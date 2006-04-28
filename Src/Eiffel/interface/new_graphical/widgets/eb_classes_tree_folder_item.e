@@ -492,7 +492,9 @@ feature {EB_CLASSES_TREE} -- Implementation
 			end
 			if l_has_children then
 					-- add a dummy item
-				extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class))
+				if system.any_class /= Void then
+					extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class))
+				end
 			end
 		end
 

@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			create warnings.make
 		end
 
-
 feature -- Status
 
 	is_profile_configured: BOOLEAN
@@ -241,6 +240,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 
 	enable_debug is
 			-- Set `is_debug' to true.
+			-- Enables debug clauses in general.
 		do
 			is_debug_configured := True
 			is_debug := True
@@ -251,6 +251,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 
 	disable_debug is
 			-- Set `is_debug' to false.
+			-- Disables all debug clauses.
 		do
 			is_debug_configured := True
 			is_debug := False

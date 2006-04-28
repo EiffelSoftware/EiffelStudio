@@ -794,7 +794,7 @@ end
 
 				-- let the configuration system build "everything"
 			create l_factory
-			create l_state.make (universe.platform, universe.build, has_multithreaded, l_target.variables)
+			create l_state.make (universe.platform, universe.build, has_multithreaded, il_generation, l_target.variables)
 			if universe.target /= Void then
 				create l_vis_build.make_build_from_old (l_state,
 					l_target, universe.target, l_factory)
@@ -803,7 +803,7 @@ end
 			end
 			if il_generation then
 				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
-				l_vis_build.set_il_version (msil_version)
+				l_vis_build.set_il_version (clr_runtime_version)
 			end
 			l_vis_build.set_partial_location (
 				l_factory.new_location_from_path (partial_generation_path, l_target))

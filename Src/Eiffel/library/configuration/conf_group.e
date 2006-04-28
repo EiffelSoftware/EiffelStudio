@@ -28,12 +28,11 @@ feature {NONE} -- Initialization
 			-- Create associated to `a_target'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
 			target := a_target
-			set_name (a_name)
+			set_name (a_name.as_lower)
 			set_location (a_location)
 			is_valid := True
 		ensure
@@ -458,10 +457,21 @@ feature -- Visit
 			a_visitor.process_group (Current)
 		end
 
-feature {CONF_VISITOR} -- Implementation, attributes stored in configuration file
+feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.
+
+	changable_internal_options: like internal_options is
+			-- A possibility to change settings without knowing if we have some options already set.
+		do
+			if internal_options = Void then
+				create internal_options
+			end
+			Result := internal_options
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.

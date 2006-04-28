@@ -14,19 +14,28 @@ inherit
 	CONF_FILE_DATE
 
 create
-	make
+	make,
+	make_with_uuid
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; an_uuid: UUID) is
+	make (a_name: STRING) is
+			-- Creation with a automatically generated UUID.
+		require
+			a_name_ok: a_name /= Void and not a_name.is_empty
+		do
+			make_with_uuid (a_name, (create {UUID_GENERATOR}).generate_uuid)
+		end
+
+	make_with_uuid (a_name: STRING; an_uuid: UUID) is
 			-- Creation with `a_name' and `an_uuid'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
+			an_uuid_ok: an_uuid /= Void
 		do
 			create targets.make (1)
 			create target_order.make (1)
-			name := a_name
+			name := a_name.as_lower
 			uuid := an_uuid
 		ensure
 			name_set: name = a_name

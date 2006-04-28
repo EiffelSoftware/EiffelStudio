@@ -22,10 +22,9 @@ feature {NONE} -- Initialization
 			-- Create with `a_name'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_system_not_void: a_system /= Void
 		do
-			name := a_name
+			name := a_name.as_lower
 			create internal_libraries.make (1)
 			create internal_overrides.make (0)
 			create internal_clusters.make (1)
@@ -903,6 +902,17 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this target itself.
+
+	changable_internal_options: like internal_options is
+			-- A possibility to change settings without knowing if we have some options already set.
+		do
+			if internal_options = Void then
+				create internal_options
+			end
+			Result := internal_options
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	internal_settings: HASH_TABLE [STRING, STRING]
 			-- Settings of this target itself.

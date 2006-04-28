@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			if internal_conditions = Void then
 				create l_cond.make
-				l_cond.add_platform (pf_dotnet)
+				l_cond.set_dotnet (True)
 				add_condition (l_cond)
 			else
 				from
@@ -53,8 +53,7 @@ feature {NONE} -- Initialization
 					internal_conditions.after
 				loop
 					l_cond := internal_conditions.item
-					l_cond.wipe_out_platform
-					l_cond.add_platform (pf_dotnet)
+					l_cond.set_dotnet (True)
 					internal_conditions.forth
 				end
 			end
@@ -63,7 +62,7 @@ feature {NONE} -- Initialization
 	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
 			-- Create
 		do
-			Precursor (a_name, a_location, a_target)
+			Precursor (a_name.as_lower, a_location, a_target)
 			initialize_conditions
 		end
 
@@ -81,7 +80,7 @@ feature {NONE} -- Initialization
 			is_in_gac := True
 			target := a_target
 			is_valid := True
-			set_name (a_name)
+			set_name (a_name.as_lower)
 			assembly_name := an_assembly_name
 			assembly_version := an_assembly_version
 			assembly_culture := an_assembly_culture

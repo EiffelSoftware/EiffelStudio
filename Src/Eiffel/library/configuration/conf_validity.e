@@ -133,7 +133,6 @@ feature {NONE} -- Onces
 			create Result.make (6)
 			Result.force ("Windows", Pf_windows)
 			Result.force ("Unix", Pf_unix)
-			Result.force ("Dotnet", Pf_dotnet)
 			Result.force ("Macintosh", Pf_mac)
 			Result.force ("vxWorks", Pf_vxworks)
 			Result.force ("All", Pf_all)

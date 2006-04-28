@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			is_valid := True
-			set_name (a_name)
+			set_name (a_name.as_lower)
 			set_location (a_location)
 		end
 

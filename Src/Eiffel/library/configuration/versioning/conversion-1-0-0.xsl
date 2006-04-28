@@ -8,7 +8,7 @@
 
 <!-- 
 	Convert from old to improved condition statements. Versionnumber was not changed.
-
+	Needs to be applied 2x to fully convert.
 -->
 
 <!-- specify encoding of output -->
@@ -50,6 +50,32 @@
 		</xsl:element>
 		</xsl:if>
 	</xsl:element>
+</xsl:template>
+	
+<!-- convert platform=dotnet conditions into new dotnet nodes -->
+<xsl:template match="//cf:platform">
+	<xsl:choose>
+		<xsl:when test="translate(@value, 'DOTNET', 'dotnet')='dotnet'">
+			<xsl:element name="dotnet">
+				<xsl:attribute name="value">true</xsl:attribute>
+			</xsl:element>
+		</xsl:when>
+		<xsl:when test="translate(@excluded_value, 'DOTNET', 'dotnet')='dotnet'">
+			<xsl:element name="dotnet">
+				<xsl:attribute name="value">false</xsl:attribute>
+			</xsl:element>
+		</xsl:when>
+		<xsl:when test="@value">
+			<xsl:element name="platform">
+				<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+			</xsl:element>
+		</xsl:when>
+		<xsl:when test="@excluded_value">
+			<xsl:element name="platform">
+				<xsl:attribute name="excluded_value"><xsl:value-of select="@excluded_value"/></xsl:attribute>
+			</xsl:element>
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 
 <!-- match every normal node and change the namespace to the new namespace -->

@@ -183,6 +183,8 @@ feature -- Callbacks
 					process_build_attributes
 				when t_multithreaded then
 					process_multithreaded_attributes
+				when t_dotnet then
+					process_dotnet_attributes
 				when t_custom then
 					process_custom_attributes
 				else
@@ -228,8 +230,6 @@ feature -- Callbacks
 					if current_target = last_system.library_target then
 						if not current_target.overrides.is_empty then
 							set_error (create {CONF_ERROR_LIBOVER})
-						elseif current_target.precompile /= Void then
-							set_error (create {CONF_ERROR_LIBPRE})
 						end
 					end
 						-- handle uses and overrides
@@ -1126,6 +1126,21 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_dotnet_attributes is
+			-- Process attributes of a dotnet tag.
+		require
+			current_condition: current_condition /= Void
+		local
+			l_value: STRING
+		do
+			l_value := current_attributes.item (at_value)
+			if l_value = Void or else not l_value.is_boolean then
+				set_parse_error_message ("No valid value specified in dotnet condition.")
+			else
+				current_condition.set_dotnet (l_value.to_boolean)
+			end
+		end
+
 	process_custom_attributes is
 			-- Process attributes of a custom tag.
 		require
@@ -1380,11 +1395,13 @@ feature {NONE} -- Implementation state transitions
 				-- => platform
 				-- => build
 				-- => multithreaded
+				-- => dotnet
 				-- => custom
-			create l_trans.make (4)
+			create l_trans.make (5)
 			l_trans.force (t_platform, "platform")
 			l_trans.force (t_build, "build")
 			l_trans.force (t_multithreaded, "multithreaded")
+			l_trans.force (t_dotnet, "dotnet")
 			l_trans.force (t_custom, "custom")
 			Result.force (l_trans, t_condition)
 		ensure
@@ -1580,6 +1597,11 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			Result.force (l_attr, t_multithreaded)
 
+				-- dotnet
+			create l_attr.make (1)
+			l_attr.force (at_value, "value")
+			Result.force (l_attr, t_dotnet)
+
 				-- custom
 				-- * name
 				-- * value
@@ -1651,6 +1673,7 @@ feature {NONE} -- Implementation constants
 	t_platform,
 	t_build,
 	t_multithreaded,
+	t_dotnet,
 	t_custom,
 	t_renaming,
 	t_class_option,

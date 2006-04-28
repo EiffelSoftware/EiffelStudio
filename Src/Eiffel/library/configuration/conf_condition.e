@@ -30,8 +30,11 @@ feature -- Access
 	build: ARRAYED_LIST [TUPLE [value: INTEGER; invert: BOOLEAN]]
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
-	multithreaded: TUPLE [value: BOOLEAN]
+	multithreaded: CELL [BOOLEAN]
 			-- Enabled for multithreaded?
+
+	dotnet: CELL [BOOLEAN]
+			-- Enabled for dotnet?
 
 	custom: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
@@ -51,7 +54,12 @@ feature -- Queries
 			Result := True
 				-- multithreaded
 			if Result and multithreaded /= Void then
-				Result := a_state.is_multithreaded = multithreaded.value
+				Result := a_state.is_multithreaded = multithreaded.item
+			end
+
+				-- dotnet
+			if Result and dotnet /= Void then
+				Result := a_state.is_dotnet = dotnet.item
 			end
 
 				-- platform
@@ -150,7 +158,13 @@ feature -- Update
 	set_multithreaded (a_value: BOOLEAN) is
 			-- Set `multithreaded' to `a_value'.
 		do
-			multithreaded := [a_value]
+			create multithreaded.put (a_value)
+		end
+
+	set_dotnet (a_value: BOOLEAN) is
+			-- Set `dotnet' to `a_value'.
+		do
+			create dotnet.put (a_value)
 		end
 
 	add_custom (a_name, a_value: STRING) is
@@ -183,5 +197,4 @@ invariant
 	platform_not_void: platform /= Void
 	build_not_void: build /= Void
 	custom_not_void: custom /= Void
-
 end

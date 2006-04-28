@@ -507,8 +507,11 @@ feature {NONE} -- Implementation
 	comment_scanner: COMMENT_SCANNER is
 			-- Scanner for comment and manifest string
 		once
-			create Result.make_with_text_formatter (Current)
+			create Result.make_with_text_formatter (Current, seperate_comment)
 		end
+
+	seperate_comment: BOOLEAN
+			-- Seperate comment into words?
 
 	reset_phrase (p: STRING; for_comment: BOOLEAN) is
 			-- Add comment `p' and wipe out `p'.

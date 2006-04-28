@@ -24,12 +24,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text_formatter (a_text_formatter: like text_formatter) is
+	make_with_text_formatter (a_text_formatter: like text_formatter; a_seperate_comment: BOOLEAN) is
 			-- Initialization
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
 			text_formatter := a_text_formatter
+			seperate_comment := a_seperate_comment
+			create buffer_string.make (100)
 			for_comment := True
 			make
 		ensure
@@ -75,6 +77,14 @@ feature -- Access
 
 	current_class : CLASS_C
 			-- Current class for analyze context.
+
+	last_condition: INTEGER
+			-- Last start condition.
+
+feature -- Status report
+
+	seperate_comment: BOOLEAN
+			-- Seperate into word?
 
 feature -- Action
 
@@ -182,6 +192,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				add_text (l_text)
+				reset_last_type
 			end
 		end
 
@@ -250,6 +261,24 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	append_buffer is
+			-- Append token to `text_formatter'
+		do
+			if not buffer_string.is_empty then
+				add_text (buffer_string.twin)
+				buffer_string.clear_all
+			end
+		end
+
+	buffer_token is
+			-- Buffer token.
+		do
+			buffer_string.append (text)
+		end
+
+	buffer_string : STRING
+			-- Buffered string
 
 	text_formatter: TEXT_FORMATTER
 			-- Output text formatter.

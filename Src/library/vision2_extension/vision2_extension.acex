@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2_extension" uuid="72eb29a8-4a3d-4b17-b2f6-365f388d2282" library_target="vision2_extension">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2_extension" uuid="72eb29a8-4a3d-4b17-b2f6-365f388d2282" library_target="vision2_extension">
 	<target name="vision2_extension">
 		<description>Extensions to the EiffelVision2 library.
 Copyright (c) 1984-2006, Eiffel Software and others.
@@ -27,10 +27,10 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 		</cluster>
 		<cluster name="windows_neutral" location="windows/neutral" recursive="true">
 			<condition><platform value="windows"/></condition>
-			<condition><platform value="dotnet"/></condition>
+			<condition><dotnet value="true"/></condition>
 		</cluster>
 		<cluster name="windows_dotnet" location="windows/dotnet" recursive="true">
-			<condition><platform value="dotnet"/></condition>
+			<condition><dotnet value="true"/></condition>
 		</cluster>
 	</target>
 </system>

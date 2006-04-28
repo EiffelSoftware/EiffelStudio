@@ -3178,19 +3178,43 @@ feature -- Implementation
 		local
 			l_byte_code: BYTE_CODE
 			l_list: BYTE_LIST [BYTE_NODE]
+			l_property_name: STRING
+			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			last_byte_node := Void
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)
 			if is_byte_node_enabled then
 				l_byte_code ?= last_byte_node
+				if l_byte_code = Void then
+					create {ATTRIBUTE_BYTE_CODE} l_byte_code
+					context.init_byte_code (l_byte_code)
+					l_byte_code.set_end_location (l_as.end_location)
+				end
 				l_byte_code.set_start_line_number (l_as.start_location.line)
 				l_byte_code.set_has_loop (has_loop)
 			end
-			if l_as.custom_attributes /= Void then
-				l_as.custom_attributes.process (Current)
+			l_custom_attributes := l_as.custom_attributes
+			if l_custom_attributes /= Void then
+				l_custom_attributes.process (Current)
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
 					l_byte_code.set_custom_attributes (l_list)
+				end
+			end
+			l_property_name := l_as.property_name
+			if l_property_name /= Void then
+				if is_byte_node_enabled then
+					names_heap.put (l_property_name)
+					l_byte_code.set_property_name_id (names_heap.found_item)
+				end
+				l_custom_attributes := l_as.property_custom_attributes
+				if l_custom_attributes /= Void then
+					l_custom_attributes.process (Current)
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_byte_code.set_property_custom_attributes (l_list)
+					end
 				end
 			end
 			if is_byte_node_enabled then

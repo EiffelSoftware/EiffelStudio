@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 								proc.set_arguments (inh_feat.arguments)
 							end
 							dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
-							implementation_generate_feature (dup_feat, False, False, False, False, class_type)
+							implementation_generate_feature (dup_feat, False, False, False, False, False, class_type)
 						else
 							generate_feature (feat, False, False, False)
 						end
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			feat_is_deferred: feat.is_deferred
 			class_type_not_void: class_type /= Void
 		do
-			implementation_generate_feature (feat, False, False, False, True, current_class_type)
+			implementation_generate_feature (feat, False, False, False, False, True, current_class_type)
 			generate_empty_body (feat)
 
 			if inh_feat /= Void then
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 							proc.set_arguments (inh_feat.arguments)
 						end
 						dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
-						implementation_generate_feature (dup_feat, False, False, False, False, class_type)
+						implementation_generate_feature (dup_feat, False, False, False, False, False, class_type)
 					else
 						generate_feature (feat, False, False, False)
 					end

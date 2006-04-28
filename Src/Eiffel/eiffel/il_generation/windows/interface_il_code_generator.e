@@ -60,6 +60,16 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		local
 			class_interface: CLASS_INTERFACE
+			f: FEATURE_I
+			gt: INTEGER
+			st: INTEGER
+			pt: INTEGER
+			tid: INTEGER
+			fid: INTEGER
+			p: PAIR [INTEGER, INTEGER]
+			ct: INTEGER
+			ca: BYTE_LIST [BYTE_NODE]
+			t: TYPE_I
 		do
 				-- Reset data
 			rout_ids_tbl.wipe_out
@@ -82,6 +92,56 @@ feature -- IL Generation
 				local_feature_processor, inherited_feature_processor)
 			generate_il_implementation_parents (class_interface, implemented_feature_processor,
 				local_feature_processor, inherited_feature_processor)
+
+			from
+				postponed_property_setters.start
+			until
+				postponed_property_setters.after
+			loop
+				p := postponed_property_setters.item
+				fid := p.first
+				tid := p.second
+				current_module.insert_property_setter
+					(feature_token (tid, current_class.feature_of_feature_id
+						(fid).property_setter_in (current_class_type).feature_id), tid, fid)
+				postponed_property_setters.forth
+			end
+			postponed_property_setters.wipe_out
+
+			from
+				tid := class_type.static_type_id
+				ct := actual_class_type_token (tid)
+				properties.start
+			until
+				properties.after
+			loop
+				fid := properties.item
+				f := current_class.feature_of_feature_id (fid)
+				uni_string.set_string (f.property_name)
+				property_sig.reset
+				property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
+				property_sig.set_parameter_count (0)
+				t := result_type_in (f, current_class_type)
+				if t.is_void then
+					t := argument_actual_type_in (f.arguments.first.type_i, current_class_type)
+				end
+				set_signature_type (property_sig, t)
+				st := current_module.defined_property_setter_token (tid, fid)
+				if st = 0 then
+					st := {MD_TOKEN_TYPES}.md_method_def
+				end
+				gt := current_module.defined_property_getter_token (tid, fid)
+				if gt = 0 then
+					gt := {MD_TOKEN_TYPES}.md_method_def
+				end
+				pt := md_emit.define_property (ct, uni_string, 0, property_sig, st, gt)
+				ca := f.property_custom_attributes
+				if ca /= Void then
+					(create {CUSTOM_ATTRIBUTE_FACTORY}).generate_custom_attributes (pt, ca)
+				end
+				properties.forth
+			end
+			properties.wipe_out
 
 				-- Reset global variable for collection.
 			current_select_tbl := Void
@@ -396,9 +456,7 @@ feature -- IL Generation
 						-- inherited method to current defined one.
 					generate_method_impl (feat, impl_class_type, impl_feat)
 				end
-				if feat.is_attribute then
-					generate_property (feat)
-				end
+				generate_property (feat)
 			end
 		end
 
@@ -459,9 +517,7 @@ feature -- IL Generation
 							feat.written_feature_id)
 				end
 			end
-			if feat.is_attribute then
-				generate_property (feat)
-			end
+			generate_property (feat)
 			if old_class_type /= Void then
 				byte_context.set_class_type (old_class_type)
 			end

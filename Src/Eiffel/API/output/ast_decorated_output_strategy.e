@@ -1273,9 +1273,6 @@ feature {NONE} -- Implementation
 			if not has_error then
 				l_feat := feature_in_class (l_expr_type.actual_type.associated_class, l_as.routine_ids)
 			end
-			check
-				l_feat_not_void: l_feat /= Void
-			end
 			if not expr_type_visiting then
 				if not has_error then
 					if l_feat.is_prefix then
@@ -1305,8 +1302,8 @@ feature {NONE} -- Implementation
 				end
 				text_formatter_decorator.commit
 			end
-			check l_feat_is_not_procedure: not l_feat.is_procedure end
 			if not has_error then
+				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
 				if l_type.has_formal_generic then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)

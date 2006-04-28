@@ -4703,7 +4703,6 @@ feature -- Conveniences
 			set_use_cluster_as_namespace (True)
 			set_use_all_cluster_as_namespace (True)
 			set_check_generic_creation_constraint (True)
-			set_has_syntax_warning (False)
 			set_msil_use_optimized_precompile (False)
 			msil_version := Void
 			msil_assembly_compatibility := Void

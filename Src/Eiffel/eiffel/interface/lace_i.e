@@ -631,13 +631,13 @@ feature {NONE} -- Implementation
 
 			update_settings_for_eweasel (l_settings)
 
-			l_s := l_settings.item ("address_expression")
+			l_s := l_settings.item (s_address_expression)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.allow_address_expression (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("address_expression")
+					vd15.set_option_name (s_address_expression)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -645,18 +645,14 @@ feature {NONE} -- Implementation
 				system.allow_address_expression (False)
 			end
 
-			l_s := l_settings.item ("arguments")
-			if l_s /= Void then
-			end
-
-			l_s := l_settings.item ("array_optimization")
+			l_s := l_settings.item (s_array_optimization)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					fixme ("Enable array optimizations")
 					system.set_array_optimization_on (False)
 				else
 					create vd15
-					vd15.set_option_name ("array_optimization")
+					vd15.set_option_name (s_array_optimization)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -666,13 +662,13 @@ feature {NONE} -- Implementation
 
 			System.server_controler.set_block_size (1024)
 
-			l_s := l_settings.item ("check_generic_creation_constraint")
+			l_s := l_settings.item (s_check_generic_creation_constraint)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_check_generic_creation_constraint (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("check_generic_creation_constraint")
+					vd15.set_option_name (s_check_generic_creation_constraint)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -680,13 +676,13 @@ feature {NONE} -- Implementation
 				system.set_check_generic_creation_constraint (True)
 			end
 
-			l_s := l_settings.item ("check_vape")
+			l_s := l_settings.item (s_check_vape)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_do_not_check_vape (not l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("check_vape")
+					vd15.set_option_name (s_check_vape)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -705,13 +701,13 @@ feature {NONE} -- Implementation
 				-- Also you cannot change this option after
 				-- the first successful compilation as it might
 				-- break a lot of stuff.
-			l_s := l_settings.item ("cls_compliant")
+			l_s := l_settings.item (s_cls_compliant)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_cls_compliant (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("cls_compliant")
+					vd15.set_option_name (s_cls_compliant)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -719,13 +715,13 @@ feature {NONE} -- Implementation
 				-- once set don't loose it
 			end
 
-			l_s := l_settings.item ("console_application")
+			l_s := l_settings.item (s_console_application)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_console_application (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("console_application")
+					vd15.set_option_name (s_console_application)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -733,13 +729,13 @@ feature {NONE} -- Implementation
 				system.set_console_application (False)
 			end
 
-			l_s := l_settings.item ("dead_code_removal")
+			l_s := l_settings.item (s_dead_code_removal)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_remover_off (not l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("dead_code_removal")
+					vd15.set_option_name (s_dead_code_removal)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -748,13 +744,13 @@ feature {NONE} -- Implementation
 			end
 
 				-- see cls_compliant comment above
-			l_s := l_settings.item ("dotnet_naming_convention")
+			l_s := l_settings.item (s_dotnet_naming_convention)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_dotnet_naming_convention (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("dotnet_naming_convention")
+					vd15.set_option_name (s_dotnet_naming_convention)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -762,13 +758,13 @@ feature {NONE} -- Implementation
 				system.set_dotnet_naming_convention (False)
 			end
 
-			l_s := l_settings.item ("dynamic_runtime")
+			l_s := l_settings.item (s_dynamic_runtime)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_dynamic_runtime (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("dynamic_runtime")
+					vd15.set_option_name (s_dynamic_runtime)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -776,13 +772,13 @@ feature {NONE} -- Implementation
 				system.set_dynamic_runtime (False)
 			end
 
-			l_s := l_settings.item ("dynamic_runtime")
+			l_s := l_settings.item (s_dynamic_runtime)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_dynamic_runtime (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("dynamic_runtime")
+					vd15.set_option_name (s_dynamic_runtime)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -790,13 +786,13 @@ feature {NONE} -- Implementation
 				system.set_dynamic_runtime (False)
 			end
 
-			l_s := l_settings.item ("exception_trace")
+			l_s := l_settings.item (s_exception_trace)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_exception_stack_managed (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("exception_trace")
+					vd15.set_option_name (s_exception_trace)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -804,25 +800,25 @@ feature {NONE} -- Implementation
 				system.set_exception_stack_managed (False)
 			end
 
-			l_s := l_settings.item ("external_runtime")
+			l_s := l_settings.item (s_external_runtime)
 			if l_s /= Void then
 				system.set_external_runtime (l_s)
 			end
 
-			l_s := l_settings.item ("executable_name")
+			l_s := l_settings.item (s_executable_name)
 			if l_s /= Void and then not l_s.is_equal (a_target.system.name) then
 				system.set_name (l_s)
 			elseif system.name = Void or else not system.name.is_equal (a_target.system.name) then
 				system.set_name (a_target.system.name)
 			end
 
-			l_s := l_settings.item ("full_type_checking")
+			l_s := l_settings.item (s_full_type_checking)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_full_type_checking (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("full_type_checking")
+					vd15.set_option_name (s_full_type_checking)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -830,13 +826,13 @@ feature {NONE} -- Implementation
 				system.set_full_type_checking (False)
 			end
 
-			l_s := l_settings.item ("il_verifiable")
+			l_s := l_settings.item (s_il_verifiable)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_il_verifiable (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("il_verifiable")
+					vd15.set_option_name (s_il_verifiable)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -844,13 +840,13 @@ feature {NONE} -- Implementation
 				system.set_il_verifiable (True)
 			end
 
-			l_s := l_settings.item ("inlining")
+			l_s := l_settings.item (s_inlining)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_inlining_on (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("inlining")
+					vd15.set_option_name (s_inlining)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -858,13 +854,13 @@ feature {NONE} -- Implementation
 				system.set_inlining_on (False)
 			end
 
-			l_s := l_settings.item ("inlining_size")
+			l_s := l_settings.item (s_inlining_size)
 			if l_s /= Void then
 				if l_s.is_integer and then l_s.to_integer >= 0 and l_s.to_integer <= 100 then
 					system.set_inlining_size (l_s.to_integer)
 				else
 					create vd15
-					vd15.set_option_name ("inlining_size")
+					vd15.set_option_name (s_inlining_size)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -872,20 +868,20 @@ feature {NONE} -- Implementation
 				system.set_inlining_size (4)
 			end
 
-			l_s := l_settings.item ("java_generation")
+			l_s := l_settings.item (s_java_generation)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make ("java_generation")
+						create vd83.make (s_java_generation)
 						Error_handler.insert_warning (vd83)
 					else
 						system.set_java_generation (l_b)
 					end
 				else
 					create vd15
-					vd15.set_option_name ("java_generation")
+					vd15.set_option_name (s_java_generation)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -893,13 +889,13 @@ feature {NONE} -- Implementation
 					-- don't loose java_generation flag
 			end
 
-			l_s := l_settings.item ("line_generation")
+			l_s := l_settings.item (s_line_generation)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_line_generation (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("line_generation")
+					vd15.set_option_name (s_line_generation)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -907,7 +903,7 @@ feature {NONE} -- Implementation
 				system.set_line_generation (False)
 			end
 
-			l_s := l_settings.item ("metadata_cache_path")
+			l_s := l_settings.item (s_metadata_cache_path)
 			if l_s = Void then
 				l_s := overridden_metadata_cache_path
 			else
@@ -915,7 +911,7 @@ feature {NONE} -- Implementation
 			end
 				-- value can't change from a precompile or in a compiled system
 			if l_s /= Void and then not equal (l_s, system.metadata_cache_path) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-				create vd83.make ("metadata_cache_path")
+				create vd83.make (s_metadata_cache_path)
 				Error_handler.insert_warning (vd83)
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
@@ -925,35 +921,35 @@ feature {NONE} -- Implementation
 				system.set_metadata_cache_path (l_s)
 			end
 
-			l_s := l_settings.item ("msil_assembly_compatibility")
+			l_s := l_settings.item (s_msil_assembly_compatibility)
 			if l_s /= Void then
 				system.set_msil_assembly_compatibility (l_s)
 			end
 
-			l_s := l_settings.item ("msil_classes_per_module")
+			l_s := l_settings.item (s_msil_classes_per_module)
 			if l_s /= Void then
 				if l_s.is_natural_16 then
 					system.set_msil_classes_per_module (l_s.to_natural_16)
 				else
 					create vd15
-					vd15.set_option_name ("msil_classes_per_module")
+					vd15.set_option_name (s_msil_classes_per_module)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
 			end
 
-			l_s := l_settings.item ("msil_culture")
+			l_s := l_settings.item (s_msil_culture)
 			if l_s /= Void then
 				system.set_msil_culture (l_s)
 			end
 
-			l_s := l_settings.item ("msil_generation")
+			l_s := l_settings.item (s_msil_generation)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make ("msil_generation")
+						create vd83.make (s_msil_generation)
 						Error_handler.insert_warning (vd83)
 					else
 						system.set_il_generation (l_b)
@@ -961,7 +957,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					create vd15
-					vd15.set_option_name ("msil_generation")
+					vd15.set_option_name (s_msil_generation)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -969,18 +965,18 @@ feature {NONE} -- Implementation
 					-- don't loose il generation flag
 			end
 
-			l_s := l_settings.item ("msil_clr_version")
+			l_s := l_settings.item (s_msil_clr_version)
 			if system.il_generation then
 				set_clr_runtime_version (l_s)
 			end
 
-			l_s := l_settings.item ("msil_generation_type")
+			l_s := l_settings.item (s_msil_generation_type)
 			if l_s /= Void then
 				if l_s.is_case_insensitive_equal ("exe") or l_s.is_case_insensitive_equal ("dll") then
 					system.set_msil_generation_type (l_s.as_lower)
 				else
 					create vd15
-					vd15.set_option_name ("msil_generation_type")
+					vd15.set_option_name (s_msil_generation_type)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -988,18 +984,18 @@ feature {NONE} -- Implementation
 				system.set_msil_generation_type ("exe")
 			end
 
-			l_s := l_settings.item ("msil_key_file_name")
+			l_s := l_settings.item (s_msil_key_file_name)
 			if l_s /= Void then
 				system.set_msil_key_file_name (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 
-			l_s := l_settings.item ("msil_use_optimized_precompile")
+			l_s := l_settings.item (s_msil_use_optimized_precompile)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_msil_use_optimized_precompile (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("msil_use_optimized_precompile")
+					vd15.set_option_name (s_msil_use_optimized_precompile)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -1009,20 +1005,20 @@ feature {NONE} -- Implementation
 
 				-- il generation has no multithreaded
 			if not system.il_generation then
-				l_s := l_settings.item ("multithreaded")
+				l_s := l_settings.item (s_multithreaded)
 				if l_s /= Void then
 					if l_s.is_boolean then
 						l_b := l_s.to_boolean
 							-- value can't change from a precompile or in a compiled system
 						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-							create vd83.make ("multithreaded")
+							create vd83.make (s_multithreaded)
 							Error_handler.insert_warning (vd83)
 						else
 							system.set_has_multithreaded (l_b)
 						end
 					else
 						create vd15
-						vd15.set_option_name ("multithreaded")
+						vd15.set_option_name (s_multithreaded)
 						vd15.set_option_value (l_s)
 						Error_handler.insert_error (vd15)
 					end
@@ -1031,73 +1027,46 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			l_s := l_settings.item ("old_verbatim_strings")
+			l_s := l_settings.item (s_old_verbatim_strings)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_has_old_verbatim_strings (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("old_verbatim_strings")
+					vd15.set_option_name (s_old_verbatim_strings)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
 			else
 				system.set_has_old_verbatim_strings (False)
 			end
-			l_s := l_settings.item ("old_verbatim_strings_warning")
-			if l_s /= Void then
-				if l_s.is_boolean then
-					system.set_has_old_verbatim_strings_warning (l_s.to_boolean)
-				else
-					create vd15
-					vd15.set_option_name ("old_verbatim_strings_warning")
-					vd15.set_option_value (l_s)
-					Error_handler.insert_error (vd15)
-				end
-			else
-				system.set_has_old_verbatim_strings_warning (False)
-			end
 
-			l_s := l_settings.item ("platform")
+			l_s := l_settings.item (s_platform)
 			if l_s /= Void then
 				if get_platform (l_s) /= 0 then
 					system.set_platform (get_platform (l_s))
 				else
 					create vd15
-					vd15.set_option_name ("platform")
+					vd15.set_option_name (s_platform)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
 			end
 
-			l_s := l_settings.item ("shared_library_definition")
+			l_s := l_settings.item (s_shared_library_definition)
 				-- If the release doesn't generate DLL's,
 				-- we do not take the option into account in the Ace.
 			if l_s /= Void and has_dll_generation then
 				system.set_dynamic_def_file (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 
-			l_s := l_settings.item ("syntax_warning")
-			if l_s /= Void then
-				if l_s.is_boolean then
-					system.set_has_syntax_warning (l_s.to_boolean)
-				else
-					create vd15
-					vd15.set_option_name ("syntax_warning")
-					vd15.set_option_value (l_s)
-					Error_handler.insert_error (vd15)
-				end
-			else
-				system.set_has_syntax_warning (False)
-			end
-
-			l_s := l_settings.item ("use_cluster_name_as_namespace")
+			l_s := l_settings.item (s_use_cluster_name_as_namespace)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_use_cluster_as_namespace (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("use_cluster_name_as_namespace")
+					vd15.set_option_name (s_use_cluster_name_as_namespace)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -1105,13 +1074,13 @@ feature {NONE} -- Implementation
 				system.set_use_cluster_as_namespace (True)
 			end
 
-			l_s := l_settings.item ("use_all_cluster_name_as_namespace")
+			l_s := l_settings.item (s_use_all_cluster_name_as_namespace)
 			if l_s /= Void then
 				if l_s.is_boolean then
 					system.set_use_all_cluster_as_namespace (l_s.to_boolean)
 				else
 					create vd15
-					vd15.set_option_name ("use_all_cluster_name_as_namespace")
+					vd15.set_option_name (s_use_all_cluster_name_as_namespace)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
 				end
@@ -1132,19 +1101,19 @@ feature {NONE} -- Implementation
 			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
 				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
 
-				a_settings.force ("true", "msil_generation")
+				a_settings.force ("true", s_msil_generation)
 
 				if compilation_modes.is_precompiling then
-					a_settings.force ("dll", "msil_generation_type")
+					a_settings.force ("dll", s_msil_generation_type)
 				else
-					a_settings.force ("exe", "msil_generation_type")
+					a_settings.force ("exe", s_msil_generation_type)
 				end
 
 				if l_runtime_version /= Void then
-					a_settings.force (l_runtime_version, "msil_clr_version")
+					a_settings.force (l_runtime_version, s_msil_clr_version)
 				end
 
-				a_settings.force ("true", "console_application")
+				a_settings.force ("true", s_console_application)
 			end
 		end
 

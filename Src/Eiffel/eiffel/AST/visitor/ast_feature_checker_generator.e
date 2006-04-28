@@ -71,6 +71,11 @@ inherit
 			{NONE} all
 		end
 
+	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
@@ -1043,7 +1048,7 @@ feature -- Implementation
 							-- Inherited code is checked in parent class.
 						and then not is_inherited
 							-- Warning not disabled
-						and then context.current_class.lace_class.options.warnings.is_enabled ("obsolete_feature")
+						and then context.current_class.lace_class.options.warnings.is_enabled (w_obsolete_feature)
 					then
 						create l_obs_warn
 						l_obs_warn.set_class (context.current_class)
@@ -1991,7 +1996,7 @@ feature -- Implementation
 				end
 			end
 
-			if l_as.locals /= Void and then context.current_class.lace_class.options.warnings.is_enabled ("unused_local") then
+			if l_as.locals /= Void and then context.current_class.lace_class.options.warnings.is_enabled (w_unused_local) then
 				check_unused_locals (context.locals)
 			end
 
@@ -4310,7 +4315,7 @@ feature -- Implementation
 					l_list ?= last_byte_node
 				end
 			end
-			if context.current_class.is_generic and then context.current_class.lace_class.options.warnings.is_enabled ("once_in_generic") then
+			if context.current_class.is_generic and then context.current_class.lace_class.options.warnings.is_enabled (w_once_in_generic) then
 				error_handler.insert_warning (
 					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
 			end

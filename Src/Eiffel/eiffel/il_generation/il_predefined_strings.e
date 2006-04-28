@@ -40,8 +40,8 @@ feature -- Access
 	setter_prefix: STRING is "_set_"
 			-- Prefix for automatically generated features.
 
-	property_getter_prefix: STRING is "__get__";
-	property_setter_prefix: STRING is "__set__";
+	property_getter_prefix: STRING is "get_";
+	property_setter_prefix: STRING is "set_";
 			-- Prefix for property getter and setter methods.
 
 indexing

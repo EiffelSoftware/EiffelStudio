@@ -9,9 +9,12 @@ class
 	SD_NOTEBOOK_TAB
 
 inherit
-	EV_HORIZONTAL_BOX
+	EV_DRAWING_AREA
+		export
+			{SD_NOTEBOOK_TAB_DRAWER_I} implementation
 		redefine
-			destroy
+			destroy,
+			create_implementation
 		end
 
 create
@@ -27,16 +30,14 @@ feature {NONE}  -- Initlization
 		do
 			default_create
 			create internal_shared
-			create internal_drawing_area
+
 			create info
-			extend (internal_drawing_area)
-			disable_item_expand (internal_drawing_area)
 
 			set_minimum_height (internal_shared.title_bar_height)
 
-			internal_drawing_area.expose_actions.force_extend (agent on_expose)
-			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
-			internal_drawing_area.pointer_leave_actions.extend (agent on_pointer_leave)
+			expose_actions.force_extend (agent on_expose)
+			pointer_enter_actions.extend (agent on_pointer_enter)
+			pointer_leave_actions.extend (agent on_pointer_leave)
 
 			create select_actions
 			create drag_actions
@@ -56,18 +57,24 @@ feature {NONE}  -- Initlization
 	init_drawing_style (a_top: BOOLEAN) is
 			-- Init `internal_tab_style'
 		do
-			create {SD_NOTEBOOK_TAB_DRAWER_IMP}internal_tab_style.make (internal_drawing_area, a_top)
+			create {SD_NOTEBOOK_TAB_DRAWER_IMP}internal_tab_style.make (Current, a_top)
 			internal_tab_style.set_padding_width (internal_shared.padding_width)
 		end
 
 	init_actions (a_notebook: SD_NOTEBOOK) is
 			-- Initialize actions
 		do
-			internal_drawing_area.pointer_button_press_actions.extend (agent on_pointer_press)
-			internal_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
+			pointer_button_press_actions.extend (agent on_pointer_press)
+			pointer_double_press_actions.extend (agent on_double_press)
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
+		end
+
+	create_implementation is
+			-- Redefine
+		do
+			create {SD_DRAWING_AREA_IMP} implementation.make (Current)
 		end
 
 feature -- Command
@@ -75,7 +82,7 @@ feature -- Command
 	destroy is
 			-- Redefine.
 		do
-			Precursor {EV_HORIZONTAL_BOX}
+			Precursor {EV_DRAWING_AREA}
 		end
 
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
@@ -83,10 +90,10 @@ feature -- Command
 		require
 			a_actions_not_void: a_actions /= Void
 		do
-			internal_drawing_area.drop_actions.wipe_out
-			internal_drawing_area.drop_actions.append (a_actions)
+			drop_actions.wipe_out
+			drop_actions.append (a_actions)
 		ensure
-			set: internal_drawing_area.drop_actions.is_equal (a_actions)
+			set: drop_actions.is_equal (a_actions)
 		end
 
 	set_width_not_enough_space (a_width: INTEGER) is
@@ -131,7 +138,7 @@ feature -- Query
 	prefered_size: INTEGER is
 			-- If current is displayed, size should take.
 		do
-			Result := internal_drawing_area.minimum_width
+			Result := minimum_width
 		end
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -172,7 +179,7 @@ feature -- Properties
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			internal_tab_style.set_pixmap (a_pixmap)
-			internal_drawing_area.set_minimum_width (a_pixmap.width)
+			set_minimum_width (a_pixmap.width)
 			update_minmum_size
 			on_expose
 		ensure
@@ -202,14 +209,14 @@ feature -- Properties
 			selected: is_selected
 		do
 			if a_focused then
-				internal_drawing_area.set_background_color (internal_shared.focused_color)
+				set_background_color (internal_shared.focused_color)
 			else
-				internal_drawing_area.set_background_color (internal_shared.non_focused_title_color)
+				set_background_color (internal_shared.non_focused_title_color)
 			end
 			on_expose
 		ensure
-			set: a_focused implies internal_drawing_area.background_color.is_equal (internal_shared.focused_color)
-			set: not a_focused implies internal_drawing_area.background_color.is_equal (internal_shared.non_focused_title_color)
+			set: a_focused implies background_color.is_equal (internal_shared.focused_color)
+			set: not a_focused implies background_color.is_equal (internal_shared.non_focused_title_color)
 		end
 
 	info: SD_NOTEBOOK_TAB_INFO
@@ -298,9 +305,9 @@ feature {NONE}  -- Implementation agents
 		require
 			a_width_valid: a_width >= 0
 		do
-			internal_drawing_area.clear
+			clear
 			if pixmap /= Void then
-				if internal_drawing_area.width > 0 and internal_drawing_area.height >0 then
+				if width > 0 and height >0 then
 					if is_selected then
 						internal_tab_style.expose_selected (a_width, info)
 					else
@@ -323,19 +330,19 @@ feature {NONE}  -- Implementation functions.
 			l_orignal_font, l_font: EV_FONT
 		do
 			if enough_space then
-				l_font := internal_drawing_area.font
+				l_font := font
 				l_orignal_font := l_font.twin
 				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-				internal_drawing_area.set_font (l_font)
+				set_font (l_font)
 
 				l_size := internal_tab_style.start_x_tail_internal
-				internal_drawing_area.set_font (l_orignal_font)
+				set_font (l_orignal_font)
 --				if is_selected then
 --					l_size := l_size + internal_shared.highlight_tail_width
 --					l_size := l_size + internal_tab_style.padding_width
 --				end
-				if l_size /= internal_drawing_area.minimum_width or l_size /= minimum_width then
-					internal_drawing_area.set_minimum_width (l_size)
+				if l_size /= minimum_width or l_size /= minimum_width then
+					set_minimum_width (l_size)
 					set_minimum_width (l_size)
 				end
 			end
@@ -346,11 +353,11 @@ feature {NONE}  -- Implementation attributes
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook Current belong to.
 
-	internal_drawing_area: EV_DRAWING_AREA
-			-- Drawing area for pixmap.
+--	internal_drawing_area: EV_DRAWING_AREA
+--			-- Drawing area for pixmap.
 
-	internal_horizontal_box: EV_HORIZONTAL_BOX
-			-- Horizontal box which contain `internal_pixmap_drawing
+--	internal_horizontal_box: EV_HORIZONTAL_BOX
+--			-- Horizontal box which contain `internal_pixmap_drawing
 
 	internal_shared: SD_SHARED
 			-- All singletons.
@@ -359,7 +366,7 @@ feature {NONE}  -- Implementation attributes
 			-- Docking manager which Current belong to.
 
 	internal_tab_style: SD_NOTEBOOK_TAB_DRAWER_I
-			-- Drawer of the internal_drawing_area.
+			-- Drawer of Current
 
 	is_hot: BOOLEAN
 			-- If Current hot?
@@ -370,7 +377,6 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 	select_actions_not_void: select_actions /= Void
 	drag_actions_not_void: drag_actions /= Void
-	internal_drawing_area_not_void: internal_drawing_area /= Void
 	not_void: internal_tab_style /= Void
 	not_void: info /= Void
 

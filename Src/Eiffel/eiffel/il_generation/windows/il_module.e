@@ -1910,6 +1910,22 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			setter_token_valid: Result /= 0
 		end
 
+	defined_property_setter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
+			-- Given an attribute `a_feature_id' in `a_type_id' return associated
+			-- token of a property setter (if any) without attempting to define it.
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_setters /= Void
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		do
+			Result := table_token (internal_property_setters, a_type_id, a_feature_id)
+		ensure
+			setter_token_valid: Result /= 0 implies
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def or
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref
+		end
+
 	property_setter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
 			-- Given an attribute `a_feature_id' in `a_type_id' return associated
 			-- token of a property setter (if any).
@@ -1929,6 +1945,22 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			setter_token_valid: Result /= 0 implies
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def or
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref
+		end
+
+	defined_property_getter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
+			-- Given an attribute `a_feature_id' in `a_type_id' return associated
+			-- token of a property getter (if any) without attempting to define it.
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_getters /= Void
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		do
+			Result := table_token (internal_property_getters, a_type_id, a_feature_id)
+		ensure
+			getter_token_valid: Result /= 0 implies
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def or
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref
 		end

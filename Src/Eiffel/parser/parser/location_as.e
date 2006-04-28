@@ -10,7 +10,7 @@ class
 
 create
 	make, make_null, make_from_other
-	
+
 feature {NONE} -- Initialization
 
 	make (l, c, p, s: INTEGER) is
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			position_set: position = p
 			location_count_set: location_count = s
 		end
-		
+
 	make_from_other (other: LOCATION_AS) is
 			-- Copy `other' data into Current
 		require
@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 			internal_location_set: internal_location = other.internal_location
 			internal_count_set: internal_count = other.internal_count
 		end
-		
+
 	make_null is
 			-- Initialize current with (0,0) as `line' and `column'.
 		do
 		ensure
 			is_null: is_null
 		end
-		
+
 feature -- Access
 
 	line: INTEGER is
@@ -58,13 +58,13 @@ feature -- Access
 		do
 			Result := (internal_location & line_mask).to_integer_32
 		end
-		
+
 	column: INTEGER is
 			-- Column number in file of Current
 		do
 			Result := (internal_location |>> column_shift).to_integer_32
 		end
-		
+
 	position: INTEGER
 			-- Position in file of Current
 
@@ -80,13 +80,13 @@ feature -- Access
 			Result := (internal_location |>> column_shift).to_integer_32 +
 				internal_count.to_integer_32
 		end
-		
+
 	location_count: INTEGER is
 			-- Length of Current.
 		do
 			Result := internal_count.to_integer_32
 		end
-			
+
 feature -- Setting
 
 	set_position (l, c, p, s: INTEGER) is
@@ -129,19 +129,19 @@ feature -- Access: Constants
 
 	max_line: INTEGER is 0x007FFFFF
 			-- Maximum value for `line'
-	
+
 	max_column: INTEGER is 0x000001FF
 			-- Maximum value for `column'
-			
+
 	max_count: INTEGER is 0x0000FFFF
 			-- Maximum value for `location_count'
-	
-	line_mask: NATURAL_32 is {NATURAL_32} 8388607 -- 0x007FFFFF
+
+	line_mask: NATURAL_32 is {NATURAL_32} 0x007FFFFF
 			-- Mask to get line information
-			
+
 	column_mask: NATURAL_32 is {NATURAL_32} 0xFF800000
 			-- Mask to get column information
-			
+
 	column_shift: INTEGER is 23
 			-- Number of shift to the left needed to get column information
 
@@ -152,17 +152,17 @@ feature -- Status Report
 		do
 			Result := internal_location = 0
 		end
-		
+
 feature {LOCATION_AS} -- Internal position
 
 	internal_location: NATURAL_32
 			-- Space efficient encoding of `line',`column' position.
 			-- First 9 bits for the column
 			-- Last 23 bits for the line
-			
+
 	internal_count: NATURAL_16;
 			-- Space efficient encoding of `location_count'.
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

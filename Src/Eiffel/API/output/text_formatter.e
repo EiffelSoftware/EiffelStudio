@@ -500,6 +500,7 @@ feature {NONE} -- Implementation
 			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (s))
 			comment_scanner.set_text_formatter (Current)
 			comment_scanner.set_for_comment (for_comment)
+			comment_scanner.set_seperate (seperate_comment)
 			comment_scanner.set_current_class (comment_context_class)
 			comment_scanner.scan
 		end

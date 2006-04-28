@@ -12,10 +12,10 @@ class
 
 create
 	make_for_documentation
-	
+
 feature {NONE} -- Initialization
 
-	make_for_documentation (a_cluster: CLUSTER_I; view_name: STRING; doc: DOCUMENTATION) is
+	make_for_documentation (a_cluster: CONF_GROUP; view_name: STRING; doc: DOCUMENTATION) is
 		require
 			a_cluster_not_void: a_cluster /= Void
 			doc_not_void: doc /= Void
@@ -27,7 +27,7 @@ feature {DOCUMENTATION} -- Basic operations
 	execute is
 		do
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

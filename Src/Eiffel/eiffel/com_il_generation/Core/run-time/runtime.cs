@@ -55,6 +55,9 @@ public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int 
 public delegate int WEL_RICH_EDIT_STREAM_IN_DELEGATE (IntPtr a_buffer, int a_buffer_length, IntPtr a_data_length);
 public delegate int WEL_RICH_EDIT_STREAM_OUT_DELEGATE (IntPtr a_buffer, int length);
 public delegate void WEL_DISK_SPACE_DELEGATE (int free_space, int total_space, int free_space_in_bytes, int total_space_in_bytes);
+public delegate void EIFFEL_PROCEDURE_DELEGATE (object args);
+public delegate object EIFFEL_FUNCTION_DELEGATE (object args);
+
 
 [Serializable]
 public sealed class ISE_RUNTIME

@@ -558,6 +558,33 @@ feature -- Third pass: byte code production and type check
 					end
 
 				elseif not feature_i.is_routine then
+					if feature_i.body_index /= 0 then
+						ast_context.set_current_feature (feature_i)
+						if
+							feature_changed
+							or else
+							not (f_suppliers = Void
+								or else (propagators.empty_intersection (f_suppliers)
+								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
+						then
+							error_handler.mark
+							feature_checker.type_check_and_code (feature_i)
+							type_checked := True
+							type_check_error := error_handler.new_error
+							if
+								not type_check_error and then
+								(feature_checker.byte_code.property_name /= Void or else
+								feature_checker.byte_code.property_custom_attributes /= Void)
+							then
+									-- Save byte code
+								tmp_byte_server.put (feature_checker.byte_code)
+								byte_code_generated := True
+							end
+						else
+							feature_checker.type_check_only (feature_i, False)
+						end
+						ast_context.clear_feature_context
+					end
 					record_suppliers (feature_i, dependances)
 				elseif feature_i.is_deferred and then class_id = feature_i.written_in then
 						-- Just type check it. See if VRRR or

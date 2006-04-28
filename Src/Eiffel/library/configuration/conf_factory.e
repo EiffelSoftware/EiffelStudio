@@ -14,10 +14,9 @@ feature
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			an_uuid_not_void: an_uuid /= Void
 		do
-			create Result.make (a_name, an_uuid)
+			create Result.make_with_uuid (a_name, an_uuid)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -67,11 +66,8 @@ feature
 			-- Create a `CONF_ROOT' object.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
-			a_cluster_lower: a_cluster /= Void implies a_cluster.is_equal (a_cluster.as_lower)
 			a_class_ok: not a_all_root implies a_class /= Void and then not a_class.is_empty
-			a_class_upper: not a_all_root implies a_class.is_equal (a_class.as_upper)
 			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
-			a_feature_lower: a_feature /= Void implies a_feature.is_equal (a_feature.as_lower)
 		do
 			create Result.make (a_cluster, a_class, a_feature, a_all_root)
 		ensure
@@ -194,7 +190,6 @@ feature
 			-- Create a `CONF_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		local
@@ -225,7 +220,6 @@ feature
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		do
@@ -238,7 +232,6 @@ feature
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		do
@@ -251,7 +244,6 @@ feature
 			-- Create a `CONF_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		do
@@ -264,7 +256,6 @@ feature
 			-- Create a `CONF_OVERRIDE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		do

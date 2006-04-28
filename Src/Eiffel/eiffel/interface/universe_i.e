@@ -62,7 +62,7 @@ feature -- Properties
 		require
 			target_not_void: target /= Void
 		do
-			create Result.make (platform, build, system.has_multithreaded, target.variables)
+			create Result.make (platform, build, system.has_multithreaded, system.il_generation, target.variables)
 		end
 
 	platform: INTEGER is

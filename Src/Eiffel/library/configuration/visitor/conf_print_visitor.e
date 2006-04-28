@@ -411,23 +411,20 @@ feature {NONE} -- Implementation
 						a_conditions.after
 					loop
 						l_condition := a_conditions.item
-							-- don't print platform for assemblies
-						if not is_assembly then
-							from
-								l_platforms := l_condition.platform
-								l_platforms.start
-							until
-								l_platforms.after
-							loop
-								l_pf := l_platforms.item
-								if l_pf.invert then
-									l_name := "excluded-value"
-								else
-									l_name := "value"
-								end
-								append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>")
-								l_platforms.forth
+						from
+							l_platforms := l_condition.platform
+							l_platforms.start
+						until
+							l_platforms.after
+						loop
+							l_pf := l_platforms.item
+							if l_pf.invert then
+								l_name := "excluded-value"
+							else
+								l_name := "value"
 							end
+							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>")
+							l_platforms.forth
 						end
 
 						from
@@ -447,7 +444,12 @@ feature {NONE} -- Implementation
 						end
 
 						if l_condition.multithreaded /= Void then
-							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.value.out.as_lower+"%"")
+							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.item.out.as_lower+"%"")
+						end
+
+							-- don't print dotnet for assemblies
+						if not is_assembly and then l_condition.dotnet /= Void then
+							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"")
 						end
 
 						from

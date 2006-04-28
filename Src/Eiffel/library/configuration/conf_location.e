@@ -324,6 +324,11 @@ feature {NONE} -- Implementation
 					Result.prepend ("\")
 				end
 			end
+
+				-- handle file incasesensitivity under windows
+			if operating_system.is_windows then
+				Result.to_lower
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end

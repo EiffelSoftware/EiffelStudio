@@ -20,22 +20,24 @@ create
 feature {NONE} -- Initialization
 
 	make (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN) is
-			-- Create.
+			-- Create with `a_cluster', `a_class' and `a_feature'.
+			-- `a_all_root' indicates that all classes are considered to be root.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
-			a_cluster_lower: a_cluster /= Void implies a_cluster.is_equal (a_cluster.as_lower)
 			a_class_ok: not a_all_root implies a_class /= Void and then not a_class.is_empty
-			a_class_upper: not a_all_root implies a_class.is_equal (a_class.as_upper)
 			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
-			a_feature_lower: a_feature /= Void implies a_feature.is_equal (a_feature.as_lower)
 		do
 			is_all_root := a_all_root
 			if a_all_root then
 				class_name := "ANY"
 			else
-				cluster_name := a_cluster
-				class_name := a_class
-				feature_name := a_feature
+				if a_cluster /= Void then
+					cluster_name := a_cluster.as_lower
+				end
+				if a_feature /= Void then
+					feature_name := a_feature.as_lower
+				end
+				class_name := a_class.as_upper
 			end
 		ensure
 			cluster_set: not a_all_root implies cluster_name = a_cluster

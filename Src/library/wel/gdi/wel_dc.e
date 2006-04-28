@@ -709,6 +709,26 @@ feature -- Status setting
 			stretch_blt_mode_set: stretch_blt_mode = a_mode
 		end
 
+	set_di_bits (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
+			bits: ARRAY [CHARACTER]; bitmap_info: WEL_BITMAP_INFO;
+			usage: INTEGER): INTEGER is
+			-- Set device-independent bits of `a_bitmap'.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			positive_start_scan: start_scan >= 0
+			positive_scan_lines: scan_lines >= 0
+			bitmap_info_not_void: bitmap_info /= Void
+			valid_usage: valid_dib_colors_constant (usage)
+		local
+			l_char_array: WEL_CHARACTER_ARRAY
+		do
+			create l_char_array.make (bits)
+			cwin_set_di_bits (item, a_bitmap.item, start_scan,
+				scan_lines, l_char_array.item, bitmap_info.item, usage)
+		end
+
 	select_palette (a_palette: WEL_PALETTE) is
 			-- Select the `a_palette' as the current palette.
 		require
@@ -1504,6 +1524,28 @@ feature -- Basic operations
 				y_source, raster_operation)
 		end
 
+	alpha_blend (a_x_dest, a_y_dest, a_width, a_height: INTEGER;
+			a_dc_src: WEL_DC; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER
+			a_blend_function: WEL_BLEND_FUNCTION): BOOLEAN is
+				-- Per pixel alpha blend.
+		require
+			exists: exists
+		local
+			l_result: INTEGER
+			l_err: WEL_ERROR
+		do
+			create l_err
+			l_err.reset_last_error_code
+			cwin_alpha_blend (item, a_x_dest, a_y_dest, a_width, a_height,
+								a_dc_src.item, a_x_src, a_y_src, a_width_src, a_height_src,
+								a_blend_function.item, $l_result)
+			if l_result = 0 and l_err.last_error_code /= 0 then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
 	mask_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			dc_source: WEL_DC; x_source, y_source: INTEGER;
 			mask_bitmap: WEL_BITMAP; x_mask, y_mask,
@@ -2040,6 +2082,28 @@ feature {NONE} -- Externals
 			"BitBlt"
 		end
 
+	cwin_alpha_blend (a_dc_dest: POINTER; a_x_dest, a_y_dest, a_width_dest, a_height_dest: INTEGER;
+						a_dc_src: POINTER; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER; a_blend_function: POINTER; a_result: TYPED_POINTER [INTEGER]) is
+			-- Alpha blend function.
+		external
+			"C inline use <Windows.h>"
+		alias
+			"[
+				AlphaBlend(
+					(HDC) $a_dc_dest,
+					(int) $a_x_dest,
+					(int) $a_y_dest,
+					(int) $a_width_dest,
+					(int) $a_height_dest,
+					(HDC) $a_dc_src,
+					(int) $a_x_src,
+					(int) $a_y_src,
+					(int) $a_width_src,
+					(int) $a_height_src,
+					*(BLENDFUNCTION*) $a_blend_function)
+			]"
+		end
+
 	cwin_stretch_di_bits (hdc: POINTER; xdest, ydest, cxdest, cydest, xsrc,
 			ysrc, cxsrc, cysrc: INTEGER; lpvBits,
 			lpbmi: POINTER; color_use, rop: INTEGER) is
@@ -2394,6 +2458,16 @@ feature {NONE} -- Externals
 				%VOID *, BITMAPINFO *, UINT)"
 		alias
 			"GetDIBits"
+		end
+
+	cwin_set_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
+			bits, bi: POINTER; useage: INTEGER) is
+			-- SDK SetDIBits
+		external
+			"C [macro <windows.h>] (HDC, HBITMAP, UINT, UINT, %
+				%VOID *, BITMAPINFO *, UINT)"
+		alias
+			"SetDIBits"
 		end
 
 	Opaque: INTEGER is

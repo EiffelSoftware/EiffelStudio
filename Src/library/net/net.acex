@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="net" uuid="65e3e91a-6c89-45b1-9f59-079a081d32dc" library_target="net">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="net" uuid="65e3e91a-6c89-45b1-9f59-079a081d32dc" library_target="net">
 	<target name="net">
 		<description>Net library: Networking library with serialization facilities.
 Copyright (c) 1984-2006, Eiffel Software and others.

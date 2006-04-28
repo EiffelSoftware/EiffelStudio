@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initlization
 
-	make (a_drawing_area: EV_DRAWING_AREA; a_draw_at_top: BOOLEAN) is
+	make (a_drawing_area: SD_NOTEBOOK_TAB; a_draw_at_top: BOOLEAN) is
 			-- Creation method
 		require
 			not_void: a_drawing_area /= Void
@@ -242,45 +242,45 @@ feature {NONE} -- Implementation
 			cleared: buffer_pixmap = Void
 		end
 
-	draw_pixmap_text_unselected (a_width: INTEGER) is
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_width: INTEGER) is
 			-- Draw pixmap and text when unselected.
 		require
-			not_void: buffer_pixmap /= Void
+			not_void: a_pixmap /= Void
 		do
-			buffer_pixmap.set_foreground_color (internal_shared.tab_text_color)
+			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 			if internal_draw_border_at_top then
 				-- Draw pixmap
-				buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				buffer_pixmap.draw_text_top_left (start_x_text_internal, gap_height, text)
+				a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				a_pixmap.draw_text_top_left (start_x_text_internal, gap_height, text)
 			else
 				-- Draw pixmap
-				buffer_pixmap.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
+				a_pixmap.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
 				-- Draw text
-				buffer_pixmap.draw_text_top_left (start_x_text_internal, 0, text)
+				a_pixmap.draw_text_top_left (start_x_text_internal, 0, text)
 			end
 		end
 
-	draw_pixmap_text_selected (a_width: INTEGER) is
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_width: INTEGER) is
 			-- Draw pixmap and text when selected.
 		require
-			not_void: buffer_pixmap /= Void
+			not_void: a_pixmap /= Void
 		do
-			if buffer_pixmap.height > 0 then
+			if a_pixmap.height > 0 then
 				-- Draw text
-				buffer_pixmap.set_foreground_color (internal_shared.tab_text_color)
+				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
 					if internal_draw_border_at_top then
-						buffer_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					else
-						buffer_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					end
 				end
 				-- Draw pixmap
 				if is_draw_pixmap then
 					if internal_draw_border_at_top then
-						buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
+						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
 					else
-						buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
+						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
 					end
 				end
 			end
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 	internal_draw_border_at_top: BOOLEAN
 			-- If Current draw border at top?
 
-	internal_drawing_area: EV_DRAWING_AREA
+	internal_drawing_area: SD_NOTEBOOK_TAB
 			-- Drawing area to draw tab.
 
 	internal_shared: SD_SHARED

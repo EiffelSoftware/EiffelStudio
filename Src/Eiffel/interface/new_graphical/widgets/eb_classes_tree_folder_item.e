@@ -516,9 +516,15 @@ feature {NONE} -- Implementation
 						Result.append (l_tmp)
 					end
 					Result.append ("%N")
-					Result.append (l_as.assembly_culture+"%N")
-					Result.append (l_as.assembly_version+"%N")
-					Result.append (l_as.assembly_public_key_token+"%N")
+					if l_as.assembly_culture /= Void then
+						Result.append (l_as.assembly_culture+"%N")
+					end
+					if l_as.assembly_version /= Void then
+						Result.append (l_as.assembly_version+"%N")
+					end
+					if l_as.assembly_public_key_token /= Void then
+						Result.append (l_as.assembly_public_key_token+"%N")
+					end
 				end
 				Result.append (data.actual_group.location.evaluated_path)
 			elseif data.is_library then

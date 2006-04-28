@@ -65,6 +65,14 @@ feature -- Element change
 			for_comment_set: for_comment = a_for_comment
 		end
 
+	set_seperate (a_sep: BOOLEAN) is
+			-- Set `seperate_comment' with `a_sep'
+		do
+			seperate_comment := a_sep
+		ensure
+			seperate_comment_set: seperate_comment = a_sep
+		end
+
 	set_current_class (a_class: like current_class) is
 			-- Set `a_class' to `current_class'.
 		do

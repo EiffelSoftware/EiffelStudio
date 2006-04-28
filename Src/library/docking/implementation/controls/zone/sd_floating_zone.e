@@ -397,7 +397,9 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_FLOATING_ZONE on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
 			end
-			docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+			if docker_mediator /= Void then
+				docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+			end
 		end
 
 	on_close is

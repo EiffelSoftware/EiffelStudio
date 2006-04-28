@@ -324,6 +324,22 @@ feature -- Access
 			end
 		end
 
+	property_name: STRING is
+			-- Name of the associated property (if any).
+		do
+			if indexes /= Void then
+				Result := indexes.property_name
+			end
+		end
+
+	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributes of a property (if any).
+		do
+			if indexes /= Void then
+				Result := indexes.property_custom_attributes
+			end
+		end
+
 feature -- Update
 
 	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is

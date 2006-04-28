@@ -172,6 +172,37 @@ feature -- Access
 			end
 		end
 
+	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Expression representing custom attributes for a property
+		do
+			Result := internal_custom_attributes (Property_metadata_header)
+		end
+
+	property_name: STRING is
+			-- Expression representing custom attributes for a property
+		local
+			i: INDEX_AS
+			s: STRING_AS
+			id: ID_AS
+			list: EIFFEL_LIST [ATOMIC_AS]
+		do
+			i := find_index_as (property_name_header)
+			if i /= Void then
+				list := i.index_list
+				if not list.is_empty then
+					s ?= list.first
+					if s /= Void then
+						Result := s.value
+					else
+						id ?= list.first
+						if id /= Void then
+							Result := id.string_value
+						end
+					end
+				end
+			end
+		end
+
 	has_global_once: BOOLEAN is
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
@@ -279,6 +310,9 @@ feature {NONE} -- Constants
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
 
+	Property_metadata_header: STRING is "property_metadata"
+			-- Index name which holds custom attributes applied to associated property.
+
 	Attribute_header: STRING is "attribute"
 			-- Index name which holds custom attributes applied to both implementation
 			-- and interface of current class.
@@ -301,6 +335,9 @@ feature {NONE} -- Constants
 
 	Once_status_header: STRING is "once_status"
 			-- Index name under which globalness of a once is specified.
+
+	Property_name_header: STRING is "property"
+			-- Index name which holds name of an associated property.
 
 	Enum_type_header: STRING is "enum_type"
 			-- Type of enum elements.

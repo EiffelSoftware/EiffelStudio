@@ -109,6 +109,20 @@ feature -- Access
 	rescue_clause: BYTE_LIST [BYTE_NODE]
 			-- List of INSTR_B instances: can be Void.
 
+	property_name_id: INTEGER
+			-- Name ID of an associated property (if any)
+
+	property_name: STRING is
+			-- Name of an associated property (if any)
+		do
+			if property_name_id > 0 then
+				Result := Names_heap.item (property_name_id)
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
 	clear_old_expressions is
 			-- Clear old_expressions
 		require
@@ -125,6 +139,9 @@ feature -- Access
 
 	custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Custom attributes if any.
+
+	property_custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Property custom attributes (if any)
 
 	is_external: BOOLEAN is
 			-- Is the current byte code relative to an external feature ?
@@ -158,6 +175,16 @@ feature -- Settings
 			feature_name_id := id
 		ensure
 			feature_name_id_set: feature_name_id = id
+		end
+
+	set_property_name_id (id: INTEGER) is
+			-- Set `property_name_id' to `id'.
+		require
+			valid_id: id > 0
+		do
+			property_name_id := id
+		ensure
+			property_name_id_set: property_name_id = id
 		end
 
 	set_real_body_id (i: INTEGER) is
@@ -228,6 +255,14 @@ feature -- Settings
 			custom_attributes := cas
 		ensure
 			custom_attributes_set: custom_attributes = cas
+		end
+
+	set_property_custom_attributes (cas: like property_custom_attributes) is
+			-- Assign `cas' to `property_custom_attributes'.
+		do
+			property_custom_attributes := cas
+		ensure
+			property_custom_attributes_set: property_custom_attributes = cas
 		end
 
 	set_rescue_clause (var: like rescue_clause) is

@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end
 
+	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -185,7 +190,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 					and then not context.current_feature.is_obsolete
 						-- Inherited code is checked in parent class.
 					-- and then not is_inherited
-					and then context.current_class.lace_class.options.warnings.is_enabled ("obsolete_feature")
+					and then context.current_class.lace_class.options.warnings.is_enabled (w_obsolete_feature)
 				then
 					create obs_warn
 					obs_warn.set_class (context.current_class)

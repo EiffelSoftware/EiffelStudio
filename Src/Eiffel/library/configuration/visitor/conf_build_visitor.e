@@ -225,7 +225,7 @@ feature -- Visit nodes
 					process_library (l_pre)
 				end
 
-				if not a_target.assemblies.is_empty and state.platform = pf_dotnet then
+				if not a_target.assemblies.is_empty and state.is_dotnet then
 					consume_assemblies (a_target)
 					process_with_old (a_target.assemblies, Void)
 				end
@@ -269,7 +269,7 @@ feature -- Visit nodes
 				end
 			end
 				-- at the complete end, if we are dotnet unload emitter
-			if a_target = application_target and state.platform = pf_dotnet and il_emitter /= Void then
+			if a_target = application_target and state.is_dotnet and il_emitter /= Void then
 				il_emitter.unload
 			end
 		ensure then
@@ -285,7 +285,7 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
-			if state.platform /= pf_dotnet then
+			if not state.is_dotnet then
 				add_error (create {CONF_ERROR_DOTNET})
 			end
 			if not is_error then
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 			-- or from `old_libraries'
 		require
 			an_assembly_not_void: an_assembly /= Void
-			dotnet: state.platform = pf_dotnet
+			dotnet: state.is_dotnet
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
 		local
@@ -929,7 +929,7 @@ feature {NONE} -- Implementation
 		require
 			an_assembly_ok: an_assembly /= Void and then an_assembly.guid /= Void
 			an_assembly_consumed: an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
-			dotnet: state.platform = pf_dotnet
+			dotnet: state.is_dotnet
 		local
 			l_path: STRING
 			l_reference_file: FILE_NAME
@@ -990,7 +990,7 @@ feature {NONE} -- Implementation
 			if not is_error then
 					-- holds the list of all assemblies
 				if not assemblies.is_empty then
-					if state.platform /= pf_dotnet then
+					if not state.is_dotnet then
 						add_error (create {CONF_ERROR_DOTNET})
 					else
 						from
@@ -1035,7 +1035,7 @@ feature {NONE} -- Implementation
 				loop
 					l_a := l_assemblies.item_for_iteration
 					if l_a.is_enabled (state) then
-						if state.platform /= pf_dotnet then
+						if not state.is_dotnet then
 							add_error (create {CONF_ERROR_DOTNET})
 						else
 							l_p := l_a.location.evaluated_path

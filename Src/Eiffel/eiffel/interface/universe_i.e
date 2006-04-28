@@ -71,9 +71,7 @@ feature -- Properties
 			l_pf: PLATFORM
 		do
 			create l_pf
-			if system.il_generation then
-				Result := pf_dotnet
-			elseif system.platform /= 0 then
+			if system.platform /= 0 then
 				Result := system.platform
 			else
 				if l_pf.is_unix then

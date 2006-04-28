@@ -92,7 +92,7 @@ feature {NONE} -- Retrieval
 					l_args.forth
 				end
 			end
-			if not l_last_found then
+			if not l_last_found and argument_combo.count > 0 then
 				argument_combo.first.disable_select
 			end
 			argument_combo.select_actions.resume

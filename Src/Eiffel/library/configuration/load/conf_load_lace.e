@@ -570,6 +570,16 @@ feature {NONE} -- Implementation of data retrieval
 									end
 								end
 							end
+						elseif l_name.is_equal ("syntax_warning") then
+							if current_options = Void then
+								create current_options
+							end
+							current_options.warnings.enable (w_syntax)
+						elseif l_name.is_equal ("old_verbatim_strings_warning") then
+							if current_options = Void then
+								create current_options
+							end
+							current_options.warnings.enable (w_old_verbatim_strings)
 						elseif valid_setting (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value)
 						end

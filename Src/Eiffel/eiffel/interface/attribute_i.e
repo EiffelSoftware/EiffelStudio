@@ -234,6 +234,8 @@ feature -- Element Change
 		do
 			create rep.make
 			transfer_to (rep)
+			rep.set_has_property_getter (has_property_getter)
+			rep.set_has_property_setter (has_property_setter)
 			rep.set_code_id (new_code_id)
 			Result := rep
 		end

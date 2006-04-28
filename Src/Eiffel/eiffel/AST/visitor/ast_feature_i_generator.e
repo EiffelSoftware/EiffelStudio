@@ -46,12 +46,31 @@ feature -- Factory
 			current_class := Void
 			Result := last_feature
 			last_feature := Void
-			if Result.is_once and then a_node.indexes /= Void then
-				l_once ?= Result
-				if l_once /= Void then
-					l_once.set_is_process_relative (a_node.indexes.has_global_once)
-				else
-					fixme ("support process-relative constants (e.g., string constants)")
+			if a_node.indexes /= Void then
+				if Result.is_once then
+					l_once ?= Result
+					if l_once /= Void then
+						l_once.set_is_process_relative (a_node.indexes.has_global_once)
+					else
+						fixme ("support process-relative constants (e.g., string constants)")
+					end
+				end
+				if a_node.property_name /= Void or else a_node.is_attribute then
+					Result.set_has_property (True)
+					if Result.type.is_void then
+						Result.set_has_property_setter (True)
+					else
+						Result.set_has_property_getter (True)
+						if Result.assigner_name_id /= 0 then
+							Result.set_has_property_setter (True)
+						end
+					end
+				end
+			elseif a_node.is_attribute then
+				Result.set_has_property (True)
+				Result.set_has_property_getter (True)
+				if Result.assigner_name_id /= 0 then
+					Result.set_has_property_setter (True)
 				end
 			end
 		end
@@ -60,7 +79,7 @@ feature {NONE} -- Implementation: Access
 
 	last_feature: FEATURE_I
 			-- Last computed feature
-		
+
 	current_class: CLASS_C
 			-- Class in which a FEATURE_AS is converted into a FEATURE_I.
 

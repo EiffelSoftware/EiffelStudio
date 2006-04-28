@@ -76,6 +76,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	feature_name: STRING is
@@ -651,6 +656,30 @@ feature -- Setting
 			-- is_selected := b
 		end
 
+	set_has_property (v: BOOLEAN) is
+			-- Set `has_property' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_property_mask)
+		ensure
+			has_property_set: has_property = v
+		end
+
+	set_has_property_getter (v: BOOLEAN) is
+			-- Set `has_property_getter' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_property_getter_mask)
+		ensure
+			has_property_getter_set: has_property_getter = v
+		end
+
+	set_has_property_setter (v: BOOLEAN) is
+			-- Set `has_property_setter' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_property_setter_mask)
+		ensure
+			has_property_setter_set: has_property_setter = v
+		end
+
 	set_rout_id_set (set: like rout_id_set) is
 			-- Assign `set' to `rout_id_set'.
 		do
@@ -1072,6 +1101,37 @@ feature -- Conveniences
 			Result := redefinable
 		end
 
+	has_property: BOOLEAN is
+			-- Does feature have an associated property?
+		do
+			Result := feature_flags & has_property_mask = has_property_mask
+		end
+
+	has_property_getter: BOOLEAN is
+			-- Does feature have an associated property getter?
+		do
+			Result := feature_flags & has_property_getter_mask = has_property_getter_mask
+		end
+
+	has_property_setter: BOOLEAN is
+			-- Does feature have an associated property setter?
+		do
+			Result := feature_flags & has_property_setter_mask = has_property_setter_mask
+		end
+
+	property_name: STRING is
+			-- IL property name.
+		do
+			if byte_server.has (body_index) then
+				Result := byte_server.item (body_index).property_name
+			end
+			if Result = Void then
+				Result := il_casing.pascal_casing (system.dotnet_naming_convention, feature_name, {IL_CASING_CONVERSION}.lower_case)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 	type: TYPE_A is
 			-- Type of feature
 		do
@@ -1256,6 +1316,14 @@ feature -- IL code generation
 					byte_code := Byte_server.item (body_index)
 					Result := byte_code.custom_attributes
 				end
+			end
+		end
+
+	property_custom_attributes: BYTE_LIST [BYTE_NODE] is
+			-- Custom attributes of Current if any.
+		do
+			if Byte_server.has (body_index) then
+				Result := Byte_server.item (body_index).property_custom_attributes
 			end
 		end
 
@@ -1880,21 +1948,23 @@ end
 			end
 		end
 
-	assigner_in (class_type: CLASS_TYPE): FEATURE_I is
-			-- Find an assigner in `class_type'.
+	property_setter_in (class_type: CLASS_TYPE): FEATURE_I is
+			-- Find an associated property setter in `class_type'.
 		require
-			class_type_not_void: class_type /= Void
+			class_type_attached: class_type /= Void
 		do
-			if assigner_name_id /= 0 then
+			if type.is_void then
+				Result := class_type.associated_class.feature_of_rout_id (rout_id_set.first)
+			elseif assigner_name_id /= 0 then
 				Result := class_type.associated_class.feature_of_rout_id
 					(written_class.feature_table.item_id (assigner_name_id).rout_id_set.first)
 			end
 		ensure
-			result_not_void: assigner_name_id /= 0 implies Result /= Void
+			result_attached: (type.is_void or else assigner_name_id /= 0) implies Result /= Void
 		end
 
-	ancestor_assigner_in (c: CLASS_C): FEATURE_I is
-			-- Find an assigner routine id in some ancestor class of the class `c'.
+	ancestor_property_setter_in (c: CLASS_C): FEATURE_I is
+			-- Find an property setter routine in some ancestor class of the class `c'.
 		require
 			c_not_void: c /= Void
 		local
@@ -1904,7 +1974,9 @@ end
 			c_id: like origin_class_id
 			f_id: like origin_feature_id
 		do
-			if assigner_name_id /= 0 then
+			if type.is_void then
+				Result := c.feature_of_rout_id (rout_id_set.first)
+			elseif assigner_name_id /= 0 then
 				Result := written_class.feature_table.item_id (assigner_name_id)
 			else
 				c_id := origin_class_id
@@ -1925,14 +1997,14 @@ end
 						parent_class := parent_classes.item
 						Result := parent_class.feature_of_rout_id (routine_id)
 						if Result /= Void then
-							Result := Result.ancestor_assigner_in (parent_class)
+							Result := Result.ancestor_property_setter_in (parent_class)
 						end
 						parent_classes.forth
 					end
 				end
 			end
 		ensure
-			result_not_void: assigner_name_id /= 0 implies Result /= Void
+			result_attached: (type.is_void or else assigner_name_id /= 0) implies Result /= Void
 		end
 
 	check_assigner (feature_table: FEATURE_TABLE) is
@@ -2396,7 +2468,7 @@ feature {NONE} -- Implementation
 
 	feature_flags: INTEGER_16
 			-- Property of Current feature, i.e. frozen,
-			-- infix, origin, prefix, selected.
+			-- infix, origin, prefix, selected...
 
 	is_frozen_mask: INTEGER_16 is 0x0001
 	is_origin_mask: INTEGER_16 is 0x0002
@@ -2411,6 +2483,9 @@ feature {NONE} -- Implementation
 	is_binary_mask: INTEGER_16 is 0x0400
 	is_unary_mask: INTEGER_16 is 0x0800
 	has_convert_mark_mask: INTEGER_16 is 0x1000
+	has_property_mask: INTEGER_16 is 0x2000
+	has_property_getter_mask: INTEGER_16 is 0x4000
+	has_property_setter_mask: INTEGER_16 is 0x8000
 			-- Mask used for each feature property.
 
 feature {INHERIT_TABLE} -- Access

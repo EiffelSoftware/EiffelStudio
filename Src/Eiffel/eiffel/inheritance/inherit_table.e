@@ -1262,6 +1262,14 @@ end;
 		do
 				-- It is no more an origin
 			f.set_is_origin (False)
+			f.set_has_property (False)
+			if a_class.is_single then
+					-- Feature getters and setters may have been generated.
+				if inherit_feat.inherited_info.parent.parent.is_single then
+					f.set_has_property_getter (False)
+					f.set_has_property_setter (False)
+				end
+			end
 
 				--  Check the routine table ids
 			rout_ids := inherit_feat.rout_id_set

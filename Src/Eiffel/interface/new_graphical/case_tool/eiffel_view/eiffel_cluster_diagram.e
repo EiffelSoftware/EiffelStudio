@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
-			l_cluster, es_cluster : ES_CLUSTER
+			es_cluster : ES_CLUSTER
 			cluster_fig, parent_fig: EIFFEL_CLUSTER_FIGURE
 			cluster_added: BOOLEAN
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
@@ -293,8 +293,8 @@ feature {NONE} -- Implementation
 					parent := l_clusters.item
 					if parent.is_needed_on_diagram then
 						parent_fig ?= figure_from_model (parent)
-						l_cluster := parent.sub_cluster_of (a_lib)
-						if l_cluster = Void then
+						es_cluster := parent.sub_cluster_of (a_lib)
+						if es_cluster = Void then
 							create es_cluster.make (a_lib)
 							model.add_cluster (es_cluster)
 							parent.extend (es_cluster)
@@ -307,11 +307,11 @@ feature {NONE} -- Implementation
 							end
 							cluster_added := True
 							context_editor.layout.layout_cluster (cluster_fig, 1)
-						elseif not l_cluster.is_needed_on_diagram then
-							l_cluster.enable_needed_on_diagram
-							enable_all_links (l_cluster)
-							model.add_children_relations (l_cluster, parent)
-							cluster_fig ?= figure_from_model (l_cluster)
+						elseif not es_cluster.is_needed_on_diagram then
+							es_cluster.enable_needed_on_diagram
+							enable_all_links (es_cluster)
+							model.add_children_relations (es_cluster, parent)
+							cluster_fig ?= figure_from_model (es_cluster)
 							cluster_fig.set_port_position (parent_fig.port_x, parent_fig.port_y)
 							check
 								fig_inserted: cluster_fig /= Void

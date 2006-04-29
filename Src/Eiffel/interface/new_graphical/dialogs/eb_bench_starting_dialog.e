@@ -136,12 +136,12 @@ feature {NONE} -- Initialization
 
 				-- Open projects item
 			if show_open_project_frame then
-				create open_project_frame.make_with_text (Interface_names.l_Open_project)
+				create open_project_frame.make_with_text (Interface_names.l_open_a_project)
 				create open_project_vb
 				open_project_vb.set_border_width (Layout_constants.Small_border_size)
 				open_project_vb.set_padding (Layout_constants.Default_border_size)
 
-				create open_epr_project_rb.make_with_text (Interface_names.l_Open_an_existing_project)
+				create open_epr_project_rb.make_with_text (Interface_names.l_open_project)
 				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
 				open_epr_project_rb.pointer_double_press_actions.force_extend (agent open_existing_project_not_listed)
 				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)

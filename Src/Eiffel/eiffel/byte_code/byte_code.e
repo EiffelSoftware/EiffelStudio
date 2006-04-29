@@ -119,8 +119,8 @@ feature -- Access
 				Result := Names_heap.item (property_name_id)
 			end
 		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
+			Result_not_void: property_name_id > 0 implies Result /= Void
+			Result_not_empty: property_name_id > 0 implies not Result.is_empty
 		end
 
 	clear_old_expressions is

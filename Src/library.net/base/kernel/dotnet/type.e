@@ -28,6 +28,14 @@ feature -- Conversion
 				{ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type)
 		end
 
+	adapted alias "[]" (g: G): G is
+			-- Adapts `g' or calls necessary conversion routine to adapt `g'
+		do
+			Result := g
+		ensure
+			adapted: equal (Result, g)
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is

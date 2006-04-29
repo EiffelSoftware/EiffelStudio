@@ -126,7 +126,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 				 * forward the message to the current window
 				 * (return 1), and we send an identical
 				 * message to the target window. */
-				SendMessage(hHookWindow, Msg, 0, dwMousePos);
+				PostMessage(hHookWindow, Msg, 0, dwMousePos);
 				return 1;
 			}
 			/* The current window IS the window that
@@ -137,34 +137,34 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 			break;
 
 		case WM_NCMOUSEMOVE:
-			SendMessage(hHookWindow, WM_MOUSEMOVE, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_MOUSEMOVE, 0, dwMousePos);
 			return 1;
 		case WM_NCLBUTTONDOWN:
-			SendMessage(hHookWindow, WM_LBUTTONDOWN, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_LBUTTONDOWN, 0, dwMousePos);
 			return 1;
 		case WM_NCMBUTTONDOWN:
-			SendMessage(hHookWindow, WM_MBUTTONDOWN, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_MBUTTONDOWN, 0, dwMousePos);
 			return 1;
 		case WM_NCRBUTTONDOWN:
-			SendMessage(hHookWindow, WM_RBUTTONDOWN, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_RBUTTONDOWN, 0, dwMousePos);
 			return 1;
 		case WM_NCLBUTTONUP:
-			SendMessage(hHookWindow, WM_LBUTTONUP, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_LBUTTONUP, 0, dwMousePos);
 			return 1;
 		case WM_NCMBUTTONUP:
-			SendMessage(hHookWindow, WM_MBUTTONUP, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_MBUTTONUP, 0, dwMousePos);
 			return 1;
 		case WM_NCRBUTTONUP:
-			SendMessage(hHookWindow, WM_RBUTTONUP, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_RBUTTONUP, 0, dwMousePos);
 			return 1;
 		case WM_NCLBUTTONDBLCLK:
-			SendMessage(hHookWindow, WM_LBUTTONDBLCLK, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_LBUTTONDBLCLK, 0, dwMousePos);
 			return 1;
 		case WM_NCMBUTTONDBLCLK:
-			SendMessage(hHookWindow, WM_MBUTTONDBLCLK, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_MBUTTONDBLCLK, 0, dwMousePos);
 			return 1;
 		case WM_NCRBUTTONDBLCLK:
-			SendMessage(hHookWindow, WM_RBUTTONDBLCLK, 0, dwMousePos);
+			PostMessage(hHookWindow, WM_RBUTTONDBLCLK, 0, dwMousePos);
 			return 1;
 	}
 	

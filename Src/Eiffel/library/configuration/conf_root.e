@@ -41,9 +41,12 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			cluster_set: not a_all_root implies cluster_name = a_cluster
-			class_set: not a_all_root implies class_name = a_class
+			class_name_not_void: class_name /= Void
+			class_set: not a_all_root implies class_name.is_equal (a_class.as_upper)
 			class_set: a_all_root implies class_name.is_equal ("ANY")
-			feature_set: not a_all_root implies feature_name = a_feature
+			feature_set: not a_all_root implies (a_feature = Void and feature_name = Void) or
+				(a_feature /= Void and then feature_name /= Void and then
+					feature_name.is_equal (a_feature.as_lower))
 			feature_set: a_all_root implies feature_name = Void
 		end
 

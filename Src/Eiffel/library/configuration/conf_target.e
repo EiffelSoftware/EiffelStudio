@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			create internal_settings.make (1)
 			system := a_system
 		ensure
-			name_set: name = a_name
+			name_set: name /= Void and then name.is_equal (a_name.as_lower)
 			system_set: system = a_system
 		end
 

@@ -294,6 +294,8 @@ feature {NONE} -- Implementation
 						Missing_source_file)
 			Result.extend (["Missing Compiler Path", "compiler", "Path to compiler setting is missing, installation is corrupted.", Error],
 						Missing_compiler_path)
+			Result.extend (["Failed Configuration Save", "compiler", "Configuration file could not be saved at {1}", Error],
+						Failed_config_save)
 
 			-- Compilation directory is missing
 

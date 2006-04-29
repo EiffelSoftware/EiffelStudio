@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			internal_config_values.extend ("1", "log_level")
 			internal_config_values.extend ("Eiffel Codedom Provider", "log_source_name")
 			internal_config_values.extend (".", "log_server_name")
-			internal_config_values.extend ("System", "log_name")
+			internal_config_values.extend ("Application", "log_name")
 			internal_config_values.extend ("generated", "default_system_name")
 			internal_config_values.extend ("NONE", "default_root_class")
 			if Default_metadata_cache_path /= Void then

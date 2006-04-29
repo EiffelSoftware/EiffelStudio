@@ -61,10 +61,10 @@ feature -- Access: environment variable
 			fname: FILE_NAME
 		once
 			if platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel56\build\Preferences"
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel57\build\Preferences"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
-				fname.set_file_name (".buildrc")
+				fname.set_file_name (".buildrc57")
 				Result := fname
 			end
 		end

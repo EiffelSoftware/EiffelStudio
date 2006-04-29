@@ -210,6 +210,11 @@ cluster
 				end
 		end
 
+	all process:		"$EIFFEL_SRC\library\process"
+		exclude
+			".svn"; "dotnet"; "unix"; 
+		end
+
 	all uuid:		"$EIFFEL_SRC\library\uuid"
 		exclude
 			".svn";

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	class_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
+		create {CLASS_INTERFACE_ATTRIBUTE}.make ({CLASS_INTERFACE_TYPE}.none) end,
 		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F") end
 
 class
@@ -91,7 +91,7 @@ feature -- Basic Exportations
 			if app_domain /= Void then
 				internal_marshalled_cache_manager := Void
 				if not app_domain.is_finalizing_for_unload then
-					feature {APP_DOMAIN}.unload (app_domain)
+					{APP_DOMAIN}.unload (app_domain)
 				end
 				app_domain := Void
 			end
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 				check
 					app_domain_not_exists: app_domain = Void
 				end
-				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
+				app_domain := {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + {GUID}.new_guid.to_string, Void, Void)
 
 					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
 				l_type := {COM_CACHE_MANAGER}
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 				check
 					l_lifetime_lease_not_void: l_lifetime_lease /= Void
 				end
-				l_time_span := l_lifetime_lease.renew (feature {TIME_SPAN}.from_days (356))
+				l_time_span := l_lifetime_lease.renew ({TIME_SPAN}.from_days (356))
 
 					-- Note: When trying to unwrap a dynamically created object using
 					-- APP_DOMAIN.create_instance_from, OBJECT_HANDLE.unwrap will try

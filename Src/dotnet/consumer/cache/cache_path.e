@@ -140,7 +140,7 @@ feature {CACHE_READER} -- Access
 				if internal_eiffel_cache_path.item = Void then
 					Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
 					if Result = Void then
-						l_registry_key := feature {REGISTRY}.local_machine
+						l_registry_key := {REGISTRY}.local_machine
 						l_registry_key := l_registry_key.open_sub_key ("SOFTWARE")
 						l_registry_key := l_registry_key.open_sub_key ("ISE")
 						l_registry_key := l_registry_key.open_sub_key ("Eiffel56")

@@ -29,7 +29,7 @@ feature -- Access
 			-- a different user causes a security exception. This means that concurrent
 			-- cache access by different users is not supported.
 		once
-			Result := feature {SYSTEM_STRING}.concat (("MetadataConsumer").to_cil,  feature {ENVIRONMENT}.user_name)
+			Result := {SYSTEM_STRING}.concat (("MetadataConsumer").to_cil,  {ENVIRONMENT}.user_name)
 		end
 
 indexing

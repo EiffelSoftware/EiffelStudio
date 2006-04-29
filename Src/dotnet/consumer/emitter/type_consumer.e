@@ -108,20 +108,20 @@ feature {NONE} -- Initialization
 					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
 				update_interface_members (t)
 			else
-				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.non_public)
-				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-						feature {BINDING_FLAGS}.static)
-				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public|
-						feature {BINDING_FLAGS}.static)
+				internal_members := t.get_members_binding_flags ({BINDING_FLAGS}.instance |
+						{BINDING_FLAGS}.static | {BINDING_FLAGS}.public |
+						{BINDING_FLAGS}.non_public)
+				internal_properties := t.get_properties_binding_flags ({BINDING_FLAGS}.instance |
+						{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public |
+						{BINDING_FLAGS}.static)
+				internal_events := t.get_events_binding_flags ({BINDING_FLAGS}.instance |
+						{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public|
+						{BINDING_FLAGS}.static)
 			end
 
 			internal_constructors := t.get_constructors_binding_flags (
-				feature {BINDING_FLAGS}.instance | feature {BINDING_FLAGS}.public |
-				feature {BINDING_FLAGS}.non_public)
+				{BINDING_FLAGS}.instance | {BINDING_FLAGS}.public |
+				{BINDING_FLAGS}.non_public)
 
 			internal_referenced_type := referenced_type_from_type (t)
 
@@ -232,7 +232,7 @@ feature -- Basic Operation
 					i = nb
 				loop
 					l_member := internal_members.item (i)
-					if l_member.member_type = feature {MEMBER_TYPES}.method then
+					if l_member.member_type = {MEMBER_TYPES}.method then
 						l_meth ?= l_member
 						check
 							is_method: l_meth /= Void
@@ -252,7 +252,7 @@ feature -- Basic Operation
 						else
 							-- The method will be added at the same time than the property or the event.
 						end
-					elseif l_member.member_type = feature {MEMBER_TYPES}.field then
+					elseif l_member.member_type = {MEMBER_TYPES}.field then
 						l_field ?= l_member
 						check
 							is_field: l_field /= Void
@@ -267,7 +267,7 @@ feature -- Basic Operation
 								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
 							end
 						end
-					elseif l_member.member_type = feature {MEMBER_TYPES}.property then
+					elseif l_member.member_type = {MEMBER_TYPES}.property then
 						l_property ?= l_member
 						check
 							is_property: l_property /= Void
@@ -276,7 +276,7 @@ feature -- Basic Operation
 						if cp_property /= Void then
 							l_properties.extend (cp_property)
 						end
-					elseif l_member.member_type = feature {MEMBER_TYPES}.event then
+					elseif l_member.member_type = {MEMBER_TYPES}.event then
 						l_event ?= l_member
 						check
 							is_event: l_event /= Void
@@ -384,7 +384,7 @@ feature -- Basic Operation
 				i = nb
 			loop
 				l_member := internal_members.item (i)
-				if l_member.member_type = feature {MEMBER_TYPES}.method then
+				if l_member.member_type = {MEMBER_TYPES}.method then
 					l_meth ?= l_member
 					check
 						is_method: l_meth /= Void
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.
-					l_value := feature {SYSTEM_CONVERT}.to_int_64_object (info.get_value (Void))
+					l_value := {SYSTEM_CONVERT}.to_int_64_object (info.get_value (Void))
 				else
 					l_value := info.get_value (Void)
 				end
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 					info.is_static,
 					info.is_abstract,
 					info.is_public,
-					(info.attributes.to_integer & feature {METHOD_ATTRIBUTES}.new_slot.to_integer) = feature {METHOD_ATTRIBUTES}.new_slot.to_integer,
+					(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
 					info.is_virtual,
 					property_or_event,
 					referenced_type_from_type (info.declaring_type))
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 					is_infix (info),
 					is_prefix (info),
 					info.is_public,
-					(info.attributes.to_integer & feature {METHOD_ATTRIBUTES}.new_slot.to_integer) = feature {METHOD_ATTRIBUTES}.new_slot.to_integer,
+					(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
 					info.is_virtual,
 					property_or_event,
 					referenced_type_from_type (info.declaring_type))
@@ -857,7 +857,7 @@ feature {NONE} -- Status Setting.
 	Void_type: SYSTEM_TYPE is
 			-- Void .NET type
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
 	Operator_name_prefix: SYSTEM_STRING is "op_"
@@ -946,7 +946,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			end
 
 			create l_members.make (internal_members.count + l_object_methods.count)
- 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
+ 			{SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
 
 			from
 				l_object_methods.start
@@ -978,42 +978,42 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			l_events: NATIVE_ARRAY [EVENT_INFO]
 		do
-			l_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public)
---			l_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---					feature {BINDING_FLAGS}.non_public)
-			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static)
-			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static)
+			l_members := t.get_members_binding_flags ({BINDING_FLAGS}.instance |
+					{BINDING_FLAGS}.static | {BINDING_FLAGS}.public |
+					{BINDING_FLAGS}.non_public)
+--			l_methods := t.get_methods_binding_flags ({BINDING_FLAGS}.instance |
+--					{BINDING_FLAGS}.static | {BINDING_FLAGS}.public |
+--					{BINDING_FLAGS}.non_public)
+			l_properties := t.get_properties_binding_flags ({BINDING_FLAGS}.instance |
+					{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public |
+					{BINDING_FLAGS}.static)
+			l_events := t.get_events_binding_flags ({BINDING_FLAGS}.instance |
+					{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public |
+					{BINDING_FLAGS}.static)
 
 
 				-- merge members.
 			create l_merged_members.make (internal_members.count + l_members.count)
-			feature {SYSTEM_ARRAY}.copy (internal_members, l_merged_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy (l_members, 0, l_merged_members, internal_members.count, l_members.count)
+			{SYSTEM_ARRAY}.copy (internal_members, l_merged_members, internal_members.count)
+			{SYSTEM_ARRAY}.copy (l_members, 0, l_merged_members, internal_members.count, l_members.count)
 			internal_members := l_merged_members
 
 --				-- merge methods.
 --			create l_merged_methods.make (internal_methods.count + l_methods.count)
---			feature {SYSTEM_ARRAY}.copy (internal_methods, l_merged_methods, internal_methods.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
+--			{SYSTEM_ARRAY}.copy (internal_methods, l_merged_methods, internal_methods.count)
+--			{SYSTEM_ARRAY}.copy_array_integer (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
 --			internal_methods := l_merged_methods
 
 				-- merge properties.
 			create l_merged_properties.make (internal_properties.count + l_properties.count)
-			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
-			feature {SYSTEM_ARRAY}.copy (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
+			{SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
+			{SYSTEM_ARRAY}.copy (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
 			internal_properties := l_merged_properties
 
 				-- merge events.
 			create l_merged_events.make (internal_events.count + l_events.count)
-			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
-			feature {SYSTEM_ARRAY}.copy (l_events, 0, l_merged_events, internal_events.count, l_events.count)
+			{SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
+			{SYSTEM_ARRAY}.copy (l_events, 0, l_merged_events, internal_events.count, l_events.count)
 			internal_events := l_merged_events
 			from
 				l_interfaces := t.get_interfaces
@@ -1038,9 +1038,9 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_methods: NATIVE_ARRAY [METHOD_INFO]
 			i, nb: INTEGER
 		once
-			l_type := feature {SYSTEM_TYPE}.get_type_string ("System.Object")
-			l_methods := l_type.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
-				feature {BINDING_FLAGS}.public)
+			l_type := {SYSTEM_TYPE}.get_type_string ("System.Object")
+			l_methods := l_type.get_methods_binding_flags ({BINDING_FLAGS}.instance |
+				{BINDING_FLAGS}.public)
 			create Result.make (l_methods.count)
 			from
 				i := l_methods.lower
@@ -1175,8 +1175,7 @@ feature {NONE} -- Added features for ENUM types.
 	integer_type: CONSUMED_REFERENCED_TYPE is
 			-- Referenced type of `System.Int32'.
 		do
-			Result := referenced_type_from_type (
-				feature {SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil))
+			Result := referenced_type_from_type ({SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil))
 		ensure
 			integer_type_not_void: integer_type /= Void
 		end
@@ -1191,10 +1190,10 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			if val.get_type.equals_type (Double_type) then
 				d ?= val
-				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
+				Result := bytes_to_string ({BIT_CONVERTER}.get_bytes_double (d))
 			elseif val.get_type.equals_type (Real_type) then
 				r ?= val
-				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
+				Result := bytes_to_string ({BIT_CONVERTER}.get_bytes_real (r))
 			else
 				create Result.make_from_cil (val.to_string)
 			end
@@ -1228,13 +1227,13 @@ feature {NONE} -- Added features for ENUM types.
 	Double_type: SYSTEM_TYPE is
 			-- typeof (double)
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
 		end
 
 	Real_type: SYSTEM_TYPE is
 			-- typeof (float)
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
 		end
 
 indexing

@@ -81,6 +81,7 @@ feature {NONE} -- Type generation
 			if l_parents /= Void then
 				from
 					l_count := l_parents.count
+					i := 0
 				until
 					i = l_count
 				loop

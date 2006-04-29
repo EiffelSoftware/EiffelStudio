@@ -29,6 +29,16 @@ feature -- Comparison
 				l_internal.generic_dynamic_type (other, 1)
 		end
 		
+feature -- Conversion
+
+	adapted alias "[]" (g: G): G is
+			-- Adapts `g' or calls necessary conversion routine to adapt `g'
+		do
+			Result := g
+		ensure
+			adapted: equal (Result, g)
+		end
+		
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

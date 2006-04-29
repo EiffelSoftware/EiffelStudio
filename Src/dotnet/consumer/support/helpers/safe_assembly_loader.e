@@ -29,7 +29,7 @@ feature -- Basic Operations
 				l_path := a_path.as_lower
 				Result := assembly_table.item (l_path)
 				if Result = Void then
-					Result := feature {ASSEMBLY}.load_from (l_path)
+					Result := {ASSEMBLY}.load_from (l_path)
 					if Result /= Void then
 						assembly_table.put (Result, l_path)
 					end
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			if not l_retried then
 				Result := assembly_table.item (a_name)
 				if Result = Void then
-					Result := feature {ASSEMBLY}.load (a_name)
+					Result := {ASSEMBLY}.load (a_name)
 					l_path := Result.location.to_lower
 					if not assembly_table.has (l_path) then
 						assembly_table.put (Result, l_path)
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 				l_path := a_name.to_string.to_lower
 				Result := assembly_table.item (l_path)
 				if Result = Void then
-					l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
+					l_new_domain := {APP_DOMAIN}.create_domain ("gac_loader")
 					Result := l_new_domain.load (a_name)
 					assembly_table.put (Result, l_path)
 					l_path := Result.location.to_lower
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if l_new_domain /= Void then
-				feature {APP_DOMAIN}.unload (l_new_domain)
+				{APP_DOMAIN}.unload (l_new_domain)
 			end
 		rescue
 			retried := True

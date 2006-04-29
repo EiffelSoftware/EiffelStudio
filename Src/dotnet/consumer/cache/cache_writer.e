@@ -87,7 +87,7 @@ feature -- Basic Operations
 		do
 			guard.lock
 			if not l_retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
 
 				l_reader := cache_reader
 				l_ca := l_reader.consumed_assembly_from_path (a_path)
@@ -111,7 +111,7 @@ feature -- Basic Operations
 					end
 
 					if l_ca /= Void and then l_ca.is_consumed then
-						feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("'{0}' has already been consumed. Checking...", a_path))
+						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("'{0}' has already been consumed. Checking...", a_path))
 
 							-- Examine existing data and modify
 						if l_assembly.global_assembly_cache then
@@ -119,19 +119,19 @@ feature -- Basic Operations
 								l_ca.set_gac_path (l_assembly_path)
 								l_ca.set_is_in_gac (True)
 								l_assembly_info_updated := True
-								feature {SYSTEM_DLL_TRACE}.write_line_string ("Assembly GAC path changed.")
+								{SYSTEM_DLL_TRACE}.write_line_string ("Assembly GAC path changed.")
 							end
 							if not l_ca.gac_path.is_equal (l_lower_path) and then not l_ca.location.is_equal (l_lower_path) then
 								l_ca.set_location (l_lower_path)
 								l_ca.set_is_in_gac (True)
 								l_assembly_info_updated := True
-								feature {SYSTEM_DLL_TRACE}.write_line_string ("Assembly location path changed.")
+								{SYSTEM_DLL_TRACE}.write_line_string ("Assembly location path changed.")
 							end
 						elseif not l_ca.location.is_equal (l_assembly_path) then
 							l_ca.set_location (l_assembly_path)
 							l_ca.set_is_in_gac (False)
 							l_assembly_info_updated := True
-							feature {SYSTEM_DLL_TRACE}.write_line_string ("Assembly is no longer in GAC.")
+							{SYSTEM_DLL_TRACE}.write_line_string ("Assembly is no longer in GAC.")
 								-- Do not reset GAC path, because it really does not affect anything.
 								-- Plus it should be preserved for future look ups, just because a GAC assembly in no longer
 								-- present doesn't mean that we cannot still look at it's consumed metadata
@@ -139,7 +139,7 @@ feature -- Basic Operations
 
 						if l_assembly_info_updated then
 								-- The assembly information requires updating
-							feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Storing changed assembly information for '{0}'.", a_path))
+							{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Storing changed assembly information for '{0}'.", a_path))
 							l_info := l_reader.info
 							l_info.update_assembly (l_ca)
 							update_info (l_info)
@@ -165,7 +165,7 @@ feature -- Basic Operations
 				l_assembly_info_updated := False
 
 				if l_ca /= Void and then l_ca.is_consumed then
-					feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path))
+					{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path))
 					if status_printer /= Void then
 						create l_string_tuple
 						l_string_tuple.put ("Up-to-date check: '" +	a_path +
@@ -206,7 +206,7 @@ feature -- Basic Operations
 				end
 
 				if l_consumer.successful then
-					feature {SYSTEM_DLL_TRACE}.write_line_string ("Processing assembly dependencies.")
+					{SYSTEM_DLL_TRACE}.write_line_string ("Processing assembly dependencies.")
 
 					l_names := l_assembly.get_referenced_assemblies
 					from
@@ -228,7 +228,7 @@ feature -- Basic Operations
 
 				end
 			else
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
 
 				if l_name /= Void then
 					set_error (Assembly_not_found_error, l_name.to_string)
@@ -268,7 +268,7 @@ feature -- Basic Operations
 			end
 			guard.lock
 			if not l_retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'", a_path))
 
 				l_reader := cache_reader
 				if status_printer /= Void then
@@ -297,7 +297,7 @@ feature -- Basic Operations
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to fully unconsuming the assembly '{0}'.", a_path))
+			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to fully unconsuming the assembly '{0}'.", a_path))
 			l_retried := True
 			retry
 		end
@@ -357,7 +357,7 @@ feature -- Basic Operations
 		do
 			guard.lock
 			if not l_retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path))
 
 				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists then
@@ -406,7 +406,7 @@ feature -- Basic Operations
 		do
 			guard.lock
 
-			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path))
+			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path))
 
 			l_info := cache_reader.info
 			l_assemblies := l_info.assemblies
@@ -442,7 +442,7 @@ feature -- Basic Operations
 			l_path := {PATH}.get_full_path (a_path)
 			Result := cache_reader.consumed_assembly_from_path (l_path)
 			if Result = Void then
-				l_id := feature {GUID}.new_guid.to_string
+				l_id := {GUID}.new_guid.to_string
 				l_id.to_upper
 				Result := create_consumed_assembly_from_path (l_id, l_path)
 				if Result /= Void then
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 
 				create l_dir_info.make (l_consume_path)
 				create l_file_info.make (l_ca.location)
-				Result := not l_dir_info.exists or feature {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+				Result := not l_dir_info.exists or {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 				if not Result then
 						-- User could have swaped file to an older version
 					l_new_ca := create_consumed_assembly_from_path ("dummy", a_path)
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 						-- now check in consumer is newer
 					l_so := Current
 					create l_file_info.make (l_so.get_type.assembly.location)
-					Result := feature {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+					Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 					if Result then
 						l_reason := "The consumer is newer than the generate contents."
 					end
@@ -526,8 +526,8 @@ feature {NONE} -- Implementation
 				check
 					l_reason_not_void: l_reason /= Void
 				end
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is considered stale.", a_path))
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("%TReason: {0}.", l_reason))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is considered stale.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("%TReason: {0}.", l_reason))
 			end
 		end
 
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 			guard.lock
 			if not l_retried then
 				l_reader := cache_reader
-				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path))
 				l_ca := consumed_assembly_from_path (a_path)
 				create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
 				if l_dir.exists then
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to remove assembly '{0}'.", a_path))
+			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to remove assembly '{0}'.", a_path))
 			l_retried := True
 			retry
 		end
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 		do
 			guard.lock
 
-			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.out))
+			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.out))
 
 			create l_serializer
 			l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 		do
 			guard.lock
 
-			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.out))
+			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.out))
 
 			l_clients := cache_reader.client_assemblies (a_assembly)
 			from

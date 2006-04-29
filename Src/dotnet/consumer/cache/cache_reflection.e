@@ -67,7 +67,7 @@ feature -- Initialization
 			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
 			l_cache: like types_cache
 		do
-			if feature {SYSTEM_FILE}.exists (a_path.to_cil) then
+			if {SYSTEM_FILE}.exists (a_path.to_cil) then
 				create l_raw_file.make (a_path)
 				l_raw_file.open_read
 				l_consumed_types ?= l_raw_file.retrieved

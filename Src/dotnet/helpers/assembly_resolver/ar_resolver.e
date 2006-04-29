@@ -105,11 +105,11 @@ feature -- Resolution
 			l_file_name: FILE_NAME
 			l_name: ASSEMBLY_NAME
 		do
-			feature {SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
+			{SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
 			if friendly_name /= Void then
-				feature {SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
+				{SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
 			end
-			feature {SYSTEM_DLL_TRACE}.write_line_string (".")
+			{SYSTEM_DLL_TRACE}.write_line_string (".")
 
 			l_paths := resolve_paths
 			l_cursor := l_paths.cursor
@@ -119,7 +119,7 @@ feature -- Resolution
 			until
 				l_paths.after or Result /= Void
 			loop
-				feature {SYSTEM_DLL_TRACE}.write_line_string ("Looking in '" + l_paths.item + "'.")
+				{SYSTEM_DLL_TRACE}.write_line_string ("Looking in '" + l_paths.item + "'.")
 
 				from
 					assembly_extensions.start
@@ -128,13 +128,13 @@ feature -- Resolution
 				loop
 					create l_file_name.make_from_string (l_paths.item)
 					l_file_name.set_file_name (a_name + assembly_extensions.item)
-					feature {SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
+					{SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
 					if (create {RAW_FILE}.make (l_file_name)).exists then
-						feature {SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
+						{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
 						l_name := get_assembly_name (l_file_name)
 						if l_name /= Void then
 							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
-								feature {SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
+								{SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
 								Result := load_assembly (l_file_name)
 							end
 						end
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := feature {ASSEMBLY}.load_from (a_path)
+				Result := {ASSEMBLY}.load_from (a_path)
 			end
 		rescue
 			retried := True

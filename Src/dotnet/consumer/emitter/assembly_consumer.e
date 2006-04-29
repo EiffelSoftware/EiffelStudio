@@ -62,8 +62,8 @@ feature -- Basic Operations
 			count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 		do
-			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Beginning consumption for assembly '{0}'.", ass.to_string)
-			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Consuming into '{0}'.", destination_path)
+			{SYSTEM_DLL_TRACE}.write_line_string_string ("Beginning consumption for assembly '{0}'.", ass.to_string)
+			{SYSTEM_DLL_TRACE}.write_line_string_string ("Consuming into '{0}'.", destination_path)
 
 			referenced_assemblies := ass.get_referenced_assemblies
 			reset_assembly_mapping
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			until
 				i > count
 			loop
-				l_ref_ass := feature {ASSEMBLY}.load_assembly_name (referenced_assemblies.item (i - 1))
+				l_ref_ass := {ASSEMBLY}.load_assembly_name (referenced_assemblies.item (i - 1))
 				check
 					non_void_referenced_assembly: l_ref_ass /= Void
 				end

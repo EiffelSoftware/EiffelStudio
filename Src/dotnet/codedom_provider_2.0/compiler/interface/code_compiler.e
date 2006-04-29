@@ -20,6 +20,7 @@ inherit
 	CODE_SHARED_REFERENCED_ASSEMBLIES
 	CODE_SHARED_GENERATION_HELPERS
 	CODE_SHARED_ACCESS_MUTEX
+	CONF_ACCESS
 
 create
 	default_create
@@ -277,12 +278,17 @@ feature {NONE} -- Implementation
 			l_creation_routines: HASH_TABLE [CODE_CREATION_ROUTINE, STRING]
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			l_found: BOOLEAN
-			l_ace_file: CODE_ACE_FILE
-			l_cluster: CODE_ACE_CLUSTER
+			l_system: CONF_SYSTEM
+			l_cluster: CONF_CLUSTER
 			l_precompiler: CODE_PRECOMPILER
 			l_precompile_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
 			l_references_list: CODE_REFERENCES_LIST
 			l_assembly_name, l_name: ASSEMBLY_NAME
+			l_target: CONF_TARGET
+			l_root: CONF_ROOT
+			l_option: CONF_OPTION
+			l_library: CONF_LIBRARY
+			l_conf_asm: CONF_ASSEMBLY
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -306,8 +312,7 @@ feature {NONE} -- Implementation
 				create source_generator.make (compilation_directory)
 
 				-- Finally initialize compiler
-				create l_ace_file.make
- 				ace_file_path := temp_files.add_extension ("ace")
+ 				ace_file_path := temp_files.add_extension ("acex")
 
 				if a_options.output_assembly /= Void then
 					system_path := a_options.output_assembly
@@ -323,9 +328,11 @@ feature {NONE} -- Implementation
 				if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
 					l_system_name.keep_head (l_system_name.count - 4)
 				end
-				l_ace_file.set_system_name (l_system_name)
-
-				create l_cluster.make ("root_cluster", compilation_directory)
+				l_system := (create {CONF_FACTORY}).new_system (l_system_name, (create {UUID_GENERATOR}).generate_uuid)
+				create l_target.make ("default", l_system)
+				l_system.add_target (l_target)
+				create l_cluster.make ("root_cluster", create {CONF_LOCATION}.make_from_path (compilation_directory, l_target), l_target)
+				l_target.add_cluster (l_cluster)
 
 				l_root_class := Compilation_context.root_class_name
 				l_creation_routine := Compilation_context.root_creation_routine_name
@@ -356,7 +363,7 @@ feature {NONE} -- Implementation
 							until
 								Resolver.generated_types.after
 							loop
-								l_cluster.add_visible_clause (Resolver.generated_types.item_for_iteration.eiffel_name)
+								l_cluster.add_visible (Resolver.generated_types.item_for_iteration.eiffel_name, Void, Void, Void)
 								Resolver.generated_types.forth
 							end
 						else
@@ -364,16 +371,20 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				l_ace_file.set_root_class_name (l_root_class)
-				l_ace_file.add_cluster (l_cluster)
 
 				if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") and l_creation_routine /= Void then
-					l_ace_file.set_root_creation_routine_name (l_creation_routine)
+					create l_root.make ("root_cluster", l_root_class, l_creation_routine, false)
+				else
+					create l_root.make ("root_cluster", l_root_class, Void, false)
 				end
 
-				l_ace_file.set_console_application (a_options.generate_executable)
-
-				l_ace_file.set_target_clr_version (Clr_version)
+				if a_options.generate_executable then
+					l_target.add_setting ("console_application", "yes")
+				else
+					l_target.add_setting ("console_application", "no")
+				end
+				
+				l_target.add_setting ("msil_clr_version", Clr_version)
 
 				-- Setup Precompile
 				l_precompile_file := Compilation_context.precompile_file
@@ -386,7 +397,7 @@ feature {NONE} -- Implementation
 					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
-						l_ace_file.set_precompile (l_precompiler.precompile_path)
+						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_LOCATION}.make_from_path (l_precompiler.precompile_path, l_target), l_target))
 						precompile_files := l_precompiler.precompile_files
 					else
 						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
@@ -458,23 +469,17 @@ feature {NONE} -- Implementation
 
 
 				-- Only add base clusters if requires
-				create l_cluster.make ("base", "$ISE_EIFFEL\library\base")
-				l_cluster.set_namespace ("EiffelSoftware.Library.Base")
-				l_cluster.add_exclude_clause ("table_eiffel3")
-				l_cluster.add_exclude_clause ("desc")
-				l_cluster.add_exclude_clause ("classic")
-				l_cluster.set_is_library
-				l_ace_file.add_cluster (l_cluster)
+				create l_library.make ("base", create {CONF_LOCATION}.make_from_path ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
+				create l_option
+				l_option.set_namespace ("EiffelSoftware.Library.Base")
+				l_library.set_options (l_option)
+				l_target.add_library (l_library)
 
-				create l_cluster.make ("base_net", "$ISE_EIFFEL\library.net\base")
-				l_cluster.set_namespace ("EiffelSoftware.Library.BaseNet")
-				l_cluster.set_is_library
-				l_ace_file.add_cluster (l_cluster)
-
-				create l_cluster.make ("codedom", "$ISE_EIFFEL\library.net\codedom")
-				l_cluster.set_namespace ("EiffelSoftware.Library.CodeDom")
-				l_cluster.set_is_library
-				l_ace_file.add_cluster (l_cluster)
+				create l_library.make ("codedom", create {CONF_LOCATION}.make_from_path ("$ISE_EIFFEL\library.net\codedom\codedom.acex", l_target), l_target)
+				create l_option
+				l_option.set_namespace ("EiffelSoftware.Library.CodeDom")
+				l_library.set_options (l_option)
+				l_target.add_library (l_library)
 
 				-- Add referenced assemblies
 				from
@@ -483,7 +488,9 @@ feature {NONE} -- Implementation
 					Referenced_assemblies.after
 				loop
 					l_assembly := Referenced_assemblies.item
-					l_ace_file.add_assembly (create {CODE_ACE_ASSEMBLY}.make (l_assembly.cluster_name, l_assembly.assembly.location, l_assembly.assembly_prefix))
+					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_LOCATION}.make_from_path (l_assembly.assembly.location, l_target), l_target)
+					l_conf_asm.set_name_prefix (l_assembly.assembly_prefix)
+					l_target.add_assembly (l_conf_asm)
 					Referenced_assemblies.forth
 				end
 
@@ -498,15 +505,22 @@ feature {NONE} -- Implementation
 
 				-- Setup miscelleaneous settings
 				if compiler_metadata_cache /= Void then
-					l_ace_file.set_metadata_cache_path (compiler_metadata_cache)
+					l_target.add_setting ("metadata_cache_path", compiler_metadata_cache)
 				end
 
-				l_ace_file.set_generate_debug_info (a_options.include_debug_information)
+				if a_options.include_debug_information then
+					l_target.add_setting ("line_generation", "yes")
+				end
 
-				l_ace_file.write (ace_file_path)
-				load_result_in_memory := a_options.generate_in_memory
-				cleanup -- to avoid error if a .epr file already exists in project folder
-				is_initialized := True
+				l_system.set_file_name (ace_file_path)
+				l_system.store
+				if l_system.store_successful then
+					load_result_in_memory := a_options.generate_in_memory
+					cleanup -- to avoid error if a .epr file already exists in project folder
+					is_initialized := True
+				else
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Failed_config_save, [ace_file_path])
+				end
 			end
 		ensure
 			non_void_temp_files: is_initialized implies temp_files /= Void

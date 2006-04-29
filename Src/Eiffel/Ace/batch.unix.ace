@@ -184,6 +184,11 @@ cluster
 			".svn"; "registry_implementation"; "graphical";
 		end
 
+	all process:		"$EIFFEL_SRC/library/process"
+		exclude
+			".svn"; "dotnet"; "windows";
+		end
+
 	all uuid:		"$EIFFEL_SRC/library/uuid"
 		exclude
 			".svn";

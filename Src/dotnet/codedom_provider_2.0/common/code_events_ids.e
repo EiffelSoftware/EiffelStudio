@@ -274,6 +274,9 @@ feature -- Compiler Errors
 	Missing_compiler_path: INTEGER is 9003
 			-- Compiler path setting is missing
 
+	Failed_config_save: INTEGER is 9004
+			-- Configuration file could not be saved
+
 feature -- Compiler Warnings
 
 	File_exists: INTEGER is 10001

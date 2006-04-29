@@ -50,11 +50,11 @@ feature -- Visit nodes
 			l_target: CONF_TARGET
 		do
 			create text.make_from_string (header)
-			append_text_indent ("<system%N")
-			append_text ("%T xmlns=%""+Namespace+"%"%N")
-			append_text ("%T xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"%N")
-			append_text ("%T xsi:schemaLocation=%""+Schema+"%"%N")
-			append_text ("%T name=%""+a_system.name+"%" uuid=%""+a_system.uuid.out+"%"")
+			append_text_indent ("<system")
+			append_text (" xmlns=%""+Namespace+"%"")
+			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
+			append_text (" xsi:schemaLocation=%""+Schema+"%"")
+			append_text (" name=%""+a_system.name+"%" uuid=%""+a_system.uuid.out+"%"")
 			l_target := a_system.library_target
 			if l_target /= Void then
 				append_text (" library_target=%""+l_target.name+"%"")

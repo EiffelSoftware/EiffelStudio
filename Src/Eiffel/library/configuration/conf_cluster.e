@@ -276,6 +276,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_group_not_void: a_group /= Void
 		do
+			if internal_dependencies = Void then
+				create internal_dependencies.make
+			end
 			internal_dependencies.extend (a_group)
 		ensure
 			added: internal_dependencies.has (a_group)

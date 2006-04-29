@@ -1451,7 +1451,7 @@ feature {NONE} -- Implementation
 			current_class_name_is_not_void: current_class_name /= Void
 			group_is_not_void: group /= Void
 			group_is_valid: group.is_valid
-			workbench_is_not_compiling: not workbench.is_compiling
+			workbench_is_not_compiling: not workbench.is_compiling or else workbench.last_reached_degree < 6
 		local
 			l_classes: LIST [CONF_CLASS]
 		do

@@ -123,7 +123,7 @@ feature -- Loading
 				else
 						-- Now we have to find `a_target_name' in this configuration file
 						-- if one is specified.
-					find_target_name (a_target_name, l_load_config.last_system.targets)
+					find_target_name (a_target_name, l_load_config.last_system.compilable_targets)
 					if not has_error then
 						lace.set_conf_system (l_load_config.last_system)
 						lace.set_target_name (target_name)

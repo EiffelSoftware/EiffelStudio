@@ -2,13 +2,11 @@ indexing
 	description: "[
 		Objects representing delayed calls to a function,
 		with some arguments possibly still open.
-		]"
-	legal: "See notice at end of class."
-	note: "[
-		Features are the same as those of ROUTINE,
+		Notes: Features are the same as those of ROUTINE,
 		with `apply' made effective, and the addition
 		of `last_result' and `item'.
 		]"
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			name := a_name.as_lower
 			uuid := an_uuid
 		ensure
-			name_set: name = a_name
+			name_set: name /= Void and then name.is_equal (a_name.as_lower)
 			uuid_set: uuid = an_uuid
 		end
 

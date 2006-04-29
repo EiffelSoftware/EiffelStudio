@@ -324,6 +324,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		local
 			l_cluster: CONF_CLUSTER
 		do
+			if not group.name_prefix.is_equal (a_group.name_prefix) or else not group.renaming.is_equal (a_group.renaming) then
+				date := 0
+			end
 			file_name := a_file_name
 			group := a_group
 			path := a_path

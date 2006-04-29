@@ -41,8 +41,8 @@ feature -- Visit nodes
 				until
 					l_ren.after
 				loop
-					if not l_classes.has (l_ren.item_for_iteration) then
-						add_error (create {CONF_ERROR_RENAM}.make (l_ren.item_for_iteration))
+					if not l_classes.has (l_ren.key_for_iteration) then
+						add_error (create {CONF_ERROR_RENAM}.make (l_ren.key_for_iteration))
 					end
 					l_ren.forth
 				end

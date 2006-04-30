@@ -215,6 +215,11 @@ cluster
 			".svn"; "dotnet"; "unix"; 
 		end
 
+	all thread:		"$EIFFEL_SRC\library\thread"
+		exclude
+			".svn"; 
+		end
+
 	all uuid:		"$EIFFEL_SRC\library\uuid"
 		exclude
 			".svn";

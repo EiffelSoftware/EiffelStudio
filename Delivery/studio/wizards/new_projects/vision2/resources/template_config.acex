@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
 	<target name="${FL_PROJECT_NAME}">
 		<description>This ace file has been generated for you by "The Vision2 Application Wizard".</description>
 		<root cluster="root_cluster" feature="make_and_launch" class="APPLICATION"/>

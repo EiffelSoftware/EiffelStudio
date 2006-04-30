@@ -189,6 +189,11 @@ cluster
 			".svn"; "dotnet"; "windows";
 		end
 
+	all thread:		"$EIFFEL_SRC/library/thread"
+		exclude
+			".svn";
+		end
+
 	all uuid:		"$EIFFEL_SRC/library/uuid"
 		exclude
 			".svn";

@@ -35,7 +35,6 @@ endiff &^
 clean_project &^
 remtrace Finalizing %@EXECSTR[cd]\%2 &^
 finalize %2 &^
-fff &^
 iff not exist EIFGEN\F_code\*.exe then &^
 remtrace *****Error***** %@EXECSTR[cd]\%2 won't finalize. &^
 echo *****Error***** %@EXECSTR[cd]\%2 won't finalize. >> %INIT_DIR\examples_errors.log  &^

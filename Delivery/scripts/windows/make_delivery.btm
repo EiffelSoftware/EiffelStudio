@@ -238,7 +238,6 @@ iff not defined NO_COMPILE then
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	clean_project
 	finalize zad_miner.acex
-	fff
 	cleanup_eiffel zad_miner zad_miner.exe
 	iff not exist zad_miner.exe then
 		echo Couldnt finalize zad_miner.exe.

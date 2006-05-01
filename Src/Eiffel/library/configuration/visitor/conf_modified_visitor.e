@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not l_class.is_removed then
-						l_name := l_class.name
+						l_name := l_class.renamed_name
 						if not l_new_classes.has (l_name) then
 							l_new_classes.force (l_class, l_name)
 						else

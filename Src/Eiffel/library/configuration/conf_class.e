@@ -323,8 +323,15 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_path_not_void: a_path /= Void
 		local
 			l_cluster: CONF_CLUSTER
+			l_old_ren, l_ren: CONF_HASH_TABLE [STRING, STRING]
 		do
-			if not group.name_prefix.is_equal (a_group.name_prefix) or else not group.renaming.is_equal (a_group.renaming) then
+			l_old_ren := group.renaming
+			l_ren := a_group.renaming
+			if
+				not equal (group.name_prefix, a_group.name_prefix) or else
+				not (l_old_ren = Void and l_ren = Void or else (l_old_ren /= Void and l_ren /= Void and then
+				equal (l_ren.item (name), l_old_ren.item (name))))
+			then
 				date := 0
 			end
 			file_name := a_file_name

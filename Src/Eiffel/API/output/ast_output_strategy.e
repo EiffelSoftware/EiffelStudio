@@ -12,6 +12,21 @@ deferred class
 inherit
 	AST_VISITOR
 
+feature -- Status report
+
+	display_type_conversion: BOOLEAN assign set_show_convertion
+			-- Do we show type convertion routines?
+
+feature -- Status change
+
+	set_show_convertion (a_show: BOOLEAN) is
+			-- Set `show_convertion' with `a_show'
+		do
+			display_type_conversion := a_show
+		ensure
+			show_convertion_set: display_type_conversion = a_show
+		end
+
 feature -- Access
 
 	text_formatter: TEXT_FORMATTER;

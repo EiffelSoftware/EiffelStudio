@@ -6,6 +6,7 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
+
 		<file_rule>
 			<exclude>/\.svn</exclude>
 			<exclude>/EIFGEN.{0,1}$</exclude>
@@ -14,6 +15,13 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
 		</file_rule>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
+
 		<external_include location="$(ISE_LIBRARY)\library\vision2\spec\include">
 			<condition><platform value="windows"/></condition>
 		</external_include>
@@ -26,16 +34,24 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 		<external_object location="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --object`">
 			<condition><platform excluded_value="windows"/></condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\mtvision2.lib">
-			<condition>
-				<platform value="windows"/>
-				<multithreaded value="true"/>
-			</condition>
-		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\vision2.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\mtvision2.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\ilvision2.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\zlib.lib">
@@ -44,6 +60,7 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib">
 		<condition><platform value="windows"/></condition>
 		</external_object>
+		
 		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex" readonly="true">
 			<condition><platform value="windows"/></condition>
@@ -61,7 +78,6 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 				<exclude>/gtk$</exclude>
 			</file_rule>
 		</cluster>
-		
 		<cluster name="implementation_gtk" location="implementation" recursive="true">
 			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
@@ -69,9 +85,22 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			</file_rule>
 		</cluster>
 		<cluster name="implementation_mswin" location="implementation" recursive="true">
-			<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="false"/>
+			</condition>
 			<file_rule>
-				<exclude>/gtk.{0,1}$</exclude>
+				<exclude>/gtk.?$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="implementation_dotnet" location="implementation" recursive="true">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
+			</condition>
+			<file_rule>
+				<exclude>/gtk.?$</exclude>
+				<exclude>/ev_pixmap_imp_loader.e$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="components" location="components" recursive="true"/>
@@ -79,5 +108,8 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 		<cluster name="obsolete" location="obsolete" recursive="true"/>
 		<cluster name="perlscript" location="perlscript" recursive="true"/>
 		<cluster name="release" location="release" recursive="true"/>
+		<cluster name="vision2_net" location="$ISE_LIBRARY\library.net\vision2\" recursive="true">
+			<condition><dotnet value="true"/></condition>
+		</cluster>
 	</target>
 </system>

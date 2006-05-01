@@ -144,7 +144,7 @@ feature -- Action
 			l_dir_name: DIRECTORY_NAME
 			l_fname: FILE_NAME
 			vd21: VD21
-			l_warnings: CONF_WARNING
+			l_options: CONF_OPTION
 		do
 			create file.make (file_name)
 			file.open_read
@@ -170,10 +170,10 @@ feature -- Action
 
 					-- Call Eiffel parser
 				parser := Eiffel_parser
-				l_warnings := lace_class.options.warnings
-				parser.set_has_syntax_warning (l_warnings.is_enabled (w_syntax))
+				l_options := lace_class.options
+				parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
 				parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
-				parser.set_has_old_verbatim_strings_warning (l_warnings.is_enabled (w_old_verbatim_strings))
+				parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))
 				Inst_context.set_group (cluster)
 				parser.parse (file)
 				Result := parser.root_node

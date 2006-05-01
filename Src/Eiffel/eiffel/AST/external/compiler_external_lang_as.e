@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 		do
 				-- FIXME: Manu 10/09/2003. We do not yet raise a warning for 5.4
 				-- as new external syntax is not clearly specified.
-			if False and system.current_class.lace_class.options.warnings.is_enabled (w_syntax) then
+			if False and system.current_class.lace_class.options.is_warning_enabled (w_syntax) then
 				create l_warning.make (
 					eiffel_parser.line,
 					eiffel_parser.column,

@@ -884,12 +884,13 @@ feature {NONE} -- Implementation attribute processing
 			group: a_class_option implies current_group /= Void
 			target: current_target /= Void
 		local
-			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class: STRING
+			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class, l_warning: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
 			l_optimize := current_attributes.item (at_optimize)
 			l_debug := current_attributes.item (at_debug)
+			l_warning := current_attributes.item (at_warning)
 			l_namespace := current_attributes.item (at_namespace)
 			l_class := current_attributes.item (at_class)
 
@@ -916,6 +917,13 @@ feature {NONE} -- Implementation attribute processing
 					current_option.enable_debug
 				else
 					current_option.disable_debug
+				end
+			end
+			if l_warning /= Void and then l_warning.is_boolean then
+				if l_warning.to_boolean then
+					current_option.enable_warning
+				else
+					current_option.disable_warning
 				end
 			end
 			if l_namespace /= Void then
@@ -1480,12 +1488,14 @@ feature {NONE} -- Implementation state transitions
 				-- * profile
 				-- * optimize
 				-- * debug
+				-- * warning
 				-- * namespace
-			create l_attr.make (6)
+			create l_attr.make (7)
 			l_attr.force (at_trace, "trace")
 			l_attr.force (at_profile, "profile")
 			l_attr.force (at_optimize, "optimize")
 			l_attr.force (at_debug, "debug")
+			l_attr.force (at_warning, "warning")
 			l_attr.force (at_namespace, "namespace")
 			Result.force (l_attr, t_option)
 
@@ -1729,7 +1739,8 @@ feature {NONE} -- Implementation constants
 	at_new_name,
 	at_group,
 	at_succeed,
-	at_working_directory: INTEGER is unique
+	at_working_directory,
+	at_warning: INTEGER is unique
 
 feature -- Assertions
 

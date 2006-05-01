@@ -87,10 +87,13 @@ feature -- Basic operation
 					end
 
 				end
-				if current_options /= Void then
-					current_target.set_options (current_options)
-					current_options := Void
+				if current_options = Void then
+					create current_options
 				end
+				current_options.enable_warning
+				current_target.set_options (current_options)
+				current_options := Void
+
 				process_root (l_ast.root)
 				process_externals (l_ast.externals)
 				if l_ast.clusters /= Void then
@@ -570,16 +573,16 @@ feature {NONE} -- Implementation of data retrieval
 									end
 								end
 							end
-						elseif l_name.is_equal ("syntax_warning") then
+						elseif l_name.is_equal ("syntax_warning") and l_value /= Void then
 							if current_options = Void then
 								create current_options
 							end
-							current_options.warnings.enable (w_syntax)
-						elseif l_name.is_equal ("old_verbatim_strings_warning") then
+							current_options.add_warning (w_syntax, l_value.is_yes)
+						elseif l_name.is_equal ("old_verbatim_strings_warning") and l_value /= Void then
 							if current_options = Void then
 								create current_options
 							end
-							current_options.warnings.enable (w_old_verbatim_strings)
+							current_options.add_warning (w_old_verbatim_strings, l_value.is_yes)
 						elseif valid_setting (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value)
 						end

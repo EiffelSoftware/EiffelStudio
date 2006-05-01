@@ -606,6 +606,9 @@ feature {NONE} -- Implementation
 				if an_options.is_debug_configured then
 					append_text (" debug=%""+an_options.is_debug.out.as_lower+"%"")
 				end
+				if an_options.is_warning_configured then
+					append_text (" warning=%""+an_options.is_warning.out.as_lower+"%"")
+				end
 				l_str := an_options.namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+l_str+"%"")
@@ -649,18 +652,19 @@ feature {NONE} -- Implementation
 					append_tag ("assertions", Void, l_a_name, l_a_val)
 				end
 
-				if an_options.warnings /= Void then
-					l_warnings := an_options.warnings.internal_warnings
-				end
+				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
+					create l_sort_lst.make
+					l_sort_lst.fill (l_warnings.current_keys)
+					l_sort_lst.sort
 					from
-						l_warnings.start
+						l_sort_lst.start
 					until
-						l_warnings.after
+						l_sort_lst.after
 					loop
-						append_text_indent ("<warning name=%""+l_warnings.key_for_iteration.as_lower+"%"")
-						append_text (" enabled=%""+l_warnings.item_for_iteration.out.as_lower+"%"/>%N")
-						l_warnings.forth
+						append_text_indent ("<warning name=%""+l_sort_lst.item+"%"")
+						append_text (" enabled=%""+l_warnings.item (l_sort_lst.item).out.as_lower+"%"/>%N")
+						l_sort_lst.forth
 					end
 				end
 

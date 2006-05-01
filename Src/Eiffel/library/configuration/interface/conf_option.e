@@ -10,22 +10,8 @@ class
 
 inherit
 	CONF_VALIDITY
-		redefine
-			default_create
-		end
 
 	CONF_ACCESS
-		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Create.
-		do
-			create warnings.make
-		end
 
 feature -- Status
 
@@ -40,6 +26,9 @@ feature -- Status
 
 	is_debug_configured: BOOLEAN
 			-- Is `is_debug' configured?
+
+	is_warning_configured: BOOLEAN
+			-- Is `is_warning' configured?
 
 feature -- Status update
 
@@ -71,13 +60,18 @@ feature -- Status update
 			is_debug := False
 		end
 
+	unset_warning is
+			-- Unset warning.
+		do
+			is_warning_configured := False
+			is_warning := False
+		end
+
+
 feature -- Access, stored in configuration file
 
 	assertions: CONF_ASSERTIONS
 			-- The assertion settings.
-
-	warnings: CONF_WARNING
-			-- Warning configuration.
 
 	namespace: STRING
 			-- .NET namespace.
@@ -94,13 +88,19 @@ feature -- Access, stored in configuration file
 	is_debug: BOOLEAN
 			-- Do debug?
 
+	is_warning: BOOLEAN
+			-- Show warnings?
+
 	description: STRING
 			-- A description about the options.
 
 feature -- Access, stored in configuration file.
 
 	debugs: CONF_HASH_TABLE [BOOLEAN, STRING]
-			-- The debug settings.
+			-- Debug settings.
+
+	warnings: CONF_HASH_TABLE [BOOLEAN, STRING]
+			-- Warning settings.
 
 feature -- Access queries
 
@@ -110,6 +110,13 @@ feature -- Access queries
 			Result := is_debug and then debugs /= Void and then debugs.item (a_debug)
 		end
 
+	is_warning_enabled (a_warning: STRING): BOOLEAN is
+			-- Is `a_warning' enabled?
+		require
+			a_warning_valid: valid_warning (a_warning)
+		do
+			Result := is_warning and then (warnings = Void or else (not warnings.has (a_warning) or else warnings.found_item))
+		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.
 
@@ -119,14 +126,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			assertions := an_assertions
 		ensure
 			assertions_set: assertions = an_assertions
-		end
-
-	set_debugs (a_debugs: like debugs) is
-			-- Set `debugs' to `a_debugs'.
-		do
-			debugs := a_debugs
-		ensure
-			debugs_set: debugs = a_debugs
 		end
 
 	add_debug (a_name: STRING; an_enabled: BOOLEAN) is
@@ -143,14 +142,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	set_warnings (a_warnings: like warnings) is
-			-- Set `warnings' to `a_warnings'.
-		do
-			warnings := a_warnings
-		ensure
-			warnings_set: warnings = a_warnings
-		end
-
 	add_warning (a_name: STRING; an_enabled: BOOLEAN) is
 			-- Add a warning.
 		require
@@ -159,15 +150,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			valid_warning: valid_warning (a_name)
 		do
 			if warnings = Void then
-				create warnings.make
+				create warnings.make (1)
 			end
-			if an_enabled then
-				warnings.enable (a_name)
-			else
-				warnings.disable (a_name)
-			end
+			warnings.force (an_enabled, a_name)
 		ensure
-			added: warnings.is_enabled (a_name) = an_enabled
+			added: warnings.has (a_name) and then warnings.item (a_name) = an_enabled
 		end
 
 	set_namespace (a_namespace: like namespace) is
@@ -260,6 +247,28 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			not_is_debug: not is_debug
 		end
 
+	enable_warning is
+			-- Set `is_warning' to true.
+			-- Enables warning clauses in general.
+		do
+			is_warning_configured := True
+			is_warning := True
+		ensure
+			is_warning_configured: is_warning_configured
+			is_warning: is_warning
+		end
+
+	disable_warning is
+			-- Set `is_warning' to false.
+			-- Disables all warning clauses.
+		do
+			is_warning_configured := True
+			is_warning := False
+		ensure
+			is_warning_configured: is_warning_configured
+			not_is_warning: not is_warning
+		end
+
 	set_description (a_description: like description) is
 			-- Set `description' to `a_description'.
 		do
@@ -283,6 +292,8 @@ feature -- Merging
 
 	merge (other: like Current) is
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
+		local
+			l_tmp: like debugs
 		do
 			if other /= Void then
 				if assertions = Void then
@@ -290,8 +301,18 @@ feature -- Merging
 				end
 				if debugs = Void then
 					debugs := other.debugs
+				elseif other.debugs /= Void then
+					l_tmp := other.debugs.twin
+					l_tmp.merge (debugs)
+					debugs := l_tmp
 				end
-				warnings.merge (other.warnings)
+				if warnings = Void then
+					warnings := other.warnings
+				elseif other.warnings /= Void then
+					l_tmp := other.warnings.twin
+					l_tmp.merge (warnings)
+					warnings := l_tmp
+				end
 				if namespace = Void then
 					namespace := other.namespace
 				end
@@ -311,11 +332,12 @@ feature -- Merging
 					is_debug_configured := other.is_debug_configured
 					is_debug := other.is_debug
 				end
+				if not is_warning_configured then
+					is_warning_configured := other.is_warning_configured
+					is_warning := other.is_warning
+				end
 			end
 		end
-
-invariant
-	warnings_not_void: warnings /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

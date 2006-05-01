@@ -39,6 +39,7 @@ feature -- Access
 		local
 			l_class: CLASS_C
 			old_item: LEAF_AS_LIST
+			l_text: STRING
 		do
 				-- 02/06/2006 Patrickr
 				-- On a read only project we can't write, so we just store the match list in the cash.
@@ -51,21 +52,26 @@ feature -- Access
 			l_class := system.class_of_id (an_id)
 				-- lazy computation, create match list if needed
 			if Result = Void or else Result.generated /= l_class.lace_class.date then
-				matchlist_scanner.scan_string (l_class.text)
-				Result := matchlist_scanner.match_list
-				Result.set_class_id (an_id)
-				Result.set_generated (l_class.lace_class.date)
-					-- 02/06/2006 Patrickr
-					-- On a read only project we can't write, so we just store the match list in the cash.
-					-- It would be better to have a more intelligent store mechanism, that would do this.
-				if not system.eiffel_project.is_read_only then
-					put (Result)
-				else
-					old_item := cache.item_id (an_id)
-					if old_item = Void then
-						cache.force (Result)
+				l_text := l_class.text
+					-- If the file associated with `l_class' has been removed we might get no text
+					-- thus the protection.
+				if l_text /= Void then
+					matchlist_scanner.scan_string (l_class.text)
+					Result := matchlist_scanner.match_list
+					Result.set_class_id (an_id)
+					Result.set_generated (l_class.lace_class.date)
+						-- 02/06/2006 Patrickr
+						-- On a read only project we can't write, so we just store the match list in the cash.
+						-- It would be better to have a more intelligent store mechanism, that would do this.
+					if not system.eiffel_project.is_read_only then
+						put (Result)
 					else
-						cache.change_last_item (Result)
+						old_item := cache.item_id (an_id)
+						if old_item = Void then
+							cache.force (Result)
+						else
+							cache.change_last_item (Result)
+						end
 					end
 				end
 			end

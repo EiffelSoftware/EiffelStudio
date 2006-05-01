@@ -14,7 +14,6 @@ call retrieve_flat_short.bat >>& %INSTALL_LOG
 cdd %EIFFEL_SRC\vision2_tour
 clean_project
 finalize vision2_tour.acex
-fff
 cleanup_eiffel vision2_tour vision2_tour.exe
 iff not exist vision2_tour.exe then
 	remtrace Could not finalize a new vision2_tour

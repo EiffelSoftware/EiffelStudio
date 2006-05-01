@@ -30,6 +30,7 @@ feature -- Basic operations
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create_thread (Current, $thr_main)
+			thread_id := last_created_thread
 		end
 
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
@@ -39,6 +40,7 @@ feature -- Basic operations
 		do
 			create_thread_with_args (Current, $thr_main,
 						attr.priority, attr.scheduling_policy, attr.detached)
+			thread_id := last_created_thread
 		end
 
 feature {NONE} -- Implementation

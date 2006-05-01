@@ -35,7 +35,6 @@ co %DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
 finalize doc_builder.acex
-fff
 cleanup_eiffel doc_builder doc_builder.exe
 iff not exist doc_builder.exe then
 	remtrace Couldnt generate doc_builder.exe

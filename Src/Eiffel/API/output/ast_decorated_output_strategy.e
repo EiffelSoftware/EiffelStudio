@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 		do
 			text_formatter_decorator := a_text_formatter
 			create locals_for_current_feature.make (10)
+			create error_message.make (5)
 		end
 
 feature -- Formatting
@@ -134,10 +135,11 @@ feature -- Element change
 	wipe_out_error is
 			-- Wipe out errors.
 		do
-			has_error := False
-			error_message := Void
+			has_error_internal := False
+			error_message.wipe_out
 		ensure
-			not_has_error: not has_error
+			not_has_error: not has_error_internal
+			error_message_is_empty: error_message.is_empty
 		end
 
 feature -- Access
@@ -162,15 +164,14 @@ feature -- Access
 	last_type: TYPE_A
 			-- Last type we explained.
 
-	has_error: BOOLEAN
-			-- If error when processing.
-			-- For the case we only have old AST,
-			-- `last_type' can not be evaluated correctly.
-			-- If `has_error', we give up type evaluating and send
-			-- simple text to output.
-
-	error_message: STRING
+	error_message: ARRAYED_LIST [STRING]
 			-- Error message.
+
+	has_error: BOOLEAN is
+			-- Did an error happen?
+		do
+			Result := not error_message.is_empty
+		end
 
 feature {NONE} -- Access
 
@@ -182,6 +183,13 @@ feature {NONE} -- Access
 
 	processing_locals: BOOLEAN;
 
+	has_error_internal: BOOLEAN
+			-- If error when processing.
+			-- For the case we only have old AST,
+			-- `last_type' can not be evaluated correctly.
+			-- If `has_error', we give up type evaluating and send
+			-- simple text to output.
+
 feature {NONE} -- Error handling
 
 	set_error_message (a_str: STRING) is
@@ -189,9 +197,9 @@ feature {NONE} -- Error handling
 		require
 			a_str_not_void: a_str /= Void
 		do
-			error_message := "-- Details: " + 	a_str
+			error_message.extend (a_str)
 		ensure
-			error_message_not_void: error_message /= Void
+			error_message_extended: error_message.has (a_str)
 		end
 
 feature -- Roundtrip
@@ -308,12 +316,12 @@ feature {NONE} -- Implementation
 			check
 				l_rout_ids_not_void: l_rout_ids /= Void
 			end
-			if not has_error then
+			if not has_error_internal then
 				l_feat := feature_in_class (l_static_type.actual_type.associated_class, l_rout_ids)
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_dot)
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.feature_name)
@@ -334,12 +342,12 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.commit
 			end
-			if not has_error then
+			if not has_error_internal then
 				if l_feat.is_procedure then
 					reset_last_class_and_type
 				else
 					l_type := l_feat.type.actual_type
-					if l_type.has_formal_generic then
+					if l_type.is_loose then
 						last_type := l_type.instantiation_in (l_static_type, last_class.class_id)
 					else
 						last_type := l_type
@@ -431,7 +439,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_r_bracket)
 			end
-			if not has_error then
+			if not has_error_internal then
 				create l_tuple_type.make (system.tuple_id, expr_types (l_as.expressions))
 				last_type := l_tuple_type
 			end
@@ -579,10 +587,10 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_keyword_text (ti_assign_keyword, Void)
 				text_formatter_decorator.put_space
-				if not has_error then
+				if not has_error_internal then
 					l_feat := current_assigner_feature
 				end
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_as.assigner, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.assigner)
@@ -598,9 +606,9 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_result, Void)
 			end
-			if not has_error then
+			if not has_error_internal then
 				l_feat := feature_in_class (current_class, current_feature.rout_id_set)
-				if not has_error then
+				if not has_error_internal then
 					last_type := l_feat.type
 				end
 			end
@@ -638,7 +646,7 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.process_local_text (l_as.access_name)
 				end
 			else
-				if not has_error then
+				if not has_error_internal then
 					if last_type /= Void then
 						last_type := last_type.actual_type
 						if last_type.is_formal then
@@ -662,7 +670,7 @@ feature {NONE} -- Implementation
 						if l_as.is_qualified or text_formatter_decorator.dot_needed then
 							text_formatter_decorator.process_symbol_text (ti_dot)
 						end
-						if not has_error then
+						if not has_error_internal then
 							text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 						else
 							text_formatter_decorator.process_basic_text (l_as.access_name)
@@ -697,7 +705,7 @@ feature {NONE} -- Implementation
 					last_type := locals_for_current_feature.found_item
 				end
 			elseif l_as.is_tuple_access then
-				if not has_error then
+				if not has_error_internal then
 					l_named_tuple_type ?= last_type
 					check
 						l_named_tuple_type /= Void
@@ -717,7 +725,7 @@ feature {NONE} -- Implementation
 						reset_last_class_and_type
 					else
 						l_type := l_feat.type.actual_type
-						if l_type.has_formal_generic then
+						if l_type.is_loose then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
 						else
 							last_type := l_type
@@ -758,14 +766,14 @@ feature {NONE} -- Implementation
 				current_feature.rout_id_set /= Void
 			end
 			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
-			if not has_error then
+			if not has_error_internal then
 				if l_as.parent_base_class /= Void then
 					l_parent_class_i := universe.class_named (l_as.parent_base_class.class_name, current_class.group)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
-						if not has_error then
-							has_error := True
+						if not has_error_internal then
+							has_error_internal := True
 							set_error_message ("Precursor class locating failed.")
 						end
 					end
@@ -785,7 +793,7 @@ feature {NONE} -- Implementation
 				if l_as.parent_base_class /= Void then
 					text_formatter_decorator.put_space
 					text_formatter_decorator.process_symbol_text (ti_l_curly)
-					if not has_error then
+					if not has_error_internal then
 						text_formatter_decorator.process_class_name_text (l_as.parent_base_class.class_name, l_parent_class.lace_class, False)
 					else
 						text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name)
@@ -1103,7 +1111,7 @@ feature {NONE} -- Implementation
 							l_feature.rout_id_set /= Void
 						end
 					l_feat := feature_in_class (current_class, l_feature.rout_id_set)
-					if not has_error then
+					if not has_error_internal then
 						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					else
 						text_formatter_decorator.process_basic_text (l_feature.feature_name)
@@ -1185,7 +1193,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 		do
 			reset_last_class_and_type
-			if not has_error then
+			if not has_error_internal then
 				if l_as.is_argument then
 					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
 				elseif l_as.is_local then
@@ -1227,7 +1235,7 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.process_symbol_text (ti_dot)
 				end
 				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.feature_name)
@@ -1244,11 +1252,11 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 					text_formatter_decorator.commit
 				end
-				if not has_error then
+				if not has_error_internal then
 					last_type := expr_type (l_as)
 				end
 			else
-				if not has_error then
+				if not has_error_internal then
 					last_type := agent_type (l_as)
 				end
 			end
@@ -1267,14 +1275,14 @@ feature {NONE} -- Implementation
 			check
 				routine_id_is_zero: l_as.routine_ids.first /= 0
 			end
-			if not has_error then
+			if not has_error_internal then
 				l_expr_type := expr_type (l_as.expr)
 			end
-			if not has_error then
+			if not has_error_internal then
 				l_feat := feature_in_class (l_expr_type.actual_type.associated_class, l_as.routine_ids)
 			end
 			if not expr_type_visiting then
-				if not has_error then
+				if not has_error_internal then
 					if l_feat.is_prefix then
 						l_name := l_feat.prefix_symbol
 						if in_bench_mode then
@@ -1302,10 +1310,10 @@ feature {NONE} -- Implementation
 				end
 				text_formatter_decorator.commit
 			end
-			if not has_error then
+			if not has_error_internal then
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
-				if l_type.has_formal_generic then
+				if l_type.is_loose then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)
 				else
 					last_type := l_type
@@ -1354,14 +1362,14 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_left_type: TYPE_A
 			l_left_class: CLASS_C
+			l_right_type: TYPE_A
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
 			end
 			reset_last_class_and_type
 			l_as.left.process (Current)
-
-			if not has_error then
+			if not has_error_internal then
 				check
 					last_type /= Void
 				end
@@ -1369,17 +1377,34 @@ feature {NONE} -- Implementation
 				if last_type.is_formal then
 					l_formal ?= last_type
 					last_type := type_from_ancestor (source_class, l_formal)
-					last_type := constrained_type (last_type)
-					last_class := last_type.associated_class
-				else
-					last_class := last_type.associated_class
 				end
-				l_left_type := last_type
-				l_left_class := last_class
-				l_feat := feature_in_class (l_left_class, l_as.routine_ids)
+					-- Find correct left type and left class.
+				l_left_type := constrained_type (last_type)
+				l_right_type := expr_type (l_as.right)
+				if not has_error_internal then
+					check
+						l_right_type_not_void: l_right_type /= Void
+					end
+					l_right_type := l_right_type.actual_type
+					l_right_type := constrained_type (l_right_type)
+						-- Taking into account possible conversion of the target. If it is the
+						-- same class ID as the one recorded in BINARY_AS, it means that target
+						-- was not converted, otherwise target was converted and its type is the
+						-- one from the right-hand side.
+					if constrained_type (l_left_type).associated_class.class_id = l_as.class_id then
+						last_type := l_left_type
+					else
+						last_type := l_right_type
+					end
+					last_class := last_type.associated_class
+					l_left_type := last_type
+					l_left_class := last_class
+
+					l_feat := feature_in_class (l_left_class, l_as.routine_ids)
+				end
 			end
 			if not expr_type_visiting then
-				if not has_error then
+				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
 					if l_feat.is_infix then
 						l_name := l_feat.infix_symbol
@@ -1410,11 +1435,11 @@ feature {NONE} -- Implementation
 					l_as.right.process (Current)
 				end
 			end
-			if not has_error then
+			if not has_error_internal then
 				check l_feat_not_void: l_feat /= Void end
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
-				if l_type.has_formal_generic then
+				if l_type.is_loose then
 					last_type := l_type.instantiation_in (l_left_type, l_left_class.class_id)
 				else
 					last_type := l_type
@@ -1553,14 +1578,14 @@ feature {NONE} -- Implementation
 				routine_id_is_zero: l_as.routine_ids.first /= 0
 				last_type_not_void: last_type /= Void
 			end
-			if not has_error then
+			if not has_error_internal then
 				last_type := last_type.actual_type
 				last_class := constrained_type (last_type).associated_class
 				l_feat := feature_in_class (last_class, l_as.routine_ids)
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.put_space
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_operator_text (ti_l_bracket, l_feat)
 				else
 					text_formatter_decorator.process_basic_text (ti_l_bracket)
@@ -1576,19 +1601,19 @@ feature {NONE} -- Implementation
 					last_type := l_last_type
 					last_class := l_last_class
 				end
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_operator_text (ti_r_bracket, l_feat)
 				else
 					text_formatter_decorator.process_basic_text (ti_r_bracket)
 				end
 			end
-			if not has_error then
+			if not has_error_internal then
 				check
 					l_feat /= Void
 				end
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
-				if l_type.has_formal_generic then
+				if l_type.is_loose then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)
 				else
 					last_type := l_type
@@ -1659,7 +1684,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			if not has_error then
+			if not has_error_internal then
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
@@ -1682,7 +1707,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_double_quote)
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 				else
 					text_formatter_decorator.process_basic_text (l_as.visual_name)
@@ -1693,7 +1718,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_double_quote)
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 				else
 					text_formatter_decorator.process_basic_text (l_as.visual_name)
@@ -1709,7 +1734,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			if not has_error then
+			if not has_error_internal then
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
@@ -1724,7 +1749,7 @@ feature {NONE} -- Implementation
 				check
 					l_feat /= Void
 				end
-				if not has_error then
+				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.feature_name)
@@ -1741,7 +1766,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			if not has_error then
+			if not has_error_internal then
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
@@ -1758,7 +1783,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
 				text_formatter_decorator.put_space
 			end
-			if not has_error then
+			if not has_error_internal then
 				text_formatter_decorator.process_operator_text (l_as.feature_name, l_feat)
 			else
 				text_formatter_decorator.process_basic_text (l_as.feature_name)
@@ -1767,7 +1792,7 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
 			text_formatter_decorator.put_space
 			text_formatter_decorator.process_symbol_text (ti_double_quote)
-			if not has_error then
+			if not has_error_internal then
 				text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
 			else
 				text_formatter_decorator.process_basic_text (l_as.alias_name.value)
@@ -1798,6 +1823,9 @@ feature {NONE} -- Implementation
 
 	process_assign_as (l_as: ASSIGN_AS) is
 		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
 			reset_last_class_and_type
 			if not expr_type_visiting then
 				text_formatter_decorator.put_breakable
@@ -2783,8 +2811,8 @@ feature -- Expression visitor
 			Result := last_type
 			last_type := l_last_type
 			expr_type_visiting := l_ex_visiting
-			if not has_error and Result = Void then
-				has_error := True
+			if not has_error_internal and Result = Void then
+				has_error_internal := True
 				set_error_message ("Expression type evaluating failed.")
 			end
 		end
@@ -2875,6 +2903,8 @@ feature {NONE} -- Implementation: helpers
 			until
 				lc.after
 			loop
+				has_error_internal := False
+				reset_last_class_and_type
 				text_formatter_decorator.new_expression
 				text_formatter_decorator.begin
 				lc.item.process (Current)
@@ -3222,20 +3252,20 @@ feature {NONE} -- Implementation: helpers
 			a_classs_c_not_void: a_class_c /= Void
 			a_id_set_not_void: a_id_set /= Void
 		do
-			if not has_error and a_id_set.first = 0 then
-				has_error := True
+			if not has_error_internal and a_id_set.first = 0 then
+				has_error_internal := True
 				set_error_message ("Feature with routine id of 0!!!")
 			else
-				if not has_error then
+				if not has_error_internal then
 					Result := a_class_c.feature_with_rout_id (a_id_set.first)
 				end
 			end
-			if not has_error and Result = Void then
-				has_error := True
+			if not has_error_internal and Result = Void then
+				has_error_internal := True
 				set_error_message ("Feature with routine id " + a_id_set.first.out + " could not be found.")
 			end
 		ensure
-			feature_in_class_not_void: not has_error implies Result /= Void
+			feature_in_class_not_void: not has_error_internal implies Result /= Void
 		end
 
 	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I is
@@ -3345,12 +3375,12 @@ feature {NONE} -- Implementation: helpers
 			l_type := type_a_generator.evaluate_type (a_type, source_class)
 
 				-- An error occurs when a class was renamed.
-			if not has_error and l_type = Void then
-				has_error := True
+			if not has_error_internal and l_type = Void then
+				has_error_internal := True
 				set_error_message ("Type evaluating failed.")
 			end
 
-			if not has_error then
+			if not has_error_internal then
 				-- If `source_feature' is Void, it means that we are outside of
 				-- a feature, and therefore `l_type' must be valid because it should
 				-- not have any anchors or bit symbols in `a_type'.
@@ -3393,7 +3423,7 @@ feature {NONE} -- Implementation: helpers
 			l_open: OPEN_TYPE_A
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
-			if not has_error then
+			if not has_error_internal then
 				if l_feat.is_function then
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (1, 3)
@@ -3549,12 +3579,13 @@ feature {NONE} -- Implementation: helpers
 				Result := l_result_type
 			end
 		ensure
-			agent_type_not_void_if_no_error: not has_error implies Result /= Void
+			agent_type_not_void_if_no_error: not has_error_internal implies Result /= Void
 		end
 
 invariant
 	text_formatter_not_void: text_formatter_decorator /= Void
-	has_error_implies_error_message_not_void: has_error implies error_message /= Void
+	error_message_not_void: error_message /= Void
+	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

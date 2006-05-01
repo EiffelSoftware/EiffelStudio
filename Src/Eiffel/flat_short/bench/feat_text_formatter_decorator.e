@@ -42,7 +42,7 @@ feature -- Execution
 				prev_class := System.current_class
 				prev_cluster := Inst_context.group
 				target_feat := a_target_feat.associated_feature_i
-				execution_error := false
+				execution_error := False
 				Error_handler.wipe_out
 				f_ast := target_feat.body
 				export_status := target_feat.export_status
@@ -79,10 +79,9 @@ feature -- Execution
 				ast_output_strategy.format (f_ast)
 				if ast_output_strategy.has_error then
 					put_new_line
-					process_comment_text ("-- An error occured, which was due to a compilation failure.", Void)
-					put_new_line
-					process_comment_text (ast_output_strategy.error_message, Void)
+					print_error
 				end
+
 				commit;
 			else
 				execution_error := True;
@@ -125,6 +124,26 @@ feature -- Element change
 		end;
 
 feature {NONE} -- Feature comments
+
+	print_error is
+			-- Print error if any.
+		local
+			l_array: ARRAYED_LIST [STRING]
+		do
+			l_array := ast_output_strategy.error_message
+			process_comment_text ("-- Error(s) occured, which was due to a compilation failure.", Void)
+			put_new_line
+			from
+				l_array.start
+			until
+				l_array.after
+			loop
+				process_comment_text ("-- ", Void)
+				process_comment_text (l_array.item, Void)
+				put_new_line
+				l_array.forth
+			end
+		end
 
 	export_status: EXPORT_I;
 

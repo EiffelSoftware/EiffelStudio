@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]) is
+	append_visible (a_visible: CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]) is
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
@@ -689,30 +689,38 @@ feature {NONE} -- Implementation
 				a_visible.after
 			loop
 				l_class := a_visible.key_for_iteration
-				l_class_rename ?= a_visible.item_for_iteration.item (1)
-				l_vis_feat ?= a_visible.item_for_iteration.item (2)
-				from
-					l_vis_feat.start
-				until
-					l_vis_feat.after
-				loop
-					l_feat := l_vis_feat.key_for_iteration
-					l_feat_rename := l_vis_feat.item_for_iteration
-					if l_feat.is_equal ("*") then
-						l_feat := Void
+				l_class_rename := a_visible.item_for_iteration.class_renamed
+				l_vis_feat := a_visible.item_for_iteration.features
+				if l_vis_feat /= Void then
+					from
+						l_vis_feat.start
+					until
+						l_vis_feat.after
+					loop
+						l_feat := l_vis_feat.key_for_iteration
+						l_feat_rename := l_vis_feat.item_for_iteration
+						if l_feat.is_equal ("*") then
+							l_feat := Void
+						end
+						append_text_indent ("<visible class=%""+l_class+"%"")
+						if l_feat /= Void then
+							append_text (" feature=%""+l_feat+"%"")
+						end
+						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
+							append_text (" class_rename=%""+l_class_rename+"%"")
+						end
+						if l_feat_rename /= Void and then not l_feat_rename.is_empty then
+							append_text (" feature_rename=%""+l_feat_rename+"%"")
+						end
+						append_text ("/>%N")
+						l_vis_feat.forth
 					end
+				else
 					append_text_indent ("<visible class=%""+l_class+"%"")
-					if l_feat /= Void then
-						append_text (" feature=%""+l_feat+"%"")
-					end
 					if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
 						append_text (" class_rename=%""+l_class_rename+"%"")
 					end
-					if l_feat_rename /= Void and then not l_feat_rename.is_empty then
-						append_text (" feature_rename=%""+l_feat_rename+"%"")
-					end
 					append_text ("/>%N")
-					l_vis_feat.forth
 				end
 				a_visible.forth
 			end

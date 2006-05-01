@@ -27,6 +27,7 @@ feature -- Visit nodes
 			l_ren: CONF_HASH_TABLE [STRING, STRING]
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
+			l_found: BOOLEAN
 		do
 			l_classes := a_group.classes
 			check
@@ -41,7 +42,7 @@ feature -- Visit nodes
 				until
 					l_ren.after
 				loop
-					if not l_classes.has (l_ren.key_for_iteration) then
+					if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_ren.key_for_iteration) then
 						add_error (create {CONF_ERROR_RENAM}.make (l_ren.key_for_iteration))
 					end
 					l_ren.forth
@@ -55,7 +56,15 @@ feature -- Visit nodes
 				until
 					l_c_opt.after
 				loop
-					if not l_classes.has (l_c_opt.key_for_iteration) then
+					from
+						l_classes.start
+					until
+						l_found or l_classes.after
+					loop
+						l_found := l_classes.item_for_iteration.name.is_equal (l_c_opt.key_for_iteration)
+						l_classes.forth
+					end
+					if not l_found then
 						add_error (create {CONF_ERROR_CLOPT}.make (l_c_opt.key_for_iteration))
 					end
 					l_c_opt.forth

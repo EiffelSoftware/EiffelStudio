@@ -16,7 +16,6 @@ iff not defined WIN64 then
 	move new eiffelsoftware.metadataconsumer.acex
 endiff
 finalize eiffelsoftware.metadataconsumer.acex
-fff
 iff not exist EIFGENs\eiffelsoftware.metadataconsumer\F_code\EiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL

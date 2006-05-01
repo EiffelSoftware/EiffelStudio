@@ -6,7 +6,6 @@ co %DEFAULT_ORIGO_SVN/Src/build build
 cdd %EIFFEL_SRC/build
 clean_project
 finalize build.acex
-fff
 cleanup_eiffel build build.exe
 iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild

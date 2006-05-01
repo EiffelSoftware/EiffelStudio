@@ -49,7 +49,7 @@
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
-		<option trace="false" profile="false" debug="false">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="activity" enabled="false"/>
 			<debug name="actual_replication" enabled="false"/>
@@ -232,7 +232,7 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option trace="false" profile="false" debug="false">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="_jfiat" enabled="false"/>
 			<debug name="activity" enabled="false"/>

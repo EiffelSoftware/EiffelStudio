@@ -123,7 +123,6 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Enterprise edition
 	clean_project
 	finalize ec.acex bench
-	fff
 	cleanup_eiffel bench ec.exe
 	iff not exist ec.exe then
 		remtrace Could not finalize a new "enterprise_version" EiffelStudio
@@ -138,7 +137,6 @@ else
 
 		clean_project
 		finalize ec.acex bench
-		fff
 		cleanup_eiffel bench ec.exe
 		iff not exist ec.exe then
 			remtrace Could not finalize a new "enterprise_version" EiffelStudio
@@ -147,17 +145,12 @@ else
 		move ec.exe %INSTALL_DIR\releases\enterprise_version
 
 		remtrace Free edition
-		cdd %FINALIZATION_DIR
-		sed -e "s/free/enterprise/g" ec.acex >> newec.acex
-		move newec.acex ec.acex
-
 		cdd %EIFFEL_SRC\Eiffel\API\constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cdd %FINALIZATION_DIR
 		clean_project
 		finalize ec.acex bench
-		fff
 		cleanup_eiffel bench ec.exe
 		iff not exist ec.exe then
 			remtrace Could not finalize a new "gpl_edition" EiffelStudio
@@ -171,7 +164,6 @@ remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\tools\finish_freezing
 clean_project
 finalize finish_freezing.acex
-fff
 cleanup_eiffel finish_freezing finish_freezing.exe
 iff not exist finish_freezing.exe then
 	remtrace Could not finalize a new finish_freezing
@@ -183,7 +175,6 @@ remtrace Recompile emake
 cdd %EIFFEL_SRC\tools\eiffel_make
 clean_project
 finalize emake.acex
-fff
 cleanup_eiffel emake emake.exe
 iff not exist emake.exe then
 	remtrace Could not finalize a new emake
@@ -195,7 +186,6 @@ remtrace Recompile quick_finalize
 cdd %EIFFEL_SRC\tools\quick_finalize
 clean_project
 finalize quick_finalize.acex
-fff
 cleanup_eiffel quick_finalize quick_finalize.exe
 iff not exist quick_finalize.exe then
 	remtrace Could not finalize a new quick_finalize
@@ -225,7 +215,6 @@ remtrace Recompile h2e
 cdd %EIFFEL_SRC\library\wel\extra
 clean_project
 finalize h2e.acex
-fff
 cleanup_eiffel h2e h2e.exe
 iff not exist h2e.exe then
 	remtrace Could not finalize a new h2e
@@ -235,12 +224,12 @@ move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
+co %DEFAULT_ISE_SVN/Src/library/keygen library/keygen
 cd tools
 co %DEFAULT_ISE_SVN/Src/tools/setup setup
 cd %EIFFEL_SRC\tools\setup\studio
 clean_project
 finalize setup.acex
-fff
 cleanup_eiffel setup setup.dll
 iff not exist setup.dll then
 	remtrace Couldnt generate setup.dll
@@ -257,9 +246,7 @@ cdd %INIT_DIR
 call make_vision2_tour.btm
 
 remtrace Recompile Legacy++
-cdd %EIFFEL_SRC
-co %DEFAULT_ISE_SVN/Src/tools/legacy legacy
-cd %EIFFEL_SRC\legacy\PCCTS
+cdd %EIFFEL_SRC\tools\legacy\PCCTS
 safe_md bin
 nmake /f makefile.win
 cd ..

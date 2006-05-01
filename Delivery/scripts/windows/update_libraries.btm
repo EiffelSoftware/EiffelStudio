@@ -10,10 +10,6 @@ copy %EIFFEL_SRC\free_add_ons\gobo\gobo_34_win.tgz .
 tar xfz gobo_34_win.tgz
 fullrf gobo_34_win.tgz
 
-remtrace keygen
-cdd %EIFFEL_SRC\library
-co %DEFAULT_ISE_SVN/Src/library/keygen keygen
-
 cdd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com

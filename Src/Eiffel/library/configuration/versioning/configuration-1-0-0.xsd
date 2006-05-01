@@ -110,6 +110,7 @@
 		<xs:attribute name="profile" type="xs:boolean" use="optional"/>
 		<xs:attribute name="optimize" type="xs:boolean" use="optional"/>
 		<xs:attribute name="debug" type="xs:boolean" use="optional"/>
+		<xs:attribute name="warning" type="xs:boolean" use="optional"/>
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 	</xs:complexType>
 

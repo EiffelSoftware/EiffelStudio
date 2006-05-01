@@ -6,7 +6,6 @@ remtrace Recompile Resource Bench
 REM cdd %EIFFEL_SRC\tools\resource_bench
 REM clean_project
 REM finalize rb.acex
-REM fff
 REM cleanup_eiffel rb rb.exe
 REM if not exist rb.exe (remtrace Couldnt generate rb.exe & cancel)
 REM move rb.exe %INSTALL_DIR\rb\bin

@@ -52,12 +52,13 @@ iff not defined NO_COMPILE then
 	remtrace Retrieve the header files
 	cdd %EIFFEL_SRC
 	safe_md headers
+	REM "We keep a copy of vendors specific header files at EiffelSoftware as they cannot be"
+	REM "redistributed freely."
 	exprtfile %DEFAULT_ISE_SVN/Src/library/headers.tar.gz  > headers\headers.tar.gz
 	cd headers
 	tar xvfz headers.tar.gz
 	iff not isdir apps then
 		remtrace Couldnt retrieve the header files.
-		CANCEL
 	endiff
 	set JDK_HOME=%EIFFEL_SRC\headers\apps\jdk1.1.8
 	set ORACLE_HOME=%EIFFEL_SRC\headers\apps\oracle

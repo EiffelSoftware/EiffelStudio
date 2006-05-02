@@ -696,7 +696,7 @@ feature -- Implementation
 			l_cl_type_i: CL_TYPE_I
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
-			l_is_assigner_call, l_processing_done: BOOLEAN
+			l_is_assigner_call, l_is_last_access_tuple_access: BOOLEAN
 			l_named_tuple: NAMED_TUPLE_TYPE_A
 			l_label_pos: INTEGER
 		do
@@ -785,11 +785,8 @@ feature -- Implementation
 				check l_named_tuple_not_void: l_named_tuple /= Void end
 				l_label_pos := l_named_tuple.label_position (l_feature_name)
 				if l_label_pos > 0 then
-					l_processing_done := True
 					last_type := l_named_tuple.generics.item (l_label_pos)
-					last_access_writable := True
-					last_routine_id_set := Void
-					is_last_access_tuple_access := True
+					l_is_last_access_tuple_access := True
 					last_feature_name := l_feature_name
 					if l_needs_byte_node then
 						create {TUPLE_ACCESS_B} last_byte_node.make (l_named_tuple.type_i, l_label_pos)
@@ -797,7 +794,7 @@ feature -- Implementation
 					end
 				end
 			end
-			if not l_processing_done then
+			if not l_is_last_access_tuple_access then
 				if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
 						-- Attachments type check
 					l_formal_count := l_feature.argument_count
@@ -1134,6 +1131,14 @@ feature -- Implementation
 						error_handler.raise_error
 					end
 				end
+			end
+				-- Finally update current to reflect if current call is a tuple
+				-- access or not.
+			is_last_access_tuple_access := l_is_last_access_tuple_access
+			if l_is_last_access_tuple_access then
+					-- Properly update current to show we have just accessed a tuple.
+				last_access_writable := True
+				last_routine_id_set := Void
 			end
 		end
 

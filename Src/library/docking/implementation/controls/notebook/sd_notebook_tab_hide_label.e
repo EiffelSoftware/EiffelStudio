@@ -48,7 +48,7 @@ feature {NONE}  -- Initlization
 			extend (internal_label)
 
 			internal_pixmap_area.expose_actions.extend (agent on_expose)
-			set_minimum_height (internal_shared.title_bar_height)
+			set_minimum_height (internal_shared.title_bar_height + 2)
 			internal_focus_widget := a_focus_widget
 		ensure
 			has: has (internal_pixmap_area) and has (internal_label)

@@ -116,6 +116,28 @@ feature -- Access queries
 			end
 		end
 
+	mapping: like internal_mapping is
+			-- Special classes name mapping (eg. STRING => STRING_32).
+		do
+			if cached_mapping = Void then
+				if internal_mapping = Void and parent = Void then
+					cached_mapping := target.mapping
+				else
+					cached_mapping := target.mapping.twin
+					if parent /= Void then
+						cached_mapping.merge (parent.mapping)
+					end
+					if internal_mapping /= Void then
+						cached_mapping.merge (internal_mapping)
+					end
+				end
+			end
+			Result := cached_mapping
+		ensure
+			Result_not_void: Result /= Void
+			Result_cached: Result = cached_mapping
+		end
+
 	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
 			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
@@ -123,13 +145,23 @@ feature -- Access queries
 			l_groups: LINKED_SET [CONF_GROUP]
 			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
+			l_name: STRING
 		do
+				-- apply mapping
+			if mapping.has (a_class) then
+				l_name := mapping.found_item
+			else
+				l_name := a_class
+			end
+
+				-- search in cluster itself
 			create Result.make
-			l_class := classes.item (a_class)
+			l_class := classes.item (l_name)
 			if l_class /= Void then
 				Result.extend (l_class)
 			end
 
+				-- search in dependencies
 			if a_dependencies then
 				l_groups := accessible_groups
 				if l_groups /= Void then
@@ -140,7 +172,7 @@ feature -- Access queries
 					loop
 						l_grp := l_groups.item
 						if l_grp.classes_set then
-							Result.append (l_grp.class_by_name (a_class, False))
+							Result.append (l_grp.class_by_name (l_name, False))
 						end
 						l_groups.forth
 					end
@@ -294,6 +326,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_set: internal_file_rule = a_file_rule
 		end
 
+	add_mapping (a_old_name, a_new_name: STRING) is
+			-- Add a new mapping from `a_old_name' to `a_new_name'.
+		require
+			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
+			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
+		do
+			if internal_mapping = Void then
+				create internal_mapping.make (1)
+			end
+			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+		end
+
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
@@ -301,7 +345,7 @@ feature -- Equality
 		do
 			Result := Precursor (other) and then equal (dependencies, other.dependencies) and then
 						file_rule.is_equal (other.file_rule) and then equal (visible, other.visible) and then
-						is_recursive = other.is_recursive
+						is_recursive = other.is_recursive and then equal (mapping, other.mapping)
 		end
 
 feature -- Visit
@@ -320,6 +364,12 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_file_rule: CONF_FILE_RULE
 			-- Rules for files to be included or excluded of this cluster itself.
+
+	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
+			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
+
+	cached_mapping: like internal_mapping
+			-- Special classes name mapping cash, has the fully merge version of the mapping.
 
 feature {NONE} -- Implementation
 

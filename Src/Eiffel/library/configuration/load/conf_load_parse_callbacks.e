@@ -187,6 +187,8 @@ feature -- Callbacks
 					process_dotnet_attributes
 				when t_custom then
 					process_custom_attributes
+				when t_mapping then
+					process_mapping_attributes
 				else
 				end
 				current_attributes.clear_all
@@ -1175,6 +1177,26 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_mapping_attributes is
+			-- Process attributes of a mapping tag.
+		require
+			cluster_or_target: current_cluster /= Void or current_target /= Void
+		local
+			l_old, l_new: STRING
+		do
+			l_old := current_attributes.item (at_old_name)
+			l_new := current_attributes.item (at_new_name)
+			if l_old = Void or l_new = Void then
+				set_parse_error_message ("Invalid mapping tag.")
+			else
+				if current_cluster /= Void then
+					current_cluster.add_mapping (l_old, l_new)
+				else
+					current_target.add_mapping (l_old, l_new)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation content processing
 
 	process_description_content is
@@ -1286,6 +1308,7 @@ feature {NONE} -- Implementation state transitions
 				-- => file_rule
 				-- => setting
 				-- => option
+				-- => mapping
 				-- => external_include
 				-- => external_object
 				-- => external_ressource
@@ -1298,13 +1321,14 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (17)
+			create l_trans.make (18)
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
 			l_trans.force (t_file_rule, "file_rule")
 			l_trans.force (t_setting, "setting")
 			l_trans.force (t_option, "option")
+			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_object, "external_object")
 			l_trans.force (t_external_ressource, "external_ressource")
@@ -1386,9 +1410,11 @@ feature {NONE} -- Implementation state transitions
 				-- cluster
 				-- -everything from library/precompile
 				-- => file_rule
+				-- => mapping
 				-- => uses
 				-- => cluster
 			l_trans.force (t_file_rule, "file_rule")
+			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_uses, "uses")
 			l_trans.force (t_cluster, "cluster")
 			Result.force (l_trans, t_cluster)
@@ -1648,6 +1674,14 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_class_rename, "class_rename")
 			l_attr.force (at_feature_rename, "feature_rename")
 			Result.force (l_attr, t_visible)
+
+				-- mapping
+				-- * old_name
+				-- * new_name
+			create l_attr.make (2)
+			l_attr.force (at_old_name, "old_name")
+			l_attr.force (at_new_name, "new_name")
+			Result.force (l_attr, t_mapping)
 		end
 
 feature {NONE} -- Implementation constants
@@ -1689,7 +1723,8 @@ feature {NONE} -- Implementation constants
 	t_class_option,
 	t_uses,
 	t_visible,
-	t_overrides: INTEGER is unique
+	t_overrides,
+	t_mapping: INTEGER is unique
 
 		-- Attribute states
 	at_name,

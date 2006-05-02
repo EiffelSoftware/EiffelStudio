@@ -147,6 +147,7 @@ feature -- Visit nodes
 				append_tag ("setting", Void, l_a_name, l_a_val)
 				l_sort_lst.forth
 			end
+			append_mapping (a_target.internal_mapping)
 			append_externals (a_target.internal_external_include, "include")
 			append_externals (a_target.internal_external_object, "object")
 			append_externals (a_target.internal_external_ressource, "ressource")
@@ -476,6 +477,21 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			indent_back: indent = old indent
+		end
+
+	append_mapping (a_mapping: CONF_HASH_TABLE [STRING, STRING]) is
+			-- Append `a_mapping'.
+		do
+			if a_mapping /= Void then
+				from
+					a_mapping.start
+				until
+					a_mapping.after
+				loop
+					append_text_indent ("<mapping old_name=%""+a_mapping.key_for_iteration+"%" new_name=%""+a_mapping.item_for_iteration+"%"/>%N")
+					a_mapping.forth
+				end
+			end
 		end
 
 	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING) is
@@ -830,6 +846,7 @@ feature {NONE} -- Implementation
 			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
+			append_mapping (a_cluster.internal_mapping)
 			l_deps := a_cluster.internal_dependencies
 			if l_deps /= Void then
 				from

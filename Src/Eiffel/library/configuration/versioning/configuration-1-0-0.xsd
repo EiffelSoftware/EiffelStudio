@@ -40,6 +40,7 @@
 			<xs:element name="file_rule" type="file_rule" minOccurs="0"/>
 			<xs:element name="option" type="option" minOccurs="0"/>
 			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="external_include" type="external" minOccurs="0"
 				maxOccurs="unbounded"/>
 			<xs:element name="external_object" type="external" minOccurs="0"
@@ -255,10 +256,16 @@
 					<xs:element name="uses" type="uses" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="cluster" type="cluster" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="recursive" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="mapping">
+		<xs:attribute name="old_name" type="xs:string"/>
+		<xs:attribute name="new_name" type="xs:string"/>
 	</xs:complexType>
 	
 	<xs:complexType name="uses">

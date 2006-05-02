@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
-					l_named_tuple_type ?= last_type
+					l_named_tuple_type ?= last_type.actual_type
 					check
 						l_named_tuple_type /= Void
 					end

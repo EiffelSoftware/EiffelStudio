@@ -35,15 +35,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action: PROCEDURE [ANY, TUPLE] -- is
+	action: PROCEDURE [ANY, TUPLE]
 			-- Callback feature called with the file/pipe is changed.
---		do
---			if io_watcher.read_actions.empty then
---				Result := Void
---			else
---				Result := io_watcher.read_actions.first
---			end
---		end
 
 feature -- Element change
 
@@ -53,14 +46,12 @@ feature -- Element change
 			an_agent_not_void: an_action /= Void
 		do
 			action := an_action
-
 			io_watcher.read_actions.wipe_out
 			io_watcher.read_actions.extend (an_action)
 			io_watcher.error_actions.wipe_out
 			io_watcher.error_actions.extend (an_action)
 			io_watcher.exception_actions.wipe_out
 			io_watcher.exception_actions.extend (an_action)
-
 		ensure
 			agent_set: action = an_action
 		end
@@ -69,7 +60,6 @@ feature -- Element change
 			-- Remove the current action
 		do
 			action := Void
-			
 			io_watcher.error_actions.wipe_out
 			io_watcher.exception_actions.wipe_out
 			io_watcher.read_actions.wipe_out

@@ -10,7 +10,6 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="True"/>
-		<setting name="syntax_warning" value="False"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>

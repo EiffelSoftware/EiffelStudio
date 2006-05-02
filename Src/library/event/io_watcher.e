@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_in: INTEGER is
-		-- There is data to be read.
+			-- There is data to be read.
 		external
 			"C macro use <glib.h>"
 		alias
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_out: INTEGER is
-		-- Data can be written.
+			-- Data can be written.
 		external
 			"C macro use <glib.h>"
 		alias
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_pri: INTEGER is
-		-- There is urgent data to read.
+			-- There is urgent data to read.
 		external
 			"C macro use <glib.h>"
 		alias
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_err: INTEGER is
-		-- Error condition.
+			-- Error condition.
 		external
 			"C macro use <glib.h>"
 		alias
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_hup: INTEGER is
-		-- Hung up (the connection has been broken, usually for pipes and sockets).
+			-- Hung up (the connection has been broken, usually for pipes and sockets).
 		external
 			"C macro use <glib.h>"
 		alias
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 		end
 
 	G_io_nval: INTEGER is
-		-- Invalid request. The file descriptor is not open.
+			-- Invalid request. The file descriptor is not open.
 		external
 			"C macro use <glib.h>"
 		alias

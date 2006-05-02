@@ -80,6 +80,8 @@ feature -- Actions
 			af: LINEAR [INTEGER]
 			cancelled: BOOLEAN
 			ir_error: INTERRUPT_ERROR
+			l_groups: like groups
+			l_group: CONF_GROUP
 		do
 			eiffel_system.system.set_current_class (any_class)
 			if not cancelled then
@@ -131,35 +133,38 @@ feature -- Actions
 						generate_cluster_hierarchy
 					end
 
+					l_groups := groups
 					if cluster_chart_generated then
 						from
-							groups.start
+							l_groups.start
 						until
-							groups.after
+							l_groups.after
 						loop
-							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", groups.item))
+							l_group := l_groups.item_for_iteration
+							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
 							if filter.is_html then
-								filter.set_keyword ("html_meta", html_meta_for_cluster (groups.item))
+								filter.set_keyword ("html_meta", html_meta_for_cluster (l_group))
 							end
-							set_base_cluster (groups.item)
-							prepare_for_file (relative_path (groups.item), groups.item.name)
-							set_document_title ("cluster " + groups.item.name)
-							generate_cluster_index (groups.item)
-							groups.forth
+							set_base_cluster (l_group)
+							prepare_for_file (relative_path (l_group), "index")
+							set_document_title ("cluster " + l_group.name)
+							generate_cluster_index (l_group)
+							l_groups.forth
 						end
 					end
 
 					if filter.is_html and then cluster_diagram_generated then
 						from
-							groups.start
+							l_groups.start
 						until
-							groups.after
+							l_groups.after
 						loop
-							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", groups.item))
+							l_group := l_groups.item_for_iteration
+							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
-							generate_cluster_diagram (groups.item)
-							groups.forth
+							generate_cluster_diagram (l_group)
+							l_groups.forth
 						end
 					end
 
@@ -170,13 +175,13 @@ feature -- Actions
 						until
 							classes.after
 						loop
-							deg.put_case_class_message (classes.item)
+							deg.put_case_class_message (classes.item_for_iteration)
 							deg.flush_output
-							set_base_cluster (classes.item.group)
-							cl_name := classes.item.name.as_lower
+							set_base_cluster (classes.item_for_iteration.group)
+							cl_name := classes.item_for_iteration.name.as_lower
 							set_class_name (cl_name)
 							if filter.is_html then
-								filter.set_keyword ("html_meta", html_meta_for_class (classes.item))
+								filter.set_keyword ("html_meta", html_meta_for_class (classes.item_for_iteration))
 							end
 							af := all_class_formats.linear_representation
 							from af.start until af.after loop
@@ -184,11 +189,11 @@ feature -- Actions
 								af.forth
 								if cf.is_generated then
 									prepare_for_file (
-										create {FILE_NAME}.make_from_string (relative_path (classes.item.group)),
+										create {FILE_NAME}.make_from_string (relative_path (classes.item_for_iteration.group)),
 										cl_name + cf.file_extension
 									)
 									set_document_title (cl_name + " " + cf.description)
-									generate_class (classes.item, cf)
+									generate_class (classes.item_for_iteration, cf)
 								end
 							end
 							classes.forth
@@ -252,15 +257,15 @@ feature -- Actions
 		require
 			root_directory /= Void
 		local
-			l_groups: SORTED_TWO_WAY_LIST [CONF_GROUP]
+			l_groups: like groups
 		do
-			l_groups := doc_universe.groups
+			l_groups := groups
 			from
 				l_groups.start
 			until
 				l_groups.after
 			loop
-				create_directory_for_group (l_groups.item)
+				create_directory_for_group (l_groups.item_for_iteration)
 				l_groups.forth
 			end
 		end
@@ -460,10 +465,10 @@ feature {NONE} -- Implementation
 			doc_universe.set_any_feature_format_generated (feature_links /= Void)
 		end
 
-	classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
+	classes: DS_ARRAYED_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	groups: SORTED_TWO_WAY_LIST [CONF_GROUP] is
+	groups: DS_ARRAYED_LIST [CONF_GROUP] is
 			-- Groups to be generated.
 		do
 			Result := doc_universe.groups
@@ -492,7 +497,7 @@ feature {NONE} -- Implementation
 			until
 				classes.after
 			loop
-				s := classes.item.name.as_lower
+				s := classes.item_for_iteration.name.as_lower
 				class_array.append ("%T%T%"" + s + "%"")
 				s.to_lower
 --				s := "" + classes.item.cluster.relative_path ('/') +

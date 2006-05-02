@@ -65,28 +65,30 @@ feature -- Basic operations
 			l_count: NATURAL_32
 			l_mem: like memory
 			l_is_collecting: BOOLEAN
+			retried: BOOLEAN
 		do
-			has_error := False
+			if not retried then
+				has_error := False
 
-				-- Read number of objects we are retrieving
-			l_count := deserializer.read_compressed_natural_32
-			create object_references.make (l_count.to_integer_32 + 1)
+					-- Read number of objects we are retrieving
+				l_count := deserializer.read_compressed_natural_32
+				create object_references.make (l_count.to_integer_32 + 1)
 
-				-- Disable GC as only new memory will be allocated.
-			if not a_is_gc_enabled then
-				l_mem := memory
-				l_is_collecting := l_mem.collecting
-				l_mem.collection_off
+					-- Disable GC as only new memory will be allocated.
+				if not a_is_gc_enabled then
+					l_mem := memory
+					l_is_collecting := l_mem.collecting
+					l_mem.collection_off
+				end
+
+					-- Read header of serialized data.
+				read_header (l_count)
+
+				if not has_error then
+						-- Read data from `deserializer' in store it in `object_references'.
+					decode_objects (l_count)
+				end
 			end
-
-				-- Read header of serialized data.
-			read_header (l_count)
-
-			if not has_error then
-					-- Read data from `deserializer' in store it in `object_references'.
-				decode_objects (l_count)
-			end
-
 				-- Restore GC status
 			if l_is_collecting then
 				l_mem.collection_on
@@ -94,6 +96,9 @@ feature -- Basic operations
 
 				-- Clean data
 			clear_internal_data
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation: Access

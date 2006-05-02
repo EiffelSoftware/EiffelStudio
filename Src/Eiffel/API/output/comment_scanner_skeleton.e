@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 					reset_last_type
 				end
 			else
-				add_text (l_text)
+				add_text (l_text, False)
 				reset_last_type
 			end
 		end
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			if l_feat /= Void then
 				text_formatter.process_feature_text (l_feat_name, l_feat, false)
 			else
-				add_text (l_text)
+				add_text (l_text, True)
 			end
 		end
 
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 					last_type := l_class.compiled_class.actual_type
 				end
 			else
-				add_text (l_text)
+				add_text (l_text, False)
 				reset_last_type
 			end
 		end
@@ -237,33 +237,43 @@ feature {NONE} -- Implementation
 				loop
 					if not l_strings.item.is_empty then
 						l_cluster_name := l_strings.item
-						add_text (".")
+						add_text (".", False)
 						if l_cluster /= Void then
 							l_cluster := l_cluster.sub_group_by_name (l_cluster_name)
 						end
 						if l_cluster /= Void then
 							text_formatter.process_cluster_name_text (l_cluster.name, l_cluster, False)
 						else
-							add_text (l_cluster_name)
+							add_text (l_cluster_name, False)
 						end
 					else
-						add_text (".")
+						add_text (".", False)
 					end
 					l_strings.forth
 				end
 			else
-				add_text (l_text)
+				add_text (l_text, False)
 			end
 		end
 
-	add_text (a_text: STRING) is
+	add_normal_text is
+			-- Add `text' to `text_formatter'.
+		do
+			add_text (text, False)
+		end
+
+	add_text (a_text: STRING; a_basic_comment: BOOLEAN) is
 			-- Add `a_text' as normal text.
 		require
 			a_text_not_void: a_text /= Void
 		do
 			if not a_text.is_empty then
 				if for_comment then
-					text_formatter.process_comment_text (a_text, Void)
+					if not a_basic_comment then
+						text_formatter.process_comment_text (a_text, Void)
+					else
+						text_formatter.process_basic_text (a_text)
+					end
 				else
 					text_formatter.process_string_text (a_text, Void)
 				end
@@ -274,7 +284,7 @@ feature {NONE} -- Implementation
 			-- Append token to `text_formatter'
 		do
 			if not buffer_string.is_empty then
-				add_text (buffer_string.twin)
+				add_text (buffer_string.twin, False)
 				buffer_string.clear_all
 			end
 		end

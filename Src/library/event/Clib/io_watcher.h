@@ -1,11 +1,18 @@
-//------------------------------------------------------------------------------
-// io_watcher.h
-//------------------------------------------------------------------------------
-// description: "C features of EV_ANY_IMP, see ev_any_imp.c and ev_any_imp.e" 
-// status: "See notice at end of file"
-// date: "$Date$"
-// revision: "$Revision$"
-//------------------------------------------------------------------------------
+/*
+indexing
+	description: "C features of IO_WATCHER, see io_watcher.e for important notes."
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
 
 #ifndef _IO_WATCHER_H_INCLUDED_
 #define _IO_WATCHER_H_INCLUDED_
@@ -13,26 +20,14 @@
 #include <eif_eiffel.h>
 #include <glib.h>
 
-void c_io_watcher_initialize_callback (
-	void (*on_event_address) (EIF_REFERENCE, EIF_INTEGER)
+void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
+
+void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
+
+gboolean c_io_watcher_marshal (
+	GIOChannel* source, 
+	GIOCondition condition,
+	gpointer io_watcher
 );
 
-guint c_io_watcher_add_watch_callback (EIF_OBJECT io_watcher, gint handle);
-
 #endif
-
-//------------------------------------------------------------------------------
-// EiffelEvent: library of reusable components for ISE Eiffel.
-// Copyright (C) 1986-1999 Interactive Software Engineering Inc.
-// All rights reserved. Duplication and distribution prohibited.
-// May be used only with ISE Eiffel, under terms of user license.
-// Contact ISE for any other use.
-//
-// Interactive Software Engineering Inc.
-// ISE Building, 2nd floor
-// 270 Storke Road, Goleta, CA 93117 USA
-// Telephone 805-685-1006, Fax 805-685-6869
-// Electronic mail <info@eiffel.com>
-// Customer support e-mail <support@eiffel.com>
-// For latest info see award-winning pages: http://www.eiffel.com
-//------------------------------------------------------------------------------

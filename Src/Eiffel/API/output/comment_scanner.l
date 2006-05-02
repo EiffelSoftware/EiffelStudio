@@ -125,19 +125,19 @@ CLUSTER \[{C}+\]
 
 -- Word
 {CS}+|[`~!@#$%^&*()_+-={}[]:;\'\"\|\\<>\?,\.\/]+		{
-				add_text (text)
+				add_normal_text
 			}
 
 \r			{
 			}
 
 [ \t]+		{
-				add_text (text)
+				add_normal_text
 			}
 
 -- End			
 .			{
-				add_text (text)	
+				add_normal_text	
 			}
 }
 

@@ -199,7 +199,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 127")
 end
 
-				add_text (text)
+				add_normal_text
 			
 else
 --|#line 131 "comment_scanner.l"
@@ -219,7 +219,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 134")
 end
 
-				add_text (text)
+				add_normal_text
 			
 else
 --|#line 139 "comment_scanner.l"
@@ -227,7 +227,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 139")
 end
 
-				add_text (text)	
+				add_normal_text	
 			
 end
 else

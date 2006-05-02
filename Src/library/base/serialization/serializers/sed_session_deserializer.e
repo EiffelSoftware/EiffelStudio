@@ -898,8 +898,8 @@ feature {NONE} -- Implementation
 						l_missing.put (l_list, l_index)
 					end
 					l_tuple := new_tuple
-					l_tuple.put_integer_32 (an_obj_index, 1)
-					l_tuple.put_integer_32 (an_index, 2)
+					l_tuple.object_index := an_obj_index
+					l_tuple.field_position := an_index
 					l_list.extend (l_tuple)
 				end
 			end
@@ -958,9 +958,9 @@ feature {NONE} -- Implementation
 					loop
 						l_tuple := l_list.item
 						update_reference (
-							l_object_references.item (l_tuple.integer_32_item (1)),
+							l_object_references.item (l_tuple.object_index),
 							l_object_references.item (an_index),
-							l_tuple.integer_32_item (2))
+							l_tuple.field_position)
 						l_tuple_stack.extend (l_tuple)
 						l_list.remove
 						l_list.finish
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_tuple: TUPLE [INTEGER, INTEGER, INTEGER] is
+	new_tuple: TUPLE [object_index: INTEGER; field_position: INTEGER] is
 			-- Factory of TUPLE.
 		local
 			l_tuple_stack: like tuple_stack
@@ -991,7 +991,7 @@ feature {NONE} -- Implementation
 				create Result
 			end
 		ensure
-			new_tuple_not_void: new_tuple /= Void
+			new_tuple_not_void: Result /= Void
 		end
 
 	new_list: ARRAYED_LIST [like new_tuple] is
@@ -1007,7 +1007,7 @@ feature {NONE} -- Implementation
 				create Result.make (5)
 			end
 		ensure
-			new_list_not_void: new_list /= Void
+			new_list_not_void: Result /= Void
 		end
 
 	tuple_stack: ARRAYED_STACK [like new_tuple]

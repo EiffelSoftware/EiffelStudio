@@ -87,11 +87,11 @@ feature -- Actions
 				until
 					groups.after
 				loop
-					create new_xmi_cluster.make (id_counter, idref_counter, groups.item)
+					create new_xmi_cluster.make (id_counter, idref_counter, groups.item_for_iteration)
 					id_counter := id_counter + 1
 					create new_xmi_diagram.make (id_counter, new_xmi_cluster)
 					id_counter := id_counter + 1
-					current_cluster := groups.item.classes
+					current_cluster := groups.item_for_iteration.classes
 					current_cluster_id := idref_counter
 					idref_counter := idref_counter + 1
 						-- Classes
@@ -149,7 +149,7 @@ feature -- Actions
 				until
 					classes.after
 				loop
-					l_class_i ?= classes.item
+					l_class_i ?= classes.item_for_iteration
 					check
 						l_class_i_not_void: l_class_i /= Void
 						l_class_i_is_compiled: l_class_i.is_compiled
@@ -204,10 +204,10 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
+	classes: DS_ARRAYED_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	groups: SORTED_TWO_WAY_LIST [CONF_GROUP]
+	groups: DS_ARRAYED_LIST [CONF_GROUP]
 			-- Clusters to be generated.
 
 	xmi_clusters: LINKED_LIST [XMI_CLUSTER]
@@ -287,15 +287,13 @@ feature {NONE} -- Implementation
 	is_in_selection (c: CLASS_C): BOOLEAN is
 			-- Is `c' in the clusters selected by the user?
 		local
-			all_classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
 			l_class: CONF_CLASS
 		do
 			l_class ?= c.lace_class
 			check
 				l_class_not_void: l_class /= Void
 			end
-			all_classes := doc_universe.classes
-			Result := all_classes.has (l_class)
+			Result := doc_universe.classes.has (l_class)
 		end
 
 	add_type (t: XMI_TYPE) is

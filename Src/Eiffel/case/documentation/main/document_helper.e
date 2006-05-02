@@ -41,7 +41,7 @@ feature -- Helper
 				else
 					l_target := a_group.target
 					l_libs := l_target.used_in_libraries
-					if l_libs /= Void and then not l_libs.empty then
+					if l_libs /= Void and then not l_libs.is_empty then
 						l_lib := l_libs.first
 					end
 					if l_lib /= Void then
@@ -53,7 +53,7 @@ feature -- Helper
 			elseif a_group.is_library or a_group.is_assembly then
 				l_target := a_group.target
 				l_libs := l_target.used_in_libraries
-				if l_libs /= Void and then not l_libs.empty then
+				if l_libs /= Void and then not l_libs.is_empty then
 					l_lib := l_libs.first
 				end
 				if l_sep then
@@ -70,41 +70,6 @@ feature -- Helper
 		ensure
 			group_name_presentation_not_void: Result /= Void
 		end
-
---	group_name_presentation (sep: STRING; a_name: STRING; a_group: CONF_GROUP): STRING is
---			-- Name presentation of `a_group' + `sep' + `a_name'. i.e. "a.a_name"
---		require
---			sep_not_void: sep /= Void
---			a_name_not_void: a_name /= Void
---			a_group_not_void: a_group /= Void
---		local
---			l_cluster: CONF_CLUSTER
---			l_name: STRING
---			l_sep: BOOLEAN
---		do
---			l_sep := not a_name.is_empty
---			if a_group.is_cluster then
---				l_cluster ?= a_group
---				if l_sep then
---					l_name := l_cluster.name + sep + a_name
---				else
---					l_name := l_cluster.name
---				end
---				if l_cluster.parent /= Void then
---					Result := group_name_presentation (sep, l_name, l_cluster.parent)
---				else
---					Result := l_name
---				end
---			elseif a_group.is_library or a_group.is_assembly then
---				if l_sep then
---					Result := a_group.name + sep + a_name
---				else
---					Result := a_group.name
---				end
---			end
---		ensure
---			group_name_presentation_not_void: Result /= Void
---		end
 
 	path_representation (sep: STRING; a_name: STRING; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING is
 			-- Path representation
@@ -141,7 +106,7 @@ feature -- Helper
 			path_representation_not_void: Result /= Void
 		end
 
-	subclusters_of_group (a_group: CONF_GROUP): SORTED_TWO_WAY_LIST [CONF_CLUSTER] is
+	subclusters_of_group (a_group: CONF_GROUP): DS_ARRAYED_LIST [CONF_CLUSTER] is
 			-- Subclusters of a group.
 		require
 			a_group_not_void: a_group /= Void
@@ -151,8 +116,9 @@ feature -- Helper
 			l_lib: CONF_LIBRARY
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
+			l_groups: DS_ARRAYED_LIST [CONF_GROUP]
 		do
-			create Result.make
+			create Result.make (10)
 			if a_group.classes_set then
 				if a_group.is_cluster then
 					l_cluster ?= a_group
@@ -163,7 +129,7 @@ feature -- Helper
 						until
 							l_clu.after
 						loop
-							Result.extend (l_clu.item)
+							Result.force_last (l_clu.item)
 							l_clu.forth
 						end
 					end
@@ -175,7 +141,7 @@ feature -- Helper
 					until
 						l_clusters.after
 					loop
-						Result.extend (l_clusters.item_for_iteration)
+						Result.force_last (l_clusters.item_for_iteration)
 						l_clusters.forth
 					end
 				elseif a_group.is_assembly then
@@ -186,22 +152,27 @@ feature -- Helper
 					until
 						l_clusters.after
 					loop
-						Result.extend (l_clusters.item_for_iteration)
+						Result.force_last (l_clusters.item_for_iteration)
 						l_clusters.forth
 					end
 				end
 			end
+				-- Sort `Result', but using `group_sorter' forces us to use
+				-- a DS_ARRAYED_LIST [CONF_GROUP] local.
+			l_groups := Result
+			l_groups.sort (group_sorter)
 		ensure
 			subclusters_of_group_not_void: Result /= Void
+			sorted: (({DS_ARRAYED_LIST [CONF_GROUP]}) [Result]).sorted (group_sorter)
 		end
 
-	top_level_clusters: SORTED_TWO_WAY_LIST [CONF_GROUP] is
+	top_level_clusters: DS_ARRAYED_LIST [CONF_GROUP] is
 			-- Top level clusters in the system
 		local
 			l_groups: ARRAYED_LIST [CONF_GROUP]
 			l_cluster: CONF_CLUSTER
 		do
-			create Result.make
+			create Result.make (10)
 			l_groups := eiffel_universe.groups
 			from
 				l_groups.start
@@ -211,16 +182,35 @@ feature -- Helper
 				if l_groups.item.is_cluster then
 					l_cluster ?= l_groups.item
 					if l_cluster.parent /= Void then
-						Result.extend (l_cluster)
+						Result.force_last (l_cluster)
 					end
 				else
-					Result.extend (l_groups.item)
+					Result.force_last (l_groups.item)
 				end
 				l_groups.forth
 			end
+			Result.sort (group_sorter)
 		ensure
 			top_level_clusters_not_void: Result /= Void
+			sorted: Result.sorted (group_sorter)
 		end
+
+feature {NONE} -- Implementation
+
+	group_sorter: DS_QUICK_SORTER [CONF_GROUP] is
+			-- Sorter of group in alphabetical order.
+		do
+			Result := internal_group_sorter
+			if Result = Void then
+				create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
+				internal_group_sorter := Result
+			end
+		ensure
+			group_sorter_not_void: Result /= Void
+		end
+
+	internal_group_sorter: like group_sorter;
+			-- Storage for `group_sorter'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

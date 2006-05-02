@@ -38,7 +38,7 @@ feature -- Access
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: SORTED_TWO_WAY_LIST [CONF_GROUP]
+			subs: DS_ARRAYED_LIST [CONF_GROUP]
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -153,7 +153,7 @@ feature -- Access
 
 	group_index_text (
 		group: CONF_GROUP;
-		class_list: SORTED_TWO_WAY_LIST [CONF_CLASS];
+		class_list: DS_ARRAYED_LIST [CONF_CLASS];
 		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation group index for `group'.
 			-- Add links to diagrams if `diagrams' is True.
@@ -161,7 +161,7 @@ feature -- Access
 			group_not_void: group /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
+			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
 			l_name: STRING
 			l_cluster: CONF_CLUSTER
 		do
@@ -434,7 +434,9 @@ feature -- Routines
 			end
 		end
 
-	append_cluster_list (text: TEXT_FORMATTER; cluster_list: SORTED_TWO_WAY_LIST [CONF_GROUP]) is
+	append_cluster_list (text: TEXT_FORMATTER; cluster_list: DS_ARRAYED_LIST [CONF_GROUP]) is
+		local
+			l_cluster: CONF_GROUP
 		do
 			from
 				cluster_list.start
@@ -442,7 +444,8 @@ feature -- Routines
 				cluster_list.after
 			loop
 				text.add_indent
-				text.process_cluster_name_text (group_name_presentation (".", "", cluster_list.item), cluster_list.item, false)
+				l_cluster := cluster_list.item_for_iteration
+				text.process_cluster_name_text (group_name_presentation (".", "", l_cluster), l_cluster, false)
 				text.add_new_line
 				cluster_list.forth
 			end
@@ -511,7 +514,7 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: TEXT_FORMATTER; class_list: SORTED_TWO_WAY_LIST [CONF_CLASS]; desc: BOOLEAN) is
+	append_class_list (text: TEXT_FORMATTER; class_list: DS_ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN) is
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -523,7 +526,7 @@ feature {NONE} -- Implementation
 			until
 				class_list.after
 			loop
-				ci ?= class_list.item
+				ci ?= class_list.item_for_iteration
 				check
 					ci_not_void: ci /= Void
 				end
@@ -551,7 +554,7 @@ feature {NONE} -- Implementation
 	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER) is
 		local
 			n: INTEGER
-			subs: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
+			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
 		do
 			from n := 1 until n > indent loop
 				text.add_indent
@@ -566,7 +569,7 @@ feature {NONE} -- Implementation
 			subs := subclusters_of_group (a_group)
 			if subs /= Void then
 				from subs.start until subs.after loop
-					append_cluster_hierarchy_leaf (text, du, subs.item, indent + 1)
+					append_cluster_hierarchy_leaf (text, du, subs.item_for_iteration, indent + 1)
 					subs.forth
 				end
 			end

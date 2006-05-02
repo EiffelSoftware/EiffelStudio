@@ -644,6 +644,7 @@ feature {NONE} -- Implementation
 				if creation_check.is_selected then
 					creation_entry.parent.disable_sensitive
 				end
+				creation_check.disable_select
 				is_deferred := True
 			else
 				creation_check.enable_sensitive

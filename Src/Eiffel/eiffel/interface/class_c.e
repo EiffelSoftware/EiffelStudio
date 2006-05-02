@@ -2827,7 +2827,7 @@ feature -- Access
 			-- (After a compilation Current may become
 			-- invalid)
 		do
-			Result := class_id > 0 and then class_id <= System.classes.array_count
+			Result := class_id > 0 and then lace_class.is_valid and then class_id <= System.classes.array_count
 				and then System.class_of_id (class_id) = Current
 		end
 

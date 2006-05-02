@@ -1,16 +1,15 @@
 @echo off
 if .%1. == .clean. goto clean
-if .%1. == .cleand. goto cleand
 if .%1. == .win32. goto win32
 if .%1. == .win64. goto win64
 :usage
 echo make ...
 echo     Options:
-echo        clean   - remove unecessary files including desc
-echo        cleand - remove unecessary files excluding desc
-echo        win32 b - build a Win32 run-time for Borland
-echo        win32 m - build a Win32 run-time for Microsoft
-echo        win64 m - build a Win64 run-time for Microsoft
+echo        clean          - remove unecessary files including desc
+echo        win32 b        - build a Win32 run-time for Borland
+echo        win32 m  [dll] - build a Win32 run-time for Microsoft C++ 2005 [as DLL if specified]
+echo        win32 m6 [dll] - build a Win32 run-time for Microsoft C++ 6.0 [as DLL if specified]
+echo        win64 m  [dll] - build a Win64 run-time for Microsoft C++ 2005 [as DLL if specified]
 goto end
 :win32
 if .%2. == .. goto usage
@@ -19,8 +18,12 @@ copy CONFIGS\windows-bcb-x86 config.sh
 set remove_desc=1
 goto process
 :msc
-if NOT .%2. == .m. goto usage
+if NOT .%2. == .m. goto msc6
 copy CONFIGS\windows-msc-x86 config.sh
+goto process
+:msc6
+if NOT .%2. == .m6. goto usage
+copy CONFIGS\windows-msc6-x86 config.sh
 goto process
 :win64
 if .%2. == .. goto usage
@@ -29,6 +32,13 @@ copy CONFIGS\windows-msc-x86-64 config.sh
 set remove_desc=1
 goto process
 :process
+
+if .%3. == .dll. (
+	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
+	mv config.sh.modif config.sh
+	sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
+	mv config.sh.modif config.sh
+)
 
 bash eif_config_h.SH
 cd run-time

@@ -2438,7 +2438,8 @@
 								</Component>
 							</Directory>
 							<Component Id="wel_wnd_class.e" Guid="F1847E60-D390-4F03-81C3-88EDED7EA0ED">
-								<File Id="wel_wnd_class.e" Name="WEL_WN~1.E" LongName="wel_wnd_class.e" KeyPath="yes" />
+								<File Id="wel_blend_function_e" Name="WEL_BL~1.E" LongName="wel_blend_function.e"/>
+								<File Id="wel_wnd_class.e" Name="WEL_WN~1.E" LongName="wel_wnd_class.e"/>
 								<File Id="wel_notify_icon_data_e" Name="WEL_NO~2.E" LongName="wel_notify_icon_data.e" />
 								<File Id="wel_abc_struct.e" Name="WEL_AB~1.E" LongName="wel_abc_struct.e" />
 								<File Id="wel_tool_info.e" Name="WEL_TO~3.E" LongName="wel_tool_info.e" />
@@ -2841,6 +2842,8 @@
 									<File Id="wel_en_selchange_constants.e" Name="WEL_EN~4.E" LongName="wel_en_selchange_constants.e" />
 									<File Id="wel_cdds_constants_e" Name="WEL_CD~1.E" LongName="wel_cdds_constants.e" />
 									<File Id="wel_cdrf_constants_e" Name="WEL_CD~2.E" LongName="wel_cdrf_constants.e" />
+									<File Id="wel_theme_ts_constants_e" Name="WEL_TH~2.E" LongName="wel_theme_ts_constants.e" />
+									<File Id="wel_theme_tti_constants_e" Name="WEL_TH~1.E" LongName="wel_theme_tti_constants.e" />
 								</Component>
 							</Directory>
 						</Directory>

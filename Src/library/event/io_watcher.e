@@ -62,7 +62,7 @@ feature -- Access
 			check
 				callback_handle_zero: callback_handle = 0
 			end
-			l_condition := G_io_hup | G_io_err | G_io_nval | G_io_pri-- | G_io_in
+			l_condition := G_io_hup | G_io_err | G_io_nval | G_io_pri | G_io_in
 			add_watch_callback (Current, medium.handle, l_condition, $callback_handle)
 		ensure
 			medium_assigned: a_medium = medium

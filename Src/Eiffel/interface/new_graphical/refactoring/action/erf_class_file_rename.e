@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			new_file_name: FILE_NAME
 		do
 			class_i := a_class
-			create new_file_name.make_from_string (a_class.cluster.path)
+			create new_file_name.make_from_string (a_class.cluster.location.build_path (a_class.path, ""))
 			new_file_name.set_file_name (a_new_name)
 			new_file_name.add_extension ("e")
 			create old_name_ext.make_from_string (a_class.base_name)

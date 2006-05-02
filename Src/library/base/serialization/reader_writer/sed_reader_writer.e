@@ -1,5 +1,5 @@
 indexing
-	description: "Ancestor for reading/writing basic known entities from and to a particular % 
+	description: "Ancestor for reading/writing basic known entities from and to a particular %
 		%location specified in concrete descendants of current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,21 +13,29 @@ feature -- Header/Footer
 
 	read_header is
 			-- Action being executed before starting to read data.
+		require
+			is_ready: is_ready_for_reading
 		do
 		end
 
 	write_header is
 			-- Action being executed before starting to write data.
+		require
+			is_ready: is_ready_for_writing
 		do
 		end
 
 	read_footer is
 			-- Action being executed after finishing to read data.
+		require
+			is_ready: is_ready_for_reading
 		do
 		end
 
 	write_footer is
 			-- Action being executed after finishing to write data.
+		require
+			is_ready: is_ready_for_writing
 		do
 		end
 
@@ -51,7 +59,7 @@ feature -- Settings
 	set_is_pointer_value_stored (v: like is_pointer_value_stored) is
 			-- Set `is_pointer_value_stored' with `v'.
 		do
-			is_pointer_value_stored := v	
+			is_pointer_value_stored := v
 		ensure
 			is_pointer_value_stored_set: is_pointer_value_stored = v
 		end
@@ -181,7 +189,7 @@ feature -- Access
 			is_ready: is_ready_for_reading
 		deferred
 		end
-		
+
 	read_compressed_integer_32: INTEGER is
 			-- Read next compressed integer_32.
 			-- See `read_compressed_natural_32' for more details about encoding.
@@ -190,7 +198,7 @@ feature -- Access
 		do
 			Result := read_compressed_natural_32.as_integer_32
 		end
-		
+
 	read_compressed_natural_32: NATURAL_32 is
 			-- Read next compressed natural_32.
 			-- Depending on first natural_8 value read, it will tell how much more we need to read:
@@ -210,12 +218,12 @@ feature -- Access
 				Result := l_nat8
 			elseif l_nat8 & 0xC0 = 0x80 then
 					-- Values between 128 and 16382
-				Result := ((l_nat8.as_natural_32 & 0x0000003F) |<< 8) | 
+				Result := ((l_nat8.as_natural_32 & 0x0000003F) |<< 8) |
 					(read_natural_8.as_natural_32)
 			elseif l_nat8 & 0xE0 = 0xC0 then
 					-- Values between 16383 and 2097150
 				Result := ((l_nat8.as_natural_32 & 0x0000001F) |<< 16) |
-					(read_natural_8.as_natural_32 |<< 8) | 
+					(read_natural_8.as_natural_32 |<< 8) |
 					(read_natural_8.as_natural_32)
 			elseif l_nat8 & 0xF0 = 0xE0 then
 					-- Values between 2097151 and 268435454
@@ -238,7 +246,7 @@ feature -- Element change
 		do
 			write_natural_8 (v.code.to_natural_8)
 		end
-		
+
 	write_string_8 (v: STRING) is
 			-- Write `v'.
 		require
@@ -356,12 +364,12 @@ feature -- Element change
 		do
 			write_compressed_natural_32 (v.as_natural_32)
 		end
-		
+
 	write_compressed_natural_32 (v: NATURAL_32) is
 			-- Write `v' as a compressed natural_32.
-			-- Depending on value of `v', it will tell how many natural_8 will 
+			-- Depending on value of `v', it will tell how many natural_8 will
 			-- be written. Below here is the actual encoding where `x' represents
-			-- a meaningful bit for `v' and the last number in parenthesis is the 
+			-- a meaningful bit for `v' and the last number in parenthesis is the
 			-- marker value in hexadecimal which is added to the value of `v'.
 			-- 1 - For values between 0 and 127, write 0xxxxxxx (0x00).
 			-- 2 - For values between 128 and 16382, write 0x10xxxxxx xxxxxxxx (0xE0).

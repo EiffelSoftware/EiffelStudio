@@ -310,8 +310,9 @@ feature {NONE} -- User interaction
 			create l_ev
 			l_save_as_msg := "Save As..."
 			l_ev.set_title ("Configuration Loading Message")
-			l_ev.set_buttons (<< ev_ok, l_save_as_msg >>)
+			l_ev.set_buttons (<< ev_ok, l_save_as_msg, ev_cancel>>)
 			l_ev.set_default_push_button (l_ev.button (ev_ok))
+			l_ev.set_default_cancel_button (l_ev.button (ev_cancel))
 			l_ev.set_text ("Your old configration file needs to be converted to the new format.%N%
 				%The default name for the new configuration is '" + a_file_name + "'.%N%
 				%Select OK if you want to keep this name, or 'Save As...' to choose a different name.")
@@ -325,6 +326,7 @@ feature {NONE} -- User interaction
 			l_save_as.cancel_actions.extend (agent set_has_error)
 
 			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
+			l_ev.button (ev_cancel).select_actions.extend (agent on_cancelled (l_ev))
 			l_ev.button (ev_ok).select_actions.extend (agent a_action.call ([l_file_name.string]))
 			l_ev.show_modal_to_window (parent_window)
 
@@ -413,7 +415,7 @@ feature {NONE} -- User interaction
 				l_hbox.extend (l_select_button)
 				l_hbox.disable_item_expand (l_select_button)
 
-				create l_button.make_with_text_and_action (ev_cancel, agent on_target_cancelled (l_dialog))
+				create l_button.make_with_text_and_action (ev_cancel, agent on_cancelled (l_dialog))
 				l_button.set_minimum_height (default_button_height)
 				l_button.set_minimum_width (default_button_width)
 				l_hbox.extend (l_button)
@@ -576,14 +578,15 @@ feature {NONE} -- Actions
 			a_dlg.destroy
 		end
 
-	on_target_cancelled (a_dlg: EV_DIALOG) is
+	on_cancelled (a_dlg: EV_DIALOG) is
 			-- Action when user select a target with a double click.
 		require
 			a_dlg_not_void: a_dlg /= Void
-			a_dlg_not_destroyed: not a_dlg.is_destroyed
 		do
 			has_error := True
-			a_dlg.destroy
+			if not a_dlg.is_destroyed then
+				a_dlg.destroy
+			end
 		end
 
 

@@ -2,7 +2,9 @@
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
 microsoftestudio='estudio'
-make='nmake'
+include_path='%MSVCDir%\include'
+lib_path='%MSVCDir%\lib'
+make='"%MSVCDir%\bin\nmake"'
 del='-del'
 #
 output_cmd='-Fo'
@@ -28,20 +30,20 @@ output_libraries='standard mtstandard'
 #
 #Link Lines in non debug mode:
 #-----------------------------
-link_line='lib -OUT:$@ $** $link_flags'
+link_line='"$(MSVCDIR)\bin\lib" -OUT:$@ $** $link_flags'
 #
 #
-optimize='-O2 -GS-'
+optimize='-O2 -Ogityb2 -Gs'
 debug=''
-#optimize='-Od -GS'
+#optimize=''
 #debug='-Zi'
 
 link_flags=''
-warning_level='-W3 -Wp64 -D_CRT_SECURE_NO_DEPRECATE'
+warning_level='-W3'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc'
 #
-link32='link'
-cc='cl'
+link32='"$(MSVCDIR)\bin\link"'
+cc='"$(MSVCDIR)\bin\cl"'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #
 
@@ -151,7 +153,7 @@ d_sbrk='undef'
 d_sbrksmart='undef'
 d_smartmmap='undef'
 d_strerror='define'
-d_syserrlst='define'
+d_syserrlst='undef'
 d_sysernlst='undef'
 d_strerrm='strerror(e)'
 d_usleep='undef'

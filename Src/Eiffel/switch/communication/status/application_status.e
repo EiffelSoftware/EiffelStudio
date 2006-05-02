@@ -345,13 +345,14 @@ feature -- Thread related change
 	refresh_threads_information is
 		do
 			all_thread_ids_count := all_thread_ids.count
-			from
-				all_thread_ids.start
-			until
-				all_thread_ids.after
-			loop
-				all_thread_ids.forth
-			end
+--| FIXME: This is doing nothing, check what we wanted to do with that...			
+--			from
+--				all_thread_ids.start
+--			until
+--				all_thread_ids.after
+--			loop
+--				all_thread_ids.forth
+--			end
 		end
 
 feature {NONE} -- Call stack implementation

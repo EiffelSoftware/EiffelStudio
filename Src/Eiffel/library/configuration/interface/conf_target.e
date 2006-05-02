@@ -431,6 +431,31 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	mapping: like internal_mapping is
+			-- Special classes name mapping (eg. STRING => STRING_32)
+		do
+			if extends /= Void then
+				Result := extends.mapping.twin
+				if internal_mapping /= Void then
+					Result.merge (internal_mapping)
+				end
+			else
+				if internal_mapping /= Void then
+					Result := internal_mapping
+				else
+					create Result.make (5)
+						-- commented until new bootstrap is done
+--					Result.force ("STRING_8", "STRING")
+--					Result.force ("INTEGER_32", "INTEGER")
+--					Result.force ("NATURAL_32", "NATURAL")
+--					Result.force ("CHARACTER_8", "CHARACTER")
+--					Result.force ("REAL_32", "REAL")
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name (a_name: like name) is
@@ -789,6 +814,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			variable_added: internal_variables.has (a_name) and then internal_variables.item (a_name) = a_value
 		end
 
+	add_mapping (a_old_name, a_new_name: STRING) is
+			-- Add a new mapping from `a_old_name' to `a_new_name'.
+		require
+			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
+			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
+		do
+			if internal_mapping = Void then
+				create internal_mapping.make (1)
+			end
+			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+		end
+
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
 	set_environ_variables (a_vars: like environ_variables) is
@@ -856,7 +893,8 @@ feature -- Equality
 						is_group_equal_check (overrides, other.overrides) and then
 						equal (variables, other.variables) and then
 						equal (root, other.root) and then
-						equal (file_rule, other.file_rule)
+						equal (file_rule, other.file_rule) and then
+						equal (mapping, other.mapping)
 			if Result then
 				if precompile = Void then
 					Result := other.precompile = Void
@@ -902,6 +940,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this target itself.
+
+	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
+			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
 	changable_internal_options: like internal_options is
 			-- A possibility to change settings without knowing if we have some options already set.

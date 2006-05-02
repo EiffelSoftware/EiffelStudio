@@ -384,6 +384,8 @@ feature -- Visit nodes
 
 	process_cluster (a_cluster: CONF_CLUSTER) is
 			-- Visit `a_cluster'.
+		local
+			l_old_cluster: CONF_CLUSTER
 		do
 			if not is_error then
 				current_cluster := a_cluster
@@ -398,6 +400,19 @@ feature -- Visit nodes
 				if partial_classes /= Void then
 					process_partial_classes
 					partial_classes := Void
+				end
+
+					-- if the mapping changed, mark everything in the cluster as modified
+				l_old_cluster ?= old_group
+				if l_old_cluster /= Void and then not l_old_cluster.mapping.is_equal (a_cluster.mapping) then
+					from
+						current_classes.start
+					until
+						current_classes.after
+					loop
+						modified_classes.force (current_classes.item_for_iteration)
+						current_classes.forth
+					end
 				end
 
 					-- process removed classes

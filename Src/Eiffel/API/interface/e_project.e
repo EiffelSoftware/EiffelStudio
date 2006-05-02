@@ -535,8 +535,6 @@ feature -- Update
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-			freezing_occurred_if_successful: system /= Void and then
-					freezing_occurred implies successful
 		end
 
 	freeze is

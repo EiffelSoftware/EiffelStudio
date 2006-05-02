@@ -16,17 +16,16 @@ if test $# -eq 0; then
 	usage 1 1>&2
 fi
 
-ISE_LIBRARIES=$ISE_EIFFEL
 gtk_package_string=gtk+-2.0
 
 
 while test $# -gt 0; do
 	case $1 in
-		--devel)
-		ISE_LIBRARIES=$EIFFEL_SRC
-		;;
 		--object)
-		echo $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 `pkg-config $gtk_package_string $thread_string --libs` -lXtst -lX11
+		if [ -z $ISE_LIBRARY ]; then
+			ISE_LIBRARY=$ISE_EIFFEL
+		fi
+		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 `pkg-config $gtk_package_string $thread_string --libs` -lXtst -lX11
 		;;
 		--threads)
 		thread_string=gthread-2.0

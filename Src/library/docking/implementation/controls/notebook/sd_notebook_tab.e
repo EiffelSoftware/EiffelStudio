@@ -9,7 +9,7 @@ class
 	SD_NOTEBOOK_TAB
 
 inherit
-	EV_DRAWING_AREA
+	SD_DRAWING_AREA
 		export
 			{SD_NOTEBOOK_TAB_DRAWER_I} implementation
 		redefine
@@ -82,7 +82,7 @@ feature -- Command
 	destroy is
 			-- Redefine.
 		do
-			Precursor {EV_DRAWING_AREA}
+			Precursor {SD_DRAWING_AREA}
 		end
 
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
@@ -242,7 +242,6 @@ feature {NONE}  -- Implmentation for drag action
 				select_actions.call ([])
 				create l_menu.make (internal_notebook)
 				l_menu.show_at (Current, a_x, a_y)
---				l_menu.show_at_window (internal_docking_manager.main_window)
 			else
 
 			end
@@ -337,10 +336,6 @@ feature {NONE}  -- Implementation functions.
 
 				l_size := internal_tab_style.start_x_tail_internal
 				set_font (l_orignal_font)
---				if is_selected then
---					l_size := l_size + internal_shared.highlight_tail_width
---					l_size := l_size + internal_tab_style.padding_width
---				end
 				if l_size /= minimum_width or l_size /= minimum_width then
 					set_minimum_width (l_size)
 					set_minimum_width (l_size)
@@ -352,12 +347,6 @@ feature {NONE}  -- Implementation attributes
 
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook Current belong to.
-
---	internal_drawing_area: EV_DRAWING_AREA
---			-- Drawing area for pixmap.
-
---	internal_horizontal_box: EV_HORIZONTAL_BOX
---			-- Horizontal box which contain `internal_pixmap_drawing
 
 	internal_shared: SD_SHARED
 			-- All singletons.

@@ -2891,7 +2891,12 @@ rt_shared rt_uint_ptr eif_rt_split_block(register union overhead *selected, regi
 	i = selected->ov_size & B_SIZE;			/* Hope it will fit in an int */
 	r = (i - nbytes);				/* Actual usable bytes */
 
-	/* Do the split only if possible */
+	/* Do the split only if possible.
+	 * Note: one could say that to avoid 0-sized block in the free list, we
+	 *       could have `r <= OVERHEAD', but the issue is that in `gscavenge'
+	 *       it would most likely cause a check violation because `gscavenge'
+	 *       assumes that reallocation does not change the size of objects.
+	 */
 	if (r < OVERHEAD)
 		return -1;				/* Not enough space to split */
 

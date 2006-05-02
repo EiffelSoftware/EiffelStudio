@@ -37,7 +37,7 @@ feature -- Command
 	position_resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE; a_relative_pointer_position: INTEGER) is
 			-- When extend `a_new_tool_bar', if not `is_enough_max_space', then resize tool bars.
 		require
-			has: has (a_new_tool_bar)
+			has: has (a_new_tool_bar.tool_bar)
 		local
 			l_hot_index: INTEGER
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -50,7 +50,7 @@ feature -- Command
 				l_tool_bars := internal_tool_bar_row.zones
 				l_tool_bars.delete (a_new_tool_bar)
 				if l_hot_index = 0 then
-					internal_tool_bar_row.internal_set_item_position (a_new_tool_bar, 0)
+					internal_tool_bar_row.internal_set_item_position (a_new_tool_bar.tool_bar, 0)
 					l_last_end_position := a_new_tool_bar.size
 				end
 				from
@@ -58,11 +58,11 @@ feature -- Command
 				until
 					l_tool_bars.after
 				loop
-					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration, l_last_end_position)
+					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, l_last_end_position)
 					l_last_end_position := l_tool_bars.item_for_iteration.position + l_tool_bars.item_for_iteration.size
 
 					if l_tool_bars.index = l_hot_index then
-						internal_tool_bar_row.internal_set_item_position (a_new_tool_bar, l_last_end_position)
+						internal_tool_bar_row.internal_set_item_position (a_new_tool_bar.tool_bar, l_last_end_position)
 						l_last_end_position := a_new_tool_bar.position + a_new_tool_bar.size
 					end
 					l_tool_bars.forth
@@ -83,6 +83,7 @@ feature -- Command
 			if internal_sizer.is_enough_max_space (False) then
 				l_tool_bars := internal_tool_bar_row.zones
 				from
+					l_tool_bars.delete (internal_mediator.caller)
 					l_tool_bars.start
 					l_positions_and_sizes.start
 				until
@@ -91,7 +92,7 @@ feature -- Command
 					l_tool_bar := l_tool_bars.item_for_iteration
 					-- User dragged tool bar out of current row
 					-- We reset orignal position.
-					l_tool_bar.row.set_item_position_relative (l_tool_bar, l_positions_and_sizes.item.integer_32_item (1))
+					l_tool_bar.row.set_item_position_relative (l_tool_bar.tool_bar, l_positions_and_sizes.item.integer_32_item (1))
 					l_tool_bars.forth
 					l_positions_and_sizes.forth
 				end
@@ -122,11 +123,11 @@ feature -- Command
 				loop
 					check non_negative: positions_and_sizes_try.item.integer_32_item (1) >= 0 end
 					check not_outside: positions_and_sizes_try.item.integer_32_item (1) + l_tool_bars.item (positions_and_sizes_try.index).size <= internal_tool_bar_row.size end
-					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration, positions_and_sizes_try.item.integer_32_item (1))
+					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, positions_and_sizes_try.item.integer_32_item (1))
 					l_tool_bars.forth
 					positions_and_sizes_try.forth
 				end
-				internal_tool_bar_row.internal_set_item_position (internal_mediator.caller, caller_position)
+				internal_tool_bar_row.internal_set_item_position (internal_mediator.caller.tool_bar, caller_position)
 			end
 		end
 
@@ -172,7 +173,7 @@ feature -- Command
 				until
 					l_zones.after
 				loop
-					internal_tool_bar_row.internal_set_item_position (l_zones.item_for_iteration, l_last_end_postion)
+					internal_tool_bar_row.internal_set_item_position (l_zones.item_for_iteration.tool_bar, l_last_end_postion)
 					l_last_end_postion := l_zones.item_for_iteration.size + l_last_end_postion
 					l_zones.forth
 				end
@@ -249,13 +250,13 @@ feature {NONE}  -- Implementation
 				l_zone := l_zones.item_for_iteration
 				if l_zones.item_for_iteration.assistant.last_state.position + l_zone.size < l_last_start_position then
 					-- We can position it to orignal position.
-					internal_tool_bar_row.internal_set_item_position (l_zone, l_zones.item_for_iteration.assistant.last_state.position)
+					internal_tool_bar_row.internal_set_item_position (l_zone.tool_bar, l_zones.item_for_iteration.assistant.last_state.position)
 				else
 					l_temp_position := l_last_start_position - 1 - l_zone.size
 					if l_temp_position < 0 then
 						l_need_reposition := True
 					else
-						internal_tool_bar_row.internal_set_item_position (l_zone, l_temp_position)
+						internal_tool_bar_row.internal_set_item_position (l_zone.tool_bar, l_temp_position)
 					end
 				end
 				l_last_start_position := l_zone.position

@@ -15,13 +15,12 @@ inherit
 	EV_FIXED
 		rename
 			extend as extend_fixed,
-			set_item_position as set_item_position_fixed
+			set_item_position as set_item_position_fixed,
+			prune as prune_fixed
 		export
 			{NONE} all
 			{ANY} has, parent, count, prunable
 			{SD_TOOL_BAR_ZONE} set_item_size
-		redefine
-			prune
 		end
 
 create
@@ -34,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			create internal_shared
+			create internal_zones.make_default
 			create internal_positioner.make (Current)
 			is_vertical := a_vertical
 		ensure
@@ -46,27 +46,27 @@ feature -- Command
 			-- Extend `a_tool_bar'.
 		require
 			a_tool_bar_not_void: a_tool_bar /= Void
-			parent_void: a_tool_bar.parent = Void
+			parent_void: a_tool_bar.tool_bar.parent = Void
 		do
 			if a_tool_bar.is_vertical /= is_vertical then
 				a_tool_bar.change_direction (not is_vertical)
 			end
-			extend_fixed (a_tool_bar)
+			extend_fixed (a_tool_bar.tool_bar)
 
 			if is_vertical then
-				if a_tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
-					a_tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
+				if a_tool_bar.tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
+					a_tool_bar.tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_width (a_tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_width (a_tool_bar.tool_bar, {SD_SHARED}.tool_bar_size)
 			else
-				if a_tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
-					a_tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
+				if a_tool_bar.tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
+					a_tool_bar.tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_height (a_tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_height (a_tool_bar.tool_bar, {SD_SHARED}.tool_bar_size)
 			end
 
 			a_tool_bar.set_row (Current)
-			set_item_position_fixed (a_tool_bar, 1, 1)
+			set_item_position_fixed (a_tool_bar.tool_bar, 1, 1)
 			if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
 				if is_vertical then
 					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
@@ -74,25 +74,28 @@ feature -- Command
 					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
 				end
 			end
-
 			a_tool_bar.assistant.update_indicator
+			internal_zones.force_last (a_tool_bar)
 		ensure
-			extended: has (a_tool_bar)
+			extended: has (a_tool_bar.tool_bar) and internal_zones.has (a_tool_bar)
 			direction_changed: a_tool_bar.is_vertical = is_vertical
 			tool_bar_row_set: a_tool_bar.row = Current
 		end
 
-	prune (a_item: EV_WIDGET) is
+	prune (a_zone: SD_TOOL_BAR_ZONE) is
 			-- Redefine
 		local
-			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_result: INTEGER
 		do
-			l_tool_bar ?= a_item
-			check not_void: l_tool_bar /= Void end
-			l_result := l_tool_bar.assistant.expand_size (l_tool_bar.maximize_size)
-			Precursor {EV_FIXED} (a_item)
+			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
+
+			prune_fixed (a_zone.tool_bar)
+
 			internal_positioner.position_resize_on_prune
+
+			internal_zones.delete (a_zone)
+		ensure
+			pruned: not internal_zones.has (a_zone)
 		end
 
 	on_pointer_motion (a_screen_position: INTEGER) is
@@ -104,22 +107,12 @@ feature -- Command
 			internal_positioner.on_pointer_motion (l_relative_position)
 		end
 
---	set_item_position (a_widget: EV_WIDGET; a_screen_x_y: INTEGER) is
---			-- Set `a_widget' position with screen position.
---		require
---			a_widget_not_void: a_widget /= Void
---		do
---			set_item_position_relative (a_widget, to_relative_position (a_screen_x_y))
---		ensure
---		end
-
 	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is
 			-- Set `a_widget' position with relative position.
 		require
 			a_widget_not_void: a_widget /= Void
 		do
 			internal_set_item_position (a_widget, a_relative_x_y)
-		ensure
 		end
 
 	apply_change is
@@ -200,17 +193,7 @@ feature -- Query
 			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_TOOL_BAR_ZONE]
 		do
-			from
-				create Result.make (1)
-				start
-			until
-				after
-			loop
-				l_tool_bar_zone ?= item
-				check only_has_tool_bar_zone: l_tool_bar_zone /= Void end
-				Result.force_last (l_tool_bar_zone)
-				forth
-			end
+			Result := internal_zones.twin
 			create l_agent_sorter.make (agent sort_by_position)
 			create l_sorter.make (l_agent_sorter)
 			l_sorter.sort (Result)
@@ -266,6 +249,13 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 
 	internal_shared: SD_SHARED;
 			-- All singletons.
+
+	internal_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE];
+			-- All tool bar zones in Current.
+
+invariant
+
+	not_void: internal_zones /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

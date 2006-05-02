@@ -94,7 +94,7 @@ feature -- Basic operation
 				l_tool_bar_row := Void
 				l_tool_bar_row ?= internal_box.item
 				check box_only_have_tool_bar_row: l_tool_bar_row /= Void end
-				l_tool_bar_row.start_drag (internal_dock_mediator.caller)
+				l_tool_bar_row.start_drag (internal_dock_mediator.caller.tool_bar)
 				internal_box.forth
 			end
 		ensure
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation functions.
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
 
-				if not l_tool_bar_row.has (internal_dock_mediator.caller)  then
+				if not l_tool_bar_row.has (internal_dock_mediator.caller.tool_bar)  then
 					if (l_tool_bar_row.has_screen_y (a_screen_y) and not internal_vertical)
 						or (l_tool_bar_row.has_screen_x (a_screen_x) and internal_vertical) then
 						--Change caller's row.
@@ -198,8 +198,8 @@ feature {NONE} -- Implementation functions.
 			-- On windows, following line is not needed,
 			-- But on Gtk, we need first disable_capture (in SD_TOOL_BAR_ZONE dock) then enable capture,
 			-- because it's off-screen widget, it'll not have capture when it show again.
-			internal_dock_mediator.caller.enable_capture
-			
+			internal_dock_mediator.caller.tool_bar.enable_capture
+
 			internal_docking_manager.command.resize (True)
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_HOT_ZONE create new row. Docking Manage Resize *****************")
@@ -218,13 +218,13 @@ feature {NONE} -- Implementation functions.
 				end
 				internal_dock_mediator.caller.row.prune (internal_dock_mediator.caller)
 			end
-			if internal_dock_mediator.caller.parent /= Void then
-				internal_dock_mediator.caller.parent.prune (internal_dock_mediator.caller)
+			if internal_dock_mediator.caller.tool_bar.parent /= Void then
+				internal_dock_mediator.caller.tool_bar.parent.prune (internal_dock_mediator.caller.tool_bar)
 			end
 		ensure
 			pruned: internal_dock_mediator.caller.row /= Void implies
-				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller)
-			parent_void: internal_dock_mediator.caller.parent = Void
+				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller.tool_bar)
+			parent_void: internal_dock_mediator.caller.tool_bar.parent = Void
 		end
 
 feature {NONE}  -- Implementation query
@@ -247,7 +247,7 @@ feature {NONE}  -- Implementation query
 			loop
 				l_tool_bar_row ?= internal_box.item
 				check l_tool_bar_row /= Void end
-				Result := l_tool_bar_row.has (internal_dock_mediator.caller)
+				Result := l_tool_bar_row.has (internal_dock_mediator.caller.tool_bar)
 				internal_box.forth
 			end
 		end

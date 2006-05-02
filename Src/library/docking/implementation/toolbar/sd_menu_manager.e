@@ -150,13 +150,13 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 			not_floating: not a_tool_bar.is_floating
 			has: contents.has (a_tool_bar.content)
 		do
-			if internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar) then
+			if internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_DOCKING_MANAGER}.dock_top
-			elseif internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar) then
+			elseif internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_DOCKING_MANAGER}.dock_bottom
-			elseif internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar) then
+			elseif internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_DOCKING_MANAGER}.dock_left
-			elseif internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar) then
+			elseif internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_DOCKING_MANAGER}.dock_right
 			end
 		ensure

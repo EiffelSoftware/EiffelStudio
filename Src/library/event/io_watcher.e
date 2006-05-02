@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	medium: IO_MEDIUM
-			-- Watched for state changes.
+			-- Medium watched for state changes.
 
 	set_medium (a_medium: IO_MEDIUM) is
 			-- Assign `a_medium' to `medium'.
@@ -54,18 +54,20 @@ feature -- Access
 		require
 			medium_void: medium = Void
 			a_medium_not_void: a_medium /= Void
+		local
+			l_condition: INTEGER
 		do
 			medium := a_medium
-			initialize_callback
+			initialize_c_callback ($on_event)
 			check
 				callback_handle_zero: callback_handle = 0
 			end
-			callback_handle := c_add_watch_callback (Current, medium.handle)
+			l_condition := G_io_hup | G_io_err | G_io_nval | G_io_pri-- | G_io_in
+			add_watch_callback (Current, medium.handle, l_condition, $callback_handle)
 		ensure
-			callback_handle_positive: callback_handle > 0
 			medium_assigned: a_medium = medium
 		end
-	
+
 	remove_medium is
 			-- Make `medium' `Void'.
 		require
@@ -74,9 +76,6 @@ feature -- Access
 			res: BOOLEAN
 		do
 			medium := Void
-			check
-				callback_handle_positive: callback_handle > 0
-			end
 			res := g_source_remove (callback_handle);
 			check
 				removed: res = True
@@ -107,64 +106,93 @@ feature {NONE} -- Implementation
 			-- Call action sequence corresponding to `condition'.
 		do
 			if condition & G_io_in /= 0 then
-				read_actions.call ([])
-			end
-			if condition & G_io_out /= 0 then
-				--FIXME
-			end
-			if condition & G_io_err /= 0 then
-				error_actions.call ([])
+				read_actions.call (Void)
 			end
 			if condition & G_io_pri /= 0 then
-				exception_actions.call ([])
+				read_actions.call (Void)
+			end
+			if condition & G_io_out /= 0 then
+				-- Do nothing as we do not care about writing.
+			end
+			if condition & G_io_err /= 0 then
+				error_actions.call (Void)
 			end
 			if condition & G_io_hup /= 0 then
-				--FIXME
+				exception_actions.call (Void)
 			end
 			if condition & G_io_nval /= 0 then
-				--FIXME
+				error_actions.call (Void)
 			end
 		end
 
-	G_io_in: INTEGER is 1
+	G_io_in: INTEGER is
+		-- There is data to be read.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_IN"
+		end
 
-	G_io_out: INTEGER is 4
+	G_io_out: INTEGER is
+		-- Data can be written.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_OUT"
+		end
 
-	G_io_pri: INTEGER is 2
+	G_io_pri: INTEGER is
+		-- There is urgent data to read.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_PRI"
+		end
 
-	G_io_err: INTEGER is 8
+	G_io_err: INTEGER is
+		-- Error condition.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_ERR"
+		end
 
-	G_io_hup: INTEGER is 16
+	G_io_hup: INTEGER is
+		-- Hung up (the connection has been broken, usually for pipes and sockets).
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_HUP"
+		end
 
-	G_io_nval: INTEGER is 32
+	G_io_nval: INTEGER is
+		-- Invalid request. The file descriptor is not open.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_NVAL"
+		end
 
-	c_add_watch_callback (object: IO_WATCHER; handle: INTEGER): INTEGER is
-			-- Set up `on_event' callback for `object' when an event occurs
+	add_watch_callback (io_watcher: IO_WATCHER; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32]) is
+			-- Set up `on_event' callback for `io_watcher' when an event occurs
 			-- on medium referenced by `handle'.
 		external
-			"C (EIF_OBJECT, gint): guint | %"io_watcher.h%""
-		alias
-			"c_io_watcher_add_watch_callback"
+			--| FIXME Make this inline when built in object protection for inline code is added to compiler.
+			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"io_watcher.h%""
 		end
 
-	initialize_callback is
-			-- Pass address of `on_event' to C side to enable callbacks.
-		once
-			c_initialize_callback ($on_event)
-		end
-
-	c_initialize_callback (on_event_address: POINTER) is
+	initialize_c_callback (on_event_address: POINTER) is
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
-			"C (gpointer) | %"io_watcher.h%""
+			"C inline use %"io_watcher.h%""
 		alias
-			"c_io_watcher_initialize_callback"
+			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end
 
-	callback_handle: INTEGER
+	callback_handle: NATURAL_32
 			-- GLib callback handle.
 
-	g_source_remove (a_tag: INTEGER): BOOLEAN is 
+	g_source_remove (a_tag: NATURAL_32): BOOLEAN is
 			-- gboolean g_source_remove (guint tag);
 		external
 			"C (guint): gboolean | <gtk/gtk.h>"

@@ -264,8 +264,16 @@ feature {EV_ANY_I} -- Status setting
 			-- `new_width' by `new_height'.
 		local
 			tmp_bitmap: WEL_BITMAP
+			l_mask_dc, l_old_mask_dc: WEL_MEMORY_DC
+			l_mask, l_old_mask: WEL_BITMAP
+			l_wel_rect: WEL_RECT
+			l_brush: WEL_BRUSH
+			l_old_width, l_old_height: INTEGER
 		do
 			update_content
+
+			l_old_width := width
+			l_old_height := height
 
 			if private_bitmap = Void then
 				retrieve_icon_information
@@ -283,13 +291,26 @@ feature {EV_ANY_I} -- Status setting
 
 				-- Stretch the mask if any.
 			if private_mask_bitmap /= Void then
-				tmp_bitmap := private_mask_bitmap
-				private_mask_bitmap := stretch_wel_bitmap (
-					tmp_bitmap,
-					new_width,
-					new_height
-					)
-				tmp_bitmap.decrement_reference
+				create l_old_mask_dc.make
+				l_old_mask_dc.select_bitmap (private_mask_bitmap)
+				l_old_mask := private_mask_bitmap
+				l_old_mask_dc.select_bitmap (l_old_mask)
+
+				create l_mask_dc.make
+				l_mask_dc.set_background_opaque
+				create l_mask.make_compatible (l_mask_dc, new_width, new_height)
+				l_mask.enable_reference_tracking
+				private_mask_bitmap := l_mask
+				l_mask_dc.select_bitmap (l_mask)
+
+				l_mask_dc.stretch_blt (0, 0, new_width, new_height, l_old_mask_dc, 0, 0, l_old_width, l_old_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+
+					-- Clean up.
+				l_old_mask_dc.unselect_bitmap
+				l_old_mask_dc.delete
+				l_mask_dc.unselect_bitmap
+				l_mask_dc.delete
+				l_old_mask.decrement_reference
 			end
 
 				-- Update the width & height attributes
@@ -1263,7 +1284,6 @@ feature {NONE} -- Implementation
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
---			source_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
@@ -1335,18 +1355,6 @@ feature {NONE} -- Implementation
 							Dib_colors_constants.Dib_rgb_colors
 							)
 						private_mask_bitmap.enable_reference_tracking
-
---						memory_dc.select_bitmap (private_bitmap)
-
-							--| FIXME To get the icon masking to work properly we have to always make sure
-							--| that the color masked out is always black, this is achieved by blitting
-							--| the black part of the mask on to the source pixmap
-							--| Studio uses black as the color underneath for all icons
---						create source_dc.make
---						source_dc.select_bitmap (private_mask_bitmap)
---						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskpaint)
---						source_dc.unselect_bitmap
---						source_dc.delete
 
 						memory_dc.unselect_all
 						memory_dc.delete
@@ -1468,6 +1476,7 @@ feature {NONE} -- Implementation
 			old_dc.select_bitmap(old_bitmap)
 
 				-- create and assign a new bitmap & bitmap_dc
+			s_dc.set_background_transparent
 			create new_dc.make_by_dc (s_dc)
 			create new_bitmap.make_compatible (
 				s_dc,

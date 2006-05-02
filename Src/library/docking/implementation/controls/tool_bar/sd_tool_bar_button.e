@@ -128,9 +128,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN is
 			-- Redefine
 		do
-			if (a_rect.intersects (rectangle)) then
-				Result := True
-			end
+			Result := a_rect.intersects (rectangle)
 		end
 
 	pixmap_position: EV_COORDINATE is

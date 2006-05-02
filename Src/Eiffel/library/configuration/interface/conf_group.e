@@ -476,7 +476,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
 
-feature {CONF_VISITOR} -- Implementation, not stored in configuration fi
+feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configuration fi
 
 	classes_by_filename: HASH_TABLE [like class_type, STRING]
 			-- Classes index by filename

@@ -115,21 +115,12 @@ feature -- Access
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore. It may also
 			-- be a classc_stone if the class is compiled now)
-		local
-			l_classes: LIST [CLASS_I]
-			l_class: CLASS_I
 		do
-			if class_i /= Void then
-				l_classes := Eiffel_Universe.classes_with_name (class_i.name)
-				if l_classes /= Void and l_classes.count = 1 then
-					l_class := l_classes.first
-					if l_class.is_valid then
-						if l_class.compiled then
-							create {CLASSC_STONE} Result.make (l_class.compiled_class)
-						else
-							create {CLASSI_STONE} Result.make (l_class)
-						end
-					end
+			if class_i /= Void and then class_i.is_valid then
+				if class_i.compiled then
+					create {CLASSC_STONE} Result.make (class_i.compiled_class)
+				else
+					create {CLASSI_STONE} Result.make (class_i)
 				end
 			end
 		end

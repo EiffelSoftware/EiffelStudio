@@ -344,6 +344,7 @@ feature -- Element change
 
 				-- Mark `a_class' as invalid
 			a_class.config_class.invalidate
+			system.remove_unref_class (a_class)
 				-- we need to rebuild and then the rest will be done during rebuild
 			system.force_rebuild
 		end
@@ -489,8 +490,11 @@ feature -- Element change
 			if not l_clu.classes_set then
 				create l_classes.make (1)
 				l_clu.set_classes (l_classes)
+				create l_classes.make (1)
+				l_clu.set_classes_by_filename (l_classes)
 			end
 			l_clu.classes.force (l_new_class, l_new_class.name)
+			l_clu.classes_by_filename.force (l_new_class, a_path + "/" + l_new_class.base_name)
 
 				-- update folder
 			l_folder := folder_from_cluster (a_cluster)

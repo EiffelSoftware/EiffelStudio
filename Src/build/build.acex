@@ -12,7 +12,6 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="syntax_warning" value="False"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>

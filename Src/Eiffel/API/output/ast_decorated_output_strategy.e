@@ -1281,9 +1281,9 @@ feature {NONE} -- Implementation
 			if not has_error_internal then
 				l_feat := feature_in_class (l_expr_type.actual_type.associated_class, l_as.routine_ids)
 			end
-			if not expr_type_visiting then
-				if not has_error_internal then
-					if l_feat.is_prefix then
+			if not has_error_internal then
+				if l_feat.is_prefix then
+					if not expr_type_visiting then
 						l_name := l_feat.prefix_symbol
 						if in_bench_mode then
 							text_formatter_decorator.process_operator_text (l_name, l_feat)
@@ -1293,26 +1293,34 @@ feature {NONE} -- Implementation
 							text_formatter_decorator.process_symbol_text (l_name)
 						end
 						text_formatter_decorator.put_space
-						l_as.expr.process (Current)
-					elseif l_feat.is_infix then
-						check
-							is_infix: False
-						end
-					else
-						l_as.expr.process (Current)
+					end
+					l_as.expr.process (Current)
+				elseif l_feat.is_infix then
+					check
+						is_infix: False
+					end
+				else
+					l_as.expr.process (Current)
+					if not expr_type_visiting then
 						text_formatter_decorator.process_symbol_text (ti_dot)
 						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					end
-				else
+				end
+			else
+				if not expr_type_visiting then
 					text_formatter_decorator.process_basic_text (l_as.operator_name)
 					text_formatter_decorator.put_space
-					l_as.expr.process (Current)
 				end
+				l_as.expr.process (Current)
+			end
+			if not expr_type_visiting then
 				text_formatter_decorator.commit
 			end
 			if not has_error_internal then
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
+				check last_type_not_void: last_type /= Void end
+				last_class := last_type.associated_class
 				if l_type.is_loose then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)
 				else
@@ -1546,9 +1554,11 @@ feature {NONE} -- Implementation
 	process_bin_eq_as (l_as: BIN_EQ_AS) is
 		do
 			l_as.left.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.process_symbol_text (l_as.op_name)
-			text_formatter_decorator.put_space
+			if not expr_type_visiting then
+				text_formatter_decorator.put_space
+				text_formatter_decorator.process_symbol_text (l_as.op_name)
+				text_formatter_decorator.put_space
+			end
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end
@@ -1556,9 +1566,11 @@ feature {NONE} -- Implementation
 	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 			l_as.left.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.process_symbol_text (l_as.op_name)
-			text_formatter_decorator.put_space
+			if not expr_type_visiting then
+				text_formatter_decorator.put_space
+				text_formatter_decorator.process_symbol_text (l_as.op_name)
+				text_formatter_decorator.put_space
+			end
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end

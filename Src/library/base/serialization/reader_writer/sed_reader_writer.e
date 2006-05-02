@@ -205,7 +205,7 @@ feature -- Access
 			-- 1 - Of the form 0xxxxxxx (0x00) for values between 0 and 127
 			-- 2 - Of the form 10xxxxxx (0x80) for values between 128 and 16382 and one more to read.
 			-- 3 - Of the form 110xxxxx (0xC0) for values between 16383 and 2097150 and 2 more to read.
-			-- 4 - Of the form 110xxxxx (0xE0) for values between 2097151 and 268435454 and 3 more to read
+			-- 4 - Of the form 1110xxxx (0xE0) for values between 2097151 and 268435454 and 3 more to read
 			-- 5 - Otherwise a full natural_32 to read.
 		require
 			is_ready: is_ready_for_reading

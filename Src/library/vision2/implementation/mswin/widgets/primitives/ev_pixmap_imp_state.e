@@ -82,7 +82,7 @@ feature -- Saving
 			png_format: EV_PNG_FORMAT
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
-			a_fn: WEL_STRING
+			a_fn: C_STRING
 			char_array: WEL_CHARACTER_ARRAY
 			a_width, a_height: INTEGER
 			l_raw_image_data: like raw_image_data

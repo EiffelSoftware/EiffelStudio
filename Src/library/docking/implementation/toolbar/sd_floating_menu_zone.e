@@ -92,12 +92,12 @@ feature -- Command
 		require
 			a_tool_bar_zone_not_void: a_tool_bar_zone /= Void
 			a_tool_bar_zone_horizontal: not a_tool_bar_zone.is_vertical
-			a_tool_bar_zone_parent_void: a_tool_bar_zone.parent = Void
+			a_tool_bar_zone_parent_void: a_tool_bar_zone.tool_bar.parent = Void
 			not_extended: content = Void
 		do
 			zone := a_tool_bar_zone
-			tool_bar := a_tool_bar_zone
-			internal_padding_box.extend (a_tool_bar_zone)
+			tool_bar := a_tool_bar_zone.tool_bar
+			internal_padding_box.extend (a_tool_bar_zone.tool_bar)
 			content := a_tool_bar_zone.content
 
 			internal_title_bar.set_content (content)

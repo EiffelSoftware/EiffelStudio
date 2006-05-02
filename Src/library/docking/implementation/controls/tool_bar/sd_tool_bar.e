@@ -10,9 +10,20 @@ inherit
 	SD_DRAWING_AREA
 		export
 			{NONE} all
-			{ANY} width, height, minimum_width, minimum_height, set_background_color, background_color, screen_x, screen_y, hide, show, is_displayed
-			{SD_TOOL_BAR_DRAWER_I} implementation, draw_pixmap, clear_rectangle
-			{SD_TOOL_BAR_ITEM} tooltip, set_tooltip, remove_tooltip
+			{ANY} width, height, minimum_width, minimum_height,
+				 set_background_color, background_color, screen_x,
+				  screen_y, hide, show, is_displayed,parent,
+					pointer_motion_actions, pointer_button_release_actions,
+					enable_capture, disable_capture, has_capture,
+					x_position, y_position, destroy,
+					set_minimum_width, set_minimum_height
+			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
+			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip
+			{SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_TOOL_BAR} set_pointer_style
+			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} expose_actions, pointer_button_press_actions, pointer_double_press_actions,
+							redraw_rectangle
+		redefine
+			update_for_pick_and_drop
 		end
 
 create
@@ -26,7 +37,7 @@ feature {NONE} -- Initlization
 			l_colors: EV_STOCK_COLORS
 		do
 			default_create
-			row_height := 23
+			internal_row_height := 23
 			create internal_items.make (1)
 			expose_actions.extend (agent on_expose)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -50,13 +61,18 @@ feature -- Properties
 		require
 			valid: a_height > 0
 		do
-			row_height := a_height
+			internal_row_height := a_height
 		ensure
-			set: row_height = a_height
+			set: is_row_height_set (a_height)
 		end
 
-	row_height: INTEGER
+	row_height: INTEGER is
 			-- Height of row.
+		do
+			Result := internal_row_height
+		ensure
+			valid: is_row_height_valid (Result)
+		end
 
 feature -- Command
 
@@ -70,7 +86,7 @@ feature -- Command
 			a_item.set_tool_bar (Current)
 		ensure
 			has: has (a_item)
-			parent_set: a_item.tool_bar = Current
+			is_parent_set: is_parent_set (a_item)
 		end
 
 	prune (a_item: SD_TOOL_BAR_ITEM) is
@@ -157,7 +173,39 @@ feature -- Query
 	padding_width: INTEGER is 2
 			-- Padding width.
 
-feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM} -- Internal issues
+feature -- Contract support
+
+	is_row_height_set (a_new_height: INTEGER): BOOLEAN is
+			-- If row height set?
+		do
+			Result := internal_row_height = a_new_height
+		end
+
+	is_row_height_valid (a_height: INTEGER): BOOLEAN is
+			-- If `a_height' valid?
+		do
+			Result := internal_row_height = a_height
+		end
+
+	is_parent_set (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
+			-- If `a_item' parent set?
+		do
+			Result := a_item.tool_bar = Current
+		end
+
+	is_start_x_set (a_x: INTEGER): BOOLEAN is
+			--
+		do
+			Result := start_x = a_x
+		end
+
+	is_start_y_set (a_y: INTEGER): BOOLEAN is
+			--
+		do
+			Result := start_y = a_y
+		end
+
+feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
 			-- Relative x position of `a_item'.
@@ -233,22 +281,53 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM} -- Internal issues
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_rect: EV_RECTANGLE
 		do
-			from
-				l_items := items
-				l_items.start
-			until
-				l_items.after
-			loop
-				if l_items.item.is_need_redraw then
-					l_rect := l_items.item.rectangle
-					drawer.start_draw (l_rect)
-					redraw_item (l_items.item)
-					drawer.end_draw
-					l_items.item.disable_redraw
+			if width /= 0 and height /= 0 then
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					if l_items.item.is_need_redraw then
+						l_rect := l_items.item.rectangle
+						drawer.start_draw (l_rect)
+						redraw_item (l_items.item)
+						drawer.end_draw
+						l_items.item.disable_redraw
+					end
+					l_items.forth
 				end
-				l_items.forth
 			end
+		end
 
+feature {SD_TOOL_BAR_ZONE, SD_TOOL_BAR} -- Tool bar zone issues
+
+	set_start_x (a_x: INTEGER) is
+			--
+		do
+			internal_start_x := a_x
+		ensure
+			set: is_start_x_set (a_x)
+		end
+
+	set_start_y (a_y: INTEGER) is
+			--
+		do
+			internal_start_y := a_y
+		ensure
+			set: is_start_y_set (a_y)
+		end
+
+	start_x: INTEGER is
+			-- `internal_start_x'
+		do
+			Result := internal_start_x
+		end
+
+	start_y: INTEGER is
+			-- 'internal_start_y'
+		do
+			Result := internal_start_y
 		end
 
 feature {NONE} -- Agents
@@ -395,7 +474,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {SD_TOOL_BAR} -- Implementation
 
 	redraw_item (a_item: SD_TOOL_BAR_ITEM) is
 			-- Redraw `a_item'.
@@ -405,17 +484,21 @@ feature {NONE} -- Implementation
 			l_argu: SD_TOOL_BAR_DRAWER_ARGUMENTS
 			l_coordinate: EV_COORDINATE
 			l_rectangle: EV_RECTANGLE
+			l_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
-			l_rectangle := a_item.rectangle
-			create l_argu.make
-			l_argu.set_item (a_item)
-			create l_coordinate
-			l_coordinate.set_x (item_x (a_item))
-			l_coordinate.set_y (item_y (a_item))
-			l_argu.set_position (l_coordinate)
-			l_argu.set_tool_bar (Current)
+			l_item ?= a_item
+			if l_item = Void then
+				l_rectangle := a_item.rectangle
+				create l_argu.make
+				l_argu.set_item (a_item)
+				create l_coordinate
+				l_coordinate.set_x (item_x (a_item))
+				l_coordinate.set_y (item_y (a_item))
+				l_argu.set_position (l_coordinate)
+				l_argu.set_tool_bar (Current)
 
-			drawer.draw_item (l_argu)
+				drawer.draw_item (l_argu)
+			end
 		end
 
 	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
@@ -444,9 +527,6 @@ feature {NONE} -- Implementation
 	internal_pointer_pressed: BOOLEAN
 			-- If pointer button pressed?
 
-	start_x, start_y: INTEGER
-			-- X/Y postion start to draw buttons.
-
 	item_at_position (a_screen_x, a_screen_y: INTEGER): SD_TOOL_BAR_ITEM is
 			-- Item at `a_screen_x', `a_screen_y'
 			-- Result may be void when there wraps.
@@ -469,6 +549,15 @@ feature {NONE} -- Implementation
 				internal_items.forth
 			end
 		end
+
+	internal_row_height: INTEGER
+			-- Row height of Current.
+
+	internal_start_x: INTEGER
+			-- X postion start to draw buttons.
+
+	internal_start_y: INTEGER
+			-- Y postion start to draw buttons.
 
 invariant
 	not_void: items /= Void

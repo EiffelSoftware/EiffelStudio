@@ -9,28 +9,10 @@ class
 	SD_TOOL_BAR_ZONE
 
 inherit
-	SD_TOOL_BAR
-		rename
-			extend as extend_tool_bar,
-			make as make_tool_bar
-		export
-			{ANY} x_position, y_position, screen_x, screen_y, parent, disable_capture, enable_capture, has_capture, set_pointer_style
-			{SD_TOOL_BAR_DRAGGING_AGENTS} pointer_motion_actions, pointer_button_release_actions
-			{SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ROW} set_minimum_width, set_minimum_height
-			{SD_TOOL_BAR_CONTENT} destroy, show, hide
-			{SD_TOOL_BAR_ZONE_ASSISTANT} internal_items
-		redefine
-			compute_minmum_size,
-			wipe_out
-		end
 
 	HASHABLE
 		export
 			{NONE} all
-		undefine
-			default_create,
-			is_equal,
-			copy
 		end
 
 create
@@ -45,10 +27,11 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			docking_manager := a_docking_manager
-			make_tool_bar
+			create {SD_WIDGET_TOOL_BAR} tool_bar.make (create {SD_TOOL_BAR}.make)
+
 			is_vertical := a_vertical
 
-			create internal_tool_bar_dot_drawer.make (background_color)
+			create internal_tool_bar_dot_drawer.make (tool_bar.background_color)
 			create bar_dot.make_with_size (3, 3)
 			internal_tool_bar_dot_drawer.draw (bar_dot)
 
@@ -63,17 +46,16 @@ feature {NONE} -- Initialization
 	init_drag_area is
 			-- Initlization of `drag_area'.
 		do
-			start_x := internal_drag_area_size
-			create drag_area_rectangle.make (0, 0, start_x, row_height)
+			tool_bar.set_start_x (internal_drag_area_size)
+			create drag_area_rectangle.make (0, 0, tool_bar.start_x, tool_bar.row_height)
 
-			expose_actions.extend (agent on_redraw_drag_area)
+			tool_bar.expose_actions.extend (agent on_redraw_drag_area)
 
 			create agents.make (docking_manager, Current)
-			pointer_button_press_actions.extend (agent agents.on_drag_area_pressed)
-			pointer_motion_actions.extend (agent agents.on_drag_area_motion)
-			pointer_button_release_actions.extend (agent agents.on_drag_area_release)
-			pointer_double_press_actions.extend (agent agents.on_drag_area_pointer_double_press)
-			set_pointer_style (default_pixmaps.sizeall_cursor)
+			tool_bar.pointer_button_press_actions.extend (agent agents.on_drag_area_pressed)
+			tool_bar.pointer_motion_actions.extend (agent agents.on_drag_area_motion)
+			tool_bar.pointer_button_release_actions.extend (agent agents.on_drag_area_release)
+			tool_bar.pointer_double_press_actions.extend (agent agents.on_drag_area_pointer_double_press)
 		end
 
 feature -- Command
@@ -83,6 +65,7 @@ feature -- Command
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			set_drag_area (a_hortizontal)
 			from
@@ -93,16 +76,17 @@ feature -- Command
 						internal_text.start
 					end
 				end
-				internal_items.start
+				l_items := tool_bar.items
+				l_items.start
 			until
-				internal_items.after
+				l_items.after
 			loop
-				l_button ?= internal_items.item
-				internal_items.item.set_wrap (not a_hortizontal)
-				if not a_hortizontal and then internal_items.index /= internal_items.count then
-					l_separator ?= internal_items.i_th (internal_items.index + 1)
+				l_button ?= l_items.item
+				l_items.item.set_wrap (not a_hortizontal)
+				if not a_hortizontal and then l_items.index /= l_items.count then
+					l_separator ?= l_items.i_th (l_items.index + 1)
 					if l_separator /= Void then
-						internal_items.item.set_wrap (False)
+						l_items.item.set_wrap (False)
 					end
 				end
 
@@ -116,7 +100,7 @@ feature -- Command
 						internal_text.forth
 					end
 				end
-				internal_items.forth
+				l_items.forth
 			end
 			compute_minmum_size
 			is_vertical := not a_hortizontal
@@ -143,14 +127,14 @@ feature -- Command
 			if is_vertical then
 				change_direction (True)
 			end
-			start_x := 0
-			start_y := 0
+			tool_bar.set_start_x (0)
+			tool_bar.set_start_y (0)
 			create drag_area_rectangle.make (0, 0, 0, 0)
-			redraw_rectangle (0, 0, {SD_TOOL_BAR_SEPARATOR}.width, row_height)
+			tool_bar.redraw_rectangle (0, 0, {SD_TOOL_BAR_SEPARATOR}.width, tool_bar.row_height)
 
 			create floating_tool_bar.make (docking_manager)
-			if parent /= Void then
-				parent.prune (Current)
+			if tool_bar.parent /= Void then
+				tool_bar.parent.prune (tool_bar)
 			end
 			floating_tool_bar.extend (Current)
 
@@ -165,7 +149,7 @@ feature -- Command
 
 			assistant.update_indicator
 		ensure
-			pruned: row /= Void implies not row.has (Current)
+			pruned: row /= Void implies not row.has (tool_bar)
 			is_floating: is_floating
 		end
 
@@ -178,14 +162,14 @@ feature -- Command
 			-- On windows, following line is not needed,
 			-- But on Gtk, we need first disable_capture then enable capture,
 			-- because it's off-screen widget, it'll not have capture when it show again (in SD_TOOL_BAR_HOT_ZONE).
-			disable_capture
+			tool_bar.disable_capture
 
-			floating_tool_bar.prune (Current)
+			floating_tool_bar.prune (tool_bar)
 			floating_tool_bar.destroy
 			floating_tool_bar := Void
 
-			if parent /= Void then
-				parent.prune (Current)
+			if tool_bar.parent /= Void then
+				tool_bar.parent.prune (tool_bar)
 			end
 			set_drag_area (True)
 			change_direction (True)
@@ -247,17 +231,41 @@ feature -- Command
 	compute_minmum_size is
 			-- Redefine
 		do
-			Precursor {SD_TOOL_BAR}
-			if row /= Void and row.has (Current) then
-				row.set_item_size (Current, minimum_width, minimum_height)
+			tool_bar.compute_minmum_size
+			if row /= Void and row.has (tool_bar) then
+				row.set_item_size (tool_bar, tool_bar.minimum_width, tool_bar.minimum_height)
 			end
 		end
 
 	wipe_out is
 			-- Wipe out
 		do
-			Precursor {SD_TOOL_BAR}
+			tool_bar.wipe_out
 			content := Void
+		end
+
+	destroy is
+			-- Destroy
+		do
+			tool_bar.destroy
+		end
+
+	show is
+			-- Show
+		do
+			tool_bar.show
+		end
+
+	hide is
+			-- Hide
+		do
+			tool_bar.hide
+		end
+
+	prune (a_item: SD_TOOL_BAR_ITEM) is
+			-- Prune `a_item'
+		do
+			tool_bar.prune (a_item)
 		end
 
 feature -- Query
@@ -267,6 +275,9 @@ feature -- Query
 		do
 			Result := floating_tool_bar /= Void
 		end
+
+	tool_bar: SD_TOOL_BAR
+			-- Tool bar which managed by Current.
 
 	is_vertical: BOOLEAN
 			-- Is `Current' vertical layout or horizontal layout?
@@ -292,9 +303,9 @@ feature -- Query
 			-- Current size.
 		do
 			if is_vertical then
-				Result := height
+				Result := tool_bar.height
 			else
-				Result := width
+				Result := tool_bar.width
 			end
 		ensure
 			valid: Result >= 0
@@ -304,9 +315,9 @@ feature -- Query
 			-- X position if not `is_vertical' or Y position if `is_vertical'.
 		do
 			if is_vertical then
-				Result := y_position
+				Result := tool_bar.y_position
 			else
-				Result := x_position
+				Result := tool_bar.x_position
 			end
 		end
 
@@ -316,7 +327,7 @@ feature -- Query
 			l_rect: EV_RECTANGLE
 		do
 			l_rect := tail_indicator.rectangle
-			create Result.make (l_rect.x + screen_x, l_rect.y + screen_y)
+			create Result.make (l_rect.x + tool_bar.screen_x, l_rect.y + tool_bar.screen_y)
 		ensure
 			not_void: Result /= Void
 		end
@@ -329,6 +340,12 @@ feature -- Query
 
 	floating_tool_bar: SD_FLOATING_TOOL_BAR_ZONE
 			-- Floating tool bar zone which contain `Current' when floating.
+
+	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
+			-- If Current has `a_item'?
+		do
+			Result := tool_bar.has (a_item)
+		end
 
 feature {NONE} -- Agents
 
@@ -350,9 +367,9 @@ feature {NONE} -- Agents
 					i > l_interval - 3
 				loop
 					if not is_vertical then
-						draw_pixmap (4, i, bar_dot)
+						tool_bar.draw_pixmap (4, i, bar_dot)
 					else
-						draw_pixmap (i, 4, bar_dot)
+						tool_bar.draw_pixmap (i, 4, bar_dot)
 					end
 					i := i + 4
 				end
@@ -386,14 +403,14 @@ feature {NONE} -- Implmentation
 		do
 			if a_is_for_horizontal then
 				-- Change to horizontal drag area.
-				start_x := internal_drag_area_size
-				start_y := 0
-				create drag_area_rectangle.make (0, 0, internal_drag_area_size, row_height)
+				tool_bar.set_start_x (internal_drag_area_size)
+				tool_bar.set_start_y (0)
+				create drag_area_rectangle.make (0, 0, internal_drag_area_size, tool_bar.row_height)
 			else
 				-- Change to vertical drag area.
-				start_x := 0
-				start_y := internal_drag_area_size
-				create drag_area_rectangle.make (0, 0, row_height, internal_drag_area_size)
+				tool_bar.set_start_x (0)
+				tool_bar.set_start_y (internal_drag_area_size)
+				create drag_area_rectangle.make (0, 0, tool_bar.row_height, internal_drag_area_size)
 			end
 		end
 
@@ -404,9 +421,9 @@ feature {NONE} -- Implmentation
 			-- Update `maximize_size'
 		do
 			if is_vertical then
-				maximize_size := minimum_height
+				maximize_size := tool_bar.minimum_height
 			else
-				maximize_size := minimum_width
+				maximize_size := tool_bar.minimum_width
 			end
 		end
 
@@ -422,7 +439,7 @@ feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING
 			-- Extend `a_item' if `a_item' is_displayed.
 		do
 			if a_item.is_displayed then
-				extend_tool_bar (a_item)
+				tool_bar.extend (a_item)
 			end
 		end
 

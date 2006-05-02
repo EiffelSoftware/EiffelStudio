@@ -58,7 +58,7 @@ feature -- Command
 	resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE) is
 			-- When extend `a_new_tool_bar;, if not `is_enough_max_space', then resize tool bars.
 		require
-			has: has (a_new_tool_bar)
+			has: has (a_new_tool_bar.tool_bar)
 		local
 			l_space_to_reduce: INTEGER
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]

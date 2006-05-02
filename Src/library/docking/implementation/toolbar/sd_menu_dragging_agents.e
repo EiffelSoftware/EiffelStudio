@@ -31,8 +31,8 @@ feature {NONE}  -- Initlization
 	init_actions is
 			-- Initialize actions.
 		do
-			zone.pointer_motion_actions.extend (agent on_pointer_motion)
-			zone.pointer_button_release_actions.extend (agent on_pointer_release)
+			zone.tool_bar.pointer_motion_actions.extend (agent on_pointer_motion)
+			zone.tool_bar.pointer_button_release_actions.extend (agent on_pointer_release)
 		end
 
 feature -- Agents
@@ -72,15 +72,15 @@ feature -- Agents
 			create l_pixmaps
 			if internal_docker_mediator = Void then
 				if zone.drag_area_rectangle.has_x_y (a_x, a_y) then
-					zone.set_pointer_style (l_pixmaps.sizeall_cursor)
+					zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
 				else
-					zone.set_pointer_style (l_pixmaps.standard_cursor)
+					zone.tool_bar.set_pointer_style (l_pixmaps.standard_cursor)
 				end
 			end
 			if internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating) then
 				if internal_docker_mediator = Void then
-					zone.enable_capture
-					zone.set_pointer_style (l_pixmaps.sizeall_cursor)
+					zone.tool_bar.enable_capture
+					zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
 
 					create internal_docker_mediator.make (zone, internal_docking_manager)
 					internal_docker_mediator.start_drag (a_screen_x, a_screen_y)
@@ -89,8 +89,8 @@ feature -- Agents
 						l_offset_x := a_screen_x - zone.floating_tool_bar.screen_x
 						l_offset_y := a_screen_y - zone.floating_tool_bar.screen_y
 					else
-						l_offset_x := a_screen_x - zone.screen_x
-						l_offset_y := a_screen_y - zone.screen_y
+						l_offset_x := a_screen_x - zone.tool_bar.screen_x
+						l_offset_y := a_screen_y - zone.tool_bar.screen_y
 					end
 					internal_docker_mediator.set_offset (zone.is_floating, l_offset_x, l_offset_y)
 					internal_docker_mediator.cancel_actions.extend (agent on_cancel)
@@ -98,7 +98,7 @@ feature -- Agents
 			end
 		ensure
 			capture_enable: internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating)
-				implies zone.has_capture and internal_docker_mediator /= Void
+				implies zone.tool_bar.has_capture and internal_docker_mediator /= Void
 		end
 
 	on_drag_area_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -118,7 +118,7 @@ feature -- Query
 		local
 			l_in_docking_gripper_area, l_in_floating_tool_bar: BOOLEAN
 		do
-			l_in_docking_gripper_area := zone.drag_area_rectangle.has_x_y (a_screen_x - zone.screen_x, a_screen_y - zone.screen_y)
+			l_in_docking_gripper_area := zone.drag_area_rectangle.has_x_y (a_screen_x - zone.tool_bar.screen_x, a_screen_y - zone.tool_bar.screen_y)
 			if zone.is_floating then
 				l_in_floating_tool_bar := zone.floating_tool_bar.internal_title_bar.drag_rectangle.has_x_y (a_screen_x, a_screen_y)
 			end
@@ -135,14 +135,14 @@ feature {NONE} -- Implementation functions
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
-			zone.disable_capture
+			zone.tool_bar.disable_capture
 			internal_pointer_pressed := False
 			internal_docker_mediator := Void
 			internal_shared.set_tool_bar_docker_mediator (Void)
 			create l_pixmaps
-			zone.set_pointer_style (l_pixmaps.standard_cursor)
+			zone.tool_bar.set_pointer_style (l_pixmaps.standard_cursor)
 		ensure
-			disable_capture: not zone.has_capture
+			disable_capture: not zone.tool_bar.has_capture
 			not_pointer_pressed: not internal_pointer_pressed
 			cleared: internal_shared.tool_bar_docker_mediator_cell.item = Void and internal_docker_mediator = Void
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation functions
 				on_cancel
 			end
 		ensure
-			disable_capture: not zone.has_capture
+			disable_capture: not zone.tool_bar.has_capture
 			not_pointer_pressed: internal_docker_mediator /= Void implies not internal_pointer_pressed
 			cleared: internal_shared.tool_bar_docker_mediator_cell.item = Void
 		end

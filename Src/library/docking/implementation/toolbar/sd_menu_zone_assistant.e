@@ -16,11 +16,11 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_tool_bar_zone /= Void
 		do
-			tool_bar := a_tool_bar_zone
+			zone := a_tool_bar_zone
 			create internal_hidden_items.make (1)
 			create last_state.make
 		ensure
-			set: tool_bar = a_tool_bar_zone
+			set: zone = a_tool_bar_zone
 		end
 
 feature -- Command
@@ -33,36 +33,36 @@ feature -- Command
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_items := tool_bar.content.items
+			l_items := zone.content.items
 			from
 				l_items.finish
 			until
 				-- At least show one button.
 				l_items.index <= 1 or Result >= a_size
 			loop
-				if tool_bar.has (l_items.item) then
+				if zone.has (l_items.item) then
 					internal_hidden_items.extend (l_items.item)
-					if not tool_bar.is_vertical then
+					if not zone.is_vertical then
 						Result := Result + l_items.item.width
 					else
 						Result := Result + l_items.item.rectangle.height
 					end
-					tool_bar.prune (l_items.item)
+					zone.prune (l_items.item)
 
 					l_separator := Void
 					l_separator ?= l_items.i_th (l_items.index - 1)
 					if l_separator /= Void then
-						check has: tool_bar.has (l_separator) end
+						check has: zone.has (l_separator) end
 						internal_hidden_items.extend (l_separator)
 						Result := Result + l_separator.width
-						tool_bar.prune (l_separator)
+						zone.prune (l_separator)
 					end
 				end
 				l_items.back
 			end
 
 			update_indicator
-			tool_bar.compute_minmum_size
+			zone.compute_minmum_size
 		end
 
 	expand_size (a_size_to_expand: INTEGER): INTEGER is
@@ -79,7 +79,7 @@ feature -- Command
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := tool_bar.size
+					l_old_size := zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -89,17 +89,17 @@ feature -- Command
 					l_item_after := Void
 					l_separator ?= l_snapshot.item
 					set_item_wrap (l_snapshot.item)
-					tool_bar.extend_one_item (l_snapshot.item)
+					zone.extend_one_item (l_snapshot.item)
 					if l_separator /= Void then
 						-- We should extend item after separator.
 						if internal_hidden_items.index_of (l_separator, 1) > 1 then
 							l_item_after := internal_hidden_items.i_th (internal_hidden_items.index_of (l_separator, 1) - 1)
 							set_item_wrap (l_item_after)
-							tool_bar.extend_one_item (l_item_after)
+							zone.extend_one_item (l_item_after)
 						end
 					end
 					l_last_result := Result
-					if not tool_bar.is_vertical then
+					if not zone.is_vertical then
 						Result := Result + l_snapshot.item.width
 						if l_item_after /= Void then
 							Result := Result + l_item_after.width
@@ -114,9 +114,9 @@ feature -- Command
 					if Result > a_size_to_expand then
 						-- We should rollback one item and stop.
 						l_stop := True
-						tool_bar.prune (l_snapshot.item)
+						zone.prune (l_snapshot.item)
 						if l_item_after /= Void then
-							tool_bar.prune (l_item_after)
+							zone.prune (l_item_after)
 						end
 						Result := l_last_result
 					else
@@ -133,7 +133,7 @@ feature -- Command
 			end
 			update_indicator
 			set_item_wrap_before_separator
-			tool_bar.compute_minmum_size
+			zone.compute_minmum_size
 		ensure
 			valid: 0 <= Result and Result <= a_size_to_expand
 		end
@@ -144,31 +144,32 @@ feature -- Command
 			l_shared: SD_SHARED
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			if tool_bar.has (tool_bar.tail_indicator) then
+			if zone.has (zone.tail_indicator) then
 				create l_shared
 				if internal_hidden_items.count > 0 then
-					if not tool_bar.is_vertical then
-						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
+					if not zone.is_vertical then
+						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
 					else
-						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
+						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
 					end
 				else
-					if not tool_bar.is_vertical then
-						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
+					if not zone.is_vertical then
+						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
 					else
-						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
+						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
 					end
 				end
-				l_items := tool_bar.internal_items
-				if l_items.last /= tool_bar.tail_indicator then
-					l_items.prune_all (tool_bar.tail_indicator)
-					l_items.extend (tool_bar.tail_indicator)
+--				l_items := tool_bar.internal_items
+				l_items := zone.tool_bar.items
+				if l_items.last /= zone.tail_indicator then
+					l_items.prune_all (zone.tail_indicator)
+					l_items.extend (zone.tail_indicator)
 				end
 				if l_items.count > 1 then
-					if tool_bar.is_vertical and not l_items.i_th (l_items.count - 1).is_wrap then
+					if zone.is_vertical and not l_items.i_th (l_items.count - 1).is_wrap then
 						l_items.i_th (l_items.count - 1).set_wrap (True)
 					end
-					if not tool_bar.is_vertical and l_items.i_th (l_items.count - 1).is_wrap then
+					if not zone.is_vertical and l_items.i_th (l_items.count - 1).is_wrap then
 						l_items.i_th (l_items.count - 1).set_wrap (False)
 					end
 				end
@@ -186,7 +187,7 @@ feature -- Command
 		do
 			create l_all_hiden_items.make (1)
 			-- Prepare all hiden items in Current row.
-			l_tool_bars := tool_bar.row.zones
+			l_tool_bars := zone.row.zones
 			from
 				l_tool_bars.start
 			until
@@ -196,33 +197,33 @@ feature -- Command
 				l_tool_bars.forth
 			end
 
-			create l_dialog.make (l_all_hiden_items, tool_bar)
+			create l_dialog.make (l_all_hiden_items, zone)
 			create l_helper.make
-			if tool_bar.is_vertical then
-				l_indicator_size := tool_bar.tail_indicator.rectangle.height
+			if zone.is_vertical then
+				l_indicator_size := zone.tail_indicator.rectangle.height
 			else
-				l_indicator_size := tool_bar.tail_indicator.width
+				l_indicator_size := zone.tail_indicator.width
 			end
-			if not tool_bar.is_vertical then
-				l_helper.set_tool_bar_hidden_dialog_position (l_dialog, tool_bar.hidden_dialog_position.x, tool_bar.hidden_dialog_position.y, tool_bar.tail_indicator.width)
+			if not zone.is_vertical then
+				l_helper.set_tool_bar_hidden_dialog_position (l_dialog, zone.hidden_dialog_position.x, zone.hidden_dialog_position.y, zone.tail_indicator.width)
 			else
-				l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, tool_bar.hidden_dialog_position.x, tool_bar.hidden_dialog_position.y, tool_bar.tail_indicator.rectangle.height)
+				l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, zone.hidden_dialog_position.x, zone.hidden_dialog_position.y, zone.tail_indicator.rectangle.height)
 			end
 
-			l_dialog.show_relative_to_window (tool_bar.docking_manager.main_window)
+			l_dialog.show_relative_to_window (zone.docking_manager.main_window)
 		end
 
 	dock_last_state is
 			-- Dock to `last_state'.
 		require
-			is_floating: tool_bar.is_floating
+			is_floating: zone.is_floating
 		local
 			l_container: EV_BOX
 			l_row: SD_TOOL_BAR_ROW
 		do
-			tool_bar.dock
+			zone.dock
 
-			l_container := tool_bar.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
+			l_container := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
 			if l_container.count < last_state.container_row_number or last_state.is_only_zone then
 				-- The row it missing, we should create a new one.
 				-- Or the row last time is in the only one in row.
@@ -245,27 +246,27 @@ feature -- Command
 			end
 			check not_void: l_row /= Void end
 
-			l_row.extend (tool_bar)
-			l_row.set_item_position_relative (tool_bar, last_state.position)
-			tool_bar.docking_manager.command.resize (True)
+			l_row.extend (zone)
+			l_row.set_item_position_relative (zone.tool_bar, last_state.position)
+			zone.docking_manager.command.resize (True)
 		ensure
-			docked: not tool_bar.is_floating
+			docked: not zone.is_floating
 		end
 
 	record_docking_state is
 			-- Record docking state.
 		require
-			is_docking: not tool_bar.is_floating
+			is_docking: not zone.is_floating
 		local
 			l_box: EV_BOX
 			l_parent: SD_TOOL_BAR_ROW
 		do
-			last_state.set_position (tool_bar.position)
-			last_state.set_size (tool_bar.size)
-			last_state.set_container_direction (tool_bar.docking_manager.tool_bar_manager.container_direction (tool_bar))
+			last_state.set_position (zone.position)
+			last_state.set_size (zone.size)
+			last_state.set_container_direction (zone.docking_manager.tool_bar_manager.container_direction (zone))
 
-			l_box := tool_bar.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
-			l_parent ?= tool_bar.parent
+			l_box := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
+			l_parent ?= zone.tool_bar.parent
 			check not_void: l_parent /= Void end
 			last_state.set_container_row_number (l_box.index_of (l_parent, 1))
 
@@ -275,22 +276,22 @@ feature -- Command
 	floating_last_state is
 			-- Float to `last_state'
 		require
-			is_docking: not tool_bar.is_floating
+			is_docking: not zone.is_floating
 		do
 			record_docking_state
-			tool_bar.float (last_state.screen_x, last_state.screen_y)
+			zone.float (last_state.screen_x, last_state.screen_y)
 			if last_state.floating_group_info /= Void then
-				tool_bar.floating_tool_bar.assistant.position_groups (last_state.floating_group_info)
+				zone.floating_tool_bar.assistant.position_groups (last_state.floating_group_info)
 			end
 		ensure
-			is_floating: tool_bar.is_floating
+			is_floating: zone.is_floating
 		end
 
 	open_items_layout is
 			-- Open items layout.
 		require
 			not_void: last_state.items_layout /= Void
-			not_void: tool_bar.content /= Void
+			not_void: zone.content /= Void
 		local
 			l_item: SD_TOOL_BAR_ITEM
 			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -301,8 +302,8 @@ feature -- Command
 		do
 			from
 				create l_separator.make
-				l_all_items :=  tool_bar.content.items.twin
-				l_content := tool_bar.content
+				l_all_items :=  zone.content.items.twin
+				l_content := zone.content
 				l_content.wipe_out
 				l_datas := last_state.items_layout
 				l_datas.start
@@ -337,8 +338,8 @@ feature -- Command
 				end
 				l_datas.forth
 			end
-			tool_bar.wipe_out
-			tool_bar.extend (l_content)
+			zone.wipe_out
+			zone.extend (l_content)
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Special setting.
@@ -361,15 +362,15 @@ feature -- Query
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_items := tool_bar.content.items
+			l_items := zone.content.items
 			from
 				l_items.finish
 			until
 				-- At least show one button.
 				l_items.index <= 1 or Result >= a_size
 			loop
-				if tool_bar.has (l_items.item) then
-					if not tool_bar.is_vertical then
+				if zone.has (l_items.item) then
+					if not zone.is_vertical then
 						Result := Result + l_items.item.width
 					else
 						Result := Result + l_items.item.rectangle.height
@@ -377,7 +378,7 @@ feature -- Query
 					l_separator := Void
 					l_separator ?= l_items.i_th (l_items.index - 1)
 					if l_separator /= Void then
-						check has: tool_bar.has (l_separator) end
+						check has: zone.has (l_separator) end
 						Result := Result + l_separator.width
 					end
 				end
@@ -399,7 +400,7 @@ feature -- Query
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := tool_bar.size
+					l_old_size := zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -413,14 +414,14 @@ feature -- Query
 						l_item_after := internal_hidden_items.i_th (internal_hidden_items.index_of (l_separator, 1) - 1)
 					end
 					l_last_result := Result
-					if not tool_bar.is_vertical then
+					if not zone.is_vertical then
 						Result := Result + l_snapshot.item.width
 						if l_item_after /= Void then
 							Result := Result + l_item_after.width
 						end
 					else
 --						Result := Result + l_snapshot.item.rectangle.height
-						Result := Result + tool_bar.row_height
+						Result := Result + zone.tool_bar.row_height
 						if l_item_after /= Void then
 --							Result := Result + l_item_after.rectangle.height
 							Result := Result + {SD_TOOL_BAR_SEPARATOR}.width
@@ -453,7 +454,7 @@ feature -- Query
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			l_items := tool_bar.content.items
+			l_items := zone.content.items
 			from
 				create Result.make (1)
 				create l_group.make (1)
@@ -475,7 +476,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	tool_bar: SD_TOOL_BAR_ZONE
+	zone: SD_TOOL_BAR_ZONE
 			-- Tool bar which size issues Current managed.
 
 	last_state: SD_TOOL_BAR_ZONE_STATE
@@ -488,7 +489,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_item /= Void
 		do
-			if tool_bar.is_vertical then
+			if zone.is_vertical then
 				a_item.set_wrap (True)
 			else
 				a_item.set_wrap (False)
@@ -496,14 +497,14 @@ feature {NONE} -- Implementation
 		end
 
 	set_item_wrap_before_separator is
-			-- When `tool_bar' is_vertical, we should set item before separator not wrap.
+			-- When `zone' is_vertical, we should set item before separator not wrap.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_last_item: SD_TOOL_BAR_ITEM
 		do
-			if tool_bar.is_vertical then
-				l_items := tool_bar.items
+			if zone.is_vertical then
+				l_items := zone.tool_bar.items
 				from
 					l_items.start
 				until
@@ -553,7 +554,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not_void: tool_bar /= Void
+	not_void: zone /= Void
 	not_void: last_state /= Void
 
 end

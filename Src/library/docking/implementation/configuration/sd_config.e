@@ -76,6 +76,7 @@ feature -- Save/Open inner container data.
 			internal_docking_manager.command.lock_update (Void, True)
 			-- First we clear all areas.
 			clear_up_containers
+			clean_up_tool_bars
 			check not internal_docking_manager.query.inner_container_main.full end
 			open_all_inner_containers_data (l_config_data)
 
@@ -430,6 +431,39 @@ feature {NONE} -- Implementation for open config.
 			cleared: not internal_docking_manager.query.inner_container_main.full
 		end
 
+	clean_up_tool_bars is
+			-- Clean up all tool bars.
+		local
+			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_parent: EV_CONTAINER
+		do
+			from
+				l_contents := internal_docking_manager.tool_bar_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				l_items := l_contents.item.items
+				from
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_widget_item ?= l_items.item
+					if l_widget_item /= Void then
+						l_parent := l_widget_item.widget.parent
+						if l_parent /= Void then
+							l_parent.prune (l_widget_item.widget)
+						end
+					end
+					l_items.forth
+				end
+				l_contents.forth
+			end
+		end
+
 	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Preorder recursive. (Postorder is hard to think about....)
 		require
@@ -595,8 +629,8 @@ feature {NONE} -- Implementation for open config.
 				a_tool_bar_datas.after
 			loop
 				check is_floating_tool_bar_data: a_tool_bar_datas.item.is_floating end
-				create l_tool_bar_on_floating.make (False, internal_docking_manager)
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
+				create l_tool_bar_on_floating.make (False, internal_docking_manager)
 				l_tool_bar_on_floating.extend (l_content)
 				l_tool_bar_on_floating.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y)
 				l_tool_bar_on_floating.assistant.set_last_state (a_tool_bar_datas.item.last_state)
@@ -657,7 +691,7 @@ feature {NONE} -- Implementation for open config.
 					end
 					l_tool_bar_row.extend (l_tool_bar_zone)
 					l_tool_bar_row.record_state
-					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone, l_row.item.integer_32_item (2))
+					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone.tool_bar, l_row.item.integer_32_item (2))
 					l_row.forth
 				end
 				l_tool_bar_row.set_ignore_resize (False)

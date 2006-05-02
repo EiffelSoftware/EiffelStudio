@@ -97,9 +97,9 @@ feature -- Command
 						-- On windows, following disable/enable capture lines is not needed,
 						-- But on Gtk, we need first disable_capture then enable capture,
 						-- because it's off-screen widget, it'll not have capture when it show again.
-						caller.disable_capture
+						caller.tool_bar.disable_capture
 						caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
-						caller.enable_capture
+						caller.tool_bar.enable_capture
 
 						docking_manager.command.unlock_update
 					end
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation functions
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if is_in_orignal_row then
-				if not orignal_row.has (caller) then
+				if not orignal_row.has (caller.tool_bar) then
 					is_in_orignal_row := False
 				end
 				if motion_count = motion_count_max then
@@ -276,9 +276,9 @@ feature {NONE} -- Implementation functions
 						is_resizing_mode := True
 						create l_pixmaps
 						if caller.is_vertical then
-							caller.set_pointer_style (l_pixmaps.sizens_cursor)
+							caller.tool_bar.set_pointer_style (l_pixmaps.sizens_cursor)
 						else
-							caller.set_pointer_style (l_pixmaps.sizewe_cursor)
+							caller.tool_bar.set_pointer_style (l_pixmaps.sizewe_cursor)
 						end
 					end
 					-- Do folowing line, so we stop counting.

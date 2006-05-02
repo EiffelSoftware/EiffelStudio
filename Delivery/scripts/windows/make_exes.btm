@@ -26,24 +26,16 @@ iff not defined WIN64 then
 endiff
 
 remtrace Compile a dynamic run-time for Microsoft
-cdd %EIFFEL_SRC\C\CONFIGS
-iff not defined WIN64 then
-	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86 >> new_windows-msc-x86
-	move new_windows-msc-x86 windows-msc-x86
-	sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86 >> new_windows-msc-x86
-	move new_windows-msc-x86 windows-msc-x86
-else
-	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86-64 >> new_windows-msc-x86-64
-	move new_windows-msc-x86-64 windows-msc-x86-64
-	sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86-64 >> new_windows-msc-x86-64
-	move new_windows-msc-x86-64 windows-msc-x86-64
-endiff
 cd %EIFFEL_SRC\C
 call configure clean >>& %INSTALL_LOG
 iff defined WIN64 then
-call configure win64 m >>& %INSTALL_LOG
+	call configure win64 m dll >>& %INSTALL_LOG
 else
-call configure win32 m >>& %INSTALL_LOG
+	iff defined MSC6 then
+		call configure win32 m6 dll >>& %INSTALL_LOG
+	else
+		call configure win32 m dll >>& %INSTALL_LOG
+	endiff
 endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
@@ -55,13 +47,16 @@ copy C\run-time\FREELIB\*dll* %INSTALL_DIR\releases\gpl_version\lib\msc
 cd %EIFFEL_SRC
 
 remtrace Compile a run-time for Microsoft
-cd C
-revert
+cd %EIFFEL_SRC\C
 call configure clean >>& %INSTALL_LOG
 iff defined WIN64 then
-call configure win64 m >>& %INSTALL_LOG
+	call configure win64 m >>& %INSTALL_LOG
 else
-call configure win32 m >>& %INSTALL_LOG
+	iff defined MSC6 then
+		call configure win32 m6 >>& %INSTALL_LOG
+	else
+		call configure win32 m >>& %INSTALL_LOG
+	endiff
 endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib

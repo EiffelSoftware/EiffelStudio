@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				class_name := a_class.as_upper
 			end
 		ensure
-			cluster_set: not a_all_root implies cluster_name = a_cluster
+			cluster_set: not a_all_root implies equal (cluster_name, a_cluster.as_lower)
 			class_name_not_void: class_name /= Void
 			class_set: not a_all_root implies class_name.is_equal (a_class.as_upper)
 			class_set: a_all_root implies class_name.is_equal ("ANY")

@@ -101,7 +101,7 @@ feature -- Project file/directory warnings
 		require
 			dir_name_not_void: dir_name /= Void and then not dir_name.is_empty
 			valid_comp_version: comp_version /= Void and then not comp_version.is_empty
-			valid_incomp_version: incomp_version /= Void and then not incomp_version.is_empty
+			valid_incomp_version: incomp_version /= Void
 		do
 			create Result.make (30)
 			Result.append ("Incompatible version for project: ")

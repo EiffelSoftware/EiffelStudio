@@ -556,10 +556,10 @@ feature -- Basic Operations
 				line ?= cursor.line
 				a_position := token.pos_in_text
 				Result := stone_in_click_ast (a_position)
-				if Result = Void and then (a_position >= features_index or else token_image_is_same_as_word (token, "precursor")) then
+				if Result = Void or else token_image_is_same_as_word (token, "precursor") then
 					if a_position >= invariant_index then
 						feat := described_feature (token, line, Void)
-					elseif a_position >= features_index or else token_image_is_same_as_word (token, "precursor") then
+					else
 						ft := feature_containing (token, line)
 						if ft /= Void then
 							inspect

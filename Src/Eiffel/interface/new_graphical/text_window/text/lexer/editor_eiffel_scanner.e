@@ -1,7 +1,5 @@
 indexing
 	description:"Scanners for Eiffel parsers"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	author:     "Arnaud PICHERY from an Eric Bezault model"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -12,7 +10,7 @@ inherit
 
 	EDITOR_SCANNER
 
-	SHARED_EIFFEL_PROJECT
+	EDITOR_EIFFEL_SCANNER_SKELETON	
 
 create
 	make
@@ -145,20 +143,26 @@ debug ("GELEX")
 end
 
 										if not in_comments then
-											if not Eiffel_universe.classes_with_name (text).is_empty then
-												create {EDITOR_TOKEN_CLASS} curr_token.make(text)
+											if is_current_group_valid then
+												tmp_classes := current_group.class_by_name (text, True)
+												if not tmp_classes.is_empty then
+													create {EDITOR_TOKEN_CLASS} curr_token.make (text)
+													curr_token.set_pebble (stone_of_class (tmp_classes.first))
+												else
+													create {EDITOR_TOKEN_TEXT} curr_token.make (text)
+												end
 											else
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											end									
+												create {EDITOR_TOKEN_TEXT} curr_token.make (text)
+											end							
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										
 when 103 then
---|#line 206 "editor_eiffel_scanner.l"
+--|#line 212 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 206")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 212")
 end
 
 										if not in_comments then
@@ -169,9 +173,9 @@ end
 										update_token_list
 										
 when 104 then
---|#line 218 "editor_eiffel_scanner.l"
+--|#line 224 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 218")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 224")
 end
 
 										if not in_comments then
@@ -182,9 +186,9 @@ end
 										update_token_list
 										
 when 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126 then
---|#line 232 "editor_eiffel_scanner.l"
+--|#line 238 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 232")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 238")
 end
 
 					if not in_comments then
@@ -195,9 +199,9 @@ end
 					update_token_list
 					
 when 127 then
---|#line 262 "editor_eiffel_scanner.l"
+--|#line 268 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 262")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 268")
 end
 
 					if not in_comments then
@@ -214,9 +218,9 @@ end
 					update_token_list
 					
 when 128, 129 then
---|#line 277 "editor_eiffel_scanner.l"
+--|#line 283 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 277")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 283")
 end
 
 					-- Character error. Catch-all rules (no backing up)
@@ -228,9 +232,9 @@ end
 					update_token_list
 					
 when 130 then
---|#line 300 "editor_eiffel_scanner.l"
+--|#line 306 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 300")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 306")
 end
 
  				if not in_comments then
@@ -246,9 +250,9 @@ end
 				end
 			
 when 131 then
---|#line 314 "editor_eiffel_scanner.l"
+--|#line 320 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 314")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 320")
 end
 
 				if not in_comments then
@@ -264,15 +268,15 @@ end
 				end				
 			
 when 132 then
---|#line 329 "editor_eiffel_scanner.l"
+--|#line 335 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 329")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 335")
 end
 -- Ignore carriage return
 when 133 then
---|#line 330 "editor_eiffel_scanner.l"
+--|#line 336 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 330")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 336")
 end
 
 							-- Verbatim string closer, possibly.
@@ -283,9 +287,9 @@ end
 						update_token_list
 					
 when 134 then
---|#line 339 "editor_eiffel_scanner.l"
+--|#line 345 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 339")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 345")
 end
 
 							-- Verbatim string closer, possibly.
@@ -296,27 +300,27 @@ end
 						update_token_list
 					
 when 135 then
---|#line 348 "editor_eiffel_scanner.l"
+--|#line 354 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 348")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 354")
 end
 
 						create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
 						update_token_list						
 					
 when 136 then
---|#line 353 "editor_eiffel_scanner.l"
+--|#line 359 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 353")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 359")
 end
 						
 						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 						update_token_list						
 					
 when 137 then
---|#line 358 "editor_eiffel_scanner.l"
+--|#line 364 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 358")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 364")
 end
 
 						from i_ := 1 until i_ > text_count loop
@@ -326,18 +330,18 @@ end
 						end						
 					
 when 138 then
---|#line 366 "editor_eiffel_scanner.l"
+--|#line 372 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 366")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 372")
 end
 
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 						update_token_list
 					
 when 139, 140 then
---|#line 372 "editor_eiffel_scanner.l"
+--|#line 378 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 372")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 378")
 end
 
 					-- Eiffel String
@@ -349,9 +353,9 @@ end
 					update_token_list
 					
 when 141 then
---|#line 385 "editor_eiffel_scanner.l"
+--|#line 391 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 385")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 391")
 end
 
 					-- Eiffel Bit
@@ -363,9 +367,9 @@ end
 					update_token_list
 					
 when 142, 143 then
---|#line 397 "editor_eiffel_scanner.l"
+--|#line 403 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 397")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 403")
 end
 
 						-- Eiffel Integer
@@ -377,9 +381,9 @@ end
 						update_token_list
 						
 when 144 then
---|#line 407 "editor_eiffel_scanner.l"
+--|#line 413 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 407")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 413")
 end
 
 							-- Eiffel Integer Error (considered as text)
@@ -392,9 +396,9 @@ end
 						
 when 145 then
 	yy_end := yy_end - 1
---|#line 419 "editor_eiffel_scanner.l"
+--|#line 425 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 419")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 425")
 end
 
 							-- Eiffel reals & doubles
@@ -406,9 +410,9 @@ end
 						update_token_list
 						
 when 146, 147 then
---|#line 420 "editor_eiffel_scanner.l"
+--|#line 426 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 420")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 426")
 end
 
 							-- Eiffel reals & doubles
@@ -421,9 +425,9 @@ end
 						
 when 148 then
 	yy_end := yy_end - 1
---|#line 422 "editor_eiffel_scanner.l"
+--|#line 428 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 422")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 428")
 end
 
 							-- Eiffel reals & doubles
@@ -435,9 +439,9 @@ end
 						update_token_list
 						
 when 149, 150 then
---|#line 423 "editor_eiffel_scanner.l"
+--|#line 429 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 423")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 429")
 end
 
 							-- Eiffel reals & doubles
@@ -449,18 +453,18 @@ end
 						update_token_list
 						
 when 151 then
---|#line 440 "editor_eiffel_scanner.l"
+--|#line 446 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 440")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 446")
 end
 
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					update_token_list
 					
 when 152 then
---|#line 448 "editor_eiffel_scanner.l"
+--|#line 454 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 448")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 454")
 end
 
 					-- Error (considered as text)
@@ -1652,37 +1656,5 @@ feature {NONE} -- Constants
 
 feature -- User-defined features
 
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 
 end -- EDITOR_EIFFEL_SCANNER

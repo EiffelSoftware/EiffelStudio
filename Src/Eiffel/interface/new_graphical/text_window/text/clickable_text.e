@@ -112,7 +112,8 @@ feature -- Pick and drop
 			if not Workbench.is_compiling then
 				if feature_click_enabled and then feature_click_tool.is_ready then
 					Result := feature_click_tool.stone_at_position (cursr)
-				elseif cursr.token /= Void and then cursr.token.pebble /= Void then
+				end
+				if Result = Void and then cursr.token /= Void and then cursr.token.pebble /= Void then
 					Result ?= cursr.token.pebble.twin
 				end
 			end

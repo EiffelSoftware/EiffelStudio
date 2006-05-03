@@ -11,7 +11,7 @@ inherit
 
 	EDITOR_SCANNER
 
-	SHARED_EIFFEL_PROJECT
+	EDITOR_EIFFEL_SCANNER_SKELETON	
 
 create
 	make
@@ -191,11 +191,17 @@ H		([0-9A-Fa-f])
 
 [A-Z][A-Z0-9_]*							{
 										if not in_comments then
-											if not Eiffel_universe.classes_with_name (text).is_empty then
-												create {EDITOR_TOKEN_CLASS} curr_token.make(text)
+											if is_current_group_valid then
+												tmp_classes := current_group.class_by_name (text, True)
+												if not tmp_classes.is_empty then
+													create {EDITOR_TOKEN_CLASS} curr_token.make (text)
+													curr_token.set_pebble (stone_of_class (tmp_classes.first))
+												else
+													create {EDITOR_TOKEN_TEXT} curr_token.make (text)
+												end
 											else
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											end									
+												create {EDITOR_TOKEN_TEXT} curr_token.make (text)
+											end							
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end

@@ -59,9 +59,18 @@ inherit
 			default_create
 		end
 
+	EB_STONABLE
+		rename
+			refresh as refresh_stone,
+			set_position as set_stone_position,
+			position as stone_position
+		undefine
+			default_create
+		end
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	 make is
@@ -76,21 +85,21 @@ feature {NONE} -- Initialization
 		do
 			create syntax_files_path.make_from_string ((create {EIFFEL_ENV}).syntax_path)
 			set_cursors (create {EB_EDITOR_CURSORS})
-		end	
+		end
 
 	register_documents is
 	 		-- Register known document types with this editor
 	 	do
 	 		register_document ("e", eiffel_class)
-	 	end	 	
-	 	
+	 	end
+
 	 eiffel_class: DOCUMENT_CLASS is
 	         -- Eiffel class
 	   	once
 			create Result.make ("eiffel", "e", Void)
 	   	    Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
 	   	end
-		
+
 feature -- Warning messages display
 
 	display_not_editable_warning_message is
@@ -105,17 +114,17 @@ feature -- Warning messages display
 						wm := Warning_messages.w_Text_not_editable
 					else
 						wm := not_editable_warning_message
-					end	
+					end
 					show_warning_message (wm)
 				else
 					create w.make
 					w.show_modal_to_window (reference_window)
 				end
 			end
-		end	 
+		end
 
 feature -- Access
-	
+
 	dev_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window
 
@@ -126,10 +135,10 @@ feature -- Text Loading
 		local
 		    test_file, test_file_2: RAW_FILE
 		    l_filename: FILE_NAME
-  	   	do	
+  	   	do
   	   		reset
   	   		load_file_error := False
-  	   		
+
   	   		create l_filename.make_from_string (a_filename)
 			create test_file.make (l_filename.string.twin)
 			l_filename.add_extension ("swp")
@@ -150,10 +159,46 @@ feature -- Text Loading
 
 	load_text (s: STRING) is
 			-- Load text
-		do			
-			set_current_document_class (get_class_from_type (once "e"))
+		local
+			l_d_class : DOCUMENT_CLASS
+			l_scanner: EDITOR_EIFFEL_SCANNER
+			l_stone: CLASSI_STONE
+		do
+			l_d_class := get_class_from_type (once "e")
+			set_current_document_class (l_d_class)
+			l_scanner ?= l_d_class.scanner
+			if l_scanner /= Void then
+				l_stone ?= stone
+				if l_stone /= Void then
+					l_scanner.set_current_class (l_stone.class_i.config_class)
+				end
+			end
 			Precursor {EDITABLE_TEXT_PANEL} (s)
-		end		
+		end
+
+feature -- Stonable
+
+	stone : STONE
+			-- Stone representing Current
+
+	set_stone (a_stone: STONE) is
+			-- Make `s' the new value of stone.
+			-- Changes display as a consequence, to preserve the fact
+			-- that the tool displays the content of the stone
+			-- (when there is a stone).
+		require else
+			a_stone_attached: a_stone /= Void
+		do
+			stone := a_stone
+		ensure then
+			stone_attached: stone = a_stone
+		end
+
+	refresh_stone is
+			-- Synchronize Current with `stone'.
+		do
+
+		end
 
 feature {NONE} -- Memory Management
 
@@ -168,14 +213,14 @@ feature {NONE} -- Handle keystokes
 
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
  			-- Process the push on Ctrl + an extended key.
-		do	
+		do
 			inspect
 				ev_key.code
 
 			when Key_u then
 					-- Ctrl-U
 				run_if_editable (agent set_selection_case(shifted_key))
-				
+
 			when Key_k then
 				if shifted_key then
 						-- Ctrl+Shift+K uncomment selection
@@ -226,7 +271,7 @@ feature {NONE} -- Retrieving backup
 			dial.set_title (Interface_names.t_Open_backup)
 			dial.show_modal_to_window (reference_window)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	reference_window: EV_WINDOW is
@@ -242,8 +287,8 @@ feature {NONE} -- Implementation
 				end
 				internal_reference_window := Result
 			end
-		end	
-			
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

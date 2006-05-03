@@ -116,6 +116,7 @@ feature {NONE} -- Implementation
 				last_was_error := True
 			end
 			if not last_was_error then
+				editor.set_stone (stone)
 				editor.load_text (ynk_win.stored_output)
 			end
 		rescue

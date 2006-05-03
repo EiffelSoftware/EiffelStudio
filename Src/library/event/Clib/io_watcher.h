@@ -20,11 +20,11 @@ indexing
 #include <eif_eiffel.h>
 #include <glib.h>
 
-void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
+extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
 
-void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
+extern void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
 
-gboolean c_io_watcher_marshal (
+extern gboolean c_io_watcher_marshal (
 	GIOChannel* source, 
 	GIOCondition condition,
 	gpointer io_watcher

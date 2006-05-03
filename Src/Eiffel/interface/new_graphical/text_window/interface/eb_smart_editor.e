@@ -166,7 +166,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Complete feature name.
 		do
 			if text_displayed.completing_context and is_editable then
-				set_completing_feature (true)
+				set_completing_feature (True)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
 				end
@@ -178,7 +178,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Complete class name.
 		do
 			if text_displayed.completing_context and is_editable then
-				set_completing_feature (false)
+				set_completing_feature (False)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
 				end
@@ -321,9 +321,9 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
 			if not is_completing and then code = Key_tab and then allow_tab_selecting and then not shifted_key then
 					-- Tab action
-				handle_tab_action (false)
+				handle_tab_action (False)
 			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
-				handle_tab_action (true)
+				handle_tab_action (True)
 			elseif is_editable and not is_completing and then text_displayed.completing_context and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
 				trigger_completion
 				debug ("Auto_completion")
@@ -344,7 +344,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 								if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
 									text_displayed.complete_syntax (previous_token_image, True, True)
 									syntax_completed := text_displayed.syntax_completed
-									latest_typed_word_is_keyword := false
+									latest_typed_word_is_keyword := False
 								end
 							else
 								t ?= token.previous
@@ -862,7 +862,6 @@ feature {NONE} -- Code completable implementation
 			l_found_blank: BOOLEAN
 		do
 			if not is_empty then
-					-- Look for "like", we do not need signature after "like xxx".
 				from
 					l_token := text_displayed.cursor.token
 				until
@@ -874,7 +873,9 @@ feature {NONE} -- Code completable implementation
 							l_found_blank := True
 						else
 							if l_found_blank then
-								if l_token.image.as_lower.is_equal ("like") then
+									-- We do not need signature after "like feature"
+									-- We do not need feature signature when it is a pointer reference. case1: "$  feature"
+								if l_token.image.as_lower.is_equal ("like") or l_token.image.is_equal ("$") then
 									l_end_loop := True
 									set_discard_feature_signature (True)
 								else
@@ -883,8 +884,16 @@ feature {NONE} -- Code completable implementation
 							end
 						end
 					end
+						-- We do not need feature signature when it is a pointer reference. case2: "$feature"
+					if not l_found_blank and then not l_quit and then not l_end_loop then
+						if l_token.image.is_equal ("$") then
+							l_end_loop := True
+							set_discard_feature_signature (True)
+						end
+					end
 				end
 					-- Look for the fist feature within the whole editor.
+					-- We do not need signature before the first feature clause of a class.
 				from
 					text_displayed.start
 				until
@@ -899,7 +908,7 @@ feature {NONE} -- Code completable implementation
 						if l_line.item.image.as_lower.is_equal ("feature") then
 							l_kt ?= l_line.item
 							if l_kt /= Void then
-								l_end_loop := true
+								l_end_loop := True
 								create l_cursor.make_from_relative_pos (l_line, l_kt, 1, text_displayed)
 								if l_cursor.pos_in_text < text_displayed.cursor.pos_in_text then
 									set_discard_feature_signature (False)
@@ -941,9 +950,9 @@ feature {NONE} -- Code completable implementation
 					not a_alt and
 					not a_shift
 				then
-					Result := true
-					set_completing_feature (true)
-					completing_automatically := true
+					Result := True
+					set_completing_feature (True)
+					completing_automatically := True
 				end
 
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
@@ -954,8 +963,8 @@ feature {NONE} -- Code completable implementation
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
 				then
-					Result := true
-					set_completing_feature (true)
+					Result := True
+					set_completing_feature (True)
 				end
 
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("class_autocomplete")
@@ -966,8 +975,8 @@ feature {NONE} -- Code completable implementation
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
 				then
-					Result := true
-					set_completing_feature (false)
+					Result := True
+					set_completing_feature (False)
 				end
 			end
 		end
@@ -1090,13 +1099,13 @@ feature {NONE} -- Code completable implementation
 						l_current_line.after or l_current_line.item = text_displayed.cursor.token
 					loop
 						if l_current_line.item.is_text and then l_current_line.item.image.is_equal ("(") then
-							l_has_left_brace_ahead := true
+							l_has_left_brace_ahead := True
 						end
 						if l_current_line.item.is_text and then l_current_line.item.image.is_equal (")") then
-							l_has_right_brace_ahead := true
+							l_has_right_brace_ahead := True
 						end
 						if l_current_line.item.is_text and then (l_current_line.item.image.is_equal (",") or else l_current_line.item.image.is_equal (";")) then
-							seperator_ahead := true
+							seperator_ahead := True
 						end
 						l_current_line.forth
 					end
@@ -1107,7 +1116,7 @@ feature {NONE} -- Code completable implementation
 						l_current_token = Void or else l_current_token = l_current_line.eol_token
 					loop
 						if l_current_token.image.is_equal (")") then
-							l_has_right_brace_following := true
+							l_has_right_brace_following := True
 						end
 						l_current_token := l_current_token.next
 					end

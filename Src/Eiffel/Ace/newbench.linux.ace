@@ -284,7 +284,7 @@ external
 		"\$(EIFFEL_SRC)/C/platform",
 		"\$(EIFFEL_SRC)/library/event/Clib",
 		"\$(EIFFEL_SRC)/library/vision2/spec/include",
-		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --include_path`",
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`",
 		"\$(EIFFEL_SRC)/C_library/libpng",
 		"\$(EIFFEL_SRC)/C_library/zlib",
 		"\$(EIFFEL_SRC)/library/process/classic/unix/Clib"
@@ -296,6 +296,6 @@ external
 		"$(EIFFEL_SRC)/C/platform/libplatform.a",
 		"$(EIFFEL_SRC)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o",
 		"$(EIFFEL_SRC)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a",
-		"`$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --object`"
+		"`$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 
 end

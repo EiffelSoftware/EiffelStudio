@@ -71,7 +71,6 @@ feature -- Formatting
 				create class_file.make (classi.file_name)
 				if class_file.exists then
 					if not equal (classi.file_name, editor.file_name) then
-						set_current_class (classi.config_class)
 						editor.set_stone (stone)
 						editor.load_file (classi.file_name)
 						go_to_position

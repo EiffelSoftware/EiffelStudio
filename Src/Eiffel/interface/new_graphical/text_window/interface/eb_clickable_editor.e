@@ -350,7 +350,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 		local
 			l_number: INTEGER
 			ln: like line_type
-			stone: STONE
+			l_stone: STONE
 			bkstn: BREAKABLE_STONE
 			cur: like cursor_type
 		do
@@ -374,9 +374,9 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 				end
 				if bkstn = Void then
 					if ctrled_key then
-						stone := text_displayed.stone_at (cur)
-						if stone /= Void and then stone.is_valid then
-							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (stone)
+						l_stone := text_displayed.stone_at (cur)
+						if l_stone /= Void and then l_stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 						end
 					end
 				else

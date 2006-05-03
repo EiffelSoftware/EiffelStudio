@@ -334,6 +334,9 @@ feature -- Pick and drop
 			if not Workbench.is_compiling then
 				if click_and_complete_is_active and then click_tool.is_ready then
 					Result := click_tool.stone_at_position (cursr)
+					if Result = Void and then cursr.token /= Void and then cursr.token.pebble /= Void then
+						Result ?= cursr.token.pebble.twin
+					end
 				else
 					Result := Precursor {CLICKABLE_TEXT}(cursr)
 				end

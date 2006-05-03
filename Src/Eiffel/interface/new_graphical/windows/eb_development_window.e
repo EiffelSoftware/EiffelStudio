@@ -2882,6 +2882,7 @@ feature {NONE} -- Implementation
 				f.make_open_read (f.name)
 				f.read_stream (f.count)
 				f.close
+				editor_tool.text_area.set_stone (a_stone)
 				editor_tool.text_area.load_text (f.last_string)
 			else
 					-- Remember previous stone.

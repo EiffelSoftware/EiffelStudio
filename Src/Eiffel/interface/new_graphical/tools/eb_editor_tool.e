@@ -88,6 +88,7 @@ feature -- Basic operation
 	refresh is
 			-- Synchronize display with current stone
 		do
+			text_area.set_stone (stone)
 			text_area.load_file (development_window.file_name)
 		end
 

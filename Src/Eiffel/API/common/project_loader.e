@@ -283,14 +283,9 @@ feature {NONE} -- Settings
 			a_file_name_not_empty: not a_file_name.is_empty
 			a_file_name_readable: is_file_readable (a_file_name)
 		local
-			l_old_project: PROJECT_EIFFEL_FILE
 			l_ace: STRING
 		do
-			create l_old_project.make (a_file_name)
-			l_old_project.open_read
-			l_old_project.parse_project_header
-			l_old_project.close
-			l_ace := l_old_project.ace_file_path
+			l_ace := retrieved_ace_from_epr (a_file_name)
 			if l_ace = Void or else l_ace.is_empty or else not is_file_readable (l_ace) then
 				report_non_readable_ace_file_in_epr (a_file_name, l_ace)
 			else
@@ -670,6 +665,61 @@ feature {NONE} -- Constants
 			-- All warnings used in the interface
 		once
 			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	retrieved_ace_from_epr (a_file_name: STRING): STRING is
+			-- Parse the project header file to get the following information:
+			-- version_number_tag
+			-- precompilation_id
+			-- ace file path (in version 5.0.18 and above)
+			--| The format is the followin:
+			--| -- system name is xxx
+			--| version_number_tag
+			--| precompilation_id
+			--| ace file path
+			--| -- end of info
+		require
+			a_file_name_not_void: a_file_name /= Void
+			a_file_name_not_empty: not a_file_name.is_empty
+		local
+			line, string_tag, value: STRING
+			index, line_number: INTEGER
+			retried: BOOLEAN
+			l_storage: RAW_FILE
+		do
+			if not retried then
+				create l_storage.make (a_file_name)
+				if l_storage.exists then
+					l_storage.open_read
+					from
+						l_storage.read_line
+						l_storage.read_line
+						line := l_storage.last_string.twin
+					until
+						line_number > 4 or else line.is_equal (info_flag_end)
+					loop
+							-- Read the Ace file path if any specified.
+						index := line.index_of (':', 1)
+						if ace_file_path_tag.is_equal (line.substring (1, index - 1)) then
+							value := line.substring (index + 1, line.count)
+							Result := value.twin
+						end
+
+						line_number := line_number + 1
+						l_storage.read_line
+						line := l_storage.last_string.twin
+					end
+				end
+			else
+				if l_storage /= Void and then not l_storage.is_closed then
+					l_storage.close
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 indexing

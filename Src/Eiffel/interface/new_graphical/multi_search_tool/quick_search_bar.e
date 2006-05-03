@@ -47,6 +47,15 @@ inherit
 			copy
 		end
 
+	INTERFACE_NAMES
+		export
+			{NONE} all
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -72,6 +81,20 @@ feature {NONE} -- Initialization
 			next_button.set_pixmap (icon_quick_search_next_color)
 			previous_button.set_pixmap (icon_quick_search_previous_color)
 			advanced_button.set_pixmap (icon_search)
+			create first_reached_pixmap
+			create bottom_reached_pixmap
+			first_reached_pixmap.set_minimum_size (icon_first_result_reached_icon.width,
+													icon_first_result_reached_icon.height)
+			bottom_reached_pixmap.set_minimum_size (icon_bottom_reached_icon.width,
+														icon_bottom_reached_icon.height)
+			first_reached_pixmap.set_tooltip (t_first_match_reached)
+			bottom_reached_pixmap.set_tooltip (t_bottom_reached)
+			message_box.extend (first_reached_pixmap)
+			message_box.extend (bottom_reached_pixmap)
+			first_reached_pixmap.hide
+			bottom_reached_pixmap.hide
+			first_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, first_reached_pixmap, icon_first_result_reached_icon))
+			bottom_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, bottom_reached_pixmap, icon_bottom_reached_icon))
 			close_button.set_pixmap (icon_quick_search_close_color)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
 			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))
@@ -88,6 +111,8 @@ feature -- Access
 
 	key_press_action: PROCEDURE [ANY, TUPLE [EV_KEY]]
 			-- Key is pressed on any widget.
+
+
 
 feature -- Status report
 
@@ -107,6 +132,28 @@ feature -- Status report
 			-- Is regular expression used?
 		do
 			Result := regular_expression_button.is_selected
+		end
+
+feature -- Status change
+
+	trigger_first_reached_pixmap (a_b: BOOLEAN) is
+			-- Show or hide `first_reached_pixmap'.
+		do
+			if a_b then
+				first_reached_pixmap.show
+			else
+				first_reached_pixmap.hide
+			end
+		end
+
+	trigger_bottom_reached_pixmap (a_b: BOOLEAN) is
+			-- Show or hide `bottom_reached_pixmap'.
+		do
+			if a_b then
+				bottom_reached_pixmap.show
+			else
+				bottom_reached_pixmap.hide
+			end
 		end
 
 feature -- Recyclable
@@ -217,6 +264,8 @@ feature -- Destroy
 		end
 
 feature {NONE} -- Implementation
+
+	first_reached_pixmap, bottom_reached_pixmap: EV_DRAWING_AREA
 
 	option_manager: EB_SEARCH_OPTION_OBSERVER_MANAGER
 			-- Search option manager
@@ -338,7 +387,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_pixmap_expose (a_x, a_y, a_width, a_height: INTEGER; a_drawing_area: EV_DRAWING_AREA; a_pixmap: EV_PIXMAP) is
+			-- Expose action
+		require
+			a_drawing_area_not_void: a_drawing_area /= Void
+			a_pixmap_not_void: a_pixmap /= Void
+		do
+			a_drawing_area.set_background_color (stock_color.color_dialog)
+			a_drawing_area.clear
+			a_drawing_area.draw_pixmap (0, 0, a_pixmap)
+		end
+
 	search_history_size: INTEGER is 10;
+
+	stock_color : EV_STOCK_COLORS is
+			-- Stock color
+		once
+			create Result
+		end
 
 invariant
 	option_manager_not_void: option_manager /= Void

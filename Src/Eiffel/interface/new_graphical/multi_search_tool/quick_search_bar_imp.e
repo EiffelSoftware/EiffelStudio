@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
+
 				-- Create all widgets.
 			create l_ev_horizontal_separator_1
 			create l_ev_horizontal_box_1
@@ -44,10 +44,15 @@ feature {NONE}-- Initialization
 			create l_ev_cell_4
 			create l_ev_tool_bar_3
 			create advanced_button
+			create l_ev_cell_5
 			create l_ev_vertical_box_1
+			create l_ev_cell_6
+			create message_box
+			create l_ev_cell_7
+			create l_ev_vertical_box_2
 			create l_ev_tool_bar_4
 			create close_button
-			
+
 				-- Build widget structure.
 			extend (l_ev_horizontal_separator_1)
 			extend (l_ev_horizontal_box_1)
@@ -65,10 +70,15 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_cell_4)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_3)
 			l_ev_tool_bar_3.extend (advanced_button)
+			l_ev_horizontal_box_1.extend (l_ev_cell_5)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_cell_6)
+			l_ev_vertical_box_1.extend (message_box)
+			l_ev_vertical_box_1.extend (l_ev_cell_7)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_4)
 			l_ev_tool_bar_4.extend (close_button)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -94,6 +104,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (regular_expression_button)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_4)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_3)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_5)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_4)
 			l_ev_cell_1.set_minimum_width (5)
 			l_ev_label_1.set_text ("Find : ")
@@ -109,13 +121,15 @@ feature {NONE}-- Initialization
 			regular_expression_button.set_tooltip ("Use regular expression?")
 			l_ev_cell_4.set_minimum_width (3)
 			advanced_button.set_tooltip ("Advanced search")
+			l_ev_cell_5.set_minimum_width (3)
+			l_ev_vertical_box_1.disable_item_expand (message_box)
 			close_button.set_tooltip ("Close")
 			set_padding (1)
 			disable_item_expand (l_ev_horizontal_separator_1)
 			disable_item_expand (l_ev_horizontal_box_1)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -129,17 +143,19 @@ feature -- Access
 
 	keyword_field: EV_COMBO_BOX
 	next_button, previous_button, advanced_button, close_button: EV_TOOL_BAR_BUTTON
+	message_box: EV_HORIZONTAL_BOX
 	match_case_button,
 	regular_expression_button: EV_CHECK_BUTTON
 
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
-	l_ev_tool_bar_1,
-	l_ev_tool_bar_2, l_ev_tool_bar_3, l_ev_tool_bar_4: EV_TOOL_BAR
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4,
+	l_ev_cell_5, l_ev_cell_6, l_ev_cell_7: EV_CELL
+	l_ev_tool_bar_1, l_ev_tool_bar_2, l_ev_tool_bar_3,
+	l_ev_tool_bar_4: EV_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
 
 feature {NONE} -- Implementation
@@ -151,19 +167,19 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING
+			s: STRING_32
 		do
 			from
 				string_constant_set_procedures.start
@@ -176,7 +192,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -212,7 +228,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -230,7 +246,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -246,9 +262,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -266,7 +282,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -277,9 +293,9 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
+
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -290,7 +306,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

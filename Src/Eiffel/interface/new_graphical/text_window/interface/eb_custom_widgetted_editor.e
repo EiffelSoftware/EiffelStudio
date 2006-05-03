@@ -161,6 +161,8 @@ feature {NONE} -- Quick search bar.
 			bottom_widget_created: bottom_widget /= Void
 		do
 			create search_bar.make (search_tool)
+			search_tool.first_result_reached_actions.extend (agent search_bar.trigger_first_reached_pixmap)
+			search_tool.bottom_reached_actions.extend (agent search_bar.trigger_bottom_reached_pixmap)
 			bottom_widget.extend (search_bar)
 			hide_search_bar
 			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)

@@ -38,6 +38,8 @@ inherit
 		end
 
 	EB_SHARED_MANAGERS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -50,6 +52,8 @@ inherit
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -65,8 +69,14 @@ inherit
 		end
 
 	EB_SEARCH_OPTION_OBSERVER_MANAGER
+		export
+			{NONE} all
+		end
 
 	EB_SEARCH_OPTION_OBSERVER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -82,11 +92,19 @@ feature {NONE} -- Initialization
 			is_text_new_loaded := true
 			check_class_succeed := true
 			create changed_classes.make (0)
-			create loaded_actions
-			create show_actions
+			build_actions
 			create last_keyword_queue.make
 			incremental_search_start_pos := 1
 			add_observer (Current)
+		end
+
+	build_actions is
+			-- Build actions
+		do
+			create loaded_actions
+			create show_actions
+			create bottom_reached_actions
+			create first_result_reached_actions
 		end
 
 	build_interface is
@@ -364,6 +382,12 @@ feature -- Access
 
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called when the item becomes visible.
+
+	bottom_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Get called when result reaches the bottom of a class.
+
+	first_result_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Get called when result reaches the one started.
 
 feature -- Status report
 
@@ -1463,6 +1487,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					multi_search_performer.do_search
 					multi_search_performer.start
 					force_new_search
+					saved_cursor := 0
 				end
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
@@ -1516,6 +1541,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					text_strategy.set_data (class_i)
 					text_strategy.set_date (class_i.date)
 				end
+				saved_cursor := 0
+				report_cursor_recorded := False
 				multi_search_performer.do_search
 				update_combo_box_specific (keyword_field, currently_searched)
 				after_search
@@ -1562,6 +1589,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 						text_strategy.set_data (class_i)
 						text_strategy.set_date (class_i.date)
 					end
+					saved_cursor := 0
+					report_cursor_recorded := False
 					multi_search_performer.do_search
 					update_combo_box_specific (keyword_field, currently_searched)
 					after_search
@@ -1587,6 +1616,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			l_project_strategy.set_regular_expression_used (is_regular_expression_used)
 			l_project_strategy.set_whole_word_matched (is_whole_word_matched)
 			multi_search_performer.set_search_strategy (l_project_strategy)
+			saved_cursor := 0
+			report_cursor_recorded := False
 			multi_search_performer.do_search
 			update_combo_box_specific (keyword_field, currently_searched)
 			after_search
@@ -1612,6 +1643,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			l_scope_strategy.set_subcluster_searched (is_sub_cluster_searched)
 			l_scope_strategy.set_whole_word_matched (is_whole_word_matched)
 			multi_search_performer.set_search_strategy (l_scope_strategy)
+			saved_cursor := 0
+			report_cursor_recorded := False
 			multi_search_performer.do_search
 			update_combo_box_specific (keyword_field, currently_searched)
 			after_search
@@ -2144,7 +2177,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			-- Do actual `select_and_show'.
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-				select_in_current_editor_perform
 				select_current_row
 			end
 		end
@@ -2162,6 +2194,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		local
 			l_text_item: MSR_TEXT_ITEM
 			l_editor: EB_EDITOR
+			l_start, l_end: INTEGER
 		do
 			if old_editor /= Void then
 				l_editor := old_editor
@@ -2171,12 +2204,14 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item
 				if l_text_item /= Void then
-					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
+					l_start := l_text_item.start_index_in_unix_text
+					l_end := l_text_item.end_index_in_unix_text + 1
+					if l_end > l_start then
 						if l_editor.text_is_fully_loaded then
-							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
+							l_editor.select_region (l_start, l_end)
 						end
-					elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-						l_editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
+					elseif l_end = l_start then
+						l_editor.text_displayed.cursor.go_to_position (l_end)
 						l_editor.deselect_all
 					end
 					if l_editor.has_selection then
@@ -2184,6 +2219,8 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 					end
 					l_editor.refresh_now
 				end
+				bottom_reached_actions.call ([False])
+				first_result_reached_actions.call ([False])
 			end
 		end
 
@@ -2352,6 +2389,23 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		once
 			create l_comb
 			Result := l_comb.background_color
+		end
+
+	set_report_cursor_recorded (a_recorded: BOOLEAN) is
+			-- Set `report_cursor_recorded' with `a_recorded'
+		do
+			report_cursor_recorded := a_recorded
+		end
+
+	report_cursor_recorded: BOOLEAN
+
+	saved_cursor: INTEGER
+			-- Saved cursor in report
+
+	save_current_cursor is
+			-- Save current cursor position in report
+		do
+			saved_cursor := multi_search_performer.index
 		end
 
 indexing

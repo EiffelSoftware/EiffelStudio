@@ -1233,6 +1233,16 @@ feature -- Icons
 			Result := icon_feature
 		end
 
+	Icon_bottom_reached_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_bottom_reached_icon_value)
+		end
+
+	Icon_first_result_reached_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_first_result_reached_icon_value)
+		end
+
 feature -- Reading
 
 	pixmap_path: DIRECTORY_NAME is
@@ -1486,6 +1496,8 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (2, 16, Icon_error_output_view_icon_value)
 			Result.add_pixmap (3, 16, Icon_diagram_tool_icon_value)
 			Result.add_pixmap (4, 16, Icon_output_view_icon_value)
+			Result.add_pixmap (5, 16, Icon_bottom_reached_icon_value)
+			Result.add_pixmap (6, 16, Icon_first_result_reached_icon_value)
 		end
 
 feature {NONE} -- Constants
@@ -1711,7 +1723,9 @@ feature {NONE} -- Constants
 			Icon_output_view_icon_value,
 			Icon_error_output_view_icon_value,
 			Icon_warning_output_view_icon_value,
-			Icon_diagram_tool_icon_value: INTEGER is unique;
+			Icon_diagram_tool_icon_value,
+			Icon_bottom_reached_icon_value,
+			Icon_first_result_reached_icon_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -563,6 +563,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_text_item: MSR_TEXT_ITEM
 			l_editor: EB_EDITOR
 			l_saving_string: STRING
+			l_start, l_end: INTEGER
 		do
 			search_tool.set_new_search_set (false)
 			l_text_item ?= multi_search_performer.item
@@ -574,21 +575,39 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				end
 --				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
 				if (not search_tool.is_item_source_changed (l_text_item)) then
-					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
+					l_start := l_text_item.start_index_in_unix_text
+					l_end := l_text_item.end_index_in_unix_text + 1
+					if l_end > l_start then
 						if l_editor.text_is_fully_loaded then
-							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
+							l_editor.select_region (l_start, l_end)
 						end
-					elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-						l_editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
+					elseif l_end = l_start then
+						l_editor.text_displayed.cursor.go_to_position (l_end)
 						l_editor.deselect_all
 					end
 					if l_editor.has_selection then
 						l_editor.show_selection (False)
 					end
+					if search_tool.saved_cursor /= 0 and then search_tool.saved_cursor = multi_search_performer.index then
+						search_tool.first_result_reached_actions.call ([True])
+					else
+						search_tool.first_result_reached_actions.call ([False])
+					end
+					if multi_search_performer.islast then
+						search_tool.bottom_reached_actions.call ([True])
+					else
+						search_tool.bottom_reached_actions.call ([False])
+					end
 					l_editor.refresh_now
 					search_tool.summary_label.set_text (report_summary_string)
 					search_tool.new_search_tool_bar.hide
+					if not search_tool.report_cursor_recorded then
+						search_tool.save_current_cursor
+						search_tool.set_report_cursor_recorded (True)
+					end
 				else
+					search_tool.bottom_reached_actions.call ([False])
+					search_tool.first_result_reached_actions.call ([False])
 					if search_tool.is_customized or search_tool.is_whole_project_searched then
 						l_saving_string := " saving file and"
 					else

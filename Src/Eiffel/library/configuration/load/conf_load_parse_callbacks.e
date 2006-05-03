@@ -1084,7 +1084,7 @@ feature {NONE} -- Implementation attribute processing
 				if valid_platform (l_pf) then
 					current_condition.exclude_platform (l_pf)
 				else
-					set_parse_error_message ("Invalid platform "+l_value+".")
+					set_parse_error_message ("Invalid platform "+l_excluded_value+".")
 				end
 			end
 		end
@@ -1116,7 +1116,7 @@ feature {NONE} -- Implementation attribute processing
 				if valid_build (l_build) then
 					current_condition.exclude_build (l_build)
 				else
-					set_parse_error_message ("Invalid build "+l_value+".")
+					set_parse_error_message ("Invalid build "+l_excluded_value+".")
 				end
 			end
 		end

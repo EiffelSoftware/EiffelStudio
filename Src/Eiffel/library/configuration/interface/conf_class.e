@@ -172,6 +172,19 @@ feature -- Access, in compiled only, not stored to configuration file
 	overrides: ARRAYED_LIST [like class_type]
 			-- The classes that this class overrides.
 
+feature -- Status report
+
+	has_modification_date_changed: BOOLEAN is
+			-- Did modification date changed since last call to `check_changed'?
+		local
+			l_str: ANY
+			l_date: INTEGER
+		do
+			l_str := full_file_name.to_c
+			eif_date ($l_str, $l_date)
+			Result := (l_date = -1) or (l_date /= date)
+		end
+
 feature -- Access queries
 
 	actual_class: like class_type is

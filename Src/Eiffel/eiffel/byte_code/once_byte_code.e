@@ -78,38 +78,45 @@ feature {NONE} -- C code generation: implementation
 			c_type_name: STRING
 			buf: like buffer
 			data_macro_suffix: CHARACTER
+			is_basic_type: BOOLEAN
 		do
 			buf := buffer
 				-- Use "EIF_POINTER" C type for TYPED_POINTER and CECIL type name for other types
 			type_i := real_type (result_type)
-			if not type_i.is_void and then (context.workbench_mode or else context.result_used)	then
-					-- Generate Result definition
+			if type_i.is_void then
+				data_macro_suffix := 'V'
+			else
 				if type_i.is_feature_pointer then
 					c_type_name := "EIF_POINTER"
 				else
 					c_type_name := type_i.c_type.c_string
 				end
-				buf.put_string ("%N#define Result ")
-				buf.put_string (result_macro_prefix)
 				if type_i.c_type.is_pointer then
-						-- Define "Result" macro for reference result type
-					buf.put_character ('R')
+						-- Reference result type
 					data_macro_suffix := 'R'
 				else
-						-- Define "Result" macro for basic result type
-					buf.put_string ("B (")
-					buf.put_string (c_type_name)
-					buf.put_character (')')
+						-- Basic result type
 					data_macro_suffix := 'B'
+					is_basic_type := True
 				end
-				buf.put_new_line
-			else
-				data_macro_suffix := 'V'
+				if context.workbench_mode or else context.result_used then
+						-- Generate Result definition
+					buf.put_string ("%N#define Result ")
+					buf.put_string (result_macro_prefix)
+					buf.put_character (data_macro_suffix)
+					if is_basic_type then
+							-- Specify basic result type
+						buf.put_character ('(')
+						buf.put_string (c_type_name)
+						buf.put_character (')')
+					end
+					buf.put_new_line
+				end
 			end
 			buf.put_string (data_macro_prefix)
 			buf.put_character (data_macro_suffix)
 			buf.put_character ('(')
-			if c_type_name /= Void and then not type_i.c_type.is_pointer then
+			if is_basic_type then
 				buf.put_string (c_type_name)
 				buf.put_string (gc_comma)
 			end

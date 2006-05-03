@@ -367,7 +367,7 @@ feature -- Commands
 				Rescue_status.set_is_error_exception (False)
 				retried := retried + 1
 				if not missing_class_error then
-					degree_6_done := system.is_rebuild
+					degree_6_done := system /= Void and then system.is_rebuild
 					Error_handler.error_list.start
 					if
 						not degree_6_done and then

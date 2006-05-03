@@ -26,32 +26,35 @@ feature -- Execution
 	work is
 			-- Show indexing clauses of clases in universe.
 		local
-			clusters: ARRAYED_LIST [CLUSTER_I];
-			cursor: CURSOR
+			groups: ARRAYED_LIST [CONF_GROUP];
+			cursor: CURSOR;
 		do
-			conf_todo
---			clusters := Universe.clusters;
---			from
---				clusters.start
---			until
---				clusters.after
---			loop
---				cursor := clusters.cursor;
---				display_a_cluster (clusters.item);
---				clusters.go_to (cursor);
---				clusters.forth
---			end
-		end;
+			groups := universe.groups
+			if not groups.is_empty then
+				from
+					--| Print user defined clusters
+					groups.start
+				until
+					groups.after
+				loop
+					cursor := groups.cursor
+					display_a_cluster (groups.item)
+					groups.go_to (cursor)
+					groups.forth
+				end
+			end
+		end
 
-	display_a_cluster (cluster: CLUSTER_I) is
+	display_a_cluster (a_group: CONF_GROUP) is
 		local
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
-			classes: HASH_TABLE [CLASS_I, STRING];
+			classes: HASH_TABLE [CONF_CLASS, STRING];
 			a_classi: CLASS_I;
 			a_class: CLASS_C;
+			l_precompile: CONF_PRECOMPILE
 		do
 			create sorted_class_names.make;
-			classes := cluster.classes;
+			classes := a_group.classes;
 			from
 				classes.start
 			until
@@ -62,28 +65,30 @@ feature -- Execution
 			end;
 			sorted_class_names.sort;
 			text_formatter.add ("Cluster: ");
-			text_formatter.add_group (cluster, cluster.cluster_name);
-			conf_todo
---			if cluster.is_precompiled then
---				text_formatter.add (" (Precompiled)")
---			end;
+			text_formatter.add_group (a_group, a_group.name);
+			l_precompile ?= a_group
+			if l_precompile /= Void then
+				text_formatter.add (" (Precompiled)")
+			end
 			text_formatter.add_new_line;
 			from
 				sorted_class_names.start
 			until
 				sorted_class_names.after
 			loop
-				text_formatter.add_indent;
-				a_classi := classes.item (sorted_class_names.item);
-				a_class := a_classi.compiled_class;
-				if a_class /= Void then
-					a_class.append_signature (text_formatter, True);
-					display_indexing (a_class, text_formatter)
-				else
-					a_classi.append_name (text_formatter);
-					text_formatter.add ("  (not in system)")
-				end;
-				text_formatter.add_new_line;
+				a_classi ?= classes.item (sorted_class_names.item)
+				if a_classi /= Void then
+					text_formatter.add_indent;
+					a_class := a_classi.compiled_class;
+					if a_class /= Void then
+						a_class.append_signature (text_formatter, True);
+						display_indexing (a_class, text_formatter)
+					else
+						a_classi.append_name (text_formatter);
+						text_formatter.add ("  (not in system)")
+					end;
+					text_formatter.add_new_line;
+				end
 				sorted_class_names.forth
 			end
 		end;

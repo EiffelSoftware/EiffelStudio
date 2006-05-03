@@ -4420,7 +4420,7 @@ feature -- Implementation
 
 	process_interval_as (l_as: INTERVAL_AS) is
 		do
-			inspect_control.process_interval (l_as)
+			inspect_control.process_interval (l_as, is_inherited)
 			if is_byte_node_enabled then
 				last_byte_node := inspect_control.last_interval_byte_node
 			end

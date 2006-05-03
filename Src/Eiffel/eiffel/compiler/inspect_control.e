@@ -77,6 +77,9 @@ feature -- Access
 	last_interval_byte_node: INTERVAL_B
 			-- Last byte node for interval (if any)
 
+	is_inherited: BOOLEAN
+			-- Is code being checked coming from an inherited routine?
+
 feature {NONE} -- State
 
 	positive_value: ATOMIC_AS
@@ -99,7 +102,7 @@ feature {NONE} -- State
 
 feature -- Processing
 
-	process_interval (interval: INTERVAL_AS) is
+	process_interval (interval: INTERVAL_AS; a_code_inherited: BOOLEAN) is
 			-- Check type validity of `interval' and make byte code available
 			-- in `last_interval_byte_node' if possible.
 		require
@@ -113,6 +116,7 @@ feature -- Processing
 			i: like intervals
 			interval_byte_node: like last_interval_byte_node
 		do
+			is_inherited := a_code_inherited
 			last_interval_byte_node := Void
 			process_inspect_value (interval.lower)
 			lower_bound := last_inspect_value
@@ -198,6 +202,10 @@ feature {STATIC_ACCESS_AS} -- Visitor
 					obs_warn.set_obsolete_feature (feature_i)
 					obs_warn.set_feature (context.current_feature)
 					error_handler.insert_warning (obs_warn)
+				end
+				if not is_inherited then
+					l_as.set_routine_ids (constant_i.rout_id_set)
+					l_as.set_class_id (class_c.class_id)
 				end
 			else
 				report_vomb2 (l_as)

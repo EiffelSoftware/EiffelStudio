@@ -94,7 +94,7 @@ move /s thread %DOCUMENT_DIR\xmldoc\libraries\thread\reference
 move /s time %DOCUMENT_DIR\xmldoc\libraries\time\reference
 move /s web %DOCUMENT_DIR\xmldoc\libraries\web\reference
 move /s store %DOCUMENT_DIR\xmldoc\libraries\store\reference
-move /s preferences %DOCUMENT_DIR\xmldoc\libraries\preferences\reference
+move /s preferences_reg %DOCUMENT_DIR\xmldoc\libraries\preferences\reference
 
 	
 remtrace ----------------------------------------------------------------------------------------

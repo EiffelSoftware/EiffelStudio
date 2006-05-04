@@ -72,9 +72,6 @@ rt_private long r64acs (char recursive_call);
 rt_private long i64acs (char recursive_call);
 rt_private long ptracs (char recursive_call);
 
-rt_private long eif_remainder(long int x);
-rt_private long eif_padding(long int x, long int y);
-
 rt_private long nextarg(void);
 rt_private void getarg(int n, char *name);
 
@@ -382,69 +379,69 @@ rt_private long chroff(char recursive_call)
 {
 	long to_add = nb_ref * REFSIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) CHRSIZ);
+		return to_add + PADD(to_add, (long) CHRSIZ);
 	else
-		return to_add + eif_padding(to_add, (long) CHRSIZ) + CHRACS(second_argument);
+		return to_add + PADD(to_add, (long) CHRSIZ) + CHRACS(second_argument);
 }
 
 rt_private long i16off(char recursive_call)
 {
 	long to_add = chroff(RECURSIVE) + nb_char *CHRSIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add,(long)  I16SIZ);
+		return to_add + PADD(to_add,(long)  I16SIZ);
 	else
-		return to_add + eif_padding(to_add,(long)  I16SIZ) + I16ACS(third_argument);
+		return to_add + PADD(to_add,(long)  I16SIZ) + I16ACS(third_argument);
 }
 
 rt_private long lngoff(char recursive_call)
 {
 	long to_add = i16off(RECURSIVE) + nb_i16 *I16SIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add,(long)  LNGSIZ);
+		return to_add + PADD(to_add,(long)  LNGSIZ);
 	else
-		return to_add + eif_padding(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
+		return to_add + PADD(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
 }
 
 rt_private long r32off(char recursive_call)
 {
 	long to_add = lngoff(RECURSIVE) + nb_int * LNGSIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) R32SIZ);
+		return to_add + PADD(to_add, (long) R32SIZ);
 	else
-		return to_add + eif_padding(to_add, (long) R32SIZ) + R32ACS(fifth_argument);
+		return to_add + PADD(to_add, (long) R32SIZ) + R32ACS(fifth_argument);
 }
 
 rt_private long ptroff(char recursive_call)
 {
 	long to_add = r32off(RECURSIVE) + nb_r32 * R32SIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) PTRSIZ);
+		return to_add + PADD(to_add, (long) PTRSIZ);
 	else
-		return to_add + eif_padding(to_add, (long) PTRSIZ) + PTRACS(sixth_argument);
+		return to_add + PADD(to_add, (long) PTRSIZ) + PTRACS(sixth_argument);
 }
 
 rt_private long i64off(char recursive_call)
 {
 	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) I64SIZ);
+		return to_add + PADD(to_add, (long) I64SIZ);
 	else
-		return to_add + eif_padding(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
+		return to_add + PADD(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
 }
 
 rt_private long r64off(char recursive_call)
 {
 	long to_add = i64off(RECURSIVE) + nb_i64 * I64SIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) R64SIZ);
+		return to_add + PADD(to_add, (long) R64SIZ);
 	else
-		return to_add + eif_padding(to_add, (long) R64SIZ) + R64ACS(eigth_argument);
+		return to_add + PADD(to_add, (long) R64SIZ) + R64ACS(eigth_argument);
 }
 
 rt_private long objsiz(char recursive_call)
 {
 	long to_add = r64off(RECURSIVE) + nb_r64 * R64SIZ;
-	return to_add + eif_remainder(to_add);
+	return to_add + REMAINDER(to_add);
 }
 
 rt_private long bitoff (char recursive_call) { return BITOFF(first_argument); }
@@ -456,22 +453,6 @@ rt_private long r32acs (char recursive_call) { return R32ACS(first_argument); }
 rt_private long r64acs (char recursive_call) { return R64ACS(first_argument); }
 rt_private long i64acs (char recursive_call) { return I64ACS(first_argument); }
 rt_private long ptracs (char recursive_call) { return PTRACS(first_argument); }
-
-/*
- * Private functions definitions
- */
-
-rt_private long eif_remainder (long int x) {
-		/* if `x' is aligned on ALIGN boundaries then nothing, if not,
-		 * we return what is missing to reach the alignment. */
-	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
-}
-
-rt_private long eif_padding (long int x, long int y) {
-		/* Find how much we need to pad to put next attribute of size `y' after
-		 * all previous attribute which have a size of `x'. */
-	return eif_remainder(x) % y;
-}
 
 /*
 doc:</file>

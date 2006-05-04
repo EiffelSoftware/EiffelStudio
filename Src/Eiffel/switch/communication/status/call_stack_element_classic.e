@@ -51,11 +51,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_STATELESS_VISITOR
-		export
-			{NONE} all
-		end
-
 create {EIFFEL_CALL_STACK}
 	make
 create {STOPPED_HDLR,APPLICATION_EXECUTION_CLASSIC}
@@ -262,12 +257,13 @@ feature {NONE} -- Implementation
 			arg_types		: E_FEATURE_ARGUMENTS
 			arg_names		: LIST [STRING]
 			rout			: like routine
+			rout_i			: like routine_i
 			counter			: INTEGER
 			l_names_heap	: like Names_heap
 			l_stat_class	: CLASS_C
 			l_old_group   	: CONF_GROUP
 			l_old_class		: CLASS_C
-			l_type_a: TYPE_A
+			l_wc			: CLASS_C
 		do
 			debug ("DEBUGGER_TRACE_CALLSTACK")
 				io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
@@ -277,7 +273,9 @@ feature {NONE} -- Implementation
 				set_hector_addr_for_locals_and_arguments
 			end
 			debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument"+"%N"); end
+
 			rout := routine
+
 			unprocessed_l := unprocessed_values
 			unprocessed_l.start
 			if rout /= Void then
@@ -312,9 +310,10 @@ feature {NONE} -- Implementation
 					l_old_class := System.current_class
 					System.set_current_class (dynamic_class)
 
-
 					create locals_list.make (retrieved_locals_count)
 					from
+						rout_i := routine_i
+						l_wc := rout_i.written_class
 						l_count := 0
 						local_decl_grps.start
 						l_names_heap := Names_heap
@@ -324,15 +323,7 @@ feature {NONE} -- Implementation
 					loop
 						id_list := local_decl_grps.item.id_list
 						if not id_list.is_empty then
-							l_type_a := type_a_generator.evaluate_type (local_decl_grps.item.type, dynamic_class)
-							type_a_checker.init_for_checking (routine_i, dynamic_class, Void, Void)
-							l_type_a := type_a_checker.solved (l_type_a, Void)
-							check
-								l_type_a_not_void: l_type_a /= Void
-								l_type_a_valid: l_type_a.is_valid and l_type_a.has_associated_class
-							end
-							l_stat_class := l_type_a.associated_class
-
+							l_stat_class := static_class_for_local (local_decl_grps.item, rout_i, l_wc)
 							from
 								id_list.start
 							until
@@ -341,7 +332,9 @@ feature {NONE} -- Implementation
 							loop
 								value := unprocessed_l.item
 								value.set_name (l_names_heap.item (id_list.item))
-								value.set_static_class (l_stat_class)
+								if l_stat_class /= Void then
+									value.set_static_class (l_stat_class)
+								end
 								locals_list.extend (value)
 								id_list.forth
 								unprocessed_l.forth

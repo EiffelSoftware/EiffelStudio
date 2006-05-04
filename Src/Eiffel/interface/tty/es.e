@@ -40,6 +40,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	EB_SHARED_PREFERENCES
+
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -62,6 +64,7 @@ feature -- Initialization
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
+			preference_access: PREFERENCES
 		do
 			if not retried then
 					-- Check that environment variables
@@ -74,6 +77,11 @@ feature -- Initialization
 					--| back to the values which permits the compiler to access correctly the EIFGEN
 					--| directory
 				create eifgen_init.make
+
+					-- Initialization of compiler resources.
+				create preference_access.make_with_defaults_and_location (
+					<<general_preferences, platform_preferences>>, eiffel_preferences)
+				initialize_preferences (preference_access, False)
 
 						-- Read the resource files
 				create new_resources.initialize

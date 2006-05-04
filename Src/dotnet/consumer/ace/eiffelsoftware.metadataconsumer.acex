@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA">
 	<target name="eiffelsoftware.metadataconsumer">
 		<root feature="make" class="EMITTER"/>
-		<version major="5" minor="7" release="414" build="1"/>
+		<version major="5" minor="7" release="414" build="0"/>
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="assemblies_are_never_stale" enabled="false"/>

@@ -370,19 +370,21 @@ feature -- Inlining
 						-- Creation of a special node for the entire
 						-- feature (descendant of STD_BYTE_CODE)
 					inliner.set_current_feature_inlined
+					context_class_type := system.class_type_of_id (entry.type_id)
+					written_class_type := context_class_type.associated_class.implemented_type (f.written_in, context_class_type.type).associated_class_type
+						-- Create inlined byte node.
 					if cl_type.base_class.is_special then
 						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
 					else
 						create inlined_feat_b
 					end
 					inlined_feat_b.fill_from (Current)
-					bc ?= Byte_server.disk_item (l_body_index)
 
-					context_class_type := system.class_type_of_id (entry.type_id)
-					written_class_type := context_class_type.associated_class.implemented_type (f.written_in, context_class_type.type).associated_class_type
+						-- Change context type before evaluating inlined feature byte code.
+					Context.change_class_type_context (context_class_type, written_class_type)
 					inlined_feat_b.set_context_type (context_class_type, written_class_type)
 
-					Context.change_class_type_context (context_class_type, written_class_type)
+					bc ?= Byte_server.disk_item (l_body_index)
 					bc := bc.pre_inlined_code
 					Context.restore_class_type_context
 

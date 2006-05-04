@@ -322,6 +322,7 @@ feature -- Text processing
 		local
 			format: CELL2 [STRING, STRING];
 			text_image: STRING
+			l_feature_generated: BOOLEAN
 		do
 			if not skipping then
 				text_image := text.as_lower
@@ -335,14 +336,17 @@ feature -- Text processing
 
 				if format /= Void then
 					if a_feature /= Void then
-						set_keywords_for_feature (a_feature)
+						l_feature_generated := doc_universe.is_feature_generated (a_feature)
+						if l_feature_generated then
+							set_keywords_for_feature (a_feature, doc_universe.found_group)
+						end
 					end
 					image_append (format.item1)
 					if format.item2 /= Void then
 						print_escaped_text (text)
 						image_append (format.item2)
 					end
-					if a_feature /= Void then
+					if l_feature_generated then
 						set_keyword (kw_File, Void)
 						set_keyword (kw_Feature, Void)
 					end
@@ -362,9 +366,11 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING]
 			text_image: STRING
 			operator_generated: BOOLEAN
+			l_group: CONF_GROUP
 		do
 			if not skipping then
 				operator_generated := doc_universe.is_feature_generated (a_feature)
+				l_group := doc_universe.found_group
 				text_image := text.as_lower
 				if format_table.has (text_image) then
 					format := format_table.found_item
@@ -382,14 +388,18 @@ feature -- Text processing
 					end
 				end
 				if format /= Void then
-					set_keywords_for_feature (a_feature)
+					if operator_generated then
+						set_keywords_for_feature (a_feature, l_group)
+					end
 					image_append (format.item1)
 					if format.item2 /= Void then
 						print_escaped_text (text)
 						image_append (format.item2)
 					end
-					set_keyword (kw_File, Void)
-					set_keyword (kw_Feature, Void)
+					if operator_generated then
+						set_keyword (kw_File, Void)
+						set_keyword (kw_Feature, Void)
+					end
 				else
 					print_escaped_text (text)
 				end
@@ -504,14 +514,16 @@ feature -- Text processing
 		local
 			format: CELL2 [STRING, STRING]
 			class_generated: BOOLEAN
+			l_group: CONF_GROUP
 			path_pre: STRING
 		do
 			if not skipping then
 				class_generated := doc_universe.is_class_generated (a_class)
 				if class_generated then
 					if format_table.has (f_Class_name) then
+						l_group := doc_universe.found_group
 						format := format_table.found_item
-						path_pre := path_representation (file_separator.out, a_class.group.name, a_class.group, False)
+						path_pre := path_representation (file_separator.out, l_group.name, l_group, False)
 						set_keyword (kw_File,
 							relative_to_base (path_pre + file_separator.out + a_class.name.as_lower +
 								class_suffix
@@ -759,11 +771,12 @@ feature -- Text processing
 			process_basic_text (text)
 		end
 
-	set_keywords_for_feature (f: E_FEATURE) is
+	set_keywords_for_feature (f: E_FEATURE; a_group: CONF_GROUP) is
 			-- Set keywords "$file$" and "$feature$" to the correct
 			-- values for `f'.
 		require
 			f_not_void: f /= Void
+			a_group_not_void: a_group /= Void
 		local
 			real_feature: E_FEATURE
 			written_class: CLASS_C
@@ -785,7 +798,7 @@ feature -- Text processing
 
 			feat_suffix := escaped_text (feat_suffix)
 			l_class_i := f.written_class.lace_class
-			path_pre := path_representation (file_separator.out, l_class_i.group.name, l_class_i.group, False)
+			path_pre := path_representation (file_separator.out, a_group.name, a_group, False)
 			set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + l_class_i.name.as_lower + feat_suffix))
 			set_keyword (kw_Feature, escaped_text (real_feature.name))
 		end
@@ -801,7 +814,7 @@ feature -- Text processing
 				if feature_generated then
 					if format_table.has (f_Features) then
 						format := format_table.found_item
-						set_keywords_for_feature (a_feature)
+						set_keywords_for_feature (a_feature, doc_universe.found_group)
 					end
 				else
 					if format_table.has (f_Non_generated_feature) then

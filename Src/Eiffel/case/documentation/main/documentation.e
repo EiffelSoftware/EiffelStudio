@@ -82,12 +82,12 @@ feature -- Actions
 			ir_error: INTERRUPT_ERROR
 			l_groups: like groups
 			l_group: CONF_GROUP
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			eiffel_system.system.set_current_class (any_class)
 			if not cancelled then
 				deg.put_initializing_documentation
 
-				classes := doc_universe.classes
 				create filter.make (filter_name)
 				filter.set_universe (doc_universe)
 				base_path := ""
@@ -169,37 +169,49 @@ feature -- Actions
 					end
 
 					if any_class_format_generated then
-						deg.put_start_documentation (classes.count, generated_class_formats_string)
+						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
 						from
-							classes.start
+							l_groups.start
 						until
-							classes.after
+							l_groups.after
 						loop
-							deg.put_case_class_message (classes.item_for_iteration)
-							deg.flush_output
-							set_base_cluster (classes.item_for_iteration.group)
-							cl_name := classes.item_for_iteration.name.as_lower
-							set_class_name (cl_name)
-							if filter.is_html then
-								filter.set_keyword ("html_meta", html_meta_for_class (classes.item_for_iteration))
-							end
-							af := all_class_formats.linear_representation
-							from af.start until af.after loop
-								create cf.make (af.item)
-								af.forth
-								if cf.is_generated then
-									prepare_for_file (
-										create {FILE_NAME}.make_from_string (relative_path (classes.item_for_iteration.group)),
-										cl_name + cf.file_extension
-									)
-									set_document_title (cl_name + " " + cf.description)
-									generate_class (classes.item_for_iteration, cf)
+							l_group := l_groups.item_for_iteration
+							l_groups.forth
+							l_classes := l_group.classes
+							if l_classes /= Void then
+								from
+									l_classes.start
+								until
+									l_classes.after
+								loop
+									if l_classes.item_for_iteration.is_compiled then
+										deg.put_case_class_message (l_classes.item_for_iteration)
+										deg.flush_output
+										set_base_cluster (l_group)
+										cl_name := l_classes.item_for_iteration.name.as_lower
+										set_class_name (cl_name)
+										if filter.is_html then
+											filter.set_keyword ("html_meta", html_meta_for_class (l_classes.item_for_iteration))
+										end
+										af := all_class_formats.linear_representation
+										from af.start until af.after loop
+											create cf.make (af.item)
+											af.forth
+											if cf.is_generated then
+												prepare_for_file (
+													create {FILE_NAME}.make_from_string (relative_path (l_group)),
+													cl_name + cf.file_extension
+												)
+												set_document_title (cl_name + " " + cf.description)
+												generate_class (l_classes.item_for_iteration, cf)
+											end
+										end
+									end
+									l_classes.forth
 								end
 							end
-							classes.forth
 						end
 					end
-
 				end
 			end
 			deg.finish_degree_output
@@ -277,11 +289,7 @@ feature -- Actions
 		local
 			d: DIRECTORY
 			fi: FILE_NAME
-			l_cluster: CONF_CLUSTER
-			l_lib: CONF_LIBRARY
-			l_assem: CONF_ASSEMBLY
 			l_string: STRING
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 		do
 			l_string := relative_path (a_group).out
 			create fi.make_from_string (root_directory.name)
@@ -290,47 +298,7 @@ feature -- Actions
 			if not d.exists then
 				d.create_dir
 			end
-			if a_group.classes_set then
-				if a_group.is_cluster then
-					l_cluster ?= a_group
-					if l_cluster.children /= Void then
-						from
-							l_cluster.children.start
-						until
-							l_cluster.children.after
-						loop
-							create_directory_for_group (l_cluster.children.item)
-							l_cluster.children.forth
-						end
-					end
-				elseif a_group.is_assembly then
-					l_assem ?= a_group
-					if l_assem.target.application_target /= Void then
-						l_clusters := l_assem.target.application_target.clusters
-						from
-							l_clusters.start
-						until
-							l_clusters.after
-						loop
-							create_directory_for_group (l_clusters.item_for_iteration)
-							l_clusters.forth
-						end
-					end
-				elseif a_group.is_library then
-					l_lib ?= a_group
-					l_clusters := l_lib.library_target.clusters
-					from
-						l_clusters.start
-					until
-						l_clusters.after
-					loop
-						create_directory_for_group (l_clusters.item_for_iteration)
-						l_clusters.forth
-					end
-				end
-			end
 		end
-
 
 	copy_additional_file (fn: STRING) is
 			-- Copy `fn' to directory where documentation is to be generated.

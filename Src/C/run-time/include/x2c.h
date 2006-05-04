@@ -40,7 +40,7 @@
 #include "eif_size.h"
 
 /* Macros used to compute padded size for fields in the object */
-#define REMAINDER(x)		(((x) % ALIGN)?(ALIGN-((x)%ALIGN)):0)
+#define REMAINDER(x)		(((x) % EIF_ALIGN)?(EIF_ALIGN-((x)%EIF_ALIGN)):0)
 #define PADD(x,y)			(REMAINDER(x)%(y))
 #define CHROFF(x) \
 		((x)*REFSIZ+PADD((x)*REFSIZ,CHRSIZ))

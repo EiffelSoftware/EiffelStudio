@@ -150,7 +150,7 @@ rt_public EIF_INTEGER objsiz(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 
 rt_private EIF_INTEGER eif_remainder(EIF_INTEGER x)
 {
-	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
+	return ((x % EIF_ALIGN) ? (EIF_ALIGN -(x % EIF_ALIGN)) : 0);
 }
 
 rt_private EIF_INTEGER eif_padding(EIF_INTEGER x, EIF_INTEGER y)

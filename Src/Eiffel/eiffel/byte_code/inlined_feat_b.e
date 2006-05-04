@@ -51,9 +51,17 @@ feature
 		require
 			context_class_type_not_void: context_class_type /= Void
 			written_class_type_not_void: written_class_type /= Void
+		local
+			c: CLASS_C
+			f: FEATURE_I
 		do
 			context_type_id := context_class_type.type_id
 			written_type_id := written_class_type.type_id
+			if not type.is_void then
+				c := context_class_type.associated_class
+				f := c.feature_of_rout_id (routine_id)
+				type := context.real_type (f.type.type_i).type_a.type_i
+			end
 		ensure
 			context_type_id_set: context_type_id = context_class_type.type_id
 			written_type_id_set: written_type_id = written_class_type.type_id
@@ -104,18 +112,18 @@ feature
 
 	analyze_on (reg: REGISTRABLE) is
 		local
-			result_type: TYPE_I;
-			reg_type: TYPE_C;
-			local_is_current_temporary: BOOLEAN;
-			a: ATTRIBUTE_BL;
+			result_type: TYPE_I
+			reg_type: TYPE_C
+			local_is_current_temporary: BOOLEAN
+			a: ATTRIBUTE_BL
 			access: ACCESS_EXPR_B
 			local_inliner: INLINER
 			cl_type_i: CL_TYPE_I
 		do
 				-- First, standard analysis of the call
-			Precursor {FEATURE_BL} (reg);
+			Precursor {FEATURE_BL} (reg)
 
-			reg_type := reg.c_type;
+			reg_type := reg.c_type
 
 				-- Instantiation of the result type (used by INLINED_RESULT_B)
 			type := real_type (type)
@@ -123,10 +131,10 @@ feature
 			local_inliner.set_inlined_feature (Current)
 
 			cl_type_i ?= context_type
-			Context.change_class_type_context (cl_type_i.associated_class_type, current_class_type)
+			Context.change_class_type_context
+				(system.class_type_of_id (context_type_id), system.class_type_of_id (written_type_id))
 
-			-- current_reg := get_current_register (reg_type);
-			local_is_current_temporary := reg.is_temporary or reg.is_predefined;
+			local_is_current_temporary := reg.is_temporary or reg.is_predefined
 
 			if local_is_current_temporary then
 				current_reg := reg
@@ -138,7 +146,7 @@ feature
 
 				a ?= reg;
 				if a /= Void then
-					current_reg := a.register;
+					current_reg := a.register
 					if current_reg /= Void then
 						local_is_current_temporary := current_reg.is_temporary
 					end
@@ -146,53 +154,53 @@ feature
 					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the
 					-- feature is an infixed routine). The attribute is stored in
 					-- field `expr'.
-					access ?= reg;
+					access ?= reg
 					if access /= Void then
-						a ?= access.expr;
+						a ?= access.expr
 						if a /= Void then
-							current_reg := a.register;
+							current_reg := a.register
 							if current_reg /= Void then
 								local_is_current_temporary := current_reg.is_temporary
 							end
 						end
 					end
 				end
-			end;
+			end
 
-			is_current_temporary := local_is_current_temporary;
+			is_current_temporary := local_is_current_temporary
 
 			if not local_is_current_temporary then
 				create {REGISTER} current_reg.make (reg_type)
-			end;
+			end
 
-			Context.set_inlined_current_register (current_reg);
+			Context.set_inlined_current_register (current_reg)
 
-			local_regs := get_inlined_registers (byte_code.locals);
-			argument_regs := get_inlined_param_registers (byte_code.arguments);
+			local_regs := get_inlined_registers (byte_code.locals)
+			argument_regs := get_inlined_param_registers (byte_code.arguments)
 
-			result_type := byte_code.result_type;
+			result_type := byte_code.result_type
 			if not result_type.is_void then
 				result_reg := get_inline_register (real_type (result_type))
-			end;
+			end
 
 			if compound /= Void then
-				compound.analyze;
-			end;
-			inlined_dt_current := context.inlined_dt_current;
-			inlined_dftype_current := context.inlined_dftype_current;
+				compound.analyze
+			end
+			inlined_dt_current := context.inlined_dt_current
+			inlined_dftype_current := context.inlined_dftype_current
 
-			context.reset_inlined_dt_current;
-			context.reset_inlined_dftype_current;
+			context.reset_inlined_dt_current
+			context.reset_inlined_dftype_current
 
 				-- Free resources
-			free_inlined_registers (local_regs);
-			free_inlined_param_registers (argument_regs);
+			free_inlined_registers (local_regs)
+			free_inlined_param_registers (argument_regs)
 
 			if not local_is_current_temporary then
 				current_reg.free_register
 			end;
 
-			local_inliner.set_inlined_feature (Void);
+			local_inliner.set_inlined_feature (Void)
 
 			Context.restore_class_type_context
 			Context.set_inlined_current_register (Void)

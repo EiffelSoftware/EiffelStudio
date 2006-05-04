@@ -58,7 +58,7 @@ $spitshell >eif_size.h <<!GROK!THIS!
 #include "eif_portable.h"
 
 /* Basic sizes */
-#define ALIGN	$alignbytes		/* Alignment restrictions */
+#define EIF_ALIGN	$alignbytes		/* Alignment restrictions */
 #define R64SIZ	$doublesize		/* Size of double */
 #define I64SIZ	$integer_64_size	/* Size of integer 64 bits */
 #define R32SIZ	$floatsize		/* Size of float */
@@ -85,16 +85,16 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
-#define BITOFF(n)		(((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
+#define BITOFF(n)		(((BITACS(n)/EIF_ALIGN)+((BITACS(n)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
-#define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
-#define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
-#define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
-#define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
-#define R32PAD(n) (((((n)*R32SIZ)/ALIGN)+((((n)*R32SIZ)%ALIGN)?1:0))*ALIGN)
-#define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
-#define R64PAD(n) (((((n)*R64SIZ)/ALIGN)+((((n)*R64SIZ)%ALIGN)?1:0))*ALIGN)
-#define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
+#define REFPAD(n) (((((n)*REFSIZ)/EIF_ALIGN)+((((n)*REFSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define CHRPAD(n) (((((n)*CHRSIZ)/EIF_ALIGN)+((((n)*CHRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define I16PAD(n) (((((n)*I16SIZ)/EIF_ALIGN)+((((n)*I16SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define LNGPAD(n) (((((n)*LNGSIZ)/EIF_ALIGN)+((((n)*LNGSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define R32PAD(n) (((((n)*R32SIZ)/EIF_ALIGN)+((((n)*R32SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define I64PAD(n) (((((n)*I64SIZ)/EIF_ALIGN)+((((n)*I64SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define R64PAD(n) (((((n)*R64SIZ)/EIF_ALIGN)+((((n)*R64SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define PTRPAD(n) (((((n)*PTRSIZ)/EIF_ALIGN)+((((n)*PTRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
 	/* Macros used to access fields in the object */
 #define REFACS(n) ((n)*REFSIZ)

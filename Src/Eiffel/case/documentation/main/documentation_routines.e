@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 				text.add_indent
 				n := n + 1
 			end
-			if du.is_group_leaf_generated (a_group) then
+			if du.is_group_generated (a_group) then
 			 	text.process_cluster_name_text (group_name_presentation (".", "", a_group), a_group, false)
 			else
 				text.process_basic_text (group_name_presentation (".", "", a_group))

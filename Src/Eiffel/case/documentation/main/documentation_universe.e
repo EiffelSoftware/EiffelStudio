@@ -134,6 +134,9 @@ feature -- Access
 	any_feature_format_generated: BOOLEAN
 			-- Is a format generated where a feature link can be redirected to?
 
+	found_group: CONF_GROUP
+			-- Last found group in a search in `is_class_in_group', `is_XXX_generated', otherwise Void.
+
 feature -- Status report
 
 	is_universe_completed: BOOLEAN
@@ -143,25 +146,32 @@ feature -- Status report
 			-- Is documentation for `a_group' generated?
 		do
 			Result := any_group_format_generated and then groups.has (a_group)
+			if Result then
+				found_group := a_group
+			else
+				found_group := Void
+			end
+		ensure
+			found_group_reset: not Result implies found_group = Void
+			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
 	is_class_generated (a_class: CLASS_I): BOOLEAN is
 			-- Is documentation for `a_class' generated?
 		do
 			Result := any_class_format_generated and then is_class_in_group (a_class)
+		ensure
+			found_group_reset: not Result implies found_group = Void
+			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
 	is_feature_generated (a_feature: E_FEATURE): BOOLEAN is
 			-- Is documentation for `cl' generated?
 		do
 			Result := any_feature_format_generated and then is_class_in_group (a_feature.written_class.lace_class)
-		end
-
-	is_group_leaf_generated (group: CONF_GROUP): BOOLEAN is
-			-- Is `group' or recursively any of its subgroups generated?
-			-- Used for cluster hierarchy view.
-		do
-			Result := any_group_format_generated and then groups.has (group)
+		ensure
+			found_group_reset: not Result implies found_group = Void
+			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
 	is_class_in_group (a_class: CLASS_I): BOOLEAN is
@@ -179,9 +189,18 @@ feature -- Status report
 				l_group := l_cursor.item
 				if l_group.classes_set then
 					Result := l_group.class_by_name (a_class.name, False).has (a_class.config_class)
+					if Result then
+						found_group := l_group
+					end
 				end
 				l_cursor.forth
 			end
+			if not Result then
+				found_group := Void
+			end
+		ensure
+			found_group_reset: not Result implies found_group = Void
+			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
 feature -- Status setting
@@ -244,21 +263,6 @@ feature {NONE} -- Implementation
 							Result.append_last (unsorted_classes_in_group (l_subclusters.item))
 							l_subclusters.forth
 						end
-					end
-				elseif group.is_library then
-					l_lib ?= group
-					check
-						l_lib_not_void: l_lib /= Void
-						library_target_not_void: l_lib.library_target /= Void
-					end
-					l_lib_clusters := l_lib.library_target.clusters
-					from
-						l_lib_clusters.start
-					until
-						l_lib_clusters.after
-					loop
-						Result.append_last (unsorted_classes_in_group (l_lib_clusters.item_for_iteration))
-						l_lib_clusters.forth
 					end
 				end
 			end

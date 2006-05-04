@@ -15,9 +15,9 @@ inherit
 		redefine
 			create_drop_actions
 		end
-		
+
 	EV_SHARED_TRANSPORT_IMP
-	
+
 	WEL_WINDOWS_ROUTINES
 
 feature {NONE} -- Initialization
@@ -77,7 +77,7 @@ feature -- Status setting
 		end
 
 	set_capture_type (a_capture_type: INTEGER) is
-			-- Set the type of capture to use when capturing the 
+			-- Set the type of capture to use when capturing the
 			-- mouse to `a_capture_type'.
 			-- See constants Capture_xxxx at the end of the class
 		require
@@ -179,7 +179,7 @@ feature -- Status setting
 		ensure
 			not_in_transport: not transport_executing
 		end
-	
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -189,7 +189,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			application_imp.clear_transport_just_ended
 			if mode_is_pick_and_drop and a_button /= 3 then
-			else	
+			else
 					-- We used to call `call_pebble_function' here, but this causes
 					-- the pebble function to be executed twice. The first execution
 					-- occurrs in EV_WINDOW_IMP source_at_pointer_position. This should
@@ -204,7 +204,7 @@ feature {EV_ANY_I} -- Implementation
 					-- If you drop on to a widget that is also a source and call `process_events' from the
 					-- `drop_actions', this causes the transport to start. The above check prevents this
 					-- from occurring.
-					
+
 					if mode_is_pick_and_drop and a_button = 3 then
 						real_start_transport (a_x, a_y, a_button, a_x_tilt,
 							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
@@ -226,7 +226,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		end
-		
+
 	modify_widget_appearance (starting: BOOLEAN) is
 			-- Modify the appearence of widgets to reflect current
 			-- state of pick and drop and dropable targets.
@@ -250,7 +250,7 @@ feature {EV_ANY_I} -- Implementation
 				windows.forth
 			end
 		end
-		
+
 
 	real_start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -272,23 +272,24 @@ feature {EV_ANY_I} -- Implementation
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.
 			then
-				
+
 					-- We need to store `top_level_window_imp' for use later if `Current'
 					-- is unparented during the pick and drop execution.
 				original_top_level_window_imp := top_level_window_imp
-				
+
 					-- We now create the screen at the start of every pick.
 					-- See `pnd_screen' comment for explanation.
 				create pnd_screen
+				pnd_screen.enable_dashed_line_style
 
 				interface.pointer_motion_actions.block
 					-- Block `pointer_motion_actions'.
 
 					-- Update `application_imp' with pick_and_drop info.
 				application_imp.transport_started (Current)
-				
+
 				modify_widget_appearance (True)
-				
+
 				create env
 
 					-- Execute pick_actions for the application.
@@ -337,7 +338,7 @@ feature {EV_ANY_I} -- Implementation
 					-- Assign correct pointer for transport.
 				update_pointer_style (pointed_target)
 
-					-- Start the capture (as late as possible because 
+					-- Start the capture (as late as possible because
 					-- we can't debug when the capture is enabled)
 				internal_enable_capture
 			end
@@ -359,7 +360,7 @@ feature {EV_ANY_I} -- Implementation
 				-- Return capture type to capture_normal.
 				--| normal capture only works on the current windows thread.
 			set_capture_type (Capture_normal)
-		
+
 			release_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
 
@@ -405,7 +406,7 @@ feature {EV_ANY_I} -- Implementation
 						target.drop_actions.call ([pebble])
 							-- If there is a target then execute the drop
 							-- actions for `target'.
-							
+
 						env.application.drop_actions.call ([pebble])
 							-- Execute drop_actions for the application.
 						application_imp.disable_drop_actions_executing
@@ -426,14 +427,14 @@ feature {EV_ANY_I} -- Implementation
 			pick_ended_actions.call ([abstract_pick_and_dropable])
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
-			
-			
+
+
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
-			
+
 			original_top_level_window_imp.allow_movement
 			original_top_level_window_imp := Void
-			
+
 				-- Reset internal attributes.
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
@@ -449,7 +450,7 @@ feature {EV_ANY_I} -- Implementation
 			press_action_Reset: press_action = Ev_pnd_start_transport
 			not_has_capture: internal_capture_status.item = False
 		end
-		
+
 	call_cancel_actions (a_pebble: ANY) is
 			-- Call `cancel_actions' of application with `a_pebble' as
 			-- event data if the cancel actions exist (i.e. used via interface)
@@ -457,10 +458,10 @@ feature {EV_ANY_I} -- Implementation
 			pebble_not_void: a_pebble /= Void
 		do
 			if application_imp.cancel_actions_internal /= Void then
-				application_imp.cancel_actions_internal.call ([a_pebble])	
+				application_imp.cancel_actions_internal.call ([a_pebble])
 			end
 		end
-		
+
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
@@ -491,7 +492,7 @@ feature {EV_ANY_I} -- Implementation
 					-- Retrieve the implementation of the Vision2 Widget at
 					-- Cursor position and check it is not Void.
 
-			
+
 					-- We must now perform special processing for widgets that have an HTTRANSPARENT
 					-- part. In this situation, the widget returned by "wel_point.window_at' may be the
 					-- parent of the widget that is pointed to. For example, if you place a notebook in a box
@@ -519,19 +520,19 @@ feature {EV_ANY_I} -- Implementation
 						end
 					end
 				end
-				
+
 				if widget_imp_at_cursor_position = Void then
-						-- We must now check for an internal combo field, and 
+						-- We must now check for an internal combo field, and
 						-- use its parent as the widget.
 					combo_field ?= wel_window_at_cursor_position
 					if combo_field /= Void then
 						widget_imp_at_cursor_position := combo_field.parent
 					end
 				end
-				
-				if widget_imp_at_cursor_position /= Void then	
+
+				if widget_imp_at_cursor_position /= Void then
 					current_target := widget_imp_at_cursor_position.interface
-						-- Current pick and drop target is the interface of 
+						-- Current pick and drop target is the interface of
 
 					current_target_object_id := current_target.object_id
 							-- The current_target_object_id is set to the
@@ -540,7 +541,7 @@ feature {EV_ANY_I} -- Implementation
 							-- that the correct target is in fact one of its
 							-- children.
 
-					
+
 					item_list_imp ?= widget_imp_at_cursor_position
 					if item_list_imp /= Void then
 						item_imp ?= item_list_imp.find_item_at_position (wel_point.x
@@ -550,7 +551,7 @@ feature {EV_ANY_I} -- Implementation
 								-- If the cursor is over an item and the item is a
 								-- pick and drop target then we set the target id to that of the
 								-- item, as the items are conceptually 'above' the list and so
-								-- if a list and one of its items are pnd targets then the 
+								-- if a list and one of its items are pnd targets then the
 								-- item should recieve.
 							sensitive ?= item_imp.interface
 								-- If an item is not `sensitive' then it cannot be dropped on.
@@ -561,7 +562,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 					end
 				end
-						
+
 				global_pnd_targets.start
 				global_pnd_targets.search (current_target_object_id)
 				if not global_pnd_targets.exhausted then
@@ -571,7 +572,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		end
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	is_pnd_in_transport: BOOLEAN
@@ -579,7 +580,7 @@ feature {EV_ANY_I} -- Implementation
 
 	is_dnd_in_transport: BOOLEAN
 		-- Is `Current' executing drag and drop?
-	
+
 	press_action: INTEGER
 		-- State which is used to decide action on pick/drag and drop press.
 
@@ -731,7 +732,7 @@ feature {EV_ANY_I} -- Implementation
 			Create Result
 		end
 
-feature {EV_ANY_I, WEL_WINDOW} -- Implementation 
+feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 
 	application_imp: EV_APPLICATION_IMP is
 			-- `Result' is implementation of application from environment.

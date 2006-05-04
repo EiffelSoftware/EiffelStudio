@@ -20,8 +20,7 @@ inherit
 			{NONE} silly_main_window
 		redefine
 			init_application,
-			message_loop,
-			run
+			message_loop
  		end
 
 	WEL_CONSTANTS
@@ -90,23 +89,6 @@ feature {NONE} -- Initialization
 			-- Start the event loop.
 		do
 			set_application_main_window (silly_main_window)
-			run
-		end
-
-	run is
-			-- Create `main_window' and start the message loop.
-			--| Redefined so post_launch_actions can be called at
-			--| The correct time.
-		local
-			d: WEL_MAIN_DIALOG
-		do
-			d ?= application_main_window
-			if d /= Void then
-				d.activate
-			end
-			if post_launch_actions_internal /= Void then
-				post_launch_actions_internal.call (Void)
-			end
 			message_loop
 		end
 
@@ -117,18 +99,13 @@ feature -- Access
 
 	key_pressed (virtual_key: INTEGER): BOOLEAN is
 			-- Is `virtual_key' currently pressed?
-		local
-			i: INTEGER
 		do
-			i := cwin_get_keyboard_state (virtual_key)
+			Result := cwin_get_keyboard_state (virtual_key) < 0
 				--| The high order bit of i will be set if the key is down.
 				--| If the high order bit of an INTEGER is set, then the
 				--| value is negative. The correct solution is
 				--|	Result := i & 0xF0000000 but this does not work with
 				--| 4.5. Julian.
-			if i < 0 then
-				Result := True
-			end
 		end
 
 	ctrl_pressed: BOOLEAN is
@@ -207,30 +184,8 @@ feature -- Element change
 
 	remove_root_window (w: WEL_FRAME_WINDOW) is
 			-- Remove `w' from the root windows list.
-		local
-			window: WEL_FRAME_WINDOW
 		do
 			Application_windows_id.prune_all (w.item)
-			if Application_windows_id.is_empty then
-				window := Silly_main_window
-			else
-				from
-					Application_windows_id.start
-				until
-					Application_windows_id.after or else
-					is_window (Application_windows_id.item)
-				loop
-					Application_windows_id.forth
-				end
-				check
-					not_after: not Application_windows_id.after
-				end
-				window ?= window_of_item (Application_windows_id.item)
-				check
-					window_is_assigned_correctly: window /= Void
-				end
-			end
-			set_application_main_window (window)
 		end
 
 	window_with_focus: EV_TITLED_WINDOW_IMP
@@ -563,6 +518,9 @@ feature {NONE} -- Implementation
 			msg: WEL_MSG
 		do
 			from
+				if post_launch_actions_internal /= Void then
+					post_launch_actions_internal.call (Void)
+				end
 				create msg.make
 			until
 				quit_requested

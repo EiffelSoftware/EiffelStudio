@@ -409,6 +409,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 rt_private int trigger_gc_cycle (void);
 rt_private int trigger_smart_gc_cycle (void);
 rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE, struct stack *);
+rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE);
 
 /* Also used by the garbage collector */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
@@ -697,6 +698,11 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 
 #ifdef ISE_GC
+		/* Objects of size 0 are very expensive to manage in the free-list, thus we make them not 0. */
+	if (nbytes == 0) {
+		nbytes = OVERHEAD;
+	}
+
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
 		 */
@@ -962,7 +968,7 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 	zone = HEADER(result);
 	zone->ov_flags |= flags;
 
-	offset = result + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	offset = RT_SPECIAL_INFO_WITH_ZONE(result, zone);
 
 	RT_SPECIAL_COUNT_WITH_INFO(offset) = nb;
 	RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) = element_size;
@@ -1090,6 +1096,11 @@ rt_public EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic)
 #endif
 
 #ifdef ISE_GC
+		/* Objects of size 0 are very expensive to manage in the free-list, thus we make them not 0. */
+	if (nbytes == 0) {
+		nbytes = OVERHEAD;
+	}
+
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
 		 */
@@ -1765,7 +1776,14 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 #endif
 
 	if (i >= HLIST_INDEX_LIMIT) {
-		selected = allocate_free_list_helper (i, nbytes, hlist);
+		selected = allocate_free_list_helper (i + 1, nbytes, hlist);
+		if ((!selected) && (hlist[i])) {
+				/* We could not find a free space in `i + 1' or above and there
+				 * is some space in `i'. We take that space and too bad that
+				 * we will have a 0-sized block. */
+			selected = allocate_free_list_helper (i, nbytes, hlist);
+			CHECK("found block", selected);
+		}
 	} else {
 			/* We are below the limit `HLIST_INDEX_LIMIT', therefore if the entry of
 			 * `hlist' at index `i' is not NULL, then it means that we have `nbytes'
@@ -1784,8 +1802,18 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 			}
 #endif
 		} else {
-			i++;
-			selected = allocate_free_list_helper (i, nbytes, hlist);
+				/* We search in `i + 2' because if we find something in
+				 * `i + 1' then it will cause a 0-sized block to be inserted
+				 * in the free list, and as we know 0-sized block are expensive
+				 * when we want to remove them from the free-list. */
+			selected = allocate_free_list_helper (i + 2, nbytes, hlist);
+			if ((!selected) && (hlist[i + 1])) {
+					/* We could not find a free space in `i + 2' or above and there
+					 * is some space in `i + 1'. We take that space and too bad that
+					 * we will have a 0-sized block. */
+				selected = allocate_free_list_helper (i + 1, nbytes, hlist);
+				CHECK("found block", selected);
+			}
 		}
 	}
 
@@ -2661,7 +2689,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	SIGBLOCK;					/* Beginning of critical section */
 
-	if (r > nbytes) {			/* New block is smaller */
+	if (r > (nbytes + OVERHEAD)) {			/* New block is smaller */
 
 #ifdef DEBUG
 		dprintf(16)("realloc: new size is smaller (%d versus %d bytes)\n",
@@ -2755,7 +2783,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 
 	i = zone->ov_size & B_SIZE;			/* Coalesc modified data in zone */
 
-	if (i >= nbytes) {					/* Total size is ok ? */
+	if (i > (nbytes + OVERHEAD)) {					/* Total size is ok ? */
 		r = i - r;						/* Amount of memory over-used */
 		CHECK("computation correct", size_gain == r);
 		i = eif_rt_split_block(zone, nbytes);	/* Split block, i holds size */
@@ -3828,7 +3856,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 #ifdef ISE_GC
 	if (dftype & EO_NEW) {					/* New object outside scavenge zone */
-		object = add_to_stack (object, &moved_set);
+		object = add_to_moved_set (object);
 	}
 	if (Disp_rout(dtype)) {
 			/* Special marking of MEMORY object allocated in scavenge zone */
@@ -3902,7 +3930,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef ISE_GC
 	if (in_scavenge == EIF_FALSE) {
 		zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
-		object = add_to_stack (object, &moved_set);
+		object = add_to_moved_set (object);
 	} else
 #endif
 		zone->ov_flags = EO_SPEC;	/* Object is special */
@@ -3924,6 +3952,49 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef ISE_GC
 
 /*
+doc:	<routine name="add_to_moved_set" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Add `object' into `moved_set' but only if `moved_set' is not full. At the moment `not full' means simply that the first chunk of the set is full. The reason is that we noticed that if too many objects are allocated as EO_NEW, then we will spend a lot of time in `update_moved_set'.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to add in `memory_set'.</param>
+doc:		<return>Location of `object' as it might have moved.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_gc_set_mutex'.</synchronization>
+doc:		<fixme>Refine notion of `full'.</fixme>
+doc:	</routine>
+*/
+
+rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE object)
+{
+	RT_GET_CONTEXT
+	union overhead * zone;
+
+	REQUIRE("object not null", object);
+	REQUIRE("object has EO_NEW", HEADER(object)->ov_flags & EO_NEW);
+
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+		/* Check that we can actuall add something to the stack. */
+	if ((moved_set.st_top == NULL) || (moved_set.st_end != moved_set.st_top)) {
+		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+				/* We don't bother, we simply remove the EO_NEW flag from the object
+				 * and mark it old. */
+			zone = HEADER(object);
+			zone->ov_flags &= ~EO_NEW;
+			zone->ov_flags |= EO_OLD;
+		} else {
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+		}
+	} else {
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+			/* `moved_set' was full so we don't bother, we simply remove the EO_NEW flag from the object
+			 * and mark it old. */
+		zone = HEADER(object);
+		zone->ov_flags &= ~EO_NEW;
+		zone->ov_flags |= EO_OLD;
+	}
+	return object;
+}
+
+/*
 doc:	<routine name="add_to_stack" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Add `object' into `stk'.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object to add in `memory_set'.</param>
@@ -3937,7 +4008,6 @@ doc:	</routine>
 rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE object, struct stack *stk)
 {
 	RT_GET_CONTEXT
-		/* Need to discard breakpoint in case GC is called */
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(stk, object)) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);

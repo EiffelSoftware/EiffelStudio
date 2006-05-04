@@ -70,6 +70,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			first_window: EB_DEVELOPMENT_WINDOW
 			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
+			preference_access: PREFERENCES
 		do
 				--| If we don't put bench mode here,
 				--| `error_window' will assume batch
@@ -77,6 +78,11 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				--| `error_window' as a TERM_WINDOW.
 				--| Also note that `error_window' is a
 				--| once-function!!
+
+				-- Initialization of compiler resources.
+			create preference_access.make_with_defaults_and_location (
+				<<general_preferences, platform_preferences>>, eiffel_preferences)
+			initialize_preferences (preference_access, True)
 
 				-- Create and setup the output manager / Error displayer
 			create an_output_manager

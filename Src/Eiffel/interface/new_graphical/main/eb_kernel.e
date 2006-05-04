@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 			pref_strs: PREFERENCE_CONSTANTS
 			l_app: EV_APPLICATION
 			fn: FILE_NAME
-			preference_access: PREFERENCES
 			l_is_gui: BOOLEAN
 			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
@@ -98,11 +97,6 @@ feature {NONE} -- Initialization
 					-- for preference initialization
 				create l_app
 			end
-
-				-- Initialization of compiler resources.
-			create preference_access.make_with_defaults_and_location (
-				<<general_preferences, platform_preferences>>, eiffel_preferences)
-			initialize_preferences (preference_access, l_is_gui)
 
 			create new_resources.initialize
 			if not new_resources.error_occurred then

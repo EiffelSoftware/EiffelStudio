@@ -1,18 +1,18 @@
 indexing
-	description:	
+	description:
 		"User preferences used in the interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision: "
 
-class 
+class
 	EB_SHARED_PREFERENCES
 
 inherit
 	EIFFEL_ENV
 
-feature {EB_KERNEL} -- Initialization
+feature {ES, ES_GRAPHIC} -- Initialization
 
 	initialize_preferences (a_preferences: PREFERENCES; gui_mode: BOOLEAN) is
 		require
@@ -26,7 +26,7 @@ feature {EB_KERNEL} -- Initialization
 		ensure
 			preferences_not_void: preferences /= Void
 			initialized: preferences_initialized
-		end		
+		end
 
 feature -- Access
 
@@ -37,22 +37,22 @@ feature -- Access
 		once
 			Result := preferences_cell.item
 		end
-		
+
 feature -- Query
 
 	preferences_initialized: BOOLEAN is
 			-- Have preferences been initialized?
 		do
 			Result := preferences_cell.item /= Void
-		end		
-		
+		end
+
 feature {NONE} -- Implementation
 
 	preferences_cell: CELL [EB_PREFERENCES] is
 			-- Once cell.
 		once
 			create Result
-		end		
+		end
 
 invariant
 	preferences_not_void: preferences /= Void

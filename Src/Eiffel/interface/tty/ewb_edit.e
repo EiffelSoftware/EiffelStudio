@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Class abstraction for editing text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,10 +25,12 @@ feature -- Element change
 		do
 			editor := preferences.misc_data.general_shell_command
 			if editor /= Void then
+					-- Replace $target and $line
+				editor.replace_substring_all ("$target", a_file)
+				editor.replace_substring_all ("$line", "")
+
 				create cmd.make (0);
 				cmd.append (editor);
-				cmd.extend (' ');
-				cmd.append (a_file);
 				create cmd_exec;
 				cmd_exec.execute (cmd)
 			else

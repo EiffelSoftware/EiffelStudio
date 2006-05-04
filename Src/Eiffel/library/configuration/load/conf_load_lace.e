@@ -384,6 +384,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_str: STRING
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_rename: LACE_LIST [TWO_NAME_SD]
+			i: INTEGER
 		do
 			if a_defaults /= Void then
 				from
@@ -488,7 +489,21 @@ feature {NONE} -- Implementation of data retrieval
 						if l_precomp.value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Incorrect precompile."))
 						else
-							l_conf_pre := factory.new_precompile ("precompile", l_precomp.value.value, current_target)
+								-- we try to guess the correct configuration location, may not always work
+								-- what we guess is that the path looks like this something/base and
+								-- we convert it into somethings/base/base.acex
+							l_str := l_precomp.value.value
+							if l_str.count > 2 then
+								i := l_str.last_index_of ('/', l_str.count)
+								if i = 0 then
+									i := l_str.last_index_of ('\', l_str.count)
+								end
+								if i > 0 then
+									l_str := l_str + "\" + l_str.substring (i+1, l_str.count) + ".acex"
+								end
+							end
+
+							l_conf_pre := factory.new_precompile ("precompile", l_str, current_target)
 							l_rename := l_precomp.renamings
 							if l_rename /= Void then
 								from

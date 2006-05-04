@@ -193,7 +193,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 invariant
 	modifed_classes_not_void: modified_classes /= Void
 	process_group_observer_not_void: process_group_observer /= Void

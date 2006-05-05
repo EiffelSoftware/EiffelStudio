@@ -116,6 +116,10 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	endiff
 
 	remtrace Enterprise edition
+	cdd %EIFFEL_SRC\Eiffel\API\constants
+	sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
+	move new_system_constants.e system_constants.e
+	cdd %FINALIZATION_DIR
 	clean_project
 	finalize ec.acex bench
 	cleanup_eiffel bench ec.exe
@@ -126,10 +130,23 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	move ec.exe %INSTALL_DIR\releases\enterprise_version
 else
 	iff not defined NO_NEW_EC then
-		remtrace Enterprise edition for EiffelStudio
+		remtrace GPL edition
 		cdd %FINALIZATION_DIR
 		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+		clean_project
+		finalize ec.acex bench
+		cleanup_eiffel bench ec.exe
+		iff not exist ec.exe then
+			remtrace Could not finalize a new "gpl_edition" EiffelStudio
+			CANCEL
+		endiff
+		move ec.exe %INSTALL_DIR\releases\gpl_version
 
+		remtrace Enterprise edition for EiffelStudio
+		cdd %EIFFEL_SRC\Eiffel\API\constants
+		sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
+		move new_system_constants.e system_constants.e
+		cdd %FINALIZATION_DIR
 		clean_project
 		finalize ec.acex bench
 		cleanup_eiffel bench ec.exe
@@ -139,19 +156,6 @@ else
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise_version
 
-		remtrace Free edition
-		cdd %EIFFEL_SRC\Eiffel\API\constants
-		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/g" system_constants.e >> new_system_constants.e
-		move new_system_constants.e system_constants.e
-		cdd %FINALIZATION_DIR
-		clean_project
-		finalize ec.acex bench
-		cleanup_eiffel bench ec.exe
-		iff not exist ec.exe then
-			remtrace Could not finalize a new "gpl_edition" EiffelStudio
-			CANCEL
-		endiff
-		move ec.exe %INSTALL_DIR\releases\gpl_version
 	endiff
 endiff
 

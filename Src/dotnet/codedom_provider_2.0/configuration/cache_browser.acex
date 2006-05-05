@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="eiffelsoftware.codedom.cachebrowser" uuid="7748DE6F-CC93-47B4-BE13-1A308A728B0A"
+	 library_target="cache_browser">
+	 
+	<target name="cache_browser">
+		<description>
+			Codedom provider consumer
+		</description>
+		<root class="ANY"/>
+		<version major="5" minor="7" release="426" build="0"/>
+		
+		<setting name="line_generation" value="True"/>
+		<setting name="cls_compliant" value="True"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="il_verifiable" value="True"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="dll"/>
+		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
+		<setting name="msil_use_optimized_precompile" value="True"/>
+		<setting name="use_all_cluster_name_as_namespace" value="True"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser"/>
+		
+		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\base.acex"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
+
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+
+		<cluster name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\cache_browser">
+			<option namespace="EiffelSoftware.CodeDom.CacheBrowser" />
+		</cluster>
+		<cluster name="common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\common" recursive="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</cluster>
+		<cluster name="compliance_checker" location="$EIFFEL_SRC\tools\compliance_checker\engine" recursive="true">
+			<option namespace="EiffelSoftware.Library.ComplianceChecker" />
+			<file_rule>
+				<exclude>/reporting$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="emitter" location="$EIFFEL_SRC\dotnet\consumer" recursive="true">
+			<option namespace="EiffelSoftware.Library.Emitter" />
+		</cluster>
+		<cluster name="helpers" location="$EIFFEL_SRC\dotnet\helpers" recursive="true">
+			<option namespace="EiffelSoftware.Library.Helpers" />
+			<file_rule>
+				<exclude>/example$</exclude>
+				<exclude>/classic$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

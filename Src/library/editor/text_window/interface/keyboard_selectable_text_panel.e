@@ -595,7 +595,11 @@ feature {NONE} -- Handle keystrokes
 
 			when Key_home then
 					-- Home key action
-				basic_cursor_move (agent l_cursor.go_start_line)
+				if editor_preferences.smart_home then
+					basic_cursor_move (agent l_cursor.go_home)
+				else
+					basic_cursor_move (agent l_cursor.go_start_line)
+				end
 
 			when Key_end then
 					-- End key action

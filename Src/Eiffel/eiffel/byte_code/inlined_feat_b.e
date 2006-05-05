@@ -54,13 +54,19 @@ feature
 		local
 			c: CLASS_C
 			f: FEATURE_I
+			t: TYPE_I
 		do
 			context_type_id := context_class_type.type_id
 			written_type_id := written_class_type.type_id
-			if not type.is_void then
+			t := type
+			if t.has_true_formal then
 				c := context_class_type.associated_class
 				f := c.feature_of_rout_id (routine_id)
-				type := context.real_type (f.type.type_i).type_a.type_i
+				t := context.real_type (f.type.type_i)
+				if t.has_true_formal then
+					t := t.type_a.type_i
+				end
+				type := t
 			end
 		ensure
 			context_type_id_set: context_type_id = context_class_type.type_id

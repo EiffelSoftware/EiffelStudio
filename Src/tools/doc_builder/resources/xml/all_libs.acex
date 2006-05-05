@@ -2,6 +2,7 @@
 	<target name="all_libs">
 		<description>All libraries</description>
 		<root all_classes="true"/>
+		<setting name="platform" value="windows"/>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
@@ -10,7 +11,7 @@
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.acex" readonly="true"/>
-		<library name="eiffel2java" location="$ISE_LIBRARY\library\eiffel2java\eiffel2java.acex" readonly="true"/>
+		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.acex" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.acex" readonly="true"/>

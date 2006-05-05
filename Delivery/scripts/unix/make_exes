@@ -1,16 +1,5 @@
 #!/bin/sh
 
-# Clean up the files
-remtrace Update all source files.
-cd $EIFFEL_SRC
-co $DEFAULT_CVS_TAG/Src/bench/Eiffel Eiffel 
-co $DEFAULT_CVS_TAG/Src/common Eiffel/common
-co $DEFAULT_CVS_TAG/Src/build2 build2 
-exprt $DEFAULT_CVS_TAG/Src/examples/vision2/widget_test vision2_tour 
-co $DEFAULT_CVS_TAG/Src/bench/C C
-co $DEFAULT_CVS_TAG/Src/dotnet dotnet 
-co $DEFAULT_CVS_TAG/Src/C_library C_library 
-
 # These directories should already have been created by make_delivery. Whatever...
 safe_md $INSTALL_DIR/studio/spec
 safe_md $INSTALL_DIR/studio/spec/unix
@@ -22,14 +11,16 @@ safe_md $INSTALL_DIR/build/spec/unix
 safe_md $INSTALL_DIR/build/spec/unix/bin
 
 remtrace Recompile Vision2 Tour
+cd $EIFFEL_SRC
+exprt $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_tour
 cd $EIFFEL_SRC/vision2_tour
 safe_md $EXPORT_DIR/vision2_tour
-source retrieve_build_files $DEFAULT_CVS_TAG &> $INSTALL_LOG >> $INSTALL_LOG
+source retrieve_build_files $DEFAULT_ORIGO_SVN &> $INSTALL_LOG >> $INSTALL_LOG
 source retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
 cd $EIFFEL_SRC/vision2_tour
 clean_project
-finalize linuxace.ace
-tgz_ccode vision2_tour
+finalize vision2_tour.acex vision2_tour
+tgz_ccode vision2_tour vision2_tour.tar.gz
 if [ ! -f vision2_tour.tar.gz ]; then
 	echo Could not finalize a new Vision2 tour
 	CANCEL
@@ -42,19 +33,17 @@ move vision2_tour.tar.gz $EXPORT_DIR/vision2_tour
 
 
 remtrace Recompile EiffelBuild
-cd $EIFFEL_SRC/build2
-cd modified_libraries
-safe_md $EXPORT_DIR/build
-cd ..
+cd $EIFFEL_SRC/build
 remtrace Enterprise Build
 clean_project
-finalize Ace.unix.ace
-tgz_ccode build
+finalize build.acex build
+tgz_ccode build build.tar.gz
 if [ ! -f build.tar.gz ]; then
 	echo Could not finalize a new EiffelBuild
 	CANCEL
 fi
 clean_project
+safe_md $EXPORT_DIR/build
 move build.tar.gz $EXPORT_DIR/build
 
 if [ ! "$NO_NEW_EC" ]; then
@@ -64,10 +53,10 @@ if [ ! "$NO_NEW_EC" ]; then
 		md $FINALIZATION_DIR
 	fi
 	cd $FINALIZATION_DIR
-	copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
+	copy $NEW_EIFFEL_SRC/Eiffel/Ace/ec.acex ec.acex
 	clean_project
-	finalize ace.ace
-	tgz_ccode ec
+	finalize ec.acex bench
+	tgz_ccode bench ec.tar.gz
 	if [ ! -f ec.tar.gz ]; then
 		echo Could not finalize a new EiffelStudio
 		CANCEL
@@ -76,50 +65,21 @@ if [ ! "$NO_NEW_EC" ]; then
 	move ec.tar.gz $EXPORT_DIR
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
-		remtrace University version edition
+		remtrace GPL version edition
 		cd $FINALIZATION_DIR
-		copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
-		sed -e "s/free/enterprise/g" ace.ace >> newace.ace
-		move newace.ace ace.ace
-		cd $EIFFEL_SRC/Eiffel/library/activation/free
-		sed -e "s/is_evaluating\ := \True/is_evaluating\ :=\ False/g" activation_checker.e >> tmp.e
-		move tmp.e activation_checker.e
 		cd $EIFFEL_SRC/Eiffel/API/constants
-		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"University\ Edition\"/g" system_constants.e >> new_system_constants.e
+		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR
 		clean_project
-		finalize ace.ace
-		tgz_ccode ec
+		finalize ec.acex bench
+		tgz_ccode bench ec.tar.gz
 		if [ ! -f ec.tar.gz ]; then
 			echo Could not finalize a new EiffelStudio
 			CANCEL
 		fi
 		clean_project
-		move ec.tar.gz $EXPORT_DIR/ecuni.tar.gz
-
-
-		remtrace Free version edition
-		cd $FINALIZATION_DIR
-		copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
-		sed -e "s/free/enterprise/g" ace.ace >> newace.ace
-		move newace.ace ace.ace
-		cd $EIFFEL_SRC/Eiffel/library/activation/free
-		sed -e "s/is_evaluating\ := \False/is_evaluating\ :=\ True/g" activation_checker.e >> tmp.e
-		move tmp.e activation_checker.e
-		cd $EIFFEL_SRC/Eiffel/API/constants
-		sed -e "s/Version_type_name:\ STRING\ is\ \"University\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
-		move new_system_constants.e system_constants.e
-		cd $FINALIZATION_DIR
-		clean_project
-		finalize ace.ace
-		tgz_ccode ec
-		if [ ! -f ec.tar.gz ]; then
-			echo Could not finalize a new EiffelStudio
-			CANCEL
-		fi
-		clean_project
-		move ec.tar.gz $EXPORT_DIR/ecfree.tar.gz
+		move ec.tar.gz $EXPORT_DIR/ecgpl.tar.gz
 	fi
 else
 	# FIXME doesn't work.
@@ -127,10 +87,10 @@ else
 fi
 
 remtrace Recompile quick_finalize
-cd $EIFFEL_SRC/Eiffel/extra/quick_c_compilation
+cd $EIFFEL_SRC/tools/quick_finalize
 clean_project
-finalize Ace.unix
-tgz_ccode quick_finalize
+finalize quick_finalize.acex quick_finalize
+tgz_ccode quick_finalize quick_finalize.tar.gz
 if [ ! -f quick_finalize.tar.gz ]; then
 	echo Could not finalize a new quick_finalize
 	CANCEL
@@ -139,18 +99,17 @@ clean_project
 move quick_finalize.tar.gz $EXPORT_DIR
 
 remtrace Compiling CD key validator
-cd $EIFFEL_SRC
-mkdir tools
-cd tools
-co $DEFAULT_CVS_TAG/Src/tools/cd_key_validator cd_key_validator 
-cd cd_key_validator/eiffel_studio_52
-clean_project
-finalize ace.unix.ace
-tgz_ccode setup
-if [ ! -f setup.tar.gz ]; then
-	echo Could not finalize a new setup
-	CANCEL
+cd $EIFFEL_SRC/tools
+co $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
+if [ -d cd_key_validator ]; then
+	cd cd_key_validator/eiffel_studio_52
+	clean_project
+	finalize setup.acex setup
+	tgz_ccode setup setup.tar.gz
+	if [ ! -f setup.tar.gz ]; then
+		echo Could not finalize a new setup
+		CANCEL
+	fi
+	clean_project
+	move setup.tar.gz $EXPORT_DIR
 fi
-clean_project
-move setup.tar.gz $EXPORT_DIR
-

@@ -21,7 +21,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -d free_rt ]; then
+if [ -f ec_gpl.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -44,36 +44,24 @@ if [ ! -d Eiffel57 ]; then
 fi
 
 
+# Copy runtime files
+cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+
 if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Preparing Free version
-	cp -r free_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-	gunzip -c $EXPORT_DIR/ecs/ec_free.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	remtrace Preparing GPL version
+	gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
 	remtrace Building Home CD image
 	mv Eiffel57 cdrom
-	make_cd_image Eiffel57_free Eiffel57_free.iso cdrom
-	gzip Eiffel57_free.iso
+	make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
+	gzip Eiffel57_gpl.iso
 	mv cdrom/Eiffel57 Eiffel57
-	tar czf Eiffel57_free.tgz Eiffel57 
-
-	remtrace Preparing University version
-	cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-	gunzip -c $EXPORT_DIR/ecs/ec_university.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-
-	remtrace Building Home CD image
-	mv Eiffel57 cdrom
-	make_cd_image Eiffel57_university Eiffel57_university.iso cdrom
-	gzip Eiffel57_university.iso
-	mv cdrom/Eiffel57 Eiffel57
-	tar czf Eiffel57_university.tgz Eiffel57 
+	tar czf Eiffel57_gpl.tgz Eiffel57 
 fi
 
 remtrace Preparing Enterprise version
-cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 

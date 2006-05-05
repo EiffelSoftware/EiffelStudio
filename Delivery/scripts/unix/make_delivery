@@ -4,6 +4,9 @@
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 TMP_EIFFEL_SRC=""
+TMP_ISE_SRC=""
+TMP_ISE_LIBRARY=""
+
 . set_aliases
 echo > $INSTALL_LOG
 
@@ -69,7 +72,7 @@ fi
 md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
-exprt $DEFAULT_CVS_TAG/Delivery/studio studio 
+exprt $DEFAULT_ORIGO_SVN/Delivery/studio studio 
 fullrd studio/config/windows
 fullrd studio/wizards/new_projects/wizard
 fullrf studio/wizards/new_projects/wizard.dsc
@@ -77,18 +80,18 @@ fullrd studio/wizards/new_projects/dotnet
 fullrf studio/wizards/new_projects/dotnet.dsc
 
 remtrace build
-exprt $DEFAULT_CVS_TAG/Delivery/build build 
+exprt $DEFAULT_ORIGO_SVN/Delivery/build build 
 remtrace vision2_tour
-exprt $DEFAULT_CVS_TAG/Delivery/vision2_tour vision2_tour 
+exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour 
 remtrace eifinit
-exprt $DEFAULT_CVS_TAG/Delivery/eifinit eifinit 
+exprt $DEFAULT_ORIGO_SVN/Delivery/eifinit eifinit 
 remtrace install
-exprt $DEFAULT_CVS_TAG/Delivery/install install 
+exprt $DEFAULT_ORIGO_SVN/Delivery/install install 
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt $DEFAULT_CVS_TAG/Delivery/precomp/spec/unix unix 
+exprt $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/unix unix 
 cd unix
 fullrd lex
 fullrd mel
@@ -98,12 +101,12 @@ fullrd parse
 fullrd vision
 cd $INSTALL_DIR
 remtrace wizards
-exprt $DEFAULT_CVS_TAG/Delivery/wizards wizards 
+exprt $DEFAULT_ORIGO_SVN/Delivery/wizards wizards 
 remtrace C_library
-exprt $DEFAULT_CVS_TAG/Src/C_library C_library 
+exprt $DEFAULT_ORIGO_SVN/Src/C_library C_library 
 cd $INSTALL_DIR
 remtrace root
-exprt -N $DEFAULT_CVS_TAG/Delivery Delivery
+exprt -N $DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery/* . >> $INSTALL_LOG
 fullrd Delivery >> $INSTALL_LOG
 
@@ -114,16 +117,29 @@ fullrf *.exe
 if [ ! -d $NEW_EIFFEL_SRC ]; then
 	md $NEW_EIFFEL_SRC
 fi
+
+#Save environment variables
 TMP_EIFFEL_SRC=$EIFFEL_SRC
+TMP_ISE_SRC=$ISE_SRC
+TMP_ISE_LIBRARY=$ISE_LIBRARY
 EIFFEL_SRC=$NEW_EIFFEL_SRC
+ISE_SRC=$NEW_ISE_SRC
+ISE_LIBRARY=$NEW_ISE_LIBRARY
 
 cd $INIT_DIR
 
 # Fill directories
 if [ ! "$NO_COMPILE" ]; then
+	remtrace Update all source files.
+	cd $INIT_DIR
+	if [ -d $EIFFEL_SRC ]; then
+		fullrd $EIFFEL_SRC
+	fi
+	md $EIFFEL_SRC
+	co $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
+
 	remtrace Update all libraries
 	. update_libraries $GTK_DIR
-	cd $INIT_DIR
 
 	remtrace Generate needed executables of the bin directory
 	cd $INIT_DIR
@@ -156,7 +172,7 @@ cd $INIT_DIR
 
 cd $INSTALL_DIR
 remtrace Free add ons
-exprt $DEFAULT_CVS_TAG/free_add_ons free_add_ons 
+exprt $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons 
 cd $INSTALL_DIR/library
 gunzip -c $INSTALL_DIR/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
 cd $INSTALL_DIR/free_add_ons
@@ -197,8 +213,13 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
 fi
+# Restore environment variables to their original value
 EIFFEL_SRC=$TMP_EIFFEL_SRC
+ISE_SRC=$TMP_ISE_SRC
+ISE_LIBRARY=$TMP_ISE_LIBRARY
 TMP_EIFFEL_SRC=""
+TMP_ISE_SRC=""
+TMP_ISE_LIBRARY=""
 
 fullrd $NEW_EIFFEL_SRC
 fullrd $INSTALL_DIR

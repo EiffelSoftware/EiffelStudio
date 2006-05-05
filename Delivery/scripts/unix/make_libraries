@@ -5,43 +5,43 @@ cd $INSTALL_DIR
 md library
 cd library
 remtrace base
-exprt $DEFAULT_CVS_TAG/Src/library/base base 
+exprt $DEFAULT_ORIGO_SVN/Src/library/base base 
 remtrace diff
-exprt $DEFAULT_CVS_TAG/Src/library/diff diff
+exprt $DEFAULT_ORIGO_SVN/Src/library/diff diff
 remtrace Eiffel2Java
-exprt $DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java 
+exprt $DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java 
 remtrace event
-exprt $DEFAULT_CVS_TAG/Src/library/event event 
+exprt $DEFAULT_ORIGO_SVN/Src/library/event event 
 remtrace graph
-exprt $DEFAULT_CVS_TAG/Src/library/graph graph 
+exprt $DEFAULT_ORIGO_SVN/Src/library/graph graph 
 remtrace lex
-exprt $DEFAULT_CVS_TAG/Src/library/lex lex 
+exprt $DEFAULT_ORIGO_SVN/Src/library/lex lex 
 remtrace mel
-exprt $DEFAULT_CVS_TAG/Src/library/mel mel 
+exprt $DEFAULT_ORIGO_SVN/Src/library/mel mel 
 remtrace memory_analyzer
-exprt $DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer 
+exprt $DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer 
 remtrace net
-exprt $DEFAULT_CVS_TAG/Src/library/net net 
+exprt $DEFAULT_ORIGO_SVN/Src/library/net net 
 remtrace obsolete
-exprt $DEFAULT_CVS_TAG/Src/library/obsolete obsolete 
+exprt $DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete 
 remtrace parse
-exprt $DEFAULT_CVS_TAG/Src/library/parse parse 
+exprt $DEFAULT_ORIGO_SVN/Src/library/parse parse 
 remtrace preferences
-exprt $DEFAULT_CVS_TAG/Src/library/preferences preferences 
+exprt $DEFAULT_ORIGO_SVN/Src/library/preferences preferences 
 remtrace process
-exprt $DEFAULT_CVS_TAG/Src/library/process process 
+exprt $DEFAULT_ORIGO_SVN/Src/library/process process 
 remtrace store
-exprt $DEFAULT_CVS_TAG/Src/library/store store 
+exprt $DEFAULT_ORIGO_SVN/Src/library/store store 
 remtrace thread
-exprt $DEFAULT_CVS_TAG/Src/library/thread thread 
+exprt $DEFAULT_ORIGO_SVN/Src/library/thread thread 
 remtrace time
-exprt $DEFAULT_CVS_TAG/Src/library/time time 
+exprt $DEFAULT_ORIGO_SVN/Src/library/time time 
 remtrace uuid
-exprt $DEFAULT_CVS_TAG/Src/library/uuid uuid 
+exprt $DEFAULT_ORIGO_SVN/Src/library/uuid uuid 
 remtrace vision
-exprt $DEFAULT_CVS_TAG/Src/library/vision vision 
+exprt $DEFAULT_ORIGO_SVN/Src/library/vision vision 
 remtrace vision2
-exprt $DEFAULT_CVS_TAG/Src/library/vision2 vision2 
+exprt $DEFAULT_ORIGO_SVN/Src/library/vision2 vision2 
 fullrd vision2/implementation/mswin
 if [ "$1" = "gtk" ]; then
 	# TODO
@@ -49,7 +49,7 @@ if [ "$1" = "gtk" ]; then
 	echo ""
 fi
 remtrace web
-exprt $DEFAULT_CVS_TAG/Src/library/web web 
+exprt $DEFAULT_ORIGO_SVN/Src/library/web web 
 
 cd ../..
 
@@ -58,35 +58,35 @@ cd $INSTALL_DIR
 md examples
 cd examples
 remtrace base
-exprt $DEFAULT_CVS_TAG/Src/examples/base base 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/base base 
 remtrace Eiffel2Java
-exprt $DEFAULT_CVS_TAG/Src/examples/Eiffel2Java Eiffel2Java 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/Eiffel2Java Eiffel2Java 
 remtrace cecil
-exprt $DEFAULT_CVS_TAG/Src/examples/cecil cecil 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/cecil cecil 
 remtrace cpp
-exprt $DEFAULT_CVS_TAG/Src/examples/cpp cpp 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/cpp cpp 
 remtrace lex
-exprt $DEFAULT_CVS_TAG/Src/examples/lex lex 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/lex lex 
 remtrace net
-exprt $DEFAULT_CVS_TAG/Src/examples/net net 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/net net 
 remtrace parse
-exprt $DEFAULT_CVS_TAG/Src/examples/parse parse 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/parse parse 
 remtrace preferences
-exprt $DEFAULT_CVS_TAG/Src/examples/preferences preferences 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/preferences preferences 
 remtrace store
-exprt $DEFAULT_CVS_TAG/Src/examples/store store 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/store store 
 fullrd store/matisse
 remtrace thread
-exprt $DEFAULT_CVS_TAG/Src/examples/thread thread 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/thread thread 
 cd thread
 fullrd fancy
 cd ..
 remtrace time
-exprt $DEFAULT_CVS_TAG/Src/examples/time time 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/time time 
 remtrace vision
-exprt $DEFAULT_CVS_TAG/Src/examples/vision vision 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/vision vision 
 remtrace vision2
-exprt $DEFAULT_CVS_TAG/Src/examples/vision2 vision2 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/vision2 vision2 
 cd vision2
 fullrd Boxes
 fullrd drawing_area
@@ -106,8 +106,8 @@ fullrd tests
 fullrd tutorial
 cd ..
 remtrace web
-exprt $DEFAULT_CVS_TAG/Src/examples/web web 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/web web 
 remtrace studio
-exprt $DEFAULT_CVS_TAG/Src/examples/studio studio 
+exprt $DEFAULT_ORIGO_SVN/Src/examples/studio studio 
 
 cd ../..

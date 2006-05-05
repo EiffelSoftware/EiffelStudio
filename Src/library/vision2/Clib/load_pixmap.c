@@ -28,6 +28,7 @@ indexing
 #include "png.h"
 #else
 #include <stdlib.h>
+#include <unistd.h>
 #include <png.h>
 #endif
 

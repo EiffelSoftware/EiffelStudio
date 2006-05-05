@@ -30,6 +30,8 @@ inherit
 
 	EB_CONSTANTS
 
+	EB_TEXT_OUTPUT_TOOL
+
 create
 	make
 
@@ -72,7 +74,6 @@ feature{NONE} -- Initialization
 			create cmd_toolbar
 			create output_toolbar
 			create input_toolbar
-			create console
 			create main_frame
 			create l_ev_empty_lbl
 			create l_ev_vertical_box_2
@@ -139,7 +140,7 @@ feature{NONE} -- Initialization
 			l_ev_output_lbl.align_text_left
 			l_ev_vertical_box_2.extend (l_ev_output_lbl)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_output_lbl)
-			l_ev_vertical_box_2.extend (console)
+			l_ev_vertical_box_2.extend (output_text)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_6)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_6)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
@@ -157,16 +158,16 @@ feature{NONE} -- Initialization
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
-			console.set_foreground_color (preferences.editor_data.normal_text_color)
-			console.set_background_color (preferences.editor_data.normal_background_color)
-			console.set_font (preferences.editor_data.font)
-			console.disable_edit
+			output_text.set_foreground_color (preferences.editor_data.normal_text_color)
+			output_text.set_background_color (preferences.editor_data.normal_background_color)
+			output_text.set_font (preferences.editor_data.font)
+			output_text.disable_edit
 
 			terminate_btn.set_pixmap (Pixmaps.icon_exec_quit)
-			console.drop_actions.extend (agent drop_class)
-			console.drop_actions.extend (agent drop_feature)
-			console.drop_actions.extend (agent drop_cluster)
-			console.drop_actions.extend (agent drop_breakable)
+			output_text.drop_actions.extend (agent drop_class)
+			output_text.drop_actions.extend (agent drop_feature)
+			output_text.drop_actions.extend (agent drop_cluster)
+			output_text.drop_actions.extend (agent drop_breakable)
 
 			terminate_btn.set_tooltip (f_terminate_command_button)
 			terminate_btn.select_actions.extend (agent on_terminate_process)
@@ -299,7 +300,7 @@ feature -- Basic operation
 	clear is
 			-- Clear window
 		do
-			console.set_text ("")
+			output_text.set_text ("")
 		end
 
 	print_command_name (name: STRING) is
@@ -314,13 +315,12 @@ feature -- Basic operation
 			-- To be called before destroying this objects
 		do
 			external_output_manager.prune (Current)
-			console := Void
 		end
 
 	scroll_to_end is
 			-- Scroll the console to the bottom.
 		do
-			console.scroll_to_line (console.line_count)
+			output_text.scroll_to_line (output_text.line_count)
 		end
 
 	set_focus is
@@ -393,13 +393,13 @@ feature -- Basic operation
 		end
 
 	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
-			-- Print `text_block' on `console'.
+			-- Print `text_block' on `output_text'.
 		local
 			str: STRING
 		do
 			str ?= text_block.data
 			if str /= Void then
-				console.append_text (str)
+				output_text.append_text (str)
 			end
 		end
 
@@ -596,12 +596,12 @@ feature{NONE} -- Actions
 			if process_manager.is_external_command_running then
 				show_warning_dialog (Warning_messages.w_cannot_save_when_external_running, owner.window)
 			else
-				create save_tool.make_and_save (console.text, owner.window)
+				create save_tool.make_and_save (output_text.text, owner.window)
 			end
 		end
 
 	on_clear_output_window is
-			-- Clear `console'.
+			-- Clear `output_text'.
 		do
 			clear
 		end
@@ -720,9 +720,6 @@ feature{NONE} -- Implementation
 
 	hidden_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to set whether or not external command should be run hidden.
-
-	console: EV_TEXT
-			-- Panel to display output from process and waits for user input.
 
 	input_field: EV_COMBO_BOX
 			-- Text field where user can type data.

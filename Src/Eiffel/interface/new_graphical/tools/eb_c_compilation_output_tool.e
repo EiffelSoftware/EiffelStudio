@@ -35,6 +35,8 @@ inherit
 
 	SHARED_WORKBENCH
 
+	EB_TEXT_OUTPUT_TOOL
+
 create
 	make
 
@@ -60,7 +62,6 @@ feature{NONE} -- Initialization
 			l_label: EV_LABEL
 		do
 			create l_ev_vertical_box_1
-			create c_compilation_output
 			create l_ev_tool_bar_1
 			create save_output_btn
 			create l_ev_tool_bar_separator_1
@@ -79,7 +80,7 @@ feature{NONE} -- Initialization
 			l_ev_h_area_1.disable_item_expand (l_ev_tool_bar_1)
 
 				-- Build_widget_structure.
-			l_ev_vertical_box_1.extend (c_compilation_output)
+			l_ev_vertical_box_1.extend (output_text)
 			l_ev_save_toolbar.extend (open_editor_btn)
 			l_ev_save_toolbar.extend (save_output_btn)
 			l_ev_save_toolbar.extend (clear_output_btn)
@@ -109,17 +110,17 @@ feature{NONE} -- Initialization
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
-			c_compilation_output.drop_actions.extend (agent drop_class)
-			c_compilation_output.drop_actions.extend (agent drop_feature)
-			c_compilation_output.drop_actions.extend (agent drop_cluster)
-			c_compilation_output.drop_actions.extend (agent drop_breakable)
-			c_compilation_output.change_actions.extend (agent on_text_change)
+			output_text.drop_actions.extend (agent drop_class)
+			output_text.drop_actions.extend (agent drop_feature)
+			output_text.drop_actions.extend (agent drop_cluster)
+			output_text.drop_actions.extend (agent drop_breakable)
+			output_text.change_actions.extend (agent on_text_change)
 			on_text_change
-			c_compilation_output.pointer_button_release_actions.extend (agent on_pointer_release_in_console)
-			c_compilation_output.set_foreground_color (preferences.editor_data.normal_text_color)
-			c_compilation_output.set_background_color (preferences.editor_data.normal_background_color)
-			c_compilation_output.set_font (preferences.editor_data.font)
-			c_compilation_output.disable_edit
+			output_text.pointer_button_release_actions.extend (agent on_pointer_release_in_console)
+			output_text.set_foreground_color (preferences.editor_data.normal_text_color)
+			output_text.set_background_color (preferences.editor_data.normal_background_color)
+			output_text.set_font (preferences.editor_data.font)
+			output_text.disable_edit
 		end
 
 feature -- Basic operation
@@ -127,7 +128,7 @@ feature -- Basic operation
 	clear is
 			-- Clear window
 		do
-			c_compilation_output.set_text ("")
+			output_text.set_text ("")
 			on_text_change
 		end
 
@@ -140,7 +141,7 @@ feature -- Basic operation
 	scroll_to_end is
 			-- Scroll the console to the bottom.
 		do
-			c_compilation_output.scroll_to_line (c_compilation_output.line_count)
+			output_text.scroll_to_line (output_text.line_count)
 		end
 
 	set_focus is
@@ -165,7 +166,7 @@ feature -- Basic operation
 		do
 			str ?= text_block.data
 			if str /= Void then
-				c_compilation_output.append_text (str)
+				output_text.append_text (str)
 			end
 		end
 
@@ -187,7 +188,7 @@ feature{NONE} -- Actions
 			if process_manager.is_c_compilation_running then
 				show_warning_dialog (Warning_messages.w_cannot_save_when_c_compilation_running, owner.window)
 			else
-				create save_tool.make_and_save (c_compilation_output.text, owner.window)
+				create save_tool.make_and_save (output_text.text, owner.window)
 			end
 		end
 
@@ -214,7 +215,7 @@ feature{NONE} -- Actions
 		end
 
 	on_open_selected_text_in_external_editor is
-			-- Open selected text from `c_compilation_output' as file name in external editor.
+			-- Open selected text from `output_text' as file name in external editor.
 		local
 			l_dlg: EV_WARNING_DIALOG
 			req: COMMAND_EXECUTOR
@@ -222,11 +223,11 @@ feature{NONE} -- Actions
 			l_dialog_needed: BOOLEAN
 			l_message: STRING
 		do
-			if c_compilation_output.has_selection then
+			if output_text.has_selection then
 				if has_selected_file then
 					cmd_string := command_shell_name
 					if not cmd_string.is_empty then
-						cmd_string.replace_substring_all ("$target", c_compilation_output.selected_text)
+						cmd_string.replace_substring_all ("$target", output_text.selected_text)
 						cmd_string.replace_substring_all ("$line", "")
 						create req
 						req.execute (cmd_string)
@@ -249,7 +250,7 @@ feature{NONE} -- Actions
 		end
 
 	on_pointer_release_in_console (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer release in `c_compilation_output'
+			-- Action to be performed when pointer release in `output_text'
 		local
 			l_need_sensitive: BOOLEAN
 		do
@@ -268,11 +269,11 @@ feature{NONE} -- Actions
 		end
 
 	on_text_change is
-			-- Action performed when text changes in `c_compilation_output'
+			-- Action performed when text changes in `output_text'
 		local
 			l_save_and_clear_need_sensitive: BOOLEAN
 		do
-			if c_compilation_output.text_length > 0 and then not process_manager.is_c_compilation_running then
+			if output_text.text_length > 0 and then not process_manager.is_c_compilation_running then
 				l_save_and_clear_need_sensitive := True
 			end
 			if l_save_and_clear_need_sensitive then
@@ -352,12 +353,12 @@ feature{NONE}	-- Implementation
 		end
 
 	has_selected_file: BOOLEAN is
-			-- Does selected text (if any) in `c_compilation_output' represent a correct file name?
+			-- Does selected text (if any) in `output_text' represent a correct file name?
 		local
 			l_file: RAW_FILE
 		do
-			if c_compilation_output.has_selection then
-				create l_file.make (c_compilation_output.selected_text)
+			if output_text.has_selection then
+				create l_file.make (output_text.selected_text)
 				if l_file.exists then
 					Result := True
 				end
@@ -367,9 +368,6 @@ feature{NONE}	-- Implementation
 feature{NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-
-	c_compilation_output: EV_TEXT
-			-- Text pane used to output c compilation result
 
 	save_output_btn: EV_TOOL_BAR_BUTTON
 			-- Button to save c compilation output to a file

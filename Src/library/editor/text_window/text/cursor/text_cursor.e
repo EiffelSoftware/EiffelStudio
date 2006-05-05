@@ -457,6 +457,29 @@ feature -- Cursor movement
 			set_current_char (line.eol_token, line.eol_token.length)
 		end
 
+	go_home is
+			-- Move to home position
+		local
+			l_token: like token
+		do
+			if line.first_token = token then
+				if pos_in_token = 1 then
+					go_right_word
+				end
+			else
+				if line.count > 2 then
+					l_token := token
+					go_start_line
+					go_right_word
+					if l_token = token then
+							-- Ended up in same location so
+							-- go to the beginning of line
+						go_start_line
+					end
+				end
+			end
+		end
+
 	go_start_word is
 			-- Move to beginning of word.
 		local

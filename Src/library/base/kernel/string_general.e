@@ -45,7 +45,7 @@ feature -- Access
 				from
 					i := start_index
 				until
-					i < nb or else code (i) = c
+					i > nb or else code (i) = c
 				loop
 					i := i + 1
 				end

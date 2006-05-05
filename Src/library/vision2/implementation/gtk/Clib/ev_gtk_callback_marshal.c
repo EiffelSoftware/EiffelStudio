@@ -33,7 +33,7 @@ void c_ev_gtk_callback_marshal_init (
         ev_gtk_callback_marshal = callback_marshal;
 }
 
-void c_ev_gtk_callback_marshal_destroy (Void)
+void c_ev_gtk_callback_marshal_destroy (void)
 		// Disconnect marshal from the eiffel system.
 {
        /* eif_wean (ev_gtk_callback_marshal_object);

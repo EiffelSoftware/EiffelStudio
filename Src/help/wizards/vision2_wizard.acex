@@ -8,12 +8,18 @@
 		<setting name="inlining_size" value="0"/>
 
 		<library name="base" location="$ISE_LIBRARY/library/base/base.acex"/>
-		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex"/>
+		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex">
+			<condition><platform value="windows"/></condition>	
+		</library>
 		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.acex"/>
 		<library name="wizard" location="$ISE_LIBRARY/library/wizard/wizard.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY/library/uuid/uuid.acex"/>
+		<library name="time" location="$ISE_LIBRARY/library/time/time.acex"/>
 
 		<cluster name="bench_common" location="$EIFFEL_SRC/help/wizards/bench_common/"/>
+		<cluster name="linux_helpers" location="$EIFFEL_SRC/help/wizards/linux_helpers">
+			<condition><platform excluded_value="windows"/></condition>	
+		</cluster>
 		<cluster name="vision2_wizard" location="$EIFFEL_SRC/help/wizards/evision2/src/"/>
 	</target>
 </system>

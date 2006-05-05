@@ -457,26 +457,26 @@ feature -- Cursor movement
 			set_current_char (line.eol_token, line.eol_token.length)
 		end
 
-	go_home is
-			-- Move to home position
+	go_smart_home is
+			-- Move to smart home position
 		local
 			l_token: like token
+			l_pos: INTEGER
 		do
-			if line.first_token = token then
-				if pos_in_token = 1 then
+			if line.first_token.is_blank then
+				l_token := token
+				l_pos := pos_in_token
+				go_start_line
+				if l_token /= line.first_token then
+					go_right_word
+					if l_token = token and l_pos = 1 then
+						go_start_line
+					end
+				elseif l_pos = 1 then
 					go_right_word
 				end
 			else
-				if line.count > 2 then
-					l_token := token
-					go_start_line
-					go_right_word
-					if l_token = token then
-							-- Ended up in same location so
-							-- go to the beginning of line
-						go_start_line
-					end
-				end
+				go_start_line
 			end
 		end
 

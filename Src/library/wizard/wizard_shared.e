@@ -83,8 +83,11 @@ feature -- Access
 			Result := "png"
 		end
 
-	platform_is_unix: BOOLEAN is False
+	platform_is_unix: BOOLEAN is
 			-- False because this class is windows-related.
+		once
+			Result := not (create {PLATFORM}).is_windows
+		end
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap on which can be displayed a picture which
@@ -154,8 +157,12 @@ feature -- Colors
 			Result.set_family (font_constants.Family_screen)
 			Result.set_weight (font_constants.Weight_bold)
 			Result.set_shape (font_constants.Shape_regular)
-			Result.preferred_families.extend ("Verdana")
-			Result.preferred_families.extend ("Arial")
+			if platform_is_unix then
+				Result.preferred_families.extend ("Tahoma")
+			else
+				Result.preferred_families.extend ("Verdana")
+				Result.preferred_families.extend ("Arial")
+			end
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (16)
 		end
@@ -171,7 +178,9 @@ feature -- Colors
 			Result.set_weight (font_constants.Weight_bold)
 			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
-			Result.preferred_families.extend ("Arial")
+			if not platform_is_unix then
+				Result.preferred_families.extend ("Arial")
+			end
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
@@ -187,7 +196,9 @@ feature -- Colors
 			Result.set_weight (font_constants.Weight_regular)
 			Result.set_shape (font_constants.Shape_regular)
 			Result.preferred_families.extend ("Tahoma")
-			Result.preferred_families.extend ("Arial")
+			if not platform_is_unix then
+				Result.preferred_families.extend ("Arial")
+			end
 			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end

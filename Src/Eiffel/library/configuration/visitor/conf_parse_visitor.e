@@ -92,7 +92,7 @@ feature -- Visit nodes
 					if l_target /= Void then
 						a_library.set_library_target (l_target)
 						a_library.set_uuid (l_uuid)
-						if a_library.options.is_warning_enabled (w_same_uuid) and not l_path.is_equal (l_target.system.file_name) then
+						if a_library.options.is_warning_enabled (w_same_uuid) and not l_path.is_case_insensitive_equal (l_target.system.file_name) then
 							add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
 						end
 					else

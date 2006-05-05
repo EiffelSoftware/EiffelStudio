@@ -173,6 +173,12 @@ feature -- Value
 			Result := show_line_numbers_preference.value
 		end
 
+	smart_home: BOOLEAN is
+			-- Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed
+		do
+			Result := smart_home_preference.value
+		end
+
 	blinking_cursor: BOOLEAN is
 			-- Indicates if editor cursor should blick
 		do
@@ -360,6 +366,9 @@ feature {ANY} -- Preferences
 	show_line_numbers_preference: BOOLEAN_PREFERENCE
 			-- Indicates if line numbers should be shown in the editor
 
+	smart_home_preference: BOOLEAN_PREFERENCE
+			-- Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed
+
 	blinking_cursor_preference: BOOLEAN_PREFERENCE
 			-- Indicates if editor cursor should blick
 
@@ -454,6 +463,7 @@ feature {NONE} -- Preference Strings
 	margin_separator_color_string: STRING is "editor.general.colors.margin_separator_color"
 	line_number_text_color_string: STRING is "editor.general.colors.line_number_text_color"
 	show_line_numbers_string: STRING is "editor.general.show_line_numbers"
+	smart_home_string: STRING is "editor.general.smart_home"
 	use_tab_for_indentation_string: STRING is "editor.general.use_tab_for_indentation"
 	scrolling_common_line_count_string: STRING is "editor.general.scrolling_common_line_count"
 	mouse_wheel_scroll_full_page_string: STRING is "editor.general.mouse_wheel_scroll_full_page"
@@ -601,7 +611,7 @@ feature {NONE} -- Implementation
 			blinking_cursor_preference := l_manager.new_boolean_preference_value (l_manager, blinking_cursor_string, False)
 			automatic_update_preference := l_manager.new_boolean_preference_value (l_manager, automatic_update_string, True)
 			show_line_numbers_preference := l_manager.new_boolean_preference_value (l_manager, show_line_numbers_string, False)
-
+			smart_home_preference := l_manager.new_boolean_preference_value (l_manager, smart_home_string, True)
 			editor_font_preference := l_manager.new_font_preference_value (l_manager, editor_font_string, create {EV_FONT})
 			font_cell.put (editor_font_preference)
 			header_font_preference := l_manager.new_font_preference_value (l_manager, header_font_string, create {EV_FONT})

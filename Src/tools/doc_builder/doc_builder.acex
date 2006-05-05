@@ -45,7 +45,8 @@
 				<exclude>/names_heap.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+		<cluster name="doc_builder_windows" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/facade$</exclude>
 				<exclude>/doc_builder.e$</exclude>
@@ -59,12 +60,32 @@
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="facade" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+		<cluster name="doc_builder_unix" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+			<condition><platform excluded_value="windows"/></condition>
+			<file_rule>
+				<exclude>/facade$</exclude>
+				<exclude>/doc_builder.e$</exclude>
+				<exclude>/document_browser.e$</exclude>
+				<exclude>/document_schema.e$</exclude>
+				<exclude>/document_schema_element.e$</exclude>
+				<exclude>/schema_rendering_factory.e$</exclude>
+				<exclude>/spell_checker.e$</exclude>
+				<exclude>/web_browser_widget.e$</exclude>
+				<exclude>/schema_validator.e$</exclude>
+				<exclude>/help_manager.e$</exclude>
+				<exclude>/help_setting_constants.e$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="facade_windows" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/help_manager.e$</exclude>
 				<exclude>/help_setting_constants.e$</exclude>
 			</file_rule>
 		</cluster>
-
+		<cluster name="facade_unix" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+			<condition><platform excluded_value="windows"/></condition>
+		</cluster>
 	</target>
 </system>

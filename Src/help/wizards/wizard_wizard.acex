@@ -12,8 +12,12 @@
 		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.acex"/>
 		<library name="wizard" location="$ISE_LIBRARY/library/wizard/wizard.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY/library/uuid/uuid.acex"/>
+		<library name="time" location="$ISE_LIBRARY/library/time/time.acex"/>
 
 		<cluster name="bench_common" location="$EIFFEL_SRC/help/wizards/bench_common/"/>
-		<cluster name="wizard_wizard" location="$EIFFEL_SRC/help/wizards/ewizard/src/"/>
+		<cluster name="linux_helpers" location="$EIFFEL_SRC/help/wizards/linux_helpers">
+			<condition><platform excluded_value="windows"/></condition>	
+		</cluster>
+		<cluster name="wizard_wizard" location="$EIFFEL_SRC/help/wizards/ewizard/Src/"/>
 	</target>
 </system>

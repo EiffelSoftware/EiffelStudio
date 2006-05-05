@@ -116,10 +116,48 @@
 	</xs:complexType>
 
 	<xs:complexType name="setting">
-		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="name" type="available_settings"/>
 		<xs:attribute name="value" type="xs:string"/>
 	</xs:complexType>
-		
+
+	<xs:simpleType name="available_settings">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "address_expression"/>
+			  <xs:enumeration value = "array_optimization"/>
+			  <xs:enumeration value = "check_generic_creation_constraint"/>
+			  <xs:enumeration value = "check_vape"/>
+			  <xs:enumeration value = "console_application"/>
+			  <xs:enumeration value = "cls_compliant"/>
+			  <xs:enumeration value = "dead_code_removal"/>
+			  <xs:enumeration value = "dotnet_naming_convention"/>
+			  <xs:enumeration value = "dynamic_runtime"/>
+			  <xs:enumeration value = "exception_trace"/>
+			  <xs:enumeration value = "executable_name"/>
+			  <xs:enumeration value = "full_type_checking"/>
+			  <xs:enumeration value = "il_verifiable"/>
+			  <xs:enumeration value = "inlining"/>
+			  <xs:enumeration value = "inlining_size"/>
+			  <xs:enumeration value = "java_generation"/>
+			  <xs:enumeration value = "line_generation"/>
+			  <xs:enumeration value = "metadata_cache_path"/>
+			  <xs:enumeration value = "msil_assembly_compatibility"/>
+			  <xs:enumeration value = "msil_classes_per_module"/>
+			  <xs:enumeration value = "msil_clr_version"/>
+			  <xs:enumeration value = "msil_culture"/>
+			  <xs:enumeration value = "msil_generation"/>
+			  <xs:enumeration value = "msil_generation_type"/>
+			  <xs:enumeration value = "msil_key_file_name"/>
+			  <xs:enumeration value = "msil_use_optimized_precompile"/>
+			  <xs:enumeration value = "multithreaded"/>
+			  <xs:enumeration value = "old_verbatim_strings"/>
+			  <xs:enumeration value = "platform"/>
+			  <xs:enumeration value = "external_runtime"/>
+			  <xs:enumeration value = "shared_library_definition"/>
+			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
+			  <xs:enumeration value = "use_all_cluster_name_as_namespace"/>
+	    </xs:restriction>
+	</xs:simpleType>		
+
 	<xs:complexType name="debug">
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="enabled" type="xs:boolean"/>
@@ -134,9 +172,21 @@
 	</xs:complexType>
 	
 	<xs:complexType name="warning">
-		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="name" type="available_warnings"/>
 		<xs:attribute name="enabled" type="xs:boolean"/>
 	</xs:complexType>
+	
+	<xs:simpleType name="available_warnings">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "unused_local"/>
+			  <xs:enumeration value = "obsolete_class"/>
+			  <xs:enumeration value = "obsolete_feature"/>
+			  <xs:enumeration value = "once_in_generic"/>
+			  <xs:enumeration value = "syntax"/>
+			  <xs:enumeration value = "old_verbatim_strings"/>
+			  <xs:enumeration value = "same_uuid"/>
+	    </xs:restriction>
+	</xs:simpleType>
 	
 	<xs:complexType name="variable">
 		<xs:attribute name="name" type="xs:string"/>
@@ -164,21 +214,37 @@
 	</xs:complexType>
 
 	<xs:complexType name="platform">
-		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="value" type="available_platforms"/>
+		<xs:attribute name="excluded_value" type="available_platforms"/>
+	</xs:complexType>
+	
+	<xs:simpleType name="available_platforms">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "windows"/>
+			  <xs:enumeration value = "unix"/>
+			  <xs:enumeration value = "macintosh"/>
+			  <xs:enumeration value = "vxworks"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+
+	<xs:complexType name="build">
+		<xs:attribute name="value" type="available_builds"/>
 		<xs:attribute name="excluded_value" type="xs:string"/>
 	</xs:complexType>
 
-	<xs:complexType name="build">
-		<xs:attribute name="value" type="xs:string"/>
-		<xs:attribute name="excluded_value" type="xs:string"/>
-	</xs:complexType>
-	
+		<xs:simpleType name="available_builds">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "workbench"/>
+			  <xs:enumeration value = "finalize"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+		
 	<xs:complexType name="multithreaded">
-		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="value" type="xs:boolean"/>
 	</xs:complexType>
 
 	<xs:complexType name="dotnet">
-		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="value" type="xs:boolean"/>
 	</xs:complexType>
 	
 	<xs:complexType name="custom">
@@ -225,7 +291,9 @@
 	<xs:complexType name="library">
 		<xs:complexContent>
 			<xs:extension base="group">
-				<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:sequence>
+					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

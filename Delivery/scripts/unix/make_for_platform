@@ -21,10 +21,9 @@ open $remote_host
 user $user $user 
 binary
 get local/TEST_DELIV/PorterPackage/Eiffel57_enterprise.tgz Eiffel57_$platform.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel57_free.tgz Eiffel57_free_$platform.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel57_gpl.tgz Eiffel57_gpl_$platform.tgz
 get local/TEST_DELIV/PorterPackage/Eiffel57_enterprise.iso.gz Eiffel57_enterprise_$platform.iso.gz
-get local/TEST_DELIV/PorterPackage/Eiffel57_university.iso.gz Eiffel57_university_$platform.iso.gz
-get local/TEST_DELIV/PorterPackage/Eiffel57_free.iso.gz Eiffel57_free_$platform.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel57_gpl.iso.gz Eiffel57_gpl_$platform.iso.gz
 close 
 EOF
 

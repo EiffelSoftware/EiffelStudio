@@ -2,11 +2,6 @@
 
 remtrace Retrieve all source files
 remtrace The wizards
-cd $EIFFEL_SRC
-safe_md help
-cd help
-exprt $DEFAULT_CVS_TAG/Src/help/wizards wizards
-
 cd $EIFFEL_SRC/help/wizards
 DELIVERY=$INSTALL_DIR
 remtrace Launch the actual wizard compilation

@@ -1,72 +1,16 @@
 #!/bin/sh
 
-remtrace Update the Eiffel libraries source
-if [ -d $EIFFEL_SRC ]; then
-fullrd $EIFFEL_SRC
-fi
-md $EIFFEL_SRC
+remtrace free_add_ons
 cd $EIFFEL_SRC
-md library
-cd library
-remtrace base
-co $DEFAULT_CVS_TAG/Src/library/base base
-remtrace diff
-co $DEFAULT_CVS_TAG/Src/library/diff diff
-remtrace encryption
-co $DEFAULT_CVS_TAG/Src/library/encryption encryption
-remtrace editor
-co $DEFAULT_CVS_TAG/Src/library/editor editor
-remtrace event
-co $DEFAULT_CVS_TAG/Src/library/event event
-remtrace gobo
-co $DEFAULT_CVS_TAG/free_add_ons/gobo free_add_ons
-gunzip -c free_add_ons/gobo_34_unix.tgz | tar -xf -
-fullrd free_add_ons
-remtrace graph
-co $DEFAULT_CVS_TAG/Src/library/graph graph
-remtrace graph
-co $DEFAULT_CVS_TAG/Src/library/helpers helpers
-remtrace keygen
-co $DEFAULT_CVS_TAG/Src/library/keygen keygen
-remtrace lex
-co $DEFAULT_CVS_TAG/Src/library/lex lex
-remtrace memory_analyzer
-co $DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer
-remtrace net
-co $DEFAULT_CVS_TAG/Src/library/net net
-remtrace obsolete
-co $DEFAULT_CVS_TAG/Src/library/obsolete obsolete
-remtrace parse
-co $DEFAULT_CVS_TAG/Src/library/parse parse
-remtrace patterns
-co $DEFAULT_CVS_TAG/Src/library/patterns patterns
-remtrace preferences
-co $DEFAULT_CVS_TAG/Src/library/preferences preferences
-remtrace process
-co $DEFAULT_CVS_TAG/Src/library/process process
-remtrace time
-co $DEFAULT_CVS_TAG/Src/library/time time
-remtrace uuid
-co $DEFAULT_CVS_TAG/Src/library/uuid uuid 
-remtrace vision2
-co $DEFAULT_CVS_TAG/Src/library/vision2 vision2
-if [ "$1" = "gtk" ]; then
-	# TODO
-	# Copy GTK 1.2 implementation over gtk directory
-	echo ""
-fi
-remtrace vision2_extension
-co $DEFAULT_CVS_TAG/Src/library/vision2_extension vision2_extension
-remtrace wizard
-co $DEFAULT_CVS_TAG/Src/library/wizard wizard
+co $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
-remtrace Additional libraries for producing documentation
-co $DEFAULT_CVS_TAG/Src/library/com com
-co $DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java
-co $DEFAULT_CVS_TAG/Src/library/store store
-co $DEFAULT_CVS_TAG/Src/library/thread thread
-co $DEFAULT_CVS_TAG/Src/library/web web
-co $DEFAULT_CVS_TAG/Src/library/wel wel
+remtrace gobo
+cd $EIFFEL_SRC/library
+gunzip -c $EIFFEL_SRC/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
+
+remtrace keygen
+cd $EIFFEL_SRC/library
+co $DEFAULT_ISE_SVN/Src/library/keygen keygen
 
 remtrace Compiling additional libraries
 cd vision2/Clib

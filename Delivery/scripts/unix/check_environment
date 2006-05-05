@@ -8,14 +8,6 @@ if [ ! "$ISE_PLATFORM" ]; then
 	echo ISE_PLATFORM not defined. Cannot continue
 	CANCEL
 fi
-if [ ! "$DEFAULT_CVS_TAG" ]; then
-	echo DEFAULT_CVS_TAG not defined. Cannot continue
-	CANCEL
-fi
-# if [ ! "$ISE_C_COMPILER" ]; then
-# 	echo ISE_C_COMPILER not defined. Cannot continue
-# 	CANCEL
-# fi
 if [ ! "$NO_COMPILE" ]; then
 	if [ ! "$NEW_EIFFEL_SRC" ]; then
 		echo NEW_EIFFEL_SRC not defined. Cannot continue

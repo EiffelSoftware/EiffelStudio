@@ -2,24 +2,23 @@
 
 remtrace Checkout up to date version of XML documentation files
 cd $DOCUMENT_DIR
-exprt $DEFAULT_CVS_TAG/Delivery/xmldoc xmldoc
+exprt $DEFAULT_ORIGO_SVN/Delivery/xmldoc xmldoc
 
 remtrace Checkout and compile the Documentation tool
 cd $EIFFEL_SRC
 safe_md tools
 cd $EIFFEL_SRC/tools
-co $DEFAULT_CVS_TAG/Src/tools/doc_builder doc_builder
+co $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
-ec -batch -finalize -ace docbuilder.unix.ace -c_compile &> $INSTALL_LOG
-if [ ! -f EIFGEN/F_code/doc_builder ]; then
+ec -batch -finalize -config doc_builder.acex -c_compile &> $INSTALL_LOG
+if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then
 	remtrace Couldnt generate doc_builder
 	CANCEL
 fi
 
 remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
-ec -ace all_libs.ace &> $INSTALL_LOG
-ec -flatshort -filter xml -all -project all_libs.epr &> $INSTALL_LOG
+ec -flatshort -filter xml -all -config all_libs.acex &> $INSTALL_LOG
 
 remtrace Copy XML docs into appropriate written docs location
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
@@ -62,7 +61,7 @@ mv preferences $DOCUMENT_DIR/xmldoc/libraries/preferences/reference
 
 
 remtrace Run the documentation tool to generate the documentation for EiffelStudio as web based help
-cd $EIFFEL_SRC/tools/doc_builder/EIFGEN/F_code
+cd $EIFFEL_SRC/tools/doc_builder/EIFGENs/doc_builder/F_code
 
 export DOCUMENT_DIR
 export EIFFEL_SRC

@@ -30,11 +30,12 @@ feature {NONE} -- Initialization
 				g_thread_init
 			end
 			check
-				gtk_threading_supported: g_thread_supported
+				threading_supported: g_thread_supported
 			end
 				-- Initialize the recursive mutex.
 			static_mutex := new_g_static_rec_mutex
 			g_static_rec_mutex_init (static_mutex)
+
 			Precursor {EV_APPLICATION_IMP} (an_interface)
 		end
 
@@ -83,11 +84,11 @@ feature {NONE} -- Implementation
 	call_idle_actions is
 			-- Execute idle actions.
 		do
+				-- If we cannot obtain a lock then do not call idle actions, it will be called again in the next CPU slice.
 			if try_lock then
 				Precursor {EV_APPLICATION_IMP}
 				unlock
 			end
-				-- If we cannot obtain a lock then do not call idle actions, it will be called again in the next CPU slice.
 		end
 
 feature {NONE} -- Externals
@@ -135,7 +136,7 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				#ifdef G_THREADS_ENABLED
+				#ifdef EIF_THREADS
 					g_thread_init (NULL);
 				#endif
 			}

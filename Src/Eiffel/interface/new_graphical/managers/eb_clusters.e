@@ -755,14 +755,14 @@ feature {NONE} -- Implementation
 			parent_cluster_sons: DS_LIST [EB_SORTED_CLUSTER]
 		do
 			if parent_cluster = Void then
-				if clusteri.is_cluster then
+				if clusteri.is_override then
+					parent_cluster_sons := overrides
+				elseif clusteri.is_cluster then
 					parent_cluster_sons := clusters
 				elseif clusteri.is_assembly then
 					parent_cluster_sons := assemblies
 				elseif clusteri.is_library then
 					parent_cluster_sons := libraries
-				elseif clusteri.is_override then
-					parent_cluster_sons := overrides
 				else
 					check should_not_reach: False end
 				end

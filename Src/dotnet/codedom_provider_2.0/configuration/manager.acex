@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="manager" uuid="56B27D8D-8B31-42f6-BEAC-94CB4BE01F24">
+	<target name="common">
+		<description>
+			Eiffel Codedom Manager utility
+		</description>
+		
+		<root feature="make_and_launch" class="ECDM_APPLICATION"/>
+		<version major="5" minor="7" release="426" build="0"/>
+		
+		<setting name="cls_compliant" value="True"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="il_verifiable" value="True"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
+		<setting name="msil_use_optimized_precompile" value="True"/>
+		<setting name="use_all_cluster_name_as_namespace" value="True"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
+		<setting name="console_application" value="no"/>
+		<setting name="executable_name" value="ecdpman"/>
+
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+
+		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.acex"/>
+
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		
+		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\manager">
+			<option namespace="EiffelSoftware.Codedom.Manager" />
+		</cluster>
+
+		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common">
+			<option namespace="EiffelSoftware.Codedom.Tools" />
+		</cluster>
+
+		<cluster name="eclop" location="$ECLOP\eclop" recursive="true">
+			<option namespace="Eclop" />
+		</cluster>
+	</target>
+	
+	<target name="debug" extends="common">
+		<setting name="line_generation" value="True"/>		
+		<option debug="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>		
+	</target>
+
+	<target name="release" extends="common">
+		<setting name="line_generation" value="False"/>
+		<option debug="false">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>		
+	</target>
+</system>

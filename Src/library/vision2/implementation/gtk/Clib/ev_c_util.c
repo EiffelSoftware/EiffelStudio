@@ -15,6 +15,8 @@ indexing
 */
 
 #include "ev_c_util.h"
+#include <stdio.h>
+#include <string.h>
 #include "eif_except.h"
 
 void

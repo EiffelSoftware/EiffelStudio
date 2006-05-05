@@ -574,6 +574,7 @@
 	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.use_buffered_line" DESCRIPTION="Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
 	
 	<PREF NAME="general.external_command_0" DESCRIPTION="First external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_1" DESCRIPTION="Second external command." HIDDEN="True"><STRING></STRING></PREF>

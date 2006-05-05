@@ -170,7 +170,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 7
-	Build_version_number: STRING is "1003"
+	Build_version_number: STRING is "1005"
 			-- Version number
 
 	Version_number: STRING is
@@ -189,9 +189,9 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Version_tag: INTEGER is 0x00000026
 
-	Version_type_name: STRING is "Enterprise Edition";
-			-- Name of version, e.g. Free edition, Enterprise Edition,...
-			-- Default: "Enterprise Edition"
+	Version_type_name: STRING is "GPL Edition";
+			-- Name of version, e.g. GPL edition, Enterprise Edition,...
+			-- Default: "GPL Edition"
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

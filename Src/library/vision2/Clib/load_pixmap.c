@@ -23,6 +23,9 @@ indexing
 /*       Level 4 without issuing any warning message                         */
 /*****************************************************************************/
 
+#include "eif_portable.h"
+#include "eif_malloc.h"
+
 #ifdef EIF_WINDOWS
 #include <windows.h>
 #include "png.h"
@@ -32,8 +35,6 @@ indexing
 #include <png.h>
 #endif
 
-#include "eif_portable.h"
-#include "eif_malloc.h"
 #include <stdio.h>
 
 

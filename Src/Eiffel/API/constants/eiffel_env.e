@@ -45,6 +45,10 @@ feature -- Status
 					(create {EXCEPTIONS}).die (-1)
 				end
 			end
+
+			if Execution_environment.get (ise_library_env) = Void then
+				Execution_environment.put (eiffel_installation_dir_name, ise_library_env)
+			end
 		end
 
 feature -- Status report
@@ -402,6 +406,11 @@ feature -- Version limitation
 
 	has_signable_generation: BOOLEAN is True;
 			-- Does this version allow the signing of .NET assemblies
+
+feature -- Constants
+
+	ise_library_env: STRING is "ISE_LIBRARY";
+			-- Name of the ISE_LIBRARY environment variable.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

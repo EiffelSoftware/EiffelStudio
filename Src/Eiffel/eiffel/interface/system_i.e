@@ -769,7 +769,6 @@ end
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
-			l_ise_lib: STRING
 			l_env: EIFFEL_ENV
 			d1, d2: DATE_TIME
 			l_factory: CONF_COMP_FACTORY
@@ -785,12 +784,6 @@ end
 			check
 				l_target_not_void: l_target /= Void
 			end
-				-- initialize ISE_LIBRARY with ISE_EIFFEL
-			l_ise_lib := l_env.eiffel_library
-			if l_ise_lib = Void then
-				l_ise_lib := l_env.eiffel_installation_dir_name
-			end
-			l_target.environ_variables.force (l_ise_lib, "ise_library")
 
 				-- let the configuration system build "everything"
 			create l_factory

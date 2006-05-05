@@ -18,6 +18,7 @@
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>		
+		<assembly name="eiffelsoftware.runtime" location="${ISE_EIFFEL}\studio\spec\${ISE_PLATFORM}\bin\EiffelSoftware.Runtime.dll"/>
 		<cluster name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\library\kernel\" recursive="true"/>
 		<cluster name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\library\lexical\" recursive="true">
 			<file_rule>

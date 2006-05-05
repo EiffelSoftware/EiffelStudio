@@ -6,8 +6,8 @@
 remtrace Vision2 wizard
 echo Building the Vision2 wizard
 clean_project
-finalize vision2_wizard_linux.ace
-tgz_ccode wizard
+finalize vision2_wizard.acex wizard
+tgz_ccode wizard wizard.tar.gz
 if [ ! -f wizard.tar.gz ]; then
 	remtrace Couldnt generate the Vision2 wizard
 	CANCEL
@@ -20,8 +20,8 @@ echo Vision2 wizard Built!
 remtrace Precompilation wizard
 echo Building the Precompilation wizard
 clean_project
-finalize precompile_wizard_linux.ace
-tgz_ccode wizard
+finalize precompile_wizard.acex wizard
+tgz_ccode wizard wizard.tar.gz
 if [ ! -f wizard.tar.gz ]; then
    remtrace Couldnt generate the Precompilation wizard
    CANCEL

@@ -304,7 +304,7 @@ feature {NONE}  -- Implementation agents
 		require
 			a_width_valid: a_width >= 0
 		do
-			clear
+--			clear
 			if pixmap /= Void then
 				if width > 0 and height >0 then
 					if is_selected then

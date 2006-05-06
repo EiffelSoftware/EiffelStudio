@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 
 			long_title := ""
 			short_title := ""
+			is_visible := False
 		ensure
 			a_widget_set: a_widget = internal_user_widget
 			a_title_set: internal_unique_title /= Void
@@ -99,10 +100,14 @@ feature -- Access
 		end
 
 	type: INTEGER is
-			--
+			-- Type of Current.
+			-- One value from SD_SHARED type_editor or type_tool
 		do
 			Result := internal_type
 		end
+
+	is_visible: BOOLEAN
+			-- If Current visible?
 
 feature -- Set
 
@@ -224,7 +229,7 @@ feature -- Set Position
 			l_tab_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
 				if not a_first then
-				 	state.move_to_tab_zone (l_tab_zone, 0)
+				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
 				 	state.move_to_tab_zone (l_tab_zone, 1)
 				end
@@ -286,12 +291,14 @@ feature -- Command
 			-- Hide zone which has `Current'.
 		do
 			state.hide
+			is_visible := False
 		end
 
 	show is
 			-- Show zone which has `Current'.
 		do
 			state.show
+			is_visible := True
 		end
 
 feature -- States report
@@ -373,6 +380,16 @@ feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT} -- Change the SD_
 				print ("%NXXXXXXXXXXXXXXXXXXXXXXXXXX SD_CONTENT change_state XXXXXXXXXXXXXXXXXXXXXXXXXX")
 			end
 			internal_state := a_state
+		end
+
+feature {SD_STATE, SD_CONFIG_MEDIATOR}
+
+	set_visible (a_bool: BOOLEAN) is
+			-- Set `is_visible'
+		do
+			is_visible := a_bool
+		ensure
+			set: is_visible = a_bool
 		end
 
 feature {NONE}  -- Implemention.

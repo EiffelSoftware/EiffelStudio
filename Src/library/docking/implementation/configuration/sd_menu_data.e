@@ -19,6 +19,19 @@ feature {NONE} -- Initlization
 			create rows.make (1)
 		end
 
+feature -- Visible
+
+	is_visible: BOOLEAN
+		-- If visible?
+
+	set_visible (a_bool: BOOLEAN) is
+			-- Set `is_visible'
+		do
+			is_visible := a_bool
+		ensure
+			set: is_visible = a_bool
+		end
+
 feature -- Floating datas
 
 	is_floating: BOOLEAN

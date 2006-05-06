@@ -86,8 +86,11 @@ feature -- Redefine.
 			create internal_shared
 			a_titles.start
 			l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
+
 			-- If we don't find SD_CONTENT, ignore it.
 			if l_content /= Void then
+				internal_content := l_content
+				Precursor {SD_STATE} (a_titles, a_container, a_direction)
 				make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)
 				a_container.extend (zone)
 				change_state (Current)
@@ -120,56 +123,67 @@ feature -- Redefine.
 			l_old_stuff: EV_WIDGET
 			l_old_spliter: EV_SPLIT_AREA
 			l_new_container: EV_SPLIT_AREA
+			l_retried: BOOLEAN
+			l_called: BOOLEAN
 		do
-			internal_docking_manager.command.lock_update (zone, False)
-			record_state
-			if zone.parent /= Void then
-				zone.parent.prune (zone)
-			end
+			if not l_retried then
+				internal_docking_manager.command.lock_update (zone, False)
+				record_state
+				if zone.parent /= Void then
+					zone.parent.prune (zone)
+				end
 
+				internal_docking_manager.command.lock_update (Void, True)
+				l_called := True
 
-			internal_docking_manager.command.lock_update (Void, True)
+				if a_multi_dock_area.full then
+					l_old_stuff := a_multi_dock_area.item
+					l_old_spliter ?= l_old_stuff
+					if l_old_spliter /= Void then
+						a_multi_dock_area.save_spliter_position (l_old_spliter)
+					end
+					a_multi_dock_area.prune (l_old_stuff)
+				end
 
-			if a_multi_dock_area.full then
-				l_old_stuff := a_multi_dock_area.item
-				l_old_spliter ?= l_old_stuff
+				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+					create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
+				else
+					create {SD_VERTICAL_SPLIT_AREA} l_new_container
+				end
+
+				a_multi_dock_area.extend (l_new_container)
+
+				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
+					l_new_container.set_first (zone)
+					if l_old_stuff /= Void then
+						l_new_container.set_second (l_old_stuff)
+					end
+				else
+					l_new_container.set_second (zone)
+					if l_old_stuff /= Void then
+						l_new_container.set_first (l_old_stuff)
+					end
+				end
+				if l_new_container.full then
+					l_new_container.set_split_position (top_split_position (direction, l_new_container))
+				end
 				if l_old_spliter /= Void then
-					a_multi_dock_area.save_spliter_position (l_old_spliter)
+					a_multi_dock_area.restore_spliter_position (l_old_spliter)
 				end
-				a_multi_dock_area.prune (l_old_stuff)
+				internal_docking_manager.command.remove_empty_split_area
+				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.command.unlock_update
+				internal_docking_manager.command.unlock_update
 			end
-
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
-			else
-				create {SD_VERTICAL_SPLIT_AREA} l_new_container
-			end
-
-			a_multi_dock_area.extend (l_new_container)
-
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
-				l_new_container.set_first (zone)
-				if l_old_stuff /= Void then
-					l_new_container.set_second (l_old_stuff)
-				end
-			else
-				l_new_container.set_second (zone)
-				if l_old_stuff /= Void then
-					l_new_container.set_first (l_old_stuff)
-				end
-			end
-			if l_new_container.full then
-				l_new_container.set_split_position (top_split_position (direction, l_new_container))
-			end
-			if l_old_spliter /= Void then
-				a_multi_dock_area.restore_spliter_position (l_old_spliter)
-			end
-			internal_docking_manager.command.remove_empty_split_area
-			internal_docking_manager.command.update_title_bar
-			internal_docking_manager.command.unlock_update
-			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
+		rescue
+			internal_docking_manager.command.unlock_update
+			if l_called then
+				internal_docking_manager.command.unlock_update
+			end
+			l_retried := True
+			retry
 		end
 
 stick (a_direction: INTEGER) is
@@ -219,21 +233,34 @@ stick (a_direction: INTEGER) is
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Redefine.
+		local
+			l_called: BOOLEAN
+			l_retried: BOOLEAN
 		do
-			internal_docking_manager.command.lock_update (zone, False)
-			record_state
-			if zone.parent /= Void then
-				zone.parent.prune (zone)
+			if not l_retried then
+				internal_docking_manager.command.lock_update (zone, False)
+				record_state
+				if zone.parent /= Void then
+					zone.parent.prune (zone)
+				end
+
+				internal_docking_manager.command.lock_update (a_target_zone, False)
+				l_called := True
+
+				change_zone_split_area_to_zone (a_target_zone, a_direction)
+				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.command.unlock_update
+				internal_docking_manager.command.unlock_update
 			end
-
-			internal_docking_manager.command.lock_update (a_target_zone, False)
-
-			change_zone_split_area_to_zone (a_target_zone, a_direction)
-			internal_docking_manager.command.update_title_bar
-			internal_docking_manager.command.unlock_update
-			internal_docking_manager.command.unlock_update
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
+		rescue
+			internal_docking_manager.command.unlock_update
+			if l_called then
+				internal_docking_manager.command.unlock_update
+			end
+			l_retried := True
+			retry
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
@@ -283,6 +310,7 @@ stick (a_direction: INTEGER) is
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.update_title_bar
 			end
+			docking_manager.command.resize (False)
 		end
 
 	zone: SD_DOCKING_ZONE
@@ -366,7 +394,7 @@ feature {NONE} -- Implementation
 			-- If we don't resize here and content is in top level,
 			-- content's widget will be minimum size.
 			internal_docking_manager.command.resize (False)
-			
+
 			l_new_split_area.set_proportion (0.5)
 			set_direction (a_target_zone.state.direction)
 			internal_docking_manager.command.remove_empty_split_area

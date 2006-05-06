@@ -88,7 +88,8 @@ feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 			a_container_not_full: not a_container.full
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
-		deferred
+		do
+			content.set_visible (True)
 		end
 
 feature -- Commands

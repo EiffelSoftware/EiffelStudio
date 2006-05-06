@@ -144,16 +144,17 @@ feature -- Command
 			l_config.save_config (a_file)
 		end
 
-	open_config (a_file: STRING) is
+	open_config (a_file: STRING): BOOLEAN is
 			-- Open a docking config from a_named_file.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_exist: file_exist (a_file)
 		local
 			l_config: SD_CONFIG_MEDIATOR
+			l_result: BOOLEAN
 		do
 			create l_config.make (Current)
-			l_config.open_config (a_file)
+			Result := l_config.open_config (a_file)
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR) is

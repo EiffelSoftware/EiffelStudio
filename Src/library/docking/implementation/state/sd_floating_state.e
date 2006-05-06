@@ -41,11 +41,6 @@ feature {NONE} -- Initlization
 
 feature -- Redefine.
 
-	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
-			-- Redefine.
-		do
-		end
-
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Redefine.
 		local

@@ -22,8 +22,6 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method.
 		local
-			main_box, vertical_box: EV_VERTICAL_BOX
-			minimum_size_cell: EV_CELL
 			l_zero_size_container: EV_HORIZONTAL_BOX
 		do
 			create internal_shared
@@ -32,28 +30,19 @@ feature {NONE} -- Initlization
 			hightlight_color := internal_shared.focused_color
 			hightlight_gray_color := internal_shared.non_focused_color
 
-			create main_box
-			extend (main_box)
-			create minimum_size_cell
-			extend (minimum_size_cell)
-			disable_item_expand (minimum_size_cell)
 			create container
-
 			create internal_border.make
+
+			extend (internal_border)
+
 			internal_border.set_border_width (internal_shared.border_width)
 			internal_border.set_border_color (internal_shared.border_color)
 			internal_border.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
 
-			main_box.extend (internal_border)
-
-			create vertical_box
-			internal_border.extend (vertical_box)
-
-			vertical_box.extend (container)
+			internal_border.extend (container)
 
 			create l_zero_size_container
 			container.extend (l_zero_size_container)
-
 
 			create internal_highlight_area_before
 			internal_highlight_area_before.set_minimum_width (4)
@@ -130,7 +119,6 @@ feature {NONE} -- Initlization
 			internal_highlight_area_after.pointer_leave_actions.force_extend (agent on_pointer_leave)
 			internal_highlight_area_after.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_highlight_area_after.pointer_double_press_actions.force_extend (agent on_normal_max)
-
 		end
 
 feature -- Command

@@ -9,9 +9,9 @@ class
 	SD_WINDOW
 
 inherit
-	EV_CELL
+	EV_VERTICAL_BOX
 		rename
-			has_focus as has_focus_cell
+			has_focus as has_focus_vertical_box
 		end
 
 create
@@ -27,7 +27,6 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			create internal_shared
-			create internal_vertical_box
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
 			internal_title_bar.set_minimum_height (internal_shared.title_bar_height)
@@ -39,21 +38,20 @@ feature {NONE} -- Initlization
 			pointer_button_release_actions.extend (agent pointer_release)
 			pointer_motion_actions.extend (agent pointer_motion)
 
-			internal_vertical_box.extend (internal_title_bar)
-			internal_vertical_box.disable_item_expand (internal_title_bar)
+			extend (internal_title_bar)
+			disable_item_expand (internal_title_bar)
 
 			create internal_border_box.make
 			internal_border_box.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
 			internal_border_box.set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
-			internal_vertical_box.extend (internal_border_box)
 
-			extend (internal_vertical_box)
+			extend (internal_border_box)
+
 			set_minimum_size (internal_shared.Zone_minmum_width, internal_shared.title_bar_height)
 			internal_border_box.set_border_color (internal_shared.border_color)
 		ensure
-			extended: has (internal_vertical_box)
-			extended: internal_vertical_box.has (internal_title_bar)
+			extended: has (internal_title_bar)
 		end
 
 feature   -- Access
@@ -244,10 +242,6 @@ feature {NONE} -- Implementation
 	internal_normal_max_action: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed when min/max window.
 
-	internal_vertical_box: EV_VERTICAL_BOX
-			-- Vertical box to hold SD_TITLE_BAR and user_widget.
-
---	internal_border_box: EV_CELL
 	internal_border_box: SD_CELL_WITH_BORDER
 			-- Box for border highlight.
 
@@ -255,7 +249,6 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 	internal_title_bar_not_void: internal_title_bar /= Void
-	internal_vertical_box_not_void: internal_vertical_box /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

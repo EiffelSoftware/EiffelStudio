@@ -8,6 +8,9 @@ indexing
 class
 	SD_TOOL_BAR_CONTENT
 
+inherit
+	HASHABLE
+
 create
 	make_with_items,
 	make_with_tool_bar
@@ -118,23 +121,46 @@ feature -- Command
 
 	show is
 			-- Show Current.
+		local
+			l_fixed: EV_FIXED
 		do
-			if zone /= Void then
-				zone.show
-				if zone.is_floating then
-					zone.floating_tool_bar.show
+			if not is_visible then
+				if zone /= Void then
+					zone.show
+					if zone.is_floating then
+						zone.floating_tool_bar.show
+					else
+						if zone.assistant.last_state.is_docking_state_recorded then
+							zone.assistant.dock_last_state_for_hide
+						end
+					end
 				end
+				is_visible := True
 			end
 		end
 
 	hide is
 			-- Hide Current
+		local
+			l_row: SD_TOOL_BAR_ROW
 		do
-			if zone /= Void then
-				zone.hide
-				if zone.is_floating then
-					zone.floating_tool_bar.hide
+			if is_visible then
+				if zone /= Void then
+					if zone.is_floating then
+						zone.floating_tool_bar.hide
+					else
+						l_row := zone.row
+						if l_row /= Void then
+							zone.assistant.record_docking_state
+							l_row.prune (zone)
+							if l_row.count = 0 then
+								l_row.destroy
+							end
+						end
+					end
+					zone.hide
 				end
+				is_visible := False
 			end
 		end
 
@@ -147,6 +173,15 @@ feature -- Command
 					zone.floating_tool_bar.destroy
 				end
 			end
+		end
+
+	set_top (a_direction: INTEGER) is
+			-- Set dock at `a_direction'
+		require
+			valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+			added: is_added
+		do
+			manager.set_top (Current, a_direction)
 		end
 
 feature -- Query
@@ -262,6 +297,37 @@ feature -- Query
 			end
 		end
 
+	is_contain_widget_item: BOOLEAN is
+			-- If Current contain normal widget items?
+		local
+			l_widget: SD_TOOL_BAR_WIDGET_ITEM
+		do
+			from
+				items.start
+			until
+				items.after or Result
+			loop
+				l_widget ?= items.item
+				Result := (l_widget /= Void)
+				items.forth
+			end
+		end
+
+	is_added: BOOLEAN is
+			-- If Current added to a tool bar manager?
+		do
+			Result := manager /= Void
+		end
+
+	is_visible: BOOLEAN
+			-- If Current visible?
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := title.hash_code
+		end
+
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
 		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER, SD_CONFIG_MEDIATOR}  -- Internal issues.
 
@@ -356,6 +422,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			not_void: a_zone /= Void
 		do
 			zone := a_zone
+			is_visible := True
 		ensure
 			set: zone = a_zone
 		end
@@ -369,6 +436,14 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			manager := a_manager
 		ensure
 			set: manager = a_manager
+		end
+
+	set_visible (a_bool: BOOLEAN) is
+			-- Set `is_visible'
+		do
+			is_visible := a_bool
+		ensure
+			set: is_visible = a_bool
 		end
 
 feature {NONE} -- Implementation

@@ -21,7 +21,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the tgzs.
 	CANCEL
 fi
-if [ -f ecgpl.tar.gz ]; then
+if [ -f ec_ent.tar.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -45,14 +45,14 @@ fullrd C
 gunzip -c c.tar.gz | tar -xf -
 cd C
 . quick_configure >> $COMPILE_LOG
-safe_md $EXPORT_DIR/commercial_rt
-cp run-time/*.so $EXPORT_DIR/commercial_rt
-cp run-time/*.a $EXPORT_DIR/commercial_rt
-if [ ! -f $EXPORT_DIR/commercial_rt/libwkbench.a ]; then
+safe_md $EXPORT_DIR/runtimes
+cp run-time/*.so $EXPORT_DIR/runtimes
+cp run-time/*.a $EXPORT_DIR/runtimes
+if [ ! -f $EXPORT_DIR/runtimes/libwkbench.a ]; then
 	remtrace Couldnt generate the run-time
 	CANCEL
 else
-	if [ ! -f $EXPORT_DIR/commercial_rt/libwkbench.so ]; then
+	if [ ! -f $EXPORT_DIR/runtimes/libwkbench.so ]; then
 		remtrace Couldnt generate the run-time
 		CANCEL
 	fi
@@ -104,7 +104,7 @@ cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libfinalized.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libwkbench.a
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
-fullrf $EXPORT_DIR/commercial_rt/libebench.a
+fullrf $EXPORT_DIR/runtimes/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
@@ -178,29 +178,31 @@ safe_md $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
 untgz_ccode vision2_tour
 move vision2_tour $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
 
-remtrace Recompile CD key validator
-cd $EXPORT_DIR
-untgz_ccode setup
+if [ "$MULTIPLE_EDITIONS" ]; then
+	remtrace Recompile CD key validator
+	cd $EXPORT_DIR
+	untgz_ccode setup
+fi
 
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR
 safe_md $EXPORT_DIR/ecs
 
-remtrace Enterprise edition
-cp ec.tar.gz ec.tar.gz.old
+remtrace GPL edition
+cp ec_gpl.tar.gz ec.tar.gz
 untgz_ccode ec
 gzip ec
-move ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
+move ec.gz $EXPORT_DIR/ecs/ec_gpl.gz
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 else
 	remtrace GPL edition
-	cp ecgpl.tar.gz ecgpl.tar.gz.old
-	move ecgpl.tar.gz ec.tar.gz
+	cp ec_ent.tar.gz ec.tar.gz
+	move ec_ent.tar.gz ec.tar.gz
 	untgz_ccode ec
 	gzip ec
-	move ec.gz $EXPORT_DIR/ecs/ec_gpl.gz
+	move ec.gz $EXPORT_DIR/ecs/ec_ent.gz
 fi
 
 cd $EXPORT_DIR

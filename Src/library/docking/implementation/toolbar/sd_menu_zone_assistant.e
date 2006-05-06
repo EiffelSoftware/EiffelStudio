@@ -217,12 +217,19 @@ feature -- Command
 			-- Dock to `last_state'.
 		require
 			is_floating: zone.is_floating
+		do
+			zone.dock
+			dock_last_state_for_hide
+		ensure
+			docked: not zone.is_floating
+		end
+
+	dock_last_state_for_hide is
+			-- Dock to `last_state' for hidding.
 		local
 			l_container: EV_BOX
 			l_row: SD_TOOL_BAR_ROW
 		do
-			zone.dock
-
 			l_container := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
 			if l_container.count < last_state.container_row_number or last_state.is_only_zone then
 				-- The row it missing, we should create a new one.
@@ -249,8 +256,6 @@ feature -- Command
 			l_row.extend (zone)
 			l_row.set_item_position_relative (zone.tool_bar, last_state.position)
 			zone.docking_manager.command.resize (True)
-		ensure
-			docked: not zone.is_floating
 		end
 
 	record_docking_state is

@@ -64,8 +64,7 @@ feature -- Propertites which record row infomations.
 	set_container_direction (a_direction: INTEGER) is
 			-- Set `container_direction'
 		require
-			valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			valid: is_direction_valid (a_direction)
 		do
 			container_direction := a_direction
 		ensure
@@ -162,6 +161,33 @@ feature -- Items layout
 	items_layout: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
 			-- Items layout, first is item name, second is whether item `is_displayed'
 			-- Order of this list, it's order items displayed.
+
+feature -- Query
+
+	is_docking_state_recorded: BOOLEAN is
+			-- If have a valid docking state recorded?
+		do
+			Result := is_direction_valid (container_direction)
+			if Result then
+				-- Then check if `container_row_number' valid
+				Result := container_row_number > 0
+			end
+		end
+
+	is_direction_valid (a_direction: INTEGER): BOOLEAN is
+			-- If `a_direction' valid?
+		do
+			Result :=  a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+		end
+
+	is_vertical: BOOLEAN is
+			-- If Current is vertical tool bar?
+		require
+			valid: is_direction_valid (container_direction)
+		do
+			Result := container_direction = {SD_DOCKING_MANAGER}.dock_left or container_direction = {SD_DOCKING_MANAGER}.dock_right
+		end
 
 feature {NONE} -- Implementation
 

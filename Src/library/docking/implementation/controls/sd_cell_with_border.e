@@ -16,12 +16,16 @@ class
 	SD_CELL_WITH_BORDER
 
 inherit
-	EV_CELL
+
+	EV_VERTICAL_BOX
 		rename
-			extend as extend_cell,
-			has as has_cell,
-			count as count_cell,
-			wipe_out as wipe_out_cell
+			extend as extend_vertical_box,
+			has as has_vertical_box,
+			count as count_vertical_box,
+			wipe_out as wipe_out_vertical_box,
+			set_border_width as set_border_width_vertical_box
+		export
+			{NONE} all
 		end
 
 create
@@ -39,13 +43,11 @@ feature {NONE} -- Initlization
 			create internal_border_left
 			create internal_border_right
 
-			create internal_vertical_box
-			extend_cell (internal_vertical_box)
-			internal_vertical_box.extend (internal_border_up)
-			internal_vertical_box.disable_item_expand (internal_border_up)
+			extend_vertical_box (internal_border_up)
+			disable_item_expand (internal_border_up)
 
 			create internal_horizontal_box
-			internal_vertical_box.extend (internal_horizontal_box)
+			extend_vertical_box (internal_horizontal_box)
 			internal_horizontal_box.extend (internal_border_left)
 			internal_horizontal_box.disable_item_expand (internal_border_left)
 			create internal_cell
@@ -53,8 +55,8 @@ feature {NONE} -- Initlization
 			internal_horizontal_box.extend (internal_border_right)
 			internal_horizontal_box.disable_item_expand (internal_border_right)
 
-			internal_vertical_box.extend (internal_border_bottom)
-			internal_vertical_box.disable_item_expand (internal_border_bottom)
+			extend_vertical_box (internal_border_bottom)
+			disable_item_expand (internal_border_bottom)
 		end
 
 feature -- Command
@@ -157,7 +159,6 @@ feature -- Command
 			set:
 		end
 
-
 	set_border_color (a_color: EV_COLOR) is
 			-- Set border color.
 		require
@@ -190,9 +191,6 @@ feature {NONE}  -- Implementation
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which contain left border, user widget, right border.
-
-	internal_vertical_box: EV_VERTICAL_BOX
-			-- Vertical box which contain top border, `internal_horizontal_box', bottom border.
 
 	internal_border_up, internal_border_bottom, internal_border_left, internal_border_right: EV_CELL
 			-- Four edges border.

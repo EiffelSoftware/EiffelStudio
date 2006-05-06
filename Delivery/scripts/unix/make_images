@@ -21,7 +21,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -f ec_gpl.gz ]; then
+if [ -f ec_ent.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -45,37 +45,37 @@ fi
 
 
 # Copy runtime files
-cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
 if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Preparing GPL version
-	gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	remtrace Preparing Enterprise version
+	gunzip -c $EXPORT_DIR/ecs/ec_ent.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
-	remtrace Building Home CD image
+	remtrace copying CD key validator
+	move setup $INSTALL_DIR/register
+	chmod a+rx $INSTALL_DIR/register
+	mkdir $INSTALL_DIR/setup
+	cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
+	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
+
+	remtrace Building Enterprise CD image
 	mv Eiffel57 cdrom
-	make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
-	gzip Eiffel57_gpl.iso
+	make_cd_image Eiffel57_enterprise Eiffel57_enterprise.iso cdrom
+	gzip Eiffel57_enterprise.iso
 	mv cdrom/Eiffel57 Eiffel57
-	tar czf Eiffel57_gpl.tgz Eiffel57 
+	tar czf Eiffel57_enterprise.tgz Eiffel57 
 fi
 
-remtrace Preparing Enterprise version
-gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+remtrace Preparing GPL version
+gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
-remtrace copying CD key validator
-move setup $INSTALL_DIR/register
-chmod a+rx $INSTALL_DIR/register
-mkdir $INSTALL_DIR/setup
-cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
-cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
-
-remtrace Building Enterprise CD image
+remtrace Building GPL CD image
 mv Eiffel57 cdrom
-make_cd_image Eiffel57_enterprise Eiffel57_enterprise.iso cdrom
-gzip Eiffel57_enterprise.iso
+make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
+gzip Eiffel57_gpl.iso
 mv cdrom/Eiffel57 Eiffel57
-tar czf Eiffel57_enterprise.tgz Eiffel57
+tar czf Eiffel57_gpl.tgz Eiffel57

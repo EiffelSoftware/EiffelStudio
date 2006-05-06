@@ -48,7 +48,7 @@ move build.tar.gz $EXPORT_DIR/build
 
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
-	remtrace Enterprise edition
+	remtrace GPL edition
 	if [ ! -d $FINALIZATION_DIR ]; then
 		md $FINALIZATION_DIR
 	fi
@@ -62,13 +62,13 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.gz $EXPORT_DIR
+	move ec.tar.gz $EXPORT_DIR/ec_gpl.tar.gz
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
-		remtrace GPL version edition
+		remtrace Enterprise version edition
 		cd $FINALIZATION_DIR
 		cd $EIFFEL_SRC/Eiffel/API/constants
-		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/g" system_constants.e >> new_system_constants.e
+		sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR
 		clean_project
@@ -79,7 +79,7 @@ if [ ! "$NO_NEW_EC" ]; then
 			CANCEL
 		fi
 		clean_project
-		move ec.tar.gz $EXPORT_DIR/ecgpl.tar.gz
+		move ec.tar.gz $EXPORT_DIR/ec_ent.tar.gz
 	fi
 else
 	# FIXME doesn't work.
@@ -98,18 +98,20 @@ fi
 clean_project
 move quick_finalize.tar.gz $EXPORT_DIR
 
-remtrace Compiling CD key validator
-cd $EIFFEL_SRC/tools
-co $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
-if [ -d cd_key_validator ]; then
-	cd cd_key_validator/eiffel_studio_52
-	clean_project
-	finalize setup.acex setup
-	tgz_ccode setup setup.tar.gz
-	if [ ! -f setup.tar.gz ]; then
-		echo Could not finalize a new setup
-		CANCEL
+if [ "$MULTIPLE_EDITIONS" ]; then
+	remtrace Compiling CD key validator
+	cd $EIFFEL_SRC/tools
+	co $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
+	if [ -d cd_key_validator ]; then
+		cd cd_key_validator/eiffel_studio_52
+		clean_project
+		finalize setup.acex setup
+		tgz_ccode setup setup.tar.gz
+		if [ ! -f setup.tar.gz ]; then
+			echo Could not finalize a new setup
+			CANCEL
+		fi
+		clean_project
+		move setup.tar.gz $EXPORT_DIR
 	fi
-	clean_project
-	move setup.tar.gz $EXPORT_DIR
 fi

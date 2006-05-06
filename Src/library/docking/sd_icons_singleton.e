@@ -82,74 +82,75 @@ feature -- Icons
 
 feature -- Side indicators
 
-	arrow_indicator_up: STRING is
+	arrow_indicator_up: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at up side of main window.
 		deferred
 		end
 
-	arrow_indicator_down: STRING is
-			--
+	arrow_indicator_down: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at down side of main window.
 		deferred
 		end
 
-	arrow_indicator_left: STRING is
-			--
+	arrow_indicator_left: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at left side of main window.
 		deferred
 		end
 
-	arrow_indicator_right: STRING is
-			--
+	arrow_indicator_right: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at right side of main window.
 		deferred
 		end
 
-	arrow_indicator_up_lightening: STRING is
-			--
+	arrow_indicator_up_lightening: EV_PIXMAP is
+			-- We use transparency feedback style, hot feedback indicator shown at up side of main window.
 		deferred
 		end
 
-	arrow_indicator_down_lightening: STRING is
-			--
+	arrow_indicator_down_lightening: EV_PIXMAP is
+			-- We use transparency feedback style, hot feedback indicator shown at down side of main window.
 		deferred
 		end
 
-	arrow_indicator_left_lightening: STRING is
-			--
+	arrow_indicator_left_lightening: EV_PIXMAP is
+			-- We use transparency feedback style, hot feedback indicator shown at left side of main window.
 		deferred
 		end
 
-	arrow_indicator_right_lightening: STRING is
-			--
+	arrow_indicator_right_lightening: EV_PIXMAP is
+			-- We use transparency feedback style, hot feedback indicator shown at right side of main window.
 		deferred
 		end
 
 feature -- Center indicators
 
-	arrow_indicator_center: STRING is
-			--
+	arrow_indicator_center: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone.
 		deferred
 		end
 
-	arrow_indicator_center_lightening_up: STRING is
-			--
+	arrow_indicator_center_lightening_up: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone, up side of indicator is hot.
 		deferred
 		end
 
-	arrow_indicator_center_lightening_down: STRING is
-			--
+	arrow_indicator_center_lightening_down: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone, down side of indicator is hot.
 		deferred
 		end
 
-	arrow_indicator_center_lightening_left: STRING is
-			--
+	arrow_indicator_center_lightening_left: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone, left side of indicator is hot.
 		deferred
 		end
 
-	arrow_indicator_center_lightening_right: STRING is
-			--
+	arrow_indicator_center_lightening_right: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone, right side of indicator is hot.
 		deferred
 		end
 
-	arrow_indicator_center_lightening_center: STRING is
-			--
+	arrow_indicator_center_lightening_center: EV_PIXMAP is
+			-- We use transparency feedback style, feedback indicator shown at center of a zone, center of indicator is hot.
 		deferred
 		end
 

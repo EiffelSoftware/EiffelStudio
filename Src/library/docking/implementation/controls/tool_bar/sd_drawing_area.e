@@ -27,7 +27,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Update for pick and drop.
 		require
 			not_void: a_starting implies a_pebble /= Void
-		deferred
+		do
 		end
 
 end

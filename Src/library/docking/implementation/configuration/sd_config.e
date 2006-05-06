@@ -56,7 +56,7 @@ feature -- Save/Open inner container data.
 			l_file.close
 		end
 
-	open_config (a_file: STRING) is
+	open_config (a_file: STRING): BOOLEAN is
 			-- Open all docking library datas from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -65,32 +65,48 @@ feature -- Save/Open inner container data.
 			l_config_data: SD_CONFIG_DATA
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
+			l_called: BOOLEAN
+			l_retried: BOOLEAN
 		do
-			create l_file.make_open_read (a_file)
-			create l_reader.make (l_file)
-			l_reader.set_for_reading
-			create l_config_data.make
-			create l_facility
-			l_config_data ?=  l_facility.retrieved (l_reader, True)
-			check l_config_data /= Void end
-			internal_docking_manager.command.lock_update (Void, True)
-			-- First we clear all areas.
-			clear_up_containers
+			if not l_retried then
+				create l_file.make_open_read (a_file)
+				create l_reader.make (l_file)
+				l_reader.set_for_reading
+				create l_config_data.make
+				create l_facility
+				l_config_data ?=  l_facility.retrieved (l_reader, True)
+				check l_config_data /= Void end
+				internal_docking_manager.command.lock_update (Void, True)
+				l_called := True
+				-- First we clear all areas.
+				clear_up_containers
+				clean_up_tool_bars
+				set_all_visible
+
+				check not internal_docking_manager.query.inner_container_main.full end
+				open_all_inner_containers_data (l_config_data)
+
+				-- Restore auto hide zone.
+				open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
+
+				open_tool_bar_datas (l_config_data.tool_bar_datas)
+
+				l_file.close
+
+				internal_docking_manager.command.resize (True)
+				internal_docking_manager.command.remove_empty_split_area
+				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.command.unlock_update
+				Result := True
+			end
+		rescue
+			if l_called then
+				internal_docking_manager.command.unlock_update
+			end
+			l_retried := True
 			clean_up_tool_bars
-			check not internal_docking_manager.query.inner_container_main.full end
-			open_all_inner_containers_data (l_config_data)
-
-			-- Restore auto hide zone.
-			open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
-
-			open_tool_bar_datas (l_config_data.tool_bar_datas)
-
-			l_file.close
-
-			internal_docking_manager.command.resize (True)
-			internal_docking_manager.command.remove_empty_split_area
-			internal_docking_manager.command.update_title_bar
-			internal_docking_manager.command.unlock_update
+			clear_up_containers
+			retry
 		end
 
 feature {NONE} -- Implementation for save config.
@@ -255,6 +271,7 @@ feature {NONE} -- Implementation for save config.
 			l_tool_bar_data: SD_TOOL_BAR_DATA
 			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
+			l_tool_bar_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 		do
 			-- Top
 			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_top)
@@ -269,6 +286,7 @@ feature {NONE} -- Implementation for save config.
 			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_right)
 			a_tool_bar_datas.extend (l_tool_bar_data)
 
+			-- Floating tool bars datas
 			l_float_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
 				l_float_tool_bars.start
@@ -281,8 +299,29 @@ feature {NONE} -- Implementation for save config.
 				l_tool_bar_data.set_title (l_tool_bar_zone.content.title)
 				l_tool_bar_data.set_screen_x_y (l_float_tool_bars.item.screen_x, l_float_tool_bars.item.screen_y)
 				l_tool_bar_data.set_last_state (l_float_tool_bars.item.zone.assistant.last_state)
+				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
 				a_tool_bar_datas.extend (l_tool_bar_data)
 				l_float_tool_bars.forth
+			end
+
+			-- Hidden docking tool bar datas.
+			from
+				l_tool_bar_contents := internal_docking_manager.tool_bar_manager.hidden_docking_contents
+				l_tool_bar_contents.start
+			until
+				l_tool_bar_contents.after
+			loop
+				if not l_tool_bar_contents.item.is_visible then
+					create l_tool_bar_data.make
+					l_tool_bar_data.set_visible (False)
+					l_tool_bar_data.set_floating (False)
+					l_tool_bar_data.set_title (l_tool_bar_contents.item.title)
+					if l_tool_bar_contents.item.zone /= Void and then l_tool_bar_contents.item.zone.assistant.last_state /= Void then
+						l_tool_bar_data.set_last_state (l_tool_bar_contents.item.zone.assistant.last_state)
+					end
+					a_tool_bar_datas.extend (l_tool_bar_data)
+				end
+				l_tool_bar_contents.forth
 			end
 		end
 
@@ -460,6 +499,23 @@ feature {NONE} -- Implementation for open config.
 					end
 					l_items.forth
 				end
+				l_contents.item.set_visible (False)
+				l_contents.forth
+			end
+		end
+
+	set_all_visible is
+			-- Set all contents not visible
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_contents := internal_docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				l_contents.item.set_visible (False)
 				l_contents.forth
 			end
 		end
@@ -581,6 +637,7 @@ feature {NONE} -- Implementation for open config.
 					l_list.after
 				loop
 					l_content := internal_docking_manager.query.content_by_title_for_restore ((l_list.item[1]).out)
+					l_content.set_visible (True)
 					-- If we don't find SD_CONTENT last saved, ignore it.
 					if l_content /= Void then
 						create l_auto_hide_state.make (l_content, a_direction)
@@ -606,7 +663,7 @@ feature {NONE} -- Implementation for open config.
 		require
 			a_tool_bar_datas_not_void: a_tool_bar_datas /= Void
 		local
-			l_tool_bar_on_floating: SD_TOOL_BAR_ZONE
+			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_content: SD_TOOL_BAR_CONTENT
 		do
 			-- Top
@@ -626,18 +683,35 @@ feature {NONE} -- Implementation for open config.
 			from
 				a_tool_bar_datas.forth
 			until
-				a_tool_bar_datas.after
+				a_tool_bar_datas.after or not a_tool_bar_datas.item.is_floating
 			loop
 				check is_floating_tool_bar_data: a_tool_bar_datas.item.is_floating end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
-				create l_tool_bar_on_floating.make (False, internal_docking_manager)
-				l_tool_bar_on_floating.extend (l_content)
-				l_tool_bar_on_floating.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y)
-				l_tool_bar_on_floating.assistant.set_last_state (a_tool_bar_datas.item.last_state)
+				create l_tool_bar.make (False, internal_docking_manager)
+				l_tool_bar.extend (l_content)
+				l_tool_bar.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y)
+				l_tool_bar.assistant.set_last_state (a_tool_bar_datas.item.last_state)
 				if a_tool_bar_datas.item.last_state.floating_group_info /= Void then
-					l_tool_bar_on_floating.floating_tool_bar.assistant.position_groups (a_tool_bar_datas.item.last_state.floating_group_info)
+					l_tool_bar.floating_tool_bar.assistant.position_groups (a_tool_bar_datas.item.last_state.floating_group_info)
 				end
+				if not a_tool_bar_datas.item.is_visible then
+					l_tool_bar.content.hide
+				end
+				a_tool_bar_datas.forth
+			end
 
+			-- Hidden docking tool bars
+			from
+			until
+				a_tool_bar_datas.after
+			loop
+				check is_hidden_docking: not a_tool_bar_datas.item.is_floating and not a_tool_bar_datas.item.is_visible end
+				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
+				create l_tool_bar.make (a_tool_bar_datas.item.last_state.is_vertical, internal_docking_manager)
+				l_tool_bar.extend (l_content)
+				l_content.set_zone (l_tool_bar)
+				l_content.set_visible (False)
+				l_content.zone.assistant.set_last_state (a_tool_bar_datas.item.last_state)
 				a_tool_bar_datas.forth
 			end
 		end

@@ -17,7 +17,8 @@ inherit
 			change_title,
 			hide,
 			set_focus,
-			record_state
+			record_state,
+			restore
 		end
 
 create
@@ -101,17 +102,25 @@ feature -- Redefine.
 
 	stick (a_direction: INTEGER) is
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
+		local
+			l_retried: BOOLEAN
 		do
-			internal_docking_manager.command.lock_update (Void, True)
-			internal_docking_manager.command.remove_auto_hide_zones (False)
-			internal_docking_manager.command.recover_normal_state
+			if not l_retried then
+				internal_docking_manager.command.lock_update (Void, True)
+				internal_docking_manager.command.remove_auto_hide_zones (False)
+				internal_docking_manager.command.recover_normal_state
 
-			stick_zones (a_direction)
+				stick_zones (a_direction)
 
-			internal_docking_manager.command.remove_empty_split_area
-			internal_docking_manager.command.unlock_update
+				internal_docking_manager.command.remove_empty_split_area
+				internal_docking_manager.command.unlock_update
+			end
 		ensure then
 			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
+		rescue
+			internal_docking_manager.command.unlock_update
+			l_retried := True
+			retry
 		end
 
  	change_title (a_title: STRING; a_content: SD_CONTENT) is
@@ -122,12 +131,13 @@ feature -- Redefine.
 			set: tab_stub.text = a_title
 		end
 
-	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			-- Redefine.
 		do
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
 			change_state (Current)
 			direction := a_direction
+			Precursor {SD_STATE} (a_titles, a_container, a_direction)
 		end
 
 	record_state is
@@ -150,20 +160,42 @@ feature -- Redefine.
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Redefine.
+			-- It's completely same as SD_STATE_VOID, merge?
+		local
+			l_docking_state: SD_DOCKING_STATE
 		do
+			internal_docking_manager.command.lock_update (Void, True)
+			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
+			else
+				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
+			end
+			l_docking_state.dock_at_top_level (a_multi_dock_area)
+			change_state (l_docking_state)
+			internal_docking_manager.command.unlock_update
+		ensure then
+			state_changed: internal_content.state /= Current
 		end
 
 	show is
 			-- Redefine.
+		local
+			l_retried: BOOLEAN
 		do
-			internal_docking_manager.command.lock_update (Void, True)
-			if is_hide then
-				auto_hide_panel.tab_stubs.extend (tab_stub)
+			if not l_retried then
+				internal_docking_manager.command.lock_update (Void, True)
+				if is_hide then
+					auto_hide_panel.tab_stubs.extend (tab_stub)
+				end
+				internal_animation.show (True)
+				internal_docking_manager.command.unlock_update
 			end
-			internal_animation.show (True)
-			internal_docking_manager.command.unlock_update
 		ensure then
 			show: internal_docking_manager.zones.has_zone_by_content (internal_content)
+		rescue
+			internal_docking_manager.command.unlock_update
+			l_retried := True
+			retry
 		end
 
 	hide is

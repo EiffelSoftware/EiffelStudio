@@ -26,7 +26,8 @@ inherit
 			content_count_valid,
 			is_dock_at_top,
 			hide,
-			has
+			has,
+			restore
 		end
 create
 	make,
@@ -76,9 +77,9 @@ feature {NONE} -- Initlization
 					l_split_parent.set_split_position (l_old_split_position)
 				end
 			end
-
+			internal_content := a_content
 		ensure
-
+			set: internal_content = a_content
 		end
 
 	make_with_tab_zone (a_content: SD_CONTENT; a_target_zone: SD_TAB_ZONE; a_direction: INTEGER) is
@@ -96,9 +97,12 @@ feature {NONE} -- Initlization
 				internal_content.user_widget.parent.prune (internal_content.user_widget)
 			end
 			tab_zone.extend (internal_content)
+
+			internal_content := a_content
 		ensure
 			set: a_target_zone = tab_zone
 			extended: tab_zone.has (internal_content)
+			set: internal_content = a_content
 		end
 
 	init_common (a_content: SD_CONTENT; a_direction: INTEGER) is
@@ -141,8 +145,11 @@ feature -- Redefine
 				l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
 				if l_content /= Void then
 					if l_first_tab then
+						internal_content := l_content
+						Precursor {SD_STATE} (a_titles, a_container, a_direction)
 						create l_docking_state.make_for_tab_zone (l_content, a_container, a_direction)
 						l_content.change_state (l_docking_state)
+
 						l_docking_state.set_direction (a_direction)
 						l_first_tab := False
 					elseif not l_third_time then
@@ -159,6 +166,7 @@ feature -- Redefine
 				a_titles.forth
 			end
 --			update_last_content_state
+
 		ensure then
 			restored:
 		end
@@ -349,7 +357,8 @@ feature -- Properties redefine.
 	content: SD_CONTENT is
 			-- Redefine.
 		do
-			Result := tab_zone.content
+--			Result := tab_zone.content
+			Result := internal_content
 		ensure then
 			not_void: Result /= Void
 		end

@@ -78,12 +78,11 @@ copy config.sh run-time
 copy make.w32 run-time\make.bat
 del make.w32
 rem
-rem Create OBJDIR, LIB, and FREELIB in run-time
+rem Create OBJDIR, LIB in run-time
 rem
 cd run-time
 if not exist OBJDIR mkdir OBJDIR
 if not exist LIB mkdir LIB
-if not exist FREELIB mkdir FREELIB
 cd ..
 rem
 rem Call the converter tranforming the makefile-win.sh to Makefile
@@ -179,7 +178,6 @@ copy cleanup.bat idrs\
 copy cleanup.bat run-time\
 if exist run-time\OBJDIR copy cleanup.bat run-time\OBJDIR\
 if exist run-time\LIB copy cleanup.bat run-time\LIB\
-if exist run-time\FREELIB copy cleanup.bat run-time\FREELIB\
 
 cd bench
 call cleanup
@@ -208,11 +206,6 @@ cd ..
 )
 if exist LIB (
 cd LIB
-call cleanup
-cd ..
-)
-if exist FREELIB (
-cd FREELIB
 call cleanup
 cd ..
 )

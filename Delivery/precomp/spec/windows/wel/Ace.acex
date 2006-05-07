@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="wel" uuid="54812F3B-BA89-4993-B445-57F427026BA9">
+	<target name="wel">
+		<description>WEL library</description>
+		<root class="ANY"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+	</target>
+</system>

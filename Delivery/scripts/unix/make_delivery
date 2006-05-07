@@ -91,7 +91,7 @@ remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/unix unix 
+exprt $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
 cd unix
 fullrd lex
 fullrd mel

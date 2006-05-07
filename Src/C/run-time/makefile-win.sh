@@ -1,6 +1,5 @@
 TOP = ..
 OUTDIR = .\LIB
-FREEOUTDIR = .\FREELIB
 INDIR = .\OBJDIR
 RTSRC = .
 CC = $cc
@@ -73,9 +72,6 @@ FINAL_OBJECTS = \
 
 OBJECTS = $(FINAL_OBJECTS) \
 	$(INDIR)\main.$obj
-
-FREE_OBJECTS = $(FINAL_OBJECTS) \
-	$(INDIR)\fmain.$obj
 
 WOBJECTS = \
 	$(NETWORK) \
@@ -292,9 +288,6 @@ MT_FINAL_OBJECTS = \
 MT_OBJECTS = $(MT_FINAL_OBJECTS) \
 	$(INDIR)\MTmain.$obj
 
-MT_FREE_OBJECTS = $(MT_FINAL_OBJECTS) \
-	$(INDIR)\MTfmain.$obj
-
 MT_WOBJECTS = \
 	$(MT_NETWORK) \
 	$(INDIR)\MTwlmalloc.$obj \
@@ -371,17 +364,6 @@ $(OUTDIR)\mtwkbench.$lib: $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.$lib
 	$link_line
 
-freestandard:: $(FREEOUTDIR)\finalized.$lib
-mtfreestandard:: $(FREEOUTDIR)\mtfinalized.$lib
-
-$(FREEOUTDIR)\finalized.$lib: $(FREE_OBJECTS)
-	$(RM) $(FREEOUTDIR)\finalized.$lib
-	$link_line
-
-$(FREEOUTDIR)\mtfinalized.$lib: $(MT_FREE_OBJECTS)
-	$(RM) $(FREEOUTDIR)\mtfinalized.$lib
-	$link_line
-
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS)
@@ -408,19 +390,6 @@ $(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\finalized.dll \
 		-IMPLIB:$(OUTDIR)\dll_finalized.lib $(OBJECTS)
-
-freedll:: $(FREEOUTDIR)\finalized.dll
-mtfreedll:: $(FREEOUTDIR)\mtfinalized.dll
-
-$(FREEOUTDIR)\finalized.dll : $(FREEOUTDIR) $(FREE_OBJECTS)
-	$(RM) $(FREEOUTDIR)\finalized.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(FREEOUTDIR)\finalized.dll \
-		-IMPLIB:$(FREEOUTDIR)\dll_finalized.lib $(FREE_OBJECTS)
-
-$(FREEOUTDIR)\mtfinalized.dll : $(FREEOUTDIR) $(MT_FREE_OBJECTS)
-	$(RM) $(FREEOUTDIR)\mtfinalized.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(FREEOUTDIR)\mtfinalized.dll \
-		-IMPLIB:$(FREEOUTDIR)\dll_mtfinalized.lib $(MT_FREE_OBJECTS)
 
 ..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console
@@ -774,16 +743,9 @@ $(INDIR)\bmain.$obj: $(RTSRC)\main.c
 $(INDIR)\bexcept.$obj: $(RTSRC)\except.c
 	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
 
-$(INDIR)\fmain.$obj: $(RTSRC)\main.c
-	$(CC) $(JCFLAGS) -DNON_COMMERCIAL $(RTSRC)\main.c
-
-
 ###################
 # MT_OBJECTS
 ###################
-
-$(INDIR)\MTfmain.$obj: $(RTSRC)\main.c
-	$(CC) $(JMTCFLAGS) -DNON_COMMERCIAL $(RTSRC)\main.c
 
 $(INDIR)\MTmain.$obj: $(RTSRC)\main.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\main.c

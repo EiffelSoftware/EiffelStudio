@@ -127,7 +127,7 @@ remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
-exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/windows %ISE_PLATFORM
+exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
 exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet dotnet
 cdd %INSTALL_DIR
 remtrace wizards

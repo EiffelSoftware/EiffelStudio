@@ -4,12 +4,9 @@ md %INSTALL_DIR\releases
 md %INSTALL_DIR\releases\enterprise_version
 md %INSTALL_DIR\releases\gpl_version
 
-mkdir %INSTALL_DIR\releases\gpl_version\lib
-mkdir %INSTALL_DIR\releases\gpl_version\lib\bcb
-mkdir %INSTALL_DIR\releases\gpl_version\lib\msc
-mkdir %INSTALL_DIR\releases\enterprise_version\lib
-mkdir %INSTALL_DIR\releases\enterprise_version\lib\bcb
-mkdir %INSTALL_DIR\releases\enterprise_version\lib\msc
+mkdir %INSTALL_DIR\releases\lib
+mkdir %INSTALL_DIR\releases\lib\bcb
+mkdir %INSTALL_DIR\releases\lib\msc
 
 remtrace Compile the commercial run-times
 iff not defined WIN64 then
@@ -20,9 +17,7 @@ iff not defined WIN64 then
 	call configure win32 b >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
 	fullrf C\run-time\LIB\ebench.lib
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise_version\lib\bcb
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\gpl_version\lib\bcb
-	copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\gpl_version\lib\bcb
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\lib\bcb
 endiff
 
 remtrace Compile a dynamic run-time for Microsoft
@@ -40,10 +35,7 @@ endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 fullrf C\run-time\LIB\*.exp
-fullrf C\run-time\FREELIB\*.exp
-copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\enterprise_version\lib\msc
-copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\gpl_version\lib\msc
-copy C\run-time\FREELIB\*dll* %INSTALL_DIR\releases\gpl_version\lib\msc
+copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\lib\msc
 cd %EIFFEL_SRC
 
 remtrace Compile a run-time for Microsoft
@@ -66,11 +58,10 @@ iff not defined WIN64 then
 	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise_version\lib\msc
 endiff
 
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\gpl_version\lib\msc
-copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\gpl_version\lib\msc
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\lib\msc
 iff not defined WIN64 then
-	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\gpl_version\lib\msc
-	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\gpl_version\lib\msc
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\lib\msc
 endiff
 
 

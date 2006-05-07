@@ -12,7 +12,7 @@
 									<File Id="ec.exe" Name="ec.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\ec.exe" />
 								</Component>
 							</Directory>
-							<Directory Id="lib" Name="lib" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\lib\" >
+							<Directory Id="lib" Name="lib" src="$(env.INSTALL_DIR)\releases\lib\" >
 								<?if not $(env.ISE_PLATFORM)="win64" ?>
 									<Directory Id="bcb" Name="bcb">
 										<Component Id="bcb" Guid="8B26D3AB-1D7C-4B7B-8726-382D0E0576BD">

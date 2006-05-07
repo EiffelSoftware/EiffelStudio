@@ -345,8 +345,8 @@ MT_WOBJECTS = \
 all:: eif_size.h
 all:: $output_libraries
 
-standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib freestandard
-mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib $(OUTDIR)\mtebench.lib mtfreestandard
+standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib
+mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib $(OUTDIR)\mtebench.lib
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
@@ -368,8 +368,8 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS)
 
-dll:: $(OUTDIR)\wkbench.dll $(OUTDIR)\finalized.dll freedll
-mtdll:: $(OUTDIR)\mtwkbench.dll $(OUTDIR)\mtfinalized.dll mtfreedll
+dll:: $(OUTDIR)\wkbench.dll $(OUTDIR)\finalized.dll
+mtdll:: $(OUTDIR)\mtwkbench.dll $(OUTDIR)\mtfinalized.dll
 
 $(OUTDIR)\mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.dll

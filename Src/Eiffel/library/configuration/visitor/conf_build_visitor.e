@@ -225,7 +225,7 @@ feature -- Visit nodes
 					process_library (l_pre)
 				end
 
-				if not a_target.assemblies.is_empty and state.is_dotnet then
+				if not is_error and then not a_target.assemblies.is_empty and state.is_dotnet then
 					consume_assemblies (a_target)
 					process_with_old (a_target.assemblies, Void)
 				end
@@ -269,7 +269,7 @@ feature -- Visit nodes
 				end
 			end
 				-- at the complete end, if we are dotnet unload emitter
-			if a_target = application_target and state.is_dotnet and il_emitter /= Void then
+			if not is_error and then a_target = application_target and state.is_dotnet and il_emitter /= Void then
 				il_emitter.unload
 			end
 		ensure then
@@ -455,7 +455,7 @@ feature -- Visit nodes
 				loop
 					l_overridee := l_groups.item
 					if l_overridee.is_enabled (state) then
-						l_overridee.add_overriders (an_override, modified_classes)
+						l_overridee.add_overriders (an_override, modified_classes, removed_classes)
 						if l_overridee.is_error then
 							add_error (l_overridee.last_error)
 						end
@@ -1046,7 +1046,7 @@ feature {NONE} -- Implementation
 					l_assemblies := a_target.assemblies
 					l_assemblies.start
 				until
-					l_assemblies.after
+					is_error or l_assemblies.after
 				loop
 					l_a := l_assemblies.item_for_iteration
 					if l_a.is_enabled (state) then
@@ -1070,7 +1070,7 @@ feature {NONE} -- Implementation
 					end
 					l_assemblies.forth
 				end
-				if l_locals.count > 1 then
+				if not is_error and l_locals.count > 1 then
 					l_locals.remove_tail (1)
 					l_emitter.consume_assembly_from_path (l_locals)
 				end

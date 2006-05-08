@@ -106,17 +106,21 @@ feature -- Visit nodes
 							if l_target = Void then
 								add_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
 							else
-									-- set environment to our global environment
-								l_target.set_environ_variables (application_target.environ_variables)
+								if l_target.precompile /= Void and then not a_library.is_precompile then
+									add_error (create {CONF_ERROR_PREINLIB}.make (a_library.name))
+								else
+										-- set environment to our global environment
+									l_target.set_environ_variables (application_target.environ_variables)
 
-								check
-									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
+									check
+										uuid_correct: l_uuid.is_equal (l_target.system.uuid)
+									end
+									libraries.force (l_target, l_uuid)
+
+									l_target.process (Current)
+									a_library.set_library_target (l_target)
+									a_library.set_uuid (l_uuid)
 								end
-								libraries.force (l_target, l_uuid)
-
-								l_target.process (Current)
-								a_library.set_library_target (l_target)
-								a_library.set_uuid (l_uuid)
 							end
 						end
 					end

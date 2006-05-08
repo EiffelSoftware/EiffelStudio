@@ -170,11 +170,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 		do
-			name := a_name
+			name := a_name.as_lower
 		ensure
-			name_set: name = a_name
+			name_set: name.is_equal (a_name)
 		end
 
 	set_description (a_description: like description) is
@@ -226,6 +225,49 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			library_target := a_target
 		end
 
+	set_library_target_by_name (a_target: STRING) is
+			-- Set `library_target' to `a_target'.
+		require
+			a_target_valid: a_target /= Void and then not a_target.is_empty implies targets.has (a_target)
+		do
+			if a_target /= Void and then not a_target.is_empty then
+				set_library_target (targets.item (a_target))
+			else
+				set_library_target (Void)
+			end
+		end
+
+	update_targets (a_target_list: LIST [STRING]; a_factory: CONF_FACTORY) is
+			-- add/remove/reorder targets so that we get the targets in `a_target_list'
+			-- use `a_factory' to create new targets.
+		require
+			a_factory_not_void: a_factory /= Void
+		local
+			l_old_targets: like targets
+			l_target: CONF_TARGET
+		do
+			target_order.wipe_out
+			if a_target_list = Void then
+				targets.clear_all
+			else
+				l_old_targets := targets
+				create targets.make (l_old_targets.count)
+				from
+					a_target_list.start
+				until
+					a_target_list.after
+				loop
+					l_old_targets.search (a_target_list.item)
+					if l_old_targets.found then
+						add_target (l_old_targets.found_item)
+					else
+						add_target (a_factory.new_target (a_target_list.item, Current))
+					end
+					a_target_list.forth
+				end
+			end
+		end
+
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
@@ -263,7 +305,7 @@ feature -- Dummy
 
 	compile_all_classes: BOOLEAN
 
-feature {CONF_VISITOR} -- Implementation
+feature {CONF_VISITOR, CONF_ACCESS} -- Implementation
 
 	target_order: ARRAYED_LIST [CONF_TARGET]
 			-- Order the targets appear in configuration file.

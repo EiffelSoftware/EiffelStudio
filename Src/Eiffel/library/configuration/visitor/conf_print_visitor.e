@@ -420,11 +420,11 @@ feature {NONE} -- Implementation
 						loop
 							l_pf := l_platforms.item
 							if l_pf.invert then
-								l_name := "excluded-value"
+								l_name := "excluded_value"
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>")
+							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>%N")
 							l_platforms.forth
 						end
 
@@ -436,21 +436,21 @@ feature {NONE} -- Implementation
 						loop
 							l_build := l_builds.item
 							if l_build.invert then
-								l_name := "excluded-value"
+								l_name := "excluded_value"
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value)+"%"/>")
+							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value)+"%"/>%N")
 							l_builds.forth
 						end
 
 						if l_condition.multithreaded /= Void then
-							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.item.out.as_lower+"%"")
+							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.item.out.as_lower+"%"/>%N")
 						end
 
 							-- don't print dotnet for assemblies
 						if not is_assembly and then l_condition.dotnet /= Void then
-							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"")
+							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"/>%N")
 						end
 
 						from
@@ -461,11 +461,11 @@ feature {NONE} -- Implementation
 						loop
 							l_custom := l_custs.item_for_iteration
 							if l_custom.invert then
-								l_name := "excluded-value"
+								l_name := "excluded_value"
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<build name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>")
+							append_text_indent ("<build name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>%N")
 							l_custs.forth
 						end
 

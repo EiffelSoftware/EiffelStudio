@@ -10,7 +10,7 @@ class
 	EB_CODE_COMPLETABLE_TEXT_FIELD
 
 inherit
-	CODE_COMPLETABLE
+	EB_TAB_CODE_COMPLETABLE
 		export
 			{ANY}
 				set_completion_possibilities_provider,
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			initialize_code_complete
-			can_complete_by_key := agent can_complete
+			key_completable := agent can_complete
 			set_discard_feature_signature (true)
 		end
 

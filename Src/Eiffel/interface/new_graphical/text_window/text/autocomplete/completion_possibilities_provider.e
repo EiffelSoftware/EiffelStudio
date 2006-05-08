@@ -1,75 +1,65 @@
 indexing
-	description: "A class to be inserted into the auto-complete list"
+	description: "Objects provide possibilities for code completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author     : "$Author$"
-	date       : "$Date$"
-	revision   : "$Revision$"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-class
-	EB_CLASS_FOR_COMPLETION
-
-inherit
-	EB_NAME_FOR_COMPLETION
-		rename
-			make as make_old
-		redefine
-			icon,
-			tooltip_text,
-			is_class,
-			full_insert_name
-		end
-
-create
-	make
-
-create {EB_CLASS_FOR_COMPLETION}
-	make_string
-
-feature {NONE} -- Initialization
-
-	make (a_class: like associated_class) is
-			-- Creates and initializes a new class completion item
-		require
-			a_class_not_void: a_class /= Void
-		do
-			make_old (a_class.name)
-			associated_class := a_class
-		ensure
-			associated_class_set: associated_class = a_class
-		end
+deferred class
+	COMPLETION_POSSIBILITIES_PROVIDER
 
 feature -- Access
 
-	is_class: BOOLEAN is
-			-- Is completion item a class?
-		do
-			Result := True
+	code_completable: CODE_COMPLETABLE
+			-- A code completable.
+
+	completion_possibilities: SORTABLE_ARRAY [like name_type] is
+			-- Completions proposals found by `prepare_auto_complete'
+		require
+			is_prepared : is_prepared
+		deferred
 		end
 
-	full_insert_name: STRING is
-			-- Full name to insert in editor
-		do
-			Result := associated_class.name
+	insertion: STRING is
+			-- String to be partially completed
+		require
+			is_prepared : is_prepared
+		deferred
 		end
 
-	icon: EV_PIXMAP is
-			-- Associated icon based on data
-		do
-			Result := pixmap_from_class_i (associated_class)
+	insertion_remainder: INTEGER is
+			-- The number of characters in the insertion remaining from the cursor position to the
+			-- end of the token
+		require
+			is_prepared : is_prepared
+		deferred
 		end
 
-	tooltip_text: STRING is
-			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
-			-- actual output of Current.
+	name_type: NAME_FOR_COMPLETION
+
+feature {CODE_COMPLETABLE} -- Basic operation
+
+	prepare_completion is
+			-- Prepare completion possibilities.
+		require
+			code_completable_attached: code_completable /= Void
 		do
-			Result := Current.out.twin
+			is_prepared := true
+		ensure
+			is_prepared: is_prepared
 		end
 
-feature {NONE} -- Implementation
+feature -- Status report
 
-	associated_class: CLASS_I;
-			-- Corresponding class
+	is_prepared: BOOLEAN
+			-- Is completion possibilities prepared?
+
+	completion_possible: BOOLEAN is
+			-- Is completion possible?
+		do
+			Result := completion_possibilities /= Void and then not completion_possibilities.is_empty
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -103,4 +93,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASS_FOR_COMPLETION
+end

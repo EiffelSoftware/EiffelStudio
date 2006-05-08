@@ -843,7 +843,7 @@ feature -- Class names completion
 				until
 					current_class_as.generics.after
 				loop
-					create name_name.make_with_name (current_class_as.generics.item.name)
+					create name_name.make (current_class_as.generics.item.name)
 					class_list.put_front (name_name)
 					current_class_as.generics.forth
 				end
@@ -1142,14 +1142,14 @@ feature {NONE} -- Completion implementation
 			l_basic: EB_NAME_FOR_COMPLETION
 			l_names: DYNAMIC_LIST [STRING]
 		do
-			create l_basic.make_with_name ("Current")
+			create l_basic.make ("Current")
 			insert_in_completion_possibilities (l_basic)
 			if a_analyser.has_return_type then
-				create l_basic.make_with_name ("Result")
+				create l_basic.make ("Result")
 				insert_in_completion_possibilities (l_basic)
 			end
 			if preferences.editor_data.show_any_features then
-				create l_basic.make_with_name ("Void")
+				create l_basic.make ("Void")
 				insert_in_completion_possibilities (l_basic)
 			end
 
@@ -1160,7 +1160,7 @@ feature {NONE} -- Completion implementation
 				until
 					l_names.after
 				loop
-					create l_basic.make_with_name (l_names.item)
+					create l_basic.make (l_names.item)
 					insert_in_completion_possibilities (l_basic)
 
 					l_names.forth
@@ -1461,7 +1461,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 								l_continue := l_feat_name.visual_name.is_case_insensitive_equal (l_name)
 								if l_continue then
 										-- Found a precursor match
-									create l_completion_name.make_with_name (once "Precursor")
+									create l_completion_name.make (once "Precursor")
 									if l_parent.type /= Void then
 										l_completion_name.append (" {")
 										l_completion_name.append (l_parent.type.class_name)

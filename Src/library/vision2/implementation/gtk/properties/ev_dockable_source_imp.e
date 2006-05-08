@@ -99,8 +99,6 @@ feature {NONE} -- Implementation
 			-- Initialize the pick/drag and drop mechanism.
 		do
 			--call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-
-			--pointer_motion_actions_internal.block	
 			enable_capture
 			initialize_transport (a_screen_x, a_screen_y, interface)
 			App_implementation.enable_is_in_transport
@@ -126,11 +124,6 @@ feature {NONE} -- Implementation
 						-- Restore the cursor style of `Current' if necessary.
 					set_pointer_style (orig_cursor)
 					orig_cursor := Void
-				end
-				if widget_imp_at_pointer_position = Current then
-					-- We are dropping back on to the same widget, therefore prevent selection events if applicable.
-					--| FIXME IEK Need to find a better method of preventing execution of selection actions.
-					signal_emit_stop (event_widget, "button_release_event")
 				end
 				complete_dock
 				original_x_offset := -1
@@ -166,10 +159,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	signal_emit_stop (a_c_object: POINTER; signal: STRING_GENERAL) is
-		deferred
-		end
 
 	event_widget: POINTER is
 			-- Pointer to the GtkWidget to which the events are hooked up to

@@ -9,11 +9,12 @@
 			<exclude>/hact$</exclude>
 			<exclude>/se$</exclude>
 			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
 			<exclude>/base$</exclude>
 			<exclude>/cvs$</exclude>
 			<exclude>/other$</exclude>
 			<exclude>/free_elks$</exclude>
-			<exclude>/EIFGEN$</exclude>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/Documentation$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>

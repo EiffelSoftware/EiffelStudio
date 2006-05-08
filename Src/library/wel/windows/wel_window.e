@@ -1721,7 +1721,7 @@ feature {WEL_WINDOW} -- Implementation
 			l_string: WEL_STRING
 			l_max_length: INTEGER
 			i: INTEGER
-			l_file_list: ARRAYED_LIST [STRING]
+			l_file_list: ARRAYED_LIST [STRING_32]
 		do
 				-- Retrieve number of filenames dropped
 			l_filecount := cwin_drag_query_file (wparam, -1, default_pointer, 0)
@@ -1742,7 +1742,7 @@ feature {WEL_WINDOW} -- Implementation
 					i := i + 1
 				end
 			end
-			--| FIXME Move code to Vision2 
+			--| FIXME Move code to Vision2
 		end
 
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is

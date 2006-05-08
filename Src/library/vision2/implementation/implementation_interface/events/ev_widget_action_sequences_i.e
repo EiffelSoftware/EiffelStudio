@@ -13,6 +13,24 @@ deferred class
 
 feature -- Event handling
 
+	file_drop_actions: ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]] is
+			-- Actions to be performed when an OS file drop occurs on `Current'.
+		do
+			if file_drop_actions_internal = Void then
+				create file_drop_actions_internal
+			end
+			Result := file_drop_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	file_drop_actions_internal: ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]]
+			-- Implementation of once per object `file_drop_actions'.
+
+feature -- Event handling
+
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer moves.
 		do

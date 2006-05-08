@@ -9,14 +9,14 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_WIDGET_I 
+	EV_WIDGET_I
 
 inherit
 	EV_PICK_AND_DROPABLE_I
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_SOURCE_I
 		redefine
 			interface
@@ -38,7 +38,7 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_I
-	
+
 	EV_HELP_CONTEXTABLE_I
 		redefine
 			interface,
@@ -64,13 +64,13 @@ feature -- Access
             -- Position of the screen pointer relative to `Current'.
 		deferred
 		end
-		
+
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when screen pointer is over current widget.
 			-- Void if none has been set using `set_pointer_position'.
 		deferred
 		end
-		
+
 	internal_pointer_style: EV_CURSOR is
 			-- Cursor displayed when screen pointer is over current widget,
 			-- as seen from interface.
@@ -87,13 +87,13 @@ feature -- Access
 				end
 			end
 		end
-		
+
 
 	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', will use the default drop target.
 			-- Always void if `Current' is not a widget.
-			
+
 	real_target: EV_DOCKABLE_TARGET
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
@@ -132,7 +132,7 @@ feature -- Status setting
 			--| FIXME: does not hold when an action sequence is called as a result of hiding
 			--| Current widget as this action sequence might call `show'.
 		end
-	
+
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		deferred
@@ -160,7 +160,7 @@ feature -- Status setting
 		ensure
 			assigned: actual_drop_target_agent = an_agent
 		end
-		
+
 	set_real_target (a_target: EV_DOCKABLE_TARGET) is
 			-- Assign `a_target' to `real_target'.
 		require
@@ -170,7 +170,7 @@ feature -- Status setting
 		ensure
 			assigned: real_target = a_target
 		end
-		
+
 	remove_real_target is
 			-- Ensure `real_target' is `Void'.
 		do
@@ -197,7 +197,7 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height >= 0
 		deferred
 		ensure
-			minimum_height_assigned: is_usable implies 
+			minimum_height_assigned: is_usable implies
 				interface.minimum_height = a_minimum_height
 		end
 
@@ -209,14 +209,14 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height >= 0
 		deferred
 		ensure
-			minimum_width_assigned: is_usable implies 
+			minimum_width_assigned: is_usable implies
 				interface.minimum_width = a_minimum_width
-			minimum_height_assigned: is_usable implies 
+			minimum_height_assigned: is_usable implies
 				interface.minimum_height = a_minimum_height
 		end
 
 feature -- Measurement
-	
+
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		deferred
@@ -254,12 +254,6 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Environment: EV_ENVIRONMENT is
-			-- Hold global data needed in `help_handler'
-		once
-			create Result
-		end
-
 	on_help_context_changed is
 			-- Connect help accelerators if not done already
 		local
@@ -279,7 +273,7 @@ feature {NONE} -- Implementation
 				top_window.enable_help
 			end
 		end
-	
+
 invariant
 	pointer_position_not_void: is_usable implies pointer_position /= Void
 

@@ -1,5 +1,5 @@
 indexing
-	description: "Serialize and deserialize objects to and from SER_READER_WRITER instances."
+	description: "Serialize and deserialize objects to and from SED_READER_WRITER instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -7,7 +7,7 @@ indexing
 
 class
 	SED_STORABLE_FACILITIES
-	
+
 feature -- Serialization routines
 
 	session_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN) is

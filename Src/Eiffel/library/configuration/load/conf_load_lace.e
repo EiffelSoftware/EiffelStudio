@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 				factory_set: factory = a_factory
 			end
 
-
 feature -- Status
 
 	is_error: BOOLEAN
@@ -63,6 +62,7 @@ feature -- Basic operation
 		local
 			l_parser: LACE_PARSER
 			l_ast: ACE_SD
+			l_desc: STRING
 		do
 			create l_parser.make
 			l_parser.parse_file (a_file, False)
@@ -80,12 +80,15 @@ feature -- Basic operation
 
 				process_defaults (l_ast.defaults)
 				if not l_parser.comments.is_empty then
-					if current_target.description /= Void then
-						current_target.set_description (l_parser.comments + current_target.description)
-					else
-						current_target.set_description (l_parser.comments)
-					end
 
+					if current_target.description /= Void then
+						l_desc := l_parser.comments + current_target.description
+					else
+						l_desc := l_parser.comments
+					end
+					l_desc.replace_substring_all ("<", "&lt;")
+					l_desc.replace_substring_all (">", "&gt;")
+					current_target.set_description (l_desc)
 				end
 				if current_options = Void then
 					create current_options

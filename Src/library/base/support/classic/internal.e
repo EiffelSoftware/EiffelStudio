@@ -740,7 +740,7 @@ feature -- Marking
 			-- Get a lock on `mark' and `unmark' routine so that 2 threads cannot `mark' and
 			-- `unmark' at the same time.
 		external
-			"C use %"eif_traverse.h%""
+			"C blocking use %"eif_traverse.h%""
 		alias
 			"eif_lock_marking"
 		end

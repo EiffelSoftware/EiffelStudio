@@ -3340,7 +3340,7 @@ feature -- IL Generation
 					target_type := implemented_type (f.origin_class_id, target_type)
 				end
 			end
-			target_feature := target_type.base_class.feature_of_rout_id (f.rout_id_set.first)
+			target_feature := target_type.base_class.feature_table.feature_of_rout_id_set (f.rout_id_set)
 			generate_current
 			if f.is_attribute then
 				generate_attribute (true, target_type, target_feature.feature_id)

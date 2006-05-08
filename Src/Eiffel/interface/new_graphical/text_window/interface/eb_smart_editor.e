@@ -35,7 +35,7 @@ inherit
 			make
 		end
 
-	CODE_COMPLETABLE
+	EB_TAB_CODE_COMPLETABLE
 		export
 			{NONE} all
 		undefine
@@ -324,7 +324,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 				handle_tab_action (False)
 			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
 				handle_tab_action (True)
-			elseif is_editable and not is_completing and then text_displayed.completing_context and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
+			elseif is_editable and not is_completing and then text_displayed.completing_context and then key_completable.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
 				trigger_completion
 				debug ("Auto_completion")
 					print ("Completion triggered.%N")
@@ -847,7 +847,7 @@ feature {NONE} -- Code completable implementation
 			-- Prepare possibilities in provider.
 		do
 			check_need_signature
-			Precursor {CODE_COMPLETABLE}
+			Precursor {EB_TAB_CODE_COMPLETABLE}
 		end
 
 	check_need_signature is
@@ -883,12 +883,12 @@ feature {NONE} -- Code completable implementation
 								end
 							end
 						end
-					end
 						-- We do not need feature signature when it is a pointer reference. case2: "$feature"
-					if not l_found_blank and then not l_quit and then not l_end_loop then
-						if l_token.image.is_equal ("$") then
-							l_end_loop := True
-							set_discard_feature_signature (True)
+						if not l_found_blank and then not l_quit and then not l_end_loop then
+							if l_token.image.is_equal ("$") then
+								l_end_loop := True
+								set_discard_feature_signature (True)
+							end
 						end
 					end
 				end

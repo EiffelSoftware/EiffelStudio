@@ -510,7 +510,6 @@ feature -- Once manifest string manipulation
 		require
 			valid_number: number >= 0
 			non_void_value: value /= Void
-			non_empty_value: not value.is_empty
 		deferred
 		end
 

@@ -423,6 +423,41 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	call_exception_actions is
+			-- Call exception actions.
+		do
+			if uncaught_exception_actions_internal /= Void and then not uncaught_exception_actions_called then
+				uncaught_exception_actions_called := True
+				uncaught_exception_actions_internal.call ([new_exception])
+				uncaught_exception_actions_called := False
+			end
+		end
+
+	uncaught_exception_actions_called: BOOLEAN
+			-- Are the `uncaught_exceptions_actions' currently being called?
+			-- This is used to prevent infinite looping should an exception be raised as part of calling `uncaught_exception_actions'.
+
+	new_exception: EXCEPTION is
+			-- New exception object representating the last exception caught in Current
+		local
+			l_exceptions: EXCEPTIONS
+			l_tag: STRING
+			l_trace: STRING
+		do
+			create l_exceptions
+			l_tag := l_exceptions.tag_name
+			if l_tag = Void then
+				l_tag := "No tag"
+			end
+			l_trace := l_exceptions.exception_trace
+			if l_trace = Void then
+				l_trace := "No trace"
+			end
+			create Result.make_with_tag_and_trace (l_tag, l_trace)
+		ensure
+			new_exception_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	stop_processing_requested: BOOLEAN

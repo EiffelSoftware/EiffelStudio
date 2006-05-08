@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	button_press_switch (
+	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;

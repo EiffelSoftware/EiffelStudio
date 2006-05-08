@@ -9,54 +9,28 @@ indexing
 deferred class
 	EB_COMPLETION_POSSIBILITIES_PROVIDER
 
+inherit
+	COMPLETION_POSSIBILITIES_PROVIDER
+		redefine
+			code_completable,
+			completion_possible,
+			prepare_completion,
+			name_type
+		end
+
 feature -- Access
 
-	code_completable: CODE_COMPLETABLE
+	code_completable: EB_TAB_CODE_COMPLETABLE
 			-- A code completable.
 
-	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+	class_completion_possibilities: SORTABLE_ARRAY [like name_type] is
 			-- Completions proposals found by `prepare_auto_complete'
 		require
 			is_prepared : is_prepared
 		deferred
 		end
 
-	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
-			-- Completions proposals found by `prepare_auto_complete'
-		require
-			is_prepared : is_prepared
-		deferred
-		end
-
-	insertion: STRING is
-			-- Strings to be partially completed : the first one is the dot or tilda if there is one
-			-- the second one is the feature name to be completed
-		require
-			is_prepared : is_prepared
-		deferred
-		end
-
-	insertion_remainder: INTEGER is
-			-- The number of characters in the insertion remaining from the cursor position to the
-			-- end of the token
-		require
-			is_prepared : is_prepared
-		deferred
-		end
-
-feature {CODE_COMPLETABLE} -- Basic operation
-
-	prepare_completion is
-			-- Prepare completion possibilities.
-		require
-			code_completable_attached: code_completable /= Void
-		do
-			is_prepared := true
-			provide_features := code_completable.completing_feature
-			provide_classes := not code_completable.completing_feature
-		ensure
-			is_prepared: is_prepared
-		end
+	name_type: EB_NAME_FOR_COMPLETION
 
 feature -- Status report
 
@@ -65,9 +39,6 @@ feature -- Status report
 
 	provide_classes: BOOLEAN
 			-- Provide `class_completion_possibilities'?
-
-	is_prepared: BOOLEAN
-			-- Is completion possibilities prepared?
 
 	completion_possible: BOOLEAN is
 			-- Is completion possible?
@@ -80,9 +51,19 @@ feature -- Status report
 			end
 		end
 
+feature {CODE_COMPLETABLE} -- Basic operation
+
+	prepare_completion is
+			-- Prepare completion possibilities.
+		do
+			Precursor {COMPLETION_POSSIBILITIES_PROVIDER}
+			provide_features := code_completable.completing_feature
+			provide_classes := not code_completable.completing_feature
+		end
+
 feature -- Element Change
 
-	set_code_completable (a_completable: CODE_COMPLETABLE) is
+	set_code_completable (a_completable: EB_TAB_CODE_COMPLETABLE) is
 			-- Set `code_completable' with `a_completable'.
 		require
 			a_completable_attached: a_completable /= Void

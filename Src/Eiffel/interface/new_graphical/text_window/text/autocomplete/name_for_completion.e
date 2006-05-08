@@ -1,75 +1,117 @@
 indexing
-	description: "A class to be inserted into the auto-complete list"
+	description: "Name to be inserted by auto-completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author     : "$Author$"
-	date       : "$Date$"
-	revision   : "$Revision$"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	EB_CLASS_FOR_COMPLETION
+	NAME_FOR_COMPLETION
 
 inherit
-	EB_NAME_FOR_COMPLETION
+	STRING
 		rename
-			make as make_old
+			make as make_string
 		redefine
-			icon,
-			tooltip_text,
-			is_class,
-			full_insert_name
+			is_equal, infix "<"
 		end
 
 create
 	make
 
-create {EB_CLASS_FOR_COMPLETION}
+create {NAME_FOR_COMPLETION}
 	make_string
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class) is
-			-- Creates and initializes a new class completion item
-		require
-			a_class_not_void: a_class /= Void
+	make (a_name: STRING) is
+			-- Initialization
 		do
-			make_old (a_class.name)
-			associated_class := a_class
-		ensure
-			associated_class_set: associated_class = a_class
+			make_from_string (a_name)
+			name := a_name
 		end
 
 feature -- Access
 
-	is_class: BOOLEAN is
-			-- Is completion item a class?
-		do
-			Result := True
-		end
+	name: STRING
+			-- Completion item name
 
 	full_insert_name: STRING is
 			-- Full name to insert in editor
 		do
-			Result := associated_class.name
+			Result := out
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	icon: EV_PIXMAP is
 			-- Associated icon based on data
 		do
-			Result := pixmap_from_class_i (associated_class)
+			Result := icon_internal
 		end
 
 	tooltip_text: STRING is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
-			Result := Current.out.twin
+			create Result.make_from_string (Current)
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature -- Element change
+
+	set_icon (a_icon: EV_PIXMAP) is
+			-- Set `icon_internal' with `a_icon'.
+		require
+			a_icon_not_void: a_icon /= Void
+		do
+			icon_internal := a_icon
+		ensure
+			icon_internal_not_void: icon_internal /= Void
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is name made of same character sequence as `other' (case has no importance)
+		do
+			if name = Void or other.name = Void then
+				Result := Precursor {STRING} (other)
+			else
+				Result := name.as_lower.is_equal (other.name.as_lower)
+			end
+		end
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is name lexicographically lower than `other'?
+		do
+			if name = Void or other.name = Void then
+				Result := Precursor {STRING} (other)
+			else
+				Result := name.as_lower < other.name.as_lower
+			end
+		end
+
+	begins_with (s:STRING): BOOLEAN is
+			-- Does this feature name begins with `s'?
+		local
+			lower_s: STRING
+		do
+			if count >= s.count then
+				lower_s := s.as_lower
+				Result := as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	associated_class: CLASS_I;
-			-- Corresponding class
+	icon_internal: EV_PIXMAP;
+			-- Icon	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -103,4 +145,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASS_FOR_COMPLETION
+end

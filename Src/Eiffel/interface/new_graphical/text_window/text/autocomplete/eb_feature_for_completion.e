@@ -11,6 +11,8 @@ class
 
 inherit
 	EB_NAME_FOR_COMPLETION
+		rename
+			make as make_old
 		redefine
 			icon,
 			tooltip_text,
@@ -37,9 +39,9 @@ feature {NONE} -- Initialization
 			a_feature_not_void: a_feature /= Void
 		do
 			if a_feature.is_infix then
-				make_with_name (extract_symbol_from_infix(a_feature.name))
+				make_old (extract_symbol_from_infix(a_feature.name))
 			else
-				make_with_name (a_feature.name)
+				make_old (a_feature.name)
 			end
 
 			associated_feature := a_feature

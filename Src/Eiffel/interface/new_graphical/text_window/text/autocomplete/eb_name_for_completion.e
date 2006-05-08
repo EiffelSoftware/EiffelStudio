@@ -1,5 +1,5 @@
 indexing
-	description: "Name of a feature to be inserted by autocomplete"
+	description: "Name of a feature or a class to be inserted by autocomplete"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Etienne Amodeo"
@@ -10,17 +10,19 @@ class
 	EB_NAME_FOR_COMPLETION
 
 inherit
-	STRING
-		rename
-			make as make_string
+
+	NAME_FOR_COMPLETION
+		export
+			{NONE} set_icon
 		redefine
-			is_equal, infix "<"
+			make,
+			icon
 		end
 
 	EB_SHARED_PREFERENCES
 		undefine
 		    copy,
-		    out, 
+		    out,
 		    is_equal
 		end
 
@@ -32,18 +34,17 @@ inherit
 		end
 
 create
-	make_with_name
-	
+	make
+
 create {EB_NAME_FOR_COMPLETION}
 	make_string
 
 feature -- Initialization
 
-	make_with_name (a_name: STRING) is
+	make (a_name: STRING) is
 			-- Create feature name with value `name'
 		do
-			make_from_string (a_name)
-			name := a_name
+			Precursor {NAME_FOR_COMPLETION} (a_name)
 			has_dot := True
 		ensure then
 			name_set: name = a_name
@@ -57,42 +58,16 @@ feature -- Query
 			Result := False
 		end
 
-feature -- Access
-
-	name: STRING
-			-- Completion item name
-
-	full_insert_name: STRING is
-			-- Full name to insert in editor
-		do			
-			Result := out
-		ensure
-			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end		
-
 	icon: EV_PIXMAP is
-			-- Associated icon based on data
+			-- Icon
 		do
 			Result := pixmaps.icon_other_feature
-		end		
-
-	tooltip_text: STRING is
-			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
-			-- actual output of Current.
-		require
-			not show_signature or not show_type
-		do
-			create Result.make_from_string (Current)
-		ensure
-			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end		
+		end
 
 feature -- Status Report
 
-	has_dot: BOOLEAN	
-		
+	has_dot: BOOLEAN
+
 	show_signature: BOOLEAN is
 			-- Should signature be displayed?
 		do
@@ -113,44 +88,11 @@ feature -- Status setting
 			has_dot := hd
 		end
 
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is name made of same character sequence as `other' (case has no importance)
-		do
-			if name = Void or other.name = Void then
-				Result := Precursor {STRING} (other)
-			else
-				Result := name.as_lower.is_equal (other.name.as_lower)
-			end
-		end
-		
-	infix "<" (other: like Current): BOOLEAN is
-			-- Is name lexicographically lower than `other'?
-		do
-			if name = Void or other.name = Void then
-				Result := Precursor {STRING} (other)
-			else
-				Result := name.as_lower < other.name.as_lower
-			end
-		end
-		
-	begins_with (s:STRING): BOOLEAN is
-			-- Does this feature name begins with `s'?
-		local
-			lower_s: STRING
-		do
-			if count >= s.count then
-				lower_s := s.as_lower
-				Result := as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
-			end
-		end	
-
 feature {NONE} -- Implementation
 
 	return_type: TYPE_A
 			-- Associated feature's return type
-		
+
 	completion_type: STRING is
 			-- The type of the feature (for a function, attribute)
 		local
@@ -172,7 +114,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	internal_completion_type: STRING;
 			-- cache `completion_type'
 

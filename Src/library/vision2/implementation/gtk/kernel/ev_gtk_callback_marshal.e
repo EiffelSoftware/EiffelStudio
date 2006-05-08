@@ -66,19 +66,6 @@ feature {EV_ANY_IMP} -- Access
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 
---	motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER):like internal_motion_tuple is
---			-- Return a motion tuple from given arguments.
---		do
---			Result := internal_motion_tuple
---			Result.put_integer (a_1, 1)
---			Result.put_integer (a_2, 2)
---			Result.put_double (a_3, 3)
---			Result.put_double (a_4, 4)
---			Result.put_double (a_5, 5)
---			Result.put_integer (a_6, 6)
---			Result.put_integer (a_7, 7)
---		end
-
 	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER): like internal_dimension_tuple is
 			-- Return a dimension tuple from given arguments.
 		do
@@ -114,18 +101,6 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					-- If no arguments are available then a Void tuple is returned
 				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 				event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
-
---				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
---				then
---					Result := motion_tuple (
---						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
---						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
---						0.5,
---						0.5,
---						0.5,
---						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
---						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
---					)
 				if event_type = {EV_GTK_ENUMS}.Gdk_configure_enum then
 					Result := dimension_tuple	 (
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
@@ -133,20 +108,6 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
 					)
-	--			when
-	--				Gdk_nothing_enum,
-	--				Gdk_delete_enum,
-	--				Gdk_destroy_enum,
-	--				Gdk_focus_change_enum,
-	--				Gdk_map_enum,
-	--				Gdk_unmap_enum,
-	--				Gdk_enter_notify_enum,
-	--				Gdk_leave_notify_enum,
-	--				Gdk_proximity_in_enum,
-	--				Gdk_proximity_out_enum
-	--			then
-	--				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
-
 				elseif event_type = {EV_GTK_ENUMS}.Gdk_expose_enum
 				then
 					p := {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
@@ -192,9 +153,6 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					Result := [key]
 				end
 			end
---			if Result = Void then
---				Result := integer_pointer_tuple
---			end
 		end
 
 feature {EV_ANY_IMP}
@@ -261,8 +219,8 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			integer_tuple.put_integer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 			Result := integer_tuple
+			Result.put_integer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 		end
 
 	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER] is
@@ -299,11 +257,13 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			l_exception: EXCEPTION
+			l_integer_pointer_tuple: like integer_pointer_tuple
 		do
 			if not retried then
-				integer_pointer_tuple.put_integer (n_args, 1)
-				integer_pointer_tuple.put_pointer (args, 2)
-				action.call (integer_pointer_tuple)
+				l_integer_pointer_tuple := integer_pointer_tuple
+				l_integer_pointer_tuple.put_integer (n_args, 1)
+				l_integer_pointer_tuple.put_pointer (args, 2)
+				action.call (l_integer_pointer_tuple)
 			elseif not uncaught_exception_actions_called then
 				create l_exception.make_with_tag_and_trace (tag_name, exception_trace)
 				uncaught_exception_actions_called := True

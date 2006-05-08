@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	Stretch_andscans: INTEGER is
+	frozen Stretch_andscans: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_ANDSCANS"
 		end
 
-	Stretch_deletescans: INTEGER is
+	frozen Stretch_deletescans: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_DELETESCANS"
 		end
 
-	Stretch_orscans: INTEGER is
+	frozen Stretch_orscans: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias

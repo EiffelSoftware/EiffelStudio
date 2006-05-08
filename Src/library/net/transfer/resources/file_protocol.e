@@ -56,7 +56,7 @@ feature -- Measurement
 			Result := file.count
 		end
 
-	 bytes_transferred: INTEGER
+	bytes_transferred: INTEGER
 	 		-- Number of transferred bytes
 
 feature -- Status report

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		require
 			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
 		do
-			set_from_pointer (a_utf8_ptr, byte_length_from_utf8_ptr (a_utf8_ptr),  False)
+			set_from_pointer (a_utf8_ptr, c_strlen (a_utf8_ptr) + 1,  False)
 		end
 
 feature -- Access
@@ -115,7 +115,7 @@ feature -- Access
 		require
 			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
 		do
-			set_from_pointer (a_utf8_ptr, byte_length_from_utf8_ptr (a_utf8_ptr), True)
+			set_from_pointer (a_utf8_ptr, c_strlen (a_utf8_ptr) + 1, True)
 		end
 
 feature {NONE} -- Implementation
@@ -148,10 +148,11 @@ feature {NONE} -- Implementation
 			until
 				i = 0
 			loop
-				if a_string.code (i) > 127 then
+				if a_string.code (i) <= 127 then
 					bytes_written := bytes_written + 1
+				else
+					bytes_written := bytes_written + 2
 				end
-				bytes_written := bytes_written + 1
 				i := i - 1
 			end
 
@@ -176,16 +177,16 @@ feature {NONE} -- Implementation
 				if l_code <= 127 then
 						-- Of the form 0xxxxxxx.
 					l_ptr.put_natural_8 (l_code.to_natural_8, bytes_written)
+					bytes_written := bytes_written + 1
 				else
 					check
 						ascii_only: l_code <= 255
 					end
 						-- Insert 110xxxxx 10xxxxxx.
 					l_ptr.put_natural_8 ((0xC0 | (l_code |>> 6)).to_natural_8, bytes_written)
-					bytes_written := bytes_written + 1
-					l_ptr.put_natural_8 ((0x80 | (l_code & 0x3F)).to_natural_8, bytes_written)
+					l_ptr.put_natural_8 ((0x80 | (l_code & 0x3F)).to_natural_8, bytes_written + 1)
+					bytes_written := bytes_written + 2
 				end
-				bytes_written := bytes_written + 1
 				i := i + 1
 			end
 			l_ptr.put_integer_8 (0, bytes_written)
@@ -211,41 +212,6 @@ feature {NONE} -- Implementation
 			is_shared := a_shared
 		end
 
-	byte_length_from_utf8_ptr (a_utf8_ptr: POINTER): INTEGER is
-			-- Length in bytes of UTF8 pointer `a_utf8_ptr'.
-		require
-			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
-		local
-			l_ptr: MANAGED_POINTER
-			l_done: BOOLEAN
-			l_nat8: NATURAL_8
-		do
-				-- We compute it ourself since we cannot trust GTK `g_utf8_validate'.
-				-- This is a security risk as we don't know how much we can read, we limit ourself
-				-- to the maximum we can allocate.
-			l_ptr := shared_pointer_helper
-			l_ptr.set_from_pointer (a_utf8_ptr, {INTEGER}.max_value)
-			from
-				Result := 0
-			until
-				l_done
-			loop
-				l_nat8 := l_ptr.read_natural_8 (Result)
-				if l_nat8 <= 127 then
-					l_done := l_nat8 = 0
-				elseif (l_nat8 & 0xE0) = 0xC0 then
-					Result := Result + 1
-				elseif (l_nat8 & 0xF0) = 0xE0 then
-					Result := Result + 2
-				elseif (l_nat8 & 0xF8) = 0xF0 then
-					Result := Result + 3
-				end
-				Result := Result + 1
-			end
-				-- Reset shared pointer helper.
-			l_ptr.set_from_pointer (default_pointer, 0)
-		end
-
 	dispose is
 			-- Dispose `Current'.
 		do
@@ -254,6 +220,15 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.g_free (item)
 				item := default_pointer
 			end
+		end
+
+feature {NONE} -- Externals
+
+	c_strlen (ptr: POINTER): INTEGER is
+		external
+			"C macro signature (char *): EIF_INTEGER use <string.h>"
+		alias
+			"strlen"
 		end
 
 indexing

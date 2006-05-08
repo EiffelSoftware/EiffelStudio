@@ -46,7 +46,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when an item is deselected.
 		do
@@ -62,7 +62,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions to be performed when a row is deselected.
 		do
@@ -70,7 +70,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	column_select_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is selected
 		do
@@ -78,7 +78,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	column_deselect_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
 			-- Actions to be performed when a column is deselected
 		do
@@ -86,7 +86,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	row_expand_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions to be performed when a row is expanded.
 		do
@@ -94,7 +94,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	row_collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions to be performed when a row is collapsed.
 		do
@@ -102,7 +102,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_motion_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
@@ -115,7 +115,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_button_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
@@ -129,7 +129,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_double_press_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
@@ -143,7 +143,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_button_release_item_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
@@ -157,7 +157,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_enter_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
@@ -173,7 +173,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pointer_leave_item_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
@@ -213,7 +213,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	pre_draw_overlay_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]] is
 			-- Actions to be performed before the features of an item cell in `Current' have been drawn but after the background of
 			-- the cell has been drawn. The four pieces of event data are:
@@ -254,13 +254,13 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	fill_background_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when part of the background area of the grid that is outside of the
 			-- area filled by `row_count' and `column_count' needs to be redrawn.
 			-- By default, the grid fills the area in its `background_color'. If one or more agents are
 			-- contained in this action sequence, the grid is no longer responsible for drawing its background
-			-- and the agents must redraw this area, otherwis graphical glitches may appear.
+			-- and the agents must redraw this area, otherwise graphical glitches may appear.
 			-- The five pieces of event data passed are:
 			-- drawable: EV_DRAWABLE The drawable into which you must draw the background.
 			-- virtual_x: INTEGER The virtual x position of the area to be redrawn.
@@ -278,12 +278,12 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 
 feature {NONE} -- Implementation
 
 	implementation: EV_GRID_ACTION_SEQUENCES_I;
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

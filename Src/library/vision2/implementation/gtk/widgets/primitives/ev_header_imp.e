@@ -26,7 +26,7 @@ inherit
 			interface,
 			initialize,
 			needs_event_box,
-			button_press_switch
+			call_button_event_actions
 		end
 
 	EV_FONTABLE_IMP
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		local

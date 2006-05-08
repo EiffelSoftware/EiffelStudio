@@ -36,9 +36,10 @@ inherit
 			able_to_transport,
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
-			button_press_switch,
+			call_button_event_actions,
 			create_pointer_motion_actions,
-			visual_widget
+			visual_widget,
+			on_pointer_motion
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -196,7 +197,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	button_press_switch (
+	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -406,22 +407,18 @@ feature {NONE} -- Implementation
 	list_store: POINTER
 		-- Pointer to the Model
 
-	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
 		local
-			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			a_row_number: INTEGER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
-			if pointer_motion_actions_internal /= Void then
-				pointer_motion_actions_internal.call (t)
-			end
-			if a_y > 0 and a_x <= width then
-				a_row_number := row_index_from_y_coord (a_y)
+			Precursor (a_motion_tuple)
+			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
+				a_row_number := row_index_from_y_coord (a_motion_tuple.integer_item (2))
 				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
-						a_row_imp.pointer_motion_actions_internal.call (t)
+						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
 					end
 				end
 			end

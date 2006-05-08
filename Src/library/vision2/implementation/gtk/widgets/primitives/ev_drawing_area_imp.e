@@ -30,7 +30,7 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			button_press_switch,
+			call_button_event_actions,
 			initialize,
 			tooltips_pointer,
 			set_tooltip,
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
 		end
 
-	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do

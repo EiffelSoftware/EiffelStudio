@@ -22,7 +22,7 @@ inherit
 		redefine
 			interface,
 			initialize,
-			button_press_switch,
+			call_button_event_actions,
 			create_pointer_motion_actions,
 			set_to_drag_and_drop,
 			able_to_transport,
@@ -33,7 +33,8 @@ inherit
 			post_drop_steps,
 			call_pebble_function,
 			visual_widget,
-			needs_event_box
+			needs_event_box,
+			on_pointer_motion
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -171,7 +172,7 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
-	button_press_switch (
+	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -234,21 +235,17 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
-			-- Handle motion events on 'Current'
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
 		local
-			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			a_row_imp: EV_TREE_NODE_IMP
 		do
-			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
-			if pointer_motion_actions_internal /= Void then
-				pointer_motion_actions_internal.call (t)
-			end
-
-			a_row_imp := row_from_y_coord (a_y)
-			if a_row_imp /= Void then
-				if a_row_imp.pointer_motion_actions_internal /= Void then
-					a_row_imp.pointer_motion_actions_internal.call (t)
+			Precursor (a_motion_tuple)
+			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
+				a_row_imp := row_from_y_coord (a_motion_tuple.integer_item (2))
+				if a_row_imp /= Void then
+					if a_row_imp.pointer_motion_actions_internal /= Void then
+						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
+					end
 				end
 			end
 		end
@@ -363,22 +360,24 @@ feature -- Implementation
 			i: INTEGER
 			a_cursor: CURSOR
 			a_tree_node_imp: EV_TREE_NODE_IMP
+			l_child_array: like child_array
 		do
 			from
 				a_cursor := child_array.cursor
-				child_array.start
+				l_child_array := child_array
+				l_child_array.start
 				i := 1
 			until
-				i > child_array.count or else a_enable_flag
+				i > l_child_array.count or else a_enable_flag
 			loop
-				child_array.go_i_th (i)
-				if child_array.item /= Void then
-					a_tree_node_imp ?= child_array.item.implementation
+				l_child_array.go_i_th (i)
+				if l_child_array.item /= Void then
+					a_tree_node_imp ?= l_child_array.item.implementation
 					a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator
 				end
 				i := i + 1
 			end
-			child_array.go_to (a_cursor)
+			l_child_array.go_to (a_cursor)
 			update_pnd_connection (a_enable_flag)
 		end
 

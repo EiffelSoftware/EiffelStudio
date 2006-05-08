@@ -20,7 +20,7 @@ inherit
 		redefine
 			interface,
 			initialize,
-			button_press_switch,
+			call_button_event_actions,
 			destroy,
 			minimum_width,
 			minimum_height,
@@ -214,7 +214,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	button_press_switch (
+	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;

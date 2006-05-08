@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 
 	make (a_factory: like factory) is
 			-- Create.
+		require
+			a_factory_not_void: a_factory /= Void
 		do
 			factory := a_factory
 		ensure

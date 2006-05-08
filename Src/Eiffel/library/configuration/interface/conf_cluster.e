@@ -157,7 +157,7 @@ feature -- Access queries
 				-- search in cluster itself
 			create Result.make
 			l_class := classes.item (l_name)
-			if l_class /= Void then
+			if l_class /= Void and then not l_class.does_override then
 				Result.extend (l_class)
 			end
 

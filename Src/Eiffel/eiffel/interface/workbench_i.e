@@ -450,7 +450,7 @@ feature -- Commands
 				classes.after
 			loop
 				cl := classes.item_for_iteration
-				if not cl.is_compiled and not cl.is_external_class then
+				if not cl.is_compiled and not cl.is_external_class and not cl.config_class.does_override then
 					change_class (cl)
 				end
 				classes.forth

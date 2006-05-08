@@ -78,9 +78,13 @@ feature {NONE} -- Implementation
 			a_class_not_void: a_class /= Void
 		local
 			l_conf_class: CONF_CLASS
+			l_classi: CLASS_I
+			l_comp: CLASS_C
 			l_pixcode: INTEGER
 			l_map: HASH_TABLE [EV_PIXMAP, INTEGER]
+			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
+			l_conf_class := a_class.config_class
 				-- state encoding instead of dozens of ifs
 				--
 				-- 1 read_only
@@ -93,15 +97,38 @@ feature {NONE} -- Implementation
 				l_pixcode := l_pixcode | 0x1
 			end
 
-			if a_class.is_compiled then
+			if not l_conf_class.does_override and not l_conf_class.is_overriden and a_class.is_compiled then
 				if a_class.compiled_class.is_deferred then
 					l_pixcode := l_pixcode | 0x4
 				else
 					l_pixcode := l_pixcode | 0x2
 				end
+			elseif l_conf_class.does_override then
+					-- compiled if any class overriden class is compiled
+				from
+					l_overrides := l_conf_class.overrides
+					l_overrides.start
+				until
+					l_overrides.after or l_comp /= Void
+				loop
+					if l_overrides.item.is_compiled then
+						l_classi ?= l_overrides.item
+						check
+							classi: l_classi /= Void
+						end
+						l_comp := l_classi.compiled_class
+					end
+					l_overrides.forth
+				end
+				if l_comp /= Void then
+					if l_comp.is_deferred then
+						l_pixcode := l_pixcode | 0x4
+					else
+						l_pixcode := l_pixcode | 0x2
+					end
+				end
 			end
 
-			l_conf_class := a_class.config_class
 			if l_conf_class.is_overriden then
 				l_pixcode := l_pixcode | 0x8
 			elseif l_conf_class.does_override then

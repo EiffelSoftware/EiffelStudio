@@ -597,15 +597,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	ev_application: EV_APPLICATION is
-			-- The application
-		local
-			ev_eviron: EV_ENVIRONMENT
-		do
-			create ev_eviron
-			Result := ev_eviron.application
-		end
-
 	auto_complete_after_dot: BOOLEAN is
 	        -- Should build autocomplete dialog after call on valid target?
 	  	do

@@ -419,7 +419,11 @@ feature {NONE} -- Timer
 
 	ev_application: EV_APPLICATION is
 			-- The application
-		deferred
+		local
+			l_env: EV_ENVIRONMENT
+		once
+			create l_env
+			Result := l_env.application
 		end
 
 	default_timer_interval: INTEGER is 1500;

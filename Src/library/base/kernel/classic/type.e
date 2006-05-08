@@ -22,13 +22,13 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
-			l_internal :INTERNAL
+			l_internal: INTERNAL
 		do
 			create l_internal
 			Result := l_internal.generic_dynamic_type (Current, 1) =
 				l_internal.generic_dynamic_type (other, 1)
 		end
-		
+
 feature -- Conversion
 
 	adapted alias "[]" (g: G): G is

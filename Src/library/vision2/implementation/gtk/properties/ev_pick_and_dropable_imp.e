@@ -31,7 +31,7 @@ inherit
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	button_press_switch (
+	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -159,24 +159,49 @@ feature -- Implementation
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
 		is
-			-- Filter out double click events.
+			-- Handle mouse button events.
+		local
+			app_imp: EV_APPLICATION_IMP
+			l_cursor: EV_CURSOR
 		do
-			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not App_implementation.is_in_transport and then able_to_transport (a_button) then
-				start_transport (
-					a_x,
-					a_y,
-					a_button,
-					a_x_tilt,
-					a_y_tilt,
-					a_pressure,
-					a_screen_x,
-					a_screen_y
-				)
+			app_imp := app_implementation
+			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
+					-- Retrieve/calculate pebble
+				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
+				if pebble /= Void then
+					if
+						able_to_transport (a_button)
+					then
+						pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
+						if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
+								-- Set correct accept cursor
+							if accept_cursor /= Void then
+								l_cursor := accept_cursor
+							else
+								l_cursor := default_accept_cursor
+							end
+						else
+								-- Set correct deny cursor
+							if deny_cursor /= Void then
+								l_cursor := deny_cursor
+							else
+								l_cursor := default_deny_cursor
+							end
+						end
+						internal_set_pointer_style (l_cursor)
+						enable_capture
+					elseif ready_for_pnd_menu (a_button) then
+						app_imp.target_menu (pebble).show
+					end
+				else
+						-- Call the normal button events if Pick and Drop is not initiated.
+					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+				end
 			else
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_implementation.is_in_transport and then app_implementation.captured_widget = interface then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport and then app_imp.captured_widget = interface then
 					end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				else
-					button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				end
 			end
 		end
@@ -187,38 +212,9 @@ feature -- Implementation
 			a_screen_x, a_screen_y: INTEGER)
 		is
 			-- Initialize a pick and drop transport.
-		local
-			app_imp: EV_APPLICATION_IMP
-			l_cursor: EV_CURSOR
 		do
-				-- Retrieve/calculate pebble
-			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-			if pebble /= Void then
-				if
-					able_to_transport (a_button)
-				then
-					app_imp := app_implementation
-					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
-					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
-							-- Set correct accept cursor
-						if accept_cursor /= Void then
-							l_cursor := accept_cursor
-						else
-							l_cursor := default_accept_cursor
-						end
-					else
-							-- Set correct deny cursor
-						if deny_cursor /= Void then
-							l_cursor := deny_cursor
-						else
-							l_cursor := default_deny_cursor
-						end
-					end
-					internal_set_pointer_style (l_cursor)
-					enable_capture
-				elseif ready_for_pnd_menu (a_button) then
-					app_imp.target_menu (pebble).show
-				end
+			check
+				do_not_call: False
 			end
 		end
 
@@ -226,15 +222,6 @@ feature -- Implementation
 			-- Will `Current' display a menu with button `a_button'.
 		do
 			Result := mode_is_target_menu and a_button = 3
-		end
-
-	signal_emit_stop (a_c_object: POINTER; a_signal: STRING_GENERAL) is
-			-- Stop emission of signal `signal' on `a_c_object'.
-		local
-			a_cs: EV_GTK_C_STRING
-		do
-			a_cs := a_signal
-			{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 
 	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -380,15 +367,6 @@ feature -- Implementation
 		do
 			create Result
 			interface.init_drop_actions (Result)
-		end
-
-feature {NONE} -- Implementation
-
-	gdk_widget_no_window (a_widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_NO_WINDOW"
 		end
 
 feature {EV_ANY_I} -- Implementation

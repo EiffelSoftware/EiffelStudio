@@ -128,8 +128,6 @@ feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 			-- `appended_character' is a character that should be appended after. '%U' if none.
 		local
 			completed: STRING
-			ind: INTEGER
-			lp: INTEGER
 		do
 			completed := cmp
 			if completed.is_empty then

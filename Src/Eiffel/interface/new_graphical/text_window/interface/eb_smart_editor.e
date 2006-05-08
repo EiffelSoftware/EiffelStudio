@@ -44,7 +44,8 @@ inherit
 			ctrled_key,
 			alt_key,
 			unwanted_characters,
-			refresh
+			refresh,
+			ev_application
 		redefine
 			can_complete,
 			exit_complete_mode,

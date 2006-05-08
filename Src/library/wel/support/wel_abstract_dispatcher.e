@@ -39,7 +39,7 @@ feature -- Settings
 		do
 			exception_callback := an_action
 		ensure
-			excetption_callback_set: exception_callback = an_action
+			exception_callback_set: exception_callback = an_action
 		end
 
 feature {NONE} -- Implementation: Access

@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WEL_GWL_CONSTANTS
 		export
 			{NONE} all

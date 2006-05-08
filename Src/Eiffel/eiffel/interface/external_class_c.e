@@ -178,8 +178,8 @@ feature -- Initialization
 			end
 			if l_functions /= Void then
 				process_features (l_feat_tbl, l_functions)
+				process_property_assigners (l_feat_tbl)
 			end
-
 				-- Clean `overloaded_names' to remove non-overloaded routines.
 			clean_overloaded_names (l_feat_tbl)
 			l_feat_tbl.set_overloaded_names (overloaded_names)
@@ -980,6 +980,53 @@ feature {NONE} -- Initialization
 					l_list.extend (l_feat.feature_name_id)
 					overloaded_names.put (l_list, l_id)
 				end
+			end
+		end
+
+	process_property_assigners (a_feat_tbl: like feature_table) is
+			-- Processes current feature table `feature_table' and matches
+			-- property functions (getters) with an assigner (setter), if available.
+		require
+			a_feat_tbl_attached: a_feat_tbl /= Void
+		local
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			l_property: CONSUMED_PROPERTY
+			l_getter, l_setter: CONSUMED_ENTITY
+			l_extrn_func_i: EXTERNAL_FUNC_I
+			l_def_func_i: DEF_FUNC_I
+		do
+			l_properties := external_class.properties
+			from
+				l_properties.start
+			until
+				l_properties.after
+			loop
+				l_property := l_properties.item
+				l_setter := l_property.setter
+				if l_setter /= Void then
+					l_getter := l_property.getter
+					if l_getter /= Void then
+						a_feat_tbl.search (l_getter.eiffel_name)
+						check found: a_feat_tbl.found end
+						if a_feat_tbl.found then
+							l_extrn_func_i ?= a_feat_tbl.found_item
+							if l_extrn_func_i = Void then
+								l_def_func_i ?= a_feat_tbl.found_item
+							end
+							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
+							a_feat_tbl.search (l_setter.eiffel_name)
+							check found: a_feat_tbl.found end
+							if a_feat_tbl.found then
+								if l_extrn_func_i /= Void then
+									l_extrn_func_i.set_type (l_extrn_func_i.type, a_feat_tbl.found_item.feature_name_id)
+								elseif l_def_func_i /= Void then
+									l_def_func_i.set_type (l_def_func_i.type, a_feat_tbl.found_item.feature_name_id)
+								end
+							end
+						end
+					end
+				end
+				l_properties.forth
 			end
 		end
 

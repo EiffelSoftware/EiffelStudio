@@ -142,34 +142,36 @@ feature {NONE} -- Actions implementation
 			l_new_width, l_new_neighbor: INTEGER
 			l_resize, l_neighbor: EV_GRID_COLUMN
 		do
-			if not is_resize_mode then
-				l_resize := column_at_virtual_position (x_pos)
-				if l_resize /= Void then
-					column_index := l_resize.index
-					start_x := l_resize.virtual_x_position
-					if column_index > 1 and then x_pos < start_x + 10 then
-						column_index := column_index - 1
-						l_near_border := True
-					elseif column_index < column_count and then x_pos > start_x + l_resize.width - 10  then
-						l_near_border := True
+			if not implementation.is_header_item_resizing then
+				if not is_resize_mode then
+					l_resize := column_at_virtual_position (x_pos)
+					if l_resize /= Void then
+						column_index := l_resize.index
+						start_x := l_resize.virtual_x_position
+						if column_index > 1 and then x_pos < start_x + 10 then
+							column_index := column_index - 1
+							l_near_border := True
+						elseif column_index < column_count and then x_pos > start_x + l_resize.width - 10  then
+							l_near_border := True
+						end
 					end
-				end
-				if not is_near_border and l_near_border and not (disabled_resize_columns.has (column_index) or disabled_resize_columns.has (column_index + 1)) then
-					is_near_border := True
-					set_pointer_style (default_pixmaps.sizewe_cursor)
-					resize_index := column_index
-				elseif is_near_border and not l_near_border then
-					is_near_border := False
-					set_pointer_style (default_pixmaps.standard_cursor)
-				end
-			else
-				l_resize := column (resize_index)
-				l_neighbor := column (resize_index + 1)
-				l_new_width := x_pos - l_resize.virtual_x_position
-				l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - x_pos
-				if l_new_width > 10 and l_new_neighbor > 10 then
-					l_resize.set_width (l_new_width)
-					l_neighbor.set_width (l_new_neighbor)
+					if not is_near_border and l_near_border and not (disabled_resize_columns.has (column_index) or disabled_resize_columns.has (column_index + 1)) then
+						is_near_border := True
+						set_pointer_style (default_pixmaps.sizewe_cursor)
+						resize_index := column_index
+					elseif is_near_border and not l_near_border then
+						is_near_border := False
+						set_pointer_style (default_pixmaps.standard_cursor)
+					end
+				else
+					l_resize := column (resize_index)
+					l_neighbor := column (resize_index + 1)
+					l_new_width := x_pos - l_resize.virtual_x_position
+					l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - x_pos
+					if l_new_width > 10 and l_new_neighbor > 10 then
+						l_resize.set_width (l_new_width)
+						l_neighbor.set_width (l_new_neighbor)
+					end
 				end
 			end
 		end

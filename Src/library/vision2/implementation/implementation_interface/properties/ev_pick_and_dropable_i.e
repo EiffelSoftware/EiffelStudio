@@ -16,13 +16,13 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_SHARED_TRANSPORT_I
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_I
 
 feature -- Access
-	
+
 	pebble: ANY
 			-- Data to be transported by pick and drop mechanism.
 
@@ -46,7 +46,7 @@ feature -- Access
 	deny_cursor: EV_CURSOR
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
-		
+
 	pebble_x_position: INTEGER is
 			-- Initial x position for pick and drop relative to `Current'.
 		do
@@ -155,7 +155,7 @@ feature -- Status setting
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
-		end 
+		end
 
 	set_deny_cursor (a_cursor: EV_CURSOR) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
@@ -205,14 +205,14 @@ feature {EV_ANY_I} -- Implementation
 		-- Initial point for the pick and drop.
 
 	internal_pebble_positioning_enabled: BOOLEAN
-		-- Is `pebble_positining_enabled' ? 
+		-- Is `pebble_positining_enabled' ?
 
-	user_interface_mode: INTEGER
+	user_interface_mode: INTEGER_8
 			-- Transport user interface mode.
-	
-	pick_and_drop_mode: INTEGER is 0
-	drag_and_drop_mode: INTEGER is 1
-	target_menu_mode: INTEGER is 2
+
+	pick_and_drop_mode: INTEGER_8 is 0
+	drag_and_drop_mode: INTEGER_8 is 1
+	target_menu_mode: INTEGER_8 is 2
 
 	start_transport (
 		a_x, a_y, a_button: INTEGER;
@@ -233,7 +233,7 @@ feature {EV_ANY_I} -- Implementation
 		ensure
 			last_pointed_target_is_void: last_pointed_target = Void
 		end
-	
+
 	execute (
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -249,17 +249,14 @@ feature {EV_ANY_I} -- Implementation
 			draw_rubber_band
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
-			
+
 			target := pointed_target
 			real_target ?= target
-			application ?= (create {EV_ENVIRONMENT}).application.implementation
-			check
-				application_not_void: application /= Void
-			end
+			application ?= environment.application.implementation
 			if application.pnd_motion_actions_internal /= Void then
 				application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
 			end
-			
+
 				-- Cursor needs to be constantly updated so for widgets that handle
 				-- Pick and Drop themselves such as EV_GRID.
 				--| FIXME IEK This could be refactored to only update cursor for widgets that
@@ -365,6 +362,12 @@ feature {EV_WIDGET, EV_WIDGET_I}
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	environment: EV_ENVIRONMENT is
+			-- Environment object.
+		once
+			create Result
+		end
 
 	interface: EV_PICK_AND_DROPABLE
 		-- Provides a common user interface to platform dependent functionality

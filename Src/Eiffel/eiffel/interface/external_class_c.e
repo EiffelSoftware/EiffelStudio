@@ -994,6 +994,7 @@ feature {NONE} -- Initialization
 			l_getter, l_setter: CONSUMED_ENTITY
 			l_extrn_func_i: EXTERNAL_FUNC_I
 			l_def_func_i: DEF_FUNC_I
+			l_feat_i: FEATURE_I
 		do
 			l_properties := external_class.properties
 			from
@@ -1006,22 +1007,19 @@ feature {NONE} -- Initialization
 				if l_setter /= Void then
 					l_getter := l_property.getter
 					if l_getter /= Void then
-						a_feat_tbl.search (l_getter.eiffel_name)
-						check found: a_feat_tbl.found end
-						if a_feat_tbl.found then
-							l_extrn_func_i ?= a_feat_tbl.found_item
-							if l_extrn_func_i = Void then
-								l_def_func_i ?= a_feat_tbl.found_item
-							end
-							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
-							a_feat_tbl.search (l_setter.eiffel_name)
-							check found: a_feat_tbl.found end
-							if a_feat_tbl.found then
-								if l_extrn_func_i /= Void then
-									l_extrn_func_i.set_type (l_extrn_func_i.type, a_feat_tbl.found_item.feature_name_id)
-								elseif l_def_func_i /= Void then
-									l_def_func_i.set_type (l_def_func_i.type, a_feat_tbl.found_item.feature_name_id)
-								end
+						l_feat_i := a_feat_tbl.item (l_getter.eiffel_name)
+						l_extrn_func_i ?= l_feat_i
+						if l_extrn_func_i = Void then
+							l_def_func_i ?= l_feat_i
+						end
+						check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
+						l_feat_i := a_feat_tbl.item (l_setter.eiffel_name)
+						check l_feat_i_attached: l_feat_i /= Void end
+						if l_feat_i /= Void then
+							if l_extrn_func_i /= Void then
+								l_extrn_func_i.set_type (l_extrn_func_i.type, a_feat_tbl.found_item.feature_name_id)
+							elseif l_def_func_i /= Void then
+								l_def_func_i.set_type (l_def_func_i.type, a_feat_tbl.found_item.feature_name_id)
 							end
 						end
 					end

@@ -164,7 +164,7 @@ feature -- Command
 
 feature -- Query
 
-	items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	items: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- All items in Current.
 		do
 			Result := tool_bar.items

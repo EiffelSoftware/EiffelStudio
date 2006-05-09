@@ -18,7 +18,7 @@ inherit
 					x_position, y_position, destroy,
 					set_minimum_width, set_minimum_height
 			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
-			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip
+			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip, font
 			{SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_TOOL_BAR} set_pointer_style
 			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} expose_actions, pointer_button_press_actions, pointer_double_press_actions,
 							redraw_rectangle
@@ -81,6 +81,7 @@ feature -- Command
 		require
 			not_void: a_item /= Void
 --			parent_void: a_item.tool_bar = Void
+			valid: is_item_valid (a_item)
 		do
 			internal_items.extend (a_item)
 			a_item.set_tool_bar (Current)
@@ -107,6 +108,7 @@ feature -- Command
 			l_item: SD_TOOL_BAR_ITEM
 			l_items: like internal_items
 			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_item_before: SD_TOOL_BAR_ITEM
 		do
 			from
 				l_items := items
@@ -123,8 +125,8 @@ feature -- Command
 					-- Minmum width only make sence in this case.
 					if l_separator /= Void then
 						-- It's a separator, we should calculate the item before
-						if l_items.index > 1 then
-							l_item := internal_items.i_th (l_items.index - 1)
+						if l_item_before /= Void then
+							l_item := l_item_before
 						end
 					end
 					if l_minmum_width < l_item.rectangle.right then
@@ -134,11 +136,14 @@ feature -- Command
 				if l_items.index = l_items.count then
 					l_minmum_height := l_items.item.rectangle.bottom
 				end
+
+				l_item_before := l_items.item
 				l_items.forth
 			end
 			debug ("docking")
 				print ("%NSD_TOOL_BAR compute minimum size minimum_width is: " + l_minmum_width.out)
 				print ("%NSD_TOOL_BAR compute minimum size minimum_height is: " + l_minmum_height.out)
+				print ("%N             items.count: " + l_items.count.out)
 			end
 
 			set_minimum_width (l_minmum_width)
@@ -205,6 +210,18 @@ feature -- Contract support
 			Result := start_y = a_y
 		end
 
+	is_item_valid (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
+			-- If `a_item' valid?
+		local
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+		do
+			Result := True
+			l_widget_item ?= a_item
+			if l_widget_item /= Void then
+				Result := l_widget_item.widget.parent = Void
+			end
+		end
+
 feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
@@ -236,7 +253,6 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 						Result := start_x
 					end
 				end
-
 				l_items.forth
 			end
 		end
@@ -521,7 +537,7 @@ feature {SD_TOOL_BAR} -- Implementation
 	drawer: SD_TOOL_BAR_DRAWER
 			-- Drawer with responsibility for draw OS native looks.
 
-	internal_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	internal_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All tool bar items in Current.
 
 	internal_pointer_pressed: BOOLEAN

@@ -9,12 +9,22 @@ indexing
 class
 	SHARED_FLAGS
 
-feature
+feature -- Setting
 
 	set_gui (b: BOOLEAN) is
 			-- Set `gui_cell' with `b'.
 		do
 			gui_cell.put (b)
+		ensure
+			gui_cell_set: gui_cell.item = b
+		end
+
+	set_is_last_c_compilation_freezing (b: BOOLEAN) is
+			-- Set `is_last_c_compilation_freezing' with `b'.
+		do
+			compilation_cell.put (b)
+		ensure
+			compilation_cell_set: compilation_cell.item = b
 		end
 
 feature -- Status reporting
@@ -23,6 +33,24 @@ feature -- Status reporting
 			-- Is ec running on GUI mode?
 		do
 			Result := gui_cell.item
+		ensure
+			good_result: Result = gui_cell.item
+		end
+
+	is_last_c_compilation_freezing: BOOLEAN is
+			-- Is last c compilation a freezing?
+		do
+			Result := compilation_cell.item
+		ensure
+			good_result: Result = compilation_cell.item
+		end
+
+	is_last_c_compilation_finalizing: BOOLEAN is
+			-- Is last c compilation a finalizing?
+		do
+			Result := not compilation_cell.item
+		ensure
+			good_result: Result = not compilation_cell.item
 		end
 
 feature{NONE} -- Implementation
@@ -32,6 +60,13 @@ feature{NONE} -- Implementation
 		once
 			create Result.put (False)
 		end
+
+	compilation_cell: CELL [BOOLEAN] is
+			-- Compilation flag
+		once
+			create Result.put (True)
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

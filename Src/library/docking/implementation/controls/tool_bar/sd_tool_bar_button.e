@@ -50,6 +50,7 @@ feature -- Properties
 
 	tooltip: STRING
 			-- Tooltip shown on item.
+
 feature -- Command
 
 	enable_sensitive is
@@ -82,16 +83,13 @@ feature -- Query
 
 	width: INTEGER is
 			-- Redefine
-		local
-			l_font: EV_FONT
 		do
 			Result := {SD_TOOL_BAR}.padding_width
 			if text /= Void then
-				create l_font
-				Result := Result + l_font.string_width (text)
+				Result := Result + {SD_TOOL_BAR}.padding_width + tool_bar.font.string_width (text)
 			end
 			if pixmap /= Void then
-				Result := Result + {SD_TOOL_BAR}.padding_width + pixmap.width
+				Result := Result + pixmap.width
 			end
 			Result := Result + {SD_TOOL_BAR}.padding_width
 		end
@@ -151,7 +149,6 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			has_parent: tool_bar /= Void
 		local
 			l_left, l_top, l_width, l_height: INTEGER
-			l_font: EV_FONT
 		do
 			l_left := tool_bar.item_x (Current)
 			if pixmap /= Void then
@@ -159,8 +156,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			else
 				l_left := l_left + {SD_TOOL_BAR}.padding_width
 			end
-			create l_font
-			l_width := l_font.string_width (text)
+			l_width := tool_bar.font.string_width (text)
 			l_top := tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width
 			l_height := tool_bar.row_height - 2 * {SD_TOOL_BAR}.border_width
 

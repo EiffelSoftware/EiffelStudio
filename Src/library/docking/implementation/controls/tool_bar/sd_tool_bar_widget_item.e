@@ -22,8 +22,13 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_widget /= Void
 			parent_void: a_widget.parent = Void
+		local
+			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			widget := a_widget
+			description := "Widget item"
+			create l_pixmaps
+			pixmap := l_pixmaps.default_window_icon
 			is_displayed := True
 		ensure
 			set: widget = a_widget

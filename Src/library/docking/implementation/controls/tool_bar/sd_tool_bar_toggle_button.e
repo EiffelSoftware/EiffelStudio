@@ -41,6 +41,7 @@ feature -- Command
 			-- Enable select.
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.checked
+			last_state := state
 			update
 		end
 
@@ -48,11 +49,12 @@ feature -- Command
 			-- Disable select
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
+			last_state := state
 			update
 		end
 
 feature {NONE} -- Agents
-
+	
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer press actions.
 		do
@@ -72,18 +74,22 @@ feature {NONE} -- Agents
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer release actions.
 		do
-			if has_position (a_relative_x, a_relative_y) then
-				if last_state = {SD_TOOL_BAR_ITEM_STATE}.hot then
-					state := {SD_TOOL_BAR_ITEM_STATE}.checked
-					last_state := state
-					is_need_redraw := True
-				elseif last_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-					state := {SD_TOOL_BAR_ITEM_STATE}.normal
-					last_state := state
-					is_need_redraw := True
+			if is_sensitive then
+				if has_position (a_relative_x, a_relative_y) then
+					if last_state = {SD_TOOL_BAR_ITEM_STATE}.hot or last_state = {SD_TOOL_BAR_ITEM_STATE}.normal then
+						state := {SD_TOOL_BAR_ITEM_STATE}.hot_checked
+						last_state := {SD_TOOL_BAR_ITEM_STATE}.checked
+						is_need_redraw := True
+						select_actions.call ([])
+					elseif last_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked or last_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
+						state := {SD_TOOL_BAR_ITEM_STATE}.hot
+						last_state := {SD_TOOL_BAR_ITEM_STATE}.normal
+						is_need_redraw := True
+						select_actions.call ([])
+					end
+				else
+					is_need_redraw := False
 				end
-			else
-				is_need_redraw := False
 			end
 		end
 

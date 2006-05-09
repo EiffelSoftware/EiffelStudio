@@ -49,6 +49,8 @@ feature -- Query
 
 	width: INTEGER is
 			-- Width of Current item.
+		require
+			not_void: tool_bar /= Void
 		deferred
 		end
 

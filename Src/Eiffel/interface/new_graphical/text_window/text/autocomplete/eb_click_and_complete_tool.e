@@ -556,7 +556,7 @@ feature -- Basic Operations
 				if Result = Void or else token_image_is_same_as_word (token, "precursor") then
 					if a_position >= invariant_index then
 						feat := described_feature (token, line, Void)
-					else
+					elseif click_possible (token) then
 						ft := feature_containing (token, line)
 						if ft /= Void then
 							inspect
@@ -1501,6 +1501,35 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 					l_parents.forth
 				end
 				l_parents.go_to (l_cursor)
+			end
+		end
+
+	click_possible (a_token: EDITOR_TOKEN): BOOLEAN is
+			-- Is `a_token' possibly clickable?
+			-- Does the same checking as `setup_line'
+			-- But here we only check if current token can possibly clickable.
+			-- Take into account that the line have not set up yet.
+		require
+			a_token_not_void: a_token /= Void
+		local
+			token: EDITOR_TOKEN
+		do
+			token := a_token
+			if token.pos_in_text > 0 then
+					-- pos_in_text has already been setup.
+				Result := True
+			elseif token.is_text then
+				if is_keyword (token) then
+					-- no interesting token : skip
+				elseif is_comment (token) then
+					-- no interesting token : skip
+				elseif is_string (token) then
+					-- no interesting token : skip
+					-- We do not care the operator case here.
+				else
+						-- "Normal" text token
+					Result := True
+				end
 			end
 		end
 

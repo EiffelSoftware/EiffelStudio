@@ -1017,9 +1017,9 @@ feature {NONE} -- Initialization
 						check l_feat_i_attached: l_feat_i /= Void end
 						if l_feat_i /= Void then
 							if l_extrn_func_i /= Void then
-								l_extrn_func_i.set_type (l_extrn_func_i.type, a_feat_tbl.found_item.feature_name_id)
+								l_extrn_func_i.set_type (l_extrn_func_i.type, l_feat_i.feature_name_id)
 							elseif l_def_func_i /= Void then
-								l_def_func_i.set_type (l_def_func_i.type, a_feat_tbl.found_item.feature_name_id)
+								l_def_func_i.set_type (l_def_func_i.type, l_feat_i.feature_name_id)
 							end
 						end
 					end

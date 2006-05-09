@@ -166,6 +166,7 @@ feature -- Conversion
 			Result := as_string_8
 		ensure
 			as_string_8_not_void: Result /= Void
+			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
 	as_string_8: STRING is
@@ -176,24 +177,29 @@ feature -- Conversion
 			i, nb: INTEGER
 			l_code: like code
 		do
-			nb := count
-			create Result.make (nb)
-			Result.set_count (nb)
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				l_code := code (i)
-				if Result.valid_code (l_code) then
-					Result.put_code (l_code, i)
-				else
-					Result.put_code (0, i)
+			if is_string_8 then
+				Result ?= Current
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_code := code (i)
+					if Result.valid_code (l_code) then
+						Result.put_code (l_code, i)
+					else
+						Result.put_code (0, i)
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
 			as_string_8_not_void: Result /= Void
+			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
 	as_string_32, to_string_32: STRING_32 is
@@ -217,7 +223,8 @@ feature -- Conversion
 				end
 			end
 		ensure
-			to_string_8_not_void: Result /= Void
+			as_string_8_not_void: Result /= Void
+			identity: (is_string_32 and Result = Current) or (not is_string_32 and Result /= Current)
 		end
 
 feature -- Duplication

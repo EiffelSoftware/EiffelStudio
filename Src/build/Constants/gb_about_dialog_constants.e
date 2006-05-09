@@ -13,13 +13,13 @@ feature -- Access
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.7.014)"
+			Result := "EiffelBuild 5.7.0000"
 		end
 
 	t_Copyright_info: STRING is
 		once
 			Result := 
-				"Copyright (C) 1985-2004 Eiffel Software Inc.%N%
+				"Copyright (C) 1985-2006 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 

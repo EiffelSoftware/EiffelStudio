@@ -165,14 +165,20 @@ feature -- File warnings
 	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING): STRING is
 		require
 			epr_name_not_void: epr_name /= Void
-			file_name_not_void: file_name /= Void
 		do
-			create Result.make (file_name.count + epr_name.count + 25)
-			Result.append ("Ace file: '")
-			Result.append (file_name)
-			Result.append ("'%Nreferenced from configuration file: '")
-			Result.append (epr_name)
-			Result.append ("' cannot be read.")
+			create Result.make (50)
+			if file_name = Void then
+				Result.append ("Cannot read Ace file from configuration file '")
+				Result.append (epr_name)
+				Result.append ("'.")
+			else
+				Result.append ("Ace file: '")
+				Result.append (file_name)
+				Result.append ("'%Nreferenced from configuration file: '")
+				Result.append (epr_name)
+				Result.append ("' cannot be read.")
+			end
+			Result.append ("%NSelect a 5.6 or older version of an Eiffel project.")
 		end
 
 	w_Cannot_read_file_retry (file_name: STRING): STRING is

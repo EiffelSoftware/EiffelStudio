@@ -26,33 +26,29 @@ feature -- Initialization
 			class_c: CLASS_C
 			current_feature: E_FEATURE
 		do
-			conf_todo
---			class_c := feat.written_class
---			can_analyze_current_class := False
---			if class_c /= Void and then not Workbench.is_compiling then
---				current_class_name := class_c.name
---				current_feature_name := feat.name
---				cluster_name := class_c.cluster.cluster_name
---				is_ready := False
---				initialize_context
---				if current_class_i /= Void and then current_class_i.compiled and then not current_class_i.date_has_changed then
---					class_c := current_class_i.compiled_class
---					if class_c.has_feature_table then
---						generate_ast (class_c, False)
---						if last_syntax_error = Void and then current_class_as /= Void then
---							current_feature := class_c.feature_with_name (current_feature_name)
---							if current_feature /= Void then
---								current_feature_as := current_feature.ast
---								if feat.associated_class /= Void then
---									current_class_name := feat.associated_class.name
---									cluster_name := feat.associated_class.cluster.cluster_name
---									can_analyze_current_class := True
---								end
---							end
---						end
---					end
---				end
---			end
+			current_class_c := feat.written_class
+			can_analyze_current_class := False
+			if current_class_c /= Void and then not Workbench.is_compiling then
+				current_class_i := current_class_c.lace_class
+				group := current_class_i.group
+				current_feature_name := feat.name
+				is_ready := False
+				if current_class_i /= Void then --and then not current_class_i.date_has_changed then
+					class_c := current_class_c
+					if class_c.has_feature_table then
+						generate_ast (class_c, False)
+						if last_syntax_error = Void and then current_class_as /= Void then
+							current_feature := class_c.feature_with_name (current_feature_name)
+							if current_feature /= Void then
+								current_feature_as := current_feature.ast
+								if feat.associated_class /= Void then
+									can_analyze_current_class := True
+								end
+							end
+						end
+					end
+				end
+			end
 		end
 
 	set_content (a_content: CLICKABLE_TEXT) is
@@ -75,9 +71,8 @@ feature -- Basic operation
 			line		: EDITOR_LINE
 			l_current_class_c: CLASS_C
 		do
-			initialize_context
-			if current_class_i /= Void and then current_class_i.is_compiled then
-				l_current_class_c := current_class_i.compiled_class
+			if current_class_i /= Void and then current_class_c /= Void then
+				l_current_class_c := current_class_c
 				if l_current_class_c.has_feature_table then
 					feat := l_current_class_c.feature_with_name (current_feature_name)
 					if feat /= Void then

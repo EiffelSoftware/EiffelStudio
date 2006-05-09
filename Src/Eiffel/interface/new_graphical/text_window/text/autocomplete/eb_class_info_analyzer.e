@@ -64,9 +64,6 @@ inherit
 
 feature -- Access
 
-	current_class_name: STRING
-			-- name of analyzed class
-
 	group: CONF_GROUP
 			-- Group which contains analyzed class
 
@@ -117,10 +114,10 @@ feature -- Reinitialization
 			-- set class attributes to default values
 		do
 			current_class_i := Void
+			current_class_c := Void
 			--if Workbench.system_defined then
 			--	System.set_current_class (Void)
 			--end
-			current_class_name := Void
 			group := Void
 			content := Void
 			is_ready := False
@@ -135,7 +132,6 @@ feature -- Reinitialization
 			searched_token := Void
 			current_line := Void
 			searched_line := Void
-			current_class_i := Void
 			--if Workbench.system_defined then
 			--	System.set_current_class (Void)
 			--end
@@ -253,7 +249,7 @@ feature {NONE} -- Click ast exploration
 								end
 							end
 							if class_name = Void then
-								class_name := current_class_name
+								class_name := current_class_i.name
 							end
 							create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
 							clickable_position.set_feature (class_name, clickable.feature_name)
@@ -391,7 +387,7 @@ feature {NONE}-- Clickable/Editable implementation
 			token_in_line: line.has_token (token)
 		do
 			initialize_context
-			if current_class_i /= Void and current_class_i.is_compiled then
+			if current_class_c /= Void then
 				if not token_image_is_in_array (token, unwanted_symbols) then
 					current_feature_as := ft
 					current_token := token
@@ -410,8 +406,7 @@ feature {NONE}-- Clickable/Editable implementation
 	searched_feature: E_FEATURE is
 			-- analyze class text from `current_token' to find feature associated with `searched_token'
 		require
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
 			name: STRING
@@ -419,11 +414,12 @@ feature {NONE}-- Clickable/Editable implementation
 			processed_type: TYPE_A
 			processed_class: CLASS_C
 			type: TYPE_A
-			formal: FORMAL_A
 			l_current_class_c: CLASS_C
+			l_named_tuple_type: NAMED_TUPLE_TYPE_A
+			l_pos: INTEGER
 		do
 			from
-				l_current_class_c := current_class_i.compiled_class
+				l_current_class_c := current_class_c
 				processed_type := l_current_class_c.actual_type
 				if token_image_is_same_as_word (current_token, Create_word) then
 					go_to_next_token
@@ -498,22 +494,30 @@ feature {NONE}-- Clickable/Editable implementation
 						Result := l_current_class_c.feature_with_name (name)
 					end
 					if Result = Void then
-						processed_type := type_of_local_entity_named (name)
-						if processed_type = Void then
-							processed_type := type_of_constants_or_reserved_word (current_token)
+						type := type_of_local_entity_named (name)
+						if type = Void then
+							type := type_of_constants_or_reserved_word (current_token)
+						end
+						if type /= Void then
+							if type.is_loose then
+								processed_type := type.instantiation_in (processed_type, processed_type.associated_class.class_id)
+								if processed_type /= Void then
+									processed_type := processed_type.actual_type
+									error := False
+								end
+							else
+								processed_type := type
+								error := False
+							end
 						end
 					else
 						error := True
 						if Result.type /= Void then
 							type := Result.type
-							if type.is_formal then
-								formal ?= type
-								if
-									processed_type /= Void and then
-									processed_type.has_generics and then
-									processed_type.generics.valid_index (formal.position)
-								then
-									processed_type := processed_type.generics @ (formal.position)
+							if type.is_loose then
+								processed_type := type.instantiation_in (processed_type, processed_type.associated_class.class_id)
+								if processed_type /= Void then
+									processed_type := processed_type.actual_type
 									error := False
 								end
 							else
@@ -542,29 +546,42 @@ feature {NONE}-- Clickable/Editable implementation
 				error or else after_searched_token
 			loop
 				name := current_token.image.as_lower
+				processed_type := constrained_type (processed_type)
+					-- We do not have named tuple problem before the second token.
+				l_named_tuple_type ?= processed_type
+				check
+					processed_type_has_associated_class: processed_type.has_associated_class
+				end
 				processed_class := processed_type.associated_class
 				error := True
-				if processed_class /= Void  and then processed_class.has_feature_table then
-					Result := processed_class.feature_with_name (name)
-					if Result /= Void then
-						if Result.type /= Void then
+				if (processed_class /= Void and then processed_class.has_feature_table) or l_named_tuple_type /= Void then
+					type := Void
+					if l_named_tuple_type /= Void then
+						Result := Void
+						l_pos := l_named_tuple_type.label_position (name)
+						if l_pos > 0 then
+							type := l_named_tuple_type.generics.item (l_pos)
+						end
+					else
+						Result := processed_class.feature_with_name (name)
+					end
+					if Result /= Void or type /= Void then
+						if Result /= Void and then Result.type /= Void then
 							type := Result.type
-							if type.is_formal then
-								formal ?= type
-								if
-									processed_type /= Void and then
-									processed_type.has_generics and then
-									processed_type.generics.valid_index (formal.position)
-								then
-									processed_type := processed_type.generics @ (formal.position)
+						elseif type = Void then
+							error := current_token /= searched_token
+						end
+						if type /= Void then
+							if type.is_loose then
+								processed_type := type.instantiation_in (processed_type, processed_type.associated_class.class_id)
+								if processed_type /= Void then
+									processed_type := processed_type.actual_type
 									error := False
 								end
 							else
 								processed_type := type
 								error := False
 							end
-						else
-							error := current_token /= searched_token
 						end
 					end
 				end
@@ -707,8 +724,7 @@ feature {NONE}-- Implementation
 			-- analyze expression represented by list of token `exp'
 		require
 			exp_not_void: exp /= Void
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			sub_exp: like exp
 			infix_expected: BOOLEAN
@@ -854,8 +870,7 @@ feature {NONE}-- Implementation
 		require
 			infix_list_not_void: infix_list /= Void
 			type_list_not_void: type_list /= Void
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			priority: LINKED_LIST[INTEGER]
 			index: INTEGER
@@ -918,8 +933,7 @@ feature {NONE}-- Implementation
 			-- create list of type from a list of expression (represented by lists of tokens)
 		require
 			expression_table_not_void: expression_table /= Void
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			sub_exp, recur_exp: LINKED_LIST[EDITOR_TOKEN]
 			type: TYPE_A
@@ -930,7 +944,7 @@ feature {NONE}-- Implementation
 			formal: FORMAL_A
 			l_current_class_c: CLASS_C
 		do
-			l_current_class_c := current_class_i.compiled_class
+			l_current_class_c := current_class_c
 			create Result.make
 			from
 				expression_table.start
@@ -1076,8 +1090,7 @@ feature {NONE}-- Implementation
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			name: STRING
 			feat: E_FEATURE
@@ -1108,8 +1121,7 @@ feature {NONE}-- Implementation
 			-- return type of argument or local variable named `name' found in `current_feature_as'
 			-- Void if there is none
 		require
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			current_feature: E_FEATURE
 			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
@@ -1123,7 +1135,7 @@ feature {NONE}-- Implementation
 				Result := Void
 			else
 				if current_feature_as /= Void then
-					l_current_class_c := current_class_i.compiled_class
+					l_current_class_c := current_class_c
 					if l_current_class_c.has_feature_table then
 						current_feature := l_current_class_c.feature_with_name (current_feature_as.feature_name)
 					end
@@ -1173,8 +1185,7 @@ feature {NONE}-- Implementation
 			-- return type associated with `token' if it represents a constant
 			-- or a reserved word. If not, return Void
 		require
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			nb: EDITOR_TOKEN_NUMBER
 			ch: EDITOR_TOKEN_CHARACTER
@@ -1183,7 +1194,7 @@ feature {NONE}-- Implementation
 			l_current_class_c: CLASS_C
 		do
 			if is_keyword (token) then
-				l_current_class_c := current_class_i.compiled_class
+				l_current_class_c := current_class_c
 				if token_image_is_same_as_word (token, Current_word) then
 					Result := l_current_class_c.actual_type
 				elseif
@@ -1218,6 +1229,21 @@ feature {NONE}-- Implementation
 				end
 			end
 --| FIXME: Missing manifest arrays and strings
+		end
+
+	constrained_type (a_type: TYPE_A): TYPE_A is
+			-- Constrained type of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_formal_type: FORMAL_A
+		do
+			if a_type.is_formal then
+				l_formal_type ?= a_type
+				Result := current_class_c.constraint (l_formal_type.position)
+			else
+				Result := a_type
+			end
 		end
 
 feature {NONE}-- Implementation
@@ -1448,26 +1474,56 @@ feature {NONE} -- Implementation
 	initialize_context is
 			-- Initialize `current_class_i'.
 		require
-			current_class_name_is_not_void: current_class_name /= Void
 			group_is_not_void: group /= Void
 			group_is_valid: group.is_valid
 			workbench_is_not_compiling: not workbench.is_compiling or else workbench.last_reached_degree < 6
 		local
-			l_classes: LIST [CONF_CLASS]
+			class_c: CLASS_C
+			l_classi: CLASS_I
+			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
-			l_classes := group.class_by_name (current_class_name, False)
-				-- We should not have an ambiguity, but in case it happens we
-				-- will not try to resolve it and simply set `current_class_i'
-				-- to Void.
-			if l_classes.count = 1 then
-				current_class_i ?= l_classes.first
-			else
-				current_class_i := Void
+			if current_class_i /= Void then
+				if current_class_i.compiled then
+						-- If current_class_i is an overriden class,
+						-- we do not try analysing its compiling infomation.
+					if current_class_i.config_class.is_overriden then
+						class_c := Void
+					else
+						class_c := current_class_i.compiled_class
+					end
+				elseif current_class_i.config_class.does_override then
+						-- If a class is an overriding class, we take its overrides and
+						-- try analysing one of them compiled.
+					from
+						l_overrides := current_class_i.config_class.overrides
+						l_overrides.start
+					until
+						class_c /= Void or l_overrides.after
+					loop
+						if l_overrides.item.is_compiled then
+							l_classi ?= l_overrides.item
+							check
+								class_i: l_classi /= Void
+							end
+							class_c := l_classi.compiled_class
+						end
+						l_overrides.forth
+					end
+				else
+					class_c := Void
+				end
+				if class_c /= Void then
+					current_class_c := class_c
+				end
 			end
 		end
 
 	current_class_i: CLASS_I
 			-- current class
+
+	current_class_c: CLASS_C
+			-- Current class_c
+			-- Temp class_c, it could be an overriding class_c, while `current_class_i' is not compiled.
 
 	platform_is_windows: BOOLEAN is
 			-- Is the current platform Windows?
@@ -1578,7 +1634,7 @@ feature {SMART_TEXT} -- Constants
 
 	feature_body_keywords: ARRAY [STRING] is
 		once
-			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "recue", "unique", "is">>
+			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "recue", "unique", "is", "assign">>
 		end
 
 	feature_contract_keywords: ARRAY [STRING] is
@@ -1588,7 +1644,8 @@ feature {SMART_TEXT} -- Constants
 
 	feature_executable_keywords: ARRAY [STRING] is
 		once
-			Result := <<"do", "once", "rescue">>
+				-- We treat assgin as fake executable.
+			Result := <<"do", "once", "rescue", "assign">>
 		end
 
 	feature_local_keywords: ARRAY [STRING] is

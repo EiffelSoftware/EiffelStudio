@@ -23,27 +23,24 @@ create
 
 feature -- Initialization
 
-	initialize (a_content: CLICKABLE_TEXT; a_class_name: STRING; a_group: like group; after_save: BOOLEAN) is
+	initialize (a_content: CLICKABLE_TEXT; a_class: CLASS_I; a_group: like group; after_save: BOOLEAN) is
 			-- initialize the tool before analyzing a class called `a_classname' located in cluster called `a_cluster_name'
 			-- `a_content' is text of this class
 		require
 			a_content_is_not_void: a_content /= Void
-			a_class_name_is_not_void: a_class_name /= Void
+			a_class_is_not_void: a_class /= Void
 			a_group_is_not_void: a_group /= Void
 			a_group_is_vaild: a_group.is_valid
-		local
-			class_c: CLASS_C
 		do
-			current_class_name := a_class_name
+			current_class_i := a_class
 			group := a_group
 			content := a_content
 			is_ready := False
 			can_analyze_current_class := False
 			if not Workbench.is_compiling then
 				initialize_context
-				if current_class_i /= Void and then current_class_i.compiled then
-					class_c := current_class_i.compiled_class
-					generate_ast (class_c, after_save)
+				if current_class_c /= Void then
+					generate_ast (current_class_c, after_save)
 					can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
 				end
 			end
@@ -447,8 +444,8 @@ feature -- Basic Operations
 			create completion_possibilities.make (1, 30)
 			cp_index := 1
 			initialize_context
-			if current_class_i /= Void and then current_class_i.is_compiled then
-				l_current_class_c := current_class_i.compiled_class
+			if current_class_i /= Void and then current_class_c /= Void then
+				l_current_class_c := current_class_c
 				token := cursor.token
 				if token /= Void then
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
@@ -953,19 +950,20 @@ feature {NONE} -- Completion implementation
 			-- analyze class text from `current_token' to find type associated with `searched_token'
 		require
 			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
 			name: STRING
 			par_cnt: INTEGER
 			processed_class: CLASS_C
 			type: TYPE_A
-			formal: FORMAL_A
 			feat: E_FEATURE
 			l_current_class_c: CLASS_C
+			l_named_tuple_type: NAMED_TUPLE_TYPE_A
+			l_pos: INTEGER
 		do
 			from
-				l_current_class_c := current_class_i.compiled_class
+				l_current_class_c := current_class_c
 				Result := l_current_class_c.actual_type
 				if token_image_is_same_as_word (current_token, "create") then
 					go_to_next_token
@@ -1045,26 +1043,29 @@ feature {NONE} -- Completion implementation
 					end
 					if feat = Void then
 							-- Could not find feature, may be a local or argument
-						Result := type_of_local_entity_named (name)
-						if Result = Void then
-							Result := type_of_constants_or_reserved_word (current_token)
+						type := type_of_local_entity_named (name)
+						if type = Void then
+							type := type_of_constants_or_reserved_word (current_token)
 						end
 					else
-							-- Found feature						
-						error := True
-						Result := feat.type
+							-- Found feature
+						error := False
+						type := feat.type
 					end
 
-					if Result /= Void then
-						if Result.is_like and then Result.actual_type.is_formal then
-								-- Get type from like formal
-							Result := Result.actual_type
+					if type /= Void then
+						if type.is_loose then
+							Result := type.instantiation_in (Result, Result.associated_class.class_id)
+							if Result /= Void then
+								Result := type.actual_type
+								error := False
+							end
+						else
+							Result := type
+							error := False
 						end
-						if Result.is_formal then
-							formal ?= Result
-							Result := type_from_formal_type (l_current_class_c, formal)
-						end
-						error := False
+					else
+						error := True
 					end
 				end
 				go_to_next_token
@@ -1080,31 +1081,44 @@ feature {NONE} -- Completion implementation
 						go_to_next_token
 					end
 				end
+				if Result /= Void then
+					Result := constrained_type (Result)
+				end
 			until
 				error or else after_searched_token
 			loop
 				name := current_token.image.as_lower
+				Result := constrained_type (Result)
+				l_named_tuple_type ?= Result
+				check
+					Result_has_associated_class: Result.has_associated_class
+				end
 				processed_class := Result.associated_class
 				error := True
-				if processed_class /= Void and then processed_class.has_feature_table then
-					feat := processed_class.feature_with_name (name)
-					if feat /= Void then
-						if feat.type /= Void then
+				if processed_class /= Void and then processed_class.has_feature_table or l_named_tuple_type /= Void then
+					type := Void
+					if l_named_tuple_type /= Void then
+						l_pos := l_named_tuple_type.label_position (name)
+						if l_pos > 0 then
+							type := l_named_tuple_type.generics.item (l_pos)
+						end
+					else
+						feat := processed_class.feature_with_name (name)
+						if feat /= Void and then feat.type /= Void then
 							type := feat.type
-							if type.is_formal then
-								formal ?= type
-								if
-									Result /= Void and then
-									Result.has_generics and then
-									Result.generics.valid_index (formal.position)
-								then
-									Result := Result.generics.item (formal.position)
-									error := False
-								end
-							else
-								Result := type
+						end
+					end
+					if type /= Void then
+						if type.is_loose then
+							Result := type.instantiation_in (Result, Result.associated_class.class_id)
+							if Result /= Void then
+								Result := type.actual_type
+								Result := constrained_type (Result)
 								error := False
 							end
+						else
+							Result := type
+							error := False
 						end
 					end
 				end
@@ -1119,18 +1133,6 @@ feature {NONE} -- Completion implementation
 			end
 			if error then
 				Result := Void
-			end
-		end
-
-	type_from_formal_type (a_class_c: CLASS_C; a_formal: FORMAL_A): TYPE_A is
-			-- For `_a_class_c' get actual type of `a_formal'.
-		do
-			if
-				a_class_c /= Void and then
-				a_class_c.generics /= Void and then
-				a_class_c.generics.valid_index (a_formal.position)
-			then
-				Result := a_class_c.constraint (a_formal.position)
 			end
 		end
 

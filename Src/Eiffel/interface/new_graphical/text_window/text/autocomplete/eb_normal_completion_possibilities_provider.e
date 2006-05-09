@@ -94,7 +94,8 @@ feature -- Basic operation
 			current_feature_as := context_feature_as
 			watching_line := text_field.current_line
 			if context_class_c /= Void then
-				current_class_name := context_class_c.name
+				current_class_i := context_class_c.lace_class
+				current_class_c := context_class_c
 				group := context_class_c.group
 				if provide_features then
 					build_completion_list

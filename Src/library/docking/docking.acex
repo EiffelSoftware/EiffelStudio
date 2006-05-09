@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="docking" uuid="7cd5d682-0880-46fa-85c3-7aadff14da11" library_target="docking">
+	<target name="docking">
+		<description>Docking: Multiplatform docking library of reusable components for Eiffel.
+Copyright (c) 1984-2006, Eiffel Software and others.
+Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/temp$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/obsolete$</exclude>
+		</file_rule>
+		
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex" readonly="true">
+			<condition><platform value="windows"/></condition>
+		</library>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY/library/gobo" readonly="true"/>
+		<cluster name="docking" location="./" recursive="false"/>
+		<cluster name="implementation_mswin" location="implementation" recursive="true">
+			<condition><platform excluded_value="unix"/></condition>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="implementation_gtk" location="implementation" recursive="true">
+			<condition><platform excluded_value="windows"/></condition>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<!--	<cluster name="contrib_mswin" location="contrib" recursive="true">
+			<condition><platform value="windows"/></condition>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+			</file_rule>
+		</cluster>-->
+	</target>
+</system>

@@ -75,6 +75,16 @@ feature -- Message
 			Result := interface_names.e_finalizing_terminated
 		end
 
+feature -- Setting
+
+	set_c_compilation_type is
+			-- Set c compilation type, either freezing or finalizing.
+		do
+			set_is_last_c_compilation_freezing (False)
+		ensure then
+			compilation_type_set: is_last_c_compilation_finalizing
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

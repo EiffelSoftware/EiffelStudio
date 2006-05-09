@@ -20,7 +20,6 @@ inherit
 			rebuild_list_during_matching,
 			automatically_complete_words,
 			save_window_position,
-			exit_complete_mode,
 			complete_feature,
 			scrolling_common_line_count,
 			mouse_wheel_scroll_full_page,
@@ -163,14 +162,6 @@ feature {NONE} -- Implementation
 				else
 					last_completed_feature_had_arguments := False
 				end
-			end
-		end
-
-	exit_complete_mode is
-			-- Exit editor complete mode.
-		do
-			if not last_completed_feature_had_arguments then
-				code_completable.exit_complete_mode
 			end
 		end
 

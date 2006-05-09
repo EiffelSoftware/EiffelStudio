@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			make_with_title ("Execution Control")
 			set_icon_pixmap (pixmaps.icon_dialog_window)
 			Eb_debugger_manager.observers.extend (Current)
+			set_size (600, 400)
 			run := cmd
 
 				-- Build Dialog GUI

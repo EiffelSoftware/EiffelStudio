@@ -684,7 +684,7 @@ feature {NONE} -- Implementation
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
-			line, string_tag, value: STRING
+			line, value: STRING
 			index, line_number: INTEGER
 			retried: BOOLEAN
 			l_storage: RAW_FILE

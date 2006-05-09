@@ -737,9 +737,7 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 	application_imp: EV_APPLICATION_IMP is
 			-- `Result' is implementation of application from environment.
 		local
-			environment: EV_ENVIRONMENT
 		once
-			create environment
 			Result ?= environment.application.implementation
 		ensure
 			Result_not_void: Result /= Void
@@ -755,9 +753,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 

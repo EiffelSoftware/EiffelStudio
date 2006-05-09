@@ -34,7 +34,7 @@ move vision2_tour.tar.gz $EXPORT_DIR/vision2_tour
 
 remtrace Recompile EiffelBuild
 cd $EIFFEL_SRC/build/Constants
-$INIT_DIR/set_version.sh $DEFAULT_ORIGO_SVN 0000 gb_about_dialog_constants.e
+. $INIT_DIR/set_version.sh $DEFAULT_ORIGO_SVN 0000 gb_about_dialog_constants.e
 cd $EIFFEL_SRC/build
 remtrace Enterprise Build
 clean_project
@@ -55,7 +55,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		md $FINALIZATION_DIR
 	fi
 	cd $EIFFEL_SRC/Eiffel/API/constants
-	$INIT_DIR/set_version.sh $DEFAULT_ORIGO_SVN 0000 system_constants.e
+	. $INIT_DIR/set_version.sh $DEFAULT_ORIGO_SVN 0000 system_constants.e
 	cd $FINALIZATION_DIR
 	copy $EIFFEL_SRC/Eiffel/Ace/ec.acex ec.acex
 	clean_project

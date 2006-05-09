@@ -210,7 +210,7 @@ feature -- Access
 	system_defined: BOOLEAN is
 			-- Has the Eiffel system been defined.
 		do
-			Result := system /= Void
+			Result := system /= Void and Workbench.system_defined
 		ensure
 			Result = Workbench.system_defined
 		end

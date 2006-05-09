@@ -464,6 +464,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_lowoer: a_name.is_equal (a_name.as_lower)
 		do
+			if system /= Void then
+				system.targets.replace_key (a_name, name)
+			end
 			name := a_name
 		ensure
 			name_set: name = a_name

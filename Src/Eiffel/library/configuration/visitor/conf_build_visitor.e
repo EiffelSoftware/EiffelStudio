@@ -337,7 +337,7 @@ feature -- Visit nodes
 					end
 				end
 				if not is_error then
-					reused_groups.force (a_library)
+					handled_groups.force (a_library)
 					create current_classes.make (Classes_per_cluster)
 					l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
 						-- do renaming prefixing if necessary
@@ -415,8 +415,12 @@ feature -- Visit nodes
 					end
 				end
 
+					-- cluster itself has been handled
+				handled_groups.force (a_cluster)
+
 					-- process removed classes
 				if old_group /= Void then
+					handled_groups.force (old_group)
 					process_removed_classes (old_group.classes)
 				end
 
@@ -483,7 +487,7 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 			old_target := Void
 			partial_classes := Void
 			create reused_classes.make (classes_per_system)
-			create reused_groups.make (groups_per_system)
+			create handled_groups.make (groups_per_system)
 		end
 
 	set_old_target (a_target: like old_target) is
@@ -500,8 +504,8 @@ feature {NONE} -- Implementation
 	reused_classes: SEARCH_TABLE [CONF_CLASS]
 			-- List of classes that are reused (and therefore should not be added to `removed_classes').
 
-	reused_groups: SEARCH_TABLE [CONF_GROUP]
-			-- List of groups that are reused (and therefore their removed classes have already been handled).
+	handled_groups: SEARCH_TABLE [CONF_GROUP]
+			-- List of groups that have been handled (and therefore don't need to be checked for removed classes).
 
 	old_assemblies_handled: SEARCH_TABLE [STRING]
 			-- Old assemblies where their removed classes have been handled.
@@ -1143,7 +1147,7 @@ feature {NONE} -- Implementation
 					end
 					if l_group /= Void then
 							-- check if the group has already been handled
-						if reused_groups.has (l_group) then
+						if handled_groups.has (l_group) then
 							l_done := True
 						else
 								-- if we rebuild, groups themselves aren't reused
@@ -1253,7 +1257,7 @@ feature {NONE} -- Implementation
 							old_group_computed: old_group /= Void implies old_group.classes_set
 						end
 						if old_group /= Void then
-							reused_groups.force (old_group)
+							handled_groups.force (old_group)
 							if old_group /= l_group then
 								old_group.invalidate
 							else

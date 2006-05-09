@@ -298,7 +298,7 @@ feature -- Constants
 	Zone_minmum_height: INTEGER is
 			-- Minmum height of a zone.
 		once
-			Result := Title_bar_height
+			Result := Title_bar_height + 1
 		end
 
 	Tool_bar_size: INTEGER is 24

@@ -257,9 +257,7 @@ feature -- Check
 			file: PROJECT_EIFFEL_FILE
 		do
 			file := project_epr_file;
-			file.open_read
 			file.check_version_number (precomp_id);
-			file.close
 			if file.is_incompatible then
 				create vd52;
 				vd52.set_path (compilation_path);

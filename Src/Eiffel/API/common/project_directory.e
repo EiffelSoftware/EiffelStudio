@@ -42,16 +42,10 @@ feature -- Access
 
 	valid_project_epr: BOOLEAN is
 			-- Is the `project_epr' file valid?
-		local
-			file: like project_epr_file
 		do
-			file := project_epr_file;
-			Result := file.is_readable and then
-				file.is_plain
+			Result := project_epr_file.is_valid
 		ensure
-			valid_implies_good_file:
-				project_epr_file.is_readable and then
-					project_epr_file.is_plain
+			valid_implies_good_file: Result implies project_epr_file.is_valid
 		end;
 
 	is_readable: BOOLEAN is
@@ -60,15 +54,13 @@ feature -- Access
 			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
-			project_file: RAW_FILE
 		do
 			create w_code_dir.make (temp_workbench_generation_path);
 			create f_code_dir.make (temp_final_generation_path);
 			create comp_dir.make (temp_compilation_path);
-			create project_file.make (project_epr_file.name);
 			Result := is_base_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
-					and then project_file.is_readable
+					and then project_epr_file.is_readable
 			if initialized then
 				Result := Result and then System.server_controler.is_readable
 			end
@@ -80,15 +72,13 @@ feature -- Access
 			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
-			project_file: RAW_FILE
 		do
 			create w_code_dir.make (temp_workbench_generation_path)
 			create f_code_dir.make (temp_final_generation_path)
 			create comp_dir.make (temp_compilation_path)
-			create project_file.make (project_epr_file.name)
 			Result := is_base_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
-					and then project_file.is_writable
+					and then project_epr_file.is_writable
 			if initialized then
 				Result := Result and then System.server_controler.is_writable
 			end
@@ -101,15 +91,13 @@ feature -- Access
 			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
-			project_file: RAW_FILE
 		do
 			create w_code_dir.make (temp_workbench_generation_path)
 			create f_code_dir.make (temp_final_generation_path)
 			create comp_dir.make (temp_compilation_path)
-			create project_file.make (project_epr_file.name)
 			Result := base_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
-				and then project_file.exists
+				and then project_epr_file.exists
 			if initialized then
 				Result := Result and then System.server_controler.exists
 			end

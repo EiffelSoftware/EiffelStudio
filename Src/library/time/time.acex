@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="time" uuid="78d80981-ef3c-42ec-8919-ef7d7bb61701" library_target="time">
 	<target name="time">
-		<description>EiffelTime: Date/Time abstractions and computations.
-Copyright (c) 1984-2006, Eiffel Software and others.
-Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<description>
+			EiffelTime: Date/Time abstractions and computations.
+			Copyright (c) 1984-2006, Eiffel Software and others.
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+		</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
@@ -11,8 +13,23 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			<exclude>/french$</exclude>
 			<exclude>/german$</exclude>
 		</file_rule>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+
 		<cluster name="format" location="format" recursive="true"/>
-		<cluster name="time" location="." recursive="false"/>
+		<cluster name="time" location="." recursive="false">
+			<condition><dotnet value="false"/></condition>
+		</cluster>
+		<cluster name="dotnet_time" location="." recursive="false">
+			<condition><dotnet value="true"/></condition>
+			<file_rule>
+				<exclude>/c_date.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="time_net" location="$ISE_LIBRARY\library.net\time" recursive="false">
+			<condition><dotnet value="true"/></condition>
+		</cluster>
 	</target>
 </system>

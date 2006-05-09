@@ -79,8 +79,6 @@ feature -- Commands
 
 		end
 
-	ignore_update: BOOLEAN
-
 	unlock_update is
 			-- Unlock window update.
 		do
@@ -227,6 +225,9 @@ feature -- Contract Support
 		end
 
 feature {NONE}  -- Implementation
+
+	ignore_update: BOOLEAN
+			-- If ignore update?
 
 	lock_update_internal (a_zone: EV_WIDGET; a_main_window: BOOLEAN) is
 			-- Lock window update.

@@ -932,8 +932,7 @@ feature {NONE} -- Completion implementation
 			token_not_void: token /= Void
 			line_not_void: line /= Void
 			token_in_line: line.has_token (token)
-			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		do
 			current_token := token
 			searched_token := token

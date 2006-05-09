@@ -210,7 +210,7 @@ feature -- Access
 	system_defined: BOOLEAN is
 			-- Has the Eiffel system been defined.
 		do
-			Result := system /= Void and Workbench.system_defined
+			Result := system /= Void and then workbench.system_defined
 		ensure
 			Result = Workbench.system_defined
 		end
@@ -372,12 +372,6 @@ feature -- Error status
 		once
 			create Result.make (0)
 		end
-
-	ace_file_path: STRING
-			-- Path for the ace file as written in the header of each .epr file
-			-- Used when the project can be retrieved.
-			--
-			-- Void if none.
 
 	is_incompatible: BOOLEAN is
 			-- Is the retrieved project incompatible with current version
@@ -725,36 +719,25 @@ feature -- Output
 			initialized: initialized
 			compilation_successful: not Comp_system.il_generation implies successful
 		local
-			retried: BOOLEAN
 			file_name: FILE_NAME
-			project_file: RAW_FILE
+			l_epr_file: PROJECT_EIFFEL_FILE
 		do
-			if not retried then
-				error_status_mode.set_item (Ok_status)
+				--| Prepare informations to store
+			Comp_system.server_controler.wipe_out
+			saved_workbench := workbench
 
-					--| Prepare informations to store
-				Comp_system.server_controler.wipe_out
-				saved_workbench := workbench
-				create file_name.make_from_string (Target_path);
-				file_name.set_file_name (project_file_name)
+			error_status_mode.set_item (Ok_status)
+			create file_name.make_from_string (Target_path);
+			file_name.set_file_name (project_file_name)
+			create l_epr_file.make (file_name)
+			l_epr_file.store (Current, version_number, comp_system.compilation_id)
 
-				create project_file.make_open_write (file_name)
-				store_project_info (project_file)
-				compiler_store (project_file.descriptor, $Current)
-				project_file.close
-			else
-				if project_file /= Void and then not project_file.is_closed then
-					project_file.close
-				end
-				retried := False
+			if l_epr_file.has_error then
 				set_error_status (Save_error_status)
 			end
 			saved_workbench := Void
 		ensure
 			error_implies: error_occurred implies save_error
-		rescue
-			retried := True
-			retry
 		end
 
 	save_precomp (licensed: BOOLEAN) is
@@ -763,31 +746,21 @@ feature -- Output
 			initialized: initialized
 			compilation_successful: successful
 		local
-			retried: BOOLEAN
-			file: RAW_FILE
 			precomp_info: PRECOMP_INFO
+			l_epr_file: PROJECT_EIFFEL_FILE
 		do
-			if not retried then
-				error_status_mode.set_item (Ok_status)
-				create precomp_info.make (Precompilation_directories, licensed)
-				create file.make (Precompilation_file_name)
-				file.open_write
-				store_project_info (file)
-				compiler_store (file.descriptor, $precomp_info)
-				file.close
-				set_file_status (read_only_status)
-			else
-				if file /= Void and then not file.is_closed then
-					file.close
-				end
-				retried := False
+			error_status_mode.set_item (Ok_status)
+			create precomp_info.make (Precompilation_directories, licensed)
+			create l_epr_file.make (precompilation_file_name)
+			l_epr_file.store (precomp_info, version_number, comp_system.compilation_id)
+
+			if l_epr_file.has_error then
 				set_error_status (Precomp_save_error_status)
+			else
+				set_file_status (read_only_status)
 			end
 		ensure
 			error_implies: error_occurred implies precomp_save_error
-		rescue
-			retried := True
-			retry
 		end
 
 feature {LACE_I} -- Initialization
@@ -806,32 +779,6 @@ feature {APPLICATION_EXECUTION}
 		end
 
 feature {NONE} -- Retrieval
-
-	store_project_info (file: RAW_FILE) is
-			-- Store project specific info in project file `file'.
-		require
-			file_not_void: file /= Void
-			file_open_write: file.is_open_write
-		do
-			file.put_string (info_flag_begin)
-			file.put_string (System.name)
-			file.put_new_line
-			file.put_string (version_number_tag)
-			file.put_string (":")
-			file.put_string (version_number)
-			file.put_new_line
-			file.put_string (precompilation_id_tag)
-			file.put_string (":")
-			file.put_string (Comp_system.compilation_id.out)
-			file.put_new_line
-			file.put_string (info_flag_end)
-			file.put_new_line
-
-				--| To store correctly the information after the project
-				--| header, we need to set the position, otherwise the
-				--| result is quite strange and won't be retrievable
-			file.go (file.count)
-		end
 
 	retrieve is
 			-- Retrieve an existing Eiffel Project from `file.
@@ -862,14 +809,12 @@ feature {NONE} -- Retrieval
 				if p_eif.error then
 					if p_eif.is_corrupted then
 						set_error_status (Retrieve_corrupt_error_status)
-						ace_file_path := p_eif.ace_file_path
 					elseif p_eif.is_interrupted then
 						set_error_status (Retrieve_interrupt_error_status)
 					else
 						set_error_status (Retrieve_incompatible_error_status)
 						incompatible_version_number.clear_all
 						incompatible_version_number.append (p_eif.project_version_number)
-						ace_file_path := p_eif.ace_file_path
 					end
 				else
 --!! FIXME: check Concurrent_Eiffel license
@@ -1088,15 +1033,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	compiler_store (f_desc: INTEGER; obj: POINTER) is
-		external
-			"C | %"pstore.h%""
-		alias
-			"parsing_store"
 		end
 
 invariant

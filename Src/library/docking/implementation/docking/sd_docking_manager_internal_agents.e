@@ -116,7 +116,7 @@ feature  -- Agents
 		do
 			l_content := internal_docking_manager.property.last_focus_content
 			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
-			if internal_docking_manager.main_container.has_recursive (l_zone) then
+			if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
 				l_zone.set_non_focus_selection_color
 			end
 			debug ("docking")
@@ -132,7 +132,7 @@ feature  -- Agents
 		do
 			l_content := internal_docking_manager.property.last_focus_content
 			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
-			if internal_docking_manager.main_container.has_recursive (l_zone) then
+			if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
 				l_zone.set_focus_color (True)
 			end
 			debug ("docking")
@@ -228,7 +228,7 @@ feature -- Contract support
 			end
 		end
 
-feature {SD_DEBUG_WINDOW} -- For debug.
+feature {SD_ACCESS} -- For debug.
 
 	show_inner_container_structure is
 			-- For debug.

@@ -37,6 +37,8 @@ inherit
 
 	EB_TEXT_OUTPUT_TOOL
 
+	SHARED_FLAGS
+
 create
 	make
 
@@ -178,8 +180,6 @@ feature -- Action
 			on_text_change
 		end
 
-feature{NONE} -- Actions
-
 	on_save_output_to_file is
 			-- Called when user press Save output button.
 		local
@@ -227,7 +227,10 @@ feature{NONE} -- Actions
 				if has_selected_file then
 					cmd_string := command_shell_name
 					if not cmd_string.is_empty then
-						cmd_string.replace_substring_all ("$target", output_text.selected_text)
+						check
+							selected_file_exists: selected_file_path /= Void
+						end
+						cmd_string.replace_substring_all ("$target", selected_file_path)
 						cmd_string.replace_substring_all ("$line", "")
 						create req
 						req.execute (cmd_string)
@@ -311,6 +314,7 @@ feature -- Status reporting
 		end
 
 	is_general: BOOLEAN is false
+			-- Is general output tool?	
 
 feature{NONE}	-- Implementation
 
@@ -356,11 +360,93 @@ feature{NONE}	-- Implementation
 			-- Does selected text (if any) in `output_text' represent a correct file name?
 		local
 			l_file: RAW_FILE
+			l_path: ARRAYED_LIST [STRING]
+			l_selected_text: STRING
 		do
 			if output_text.has_selection then
-				create l_file.make (output_text.selected_text)
+				l_selected_text := output_text.selected_text.twin
+				create l_file.make (l_selected_text)
 				if l_file.exists then
 					Result := True
+					selected_file_path := output_text.selected_text.twin
+				end
+				if not Result then
+					create l_path.make (2)
+					if is_last_c_compilation_freezing then
+						l_path.extend (Workbench_generation_path)
+						l_path.extend (final_generation_path)
+					else
+						l_path.extend (final_generation_path)
+						l_path.extend (Workbench_generation_path)
+					end
+					l_selected_text.left_adjust
+					l_selected_text.right_adjust
+					selected_file_path := file_in_path (l_path.i_th (1), l_selected_text)
+					Result := selected_file_path /= Void
+					if not Result then
+						selected_file_path := file_in_path (l_path.i_th (2), l_selected_text)
+						Result := selected_file_path /= Void
+					end
+				end
+			end
+		end
+
+	file_in_path (start_path: STRING; keyword: STRING): STRING is
+			-- Find file whose path contains `keyword' starting from `start_path'.
+			-- If found, return final path of the file, otherwise, return Void.
+		require
+			start_path_attached: start_path /= Void
+			keyword_attached: keyword /= Void
+			not_keyword_is_empty: not keyword.is_empty
+		local
+			l_dir: DIRECTORY
+			l_file: RAW_FILE
+			l_path: STRING
+			l_end_with_separator: BOOLEAN
+			l_start_with_separator: BOOLEAN
+			l_name: STRING
+			l_dot: STRING
+			l_dotdot: STRING
+		do
+			create l_dir.make (start_path)
+			if l_dir.exists then
+				l_start_with_separator := path_start_with_dir_separator (keyword)
+				l_end_with_separator := path_end_with_dir_separator (start_path)
+				l_name := start_path.twin
+				if not l_start_with_separator and not l_end_with_separator then
+					l_name.append_character (directory_separator)
+				end
+				l_name.append (keyword)
+				create l_file.make (l_name)
+				if l_file.exists and then not l_file.is_directory then
+					Result := l_name
+				else
+					l_dot := once "."
+					l_dotdot := once ".."
+					create l_dir.make_open_read (start_path)
+					create l_path.make (start_path.count + 50)
+					l_path.append (start_path)
+					if not l_end_with_separator then
+						l_path.append (directory_separator.out)
+					end
+					from
+						l_dir.readentry
+					until
+						l_dir.lastentry = Void or Result /= Void
+					loop
+						if not
+							(l_dir.lastentry.is_equal (l_dot) or
+							l_dir.lastentry.is_equal (l_dotdot))
+						then
+							l_name := l_path.twin
+							l_name.append (l_dir.lastentry)
+							create l_file.make (l_name)
+							if l_file.is_directory then
+								Result := file_in_path (l_name, keyword)
+							end
+						end
+						l_dir.readentry
+					end
 				end
 			end
 		end
@@ -392,6 +478,42 @@ feature{NONE} -- Implementation
 		do
 			Result := preferences.misc_data.general_shell_command.twin
 		end
+
+	directory_separator: CHARACTER is
+			-- Directory separator
+		local
+			l_obj: ANY
+		once
+			create l_obj
+			Result := l_obj.operating_environment.directory_separator
+		end
+
+	path_end_with_dir_separator (path: STRING): BOOLEAN is
+			-- Does `path' end with dir separator of current running system?
+		require
+			path_not_void: path /= Void
+		do
+			if not path.is_empty then
+				Result := path.item (path.count) = path.operating_environment.directory_separator
+			end
+		ensure
+			Result_set: Result implies (not path.is_empty and then (path.item (path.count) = path.operating_environment.directory_separator))
+		end
+
+	path_start_with_dir_separator (path: STRING): BOOLEAN is
+			-- Does `path' start with dir separator of current running system?
+		require
+			path_not_void: path /= Void
+		do
+			if not path.is_empty then
+				Result := path.item (1) = path.operating_environment.directory_separator
+			end
+		ensure
+			Result_set: Result implies (not path.is_empty and then (path.item (1) = path.operating_environment.directory_separator))
+		end
+
+	selected_file_path: STRING;
+			-- Final path of selected file
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

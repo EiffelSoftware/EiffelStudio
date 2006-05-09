@@ -51,6 +51,13 @@ feature{NONE}	-- Initialization
 			time_interval_set: time_interval = initial_time_interval
 		end
 
+feature -- Setting
+
+	set_c_compilation_type is
+			-- Set c compilation type, either freezing or finalizing.
+		deferred
+		end
+
 feature -- Path
 
 	generation_path: STRING is
@@ -109,6 +116,7 @@ feature{NONE}  -- Actions
 	synchronize_on_c_compilation_exit is
 			-- Synchronize when c compiler exits.
 		do
+			set_c_compilation_type
 			eb_debugger_manager.on_compile_stop
 			window_manager.on_c_compilation_stop
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))

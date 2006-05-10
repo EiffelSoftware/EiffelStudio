@@ -7,7 +7,7 @@ indexing
 
 class
 	EIFFEL_EDITOR_LINE
-	
+
 inherit
 	EDITOR_LINE
 		redefine
@@ -25,7 +25,7 @@ feature -- Initialisation
 	make_empty_line is
 			-- Create an empty line.
 		local
-			t_eol: EDITOR_TOKEN_EOL			
+			t_eol: EDITOR_TOKEN_EOL
 			t_begin: EDITOR_TOKEN_BREAKPOINT
 			t_second: EDITOR_TOKEN_LINE_NUMBER
 		do
@@ -45,7 +45,7 @@ feature -- Initialisation
 	make_from_lexer (lexer: EDITOR_SCANNER) is
 			-- Create a line using token from `lexer'
 		local
-			t_eol				: EDITOR_TOKEN_EOL					
+			t_eol				: EDITOR_TOKEN_EOL
 			t_begin				: EDITOR_TOKEN_BREAKPOINT
 			t_second			: EDITOR_TOKEN_LINE_NUMBER
 			lexer_first_token	: EDITOR_TOKEN
@@ -82,18 +82,35 @@ feature -- Initialisation
 
 feature -- Access
 
-	breakpoint_token: EDITOR_TOKEN_BREAKPOINT is	
+	breakpoint_token: EDITOR_TOKEN_BREAKPOINT is
 			-- Token containing the breakpoint information for the line.
 		do
 			Result ?= real_first_token
 		end
 
-	number_token: EDITOR_TOKEN_LINE_NUMBER is	
+	number_token: EDITOR_TOKEN_LINE_NUMBER is
 			-- Token containing the line number information for the line.
 		do
 			Result ?= real_first_token.next
 		end
-		
+
+	content: LIST [EDITOR_TOKEN] is
+			-- Content tokens in current
+			-- Breakpoint token, line number token and EOL token are not included.
+		local
+			l_token: EDITOR_TOKEN
+		do
+			create {ARRAYED_LIST [EDITOR_TOKEN]}Result.make (count)
+			from
+				l_token := first_token
+			until
+				l_token = Void or else l_token = eol_token
+			loop
+				Result.extend (l_token)
+				l_token := l_token.next
+			end
+		end
+
 invariant
 	has_breakpoint_token: breakpoint_token /= Void
 

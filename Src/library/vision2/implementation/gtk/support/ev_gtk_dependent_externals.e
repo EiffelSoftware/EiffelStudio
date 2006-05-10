@@ -3138,6 +3138,11 @@ feature -- Externals
 			"C signature (GtkImage*, GdkPixmap*, GdkBitmap*) use <gtk/gtk.h>"
 		end
 
+	frozen gtk_image_set_from_pixbuf (a_image: POINTER; a_pixbuf: POINTER) is
+		external
+			"C signature (GtkImage*, GdkPixbuf*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_image_get_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER) is
 		external
 			"C signature (GtkImage*, GdkPixmap**, GdkBitmap**) use <gtk/gtk.h>"

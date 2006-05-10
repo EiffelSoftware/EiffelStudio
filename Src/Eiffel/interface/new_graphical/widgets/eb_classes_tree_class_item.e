@@ -41,37 +41,11 @@ feature -- Status report
 	stone: CLASSI_STONE is
 			-- Class stone representing `Current', can be a classi_stone or a classc_stone.
 		local
-			l_classi: CLASS_I
 			l_classc: CLASS_C
-			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
-			if data.compiled then
-				if data.config_class.is_overriden then
-					create {CLASSI_STONE} Result.make (data)
-				else
-					create {CLASSC_STONE} Result.make (data.compiled_class)
-				end
-			elseif data.config_class.does_override then
-				from
-					l_overrides := data.config_class.overrides
-					l_overrides.start
-				until
-					l_classc /= Void or l_overrides.after
-				loop
-					if l_overrides.item.is_compiled then
-						l_classi ?= l_overrides.item
-						check
-							class_i: l_classi /= Void
-						end
-						l_classc := l_classi.compiled_class
-					end
-					l_overrides.forth
-				end
-				if l_classc /= Void then
-					create {CLASSC_STONE} Result.make (l_classc)
-				else
-					create {CLASSI_STONE} Result.make (data)
-				end
+			l_classc := data.compiled_representation
+			if l_classc /= Void then
+				create {CLASSC_STONE} Result.make (l_classc)
 			else
 				create {CLASSI_STONE} Result.make (data)
 			end

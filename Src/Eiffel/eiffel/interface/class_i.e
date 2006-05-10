@@ -264,6 +264,41 @@ feature -- Access
 			Result := l_date /= date
 		end
 
+	compiled_representation: CLASS_C is
+			-- Compiled representation of `Current'
+			-- same as `compiled_class' for normal classes
+			-- Void for classes that are overriden
+			-- The first compiled class of an override if it is an overrider.
+		local
+			l_classi: CLASS_I
+			l_classc: CLASS_C
+			l_overrides: ARRAYED_LIST [CONF_CLASS]
+		do
+			if config_class.is_overriden then
+				Result := Void
+			elseif config_class.does_override then
+				from
+					l_overrides := config_class.overrides
+					l_overrides.start
+				until
+					l_classc /= Void or l_overrides.after
+				loop
+					if l_overrides.item.is_compiled then
+						l_classi ?= l_overrides.item
+						check
+							class_i: l_classi /= Void
+						end
+						l_classc := l_classi.compiled_class
+					end
+					l_overrides.forth
+				end
+				Result := l_classc
+			else
+				Result := compiled_class
+			end
+		end
+
+
 feature {NONE} -- Access
 
 	internal_namespace: STRING

@@ -21,6 +21,7 @@ inherit
 			{NONE} all
 			{ANY} has, parent, count, prunable
 			{SD_TOOL_BAR_ZONE} set_item_size
+			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		end
 
 create
@@ -42,44 +43,43 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	extend (a_tool_bar: SD_TOOL_BAR_ZONE) is
-			-- Extend `a_tool_bar'.
+	extend (a_zone: SD_TOOL_BAR_ZONE) is
+			-- Extend `a_zone'.
 		require
-			a_tool_bar_not_void: a_tool_bar /= Void
-			parent_void: a_tool_bar.tool_bar.parent = Void
+			a_tool_bar_not_void: a_zone /= Void
+			parent_void: a_zone.row = Void
 		do
-			if a_tool_bar.is_vertical /= is_vertical then
-				a_tool_bar.change_direction (not is_vertical)
+			if a_zone.is_vertical /= is_vertical then
+				a_zone.change_direction (not is_vertical)
 			end
-			extend_fixed (a_tool_bar.tool_bar)
+			extend_fixed (a_zone.tool_bar)
 
 			if is_vertical then
-				if a_tool_bar.tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
-					a_tool_bar.tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
+				if a_zone.tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
+					a_zone.tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_width (a_tool_bar.tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_width (a_zone.tool_bar, {SD_SHARED}.tool_bar_size)
 			else
-				if a_tool_bar.tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
-					a_tool_bar.tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
+				if a_zone.tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
+					a_zone.tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_height (a_tool_bar.tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_height (a_zone.tool_bar, {SD_SHARED}.tool_bar_size)
 			end
 
-			a_tool_bar.set_row (Current)
-			set_item_position_fixed (a_tool_bar.tool_bar, 1, 1)
+			set_item_position_fixed (a_zone.tool_bar, 1, 1)
 			if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
 				if is_vertical then
-					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
+					internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
 				else
-					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
+					internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
 				end
 			end
-			a_tool_bar.assistant.update_indicator
-			internal_zones.force_last (a_tool_bar)
+			a_zone.assistant.update_indicator
+			internal_zones.force_last (a_zone)
 		ensure
-			extended: has (a_tool_bar.tool_bar) and internal_zones.has (a_tool_bar)
-			direction_changed: a_tool_bar.is_vertical = is_vertical
-			tool_bar_row_set: a_tool_bar.row = Current
+			extended: has (a_zone.tool_bar) and internal_zones.has (a_zone)
+			direction_changed: a_zone.is_vertical = is_vertical
+			tool_bar_row_set: a_zone.row = Current
 		end
 
 	prune (a_zone: SD_TOOL_BAR_ZONE) is
@@ -90,10 +90,9 @@ feature -- Command
 			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
 
 			prune_fixed (a_zone.tool_bar)
+			internal_zones.delete (a_zone)
 
 			internal_positioner.position_resize_on_prune
-
-			internal_zones.delete (a_zone)
 		ensure
 			pruned: not internal_zones.has (a_zone)
 		end

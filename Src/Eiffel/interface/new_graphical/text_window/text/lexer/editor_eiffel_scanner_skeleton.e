@@ -52,7 +52,11 @@ feature {NONE} -- Implementation
 			check
 				l_class_not_void: l_class /= Void
 			end
-			create Result.make (l_class)
+			if l_class.is_compiled then
+				create {CLASSC_STONE}Result.make (l_class.compiled_class)
+			else
+				create Result.make (l_class)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

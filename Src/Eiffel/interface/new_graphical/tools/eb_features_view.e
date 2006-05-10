@@ -15,9 +15,9 @@ inherit
 	WIDGET_OWNER
 
 	SHARED_WORKBENCH
-	
+
 	EB_SHARED_PREFERENCES
-	
+
 	E_FEATURE_COMPARER
 
 create
@@ -34,13 +34,19 @@ feature {NONE} -- Initialization
 			conv_ft: EB_FEATURE_TEXT_FORMATTER
 			l_flat_formatter: EB_ROUTINE_FLAT_FORMATTER
 			l_formatter: EB_FEATURE_INFO_FORMATTER
+			l_browser: EB_FEATURE_BROWSER_GRID_VIEW
+			l_feature_content_formatter: EB_FEATURE_CONTENT_FORMATTER
+			l_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
 			context := a_context
 			formatters := a_tool.managed_feature_formatters
 			create managed_formatters.make (10)
 			create shared_editor.make (a_tool)
+			create l_drop_actions
+			l_drop_actions.extend (agent drop_stone)
 			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)
+			create l_browser.make (a_tool, l_drop_actions)
 			from
 				formatters.start
 			until
@@ -54,6 +60,11 @@ feature {NONE} -- Initialization
 					if l_flat_formatter /= Void then
 						flat_formatter := l_flat_formatter
 					end
+				end
+				l_feature_content_formatter ?= formatters.item
+				if l_feature_content_formatter /= Void then
+					l_feature_content_formatter.set_browser (l_browser)
+					l_feature_content_formatter.set_editor (shared_editor)
 				end
 				managed_formatters.extend (l_formatter)
 				formatters.forth
@@ -101,25 +112,25 @@ feature -- Status setting
 			fst: FEATURE_STONE
 			type_changed: BOOLEAN
 		do
-			fst ?= new_stone	
+			fst ?= new_stone
 			if fst /= Void then
 				type_changed := (fst.e_class.is_true_external and not is_stone_external) or
 					(not fst.e_class.is_true_external and is_stone_external)
-					
+
 			end
-			
+
 				-- Toggle stone flag.
-			if type_changed then			
+			if type_changed then
 				is_stone_external := not is_stone_external
-			end 
-			
-				-- Update formatters. 
+			end
+
+				-- Update formatters.
             if is_stone_external then
 				enable_dotnet_formatters (True)
 			else
 				enable_dotnet_formatters (False)
 			end
-			
+
 			if fst = Void then
 				managed_formatters.first.enable_sensitive
 				from
@@ -143,7 +154,7 @@ feature -- Status setting
 					managed_formatters.item.set_stone (fst)
 					managed_formatters.forth
 				end
-				internal_stone := fst				
+				internal_stone := fst
 			end
 			flat_formatter.show_debugged_line
 		end
@@ -279,12 +290,40 @@ feature -- Status setting
 		end
 
 	set_widget (new_widget: EV_WIDGET) is
-			-- Jump to this tab and display `new_widget' under the tool bar.
+			-- Display `new_widget' under the tool bar.
+		local
+			l_formatters: like managed_formatters
+			l_class_feature_formatter: EB_FEATURE_CONTENT_FORMATTER
+			l_cursor: CURSOR
+			l_control_bar: EV_WIDGET
 		do
 			if not formatter_container.has (new_widget) then
 				formatter_container.replace (new_widget)
 			end
+			l_formatters := managed_formatters
+			l_cursor := l_formatters.cursor
+			from
+				formatter_tool_bar_area.wipe_out
+				l_formatters.start
+			until
+				l_formatters.after
+			loop
+				if l_formatters.item.selected then
+					l_class_feature_formatter ?= l_formatters.item
+					if l_class_feature_formatter /= Void then
+						l_control_bar := l_class_feature_formatter.browser.control_bar
+						if l_control_bar /= Void then
+							formatter_tool_bar_area.extend (l_class_feature_formatter.browser.control_bar)
+							formatter_tool_bar_area.disable_item_expand (l_class_feature_formatter.browser.control_bar)
+						end
+					end
+				end
+				l_formatters.forth
+			end
+			l_formatters.go_to (l_cursor)
 		end
+
+
 
 	force_display is
 			-- Jump to this tab and display `explorer_parent'.
@@ -361,7 +400,7 @@ feature {NONE} -- Implementation
 			until
 				managed_formatters.after
 			loop
-				if 
+				if
 					(managed_formatters.item.is_dotnet_formatter and a_flag) or
 					(not a_flag)
 				then
@@ -371,13 +410,13 @@ feature {NONE} -- Implementation
 				end
 				managed_formatters.forth
 			end
-			
+
 			if not used then
 					-- First time so default to flat view.
 				managed_formatters.i_th (2).enable_select
 				used := True
 			end
-			
+
 					-- Determine which formatter to give focus based upon previous one.
 			if a_flag then
 				if managed_formatters.i_th (1).selected then
@@ -399,10 +438,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	used: BOOLEAN
 			-- Has the feature view been used yet to perform any formatting?
-	
+
 	is_stone_external: BOOLEAN
 			-- Does Current stone represent a .NET class feature?
 
@@ -427,8 +466,12 @@ feature {NONE} -- Implementation
 			create widget
 			create formatter_container
 			create output_line
+			create tool_bar_area
+			create formatter_tool_bar_area
 			output_line.align_text_left
 			build_tool_bar
+			widget.extend (tool_bar_area)
+			widget.disable_item_expand (tool_bar_area)
 			create sep
 			widget.extend (sep)
 			widget.disable_item_expand (sep)
@@ -447,9 +490,9 @@ feature {NONE} -- Implementation
 			formatter: EB_FEATURE_INFO_FORMATTER
 		do
 			create tool_bar
-			widget.extend (tool_bar)
-			widget.disable_item_expand (tool_bar)
-
+			tool_bar_area.extend (tool_bar)
+			tool_bar_area.disable_item_expand (tool_bar)
+			tool_bar_area.extend (formatter_tool_bar_area)
 			from
 				managed_formatters.start
 			until
@@ -496,6 +539,12 @@ feature {NONE} -- Implementation
 
 	explorer_parent: EB_EXPLORER_BAR_ITEM
 			-- Explorer bar item that contains `Current'.
+
+	formatter_tool_bar_area: EV_HORIZONTAL_BOX
+			-- Area to contain tool bar from formatter
+
+	tool_bar_area: EV_HORIZONTAL_BOX
+			-- Area to contain tool bar
 
 invariant
 	flat_formatter_not_void: flat_formatter /= Void

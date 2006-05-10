@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="ecchecker" uuid="E67360E2-5309-4993-A4EF-8DF437D4428A" library_target="ecchecker">
+
+	<target name="ecchecker">
+		<version major="1" minor="1207" release="0" build="0" company="Eiffel Software" product="Eiffel for .NET Compliance Checker" copyright="2005 Eiffel Software. All Rights Reserved"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+
+		<setting name="cls_compliant" value="True"/>
+		<setting name="console_application" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="il_verifiable" value="True"/>
+		<setting name="msil_clr_version" value="v1.1.4322"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="msil_key_file_name" value="${EIFFEL_SRC}\dotnet\helpers\isekey.snk"/>
+		<setting name="multithreaded" value="True"/>
+		<setting name="use_all_cluster_name_as_namespace" value="True"/>
+		<setting name="use_cluster_name_as_namespace" value="True"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
+		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.acex" readonly="true"/>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
+		<assembly name="system_" location="${ISE_DOTNET_FRAMEWORK}\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="${ISE_DOTNET_FRAMEWORK}\System.Xml.dll" prefix="XML_"/>
+
+		<cluster name="eiffel_compliant_check" location="..\" recursive="true">
+			<condition><dotnet value="True"/></condition>
+			<option namespace="EiffelSoftware.ComplianceChecker">
+			</option>
+			<file_rule>
+				<exclude>/ec_checker_application.e$</exclude>
+				<exclude>/ace$</exclude>
+			</file_rule>
+		</cluster>
+
+	</target>
+	
+	<target name="ecchecker_debug" extends="ecchecker">
+		<root feature="make_sta" class="EC_MAIN"/>
+		<setting name="line_generation" value="True"/>
+	</target>
+
+	<target name="ecchecker_release" extends="ecchecker">
+		<root feature="make_sta" class="EC_MAIN"/>
+		<setting name="line_generation" value="False"/>
+	</target>
+</system>

@@ -605,8 +605,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_root (a_root: like root) is
 			-- Set `a_root'.
-		require
-			a_root_not_void: a_root /= Void
 		do
 			internal_root := a_root
 		ensure
@@ -668,8 +666,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
 			if a_value = Void or else a_value.is_empty then
-				internal_settings.remove (a_name)
-			else
+					internal_settings.remove (a_name)
+				else
 				add_setting (a_name, a_value)
 			end
 		ensure

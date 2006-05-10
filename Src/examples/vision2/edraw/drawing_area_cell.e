@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	user_text_input (keystring: STRING) is
+	user_text_input (keystring: STRING_32) is
 			-- User made a text input
 		local
 			i: INTEGER

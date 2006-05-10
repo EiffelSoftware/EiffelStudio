@@ -73,6 +73,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.acex"/>
+		<library name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.acex"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
@@ -227,10 +230,6 @@
 		</cluster>
 		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
-		<cluster name="dotnet_helpers" location="$EIFFEL_SRC\dotnet\helpers\"/>
-		<cluster name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\classic\"/>
-		<cluster name="eac_components" location="$EIFFEL_SRC\dotnet\consumer\components\" recursive="true"/>
-		<cluster name="eac_serialization" location="$EIFFEL_SRC\dotnet\consumer\serialization\" recursive="true"/>
 		<cluster name="eiffel_structured_text" location="$EIFFEL_SRC\Eiffel\API\structured_text\" recursive="true">
 			<file_rule>
 				<exclude>/common$</exclude>
@@ -508,11 +507,7 @@
 		</cluster>
 		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
-		<cluster name="dotnet_helpers" location="$EIFFEL_SRC\dotnet\helpers\"/>
-		<cluster name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\classic\"/>
-		<cluster name="eac_components" location="$EIFFEL_SRC\dotnet\consumer\components\" recursive="true"/>
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
-		<cluster name="eac_serialization" location="$EIFFEL_SRC\dotnet\consumer\serialization\" recursive="true"/>
 		<cluster name="eiffel_support" location="$EIFFEL_SRC\Eiffel\support\" recursive="true"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">

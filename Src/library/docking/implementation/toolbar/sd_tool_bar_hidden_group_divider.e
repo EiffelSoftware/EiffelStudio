@@ -82,7 +82,6 @@ feature -- Query
 
 				if algorithm.maximum_group_width (l_group_count) <= max_width_allowed then
 					l_stop := True
-					algorithm.set_group_count (l_group_count)
 					l_group_info := algorithm.best_grouping
 					from
 						l_group_info.start

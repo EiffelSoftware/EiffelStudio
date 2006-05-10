@@ -85,7 +85,7 @@ feature -- Basic operatioin
 				end
 				if is_subgroup_searched then
 					subcluster := l_cluster.sub_clusters
-					if not subcluster.is_empty then
+					if subcluster /= Void and then not subcluster.is_empty then
 						from
 							subcluster.start
 						until

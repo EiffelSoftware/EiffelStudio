@@ -65,6 +65,11 @@ feature -- Status Report
 	is_fake: BOOLEAN
 			-- Is current fake?
 
+	is_new_line: BOOLEAN is
+			-- Is current a new line token?
+		do
+		end
+
 feature -- Status setting
 
 	set_pebble (a_pebble: like pebble) is

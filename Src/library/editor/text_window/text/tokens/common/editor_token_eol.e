@@ -15,7 +15,8 @@ inherit
 			text_color_id,
 			background_color_id,
 			background_color,
-			process
+			process,
+			is_new_line
 		end
 
 create
@@ -28,6 +29,16 @@ feature -- Initialisation
 		do
 			image := ""
 			length := 1
+		end
+
+feature -- Status report
+
+	is_new_line: BOOLEAN is
+			-- Is current a new line token?
+		do
+			Result := True
+		ensure then
+			good_result: Result
 		end
 
 feature -- Display

@@ -728,19 +728,16 @@ feature {NONE} -- Implementation of data retrieval
 				if boolean_settings.has (l_name) then
 					l_value := l_settings.item_for_iteration
 					if l_value.is_case_insensitive_equal ("yes") then
-						l_settings.force ("True", l_name)
+						l_settings.force ("true", l_name)
 					elseif l_value.is_case_insensitive_equal ("no") then
-						l_settings.force ("False", l_name)
+						l_settings.force ("false", l_name)
 					else
 						set_error (create {CONF_ERROR_PARSE}.make ("Invalid value for option, must be yes or no: "+l_name))
 					end
 				end
 				l_settings.forth
 			end
-
 		end
-
-
 
 feature {NONE} -- Implementation
 

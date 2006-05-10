@@ -900,11 +900,15 @@ feature {NONE} -- Implementation attribute processing
 			if l_trace /= Void and then l_trace.is_boolean then
 				if l_trace.to_boolean then
 					current_option.enable_trace
+				else
+					current_option.disable_trace
 				end
 			end
 			if l_profile /= Void and then l_profile.is_boolean then
 				if l_profile.to_boolean then
 					current_option.enable_profile
+				else
+					current_option.disable_profile
 				end
 			end
 			if l_optimize /= Void and then l_optimize.is_boolean then

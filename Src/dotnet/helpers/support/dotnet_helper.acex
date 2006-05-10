@@ -21,9 +21,7 @@
 		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
 		<assembly name="system_" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>
 
-		<cluster name="dotnet_helper" location=".">
-			<condition><dotnet value="True"/></condition>
-		</cluster>
+		<cluster name="dotnet_helper" location="." />
 	</target>
 	
 </system>

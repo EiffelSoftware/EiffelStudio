@@ -164,6 +164,8 @@ feature -- Set
 
 	set_focus is
 			-- Set focus to `Current'.
+		require
+			visible: is_visible
 		do
 			if docking_manager.property.last_focus_content /= Current then
 				if internal_focus_in_actions /= Void then

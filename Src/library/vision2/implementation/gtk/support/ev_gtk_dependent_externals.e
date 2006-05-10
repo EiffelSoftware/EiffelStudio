@@ -12,7 +12,7 @@ feature -- Externals
 
 	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN) is
 		external
-			"C signature (GtkFixed*, gboolean)"
+			"C signature (GtkFixed*, gboolean) use <gtk/gtk.h>"
 		end
 
 	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER]): INTEGER is

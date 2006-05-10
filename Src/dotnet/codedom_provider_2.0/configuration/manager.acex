@@ -22,12 +22,19 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="console_application" value="no"/>
+		<setting name="console_application" value="False"/>
 		<setting name="executable_name" value="ecdpman"/>
 
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.acex" readonly="true"/>
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.acex"/>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 
 		<file_rule>
 			<exclude>/\.svn$</exclude>

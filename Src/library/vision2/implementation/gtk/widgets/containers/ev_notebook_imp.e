@@ -279,7 +279,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 				a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
 				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
-				a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+				a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, default_tab_label_spacing)
 				{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
 				a_image := {EV_GTK_EXTERNALS}.gtk_image_new
@@ -291,6 +291,9 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 				{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, tab_widget, a_event_box)
 			end
 		end
+
+	default_tab_label_spacing: INTEGER is 3
+		-- Space between pixmap and text in the tab label.
 
 	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to the label for `an_item'.

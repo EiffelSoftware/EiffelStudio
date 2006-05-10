@@ -40,7 +40,9 @@ class CONSOLE inherit
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, next_line,
 			read_integer_with_no_type, read_double, readdouble,
-			read_character, readchar, back
+			read_character, readchar, 
+			read_line, readline,
+			back
 		end
 
 create {STD_FILES}
@@ -147,6 +149,64 @@ feature -- Input
 			last_double := ctor_convertor.parsed_double			
 				-- Consume all left characters until we meet a new-line character.
 			consume_characters
+		end
+
+	read_line, readline is
+			-- Read a string until new line or end of file.
+			-- Make result available in `last_string'.
+			-- New line will be consumed but not part of `last_string'.
+		local
+			i, c, p: INTEGER
+			str_cap: INTEGER
+			p_fetched: BOOLEAN
+			done: BOOLEAN
+		do
+			from
+				if last_string = Void then
+					create_last_string (1024)
+				else
+					last_string.clear_all
+				end
+				done := False
+				i := 0
+				str_cap := last_string.capacity
+			until
+				done
+			loop
+				if p_fetched then
+					c := p
+				else
+					c := internal_stream.read_byte
+				end
+				if c = 13 then
+					p := internal_stream.read_byte
+					p_fetched := True
+				end
+				if c = 13 and then p = 10 then
+						-- Discard end of line in the form "%R%N".
+					c := p -- internal_stream.read_byte
+					p_fetched := False
+					done := True
+				elseif c = 10 then
+						-- Discard end of line in the form "%N".
+					done := True
+				elseif c = -1 then
+					internal_end_of_file := True
+					done := True
+				else
+					i := i + 1
+					if i > str_cap then
+						if str_cap < 2048 then
+							last_string.grow (str_cap + 1024)
+							str_cap := str_cap + 1024
+						else
+							last_string.automatic_grow
+							str_cap := last_string.capacity
+						end
+					end
+					last_string.append_character (c.to_character_8)
+				end
+			end
 		end
 		
 feature {NONE} -- Implementation	

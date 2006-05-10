@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		name="parser"
+		uuid="EEDEBEBE-5DC8-4b41-B999-CC31DB3B54F6"
+		library_target="parser">
+
+	<target name="parser">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
+
+		<cluster name="parser" location="." recursive="true">
+			<file_rule>
+				<exclude>/external_parser$</exclude>
+			</file_rule>
+			<cluster name="eiffel_parser_errors" location="..\API\error\misc">
+				<file_rule>
+					<exclude>/error_handler.e$</exclude>
+					<exclude>/syntax_error.e$</exclude>
+				</file_rule>
+			</cluster>
+		</cluster>
+	</target>
+</system>
+

@@ -52,7 +52,7 @@ feature -- Query
 			end
 		end
 
-feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT} -- Internal functions.
+feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_CONTENT} -- Internal functions.
 
 	on_resize (a_x, a_y, a_width, a_height: INTEGER; a_force: BOOLEAN) is
 			-- Handle main window resize event.
@@ -119,6 +119,31 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 			end
 		end
 
+	set_top (a_content: SD_TOOL_BAR_CONTENT; a_direction: INTEGER) is
+			-- Set `a_content' dock at `a_direction'
+		require
+			direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+			not_void: a_content /= Void
+			main_window_not_has:
+		local
+			l_tool_bar_zone: SD_TOOL_BAR_ZONE
+			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_container: EV_CONTAINER
+		do
+			a_content.set_manager (Current)
+			create l_tool_bar_zone.make (False, internal_docking_manager)
+			l_tool_bar_zone.extend (a_content)
+
+			create l_tool_bar_row.make (False)
+			l_tool_bar_row.set_ignore_resize (True)
+			l_tool_bar_row.extend (l_tool_bar_zone)
+			l_tool_bar_row.record_state
+			l_tool_bar_row.set_ignore_resize (False)
+
+			l_container := tool_bar_container (a_direction)
+			l_container.extend (l_tool_bar_row)
+		end
+
 feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT,
 			SD_TOOL_BAR_ZONE} -- Internal querys
 
@@ -167,29 +192,33 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 	floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			-- All floating tool bars.
 
+	hidden_docking_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT] is
+			-- Hidden docking contents.
+		local
+			l_floating_bars: like floating_tool_bars
+		do
+			from
+				l_floating_bars := floating_tool_bars.twin
+				l_floating_bars.start
+				Result := contents.twin
+			until
+				l_floating_bars.after
+			loop
+				-- FIXIT: There is a bug in prune_all of ACTIVE_LIST
+				Result.start
+				Result.prune (l_floating_bars.item.content)
+				l_floating_bars.forth
+			end
+		end
+
 feature {NONE} -- Agents
 
 	on_add_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT) is
 			-- Handle add tool bar content.
 		require
 			a_tool_bar_item_not_void: a_content /= Void
-		local
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
-			l_tool_bar_row: SD_TOOL_BAR_ROW
 		do
 			a_content.set_manager (Current)
-			create l_tool_bar_zone.make (False, internal_docking_manager)
-			l_tool_bar_zone.extend (a_content)
-			a_content.set_zone (l_tool_bar_zone)
-			create l_tool_bar_row.make (False)
-			l_tool_bar_row.set_ignore_resize (True)
-			l_tool_bar_row.extend (l_tool_bar_zone)
-			l_tool_bar_row.record_state
-			l_tool_bar_row.set_ignore_resize (False)
-			internal_docking_manager.tool_bar_container.top.extend (l_tool_bar_row)
-		ensure
-			top_added_new_tool_bar: old internal_docking_manager.tool_bar_container.top.count + 1
-				= internal_docking_manager.tool_bar_container.top.count
 		end
 
 	on_remove_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT) is

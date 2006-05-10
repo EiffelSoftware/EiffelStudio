@@ -22,7 +22,6 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			on_new_item,
 			replace,
 			initialize,
 			remove_i_th,
@@ -96,27 +95,7 @@ feature -- Access
 			--| FIXME IEK Implement this
 		end
 
-	item_pixmap (an_item: like item): EV_PIXMAP is
-			--
-		local
-			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
-			pix_imp: EV_PIXMAP_IMP
-		do
-			item_imp ?= an_item.implementation
-			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
-				-- Our pixmap is set
-				create Result
-				pix_imp ?= Result.implementation
-				a_pixmap := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-				a_pixmap := {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
-				pix_imp.set_pixmap_from_pixbuf (a_pixmap)
-			end
-			{EV_GTK_EXTERNALS}.g_list_free (a_list)
-		end
+
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 
@@ -130,28 +109,47 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_hbox, a_list, a_label: POINTER
+			a_event_box, a_hbox, a_list, a_label: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
 			item_imp ?= an_item.implementation
-			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-
-			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if {EV_GTK_EXTERNALS}.g_list_length (a_list) = 1 then
-				-- We only have a label stored
-				a_label := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-			else
-				-- We have both a pixmap and a label
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			if a_event_box /= default_pointer then
+				a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+				a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
 				a_label := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
+				{EV_GTK_EXTERNALS}.g_list_free (a_list)
 			end
 
-			create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
-				a_label
-			))
-			Result := a_cs.string
-			{EV_GTK_EXTERNALS}.g_list_free (a_list)
+			if a_label /= default_pointer then
+				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
+					a_label
+				))
+				Result := a_cs.string
+			else
+				Result := ""
+			end
+		end
+
+	item_pixmap (an_item: like item): EV_PIXMAP is
+			-- Pixmap of `an_item'.
+		local
+			item_imp: EV_WIDGET_IMP
+			a_event_box, a_hbox, a_list, a_image, a_pixbuf: POINTER
+			pix_imp: EV_PIXMAP_IMP
+		do
+			item_imp ?= an_item.implementation
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			if a_event_box /= default_pointer then
+				a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+				a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+				a_image := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+				{EV_GTK_EXTERNALS}.g_list_free (a_list)
+				a_pixbuf := {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_image)
+				create Result
+				pix_imp ?= Result.implementation
+				pix_imp.set_pixmap_from_pixbuf (a_pixbuf)
+			end
 		end
 
 feature -- Status report
@@ -270,54 +268,71 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
 		end
 
-	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
-			-- Assign `a_pixmap' to the tab for `an_item'.
+feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
+
+	ensure_tab_label (tab_widget: POINTER) is
+			-- Ensure the is a tab label widget for `tab_widget'.
 		local
-			item_imp: EV_WIDGET_IMP
-			a_event_box, a_hbox, a_list, a_pix, a_pixbuf: POINTER
-			a_pix_imp: EV_PIXMAP_IMP
+			a_event_box, a_hbox, a_image, a_label: POINTER
 		do
-			item_imp ?= an_item.implementation
-			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
-			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if  {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
-				-- We already have a pixmap present so we remove it
-				{EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
-			end
-			if a_pixmap /= Void then
-				a_pix_imp ?= a_pixmap.implementation
-				a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
-				a_pix := {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pixbuf)
-				{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
-				{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
-				{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
-				{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+			if {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, tab_widget) = default_pointer then
+				a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
+				a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+				{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
+				a_image := {EV_GTK_EXTERNALS}.gtk_image_new
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_image)
+				{EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_image)
+				a_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
+				{EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
+				{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, tab_widget, a_event_box)
 			end
 		end
-
-feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
 	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
 			a_cs: EV_GTK_C_STRING
-			a_event_box, a_hbox, a_label: POINTER
+			a_event_box, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
 			a_cs := a_text
+			ensure_tab_label (item_imp.c_object)
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			a_label := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
+			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_label, a_cs.item)
+			{EV_GTK_EXTERNALS}.g_list_free (a_list)
+		end
 
-			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
-			a_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
+	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
+			-- Assign `a_pixmap' to the tab for `an_item'.
+		local
+			item_imp: EV_WIDGET_IMP
+			a_event_box, a_hbox, a_image, a_list, a_pixbuf: POINTER
+			a_pix_imp: EV_PIXMAP_IMP
+		do
+			item_imp ?= an_item.implementation
+			ensure_tab_label (item_imp.c_object)
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+
+			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			a_image := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+			{EV_GTK_EXTERNALS}.g_list_free (a_list)
+
+			if a_pixmap /= Void then
+				a_pix_imp ?= a_pixmap.implementation
+				a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
+				{EV_GTK_EXTERNALS}.gtk_image_set_from_pixbuf (a_image, a_pixbuf)
+			else
+				{EV_GTK_EXTERNALS}.gtk_image_set_from_pixbuf (a_image, default_pointer)
+			end
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -337,13 +352,6 @@ feature {EV_ANY_I} -- Implementation
 
 	selected_item_index_internal: INTEGER
 			-- Index `selected_item'
-
-	on_new_item (an_item_imp: EV_WIDGET_IMP) is
-			-- Set `an_item's text empty.
-		do
-			Precursor (an_item_imp)
-			set_item_text (an_item_imp.interface, once "      ")
-		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.

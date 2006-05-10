@@ -111,13 +111,16 @@ feature -- Command
 
 	float (a_screen_x, a_screen_y: INTEGER) is
 			-- Float to `a_screen_x' and `a_screen_y'.
+		local
+			l_row: SD_TOOL_BAR_ROW
 		do
-			if row /= Void then
-				row.prune (Current)
-				if row.count = 0 then
-					if row.parent /= Void then
+			l_row := row
+			if l_row /= Void then
+				l_row.prune (Current)
+				if l_row.count = 0 then
+					if l_row.parent /= Void then
 						docking_manager.command.lock_update (Void, True)
-						row.parent.prune (row)
+						l_row.parent.prune (l_row)
 						docking_manager.command.resize (True)
 						docking_manager.command.unlock_update
 					end
@@ -188,6 +191,7 @@ feature -- Command
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			content := a_content
+			a_content.set_zone (Current)
 			l_items := a_content.items
 			from
 				l_items.start
@@ -216,16 +220,6 @@ feature -- Command
 			floating_tool_bar.set_position (a_screen_x, a_screen_y)
 		ensure
 			set: floating_tool_bar.screen_x = a_screen_x and floating_tool_bar.screen_y = a_screen_y
-		end
-
-	set_row (a_row: like row) is
-			-- Set `row'
-		require
-			a_row_not_void: a_row /= Void
-		do
-			row := a_row
-		ensure
-			set: row = a_row
 		end
 
 	compute_minmum_size is
@@ -293,8 +287,12 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	row: SD_TOOL_BAR_ROW
+	row: SD_TOOL_BAR_ROW is
 			-- Parent which contain `Current'.
+		do
+			Result ?= tool_bar.parent
+			check really_void: Result = Void implies tool_bar.parent = Void end
+		end
 
 	maximize_size: INTEGER
 			-- Maximize width of Current if not `is_vertical'. Maximize height of Current if `is_vertical'.

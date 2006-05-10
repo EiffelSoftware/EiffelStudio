@@ -11,7 +11,8 @@ class
 inherit
 	ANY
 		redefine
-			is_equal
+			is_equal,
+			out
 		end
 
 create
@@ -60,6 +61,25 @@ feature -- Comparison
 			Result := equal (cluster_name, other.cluster_name) and
 				equal (class_name, other.class_name) and
 				equal (feature_name, other.feature_name)
+		end
+
+feature -- Output
+
+	out: STRING is
+			-- New string with printable representation.
+		do
+			if is_all_root then
+				Result := "all classes"
+			else
+				create Result.make_empty
+				if cluster_name /= Void then
+					Result.append (cluster_name+" ")
+				end
+				Result.append (class_name+" ")
+				if feature_name /= Void then
+					Result.append (feature_name+" ")
+				end
+			end
 		end
 
 feature -- Access, stored in configuration file

@@ -5,7 +5,7 @@
 			It is also not possible to do a full compilation of all classes in this library.
 		</description>
 		
-		<root all_classes="True" />
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
@@ -36,6 +36,9 @@
 		</cluster>
 		
 		<cluster name="il_generation_windows" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
 			<file_rule>
 				<exclude>.*</exclude>
 				<include>/windows$</include>
@@ -45,6 +48,9 @@
 		</cluster>
 
 		<cluster name="il_generation_unix" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
 			<file_rule>
 				<exclude>.*</exclude>
 				<include>/unix$</include>

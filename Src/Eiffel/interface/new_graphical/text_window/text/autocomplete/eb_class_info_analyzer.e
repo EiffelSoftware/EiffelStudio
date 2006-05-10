@@ -511,8 +511,8 @@ feature {NONE}-- Clickable/Editable implementation
 							end
 						end
 					else
-						error := True
 						if Result.type /= Void then
+							error := True
 							type := Result.type
 							if type.is_loose then
 								processed_type := type.instantiation_in (processed_type, processed_type.associated_class.class_id)
@@ -524,8 +524,6 @@ feature {NONE}-- Clickable/Editable implementation
 								processed_type := type
 								error := False
 							end
-						else
-							error := current_token /= searched_token
 						end
 					end
 				end

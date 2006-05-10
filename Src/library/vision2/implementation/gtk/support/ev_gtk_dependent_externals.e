@@ -10,9 +10,14 @@ class
 
 feature -- Externals
 
+	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN) is
+		external
+			"C signature (GtkFixed*, gboolean)"
+		end
+
 	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C signature (GdkWindow*, GdkAtom, GdkAtom*, gint*): gint use <gtk/gtk.h>"
+			"C signature (GdkWindow*, guchar**, GdkAtom*, gint*): gint use <gtk/gtk.h>"
 		end
 
 	frozen gdk_selection_convert (a_requestor, a_selection, a_target: POINTER; a_time: NATURAL_32) is

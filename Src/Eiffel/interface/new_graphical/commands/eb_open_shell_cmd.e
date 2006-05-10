@@ -187,7 +187,7 @@ feature {NONE} -- Implementation properties
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell dialog.
 		do
-			Result := preferences.misc_data.general_shell_command.twin
+			Result := preferences.misc_data.external_editor_command.twin
 		end
 
 	menu_name: STRING is

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			create recent_projects_data.make (a_preferences)
 			create editor_data.make (a_preferences)
 			create search_tool_data.make (a_preferences)
+			create class_browser_data.make (a_preferences)
 		end
 
 feature -- Access
@@ -57,6 +58,9 @@ feature -- Access
 
 	search_tool_data: EB_SEARCH_TOOL_DATA
 		-- Preference data for EiffelStudio search tool
+
+	class_browser_data: EB_CLASS_BROWSER_DATA
+		-- Preference data for class browser
 
 invariant
 	dialog_data_not_void: dialog_data /= Void

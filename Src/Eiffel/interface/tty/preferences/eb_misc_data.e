@@ -72,9 +72,9 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := text_mode_is_windows_preference.value
 		end
 
-	general_shell_command: STRING is
+	external_editor_command: STRING is
 		do
-			Result := general_shell_command_preference.value
+			Result := external_editor_command_preference.value
 		end
 
 	external_command_0: STRING is
@@ -168,7 +168,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		end
 
 	console_shell_command: STRING is
-			--
+			-- Shell to open a console
 		do
 			Result := console_shell_command_preference.value
 		end
@@ -202,7 +202,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	acrobat_reader_preference: STRING_PREFERENCE
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
-	general_shell_command_preference: STRING_PREFERENCE
+	external_editor_command_preference: STRING_PREFERENCE
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
 	preference_window_width_preference: INTEGER_PREFERENCE
@@ -227,7 +227,7 @@ feature {NONE} -- Preference Strings
 	acrobat_reader_string: STRING is "general.acrobat_reader"
 	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
 	internet_browser_string: STRING is "general.internet_browser"
-	general_shell_command_string: STRING is "general.shell_command"
+	external_editor_command_string: STRING is "general.external_editor_command"
 	editor_left_side_string: STRING is "interface.development_window.editor_left_side"
 	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
 	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
@@ -243,7 +243,9 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
+			l_platform: PLATFORM_CONSTANTS
 		do
+			create l_platform
 			create l_manager.make (preferences, "misc")
 
 			external_command_0_preference := l_manager.new_string_preference_value (l_manager, external_command_0_string, "")
@@ -268,8 +270,8 @@ feature {NONE} -- Implementation
 			external_commands.put (external_command_9_preference, 9)
 
 			acrobat_reader_preference := l_manager.new_string_preference_value (l_manager, acrobat_reader_string, "acrobat")
-			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)									internet_browser_preference := l_manager.new_string_preference_value (l_manager, internet_browser_string, "netscape $url")
-			general_shell_command_preference := l_manager.new_string_preference_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")
+			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, l_platform.is_windows)
+			internet_browser_preference := l_manager.new_string_preference_value (l_manager, internet_browser_string, "netscape $url")
 			editor_left_side_preference := l_manager.new_boolean_preference_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
@@ -277,7 +279,13 @@ feature {NONE} -- Implementation
 			preference_window_width_preference := l_manager.new_integer_preference_value (l_manager, preference_window_width_string, 400)
 			default_displayed_string_size_preference := l_manager.new_integer_preference_value (l_manager, default_displayed_string_size_string, 50)
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
-			console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
+			if l_platform.is_windows then
+				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
+				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
+			else
+				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
+				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
+			end
 		end
 
 	preferences: PREFERENCES
@@ -297,7 +305,7 @@ invariant
 	external_command_9_preference_not_void: external_command_9_preference /= Void
 	acrobat_reader_preference_not_void: acrobat_reader_preference /= Void
 	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void
-	general_shell_command_preference_not_void: general_shell_command_preference /= Void
+	general_shell_command_preference_not_void: external_editor_command_preference /= Void
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void

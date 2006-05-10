@@ -292,20 +292,27 @@ feature -- Unmanaged process launch
 			cmdexe: STRING
 			str: STRING
 			cl: STRING
+			console_shell: STRING
 		do
 			create cl.make (50)
-			if platform_constants.is_windows then
-				cmdexe := Execution_environment.get ("COMSPEC")
-				if cmdexe /= Void then
-						-- This allows the use of `dir' etc.
-					cl.append (cmdexe)
-				else
-					cl.append (preferences.misc_data.console_shell_command)
-				end
-			else
-				cl.append (once "/bin/sh -c ")
-				cl.append (preferences.misc_data.console_shell_command)
+			console_shell := preferences.misc_data.console_shell_command
+			if console_shell /= Void then
+				cl.append (console_shell)
 			end
+			if console_shell.is_empty then
+				if platform_constants.is_windows then
+					cmdexe := Execution_environment.get ("COMSPEC")
+					if cmdexe /= Void then
+							-- This allows the use of `dir' etc.
+						cl.append (cmdexe)
+					else
+						cl.append ("CMD")
+					end
+				else
+					cl.append (once "/bin/sh -c xterm -geometry 80x40")
+				end
+			end
+
 			str := execution_environment.current_working_directory
 			execution_environment.change_working_directory (dir)
 			execution_environment.launch (cl)

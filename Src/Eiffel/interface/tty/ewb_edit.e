@@ -23,7 +23,7 @@ feature -- Element change
 			cmd: STRING;
 			cmd_exec: COMMAND_EXECUTOR
 		do
-			editor := preferences.misc_data.general_shell_command
+			editor := preferences.misc_data.external_editor_command
 			if editor /= Void then
 					-- Replace $target and $line
 				editor.replace_substring_all ("$target", a_file)

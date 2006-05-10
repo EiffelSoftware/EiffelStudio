@@ -687,6 +687,14 @@ feature -- Label texts
 	l_Tab_C_output: STRING is    		"C Output"
 	l_Tab_warning_output: STRING is    	"Warnings"
 	l_Tab_error_output: STRING is    	"Errors"
+	l_show_feature_from_any: STRING is  "Features from ANY"
+	l_show_tooltip: STRING is "Tooltip"
+	h_show_feature_from_any: STRING is  "Show unchanged features from class ANY?"
+	h_show_tooltip: STRING is "Show tooltips?"
+	l_class_browser_classes: STRING is "Class"
+	l_class_browser_features: STRING is "Feature"
+	l_version_from: STRING is "Version from"
+
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class "

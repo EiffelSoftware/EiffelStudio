@@ -56,6 +56,7 @@ feature -- Generation
 			l_not_is_resource_generated: BOOLEAN
 			l_res: CONF_EXTERNAL_RESSOURCE
 			l_res_added: SEARCH_TABLE [STRING]
+			l_loc: CONF_LOCATION
 		do
 			from
 				last_resource_offset := 0
@@ -66,7 +67,8 @@ feature -- Generation
 				create l_res_added.make (10)
 				l_res := resources.item
 				if l_res.is_enabled (universe.conf_state) then
-					l_name := l_res.location
+					create l_loc.make_from_full_path (l_res.location, universe.target)
+					l_name := l_loc.evaluated_path
 					if not l_res_added.has (l_name) then
 						l_res_added.force (l_name)
 						nb := l_name.count

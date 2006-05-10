@@ -1123,7 +1123,7 @@ feature {NONE}-- Implementation
 		require
 			current_class_c_not_void: current_class_c /= Void
 		local
-			current_feature: E_FEATURE
+			current_feature: FEATURE_I
 			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list: ARRAYED_LIST [INTEGER]
 			stop: BOOLEAN
@@ -1134,44 +1134,54 @@ feature {NONE}-- Implementation
 			if retried then
 				Result := Void
 			else
-				if current_feature_as /= Void then
-					l_current_class_c := current_class_c
-					if l_current_class_c.has_feature_table then
-						current_feature := l_current_class_c.feature_with_name (current_feature_as.feature_name)
+				l_current_class_c := current_class_c
+				if l_current_class_c.has_feature_table then
+					if current_feature_as /= Void then
+						current_feature := l_current_class_c.feature_named (current_feature_as.feature_name)
 					end
+				end
 
-					if current_feature /= Void then
-						if current_token /= Void and then current_line /= Void then
-							set_up_local_analyzer (current_line, current_token, l_current_class_c)
-							entities_list := local_analyzer.found_locals_list
+				if current_feature = Void then
+						-- We hack here to avoid current feature void.
+						-- type_a_checker only need a feature for like_argument checking.
+						-- So it goes here only when we try to analyse a name within a typed feature
+						-- which is after a saved but not compiled feature.
+						-- It 90% works, only fails when we try to find a type that is a like_argument.
+					current_feature := l_current_class_c.feature_named ("is_equal")
+					check
+						current_feature_not_void: current_feature /= Void
+					end
+				end
 
-							name_id := Names_heap.id_of (name)
-							if name_id > 0 and not entities_list.is_empty then
-									-- There is a `name_id' corresponding to `name' so let's
-									-- look further.
-								from
-									entities_list.start
-								until
-									entities_list.after or stop
-								loop
-									from
-										id_list := entities_list.item.id_list
-										id_list.start
-									until
-										id_list.after or stop
-									loop
-										if name_id = id_list.item then
-											stop := True
-												-- Compute actual type for local
-											Result := local_evaluated_type (name_id,
-												entities_list.item.type, l_current_class_c,
-												current_feature_as.feature_name)
-										end
-										id_list.forth
-									end
-									entities_list.forth
+				if current_token /= Void and then current_line /= Void then
+					set_up_local_analyzer (current_line, current_token, l_current_class_c)
+					entities_list := local_analyzer.found_locals_list
+
+					name_id := Names_heap.id_of (name)
+					if name_id > 0 and not entities_list.is_empty then
+							-- There is a `name_id' corresponding to `name' so let's
+							-- look further.
+						from
+							entities_list.start
+						until
+							entities_list.after or stop
+						loop
+							from
+								id_list := entities_list.item.id_list
+								id_list.start
+							until
+								id_list.after or stop
+							loop
+								if name_id = id_list.item then
+									stop := True
+										-- Compute actual type for local
+									Result := local_evaluated_type (name_id,
+										entities_list.item.type, l_current_class_c,
+										current_feature)
 								end
+								id_list.forth
 							end
+							entities_list.forth
 						end
 					end
 				end
@@ -1248,24 +1258,21 @@ feature {NONE}-- Implementation
 
 feature {NONE}-- Implementation
 
-	local_evaluated_type (a_local_name_id: INTEGER; a_type: TYPE_AS; a_current_class: CLASS_C; a_feature_name: STRING): TYPE_A is
+	local_evaluated_type (a_local_name_id: INTEGER; a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A is
 			-- Given `a_type' from AST resolve its type in `a_current_class' for feature called
 			-- `a_feature_name'.
 		require
 			a_local_name_id_positive: a_local_name_id > 0
 			a_type_not_void: a_type /= Void
 			a_current_class_not_void: a_current_class /= Void
-			a_current_class_has_feature_table: a_current_class.has_feature_table
-			a_feature_name_not_void: a_feature_name /= Void
+			a_feature_not_void: a_feature /= Void
 		local
 			l_feat: FEATURE_I
 		do
-			l_feat := a_current_class.feature_named (a_feature_name)
-			if l_feat /= Void then
-				type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
-				Result := type_a_generator.evaluate_type (a_type, a_current_class)
-				Result := type_a_checker.solved (Result, a_type)
-			end
+			l_feat := a_feature
+			type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
+			Result := type_a_generator.evaluate_type (a_type, a_current_class)
+			Result := type_a_checker.solved (Result, a_type)
 		end
 
 	after_searched_token: BOOLEAN is

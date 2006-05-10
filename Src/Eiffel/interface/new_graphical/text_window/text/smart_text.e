@@ -772,9 +772,9 @@ feature {NONE} -- Possiblilities provider
 		end
 
 	completion_possible: BOOLEAN is
-			--
+			-- Is completion possible?
 		do
-			Result := click_and_complete_is_active and then auto_complete_possible and then Precursor
+			Result := auto_complete_possible and then Precursor
 		end
 
 feature {NONE}-- click information update

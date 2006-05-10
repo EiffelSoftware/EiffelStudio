@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		name="class_merger"
+		uuid="2C9704C7-E65F-4680-84BC-6B27E4AECFC1"
+		library_target="dotnet_helper">
+
+	<target name="dotnet_helper">
+		<root all_classes="true" />
+
+		<setting name="msil_generation" value="True"/>
+
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
+		<assembly name="system_" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>
+
+		<cluster name="dotnet_helper" location=".">
+			<condition><dotnet value="True"/></condition>
+		</cluster>
+	</target>
+	
+</system>

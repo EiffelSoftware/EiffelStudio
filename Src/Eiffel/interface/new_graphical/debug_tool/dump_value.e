@@ -124,7 +124,6 @@ feature -- Initialization
 		do
 			init
 			value_wide_character := value
-			print (generator + ".make_wide_character (" + value.out + " /" + value.natural_32_code.out + "/ %N")
 			type := Type_wide_character
 			dynamic_class := dtype
 		ensure

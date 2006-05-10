@@ -41,7 +41,7 @@ feature {NONE} -- Constants
 					-- If it contains some environment variables, they are translated.			
 				Result := (create {ENV_INTERP}).interpreted_string (l_options.working_directory)
 			else
-				Result := "."
+				Result := shared_eiffel.Eiffel_project.Project_directory_name
 			end
 		ensure
 			application_working_directory_not_void: Result /= Void

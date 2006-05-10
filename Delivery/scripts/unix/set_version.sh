@@ -5,6 +5,6 @@
 # $2 = pattern to transform
 # $3 = file to process
 
-svn_revision=`svn info $1 | grep Revision | sed -e "s/Revision: //"`
+svn_revision=`svn info $1 | grep "Last Changed Rev" | sed -e "s/Last Changed Rev: //"`
 sed -e "s/$2/$svn_revision/" $3 > tmp
 mv tmp $3

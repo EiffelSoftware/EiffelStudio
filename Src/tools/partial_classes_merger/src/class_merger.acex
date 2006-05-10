@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		name="class_merger"
+		uuid="198069A9-CE2D-463D-8CD1-0B599EB5C9A0"
+		library_target="class_merger">
+
+	<target name="common">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\eiffel\parser\parser.acex" readonly="true"/>
+		<library name="configuration" location="$EIFFEL_SRC\eiffel\library\configuration\configuration.acex" readonly="true"/>
+
+		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true" />
+		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true" />
+	</target>
+
+	<target name="class_merger" extends="common">
+		<root feature="default_create" class="EPC_MERGER"/>
+	</target>
+
+	<target name="class_merger_debug" extends="common">
+		<root feature="execute" class="EPC_APPLICATION"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<setting name="console_application" value="True"/>
+		<setting name="line_generation" value="True"/>
+	</target>
+
+	<target name="class_merger_release" extends="common">
+		<root feature="execute" class="EPC_APPLICATION"/>
+		<option>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="True"/>
+		<setting name="line_generation" value="False"/>
+	</target>
+
+</system>

@@ -9,8 +9,11 @@
 # Let's create an enterprise package for Unix
 rm -rf PorterPackage
 
+echo $1
+exit
+
 # Let's create all packages
-echo "\n" | /bin/sh make_delivery all
+echo "\n" | /bin/sh make_delivery all $1
 
 # Now edit `set_aliases' in PorterPackage as we are now going for compilation mode.
 cd PorterPackage

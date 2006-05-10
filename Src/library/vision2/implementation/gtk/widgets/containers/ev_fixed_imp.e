@@ -21,7 +21,8 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			on_removed_item
+			on_removed_item,
+			initialize
 		end
 
 create
@@ -34,6 +35,13 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
+		end
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (c_object, True)
+			Precursor
 		end
 
 feature -- Status setting

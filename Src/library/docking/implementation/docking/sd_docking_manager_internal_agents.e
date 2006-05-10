@@ -228,7 +228,7 @@ feature -- Contract support
 			end
 		end
 
-feature {SD_ACCESS} -- For debug.
+feature {SD_DEBUG_ACCESS} -- For debug.
 
 	show_inner_container_structure is
 			-- For debug.

@@ -142,11 +142,19 @@ feature -- Recycling
 			last_dump_value := Void
 		end
 
-feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Row attachement
+feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
+
+	relocate_to_parent_grid (a_parent_grid: like parent_grid) is
+			-- relocate current line to `a_parent_grid'.
+		require
+			is_not_attached_to_row: not is_attached_to_row
+		do
+			parent_grid := a_parent_grid
+		end
 
 	attach_to_row (a_row: EV_GRID_ROW) is
 		require
-			a_row /= Void
+			row_not_void: a_row /= Void
 			is_not_attached_to_row: not is_attached_to_row
 		do
 			row := a_row

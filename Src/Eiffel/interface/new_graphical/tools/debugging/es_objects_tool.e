@@ -89,23 +89,30 @@ feature {NONE} -- Initialization
 			create objects_grids_empty.make (2)
 
 			create objects_grids_positions.make (Position_current, Position_objects)
-			objects_grids_positions[Position_current] 	:= debugged_objects_grid_id
-			objects_grids_positions[Position_stack] 	:= stack_objects_grid_id
-			objects_grids_positions[Position_locals] 	:= stack_objects_grid_id
-			objects_grids_positions[Position_arguments] := stack_objects_grid_id
-			objects_grids_positions[Position_result] 	:= stack_objects_grid_id
-			objects_grids_positions[Position_objects] 	:= debugged_objects_grid_id
 
 			Precursor {EB_TOOL} (a_manager)
 		end
 
 feature {NONE} -- Internal properties
 
-	stack_objects_grid_id: STRING is "stack_objects"
+	first_grid_id: STRING is "1"
 
-	debugged_objects_grid_id: STRING is "debugged_objects"
+	second_grid_id: STRING is "2"
 
 	objects_grids_positions: ARRAY [STRING]
+
+	reset_objects_grids_positions_to_default is
+		do
+			if objects_grids_positions = Void then
+				create objects_grids_positions.make (Position_current, Position_objects)
+			end
+			objects_grids_positions[Position_current] 	:= second_grid_id
+			objects_grids_positions[Position_stack] 	:= first_grid_id
+			objects_grids_positions[Position_locals] 	:= first_grid_id
+			objects_grids_positions[Position_arguments] := first_grid_id
+			objects_grids_positions[Position_result] 	:= first_grid_id
+			objects_grids_positions[Position_objects] 	:= second_grid_id
+		end
 
 	Position_current: INTEGER is 1
 	Position_stack: INTEGER is 2
@@ -152,11 +159,11 @@ feature {NONE} -- Interface
 				--| Build interface
 
 			create displayed_objects.make
-			create_objects_grid ("Stack objects", stack_objects_grid_id)
-			create_objects_grid ("Debugged objects", debugged_objects_grid_id)
+			create_objects_grid ("Objects tool: left", first_grid_id)
+			create_objects_grid ("Objects tool: right", second_grid_id)
 
-			stack_objects_grid := objects_grid (stack_objects_grid_id)
-			debugged_objects_grid := objects_grid (debugged_objects_grid_id)
+			stack_objects_grid := objects_grid (first_grid_id)
+			debugged_objects_grid := objects_grid (second_grid_id)
 
 			create split
 
@@ -176,6 +183,7 @@ feature {NONE} -- Interface
 			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			split.set_second (l_box)
 			l_box.extend (debugged_objects_grid)
+
 			widget := split
 
 				-- Specific initialization
@@ -190,6 +198,8 @@ feature {NONE} -- Interface
 				--| Initialize various agent and special mecanisms
 			init_delayed_cleaning_mecanism
 			create_update_on_idle_agent
+			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
+			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
 		end
 
 	create_objects_grid (a_name, a_id: STRING) is
@@ -241,8 +251,16 @@ feature {NONE} -- Interface
 			-- Build associated tool bar
 		local
 			tbb: EV_TOOL_BAR_BUTTON
+			scmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar
+
+			create scmd.make
+			scmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_open_menu)
+			scmd.set_tooltip ("Open Objects tool menu")
+			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
+			scmd.enable_sensitive
+			mini_toolbar.extend (scmd.new_mini_toolbar_item)
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
@@ -313,7 +331,129 @@ feature {NONE} -- Interface
 			notebook_item.drop_actions.extend (agent drop_stack_element)
 		end
 
+	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
+		local
+			m, sm: EV_MENU
+			mci: EV_CHECK_MENU_ITEM
+			og: like objects_grid
+			lid: STRING
+			i: INTEGER
+			pos_titles: ARRAY [STRING]
+		do
+			if not objects_grids.is_empty then
+				create m
+				from
+					create pos_titles.make (objects_grids_positions.lower, objects_grids_positions.upper)
+					i := objects_grids_positions.lower
+					pos_titles[i] := Interface_names.l_current_object
+					i := i + 1
+					pos_titles[i] := Interface_names.l_stack_information
+					i := i + 1
+					pos_titles[i] := Interface_names.l_arguments
+					i := i + 1
+					pos_titles[i] := Interface_names.l_locals
+					i := i + 1
+					pos_titles[i] := Interface_names.l_result
+					i := i + 1
+					pos_titles[i] := Interface_names.l_dropped_references
+
+					objects_grids.start
+				until
+					objects_grids.after
+				loop
+					og := objects_grids.item_for_iteration
+					create sm.make_with_text (og.name)
+					m.extend (sm)
+					from
+						lid := objects_grids.key_for_iteration
+						i := objects_grids_positions.lower
+					until
+						i > objects_grids_positions.upper
+					loop
+						create mci
+						if lid.is_case_insensitive_equal (objects_grids_positions[i]) then
+							mci.set_text ("Item [" + pos_titles[i] + "] is attached to %"" + og.name + "%"")
+							mci.enable_select
+							mci.disable_sensitive
+						else
+							mci.set_text ("Move [" + pos_titles[i] + "] to %"" + og.name + "%"")
+							mci.disable_select
+							mci.select_actions.extend (agent assign_objects_grids_position (lid, i))
+						end
+						sm.extend (mci)
+						i := i + 1
+					end
+					objects_grids.forth
+				end
+
+				m.show_at (w, ax, ay)
+			end
+		end
+
+	assign_objects_grids_position (a_gid: STRING; a_pos: INTEGER) is
+			-- Change grid position for item at position `a_pos' to grid identified by `a_gid'
+		local
+			apref: ARRAY_PREFERENCE
+			ap: ARRAY [STRING]
+		do
+			apref := Preferences.Debug_tool_data.objects_tool_layout_preference
+			ap := apref.value
+			ap[ap.lower + a_pos - objects_grids_positions.lower] := a_gid
+			apref.set_value (ap) --| Should trigger "update"
+		end
+
 feature -- preference
+
+	refresh_objects_layout_from_preference (p: ARRAY_PREFERENCE) is
+			-- Refresh the layout using preference `p'
+		local
+			retried: BOOLEAN
+			vals: ARRAY [STRING]
+			i: INTEGER
+			l_changed: BOOLEAN
+			l_pref_changed: BOOLEAN
+			l_pos: STRING
+		do
+			vals := p.value
+			if retried or (vals = Void or else vals.is_empty) then
+				reset_objects_grids_positions_to_default
+				if not retried then
+					p.set_value (objects_grids_positions) --| should trigger the `p.change_actions' and then recall this feature
+				end
+			else
+				from
+					i := vals.lower
+				until
+					i > vals.upper
+				loop
+					l_pos := objects_grids_positions[i]
+					l_changed := l_changed or l_pos = Void or else (not (l_pos).is_case_insensitive_equal (vals[i]))
+					if (vals[i]).is_case_insensitive_equal (second_grid_id) then
+						objects_grids_positions[i] := second_grid_id
+					elseif (vals[i]).is_case_insensitive_equal (first_grid_id) then
+						objects_grids_positions[i] := first_grid_id
+					else -- Default ?
+							--| This occurs only if bad value is provided.
+						l_pref_changed := True
+						objects_grids_positions[i] := first_grid_id --| vals[i]
+					end
+					i := i + 1
+				end
+				if l_pref_changed then
+					p.set_value (objects_grids_positions) --| should trigger the `p.change_actions' and then recall this feature
+				else
+					if not objects_grids_positions.has (second_grid_id) then
+						split.second.hide
+					elseif not split.second.is_show_requested then
+						split.second.show
+					end
+					split.show
+					if l_changed then
+						update
+					end
+				end
+			end
+		end
 
 	save_grids_preferences is
 		local
@@ -821,7 +961,6 @@ feature {NONE} -- Implementation
 						if not Application.current_call_stack_is_empty then
 							cse ?= current_stack_element
 						end
-
 						from
 							objects_grids.start
 						until
@@ -921,7 +1060,7 @@ feature {NONE} -- Current objects grid Implementation
 				else
 					item.set_title (Interface_names.l_Current_object)
 				end
-				item.attach_to_row (a_target_grid.front_new_row) --| Always first row
+				item.attach_to_row (a_target_grid.extended_new_row)
 				if application.is_running and then application.is_stopped then
 					current_object.compute_grid_display
 				end
@@ -940,6 +1079,9 @@ feature {NONE} -- Current objects grid Implementation
 				item := displayed_objects.item
 				if item.is_attached_to_row then
 					item.unattach
+				end
+				if item.parent_grid /= a_target_grid then
+					item.relocate_to_parent_grid (a_target_grid)
 				end
 				item.attach_to_row (a_target_grid.extended_new_row)
 				displayed_objects.forth

@@ -156,6 +156,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	is_stack_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_watches_grids_layout_managed_preference: BOOLEAN_PREFERENCE
+	objects_tool_layout_preference: ARRAY_PREFERENCE
 
 	grid_column_layout_preference_for (grid_name: STRING): STRING_PREFERENCE is
 		local
@@ -198,7 +199,7 @@ feature -- Preference Strings
 	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
 	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
 	is_watches_grids_layout_managed_string: STRING is "debugger.watches_grids_layout_managed"
-
+	objects_tool_layout_string: STRING is "debugger.objects_tool_layout"
 	grid_column_layout_prefix: STRING is "debugger.grid_column_layout_"
 
 feature {NONE} -- Implementation
@@ -233,6 +234,8 @@ feature {NONE} -- Implementation
 			is_stack_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_stack_grid_layout_managed_string, True)
 			is_debugged_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_debugged_grid_layout_managed_string, True)
 			is_watches_grids_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_watches_grids_layout_managed_string, True)
+
+			objects_tool_layout_preference := l_manager.new_array_preference_value (l_manager, objects_tool_layout_string, <<>>)
 		end
 
 	preferences: PREFERENCES
@@ -259,6 +262,7 @@ invariant
 	is_stack_grid_layout_managed_preference_not_void: is_stack_grid_layout_managed_preference /= Void
 	is_debugged_grid_layout_managed_preference_not_void: is_debugged_grid_layout_managed_preference /= Void
 	is_watches_grids_layout_managed_preference_not_void: is_watches_grids_layout_managed_preference /= Void
+	objects_tool_layout_preference_not_void: objects_tool_layout_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

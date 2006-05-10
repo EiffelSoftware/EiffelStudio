@@ -93,6 +93,7 @@ feature -- Access queries
 			-- Options (Debuglevel, assertions, ...)
 		local
 			l_lib: CONF_LIBRARY
+			l_local: CONF_OPTION
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
@@ -103,16 +104,22 @@ feature -- Access queries
 				else
 					Result := target.application_target.options
 				end
+			end
+				-- get local options
+			if internal_options /= Void then
+				l_local := internal_options.twin
 			else
-				if internal_options /= Void then
-					Result := internal_options.twin
-				else
-					create Result
-				end
-				if parent /= Void then
-					Result.merge (parent.options)
-				end
-				Result.merge (target.options)
+				create l_local
+			end
+			if parent /= Void then
+				l_local.merge (parent.options)
+			end
+			l_local.merge (target.options)
+
+			if Result /= Void then
+				Result.merge (l_local)
+			else
+				Result := l_local
 			end
 		end
 

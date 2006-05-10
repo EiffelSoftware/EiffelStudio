@@ -413,6 +413,9 @@ feature {NONE} -- Private Access : indexes
 	invariant_index: INTEGER
 			-- index of "invariant" keyword in text
 
+	last_type : TYPE_A
+			-- Last type stores when `class_c_to_complete_from'
+
 feature {NONE} -- Private Access
 
 	split_string: BOOLEAN
@@ -436,6 +439,7 @@ feature -- Basic Operations
 			l_current_class_c	: CLASS_C
 			l_class_as          : CLASS_AS
 			l_feature_as        : FEATURE_AS
+			l_named_tuple_type	: NAMED_TUPLE_TYPE_A
 		do
 			create insertion
 			insertion.put ("")
@@ -466,6 +470,14 @@ feature -- Basic Operations
 
 					-- Build the completion list based on data mined from
 				if cls_c /= Void and then cls_c.has_feature_table then
+
+						-- Add named tuple generics.
+						-- A class c should have been found.
+					l_named_tuple_type ?= last_type
+					if l_named_tuple_type /= Void then
+						add_named_tuple_generics (l_named_tuple_type)
+					end
+
 					feat_table := cls_c.api_feature_table
 					if is_create then
 							-- Creators
@@ -666,6 +678,7 @@ feature -- Basic Operations
 				elseif is_static or is_parenthesized then
 					Result := found_class
 				end
+				last_type := type
 			end
 
 			if not recurse then
@@ -1056,7 +1069,7 @@ feature {NONE} -- Completion implementation
 						if type.is_loose then
 							Result := type.instantiation_in (Result, Result.associated_class.class_id)
 							if Result /= Void then
-								Result := type.actual_type
+								Result := Result.actual_type
 								error := False
 							end
 						else
@@ -1111,7 +1124,7 @@ feature {NONE} -- Completion implementation
 						if type.is_loose then
 							Result := type.instantiation_in (Result, Result.associated_class.class_id)
 							if Result /= Void then
-								Result := type.actual_type
+								Result := Result.actual_type
 								Result := constrained_type (Result)
 								error := False
 							end
@@ -1501,6 +1514,27 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 					l_parents.forth
 				end
 				l_parents.go_to (l_cursor)
+			end
+		end
+
+	add_named_tuple_generics (a_type: NAMED_TUPLE_TYPE_A) is
+			-- Add named tuple generics to completion possibilities.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_feat_name: EB_NAME_FOR_COMPLETION
+			l_array: ARRAY [TYPE_A]
+			i: INTEGER
+		do
+			from
+				l_array := a_type.generics
+				i := l_array.lower
+			until
+				i > l_array.upper
+			loop
+				create l_feat_name.make (a_type.label_name (i).twin)
+				insert_in_completion_possibilities (l_feat_name)
+				i := i + 1
 			end
 		end
 

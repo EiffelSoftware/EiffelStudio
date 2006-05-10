@@ -509,7 +509,8 @@ feature {NONE} -- Build completion possibilities
 			externals			: ARRAYED_LIST [E_FEATURE]
 			show_any_features	: BOOLEAN
 			l_current_class_c	: CLASS_C
-			l_saved_token: EDITOR_TOKEN
+			l_saved_token		: EDITOR_TOKEN
+			l_named_tuple_type	: NAMED_TUPLE_TYPE_A
 		do
 			insertion_cell.put ("")
 			is_create := False
@@ -533,6 +534,14 @@ feature {NONE} -- Build completion possibilities
 
 					-- Build the completion list based on data mined from
 				if cls_c /= Void and then cls_c.has_feature_table then
+
+						-- Add named tuple generics.
+						-- A class c should have been found.
+					l_named_tuple_type ?= last_type
+					if l_named_tuple_type /= Void then
+						add_named_tuple_generics (l_named_tuple_type)
+					end
+
 					feat_table := cls_c.api_feature_table
 					if is_create then
 							-- Creators
@@ -612,7 +621,6 @@ feature {NONE} -- Build completion possibilities
 			type: TYPE_A
 			gone_back_two: BOOLEAN
 			token: EDITOR_TOKEN
---			old_token: EDITOR_TOKEN
 			old_position: INTEGER
 			l_swapped: BOOLEAN
 		do
@@ -620,7 +628,6 @@ feature {NONE} -- Build completion possibilities
 			if token /= Void then
 					-- Restore faked cursor position so we can complete before '.'
 				if token.image.is_equal (".") then
---					old_token := text_field.current_token_in_line (a_line)
 					old_position := text_field.caret_position
 					text_field.set_caret_position (text_field.caret_position - 1)
 					token := text_field.current_token_in_line (a_line)
@@ -672,7 +679,6 @@ feature {NONE} -- Build completion possibilities
 				if exploring_current_class then
 					Result := a_compiled_class
 				elseif prev_token /= Void and not is_create and not is_static and not is_parenthesized then
---					current_feature_as := feature_containing (prev_token, cursor.line)
 					type := type_from (prev_token, a_line)
 					if type /= Void then
 						Result := type.associated_class
@@ -683,7 +689,6 @@ feature {NONE} -- Build completion possibilities
 						Result := found_class
 					else
 							-- Looks like it was a creation instruction since `found_class' was not set.
---						current_feature_as := feature_containing (prev_token, cursor.line)
 						type := type_from (prev_token, a_line)
 						if type /= Void then
 							Result := type.associated_class
@@ -692,6 +697,7 @@ feature {NONE} -- Build completion possibilities
 				elseif is_static or is_parenthesized then
 					Result := found_class
 				end
+				last_type := type
 			end
 
 			if not recurse then
@@ -958,19 +964,20 @@ feature {NONE} -- Build completion possibilities
 			-- analyze class text from `current_token' to find type associated with `searched_token'
 		require
 			current_class_i_not_void: current_class_i /= Void
-			current_class_i_compiled: current_class_i.is_compiled
+			current_class_c_not_void: current_class_c /= Void
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
 			name: STRING
 			par_cnt: INTEGER
 			processed_class: CLASS_C
 			type: TYPE_A
-			formal: FORMAL_A
 			feat: E_FEATURE
 			l_current_class_c: CLASS_C
+			l_named_tuple_type: NAMED_TUPLE_TYPE_A
+			l_pos: INTEGER
 		do
 			from
-				l_current_class_c := current_class_i.compiled_class
+				l_current_class_c := current_class_c
 				Result := l_current_class_c.actual_type
 				if token_image_is_same_as_word (current_token, "create") then
 					go_to_next_token
@@ -1050,26 +1057,29 @@ feature {NONE} -- Build completion possibilities
 					end
 					if feat = Void then
 							-- Could not find feature, may be a local or argument
-						Result := type_of_local_entity_named (name)
-						if Result = Void then
-							Result := type_of_constants_or_reserved_word (current_token)
+						type := type_of_local_entity_named (name)
+						if type = Void then
+							type := type_of_constants_or_reserved_word (current_token)
 						end
 					else
-							-- Found feature						
-						error := True
-						Result := feat.type
+							-- Found feature
+						error := False
+						type := feat.type
 					end
 
-					if Result /= Void then
-						if Result.is_like and then Result.actual_type.is_formal then
-								-- Get type from like formal
-							Result := Result.actual_type
+					if type /= Void then
+						if type.is_loose then
+							Result := type.instantiation_in (Result, Result.associated_class.class_id)
+							if Result /= Void then
+								Result := Result.actual_type
+								error := False
+							end
+						else
+							Result := type
+							error := False
 						end
-						if Result.is_formal then
-							formal ?= Result
-							Result := type_from_formal_type (l_current_class_c, formal)
-						end
-						error := False
+					else
+						error := True
 					end
 				end
 				go_to_next_token
@@ -1085,31 +1095,44 @@ feature {NONE} -- Build completion possibilities
 						go_to_next_token
 					end
 				end
+				if Result /= Void then
+					Result := constrained_type (Result)
+				end
 			until
 				error or else after_searched_token
 			loop
 				name := current_token.image.as_lower
+				Result := constrained_type (Result)
+				l_named_tuple_type ?= Result
+				check
+					Result_has_associated_class: Result.has_associated_class
+				end
 				processed_class := Result.associated_class
 				error := True
-				if processed_class /= Void and then processed_class.has_feature_table then
-					feat := processed_class.feature_with_name (name)
-					if feat /= Void then
-						if feat.type /= Void then
+				if processed_class /= Void and then processed_class.has_feature_table or l_named_tuple_type /= Void then
+					type := Void
+					if l_named_tuple_type /= Void then
+						l_pos := l_named_tuple_type.label_position (name)
+						if l_pos > 0 then
+							type := l_named_tuple_type.generics.item (l_pos)
+						end
+					else
+						feat := processed_class.feature_with_name (name)
+						if feat /= Void and then feat.type /= Void then
 							type := feat.type
-							if type.is_formal then
-								formal ?= type
-								if
-									Result /= Void and then
-									Result.has_generics and then
-									Result.generics.valid_index (formal.position)
-								then
-									Result := Result.generics.item (formal.position)
-									error := False
-								end
-							else
-								Result := type
+						end
+					end
+					if type /= Void then
+						if type.is_loose then
+							Result := type.instantiation_in (Result, Result.associated_class.class_id)
+							if Result /= Void then
+								Result := Result.actual_type
+								Result := constrained_type (Result)
 								error := False
 							end
+						else
+							Result := type
+							error := False
 						end
 					end
 				end
@@ -1153,6 +1176,29 @@ feature {NONE} -- Build completion possibilities
 				l_analyzer.build_entities_list (context_feature_as)
 			end
 		end
+
+	add_named_tuple_generics (a_type: NAMED_TUPLE_TYPE_A) is
+			-- Add named tuple generics to completion possibilities.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_feat_name: EB_NAME_FOR_COMPLETION
+			l_array: ARRAY [TYPE_A]
+			i: INTEGER
+		do
+			from
+				l_array := a_type.generics
+				i := l_array.lower
+			until
+				i > l_array.upper
+			loop
+				create l_feat_name.make (a_type.label_name (i).twin)
+				insert_in_completion_possibilities (l_feat_name)
+				i := i + 1
+			end
+		end
+
+	last_type: TYPE_A
 
 	static: BOOLEAN
 

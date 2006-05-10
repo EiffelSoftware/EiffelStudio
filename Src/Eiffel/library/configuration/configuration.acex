@@ -2,7 +2,6 @@
 	<target name="configuration">
 		<description>
 			At the moment this library uses some clusters directly where it should use libraries and can therefore not be used in the compiler itself.
-			It is also not possible to do a full compilation of all classes in this library.
 		</description>
 		
 		<root all_classes="true"/>
@@ -23,15 +22,19 @@
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex" readonly="true"/>
 
 		<cluster name="configuration" location="." recursive="true"/>
-		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\structures\"/>
+		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\structures\">
+			<file_rule>
+				<exclude>.*</exclude>
+				<include>/search_table\.e$</include>
+			</file_rule>
+		</cluster>
 		<cluster name="cli_writer" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<file_rule>
-				<exclude>/clib$</exclude>
-				<exclude>/spec$</exclude>
-				<exclude>/sample$</exclude>
-				<exclude>/meta_data$</exclude>
-				<exclude>/pe_file$</exclude>
-				<exclude>/debug$</exclude>
+				<exclude>.*</exclude>
+				<include>\.e$</include>
+				<include>/com$</include>
+				<include>/emitter$</include>
+				<include>/versioning$</include>
 			</file_rule>
 		</cluster>
 		

@@ -19,7 +19,8 @@ inherit
 		move_to_tab_zone,
 		move_to_docking_zone,
 		show,
-		restore
+		restore,
+		close
 	end
 
 create
@@ -188,6 +189,11 @@ feature -- Redefine.
 			retry
 		end
 
+	close is
+			-- Redefine
+		do
+		end
+		
 feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
 	set_relative (a_content: SD_CONTENT) is

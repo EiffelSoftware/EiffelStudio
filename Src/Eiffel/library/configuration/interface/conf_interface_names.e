@@ -29,6 +29,8 @@ feature {NONE} -- Target names and descriptions
 	target_base_description: STRING is "Base target of this target."
 	target_compilation_type_name: STRING is "Compilation type"
 	target_compilation_type_description: STRING is "Type of compilation."
+	target_compilation_type_standard: STRING is "Standard (C/byte code)"
+	target_compilation_type_dotnet: STRING is ".NET (msil)"
 	target_executable_name: STRING is "Output name"
 	target_executable_description: STRING is "Name of the generated binary."
 	target_root_name: STRING is "Root"
@@ -56,5 +58,8 @@ feature {NONE} -- Option names and descriptions
 	option_invariant_description: STRING is "Evaluate invariant assertions."
 	option_loop_name: STRING is "Loop"
 	option_loop_description: STRING is "Evaluate loop assertions."
+
+	option_warnings_name: STRING is "Enabled"
+	option_warnings_description: STRING is "Are warnings enabled?"
 
 end

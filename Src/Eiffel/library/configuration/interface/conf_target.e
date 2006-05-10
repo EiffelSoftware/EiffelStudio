@@ -490,6 +490,19 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: extends = a_target
 		end
 
+	set_parent_by_name (a_target: STRING) is
+			-- Set `parent' to `a_target'.
+		require
+			system: system /= Void
+			a_target_ok: a_target /= Void and then not a_target.is_empty implies system.targets.has (a_target)
+		do
+			if a_target /= Void and then not a_target.is_empty then
+				set_parent (system.targets.item (a_target))
+			else
+				extends := Void
+			end
+		end
+
 	remove_parent is
 			-- Remove the parent target.
 		do
@@ -647,6 +660,21 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_settings.force (a_value, a_name)
 		ensure
 			added: internal_settings.item (a_name) = a_value
+		end
+
+	update_setting (a_name, a_value: STRING) is
+			-- Update/add/remove a setting.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+		do
+			if a_value = Void or else a_value.is_empty then
+				internal_settings.remove (a_name)
+			else
+				add_setting (a_name, a_value)
+			end
+		ensure
+			updated_removed: a_value = Void or else a_value.is_empty implies not internal_settings.has (a_name)
+			updated_added_set: a_value /= Void and then not a_value.is_empty implies internal_settings.item (a_name) = a_value
 		end
 
 	set_external_includes (an_includes: like internal_external_include) is

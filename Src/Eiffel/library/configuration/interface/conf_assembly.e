@@ -234,6 +234,7 @@ feature -- Access queries
 	options: CONF_OPTION is
 		local
 			l_assembly: CONF_ASSEMBLY
+			l_local: CONF_OPTION
 		do
 				-- if used as library, get options from application level
 				-- either if the assembly is defined there or otherwise directly from the application target
@@ -244,14 +245,20 @@ feature -- Access queries
 				else
 					Result := target.application_target.options
 				end
-			else
-				if internal_options /= Void then
-					Result := internal_options
-				else
-					create Result
-				end
+			end
 
-				Result.merge (target.options)
+				-- get local options
+			if internal_options /= Void then
+				l_local := internal_options.twin
+			else
+				create l_local
+			end
+			l_local.merge (target.options)
+
+			if Result /= Void then
+				Result.merge (l_local)
+			else
+				Result := l_local
 			end
 		end
 

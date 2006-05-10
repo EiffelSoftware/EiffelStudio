@@ -1554,7 +1554,10 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 				Result := True
 			elseif token.is_text then
 				if is_keyword (token) then
-					-- no interesting token : skip
+					-- no interesting token except precursor
+					if token_image_is_same_as_word (token, "precursor") then
+						Result := True
+					end
 				elseif is_comment (token) then
 					-- no interesting token : skip
 				elseif is_string (token) then

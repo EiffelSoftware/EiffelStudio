@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <system
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,8 +8,15 @@
 		<description>
 			Codedom provider
 		</description>
+
 		<root feature="default_create" class="CODE_DOM_PROVIDER"/>
-		<version major="5" minor="7" release="426" build="0"/>
+
+		<version major="5" minor="7" release="509" build="0"/>
+
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+
 		<option>
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
@@ -27,139 +34,80 @@
 		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="executable_name" value="EiffelSoftware.Codedom"/>
 
-		<!--<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.acex"/>-->
+		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.acex"/>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</library>
+		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.acex" readonly="true">
+			<option namespace="EiffelSoftware.Library.Merger" />
+		</library>
+		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.acex" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</library>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</library>
+		<library name="compiler_parser" location="$EIFFEL_SRC\eiffel\parser\parser.acex" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</library>
 
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
 
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
-
-
-
-		<cluster name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\cache_browser">
-			<option namespace="EiffelSoftware.CodeDom.CacheBrowser" />
-		</cluster>
-		<cluster name="common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\common" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</cluster>
-		<cluster name="compliance_checker" location="$EIFFEL_SRC\tools\compliance_checker\engine" recursive="true">
-			<option namespace="EiffelSoftware.Library.ComplianceChecker" />
-			<file_rule>
-				<exclude>/reporting$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="emitter" location="$EIFFEL_SRC\dotnet\consumer" recursive="true">
-			<option namespace="EiffelSoftware.Library.Emitter" />
-		</cluster>
-		<cluster name="helpers" location="$EIFFEL_SRC\dotnet\helpers" recursive="true">
-			<option namespace="EiffelSoftware.Library.Helpers" />
-			<file_rule>
-				<exclude>/example$</exclude>
-				<exclude>/classic$</exclude>
-			</file_rule>
-		</cluster>
-
-
-
-
-		<cluster name="interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface\" recursive="true">
+		<cluster name="interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom" />
 		</cluster>
-		<cluster name="code_generator" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\" recursive="true">
+		<cluster name="code_generator" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom.CodeGenerator" />
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="code_generator_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface\">
+		<cluster name="code_generator_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface">
 			<option namespace="EiffelSoftware.CodeDom" />
 		</cluster>
-		<cluster name="compiler" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\" recursive="true">
+		<cluster name="compiler" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom.Compiler" />
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface\">
+		<cluster name="compiler_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface">
 			<option namespace="EiffelSoftware.CodeDom" />
 		</cluster>
-		<cluster name="parser_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface\">
-			<option namespace="EiffelSoftware.CodeDom">
-			</option>
-		</cluster>
-		<cluster name="ast" location="$EIFFEL_SRC\eiffel\parser\" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</cluster>
-		<cluster name="eiffel_parser_errors" location="$EIFFEL_SRC\Eiffel\API\error\misc\">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-			<file_rule>
-				<exclude>/error_handler.e$</exclude>
-				<exclude>/syntax_error.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="config" location="$EIFFEL_SRC\eiffel\library\configuration\" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</cluster>
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true">
-			<option namespace="EiffelSoftware.Library.Merger" />
-		</cluster>
-		<cluster name="gobo" location="$GOBO\library\" readonly="true" recursive="true">
-			<option namespace="EiffelSoftware.Library.Gobo" />
-			<file_rule>
-				<exclude>/hact$</exclude>
-				<exclude>/other$</exclude>
-				<exclude>/se$</exclude>
-				<exclude>/ve$</exclude>
-				<exclude>/expat$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
-			<option namespace="EiffelSoftware.Library.Merger">
-			</option>
-		</cluster>
-		<cluster name="parser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\" recursive="true">
+		<cluster name="parser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom.Parser">
 			</option>
 			<file_rule>
 				<exclude>/interface$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="shared_env" location="$EIFFEL_SRC\eiffel\eiffel\shared\">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-			<file_rule>
-				<exclude>/shared_names_heap.e$</exclude>
-				<exclude>/shared_error_handler.e$</exclude>
-			</file_rule>
+		<cluster name="parser_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface">
+			<option namespace="EiffelSoftware.CodeDom" />
 		</cluster>
-		<cluster name="structures" location="$EIFFEL_SRC\eiffel\eiffel\structures\">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-			<renaming old_name="version" new_name="version_toto"/>
-		</cluster>
-		<cluster name="uuid" location="$EIFFEL_SRC\library\uuid\" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
+		
+		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop" recursive="true">
+			<option namespace="EiffelSoftware.Library.Merger" />
 		</cluster>
 	</target>
 
 	<target name="debug" extends="common">
-		<setting name="line_generation" value="True"/>
 		<option debug="true">
 			<debug name="log_exceptions" enabled="true"/>
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>		
+		</option>
+		<setting name="line_generation" value="True"/>
 	</target>
 
 	<target name="release" extends="common">
-		<setting name="line_generation" value="False"/>
 		<option debug="false">
 			<debug name="log_exceptions" enabled="false"/>
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>		
+		</option>
+		<setting name="line_generation" value="False"/>
 	</target>
 </system>

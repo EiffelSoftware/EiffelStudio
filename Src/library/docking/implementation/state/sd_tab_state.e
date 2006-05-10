@@ -154,11 +154,13 @@ feature -- Redefine
 						l_first_tab := False
 					elseif not l_third_time then
 	 					create l_tab_state.make (l_content, l_docking_state.zone, direction)
+	 					l_content.set_visible (True)
 						l_content.change_state (l_tab_state)
 						l_tab_state.set_direction (a_direction)
 						l_third_time := True
 					elseif l_third_time then
 						create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone, direction)
+						l_content.set_visible (True)
 						l_content.change_state (l_tab_state)
 						l_tab_state.set_direction (a_direction)
 					end

@@ -590,7 +590,6 @@
 
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>iexplore.exe $url</STRING></PREF>
-	<PREF NAME="general.shell_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
 
 	<PREF NAME="general.dynamic_library_window_width" DESCRIPTION="Height of dynamic library window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.dynamic_library_window_height" DESCRIPTION="Width of dynamic library window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
@@ -607,5 +606,10 @@
 	<PREF NAME="tools.search_tool.init_only_compiled_classes" DESCRIPTION="Initial status of only compiled classes."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_subclusters" DESCRIPTION="Initial status of searching subclusters."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.none_result_keyword_field_background_color" DESCRIPTION="Background color of none result keyword field" HIDDEN="True"><COLOR>255;175;138</COLOR></PREF>
+
+	<PREF NAME="tools.class_browser.show_unchanged_feature_from_any" DESCRIPTION="Show unchanged features in class ANY by default?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.show_tooltip" DESCRIPTION="Show tooltip?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.odd_row_background_color" DESCRIPTION="Backgroud color of odd rows in class browser"><COLOR>240;240;240</COLOR></PREF>
+	<PREF NAME="tools.class_browser.even_row_background_color" DESCRIPTION="Backgroud color of even rows in class browser"><COLOR>255;255;255</COLOR></PREF>
 
 </EIFFEL_DOCUMENT>

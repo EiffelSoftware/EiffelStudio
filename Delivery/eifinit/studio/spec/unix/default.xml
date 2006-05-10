@@ -1,6 +1,7 @@
 <EIFFEL_DOCUMENT>		
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>False</BOOLEAN></PREF>	
-	<PREF NAME="general.shell_command" DESCRIPTION="Command used to launch an external editor."><STRING>xterm -geometry 100x40 -e vi +$line $target</STRING></PREF>
+	<PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING>xterm -geometry 100x40</STRING></PREF>
+	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>xterm -geometry 100x40 -e vi +$line $target</STRING></PREF>
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acroread</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>firefox $url</STRING></PREF>
 <PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Monospace-r-regular-9-sans</FONT></PREF>

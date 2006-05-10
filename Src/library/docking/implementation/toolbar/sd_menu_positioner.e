@@ -83,7 +83,9 @@ feature -- Command
 			if internal_sizer.is_enough_max_space (False) then
 				l_tool_bars := internal_tool_bar_row.zones
 				from
-					l_tool_bars.delete (internal_mediator.caller)
+					if internal_mediator /= Void then
+						l_tool_bars.delete (internal_mediator.caller)
+					end
 					l_tool_bars.start
 					l_positions_and_sizes.start
 				until

@@ -12,54 +12,59 @@ inherit
 			parent as parent_dialog,
 			make as make_dlg,
 			on_timer as on_timer_wel_dialog,
-			destroy as real_destroy
+			destroy as real_destroy,
+			show as wel_show
 		export
 			{NONE} all
 			{ANY} exists
 		end
-
-	REFACTORING_HELPER
 
 create
 	make
 
 feature {NONE} -- Initlization
 
-	make (a_file_name: STRING; a_parent_window: EV_WINDOW) is
+	make (a_pixmap: EV_PIXMAP; a_parent_window: EV_WINDOW) is
 			-- Creation method.
 		require
-			not_void: a_file_name /= Void
+			not_void: a_pixmap /= Void
 		local
-			l_imp: WEL_WINDOW
 			l_composite_window: WEL_COMPOSITE_WINDOW
 		do
-			to_implement ("User timer to show fading effect, has problem: it not have high priority. May use thread instead or improve efficiency of this class?")
-
 			l_composite_window ?= a_parent_window.implementation
 			check not_void: l_composite_window /= Void end
 			make_dlg (l_composite_window)
 
-			l_imp := Current
-			l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
-			file_name := a_file_name
+			set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
 
-			create timer
-			timer.actions.extend (agent on_timer)
-			alpha := alpha_step
-			timer.set_interval (timer_interval)
+			pixmap := a_pixmap
 		ensure
-			set: file_name = a_file_name
+			set: pixmap = a_pixmap
 		end
 
 feature -- Command
 
-	set_pixmap_file (a_filename: STRING) is
-			-- Set `file_name'.
+	show is
+			-- Show
 		do
-			file_name := a_filename
+			create timer
+			timer.set_interval (timer_interval)
+
+			timer.actions.extend (agent on_timer)
+			alpha := alpha_step
+
+			wel_show
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set `pixmap'
+		do
+			pixmap := a_pixmap
 			if exists then
 				update_layered_window_rgba (alpha)
 			end
+		ensure
+			set: pixmap = a_pixmap
 		end
 
 	set_position (a_screen_x, a_screen_y: INTEGER) is
@@ -67,7 +72,6 @@ feature -- Command
 		do
 			set_x (a_screen_x)
 			set_y (a_screen_y)
-			show
 		end
 
 	destroy is
@@ -85,20 +89,14 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	file_name: STRING
-			-- Pixmap file name.
-
-	load_rgba_dib (a_filaname: STRING; a_width, a_height: INTEGER): WEL_BITMAP is
+	load_rgba_dib: WEL_BITMAP is
 			-- Load a image which is locate at `a_filename' to RGBA DIB.
 		local
-			l_pixmap: EV_PIXMAP
 			l_imp: EV_PIXMAP_IMP
 		do
-			create l_pixmap
-			l_pixmap.set_with_named_file (a_filaname)
-			l_imp ?= l_pixmap.implementation
+			l_imp ?= pixmap.implementation
 			check not_void: l_imp /= Void end
-			Result := l_imp.get_bitmap
+			create Result.make_by_bitmap (l_imp.get_bitmap)
 		ensure
 			exists: Result /= Void and then Result.exists
 		end
@@ -115,7 +113,6 @@ feature {NONE} -- Implementation
 			l_point: WEL_POINT
 			l_size: WEL_SIZE
 			-- Source
-			l_pixmap: EV_PIXMAP
 			l_dc_src: WEL_MEMORY_DC
 			l_point_src: WEL_POINT
 			-- Misc
@@ -132,14 +129,11 @@ feature {NONE} -- Implementation
 			create l_point.make (x, y)
 
 			-- Prepare source DC
-			create l_pixmap
-			l_pixmap.set_with_named_file (file_name)
-			create l_size.make (l_pixmap.width, l_pixmap.height)
+			create l_size.make (pixmap.width, pixmap.height)
 
 			create l_dc_src.make_by_dc (l_dc)
-			l_dc_src.select_bitmap (load_rgba_dib (file_name, l_pixmap.width, l_pixmap.height))
+			l_dc_src.select_bitmap (load_rgba_dib)
 			check l_dc_src.exists end
-
 
 			create l_point_src.make (0, 0)
 
@@ -203,7 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 	timer: EV_TIMEOUT
-			-- Timer to show gradient effect.		
+			-- Timer to show gradient effect.	
 
 	timer_interval: INTEGER is 50
 			-- Interval for `timer'.
@@ -213,6 +207,9 @@ feature {NONE} -- Implementation
 
 	alpha_step: INTEGER is 50
 			-- Used by `timer', `alpha' increase step.
+
+	pixmap: EV_PIXMAP
+			-- Pixmap to show.
 
 feature {NONE} -- Externals
 

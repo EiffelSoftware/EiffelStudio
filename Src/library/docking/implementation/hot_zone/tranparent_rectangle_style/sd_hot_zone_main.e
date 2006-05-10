@@ -28,7 +28,6 @@ feature {NONE} -- Initlization
 			l_area: EV_RECTANGLE
 			l_up_width, l_left_width, l_right_width, l_bottom_width: INTEGER
 			l_up_height, l_left_height, l_right_height, l_bottom_height: INTEGER
-			l_temp: EV_PIXMAP
 		do
 			internal_docking_manager := a_docking_manager
 			internal_mediator := a_docker_mediator
@@ -36,22 +35,17 @@ feature {NONE} -- Initlization
 
 			l_area := internal_docking_manager.query.container_rectangle_screen
 
-			create l_temp
-			l_temp.set_with_named_file (internal_shared.icons.arrow_indicator_up)
-			l_up_width := l_temp.width
-			l_up_height := l_temp.height
+			l_up_width := internal_shared.icons.arrow_indicator_up.width
+			l_up_height := internal_shared.icons.arrow_indicator_up.height
 
-			l_temp.set_with_named_file (internal_shared.icons.arrow_indicator_down)
-			l_bottom_width := l_temp.width
-			l_bottom_height := l_temp.height
+			l_bottom_width := internal_shared.icons.arrow_indicator_down.width
+			l_bottom_height := internal_shared.icons.arrow_indicator_down.height
 
-			l_temp.set_with_named_file (internal_shared.icons.arrow_indicator_left)
-			l_left_width := l_temp.width
-			l_left_height := l_temp.height
+			l_left_width := internal_shared.icons.arrow_indicator_left.width
+			l_left_height := internal_shared.icons.arrow_indicator_left.height
 
-			l_temp.set_with_named_file (internal_shared.icons.arrow_indicator_right)
-			l_right_width := l_temp.width
-			l_right_height := l_temp.height
+			l_right_width := internal_shared.icons.arrow_indicator_right.width
+			l_right_height := internal_shared.icons.arrow_indicator_right.height
 
 			create top_rectangle.make (l_area.left + l_area.width // 2 - l_up_width // 2, l_area.top, l_up_width, l_up_height)
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_height, l_bottom_width, l_bottom_height)
@@ -68,6 +62,11 @@ feature {NONE} -- Initlization
 			bottom_indicator.set_position (bottom_rectangle.left, bottom_rectangle.top)
 			left_indicator.set_position (left_rectangle.left, left_rectangle.top)
 			right_indicator.set_position (right_rectangle.left, right_rectangle.top)
+
+			top_indicator.show
+			bottom_indicator.show
+			left_indicator.show
+			right_indicator.show
 		ensure
 			set: a_docker_mediator = internal_mediator
 			set: internal_docking_manager = a_docking_manager
@@ -105,9 +104,9 @@ feature  -- Redefine
 			end
 
 			l_floating_zone ?= l_caller
---			debug ("docking")
+			debug ("docking")
 				print ("%N SD_HOT_ZONE_MAIN apply change Manu. Result: " + Result.out)
---			end
+			end
 			if not Result then
 				l_left := a_screen_x - internal_mediator.offset_x
 				l_left := left_position (a_screen_x, l_left, l_caller.state.last_floating_width)
@@ -116,14 +115,14 @@ feature  -- Redefine
 				else
 					l_floating_zone.set_position (l_left, a_screen_y - internal_mediator.offset_y)
 				end
---				debug ("docking")
+				debug ("docking")
 					print ("%N SD_HOT_ZONE_MAIN apply changed l_floating_zone Void?  " + (l_floating_zone = Void).out)
---				end
+				end
 				Result := True
 			end
---			debug ("docking")
+			debug ("docking")
 				print ("%N SD_HOT_ZONE_MAIN apply changed Manu end")
---			end
+			end
 		ensure then
 			must_process: Result = True
 		end
@@ -175,29 +174,28 @@ feature  -- Redefine
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) or internal_shared.show_all_feedback_indicator then
 				if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					top_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_up_lightening)
+					top_indicator.set_pixmap (internal_shared.icons.arrow_indicator_up_lightening)
 				else
-					top_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_up)
+					top_indicator.set_pixmap (internal_shared.icons.arrow_indicator_up)
 				end
 				if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					bottom_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_down_lightening)
+					bottom_indicator.set_pixmap (internal_shared.icons.arrow_indicator_down_lightening)
 				else
-					bottom_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_down)
+					bottom_indicator.set_pixmap (internal_shared.icons.arrow_indicator_down)
 				end
 				if left_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					left_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_left_lightening)
+					left_indicator.set_pixmap (internal_shared.icons.arrow_indicator_left_lightening)
 				else
-					left_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_left)
+					left_indicator.set_pixmap (internal_shared.icons.arrow_indicator_left)
 				end
 				if right_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					right_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_right_lightening)
+					right_indicator.set_pixmap (internal_shared.icons.arrow_indicator_right_lightening)
 				else
-					right_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_right)
+					right_indicator.set_pixmap (internal_shared.icons.arrow_indicator_right)
 				end
 			end
-
 		ensure then
-			must_process:
+			must_process: True
 		end
 
 	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is

@@ -92,16 +92,16 @@ feature -- Visit nodes
 			if l_root /= Void then
 				create l_a_name.make (4)
 				create l_a_val.make (4)
-				l_a_name.force ("cluster")
-				l_a_val.force (l_root.cluster_name)
-				l_a_name.force ("feature")
-				l_a_val.force (l_root.feature_name)
 				if l_root.is_all_root then
 					l_a_name.force ("all_classes")
 					l_a_val.force (l_root.is_all_root.out.as_lower)
 				else
+					l_a_name.force ("cluster")
+					l_a_val.force (l_root.cluster_name)
 					l_a_name.force ("class")
 					l_a_val.force (l_root.class_name)
+					l_a_name.force ("feature")
+					l_a_val.force (l_root.feature_name)
 				end
 				append_tag ("root", Void, l_a_name, l_a_val)
 			end
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>%N")
+							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value).as_lower+"%"/>%N")
 							l_platforms.forth
 						end
 
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value)+"%"/>%N")
+							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value).as_lower+"%"/>%N")
 							l_builds.forth
 						end
 
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<build name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>%N")
+							append_text_indent ("<custom name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>%N")
 							l_custs.forth
 						end
 

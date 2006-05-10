@@ -187,7 +187,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_string (version_type_name)
 		end
 
-	Version_tag: INTEGER is 0x00000026
+	Version_tag: INTEGER is 0x026
 
 	Version_type_name: STRING is "GPL Edition";
 			-- Name of version, e.g. GPL edition, Enterprise Edition,...

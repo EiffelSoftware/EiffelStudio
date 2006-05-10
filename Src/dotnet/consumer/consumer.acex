@@ -20,6 +20,7 @@
 
 		<file_rule>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 
 		<setting name="cls_compliant" value="True"/>

@@ -1,9 +1,9 @@
-indexing 
+indexing
 	description: "Information on data to be generated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class 
+class
 	WIZARD_ENVIRONMENT
 
 inherit
@@ -20,7 +20,7 @@ inherit
 		end
 
 	WIZARD_ERRORS
-	
+
 create
 	make
 
@@ -34,17 +34,17 @@ feature {NONE} -- Initialization
 			Compile_c := True
 			Compile_eiffel := True
 			create abort_request_actions.make (10)
-			create abort_request_actions_mutex
+			create abort_request_actions_mutex.make
 		end
 
 feature -- Access
 
 	is_eiffel_interface: BOOLEAN
 			-- Is project COM interface to existing Eiffel project?
-	
+
 	is_new_component: BOOLEAN
 			-- Is project for new COM component?
-	
+
 	is_client: BOOLEAN
 			-- Is project for accessing existing COM component?
 
@@ -65,7 +65,7 @@ feature -- Access
 
 	idl_file_name: STRING
 			-- Path to definition file
-	
+
 	proxy_stub_file_name: STRING
 			-- Path to Proxy/Stub dll
 
@@ -74,13 +74,13 @@ feature -- Access
 
 	is_in_process: BOOLEAN
 			-- Should in process server code be generated?
-			
+
 	is_out_of_process: BOOLEAN
 			-- Should out of process server code be generated?
 
 	destination_folder: STRING
 			-- Path to destination folder
-	
+
 	project_name: STRING
 			-- Project name
 
@@ -121,7 +121,7 @@ feature -- Access
 		ensure
 			non_void_message: Result /= Void
 		end
-	
+
 	expanded_path (a_path: STRING): STRING is
 			-- Expand all environment variables in `a_path'.
 		require
@@ -202,7 +202,7 @@ feature -- Element Change
 			not_is_new_component: not is_new_component
 			not_is_client: not is_client
 		end
-		
+
 	set_is_new_component is
 			-- Set `is_eiffel_interface' with `False'.
 			-- Set `is_new_component' with `True'.
@@ -216,7 +216,7 @@ feature -- Element Change
 			is_new_component: is_new_component
 			not_is_client: not is_client
 		end
-		
+
 	set_is_client is
 			-- Set `is_eiffel_interface' with `False'.
 			-- Set `is_new_component' with `False'.
@@ -230,7 +230,7 @@ feature -- Element Change
 			not_is_new_component: not is_new_component
 			is_client: is_client
 		end
-	
+
 	set_marshaller_generated (a_value: BOOLEAN) is
 			-- Set `marshaller_generated' with `a_value'.
 		do
@@ -238,7 +238,7 @@ feature -- Element Change
 		ensure
 			marshaller_generated_set: marshaller_generated = a_value
 		end
-		
+
 	set_ace_file_name (ace_file: STRING) is
 			-- Set 'ace_file_name' to 'ace_file'.
 		require
@@ -349,7 +349,7 @@ feature -- Element Change
 			idl_file_name_set: idl_file_name.is_equal (expanded_path (a_idl_file_name))
 			idl: idl
 		end
-	
+
 	set_proxy_stub_file_name (a_proxy_stub: like proxy_stub_file_name) is
 			-- Set `proxy_stub_file_name' with `a_proxy_stub'.
 		require
@@ -360,7 +360,7 @@ feature -- Element Change
 		ensure
 			proxy_stub_file_name_set: proxy_stub_file_name.is_equal (expanded_path (a_proxy_stub))
 		end
-	
+
 	set_type_library_file_name (a_type_library_file_name: like type_library_file_name) is
 			-- Set `type_library_file_name' with `a_type_library_file_name'.
 		require
@@ -379,7 +379,7 @@ feature -- Element Change
 		ensure
 			idl_set: idl = a_boolean
 		end
-	
+
 	set_abort (a_error_code: like error_code) is
 			-- Set `abort' to `True'.
 			-- Set `error_code' with `a_error_code'.

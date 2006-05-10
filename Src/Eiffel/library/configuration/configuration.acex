@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="configuration" uuid="d99d877f-0f37-4b82-8fb6-ee98af7b13d7" library_target="configuration">
-		<target name="configuration">
+	<target name="configuration">
 		<description>
 			At the moment this library uses some clusters directly where it should use libraries and can therefore not be used in the compiler itself.
 			It is also not possible to do a full compilation of all classes in this library.
 		</description>
+		
+		<root all_classes="True" />
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
@@ -16,33 +18,38 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="parser" location="$EIFFEL_SRC\eiffel\parser\parser.acex" readonly="true"/>
+		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.acex" readonly="true"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex" readonly="true"/>
 
-		<cluster name="ast" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
-			<cluster name="eiffel_parser_errors" location="$EIFFEL_SRC\Eiffel\API\error\misc\">
-				<file_rule>
-					<exclude>/error_handler.e$</exclude>
-					<exclude>/syntax_error.e$</exclude>
-				</file_rule>
-			</cluster>
-		</cluster>
+		<cluster name="configuration" location="." recursive="true"/>
+		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\structures\"/>
 		<cluster name="cli_writer" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<file_rule>
 				<exclude>/clib$</exclude>
 				<exclude>/spec$</exclude>
 				<exclude>/sample$</exclude>
+				<exclude>/meta_data$</exclude>
+				<exclude>/pe_file$</exclude>
+				<exclude>/debug$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\structures\"/>
-
-		<cluster name="configuration" location="." recursive="true"/>
-		<cluster name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\classic\"/>
-		<cluster name="eac_components" location="$EIFFEL_SRC\dotnet\consumer\components\" recursive="true"/>
-		<cluster name="eac_serialization" location="$EIFFEL_SRC\dotnet\consumer\serialization\" recursive="true"/>
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true"/>
-		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true"/>
-		<cluster name="il_generation" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\" recursive="true">
+		
+		<cluster name="il_generation_windows" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\" recursive="true">
 			<file_rule>
-				<exclude>/unix$</exclude>
+				<exclude>.*</exclude>
+				<include>/windows$</include>
+				<include>/il_emitter.e$</include>
+				<include>/il_environment.e$</include>
+			</file_rule>
+		</cluster>
+
+		<cluster name="il_generation_unix" location="$EIFFEL_SRC\Eiffel\eiffel\il_generation\" recursive="true">
+			<file_rule>
+				<exclude>.*</exclude>
+				<include>/unix$</include>
+				<include>/il_emitter.e$</include>
+				<include>/il_environment.e$</include>
 			</file_rule>
 		</cluster>
 

@@ -170,49 +170,71 @@ feature {NONE} -- Implementation
 			-- Sets `a_item' pixmap based on `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_name: STRING
 		do
-			if a_feature.is_attribute then
-				if a_feature.is_obsolete then
-					Result := Pixmaps.Icon_obsolete_attribute
-				elseif a_feature.is_frozen then
-					Result := Pixmaps.Icon_frozen_attribute
-				else
-					Result := Pixmaps.Icon_attributes
-				end
-			elseif a_feature.is_deferred then
-				if a_feature.is_obsolete then
-					Result := Pixmaps.Icon_deferred_obsolete_feature
-				else
-					Result := Pixmaps.Icon_deferred_feature
-				end
-			elseif a_feature.is_once or else a_feature.is_constant then
-				if a_feature.is_obsolete then
-					Result := Pixmaps.Icon_once_obsolete_objects
-				elseif a_feature.is_frozen then
-					Result := Pixmaps.Icon_once_frozen_objects
-				else
-					Result := Pixmaps.Icon_once_objects
-				end
-			elseif a_feature.is_external then
-				if a_feature.associated_class = Void or else not a_feature.associated_class.is_true_external then
+			l_name := a_feature.assigner_name
+			if l_name = Void or else l_name.is_empty then
+				if a_feature.is_attribute then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_external_obsolete_feature
+						Result := Pixmaps.Icon_obsolete_attribute
 					elseif a_feature.is_frozen then
-						Result := Pixmaps.Icon_external_frozen_feature
+						Result := Pixmaps.Icon_frozen_attribute
 					else
-						Result := Pixmaps.Icon_external_feature
+						Result := Pixmaps.Icon_attributes
+					end
+				elseif a_feature.is_deferred then
+					if a_feature.is_obsolete then
+						Result := Pixmaps.Icon_deferred_obsolete_feature
+					else
+						Result := Pixmaps.Icon_deferred_feature
+					end
+				elseif a_feature.is_once or else a_feature.is_constant then
+					if a_feature.is_obsolete then
+						Result := Pixmaps.Icon_once_obsolete_objects
+					elseif a_feature.is_frozen then
+						Result := Pixmaps.Icon_once_frozen_objects
+					else
+						Result := Pixmaps.Icon_once_objects
+					end
+				elseif a_feature.is_external then
+					if a_feature.associated_class = Void or else not a_feature.associated_class.is_true_external then
+						if a_feature.is_obsolete then
+							Result := Pixmaps.Icon_external_obsolete_feature
+						elseif a_feature.is_frozen then
+							Result := Pixmaps.Icon_external_frozen_feature
+						else
+							Result := Pixmaps.Icon_external_feature
+						end
+					end
+				end
+				if Result = Void then
+					if a_feature.is_obsolete then
+						Result := Pixmaps.Icon_obsolete_feature
+					elseif a_feature.is_frozen then
+						Result := Pixmaps.Icon_frozen_feature
+					else
+						Result := Pixmaps.Icon_feature
+					end
+				end
+			else
+				if a_feature.is_deferred then
+					if a_feature.is_obsolete then
+						Result := Pixmaps.icon_deferred_obsolete_assigner
+					else
+						Result := Pixmaps.icon_deferred_assigner
+					end
+				else
+					if a_feature.is_obsolete then
+						Result := Pixmaps.Icon_obsolete_assigner
+					elseif a_feature.is_frozen then
+						Result := Pixmaps.Icon_frozen_assigner
+					else
+						Result := Pixmaps.Icon_assigner
 					end
 				end
 			end
-			if Result = Void then
-				if a_feature.is_obsolete then
-					Result := Pixmaps.Icon_obsolete_feature
-				elseif a_feature.is_frozen then
-					Result := Pixmaps.Icon_frozen_feature
-				else
-					Result := Pixmaps.Icon_feature
-				end
-			end
+
 		ensure
 			result_not_void: Result /= Void
 		end

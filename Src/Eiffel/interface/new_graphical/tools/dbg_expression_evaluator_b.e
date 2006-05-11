@@ -170,7 +170,7 @@ feature {NONE} -- EXPR_B evaluation
 			if not retried then
 				evaluate_expr_b (a_expr_b)
 			else
-				notify_error_exception (Cst_error_evaluation_failed_with_exception)
+				notify_error_exception (Cst_error_evaluation_failed_with_internal_exception)
 			end
 		rescue
 			retried := True
@@ -587,7 +587,7 @@ feature {NONE} -- EXPR_B evaluation
 					cl := a_feature_b.precursor_type.base_class
 					fi := cl.feature_table.feature_of_rout_id (a_feature_b.routine_id)
 				else
-					fi := cl.feature_table.item (a_feature_b.feature_name)
+					fi := feature_i_from_call_access_b_in_context (cl, a_feature_b)
 				end
 				if fi /= Void then
 					if fi.is_once then
@@ -639,7 +639,7 @@ feature {NONE} -- EXPR_B evaluation
 						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
-				fi := cl.feature_table.item (a_external_b.feature_name)
+					fi := feature_i_from_call_access_b_in_context (cl, a_external_b)
 				if fi = Void then
 					params := parameter_values_from_parameters_b (a_external_b.parameters)
 					if not error_occurred then
@@ -702,7 +702,7 @@ feature {NONE} -- EXPR_B evaluation
 
 	evaluate_attribute_b (a_attribute_b: ATTRIBUTE_B) is
 		local
-			cl: CLASS_C
+			wcl, cl: CLASS_C
 			fi: FEATURE_I
 		do
 			if tmp_target /= Void then
@@ -716,7 +716,7 @@ feature {NONE} -- EXPR_B evaluation
 			if cl = Void then
 				notify_error_evaluation (Cst_error_call_on_void_target)
 			else
-				fi := cl.feature_table.item (a_attribute_b.attribute_name)
+				fi := feature_i_from_call_access_b_in_context (cl, a_attribute_b)
 				if tmp_target /= Void then
 					evaluate_attribute (tmp_target.value_address, tmp_target, fi)
 				else
@@ -1288,6 +1288,44 @@ feature {NONE} -- Implementation
 		end
 
 	internal_expression_byte_node: like expression_byte_node
+
+feature {NONE} -- Compiler helpers
+
+	feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is
+			-- Return FEATURE_I corresponding to `a_call_access_b' in class `cl'
+			-- (this handles the feature renaming cases)
+		require
+			cl_not_void: cl /= Void
+			a_call_access_b_not_void: a_call_access_b /= Void
+		local
+			wcl: CLASS_C
+			featn: STRING
+		do
+			featn := a_call_access_b.feature_name
+			Result := cl.feature_named (featn)
+			if Result = Void then
+				wcl := system.class_of_id (a_call_access_b.written_in)
+				Result := wcl.feature_named (featn)
+				if Result /= Void and then wcl /= cl then
+					Result := fi_version_of_class (Result, cl)
+				end
+			end
+		end
+
+	fi_version_of_class (fi: FEATURE_I; a_class: CLASS_C): FEATURE_I is
+			-- Feature in `a_class' of which `Current' is derived.
+			-- `Void' if not present in that class.
+		require
+			fi_not_void: fi /= Void
+			a_class_not_void: a_class /= Void
+		local
+			rids: ROUT_ID_SET
+		do
+			if a_class.is_valid and then a_class.has_feature_table then
+				rids := fi.rout_id_set
+				Result := a_class.feature_table.feature_of_rout_id_set (fi.rout_id_set)
+			end
+		end
 
 feature {NONE} -- Dump value helpers
 

@@ -218,6 +218,8 @@ feature {NONE} -- Error message values
 
 	Cst_error_evaluation_failed_with_exception: STRING is "Evaluation failed with an exception"
 
+	Cst_error_evaluation_failed_with_internal_exception: STRING is "Evaluation failed due to internal exception"
+
 	Cst_error_not_yet_ready: STRING is " : sorry not yet ready"
 
 	Cst_error_report_to_support: STRING is " => ERROR : please report to support"

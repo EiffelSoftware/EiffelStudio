@@ -80,7 +80,7 @@ feature {DBG_EVALUATOR} -- Interface
 				notify_error (Cst_error_unable_to_get_target_object, Void)
 			else
 					--| Get the ICorDebugFunction to call.
-				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, f)
+				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, realf)
 
 					--| And then let's process the following ...
 				if l_icd_function = Void then

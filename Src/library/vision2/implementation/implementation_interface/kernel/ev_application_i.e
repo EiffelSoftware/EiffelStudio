@@ -232,9 +232,11 @@ feature -- Basic operation
 		require
 			a_idle_action_not_void: a_idle_action /= Void
 		do
+			lock
 			if not idle_actions.has (a_idle_action) then
 				idle_actions.extend (a_idle_action)
 			end
+			unlock
 		end
 
 	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
@@ -243,7 +245,24 @@ feature -- Basic operation
 		require
 			a_idle_action_not_void: a_idle_action /= Void
 		do
+			lock
 			idle_actions.prune_all (a_idle_action)
+			unlock
+		end
+
+	lock is
+			-- Lock the Mutex.
+		deferred
+		end
+
+	try_lock: BOOLEAN is
+			-- Try to see if we can lock, False means no lock could be attained
+		deferred
+		end
+
+	unlock is
+			-- Unlock the Mutex.
+		deferred
 		end
 
 feature -- Events
@@ -258,10 +277,12 @@ feature -- Events
 	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time only on idle.
 		do
+			lock
 			once_idle_actions.extend (an_action)
 			if not internal_idle_actions.has (do_once_idle_actions_agent) then
 				internal_idle_actions.extend (do_once_idle_actions_agent)
 			end
+			unlock
 		end
 
 	do_once_idle_actions is
@@ -270,7 +291,6 @@ feature -- Events
 		local
 			snapshot: like once_idle_actions
 		do
-
 			snapshot := once_idle_actions.twin
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
@@ -282,8 +302,7 @@ feature -- Events
 
 feature -- Event handling
 
-	accelerator_actions (an_accelerator: EV_ACCELERATOR):
-		EV_NOTIFY_ACTION_SEQUENCE is
+	accelerator_actions (an_accelerator: EV_ACCELERATOR): EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when `an_accelerator' key sequence is
 			-- pressed.
 		do
@@ -410,25 +429,61 @@ feature {NONE} -- Debug
 			pnd_targets.go_to (cur)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature -- Implementation
+
+	call_post_launch_actions is
+			-- Call the post launch actions.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				post_launch_actions.call (Void)
+			else
+				on_exception_action (new_exception)
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 	call_idle_actions is
 			-- Call idle actions.
+		local
+			retried: BOOLEAN
+			l_locked: BOOLEAN
 		do
-				-- Call the opo idle actions only if there are actions available.
-			if not internal_idle_actions.is_empty then
-				internal_idle_actions.call (Void)
-			elseif idle_actions_internal /= Void then
-				idle_actions_internal.call (Void)
+			if not retried then
+					-- Call the opo idle actions only if there are actions available.
+				if try_lock then
+					l_locked := True
+					if not internal_idle_actions.is_empty then
+						internal_idle_actions.call (Void)
+					elseif idle_actions_internal /= Void then
+						idle_actions_internal.call (Void)
+					end
+					unlock
+					l_locked := False
+				end
+			else
+				on_exception_action (new_exception)
 			end
+		rescue
+			if l_locked then
+				unlock
+				l_locked := False
+			end
+			retried := True
+			retry
 		end
 
-	call_exception_actions is
+	on_exception_action (an_exception: EXCEPTION) is
 			-- Call exception actions.
+		require
+			an_exception_not_void: an_exception /= Void
 		do
 			if uncaught_exception_actions_internal /= Void and then not uncaught_exception_actions_called then
 				uncaught_exception_actions_called := True
-				uncaught_exception_actions_internal.call ([new_exception])
+				uncaught_exception_actions_internal.call ([an_exception])
 				uncaught_exception_actions_called := False
 			end
 		end

@@ -36,7 +36,7 @@ feature {NONE} -- Target names and descriptions
 	target_root_name: STRING is "Root"
 	target_root_description: STRING is "Root cluster, class, feature of the system."
 	target_version_name: STRING is "Version"
-	target_version_description: STRING is "Version number."
+	target_version_description: STRING is "Version information."
 	target_product_name: STRING is "Product"
 	target_product_description: STRING is "Name of the product."
 	target_company_name: STRING is "Company"
@@ -45,11 +45,15 @@ feature {NONE} -- Target names and descriptions
 	target_copyright_description: STRING is "Copyright of this product."
 	target_trademark_name: STRING is "Trademark"
 	target_trademark_description: STRING is "Trademark of this product."
-
 	target_dialog_root_cluster: STRING is "Root cluster"
 	target_dialog_root_class: STRING is "Root class"
 	target_dialog_root_feature: STRING is "Root feature"
 	target_dialog_root_all: STRING is "Compile all classes"
+	target_excludes_name: STRING is "Excludes"
+	target_excludes_description: STRING is "Regular expression that exclude subfolders and/or files."
+	target_includes_name: STRING is "Includes"
+	target_includes_description: STRING is "Regular expression that include subfolders and/or files which where excluded by an exclude pattern."
+
 
 feature {NONE} -- Option names and descriptions
 

@@ -222,7 +222,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	set_library_target (a_target: like library_target) is
 			-- Set `library_target' to `a_target'.
 		require
-			no_overrides: a_target.overrides.is_empty
+			no_overrides: a_target /= Void implies a_target.overrides.is_empty
 		do
 			library_target := a_target
 		end

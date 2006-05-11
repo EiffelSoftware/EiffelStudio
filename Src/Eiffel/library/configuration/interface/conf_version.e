@@ -9,7 +9,10 @@ class
 	CONF_VERSION
 
 inherit
-	comparable
+	COMPARABLE
+		redefine
+			out
+		end
 
 create
 	make,
@@ -182,6 +185,34 @@ feature -- Comparison
 				(major = other.major and minor < other.minor) or
 				(major = other.major and minor = other.minor and release < other.release) or
 				(major = other.major and minor = other.minor and release = other.release and build < other.build)
+		end
+
+feature -- Output
+
+	out: STRING is
+			-- New string with printable representation.
+		local
+			l_ext: STRING
+		do
+			Result := version
+
+			create l_ext.make_empty
+			if product /= Void then
+				l_ext.append (product+" ")
+			end
+			if company /= Void then
+				l_ext.append (company+" ")
+			end
+			if copyright /= Void then
+				l_ext.append ("(c) "+copyright+" ")
+			end
+			if trademark /= Void then
+				l_ext.append ("(tm) "+trademark+" ")
+			end
+			if not l_ext.is_empty then
+				l_ext.prune_all_trailing (' ')
+				Result.append (" ("+l_ext+")")
+			end
 		end
 
 indexing

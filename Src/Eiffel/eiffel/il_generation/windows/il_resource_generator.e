@@ -204,6 +204,7 @@ feature {NONE} -- Implementation
 			l_data: MANAGED_POINTER
 			l_platform: PLATFORM
 			l_raw_file: RAW_FILE
+			virc: VIRC
 		do
 				-- Get resources of `a_module' if already initialized,
 				-- otherwise create a new one.
@@ -217,21 +218,26 @@ feature {NONE} -- Implementation
 				-- Read content of `a_file' and add it to the list of known resources
 				-- of `a_module'.
 			create l_raw_file.make_open_read (a_file)
+			if l_raw_file.exists then
 
-				-- Before putting the resource data in `l_data', we need to insert
-				-- the number of bytes in the first 4 bytes of `l_data' so that
-				-- we know exactly how long is the current resource entry.
-			create l_platform
-			create l_data.make (l_raw_file.count + l_platform.integer_32_bytes)
-			l_data.put_integer_32_le (l_raw_file.count, 0)
-			l_raw_file.read_data (l_data.item + l_platform.integer_32_bytes, l_raw_file.count)
-			l_raw_file.close
-			l_resources.extend (l_data)
+					-- Before putting the resource data in `l_data', we need to insert
+					-- the number of bytes in the first 4 bytes of `l_data' so that
+					-- we know exactly how long is the current resource entry.
+				create l_platform
+				create l_data.make (l_raw_file.count + l_platform.integer_32_bytes)
+				l_data.put_integer_32_le (l_raw_file.count, 0)
+				l_raw_file.read_data (l_data.item + l_platform.integer_32_bytes, l_raw_file.count)
+				l_raw_file.close
+				l_resources.extend (l_data)
 
-				-- Add entry in manifest resource table of current module.
-			l_token := a_module.md_emit.define_manifest_resource (
-				create {UNI_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
-			last_resource_offset := last_resource_offset + l_data.count
+					-- Add entry in manifest resource table of current module.
+				l_token := a_module.md_emit.define_manifest_resource (
+					create {UNI_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
+				last_resource_offset := last_resource_offset + l_data.count
+			else
+				create virc.make_resource_file_not_found (a_file)
+				error_handler.insert_warning (virc)
+			end
 		ensure
 			inserted: a_module.resources /= Void
 		end

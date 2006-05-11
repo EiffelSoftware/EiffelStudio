@@ -173,6 +173,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := console_shell_command_preference.value
 		end
 
+	xml_editor_command: STRING is
+			-- Command to open an external xml editor
+		do
+			Result := xml_editor_command_preference.value
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -211,6 +216,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	default_displayed_string_size_preference: INTEGER_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
+	xml_editor_command_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -236,6 +242,7 @@ feature {NONE} -- Preference Strings
 	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
 	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
 	console_shell_command_string: STRING is "general.console_shell_command"
+	xml_editor_command_string: STRING is "general.xml_editor_command"
 
 feature {NONE} -- Implementation
 
@@ -282,9 +289,11 @@ feature {NONE} -- Implementation
 			if l_platform.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
+				xml_editor_command_preference := l_manager.new_string_preference_value (l_manager, xml_editor_command_string, "notepad $target")
 			else
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
+				xml_editor_command_preference := l_manager.new_string_preference_value (l_manager, xml_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			end
 		end
 

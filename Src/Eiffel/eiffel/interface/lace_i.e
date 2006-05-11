@@ -928,7 +928,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_classes_per_module)
 			if l_s /= Void then
-				if l_s.is_natural_16 then
+				if l_s.is_natural_16 and then l_s.to_natural_16 > 0 then
 					system.set_msil_classes_per_module (l_s.to_natural_16)
 				else
 					create vd15

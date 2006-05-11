@@ -224,7 +224,6 @@ feature {EV_ANY_I} -- Implementation
 	pointer_button_press_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_button_press_actions'.
 
-
 feature -- Event handling
 
 	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
@@ -248,7 +247,6 @@ feature {EV_ANY_I} -- Implementation
 
 	pointer_double_press_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_double_press_actions'.
-
 
 feature -- Event handling
 
@@ -320,7 +318,6 @@ feature {EV_ANY_I} -- Implementation
 
 	key_press_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
 			-- Implementation of once per object `key_press_actions'.
-
 
 feature -- Event handling
 

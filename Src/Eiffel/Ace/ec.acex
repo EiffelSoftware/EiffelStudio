@@ -3,6 +3,14 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<setting name="check_vape" value="true"/>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="inlining" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="multithreaded" value="true"/>
 		<external_include location="$(EIFFEL_SRC)/C/bench">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -138,21 +146,6 @@
 			<debug name="xml_parser" enabled="false"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
-		<setting name="address_expression" value="false"/>
-		<setting name="array_optimization" value="false"/>
-		<setting name="check_vape" value="true"/>
-		<setting name="cls_compliant" value="true"/>
-		<setting name="console_application" value="true"/>
-		<setting name="dead_code_removal" value="true"/>
-		<setting name="dotnet_naming_convention" value="true"/>
-		<setting name="dynamic_runtime" value="false"/>
-		<setting name="exception_trace" value="true"/>
-		<setting name="il_verifiable" value="true"/>
-		<setting name="inlining" value="true"/>
-		<setting name="inlining_size" value="0"/>
-		<setting name="line_generation" value="false"/>
-		<setting name="msil_generation_type" value="exe"/>
-		<setting name="multithreaded" value="true"/>
 		<variable name="batch_preferences" value="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
 			<condition>
@@ -378,17 +371,6 @@
 			<debug name="xml_parser" enabled="false"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
-		<setting name="address_expression" value="false"/>
-		<setting name="array_optimization" value="false"/>
-		<setting name="check_vape" value="true"/>
-		<setting name="console_application" value="true"/>
-		<setting name="dead_code_removal" value="true"/>
-		<setting name="dynamic_runtime" value="false"/>
-		<setting name="exception_trace" value="true"/>
-		<setting name="inlining" value="true"/>
-		<setting name="inlining_size" value="0"/>
-		<setting name="line_generation" value="false"/>
-		<setting name="multithreaded" value="true"/>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition>
 				<platform excluded_value="windows"/>

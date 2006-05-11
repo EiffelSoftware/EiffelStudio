@@ -61,7 +61,7 @@ feature
 
 	type: TYPE_I is
 		do
-			Result := System.remover.inliner.inlined_feature.type
+			Result := System.remover.inliner.inlined_feature.result_type
 		end
 
 indexing

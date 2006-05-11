@@ -297,17 +297,18 @@ feature {NONE} -- WEL Implementation
 			loop
 				current_child := temp_children.item
 					-- Create a temporary region the size of the current child.
-				create tmp_region.make_rect
-					(current_child.x_position, current_child.y_position,
-					current_child.x_position + current_child.width,
-					current_child.y_position + current_child.height)
-					-- Subtract this temporary region from the `main_region'
-					-- and store in `main_region'.
-				new_region := main_region.combine (tmp_region, Rgn_diff)
-				tmp_region.delete
-				main_region.delete
-				main_region := new_region
-
+				if current_child.is_show_requested then
+					create tmp_region.make_rect
+						(current_child.x_position, current_child.y_position,
+						current_child.x_position + current_child.width,
+						current_child.y_position + current_child.height)
+						-- Subtract this temporary region from the `main_region'
+						-- and store in `main_region'.
+					new_region := main_region.combine (tmp_region, Rgn_diff)
+					tmp_region.delete
+					main_region.delete
+					main_region := new_region
+				end
 					-- Point to the next child if there is one.
 				temp_children.forth
 			end

@@ -86,6 +86,7 @@ feature -- Status setting
 			-- assign `hd' to `has_dot'
 		do
 			has_dot := hd
+
 		end
 
 feature {NONE} -- Implementation

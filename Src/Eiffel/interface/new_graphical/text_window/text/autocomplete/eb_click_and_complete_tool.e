@@ -1522,9 +1522,10 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_feat_name: EB_NAME_FOR_COMPLETION
+			l_feat_name: EB_NAME_WITH_TYPE_FOR_COMPLETION
 			l_array: ARRAY [TYPE_A]
 			i: INTEGER
+			l_type: TYPE_A
 		do
 			from
 				l_array := a_type.generics
@@ -1532,7 +1533,14 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			until
 				i > l_array.upper
 			loop
-				create l_feat_name.make (a_type.label_name (i).twin)
+				l_type := a_type.generics.item (i).actual_type
+				if l_type.is_loose then
+					l_type := l_type.instantiation_in (a_type, a_type.associated_class.class_id)
+						-- Do we need to solve the type?	
+					--l_type := l_type.actual_type
+					--l_type := constrained_type (l_type)
+				end
+				create l_feat_name.make (a_type.label_name (i).twin, l_type)
 				insert_in_completion_possibilities (l_feat_name)
 				i := i + 1
 			end

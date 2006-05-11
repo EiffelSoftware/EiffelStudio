@@ -95,8 +95,6 @@ feature -- Access
 			--| FIXME IEK Implement this
 		end
 
-
-
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is

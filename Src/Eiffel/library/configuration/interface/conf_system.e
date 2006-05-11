@@ -246,7 +246,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_factory_not_void: a_factory /= Void
 		local
 			l_old_targets: like targets
-			l_target: CONF_TARGET
 		do
 			target_order.wipe_out
 			if a_target_list = Void then

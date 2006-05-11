@@ -47,7 +47,6 @@ feature -- Status Setting
 		local
 			oldpix: POINTER
 			l_width, l_height: INTEGER
-			pixgc: POINTER
 		do
 			if drawable /= default_pointer then
 				oldpix := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (drawable)

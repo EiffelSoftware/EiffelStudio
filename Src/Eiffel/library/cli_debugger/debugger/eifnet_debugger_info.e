@@ -876,6 +876,17 @@ feature -- JIT Thread
 			end
 		end
 
+	refresh_last_thread_details is
+			-- Refresh last thread's details
+		local
+			t: EIFNET_DEBUGGER_THREAD_INFO
+		do
+			t := managed_thread (last_icd_thread_id)
+			if t /= Void then
+				t.refresh_thread_details
+			end
+		end
+
 	set_last_icd_thread (p: POINTER) is
 			-- Set `last_icd_thread' to `p'
 		local

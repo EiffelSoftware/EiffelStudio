@@ -671,10 +671,13 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			when Cst_managed_cb_name_change then
 					--| p_app_domain, p_thread
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
-				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				if p /= Default_pointer then
+					set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				end
 				p := dbg_cb_info_pointer_item (2) -- p_thread
 				if p /= Default_pointer then
 					set_last_thread_by_pointer (p)
+					Eifnet_debugger_info.refresh_last_thread_details
 				end
 
 			when Cst_managed_cb_step_complete then
@@ -744,14 +747,14 @@ feature {NONE} -- Callback actions
 		do
 			if p_controller /= Default_pointer then
 				l_hr := {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $Result)
+				if l_hr /= 0 then
+					l_hr := {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
+					l_hr := {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
+					Result := p_process
+					n := {CLI_COM}.release (p_app_domain)
+				end
+				n := {CLI_COM}.release (p_controller)
 			end
-			if l_hr /= 0 then
-				l_hr := {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
-				l_hr := {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
-				Result := p_process
-				n := {CLI_COM}.release (p_app_domain)
-			end
-			n := {CLI_COM}.release (p_controller)
 		end
 
 	continue_on_cb (cb_id: INTEGER): BOOLEAN is

@@ -556,7 +556,7 @@
 								<File Id="color_chooser_e" Name="COLOR_~1.E" LongName="color_chooser.e" />
 								<File Id="drawer_main_window_e" Name="DRAWER~1.E" LongName="drawer_main_window.e" />
 								<File Id="drawing_area_cell_e" Name="DRAWIN~1.E" LongName="drawing_area_cell.e" />
-								<File Id="edraw_e" Name="edraw.ace" />
+								<File Id="edraw_acex" Name="EDRAW~1.ACE" LongName="edraw.acex" />
 								<File Id="interface_names_e" Name="INTERF~1.E" LongName="interface_names.e" />
 								<File Id="line_style_chooser_e" Name="LINE_S~1.E" LongName="line_style_chooser.e" />
 								<File Id="main_window4_e" Name="MAIN_W~1.E" LongName="main_window.e" />

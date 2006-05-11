@@ -81,7 +81,7 @@ feature -- Access
 			loop
 				a_wid ?= i_th (i).implementation
 				tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
-				if mouse_ptr_wid = tab_label or else mouse_ptr_wid =  {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
+				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
 					Result := i
 				end
 				i := i + 1
@@ -167,19 +167,8 @@ feature -- Status report
 					visual_widget,
 					pn
 				)
-				check
-					p_not_void: p /= NULL
-				end
 				imp ?= eif_object_from_c (p)
-				check
-					p_has_eif_object: imp /= Void
-				end
-
 				Result ?= imp.interface
-
-				check
-					imp_has_interface: Result /= Void
-				end
 			end
 		end
 

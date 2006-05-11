@@ -453,6 +453,9 @@ feature {NONE} -- Class type anchor
 
 	class_type: CONF_CLASS;
 
+invariant
+	guid_set: classes_set implies guid /= Void and then not guid.is_empty
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

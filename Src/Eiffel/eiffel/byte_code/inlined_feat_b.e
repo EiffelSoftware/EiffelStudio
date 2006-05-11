@@ -33,6 +33,12 @@ feature
 	written_type_id: INTEGER
 			-- Class type ID of the class type where the feature is written
 
+	result_type: TYPE_I is
+			-- Type of an inlined feature
+		do
+			Result := real_type (byte_code.result_type)
+		end
+
 	fill_from (f: FEATURE_B) is
 		do
 			feature_name_id := f.feature_name_id;
@@ -51,23 +57,9 @@ feature
 		require
 			context_class_type_not_void: context_class_type /= Void
 			written_class_type_not_void: written_class_type /= Void
-		local
-			c: CLASS_C
-			f: FEATURE_I
-			t: TYPE_I
 		do
 			context_type_id := context_class_type.type_id
 			written_type_id := written_class_type.type_id
-			t := type
-			if t.has_true_formal then
-				c := context_class_type.associated_class
-				f := c.feature_of_rout_id (routine_id)
-				t := context.real_type (f.type.type_i)
-				if t.has_true_formal then
-					t := t.type_a.type_i
-				end
-				type := t
-			end
 		ensure
 			context_type_id_set: context_type_id = context_class_type.type_id
 			written_type_id_set: written_type_id = written_class_type.type_id
@@ -118,7 +110,7 @@ feature
 
 	analyze_on (reg: REGISTRABLE) is
 		local
-			result_type: TYPE_I
+			r_type: TYPE_I
 			reg_type: TYPE_C
 			local_is_current_temporary: BOOLEAN
 			a: ATTRIBUTE_BL
@@ -184,9 +176,9 @@ feature
 			local_regs := get_inlined_registers (byte_code.locals)
 			argument_regs := get_inlined_param_registers (byte_code.arguments)
 
-			result_type := byte_code.result_type
-			if not result_type.is_void then
-				result_reg := get_inline_register (real_type (result_type))
+			r_type := result_type
+			if not r_type.is_void then
+				result_reg := get_inline_register (r_type)
 			end
 
 			if compound /= Void then
@@ -268,6 +260,13 @@ feature -- Generation
 					i := i + 1
 				end
 			end;
+
+			context_class_type := system.class_type_of_id (context_type_id)
+			written_class_type := system.class_type_of_id (written_type_id)
+
+			Context.change_class_type_context (context_class_type, written_class_type)
+			Context.set_inlined_current_register (current_reg)
+
 			if local_regs /= Void then
 					-- Set the value of the local registers to the default
 				from
@@ -283,14 +282,8 @@ feature -- Generation
 
 			if result_reg /= Void then
 					-- Set the value of the result register to the default
-				reset_register_value (byte_code.result_type, result_reg)
-			end;
-
-			context_class_type := system.class_type_of_id (context_type_id)
-			written_class_type := system.class_type_of_id (written_type_id)
-
-			Context.change_class_type_context (context_class_type, written_class_type)
-			Context.set_inlined_current_register (current_reg)
+				reset_register_value (result_type, result_reg)
+			end
 
 			if not is_current_temporary then
 

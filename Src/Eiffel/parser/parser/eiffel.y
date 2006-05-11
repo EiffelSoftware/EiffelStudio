@@ -1883,6 +1883,8 @@ Qualified_expression:
 			{ $$ := $1 }
 	|	Qualified_call
 			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	A_static_call
+			{ $$ := $1 }
 	;
 
 Assigner_call: Qualified_expression TE_ASSIGNMENT Expression

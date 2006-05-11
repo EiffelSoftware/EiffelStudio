@@ -13,9 +13,9 @@ inherit
 	EV_APPLICATION_IMP
 		redefine
 			make,
-			add_idle_action,
-			do_once_on_idle,
-			call_idle_actions
+			lock,
+			try_lock,
+			unlock
 		end
 
 create
@@ -28,26 +28,6 @@ feature {NONE} -- Initialization
 		do
 			create idle_action_mutex
 			Precursor {EV_APPLICATION_IMP} (an_interface)
-		end
-
-feature -- Event Handling
-
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
-			-- Perform `an_action' one time only on idle.
-			-- Thread safe.
-		do
-			lock
-			Precursor {EV_APPLICATION_IMP} (an_action)
-			unlock
-		end
-
-	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
-			-- Extend `idle_actions' with `a_idle_action'.
-			-- Thread safe
-		do
-			lock
-			idle_actions.extend (a_idle_action)
-			unlock
 		end
 
 feature -- Thread Handling.
@@ -68,18 +48,6 @@ feature -- Thread Handling.
 			-- Unlock the Mutex.
 		do
 			idle_action_mutex.unlock
-		end
-
-feature {NONE} -- Implementation
-
-	call_idle_actions is
-			-- Execute idle actions.
-		do
-			if try_lock then
-				Precursor {EV_APPLICATION_IMP}
-				unlock
-			end
-				-- If we cannot obtain a lock then do not call idle actions, it will be called again in the next CPU slice.
 		end
 
 feature {NONE} -- Implementation

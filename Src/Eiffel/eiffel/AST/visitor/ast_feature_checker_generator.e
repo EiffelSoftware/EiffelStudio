@@ -3344,6 +3344,7 @@ feature -- Implementation
 			binary_b: BINARY_B
 			unary_b: UNARY_B
 			call_b: CALL_B
+			external_b: EXTERNAL_B
 			arguments: BYTE_LIST [PARAMETER_B]
 			argument: PARAMETER_B
 			assigner_arguments: BYTE_LIST [PARAMETER_B]
@@ -3392,7 +3393,10 @@ feature -- Implementation
 				outer_nested_b ?= target_byte_node
 				binary_b ?= target_byte_node
 				unary_b ?= target_byte_node
-				if outer_nested_b /= Void then
+				external_b ?= target_byte_node
+				if external_b /= Void then
+					--| Do nothing (for external static calls)
+				elseif outer_nested_b /= Void then
 					call_b := outer_nested_b
 						-- Find end of call chain
 					from
@@ -3455,9 +3459,15 @@ feature -- Implementation
 						-- Evaluate assigner command byte node
 					access_b := target_assigner.access (void_type.type_i)
 					access_b.set_parameters (assigner_arguments)
-						-- Replace end of call chain with an assigner command
-					access_b.set_parent (outer_nested_b)
-					outer_nested_b.set_message (access_b)
+					if external_b = Void then
+							-- Replace end of call chain with an assigner command
+						access_b.set_parent (outer_nested_b)
+						outer_nested_b.set_message (access_b)
+					else
+							-- Set external static assigner
+						check call_b_unattached: call_b = Void end
+						call_b := access_b
+					end
 					create l_instr.make (call_b, l_as.start_location.line)
 					l_instr.set_line_pragma (l_as.line_pragma)
 					last_byte_node := l_instr

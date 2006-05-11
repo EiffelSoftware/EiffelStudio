@@ -68,14 +68,14 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.acex"/>
+		<library name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.acex"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
-		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.acex"/>
-		<library name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.acex"/>
-		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>

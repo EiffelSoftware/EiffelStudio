@@ -146,9 +146,11 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 				a_image := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
 				{EV_GTK_EXTERNALS}.g_list_free (a_list)
 				a_pixbuf := {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_image)
-				create Result
-				pix_imp ?= Result.implementation
-				pix_imp.set_pixmap_from_pixbuf (a_pixbuf)
+				if a_pixbuf /= default_pointer then
+					create Result
+					pix_imp ?= Result.implementation
+					pix_imp.set_pixmap_from_pixbuf (a_pixbuf)
+				end
 			end
 		end
 

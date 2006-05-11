@@ -89,6 +89,7 @@ feature {NONE} -- Initialization
 			-- Start the event loop.
 		do
 			set_application_main_window (silly_main_window)
+			call_post_launch_actions
 			message_loop
 		end
 
@@ -151,6 +152,22 @@ feature -- Basic operation
 			-- Wait for `msec' milliseconds and return.
 		do
 			c_sleep (msec)
+		end
+
+	lock is
+			-- Lock the Mutex.
+		do
+		end
+
+	try_lock: BOOLEAN is
+			-- Try to see if we can lock, False means no lock could be attained
+		do
+			Result := True
+		end
+
+	unlock is
+			-- Unlock the Mutex.
+		do
 		end
 
 feature -- Root window
@@ -486,21 +503,6 @@ feature {NONE} -- WEL Implemenation
 			create rich_edit_dll.make
 		end
 
-feature {NONE} -- Exceptions
-
-	in_exception_processing: BOOLEAN
-			-- Are we already called by `on_exception_action'?
-
-	on_exception_action (an_exception: EXCEPTION) is
-			-- Call `uncaught_exception_actions' if set when an exception occurs in the event loop.
-		do
-			if uncaught_exception_actions_internal /= Void and not in_exception_processing then
-				in_exception_processing := True
-				uncaught_exception_actions_internal.call ([an_exception])
-				in_exception_processing := False
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	theme_window: EV_THEME_WINDOW
@@ -518,9 +520,6 @@ feature {NONE} -- Implementation
 			msg: WEL_MSG
 		do
 			from
-				if post_launch_actions_internal /= Void then
-					post_launch_actions_internal.call (Void)
-				end
 				create msg.make
 			until
 				quit_requested

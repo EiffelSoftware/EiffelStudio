@@ -134,10 +134,10 @@ feature {NONE} -- Implementation
 			cmd_string: STRING
 		do
 			if a_button = 3 and is_sensitive then
-				cmd_string := preferences.misc_data.external_editor_command.twin
+				cmd_string := preferences.misc_data.xml_editor_command.twin
 				if not cmd_string.is_empty then
 					cmd_string.replace_substring_all ("$target", eiffel_ace.lace.file_name)
-					cmd_string.replace_substring_all ("$line", "1")
+					cmd_string.replace_substring_all ("$line", "")
 					create cmd_exec
 					cmd_exec.execute (cmd_string)
 				end

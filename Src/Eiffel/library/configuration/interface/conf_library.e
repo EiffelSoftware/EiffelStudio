@@ -142,7 +142,11 @@ feature {NONE} -- Implementation
 			l_app_target: CONF_TARGET
 		do
 			l_app_target := target.application_target
-			if l_app_target.precompile /= Void and then l_app_target.precompile.uuid.is_equal (uuid) then
+			if
+				l_app_target.precompile /= Void and then
+				l_app_target.precompile.uuid /= Void and then
+				l_app_target.precompile.uuid.is_equal (uuid)
+			then
 				Result := l_app_target.precompile
 			else
 				from

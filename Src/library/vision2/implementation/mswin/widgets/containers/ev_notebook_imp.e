@@ -408,10 +408,9 @@ feature {NONE} -- Implementation
 				counter = nb
 			loop
 				child_imp ?= get_item (counter).window
-				check
-					valid_cast: child_imp /= Void
+				if child_imp.is_show_requested then
+					value := child_imp.minimum_width.max (value)
 				end
-				value := child_imp.minimum_width.max (value)
 				counter := counter + 1
 			end
 
@@ -440,10 +439,9 @@ feature {NONE} -- Implementation
 				counter = count
 			loop
 				child_imp ?= get_item (counter).window
-				check
-					valid_cast: child_imp /= Void
+				if child_imp.is_show_requested then
+					value := child_imp.minimum_height.max (value)
 				end
-				value := child_imp.minimum_height.max (value)
 				counter := counter + 1
 			end
 
@@ -473,11 +471,10 @@ feature {NONE} -- Implementation
 				counter = count
 			loop
 				child_imp ?= (get_item (counter)).window
-				check
-					valid_cast: child_imp /= Void
+				if child_imp.is_show_requested then
+					mw := child_imp.minimum_width.max (mw)
+					mh := child_imp.minimum_height.max (mh)
 				end
-				mw := child_imp.minimum_width.max (mw)
-				mh := child_imp.minimum_height.max (mh)
 				counter := counter + 1
 			end
 
@@ -501,10 +498,10 @@ feature {NONE} -- Implementation
 		do
 				-- Resize ourself first.
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			resize_children
+			resize_children (False)
 		end
 
-	resize_children is
+	resize_children (from_on_size: BOOLEAN) is
 			-- Resize children to match `sheet_rect'.
 		local
 			i: INTEGER
@@ -513,13 +510,22 @@ feature {NONE} -- Implementation
 		do
 			from
 				tab_rect := sheet_rect
+				print ("Resizing children to " + tab_rect.width.out + " " + tab_rect.height.out + "%N")
 				i := 1
 			until
 				i > count
 			loop
 				child_imp ?= get_item (i - 1).window
-				child_imp.child_cell.move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
-				child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
+
+				if from_on_size then
+						-- The code below is like the one from `set_move_and_size' except that
+						-- we always call `wel_move_and_resize' as otherwise the hidden notebook
+						-- items don't get a proper size.
+					child_imp.child_cell.move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
+					child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_show_requested)
+				else
+					child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
+				end
 				i := i + 1
 			end
 		end
@@ -592,7 +598,7 @@ feature {NONE} -- WEL Implementation
 			-- `Current' has been resized.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
-			resize_children
+			resize_children (True)
 		end
 
 	on_tcn_selchange is

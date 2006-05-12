@@ -1004,7 +1004,10 @@ feature {NONE} -- Initialization
 			loop
 				l_property := l_properties.item
 				l_setter := l_property.setter
-				if l_setter /= Void then
+					-- Only setters with one argument can be used as assigner commands
+					-- because order of arguments in setters and assigner commands is
+					-- opposite.
+				if l_setter /= Void and then l_setter.arguments.count = 1 then
 					l_getter := l_property.getter
 					if l_getter /= Void then
 						l_feat_i := a_feat_tbl.item (l_getter.eiffel_name)

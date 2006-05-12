@@ -197,16 +197,16 @@ feature -- Output
 			Result := version
 
 			create l_ext.make_empty
-			if product /= Void then
+			if product /= Void and then not product.is_empty then
 				l_ext.append (product+" ")
 			end
-			if company /= Void then
+			if company /= Void and then not company.is_empty then
 				l_ext.append (company+" ")
 			end
-			if copyright /= Void then
+			if copyright /= Void and then not copyright.is_empty then
 				l_ext.append ("(c) "+copyright+" ")
 			end
-			if trademark /= Void then
+			if trademark /= Void and then not trademark.is_empty then
 				l_ext.append ("(tm) "+trademark+" ")
 			end
 			if not l_ext.is_empty then

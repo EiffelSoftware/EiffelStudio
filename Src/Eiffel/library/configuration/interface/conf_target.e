@@ -1114,7 +1114,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	update_setting (a_name, a_value: STRING) is
 			-- Update/add/remove a setting.
 		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_name_valid: a_name /= Void and then valid_setting (a_name)
 		do
 			if a_value = Void or else a_value.is_empty then
 					internal_settings.remove (a_name)

@@ -878,7 +878,7 @@ feature {NONE} -- Implementation
 							old_assembly.check_changed
 
 								-- if it wasn't modified, directly use the old classes.
-							if not old_assembly.is_modified then
+							if not old_assembly.is_modified and old_assembly.is_group_equivalent (an_assembly) then
 								an_assembly.set_date (old_assembly.date)
 								an_assembly.set_classes (old_assembly.classes)
 								an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)

@@ -34,13 +34,6 @@ inherit
 			default_create
 		end
 
-	SHARED_EIFFEL_PARSER
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
@@ -80,11 +73,6 @@ inherit
 		end
 
 	SHARED_INST_CONTEXT
-		undefine
-			default_create
-		end
-
-	SHARED_SERVER
 		undefine
 			default_create
 		end
@@ -915,21 +903,35 @@ feature {NONE} -- Implementation
 	insertion_position: INTEGER
 			-- Current place to insert code at.
 
+	match_list: LEAF_AS_LIST
+			-- Match list from `reparse'
+
+	parser: EIFFEL_PARSER is
+			-- Eiffel parser
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
+		end
+
 	reparse is
 			-- Parse `class_text' and assign AST to `class_as'.
 		require
 			text_managed: text_managed
 		local
 			retried: BOOLEAN
+			l_class_c: CLASS_C
 		do
 			if not retried then
 					--| FIXME set `current_class' in `system'.
 				if class_i.compiled then
-					class_i.system.set_current_class (class_i.compiled_class)
+					l_class_c := class_i.compiled_class
+					class_i.system.set_current_class (l_class_c)
 				end
 				inst_context.set_group (class_i.group)
-				Eiffel_parser.parse_from_string (text)
-				class_as := Eiffel_parser.root_node
+				parser.parse_from_string (text)
+				if parser.root_node /= Void and then parser.match_list /= Void then
+					class_as := parser.root_node
+					match_list := parser.match_list
+				end
 				is_modified := False
 			else
 				class_as := Void
@@ -1036,7 +1038,7 @@ feature {NONE} -- Implementation
 			l_match_list: LEAF_AS_LIST
 			l_comments: EIFFEL_COMMENTS
 		do
-			l_match_list := match_list_server.item (class_as.class_id)
+			l_match_list := match_list
 			exp := a_export.as_lower
 			insertion_position := 0
 
@@ -1049,12 +1051,14 @@ feature {NONE} -- Implementation
 					else
 						s := ""
 					end
---					c := l.item.comment (text)
 					l_comments := l.item.comment (l_match_list)
 					if l_comments = Void or else l_comments.is_empty then
-						c := " "
+						c := ""
 					else
 						c := l_comments.first
+						if not c.is_equal (" ") then
+							c.left_adjust
+						end
 					end
 					c.prune_all_trailing ('%R')
 					if s.is_equal (exp) and c.is_equal (a_comment) then
@@ -1076,12 +1080,14 @@ feature {NONE} -- Implementation
 					until
 						insertion_position > 0 or else l.after
 					loop
---						c := l.item.comment (text)
 						l_comments := l.item.comment (l_match_list)
 						if l_comments = Void or else l_comments.is_empty then
-							c := " "
+							c := ""
 						else
 							c := l_comments.first
+							if not c.is_equal (" ") then
+								c.left_adjust
+							end
 						end
 						c.prune_all_trailing ('%R')
 						if not lcs.has (c) then

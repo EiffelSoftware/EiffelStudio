@@ -56,14 +56,14 @@ feature -- Visit nodes
 					-- set all libraries
 				a_target.set_all_libraries (libraries)
 
-					-- if it is the library or application target, add the target to the libraries
-				if a_target = a_target.system.library_target or a_target = application_target then
-					libraries.force (a_target, a_target.system.uuid)
-				end
-
 				l_pre := a_target.precompile
 				if l_pre /= Void then
 					l_pre.process (Current)
+				end
+
+					-- if it is the library or application target, add the target to the libraries
+				if a_target = a_target.system.library_target or a_target = application_target then
+					libraries.force (a_target, a_target.system.uuid)
 				end
 
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))

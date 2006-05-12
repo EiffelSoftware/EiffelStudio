@@ -594,6 +594,11 @@ feature -- Access queries for settings
 			-- Value for the executable_name setting.
 		do
 			Result := settings.item (s_executable_name)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	setting_exception_trace: BOOLEAN is
@@ -705,15 +710,25 @@ feature -- Access queries for settings
 			-- Value for the metadata_cache_path setting.
 		do
 			Result := settings.item (s_metadata_cache_path)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	settings_msil_assembly_compatibility: STRING is
+	setting_msil_assembly_compatibility: STRING is
 			-- Value for the msil_assembly_compatibility setting.
 		do
 			Result := settings.item (s_msil_assembly_compatibility)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	settings_msil_classes_per_module: NATURAL_16 is
+	setting_msil_classes_per_module: NATURAL_16 is
 			-- Value for the msil_classes_per_module setting.
 		local
 			l_settings: like settings
@@ -728,16 +743,26 @@ feature -- Access queries for settings
 			end
 		end
 
-	settings_msil_clr_version: STRING is
+	setting_msil_clr_version: STRING is
 			-- Value for the msil_clr_version setting.
 		do
 			Result := settings.item (s_msil_clr_version)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	settings_msil_culture: STRING is
+	setting_msil_culture: STRING is
 			-- Value for the msil_culture setting.
 		do
 			Result := settings.item (s_msil_culture)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	setting_msil_generation: BOOLEAN is
@@ -755,7 +780,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	settings_msil_generation_type: STRING is
+	setting_msil_generation_type: STRING is
 			-- Value for the msil_generation_type setting.
 		local
 			l_settings: like settings
@@ -770,10 +795,15 @@ feature -- Access queries for settings
 			end
 		end
 
-	settings_msil_key_file_name: STRING is
+	setting_msil_key_file_name: STRING is
 			-- Value for the msil_key_file_name setting.
 		do
 			Result := settings.item (s_msil_key_file_name)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	setting_msil_use_optimized_precompile: BOOLEAN is
@@ -840,6 +870,11 @@ feature -- Access queries for settings
 			-- Value for the shared_library_definition setting.
 		do
 			Result := settings.item (s_shared_library_definition)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	setting_use_cluster_name_as_namespace: BOOLEAN is

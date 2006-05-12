@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_DIALOG_I
 
 inherit
@@ -22,26 +22,26 @@ feature -- Status Report
 			-- pressing ALT-F4)
 		deferred
 		end
-		
+
 	is_modal: BOOLEAN is
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
 		deferred
 		end
-		
+
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		deferred
 		end
-		
+
 	blocking_window: EV_WINDOW is
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
-		
+
 		deferred
 		end
-	
+
 	default_push_button: EV_BUTTON is
 			-- Default pushed button. This is the button that
 			-- is pushed if the user press the enter key unless
@@ -49,7 +49,7 @@ feature -- Status Report
 		do
 			Result := internal_default_push_button
 		end
-		
+
 	default_cancel_button: EV_BUTTON is
 			-- Default cancel button. This is the button that
 			-- is pushed if the user press the escape key or
@@ -59,7 +59,7 @@ feature -- Status Report
 		do
 			Result := internal_default_cancel_button
 		end
-		
+
 	current_push_button: EV_BUTTON is
 			-- Currently focused push button.
 			-- This is the button that is pushed when the user
@@ -92,7 +92,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 					internal_default_push_button.disable_default_push_button
 				end
 					-- Now we set `a_button' with the `is_default_push_button' flag.
-				a_button.enable_default_push_button	
+				a_button.enable_default_push_button
 			else
 					-- A button is already selected for being the current push button:
 					-- nothing to be done here.
@@ -105,10 +105,10 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 				-- Set the new `internal_default_push_button'.
 			internal_default_push_button := a_button
 		ensure
-			default_push_button_set: 
+			default_push_button_set:
 				default_push_button = a_button
 		end
-		
+
 	remove_default_push_button is
 			-- Remove the default push button of this dialog.
 		require
@@ -130,7 +130,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 		ensure
 			not_has_default_push_button: default_push_button = Void
 		end
-		
+
 	set_default_cancel_button (a_button: EV_BUTTON) is
 			-- Assign `a_button' to default_cancel_button.This is the button
 			-- that is pushed if the user press the escape key or
@@ -144,10 +144,10 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 			internal_default_cancel_button := a_button
 			enable_closeable
 		ensure
-			default_cancel_button_set: 
+			default_cancel_button_set:
 				default_cancel_button = a_button
 		end
-		
+
 	remove_default_cancel_button is
 			-- Remove the default cancel button of this dialog.
 		require
@@ -158,7 +158,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 		ensure
 			not_has_default_cancel_button: default_cancel_button = Void
 		end
-	
+
 	enable_closeable is
 			-- Set the window to be closeable by the user.
 		deferred
@@ -190,8 +190,8 @@ feature -- Basic operations
 			-- Show `Current' with respect to `a_window'.
 		deferred
 		end
-		
-feature {EV_DIALOG} -- Implementation 
+
+feature {EV_DIALOG} -- Implementation
 
 	dialog_key_press_action (a_key: EV_KEY) is
 		local
@@ -212,7 +212,7 @@ feature {EV_DIALOG} -- Implementation
 							-- sensitive so simulate a press.
 						default_cancel_button.select_actions.call (Void)
 					end
-	
+
 				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
 					current_push_button /= Void then
 					if current_push_button.is_sensitive then
@@ -236,18 +236,18 @@ feature {EV_DIALOG, EV_DIALOG_I, EV_WIDGET_I} -- Implementation
 			-- the user presses the enter key.
 
 	internal_default_cancel_button: EV_BUTTON
-			-- The default cancel button is the button pushed 
-			-- when the user press the escape key or close the 
+			-- The default cancel button is the button pushed
+			-- when the user press the escape key or close the
 			-- window using the close icon.
 			--
 			-- If there is no default cancel button, the close
 			-- icon is disabled.
-			
+
 	internal_current_push_button: EV_BUTTON
 			-- Current button pushed when the user press the enter
 			-- key in the dialog.
 			-- Void if none.
-			
+
 feature {EV_WIDGET_I} -- Implementation
 
 	set_current_push_button (a_button: EV_BUTTON) is
@@ -262,10 +262,9 @@ feature {EV_WIDGET_I} -- Implementation
 
 				-- At this stage no button in Current dialog has the `is_default_push_button' flag.
 			if a_button /= Void then
-				check
-					a_button_not_default: not a_button.is_default_push_button
+				if not a_button.is_default_push_button then
+					a_button.enable_default_push_button
 				end
-				a_button.enable_default_push_button
 				if a_button /= internal_default_push_button then
 						-- Only set `internal_current_push_button' if `a_button'
 						-- is different from `internal_default_push_button' as otherwise
@@ -285,11 +284,11 @@ feature {EV_WIDGET_I} -- Implementation
 				end
 			end
 		ensure
-			current_push_button_set: 
+			current_push_button_set:
 				(a_button = Void or else a_button /= internal_default_push_button) implies
 					internal_current_push_button = a_button
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIALOG

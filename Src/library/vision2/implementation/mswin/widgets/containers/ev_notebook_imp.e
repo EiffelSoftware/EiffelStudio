@@ -510,7 +510,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				tab_rect := sheet_rect
-				print ("Resizing children to " + tab_rect.width.out + " " + tab_rect.height.out + "%N")
 				i := 1
 			until
 				i > count

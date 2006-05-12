@@ -75,6 +75,9 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
+		<option>
+			<assertions postcondition="false" invariant="false" loop="false"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.acex"/>

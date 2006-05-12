@@ -270,12 +270,16 @@ feature {NONE} -- Children implementation
 		local
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
+			l_statcl: CLASS_C
 		do
 			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type)
 			if l_att_token /= 0 then
 				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 				if l_att_icd_debug_value /= Void then
-					Result := debug_value_from_icdv (l_att_icd_debug_value, f.type.associated_class)
+					if f.type.has_associated_class then
+						l_statcl := f.type.associated_class
+					end
+					Result := debug_value_from_icdv (l_att_icd_debug_value, l_statcl)
 					if Result /= Void then
 						Result.set_name (f.feature_name)
 					else

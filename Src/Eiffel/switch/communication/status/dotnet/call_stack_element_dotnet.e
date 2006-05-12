@@ -528,6 +528,16 @@ feature {NONE} -- Implementation
 								--| no local variable to store the Result
 								--| using directly  "return value"
 
+								--| However now (2006-05-12), 
+								--| there is a generated "unused" local variable
+								--| thus we have to skip this local
+								--| if the generated IL code is changed to get rid of this unused local
+								--| Please let me know (jfiat)
+							if l_list /= Void and then not l_list.is_empty then
+								l_list.start
+								l_list.remove
+							end
+
 								--| at this point, the private_current_object is known
 							l_dotnet_ref_value ?= private_current_object
 							if l_dotnet_ref_value /= Void then
@@ -550,7 +560,9 @@ feature {NONE} -- Implementation
 							end
 						end
 						if private_result /= Void then
-							private_result.set_static_class (rout.type.associated_class)
+							if rout.type.has_associated_class then
+								private_result.set_static_class (rout.type.associated_class)
+							end
 						end
 					end
 

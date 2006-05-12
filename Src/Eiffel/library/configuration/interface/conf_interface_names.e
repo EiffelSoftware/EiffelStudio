@@ -151,5 +151,6 @@ feature {NONE} -- Validation warnings
 		end
 
 	target_name_duplicate: STRING is "Can not rename target because there is already a target with the new name."
+	root_no_class: STRING is "Can not specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
 
 end

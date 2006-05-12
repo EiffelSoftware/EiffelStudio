@@ -25,7 +25,8 @@ feature {NONE} -- Initlization
 			create algorithm.make (a_content.group_count)
 			content := a_content
 			l_items := a_content.items
-			algorithm.set_items_width (init_group_width (l_items))
+--			algorithm.set_items_width (init_group_width (l_items))
+			algorithm.set_items_width (init_group_width (a_content.items))
 
 			init_grouping_infos
 		ensure
@@ -67,7 +68,10 @@ feature {NONE} -- Initlization
 		local
 			l_count: INTEGER
 			l_max_group_count: INTEGER
+--			l_setting: PROFILING_SETTING
 		do
+--			create l_setting.make
+--			l_setting.start_profiling
 			from
 				l_count := 1
 				l_max_group_count := content.item_count_except_separator
@@ -80,6 +84,7 @@ feature {NONE} -- Initlization
 
 				l_count := l_count + 1
 			end
+--			l_setting.stop_profiling
 		end
 
 feature -- Query

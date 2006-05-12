@@ -210,21 +210,25 @@ feature {NONE} -- Implementation functions.
 
 	prune_internal_caller_from_parent is
 			-- Prune `caller' from parent.
+		local
+			l_row: SD_TOOL_BAR_ROW
 		do
-			if internal_dock_mediator.caller.row /= Void then
-				if caller_in_single_row then
-					internal_dock_mediator.caller.row.parent.prune (internal_dock_mediator.caller.row)
+			l_row := internal_dock_mediator.caller.row
+			if l_row /= Void then
+				l_row.prune (internal_dock_mediator.caller)
+				check pruned: internal_dock_mediator.caller.row = Void end
+				if l_row.count = 0 then
+					l_row.parent.prune (l_row)
+					l_row.destroy
 					internal_docking_manager.command.resize (True)
 				end
-				internal_dock_mediator.caller.row.prune (internal_dock_mediator.caller)
-			end
-			if internal_dock_mediator.caller.tool_bar.parent /= Void then
-				internal_dock_mediator.caller.tool_bar.parent.prune (internal_dock_mediator.caller.tool_bar)
 			end
 		ensure
 			pruned: internal_dock_mediator.caller.row /= Void implies
 				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller.tool_bar)
+-- FIXIT: why following line cann't be satisfied sometime? It's EV_VERTICAL_BOX ?
 			parent_void: internal_dock_mediator.caller.tool_bar.parent = Void
+			parent_void: internal_dock_mediator.caller.row = Void
 		end
 
 feature {NONE}  -- Implementation query

@@ -192,6 +192,24 @@ feature -- Query
 	items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current'.
 
+	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- All displayed items.
+		do
+			from
+				create Result.make (1)
+				items.start
+			until
+				items.after
+			loop
+				if items.item.is_displayed then
+					Result.extend (items.item)
+				end
+				items.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		local

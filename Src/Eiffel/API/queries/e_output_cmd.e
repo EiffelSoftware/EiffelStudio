@@ -19,6 +19,8 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
+	E_SHARED_OUTPUT_INTERFACE_NAMES
+
 feature -- Properties
 
 	text_formatter: TEXT_FORMATTER;

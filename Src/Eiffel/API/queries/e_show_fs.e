@@ -46,7 +46,7 @@ feature -- Output
 			ctxt.set_is_short;
 			ctxt.set_feature_clause_order (feature_clause_order);
 			ctxt.format (current_class, text_formatter);
-		end;
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

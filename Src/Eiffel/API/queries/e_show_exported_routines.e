@@ -10,21 +10,14 @@ class E_SHOW_EXPORTED_ROUTINES
 inherit
 	E_CLASS_FORMAT_CMD
 		redefine
-			display_feature
+			display_feature,
+			criterion
 		end
 
 create
 	make, default_create
 
 feature -- Access
-
-	criterium (f: E_FEATURE): BOOLEAN is
-			-- Criterium for feature `f'
-		do
-			Result := f.is_exported_to (any_class)
-		ensure then
-			good_criterium: Result = f.is_exported_to (Any_class)
-		end
 
 	display_feature (f: E_FEATURE; st: TEXT_FORMATTER) is
 			-- Append `f' to `st'.
@@ -35,6 +28,12 @@ feature -- Access
 				st.add ("  ")
 				st.add_comment ("(obsolete)")
 			end
+		end
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
+		do
+			create {QL_FEATURE_IS_EXPORTED_CRI}Result
 		end
 
 indexing

@@ -10,62 +10,25 @@ indexing
 class E_SHOW_ROUTINE_DESCENDANTS
 
 inherit
-
-	E_FEATURE_CMD
+	E_SHOW_ROUTINE_HIERARCHY
+		redefine
+			criterion
+		end
 
 create
 	make, default_create
 
-feature -- Execution
+feature{NONE} -- Implemetation
 
-	work is
-		local
-			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
-			rout_id_set: ROUT_ID_SET;
-			i: INTEGER;
-			other_feature: E_FEATURE;
-			e_class: CLASS_C;
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			create classes.make;
-			record_descendants (classes, current_class);
-
-			rout_id_set := current_feature.rout_id_set;
-			from
-				i := 1;
-			until
-				i > rout_id_set.count
-			loop
-				text_formatter.add_new_line;
-				text_formatter.add ("History branch #");
-				text_formatter.add_int (i);
-				text_formatter.add_new_line;
-				text_formatter.add ("-----------------");
-				text_formatter.add_new_line;
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					e_class := classes.item
-					if e_class.has_feature_table then
-						other_feature := e_class.feature_with_rout_id (rout_id_set.item (i))
-						if other_feature /= Void then
-							e_class.append_name (text_formatter)
-							text_formatter.add (ti_Space)
-							other_feature.append_signature (text_formatter)
-							text_formatter.add_new_line
-							text_formatter.add_indent
-							text_formatter.add ("Version from class ")
-							other_feature.written_class.append_name (text_formatter)
-							text_formatter.add_new_line
-						end
-					end
-					classes.forth
-				end;
-				i := i + 1
-			end
-		end;
-
+			create {QL_FEATURE_DESCENDANT_RELATION_CRI}Result.make (
+				query_feature_item_from_e_feature (current_feature).wrapped_domain)
+		ensure then
+			result_attached: Result /= Void
+		end
+		
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

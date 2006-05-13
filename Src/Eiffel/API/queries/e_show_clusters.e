@@ -10,144 +10,37 @@ indexing
 class E_SHOW_CLUSTERS
 
 inherit
-
-	E_OUTPUT_CMD;
-	SHARED_EIFFEL_PROJECT
-	CONF_REFACTORING
+	E_SHOW_CLUSTER_HIERARCHY
+		redefine
+			is_folder_hierarchy_displayed,
+			work
+		end
 
 create
 
 	make, do_nothing
 
+feature -- Status report
+
+	is_folder_hierarchy_displayed: BOOLEAN is
+			-- Is folder hierarchy displayed?
+			-- e.g., should we display folders in a cluster?
+		do
+			Result := False
+		end
+
 feature -- Execution
 
 	work is
-			-- Show universe: clusters in class lists.
-		local
-			clusters: ARRAYED_LIST [CLUSTER_I];
-			cursor: CURSOR;
-			nb_of_classes: INTEGER;
-			nb_of_clusters: INTEGER;
+			-- Show clusters in universe.
 		do
---			clusters := Eiffel_universe.clusters;
-			if not clusters.is_empty then
-
-				nb_of_clusters := clusters.count;
-				text_formatter.add_int (nb_of_clusters);
-				if nb_of_clusters > 1 then
-					text_formatter.add (" clusters containing ")
-				else
-					text_formatter.add (" cluster containing ")
-				end;
-				from clusters.start until clusters.after loop
-					nb_of_classes := nb_of_classes + clusters.item.classes.count;
-					clusters.forth
-				end;
-				text_formatter.add_int (nb_of_classes);
-				if nb_of_classes > 1 then
-					text_formatter.add (" classes");
-				else
-					text_formatter.add (" class");
-				end;
-				text_formatter.add_new_line;
-				text_formatter.add ("root: ");
-				Eiffel_system.root_class.compiled_class.append_signature (text_formatter, True);
-				text_formatter.add (" (cluster: ");
-				text_formatter.add_group (
-					Eiffel_system.root_cluster,
-					Eiffel_system.root_cluster.name);
-				text_formatter.add (")");
-				text_formatter.add_new_line;
-				text_formatter.add_new_line;
-
-					--| Skip precompile clusters for now
-				conf_todo
---				from
---					clusters.start
---				until
---					clusters.after or else not (clusters.item.is_precompiled)
---				loop
---					clusters.forth
---				end;
-				from
-					--| Print user defined clusters
-				until
-					clusters.after
-				loop
-					cursor := clusters.cursor;
-					display_a_cluster (clusters.item);
-					clusters.go_to (cursor);
-					clusters.forth
-				end
-				conf_todo
---				from
---					--| Print precompiled clusters.
---					clusters.start
---				until
---					clusters.after or else not (clusters.item.is_precompiled)
---				loop
---					cursor := clusters.cursor;
---					display_a_cluster (clusters.item)
---					clusters.go_to (cursor);
---					clusters.forth
---				end
-			end
-		end;
-
-	display_a_cluster (cluster: CLUSTER_I) is
-		local
-			classes: HASH_TABLE [CLASS_I, STRING];
-			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
-			a_classi: CLASS_I;
-			a_classe: CLASS_C;
-			nb_of_classes: INTEGER;
-		do
-			create sorted_class_names.make;
-			classes := cluster.classes;
-
-			text_formatter.add ("Cluster: ");
-			text_formatter.add_group (cluster, cluster.cluster_name);
-			conf_todo
---			if cluster.is_precompiled then
---				text_formatter.add (" (Precompiled, ")
---			else
---				text_formatter.add (" (")
---			end;
-			nb_of_classes := classes.count;
-			text_formatter.add_int (nb_of_classes);
-			if nb_of_classes > 1 then
-				text_formatter.add (" classes)")
-			else
-				text_formatter.add (" class)")
-			end;
-			text_formatter.add_new_line;
-
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				sorted_class_names.put_front (classes.key_for_iteration);
-				classes.forth
-			end;
-			sorted_class_names.sort;
-			from
-				sorted_class_names.start
-			until
-				sorted_class_names.after
-			loop
-				text_formatter.add_indent;
-				a_classi := classes.item (sorted_class_names.item);
-				a_classe := a_classi.compiled_class;
-				if a_classe /= Void then
-					a_classe.append_signature (text_formatter, True);
-				else
-					a_classi.append_name (text_formatter);
-					text_formatter.add ("  (not in system)");
-				end;
-				text_formatter.add_new_line;
-				sorted_class_names.forth
-			end;
+			text_formatter.add (output_interface_names.root_class)
+			text_formatter.add (output_interface_names.colon)
+			text_formatter.add_space
+			Eiffel_system.root_class.compiled_class.append_signature (text_formatter, True)
+			text_formatter.add_new_line
+			text_formatter.add_new_line
+			Precursor
 		end
 
 indexing

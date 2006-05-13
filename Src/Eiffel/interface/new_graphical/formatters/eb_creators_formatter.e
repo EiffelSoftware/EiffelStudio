@@ -9,11 +9,7 @@ class
 	EB_CREATORS_FORMATTER
 
 inherit
-	EB_CLASS_TEXT_FORMATTER
-		redefine
-			class_cmd,
-			is_dotnet_formatter
-		end
+	EB_CLASS_FEATURE_FORMATTER
 
 create
 	make
@@ -27,9 +23,6 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_creators, 1)
 			Result.put (Pixmaps.Icon_format_creators, 2)
 		end
-
-	class_cmd: E_SHOW_CREATORS
-			-- Class command that can generate the information.
 
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
@@ -48,27 +41,13 @@ feature {NONE} -- Properties
 	post_fix: STRING is "cre"
 			-- String symbol of the command, used as an extension when saving.
 
-	is_dotnet_formatter: BOOLEAN is
-			-- Is Current able to format .NET XML types?
-		do
-			Result := True
-		end
-
 feature {NONE} -- Implementation
 
-	create_class_cmd is
-			-- Create `class_cmd'.
-		require else
-			associated_class_non_void: associated_class /= Void
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
 		do
-			create class_cmd.make (editor.text_displayed, associated_class)
+			Result := create{QL_FEATURE_IS_CREATOR_CRI}
 		end
-
-	has_breakpoints: BOOLEAN is False
-		-- Should `Current' display breakpoints?		
-
-	line_numbers_allowed: BOOLEAN is False;
-		-- Does it make sense to show line numbers in Current?	
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -10,8 +10,13 @@ indexing
 class E_SHOW_CALLERS
 
 inherit
+	E_FEATURE_CMD
+		redefine
+			criterion,
+			domain_generator
+		end
 
-	E_FEATURE_CMD;
+	QL_SHARED_FEATURE_INVOKE_RELATION_TYPES
 
 create
 	make, default_create
@@ -46,143 +51,117 @@ feature -- Execution
 
 	work is
 			-- Execute the display of callers.
-		do
-			if to_show_all_callers then
-				show_all_callers (flag)
-			else
-				tabs := -1;
-				show_current_callers (current_class, current_feature, flag)
-			end
-		end;
-
-	show_current_callers (l_class: like current_class; l_feat: like current_feature; a_flag: INTEGER_8) is
-			-- Show the callers of `l_feat' in `l_class'.
-		require
-			l_class_not_void: l_class /= Void
-			l_feat_not_void: l_feat /= Void
 		local
-			clients: ARRAYED_LIST [CLASS_C];
-			cfeat: STRING;
-			client: CLASS_C;
-			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
-			list: SORTED_LIST [STRING];
-			table: HASH_TABLE [SORTED_LIST [STRING], INTEGER];
-			st: like text_formatter;
-			invariant_name: STRING
+			l_domain: QL_FEATURE_DOMAIN
+			l_formatter: like text_formatter
+			l_callee: QL_FEATURE
+			l_caller: QL_FEATURE
+			l_last_callee_written_class_id: INTEGER
+			l_last_caller_class_id: INTEGER
+			l_changed: BOOLEAN
 		do
-			invariant_name := "_invariant";
-			st := text_formatter;
-			clients := l_class.clients;
-			create table.make (20);
-			create classes.make;
-			from
-				clients.start
-			until
-				clients.after
-			loop
-				client := clients.item;
-				list := l_feat.callers (client, a_flag)
-				if list /= Void then
-					table.put (list, client.class_id);
-					classes.put_front (client.lace_class)
-				end;
-				clients.forth;
-			end;
-
-			if not classes.is_empty then
-				l_feat.append_name (st);
-				st.add (" from ");
-				l_class.append_name (st);
-				st.add_new_line;
-				tabs := 0;
-			end
-
-			from
-				classes.sort;
-				tabs := tabs + 1;
-				classes.start
-			until
-				classes.after
-			loop
-				client := classes.item.compiled_class;
-					-- Print out client name once.
-				add_tabs (st, tabs);
-				client.append_name (st);
-				st.add_new_line;
+			l_domain ?= system_target_domain.new_domain (domain_generator)
+			check l_domain /= Void end
+			if not l_domain.is_empty then
+				l_domain.sort (agent feature_name_tester)
+				l_formatter := text_formatter
 				from
-					list := table.item (client.class_id);
-					list.start
+					l_domain.start
 				until
-					list.after
+					l_domain.after
 				loop
-					cfeat := list.item;
-					add_tabs (st, tabs + 1);
-					if cfeat.is_equal (invariant_name) then
-						st.add ("invariant")
+					l_caller := l_domain.item
+					l_callee ?= l_caller.data
+					check
+						l_callee /= Void
+					end
+					l_changed := False
+					if l_callee.class_c.class_id /= l_last_callee_written_class_id then
+						l_changed := True
+						l_last_callee_written_class_id := l_callee.class_c.class_id
+						if l_callee.is_real_feature then
+							l_callee.e_feature.append_full_name (l_formatter)
+						else
+							l_formatter.add (l_callee.name)
+						end
+						l_formatter.add_space
+						l_formatter.add (output_interface_names.from_word)
+						l_formatter.add_space
+						l_callee.class_c.append_name (l_formatter)
+						l_formatter.add_new_line
+					end
+					if l_changed or else l_caller.class_c.class_id /= l_last_caller_class_id then
+						l_last_caller_class_id := l_caller.class_c.class_id
+						l_formatter.add_indent
+						l_caller.class_c.append_name (l_formatter)
+						l_formatter.add_new_line
+					end
+					l_formatter.add_indent
+					l_formatter.add_indent
+					if l_caller.is_real_feature then
+						l_caller.e_feature.append_full_name (l_formatter)
 					else
-						st.add_feature_name (cfeat, client)
-					end;
-					st.add_new_line;
-					list.forth
-				end;
-				classes.forth
+						l_formatter.add (l_caller.name)
+					end
+					l_formatter.add_new_line
+					l_domain.forth
+				end
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
-	tabs: INTEGER;
-			-- Number of tabs
-
-	show_all_callers (a_flag: INTEGER_8) is
-			-- Show all the callers of `current_feature' and its descendants.
-		require
-			to_show_all_callers: to_show_all_callers
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		local
-			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C];
-			a_feat: E_FEATURE;
-			a_class: CLASS_C;
-			a_list: ARRAYED_LIST [CELL2 [CLASS_C,E_FEATURE]];
-			cell: CELL2 [CLASS_C,E_FEATURE];
-			rid: INTEGER;
-			st: like text_formatter
+			l_caller_type: QL_FEATURE_CALLER_TYPE
 		do
-			rid := current_feature.rout_id_set.item (1);
-			create descendants.make;
-			record_descendants (descendants, current_class);
-			from
-				create a_list.make (descendants.count)
-				a_list.start
-				descendants.start
-			until
-				descendants.after
-			loop
-				a_class := descendants.item;
-				if a_class.has_feature_table then
-					a_feat := a_class.feature_with_rout_id (rid)
-						-- FIXME: Manu: 03/25/2004:
-						-- Temporary fix for .NET as .NET classes don't have yet
-						-- the routine of ANY
-					debug ("FIXME") check fixme: False end end
-					if a_feat /= Void then
-						create cell.make (a_class, a_feat)
-						a_list.extend (cell)
-					end
-				end
-				descendants.forth
-			end;
-
-			from
-				a_list.start
-				st := text_formatter
-			until
-				a_list.after
-			loop
-				cell := a_list.item
-				show_current_callers (cell.item1, cell.item2, a_flag)
-				a_list.forth
+			if flag = {DEPEND_UNIT}.is_in_assignment_flag then
+				l_caller_type := assigner_caller
+			elseif flag = {DEPEND_UNIT}.is_in_creation_flag then
+				l_caller_type := creator_caller
+			else
+				l_caller_type := normal_caller
 			end
-		end;
+			create {QL_FEATURE_CALLERS_OF_CRI}Result.make (
+				query_feature_item_from_e_feature (current_feature).wrapped_domain,
+				l_caller_type, not to_show_all_callers)
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator used in current command
+		do
+			create {QL_FEATURE_DOMAIN_GENERATOR}Result
+			Result.set_criterion (criterion)
+			Result.enable_fill_domain
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+			-- Compare name of `feature_a' and `feature_b'.
+		local
+			l_callee_a: QL_FEATURE
+			l_callee_b: QL_FEATURE
+		do
+			l_callee_a ?= feature_a.data
+			l_callee_b ?= feature_b.data
+			check
+				l_callee_a /= Void
+				l_callee_b /= Void
+			end
+			if l_callee_a.class_c.topological_id /= l_callee_b.class_c.topological_id then
+				Result := l_callee_a.class_c.topological_id < l_callee_b.class_c.topological_id
+			else
+				if not feature_a.class_c.name.is_equal (feature_b.class_c.name) then
+					Result := feature_a.class_c.name < feature_b.class_c.name
+				else
+					Result := feature_a.name < feature_b.name
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display class externals of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,23 +8,23 @@ indexing
 	revision: "$Revision $"
 
 
-class E_SHOW_EXTERNALS 
+class E_SHOW_EXTERNALS
 
 inherit
-
 	E_CLASS_FORMAT_CMD
+		redefine
+			criterion
+		end
 
 create
 	make, default_create
 
 feature -- Access
 
-	criterium (f: E_FEATURE): BOOLEAN is
-			-- Criterium for feature `f'
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			Result := f.is_external
-		ensure then
-			good_criterium: Result = f.is_external
+			create {QL_FEATURE_IS_EXTERNAL_CRI}Result
 		end
 
 indexing

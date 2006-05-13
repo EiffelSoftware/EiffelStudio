@@ -11,8 +11,20 @@ deferred class
 
 inherit
 	EB_FORMATTER
+		redefine
+			new_button
+		end
 
 	SHARED_FORMAT_INFO
+
+feature -- Access
+
+	new_button: EV_TOOL_BAR_RADIO_BUTTON is
+			-- Create a new toolbar button and associate it with `Current'.
+		do
+			Result := Precursor
+			Result.drop_actions.extend (agent on_class_drop)
+		end
 
 feature -- Properties
 
@@ -28,56 +40,6 @@ feature -- Properties
 			-- Is Current class a .NET class? 		
 
 feature -- Status setting
-
-	set_stone (new_stone: CLASSI_STONE) is
-			-- Associate current formatter with class contained in `a_stone'.
-		local
-			a_stone: CLASSC_STONE
-		do
-			force_stone (new_stone)
-			a_stone ?= new_stone
-			if a_stone /= Void then
-				if (not a_stone.class_i.is_external_class) or is_dotnet_formatter then
-					set_class (a_stone.e_class)
-				end
-			else
-				associated_class := Void
-				class_cmd := Void
-				reset_display
-				if
-					selected and then
-					not widget.is_displayed
-				then
-					if widget_owner /= Void then
-						widget_owner.set_widget (widget)
-					end
-					display_header
-				end
-			end
-		end
-
-	set_class (a_class: CLASS_C) is
-			-- Associate current formatter with `a_class'.
-		do
-			associated_class := a_class
-			if a_class = Void or else not a_class.has_feature_table then
-				class_cmd := Void
-				associated_class := Void
-			else
-				create_class_cmd
-			end
-			must_format := True
-			format
-			if selected then
-				if widget_owner /= Void then
-					widget_owner.set_widget (widget)
-				end
-				display_header
-			end
-		ensure
-			class_set: (a_class /= Void and then a_class.has_feature_table) implies (a_class = associated_class)
-			cmd_created_if_possible: (a_class = Void or else not a_class.has_feature_table) = (class_cmd = Void)
-		end
 
 	set_dotnet_mode (a_flag: BOOLEAN) is
 			-- Set whether formatting in .NET mode to 'a_flag'
@@ -104,16 +66,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	create_class_cmd is
-			-- Create `class_cmd' depending on its actual type.
-		require
-			associated_class_non_void: associated_class /= Void
-			associated_class_is_compiled: associated_class.has_feature_table
-		deferred
-		ensure
-			class_cmd /= Void
-		end
-
 	file_name: FILE_NAME is
 			-- Name of the file in which displayed information may be stored.
 		require else
@@ -121,31 +73,6 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_from_string (associated_class.name)
 			Result.add_extension (post_fix)
-		end
-
-	generate_text is
-			-- Fill `formatted_text' with information concerning `class'.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				if class_cmd /= Void then
-					if has_breakpoints then
-						set_is_with_breakable
-					else
-						set_is_without_breakable
-					end
-					editor.handle_before_processing (false)
-					class_cmd.execute
-					editor.handle_after_processing
-				end
-				last_was_error := False
-			else
-				last_was_error := True
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 	temp_header: STRING is
@@ -177,8 +104,25 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	class_cmd: E_CLASS_CMD;
-			-- Class command that is used to generate text output (especially in files).
+	on_class_drop (cs: CLASSI_STONE) is
+			-- Notify `manager' of the dropping of `cs'.
+		do
+			if not selected then
+				execute
+			end
+			manager.set_stone (cs)
+		end
+
+	empty_widget: EV_WIDGET is
+			-- Widget displayed when no information can be displayed.
+		local
+			def: EV_STOCK_COLORS
+		do
+			create def
+			create {EV_CELL} Result
+			Result.set_background_color (def.White)
+			Result.drop_actions.extend (agent on_class_drop)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

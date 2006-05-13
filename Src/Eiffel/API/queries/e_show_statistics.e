@@ -10,10 +10,9 @@ indexing
 class E_SHOW_STATISTICS
 
 inherit
+	E_OUTPUT_CMD
 
-	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
-	CONF_REFACTORING
 
 create
 
@@ -25,32 +24,101 @@ feature -- Execution
 			-- Show system statistics.
 		local
 			stats: SYSTEM_STATISTICS
+			l_number: INTEGER
 		do
-			conf_todo
 			if Eiffel_project.initialized then
-				stats := Eiffel_system.statistics;
-				text_formatter.add_int (stats.number_of_compilations);
+				stats := Eiffel_system.statistics
+
+				text_formatter.add (output_interface_names.for_system)
+				text_formatter.add_space
+				text_formatter.add (eiffel_universe.target.name)
+				text_formatter.add_new_line
+				text_formatter.add (output_interface_names.long_separator)
+				text_formatter.add_new_line
+
+					-- Number of compilations
+				text_formatter.add_int (stats.number_of_compilations)
+				text_formatter.add_indent
 				if stats.number_of_compilations = 1 then
-					text_formatter.add (" compilation for system.")
+					text_formatter.add (output_interface_names.compilation_for_system)
 				else
-					text_formatter.add (" compilations for system.")
-				end;
-				text_formatter.add_new_line;
-				text_formatter.add_int (stats.number_of_clusters);
-				text_formatter.add (" clusters in the system.");
-				text_formatter.add_new_line;
-				text_formatter.add_int (stats.number_of_classes);
-				text_formatter.add (" classes in the system.");
-				text_formatter.add_new_line;
-				text_formatter.add_int (stats.number_of_melted_classes);
-				if stats.number_of_melted_classes = 1 then
-					text_formatter.add (" melted class in the system.");
-				else
-					text_formatter.add (" melted classes in the system.");
+					text_formatter.add (output_interface_names.compilations_for_system)
 				end
-				text_formatter.add_new_line;
+				text_formatter.add_new_line
+
+					-- Number of clusters
+				l_number := stats.number_of_clusters
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				if l_number > 1 then
+					text_formatter.add (output_interface_names.clusters_in_system)
+				else
+					text_formatter.add (output_interface_names.cluster_in_system)
+				end
+				text_formatter.add_new_line
+
+					-- Number of libraries
+				l_number := stats.number_of_libraries
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				if l_number > 1 then
+					text_formatter.add (output_interface_names.libraries_in_system)
+				else
+					text_formatter.add (output_interface_names.library_in_system)
+				end
+				text_formatter.add_new_line
+
+					-- Number of assemblies
+				l_number := stats.number_of_assemblies
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				if l_number > 1 then
+					text_formatter.add (output_interface_names.assemblies_in_system)
+				else
+					text_formatter.add (output_interface_names.assembly_in_system)
+				end
+				text_formatter.add_new_line
+
+					-- Number of classes
+				l_number := stats.number_of_classes
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				text_formatter.add (output_interface_names.classes_in_system)
+				text_formatter.add_new_line
+
+					-- Number of existing classes
+				l_number := stats.number_of_used_classes
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				text_formatter.add (output_interface_names.all_classes)
+				text_formatter.add_new_line
+
+					-- Number of compiled classes
+				l_number := stats.number_of_compiled_classes
+				text_formatter.add_int (l_number)
+				text_formatter.add_indent
+				text_formatter.add (output_interface_names.compiled)
+				text_formatter.add_space
+				if l_number > 1 then
+					text_formatter.add (output_interface_names.classes_in_universe)
+				else
+					text_formatter.add (output_interface_names.class_in_universe)
+				end
+				text_formatter.add_new_line
+
+					-- Number of melted classes
+				text_formatter.add_int (stats.number_of_melted_classes)
+				text_formatter.add_indent
+				text_formatter.add (output_interface_names.melted)
+				text_formatter.add_space
+				if stats.number_of_melted_classes = 1 then
+					text_formatter.add (output_interface_names.classes_in_universe)
+				else
+					text_formatter.add (output_interface_names.class_in_universe)
+				end
+				text_formatter.add_new_line
 			end
-		end;
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

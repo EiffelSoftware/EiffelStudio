@@ -10,9 +10,8 @@ class
 	EB_IMPLEMENTERS_FORMATTER
 
 inherit
-	EB_FEATURE_TEXT_FORMATTER
+	EB_FEATURE_CONTENT_FORMATTER
 		redefine
-			feature_cmd,
 			is_dotnet_formatter
 		end
 
@@ -28,9 +27,6 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_feature_implementers, 1)
 			Result.put (Pixmaps.Icon_format_feature_implementers, 2)
 		end
-
-	feature_cmd: E_SHOW_ROUTINE_IMPLEMENTERS
-			-- Feature command that can generate wanted information.
 
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
@@ -57,16 +53,25 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	create_feature_cmd is
-			-- Create `feature_cmd'.
-		require else
-			associated_feature_non_void: associated_feature /= Void
+	has_breakpoints: BOOLEAN is False
+			-- Should breakpoints be shown in Current?
+
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
 		do
-			create feature_cmd.make (editor.text_displayed, associated_feature)
+			create {QL_FEATURE_IMPLEMENTORS_OF_CRI}Result.make (query_feature_item_from_e_feature (associated_feature).wrapped_domain)
 		end
 
-	has_breakpoints: BOOLEAN is False;
-			-- Should breakpoints be shown in Current?
+	rebuild_browser is
+			-- Rebuild `browser'.
+		do
+			browser.set_is_branch_id_used (True)
+			browser.set_is_written_class_used (False)
+			browser.set_is_signature_displayed (False)
+			browser.set_is_version_from_displayed (True)
+			browser.set_feature_item (associated_feature)
+			browser.rebuild_interface
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

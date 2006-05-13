@@ -11,8 +11,11 @@ indexing
 class E_SHOW_SUPPLIERS
 
 inherit
-
 	E_CLASS_CMD
+		redefine
+			criterion,
+			domain_generator
+		end
 
 create
 	make, default_create
@@ -20,31 +23,57 @@ create
 feature -- Output
 
 	work is
-			-- Execute Current command.
+			-- Execute Current command.	
 		local
-			suppliers: SORTED_TWO_WAY_LIST [CLASS_I];
-			a_supplier: CLASS_C
+			l_domain: QL_CLASS_DOMAIN
+			l_formatter: like text_formatter
 		do
-			text_formatter.add ("Suppliers of class ");
-			current_class.append_signature (text_formatter, True);
-			text_formatter.add (":");
 			text_formatter.add_new_line;
-			text_formatter.add_new_line;
-			from
-				suppliers := sorted_list (current_class.suppliers.classes);
-				suppliers.start
-			until
-				suppliers.after
-			loop
-				a_supplier := suppliers.item.compiled_class;
-				if (current_class /= a_supplier) then
-					text_formatter.add_indent;
-					a_supplier.append_signature (text_formatter, True);
-					text_formatter.add_new_line
-				end;
-				suppliers.forth
+			l_domain ?= system_target_domain.new_domain (domain_generator)
+			check l_domain /= Void end
+			if not l_domain.is_empty then
+				l_formatter := text_formatter
+				l_domain.sort (agent class_name_tester)
+				from
+					l_domain.start
+				until
+					l_domain.after
+				loop
+					l_domain.item.class_c.append_signature (l_formatter, True)
+					l_formatter.add_new_line
+					l_domain.forth
+				end
 			end
-		end;
+		end
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
+		do
+			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (
+				query_class_item_from_class_c (current_class).wrapped_domain,
+				class_supplier_relation)
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator used in current command
+		do
+			create {QL_CLASS_DOMAIN_GENERATOR}Result
+			Result.set_criterion (criterion)
+			Result.enable_fill_domain
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	class_name_tester (class_a, class_b: QL_CLASS): BOOLEAN is
+			-- Compare name of `class_a' and `class_b'.
+		require
+			class_a_attached: class_a /= Void
+			class_b_attached: class_b /= Void
+		do
+			Result := class_a.name < class_b.name
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -164,6 +164,9 @@ feature -- Pop up
 			-- Make `widget' visible.
 		do
 			if widget_owner /= Void then
+				if widget_owner.last_widget /= widget then
+					widget_owner.set_widget (widget)
+				end
 				widget_owner.force_display
 			end
 			display_header

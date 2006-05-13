@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display deferred routines of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,18 +12,19 @@ class E_SHOW_DEFERRED_ROUTINES
 inherit
 
 	E_CLASS_FORMAT_CMD
+		redefine
+			criterion
+		end
 
 create
 	make, default_create
 
 feature -- Access
 
-	criterium (f: E_FEATURE): BOOLEAN is
-			-- Criterium for feature `f'
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			Result := f.is_deferred
-		ensure then
-			good_criterium: Result = f.is_deferred
+			create {QL_FEATURE_IS_DEFERRED_CRI}Result
 		end
 
 indexing

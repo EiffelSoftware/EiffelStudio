@@ -10,8 +10,12 @@ indexing
 class E_SHOW_ANCESTORS
 
 inherit
+	E_CLASS_CMD
+		redefine
+			criterion,
+			domain_generator
+		end
 
-	E_CLASS_CMD;
 	SHARED_EIFFEL_PROJECT
 
 create
@@ -20,69 +24,100 @@ create
 feature -- Execution
 
 	work is
+			-- Execute Current command.	
+		local
+			l_domain: QL_CLASS_DOMAIN
+			l_class: QL_CLASS
 		do
-			create displayed.make;
-			current_class.append_signature (text_formatter, True);
 			text_formatter.add_new_line;
-			rec_display (1, current_class, text_formatter);
-			displayed := Void;
-		end;
+			l_class := query_class_item_from_class_c (current_class)
+			l_domain ?= system_target_domain.new_domain (domain_generator)
+			check l_domain /= Void end
+			l_domain.compare_objects
+			l_domain.start
+			l_domain.search (l_class)
+			check not l_domain.exhausted end
+			processed_class.wipe_out
+			rec_display_ancestors (l_domain.item, 1, text_formatter)
+		end
 
 feature {NONE} -- Implementation
 
-	displayed: LINKED_LIST [CL_TYPE_A];
-
-	already_processed (t: CL_TYPE_A): BOOLEAN is
-		do
-			from
-				displayed.start
-			until
-				Result or else displayed.after
-			loop
-				if displayed.item.same_as (t) then
-					Result := True
-				else
-					displayed.forth
-				end
-			end
-		end;
-
-	rec_display (i: INTEGER; c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
-			-- Display parents of `c' in tree form.
+	rec_display_ancestors (a_class: QL_CLASS; a_tab_count: INTEGER; a_text_formatter: TEXT_FORMATTER) is
+			-- Display ancestors of `a_class' recursively in `a_text_formatter'.
+			-- `a_tab_count' indicates how many tabs should be prepended in each line.
+		require
+			a_class_attached: a_class /= Void
+			a_tab_count_non_negative: a_tab_count >= 0
+			a_text_formatter_attached: a_text_formatter /= Void
 		local
-			parents: FIXED_LIST [CL_TYPE_A];
-			parent_class: CLASS_C;
-			any_id: INTEGER
+			l_any_id: INTEGER
+			l_list: LIST [QL_CLASS]
+			l_sorted_list: DS_ARRAYED_LIST [QL_CLASS]
 		do
-			any_id := Eiffel_system.system.any_id
-			if (c.class_id /= any_id) or else (c = current_class) then
-				parents := c.parents;
-				if not parents.is_empty then
+			l_any_id := Eiffel_system.system.any_id
+			add_tabs (a_text_formatter, a_tab_count)
+			a_class.class_c.append_signature (a_text_formatter, True)
+			if processed_class.has (a_class) then
+				if a_class.class_c.class_id /= l_any_id then
+					a_text_formatter.add (output_interface_names.ellipse)
+					a_text_formatter.add_new_line
+				end
+			else
+				if processed_class.capacity = processed_class.count then
+					processed_class.resize (processed_class.count + 50)
+				end
+				processed_class.put (a_class)
+				a_text_formatter.add_new_line
+				l_list ?= a_class.data
+				if l_list /= Void and then not l_list.is_empty then
+					create l_sorted_list.make (l_list.count)
+					l_list.do_all (agent l_sorted_list.force_last)
 					from
-						parents.start
+						l_sorted_list.start
 					until
-						parents.after
+						l_sorted_list.after
 					loop
-						parent_class := parents.item.associated_class;
-						add_tabs (a_text_formatter, i);
-						parent_class.append_signature (a_text_formatter, True);
-						if
-							already_processed (parents.item) and then
-							parent_class.class_id /= any_id
-						then
-							a_text_formatter.add ("...");
-							a_text_formatter.add_new_line;
-						else
-							a_text_formatter.add_new_line;
-							displayed.extend (parents.item);
-							displayed.finish
-							rec_display (i + 1, parent_class, a_text_formatter);
-						end;
-						parents.forth
+						rec_display_ancestors (l_sorted_list.item_for_iteration, a_tab_count + 1, a_text_formatter)
+						l_sorted_list.forth
 					end
 				end
 			end
-		end;
+		end
+
+	processed_class: DS_HASH_SET [QL_CLASS] is
+			-- List of processed classes
+		do
+			if processed_class_internal = Void then
+				create processed_class_internal.make (50)
+			end
+			Result := processed_class_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	processed_class_internal: like processed_class
+			-- Implementation of `processed_class'
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
+		do
+			create {QL_CLASS_ANCESTOR_RELATION_CRI}Result.make (
+				query_class_item_from_class_c (current_class).wrapped_domain,
+				class_ancestor_relation)
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator used in current command
+		do
+			create {QL_CLASS_DOMAIN_GENERATOR}Result
+			Result.set_criterion (criterion)
+			Result.enable_fill_domain
+		ensure then
+			result_attached: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

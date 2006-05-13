@@ -22,6 +22,12 @@ inherit
 			executable, execute
 		end
 
+	QL_SHARED
+
+	QL_SHARED_CLASS_RELATION
+
+	EB_FORMATTER_UTILITY
+
 feature -- Initialization
 
 	make (a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C) is
@@ -71,24 +77,14 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	sorted_list (list: ARRAYED_LIST [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I] is
-			-- Sorted `list' based on `class_name' from `CLASS_I'
-		require
-			valid_list: list /= Void
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			create Result.make
-			from
-				list.start
-			until
-				list.after
-			loop
-				Result.put_front (list.item.lace_class);
-				list.forth
-			end;
-			Result.sort
-		ensure
-			valid_Result: Result /= Void;
-			sorted: Result.sorted
+		end
+
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator used in current command
+		do
 		end
 
 indexing

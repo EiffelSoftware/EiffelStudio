@@ -614,8 +614,12 @@ feature {NONE} -- Lexer
 	line_from_lexer: EDITOR_LINE is
 			-- Editor line from lexer.
 		do
-			scanner.execute (text)
-			create Result.make_from_lexer (scanner)
+			if text.is_empty then
+				create Result.make_empty_line
+			else
+				scanner.execute (text)
+				create Result.make_from_lexer (scanner)
+			end
 		end
 
 invariant

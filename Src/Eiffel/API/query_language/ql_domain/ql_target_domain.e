@@ -16,7 +16,9 @@ inherit
 			is_equal
 		redefine
 			content,
-			item_type
+			item_type,
+			prepare_before_new_domain_generation,
+			cleanup_after_new_domain_generation
 		end
 
 	LINKED_LIST [QL_TARGET]
@@ -40,6 +42,32 @@ feature -- Access
 			Result := target_scope
 		ensure then
 			good_result: Result = target_scope
+		end
+
+feature -- Preparation and cleanup
+
+	prepare_before_new_domain_generation is
+			-- Prepare before new domain generation.
+		do
+			Precursor
+			if class_table = Void then
+				create class_table.make (10)
+			else
+				class_table.wipe_out
+			end
+		ensure then
+			class_table_attached: class_table /= Void
+			class_table_is_empty: class_table.is_empty
+		end
+
+	cleanup_after_new_domain_generation is
+			-- Clean up after new domain generation.
+		do
+			Precursor
+			check class_table /= Void end
+			class_table.wipe_out
+		ensure then
+			class_table_is_empty: class_table.is_empty
 		end
 
 feature -- Set operation
@@ -72,33 +100,40 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- otherwise return Void.
 		local
 			l_cursor: CURSOR
-			l_group: CONF_GROUP
-			done: BOOLEAN
 			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			l_target: like item
+			l_class_table: like class_table
 		do
 			l_cursor := cursor
 			from
 				start
+				check class_table /= Void end
+				l_class_table := class_table
 			until
 				after or Result /= Void
 			loop
-				l_groups := item.target.groups
+				l_target := item
+				l_groups := l_target.target.groups
 				if not l_groups.is_empty then
 					from
 						l_groups.start
 					until
 						l_groups.after or Result /= Void
 					loop
-						Result := class_from_group (a_class, create{QL_GROUP}.make_with_parent (l_groups.item_for_iteration, item))
+						Result := class_from_group (a_class, create{QL_GROUP}.make_with_parent (l_groups.item_for_iteration, l_target), l_class_table)
 						l_groups.forth
 					end
 				end
 				forth
 			end
-			if l_cursor /= Void and then valid_cursor (l_cursor) then
+			if l_cursor /= Void then
 				go_to (l_cursor)
 			end
 		end
+
+	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]
+			-- Table of classes in a group.
+			-- Key is the group, value is a hash table containing all classes in that group.
 
 	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE is
 			-- If `e_feature' is included in current domain, return the item,

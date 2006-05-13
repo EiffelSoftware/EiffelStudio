@@ -72,19 +72,20 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- otherwise return Void.
 		local
 			l_cursor: CURSOR
-			l_group: CONF_GROUP
-			done: BOOLEAN
+			l_class_table: like class_table
 		do
 			l_cursor := cursor
 			from
+				check class_table /= Void end
+				l_class_table := class_table
 				start
 			until
 				after or Result /= Void
 			loop
-				Result := class_from_group (a_class, item)
+				Result := class_from_group (a_class, item, l_class_table)
 				forth
 			end
-			if l_cursor /= Void and then valid_cursor (l_cursor) then
+			if l_cursor /= Void then
 				go_to (l_cursor)
 			end
 		end
@@ -117,6 +118,10 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 				end
 			end
 		end
+
+	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]
+			-- Table of classes in a group.
+			-- Key is the group, value is a hash table containing all classes in that group.
 
 feature{NONE} -- Type ancher
 

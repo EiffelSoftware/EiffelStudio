@@ -1,5 +1,11 @@
 indexing
-	description: "Object that represents a criterion to decide whether or not a feature is descendant of another feature"
+	description: "[
+					Object that represents a criterion to decide whether or not a feature is descendant of another feature
+					
+					This criterion will use `data' attribute in every QL_FEATURE candidate object.
+					IF a QL_FEATURE candidate is satisfied by this criterion. it's `data' attribute will
+					be set with branch id (of type INTEGER)					
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

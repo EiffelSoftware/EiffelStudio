@@ -1,5 +1,18 @@
 indexing
-	description: "Object that represents a criterion to decide whether a client is a descendant of a certion class/classes"
+	description: "[
+					Object that represents a criterion to decide whether a client is a descendant of a class
+					Supported descendant relation includes:
+						descendant
+						proper descendant
+						heir
+						indirect heir
+
+					This criterion will use `data' attribute in every QL_CLASS candidate object.
+					IF a QL_CLASS candidate is satisfied by this criterion. it's `data' attribute will
+					be set with a list of its heirs (of type LIST [QL_CLASS]).
+					This is useful to build tree structure.
+
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

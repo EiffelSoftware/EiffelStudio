@@ -1,5 +1,12 @@
 indexing
-	description: "Object that represents a criterion to decide whether or not a feature is caller of another feature"
+	description: "[
+					Criterion to test whether or not a feature is caller of another feature
+					
+					This criterion will use `data' attribute in every QL_FEATURE candidate object.
+					IF a QL_FEATURE candidate is satisfied by this criterion. it's `data' attribute will
+					be set with actual callee version which is also a QL_FEATURE object. This means
+					the caller (which is the current candidate feature) calls the callee stored in `data'.
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

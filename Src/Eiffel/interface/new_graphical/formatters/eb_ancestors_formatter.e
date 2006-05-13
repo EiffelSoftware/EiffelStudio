@@ -9,11 +9,7 @@ class
 	EB_ANCESTORS_FORMATTER
 
 inherit
-	EB_CLASS_TEXT_FORMATTER
-		redefine
-			class_cmd,
-			is_dotnet_formatter
-		end
+	EB_CLASS_HIERARCHY_FORMATTER
 
 create
 	make
@@ -27,9 +23,6 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_ancestors, 1)
 			Result.put (Pixmaps.Icon_format_ancestors, 2)
 		end
-
-	class_cmd: E_SHOW_ANCESTORS
-			-- Class command that can generate the information.
 
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
@@ -48,27 +41,26 @@ feature {NONE} -- Properties
 	post_fix: STRING is "anc"
 			-- String symbol of the command, used as an extension when saving.
 
-	is_dotnet_formatter: BOOLEAN is
-			-- Is Current able to format .NET XML types?
-		do
-			Result := True
-		end
-
 feature {NONE} -- Implementation
 
-	create_class_cmd is
-			-- Create `class_cmd'.
-		require else
-			associated_class_non_void: associated_class /= Void
+	start_class: QL_CLASS is
+			-- Start class
 		do
-			create class_cmd.make (editor.text_displayed, associated_class)
+			check associated_class /= Void end
+			Result := query_class_item_from_class_c (associated_class)
+		ensure then
+			result_attached: Result /= Void
 		end
 
-	has_breakpoints: BOOLEAN is False
-		-- Should `Current' display breakpoints?
-
-	line_numbers_allowed: BOOLEAN is False;
-		-- Does it make sense to show line numbers in Current?
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
+		local
+			l_class: QL_CLASS
+		do
+			check associated_class /= Void end
+			l_class := query_class_item_from_class_c (associated_class)
+			create {QL_CLASS_ANCESTOR_RELATION_CRI}Result.make (l_class.wrapped_domain, class_ancestor_relation)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

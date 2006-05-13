@@ -8,10 +8,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class E_FEATURE_CMD
+deferred class
+	E_FEATURE_CMD
 
 inherit
-
 	E_CLASS_CMD
 		rename
 			make as class_make
@@ -35,7 +35,7 @@ feature -- Initialization
 			current_feature_set: current_feature = a_feature
 		end;
 
-feature -- Properties
+feature -- Status report
 
 	executable: BOOLEAN is
 			-- Is the Current able to be executed?
@@ -49,8 +49,6 @@ feature -- Properties
 					has_valid_feature
 		end
 
-feature -- Access
-
 	has_valid_feature: BOOLEAN is
 			-- Is current_feature valid?
 		do
@@ -59,34 +57,8 @@ feature -- Access
 
 feature -- Property
 
-	current_feature: E_FEATURE
+	current_feature: E_FEATURE;
 			-- Feature for current action
-
-feature {NONE} -- Convenience
-
-	record_descendants (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]; e_class: CLASS_C) is
-			-- Record the descendants of `class_c' to `classes'.
-		require
-			valid_classes: classes /= Void;
-			valid_e_class: e_class /= Void
-		local
-			descendants: ARRAYED_LIST [CLASS_C];
-			desc_c: CLASS_C
-		do
-			descendants := e_class.descendants;
-			classes.extend (e_class);
-			from
-				descendants.start
-			until
-				descendants.after
-			loop
-				desc_c := descendants.item;
-				if not classes.has (desc_c) then
-					record_descendants (classes, desc_c);
-				end;
-				descendants.forth;
-			end;
-		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

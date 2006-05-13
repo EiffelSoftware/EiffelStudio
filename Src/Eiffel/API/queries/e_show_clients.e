@@ -10,8 +10,11 @@ indexing
 class E_SHOW_CLIENTS
 
 inherit
-
 	E_CLASS_CMD
+		redefine
+			criterion,
+			domain_generator
+		end
 
 create
 
@@ -19,32 +22,60 @@ create
 
 feature -- Execution
 
+feature -- Output
+
 	work is
-			-- Execute Current command.
+			-- Execute Current command.	
 		local
-			clients: SORTED_TWO_WAY_LIST [CLASS_I];
-			a_client: CLASS_C;
+			l_domain: QL_CLASS_DOMAIN
+			l_formatter: like text_formatter
 		do
-			text_formatter.add ("Clients of class ");
-			current_class.append_signature (text_formatter, True);
-			text_formatter.add (":");
 			text_formatter.add_new_line;
-			text_formatter.add_new_line;
-			from
-				clients := sorted_list (current_class.clients);
-				clients.start;
-			until
-				clients.after
-			loop
-				a_client := clients.item.compiled_class;
-				if (current_class /= a_client) then
-					text_formatter.add_indent;
-					a_client.append_signature (text_formatter, True);
-					text_formatter.add_new_line;
-				end;
-				clients.forth
+			l_domain ?= system_target_domain.new_domain (domain_generator)
+			check l_domain /= Void end
+			if not l_domain.is_empty then
+				l_formatter := text_formatter
+				l_domain.sort (agent class_name_tester)
+				from
+					l_domain.start
+				until
+					l_domain.after
+				loop
+					l_domain.item.class_c.append_signature (l_formatter, True)
+					l_formatter.add_new_line
+					l_domain.forth
+				end
 			end
-		end;
+		end
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
+		do
+			create {QL_CLASS_CLIENT_RELATION_CRI}Result.make (
+				query_class_item_from_class_c (current_class).wrapped_domain,
+				class_client_relation)
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator used in current command
+		do
+			create {QL_CLASS_DOMAIN_GENERATOR}Result
+			Result.set_criterion (criterion)
+			Result.enable_fill_domain
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	class_name_tester (class_a, class_b: QL_CLASS): BOOLEAN is
+			-- Compare name of `class_a' and `class_b'.
+		require
+			class_a_attached: class_a /= Void
+			class_b_attached: class_b /= Void
+		do
+			Result := class_a.name < class_b.name
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -693,7 +693,11 @@ feature -- Label texts
 	h_show_tooltip: STRING is "Show tooltips?"
 	l_class_browser_classes: STRING is "Class"
 	l_class_browser_features: STRING is "Feature"
-	l_version_from: STRING is "Version from"
+	l_version_from: STRING is "Declared in class"
+	l_branch: STRING is "Branch #"
+	l_version_from_message: STRING is " (version from)"
+	l_expand_layer: STRING is "Expand selected level"
+	l_collapse_layer: STRING is "Collapse selected level"
 
 feature -- Stone names
 

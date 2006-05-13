@@ -11,74 +11,18 @@ indexing
 class E_SHOW_CLASSES
 
 inherit
-	E_OUTPUT_CMD;
-	SHARED_EIFFEL_PROJECT
-	CONF_REFACTORING
+	E_SHOW_CLUSTER_HIERARCHY
+		redefine
+			is_class_displayed
+		end
 
 create
 	make, do_nothing
 
-feature -- Execution
+feature -- Status report
 
-	work is
-			-- Show classes in universe
-		local
-			l_groups: ARRAYED_LIST [CONF_GROUP];
-			cursor: CURSOR;
-			l_classes: HASH_TABLE [CONF_CLASS, STRING];
-			l_sorted_classes: SORTED_TWO_WAY_LIST [CONF_CLASS];
-			a_classi: CLASS_I;
-			a_classe: CLASS_C;
-		do
-			conf_todo_msg ("tree layout?")
-			l_groups := Eiffel_universe.groups
-			if not l_groups.is_empty then
-				create l_sorted_classes.make;
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					cursor := l_groups.cursor;
-					l_classes := l_groups.item.classes;
-					if l_classes /= Void then
-						from
-							l_classes.start
-						until
-							l_classes.after
-						loop
-							l_sorted_classes.put_front (l_classes.item_for_iteration);
-							l_classes.forth
-						end;
-					end
-					l_groups.go_to (cursor);
-					l_groups.forth
-				end;
-				l_sorted_classes.sort;
-				from
-					l_sorted_classes.start
-				until
-					l_sorted_classes.after
-				loop
-					a_classi ?= l_sorted_classes.item;
-					check
-						a_classi_not_void: a_classi /= Void
-					end
-					a_classe := a_classi.compiled_class;
-					if a_classe /= Void then
-						a_classe.append_signature (text_formatter, True)
-					else
-						a_classi.append_name (text_formatter)
-					end;
-					text_formatter.add_new_line;
-					text_formatter.add_indent;
-					text_formatter.add ("-- Group: ");
-					text_formatter.add_group (a_classi.group, a_classi.group.name);
-					text_formatter.add_new_line;
-					l_sorted_classes.forth
-				end
-			end
-		end;
+	is_class_displayed: BOOLEAN is True;
+			-- Is classes displayed?
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

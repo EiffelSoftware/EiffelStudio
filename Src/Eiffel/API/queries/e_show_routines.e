@@ -5,22 +5,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class E_SHOW_ROUTINES 
+class E_SHOW_ROUTINES
 
 inherit
 	E_CLASS_FORMAT_CMD
+		redefine
+			criterion
+		end
 
 create
 	make, default_create
 
 feature -- Access
 
-	criterium (f: E_FEATURE): BOOLEAN is
-			-- Criterium for feature `f'
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			Result := not f.is_attribute and not f.is_constant
-		ensure then
-			good_criterium: Result = (not f.is_attribute and not f.is_constant)
+			Result := create {QL_FEATURE_IS_PROCEDURE_CRI} or create {QL_FEATURE_IS_FUNCTION_CRI}
 		end
 
 indexing

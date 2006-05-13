@@ -10,78 +10,31 @@ indexing
 class E_SHOW_ROUTINE_IMPLEMENTERS
 
 inherit
-
-	E_FEATURE_CMD;
+	E_SHOW_ROUTINE_HIERARCHY
+		redefine
+			is_written_class_displayed,
+			criterion
+		end
 	SHARED_EIFFEL_PROJECT
 
 create
 	make, default_create
 
-feature -- Execution
+feature -- Status report
 
-	work is
-		local
-			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
-			rout_id_set: ROUT_ID_SET;
-			rout_id: INTEGER;
-			i: INTEGER;
-			written_in: INTEGER;
-			feat: E_FEATURE;
-			c: CLASS_C;
-			written_cl: CLASS_C;
-			precursors: LIST [CLASS_C];
-			rc: INTEGER
-        do
-			written_cl := current_feature.written_class;
-			precursors := current_feature.precursors;
-			create classes.make;
-			record_descendants (classes, current_class);
-			if not classes.has (current_class) then
-				classes.extend (current_class)
-			end;
-			if precursors /= Void then
-				classes.append (precursors)
-			end;
-			rout_id_set := current_feature.rout_id_set;
-			from
-				rc := rout_id_set.count;
-				i := 1
-			until
-				i > rc
-			loop
-				rout_id := rout_id_set.item (i);
-				if rc > 1 then
-					text_formatter.add_new_line;
-					text_formatter.add ("Class history branch #");
-					text_formatter.add_int (i);
-					text_formatter.add_new_line;
-					text_formatter.add ("-----------------------");
-					text_formatter.add_new_line;
-				end;
-				from
-					classes.start;
-				until
-					classes.after
-				loop
-					c := classes.item;
-					written_in := c.class_id;
-					if c.has_feature_table then
-						feat := c.feature_with_rout_id (rout_id);
-						if feat /= Void and then feat.written_in = written_in then
-							c.append_name (text_formatter);
-							text_formatter.add (ti_Space);
-							feat.append_full_name (text_formatter);
-							if c = written_cl then
-								text_formatter.add (" (version from)");
-							end;
-							text_formatter.add_new_line;
-						end
-					end
-					classes.forth
-				end;
-				i := i + 1
-			end;
-		end;
+	is_written_class_displayed: BOOLEAN is False
+			-- Is current a command to display feature implementors?
+
+feature{NONE} -- Implemetation
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
+		do
+			create {QL_FEATURE_IMPLEMENTORS_OF_CRI}Result.make (
+				query_feature_item_from_e_feature (current_feature).wrapped_domain)
+		ensure then
+			result_attached: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

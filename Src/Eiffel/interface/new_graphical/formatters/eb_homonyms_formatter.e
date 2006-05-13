@@ -10,11 +10,10 @@ class
 	EB_HOMONYMS_FORMATTER
 
 inherit
-	EB_FEATURE_TEXT_FORMATTER
+	EB_FEATURE_CONTENT_FORMATTER
 		redefine
-			feature_cmd,
-			generate_text,
-			is_dotnet_formatter
+			is_dotnet_formatter,
+			format
 		end
 
 	EB_SHARED_PREFERENCES
@@ -31,9 +30,6 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_feature_homonyms, 1)
 			Result.put (Pixmaps.Icon_format_feature_homonyms, 2)
 		end
-
-	feature_cmd: E_SHOW_ROUTINE_HOMONYMNS
-			-- Feature command that can generate wanted information.
 
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
@@ -58,24 +54,35 @@ feature {NONE} -- Properties
 			Result := True
 		end
 
-feature {NONE} -- Implementation
+feature -- Formatting
 
-	generate_text is
-			-- Fill `formatted_text' with information concerning `associated_feature'.
+	format is
+			-- Refresh `widget'.
 		local
 			cf: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
-			confirmed := False
-			create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again, preferences.preferences)
-			cf.set_ok_action (agent confirm_generate)
-			cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
-			if confirmed then
-				last_was_error := False
-				Precursor
-			else
-				last_was_error := True
+			if associated_feature /= Void and then selected and then displayed then
+				display_temp_header
+				confirmed := False
+				create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again, preferences.preferences)
+				cf.set_ok_action (agent confirm_generate)
+				cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
+				if confirmed then
+					last_was_error := False
+					rebuild_browser
+					generate_result
+				else
+					browser.update (Void, Void)
+					last_was_error := True
+				end
+				if not widget.is_displayed then
+					widget.show
+				end
+				display_header
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	confirm_generate is
 			-- The user DOES want to generate the homonyms.
@@ -86,16 +93,25 @@ feature {NONE} -- Implementation
 	confirmed: BOOLEAN
 			-- Did the user confirm he wanted to generate the homonyms?
 
-	create_feature_cmd is
-			-- Create `feature_cmd'.
-		require else
-			associated_feature_non_void: associated_feature /= Void
-		do
-			create feature_cmd.make (editor.text_displayed, associated_feature)
-		end
-
 	has_breakpoints: BOOLEAN is False;
 			-- Should breakpoints be shown in Current?
+
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
+		do
+			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (associated_feature.name, False, True)
+		end
+
+	rebuild_browser is
+			-- Rebuild `browser'.
+		do
+			browser.set_is_branch_id_used (False)
+			browser.set_is_written_class_used (True)
+			browser.set_is_signature_displayed (True)
+			browser.set_is_version_from_displayed (False)
+			browser.set_feature_item (associated_feature)
+			browser.rebuild_interface
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

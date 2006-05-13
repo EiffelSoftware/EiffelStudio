@@ -10,10 +10,10 @@ indexing
 class E_SHOW_ONCES
 
 inherit
-
 	E_CLASS_FORMAT_CMD
 		redefine
-			display_feature
+			display_feature,
+			criterion
 		end
 
 create
@@ -21,13 +21,12 @@ create
 
 feature -- Access
 
-	criterium (f: E_FEATURE): BOOLEAN is
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			Result := f.is_once or f.is_constant
-		ensure then
-			good_criterium: Result = (f.is_once or f.is_constant)
-		end;
-
+			Result := create {QL_FEATURE_IS_ONCE_CRI} or create {QL_FEATURE_IS_CONSTANT_CRI}
+		end
+		
 feature -- Output
 
 	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is

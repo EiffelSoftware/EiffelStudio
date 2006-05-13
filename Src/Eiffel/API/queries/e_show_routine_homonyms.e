@@ -11,65 +11,43 @@ class E_SHOW_ROUTINE_HOMONYMNS
 
 inherit
 
-	E_FEATURE_CMD
+	E_SHOW_ROUTINE_HIERARCHY
 		redefine
-			has_valid_feature
-		end;
+			has_valid_feature,
+			is_branch_displayed,
+			criterion,
+			feature_name_tester
+		end
+
 	SHARED_EIFFEL_PROJECT
-	CONF_REFACTORING
+
 
 create
 	make, default_create
 
-feature -- Access
+feature -- Status report
 
 	has_valid_feature: BOOLEAN is True
 			-- Always a valid feature
 
-feature -- Execution
+	is_branch_displayed: BOOLEAN is False;
+			-- Is branch information displayed?
 
-	work is
-			-- Execute Current command.
-		local
-			clusters: ARRAYED_LIST [CLUSTER_I];
-			classes: HASH_TABLE [CLASS_I, STRING];
-			e_class: CLASS_C;
-			feat: E_FEATURE;
-			feature_name: STRING;
-			class_name: STRING
+feature{NONE} -- Implemetation
+
+	criterion: QL_CRITERION is
+			-- Criterion used in current command
 		do
-			feature_name := current_feature.name;
-			conf_todo
---S			clusters := Eiffel_universe.clusters;
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				classes := clusters.item.classes;
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					e_class := classes.item_for_iteration.compiled_class;
-					if e_class /= Void and e_class.has_feature_table then
-						feat := e_class.feature_with_name (feature_name);
-						if feat /= Void then
-							class_name := e_class.name;
-							feat.append_signature (text_formatter);
-							text_formatter.add_new_line;
-							text_formatter.add_indent;
-							text_formatter.add ("From class ");
-							e_class.append_signature (text_formatter, True);
-							text_formatter.add_new_line;
-						end
-					end;
-					classes.forth
-				end;
-				clusters.forth
-			end
-		end;
+			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (current_feature.name, False, True)
+		ensure then
+			result_attached: Result /= Void
+		end
+
+	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+			-- Compare name of `feature_a' and `feature_b'.
+		do
+			Result := feature_a.class_c.topological_id < feature_b.class_c.topological_id
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -47,6 +47,8 @@ feature{NONE} -- Initialization
 			stone_manager := m
 		end
 
+	a_cri: QL_FEATURE_CALLER_IS_CRI
+
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
 			--
 		local

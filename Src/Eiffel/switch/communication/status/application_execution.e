@@ -84,7 +84,9 @@ feature -- Recylcing
 			-- Clean debugging session data
 		do
 			implementation.recycle
-			destroy_status
+			if is_running then
+				destroy_status
+			end
 		end
 
 feature -- execution mode

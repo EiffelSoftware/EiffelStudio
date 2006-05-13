@@ -827,27 +827,27 @@
 						<Directory Id="windows23" Name="$(env.ISE_PLATFORM)">
 							<Directory Id="vision224" Name="vision2">
 								<Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
-									<File Id="ace.ace140" Name="ACE~1.ACE" LongName="Ace.acex"/>
+									<File Id="ace.ace140" Name="VISION~1.ACE" LongName="vision2.acex"/>
 								</Component>
 							</Directory>
 							<Directory Id="basemt" Name="base-mt">
 								<Component Id="basemt" Guid="DD937DAD-9136-4553-8E64-CCDFE8519EE0">
-									<File Id="ace_acex144" Name="ACE~1.ACE" LongName="Ace.acex"/>
+									<File Id="ace_acex144" Name="BASE-M~1.ACE" LongName="base-mt.acex"/>
 								</Component>
 							</Directory>
 							<Directory Id="welmt" Name="wel-mt">
 								<Component Id="welmt" Guid="6DF2EC23-1E26-465B-8397-DE4A1FD118FB">
-									<File Id="ace.ace141" Name="ACE~1.ACE" LongName="Ace.acex"/>
+									<File Id="ace.ace141" Name="WEL-MT~1.ACE" LongName="wel-mt.acex"/>
 								</Component>
 							</Directory>
 							<Directory Id="wel25" Name="wel">
 								<Component Id="wel25" Guid="B1F73FE5-ED9C-4B4A-A121-5B9E6A683841">
-									<File Id="ace.ace142" Name="ACE~1.ACE" LongName="Ace.acex"/>
+									<File Id="ace.ace142" Name="WEL~1.ACE" LongName="wel.acex"/>
 								</Component>
 							</Directory>
 							<Directory Id="base" Name="base">
 								<Component Id="base" Guid="3E24F992-00C3-4EAD-A6D9-7290FE36B408">
-									<File Id="ace_acex143" Name="ACE~1.ACE" LongName="Ace.acex"/>
+									<File Id="ace_acex143" Name="BASE~1.ACE" LongName="base.acex"/>
 								</Component>
 							</Directory>
 						</Directory>

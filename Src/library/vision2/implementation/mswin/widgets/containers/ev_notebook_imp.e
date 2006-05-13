@@ -337,6 +337,9 @@ feature {EV_ANY_I} -- Basic operation
 				test or else Result = nb
 			loop
 				child_imp ?= get_item (Result).window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				test := a_child.is_equal (child_imp)
 				Result := Result + 1
 			end
@@ -359,6 +362,9 @@ feature -- Assertion features
 				(counter = count) or Result
 			loop
 				child_imp ?= get_item (counter).window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				Result := a_child.is_equal (child_imp)
 				counter := counter + 1
 			end
@@ -408,6 +414,9 @@ feature {NONE} -- Implementation
 				counter = nb
 			loop
 				child_imp ?= get_item (counter).window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				if child_imp.is_show_requested then
 					value := child_imp.minimum_width.max (value)
 				end
@@ -439,6 +448,9 @@ feature {NONE} -- Implementation
 				counter = count
 			loop
 				child_imp ?= get_item (counter).window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				if child_imp.is_show_requested then
 					value := child_imp.minimum_height.max (value)
 				end
@@ -471,6 +483,9 @@ feature {NONE} -- Implementation
 				counter = count
 			loop
 				child_imp ?= (get_item (counter)).window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				if child_imp.is_show_requested then
 					mw := child_imp.minimum_width.max (mw)
 					mh := child_imp.minimum_height.max (mh)
@@ -515,13 +530,15 @@ feature {NONE} -- Implementation
 				i > count
 			loop
 				child_imp ?= get_item (i - 1).window
-
+				check
+					child_imp_not_void: child_imp /= Void
+				end
 				if from_on_size then
 						-- The code below is like the one from `set_move_and_size' except that
 						-- we always call `wel_move_and_resize' as otherwise the hidden notebook
 						-- items don't get a proper size.
 					child_imp.child_cell.move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
-					child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_show_requested)
+					child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
 				else
 					child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
 				end
@@ -812,6 +829,9 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			child_imp: EV_WIDGET_IMP
 		do
 			child_imp ?= v.implementation
+			check
+				child_imp_not_void: child_imp /= Void
+			end
 			an_index := get_child_index (child_imp)
 				-- Only select a page if it is not already selected.
 			if an_index /= selected_item_index then

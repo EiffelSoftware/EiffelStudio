@@ -384,16 +384,19 @@ feature {NONE} -- Build completion possibilities
 	build_class_completion_list is
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
+		require
+			group_not_void: group /= Void
 		local
 			cname				: STRING
 			class_list			: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes				: DS_HASH_SET [CLASS_I]
+			classes				: HASH_TABLE [CONF_CLASS, STRING]
 			token				: EDITOR_TOKEN
-			show_all	: BOOLEAN
+			show_all			: BOOLEAN
 			class_name			: EB_CLASS_FOR_COMPLETION
 			name_name			: EB_NAME_FOR_COMPLETION
 			cnt, i				: INTEGER
-			l_saved_token: EDITOR_TOKEN
+			l_saved_token		: EDITOR_TOKEN
+			l_class_i			: CLASS_I
 		do
 			insertion_cell.put ("")
 			is_create := False
@@ -414,19 +417,23 @@ feature {NONE} -- Build completion possibilities
 			end
 			cname := ""
 
-			classes := universe.all_classes
+			classes := group.accessible_classes
 			create class_list.make (100)
 			from
 				classes.start
 			until
 				classes.after
 			loop
+				l_class_i ?= classes.item_for_iteration
+				check
+					l_class_i_not_void: l_class_i /= Void
+				end
 				if show_all then
-					create class_name.make (classes.item_for_iteration)
+					create class_name.make (l_class_i)
 				 	class_list.extend (class_name)
 				else
-					if matches (classes.item_for_iteration.name, cname) then
-						create class_name.make (classes.item_for_iteration)
+					if matches (l_class_i.name, cname) then
+						create class_name.make (l_class_i)
 					 	class_list.extend (class_name)
 					end
 				end

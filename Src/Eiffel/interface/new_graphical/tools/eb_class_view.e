@@ -99,7 +99,9 @@ feature -- Access
 	last_widget: EV_WIDGET is
 			-- Last set widget
 		do
-			Result := formatter_container.item
+			if formatter_container.readable then
+				Result := formatter_container.item
+			end
 		end
 
 feature -- Status setting

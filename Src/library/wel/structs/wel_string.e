@@ -56,6 +56,7 @@ feature --{NONE} -- Initialization
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
+			a_length_valid: (a_length \\ {WEL_STRING}.character_size) = 0
 		do
 			count := a_length // character_size
 			create managed_data.make (a_length + character_size)
@@ -77,6 +78,7 @@ feature -- Initialization
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
+			a_length_valid: (a_length \\ {WEL_STRING}.character_size) = 0
 		do
 			count := a_length // character_size
 			if managed_data = Void or else not managed_data.is_shared then
@@ -228,7 +230,7 @@ feature -- Measurement
 			length_not_negative: Result >= 0
 		end
 
-	character_size: INTEGER is
+	frozen character_size: INTEGER is
 			-- Number of bytes occupied by a TCHAR.
 		external
 			"C inline use <tchar.h>"
@@ -392,6 +394,7 @@ feature {NONE} -- Implementation
 invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
+	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -113,14 +113,19 @@ feature -- Access
 			l_str: WEL_STRING
 		do
 			l_count := data.count
-			if l_count > 0 then
+			if l_count > 0 and then (l_count \\ {WEL_STRING}.character_size = 0) then
 				create l_str.share_from_pointer_and_count (data.item, l_count)
-				Result := l_str.string
+				Result := l_str.substring (1, l_count // l_str.character_size)
+				check
+					not_empty: not Result.is_empty
+				end
 				if Result.item (Result.count) = '%U' then
 						-- Case where string was stored with its final null character,
 						-- so we don't want it in our actual string.
-					Result.remove (l_count)
+					Result.remove (Result.count)
 				end
+			else
+				create Result.make_empty
 			end
 		ensure
 			string_value_not_void: Result /= Void

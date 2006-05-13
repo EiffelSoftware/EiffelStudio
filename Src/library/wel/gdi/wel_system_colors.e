@@ -7,7 +7,7 @@ indexing
 
 class
 	WEL_SYSTEM_COLORS
-	
+
 inherit
 	ANY
 
@@ -35,7 +35,7 @@ feature -- Access
 		end
 
 	system_color_activecaption: WEL_COLOR_REF is
-			-- Color for active window title bar. 
+			-- Color for active window title bar.
 			--
 			-- Windows 98, Windows 2000: Specifies the left side color in the
 			-- color gradient of an active window's title bar if the gradient
@@ -47,7 +47,7 @@ feature -- Access
 		end
 
 	system_color_inactivecaption: WEL_COLOR_REF is
-			-- Color for inactive window caption. 
+			-- Color for inactive window caption.
 			--
 			-- Windows 98, Windows 2000: Specifies the left side color in the
 			-- color gradient of an inactive window's title bar if the gradient
@@ -200,7 +200,7 @@ feature -- Access
 		end
 
 	system_color_menuhilight: WEL_COLOR_REF is
-			-- The color used to highlight menu items when the menu appears as a flat menu (see SystemParametersInfo). 
+			-- The color used to highlight menu items when the menu appears as a flat menu (see SystemParametersInfo).
 			-- The highlighted menu item is outlined with `system_color_highlight'.
 		require
 			windows_xp_required: (create {WEL_WINDOWS_VERSION}).is_windows_xp_compatible
@@ -231,7 +231,7 @@ feature -- Access
 		ensure
 			Result_exists: Result /= Void
 		end
-		
+
 	system_color_gradientactivecaption: WEL_COLOR_REF is
 			-- Right side color in the color gradient of an active window's
 			-- title bar. `System_color_activecaption' specifies the left side color.
@@ -242,7 +242,7 @@ feature -- Access
 		ensure
 			Result_exists: Result /= Void
 		end
-	
+
 	system_color_gradientinactivecaption: WEL_COLOR_REF is
 			-- Right side color in the color gradient of an inactive window's
 			-- title bar. `system_color_inactivecaption' specifies the left side color.
@@ -254,6 +254,21 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
+	system_color_infobk: WEL_COLOR_REF is
+			-- Background color for tooltip
+		do
+			Result := get_color (system_color_graytext_cell, Wel_color_constants.color_infobk)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+	system_color_info_text: WEL_COLOR_REF is
+			-- Background color for tooltip text
+		do
+			Result := get_color (system_color_graytext_cell, Wel_color_constants.color_infotext)
+		ensure
+			Result_exists: Result /= Void
+		end
 
 feature {WEL_COMPOSITE_WINDOW}
 
@@ -382,7 +397,7 @@ feature {WEL_COMPOSITE_WINDOW}
 		once
 			create Result.put (Void)
 		end
-		
+
 	system_color_menuhilight_cell: CELL [WEL_COLOR_REF] is
 			-- Container for `system_color_menuhilight'
 		once
@@ -400,7 +415,7 @@ feature {WEL_COMPOSITE_WINDOW}
 		once
 			create Result.put (Void)
 		end
-		
+
 	system_color_gradientactivecaption_cell: CELL [WEL_COLOR_REF] is
 			-- Container for `system_color_gradientactivecaption'
 		once

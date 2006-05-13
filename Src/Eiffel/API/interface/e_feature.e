@@ -440,6 +440,47 @@ feature -- Access
 			Result := name.hash_code
 		end;
 
+	callees (a_flag: INTEGER_8): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]] is
+			-- Callees of feature in `associated_class'
+			-- from client class `su_class'.
+		require
+			valid_flags: a_flag = 0 or
+				a_flag = {DEPEND_UNIT}.is_in_assignment_flag or
+				a_flag = {DEPEND_UNIT}.is_in_check_flag or
+				a_flag = {DEPEND_UNIT}.is_in_creation_flag or
+				a_flag = {DEPEND_UNIT}.is_in_ensure_flag or
+				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
+				a_flag = {DEPEND_UNIT}.is_in_require_flag
+		local
+			dep: CLASS_DEPENDANCE
+			fdep: FEATURE_DEPENDANCE
+			l_depend_unit: DEPEND_UNIT
+			l_system: like eiffel_system
+			l_class_c: CLASS_C
+		do
+			create Result.make
+			dep := Depend_server.item (associated_class.class_id)
+			l_system := eiffel_system
+			from
+				fdep := dep.item (body_index)
+				fdep.start
+			until
+				fdep.after
+			loop
+				l_depend_unit := fdep.item
+				if l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
+					l_class_c := l_system.class_of_id (l_depend_unit.written_in)
+					Result.extend ([l_system.class_of_id (l_depend_unit.class_id), l_class_c.feature_with_body_index (l_depend_unit.body_index).name])
+				end
+				fdep.forth
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		ensure
+			valid_result: Result /= Void implies not Result.is_empty
+		end
+
 	callers (cl_class: CLASS_C; a_flag: INTEGER_8): SORTED_TWO_WAY_LIST [STRING] is
 			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'

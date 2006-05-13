@@ -169,11 +169,13 @@ feature -- Query
 				l_wel_color_ref := l_wel_color.system_color_windowframe
 			when {WEL_COLOR_CONSTANTS}.color_windowtext then
 				l_wel_color_ref := l_wel_color.system_color_windowtext
+			when {WEL_COLOR_CONSTANTS}.color_infobk then
+				l_wel_color_ref := l_wel_color.system_color_infobk
+			when {WEL_COLOR_CONSTANTS}.color_infotext then
+				l_wel_color_ref := l_wel_color.system_color_info_text
 			end
-
 			create Result.make_with_rgb (l_wel_color_ref.red / 255, l_wel_color_ref.green / 255, l_wel_color_ref.blue / 255)
 		end
-
 
 feature {NONE} -- implementation
 

@@ -85,7 +85,9 @@ feature -- Domain creation
 			a_generator_attached: a_generator /= Void
 		do
 			a_generator.reset_domain
+			prepare_before_new_domain_generation
 			a_generator.process_domain (Current)
+			cleanup_after_new_domain_generation
 			Result := a_generator.domain.twin
 		ensure
 			result_attached: Result /= Void
@@ -97,6 +99,18 @@ feature -- Visit
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_domain (Current)
+		end
+
+feature -- Preparation and cleanup
+
+	prepare_before_new_domain_generation is
+			-- Prepare before new domain generation.
+		do
+		end
+
+	cleanup_after_new_domain_generation is
+			-- Clean up after new domain generation.
+		do
 		end
 
 feature -- Sorting
@@ -259,31 +273,37 @@ feature{QL_CRITERION} -- Implementation
 
 feature{NONE} -- Implementation
 
-	class_from_group (a_class: CONF_CLASS; a_group: QL_GROUP): QL_CLASS is
+	class_from_group (a_class: CONF_CLASS; a_group: QL_GROUP; a_class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]): QL_CLASS is
 			-- Find out if `a_class' is defined directly in `a_group'.
 			-- If yes, return a QL_CLASS object representing `a_class' in `a_group',
 			-- otherwise return Void.
+			-- `a_class_table' is used to cache temporary results for optimization.
 		require
 			a_class_attached: a_class /= Void
 			a_group_attached: a_group /= Void
 			a_group_valid: a_group.is_valid_domain_item
+			a_class_table_attached: a_class_table /= Void
 		local
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			done: BOOLEAN
+			l_class_table: HASH_TABLE [QL_CLASS, CONF_CLASS]
+			l_conf_class: CONF_CLASS
 		do
-			l_classes := a_group.group.classes
-			from
-				l_classes.start
-			until
-				l_classes.after or done
-			loop
-				if l_classes.item_for_iteration = a_class then
-					create Result.make_with_parent (a_class, a_group)
-					done := True
-				else
+			l_class_table := a_class_table.item (a_group.group)
+			if l_class_table = Void then
+				l_classes := a_group.group.classes
+				create l_class_table.make (l_classes.count)
+				a_class_table.put (l_class_table, a_group.group)
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_conf_class := l_classes.item_for_iteration
+					l_class_table.put (create{QL_CLASS}.make_with_parent (l_conf_class, a_group), l_conf_class)
 					l_classes.forth
 				end
 			end
+			Result := l_class_table.item (a_class)
 		end
 
 feature{NONE} -- Implementation

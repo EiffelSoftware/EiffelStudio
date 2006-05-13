@@ -6,6 +6,11 @@ indexing
 						proper ancestor
 						parent
 						indirect parent
+						
+					This criterion will use `data' attribute in every QL_CLASS candidate object.
+					IF a QL_CLASS candidate is satisfied by this criterion. it's `data' attribute will
+					be set with a list of its parents (of type LIST [QL_CLASS]).
+					This is useful to build tree structure.
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

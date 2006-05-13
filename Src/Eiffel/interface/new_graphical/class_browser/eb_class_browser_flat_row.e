@@ -37,9 +37,12 @@ feature -- Grid binding
 			-- Refresh current row.
 		require
 			grid_row_attached: grid_row /= Void
+		local
+			l_class_item: like class_grid_item
+			l_feature_item: like feature_grid_item
 		do
-			grid_row.set_item (1, class_grid_item)
-			grid_row.set_item (2, feature_grid_item)
+			l_class_item := class_grid_item
+			l_feature_item := feature_grid_item
 		end
 
 	bind_row (a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER) is
@@ -80,7 +83,8 @@ feature -- Grid binding
 				l_row.set_height (0)
 			end
 			set_grid_row (l_row)
-			refresh
+			grid_row.set_item (1, class_grid_item)
+			grid_row.set_item (2, feature_grid_item)
 		end
 
 feature -- Status report

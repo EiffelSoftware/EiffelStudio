@@ -1032,7 +1032,8 @@ feature -- Description texts
 	e_no_text_is_selected: STRING is "No file name is selected."
 	e_selected_text_is_not_file: STRING is "Selected text is not a correct file name."
 	e_external_editor_not_defined: STRING is "External editor not defined"
-
+	e_external_command_is_running: STRING is "An external command is running now. %NPlease wait until it exits."
+	e_external_command_list_full: STRING is "Your external command list is full.%NUse Tools->External Command... to delete one."
 feature -- Wizard texts
 
 	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"

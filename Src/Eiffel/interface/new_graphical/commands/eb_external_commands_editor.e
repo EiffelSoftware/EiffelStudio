@@ -82,6 +82,41 @@ feature -- Status report
 			create Result.make (0, 9)
 		end
 
+	existing_commands: LIST [EB_EXTERNAL_COMMAND] is
+			-- Array of existing external commands.
+		local
+			i: INTEGER
+		do
+			from
+				create {ARRAYED_LIST [EB_EXTERNAL_COMMAND]} Result.make (10)
+			until
+				i > 9
+			loop
+				if commands @ i /= Void then
+					Result.extend ((commands @ i))
+				end
+				i := i + 1
+			end
+		end
+
+	accelerators: ARRAY [EV_ACCELERATOR] is
+			-- Accelerators for `commands'.
+		once
+			create Result.make (0, 9)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_0), False, True, False), 0)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_1), False, True, False), 1)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_2), False, True, False), 2)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_3), False, True, False), 3)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_4), False, True, False), 4)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_5), False, True, False), 5)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_6), False, True, False), 6)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_7), False, True, False), 7)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_8), False, True, False), 8)
+			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_9), False, True, False), 9)
+		ensure
+			Result_attached: Result /= Void
+		end
+
 feature -- Basic operations
 
 	execute is

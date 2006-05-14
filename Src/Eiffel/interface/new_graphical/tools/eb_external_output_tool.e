@@ -285,7 +285,7 @@ feature -- Basic operation
 			edit_cmd_detail_btn.enable_sensitive
 			hidden_btn.enable_sensitive
 			cmd_lst.enable_sensitive
-			owner.Edit_external_commands_cmd.disable_sensitive
+			owner.Edit_external_commands_cmd.enable_sensitive
 
 			input_field.disable_sensitive
 			send_input_btn.disable_sensitive
@@ -489,7 +489,7 @@ feature{NONE} -- Actions
 					-- If user has just input a new external command,
 					-- first check whether we have room for this command.
 				if owner.edit_external_commands_cmd.menus.count = 10 then
-					create warn_dlg.make_with_text ("Your external command list is full.%NUse Tools->External Command... to delete one.")
+					create warn_dlg.make_with_text (interface_names.e_external_command_list_full)
 					warn_dlg.show_modal_to_window (owner.window)
 				else
 						-- If we have room for this command, pop up a new command

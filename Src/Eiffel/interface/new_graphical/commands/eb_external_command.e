@@ -304,12 +304,18 @@ feature{NONE} -- Command substitution
 		local
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
+			l_dir: STRING
+			l_path: STRING
 		do
 			dev := Window_manager.last_focused_development_window
 			if dev /= Void then
 				cv_cst ?= dev.stone
 				if cv_cst /= Void then
-					cmd.replace_substring_all (sub_string_list.i_th (sub_directory_name), cv_cst.class_i.group.location.evaluated_directory)
+					l_dir := cv_cst.class_i.group.location.evaluated_directory
+					l_path := cv_cst.class_i.config_class.path
+					l_path.replace_substring_all ("/", directory_separator.out)
+					l_dir.append (l_path)
+					cmd.replace_substring_all (sub_string_list.i_th (sub_directory_name), l_dir)
 				else
 					set_is_command_ok (False)
 					show_warning_dialog (Warning_messages.w_Command_needs_directory)
@@ -400,7 +406,7 @@ feature -- Execution
 			use_argument: BOOLEAN
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
-				show_warning_dialog ("An external command is running now. %NPlease wait until it exits.")
+				show_warning_dialog (interface_names.e_external_command_is_running)
 			else
 				create cl.make (external_command.count + 20)
 				if working_directory /= Void then
@@ -454,6 +460,8 @@ feature -- Properties
 			Result.append (index.out)
 			Result.append_character (' ')
 			Result.append (name)
+			Result.append (Tabulation)
+			Result.append (accelerator_key.out)
 		end
 
 	name: STRING
@@ -470,6 +478,16 @@ feature -- Properties
 
 	last_call_output: STRING
 			-- Output of the last invocation of command.
+
+	accelerator_key: like accelerator is
+			-- Accelerator for current command
+		do
+			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index)
+			Result.actions.wipe_out
+			Result.actions.extend (agent execute)
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Status setting
 
@@ -528,6 +546,12 @@ feature{EB_EXTERNAL_OUTPUT_TOOL} -- Status setting
 			working_directory_set:
 				((dir /= Void) implies working_directory.is_equal (dir)) and
 				((dir = Void) implies working_directory = Void)
+		end
+
+	set_accelerator (accel: EV_ACCELERATOR) is
+			-- Set `accelerator' to `accel'.
+		do
+			accelerator := accel
 		end
 
 feature -- Status report
@@ -758,8 +782,17 @@ feature {NONE} -- Implementation
 			command_field := Void
 		end
 
-	old_index: INTEGER;
+	old_index: INTEGER
 			-- Index of `Current' before we edited its properties.
+
+	directory_separator: CHARACTER is
+			-- Directory separator
+		local
+			l_obj: ANY
+		once
+			create l_obj
+			Result := l_obj.operating_environment.directory_separator
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

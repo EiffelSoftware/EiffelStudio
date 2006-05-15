@@ -118,7 +118,6 @@ feature {NONE} -- Implementation
 			-- Terminate the pick and drop mechanism.
 		do
 			disable_capture
-			set_composite_widget_pointer_style (NULL)
 			if not dawaiting_movement then
 				if orig_cursor /= Void then
 						-- Restore the cursor style of `Current' if necessary.
@@ -166,11 +165,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	set_composite_widget_pointer_style (a_cursor: POINTER) is
-			--
-		deferred
-		end
 
 	pointer_style: EV_CURSOR is
 			--

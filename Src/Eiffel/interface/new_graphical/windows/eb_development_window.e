@@ -406,6 +406,7 @@ feature {NONE} -- Initialization
 			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
 		local
 			cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
+			i: INTEGER
 		do
 				--| Accelerators related to toolbarable_commands
 			from
@@ -433,6 +434,16 @@ feature {NONE} -- Initialization
 					window.accelerators.extend (cmds.item.accelerator)
 				end
 				cmds.forth
+			end
+
+				--| Accelerators related to external commands
+			from
+				i := 0
+			until
+				i > 9
+			loop
+				window.accelerators.extend (edit_external_commands_cmd.accelerators.item (i))
+				i := i + 1
 			end
 		end
 
@@ -2299,13 +2310,7 @@ feature -- Resource Update
 			-- Refresh the list of external commands.
 		local
 			ms: LIST [EB_COMMAND_MENU_ITEM]
-			l_external_cmds: LIST [EB_EXTERNAL_COMMAND]
-			l_accelerators: ARRAY [EV_ACCELERATOR]
 			l_sep: EV_MENU_SEPARATOR
-			i: INTEGER
-			l_accelerator: EV_ACCELERATOR
-			l_window_acc: EV_ACCELERATOR_LIST
-			done: BOOLEAN
 		do
 				-- Remove all the external commands, which are at the end of the menu.
 			from
@@ -2316,9 +2321,6 @@ feature -- Resource Update
 				tools_menu.remove
 			end
 			ms := Edit_external_commands_cmd.menus
-			l_external_cmds := edit_external_commands_cmd.existing_commands
-			l_accelerators := edit_external_commands_cmd.accelerators.twin
-			l_accelerators.compare_objects
 			number_of_displayed_external_commands := ms.count
 
 			if not ms.is_empty and not tools_menu.is_empty then
@@ -2330,30 +2332,14 @@ feature -- Resource Update
 				end
 			end
 
-			l_window_acc := window.accelerators
-			from
-				l_window_acc.start
-			until
-				l_window_acc.after or done
-			loop
-				l_accelerator := l_window_acc.item
-				if l_accelerators.has (l_accelerator) then
-					l_window_acc.remove
-				else
-					l_window_acc.forth
-				end
-			end
 			from
 				ms.start
-				l_external_cmds.start
 			until
 				ms.after
 			loop
 				tools_menu.extend (ms.item)
 				add_recyclable (ms.item)
-				l_window_acc.extend (l_external_cmds.item.accelerator_key)
 				ms.forth
-				l_external_cmds.forth
 			end
 		end
 

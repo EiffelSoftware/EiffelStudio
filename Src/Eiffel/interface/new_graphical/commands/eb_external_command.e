@@ -222,17 +222,19 @@ feature{NONE} -- Command substitution
 			Result.extend ("$directory_name")
 			Result.extend ("$w_code")
 			Result.extend ("$f_code")
+			Result.extend ("$group_path")
 		end
 
 	sub_action_list: ARRAYED_LIST [ PROCEDURE [ANY, TUPLE]] is
 			-- List of actions used for command substitution
 		once
-			create Result.make (5)
+			create Result.make (6)
 			Result.extend (agent on_substitute_class_name)
 			Result.extend (agent on_substitute_file_name)
 			Result.extend (agent on_substitute_directory_name)
 			Result.extend (agent on_substitute_w_code)
 			Result.extend (agent on_substitute_f_code)
+			Result.extend (agent on_substitute_group_path)
 		end
 
 	sub_class_name: INTEGER is 1
@@ -240,6 +242,7 @@ feature{NONE} -- Command substitution
 	sub_directory_name: INTEGER is 3
 	sub_w_code: INTEGER is 4
 	sub_f_code: INTEGER is 5
+	sub_group_path: INTEGER is 6
 
 	show_warning_dialog (msg: STRING) is
 			-- Show a warning dialog to display `msg'.
@@ -248,6 +251,32 @@ feature{NONE} -- Command substitution
 		do
 			create wdlg.make_with_text (msg)
 			wdlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+		end
+
+	on_substitute_group_path (cmd: STRING; sub_str: STRING) is
+			-- If `cmd' has substring (case insensitive' `sub_str',
+			-- call an agent to substitute it.
+		require
+			is_command_ok_is_true: is_command_ok = True
+		local
+			cv_cst: CLASSI_STONE
+			dev: EB_DEVELOPMENT_WINDOW
+			l_dir: STRING
+			l_path: STRING
+		do
+			dev := Window_manager.last_focused_development_window
+			if dev /= Void then
+				cv_cst ?= dev.stone
+				if cv_cst /= Void then
+					l_dir := cv_cst.class_i.group.location.evaluated_directory
+					cmd.replace_substring_all (sub_string_list.i_th (sub_group_path), l_dir)
+				else
+					set_is_command_ok (False)
+					show_warning_dialog (Warning_messages.w_Command_needs_directory)
+				end
+			else
+				set_is_command_ok (False)
+			end
 		end
 
 	on_substitute_class_name (cmd: STRING; sub_str: STRING) is
@@ -461,7 +490,7 @@ feature -- Properties
 			Result.append_character (' ')
 			Result.append (name)
 			Result.append (Tabulation)
-			Result.append (accelerator_key.out)
+			Result.append ((create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index).out)
 		end
 
 	name: STRING
@@ -478,16 +507,6 @@ feature -- Properties
 
 	last_call_output: STRING
 			-- Output of the last invocation of command.
-
-	accelerator_key: like accelerator is
-			-- Accelerator for current command
-		do
-			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index)
-			Result.actions.wipe_out
-			Result.actions.extend (agent execute)
-		ensure
-			result_attached: Result /= Void
-		end
 
 feature -- Status setting
 

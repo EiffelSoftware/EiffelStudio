@@ -290,17 +290,22 @@ feature{NONE} -- Implementation
 		do
 			l_class_table := a_class_table.item (a_group.group)
 			if l_class_table = Void then
-				l_classes := a_group.group.classes
-				create l_class_table.make (l_classes.count)
-				a_class_table.put (l_class_table, a_group.group)
-				from
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_conf_class := l_classes.item_for_iteration
-					l_class_table.put (create{QL_CLASS}.make_with_parent (l_conf_class, a_group), l_conf_class)
-					l_classes.forth
+				if a_group.group.classes_set then
+					l_classes := a_group.group.classes
+					create l_class_table.make (l_classes.count)
+					a_class_table.put (l_class_table, a_group.group)
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						l_conf_class := l_classes.item_for_iteration
+						l_class_table.put (create{QL_CLASS}.make_with_parent (l_conf_class, a_group), l_conf_class)
+						l_classes.forth
+					end
+				else
+					create l_class_table.make (0)
+					a_class_table.put (l_class_table, a_group.group)
 				end
 			end
 			Result := l_class_table.item (a_class)

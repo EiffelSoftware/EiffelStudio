@@ -75,6 +75,13 @@ feature -- Code generation
 			l_creation_class := l_type.base_class
 			l_tuple_const := a_ca.named_arguments
 
+			param := cb.call.parameters
+			if param /= Void then
+				count := param.count
+			else
+				count := 0
+			end
+
 			if cb.type.is_external then
 				l_creation_external ?= cb.call
 				if l_creation_external /= Void then
@@ -83,16 +90,13 @@ feature -- Code generation
 				end
 			end
 			if l_extension = Void then
-					-- Use default constructor
 				l_type ?= cb.type
-				l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type.implementation_id)
-			end
-
-			param := cb.call.parameters
-			if param /= Void then
-				count := param.count
-			else
-				count := 0
+				if count = 0 then
+						-- Use default constructor
+					l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type.implementation_id)
+				else
+					l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type.implementation_id, cb.call.feature_id)
+				end
 			end
 
 				-- Start initialization of custom attribute.

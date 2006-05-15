@@ -6976,6 +6976,18 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			constructor_token_valid: Result /= 0
 		end
 
+	inherited_constructor_token (a_type_id, a_feature_id: INTEGER): INTEGER is
+			-- Given a `a_feature_id' in `a_type_id' return associated
+			-- constructor token.
+		require
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		do
+			Result := current_module.inherited_constructor_token (a_type_id, a_feature_id)
+		ensure
+			feature_token_valid: Result /= 0
+		end
+
 	actual_class_type_token (a_type_id: INTEGER): INTEGER is
 			-- Given `a_type_id' returns its associated metadata token.
 		require

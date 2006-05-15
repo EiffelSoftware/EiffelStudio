@@ -1319,8 +1319,8 @@ feature -- Metadata description
 			end
 		end
 
-	define_constructor (class_type: CLASS_TYPE; signature: like method_sig; is_reference: BOOLEAN; parent_token: INTEGER) is
-			-- Define default constructor for implementation of `class_type'
+	define_constructor (class_type: CLASS_TYPE; signature: like method_sig; is_reference: BOOLEAN; parent_token: INTEGER; feature_id: INTEGER) is
+			-- Define constructor for implementation of `class_type'
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
@@ -1332,6 +1332,7 @@ feature -- Metadata description
 			l_class: CLASS_C
 			l_arg_count: INTEGER
 			l_method_body: MD_METHOD_BODY
+			l_tokens: HASH_TABLE [INTEGER, INTEGER]
 			i: INTEGER
 		do
 				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
@@ -1407,7 +1408,17 @@ feature -- Metadata description
 				method_writer.write_current_body
 
 			end
-			internal_constructor_token.put (l_meth_token, class_type.implementation_id)
+			if signature = default_sig then
+				internal_constructor_token.put (l_meth_token, class_type.implementation_id)
+			end
+			if feature_id /= 0 then
+				l_tokens := internal_constructors [class_type.implementation_id]
+				if l_tokens = Void then
+					create l_tokens.make (1)
+					internal_constructors [class_type.implementation_id] := l_tokens
+				end
+				l_tokens [feature_id] := l_meth_token
+			end
 		end
 
 	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
@@ -1417,7 +1428,7 @@ feature -- Metadata description
 			class_type_not_void: class_type /= Void
 			class_type_can_be_created: not class_type.associated_class.is_interface
 		do
-			define_constructor (class_type, default_sig, is_reference, 0)
+			define_constructor (class_type, default_sig, is_reference, 0, 0)
 		end
 
 	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
@@ -1484,7 +1495,7 @@ feature -- Metadata description
 								set_signature_type (l_sig, l_type_i)
 								l_feat_arg.forth
 							end
-							define_constructor (class_type, l_sig, is_reference, l_il_extension.token)
+							define_constructor (class_type, l_sig, is_reference, l_il_extension.token, l_feature.feature_id)
 						else
 							l_define_default_ctor := True
 						end
@@ -1656,6 +1667,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 	internal_constructor_token: ARRAY [INTEGER]
 			-- Array of ctor token indexed by their `type_id'.
 
+	internal_constructors: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+			-- Array of ctor tokens indexed by their `type_id' and parent ctor tokens.
+
 	constructor_token (a_type_id: INTEGER): INTEGER is
 			-- Token identifier for default constructor of `a_type_id'.
 		require
@@ -1672,6 +1686,57 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			constructor_token_valid: Result /= 0
+		end
+
+	inherited_constructor_token (a_type_id: INTEGER; a_feature_id: INTEGER): INTEGER is
+			-- Token identifier for constructor of `a_type_id' generated for
+			-- a feature identified by `a_feature_id'.
+		require
+			is_generated: is_generated
+			internal_constructors_not_void: internal_constructors /= Void
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		local
+			l_tokens: HASH_TABLE [INTEGER, INTEGER]
+			l_class_type: CLASS_TYPE
+			l_feature: FEATURE_I
+			l_meth_sig: MD_METHOD_SIGNATURE
+			l_argument_count: INTEGER
+			l_arguments: FEAT_ARG
+			l_type_i: TYPE_I
+			i: INTEGER
+		do
+			l_tokens := internal_constructors [a_type_id]
+			if l_tokens /= Void then
+				Result := l_tokens [a_feature_id]
+			end
+			if Result = 0 then
+				l_class_type := il_code_generator.class_types.item (a_type_id)
+				l_feature := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
+				l_argument_count := l_feature.argument_count
+				create l_meth_sig.make
+				l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_meth_sig.set_parameter_count (l_argument_count)
+				l_meth_sig.set_return_type (
+					{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				from
+					l_arguments := l_feature.arguments
+					l_arguments.start
+					i := 0
+				until
+					l_arguments.after
+				loop
+					l_type_i := il_code_generator.argument_actual_type_in (l_arguments.item.type_i, l_class_type)
+					il_code_generator.set_signature_type (l_meth_sig, l_type_i)
+					i := i + 1
+					l_arguments.forth
+				end
+				define_constructor (l_class_type, l_meth_sig, True, 0, a_feature_id)
+				l_tokens := internal_constructors [a_type_id]
+				if l_tokens /= Void then
+					Result := l_tokens [a_feature_id]
+				end
+			end
 		end
 
 	invariant_token (a_type_id: INTEGER): INTEGER is
@@ -2405,6 +2470,7 @@ feature {NONE} -- Once per modules being generated.
 			create internal_external_token_mapping.make (a_type_count)
 			create internal_invariant_token.make (0, a_type_count)
 			create internal_constructor_token.make (0, a_type_count)
+			create internal_constructors.make (0, a_type_count)
 			create internal_assemblies.make (0, a_type_count)
 			create internal_module_references.make (10)
 			create defined_assemblies.make (10)
@@ -3022,6 +3088,7 @@ feature {NONE} -- Cleaning
 			internal_attributes := Void
 			internal_class_types := Void
 			internal_constructor_token := Void
+			internal_constructors := Void
 			internal_dbg_documents := Void
 			internal_dbg_pragma_documents := Void
 			internal_external_token_mapping := Void

@@ -48,7 +48,7 @@ inherit
 		redefine
 			on_draw_item
 		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -103,7 +103,7 @@ feature -- Access
 
 	background_pixmap_imp: EV_PIXMAP_IMP
 			-- Pixmap used for the background of the widget
-			
+
 	background_pixmap: EV_PIXMAP is
 			-- `Result' is pixmap used for background.
 		do
@@ -152,7 +152,7 @@ feature -- Element change
 				invalidate
 			end
 		end
-		
+
 	remove_background_pixmap is
 			-- Remove background pixmap.
 		do
@@ -179,7 +179,9 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.interface.prune (Current.interface)
 			end
-			interface.wipe_out
+			if interface.prunable then
+				interface.wipe_out
+			end
 			wel_destroy
 			set_is_destroyed (True)
 		end
@@ -234,7 +236,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
-			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
 			-- needs :
@@ -263,9 +265,9 @@ feature {NONE} -- WEL Implementation
 					-- over the background we have just drawn.
 				paint_dc.set_background_transparent
 				brush.delete
-			elseif w.background_color_imp /= Void or 
+			elseif w.background_color_imp /= Void or
 				w.foreground_color_imp /= Void
-			then	
+			then
 					-- Not the default color, we need to do something here
 					-- to apply `background_color' to `control'.
 				paint_dc.set_text_color (control.foreground_color)
@@ -282,7 +284,7 @@ feature {NONE} -- WEL Implementation
    	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
-   			-- By default there is no background  
+   			-- By default there is no background
    		local
    			tmp_bitmap: WEL_BITMAP
 		do
@@ -328,7 +330,7 @@ feature {NONE} -- WEL Implementation
  				end
 			end
  		end
- 
+
  	on_wm_hscroll (wparam, lparam: POINTER) is
  			-- Wm_hscroll message.
  		local
@@ -401,14 +403,14 @@ feature {NONE} -- WEL Implementation
 				tree ?= info.window_from
 				tooltip := tree.get_tooltip
 					-- Bring the tooltip to the front.
-					-- For some reason without this, it is shown behind 
+					-- For some reason without this, it is shown behind
 					-- the window.
 				tooltip.set_z_order (Hwnd_top)
-				
+
 				tree.all_ev_children.search (tvinfotip.hitem)
 				if tree.all_ev_children.found then
 					temp_node := tree.all_ev_children.found_item
-					if temp_node.tooltip /= Void and 
+					if temp_node.tooltip /= Void and
 						not temp_node.tooltip.is_empty
 					then
 							-- Assign tooltip text to `tooltip_text'.
@@ -432,16 +434,16 @@ feature {NONE} -- WEL Implementation
 					end
 					create string.make (multi_column_list_row.tooltip)
 				else
-					tooltip := list.get_tooltip	
+					tooltip := list.get_tooltip
 					create string.make (list.i_th (lvninfotip.iitem + 1).tooltip)
 				end
-				
+
 				tooltip.set_z_order (Hwnd_top)
-					
+
 					-- Copy tooltip to allocated memory location.
 				lvninfotip.psztext.memory_copy (string.item, string.count.min (lvninfotip.cchtextmax))
 				(lvninfotip.psztext + (lvninfotip.cchtextmax - 1)).memory_copy ($l_zero, 1)
-				
+
 			elseif info.code = ({WEL_LIST_VIEW_CONSTANTS}.Lvn_marqueebegin) then
 					-- A message has been received from an EV_LIST notifying
 					-- us that a bounding box selection is beginning. We
@@ -454,7 +456,7 @@ feature {NONE} -- WEL Implementation
 			elseif info.code = {WEL_NM_CONSTANTS}.nm_click then
 				checkable_tree ?= info.window_from
 				if checkable_tree /= Void then
-					checkable_tree.on_nm_click				
+					checkable_tree.on_nm_click
 				end
 			elseif info.code = {WEL_NM_CONSTANTS}.nm_customdraw then
 				radio_button ?= info.window_from
@@ -506,7 +508,7 @@ feature {NONE} -- Implementation, focus event
 				l.off
 			loop
 				widget_imp ?= l.item.implementation
-				check 
+				check
 					widget_imp_non_void: widget_imp /= Void
 				end
 				widget_imp.redraw_current_push_button (focused_button)
@@ -518,7 +520,7 @@ feature {NONE} -- Implementation, focus event
 		end
 
 feature {NONE} -- Implementation : deferred features
-		
+
 	client_rect: WEL_RECT is
 		deferred
 		end
@@ -581,7 +583,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Is `a_child' a child of `Current'?
 		deferred
 		end
-		
+
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		require
@@ -609,7 +611,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			c_imp ?= other.implementation
 			Result := c_imp.radio_group = radio_group
 		end
-		
+
 	reset_radio_group is
 			-- Reset radio group to be an empty
 			-- list.
@@ -619,7 +621,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			radio_group_exists: radio_group /= Void
 			radio_group_empty: radio_group.is_empty
 		end
-		
+
 
 	set_radio_group (rg: like radio_group) is
 			-- Set `radio_group' by reference. (Merge)
@@ -699,7 +701,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 				w_imp.disable_sensitive
 			end
 		end
-		
+
 feature -- Status setting
 
 	connect_radio_grouping (a_container: EV_CONTAINER) is
@@ -727,7 +729,7 @@ feature -- Status setting
 				end
 			end
 		end
-		
+
 	unconnect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Removed radio grouping of `a_container' from `Current'.
 		local
@@ -760,7 +762,7 @@ feature -- Status setting
 						if peer.radio_group = radio_group then
 								-- Reset radio group, back to
 								-- empty.
-							peer.reset_radio_group	
+							peer.reset_radio_group
 						end
 							-- Remove radio button from radio group
 							-- of `Current'.
@@ -792,7 +794,7 @@ feature -- Status setting
 					peer.select_first_radio_button
 				end
 			end
-		end	
+		end
 
 feature -- Event handling
 

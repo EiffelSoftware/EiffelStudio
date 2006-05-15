@@ -105,7 +105,7 @@ feature -- Access
 				Result := formatter_container.item
 			end
 		end
-		
+
 feature -- Status setting
 
 	set_parent (explorer: EB_EXPLORER_BAR_ITEM) is
@@ -304,16 +304,16 @@ feature -- Status setting
 			l_class_feature_formatter: EB_FEATURE_CONTENT_FORMATTER
 			l_cursor: CURSOR
 			l_control_bar: EV_WIDGET
+			done: BOOLEAN
 		do
 			if not formatter_container.has (new_widget) then
-				formatter_container.replace (new_widget)
 				l_formatters := managed_formatters
 				l_cursor := l_formatters.cursor
 				from
 					formatter_tool_bar_area.wipe_out
 					l_formatters.start
 				until
-					l_formatters.after
+					l_formatters.after or done
 				loop
 					if l_formatters.item.selected then
 						l_class_feature_formatter ?= l_formatters.item
@@ -324,10 +324,22 @@ feature -- Status setting
 								formatter_tool_bar_area.disable_item_expand (l_class_feature_formatter.browser.control_bar)
 							end
 						end
+						if l_formatters.item.is_editor_formatter then
+							editor_frame.wipe_out
+							outer_container.wipe_out
+							editor_frame.extend (formatter_container)
+							outer_container.extend (editor_frame)
+						else
+							editor_frame.wipe_out
+							outer_container.wipe_out
+							outer_container.extend (formatter_container)
+						end
+						done := True
 					end
 					l_formatters.forth
 				end
 				l_formatters.go_to (l_cursor)
+				formatter_container.replace (new_widget)
 			end
 		end
 
@@ -474,6 +486,8 @@ feature {NONE} -- Implementation
 			create output_line
 			create tool_bar_area
 			create formatter_tool_bar_area
+			create outer_container
+			create editor_frame
 			output_line.align_text_left
 			build_tool_bar
 			widget.extend (tool_bar_area)
@@ -483,10 +497,10 @@ feature {NONE} -- Implementation
 			widget.disable_item_expand (sep)
 			widget.extend (output_line)
 			widget.disable_item_expand (output_line)
-			create f
-			f.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
-			f.extend (formatter_container)
-			widget.extend (f)
+
+			editor_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			outer_container.extend (formatter_container)
+			widget.extend (outer_container)
 			output_line.set_text (Interface_names.l_No_feature)
 		end
 
@@ -551,6 +565,12 @@ feature {NONE} -- Implementation
 
 	tool_bar_area: EV_HORIZONTAL_BOX
 			-- Area to contain tool bar
+
+	outer_container: EV_CELL
+			-- Container to hold `formatter_container' and `editor_frame' (if current formatter is an editor formatter)
+
+	editor_frame: EV_FRAME
+			-- Frame as borer of an editor if current formatter is and editor formatter
 
 invariant
 	flat_formatter_not_void: flat_formatter /= Void

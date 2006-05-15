@@ -1,5 +1,5 @@
 indexing
-	description: "Eiffel Query Language utilities used in formatters"
+	description: "Eiffel Query Language utilities"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,9 +7,9 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_FORMATTER_UTILITY
+	QL_UTILITY
 
-feature{NONE} -- Implementation
+feature -- Access
 
 	query_feature_item_from_e_feature (a_feature: E_FEATURE): QL_FEATURE is
 			-- Given a E_FEATURE object, return a QL_FEATURE object representing it.
@@ -54,6 +54,8 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implementation
 
 	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP) is
 			-- Find a path from `a_group' to current system target, and

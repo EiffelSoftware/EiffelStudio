@@ -18,7 +18,7 @@ inherit
 
 	REFACTORING_HELPER
 
-	EB_FORMATTER_UTILITY
+	QL_UTILITY
 
 feature -- Formatting
 

@@ -861,7 +861,7 @@ feature -- Keybord shortcuts Customization
 	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
-			create Result.make (10)
+			create Result.make (21)
 			Result.put ([False,  True, False, key_strings.item (Key_space).twin.as_string_8], "autocomplete")
 			Result.put ([False,  True,  True, key_strings.item (Key_space).twin.as_string_8], "class_autocomplete")
 			Result.put ([ True,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_panel")
@@ -873,6 +873,16 @@ feature -- Keybord shortcuts Customization
 			Result.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_1")
 			Result.put ([False,  True, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_2")
 			Result.put ([False, False,  True, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_3")
+			Result.put ([True, False,  False, key_strings.item (Key_0).twin.as_string_8], "external_command_0")
+			Result.put ([True, False,  False, key_strings.item (Key_1).twin.as_string_8], "external_command_1")
+			Result.put ([True, False,  False, key_strings.item (Key_2).twin.as_string_8], "external_command_2")
+			Result.put ([True, False,  False, key_strings.item (Key_3).twin.as_string_8], "external_command_3")
+			Result.put ([True, False,  False, key_strings.item (Key_4).twin.as_string_8], "external_command_4")
+			Result.put ([True, False,  False, key_strings.item (Key_5).twin.as_string_8], "external_command_5")
+			Result.put ([True, False,  False, key_strings.item (Key_6).twin.as_string_8], "external_command_6")
+			Result.put ([True, False,  False, key_strings.item (Key_7).twin.as_string_8], "external_command_7")
+			Result.put ([True, False,  False, key_strings.item (Key_8).twin.as_string_8], "external_command_8")
+			Result.put ([True, False,  False, key_strings.item (Key_9).twin.as_string_8], "external_command_9")
 		end
 
 invariant

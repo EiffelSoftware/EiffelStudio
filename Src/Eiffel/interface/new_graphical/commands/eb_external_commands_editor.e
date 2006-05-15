@@ -82,39 +82,40 @@ feature -- Status report
 			create Result.make (0, 9)
 		end
 
-	existing_commands: LIST [EB_EXTERNAL_COMMAND] is
-			-- Array of existing external commands.
+	accelerators: ARRAY [EV_ACCELERATOR] is
+			-- Accelerators for `commands'.
 		local
+			l_shortcut: SHORTCUT_PREFERENCE
 			i: INTEGER
-		do
+		once
+			create Result.make (0, 9)
 			from
-				create {ARRAYED_LIST [EB_EXTERNAL_COMMAND]} Result.make (10)
+				i := 0
 			until
 				i > 9
 			loop
-				if commands @ i /= Void then
-					Result.extend ((commands @ i))
-				end
+				l_shortcut := preferences.editor_data.shortcuts.item ("external_command_" + i.out)
+				l_shortcut.change_actions.extend (agent on_shortcut_change (i))
+				Result.put (create{EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift), i)
+				Result.item (i).actions.extend (agent execute_command_at_position (i))
 				i := i + 1
 			end
-		end
-
-	accelerators: ARRAY [EV_ACCELERATOR] is
-			-- Accelerators for `commands'.
-		once
-			create Result.make (0, 9)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_0), False, True, False), 0)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_1), False, True, False), 1)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_2), False, True, False), 2)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_3), False, True, False), 3)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_4), False, True, False), 4)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_5), False, True, False), 5)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_6), False, True, False), 6)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_7), False, True, False), 7)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_8), False, True, False), 8)
-			Result.put (create{EV_ACCELERATOR}.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_9), False, True, False), 9)
 		ensure
 			Result_attached: Result /= Void
+		end
+
+feature -- Actions
+
+	on_shortcut_change (i: INTEGER) is
+			-- Action to be performed when shortcut for an external command changes
+		require
+			i_valid: i >= 0 and i <= 9
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			l_shortcut := preferences.editor_data.shortcuts.item ("external_command_" + i.out)
+			accelerators.put (create{EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift), i)
+			accelerators.item (i).actions.extend (agent execute_command_at_position (i))
 		end
 
 feature -- Basic operations
@@ -128,6 +129,16 @@ feature -- Basic operations
 			else
 				dialog.hide
 				dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
+			end
+		end
+
+	execute_command_at_position (a_pos: INTEGER) is
+			-- Execute command at position `a_pos'.
+		require
+			a_pos_valid: a_pos >=0 and a_pos <= 9
+		do
+			if commands.item (a_pos) /= Void then
+				commands.item (a_pos).execute
 			end
 		end
 

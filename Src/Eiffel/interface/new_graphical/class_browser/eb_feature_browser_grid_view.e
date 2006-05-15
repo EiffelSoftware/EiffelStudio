@@ -105,20 +105,6 @@ feature -- Setting
 
 feature -- Actions
 
-	on_color_or_font_changed is
-			-- Action performed when color or font used to display editor tokens changes
-		do
-			if grid.is_displayed then
-				fill_rows
-				bind_grid
-			else
-				text.set_background_color (editor_preferences.normal_background_color)
-				text.set_foreground_color (editor_preferences.normal_text_color)
-				text.set_font (font)
-				text.refresh_now
-			end
-		end
-
 	on_show_tooltip_changed is
 			-- Action to be performed when selection status of `show_tooltip_checkbox' changes
 		do

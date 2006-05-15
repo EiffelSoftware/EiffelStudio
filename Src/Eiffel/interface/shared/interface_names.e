@@ -698,6 +698,8 @@ feature -- Label texts
 	l_version_from_message: STRING is " (version from)"
 	l_expand_layer: STRING is "Expand selected level"
 	l_collapse_layer: STRING is "Collapse selected level"
+	l_expand_all: STRING is "Expand all rows"
+	l_collapse_all: STRING is "Collapse all rows"
 
 feature -- Stone names
 

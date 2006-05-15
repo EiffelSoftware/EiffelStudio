@@ -150,14 +150,8 @@ feature -- Access
 
 	start_class: QL_CLASS
 			-- Class as root of tree
+			-- This is used when a tree view is to be built. And start class serves as the root of that tree.
 			-- If `start_class' is Void, don't build tree.
-
-feature -- Actions
-
-	on_color_or_font_changed is
-			-- Action performed when color or font used to display editor tokens changes
-		deferred
-		end
 
 feature -- Status report
 
@@ -183,7 +177,21 @@ feature{NONE} -- Implementation
 	widget_internal: like widget
 			-- Implementation of `widget'
 
-feature{NONE} -- Pick and drop
+feature{NONE} -- Actions
+
+	on_color_or_font_changed is
+			-- Action performed when color or font used to display editor tokens changes
+		do
+			if grid.is_displayed then
+				fill_rows
+				bind_grid
+			else
+				text.set_background_color (editor_preferences.normal_background_color)
+				text.set_foreground_color (editor_preferences.normal_text_color)
+				text.set_font (font)
+				text.refresh_now
+			end
+		end
 
 	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Action performed when pick ends
@@ -225,10 +233,10 @@ feature{NONE} -- Pick and drop
 			end
 		end
 
+feature{NONE} -- Implementation
+
 	last_picked_item: EV_GRID_ITEM
 			-- Last picked item	
-
-feature{NONE} -- Implementation
 
 	line_height: INTEGER is
 			-- Line height
@@ -251,6 +259,16 @@ feature{NONE} -- Implementation
 		deferred
 		ensure
 			view_up_to_date: is_up_to_date
+		end
+
+	fill_rows is
+			-- Fill rows with `data'.
+		deferred
+		end
+
+	bind_grid is
+			-- Bind data in `rows' into `grid'.
+		deferred
 		end
 
 invariant

@@ -57,6 +57,31 @@ feature -- Actions
 			end
 		end
 
+	on_expand_all_rows is
+			-- Action to be performed to expand all rows.
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+			l_grid_row: EV_GRID_ROW
+			l_row: EB_CLASS_BROWSER_FLAT_ROW
+		do
+			if grid.row_count > 0 then
+				from
+					l_row_index := 1
+					l_row_count := grid.row_count
+				until
+					l_row_index > l_row_count
+				loop
+					l_grid_row := grid.row (l_row_index)
+					l_row ?= l_grid_row.data
+					if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
+						on_row_expanded (l_grid_row)
+					end
+					l_row_index := l_row_index + 1
+				end
+			end
+		end
+
 	on_row_collapsed (a_row: EV_GRID_ROW) is
 			-- Action performed when `a_row' is collapsed
 		local
@@ -81,6 +106,31 @@ feature -- Actions
 					l_row_index := l_row_index + 1
 				else
 					done := True
+				end
+			end
+		end
+
+	on_collapse_all_rows is
+			-- Action to be performed to collapse all rows.
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+			l_grid_row: EV_GRID_ROW
+			l_row: EB_CLASS_BROWSER_FLAT_ROW
+		do
+			if grid.row_count > 0 then
+				from
+					l_row_index := 1
+					l_row_count := grid.row_count
+				until
+					l_row_index > l_row_count
+				loop
+					l_grid_row := grid.row (l_row_index)
+					l_row ?= l_grid_row.data
+					if l_row /= Void and then l_row.is_parent and then l_row.children_count > 0 and then l_row.is_expanded then
+						on_row_collapsed (l_grid_row)
+					end
+					l_row_index := l_row_index + 1
 				end
 			end
 		end
@@ -131,21 +181,6 @@ feature -- Actions
 			end
 		end
 
-	on_color_or_font_changed is
-			-- Action performed when color or font used to display editor tokens changes
-		do
-			if grid.is_displayed then
-				fill_features (data, show_feature_from_any_checkbox.is_selected)
-				build_row_relation
-				bind_grid
-			else
-				text.set_background_color (editor_preferences.normal_background_color)
-				text.set_foreground_color (editor_preferences.normal_text_color)
-				text.set_font (font)
-				text.refresh_now
-			end
-		end
-
 feature{NONE} -- Sorting
 
 	class_column: INTEGER is 1
@@ -166,7 +201,6 @@ feature{NONE} -- Sorting
 			if last_sorted_column /= class_column then
 				expand_all_rows
 			end
-			build_row_relation
 			bind_grid
 		end
 
@@ -182,7 +216,6 @@ feature{NONE} -- Sorting
 			if last_sorted_column /= feature_column then
 				expand_all_rows
 			end
-			build_row_relation
 			bind_grid
 		end
 
@@ -333,6 +366,7 @@ feature -- Access
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
 			l_tool_bar: EV_TOOL_BAR
+			l_tool_bar2: EV_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
@@ -345,6 +379,12 @@ feature -- Access
 				control_tool_bar.disable_item_expand (show_feature_from_any_checkbox)
 				control_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.disable_item_expand (show_tooltip_checkbox)
+				create l_tool_bar2
+				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
+				l_tool_bar2.extend (expand_button)
+				l_tool_bar2.extend (collapse_button)
+				control_tool_bar.extend (l_tool_bar2)
+				control_tool_bar.disable_item_expand (l_tool_bar2)
 			end
 			Result := control_tool_bar
 		ensure then
@@ -357,6 +397,34 @@ feature -- Access
 	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_FLAT_ROW]
 			-- Rows for features that are to be displayed
 
+	collapse_button: EV_TOOL_BAR_BUTTON is
+			-- Button to collapse one level of tree
+		do
+			if collapse_button_internal = Void then
+				create collapse_button_internal
+				collapse_button_internal.set_pixmap (icon_collapse_all)
+				collapse_button_internal.set_tooltip (interface_names.l_collapse_all)
+				collapse_button_internal.select_actions.extend (agent on_collapse_all_rows)
+			end
+			Result := collapse_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expand_button: EV_TOOL_BAR_BUTTON is
+			-- Button to expand one level of tree
+		do
+			if expand_button_internal = Void then
+				create expand_button_internal
+				expand_button_internal.set_pixmap (icon_expand_all)
+				expand_button_internal.set_tooltip (interface_names.l_expand_all)
+				expand_button_internal.select_actions.extend (agent on_expand_all_rows)
+			end
+			Result := expand_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Update
 
 	update_view is
@@ -366,7 +434,7 @@ feature{NONE} -- Update
 				if data /= Void then
 					text.hide
 					component_widget.show
-					fill_features (data, show_feature_from_any_checkbox.is_selected)
+					fill_rows
 					if last_sorted_column = 0 then
 						expand_all_rows
 						last_sorted_column := class_column
@@ -395,6 +463,7 @@ feature{NONE} -- Update
 			l_even_line_color: EV_COLOR
 
 		do
+			build_row_relation
 			l_odd_line_color := preferences.class_browser_data.odd_row_background_color
 			l_even_line_color := preferences.class_browser_data.even_row_background_color
 			if grid.row_count > 0 then
@@ -538,31 +607,30 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation			
 
-	fill_features (a_data: QL_FEATURE_DOMAIN; a_feature_from_any_displayed: BOOLEAN) is
-			-- Fill `rows' with `a_data'.
-			-- If `a_feature_from_any_displayed' is True, display unchanged features from class {ANY}.
-		require
-			a_data_not_void: a_data /= Void
+	fill_rows is
+			-- Fill `rows' using information from `data'.
 		local
 			l_feature_list: LIST [QL_FEATURE]
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_feature: QL_FEATURE
 			l_any_class_id: INTEGER
+			l_feature_from_any_displayed: BOOLEAN
 		do
-			l_feature_list := data.content
+			l_feature_list := data
 			if rows = Void then
 				create rows.make (l_feature_list.count)
 			else
 				rows.wipe_out
 			end
 			l_any_class_id := system.any_id
+			l_feature_from_any_displayed := show_feature_from_any_checkbox.is_selected
 			from
 				l_feature_list.start
 			until
 				l_feature_list.after
 			loop
 				l_feature := l_feature_list.item
-				if a_feature_from_any_displayed or else (l_feature.written_class.class_id /= l_any_class_id) then
+				if l_feature_from_any_displayed or else (l_feature.written_class.class_id /= l_any_class_id) then
 					create l_row.make (l_feature_list.item, Current)
 					l_row.set_is_expanded (True)
 					rows.force_last (l_row)
@@ -622,6 +690,16 @@ feature{NONE} -- Implementation
 				l_rows.forth
 			end
 		end
+
+feature{NONE} -- Implementation
+
+
+	expand_button_internal: like expand_button
+			-- Implementation of `expand_button'
+
+	collapse_button_internal: like collapse_button
+			-- Implementation of `collapse_button'
+
 
 invariant
 	development_window_attached: development_window /= Void

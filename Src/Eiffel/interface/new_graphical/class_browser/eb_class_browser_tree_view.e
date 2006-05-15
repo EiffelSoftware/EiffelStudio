@@ -102,20 +102,6 @@ feature -- Actions
 			end
 		end
 
-	on_color_or_font_changed is
-			-- Action performed when color or font used to display editor tokens changes
-		do
-			if grid.is_displayed then
-				fill_rows
-				bind_grid
-			else
-				text.set_background_color (editor_preferences.normal_background_color)
-				text.set_foreground_color (editor_preferences.normal_text_color)
-				text.set_font (font)
-				text.refresh_now
-			end
-		end
-
 feature -- Notification
 
 	update_view is

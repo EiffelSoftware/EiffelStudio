@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EB_FEATURE_INFO_FORMATTER
+		redefine
+			empty_widget
+		end
 
 	QL_UTILITY
 
@@ -45,6 +48,23 @@ feature -- Access
 			else
 				Result := browser.widget
 			end
+		end
+
+	empty_widget: EV_WIDGET is
+			-- Widget displayed when no information can be displayed.
+		local
+			def: EV_STOCK_COLORS
+			l_frame: EV_FRAME
+			l_cell: EV_CELL
+		do
+			create def
+			create l_frame
+			l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			create l_cell
+			l_cell.extend (l_frame)
+			Result := l_cell
+			l_frame.set_background_color (def.White)
+			l_frame.drop_actions.extend (agent on_feature_drop)
 		end
 
 feature -- Setting

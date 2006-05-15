@@ -572,6 +572,7 @@ feature {NONE} -- Handle keystrokes
 		local
 			other_keys: BOOLEAN
 			l_cursor: like cursor_type
+			l_cursor_twin: like cursor_type
 		do
 			l_cursor := text_displayed.cursor
 			inspect
@@ -596,7 +597,17 @@ feature {NONE} -- Handle keystrokes
 			when Key_home then
 					-- Home key action
 				if editor_preferences.smart_home then
-					basic_cursor_move (agent l_cursor.go_smart_home)
+					if text_displayed.has_selection then
+						l_cursor_twin := l_cursor.twin
+						l_cursor_twin.go_smart_home
+						if text_displayed.selection_start <= l_cursor_twin then
+							basic_cursor_move (agent l_cursor.go_start_line)
+						else
+							basic_cursor_move (agent l_cursor.go_smart_home)
+						end
+					else
+						basic_cursor_move (agent l_cursor.go_smart_home)
+					end
 				else
 					basic_cursor_move (agent l_cursor.go_start_line)
 				end

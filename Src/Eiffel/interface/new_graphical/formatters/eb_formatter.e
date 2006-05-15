@@ -38,6 +38,11 @@ feature -- Properties
 	stone: STONE
 			-- Stone representing Current
 
+	is_editor_formatter: BOOLEAN is
+			-- Is current formatter use an editor to display information?
+		do
+		end
+
 feature -- Initialization
 
 	make (a_manager: like manager) is

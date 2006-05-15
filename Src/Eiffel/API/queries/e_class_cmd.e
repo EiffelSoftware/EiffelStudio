@@ -26,7 +26,7 @@ inherit
 
 	QL_SHARED_CLASS_RELATION
 
-	EB_FORMATTER_UTILITY
+	QL_UTILITY
 
 feature -- Initialization
 

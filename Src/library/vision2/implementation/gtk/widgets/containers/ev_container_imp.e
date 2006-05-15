@@ -1,15 +1,15 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision container, GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "container"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_CONTAINER_IMP
-	
+
 inherit
 	EV_CONTAINER_I
 		redefine
@@ -25,9 +25,9 @@ inherit
 			destroy,
 			set_parent_imp
 		end
-	
+
 	EV_CONTAINER_ACTION_SEQUENCES_IMP
-	
+
 	PLATFORM
 
 feature {NONE} -- Initialization
@@ -45,14 +45,14 @@ feature -- Access
 		do
 			Result := visual_widget
 		end
-	
+
 	client_width: INTEGER is
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
 			Result := width
 		end
-	
+
 	client_height: INTEGER is
 			-- Height of the client area of container
 			-- Redefined in children.
@@ -62,7 +62,7 @@ feature -- Access
 
 	background_pixmap: EV_PIXMAP
 			-- the background pixmap
-	
+
 feature -- Element change
 
 	replace (v: like item) is
@@ -81,7 +81,7 @@ feature -- Element change
 				on_new_item (w)
 			end
 		end
-	
+
 feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 
 	shared_pointer: POINTER_REF
@@ -254,7 +254,7 @@ feature -- Status setting
 			if r /= Void then
 				a_max_index := {EV_GTK_EXTERNALS}.g_slist_length (radio_group) - 1
 				a_item_index := {EV_GTK_EXTERNALS}.g_slist_index (radio_group, r.visual_widget)
-				
+
 				if a_max_index - a_item_index > 0 then
 					a_item_pointer := {EV_GTK_EXTERNALS}.g_slist_nth_data (
 								radio_group,
@@ -265,8 +265,8 @@ feature -- Status setting
 								radio_group,
 								a_max_index - 1
 							)
-				end				
-				
+				end
+
 				{EV_GTK_EXTERNALS}.gtk_radio_button_set_group (r.visual_widget, NULL)
 
 				if a_item_pointer /= NULL then
@@ -311,7 +311,7 @@ feature -- Status setting
 				i = 12
 			loop
 				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
-				pix_ptr := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)	
+				pix_ptr := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 				i := i + 1
 			end
 			from
@@ -327,14 +327,14 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_widget_set_style (visual_widget, a_style)
 			{EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
 		end
-		
+
 	set_background_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set the container background pixmap to `pixmap'. 
+			-- Set the container background pixmap to `pixmap'.
 		do
 			background_pixmap := a_pixmap.twin
 			internal_set_background_pixmap (a_pixmap)
 		end
-		
+
 	bg_pixmap (p: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
@@ -387,7 +387,9 @@ feature -- Command
 	destroy is
 			-- Render `Current' unusable.
 		do
-			interface.wipe_out
+			if interface.prunable then
+				interface.wipe_out
+			end
 			Precursor {EV_WIDGET_IMP}
 		end
 
@@ -409,17 +411,17 @@ feature -- Event handling
 			an_item_imp.set_parent_imp (Void)
 			remove_radio_button (an_item_imp)
 		end
-		
+
 feature {EV_WIDGET_IMP} -- Implementation
 
 	child_has_resized (a_widget_imp: EV_WIDGET_IMP) is
-			-- 
+			--
 		do
 			-- By default do nothing
 		end
-		
+
 	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP) is
-			-- 
+			--
 		do
 			Precursor {EV_WIDGET_IMP} (a_parent_imp)
 			if background_pixmap /= Void and parent_imp = Void then
@@ -430,7 +432,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 		end
 
 feature {NONE} -- Externals
-	
+
 	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
 			-- Convert `gslist' to Eiffel structure.
 		local
@@ -448,7 +450,7 @@ feature {NONE} -- Externals
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)
 		end
-		
+
 	glist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
 			-- Convert `gslist' to Eiffel structure.
 		local

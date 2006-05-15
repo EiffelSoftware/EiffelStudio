@@ -114,7 +114,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 				end
 				remove_and_clear_all_rows
 				put_report_summary
-				search_tool.new_search_tool_bar.hide
+				search_tool.report_tool.new_search_tool_bar.hide
 
 				l_index := multi_search_performer.index
 				font := label_font
@@ -450,7 +450,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 										" found(s) in " +
 										multi_search_performer.class_count.out +
 										" class(es)"
-			search_tool.summary_label.set_text (report_summary_string)
+			search_tool.report_tool.set_summary (report_summary_string)
 		end
 
 	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
@@ -492,7 +492,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 						text_height := a_font.string_size ("a").integer_item (2)
 					end
 					client_height := label_item.height - label_item.top_border - label_item.bottom_border
-					vertical_text_offset_into_available_space := client_height - text_height - 1
+					vertical_text_offset_into_available_space := client_height - text_height
 					if label_item.is_top_aligned then
 						vertical_text_offset_into_available_space := 0
 					elseif label_item.is_bottom_aligned then
@@ -599,8 +599,8 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 						search_tool.bottom_reached_actions.call ([False])
 					end
 					l_editor.refresh_now
-					search_tool.summary_label.set_text (report_summary_string)
-					search_tool.new_search_tool_bar.hide
+					search_tool.report_tool.set_summary (report_summary_string)
+					search_tool.report_tool.set_new_search_button_visible (False)
 					if not search_tool.report_cursor_recorded then
 						search_tool.save_current_cursor
 						search_tool.set_report_cursor_recorded (True)
@@ -613,12 +613,12 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 					else
 						l_saving_string := ""
 					end
-					search_tool.summary_label.set_text (report_summary_string + "   Item expires. Try" + l_saving_string + " searching again.")
-					search_tool.new_search_tool_bar.show
+					search_tool.report_tool.set_summary (report_summary_string + "   Item expires. Try" + l_saving_string + " searching again.")
+					search_tool.report_tool.set_new_search_button_visible (True)
 				end
 			else
-				search_tool.summary_label.set_text (report_summary_string)
-				search_tool.new_search_tool_bar.hide
+				search_tool.report_tool.set_summary (report_summary_string)
+				search_tool.report_tool.set_new_search_button_visible (False)
 			end
 		end
 

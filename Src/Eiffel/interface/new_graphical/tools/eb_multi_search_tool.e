@@ -1,5 +1,5 @@
 indexing
-	description	: "Tool to search and replace a string in clusters, classes or editor in the whole system."
+	description	: "Tool to search and replace a string in groups, classes or editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
@@ -10,31 +10,12 @@ class
 
 inherit
 
-	EB_SEARCH_TOOL
-		rename
-			replace as replace_current
-		export
-			{MSR_REPLACE_IN_ESTUDIO_STRATEGY} editor
+	EB_MULTI_SEARCH_TOOL_IMP
 		redefine
 			make,
-			build_interface,
-			search,
-			replace_current,
-			switch_mode,
-			search_is_possible,
-			force_new_search,
-			go_to_next_found,
-			go_to_previous_found,
-			key_pressed,
-			default_search,
-			enable_disable_search_button,
-			build_explorer_bar_item,
-			on_text_edited,
-			on_text_reset,
-			on_text_fully_loaded,
-			set_focus,
-			recycle,
-			editor
+			manager,
+			reverse,
+			create_report_grid
 		end
 
 	EB_SHARED_MANAGERS
@@ -58,11 +39,6 @@ inherit
 			default_create, copy, is_equal
 		end
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 	DOCUMENT_HELPER
 		export
 			{NONE} all
@@ -76,6 +52,20 @@ inherit
 	EB_SEARCH_OPTION_OBSERVER
 		export
 			{NONE} all
+		end
+
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	TEXT_OBSERVER
+		rename
+			set_manager as set_text_observer_manager
+		redefine
+			on_text_edited,
+			on_text_reset,
+			on_text_fully_loaded
 		end
 
 create
@@ -93,6 +83,8 @@ feature {NONE} -- Initialization
 			check_class_succeed := true
 			create changed_classes.make (0)
 			build_actions
+			prepare_interface
+			switch_mode
 			create last_keyword_queue.make
 			incremental_search_start_pos := 1
 			add_observer (Current)
@@ -101,218 +93,98 @@ feature {NONE} -- Initialization
 	build_actions is
 			-- Build actions
 		do
+			search_button.select_actions.extend (agent new_search)
+			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent new_search))
+
+			keyword_field.change_actions.extend (agent enable_disable_search_button)
+			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
+			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
+			keyword_field.focus_in_actions.extend (agent focusing_keyword_field)
+
+			replace_combo_box.key_press_actions.extend (agent key_pressed (?, False))
+			replace_combo_box.drop_actions.extend (agent display_stone_signature (replace_combo_box, ?))
+
+			replace_check_button.select_actions.extend (agent switch_mode)
+			replace_check_button.key_press_actions.extend (agent key_pressed (?, True ))
+
+			replace_button.select_actions.extend (agent replace_current)
+			replace_button.key_press_actions.extend (agent handle_enter_on_button (?, agent replace_current))
+
+			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
+			case_sensitive_button.select_actions.extend (agent force_new_search)
+			case_sensitive_button.select_actions.extend (agent check_button_changed (case_sensitive_button))
+
+			whole_word_button.key_press_actions.extend (agent key_pressed (?, True))
+			whole_word_button.select_actions.extend (agent force_new_search)
+			whole_word_button.select_actions.extend (agent check_button_changed (whole_word_button))
+
+			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
+			use_regular_expression_button.select_actions.extend (agent force_new_search)
+			use_regular_expression_button.select_actions.extend (agent check_button_changed (use_regular_expression_button))
+
+			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
+			search_backward_button.select_actions.extend (agent check_button_changed (search_backward_button))
+
+			replace_all_click_button.select_actions.extend (agent confirm_and_replace_all)
+			replace_all_click_button.key_press_actions.extend (agent handle_enter_on_button (?, agent confirm_and_replace_all))
+
+			notebook.drop_actions.set_veto_pebble_function (agent notebook_veto_pebble)
+			notebook.drop_actions.extend (agent on_drop_notebook)
+			notebook.selection_actions.extend (agent on_notebook_selected)
+
+			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
+			current_editor_button.select_actions.extend (agent toggle_scope_detail (current_editor_button))
+			current_editor_button.select_actions.extend (agent force_new_search)
+
+			whole_project_button.key_press_actions.extend (agent key_pressed (?, True))
+			whole_project_button.select_actions.extend (agent toggle_scope_detail (whole_project_button))
+			whole_project_button.select_actions.extend (agent force_new_search)
+
+			custom_button.key_press_actions.extend (agent key_pressed (?, True))
+			custom_button.select_actions.extend (agent toggle_scope_detail (custom_button))
+			custom_button.select_actions.extend (agent force_new_search)
+			custom_button.drop_actions.extend (agent on_drop_custom_button (?))
+
+			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
+			search_subcluster_button.select_actions.extend (agent force_new_search)
+
+			search_compiled_class_button.key_press_actions.extend (agent key_pressed (?, True))
+			search_compiled_class_button.select_actions.extend (agent force_new_search)
+
+			scope_list.key_press_actions.extend (agent key_pressed (?, True))
+			scope_list.drop_actions.extend (agent on_drop_add (?))
+
+			add_button.select_actions.extend (agent add_scope)
+			add_button.drop_actions.extend (agent on_drop_add (?))
+
+			remove_button.select_actions.extend (agent remove_scope)
+			remove_button.drop_actions.extend (agent on_drop_remove (?))
+
+			remove_all_button.select_actions.extend (agent remove_all)
+
+					-- Report box
+			report_tool.new_search_button.select_actions.extend (agent new_search)
+			report_tool.expand_all_button.select_actions.extend (agent expand_all)
+			report_tool.collapse_all_button.select_actions.extend (agent collapse_all)
+
 			create loaded_actions
 			create show_actions
 			create bottom_reached_actions
 			create first_result_reached_actions
 		end
 
-	build_interface is
-			-- Build all the tool's widgets.
-		local
-			vbox: EV_VERTICAL_BOX
-			search_box: EV_VERTICAL_BOX
-			replace_box: EV_VERTICAL_BOX
-			label, label_search: EV_LABEL
-			size: INTEGER
-			options_box: EV_BOX
-			report_box: EV_BOX
-			frame: EV_FRAME
-			hbox: EV_HORIZONTAL_BOX
-			cell: EV_CELL
-			option_and_replace_all_box: EV_HORIZONTAL_BOX
-			option_frame: EV_FRAME
+	create_report_grid is
+			-- Create `search_report_grid'.
 		do
-					-- Search box
-			create label_search.make_with_text (Interface_names.l_Search_for + " ")
-			label_search.align_text_left
-			size := label_search.minimum_width
+			create search_report_grid.make (current)
+		end
 
-			create keyword_field
-			keyword_field.change_actions.extend (agent enable_disable_search_button)
-			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
-			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
-			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
-			keyword_field.focus_in_actions.extend (agent focusing_keyword_field)
-
-			create search_box
-			search_box.set_padding (1)
-			create hbox
-			search_box.extend (hbox)
-			hbox.extend (label_search)
-			hbox.disable_item_expand (label_search)
-
-			hbox.extend (keyword_field)
-			hbox.disable_item_expand (keyword_field)
-			create cell
-			cell.set_minimum_width (3)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-			create search_button.make_with_text_and_action (interface_names.b_search, agent new_search)
-			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent new_search))
-			search_button.disable_sensitive
-			hbox.extend (search_button)
-			hbox.disable_item_expand (search_button)
-
-					-- Replace box
-			create replace_combo_box
-			replace_combo_box.key_press_actions.extend (agent key_pressed (?, False))
-			replace_combo_box.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
-			replace_combo_box.drop_actions.extend (agent display_stone_signature (replace_combo_box, ?))
-
-			create replace_check_button.make_with_text (Interface_names.l_Replace_with)
-			replace_check_button.select_actions.extend (agent switch_mode)
-			replace_check_button.key_press_actions.extend (agent key_pressed (?, True ))
-
-
-			create replace_button.make_with_text_and_action (interface_names.b_replace, agent replace_current)
-			replace_button.key_press_actions.extend (agent handle_enter_on_button (?, agent replace_current))
-
-			create replace_text.make (0)
-
-			create replace_box
-			create hbox
-			replace_box.extend (hbox)
-			replace_box.disable_item_expand (hbox)
-			create label.make_with_text (interface_names.l_replace_with + " ")
-
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
-			label_search.set_minimum_width (label.width)
-
-			hbox.extend (replace_check_button)
-			replace_check_button.hide
-			hbox.disable_item_expand (replace_check_button)
-			hbox.extend (replace_combo_box)
-			hbox.disable_item_expand (replace_combo_box)
-			size := label.width + replace_combo_box.width
-
-			create cell
-			cell.set_minimum_width (3)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-
-			hbox.extend (replace_button)
-			hbox.disable_item_expand (replace_button)
-
-					-- Options and replace all
-			create option_and_replace_all_box
-			create option_frame.make_with_text (interface_names.l_Options)
-			option_frame.set_minimum_width (size)
-			option_and_replace_all_box.extend (option_frame)
-			option_and_replace_all_box.disable_item_expand (option_frame)
-			create hbox
-			create cell
-			cell.set_minimum_width (10)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-			option_frame.extend (hbox)
-				-- Option "Match case"
-			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
-			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
-			case_sensitive_button.select_actions.extend (agent force_new_search)
-			case_sensitive_button.select_actions.extend (agent check_button_changed (case_sensitive_button))
-
-				-- Option "Whole word"
-			create whole_word_button.make_with_text (Interface_names.l_Whole_word)
-			whole_word_button.key_press_actions.extend (agent key_pressed (?, True))
-			whole_word_button.select_actions.extend (agent force_new_search)
-			whole_word_button.select_actions.extend (agent check_button_changed (whole_word_button))
-
-				-- Option "Use regular expression"
-			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
-			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
-			use_regular_expression_button.select_actions.extend (agent force_new_search)
-			use_regular_expression_button.select_actions.extend (agent check_button_changed (use_regular_expression_button))
-
-				-- Option "Search backward"
-			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
-			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
-			search_backward_button.select_actions.extend (agent check_button_changed (search_backward_button))
-
-			create vbox
-			hbox.extend (vbox)
-			hbox.disable_item_expand (vbox)
-			vbox.extend (case_sensitive_button)
-			vbox.disable_item_expand (case_sensitive_button)
-			vbox.extend (whole_word_button)
-			vbox.disable_item_expand (whole_word_button)
-
-			create cell
-			cell.set_minimum_width (80)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-
-			create vbox
-			hbox.extend (vbox)
-			hbox.disable_item_expand (vbox)
-			vbox.extend (use_regular_expression_button)
-			vbox.disable_item_expand (use_regular_expression_button)
-			vbox.extend (search_backward_button)
-			vbox.disable_item_expand (search_backward_button)
-
-			create replace_all_click_button.make_with_text_and_action (interface_names.b_replace_all, agent confirm_and_replace_all)
-			replace_all_click_button.key_press_actions.extend (agent handle_enter_on_button (?, agent confirm_and_replace_all))
-			create vbox
-			vbox.extend (replace_all_click_button)
-			vbox.disable_item_expand (replace_all_click_button)
-			vbox.extend (create {EV_CELL})
-
-			create cell
-			cell.set_minimum_width (3)
-			option_and_replace_all_box.extend (cell)
-			option_and_replace_all_box.disable_item_expand (cell)
-
-			option_and_replace_all_box.extend (vbox)
-			option_and_replace_all_box.disable_item_expand (vbox)
-
-			replace_button.set_minimum_width (layout_constants.default_button_width)
-			replace_all_click_button.set_minimum_width (layout_constants.default_button_width)
-			search_button.set_minimum_width (layout_constants.default_button_width)
-
-			replace_button.disable_sensitive
-			replace_all_click_button.disable_sensitive
-
-			options_box := build_scope_box
-			report_box := build_report_box
-
-			if not preferences.development_window_data.show_search_options then
-				toggle_options
-			end
-
-			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
-			vbox.set_padding (Layout_constants.Small_border_size)
-			vbox.extend (search_box)
-			vbox.disable_item_expand (search_box)
-			vbox.extend (replace_box)
-			vbox.disable_item_expand (replace_box)
-			vbox.extend (option_and_replace_all_box)
-			vbox.disable_item_expand (option_and_replace_all_box)
-
-			create notebook
-			notebook.drop_actions.set_veto_pebble_function (agent notebook_veto_pebble)
-			notebook.drop_actions.extend (agent on_drop_notebook)
-			notebook.selection_actions.extend (agent on_notebook_selected)
-			notebook.set_tab_position (notebook.tab_top)
-			notebook.extend (vbox)
-			notebook.extend (options_box)
-			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
-			notebook.item_tab (options_box).set_text (interface_names.l_scope)
-
-			create vbox
-			vbox.extend (notebook)
-			vbox.disable_item_expand (notebook)
-
-			vbox.extend (report_box)
-			create frame
-			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
-			frame.extend (vbox)
-
-			prepare_interface
-
-			switch_mode
-			widget := frame
+	build_report_box: EV_VERTICAL_BOX is
+			-- Build a report.
+		do
+			create report_tool.make (Current)
+			Result := report_tool.report_box
+			search_report_grid := report_tool.search_report_grid
 		end
 
 feature -- Access
@@ -329,59 +201,11 @@ feature -- Access
 	multi_search_performer: MSR
 			-- Tool that actually performs the search
 
-	replace_all_click_button: EV_BUTTON
-			-- Replace all button
-
-	add_button: EV_BUTTON
-			-- Add button
-
-	remove_button: EV_BUTTON
-			-- Remove button
-
-	remove_all_button: EV_BUTTON
-			-- Remove all button
-
-	use_regular_expression_button: EV_CHECK_BUTTON
-			-- Button to tell if pattern contains wild card.
-
-	current_editor_button: EV_RADIO_BUTTON
-			-- Button to search in editor
-
-	whole_project_button: EV_RADIO_BUTTON
-			-- Button to search in whole project
-
-	custom_button: EV_RADIO_BUTTON
-			-- Button to search in a specific scope
-
-	search_subcluster_button: EV_CHECK_BUTTON
-			-- Button to indicate if subcluster of the specific scope will be searched.
-
-	search_compiled_class_button: EV_CHECK_BUTTON
-			-- Button to indicate if compiled classes will be searched.
-
-	incremental_search_button: EV_CHECK_BUTTON
-			-- Button to control incremental search.
-
-	scope_list: EV_LIST
-			-- List of the specific scope
-
-	search_report_grid: EB_SEARCH_REPORT_GRID
-			-- Grid to contain search report
-
-	replace_combo_box: EV_COMBO_BOX
-			-- Replacment combo box
-
-	notebook: EV_NOTEBOOK
-			-- Notebook, one tab for basic search, one for scopes.
-
 	editor: EB_EDITOR is
 			-- current_editor
 		do
 			Result := manager.current_editor
 		end
-
-	show_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions called when the item becomes visible.
 
 	bottom_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Get called when result reaches the bottom of a class.
@@ -389,67 +213,18 @@ feature -- Access
 	first_result_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Get called when result reaches the one started.
 
+	currently_searched: STRING
+			-- string to be search
+
+feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Access
+
+	manager: EB_DEVELOPMENT_WINDOW
+			-- Development window
+
+	currently_replacing: STRING
+			-- string to be search
+
 feature -- Status report
-
-	reverse : BOOLEAN is
-			-- Search upwards?
-		do
-			Result := search_backward_button.is_selected or temp_reverse
-		end
-
-	is_whole_project_searched : BOOLEAN is
-			-- Is the whole project searched?
-		do
-			Result := whole_project_button.is_selected
-		end
-
-	is_customized : BOOLEAN is
-			-- Is search scoped?
-		do
-			Result := custom_button.is_selected
-		end
-
-	is_case_sensitive: BOOLEAN is
-			-- Is search case sensitive?
-		do
-			Result := case_sensitive_button.is_selected
-		end
-
-	is_whole_word_matched: BOOLEAN is
-			-- Is search whole word matched?
-		do
-			Result := whole_word_button.is_selected
-		end
-
-	is_regular_expression_used: BOOLEAN is
-			-- Is regular expression used in search?
-		do
-			Result := use_regular_expression_button.is_selected
-		end
-
-	is_incremental_search: BOOLEAN is
-			-- Is incremental search enabled?
-		do
-			Result := incremental_search_button.is_selected
-		end
-
-	is_sub_cluster_searched: BOOLEAN is
-			-- Are subclusters searched?
-		do
-			Result := search_subcluster_button.is_selected
-		end
-
-	is_current_editor_searched: BOOLEAN is
-			-- Is current editor searched?
-		do
-			Result := current_editor_button.is_selected
-		end
-
-	only_compiled_class_searched: BOOLEAN is
-			-- Only compiled classes are searched?
-		do
-			Result := search_compiled_class_button.is_selected
-		end
 
 	item_selected (a_editor: EB_EDITOR): BOOLEAN is
 			-- If item in report is selected in a_editor.
@@ -478,7 +253,35 @@ feature -- Status report
 	last_replaced_class: INTEGER
 			-- Numbers of classes replaced last time.
 
+	options_shown: BOOLEAN is
+			-- Are the options shown ?
+			-- We do not use this for the moment, callers should be removed.
+		do
+		end
+
+	reverse : BOOLEAN is
+			-- Search upwards?
+		do
+			Result := Precursor {EB_MULTI_SEARCH_TOOL_IMP} or temp_reverse
+		end
+
 feature -- Status setting
+
+	set_current_searched (word: STRING) is
+			-- assign `word' to `currently_searched'
+		do
+			currently_searched := word
+			if keyword_field /= Void then
+				if keyword_field.text /= Void and then not keyword_field.text.is_empty then
+					update_combo_box (keyword_field.text)
+				end
+				if word = Void or else word.is_empty then
+					keyword_field.remove_text
+				else
+					keyword_field.set_text (word)
+				end
+			end
+		end
 
 	force_new_search is
 			-- Force new search.
@@ -741,257 +544,6 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build explorer bar item
-		do
-			Precursor {EB_SEARCH_TOOL} (explorer_bar)
-			explorer_bar_item.show_actions.extend (agent show_actions.call ([Void]))
-		end
-
-	build_scope_box: EV_VERTICAL_BOX is
-			-- Create and return a box containing the search options
-		local
-			vbox: EV_VERTICAL_BOX
-			frm: EV_FRAME
-			options_toolbar: EV_TOOL_BAR
-			cell: EV_CELL
-			hbox: EV_HORIZONTAL_BOX
-			l_hbox: EV_HORIZONTAL_BOX
-		do
-				-- Option "Incremental search"
-			create incremental_search_button.make_with_text ("Have not added to search panel")
-
-				-- Option "Current Editor"		
-			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
-			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
-			current_editor_button.select_actions.extend (agent toggle_scope_detail (current_editor_button))
-			current_editor_button.select_actions.extend (agent force_new_search)
-
-				-- Option "Whole Project"
-			create whole_project_button.make_with_text (Interface_names.l_Whole_project)
-			whole_project_button.key_press_actions.extend (agent key_pressed (?, True))
-			whole_project_button.select_actions.extend (agent toggle_scope_detail (whole_project_button))
-			whole_project_button.select_actions.extend (agent force_new_search)
-
-				-- Option "Scope"
-			create custom_button.make_with_text (Interface_names.l_Custom)
-			custom_button.key_press_actions.extend (agent key_pressed (?, True))
-			custom_button.select_actions.extend (agent toggle_scope_detail (custom_button))
-			custom_button.select_actions.extend (agent force_new_search)
-			custom_button.drop_actions.extend (agent on_drop_custom_button (?))
-
-				-- Option "Subcluster"
-			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
-			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
-			search_subcluster_button.select_actions.extend (agent force_new_search)
-
-				-- Option "Compiled class"
-			create search_compiled_class_button.make_with_text (Interface_names.l_Compiled_class)
-			search_compiled_class_button.key_press_actions.extend (agent key_pressed (?, True))
-			search_compiled_class_button.select_actions.extend (agent force_new_search)
-
-				-- Option list scope
-			create scope_list.default_create
-			scope_list.key_press_actions.extend (agent key_pressed (?, True))
-			scope_list.enable_multiple_selection
-			scope_list.set_pick_and_drop_mode
-			scope_list.drop_actions.extend (agent on_drop_add (?))
-
-				-- Add button
-			create add_button.make_with_text (interface_names.b_Add)
-			add_button.set_minimum_width (layout_constants.default_button_width)
-			add_button.select_actions.extend (agent add_scope)
-			add_button.drop_actions.extend (agent on_drop_add (?))
-
-				-- Remove button
-			create remove_button.make_with_text (interface_names.b_Remove)
-			remove_button.set_minimum_width (layout_constants.default_button_width)
-			remove_button.select_actions.extend (agent remove_scope)
-			remove_button.drop_actions.extend (agent on_drop_remove (?))
-
-				-- Remove all button
-			create remove_all_button.make_with_text (interface_names.b_Remove_all)
-			remove_all_button.set_minimum_width (layout_constants.default_button_width)
-			remove_all_button.select_actions.extend (agent remove_all)
-
-			create vbox
-
-			create options_button.make_with_text (Interface_names.l_Search_options_hide)
-			options_button.select_actions.extend (agent toggle_options)
-			create options_toolbar
-			options_toolbar.extend (options_button)
-			create frm
-				-- This is a small workaround for a bug on Windows, where a toolbar
-				-- directly inserted within an EV_FRAME, overlaps the bottom of the frame.
-				-- There is currently no easy fix for this so this code has been added temporarily
-				-- as a work around. Julian.
-			create cell
-			frm.extend (cell)
-			cell.extend (options_toolbar)
-			create Result
-
-			create hbox
-			hbox.set_border_width (Layout_constants.Small_border_size)
-
-			create cell
-			cell.set_minimum_width (5)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-
-			create scope
-			create vbox
-			vbox.set_padding_width (layout_constants.small_border_size )
-			vbox.extend (current_editor_button)
-			vbox.extend (whole_project_button)
-			vbox.extend (custom_button)
-			vbox.extend (search_compiled_class_button)
-			vbox.disable_item_expand (current_editor_button)
-			vbox.disable_item_expand (whole_project_button)
-			vbox.disable_item_expand (custom_button)
-			vbox.disable_item_expand (search_compiled_class_button)
-			hbox.extend (vbox)
-			hbox.disable_item_expand (vbox)
-
-
-			create vbox
-			vbox.extend (scope_list)
-			scope_list.set_minimum_width (142 + layout_constants.default_button_width)
-
-			scope.extend (vbox)
-			scope.disable_item_expand (vbox)
-
-			create cell
-			cell.set_minimum_width (3)
-			scope.extend (cell)
-			scope.disable_item_expand (cell)
-
-			create vbox
-			vbox.set_padding_width (layout_constants.small_border_size)
-
-			create l_hbox
-			vbox.extend (l_hbox)
-			vbox.disable_item_expand (l_hbox)
-			l_hbox.extend (add_button)
-			l_hbox.disable_item_expand (add_button)
-
-			create l_hbox
-			vbox.extend (l_hbox)
-			vbox.disable_item_expand (l_hbox)
-			l_hbox.extend (remove_button)
-			l_hbox.disable_item_expand (remove_button)
-
-			create l_hbox
-			vbox.extend (l_hbox)
-			vbox.disable_item_expand (l_hbox)
-			l_hbox.extend (remove_all_button)
-			l_hbox.disable_item_expand (remove_all_button)
-
-			vbox.extend (search_subcluster_button)
-			vbox.disable_item_expand (search_subcluster_button)
-			scope.extend (vbox)
-			scope.disable_item_expand (vbox)
-
-			hbox.extend (scope)
-
-			create options
-			options.extend (hbox)
-			Result.extend (options)
-			Result.disable_item_expand (options)
-			Result.set_border_width (layout_constants.small_border_size)
-		end
-
-	report : EV_FRAME
-			-- Report container
-
-	report_button : EV_TOOL_BAR_BUTTON
-			-- Button to hide or show report.
-
-	summary_label : EV_LABEL
-			-- Label to show search summary.
-
-	shortcut_tool_bar: EV_TOOL_BAR
-			-- Tool bar contains expand all button etc.
-
-	new_search_tool_bar: EV_TOOL_BAR
-			-- Tool bar contains new search button.
-
-	new_search_button: EV_TOOL_BAR_BUTTON
-			-- Button to force a new search.
-
-	expand_all_button: EV_TOOL_BAR_BUTTON
-			-- Button to expand all.
-
-	collapse_all_button: EV_TOOL_BAR_BUTTON
-			-- Button to collapse all.
-
-	build_report_box : EV_VERTICAL_BOX is
-			-- Create and return a box containing result grid.
-		local
-			frm: EV_FRAME
-			report_toolbar: EV_TOOL_BAR
-			hbox: EV_HORIZONTAL_BOX
-		do
-			create report_button.make_with_text (Interface_names.l_Search_report_hide)
-			report_button.select_actions.extend (agent toggle_search_report)
-			create report_toolbar
-			report_toolbar.disable_vertical_button_style
-			report_toolbar.extend (report_button)
-			create frm
-				-- This is a small workaround for a bug on Windows, where a toolbar
-				-- directly inserted within an EV_FRAME, overlaps the bottom of the frame.
-				-- There is currently no easy fix for this so this code has been added temporarily
-				-- as a work around. Julian.
-			create hbox
-			frm.extend (hbox)
-			hbox.extend (report_toolbar)
-			create summary_label.default_create
-			hbox.extend (summary_label)
-			hbox.disable_item_expand (summary_label)
-			hbox.disable_item_expand (report_toolbar)
-
-			create new_search_tool_bar
-			hbox.extend (new_search_tool_bar)
-			hbox.disable_item_expand (new_search_tool_bar)
-			create new_search_button.make_with_text (interface_names.b_new_search)
-			new_search_tool_bar.extend (new_search_button)
-			new_search_tool_bar.disable_vertical_button_style
-			new_search_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			new_search_button.select_actions.extend (agent new_search)
-			new_search_tool_bar.hide
-
-			create shortcut_tool_bar
-			shortcut_tool_bar.disable_vertical_button_style
-			hbox.extend (create {EV_CELL})
-			hbox.extend (shortcut_tool_bar)
-			hbox.disable_item_expand (shortcut_tool_bar)
-			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			create expand_all_button.make_with_text (interface_names.b_expand_all)
-			create collapse_all_button.make_with_text (interface_names.b_collapse_all)
-			shortcut_tool_bar.extend (expand_all_button)
-			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			shortcut_tool_bar.extend (collapse_all_button)
-			expand_all_button.select_actions.extend (agent expand_all)
-			collapse_all_button.select_actions.extend (agent collapse_all)
-
-			create search_report_grid.make (current)
-
-			create Result
-			Result.extend (frm)
-			Result.disable_item_expand (frm)
-
-			create report
-
-			report.extend (search_report_grid)
-			Result.extend (report)
-
-		end
-
-	scope : EV_HORIZONTAL_BOX
-			-- Scope widget container.
-
-	choose_dialog: EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
-			-- Dialog used to add classes or clusters to scope
-
 	prepare_interface is
 			-- Initialize options' status.
 		local
@@ -1114,7 +666,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 	on_text_fully_loaded is
 			-- Text observer, runs when text is fully loaded.
 		do
-			Precursor {EB_SEARCH_TOOL}
+			Precursor {TEXT_OBSERVER}
 			if not loaded_actions.is_empty then
 				loaded_actions.call ([])
 				loaded_actions.wipe_out
@@ -1166,18 +718,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			end
 		end
 
-	toggle_search_report is
-			-- Hide report if it is shown, show it if it is hidden.
-		do
-			if report.is_show_requested then
-				report.hide
-				report_button.set_text (Interface_names.l_Search_report_show)
-			else
-				report.show
-				report_button.set_text (Interface_names.l_Search_report_hide)
-			end
-		end
-
 	toggle_scope_detail (a_button: EV_RADIO_BUTTON) is
 			-- Show and hide the scope detail according to the scope box's selection.
 		do
@@ -1199,7 +739,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				end
 				notebook.item_tab (notebook.i_th (2)).set_text (interface_names.l_scope + ": " + a_button.text)
 			end
-
 		end
 
 	add_scope is
@@ -1535,8 +1074,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				else
 					text_strategy.set_case_insensitive
 				end
-				text_strategy.set_regular_expression_used (use_regular_expression_button.is_selected)
-				text_strategy.set_whole_word_matched (whole_word_button.is_selected)
+				text_strategy.set_regular_expression_used (is_regular_expression_used)
+				text_strategy.set_whole_word_matched (is_whole_word_matched)
 				if class_i /= Void then
 					text_strategy.set_data (class_i)
 					text_strategy.set_date (class_i.date)
@@ -1812,63 +1351,39 @@ feature {NONE} -- Replacement Implementation
 			valid_replace_report: not a_did_nothing implies multi_search_performer.replace_report /= Void
 		do
 			if not a_did_nothing then
-				summary_label.set_text ("   " +
+				report_tool.set_summary ("   " +
 										multi_search_performer.replace_report.text_replaced.out +
 										" replaced in " +
 										multi_search_performer.replace_report.class_replaced.out +
 										" class(es)")
 			else
-				summary_label.set_text ("0 replaced in 0 class(es)")
+				report_tool.set_summary ("0 replaced in 0 class(es)")
 			end
 		end
 
-feature {NONE} -- Destroy behavior.
+feature {NONE} -- Shortcut
 
-	save_preferences is
-			-- Save preferences. All options' status.
-		local
-			l_pre : EB_SEARCH_TOOL_DATA
-		do
-			l_pre := preferences.search_tool_data
-			l_pre.init_incremental_preference.set_value (is_incremental_search)
-			preferences.preferences.save_preference (l_pre.init_incremental_preference)
-
-			l_pre.init_match_case_preference.set_value (is_case_sensitive)
-			preferences.preferences.save_preference (l_pre.init_match_case_preference)
-
-			l_pre.init_only_compiled_classes_preference.set_value (only_compiled_class_searched)
-			preferences.preferences.save_preference (l_pre.init_only_compiled_classes_preference)
-
-			l_pre.init_search_backwards_preference.set_value (search_backward_button.is_selected)
-			preferences.preferences.save_preference (l_pre.init_search_backwards_preference)
-
-			l_pre.init_subclusters_preference.set_value (is_sub_cluster_searched)
-			preferences.preferences.save_preference (l_pre.init_subclusters_preference)
-
-			l_pre.init_use_regular_expression_preference.set_value (is_regular_expression_used)
-			preferences.preferences.save_preference (l_pre.init_use_regular_expression_preference)
-
-			l_pre.init_whole_word_preference.set_value (is_whole_word_matched)
-			preferences.preferences.save_preference (l_pre.init_whole_word_preference)
-
-			if is_current_editor_searched then
-				l_pre.init_scope_preference.set_selected_index (1)
-			elseif is_whole_project_searched then
-				l_pre.init_scope_preference.set_selected_index (2)
-			elseif is_customized then
-				l_pre.init_scope_preference.set_selected_index (3)
-			end
-			preferences.preferences.save_preference (l_pre.init_scope_preference)
+	search_selection_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := preferences.editor_data.shortcuts.item ("search_selection")
 		end
 
-	recycle is
-			-- Recycle
-		do
-			save_preferences
-			Precursor {EB_SEARCH_TOOL}
+	search_last_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := preferences.editor_data.shortcuts.item ("search_last")
+		end
+
+	search_backward_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := 	preferences.editor_data.shortcuts.item ("search_backward")
 		end
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
+
+	search_history_size: INTEGER is 10
 
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
@@ -1968,6 +1483,27 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				if not is_current_editor_searched and l_stone /= manager.stone then
 					manager.editor_tool.text_area.set_focus
 				end
+			end
+		end
+
+	update_combo_box (word: STRING) is
+			-- add word to combo box list
+		local
+			l: LIST[STRING]
+		do
+			l := keyword_field.strings_8
+			if l /= Void then
+				l.compare_objects
+			end
+			if l = Void or else not l.has (word) then
+				if keyword_field.count = search_history_size then
+					keyword_field.start
+					keyword_field.remove
+				end
+				keyword_field.extend (create {EV_LIST_ITEM}.make_with_text (word))
+			end
+			if keyword_field.text.is_empty or else not word.is_equal (keyword_field.text) then
+				keyword_field.set_text (word)
 			end
 		end
 
@@ -2323,6 +1859,31 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			-- Is `editor' main editor?
 		do
 			Result := (manager.editor_tool.text_area = editor)
+		end
+
+	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is
+			-- Display signature name of `a_stone' in `textable'.
+		require
+			textable_not_void: textable /= Void
+			a_stone_not_void: a_stone /= Void
+		local
+			stone_signature: STRING
+		do
+			if a_stone.stone_signature /= Void then
+					-- FIXME Protected against Void, as there is no postcondition
+					-- on `stone_signature', although it appears it should never be Void,
+					-- it must be protected for now. Julian 07/22/03
+
+				stone_signature := a_stone.stone_signature
+				if stone_signature.has (' ') then
+						-- Generic classes, and features with arguments have their arguments
+						-- included, so we strip everything except the name.
+					stone_signature := stone_signature.substring (1, stone_signature.index_of (' ', 1) - 1)
+				end
+				textable.set_text (stone_signature)
+			end
+		ensure
+			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)
 		end
 
 	block_actions is

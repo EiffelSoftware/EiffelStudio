@@ -715,7 +715,7 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_name, l_location, l_readonly, l_prefix, l_recursive: STRING
 			l_parent: CONF_CLUSTER
-			l_loc: CONF_LOCATION
+			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			l_name := current_attributes.item (at_name)
 			l_location := current_attributes.item (at_location)

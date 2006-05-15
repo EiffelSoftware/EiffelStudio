@@ -1,11 +1,11 @@
 indexing
-	description: "Objects that represent a directory location."
+	description: "Abstract representation of a file system location."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CONF_LOCATION
 
 inherit
@@ -39,43 +39,6 @@ inherit
 		undefine
 			is_equal
 		end
-
-create
-	make_from_path,
-	make_from_full_path
-
-feature {NONE} -- Initialization
-
-	make_from_path (a_path: STRING; a_target: CONF_TARGET) is
-			-- Create with `a_path' (without a filename).
-			-- e.g. aa/bb/cc =>
-			-- directory = aa/bb/cc
-			-- file =
-		require
-			a_path_not_void: a_path /= Void
-			a_target_not_void: a_target /= Void
-		do
-			set_path (a_path)
-			target := a_target
-		ensure
-			target_set: target = a_target
-		end
-
-	make_from_full_path (a_full_path: STRING; a_target: CONF_TARGET) is
-			-- Create with `a_full_path' (with a filename).
-			-- e.g. aa/bb/cc =>
-			-- directory = aa/bb
-			-- file = cc
-		require
-			a_full_path_not_void: a_full_path /= Void
-			a_target_not_void: a_target /= Void
-		do
-			set_full_path (a_full_path)
-			target := a_target
-		ensure
-			target_set: target = a_target
-		end
-
 
 feature -- Access, stored in configuration file
 
@@ -166,34 +129,6 @@ feature -- Access queries
 
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
-
-	set_path (a_path: like original_path) is
-			-- Set `original_path' to `a_path'.
-			-- e.g. aa/bb/cc =>
-			-- directory = aa/bb/cc
-			-- file =
-		require
-			a_path_not_void: a_path /= Void
-		do
-			original_path := to_internal (a_path)
-			if original_path.count = 0 then
-				original_path.append_character ('.')
-			end
-			if original_path.item (original_path.count) /= '\' then
-				original_path.append_character ('\')
-			end
-		end
-
-	set_full_path (a_path: STRING) is
-			-- Set `original_path' to `a_path'.
-			-- e.g. aa/bb/cc =>
-			-- directory = aa/bb
-			-- file = cc
-		require
-			a_path_not_void: a_path /= Void
-		do
-			original_path := to_internal (a_path)
-		end
 
 	set_parent (a_parent: like parent) is
 			-- Set `parent' to `a_parent'.
@@ -377,7 +312,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
 
 invariant
 	original_path_not_void: original_path /= Void

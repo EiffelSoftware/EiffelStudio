@@ -38,11 +38,8 @@ feature -- Basic validity queries
 
 	valid_setting (a_setting: STRING): BOOLEAN is
 			-- Is `a_setting' a valid setting?
-		require
-			a_setting_not_void: a_setting /= Void
-			a_setting_lower: a_setting.is_equal (a_setting.as_lower)
 		do
-			if not a_setting.is_empty then
+			if a_setting /= Void and then not a_setting.is_empty then
 				Result := valid_settings.has (a_setting)
 			end
 		end

@@ -22,7 +22,8 @@ inherit
 			is_readonly,
 			accessible_groups,
 			accessible_classes,
-			add_condition
+			add_condition,
+			location
 		end
 
 	CONF_FILE_DATE
@@ -85,7 +86,7 @@ feature {NONE} -- Initialization
 			assembly_version := an_assembly_version
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
-			create location.make_from_full_path ("", a_target)
+			create location.make ("", a_target)
 		ensure
 			is_valid: is_valid
 		end
@@ -109,6 +110,9 @@ feature -- Status
 			-- Is this assembly in gac?
 
 feature -- Access, stored in configuration file if location is empty
+
+	location: CONF_FILE_LOCATION
+			-- Assembly location.
 
 	assembly_name: STRING
 			-- Name of the assembly.
@@ -172,7 +176,9 @@ feature -- Access queries
 				l_groups.after
 			loop
 				l_grp := l_groups.item
-				Result.merge (l_grp.classes)
+				if l_grp.classes_set then
+					Result.merge (l_grp.classes)
+				end
 				l_groups.forth
 			end
 		end

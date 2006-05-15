@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 	partial_classes: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- The partial classes in the current string mapped to their class name.
 
-	partial_location: CONF_LOCATION
+	partial_location: CONF_DIRECTORY_LOCATION
 			-- Location where the merged partial classes will be stored (normally somewhere inside eifgen)
 
 	process_cluster_recursive (a_path: STRING) is

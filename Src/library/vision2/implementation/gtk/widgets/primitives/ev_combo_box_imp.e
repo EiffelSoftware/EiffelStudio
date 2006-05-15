@@ -1,15 +1,15 @@
 indexing
 
-	description: 
+	description:
 		"EiffelVision combo box, gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_COMBO_BOX_IMP
-	
+
 inherit
 	EV_COMBO_BOX_I
 		undefine
@@ -41,7 +41,6 @@ inherit
 		undefine
 			set_default_colors,
 			visual_widget,
-			set_composite_widget_pointer_style,
 			destroy,
 			on_key_event,
 			default_key_processing_blocked,
@@ -80,7 +79,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
-		
+
 
 				-- Alter focus chain so that button cannot be selected via the keyboard.
 			a_focus_list := {EV_GTK_EXTERNALS}.g_list_append (default_pointer, entry_widget)
@@ -127,7 +126,7 @@ feature {NONE} -- Initialization
 
 	previous_selected_item_imp: EV_LIST_ITEM_IMP
 		-- Item that was selected previously.
-	
+
 	initialize is
 			-- Connect action sequences to signals.
 		local
@@ -137,7 +136,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
-			
+
 				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
 			a_cs := once "v2combobox"
 			{EV_GTK_EXTERNALS}.gtk_widget_set_name (container_widget, a_cs.item)
@@ -158,7 +157,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := once "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
-			
+
 			set_minimum_width_in_characters (4)
 
 			real_signal_connect (container_widget, once "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
@@ -172,7 +171,7 @@ feature {NONE} -- Initialization
 				v.enable_select
 			end
 		end
-		
+
 feature -- Status report
 
 	has_focus: BOOLEAN is
@@ -315,7 +314,7 @@ feature {NONE} -- Externals
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
-		
+
 	container_widget: POINTER
 			-- Gtk combo struct
 

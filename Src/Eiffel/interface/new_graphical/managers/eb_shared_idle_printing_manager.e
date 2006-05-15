@@ -91,12 +91,12 @@ feature -- Printing
 				if process_manager.is_freezing_running then
 					is_printing_freezing := True
 				else
-					if data_block.count = 0 then
+					if freezing_storage.has_new_block then
+						is_printing_freezing := True
+					else
 						is_printing_freezing := False
 						remove_printer (freezing_printer)
 						gm.notify_c_compilation_output_finished
-					else
-						is_printing_freezing := True
 					end
 				end
 			end
@@ -116,12 +116,12 @@ feature -- Printing
 				if process_manager.is_finalizing_running then
 					is_printing_finalizing := True
 				else
-					if data_block.count = 0 then
+					if not finalizing_storage.has_new_block then
+						is_printing_finalizing := True
+					else
 						is_printing_finalizing := False
 						remove_printer (finalizing_printer)
 						gm.notify_c_compilation_output_finished
-					else
-						is_printing_finalizing := True
 					end
 				end
 			end

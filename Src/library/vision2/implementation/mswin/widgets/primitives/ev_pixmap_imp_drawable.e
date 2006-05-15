@@ -452,16 +452,30 @@ feature -- Element change
 		end
 
 	set_mask (a_mask: EV_BITMAP) is
-			-- Height of `Current'.
+			-- Set bitmap mask of `Current' to `a_mask'.
 		local
 			l_bitmap_imp: EV_BITMAP_IMP
+			s_dc: WEL_SCREEN_DC
+			other_mask_bitmap: WEL_BITMAP
 		do
 			if internal_mask_bitmap /= Void then
+				mask_dc.unselect_all
+				mask_dc.delete
 				internal_mask_bitmap.decrement_reference
 			end
 			l_bitmap_imp ?= a_mask.implementation
-			internal_mask_bitmap := l_bitmap_imp.drawable
-			internal_mask_bitmap.increment_reference
+			other_mask_bitmap := l_bitmap_imp.drawable
+			create internal_mask_bitmap.make_by_bitmap (other_mask_bitmap)
+			internal_mask_bitmap.enable_reference_tracking
+
+			create s_dc
+			s_dc.get
+
+			create mask_dc.make_by_dc (s_dc)
+			mask_dc.enable_reference_tracking
+			mask_dc.select_bitmap (internal_mask_bitmap)
+
+			s_dc.release
 		end
 
 feature {

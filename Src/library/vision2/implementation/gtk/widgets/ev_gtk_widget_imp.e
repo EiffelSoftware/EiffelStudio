@@ -155,16 +155,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
-		do
-			a_cursor_ptr := app_implementation.gdk_cursor_from_pixmap (a_cursor)
-			set_composite_widget_pointer_style (a_cursor_ptr)
-		end
-
-	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
-			-- Used to set the gdkcursor for composite widgets.
-		local
 			a_window: POINTER
 		do
+			a_cursor_ptr := app_implementation.gdk_cursor_from_pixmap (a_cursor)
 			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 			if a_window /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)

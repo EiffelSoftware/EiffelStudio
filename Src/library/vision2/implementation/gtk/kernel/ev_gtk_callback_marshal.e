@@ -256,7 +256,6 @@ feature {NONE} -- Implementation
 			args_not_null: n_args > 0 implies args /= default_pointer
 		local
 			retried: BOOLEAN
-			l_exception: EXCEPTION
 			l_integer_pointer_tuple: like integer_pointer_tuple
 			app_imp: EV_APPLICATION_IMP
 		do

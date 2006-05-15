@@ -464,130 +464,86 @@ feature -- Access queries
 
 feature -- Access queries for settings
 
-	setting_address_expression: BOOLEAN is
-			-- Value of the address_expression setting.
+	setting_boolean (a_name: STRING): BOOLEAN is
+			-- Get value of boolean setting with `a_name'.
+		require
+			a_name_valid: valid_setting (a_name)
 		local
 			l_settings: like settings
 		do
 			l_settings := settings
-			l_settings.search (s_address_expression)
+			l_settings.search (a_name)
 			if l_settings.found then
 				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
+				if not a_name.is_equal (s_array_optimization) then
+					Result := l_settings.found_item.to_boolean
+				end
 			else
-				Result := False
+				if
+					a_name.is_equal (s_check_generic_creation_constraint) or
+					a_name.is_equal (s_il_verifiable) or
+					a_name.is_equal (s_use_cluster_name_as_namespace) or
+					a_name.is_equal (s_use_all_cluster_name_as_namespace)
+				then
+					Result := True
+				else
+					Result := False
+				end
 			end
+		end
+
+	setting_address_expression: BOOLEAN is
+			-- Value of the address_expression setting.
+		do
+			Result := setting_boolean (s_address_expression)
 		end
 
 	setting_array_optimization: BOOLEAN is
 			-- Value of the array_optimization setting.
 		do
-			Result := False
+			Result := setting_boolean (s_array_optimization)
 		end
 
 	setting_check_generic_creation_constraint: BOOLEAN is
 			-- Value of the check_generic_creation_constraint setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_check_generic_creation_constraint)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := True
-			end
+			Result := setting_boolean (s_check_generic_creation_constraint)
 		end
 
 	setting_check_vape: BOOLEAN is
 			-- Value for the check_vape setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_check_vape)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_check_vape)
 		end
 
 	setting_console_application: BOOLEAN is
 			-- Value for the console_application setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_console_application)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_console_application)
 		end
 
 	setting_cls_compliant: BOOLEAN is
 			-- Value for the cls_compliant setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_cls_compliant)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_cls_compliant)
 		end
 
 	setting_dead_code_removal: BOOLEAN is
 			-- Value for the dead_code_removal setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_dead_code_removal)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_dead_code_removal)
 		end
 
 	setting_dotnet_naming_convention: BOOLEAN is
 			-- Value for the dotnet_naming_convention setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_dotnet_naming_convention)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_dotnet_naming_convention)
 		end
 
 	setting_dynamic_runtime: BOOLEAN is
 			-- Value for the dynamic_runtime setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_dynamic_runtime)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_dynamic_runtime)
 		end
 
 	setting_executable_name: STRING is
@@ -603,62 +559,26 @@ feature -- Access queries for settings
 
 	setting_exception_trace: BOOLEAN is
 			-- Value for the exception_trace setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_exception_trace)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_exception_trace)
 		end
 
 	setting_full_type_checking: BOOLEAN is
 			-- Value for the full_type_checking setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_full_type_checking)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_full_type_checking)
 		end
 
 	setting_il_verifiable: BOOLEAN is
 			-- Value for the console_application setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_il_verifiable)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := True
-			end
+			Result := setting_boolean (s_il_verifiable)
 		end
 
 	setting_inlining: BOOLEAN is
 			-- Value for the inlining setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_inlining)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_inlining)
 		end
 
 	setting_inlining_size: NATURAL_8 is
@@ -678,32 +598,14 @@ feature -- Access queries for settings
 
 	setting_java_generation: BOOLEAN is
 			-- Value for the java_generation setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_java_generation)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_java_generation)
 		end
 
 	setting_line_generation: BOOLEAN is
 			-- Value for the line_generation setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_line_generation)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_line_generation)
 		end
 
 	setting_metadata_cache_path: STRING is
@@ -767,17 +669,8 @@ feature -- Access queries for settings
 
 	setting_msil_generation: BOOLEAN is
 			-- Value for the msil_generation setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_msil_generation)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_msil_generation)
 		end
 
 	setting_msil_generation_type: STRING is
@@ -808,47 +701,20 @@ feature -- Access queries for settings
 
 	setting_msil_use_optimized_precompile: BOOLEAN is
 			-- Value for the msil_use_optimized_precompile setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_msil_use_optimized_precompile)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_msil_use_optimized_precompile)
 		end
 
 	setting_multithreaded: BOOLEAN is
 			-- Value for the multithreaded setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_multithreaded)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_multithreaded)
 		end
 
 	setting_old_verbatim_strings: BOOLEAN is
 			-- Value for the old_verbatim_strings setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_old_verbatim_strings)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := False
-			end
+			Result := setting_boolean (s_old_verbatim_strings)
 		end
 
 	setting_platform: STRING is
@@ -866,6 +732,17 @@ feature -- Access queries for settings
 			end
 		end
 
+	setting_external_runtime: STRING is
+			-- Value for the external_runtime setting.
+		do
+			Result := settings.item (s_external_runtime)
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	setting_shared_library_definition: STRING is
 			-- Value for the shared_library_definition setting.
 		do
@@ -879,32 +756,14 @@ feature -- Access queries for settings
 
 	setting_use_cluster_name_as_namespace: BOOLEAN is
 			-- Value for the use_cluster_name_as_namespace setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_use_cluster_name_as_namespace)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := True
-			end
+			Result := setting_boolean (s_use_cluster_name_as_namespace)
 		end
 
 	setting_use_all_cluster_name_as_namespace: BOOLEAN is
 			-- Value for the use_all_cluster_name_as_namespace setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_use_all_cluster_name_as_namespace)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
-				Result := l_settings.found_item.to_boolean
-			else
-				Result := True
-			end
+			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

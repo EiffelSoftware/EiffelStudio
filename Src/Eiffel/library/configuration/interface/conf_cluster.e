@@ -19,7 +19,8 @@ inherit
 			is_cluster,
 			is_readonly,
 			accessible_groups,
-			accessible_classes
+			accessible_classes,
+			location
 		end
 
 	CONF_VISIBLE
@@ -46,6 +47,9 @@ feature -- Status
 
 
 feature -- Access, stored in configuration file
+
+	location: CONF_DIRECTORY_LOCATION
+			-- Directory of this cluster
 
 	is_recursive: BOOLEAN
 			-- Are subdirectories included recursively?
@@ -222,7 +226,9 @@ feature -- Access queries
 					l_groups.after
 				loop
 					l_grp := l_groups.item
-					Result.merge (l_grp.classes)
+					if l_grp.classes_set then
+						Result.merge (l_grp.classes)
+					end
 					l_groups.forth
 				end
 			end

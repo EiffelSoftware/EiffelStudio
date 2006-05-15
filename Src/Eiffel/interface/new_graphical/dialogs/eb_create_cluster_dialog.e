@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			cp: STRING
 			icp: STRING
 			wd: EV_WARNING_DIALOG
-			l_loc: CONF_LOCATION
+			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			cp := folder_entry.text
 				-- top level clusters need a path
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 				chosen_dir.set_file_name (cluster_name)
 				original_path := chosen_dir
 			else
-				create l_loc.make_from_path (cp, Eiffel_universe.target)
+				create l_loc.make (cp, Eiffel_universe.target)
 				if not is_top_level and then group.is_cluster then
 					l_loc.set_parent (group.location)
 				end

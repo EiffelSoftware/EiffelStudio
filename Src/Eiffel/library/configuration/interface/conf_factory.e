@@ -32,7 +32,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_path (a_path: STRING; a_target: CONF_TARGET): CONF_LOCATION is
+	new_location_from_path (a_path: STRING; a_target: CONF_TARGET): CONF_DIRECTORY_LOCATION is
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_path' (without a filename).
 			-- e.g. aa/bb/cc =>
@@ -42,12 +42,12 @@ feature
 			a_path_not_void: a_path /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make_from_path (a_path, a_target)
+			create Result.make (a_path, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_full_path (a_full_path: STRING; a_target: CONF_TARGET): CONF_LOCATION is
+	new_location_from_full_path (a_full_path: STRING; a_target: CONF_TARGET): CONF_FILE_LOCATION is
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_full_path' (with a filename).
 			-- e.g. aa/bb/cc =>
@@ -57,7 +57,7 @@ feature
 			a_full_path_not_void: a_full_path /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make_from_full_path (a_full_path, a_target)
+			create Result.make (a_full_path, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -131,7 +131,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_LOCATION): CONF_ACTION is
+	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION is
 			-- Create a `CONF_ACTION' object.
 		do
 			create Result.make (a_command, a_must_succeed, a_working_directory)
@@ -174,7 +174,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_LOCATION): CONF_CLASS_PARTIAL is
+	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_DIRECTORY_LOCATION): CONF_CLASS_PARTIAL is
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -186,16 +186,16 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly (a_name: STRING; a_directory: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY is
+	new_assembly (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY is
 			-- Create a `CONF_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_directory_not_void: a_directory /= Void
+			a_directory_not_void: a_file /= Void
 			a_target_not_void: a_target /= Void
 		local
-			l_location: CONF_LOCATION
+			l_location: CONF_FILE_LOCATION
 		do
-			l_location := new_location_from_full_path (a_directory, a_target)
+			l_location := new_location_from_full_path (a_file, a_target)
 			create Result.make (a_name, l_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
@@ -216,7 +216,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_library (a_name: STRING; a_directory: CONF_LOCATION; a_target: CONF_TARGET): CONF_LIBRARY is
+	new_library (a_name: STRING; a_directory: CONF_FILE_LOCATION; a_target: CONF_TARGET): CONF_LIBRARY is
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -240,7 +240,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: STRING; a_directory: CONF_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER is
+	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER is
 			-- Create a `CONF_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -252,7 +252,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_override (a_name: STRING; a_directory: CONF_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE is
+	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE is
 			-- Create a `CONF_OVERRIDE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

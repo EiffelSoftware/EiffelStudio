@@ -150,7 +150,7 @@ feature {NONE} -- Implementation of data retrieval
 		local
 			l_over: CONF_OVERRIDE
 			l_name: STRING
-			l_location: CONF_LOCATION
+			l_location: CONF_DIRECTORY_LOCATION
 		do
 			l_name := a_cluster.cluster_name
 			l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)

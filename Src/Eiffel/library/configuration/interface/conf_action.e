@@ -37,7 +37,7 @@ feature -- Access, stored in configuration file
 	command: STRING
 			-- The command to execute.
 
-	working_directory: CONF_LOCATION
+	working_directory: CONF_DIRECTORY_LOCATION
 			-- Working directory to execute action.
 
 	must_succeed: BOOLEAN

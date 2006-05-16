@@ -106,7 +106,7 @@ feature -- Sort
 			l_last_sorted_column: INTEGER
 		do
 				-- We only sort on column where sorting information is set.									
-			if is_column_sortable (a_column_index) then
+			if button = 1 and then is_column_sortable (a_column_index) then
 				l_sort_info := column_sort_info.item (a_column_index)
 				if is_auto_sort_order_change_enabled then
 					l_sort_info.change_order_and_sort

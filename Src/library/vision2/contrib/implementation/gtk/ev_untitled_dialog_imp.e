@@ -12,7 +12,6 @@ inherit
 	EV_DIALOG_IMP
 		redefine
 			interface,
-			set_size,
 			default_wm_decorations,
 			initialize
 		end
@@ -28,16 +27,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_DIALOG_IMP}
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
-		end
-
-feature -- Status setting	
-
-	set_size (a_width, a_height: INTEGER) is
-			-- Set the horizontal size to `a_width'.
-			-- Set the vertical size to `a_height'.
-		do
-			Precursor {EV_DIALOG_IMP} (a_width, a_height)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 feature {NONE} -- Implementation

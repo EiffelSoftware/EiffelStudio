@@ -76,7 +76,6 @@ feature -- Constant strings
 				%ISE Building, 2nd floor%R%N%
 				%270 Storke Road, Goleta, CA 93117 USA%R%N%
 				%Telephone 805-685-1006, Fax 805-685-6869%R%N%
-				%Electronic mail <info@eiffel.com>%R%N%
 				%Web Customer Support: http://support.eiffel.com %R%N%
 				%Award-winning Web pages: http://eiffel.com%R%N")
 		end

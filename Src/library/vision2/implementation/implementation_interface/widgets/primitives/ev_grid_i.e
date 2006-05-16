@@ -2946,7 +2946,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- A wrapper for the idle actions to call `recompute_vertical_scroll_bar'
 			-- and reset `vertical_computation_added_to_once_idle_actions'.
 		do
-			recompute_vertical_scroll_bar
+			if not is_destroyed then
+				recompute_vertical_scroll_bar
+					-- The grid may be destroyed whilst the agent for `Current' is still referenced
+					-- in EV_APPLICATION do_once_idle_actions.
+			end
 			vertical_computation_added_to_once_idle_actions := False
 		ensure
 			reset: vertical_computation_added_to_once_idle_actions = False
@@ -2956,7 +2960,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- A wrapper for the idle actions to call `recompute_horizontal_scroll_bar'
 			-- and reset `horizontal_computation_added_to_once_idle_actions'.
 		do
-			recompute_horizontal_scroll_bar
+			if not is_destroyed then
+				recompute_horizontal_scroll_bar
+					-- The grid may be destroyed whilst the agent for `Current' is still referenced
+					-- in EV_APPLICATION do_once_idle_actions.
+			end
 			horizontal_computation_added_to_once_idle_actions := False
 		ensure
 			reset: horizontal_computation_added_to_once_idle_actions = False
@@ -4053,24 +4061,24 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header.pointer_enter_actions.extend (agent pointer_enter_received)
 			header.pointer_leave_actions.extend (agent pointer_leave_received)
 
-			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
-			vertical_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			vertical_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			vertical_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+--			vertical_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--			vertical_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--			vertical_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
 			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
-
-			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
-			horizontal_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			horizontal_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			horizontal_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--
+--			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+--			horizontal_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--			horizontal_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
+--			horizontal_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
 			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
-			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
-			scroll_bar_spacer.pointer_button_press_actions.extend (agent pointer_button_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
-			scroll_bar_spacer.pointer_double_press_actions.extend (agent pointer_double_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
-			scroll_bar_spacer.pointer_button_release_actions.extend (agent pointer_button_release_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
+--			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
+--			scroll_bar_spacer.pointer_button_press_actions.extend (agent pointer_button_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
+--			scroll_bar_spacer.pointer_double_press_actions.extend (agent pointer_double_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
+--			scroll_bar_spacer.pointer_button_release_actions.extend (agent pointer_button_release_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
 			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
 			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
 
@@ -4682,39 +4690,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_button_press_received_vertical_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_press_actions' of `vertical_scroll_bar'.
-		do
-			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
-				pointer_button_press_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_press_item_actions_internal /= Void and then not pointer_button_press_item_actions_internal.is_empty then
-				pointer_button_press_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, Void])
-			end
-		end
-
-	pointer_button_press_received_horizontal_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_press_actions' of `horizontal_scroll_bar'.
-		do
-			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
-				pointer_button_press_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_press_item_actions_internal /= Void and then not pointer_button_press_item_actions_internal.is_empty then
-				pointer_button_press_item_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, Void])
-			end
-		end
-
-	pointer_button_press_received_scroll_bar_spacer (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_press_actions' of `scroll_bar_spacer'.
-		do
-			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
-				pointer_button_press_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_press_item_actions_internal /= Void and then not pointer_button_press_item_actions_internal.is_empty then
-				pointer_button_press_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_button, Void])
-			end
-		end
-
 	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_motion_actions' of `drawable'.
 		local
@@ -4823,87 +4798,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointer_enter_called := True
 		end
 
---	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
---			-- Called by `pointer_motion_actions' of `drawable'.
---		local
---			pointed_item: EV_GRID_ITEM_I
---			pointed_item_interface: EV_GRID_ITEM
---		do
---			if a_x >= 0 and then a_y >= 0 then
---				pointed_item := drawer.item_at_position_strict (a_x, a_y)
---			end
---				-- Now handle the tooltips for items.
---			if pointed_item /= Void and then pointed_item.tooltip /= Void and then not drawable.tooltip.is_equal (pointed_item.tooltip) then
---				drawable.set_tooltip (pointed_item.tooltip)
---			elseif pointed_item = Void or else pointed_item /= Void and then pointed_item.tooltip = Void then
---				if tooltip.is_empty and not drawable.tooltip.is_empty then
---						-- There is no tooltip at the item or grid level, but there
---						-- is still a tooltip set, so remove the tooltip.
---					drawable.remove_tooltip
---				elseif (not drawable.tooltip.is_equal (tooltip)) then
---						-- Reset the tooltip back to the one of the grid, only
---						-- if not already equal.
---					drawable.set_tooltip (tooltip)
---				end
---			end
---
---				-- Now handle the enter and leave actions. Note that these are fired before the motion events.
---			if not pointer_enter_called then
---				if pointer_enter_actions_internal /= Void and then not pointer_enter_actions_internal.is_empty then
---					pointer_enter_actions_internal.call (Void)
---				end
---			end
---			if pointed_item /= Void then
---				if pointed_item /= last_pointed_item then
---					if last_pointed_item /= Void then
---						if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
---							pointer_leave_item_actions_internal.call ([False, last_pointed_item.interface])
---						end
---						if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
---							last_pointed_item.pointer_leave_actions_internal.call (Void)
---						end
---					end
---					if not pointer_enter_called then
---						if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
---							pointer_enter_item_actions_internal.call ([not pointer_enter_called, pointed_item.interface])
---						end
---					end
---					if pointed_item.pointer_enter_actions_internal /= Void and then not pointed_item.pointer_enter_actions_internal.is_empty then
---						pointed_item.pointer_enter_actions_internal.call (Void)
---					end
---					last_pointed_item := pointed_item
---				end
---				if pointed_item.pointer_motion_actions_internal /= Void and then not pointed_item.pointer_motion_actions_internal.is_empty then
---					pointed_item.pointer_motion_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
---				end
---			else
---				if not pointer_enter_called then
---					if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
---						pointer_enter_item_actions_internal.call ([True, Void])
---					end
---				end
---				if last_pointed_item /= Void then
---					if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
---						pointer_leave_item_actions_internal.call ([False, last_pointed_item.interface])
---					end
---					if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
---						last_pointed_item.pointer_leave_actions_internal.call (Void)
---					end
---					last_pointed_item := Void
---				end
---			end
---			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
---				pointer_motion_actions_internal.call ([client_x_to_x (a_x), client_y_to_y (a_y) , a_x_tilt, a_y_tilt, a_pressure, client_x_to_x (a_screen_x), client_y_to_y (a_screen_y)])
---			end
---			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
---				if pointed_item /= Void then
---					pointed_item_interface := pointed_item.interface
---				end
---				pointer_motion_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), pointed_item_interface])
---			end
---			pointer_enter_called := True
---		end
-
 	last_pointed_item: EV_GRID_ITEM_I
 		-- The last item that was pointed to in `pointer_motion_received', which may be `Void'.
 		-- This is used to implement the pointer enter and pointer leave actions at the item level.
@@ -4918,36 +4812,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				pointer_motion_item_actions_internal.call ([a_x, a_y, Void])
 			end
 		end
-
-	pointer_motion_received_vertical_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_motion_actions' of `vertical_scroll_bar'.
-		do
-			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointer_motion_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
-				pointer_motion_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, Void])
-			end
-		end
-
-	pointer_motion_received_horizontal_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_motion_actions' of `horizontal_scroll_bar'.
-		do
-			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointer_motion_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
-				pointer_motion_item_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, Void])
-			end
-		end
-
-	pointer_motion_received_scroll_bar_spacer (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_motion_actions' of `scroll_bar_spacer'.
-		do
-			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointer_motion_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-	end
 
 	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_double_press_actions' of `drawable'.
@@ -4979,28 +4843,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 			if pointer_double_press_item_actions_internal /= Void and then not pointer_double_press_item_actions_internal.is_empty then
 				pointer_double_press_item_actions_internal.call ([a_x, a_y, a_button, Void])
-			end
-		end
-
-	pointer_double_press_received_vertical_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_double_press_actions' of `vertical_scroll_bar'.
-		do
-			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
-				pointer_double_press_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_double_press_item_actions_internal /= Void and then not pointer_double_press_item_actions_internal.is_empty then
-				pointer_double_press_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, Void])
-			end
-		end
-
-	pointer_double_press_received_horizontal_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_double_press_actions' of `horizontal_scroll_bar'.
-		do
-			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
-				pointer_double_press_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_double_press_item_actions_internal /= Void and then not pointer_double_press_item_actions_internal.is_empty then
-				pointer_double_press_item_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, Void])
 			end
 		end
 
@@ -5045,39 +4887,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 			if pointer_button_release_item_actions_internal /= Void and then not pointer_button_release_item_actions_internal.is_empty then
 				pointer_button_release_item_actions_internal.call ([a_x, a_y, a_button, Void])
-			end
-		end
-
-	pointer_button_release_received_vertical_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_release_actions' of `vertical_scroll_bar'.
-		do
-			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
-				pointer_button_release_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_release_item_actions_internal /= Void and then not pointer_button_release_item_actions_internal.is_empty then
-				pointer_button_release_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_button, Void])
-			end
-		end
-
-	pointer_button_release_received_horizontal_scroll_bar (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_release_actions' of `horizontal_scroll_bar'.
-		do
-			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
-				pointer_button_release_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_release_item_actions_internal /= Void and then not pointer_button_release_item_actions_internal.is_empty then
-				pointer_button_release_item_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_button, Void])
-			end
-		end
-
-	pointer_button_release_received_scroll_bar_spacer (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Called by `pointer_button_release_actions' of `scroll_bar_spacer'.
-		do
-			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
-				pointer_button_release_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-			end
-			if pointer_button_release_item_actions_internal /= Void and then not pointer_button_release_item_actions_internal.is_empty then
-				pointer_button_release_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_button, Void])
 			end
 		end
 

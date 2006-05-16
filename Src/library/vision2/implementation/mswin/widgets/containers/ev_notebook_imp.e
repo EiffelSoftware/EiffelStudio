@@ -417,9 +417,7 @@ feature {NONE} -- Implementation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				if child_imp.is_show_requested then
-					value := child_imp.minimum_width.max (value)
-				end
+				value := child_imp.minimum_width.max (value)
 				counter := counter + 1
 			end
 
@@ -451,9 +449,7 @@ feature {NONE} -- Implementation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				if child_imp.is_show_requested then
-					value := child_imp.minimum_height.max (value)
-				end
+				value := child_imp.minimum_height.max (value)
 				counter := counter + 1
 			end
 
@@ -486,10 +482,8 @@ feature {NONE} -- Implementation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				if child_imp.is_show_requested then
-					mw := child_imp.minimum_width.max (mw)
-					mh := child_imp.minimum_height.max (mh)
-				end
+				mw := child_imp.minimum_width.max (mw)
+				mh := child_imp.minimum_height.max (mh)
 				counter := counter + 1
 			end
 

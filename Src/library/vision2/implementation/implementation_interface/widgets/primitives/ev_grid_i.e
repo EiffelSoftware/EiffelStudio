@@ -549,8 +549,11 @@ feature -- Access
 			Result := drawable.has_focus
 		end
 
-	tooltip: STRING_32
-		-- Tooltip displayed on `Current'.
+	tooltip: STRING_32 is
+			-- Tooltip displayed on `Current'.
+		do
+			Result := drawable.tooltip
+		end
 
 	has_capture: BOOLEAN is
 			-- Does `Current' have capture?
@@ -2414,7 +2417,6 @@ feature -- Element change
 					-- Do not set the tooltip if already set.
 				drawable.set_tooltip (a_tooltip)
 			end
-			tooltip := a_tooltip.twin
 		end
 
 feature -- Removal
@@ -4104,7 +4106,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_default_colors
 			set_separator_color (black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
-			tooltip := ""
 			create locked_indexes.make (1)
 		end
 

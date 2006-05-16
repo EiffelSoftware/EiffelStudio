@@ -649,6 +649,7 @@ feature {NONE} -- Execution
 		local
 			ctxt: STRING
 			wd: EV_WARNING_DIALOG
+			l_classc: CLASS_C
 		do
 			output_line.remove_text
 			if class_i = Void then
@@ -683,10 +684,11 @@ feature {NONE} -- Execution
 					end
 				end
 			else
-				if not class_i.compiled then
-					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
-				else
+				l_classc := class_i.compiled_representation
+				if l_classc /= Void then
 					extract_feature_from_user_entry
+				else
+					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			end
 		end
@@ -764,13 +766,19 @@ feature {NONE} -- Execution
 
 	process_class_feature is
 			-- We are choosing a class, but just in case we analyze the given feature.
+		local
+			l_class_c: CLASS_C
 		do
+			l_class_c := current_class
+			check
+				l_class_c_not_void: l_class_c /= Void
+			end
 			if
 				current_feature = Void or else
-				current_feature.written_class /= class_i.compiled_class and
+				current_feature.written_class /= l_class_c and
 				not mode
 			then
-				parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
+				parent.advanced_set_stone (create {CLASSC_STONE}.make (l_class_c))
 			else
 				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
 			end
@@ -1816,11 +1824,7 @@ feature {NONE} -- open new class
 			-- Either what the user typed in `class_address' or manager's stone.
 		do
 			if class_i /= Void then
-				if class_i.compiled then
-					Result := class_i.compiled_class
-				else
-					Result := Void
-				end
+				Result := class_i.compiled_representation
 			end
 		end
 
@@ -1962,6 +1966,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			conv_f: FEATURE_STONE
 			text: STRING
 			c_stone: STONE
+			l_class_c: CLASS_C
 		do
 			c_stone := parent.history_manager.active
 			conv_clus ?= c_stone
@@ -1999,8 +2004,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						cluster_label.set_minimum_width (maximum_label_width (text))
 						cluster_label.set_text (text)
 						text := conv_class.class_i.name_in_upper
-						if conv_class.class_i.compiled then
-							class_label.set_pebble (create {CLASSC_STONE}.make (conv_class.class_i.compiled_class))
+						l_class_c := conv_class.class_i.compiled_representation
+						if l_class_c /= Void then
+							class_label.set_pebble (create {CLASSC_STONE}.make (l_class_c))
 						else
 							class_label.set_pebble (create {CLASSI_STONE}.make (conv_class.class_i))
 						end

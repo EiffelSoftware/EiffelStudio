@@ -563,7 +563,6 @@ feature -- Drawing operations
 			source_mask_bitmap	: WEL_BITMAP
 			source_bitmap		: WEL_BITMAP
 			s_dc				: WEL_SCREEN_DC
-			source_mask_dc		: WEL_MEMORY_DC
 			source_bitmap_dc	: WEL_MEMORY_DC
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
 			source_drawable	: EV_PIXMAP_IMP_DRAWABLE

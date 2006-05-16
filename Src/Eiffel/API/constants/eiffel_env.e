@@ -67,24 +67,32 @@ feature -- Access: environment variable
 			-- Installation of ISE Eiffel name.
 		once
 			Result := Execution_environment.get ("ISE_EIFFEL")
+		ensure
+			eiffel_installation_dir_name_not_void: Result /= Void
 		end
 
 	Eiffel_library: STRING is
 			-- ISE_LIBRARY name.
 		once
 			Result := Execution_environment.get ("ISE_LIBRARY")
+		ensure
+			eiffel_library_not_void: Result /= Void
 		end
 
 	Eiffel_c_compiler: STRING is
 			-- ISE_C_COMPILER name.
 		once
 			Result := Execution_environment.get ("ISE_C_COMPILER")
+		ensure
+			eiffel_c_compiler_not_void: platform_constants.is_windows implies Result /= Void
 		end
 
 	Eiffel_platform: STRING is
 			-- ISE_PLATFORM name.
 		once
 			Result := Execution_environment.get ("ISE_PLATFORM")
+		ensure
+			eiffel_platform_not_void: Result /= Void
 		end
 
 	Eiffel_defaults: STRING is

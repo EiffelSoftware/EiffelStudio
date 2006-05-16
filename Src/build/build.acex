@@ -44,7 +44,6 @@
 				<exclude>/Gtk$</exclude>
 				<exclude>/base$</exclude>
 				<exclude>/test$</exclude>
-				<exclude>/demo_version$</exclude>
 				<exclude>/modified_libraries$</exclude>
 				<exclude>/exml$</exclude>
 			</file_rule>

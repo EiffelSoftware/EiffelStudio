@@ -10,7 +10,12 @@ class
 	EB_EXTERNAL_COMMANDS_EDITOR
 
 inherit
-	EB_MENUABLE_COMMAND
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			name,
+			executable,
+			new_toolbar_item
+		end
 
 	EB_CONSTANTS
 		export
@@ -49,6 +54,7 @@ feature {NONE} -- Initialization
 					i := i + 1
 				end
 			end
+			enable_displayed
 		end
 
 	loaded: BOOLEAN_REF is
@@ -102,6 +108,43 @@ feature -- Status report
 			end
 		ensure
 			Result_attached: Result /= Void
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_external_command_icon
+		end
+
+	tooltip: STRING is
+			-- Tooltip for the toolbar button.
+		do
+			Result := description
+		end
+
+	name: STRING is "External commands"
+			-- Name of the command. Use to store the command in the
+			-- preferences.
+
+	description: STRING is
+			-- Pop up help on the toolbar button.
+		do
+			Result := Interface_names.l_manage_external_commands
+		end
+
+	executable: BOOLEAN is
+			-- Is Current command executable?
+			-- (True by default)
+		do
+			Result := is_sensitive
+		end
+
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.set_pixmap (pixmap)
+			Result.set_tooltip (tooltip)
 		end
 
 feature -- Actions

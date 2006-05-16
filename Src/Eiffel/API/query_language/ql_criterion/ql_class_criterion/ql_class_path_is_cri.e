@@ -1,57 +1,51 @@
 indexing
-	description: "Command to display feature information concerning a compiled class."
+	description: "Criterion to test whether or not a class is from a given folder"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	EB_CLASS_FEATURE_FORMATTER
+class
+	QL_CLASS_PATH_IS_CRI
 
 inherit
-	EB_CLASS_CONTENT_FORMATTER
+	QL_NAME_CRITERION
 		redefine
-			is_class_feature_formatter
+			make,
+			is_satisfied_by
+		end
+
+	QL_CLASS_CRITERION
+		redefine
+			is_satisfied_by
+		end
+
+create
+	make
+
+feature{NONE} -- Initialization
+
+	make (a_name: STRING) is
+			-- Initialize `name' with `a_name'.
+		do
+			make_with_setting (a_name, True, True)
+		end
+
+feature -- Evaluate
+
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+			-- Evaluate `a_item'.
+		do
+			Result := is_name_same_as (a_item.conf_class.path)
 		end
 
 feature -- Status report
 
-	is_class_feature_formatter: BOOLEAN is True
-			-- Is current a class feature formatter?
-
-feature{NONE} -- Implementation
-
-	generate_result is
-			-- Generate result for display
-		local
-			l_class: QL_CLASS
-			l_domain: QL_FEATURE_DOMAIN
-			l_retried: BOOLEAN
+	require_compiled: BOOLEAN is
+			-- Does current criterion require a compiled item?
 		do
-			if not l_retried then
-				l_class := query_class_item_from_class_c (associated_class)
-				l_domain ?= l_class.wrapped_domain.new_domain (domain_generator)
-				browser.update (Void, l_domain)
-			else
-				browser.update (Void, Void)
-			end
-		rescue
-			l_retried := True
-			retry
-		end
-
-	domain_generator: QL_DOMAIN_GENERATOR is
-			-- Domain generator to generate result				
-		do
-			create {QL_FEATURE_DOMAIN_GENERATOR}Result
-			Result.enable_fill_domain
-			Result.set_criterion (criterion)
-		end
-
-	start_class: QL_CLASS is
-			-- Start class
-		do
+			Result := False
 		end
 
 indexing
@@ -85,5 +79,6 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
 
 end

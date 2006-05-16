@@ -99,6 +99,7 @@ feature -- Display
 			-- Display current search tool.
 		do
 			show
+			keyword_field.set_focus
 		end
 
 	hide_tool is

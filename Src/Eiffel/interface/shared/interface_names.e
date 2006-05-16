@@ -700,6 +700,8 @@ feature -- Label texts
 	l_collapse_layer: STRING is "Collapse selected level"
 	l_expand_all: STRING is "Expand all rows"
 	l_collapse_all: STRING is "Collapse all rows"
+	l_searching_selected_file: STRING is "Searching selected file..."
+	l_manage_external_commands: STRING is "Add, remove or edit external commands"
 
 feature -- Stone names
 

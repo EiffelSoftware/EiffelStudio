@@ -32,25 +32,29 @@ feature -- Access
 			l_class: CONF_CLASS
 			l_group: CONF_GROUP
 			l_path: LINKED_LIST [QL_ITEM]
-			l_last_item: QL_ITEM
 		do
 			l_class := a_class_c.lace_class.config_class
 			l_group := l_class.group
 			create l_path.make
 			find_path_from_conf_group (l_path, l_group)
 			check l_path.count >= 2 end
-			from
-				l_path.start
-				l_last_item := l_path.item
-				l_path.forth
-			until
-				l_path.after
-			loop
-				l_path.item.set_parent (l_last_item)
-				l_last_item := l_path.item
-				l_path.forth
-			end
+			set_parents (l_path)
 			create Result.make_with_parent (l_class, l_path.last)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	query_group_item_from_conf_group (a_group: CONF_GROUP): QL_GROUP is
+			-- Given a CONF_GROUP object, return a QL_GROUP object representing it.
+		require
+			a_group_attached: a_group /= Void
+		local
+			l_list: LINKED_LIST [QL_ITEM]
+		do
+			create l_list.make
+			find_path_from_conf_group (l_list, a_group)
+			set_parents (l_list)
+			Result ?= l_list.last
 		ensure
 			result_attached: Result /= Void
 		end
@@ -101,6 +105,28 @@ feature{NONE} -- Implementation
 				end
 				if l_lib /= Void then
 					find_path_from_conf_group (a_list, l_lib)
+				end
+			end
+		end
+
+	set_parents (a_list: LINKED_LIST [QL_ITEM]) is
+			-- Set parent of every item in `a_list'.
+		require
+			a_list_attached: a_list /= Void
+		local
+			l_last_item: QL_ITEM
+		do
+			if a_list.count >= 2 then
+				from
+					a_list.start
+					l_last_item := a_list.item
+					a_list.forth
+				until
+					a_list.after
+				loop
+					a_list.item.set_parent (l_last_item)
+					l_last_item := a_list.item
+					a_list.forth
 				end
 			end
 		end

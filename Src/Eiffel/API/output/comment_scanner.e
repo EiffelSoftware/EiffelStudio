@@ -1,7 +1,8 @@
 indexing
 
 	description: "Scanners for Eiffel comment"
-	status: "See notice at end of class"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$date$"
 	revision: "$Revision$"
 
@@ -44,9 +45,9 @@ if yy_act <= 6 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 38 "comment_scanner.l"
+--|#line 39 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 38")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 39")
 end
 
 				if seperate_comment then
@@ -57,9 +58,9 @@ end
 				less (0)
 			
 else
---|#line 53 "comment_scanner.l"
+--|#line 54 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 53")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 54")
 end
 
 				append_buffer
@@ -67,9 +68,9 @@ end
 			
 end
 else
---|#line 59 "comment_scanner.l"
+--|#line 60 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 59")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 60")
 end
 	
 				append_buffer
@@ -79,18 +80,18 @@ end
 else
 if yy_act <= 5 then
 if yy_act = 4 then
---|#line 65 "comment_scanner.l"
+--|#line 66 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 65")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 66")
 end
 
 				append_buffer
 				add_quote_feature
 			
 else
---|#line 71 "comment_scanner.l"
+--|#line 72 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 71")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 72")
 end
 
 				append_buffer
@@ -100,9 +101,9 @@ end
 			
 end
 else
---|#line 79 "comment_scanner.l"
+--|#line 80 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 79")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 80")
 end
 
 				append_buffer
@@ -114,27 +115,27 @@ else
 if yy_act <= 9 then
 if yy_act <= 8 then
 if yy_act = 7 then
---|#line 84 "comment_scanner.l"
+--|#line 85 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 84")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 85")
 end
 
 				append_buffer
 				text_formatter.process_new_line
 			
 else
---|#line 89 "comment_scanner.l"
+--|#line 90 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 89")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 90")
 end
 
 				buffer_token
 			
 end
 else
---|#line 96 "comment_scanner.l"
+--|#line 97 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 96")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 97")
 end
 
 				add_email_tokens
@@ -142,17 +143,17 @@ end
 end
 else
 if yy_act = 10 then
---|#line 101 "comment_scanner.l"
+--|#line 102 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 101")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 102")
 end
 				
 				add_url_tokens				
 			
 else
---|#line 106 "comment_scanner.l"
+--|#line 107 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 106")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 107")
 end
 
 				add_quote_feature
@@ -165,9 +166,9 @@ if yy_act <= 16 then
 if yy_act <= 14 then
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 111 "comment_scanner.l"
+--|#line 112 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 111")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 112")
 end
 
 				add_class
@@ -175,18 +176,18 @@ end
 				set_start_condition (DOT_FEATURE)
 			
 else
---|#line 118 "comment_scanner.l"
+--|#line 119 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 118")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 119")
 end
 
 				add_cluster
 			
 end
 else
---|#line 122 "comment_scanner.l"
+--|#line 123 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 123")
 end
 
 				text_formatter.process_new_line
@@ -194,17 +195,17 @@ end
 end
 else
 if yy_act = 15 then
---|#line 127 "comment_scanner.l"
+--|#line 128 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 127")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 128")
 end
 
 				add_normal_text
 			
 else
---|#line 131 "comment_scanner.l"
+--|#line 132 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 131")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 132")
 end
 
 			
@@ -214,26 +215,26 @@ else
 if yy_act <= 19 then
 if yy_act <= 18 then
 if yy_act = 17 then
---|#line 134 "comment_scanner.l"
+--|#line 135 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 134")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 135")
 end
 
 				add_normal_text
 			
 else
---|#line 139 "comment_scanner.l"
+--|#line 140 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 139")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 140")
 end
 
 				add_normal_text	
 			
 end
 else
---|#line 145 "comment_scanner.l"
+--|#line 146 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 145")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 146")
 end
 
 				add_dot_feature
@@ -241,9 +242,9 @@ end
 end
 else
 if yy_act = 20 then
---|#line 148 "comment_scanner.l"
+--|#line 149 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 148")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 149")
 end
 
 				less (0)
@@ -714,5 +715,37 @@ feature {NONE} -- Constants
 feature -- User-defined features
 
 
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end -- class COMMENT_SCANNER

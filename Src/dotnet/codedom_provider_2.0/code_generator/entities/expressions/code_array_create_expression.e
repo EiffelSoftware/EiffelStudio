@@ -62,7 +62,7 @@ feature -- Code Generation
 			-- | OR
 			-- | 	Result := "create {`array_type'}.make (`size')" if size > 0 and target = Void
 			-- | OR 
-			-- |	Result := "(create {MANIFEST_ARRAY_CONVERTER [SYSTEM_OBJECT]}).convert_to (<<`initializers', `initializers',...>>)
+			-- |	Result := "({NATIVE_ARRAY [`array_type']}) [({ARRAY [`array_type']}) [<<`initializers', `initializers',...>>]]
 		do
 			create Result.make (160)
 			if size_expression /= Void or size > 0 then
@@ -82,9 +82,11 @@ feature -- Code Generation
 				end
 				Result.append_character (')')
 			elseif initializers /= Void then
-				Result.append ("(create {MANIFEST_ARRAY_CONVERTER [")
+				Result.append ("({NATIVE_ARRAY [")
 				Result.append (array_type.eiffel_name)
-				Result.append ("]}).cil_array (<<")
+				Result.append ("]}) [({ARRAY [")
+				Result.append (array_type.eiffel_name)
+				Result.append ("]}) [<<")
 				from
 					initializers.start
 					if not initializers.after then
@@ -98,7 +100,7 @@ feature -- Code Generation
 					Result.append (initializers.item.code)
 					initializers.forth
 				end
-				Result.append (">>)")
+				Result.append (">>]]")
 			end
 		end
 		

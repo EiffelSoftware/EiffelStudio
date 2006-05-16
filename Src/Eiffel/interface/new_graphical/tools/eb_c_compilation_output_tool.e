@@ -61,7 +61,6 @@ feature{NONE} -- Initialization
 			l_ev_tool_bar_1: EV_TOOL_BAR
 			l_ev_save_toolbar: EV_TOOL_BAR
 			l_ev_h_area_1: EV_HORIZONTAL_BOX
-			l_label: EV_LABEL
 		do
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1
@@ -70,12 +69,13 @@ feature{NONE} -- Initialization
 			create w_code_btn
 			create f_code_btn
 			create l_ev_h_area_1
-			create l_label.default_create
 			create clear_output_btn
 			create l_ev_save_toolbar
 			create open_editor_btn
+			create message_label
 
-			l_ev_h_area_1.extend (l_label)
+			message_label.align_text_left
+			l_ev_h_area_1.extend (message_label)
 			l_ev_h_area_1.extend (l_ev_save_toolbar)
 			l_ev_h_area_1.extend (l_ev_tool_bar_1)
 			l_ev_h_area_1.disable_item_expand (l_ev_save_toolbar)
@@ -364,6 +364,7 @@ feature{NONE}	-- Implementation
 			l_selected_text: STRING
 		do
 			if output_text.has_selection then
+				display_status_message (interface_names.l_searching_selected_file)
 				l_selected_text := output_text.selected_text.twin
 				create l_file.make (l_selected_text)
 				if l_file.exists then
@@ -388,6 +389,7 @@ feature{NONE}	-- Implementation
 						Result := selected_file_path /= Void
 					end
 				end
+				display_status_message ("")
 			end
 		end
 
@@ -451,6 +453,17 @@ feature{NONE}	-- Implementation
 			end
 		end
 
+	display_status_message (a_msg: STRING) is
+			-- Display message `a_msg' in `message_label'.
+		require
+			a_msg_attached: a_msg /= Void
+		do
+			check message_label /= Void end
+			message_label.set_text (a_msg)
+		ensure
+			message_set: message_label.text.is_equal (a_msg)
+		end
+
 feature{NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
@@ -512,8 +525,11 @@ feature{NONE} -- Implementation
 			Result_set: Result implies (not path.is_empty and then (path.item (1) = path.operating_environment.directory_separator))
 		end
 
-	selected_file_path: STRING;
+	selected_file_path: STRING
 			-- Final path of selected file
+
+	message_label: EV_LABEL;
+			-- Status message label
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

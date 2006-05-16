@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	QL_VISITOR
+		redefine
+			process_item
+		end
 
 	QL_SHARED_SCOPES
 
@@ -20,6 +23,10 @@ inherit
 		redefine
 			item_type
 		end
+
+	QL_TERMINATABLE
+
+	QL_SHARED_ERROR_HANDLER
 
 feature -- Setting
 
@@ -41,6 +48,16 @@ feature -- Setting
 		ensure
 			criterion_set: criterion = a_criterion
 			internal_actual_criterion_reset: internal_actual_criterion = Void
+		end
+
+	set_interval (a_interval: INTEGER) is
+			-- Set `interval' with `a_interval'.
+		require
+			a_interval_positive: a_interval > 0
+		do
+			interval_cell.put (a_interval)
+		ensure
+			interval_set: interval = a_interval
 		end
 
 	remove_criterion is
@@ -72,9 +89,15 @@ feature -- Setting
 feature -- Status report
 
 	is_fill_domain_enabled: BOOLEAN
-			-- During domain generation, if some item is satisfied by `criterion' will it
-			-- be inserted into `domain'?
+			-- During domain generation, if some item is satisfied by `criterion',
+			-- will it be inserted into `domain'?
 			-- Default: False
+
+	is_interval_reached: BOOLEAN is
+			-- Does `interval_counter' reach `interval'?
+		do
+			Result := interval_counter \\ interval = 0
+		end
 
 feature -- Access
 
@@ -106,6 +129,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	interval: INTEGER is
+			-- Interval to decide if `interval_tick_actions' should be called.
+			-- `interval_tick_actions' will be called after every `interval' number of items have been processed.
+			-- Default value is `initial_interval'.
+		do
+			Result := interval_cell.item
+		end
+
 feature -- Visit
 
 	process_domain (a_item: QL_DOMAIN) is
@@ -113,19 +144,27 @@ feature -- Visit
 		local
 			l_criterion: like criterion
 			l_domain: like domain
+			l_content: LIST [like item_type]
 		do
 			current_source_domain := a_item
 			actual_criterion.set_source_domain (a_item)
 			l_criterion := actual_criterion
+			interval_counter := 0
 			if l_criterion.is_atomic and l_criterion.has_intrinsic_domain then
 				l_domain := criterion.intrinsic_domain
-				l_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?))
+				l_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
 				domain.content.fill (l_domain.content)
 			else
 				if not a_item.is_empty then
 					a_item.content.do_all (agent process_item ({QL_ITEM}?))
 				end
 			end
+		end
+
+	process_item (a_item: QL_VISITABLE) is
+			-- Process `a_item'.
+		do
+			Precursor (a_item)
 		end
 
 feature{NONE} -- Implementation
@@ -175,12 +214,14 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 		do
+			interval_counter := interval_counter + 1
+			check_interval_tick_actions
 			if has_observer then
 				set_changed
 				notify (a_item)
 			end
 			if actual_criterion.is_satisfied_by (a_item) then
-				on_item_satisfied_by_criterion (a_item)
+				on_item_satisfied_by_criterion (a_item, True)
 				if is_fill_domain_enabled then
 					domain.content.extend (a_item)
 				end
@@ -232,8 +273,8 @@ feature{NONE} -- Implementation
 			l_actual_criterion: like actual_criterion
 			l_class_cri: QL_CLASS_CRITERION
 		do
-			l_classes := a_group.classes
-			if l_classes /= Void and then not l_classes.is_empty then
+			if a_group.classes_set then
+				l_classes := a_group.classes
 				l_actual_criterion := actual_criterion
 				if l_actual_criterion.require_compiled then
 					create {QL_CLASS_IS_COMPILED_CRI}l_class_cri
@@ -378,12 +419,17 @@ feature{NONE} -- Implementation
 	internal_domain: like domain
 			-- Implementation of `domain'
 
-	on_item_satisfied_by_criterion (a_item: like item_type) is
+	on_item_satisfied_by_criterion (a_item: like item_type; a_interval_actions_applied: BOOLEAN) is
 			-- Action to be performed when `a_item' is satisfied by `criterion'
+			-- If not `a_interval_actions_applied', `check_interval_tick_actions' will be called.
 		require
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		do
+			if not a_interval_actions_applied then
+				interval_counter := interval_counter + 1
+				check_interval_tick_actions
+			end
 			actions.call ([a_item])
 		end
 
@@ -393,8 +439,23 @@ feature{NONE} -- Implementation
 	item_type: QL_ITEM
 			-- Anchor type for items of generated domain
 
+	interval_counter: INTEGER
+			-- Internal counter to indicate how many items have been processed
+
+	interval_cell: CELL [INTEGER] is
+			-- Cell to hold `interval'
+		once
+			create Result.put (initial_interval)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	initial_interval: INTEGER is 500
+			-- Default value of `internval'			
+
 invariant
 	domain_attached: domain /= Void
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

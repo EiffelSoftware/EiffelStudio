@@ -47,10 +47,8 @@ feature{NONE} -- Initialization
 			stone_manager := m
 		end
 
-	a_cri: QL_FEATURE_CALLER_IS_CRI
-
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
-			--
+			-- Initialize interface.
 		local
 			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 			l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
@@ -70,6 +68,8 @@ feature{NONE} -- Initialization
 			clear_output_toolbar: EV_TOOL_BAR
 			input_toolbar: EV_TOOL_BAR
 			tbs: EV_TOOL_BAR_SEPARATOR
+			l_eb_toolbar: EB_TOOLBAR
+			l_del_tool_bar: EV_TOOL_BAR
 		do
 			create del_cmd_btn
 			create tbs.default_create
@@ -101,6 +101,8 @@ feature{NONE} -- Initialization
 			create save_output_btn
 			create clear_output_btn
 			create clear_output_toolbar
+			create l_eb_toolbar
+			create l_del_tool_bar
 
 			l_ev_empty_lbl.set_minimum_height (State_bar_height)
 			l_ev_empty_lbl.set_minimum_width (State_bar_height * 2)
@@ -128,12 +130,19 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_2.extend (cmd_lst)
 			l_ev_horizontal_box_2.set_padding_width (5)
 			l_ev_horizontal_box_5.extend (cmd_toolbar)
+			l_ev_horizontal_box_5.extend (l_eb_toolbar.widget)
+			l_ev_horizontal_box_5.disable_item_expand (l_eb_toolbar.widget)
+			l_ev_horizontal_box_5.extend (l_del_tool_bar)
 			l_ev_horizontal_box_5.disable_item_expand (cmd_toolbar)
 			cmd_toolbar.extend (run_btn)
 			cmd_toolbar.extend (terminate_btn)
 			cmd_toolbar.extend (tbs)
 			cmd_toolbar.extend (edit_cmd_detail_btn)
-			cmd_toolbar.extend (del_cmd_btn)
+
+			l_eb_toolbar.extend (a_tool.edit_external_commands_cmd)
+			l_eb_toolbar.update_toolbar
+
+			l_del_tool_bar.extend (del_cmd_btn)
 			l_ev_horizontal_box_2.extend (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_cmd_lbl)
@@ -254,7 +263,7 @@ feature -- Basic operation
 			cmd_lst.disable_sensitive
 			del_cmd_btn.disable_sensitive
 			owner.Edit_external_commands_cmd.disable_sensitive
-
+			save_output_btn.disable_sensitive
 			if external_output_manager.target_development_window /= Void then
 				if owner = external_output_manager.target_development_window then
 					send_input_btn.enable_sensitive
@@ -286,7 +295,7 @@ feature -- Basic operation
 			hidden_btn.enable_sensitive
 			cmd_lst.enable_sensitive
 			owner.Edit_external_commands_cmd.enable_sensitive
-
+			save_output_btn.enable_sensitive
 			input_field.disable_sensitive
 			send_input_btn.disable_sensitive
 			terminate_btn.disable_sensitive

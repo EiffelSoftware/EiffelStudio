@@ -87,6 +87,7 @@ feature -- Access
 
 	description: STRING is
 			-- Description of current item
+			--| Note: This is slow.
 		local
 			l_indexing: INDEXING_CLAUSE_AS
 			l_string: STRING
@@ -136,9 +137,7 @@ feature -- Access
 	class_c: CLASS_C is
 			-- Compiled class of `conf_class'
 		do
-			Result := class_i.compiled_class
-		ensure then
-			good_result: Result = class_i.compiled_class
+			Result := class_i.compiled_representation
 		end
 
 	written_class: like class_c is
@@ -195,10 +194,17 @@ feature -- Status report
 
 	is_compiled: BOOLEAN is
 			-- Is Current item compiled?
+		local
+			l_class_i: CLASS_I
+			l_conf_class: CONF_CLASS
 		do
-			Result := conf_class.is_compiled
-		ensure then
-			good_result: Result = conf_class.is_compiled
+			l_conf_class := conf_class
+			if not (l_conf_class.is_overriden or l_conf_class.does_override) then
+				Result := conf_class.is_compiled
+			else
+				l_class_i ?= conf_class
+				Result := l_class_i.compiled_representation /= Void
+			end
 		end
 
 	scope: QL_SCOPE is

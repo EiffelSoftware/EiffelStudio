@@ -1283,6 +1283,26 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_invisible_value)
 		end
 
+	Icon_external_command_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_external_command_icon_value)
+		end
+
+	Icon_normal_callee_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_normal_callee_icon_value)
+		end
+
+	Icon_creator_callee_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_creator_callee_icon_value)
+		end
+
+	Icon_assigner_callee_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_assigner_callee_icon_value)
+		end
+
 feature -- Reading
 
 	pixmap_path: DIRECTORY_NAME is
@@ -1546,6 +1566,10 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (4, 16, Icon_output_view_icon_value)
 			Result.add_pixmap (5, 16, Icon_bottom_reached_icon_value)
 			Result.add_pixmap (6, 16, Icon_first_result_reached_icon_value)
+			Result.add_pixmap (7, 16, Icon_external_command_icon_value)
+			Result.add_pixmap (8, 16, Icon_normal_callee_icon_value)
+			Result.add_pixmap (9, 16, Icon_creator_callee_icon_value)
+			Result.add_pixmap (10, 16, Icon_assigner_callee_icon_value)
 		end
 
 feature {NONE} -- Constants
@@ -1781,7 +1805,11 @@ feature {NONE} -- Constants
 			icon_obsolete_assigner_value,
 			icon_deferred_assigner_value,
 			icon_deferred_obsolete_assigner_value,
-			icon_invisible_value: INTEGER is unique;
+			icon_invisible_value,
+			icon_external_command_icon_value,
+			icon_normal_callee_icon_value,
+			icon_creator_callee_icon_value,
+			icon_assigner_callee_icon_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

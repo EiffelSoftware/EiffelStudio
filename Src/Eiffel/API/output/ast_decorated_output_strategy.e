@@ -183,6 +183,8 @@ feature {NONE} -- Access
 
 	processing_locals: BOOLEAN;
 
+	processing_creation_target: BOOLEAN
+
 	has_error_internal: BOOLEAN
 			-- If error when processing.
 			-- For the case we only have old AST,
@@ -656,13 +658,23 @@ feature {NONE} -- Implementation
 					end
 					l_rout_id_set := l_as.routine_ids
 					if l_rout_id_set /= Void then
-						if last_class /= Void then
-							l_feat := feature_in_class (last_class, l_rout_id_set)
-						else
+						if processing_creation_target then
 							l_feat := feature_in_class (current_class, l_rout_id_set)
-							last_type := current_class.actual_type
-							last_class := current_class
+							if last_type /= Void then
+								last_class := last_type.associated_class
+							else
+								last_class := current_class
+							end
+						else
+							if last_type /= Void then
+								l_feat := feature_in_class (last_class, l_rout_id_set)
+							else
+								l_feat := feature_in_class (current_class, l_rout_id_set)
+								last_type := current_class.actual_type
+								last_class := current_class
+							end
 						end
+						check last_class_not_void: last_class /= Void end
 					end
 				end
 				if not expr_type_visiting then
@@ -701,8 +713,10 @@ feature {NONE} -- Implementation
 			if l_as.is_argument then
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
 			elseif l_as.is_local then
-				if locals_for_current_feature.has (l_as.access_name) then
-					last_type := locals_for_current_feature.found_item
+				if last_type = Void then
+					if locals_for_current_feature.has (l_as.access_name) then
+						last_type := locals_for_current_feature.found_item
+					end
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
@@ -724,7 +738,16 @@ feature {NONE} -- Implementation
 					if l_feat.is_procedure then
 						reset_last_class_and_type
 					else
-						l_type := l_feat.type.actual_type
+						if processing_creation_target then
+							if last_type = Void then
+								l_type := l_feat.type.actual_type
+							else
+									-- A static type in creation as.
+								l_type := last_type
+							end
+						else
+							l_type := l_feat.type.actual_type
+						end
 						if l_type.is_loose then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
 						else
@@ -1924,7 +1947,9 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.put_space
 				end
 			end
+			processing_creation_target := True
 			l_as.target.process (Current)
+			processing_creation_target := False
 			if l_as.call /= Void then
 				if not expr_type_visiting then
 					text_formatter_decorator.need_dot

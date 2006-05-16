@@ -25,7 +25,7 @@ while test $# -gt 0; do
 		if [ -z $ISE_LIBRARY ]; then
 			ISE_LIBRARY=$ISE_EIFFEL
 		fi
-		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 `pkg-config $gtk_package_string $thread_string --libs` -lXtst -lX11
+		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o `pkg-config $gtk_package_string $thread_string --libs` -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11
 		;;
 		--threads)
 		thread_string=gthread-2.0

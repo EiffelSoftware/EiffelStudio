@@ -944,14 +944,57 @@ feature {NONE} -- Implementation
 		require
 			valid_dialog: fd /= Void
 		local
+			f: RAW_FILE
+			fn, fp: STRING
+			retried: BOOLEAN
+			wd: EV_WARNING_DIALOG
+			dlg: EV_QUESTION_DIALOG
+		do
+			if not retried then
+					--| We create a file (or open it).
+				fn := fd.file_name
+				fp := fd.file_path
+				create f.make (fn)
+				if f.exists then
+					create dlg.make_with_text ("File " + fn + " already exists,%N Do you want to ?")
+					dlg.set_buttons_and_actions (<<"Overwrite", "Append", "Cancel">>,
+							<<
+								agent save_call_stack_to_filename	(fp, fn, False),
+								agent save_call_stack_to_filename	(fp, fn, True),
+								agent dlg.destroy
+							 >>
+						)
+					dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				else
+					save_call_stack_to_filename	(fp, fn, False)
+				end
+			else
+					-- The file name was probably incorrect (not creatable).
+				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
+				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	save_call_stack_to_filename (a_fp: STRING; a_fn: STRING; is_append: BOOLEAN) is
+			-- Save call stack into file named `a_fn'.
+			-- if the file already exists and `is_append' is True
+			-- then append the stack in the same file
+		local
 			fn: FILE_WINDOW
 			retried: BOOLEAN
 			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
 					--| We create a file (or open it).
-				create fn.make (fd.file_name)
-				fn.open_read_write
+				create fn.make (a_fn)
+				if fn.exists and is_append then
+					fn.open_append
+				else
+					fn.create_read_write
+				end
 					--| We generate the call stack.
 				eb_debugger_manager.Application.status.current_call_stack.display_stack (fn)
 					--| We put it in the file.
@@ -959,11 +1002,11 @@ feature {NONE} -- Implementation
 					fn.close
 				end
 					--| Save the path to the preferences.
-				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (fd.file_path)
+				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (a_fp)
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).
-				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
+				create wd.make_with_text (Warning_messages.w_Not_creatable (a_fn))
 				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			end
 		rescue

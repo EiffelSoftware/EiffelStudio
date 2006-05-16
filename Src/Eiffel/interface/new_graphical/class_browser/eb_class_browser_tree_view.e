@@ -116,7 +116,7 @@ feature -- Notification
 						last_sorted_column := 1
 					end
 					disable_auto_sort_order_change
-					sort (0, 0, 0, 0, 0, 0, 0, 0, 1)
+					sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
 					enable_auto_sort_order_change
 				else
 					component_widget.hide

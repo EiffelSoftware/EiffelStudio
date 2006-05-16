@@ -440,7 +440,8 @@ feature{NONE} -- Update
 						last_sorted_column := class_column
 					end
 					disable_auto_sort_order_change
-					sort (0, 0, 0, 0, 0, 0, 0, 0, feature_column)
+					sort (0, 0, 1, 0, 0, 0, 0, 0, feature_column)
+					bind_grid
 					enable_auto_sort_order_change
 				else
 					component_widget.hide

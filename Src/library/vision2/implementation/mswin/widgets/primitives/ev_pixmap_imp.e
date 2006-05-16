@@ -266,8 +266,6 @@ feature {EV_ANY_I} -- Status setting
 			tmp_bitmap: WEL_BITMAP
 			l_mask_dc, l_old_mask_dc: WEL_MEMORY_DC
 			l_mask, l_old_mask: WEL_BITMAP
-			l_wel_rect: WEL_RECT
-			l_brush: WEL_BRUSH
 			l_old_width, l_old_height: INTEGER
 		do
 			update_content

@@ -100,9 +100,15 @@ feature -- Output
 			a_text_formatter.add ("Syntax error at line ")
 			a_text_formatter.add_int (line)
 				-- Error happened in a class
-			a_text_formatter.add (" in class ")
-			a_text_formatter.add_class_syntax (Current, System.current_class, 
-					System.current_class.class_signature)
+			if System.current_class /= Void then
+				a_text_formatter.add (" in class ")
+				a_text_formatter.add_class_syntax (Current, System.current_class,
+						System.current_class.class_signature)
+			elseif file_name /= Void then
+				-- `current_class' May be void at degree 6 when parsing partial classes
+				a_text_formatter.add (" in file ")
+				a_text_formatter.add (file_name)
+			end
 			if error_message /= Void then
 				a_text_formatter.add_new_line
 				a_text_formatter.add (error_message)

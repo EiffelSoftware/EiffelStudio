@@ -198,10 +198,7 @@ feature{NONE} -- Implementation
 						l_list.extend (l_parent_class)
 					end
 					if not l_processed_classes.has (l_class_id) then
-						if l_processed_classes.count = l_processed_classes.capacity then
-							l_processed_classes.resize (l_processed_classes.capacity * 2)
-						end
-						l_processed_classes.put (l_class_id)
+						l_processed_classes.force (l_class_id)
 						if a_recursive then
 							find_classes (l_parent_class, False, a_recursive)
 						end

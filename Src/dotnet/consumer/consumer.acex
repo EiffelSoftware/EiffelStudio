@@ -34,6 +34,7 @@
 		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
+		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>

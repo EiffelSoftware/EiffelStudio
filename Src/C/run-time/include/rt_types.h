@@ -100,9 +100,10 @@ struct partial_sc_zone {
 	char *sc_active_arena;		/* Updated base address of zone */
 	char *sc_arena;				/* Original base address of zone */
 	char *sc_top;				/* Pointer to first free location */
-	char *sc_previous_top;		/* Pointer to previous top location, usefull to see the B_LAST flag. */
+	char *sc_previous_top;		/* Pointer to previous top location, useful to see the B_LAST flag. */
 	char *sc_end;				/* First location beyond space */
 	rt_uint_ptr sc_flags;		/* ov_size in the selected malloc block */
+	uint32 sc_overflowed_size;	/* How much space did we not move because to_zone was full? */
 };
 
 #ifdef EIF_THREADS

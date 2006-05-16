@@ -2196,25 +2196,26 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 					*prev = current;
 				goto marked;
 			} else
-				if
-					((offset & GC_PART) && (current > ps_from.sc_arena && current <= ps_from.sc_end) &&
-					 (ps_to.sc_top + ((size & B_SIZE) + OVERHEAD) <= ps_to.sc_end))
-				{
-						/* Record location of previous `top' which will be used to set the
-						 * B_LAST flag at the end of the scavenging. */
-					ps_to.sc_previous_top = ps_to.sc_top;
-					current = scavenge(current, &ps_to.sc_top);/* Partial scavenge */
-					zone = HEADER(current);				/* Update zone */
-						/* Clear B_LAST flag in case previous location of `current' was the last
-						 * block in its chunk, we don't want to find a B_LAST flag bit in the new
-						 * location especially if it is most likely the case that we are not at the
-						 * end of the `ps_to' zone. This is a 1 day bug.
-						 */
-					zone->ov_size &= ~B_LAST;
-					flags = zone->ov_flags;				/* And Eiffel flags */
-					if (prev)
-						*prev = current;	/* Update referencing pointer */
-					goto marked;
+				if ((offset & GC_PART) && (current > ps_from.sc_arena && current <= ps_from.sc_end)) {
+					if (ps_to.sc_top + ((size & B_SIZE) + OVERHEAD) <= ps_to.sc_end) {
+							/* Record location of previous `top' which will be used to set the
+							 * B_LAST flag at the end of the scavenging. */
+						ps_to.sc_previous_top = ps_to.sc_top;
+						current = scavenge(current, &ps_to.sc_top);/* Partial scavenge */
+						zone = HEADER(current);				/* Update zone */
+							/* Clear B_LAST flag in case previous location of `current' was the last
+							 * block in its chunk, we don't want to find a B_LAST flag bit in the new
+							 * location especially if it is most likely the case that we are not at the
+							 * end of the `ps_to' zone. This is a 1 day bug.
+							 */
+						zone->ov_size &= ~B_LAST;
+						flags = zone->ov_flags;				/* And Eiffel flags */
+						if (prev)
+							*prev = current;	/* Update referencing pointer */
+						goto marked;
+					} else {
+						ps_to.sc_overflowed_size += (uint32) (size & B_SIZE) + OVERHEAD;
+					}
 				}
 		}
 
@@ -2604,7 +2605,6 @@ rt_private void clean_zones(void)
 	 */
 
 	int is_ps_to_keep, has_block_been_split;
-	static rt_uint_ptr copied_average = 0;
 
 	REQUIRE("GC_PART", rt_g_data.status & GC_PART);
 
@@ -2618,20 +2618,12 @@ rt_private void clean_zones(void)
 	rt_g_data.mem_move += ps_to.sc_top - ps_to.sc_active_arena;
 
 		/* Update the average. */
-	copied_average = (copied_average + (ps_to.sc_top - ps_to.sc_active_arena)) / 2;
-	if
-		((ps_to.sc_top >= ps_to.sc_end) ||
-		(((copied_average * 2) <= ps_to.sc_size) &&
-		 	(((rt_uint_ptr) (ps_to.sc_end - ps_to.sc_top)) <= ((copied_average * 50) / 100))))
-	{
-			/* If we have reached the end of the `ps_to' zone, then we cannot keep it. */
-			/* If we compact in average less than half of the `ps_to' zone, and then if we
-			 * have less than 50% of `copied_average' bytes available in `ps_to', we
-			 * cannot keep it, since next partial scavenging might overflow `ps_to' and thus
-			 * as if no partial scavenging was done.
-			 */
+	if ((ps_to.sc_top >= ps_to.sc_end) || (ps_to.sc_overflowed_size > 0)) {
+			/* If we have reached the end of the `ps_to' zone, or if we have overflowed
+			 * the `ps_to' zone, then we cannot keep it. */
 		is_ps_to_keep = 0;
 	} else {
+			/* If the zone overflowed, we have to use a new `to' zone, thus we cannot keep it. */
 		is_ps_to_keep = 1;
 	}
 
@@ -2644,6 +2636,7 @@ rt_private void clean_zones(void)
 	if (is_ps_to_keep) {
 			/* Update `ps_to' so that we can reuse it for next compaction. */
 			/* Reset `sc_active_arena', so that it corresponds to `top'. */
+		ps_to.sc_overflowed_size = 0;
 		ps_to.sc_size = ps_to.sc_size - (ps_to.sc_top - ps_to.sc_active_arena);
 		ps_to.sc_active_arena = ps_to.sc_top;
 			/* Update size so that it is seen as a non-free block of memory. */

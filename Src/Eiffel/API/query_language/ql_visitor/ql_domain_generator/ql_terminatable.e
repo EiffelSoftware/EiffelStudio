@@ -69,10 +69,8 @@ feature{NONE} -- Implementation
 		end
 
 invariant
-	interval_cell_attached: interval_cell /= Void
 	interval_tick_actions_cell_attached: interval_tick_actions_cell /= Void
 	interval_tick_actions_attached: interval_tick_actions /= Void
 	tick_action_invocation_function_cell_attached: tick_action_invocation_function_cell /= Void
-	interval_positive: interval > 0
 
 end

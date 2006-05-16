@@ -47,24 +47,12 @@ void c_ev_gtk_callback_marshal (
         // Called by GTK when an `object' emits a signal,
         // Call an `agent' with `n_args' `args'.
 {
-	/*int i;
-	printf ("Number of events passed = %i\n", n_param_values);
-	for (i = 0 ; i < n_param_values ; i++)
-	{
-		printf ("Value of parameter %i is %s\n", i, G_VALUE_TYPE_NAME (param_values + i));
-	}
-
-
-	printf ("Type of GValue %s", G_VALUE_TYPE_NAME(param_values));*/
-	/*if (ev_gtk_callback_marshal != NULL && closure != NULL)
-	{*/
-		ev_gtk_callback_marshal (
-			eif_access (ev_gtk_callback_marshal_object),
-			eif_access ((EIF_OBJECT) closure->data),
-			(EIF_INTEGER) n_param_values - 1,
-			(EIF_POINTER) ((GValue*)param_values + 1)
-       		 );
-//	}
+	ev_gtk_callback_marshal (
+		eif_access (ev_gtk_callback_marshal_object),
+		eif_access ((EIF_OBJECT) closure->data),
+		(EIF_INTEGER) n_param_values - 1,
+		(EIF_POINTER) ((GValue*)param_values + 1)
+       	 );
 }
 
 
@@ -84,18 +72,6 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 		// Return connection id.
 {
 	guint connection_id;
-  /*          connection_id = gtk_signal_connect_full (
-                c_object,                  // Object which emits the signal.
-                signal,                    // Name of the signal.
-                NULL,                      // Function pointer to attach.
-                (GtkCallbackMarshal)
-                c_ev_gtk_callback_marshal, // Function marshal.
-                eif_adopt (agent),         // User data for function.
-                (GtkDestroyNotify)
-                eif_wean,                  // To call on hook disconnect.
-                FALSE,                     // This is an object signal.
-                FALSE                      // Invoke handler after the signal.
-            );*/
 	GClosure *closure;
 	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)eif_wean);
 	g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
@@ -176,19 +152,19 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 )
 		// Call an `agent' when `c_object' emmits "delete-event".
 {
-		int connection_id;
-		connection_id = gtk_signal_connect_full (
-			c_object,                  // Object which emits the signal.
-			"delete-signal",           // Name of the signal.
-			(GtkSignalFunc)
-			c_ev_gtk_callback_marshal_true_event_callback,
-				// Function pointer to attach.
-			(GtkCallbackMarshal) gtk_marshal_BOOL__POINTER, // Function marshal.
-			eif_adopt (agent),         // User data for function.
-			(GtkDestroyNotify) eif_wean,                  // To call on hook disconnect.
-			FALSE,                     // This is an object signal.
-			FALSE                      // Invoke handler after the signal.
-		);
-		return (connection_id);
+	int connection_id;
+	connection_id = gtk_signal_connect_full (
+		c_object,                  // Object which emits the signal.
+		"delete-signal",           // Name of the signal.
+		(GtkSignalFunc)
+		c_ev_gtk_callback_marshal_true_event_callback,
+			// Function pointer to attach.
+		(GtkCallbackMarshal) gtk_marshal_BOOL__POINTER, // Function marshal.
+		eif_adopt (agent),         // User data for function.
+		(GtkDestroyNotify) eif_wean,                  // To call on hook disconnect.
+		FALSE,                     // This is an object signal.
+		FALSE                      // Invoke handler after the signal.
+	);
+	return (connection_id);
 }
 

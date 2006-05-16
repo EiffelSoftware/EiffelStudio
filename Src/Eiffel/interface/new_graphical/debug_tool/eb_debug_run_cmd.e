@@ -440,8 +440,22 @@ feature -- Execution
 					-- First time we launch the program, we clear the output tool.
 				output_manager.clear
 			end
-			working_dir := application_working_directory
+
+				--| Getting well formatted workind directory path
+			working_dir := application_working_directory.twin
+			working_dir.left_adjust
+			working_dir.right_adjust
+			if
+				not working_dir.is_empty
+				and then working_dir.item (working_dir.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
+			then
+				working_dir.remove_tail (1)
+			end
+
+				--| Building the command line argument
 			l_cmd_line_arg := current_cmd_line_argument
+
+				--| Display information
 			output_manager.add_string ("Launching system :")
 			output_manager.add_new_line
 			output_manager.add_comment ("  - directory = ")

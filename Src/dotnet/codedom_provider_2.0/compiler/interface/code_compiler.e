@@ -377,13 +377,14 @@ feature {NONE} -- Implementation
 				else
 					create l_root.make ("root_cluster", l_root_class, Void, false)
 				end
+				l_target.set_root (l_root)
 
 				if a_options.generate_executable then
-					l_target.add_setting ("console_application", "yes")
+					l_target.add_setting ("console_application", "true")
 				else
-					l_target.add_setting ("console_application", "no")
+					l_target.add_setting ("console_application", "false")
 				end
-				
+				l_target.add_setting ("msil_generation", "true")
 				l_target.add_setting ("msil_clr_version", Clr_version)
 
 				-- Setup Precompile
@@ -397,7 +398,7 @@ feature {NONE} -- Implementation
 					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
-						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_LOCATION}.make_from_path (l_precompiler.precompile_path, l_target), l_target))
+						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_LOCATION}.make_from_full_path (l_precompiler.precompile_path, l_target), l_target))
 						precompile_files := l_precompiler.precompile_files
 					else
 						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
@@ -469,15 +470,9 @@ feature {NONE} -- Implementation
 
 
 				-- Only add base clusters if requires
-				create l_library.make ("base", create {CONF_LOCATION}.make_from_path ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
+				create l_library.make ("base", create {CONF_LOCATION}.make_from_full_path ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
 				create l_option
 				l_option.set_namespace ("EiffelSoftware.Library.Base")
-				l_library.set_options (l_option)
-				l_target.add_library (l_library)
-
-				create l_library.make ("codedom", create {CONF_LOCATION}.make_from_path ("$ISE_EIFFEL\library.net\codedom\codedom.acex", l_target), l_target)
-				create l_option
-				l_option.set_namespace ("EiffelSoftware.Library.CodeDom")
 				l_library.set_options (l_option)
 				l_target.add_library (l_library)
 
@@ -488,7 +483,7 @@ feature {NONE} -- Implementation
 					Referenced_assemblies.after
 				loop
 					l_assembly := Referenced_assemblies.item
-					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_LOCATION}.make_from_path (l_assembly.assembly.location, l_target), l_target)
+					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_LOCATION}.make_from_full_path (l_assembly.assembly.location, l_target), l_target)
 					l_conf_asm.set_name_prefix (l_assembly.assembly_prefix)
 					l_target.add_assembly (l_conf_asm)
 					Referenced_assemblies.forth

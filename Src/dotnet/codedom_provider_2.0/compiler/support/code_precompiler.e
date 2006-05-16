@@ -165,7 +165,7 @@ feature -- Basic Operations
 						if l_compiler_path = Void then
 							Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_compiler_path, [])
 						else
-							create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -precompile -finalize -c_compile -metadata_cache_path %"" + compiler_metadata_cache + "%" -ace %"" + ace_file_name + "%"")
+							create l_start_info.make_from_file_name_and_arguments (l_compiler_path + Directory_separator.out + Compiler_file_name, "-batch -precompile -finalize -c_compile -metadata_cache_path %"" + compiler_metadata_cache + "%" -project_path %"" + l_abs_dir + "%" -config %"" + ace_file_name + "%"")
 							l_start_info.set_working_directory (l_abs_dir)
 							l_start_info.set_create_no_window (True)
 							l_start_info.set_redirect_standard_error (False)

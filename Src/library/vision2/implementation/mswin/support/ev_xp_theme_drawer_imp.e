@@ -176,11 +176,15 @@ feature -- Query
 			l_wel_err: WEL_ERROR
 			l_int: INTEGER
 		do
-			create l_wel_err
-			l_wel_err.reset_last_error_code
+			debug ("VISION2_WINDOWS")
+				create l_wel_err
+				l_wel_err.reset_last_error_code
+			end
 			l_int := cwin_get_theme_sys_color (a_theme, a_color_id)
-			if l_wel_err.last_error_code /= 0 then
-				l_wel_err.display_last_error
+			debug ("VISION2_WINDOWS")
+				if l_wel_err.last_error_code /= 0 then
+					l_wel_err.display_last_error
+				end
 			end
 			create l_wel_color.make_by_color (l_int)
 

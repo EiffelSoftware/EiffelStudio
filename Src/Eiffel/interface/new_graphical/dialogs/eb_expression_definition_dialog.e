@@ -483,13 +483,19 @@ feature {NONE} -- Event handling
 		do
 			if class_radio.is_selected then
 				l_class_name := class_field.text
+				l_class_name.left_adjust
+				l_class_name.right_adjust
 				l_class_name.to_upper
-				l_list := eiffel_universe.classes_with_name (l_class_name)
-				if l_list /= Void and then not l_list.is_empty and then l_list.first.is_compiled then
-					l_class_c := l_list.first.compiled_class
-					create expression_field_provider.make (l_class_c, Void, True)
-					expression_field.set_completion_possibilities_provider (expression_field_provider)
-					expression_field_provider.set_code_completable (expression_field)
+				if not l_class_name.is_empty then
+					l_list := eiffel_universe.compiled_classes_with_name (l_class_name)
+					if l_list /= Void and then not l_list.is_empty then
+						l_class_c := l_list.first.compiled_class
+						create expression_field_provider.make (l_class_c, Void, True)
+						expression_field.set_completion_possibilities_provider (expression_field_provider)
+						expression_field_provider.set_code_completable (expression_field)
+					else
+						expression_field.set_completion_possibilities_provider (Void)
+					end
 				else
 					expression_field.set_completion_possibilities_provider (Void)
 				end
@@ -646,6 +652,7 @@ feature {NONE} -- Code completion.
 
 			if class_provider = Void then
 				create class_provider.make (Void, Void, false)
+				class_provider.set_use_all_classes_in_universe (True)
 				class_field.set_completing_feature (false)
 				class_field.set_completion_possibilities_provider (class_provider)
 				class_provider.set_code_completable (class_field)

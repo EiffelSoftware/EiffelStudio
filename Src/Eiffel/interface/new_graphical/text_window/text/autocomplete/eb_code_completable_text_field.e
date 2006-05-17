@@ -334,7 +334,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			if show_below then
 				Result := Result + height
 			else
-				Result := Result - preferred_height - height
+				Result := Result - preferred_height
 			end
 		end
 

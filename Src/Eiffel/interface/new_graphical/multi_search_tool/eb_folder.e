@@ -31,9 +31,9 @@ feature {NONE} -- Initialize
 			path := a_path
 			name := a_name
 		ensure
-			a_cluster_not_void: cluster /= a_cluster
-			a_path_valid: path /= a_path and then not path.is_empty
-			a_name_not_void: name /= a_name
+			a_cluster_not_void: cluster = a_cluster
+			a_path_valid: path = a_path and then not path.is_empty
+			a_name_not_void: name = a_name
 		end
 
 feature -- Access
@@ -67,7 +67,7 @@ feature -- Element change
 		do
 			cluster := a_cluster
 		ensure
-			cluster_not_void: a_cluster /= a_cluster
+			cluster_not_void: a_cluster = a_cluster
 		end
 
 	set_path (a_path: like path) is

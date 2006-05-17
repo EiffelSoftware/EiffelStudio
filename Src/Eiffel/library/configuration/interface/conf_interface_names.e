@@ -129,6 +129,16 @@ feature {NONE} -- Target names and descriptions
 	target_external_condition_name: STRING is "Condition"
 	target_external_condition_description: STRING is "Conditions for this external."
 
+	target_external_include: STRING is "Include"
+	target_external_object: STRING is "Object"
+	target_external_make: STRING is "Makefile"
+	target_external_resource: STRING is "Resource"
+
+	target_external_include_tree: STRING is "Includes"
+	target_external_object_tree: STRING is "Objects"
+	target_external_make_tree: STRING is "Makefiles"
+	target_external_resource_tree: STRING is "Resources"
+
 feature {NONE} -- Option names and descriptions
 
 	option_require_name: STRING is "Require"

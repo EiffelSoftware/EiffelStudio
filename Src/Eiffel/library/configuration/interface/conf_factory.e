@@ -115,8 +115,8 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_ressource (a_location: STRING): CONF_EXTERNAL_RESSOURCE is
-			-- Create a `CONF_EXTERNAL_RESSOURCE' object.
+	new_external_resource (a_location: STRING): CONF_EXTERNAL_RESOURCE is
+			-- Create a `CONF_EXTERNAL_RESOURCE' object.
 		do
 			create Result.make (a_location)
 		ensure

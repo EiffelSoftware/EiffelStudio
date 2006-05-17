@@ -54,7 +54,7 @@ feature -- Generation
 			l_new_name: STRING
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
-			l_res: CONF_EXTERNAL_RESSOURCE
+			l_res: CONF_EXTERNAL_RESOURCE
 			l_res_added: SEARCH_TABLE [STRING]
 			l_loc: CONF_FILE_LOCATION
 		do
@@ -102,7 +102,7 @@ feature -- Access
 	module: IL_MODULE
 			-- PE file in which `resources' will be generated.
 
-	resources: LIST [CONF_EXTERNAL_RESSOURCE]
+	resources: LIST [CONF_EXTERNAL_RESOURCE]
 			-- List of resources.
 
 	last_resource_offset: INTEGER

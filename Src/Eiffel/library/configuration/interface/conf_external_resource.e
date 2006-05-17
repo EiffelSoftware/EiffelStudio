@@ -6,12 +6,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	CONF_EXTERNAL_RESSOURCE
+	CONF_EXTERNAL_RESOURCE
 
 inherit
 	CONF_EXTERNAL
 		redefine
-			is_ressource
+			is_resource
 		end
 
 create
@@ -19,7 +19,7 @@ create
 
 feature -- Status
 
-	is_ressource: BOOLEAN is
+	is_resource: BOOLEAN is
 			-- Is `Current' an external ressource?
 		once
 			Result := True

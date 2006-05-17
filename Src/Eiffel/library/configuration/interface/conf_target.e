@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			create internal_external_include.make (1)
 			create internal_external_object.make (1)
-			create internal_external_ressource.make (1)
+			create internal_external_resource.make (1)
 			create internal_external_make.make (1)
 			create internal_pre_compile_action.make (1)
 			create internal_post_compile_action.make (1)
@@ -280,7 +280,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_ressource: like internal_external_ressource is
+	all_external_resource: like internal_external_resource is
 			-- All external ressource files including the ones from libraries.
 		require
 			all_libraries_set: all_libraries /= Void
@@ -291,7 +291,7 @@ feature -- Access queries
 			until
 				all_libraries.after
 			loop
-				Result.append (all_libraries.item_for_iteration.external_ressource)
+				Result.append (all_libraries.item_for_iteration.external_resource)
 				all_libraries.forth
 			end
 		ensure
@@ -349,12 +349,12 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_ressource: like internal_external_ressource is
+	external_resource: like internal_external_resource is
 			-- Global external ressource files.
 		do
-			Result := internal_external_ressource.twin
+			Result := internal_external_resource.twin
 			if extends /= Void then
-				Result.append (extends.external_ressource)
+				Result.append (extends.external_resource)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -1005,14 +1005,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			objects_set: internal_external_object = an_objects
 		end
 
-	set_external_ressources (a_ressources: like internal_external_ressource) is
+	set_external_ressources (a_ressources: like internal_external_resource) is
 			-- Set `a_ressources'.
 		require
 			a_ressources_not_void: a_ressources /= Void
 		do
-			internal_external_ressource := a_ressources
+			internal_external_resource := a_ressources
 		ensure
-			ressources_set: internal_external_ressource = a_ressources
+			ressources_set: internal_external_resource = a_ressources
 		end
 
 	set_external_make (a_makes: like internal_external_make) is
@@ -1051,17 +1051,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_object.has (an_object)
 		end
 
-	add_external_ressource (a_ressource: CONF_EXTERNAL_RESSOURCE) is
+	add_external_resource (a_ressource: CONF_EXTERNAL_RESOURCE) is
 			-- Add `a_ressource'.
 		require
 			a_ressource_not_void: a_ressource /= Void
 		do
-			if internal_external_ressource = Void then
-				create internal_external_ressource.make (1)
+			if internal_external_resource = Void then
+				create internal_external_resource.make (1)
 			end
-			internal_external_ressource.extend (a_ressource)
+			internal_external_resource.extend (a_ressource)
 		ensure
-			added: internal_external_ressource.has (a_ressource)
+			added: internal_external_resource.has (a_ressource)
 		end
 
 	add_external_make (a_make: CONF_EXTERNAL_MAKE) is
@@ -1303,7 +1303,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- Global external object files of this target itself.
 
-	internal_external_ressource: ARRAYED_LIST [CONF_EXTERNAL_RESSOURCE]
+	internal_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 			-- Global external ressource files of this target itself.
 
 	internal_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE]
@@ -1349,7 +1349,7 @@ invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
 	internal_external_include_not_void: internal_external_include /= Void
 	internal_external_object_not_void: internal_external_object /= Void
-	internal_external_ressource_not_void: internal_external_ressource /= Void
+	internal_external_ressource_not_void: internal_external_resource /= Void
 	internal_external_make_not_void: internal_external_make /= Void
 	internal_pre_compile_not_void: internal_pre_compile_action /= Void
 	internal_post_compile_not_void: internal_post_compile_action /= Void

@@ -37,7 +37,7 @@ feature -- Access
 
 	Config_files_filter: STRING is "*.ecf"
 
-	Config_files_description: STRING is "Eiffel Config Files (*.ecf)"
+	Config_files_description: STRING is "Eiffel Configuration Files (*.ecf)"
 
 	Ace_files_filter: STRING is "*.ace"
 

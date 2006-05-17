@@ -65,14 +65,14 @@ feature {NONE} -- Implementation
 			tuple.put ("make_by_id ("+main_dialog_id+")", 2)
 			map_list.extend (tuple)
 
-			from_template_to_project (wizard_resources_path, "template_config.acex", 					project_location, project_name_lowercase + ".acex", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", 					project_location, project_name_lowercase + ".ecf", map_list)
 			from_template_to_project (wizard_resources_path, "root_template.e", 			project_location, "root_class.e", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_main_window.e", 		project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_resource.h", 			project_location, "resource.h", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_application_ids.e", 	project_location, "application_ids.e", map_list)
 			copy_icon
-			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".acex")
+			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ecf")
 		end
 
 
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			tuple.put ("MAIN_WINDOW", 2)
 			map_list.extend (tuple)
 
-			from_template_to_project (wizard_resources_path, "template_config.acex", 				project_location, project_name_lowercase + ".acex", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", 				project_location, project_name_lowercase + ".ecf", map_list)
 			from_template_to_project (wizard_resources_path, "root_template.e", 		project_location, "root_class.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_main_window.e",		project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_template.rc",	 	project_location, project_name_lowercase + ".rc", map_list)
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			from_template_to_project (wizard_resources_path, "frame_application_ids.e", project_location, "application_ids.e", map_list)
 
 			copy_icon
-			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".acex")
+			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ecf")
 		end
 
 	copy_icon is

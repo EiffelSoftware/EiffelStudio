@@ -35,7 +35,7 @@ feature -- Basic Operations
 
 				-- Update the ace file location.
 			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (project_name_lowercase + ".acex")
+			ace_location.set_file_name (project_name_lowercase + ".ecf")
 			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
@@ -83,7 +83,7 @@ feature -- Basic Operations
 			from_template_to_project (wizard_resources_path, "template_main_window.e", 	project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "interface_names.e", 		project_location, "interface_names.e", map_list)
 			from_template_to_project (wizard_resources_path, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
-			from_template_to_project (wizard_resources_path, "template_config.acex", 		project_location, project_name_lowercase + ".acex", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", 		project_location, project_name_lowercase + ".ecf", map_list)
 			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
 
 			if wizard_information.has_tool_bar then

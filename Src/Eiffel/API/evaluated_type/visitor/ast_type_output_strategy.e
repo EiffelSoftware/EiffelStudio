@@ -277,7 +277,7 @@ feature {TYPE_A} -- Visitors
 					text_formatter.add_space
 					process_generic_in_gen_type (a_type.generics.item (i))
 					if i /= count then
-						text_formatter.process_symbol_text (ti_Comma)
+						text_formatter.process_symbol_text (ti_semi_colon)
 						text_formatter.add_space
 					end
 					i := i + 1

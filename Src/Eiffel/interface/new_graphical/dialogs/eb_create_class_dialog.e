@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			empty_check.enable_select
 			create creation_check.make_with_text (Interface_names.l_generate_creation)
 			creation_check.select_actions.extend (agent on_creation_check)
-			create parents_list.make
+			create parents_list.make (agent compute_group)
 			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
 			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
 
@@ -689,6 +689,13 @@ feature {NONE} -- Implementation
 			if not is_destroyed then
 				set_default_push_button (create_button)
 			end
+		end
+
+	compute_group: CONF_GROUP is
+			-- Compute group.
+		do
+			change_cluster
+			Result := cluster
 		end
 
 feature {NONE} -- Vision2 widgets

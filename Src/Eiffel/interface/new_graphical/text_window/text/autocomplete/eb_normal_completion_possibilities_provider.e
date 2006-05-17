@@ -80,6 +80,9 @@ feature -- Access
 
 	text_field : EB_CODE_COMPLETABLE_TEXT_FIELD
 
+	use_all_classes_in_universe: BOOLEAN
+			-- Provide all classes in universe?
+
 feature -- Basic operation
 
 	prepare_completion is
@@ -102,8 +105,31 @@ feature -- Basic operation
 				end
 			end
 			if provide_classes then
-				build_class_completion_list
+				if not use_all_classes_in_universe and then group_callback /= Void then
+					group := group_callback.item (Void)
+				end
+				if not use_all_classes_in_universe implies group /= Void then
+					build_class_completion_list
+				end
 			end
+		end
+
+feature -- Element change
+
+	set_group_callback (a_call: FUNCTION [ANY, TUPLE, CONF_GROUP]) is
+			-- Group call back
+		require
+			a_call_not_void: a_call /= Void
+		do
+			group_callback := a_call
+		ensure
+			group_callback_not_void: group_callback = a_call
+		end
+
+	set_use_all_classes_in_universe (a_b: BOOLEAN) is
+			-- Set `use_all_classes_in_universe' with `a_b'.
+		do
+			use_all_classes_in_universe := a_b
 		end
 
 feature {NONE} -- Implementation
@@ -362,7 +388,6 @@ feature {NONE} -- Build completion possibilities
 	update is
 			--
 		do
-
 		end
 
 	reset is
@@ -385,11 +410,12 @@ feature {NONE} -- Build completion possibilities
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
 		require
-			group_not_void: group /= Void
+			not_use_all_classes_implies_group_not_void: not use_all_classes_in_universe implies group /= Void
 		local
 			cname				: STRING
 			class_list			: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes				: HASH_TABLE [CONF_CLASS, STRING]
+			l_classes			: HASH_TABLE [CONF_CLASS, STRING]
+			classes				: DS_HASH_SET [CLASS_I]
 			token				: EDITOR_TOKEN
 			show_all			: BOOLEAN
 			class_name			: EB_CLASS_FOR_COMPLETION
@@ -416,28 +442,52 @@ feature {NONE} -- Build completion possibilities
 				end
 			end
 			cname := ""
-
-			classes := group.accessible_classes
-			create class_list.make (100)
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				l_class_i ?= classes.item_for_iteration
-				check
-					l_class_i_not_void: l_class_i /= Void
-				end
-				if show_all then
-					create class_name.make (l_class_i)
-				 	class_list.extend (class_name)
-				else
-					if matches (l_class_i.name, cname) then
+			if use_all_classes_in_universe then
+				classes := universe.all_classes
+				create class_list.make (100)
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					l_class_i ?= classes.item_for_iteration
+					check
+						l_class_i_not_void: l_class_i /= Void
+					end
+					if show_all then
 						create class_name.make (l_class_i)
 					 	class_list.extend (class_name)
+					else
+						if matches (l_class_i.name, cname) then
+							create class_name.make (l_class_i)
+						 	class_list.extend (class_name)
+						end
 					end
+					classes.forth
 				end
-				classes.forth
+			else
+				l_classes := group.accessible_classes
+				create class_list.make (100)
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_class_i ?= l_classes.item_for_iteration
+					check
+						l_class_i_not_void: l_class_i /= Void
+					end
+					if show_all then
+						create class_name.make (l_class_i)
+					 	class_list.extend (class_name)
+					else
+						if matches (l_class_i.name, cname) then
+							create class_name.make (l_class_i)
+						 	class_list.extend (class_name)
+						end
+					end
+					l_classes.forth
+				end
 			end
 
 				cnt := class_list.count
@@ -1222,6 +1272,8 @@ feature {NONE} -- Build completion possibilities
 	Any_name: STRING is "ANY"
 
 	cp_index: INTEGER
+
+	group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]
 
 invariant
 	invariant_clause: True -- Your invariant here

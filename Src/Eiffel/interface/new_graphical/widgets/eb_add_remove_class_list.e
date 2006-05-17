@@ -11,6 +11,8 @@ class
 
 inherit
 	EV_ADD_REMOVE_LIST
+		rename
+			make as make_old
 		redefine
 			text_field,
 			build_widget,
@@ -20,9 +22,26 @@ inherit
 create
 	make
 
+feature -- Init
+
+	make (a_group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]) is
+			-- Initialize
+		require
+			a_group_callback_not_void: a_group_callback /= Void
+		do
+			group_internal := a_group_callback
+			make_old
+		end
+
 feature -- Access
 
-		text_field: EB_CODE_COMPLETABLE_TEXT_FIELD
+	group: CONF_GROUP is
+			-- Group for class auto completion
+		do
+			Result := group_internal.item (Void)
+		end
+
+	text_field: EB_CODE_COMPLETABLE_TEXT_FIELD
 
 feature {NONE} -- GUI
 
@@ -82,6 +101,7 @@ feature {NONE} -- GUI
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 		do
 			create l_provider.make (Void, Void, true)
+			l_provider.set_group_callback (group_internal)
 			create text_field.make
 			text_field.set_completing_feature (false)
 			text_field.set_completion_possibilities_provider (l_provider)
@@ -96,6 +116,8 @@ feature {NONE} -- GUI
 		end
 
 feature {NONE} -- Implementation
+
+	group_internal: FUNCTION [ANY, TUPLE, CONF_GROUP]
 
 invariant
 	invariant_clause: True -- Your invariant here

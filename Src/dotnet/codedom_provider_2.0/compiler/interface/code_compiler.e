@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 				create source_generator.make (compilation_directory)
 
 				-- Finally initialize compiler
- 				ace_file_path := temp_files.add_extension ("acex")
+ 				ace_file_path := temp_files.add_extension ("ecf")
 
 				if a_options.output_assembly /= Void then
 					system_path := a_options.output_assembly
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 				end
 
 				-- Add base library
-				create l_library.make ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
+				create l_library.make ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.ecf", l_target), l_target)
 				create l_option
 				l_option.set_namespace ("EiffelSoftware.Library.Base")
 				l_library.set_options (l_option)

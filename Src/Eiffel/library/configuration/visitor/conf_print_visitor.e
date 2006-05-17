@@ -453,6 +453,17 @@ feature {NONE} -- Implementation
 							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"/>%N")
 						end
 
+						if l_condition.version /= Void then
+							append_text_indent ("<version")
+							if l_condition.version.min /= Void then
+								append_text (" min=%""+l_condition.version.min.version+"%"")
+							end
+							if l_condition.version.max /= Void then
+								append_text (" max=%""+l_condition.version.max.version+"%"")
+							end
+							append_text ("/>%N")
+						end
+
 						from
 							l_custs := l_condition.custom
 							l_custs.start

@@ -36,6 +36,9 @@ feature -- Access
 	dotnet: CELL [BOOLEAN]
 			-- Enabled for dotnet?
 
+	version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			-- Enabled for a certain version number?
+
 	custom: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
 
@@ -88,6 +91,12 @@ feature -- Queries
 					Result := l_build = l_build_cond.value xor l_build_cond.invert
 					build.forth
 				end
+			end
+
+				-- Version
+			if Result and version /= Void then
+				Result := (version.min = Void or else version.min <= a_state.version) and
+					(version.max = Void or else version.max >= a_state.version)
 			end
 
 				-- custom
@@ -192,6 +201,20 @@ feature -- Update
 		ensure
 			custom_empty: custom.is_empty
 		end
+
+	set_version (a_min, a_max: CONF_VERSION) is
+			-- Set version constraint.
+		require
+			min_or_max: a_min /= Void or a_max /= Void
+			min_less_max: a_min /= Void and a_max /= Void implies a_min <= a_max
+		do
+			create version
+			version.min := a_min
+			version.max := a_max
+		ensure
+			version_set: version /= Void and then version.min = a_min and version.max = a_max
+		end
+
 
 invariant
 	platform_not_void: platform /= Void

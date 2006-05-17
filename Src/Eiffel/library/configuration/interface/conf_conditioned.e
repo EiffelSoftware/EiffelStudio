@@ -40,6 +40,7 @@ feature {CONF_ACCESS} -- Status update
 		do
 			if internal_conditions = Void then
 				create internal_conditions.make (1)
+				internal_conditions.compare_objects
 			end
 			internal_conditions.force (a_condition)
 		ensure
@@ -50,6 +51,7 @@ feature {CONF_ACCESS} -- Status update
 			-- Set `internal_conditions' to `a_conditions'.
 		require
 			a_conditions_ok: a_conditions = Void or else not a_conditions.is_empty
+			object_comparison: a_conditions.object_comparison
 		do
 			internal_conditions := a_conditions
 		ensure

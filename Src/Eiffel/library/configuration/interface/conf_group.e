@@ -451,7 +451,8 @@ feature -- Equality
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := name.is_equal (other.name) and then location.is_equal (other.location) and then
-						equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
+						equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming) and then
+						equal (internal_conditions, other.internal_conditions)
 		end
 
 feature -- Visit

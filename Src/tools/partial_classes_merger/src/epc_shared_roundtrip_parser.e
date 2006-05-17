@@ -14,6 +14,7 @@ feature -- Access
 			-- Shared instance of roundtrip parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+			Result.set_il_parser -- This is to accept class alias syntax
 		ensure
 			attached_eiffel_parser: Result /= Void
 		end

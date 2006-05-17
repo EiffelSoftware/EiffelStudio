@@ -11,8 +11,9 @@ class
 
 inherit
 	QL_NAME_CRITERION
+		rename
+			make as old_make
 		redefine
-			make,
 			is_satisfied_by
 		end
 

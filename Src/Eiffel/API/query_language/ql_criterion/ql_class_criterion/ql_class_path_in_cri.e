@@ -11,8 +11,9 @@ class
 
 inherit
 	QL_NAME_CRITERION
+		rename
+			make as old_make
 		redefine
-			make,
 			is_satisfied_by
 		end
 
@@ -36,13 +37,11 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
-		local
-			l_path: STRING
 		do
 			if name.is_empty then
 				Result := True
 			else
-				Result := l_path.substring (1, name.count).is_equal (name)
+				Result := a_item.conf_class.path.substring (1, name.count).is_equal (name)
 			end
 		end
 

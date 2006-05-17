@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
 --			end
 
-			--put ("localhost:0", "DISPLAY")
+--			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
 			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
@@ -232,11 +232,25 @@ feature -- Basic operation
 			a_gdkevent_not_null: a_gdk_event /= default_pointer
 		local
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
+			l_gdk_window, l_gtk_widget: POINTER
 		do
 			if captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
 			else
-				l_pnd_item ?= gtk_widget_imp_at_pointer_position
+				if {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (a_gdk_event) = GDK_BUTTON_RELEASE then
+						-- Button release events need to be handled directly as they can occur on other widgets
+						-- an on non client areas.
+					l_gdk_window := {EV_GTK_EXTERNALS}.gdk_event_button_struct_window (a_gdk_event)
+					if l_gdk_window /= default_pointer then
+						{EV_GTK_EXTERNALS}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget)
+						if l_gtk_widget /= default_pointer then
+							l_pnd_item ?= eif_object_from_gtk_object (l_gtk_widget)
+						end
+					end
+				else
+						-- We retrieve the appropriate Vision2 widget that the mouse pointer is above.
+					l_pnd_item ?= gtk_widget_imp_at_pointer_position
+				end
 			end
 			if
 				l_pnd_item /= Void and then

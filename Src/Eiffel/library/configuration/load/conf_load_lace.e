@@ -689,7 +689,7 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							current_target.add_external_ressource (factory.new_external_ressource (l_files.item))
+							current_target.add_external_resource (factory.new_external_resource (l_files.item))
 							l_files.forth
 						end
 					elseif l_type.is_make then

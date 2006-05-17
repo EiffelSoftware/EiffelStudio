@@ -137,7 +137,7 @@ feature -- Callbacks
 					process_external_attributes
 				when t_external_object then
 					process_external_attributes
-				when t_external_ressource then
+				when t_external_resource then
 					process_external_attributes
 				when t_external_make then
 					process_external_attributes
@@ -285,7 +285,7 @@ feature -- Callbacks
 					current_external := Void
 				when t_external_object then
 					current_external := Void
-				when t_external_ressource then
+				when t_external_resource then
 					current_external := Void
 				when t_pre_compile_action then
 					current_action := Void
@@ -507,14 +507,14 @@ feature {NONE} -- Implementation attribute processing
 
 
 	process_external_attributes is
-			-- Process attributes of external_(include|object|ressource) tags.
+			-- Process attributes of external_(include|object|resource) tags.
 		require
 			current_target_not_void: current_target /= Void
 		local
 			l_location: STRING
 			l_inc: CONF_EXTERNAL_INCLUDE
 			l_obj: CONF_EXTERNAL_OBJECT
-			l_res: CONF_EXTERNAL_RESSOURCE
+			l_res: CONF_EXTERNAL_RESOURCE
 			l_make: CONF_EXTERNAL_MAKE
 		do
 			l_location := current_attributes.item (at_location)
@@ -529,9 +529,9 @@ feature {NONE} -- Implementation attribute processing
 					l_obj := factory.new_external_object (l_location)
 					current_target.add_external_object (l_obj)
 					current_external := l_obj
-				when t_external_ressource then
-					l_res := factory.new_external_ressource (l_location)
-					current_target.add_external_ressource (l_res)
+				when t_external_resource then
+					l_res := factory.new_external_resource (l_location)
+					current_target.add_external_resource (l_res)
 					current_external := l_res
 				when t_external_make then
 					l_make := factory.new_external_make (l_location)
@@ -1315,7 +1315,7 @@ feature {NONE} -- Implementation state transitions
 				-- => mapping
 				-- => external_include
 				-- => external_object
-				-- => external_ressource
+				-- => external_rssource
 				-- => external_make
 				-- => pre_compile_action
 				-- => post_compile_action
@@ -1335,7 +1335,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_object, "external_object")
-			l_trans.force (t_external_ressource, "external_ressource")
+			l_trans.force (t_external_resource, "external_resource")
 			l_trans.force (t_external_make, "external_make")
 			l_trans.force (t_pre_compile_action, "pre_compile_action")
 			l_trans.force (t_post_compile_action, "post_compile_action")
@@ -1379,7 +1379,7 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_pre_compile_action)
 			Result.force (l_trans, t_post_compile_action)
 
-				-- external_(include|object|ressource|make)
+				-- external_(include|object|resource|make)
 				-- => description
 				-- => condition
 			create l_trans.make (2)
@@ -1387,7 +1387,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_condition, "condition")
 			Result.force (l_trans, t_external_include)
 			Result.force (l_trans, t_external_object)
-			Result.force (l_trans, t_external_ressource)
+			Result.force (l_trans, t_external_resource)
 			Result.force (l_trans, t_external_make)
 
 				-- assembly
@@ -1535,13 +1535,13 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_class, "class")
 			Result.force (l_attr, t_class_option)
 
-				-- external_(include|object|ressource|make)
+				-- external_(include|object|resource|make)
 				-- * location
 			create l_attr.make (1)
 			l_attr.force (at_location, "location")
 			Result.force (l_attr, t_external_include)
 			Result.force (l_attr, t_external_object)
-			Result.force (l_attr, t_external_ressource)
+			Result.force (l_attr, t_external_resource)
 			Result.force (l_attr, t_external_make)
 
 				-- (pre|post)_compile_action
@@ -1702,7 +1702,7 @@ feature {NONE} -- Implementation constants
 	t_setting,
 	t_external_include,
 	t_external_object,
-	t_external_ressource,
+	t_external_resource,
 	t_external_make,
 	t_pre_compile_action,
 	t_post_compile_action,

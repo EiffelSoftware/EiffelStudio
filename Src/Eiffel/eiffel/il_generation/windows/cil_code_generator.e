@@ -878,7 +878,7 @@ feature -- Generation Structure
 			Il_debug_info_recorder.end_recording_session
 		end
 
-	generate_resources (a_resources: LIST [CONF_EXTERNAL_RESSOURCE]) is
+	generate_resources (a_resources: LIST [CONF_EXTERNAL_RESOURCE]) is
 			-- Generate all resources in assembly.
 		require
 			a_resources_not_void: a_resources /= Void

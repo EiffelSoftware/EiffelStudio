@@ -43,7 +43,7 @@ feature -- Status
 		once
 		end
 
-	is_ressource: BOOLEAN is
+	is_resource: BOOLEAN is
 			-- Is `Current' an external ressource?
 		once
 		end

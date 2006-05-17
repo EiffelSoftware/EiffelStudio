@@ -21,6 +21,7 @@ inherit
 	CODE_SHARED_GENERATION_HELPERS
 	CODE_SHARED_ACCESS_MUTEX
 	CONF_ACCESS
+	CODE_PROJECT_CONTEXT
 
 create
 	default_create
@@ -329,9 +330,9 @@ feature {NONE} -- Implementation
 					l_system_name.keep_head (l_system_name.count - 4)
 				end
 				l_system := (create {CONF_FACTORY}).new_system (l_system_name, (create {UUID_GENERATOR}).generate_uuid)
-				create l_target.make ("default", l_system)
+				create l_target.make (Target_name, l_system)
 				l_system.add_target (l_target)
-				create l_cluster.make ("root_cluster", create {CONF_LOCATION}.make_from_path (compilation_directory, l_target), l_target)
+				create l_cluster.make ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
 				l_target.add_cluster (l_cluster)
 
 				l_root_class := Compilation_context.root_class_name
@@ -398,7 +399,7 @@ feature {NONE} -- Implementation
 					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
-						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_LOCATION}.make_from_full_path (l_precompiler.precompile_path, l_target), l_target))
+						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_FILE_LOCATION}.make (l_precompile_file, l_target), l_target))
 						precompile_files := l_precompiler.precompile_files
 					else
 						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
@@ -430,47 +431,12 @@ feature {NONE} -- Implementation
 						end
 						i := i + 1
 					end
-				elseif l_precompiler = Void or else not l_precompiler.successful then
+				else
 					add_default_assemblies
 				end
 
-				-- Complete list of referenced assemblies so all required assemblies are listed
-				Referenced_assemblies.complete
-
-					-- Remove precompile referenced assemblies
-				if l_precompiler /= Void and then l_precompiler.successful then
-						-- Only add references not already in precompile
-					create l_references_list.make (10)
-					from
-						l_precompile_assemblies := l_precompiler.precompile_assembly.get_referenced_assemblies
-						i := 0
-						l_count := l_precompile_assemblies.count
-					until
-						i = l_count
-					loop
-						l_assembly_name := l_precompile_assemblies.item (i)
-						if not l_references_list.has_name (l_assembly_name) then
-							l_references_list.extend_name (l_assembly_name)
-						end
-						i := i + 1
-					end
-					l_references_list.complete
-					from
-						l_references_list.start
-					until
-						l_references_list.after
-					loop
-						l_name := l_references_list.item.assembly.get_name
-						if Referenced_assemblies.has_name (l_name) then
-							Referenced_assemblies.remove_name (l_name)
-						end
-						l_references_list.forth
-					end
-				end
-
-
-				-- Only add base clusters if requires
-				create l_library.make ("base", create {CONF_LOCATION}.make_from_full_path ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
+				-- Add base library
+				create l_library.make ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.acex", l_target), l_target)
 				create l_option
 				l_option.set_namespace ("EiffelSoftware.Library.Base")
 				l_library.set_options (l_option)
@@ -483,7 +449,7 @@ feature {NONE} -- Implementation
 					Referenced_assemblies.after
 				loop
 					l_assembly := Referenced_assemblies.item
-					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_LOCATION}.make_from_full_path (l_assembly.assembly.location, l_target), l_target)
+					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_FILE_LOCATION}.make (l_assembly.assembly.location, l_target), l_target)
 					l_conf_asm.set_name_prefix (l_assembly.assembly_prefix)
 					l_target.add_assembly (l_conf_asm)
 					Referenced_assemblies.forth
@@ -600,12 +566,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				last_compilation_results.set_native_compiler_return_value (1)
-				create l_dir_name.make (compilation_directory.count + 14)
-				l_dir_name.append (compilation_directory)
-				l_dir_name.append_character (Directory_separator)
-				l_dir_name.append ("EIFGEN")
-				l_dir_name.append_character (Directory_separator)
-				l_dir_name.append ("F_Code")
+				l_dir_name := default_f_code_path (compilation_directory) 
 				create l_dir.make (l_dir_name)
 				if l_dir.exists then
 					l_system_dir := system_path.substring (1, system_path.last_index_of (Directory_separator, system_path.count) - 1)
@@ -650,7 +611,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_directory, [compilation_directory + Directory_separator.out + "EIFGEN" + Directory_separator.out + "F_Code"])
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_directory, [l_dir_name])
 				end
 			else
 				create last_compilation_results.make (temp_files)
@@ -682,7 +643,7 @@ feature {NONE} -- Implementation
 		end
 
 	cleanup is
-			-- Cleanup compiler generated temporary files (EIFGEN directory and .epr file)
+			-- Cleanup compiler generated temporary files (EIFGENs directory and .epr file)
 		local
 			l_dir: DIRECTORY
 			l_dir_name: STRING
@@ -693,7 +654,7 @@ feature {NONE} -- Implementation
 				create l_dir_name.make (compilation_directory.count + 7)
 				l_dir_name.append (compilation_directory)
 				l_dir_name.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				l_dir_name.append ("EIFGEN")
+				l_dir_name.append ("EIFGENs")
 				create l_dir.make (l_dir_name)
 				if l_dir.exists then
 					l_dir.recursive_delete
@@ -813,7 +774,7 @@ feature {NONE} -- Private access
 	
 	last_merge_error: STRING;
 			-- Last error that occurred when executing `merge_partial_classes'
-
+			
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

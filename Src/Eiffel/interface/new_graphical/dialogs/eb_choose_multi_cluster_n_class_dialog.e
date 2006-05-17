@@ -105,16 +105,27 @@ feature -- Access
 
 feature -- Element Change
 
-	set_class_add_action (action: PROCEDURE [ANY, TUPLE [CLASS_I]]) is
+	set_class_add_action (action: like on_class_add) is
 			-- set class add action
+		require
+			action_not_void: action /= Void
 		do
 			on_class_add := action
 		end
 
-	set_cluster_add_action (action: PROCEDURE [ANY, TUPLE [CONF_GROUP]]) is
+	set_cluster_add_action (action: like on_cluster_add) is
 			-- set cluster add action
+		require
+			action_not_void: action /= Void
 		do
 			on_cluster_add := action
+		end
+
+	set_folder_add_action (action: like on_folder_add) is
+		require
+			action_not_void: action /= Void
+		do
+			on_folder_add := action
 		end
 
 feature {NONE} -- Implementation
@@ -129,18 +140,32 @@ feature {NONE} -- Vision2 events
 
 	on_add is
 			-- add a do add operations to object.
+		require
+			on_class_add_set: on_class_add /= Void
+			on_folder_add_set: on_folder_add /= Void
+			on_cluster_add_set: on_cluster_add /= Void
 		local
 			l_class: CLASS_I
 			l_cluster: EB_SORTED_CLUSTER
+			l_item : EB_CLASSES_TREE_FOLDER_ITEM
+			l_conf_cluster: CONF_CLUSTER
 		do
 			if classes_tree.selected_item /= Void then
 				l_class ?= classes_tree.selected_item.data
 				l_cluster ?= classes_tree.selected_item.data
+				l_item ?= classes_tree.selected_item
 				if l_class /= Void then
 					on_class_add.call ([l_class])
-				end
-				if l_cluster /= Void and then l_cluster.actual_group /= Void then
-					on_cluster_add.call ([l_cluster.actual_group])
+				elseif l_cluster /= Void and then l_cluster.actual_group /= Void then
+					if l_item /= Void and then not l_item.path.is_empty then
+						l_conf_cluster ?= l_cluster.actual_group
+						check
+							l_conf_cluster_not_void: l_conf_cluster /= Void
+						end
+						on_folder_add.call ([create {EB_FOLDER}.make (l_conf_cluster, l_item.path, l_item.name)])
+					else
+						on_cluster_add.call ([l_cluster.actual_group])
+					end
 				end
 			end
 		end
@@ -148,6 +173,8 @@ feature {NONE} -- Vision2 events
 	on_class_add: PROCEDURE [ANY, TUPLE [CLASS_I]]
 
 	on_cluster_add: PROCEDURE [ANY, TUPLE [CONF_GROUP]]
+
+	on_folder_add: PROCEDURE [ANY, TUPLE [EB_FOLDER]]
 
 	on_ok is
 			-- Terminate the dialog and clear the selection.

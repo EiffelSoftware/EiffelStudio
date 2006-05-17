@@ -34,7 +34,7 @@ feature {NONE} -- Initialize
 			replace_box: EV_VERTICAL_BOX
 			label, label_search: EV_LABEL
 			size: INTEGER
-			options_box: EV_BOX
+			scope_tab: EV_BOX
 			report_box: EV_BOX
 			frame: EV_FRAME
 			hbox: EV_HORIZONTAL_BOX
@@ -113,6 +113,10 @@ feature {NONE} -- Initialize
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 			option_frame.extend (hbox)
+
+				-- Option "Incremental search"
+			create incremental_search_button.make_with_text ("Have not added to search panel")
+
 				-- Option "Match case"
 			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
 
@@ -169,7 +173,7 @@ feature {NONE} -- Initialize
 			replace_button.disable_sensitive
 			replace_all_click_button.disable_sensitive
 
-			options_box := build_scope_box
+			scope_tab := build_scope_box
 			report_box := build_report_box
 
 			create vbox
@@ -186,9 +190,9 @@ feature {NONE} -- Initialize
 
 			notebook.set_tab_position (notebook.tab_top)
 			notebook.extend (vbox)
-			notebook.extend (options_box)
+			notebook.extend (scope_tab)
 			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
-			notebook.item_tab (options_box).set_text (interface_names.l_scope)
+			notebook.item_tab (scope_tab).set_text (interface_names.l_scope)
 
 			create vbox
 			vbox.extend (notebook)
@@ -202,16 +206,13 @@ feature {NONE} -- Initialize
 		end
 
 	build_scope_box: EV_VERTICAL_BOX is
-			-- Create and return a box containing the search options
+			-- Create and return a box containing scope pad.
 		local
 			vbox: EV_VERTICAL_BOX
 			cell: EV_CELL
 			hbox: EV_HORIZONTAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 		do
-				-- Option "Incremental search"
-			create incremental_search_button.make_with_text ("Have not added to search panel")
-
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
 

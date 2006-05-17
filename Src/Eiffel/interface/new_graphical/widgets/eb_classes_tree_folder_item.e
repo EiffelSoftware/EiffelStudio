@@ -80,7 +80,7 @@ feature -- Access
 		do
 			l_group := data.actual_group
 			if l_group.is_cluster then
-				create Result.make_subfolder (data.actual_group, path)
+				create Result.make_subfolder (data.actual_group, path, name)
 			else
 				create Result.make (data.actual_group)
 			end
@@ -96,7 +96,6 @@ feature -- Status setting
 		do
 			data := a_cluster
 			l_group := a_cluster.actual_group
-			set_pebble (stone)
 			if not path.is_empty then
 				l_pos := path.last_index_of ('/', path.count)
 				if l_pos > 0 then
@@ -108,6 +107,7 @@ feature -- Status setting
 			if name = Void then
 				name := l_group.name
 			end
+			set_pebble (stone)
 			set_text (name)
 			set_tooltip (tooltip_text)
 			set_accept_cursor (Cursors.cur_Cluster)

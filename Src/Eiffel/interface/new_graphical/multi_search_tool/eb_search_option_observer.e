@@ -1,5 +1,7 @@
 indexing
 	description: "Search options observer."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

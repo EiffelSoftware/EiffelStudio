@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			group_set: group = clu
 		end
 
-	make_subfolder (clu: CONF_GROUP; a_path: STRING) is
+	make_subfolder (clu: CONF_GROUP; a_path: STRING; a_name: STRING) is
 			-- Create for a subfolder `path' of `clu'.
 		require
 			valid_cluster: clu /= Void
@@ -47,9 +47,11 @@ feature {NONE} -- Initialization
 		do
 			group := clu
 			path := a_path
+			folder_name := a_name
 		ensure
 			group_set: group = clu
 			path_set: path = a_path
+			folder_name_set: folder_name = a_name
 		end
 
 feature -- Access
@@ -72,6 +74,9 @@ feature -- Access
 
 	path: STRING
 			-- Subfolder path in unix format eg "/test/a/b"
+
+	folder_name: STRING
+			-- Subfolder name
 
 	stone_signature: STRING is
 		do

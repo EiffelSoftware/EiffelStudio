@@ -71,8 +71,10 @@ feature -- Basic operation
 			l_list: EV_LIST
 			l_class_i: CLASS_I
 			l_group: CONF_GROUP
+			l_folder: EB_FOLDER
 			l_group_strategy: MSR_SEARCH_GROUP_STRATEGY
 			l_class_strategy: MSR_SEARCH_CLASS_STRATEGY
+			l_folder_strategy: MSR_SEARCH_EB_FOLDER_STRATEGY
 		do
 			create item_matched_internal.make (0)
 			l_list ?= scope_container
@@ -84,6 +86,7 @@ feature -- Basic operation
 				loop
 					l_class_i ?= l_list.item.data
 					l_group ?= l_list.item.data
+					l_folder ?= l_list.item.data
 					if l_group /= Void then
 						create l_group_strategy.make (keyword,
 														surrounding_text_range_internal,
@@ -99,8 +102,7 @@ feature -- Basic operation
 						l_group_strategy.set_whole_word_matched (is_whole_word_matched)
 						l_group_strategy.launch
 						item_matched.append (l_group_strategy.item_matched)
-					end
-					if l_class_i /= Void then
+					elseif l_class_i /= Void then
 						create l_class_strategy.make (keyword,
 														surrounding_text_range_internal,
 														l_class_i,
@@ -116,6 +118,21 @@ feature -- Basic operation
 						l_class_strategy.set_whole_word_matched (is_whole_word_matched)
 						l_class_strategy.launch
 						item_matched.append (l_class_strategy.item_matched)
+					elseif l_folder /= Void then
+						create l_folder_strategy.make (keyword,
+														surrounding_text_range_internal,
+														l_folder,
+														only_compiled_class_searched)
+						if case_sensitive then
+							l_folder_strategy.set_case_sensitive
+						else
+							l_folder_strategy.set_case_insensitive
+						end
+						l_folder_strategy.set_regular_expression_used (is_regular_expression_used)
+						l_folder_strategy.set_subgroup_searched (is_subcluster_searched)
+						l_folder_strategy.set_whole_word_matched (is_whole_word_matched)
+						l_folder_strategy.launch
+						item_matched.append (l_folder_strategy.item_matched)
 					end
 					l_list.forth
 				end

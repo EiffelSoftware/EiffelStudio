@@ -132,26 +132,41 @@ feature -- Implementation
 			is_function: once_routine.type /= Void
 		local
 			l_index: INTEGER
-			l_type: INTEGER
+			l_type: TYPE_A
+			l_type_value: INTEGER
 			l_once_func: ONCE_FUNC_I
+			l_const: CONSTANT_I
 			exc_v: EXCEPTION_DEBUG_VALUE
 			err_v: DUMMY_MESSAGE_DEBUG_VALUE
+			l_once_nature: INTEGER
 		do
 			clear_last_values
 			l_index := once_index (once_routine)
 			if l_index >= 0 then
+				debug ("debugger_ipc")
+					print ("### feature is of type : " + once_routine.generating_type + "%N")
+				end
 				l_once_func ?= once_routine
 				if l_once_func /= Void then
-					l_type := l_once_func.type.type_i.sk_value
+					l_type := l_once_func.type
+				else
+					l_const ?= once_routine
+					if l_const /= Void then
+						l_type := l_const.type
+					end
+				end
+				if l_type /= Void then
+					l_type_value := l_type.type_i.sk_value
 				end
 				debug ("debugger_ipc")
-					print ("### Called [type="+l_type.out+"]?%N")
+					print ("### Called [type="+l_type_value.out+"]?%N")
 				end
 				if once_routine.is_process_relative then
-					send_rqst_3_integer (Rqst_once, out_data_per_process, l_type, l_index)
+					l_once_nature := out_data_per_process
 				else
-					send_rqst_3_integer (Rqst_once, out_data_per_thread, l_type, l_index)
+					l_once_nature := out_data_per_thread
 				end
+				send_rqst_3_integer (Rqst_once, l_once_nature, l_type_value, l_index)
 				last_is_called := c_tread.to_boolean
 			end
 			if last_is_called then
@@ -161,7 +176,7 @@ feature -- Implementation
 				last_failed := c_tread.to_boolean
 				if not last_failed then
 					debug ("debugger_ipc")
-						print ("### Result of type["+ l_type.out +" ~ 0x"+l_type.to_hex_string+"] ?%N")
+						print ("### Result of type["+ l_type_value.out +" ~ 0x" + l_type_value.to_hex_string+"] ?%N")
 					end
 					recv_value (Current)
 					if is_exception_trace then

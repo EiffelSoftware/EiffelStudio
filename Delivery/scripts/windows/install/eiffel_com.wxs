@@ -31,7 +31,7 @@
 				<Directory Id="library" Name="library">
 					<Directory Id="com" Name="com">
 						<Component Id="com" Guid="9EA22E42-B7D6-4819-ABE6-0226E3D8AE25">
-							<File Id="com_acex" Name="com.acex"/>
+							<File Id="com_ecf" Name="com.ecf"/>
 						</Component>
 						<Directory Id="Support" Name="Support">
 							<Component Id="Support" Guid="30F7852F-D092-43F3-8643-DFFF0AE3BCE6">

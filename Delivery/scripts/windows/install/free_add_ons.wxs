@@ -9,7 +9,7 @@
 						<Directory Id="ace" Name="ace">
 							<Component Id="zad_miner.rc" Guid="1F8CF2E1-92AD-4CB5-A1E3-F1C4EF9C0CFD">
 								<File Id="zad_miner.rc" Name="ZAD_MI~1.RC" LongName="zad_miner.rc" KeyPath="yes" />
-								<File Id="zad_miner.acex" Name="ZAD_MI~1.ACE" LongName="zad_miner.acex" />
+								<File Id="zad_miner.ecf" Name="ZAD_MI~1.ECF" LongName="zad_miner.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="binaries" Name="binaries">

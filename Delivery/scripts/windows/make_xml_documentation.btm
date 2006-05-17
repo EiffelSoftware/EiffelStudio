@@ -34,7 +34,7 @@ cdd %EIFFEL_SRC\tools
 co %DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
-finalize doc_builder.acex
+finalize doc_builder.ecf
 cleanup_eiffel doc_builder doc_builder.exe
 iff not exist doc_builder.exe then
 	remtrace Couldnt generate doc_builder.exe
@@ -49,8 +49,8 @@ remtrace Compile all required libraries and generate XML documentation |
 remtrace ---------------------------------------------------------------
 
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml
-melt all_libs.acex
-ec -flatshort -filter xml -all -config all_libs.acex
+melt all_libs.ecf
+ec -flatshort -filter xml -all -config all_libs.ecf
 
 remtrace ------------------------------------------------------
 remtrace Copy XML docs into appropriate written docs location |

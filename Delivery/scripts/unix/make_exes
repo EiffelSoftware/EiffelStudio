@@ -19,7 +19,7 @@ source retrieve_build_files $DEFAULT_ORIGO_SVN &> $INSTALL_LOG >> $INSTALL_LOG
 source retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
 cd $EIFFEL_SRC/vision2_tour
 clean_project
-finalize vision2_tour.acex vision2_tour
+finalize vision2_tour.ecf vision2_tour
 tgz_ccode vision2_tour vision2_tour.tar.gz
 if [ ! -f vision2_tour.tar.gz ]; then
 	echo Could not finalize a new Vision2 tour
@@ -38,7 +38,7 @@ cd $EIFFEL_SRC/build/Constants
 cd $EIFFEL_SRC/build
 remtrace Enterprise Build
 clean_project
-finalize build.acex build
+finalize build.ecf build
 tgz_ccode build build.tar.gz
 if [ ! -f build.tar.gz ]; then
 	echo Could not finalize a new EiffelBuild
@@ -57,9 +57,9 @@ if [ ! "$NO_NEW_EC" ]; then
 	cd $EIFFEL_SRC/Eiffel/API/constants
 	. $INIT_DIR/set_version.sh $DEFAULT_ORIGO_SVN 0000 system_constants.e
 	cd $FINALIZATION_DIR
-	copy $EIFFEL_SRC/Eiffel/Ace/ec.acex ec.acex
+	copy $EIFFEL_SRC/Eiffel/Ace/ec.ecf ec.ecf
 	clean_project
-	finalize ec.acex bench
+	finalize ec.ecf bench
 	tgz_ccode bench ec.tar.gz
 	if [ ! -f ec.tar.gz ]; then
 		echo Could not finalize a new EiffelStudio
@@ -76,7 +76,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR
 		clean_project
-		finalize ec.acex bench
+		finalize ec.ecf bench
 		tgz_ccode bench ec.tar.gz
 		if [ ! -f ec.tar.gz ]; then
 			echo Could not finalize a new EiffelStudio
@@ -93,7 +93,7 @@ fi
 remtrace Recompile quick_finalize
 cd $EIFFEL_SRC/tools/quick_finalize
 clean_project
-finalize quick_finalize.acex quick_finalize
+finalize quick_finalize.ecf quick_finalize
 tgz_ccode quick_finalize quick_finalize.tar.gz
 if [ ! -f quick_finalize.tar.gz ]; then
 	echo Could not finalize a new quick_finalize
@@ -109,7 +109,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	if [ -d cd_key_validator ]; then
 		cd cd_key_validator/eiffel_studio_52
 		clean_project
-		finalize setup.acex setup
+		finalize setup.ecf setup
 		tgz_ccode setup setup.tar.gz
 		if [ ! -f setup.tar.gz ]; then
 			echo Could not finalize a new setup

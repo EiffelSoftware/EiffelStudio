@@ -6,7 +6,7 @@ bash %INIT_DIR\set_version.sh %DEFAULT_ORIGO_SVN 0000 gb_about_dialog_constants.
 
 cdd %EIFFEL_SRC/build
 clean_project
-finalize build.acex
+finalize build.ecf
 cleanup_eiffel build build.exe
 iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild

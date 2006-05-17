@@ -99,9 +99,9 @@ REM Compiling EiffelStudio stuff
 iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR
-	copy %EIFFEL_SRC\Eiffel\Ace\ec.acex ec.acex
+	copy %EIFFEL_SRC\Eiffel\Ace\ec.ecf ec.ecf
 	copy %EIFFEL_SRC\Eiffel\Ace\*.* .
-	iff not exist ec.acex then
+	iff not exist ec.ecf then
 		remtrace Cannot find the finalization Ace for EiffelStudio
 		CANCEL
 	endiff
@@ -113,7 +113,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	move new_system_constants.e system_constants.e
 	cdd %FINALIZATION_DIR
 	clean_project
-	finalize ec.acex bench
+	finalize ec.ecf bench
 	cleanup_eiffel bench ec.exe
 	iff not exist ec.exe then
 		remtrace Could not finalize a new "enterprise_version" EiffelStudio
@@ -128,7 +128,7 @@ else
 		cdd %FINALIZATION_DIR
 		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
 		clean_project
-		finalize ec.acex bench
+		finalize ec.ecf bench
 		cleanup_eiffel bench ec.exe
 		iff not exist ec.exe then
 			remtrace Could not finalize a new "gpl_edition" EiffelStudio
@@ -142,7 +142,7 @@ else
 		move new_system_constants.e system_constants.e
 		cdd %FINALIZATION_DIR
 		clean_project
-		finalize ec.acex bench
+		finalize ec.ecf bench
 		cleanup_eiffel bench ec.exe
 		iff not exist ec.exe then
 			remtrace Could not finalize a new "enterprise_version" EiffelStudio
@@ -156,7 +156,7 @@ endiff
 remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\tools\finish_freezing
 clean_project
-finalize finish_freezing.acex
+finalize finish_freezing.ecf
 cleanup_eiffel finish_freezing finish_freezing.exe
 iff not exist finish_freezing.exe then
 	remtrace Could not finalize a new finish_freezing
@@ -167,7 +167,7 @@ move finish_freezing.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 remtrace Recompile emake
 cdd %EIFFEL_SRC\tools\eiffel_make
 clean_project
-finalize emake.acex
+finalize emake.ecf
 cleanup_eiffel emake emake.exe
 iff not exist emake.exe then
 	remtrace Could not finalize a new emake
@@ -178,7 +178,7 @@ move emake.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 remtrace Recompile quick_finalize
 cdd %EIFFEL_SRC\tools\quick_finalize
 clean_project
-finalize quick_finalize.acex
+finalize quick_finalize.ecf
 cleanup_eiffel quick_finalize quick_finalize.exe
 iff not exist quick_finalize.exe then
 	remtrace Could not finalize a new quick_finalize
@@ -207,7 +207,7 @@ move x2c.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 remtrace Recompile h2e
 cdd %EIFFEL_SRC\library\wel\extra
 clean_project
-finalize h2e.acex
+finalize h2e.ecf
 cleanup_eiffel h2e h2e.exe
 iff not exist h2e.exe then
 	remtrace Could not finalize a new h2e
@@ -222,7 +222,7 @@ cd tools
 co %DEFAULT_ISE_SVN/Src/tools/setup setup
 cd %EIFFEL_SRC\tools\setup\studio
 clean_project
-finalize setup.acex
+finalize setup.ecf
 cleanup_eiffel setup setup.dll
 iff not exist setup.dll then
 	remtrace Couldnt generate setup.dll

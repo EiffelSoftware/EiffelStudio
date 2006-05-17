@@ -4,7 +4,7 @@ copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\re
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\tools\com_wizard\root
 clean_project
-finalize com_wizard.acex
+finalize com_wizard.ecf
 cleanup_eiffel com_wizard com_wizard.exe
 iff not exist com_wizard.exe then
 	echo "Couldnt generate the COM wizard"
@@ -15,7 +15,7 @@ clean_project
 
 remtrace Compile COM wizard launcher for GUI mode.
 cdd %EIFFEL_SRC\tools\com_wizard\launcher
-finalize com_wizard_launcher.acex
+finalize com_wizard_launcher.ecf
 cleanup_eiffel com_wizard_launcher com_wizard_launcher.exe
 iff not exist com_wizard_launcher.exe then
 	echo "Couldnt compile com_wizard_launcher.exe"

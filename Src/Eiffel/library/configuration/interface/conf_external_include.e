@@ -10,9 +10,20 @@ class
 
 inherit
 	CONF_EXTERNAL
+		redefine
+			is_include
+		end
 
 create
 	make
+
+feature -- Status
+
+	is_include: BOOLEAN is
+			-- Is `Current' an include external?
+		once
+			Result := True
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

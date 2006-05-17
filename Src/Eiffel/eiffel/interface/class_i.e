@@ -255,13 +255,8 @@ feature -- Access
 		end
 
 	date_has_changed: BOOLEAN is
-		local
-			str: ANY
-			l_date: INTEGER
 		do
-			str := file_name.to_c
-			eif_date ($str, $l_date)
-			Result := l_date /= date
+			Result := file_modified_date (file_name) /= date
 		end
 
 	compiled_representation: CLASS_C is

@@ -165,7 +165,7 @@ feature -- Access
 			-- account, but not renamings because of the use as a library.
 			-- We also look at classes in libraries of libraries.
 		require
-			class_name_not_void: class_name /= Void
+			class_name_not_void: class_name /= Void and then not class_name.is_empty
 			class_name_upper: class_name.is_equal (class_name.as_upper)
 		local
 			l_vis: CONF_FIND_CLASS_VISITOR
@@ -190,7 +190,7 @@ feature -- Access
 	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Compiled classes with name `class_name' found in the Universe
 		require
-			class_name_not_void: class_name /= Void
+			class_name_not_void: class_name /= Void and then not class_name.is_empty
 			class_name_upper: class_name.is_equal (class_name.as_upper)
 		do
 			Result := classes_with_name (class_name.as_upper)

@@ -122,6 +122,13 @@ feature {NONE} -- Target names and descriptions
 	target_use_all_cluster_name_as_namespace_name: STRING is "Use recursive cluster name as namespace"
 	target_use_all_cluster_name_as_namespace_description: STRING is " "
 
+	target_external_location_name: STRING is "Location"
+	target_external_location_description: STRING is "Location of the external."
+	target_external_description_name: STRING is "Description"
+	target_external_description_description: STRING is "Description of the external."
+	target_external_condition_name: STRING is "Condition"
+	target_external_condition_description: STRING is "Conditions for this external."
+
 feature {NONE} -- Option names and descriptions
 
 	option_require_name: STRING is "Require"

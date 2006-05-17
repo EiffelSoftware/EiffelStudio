@@ -26,6 +26,27 @@ feature {NONE} -- Initialization
 			location_set: location = a_location
 		end
 
+feature -- Status
+
+	is_include: BOOLEAN is
+			-- Is `Current' an include external?
+		once
+		end
+
+	is_object: BOOLEAN is
+			-- Is `Current' an object external?
+		once
+		end
+
+	is_make: BOOLEAN is
+			-- Is `Current' a make external?
+		once
+		end
+
+	is_ressource: BOOLEAN is
+			-- Is `Current' an external ressource?
+		once
+		end
 
 feature -- Access, stored in configuration file
 

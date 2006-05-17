@@ -1,28 +1,26 @@
 indexing
-	description: "Objects that represent an external ressource."
+	description: "Access to a file date."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_EXTERNAL_RESSOURCE
+	CONF_FILE_DATE
 
-inherit
-	CONF_EXTERNAL
-		redefine
-			is_ressource
-		end
+feature -- Access
 
-create
-	make
-
-feature -- Status
-
-	is_ressource: BOOLEAN is
-			-- Is `Current' an external ressource?
-		once
-			Result := True
+	file_modified_date (a_path: STRING): INTEGER is
+			-- Get last modified timestamp of `a_path'.
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (a_path)
+			if l_file.exists then
+				Result := l_file.change_date
+			else
+				Result := -1
+			end
 		end
 
 indexing

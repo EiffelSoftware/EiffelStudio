@@ -10,9 +10,20 @@ class
 
 inherit
 	CONF_EXTERNAL
+		redefine
+			is_make
+		end
 
 create
 	make
+
+feature -- Status
+
+	is_make: BOOLEAN is
+			-- Is `Current' a make external?
+		once
+			Result := True
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

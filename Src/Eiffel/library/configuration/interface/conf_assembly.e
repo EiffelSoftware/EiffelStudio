@@ -395,11 +395,9 @@ feature {CONF_ACCESS} -- Update, in compiled only
 		require
 			consumed_path_ok: consumed_path /= void and then not consumed_path.is_empty
 		local
-			l_str: ANY
 			l_date: INTEGER
 		do
-			l_str := consumed_path.to_c
-			eif_date ($l_str, $l_date)
+			l_date := file_modified_date (consumed_path)
 			if date /= l_date then
 				date := l_date
 				is_modified := True

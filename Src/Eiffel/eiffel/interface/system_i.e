@@ -1386,7 +1386,8 @@ feature -- Recompilation
 				workbench.create_backup_directory
 				create l_file.make (lace.file_name)
 				create l_file_name.make_from_string (workbench.backup_subdirectory)
-				l_file_name.set_file_name ("config.acex")
+				l_file_name.set_file_name ("config")
+				l_file_name.add_extension (config_extension)
 				l_file.copy_file (l_file_name)
 			end
 

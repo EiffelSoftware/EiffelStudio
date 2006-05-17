@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="event" uuid="ba362416-9c3f-4185-acb5-7c4040a25996" library_target="event">
+	<target name="event">
+		<description>Event library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="event" location=".">
+			<condition><platform excluded_value="windows"/></condition>
+		</cluster>
+		<external_include location="$(ISE_LIBRARY)/library/event/Clib">
+			<condition><platform excluded_value="windows"/></condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/MTio_watcher.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="True"/>
+			</condition>
+		</external_object>
+	</target>
+</system>

@@ -29,7 +29,6 @@ feature -- Access
 			end
 		end
 
-
 	Eiffel_validating_parser: EIFFEL_PARSER is
 		do
 			if il_parsing then

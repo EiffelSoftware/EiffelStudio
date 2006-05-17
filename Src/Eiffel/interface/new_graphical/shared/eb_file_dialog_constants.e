@@ -16,65 +16,65 @@ class
 feature -- Access
 
 	Eiffel_project_files_filter: STRING is "*.epr"
-	
+
 	Eiffel_project_files_description: STRING is "Eiffel Project Files (*.epr)"
-	
+
 	All_files_filter: STRING is "*.*"
-	
+
 	All_files_description: STRING is "All Files (*.*)"
-	
+
 	Text_files_filter: STRING is "*.txt"
-	
+
 	Text_files_description: STRING is "Text Files (*.txt)"
-	
+
 	Png_files_filter: STRING is "*.png"
-	
+
 	Png_files_description: STRING is "PNG Files (*.png)"
-	
+
 	Xml_files_filter: STRING is "*.xml"
-	
+
 	Xml_files_description: STRING is "XML Files (*.xml)"
-	
-	Config_files_filter: STRING is "*.acex"
-	
-	Config_files_description: STRING is "Eiffel Config Files (*.acex)"
+
+	Config_files_filter: STRING is "*.ecf"
+
+	Config_files_description: STRING is "Eiffel Config Files (*.ecf)"
 
 	Ace_files_filter: STRING is "*.ace"
-	
+
 	Ace_files_description: STRING is "Eiffel Ace Files (*.ace)"
-	
+
 	Strong_name_key_files_filter: STRING is "*.snk"
-	
+
 	Strong_name_key_files_description: STRING is "Strong Name Key Files (*.snk)"
-	
+
 	Eiffel_class_files_filter: STRING is "*.e"
-	
+
 	Eiffel_class_files_description: STRING is "Eiffel Class Files (*.e)"
-	
+
 	Resx_files_filter: STRING is "*.resx"
-	
+
 	Resx_files_description: STRING is "Resx Files (*.resx)"
-	
+
 	Definition_files_filter: STRING is "*.def"
-	
+
 	Definition_files_description: STRING is "Dynamic Library Definition (*.def)"
-	
+
 	Dll_files_filter: STRING is "*.dll"
-	
+
 	Dll_files_description: STRING is ".NET library (*.dll)"
-	
+
 	Exe_files_filter: STRING is "*.exe"
-	
+
 	Exe_files_description: STRING is ".NET Application (*.exe)"
-	
+
 	All_assemblies_filter: STRING is "*.exe;*.dll"
-	
+
 	All_assemblies_description: STRING is "All Assemblies (*.exe; *.dll)"
-	
+
 	Profile_files_filter: STRING is "*.pfi"
-	
+
 	Profile_files_description: STRING is "Profile files (*.pfi)"
-	
+
 	supported_filters: ARRAYED_LIST [STRING] is
 			-- `Result' is list of all supported filters.
 		do
@@ -161,7 +161,7 @@ feature -- Status setting
 			if not a_dialog.filters.is_empty then
 				a_dialog.filters.wipe_out
 			end
-			
+
 			from
 				i := filters.lower
 			until
@@ -174,7 +174,7 @@ feature -- Status setting
 		ensure
 			filters_set: a_dialog.filters.count = filters.count
 		end
-		
+
 	set_dialog_filters_and_add_all (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING]) is
 			-- Add filters to `a_dialog' corresponding to all items in `filters' and also add a final `all_files' option.
 		require

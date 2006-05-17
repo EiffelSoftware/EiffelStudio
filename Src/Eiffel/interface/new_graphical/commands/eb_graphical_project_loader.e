@@ -181,7 +181,7 @@ feature {NONE} -- Error reporting
 		end
 
 	report_cannot_save_converted_file (a_file_name: STRING) is
-			-- Report an error when result of a conversion from ace to acex cannot be stored
+			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		local
 			l_ev: EV_ERROR_DIALOG
@@ -294,7 +294,7 @@ feature {NONE} -- Error reporting
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
-			-- Given `a_dir_name' and a proposed `a_file_name' name for the new acex format, ask the
+			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		local

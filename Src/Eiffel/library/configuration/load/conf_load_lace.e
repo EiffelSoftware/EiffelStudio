@@ -23,16 +23,20 @@ create
 
 feature {NONE} -- Initialization
 
-		make (a_factory: like factory) is
-				-- Create.
-			require
-				a_factory_not_void: a_factory /= Void
-			do
-				factory := a_factory
-				create current_overrides.make (1)
-			ensure
-				factory_set: factory = a_factory
-			end
+	make (a_factory: like factory; an_extension: like extension_name) is
+			-- Create.
+		require
+			a_factory_not_void: a_factory /= Void
+			an_extension_not_void: an_extension /= Void
+			an_extension_not_empty: not an_extension.is_empty
+		do
+			factory := a_factory
+			extension_name := an_extension
+			create current_overrides.make (1)
+		ensure
+			factory_set: factory = a_factory
+			extension_name_set: extension_name = an_extension
+		end
 
 feature -- Status
 
@@ -47,6 +51,9 @@ feature -- Status
 
 	warnings: ARRAYED_LIST [STRING]
 			-- The warnings.
+
+	extension_name: STRING
+			-- Name of the config file extension.
 
 feature -- Access
 
@@ -494,7 +501,7 @@ feature {NONE} -- Implementation of data retrieval
 						else
 								-- we try to guess the correct configuration location, may not always work
 								-- what we guess is that the path looks like this something/base and
-								-- we convert it into somethings/base/base.acex
+								-- we convert it into somethings/base/base.`extension_name'.
 							l_str := l_precomp.value.value
 							if l_str.count > 2 then
 								i := l_str.last_index_of ('/', l_str.count)
@@ -502,7 +509,7 @@ feature {NONE} -- Implementation of data retrieval
 									i := l_str.last_index_of ('\', l_str.count)
 								end
 								if i > 0 then
-									l_str := l_str + "\" + l_str.substring (i+1, l_str.count) + ".acex"
+									l_str := l_str + "\" + l_str.substring (i+1, l_str.count) + "." + extension_name
 								end
 							end
 
@@ -758,6 +765,8 @@ feature {NONE} -- Implementation
 
 invariant
 	factory_not_void: factory /= Void
+	extension_name_not_void: extension_name /= Void
+	extension_name_not_empty: not extension_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

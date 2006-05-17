@@ -141,7 +141,7 @@
 								<Directory Id="resources" Name="RESOUR~1" LongName="resources">
 									<Component Id="resources" Guid="B94CC7FC-908D-4EEF-8F46-98C803789C73">
 										<File Id="template_application.e" Name="TEMPLA~1.E" LongName="template_application.e" />
-										<File Id="template_config.acex" Name="TEMPLA~1.ACE" LongName="template_config.acex" />
+										<File Id="template_config.ecf" Name="TEMPLA~1.ECF" LongName="template_config.ecf" />
 									</Component>
 								</Directory>
 								<Directory Id="spec11" Name="spec">
@@ -182,7 +182,7 @@
 										<File Id="template_menubar_add.e" Name="TEMPLA~3.E" LongName="template_menubar_add.e" />
 										<File Id="template_aboutdialog_init.e116" Name="TEMPLA~5.E" LongName="template_aboutdialog_init.e" />
 										<File Id="open.png117" Name="open.png" />
-										<File Id="template_config.acex120" Name="TEMPLA~4.ACE" LongName="template_config.acex" />
+										<File Id="template_config.ecf120" Name="TEMPLA~4.ECF" LongName="template_config.ecf" />
 										<File Id="template_toolbar_add.e" Name="TE5CD2~1.E" LongName="template_toolbar_add.e" />
 										<File Id="template_statusbar_add.e" Name="TECB26~1.E" LongName="template_statusbar_add.e" />
 										<File Id="interface_names.e121" Name="INTERF~2.E" LongName="interface_names.e" />
@@ -207,7 +207,7 @@
 							<Directory Id="wel" Name="wel">
 								<Directory Id="resources19" Name="RESOUR~3" LongName="resources">
 									<Component Id="resources19" Guid="D0D33C7B-AFA8-47CE-BFFA-9AA87EC62E96">
-										<File Id="templace_config.acex121" Name="TEMPLA~1.ACE" LongName="template_config.acex" />
+										<File Id="templace_config.ecf121" Name="TEMPLA~1.ECF" LongName="template_config.ecf" />
 										<File Id="dialog_resource.h" Name="DIALOG~1.H" LongName="dialog_resource.h" />
 										<File Id="frame_template.rc" Name="FRAME_~1.RC" LongName="frame_template.rc" />
 										<File Id="frame_main_window.e" Name="FRAME_~2.E" LongName="frame_main_window.e" />
@@ -697,7 +697,7 @@
 							<Component Id="defaults" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
 								<File Id="full.cls" Name="full.cls" KeyPath="yes" />
 								<File Id="default.cls" Name="default.cls" />
-								<File Id="default.acex" Name="DEFAUL~1.ACE" LongName="default.acex" />
+								<File Id="default.ecf" Name="default.ecf" />
 								<File Id="empty.cls" Name="empty.cls" />
 							</Component>
 						</Directory>
@@ -827,44 +827,44 @@
 						<Directory Id="windows23" Name="$(env.ISE_PLATFORM)">
 							<Directory Id="vision224" Name="vision2">
 								<Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
-									<File Id="ace.ace140" Name="VISION~1.ACE" LongName="vision2.acex"/>
+									<File Id="ace.ace140" Name="VISION~1.ACE" LongName="vision2.ecf"/>
 								</Component>
 							</Directory>
 							<Directory Id="basemt" Name="base-mt">
 								<Component Id="basemt" Guid="DD937DAD-9136-4553-8E64-CCDFE8519EE0">
-									<File Id="ace_acex144" Name="BASE-M~1.ACE" LongName="base-mt.acex"/>
+									<File Id="ace_ecf144" Name="base-mt.ecf"/>
 								</Component>
 							</Directory>
 							<Directory Id="welmt" Name="wel-mt">
 								<Component Id="welmt" Guid="6DF2EC23-1E26-465B-8397-DE4A1FD118FB">
-									<File Id="ace.ace141" Name="WEL-MT~1.ACE" LongName="wel-mt.acex"/>
+									<File Id="ace.ace141" Name="wel-mt.ecf"/>
 								</Component>
 							</Directory>
 							<Directory Id="wel25" Name="wel">
 								<Component Id="wel25" Guid="B1F73FE5-ED9C-4B4A-A121-5B9E6A683841">
-									<File Id="ace.ace142" Name="WEL~1.ACE" LongName="wel.acex"/>
+									<File Id="ace.ace142" Name="wel.ecf"/>
 								</Component>
 							</Directory>
 							<Directory Id="base" Name="base">
 								<Component Id="base" Guid="3E24F992-00C3-4EAD-A6D9-7290FE36B408">
-									<File Id="ace_acex143" Name="BASE~1.ACE" LongName="base.acex"/>
+									<File Id="ace_ecf143" Name="base.ecf"/>
 								</Component>
 							</Directory>
 						</Directory>
 						<Directory Id="dotnet1" Name="dotnet">
 							<Directory Id="vision23" Name="vision2">
 								<Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
-									<File Id="ace.ace2" Name="ace.ace" KeyPath="yes" />
+									<File Id="ace.ace2" Name="vision2.ace"/>
 								</Component>
 							</Directory>
 							<Directory Id="wel2" Name="wel">
 								<Component Id="wel2" Guid="7B4957D5-F93E-4CB4-BF19-8F185BB0FF5E">
-									<File Id="ace.ace3" Name="ace.ace" KeyPath="yes" />
+									<File Id="ace.ace3" Name="wel.ace" />
 								</Component>
 							</Directory>
 							<Directory Id="base4" Name="base">
 								<Component Id="base4" Guid="23CFD01E-AE9F-40DE-96E5-2005039047B6">
-									<File Id="ace.acex4" Name="ACE~1.ACE" LongName="ace.acex"/>
+									<File Id="ace_ecf4" Name="base.ecf"/>
 								</Component>
 							</Directory>
 						</Directory>

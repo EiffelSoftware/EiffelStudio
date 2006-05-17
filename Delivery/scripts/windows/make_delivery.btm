@@ -237,13 +237,13 @@ iff not defined NO_COMPILE then
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	clean_project
-	finalize zad_miner.acex
+	finalize zad_miner.ecf
 	cleanup_eiffel zad_miner zad_miner.exe
 	iff not exist zad_miner.exe then
 		echo Couldnt finalize zad_miner.exe.
 		CANCEL
 	endiff
-	fullrf new_ace.acex
+	fullrf new_ace.ecf
 	cd ..
 	safe_md binaries
 	move ace\zad_miner.exe binaries

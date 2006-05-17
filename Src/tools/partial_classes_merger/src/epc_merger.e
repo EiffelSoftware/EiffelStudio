@@ -67,6 +67,7 @@ feature -- Status Report
 				create l_file.make (a_file)
 				l_file.open_read
 				roundtrip_eiffel_parser.parse (l_file)
+				l_file.close
 				Result := roundtrip_eiffel_parser.root_node
 				if Result = Void then
 					successful := False
@@ -288,18 +289,20 @@ feature {NONE} -- Implementation
 						l_index := equiv_client_index (l_new_creator, l_creators)
 						if l_index > 0 then
 							l_list := l_creators.i_th (l_index).feature_list
-							create l_mod.make (l_list, a_match_list)
-							l_mod.set_separator (", ")
-							l_new_list := l_new_creator.feature_list
-							from
-								l_new_list.start
-							until
-								l_new_list.after
-							loop
-								l_mod.append (l_new_list.item.text (a_new_match_list))
-								l_new_list.forth
+							if l_list /= Void then
+								create l_mod.make (l_list, a_match_list)
+								l_mod.set_separator (", ")
+								l_new_list := l_new_creator.feature_list
+								from
+									l_new_list.start
+								until
+									l_new_list.after
+								loop
+									l_mod.append (l_new_list.item.text (a_new_match_list))
+									l_new_list.forth
+								end
+								l_mod.apply
 							end
-							l_mod.apply
 						else
 							create l_mod.make (l_creators, a_match_list)
 							l_mod.set_separator ("%N")

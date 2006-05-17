@@ -270,7 +270,8 @@ feature -- Equality
 			l_o_target: CONF_TARGET
 		do
 			if targets.count = other.targets.count then
-				Result := True
+				Result := (library_target = Void and other.library_target = Void) or
+					(library_target /= Void and other.library_target /= Void and then library_target.name.is_equal (other.library_target.name) )
 				from
 					targets.start
 					l_o_targets := other.targets

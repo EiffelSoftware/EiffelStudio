@@ -224,7 +224,11 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
+		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true">
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
 		<cluster name="eiffel_structured_text" location="$EIFFEL_SRC\Eiffel\API\structured_text\" recursive="true">
 			<file_rule>
@@ -490,7 +494,11 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
+		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true">
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
 		<cluster name="eiffel_support" location="$EIFFEL_SRC\Eiffel\support\" recursive="true"/>

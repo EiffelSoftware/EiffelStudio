@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 					l_classes.after
 				loop
 					l_class := l_classes.item_for_iteration
-					if l_class.is_compiled then
+					if l_class.is_compiled or l_class.does_override then
 							-- check for changes and update name if necessary
 						l_class.check_changed
 						if l_class.is_error then

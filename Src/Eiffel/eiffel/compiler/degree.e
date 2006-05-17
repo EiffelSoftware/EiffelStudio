@@ -56,6 +56,8 @@ feature -- Element change
 		require
 			a_class_not_void: a_class /= Void
 		deferred
+		ensure
+			count_non_negative: count >= 0
 		end
 
 	insert_new_class (a_class: CLASS_C) is
@@ -65,6 +67,8 @@ feature -- Element change
 			a_class_not_void: a_class /= Void
 		do
 			insert_class (a_class)
+		ensure
+			count_non_negative: count >= 0
 		end
 
 feature -- Removal
@@ -74,6 +78,8 @@ feature -- Removal
 		require
 			a_class_not_void: a_class /= Void
 		deferred
+		ensure
+			count_non_negative: count >= 0
 		end
 
 	wipe_out is

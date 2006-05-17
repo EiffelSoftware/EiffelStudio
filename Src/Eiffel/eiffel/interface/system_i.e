@@ -660,11 +660,11 @@ end
 							-- At this stage classes have not yet been removed, so we simply
 							-- look into `removed_classes'.
 						if
-							l_class.lace_class.is_compiled and
+							l_class.original_class.is_compiled and
 							not (removed_classes /= Void and then removed_classes.has (l_class))
 						then
 							check
-								same_compiled_class: l_class.lace_class.compiled_class = l_class
+								same_compiled_class: l_class.original_class.compiled_class = l_class
 							end
 								-- If class is still compiled then we should report the error.
 							create l_vtct
@@ -674,7 +674,7 @@ end
 
 								-- But since it is an invalid class, then we need to force
 								-- a compilation again to check for the VTCT error again.
-							workbench.add_class_to_recompile (l_class.lace_class)
+							workbench.add_class_to_recompile (l_class.original_class)
 							l_has_error := True
 						end
 						l_table.forth
@@ -1590,18 +1590,16 @@ end
 					create d1.make_now
 				end
 
-				if not Lace.compile_all_classes then
-						-- Melt the changed features
-					melt
+					-- Melt the changed features
+				melt
 
-					debug ("Timing")
-						create d2.make_now
-						print ("Degree 2 duration: ")
-						print (d2.relative_duration (d1).fine_seconds_count)
-						print ("%N")
-						print_memory_statistics
-						create d1.make_now
-					end
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 2 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					print_memory_statistics
+					create d1.make_now
 				end
 
 					-- Finalize a successful compilation
@@ -1616,7 +1614,7 @@ end
 				end
 
 					-- Produce the update file
-				if not il_generation and then not freeze then
+				if not il_generation and then not freeze and then not lace.compile_all_classes then
 					Degree_output.put_melting_changes_message
 
 						-- Create a non-empty melted file
@@ -2069,7 +2067,7 @@ end
 
 				-- The execution table are now updated.
 
-			if not il_generation and then not freeze then
+			if not il_generation and then not freeze and then not lace.compile_all_classes then
 					-- Melt the feature tables
 					-- Open first the file for writing on disk melted feature
 					-- tables

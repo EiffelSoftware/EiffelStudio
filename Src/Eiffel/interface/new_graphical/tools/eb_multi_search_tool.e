@@ -746,8 +746,9 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 		do
 			if choose_dialog = Void or else choose_dialog.is_destroyed then
 				create choose_dialog.make
-				choose_dialog.set_class_add_action (agent add_class_item (?))
-				choose_dialog.set_cluster_add_action (agent add_cluster_item (?))
+				choose_dialog.set_class_add_action (agent add_class_item)
+				choose_dialog.set_cluster_add_action (agent add_cluster_item)
+				choose_dialog.set_folder_add_action (agent add_folder_item)
 				choose_dialog.show_relative_to_window (manager.window)
 				choose_dialog.default_push_button.select_actions.extend (agent force_new_search)
 			end
@@ -768,6 +769,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 		local
 			l_classi_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
+			l_folder: EB_FOLDER
+			l_cluster: CONF_CLUSTER
 		do
 			l_classi_stone ?= a_any
 			l_cluster_stone ?= a_any
@@ -775,7 +778,16 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				add_class_item (l_classi_stone.class_i)
 			end
 			if l_cluster_stone /= Void then
-				add_cluster_item (l_cluster_stone.group)
+				if not l_cluster_stone.path.is_empty and l_cluster_stone.folder_name /= Void then
+					l_cluster ?= l_cluster_stone.group
+					check
+						l_cluster_not_void: l_cluster /= Void
+					end
+					create l_folder.make (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
+					add_folder_item (l_folder)
+				else
+					add_cluster_item (l_cluster_stone.group)
+				end
 			end
 		end
 
@@ -786,14 +798,24 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 		local
 			l_classi_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
+			l_folder: EB_FOLDER
+			l_cluster: CONF_CLUSTER
 		do
 			l_classi_stone ?= a_any
 			l_cluster_stone ?= a_any
 			if l_classi_stone /= Void then
 				remove_class_item (l_classi_stone.class_i)
-			end
-			if l_cluster_stone /= Void then
-				remove_cluster_item (l_cluster_stone.group)
+			elseif l_cluster_stone /= Void then
+				if not l_cluster_stone.path.is_empty and l_cluster_stone.folder_name /= Void then
+					l_cluster ?= l_cluster_stone.group
+					check
+						l_cluster_not_void: l_cluster /= Void
+					end
+					create l_folder.make (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
+					remove_folder_item (l_folder)
+				else
+					remove_cluster_item (l_cluster_stone.group)
+				end
 			end
 		end
 
@@ -1381,6 +1403,145 @@ feature {NONE} -- Shortcut
 			Result := 	preferences.editor_data.shortcuts.item ("search_backward")
 		end
 
+feature -- Custom search scope
+
+	add_class_item (a_class: CLASS_I) is
+			-- Add a class item to the tree.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			if l_item = Void then
+				create l_item.make_with_text (a_class.name)
+				l_item.set_tooltip (group_name_presentation (".", "", a_class.group) + "." + a_class.name)
+				l_item.set_pixmap (pixmap_from_class_i (a_class))
+				scope_list.extend (l_item)
+				l_item.set_data (a_class)
+				l_item.set_pebble_function (agent scope_pebble_function (a_class))
+				l_item.set_accept_cursor (Cursors.cur_class)
+				l_item.set_deny_cursor (Cursors.cur_x_class)
+				force_new_search
+			end
+		end
+
+	remove_class_item (a_class: CLASS_I) is
+			-- Remove a class item from the list.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			scope_list.prune_all (l_item)
+			force_new_search
+		end
+
+	add_cluster_item (a_group: CONF_GROUP) is
+			-- Add a group item to the list.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			if not a_group.is_assembly then
+				l_item := scope_list.retrieve_item_by_data (a_group, false)
+				if l_item = Void then
+					create l_item.make_with_text (a_group.name)
+					l_item.set_tooltip (group_name_presentation (".", "", a_group))
+					l_item.set_pixmap (pixmap_from_group (a_group))
+					scope_list.extend (l_item)
+					l_item.set_data (a_group)
+					l_item.set_pebble_function (agent scope_pebble_function (a_group))
+					l_item.set_accept_cursor (Cursors.cur_cluster)
+					l_item.set_deny_cursor (Cursors.cur_x_cluster)
+					force_new_search
+				end
+			end
+		end
+
+	remove_cluster_item (a_group: CONF_GROUP) is
+			-- Remove a class item from the list.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_group, false)
+			scope_list.prune_all (l_item)
+			force_new_search
+		end
+
+	add_folder_item (a_folder: EB_FOLDER) is
+			-- Add a folder item to the list.
+		require
+			a_folder_not_void: a_folder /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_folder, True)
+			if l_item = Void then
+				create l_item.make_with_text (a_folder.name)
+				l_item.set_tooltip (group_name_presentation (".", "", a_folder.cluster) + " (" + a_folder.path + ")")
+				l_item.set_pixmap (pixmap_from_group_path (a_folder.cluster, a_folder.path))
+				scope_list.extend (l_item)
+				l_item.set_data (a_folder)
+				l_item.set_pebble_function (agent scope_pebble_function (a_folder))
+				l_item.set_accept_cursor (Cursors.cur_cluster)
+				l_item.set_deny_cursor (Cursors.cur_x_cluster)
+				force_new_search
+			end
+		end
+
+	remove_folder_item (a_folder: EB_FOLDER) is
+			-- Remove a folder item from the list.
+		require
+			a_folder_not_void: a_folder /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_folder, True)
+			scope_list.prune_all (l_item)
+			force_new_search
+		end
+
+	scope_pebble_function (a_data: ANY) : STONE is
+			-- Scope pebble function
+		local
+			l_class_i: CLASS_I
+			l_cluster_i: CLUSTER_I
+			l_folder: EB_FOLDER
+		do
+			l_class_i ?= a_data
+			l_cluster_i ?= a_data
+			l_folder ?= a_data
+			if l_class_i /= Void then
+				Result := stone_from_class_i (l_class_i)
+			elseif l_cluster_i /= Void then
+				create {CLUSTER_STONE}Result.make (l_cluster_i)
+			elseif l_folder /= Void then
+				create {CLUSTER_STONE}Result.make_subfolder (l_folder.cluster, l_folder.path, l_folder.name)
+			end
+		end
+
+	stone_from_class_i (a_class_i: CLASS_I): STONE is
+			-- Make a stone from a_class_i.
+			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
+		require
+			a_class_i_not_void: a_class_i /= Void
+		local
+			l_class_c: CLASS_C
+		do
+			l_class_c := a_class_i.compiled_representation
+			if l_class_c /= Void then
+				create {CLASSC_STONE}Result.make (l_class_c )
+			else
+				create {CLASSI_STONE}Result.make (a_class_i)
+			end
+			Result.set_pos_container (manager.managed_main_formatters.first)
+		end
+
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	search_history_size: INTEGER is 10
@@ -1549,111 +1710,11 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions that are invoked sequently when text is fully loaded
 
-	stone_from_class_i (a_class_i: CLASS_I): STONE is
-			-- Make a stone from a_class_i.
-			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
-		require
-			a_class_i_not_void: a_class_i /= Void
-		local
-			l_class_c: CLASS_C
-		do
-			l_class_c := a_class_i.compiled_class
-			if l_class_c /= Void then
-				create {CLASSC_STONE}Result.make (l_class_c )
-			else
-				create {CLASSI_STONE}Result.make (a_class_i)
-			end
-			Result.set_pos_container (manager.managed_main_formatters.first)
-		end
-
 	is_text_changed_in_editor: BOOLEAN
 			-- Text changed in the editor?
 
 	is_text_new_loaded: BOOLEAN
 			-- Text loaded in the editor?
-
-	add_class_item (a_class: CLASS_I) is
-			-- Add a class item to the tree.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
-			if l_item = Void then
-				create l_item.make_with_text (a_class.name)
-				l_item.set_tooltip (group_name_presentation (".", "", a_class.group))
-				l_item.set_pixmap (pixmap_from_class_i (a_class))
-				scope_list.extend (l_item)
-				l_item.set_data (a_class)
-				l_item.set_pebble_function (agent scope_pebble_function (a_class))
-				l_item.set_accept_cursor (Cursors.cur_class)
-				l_item.set_deny_cursor (Cursors.cur_x_class)
-				force_new_search
-			end
-		end
-
-	remove_class_item (a_class: CLASS_I) is
-			-- Remove a class item from the list.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
-			scope_list.prune_all (l_item)
-			force_new_search
-		end
-
-	remove_cluster_item (a_group: CONF_GROUP) is
-			-- Remove a class item from the list.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_group, false)
-			scope_list.prune_all (l_item)
-			force_new_search
-		end
-
-	add_cluster_item (a_group: CONF_GROUP) is
-			-- Add a group item to the list.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			if not a_group.is_assembly then
-				l_item := scope_list.retrieve_item_by_data (a_group, false)
-				if l_item = Void then
-					create l_item.make_with_text (group_name_presentation (".", "", a_group))
-					l_item.set_pixmap (pixmap_from_group (a_group))
-					scope_list.extend (l_item)
-					l_item.set_data (a_group)
-					l_item.set_pebble_function (agent scope_pebble_function (a_group))
-					l_item.set_accept_cursor (Cursors.cur_cluster)
-					l_item.set_deny_cursor (Cursors.cur_x_class)
-					force_new_search
-				end
-			end
-		end
-
-	scope_pebble_function (a_data: ANY) : STONE is
-			-- Scope pebble function
-		local
-			l_class_i: CLASS_I
-			l_cluster_i: CLUSTER_I
-		do
-			l_class_i ?= a_data
-			l_cluster_i ?= a_data
-			if l_class_i /= Void then
-				Result := stone_from_class_i (l_class_i)
-			end
-			if l_cluster_i /= Void then
-				create {CLUSTER_STONE}Result.make (l_cluster_i)
-			end
-		end
 
 	clusters_in_the_project: EB_CLUSTERS is
 			-- Clusters in the project

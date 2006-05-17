@@ -3016,7 +3016,9 @@ feature {NONE} -- Implementation
 							-- Cannot propagate for a protected class
 						supplier.class_id > protected_classes_level and then
 							-- A recursion may occur when removing a cluster
-						class_of_id (supplier.class_id) /= Void
+						class_of_id (supplier.class_id) /= Void and then
+							-- removable
+						supplier.is_removable
 					then
 							-- Recursively remove class.
 						internal_remove_class (supplier, a_depth + 1)

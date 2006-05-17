@@ -258,9 +258,9 @@ feature {NONE} -- Implementation
 			mem_dc.select_bitmap (empty_mask_bitmap)
 
 			create raster_operations
-			mem_dc.pat_blt (0, 0, width, height,
-				raster_operations.whiteness)
 			if has_mask then
+				mem_dc.pat_blt (0, 0, width, height,
+				raster_operations.whiteness)
 				tmp_mask_bitmap := get_mask_bitmap
 				create l_mask_bitmap_dc.make_by_dc (mem_dc)
 				l_mask_bitmap_dc.select_bitmap (tmp_mask_bitmap)
@@ -276,7 +276,8 @@ feature {NONE} -- Implementation
 				l_mask_bitmap_dc.unselect_bitmap
 				l_mask_bitmap_dc.delete
 			else
-
+					-- We have no mask so make sure that all of the pixmap is visible.
+				mem_dc.pat_blt (0, 0, width, height, raster_operations.blackness)
 			end
 			mem_dc.unselect_bitmap
 			mem_dc.delete

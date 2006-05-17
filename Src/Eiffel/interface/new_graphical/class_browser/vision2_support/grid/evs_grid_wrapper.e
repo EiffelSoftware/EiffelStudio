@@ -92,7 +92,7 @@ feature -- Setting
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		require
 			a_item_attached: a_item /= Void
-		deferred
+		do
 		end
 
 feature -- Sort

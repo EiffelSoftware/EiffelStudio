@@ -702,6 +702,9 @@ feature -- Label texts
 	l_collapse_all: STRING is "Collapse all rows"
 	l_searching_selected_file: STRING is "Searching selected file..."
 	l_manage_external_commands: STRING is "Add, remove or edit external commands"
+	l_add_scope: STRING is "Add scope"
+	l_remove_scope: STRING is "Remove selected scope(s)"
+	l_remove_all_scopes: STRING is "Remove all scopes"
 
 feature -- Stone names
 
@@ -1117,6 +1120,7 @@ feature -- Metric constants (tooltips)
 	metric_this_cluster: STRING is		"Cluster"
 	metric_this_class: STRING is		"Class"
 	metric_this_feature: STRING is		"Feature"
+	metric_this_delayed: STRING is "Delayed"
 
 	metric_ignore: STRING is						"Ignore"
 

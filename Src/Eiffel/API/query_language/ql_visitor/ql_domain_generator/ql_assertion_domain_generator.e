@@ -19,6 +19,10 @@ inherit
 
 	QL_SHARED_ASSERTION_TYPES
 
+create
+	default_create,
+	make
+
 feature -- Access
 
 	criterion: QL_ASSERTION_CRITERION

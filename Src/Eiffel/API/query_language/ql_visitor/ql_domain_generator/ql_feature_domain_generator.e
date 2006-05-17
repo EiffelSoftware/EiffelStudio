@@ -17,6 +17,10 @@ inherit
 			item_type
 		end
 
+create
+	default_create,
+	make
+
 feature -- Access
 
 	criterion: QL_FEATURE_CRITERION

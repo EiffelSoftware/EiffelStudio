@@ -1792,7 +1792,9 @@ end
 				until
 					removed_classes.after
 				loop
-					internal_remove_class (removed_classes.key_for_iteration, 0)
+					if removed_classes.key_for_iteration.is_removable then
+						internal_remove_class (removed_classes.key_for_iteration, 0)
+					end
 					removed_classes.forth
 				end
 				removed_classes := Void

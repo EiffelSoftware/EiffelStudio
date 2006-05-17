@@ -42,7 +42,7 @@ shared_suffix='.so'
 
 optimize='-g'
 large=''
-mkdep='/rio/paulv/C.hppa/mkdep'
+mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mv='/bin/mv'
 ranlib='ranlibhppa'
 rm='/bin/rm'

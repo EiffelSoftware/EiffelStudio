@@ -47,7 +47,7 @@ command_makefile='make -f'
 
 optimize='-O3'
 large=''
-mkdep='/rio/paulv/C.mips/mkdep'
+mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mv='/bin/mv'
 ranlib='ranlibmips'
 rm='/bin/rm'

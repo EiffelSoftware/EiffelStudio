@@ -24,7 +24,12 @@ inherit
 		export
 			{NONE} all
 		end
-
+	
+	CODE_PROJECT_CONTEXT
+		export
+			{NONE} all
+		end
+	
 create
 	make
 
@@ -78,7 +83,7 @@ feature -- Basic Operations
 			-- Set `successful' and `precompile_path'.
 		local
 			l_dir_file, l_ace_file: RAW_FILE
-			l_rel_dir, l_abs_dir, l_compiler_path, l_file, l_dll: STRING
+			l_rel_dir, l_abs_dir, l_compiler_path, l_file, l_dll, l_fcode_path: STRING
 			l_index, l_index_2, l_counter: INTEGER
 			l_exists, l_retried: BOOLEAN
 			l_start_info: SYSTEM_DLL_PROCESS_START_INFO
@@ -179,8 +184,11 @@ feature -- Basic Operations
 						end
 					end
 					-- Check if precompile was successful
-					create l_fcode_dir.make (l_abs_dir + "\EIFGEN\F_Code")
-					if l_fcode_dir.exists then
+					l_fcode_path := f_code_path (l_abs_dir, ace_file_name)
+					if l_fcode_path /= Void then
+						create l_fcode_dir.make (l_fcode_path)
+					end
+					if l_fcode_dir /= Void and then l_fcode_dir.exists then
 						l_files := l_fcode_dir.linear_representation
 						from
 							l_files.start
@@ -190,9 +198,9 @@ feature -- Basic Operations
 						loop
 							l_file := l_files.item
 							if l_file.count > 3 and then (l_file.substring_index (".dll", l_file.count - 3) = l_file.count - 3) then
-								create l_dll.make (l_abs_dir.count + 15 + l_file.count)
-								l_dll.append (l_abs_dir)
-								l_dll.append ("\EIFGEN\F_Code\")
+								create l_dll.make (l_fcode_path.count + l_file.count + 1)
+								l_dll.append (l_fcode_path)
+								l_dll.append_character (Directory_separator)
 								l_dll.append (l_file)
 								l_dlls.extend (l_dll)
 							end

@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			a_dev_window_attached: a_dev_window /= Void
 		do
 			dev_window := a_dev_window
+			check_search_bar_visible_procedure := agent check_search_bar_visible
+			dev_window.window.focus_in_actions.extend (check_search_bar_visible_procedure)
 			make_editor
 			initialize_customizable_commands
 			search_tool.show_actions.extend (agent hide_search_bar)
@@ -335,6 +337,16 @@ feature {NONE} -- Quick search bar.
 			Result := shared_quick_search_mode.item
 		end
 
+	check_search_bar_visible is
+			-- Show search bar if it has focus on one of its widget.
+		do
+			if search_bar.has_focus_on_widgets then
+				if quick_search_mode then
+					show_search_bar
+				end
+			end
+		end
+
 feature -- Search commands
 
 	find_last is
@@ -405,8 +417,9 @@ feature {NONE} -- Implementation
 	recycle is
 			-- Recycle
 		do
-			Precursor {EB_EDITOR}
+			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
 			search_bar.recycle
+			Precursor {EB_EDITOR}
 		end
 
 	shared_quick_search_mode: CELL [BOOLEAN] is
@@ -531,6 +544,9 @@ feature {NONE} -- Implementation
 
 	customizable_commands: HASH_TABLE [PROCEDURE [like Current, TUPLE], STRING]
 			-- Hash of customizable commands (agent hashed by shortcut name)
+
+	check_search_bar_visible_procedure: PROCEDURE [ANY, TUPLE]
+			-- Procedure instance added into focus_in_actions of current window
 
 invariant
 	invariant_clause: True -- Your invariant here

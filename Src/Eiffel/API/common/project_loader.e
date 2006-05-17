@@ -59,9 +59,10 @@ feature -- Loading
 			is_recompile_from_scrach := from_scratch
 			if a_file_name = Void or else a_file_name.is_empty then
 					-- We are in the case where no file was specified, so we will try either to read
-					-- Ace or Ace.acex from the current working directory.
+					-- Ace or Ace.ecf from the current working directory.
 				create l_default_file_name.make_from_string (file_system.current_working_directory)
-				l_default_file_name.set_file_name ("Ace.acex")
+				l_default_file_name.set_file_name ("Ace")
+				l_default_file_name.add_extension (config_extension)
 				if is_file_readable (l_default_file_name.string) then
 					config_file_name := l_default_file_name.string
 				else
@@ -70,7 +71,7 @@ feature -- Loading
 					l_default_file_name.set_file_name ("Ace")
 					if is_file_readable (l_default_file_name) then
 							-- Special case where `Ace' can mean either the old or new format.
-						create l_load_ace.make (l_factory)
+						create l_load_ace.make (l_factory, config_extension)
 						l_load_ace.retrieve_configuration (l_default_file_name)
 						if l_load_ace.is_error then
 								-- Most likely it is not an Ace file, so it must be in the new format.
@@ -83,10 +84,11 @@ feature -- Loading
 								agent store_converted ((l_load_ace.last_system), ?))
 						end
 					else
-							-- Report error stating that we could not find `Ace.acex'
+							-- Report error stating that we could not find `Ace.ecf'
 							-- in the current working directory.
 						create l_default_file_name.make_from_string (file_system.current_working_directory)
-						l_default_file_name.set_file_name ("Ace.acex")
+						l_default_file_name.set_file_name ("Ace")
+						l_default_file_name.add_extension (config_extension)
 						report_non_readable_configuration_file (l_default_file_name.string)
 					end
 				end
@@ -101,7 +103,7 @@ feature -- Loading
 					elseif l_ext.is_equal (ace_file_extension) then
 						convert_ace (a_file_name)
 					else
-							-- Case where it is a `acex' extension or another one.
+							-- Case where it is a `ecf' extension or another one.
 						config_file_name := a_file_name.twin
 					end
 				else
@@ -277,7 +279,7 @@ feature {NONE} -- Settings
 
 	convert_epr (a_file_name: STRING) is
 			-- Convert `a_file_name' which is supposely in the `epr' format to the
-			-- new `acex' format.
+			-- new configuration format.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
@@ -297,7 +299,7 @@ feature {NONE} -- Settings
 
 	convert_ace (a_file_name: STRING) is
 			-- Convert `a_file_name' which is supposely in the `ace' format to the
-			-- new `acex' format.
+			-- new configuration format.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
@@ -309,7 +311,7 @@ feature {NONE} -- Settings
 		do
 				-- load config from ace
 			create l_factory
-			create l_load.make (l_factory)
+			create l_load.make (l_factory, config_extension)
 			l_load.retrieve_configuration (a_file_name)
 			if l_load.is_error then
 				report_cannot_read_ace_file (a_file_name, l_load.last_error)
@@ -551,7 +553,7 @@ feature {NONE} -- Error reporting
 		end
 
 	report_cannot_save_converted_file (a_file_name: STRING) is
-			-- Report an error when result of a conversion from ace to acex cannot be stored
+			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -622,7 +624,7 @@ feature {NONE} -- Error reporting
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
-			-- Given `a_dir_name' and a proposed `a_file_name' name for the new acex format, ask the
+			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		require

@@ -339,7 +339,7 @@ feature -- Output
 					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N")
 			end
 			io.put_string ("%
-				%%T-config config.acex | -target target |%N%
+				%%T-config config.ecf | -target target |%N%
 				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name|%N%
 				%%T-stop |%N%
 				%%T-project_path Project_directory_path | -file File]%N")

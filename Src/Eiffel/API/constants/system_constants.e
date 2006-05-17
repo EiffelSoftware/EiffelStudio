@@ -37,7 +37,7 @@ feature {NONE}
 
 	Comp: STRING is "COMP"
 
-	Default_config_file: STRING is "default.acex"
+	Default_config_file: STRING is "default.ecf"
 
 	Default_class_filename: STRING is "default.cls"
 
@@ -139,7 +139,7 @@ feature {NONE}
 
 	project_extension: STRING is "epr"
 
-	config_extension: STRING is "acex"
+	config_extension: STRING is "ecf"
 
 	ace_file_extension: STRING is "ace"
 

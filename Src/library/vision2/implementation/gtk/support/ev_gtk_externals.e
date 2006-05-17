@@ -12218,6 +12218,13 @@ feature -- External C structs
 			"button"
 		end
 
+	frozen gdk_event_button_struct_window (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventButton): EIF_REFERENCE"
+		alias
+			"window"
+		end
+
 	frozen gdk_event_button_struct_send_event (a_c_struct: POINTER): INTEGER is
 			-- (from C_GDK_EVENT_BUTTON_STRUCT)
 		external

@@ -1030,9 +1030,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			an_include_not_void: an_include /= Void
 		do
-			if internal_external_include = Void then
-				create internal_external_include.make (1)
-			end
 			internal_external_include.extend (an_include)
 		ensure
 			added: internal_external_include.has (an_include)
@@ -1043,25 +1040,22 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			an_object_not_void: an_object /= Void
 		do
-			if internal_external_object = Void then
-				create internal_external_object.make (1)
-			end
 			internal_external_object.extend (an_object)
 		ensure
 			added: internal_external_object.has (an_object)
 		end
 
-	add_external_resource (a_ressource: CONF_EXTERNAL_RESOURCE) is
-			-- Add `a_ressource'.
+	add_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
+			-- Add `a_resource'.
 		require
-			a_ressource_not_void: a_ressource /= Void
+			a_resource_not_void: a_resource /= Void
 		do
 			if internal_external_resource = Void then
 				create internal_external_resource.make (1)
 			end
-			internal_external_resource.extend (a_ressource)
+			internal_external_resource.extend (a_resource)
 		ensure
-			added: internal_external_resource.has (a_ressource)
+			added: internal_external_resource.has (a_resource)
 		end
 
 	add_external_make (a_make: CONF_EXTERNAL_MAKE) is
@@ -1069,12 +1063,61 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_make_not_void: a_make /= Void
 		do
-			if internal_external_make = Void then
-				create internal_external_make.make (1)
-			end
 			internal_external_make.extend (a_make)
 		ensure
 			added: internal_external_make.has (a_make)
+		end
+
+	remove_external_include (an_include: CONF_EXTERNAL_INCLUDE) is
+			-- Remove `an_include'.
+		require
+			an_include_not_void: an_include /= Void
+			has_an_include: internal_external_include.has (an_include)
+		do
+			internal_external_include.start
+			internal_external_include.search (an_include)
+			internal_external_include.remove
+		ensure
+			removed: not internal_external_include.has (an_include)
+		end
+
+	remove_external_object (an_object: CONF_EXTERNAL_OBJECT) is
+			-- Remove `an_object'.
+		require
+			an_object_not_void: an_object /= Void
+			has_an_object: internal_external_object.has (an_object)
+		do
+			internal_external_object.start
+			internal_external_object.search (an_object)
+			internal_external_object.remove
+		ensure
+			removed: not internal_external_object.has (an_object)
+		end
+
+	remove_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
+			-- Remove `a_ressource'.
+		require
+			a_ressource_not_void: a_resource /= Void
+			has_a_resource: internal_external_resource.has (a_resource)
+		do
+			internal_external_resource.start
+			internal_external_resource.search (a_resource)
+			internal_external_resource.remove
+		ensure
+			removed: not internal_external_resource.has (a_resource)
+		end
+
+	remove_external_make (a_make: CONF_EXTERNAL_MAKE) is
+			-- Remove `a_make'.
+		require
+			a_make_not_void: a_make /= Void
+			has_a_make: internal_external_make.has (a_make)
+		do
+			internal_external_make.start
+			internal_external_make.search (a_make)
+			internal_external_make.remove
+		ensure
+			removed: not internal_external_make.has (a_make)
 		end
 
 	set_pre_compile (a_pre_compile: like internal_pre_compile_action) is

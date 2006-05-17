@@ -536,7 +536,7 @@ feature {NONE} -- Implementation attribute processing
 				when t_external_make then
 					l_make := factory.new_external_make (l_location)
 					current_target.add_external_make (l_make)
-					current_external := l_res
+					current_external := l_make
 				else
 					set_parse_error_message ("Invalid external tag.")
 				end

@@ -125,7 +125,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 	check_changed is
 			-- Check if any of the partial classes that build this class have changed.
 		local
-			l_str: ANY
 			l_date: INTEGER
 			l_key: STRING
 		do
@@ -136,8 +135,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 				partial_classes.after
 			loop
 				l_key := partial_classes.key_for_iteration
-				l_str := l_key.to_c
-				eif_date ($l_str, $l_date)
+				l_date := file_modified_date (l_key)
 				is_modified := partial_classes.item_for_iteration /= l_date
 				if is_modified then
 					partial_classes.replace (l_date, l_key)

@@ -46,8 +46,17 @@ feature {CONF_ACCESS} -- Status update
 			condition_added: internal_conditions /= Void and then internal_conditions.has (a_condition)
 		end
 
+	set_conditions (a_conditions: like internal_conditions) is
+			-- Set `internal_conditions' to `a_conditions'.
+		require
+			a_conditions_ok: a_conditions = Void or else not a_conditions.is_empty
+		do
+			internal_conditions := a_conditions
+		ensure
+			internal_conditions_set: internal_conditions = a_conditions
+		end
 
-feature {CONF_VISITOR} -- Implementation, attributes stored in configuration file
+feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_conditions: ARRAYED_LIST [CONF_CONDITION];
 			-- The list of conditions.

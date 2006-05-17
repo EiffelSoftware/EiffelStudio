@@ -48,13 +48,8 @@ feature -- Status
 			-- Was the last `store' operation successful?
 
 	date_has_changed: BOOLEAN is
-		local
-			str: ANY
-			new_date: INTEGER
 		do
-			str := file_name.to_c
-			eif_date ($str, $new_date)
-			Result := new_date /= file_date
+			Result := file_modified_date (file_name) /= file_date
 		end
 
 feature -- Access, stored in configuration file
@@ -99,11 +94,8 @@ feature -- Update, in compiled only
 
 	set_file_date is
 			-- Set `file_date' to last modified date of `file_name'.
-		local
-			str: ANY
 		do
-			str := file_name.to_c
-			eif_date ($str, $file_date)
+			file_date := file_modified_date (file_name)
 		end
 
 	set_application_target (a_target: CONF_TARGET) is

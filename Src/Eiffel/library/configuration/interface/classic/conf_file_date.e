@@ -8,6 +8,18 @@ indexing
 class
 	CONF_FILE_DATE
 
+feature -- Access
+
+	file_modified_date (a_path: STRING): INTEGER is
+			-- Get last modified timestamp of `a_path'.
+		local
+			l_cstr: C_STRING
+		do
+			create l_cstr.make (a_path)
+			eif_date (l_cstr.item, $Result)
+		end
+
+
 feature {NONE} -- Externals
 
 	eif_date (a_path: POINTER; r: TYPED_POINTER [INTEGER]) is

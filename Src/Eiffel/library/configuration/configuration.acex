@@ -21,7 +21,24 @@
 		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.acex" readonly="true"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.acex" readonly="true"/>
 
-		<cluster name="configuration" location="." recursive="true"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		
+		<cluster name="configuration" location="." recursive="true">
+			<condition>
+				<dotnet value="false"/>
+			</condition>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="configuration_dotnet" location="." recursive="true">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<file_rule>
+				<exclude>/classic$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\structures\">
 			<file_rule>
 				<exclude>.*</exclude>

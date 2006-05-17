@@ -10,9 +10,20 @@ class
 
 inherit
 	CONF_EXTERNAL
+		redefine
+			is_object
+		end
 
 create
 	make
+
+feature -- Status
+
+	is_object: BOOLEAN is
+			-- Is `Current' an object external?
+		once
+			Result := True
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

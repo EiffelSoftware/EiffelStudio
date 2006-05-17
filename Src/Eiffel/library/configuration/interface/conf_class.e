@@ -177,11 +177,9 @@ feature -- Status report
 	has_modification_date_changed: BOOLEAN is
 			-- Did modification date changed since last call to `check_changed'?
 		local
-			l_str: ANY
 			l_date: INTEGER
 		do
-			l_str := full_file_name.to_c
-			eif_date ($l_str, $l_date)
+			l_date := file_modified_date (full_file_name)
 			Result := (l_date = -1) or (l_date /= date)
 		end
 
@@ -375,11 +373,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			-- Check if the file was changed.
 			-- And update name if necessary
 		local
-			l_str: ANY
 			l_date: INTEGER
 		do
-			l_str := full_file_name.to_c
-			eif_date ($l_str, $l_date)
+			l_date := file_modified_date (full_file_name)
 			if l_date = -1 then
 				is_removed := True
 				date := 0

@@ -10,13 +10,13 @@ class
 
 inherit
 	EV_MENU
-	
+
 	SYSTEM_CONSTANTS
 		undefine
 			default_create, is_equal, copy
-		end		
-	
-	EB_SHARED_GRAPHICAL_COMMANDS 
+		end
+
+	EB_SHARED_GRAPHICAL_COMMANDS
 		undefine
 			default_create, is_equal, copy
 		end
@@ -26,24 +26,24 @@ inherit
 		end
 create
 	make_with_window
-	
+
 feature {NONE} -- Initialization
-	
+
 	make_with_window (w: EV_WINDOW) is
 		local
 			menu_item: EV_MENU_ITEM
 		do
 			window := w
 			default_create
-			set_text (Major_version_number.out + "." + Minor_version_number.out + "." +Build_version_number)
-			
+			set_text (Major_version_number.out + "." + Minor_version_number.out + "." +Build_version_number.out)
+
 				--| Memory tool
 			create menu_item.make_with_text ("Memory Analyzer")
 			menu_item.select_actions.extend (agent launch_memory_tool)
 			extend (menu_item)
-		
+
 		end
-		
+
 feature {NONE} -- Actions
 
 	launch_memory_tool is
@@ -69,7 +69,7 @@ feature {NONE} -- Actions
 			end
 			ma_window.show
 		end
-		
+
 feature {NONE} -- Implementation
 
 	handle_close_window is
@@ -77,10 +77,10 @@ feature {NONE} -- Implementation
 		do
 			ma_window.destroy
 		end
-		
+
 	window: EV_WINDOW
 			-- Main development window.
-	
+
 	ma_window: MA_WINDOW;
 			-- Memory analyzer window.
 

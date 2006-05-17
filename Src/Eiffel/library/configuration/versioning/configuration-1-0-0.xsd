@@ -209,6 +209,7 @@
 			<xs:element name="build" type="build" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="multithreaded" type="multithreaded" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="dotnet" type="dotnet" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="version" type="version_condition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="custom" type="custom" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -247,10 +248,22 @@
 		<xs:attribute name="value" type="xs:boolean"/>
 	</xs:complexType>
 	
+	<xs:complexType name="version_condition">
+		<xs:attribute type="version_number" name="min" use="optional"/>
+		<xs:attribute type="version_number" name="max" use="optional"/>
+	</xs:complexType>
+	
+	<xs:simpleType name="version_number">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="\d*(\.\d*){0,2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<xs:complexType name="custom">
 		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="value" type="xs:string"/>
-		<xs:attribute name="excluded_value" type="xs:string"/>
+		<xs:attribute name="value" type="xs:string" use="optional"/>
+		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	<xs:complexType name="external">

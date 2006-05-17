@@ -185,6 +185,8 @@ feature -- Callbacks
 					process_multithreaded_attributes
 				when t_dotnet then
 					process_dotnet_attributes
+				when t_version_condition then
+					process_version_condition_attributes
 				when t_custom then
 					process_custom_attributes
 				when t_mapping then
@@ -1155,6 +1157,34 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_version_condition_attributes is
+			-- Process attributes of a condition version tag.
+		require
+			current_condition: current_condition /= Void
+		local
+			l_min, l_max: STRING
+			l_vers_min, l_vers_max: CONF_VERSION
+		do
+			l_min := current_attributes.item (at_min)
+			l_max := current_attributes.item (at_max)
+			if l_min /= Void then
+				l_vers_min := parse_version (l_min)
+			end
+			if l_max /= Void then
+				l_vers_max := parse_version (l_max)
+			end
+			if not is_error then
+				if l_min = Void and l_max = Void then
+					set_parse_error_message ("No minimum or maximum version in version condition specified.")
+				elseif l_min /= Void and l_max /= Void and then l_min > l_max then
+					set_parse_error_message ("Minimum version can not be greater than maximum version in version condition.")
+				else
+					current_condition.set_version (l_vers_min, l_vers_max)
+				end
+			end
+		end
+
+
 	process_custom_attributes is
 			-- Process attributes of a custom tag.
 		require
@@ -1282,6 +1312,48 @@ feature {NONE} -- Implementation
 
 	current_attributes: HASH_TABLE [STRING, INTEGER]
 			-- The values of the current attributes.
+
+feature {NONE} -- Implementation helper
+
+	parse_version (a_version: STRING): CONF_VERSION is
+			-- Parse `a_version' and generate a {CONF_VERSION} out of it or set an error
+			-- Has to be of format XXX.XXX.XXX.XXX where only the first part is obligatory.
+			-- regexp to match it is \d*(\.\d*){0,3}
+		require
+			a_version_not_void: a_version /= Void
+		local
+			l_parts: LIST [STRING]
+			l_version: ARRAY [NATURAL_16]
+			l_error: BOOLEAN
+		do
+			create l_version.make (1, 4)
+			l_parts := a_version.split ('.')
+			if l_parts.count = 0 or l_parts.count > 4 then
+				l_error := True
+			else
+				from
+					l_parts.start
+				until
+					l_error or l_parts.after
+				loop
+					if l_parts.item.is_natural_16 then
+						l_version[l_parts.index] := l_parts.item.to_natural_16
+					else
+						l_error := True
+					end
+					l_parts.forth
+				end
+			end
+
+			if not l_error then
+				create Result.make_version (l_version[1], l_version[2], l_version[3], l_version[4])
+			else
+				set_parse_error_message ("Invalid version number in version condition: "+a_version)
+			end
+		ensure
+			Result_set: not is_error implies Result /= Void
+		end
+
 
 feature {NONE} -- Implementation state transitions
 
@@ -1434,12 +1506,14 @@ feature {NONE} -- Implementation state transitions
 				-- => build
 				-- => multithreaded
 				-- => dotnet
+				-- => version
 				-- => custom
-			create l_trans.make (5)
+			create l_trans.make (6)
 			l_trans.force (t_platform, "platform")
 			l_trans.force (t_build, "build")
 			l_trans.force (t_multithreaded, "multithreaded")
 			l_trans.force (t_dotnet, "dotnet")
+			l_trans.force (t_version_condition, "version")
 			l_trans.force (t_custom, "custom")
 			Result.force (l_trans, t_condition)
 		ensure
@@ -1642,6 +1716,12 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			Result.force (l_attr, t_dotnet)
 
+				-- version
+			create l_attr.make (2)
+			l_attr.force (at_min, "min")
+			l_attr.force (at_max, "max")
+			Result.force (l_attr, t_version_condition)
+
 				-- custom
 				-- * name
 				-- * value
@@ -1722,6 +1802,7 @@ feature {NONE} -- Implementation constants
 	t_build,
 	t_multithreaded,
 	t_dotnet,
+	t_version_condition,
 	t_custom,
 	t_renaming,
 	t_class_option,
@@ -1774,6 +1855,8 @@ feature {NONE} -- Implementation constants
 	at_invariant,
 	at_loop,
 	at_platform,
+	at_min,
+	at_max,
 	at_old_name,
 	at_new_name,
 	at_group,

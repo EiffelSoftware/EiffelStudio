@@ -550,6 +550,10 @@ feature -- Element change
 				l_target := a_parent.target
 			end
 			last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				-- create empty class list, so that the folder can be displayed
+			last_added_cluster.set_classes (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
+			last_added_cluster.set_classes_by_filename (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
+
 			if a_parent /= Void and then a_parent.is_cluster then
 				l_clu ?= a_parent
 				last_added_cluster.set_parent (l_clu)

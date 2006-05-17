@@ -219,7 +219,7 @@ feature {NONE} -- Tools
 					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
 						create current_precomp.make_from_string (eiffel_directory.name)
 						current_precomp.extend (current_lib)
-						it:= fill_ev_list_items (current_precomp, "Ace.acex")
+						it:= fill_ev_list_items (current_precomp, "Ace.ecf")
 						if it /= Void then
 							precompilable_libraries.extend (it)
 						end
@@ -449,7 +449,7 @@ feature {NONE} -- Tools
 			error_dialog: EV_WARNING_DIALOG
 		do
 			create file_open_dialog
-			file_open_dialog.filters.extend (["*.acex", "Eiffel Configuration Files (acex)"])
+			file_open_dialog.filters.extend (["*.ecf", "Eiffel Configuration Files (ecf)"])
 			file_open_dialog.show_modal_to_window (first_window)
 
 			file_path := file_open_dialog.file_path
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 		end
 
 	error_no_ace: BOOLEAN
-			-- Is there an ace file "ace.acex" in the library directory
+			-- Is there an ace file in the library directory
 
 	precompilable_libraries: EV_MULTI_COLUMN_LIST
 			-- List of precombilable libraries

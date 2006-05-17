@@ -157,13 +157,13 @@ feature {NONE} -- Constants
 	all_classes_template: STRING is "${FL_ALL_CLASSES}"
 			-- String to be replaced if NONE is root class.
 
-	Config_extension: STRING is ".acex"
+	Config_extension: STRING is ".ecf"
 			-- Ace files extension
 
 	Eiffel_extension: STRING is ".e"
 			-- Eiffel classes extension
 
-	Ace_template_filename: STRING is "template_config.acex"
+	Ace_template_filename: STRING is "template_config.ecf"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Application_template_filename: STRING is "template_application.e"

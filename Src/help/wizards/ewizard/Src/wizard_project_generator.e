@@ -83,7 +83,7 @@ feature -- Basic Operations
 			l_tuple.put ("${FL_UUID}", 1)
 			l_tuple.put (l_uuid.generate_uuid.out, 2)
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_config.acex", project_location, "Ace.acex", l)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, "Ace.ecf", l)
 
 			from
 				i := 1

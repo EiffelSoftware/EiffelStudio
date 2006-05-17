@@ -21,6 +21,8 @@ inherit
 	EVS_SEARCHABLE_COMPONENT
 		rename
 			make as old_make
+		undefine
+			ensure_visible
 		end
 
 	SHARED_EDITOR_FONT
@@ -201,7 +203,9 @@ feature{NONE} -- Actions
 			l_item ?= last_picked_item
 			if l_item /= Void then
 				l_item.set_last_picked_token (0)
-				l_item.redraw
+				if l_item.is_parented then
+					l_item.redraw
+				end
 			end
 			last_picked_item := Void
 		ensure
@@ -215,6 +219,7 @@ feature{NONE} -- Actions
 			l_stone: STONE
 			l_index: INTEGER
 		do
+			last_picked_item := Void
 			l_item ?= a_item
 			if l_item /= Void then
 				l_index := l_item.token_index_at_current_position

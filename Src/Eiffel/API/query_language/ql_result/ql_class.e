@@ -150,23 +150,8 @@ feature -- Access
 
 	class_i: CLASS_I is
 			-- Un-compiled class information of `conf_class'
-		local
-			l_conf_class: CONF_CLASS
-			l_eiffel_class_i: EIFFEL_CLASS_I
-			l_external_class_i: EXTERNAL_CLASS_I
-			l_partial_class_i: PARTIAL_EIFFEL_CLASS_I
 		do
-			l_conf_class := conf_class
-			if l_conf_class.is_class_assembly then
-				l_eiffel_class_i ?= l_conf_class
-				Result ?= l_eiffel_class_i
-			elseif l_conf_class.is_partial then
-				l_partial_class_i ?= l_conf_class
-				Result ?= l_partial_class_i
-			else
-				l_eiffel_class_i ?= l_conf_class
-				Result ?= l_eiffel_class_i
-			end
+			Result ?= conf_class
 		ensure
 			result_attached: Result /= Void
 		end

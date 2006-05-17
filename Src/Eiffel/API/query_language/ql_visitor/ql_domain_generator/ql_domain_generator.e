@@ -28,6 +28,20 @@ inherit
 
 	QL_SHARED_ERROR_HANDLER
 
+feature{NONE} -- Initialization
+
+	make (a_criterion: like criterion; a_enable_fill_domain: BOOLEAN) is
+			-- Initialize `criterion' with `a_criterion' and `is_fill_domain_enabled' with `a_enable_fill_domain'.
+		do
+			set_criterion (a_criterion)
+			if a_enable_fill_domain then
+				enable_fill_domain
+			end
+		ensure
+			criterion_set: criterion = a_criterion
+			is_fill_domain_enabled_set: is_fill_domain_enabled = a_enable_fill_domain
+		end
+
 feature -- Setting
 
 	reset_domain is

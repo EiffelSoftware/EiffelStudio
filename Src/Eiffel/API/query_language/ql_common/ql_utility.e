@@ -28,12 +28,22 @@ feature -- Access
 			-- Given a CLASS_C object, return a QL_CLASS object representing it.
 		require
 			a_class_c_attached: a_class_c /= Void
+		do
+			Result := query_class_item_from_class_i (a_class_c.lace_class)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	query_class_item_from_class_i (a_class_i: CLASS_I): QL_CLASS is
+			-- Given a CLASS_I object, return a QL_CLASS object representing it.
+		require
+			a_class_i_attached: a_class_i /= Void
 		local
 			l_class: CONF_CLASS
 			l_group: CONF_GROUP
 			l_path: LINKED_LIST [QL_ITEM]
 		do
-			l_class := a_class_c.lace_class.config_class
+			l_class := a_class_i.config_class
 			l_group := l_class.group
 			create l_path.make
 			find_path_from_conf_group (l_path, l_group)

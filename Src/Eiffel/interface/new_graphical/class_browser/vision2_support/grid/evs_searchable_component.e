@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EVS_SEARCHABLE_COMPONENT
 
 inherit
@@ -14,6 +14,9 @@ inherit
 			export
 				{EVS_GRID_SEARCH_TOOL}grid
 			end
+
+create
+	make
 
 feature -- Setting
 

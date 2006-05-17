@@ -2193,9 +2193,23 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			Result := preferences.development_window_data.class_completion --, True
 		end
 
-	default_class_name: STRING is "(no_class)"
-	default_feature_name: STRING is "(no_feature)"
-	default_cluster_name: STRING is "(no_cluster)"
+	default_class_name: STRING is
+			-- Default name for class
+		do
+			Result := "(no_class)"
+		end
+
+	default_feature_name: STRING is
+			-- Default name for feature
+		do
+			Result := "(no_feature)"
+		end
+
+	default_cluster_name: STRING is
+			-- Default name for cluster		
+		do
+			Result := "(no_cluster)"
+		end
 
 	l_From: STRING is " from "
 	l_Space: STRING is " "

@@ -102,6 +102,77 @@ feature -- Actions
 			end
 		end
 
+	on_grid_focus_in is
+			-- Action to be performed when `grid' gets focus
+		local
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+		do
+			l_selected_rows := grid.selected_rows
+			if not l_selected_rows.is_empty then
+				l_row := l_selected_rows.first
+				on_row_selected (l_row)
+			end
+		end
+
+	on_grid_focus_out is
+			-- Action to be performed when `grid' loses focus
+		local
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+		do
+			l_selected_rows := grid.selected_rows
+			if not l_selected_rows.is_empty then
+				l_row := l_selected_rows.first
+				on_row_deselected (l_row)
+			end
+		end
+
+	on_row_selected (a_row: EV_GRID_ROW) is
+			-- Action to be performed when `a_row' is selected
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+		do
+			a_row.set_background_color (odd_line_color)
+			l_row_count := a_row.subrow_count
+			if l_row_count > 0 then
+				from
+					l_row_index := 1
+				until
+					l_row_index > l_row_count
+				loop
+					on_row_selected (a_row.subrow (l_row_index))
+					l_row_index := l_row_index + 1
+				end
+			end
+		end
+
+	on_row_deselected (a_row: EV_GRID_ROW) is
+			-- Action to be performed when `a_row' is deselected
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_bg_color: EV_COLOR
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+		do
+			a_row.set_background_color (even_line_color)
+			l_row_count := a_row.subrow_count
+			if l_row_count > 0 then
+				from
+					l_row_index := 1
+				until
+					l_row_index > l_row_count
+				loop
+					on_row_deselected (a_row.subrow (l_row_index))
+					l_row_index := l_row_index + 1
+				end
+			end
+		end
+
 feature -- Notification
 
 	update_view is
@@ -364,7 +435,7 @@ feature{NONE} -- Implementation
 			l_rows: like rows
 			l_bg_color: EV_COLOR
 		do
-			l_bg_color := preferences.class_browser_data.even_row_background_color
+			l_bg_color := even_line_color
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
 			end
@@ -380,43 +451,6 @@ feature{NONE} -- Implementation
 				l_row.bind_row (Void, grid, l_bg_color, 0)
 				l_rows.forth
 			end
-		end
-
-feature{NONE} -- Initialization
-
-	build_grid is
-			-- Build `grid'.
-		do
-			create grid
-			grid.set_column_count_to (1)
-			grid.enable_selection_on_single_button_click
-			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
-			grid.enable_tree
-			grid.set_row_height (line_height)
-			grid.pick_ended_actions.force_extend (agent on_pick_ended)
-			grid.set_item_pebble_function (agent on_pick)
-			if drop_actions /= Void then
-				grid.drop_actions.fill (drop_actions)
-			end
-		end
-
-	build_sortable_and_searchable is
-			-- Build facilities to support sort and search
-		local
-			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
-			l_quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
-		do
-			old_make (grid)
-				-- Prepare sort facilities
-			last_sorted_column := 0
-			create l_class_sort_info.make (grid.column (1), agent class_sorter, ascending_order)
-			l_class_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info, 1)
-
-				-- Prepare search facilities
-			create l_quick_search_bar.make (development_window)
-			l_quick_search_bar.attach_tool (Current)
-			enable_search
 		end
 
 	expand_row (a_row: EV_GRID_ROW) is
@@ -443,7 +477,6 @@ feature{NONE} -- Initialization
 			end
 		end
 
-
 	collapse_row (a_row: EV_GRID_ROW) is
 			-- Collapse subrows of `a_row'.
 			-- But don't collapse `a_row', and make sure direct subrows of `a_row' is visible.
@@ -469,6 +502,47 @@ feature{NONE} -- Initialization
 			if a_row.is_expandable then
 				a_row.expand
 			end
+		end
+
+feature{NONE} -- Initialization
+
+	build_grid is
+			-- Build `grid'.
+		do
+			create grid
+			grid.set_column_count_to (1)
+			grid.enable_selection_on_single_button_click
+			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
+			grid.enable_tree
+			grid.set_row_height (line_height)
+			grid.pick_ended_actions.force_extend (agent on_pick_ended)
+			grid.set_item_pebble_function (agent on_pick)
+			if drop_actions /= Void then
+				grid.drop_actions.fill (drop_actions)
+			end
+			grid.focus_in_actions.extend (agent on_grid_focus_in)
+			grid.focus_out_actions.extend (agent on_grid_focus_out)
+			grid.row_select_actions.extend (agent on_row_selected)
+			grid.row_deselect_actions.extend (agent on_row_deselected)
+		end
+
+	build_sortable_and_searchable is
+			-- Build facilities to support sort and search
+		local
+			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
+			l_quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
+		do
+			old_make (grid)
+				-- Prepare sort facilities
+			last_sorted_column := 0
+			create l_class_sort_info.make (grid.column (1), agent class_sorter, ascending_order)
+			l_class_sort_info.enable_auto_indicator
+			set_sort_info (l_class_sort_info, 1)
+
+				-- Prepare search facilities
+			create l_quick_search_bar.make (development_window)
+			l_quick_search_bar.attach_tool (Current)
+			enable_search
 		end
 
 indexing

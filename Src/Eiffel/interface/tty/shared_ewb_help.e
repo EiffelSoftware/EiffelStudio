@@ -33,6 +33,8 @@ feature {NONE}
 
 	callers_help: STRING is "show the callers of a feature"
 
+	callees_help: STRING is "show the callees of a feature"
+
 	change_operator_help: STRING is "change the boolean operator"
 
 	class_help: STRING is "class formats and information"

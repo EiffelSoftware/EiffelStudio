@@ -465,8 +465,8 @@ feature{NONE} -- Update
 
 		do
 			build_row_relation
-			l_odd_line_color := preferences.class_browser_data.odd_row_background_color
-			l_even_line_color := preferences.class_browser_data.even_row_background_color
+			l_odd_line_color := odd_line_color
+			l_even_line_color := even_line_color
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
 			end

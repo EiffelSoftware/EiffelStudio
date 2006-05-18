@@ -368,6 +368,9 @@ feature -- Accelerator, focus label and menu name
 	m_Showancestors: STRING is			"&Ancestors"
 	m_Showattributes: STRING is			"A&ttributes"
 	m_Showcallers: STRING is			"&Callers"
+	m_Showcallees: STRING is 		"Call&ees"
+	m_Show_creation: STRING is 		"&Creators"
+	m_Show_assignees: STRING is 		"&Assignees"
 	m_Showclick: STRING is				"C&lickable"
 	m_Showclients: STRING is			"Cli&ents"
 	m_showcreators: STRING is			"&Creators"
@@ -705,6 +708,9 @@ feature -- Label texts
 	l_add_scope: STRING is "Add scope"
 	l_remove_scope: STRING is "Remove selected scope(s)"
 	l_remove_all_scopes: STRING is "Remove all scopes"
+	l_callees: STRING is "callees"
+	l_assignees: STRING is "assignees"
+	l_created: STRING is "creators"
 
 feature -- Stone names
 

@@ -259,6 +259,22 @@ feature{NONE} -- Implementation
 	data: QL_DOMAIN
 			-- Data to be displayed in current view
 
+	even_line_color: EV_COLOR is
+			-- Background color for even lines
+		do
+			Result := preferences.class_browser_data.even_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	odd_line_color: EV_COLOR is
+			-- Background color for odd lines
+		do
+			Result := preferences.class_browser_data.odd_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
 	update_view is
 			-- Update current view according to change in `model'.
 		deferred

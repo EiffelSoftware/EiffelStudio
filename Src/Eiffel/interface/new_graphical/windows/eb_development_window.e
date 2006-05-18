@@ -483,6 +483,14 @@ feature {NONE} -- Initialization
 			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current,
 				{DEPEND_UNIT}.is_in_creation_flag))
 			managed_feature_formatters.extend (Void)
+
+			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current, 0))
+			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current,
+				{DEPEND_UNIT}.is_in_assignment_flag))
+			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current,
+				{DEPEND_UNIT}.is_in_creation_flag))
+			managed_feature_formatters.extend (Void)
+
 			managed_feature_formatters.extend (create {EB_IMPLEMENTERS_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_ANCESTORS_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_DESCENDANTS_FORMATTER}.make (Current))

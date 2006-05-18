@@ -459,8 +459,8 @@ feature -- Access
 			l_class_c: CLASS_C
 		do
 			create Result.make
-			dep := Depend_server.item (associated_class.class_id)
 			l_system := eiffel_system
+			dep := Depend_server.item (written_class.class_id)
 			from
 				fdep := dep.item (body_index)
 				fdep.start
@@ -469,8 +469,8 @@ feature -- Access
 			loop
 				l_depend_unit := fdep.item
 				if l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-					l_class_c := l_system.class_of_id (l_depend_unit.written_in)
-					Result.extend ([l_system.class_of_id (l_depend_unit.class_id), l_class_c.feature_with_body_index (l_depend_unit.body_index).name])
+					l_class_c := l_system.class_of_id (l_depend_unit.class_id)
+					Result.extend ([l_class_c, l_class_c.feature_with_rout_id (l_depend_unit.rout_id).name])
 				end
 				fdep.forth
 			end

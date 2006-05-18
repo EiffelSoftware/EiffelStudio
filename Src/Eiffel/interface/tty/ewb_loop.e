@@ -158,10 +158,11 @@ feature -- Initialization
 	feature_menu: EWB_MENU is
 			-- Feature menu options
 		once
-			create Result.make (1, 7)
+			create Result.make (1, 8)
 			Result.set_parent (Main_menu)
 			Result.add_entry (create {EWB_PAST})
 			Result.add_entry (create {EWB_SENDERS})
+			Result.add_entry (create {EWB_CALLEES})
 			Result.add_entry (create {EWB_FUTURE})
 			Result.add_entry (create {EWB_R_FLAT})
 			Result.add_entry (create {EWB_HOMONYMS})

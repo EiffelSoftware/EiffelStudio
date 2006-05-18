@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Abbreviation constants for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,6 +24,8 @@ feature
 	Batch_abb: CHARACTER is 'b'
 
 	Callers_abb: CHARACTER is 'c'
+
+	Callees_abb: CHARACTER is 'e'
 
 	Change_operator_abb: CHARACTER is 'c'
 
@@ -98,7 +100,7 @@ feature
 	Percentage_abb: CHARACTER is 'p'
 
 	Precompile_abb: CHARACTER is 'p'
-	
+
 	Finalize_precompile_abb: CHARACTER is 'd'
 
 	Profile_abb: CHARACTER is 'p'

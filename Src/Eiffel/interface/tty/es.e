@@ -240,6 +240,7 @@ feature -- Properties
 			Result.put (aversions_help, aversions_cmd_name)
 			Result.put (config_help, config_cmd_name)
 			Result.put (callers_help, callers_cmd_name)
+			Result.put (callees_help, callees_cmd_name)
 			Result.put (clients_help, clients_cmd_name)
 			Result.put (descendants_help, descendants_cmd_name)
 			Result.put (dversions_help, dversions_cmd_name)
@@ -336,7 +337,8 @@ feature -- Output
 					%%T-aversions [-filter filtername] class feature |%N%
 					%%T-dversions [-filter filtername] class feature |%N%
 					%%T-implementers [-filter filtername] class feature |%N%
-					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N")
+					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%
+					%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
 			end
 			io.put_string ("%
 				%%T-config config.ecf | -target target |%N%
@@ -440,6 +442,7 @@ feature -- Update
 			show_assigners: BOOLEAN
 			show_creators: BOOLEAN
 			ewb_senders: EWB_SENDERS
+			ewb_callees: EWB_CALLEES
 			l_arg: STRING
 		do
 			filter_name := ""
@@ -593,6 +596,55 @@ feature -- Update
 									ewb_senders.set_assigners_only
 								elseif show_creators then
 									ewb_senders.set_creators_only
+								end
+								command := ewb_senders
+							else
+								option_error := True
+							end
+						end
+					end
+				else
+					option_error := True
+				end
+			elseif has_documentation_generation and then option.is_equal ("-callees") then
+				if current_option < argument_count then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1
+								filter_name := argument (current_option)
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end
+						if argument (current_option).is_equal ("-show_all") then
+							show_all := True
+							current_option := current_option + 1
+						end
+						if argument (current_option).is_equal ("-assignees") then
+							show_assigners := True
+							current_option := current_option + 1
+						elseif argument (current_option).is_equal ("-creators") then
+							show_creators := True
+							current_option := current_option + 1
+						end
+						if not option_error then
+							if current_option < argument_count then
+								cn := argument (current_option)
+								current_option := current_option + 1
+								fn := argument (current_option)
+								create ewb_callees.make (cn, fn, filter_name)
+								if show_all then
+									ewb_callees.set_all_callees
+								end
+								if show_assigners then
+									ewb_callees.set_assignees_only
+								elseif show_creators then
+									ewb_callees.set_creations_only
 								end
 								command := ewb_senders
 							else

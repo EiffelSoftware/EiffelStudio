@@ -386,6 +386,7 @@ feature {NONE} -- Implementation
 					l_target.add_setting ("console_application", "false")
 				end
 				l_target.add_setting ("msil_generation", "true")
+				l_target.add_setting ("msil_generation_type", "dll")
 				l_target.add_setting ("msil_clr_version", Clr_version)
 
 				-- Setup Precompile

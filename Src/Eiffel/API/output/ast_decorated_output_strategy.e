@@ -741,6 +741,7 @@ feature {NONE} -- Implementation
 						if processing_creation_target then
 							if last_type = Void then
 								l_type := l_feat.type.actual_type
+								last_type := current_class.actual_type
 							else
 									-- A static type in creation as.
 								l_type := last_type
@@ -876,6 +877,8 @@ feature {NONE} -- Implementation
 		end
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+		local
+			l_type: TYPE_A
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
@@ -883,6 +886,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_symbol_text (ti_l_curly)
 			end
 			l_as.type.process (Current)
+			l_type := last_type
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_r_curly)
 			end
@@ -892,6 +896,7 @@ feature {NONE} -- Implementation
 				end
 				l_as.call.process (Current)
 			end
+			last_type := l_type
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS) is
@@ -1956,6 +1961,7 @@ feature {NONE} -- Implementation
 				end
 				l_as.call.process (Current)
 			end
+
 		end
 
 	process_debug_as (l_as: DEBUG_AS) is

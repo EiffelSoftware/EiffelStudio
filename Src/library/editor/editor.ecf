@@ -7,7 +7,7 @@
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
 		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true"/>

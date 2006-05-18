@@ -939,6 +939,8 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			classes_set: not is_error implies an_assembly.classes_set
+			guid_set: not is_error implies an_assembly.guid /= Void and then not an_assembly.guid.is_empty
+			consumed_path_set: not is_error implies an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
 		end
@@ -960,42 +962,44 @@ feature {NONE} -- Implementation
 			l_guid, l_dep_guid: STRING
 			l_old_current_assembly: like current_assembly
 		do
-			l_path := an_assembly.consumed_path
-			l_guid := an_assembly.guid
-			create l_reader
-			create l_reference_file.make_from_string (l_path)
-			l_reference_file.set_file_name (referenced_assemblies_file_name)
-			l_reader.deserialize (l_reference_file, 0)
-			l_referenced_assemblies ?= l_reader.deserialized_object
-			if l_referenced_assemblies /= Void then
-				from
-					i := l_referenced_assemblies.assemblies.lower
-					cnt := l_referenced_assemblies.assemblies.upper
-				until
-					i > cnt
-				loop
-					l_cons_ass := l_referenced_assemblies.assemblies.item (i)
-					if l_cons_ass /= Void then
-						l_dep_guid := l_cons_ass.unique_id
-							-- if it's not the assembly itself
-						if not l_dep_guid.is_equal (l_guid) then
-								-- try to retrieve the assembly
-							l_assembly := assemblies.item (l_dep_guid)
-							if l_assembly /= Void then
-								an_assembly.add_dependency (l_assembly)
-							else
-									-- create new assembly and process it
-								l_assembly := factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
-								l_old_current_assembly := current_assembly
-								current_assembly := l_assembly
-								process_assembly_implementation (l_assembly)
-								process_assembly_dependencies_implementation (l_assembly)
-								an_assembly.add_dependency (l_assembly)
-								current_assembly := l_old_current_assembly
+			if not is_error then
+				l_path := an_assembly.consumed_path
+				l_guid := an_assembly.guid
+				create l_reader
+				create l_reference_file.make_from_string (l_path)
+				l_reference_file.set_file_name (referenced_assemblies_file_name)
+				l_reader.deserialize (l_reference_file, 0)
+				l_referenced_assemblies ?= l_reader.deserialized_object
+				if l_referenced_assemblies /= Void then
+					from
+						i := l_referenced_assemblies.assemblies.lower
+						cnt := l_referenced_assemblies.assemblies.upper
+					until
+						i > cnt
+					loop
+						l_cons_ass := l_referenced_assemblies.assemblies.item (i)
+						if l_cons_ass /= Void then
+							l_dep_guid := l_cons_ass.unique_id
+								-- if it's not the assembly itself
+							if not l_dep_guid.is_equal (l_guid) then
+									-- try to retrieve the assembly
+								l_assembly := assemblies.item (l_dep_guid)
+								if l_assembly /= Void then
+									an_assembly.add_dependency (l_assembly)
+								else
+										-- create new assembly and process it
+									l_assembly := factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
+									l_old_current_assembly := current_assembly
+									current_assembly := l_assembly
+									process_assembly_implementation (l_assembly)
+									process_assembly_dependencies_implementation (l_assembly)
+									an_assembly.add_dependency (l_assembly)
+									current_assembly := l_old_current_assembly
+								end
 							end
 						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		end

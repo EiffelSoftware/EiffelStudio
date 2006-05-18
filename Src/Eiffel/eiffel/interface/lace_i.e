@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make (s_java_generation)
+						create vd83.make (s_java_generation, system.il_generation.out, l_s)
 						Error_handler.insert_warning (vd83)
 					else
 						system.set_java_generation (l_b)
@@ -911,7 +911,7 @@ feature {NONE} -- Implementation
 			end
 				-- value can't change from a precompile or in a compiled system
 			if l_s /= Void and then not equal (l_s, system.metadata_cache_path) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-				create vd83.make (s_metadata_cache_path)
+				create vd83.make (s_metadata_cache_path, system.metadata_cache_path, l_s)
 				Error_handler.insert_warning (vd83)
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
@@ -949,7 +949,7 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make (s_msil_generation)
+						create vd83.make (s_msil_generation, system.il_generation.out, l_s)
 						Error_handler.insert_warning (vd83)
 					else
 						system.set_il_generation (l_b)
@@ -1011,7 +1011,7 @@ feature {NONE} -- Implementation
 						l_b := l_s.to_boolean
 							-- value can't change from a precompile or in a compiled system
 						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-							create vd83.make (s_multithreaded)
+							create vd83.make (s_multithreaded, system.has_multithreaded.out, l_s)
 							Error_handler.insert_warning (vd83)
 						else
 							system.set_has_multithreaded (l_b)

@@ -208,6 +208,9 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
+
+			{SYSTEM_THREAD}.current_thread.sleep (100)
+
 			create used_names.make (generated_count)
 			create type_consumers.make (generated_count)
 			from
@@ -234,6 +237,9 @@ feature {NONE} -- Implementation
 				names.forth
 			end
 			used_names := Void
+
+			{SYSTEM_THREAD}.current_thread.sleep (100)
+
 			from
 				names.start
 			until

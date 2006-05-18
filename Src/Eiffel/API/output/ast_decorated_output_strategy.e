@@ -1070,8 +1070,6 @@ feature {NONE} -- Implementation
 				l_as.class_type.process (Current)
 				if not expr_type_visiting then
 					text_formatter_decorator.process_symbol_text (ti_r_curly)
-					text_formatter_decorator.put_space
-					text_formatter_decorator.process_symbol_text (ti_question)
 				end
 			else
 				if l_as.expression /= Void then
@@ -1879,6 +1877,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 				text_formatter_decorator.new_expression
 			end
+			reset_last_class_and_type
 			l_as.source.process (Current)
 		end
 

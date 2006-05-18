@@ -65,7 +65,7 @@ feature -- Visit nodes
 				a_target.set_external_make (new_target.internal_external_make)
 				a_target.set_pre_compile (new_target.internal_pre_compile_action)
 				a_target.set_post_compile (new_target.internal_post_compile_action)
-				a_target.set_file_rule (new_target.internal_file_rule)
+				a_target.set_file_rules (new_target.internal_file_rule)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then

@@ -568,39 +568,51 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_file_rule (a_file_rule: CONF_FILE_RULE) is
+	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE]) is
 			-- Append `a_file_rule'
 		local
 			l_pattern: LINKED_SET [STRING]
+			l_rule: CONF_FILE_RULE
 		do
-			if not a_file_rule.is_empty then
-				append_text_indent ("<file_rule>%N")
-				indent := indent + 1
-				append_description_tag (a_file_rule.description)
-				l_pattern := a_file_rule.exclude
-				if l_pattern /= Void then
-					from
-						l_pattern.start
-					until
-						l_pattern.after
-					loop
-						append_tag ("exclude", l_pattern.item, Void, Void)
-						l_pattern.forth
+			from
+				a_file_rules.start
+			until
+				a_file_rules.after
+			loop
+				l_rule := a_file_rules.item
+
+				if not l_rule.is_empty then
+					append_text_indent ("<file_rule>%N")
+					indent := indent + 1
+					append_description_tag (l_rule.description)
+					l_pattern := l_rule.exclude
+					if l_pattern /= Void then
+						from
+							l_pattern.start
+						until
+							l_pattern.after
+						loop
+							append_tag ("exclude", l_pattern.item, Void, Void)
+							l_pattern.forth
+						end
 					end
-				end
-				l_pattern := a_file_rule.include
-				if l_pattern /= Void then
-					from
-						l_pattern.start
-					until
-						l_pattern.after
-					loop
-						append_tag ("include", l_pattern.item, Void, Void)
-						l_pattern.forth
+					l_pattern := l_rule.include
+					if l_pattern /= Void then
+						from
+							l_pattern.start
+						until
+							l_pattern.after
+						loop
+							append_tag ("include", l_pattern.item, Void, Void)
+							l_pattern.forth
+						end
 					end
+					append_conditionals (l_rule.internal_conditions, False)
+					indent := indent - 1
+					append_text_indent ("</file_rule>%N")
 				end
-				indent := indent - 1
-				append_text_indent ("</file_rule>%N")
+
+				a_file_rules.forth
 			end
 		end
 

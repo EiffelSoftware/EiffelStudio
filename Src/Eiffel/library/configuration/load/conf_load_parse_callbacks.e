@@ -489,17 +489,9 @@ feature {NONE} -- Implementation attribute processing
 		do
 			current_file_rule := factory.new_file_rule
 			if current_cluster /= Void then
-				if current_cluster.internal_file_rule.is_empty then
-					current_cluster.set_file_rule (current_file_rule)
-				else
-					set_parse_error_message ("Multiple file_rule tags on cluster "+current_cluster.name)
-				end
+				current_cluster.add_file_rule (current_file_rule)
 			elseif current_target /= Void then
-				if current_target.internal_file_rule.is_empty then
-					current_target.set_file_rule (current_file_rule)
-				else
-					set_parse_error_message ("Multiple file_rule tags on target "+current_target.name)
-				end
+				current_target.add_file_rule (current_file_rule)
 			else
 				set_parse_error_message ("Invalid file_rule tag.")
 			end
@@ -1044,12 +1036,14 @@ feature {NONE} -- Implementation attribute processing
 	process_condition_attributes is
 			-- Process attributes of a condition tag.
 		require
-			external_or_action_or_group: current_external /= Void or current_action /= Void or current_group /= Void
+			external_or_action_or_group_or_file_rule: current_external /= Void or current_action /= Void or current_group /= Void or current_file_rule /= Void
 		do
 			create current_condition.make
 
 			if not is_error then
-				if current_external /= Void then
+				if current_file_rule /= Void then
+					current_file_rule.add_condition (current_condition)
+				elseif current_external /= Void then
 					current_external.add_condition (current_condition)
 				elseif current_action /= Void then
 					current_action.add_condition (current_condition)
@@ -1423,10 +1417,12 @@ feature {NONE} -- Implementation state transitions
 				-- => description
 				-- => exclude
 				-- => include
-			create l_trans.make (3)
+				-- => condition
+			create l_trans.make (4)
 			l_trans.force (t_description, "description")
 			l_trans.force (t_exclude, "exclude")
 			l_trans.force (t_include, "include")
+			l_trans.force (t_condition, "condition")
 			Result.force (l_trans, t_file_rule)
 
 				-- option/class_option

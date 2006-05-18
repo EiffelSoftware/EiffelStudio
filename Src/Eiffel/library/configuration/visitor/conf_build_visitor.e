@@ -389,7 +389,7 @@ feature -- Visit nodes
 		do
 			if not is_error then
 				current_cluster := a_cluster
-				current_file_rule := a_cluster.file_rule
+				current_file_rule := a_cluster.active_file_rule (state)
 				create current_classes.make (Classes_per_cluster)
 				create current_classes_by_filename.make (Classes_per_cluster)
 				a_cluster.set_classes (current_classes)

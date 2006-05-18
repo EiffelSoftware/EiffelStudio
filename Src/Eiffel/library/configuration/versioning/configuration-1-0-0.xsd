@@ -37,7 +37,7 @@
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
 			<xs:element name="root" type="root" minOccurs="0"/>
 			<xs:element name="version" type="version" minOccurs="0"/>
-			<xs:element name="file_rule" type="file_rule" minOccurs="0"/>
+			<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="option" type="option" minOccurs="0"/>
 			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
@@ -95,6 +95,7 @@
 				maxOccurs="unbounded"/>
 			<xs:element name="include" type="regexp" minOccurs="0"
 				maxOccurs="unbounded"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -333,7 +334,7 @@
 		<xs:complexContent>
 			<xs:extension base="group">
 				<xs:sequence>
-					<xs:element name="file_rule" type="file_rule" minOccurs="0"/>
+					<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="uses" type="uses" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="cluster" type="cluster" minOccurs="0" maxOccurs="unbounded"/>

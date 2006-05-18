@@ -841,12 +841,9 @@ feature {NONE} -- Implementation
 					a_group.invalidate
 				else
 					l_cl ?= a_group
-					l_fr := l_cl.internal_file_rule
-					if l_fr = Void then
-						create l_fr.make
-					end
+					create l_fr.make
 					l_fr.add_exclude (build_pattern (a_path))
-					l_cl.set_file_rule (l_fr)
+					l_cl.add_file_rule (l_fr)
 				end
 					-- store it to disk
 				l_sys.store

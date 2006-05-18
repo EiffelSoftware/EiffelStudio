@@ -64,7 +64,7 @@ feature -- Setting
 			internal_actual_criterion_reset: internal_actual_criterion = Void
 		end
 
-	set_interval (a_interval: INTEGER) is
+	set_interval (a_interval: NATURAL_64) is
 			-- Set `interval' with `a_interval'.
 		require
 			a_interval_positive: a_interval > 0
@@ -110,7 +110,7 @@ feature -- Status report
 	is_interval_reached: BOOLEAN is
 			-- Does `interval_counter' reach `interval'?
 		do
-			Result := interval_counter \\ interval = 0
+			Result := internal_counter \\ interval = 0
 		end
 
 feature -- Access
@@ -143,7 +143,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	interval: INTEGER is
+	interval: NATURAL_64 is
 			-- Interval to decide if `interval_tick_actions' should be called.
 			-- `interval_tick_actions' will be called after every `interval' number of items have been processed.
 			-- Default value is `initial_interval'.
@@ -163,7 +163,6 @@ feature -- Visit
 			current_source_domain := a_item
 			actual_criterion.set_source_domain (a_item)
 			l_criterion := actual_criterion
-			interval_counter := 0
 			if l_criterion.is_atomic and l_criterion.has_intrinsic_domain then
 				l_domain := criterion.intrinsic_domain
 				l_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
@@ -228,7 +227,7 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 		do
-			interval_counter := interval_counter + 1
+			increase_internal_counter
 			check_interval_tick_actions
 			if has_observer then
 				set_changed
@@ -441,7 +440,7 @@ feature{NONE} -- Implementation
 			a_item_valid: a_item.is_valid_domain_item
 		do
 			if not a_interval_actions_applied then
-				interval_counter := interval_counter + 1
+				increase_internal_counter
 				check_interval_tick_actions
 			end
 			actions.call ([a_item])
@@ -453,10 +452,7 @@ feature{NONE} -- Implementation
 	item_type: QL_ITEM
 			-- Anchor type for items of generated domain
 
-	interval_counter: INTEGER
-			-- Internal counter to indicate how many items have been processed
-
-	interval_cell: CELL [INTEGER] is
+	interval_cell: CELL [NATURAL_64] is
 			-- Cell to hold `interval'
 		once
 			create Result.put (initial_interval)
@@ -464,7 +460,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	initial_interval: INTEGER is 500
+	initial_interval: NATURAL_64 is 5000
 			-- Default value of `internval'			
 
 invariant

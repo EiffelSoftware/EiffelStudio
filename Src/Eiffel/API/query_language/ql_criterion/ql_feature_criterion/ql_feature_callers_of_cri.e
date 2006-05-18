@@ -66,6 +66,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_current_domain: like source_domain
 			l_invariant_callee: like callee_list_for_invariant
 			l_feature_callee: like callee_list_for_feature
+			l_data_feature: QL_FEATURE
 		do
 				-- For normal feature callers
 			l_current_domain := source_domain
@@ -79,8 +80,11 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			loop
 				l_feature := l_current_domain.feature_item_from_current_domain (l_feature_list.item)
 				if l_feature /= Void then
-					l_feature.set_data (l_current_domain.feature_item_from_current_domain (l_feature_callee.i_th (l_feature_list.index)))
-					Result.extend (l_feature)
+					l_data_feature := l_current_domain.feature_item_from_current_domain (l_feature_callee.i_th (l_feature_list.index))
+					if l_data_feature /= Void then
+						l_feature.set_data (l_data_feature)
+						Result.extend (l_feature)
+					end
 				end
 				l_feature_list.forth
 			end
@@ -97,8 +101,11 @@ feature{QL_DOMAIN} -- Intrinsic domain
 				loop
 					l_feature := l_current_domain.invariant_item_from_current_domain (l_invariant_list.item)
 					if l_feature /= Void then
-						l_feature.set_data (l_current_domain.feature_item_from_current_domain (l_invariant_callee.item))
-						Result.extend (l_feature)
+						l_data_feature := l_current_domain.feature_item_from_current_domain (l_invariant_callee.item)
+						if l_data_feature /= Void then
+							l_feature.set_data (l_data_feature)
+							Result.extend (l_feature)
+						end
 					end
 					l_invariant_list.forth
 					l_invariant_callee.forth

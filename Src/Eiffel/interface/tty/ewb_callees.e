@@ -1,21 +1,28 @@
 indexing
-
 	description:
-		"Displays the senders of a feature in output_window."
+		"Displays the callees of a feature in output_window."
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class.";
+	author: ""
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class EWB_SENDERS
+class
+	EWB_CALLEES
 
 inherit
-	EWB_FEATURE
+	EWB_SENDERS
+		rename
+			set_all_callers as set_all_callees,
+			set_assigners_only as set_assignees_only,
+			set_creators_only as set_creations_only
 		redefine
+			name,
+			help_message,
+			abbreviation,
+			associated_cmd,
 			loop_action
 		end
-
-	EB_SHARED_PREFERENCES
 
 create
 	make, default_create
@@ -25,77 +32,29 @@ feature -- Access
 	name: STRING is
 			-- Name of current command
 		do
-			Result := callers_cmd_name
+			Result := callees_cmd_name
 		end
 
 	help_message: STRING is
 			-- Help message for current command
 		do
-			Result := callers_help
+			Result := callees_help
 		end
 
 	abbreviation: CHARACTER is
 			-- Abbreviation for current command
 		do
-			Result := callers_abb
+			Result := callees_abb
 		end
 
-feature -- Setting
-
-	set_all_callers is
-			-- Set `to_show_all_callers' to `True'
-		do
-			to_show_all_callers := True
-		ensure
-			to_show_all_callers: to_show_all_callers
-		end
-
-	clear_target_only is
-			-- Do not restrict callers only to assigners or creators.
-		do
-			is_assigners_only := False
-			is_creators_only := False
-		ensure
-			not_is_assigners_only: not is_assigners_only
-			not_is_creators_only: not is_creators_only
-		end
-
-	set_assigners_only is
-			-- Restrict callers only to assigners.
-		do
-			is_assigners_only := True
-			is_creators_only := False
-		ensure
-			is_assigners_only: is_assigners_only
-			not_is_creators_only: not is_creators_only
-		end
-
-	set_creators_only is
-			-- Restrict callers only to creators.
-		do
-			is_assigners_only := False
-			is_creators_only := True
-		ensure
-			not_is_assigners_only: not is_assigners_only
-			is_creators_only: is_creators_only
-		end
-
-feature {NONE} -- Implementation
-
-	to_show_all_callers: BOOLEAN
-			-- Is the format going to show all callers?
-
-	is_assigners_only: BOOLEAN
-			-- Have assigners to be shown only?
-
-	is_creators_only: BOOLEAN
-			-- Have creators to be shown only?
+feature{NONE} -- Implementation
 
 	associated_cmd: E_SHOW_CALLERS is
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
 			create Result
+			Result.show_callees
 			if to_show_all_callers then
 				Result.set_all_callers
 			end
@@ -114,15 +73,15 @@ feature {NONE} -- Implementation
 			feature_name := command_line_io.last_input
 			command_line_io.get_filter_name
 			filter_name := command_line_io.last_input
-			command_line_io.get_option_value ("All senders", preferences.feature_tool_data.show_all_callers)
+			command_line_io.get_option_value ("All callees", preferences.feature_tool_data.show_all_callers)
 			to_show_all_callers := command_line_io.last_input.to_boolean
-			command_line_io.get_option_value ("Only assigners", False)
+			command_line_io.get_option_value ("Only assignees", False)
 			if command_line_io.last_input.to_boolean then
-				set_assigners_only
+				set_assignees_only
 			else
 				command_line_io.get_option_value ("Only creators", False)
 				if command_line_io.last_input.to_boolean then
-					set_creators_only
+					set_creations_only
 				else
 					clear_target_only
 				end
@@ -162,4 +121,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_SENDERS
+end

@@ -27,6 +27,8 @@ feature {NONE}
 
 	callers_cmd_name: STRING is "callers"
 
+	callees_cmd_name: STRING is "callees"
+
 	c_compile_cmd_name: STRING is "c_compile"
 			-- Name of command launching C compilation
 

@@ -29,6 +29,10 @@ feature -- Status report
 	flag: INTEGER_8
 			-- Type of callers we are looking for.
 
+	is_callee_displayed: BOOLEAN
+			-- Does current command display callees?
+			-- If not, callers are displayed.
+
 feature -- Status setting
 
 	set_all_callers is
@@ -45,6 +49,22 @@ feature -- Status setting
 			flag := a_flag
 		ensure
 			flag_set: flag = a_flag
+		end
+
+	show_callers is
+			-- Show callers.
+		do
+			is_callee_displayed := False
+		ensure
+			callers_displayed: not is_callee_displayed
+		end
+
+	show_callees is
+			-- Show callees.
+		do
+			is_callee_displayed := True
+		ensure
+			callees_displayed: is_callee_displayed
 		end
 
 feature -- Execution
@@ -115,17 +135,27 @@ feature {NONE} -- Implementation
 			-- Criterion used in current command
 		local
 			l_caller_type: QL_FEATURE_CALLER_TYPE
+			l_callee_type: QL_FEATURE_CALLEE_TYPE
 		do
 			if flag = {DEPEND_UNIT}.is_in_assignment_flag then
 				l_caller_type := assigner_caller
+				l_callee_type := assigner_callee
 			elseif flag = {DEPEND_UNIT}.is_in_creation_flag then
 				l_caller_type := creator_caller
+				l_callee_type := creator_callee
 			else
 				l_caller_type := normal_caller
+				l_callee_type := normal_callee
 			end
-			create {QL_FEATURE_CALLERS_OF_CRI}Result.make (
-				query_feature_item_from_e_feature (current_feature).wrapped_domain,
-				l_caller_type, not to_show_all_callers)
+			if is_callee_displayed then
+				create {QL_FEATURE_CALLER_IS_CRI}Result.make (
+					query_feature_item_from_e_feature (current_feature).wrapped_domain,
+					l_callee_type, not to_show_all_callers)
+			else
+				create {QL_FEATURE_CALLERS_OF_CRI}Result.make (
+					query_feature_item_from_e_feature (current_feature).wrapped_domain,
+					l_caller_type, not to_show_all_callers)
+			end
 		ensure then
 			result_attached: Result /= Void
 		end

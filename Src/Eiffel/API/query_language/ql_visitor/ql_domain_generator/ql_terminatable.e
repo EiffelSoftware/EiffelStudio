@@ -23,6 +23,14 @@ feature -- Access
 			Result := tick_action_invocation_function_cell.item
 		end
 
+feature{NONE} -- Implementation
+
+	internal_counter: NATURAL_64 is
+			-- Internal counter to indicate how many items have been processed
+		do
+			Result := internal_counter_cell.item
+		end
+
 feature -- Status report
 
 	has_interval_tick_actions: BOOLEAN is
@@ -52,6 +60,20 @@ feature -- Basic operations
 			end
 		end
 
+	increase_internal_counter is
+			-- Increase `internal_counter' by 1.
+		local
+			l_counter: NATURAL_64
+		do
+			l_counter := internal_counter
+			if l_counter = l_counter.max_value then
+				internal_counter_cell.put (0)
+			else
+				internal_counter_cell.put (l_counter + 1)
+			end
+		end
+
+
 feature{NONE} -- Implementation
 
 	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE]] is
@@ -66,6 +88,14 @@ feature{NONE} -- Implementation
 			-- Cell to hold `tick_action_invocation_function'
 		once
 			create Result.put (Void)
+		end
+
+	internal_counter_cell: CELL [NATURAL_64] is
+			-- Cell to hold `internal_counter'.
+		once
+			create Result.put (0)
+		ensure
+			result_attached: Result /= Void
 		end
 
 invariant

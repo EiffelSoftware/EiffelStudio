@@ -19,19 +19,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setting: STRING) is
+	make (a_setting, an_old_value, a_new_value: STRING) is
 			-- Create.
 		require
 			a_setting_not_void: a_setting /= Void
+			an_old_value_not_void: an_old_value /= Void
+			a_new_value_not_void: a_new_value /= Void
 		do
 			setting := a_setting
+			old_value := an_old_value
+			new_value := a_new_value
 		end
 
 
 feature -- Properties
 
-	setting: STRING;
+	setting: STRING
 			-- Setting name.
+
+	old_value: STRING
+			-- Old value (which was preserved).
+
+	new_value: STRING
+			-- New value (which was ignored).
 
 feature -- Output
 
@@ -39,6 +49,10 @@ feature -- Output
 		do
 			st.add_string ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ");
 			st.add_string (setting);
+			st.add_new_line
+			st.add ("Old: "+old_value)
+			st.add_new_line
+			st.add ("New: "+new_value)
 			st.add_new_line;
 		end;
 

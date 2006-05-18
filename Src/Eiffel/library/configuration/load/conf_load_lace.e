@@ -277,7 +277,7 @@ feature {NONE} -- Implementation of data retrieval
 						end
 						l_excludes.forth
 					end
-					current_cluster.set_file_rule (l_fr)
+					current_cluster.add_file_rule (l_fr)
 				end
 
 					-- handle class defaults

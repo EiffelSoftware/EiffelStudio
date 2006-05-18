@@ -9,7 +9,7 @@ class
 	CONF_FILE_RULE
 
 inherit
-	ANY
+	CONF_CONDITIONED
 		redefine
 			is_equal
 		end

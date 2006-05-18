@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create internal_clusters.make (1)
 			create internal_assemblies.make (0)
 
-			create internal_file_rule.make
+			create internal_file_rule.make (0)
 
 			create internal_external_include.make (1)
 			create internal_external_object.make (1)
@@ -206,19 +206,18 @@ feature -- Access queries
 			end
 		end
 
-	file_rule: CONF_FILE_RULE is
+	file_rule: like internal_file_rule is
 			-- Rules for files to be included or excluded.
 		do
-			create Result.make
-			Result.merge (internal_file_rule)
+			Result := internal_file_rule.twin
 			if extends /= Void then
-				Result.merge (extends.file_rule)
+				Result.append (extends.file_rule)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	options: CONF_OPTION is
+	options: like internal_options is
 			-- Options (Debuglevel, assertions, ...)
 		do
 			if internal_options /= Void then
@@ -929,14 +928,24 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			root_removed: internal_root = Void
 		end
 
-	set_file_rule (a_file_rule: like internal_file_rule) is
-			-- Set `a_file_rule'.
+	set_file_rules (a_file_rules: like internal_file_rule) is
+			-- Set `internal_file_rule' to `a_file_rules'.
+		require
+			a_file_rules_not_void: a_file_rules /= Void
+		do
+			internal_file_rule := a_file_rules
+		ensure
+			file_rules_set: internal_file_rule = a_file_rules
+		end
+
+	add_file_rule (a_file_rule: CONF_FILE_RULE) is
+			-- Add `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
 		do
-			internal_file_rule := a_file_rule
+			internal_file_rule.force (a_file_rule)
 		ensure
-			file_rule_set: internal_file_rule = a_file_rule
+			file_rule_added: internal_file_rule.has (a_file_rule)
 		end
 
 	set_options (an_option: like internal_options) is
@@ -1317,7 +1326,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			-- The assemblies of this target itself.
 
-	internal_file_rule: CONF_FILE_RULE
+	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded of this target itself.
 
 	internal_options: CONF_OPTION

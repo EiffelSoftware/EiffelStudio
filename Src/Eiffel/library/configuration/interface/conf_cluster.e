@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create
 		do
 			Precursor (a_name, a_location, a_target)
-			create internal_file_rule.make
+			create internal_file_rule.make (0)
 		end
 
 feature -- Status
@@ -80,15 +80,37 @@ feature -- Access queries
 			end
 		end
 
-	file_rule: CONF_FILE_RULE is
-			-- Rules for files to be included or excluded.
+	active_file_rule (a_state: CONF_STATE): CONF_FILE_RULE is
+			-- Active file rule for `a_state'.
+		require
+			a_state_not_void: a_state /= Void
+		local
+			l_rules: like file_rule
 		do
 			create Result.make
-			Result.merge (internal_file_rule)
-			if parent /= Void then
-				Result.merge (parent.file_rule)
+			from
+				l_rules := file_rule
+				l_rules.start
+			until
+				l_rules.after
+			loop
+				if l_rules.item.is_enabled (a_state) then
+					Result.merge (l_rules.item)
+				end
+				l_rules.forth
 			end
-			Result.merge (target.file_rule)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	file_rule: like internal_file_rule is
+			-- Rules for files to be included or excluded.
+		do
+			Result := internal_file_rule.twin
+			if parent /= Void then
+				Result.append (parent.file_rule)
+			end
+			Result.append (target.file_rule)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -329,6 +351,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_dependencies.has (a_group)
 		end
 
+	add_file_rule (a_file_rule: CONF_FILE_RULE) is
+			-- Add `a_file_rule'.
+		require
+			a_file_rule_not_void: a_file_rule /= Void
+		do
+			internal_file_rule.force (a_file_rule)
+		ensure
+			file_rule_added: internal_file_rule.has (a_file_rule)
+		end
+
 	set_file_rule (a_file_rule: like internal_file_rule) is
 			-- Set `a_file_rule'.
 		require
@@ -375,7 +407,7 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 	internal_dependencies: LINKED_SET [CONF_GROUP]
 			-- Dependencies to other groups of this cluster itself.
 
-	internal_file_rule: CONF_FILE_RULE
+	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded of this cluster itself.
 
 	internal_mapping: CONF_HASH_TABLE [STRING, STRING]

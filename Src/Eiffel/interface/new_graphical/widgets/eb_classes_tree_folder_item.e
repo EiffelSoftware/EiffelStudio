@@ -209,7 +209,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					create subfolders.make_from_array (l_set)
 					subfolders.sort
 					from
-						l_fr := cluster.file_rule
+					l_fr := cluster.active_file_rule (universe.conf_state)
 						i := subfolders.lower
 						up := subfolders.upper
 					until
@@ -474,7 +474,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 						l_sub_dirs := l_dir.directory_names
 						if l_sub_dirs /= Void then
 							from
-								l_fr := data.actual_cluster.file_rule
+								l_fr := data.actual_cluster.active_file_rule (universe.conf_state)
 								i := l_sub_dirs.lower
 								up := l_sub_dirs.upper
 							until

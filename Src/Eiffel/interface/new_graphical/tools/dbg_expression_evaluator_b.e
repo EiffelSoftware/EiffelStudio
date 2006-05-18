@@ -414,6 +414,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_argument_b: ARGUMENT_B
 			l_current_b: CURRENT_B
 			l_creation_expr_b: CREATION_EXPR_B
+			l_tuple_access_b: TUPLE_ACCESS_B
 			-- ...
 		do
 			l_call_access_b ?= a_access_b
@@ -444,14 +445,13 @@ feature {NONE} -- EXPR_B evaluation
 									if l_creation_expr_b /= Void then
 										evaluate_creation_expr_b (l_creation_expr_b)
 									else
+										l_tuple_access_b ?= a_access_b
+										if l_tuple_access_b /= Void then
+											evaluate_tuple_access_b (l_tuple_access_b)
+										else
 
-	-- Constants value should be already caught by the value_i in evaluate_expr_b									
-	--									l_constant_b ?= a_access_b
-	--									if l_constant_b /= Void then
-	--					--					l_constant_b.evaluate
-	--									else
 											notify_error_not_implemented (a_access_b.generator + " = ACCESS_B" + Cst_error_not_yet_ready)
-	--									end	
+										end
 									end
 								end
 							end
@@ -542,6 +542,35 @@ feature {NONE} -- EXPR_B evaluation
 		rescue
 			retried := True
 			retry
+		end
+
+	evaluate_tuple_access_b (a_tuple_access_b: TUPLE_ACCESS_B) is
+		local
+			fi: FEATURE_I
+			cl: CLASS_C
+			params: ARRAYED_LIST [DUMP_VALUE]
+			dv: DUMP_VALUE
+		do
+			if tmp_target /= Void then
+				cl := tmp_target.dynamic_class
+			elseif context_class /= Void then
+				cl := context_class
+			else
+				cl := system.tuple_class.compiled_class
+			end
+			fi := cl.feature_named ("item")
+			create params.make (1)
+			create dv.make_integer_32 (a_tuple_access_b.position, system.integer_32_class.compiled_class)
+			params.extend (dv)
+			if not error_occurred then
+				if tmp_target /= Void then
+					evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
+				else
+					evaluate_function (context_address, Void, cl, fi, params)
+				end
+			else
+				notify_error_evaluation (a_tuple_access_b.generator + Cst_error_report_to_support)
+			end
 		end
 
 	evaluate_call_access_b (a_call_access_b: CALL_ACCESS_B) is
@@ -702,7 +731,7 @@ feature {NONE} -- EXPR_B evaluation
 
 	evaluate_attribute_b (a_attribute_b: ATTRIBUTE_B) is
 		local
-			wcl, cl: CLASS_C
+			cl: CLASS_C
 			fi: FEATURE_I
 		do
 			if tmp_target /= Void then

@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			-- New instance of Current for runtime version `a_clr_version'.
 		do
 			create cache_reader
+			create notifier.make
 		end
 
 feature -- Basic Operations
@@ -82,12 +83,14 @@ feature -- Basic Operations
 			l_assembly_info_updated: BOOLEAN
 			l_lower_path: like a_path
 			l_reader: like cache_reader
+			l_reason: SYSTEM_STRING
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
 			guard.lock
 			if not l_retried then
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
+				l_reason := "New Entry"
 
 				l_reader := cache_reader
 				l_ca := l_reader.consumed_assembly_from_path (a_path)
@@ -166,6 +169,7 @@ feature -- Basic Operations
 
 				if l_ca /= Void and then l_ca.is_consumed then
 					{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path))
+					l_reason := "Out of date"
 					if status_printer /= Void then
 						create l_string_tuple
 						l_string_tuple.put ("Up-to-date check: '" +	a_path +
@@ -192,7 +196,10 @@ feature -- Basic Operations
 						l_consumer.set_status_querier (status_querier)
 					end
 					l_consumer.set_destination_path (l_dir.name)
+
+					notifier.notify_consume (l_assembly.get_name.to_string, a_path, l_ca.folder_name, l_reason)
 					l_consumer.consume (l_assembly)
+					notifier.clear_notification
 
 					if not l_consumer.successful then
 						set_error (Consume_error, a_path)
@@ -710,8 +717,14 @@ feature {NONE} -- Implementation
 	null_public_key_token: STRING is "null"
 			-- Null public key tokens
 
+feature {NONE} -- Notification
+
+	notifier: NOTIFIER
+			-- Windows ballon tip notifier
+
 invariant
 	non_void_cache_reader: cache_reader /= Void
+	notifier_attached: notifier /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

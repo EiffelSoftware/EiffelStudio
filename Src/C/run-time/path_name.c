@@ -47,6 +47,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
+#include <shlobj.h>
 #endif
 
 #include <stdlib.h>			/* For getenv */
@@ -531,11 +532,7 @@ rt_public EIF_REFERENCE eif_current_dir_representation(void)
 rt_public EIF_BOOLEAN eif_home_dir_supported(void)
 {
 		/* Is the notion of $HOME supported */
-#ifdef EIF_WINDOWS
-	return EIF_FALSE;
-#else
 	return EIF_TRUE;
-#endif
 }
 
 rt_public EIF_BOOLEAN eif_root_dir_supported(void)
@@ -552,7 +549,15 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 {
 		/* String representation of $HOME */
 #ifdef EIF_WINDOWS
-	return NULL;
+	char l_path[MAX_PATH];
+	HRESULT hr = SHGetFolderPath (NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, l_path);
+	if (hr == S_OK) {
+		return RTMS(l_path);
+	} else if (getenv ("APPDATA")) {
+		return RTMS(getenv("APPDATA"));
+	} else {
+		return NULL;
+	}
 #elif defined (EIF_VMS)
 	return RTMS(getenv("SYS$LOGIN"));
 #else

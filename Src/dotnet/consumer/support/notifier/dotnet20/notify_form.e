@@ -40,7 +40,7 @@ feature -- Status Setting
 		do
 			show_ballon := True
 			notify_string := {SYSTEM_STRING}.format (
-				"Consuming assembly '{0}' in {1}%N%NCLR Version: {2}%NReason: {5}%NID: {4}%NAssembly:%T{3}",
+				"Consuming assembly '{0}'.%N%NCLR Version: {2}%NReason: {5}%NAssembly:{3}%N%NID: {4}",
 				({NATIVE_ARRAY [SYSTEM_STRING]})[<<a_name, a_cache, a_version, a_path, a_id, a_reason>>]
 				)
 		end

@@ -108,6 +108,11 @@ feature -- Visit nodes
 			on_process_group (a_group)
 		end
 
+feature -- Status
+
+	is_force_rebuild: BOOLEAN
+			-- Do we need to do a full rebuild of the configuration?
+
 feature -- Access
 
 	modified_classes: ARRAYED_LIST [CONF_CLASS]
@@ -166,25 +171,29 @@ feature {NONE} -- Implementation
 				from
 					l_classes.start
 				until
-					l_classes.after
+					l_classes.after or is_error or is_force_rebuild
 				loop
 					l_class := l_classes.item_for_iteration
-					if l_class.is_compiled or l_class.does_override then
-							-- check for changes and update name if necessary
-						l_class.check_changed
-						if l_class.is_error then
-							add_error (l_class.last_error)
+						-- check for changes
+					l_class.check_changed
+					if l_class.is_renamed then
+						is_force_rebuild := True
+					else
+						if l_class.is_compiled or l_class.does_override then
+							if l_class.is_error then
+								add_error (l_class.last_error)
+							end
+							if l_class.is_modified or (l_class.is_removed and l_class.is_compiled) then
+								modified_classes.extend (l_class)
+							end
 						end
-						if l_class.is_modified or (l_class.is_removed and l_class.is_compiled) then
-							modified_classes.extend (l_class)
-						end
-					end
-					if not l_class.is_removed then
-						l_name := l_class.renamed_name
-						if not l_new_classes.has (l_name) then
-							l_new_classes.force (l_class, l_name)
-						else
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+						if not l_class.is_removed then
+							l_name := l_class.renamed_name
+							if not l_new_classes.has (l_name) then
+								l_new_classes.force (l_class, l_name)
+							else
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+							end
 						end
 					end
 					l_classes.forth

@@ -639,6 +639,7 @@ feature {NONE} -- Implementation
 			l_pc: ARRAYED_LIST [STRING]
 			l_renamings: HASH_TABLE [STRING, STRING]
 			l_file_name: STRING
+			l_done: BOOLEAN
 		do
 			if valid_eiffel_extension (a_file) then
 				l_file_name := a_path+"/"+a_file
@@ -649,20 +650,24 @@ feature {NONE} -- Implementation
 					l_class.rebuild (a_file, current_cluster, a_path)
 					if l_class.is_error then
 						add_error (l_class.last_error)
+						-- don't update renamed classes, instead handle them on the class name basis
+					elseif not l_class.is_renamed then
+						l_name := l_class.renamed_name
+						if l_class.is_compiled and l_class.is_modified then
+							modified_classes.force (l_class)
+						end
+							-- add it to `reused_classes'
+						reused_classes.force (l_class)
+						if current_classes.has (l_name) then
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+						else
+							current_classes.force (l_class, l_name)
+							current_classes_by_filename.force (l_class, l_file_name)
+						end
+						l_done := True
 					end
-					l_name := l_class.renamed_name
-					if l_class.is_compiled and l_class.is_modified then
-						modified_classes.force (l_class)
-					end
-						-- add it to `reused_classes'
-					reused_classes.force (l_class)
-					if current_classes.has (l_name) then
-						add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
-					else
-						current_classes.force (l_class, l_name)
-						current_classes_by_filename.force (l_class, l_file_name)
-					end
-				else
+				end
+				if not is_error and not l_done then
 					l_full_file := current_cluster.location.evaluated_directory
 					l_full_file.append (l_file_name)
 					create l_file.make (l_full_file)

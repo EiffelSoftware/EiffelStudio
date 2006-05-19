@@ -56,10 +56,8 @@ feature {NONE} -- Target names and descriptions
 	target_dialog_root_class: STRING is "Root class"
 	target_dialog_root_feature: STRING is "Root feature"
 	target_dialog_root_all: STRING is "Compile all classes"
-	target_excludes_name: STRING is "Excludes"
-	target_excludes_description: STRING is "Regular expression that exclude subfolders and/or files."
-	target_includes_name: STRING is "Includes"
-	target_includes_description: STRING is "Regular expression that include subfolders and/or files which %Nwhere excluded by an exclude pattern."
+	target_file_rule_name: STRING is "File pattern"
+	target_file_rule_description: STRING is "Regular expression that exclude/include subfolders and/or files."
 
 	target_address_expression_name: STRING is "Address expression"
 	target_address_expression_description: STRING is " "

@@ -59,7 +59,6 @@ feature {NONE} -- WEL Implementation
 			tooltip_text: STRING_32
 			tooltip: WEL_TOOLTIP
 			int: POINTER
-			env: EV_ENVIRONMENT
 			app: EV_APPLICATION
 		do
 			if info.code = Ttn_needtext then
@@ -70,8 +69,7 @@ feature {NONE} -- WEL Implementation
 					toolbar.wel_item, tb_gettooltips, to_wparam (0), to_lparam (0))
 					-- We create `tooltip' from retrieved pointer.	
 				create tooltip.make_by_pointer (int)
-				create env
-				app := env.application
+				app := toolbar.application_imp.interface
 					-- If there is a tooltip delay and it has changed then
 					-- assign the delay to `tooltip'.
 					--| The first time this tooltip is shown after setting
@@ -93,12 +91,10 @@ feature {NONE} -- WEL Implementation
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
-			-- No need to erase the background because this
-			-- containers has always the same size than the
-			-- tool-bar.
 		local
 			bk_brush: WEL_BRUSH
 			current_height: INTEGER
+			theme_drawer: EV_THEME_DRAWER_IMP
 		do
 				-- Retreive the internal `height' of `tool_bar'
 				-- computed from `get_max_size'. This is the height that the
@@ -107,14 +103,13 @@ feature {NONE} -- WEL Implementation
 			if current_height < height then
 						-- In this situation, `tool_bar' has a `height' greater than its minimum.
 						-- This does not actually change the height of `tool_bar', but instead,
-						-- `Current' in which it is parented. Therfore we must clear the background
+						-- `Current' in which it is parented. Therefore we must clear the background
 						-- of `Current' that is not occupied by `tool_bar'.
 				bk_brush := toolbar.background_brush
 				invalid_rect.set_top (invalid_rect.top + current_height)
-				if bk_brush /= Void then
-					paint_dc.fill_rect (invalid_rect, bk_brush)
-					bk_brush.delete
-				end
+				theme_drawer := toolbar.application_imp.theme_drawer
+				theme_drawer.draw_widget_background (toolbar, paint_dc, invalid_rect, bk_brush)
+				bk_brush.delete
 			end
 				--| Disable the default windows processing and return correct
 				--| value to Windows, i.e. nonzero value.
@@ -138,7 +133,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- We redefine the default style.
 		do
-			Result := Ws_child + Ws_clipsiblings
+			Result := Ws_child | Ws_clipsiblings
 		end
 
 indexing

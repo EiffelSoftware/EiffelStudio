@@ -82,6 +82,7 @@
 
 	<target name="consumer_10" extends="consumer_library">
 		<root feature="make" class="EMITTER"/>
+		<setting name="msil_clr_version" value="v1.0.3705"/>
 		<setting name="line_generation" value="False"/>
 		<override name="dotnet10" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet10\" recursive="false"/>
 	</target>
@@ -92,6 +93,7 @@
 
 	<target name="debug_10" extends="consumer_10">
 		<setting name="line_generation" value="True"/>
+		<setting name="msil_clr_version" value="v1.0.3705"/>
 	</target>
 
 </system>

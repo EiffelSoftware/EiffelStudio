@@ -372,6 +372,7 @@ feature {NONE} -- Implementation attribute processing
 					l_target := last_system.targets.item (l_extends)
 					if l_target /= Void then
 						current_target.set_parent (l_target)
+						group_list := l_target.groups
 					else
 						set_parse_error_message ("Missing parent target: "+l_extends)
 					end
@@ -695,8 +696,14 @@ feature {NONE} -- Implementation attribute processing
 				end
 				group_list.force (current_group, l_name)
 				current_target.add_assembly (current_assembly)
+			elseif l_name = Void then
+				set_parse_error_message ("Invalid assembly tag no name specified.")
+			elseif l_location = Void then
+				set_parse_error_message ("Invalid assembly tag "+l_name+" no location specified.")
+			elseif group_list.has (l_name) then
+				set_parse_error_message ("Invalid assembly tag there is already an assembly with the name "+l_name+".")
 			else
-				set_parse_error_message ("Invalid assembly tag.")
+				check should_not_reach: False end
 			end
 		ensure
 			assembly_and_group: not is_error implies current_assembly /= Void and current_group /= Void

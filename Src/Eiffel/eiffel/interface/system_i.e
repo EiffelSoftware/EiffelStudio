@@ -922,8 +922,10 @@ end
 				-- Try to reconnect removed classes with new classes
 			revive_moved_classes
 
-				-- check the universe
-			universe.check_universe
+				-- check the universe if we don't use a precompile
+			if not uses_precompiled then
+				universe.check_universe
+			end
 
 				-- update/check root class
 			update_root_class
@@ -1068,6 +1070,7 @@ end
 					end
 
 					l_classes := l_vis_modified.modified_classes
+					l_rebuild := l_vis_modified.is_force_rebuild
 					from
 						l_classes.start
 					until
@@ -1080,9 +1083,6 @@ end
 							class_i: l_class /= Void
 						end
 						l_rebuild := l_conf_class.is_renamed and then (l_grp.is_overriden or l_grp.is_override)
-						if l_conf_class.is_renamed then
-							l_class.compiled_class.recompile_syntactical_clients
-						end
 						if l_conf_class.is_removed then
 							l_class.compiled_class.recompile_syntactical_clients
 							if workbench.automatic_backup then

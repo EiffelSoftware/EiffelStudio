@@ -50,25 +50,45 @@ feature -- Clean Up
 				notify_form_attached: notify_form /= Void
 			end
 			if notify_form /= Void then
-				notify_form.close
+				{WINFORMS_APPLICATION}.exit
 				notify_form := Void
 			end
+		ensure then
+			notify_form_unattached: notify_form = Void
+			is_zombie: is_zombie
 		end
+
+feature -- Status Report
+
+	is_zombie: BOOLEAN
+			-- Indicates object has been disposed of
 
 feature -- Status Setting
 
-	notify_consume (a_name, a_path, a_id, a_reason: SYSTEM_STRING) is
+	notify_consume (a_name, a_path, a_id, a_reason, a_version, a_cache: SYSTEM_STRING) is
 			-- Notifies user of a consume
 		require
 			notify_form_attached: notify_form /= Void
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: a_name.length > 0
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: a_path.length > 0
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: a_id.length > 0
+			a_reason_attached: a_reason /= Void
+			not_a_reason_is_empty: a_reason.length > 0
+			a_cache_attached: a_cache /= Void
+			not_a_cache_is_empty: a_cache.length > 0
+			not_is_zombie: not is_zombie
 		do
-			notify_form.notify_consume (a_name, a_path, a_id, a_reason)
+			notify_form.notify_consume (a_name, a_path, a_id, a_reason, a_version, a_cache)
 		end
 
 	clear_notification is
 			-- Clears last notification message.
 		require
 			notify_form_attached: notify_form /= Void
+			not_is_zombie: not is_zombie
 		do
 			notify_form.clear_notification
 		end
@@ -77,6 +97,9 @@ feature -- Implementation
 
 	notify_form: NOTIFY_FORM;
 			-- Windows form used to notify users of consumption
+
+invariant
+	notify_form_attached: not is_zombie implies notify_form /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

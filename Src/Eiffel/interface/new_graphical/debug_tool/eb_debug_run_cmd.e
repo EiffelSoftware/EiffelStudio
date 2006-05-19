@@ -447,6 +447,7 @@ feature -- Execution
 			working_dir.right_adjust
 			if
 				not working_dir.is_empty
+				and then working_dir.occurrences (directory_separator) > 1
 				and then working_dir.item (working_dir.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 			then
 				working_dir.remove_tail (1)

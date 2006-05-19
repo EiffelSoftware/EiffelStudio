@@ -215,6 +215,10 @@ feature {NONE} -- Implementation
 				end
 			end
 
+			if cache_writer /= Void then
+				cache_writer.dispose
+			end
+
 			debug ("press_enter_to_finish")
 				io.put_string ("%NApplication has finished executing.")
 				io.put_string ("%NPress enter to exit.")

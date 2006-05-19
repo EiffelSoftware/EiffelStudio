@@ -27,19 +27,32 @@ feature {NONE} -- Initialization
 
 	initialize_component is
 			-- Initialize form controls
+		local
+			l_rm: RESOURCE_MANAGER
+			l_icon: DRAWING_ICON
 		do
+			create l_rm.make (resource_name, (({SYSTEM_TYPE})[{NOTIFY_FORM}]).assembly)
+			l_icon ?= l_rm.get_object (tray_icon_resource_name)
+			check l_icon_attached: l_icon /= Void end
+			set_icon (l_icon)
+
 			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 			create notify_icon.make
-			notify_icon.set_visible (True)
-			notify_icon.set_balloon_tip_title ("Eiffel Metadata Consumer")
-			notify_icon.set_text ("Initializing consumer for first use by the Eiffel compiler")
-			notify_icon.add_balloon_tip_closed (create {EVENT_HANDLER}.make (Current, $on_closed_notify_ballon))
-			notify_icon.add_mouse_move (create {WINFORMS_MOUSE_EVENT_HANDLER}.make (Current, $on_notify_mouse_move))
-			notify_icon.set_icon (Current.icon)
+
 			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.minimized)
 			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_tool_window)
 			set_show_in_taskbar (False)
 			add_load (create {EVENT_HANDLER}.make (Current, $on_form_load))
+
+			notify_icon.visible := True
+			notify_icon.balloon_tip_icon := {WINFORMS_TOOL_TIP_ICON}.info
+			notify_icon.balloon_tip_title := "Eiffel Metadata Consumer"
+			notify_icon.balloon_tip_text := "The Eiffel Metadata Consumer is a tool used to consume .NET assemblies so they may be used by the Eiffel Software Eiffel for .NET compiler."
+			notify_icon.text := "Eiffel Metadata Consumer"
+			notify_icon.add_balloon_tip_closed (create {EVENT_HANDLER}.make (Current, $on_closed_notify_ballon))
+			notify_icon.add_click (create {EVENT_HANDLER}.make (Current, $on_notify_clicked))
+			notify_icon.icon := icon
+			notify_icon.visible := True
 		end
 
 feature -- Status Setting
@@ -76,17 +89,16 @@ feature -- Events
 	on_idle (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
 			-- Processes application idle events.
 		do
-			if notify_string = Void or notify_string.length = 0 then
-				if show_ballon and notify_icon.balloon_tip_text /= Void and then notify_icon.balloon_tip_text.length > 0 then
-					notify_icon.show_balloon_tip (0)
+			if show_ballon then
+				if notify_string /= Void and then notify_string.length > 0 then
+
+					notify_icon.balloon_tip_text := notify_string
+					notify_icon.show_balloon_tip (1)
+				else
+					notify_icon.balloon_tip_text := "The Eiffel Metadata Consumer has no queued jobs to process."
+					notify_icon.show_balloon_tip (1)
 				end
-			else
-				if show_ballon then
-					notify_icon.set_balloon_tip_text (notify_string)
-					notify_icon.show_balloon_tip (10)
-					notify_icon.set_balloon_tip_icon ({WINFORMS_TOOL_TIP_ICON}.info)
-					notify_icon.visible := True
-				end
+				show_ballon := False
 			end
 		end
 
@@ -96,8 +108,8 @@ feature -- Events
 			on_idle (a_sender, a_args)
 		end
 
-	on_notify_mouse_move (a_sender: SYSTEM_OBJECT; a_args: WINFORMS_MOUSE_EVENT_HANDLER) is
-			-- Processes mouse movement events over notify icon.
+	on_notify_clicked (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+			-- Processes mouse click events over notify icon.
 		do
 			show_ballon := True
 			on_idle (a_sender, create {EVENT_ARGS}.make)
@@ -108,6 +120,13 @@ feature -- Events
 		do
 			show_ballon := False
 		end
+
+feature {NONE} -- Constants
+
+	tray_icon_resource_name: SYSTEM_STRING is "tray_icon"
+
+	resource_name: SYSTEM_STRING is "consumer";
+			-- Consumer resources name
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

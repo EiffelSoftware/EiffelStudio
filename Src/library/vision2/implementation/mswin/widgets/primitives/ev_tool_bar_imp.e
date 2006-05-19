@@ -73,7 +73,7 @@ inherit
 			on_kill_focus, on_desactivate, on_set_focus, on_set_cursor,
 			on_char, show, hide, on_size, x_position, y_position,
 			on_sys_key_down, default_process_message, on_sys_key_up,
-			on_mouse_wheel, on_getdlgcode
+			on_mouse_wheel, on_getdlgcode, on_erase_background
 		redefine
 			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
  			on_left_button_double_click, default_style, background_brush,
@@ -94,6 +94,26 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+			-- (from WEL_WINDOW)
+			-- (export status {NONE})
+		local
+			bk_brush: WEL_BRUSH
+			theme_drawer: EV_THEME_DRAWER_IMP
+		do
+			bk_brush := background_brush
+			theme_drawer := application_imp.theme_drawer
+			theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, bk_brush)
+			bk_brush.delete
+			disable_default_processing
+			set_message_return_value (to_lresult (1))
+		end
 
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
@@ -483,11 +503,7 @@ feature -- Basic operation
 						wel_insert_button (l_count, l_wel_button)
 					end
 
-					if (l_wel_button.style & {WEL_TB_STYLE_CONSTANTS}.tbstyle_sep) /= 0 then
-						l_behind_is_separator := True
-					else
-						l_behind_is_separator := False
-					end
+					l_behind_is_separator := (l_wel_button.style & {WEL_TB_STYLE_CONSTANTS}.tbstyle_sep) /= 0
 
 					l_count := l_count - 1
 				end
@@ -880,7 +896,7 @@ feature {NONE} -- Implementation
 		end
 
 	a_child_has_text: BOOLEAN is
-			-- Does a child of `Current' have a text set?
+			-- Does a child of `Current' have text set?
 		local
 			a_cursor: CURSOR
 		do
@@ -888,18 +904,16 @@ feature {NONE} -- Implementation
 			from
 				ev_children.start
 			until
-				ev_children.off or Result = True
+				ev_children.off or else Result
 			loop
-				if not ev_children.item.text.is_empty then
-					Result := True
-				end
+				Result := not ev_children.item.text.is_empty
 				ev_children.forth
 			end
 			ev_children.go_to (a_cursor)
 		end
 
 	children_with_text: INTEGER is
-			-- Does a child of `Current' have a text set?
+			-- How many children of `Current' have text set?
 		local
 			a_cursor: CURSOR
 		do
@@ -1034,7 +1048,11 @@ feature {NONE} -- WEL Implementation
 
 				-- Add the flat style if available.
 			if comctl32_version >= version_470 then
-				Result := Result | Tbstyle_flat
+				if not application_imp.themes_active then
+						-- Setting this style with themes enabled overdraws
+						-- any custom background color
+					Result := Result | Tbstyle_flat
+				end
 			end
 		end
 
@@ -1046,7 +1064,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
    			-- By default there is no background
 		do
  			if exists then
-				create Result.make_solid (wel_background_color)
+ 				create Result.make_solid (wel_background_color)
 			end
  		end
 

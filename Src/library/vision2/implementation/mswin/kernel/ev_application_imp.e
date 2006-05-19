@@ -273,7 +273,7 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 			end
 		end
 
-feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTAINER_IMP} -- Theme drawing
+feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTAINER_IMP, WEL_ANY} -- Theme drawing
 
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- `Result' is object suitable for drawing using the

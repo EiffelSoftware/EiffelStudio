@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_CLASS_HIERARCHY_FORMATTER
+		redefine
+			is_tree_node_highlight_enabled
+		end
 
 create
 	make
@@ -29,6 +32,9 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showancestors
 		end
+
+	is_tree_node_highlight_enabled: BOOLEAN is True
+			-- Is tree node highlight enabled?
 
 feature {NONE} -- Properties
 

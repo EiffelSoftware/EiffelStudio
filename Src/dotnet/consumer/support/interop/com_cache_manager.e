@@ -62,6 +62,8 @@ feature -- Basic Exportations
 			{SECURITY_MANAGER}.set_security_enabled (False)
 
 			is_initialized := True
+
+			{APP_DOMAIN}.current_domain.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_unload_top_level_domain))
 		end
 
 	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
@@ -166,6 +168,15 @@ feature -- Basic Exportations
 			if Result = Void then
 				{ISE_RUNTIME}.raise (create {COM_EXCEPTION}.make ("No assembly found", e_fail_code))
 			end
+		end
+
+feature {NONE} -- Event Handlers
+
+	on_unload_top_level_domain (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
+			-- Called when top level domain is unloaded.
+		do
+				-- Exits notifier
+			{WINFORMS_APPLICATION}.exit
 		end
 
 feature {NONE} -- Implementation

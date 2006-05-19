@@ -49,6 +49,8 @@ inherit
 			{NONE} all
 		end
 
+	IDISPOSABLE
+
 create
 	make
 
@@ -58,7 +60,19 @@ feature {NONE} -- Initialization
 			-- New instance of Current for runtime version `a_clr_version'.
 		do
 			create cache_reader
-			create notifier.make
+		end
+
+feature -- Clean Up
+
+	dispose is
+			-- Clean up used resources.
+		do
+			if notifier /= Void then
+				notifier.dispose
+				notifier := Void
+			end
+		ensure then
+			notifier_unattached: notifier = Void
 		end
 
 feature -- Basic Operations
@@ -89,6 +103,10 @@ feature -- Basic Operations
 		do
 			guard.lock
 			if not l_retried then
+				if notifier = Void then
+					create notifier.make
+				end
+
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
 				l_reason := "New Entry"
 
@@ -197,7 +215,7 @@ feature -- Basic Operations
 					end
 					l_consumer.set_destination_path (l_dir.name)
 
-					notifier.notify_consume (l_assembly.get_name.to_string, a_path, l_ca.folder_name, l_reason)
+					notifier.notify_consume (l_assembly.get_name.to_string, a_path, l_ca.folder_name, l_reason, clr_version, cache_reader.eac_path)
 					l_consumer.consume (l_assembly)
 					notifier.clear_notification
 
@@ -724,7 +742,6 @@ feature {NONE} -- Notification
 
 invariant
 	non_void_cache_reader: cache_reader /= Void
-	notifier_attached: notifier /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

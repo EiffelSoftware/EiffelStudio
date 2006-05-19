@@ -215,7 +215,7 @@ feature -- Basic Operations
 					end
 					l_consumer.set_destination_path (l_dir.name)
 
-					notifier.notify_consume (l_assembly.get_name.to_string, a_path, l_ca.folder_name, l_reason, clr_version, cache_reader.eac_path)
+					notifier.notify_consume ({SYSTEM_STRING}.format ("{0}, Version={1}", l_ca.name, l_ca.version), a_path, l_ca.folder_name, l_reason, clr_version, cache_reader.eiffel_assembly_cache_path)
 					l_consumer.consume (l_assembly)
 					notifier.clear_notification
 

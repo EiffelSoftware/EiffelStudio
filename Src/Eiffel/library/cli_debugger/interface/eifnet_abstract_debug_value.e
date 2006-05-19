@@ -10,14 +10,14 @@ deferred class
 	EIFNET_ABSTRACT_DEBUG_VALUE
 
 inherit
-	
+
 	ABSTRACT_DEBUG_VALUE
 
 	SHARED_EIFNET_DEBUGGER
 		undefine
 			is_equal
-		end	
-	
+		end
+
 	DEBUG_VALUE_EXPORTER
 		export
 			{NONE} all
@@ -95,7 +95,7 @@ feature -- Special Dotnet status
 
 	is_static: BOOLEAN
 			-- Is a static value ?
-			
+
 	set_static (v: like is_static) is
 			-- Set `is_static' as `v'
 		do
@@ -111,18 +111,20 @@ feature {NONE} -- Special childrens
 			l_object_value: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_frame: ICOR_DEBUG_FRAME
-			l_class_token: INTEGER			
+			l_class_token: INTEGER
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_md_import: MD_IMPORT
 			l_tokens: DS_ARRAYED_LIST [INTEGER]
 			l_tokens_array: ARRAY [INTEGER]
+			l_class_tokens_array: ARRAY [INTEGER]
+			l_ct_index: INTEGER
 			l_t_index: INTEGER
 			l_t_upper: INTEGER
-			
+
 			l_tokens_cursor: DS_LINEAR_CURSOR [INTEGER]
 			l_tokens_count: INTEGER
 			l_enum_hdl: POINTER
-			
+
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
@@ -134,7 +136,7 @@ feature {NONE} -- Special childrens
 			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.new_interface_debug_object_value
 			end
-			
+
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
 				if l_icd_class /= Void then
@@ -146,25 +148,28 @@ feature {NONE} -- Special childrens
 					l_icd_module := l_icd_class.get_module
 					l_md_import := l_icd_module.interface_md_import
 
-						--| Get "direct" Fields
+						--| Get inherited "direct" Fields
 					l_enum_hdl := default_pointer
-					l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
-					l_tokens_count := l_md_import.count_enum (l_enum_hdl)
-					if l_tokens_count > 0 then
-						create l_tokens.make (l_tokens_count)
-						from
-							l_t_upper := l_tokens_array.upper
-							l_t_index := l_tokens_array.lower
-						until
-							l_t_index > l_t_upper
-						loop
-							l_tokens.put_last (l_tokens_array.item (l_t_index))
-							l_t_index := l_t_index + 1
-						end
-						if l_tokens_count > l_tokens_array.count then
-								-- We need to retrieve the rest of the data
-							l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
-							
+					l_class_tokens_array := l_md_import.enum_interface_impls ($l_enum_hdl, l_class_token, 20)
+					l_md_import.close_enum (l_enum_hdl)
+					if l_class_tokens_array = Void then
+							--| Get "direct" Fields
+						l_class_tokens_array := << l_class_token >>
+					else
+						l_class_tokens_array.grow (l_class_tokens_array.count + 1)
+						l_class_tokens_array.enter (l_class_token, l_class_tokens_array.upper)
+					end
+					from
+						l_ct_index := l_class_tokens_array.upper
+					until
+						l_ct_index < l_class_tokens_array.lower
+					loop
+						l_class_token := l_class_tokens_array[l_ct_index]
+						l_enum_hdl := default_pointer
+						l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
+						l_tokens_count := l_md_import.count_enum (l_enum_hdl)
+						if l_tokens_count > 0 then
+							create l_tokens.make (l_tokens_count)
 							from
 								l_t_upper := l_tokens_array.upper
 								l_t_index := l_tokens_array.lower
@@ -174,13 +179,28 @@ feature {NONE} -- Special childrens
 								l_tokens.put_last (l_tokens_array.item (l_t_index))
 								l_t_index := l_t_index + 1
 							end
+							if l_tokens_count > l_tokens_array.count then
+									-- We need to retrieve the rest of the data
+								l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
+
+								from
+									l_t_upper := l_tokens_array.upper
+									l_t_index := l_tokens_array.lower
+								until
+									l_t_index > l_t_upper
+								loop
+									l_tokens.put_last (l_tokens_array.item (l_t_index))
+									l_t_index := l_t_index + 1
+								end
+							end
 						end
+						l_md_import.close_enum (l_enum_hdl)
+						l_ct_index := l_ct_index - 1
 					end
-					l_md_import.close_enum (l_enum_hdl)
-				
+
 -- FIXME JFIAT: 2004-01-14 : Check with User's preference limit.
 -- FIXME JFIAT: 2004-01-14 : do we get all inherited fields too ?
-					
+
 					if l_tokens /=  Void then
 						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
 						from
@@ -197,7 +217,7 @@ feature {NONE} -- Special childrens
 									--| If the field is not a constant at compiled time
 									--| then available only throught source code or
 									--| Meta Data
-								
+
 								l_is_static := l_md_import.last_field_is_static
 								if l_is_static and l_icd_frame /= Void then
 									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
@@ -252,7 +272,7 @@ feature -- Properties
 			-- Original ICorDebugValue from Debugger
 			-- not dereferenced !
 			-- may be useful to ICorDebugEval::CallFunction ...
-			
+
 	icd_value: ICOR_DEBUG_VALUE
 			-- Value of object.
 			-- unreferenced, unboxed ...

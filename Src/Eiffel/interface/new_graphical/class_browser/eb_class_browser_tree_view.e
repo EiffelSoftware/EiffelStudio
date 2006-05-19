@@ -93,12 +93,14 @@ feature -- Actions
 		local
 			l_rows: LIST [EV_GRID_ROW]
 		do
-			l_rows := grid.selected_rows
-			if l_rows.is_empty and then grid.row_count > 0 then
-				l_rows.extend (grid.row (1))
-			end
-			if not l_rows.is_empty then
-				l_rows.do_all (agent collapse_row)
+			if is_tree_node_highlight_enabled then
+				l_rows := grid.selected_rows
+				if l_rows.is_empty and then grid.row_count > 0 then
+					l_rows.extend (grid.row (1))
+				end
+				if not l_rows.is_empty then
+					l_rows.do_all (agent collapse_row)
+				end
 			end
 		end
 
@@ -108,10 +110,12 @@ feature -- Actions
 			l_selected_rows: LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 		do
-			l_selected_rows := grid.selected_rows
-			if not l_selected_rows.is_empty then
-				l_row := l_selected_rows.first
-				on_row_selected (l_row)
+			if is_tree_node_highlight_enabled then
+				l_selected_rows := grid.selected_rows
+				if not l_selected_rows.is_empty then
+					l_row := l_selected_rows.first
+					on_row_selected (l_row)
+				end
 			end
 		end
 
@@ -136,16 +140,18 @@ feature -- Actions
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 		do
-			a_row.set_background_color (odd_line_color)
-			l_row_count := a_row.subrow_count
-			if l_row_count > 0 then
-				from
-					l_row_index := 1
-				until
-					l_row_index > l_row_count
-				loop
-					on_row_selected (a_row.subrow (l_row_index))
-					l_row_index := l_row_index + 1
+			if is_tree_node_highlight_enabled then
+				a_row.set_background_color (odd_line_color)
+				l_row_count := a_row.subrow_count
+				if l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count
+					loop
+						on_row_selected (a_row.subrow (l_row_index))
+						l_row_index := l_row_index + 1
+					end
 				end
 			end
 		end
@@ -159,16 +165,18 @@ feature -- Actions
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 		do
-			a_row.set_background_color (even_line_color)
-			l_row_count := a_row.subrow_count
-			if l_row_count > 0 then
-				from
-					l_row_index := 1
-				until
-					l_row_index > l_row_count
-				loop
-					on_row_deselected (a_row.subrow (l_row_index))
-					l_row_index := l_row_index + 1
+			if is_tree_node_highlight_enabled then
+				a_row.set_background_color (even_line_color)
+				l_row_count := a_row.subrow_count
+				if l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count
+					loop
+						on_row_deselected (a_row.subrow (l_row_index))
+						l_row_index := l_row_index + 1
+					end
 				end
 			end
 		end

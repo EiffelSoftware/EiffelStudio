@@ -24,6 +24,12 @@ feature -- Status report
 	is_class_hierarchy_formatter: BOOLEAN is True
 			-- Is current a class hierarchy formatter?
 
+	is_tree_node_highlight_enabled: BOOLEAN is
+			-- Is tree node highlight enabled?
+			-- For more information, go to {EB_CLASS_BROWSER_GRID_VIEW}.is_tree_node_highlight_enabled.
+		deferred
+		end
+
 feature{NONE} -- Implementation
 
 	generate_result is
@@ -35,9 +41,14 @@ feature{NONE} -- Implementation
 			if not l_retried then
 				l_domain ?= system_target_domain.new_domain (domain_generator)
 				browser.set_start_class (start_class)
+				if is_tree_node_highlight_enabled then
+					browser.enable_tree_node_highlight
+				else
+					browser.disable_tree_node_highlight
+				end
 				browser.update (Void, l_domain)
 			else
-				browser.update (Void, l_domain)
+				browser.update (Void, Void)
 			end
 		rescue
 			l_retried := True

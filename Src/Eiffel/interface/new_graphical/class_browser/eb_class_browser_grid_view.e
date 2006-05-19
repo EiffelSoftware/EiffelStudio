@@ -101,6 +101,24 @@ feature -- Setting
 		do
 			grid.unlock_update
 		end
+		
+	enable_tree_node_highlight is
+			-- Enable tree node highlight.
+			-- Go to `is_tree_node_highlight_enabled' for more information.
+		do
+			is_tree_node_highlight_enabled := True
+		ensure
+			tree_node_highlight_enabled: is_tree_node_highlight_enabled
+		end
+
+	disable_tree_node_highlight is
+			-- Disable tree node highlight.
+			-- Go to `is_tree_node_highlight_enabled' for more information.
+		do
+			is_tree_node_highlight_enabled := False
+		ensure
+			tree_node_highlight_disabled: not is_tree_node_highlight_enabled
+		end
 
 feature -- View update
 
@@ -159,6 +177,14 @@ feature -- Status report
 
 	is_up_to_date: BOOLEAN
 			-- Is current up-to_date?
+
+
+feature -- Status reporting
+
+	is_tree_node_highlight_enabled: BOOLEAN
+			-- Is tree node highlight enabled?
+			-- If True, when you select one row in tree view, the whole tree node hierarchy
+			-- starting from the row will be highlighted.
 
 feature{NONE} -- Implementation
 

@@ -9,7 +9,12 @@
 	<target name="consumer_library">
 		<version major="5" minor="7" release="414" build="0"/>
 
-		<external_ressource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resources"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+
+		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resources"/>
 
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
 			<debug name="assemblies_are_never_stale" enabled="false"/>
@@ -19,12 +24,7 @@
 			<debug name="refactor_fixme" enabled="false"/>
 			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
 		</option>
-
-		<file_rule>
-			<exclude>/.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
-		</file_rule>
-
+	
 		<setting name="cls_compliant" value="True"/>
 		<setting name="console_application" value="True"/>
 		<setting name="dead_code_removal" value="True"/>
@@ -50,14 +50,15 @@
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf"/>
 		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
 
-		<cluster name="consumer" location="." recursive="true">
+		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
 			<condition><dotnet value="True" /></condition>
 			<file_rule>
 				<exclude>/interop$</exclude>
 				<exclude>/resources$</exclude>
+				<exclude>/dotnet10$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="consumer_classic" location="." recursive="true">
+		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
 			<condition><dotnet value="False" /></condition>
 			<file_rule>
 				<exclude>/interop$</exclude>
@@ -67,21 +68,30 @@
 				<exclude>/resources$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="interop" location=".\support\interop\" recursive="true">
+		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
 			<condition><dotnet value="True" /></condition>
 			<option namespace="Interop"/>
 			<visible class="COM_CACHE_MANAGER"/>
 		</cluster>
 	</target>
-	
-	<target name="consumer_debug" extends="consumer_library">
-		<root feature="make" class="EMITTER"/>
-		<setting name="line_generation" value="True"/>
-	</target>
 
-	<target name="consumer_release" extends="consumer_library">
+	<target name="consumer_20" extends="consumer_library">
 		<root feature="make" class="EMITTER"/>
 		<setting name="line_generation" value="False"/>
+	</target>
+
+	<target name="consumer_10" extends="consumer_library">
+		<root feature="make" class="EMITTER"/>
+		<setting name="line_generation" value="False"/>
+		<override name="dotnet10" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet10\" recursive="false"/>
+	</target>
+
+	<target name="debug_20" extends="consumer_20">
+		<setting name="line_generation" value="False"/>
+	</target>
+
+	<target name="debug_10" extends="consumer_10">
+		<setting name="line_generation" value="True"/>
 	</target>
 
 </system>

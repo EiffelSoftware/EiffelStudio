@@ -487,6 +487,7 @@ feature {NONE} -- Settings
 			a_targets_not_void: a_targets /= Void
 		local
 			l_not_found: BOOLEAN
+			l_list: DS_ARRAYED_LIST [STRING]
 		do
 			if a_proposed_target /= Void then
 				a_targets.search (a_proposed_target)
@@ -499,7 +500,18 @@ feature {NONE} -- Settings
 				l_not_found := True
 			end
 			if l_not_found then
-				ask_for_target_name (a_targets)
+					-- Order targets in alphabetical order.
+				from
+					create l_list.make (a_targets.count)
+					a_targets.start
+				until
+					a_targets.after
+				loop
+					l_list.put_last (a_targets.key_for_iteration)
+					a_targets.forth
+				end
+				l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				ask_for_target_name (l_list)
 			end
 		ensure
 			target_name_set: not has_error implies target_name /= Void and then not target_name.is_empty
@@ -636,11 +648,13 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_for_target_name (a_targets: HASH_TABLE [CONF_TARGET, STRING]) is
+	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
 		require
 			a_targets_not_void: a_targets /= Void
 		deferred
+		ensure
+			target_name_set: not has_error implies target_name /= Void
 		end
 
 	ask_for_new_project_location (a_project_path: STRING) is

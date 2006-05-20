@@ -302,7 +302,6 @@ feature {NONE} -- User interaction
 			l_file_name: FILE_NAME
 			l_ev: EV_MESSAGE_DIALOG
 			l_save_as_msg: STRING
-			l_dir: STRING
 		do
 			create l_file_name.make_from_string (a_dir_name)
 			l_file_name.set_file_name (a_file_name)
@@ -317,7 +316,6 @@ feature {NONE} -- User interaction
 				%The default name for the new configuration is '" + a_file_name + "'.%N%
 				%Select OK if you want to keep this name, or 'Save As...' to choose a different name.")
 
-			l_dir := execution_environment.current_working_directory
 			create l_save_as.make_with_title ("Choose name for new configuration file")
 			l_save_as.set_start_directory (a_dir_name)
 			l_save_as.set_file_name (a_file_name)
@@ -329,10 +327,6 @@ feature {NONE} -- User interaction
 			l_ev.button (ev_cancel).select_actions.extend (agent on_cancelled (l_ev))
 			l_ev.button (ev_ok).select_actions.extend (agent a_action.call ([l_file_name.string]))
 			l_ev.show_modal_to_window (parent_window)
-
-				-- Due to a bug in EV_FILE_DIALOG which changes the current working directory,
-				-- we manually set it back to what it was before.
-			execution_environment.change_working_directory (l_dir)
 		end
 
 	select_config_file (a_dlg: EV_FILE_SAVE_DIALOG; a_action: PROCEDURE [ANY, TUPLE]) is
@@ -369,7 +363,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_targets: HASH_TABLE [CONF_TARGET, STRING]) is
+	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
 		local
 			l_dialog: EV_DIALOG
@@ -381,7 +375,7 @@ feature {NONE} -- User interaction
 		do
 			if a_targets.count = 1 then
 				a_targets.start
-				target_name := a_targets.key_for_iteration
+				target_name := a_targets.item_for_iteration
 			else
 				create l_dialog.make_with_title ("Select a target")
 				create l_list
@@ -390,7 +384,7 @@ feature {NONE} -- User interaction
 				until
 					a_targets.after
 				loop
-					create l_item.make_with_text (a_targets.key_for_iteration)
+					create l_item.make_with_text (a_targets.item_for_iteration)
 					l_item.pointer_double_press_actions.force_extend (agent on_target_selected (l_dialog, l_item))
 					l_list.extend (l_item)
 					a_targets.forth

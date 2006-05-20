@@ -34,6 +34,7 @@ feature {NONE} -- Constants
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
 			l_options: USER_OPTIONS
+			l_dir: DIRECTORY
 		do
 			create shared_eiffel
 			l_options := shared_eiffel.eiffel_ace.lace.user_options
@@ -42,6 +43,26 @@ feature {NONE} -- Constants
 				Result := (create {ENV_INTERP}).interpreted_string (l_options.working_directory)
 			else
 				Result := shared_eiffel.Eiffel_project.Project_directory_name
+			end
+			Result := Result.twin
+			Result.right_adjust
+			Result.left_adjust
+
+			if Result.count > 1 then
+					-- Check if directory exists? If it does not, it might be because of
+					-- an extra directory separator at the end of the name which could cause
+					-- some problem. Therefore we remove it.
+					-- We only do it if there is at least one character in the directory name,
+					-- otherwise it does not make sense.
+				create l_dir.make (Result)
+				if not l_dir.exists and then Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					Result.remove_tail (1)
+					create l_dir.make (Result)
+					if not l_dir.exists then
+							-- Revert back to the original string.
+						Result.extend ((create {OPERATING_ENVIRONMENT}).directory_separator)
+					end
+				end
 			end
 		ensure
 			application_working_directory_not_void: Result /= Void

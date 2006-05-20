@@ -312,37 +312,28 @@ feature -- Action
 
 	new_archive is
 			-- Open dialog to create new archive file.
-		local
-			current_directory: STRING
-			ee: EXECUTION_ENVIRONMENT
 		do
 			create save_dialog.make_with_preference (preferences.dialog_data.last_saved_metric_new_archive_directory_preference)
 			set_dialog_filters_and_add_all (save_dialog, <<xml_files_filter>>)
-			create ee
-			current_directory := ee.current_working_directory
-			save_dialog.save_actions.extend (agent confirm_new_archive (current_directory))
+			save_dialog.save_actions.extend (agent confirm_new_archive)
 			save_dialog.show_modal_to_window (archive_dialog)
 		end
 
-	confirm_new_archive (current_directory: STRING) is
+	confirm_new_archive is
 			-- Confirm creation of new archive
-		require
-			correct_directory: current_directory /= Void
 		local
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 1)
-			array.put (agent on_new_archive (current_directory), 1)
+			array.put (agent on_new_archive, 1)
 			create confirm_dialog.make_with_text_and_actions (
 				"Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
 
-	on_new_archive (current_directory: STRING) is
+	on_new_archive is
 			-- Launch metric calculation for all non scope ratio metrics over
 			-- `System_scope'. Save measures in the created file.
-		require
-			correct_directory: current_directory /= Void
 		local
 			file: PLAIN_TEXT_FILE
 			file_name: STRING
@@ -351,8 +342,6 @@ feature -- Action
 			error_dialog: EB_INFORMATION_DIALOG
 			x_pos, y_pos: INTEGER
 		do
-			create ee
-			ee.change_working_directory (current_directory)
 			overwrite := False
 			x_pos := archive_dialog.x_position + 50
 			y_pos := archive_dialog.y_position + 50
@@ -383,37 +372,28 @@ feature -- Action
 
 	update_archive is
 			-- Open dialog to update archive file.
-		local
-			current_directory: STRING
-			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_update_archive_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
-			create ee
-			current_directory := ee.current_working_directory
-			open_dialog.open_actions.extend (agent confirm_update_archive (current_directory))
+			open_dialog.open_actions.extend (agent confirm_update_archive)
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 
-	confirm_update_archive (current_directory: STRING) is
+	confirm_update_archive is
 			-- Confirm creation of new archive
-		require
-			correct_directory: current_directory /= Void
 		local
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 1)
-			array.put (agent on_update_archive (current_directory), 1)
+			array.put (agent on_update_archive, 1)
 			create confirm_dialog.make_with_text_and_actions (
 				"Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
 
-	on_update_archive (current_directory: STRING) is
+	on_update_archive is
 			-- Launch metric calculation for all non scope ratio metrics over
 			-- `System_scope'. Overwrite updated file.
-		require
-			correct_directory: current_directory /= Void
 		local
 			file: PLAIN_TEXT_FILE
 			file_name: STRING
@@ -422,10 +402,7 @@ feature -- Action
 			l_deserialized_document: XM_DOCUMENT
 			error_dialog: EB_INFORMATION_DIALOG
 			x_pos, y_pos: INTEGER
-			ee: EXECUTION_ENVIRONMENT
 		do
-			create ee
-			ee.change_working_directory (current_directory)
 			overwrite := False
 			x_pos := archive_dialog.x_position + 50
 			y_pos := archive_dialog.y_position + 50
@@ -479,30 +456,17 @@ feature -- Action
 
 	browse_archive is
 			-- Open dialog to select archive file forcomparison with surrent system.
-		local
-			current_directory: STRING
-			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_browse_archive_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
-			create ee
-			current_directory := ee.current_working_directory
-			open_dialog.open_actions.extend (agent on_browse_archive (current_directory))
+			open_dialog.open_actions.extend (agent on_browse_archive)
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 
-	on_browse_archive (current_directory: STRING) is
+	on_browse_archive is
 			-- Display archive path and compare.
-		require
-			correct_directory: current_directory /= Void
-		local
-			ee: EXECUTION_ENVIRONMENT
-			file_name: STRING
 		do
-			create ee
-			ee.change_working_directory (current_directory)
-			file_name := open_dialog.file_name
-			browse_archive_field.set_text (file_name)
+			browse_archive_field.set_text (open_dialog.file_name)
 		end
 
 	archive_syntax (root_element: XM_ELEMENT): BOOLEAN is

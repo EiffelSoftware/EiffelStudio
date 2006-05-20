@@ -11,17 +11,17 @@ class
 
 inherit
 	SHARED_XML_ROUTINES
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make (management_cmd: EB_METRIC_MANAGEMENT_CMD) is
@@ -73,23 +73,23 @@ feature -- Access
 		-- List of available non basic metrics in current system that have not been
 		-- deleted (before exiting management dialog). They cannot be added to importable
 		-- metrics of selected file.
-		
+
 	importable_metric_list: EV_LIST
 		-- List of available and importable non basic metrics in selected file.
-		
+
 	current_metric_list: EV_LIST
 		-- List of available non basic metrics in current system,
 		-- and the imported one from selected file.
 
 	import_metrics_dialog: EV_DIALOG
 			-- Dialog to display importable metrics and to pick up the wished ones.
-			
+
 	rename_imported_metric_dialog: EV_DIALOG
 			-- Dialog to rename metric when its name is already being used in current project.
-			
+
 	name_is_correct: BOOLEAN
 		-- Is new name correct?
-	
+
 feature -- Dialogs
 
 	build_import_metrics_dialog is
@@ -287,27 +287,21 @@ feature -- Importation
 
 	import_action is
 			-- Open dialog to select file for metric importation.
-		local
-			l_env: EXECUTION_ENVIRONMENT
-			l_dir: STRING
 		do
 			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_import_metric_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			open_dialog.open_actions.extend (agent import_file)
-			create l_env
-			l_dir := l_env.current_working_directory
 			open_dialog.show_modal_to_window (interface.management_dialog)
-			l_env.change_working_directory (l_dir)
 		end
-	
+
 	import_file is
 			-- Read selected file's name.
 		local
 			file_name: STRING
 		do
 			file_name := open_dialog.file_name
-			on_import (file_name, interface.management_dialog)			
-		end		
+			on_import (file_name, interface.management_dialog)
+		end
 
 	on_import (file_name: STRING; parent_dialog: EV_DIALOG) is
 			-- Display dialog to allow metric importation.
@@ -396,7 +390,7 @@ feature -- Importation
 			error_dialog.show_modal_to_window (interface.management_dialog)
 			retry
 		end
-		
+
 	update_wished_list is
 			-- Update `wished_metric_list' when `interface.tool.metrics' has changed.
 		local
@@ -452,7 +446,7 @@ feature -- Importation
 				current_metric_list.extend (list_item)
 			end
 			current_metric_list.drop_actions.extend (agent interface.move_to_list (?, current_metric_list))
-			
+
 		end
 
 	add_metric is
@@ -652,7 +646,7 @@ feature -- Importation
 			formula_field_import.set_text (formula)
 			unit_field_import.set_text (unit)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

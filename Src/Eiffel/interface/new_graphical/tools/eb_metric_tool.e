@@ -738,17 +738,11 @@ feature -- Archive
 	select_archive_for_measure is
 			-- Open dialog to load an archive file as a scope object for
 			-- metric calculation.
-		local
-			current_directory: STRING
-			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
-			create ee
-			current_directory := ee.current_working_directory
 			open_dialog.open_actions.extend (agent import_archive_for_measure)
 			open_dialog.show_modal_to_window (development_window.window)
-			ee.change_working_directory (current_directory)
 		end
 
 	import_archive_for_measure is

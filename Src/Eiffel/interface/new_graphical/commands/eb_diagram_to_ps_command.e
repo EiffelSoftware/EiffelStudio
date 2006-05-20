@@ -51,8 +51,6 @@ feature -- Basic operations
 			test_file: RAW_FILE
 			error: INTEGER
 			wd: EV_WARNING_DIALOG
-			env: EXECUTION_ENVIRONMENT
-			current_directory: STRING
 		do
 			if is_sensitive then
 				if error = 0 then
@@ -64,12 +62,7 @@ feature -- Basic operations
 					else
 						dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
 					end
-					create env
-					current_directory := env.current_working_directory
 					dial.show_modal_to_window (tool.development_window.window)
-						-- EA: added this to prevent working directory changes by file dialog.
-						-- Will maybe be fixed in Vision 2
-					env.change_working_directory (current_directory)
 					if not dial.file_name.is_empty then
 						error := 1
 						p := tool.projector.world_as_pixmap (5)

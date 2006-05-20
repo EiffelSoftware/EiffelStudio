@@ -96,7 +96,7 @@ feature {NONE} -- WEL Implementation
 			current_height: INTEGER
 			theme_drawer: EV_THEME_DRAWER_IMP
 		do
-				-- Retreive the internal `height' of `tool_bar'
+				-- Retrieve the internal `height' of `tool_bar'
 				-- computed from `get_max_size'. This is the height that the
 				-- bar is actually displayed as.
 			current_height := toolbar.get_max_size.height

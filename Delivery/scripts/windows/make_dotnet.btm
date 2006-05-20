@@ -10,17 +10,19 @@ call nmake
 copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
-cdd %EIFFEL_SRC\dotnet\consumer\ace
+cdd %EIFFEL_SRC\dotnet\consumer
 iff not defined WIN64 then
-	sed -e "s/^.*setting name=\"msil_generation\".*$/<setting name=\"msil_generation\" value=\"True\"\/><setting name=\"msil_clr_version\" value=\"v1.0.3705\"\/>/" eiffelsoftware.metadataconsumer.ecf >> new
-	move new eiffelsoftware.metadataconsumer.ecf
+	set TARGET_NAME=consumer_10
+else
+	set TARGET_NAME=consumer_20
 endiff
-finalize eiffelsoftware.metadataconsumer.ecf
-iff not exist EIFGENs\eiffelsoftware.metadataconsumer\F_code\EiffelSoftware.MetadataConsumer.dll then
+finalize consumer.ecf %TARGET_NAME
+iff not exist EIFGENs\%TARGET_NAME\F_code\EiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EIFGENs\eiffelsoftware.metadataconsumer\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
-copy EIFGENs\eiffelsoftware.metadataconsumer\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGENs\%TARGET_NAME\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGENs\%TARGET_NAME\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
 
+set TARGET_NAME=
 cdd %EIFFEL_SRC

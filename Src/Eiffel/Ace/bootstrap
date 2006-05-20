@@ -23,7 +23,7 @@ set target = "batch"
 #set target = "bench"
 
 #First stage of bootstrap
-(time ec -finalize -config ec.acex -target $target -batch -clean >& e_comp1 )>> e_comp1
+(time ec -finalize -config ec.ecf -target $target -batch -clean >& e_comp1 )>> e_comp1
 cd EIFGENs/$target/F_code
 (time finish_freezing >& ../../../c_comp1 )>> ../../../c_comp1
 strip ec
@@ -35,7 +35,7 @@ cd ../..
 #If first stage succeeded, let's go for Second stage of bootstrap
 if ( -e ec_stage1 ) then
 	\rm -rf EIFGENs
-	(time ./ec_stage1 -finalize -config ec.acex -target $target -batch -clean >& e_comp2 )>> e_comp2
+	(time ./ec_stage1 -finalize -config ec.ecf -target $target -batch -clean >& e_comp2 )>> e_comp2
 	cd EIFGENs/$target/F_code
 	(time finish_freezing >& ../../../c_comp2)>> ../../../c_comp2
 	strip ec
@@ -47,7 +47,7 @@ if ( -e ec_stage1 ) then
 	#if second stage succeeded, let's go for Third and final stage of bootstrap
 	if ( -e ec_stage2 ) then
 		\rm -rf EIFGENs
-		(time ./ec_stage2 -finalize -config ec.acex -target $target -batch -clean >& e_comp3 )>> e_comp3
+		(time ./ec_stage2 -finalize -config ec.ecf -target $target -batch -clean >& e_comp3 )>> e_comp3
 		cd EIFGENs/$target/F_code
 		(time finish_freezing >& ../../../c_comp3)>> ../../../c_comp3
 		strip ec

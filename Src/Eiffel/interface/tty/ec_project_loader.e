@@ -218,14 +218,14 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_targets: HASH_TABLE [CONF_TARGET, STRING]) is
+	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
 		local
 			l_answered: BOOLEAN
 		do
 			if a_targets.count = 1 then
 				a_targets.start
-				target_name := a_targets.key_for_iteration.twin
+				target_name := a_targets.item_for_iteration.twin
 			else
 				io.put_string ("This project has more than one target: ")
 				io.put_new_line
@@ -235,7 +235,7 @@ feature {NONE} -- User interaction
 					a_targets.after
 				loop
 					io.put_string (" - ")
-					io.put_string (a_targets.key_for_iteration)
+					io.put_string (a_targets.item_for_iteration)
 					io.put_new_line
 					a_targets.forth
 				end

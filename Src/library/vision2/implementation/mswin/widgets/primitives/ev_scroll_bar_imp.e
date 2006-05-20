@@ -115,7 +115,7 @@ feature {EV_ANY_I} -- Implementation
 			wel_set_range (value_range.lower, value_range.upper + a_leap - 1)
 			Precursor (a_leap)
 		end
-		
+
 	wel_set_range (a_minimum, a_maximum: INTEGER) is
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
@@ -138,12 +138,12 @@ feature {EV_ANY_I} -- Implementation
 				must_adjust := True
 				adjusted_value := a_maximum
 			end
-			
+
 			scroll_info_struct.set_mask (Sif_range)
 			scroll_info_struct.set_minimum (a_minimum)
 			scroll_info_struct.set_maximum (a_maximum)
 			cwin_set_scroll_info (wel_item, Sb_ctl, scroll_info_struct.item, True)
-			
+
 				-- If previous `value' is now out of range then
 				-- assign `adjusted_value' to `value'.
 			if must_adjust then

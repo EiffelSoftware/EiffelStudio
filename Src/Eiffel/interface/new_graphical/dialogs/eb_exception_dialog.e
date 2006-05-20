@@ -11,14 +11,14 @@ class
 
 inherit
 	EV_DIALOG
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -32,7 +32,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 create
 	make
 
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			save_button: EV_BUTTON
 		do
 			trace := a_trace
-			
+
 			default_create
 			set_title ("Internal Error")
 			set_icon_pixmap (pixmaps.icon_dialog_window)
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			error_label.align_text_left
 			error_pixmap := Pixmaps.error_pixmap.twin
 			error_pixmap.set_minimum_size (error_pixmap.width, error_pixmap.height)
-			
+
 			create ignore_button.make_with_text_and_action ("Ignore", agent destroy)
 			create quit_button.make_with_text_and_action ("Quit now!", agent execute_die)
 			create restart_button.make_with_text_and_action ("Restart now!", agent restart)
@@ -80,12 +80,12 @@ feature {NONE} -- Initialization
 			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))
 			exception_text.disable_line_numbers
 			exception_text.load_text (trace)
-			
+
 			create pixmap_box
 			pixmap_box.extend (error_pixmap)
 			pixmap_box.disable_item_expand (error_pixmap)
 			pixmap_box.extend (create {EV_CELL})
-			
+
 			create error_box
 			error_box.set_padding (Layout_constants.Default_padding_size)
 			error_box.extend (pixmap_box)
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			error_box.extend (error_label)
 			error_box.disable_item_expand (error_label)
 			error_box.extend (create {EV_CELL})
-			
+
 			create exception_frame
 			exception_frame.extend (exception_text.widget)
 
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			buttons_box.extend (save_button)
 			buttons_box.disable_item_expand (save_button)
 			buttons_box.extend (create {EV_CELL})
-			
+
 			create main_box
 			main_box.set_padding (Layout_constants.Default_padding_size)
 			main_box.set_border_width (Layout_constants.Default_border_size)
@@ -118,12 +118,12 @@ feature {NONE} -- Initialization
 			main_box.extend (exception_frame) -- Expadable item
 			main_box.extend (buttons_box)
 			main_box.disable_item_expand (buttons_box)
-			
+
 			extend (main_box)
 			set_default_push_button (ignore_button)
 			set_default_cancel_button (ignore_button)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	execute_die is
@@ -148,16 +148,11 @@ feature {NONE} -- Implementation
 			sfd: EB_FILE_SAVE_DIALOG
 			text_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			l_env: EXECUTION_ENVIRONMENT
-			l_dir: STRING
 		do
 			if not retried then
 				create sfd.make_with_preference (preferences.dialog_data.last_saved_exception_directory_preference)
 				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
-				create l_env
-				l_dir := l_env.current_working_directory
 				sfd.show_modal_to_window (Current)
-				l_env.change_working_directory (l_dir)
 				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)
 					text_file.put_string (trace)
@@ -171,7 +166,7 @@ feature {NONE} -- Implementation
 
 	trace: STRING;
 			-- displayed Trace
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

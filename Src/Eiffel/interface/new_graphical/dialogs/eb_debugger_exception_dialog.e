@@ -20,21 +20,21 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 create
 	make, default_create --, make_with_window
 
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_exception_tag (a_exception_tag)
-			set_exception_message (a_exception_message)			
+			set_exception_message (a_exception_message)
 		end
 
 	make_with_window (a_window: EV_DIALOG) is
@@ -78,7 +78,7 @@ feature -- Show
 		do
 			window.show_modal_to_window (w)
 		end
-		
+
 feature -- Details
 
 	set_title_and_label (t,l: STRING) is
@@ -104,7 +104,7 @@ feature -- Details
 			message := t
 			display_exception_tag_and_message
 		end
-		
+
 	display_exception_tag_and_message is
 			-- Display Exception's tag and message
 		local
@@ -116,15 +116,15 @@ feature -- Details
 				s.append_string ("%N%N")
 			end
 			if message /= Void then
-				s.append_string (message)				
+				s.append_string (message)
 			end
 			if s.occurrences ('%R') > 0 then
 				s.prune_all ('%R')
 			end
 			message_text.set_text (s)
 			message_text.disable_edit
-			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)			
-		end		
+			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
+		end
 
 	set_details (d: STRING) is
 			-- Add additional details
@@ -173,16 +173,11 @@ feature {NONE} -- Implementation
 			sfd: EB_FILE_SAVE_DIALOG
 			text_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			l_env: EXECUTION_ENVIRONMENT
-			l_dir: STRING
 		do
 			if not retried then
 				create sfd.make_with_preference (preferences.dialog_data.last_saved_debugger_exception_directory_preference)
 				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
-				create l_env
-				l_dir := l_env.current_working_directory
 				sfd.show_modal_to_window (window)
-				l_env.change_working_directory (l_dir)
 				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)
 					text_file.put_string (message_text.text)
@@ -193,23 +188,23 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-	
+
 	close_dialog is
 			-- Close dialog
 		do
 			window.destroy
 		end
-		
+
 	set_wrapping_mode is
 			-- update wrapping mode for exception message
 		do
 			if wrapping_button.is_selected then
 				message_text.enable_word_wrapping
 			else
-				message_text.disable_word_wrapping				
+				message_text.disable_word_wrapping
 			end
 			message_text.disable_edit
-		end	
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

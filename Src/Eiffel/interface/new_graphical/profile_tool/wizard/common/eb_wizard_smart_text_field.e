@@ -16,14 +16,14 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 			{ANY} supported_filters
 		end
 
-create	
+create
 	make
 
 feature -- Initialization
@@ -100,7 +100,7 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING is 
+	text: STRING is
 			-- Text of the textfield
 		do
 			if generated then
@@ -138,7 +138,7 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	is_password: BOOLEAN
 			-- Is the text in the text field replaced by stars (for passwords).
 
@@ -155,7 +155,7 @@ feature -- Status report
 		do
 			Result := widget.is_sensitive
 		end
-		
+
 	starting_directory: STRING is
 			-- Starting directory
 		require
@@ -187,13 +187,13 @@ feature -- Status setting
 		end
 
 feature -- Settings
-	
+
 	set_text, set_textfield_string (a_string: STRING) is
 			-- Set the text of the text field to `txt'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
 		do
-			if generated then 
+			if generated then
 				textfield.set_text (a_string)
 			else
 				textfield_string := a_string
@@ -310,7 +310,7 @@ feature -- Settings
 		ensure
 			not_password: not is_password
 		end
-		
+
 	set_starting_directory (a_directory: STRING) is
 			-- Set the starting directory
 		require
@@ -326,11 +326,9 @@ feature {NONE} -- Implementation
 			-- Launch a file Browser.
 		local
 			file_selector: EV_FILE_OPEN_DIALOG
-			l_env: EXECUTION_ENVIRONMENT
-			l_dir: STRING
 		do
 			create file_selector
-			if starting_directory /= Void and then 
+			if starting_directory /= Void and then
 				not starting_directory.is_empty and then
 				(create {DIRECTORY}.make (starting_directory)).exists
 			then
@@ -338,10 +336,7 @@ feature {NONE} -- Implementation
 			end
 			set_dialog_filters_and_add_all (file_selector, <<browse_file_filter>>)
 			file_selector.open_actions.extend(agent file_selected(file_selector))
-			create l_env
-			l_dir := l_env.current_working_directory
 			file_selector.show_modal_to_window (caller.first_window)
-			l_env.change_working_directory (l_dir)
 		end
 
 	browse_directory is
@@ -359,7 +354,7 @@ feature {NONE} -- Implementation
 					-- Retrieve the string from the textfield, and set
 					-- the starting directory with it if it's a directory.
 				start_directory := textfield.text.twin
-				
+
 				if not start_directory.is_empty then
 					end_char := start_directory @ start_directory.count
 					if end_char = '\' or end_char = '/' then
@@ -367,8 +362,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			
-			if not start_directory.is_empty and then 
+
+			if not start_directory.is_empty and then
 				not start_directory.is_empty and then
 				(create {DIRECTORY}.make (start_directory)).exists
 			then
@@ -379,7 +374,7 @@ feature {NONE} -- Implementation
 		end
 
 	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
-			-- The user selected a directory from the browser. 
+			-- The user selected a directory from the browser.
 			-- It updates the text fields accordingly.
 		require
 			selector_exists: dir_selector /= Void
@@ -388,7 +383,7 @@ feature {NONE} -- Implementation
 		end
 
 	file_selected (file_selector: EV_FILE_OPEN_DIALOG) is
-			-- The user selected a file from the file dialog. 
+			-- The user selected a file from the file dialog.
 			-- Updates the text field accordingly.
 		require
 			selector_exists: file_selector /= Void
@@ -413,13 +408,13 @@ feature {NONE} -- Implementation
 
 	label_size: INTEGER
 			-- Requested size for the label.
-	
+
 	label_string: STRING
 			-- Requested Text for the Label.
 
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
-	
+
 	textfield_string: STRING
 			-- Requested text for the text field.
 

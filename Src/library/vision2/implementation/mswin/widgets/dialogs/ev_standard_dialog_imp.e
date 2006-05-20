@@ -26,11 +26,22 @@ feature -- Status setting
 			--| A window is required for the gtk implementation.
 		local
 			modal_to: WEL_COMPOSITE_WINDOW
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
+				-- Because on Windows, standard dialog may change the current
+				-- working directory, we prevent it.
+			create l_env
+			l_dir := l_env.current_working_directory
+
 			set_blocking_window (a_window)
 			modal_to ?= blocking_window.implementation
 			activate (modal_to)
 			set_blocking_window (Void)
+
+				-- After closing the dialog, we restore the current working directory.
+			l_env.change_working_directory (l_dir)
+
 			if selected then
 				selected_button := internal_accept
 				if ok_actions_internal /= Void then

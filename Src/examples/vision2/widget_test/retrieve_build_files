@@ -18,7 +18,7 @@ svn co $svntag/Delivery/build/bitmaps Delivery/build/bitmaps
 svn co $svntag/Delivery/vision2_tour Delivery/vision2_tour
 
 # Copy template files
-cp -r Delivery/vision2_tour/templates/ ./
+cp -r Delivery/vision2_tour/templates ./
 
 
 # Copy constants and eiffel environment to interface.

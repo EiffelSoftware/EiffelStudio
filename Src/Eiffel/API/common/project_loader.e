@@ -502,7 +502,7 @@ feature {NONE} -- Settings
 			if l_not_found then
 					-- Order targets in alphabetical order.
 				from
-					create l_list.make (a_targets.count)
+					create l_list.make_equal (a_targets.count)
 					a_targets.start
 				until
 					a_targets.after

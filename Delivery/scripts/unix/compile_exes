@@ -96,6 +96,8 @@ fullrd $INSTALL_DIR/studio/spec/unix
 
 
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libmtfinalized.a
+mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libmtwkbench.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libfinalized.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libwkbench.a
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 

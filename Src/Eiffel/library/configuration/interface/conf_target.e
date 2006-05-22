@@ -930,12 +930,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_file_rules (a_file_rules: like internal_file_rule) is
 			-- Set `internal_file_rule' to `a_file_rules'.
-		require
-			a_file_rules_not_void: a_file_rules /= Void
 		do
-			internal_file_rule := a_file_rules
+			if a_file_rules /= Void then
+				internal_file_rule := a_file_rules
+			else
+				create internal_file_rule.make (0)
+			end
 		ensure
-			file_rules_set: internal_file_rule = a_file_rules
+			file_rules_set: a_file_rules /= Void implies internal_file_rule = a_file_rules
+			file_rules_set: a_file_rules = Void implies internal_file_rule.is_empty
 		end
 
 	add_file_rule (a_file_rule: CONF_FILE_RULE) is

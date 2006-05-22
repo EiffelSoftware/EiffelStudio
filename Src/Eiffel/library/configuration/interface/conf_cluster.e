@@ -121,16 +121,6 @@ feature -- Access queries
 			l_lib: CONF_LIBRARY
 			l_local: CONF_OPTION
 		do
-				-- if used as library, get options from application level
-				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_library then
-				l_lib := find_parent_library_in_application_target
-				if l_lib /= Void then
-					Result := l_lib.options
-				else
-					Result := target.application_target.options
-				end
-			end
 				-- get local options
 			if internal_options /= Void then
 				l_local := internal_options.twin
@@ -141,6 +131,22 @@ feature -- Access queries
 				l_local.merge (parent.options)
 			end
 			l_local.merge (target.options)
+
+				-- if used as library, get options from application level
+				-- either if the library is defined there or otherwise directly from the application target
+			if is_used_library then
+				l_lib := find_parent_library_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.options
+				else
+					Result := target.application_target.options
+						-- take namespace from local options if defined there
+					if l_local.namespace /= Void then
+						Result.set_namespace (l_local.namespace)
+					end
+				end
+				l_local.set_namespace (Void)
+			end
 
 			if Result /= Void then
 				Result.merge (l_local)

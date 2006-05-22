@@ -242,6 +242,14 @@ feature -- Access queries
 			l_assembly: CONF_ASSEMBLY
 			l_local: CONF_OPTION
 		do
+				-- get local options
+			if internal_options /= Void then
+				l_local := internal_options.twin
+			else
+				create l_local
+			end
+			l_local.merge (target.options)
+
 				-- if used as library, get options from application level
 				-- either if the assembly is defined there or otherwise directly from the application target
 			if is_used_library then
@@ -250,16 +258,13 @@ feature -- Access queries
 					Result := l_assembly.options
 				else
 					Result := target.application_target.options
+						-- take namespace from local options if defined there
+					if l_local.namespace /= Void then
+						Result.set_namespace (l_local.namespace)
+					end
 				end
+				l_local.set_namespace (Void)
 			end
-
-				-- get local options
-			if internal_options /= Void then
-				l_local := internal_options.twin
-			else
-				create l_local
-			end
-			l_local.merge (target.options)
 
 			if Result /= Void then
 				Result.merge (l_local)

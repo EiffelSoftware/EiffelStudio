@@ -159,6 +159,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 
 	set_namespace (a_namespace: like namespace) is
 			-- Set `namespace' to `a_namespace'.
+		require
+			a_namespace_not_empty: a_namespace = Void or else not a_namespace.is_empty
 		do
 			namespace := a_namespace
 		ensure
@@ -340,6 +342,9 @@ feature -- Merging
 				end
 			end
 		end
+
+invariant
+	namespace_not_empty: namespace = Void or else not namespace.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -162,10 +162,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_window /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
 			end
-			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
-			if a_window /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-			end
 		end
 
 	pointer_style: EV_CURSOR

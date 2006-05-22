@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		do
 			create platform.make (1)
 			create build.make (1)
+			create version.make (1)
 			create custom.make (1)
 		end
 
@@ -36,8 +37,8 @@ feature -- Access
 	dotnet: CELL [BOOLEAN]
 			-- Enabled for dotnet?
 
-	version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
-			-- Enabled for a certain version number?
+	version: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
+			-- Enabled for a certain version number? Indexed by the type of the version number.
 
 	custom: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
@@ -53,6 +54,9 @@ feature -- Queries
 			l_pf_cond, l_build_cond: TUPLE [value: INTEGER; invert: BOOLEAN]
 			l_cust_cond: TUPLE [value: STRING; invert: BOOLEAN]
 			l_vars: CONF_HASH_TABLE [STRING, STRING]
+			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_ver_cond: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_ver_state: CONF_VERSION
 		do
 			Result := True
 				-- multithreaded
@@ -94,9 +98,19 @@ feature -- Queries
 			end
 
 				-- Version
-			if Result and version /= Void then
-				Result := (version.min = Void or else version.min <= a_state.version) and
-					(version.max = Void or else version.max >= a_state.version)
+			if Result and not version.is_empty then
+				from
+					l_version := a_state.version
+					version.start
+				until
+					not Result or version.after
+				loop
+					l_ver_cond := version.item_for_iteration
+					l_ver_state := l_version.item (version.key_for_iteration)
+					Result := l_ver_state /= Void and then (l_ver_cond.min = Void or else l_ver_cond.min <= l_ver_state) and
+						(l_ver_cond.max = Void or else l_ver_cond.max >= l_ver_state)
+					version.forth
+				end
 			end
 
 				-- custom
@@ -202,22 +216,27 @@ feature -- Update
 			custom_empty: custom.is_empty
 		end
 
-	set_version (a_min, a_max: CONF_VERSION) is
+	add_version (a_min, a_max: CONF_VERSION; a_type: STRING) is
 			-- Set version constraint.
 		require
 			min_or_max: a_min /= Void or a_max /= Void
 			min_less_max: a_min /= Void and a_max /= Void implies a_min <= a_max
+			valid_type: valid_version_type (a_type)
+		local
+			l_vers: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 		do
-			create version
-			version.min := a_min
-			version.max := a_max
+			create l_vers
+			l_vers.min := a_min
+			l_vers.max := a_max
+			version.force (l_vers, a_type)
 		ensure
-			version_set: version /= Void and then version.min = a_min and version.max = a_max
+			version_added: version.has (a_type)
 		end
 
 
 invariant
 	platform_not_void: platform /= Void
 	build_not_void: build /= Void
+	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 end

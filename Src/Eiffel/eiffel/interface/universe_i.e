@@ -62,7 +62,30 @@ feature -- Properties
 		require
 			target_not_void: target /= Void
 		do
-			create Result.make (platform, build, system.has_multithreaded, system.il_generation, target.variables, compiler_version_number)
+			Result := conf_state_from_target (target)
+		end
+
+	conf_state_from_target (a_target: CONF_TARGET): CONF_STATE is
+			-- Current state, according to `a_target', needed for conditioning.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_ver: STRING
+			l_clr_version: CONF_VERSION
+		do
+			create l_version.make (1)
+			l_version.force (compiler_version_number, v_compiler)
+			if system.il_generation then
+				l_ver := system.clr_runtime_version.twin
+				l_ver.prune_all_leading ('v')
+				create l_clr_version.make_from_string (l_ver)
+				check
+					valid_clr_version: not l_clr_version.is_error
+				end
+				l_version.force (l_clr_version, v_msil_clr)
+			end
+			create Result.make (platform, build, system.has_multithreaded, system.il_generation, a_target.variables, l_version)
 		end
 
 	platform: INTEGER is

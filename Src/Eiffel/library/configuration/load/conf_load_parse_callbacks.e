@@ -1163,24 +1163,35 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_condition: current_condition /= Void
 		local
-			l_min, l_max: STRING
+			l_min, l_max, l_type: STRING
 			l_vers_min, l_vers_max: CONF_VERSION
 		do
 			l_min := current_attributes.item (at_min)
 			l_max := current_attributes.item (at_max)
+			l_type := current_attributes.item (at_type)
 			if l_min /= Void then
-				l_vers_min := parse_version (l_min)
+				create l_vers_min.make_from_string (l_min)
+				if l_vers_min.is_error then
+					set_parse_error_message ("Invalid version number in version condition: "+l_min)
+				end
 			end
 			if l_max /= Void then
-				l_vers_max := parse_version (l_max)
+				create l_vers_max.make_from_string (l_max)
+				if l_vers_max.is_error then
+					set_parse_error_message ("Invalid version number in version condition: "+l_max)
+				end
 			end
 			if not is_error then
 				if l_min = Void and l_max = Void then
 					set_parse_error_message ("No minimum or maximum version in version condition specified.")
 				elseif l_min /= Void and l_max /= Void and then l_min > l_max then
 					set_parse_error_message ("Minimum version can not be greater than maximum version in version condition.")
+				elseif l_type = Void then
+					set_parse_error_message ("No version type specified in version condition.")
+				elseif not valid_version_type (l_type) then
+					set_parse_error_message ("Invalid version type "+l_type+" in version condition.")
 				else
-					current_condition.set_version (l_vers_min, l_vers_max)
+					current_condition.add_version (l_vers_min, l_vers_max, l_type)
 				end
 			end
 		end
@@ -1313,48 +1324,6 @@ feature {NONE} -- Implementation
 
 	current_attributes: HASH_TABLE [STRING, INTEGER]
 			-- The values of the current attributes.
-
-feature {NONE} -- Implementation helper
-
-	parse_version (a_version: STRING): CONF_VERSION is
-			-- Parse `a_version' and generate a {CONF_VERSION} out of it or set an error
-			-- Has to be of format XXX.XXX.XXX.XXX where only the first part is obligatory.
-			-- regexp to match it is \d*(\.\d*){0,3}
-		require
-			a_version_not_void: a_version /= Void
-		local
-			l_parts: LIST [STRING]
-			l_version: ARRAY [NATURAL_16]
-			l_error: BOOLEAN
-		do
-			create l_version.make (1, 4)
-			l_parts := a_version.split ('.')
-			if l_parts.count = 0 or l_parts.count > 4 then
-				l_error := True
-			else
-				from
-					l_parts.start
-				until
-					l_error or l_parts.after
-				loop
-					if l_parts.item.is_natural_16 then
-						l_version[l_parts.index] := l_parts.item.to_natural_16
-					else
-						l_error := True
-					end
-					l_parts.forth
-				end
-			end
-
-			if not l_error then
-				create Result.make_version (l_version[1], l_version[2], l_version[3], l_version[4])
-			else
-				set_parse_error_message ("Invalid version number in version condition: "+a_version)
-			end
-		ensure
-			Result_set: not is_error implies Result /= Void
-		end
-
 
 feature {NONE} -- Implementation state transitions
 
@@ -1720,9 +1689,10 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_attr, t_dotnet)
 
 				-- version
-			create l_attr.make (2)
+			create l_attr.make (3)
 			l_attr.force (at_min, "min")
 			l_attr.force (at_max, "max")
+			l_attr.force (at_type, "type")
 			Result.force (l_attr, t_version_condition)
 
 				-- custom
@@ -1865,6 +1835,7 @@ feature {NONE} -- Implementation constants
 	at_group,
 	at_succeed,
 	at_working_directory,
+	at_type,
 	at_warning: INTEGER is unique
 
 feature -- Assertions

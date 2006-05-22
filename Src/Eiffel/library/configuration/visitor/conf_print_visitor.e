@@ -395,7 +395,9 @@ feature {NONE} -- Implementation
 			l_custs: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
 			l_pf, l_build: TUPLE [value: INTEGER; invert: BOOLEAN]
 			l_custom: TUPLE [value: STRING; invert: BOOLEAN]
+			l_versions: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
 			l_name: STRING
+			l_ver: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 		do
 			if a_conditions /= Void then
 					-- assembly and only the default rule? => don't print it
@@ -453,15 +455,23 @@ feature {NONE} -- Implementation
 							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"/>%N")
 						end
 
-						if l_condition.version /= Void then
-							append_text_indent ("<version")
-							if l_condition.version.min /= Void then
-								append_text (" min=%""+l_condition.version.min.version+"%"")
+						from
+							l_versions := l_condition.version
+							l_versions.start
+						until
+							l_versions.after
+						loop
+							l_ver := l_versions.item_for_iteration
+							append_text_indent ("<version type="+l_versions.key_for_iteration)
+							if l_ver.min /= Void then
+								append_text (" min=%""+l_ver.min.version+"%"")
 							end
-							if l_condition.version.max /= Void then
-								append_text (" max=%""+l_condition.version.max.version+"%"")
+							if l_ver.max /= Void then
+								append_text (" max=%""+l_ver.max.version+"%"")
 							end
 							append_text ("/>%N")
+
+							l_versions.forth
 						end
 
 						from

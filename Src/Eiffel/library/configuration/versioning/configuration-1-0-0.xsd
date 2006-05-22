@@ -234,7 +234,7 @@
 		<xs:attribute name="excluded_value" type="xs:string"/>
 	</xs:complexType>
 
-		<xs:simpleType name="available_builds">
+	<xs:simpleType name="available_builds">
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "workbench"/>
 			  <xs:enumeration value = "finalize"/>
@@ -250,10 +250,18 @@
 	</xs:complexType>
 	
 	<xs:complexType name="version_condition">
+		<xs:attribute type="version_type" name="type"/>
 		<xs:attribute type="version_number" name="min" use="optional"/>
 		<xs:attribute type="version_number" name="max" use="optional"/>
 	</xs:complexType>
-	
+
+	<xs:simpleType name="version_type">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "compiler"/>
+			  <xs:enumeration value = "msil_clr"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+		
 	<xs:simpleType name="version_number">
 		<xs:restriction base="xs:string">
 			<xs:pattern

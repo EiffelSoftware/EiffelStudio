@@ -549,7 +549,7 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 {
 		/* String representation of $HOME */
 #ifdef EIF_WINDOWS
-	char l_path[MAX_PATH];
+	char l_path[MAX_PATH + 1];
 	HRESULT hr = SHGetFolderPath (NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, l_path);
 	if (hr == S_OK) {
 		return RTMS(l_path);

@@ -39,11 +39,14 @@ feature -- Basic validity queries
 	valid_setting (a_setting: STRING): BOOLEAN is
 			-- Is `a_setting' a valid setting?
 		do
-			if a_setting /= Void and then not a_setting.is_empty then
-				Result := valid_settings.has (a_setting)
-			end
+			Result := a_setting /= Void and then valid_settings.has (a_setting)
 		end
 
+	valid_version_type (a_version_type: STRING): BOOLEAN is
+			-- Is `a_version_type' valid?
+		do
+			Result := a_version_type /= Void and then valid_version_types.has (a_version_type)
+		end
 
 feature {NONE} -- Basic operation
 
@@ -138,6 +141,16 @@ feature {NONE} -- Implementation
 			Result.force (w_syntax)
 			Result.force (w_old_verbatim_strings)
 			Result.force (w_same_uuid)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	valid_version_types: SEARCH_TABLE [STRING] is
+			-- The codes of valid version types.
+		once
+			create Result.make (2)
+			Result.force (v_compiler)
+			Result.force (v_msil_clr)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			l_errors: LIST [CONF_ERROR]
 		do
 			create l_factory
-			create l_state.make (universe.platform, universe.build, system.has_multithreaded, system.il_generation, a_target.variables, compiler_version_number)
+			l_state := universe.conf_state_from_target (a_target)
 			create l_parse_vis.make_build (l_state, a_target, l_factory)
 			a_target.process (l_parse_vis)
 			if l_parse_vis.is_error then

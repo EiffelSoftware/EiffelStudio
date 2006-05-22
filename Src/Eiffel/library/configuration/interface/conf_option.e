@@ -315,6 +315,8 @@ feature -- Merging
 				end
 				if namespace = Void then
 					namespace := other.namespace
+				elseif other.namespace /= Void then
+					namespace := other.namespace + "." + namespace
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured

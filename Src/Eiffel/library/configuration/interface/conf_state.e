@@ -51,8 +51,8 @@ feature -- Access
 	is_dotnet: BOOLEAN
 			-- Dotnet?
 
-	version: CONF_VERSION
-			-- Version?
+	version: HASH_TABLE [CONF_VERSION, STRING]
+			-- Versions?
 
 	custom_variables: CONF_HASH_TABLE [STRING, STRING]
 			-- User defined variables.

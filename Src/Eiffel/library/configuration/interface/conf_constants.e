@@ -28,6 +28,11 @@ feature -- Builds
 	build_workbench_name: STRING is "Workbench"
 	build_finalize_name: STRING is "Finalize"
 
+feature -- Version types
+
+	v_compiler: STRING is "compiler"
+	v_msil_clr: STRING is "msil_clr"
+
 feature -- Warnings
 
 	w_unused_local: STRING is "unused_local"

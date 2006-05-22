@@ -116,6 +116,7 @@ feature -- Execution
 				-- User just asked for an open file dialog,
 				-- and we set it on the last opened directory.
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
+			create environment_variable
 			last_directory_opened := environment_variable.get (Studio_Directory_List)
 			if last_directory_opened /= Void then
 				fod.set_start_directory (last_directory_opened.substring (1,last_directory_opened.index_of(';',1) -1 ))

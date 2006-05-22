@@ -361,6 +361,11 @@ feature {NONE} -- Implementation
 			-- while parented.
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
+			if parent_imp /= Void and then parent_imp.i_th (1) = interface then
+					-- Account for the fact that the 1st column does not have a resize bar
+					-- so 2 pixel are removed from the 1st column.
+				Result := Result - 2
+			end
 		end
 
 	box: POINTER

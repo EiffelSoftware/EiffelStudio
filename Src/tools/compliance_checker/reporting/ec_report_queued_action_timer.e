@@ -13,19 +13,19 @@ indexing
 
 class
 	EC_REPORT_QUEUED_ACTION_TIMER
-	
+
 inherit
 	DISPOSABLE
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Create an initialize a new idle action timer
 		do
-			create mutex_guard
+			create mutex_guard.make
 			create action_queue.make (5)
 			create action_timer
 			action_timer.actions.extend (agent on_tick)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Disposing
-	
+
 	dispose is
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
@@ -49,10 +49,10 @@ feature -- Disposing
 		ensure then
 			is_disposed: is_disposed
 		end
-		
+
 	is_disposed: BOOLEAN
 			-- Has instance been disposed of?
-	
+
 feature -- Extending
 
 	extend (a_action: PROCEDURE [ANY, TUPLE]) is
@@ -67,9 +67,9 @@ feature -- Extending
 		ensure
 			a_action_added: action_queue.has (a_action)
 		end
-		
+
 feature {NONE} -- Basic Operations
-	
+
 	suspend is
 			-- Suspend timer actions
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Basic Operations
 		ensure
 			action_timer_paused: action_timer.interval = 0
 		end
-		
+
 	resume is
 			-- Resume timer actions
 		require
@@ -94,8 +94,8 @@ feature {NONE} -- Basic Operations
 			unlock_access
 		ensure
 			action_timer_resumed: action_timer.interval = interval
-		end	
-		
+		end
+
 feature {NONE} -- Action Processing
 
 	on_tick is
@@ -103,7 +103,7 @@ feature {NONE} -- Action Processing
 		do
 			lock_access
 			suspend
-				
+
 			from
 			until
 				action_queue.is_empty
@@ -111,11 +111,11 @@ feature {NONE} -- Action Processing
 				action_queue.item.call ([])
 				action_queue.remove
 			end
-				
+
 			resume
 			unlock_access
 		end
-		
+
 feature {NONE} -- Implementation
 
 	lock_access is
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		do
 			mutex_guard.lock
 		end
-		
+
 	unlock_access is
 			-- Unlocks access
 		do
@@ -132,16 +132,16 @@ feature {NONE} -- Implementation
 
 	action_queue: ARRAYED_QUEUE [PROCEDURE [ANY, TUPLE]]
 			-- Queue of all actions to process.
-			
+
 	action_timer: EV_TIMEOUT
 			-- Idle action timer.
-			
+
 	interval: INTEGER is 20
 			-- Timer interval.
-			
+
 	mutex_guard: MUTEX
 			-- Mutex used to syncronize access
-	
+
 invariant
 	action_queue_attached: action_queue /= Void
 	action_timer_attached: action_timer /= Void

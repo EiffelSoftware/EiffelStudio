@@ -1,0 +1,3 @@
+Error: Two creation routines specified as constructors have same interface.
+What to do: Make sure that creation routines used as constructors have
+    different signatures (number and/or type of arguments).

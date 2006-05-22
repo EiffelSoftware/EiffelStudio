@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 
 			signal_connect (l_c_object, app_imp.focus_in_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, True), Void, True)
 			signal_connect (l_c_object, app_imp.focus_out_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, False), Void, True)
-				--Used to handle explicit Window focus handling.
+				-- Used to handle explicit Window focus handling.
 
 			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
 

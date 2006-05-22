@@ -153,8 +153,7 @@ feature -- Basic Exportations
 	prepare_for_unload is
 			-- prepares all that in necessary be before running app domain in unloaded
 		do
-			implementation.compact_and_clean_cache
-			implementation.release_cached_assemblies
+			implementation.unload
 		end
 
 feature {COM_CACHE_MANAGER2} -- Implementation

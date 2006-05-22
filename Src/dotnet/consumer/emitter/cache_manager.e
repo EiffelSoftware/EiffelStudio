@@ -69,9 +69,8 @@ feature -- Clean Up
 			-- resources. This is not a dispose so and cleaned up
 			-- resources should be able to be resurected.
 		do
-			compact_and_clean_cache
-			release_cached_assemblies
 			cache_writer.dispose
+			release_cached_assemblies
 		end
 
 feature -- Access

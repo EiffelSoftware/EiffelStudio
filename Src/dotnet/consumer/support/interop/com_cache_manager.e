@@ -90,14 +90,16 @@ feature -- Basic Exportations
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do
-			l_impl := new_marshalled_cache_manager
-			l_impl.prepare_for_unload
-			if app_domain /= Void then
-				internal_marshalled_cache_manager := Void
-				if not app_domain.is_finalizing_for_unload then
-					{APP_DOMAIN}.unload (app_domain)
+			if internal_marshalled_cache_manager /= Void then
+				l_impl := new_marshalled_cache_manager
+				l_impl.prepare_for_unload
+				if app_domain /= Void then
+					internal_marshalled_cache_manager := Void
+					if not app_domain.is_finalizing_for_unload then
+						{APP_DOMAIN}.unload (app_domain)
+					end
+					app_domain := Void
 				end
-				app_domain := Void
 			end
 		end
 

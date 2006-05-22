@@ -13,6 +13,7 @@
 
 		<file_rule>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 
 		<setting name="cls_compliant" value="True"/>
@@ -20,7 +21,6 @@
 		<setting name="dead_code_removal" value="True"/>
 		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="il_verifiable" value="True"/>
-		<setting name="msil_clr_version" value="v1.1.4322"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_key_file_name" value="${EIFFEL_SRC}\dotnet\helpers\isekey.snk"/>
@@ -52,6 +52,7 @@
 			</option>
 			<file_rule>
 				<exclude>/ec_checker_application.e$</exclude>
+				<exclude>/engine$</exclude>
 				<exclude>/ace$</exclude>
 			</file_rule>
 		</cluster>		

@@ -88,7 +88,7 @@
 	</target>
 
 	<target name="debug_20" extends="consumer_20">
-		<setting name="line_generation" value="False"/>
+		<setting name="line_generation" value="True"/>
 	</target>
 
 	<target name="debug_10" extends="consumer_10">

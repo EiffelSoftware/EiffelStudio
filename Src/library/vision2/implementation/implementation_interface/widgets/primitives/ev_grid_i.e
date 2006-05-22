@@ -4067,22 +4067,22 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 --			vertical_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 --			vertical_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 --			vertical_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
-			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+--			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+--			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 --
 --			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
 --			horizontal_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 --			horizontal_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
 --			horizontal_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
-			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
-			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+--			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+--			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
 --			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
 --			scroll_bar_spacer.pointer_button_press_actions.extend (agent pointer_button_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
 --			scroll_bar_spacer.pointer_double_press_actions.extend (agent pointer_double_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
 --			scroll_bar_spacer.pointer_button_release_actions.extend (agent pointer_button_release_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
-			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
-			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
+--			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
+--			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
 
 			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates_wrapper)
 

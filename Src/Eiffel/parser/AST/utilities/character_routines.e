@@ -15,7 +15,7 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := char_to_string (char, False).twin
+			Result := char_to_string (char, False)
 		ensure
 			char_text_not_void: Result /= Void
 			refactoring_correct: Result.is_equal (old_char_text (char))
@@ -26,11 +26,9 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			--| FIXME jfiat [2006/03/28] : to implemente better WIDE_CHARACTER support
-			Result := char_to_string (wchar.to_character_8, False).twin
+			Result := code_to_string_32 (wchar.natural_32_code, False)
 		ensure
 			wchar_text_not_void: Result /= Void
---			refactoring_correct: Result.is_equal (old_wchar_text (wchar))
 		end
 
 	eiffel_string (s: STRING): STRING is
@@ -58,6 +56,46 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	code_to_string_32 (code: NATURAL_32; for_string: BOOLEAN): STRING_32 is
+			-- "Readable" representation of `code' using
+			-- special character convention when necessary;
+			-- Syntactically correct when quoted
+			-- If `for_string', do not escape '%'' else do not escape '"'.
+		local
+			esc_char: CHARACTER
+		do
+			if for_string then
+				esc_char := '"'
+			else
+				esc_char := '%''
+			end
+			if
+				code = ('%N').natural_32_code
+				or else code = ('%T').natural_32_code
+				or else code = ('%%').natural_32_code
+				or else code = ('%R').natural_32_code
+				or else code = ('%F').natural_32_code
+				or else code = ('%B').natural_32_code
+				or else code = esc_char.natural_32_code
+			then
+				Result := special_chars.item (code)
+			elseif code = ('%U').natural_32_code then
+				Result := "%%U"
+			else
+				if code < {ASCII}.First_printable.to_natural_32 then
+					create Result.make (6)
+					Result.append ("%%/")
+					Result.append_code (code)
+					Result.extend ('/')
+				else
+					create Result.make (1)
+					Result.append_code (code)
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	char_to_string (char: CHARACTER; for_string: BOOLEAN): STRING is
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
@@ -78,7 +116,7 @@ feature {NONE} -- Implementation
 				or else char = '%R' or else char = '%F'
 				or else char = '%B' or else char = esc_char
 			then
-				Result := special_chars.item (char)
+				Result := special_chars.item (char.natural_32_code)
 			elseif char = '%U' then
 				Result := "%%U"
 			else
@@ -93,21 +131,21 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			char_to_string_not_void: Result /= Void
+			Result_not_void: Result /= Void
 		end
 
-	special_chars: HASH_TABLE [STRING, CHARACTER] is
+	special_chars: HASH_TABLE [STRING, NATURAL_32] is
 			-- List of characters that need escaping.
 		once
 			create Result.make (8)
-			Result.put ("%%N", '%N')
-			Result.put ("%%T", '%T')
-			Result.put ("%%%%", '%%')
-			Result.put ("%%R", '%R')
-			Result.put ("%%F", '%F')
-			Result.put ("%%B", '%B')
-			Result.put ("%%'", '%'')
-			Result.put ("%%%"", '"')
+			Result.put ("%%N", ('%N').natural_32_code)
+			Result.put ("%%T", ('%T').natural_32_code)
+			Result.put ("%%%%",('%%').natural_32_code)
+			Result.put ("%%R", ('%R').natural_32_code)
+			Result.put ("%%F", ('%F').natural_32_code)
+			Result.put ("%%B", ('%B').natural_32_code)
+			Result.put ("%%'", ('%'').natural_32_code)
+			Result.put ("%%%"", ('"').natural_32_code)
 		ensure
 			special_chars_not_void: Result /= Void
 		end

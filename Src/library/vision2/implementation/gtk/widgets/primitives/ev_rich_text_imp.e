@@ -558,8 +558,10 @@ feature -- Status setting
 		local
 			a_format_imp: EV_CHARACTER_FORMAT_IMP
 		do
-			a_format_imp ?= format.implementation
-			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+			if not is_destroyed then
+				a_format_imp ?= format.implementation
+				modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+			end
 		end
 
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is

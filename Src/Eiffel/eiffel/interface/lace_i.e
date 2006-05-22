@@ -324,8 +324,12 @@ feature -- Status setting
 				 -- update project path
 			if a_project_path /= Void then
 				project_path := a_project_path.twin
-				l_changed := not equal (a_project_path, user_options.eifgen)
-				user_options.set_eifgen (a_project_path)
+
+					-- make it into an absolute path
+				project_path := file_system.absolute_pathname (project_path)
+
+				l_changed := not equal (project_path, user_options.eifgen)
+				user_options.set_eifgen (project_path)
 			elseif user_options.eifgen /= Void then
 				project_path := user_options.eifgen
 			else

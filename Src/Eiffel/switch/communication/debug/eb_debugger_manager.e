@@ -1558,7 +1558,7 @@ feature {NONE} -- MSIL system implementation
 			Result := Eiffel_project.initialized
 					and then Eiffel_project.system_defined
 					and then Eiffel_system.System.il_generation
-					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)
+					and then equal (Eiffel_system.System.msil_generation_type, dll_type)
 		end
 
 	dll_type: STRING is "dll"

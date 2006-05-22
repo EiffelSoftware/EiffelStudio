@@ -10,6 +10,9 @@ class
 
 inherit
 	MARSHAL_BY_REF_OBJECT
+		redefine
+			initialize_lifetime_service
+		end
 
 feature -- Access
 
@@ -154,6 +157,22 @@ feature -- Basic Exportations
 			-- prepares all that in necessary be before running app domain in unloaded
 		do
 			implementation.unload
+		end
+
+feature -- Lifetime Services
+
+	initialize_lifetime_service: SYSTEM_OBJECT is
+			-- Obtains a lifetime service object to control the lifetime policy for this instance
+		local
+			l_lease: ILEASE
+		do
+			l_lease ?= Precursor {MARSHAL_BY_REF_OBJECT}
+			check l_lease_attached: l_lease /= Void end
+
+			l_lease.initial_lease_time := {TIME_SPAN}.zero
+			Result := l_lease
+		ensure then
+			result_attached: Result /= Void
 		end
 
 feature {COM_CACHE_MANAGER2} -- Implementation

@@ -244,13 +244,15 @@ feature -- Basic operation
 		local
 			a_start, a_end, text_count: INTEGER
 		do
-			a_start := start_pos.min (end_pos)
-			a_end := end_pos.max (start_pos)
-			text_count := text.count
-			if a_end < text_count then
-				a_start := a_start + (text_count - a_end)
+			if not is_destroyed then
+				a_start := start_pos.min (end_pos)
+				a_end := end_pos.max (start_pos)
+				text_count := text.count
+				if a_end < text_count then
+					a_start := a_start + (text_count - a_end)
+				end
+				{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, a_start - 1, -1)
 			end
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, a_start - 1, -1)
 		end
 
 	select_region_internal (start_pos, end_pos: INTEGER) is

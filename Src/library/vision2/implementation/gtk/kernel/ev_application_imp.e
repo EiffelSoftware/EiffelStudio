@@ -234,7 +234,9 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window, l_gtk_widget: POINTER
 		do
-			if captured_widget /= Void then
+			if pebble_transporter /= Void then
+				l_pnd_item := pebble_transporter
+			elseif captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
 			else
 				if {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (a_gdk_event) = GDK_BUTTON_RELEASE then
@@ -276,12 +278,13 @@ feature -- Basic operation
 			gdk_event: POINTER
 			event_widget, grab_widget: POINTER
 			l_call_event, l_propagate_event, l_event_handled: BOOLEAN
+			l_pnd_imp: EV_PICK_AND_DROPABLE_IMP
 			l_widget_imp: EV_WIDGET_IMP
-			l_widget_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			l_no_more_events: BOOLEAN
 		do
 			from
-				l_widget_motion_tuple := motion_tuple
+				l_motion_tuple := motion_tuple
 			until
 				l_no_more_events
 			loop
@@ -305,31 +308,40 @@ feature -- Basic operation
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 								-- This will force another motion notify as we have the motion hint flag set for all widgets.
 							l_widget_imp ?= gtk_widget_imp_at_pointer_position
-							if captured_widget /= Void then
-								l_widget_imp ?= captured_widget.implementation
+							if is_in_transport then
+								l_pnd_imp := pebble_transporter
+							elseif
+								captured_widget /= Void
+							then
+								l_pnd_imp ?= captured_widget.implementation
 							end
-							if l_widget_imp /= Void then
+
+							if l_pnd_imp /= Void then
 								if pointer_motion_actions_internal /= Void then
-									pointer_motion_actions_internal.call (
-										[
-											l_widget_imp.interface,
-											{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-											{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-										]
-									)
+									l_widget_imp ?= l_pnd_imp
+									if l_widget_imp /= Void then
+											pointer_motion_actions_internal.call (
+											[
+												l_widget_imp.interface,
+												{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+												{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+											]
+										)
+									end
 								end
-								if l_widget_imp.is_sensitive then
-									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_widget_imp.screen_x, 1)
-									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_widget_imp.screen_y, 2)
-									l_widget_motion_tuple.put_double (0.5, 3)
-									l_widget_motion_tuple.put_double (0.5, 4)
-									l_widget_motion_tuple.put_double (0.5, 5)
-									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
-									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
-									l_widget_imp.on_pointer_motion (l_widget_motion_tuple)
+								if l_pnd_imp.has_struct_flag (l_pnd_imp.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) then
+									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_x, 1)
+									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_y, 2)
+									l_motion_tuple.put_double (0.5, 3)
+									l_motion_tuple.put_double (0.5, 4)
+									l_motion_tuple.put_double (0.5, 5)
+									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
+									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
+									l_pnd_imp.on_pointer_motion (l_motion_tuple)
 								end
 							end
 							l_widget_imp := Void
+							l_pnd_imp := Void
 						when GDK_BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_PRESS%N")
@@ -648,7 +660,7 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-	on_pick (a_pebble: ANY) is
+	on_pick (a_source: EV_PICK_AND_DROPABLE_IMP; a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		local
 			cur: CURSOR
@@ -656,7 +668,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			i: INTEGER
 			l_pnd_targets: like pnd_targets
 		do
-			enable_is_in_transport
+			pebble_transporter := a_source
 			l_pnd_targets := pnd_targets
 			cur := l_pnd_targets.cursor
 			from
@@ -682,7 +694,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
-			disable_is_in_transport
+			pebble_transporter := Void
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -692,24 +704,14 @@ feature {EV_ANY_IMP} -- Implementation
 
 feature -- Implementation
 
-	is_in_transport: BOOLEAN
-		-- Is application currently in transport (either PND or docking)?
-
-	enable_is_in_transport is
-			-- Set `is_in_transport' to True.
-		require
-			not_in_transport: not is_in_transport
+	is_in_transport: BOOLEAN is
+			-- Is application currently in transport (either PND or docking)?
 		do
-			is_in_transport := True
+			Result := pebble_transporter /= Void
 		end
 
-	disable_is_in_transport is
-			-- Set `is_in_transport' to False.
-		require
-			in_transport: is_in_transport
-		do
-			is_in_transport := False
-		end
+	pebble_transporter: EV_PICK_AND_DROPABLE_IMP
+		-- Transporter object if any.
 
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.

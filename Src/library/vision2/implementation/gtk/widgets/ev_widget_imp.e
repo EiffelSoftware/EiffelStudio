@@ -95,20 +95,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			-- Used for key event actions sequences.
 		local
 			temp_key_string: STRING_32
-			a_capture_widget_imp: EV_WIDGET_IMP
 			app_imp: like app_implementation
 		do
 			app_imp := app_implementation
-			if app_imp.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.Key_escape then
-					-- If a PND is in action and the Esc key is pressed then cancel it
-				if app_imp.captured_widget /= Void then
-						-- We are definitely in PND so we set a_capture_widget_imp for start_transport to be executed on it
-					a_capture_widget_imp ?= app_imp.captured_widget.implementation
-				end
-			end
-			if a_capture_widget_imp /= Void then
-				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
-			elseif has_focus or else has_capture then
+			if has_focus or else has_capture then
 					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
 				if a_key_press then
 						-- The event is a key press event.
@@ -292,26 +282,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
-			-- Handle motion event for `Current'.
-		do
-			if app_implementation.is_in_transport then
-				execute (
-					a_motion_tuple.integer_32_item (1),
-					a_motion_tuple.integer_32_item (2),
-					a_motion_tuple.double_item (3),
-					a_motion_tuple.double_item (4),
-					a_motion_tuple.double_item (5),
-					a_motion_tuple.integer_32_item (6),
-					a_motion_tuple.integer_32_item (7)
-				)
-			elseif pointer_motion_actions_internal /= Void then
-				pointer_motion_actions_internal.call (a_motion_tuple)
-			end
-		end
-
 feature -- Access
 
 	parent: EV_CONTAINER is
@@ -336,48 +306,6 @@ feature -- Access
 		do
 			child := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
 			create Result.set (x, y)
-		end
-
-feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
-
-	screen_x: INTEGER is
-			-- Horizontal position of the client area on screen,
-		local
-			a_x: INTEGER
-			a_aux_info: POINTER
-			i: INTEGER
-		do
-			if is_displayed then
-					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				    	$a_x, NULL)
-					Result := a_x
-			else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
-					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
-				end
-			end
-		end
-
-	screen_y: INTEGER is
-			-- Vertical position of the client area on screen,
-		local
-			a_y: INTEGER
-			a_aux_info: POINTER
-			i: INTEGER
-		do
-			if is_displayed then
-					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				    	NULL, $a_y)
-					Result := a_y
-			else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
-					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
-				end
-			end
 		end
 
 feature -- Status setting

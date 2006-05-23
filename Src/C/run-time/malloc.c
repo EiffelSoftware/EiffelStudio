@@ -121,28 +121,41 @@ doc:	</description>
 #define NEXT(zone)			(zone)->ov_next
 #define PREVIOUS(zone)		(*(union overhead **) (zone + 1))
 
-/* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT
+/* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT - ALIGNMAX
  * with their own padding which is a multiple of ALIGNMAX
  * have their own entry in the `hlist'.
- *  E.g.: 0, 8, 16, ...., 512 in case where ALIGNMAX = 8
- * Above `HLIST_SIZE_LIMIT', the corresponding entry `i' (i > 8) has
- * the sizes between 2^i and (2^(i+1) - 1).
+ *  E.g.: 0,  4,  8, ...., 252 in case where ALIGNMAX = 4
+ *  E.g.: 0,  8, 16, ...., 504 in case where ALIGNMAX = 8
+ *  E.g.: 0, 16, 32, ...., 1008 in case where ALIGNMAX = 16
+ 
+ * Above or at `HLIST_SIZE_LIMIT', the corresponding entry `i' (i >= HLIST_INDEX_LIMIT) has
+ * the sizes between 2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT) and
+ * (2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT + 1) - ALIGNMAX).
+ * Explanation: Since we already occupy slots below HLIST_INDEX_LIMIT for sizes smaller
+ *   than HLIST_SIZE_LIMIT, there will be non-used slots after slot HLIST_INDEX_LIMIT.
+ *   Because we cannot use ALIGNMAX for testing in preprocessor macros, we are taking the minimum
+ *   number of slots that we are guaranteed not to occupy when ALIGNAX is at its minimum value,
+ *   this value is HLIST_DEFAULT_SHIFT (the minimum possible value for ALIGNMAX being 4, this gives
+ *   a smallest greatest size for HLIST_SIZE_LIMIT of 256, i.e. 2^HLIST_DEFAULT_SHIFT).
+ *   Note: on other platforms where ALIGNMAX is greater, we get some more unused slots and it would
+ *     be great to dynamically compute HLIST_DEFAULT_SHIFT at compile time, but this is not
+ *     yet possible.
  *
- * In `compute_hlist_index' we decided to shift by default by 8 since the minimum
- * of ALIGNMAX is 4.
  * Because the maximum size we can allocate is either 2^27 or 2^59 (depending or not
- * you are running 64 bits) this gives us 19 or 51 more possibilities in addition to the 64
- * of HLIST_INDEX_LIMIT. Resulting in a value of 83 or 115 for NBLOCKS (See below).
+ * you are running 64 bits) this gives us (27 - HLIST_DEFAULT_SHIFT) or (59 - HLIST_DEFAULT_SHIFT)
+ * more possibilities in addition to the HLIST_INDEX_LIMIT possibilities, thus having the definition
+ * below for NBLOCKS.
  */
-
-#ifdef EIF_64_BITS
-#define NBLOCKS				115
-#else
-#define NBLOCKS				83
-#endif
 
 #define HLIST_INDEX_LIMIT	64
 #define HLIST_DEFAULT_SHIFT 8
+
+#ifdef EIF_64_BITS
+#define NBLOCKS				HLIST_INDEX_LIMIT + 59 - HLIST_DEFAULT_SHIFT
+#else
+#define NBLOCKS				HLIST_INDEX_LIMIT + 27 - HLIST_DEFAULT_SHIFT
+#endif
+
 #define HLIST_SIZE_LIMIT	HLIST_INDEX_LIMIT * ALIGNMAX
 #define HLIST_INDEX(size)	(((size) < HLIST_SIZE_LIMIT)? \
 							 	(uint32) (size / ALIGNMAX) : compute_hlist_index (size))
@@ -1776,14 +1789,7 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 #endif
 
 	if (i >= HLIST_INDEX_LIMIT) {
-		selected = allocate_free_list_helper (i + 1, nbytes, hlist);
-		if ((!selected) && (hlist[i])) {
-				/* We could not find a free space in `i + 1' or above and there
-				 * is some space in `i'. We take that space and too bad that
-				 * we will have a 0-sized block. */
-			selected = allocate_free_list_helper (i, nbytes, hlist);
-			CHECK("found block", selected);
-		}
+		selected = allocate_free_list_helper (i, nbytes, hlist);
 	} else {
 			/* We are below the limit `HLIST_INDEX_LIMIT', therefore if the entry of
 			 * `hlist' at index `i' is not NULL, then it means that we have `nbytes'

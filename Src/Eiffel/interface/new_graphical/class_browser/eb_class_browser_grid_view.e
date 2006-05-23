@@ -32,6 +32,10 @@ inherit
 
 	SHARED_EDITOR_DATA
 
+	EB_CLASS_BROWSER_UTILITY
+
+	EB_SHARED_PIXMAPS
+
 feature{NONE} -- Initialization
 
 	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
@@ -72,12 +76,16 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				text.drop_actions.fill (drop_actions)
 			end
+			on_scroll_behavior_changed
 			editor_preferences.keyword_font_preference.change_actions.extend (agent on_color_or_font_changed)
 			editor_preferences.keyword_text_color_preference.change_actions.extend (agent on_color_or_font_changed)
 			editor_preferences.normal_text_color_preference.change_actions.extend (agent on_color_or_font_changed)
 			editor_preferences.editor_font_preference.change_actions.extend (agent on_color_or_font_changed)
 			preferences.class_browser_data.odd_row_background_color_preference.change_actions.extend (agent on_color_or_font_changed)
 			preferences.class_browser_data.even_row_background_color_preference.change_actions.extend (agent on_color_or_font_changed)
+			editor_preferences.mouse_wheel_scroll_full_page_preference.change_actions.extend (agent on_scroll_behavior_changed)
+			editor_preferences.mouse_wheel_scroll_size_preference.change_actions.extend (agent on_scroll_behavior_changed)
+			editor_preferences.scrolling_common_line_count_preference.change_actions.extend (agent on_scroll_behavior_changed)
 		end
 
 feature -- Setting
@@ -101,7 +109,7 @@ feature -- Setting
 		do
 			grid.unlock_update
 		end
-		
+
 	enable_tree_node_highlight is
 			-- Enable tree node highlight.
 			-- Go to `is_tree_node_highlight_enabled' for more information.
@@ -173,6 +181,34 @@ feature -- Access
 			-- This is used when a tree view is to be built. And start class serves as the root of that tree.
 			-- If `start_class' is Void, don't build tree.
 
+	collapse_button: EV_TOOL_BAR_BUTTON is
+			-- Button to collapse one level of tree
+		do
+			if collapse_button_internal = Void then
+				create collapse_button_internal
+				collapse_button_internal.set_pixmap (icon_collapse_all)
+				collapse_button_internal.set_tooltip (tooltip_with_accelerator (interface_names.l_collapse_layer, accelerator_from_preference ("collapse_tree_node")))
+				collapse_button_internal.select_actions.extend (collapse_button_pressed_action)
+			end
+			Result := collapse_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expand_button: EV_TOOL_BAR_BUTTON is
+			-- Button to expand one level of tree
+		do
+			if expand_button_internal = Void then
+				create expand_button_internal
+				expand_button_internal.set_pixmap (icon_expand_all)
+				expand_button_internal.set_tooltip (tooltip_with_accelerator (interface_names.l_expand_layer,accelerator_from_preference ("expand_tree_node")))
+				expand_button_internal.select_actions.extend (expand_button_pressed_action)
+			end
+			Result := expand_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
@@ -208,7 +244,7 @@ feature{NONE} -- Implementation
 feature{NONE} -- Actions
 
 	on_color_or_font_changed is
-			-- Action performed when color or font used to display editor tokens changes
+			-- Action to be performed when color or font used to display editor tokens changes
 		do
 			if grid.is_displayed then
 				fill_rows
@@ -219,6 +255,14 @@ feature{NONE} -- Actions
 				text.set_font (font)
 				text.refresh_now
 			end
+		end
+
+	on_scroll_behavior_changed is
+			-- Action to be performed when scroll behevior preferences changes
+		do
+			grid.scrolling_behavior.set_mouse_wheel_scroll_full_page (editor_preferences.mouse_wheel_scroll_full_page)
+			grid.scrolling_behavior.set_mouse_wheel_scroll_size (editor_preferences.mouse_wheel_scroll_size)
+			grid.scrolling_behavior.set_scrolling_common_line_count (editor_preferences.scrolling_common_line_count)
 		end
 
 	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
@@ -262,6 +306,112 @@ feature{NONE} -- Actions
 					end
 				end
 			end
+		end
+
+	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `collapse_button' is pressed
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `expand_button' is pressed
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is
+			-- Action to be performed when predefined function keys are pressed
+			-- If `a_key' is processed, return True, otherwise False.
+		require
+			a_key_attached: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+				if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
+					on_collapse_selected_levels_key_pressed
+					Result := True
+				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+				if is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
+					on_expand_selected_levels_key_pressed
+					Result := True
+				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				on_enter_pressed
+				Result := True
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
+				on_ctrl_c_pressed
+				Result := True
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
+				on_ctrl_a_pressed
+				Result := True
+			end
+		end
+
+	on_enter_pressed is
+			-- Action to be performed when enter key is pressed
+		deferred
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		deferred
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		deferred
+		end
+
+	on_collapse_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for collapse selected levels is pressed.
+		deferred
+		end
+
+	on_expand_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for expand selected levels is pressed.
+		deferred
+		end
+
+feature{NONE} -- Sorting
+
+	item_tester (a_item, b_item: EV_GRID_ITEM): BOOLEAN is
+			-- Tester to test if index of `a_item' is less than `b_item'
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.parent /= Void
+			b_item_attached: b_item /= Void
+			b_item_is_parented: b_item.parent /= Void
+		do
+			if a_item.row.index /= b_item.row.index then
+				Result := a_item.row.index < b_item.row.index
+			else
+				Result := a_item.column.index < b_item.column.index
+			end
+		end
+
+	sorted_items (a_item_list: LIST [EV_GRID_ITEM]): DS_LIST [EV_GRID_ITEM] is
+			-- Sorted items of `a_item_list'
+		require
+			a_item_list_attached: a_item_list /= Void
+		local
+			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ITEM]
+			l_sorter: DS_QUICK_SORTER [EV_GRID_ITEM]
+		do
+			create {DS_ARRAYED_LIST [EV_GRID_ITEM]}Result.make (a_item_list.count)
+			from
+				a_item_list.start
+			until
+				a_item_list.after
+			loop
+				Result.force_last (a_item_list.item)
+				a_item_list.forth
+			end
+			create l_tester.make (agent item_tester)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (Result)
 		end
 
 feature{NONE} -- Implementation
@@ -317,6 +467,116 @@ feature{NONE} -- Implementation
 			-- Bind data in `rows' into `grid'.
 		deferred
 		end
+
+	row_depth (a_row: EV_GRID_ROW): INTEGER is
+			-- Tree depth of `a_row'.
+			-- Top level row has depth 0.
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_parent_row: EV_GRID_ROW
+		do
+			from
+				l_parent_row := a_row.parent_row
+			until
+				l_parent_row = Void
+			loop
+				Result := Result + 1
+				l_parent_row := l_parent_row.parent_row
+			end
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	selected_text: STRING is
+			-- String representation of selected rows/items
+			-- If no row/item is selected, return an empty string.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	tabs (n: INTEGER): STRING is
+			-- String representation of `n' tabs
+		require
+			n_non_negative: n >= 0
+		local
+			i: INTEGER
+		do
+			create Result.make (n)
+			if n > 0 then
+				from
+					i := 1
+				until
+					i > n
+				loop
+					Result.append_character ('%T')
+					i := i + 1
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	do_all_in_rows (a_row_list: LIST [EV_GRID_ROW]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]) is
+			-- Call `a_agent' for all rows in `a_row_list'.
+		require
+			a_row_list_attached: a_row_list /= Void
+			a_agent_attached: a_agent /= Void
+		do
+			if not a_row_list.is_empty then
+				from
+					a_row_list.start
+				until
+					a_row_list.after
+				loop
+					a_agent.call ([a_row_list.item])
+					a_row_list.forth
+				end
+			end
+		end
+
+	do_all_in_items (a_item_list: LIST [EV_GRID_ITEM]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]]) is
+			-- Call `a_agent' for all items in `a_item_list'.
+		require
+			a_item_list_attached: a_item_list /= Void
+			a_agent_attached: a_agent /= Void
+		do
+			if not a_item_list.is_empty then
+				from
+					a_item_list.start
+				until
+					a_item_list.after
+				loop
+					a_agent.call ([a_item_list.item])
+					a_item_list.forth
+				end
+			end
+		end
+
+	tooltip_with_accelerator (a_text: STRING; a_accelerator: EV_ACCELERATOR): STRING is
+			-- Tooltip text `a_text' with information of accelerator key `a_accelerator'
+		require
+			a_text_attached: a_text /= Void
+			a_accelerator_attached: a_accelerator /= Void
+		do
+			create Result.make (a_text.count + 10)
+			Result.append (a_text)
+			Result.append (" (")
+			Result.append (a_accelerator.out)
+			Result.append_character (')')
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature{NONE} -- Implementation
+
+	expand_button_internal: like expand_button
+			-- Implementation of `expand_button'
+
+	collapse_button_internal: like collapse_button
+			-- Implementation of `collapse_button'
 
 invariant
 	development_window_attached: development_window /= Void

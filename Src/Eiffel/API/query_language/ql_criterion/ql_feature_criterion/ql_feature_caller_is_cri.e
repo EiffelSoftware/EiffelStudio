@@ -57,7 +57,6 @@ feature{QL_DOMAIN} -- Intrinsic domain
 	intrinsic_domain: QL_FEATURE_DOMAIN is
 			-- Intrinsic_domain which can be inferred from current criterion
 		local
-			l_user_data_list: like user_data_list
 			l_feature_list: like feature_list
 			l_feature: QL_FEATURE
 			l_invariant_list: like invariant_list
@@ -126,7 +125,6 @@ feature{NONE} -- Implementation
 			l_feat_not_void: l_feat /= Void
 		local
 			cfeat: STRING
-			list: SORTED_LIST [STRING]
 			invariant_name: STRING
 			l_invariant_list: like invariant_list
 			l_feature_list: like feature_list

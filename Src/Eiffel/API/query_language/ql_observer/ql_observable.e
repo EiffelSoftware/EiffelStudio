@@ -41,7 +41,7 @@ feature -- Notification
 		do
 			if changed then
 				clear_changed
-				if has_observer then
+				if observer_count > 0 then
 					from
 						l_observers := registered_observers
 						l_observers.start
@@ -109,12 +109,14 @@ feature -- Status report
 			good_result: Result = registered_observers.count
 		end
 
-	has_observer: BOOLEAN is
-			-- Is there any registered observer?
+	has_observer (a_observer: like observer_type): BOOLEAN is
+			-- Does `registered_observers' contain `a_observer'?
+		require
+			a_observer_attached: a_observer /= Void
 		do
-			Result := observer_count > 0
+			Result := registered_observers.has (a_observer)
 		ensure
-			good_result: Result implies observer_count > 0
+			good_result: Result implies registered_observers.has (a_observer)
 		end
 
 feature{NONE} -- Observers

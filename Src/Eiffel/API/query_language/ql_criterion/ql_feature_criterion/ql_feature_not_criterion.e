@@ -14,10 +14,11 @@ inherit
 		undefine
 			is_atomic,
 			set_source_domain,
-			has_intrinsic_domain
+			has_intrinsic_domain,
+			process
 		end
 
-	QL_UNARY_CRITERION
+	QL_NOT_CRITERION
 		undefine
 			require_compiled
 		redefine

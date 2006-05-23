@@ -14,7 +14,8 @@ inherit
 		undefine
 			has_intrinsic_domain,
 			set_source_domain,
-			require_compiled
+			require_compiled,
+			process
 		redefine
 			compiled_criterion
 		end

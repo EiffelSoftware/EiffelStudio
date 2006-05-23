@@ -13,13 +13,14 @@ inherit
 	QL_CLASS_CRITERION
 		undefine
 			is_atomic,
-			set_source_domain
+			set_source_domain,
+			process
 		end
 
-	QL_BINARY_CRITERION
+	QL_AND_CRITERION
 		redefine
-			first,
-			second
+			left,
+			right
 		end
 
 create
@@ -30,15 +31,15 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			Result := first.is_satisfied_by (a_item) and then second.is_satisfied_by (a_item)
+			Result := left.is_satisfied_by (a_item) and then right.is_satisfied_by (a_item)
 		ensure then
-			good_result: Result implies (first.is_satisfied_by (a_item) and then second.is_satisfied_by (a_item))
+			good_result: Result implies (left.is_satisfied_by (a_item) and then right.is_satisfied_by (a_item))
 		end
 
 feature -- Criterion
 
-	first: QL_CLASS_CRITERION
-	second: QL_CLASS_CRITERION
+	left: QL_CLASS_CRITERION
+	right: QL_CLASS_CRITERION
 			-- Criteria to which AND operation is applied
 
 feature -- Status report
@@ -46,9 +47,9 @@ feature -- Status report
 	require_compiled: BOOLEAN is
 			-- Does current item require a compiled item?
 		do
-			Result := first.require_compiled or second.require_compiled
+			Result := left.require_compiled or right.require_compiled
 		ensure then
-			good_result: Result = first.require_compiled or second.require_compiled
+			good_result: Result = left.require_compiled or right.require_compiled
 		end
 
 indexing

@@ -55,7 +55,7 @@ feature{NONE} -- Initialization
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
-			--
+			-- Initialize interface.
 		local
 			l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 			l_ev_tool_bar_1: EV_TOOL_BAR

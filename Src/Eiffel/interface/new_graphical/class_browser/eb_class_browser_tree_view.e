@@ -20,7 +20,7 @@ inherit
 
 	SHARED_WORKBENCH
 
-	EB_SHARED_PIXMAPS
+	EV_SHARED_APPLICATION
 
 create
 	make
@@ -43,34 +43,6 @@ feature -- Access
 
 	control_tool_bar: EV_TOOL_BAR
 			-- Tool bar of current view
-
-	collapse_button: EV_TOOL_BAR_BUTTON is
-			-- Button to collapse one level of tree
-		do
-			if collapse_button_internal = Void then
-				create collapse_button_internal
-				collapse_button_internal.set_pixmap (icon_collapse_all)
-				collapse_button_internal.set_tooltip (interface_names.l_collapse_layer)
-				collapse_button_internal.select_actions.extend (agent on_row_collapsed)
-			end
-			Result := collapse_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	expand_button: EV_TOOL_BAR_BUTTON is
-			-- Button to expand one level of tree
-		do
-			if expand_button_internal = Void then
-				create expand_button_internal
-				expand_button_internal.set_pixmap (icon_expand_all)
-				expand_button_internal.set_tooltip (interface_names.l_expand_layer)
-				expand_button_internal.select_actions.extend (agent on_row_expanded)
-			end
-			Result := expand_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
 
 feature -- Actions
 
@@ -99,6 +71,11 @@ feature -- Actions
 					l_rows.extend (grid.row (1))
 				end
 				if not l_rows.is_empty then
+					if processed_rows = Void then
+						create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
+					else
+						processed_rows.wipe_out
+					end
 					l_rows.do_all (agent collapse_row)
 				end
 			end
@@ -141,7 +118,15 @@ feature -- Actions
 			l_row_count: INTEGER
 		do
 			if is_tree_node_highlight_enabled then
-				a_row.set_background_color (odd_line_color)
+				if a_row.is_selected then
+					if grid.has_focus then
+						a_row.set_background_color (preferences.editor_data.selection_background_color)
+					else
+						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+					end
+				else
+					a_row.set_background_color (odd_line_color)
+				end
 				l_row_count := a_row.subrow_count
 				if l_row_count > 0 then
 					from
@@ -164,9 +149,31 @@ feature -- Actions
 			l_bg_color: EV_COLOR
 			l_row_index: INTEGER
 			l_row_count: INTEGER
+			l_is_parent_selected: BOOLEAN
+			l_parent_row: EV_GRID_ROW
 		do
 			if is_tree_node_highlight_enabled then
-				a_row.set_background_color (even_line_color)
+				from
+					l_parent_row := a_row.parent_row
+				until
+					l_parent_row = Void or l_is_parent_selected
+				loop
+					l_is_parent_selected := l_parent_row.is_selected
+					l_parent_row := l_parent_row.parent_row
+				end
+				if a_row.is_selected then
+					if grid.has_focus then
+						a_row.set_background_color (preferences.editor_data.selection_background_color)
+					else
+						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+					end
+				else
+					if l_is_parent_selected then
+						a_row.set_background_color (odd_line_color)
+					else
+						a_row.set_background_color (even_line_color)
+					end
+				end
 				l_row_count := a_row.subrow_count
 				if l_row_count > 0 then
 					from
@@ -179,6 +186,84 @@ feature -- Actions
 					end
 				end
 			end
+		end
+
+	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Action to be performed when mouse is double clicked in `grid'
+		local
+			l_grid_item: EV_GRID_ITEM
+			l_row: EB_CLASS_BROWSER_TREE_ROW
+		do
+			if a_button = 1 then
+				l_grid_item := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - grid.header.height)
+				if l_grid_item /= Void then
+					l_row ?= l_grid_item.row.data
+					if l_row /= Void and then l_row.is_collapsed then
+						l_row := first_occurrence (l_row)
+						ensure_visible (l_row.class_grid_item, True)
+						on_row_selected (l_row.grid_row)
+					end
+				end
+			end
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when some key is pressed in `grid'
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_processed: BOOLEAN
+		do
+			l_processed := on_predefined_key_pressed (a_key)
+			if not l_processed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+					do_all_in_rows (grid.selected_rows, agent go_to_parent)
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+					do_all_in_rows (grid.selected_rows, agent go_to_first_child)
+				end
+			end
+		end
+
+	on_enter_pressed is
+			-- Action to be performed when enter key is pressed
+		do
+			do_all_in_rows (grid.selected_rows, agent expand_row)
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		do
+			ev_application.clipboard.set_text (selected_text)
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		do
+			grid.select_all_rows
+		end
+
+	on_collapse_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for collapse selected levels is pressed.
+		do
+			on_row_collapsed
+		end
+
+	on_expand_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for expand selected levels is pressed.
+		do
+			on_row_expanded
+		end
+
+	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `collapse_button' is pressed
+		do
+			Result := agent on_row_collapsed
+		end
+
+	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `expand_button' is pressed
+		do
+			Result := agent on_row_expanded
 		end
 
 feature -- Notification
@@ -311,12 +396,6 @@ feature{NONE} -- Implementation
 	rows_internal: like rows
 			-- Implementation of `rows'
 
-	expand_button_internal: like expand_button
-			-- Implementation of `expand_button'
-
-	collapse_button_internal: like collapse_button
-			-- Implementation of `collapse_button'
-
 	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
 			-- Ensure `a_item' is visible in viewable area of `grid'.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
@@ -334,7 +413,9 @@ feature{NONE} -- Implementation
 			l_row.expand_row
 			grid.remove_selection
 			l_grid_row.ensure_visible
-			l_grid_row.enable_select
+			if a_selected then
+				l_grid_row.enable_select
+			end
 		end
 
 	fill_rows  is
@@ -503,14 +584,156 @@ feature{NONE} -- Implementation
 				loop
 					if a_row.subrow (l_subrow_index).is_expandable then
 						a_row.subrow (l_subrow_index).collapse
+						processed_rows.extend (a_row.subrow (l_subrow_index))
 					end
 					l_subrow_index := l_subrow_index + 1
 				end
 			end
-			if a_row.is_expandable then
+			if a_row.is_expandable and then not processed_rows.has (a_row) then
 				a_row.expand
 			end
 		end
+
+	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
+			-- Given `a_row' which represents a processed class (like "ARRAYED_LIST..."),
+			-- return the first occurrence of the same class in `grid'.
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_collapsed: a_row.is_collapsed
+		local
+			l_row: EB_CLASS_BROWSER_TREE_ROW
+		do
+			l_row ?= grid.row (1).data
+			check l_row /= Void end
+			Result := first_occurrence_internal (l_row, a_row)
+		ensure
+			result_attached: Result /= Void
+			good_result: not Result.is_collapsed
+		end
+
+	first_occurrence_internal (a_start_row, a_source_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
+			-- Find the first occurrence of class in `a_source_row' recursively starting from `a_start_row'.
+		require
+			a_start_row_attached: a_start_row /= Void
+			a_source_row_attached: a_source_row /= Void
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+			l_row: EB_CLASS_BROWSER_TREE_ROW
+		do
+			if a_start_row.class_item.conf_class = a_source_row.class_item.conf_class then
+				Result := a_start_row
+			else
+				l_row_count := a_start_row.grid_row.subrow_count
+				if l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count or Result /= Void
+					loop
+						l_row ?= a_start_row.grid_row.subrow (l_row_index).data
+						if l_row /= Void then
+							Result := first_occurrence_internal (l_row, a_source_row)
+						end
+						l_row_index := l_row_index + 1
+					end
+				end
+			end
+		end
+
+	selected_text: STRING is
+			-- String representation of selected rows/items
+			-- If no row/item is selected, return an empty string.
+		local
+			l_sorted_rows: DS_LIST [EV_GRID_ROW]
+			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_sorted_rows := sorted_rows (grid.selected_rows)
+			create Result.make (256)
+			from
+				l_sorted_rows.start
+			until
+				l_sorted_rows.after
+			loop
+				l_grid_item ?= l_sorted_rows.item_for_iteration.item (1)
+				if l_grid_item /= Void then
+					Result.append (tabs (row_depth (l_sorted_rows.item_for_iteration)))
+					Result.append (l_grid_item.text)
+					Result.append_character ('%N')
+				end
+				l_sorted_rows.forth
+			end
+		end
+
+	row_tester (a_row, b_row: EV_GRID_ROW): BOOLEAN is
+			-- Tester to test if index of `a_row' is less than `b_row'
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+			b_row_attached: b_row /= Void
+			b_row_is_parented: b_row.parent /= Void
+		do
+			Result := a_row.index < b_row.index
+		end
+
+	sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW] is
+			-- Sorted rows of `a_row_list'
+		require
+			a_row_list_attached: a_row_list /= Void
+		local
+			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ROW]
+			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
+		do
+			create {DS_ARRAYED_LIST [EV_GRID_ROW]}Result.make (a_row_list.count)
+			from
+				a_row_list.start
+			until
+				a_row_list.after
+			loop
+				Result.force_last (a_row_list.item)
+				a_row_list.forth
+			end
+			create l_tester.make (agent row_tester)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (Result)
+		end
+
+	go_to_parent (a_row: EV_GRID_ROW) is
+			-- Select parent row of `a_row'.
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+		local
+			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
+		do
+			if a_row.parent_row /= Void then
+				l_grid_item ?= a_row.item (1)
+				a_row.disable_select
+				l_grid_item ?= a_row.parent_row.item (1)
+				check l_grid_item /= Void end
+				ensure_visible (l_grid_item, True)
+			end
+		end
+
+	go_to_first_child (a_row: EV_GRID_ROW) is
+			-- Select first child (if any) of `a_row'.
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+		local
+			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
+		do
+			if a_row.subrow_count > 0 then
+				l_grid_item ?= a_row.subrow (1).item (1)
+				a_row.disable_select
+				l_grid_item ?= a_row.subrow (1).item (1)
+				check l_grid_item /= Void end
+				ensure_visible (l_grid_item, True)
+			end
+		end
+
+	processed_rows: LIST [EV_GRID_ROW]
+			-- Rows that have been processed during some expansion or collapsion
 
 feature{NONE} -- Initialization
 
@@ -521,6 +744,7 @@ feature{NONE} -- Initialization
 			grid.set_column_count_to (1)
 			grid.enable_selection_on_single_button_click
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
+			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (line_height)
 			grid.pick_ended_actions.force_extend (agent on_pick_ended)
@@ -532,6 +756,9 @@ feature{NONE} -- Initialization
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
 			grid.row_select_actions.extend (agent on_row_selected)
 			grid.row_deselect_actions.extend (agent on_row_deselected)
+			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
+			grid.key_press_actions.extend (agent on_key_pressed)
+			grid.enable_multiple_row_selection
 		end
 
 	build_sortable_and_searchable is

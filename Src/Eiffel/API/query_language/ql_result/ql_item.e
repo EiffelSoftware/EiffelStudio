@@ -109,7 +109,6 @@ feature -- Access
 		local
 			l_name: STRING
 			l_parent_path: STRING
-			l_separator: like path_separator
 		do
 			if parent = Void then
 				Result := ""

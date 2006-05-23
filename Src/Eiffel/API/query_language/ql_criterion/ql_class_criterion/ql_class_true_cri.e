@@ -11,9 +11,13 @@ class
 
 inherit
 	QL_CLASS_CRITERION
+		undefine
+			process
 		redefine
 			require_compiled
 		end
+
+	QL_TRUE_CRITERION
 
 feature -- Status report
 

@@ -11,6 +11,11 @@ class
 
 inherit
 	QL_LOCAL_CRITERION
+		undefine
+			process
+		end
+		
+	QL_FALSE_CRITERION
 
 feature -- Evaluate
 

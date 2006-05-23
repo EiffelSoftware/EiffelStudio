@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	QL_CRITERION_ADAPTER
+		undefine
+			process
 		redefine
 			has_intrinsic_domain,
 			is_atomic
@@ -36,6 +38,14 @@ feature -- Status report
 			-- Is current criterion atomic?
 		do
 			Result := False
+		end
+
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		do
+			a_criterion_visitor.process_unary_criterion (Current)
 		end
 
 indexing

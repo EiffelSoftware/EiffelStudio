@@ -50,21 +50,24 @@ feature -- Formatting
 			-- Refresh `widget'.
 		do
 			if selected and then displayed then
-				display_temp_header
-				generate_text
-				if not last_was_error then
-					go_to_position
-					if has_breakpoints then
-						editor.enable_has_breakable_slots
+				if associated_class /= Void then
+					display_temp_header
+					reset_display
+					generate_text
+					if not last_was_error then
+						go_to_position
+						if has_breakpoints then
+							editor.enable_has_breakable_slots
+						else
+							editor.disable_has_breakable_slots
+						end
+						editor.set_read_only (not editable)
 					else
-						editor.disable_has_breakable_slots
+						editor.clear_window
+						editor.display_message (Warning_messages.w_Formatter_failed)
 					end
-					editor.set_read_only (not editable)
-				else
-					editor.clear_window
-					editor.display_message (Warning_messages.w_Formatter_failed)
+					display_header
 				end
-				display_header
 			end
 		end
 

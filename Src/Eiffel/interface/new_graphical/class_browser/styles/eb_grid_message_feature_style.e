@@ -50,7 +50,7 @@ feature -- Access
 			-- Text of current style for `a_item'
 		do
 			token_writer.new_line
-			token_writer.add_string (message)
+			token_writer.add (message)
 			Result := token_writer.last_line.content
 		end
 

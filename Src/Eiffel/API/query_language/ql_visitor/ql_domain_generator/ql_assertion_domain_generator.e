@@ -189,7 +189,6 @@ feature{NONE} -- Implementation
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_valid_domain_item
 		local
-			l_tags: EIFFEL_LIST [TAGGED_AS]
 			l_assertion: QL_ASSERTION
 		do
 			from

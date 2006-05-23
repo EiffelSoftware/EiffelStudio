@@ -19,7 +19,8 @@ inherit
 	QL_CLASS_CRITERION
 		undefine
 			has_intrinsic_domain,
-			set_source_domain
+			set_source_domain,
+			process
 		redefine
 			compiled_criterion
 		end

@@ -16,7 +16,8 @@ inherit
 			is_equal
 		redefine
 			content,
-			item_type
+			item_type,
+			domain_generator
 		end
 
 	LINKED_LIST [QL_LOCAL]
@@ -40,6 +41,12 @@ feature -- Access
 			Result := generic_scope
 		ensure then
 			good_result: Result = generic_scope
+		end
+
+	domain_generator: QL_LOCAL_DOMAIN_GENERATOR is
+			-- Domain generator which can generate domains of same type as Current domain
+		do
+			create Result
 		end
 
 feature -- Set operation

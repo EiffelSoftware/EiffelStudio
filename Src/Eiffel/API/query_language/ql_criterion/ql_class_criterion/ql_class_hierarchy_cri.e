@@ -19,7 +19,8 @@ inherit
 
 	QL_CLASS_CRITERION
 		undefine
-			has_intrinsic_domain
+			has_intrinsic_domain,
+			process
 		end
 
 feature{NONE} -- Initialization

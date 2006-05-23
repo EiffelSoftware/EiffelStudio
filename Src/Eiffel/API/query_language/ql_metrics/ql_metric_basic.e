@@ -72,18 +72,31 @@ feature -- Value
 			if l_basic_scope /= Void then
 				l_calculator := l_basic_scope.domain_generator
 					-- Here is an optimization, if we don't need to change
-					-- the scope of `a_domain' and if no criterion is specified,
+					-- the scope of `a_domain' and if no criterion is specified and
+					-- no result domain is to be returned,
 					-- we just count items in `a_domain'. Otherwise, we have to
 					-- transform the domain into the scope specified by `l_calculator'.
 				if
 					a_domain.scope = l_calculator.scope and then
 					l_basic_scope.calculate_function = Void and then
-					l_calculator.criterion = Void
+					l_calculator.criterion = Void and then
+					not is_fill_domain_enabled
 				then
 					internal_value := a_domain.count
 				else
+					if is_fill_domain_enabled then
+						l_calculator.enable_fill_domain
+					else
+						l_calculator.disable_fill_domain
+					end
+					wipe_out_last_domain
 					l_calculator.reset_domain
 					l_calculator.process_domain (a_domain)
+					if is_fill_domain_enabled then
+						last_domain := l_calculator.domain.twin
+					else
+						last_domain := Void
+					end
 				end
 			end
 			if post_calculation_function /= Void then

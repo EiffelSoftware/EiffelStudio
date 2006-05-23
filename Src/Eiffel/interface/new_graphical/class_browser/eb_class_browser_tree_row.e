@@ -12,6 +12,8 @@ class
 inherit
 	EB_GRID_ROW
 
+	EB_CONSTANTS
+
 create
 	make
 
@@ -132,6 +134,11 @@ feature -- Access
 				end
 				l_style.enable_starred_class_name
 				create class_item_internal.make (class_item.class_c, l_style)
+				if is_collapsed then
+					class_item_internal.set_tooltip (interface_names.f_go_to_first_occurrence)
+				else
+					class_item_internal.set_tooltip ("")
+				end
 			end
 			Result := class_item_internal
 		ensure

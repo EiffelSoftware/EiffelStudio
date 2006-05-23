@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents an OR operation on two generic criteria"
+	description: "Object that represents a criterion to test whether or not a class is effective"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,40 +7,27 @@ indexing
 	revision: "$Revision$"
 
 class
-	QL_GENERIC_OR_CRITERION
+	QL_CLASS_IS_EFFECTIVE_CRI
 
 inherit
-	QL_GENERIC_CRITERION
-		undefine
-			is_atomic,
-			set_source_domain,
-			process
-		end
+	QL_CLASS_CRITERION
 
-	QL_OR_CRITERION
-		redefine
-			left,
-			right
-		end
 
-create
-	make
+feature -- Status report
+
+	require_compiled: BOOLEAN is True
+			-- Does current criterion require a compiled item?
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_GENERIC): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			Result := left.is_satisfied_by (a_item) or else right.is_satisfied_by (a_item)
+			check a_item.is_compiled end
+			Result := not a_item.class_c.is_deferred
 		ensure then
-			good_result: Result implies (left.is_satisfied_by (a_item) or else right.is_satisfied_by (a_item))
+			good_result: Result implies a_item.is_compiled and then not a_item.class_c.is_deferred
 		end
-
-feature -- Criterion
-
-	left: QL_GENERIC_CRITERION
-	right: QL_GENERIC_CRITERION;
-			-- Criteria to which binary operation is applied
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

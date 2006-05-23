@@ -404,6 +404,7 @@ feature -- Accelerator, focus label and menu name
 	m_Watch_tool: STRING is				"Watch Tool"
 	m_Wizard_precompile: STRING is 		"Precompilation &Wizard..."
 	f_Wizard_precompile: STRING is		"Wizard to precompile libraries"
+	f_go_to_first_occurrence: STRING is "Double click to go to first occurrence"
 
 feature -- Toggles
 
@@ -699,10 +700,8 @@ feature -- Label texts
 	l_version_from: STRING is "Declared in class"
 	l_branch: STRING is "Branch #"
 	l_version_from_message: STRING is " (version from)"
-	l_expand_layer: STRING is "Expand selected level"
-	l_collapse_layer: STRING is "Collapse selected level"
-	l_expand_all: STRING is "Expand all rows"
-	l_collapse_all: STRING is "Collapse all rows"
+	l_expand_layer: STRING is "Expand selected level(s)"
+	l_collapse_layer: STRING is "Collapse selected level(s)"
 	l_searching_selected_file: STRING is "Searching selected file..."
 	l_manage_external_commands: STRING is "Add, remove or edit external commands"
 	l_add_scope: STRING is "Add scope"

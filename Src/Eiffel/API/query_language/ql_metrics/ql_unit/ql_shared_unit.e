@@ -111,13 +111,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	no_unit: QL_METRIC_UNIT is
-			-- Unit represents no unit
-		once
-			create Result.make (query_language_names.ql_no_unit)
-		ensure
-			result_attached: Result /= Void
-		end
+feature -- Access
 
 	unit_table: HASH_TABLE [QL_METRIC_UNIT, STRING] is
 			-- Table of supported units
@@ -134,7 +128,7 @@ feature -- Units
 			Result.put (assertion_unit,   query_language_names.ql_assertion_unit)
 			Result.put (line_unit,        query_language_names.ql_line_unit)
 			Result.put (compilation_unit, query_language_names.ql_compilation_unit)
-			Result.put (no_unit,          query_language_names.ql_no_unit)
+			Result.put (ratio_unit,          query_language_names.ql_ratio_unit)
 		ensure
 			result_attached: Result /= Void
 		end

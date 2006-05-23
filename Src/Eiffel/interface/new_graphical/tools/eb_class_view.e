@@ -257,7 +257,6 @@ feature -- Status setting
 			l_cursor: CURSOR
 			l_control_bar: EV_WIDGET
 			done: BOOLEAN
-			l_frame: EV_FRAME
 		do
 			if not formatter_container.has (new_widget) then
 

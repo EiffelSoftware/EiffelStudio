@@ -16,7 +16,8 @@ inherit
 			is_equal
 		redefine
 			content,
-			item_type
+			item_type,
+			domain_generator
 		end
 
 	LINKED_LIST [QL_FEATURE]
@@ -40,6 +41,12 @@ feature -- Access
 			Result := feature_scope
 		ensure then
 			good_result: Result = feature_scope
+		end
+
+	domain_generator: QL_FEATURE_DOMAIN_GENERATOR is
+			-- Domain generator which can generate domains of same type as Current domain
+		do
+			create Result
 		end
 
 feature -- Set operation
@@ -79,7 +86,6 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- If `e_feature' is included in current domain, return the item,
 			-- otherwise return Void.
 		local
-			l_class: QL_CLASS
 			l_cursor: CURSOR
 			l_feature: E_FEATURE
 		do
@@ -109,9 +115,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- then return an QL_FEATURE object representing this invariant part, otherwise,
 			-- return Void.
 		local
-			l_class: QL_CLASS
 			l_cursor: CURSOR
-			l_feature: E_FEATURE
 		do
 			l_cursor := cursor
 			from

@@ -14,7 +14,9 @@ inherit
 		redefine
 			width,
 			height,
-			show
+			show,
+			screen_x,
+			screen_y
 		end
 
 feature {NONE} -- Agent functions.

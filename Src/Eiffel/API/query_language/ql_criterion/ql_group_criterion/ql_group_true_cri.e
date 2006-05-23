@@ -11,6 +11,11 @@ class
 
 inherit
 	QL_GROUP_CRITERION
+		undefine
+			process
+		end
+
+	QL_TRUE_CRITERION
 
 feature -- Evaluate
 

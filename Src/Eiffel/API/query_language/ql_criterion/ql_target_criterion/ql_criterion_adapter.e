@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	QL_CRITERION
+		undefine
+			process
 		redefine
 			set_source_domain
 		end
@@ -41,6 +43,14 @@ feature -- Setting
 			wrapped_criterion.set_source_domain (a_domain)
 		ensure then
 			current_domain_set_recursively: wrapped_criterion.source_domain = source_domain
+		end
+
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		do
+			a_criterion_visitor.process_criterion_adapter (Current)
 		end
 
 invariant

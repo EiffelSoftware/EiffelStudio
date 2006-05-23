@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	QL_CRITERION
+		undefine
+			process
 		redefine
 			is_atomic,
 			set_source_domain
@@ -18,52 +20,52 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_first: like first; a_second: like second) is
-			-- Initialize `first' with `a_first' and `second' with `a_second'.
+	make (a_left: like left; a_right: like right) is
+			-- Initialize `left' with `a_left' and `right' with `a_right'.
 		require
-			a_first_attached: a_first /= Void
-			a_second_attached: a_second /= Void
+			a_left_attached: a_left /= Void
+			a_right_attached: a_right /= Void
 		do
-			set_first (a_first)
-			set_second (a_second)
+			set_left (a_left)
+			set_right (a_right)
 		end
 
 feature -- Criterion
 
-	first: QL_CRITERION
-	second: QL_CRITERION
+	left: QL_CRITERION
+	right: QL_CRITERION
 			-- Criteria to which binary operation is applied
 
 feature -- Setting
 
-	set_first (a_cri: like first) is
-			-- Set `first' with `a_cri'.
+	set_left (a_cri: like left) is
+			-- Set `left' with `a_cri'.
 		require
 			a_cri_attached: a_cri /= Void
 		do
-			first := a_cri
+			left := a_cri
 		ensure
-			first_set: first = a_cri
+			first_set: left = a_cri
 		end
 
-	set_second (a_cri: like second) is
-			-- Set `second' with `a_cri'.
+	set_right (a_cri: like right) is
+			-- Set `right' with `a_cri'.
 		require
 			a_cri_attached: a_cri /= Void
 		do
-			second := a_cri
+			right := a_cri
 		ensure
-			second_set: second = a_cri
+			second_set: right = a_cri
 		end
 
 	set_source_domain (a_domain: like source_domain) is
 			-- Set `source_domain' with `a_domain'.
 		do
 			Precursor (a_domain)
-			first.set_source_domain (a_domain)
-			second.set_source_domain (a_domain)
+			left.set_source_domain (a_domain)
+			right.set_source_domain (a_domain)
 		ensure then
-			current_domain_set_recursively: first.source_domain = second.source_domain and first.source_domain = source_domain
+			current_domain_set_recursively: left.source_domain = right.source_domain and left.source_domain = source_domain
 		end
 
 feature -- Status report
@@ -71,9 +73,17 @@ feature -- Status report
 	is_atomic: BOOLEAN is False
 			-- Is current criterion atomic?
 
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		do
+			a_criterion_visitor.process_binary_criterion (Current)
+		end
+
 invariant
-	first_attached: first /= Void
-	second_attached: second /= Void
+	first_attached: left /= Void
+	second_attached: right /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -10,7 +10,6 @@ class
 	EB_CLASS_BROWSER_FLAT_VIEW
 
 inherit
-
 	EB_CLASS_BROWSER_GRID_VIEW
 		redefine
 			grid_selected_items,
@@ -57,31 +56,6 @@ feature -- Actions
 			end
 		end
 
-	on_expand_all_rows is
-			-- Action to be performed to expand all rows.
-		local
-			l_row_index: INTEGER
-			l_row_count: INTEGER
-			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
-		do
-			if grid.row_count > 0 then
-				from
-					l_row_index := 1
-					l_row_count := grid.row_count
-				until
-					l_row_index > l_row_count
-				loop
-					l_grid_row := grid.row (l_row_index)
-					l_row ?= l_grid_row.data
-					if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
-						on_row_expanded (l_grid_row)
-					end
-					l_row_index := l_row_index + 1
-				end
-			end
-		end
-
 	on_row_collapsed (a_row: EV_GRID_ROW) is
 			-- Action performed when `a_row' is collapsed
 		local
@@ -106,31 +80,6 @@ feature -- Actions
 					l_row_index := l_row_index + 1
 				else
 					done := True
-				end
-			end
-		end
-
-	on_collapse_all_rows is
-			-- Action to be performed to collapse all rows.
-		local
-			l_row_index: INTEGER
-			l_row_count: INTEGER
-			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
-		do
-			if grid.row_count > 0 then
-				from
-					l_row_index := 1
-					l_row_count := grid.row_count
-				until
-					l_row_index > l_row_count
-				loop
-					l_grid_row := grid.row (l_row_index)
-					l_row ?= l_grid_row.data
-					if l_row /= Void and then l_row.is_parent and then l_row.children_count > 0 and then l_row.is_expanded then
-						on_row_collapsed (l_grid_row)
-					end
-					l_row_index := l_row_index + 1
 				end
 			end
 		end
@@ -179,6 +128,70 @@ feature -- Actions
 					show_feature_from_any_checkbox.disable_select
 				end
 			end
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when some key is pressed in `grid'
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_processed: BOOLEAN
+		do
+			l_processed := on_predefined_key_pressed (a_key)
+		end
+
+	on_enter_pressed is
+			-- Action to be performed when enter key is pressed
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		do
+			ev_application.clipboard.set_text (selected_text)
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		do
+			grid.select_all_rows
+		end
+
+	on_collapse_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for collapse selected levels is pressed.
+		do
+			collapse_selected
+		end
+
+	on_expand_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for expand selected levels is pressed.
+		do
+			expand_selected
+		end
+
+	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `collapse_button' is pressed
+		do
+			Result := agent on_collapse_button_pressed
+		end
+
+	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `expand_button' is pressed
+		do
+			Result := agent on_expand_button_pressed
+		end
+
+	on_expand_button_pressed is
+			-- Action to be performed when `expand_button' is pressed.
+		do
+			expand_selected
+		end
+
+	on_collapse_button_pressed is
+			-- Action to be performed when `collapse_button' is pressed.
+		do
+			collapse_selected
 		end
 
 feature{NONE} -- Sorting
@@ -397,34 +410,6 @@ feature -- Access
 	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_FLAT_ROW]
 			-- Rows for features that are to be displayed
 
-	collapse_button: EV_TOOL_BAR_BUTTON is
-			-- Button to collapse one level of tree
-		do
-			if collapse_button_internal = Void then
-				create collapse_button_internal
-				collapse_button_internal.set_pixmap (icon_collapse_all)
-				collapse_button_internal.set_tooltip (interface_names.l_collapse_all)
-				collapse_button_internal.select_actions.extend (agent on_collapse_all_rows)
-			end
-			Result := collapse_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	expand_button: EV_TOOL_BAR_BUTTON is
-			-- Button to expand one level of tree
-		do
-			if expand_button_internal = Void then
-				create expand_button_internal
-				expand_button_internal.set_pixmap (icon_expand_all)
-				expand_button_internal.set_tooltip (interface_names.l_expand_all)
-				expand_button_internal.select_actions.extend (agent on_expand_all_rows)
-			end
-			Result := expand_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature{NONE} -- Update
 
 	update_view is
@@ -554,18 +539,19 @@ feature{NONE} -- Initialization
 			create grid
 			grid.set_column_count_to (2)
 			grid.enable_selection_on_single_button_click
-			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
+			grid.header.i_th (1).set_text (interface_names.l_version_from)
 			grid.header.i_th (2).set_text (interface_names.l_class_browser_features)
 			grid.enable_tree
 			grid.disable_row_height_fixed
 			grid.pick_ended_actions.force_extend (agent on_pick_ended)
 			grid.set_item_pebble_function (agent on_pick)
-
+			grid.enable_multiple_item_selection
 			grid.row_expand_actions.force_extend (agent on_row_expanded)
 			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
+			grid.key_press_actions.extend (agent on_key_pressed)
 			show_feature_from_any_checkbox.select_actions.extend (agent on_show_feature_from_any_changed)
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
 			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (agent on_show_tooltip_changed_from_outside)
@@ -605,6 +591,42 @@ feature{NONE} -- Implementation/Data
 
 	show_tooltip_checkbox_internal: like show_tooltip_checkbox
 			-- Implementation of `show_tooltip_checkbox'
+
+	selected_text: STRING is
+			-- String representation of selected rows/items
+			-- If no row/item is selected, return an empty string.
+		local
+			l_sorted_items: DS_LIST [EV_GRID_ITEM]
+			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_last_row_index: INTEGER
+			l_last_column_index: INTEGER
+			l_item: EV_GRID_ITEM
+		do
+			l_sorted_items := sorted_items (grid.selected_items)
+			create Result.make (512)
+			from
+				l_last_column_index := 1
+				l_sorted_items.start
+			until
+				l_sorted_items.after
+			loop
+				l_item := l_sorted_items.item_for_iteration
+				if l_item.row.index /= l_last_row_index then
+					if l_last_row_index /= 0 then
+						Result.append_character ('%N')
+					end
+					l_last_row_index := l_item.row.index
+					l_last_column_index := 1
+				end
+				Result.append (tabs (l_item.column.index - l_last_column_index))
+				l_last_column_index := l_item.column.index
+				l_grid_item ?= l_item
+				if l_grid_item /= Void then
+					Result.append (l_grid_item.text)
+				end
+				l_sorted_items.forth
+			end
+		end
 
 feature{NONE} -- Implementation			
 
@@ -692,15 +714,49 @@ feature{NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation
+	expand_item (a_item: EV_GRID_ITEM) is
+			-- Expand `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.is_parented
+		local
+			l_row: EB_CLASS_BROWSER_FLAT_ROW
+		do
+			l_row ?= a_item.row.data
+			if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
+				if a_item.row.is_expandable then
+					a_item.row.expand
+				end
+			end
+		end
 
+	collapse_item (a_item: EV_GRID_ITEM) is
+			-- Expand `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.is_parented
+		local
+			l_row: EB_CLASS_BROWSER_FLAT_ROW
+		do
+			l_row ?= a_item.row.data
+			if l_row /= Void and then l_row.is_parent and then l_row.is_expanded then
+				if a_item.row.is_expandable then
+					a_item.row.collapse
+				end
+			end
+		end
 
-	expand_button_internal: like expand_button
-			-- Implementation of `expand_button'
+	expand_selected is
+			-- Expanded selected items.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
 
-	collapse_button_internal: like collapse_button
-			-- Implementation of `collapse_button'
-
+	collapse_selected is
+			-- Collapse selected items.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
 
 invariant
 	development_window_attached: development_window /= Void

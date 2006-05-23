@@ -39,7 +39,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	ellipse: STRING is "%""
+	ellipse: STRING is ""
 			-- Ellipse used to display
 
 	setup_tooltip (a_item: EB_GRID_CLASS_ITEM) is

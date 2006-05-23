@@ -18,7 +18,8 @@ inherit
 			content,
 			item_type,
 			prepare_before_new_domain_generation,
-			cleanup_after_new_domain_generation
+			cleanup_after_new_domain_generation,
+			domain_generator
 		end
 
 	LINKED_LIST [QL_TARGET]
@@ -42,6 +43,12 @@ feature -- Access
 			Result := target_scope
 		ensure then
 			good_result: Result = target_scope
+		end
+
+	domain_generator: QL_TARGET_DOMAIN_GENERATOR is
+			-- Domain generator which can generate domains of same type as Current domain
+		do
+			create Result
 		end
 
 feature -- Preparation and cleanup

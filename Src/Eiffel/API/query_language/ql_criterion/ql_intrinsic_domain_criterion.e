@@ -14,6 +14,8 @@ deferred class
 
 inherit
 	QL_CRITERION
+		undefine
+			process
 		redefine
 			has_intrinsic_domain
 		end
@@ -68,6 +70,14 @@ feature -- Setting
 			end
 		ensure
 			criterion_domain_set: criterion_domain = a_domain
+		end
+
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		do
+			a_criterion_visitor.process_intrinsic_domain_criterion (Current)
 		end
 
 feature{NONE} -- Implementation

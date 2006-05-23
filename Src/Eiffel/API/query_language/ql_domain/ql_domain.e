@@ -46,6 +46,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	domain_generator: QL_DOMAIN_GENERATOR is
+			-- Domain generator which can generate domains of same type as Current domain
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	is_empty: BOOLEAN is
@@ -184,7 +191,6 @@ feature -- Set operation
 			current_and_other_are_of_same_type: current.scope = other.scope
 		local
 			l_other_set: DS_HASH_SET [QL_ITEM]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [QL_ITEM]
 			l_cur_content: like content
 			l_cursor: CURSOR
 		do

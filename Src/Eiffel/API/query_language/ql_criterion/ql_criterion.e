@@ -124,6 +124,16 @@ feature{QL_CRITERION, QL_DOMAIN_GENERATOR} -- Intrinsic domain
 			result_attached: has_intrinsic_domain implies Result /= Void
 		end
 
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		require
+			a_criterion_visitor_attached: a_criterion_visitor /= Void
+		do
+			a_criterion_visitor.process_criterion (Current)
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -38,18 +38,30 @@ feature -- Access
 			-- Given a CLASS_I object, return a QL_CLASS object representing it.
 		require
 			a_class_i_attached: a_class_i /= Void
+--		local
+--			l_class: CONF_CLASS
+--			l_group: CONF_GROUP
+--			l_path: LINKED_LIST [QL_ITEM]
+		do
+			Result := query_class_item_from_conf_class (a_class_i.config_class)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	query_class_item_from_conf_class (a_conf_class: CONF_CLASS): QL_CLASS is
+			-- Given a CONF_CLASS object, return a QL_CLASS object representing it.
+		require
+			a_conf_class_attached: a_conf_class /= Void
 		local
-			l_class: CONF_CLASS
 			l_group: CONF_GROUP
 			l_path: LINKED_LIST [QL_ITEM]
 		do
-			l_class := a_class_i.config_class
-			l_group := l_class.group
+			l_group := a_conf_class.group
 			create l_path.make
 			find_path_from_conf_group (l_path, l_group)
 			check l_path.count >= 2 end
 			set_parents (l_path)
-			create Result.make_with_parent (l_class, l_path.last)
+			create Result.make_with_parent (a_conf_class, l_path.last)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -80,8 +92,6 @@ feature{NONE} -- Implementation
 		local
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
-			l_name: STRING
-			l_sep: BOOLEAN
 			l_target: CONF_TARGET
 			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do

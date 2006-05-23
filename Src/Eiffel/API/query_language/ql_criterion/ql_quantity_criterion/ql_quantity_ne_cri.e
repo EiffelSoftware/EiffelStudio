@@ -13,13 +13,14 @@ inherit
 	QL_QUANTITY_CRITERION
 		undefine
 			is_atomic,
-			set_source_domain
+			set_source_domain,
+			process
 		end
 
 	QL_BINARY_CRITERION
 		redefine
-			first,
-			second
+			left,
+			right
 		end
 
 create
@@ -30,15 +31,15 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_QUANTITY): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			Result := first.is_satisfied_by (a_item) /= second.is_satisfied_by (a_item)
+			Result := left.is_satisfied_by (a_item) /= right.is_satisfied_by (a_item)
 		ensure then
-			good_result: Result implies (first.is_satisfied_by (a_item) /= second.is_satisfied_by (a_item))
+			good_result: Result implies (left.is_satisfied_by (a_item) /= right.is_satisfied_by (a_item))
 		end
 
 feature -- Criterion
 
-	first: QL_QUANTITY_CRITERION
-	second: QL_QUANTITY_CRITERION;
+	left: QL_QUANTITY_CRITERION
+	right: QL_QUANTITY_CRITERION;
 			-- Criteria to which "/=" operation is applied			
 
 indexing

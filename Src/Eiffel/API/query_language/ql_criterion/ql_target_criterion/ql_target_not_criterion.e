@@ -15,10 +15,11 @@ inherit
 			is_atomic,
 			set_source_domain,
 			has_intrinsic_domain,
-			require_compiled
+			require_compiled,
+			process
 		end
 
-	QL_UNARY_CRITERION
+	QL_NOT_CRITERION
 		redefine
 			wrapped_criterion
 		end

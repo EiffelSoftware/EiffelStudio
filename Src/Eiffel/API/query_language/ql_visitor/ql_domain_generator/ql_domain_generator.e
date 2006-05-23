@@ -28,6 +28,11 @@ inherit
 
 	QL_SHARED_ERROR_HANDLER
 
+	QL_CRITERION_ITERATOR
+		redefine
+			process_intrinsic_domain_criterion
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_criterion: like criterion; a_enable_fill_domain: BOOLEAN) is
@@ -57,7 +62,13 @@ feature -- Setting
 		require
 			a_criterion_attached: a_criterion /= Void
 		do
+			if criterion /= Void then
+				is_setting_new_criterion := False
+				process_criterion_item (criterion)
+			end
+			is_setting_new_criterion := True
 			criterion := a_criterion
+			process_criterion_item (criterion)
 			internal_actual_criterion := Void
 		ensure
 			criterion_set: criterion = a_criterion
@@ -151,14 +162,13 @@ feature -- Access
 			Result := interval_cell.item
 		end
 
-feature -- Visit
+feature -- Domain visit
 
 	process_domain (a_item: QL_DOMAIN) is
 			-- Process `a_item'.
 		local
 			l_criterion: like criterion
 			l_domain: like domain
-			l_content: LIST [like item_type]
 		do
 			current_source_domain := a_item
 			actual_criterion.set_source_domain (a_item)
@@ -178,6 +188,28 @@ feature -- Visit
 			-- Process `a_item'.
 		do
 			Precursor (a_item)
+		end
+
+feature -- Criterion visit
+
+	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+			-- Process `a_cri'.
+		local
+			l_delayed_domain: QL_DELAYED_DOMAIN
+		do
+			if a_cri.criterion_domain.is_delayed then
+				l_delayed_domain ?= a_cri.criterion_domain
+				check l_delayed_domain /= Void end
+				if is_setting_new_criterion then
+					if not observers.has (l_delayed_domain) then
+						add_observer (l_delayed_domain)
+					end
+				else
+					if has_observer (l_delayed_domain) then
+						remove_observer (l_delayed_domain)
+					end
+				end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -229,7 +261,7 @@ feature{NONE} -- Implementation
 		do
 			increase_internal_counter
 			check_interval_tick_actions
-			if has_observer then
+			if observer_count > 0 then
 				set_changed
 				notify (a_item)
 			end
@@ -461,7 +493,10 @@ feature{NONE} -- Implementation
 		end
 
 	initial_interval: NATURAL_64 is 5000
-			-- Default value of `internval'			
+			-- Default value of `internval'	
+
+	is_setting_new_criterion: BOOLEAN
+			-- Is setting new criterion		
 
 invariant
 	domain_attached: domain /= Void

@@ -39,8 +39,6 @@ feature -- Access
 
 	class_c: CLASS_C is
 			-- CLASS_C object associated with current item
-		local
-			l_feature: QL_FEATURE
 		do
 			if internal_class_c = Void then
 				retrieve_class_c_and_e_feature

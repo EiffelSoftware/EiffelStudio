@@ -62,17 +62,11 @@ feature -- Basic operations
 
 	increase_internal_counter is
 			-- Increase `internal_counter' by 1.
-		local
-			l_counter: NATURAL_64
 		do
-			l_counter := internal_counter
-			if l_counter = l_counter.max_value then
-				internal_counter_cell.put (0)
-			else
-				internal_counter_cell.put (l_counter + 1)
-			end
+				-- We don't detect overflow here.
+				-- If internal_counter overflows, it just restarts from 0. (Jasonw)
+			internal_counter_cell.put (internal_counter + 1)
 		end
-
 
 feature{NONE} -- Implementation
 

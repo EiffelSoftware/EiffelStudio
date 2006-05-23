@@ -42,8 +42,6 @@ feature{NONE} -- Initialization
 			a_ast_attached: a_ast /= Void
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_compiled and then a_parent.is_valid_domain_item and then a_parent.is_real_feature
-		local
-			l_class: QL_CLASS
 		do
 			internal_ast := a_ast
 			make (a_name, a_parent)

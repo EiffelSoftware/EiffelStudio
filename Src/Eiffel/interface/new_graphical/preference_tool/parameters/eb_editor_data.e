@@ -861,7 +861,7 @@ feature -- Keybord shortcuts Customization
 	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
-			create Result.make (21)
+			create Result.make (23)
 			Result.put ([False,  True, False, key_strings.item (Key_space).twin.as_string_8], "autocomplete")
 			Result.put ([False,  True,  True, key_strings.item (Key_space).twin.as_string_8], "class_autocomplete")
 			Result.put ([ True,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_panel")
@@ -883,6 +883,9 @@ feature -- Keybord shortcuts Customization
 			Result.put ([True, False,  False, key_strings.item (Key_7).twin.as_string_8], "external_command_7")
 			Result.put ([True, False,  False, key_strings.item (Key_8).twin.as_string_8], "external_command_8")
 			Result.put ([True, False,  False, key_strings.item (Key_9).twin.as_string_8], "external_command_9")
+			Result.put ([False, True,  False, key_strings.item (key_right).twin.as_string_8], "expand_tree_node")
+			Result.put ([False, True,  False, key_strings.item (key_left).twin.as_string_8], "collapse_tree_node")
+
 		end
 
 invariant

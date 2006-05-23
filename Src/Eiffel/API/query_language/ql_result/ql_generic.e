@@ -51,8 +51,6 @@ feature{NONE} -- Initialization
 			a_ast_attached: a_ast /= Void
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_class and then a_parent.is_compiled a_parent.is_valid_domain_item
-		local
-			l_class: QL_CLASS
 		do
 			internal_ast := a_ast
 			set_name (a_ast.name)
@@ -119,7 +117,6 @@ feature -- Access
 	ast: FORMAL_DEC_AS is
 			-- AST node associated with current item
 		local
-			l_class: QL_CLASS
 			l_list: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_ast: like ast
 			l_item_name: STRING

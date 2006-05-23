@@ -58,7 +58,6 @@ feature{QL_DOMAIN} -- Intrinsic domain
 	intrinsic_domain: QL_FEATURE_DOMAIN is
 			-- Intrinsic_domain which can be inferred from current criterion
 		local
-			l_user_data_list: like user_data_list
 			l_feature_list: like feature_list
 			l_feature: QL_FEATURE
 			l_invariant_list: like invariant_list
@@ -137,7 +136,6 @@ feature{NONE} -- Implementation
 			l_invariant_list: like invariant_list
 			l_feature_list: like feature_list
 			l_branch_id_list: like user_data_list
-			l_feature: QL_FEATURE
 			l_invariant_callee: like callee_list_for_invariant
 			l_feature_callee: like callee_list_for_feature
 		do
@@ -169,7 +167,7 @@ feature{NONE} -- Implementation
 			until
 				classes.after
 			loop
-				client := classes.item.compiled_class
+				client := classes.item.compiled_representation
 				from
 					list := table.item (client.class_id)
 					list.start

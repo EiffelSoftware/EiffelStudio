@@ -44,6 +44,10 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	last_domain: QL_DOMAIN
+			-- Last generated domain		
+			-- Can be Void.
+
 feature -- Setting
 
 	set_name (a_name: STRING) is
@@ -71,10 +75,41 @@ feature -- Setting
 			a_criteria.do_all (agent set_criterion)
 		end
 
+	enable_fill_domain is
+			-- Enable that newly generated domain will be filled with satisfied items.
+		do
+			is_fill_domain_enabled := True
+		ensure
+			fill_domain_enabled: is_fill_domain_enabled
+		end
+
+	disable_fill_domain is
+			-- Disable that newly generated domain will be filled with satisfied items.
+		do
+			is_fill_domain_enabled := False
+		ensure
+			fill_domain_disabled: not is_fill_domain_enabled
+		end
+
+feature -- Status report
+
+	is_fill_domain_enabled: BOOLEAN
+			-- During domain generation, if some item is satisfied by `criterion',
+			-- will it be inserted into `domain'?
+			-- Default: False		
+
 feature{NONE} -- Implementation
 
 	name_internal: like name
 			-- Implementation of `name'
+
+	wipe_out_last_domain is
+			-- Wipe out `last_domain'.
+		do
+			if last_domain /= Void then
+				last_domain.content.wipe_out
+			end
+		end
 
 invariant
 	unit_set_attached: unit /= Void

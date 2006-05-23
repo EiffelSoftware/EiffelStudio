@@ -31,6 +31,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	default_create,
 	make_with_text
@@ -220,6 +227,7 @@ feature{NONE} -- Redraw
 			l_editor_token: like editor_token_text
 			l_parent: EV_GRID
 			l_focused: BOOLEAN
+			l_editor_data: EB_EDITOR_DATA
 		do
 			l_parent := parent
 			l_focused := l_parent.has_focus
@@ -233,11 +241,13 @@ feature{NONE} -- Redraw
 
 				-- Draw border
 			if is_selected then
-					-- We always use focused selection color because use non-focused selection color
-					-- to draw a border rectangle is not obvious enough.
-				a_drawable.set_foreground_color (l_parent.focused_selection_color)
-				a_drawable.set_line_width (1)
-				a_drawable.draw_rectangle (0, 0, width, height)
+				l_editor_data := preferences.editor_data
+				if l_parent.has_focus then
+					a_drawable.set_foreground_color (l_editor_data.selection_background_color)
+				else
+					a_drawable.set_foreground_color (l_editor_data.focus_out_selection_background_color)
+				end
+				a_drawable.fill_rectangle (0, 0, width, height)
 			end
 				-- Draw pixmap
 			if pixmap /= Void then
@@ -280,7 +290,11 @@ feature{NONE} -- Redraw
 				if l_text_x /= l_editor_token.x_offset or l_text_y /= l_editor_token.y_offset then
 					l_editor_token.set_x_y_offset (l_text_x, l_text_y)
 				end
-				l_editor_token.display (0, 0, a_drawable, last_picked_token, l_focused)
+				if is_selected then
+					l_editor_token.display_selected (0, 0, a_drawable, l_focused)
+				else
+					l_editor_token.display (0, 0, a_drawable, last_picked_token, l_focused)
+				end
 			end
 		end
 

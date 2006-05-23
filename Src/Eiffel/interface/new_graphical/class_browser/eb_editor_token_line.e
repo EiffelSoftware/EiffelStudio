@@ -371,7 +371,52 @@ feature -- Display
 	display (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_selected_token_index: INTEGER; a_focus: BOOLEAN) is
 			-- Display `tokens' at position (x, y) using `a_drawable'.
 			-- `a_selected_token_index' indicates that token should be displayed in its selected status.
-			-- `a_focus' indicates whether `tokens' has focus or not.			
+			-- `a_focus' indicates whether `tokens' has focus or not.
+		require
+			a_drawable_attached: a_drawable /= Void
+			a_selected_token_index_non_negative: a_selected_token_index >= 0
+		local
+			l_tokens: like tokens
+			l_pos: like token_position
+			l_token: EDITOR_TOKEN
+			l_cursor: CURSOR
+			l_pos_cursor: CURSOR
+			l_index: INTEGER
+		do
+			if not is_position_up_to_date then
+				update_position
+			end
+			l_tokens := tokens
+			if not l_tokens.is_empty then
+				l_pos := token_position
+				l_cursor := l_tokens.cursor
+				l_pos_cursor := l_pos.cursor
+				from
+					l_tokens.start
+					l_pos.start
+					l_index := 1
+				until
+					l_tokens.after
+				loop
+					l_token := l_tokens.item
+					if a_selected_token_index < 0 or l_index = a_selected_token_index then
+						display_selected_token (x + l_pos.item.x, y + l_pos.item.y, l_token, a_focus, a_drawable)
+					else
+						display_token (x + l_pos.item.x, y + l_pos.item.y, l_token, a_drawable)
+					end
+					l_index := l_index + 1
+					l_tokens.forth
+					l_pos.forth
+				end
+				l_tokens.go_to (l_cursor)
+				l_pos.go_to (l_pos_cursor)
+			end
+		end
+
+	display_selected (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_focus: BOOLEAN) is
+			-- Display `tokens' at position (x, y) using `a_drawable' in selected mode.
+			-- `a_selected_token_index' indicates that token should be displayed in its selected status.
+			-- `a_focus' indicates whether `tokens' has focus or not.
 		require
 			a_drawable_attached: a_drawable /= Void
 		local
@@ -398,11 +443,7 @@ feature -- Display
 					l_tokens.after
 				loop
 					l_token := l_tokens.item
-					if l_index = a_selected_token_index then
-						display_selected_token (x + l_pos.item.x, y + l_pos.item.y, l_token, a_focus, a_drawable)
-					else
-						display_token (x + l_pos.item.x, y + l_pos.item.y, l_token, a_drawable)
-					end
+					display_selected_token (x + l_pos.item.x, y + l_pos.item.y, l_token, a_focus, a_drawable)
 					l_index := l_index + 1
 					l_tokens.forth
 					l_pos.forth

@@ -128,12 +128,65 @@ feature -- Actions
 			end
 		end
 
+	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `collapse_button' is pressed
+		do
+			Result := agent on_collapse_selected_levels_key_pressed
+		end
+
+	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
+			-- Action to be performed when `expand_button' is pressed
+		do
+			Result := agent on_expand_selected_levels_key_pressed
+		end
+
+	on_enter_pressed is
+			-- Action to be performed when enter key is pressed
+		do
+			on_expand_selected_levels_key_pressed
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		do
+			ev_application.clipboard.set_text (selected_text)
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		do
+			grid.select_all_rows
+		end
+
+	on_collapse_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for collapse selected levels is pressed.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
+
+	on_expand_selected_levels_key_pressed is
+			-- Actions to be performed when accelerator for expand selected levels is pressed.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when some key is pressed in `grid'
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_processed: BOOLEAN
+		do
+			l_processed := on_predefined_key_pressed (a_key)
+		end
+
 feature -- Access
 
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
 			l_tool_bar: EV_TOOL_BAR
+			l_tool_bar2: EV_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
@@ -144,6 +197,12 @@ feature -- Access
 				control_tool_bar.disable_item_expand (l_tool_bar)
 				control_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.disable_item_expand (show_tooltip_checkbox)
+				create l_tool_bar2
+				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
+				l_tool_bar2.extend (expand_button)
+				l_tool_bar2.extend (collapse_button)
+				control_tool_bar.extend (l_tool_bar2)
+				control_tool_bar.disable_item_expand (l_tool_bar2)
 			end
 			Result := control_tool_bar
 		ensure then
@@ -209,7 +268,7 @@ feature{NONE} -- Initialization
 						if l_branch_row = Void then
 							l_grid.insert_new_row (l_grid.row_count + 1)
 							l_branch_row := l_grid.row (l_grid.row_count)
-							l_branch_row.set_item (1, create{EV_GRID_LABEL_ITEM}.make_with_text (interface_names.l_branch+l_cur_branch_id.out))
+							l_branch_row.set_item (1, branch_item (l_cur_branch_id))
 						end
 					end
 					l_row := rows.item_for_iteration
@@ -238,6 +297,8 @@ feature{NONE} -- Initialization
 			grid.enable_tree
 			grid.pick_ended_actions.force_extend (agent on_pick_ended)
 			grid.set_item_pebble_function (agent on_pick)
+			grid.enable_multiple_item_selection
+			grid.key_press_actions.extend (agent on_key_pressed)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
@@ -543,6 +604,42 @@ feature{NONE} -- Sorting
 			Result := column_sort_info.item (written_class_column).current_order
 		end
 
+	selected_text: STRING is
+			-- String representation of selected rows/items
+			-- If no row/item is selected, return an empty string.
+		local
+			l_sorted_items: DS_LIST [EV_GRID_ITEM]
+			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_last_row_index: INTEGER
+			l_last_column_index: INTEGER
+			l_item: EV_GRID_ITEM
+		do
+			l_sorted_items := sorted_items (grid.selected_items)
+			create Result.make (512)
+			from
+				l_last_column_index := 1
+				l_sorted_items.start
+			until
+				l_sorted_items.after
+			loop
+				l_item := l_sorted_items.item_for_iteration
+				if l_item.row.index /= l_last_row_index then
+					if l_last_row_index /= 0 then
+						Result.append_character ('%N')
+					end
+					l_last_row_index := l_item.row.index
+					l_last_column_index := 1
+				end
+				Result.append (tabs (l_item.column.index - l_last_column_index))
+				l_last_column_index := l_item.column.index
+				l_grid_item ?= l_item
+				if l_grid_item /= Void then
+					Result.append (l_grid_item.text)
+				end
+				l_sorted_items.forth
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	data: QL_FEATURE_DOMAIN
@@ -565,8 +662,42 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	show_tooltip_checkbox_internal: like show_tooltip_checkbox;
+	show_tooltip_checkbox_internal: like show_tooltip_checkbox
 			-- Implementation of `show_tooltip_checkbox'
+
+	branch_item (a_branch_id: INTEGER): EB_GRID_EDITOR_TOKEN_ITEM is
+			-- A grid item to display branch id
+		do
+			create Result.make_with_text (interface_names.l_branch+a_branch_id.out)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expand_item (a_item: EV_GRID_ITEM) is
+			-- Expand `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.parent /= Void
+		do
+			if a_item.column.index = 1 then
+				if a_item.row.is_expandable then
+					a_item.row.expand
+				end
+			end
+		end
+
+	collapse_item (a_item: EV_GRID_ITEM) is
+			-- Collapse `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.parent /= Void
+		do
+			if a_item.column.index = 1 then
+				if a_item.row.is_expandable then
+					a_item.row.collapse
+				end
+			end
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

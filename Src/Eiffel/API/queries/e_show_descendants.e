@@ -25,7 +25,6 @@ feature -- Output
 	work is
 			-- Execute Current command.	
 		local
-			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
 			l_domain: QL_CLASS_DOMAIN
 			l_class: QL_CLASS
 		do

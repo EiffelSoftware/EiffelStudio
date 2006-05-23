@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	QL_CRITERION_ADAPTER
+		undefine
+			process
 		redefine
 			has_intrinsic_domain
 		end
@@ -26,6 +28,14 @@ feature -- Status report
 			Result := wrapped_criterion.has_intrinsic_domain
 		ensure then
 			good_result: Result implies wrapped_criterion.has_intrinsic_domain
+		end
+
+feature -- Process
+
+	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+			-- Process Current using `a_criterion_visitor'.
+		do
+			a_criterion_visitor.process_compiled_imp_criterion (Current)
 		end
 
 indexing

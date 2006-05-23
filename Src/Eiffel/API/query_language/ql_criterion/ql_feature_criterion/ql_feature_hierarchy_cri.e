@@ -18,7 +18,8 @@ inherit
 	QL_FEATURE_CRITERION
 		undefine
 			has_intrinsic_domain,
-			require_compiled
+			require_compiled,
+			process
 		redefine
 			intrinsic_domain
 		end

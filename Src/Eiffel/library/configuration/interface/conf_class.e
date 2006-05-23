@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 
 				l_cluster ?= a_group
 			end
+			is_renamed := False
 		ensure
 			is_valid: is_valid
 		end

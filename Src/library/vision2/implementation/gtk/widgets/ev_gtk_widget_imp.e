@@ -58,6 +58,48 @@ feature {NONE} -- Implementation
 			set_is_initialized (True)
 		end
 
+feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
+
+	screen_x: INTEGER is
+			-- Horizontal position of the client area on screen,
+		local
+			a_x: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+		do
+			if is_displayed then
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+				    	$a_x, NULL)
+					Result := a_x
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+				end
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical position of the client area on screen,
+		local
+			a_y: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+		do
+			if is_displayed then
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+				    	NULL, $a_y)
+					Result := a_y
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+				end
+			end
+		end
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is

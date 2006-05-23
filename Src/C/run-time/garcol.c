@@ -2735,14 +2735,16 @@ rt_private int split_to_block (int is_to_keep)
 
 
 	if (size == 0) {
-			/* No objects were scavenged, make sure that `ps_to.sc_top' refers to a B_LAST
-			 * block. */
 		CHECK("previous_same_as_top", ps_to.sc_top == ps_to.sc_previous_top);
 		CHECK("valid sc_top", ps_to.sc_top < ps_to.sc_end);
-		((union overhead *) ps_to.sc_top)->ov_size |= B_LAST;
-		if (is_to_keep) {
-				/* Mark `ps_to' as non-free block. */
-			((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
+		CHECK("base is top", base == (void *) ps_to.sc_top);
+			/* No objects were scavenged, ensure that `ps_to.sc_top' (aka base) refers to a B_LAST block. */
+		base->ov_size |= B_LAST;
+			/* Mark `ps_to.sc_top' as non-free block. */
+		base->ov_size |= B_BUSY;
+		if (!is_to_keep) {
+				/* Block cannot be kept. We have to return it to the free list. */
+			eif_rt_xfree ((EIF_REFERENCE) (base + 1));
 		}
 			/* Even if no split occurred, it is still a successful split when
 			 * seen from the client of this routine. */

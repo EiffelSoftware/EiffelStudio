@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			--call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			enable_capture
 			initialize_transport (a_screen_x, a_screen_y, interface)
-			App_implementation.enable_is_in_transport
+--			App_implementation.enable_is_in_transport
 		end
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 				original_x_offset := -1
 				original_y_offset := -1
 				dawaiting_movement := False
-				App_implementation.disable_is_in_transport
+--				App_implementation.disable_is_in_transport
 			elseif dawaiting_movement then
 				dawaiting_movement := False
 			end

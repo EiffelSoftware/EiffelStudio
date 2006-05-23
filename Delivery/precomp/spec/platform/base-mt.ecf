@@ -4,7 +4,7 @@
 		<root class="ANY" all_classes="false"/>
 		<setting name="multithreaded" value="True"/>
 		<option trace="false" profile="false" debug="false" warning="false">
-			<assertions precondition="true" postcondition="false" check"false" invariant"false" loop"false"/>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>

@@ -190,11 +190,10 @@ feature -- status settings
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_has_frame (entry_widget, False)
 		end
 
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
+	set_editable (a_editable: BOOLEAN) is
+			-- Set editable state to `a_editable'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, a_editable)
 		end
 
 	set_caret_position (pos: INTEGER) is

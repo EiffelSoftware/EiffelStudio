@@ -29,6 +29,30 @@ inherit
 			create_drop_actions
 		end
 
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+			-- Handle motion event for `Current'.
+		do
+			if app_implementation.is_in_transport then
+				execute (
+					a_motion_tuple.integer_32_item (1),
+					a_motion_tuple.integer_32_item (2),
+					a_motion_tuple.double_item (3),
+					a_motion_tuple.double_item (4),
+					a_motion_tuple.double_item (5),
+					a_motion_tuple.integer_32_item (6),
+					a_motion_tuple.integer_32_item (7)
+				)
+			elseif pointer_motion_actions_internal /= Void then
+				pointer_motion_actions_internal.call (a_motion_tuple)
+			end
+		end
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE is
+		deferred
+		end
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	call_button_event_actions (
@@ -116,7 +140,7 @@ feature -- Implementation
 			-- Steps to perform before transport initiated.
 		do
 			update_pointer_style (pointed_target)
-			app_implementation.on_pick (pebble)
+			app_implementation.on_pick (Current, pebble)
 			if pick_actions_internal /= Void then
 				pick_actions_internal.call ([a_x, a_y])
 			end
@@ -198,7 +222,7 @@ feature -- Implementation
 					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				end
 			else
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport and then app_imp.captured_widget = interface then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport then
 					end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				else
 					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)

@@ -111,7 +111,7 @@ feature -- Status report
 			do
 				temp_accept_cursor := accept_cursor
 				temp_deny_cursor := deny_cursor
-				app_implementation.on_pick (pebble)
+				app_implementation.on_pick (Current, pebble)
 				if pnd_row_imp /= Void then
 					if pnd_row_imp.pick_actions_internal /= Void then
 						pnd_row_imp.pick_actions_internal.call ([a_x, a_y])

@@ -307,7 +307,7 @@ feature -- Basic operation
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 								-- This will force another motion notify as we have the motion hint flag set for all widgets.
-							l_widget_imp ?= gtk_widget_imp_at_pointer_position
+							l_pnd_imp ?= gtk_widget_imp_at_pointer_position
 							if is_in_transport then
 								l_pnd_imp := pebble_transporter
 							elseif

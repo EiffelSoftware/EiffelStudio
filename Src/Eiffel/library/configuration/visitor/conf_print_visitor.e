@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 							l_versions.after
 						loop
 							l_ver := l_versions.item_for_iteration
-							append_text_indent ("<version type="+l_versions.key_for_iteration)
+							append_text_indent ("<version type=%""+l_versions.key_for_iteration+"%"")
 							if l_ver.min /= Void then
 								append_text (" min=%""+l_ver.min.version+"%"")
 							end

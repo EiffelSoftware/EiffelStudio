@@ -1178,15 +1178,15 @@ rt_private void interpret(int flag, int where)
 	case BC_CAST_CHAR32:
 		last = otop();
 		switch (last->type & SK_HEAD) {
-			case SK_UINT8: last->it_wchar = (EIF_CHARACTER) last->it_uint8; break;
-			case SK_UINT16: last->it_wchar = (EIF_CHARACTER) last->it_uint16; break;
-			case SK_UINT32: last->it_wchar = (EIF_CHARACTER) last->it_uint32; break;
-			case SK_UINT64: last->it_wchar = (EIF_CHARACTER) last->it_uint64; break;
-			case SK_INT8: last->it_wchar = (EIF_CHARACTER) last->it_int8; break;
-			case SK_INT16: last->it_wchar = (EIF_CHARACTER) last->it_int16; break;
-			case SK_INT32: last->it_wchar = (EIF_CHARACTER) last->it_int32; break;
-			case SK_INT64: last->it_wchar = (EIF_CHARACTER) last->it_int64; break;
-			case SK_CHAR: last->it_wchar = (EIF_CHARACTER) last->it_char; break;
+			case SK_UINT8: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint8; break;
+			case SK_UINT16: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint16; break;
+			case SK_UINT32: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint32; break;
+			case SK_UINT64: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint64; break;
+			case SK_INT8: last->it_wchar = (EIF_WIDE_CHAR) last->it_int8; break;
+			case SK_INT16: last->it_wchar = (EIF_WIDE_CHAR) last->it_int16; break;
+			case SK_INT32: last->it_wchar = (EIF_WIDE_CHAR) last->it_int32; break;
+			case SK_INT64: last->it_wchar = (EIF_WIDE_CHAR) last->it_int64; break;
+			case SK_CHAR: last->it_wchar = (EIF_WIDE_CHAR) last->it_char; break;
 			case SK_WCHAR: break;
 			}
 		last->type = SK_WCHAR;

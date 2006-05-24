@@ -1,5 +1,5 @@
 indexing
-	description: "A collection of notifier functions, that can be used with the MDC_BALLON_MSG environment variable."
+	description: "A collection of notifier functions, that can be used with the MDC_BALLOON_MSG environment variable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

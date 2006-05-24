@@ -23,8 +23,7 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			check a_item.is_compiled end
-			Result := a_item.class_c.is_precompiled
+			Result := a_item.is_compiled and then a_item.class_c.is_precompiled
 		ensure then
 			good_result: Result implies a_item.is_compiled and then a_item.class_c.is_precompiled
 		end

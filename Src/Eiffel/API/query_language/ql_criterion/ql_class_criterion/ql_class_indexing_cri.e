@@ -1,31 +1,97 @@
 indexing
-	description: "Object that represents a criterion to decide whether or not a class is obsolete"
+	description: "Criterion to test certain condition in an indexing clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	QL_CLASS_IS_OBSOLETE_CRI
+deferred class
+	QL_CLASS_INDEXING_CRI
 
 inherit
 	QL_CLASS_CRITERION
+		redefine
+			is_satisfied_by
+		end
 
+	QL_NAME_CRITERION
+		redefine
+			is_satisfied_by
+		end
 
-feature -- Status report
+	SHARED_SERVER
 
-	require_compiled: BOOLEAN is True
-			-- Does current criterion require a compiled item?
+	SHARED_WORKBENCH
+
+	SHARED_EIFFEL_PARSER
 
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
+		deferred
+		end
+
+feature -- Status report
+
+	require_compiled: BOOLEAN is
+			-- Does current criterion require a compiled item?
 		do
-			Result := a_item.is_compiled and then a_item.class_c.is_obsolete
-		ensure then
-			good_result: Result implies a_item.is_compiled and then a_item.class_c.is_obsolete
+			Result := False
+		end
+
+feature{NONE} -- Implementation
+
+	class_ast (a_item: QL_CLASS): CLASS_AS is
+			-- CLASS_AS of `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				if a_item.is_compiled then
+					Result := a_item.class_c.ast
+				else
+					roundtrip_eiffel_parser.parse_from_string (a_item.class_i.text)
+					Result := roundtrip_eiffel_parser.root_node
+				end
+			end
+		rescue
+			Result := Void
+			l_retried := True
+			retry
+		end
+
+feature {NONE} -- Internal parsers
+
+	roundtrip_eiffel_parser: EIFFEL_PARSER is
+			-- Roundtrip parser used to retrieve indexing clause
+		do
+			if il_parsing then
+				Result := roundtrip_il_eiffel_parser
+			else
+				Result := roundtrip_pure_eiffel_parser
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+			-- Pure Eiffel parser
+		deferred
+		ensure
+			eiffel_parser_not_void: Result /= Void
+			pure_parser: not Result.il_parser
+		end
+
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+			-- IL Eiffel parser.
+		deferred
+		ensure
+			il_eiffel_parser_not_void: Result /= Void
+			il_parser: Result.il_parser
 		end
 
 indexing
@@ -59,6 +125,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

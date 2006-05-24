@@ -23,8 +23,7 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			check a_item.is_compiled end
-			Result := not a_item.class_c.is_deferred
+			Result := a_item.is_compiled and then not a_item.class_c.is_deferred
 		ensure then
 			good_result: Result implies a_item.is_compiled and then not a_item.class_c.is_deferred
 		end

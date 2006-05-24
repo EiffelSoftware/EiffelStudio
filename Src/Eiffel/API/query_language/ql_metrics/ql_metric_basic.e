@@ -151,6 +151,29 @@ feature -- Setting
 			end
 		end
 
+	remove_criteria is
+			-- Remove all criteria.
+		local
+			l_basic_scope_table: like basic_scope_table
+			l_generator: QL_DOMAIN_GENERATOR
+			l_processed_generators: ARRAYED_LIST [QL_DOMAIN_GENERATOR]
+		do
+			l_basic_scope_table := basic_scope_table
+			from
+				create l_processed_generators.make (l_basic_scope_table.count)
+				l_basic_scope_table.start
+			until
+				l_basic_scope_table.after
+			loop
+				l_generator := l_basic_scope_table.item_for_iteration.domain_generator
+				if not l_processed_generators.has (l_generator) then
+					l_generator.set_criterion (Void)
+					l_processed_generators.extend (l_generator)
+				end
+				l_basic_scope_table.forth
+			end
+		end
+
 	set_value_initialize_function (a_function: like value_initialize_function) is
 			-- Set `value_initialize_function' with `a_function'.
 			-- If `a_function' is Void, `value_initialize_function' will be removed,

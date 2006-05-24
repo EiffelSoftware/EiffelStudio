@@ -133,9 +133,9 @@ feature -- Status report
 	is_valid_domain_item: BOOLEAN is
 			-- Is current a valid item that is fully attached in a domain?
 			-- True as return value means every ancestors of current item is a valid domain item.
-		once
+		do
 			if parent = Void then
-				Result := target = universe.target
+				Result := target = target.application_target
 			else
 				Result := parent.is_valid_domain_item
 			end

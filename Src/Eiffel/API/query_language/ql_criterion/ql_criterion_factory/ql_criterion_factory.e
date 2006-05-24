@@ -14,7 +14,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	make is
 			-- Initialize.
 		deferred
 		ensure
@@ -23,22 +23,48 @@ feature{NONE} -- Initialization
 
 feature -- Criterion creation
 
-	criterion (a_name: STRING; a_argu: TUPLE): QL_CRITERION is
+	criterion (a_name: STRING; a_argu: TUPLE): like criterion_type is
 			-- Criterion with `a_name' as `a_argu' as its initialization arguments
 			-- Void if no criterion with `a_name' is applicable with respect to current scope
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-		deferred
+		local
+			l_creation_function: like creation_function
+		do
+			l_creation_function := criterion_table.item (a_name.as_lower)
+			if l_creation_function /= Void and then l_creation_function.valid_operands (a_argu) then
+				Result := l_creation_function.item (a_argu)
+			end
+		end
+
+feature -- Status report
+
+	has_criterion (a_name: STRING): BOOLEAN is
+			-- Does Current contain criterion named `a_name'?
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_name: STRING
+		do
+			l_name := a_name.twin
+			l_name.left_adjust
+			l_name.right_adjust
+			l_name.to_lower
+			Result := criterion_table.has (l_name)
 		end
 
 feature{NONE} -- Implementation
 
-	creation_function: FUNCTION [ANY, TUPLE, QL_CRITERION]
+	creation_function: FUNCTION [ANY, TUPLE, like criterion_type]
 			-- Creation function type anchor
 
 	criterion_table: HASH_TABLE [like creation_function, STRING]
 			-- Hashtable to store criterion creation agents
+
+	criterion_type: QL_CRITERION
+			-- Criterion anchor type
 
 invariant
 	criterion_table_attached: criterion_table /= Void

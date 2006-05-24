@@ -442,7 +442,7 @@ feature -- Execution
 			end
 
 				--| Getting well formatted workind directory path
-			working_dir := application_working_directory.twin
+			working_dir := application_working_directory
 
 				--| Building the command line argument
 			l_cmd_line_arg := current_cmd_line_argument

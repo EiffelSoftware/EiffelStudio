@@ -158,6 +158,17 @@ feature -- Status report
 
 feature -- Conversion
 
+	frozen to_cil: SYSTEM_STRING is
+			-- Create an instance of SYSTEM_STRING using characters
+			-- of Current between indices `1' and `count'.
+		require
+			is_dotnet: {PLATFORM}.is_dotnet
+		do
+			Result := dotnet_convertor.from_string_to_system_string (Current)
+		ensure
+			to_cil_not_void: Result /= Void
+		end
+
 	to_string_8: STRING is
 			-- Convert `Current' as a STRING_8.
 		require

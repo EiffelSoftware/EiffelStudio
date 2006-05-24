@@ -391,9 +391,8 @@ feature {NONE} -- Implementation
 		local
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
-			l_platforms, l_builds: ARRAYED_LIST [TUPLE [value: INTEGER; invert: BOOLEAN]]
+			l_platforms, l_builds: ARRAYED_LIST [INTEGER]
 			l_custs: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
-			l_pf, l_build: TUPLE [value: INTEGER; invert: BOOLEAN]
 			l_custom: TUPLE [value: STRING; invert: BOOLEAN]
 			l_versions: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
 			l_name: STRING
@@ -414,36 +413,42 @@ feature {NONE} -- Implementation
 						a_conditions.after
 					loop
 						l_condition := a_conditions.item
-						from
-							l_platforms := l_condition.platform
-							l_platforms.start
-						until
-							l_platforms.after
-						loop
-							l_pf := l_platforms.item
-							if l_pf.invert then
-								l_name := "excluded_value"
+						if l_condition.platform /= Void then
+							if l_condition.platform.invert then
+								append_text_indent ("<platform excluded_value=%"")
 							else
-								l_name := "value"
+								append_text_indent ("<platform value=%"")
 							end
-							append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value).as_lower+"%"/>%N")
-							l_platforms.forth
+							from
+								l_platforms := l_condition.platform.value
+								l_platforms.start
+							until
+								l_platforms.after
+							loop
+								append_text (get_platform_name (l_platforms.item).as_lower + " ")
+								l_platforms.forth
+							end
+							text.remove_tail (1)
+							append_text ("%"/>")
 						end
 
-						from
-							l_builds := l_condition.build
-							l_builds.start
-						until
-							l_builds.after
-						loop
-							l_build := l_builds.item
-							if l_build.invert then
-								l_name := "excluded_value"
+						if l_condition.build /= Void then
+							if l_condition.build.invert then
+								append_text_indent ("<build excluded_value=%"")
 							else
-								l_name := "value"
+								append_text_indent ("<build value=%"")
 							end
-							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value).as_lower+"%"/>%N")
-							l_builds.forth
+							from
+								l_builds := l_condition.build.value
+								l_builds.start
+							until
+								l_builds.after
+							loop
+								append_text (get_build_name (l_builds.item).as_lower + " ")
+								l_builds.forth
+							end
+							text.remove_tail (1)
+							append_text ("%"/>")
 						end
 
 						if l_condition.multithreaded /= Void then

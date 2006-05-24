@@ -8,6 +8,9 @@ class
 
 inherit
 	CONF_VALIDITY
+		redefine
+			out
+		end
 
 create
 	make
@@ -17,18 +20,16 @@ feature {NONE} -- Initialization
 	make is
 			-- Create.
 		do
-			create platform.make (1)
-			create build.make (1)
 			create version.make (1)
 			create custom.make (1)
 		end
 
 feature -- Access
 
-	platform: ARRAYED_LIST [TUPLE [value: INTEGER; invert: BOOLEAN]]
+	platform: TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
 			-- Platform where it is enabled or for which it is disabled (if `invert' is true)
 
-	build: ARRAYED_LIST [TUPLE [value: INTEGER; invert: BOOLEAN]]
+	build: TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
 	multithreaded: CELL [BOOLEAN]
@@ -50,8 +51,6 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_pf, l_build: INTEGER
-			l_pf_cond, l_build_cond: TUPLE [value: INTEGER; invert: BOOLEAN]
 			l_cust_cond: TUPLE [value: STRING; invert: BOOLEAN]
 			l_vars: CONF_HASH_TABLE [STRING, STRING]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
@@ -70,31 +69,13 @@ feature -- Queries
 			end
 
 				-- platform
-			if Result and not platform.is_empty then
-				from
-					l_pf := a_state.platform
-					platform.start
-				until
-					not Result or platform.after
-				loop
-					l_pf_cond := platform.item
-					Result := l_pf = l_pf_cond.value xor l_pf_cond.invert
-					platform.forth
-				end
+			if Result and platform /= Void then
+				Result := platform.value.has (a_state.platform) xor platform.invert
 			end
 
 				-- build
-			if Result and not build.is_empty then
-				from
-					l_build := a_state.build
-					build.start
-				until
-					not Result or build.after
-				loop
-					l_build_cond := build.item
-					Result := l_build = l_build_cond.value xor l_build_cond.invert
-					build.forth
-				end
+			if Result and build /= Void then
+				Result := build.value.has (a_state.build) xor build.invert
 			end
 
 				-- Version
@@ -134,22 +115,33 @@ feature -- Update
 			-- Add requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
+			no_invert: platform = Void or else not platform.invert
 		do
-			platform.force ([a_platform, False])
+			if platform = Void then
+				create platform
+				platform.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			end
+			platform.value.force (a_platform)
 		end
 
 	exclude_platform (a_platform: INTEGER) is
 			-- Add an exclude requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
+			all_invert: platform = Void or else platform.invert
 		do
-			platform.force ([a_platform, True])
+			if platform = Void then
+				create platform
+				platform.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				platform.invert := True
+			end
+			platform.value.force (a_platform)
 		end
 
 	wipe_out_platform is
 			-- Wipe out platforms.
 		do
-			platform.wipe_out
+			platform := Void
 		ensure
 			platform_empty: platform.is_empty
 		end
@@ -157,23 +149,34 @@ feature -- Update
 	add_build (a_build: INTEGER) is
 			-- Add requirement on `a_build'.
 		require
-			valid_buidl: valid_build (a_build)
+			valid_build: valid_build (a_build)
+			no_invert: build = Void or else not build.invert
 		do
-			build.force ([a_build, False])
+			if build = Void then
+				create build
+				build.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			end
+			build.value.force (a_build)
 		end
 
 	exclude_build (a_build: INTEGER) is
 			-- Add an exclude requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
+			all_invert: build = void or else build.invert
 		do
-			build.force ([a_build, True])
+			if build = Void then
+				create build
+				build.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				build.invert := True
+			end
+			build.value.force (a_build)
 		end
 
 	wipe_out_build is
 			-- Wipe out builds.
 		do
-			build.wipe_out
+			build := Void
 		ensure
 			build_empty: build.is_empty
 		end
@@ -188,6 +191,18 @@ feature -- Update
 			-- Set `dotnet' to `a_value'.
 		do
 			create dotnet.put (a_value)
+		end
+
+	unset_multithreaded is
+			-- Unset `multithreaded'.
+		do
+			multithreaded := Void
+		end
+
+	unset_dotnet is
+			-- Unset `dotnet'.
+		do
+			dotnet := Void
 		end
 
 	add_custom (a_name, a_value: STRING) is
@@ -216,6 +231,16 @@ feature -- Update
 			custom_empty: custom.is_empty
 		end
 
+	unset_version (a_type: STRING) is
+			-- Unset version constraint.
+		require
+			valid_type: valid_version_type (a_type)
+		do
+			version.remove (a_type)
+		ensure
+			unset: not version.has (a_type)
+		end
+
 	add_version (a_min, a_max: CONF_VERSION; a_type: STRING) is
 			-- Set version constraint.
 		require
@@ -233,10 +258,115 @@ feature -- Update
 			version_added: version.has (a_type)
 		end
 
+feature -- Output
+
+	out: STRING is
+			-- Text representation for the conditions.
+		local
+			l_conc: STRING
+			l_lst: ARRAYED_LIST [INTEGER]
+		do
+			create Result.make_empty
+			if platform /= Void then
+				if platform.invert then
+					Result.append ("not ")
+					l_conc := " and "
+				else
+					l_conc := " or "
+				end
+				Result.append ("(")
+				from
+					l_lst := platform.value
+					l_lst.start
+				until
+					l_lst.after
+				loop
+					Result.append (platform_names.item (l_lst.item) + l_conc)
+					l_lst.forth
+				end
+				Result.remove_tail (l_conc.count)
+				Result.append (") and ")
+			end
+
+			if build /= Void then
+				if build.invert then
+					Result.append ("not ")
+					l_conc := " and "
+				else
+					l_conc := " or "
+				end
+				Result.append ("(")
+				from
+					l_lst := build.value
+					l_lst.start
+				until
+					l_lst.after
+				loop
+					Result.append (build_names.item (l_lst.item) + l_conc)
+					l_lst.forth
+				end
+				Result.remove_tail (l_conc.count)
+				Result.append (") and ")
+			end
+
+			from
+				version.start
+			until
+				version.after
+			loop
+				if version.item_for_iteration.min /= Void then
+					Result.append (version.item_for_iteration.min.version + " <= ")
+				end
+				Result.append (version.key_for_iteration + " version")
+				if version.item_for_iteration.max /= Void then
+					Result.append (" <= " + version.item_for_iteration.max.version)
+				end
+				Result.append (" and ")
+				version.forth
+			end
+
+			if dotnet /= Void then
+				if dotnet.item then
+					Result.append (".NET and ")
+				else
+					Result.append ("not .NET and ")
+				end
+			end
+
+			if multithreaded /= Void then
+				if multithreaded.item then
+					Result.append ("multithreaded and ")
+				else
+					Result.append ("not multithreaded and ")
+				end
+			end
+
+			from
+				custom.start
+			until
+				custom.after
+			loop
+				Result.append (custom.key_for_iteration)
+				if custom.item_for_iteration.invert then
+					Result.append (" /= ")
+				else
+					Result.append (" = ")
+				end
+				Result.append (custom.item_for_iteration.value)
+				custom.forth
+			end
+
+				-- remove last " and "
+			if not Result.is_empty then
+				Result.remove_tail (5)
+			end
+		ensure then
+			Result_not_void: Result /= Void
+		end
 
 invariant
-	platform_not_void: platform /= Void
-	build_not_void: build /= Void
+	platform_ok: platform /= Void implies platform.value /= Void
+	build_ok: build /= Void implies build.value /= Void
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 end

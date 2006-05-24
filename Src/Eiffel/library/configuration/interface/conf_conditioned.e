@@ -40,7 +40,6 @@ feature {CONF_ACCESS} -- Status update
 		do
 			if internal_conditions = Void then
 				create internal_conditions.make (1)
-				internal_conditions.compare_objects
 			end
 			internal_conditions.force (a_condition)
 		ensure
@@ -50,17 +49,20 @@ feature {CONF_ACCESS} -- Status update
 	set_conditions (a_conditions: like internal_conditions) is
 			-- Set `internal_conditions' to `a_conditions'.
 		require
-			a_conditions_ok: a_conditions = Void or else not a_conditions.is_empty
-			object_comparison: a_conditions.object_comparison
+			object_comparison: a_conditions /= Void implies a_conditions.object_comparison
 		do
-			internal_conditions := a_conditions
+			if a_conditions /= Void and then a_conditions.is_empty then
+				internal_conditions := Void
+			else
+				internal_conditions := a_conditions
+			end
 		ensure
-			internal_conditions_set: internal_conditions = a_conditions
+			internal_conditions_set: a_conditions = Void or else not a_conditions.is_empty implies internal_conditions = a_conditions
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
-	internal_conditions: ARRAYED_LIST [CONF_CONDITION];
+	internal_conditions: CONF_CONDITION_LIST;
 			-- The list of conditions.
 
 invariant

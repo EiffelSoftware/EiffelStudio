@@ -1071,27 +1071,41 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_value, l_excluded_value: STRING
 			l_pf: INTEGER
+			l_platforms: LIST [STRING]
+			l_invert: BOOLEAN
 		do
 			l_value := current_attributes.item (at_value)
 			l_excluded_value := current_attributes.item (at_excluded_value)
-			if l_value /= Void and l_excluded_value /= Void then
+			if current_condition.platform /= Void then
+				set_parse_error_message ("Can not have multiple platform specifications in one condition.")
+			elseif l_value /= Void and l_excluded_value /= Void then
 				set_parse_error_message ("Value and exclude attribute in platform condition can not appear at the same time.")
 			elseif l_value = Void and l_excluded_value = Void then
 				set_parse_error_message ("No value or excluded-value specified in platform condition.")
 			elseif l_value /= Void then
-				l_pf := get_platform (l_value)
-				if valid_platform (l_pf) then
-					current_condition.add_platform (l_pf)
-				else
-					set_parse_error_message ("Invalid platform "+l_value+".")
-				end
+				l_platforms := l_value.split (';')
 			else
-				check l_excluded_value /= Void end
-				l_pf := get_platform (l_excluded_value)
-				if valid_platform (l_pf) then
-					current_condition.exclude_platform (l_pf)
-				else
-					set_parse_error_message ("Invalid platform "+l_excluded_value+".")
+				l_platforms := l_excluded_value.split (';')
+				l_invert := True
+			end
+
+			if not is_error then
+				from
+					l_platforms.start
+				until
+					l_platforms.after or is_error
+				loop
+					l_pf := get_platform (l_platforms.item)
+					if not valid_platform (l_pf) then
+						set_parse_error_message ("Invalid platform "+l_platforms.item+".")
+					else
+						if l_invert then
+							current_condition.exclude_platform (l_pf)
+						else
+							current_condition.add_platform (l_pf)
+						end
+					end
+					l_platforms.forth
 				end
 			end
 		end
@@ -1102,28 +1116,42 @@ feature {NONE} -- Implementation attribute processing
 			current_condition: current_condition /= Void
 		local
 			l_value, l_excluded_value: STRING
-			l_build: INTEGER
+			l_bld: INTEGER
+			l_builds: LIST [STRING]
+			l_invert: BOOLEAN
 		do
 			l_value := current_attributes.item (at_value)
 			l_excluded_value := current_attributes.item (at_excluded_value)
-			if l_value /= Void and l_excluded_value /= Void then
+			if current_condition.build /= Void then
+				set_parse_error_message ("Can not have multiple build specifications in one condition.")
+			elseif l_value /= Void and l_excluded_value /= Void then
 				set_parse_error_message ("Value and exclude attribute in build condition can not appear at the same time.")
 			elseif l_value = Void and l_excluded_value = Void then
 				set_parse_error_message ("No value or excluded-value specified in build condition.")
 			elseif l_value /= Void then
-				l_build := get_build (l_value)
-				if valid_build (l_build) then
-					current_condition.add_build (l_build)
-				else
-					set_parse_error_message ("Invalid build "+l_value+".")
-				end
+				l_builds := l_value.split (' ')
 			else
-				check l_excluded_value /= Void end
-				l_build := get_build (l_excluded_value)
-				if valid_build (l_build) then
-					current_condition.exclude_build (l_build)
-				else
-					set_parse_error_message ("Invalid build "+l_excluded_value+".")
+				l_builds := l_excluded_value.split (' ')
+				l_invert := True
+			end
+
+			if not is_error then
+				from
+					l_builds.start
+				until
+					l_builds.after or is_error
+				loop
+					l_bld := get_build (l_builds.item)
+					if not valid_build (l_bld) then
+						set_parse_error_message ("Invalid platform "+l_builds.item+".")
+					else
+						if l_invert then
+							current_condition.exclude_build (l_bld)
+						else
+							current_condition.add_build (l_bld)
+						end
+					end
+					l_builds.forth
 				end
 			end
 		end

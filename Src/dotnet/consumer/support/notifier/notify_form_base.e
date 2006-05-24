@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			create l_location.make_from_x_and_y (-32000, -32000)
 			set_location (l_location)
-			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.minimized)
+			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.normal)
 			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_tool_window)
 			set_show_in_taskbar (False)
 
@@ -52,21 +52,12 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	notify_consume (a_name, a_path, a_id, a_reason, a_version, a_cache: SYSTEM_STRING) is
+	notify_consume (a_message: NOTIFY_MESSAGE) is
 			-- Notifies user of a consume.
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: a_name.length > 0
-			a_path_attached: a_path /= Void
-			not_a_path_is_empty: a_path.length > 0
-			a_id_attached: a_id /= Void
-			not_a_id_is_empty: a_id.length > 0
-			a_reason_attached: a_reason /= Void
-			not_a_reason_is_empty: a_reason.length > 0
-			a_cache_attached: a_cache /= Void
-			not_a_cache_is_empty: a_cache.length > 0
+			a_message_attached: a_message /= Void
 		do
-			notify_string := {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_name)
+			notify_string := {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path)
 			if notify_string.length > 64 then
 				notify_string := notify_string.substring (0, 63)
 			end

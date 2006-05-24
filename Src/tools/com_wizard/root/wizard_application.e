@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			s: STRING
 		do
 			s := "EiffelCOM Wizard " + version_number + "%N"
-			s.append ("Copyright (c) 2005, Eiffel Software. All rights reserved." + "%N")
+			s.append ("Copyright (c) 2006, Eiffel Software. All rights reserved." + "%N")
 			print (s)
 		end
 	

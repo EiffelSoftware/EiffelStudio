@@ -777,7 +777,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 					check
 						l_cluster_not_void: l_cluster /= Void
 					end
-					create l_folder.make (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
+					create l_folder.make_with_name (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
 					add_folder_item (l_folder)
 				else
 					add_cluster_item (l_cluster_stone.group)
@@ -805,7 +805,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 					check
 						l_cluster_not_void: l_cluster /= Void
 					end
-					create l_folder.make (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
+					create l_folder.make_with_name (l_cluster, l_cluster_stone.path, l_cluster_stone.folder_name)
 					remove_folder_item (l_folder)
 				else
 					remove_cluster_item (l_cluster_stone.group)

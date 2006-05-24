@@ -162,7 +162,7 @@ feature {NONE} -- Vision2 events
 						check
 							l_conf_cluster_not_void: l_conf_cluster /= Void
 						end
-						on_folder_add.call ([create {EB_FOLDER}.make (l_conf_cluster, l_item.path, l_item.name)])
+						on_folder_add.call ([create {EB_FOLDER}.make_with_name (l_conf_cluster, l_item.path, l_item.name)])
 					else
 						on_cluster_add.call ([l_cluster.actual_group])
 					end

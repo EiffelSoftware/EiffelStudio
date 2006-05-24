@@ -370,14 +370,4 @@ indexing
 		]"
 end -- class WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
 
---+----------------------------------------------------------------
---| EiffelCOM Wizard
---| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
---| Eiffel Software Confidential
---| Duplication and distribution prohibited.
---|
---| Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| http://www.eiffel.com
---+----------------------------------------------------------------
 

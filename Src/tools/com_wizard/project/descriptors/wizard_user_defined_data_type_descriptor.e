@@ -139,14 +139,4 @@ indexing
 		]"
 end -- class WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 
---+----------------------------------------------------------------
---| EiffelCOM Wizard
---| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
---| Eiffel Software Confidential
---| Duplication and distribution prohibited.
---|
---| Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| http://www.eiffel.com
---+----------------------------------------------------------------
 

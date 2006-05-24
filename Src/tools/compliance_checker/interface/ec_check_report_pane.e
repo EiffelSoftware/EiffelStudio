@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Compliance checker report pane. Used to initialize checking and display a running report based on 
-		user selected options.		
+		user selected options.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ class
 
 inherit
 	EC_CHECK_REPORT_PANE_IMP
-	
+
 	EC_SHARED_PROJECT
 		export
 			{NONE} all
@@ -23,7 +23,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 	EC_DIALOG_PROMPT_HELPER
 		export
 			{NONE} all
@@ -31,8 +31,8 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end	
-		
+		end
+
 	AR_SHARED_SUBSCRIBER
 		export
 			{NONE} all
@@ -40,8 +40,8 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end	
-		
+		end
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -50,7 +50,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
@@ -58,8 +58,8 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end	
-		
+		end
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -67,7 +67,7 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end			
+		end
 
 feature {NONE} -- Initialization
 
@@ -88,32 +88,32 @@ feature {NONE} -- Initialization
 			l_grid := grid_output
 			l_grid.set_column_count_to (4)
 			l_grid.enable_multiple_row_selection
-			
+
 			l_grid.set_row_height (20)
-			
+
 			l_column := l_grid.column (1)
 			l_column.set_title (label_type_feature)
-			
+
 			l_column := l_grid.column (2)
 			l_column.header_item.align_text_center
 			l_column.set_title (label_eiffel_compliant)
 			l_column.set_width (50)
-			
+
 			l_column := l_grid.column (3)
 			l_column.header_item.align_text_center
 			l_column.set_title (label_cls_compliant)
 			l_column.set_width (50)
-			
+
 			l_column := l_grid.column (4)
 			l_column.header_item.align_text_center
 			l_column.set_title (label_marked)
 			l_column.set_width (50)
-			
+
 			l_grid.enable_selection_key_handling
 			l_grid.enable_column_separators
 			l_grid.enable_row_separators
 			l_grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
-			
+
 				-- Disable user resizing of header items
 			from
 				l_header := l_grid.header
@@ -124,15 +124,15 @@ feature {NONE} -- Initialization
 				l_header.item.disable_user_resize
 				l_header.forth
 			end
-			
+
 			l_grid.enable_tree
 			l_grid.row_expand_actions.extend (agent on_grid_row_expanded)
-			
+
 			l_grid.resize_actions.extend (agent on_resize_grid_output)
 			l_grid.virtual_size_changed_actions.extend (agent on_resize_grid_output (0, 0, ?, ?))
-			
+
 			create l_grid_processor.make (l_grid)
-			
+
 			btn_export.select_actions.extend (agent on_export_selected)
 			btn_start_checking.select_actions.extend (agent on_check_selected)
 			chk_show_all.select_actions.extend (agent on_show_all_selected)
@@ -153,7 +153,7 @@ feature -- Element change
 			l_accelerator: EV_ACCELERATOR
 		do
 			owner_window := an_owner_window
-			
+
 			create l_accelerator.make_with_key_combination (create {EV_KEY}.make_with_code (key_c), True, False, False)
 			l_accelerator.actions.extend (agent on_copy_selected)
 			an_owner_window.accelerators.extend (l_accelerator)
@@ -168,16 +168,16 @@ feature {NONE} -- Agent Handlers
 		do
 			resize_first_column
 		end
-		
+
 	on_perform_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
 			-- Called when report grid shows a check item in a cell.
 		do
 			if a_item.column.index > 1 then
-				a_layout.set_pixmap_y (((a_item.height - a_item.pixmap.height - a_item.top_border - a_item.bottom_border) // 2) + a_item.top_border)	
-				a_layout.set_pixmap_x (((a_item.width - a_item.pixmap.width - a_item.left_border - a_item.right_border) // 2) + a_item.left_border)	
+				a_layout.set_pixmap_y (((a_item.height - a_item.pixmap.height - a_item.top_border - a_item.bottom_border) // 2) + a_item.top_border)
+				a_layout.set_pixmap_x (((a_item.width - a_item.pixmap.width - a_item.left_border - a_item.right_border) // 2) + a_item.left_border)
 			end
 		end
-		
+
 	on_grid_row_expanded (a_row: EV_GRID_ROW) is
 			-- Called when a row in `grid_output' has been expanded'
 		require
@@ -196,9 +196,9 @@ feature {NONE} -- Agent Handlers
 				if not l_show_all then
 					l_show_cls := report_non_cls_compliant
 				end
-				
+
 				l_data ?= a_row.data
-				if l_data /= Void then	
+				if l_data /= Void then
 					l_members := l_data.members
 					from
 						l_members.start
@@ -213,7 +213,7 @@ feature {NONE} -- Agent Handlers
 								l_add := not l_checked_member.is_compliant or not l_checked_member.is_eiffel_compliant
 							else
 								l_add := not l_checked_member.is_eiffel_compliant
-							end				
+							end
 						end
 						if l_add then
 							add_report_member_to_row (a_row, l_member)
@@ -223,7 +223,7 @@ feature {NONE} -- Agent Handlers
 				end
 			end
 		end
-		
+
 	on_export_selected is
 			-- Called when user selects to export current report to file.
 		require
@@ -251,7 +251,7 @@ feature {NONE} -- Agent Handlers
 						l_file_name.append (l_ext)
 					end
 				end
-				
+
 				create l_exporter.make (report, report_non_cls_compliant, report_all)
 				l_exporter.export_report (l_file_name)
 				if not l_exporter.export_successful then
@@ -259,7 +259,7 @@ feature {NONE} -- Agent Handlers
 				end
 			end
 		end
-		
+
 	on_check_selected is
 			-- Called when user selects Check/Recheck/Cancel button (`btn_check')
 		require
@@ -273,7 +273,7 @@ feature {NONE} -- Agent Handlers
 			retried: BOOLEAN
 		do
 			if not retried then
-				if not is_checking then					
+				if not is_checking then
 					l_file_name := project.assembly
 					if not l_file_name.is_empty and then (create {RAW_FILE}.make (l_file_name)).exists then
 							-- Add reference paths to resolver for loading assembly
@@ -294,19 +294,19 @@ feature {NONE} -- Agent Handlers
 						end
 						resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 						checker_resolver := l_resolver
-						
+
 						l_assembly := {ASSEMBLY}.load_from (l_file_name)
 						start_checking (l_assembly)
 					else
 						if not l_file_name.is_empty then
-							show_error (error_could_not_find_assembly, [l_file_name], owner_window)	
+							show_error (error_could_not_find_assembly, [l_file_name], owner_window)
 						else
-							show_error (error_assembly_not_specified, [], owner_window)	
+							show_error (error_assembly_not_specified, [], owner_window)
 						end
 					end
 				else
 					stop_checking
-				end				
+				end
 			else
 				if not is_checking then
 					show_error (error_could_not_load_assembly, [l_file_name], owner_window)
@@ -317,7 +317,7 @@ feature {NONE} -- Agent Handlers
 			retried := True
 			retry
 		end
-		
+
 	on_show_all_selected is
 			-- Called when user selects 'Show all' (`chk_show_all')
 		require
@@ -362,7 +362,7 @@ feature {NONE} -- Agent Handlers
 							l_item_string_not_void: l_item_string /= Void
 						end
 						l_clip.append (l_item_string)
-	
+
 						if l_type /= Void then
 								-- Add items to grid row and add members of type
 							on_grid_row_expanded (l_row)
@@ -374,7 +374,7 @@ feature {NONE} -- Agent Handlers
 								i > l_subrow_count
 							loop
 								if (not l_expanded) or else l_row.subrow (i).is_selected then
-										-- Only add if either parent row is collapsed or 
+										-- Only add if either parent row is collapsed or
 										-- expanded item is selected.
 									l_member ?= l_row.subrow (i).data
 									check
@@ -386,15 +386,15 @@ feature {NONE} -- Agent Handlers
 										l_clip.append (l_item_string)
 									end
 								end
-			
+
 								i := i + 1
 							end
 						end
 					end
-					
+
 					l_rows.forth
 					if l_type /= Void and then not l_rows.after then
-						l_clip.append_character ('%N')	
+						l_clip.append_character ('%N')
 					end
 				end
 			end
@@ -405,13 +405,13 @@ feature {NONE} -- Compliance Checking
 
 	is_checking: BOOLEAN
 			-- Is project being checked for compliance?
-			
+
 	checker: EC_CHECK_WORKER
 			-- Compliance checker worker thread
-			
+
 	checker_resolver: AR_RESOLVER
 			-- Assembly checker resolver.
-			
+
 	start_checking (a_assembly: ASSEMBLY) is
 			-- Starte checking
 		require
@@ -424,28 +424,28 @@ feature {NONE} -- Compliance Checking
 			l_builder: EC_REPORT_BUILDER
 		do
 			clear_report
-			
+
 			report_all := chk_show_all.is_selected
 			report_non_cls_compliant := chk_show_cls_compliant.is_selected
-			
+
 				-- Change check button usage
 			l_btn := btn_start_checking
 			old_check_pixmap := l_btn.pixmap
 			l_btn.set_text (button_cancel)
 			l_btn.remove_pixmap
-			
+
 				-- Disable export button
 			btn_export.disable_sensitive
 			chk_show_all.disable_sensitive
 			chk_show_cls_compliant.disable_sensitive
-			
+
 				-- Disable check toolbar button
 			owner_window.tbtn_check.disable_sensitive
-			
+
 			is_checking := True
-			
+
 			create sync_actions.make
-			
+
 				-- Create and launch worker thread		
 			create l_builder.make (a_assembly)
 			report := l_builder.report
@@ -454,12 +454,12 @@ feature {NONE} -- Compliance Checking
 			l_builder.report_completed_actions.extend (agent on_report_completed)
 			create checker.make (a_assembly, l_builder)
 			checker.launch
-						
+
 		ensure
 			is_checking: is_checking
 			report_not_void: report /= Void
 		end
-		
+
 	stop_checking is
 			-- Stops current checking session
 		require
@@ -478,35 +478,35 @@ feature {NONE} -- Compliance Checking
 			l_btn.set_text (button_recheck)
 			l_pixmap := old_check_pixmap
 			if l_pixmap /= Void then
-				l_btn.set_pixmap (l_pixmap)	
+				l_btn.set_pixmap (l_pixmap)
 			end
-			
+
 				-- Enable export button
 			if grid_output.row_count > 0 then
-				btn_export.enable_sensitive	
+				btn_export.enable_sensitive
 			end
 			chk_show_all.enable_sensitive
 			if not chk_show_all.is_selected then
-				chk_show_cls_compliant.enable_sensitive	
+				chk_show_cls_compliant.enable_sensitive
 			end
-			
+
 				-- Enable check toolbar button
 			owner_window.tbtn_check.enable_sensitive
-			
+
 			is_checking := False
-			
+
 				-- Stop checker
 			if not checker.should_stop then
-				checker.stop_checking	
+				checker.stop_checking
 			end
-			
+
 			checker := Void
 			old_check_pixmap := Void
 		ensure
 			not_is_checking: not is_checking
 			checker_is_void: checker = Void
 		end
-		
+
 	on_type_report_added (a_type: EC_REPORT_TYPE) is
 			-- Called when a type report has been generated by a report builder
 		require
@@ -515,7 +515,7 @@ feature {NONE} -- Compliance Checking
 		do
 			sync_actions.extend (agent on_type_report_added_idle (a_type))
 		end
-		
+
 	on_type_report_added_idle (a_type: EC_REPORT_TYPE) is
 			-- Thread-safe: Called when a type report has been generated by a report builder
 		require
@@ -530,7 +530,7 @@ feature {NONE} -- Compliance Checking
 			l_cursor: CURSOR
 		do
 			ev_application.idle_actions.block
-			
+
 			l_checked_type := a_type.type
 			l_show_cls := report_non_cls_compliant
 			if report_all then
@@ -553,7 +553,7 @@ feature {NONE} -- Compliance Checking
 							l_add := not l_checked_ab_type.is_eiffel_compliant_interface
 						end
 					end
-				end				
+				end
 			end
 			if not l_add then
 					-- Check members
@@ -569,7 +569,7 @@ feature {NONE} -- Compliance Checking
 						l_add := not l_member.is_compliant or not l_member.is_eiffel_compliant
 					else
 						l_add := not l_member.is_eiffel_compliant
-					end	
+					end
 					l_members.forth
 				end
 				l_members.go_to (l_cursor)
@@ -578,7 +578,7 @@ feature {NONE} -- Compliance Checking
 			if l_add then
 				add_type_report_row (a_type)
 			end
-			
+
 			ev_application.idle_actions.resume
 		end
 
@@ -592,7 +592,7 @@ feature {NONE} -- Compliance Checking
 		do
 			sync_actions.extend (agent on_report_percentage_changed_idle (a_percent))
 		end
-		
+
 	on_report_percentage_changed_idle (a_percent: NATURAL_8) is
 			-- Thread-safe: Called when `report' percent completion changes
 		indexing
@@ -614,7 +614,7 @@ feature {NONE} -- Compliance Checking
 		do
 			sync_actions.extend (agent on_report_completed_idle (a_complete))
 		end
-		
+
 	on_report_completed_idle (a_complete: BOOLEAN) is
 			-- Called when `report' has completed, called by the UI thread.
 		require
@@ -636,7 +636,7 @@ feature {NONE} -- Compliance Checking
 				if a_complete then
 					if l_grid.row_count > 0 then
 						show_information (question_check_completed, [], owner_window)
-					else	
+					else
 						show_information (information_no_non_compliant_member, [], owner_window)
 					end
 				end
@@ -660,10 +660,10 @@ feature {NONE} -- Compliance Checking
 				end
 			end
 			l_actions.resume
-		end		
+		end
 
 feature {NONE} -- Report Row Building
-	
+
 	add_type_report_row (a_report_type: EC_REPORT_TYPE) is
 			-- Add a row for `a_checked_type'
 			-- `a_report_type' id added as grid row data
@@ -681,28 +681,28 @@ feature {NONE} -- Report Row Building
 			l_grid := grid_output
 			i := l_grid.row_count + 1
 			first_level_row_count := first_level_row_count + 1
-			
+
 			l_grid.lock_update
 			l_grid.insert_new_row (i)
 			l_row := l_grid.row (i)
-			
+
 			l_checked_type := a_report_type.type
 			l_row.set_data (a_report_type)
-			
+
 			if (first_level_row_count \\ 2) = 0 then
 				l_row.set_background_color (alt_row_background_color)
 			else
 				l_row.set_background_color (row_background_color)
 			end
 			l_row.ensure_expandable
-			
+
 			l_checked_abstact_type ?= l_checked_type
-			
+
 				-- Name
-			create l_item.make_with_text (l_checked_type.type.full_name)
+			create l_item.make_with_text (({STRING})[l_checked_type.type.full_name])
 			l_item.set_tooltip (l_item.text)
 			l_row.set_item (1, l_item)
-			
+
 				-- Is Eiffel-compliant
 			create l_item
 			if l_checked_type.is_eiffel_compliant then
@@ -719,7 +719,7 @@ feature {NONE} -- Report Row Building
 			end
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
-			
+
 				-- Is CLS-compliant
 			create l_item
 			if l_checked_type.is_compliant then
@@ -736,25 +736,25 @@ feature {NONE} -- Report Row Building
 			end
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
-			
+
 				-- Is marked compliant
 			create l_item
 			if l_checked_type.is_marked then
-				l_item.set_pixmap (icon_check)	
+				l_item.set_pixmap (icon_check)
 				l_item.set_tooltip (tooltip_type_is_marked)
 			else
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (tooltip_type_is_not_marked)
 			end
 			l_item.set_layout_procedure (layout_agent)
-			
+
 			l_row.set_item (4, l_item)
 			if l_row.index = 1 then
 				l_row.enable_select
 			end
 			l_grid.unlock_update
 		end
-		
+
 	add_report_member_to_row (a_row: EV_GRID_ROW; a_report_member: EC_REPORT_MEMBER) is
 			-- Add a row for report `a_report_member'
 		require
@@ -762,30 +762,30 @@ feature {NONE} -- Report Row Building
 			a_report_member_not_void: a_report_member /= Void
 			grid_output_not_void: grid_output /= Void
 		local
-			l_grid: like grid_output		
+			l_grid: like grid_output
 			l_checked_member: EC_CHECKED_MEMBER
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
 			i: INTEGER
-		do	
+		do
 			l_grid := grid_output
 			l_row := a_row
 			i := l_row.subrow_count + 1
-			
+
 			l_grid.lock_update
-			
+
 			l_row.insert_subrow (i)
 			l_row := l_row.subrow (i)
 			l_row.set_data (a_report_member)
-			
+
 			l_checked_member := a_report_member.member
-			
+
 				-- Add items to row
 				-- Name
 			create l_item.make_with_text (report_formatter.format_member (l_checked_member.member, False))
 			l_item.set_tooltip (l_item.text)
 			l_row.set_item (1, l_item)
-			
+
 				-- Is Eiffel-compliant
 			create l_item
 			if l_checked_member.is_eiffel_compliant then
@@ -797,11 +797,11 @@ feature {NONE} -- Report Row Building
 			end
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
-			
+
 				-- Is CLS-compliant
 			create l_item
 			if l_checked_member.is_compliant then
-				l_item.set_pixmap (icon_check)	
+				l_item.set_pixmap (icon_check)
 				l_item.set_tooltip (tooltip_member_is_cls_compliant)
 			else
 				l_item.set_pixmap (icon_cross)
@@ -809,11 +809,11 @@ feature {NONE} -- Report Row Building
 			end
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
-			
+
 				-- Is marked compliant
 			create l_item
 			if l_checked_member.is_marked then
-				l_item.set_pixmap (icon_check)	
+				l_item.set_pixmap (icon_check)
 				l_item.set_tooltip (tooltip_member_is_marked)
 			else
 				l_item.set_pixmap (icon_cross)
@@ -821,9 +821,9 @@ feature {NONE} -- Report Row Building
 			end
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (4, l_item)
-			
+
 			l_grid.unlock_update
-		end		
+		end
 
 	row_background_color: EV_COLOR is
 			-- Alternative row background color.
@@ -831,32 +831,32 @@ feature {NONE} -- Report Row Building
 			create Result.make_with_8_bit_rgb (230, 230, 255)
 		ensure
 			result_not_void: Result /= Void
-		end	
-		
+		end
+
 	alt_row_background_color: EV_COLOR is
 			-- Alternative row background color.
 		once
 			create Result.make_with_8_bit_rgb (248, 248, 248)
 		ensure
 			result_not_void: Result /= Void
-		end	
-		
+		end
+
 	bad_row_background_color: EV_COLOR is
 			-- Alternative row background color.
 		once
 			create Result.make_with_8_bit_rgb (230, 0, 0)
 		ensure
 			result_not_void: Result /= Void
-		end	
-		
+		end
+
 	bad_alt_row_background_color: EV_COLOR is
 			-- Alternative row background color.
 		once
 			create Result.make_with_8_bit_rgb (248, 0, 0)
 		ensure
 			result_not_void: Result /= Void
-		end	
-					
+		end
+
 	first_level_row_count: INTEGER
 			-- First level row count
 
@@ -895,9 +895,9 @@ feature {NONE} -- Formatting
 			Result.append ("Type%T")
 			Result.append (report_formatter.format_member (a_type.type, True))
 			Result.append_character ('%T')
-			
+
 			l_ab_type ?= a_type
-			
+
 			if a_type.is_eiffel_compliant then
 				if l_ab_type = Void or else l_ab_type.is_eiffel_compliant_interface then
 					Result.append (eiffel_compliant_string)
@@ -908,10 +908,10 @@ feature {NONE} -- Formatting
 			else
 				Result.append (non_eiffel_compliant_string)
 				Result.append (a_type.non_eiffel_compliant_reason)
-			end			
+			end
 
 			Result.append_character ('%T')
-			
+
 			if a_type.is_compliant then
 				if l_ab_type = Void or else l_ab_type.is_compliant_interface then
 					Result.append (compliant_string)
@@ -922,11 +922,11 @@ feature {NONE} -- Formatting
 			else
 				Result.append (non_compliant_string)
 				Result.append (a_type.non_compliant_reason)
-			end	
+			end
 			Result.append_character ('%T')
-			
+
 			if a_type.is_marked then
-				Result.append (marked_string)	
+				Result.append (marked_string)
 			else
 				Result.append (not_marked_string)
 			end
@@ -943,32 +943,32 @@ feature {NONE} -- Formatting
 			Result.append ("Member%T")
 			Result.append (report_formatter.format_member (a_member.member, True))
 			Result.append_character ('%T')
-			
+
 			if a_member.is_eiffel_compliant then
-				Result.append (eiffel_compliant_string)	
+				Result.append (eiffel_compliant_string)
 			else
 				Result.append (non_eiffel_compliant_string)
 				Result.append (a_member.non_eiffel_compliant_reason)
 			end
 			Result.append_character ('%T')
-			
+
 			if a_member.is_compliant then
-				Result.append (compliant_string)	
+				Result.append (compliant_string)
 			else
 				Result.append (non_compliant_string)
 				Result.append (a_member.non_compliant_reason)
 			end
 			Result.append_character ('%T')
-			
+
 			if a_member.is_marked then
-				Result.append (marked_string)	
+				Result.append (marked_string)
 			else
 				Result.append (not_marked_string)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	illegaly_cls_compliant_string: STRING is "Illegal: "
 	compliant_string: STRING is "CLS-Compliant"
 	non_compliant_string: STRING is "Not CLS-Compliant: "
@@ -992,7 +992,7 @@ feature {NONE} -- Implementation
 			report := Void
 			btn_export.disable_sensitive
 		end
-		
+
 	resize_first_column is
 			-- Resizes first column to fit grid space.
 		require
@@ -1008,12 +1008,12 @@ feature {NONE} -- Implementation
 			l_gap := l_grid.column (2).width + l_grid.column (3).width + l_grid.column (4).width + 1
 			l_width := l_grid.viewable_width - l_gap
 			if l_width > 0 then
-				l_grid.column (1).set_width (l_width)	
+				l_grid.column (1).set_width (l_width)
 			end
 			l_grid.virtual_size_changed_actions.resume
 			l_grid.resize_actions.resume
 		end
-		
+
 	project_assembly: ASSEMBLY is
 			-- Retrieves assembly from project settings
 		local
@@ -1026,18 +1026,18 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-	
+
 	old_check_pixmap: EV_PIXMAP
 			-- old `btn_check' pixmap
 
 	layout_agent: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]] is
-			-- 
+			--
 		once
 			Result := agent on_perform_layout
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	report_formatter: EC_CHECK_REPORT_FORMATTER is
 			-- Report item formatter
 		once
@@ -1045,21 +1045,21 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	report: EC_REPORT
 			-- Report generated
-			
+
 	report_all: BOOLEAN
 			-- Should report include all assembly types and members?
-	
+
 	report_non_cls_compliant: BOOLEAN
 			-- Should report include all non-CLS-compliant types and members?
-			
-			
+
+
 	sync_actions: EC_REPORT_QUEUED_ACTION_TIMER
 			-- Thread-safe action timer.
-			
-		
+
+
 invariant
 	owner_window_not_void: owner_window /= Void
 

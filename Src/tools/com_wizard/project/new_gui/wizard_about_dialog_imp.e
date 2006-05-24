@@ -114,7 +114,7 @@ feature {NONE}-- Initialization
 			content_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			content_box.set_padding_width (5)
 			copyright_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			copyright_label.set_text ("Copyright (C) 2005 Eiffel Software")
+			copyright_label.set_text ("Copyright (C) 2006 Eiffel Software")
 			copyright_label.align_text_left
 			web_address_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			web_address_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (64, 0, 128))

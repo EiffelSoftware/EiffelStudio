@@ -197,7 +197,7 @@ feature {NONE} -- implementation
 
 	foreground_color_pointer: POINTER is
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
+			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_text (
 				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
 			)
 		end

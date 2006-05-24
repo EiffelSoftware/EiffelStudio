@@ -26,8 +26,6 @@ feature {NONE} -- Initialize
 		require
 			a_cluster_not_void: a_cluster /= Void
 			a_path_valid: a_path /= Void and then not a_path.is_empty
-		local
-			l_name: STRING
 		do
 			cluster := a_cluster
 			path := a_path
@@ -104,7 +102,6 @@ feature {NONE} -- Implementation
 			-- Build name.
 		local
 			l_string : STRING
-			l_filename: FILE_NAME
 			l_start, l_end: INTEGER
 		do
 			l_string := cluster.location.build_path (path, "")

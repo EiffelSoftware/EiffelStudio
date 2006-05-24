@@ -68,8 +68,6 @@ feature {NONE} -- Implementation
 
 	parse is
 			-- Parse external declaration
-		require
-			current_class_set: system.current_class /= Void
 		local
 			parser: like external_parser
 			is_yacc_parsing_successful: BOOLEAN
@@ -90,7 +88,6 @@ feature {NONE} -- Implementation
 	old_parse is
 			-- Parse external declaration
 		require
-			current_class_set: system.current_class /= Void
 			extension_not_yet_set: extension = Void
 		local
 			source, image: STRING
@@ -349,14 +346,15 @@ feature {NONE} -- Implementation
 
 	raise_external_warning is
 			-- Raises warning when parsing an old external syntax.
-		require
-			current_class_set: system.current_class /= Void
 		local
 			l_warning: SYNTAX_WARNING
 		do
 				-- FIXME: Manu 10/09/2003. We do not yet raise a warning for 5.4
 				-- as new external syntax is not clearly specified.
-			if False and system.current_class.lace_class.options.is_warning_enabled (w_syntax) then
+			if
+				False and
+				(system.current_class /= Void and then system.current_class.lace_class.options.is_warning_enabled (w_syntax))
+			then
 				create l_warning.make (
 					eiffel_parser.line,
 					eiffel_parser.column,

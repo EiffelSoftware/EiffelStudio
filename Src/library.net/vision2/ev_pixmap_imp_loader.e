@@ -15,7 +15,7 @@ deferred class
 
 inherit
 	ANY
-	
+
 	EXCEPTIONS
 		rename
 			raise as exception_raise,
@@ -27,31 +27,31 @@ inherit
 feature -- Status report
 
 	pixmap_filename: STRING is
-			-- Filename for the pixmap. 
+			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 		deferred
 		end
-		
+
 	disable_initialized is
 			-- Set `is_initialized' to `False'.
 		deferred
 		end
 
 feature {NONE} -- Implementation
-	
+
 	effective_load_file is
 			-- Really load the file.
 		require
 			filename_exists: pixmap_filename /= Void
 		local
-			l_c_string: WEL_STRING
+			l_c_string: C_STRING
 			load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE
 		do
 				-- Disable invariant checking.
 			disable_initialized
 			last_pixmap_loading_had_error := False
-			
+
 			create load_pixmap_delegate.make (Current, $update_fields)
 
 			if pixmap_filename.is_empty then
@@ -65,9 +65,9 @@ feature {NONE} -- Implementation
 				exception_raise ("Unable to load the file")
 			end
 		end
-		
+
 	update_fields(
-		error_code		: INTEGER -- Loadpixmap_error_xxxx 
+		error_code		: INTEGER -- Loadpixmap_error_xxxx
 		data_type		: INTEGER -- Loadpixmap_hicon, ...
 		pixmap_width	: INTEGER -- Height of the loaded pixmap
 		pixmap_height	: INTEGER -- Width of the loaded pixmap
@@ -77,14 +77,14 @@ feature {NONE} -- Implementation
 		is
 		deferred
 		end
-		
+
 	last_pixmap_loading_had_error: BOOLEAN
 			-- Did the last pixmap load result in an error?
 
 feature {NONE} -- Externals
 
 	c_ev_load_pixmap(
-		file_name: POINTER; 
+		file_name: POINTER;
 		update_fields_routine: EV_PIXMAP_IMP_DELEGATE
 		) is
 		external

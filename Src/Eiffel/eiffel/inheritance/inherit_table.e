@@ -1256,6 +1256,7 @@ end;
 			f_not_void: f /= Void
 			inherit_feat_not_void: inherit_feat /= Void
 		local
+			inherit_info: INHERIT_INFO
 			rout_ids: ROUT_ID_SET
 			old_feature: FEATURE_I
 			feature_name_id: INTEGER
@@ -1265,7 +1266,8 @@ end;
 			f.set_has_property (False)
 			if a_class.is_single then
 					-- Feature getters and setters may have been generated.
-				if inherit_feat.inherited_info.parent.parent.is_single then
+				inherit_info := inherit_feat.inherited_info
+				if inherit_info /= Void and then inherit_info.parent.parent.is_single then
 					f.set_has_property_getter (False)
 					f.set_has_property_setter (False)
 				end

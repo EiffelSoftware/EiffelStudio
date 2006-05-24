@@ -84,25 +84,25 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
-	append_text (txt: STRING_GENERAL) is
-			-- Append `txt' to the end of the text.
+	append_text (a_text: STRING_GENERAL) is
+			-- Append `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := App_implementation.c_string_from_eiffel_string (txt)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 		end
 
-	prepend_text (txt: STRING_GENERAL) is
-			-- Prepend `txt' to the end of the text.
+	prepend_text (a_text: STRING_GENERAL) is
+			-- Prepend `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := App_implementation.c_string_from_eiffel_string (txt)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 		end
 

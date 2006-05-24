@@ -1,31 +1,55 @@
 indexing
-	description: "Object that represents a criterion to decide whether or not a class is obsolete"
+	description: "Criterion to test if indexing clause of a class has an indexing with a given tag"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	QL_CLASS_IS_OBSOLETE_CRI
+deferred class
+	QL_CLASS_INDEXING_CLAUSE_HAS_TAG_CRI
 
 inherit
-	QL_CLASS_CRITERION
+	QL_CLASS_INDEXING_CRI
+		rename
+			name as tag
+		end
 
+feature{NONE} -- Implementation
 
-feature -- Status report
-
-	require_compiled: BOOLEAN is True
-			-- Does current criterion require a compiled item?
-
-feature -- Evaluate
-
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
-			-- Evaluate `a_item'.
+	indexing_clause_has_tag (a_indexing_clause: INDEXING_CLAUSE_AS): BOOLEAN is
+			-- Does `a_indexing_clause' contain a tag named `tag'?
+		require
+			a_indexing_clause_attached: a_indexing_clause /= Void
+		local
+			l_tag: ID_AS
 		do
-			Result := a_item.is_compiled and then a_item.class_c.is_obsolete
-		ensure then
-			good_result: Result implies a_item.is_compiled and then a_item.class_c.is_obsolete
+			if not a_indexing_clause.is_empty then
+				from
+					a_indexing_clause.start
+				until
+					a_indexing_clause.after or Result
+				loop
+					l_tag := a_indexing_clause.item.tag
+					if l_tag /= Void then
+						Result := is_name_same_as (l_tag.out)
+					end
+					a_indexing_clause.forth
+				end
+			end
+		end
+
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+			-- Pure Eiffel parser
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_LIGHT_FACTORY})
+		end
+
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+			-- IL Eiffel parser.
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_LIGHT_FACTORY})
+			Result.set_il_parser
 		end
 
 indexing
@@ -59,6 +83,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

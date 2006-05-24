@@ -1,5 +1,5 @@
 indexing
-	description: "Factory to produce criteria with group scope"
+	description: "Factory to produce criteria with line scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	QL_GROUP_CRITERION_FACTORY
+	QL_LINE_CRITERION_FACTORY
 
 inherit
 	QL_CRITERION_FACTORY
@@ -22,86 +22,79 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create criterion_table.make (13)
+			create criterion_table.make (10)
 			criterion_table.put (agent new_false_criterion, query_language_names.ql_cri_false)
-			criterion_table.put (agent new_is_assembly_criterion, query_language_names.ql_cri_is_assembly)
-			criterion_table.put (agent new_is_cluster_criterion, query_language_names.ql_cri_is_cluster)
+			criterion_table.put (agent new_is_blank_criterion, query_language_names.ql_cri_is_blank)
+			criterion_table.put (agent new_is_comment_criterion, query_language_names.ql_cri_is_comment)
 			criterion_table.put (agent new_is_compiled_criterion, query_language_names.ql_cri_is_compiled)
-			criterion_table.put (agent new_is_library_criterion, query_language_names.ql_cri_is_library)
-			criterion_table.put (agent new_is_override_criterion, query_language_names.ql_cri_is_override)
 			criterion_table.put (agent new_true_criterion, query_language_names.ql_cri_true)
 			criterion_table.put (agent new_name_is_criterion, query_language_names.ql_cri_name_is)
+			criterion_table.put (agent new_text_contain_criterion, query_language_names.ql_cri_text_contain)
 		end
 
 feature{NONE} -- Implementation
 
-	criterion_type: QL_GROUP_CRITERION
+	criterion_type: QL_LINE_CRITERION
 			-- Criterion anchor type
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_GROUP_FALSE_CRI is
-			-- New {QL_GROUP_FALSE_CRI} criterion.
+	new_false_criterion: QL_LINE_FALSE_CRI is
+			-- New {QL_LINE_FALSE_CRI} criterion.
 		do
 			create Result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_assembly_criterion: QL_GROUP_IS_ASSEMBLY_CRI is
-			-- New {QL_GROUP_IS_ASSEMBLY_CRI} criterion.
+	new_is_blank_criterion: QL_LINE_IS_BLANK_CRI is
+			-- New {QL_LINE_IS_BLANK_CRI} criterion.
 		do
 			create Result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_cluster_criterion: QL_GROUP_IS_CLUSTER_CRI is
-			-- New {QL_GROUP_IS_CLUSTER_CRI} criterion.
+	new_is_comment_criterion: QL_LINE_IS_COMMENT_CRI is
+			-- New {QL_LINE_IS_COMMENT_CRI} criterion.
 		do
 			create Result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_GROUP_IS_COMPILED_CRI is
-			-- New {QL_GROUP_IS_COMPILED_CRI} criterion.
+	new_is_compiled_criterion: QL_LINE_IS_COMPILED_CRI is
+			-- New {QL_LINE_IS_COMPILED_CRI} criterion.
 		do
 			create Result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_library_criterion: QL_GROUP_IS_LIBRARY_CRI is
-			-- New {QL_GROUP_IS_LIBRARY_CRI} criterion.
+	new_true_criterion: QL_LINE_TRUE_CRI is
+			-- New {QL_LINE_TRUE_CRI} criterion.
 		do
 			create Result
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_override_criterion: QL_GROUP_IS_OVERRIDE_CRI is
-			-- New {QL_GROUP_IS_OVERRIDE_CRI} criterion.
-		do
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	new_true_criterion: QL_GROUP_TRUE_CRI is
-			-- New {QL_GROUP_TRUE_CRI} criterion.
-		do
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_GROUP_NAME_IS_CRI is
-			-- New {QL_GROUP_NAME_IS_CRI} criterion.
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_LINE_NAME_IS_CRI is
+			-- New {QL_LINE_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
 		do
 			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_LINE_TEXT_CONTAIN_CRI is
+			-- New {QL_LINE_TEXT_CONTAIN_CRI} criterion.
+		require
+			a_text_attached: a_text /= Void
+		do
+			create Result.make_with_setting (a_text, a_case_sensitive, a_identical)
 		ensure
 			result_attached: Result /= Void
 		end

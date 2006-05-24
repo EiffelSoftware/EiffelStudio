@@ -64,6 +64,8 @@ feature -- Setting
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
+		require
+			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
@@ -73,6 +75,11 @@ feature -- Setting
 			a_criteria_attached: a_criteria /= Void
 		do
 			a_criteria.do_all (agent set_criterion)
+		end
+
+	remove_criteria is
+			-- Remove all criteria
+		deferred
 		end
 
 	enable_fill_domain is

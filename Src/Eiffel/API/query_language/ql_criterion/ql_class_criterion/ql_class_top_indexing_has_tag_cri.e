@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a criterion to decide whether or not a class is obsolete"
+	description: "Criterion to test if top indexing clause of a class has an indexing with a given tag"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,25 +7,26 @@ indexing
 	revision: "$Revision$"
 
 class
-	QL_CLASS_IS_OBSOLETE_CRI
+	QL_CLASS_TOP_INDEXING_HAS_TAG_CRI
 
 inherit
-	QL_CLASS_CRITERION
+	QL_CLASS_INDEXING_CLAUSE_HAS_TAG_CRI
 
-
-feature -- Status report
-
-	require_compiled: BOOLEAN is True
-			-- Does current criterion require a compiled item?
+create
+	make,
+	make_with_setting
 
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
+		local
+			l_class_as: CLASS_AS
 		do
-			Result := a_item.is_compiled and then a_item.class_c.is_obsolete
-		ensure then
-			good_result: Result implies a_item.is_compiled and then a_item.class_c.is_obsolete
+			l_class_as := class_ast (a_item)
+			if l_class_as /= Void and then l_class_as.top_indexes /= Void then
+				Result := indexing_clause_has_tag (l_class_as.top_indexes)
+			end
 		end
 
 indexing
@@ -59,6 +60,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

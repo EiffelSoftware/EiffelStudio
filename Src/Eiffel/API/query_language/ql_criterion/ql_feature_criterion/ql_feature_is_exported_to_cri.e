@@ -12,6 +12,9 @@ class
 inherit
 	QL_FEATURE_CRITERION
 
+create
+	make
+
 feature{NONE} -- Initialization
 
 	make (a_domain: like criterion_domain) is

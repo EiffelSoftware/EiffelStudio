@@ -23,8 +23,7 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
-			check a_item.is_compiled end
-			Result := a_item.ast.top_indexes /= Void or a_item.ast.bottom_indexes /= Void
+			Result := a_item.is_compiled and then (a_item.ast.top_indexes /= Void or a_item.ast.bottom_indexes /= Void)
 		ensure then
 			good_result: Result implies a_item.is_compiled and then (a_item.ast.top_indexes /= Void or a_item.ast.bottom_indexes /= Void)
 		end

@@ -14,6 +14,8 @@ inherit
 
 	QL_SHARED_NAMES
 
+	QL_SHARED_SCOPES
+
 feature -- Access
 
 	path_separator: CHARACTER is
@@ -44,6 +46,26 @@ feature -- Domain
 
 	empty_assertion_name: STRING is "#";
 			-- Name for an empty assertion
+
+feature -- Criterion factory
+
+	criterion_factory_table: HASH_TABLE [QL_CRITERION_FACTORY, QL_SCOPE] is
+			-- Criterion factory table
+			-- Key is criterion scope type, value is the factory of that scope type.
+		once
+			create Result.make (10)
+			Result.put (create{QL_TARGET_CRITERION_FACTORY}.make, target_scope)
+			Result.put (create{QL_GROUP_CRITERION_FACTORY}.make, group_scope)
+			Result.put (create{QL_CLASS_CRITERION_FACTORY}.make, class_scope)
+			Result.put (create{QL_GENERIC_CRITERION_FACTORY}.make, generic_scope)
+			Result.put (create{QL_FEATURE_CRITERION_FACTORY}.make, feature_scope)
+			Result.put (create{QL_ARGUMENT_CRITERION_FACTORY}.make, argument_scope)
+			Result.put (create{QL_LOCAL_CRITERION_FACTORY}.make, local_scope)
+			Result.put (create{QL_ASSERTION_CRITERION_FACTORY}.make, assertion_scope)
+			Result.put (create{QL_LINE_CRITERION_FACTORY}.make, line_scope)
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

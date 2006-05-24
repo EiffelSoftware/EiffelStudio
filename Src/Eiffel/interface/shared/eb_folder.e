@@ -16,12 +16,30 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_name
 
 feature {NONE} -- Initialize
 
-	make (a_cluster: CONF_CLUSTER; a_path: STRING; a_name: STRING) is
+	make (a_cluster: CONF_CLUSTER; a_path: STRING) is
 			-- Initialize
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_path_valid: a_path /= Void and then not a_path.is_empty
+		local
+			l_name: STRING
+		do
+			cluster := a_cluster
+			path := a_path
+			build_name
+		ensure
+			a_cluster_not_void: cluster = a_cluster
+			a_path_valid: path = a_path and then not path.is_empty
+			a_name_not_void: name /= Void
+		end
+
+	make_with_name (a_cluster: CONF_CLUSTER; a_path: STRING; a_name: STRING) is
+			-- Initialize with name
 		require
 			a_cluster_not_void: a_cluster /= Void
 			a_path_valid: a_path /= Void and then not a_path.is_empty
@@ -81,6 +99,24 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	build_name is
+			-- Build name.
+		local
+			l_string : STRING
+			l_filename: FILE_NAME
+			l_start, l_end: INTEGER
+		do
+			l_string := cluster.location.build_path (path, "")
+			if l_string.item (l_string.count).is_equal (operating_environment.directory_separator) then
+				l_end := l_string.count - 1
+			else
+				l_end := l_string.count
+			end
+			l_start := l_string.last_index_of (operating_environment.directory_separator, l_end)
+			l_start := l_start + 1
+			name := l_string.substring (l_start, l_end)
+		end
 
 invariant
 	invariant_clause: True -- Your invariant here

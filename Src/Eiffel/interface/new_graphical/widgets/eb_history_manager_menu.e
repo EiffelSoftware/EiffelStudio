@@ -60,6 +60,7 @@ feature -- Element change
 		do
 			history_manager.remove_observer (Current)
 			recycle_items
+			destroy
 		end
 
 feature {NONE} -- Initialization Implementation
@@ -133,7 +134,7 @@ feature -- Observer pattern
 		end
 
 	on_item_removed (an_item: STONE; index_item: INTEGER) is
-			-- `an_item' has just been removed. 
+			-- `an_item' has just been removed.
 		do
 				-- Remove the menu item that match `an_item' from the menu.
 			from

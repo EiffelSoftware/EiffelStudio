@@ -32,6 +32,8 @@ inherit
 
 	SHARED_EDITOR_DATA
 
+	EB_RECYCLABLE
+
 	EB_CLASS_BROWSER_UTILITY
 
 	EB_SHARED_PIXMAPS
@@ -76,16 +78,21 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				text.drop_actions.fill (drop_actions)
 			end
+
+
+			on_color_or_font_changed_agent := agent on_color_or_font_changed
+			editor_preferences.keyword_font_preference.change_actions.extend (on_color_or_font_changed_agent)
+			editor_preferences.keyword_text_color_preference.change_actions.extend (on_color_or_font_changed_agent)
+			editor_preferences.normal_text_color_preference.change_actions.extend (on_color_or_font_changed_agent)
+			editor_preferences.editor_font_preference.change_actions.extend (on_color_or_font_changed_agent)
+			preferences.class_browser_data.odd_row_background_color_preference.change_actions.extend (on_color_or_font_changed_agent)
+			preferences.class_browser_data.even_row_background_color_preference.change_actions.extend (on_color_or_font_changed_agent)
+
 			on_scroll_behavior_changed
-			editor_preferences.keyword_font_preference.change_actions.extend (agent on_color_or_font_changed)
-			editor_preferences.keyword_text_color_preference.change_actions.extend (agent on_color_or_font_changed)
-			editor_preferences.normal_text_color_preference.change_actions.extend (agent on_color_or_font_changed)
-			editor_preferences.editor_font_preference.change_actions.extend (agent on_color_or_font_changed)
-			preferences.class_browser_data.odd_row_background_color_preference.change_actions.extend (agent on_color_or_font_changed)
-			preferences.class_browser_data.even_row_background_color_preference.change_actions.extend (agent on_color_or_font_changed)
-			editor_preferences.mouse_wheel_scroll_full_page_preference.change_actions.extend (agent on_scroll_behavior_changed)
-			editor_preferences.mouse_wheel_scroll_size_preference.change_actions.extend (agent on_scroll_behavior_changed)
-			editor_preferences.scrolling_common_line_count_preference.change_actions.extend (agent on_scroll_behavior_changed)
+			on_scroll_behavior_changed_agent := agent on_scroll_behavior_changed
+			editor_preferences.mouse_wheel_scroll_full_page_preference.change_actions.extend (on_scroll_behavior_changed_agent)
+			editor_preferences.mouse_wheel_scroll_size_preference.change_actions.extend (on_scroll_behavior_changed_agent)
+			editor_preferences.scrolling_common_line_count_preference.change_actions.extend (on_scroll_behavior_changed_agent)
 		end
 
 feature -- Setting
@@ -243,6 +250,12 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
+	on_color_or_font_changed_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_color_or_font_changed'
+
+	on_scroll_behavior_changed_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_scroll_behavior_changed'
+
 	on_color_or_font_changed is
 			-- Action to be performed when color or font used to display editor tokens changes
 		do
@@ -305,6 +318,37 @@ feature{NONE} -- Actions
 						last_picked_item := l_item
 					end
 				end
+			end
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- Recyclable
+		do
+			development_window := Void
+			if quick_search_bar /= Void then
+				quick_search_bar.recycle
+			end
+			quick_search_bar := Void
+			recycle_agents
+		end
+
+	recycle_agents is
+			-- Recycle agents in preferences.
+		do
+			if on_color_or_font_changed_agent /= Void then
+				editor_preferences.keyword_font_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+				editor_preferences.keyword_text_color_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+				editor_preferences.normal_text_color_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+				editor_preferences.editor_font_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+				preferences.class_browser_data.odd_row_background_color_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+				preferences.class_browser_data.even_row_background_color_preference.change_actions.prune_all (on_color_or_font_changed_agent)
+			end
+			if on_scroll_behavior_changed_agent /= Void then
+				editor_preferences.mouse_wheel_scroll_full_page_preference.change_actions.prune_all (on_scroll_behavior_changed_agent)
+				editor_preferences.mouse_wheel_scroll_size_preference.change_actions.prune_all (on_scroll_behavior_changed_agent)
+				editor_preferences.scrolling_common_line_count_preference.change_actions.prune_all (on_scroll_behavior_changed_agent)
 			end
 		end
 
@@ -415,6 +459,8 @@ feature{NONE} -- Sorting
 		end
 
 feature{NONE} -- Implementation
+
+	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 
 	last_picked_item: EV_GRID_ITEM
 			-- Last picked item	

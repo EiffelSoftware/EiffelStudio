@@ -12,6 +12,8 @@ inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		rename
 			make as target_make
+		redefine
+			recycle
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -153,6 +155,15 @@ feature -- Element change
 			accelerator := a_accel
 		ensure
 			accelerator_not_void: accelerator = a_accel
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
+			accelerator := Void
 		end
 
 feature {NONE} -- Implementation

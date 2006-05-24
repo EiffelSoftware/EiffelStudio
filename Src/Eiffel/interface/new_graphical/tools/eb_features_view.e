@@ -404,6 +404,7 @@ feature -- Memory management
 		do
 			shared_editor.recycle
 			shared_editor := Void
+			context := Void
 		end
 
 feature {NONE} -- Implementation

@@ -13,16 +13,18 @@ inherit
 
 	EB_STANDARD_CMD
 		rename
-			make as make_standard
+			make as make_standard,
+			recycle as recycle_std
 		redefine
 			executable
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		redefine
-			executable, make
+			executable, make, recycle
+		select
+			recycle
 		end
-
 
 	TEXT_OBSERVER
 		redefine
@@ -109,11 +111,18 @@ feature -- Observer pattern
 			update_status
 		end
 
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
+			recycle_std
+		end
+
 feature {NONE} -- Implementation
 
 	has_selection: BOOLEAN
 			-- Is a text loaded?
-			
+
 	is_editable: BOOLEAN;
 			-- Is the current text editable?
 

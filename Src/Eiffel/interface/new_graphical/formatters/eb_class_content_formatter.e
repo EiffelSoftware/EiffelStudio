@@ -14,7 +14,8 @@ inherit
 		redefine
 			line_numbers_allowed,
 			widget,
-			empty_widget
+			empty_widget,
+			recycle
 		end
 
 	REFACTORING_HELPER
@@ -152,6 +153,16 @@ feature -- Status report
 	is_class_hierarchy_formatter: BOOLEAN is
 			-- Is current a class hierarchy formatter?
 		do
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recyclable
+		do
+			Precursor {EB_CLASS_INFO_FORMATTER}
+			browser.recycle
+			browser := Void
 		end
 
 feature{NONE} -- Implementation

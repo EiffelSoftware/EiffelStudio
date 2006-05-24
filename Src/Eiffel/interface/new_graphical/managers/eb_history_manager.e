@@ -14,6 +14,8 @@ inherit
 	EB_RECYCLER
 		rename
 			destroy as recycle
+		redefine
+			recycle
 		end
 
 	EB_SHARED_PREFERENCES
@@ -375,6 +377,14 @@ feature {EB_HISTORY_MANAGER_OBSERVER} -- Observer pattern / Registration
 			if observers /= Void then
 				observers.prune_all (an_observer)
 			end
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			target := Void
 		end
 
 feature {NONE} -- Observer pattern / Implementation

@@ -15,7 +15,7 @@ inherit
 	EB_SHARED_MANAGERS
 
 	EB_RECYCLABLE
-	
+
 create
 	make
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			create widget.make (Current, True)
 			create menu.make (Current)
 		end
-	
+
 feature -- Access
 
 	widget: EB_FAVORITES_TREE
@@ -50,7 +50,7 @@ feature -- Status setting
 				development_window.set_stone (class_stone)
 			end
 		end
-		
+
 	go_to_feature (a_favorite_feat: EB_FAVORITES_FEATURE) is
 			-- `a_favorite_feat' has been selected, the associated feature
 			-- window should load the class corresponding to `a_favorite_feat'.
@@ -61,7 +61,7 @@ feature -- Status setting
 			if feat_stone /= Void then
 				development_window.set_stone (feat_stone)
 			end
-		end		
+		end
 
 feature -- Basic Operations
 
@@ -116,15 +116,20 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			widget.recycle
-			menu.recycle
+			if widget /= Void then
+				widget.recycle
+			end
+			if menu /= Void then
+				menu.recycle
+			end
 			cleanup
 			menu := Void
 			widget := Void
+			development_window := Void
 		end
 
 feature {EB_FAVORITES_MENU} -- Implementation
-		
+
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.
 

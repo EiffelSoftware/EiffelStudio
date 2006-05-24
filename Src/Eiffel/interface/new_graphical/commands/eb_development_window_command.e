@@ -14,10 +14,20 @@ inherit
 			target
 		end
 
+	EB_RECYCLABLE
+
 feature -- Properties
 
 	target: EB_DEVELOPMENT_WINDOW;
 			-- Associated target.
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			target := Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

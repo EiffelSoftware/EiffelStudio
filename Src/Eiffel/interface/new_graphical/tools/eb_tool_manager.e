@@ -85,10 +85,10 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			create favorites_manager.make (Current)
 			set_favorites_manager (favorites_manager)
 				-- The favorites manager is already collected by the favorites tool.
---			add_recyclable (favorites_manager)
+			add_recyclable (favorites_manager)
 			create cluster_manager.make (Current)
 			set_cluster_manager (cluster_manager)
---			add_recyclable (cluster_manager)
+			add_recyclable (cluster_manager)
 
 				-- Set up the name of the window.
 			set_title (Interface_names.t_Empty_development_window)
@@ -257,7 +257,7 @@ feature {NONE} -- Menus initializations
 				favorites_menu.first.disable_sensitive
 			end
 				-- The favorites menu is already collected by the favorites manager.
---			add_recyclable (favorites_menu)
+			add_recyclable (favorites_menu)
 		ensure
 			favorites_menu_created: favorites_menu /= Void
 		end
@@ -408,15 +408,22 @@ feature -- Memory management
 --			cluster_manager.recycle
 --			favorites_menu.recycle
 			general_customizable_toolbar.recycle
+			project_customizable_toolbar.recycle
+			refactoring_customizable_toolbar.recycle
 				-- Recycle the history manager.
 				-- This is called polymorphically by EV_WINDOW.
 --			recycle
 --			history_manager.recycle
 			view_menu.destroy
 			Precursor {EB_WINDOW}
+			refactoring_toolbar.destroy
 			toolbars_area.destroy
 			panel.destroy
 			container.destroy
+
+			address_toolbar := Void
+			project_toolbar := Void
+			refactoring_toolbar := Void
 		end
 
 feature {EB_DEBUGGER_MANAGER} -- Explorer bars

@@ -582,12 +582,47 @@ feature {NONE} -- Destroy behavior.
 	recycle is
 			-- Recycle
 		do
-			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
-			end
+			save_preferences
+			explorer_bar_item.recycle
+			explorer_bar_item := Void
+			show_actions.wipe_out
+			report_tool.recycle
+			report_tool := Void
+			widget.destroy
+			recycle_widgets
 			widget := Void
 			manager := Void
-			save_preferences
+		end
+
+	recycle_widgets is
+			-- Recycle all widgets so that we can better detect memory leaks.
+		do
+			scope := Void
+			choose_dialog := Void
+			keyword_field := Void
+			replace_field := Void
+			case_sensitive_button := Void
+			replace_all_click_button := Void
+			add_button := Void
+			remove_button := Void
+			remove_all_button := Void
+			use_regular_expression_button := Void
+			current_editor_button := Void
+			whole_project_button := Void
+			custom_button := Void
+			search_subcluster_button := Void
+			search_compiled_class_button := Void
+			incremental_search_button := Void
+			scope_list := Void
+			search_report_grid := Void
+			replace_combo_box := Void
+			notebook := Void
+			whole_word_button := Void
+			search_button := Void
+			replace_check_button := Void
+			replace_button := Void
+			search_backward_button := Void
+			options := Void
 		end
 
 feature {NONE} -- Implementation
@@ -598,13 +633,6 @@ feature {NONE} -- Implementation
 
 	currently_replacing: STRING is
 		deferred
-		end
-
-	create_report_grid is
-			-- Create report grid
-		deferred
-		ensure
-			search_report_grid_not_void: search_report_grid /= Void
 		end
 
 	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is

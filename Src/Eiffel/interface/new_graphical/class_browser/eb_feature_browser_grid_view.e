@@ -12,7 +12,8 @@ class
 inherit
 	EB_CLASS_BROWSER_GRID_VIEW
 		redefine
-			data
+			data,
+			recycle_agents
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -303,7 +304,8 @@ feature{NONE} -- Initialization
 				grid.drop_actions.fill (drop_actions)
 			end
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (agent on_show_tooltip_changed_from_outside)
+			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
+			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
 		end
 
 	build_sortable_and_searchable is
@@ -312,7 +314,6 @@ feature{NONE} -- Initialization
 			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
 			l_feature_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO
 			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
-			l_quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 		do
 			old_make (grid)
 				-- Prepare sort facilities
@@ -329,8 +330,8 @@ feature{NONE} -- Initialization
 			set_sort_info (l_class_sort_info, 1)
 			set_sort_info (l_feature_sort_info, 2)
 				-- Prepare search facilities
-			create l_quick_search_bar.make (development_window)
-			l_quick_search_bar.attach_tool (Current)
+			create quick_search_bar.make (development_window)
+			quick_search_bar.attach_tool (Current)
 			enable_search
 		end
 
@@ -640,7 +641,20 @@ feature{NONE} -- Sorting
 			end
 		end
 
+feature -- Recyclable
+
+	recycle_agents is
+			-- Recyclable
+		do
+			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
+			if on_show_tooltip_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
+			end
+		end
+
 feature{NONE} -- Implementation
+
+	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
 
 	data: QL_FEATURE_DOMAIN
 			-- Data to be displayed

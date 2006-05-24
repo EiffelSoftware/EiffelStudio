@@ -84,10 +84,11 @@ feature -- Memory management
 		do
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
+				explorer_bar_item := Void
 			end
 			favorites_manager.recycle
 			favorites_manager := Void
-			explorer_bar_item := Void
+			manager := Void
 		end
 
 feature {NONE} -- Implementation

@@ -16,13 +16,13 @@ inherit
 		export
 			{NONE} all
 		redefine
-			on_text_reset, on_text_edited, 
+			on_text_reset, on_text_edited,
 			on_selection_begun, on_selection_finished,
 			on_text_back_to_its_last_saved_state,
 			on_text_fully_loaded,
 			on_text_loaded
 		end
-	
+
 	TEXT_OBSERVER_MANAGER
 		export
 			{NONE} all
@@ -36,9 +36,11 @@ inherit
 			recycle, make
 		end
 
+	EB_RECYCLABLE
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -67,8 +69,8 @@ feature -- Status setting
 				current_editor.text_displayed.post_notify_actions.extend (agent add_observers)
 			else
 				current_editor.add_edition_observer (Current)
-				current_editor.add_selection_observer (Current)	
-			end		
+				current_editor.add_selection_observer (Current)
+			end
 					-- Since the current editor has changed,
 					-- it may be in a different state than the current state,
 					-- and we have to update the state and send events accordingly....*sigh*
@@ -109,7 +111,7 @@ feature -- Status setting
 					on_text_back_to_its_last_saved_state
 				end
 			end
-			
+
 				-- Now for the "editability" of the editor...
 			if current_editor.is_editable then
 				from
@@ -177,6 +179,14 @@ feature -- Status setting
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
 			editor_commands.wipe_out
+			from
+				selection_commands.start
+			until
+				selection_commands.after
+			loop
+				selection_commands.item.recycle
+				selection_commands.forth
+			end
 			selection_commands.wipe_out
 			current_editor := Void
 		end
@@ -196,7 +206,7 @@ feature {NONE} -- Event handling
 			Precursor {TEXT_OBSERVER_MANAGER}
 			text_state := 1
 		end
-					
+
 	on_text_fully_loaded is
 			-- The main editor has just been reloaded.
 		do
@@ -243,8 +253,8 @@ feature {NONE} -- Event handling
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
 			edition_state := 0
-		end			
-		
+		end
+
 	on_text_edited (unused: BOOLEAN) is
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
@@ -260,7 +270,7 @@ feature {NONE} -- Event handling
 			Precursor {TEXT_OBSERVER_MANAGER}
 			selection_state := 1
 		end
-	
+
 	on_selection_finished is
 			-- Update `editor_copy_cmd' and `editor_cut_command'
 			-- (to be performed when selection stops in one fo the editors)
@@ -276,12 +286,12 @@ feature {NONE} -- Event handling
 feature {NONE} -- Implementation
 
 	add_observers is
-			-- 
+			--
 		do
 			current_editor.add_edition_observer (Current)
 			current_editor.add_selection_observer (Current)
 			post_notify_actions.wipe_out
-		end		
+		end
 
 	current_editor: EB_EDITOR
 			-- Currently observed editor.

@@ -41,6 +41,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -141,6 +143,14 @@ feature {NONE} -- Implementation
 			else
 				enable_sensitive
 			end
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			dev_window := Void
 		end
 
 feature {NONE} -- implementation

@@ -12,6 +12,8 @@ class
 inherit
 	EB_CONSTANTS
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -141,6 +143,15 @@ feature {EB_MULTI_SEARCH_TOOL, EB_SEARCH_REPORT_GRID} -- Widgets
 
 	report : EV_FRAME
 			-- Report container
+
+feature -- Recyclable
+
+	recycle is
+			-- Recyclable
+		do
+			search_tool := Void
+			search_report_grid.wipe_out
+		end
 
 feature {NONE} -- Implementation
 

@@ -95,9 +95,6 @@ feature -- Access
 	tree: EB_FEATURES_TREE
 			-- Widget corresponding to the tree of features.
 
-	window: EB_DEVELOPMENT_WINDOW
-			-- development window `Current' is in.
-
 	title: STRING is
 			-- Title of the tool
 		do
@@ -170,9 +167,11 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			widget.destroy
 			widget := Void
 			tree := Void
 			manager := Void
+			development_window := Void
 		end
 
 feature -- Element change

@@ -59,6 +59,7 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
 			l_ev_vertical_box_1: EV_VERTICAL_BOX
 			l_ev_vertical_box_2: EV_VERTICAL_BOX
+
 			l_ev_cmd_lbl: EV_LABEL
 			l_ev_output_lbl: EV_LABEL
 			l_ev_input_lbl: EV_LABEL
@@ -68,7 +69,6 @@ feature{NONE} -- Initialization
 			clear_output_toolbar: EV_TOOL_BAR
 			input_toolbar: EV_TOOL_BAR
 			tbs: EV_TOOL_BAR_SEPARATOR
-			l_eb_toolbar: EB_TOOLBAR
 			l_del_tool_bar: EV_TOOL_BAR
 		do
 			create del_cmd_btn
@@ -101,7 +101,7 @@ feature{NONE} -- Initialization
 			create save_output_btn
 			create clear_output_btn
 			create clear_output_toolbar
-			create l_eb_toolbar
+			create toolbar
 			create l_del_tool_bar
 
 			l_ev_empty_lbl.set_minimum_height (State_bar_height)
@@ -130,8 +130,8 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_2.extend (cmd_lst)
 			l_ev_horizontal_box_2.set_padding_width (5)
 			l_ev_horizontal_box_5.extend (cmd_toolbar)
-			l_ev_horizontal_box_5.extend (l_eb_toolbar.widget)
-			l_ev_horizontal_box_5.disable_item_expand (l_eb_toolbar.widget)
+			l_ev_horizontal_box_5.extend (toolbar.widget)
+			l_ev_horizontal_box_5.disable_item_expand (toolbar.widget)
 			l_ev_horizontal_box_5.extend (l_del_tool_bar)
 			l_ev_horizontal_box_5.disable_item_expand (cmd_toolbar)
 			cmd_toolbar.extend (run_btn)
@@ -139,8 +139,8 @@ feature{NONE} -- Initialization
 			cmd_toolbar.extend (tbs)
 			cmd_toolbar.extend (edit_cmd_detail_btn)
 
-			l_eb_toolbar.extend (a_tool.edit_external_commands_cmd)
-			l_eb_toolbar.update_toolbar
+			toolbar.extend (a_tool.edit_external_commands_cmd)
+			toolbar.update_toolbar
 
 			l_del_tool_bar.extend (del_cmd_btn)
 			l_ev_horizontal_box_2.extend (l_ev_horizontal_box_5)
@@ -189,6 +189,7 @@ feature{NONE} -- Initialization
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
+
 			state_label.drop_actions.extend (agent drop_class)
 			state_label.drop_actions.extend (agent drop_feature)
 			state_label.drop_actions.extend (agent drop_cluster)
@@ -326,6 +327,44 @@ feature -- Basic operation
 			-- To be called before destroying this objects
 		do
 			external_output_manager.prune (Current)
+			toolbar.recycle
+			toolbar := Void
+			widget.destroy
+			widget := Void
+			text_area := Void
+			owner := Void
+			stone_manager := Void
+			recycle_widgets
+		end
+
+	recycle_widgets is
+			--
+		do
+			terminate_btn.destroy
+			run_btn.destroy
+			state_label.destroy
+			main_frame.destroy
+			cmd_lst.destroy
+			edit_cmd_detail_btn.destroy
+			hidden_btn.destroy
+			input_field.destroy
+			send_input_btn.destroy
+			save_output_btn.destroy
+			clear_output_btn.destroy
+			del_cmd_btn.destroy
+
+			terminate_btn := Void
+			run_btn := Void
+			state_label := Void
+			main_frame := Void
+			cmd_lst := Void
+			edit_cmd_detail_btn := Void
+			hidden_btn := Void
+			input_field := Void
+			send_input_btn := Void
+			save_output_btn := Void
+			clear_output_btn := Void
+			del_cmd_btn := Void
 		end
 
 	scroll_to_end is
@@ -711,6 +750,8 @@ feature{NONE}
 		end
 
 feature{NONE} -- Implementation
+
+	toolbar: EB_TOOLBAR
 
 	terminate_btn: EV_TOOL_BAR_BUTTON
 			-- Button to terminate running process

@@ -667,6 +667,11 @@ feature -- Memory management
 				after_reading_text_actions.wipe_out
 				after_reading_text_actions := Void
 			end
+			text_observer_manager.selection_observer_list.wipe_out
+			text_observer_manager.post_notify_actions.wipe_out
+			text_observer_manager.lines_observer_list.wipe_out
+			text_observer_manager.edition_observer_list.wipe_out
+			text_observer_manager.cursor_observer_list.wipe_out
 		end
 
 feature {NONE} -- Implementation

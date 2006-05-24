@@ -138,6 +138,8 @@ feature -- Basic operation
 			-- To be called before destroying this objects
 		do
 			c_compilation_output_manager.prune (Current)
+			owner := Void
+			stone_manager := Void
 		end
 
 	scroll_to_end is

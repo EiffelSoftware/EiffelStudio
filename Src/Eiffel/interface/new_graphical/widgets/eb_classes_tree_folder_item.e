@@ -13,7 +13,8 @@ inherit
 	EB_CLASSES_TREE_ITEM
 		redefine
 			data,
-			set_data
+			set_data,
+			recycle
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -430,6 +431,15 @@ feature -- Interactivity
 				end
 				forth
 			end
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_CLASSES_TREE_ITEM}
+			associated_window := Void
 		end
 
 feature {NONE} -- Implementation

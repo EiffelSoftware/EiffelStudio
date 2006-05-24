@@ -182,6 +182,7 @@ feature -- Memory management
 			widget.recycle
 			widget := Void
 			window := Void
+			manager := Void
 		end
 
 feature {NONE} -- Implementation

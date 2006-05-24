@@ -23,9 +23,11 @@ inherit
 			refresh
 		end
 
+	EB_RECYCLABLE
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_window: EB_TOOL_MANAGER) is
@@ -64,6 +66,14 @@ feature -- Observer pattern
 			-- Make `manager' up-to-date.
 		do
 			manager.refresh
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			development_window := Void
 		end
 
 feature -- Load / Save / Reset...

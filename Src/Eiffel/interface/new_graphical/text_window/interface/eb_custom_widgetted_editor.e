@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			-- Recycle
 		do
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
-			search_bar.recycle
+			search_bar.destroy
 			Precursor {EB_EDITOR}
 		end
 

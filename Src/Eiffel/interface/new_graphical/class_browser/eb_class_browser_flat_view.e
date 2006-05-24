@@ -13,8 +13,8 @@ inherit
 	EB_CLASS_BROWSER_GRID_VIEW
 		redefine
 			grid_selected_items,
-			data
-
+			data,
+			recycle_agents
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -554,8 +554,11 @@ feature{NONE} -- Initialization
 			grid.key_press_actions.extend (agent on_key_pressed)
 			show_feature_from_any_checkbox.select_actions.extend (agent on_show_feature_from_any_changed)
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (agent on_show_tooltip_changed_from_outside)
-			preferences.class_browser_data.show_feature_from_any_preference.change_actions.extend (agent on_show_feature_from_any_changed_from_outside)
+
+			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
+			on_show_feature_from_any_changed_from_outside_agent := agent on_show_feature_from_any_changed_from_outside
+			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
+			preferences.class_browser_data.show_feature_from_any_preference.change_actions.extend (on_show_feature_from_any_changed_from_outside_agent)
 		end
 
 	build_sortable_and_searchable is
@@ -563,7 +566,6 @@ feature{NONE} -- Initialization
 		local
 			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
 			l_feature_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO
-			l_quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 		do
 			old_make (grid)
 				-- Prepare sort facilities
@@ -576,8 +578,8 @@ feature{NONE} -- Initialization
 			set_sort_info (l_feature_sort_info, 2)
 
 				-- Prepare search facilities
-			create l_quick_search_bar.make (development_window)
-			l_quick_search_bar.attach_tool (Current)
+			create quick_search_bar.make (development_window)
+			quick_search_bar.attach_tool (Current)
 			enable_search
 		end
 
@@ -730,6 +732,18 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	recycle_agents is
+			-- Recycle agents
+		do
+			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
+			if on_show_tooltip_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
+			end
+			if on_show_feature_from_any_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.show_feature_from_any_preference.change_actions.prune_all (on_show_feature_from_any_changed_from_outside_agent)
+			end
+		end
+
 	collapse_item (a_item: EV_GRID_ITEM) is
 			-- Expand `a_item'.
 		require
@@ -757,6 +771,12 @@ feature{NONE} -- Implementation
 		do
 			do_all_in_items (grid.selected_items, agent collapse_item)
 		end
+
+	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent kept for recycling
+
+	on_show_feature_from_any_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent kept for recycling
 
 invariant
 	development_window_attached: development_window /= Void

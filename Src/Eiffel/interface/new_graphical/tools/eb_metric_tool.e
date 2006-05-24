@@ -1450,6 +1450,8 @@ feature -- Memory management
 			internal_multi_column_list.destroy
 			internal_text_area := Void
 			internal_multi_column_list := Void
+			development_window := Void
+			context_tool := Void
 		end
 
 feature {NONE} -- Implementation

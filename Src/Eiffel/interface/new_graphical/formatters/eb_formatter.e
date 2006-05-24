@@ -22,6 +22,8 @@ inherit
 
 	EB_STONABLE
 
+	EB_RECYCLABLE
+
 feature -- Properties
 
 	manager: EB_STONABLE
@@ -288,6 +290,15 @@ feature {NONE} -- Location
 				manager.set_previous_position (manager.position)
 			end
 			manager.set_previous_pos_container (Current)
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			manager := Void
+			editor := Void
 		end
 
 feature {NONE} -- Implementation

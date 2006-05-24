@@ -409,6 +409,7 @@ feature -- Memory management
 			feature_view.recycle
 			error_output_view.recycle
 			warning_output_view.recycle
+			address_manager.recycle
 			if has_case then
 					-- Save the diagram
 				editor.store
@@ -421,7 +422,11 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			notebook.selection_actions.block
+			notebook.selection_actions.wipe_out
+			notebook.drop_actions.wipe_out
+			notebook.drop_actions.set_veto_pebble_function (Void)
 			notebook.destroy
+			address_manager := Void
 			notebook := Void
 			manager := Void
 		end

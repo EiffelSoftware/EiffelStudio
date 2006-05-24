@@ -318,6 +318,7 @@ feature -- Memory management
 		do
 			favorites.remove_observer (Current)
 			favorites_manager := Void
+			destroy
 		end
 
 feature {NONE} -- Implementation

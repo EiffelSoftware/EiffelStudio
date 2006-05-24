@@ -146,7 +146,6 @@ feature -- Actions
 		require
 			a_row_attached: a_row /= Void
 		local
-			l_bg_color: EV_COLOR
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 			l_is_parent_selected: BOOLEAN
@@ -765,7 +764,6 @@ feature{NONE} -- Initialization
 			-- Build facilities to support sort and search
 		local
 			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
-			l_quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 		do
 			old_make (grid)
 				-- Prepare sort facilities
@@ -775,8 +773,8 @@ feature{NONE} -- Initialization
 			set_sort_info (l_class_sort_info, 1)
 
 				-- Prepare search facilities
-			create l_quick_search_bar.make (development_window)
-			l_quick_search_bar.attach_tool (Current)
+			create quick_search_bar.make (development_window)
+			quick_search_bar.attach_tool (Current)
 			enable_search
 		end
 

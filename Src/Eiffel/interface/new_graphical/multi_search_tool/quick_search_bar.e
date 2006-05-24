@@ -162,6 +162,8 @@ feature -- Recyclable
 			-- Recycle
 		do
 			option_manager.remove_observer (Current)
+			option_manager := Void
+			keyword_field := Void
 		end
 
 feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Element change
@@ -259,6 +261,7 @@ feature -- Destroy
 	destroy is
 			-- Destroy
 		do
+			keyword_field.destroy
 			recycle
 			Precursor {QUICK_SEARCH_BAR_IMP}
 		end

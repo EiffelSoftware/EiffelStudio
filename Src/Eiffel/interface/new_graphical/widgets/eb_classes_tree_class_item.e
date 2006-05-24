@@ -13,7 +13,8 @@ inherit
 	EB_CLASSES_TREE_ITEM
 		redefine
 			data,
-			set_data
+			set_data,
+			recycle
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -95,6 +96,15 @@ feature -- Status setting
 			-- Add a double click action `p' on `Current'.
 		do
 			pointer_double_press_actions.extend (p)
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_CLASSES_TREE_ITEM}
+			associated_window := Void
 		end
 
 feature {NONE} -- Implementation

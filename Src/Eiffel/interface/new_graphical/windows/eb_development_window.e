@@ -399,7 +399,9 @@ feature {NONE} -- Initialization
 			toggle_feature_assigner_cmd.disable_sensitive
 
 			create editors.make (5)
-			estudio_debug_cmd.set_main_window (window)
+				--|FIXME: Uncomment following line to activate debug menu.
+				--|Search estudio_debug_cmd to reach the other place.
+--			estudio_debug_cmd.set_main_window (window)
 		end
 
 	set_up_accelerators is
@@ -1005,7 +1007,9 @@ feature -- Update
 			mb.extend (tools_menu)
 			mb.extend (window_menu)
 			mb.extend (help_menu)
-			estudio_debug_cmd.build_menu_bar
+				--|FIXME: Uncomment following line to activate debug menu.
+				--|Search estudio_debug_cmd to reach the other place.
+--			estudio_debug_cmd.build_menu_bar
 		end
 
 feature -- Graphical Interface
@@ -2793,8 +2797,6 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				development_window_data.save_size (window.width, window.height)
 				development_window_data.save_window_state (window.is_minimized, window.is_maximized)
 				development_window_data.save_position (window.x_position, window.y_position)
-				left_panel.wipe_out
-				right_panel.wipe_out
 				development_window_data.save_show_search_options (search_tool.options_shown)
 				hide
 
@@ -2806,12 +2808,14 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				project_customizable_toolbar.recycle
 				refactoring_customizable_toolbar.recycle
 				Precursor {EB_TOOL_MANAGER}
-
+				left_panel.recycle
+				right_panel.recycle
 				managed_class_formatters.wipe_out
 				managed_feature_formatters.wipe_out
 				managed_main_formatters.wipe_out
 				toolbarable_commands.wipe_out
 				editors.wipe_out
+				editors := Void
 				stone := Void
 			end
 		end
@@ -3800,15 +3804,155 @@ feature {NONE} -- Implementation
 
 	context_refreshing_timer: EV_TIMEOUT
 
+feature -- Recycle
+
 	recycle is
 			-- Call the precursors.
 		do
+			recycle_command
+			recycle_formatters
+			recycle_menu
 			Precursor {EB_TOOL_MANAGER}
+			save_as_cmd.recycle
+			open_cmd.recycle
+			save_cmd.recycle
+			save_as_cmd := Void
+			open_cmd := Void
+			save_cmd := Void
 			command_controller.recycle
 			if refactoring_manager /= Void then
 				refactoring_manager.destroy
 			end
+			editor_tool := Void
+			favorites_tool := Void
+			history_manager := Void
+			features_tool := Void
+			breakpoints_tool := Void
+			favorites_manager := Void
+			cluster_manager := Void
+			search_tool := Void
+			editors.wipe_out
 		end
+
+	recycle_command is
+			-- Recycle command
+		local
+			os_cmd: EB_ON_SELECTION_COMMAND
+		do
+			c_finalized_compilation_cmd.recycle
+			c_workbench_compilation_cmd.recycle
+			editor_paste_cmd.recycle
+			new_class_cmd.recycle
+			new_cluster_cmd.recycle
+			new_feature_cmd.recycle
+			shell_cmd.recycle
+			toggle_feature_alias_cmd.recycle
+			toggle_feature_assigner_cmd.recycle
+			toggle_feature_signature_cmd.recycle
+			undo_cmd.recycle
+			redo_cmd.recycle
+			toggle_stone_cmd.recycle
+			delete_class_cluster_cmd.recycle
+			print_cmd.recycle
+			from
+				show_tool_commands.start
+			until
+				show_tool_commands.after
+			loop
+				show_tool_commands.item.recycle
+				show_tool_commands.forth
+			end
+			show_tool_commands.wipe_out
+			show_tool_commands := Void
+
+			from
+				toolbarable_commands.start
+			until
+				toolbarable_commands.after
+			loop
+				os_cmd ?= toolbarable_commands.item
+				if os_cmd /= Void then
+					os_cmd.recycle
+				end
+				toolbarable_commands.forth
+			end
+
+			c_finalized_compilation_cmd := Void
+			c_finalized_compilation_cmd := Void
+			new_class_cmd := Void
+			new_cluster_cmd := Void
+			new_feature_cmd := Void
+			shell_cmd := Void
+			toggle_feature_alias_cmd := Void
+			toggle_feature_assigner_cmd := Void
+			toggle_feature_signature_cmd := Void
+			undo_cmd := Void
+			redo_cmd := Void
+			toggle_stone_cmd := Void
+			delete_class_cluster_cmd := Void
+			print_cmd := Void
+		end
+
+	recycle_formatters is
+			-- Recycle formatters
+		do
+			from
+				managed_class_formatters.start
+			until
+				managed_class_formatters.after
+			loop
+				if managed_class_formatters.item /= Void then
+					managed_class_formatters.item.recycle
+				end
+				managed_class_formatters.forth
+			end
+
+			from
+				managed_feature_formatters.start
+			until
+				managed_feature_formatters.after
+			loop
+				if managed_feature_formatters.item /= Void then
+					managed_feature_formatters.item.recycle
+				end
+				managed_feature_formatters.forth
+			end
+
+			from
+				managed_main_formatters.start
+			until
+				managed_main_formatters.after
+			loop
+				if managed_main_formatters.item /= Void then
+					managed_main_formatters.item.recycle
+				end
+				managed_main_formatters.forth
+			end
+		end
+
+	recycle_menu is
+			--
+		do
+			tools_menu.destroy
+			window_menu.destroy
+			metric_menu.destroy
+--			compile_menu.destroy
+			debug_menu.destroy
+			debugging_tools_menu.destroy
+			favorites_menu.destroy
+			view_menu.destroy
+
+			tools_menu := Void
+			window_menu := Void
+			metric_menu := Void
+			format_menu := Void
+			compile_menu := Void
+			debug_menu := Void
+			debugging_tools_menu := Void
+			favorites_menu := Void
+			view_menu := Void
+		end
+
 
 feature {NONE} -- Implementation: Editor commands
 
@@ -4011,12 +4155,6 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	redo_cmd: EB_REDO_COMMAND
 			-- Command to redo in the editor.
-
-	editor_cut_cmd: EB_ON_SELECTION_COMMAND
-			-- Command to cut text in the editor.
-
-	editor_copy_cmd: EB_ON_SELECTION_COMMAND
-			-- Command to copy text in the editor.
 
 	editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
 			-- Command to paste text in the editor.

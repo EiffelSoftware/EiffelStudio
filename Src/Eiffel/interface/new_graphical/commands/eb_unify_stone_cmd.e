@@ -17,6 +17,8 @@ inherit
 			tooltext
 		end
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -148,6 +150,14 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			window := Void
 		end
 
 feature {NONE} -- Implementation

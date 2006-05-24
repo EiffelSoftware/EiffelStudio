@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_MENU_ITEM 
+	EB_COMMAND_MENU_ITEM
 
 inherit
 	EV_MENU_ITEM
@@ -14,6 +14,11 @@ inherit
 	EB_RECYCLABLE
 		undefine
 			default_create, copy
+		end
+
+	EB_RECYCLER
+		undefine
+			default_create, copy, destroy
 		end
 
 create

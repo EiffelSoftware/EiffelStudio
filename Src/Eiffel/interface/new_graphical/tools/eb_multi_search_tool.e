@@ -15,7 +15,7 @@ inherit
 			make,
 			manager,
 			reverse,
-			create_report_grid
+			recycle
 		end
 
 	EB_SHARED_MANAGERS
@@ -171,12 +171,6 @@ feature {NONE} -- Initialization
 			create show_actions
 			create bottom_reached_actions
 			create first_result_reached_actions
-		end
-
-	create_report_grid is
-			-- Create `search_report_grid'.
-		do
-			create search_report_grid.make (current)
 		end
 
 	build_report_box: EV_VERTICAL_BOX is
@@ -1543,6 +1537,15 @@ feature -- Custom search scope
 		end
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
+
+	recycle is
+			-- Recycle
+		do
+			bottom_reached_actions.wipe_out
+			first_result_reached_actions.wipe_out
+			loaded_actions.wipe_out
+			Precursor {EB_MULTI_SEARCH_TOOL_IMP}
+		end
 
 	search_history_size: INTEGER is 10
 

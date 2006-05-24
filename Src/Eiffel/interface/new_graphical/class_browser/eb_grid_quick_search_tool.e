@@ -21,7 +21,8 @@ inherit
 		rename
 			make as make_search_bar
 		redefine
-			user_initialization
+			user_initialization,
+			recycle
 		end
 
 	EVS_UTILITY
@@ -205,6 +206,15 @@ feature -- Accelerator
 	store_keyword_accelerator: EV_ACCELERATOR
 			-- Key accelerator to store current search keyword in search bar
 			-- and do a search next
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			Precursor {QUICK_SEARCH_BAR}
+			searchable_component := Void
+		end
 
 feature{NONE} -- Actions
 

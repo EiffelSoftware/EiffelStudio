@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			favorites_manager := a_favorites_manager
 			build_tree
 			favorites.add_observer (Current)
-			drop_actions.extend (agent remove_class_stone)			
+			drop_actions.extend (agent remove_class_stone)
 			drop_actions.extend (agent remove_feature_stone)
 			drop_actions.extend (agent remove_folder)
 			drop_actions.extend (agent add_stone)
 			drop_actions.extend (agent add_folder)
-			
+
 			key_press_actions.extend (agent handle_key)
-			
+
 			if favorites_manager.Favorites.sensitive then
 				enable_sensitive
 			else
@@ -89,6 +89,7 @@ feature -- Element change
 			-- To be called when the object is no more used.
 		do
 			favorites.remove_observer (Current)
+			favorites_manager := Void
 		end
 
 feature {NONE} -- Initialization Implementation
@@ -148,7 +149,7 @@ feature {NONE} -- Initialization Implementation
 			a_feat_item: EB_FAVORITES_FEATURE
 			l_tree_item: EB_FAVORITES_TREE_ITEM
 		do
-			if an_item.is_class then				
+			if an_item.is_class then
 				a_class_item ?= an_item
 				create Result.make (a_class_item)
 				if is_clickable then
@@ -168,14 +169,14 @@ feature {NONE} -- Initialization Implementation
 				end
 			elseif an_item.is_folder then
 				a_folder_item ?= an_item
-				Result := build_tree_folder (a_folder_item)				
+				Result := build_tree_folder (a_folder_item)
 			elseif an_item.is_feature then
 				a_feat_item ?= an_item
 				create Result.make (a_feat_item)
 				if is_clickable then
 					Result.pointer_button_press_actions.force_extend (
-						agent on_button_pressed (a_feat_item, ?, ?, ?))					
-				end					
+						agent on_button_pressed (a_feat_item, ?, ?, ?))
+				end
 			end
 			Result.set_text (an_item.name)
 			Result.set_data (an_item)
@@ -191,15 +192,15 @@ feature -- Observer pattern
 		local
 			item_list: EV_TREE_NODE_LIST
 			a_class_item: EB_FAVORITES_CLASS
-			a_feat_item: EB_FAVORITES_FEATURE			
+			a_feat_item: EB_FAVORITES_FEATURE
 			tree_item: EB_FAVORITES_TREE_ITEM
 		do
 				-- Create a new entry for `a_item' in the tree.
 			item_list := get_tree_item_from_path (Current, a_path)
 			if item_list /= Void then
 				create tree_item.make (a_item)
-				
-				if a_item.is_class then		
+
+				if a_item.is_class then
 					a_class_item ?= a_item
 					if is_clickable then
 						tree_item.pointer_button_press_actions.force_extend (
@@ -209,8 +210,8 @@ feature -- Observer pattern
 					a_feat_item ?= a_item
 					if is_clickable then
 						tree_item.pointer_button_press_actions.force_extend (
-							agent on_button_pressed (a_feat_item, ?, ?, ?))					
-					end					
+							agent on_button_pressed (a_feat_item, ?, ?, ?))
+					end
 				end
 				tree_item.set_text (a_item.name)
 				tree_item.set_data (a_item)
@@ -219,7 +220,7 @@ feature -- Observer pattern
 		end
 
 	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
-			-- `a_item' has been removed. 
+			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
 			-- be set to an empty list or `Void'.
@@ -245,7 +246,7 @@ feature -- Observer pattern
 			wipe_out
 			build_tree
 		end
-		
+
 	add_stone (a_stone: STONE) is
 			-- Add a stone
 		local
@@ -259,7 +260,7 @@ feature -- Observer pattern
 			elseif l_class_stone /= Void then
 				add_class_stone (l_class_stone)
 			end
-		end		
+		end
 
 	add_feature_stone (a_stone: FEATURE_STONE) is
 			-- Add a feature, defined by `a_stone', to the main branch of the tree.
@@ -268,7 +269,7 @@ feature -- Observer pattern
 		do
 			favorites.add_feature_stone (a_stone)
 		end
-		
+
 	add_class_stone (a_stone: CLASSI_STONE) is
 			-- Add a class, defined by `a_stone', to the main branch of the tree.
 		require
@@ -280,7 +281,7 @@ feature -- Observer pattern
 		do
 			create new_item.make_from_class_stone (a_stone, favorites)
 			favorites.extend (new_item)
-			
+
 			l_fcs ?= a_stone
 			if l_fcs /= Void then
 				l_fc := l_fcs.origin
@@ -294,7 +295,7 @@ feature -- Observer pattern
 						l_fc.forth
 					end
 				end
-			end			
+			end
 		end
 
 	add_folder (a_folder: EB_FAVORITES_FOLDER) is
@@ -325,7 +326,7 @@ feature -- Observer pattern
 			old_class.parent.start
 			old_class.parent.prune (old_class)
 		end
-		
+
 	remove_feature_stone (a_stone: EB_FAVORITES_FEATURE_STONE) is
 			-- Remove a feature, defined by `a_stone', from the tree.
 		require
@@ -337,7 +338,7 @@ feature -- Observer pattern
 			old_feat.parent.start
 			old_feat.parent.prune (old_feat)
 		end
-		
+
 	on_button_pressed (a_node: ANY; a_x, a_y, a_button: INTEGER) is
 			-- Action done when an item is selected.
 		local
@@ -352,7 +353,7 @@ feature -- Observer pattern
 				else
 					l_feat ?= a_node
 					if l_feat /= Void then
-						favorites_manager.go_to_feature (l_feat)		
+						favorites_manager.go_to_feature (l_feat)
 					end
 				end
 			end
@@ -376,7 +377,7 @@ feature {NONE} -- Implementation
 				item_list.prune (item_to_delete)
 			end
 		end
-		
+
 	get_tree_item_from_path (item_list: EV_TREE_NODE_LIST; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_TREE_NODE_LIST is
 			-- Get the tree item corresponding to the path `a_path'
 			-- Void if not found.
@@ -401,7 +402,7 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 	favorites_manager: EB_FAVORITES_MANAGER;
 			-- Associated favorites manager
 

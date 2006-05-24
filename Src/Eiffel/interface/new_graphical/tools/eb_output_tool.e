@@ -59,6 +59,8 @@ feature -- Clean up
 			graphical_output_manager.prune (Current)
 			text_area.recycle
 			text_area := Void
+			stone_manager := Void
+			owner := Void
 		end
 
 feature -- Status setting

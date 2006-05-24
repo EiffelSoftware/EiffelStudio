@@ -65,6 +65,7 @@ feature -- Element change
 		do
 			window_manager.remove_observer (Current)
 			recycle_items
+			destroy
 		end
 
 feature {NONE} -- Initialization Implementation
@@ -155,7 +156,7 @@ feature -- Observer pattern
 		end
 
 	on_item_removed (an_item: EB_WINDOW) is
-			-- `an_item' has just been removed. 
+			-- `an_item' has just been removed.
 		local
 			menu_item_to_remove: EV_MENU_ITEM
 		do
@@ -167,7 +168,7 @@ feature -- Observer pattern
 		end
 
 	on_item_changed (an_item: EB_WINDOW) is
-			-- `an_item' has just been removed. 
+			-- `an_item' has just been removed.
 		local
 			menu_item_to_change: EV_MENU_ITEM
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -187,7 +188,7 @@ feature -- Observer pattern
 		end
 
 feature {NONE} -- Implementation
-		
+
 	window_manager: EB_WINDOW_MANAGER;
 			-- Associated window manager
 

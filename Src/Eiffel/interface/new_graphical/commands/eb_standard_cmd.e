@@ -17,6 +17,8 @@ inherit
 			tooltext
 		end
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -135,6 +137,14 @@ feature -- Basic operations
 				execute_agents.item.call (Void)
 				execute_agents.forth
 			end
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			execute_agents.wipe_out
 		end
 
 indexing

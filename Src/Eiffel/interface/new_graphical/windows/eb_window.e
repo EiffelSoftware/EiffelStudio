@@ -343,6 +343,9 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 			help_menu.destroy
 				-- The tools menu is never created?!
 --			tools_menu.destroy
+			file_menu := Void
+			edit_menu := Void
+			help_menu := Void
 			destroyed := True
 			window.destroy
 			window := Void

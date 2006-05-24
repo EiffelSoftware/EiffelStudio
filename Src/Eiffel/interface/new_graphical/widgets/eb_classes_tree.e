@@ -356,8 +356,21 @@ feature -- Memory management
 	recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
+		local
+			l_item: EB_CLASSES_TREE_ITEM
 		do
 			manager.remove_observer (Current)
+			from
+				start
+			until
+				after
+			loop
+				l_item ?= item
+				if l_item /= Void then
+					l_item.recycle
+				end
+				forth
+			end
 			window := Void
 		end
 

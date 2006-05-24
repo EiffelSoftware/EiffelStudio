@@ -1160,8 +1160,16 @@ feature -- Memory management
 			if development_window.editor_tool.text_area /= Void then
 				development_window.editor_tool.text_area.remove_observer (Current)
 			end
+			recycle_commands
 			world_cell.recycle
 			world_cell := Void
+			tool := Void
+		end
+
+	recycle_commands is
+			-- Recycle commands
+		do
+			delete_cmd.recycle
 		end
 
 feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions

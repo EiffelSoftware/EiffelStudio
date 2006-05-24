@@ -12,7 +12,8 @@ deferred class
 inherit
 	EB_FEATURE_INFO_FORMATTER
 		redefine
-			empty_widget
+			empty_widget,
+			recycle
 		end
 
 	QL_UTILITY
@@ -131,6 +132,16 @@ feature -- Status setting
 			end
 		ensure
 			feature_set: a_feature = associated_feature
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_FEATURE_INFO_FORMATTER}
+			browser.recycle
+			browser := Void
 		end
 
 feature{NONE} -- Implementation

@@ -11,22 +11,28 @@ indexing
 
 class
 	EB_EXPLORER_BAR
-	
+
 inherit
 	MULTIPLE_SPLIT_AREA
 		redefine
 			initialize
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			copy,
 			default_create
 		end
-		
+
+	EB_RECYCLABLE
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -35,9 +41,9 @@ feature {NONE} -- Initialization
 			Precursor {MULTIPLE_SPLIT_AREA}
 			create item_list.make (default_item_list_size)
 		end
-		
+
 	make (a_parent: EB_TOOL_MANAGER; use_explorer_style: BOOLEAN; full_max: BOOLEAN) is
-			-- Create `Current' with parent, `a_parent', using explorer style if `use_explorer_style', 
+			-- Create `Current' with parent, `a_parent', using explorer style if `use_explorer_style',
 			-- and maximizing its tools fully in `a_parent' if `full_max'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -47,19 +53,19 @@ feature {NONE} -- Initialization
 			full_maximize := full_max
 			explorer_bar_manager := a_parent
 			hide_disabled_minimize_button
-			
+
 				-- Connect events required as call backs to EiffelStudio routines.
 			docked_in_actions.extend (agent dock_completed)
 			docked_out_actions.extend (agent docked_external)
 			Maximize_actions.extend (agent item_maximized)
 			restore_actions.extend (agent item_restored)
-		end		
+		end
 
 feature -- Access
 
 	explorer_bar_manager: EB_TOOL_MANAGER
 			-- Parent of the bar.
-			
+
 	explorer_style: BOOLEAN
 			-- Use the explorer style? (i.e one visible item at most)
 
@@ -68,13 +74,13 @@ feature -- Access
 
 	item_list: ARRAYED_LIST [EB_EXPLORER_BAR_ITEM]
 			-- List of all items in the bar.
-			
+
 	explorer_item: EB_EXPLORER_BAR_ITEM is
 			-- First item, Void if none
 		do
 			Result := item_list.first
 		end
-		
+
 	is_maximized: BOOLEAN is
 			-- Is an item in `Current' maximized?
 		local
@@ -95,7 +101,7 @@ feature -- Access
 		ensure
 			position_not_changed: linear_representation.index = old linear_representation.index
 		end
-			
+
 	add (an_item: like explorer_item) is
 			-- Add `item' at the first available slot.
 		require
@@ -125,7 +131,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	on_item_restored (an_item: EB_EXPLORER_BAR_ITEM) is
 			-- `an_item' has been restored in `Current'.
 		require
@@ -133,7 +139,7 @@ feature -- Access
 		do
 			restore_item (an_item.widget)
 		end
-		
+
 	on_item_minimized (an_item: EB_EXPLORER_BAR_ITEM) is
 			-- `an_item' has been minimized in `Current'.
 		require
@@ -143,7 +149,7 @@ feature -- Access
 				minimize_item (an_item.widget)
 			end
 		end
-		
+
 	on_item_maximized (an_item: EB_EXPLORER_BAR_ITEM) is
 			-- `an_item' has been maximized in `Current'.
 		require
@@ -152,7 +158,7 @@ feature -- Access
 			maximize_item (an_item.widget)
 			item_maximized (an_item.widget)
 		end
-		
+
 	on_item_hidden (an_item: EB_EXPLORER_BAR_ITEM) is
 			-- `an_item' has been hidden in `Current'.
 		require
@@ -181,7 +187,7 @@ feature -- Access
 			cursor := item_list.cursor
 				-- Must mark all other items as non maximized.
 				-- This is a "brute force" method, as their is no easy way
-				-- to know when an expanded items state changes as a result of 
+				-- to know when an expanded items state changes as a result of
 				-- another item becoming expanded.
 			from
 				item_list.start
@@ -203,7 +209,7 @@ feature -- Access
 		ensure
 			item_list_index_not_changed: item_list.index = old item_list.index
 		end
-		
+
 	item_restored (a_widget: EV_WIDGET) is
 			-- `a_widget' has been restored in `Current'.
 		require
@@ -274,10 +280,10 @@ feature -- Access
 			cur: CURSOR
 		do
 			cur := item_list.cursor
-			create Result.make (1, item_list.count * 6) 
+			create Result.make (1, item_list.count * 6)
 			from
 				item_list.start
-				i := 1 
+				i := 1
 			until
 				item_list.after
 			loop
@@ -290,7 +296,7 @@ feature -- Access
 						state := "minimized"
 					elseif is_item_maximized (curr_item.widget) then
 						state := "maximized"
-					else	
+					else
 						state := "visible"
 					end
 				else
@@ -301,7 +307,7 @@ feature -- Access
 					l_parent := parent_window (curr_item.widget)
 					Result.put ((l_parent.x_position - explorer_bar_manager.window.x_position).out, i + 2)
 					Result.put ((l_parent.y_position - explorer_bar_manager.window.y_position).out, i + 3)
-					Result.put (l_parent.width.out, i + 4)	
+					Result.put (l_parent.width.out, i + 4)
 					Result.put (l_parent.height.out, i + 5)
 				else
 					Result.put ("0", i + 2)
@@ -385,12 +391,12 @@ feature -- Access
 				j := j + 1
 			end
 
-			
+
 				-- Block rebuilding of `Current' until further notice. This is because a
 				-- lot of building is to take place, and it is optimal to perform it once at
 				-- the end.
 			block
-			
+
 				-- Rebuild contents of `item_list' to ensure their order matches that of
 				-- `temp_layout'. As the order may change, it is possible that it may be different
 				-- between standard and debugging layouts, hence the need to rebuild this.
@@ -407,7 +413,7 @@ feature -- Access
 					-- prepare next iteration
 				i := i + 6
 			end
-			
+
 				-- Reset all items to their default states.
 			create all_heights.make (item_list.count)
 			from
@@ -422,10 +428,10 @@ feature -- Access
 				curr_item.reset
 				i := i + 6
 			end
-			
+
 				-- Clear all items from `Current'.
 			wipe_out
-			
+
 				-- Now perform a pass, updating the status of all items contained as
 				-- required.
 			from
@@ -444,7 +450,7 @@ feature -- Access
 				end
 				a_height := item_height.to_integer
 				if not item_state.is_equal ("closed") and not item_state.is_equal ("external") then
-					all_heights.extend (a_height) 	
+					all_heights.extend (a_height)
 				end
 				curr_item := items_by_name.item (temp_layout.item(i))
 				check
@@ -458,9 +464,9 @@ feature -- Access
 						curr_item.show
 					end
 				elseif item_state.is_equal ("external") then
-					curr_item.show_external (explorer_bar_manager.window.x_position + (temp_layout.item(i + 2)).to_integer, explorer_bar_manager.window.y_position + (temp_layout.item(i + 3)).to_integer, (temp_layout.item(i + 4)).to_integer, (temp_layout.item(i + 5)).to_integer)				
+					curr_item.show_external (explorer_bar_manager.window.x_position + (temp_layout.item(i + 2)).to_integer, explorer_bar_manager.window.y_position + (temp_layout.item(i + 3)).to_integer, (temp_layout.item(i + 4)).to_integer, (temp_layout.item(i + 5)).to_integer)
 				elseif item_state.is_equal ("visible") or item_state.is_equal ("maximized") then
-					curr_item.show	
+					curr_item.show
 				end
 				i := i + 6
 			end
@@ -482,7 +488,7 @@ feature -- Access
 					item_height_is_integer: item_height.is_integer
 				end
 				a_height := item_height.to_integer
-				
+
 					-- The protection here is for the case where we have switched from
 					-- show multiple tools to show a single tool mode. We must ignore minimization
 					-- and maximization for any tools that are not actually contained in `Current'.
@@ -491,7 +497,7 @@ feature -- Access
 				if linear_representation.has (curr_item.widget) then
 					if item_state.is_equal ("minimized") and not has_maximized_tool then
 						minimized_count := minimized_count + 1
-						
+
 							--| FIXME this is not true in the case where we are only showing a single tool.
 							--| Should we pre-prune all of the data so there is only a single item?
 							--| I think it only occurs in the case where you switch from regular mode to single and restart. Julian.
@@ -525,7 +531,7 @@ feature -- Access
 				explorer_bar_manager.close_bar (Current)
 			end
 		end
-		
+
 	unmaximize is
 			-- If an item is maximized, unmaximize it.
 		local
@@ -545,6 +551,15 @@ feature -- Access
 			item_list.go_to (cur)
 		end
 
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			wipe_out
+			explorer_bar_manager := Void
+		end
+
 feature {EB_EXPLORER_BAR_ITEM} -- Implementation
 
 	prune_item (an_item: EB_EXPLORER_BAR_ITEM) is
@@ -554,7 +569,7 @@ feature {EB_EXPLORER_BAR_ITEM} -- Implementation
 		do
 			item_list.prune_all (an_item)
 		end
-		
+
 	docked_external (a_widget: EV_WIDGET) is
 			-- `a_widget' has been docked externally, perform necessary processing.
 		require
@@ -567,18 +582,18 @@ feature {EB_EXPLORER_BAR_ITEM} -- Implementation
 					-- If final tool contained was docked externally, then hide `Current'.
 				explorer_bar_manager.close_bar (Current)
 			end
-			
+
 			development_window ?= explorer_bar_manager
-			
+
 				-- Build a tool window representation, permitting external tool to be tracked by top level window.
 			create tool_window.make_with_info (parent_window (a_widget), a_widget, development_window,
 				parent_window (a_widget).x_position - development_window.window.screen_x,
 				parent_window (a_widget).y_position - development_window.window.screen_y)
-				
+
 				-- Update `tool_window' based on movement of `window'.
 			tool_window.window.move_actions.force_extend (agent tool_window_moved (?, ?, tool_window))
 		end
-		
+
 feature {NONE} -- Implementation
 
 	dock_completed (a_widget: EV_WIDGET) is
@@ -628,7 +643,7 @@ feature {NONE} -- Implementation
 				end
 				clone_item_list.forth
 			end
-			
+
 			on_item_shown (inserted_explorer_bar_item)
 
 				-- Ensure that the close buttons is updated for the tool.			
@@ -638,7 +653,7 @@ feature {NONE} -- Implementation
 				enable_close_button_as_grayed (inserted_explorer_bar_item.widget)
 			end
 		end
-		
+
 	tool_window_moved (an_x_position, a_y_position: INTEGER; tool_window: EB_TOOL_WINDOW) is
 			-- tool window `tool_window' has moved to position `an_x_position', `y_position', so
 			-- store new psitional settings relevent to its development window.
@@ -648,13 +663,13 @@ feature {NONE} -- Implementation
 			tool_window.set_x_position (an_x_position - tool_window.development_window.window.screen_x)
 			tool_window.set_y_position (a_y_position - tool_window.development_window.window.screen_y)
 		end
-		
+
 	default_insert_height: INTEGER is 150
 			-- Default height new tools are inserted as.
-			
+
 	default_item_list_size: INTEGER is 6;
 			-- Default size of `item_list'.
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

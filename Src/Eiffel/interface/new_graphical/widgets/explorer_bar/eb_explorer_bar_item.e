@@ -402,6 +402,8 @@ feature -- Status Setting
 				if parent.linear_representation.has (widget) or parent.external_representation.has (widget) then
 					parent.remove (widget)
 				end
+				associated_command := Void
+				show_actions.wipe_out
 				parent.prune_item (Current)
 				parent := Void
 			end

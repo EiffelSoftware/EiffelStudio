@@ -84,6 +84,7 @@ feature -- Recycle
 			-- To be called when the object is no more used.
 		do
 			recent_projects_manager.remove_observer (Current)
+			destroy
 		end
 
 feature {NONE} -- Implementation

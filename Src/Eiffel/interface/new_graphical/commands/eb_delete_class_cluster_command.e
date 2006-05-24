@@ -28,6 +28,8 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -152,6 +154,14 @@ feature -- Basic operations
 					wd.show_modal_to_window (window.window)
 				end
 			end
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			window := Void
 		end
 
 feature {NONE} -- Implementation

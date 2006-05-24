@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
+		redefine
+			recycle
+		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
@@ -21,8 +24,6 @@ inherit
 		redefine
 			on_changed
 		end
-
-	EB_RECYCLABLE
 
 feature {NONE} -- initialization
 
@@ -58,9 +59,10 @@ feature -- recycle
 	recycle is
 			-- Recycle Current
 		do
-			if observer_started then
+			if observer_started and target /= Void then
 				editor.remove_history_observer (Current)
 			end
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
 		end
 
 feature {NONE} -- Implementation / Observer pattern

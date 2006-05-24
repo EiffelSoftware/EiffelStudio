@@ -25,12 +25,38 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_RECYCLABLE
+		undefine
+			default_create, is_equal, copy
+		end
+
 feature -- Access
 
 	parent_tree: EB_CLASSES_TREE is
 			-- Tree of clusters containing `Current'.
 		do
 			Result ?= Precursor
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		local
+			l_item: EB_CLASSES_TREE_ITEM
+		do
+			from
+				start
+			until
+				after
+			loop
+				l_item ?= item
+				if l_item /= Void then
+				 	l_item.recycle
+				end
+				forth
+			end
+			destroy
 		end
 
 indexing

@@ -35,14 +35,17 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	notify_consume (a_name, a_path, a_id, a_reason, a_version, a_cache: SYSTEM_STRING) is
+	notify_consume (a_message: NOTIFY_MESSAGE) is
 			-- Notifies user of a consume.
+		local
+			l_message: SYSTEM_STRING
 		do
 			show_ballon := True
-			notify_string := {SYSTEM_STRING}.format (
-				"Consuming assembly '{0}'.%N%NCLR Version: {2}%NReason: {5}%NAssembly:{3}%N%NID: {4}",
-				({NATIVE_ARRAY [SYSTEM_STRING]})[<<a_name, a_cache, a_version, a_path, a_id, a_reason>>]
-				)
+			l_message := a_message.message
+			if l_message.length > 255 then
+				l_message := {SYSTEM_STRING}.concat (l_message.substring (0, 251), ({SYSTEM_STRING})["..."])
+			end
+			notify_string := l_message
 		end
 
 	clear_notification is

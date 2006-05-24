@@ -20,7 +20,8 @@ inherit
 		end
 
 convert
-	as_string_32: {STRING_32}
+	as_string_32: {STRING_32},
+	to_cil: {SYSTEM_STRING}
 
 feature -- Access
 

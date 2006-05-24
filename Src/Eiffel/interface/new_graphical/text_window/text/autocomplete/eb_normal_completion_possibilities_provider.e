@@ -740,6 +740,7 @@ feature {NONE} -- Build completion possibilities
 					if type /= Void then
 						Result := type.associated_class
 					end
+					last_type := type
 				elseif is_create then
 					if found_class /= Void then
 							-- Looks like it was a creation expression since `found_class' was computed.
@@ -751,12 +752,11 @@ feature {NONE} -- Build completion possibilities
 							Result := type.associated_class
 						end
 					end
+					last_type := type
 				elseif is_static or is_parenthesized then
 					Result := found_class
 				end
-				last_type := type
 			end
-
 			if not recurse then
 				calculate_insertion (token)
 			end
@@ -915,10 +915,10 @@ feature {NONE} -- Build completion possibilities
 					end
 				end
 	            if token /= Void then
---	            	current_feature_as := feature_containing (token, a_cursor.line)
 	            	type := type_from (token, line)
 	            	if type /= Void then
 		            	found_class := type.associated_class
+		            	last_type := type
 		            end
 	            end
             end

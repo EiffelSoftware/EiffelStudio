@@ -663,6 +663,7 @@ feature -- Basic Operations
 					if type /= Void then
 						Result := type.associated_class
 					end
+					last_type := type
 				elseif is_create then
 					if found_class /= Void then
 							-- Looks like it was a creation expression since `found_class' was computed.
@@ -675,10 +676,10 @@ feature -- Basic Operations
 							Result := type.associated_class
 						end
 					end
+					last_type := type
 				elseif is_static or is_parenthesized then
 					Result := found_class
 				end
-				last_type := type
 			end
 
 			if not recurse then
@@ -1427,6 +1428,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 	            	current_feature_as := feature_containing (token, a_cursor.line)
 	            	type := type_from (token, a_cursor.line)
 	            	if type /= Void then
+	            		last_type := type
 		            	found_class := type.associated_class
 		            else
 		            	found_class := Void

@@ -308,8 +308,7 @@ feature -- Status
 		do
 			l_nb_attributes := nb_attributes
 			Result := l_nb_attributes.item (integer_16_level) +
-				l_nb_attributes.item (natural_16_level) +
-				l_nb_attributes.item (wide_char_level)
+				l_nb_attributes.item (natural_16_level)
 		end
 
 	nb_integer_32: INTEGER is
@@ -319,7 +318,8 @@ feature -- Status
 		do
 			l_nb_attributes := nb_attributes
 			Result := l_nb_attributes.item (integer_32_level) +
-				l_nb_attributes.item (natural_32_level)
+				l_nb_attributes.item (natural_32_level) +
+				l_nb_attributes.item (wide_char_level)
 		end;
 
 	nb_real_32: INTEGER is
@@ -610,7 +610,7 @@ feature -- Status
 				buffer.put_character (',');
 				buffer.put_integer (index - nb_ref)
 				buffer.put_character (')');
-			when Integer_16_level, natural_16_level, Wide_char_level then
+			when Integer_16_level, natural_16_level then
 				nb_ref := nb_reference
 				nb_char := nb_character
 				buffer.put_string ("+ @I16OFF(")
@@ -620,7 +620,7 @@ feature -- Status
 				buffer.put_character (',');
 				buffer.put_integer (index - nb_ref - nb_char)
 				buffer.put_character (')');
-			when Integer_32_level, natural_32_level then
+			when Integer_32_level, natural_32_level, wide_char_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
@@ -820,12 +820,12 @@ feature -- Status
 			when Character_level, Boolean_level, Integer_8_level, natural_8_level then
 				nb_ref := nb_reference;
 				Result := chroff (nb_ref + nb_expanded) + chracs (index - nb_ref);
-			when Integer_16_level, natural_16_level, Wide_char_level then
+			when Integer_16_level, natural_16_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				Result := i16off (nb_ref + nb_expanded, nb_char) +
 							i16acs (index - nb_ref - nb_char);
-			when Integer_32_level, natural_32_level then
+			when Integer_32_level, natural_32_level, wide_char_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16

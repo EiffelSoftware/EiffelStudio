@@ -797,6 +797,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_CHAR:
 				switch (offset) {
 					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_char; break;
@@ -806,6 +807,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_WCHAR:
 				switch (offset) {
 					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_wchar; break;
@@ -815,6 +817,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_UINT8:
 				switch (offset) {
 					case 8: break;
@@ -956,6 +959,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_CHAR:
 				switch (offset) {
 					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_char; break;
@@ -965,6 +969,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_WCHAR:
 				switch (offset) {
 					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_wchar; break;
@@ -974,6 +979,7 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+				break;
 			case SK_UINT8:
 				switch (offset) {
 					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_uint8; break;

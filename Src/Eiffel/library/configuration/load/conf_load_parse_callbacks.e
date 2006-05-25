@@ -899,39 +899,19 @@ feature {NONE} -- Implementation attribute processing
 
 			current_option := factory.new_option
 			if l_trace /= Void and then l_trace.is_boolean then
-				if l_trace.to_boolean then
-					current_option.enable_trace
-				else
-					current_option.disable_trace
-				end
+				current_option.set_trace (l_trace.to_boolean)
 			end
 			if l_profile /= Void and then l_profile.is_boolean then
-				if l_profile.to_boolean then
-					current_option.enable_profile
-				else
-					current_option.disable_profile
-				end
+				current_option.set_profile (l_profile.to_boolean)
 			end
 			if l_optimize /= Void and then l_optimize.is_boolean then
-				if l_optimize.to_boolean then
-					current_option.enable_optimize
-				else
-					current_option.disable_optimize
-				end
+				current_option.set_optimize (l_optimize.to_boolean)
 			end
 			if l_debug /= Void and then l_debug.is_boolean then
-				if l_debug.to_boolean then
-					current_option.enable_debug
-				else
-					current_option.disable_debug
-				end
+				current_option.set_debug (l_debug.to_boolean)
 			end
 			if l_warning /= Void and then l_warning.is_boolean then
-				if l_warning.to_boolean then
-					current_option.enable_warning
-				else
-					current_option.disable_warning
-				end
+				current_option.set_warning (l_warning.to_boolean)
 			end
 			if l_namespace /= Void then
 				current_option.set_namespace (l_namespace)

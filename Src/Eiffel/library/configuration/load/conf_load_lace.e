@@ -100,7 +100,7 @@ feature -- Basic operation
 				if current_options = Void then
 					create current_options
 				end
-				current_options.enable_warning
+				current_options.set_warning (True)
 				current_target.set_options (current_options)
 				current_options := Void
 
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation of data retrieval
 						end
 							-- because the old config had debugs enabled by default we enable them
 						if not current_options.is_debug_configured then
-							current_options.enable_debug
+							current_options.set_debug (True)
 						end
 
 
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation of data retrieval
 								l_name := "__unnamed_debug__"
 								current_options.add_debug (l_name, l_debug.enabled)
 							elseif l_name.is_case_insensitive_equal ("no") then
-								current_options.disable_debug
+								current_options.set_debug (False)
 							else
 								current_options.add_debug (l_name.as_lower, l_debug.enabled)
 							end
@@ -439,11 +439,7 @@ feature {NONE} -- Implementation of data retrieval
 						if l_value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Empty trace value."))
 						else
-							if l_value.is_yes then
-								current_options.enable_trace
-							else
-								current_options.disable_trace
-							end
+							current_options.set_trace (l_value.is_yes)
 						end
 					elseif l_option.is_optimize then
 						if current_options = Void then
@@ -452,11 +448,7 @@ feature {NONE} -- Implementation of data retrieval
 						if l_value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Empty optimize value."))
 						else
-							if l_value.is_yes then
-								current_options.enable_optimize
-							else
-								current_options.disable_optimize
-							end
+							current_options.set_optimize (l_value.is_yes)
 						end
 					elseif l_option.is_assertion then
 						if current_options = Void then
@@ -554,11 +546,7 @@ feature {NONE} -- Implementation of data retrieval
 							if current_options = Void then
 								create current_options
 							end
-							if l_value.is_yes then
-								current_options.enable_profile
-							else
-								current_options.disable_profile
-							end
+							current_options.set_profile (l_value.is_yes)
 						elseif l_name.is_equal ("trademark") then
 							if l_conf_vers = Void then
 								create l_conf_vers.make

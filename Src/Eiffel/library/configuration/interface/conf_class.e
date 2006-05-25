@@ -337,6 +337,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			l_cluster: CONF_CLUSTER
 			l_old_ren, l_ren: CONF_HASH_TABLE [STRING, STRING]
 		do
+			is_rebuilding := True
+
 			l_old_ren := group.renaming
 			l_ren := a_group.renaming
 			if
@@ -361,6 +363,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overrides := Void
 			old_overriden_by := overriden_by
 			overriden_by := Void
+
+			is_rebuilding := False
 		end
 
 
@@ -390,7 +394,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		end
 
 	set_name is
-			-- Compute and set `name' and `renamed_name'.
+			-- Compute and set (if we are not rebuilding) `name' and `renamed_name'.
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_name: like name
@@ -409,21 +413,22 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					l_name.to_upper
 					if name = Void or else not name.is_equal (l_name) then
 						is_renamed := True
-						l_old_name := renamed_name
-						name := l_name.as_upper
-						renamed_name := name.twin
-						l_renamings := group.renaming
-						if l_renamings /= Void and then l_renamings.has (name) then
-							renamed_name := l_renamings.item (name)
-						end
-						if group.name_prefix /= Void then
-							renamed_name.prepend (group.name_prefix)
+						if not is_rebuilding then
+							l_old_name := renamed_name
+							name := l_name.as_upper
+							renamed_name := name.twin
+							l_renamings := group.renaming
+							if l_renamings /= Void and then l_renamings.has (name) then
+								renamed_name := l_renamings.item (name)
+							end
+							if group.name_prefix /= Void then
+								renamed_name.prepend (group.name_prefix)
+							end
 						end
 					end
 				end
 			end
 		end
-
 
 	set_overriden_by (a_class: like class_type) is
 			-- `a_class' overrides `Current'.
@@ -457,6 +462,9 @@ feature -- Comparison
 		end
 
 feature {NONE} -- Implementation
+
+	is_rebuilding: BOOLEAN
+			-- Are we currently rebuilding an old class?
 
 	internal_hash_code: like hash_code
 			-- Computed `hash_code'.

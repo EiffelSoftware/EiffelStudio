@@ -715,9 +715,6 @@ feature{NONE} -- Implementation
 			-- Expand `a_row'.
 		require
 			a_row_attached: a_row /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
 		do
 			if a_row.is_expandable then
 				a_row.expand

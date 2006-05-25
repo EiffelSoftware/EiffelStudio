@@ -11,11 +11,11 @@ class
 
 feature -- Actions
 
-	keyword_not_found_actions: ACTION_SEQUENCE [ TUPLE [STRING]] is
+	keyword_not_found_actions: ACTION_SEQUENCE [TUPLE [STRING]] is
 			-- Actions to be performed when search for some keyword doesn't find any thing.
 		do
 			if keyword_not_found_actions_internal = Void then
-				create keyword_not_found_actions_internal.make
+				create keyword_not_found_actions_internal
 			end
 			Result := keyword_not_found_actions_internal
 		ensure

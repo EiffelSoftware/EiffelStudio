@@ -40,7 +40,7 @@ feature -- Setting
 			l_sort_agent: PROCEDURE [ANY, TUPLE]
 		do
 			if a_column_index > column_sort_info.upper then
-				column_sort_info.resize (1, a_column_index)
+				column_sort_info.conservative_resize (1, a_column_index)
 			end
 			column_sort_info.put (a_sort_info, a_column_index)
 			if not sort_agent_table.has (a_column_index) then
@@ -103,7 +103,6 @@ feature -- Sort
 			a_column_index_valid: a_column_index >= 1 and a_column_index <= grid_column_count
 		local
 			l_sort_info: EVS_GRID_SORTING_INFO
-			l_last_sorted_column: INTEGER
 		do
 				-- We only sort on column where sorting information is set.									
 			if button = 1 and then is_column_sortable (a_column_index) then

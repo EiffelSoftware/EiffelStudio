@@ -304,9 +304,6 @@ feature -- Display
 			l_index: INTEGER
 			l_rec: EV_RECTANGLE
 			l_max_height: INTEGER
-			l_last_line_y: INTEGER
-			l_ell_ready: BOOLEAN
-			l_x, l_y: INTEGER
 			l_last_available_line: INTEGER
 			l_need_ell: BOOLEAN
 			done: BOOLEAN

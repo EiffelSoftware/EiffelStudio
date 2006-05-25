@@ -357,8 +357,6 @@ feature{NONE} -- Implementation/Search
 			-- e.g. setup search conditions.
 		require
 			a_engine_attached: a_engine /= Void
-		local
-			l_search_engine: like search_engine
 		do
 			a_engine.enable_wrap_search
 			a_engine.set_keyword (current_keyword)

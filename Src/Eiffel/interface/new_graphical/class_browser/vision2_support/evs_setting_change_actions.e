@@ -38,14 +38,14 @@ feature -- Safe invocation
 			-- Only when this `lock_count' is 0, `try_call_setting_change_actions' will succeed.
 		do
 			if lock_count = 0 then
-				setting_change_actions.call ([])
+				setting_change_actions.call (Void)
 			end
 		end
 
 	force_call_setting_change_actions is
 			-- Force to call actions in `setting_change_actions'.
 		do
-			setting_change_actions.call ([])
+			setting_change_actions.call (Void)
 		end
 
 feature -- Access
@@ -63,7 +63,7 @@ feature -- Access
 			-- Usually attach redraw features in this to perform a tooltip redraw after setting
 		do
 			if setting_change_actions_internal = Void then
-				create setting_change_actions_internal.make
+				create setting_change_actions_internal
 			end
 			Result := setting_change_actions_internal
 		ensure

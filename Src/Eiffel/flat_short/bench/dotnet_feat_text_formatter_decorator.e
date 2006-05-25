@@ -252,104 +252,7 @@ feature -- Element change
 			put_signature
 			put_comments
 		end
-
-feature {NONE} -- Element Change
-
-	put_feature_qualification is
-			-- Put current feature qualification: frozen, deferred, infix or prefix.
-		require
-			text_formatter_not_void: text_formatter /= Void
-		do
-			if current_feature.is_frozen then
-					-- Check if feature is frozen.
-				text_formatter.process_keyword_text (Ti_frozen_keyword, Void)
-				text_formatter.add_space
-			end
-			if current_feature.is_deferred then
-					-- Check if feature is deferred.
-				text_formatter.process_keyword_text (Ti_deferred_keyword, Void)
-				text_formatter.add_space
-			end
-			if current_feature.is_infix then
-					-- Check if feature is infix.
-				text_formatter.process_keyword_text (Ti_infix_keyword, Void)
-				text_formatter.add_space
-			elseif current_feature.is_prefix then
-					-- Check if feature is prefix.
-				text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
-				text_formatter.add_space
-			end
-		end
-
-	put_signature is
-			-- Feature signature
-		local
-			l_c_arg: CONSUMED_ARGUMENT
-			l_c_class: CLASS_I
-			l_cnt,
-			l_char_count: INTEGER
-			l_ext: EXTERNAL_CLASS_C
-			l_type_a: CL_TYPE_A
-		do
-			if not (arguments = Void or arguments.is_empty) then
-				begin
-				set_separator (ti_comma)
-				set_space_between_tokens
-				text_formatter.add_space
-				text_formatter.process_symbol_text (ti_l_parenthesis)
---				abort_on_failure
-				l_char_count := name_of_current_feature.count + 8
-				from
-					l_cnt := 1
-				until
-					l_cnt > arguments.count
-				loop
-					l_c_arg := arguments.item (l_cnt)
-					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
-					if not use_dotnet_name_only and l_char_count > 60 then
-						text_formatter.add_new_line
-						text_formatter.add_indents (4)
-						l_char_count := 0
-					end
-					text_formatter.process_local_text (l_c_arg.eiffel_name)
-					text_formatter.add_char (':')
-					text_formatter.add_space
-
-					if class_i.is_compiled then
-						l_ext ?= class_i.compiled_class
-						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
-						l_type_a.format (Current)
-					else
-						text_formatter.add_class (l_c_class)
-					end
-
-					if l_cnt < arguments.count then
-						text_formatter.add_char (';')
-						text_formatter.add_space
-					end
-
-					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 +
-						l_c_class.name.count
-					l_ext := Void
-					l_cnt := l_cnt + 1
-				end
-				text_formatter.process_symbol_text (ti_r_parenthesis)
-			end
-				-- Feature return type, if any
-			if return_type /= Void then
-				text_formatter.add_char (':')
-				text_formatter.add_space
-				l_c_class := class_i.type_from_consumed_type (return_type)
-				if 	class_i.is_compiled then
-					l_ext ?= class_i.compiled_class
-					l_type_a := l_ext.type_from_consumed_type (return_type)
-					l_type_a.format (Current)
-				else
-					text_formatter.add_class (l_c_class)
-				end
-			end
-		end
-
+		
 	put_comments is
 			-- Feature comments from XML.
 		local
@@ -502,6 +405,103 @@ feature {NONE} -- Element Change
 				text_formatter.add_comment ("-- ")
 				text_formatter.add_comment ("Description unavailable.")
 				put_new_line
+			end
+		end
+
+feature {NONE} -- Element Change
+
+	put_feature_qualification is
+			-- Put current feature qualification: frozen, deferred, infix or prefix.
+		require
+			text_formatter_not_void: text_formatter /= Void
+		do
+			if current_feature.is_frozen then
+					-- Check if feature is frozen.
+				text_formatter.process_keyword_text (Ti_frozen_keyword, Void)
+				text_formatter.add_space
+			end
+			if current_feature.is_deferred then
+					-- Check if feature is deferred.
+				text_formatter.process_keyword_text (Ti_deferred_keyword, Void)
+				text_formatter.add_space
+			end
+			if current_feature.is_infix then
+					-- Check if feature is infix.
+				text_formatter.process_keyword_text (Ti_infix_keyword, Void)
+				text_formatter.add_space
+			elseif current_feature.is_prefix then
+					-- Check if feature is prefix.
+				text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
+				text_formatter.add_space
+			end
+		end
+
+	put_signature is
+			-- Feature signature
+		local
+			l_c_arg: CONSUMED_ARGUMENT
+			l_c_class: CLASS_I
+			l_cnt,
+			l_char_count: INTEGER
+			l_ext: EXTERNAL_CLASS_C
+			l_type_a: CL_TYPE_A
+		do
+			if not (arguments = Void or arguments.is_empty) then
+				begin
+				set_separator (ti_comma)
+				set_space_between_tokens
+				text_formatter.add_space
+				text_formatter.process_symbol_text (ti_l_parenthesis)
+--				abort_on_failure
+				l_char_count := name_of_current_feature.count + 8
+				from
+					l_cnt := 1
+				until
+					l_cnt > arguments.count
+				loop
+					l_c_arg := arguments.item (l_cnt)
+					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
+					if not use_dotnet_name_only and l_char_count > 60 then
+						text_formatter.add_new_line
+						text_formatter.add_indents (4)
+						l_char_count := 0
+					end
+					text_formatter.process_local_text (l_c_arg.eiffel_name)
+					text_formatter.add_char (':')
+					text_formatter.add_space
+
+					if class_i.is_compiled then
+						l_ext ?= class_i.compiled_class
+						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
+						l_type_a.format (Current)
+					else
+						text_formatter.add_class (l_c_class)
+					end
+
+					if l_cnt < arguments.count then
+						text_formatter.add_char (';')
+						text_formatter.add_space
+					end
+
+					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 +
+						l_c_class.name.count
+					l_ext := Void
+					l_cnt := l_cnt + 1
+				end
+				text_formatter.process_symbol_text (ti_r_parenthesis)
+			end
+				-- Feature return type, if any
+			if return_type /= Void then
+				text_formatter.add_char (':')
+				text_formatter.add_space
+				l_c_class := class_i.type_from_consumed_type (return_type)
+				if 	class_i.is_compiled then
+					l_ext ?= class_i.compiled_class
+					l_type_a := l_ext.type_from_consumed_type (return_type)
+					l_type_a.format (Current)
+				else
+					text_formatter.add_class (l_c_class)
+				end
 			end
 		end
 

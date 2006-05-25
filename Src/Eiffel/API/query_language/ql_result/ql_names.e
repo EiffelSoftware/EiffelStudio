@@ -89,6 +89,12 @@ feature -- Criterion names
 	ql_cri_path_in: STRING is "path_in"
 	ql_cri_path_is: STRING is "path_is"
 	ql_cri_text_contain: STRING is "text_contain"
+	ql_cri_top_indexing_has_tag: STRING is "top_indexing_has_tag"
+	ql_cri_bottom_indexing_has_tag: STRING is "bottom_indexing_has_tag"
+	ql_cri_indexing_has_tag: STRING is "indexing_has_tag"
+	ql_cri_top_indexing_contain: STRING is "top_indexing_contain"
+	ql_cri_bottom_indexing_contain: STRING is "bottom_indexing_contain"
+	ql_cri_indexing_contain: STRING is "indexing_contain"
 
 	ql_cri_has_argument: STRING is "has_argument"
 	ql_cri_has_assertion: STRING is "has_assertion"

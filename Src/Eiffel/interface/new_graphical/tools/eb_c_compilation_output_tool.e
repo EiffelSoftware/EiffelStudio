@@ -123,6 +123,7 @@ feature{NONE} -- Initialization
 			output_text.set_background_color (preferences.editor_data.normal_background_color)
 			output_text.set_font (preferences.editor_data.font)
 			output_text.disable_edit
+			message_label.set_foreground_color ((create{EV_STOCK_COLORS}).red)
 		end
 
 feature -- Basic operation
@@ -132,6 +133,7 @@ feature -- Basic operation
 		do
 			output_text.set_text ("")
 			on_text_change
+			message_label.set_text ("")
 		end
 
 	recycle is
@@ -391,7 +393,11 @@ feature{NONE}	-- Implementation
 						Result := selected_file_path /= Void
 					end
 				end
-				display_status_message ("")
+				if selected_file_path /= Void then
+					display_status_message ("")
+				else
+					display_status_message (interface_names.l_selected_file_not_found)
+				end
 			end
 		end
 

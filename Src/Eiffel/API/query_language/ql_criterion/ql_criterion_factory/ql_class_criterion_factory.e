@@ -57,8 +57,15 @@ feature{NONE} -- Initialization
 			criterion_table.put (agent new_indirect_supplier_criterion, query_language_names.ql_cri_indirect_supplier_is)
 			criterion_table.put (agent new_client_criterion, query_language_names.ql_cri_client_is)
 			criterion_table.put (agent new_indirect_client_criterion, query_language_names.ql_cri_indirect_client_is)
+
 			criterion_table.put (agent new_name_is_criterion, query_language_names.ql_cri_name_is)
 			criterion_table.put (agent new_text_contain_criterion, query_language_names.ql_cri_text_contain)
+			criterion_table.put (agent new_top_indexing_contain_criterion, query_language_names.ql_cri_top_indexing_contain)
+			criterion_table.put (agent new_bottom_indexing_contain_criterion, query_language_names.ql_cri_bottom_indexing_contain)
+			criterion_table.put (agent new_indexing_contain_criterion, query_language_names.ql_cri_indexing_contain)
+			criterion_table.put (agent new_top_indexing_has_tag_criterion, query_language_names.ql_cri_top_indexing_has_tag)
+			criterion_table.put (agent new_bottom_indexing_has_tag_criterion, query_language_names.ql_cri_bottom_indexing_has_tag)
+			criterion_table.put (agent new_indexing_has_tag_criterion, query_language_names.ql_cri_indexing_has_tag)
 		end
 
 feature{NONE} -- Implementation
@@ -197,6 +204,66 @@ feature{NONE} -- New criterion
 		end
 
 	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_NAME_IS_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_top_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_TOP_INDEXING_HAS_TAG_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_bottom_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_BOTTOM_INDEXING_HAS_TAG_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_INDEXING_HAS_TAG_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_top_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_TOP_INDEXING_CONTAIN_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_bottom_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_BOTTOM_INDEXING_CONTAIN_CRI is
+			-- New {QL_CLASS_NAME_IS_CRI} criterion.
+		require
+			a_name_attached: a_name /= Void
+		do
+			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_CLASS_INDEXING_CONTAIN_CRI is
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void

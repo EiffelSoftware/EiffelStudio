@@ -59,9 +59,8 @@ feature -- New line
 		do
 			if is_multiline_mode then
 				lines.extend (last_line.twin)
-			else
-				create last_line.make_empty_line
 			end
+			create last_line.make_empty_line
 		end
 
 feature -- Setting

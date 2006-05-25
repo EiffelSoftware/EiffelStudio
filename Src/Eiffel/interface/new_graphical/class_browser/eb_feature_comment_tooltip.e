@@ -64,6 +64,7 @@ feature -- Access
 			l_consumed_type: CONSUMED_TYPE
 			l_ext_class: EXTERNAL_CLASS_I
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
+			l_line: LIST [EDITOR_TOKEN]
 		do
 			if internal_tokens = Void then
 				create internal_tokens.make (0)
@@ -84,6 +85,8 @@ feature -- Access
 					end
 					token_writer.enable_multiline
 					create l_feature_text_formatter.make (feature_item, l_consumed_type, token_writer)
+					l_feature_text_formatter.prepare_for_feature (l_feature_text_formatter.current_feature)
+					l_feature_text_formatter.put_comments
 					token_writer.new_line
 					l_lines := token_writer.lines
 					from
@@ -91,7 +94,27 @@ feature -- Access
 					until
 						l_lines.after
 					loop
-						internal_tokens.fill (l_lines.item.content)
+						l_line := l_lines.item.content
+						from
+							l_line.start
+							if not l_line.after and l_line.item.is_tabulation then
+								l_line.remove
+							end
+						until
+							l_line.after
+						loop
+							if l_line.index = 1 and then l_line.item.is_text then
+								if l_line.item.image.substring (1, 2).is_equal (once "--") then
+									l_line.item.image.keep_tail (l_line.item.image.count - 2)
+								end
+							end
+							l_line.item.update_width
+							internal_tokens.extend (l_line.item)
+							l_line.forth
+						end
+						if l_lines.item /= l_lines.last and l_line.count > 0 then
+							internal_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
+						end
 						l_lines.forth
 					end
 					token_writer.wipe_out_lines

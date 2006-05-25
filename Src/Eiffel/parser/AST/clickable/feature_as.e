@@ -143,6 +143,8 @@ feature -- Roundtrip/Comment
 				check first_token (a_list).index <= l_end_index end
 				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index))
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Roundtrip/Trailing break

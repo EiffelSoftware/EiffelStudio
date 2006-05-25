@@ -660,6 +660,8 @@ feature -- Comment extraction
 				end
 				i := i + 1
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status reporting

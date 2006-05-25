@@ -201,7 +201,7 @@ cluster
 
 	all configuration:		"$EIFFEL_SRC/Eiffel/library/configuration"
 		exclude
-			".svn";
+			".svn"; "dotnet";
 		end
 
 	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"

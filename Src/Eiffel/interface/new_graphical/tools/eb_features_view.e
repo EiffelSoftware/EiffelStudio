@@ -480,7 +480,6 @@ feature {NONE} -- Implementation
 			-- Display all controls of the window.
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
-			f: EV_FRAME
 		do
 			create widget
 			create formatter_container

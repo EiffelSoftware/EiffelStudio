@@ -198,16 +198,7 @@ cluster
 
 	all configuration:		"$EIFFEL_SRC\Eiffel\library\configuration"
 		exclude
-			".svn";
-		visible
-			CONF_PRINT_VISITOR
-				end
-			CONF_BUILD_VISITOR
-				end
-			CONF_RECOMPUTE_OPTIONS
-				end
-			CONF_LOAD_LACE
-				end
+			".svn"; "dotnet";
 		end
 
 	all process:		"$EIFFEL_SRC\library\process"

@@ -132,43 +132,19 @@ feature -- Actions
 	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `collapse_button' is pressed
 		do
-			Result := agent on_collapse_selected_levels_key_pressed
+			Result := agent on_collapse_one_level
 		end
 
 	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `expand_button' is pressed
 		do
-			Result := agent on_expand_selected_levels_key_pressed
+			Result := agent on_expand_one_level
 		end
 
 	on_enter_pressed is
 			-- Action to be performed when enter key is pressed
 		do
-			on_expand_selected_levels_key_pressed
-		end
-
-	on_ctrl_c_pressed is
-			-- Action to be performed when Ctrl+C is pressed
-		do
-			ev_application.clipboard.set_text (selected_text)
-		end
-
-	on_ctrl_a_pressed is
-			-- Action to be performed when Ctrl+A is pressed
-		do
-			grid.select_all_rows
-		end
-
-	on_collapse_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for collapse selected levels is pressed.
-		do
-			do_all_in_items (grid.selected_items, agent collapse_item)
-		end
-
-	on_expand_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for expand selected levels is pressed.
-		do
-			do_all_in_items (grid.selected_items, agent expand_item)
+			on_expand_all_level
 		end
 
 	on_key_pressed (a_key: EV_KEY) is
@@ -179,6 +155,87 @@ feature -- Actions
 			l_processed: BOOLEAN
 		do
 			l_processed := on_predefined_key_pressed (a_key)
+			if not l_processed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+					do_all_in_items (grid.selected_items, agent go_to_parent)
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+					do_all_in_items (grid.selected_items, agent go_to_first_child)
+				end
+			end
+		end
+
+	go_to_parent (a_item: EV_GRID_ITEM) is
+			-- Go to parent of `a_item', if any.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.parent /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_grid_item: EV_GRID_ITEM
+		do
+			if a_item.column.index = 1 then
+				l_row := a_item.row
+				if l_row.parent_row /= Void then
+					l_row.disable_select
+					l_grid_item := l_row.parent_row.item (1)
+					l_grid_item.row.ensure_visible
+					l_grid_item.enable_select
+				end
+			end
+		end
+
+	go_to_first_child (a_item: EV_GRID_ITEM) is
+			-- Go to first child of `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_parented: a_item.parent /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
+		do
+			l_row := a_item.row
+			if l_row.is_expandable then
+				if not l_row.is_expanded then
+					l_row.expand
+				else
+					if l_row.subrow_count > 0 then
+						l_row.disable_select
+						l_grid_item ?= l_row.subrow (1).item (1)
+						check l_grid_item /= Void end
+						ensure_visible (l_grid_item, True)
+					end
+
+				end
+			end
+		end
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
+
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
+
+	on_notify is
+			-- Action to be performed when `update' is called.
+		do
 		end
 
 feature -- Access

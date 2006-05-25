@@ -12,14 +12,14 @@ deferred class
 inherit
 	EB_GRID_EDITOR_TOKEN_ITEM
 
-	EVS_GRID_SEARCHABLE_ITEM
+	EB_SHARED_MANAGERS
 		undefine
 			copy,
 			is_equal,
 			default_create
 		end
-
-	EB_SHARED_MANAGERS
+		
+	EVS_GRID_SEARCHABLE_ITEM
 		undefine
 			copy,
 			is_equal,

@@ -144,6 +144,7 @@ feature -- View update
 		do
 			data ?= a_data
 			is_up_to_date := False
+			on_notify
 			update_view
 		end
 
@@ -321,6 +322,11 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_notify is
+			-- Action to be performed when `update' is called.
+		deferred
+		end
+
 feature -- Recycle
 
 	recycle is
@@ -372,25 +378,23 @@ feature -- Recycle
 		require
 			a_key_attached: a_key /= Void
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_left then
-				if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
-					on_collapse_selected_levels_key_pressed
-					Result := True
-				end
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
-				if is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
-					on_expand_selected_levels_key_pressed
-					Result := True
-				end
+			Result := True
+			if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
+				on_collapse_one_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
+				on_expand_one_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("collapse_all_levels")) then
+				on_collapse_all_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_all_levels")) then
+				on_expand_all_level
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				on_enter_pressed
-				Result := True
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
 				on_ctrl_c_pressed
-				Result := True
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
 				on_ctrl_a_pressed
-				Result := True
+			else
+				Result := False
 			end
 		end
 
@@ -401,21 +405,33 @@ feature -- Recycle
 
 	on_ctrl_c_pressed is
 			-- Action to be performed when Ctrl+C is pressed
-		deferred
+		do
+			ev_application.clipboard.set_text (selected_text)
 		end
 
 	on_ctrl_a_pressed is
 			-- Action to be performed when Ctrl+A is pressed
+		do
+			grid.select_all_rows
+		end
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
 		deferred
 		end
 
-	on_collapse_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for collapse selected levels is pressed.
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
 		deferred
 		end
 
-	on_expand_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for expand selected levels is pressed.
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		deferred
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
 		deferred
 		end
 

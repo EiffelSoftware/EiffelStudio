@@ -46,41 +46,6 @@ feature -- Access
 
 feature -- Actions
 
-	on_row_expanded is
-			-- Action to be performed when a row is expanded
-		local
-			l_rows: LIST [EV_GRID_ROW]
-		do
-			l_rows := grid.selected_rows
-			if l_rows.is_empty and then grid.row_count > 0 then
-				l_rows.extend (grid.row (1))
-			end
-			if not l_rows.is_empty then
-				l_rows.do_all (agent expand_row)
-			end
-		end
-
-	on_row_collapsed is
-			-- Action to be performed when a row is collapsed
-		local
-			l_rows: LIST [EV_GRID_ROW]
-		do
-			if is_tree_node_highlight_enabled then
-				l_rows := grid.selected_rows
-				if l_rows.is_empty and then grid.row_count > 0 then
-					l_rows.extend (grid.row (1))
-				end
-				if not l_rows.is_empty then
-					if processed_rows = Void then
-						create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
-					else
-						processed_rows.wipe_out
-					end
-					l_rows.do_all (agent collapse_row)
-				end
-			end
-		end
-
 	on_grid_focus_in is
 			-- Action to be performed when `grid' gets focus
 		local
@@ -226,43 +191,52 @@ feature -- Actions
 	on_enter_pressed is
 			-- Action to be performed when enter key is pressed
 		do
-			do_all_in_rows (grid.selected_rows, agent expand_row)
-		end
-
-	on_ctrl_c_pressed is
-			-- Action to be performed when Ctrl+C is pressed
-		do
-			ev_application.clipboard.set_text (selected_text)
-		end
-
-	on_ctrl_a_pressed is
-			-- Action to be performed when Ctrl+A is pressed
-		do
-			grid.select_all_rows
-		end
-
-	on_collapse_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for collapse selected levels is pressed.
-		do
-			on_row_collapsed
-		end
-
-	on_expand_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for expand selected levels is pressed.
-		do
-			on_row_expanded
+			on_expand_all_level
 		end
 
 	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `collapse_button' is pressed
 		do
-			Result := agent on_row_collapsed
+			Result := agent on_collapse_one_level
 		end
 
 	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `expand_button' is pressed
 		do
-			Result := agent on_row_expanded
+			Result := agent on_expand_one_level
+		end
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
+		do
+			processed_rows.wipe_out
+			do_all_in_rows (selected_rows, agent expand_row_recursively)
+		end
+
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
+		do
+			processed_rows.wipe_out
+			do_all_in_rows (selected_rows, agent collapse_row_recursively)
+		end
+
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		do
+			processed_rows.wipe_out
+			do_all_in_rows (selected_rows, agent expand_row)
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
+		do
+			processed_rows.wipe_out
+			do_all_in_rows (selected_rows, agent collapse_row)
+		end
+
+	on_notify is
+			-- Action to be performed when `update' is called.
+		do
 		end
 
 feature -- Notification
@@ -541,58 +515,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	expand_row (a_row: EV_GRID_ROW) is
-			-- Expand `a_row' recursively.
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
-		do
-			if a_row.is_expandable then
-				a_row.expand
-				l_subrow_cnt := a_row.subrow_count
-				if l_subrow_cnt > 0 then
-					from
-						l_subrow_index := 1
-					until
-						l_subrow_index > l_subrow_cnt
-					loop
-						expand_row (a_row.subrow (l_subrow_index))
-						l_subrow_index := l_subrow_index + 1
-					end
-				end
-			end
-		end
-
-	collapse_row (a_row: EV_GRID_ROW) is
-			-- Collapse subrows of `a_row'.
-			-- But don't collapse `a_row', and make sure direct subrows of `a_row' is visible.
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
-		do
-			l_subrow_cnt := a_row.subrow_count
-			if l_subrow_cnt > 0 then
-				from
-					l_subrow_index := 1
-				until
-					l_subrow_index > l_subrow_cnt
-				loop
-					if a_row.subrow (l_subrow_index).is_expandable then
-						a_row.subrow (l_subrow_index).collapse
-						processed_rows.extend (a_row.subrow (l_subrow_index))
-					end
-					l_subrow_index := l_subrow_index + 1
-				end
-			end
-			if a_row.is_expandable and then not processed_rows.has (a_row) then
-				a_row.expand
-			end
-		end
-
 	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
 			-- Given `a_row' which represents a processed class (like "ARRAYED_LIST..."),
 			-- return the first occurrence of the same class in `grid'.
@@ -722,17 +644,124 @@ feature{NONE} -- Implementation
 		local
 			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
 		do
-			if a_row.subrow_count > 0 then
-				l_grid_item ?= a_row.subrow (1).item (1)
-				a_row.disable_select
-				l_grid_item ?= a_row.subrow (1).item (1)
-				check l_grid_item /= Void end
-				ensure_visible (l_grid_item, True)
+			if a_row.is_expandable then
+				if not a_row.is_expanded then
+					expand_row (a_row)
+				else
+					if a_row.subrow_count > 0 then
+						a_row.disable_select
+						l_grid_item ?= a_row.subrow (1).item (1)
+						check l_grid_item /= Void end
+						ensure_visible (l_grid_item, True)
+					end
+				end
 			end
 		end
 
 	processed_rows: LIST [EV_GRID_ROW]
 			-- Rows that have been processed during some expansion or collapsion
+
+	collapse_row_recursively (a_row: EV_GRID_ROW) is
+			-- Collapse `a_row' recursively.
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+		local
+			l_subrow_cnt: INTEGER
+			l_subrow_index: INTEGER
+		do
+			if a_row.is_expandable then
+				a_row.collapse
+			end
+			l_subrow_cnt := a_row.subrow_count
+			if l_subrow_cnt > 0 then
+				from
+					l_subrow_index := 1
+				until
+					l_subrow_index > l_subrow_cnt
+				loop
+					collapse_row_recursively (a_row.subrow (l_subrow_index))
+					l_subrow_index := l_subrow_index + 1
+				end
+			end
+		end
+
+	expand_row_recursively (a_row: EV_GRID_ROW) is
+			-- Expand `a_row' recursively.
+		require
+			a_row_attached: a_row /= Void
+			a_row_is_parented: a_row.parent /= Void
+		local
+			l_subrow_cnt: INTEGER
+			l_subrow_index: INTEGER
+		do
+			if a_row.is_expandable then
+				a_row.expand
+			end
+			l_subrow_cnt := a_row.subrow_count
+			if l_subrow_cnt > 0 then
+				from
+					l_subrow_index := 1
+				until
+					l_subrow_index > l_subrow_cnt
+				loop
+					expand_row_recursively (a_row.subrow (l_subrow_index))
+					l_subrow_index := l_subrow_index + 1
+				end
+			end
+		end
+
+	expand_row (a_row: EV_GRID_ROW) is
+			-- Expand `a_row'.
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_subrow_cnt: INTEGER
+			l_subrow_index: INTEGER
+		do
+			if a_row.is_expandable then
+				a_row.expand
+			end
+		end
+
+	collapse_row (a_row: EV_GRID_ROW) is
+			-- Collapse subrows of `a_row'.
+			-- But don't collapse `a_row', and make sure direct subrows of `a_row' is visible.
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_subrow_cnt: INTEGER
+			l_subrow_index: INTEGER
+		do
+			l_subrow_cnt := a_row.subrow_count
+			if l_subrow_cnt > 0 then
+				from
+					l_subrow_index := 1
+				until
+					l_subrow_index > l_subrow_cnt
+				loop
+					if a_row.subrow (l_subrow_index).is_expandable then
+						a_row.subrow (l_subrow_index).collapse
+						processed_rows.extend (a_row.subrow (l_subrow_index))
+					end
+					l_subrow_index := l_subrow_index + 1
+				end
+			end
+			if a_row.is_expandable and then not processed_rows.has (a_row) then
+				a_row.expand
+			end
+		end
+
+	selected_rows: LIST [EV_GRID_ROW] is
+			-- Selected rows in `grid'.
+			-- If empty, put the first row in `grid' in result.
+		do
+			Result := grid.selected_rows
+			if Result.is_empty and then grid.row_count > 0 then
+				create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (1)
+				Result.extend (grid.row (1))
+			end
+		end
 
 feature{NONE} -- Initialization
 
@@ -758,6 +787,7 @@ feature{NONE} -- Initialization
 			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_multiple_row_selection
+			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
 		end
 
 	build_sortable_and_searchable is

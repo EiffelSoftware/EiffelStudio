@@ -702,6 +702,7 @@ feature -- Label texts
 	l_version_from_message: STRING is " (version from)"
 	l_expand_layer: STRING is "Expand selected level(s)"
 	l_collapse_layer: STRING is "Collapse selected level(s)"
+	l_collapse_all_layers: STRING is "Collapse all selected level(s)"
 	l_searching_selected_file: STRING is "Searching selected file..."
 	l_manage_external_commands: STRING is "Add, remove or edit external commands"
 	l_add_scope: STRING is "Add scope"
@@ -710,6 +711,7 @@ feature -- Label texts
 	l_callees: STRING is "callees"
 	l_assignees: STRING is "assignees"
 	l_created: STRING is "creators"
+	l_filter: STRING is "Filter"
 
 feature -- Stone names
 

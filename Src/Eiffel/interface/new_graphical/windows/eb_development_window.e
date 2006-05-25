@@ -3101,6 +3101,8 @@ feature {NONE} -- Implementation
 					end
 					if not managed_main_formatters.first.selected then
 						editor_tool.text_area.set_read_only (true)
+					elseif new_class_stone /= Void and then new_class_stone.class_i.is_read_only then
+						editor_tool.text_area.set_read_only (true)
 					end
 				else
 						-- not a class text : cannot be edited

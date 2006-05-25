@@ -97,8 +97,6 @@ feature {NONE} -- Externals
 
 	last_created_thread: POINTER is
 			-- Returns a pointer to the thread-id of the last created thread.
-		obsolete
-			"Do not use anymore"
 		external
 			"C | %"eif_threads.h%""
 		alias

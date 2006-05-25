@@ -22,7 +22,9 @@ inherit
 			on_key_event,
 			default_key_processing_blocked,
 			on_focus_changed,
-			needs_event_box
+			needs_event_box,
+			background_color_pointer,
+			foreground_color_pointer
 		redefine
 			interface,
 			initialize,

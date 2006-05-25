@@ -197,9 +197,7 @@ feature {NONE} -- Constants
 	message_variable: SYSTEM_STRING is "MDC_BALLOON_MSG"
 			-- Notify message environment variable
 
-	default_message: SYSTEM_STRING is "Consuming assembly
-	'${assembly:name}, Version=${assembly:version}'.%N%NCLR Version:
-	${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
+	default_message: SYSTEM_STRING is "Consuming assembly '${assembly:name}, Version=${assembly:version}'.%N%NCLR Version: ${module:clr}%NReason: ${consume:reason}%NAssembly:${assembly:path}%N%NID: ${consume:cache_id}"
 			-- Default notify message
 
 feature {NONE} -- Implementation

@@ -405,13 +405,14 @@ feature {NONE} -- Implementation
 					l_done := l_condition.build.is_empty and l_condition.multithreaded = Void and l_condition.custom.is_empty
 				end
 				if not l_done then
-					append_text_indent ("<condition>%N")
-					indent := indent + 1
 					from
 						a_conditions.start
 					until
 						a_conditions.after
 					loop
+						append_text_indent ("<condition>%N")
+						indent := indent + 1
+
 						l_condition := a_conditions.item
 						if l_condition.platform /= Void then
 							if l_condition.platform.invert then
@@ -429,7 +430,7 @@ feature {NONE} -- Implementation
 								l_platforms.forth
 							end
 							text.remove_tail (1)
-							append_text ("%"/>")
+							append_text ("%"/>%N")
 						end
 
 						if l_condition.build /= Void then
@@ -448,7 +449,7 @@ feature {NONE} -- Implementation
 								l_builds.forth
 							end
 							text.remove_tail (1)
-							append_text ("%"/>")
+							append_text ("%"/>%N")
 						end
 
 						if l_condition.multithreaded /= Void then
@@ -495,10 +496,10 @@ feature {NONE} -- Implementation
 							l_custs.forth
 						end
 
+						indent := indent - 1
+						append_text_indent ("</condition>%N")
 						a_conditions.forth
 					end
-					indent := indent - 1
-					append_text_indent ("</condition>%N")
 				end
 			end
 		ensure
@@ -641,7 +642,7 @@ feature {NONE} -- Implementation
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
 			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
 		do
-			if an_options /= Void then
+			if an_options /= Void and then not an_options.is_empty then
 				if a_class /= Void and then not a_class.is_empty then
 					append_text_indent ("<class_option class=%""+a_class+"%"")
 				else

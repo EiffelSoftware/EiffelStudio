@@ -464,6 +464,7 @@ feature {NONE} -- Class type anchor
 
 invariant
 	guid_set: classes_set implies guid /= Void and then not guid.is_empty
+	consumed_path_set: classes_set implies consumed_path /= Void and then not consumed_path.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

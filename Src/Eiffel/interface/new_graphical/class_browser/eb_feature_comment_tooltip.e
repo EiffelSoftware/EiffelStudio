@@ -21,6 +21,8 @@ inherit
 
 	SHARED_SERVER
 
+	EB_SHARED_FORMAT_TABLES
+
 create
 	make
 
@@ -57,35 +59,72 @@ feature -- Access
 			l_comments: EIFFEL_COMMENTS
 			l_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_comment: STRING
+			l_feature_text_formatter: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR
+			l_classi: CLASS_I
+			l_consumed_type: CONSUMED_TYPE
+			l_ext_class: EXTERNAL_CLASS_I
+			l_lines: LIST [EIFFEL_EDITOR_LINE]
 		do
 			if internal_tokens = Void then
 				create internal_tokens.make (0)
-				token_writer.new_line
-				l_comments := feature_item.ast.comment (match_list_server.item (feature_item.written_class.class_id))
-				create l_tokens.make
-				if l_comments.count > 0 then
-					token_writer.set_comment_context_class (feature_item.associated_class)
-					from
-						l_comments.start
-					until
-						l_comments.after
-					loop
-						token_writer.new_line
-						l_comment := l_comments.item
-						l_comment.left_adjust
-						token_writer.add_comment_text (l_comment.out)
-						l_tokens.fill (token_writer.last_line.content)
-						l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
-						l_comments.forth
+				if feature_item.is_il_external then
+						-- For .NET external features
+					l_classi := feature_item.associated_class.lace_class
+					if consumed_types.has (l_classi.name) then
+						l_consumed_type := consumed_types.item (l_classi.name)
+					else
+						l_ext_class ?= l_classi
+						check
+							l_ext_class_not_void: l_ext_class /= Void
+						end
+						l_consumed_type := l_ext_class.external_consumed_type
+						if l_consumed_type /= Void then
+							consumed_types.put (l_consumed_type, l_classi.name)
+						end
 					end
+					token_writer.enable_multiline
+					create l_feature_text_formatter.make (feature_item, l_consumed_type, token_writer)
+					token_writer.new_line
+					l_lines := token_writer.lines
 					from
-						l_tokens.start
+						l_lines.start
 					until
-						l_tokens.after
+						l_lines.after
 					loop
-						l_tokens.item.update_width
-						internal_tokens.extend (l_tokens.item)
-						l_tokens.forth
+						internal_tokens.fill (l_lines.item.content)
+						l_lines.forth
+					end
+					token_writer.wipe_out_lines
+					token_writer.disable_multiline
+				else
+						-- For normal features
+					token_writer.new_line
+					l_comments := feature_item.ast.comment (match_list_server.item (feature_item.written_class.class_id))
+					create l_tokens.make
+					if l_comments.count > 0 then
+						token_writer.set_comment_context_class (feature_item.associated_class)
+						from
+							l_comments.start
+						until
+							l_comments.after
+						loop
+							token_writer.new_line
+							l_comment := l_comments.item
+							l_comment.left_adjust
+							token_writer.add_comment_text (l_comment.out)
+							l_tokens.fill (token_writer.last_line.content)
+							l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
+							l_comments.forth
+						end
+						from
+							l_tokens.start
+						until
+							l_tokens.after
+						loop
+							l_tokens.item.update_width
+							internal_tokens.extend (l_tokens.item)
+							l_tokens.forth
+						end
 					end
 				end
 			end

@@ -143,55 +143,92 @@ feature -- Actions
 	on_enter_pressed is
 			-- Action to be performed when enter key is pressed
 		do
-			do_all_in_items (grid.selected_items, agent expand_item)
-		end
-
-	on_ctrl_c_pressed is
-			-- Action to be performed when Ctrl+C is pressed
-		do
-			ev_application.clipboard.set_text (selected_text)
-		end
-
-	on_ctrl_a_pressed is
-			-- Action to be performed when Ctrl+A is pressed
-		do
-			grid.select_all_rows
-		end
-
-	on_collapse_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for collapse selected levels is pressed.
-		do
-			collapse_selected
-		end
-
-	on_expand_selected_levels_key_pressed is
-			-- Actions to be performed when accelerator for expand selected levels is pressed.
-		do
-			expand_selected
+			on_expand_all_level
 		end
 
 	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `collapse_button' is pressed
 		do
-			Result := agent on_collapse_button_pressed
+			Result := agent on_collapse_one_level
 		end
 
 	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `expand_button' is pressed
 		do
-			Result := agent on_expand_button_pressed
+			Result := agent on_expand_one_level
 		end
 
-	on_expand_button_pressed is
-			-- Action to be performed when `expand_button' is pressed.
+	on_key_pressed_in_feature_name_list (a_key: EV_KEY) is
+			-- Action to be performed when key pressed in `feature_name_list'.
+		local
+			l_str: STRING_32
+			l_feature_list: like feature_name_list
+			l_exists: BOOLEAN
 		do
-			expand_selected
+			l_feature_list := feature_name_list
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				l_str := l_feature_list.text
+				l_str.left_adjust
+				l_str.right_adjust
+				if not l_str.is_empty then
+					from
+						l_feature_list.start
+					until
+						l_feature_list.after or l_exists
+					loop
+						l_exists := l_feature_list.item.text.is_case_insensitive_equal (l_str)
+						l_feature_list.forth
+					end
+					if not l_exists then
+						if l_feature_list.count = 10 then
+							l_feature_list.finish
+							l_feature_list.remove
+						end
+						feature_name_list.put_front (create{EV_LIST_ITEM}.make_with_text (l_str))
+					end
+					is_up_to_date := False
+					update_view
+				end
+			end
 		end
 
-	on_collapse_button_pressed is
-			-- Action to be performed when `collapse_button' is pressed.
+	on_focus_in_feature_name_list is
+			-- Action to be performed when `feature_name_list' gets focus
 		do
-			collapse_selected
+			if not feature_name_list.text.is_empty then
+				feature_name_list.select_all
+			end
+		end
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
+
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent expand_item)
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
+		do
+			do_all_in_items (grid.selected_items, agent collapse_item)
+		end
+
+	on_notify is
+			-- Action to be performed when `update' is called.
+		do
+			feature_name_list.set_text ("")
+			cancel_delayed_update_matches
 		end
 
 feature{NONE} -- Sorting
@@ -380,6 +417,7 @@ feature -- Access
 		local
 			l_tool_bar: EV_TOOL_BAR
 			l_tool_bar2: EV_TOOL_BAR
+			l_label: EV_LABEL
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
@@ -396,11 +434,32 @@ feature -- Access
 				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
 				l_tool_bar2.extend (expand_button)
 				l_tool_bar2.extend (collapse_button)
+				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
 				control_tool_bar.extend (l_tool_bar2)
 				control_tool_bar.disable_item_expand (l_tool_bar2)
+				create l_label.make_with_text (interface_names.l_filter)
+				control_tool_bar.extend (l_label)
+				control_tool_bar.disable_item_expand (l_label)
+				feature_name_list.set_minimum_width (150)
+				control_tool_bar.extend (feature_name_list)
+				control_tool_bar.disable_item_expand (feature_name_list)
 			end
 			Result := control_tool_bar
 		ensure then
+			result_attached: Result /= Void
+		end
+
+	feature_name_list: EV_COMBO_BOX is
+			-- List to contain feature name filter
+		do
+			if feature_name_list_internal = Void then
+				create feature_name_list_internal
+				feature_name_list_internal.change_actions.extend (agent request_update_matches)
+				feature_name_list_internal.key_press_actions.extend (agent on_key_pressed_in_feature_name_list)
+				feature_name_list_internal.focus_in_actions.extend (agent on_focus_in_feature_name_list)
+			end
+			Result := feature_name_list_internal
+		ensure
 			result_attached: Result /= Void
 		end
 
@@ -551,6 +610,10 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
+			create filter_engine.make
+			filter_engine.set_empty_allowed (False)
+			filter_engine.set_multiline (False)
+			filter_engine.set_caseless (True)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			show_feature_from_any_checkbox.select_actions.extend (agent on_show_feature_from_any_changed)
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
@@ -632,6 +695,9 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation			
 
+	filter_engine: RX_PCRE_REGULAR_EXPRESSION
+			-- Filter engine used to filter features whose name is given by `feature_name_list'
+
 	fill_rows is
 			-- Fill `rows' using information from `data'.
 		local
@@ -640,6 +706,10 @@ feature{NONE} -- Implementation
 			l_feature: QL_FEATURE
 			l_any_class_id: INTEGER
 			l_feature_from_any_displayed: BOOLEAN
+			l_filter_used: BOOLEAN
+			l_filter_name: STRING
+			l_filter: like filter_engine
+			l_ok: BOOLEAN
 		do
 			l_feature_list := data
 			if rows = Void then
@@ -649,6 +719,14 @@ feature{NONE} -- Implementation
 			end
 			l_any_class_id := system.any_id
 			l_feature_from_any_displayed := show_feature_from_any_checkbox.is_selected
+			l_filter_name := feature_name_list.text
+			l_filter_name.left_adjust
+			l_filter_name.right_adjust
+			if not l_filter_name.is_empty then
+				l_filter_used := True
+				l_filter := filter_engine
+				l_filter.compile (l_filter_name)
+			end
 			from
 				l_feature_list.start
 			until
@@ -656,11 +734,22 @@ feature{NONE} -- Implementation
 			loop
 				l_feature := l_feature_list.item
 				if l_feature_from_any_displayed or else (l_feature.written_class.class_id /= l_any_class_id) then
-					create l_row.make (l_feature_list.item, Current)
-					l_row.set_is_expanded (True)
-					rows.force_last (l_row)
+					if l_filter_used then
+						l_filter.match (l_feature.name)
+						if l_filter.has_matched then
+							l_ok := True
+						end
+					else
+						l_ok := True
+					end
+					if l_ok then
+						create l_row.make (l_feature_list.item, Current)
+						l_row.set_is_expanded (True)
+						rows.force_last (l_row)
+					end
 				end
 				l_feature_list.forth
+				l_ok := False
 			end
 		end
 
@@ -760,16 +849,44 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	expand_selected is
-			-- Expanded selected items.
+	feature_name_list_internal: like feature_name_list
+			-- Implementation of `feature_name_list'
+
+feature{NONE} -- Implementation
+
+	update_matches_timeout: EV_TIMEOUT
+			-- Internally used timer
+
+	request_update_matches is
+			-- Start `update_matches_timeout' and if no text change in `feature_name_list' in certain
+			-- amount of time, update view.
 		do
-			do_all_in_items (grid.selected_items, agent expand_item)
+			cancel_delayed_update_matches
+			if update_matches_timeout = Void then
+				create update_matches_timeout
+				update_matches_timeout.actions.extend_kamikaze (agent delayed_update_matches)
+			end
+			update_matches_timeout.set_interval (wait_to_update_view_time)
 		end
 
-	collapse_selected is
-			-- Collapse selected items.
+	update_matches_requested: BOOLEAN is
 		do
-			do_all_in_items (grid.selected_items, agent collapse_item)
+			Result := update_matches_timeout /= Void
+		end
+
+	cancel_delayed_update_matches is
+		do
+			if update_matches_timeout /= Void then
+				update_matches_timeout.destroy
+				update_matches_timeout := Void
+			end
+		end
+
+	delayed_update_matches is
+		do
+			cancel_delayed_update_matches
+			is_up_to_date := False
+			update_view
 		end
 
 	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
@@ -778,8 +895,12 @@ feature{NONE} -- Implementation
 	on_show_feature_from_any_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent kept for recycling
 
+	wait_to_update_view_time: INTEGER is 500
+			-- Time interval (in milliseconds) to wait before we update view
+
 invariant
 	development_window_attached: development_window /= Void
+	filter_engine_attached: filter_engine /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

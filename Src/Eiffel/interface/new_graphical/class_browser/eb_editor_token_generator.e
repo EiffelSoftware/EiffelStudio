@@ -13,7 +13,8 @@ inherit
 	EDITOR_TOKEN_WRITER
 		redefine
 			make,
-			comment_context_class
+			comment_context_class,
+			new_line
 		end
 create
 	make
@@ -40,6 +41,29 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	lines: LIST [like last_line] is
+			-- All process lines since last `wipe_out_lines'.
+		do
+			if lines_internal = Void then
+				create {ARRAYED_LIST [like last_line]}lines_internal.make (10)
+			end
+			Result := lines_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- New line
+
+	new_line is
+			-- Create new `last_line'
+		do
+			if is_multiline_mode then
+				lines.extend (last_line.twin)
+			else
+				create last_line.make_empty_line
+			end
+		end
+
 feature -- Setting
 
 	set_comment_context_class (a_class_c: CLASS_C) is
@@ -52,10 +76,42 @@ feature -- Setting
 			comment_content_class_internal_set: comment_content_class_internal = a_class_c
 		end
 
+	enable_multiline is
+			-- Enable multi-line mode.
+		do
+			is_multiline_mode := True
+		ensure
+			multiline_node_enabled: is_multiline_mode
+		end
+
+	disable_multiline is
+			-- Disable multi-line mode.
+		do
+			is_multiline_mode := False
+		ensure
+			multiline_node_disabled: not is_multiline_mode
+		end
+
+	wipe_out_lines is
+			-- Wipe out `lines'.
+		do
+			lines.wipe_out
+		ensure
+			lines_is_empty: lines.is_empty
+		end
+
+feature -- Status report
+
+	is_multiline_mode: BOOLEAN
+			-- Is multiline mode enabled?
+
 feature{NONE} -- Implementation
 
-	comment_content_class_internal: like comment_context_class;
+	comment_content_class_internal: like comment_context_class
 			-- Implementation of `comment_context_class'		
+
+	lines_internal: like lines;
+			-- Implementation of `lines'
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -196,7 +196,7 @@ feature{NONE} -- Measure
 			l_end_y := l_start_y + l_height - 1
 			if l_end_y > screen.height then
 				l_end_y := pointer_y - owner.pointer_offset
-				l_start_y := l_end_y - l_width + 1
+				l_start_y := l_end_y - l_height + 1
 			end
 			if l_end_x > screen.width then
 				l_end_x := screen.width - 2

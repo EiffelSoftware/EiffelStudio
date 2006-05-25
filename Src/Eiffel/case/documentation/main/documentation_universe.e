@@ -229,9 +229,7 @@ feature {NONE} -- Implementation
 		local
 			cl: HASH_TABLE [CONF_CLASS, STRING]
 			l_cluster: CONF_CLUSTER
-			l_lib: CONF_LIBRARY
 			l_subclusters: ARRAYED_LIST [CONF_CLUSTER]
-			l_lib_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_class_i: CLASS_I
 		do
 			create Result.make (100)

@@ -5061,10 +5061,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						Result := find_next_item_in_row (row (item_index), grid_column.index, True)
 					end
 				end
-				if Result /= Void then
-					if not is_item_navigatable_to (Result) then
+				if Result /= Void and then not is_item_navigatable_to (Result) then
 						Result := Void
-					end
 				end
 				item_index := item_index + item_offset
 			end
@@ -5075,17 +5073,20 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		local
 			l_parent_row_i: EV_GRID_ROW_I
 		do
-			Result := True
-			if is_tree_enabled then
-				from
-					l_parent_row_i := a_item.row.implementation.parent_row_i
-				until
-					l_parent_row_i = Void or else not Result
-				loop
-					if not l_parent_row_i.is_expanded then
-						Result := False
+			if a_item.row.height > 0 then
+					-- Only visible rows may be navigated to.
+				Result := True
+				if is_tree_enabled then
+					from
+						l_parent_row_i := a_item.row.implementation.parent_row_i
+					until
+						l_parent_row_i = Void or else not Result
+					loop
+						if not l_parent_row_i.is_expanded then
+							Result := False
+						end
+						l_parent_row_i := l_parent_row_i.parent_row_i
 					end
-					l_parent_row_i := l_parent_row_i.parent_row_i
 				end
 			end
 		end

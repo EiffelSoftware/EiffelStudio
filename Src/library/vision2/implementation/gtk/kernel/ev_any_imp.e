@@ -114,7 +114,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: STRING_GENERAL;
+		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -124,13 +124,16 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
+		local
+			l_app_imp: EV_APPLICATION_IMP
 		do
-			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, False)
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, False)
 		end
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
-		a_signal_name: STRING_GENERAL;
+		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -141,8 +144,11 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
+		local
+			l_app_imp: EV_APPLICATION_IMP
 		do
-			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
 		end
 
 	signal_connect (
@@ -152,26 +158,15 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		invoke_after_handler: BOOLEAN) is
 				--
-		local
-			l_agent: PROCEDURE [ANY, TUPLE]
 		do
-			if translate = Void then
-					-- If we have no translate agent then we call the agent directly.
-				l_agent := an_agent
-			else
-				l_agent := agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate)
-			end
-
-			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
-				a_c_object,
-				a_signal_name.item,
-				l_agent,
-				invoke_after_handler
-			)
+			app_implementation.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, translate, invoke_after_handler)
 		end
 
-	last_signal_connection_id: INTEGER
+	last_signal_connection_id: INTEGER is
 			-- GTK signal connection id of the most recent `signal_connect'.
+		do
+			Result := app_implementation.gtk_marshal.last_signal_connection_id
+		end
 
 feature {NONE} -- Implementation
 

@@ -1193,14 +1193,21 @@ Routine_body: Internal
 			{ $$ := $1 }
 	;
 
-External: TE_EXTERNAL External_language External_name
+External: TE_EXTERNAL
 			{
-				if $3 /= Void then
-					$$ := ast_factory.new_external_as ($2, $3.second, $1, $3.first)
+					-- To avoid warnings for manifest string used to represent external data.
+				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
+				set_has_old_verbatim_strings_warning (false)
+			}
+		External_language External_name
+			{
+				if $4 /= Void then
+					$$ := ast_factory.new_external_as ($3, $4.second, $1, $4.first)
 				else
-					$$ := ast_factory.new_external_as ($2, Void, $1, Void)
+					$$ := ast_factory.new_external_as ($3, Void, $1, Void)
 				end
 				has_externals := True
+				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	;
 

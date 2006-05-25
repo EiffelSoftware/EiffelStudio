@@ -157,6 +157,34 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
 feature {EV_ANY_IMP}
 
+	signal_connect (
+		a_c_object: POINTER;
+		a_signal_name: EV_GTK_C_STRING;
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		invoke_after_handler: BOOLEAN) is
+				--
+		local
+			l_agent: PROCEDURE [ANY, TUPLE]
+		do
+			if translate = Void then
+					-- If we have no translate agent then we call the agent directly.
+				l_agent := an_agent
+			else
+				l_agent := agent translate_and_call (an_agent, translate)
+			end
+
+			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+				a_c_object,
+				a_signal_name.item,
+				l_agent,
+				invoke_after_handler
+			)
+		end
+
+	last_signal_connection_id: INTEGER
+		-- Last signal connection id.
+
 	set_focus_event_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Converted GtkWidget* to tuple.
 		do
@@ -312,7 +340,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations
 			Result := pointer_tuple
 		end
 
-feature {NONE} -- Externals
+feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_init (
 		object: EV_GTK_CALLBACK_MARSHAL; a_marshal: POINTER
@@ -329,7 +357,7 @@ feature {NONE} -- Externals
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
-feature {EV_ANY_IMP} -- Externals
+feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is

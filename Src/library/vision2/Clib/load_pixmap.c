@@ -1218,6 +1218,9 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	volatile unsigned long 	iAlphaData = 0;
 #ifdef EIF_WINDOWS
 	unsigned long 	iData;
+	BITMAPINFOHEADER *pbi, *pbi_mask;
+	HBITMAP hbitmap, hbitmap_mask;
+
 #endif
 	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
 	unsigned long 	row;			/* Current scan line */
@@ -1334,57 +1337,68 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
 #ifdef EIF_WINDOWS
-	sRowSize = 4 * ((width * 24 + 31) / 32);
-	pImage = (unsigned char *) malloc(sRowSize * height + 40);
-	pData = pImage;
+	
+	pbi = (BITMAPINFOHEADER*) malloc (sizeof (BITMAPINFOHEADER));
+	pbi->biSize = sizeof(BITMAPINFOHEADER);
+	pbi->biWidth = width;
+	pbi->biHeight = height;
+	pbi->biPlanes = 1;
+	pbi->biBitCount = 32;
+	pbi->biCompression = BI_RGB;   // No compression
+	pbi->biSizeImage = 0;
+	pbi->biXPelsPerMeter = 0;
+	pbi->biYPelsPerMeter = 0;
+	pbi->biClrUsed = 0;           // Always use the whole palette.
+	pbi->biClrImportant = 0;
+	
+	pbi_mask = (BITMAPINFOHEADER*) malloc (sizeof (BITMAPINFOHEADER));
+	pbi_mask->biSize = sizeof (BITMAPINFOHEADER);
+	pbi_mask->biWidth = width;
+	pbi_mask->biHeight = height;
+	pbi_mask->biPlanes = 1;
+	pbi_mask->biBitCount = 1;
+	pbi_mask->biCompression = BI_RGB;
+	pbi_mask->biSizeImage = 0;
+	pbi_mask->biXPelsPerMeter = 0;
+	pbi_mask->biYPelsPerMeter = 0;	
+	pbi_mask->biClrUsed = 2;     
+	pbi_mask->biClrImportant = 2;	
+	
+	hbitmap = CreateDIBSection(NULL, (BITMAPINFO *)pbi, DIB_RGB_COLORS, (VOID **) &pData, NULL, NULL);
+	hbitmap_mask = CreateDIBSection (NULL, (BITMAPINFO *)pbi_mask, DIB_RGB_COLORS, (VOID **) &pAlphaData, NULL, NULL);
+	
+	pImage = pData;
+	pAlphaImage = pAlphaData;
+
+  // We should copy datas to header.
+  // Windows does not do this work for us.
+	memcpy (pData, pbi, sizeof (BITMAPINFOHEADER));	
+	pData += sizeof (BITMAPINFOHEADER);
+	
+	memcpy (pAlphaData, pbi_mask, sizeof (BITMAPINFOHEADER));
+	pAlphaData += sizeof (BITMAPINFOHEADER);
+		
+	// Color table
+	*((DWORD *)pAlphaData) = 0x00000000; pAlphaData += 4;	/* Index 0 (black) */
+	*((DWORD *)pAlphaData) = 0x00FFFFFF; pAlphaData += 4;	/* Index 1 (white) */
+	
 	iData = 0;
-
-	sRowSize = 4 * ((width + 31) / 32);
-	pAlphaImage = (unsigned char *) malloc(sRowSize * height + 40 + 8);
-	pAlphaData = pAlphaImage;
-
-	/* Create a Windows DIB Header for the color bitmap */
-	*((DWORD *)pData) = 40;			pData += 4;				/* Size of header */
-	*((DWORD *)pData) = width;		pData += 4;				/* width in pixel */
-	*((DWORD *)pData) = height;		pData += 4;				/* height in pixel */
-	*((WORD *)pData) = 1;			pData += 2;				/* bit plane */
-	*((WORD *)pData) = 24;			pData += 2;				/* bits/pixel */
-	*((DWORD *)pData) = BI_RGB;		pData += 4;				/* compression */
-	*((DWORD *)pData) = 0;			pData += 4;				/* imageSize */
-	*((DWORD *)pData) = 0;			pData += 4;				/* XPelPerM */
-	*((DWORD *)pData) = 0;			pData += 4;				/* YPelPerM */
-	*((DWORD *)pData) = 0;			pData += 4;				/* ClrUsed */
-	*((DWORD *)pData) = 0;			pData += 4;				/* ClrImportant */
-
-	/* Create a Windows DIB Header for the mask bitmap */
-	*((DWORD *)pAlphaData) = 40;		pAlphaData += 4;	/* size of header */
-	*((DWORD *)pAlphaData) = width;		pAlphaData += 4;	/* width in pixel */
-	*((DWORD *)pAlphaData) = height;	pAlphaData += 4;	/* height in pixel */
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	/* bit plane */
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	/* bits/pixel */
-	*((DWORD *)pAlphaData) = BI_RGB;	pAlphaData += 4;	/* compression */
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* imageSize */
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* XPelPerM */
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* YPelPerM */
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	/* ClrUsed */
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	/* ClrImportant */
-	/* Color Table */
-	*((DWORD *)pAlphaData) = 0x00000000;pAlphaData += 4;	/* Index 0 (black) */
-	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;	/* Index 1 (white) */
-
-
+		
 	for (row = height; row > 0; row--) {
+		
 		unsigned char *pSrc = ppImage[row-1];
+		unsigned long column;
 		unsigned long nAlign;
 		unsigned long iAlign;
-		unsigned long column;
-
+		
 		for (column = 0; column < width; column++) {
-			/* Copy the RGB data */
-			*(pData + iData + 0) = *(pSrc + 2);	/* B */
-			*(pData + iData + 1) = *(pSrc + 1);	/* G */
-			*(pData + iData + 2) = *(pSrc + 0);	/* R */
-
+			// Because rgb datas are not same order,
+			// so we have to copy bit by bit.
+			// We premultiply rgb datas at same time.
+			*(pData + iData + 0) = *(pSrc + 2) * *(pSrc + 3) / 255;	/* B */           
+			*(pData + iData + 1) = *(pSrc + 1) * *(pSrc + 3) / 255;	/* G */
+			*(pData + iData + 2) = *(pSrc + 0) * *(pSrc + 3) / 255;/* R */
+			* (pData + iData + 3) = *(pSrc + 3); /* Alpha*/
 			/* Copy the alpha channel */
 			if (*(pSrc + 3) > 0x7F) {
 				c_ev_set_bit(0, pAlphaData, iAlphaData);
@@ -1392,26 +1406,19 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 				c_ev_set_bit(1, pAlphaData, iAlphaData);
 				bAlphaImage = TRUE;
 			}
-
-			iData += 3;
+			
+			iData += 4;
 			pSrc += 4;
 			iAlphaData++;
 		}
-
-			/* Align line to DWORD padding - Alpha data */
+			/* Align line to BYTE padding - Alpha data */
 		nAlign = (32 - width%32) % 32;
 		for (iAlign = 0; iAlign < nAlign; iAlign++) {
 			c_ev_set_bit(0, pAlphaData, iAlphaData);
 			iAlphaData++;
-		}
-
-			/* Align RGB data as well */
-		nAlign = width % 4; /* small hack to go faster */
-		for (iAlign = 0; iAlign < nAlign; iAlign++) {
-			*(pData + iData) = 0;
-			iData++;
-		}
+		}		
 	}
+	
 #else
 	pImage = (unsigned char *) malloc(width * height * 3);
 	pData = pImage;
@@ -1454,10 +1461,14 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 		/* The mast is empty, remove it */
 	if (bAlphaImage == FALSE) {
+#ifdef EIF_WINDOWS
+		DeleteObject (hbitmap_mask);
+		free (pbi_mask);
+#else
 		free (pAlphaImage);
+#endif
 		pAlphaImage = NULL;
 	}
-
 		/* Free the memory */
 	for (row = 0; row < height; row++) {
 		free(ppImage[row]);
@@ -1478,13 +1489,22 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	);
 
 		/* Free the image occupied by the image & the mask. */
-	if (pImage != NULL) {
-		free(pImage);
-	}
-
+#ifdef EIF_WINDOWS
+		DeleteObject (hbitmap);
+		free (pbi);
+		if (bAlphaImage) {
+			DeleteObject (hbitmap_mask);
+			free (pbi_mask);
+		}
+#else
+		if (pImage != NULL) {
+			free(pImage);
+		}
 	if (pAlphaImage != NULL) {
 		free(pAlphaImage);
-	}
+	}		
+	
+#endif
 
 		/* that's it */
 	return;

@@ -2951,7 +2951,7 @@ feature -- IL Generation
 			end
 
 			if l_is_il_external then
-				create_object_with_args (current_class_type.implementation_id, feat.argument_count)
+				create_object_with_args (current_class_type.implementation_id, feat.feature_id, feat.argument_count)
 			else
 				create_object (current_class_type.implementation_id)
 			end
@@ -4021,13 +4021,13 @@ feature -- Object creation
 			method_body.put_newobj (constructor_token (a_type_id), 0)
 		end
 
-	create_object_with_args (a_type_id: INTEGER; a_arg_count: INTEGER) is
+	create_object_with_args (a_type_id: INTEGER; a_feature_id: INTEGER; a_arg_count: INTEGER) is
 			-- Create object of `a_type_id'.
 		require
 			valid_type_id: a_type_id > 0
 			a_arg_count_not_negative: a_arg_count >= 0
 		do
-			method_body.put_newobj (constructor_token (a_type_id), a_arg_count)
+			method_body.put_newobj (inherited_constructor_token (a_type_id, a_feature_id), a_arg_count)
 		end
 
 	create_like_object is

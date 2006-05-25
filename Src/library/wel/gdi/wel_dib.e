@@ -102,7 +102,7 @@ feature -- Access
 			if info_header.structure_size >= 36 then
 				Result := info_header.clr_used
 			end
-			if Result = 0 and then info_header.bit_count /= 24 then
+			if Result = 0 and then (info_header.bit_count /= 24 and info_header.bit_count /= 32) then
 				Result := (2 ^ info_header.bit_count).truncated_to_integer
 			end
 		ensure
@@ -215,14 +215,14 @@ feature {NONE} -- Implementation
 			then
 				calculate_palette_all_but_24_bits
 			elseif
-				has_24_bits
+				has_24_bits or has_32_bits
 			then
 				calculate_palette_24_bits
 			else
 				-- Dead end! This code must never be reached
-				check
-					dead_end: False
-				end
+					check
+						dead_end: False
+					end
 			end
 			object_id_palette := palette.object_id
 		ensure
@@ -264,12 +264,12 @@ feature {NONE} -- Implementation
 		end
 
 	calculate_palette_24_bits is
-			-- Calculates pallete for images with a colordepth of 24 bits
+			-- Calculates pallete for images with a colordepth of 24 bits (32bits is the same).
          -- A 24 bitcount DIB has no color table entries so, set the number of
          -- to the maximum value (max_palette).
 		require
 			exists: exists
-			has_24_bits: has_24_bits
+			has_24_bits: has_24_bits or has_32_bits
 		local
 			ind, red, green, blue: INTEGER
 			pal_entry: WEL_PALETTE_ENTRY
@@ -319,6 +319,13 @@ feature {NONE} -- Implementation
 			Result := info_header.bit_count = 24
 		end
 
+	has_32_bits: BOOLEAN is
+		require
+			exists: exists
+		do
+			Result := info_header.bit_count = 32
+		end
+		
 	max_palette: INTEGER is 256
 
 	rgb_quad_size: INTEGER is

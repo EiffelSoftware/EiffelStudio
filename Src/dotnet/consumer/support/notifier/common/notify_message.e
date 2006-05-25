@@ -113,6 +113,8 @@ feature -- Access
 						i := i + 1
 					end
 				end
+				l_sb := l_sb.replace ("%%N", "%N")
+				l_sb := l_sb.replace ("%%T", "%T")
 				Result := l_sb.to_string
 				internal_message := Result
 			end

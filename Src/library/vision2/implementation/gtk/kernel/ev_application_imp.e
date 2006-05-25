@@ -122,8 +122,9 @@ feature {EV_ANY_IMP} -- Implementation
 						{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
 					end
 				else
-					call_idle_actions
 					if a_relinquish_cpu then
+							-- Idle actions only need to be called just before CPU relinquishment.
+						call_idle_actions
 						relinquish_cpu_slice
 					end
 				end

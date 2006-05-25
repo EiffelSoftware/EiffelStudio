@@ -12,7 +12,8 @@ class
 inherit
 	EDITOR_TOKEN_BLANK
 		redefine
-			process
+			process,
+			is_tabulation
 		end
 
 create
@@ -30,6 +31,14 @@ feature -- Initialisation
 		ensure
 			image_not_void: image /= Void
 			length_positive: length > 0
+		end
+
+feature -- Status report
+
+	is_tabulation: BOOLEAN is
+			-- Is current a tabulation token?
+		do
+			Result := True
 		end
 
 feature -- Width & Height

@@ -339,15 +339,14 @@ feature -- Status setting
 			-- is smaller than the old one, the bitmap is
 			-- clipped.
 		local
-			black_color: WEL_COLOR_REF
-			black_brush: WEL_BRUSH
-			resized_bitmap: WEL_BITMAP
+			l_resized_bitmap: WEL_BITMAP
+			l_resized_bitmap_dc: WEL_MEMORY_DC
 		do
 				-- Resize the bitmap
 			if dc.bitmap_selected then
 				dc.unselect_bitmap
 			end
-			resized_bitmap := resize_wel_bitmap (
+			l_resized_bitmap := resize_wel_bitmap (
 				internal_bitmap,
 				new_width,
 				new_height,
@@ -358,31 +357,30 @@ feature -- Status setting
 			internal_bitmap := Void
 
 				-- Assign the new bitmap
-			internal_bitmap := resized_bitmap
+			internal_bitmap := l_resized_bitmap
 			dc.select_bitmap (internal_bitmap)
-
 
 				-- Resize the mask (if any)
 			if has_mask then
+				create l_resized_bitmap_dc.make_by_dc (mask_dc)
+				create l_resized_bitmap.make_compatible (l_resized_bitmap_dc, new_width, new_height)
+				l_resized_bitmap.enable_reference_tracking
+				l_resized_bitmap_dc.select_bitmap (l_resized_bitmap)
 
-				create black_color.make_rgb (0, 0, 0)
-				create black_brush.make_solid (black_color)
+					-- Create a new opaque mask of size `new_width', `new_height'.
+				l_resized_bitmap_dc.pat_blt (0, 0, new_width, new_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.whiteness)
+					-- Copy existing mask data over new mask.
+				l_resized_bitmap_dc.bit_blt (0, 0, internal_mask_bitmap.width, internal_mask_bitmap.height, mask_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+				l_resized_bitmap_dc.unselect_bitmap
+				l_resized_bitmap_dc.delete
 
 				mask_dc.unselect_bitmap
-				resized_bitmap := resize_wel_bitmap (
-					internal_mask_bitmap,
-					new_width,
-					new_height,
-					black_brush
-					)
-				black_brush.delete
 
 					-- Get rid of the old bitmap
 				internal_mask_bitmap.decrement_reference
-				internal_mask_bitmap := Void
 
 					-- Assign the new bitmap
-				internal_mask_bitmap := resized_bitmap
+				internal_mask_bitmap := l_resized_bitmap
 				mask_dc.select_bitmap (internal_mask_bitmap)
 			end
 

@@ -1704,7 +1704,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_argument_count: INTEGER
 			l_arguments: FEAT_ARG
 			l_type_i: TYPE_I
-			i: INTEGER
 		do
 			l_tokens := internal_constructors [a_type_id]
 			if l_tokens /= Void then
@@ -1719,17 +1718,17 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				l_meth_sig.set_parameter_count (l_argument_count)
 				l_meth_sig.set_return_type (
 					{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				from
-					l_arguments := l_feature.arguments
-					l_arguments.start
-					i := 0
-				until
-					l_arguments.after
-				loop
-					l_type_i := il_code_generator.argument_actual_type_in (l_arguments.item.type_i, l_class_type)
-					il_code_generator.set_signature_type (l_meth_sig, l_type_i)
-					i := i + 1
-					l_arguments.forth
+				if l_argument_count > 0 then
+					from
+						l_arguments := l_feature.arguments
+						l_arguments.start
+					until
+						l_arguments.after
+					loop
+						l_type_i := il_code_generator.argument_actual_type_in (l_arguments.item.type_i, l_class_type)
+						il_code_generator.set_signature_type (l_meth_sig, l_type_i)
+						l_arguments.forth
+					end
 				end
 				define_constructor (l_class_type, l_meth_sig, True, 0, a_feature_id)
 				l_tokens := internal_constructors [a_type_id]

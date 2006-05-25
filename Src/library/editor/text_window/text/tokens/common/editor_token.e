@@ -70,6 +70,11 @@ feature -- Status Report
 		do
 		end
 
+	is_tabulation: BOOLEAN is
+			-- Is current a tabulation token?
+		do
+		end
+
 feature -- Status setting
 
 	set_pebble (a_pebble: like pebble) is

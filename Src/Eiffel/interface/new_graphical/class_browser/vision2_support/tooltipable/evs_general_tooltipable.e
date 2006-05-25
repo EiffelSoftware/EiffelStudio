@@ -396,7 +396,7 @@ feature{NONE} -- Tooltip show/hide
 		local
 			l_window: like tooltip_window
 			l_show: BOOLEAN
-			l_is_vetoed: BOOLEAN
+--			l_is_vetoed: BOOLEAN
 		do
 			l_window := tooltip_window
 			if not is_my_tooltip then
@@ -442,7 +442,6 @@ feature{NONE} -- Tooltip show/hide
 			tooltip_enabled: is_tooltip_enabled
 			my_tooltip_displayed: is_my_tooltip_displayed
 		local
-			l_force_hide: BOOLEAN
 			l_hide: BOOLEAN
 		do
 			if not is_tooltip_pined then

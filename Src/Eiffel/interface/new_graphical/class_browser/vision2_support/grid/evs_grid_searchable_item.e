@@ -129,7 +129,7 @@ feature -- Access
 			-- Actions to be performed when a `replace' succeeds
 		do
 			if replace_succeeded_actions_internal = Void then
-				create replace_succeeded_actions_internal.make
+				create replace_succeeded_actions_internal
 			end
 			Result := replace_succeeded_actions_internal
 		ensure
@@ -140,7 +140,7 @@ feature -- Access
 			-- Actions to be performed when a `replace' fails
 		do
 			if replace_failed_actions_internal = Void then
-				create replace_failed_actions_internal.make
+				create replace_failed_actions_internal
 			end
 			Result := replace_failed_actions_internal
 		ensure

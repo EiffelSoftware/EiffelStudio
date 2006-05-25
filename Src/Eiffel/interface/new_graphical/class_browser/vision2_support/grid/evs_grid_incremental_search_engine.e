@@ -94,23 +94,18 @@ feature{NONE} -- Implementation
 	grid_iterator (a_grid_wrapper: EVS_GRID_WRAPPER): EVS_GRID_ORDERED_ITERATOR is
 			-- Grid iterator for `a_grid_wrapper' according to current search order.
 			-- See `ensure_search_by_row' and `ensure_search_by_column' for search order information.
-		local
-			l_selected: ARRAYED_LIST [EV_GRID_ITEM]
-			l_sortable_list: DS_LIST [EVS_GRID_COORDINATED]
-			x, y: INTEGER
-			l_row: EV_GRID_ROW
 		do
 			if is_search_by_row then
 				if is_search_foreward then
-					create {EVS_GRID_ROW_ITERATOR}Result.make_with_last_selected_item (a_grid_wrapper)
+					create {EVS_GRID_ROW_ITERATOR} Result.make_with_last_selected_item (a_grid_wrapper)
 				else
-					create {EVS_GRID_ROW_ITERATOR}Result.make_with_first_selected_item (a_grid_wrapper)
+					create {EVS_GRID_ROW_ITERATOR} Result.make_with_first_selected_item (a_grid_wrapper)
 				end
 			else
 				if is_search_foreward then
-					create {EVS_GRID_COLUMN_ITERATOR}Result.make_with_last_selected_item (a_grid_wrapper)
+					create {EVS_GRID_COLUMN_ITERATOR} Result.make_with_last_selected_item (a_grid_wrapper)
 				else
-					create {EVS_GRID_COLUMN_ITERATOR}Result.make_with_first_selected_item (a_grid_wrapper)
+					create {EVS_GRID_COLUMN_ITERATOR} Result.make_with_first_selected_item (a_grid_wrapper)
 				end
 			end
 		ensure

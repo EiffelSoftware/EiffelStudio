@@ -374,7 +374,6 @@ feature -- Pick and drop
 		local
 			l_x: INTEGER
 			l_y: INTEGER
-			l_index: INTEGER
 			l_editor_token_text: like editor_token_text
 		do
 			l_editor_token_text := editor_token_text

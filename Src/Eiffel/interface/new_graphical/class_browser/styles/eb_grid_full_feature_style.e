@@ -27,9 +27,6 @@ feature -- Tooltip
 	tooltip (a_item: EB_GRID_FEATURE_ITEM): EB_EDITOR_TOKEN_TOOLTIP is
 			-- Setup related parameters for tooltip display.
 		local
-			l_comments: EIFFEL_COMMENTS
-			l_tokens: LINKED_LIST [EDITOR_TOKEN]
-			l_comment: STRING
 			l_tooltip: EB_FEATURE_COMMENT_TOOLTIP
 		do
 			if a_item.associated_feature.is_real_feature then

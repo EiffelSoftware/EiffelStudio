@@ -30,6 +30,13 @@ feature -- Status
 	is_warning_configured: BOOLEAN
 			-- Is `is_warning' configured?
 
+	is_empty: BOOLEAN is
+			-- Is `Current' empty? No settings are set?
+		do
+			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
+				is_warning_configured or assertions /= Void or namespace /= Void or warnings /= Void or debugs /= Void )
+		end
+
 feature -- Status update
 
 	unset_profile is

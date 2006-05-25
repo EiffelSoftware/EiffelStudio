@@ -143,7 +143,7 @@ feature -- Update
 		do
 			platform := Void
 		ensure
-			platform_empty: platform.is_empty
+			platform_void: platform = Void
 		end
 
 	add_build (a_build: INTEGER) is
@@ -178,7 +178,7 @@ feature -- Update
 		do
 			build := Void
 		ensure
-			build_empty: build.is_empty
+			build_void: build = Void
 		end
 
 	set_multithreaded (a_value: BOOLEAN) is
@@ -352,7 +352,7 @@ feature -- Output
 				else
 					Result.append (" = ")
 				end
-				Result.append (custom.item_for_iteration.value)
+				Result.append (custom.item_for_iteration.value + " and ")
 				custom.forth
 			end
 

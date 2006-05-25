@@ -16,13 +16,13 @@ feature -- Basic validity queries
 	valid_platform (a_platform: INTEGER): BOOLEAN is
 			-- Is `a_platform' a valid platform?
 		do
-			Result := a_platform = Pf_windows or a_platform = Pf_unix or a_platform = Pf_mac
+			Result := platform_names.has (a_platform)
 		end
 
 	valid_build (a_build: INTEGER): BOOLEAN is
 			-- Is `a_build' a valid build?
 		do
-			Result := a_build = Build_workbench or a_build = Build_finalize
+			Result := build_names.has (a_build)
 		end
 
 	valid_warning (a_warning: STRING): BOOLEAN is
@@ -85,6 +85,8 @@ feature {NONE} -- Basic operation
 					platform_names.forth
 				end
 			end
+		ensure
+			Result_valid: Result = 0 or else valid_platform (Result)
 		end
 
 	get_build (a_name: STRING): INTEGER is
@@ -102,6 +104,8 @@ feature {NONE} -- Basic operation
 					build_names.forth
 				end
 			end
+		ensure
+			Result_valid: Result = 0 or else valid_build (Result)
 		end
 
 feature {NONE} -- Onces

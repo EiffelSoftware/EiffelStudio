@@ -150,6 +150,13 @@ feature {NONE} -- Option names and descriptions
 	option_loop_name: STRING is "Loop"
 	option_loop_description: STRING is "Evaluate loop assertions."
 
+	option_profile_name: STRING is "Profile"
+	option_profile_description: STRING is "Generate profiling information."
+	option_trace_name: STRING is "Trace"
+	option_trace_description: STRING is ""
+	option_optimize_name: STRING is "Optimize"
+	option_optimize_description: STRING is ""
+
 	option_warnings_name: STRING is "Enabled"
 	option_warnings_description: STRING is "Are warnings enabled?"
 

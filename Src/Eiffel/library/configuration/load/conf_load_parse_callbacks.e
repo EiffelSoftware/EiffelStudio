@@ -1083,9 +1083,9 @@ feature {NONE} -- Implementation attribute processing
 			elseif l_value = Void and l_excluded_value = Void then
 				set_parse_error_message ("No value or excluded-value specified in platform condition.")
 			elseif l_value /= Void then
-				l_platforms := l_value.split (';')
+				l_platforms := l_value.split (' ')
 			else
-				l_platforms := l_excluded_value.split (';')
+				l_platforms := l_excluded_value.split (' ')
 				l_invert := True
 			end
 

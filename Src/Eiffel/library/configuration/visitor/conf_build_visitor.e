@@ -299,9 +299,7 @@ feature -- Visit nodes
 					-- directly
 			end
 		ensure then
-			guid_set: not is_error implies an_assembly.guid /= Void
-			consumed: not is_error implies an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
-			classes_set: not is_error implies an_assembly.classes_set
+			classes_set: not is_error implies current_assembly.classes_set
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -857,18 +855,14 @@ feature {NONE} -- Implementation
 						correct_path: l_path.string.has_substring (l_guid)
 					end
 
-						-- if we already have an assembly with the same guid we can directly use this classes/dependencies
+						-- if we already have an assembly with the same guid we can directly use this assembly
 						-- used if an assembly is declared in multiple libraries/application in the same configuration
 					l_a := assemblies.item (l_guid)
 					if l_a /= Void then
-						an_assembly.set_consumed_path (l_a.consumed_path)
-						an_assembly.set_classes (l_a.classes)
-						an_assembly.set_dotnet_classes (l_a.dotnet_classes)
-						an_assembly.set_dependencies (l_a.dependencies)
-						an_assembly.set_date (l_a.date)
+						an_assembly.target.remove_assembly (an_assembly.name)
+						an_assembly.target.add_assembly (l_a)
+						current_assembly := l_a
 					else
-						assemblies.force (an_assembly, l_guid)
-
 							-- set consumed path
 						an_assembly.set_consumed_path (l_path)
 
@@ -882,16 +876,18 @@ feature {NONE} -- Implementation
 							old_assemblies.remove (l_guid)
 							old_assembly.check_changed
 
-								-- if it wasn't modified, directly use the old classes.
-							if not old_assembly.is_modified and old_assembly.is_group_equivalent (an_assembly) then
-								an_assembly.set_date (old_assembly.date)
-								an_assembly.set_classes (old_assembly.classes)
-								an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)
+								-- if it wasn't modified, directly use the old assembly.
+							if not old_assembly.is_modified then
+								an_assembly.target.remove_assembly (an_assembly.name)
+								an_assembly.target.add_assembly (old_assembly)
+								current_assembly := old_assembly
 								l_done := True
 								old_assembly := Void
 								old_group := Void
 							end
 						end
+						assemblies.force (current_assembly, l_guid)
+						
 							-- (re)build
 						if not l_done then
 							create l_reader
@@ -938,14 +934,11 @@ feature {NONE} -- Implementation
 							an_assembly.set_classes (current_classes)
 							an_assembly.set_dotnet_classes (current_dotnet_classes)
 						end
-
 					end
 				end
 			end
 		ensure
-			classes_set: not is_error implies an_assembly.classes_set
-			guid_set: not is_error implies an_assembly.guid /= Void and then not an_assembly.guid.is_empty
-			consumed_path_set: not is_error implies an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
+			classes_set: not is_error implies current_assembly.classes_set
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
 		end
@@ -1435,6 +1428,12 @@ feature {NONE} -- shared instances
 			end
 		end
 
+	assemblies_classes_set: BOOLEAN is
+			-- Do all the assemblies in `assemblies' have their classes set?
+		do
+			Result := assemblies.linear_representation.for_all (agent {CONF_ASSEMBLY}.classes_set)
+		end
+
 
 feature {NONE} -- Constants
 
@@ -1471,6 +1470,7 @@ feature {NONE} -- Size constants
 invariant
 	libraries_not_void: libraries /= Void
 	assemblies_not_void: assemblies /= Void
+	assemblies_classes_set: assemblies_classes_set
 	old_assemblies_handled_not_void: old_assemblies_handled /= Void
 	reused_classes_not_void: reused_classes /= Void
 	modified_classes_not_void: modified_classes /= Void

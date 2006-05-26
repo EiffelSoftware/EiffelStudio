@@ -653,6 +653,8 @@ feature {NONE} -- Implementation
 						l_name := l_class.renamed_name
 						if l_class.is_compiled and l_class.is_modified then
 							modified_classes.force (l_class)
+						else
+							l_class.set_up_to_date
 						end
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
@@ -887,7 +889,7 @@ feature {NONE} -- Implementation
 							end
 						end
 						assemblies.force (current_assembly, l_guid)
-						
+
 							-- (re)build
 						if not l_done then
 							create l_reader

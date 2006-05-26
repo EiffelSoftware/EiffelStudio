@@ -1809,7 +1809,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 
 				generate_current
 				generate_feature_access (type_i, feature_i.feature_id, 0, True, True)
-				internal_generate_feature_access (string_type_id, to_cil_feat_id, 0, True, True)
+				internal_generate_feature_access (to_cil_feat.static_type_id, to_cil_feat.feature_id, 0, True, True)
 
 				generate_return (True)
 				method_writer.write_current_body
@@ -6797,13 +6797,19 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			out_feat_id_positive: Result > 0
 		end
 
-	to_cil_feat_id: INTEGER is
+	to_cil_feat: TUPLE [static_type_id: INTEGER; feature_id: INTEGER] is
 			-- Feature ID of `to_cil' of STRING.
+		local
+			l_class: CLASS_C
 		once
-			Result := system.string_class.compiled_class.feature_table.
-				item_id ({PREDEFINED_NAMES}.to_cil_name_id).feature_id
+			l_class := system.string_class.compiled_class.feature_table.
+				item_id ({PREDEFINED_NAMES}.to_cil_name_id).written_class
+
+			Result := [l_class.types.first.static_type_id,
+				l_class.feature_table.item_id ({PREDEFINED_NAMES}.to_cil_name_id).feature_id]
 		ensure
-			to_cil_feat_id_positive: Result > 0
+			to_cil_feat_valid: Result /= Void and then (Result.static_type_id > 0 and
+				Result.feature_id > 0)
 		end
 
 	hashable_class_id: INTEGER is

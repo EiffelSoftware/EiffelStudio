@@ -611,7 +611,12 @@ feature {NONE} -- Implementation
 			if not has_error_internal then
 				l_feat := feature_in_class (current_class, current_feature.rout_id_set)
 				if not has_error_internal then
-					last_type := l_feat.type
+					if not processing_creation_target or else last_type = Void then
+						last_type := l_feat.type
+					end
+					check
+						last_type_not_void: last_type /= Void
+					end
 				end
 			end
 		end

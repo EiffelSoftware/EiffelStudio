@@ -4675,7 +4675,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					last_selected_item := selected_item.implementation
 					shift_key_start_item := Void
 				else
-					handle_newly_selected_item (selected_item, a_button)
+					handle_newly_selected_item (selected_item, a_button, False)
 				end
 			end
 		end
@@ -5167,7 +5167,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						then
 							last_selected_item.disable_select
 						end
-						handle_newly_selected_item (a_sel_item, 0)
+						handle_newly_selected_item (a_sel_item, 0, True)
 						if is_row_selection_enabled then
 							last_selected_row := a_sel_item.row.implementation
 						end
@@ -5180,7 +5180,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 	shift_key_start_item: EV_GRID_ITEM
 		-- Item where initial selection began from.
 
-	handle_newly_selected_item (a_item: EV_GRID_ITEM; a_button: INTEGER) is
+	handle_newly_selected_item (a_item: EV_GRID_ITEM; a_button: INTEGER; from_key_press: BOOLEAN) is
 			-- Handle selection for newly selected `a_item' as a result of pressing
 			-- mouse button `a_button'. If no mouse button was pressed to trigger the
 			-- change of selection, `a_button' should be 0.
@@ -5326,8 +5326,9 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			if
 				a_item /= Void
 			then
-				if a_item /= currently_active_item then
+				if a_item /= currently_active_item and then from_key_press then
 						-- We don't want to scroll the grid if an item is being activated.
+						-- or via mouse click.
 					if is_row_selection_enabled then
 						a_item.row.ensure_visible
 					else

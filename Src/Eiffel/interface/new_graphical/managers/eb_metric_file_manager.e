@@ -64,7 +64,7 @@ feature -- File creation
 		do
 			if internal_metric_file_name = Void then
 				create directory.make ("Metrics")
-				create internal_metric_file_name.make_from_string (Project_directory_name)
+				create internal_metric_file_name.make_from_string (project_location.location)
 				if not directory.exists then
 					directory.create_dir
 				end

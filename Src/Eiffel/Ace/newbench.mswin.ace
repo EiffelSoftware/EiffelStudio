@@ -265,7 +265,7 @@ cluster
 			".svn"; 
 		end
 
-	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers\support"
 
 	dotnet_logger:		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
 

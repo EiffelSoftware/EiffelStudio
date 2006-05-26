@@ -184,6 +184,7 @@ feature -- Basic Operation
 			cp_procedure: CONSUMED_PROCEDURE
 			cp_property: CONSUMED_PROPERTY
 			cp_event: CONSUMED_EVENT
+			cP_field: CONSUMED_FIELD
 		do
 			if not rescued then
 				check
@@ -262,9 +263,11 @@ feature -- Basic Operation
 							underlying_enum_type := referenced_type_from_type (l_field.field_type)
 						end
 						if is_consumed_field (l_field) then
-							l_fields.extend (consumed_field (l_field))
+							cp_field := consumed_field (l_field)
+							l_fields.extend (cp_field)
 							if is_public_field (l_field) and not is_init_only_field (l_field) then
-								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
+								cp_field.setter := attribute_setter_feature (l_field, l_fields.last.eiffel_name)
+								l_procedures.extend (cp_field.setter)
 							end
 						end
 					elseif l_member.member_type = {MEMBER_TYPES}.property then
@@ -867,19 +870,19 @@ feature {NONE} -- Status Setting.
 
 --	internal_is_prefix_set: BOOLEAN
 --			-- Was `internal_is_prefix' calculated?
---	
+--
 --	internal_is_prefix: BOOLEAN
 --			-- Cached value for `is_prefix'
---	
+--
 --	internal_is_infix_set: BOOLEAN
 --			-- Was `internal_is_infix' calculated?
---		
+--
 --	internal_is_infix: BOOLEAN
 --			-- Cached value for `is_infix'
---	
+--
 --	internal_is_function_set: BOOLEAN
 --			-- Was `internal_is_function' calculated?
---	
+--
 --	internal_is_function: BOOLEAN
 --			-- Cached value for `is_function'
 
@@ -1242,19 +1245,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

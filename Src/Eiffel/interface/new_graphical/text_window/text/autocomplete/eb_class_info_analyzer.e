@@ -421,8 +421,12 @@ feature {NONE}-- Clickable/Editable implementation
 			from
 				l_current_class_c := current_class_c
 				processed_type := l_current_class_c.actual_type
-				if token_image_is_same_as_word (current_token, Create_word) then
-					go_to_next_token
+				if token_image_is_same_as_word (current_token, Create_word) or else
+					token_image_is_same_as_word (current_token, Opening_brace)
+				then
+					if not token_image_is_same_as_word (current_token, Opening_brace) then
+						go_to_next_token
+					end
 					error := not token_image_is_same_as_word (current_token, Opening_brace)
 					if not error then
 						go_to_next_token
@@ -650,6 +654,7 @@ feature {NONE}-- Implementation
 		local
 			par_cnt: INTEGER
 			stop, stop_loop: BOOLEAN
+			l_token : EDITOR_TOKEN
 		do
 			go_to_previous_token
 			if current_token /= Void then
@@ -705,8 +710,16 @@ feature {NONE}-- Implementation
 										par_cnt:= par_cnt + 1
 									end
 								end
+								l_token := current_token
 								go_to_previous_token
-								error := current_token = Void or else not token_image_is_in_array (current_token, special_keywords)
+--								error := current_token = Void or else not token_image_is_in_array (current_token, special_keywords)
+								if current_token = Void then
+									error := True
+								else
+									if not token_image_is_in_array (current_token, special_keywords) then
+										current_token := l_token
+									end
+								end
 							end
 							go_to_previous_token
 						end
@@ -1064,6 +1077,8 @@ feature {NONE}-- Implementation
 			cc_stone: CLASSC_STONE
 			image: STRING
 			class_i: CLASS_I
+			l_token: EDITOR_TOKEN
+			l_feat: E_FEATURE
 		do
 			found_class := Void
 			cc_stone ?= stone_in_click_ast (current_token.pos_in_text)
@@ -1077,6 +1092,48 @@ feature {NONE}-- Implementation
 				if class_i /= Void and then class_i.compiled then
 					found_class := class_i.compiled_class
 					Result := found_class.actual_type
+				end
+			end
+			if Result = Void then
+				image := current_token.image.as_lower
+				if image.is_equal ("like") then
+					if current_token.next /= Void and then current_token.next.next /= Void then
+						l_token := current_token.next.next
+						if l_token.is_text then
+							image := l_token.image.as_lower
+							if current_class_c /= Void then
+								l_feat := current_class_c.feature_with_name (image)
+								if l_feat /= Void then
+									Result := l_feat.type
+								end
+								if Result = Void then
+									Result := type_of_local_entity_named (image)
+								end
+								if Result = Void then
+									Result := type_of_constants_or_reserved_word (l_token)
+								end
+							end
+						end
+					end
+				end
+				if Result = Void then
+					Result := type_of_generic (current_token.image)
+				end
+				if Result /= Void then
+					if Result.is_loose then
+						if current_class_c /= Void then
+							Result := Result.instantiation_in (current_class_c.actual_type, current_class_c.class_id)
+							if Result /= Void then
+								Result := Result.actual_type
+								Result := constrained_type (Result)
+								found_class := Result.associated_class
+							end
+						else
+							Result := Void
+						end
+					else
+						found_class := Result.associated_class
+					end
 				end
 			end
 		end
@@ -1237,6 +1294,31 @@ feature {NONE}-- Implementation
 				end
 			end
 --| FIXME: Missing manifest arrays and strings
+		end
+
+	type_of_generic (a_str: STRING): TYPE_A is
+			-- Type a formal generic
+		require
+			a_str_not_void: a_str /= Void
+			current_class_c_not_void: current_class_c /= Void
+		local
+			l_gens: EIFFEL_LIST [FORMAL_DEC_AS]
+			l_des_as: FORMAL_DEC_AS
+			end_loop: BOOLEAN
+		do
+			l_gens := current_class_c.generics
+			from
+				l_gens.start
+			until
+				l_gens.after or else end_loop
+			loop
+				if a_str.is_equal (l_gens.item.name) then
+					end_loop := True
+					l_des_as := l_gens.item
+					create {FORMAL_A}Result.make (l_des_as.is_reference, l_des_as.is_expanded, l_des_as.position)
+				end
+				l_gens.forth
+			end
 		end
 
 	constrained_type (a_type: TYPE_A): TYPE_A is

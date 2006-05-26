@@ -875,13 +875,17 @@ feature {NONE} -- Code completable implementation
 						else
 							if l_found_blank then
 									-- We do not need signature after "like feature"
-									-- We do not need feature signature when it is a pointer reference. case1: "$  feature"
+									-- We do not need feature signature when it is a pointer reference. case: "$  feature"
 								if l_token.image.as_lower.is_equal ("like") or l_token.image.is_equal ("$") then
 									l_end_loop := True
 									set_discard_feature_signature (True)
 								else
 									l_quit := True
 								end
+							end
+								-- Prevent create {like a}.input (a, b) from signature being discarded.
+							if l_token.image.as_lower.is_equal ("}") then
+								l_end_loop := True
 							end
 						end
 						-- We do not need feature signature when it is a pointer reference. case2: "$feature"

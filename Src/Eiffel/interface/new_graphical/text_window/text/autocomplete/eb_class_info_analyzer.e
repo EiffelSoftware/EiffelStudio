@@ -564,6 +564,9 @@ feature {NONE}-- Clickable/Editable implementation
 						if l_pos > 0 then
 							type := l_named_tuple_type.generics.item (l_pos)
 						end
+						if type = Void then
+							Result := processed_class.feature_with_name (name)
+						end
 					else
 						Result := processed_class.feature_with_name (name)
 					end

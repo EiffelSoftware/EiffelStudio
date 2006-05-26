@@ -1117,6 +1117,12 @@ feature {NONE} -- Completion implementation
 						if l_pos > 0 then
 							type := l_named_tuple_type.generics.item (l_pos)
 						end
+						if type = Void then
+							feat := processed_class.feature_with_name (name)
+							if feat /= Void and then feat.type /= Void then
+								type := feat.type
+							end
+						end
 					else
 						feat := processed_class.feature_with_name (name)
 						if feat /= Void and then feat.type /= Void then

@@ -23,6 +23,8 @@ inherit
 		end
 
 	EB_SHARED_MANAGERS
+		rename
+			project_location as compiler_project_location
 		export
 			{NONE} all
 		end
@@ -192,6 +194,18 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
+
+	report_cannot_convert_project (a_file_name: STRING) is
+			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
+		local
+			l_ev: EV_ERROR_DIALOG
+		do
+			l_ev := new_error_dialog
+			l_ev.set_text (warning_messages.w_cannot_convert_file (a_file_name))
+			l_ev.show_modal_to_window (parent_window)
+			set_has_error
+		end
+
 	report_cannot_create_project (a_dir_name: STRING) is
 			-- Report an error when we cannot create project in `a_dir_name'.
 		local
@@ -275,6 +289,7 @@ feature {NONE} -- Error reporting
 			-- Report that project was loaded successfully.
 		local
 			l_title: STRING
+			l_projects: ARRAYED_LIST [STRING]
 		do
 			l_title := Interface_names.l_loaded_project.twin
 			l_title.append (target_name)
@@ -282,7 +297,8 @@ feature {NONE} -- Error reporting
 				l_title.append ("  (precompiled)")
 			end
 			window_manager.display_message (l_title)
-			Recent_projects_manager.save_environment
+			recent_projects_manager.add_recent_project (project_file_name)
+			Recent_projects_manager.save_recent_projects
 
 				--| IEK With project session handling this code is no longer needed, remove when fully integrated.
 				-- We print text in the project_tool text concerning the system

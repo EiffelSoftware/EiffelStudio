@@ -70,7 +70,7 @@
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
 			<condition><dotnet value="True" /></condition>
-			<option namespace="EiffelSoftware.MetadataConsumer.Interop"/>
+			<option namespace="Interop"/>
 			<visible class="COM_CACHE_MANAGER"/>
 		</cluster>
 	</target>

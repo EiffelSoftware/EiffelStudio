@@ -16,8 +16,6 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
 			-- Evaluate `a_item'.
-		local
-			l_feature: E_FEATURE
 		do
 			Result := a_item.is_immediate
 		ensure then

@@ -972,17 +972,19 @@ end
 					end
 				else
 					l_group := l_target.groups.item (l_root.cluster_name)
-					l_class := universe.class_named (root_class_name, l_group)
 					if l_group = Void then
 						create vd19
 						vd19.set_root_cluster_name (l_root.cluster_name)
 						Error_handler.insert_error (vd19)
 						Error_handler.raise_error
-					elseif l_class = Void or else not l_group.classes.has (root_class_name) then
-						create vd20
-						vd20.set_class_name (l_root.class_name.as_upper)
-						Error_handler.insert_error (vd20)
-						Error_handler.raise_error
+					else
+						l_class := universe.class_named (root_class_name, l_group)
+						if l_class = Void or else not l_group.classes.has (root_class_name) then
+							create vd20
+							vd20.set_class_name (l_root.class_name.as_upper)
+							Error_handler.insert_error (vd20)
+							Error_handler.raise_error
+						end
 					end
 				end
 

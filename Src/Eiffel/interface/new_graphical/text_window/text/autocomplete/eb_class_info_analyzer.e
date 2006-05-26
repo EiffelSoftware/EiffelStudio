@@ -540,6 +540,10 @@ feature {NONE}-- Clickable/Editable implementation
 					if after_searched_token then
 						error := error or else processed_type = Void
 					else
+						if not token_image_is_in_array (current_token, feature_call_separators) then
+								-- Skip "Result" in the case : create {CLASS}Result.make
+							go_to_next_token
+						end
 						error := error or else processed_type = Void or else not token_image_is_in_array (current_token, feature_call_separators)
 						go_to_next_token
 					end
@@ -658,6 +662,7 @@ feature {NONE}-- Implementation
 			par_cnt: INTEGER
 			stop, stop_loop: BOOLEAN
 			l_token : EDITOR_TOKEN
+			l_line: EDITOR_LINE
 		do
 			go_to_previous_token
 			if current_token /= Void then
@@ -699,6 +704,11 @@ feature {NONE}-- Implementation
 									(is_keyword (current_token) and then not token_image_is_in_array (current_token, special_keywords))
 						end
 						if not stop then
+								-- Try to find create {CLASS}Result.make
+							go_to_previous_token
+							if not token_image_is_same_as_word (current_token, Closing_brace) then
+								go_to_next_token
+							end
 								-- special case with "create" and "Precursor"
 							if token_image_is_same_as_word (current_token, Closing_brace) then
 								from
@@ -714,13 +724,16 @@ feature {NONE}-- Implementation
 									end
 								end
 								l_token := current_token
+								l_line := current_line
+
 								go_to_previous_token
---								error := current_token = Void or else not token_image_is_in_array (current_token, special_keywords)
+								
 								if current_token = Void then
 									error := True
 								else
 									if not token_image_is_in_array (current_token, special_keywords) then
 										current_token := l_token
+										current_line := l_line
 									end
 								end
 							end

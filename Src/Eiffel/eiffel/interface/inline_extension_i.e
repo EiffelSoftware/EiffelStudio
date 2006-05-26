@@ -26,7 +26,7 @@ feature  -- Initialization
 		ensure
 			is_cpp_set: is_cpp = is_cpp_inline
 		end
-		
+
 feature -- Access
 
 	argument_names: SPECIAL [INTEGER]
@@ -36,7 +36,7 @@ feature -- Properties
 
 	is_cpp: BOOLEAN
 		-- Is Current inline a C++ one?
-		
+
 	is_inline: BOOLEAN is True
 		-- Is Current external an inline one?
 
@@ -53,7 +53,7 @@ feature -- Settings
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-		do	
+		do
 			Result := same_type (other) and then
 				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
@@ -68,38 +68,123 @@ feature -- Code generation
 			l_buffer: GENERATION_BUFFER
 			l_is_func: BOOLEAN
 			l_ret_type: TYPE_I
+			name: STRING
+			i: INTEGER
+			put_eif_test: BOOLEAN
 		do
+			name := inline_byte_code.generated_c_feature_name
+			force_inline_def (inline_byte_code.result_type, name, inline_byte_code.argument_types)
+			name := inline_name (name)
+
 			l_buffer := Context.buffer
 			l_ret_type := inline_byte_code.result_type
 			if not l_ret_type.is_void then
+				put_eif_test := l_ret_type.is_boolean
 				l_is_func := True
 				a_result.print_register
 				l_buffer.put_string (" = ")
+				if put_eif_test then
+					l_buffer.put_string ("EIF_TEST(")
+				end
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
-			internal_generate_inline (Void, l_ret_type)
-			l_buffer.put_character (';')
+
+			l_buffer.put_string (name)
+			l_buffer.put_string (" (")
+			from
+				i := 1
+			until
+				i > inline_byte_code.argument_count
+			loop
+				if i > 1 then
+					l_buffer.put_string (", ")
+				end
+				l_buffer.put_string ("arg" + i.out)
+				i := i + 1
+			end
+			if put_eif_test then
+				l_buffer.put_character (')')
+			end
+			l_buffer.put_string (");")
 			l_buffer.put_new_line
 		end
 
-	generate_access (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
-			-- Generate code for access to inline C feature.
+	force_inline_def (a_ret_type: TYPE_I; name: STRING; arg_types: ARRAY [STRING]) is
+			-- Add routine `name' in set of already generated inlines if not present already.
 		require
-			parameters_not_void: argument_names /= Void implies parameters /= Void
-			parameters_count_valid: argument_names /= Void implies
-				(argument_names.count = parameters.count)
+			a_ret_type_not_void: a_ret_type /= Void
+			name_not_void: name /= Void
+			arg_types_not_void: arg_types /= Void
 		do
-			internal_generate_inline (parameters, a_ret_type)
+			if not context.generated_inlines.has (name) then
+				generate_inline_def (a_ret_type, name, arg_types)
+				context.generated_inlines.put (clone (name))
+			end
+		end
+
+	inline_name (a_name: STRING): STRING is
+			-- Name of inline routine from original name `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := "inline_" + a_name
+		ensure
+			inline_name_not_void: Result /= Void
+		end
+
+	generate_inline_def (a_ret_type: TYPE_I; name: STRING; arg_types: ARRAY [STRING]) is
+			-- Generate content of inline routine `name' in a separate routine called `inline_name'.
+		require
+			a_ret_type_not_void: a_ret_type /= Void
+			name_not_void: name /= Void
+			arg_types_not_void: arg_types /= Void
+		local
+			buf, old_buf: GENERATION_BUFFER
+			uc_name: STRING
+			i: INTEGER
+		do
+			old_buf := context.generation_buffer
+			buf := context.generation_ext_inline_buffer
+			context.set_buffer (buf)
+			uc_name := clone (name)
+			uc_name.to_upper
+
+			buf.put_string ("#ifndef INLINE_")
+			buf.put_string (uc_name)
+			buf.put_new_line
+			buf.put_new_line
+
+			buf.generate_pure_function_signature (
+				a_ret_type.c_type.c_string,
+				inline_name (name),
+				False,
+				Void,
+				inline_arg_names (arg_types.count),
+				arg_types)
+
+			buf.put_character ('{')
+			buf.put_new_line
+
+			internal_generate_inline (a_ret_type)
+			buf.put_character (';')
+
+			buf.put_new_line
+			buf.put_character ('}')
+			buf.put_new_line
+
+			buf.put_string ("#define INLINE_")
+			buf.put_string (uc_name)
+			buf.put_new_line
+			buf.put_string ( "#endif" )
+			buf.put_new_line
+			buf.put_new_line
+			context.set_buffer (old_buf)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_generate_inline (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	internal_generate_inline (a_ret_type: TYPE_I) is
 			-- Generate code for inline C feature.
-		require
-			parameters_not_void: parameters /= Void implies argument_names /= Void
-			parameters_count_valid: parameters /= Void implies
-				(argument_names.count = parameters.count)
 		local
 			l_code, l_arg: STRING
 			l_buffer: GENERATION_BUFFER
@@ -122,7 +207,7 @@ feature {NONE} -- Implementation
 				l_code := l_code.twin
 				l_code.right_adjust
 				l_code.left_adjust
-	
+
 				if argument_names /= Void then
 						-- Generate all expressions corresponding to passed arguments.
 						-- We use a trick to use an empty generation buffer by replacing
@@ -130,36 +215,19 @@ feature {NONE} -- Implementation
 					l_old := context.buffer
 					create l_values.make (1, argument_names.count)
 					create l_names.make (1, argument_names.count)
-					if parameters /= Void then
-						from
-							parameters.start
-							i := 1
-						until
-							parameters.after
-						loop
-							create l_temp.make (32)
-							context.set_buffer (l_temp)
-							parameters.item.print_register
-							l_values.put (l_temp.as_string, i)
-							parameters.forth
-							i := i + 1
-						end
-					else
-							-- If parameters was Void, it means that we are generating code
-							-- in encapsulating routine.
-						from
-							i := 1
-							nb := argument_names.count
-						until
-							i > nb
-						loop
-							l_values.put ("arg" + i.out, i)
-							i := i + 1
-						end
+
+					from
+						i := 1
+						nb := argument_names.count
+					until
+						i > nb
+					loop
+						l_values.put ("arg" + i.out, i)
+						i := i + 1
 					end
 					context.set_buffer (l_old)
-				
-						-- Extract names from arguments.
+
+					-- Extract names from arguments.
 					from
 						i := 0
 						nb := argument_names.count - 1
@@ -172,7 +240,7 @@ feature {NONE} -- Implementation
 						l_max := l_max.max (l_arg.count)
 						i := i + 1
 					end
-					
+
 						-- Now replace arguments by their real name. Note that we always start
 						-- with the bigger one to the small one. Not doing it was breaking
 						-- eweasel tests ccomp046, ccomp047 and final026.
@@ -203,28 +271,125 @@ feature {NONE} -- Implementation
 						l_current_max := 0
 					end
 				end
-	
+
 					-- Replace `$$_result_type' if used by return type of current inlined function
 				l_code.replace_substring_all ("$$_result_type", a_ret_type.c_type.c_string)
-	
+
 					-- FIXME: Manu 03/26/2003:
 					-- When verbatim strings are used, on Windows we get a %R%N which
 					-- is annoying to see in generated code. We get rid of it here.
 				l_code.replace_substring_all ("%R", "")
-	
+
 				l_buffer := Context.buffer
 				if a_ret_type.is_void then
 					l_buffer.put_string (l_code)
 				else
-					if a_ret_type.is_boolean then
-						l_buffer.put_string ("EIF_TEST")
+					if not alias_contains_return (l_code) then
+						l_buffer.put_string ("return ")
 					end
-					l_buffer.put_character ('(')
 					l_buffer.put_string (l_code)
-					l_buffer.put_character (')')
 				end
 			end
 		end
+
+	inline_arg_names (count: INTEGER): ARRAY [STRING] is
+			-- Names of the arguments
+		local
+			i : INTEGER
+			temp: STRING
+		do
+			from
+				create Result.make(1, count)
+				i := 1
+			until
+				i > count
+			loop
+				temp := "arg"
+				temp.append_integer (i)
+				Result.put (temp, i)
+				i := i + 1
+			end
+		end
+
+	alias_contains_return (c_code: STRING): BOOLEAN is
+			-- checks, whether there is a return statement in c_code
+		local
+			in_string, in_char, in_single_comment,
+			in_multi_comment, last_was_slash, last_was_star,
+			last_was_backslash: BOOLEAN;
+			i: INTEGER;
+			c, tc: CHARACTER;
+			changed_into: BOOLEAN
+		do
+			from
+				i := 1
+			until
+				Result = True or i > c_code.count - 5
+			loop
+				c := c_code.item (i)
+				if not in_string and not in_char and not in_single_comment and not in_multi_comment then
+					if not last_was_backslash then
+						changed_into := False
+						inspect c
+						when '%"' then
+							in_string := True
+							changed_into := True
+						when '%'' then
+							in_char := True
+							changed_into := True
+						when '/' then
+							in_single_comment := last_was_slash
+							changed_into := in_single_comment
+						when '*' then
+							in_multi_comment := last_was_slash
+							changed_into := in_multi_comment
+						else
+						end
+
+						if changed_into then
+							last_was_slash := False
+						else
+							if c = 'r' then
+								if equal (c_code.substring (i+1, i+5), "eturn") then
+									tc := c_code.item (i+6)
+									if not (tc.is_alpha_numeric or tc = '_') then
+										Result := True
+									end
+								end
+							end
+						end
+					end
+					if not changed_into then
+						last_was_slash := c = '/'
+						last_was_backslash := c = '\' and not last_was_backslash
+					end
+				elseif in_string then
+					if c = '"' and not last_was_backslash then
+						in_string := False
+					end
+					last_was_backslash := c = '\' and not last_was_backslash
+				elseif in_char then
+					if c = '%'' and not last_was_backslash then
+						in_char := False
+					end
+				else if in_single_comment then
+					if c = '%N' then
+						in_single_comment := False
+					end
+				elseif in_multi_comment then
+					if last_was_star and c = '/' then
+						in_multi_comment := False
+					end
+					last_was_star := c = '*'
+				else
+					check
+						impossible_state: false
+					end
+				end
+			end
+			i := i + 1
+		end
+	end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

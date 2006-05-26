@@ -523,7 +523,7 @@ feature -- Generation
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
-			tmp, buffer, header_buffer, headers: GENERATION_BUFFER
+			tmp, buffer, ext_inline_buffer, header_buffer, headers: GENERATION_BUFFER
 		do
 			final_mode := byte_context.final_mode
 
@@ -532,8 +532,12 @@ feature -- Generation
 				-- Clear buffers for the new generation
 			buffer := generation_buffer
 			buffer.clear_all
+			ext_inline_buffer := generation_ext_inline_buffer
+			ext_inline_buffer.clear_all
 			header_buffer := header_generation_buffer
 			header_buffer.clear_all
+			byte_context.generated_inlines.wipe_out
+
 			if final_mode then
 				create headers.make (100)
 			end
@@ -686,6 +690,7 @@ feature -- Generation
 				else
 					headers.put_in_file (file)
 				end
+				ext_inline_buffer.put_in_file (file)
 				buffer.put_in_file (file)
 				file.close
 

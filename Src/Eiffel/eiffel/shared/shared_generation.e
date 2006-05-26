@@ -38,6 +38,14 @@ feature
 			create Result.make (600000)
 		end
 
+	generation_ext_inline_buffer: GENERATION_BUFFER is
+			-- Buffer used for the generation of inlined externals
+			-- Default size is 2Ko, it will be rezized when needed.
+		once
+			create Result.make (2000)
+		end
+
+
 	header_generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation for the header
 			-- file will happen. Default size is 50Ko, it will
@@ -51,7 +59,7 @@ feature
 		once
 			create Result
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

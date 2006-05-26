@@ -13,7 +13,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -60,7 +60,7 @@ feature -- Open, close buffer operations
 			emitted := False
 				-- We reuse the first buffer allocated with `chunk_size' characters.
 				-- If `buffers' is not empty, then the first buffer is at the first
-				-- entry of `buffers', otherwise we simply reset `count' of 
+				-- entry of `buffers', otherwise we simply reset `count' of
 				-- current_buffer.
 			if not buffers.is_empty then
 				current_buffer := buffers.first
@@ -171,14 +171,14 @@ feature -- Basic element change
 			emit_tabs
 			current_buffer.append_character (c)
 		end
-	
+
 	put_integer (i: INTEGER) is
 			-- Write int `i'.
 		do
 			emit_tabs
 			current_buffer.append_integer (i)
 		end
-	
+
 	put_string (s: STRING) is
 			-- Write string `s'.
 		require
@@ -193,7 +193,7 @@ feature -- Basic element change
 		do
 			tabs := tabs + 1
 		end
-	
+
 	exdent is
 			-- Remove one leading tab for next line.
 		require
@@ -208,7 +208,7 @@ feature -- Basic element change
 			old_tabs := tabs
 			tabs := 0
 		end
-	
+
 	restore_margin is
 			-- Restore margin value as of the one which was in
 			-- use when a `left_margin' call was issued.
@@ -312,7 +312,7 @@ feature -- Basic element change
 			put_character ('"')
 			string_converter.escape_string (current_buffer, s)
 			put_character ('"')
-		end	
+		end
 
 	escape_char (c: CHARACTER) is
 			-- Append `c' with C escape sequences.
@@ -342,11 +342,11 @@ feature -- prototype code generation
 			generate_function_declaration (type, f_name, False, arg_types)
 		end
 
-	generate_function_signature (type: STRING; f_name: STRING;
+	generate_pure_function_signature (type: STRING; f_name: STRING;
 					extern: BOOLEAN; extern_header: like Current
 					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
 			-- Generate the function signature for ANSI C
-			-- including the starting '{'
+			-- without the starting '{'
 		require
 			non_void_args: type /= Void and f_name /= Void and
 				arg_names /= Void and arg_types /= Void
@@ -355,7 +355,9 @@ feature -- prototype code generation
 		local
 			i, nb: INTEGER
 		do
-			extern_header.generate_function_declaration (type, f_name, extern, arg_types)
+			if extern_header /= Void then
+				extern_header.generate_function_declaration (type, f_name, extern, arg_types)
+			end
 			if not extern then
 				append ("static ")
 			end
@@ -392,6 +394,22 @@ feature -- prototype code generation
 
 			current_buffer.append_character (')')
 			put_new_line
+		end
+
+	generate_function_signature (type: STRING; f_name: STRING;
+					extern: BOOLEAN; extern_header: like Current
+					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
+			-- Generate the function signature for ANSI C
+			-- including the starting '{'
+		require
+			non_void_args: type /= Void and f_name /= Void and
+				arg_names /= Void and arg_types /= Void
+			same_count: arg_names.count = arg_types.count
+			valid_lower: arg_names.lower = 1 and arg_types.lower = 1
+		local
+			i, nb: INTEGER
+		do
+			generate_pure_function_signature (type, f_name, extern, extern_header, arg_names, arg_types)
 			current_buffer.append_character ('{')
 			put_new_line
 			if not is_il_generation then
@@ -401,7 +419,7 @@ feature -- prototype code generation
 				put_new_line
 			end
 		end
-	
+
 feature {GENERATION_BUFFER} -- prototype code generation
 
 	generate_function_declaration (type: STRING; f_name: STRING;
@@ -433,7 +451,7 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			append (f_name)
 			current_buffer.append_character ('(')
 			nb := arg_types.count
-			
+
 			if nb = 0 then
 				append ("void")
 			else
@@ -465,7 +483,7 @@ feature {NONE} -- Implementation: Status report
 
 	chunk_size: INTEGER
 			-- Size of buffers we will create.
-			
+
 	max_chunk_size: INTEGER is 262144
 			-- Maximum size of chunks allocated (256KB)
 

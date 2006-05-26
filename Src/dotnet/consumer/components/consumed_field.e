@@ -58,6 +58,12 @@ feature -- Access
 			Result := r
 		end
 
+	setter: CONSUMED_PROCEDURE assign set_setter is
+			-- Setter procedure
+		do
+			Result := s
+		end
+
 feature -- Status report
 
 	is_attribute: BOOLEAN is True
@@ -71,7 +77,7 @@ feature -- Status report
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_init_only = {FEATURE_ATTRIBUTE}.Is_init_only
 		end
-		
+
 	is_field: BOOLEAN is
 			-- Is field?
 		do
@@ -87,10 +93,27 @@ feature -- Status report
 			definition: Result = not is_static
 		end
 
+feature {TYPE_CONSUMER} -- Element Change
+
+	set_setter (a_setter: like setter) is
+			-- Sets `setter' with `a_setter'.
+		require
+			a_setter_attached: a_setter /= Void
+			a_setter_is_attribute_setter: a_setter.is_attribute_setter
+			setter_not_set: setter = Void
+		do
+			s := a_setter
+		ensure
+			setter_set: setter = a_setter
+		end
+
 feature {NONE} -- Access
 
 	r: like return_type;
 			-- Internal data for `return_type'.
+
+	s: like setter;
+			-- Fields setter.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -39,7 +39,7 @@ feature -- Miscellaneous
 
 			text.add_indent
 			text.process_indexing_tag_text ("compilation: ")
-			text.process_basic_text (Eiffel_ace.system.target_path)
+			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
 			text.add_new_line
 
 			text.add_indent

@@ -67,7 +67,7 @@ feature -- Action
 			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
-				create generation_dir.make_from_string (Workbench_generation_path)
+				create generation_dir.make_from_string (project_location.workbench_path)
 
 				from
 					l_types := types
@@ -1076,9 +1076,9 @@ feature
 			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
-				dir_name := Final_generation_path.twin
+				dir_name := project_location.final_path.twin
 			else
-				dir_name := Workbench_generation_path.twin
+				dir_name := project_location.workbench_path.twin
 			end
 
 			create subdirectory.make (5)

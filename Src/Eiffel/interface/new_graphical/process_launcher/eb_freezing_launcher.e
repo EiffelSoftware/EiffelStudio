@@ -40,7 +40,7 @@ feature{NONE} -- Generation path
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		do
-			Result := workbench_generation_path
+			Result := project_location.workbench_path
 		end
 
 feature -- Message

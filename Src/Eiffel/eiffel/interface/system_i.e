@@ -799,7 +799,7 @@ end
 				l_vis_build.set_il_version (clr_runtime_version)
 			end
 			l_vis_build.set_partial_location (
-				l_factory.new_location_from_path (partial_generation_path, l_target))
+				l_factory.new_location_from_path (project_location.partial_generation_path, l_target))
 
 				-- set observers
 			l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
@@ -2119,7 +2119,7 @@ end
 			end
 
 			l_name.append (".melted")
-			create file_name.make_from_string (Workbench_generation_path)
+			create file_name.make_from_string (project_location.workbench_path)
 			file_name.set_file_name (l_name)
 			create melted_file.make_open_write (file_name)
 
@@ -3148,7 +3148,7 @@ feature {NONE} -- Finalization implementation
 			j: INTEGER
 			deg_output: DEGREE_OUTPUT
 		do
-			Eiffel_project.delete_generation_directory (Final_generation_path, Void, Void) -- No agent
+			Eiffel_project.delete_generation_directory (project_location.final_path, Void, Void) -- No agent
 			create {FINAL_MAKER} makefile_generator.make
 			open_log_files
 			j := classes.count
@@ -4084,7 +4084,7 @@ end
 				create temp.make (2)
 				temp.append_character (System_object_prefix)
 				temp.append_integer (1)
-				create dir_name.make_from_string (Final_generation_path)
+				create dir_name.make_from_string (project_location.final_path)
 				dir_name.extend (temp)
 				create subdir.make (dir_name)
 				if not subdir.exists then
@@ -4808,11 +4808,11 @@ feature -- Log files
 		do
 			if in_final_mode then
 					-- removed_log_file is used only in final mode
-				create f_name.make_from_string (Final_generation_path)
+				create f_name.make_from_string (project_location.final_path)
 				f_name.set_file_name (Removed_log_file_name)
 				create removed_log_file.make (f_name)
 
-				create f_name.make_from_string (Final_generation_path)
+				create f_name.make_from_string (project_location.final_path)
 				f_name.set_file_name (Translation_log_file_name)
 				create used_features_log_file.make (f_name)
 
@@ -4820,7 +4820,7 @@ feature -- Log files
 				removed_log_file.open_write
 				used_features_log_file.open_write
 			else
-				create f_name.make_from_string (Workbench_generation_path)
+				create f_name.make_from_string (project_location.workbench_path)
 				f_name.set_file_name (Translation_log_file_name)
 				create used_features_log_file.make (f_name)
 

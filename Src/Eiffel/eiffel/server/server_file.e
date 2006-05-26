@@ -37,7 +37,7 @@ feature -- Initialization
 			temp: STRING
 			d: DIRECTORY
 		do
-			create d_name.make_from_string (Compilation_path)
+			create d_name.make_from_string (project_location.compilation_path)
 			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (i))
@@ -124,7 +124,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	open is
 			-- Open file in read mode if precompiled
 			-- in read-write otherwise.
@@ -204,8 +204,8 @@ end
 		end
 
 	update_path is
-			-- Update the file path of Current 
-			-- server file. (It might have changed 
+			-- Update the file path of Current
+			-- server file. (It might have changed
 			-- between compilations)
 		local
 			fname: FILE_NAME
@@ -319,7 +319,7 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 			-- Server file directory path
 		do
 			if an_id > file_counter.precompiled_offset then
-				Result := Compilation_path
+				Result := project_location.compilation_path
 			else
 				Result := Precompilation_directories.item
 						(file_counter.compilation_id (an_id)).compilation_path

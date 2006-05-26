@@ -115,7 +115,7 @@ feature {NONE} -- Compilation implementation
 						-- or new derivation of SPECIAL), no need to freeze again.
 					if Eiffel_project.save_error then
 						output_manager.add_string ("Could not write to ")
-						output_manager.add_string (Project_directory_name)
+						output_manager.add_string (project_location.location)
 						output_manager.add_new_line
 						output_manager.add_string ("Please check permissions / disk space")
 						output_manager.add_new_line
@@ -227,7 +227,7 @@ feature {NONE} -- Attributes
 	c_code_directory: STRING is
 			-- Directory where the C code is stored.
 		do
-			Result := Workbench_generation_path
+			Result := project_location.workbench_path
 		end
 
 feature -- Execution

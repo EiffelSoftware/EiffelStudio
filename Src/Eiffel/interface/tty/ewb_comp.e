@@ -208,9 +208,9 @@ feature {NONE} -- Output
 				io.error.put_string (Platform_constants.Finish_freezing_script);
 				io.error.put_string ("%" in:%N%T");
 				if finalized_dir then
-					io.error.put_string (Final_generation_path)
+					io.error.put_string (project_location.final_path)
 				else
-					io.error.put_string (Workbench_generation_path)
+					io.error.put_string (project_location.workbench_path)
 				end;
 				io.error.put_new_line;
 			end
@@ -250,9 +250,8 @@ feature {NONE} -- Compilation
 				finished
 			loop
 				if Eiffel_project.save_error then
-					create file_name.make_from_string (Eiffel_project.project_directory.name);
-					file_name.set_file_name (project_file_name)
-					create temp.make (0);
+					create file_name.make_from_string (project_location.project_file_name)
+					create temp.make (128);
 					temp.append ("Error: could not write to ");
 					temp.append (file_name);
 					temp.append ("%NPlease check permissions and disk space");

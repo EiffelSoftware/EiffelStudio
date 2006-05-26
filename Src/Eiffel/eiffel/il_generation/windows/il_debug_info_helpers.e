@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Query
 
 	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
@@ -55,7 +60,7 @@ feature {NONE} -- IL info file names
 	Workbench_il_info_file_name: FILE_NAME is
 			-- Filename for Workbench IL info storage
 		do
-			create Result.make_from_string (Workbench_generation_path)
+			create Result.make_from_string (project_location.workbench_path)
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
 		end
@@ -63,7 +68,7 @@ feature {NONE} -- IL info file names
 	Final_il_info_file_name: FILE_NAME is
 			-- Filename for Final IL info storage
 		once
-			create Result.make_from_string (Final_generation_path)
+			create Result.make_from_string (project_location.final_path)
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
 		end
@@ -73,27 +78,27 @@ feature {NONE} -- File name data From compiler world
 	workbench_module_directory_path_name: STRING is
 			-- Directory path where module are located
 		do
-			Result := Workbench_generation_path
+			Result := project_location.workbench_path
 		end
 
 	finalized_module_directory_path_name: STRING is
 			-- Directory path where module are located
 		do
-			Result := Final_generation_path
+			Result := project_location.final_path
 		end
 
 	workbench_assembly_directory_path_name: STRING is
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
-			Result := Workbench_bin_generation_path
+			Result := project_location.workbench_assemblies_path
 		end
 
 	finalized_assembly_directory_path_name: STRING is
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
-			Result := Final_bin_generation_path
+			Result := project_location.final_assemblies_path
 		end
 
 	precompilation_module_name (a_system_name: STRING): STRING is

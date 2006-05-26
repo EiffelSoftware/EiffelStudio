@@ -18,9 +18,11 @@ inherit
 	EB_SHARED_WINDOW_MANAGER
 
 	PROJECT_CONTEXT
-	
+
+	SYSTEM_CONSTANTS
+
 create
-	make_workbench, 
+	make_workbench,
 	make_finalized
 
 feature {NONE} -- Initialization
@@ -56,15 +58,13 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 		do
 			if is_workbench then
-				create makefile_sh_name.make_from_string 
-						(Workbench_generation_path)
+				create makefile_sh_name.make_from_string (project_location.workbench_path)
 			else
-				create makefile_sh_name.make_from_string 
-						(Final_generation_path)
+				create makefile_sh_name.make_from_string (project_location.final_path)
 			end
 			makefile_sh_name.set_file_name (Makefile_SH)
 			create file.make (makefile_sh_name)
-			if file.exists then		
+			if file.exists then
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else
 				create wd.make_with_text (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name))

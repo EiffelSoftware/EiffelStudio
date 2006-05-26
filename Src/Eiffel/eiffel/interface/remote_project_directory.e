@@ -12,23 +12,7 @@ indexing
 class REMOTE_PROJECT_DIRECTORY
 
 inherit
-
 	EIFFEL_ENV
-		rename
-			precomp_eif as shared_precomp_eif
-		end;
-	PROJECT_CONTEXT
-		rename
-			compilation_path as shared_compilation_path,
-			precomp_eif as shared_precomp_eif
-		export
-			{NONE} all
-		end;
-	DIRECTORY
-		rename
-			make as directory_make,
-			mode as file_mode
-		end;
 	SHARED_ERROR_HANDLER;
 	SHARED_ENV;
 	COMPILER_EXPORTER
@@ -39,15 +23,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dn: STRING) is
+	make (a_project_location: like project_location) is
 			-- Create a remote project directory object.
+		require
+			a_project_location_not_void: a_project_location /= Void
 		do
-			name := dn
 			has_precompiled_preobj := True;
-			directory_make (Environ.interpreted_string (dn))
+			project_location := a_project_location
+		ensure
+			project_location_set: project_location = a_project_location
 		end
 
 feature -- Status report
+
+	name: STRING is
+			-- Name for remote project.
+		do
+			Result := project_location.location
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	is_valid: BOOLEAN;
 		-- Is Current a valid project directory
@@ -115,12 +110,14 @@ feature -- Status setting
 
 feature -- Access
 
+	project_location: PROJECT_DIRECTORY
+			-- Info about remote project location
+
 	compilation_path: DIRECTORY_NAME is
 			-- Path of the COMP directory
 		do
-			create Result.make_from_string (name);
-			Result.extend (Comp)
-		end;
+			Result := project_location.compilation_path
+		end
 
 	licensed: BOOLEAN
 			-- Is this precompilation protected by a license?
@@ -129,38 +126,28 @@ feature -- Access
 			-- Full name of the file where the
 			-- workbench is stored
 		do
-			create Result.make_from_string (name);
-			Result.set_file_name (project_file_name);
+			Result := project_location.project_file_name
 		end
 
 	project_epr_file: PROJECT_EIFFEL_FILE is
 			-- File where the workbench is stored
 		do
-			create Result.make (project_epr_location)
-		end
-
-	precomp_eif_location: FILE_NAME is
-			-- Full name of the file where the
-			-- precompilation information is stored
-		do
-			create Result.make_from_string (name);
-			Result.set_file_name (Shared_precomp_eif)
+			Result := project_location.project_file
 		end
 
 	precomp_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the precompilation information is stored
 		do
-			create Result.make (precomp_eif_location)
+			create Result.make (project_location.precompilation_file_name)
 		end
 
 	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- File where the il debug info for the precompiled is stored
 		do
-			create Result.make_from_string (name);
 			if a_use_optimized_precompile then
-				Result.extend (F_code)
+				create Result.make_from_string (project_location.final_path)
 			else
-				Result.extend (W_code)
+				create Result.make_from_string (project_location.workbench_path)
 			end
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
@@ -168,31 +155,25 @@ feature -- Access
 
 	precompiled_preobj: FILE_NAME is
 			-- Full name of `preobj' object file
-		local
-			makefile_name: STRING
 		do
-			makefile_name := name
-			create Result.make_from_string (makefile_name);
-			Result.extend (W_code)
+			create Result.make_from_string (project_location.workbench_path)
 			Result.set_file_name (Platform_constants.Preobj)
 		end
 
 	precompiled_driver: FILE_NAME is
 			-- Full name of the precompilation driver
 		do
-			create Result.make_from_string (name);
-			Result.extend (W_code)
+			create Result.make_from_string (project_location.workbench_path)
 			Result.set_file_name (Platform_constants.Driver)
 		end
 
 	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly driver.
 		do
-			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend (F_code)
+				create Result.make_from_string (project_location.final_path)
 			else
-				Result.extend (W_code)
+				create Result.make_from_string (project_location.workbench_path)
 			end
 			Result.set_file_name (system_name)
 			Result.add_extension (msil_generation_type)
@@ -203,11 +184,10 @@ feature -- Access
 	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly driver.
 		do
-			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend (F_code)
+				create Result.make_from_string (project_location.final_path)
 			else
-				Result.extend (W_code)
+				create Result.make_from_string (project_location.workbench_path)
 			end
 			Result.set_file_name ("lib" + system_name)
 			Result.add_extension ("dll")
@@ -218,11 +198,10 @@ feature -- Access
 	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly pdb.
 		do
-			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend (F_code)
+				create Result.make_from_string (project_location.final_path)
 			else
-				Result.extend (W_code)
+				create Result.make_from_string (project_location.workbench_path)
 			end
 			Result.set_file_name (system_name)
 			Result.add_extension ("pdb")
@@ -286,7 +265,7 @@ feature -- Check
 			is_precompile := True;
 			check_project_directory
 				-- precomp.eif file must be readable.
-			check_file (<<>>, Shared_precomp_eif);
+			check_file (project_location.precompilation_file_name);
 		end
 
 	check_optional (a_use_optimized_precompile: BOOLEAN) is
@@ -320,83 +299,64 @@ feature {NONE} -- Implementation
 			is_valid := True;
 				-- Current directory must be
 				-- readable.
-			check_directory (<<>>);
+			check_directory (project_location.eifgens_path)
 
 				-- COMP directory must be
 				-- readable.
-			check_directory (<<Comp>>);
+			check_directory (project_location.compilation_path)
 
 				-- project.eif file must be
 				-- readable.
-			check_file (<<>>, project_file_name);
+			check_file (project_location.project_file_name);
 
 				-- W_code file must be
 				-- readable.
-			check_directory (<<W_code>>);
+			check_directory (project_location.workbench_path);
 
 		end
 
-	check_directory (directories: ARRAY [STRING]) is
+	check_directory (a_directory: STRING) is
 			-- Check readability of directory of name
 			-- `rn' relative to Current.
+		require
+			a_directory_not_void: a_directory /= Void
 		local
 			d: DIRECTORY;
-			dn: DIRECTORY_NAME;
 			vd42: VD42;
-			i: INTEGER
 		do
 			if is_valid then
-				create dn.make_from_string (name);
-				from
-					i := directories.lower
-				until
-					i > directories.upper
-				loop
-					dn.extend (directories.item (i))
-					i := i + 1
-				end
-				create d.make (dn);
+				create d.make (a_directory);
 				is_valid :=
 					d.exists and then
 					d.is_readable and then
 					d.is_executable
 				if not is_valid and then is_precompile then
 					create vd42;
-					vd42.set_path (dn);
+					vd42.set_path (a_directory);
 					vd42.set_is_directory;
 					Error_handler.insert_error (vd42);
 				end
 			end
 		end;
 
-	check_file (directories: ARRAY [STRING]; rn: STRING) is
+	check_file (n: STRING) is
 			-- Check readability of file of name
 			-- `rn' relative to Current.
+		require
+			n_not_void: n /= Void
 		local
 			f: RAW_FILE;
-			fn: FILE_NAME;
 			vd42: VD42;
-			i: INTEGER
 		do
 			if is_valid then
-				create fn.make_from_string (name);
-				from
-					i := directories.lower
-				until
-					i > directories.upper
-				loop
-					fn.extend (directories.item (i))
-					i := i + 1
-				end
-				fn.set_file_name (rn);
-				create f.make (fn);
+				create f.make (n)
 				is_valid :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not is_valid and then is_precompile then
 					create vd42;
-					vd42.set_path (fn);
+					vd42.set_path (n);
 					Error_handler.insert_error (vd42);
 				end
 			end
@@ -408,20 +368,18 @@ feature {NONE} -- Implementation
 			rn_not_void: rn /= Void
 		local
 			f: RAW_FILE;
-			fn: FILE_NAME;
 			vd43: VD43;
 			ok: BOOLEAN
 		do
 			if is_valid then
-				create fn.make_from_string (rn)
-				create f.make (fn)
+				create f.make (rn)
 				ok :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not ok then
 					create vd43
-					vd43.set_path (fn)
+					vd43.set_path (rn)
 					Error_handler.insert_warning (vd43)
 				end
 			end
@@ -436,6 +394,9 @@ feature {NONE} -- Externals
 		alias
 			"eif_date_string"
 		end
+
+invariant
+	project_location_not_void: project_location /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

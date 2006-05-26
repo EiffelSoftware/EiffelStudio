@@ -40,10 +40,10 @@ feature  {NONE} -- Initialization
 			wkb_generate_execution_profile := (wkb_existing_profile = Void)
 			flz_generate_execution_profile := (flz_existing_profile = Void)
 			
-			create filename.make_from_string (workbench_generation_path)
+			create filename.make_from_string (project_location.workbench_path)
 			filename.set_file_name ("profinfo")
 			wkb_runtime_information_record := filename
-			create filename.make_from_string (final_generation_path)
+			create filename.make_from_string (project_location.final_path)
 			filename.set_file_name ("profinfo")
 			flz_runtime_information_record := filename
 			
@@ -156,9 +156,9 @@ feature -- Access
 			-- Generation path for "profinfo.pfi"
 		do
 			if workbench_mode then
-				Result := workbench_generation_path
+				Result := project_location.workbench_path
 			else
-				Result := final_generation_path
+				Result := project_location.final_path
 			end
 		end	
 
@@ -322,9 +322,9 @@ feature {NONE} -- Implementation
 			substring: STRING
 		do
 			if is_workbench_mode then
-				path := workbench_generation_path
+				path := project_location.workbench_path
 			else
-				path := final_generation_path
+				path := project_location.final_path
 			end
 			create dir.make (path)
 			files := dir.linear_representation

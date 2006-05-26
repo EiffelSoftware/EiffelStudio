@@ -10,13 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TABLE_GENERATOR 
+deferred class TABLE_GENERATOR
 
 inherit
 	SHARED_CODE_FILES;
 	SHARED_BYTE_CONTEXT;
 	SHARED_GENERATION
 	SHARED_WORKBENCH
+	SYSTEM_CONSTANTS
 
 feature -- Initialization
 
@@ -31,7 +32,7 @@ feature -- Initialization
 		ensure
 			file_counter_set: file_counter = 1
 		end;
-	
+
 feature -- Access
 
 	file_counter: INTEGER is
@@ -132,7 +133,7 @@ feature -- Access
 		do
 				-- Clear buffer for Current generation
 			current_buffer.clear_all
-			
+
 				-- Start C code generation
 			current_buffer.start_c_specific_code
 		end;

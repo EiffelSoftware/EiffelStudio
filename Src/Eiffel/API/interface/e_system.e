@@ -18,6 +18,8 @@ inherit
 
 	PROJECT_CONTEXT
 
+	SYSTEM_CONSTANTS
+
 create
 	make
 
@@ -67,7 +69,7 @@ feature -- Access
 		local
 			d: DIRECTORY
 		do
-			create Result.make_from_string (target_path)
+			create Result.make_from_string (project_location.target_path)
 			Result.extend ("Diagrams")
 			create d.make (Result)
 			if not d.exists then
@@ -187,9 +189,9 @@ feature -- Access
 			tmp: STRING
 		do
 			if workbench_mode then
-				create Result.make_from_string (Workbench_generation_path)
+				create Result.make_from_string (project_location.workbench_path)
 			else
-				create Result.make_from_string (Final_generation_path)
+				create Result.make_from_string (project_location.final_path)
 			end
 			Result.set_file_name (name)
 			tmp := Platform_constants.Executable_suffix

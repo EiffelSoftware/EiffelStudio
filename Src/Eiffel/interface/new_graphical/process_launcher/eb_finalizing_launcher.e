@@ -40,7 +40,7 @@ feature{NONE} -- Generation path
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		do
-			Result := final_generation_path
+			Result := project_location.final_path
 		end
 
 feature -- Message

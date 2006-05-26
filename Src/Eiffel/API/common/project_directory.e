@@ -1,126 +1,472 @@
 indexing
-	description: "Directory for an eiffel project."
+	description: "Facilities to locate and create project directories/files."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class PROJECT_DIRECTORY
+class
+	PROJECT_DIRECTORY
 
 inherit
-	PROJECT_CONTEXT
+	ANY
+
+	SYSTEM_CONSTANTS
+		rename
+			project_file_name as project_file_name_constant
 		export
 			{NONE} all
 		end
 
-	DIRECTORY
-		rename
-			make as directory_make,
-			mode as file_mode,
-			exists as base_exists,
-			is_readable as is_base_readable,
-			is_writable as is_base_writable,
-			is_executable as is_base_executable
-		end
-
-	SHARED_WORKBENCH
-
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (dn: STRING; project_eiffel_file: PROJECT_EIFFEL_FILE) is
+	make (a_location, a_target: STRING) is
+			-- Initialize Current project location at `a_location' for a target `a_target'.
+		require
+			a_location_not_void: a_location /= Void
+			a_location_not_empty: not a_location.is_empty
+			a_target_not_void: a_target /= Void
+			a_target_not_empty: not a_target.is_empty
 		do
-			directory_make (dn)
-			if project_eiffel_file /= Void then
-				set_project_file (project_eiffel_file)
-			end
+			location := a_location
+			target := a_target
+		ensure
+			location_set: location = a_location
+			target_set: target = a_target
 		end
 
 feature -- Access
 
-	valid_project_epr: BOOLEAN is
+	location: STRING
+			-- Location of project
+
+	target: STRING
+			-- Name of project's target
+
+feature -- Directory creation
+
+	create_project_directories is
+			-- Create basic structure for project.
+		local
+			d: DIRECTORY
+		do
+			create d.make (eifgens_path)
+			if not d.exists then
+				d.create_dir
+			end
+
+			create d.make (target_path)
+			if not d.exists then
+				d.create_dir
+			end
+
+			create d.make (compilation_path)
+			if not d.exists then
+				d.create_dir
+			end
+
+			create d.make (final_path)
+			if not d.exists then
+				d.create_dir
+			end
+
+			create d.make (workbench_path)
+			if not d.exists then
+				d.create_dir
+			end
+
+			create d.make (partial_generation_path)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
+	create_profiler_directory is
+			-- Directory where the profiler files are generated
+		local
+			d: DIRECTORY
+		do
+			create_project_directories
+			create d.make (profiler_path)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
+	create_local_assemblies_directory (is_final: BOOLEAN) is
+			-- Directory where local assemblies will be generated.
+		local
+			d: DIRECTORY
+		do
+			create_project_directories
+			if is_final then
+				create d.make (final_assemblies_path)
+				if not d.exists then
+					d.create_dir
+				end
+			else
+				create d.make (workbench_assemblies_path)
+				if not d.exists then
+					d.create_dir
+				end
+			end
+		end
+
+feature -- Directories
+
+	path: DIRECTORY_NAME is
+			-- Path for current location.
+		do
+			Result := internal_path
+			if Result = Void then
+				create Result.make_from_string (location)
+				internal_path := Result
+			end
+		ensure
+			path_not_void: Result /= Void
+		end
+
+	backup_path: DIRECTORY_NAME is
+			-- Path where backups will be saved during a compilation.
+		do
+			Result := internal_backup_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (backup)
+				internal_backup_path := Result
+			end
+		ensure
+			backup_path_not_void: Result /= Void
+		end
+
+	compilation_path: DIRECTORY_NAME is
+			-- Path to `COMP' where compiler data will be stored.
+		do
+			Result := internal_compilation_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (comp)
+				internal_compilation_path := Result
+			end
+		ensure
+			compilation_path_not_void: Result /= Void
+		end
+
+	documentation_path: DIRECTORY_NAME is
+			-- Path where documentation will be generated if not location is given.
+		do
+			Result := internal_documentation_path
+			if Result = Void then
+				create Result.make_from_string (location)
+				Result.extend (documentation)
+				Result.extend (target)
+				internal_documentation_path := Result
+			end
+		ensure
+			documentation_path_not_void: Result /= Void
+		end
+
+	eifgens_path: DIRECTORY_NAME is
+			-- Path to `EIFGENs' directory.
+		do
+			Result := internal_eifgens_path
+			if Result = Void then
+				create Result.make_from_string (location)
+				Result.extend (eiffelgens)
+				internal_eifgens_path := Result
+			end
+		ensure
+			eifgens_path_not_void: Result /= Void
+		end
+
+	final_assemblies_path: DIRECTORY_NAME is
+			-- Path to `F_code/Assemblies' directory with project directory.
+		do
+			Result := internal_final_assemblies_path
+			if Result = Void then
+				create Result.make_from_string (final_path)
+				Result.extend (local_assemblies)
+				internal_final_assemblies_path := Result
+			end
+		ensure
+			final_assemblies_path_not_void: Result /= Void
+		end
+
+	final_path: DIRECTORY_NAME is
+			-- Path to `F_code' directory with project directory.
+		do
+			Result := internal_final_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (f_code)
+				internal_final_path := Result
+			end
+		ensure
+			final_path_not_void: Result /= Void
+		end
+
+	partial_generation_path: DIRECTORY_NAME is
+			-- Path to where partial classes will be merged.
+		do
+			Result := internal_partial_generation_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (partials)
+				internal_partial_generation_path := Result
+			end
+		ensure
+			partial_generation_path_not_void: Result /= Void
+		end
+
+	profiler_path: DIRECTORY_NAME is
+			-- Path to `Profiler' directory within project directory.
+		do
+			Result := internal_profiler_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (profiler)
+				internal_profiler_path := Result
+			end
+		ensure
+			profiler_path_not_void: Result /= Void
+		end
+
+	target_path: DIRECTORY_NAME is
+			-- Path to `target' directory within project directory.
+		do
+			Result := internal_target_path
+			if Result = Void then
+				create Result.make_from_string (eifgens_path)
+				Result.extend (target)
+				internal_target_path := Result
+			end
+		ensure
+			target_path_not_void: Result /= Void
+		end
+
+	workbench_assemblies_path: DIRECTORY_NAME is
+			-- Path to `W_code/Assemblies' directory with project directory.
+		do
+			Result := internal_workbench_assemblies_path
+			if Result = Void then
+				create Result.make_from_string (workbench_path)
+				Result.extend (local_assemblies)
+				internal_workbench_assemblies_path := Result
+			end
+		ensure
+			workbench_assemblies_path_not_void: Result /= Void
+		end
+
+	workbench_path: DIRECTORY_NAME is
+			-- Path to `W_code' directory with project directory.
+		do
+			Result := internal_workbench_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (w_code)
+				internal_workbench_path := Result
+			end
+		ensure
+			workbench_path_not_void: Result /= Void
+		end
+
+feature -- Files
+
+	project_file_name: FILE_NAME is
+			-- Path to `project.epr'.
+		do
+			Result := internal_project_file_name
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.set_file_name (project_file_name_constant)
+				internal_project_file_name := Result
+			end
+		ensure
+			project_file_name_not_void: Result /= Void
+		end
+
+	project_file: PROJECT_EIFFEL_FILE is
+			-- Access to project file data.
+		do
+				-- It is not stored within Current because Current is saved to disk
+				-- and when retrieved it would cause to have a valid file handle
+				-- to be restored in `project_file'.
+			create Result.make (project_file_name)
+		ensure
+			project_file_not_void: Result /= Void
+		end
+
+	precompilation_file_name: FILE_NAME is
+			-- Path to `precomp.eif'.
+		do
+			Result := internal_precompilation_file_name
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.set_file_name (precomp_eif)
+				internal_precompilation_file_name := Result
+			end
+		ensure
+			precompilation_file_name_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_compiled: BOOLEAN is
+			-- Is project compiled?
+		do
+			Result := project_file.exists
+		end
+
+feature -- Access
+
+	is_project_file_valid: BOOLEAN is
 			-- Is the `project_epr' file valid?
 		do
-			Result := project_epr_file.is_valid
-		ensure
-			valid_implies_good_file: Result implies project_epr_file.is_valid
-		end;
+			Result := project_file.is_valid
+		end
 
-	is_readable: BOOLEAN is
-			-- May the project be used for browsing and debugging?
-		require
-			project_epr_file_set: project_epr_file /= Void
+	is_path_readable: BOOLEAN is
+			-- Is `path' readable?
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
+			l_dir: DIRECTORY
 		do
-			create w_code_dir.make (temp_workbench_generation_path);
-			create f_code_dir.make (temp_final_generation_path);
-			create comp_dir.make (temp_compilation_path);
-			Result := is_base_readable and then w_code_dir.is_readable
-					and then f_code_dir.is_readable and then comp_dir.is_readable
-					and then project_epr_file.is_readable
-			if initialized then
-				Result := Result and then System.server_controler.is_readable
-			end
-		end;
+			create l_dir.make (path)
+			Result := l_dir.is_readable
+		end
 
-	is_writable: BOOLEAN is
-			-- May the project be both compiled and used for browsing?
-		require
-			project_epr_file_set: project_epr_file /= Void
+	is_path_writable: BOOLEAN is
+			-- Is `path' writable?
+		local
+			l_dir: DIRECTORY
+		do
+			create l_dir.make (path)
+			Result := l_dir.is_writable
+		end
+
+	path_exists: BOOLEAN is
+			-- Does `path' exist?
+		local
+			l_dir: DIRECTORY
+		do
+			create l_dir.make (path)
+			Result := l_dir.exists
+		end
+
+	is_project_readable: BOOLEAN is
+			-- May the project be used for browsing and debugging?
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
-			create w_code_dir.make (temp_workbench_generation_path)
-			create f_code_dir.make (temp_final_generation_path)
-			create comp_dir.make (temp_compilation_path)
-			Result := is_base_writable and then w_code_dir.is_writable
+			create w_code_dir.make (workbench_path)
+			create f_code_dir.make (final_path)
+			create comp_dir.make (compilation_path)
+			Result := is_path_readable and then w_code_dir.is_readable
+					and then f_code_dir.is_readable and then comp_dir.is_readable
+					and then project_file.is_readable
+		end
+
+	is_project_writable: BOOLEAN is
+			-- May the project be both compiled and used for browsing?
+		local
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
+		do
+			create w_code_dir.make (workbench_path)
+			create f_code_dir.make (final_path)
+			create comp_dir.make (compilation_path)
+			Result := is_path_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
-					and then project_epr_file.is_writable
-			if initialized then
-				Result := Result and then System.server_controler.is_writable
-			end
-		end;
+					and then project_file.is_writable
+		end
 
 	exists: BOOLEAN is
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
-		require
-			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
-			create w_code_dir.make (temp_workbench_generation_path)
-			create f_code_dir.make (temp_final_generation_path)
-			create comp_dir.make (temp_compilation_path)
-			Result := base_exists and then w_code_dir.exists
+			create w_code_dir.make (workbench_path)
+			create f_code_dir.make (final_path)
+			create comp_dir.make (compilation_path)
+			Result := path_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
-				and then project_epr_file.exists
-			if initialized then
-				Result := Result and then System.server_controler.exists
-			end
+				and then project_file.exists
 		end
 
-feature -- Update
+feature -- Settings
 
-	set_project_file (project_file: PROJECT_EIFFEL_FILE) is
+	set_location (a_location: like location) is
+			-- Set `location' with `a_location'.
 		require
-			project_file_not_void: project_file /= Void
+			a_location_not_void: a_location /= Void
+			a_location_not_empty: not a_location.is_empty
 		do
-			project_epr_file := project_file
+			location := a_location
+			reset_content
 		ensure
-			project_epr_file_set: project_epr_file = project_file
+			locationt_set: location = a_location
 		end
 
-feature -- Access
+	set_target (a_target: like target) is
+			-- Set `target' with `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+			a_target_not_empty: not a_target.is_empty
+		do
+			target := a_target
+			reset_content
+		ensure
+			target_set: target = a_target
+		end
 
-	initialized: BOOLEAN
-			-- Has the project correctly initialized?
+feature {NONE} -- Implementation
 
-	project_epr_file: PROJECT_EIFFEL_FILE;
-			-- Project.eif file in project directory
+	reset_content is
+			-- Reset all paths to Void.
+		do
+			internal_path := Void
+			internal_backup_path := Void
+			internal_compilation_path := Void
+			internal_documentation_path := Void
+			internal_eifgens_path := Void
+			internal_final_assemblies_path := Void
+			internal_final_path := Void
+			internal_partial_generation_path := Void
+			internal_profiler_path := Void
+			internal_target_path := Void
+			internal_workbench_assemblies_path := Void
+			internal_workbench_path := Void
+			internal_precompilation_file_name := Void
+			internal_project_file_name := Void
+		end
+
+feature {NONE} -- Implementation: Access
+
+	internal_path: like path
+	internal_backup_path: like backup_path
+	internal_compilation_path: like compilation_path
+	internal_documentation_path: like documentation_path
+	internal_eifgens_path: like eifgens_path
+	internal_final_assemblies_path: like final_assemblies_path
+	internal_final_path: like final_path
+	internal_partial_generation_path: like partial_generation_path
+	internal_profiler_path: like profiler_path
+	internal_target_path: like target_path
+	internal_workbench_assemblies_path: like workbench_assemblies_path
+	internal_workbench_path: like workbench_path
+			-- Placeholders for storing path.
+
+	internal_precompilation_file_name: like precompilation_file_name
+	internal_project_file_name: like project_file_name
+			-- Placeholders for storing filename.
+
+invariant
+	location_not_void: location /= Void
+	location_not_empty: not location.is_empty
+	target_not_void: target /= Void
+	target_not_empty: not target.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -153,5 +499,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-end -- class PROJECT_DIRECTORY
+end

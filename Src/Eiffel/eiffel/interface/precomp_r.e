@@ -14,6 +14,7 @@ inherit
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
 	PROJECT_CONTEXT
+	SYSTEM_CONSTANTS
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
 	SHARED_WORKBENCH
@@ -21,11 +22,11 @@ inherit
 
 feature
 
-	retrieve_precompiled (a_project_path: STRING) is
+	retrieve_precompiled (a_project_location: PROJECT_DIRECTORY) is
 			-- Initialize the system with precompiled information
-			-- contained in precompile project in `a_project_path'.
+			-- contained in precompile project in `a_project_location'.
 		require
-			a_project_path_not_void: a_project_path /= Void
+			a_project_location_not_void: a_project_location /= Void
 		local
 			project_dir: REMOTE_PROJECT_DIRECTORY;
 			project: E_PROJECT;
@@ -35,7 +36,7 @@ feature
 			sys: SYSTEM_I;
 			workb: WORKBENCH_I
 		do
-			project_dir := precompiled_project_directory (a_project_path)
+			project_dir := precompiled_project_directory (a_project_location)
 			if project_dir /= Void then
 				project_eif := project_dir.project_epr_file
 				project := project_eif.retrieved_project
@@ -129,11 +130,11 @@ feature
 
 feature {NONE} -- Implementation
 
-	precompiled_project_directory (a_path: STRING): REMOTE_PROJECT_DIRECTORY is
+	precompiled_project_directory (a_project_location: PROJECT_DIRECTORY): REMOTE_PROJECT_DIRECTORY is
 			-- Precompiled project directory containing all other
 			-- precompiled libraries listed in `precompiled_project'
 		require
-			a_path_ok: a_path /= Void and then not a_path.is_empty
+			a_project_location_not_void: a_project_location /= Void
 		local
 			project_dir: REMOTE_PROJECT_DIRECTORY;
 			info: PRECOMP_INFO;
@@ -146,7 +147,7 @@ feature {NONE} -- Implementation
 			id: INTEGER
 		do
 			create precomp_ids.make (15)
-			create project_dir.make (a_path)
+			create project_dir.make (a_project_location)
 
 			project_dir.check_precompiled
 			Error_handler.checksum
@@ -193,17 +194,17 @@ feature {NONE} -- Implementation
 						info.forth
 					end;
 					id := info.compilation_id
-					if precomp_ids.has (a_path) then
+					if precomp_ids.has (a_project_location.target_path) then
 							-- Check compatibility between
 							-- precompiled libraries.
 						if id /= precomp_ids.found_item then
 							create vd45
-							vd45.set_path (a_path)
+							vd45.set_path (a_project_location.target_path)
 							Error_handler.insert_error (vd45)
 							Error_handler.raise_error
 						end
 					else
-						precomp_ids.put (id, a_path)
+						precomp_ids.put (id, a_project_location.target_path)
 					end;
 					Result := project_dir
 				end

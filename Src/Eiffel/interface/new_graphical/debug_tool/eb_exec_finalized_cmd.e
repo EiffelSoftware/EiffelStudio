@@ -14,6 +14,11 @@ inherit
 			tooltext
 		end
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -91,7 +96,7 @@ feature -- Execution
 						create cmd_exec
 						cmd_exec.execute_with_args_and_working_directory (appl_name, current_cmd_line_argument, application_working_directory)
 					else
-						create f_name.make_from_string (Final_generation_path)
+						create f_name.make_from_string (project_location.final_path)
 						f_name.set_file_name (Makefile_SH)
 						create make_f.make (f_name)
 						if make_f.exists and then make_f.date > f.date then

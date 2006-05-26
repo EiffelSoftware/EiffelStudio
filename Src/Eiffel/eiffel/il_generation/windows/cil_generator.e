@@ -37,6 +37,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -106,9 +111,9 @@ feature -- Generation
 				file_name := System.name + "." + System.msil_generation_type
 
 				if is_finalizing then
-					location := Final_generation_path
+					location := project_location.final_path
 				else
-					location := Workbench_generation_path
+					location := project_location.workbench_path
 				end
 
 					-- Set information about current assembly.
@@ -284,7 +289,7 @@ feature -- Generation
 				then
 					from
 						Workbench.Precompilation_directories.start
-						create_local_assemblies_directory
+						project_location.create_local_assemblies_directory (is_finalizing)
 						l_has_local := True
 					until
 						Workbench.Precompilation_directories.after
@@ -319,9 +324,9 @@ feature -- Generation
 					l_source_name.set_file_name ("assembly_config.xml")
 
 					if is_finalizing then
-						create l_target_name.make_from_string (Final_generation_path)
+						create l_target_name.make_from_string (project_location.final_path)
 					else
-						create l_target_name.make_from_string (workbench_generation_path)
+						create l_target_name.make_from_string (project_location.workbench_path)
 					end
 					l_target_name.set_file_name (l_file_name)
 
@@ -1033,14 +1038,14 @@ feature {NONE} -- File copying
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create_local_assemblies_directory
+				project_location.create_local_assemblies_directory (is_finalizing)
 				l_path := a_source
 
 				create l_source.make (l_path)
 				if is_finalizing then
-					create l_target_name.make_from_string (Final_bin_generation_path)
+					create l_target_name.make_from_string (project_location.final_assemblies_path)
 				else
-					create l_target_name.make_from_string (Workbench_bin_generation_path)
+					create l_target_name.make_from_string (project_location.workbench_assemblies_path)
 				end
 
 				if platform_constants.is_windows then

@@ -100,9 +100,9 @@ feature {NONE} -- Implementation
 				exec_string.append (output_file);
 				old_dir := Execution_environment.current_working_directory;
 				if cm_bool then
-					Execution_environment.change_working_directory (Workbench_generation_path);
+					Execution_environment.change_working_directory (project_location.workbench_path);
 				else
-					Execution_environment.change_working_directory (Final_generation_path);
+					Execution_environment.change_working_directory (project_location.final_path);
 				end;
 				Execution_environment.system (exec_string);
 				Execution_environment.change_working_directory (old_dir)
@@ -123,9 +123,9 @@ feature {NONE} -- Implementation
 			end;
 			old_dir := Execution_environment.current_working_directory;
 			if cm_bool then
-				Execution_environment.change_working_directory (Workbench_generation_path);
+				Execution_environment.change_working_directory (project_location.workbench_path);
 			else
-				Execution_environment.change_working_directory (Final_generation_path);
+				Execution_environment.change_working_directory (project_location.final_path);
 			end;
 			app_name := Eiffel_system.application_name (cm_bool);
 			if app_name /= Void then

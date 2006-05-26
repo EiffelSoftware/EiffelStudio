@@ -123,7 +123,10 @@ feature -- Feature specific to ISE runtime.
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"EIF_TEST(in_assertion!=0)"
+			"[
+				GTCX;	/* Needed in multithreaded mode as `in_assertion' is a per-thread data. */
+				return EIF_TEST(in_assertion!=0);
+			]"
 		end
 
 feature -- Internal C routines

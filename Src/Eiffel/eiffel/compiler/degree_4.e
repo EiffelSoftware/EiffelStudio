@@ -117,14 +117,10 @@ feature -- Processing
 				i := i + 1
 			end
 
-				-- Cannot continue if there is an error in the declaration
-				-- of creation constraint genericity clause of a class.
-			Error_handler.checksum
-
 				-- Check now that all the instances of a generic class are
 				-- valid for the creation constraint if there is one. The
 				-- checks have been stored in `remaining_validity_checking_list'.
-			check_creation_constraint_instances
+			check_creation_constraint_instances (error_handler.has_error)
 
 			if System.has_expanded and then not is_empty then
 				System.check_vtec
@@ -515,9 +511,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Generic checking
 
-	check_creation_constraint_instances is
-			-- Check that all the generic declarations where the generic
-			-- class defines a creation constraint clause are system valid.
+	check_creation_constraint_instances (a_error_occurred: BOOLEAN) is
+			-- If not `a_error_occurred' check that all the generic
+			-- declarations where the generic class defines a creation
+			-- constraint clause are system valid.
 		local
 			generic_creation_list: LINKED_LIST [FUTURE_CHECKING_INFO]
 			constraint_info: FUTURE_CHECKING_INFO
@@ -529,12 +526,18 @@ feature {NONE} -- Generic checking
 				generic_creation_list.after
 			loop
 				constraint_info := generic_creation_list.item
-				system.set_current_class (constraint_info.context_class)
-				constraint_info.action.call (Void)
-				if not constraint_error_list.is_empty then
-						-- Fill `changed_classes' to memorize the
-						-- classes that need a recompilation.
+				if a_error_occurred then
+						-- We cannot do the type checking yet, so we have to fill
+						-- `changed_classes' to memorize classes that need a recompilation.
 					insert_class (constraint_info.context_class)
+				else
+					system.set_current_class (constraint_info.context_class)
+					constraint_info.action.call (Void)
+					if not constraint_error_list.is_empty then
+							-- Fill `changed_classes' to memorize the
+							-- classes that need a recompilation.
+						insert_class (constraint_info.context_class)
+					end
 				end
 				generic_creation_list.forth
 			end

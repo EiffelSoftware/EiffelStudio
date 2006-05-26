@@ -89,6 +89,15 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
+	report_cannot_convert_project (a_file_name: STRING) is
+			-- Report an error when result of a conversion from ace to new format cannot be stored
+			-- in file `a_file_name'.
+		do
+			io.put_string (warning_messages.w_cannot_convert_file (a_file_name))
+			io.put_new_line
+			set_has_error
+		end
+
 	report_cannot_create_project (a_dir_name: STRING) is
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do

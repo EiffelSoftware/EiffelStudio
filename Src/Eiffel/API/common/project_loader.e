@@ -22,6 +22,13 @@ inherit
 		end
 
 	PROJECT_CONTEXT
+		rename
+			project_location as compiler_project_location
+		export
+			{NONE} all
+		end
+
+	SYSTEM_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -129,7 +136,7 @@ feature -- Loading
 					if not has_error then
 						lace.set_conf_system (l_load_config.last_system)
 						lace.set_target_name (target_name)
-						internal_project_target_name.set_name (target_name)
+						compiler_project_location.set_target (target_name)
 						lace.set_file_name (config_file_name)
 
 							-- Try to retrieve project if already compiled.
@@ -140,6 +147,38 @@ feature -- Loading
 						end
 					end
 				end
+			end
+		end
+
+	convert_project (a_file_name: STRING) is
+			-- Try to convert `a_filename' from 5.6 format to current without compilation.
+			-- Converted file is stored in `converted_file_name'.
+		require
+			a_file_name_not_void: a_file_name /= Void
+			a_file_name_not_empty: not a_file_name.is_empty
+		local
+			l_pos: INTEGER
+			l_ext: STRING
+			l_convertion_done: BOOLEAN
+		do
+			if is_file_readable (a_file_name) then
+				l_pos := a_file_name.last_index_of ('.', a_file_name.count)
+				if l_pos > 0 and then l_pos < a_file_name.count then
+					l_ext := a_file_name.substring (l_pos + 1, a_file_name.count)
+					if l_ext.is_equal (project_extension) then
+						convert_epr (a_file_name)
+						l_convertion_done := True
+					end
+				end
+				if not l_convertion_done then
+						-- Try to read an Ace file.
+					convert_ace (a_file_name)
+				end
+			else
+				report_cannot_convert_project (a_file_name)
+			end
+			if not has_error then
+				converted_file_name := config_file_name.twin
 			end
 		end
 
@@ -163,6 +202,12 @@ feature -- Access
 	is_compilation_requested: BOOLEAN
 			-- Is a compilation requested after loading the project?
 
+	ignore_user_configuration_file: BOOLEAN
+			-- Will user configuration file be used for current compilation?
+
+	converted_file_name: STRING
+			-- Name of new format config file chosen by user.
+
 feature -- Settings
 
 	set_is_compilation_requested (v: like is_compilation_requested) is
@@ -171,6 +216,15 @@ feature -- Settings
 			is_compilation_requested := v
 		ensure
 			is_compilation_requested_set: is_compilation_requested = v
+		end
+
+
+	set_ignore_user_configuration_file (v: like ignore_user_configuration_file) is
+			-- Set `ignore_user_configuration_file' with `v'.
+		do
+			ignore_user_configuration_file := v
+		ensure
+			ignore_user_configuration_file_set: ignore_user_configuration_file = v
 		end
 
 feature {NONE} -- Settings
@@ -200,8 +254,6 @@ feature {NONE} -- Settings
 			config_file_name := Void
 			target_name := Void
 			project_location := Void
-			project_dir := Void
-			project_file := Void
 			should_override_project := False
 		end
 
@@ -216,13 +268,6 @@ feature {NONE} -- Implementation: access
 	project_location: STRING
 			-- Location of project chosen by user.
 
-	project_dir: PROJECT_DIRECTORY
-			-- Location of the project directory.
-
-	project_file: PROJECT_EIFFEL_FILE
-			-- Location of the file where all the information
-			-- about the current project are saved.
-
 	should_override_project: BOOLEAN
 			-- If project was incompatible, did user want to override it
 			-- and create a new one instead?
@@ -230,7 +275,7 @@ feature {NONE} -- Implementation: access
 	is_deletion_cancelled: BOOLEAN
 			-- Was last deletion operation cancelled?
 
-feature {NONE} -- Status report
+feature -- Status report
 
 	is_file_readable (a_file_name: STRING): BOOLEAN is
 			-- Does file of path `a_file_name' exist and is readable?
@@ -267,6 +312,8 @@ feature {NONE} -- Status report
 			create l_dir.make (a_dir_name)
 			Result := l_dir.exists and then l_dir.is_readable
 		end
+
+feature {NONE} -- Status report
 
 	is_config_file_name_valid: BOOLEAN is
 			-- Is `config_file_name' valid? That is to say exist, and is readable?
@@ -358,23 +405,17 @@ feature {NONE} -- Settings
 			-- Retrieve or create project.
 		local
 			msg: STRING
-			l_project_file_name: FILE_NAME
 		do
 				--| Define temporary default directory structure for project
-			lace.process_user_file (a_project_path)
+			lace.process_user_file (a_project_path, not ignore_user_configuration_file)
 
-			Project_directory_name.wipe_out
-			Project_directory_name.set_directory (lace.project_path)
-			create l_project_file_name.make_from_string (temp_target_path)
-			l_project_file_name.set_file_name (project_file_name)
-			create project_file.make (l_project_file_name)
-			create project_dir.make (temp_eiffel_gen_path, project_file)
+			compiler_project_location.set_location (lace.project_path)
 
-				-- If `project_file' actually exists we will try to retrieve it.
+				-- If `compiler_project_location.project_file' actually exists we will try to retrieve it.
 				-- Otherwise, it means that we are trying to compile a new project.
-			if project_file.exists and not is_recompile_from_scrach then
+			if compiler_project_location.project_file.exists and not is_recompile_from_scrach then
 					-- Retrieve the project
-				Eiffel_project.make (project_dir)
+				Eiffel_project.make (compiler_project_location)
 
 				if not eiffel_project.error_occurred then
 						-- Nothing to be done here
@@ -391,16 +432,16 @@ feature {NONE} -- Settings
 							report_incompatible_project (msg)
 						else
 							if Eiffel_project.is_corrupted then
-								msg := Warning_messages.w_project_corrupted (project_dir.name)
+								msg := Warning_messages.w_project_corrupted (compiler_project_location.path)
 								report_project_corrupted (msg)
 							elseif Eiffel_project.retrieval_interrupted then
-								msg := Warning_messages.w_project_interrupted (project_dir.name)
+								msg := Warning_messages.w_project_interrupted (compiler_project_location.path)
 								report_project_retrieval_interrupted (msg)
 							end
 						end
 
 					elseif Eiffel_project.incomplete_project then
-						msg := Warning_messages.w_project_directory_not_exist (project_file.name, project_dir.name)
+						msg := Warning_messages.w_project_directory_not_exist (compiler_project_location.project_file_name, compiler_project_location.path)
 						report_project_incomplete (msg)
 
 					elseif Eiffel_project.read_write_error then
@@ -428,27 +469,21 @@ feature {NONE} -- Settings
 			a_project_path_not_empty: not a_project_path.is_empty
 		local
 			retried: BOOLEAN
-			l_project_file_name: FILE_NAME
 			l_dir: DIRECTORY
 		do
 			if not retried then
 				if a_should_prompt_for_project_location then
 					ask_for_new_project_location (a_project_path)
 					if not has_error then
-						lace.process_user_file (project_location)
-						Project_directory_name.wipe_out
-						Project_directory_name.set_directory (lace.project_path)
-						create l_project_file_name.make_from_string (temp_target_path)
-						l_project_file_name.set_file_name (project_file_name)
-						create project_file.make (l_project_file_name)
-						create project_dir.make (temp_eiffel_gen_path, project_file)
+						lace.process_user_file (project_location, not ignore_user_configuration_file)
+						compiler_project_location.set_location (lace.project_path)
 					end
 				else
 					project_location := a_project_path
 				end
 				if not has_error then
 					create l_dir.make (project_location)
-					eiffel_project.make_new (l_dir, project_dir, True, deletion_agent, cancel_agent)
+					eiffel_project.make_new (l_dir, compiler_project_location, True, deletion_agent, cancel_agent)
 					if is_deletion_cancelled then
 						set_has_error
 					else
@@ -567,6 +602,16 @@ feature {NONE} -- Error reporting
 	report_cannot_save_converted_file (a_file_name: STRING) is
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
+		require
+			a_file_name_not_void: a_file_name /= Void
+			a_file_name_not_empty: not a_file_name.is_empty
+		deferred
+		ensure
+			has_error_set: has_error
+		end
+
+	report_cannot_convert_project (a_file_name: STRING) is
+			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty

@@ -32,11 +32,17 @@ feature {NONE} -- Initialization
 			loop
 				{SYSTEM_THREAD}.current_thread.sleep (10)
 			end
+		ensure
+			application_thread_attached: application_thread /= Void
+			not_application_thread_is_current_thread: application_thread /= {SYSTEM_THREAD}.current_thread
 		end
 
 	on_init is
 			-- Initialize worker application thread.
+		local
+			retried: BOOLEAN
 		do
+			application_thread := {SYSTEM_THREAD}.current_thread
 			create notify_form.make
 			{WINFORMS_APPLICATION}.run (notify_form)
 		end
@@ -48,13 +54,19 @@ feature -- Clean Up
 		do
 			check
 				notify_form_attached: notify_form /= Void
+				application_thread_attached: application_thread /= Void
 			end
 			if notify_form /= Void then
 				{WINFORMS_APPLICATION}.exit
 				notify_form := Void
 			end
+			if application_thread /= Void and then application_thread.is_alive then
+				application_thread.join
+			end
+			application_thread := Void
 		ensure then
 			notify_form_unattached: notify_form = Void
+			application_thread_unattached: application_thread = Void
 			is_zombie: is_zombie
 		end
 
@@ -88,6 +100,9 @@ feature -- Implementation
 
 	notify_form: NOTIFY_FORM;
 			-- Windows form used to notify users of consumption
+
+	application_thread: SYSTEM_THREAD
+			-- Nofitier application thread
 
 invariant
 	notify_form_attached: not is_zombie implies notify_form /= Void

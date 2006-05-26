@@ -79,4 +79,8 @@ feature -- Settings
 	s_use_cluster_name_as_namespace: STRING is "use_cluster_name_as_namespace"
 	s_use_all_cluster_name_as_namespace: STRING is "use_all_cluster_name_as_namespace"
 
+feature -- Debug
+
+	unnamed_debug: STRING is "__unnamed_debug__"
+
 end

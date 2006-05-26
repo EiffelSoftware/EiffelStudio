@@ -18,6 +18,11 @@ inherit
 
 	CONF_VALIDITY
 
+	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -424,7 +429,7 @@ feature {NONE} -- Implementation of data retrieval
 						else
 							l_name := l_value.value
 							if l_name.is_case_insensitive_equal ("yes") then
-								l_name := "__unnamed_debug__"
+								l_name := unnamed_debug
 								current_options.add_debug (l_name, l_debug.enabled)
 							elseif l_name.is_case_insensitive_equal ("no") then
 								current_options.set_debug (False)

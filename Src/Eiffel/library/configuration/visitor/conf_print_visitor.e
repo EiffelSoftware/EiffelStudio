@@ -683,8 +683,11 @@ feature {NONE} -- Implementation
 					until
 						l_sort_lst.after
 					loop
-						append_text_indent ("<debug name=%""+l_sort_lst.item+"%"")
-						append_text (" enabled=%""+l_debugs.item (l_sort_lst.item).out.as_lower+"%"/>%N")
+							-- only append enabled debugs
+						if l_debugs.item (l_sort_lst.item) then
+							append_text_indent ("<debug name=%""+l_sort_lst.item+"%"")
+							append_text (" enabled=%""+l_debugs.item (l_sort_lst.item).out.as_lower+"%"/>%N")
+						end
 						l_sort_lst.forth
 					end
 				end

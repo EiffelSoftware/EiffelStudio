@@ -166,12 +166,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 
 	set_namespace (a_namespace: like namespace) is
 			-- Set `namespace' to `a_namespace'.
-		require
-			a_namespace_not_empty: a_namespace = Void or else not a_namespace.is_empty
 		do
-			namespace := a_namespace
+			if a_namespace /= Void and then a_namespace.is_empty then
+				namespace := Void
+			else
+				namespace := a_namespace
+			end
 		ensure
-			namespace_set: namespace = a_namespace
+			namespace_set: a_namespace = Void or else not a_namespace.is_empty implies namespace = a_namespace
+			namespace_set: a_namespace /= Void and then a_namespace.is_empty implies namespace = Void
 		end
 
 	set_profile (a_enabled: BOOLEAN) is

@@ -6,6 +6,9 @@ indexing
 class
 	CONF_INTERFACE_NAMES
 
+inherit
+	CONF_CONSTANTS
+
 feature {NONE} -- Section names
 
 	section_general: STRING is "General"
@@ -157,8 +160,28 @@ feature {NONE} -- Option names and descriptions
 	option_optimize_name: STRING is "Optimize"
 	option_optimize_description: STRING is ""
 
+	option_namespace_name: STRING is ".NET Namespace"
+	option_namespace_description: STRING is "Namespace for .NET"
+
+	option_debug_name: STRING is "Enabled"
+	option_debug_description: STRING is "Are debug clauses globally enabled?"
+	option_unnamed_debug_name: STRING is "Unnamed debugs"
+
 	option_warnings_name: STRING is "Enabled"
 	option_warnings_description: STRING is "Are warnings enabled?"
+
+	warning_descriptions: HASH_TABLE [STRING, STRING] is
+			-- Warning descriptions.
+		once
+			create Result.make (7)
+			Result.force ("Locals that are not used.", w_unused_local)
+			Result.force ("Usage of obsolete classes.", w_obsolete_class)
+			Result.force ("Usage of obsolete features.", w_obsolete_feature)
+			Result.force ("Usage of onces in generics.", w_once_in_generic)
+			Result.force ("Old syntax warning.", w_syntax)
+			Result.force ("Usage of old verbatim strings warning.", w_old_verbatim_strings)
+			Result.force ("Different files with the same uuid.", w_same_uuid)
+		end
 
 feature {NONE} -- Validation warnings
 

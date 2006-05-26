@@ -1175,41 +1175,38 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add a variable with `a_name' and `a_value'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_value_not_void: a_value /= Void
-			name_not_used: not variables.has (a_name)
+			name_not_used: not variables.has (a_name.as_lower)
 		do
-			internal_variables.put (a_value, a_name)
+			internal_variables.put (a_value, a_name.as_lower)
 		ensure
-			variable_added: internal_variables.has (a_name) and then internal_variables.item (a_name) = a_value
+			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
 
 	remove_variable (a_name: STRING) is
 			-- Remove a variable with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 		do
-			internal_variables.remove (a_name)
+			internal_variables.remove (a_name.as_lower)
 		ensure
-			variable_removed: not internal_variables.has (a_name)
+			variable_removed: not internal_variables.has (a_name.as_lower)
 		end
 
 	update_variable (a_name, a_value: STRING) is
 			-- Update a variable with `a_name' and `a_value'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
 			a_value_not_void: a_value /= Void
-			entry_exists: variables.has (a_name)
+			entry_exists: variables.has (a_name.as_lower)
 		do
-			internal_variables.force (a_value, a_name)
+			internal_variables.force (a_value, a_name.as_lower)
 		ensure
-			variable_added: internal_variables.has (a_name) and then internal_variables.item (a_name) = a_value
+			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
 
 	add_mapping (a_old_name, a_new_name: STRING) is
-			-- Add a new mapping from `a_old_name' to `a_new_name'.
+			-- Add/replace  mapping from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
@@ -1218,6 +1215,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				create internal_mapping.make (1)
 			end
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+		end
+
+	remove_mapping (a_name: STRING) is
+			-- Remove a mapping with `a_name'.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+		do
+			if internal_mapping /= Void then
+				internal_mapping.remove (a_name.as_upper)
+			end
+		ensure
+			mapping_removed: not internal_mapping.has (a_name.as_upper)
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file

@@ -10,7 +10,9 @@ class
 
 inherit
 	PROJECT_CONTEXT
-	
+
+	SYSTEM_CONSTANTS
+
 feature -- Makefile generation
 
 	Make_f (final_mode: BOOLEAN): INDENT_FILE is
@@ -20,9 +22,9 @@ feature -- Makefile generation
 			f_name: FILE_NAME
 		do
 			if final_mode then
-				p := Final_generation_path
+				p := project_location.final_path
 			else
-				p := Workbench_generation_path
+				p := project_location.workbench_path
 			end
 			create f_name.make_from_string (p)
 			f_name.set_file_name (Makefile_sh)
@@ -99,9 +101,9 @@ feature -- C code generation
 			l_name: STRING
 		do
 			if final_mode then
-				Result := final_generation_path
+				Result := project_location.final_path
 			else
-				Result := workbench_generation_path
+				Result := project_location.workbench_path
 			end
 			create dir_name.make_from_string (Result)
 
@@ -133,7 +135,7 @@ feature -- C code generation
 			finished_file_name.set_file_name (Finished_file_for_make)
 			create finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
-				finished_file.delete	
+				finished_file.delete
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -150,7 +152,7 @@ feature -- C code generation
 		ensure
 			packet_name_not_void: Result /= Void
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

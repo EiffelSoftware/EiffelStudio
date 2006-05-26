@@ -1737,7 +1737,7 @@ feature -- Cleaning
 			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and not is_precompiled and System.makefile_generator /= Void then
-				create generation_dir.make_from_string (Workbench_generation_path)
+				create generation_dir.make_from_string (project_location.workbench_path)
 
 				packet_nb := packet_number
 

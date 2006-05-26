@@ -71,7 +71,7 @@ feature {NONE} -- Attributes
 	c_code_directory: STRING is
 			-- Directory where the C code is stored.
 		do
-			Result := Final_generation_path
+			Result := project_location.final_path
 		end
 
 	assertions_included: BOOLEAN

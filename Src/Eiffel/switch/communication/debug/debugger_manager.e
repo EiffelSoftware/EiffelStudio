@@ -15,6 +15,8 @@ inherit
 
 	PROJECT_CONTEXT
 
+	SYSTEM_CONSTANTS
+
 --create
 --	make
 
@@ -51,7 +53,7 @@ feature -- Debug info access
 			load_filename: FILE_NAME
 		do
 			create load_filename.make
-			load_filename.set_directory (Workbench_generation_path)
+			load_filename.set_directory (project_location.workbench_path)
 			load_filename.set_file_name (Debug_info_name)
 			load_filename.add_extension (Debug_info_extension)
 
@@ -64,7 +66,7 @@ feature -- Debug info access
 			save_filename: FILE_NAME
 		do
 			create save_filename.make
-			save_filename.set_directory (Workbench_generation_path)
+			save_filename.set_directory (project_location.workbench_path)
 			save_filename.set_file_name (Debug_info_name)
 			save_filename.add_extension (Debug_info_extension)
 

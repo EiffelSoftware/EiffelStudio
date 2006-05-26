@@ -25,7 +25,7 @@ feature -- Document processing
 				Result.extend (system_name);
 			end
 		end;
-	
+
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
@@ -34,7 +34,7 @@ feature -- Document processing
 		do
 			tmp := private_document_path;
 			if tmp = Void then
-				Result := Documentation_path
+				Result := project_location.documentation_path
 			elseif not tmp.is_equal (No_word) then
 				create Result.make_from_string (tmp)
 			end;

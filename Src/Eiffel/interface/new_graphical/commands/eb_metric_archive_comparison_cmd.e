@@ -337,7 +337,6 @@ feature -- Action
 		local
 			file: PLAIN_TEXT_FILE
 			file_name: STRING
-			ee: EXECUTION_ENVIRONMENT
 			retried: BOOLEAN
 			error_dialog: EB_INFORMATION_DIALOG
 			x_pos, y_pos: INTEGER
@@ -605,7 +604,7 @@ feature -- Action
 			file: PLAIN_TEXT_FILE
 			error_dialog: EB_INFORMATION_DIALOG
 		do
-			create file_name.make_from_string (project_directory_name)
+			create file_name.make_from_string (project_location.location)
 			create directory.make ("Metrics")
 			if not directory.exists then
 				directory.create_dir

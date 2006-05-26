@@ -289,7 +289,7 @@ feature -- Execution
 		io.error.put_string (generator)
 		io.error.put_string ("(DEBUG_RUN): Start execution%N")
 	end
-					create makefile_sh_name.make_from_string (Workbench_generation_path)
+					create makefile_sh_name.make_from_string (project_location.workbench_path)
 					makefile_sh_name.set_file_name (Makefile_SH)
 
 					create uf.make (Eiffel_system.application_name (True))

@@ -31,6 +31,8 @@ inherit
 
 	CONF_ACCESS
 
+	SYSTEM_CONSTANTS
+
 feature -- Attributes
 
 	universe: UNIVERSE_I
@@ -496,7 +498,7 @@ feature -- Automatic backup
 			d: DIRECTORY
 		do
 				-- Create the EIFGEN/BACKUP directory
-			create d.make (Backup_path)
+			create d.make (project_location.backup_path)
 			if not d.exists then
 				d.create_dir
 			end
@@ -513,7 +515,7 @@ feature -- Automatic backup
 		local
 			temp: STRING
 		do
-			create Result.make_from_string (Backup_path)
+			create Result.make_from_string (project_location.backup_path)
 			create temp.make (9)
 			temp.append (Comp)
 			temp.append_integer (backup_counter)

@@ -364,9 +364,9 @@ feature -- Dynamic Library file
 
 				system_name.append_string(".def")
 				if context.final_mode then
-					create dynamic_lib_def_file_name.make_from_string (Final_generation_path)
+					create dynamic_lib_def_file_name.make_from_string (project_location.final_path)
 				else
-					create dynamic_lib_def_file_name.make_from_string (Workbench_generation_path)
+					create dynamic_lib_def_file_name.make_from_string (project_location.workbench_path)
 				end
 				dynamic_lib_def_file_name.set_file_name (system_name)
 				create dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
@@ -689,9 +689,9 @@ feature -- Plug and Makefile file
 			buffer.put_string (System.name)
 			buffer.put_string ("%";%N%Tegc_system_location = ")
 			if context.final_mode then
-				buffer.put_string_literal (Final_generation_path)
+				buffer.put_string_literal (project_location.final_path)
 			else
-				buffer.put_string_literal (Workbench_generation_path)
+				buffer.put_string_literal (project_location.workbench_path)
 			end
 			buffer.put_string (";%N%Tegc_compiler_tag = ")
 			buffer.put_integer (System.version_tag)

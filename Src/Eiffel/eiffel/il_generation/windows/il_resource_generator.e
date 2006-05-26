@@ -183,9 +183,9 @@ feature {NONE} -- Implementation
 			a_resource_not_void: a_resource /= Void
 		do
 			if System.in_final_mode then
-				create Result.make_from_string (System.Final_generation_path)
+				create Result.make_from_string (System.project_location.final_path)
 			else
-				create Result.make_from_string (System.Workbench_generation_path)
+				create Result.make_from_string (System.project_location.workbench_path)
 			end
 			Result.set_file_name (resource_name (a_resource, True))
 			Result.add_extension (resources_extension)

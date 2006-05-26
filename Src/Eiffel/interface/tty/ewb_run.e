@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to run an eiffel application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,6 +21,7 @@ inherit
 		end;
 	SHARED_EXEC_ENVIRONMENT;
 	PROJECT_CONTEXT
+	SYSTEM_CONSTANTS
 
 feature {NONE} -- Implementation
 
@@ -44,7 +45,7 @@ feature {NONE} -- Implementation
 					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
 					output_window.put_new_line
 				else
-					create f_name.make_from_string (Workbench_generation_path);
+					create f_name.make_from_string (project_location.workbench_path);
 					f_name.set_file_name (Makefile_SH);
 					create make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then

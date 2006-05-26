@@ -11,6 +11,7 @@ class CONVERTER_CALLER
 
 inherit
 	PROJECT_CONTEXT
+	SYSTEM_CONSTANTS
 
 create
 	make
@@ -26,7 +27,7 @@ feature {EWB_GENERATE} -- Initialization
 				help
 			else
 					-- Create the directory needed for the conversion
-				Create_profiler_directory;
+				project_location.create_profiler_directory;
 
 					-- Check whether the profile file exists.
 				check_profile_file (arguments.item (1), arguments.item (2));
@@ -71,9 +72,9 @@ feature {PROF_CONVERTER} -- Implementation
 			file: PLAIN_TEXT_FILE
 		do
 			if comp_type.is_equal ("workbench") then
-				create profile_out_file.make_from_string (workbench_generation_path)
+				create profile_out_file.make_from_string (project_location.workbench_path)
 			else
-				create profile_out_file.make_from_string (final_generation_path)
+				create profile_out_file.make_from_string (project_location.final_path)
 			end;
 			profile_out_file.set_file_name (profile_name);
 			create file.make (profile_out_file);
@@ -86,9 +87,9 @@ feature {PROF_CONVERTER} -- Implementation
 			file: PLAIN_TEXT_FILE;
 		do
 			if comp_type.is_equal ("workbench") then
-				create translat_file.make_from_string (workbench_generation_path)
+				create translat_file.make_from_string (project_location.workbench_path)
 			else
-				create translat_file.make_from_string (workbench_generation_path)
+				create translat_file.make_from_string (project_location.final_path)
 			end;
 			translat_file.set_file_name (Translation_log_file_name);
 			create file.make (translat_file);

@@ -209,13 +209,13 @@ feature -- Action
 	on_go_to_w_code is
 			-- Go to W_code directory of current Eiffel system.		
 		do
-			go_to_dir (Workbench_generation_path)
+			go_to_dir (project_location.workbench_path)
 		end
 
 	on_go_to_f_code is
 			-- Go to F_code directory of current Eiffel system.
 		do
-			go_to_dir (Final_generation_path)
+			go_to_dir (project_location.final_path)
 		end
 
 	on_open_selected_text_in_external_editor is
@@ -378,11 +378,11 @@ feature{NONE}	-- Implementation
 				if not Result then
 					create l_path.make (2)
 					if is_last_c_compilation_freezing then
-						l_path.extend (Workbench_generation_path)
-						l_path.extend (final_generation_path)
+						l_path.extend (project_location.workbench_path)
+						l_path.extend (project_location.final_path)
 					else
-						l_path.extend (final_generation_path)
-						l_path.extend (Workbench_generation_path)
+						l_path.extend (project_location.final_path)
+						l_path.extend (project_location.workbench_path)
 					end
 					l_selected_text.left_adjust
 					l_selected_text.right_adjust

@@ -406,9 +406,9 @@ feature -- Sub makefile generation
 				basket := baskets.item (i)
 				if not basket.is_empty then
 					if system.in_final_mode then
-						create f_name.make_from_string (Final_generation_path)
+						create f_name.make_from_string (project_location.final_path)
 					else
-						create f_name.make_from_string (Workbench_generation_path)
+						create f_name.make_from_string (project_location.workbench_path)
 					end
 					f_name.extend (packet_name (sub_dir, i))
 					f_name.set_file_name (Makefile_SH)

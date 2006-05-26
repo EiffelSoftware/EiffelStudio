@@ -262,7 +262,6 @@ feature{NONE} -- Command substitution
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
 			l_dir: STRING
-			l_path: STRING
 		do
 			dev := Window_manager.last_focused_development_window
 			if dev /= Void then
@@ -361,7 +360,7 @@ feature{NONE} -- Command substitution
 			is_command_ok_is_true: is_command_ok = True
 		do
 			if workbench.system_defined then
-				cmd.replace_substring_all (sub_string_list.i_th (sub_w_code), workbench_generation_path)
+				cmd.replace_substring_all (sub_string_list.i_th (sub_w_code), project_location.workbench_path)
 			else
 				show_warning_dialog (Warning_messages.w_no_system_defined)
 				set_is_command_ok (False)
@@ -375,7 +374,7 @@ feature{NONE} -- Command substitution
 			is_command_ok_is_true: is_command_ok = True
 		do
 			if workbench.system_defined then
-				cmd.replace_substring_all (sub_string_list.i_th (sub_f_code), final_generation_path)
+				cmd.replace_substring_all (sub_string_list.i_th (sub_f_code), project_location.final_path)
 			else
 				show_warning_dialog (Warning_messages.w_no_system_defined)
 				set_is_command_ok (False)

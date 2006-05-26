@@ -902,7 +902,7 @@ feature {NONE} -- Implementation
 			if last_path = Void or else last_path.is_empty then
 					--| The first time, start in the project directory.
 				create standard_path.make
-				standard_path.extend (Eiffel_project.project_directory.name)
+				standard_path.extend (Eiffel_project.project_directory.path)
 			else
 				create standard_path.make
 				standard_path.extend (last_path)

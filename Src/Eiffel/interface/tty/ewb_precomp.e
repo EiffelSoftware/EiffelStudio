@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to build a precomplie eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -86,7 +86,7 @@ feature {NONE} -- Execution
 				if Eiffel_project.precomp_save_error then
 					create temp.make (0);
 					temp.append ("Error: could not write to ");
-					temp.append (Precompilation_file_name);
+					temp.append (project_location.precompilation_file_name);
 					temp.append ("%NPlease check permissions and disk space");
 					io.error.put_string (temp);
 					io.error.put_new_line;
@@ -98,7 +98,7 @@ feature {NONE} -- Execution
 						Eiffel_project.save_precomp (licensed)
 					end;
 				else
-					Precursor {EWB_COMP} 
+					Precursor {EWB_COMP}
 				end
 			end
 		end;

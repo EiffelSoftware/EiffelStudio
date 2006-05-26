@@ -34,22 +34,21 @@ inherit
 
 feature -- Initialization
 
-	make (project_dir: PROJECT_DIRECTORY) is
+	make (a_project_location: PROJECT_DIRECTORY) is
 			-- An Eiffel Project has already been created.
 			-- We just create the basic structure to enable the retrieving.
 		require
 			not_initialized: not initialized
-			is_readable: project_dir.is_base_readable
-			is_writable: project_dir.is_base_writable
-			is_executable: project_dir.is_base_executable
-			--is_creatable: project_dir.is_creatable
+			exists: a_project_location.path_exists
+			is_readable: a_project_location.is_path_readable
+			is_writable: a_project_location.is_path_writable
 			prev_read_write_error: not read_write_error
 		local
 			l_prev_work: STRING
 		do
-			project_directory := project_dir
+			project_directory := a_project_location
 			l_prev_work := Execution_environment.current_working_directory
- 			Execution_environment.change_working_directory (project_directory.name)
+ 			Execution_environment.change_working_directory (a_project_location.path)
 			retrieve
 			if not error_occurred then
 				is_finalizing := False
@@ -64,7 +63,7 @@ feature -- Initialization
 
 	make_new (
 		base_dir: DIRECTORY;
-		project_dir: PROJECT_DIRECTORY
+		a_project_location: PROJECT_DIRECTORY
 		deletion_requested: BOOLEAN
 		deletion_agent: PROCEDURE [ANY, TUPLE [ARRAYED_LIST [STRING]]]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -76,11 +75,11 @@ feature -- Initialization
 			--
 			-- Arguments:
 			-- ----------
-			-- project_dir:
+			-- a_project_location:
 			--   Project directory.
 			--
 			-- deletion_requested:
-			--   Should the files present in `project_dir' be removed?
+			--   Should the files present in `a_project_location' be removed?
 			--
 			-- deletion_agent:
 			--   Agent called each time `Deletion_agent_efficiency' files are deleted.
@@ -92,7 +91,7 @@ feature -- Initialization
 		require
 			not_initialized: not initialized
 			base_dir_not_void: base_dir /= Void
-			project_dir_not_void: project_dir /= Void
+			project_dir_not_void: a_project_location /= Void
 			is_readable: base_dir.is_readable
 			is_writable: base_dir.is_writable
 			is_executable: base_dir.is_executable
@@ -104,11 +103,11 @@ feature -- Initialization
 			l_prev_work: STRING
 		do
 			l_prev_work := Execution_environment.current_working_directory
-			create d.make (temp_eiffel_gen_path)
+			create d.make (a_project_location.eifgens_path)
 			if d.exists then
-				create d.make (temp_target_path)
+				create d.make (a_project_location.target_path)
 				if d.exists then
-					new_name := temp_target_path.twin
+					new_name := a_project_location.target_path.twin
 					if new_name.item (new_name.count) = ']' then
 							-- VMS specification. We need to append `_old' before the `]'.
 						new_name.insert_string ("_old", new_name.count - 1)
@@ -120,22 +119,21 @@ feature -- Initialization
 					if deletion_requested then
 							-- Rename the old project to EIFGEN so that we can
 							-- delete it.
-						d.change_name (temp_target_path)
-						delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
-						delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
-						delete_generation_directory (Final_generation_path, deletion_agent,
+						d.change_name (a_project_location.target_path)
+						delete_generation_directory (a_project_location.backup_path, deletion_agent, cancel_agent)
+						delete_generation_directory (a_project_location.compilation_path, deletion_agent, cancel_agent)
+						delete_generation_directory (a_project_location.final_path, deletion_agent,
 							cancel_agent)
-						delete_generation_directory (Workbench_generation_path, deletion_agent,
+						delete_generation_directory (a_project_location.workbench_path, deletion_agent,
 							cancel_agent)
 					end
 				end
 			end
 			if (cancel_agent = Void) or else (not cancel_agent.item (Void)) then
-				project_directory := project_dir
-				Create_compilation_directory
-				Create_generation_directory
+				project_directory := a_project_location
+				a_project_location.create_project_directories
 				set_is_initialized
- 				Execution_environment.change_working_directory (project_directory.name)
+ 				Execution_environment.change_working_directory (project_directory.path)
 			end
 			manager.on_project_create
 			Execution_environment.change_working_directory (l_prev_work)
@@ -168,9 +166,9 @@ feature -- Properties
 	name: DIRECTORY_NAME is
 			-- Path of eiffel project
 		do
-			Result := Project_directory_name
+			Result := project_directory.path
 		ensure
-			is_project_dir: Result = Project_directory_name
+			is_project_dir: Result = project_directory.path
 		end
 
 	error_displayer: ERROR_DISPLAYER is
@@ -584,9 +582,9 @@ feature -- Update
 			l_cmd: STRING
 		do
 			if workbench_mode then
-				path := Workbench_generation_path
+				path := project_directory.workbench_path
 			else
-				path := Final_generation_path
+				path := project_directory.final_path
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
@@ -603,9 +601,9 @@ feature -- Update
 			l_cmd: STRING
 		do
 			if workbench_mode then
-				path := Workbench_generation_path
+				path := project_directory.workbench_path
 			else
-				path := Final_generation_path
+				path := project_directory.final_path
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
@@ -719,7 +717,6 @@ feature -- Output
 			initialized: initialized
 			compilation_successful: not Comp_system.il_generation implies successful
 		local
-			file_name: FILE_NAME
 			l_epr_file: PROJECT_EIFFEL_FILE
 		do
 				--| Prepare informations to store
@@ -727,9 +724,7 @@ feature -- Output
 			saved_workbench := workbench
 
 			error_status_mode.set_item (Ok_status)
-			create file_name.make_from_string (Target_path);
-			file_name.set_file_name (project_file_name)
-			create l_epr_file.make (file_name)
+			l_epr_file := project_directory.project_file
 			l_epr_file.store (Current, version_number, comp_system.compilation_id)
 
 			if l_epr_file.has_error then
@@ -751,7 +746,7 @@ feature -- Output
 		do
 			error_status_mode.set_item (Ok_status)
 			create precomp_info.make (Precompilation_directories, licensed)
-			create l_epr_file.make (precompilation_file_name)
+			create l_epr_file.make (project_directory.precompilation_file_name)
 			l_epr_file.store (precomp_info, version_number, comp_system.compilation_id)
 
 			if l_epr_file.has_error then
@@ -786,10 +781,10 @@ feature {NONE} -- Retrieval
 			-- application).
 		require
 			non_void_project_dir: project_directory /= Void
-			project_dir_exists: project_directory.exists
-			file_readable: project_directory.is_readable
+			project_dir_exists: project_directory.path_exists
+			file_readable: project_directory.is_project_readable
 			not_initialized: not initialized
-			project_eif_ok: project_directory.valid_project_epr
+			project_eif_ok: project_directory.is_project_file_valid
 			prev_read_write_error: not read_write_error
 		local
 			precomp_r: PRECOMP_R
@@ -804,7 +799,7 @@ feature {NONE} -- Retrieval
 
 			if not error_occurred then
 
-				p_eif := project_directory.project_epr_file
+				p_eif := project_directory.project_file
 				e_project := p_eif.retrieved_project
 				if p_eif.error then
 					if p_eif.is_corrupted then
@@ -824,7 +819,7 @@ feature {NONE} -- Retrieval
 					if Comp_system.is_precompiled then
 						precomp_dirs := Workbench.precompiled_directories
 						Precompilation_directories.copy (precomp_dirs)
-						create remote_dir.make (project_directory.name)
+						create remote_dir.make (project_directory)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
 						remote_dir.set_system_name (Comp_system.name)
 						remote_dir.set_is_precompile_finalized (comp_system.is_precompile_finalized)
@@ -844,7 +839,7 @@ feature {NONE} -- Retrieval
 
 					if not error_occurred then
 						set_is_initialized
-						Execution_environment.change_working_directory (project_directory.name)
+						Execution_environment.change_working_directory (project_directory.path)
 					end
 				end
 			end
@@ -873,9 +868,9 @@ feature {NONE} -- Implementation
 			-- Check the permissions of `project_directory' after the retrieving
 			-- of the project.
 		do
-			if not System.is_precompiled and then project_directory.is_writable then
+			if not System.is_precompiled and then project_directory.is_project_writable then
 				set_file_status (write_status)
-			elseif project_directory.is_readable then
+			elseif project_directory.is_project_readable then
 				set_file_status (read_only_status)
 			else
 				set_error_status (file_error_status)
@@ -1015,7 +1010,7 @@ feature {NONE} -- Implementation
 -- FIXME: check Makefile.SH
 
 					-- Target
-				create file_name.make_from_string (Workbench_generation_path)
+				create file_name.make_from_string (project_directory.workbench_path)
 				file_name.set_file_name (System.name)
 				app_name := Platform_constants.Executable_suffix
 				if not app_name.is_empty then
@@ -1026,7 +1021,7 @@ feature {NONE} -- Implementation
 				if not uf.exists then
 					create uf.make (Precompilation_driver)
 					if uf.exists and then uf.is_readable then
-						link_eiffel_driver (Workbench_generation_path,
+						link_eiffel_driver (project_directory.workbench_path,
 							system.name,
 							Prelink_command_name,
 							Precompilation_driver)

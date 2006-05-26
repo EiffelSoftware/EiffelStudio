@@ -44,7 +44,8 @@ inherit
 
 	COMMAND_EXECUTOR
 		rename
-			execute as launch_ebench
+			execute as launch_ebench,
+			project_location as compiler_project_location
 		export
 			{NONE} all
 		undefine
@@ -375,7 +376,7 @@ feature {NONE} -- Implementation
 			project_directory_frame.extend (vb)
 
 				-- "Compile project" Check box
-			create compile_project_check_button.make_with_text (Interface_names.l_Compile_generated_project)
+			create compile_project_check_button.make_with_text (Interface_names.l_compile_project)
 			if compile_project then
 				compile_project_check_button.enable_select
 			else

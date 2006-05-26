@@ -65,11 +65,11 @@ feature {NONE} -- Retrieval
 			-- Retrieve and initialize the arguments from user options.
 		local
 			l_args: ARRAYED_LIST [STRING]
-			l_user_opts: USER_OPTIONS
+			l_user_opts: TARGET_USER_OPTIONS
 			l_last_found: BOOLEAN
 		do
 			argument_combo.wipe_out
-			l_user_opts := lace.user_options
+			l_user_opts := lace.user_options.target
 			if l_user_opts.last_argument /= Void then
 				current_argument.set_text (l_user_opts.last_argument)
 			else
@@ -114,9 +114,10 @@ feature -- Storage
 			-- arguments for system execution.
 		local
 			l_args: ARRAYED_LIST [STRING]
-			l_user_opts: USER_OPTIONS
+			l_user_opts: TARGET_USER_OPTIONS
+			l_user_factory: USER_OPTIONS_FACTORY
 		do
-			l_user_opts := lace.user_options
+			l_user_opts := lace.user_options.target
 			if argument_check.is_selected then
 				l_user_opts.enable_arguments
 			else
@@ -135,7 +136,8 @@ feature -- Storage
 			l_user_opts.set_last_argument (current_argument.text)
 			l_user_opts.set_working_directory (working_directory.path)
 
-			lace.store_user_options
+			create l_user_factory
+			l_user_factory.store (lace.user_options)
 			synch_with_others
 		end
 

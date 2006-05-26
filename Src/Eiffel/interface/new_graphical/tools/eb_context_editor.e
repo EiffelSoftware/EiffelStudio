@@ -29,11 +29,6 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-	PROJECT_CONTEXT
-		export {EB_CONTEXT_DIAGRAM_COMMAND}
-			Project_directory_name
-		end
-
 	EB_CONSTANTS
 		undefine
 			pixmaps

@@ -102,7 +102,6 @@ feature {NONE} -- Callbacks
 			end
 
 				-- We will save all the preferences for next time we are opened
-			Recent_projects_manager.save_environment
 			preferences.preferences.save_preferences
 
 				-- Destroy all development windows.

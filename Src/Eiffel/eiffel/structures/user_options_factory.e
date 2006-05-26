@@ -1,0 +1,135 @@
+indexing
+	description: "Handle user files."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	USER_OPTIONS_FACTORY
+
+inherit
+	EIFFEL_ENV
+
+feature -- Access
+
+	successful: BOOLEAN
+			-- Is last store/retrieve operation successful?
+
+	last_options: USER_OPTIONS
+			-- Last retrieved options.
+
+	last_file_name: FILE_NAME
+			-- Last file name for last store/load operation.
+
+feature -- Store/Retrieve
+
+	store (a_options: USER_OPTIONS) is
+			-- Store user options to disk.
+			-- `successful' is True if there is no error.
+		require
+			a_options_set: a_options /= Void
+		local
+			l_file: RAW_FILE
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+			retried: BOOLEAN
+		do
+			if not retried then
+				check_and_create_eiffel_home
+				if successful then
+					create last_file_name.make_from_string (eiffel_home)
+					last_file_name.extend (a_options.uuid.out)
+					create l_file.make (last_file_name)
+					l_file.open_write
+					if l_file.is_writable then
+						create l_sed_rw.make (l_file)
+						l_sed_rw.set_for_writing
+						create l_sed_facilities
+						l_sed_facilities.independent_store (a_options, l_sed_rw, True)
+						l_file.close
+						successful := True
+					else
+						successful := False
+					end
+				end
+			else
+				successful := False
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	load (a_uuid: UUID) is
+			-- Retrieve content of `a_filename' into `last_options'.
+		require
+			a_uuid_not_void: a_uuid /= Void
+		local
+			l_file: RAW_FILE
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+			retried: BOOLEAN
+		do
+			if not retried then
+				check_and_create_eiffel_home
+				if successful then
+						-- if file exists, load it
+					create last_file_name.make_from_string (eiffel_home)
+					last_file_name.extend (a_uuid.out)
+					create l_file.make (last_file_name)
+					if l_file.exists then
+						l_file.open_read
+						if l_file.is_open_read then
+							create l_sed_rw.make (l_file)
+							l_sed_rw.set_for_reading
+							create l_sed_facilities
+							last_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+							l_file.close
+							successful := True
+						else
+							successful := False
+						end
+					else
+							-- No file, it is still successful.
+						successful := True
+					end
+				end
+			else
+				successful := False
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	remove (a_options: USER_OPTIONS; a_target: STRING) is
+			-- Remove from `a_options' options related to `a_target'.
+		require
+			a_options_not_void: a_options /= Void
+		do
+			a_options.targets.remove (a_target)
+			store (a_options)
+		end
+
+feature {NONE} -- Implementation
+
+	check_and_create_eiffel_home is
+			-- Check that `eiffel_home' exists and if not create it.
+		local
+			l_dir: DIRECTORY
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_dir.make (eiffel_home)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+				successful := l_dir.exists
+			else
+				successful := False
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+end

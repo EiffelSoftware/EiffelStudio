@@ -166,33 +166,6 @@ feature -- Status setting
 			date := date - 1
 		end
 
-	store_user_options is
-			-- Store user options to disk.
-			-- `successful' is True if there is no error.
-		require
-			user_options_set: user_options /= Void
-		local
-			l_user_file: STRING
-			l_file: RAW_FILE
-			l_sed_rw: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-		do
-			l_user_file := file_name+".user"
-			create l_file.make (l_user_file)
-			l_file.open_write
-			if l_file.is_writable then
-				create l_sed_rw.make (l_file)
-				l_sed_rw.set_for_writing
-				create l_sed_facilities
-				l_sed_facilities.independent_store (user_options, l_sed_rw, True)
-				l_file.close
-				successful := True
-			else
-				successful := False
-			end
-		end
-
-
 	store is
 			-- Store updated configuration into `file_name'.
 		require
@@ -278,9 +251,9 @@ feature -- Status setting
 	compile_all_classes: BOOLEAN
 			-- Are all classes root? i.e. all the classes must be compiled
 
-	process_user_file (a_project_path: STRING) is
+	process_user_file (a_project_path: STRING; a_user_file_enabled: BOOLEAN) is
 			-- Handle the user file.
-			-- If we have a user file retrieve it, else create it
+			-- If `a_user_file_enabled' and then if we have a user file retrieve it, else create it
 			-- If we have a -project_directory argument, set the new path, else set the default path.
 			-- Store the new file.
 		require
@@ -288,38 +261,41 @@ feature -- Status setting
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)
 		local
-			l_sed_rw: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
 			l_user_file: STRING
-			l_file: RAW_FILE
 			vd21: VD21
 			vd72: VD72
 			l_changed: BOOLEAN
+			l_user_factory: USER_OPTIONS_FACTORY
+			l_target_options: TARGET_USER_OPTIONS
 		do
-			l_user_file := file_name+".user"
-
-				-- if file exists, load it
-			create l_file.make (l_user_file)
-			if l_file.exists then
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_sed_rw.make (l_file)
-					l_sed_rw.set_for_reading
-					create l_sed_facilities
-					user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
-					l_file.close
+			if a_user_file_enabled then
+				create l_user_factory
+				l_user_factory.load (conf_system.uuid)
+				if l_user_factory.successful then
+					user_options := l_user_factory.last_options
+					if user_options = Void then
+							-- No user options yet.
+						create user_options.make (conf_system.uuid, target_name)
+					end
 				else
 					create vd21
-					vd21.set_file_name (l_user_file)
+					vd21.set_file_name (l_user_factory.last_file_name)
 					Error_handler.insert_error (vd21)
 					Error_handler.raise_error
 				end
+			else
+					-- Create fake options to avoid too many if statements below.
+				create user_options.make (conf_system.uuid, target_name)
 			end
 
-				-- if we don't have a user_options object, create one.
-			if user_options = Void then
-				create user_options
+				-- Update targets
+			if not equal (user_options.target_name, target_name) then
+				user_options.set_target_name (target_name)
+				l_changed := True
 			end
+
+				-- Get options for selected target.
+			l_target_options := user_options.target
 
 				 -- update project path
 			if a_project_path /= Void then
@@ -328,20 +304,21 @@ feature -- Status setting
 					-- make it into an absolute path
 				project_path := file_system.absolute_pathname (project_path)
 
-				l_changed := not equal (project_path, user_options.eifgen)
-				user_options.set_eifgen (project_path)
-			elseif user_options.eifgen /= Void then
-				project_path := user_options.eifgen
+				l_changed := not equal (project_path, l_target_options.last_location)
+				l_target_options.set_last_location (project_path)
+				l_changed := True
+			elseif l_target_options.last_location /= Void then
+				project_path := l_target_options.last_location
 			else
 				project_path := file_system.dirname (file_name)
-				user_options.set_eifgen (project_path)
+				l_target_options.set_last_location (project_path)
 				l_changed := True
 			end
 
 				-- store the updated config file
-			if l_changed then
-				store_user_options
-				if not successful then
+			if l_changed and a_user_file_enabled then
+				l_user_factory.store (user_options)
+				if not l_user_factory.successful then
 					create vd72
 					vd72.set_file_name (l_user_file)
 					Error_handler.insert_error (vd72)
@@ -409,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 			target_name := l_new_target.name
 
-			internal_project_target_name.set_name (target_name)
+			project_location.set_target (target_name)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)
@@ -1134,16 +1111,15 @@ feature {NONE} -- Implementation
 			vd78: VD78
 			vd79: VD79
 			vd21: VD21
-			l_file_name, l_user_file: STRING
-			l_sed_rw: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			l_file: RAW_FILE
-			l_pre_path: FILE_NAME
+			l_file_name: STRING
 			l_user_options: USER_OPTIONS
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
 			l_factory: CONF_COMP_FACTORY
+			l_user_factory: USER_OPTIONS_FACTORY
+			l_target_options: TARGET_USER_OPTIONS
+			l_project_location: PROJECT_DIRECTORY
 		do
 			create l_factory
 			l_pre := a_target.precompile
@@ -1161,46 +1137,36 @@ feature {NONE} -- Implementation
 			l_system := l_load.last_system
 
 				-- check if user file is ok and get EIFGENS location
-			l_user_file := l_file_name+".user"
-			create l_file.make (l_user_file)
-			if l_file.exists then
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_sed_rw.make (l_file)
-					l_sed_rw.set_for_reading
-					create l_sed_facilities
-					l_user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
-					l_file.close
-				else
-					create vd21
-					vd21.set_file_name (l_user_file)
-					Error_handler.insert_error (vd21)
-					Error_handler.raise_error
-				end
+			create l_user_factory
+			l_user_factory.load (l_system.uuid)
+			if not l_user_factory.successful then
+				create vd21
+				vd21.set_file_name (l_user_factory.last_file_name)
+				Error_handler.insert_error (vd21)
+				Error_handler.raise_error
 			else
-					-- default
-				create l_user_options
-				l_user_options.set_eifgen (l_pre.location.build_path (eiffelgens, ""))
+					-- check if we have a library target
+				if l_system.library_target = Void then
+					create vd78
+					Error_handler.insert_error (vd78)
+					Error_handler.raise_error
+				else
+						-- default
+					create l_user_options.make (l_system.uuid, l_load.last_system.library_target.name)
+					l_target_options := l_user_options.target
+					l_target_options.set_last_location (l_pre.location.build_path ("", ""))
+				end
 			end
-			if l_user_options = Void or else l_user_options.eifgen = Void then
+			if l_target_options = Void or else l_target_options.last_location = Void then
 				create vd79
 				Error_handler.insert_error (vd79)
 				Error_handler.raise_error
 			end
 
-				-- check if we have a library target
-			if l_system.library_target = Void then
-				create vd78
-				Error_handler.insert_error (vd78)
-				Error_handler.raise_error
-			end
-
 				-- retrieve precompile project
-			create l_pre_path.make_from_string (l_user_options.eifgen)
-			l_pre_path.extend (Eiffelgens)
-			l_pre_path.extend (l_system.library_target.name)
+			create l_project_location.make (l_target_options.last_location, l_user_options.target_name)
 			create l_precomp_r
-			l_precomp_r.retrieve_precompiled (l_pre_path)
+			l_precomp_r.retrieve_precompiled (l_project_location)
 
 				-- move the configuration data from the precompile into the precompile node
 			l_target := universe.target

@@ -25,44 +25,33 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end	
+		end
 
 feature -- Value
 
 	last_opened_projects: ARRAY [STRING] is
 			-- List of last opened projects	
-		do		
+		do
 			Result := last_opened_projects_preference.value
 		end
-		
-	keep_n_projects: INTEGER is
-			--
-		do
-			Result := keep_n_projects_preference.value	
-		end		
-		
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	last_opened_projects_preference: ARRAY_PREFERENCE
-	
-	keep_n_projects_preference: INTEGER_PREFERENCE
-		
+
 feature {EB_RECENT_PROJECTS_MANAGER} -- Preference Strings
 
 	last_opened_projects_string: STRING is "recent_projects.last_opened_projects"
-	
-	keep_n_projects_string: STRING is "recent_projects.keep_n_projects"
 
 feature {NONE} -- Implementation
 
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER	
-		do		
-			create l_manager.make (preferences, "recent_projects")	
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "recent_projects")
 			last_opened_projects_preference := l_manager.new_array_preference_value (l_manager, last_opened_projects_string, <<>>)
-			keep_n_projects_preference := l_manager.new_integer_preference_value (l_manager, keep_n_projects_String, 10)
 		end
 
 	preferences: PREFERENCES
@@ -70,7 +59,7 @@ feature {NONE} -- Implementation
 
 invariant
 	preferences_not_void: preferences /= Void
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

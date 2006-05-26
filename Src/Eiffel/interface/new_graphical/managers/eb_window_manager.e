@@ -812,7 +812,7 @@ feature -- Events
 			retried: BOOLEAN
 		do
 			if not retried then
-				create fn.make_from_string (Project_directory_name)
+				create fn.make_from_string (project_location.location)
 				fn.set_file_name ("preferences.wb")
 				create pref.make (fn)
 				if pref.exists then
@@ -841,7 +841,7 @@ feature -- Events
 			retried: BOOLEAN
 		do
 			if not retried then
-				create fn.make_from_string (Project_directory_name)
+				create fn.make_from_string (project_location.location)
 				fn.set_file_name ("preferences.wb")
 				create pref.make (fn)
 				if pref.exists then
@@ -874,7 +874,7 @@ feature -- Events
 			if not retried then
 					-- Attempt to load the 'session.wb' file from the project directory.
 					-- If load fails then do nothing.
-				create fn.make_from_string (Project_directory_name)
+				create fn.make_from_string (project_location.location)
 				fn.set_file_name ("session.wb")
 				create l_raw_file.make (fn)
 				if l_raw_file.exists then
@@ -933,7 +933,7 @@ feature -- Events
 					-- If save cannot be made then do nothing.
 				create l_session
 				for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.save_layout_to_session (l_session))
-				create fn.make_from_string (Project_directory_name)
+				create fn.make_from_string (project_location.location)
 				fn.set_file_name ("session.wb")
 				create l_raw_file.make_open_write (fn)
 				create l_writer.make (l_raw_file)

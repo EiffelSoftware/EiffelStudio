@@ -112,64 +112,61 @@ feature {NONE} -- Initialization
 	build_interface is
 			-- Initialize
 		local
-			new_project_vb, open_project_vb: EV_VERTICAL_BOX
+			new_project_vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			buttons_box: EV_HORIZONTAL_BOX
-			new_project_frame, open_project_frame: EV_FRAME
+			l_frame: EV_FRAME
 			main_container: EV_VERTICAL_BOX
 		do
 			default_create
 			set_title (Interface_names.t_Starting_dialog)
 			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 
+			create main_container
+			create ok_button
+
+			main_container.set_border_width (Layout_constants.Small_border_size)
+			main_container.set_padding (Layout_constants.Small_border_size)
+
 				-- New projects item
-			create new_project_frame
 			create new_project_vb
 			new_project_vb.set_border_width (Layout_constants.Small_border_size)
 			new_project_vb.set_padding (Layout_constants.Default_border_size)
-			create wizard_rb.make_with_text (Interface_names.l_Use_wizard)
-			add_option_box (pixmaps.large_pixmaps.icon_wizard_project.twin, wizard_rb, new_project_vb)
 			create_and_fill_wizards_list
 			new_project_vb.extend (wizards_list)
-			new_project_frame.extend (new_project_vb)
+			create l_frame.make_with_text (interface_names.l_use_wizard)
+			l_frame.extend (new_project_vb)
+			main_container.extend (l_frame)
+			main_container.disable_item_expand (l_frame)
 
-				-- Open projects item
+				-- General layout
 			if show_open_project_frame then
-				create open_project_frame.make_with_text (Interface_names.l_open_a_project)
-				create open_project_vb
-				open_project_vb.set_border_width (Layout_constants.Small_border_size)
-				open_project_vb.set_padding (Layout_constants.Default_border_size)
+				create vb
+				create open_project.make (Current)
+				wizards_list.select_actions.extend (agent open_project.remove_selection)
+				wizards_list.select_actions.extend (agent ok_button.set_text (interface_names.b_create))
+				open_project.select_actions.force_extend (agent wizards_list.remove_selection)
+				open_project.select_actions.force_extend (agent ok_button.set_text (interface_names.b_open))
 
-				create open_epr_project_rb.make_with_text (Interface_names.l_open_project)
-				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
-				open_epr_project_rb.pointer_double_press_actions.force_extend (agent open_existing_project_not_listed)
-				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
-				create_and_fill_compiled_projects_list
-				open_project_vb.extend (compiled_projects_list)
+				vb.extend (open_project.widget)
+				vb.merge_radio_button_groups (new_project_vb)
 
-					-- Recompile from scratch check box
-				create recompile_from_scratch_button.make_with_text (Interface_names.l_fresh_compilation)
-				open_project_vb.extend (recompile_from_scratch_button)
-				open_project_vb.disable_item_expand (recompile_from_scratch_button)
-
-				open_project_frame.extend (open_project_vb)
+				create l_frame.make_with_text (Interface_names.l_open_project)
+				l_frame.extend (vb)
+				main_container.extend (l_frame)
 
 					--| Option buttons
-				create do_not_display_dialog_button.make_with_text (Interface_names.l_Discard_starting_dialog)
 				create vb
+				create do_not_display_dialog_button.make_with_text (Interface_names.l_Discard_starting_dialog)
 				vb.extend (do_not_display_dialog_button)
 				vb.disable_item_expand (do_not_display_dialog_button)
 				vb.extend (create {EV_CELL})
+				main_container.extend (vb)
+				main_container.disable_item_expand (vb)
 			end
 
 				--| Action buttons box
-			create ok_button
-			if show_open_project_frame then
-				ok_button.set_text (Interface_names.b_Ok)
-			else
-				ok_button.set_text (Interface_names.b_Next)
-			end
 			ok_button.select_actions.extend (agent on_ok)
 			Layout_constants.set_default_size_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
@@ -183,30 +180,12 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 			hb.extend (buttons_box)
 			hb.disable_item_expand (buttons_box)
-
-				-- General layout
-			create main_container
-			main_container.set_border_width (Layout_constants.Small_border_size)
-			main_container.set_padding (Layout_constants.Small_border_size)
-			main_container.extend (new_project_frame)
-			if show_open_project_frame then
-				main_container.extend (open_project_frame)
-				main_container.extend (vb)
-				main_container.disable_item_expand (vb)
-			end
 			main_container.extend (hb)
 			main_container.disable_item_expand (hb)
 			extend (main_container)
 
-			if show_open_project_frame then
-				open_project_vb.merge_radio_button_groups (new_project_vb)
-			end
-			wizard_rb.select_actions.extend (agent lookup_selection)
-
 				--| Connect buttons together
 			if show_open_project_frame then
-				open_epr_project_rb.select_actions.extend (agent lookup_selection)
-
 				if preferences.dialog_data.show_starting_dialog then
 					do_not_display_dialog_button.disable_select
 				else
@@ -228,71 +207,16 @@ feature {NONE} -- Initialization
 
 				--| Select the default item
 			if show_open_project_frame then
-				if compiled_projects_list.is_empty then
-					wizard_rb.enable_select
+				if open_project.is_empty then
+					open_project.remove_selection
+					ok_button.set_text (Interface_names.b_create)
 				else
-					open_epr_project_rb.enable_select
+					wizards_list.remove_selection
+					ok_button.set_text (Interface_names.b_open)
 				end
 			else
-				wizard_rb.enable_select
+				ok_button.set_text (Interface_names.b_create)
 			end
-		end
-
-	add_option_box (a_pixmap: EV_PIXMAP; a_radio_button: EV_RADIO_BUTTON; a_container: EV_BOX) is
-			-- Add a box representing an option to `a_container'.
-			--
-			--   --------    -
-			--  | PIXMAP |  |x| Label
-			--   --------    -
-		local
-			hb: EV_HORIZONTAL_BOX
-		do
-				-- Connect the radio button with `on_ok' via the wrapper `on_double_click'
-			a_radio_button.pointer_double_press_actions.extend (agent on_double_click)
-
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			a_pixmap.set_minimum_size (32, 32)
-			hb.extend (a_pixmap)
-			hb.disable_item_expand (a_pixmap)
-			hb.extend (a_radio_button)
-
-			a_container.extend (hb)
-			a_container.disable_item_expand (hb)
-			a_container.merge_radio_button_groups (hb)
-		end
-
-	add_option_box_and_button (a_pixmap: EV_PIXMAP; a_radio_button: EV_RADIO_BUTTON; a_button: EV_BUTTON; a_container: EV_BOX) is
-			-- Add a box representing an option to `a_container'.
-			--
-			--   --------    -         --------
-			--  | PIXMAP |  |x| Label | Button |
-			--   --------    -         --------
-		local
-			hb: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
-		do
-			Layout_constants.set_default_size_for_button (a_button)
-			create vb
-			vb.extend (create {EV_CELL})
-			vb.extend (a_button)
-			vb.disable_item_expand (a_button)
-			vb.extend (create {EV_CELL})
-
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			a_pixmap.set_minimum_size (32, 32)
-			hb.extend (a_pixmap)
-			hb.disable_item_expand (a_pixmap)
-			hb.extend (a_radio_button)
-			hb.disable_item_expand (a_radio_button)
-			hb.extend (vb)
-			hb.disable_item_expand (vb)
-			hb.extend (create {EV_CELL})
-
-			a_container.extend (hb)
-			a_container.disable_item_expand (hb)
-			a_container.merge_radio_button_groups (hb)
 		end
 
 feature -- Status report
@@ -341,12 +265,12 @@ feature {NONE} -- Execution
 			ok_selected := True
 
 				-- Create a new project using an ISE Wizard
-			if wizard_rb.is_selected then
+			if wizards_list.selected_item /= Void then
 				create_new_project_using_wizard
 
 				-- Open an existing project
-			elseif open_epr_project_rb.is_selected then
-				open_existing_project_current_selection
+			elseif open_project.has_selected_item and not open_project.has_error then
+				open_project.open_project
 
 			else
 				check no_item_selected: False end
@@ -411,76 +335,6 @@ feature {NONE} -- Execution
 			end
 		end
 
-	open_existing_project_current_selection is
-			-- Load the currently selected project (.epr).
-		local
-			li: EV_LIST_ITEM
-			open_project_cmd: EB_OPEN_PROJECT_COMMAND
-			wd: EV_WARNING_DIALOG
-		do
-			li := compiled_projects_list.selected_item
-			if li /= Void then
-				create open_project_cmd.make_with_parent (parent_window)
-
-				set_pointer_style (Pixmaps.Wait_cursor)
-				open_project_cmd.execute_with_file (li.text, recompile_from_scratch_button.is_selected)
-				set_pointer_style (Pixmaps.standard_cursor)
-
-					-- Dialog could be closed if user close it manually
-					-- while compiler was converting an existing project.
-				if not is_destroyed then
-						-- Hiding dialog after project has been loaded
-					hide
-					if Eiffel_project.initialized then
-						destroy
-					else
-						show_modal_to_window (parent_window)
-					end
-				end
-			else
-				create wd.make_with_text (Warning_messages.w_Select_project_to_load)
-				wd.show_modal_to_window (Current)
-			end
-
-			compile_project := False
-		end
-
-	open_existing_project_not_listed is
-			-- Open a non listed existing project
-		local
-			open_project_cmd: EB_OPEN_PROJECT_COMMAND
-		do
-			create open_project_cmd.make_with_parent (Current)
-			open_project_cmd.execute
-
-			if Eiffel_project.initialized then
-				destroy
-			end
-
-			compile_project := False
-		end
-
-	lookup_selection is
-			-- Look at the selection and enable/disable some items.
-		do
-			if show_open_project_frame then
-				if open_epr_project_rb.is_selected then
-					compiled_projects_list.enable_sensitive
-					browse_button.enable_sensitive
-					ok_button.set_text (Interface_names.b_Ok)
-				else
-					compiled_projects_list.disable_sensitive
-					browse_button.disable_sensitive
-					ok_button.set_text (Interface_names.b_Next)
-				end
-			end
-			if wizard_rb.is_selected then
-				wizards_list.enable_sensitive
-			else
-				wizards_list.disable_sensitive
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	compile_project: BOOLEAN
@@ -502,9 +356,6 @@ feature {NONE} -- Implementation
 			create wizards_list
 			wizards_list.set_minimum_height (layout_constants.dialog_unit_to_pixels (80))
 
-				-- Connect the list with `on_ok' via the wrapper `on_double_click_wizard_list'
-			wizards_list.pointer_double_press_actions.extend (agent on_double_click)
-
 			if not retried then
 				load_available_wizards
 				fill_list_with_available_wizards
@@ -514,60 +365,6 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
-		end
-
-	create_and_fill_compiled_projects_list is
-			-- Create and fill `compiled_projects_list'
-		local
-			lop: ARRAYED_LIST [STRING]
-			li: EV_LIST_ITEM
-			retried: BOOLEAN
-			project_exist: BOOLEAN
-		do
-			create compiled_projects_list
-			compiled_projects_list.set_minimum_height (Layout_constants.Dialog_unit_to_pixels(80))
-
-			if not retried then
-				lop := recent_projects_manager.recent_projects
-				if not lop.is_empty then
-					from
-						lop.start
-					until
-						lop.after
-					loop
-						if exists_project (lop.item) then
-							project_exist := True
-							create li.make_with_text (lop.item)
-							compiled_projects_list.extend (li)
-						end
-						lop.forth
-					end
-					if project_exist then
-						compiled_projects_list.i_th (1).enable_select
-					end
-				end
-			end
-
-				-- Connect the list with `on_ok' via the wrapper `on_double_click'
-			compiled_projects_list.pointer_double_press_actions.extend (agent on_double_click)
-		ensure
-			compiled_projects_list_created: compiled_projects_list /= Void
-		rescue
-			retried := True
-			retry
-		end
-
-	exists_project (a_project_path: STRING): BOOLEAN is
-			-- Does the project `a_project_path' exists?
-		local
-			a_project_filename: FILE_NAME
-			a_project_file: RAW_FILE
-		do
-			if a_project_path /= Void and then not a_project_path.is_empty then
-				create a_project_filename.make_from_string (a_project_path)
-				create a_project_file.make (a_project_filename)
-				Result := a_project_file.exists and then a_project_file.is_readable
-			end
 		end
 
 	fill_list_with_available_wizards is
@@ -587,6 +384,7 @@ feature {NONE} -- Implementation
 				available_wizards.after
 			loop
 				create list_item.make_with_text (available_wizards.item.name)
+				list_item.pointer_double_press_actions.extend (agent on_double_click)
 				wizards_list.extend (list_item)
 				available_wizards.forth
 			end
@@ -774,13 +572,10 @@ feature {NONE} -- Implementation
 		do
 			ok_button.disable_sensitive
 			cancel_button.disable_sensitive
-			wizard_rb.disable_sensitive
 			wizards_list.disable_sensitive
 			if show_open_project_frame then
-				open_epr_project_rb.disable_sensitive
-				compiled_projects_list.disable_sensitive
+				open_project.disable_sensitive
 				do_not_display_dialog_button.disable_sensitive
-				recompile_from_scratch_button.disable_sensitive
 			end
 			controls_disabled := True
 		end
@@ -790,13 +585,10 @@ feature {NONE} -- Implementation
 		do
 			ok_button.enable_sensitive
 			cancel_button.enable_sensitive
-			wizard_rb.enable_sensitive
 			wizards_list.enable_sensitive
 			if show_open_project_frame then
-				open_epr_project_rb.enable_sensitive
-				compiled_projects_list.enable_sensitive
+				open_project.enable_sensitive
 				do_not_display_dialog_button.enable_sensitive
-				recompile_from_scratch_button.enable_sensitive
 			end
 			controls_disabled := False
 		end
@@ -812,20 +604,8 @@ feature {NONE} -- Private attributes
 	show_open_project_frame: BOOLEAN
 			-- Show the "Open project" frame.
 
-	wizard_rb: EV_RADIO_BUTTON
-			-- Radio button for "ISE Wizard"
-
-	browse_button: EV_BUTTON
-			-- Browse button to browse for existing projects
-
-	open_epr_project_rb: EV_RADIO_BUTTON
-			-- Radio button for "Open an existing project"
-
 	do_not_display_dialog_button: EV_CHECK_BUTTON
 			-- Check button labeled "Don't show this dialog at start-up"
-
-	recompile_from_scratch_button: EV_CHECK_BUTTON
-			-- Check button to recompile a project from scratch.
 
 	ok_button: EV_BUTTON
 			-- OK/Next button
@@ -833,14 +613,14 @@ feature {NONE} -- Private attributes
 	cancel_button: EV_BUTTON
 			-- Cancel button
 
-	compiled_projects_list: EV_LIST
-			-- List containing the last opened projects.
-
 	wizards_list: EV_LIST
 			-- Widget representing the list of all available wizard.
 
-	parent_window: EV_WINDOW;
+	parent_window: EV_WINDOW
 			-- Parent window, Void if none.
+
+	open_project: EB_OPEN_PROJECT_WIDGET;
+			-- Widget for opening a project using a config file.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

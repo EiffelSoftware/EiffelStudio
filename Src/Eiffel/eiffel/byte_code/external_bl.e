@@ -149,9 +149,10 @@ feature
 			l_typ: CL_TYPE_I
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			local_argument_types: like argument_types
+			local_argument_types, real_arg_types: like argument_types
 			rout_table: ROUT_TABLE
 			internal_name: STRING
+			inline_ext: INLINE_EXTENSION_I
 		do
 			check
 				final_mode: context.final_mode
@@ -191,7 +192,7 @@ feature
 				buf.put_character ('-');
 				buf.put_integer (array_index);
 				buf.put_character (']');
-				
+
 				buf.put_character (')');
 
 					-- Mark routine table used.
@@ -202,9 +203,10 @@ feature
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired. If we check assertions, we need
 					-- to call associated encapsulation.
-				if encapsulated or else system.keep_assertions then
-						-- In the case of encapsulated externals, we call the associated
-						-- encapsulation.
+
+					-- In the case of encapsulated externals, we call the associated
+					-- encapsulation.
+				if encapsulated or else system.keep_assertions or else extension.is_inline then
 					rout_table ?= Eiffel_table.poly_table (routine_id)
 					if is_static_call then
 						l_typ ?= real_type (static_class_type)
@@ -221,6 +223,18 @@ feature
 					internal_name := rout_table.feature_name
 
 					local_argument_types := argument_types
+
+					if inline_needed (typ) then
+						inline_ext ?= extension
+						create real_arg_types.make (local_argument_types.lower, local_argument_types.upper-1)
+						real_arg_types.subcopy (local_argument_types, 2, local_argument_types.upper, 1)
+
+						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
+						internal_name := inline_ext.inline_name (internal_name)
+					else
+						real_arg_types := local_argument_types
+					end
+
 					if
 						not (rout_table.item.written_type_id = Context.original_class_type.type_id)
 					then
@@ -230,18 +244,27 @@ feature
 					end
 
 					buf.put_character ('(')
-					type_c.generate_function_cast (buf, local_argument_types)
+					type_c.generate_function_cast (buf, real_arg_types)
 					buf.put_string (internal_name)
 					buf.put_character (')')
+
 				else
 					if not l_type_i.is_void then
 						type_c.generate_cast (buf);
 					end
-						-- Nothing to be done now. Remaining of code generation will be done
-						-- in `generate_end'.
+						 -- Nothing to be done now. Remaining of code generation will be done
+						 -- in `generate_end'.
 				end
 			end
 		end
+
+	inline_needed (typ: CL_TYPE_I): BOOLEAN is
+		do
+			Result := context.final_mode and
+				not (encapsulated or else system.keep_assertions) and (is_static_call or
+				Eiffel_table.is_polymorphic (routine_id, typ.type_id, True) < 0)
+		end
+
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 			-- Generate final portion of C code.
@@ -254,74 +277,90 @@ feature
 			buf: GENERATION_BUFFER
 			l_type: TYPE_I
 			l_args: like argument_types
+			put_eif_test: BOOLEAN
 		do
+			buf := buffer
+			l_type := real_type (type)
+			put_eif_test := extension.is_inline and l_type.is_boolean
+			if put_eif_test then
+				buf.put_string ("EIF_TEST (")
+			end
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
-			buf := buffer
-			if context.final_mode then
-				if
-					not (encapsulated or else system.keep_assertions) and (is_static_call or
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) < 0)
-				then
-					check
-						not_dll: not extension.is_dll
-					end
-					l_type := real_type (type)
-					if extension.is_macro then
-						macro_ext ?= extension
-						macro_ext.generate_access (external_name, parameters, l_type)
-					elseif extension.is_struct then
-						struct_ext ?= extension
-						struct_ext.generate_access (external_name, parameters, l_type)
-					elseif extension.is_inline then
-						inline_ext ?= extension
-						inline_ext.generate_access (parameters, l_type)
-					elseif extension.is_cpp then
-						cpp_ext ?= extension
-						cpp_ext.generate_access (external_name, parameters, l_type)
-					else
-						c_ext ?= extension
-						check
-							is_c_extension: c_ext /= Void
-						end
-							-- Remove `Current' from argument types.
-						l_args := argument_types
-						if argument_types.count > 1 then
-							l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
-						else
-							create l_args.make (1, 0)
-						end
-						c_ext.generate_access (external_name, parameters, l_args, l_type)
-					end
-				else
-						-- Call is done like a normal Eiffel routine call.
+			if inline_needed (class_type) then
+				check
+					not_dll: not extension.is_dll
+				end
+				if extension.is_macro then
+					macro_ext ?= extension
+					macro_ext.generate_access (external_name, parameters, l_type)
+				elseif extension.is_struct then
+					struct_ext ?= extension
+					struct_ext.generate_access (external_name, parameters, l_type)
+				elseif extension.is_inline then
 					buf.put_character ('(')
-					gen_reg.print_register
 					generate_parameters_list
 					buf.put_character (')')
+				elseif extension.is_cpp then
+					cpp_ext ?= extension
+					cpp_ext.generate_access (external_name, parameters, l_type)
+				else
+					c_ext ?= extension
+					check
+						is_c_extension: c_ext /= Void
+					end
+						-- Remove `Current' from argument types.
+					l_args := argument_types
+					if argument_types.count > 1 then
+						l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
+					else
+						create l_args.make (1, 0)
+					end
+					c_ext.generate_access (external_name, parameters, l_args, l_type)
 				end
 			else
 					-- Call is done like a normal Eiffel routine call.
-				buf.put_character ('(')
-				gen_reg.print_register
-				generate_parameters_list
-				buf.put_character (')')
+				generate_parameters_part (gen_reg)
 			end
+
+			if put_eif_test then
+				buf.put_string (")")
+			end
+		end
+
+	generate_parameters_part (gen_reg: REGISTRABLE) is
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_character ('(')
+			gen_reg.print_register
+			if parameters /= Void and parameters.count > 0 then
+				buf.put_string (gc_comma)
+				generate_parameters_list
+			end
+			buf.put_character (')')
 		end
 
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
 		local
 			buf: GENERATION_BUFFER
+			first: BOOLEAN
 		do
 			if parameters /= Void then
 				from
 					buf := buffer
 					parameters.start
+					first := True
 				until
 					parameters.after
 				loop
-					buf.put_string (gc_comma)
+					if not first then
+						buf.put_string (gc_comma)
+					else
+						first := False
+					end
 					parameters.item.print_register
 					parameters.forth
 				end

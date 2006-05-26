@@ -36,6 +36,7 @@ feature -- Initialization
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
 			create {LINKED_STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]} class_type_stack.make
+			create generated_inlines.make (5)
 		end
 
 feature -- Access
@@ -86,8 +87,13 @@ feature -- Access
 	buffer: GENERATION_BUFFER
 			-- Buffer used for code generation
 
+	ext_inline_buffer: GENERATION_BUFFER
+			-- Buffer used for the generation of inlined externals
+
 	header_buffer: GENERATION_BUFFER
 			-- Buffer used for extern declaration generation
+
+	generated_inlines: SEARCH_TABLE [STRING]
 
 	inherited_assertion: INHERITED_ASSERTION
 			-- Used to record inherited assertions

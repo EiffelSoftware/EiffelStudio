@@ -12,10 +12,6 @@ class
 inherit
 	EB_SHARED_PREFERENCES
 
-	PROJECT_CONTEXT
-
-	SHARED_EIFFEL_PROJECT
-
 create
 	make
 
@@ -23,17 +19,42 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a project manager.
+		local
+			l_value: STRING
+			l_projects: ARRAY [STRING]
+			i: INTEGER
+			l_project_name: STRING
 		do
-				-- Set up the recent project list from datastore
-			create recent_projects.make (10)
-			recent_projects.compare_objects
-			update_recent_projects_from_datastore
-			load_recent_projects (preferences.recent_projects_data.last_opened_projects)
+				-- Get values from preferences.
+			l_value := preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
+			if l_value /= Void then
+				preferences.recent_projects_data.last_opened_projects_preference.set_value_from_string (l_value)
+			end
+			l_projects := preferences.recent_projects_data.last_opened_projects
+
+			if l_projects /= Void and then not l_projects.is_empty then
+				create recent_projects.make (l_projects.count)
+				recent_projects.compare_objects
+				from
+					i := l_projects.lower
+				until
+					i > l_projects.upper
+				loop
+					create l_project_name.make_from_string (l_projects.item (i))
+					if not recent_projects.has (l_project_name) then
+						recent_projects.extend (l_project_name)
+					end
+					i := i + 1
+				end
+			else
+				create recent_projects.make (1)
+				recent_projects.compare_objects
+			end
 		end
 
 feature -- Access
 
-	recent_projects: ARRAYED_LIST [FILE_NAME]
+	recent_projects: ARRAYED_LIST [STRING]
 			-- Save the list of recent opened projects during the execution
 			-- Purpose: make it easier to save the data at the end.
 
@@ -50,83 +71,32 @@ feature -- Menus handling
 
 feature -- Basic operations
 
-	save_environment is
-			-- Save the current list of recent projects
+	add_recent_project (a_project: STRING) is
+			-- Add `a_project' to list of recent projects.
 		require
-			recent_projects_exists: recent_projects /= Void
-			recent_projects_compare_objects: recent_projects.object_comparison
-		local
-			lop: ARRAYED_LIST [FILE_NAME]
-			l_project_file_name: FILE_NAME
-			i: INTEGER
+			a_project_not_void: a_project /= Void
+			a_project_not_empty: not a_project.is_empty
 		do
-				-- We save the environment variable only once and when the system
-				-- has been compiled, otherwise we do not change anything.
-			if Eiffel_project.system /= Void and then Eiffel_project.system.name /= Void then
-					-- Build the name of the entry in the recent projects list.
-				create l_project_file_name.make_from_string (eiffel_ace.lace.file_name)
-
-				update_recent_projects_from_datastore
-				load_recent_projects (preferences.recent_projects_data.last_opened_projects)
-
-					-- Update the list of opened projects.
-				if recent_projects.has (l_project_file_name) then
-					recent_projects.prune_all (l_project_file_name)
-				end
-				recent_projects.put_front (l_project_file_name)
-				on_update
-
-					-- Rebuild the preferences entry and save it.
-				from
-					create lop.make (0)
-					recent_projects.start
-				until
-					recent_projects.after or else i >= number_of_recent_projects
-				loop
-					lop.extend (recent_projects.item)
-					recent_projects.forth
-					i := i + 1
-				end
-				preferences.recent_projects_data.last_opened_projects_preference.set_value (lop)
-				saving_done := True
-			end
+			recent_projects.prune_all (a_project)
+			recent_projects.put_front (a_project)
 		end
 
-	update_recent_projects_from_datastore is
-			-- Get from the datastore the recent projects.
-		local
-			l_value: STRING
+	save_recent_projects is
+			-- Save the current list of recent projects
 		do
-			l_value := preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
-			if l_value /= Void then
-				preferences.recent_projects_data.last_opened_projects_preference.set_value_from_string (l_value)
-			end
+			save_projects (recent_projects)
 		end
 
-	load_recent_projects (projects: ARRAY [STRING]) is
-			--
-		local
-			i: INTEGER
-			l_project_name: FILE_NAME
+	save_projects (a_projects_list: like recent_projects) is
+			-- Save `a_projects_list' recent projects.
+		require
+			a_projects_list_not_void: a_projects_list /= Void
 		do
-			if not projects.is_empty then
-				from
-					i := projects.lower
-				until
-					i > projects.upper
-				loop
-					create l_project_name.make_from_string (projects @ i)
-					if not recent_projects.has (l_project_name) then
-						recent_projects.extend (create {FILE_NAME}.make_from_string (l_project_name))
-					end
-					i := i + 1
-				end
-			end
+				-- Let observers know about the changes.
+			on_update
+				-- Save it.
+			preferences.recent_projects_data.last_opened_projects_preference.set_value (recent_projects)
 		end
-
-	saving_done: BOOLEAN
-			--| Has the environment variable "BENCH_RECENT_FILES" been updated?
-			-- Has the ebench environment been saved?
 
 feature {EB_RECENT_PROJECTS_MANAGER_OBSERVER} -- Observer pattern / Registration
 
@@ -171,14 +141,9 @@ feature {NONE} -- Observer pattern / Implementation
 	observers: ARRAYED_LIST [EB_RECENT_PROJECTS_MANAGER_OBSERVER]
 			-- All observers for Current.
 
-	number_of_recent_projects: INTEGER is
-			-- Number of recent projects the user wants to keep.
-		do
-			Result := preferences.recent_projects_data.keep_n_projects
-			if Result <= 0 then
-				Result := 10
-			end
-		end
+invariant
+	recent_projects_not_void: recent_projects /= Void
+	recent_projects_compare_objects: recent_projects.object_comparison
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

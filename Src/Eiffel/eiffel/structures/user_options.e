@@ -8,74 +8,76 @@ indexing
 class
 	USER_OPTIONS
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_uuid: like uuid; a_target_name: like target_name) is
+			-- Create a user specific data file for project with UUID `a_uuid'.
+		require
+			a_uuid_not_void: a_uuid /= Void
+			a_target_name_not_void: a_target_name /= Void
+		do
+			uuid := a_uuid
+			target_name := a_target_name
+			create targets.make (1)
+		ensure
+			uuid_set: uuid = a_uuid
+			target_name_set: target_name = a_target_name
+		end
+
 feature -- Access
 
-	eifgen: STRING
-			-- EIFGEN location.
+	uuid: UUID
+			-- UUID of configuration file associated with user configurations.
 
-	arguments: ARRAYED_LIST [STRING]
-			-- List of arguments used by current project.
+	target: TARGET_USER_OPTIONS is
+			-- Options for currently selected target `target_name'.
+		do
+			Result := targets.item (target_name)
+			if Result = Void then
+					-- No options yet, create them
+				create Result.make (target_name)
+				targets.put (Result, target_name)
+			end
+		ensure
+			target_not_void: target /= Void
+		end
 
-	last_argument: STRING
-			-- Last used argument.
+	target_of_name (a_name: STRING): like target is
+			-- Options associated with target of name `a_name'.
+			-- Void if no target of name `a_name' exists.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := targets.item (a_name)
+		end
 
-	use_arguments: BOOLEAN
-			-- Use arguments?
+	target_name: STRING
+			-- Name of last chosen target.
 
-	working_directory: STRING
-			-- Working directory.
+feature {USER_OPTIONS, USER_OPTIONS_FACTORY} -- Implementation: Access
+
+	targets: HASH_TABLE [TARGET_USER_OPTIONS, STRING]
+			-- Set of options indexed by target.
 
 feature -- Update
 
-	set_eifgen (a_location: like eifgen) is
-			-- Set `eifgen' to `a_location'.
+	set_target_name (a_target: like target_name) is
+			-- Set `target' to `a_target'.
 		require
-			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			eifgen := a_location
+			target_name := a_target
 		ensure
-			eifgen_set: eifgen = a_location
+			target_name_set: target_name = a_target
 		end
 
-	set_arguments (an_arguments: like arguments) is
-			-- Set `arguments' to `an_arguments'.
-		do
-			arguments := an_arguments
-		ensure
-			arguments_set: arguments = an_arguments
-		end
-
-	set_last_argument (an_argument: like last_argument) is
-			-- Set `last_argument' to `an_argument'.
-		do
-			last_argument := an_argument
-		ensure
-			last_argument_set: last_argument = an_argument
-		end
-
-	enable_arguments is
-			-- Enable use of arguments.
-		do
-			use_arguments := True
-		ensure
-			use_arguments: use_arguments
-		end
-
-	disable_arguments is
-			-- Disable use of arguments.
-		do
-			use_arguments := False
-		ensure
-			not_use_arguments: not use_arguments
-		end
-
-	set_working_directory (a_directory: like working_directory) is
-			-- Set `working_directory' to `a_directory'.
-		do
-			working_directory := a_directory
-		ensure
-			working_directory_set: working_directory = a_directory
-		end
+invariant
+	uuid_not_void: uuid /= Void
+	targets_not_void: targets /= Void
+	target_name_not_void: target_name /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

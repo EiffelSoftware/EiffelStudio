@@ -884,6 +884,13 @@ feature -- Warning messages
 			end
 		end
 
+	w_cannot_convert_file (a_file_name: STRING): STRING is
+		require
+			a_file_name_not_void: a_file_name /= Void
+		do
+			Result := "Could not convert file '" + a_file_name + "' into new configuration format."
+		end
+
 	w_cannot_save_png_file (a_file_name: STRING): STRING is
 		do
 			if a_file_name /= Void then

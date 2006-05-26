@@ -14,10 +14,10 @@ feature -- Access
 			-- Current selected command line argument.
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
-			l_options: USER_OPTIONS
+			l_options: TARGET_USER_OPTIONS
 		do
 			create shared_eiffel
-			l_options := shared_eiffel.eiffel_ace.lace.user_options
+			l_options := shared_eiffel.eiffel_ace.lace.user_options.target
 			if l_options /= Void and then (l_options.use_arguments and l_options.last_argument /= Void) then
 				Result := (create {ENV_INTERP}).interpreted_string (l_options.last_argument)
 			else
@@ -33,16 +33,16 @@ feature {NONE} -- Constants
 			-- Current directory selected for running application.
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
-			l_options: USER_OPTIONS
+			l_options: TARGET_USER_OPTIONS
 			l_dir: DIRECTORY
 		do
 			create shared_eiffel
-			l_options := shared_eiffel.eiffel_ace.lace.user_options
+			l_options := shared_eiffel.eiffel_ace.lace.user_options.target
 			if l_options /= Void and then (l_options.working_directory /= Void and then not l_options.working_directory.is_empty) then
 					-- If it contains some environment variables, they are translated.			
 				Result := (create {ENV_INTERP}).interpreted_string (l_options.working_directory)
 			else
-				Result := shared_eiffel.Eiffel_project.Project_directory_name
+				Result := shared_eiffel.Eiffel_project.project_location.location
 			end
 			Result := Result.twin
 			Result.right_adjust

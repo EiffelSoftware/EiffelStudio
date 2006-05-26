@@ -265,12 +265,6 @@ feature -- Execution
 		require else
 			no_need_for_compiled_project: True
 		do
-				--| At this stage we have the project directory
-			if Eiffel_project.project_directory.project_epr_file = Void then
-				-- The user will have to specify the Ace file
-				-- since it is a new project
-				Eiffel_ace.set_file_name (Void)
-			end
 			ewb_iterate
 		end
 

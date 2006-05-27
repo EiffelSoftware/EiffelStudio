@@ -406,8 +406,6 @@ feature -- prototype code generation
 				arg_names /= Void and arg_types /= Void
 			same_count: arg_names.count = arg_types.count
 			valid_lower: arg_names.lower = 1 and arg_types.lower = 1
-		local
-			i, nb: INTEGER
 		do
 			generate_pure_function_signature (type, f_name, extern, extern_header, arg_names, arg_types)
 			current_buffer.append_character ('{')

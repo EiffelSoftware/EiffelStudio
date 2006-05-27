@@ -141,7 +141,6 @@ feature -- Code generation
 		local
 			buf, old_buf: GENERATION_BUFFER
 			uc_name: STRING
-			i: INTEGER
 		do
 			old_buf := context.generation_buffer
 			buf := context.generation_ext_inline_buffer
@@ -188,7 +187,7 @@ feature {NONE} -- Implementation
 		local
 			l_code, l_arg: STRING
 			l_buffer: GENERATION_BUFFER
-			l_old, l_temp: GENERATION_BUFFER
+			l_old: GENERATION_BUFFER
 			l_values: ARRAY [STRING]
 			l_names: ARRAY [STRING]
 			l_max, l_current_max: INTEGER

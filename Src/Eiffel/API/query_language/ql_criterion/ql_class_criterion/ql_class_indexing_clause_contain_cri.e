@@ -26,7 +26,6 @@ feature{NONE} -- Implementation
 			a_indexing_clause_attached: a_indexing_clause /= Void
 			a_match_list_attached: a_match_list /= Void
 		local
-			l_index: INDEX_AS
 			l_text: STRING
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
 		do

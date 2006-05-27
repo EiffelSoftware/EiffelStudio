@@ -118,7 +118,7 @@ feature -- Code generation
 		do
 			if not context.generated_inlines.has (name) then
 				generate_inline_def (a_ret_type, name, arg_types)
-				context.generated_inlines.put (clone (name))
+				context.generated_inlines.put (name.twin)
 			end
 		end
 
@@ -145,8 +145,7 @@ feature -- Code generation
 			old_buf := context.generation_buffer
 			buf := context.generation_ext_inline_buffer
 			context.set_buffer (buf)
-			uc_name := clone (name)
-			uc_name.to_upper
+			uc_name := name.as_upper
 
 			buf.put_string ("#ifndef INLINE_")
 			buf.put_string (uc_name)

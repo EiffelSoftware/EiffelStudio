@@ -534,6 +534,7 @@ feature -- Generation
 			buffer.clear_all
 			ext_inline_buffer := generation_ext_inline_buffer
 			ext_inline_buffer.clear_all
+			ext_inline_buffer.open_write_c
 			header_buffer := header_generation_buffer
 			header_buffer.clear_all
 			byte_context.generated_inlines.wipe_out
@@ -690,6 +691,7 @@ feature -- Generation
 				else
 					headers.put_in_file (file)
 				end
+				ext_inline_buffer.close_c
 				ext_inline_buffer.put_in_file (file)
 				buffer.put_in_file (file)
 				file.close

@@ -289,7 +289,6 @@ feature {NONE} -- Error reporting
 			-- Report that project was loaded successfully.
 		local
 			l_title: STRING
-			l_projects: ARRAYED_LIST [STRING]
 		do
 			l_title := Interface_names.l_loaded_project.twin
 			l_title.append (target_name)

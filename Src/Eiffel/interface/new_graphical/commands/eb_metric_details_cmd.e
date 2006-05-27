@@ -97,7 +97,7 @@ feature -- Level in hierarchy
 		require
 			system_set: universe /= Void
 		local
-			depth: INTEGER
+--			depth: INTEGER
 		do
 			conf_todo
 --			from
@@ -360,7 +360,7 @@ feature -- Detailed column list
 		require
 			positive_depth: depth >= 0
 		local
-			index: INTEGER
+--			index: INTEGER
 		do
 			conf_todo
 --			from

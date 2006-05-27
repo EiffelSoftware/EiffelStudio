@@ -272,7 +272,6 @@ feature
 			cpp_ext: CPP_EXTENSION_I
 			macro_ext: MACRO_EXTENSION_I
 			struct_ext: STRUCT_EXTENSION_I
-			inline_ext: INLINE_EXTENSION_I
 			c_ext: C_EXTENSION_I
 			buf: GENERATION_BUFFER
 			l_type: TYPE_I

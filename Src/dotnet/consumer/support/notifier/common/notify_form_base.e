@@ -12,8 +12,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_base
-		redefine
-			on_form_closed
 		end
 
 feature {NONE} -- Initialization
@@ -86,18 +84,6 @@ feature -- Events
 			if notify_icon /= Void then
 				notify_icon.text := notify_string
 			end
-		end
-
-	on_form_closed (a_args: WINFORMS_FORM_CLOSED_EVENT_ARGS) is
-			-- Called when for has closed
-		do
-			Precursor {WINFORMS_FORM} (a_args)
-			if notify_icon /= Void then
-				notify_icon.dispose
-				notify_icon := Void
-			end
-		ensure then
-			notify_icon_unattached: notify_icon = Void
 		end
 
 feature {NONE} -- Constants

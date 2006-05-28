@@ -14,7 +14,8 @@ inherit
 			initialize_component,
 			notify_consume,
 			clear_notification,
-			on_idle
+			on_idle,
+			on_form_closed
 		end
 
 create
@@ -61,6 +62,18 @@ feature -- Status
 			-- Should ballon be shown?
 
 feature -- Events
+
+	on_form_closed (a_args: WINFORMS_FORM_CLOSED_EVENT_ARGS) is
+			-- Called when for has closed
+		do
+			Precursor {WINFORMS_FORM} (a_args)
+			if notify_icon /= Void then
+				notify_icon.dispose
+				notify_icon := Void
+			end
+		ensure then
+			notify_icon_unattached: notify_icon = Void
+		end
 
 	on_idle (a_sender: SYSTEM_OBJECT; a_args: EVENT_ARGS) is
 			-- Processes application idle events.

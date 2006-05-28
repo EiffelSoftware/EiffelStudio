@@ -12,7 +12,7 @@ rd /q /s %1\EIFGENs\bench
 
 if not exist %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe del %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\old_ec.exe
 ren %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\old_ec.exe
-copy %1\EIFGENs\bench\F_code\ec.exe .
+copy %1\EIFGENs\bench\F_code\ec.exe %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 
 rd /q /s %2\EIFGENs\bench
 

@@ -3,7 +3,10 @@ indexing
 	status: "See notice at end of class."
 -- Encoder of C generate names
 
-class ENCODER 
+class ENCODER
+
+inherit
+	STRING_HANDLER
 
 feature -- Name generation
 
@@ -13,8 +16,11 @@ feature -- Name generation
 		require
 			type_id_not_void: type_id > 0
 		do
-			Result := Feature_buffer;
+			Result := Feature_buffer
 			eif000 ($Result, type_id, body_index);
+				-- In order to get a proper `hash_code' value for `Result'
+				-- we reset its count to the same value.
+			Result.set_count (name_count)
 		end
 
 	table_name (rout_id: INTEGER): STRING is
@@ -24,14 +30,20 @@ feature -- Name generation
 		do
 			Result := Table_buffer;
 			eif011 ($Result, rout_id);
+				-- In order to get a proper `hash_code' value for `Result'
+				-- we reset its count to the same value.
+			Result.set_count (name_count)
 		end;
 
 	type_table_name (rout_id: INTEGER): STRING is
-			-- Name of a type table associated to an attribute offset or 
+			-- Name of a type table associated to an attribute offset or
 			-- routine table. Useful for creation generation.
 		do
 			Result := Type_table_buffer
 			eif101 ($Result, rout_id)
+				-- In order to get a proper `hash_code' value for `Result'
+				-- we reset its count to the same value.
+			Result.set_count (name_count)
 		end
 
 	address_table_name (feature_id: INTEGER; type_id: INTEGER): STRING is
@@ -40,6 +52,9 @@ feature -- Name generation
 		do
 			Result := Address_table_buffer;
 			eif000 ($Result, type_id, feature_id);
+				-- In order to get a proper `hash_code' value for `Result'
+				-- we reset its count to the same value.
+			Result.set_count (name_count)
 		end
 
 	generate_type_id_name (type_id: INTEGER): STRING is
@@ -61,7 +76,7 @@ feature -- Name generation
 		end
 
 	module_init_name (type_id: INTEGER): STRING is
-			-- Name of the init procedure of the C module 
+			-- Name of the init procedure of the C module
 			-- associated with current type
 		do
 			create Result.make (15);
@@ -71,31 +86,34 @@ feature -- Name generation
 
 feature {NONE}
 
+	name_count: INTEGER is 7
+			-- Number of characters in names we generate.
+
 	Address_table_buffer: STRING is
 			-- String buffer for address table generation
 		once
-			create Result.make (7)
+			create Result.make (name_count)
 			Result.append ("A000000")
 		end
-	
+
 	Feature_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (7)
+			create Result.make (name_count)
 			Result.append ("F000000")
 		end
-	
+
 	Table_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (7)
+			create Result.make (name_count)
 			Result.append ("T000000")
 		end
-	
+
 	Type_table_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (7)
+			create Result.make (name_count)
 			Result.append ("Y000000")
 		end
 

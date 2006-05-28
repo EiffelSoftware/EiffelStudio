@@ -58,10 +58,9 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			an_app_not_void: an_app /= Void
 		local
 			project_index: INTEGER
-			create_project_index: INTEGER
-			create_ace_index: INTEGER
-			compile_index: INTEGER
-			open_project: EB_OPEN_PROJECT_COMMAND
+			path_index: INTEGER
+			target_index: INTEGER
+			l_config, l_project_path, l_target: STRING
 			an_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
 
 			an_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
@@ -71,6 +70,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			first_window: EB_DEVELOPMENT_WINDOW
 			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
 			preference_access: PREFERENCES
+			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 				--| If we don't put bench mode here,
 				--| `error_window' will assume batch
@@ -109,23 +109,39 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			first_window := window_manager.last_created_window
 
 			mode.set_item (False)
-			project_index := index_of_word_option ("project")
-			if project_index /= 0 then
-					-- Project opened by `ebench name_of_project.epr'
-				create open_project.make_with_parent (first_window.window)
-				open_project.execute_with_file (argument (project_index + 1), False)
+				-- If some more arguments were specified, it means that we either asked to retrieve
+				-- an existing project, or to create one.
+			project_index := index_of_word_option ("config")
+			if project_index /= 0 and argument_count >= project_index + 1 then
+					-- A project was specified.
+				l_config := argument (project_index + 1)
+				path_index := index_of_word_option ("project_path")
+				if path_index /= 0 and argument_count >= path_index + 1 then
+					l_project_path := argument (path_index + 1)
+				end
+				target_index := index_of_word_option ("target")
+				if target_index /= 0 and argument_count >= target_index + 1 then
+					l_target := argument (target_index + 1)
+				end
+
+				check window_manager.last_created_window /= Void end
+				create l_loader.make (window_manager.last_created_window.window)
+				if path_index /= 0 then
+					l_loader.set_is_project_location_requested (False)
+				end
+				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("create") /= 0)
+				if
+					not l_loader.has_error and then l_loader.is_new_project and then
+					not l_loader.is_compilation_requested and then
+					index_of_word_option ("compile") /= 0
+				then
+					l_loader.set_is_compilation_requested (True)
+					l_loader.compile_project
+				end
 			else
-					-- Project created by `ebench -create my_path -ace my_ace'
-				create_project_index := index_of_word_option ("create")
-				create_ace_index := index_of_word_option ("ace")
-				compile_index := index_of_word_option ("compile")
-				if create_project_index /= 0 and then create_ace_index /= 0 then
-					create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0)
-				else
-						-- Show starting dialog.
-					if preferences.dialog_data.show_starting_dialog then
-						display_starting_dialog
-					end
+					-- Show starting dialog.
+				if preferences.dialog_data.show_starting_dialog then
+					display_starting_dialog
 				end
 			end
 
@@ -147,23 +163,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 			create project_dialog.make_default
 			project_dialog.show_modal_to_window (first_window.window)
-		end
-
-	create_project (a_directory_name: STRING; an_ace_file_name: STRING; compilation_flag: BOOLEAN) is
-			-- Create a new project
-		local
-			first_window: EB_DEVELOPMENT_WINDOW
-			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-		do
-			first_window := window_manager.last_created_window
-			check
-				first_window_not_void: first_window /= Void
-			end
-			create l_loader.make (first_window.window)
-			l_loader.open_project_file (an_ace_file_name, Void, a_directory_name, True)
-			if not l_loader.is_compilation_requested and then compilation_flag then
-				l_loader.compile_project
-			end
 		end
 
 feature {NONE} -- Exception handling

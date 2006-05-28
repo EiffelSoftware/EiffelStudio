@@ -120,6 +120,7 @@ rt_public void init_bench(int argc, char **argv)
 	char *eiffel5;		/* Eiffel 4 installation directory */
 	char *platform;
 	char *eif_timeout;	/* Timeout specified in environment variable */
+	int i;
 
 	/* Check if the user wants to override the default timeout value
 	 * required by the children processes to launch and initialize
@@ -208,7 +209,7 @@ rt_public void init_bench(int argc, char **argv)
 	}
 #endif
 
-	ewb_path = (char *) malloc(2048);
+	ewb_path = (char *) malloc(4096);
 	if (ewb_path == (char *) 0) {
 		print_err_msg(stderr, "%s: out of memory\n", progname);
 		exit(1);
@@ -246,24 +247,15 @@ rt_public void init_bench(int argc, char **argv)
 
 	if (argc == 2) {
 			/* It means that we give as an extra parameter the project file to open
-			 * with EiffelBench */
-		strcat (ewb_path, " -project \"");
+			 * with EiffelStudio */
+		strcat (ewb_path, " -config ");
 		strcat (ewb_path, argv [1]);
-		strcat (ewb_path, "\"");
-	}
-	if ((argc >= 5) && (strcmp (argv[1], "-create")==0) && (strcmp (argv[3], "-ace")==0)) {
-			/* It means that we try to create a project from the command line or from
-			 * estudio or with EiffelBench */
-		strcat (ewb_path, " -create \"");
-		strcat (ewb_path, argv [2]);
-		strcat (ewb_path, "\" -ace \"");
-		strcat (ewb_path, argv [4]);
-		strcat (ewb_path, "\"");
-	}
-	if ((argc >= 6) && strcmp (argv[5], "-compile") == 0) {
-			/* It means that we try to compile a project from the command line or from
-			 * estudio or with EiffelBench */
-		strcat (ewb_path, " -compile");
+	} else {
+			/* Simply copy all arguments to `ewb_path'. */
+		for (i = 1; i < argc; i++) {
+			strcat (ewb_path, " ");
+			strcat (ewb_path, argv[i]);
+		}
 	}
 
 #ifdef EIF_WINDOWS

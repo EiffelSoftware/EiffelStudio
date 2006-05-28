@@ -236,9 +236,12 @@ feature
 					end
 
 					if
-						not (rout_table.item.written_type_id = Context.original_class_type.type_id)
+						not (rout_table.item.written_type_id = Context.original_class_type.type_id) and
+						inline_ext = Void
 					then
-							-- Remember extern routine declaration
+							-- Remember extern routine declaration if not written in same class. But no need
+							-- doing this for an inline C/C++ since the code of the inline routine will be
+							-- generated again.
 						Extern_declarations.add_routine_with_signature (type_c,
 								internal_name, local_argument_types)
 					end

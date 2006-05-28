@@ -129,7 +129,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				if path_index /= 0 then
 					l_loader.set_is_project_location_requested (False)
 				end
-				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("create") /= 0)
+				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0)
 				if
 					not l_loader.has_error and then l_loader.is_new_project and then
 					not l_loader.is_compilation_requested and then

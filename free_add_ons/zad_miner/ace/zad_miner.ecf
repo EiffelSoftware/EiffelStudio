@@ -21,9 +21,9 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="False"/>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 
 		<cluster name="root_cluster" location="$ISE_LIBRARY\free_add_ons\zad_miner\src\"/>
 	</target>

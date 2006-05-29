@@ -14,7 +14,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 
-		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resources"/>
+		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
 
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
 			<debug name="assemblies_are_never_stale" enabled="false"/>

@@ -162,7 +162,6 @@ feature -- Directories
 			if Result = Void then
 				create Result.make_from_string (location)
 				Result.extend (documentation)
-				Result.extend (target)
 				internal_documentation_path := Result
 			end
 		ensure

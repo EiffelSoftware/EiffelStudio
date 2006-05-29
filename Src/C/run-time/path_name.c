@@ -47,6 +47,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
+#include <shlobj.h>
 #endif
 
 #include <stdlib.h>			/* For getenv */

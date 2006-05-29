@@ -50,7 +50,7 @@ remtrace ---------------------------------------------------------------
 
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml
 melt all_libs.ecf
-ec -flatshort -filter xml -all -config all_libs.ecf
+ec -local -flatshort -filter xml -all -config all_libs.ecf
 
 remtrace ------------------------------------------------------
 remtrace Copy XML docs into appropriate written docs location |

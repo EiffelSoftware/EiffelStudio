@@ -17,12 +17,13 @@ else
 	set TARGET_NAME=consumer_20
 endiff
 finalize consumer.ecf %TARGET_NAME
-iff not exist EIFGENs\%TARGET_NAME\F_code\EiffelSoftware.MetadataConsumer.dll then
+cleanup_dotnet_eiffel %TARGET_NAME EiffelSoftware.MetadataConsumer.dll
+iff not exist libEiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EIFGENs\%TARGET_NAME\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
-copy EIFGENs\%TARGET_NAME\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
 
 set TARGET_NAME=
 cdd %EIFFEL_SRC

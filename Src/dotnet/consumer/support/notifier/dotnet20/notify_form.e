@@ -66,7 +66,7 @@ feature -- Events
 	on_form_closed (a_args: WINFORMS_FORM_CLOSED_EVENT_ARGS) is
 			-- Called when for has closed
 		do
-			Precursor {WINFORMS_FORM} (a_args)
+			Precursor {NOTIFY_FORM_BASE} (a_args)
 			if notify_icon /= Void then
 				notify_icon.dispose
 				notify_icon := Void

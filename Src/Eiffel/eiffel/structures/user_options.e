@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 		require
 			a_uuid_not_void: a_uuid /= Void
 			a_target_name_not_void: a_target_name /= Void
+			a_target_name_not_empty: not a_target_name.is_empty
 		do
 			uuid := a_uuid
 			target_name := a_target_name
@@ -78,6 +79,7 @@ invariant
 	uuid_not_void: uuid /= Void
 	targets_not_void: targets /= Void
 	target_name_not_void: target_name /= Void
+	target_name_not_empty: not target_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

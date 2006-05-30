@@ -61,8 +61,8 @@ feature {NONE} -- Implementation
 			if processed_class.has (a_class) then
 				if a_class.class_c.class_id /= l_any_id then
 					a_text_formatter.add (output_interface_names.ellipse)
-					a_text_formatter.add_new_line
 				end
+				a_text_formatter.add_new_line
 			else
 				if processed_class.capacity = processed_class.count then
 					processed_class.resize (processed_class.count + 50)

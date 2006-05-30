@@ -12,8 +12,16 @@
 
 d_bsdsig='undef'
 sh='/bin/sh'
-cc='ccmips'
-cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='ccmips'
+fi
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
+fi
 ar='armips'
 ld='ldmips -EL -X -N -warn-common'
 

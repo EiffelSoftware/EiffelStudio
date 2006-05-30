@@ -14,7 +14,11 @@ libs='-lnsl -lm'
 mtlibs='-lnsl -lm -lpthread'
 
 optimize='-O2'
-cc='cc'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='cc'
+fi
 cppflags=''
 ldflags=''
 ldsharedflags=''
@@ -48,7 +52,11 @@ comm='/usr/bin/comm'
 compress=''
 cp='/bin/cp'
 cpio=''
-cpp='/lib/cpp'
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='/lib/cpp'
+fi
 csh=''
 date='/bin/date'
 echo='/bin/echo'

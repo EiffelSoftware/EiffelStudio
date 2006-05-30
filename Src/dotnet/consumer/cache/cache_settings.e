@@ -28,8 +28,16 @@ feature -- Access
 			-- Note: This has to be unique per user since accessing a Mutex created by
 			-- a different user causes a security exception. This means that concurrent
 			-- cache access by different users is not supported.
+		local
+			l_cr: CACHE_READER
 		once
-			Result := {SYSTEM_STRING}.concat (("MetadataConsumer").to_cil,  {ENVIRONMENT}.user_name)
+			create l_cr
+			Result := l_cr.eiffel_assembly_cache_path
+			Result := Result.replace_character (':', '_')
+			Result := Result.replace_character ('\', '_')
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: Result.length > 0
 		end
 
 indexing

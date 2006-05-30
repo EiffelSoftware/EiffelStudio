@@ -139,19 +139,26 @@ feature {NONE} -- Actions implementation
 			start_x: INTEGER
 			column_index: INTEGER
 			l_near_border: BOOLEAN
-			l_new_width, l_new_neighbor: INTEGER
+			l_new_width, l_new_neighbor, l_x_pos: INTEGER
 			l_resize, l_neighbor: EV_GRID_COLUMN
+			l_visible_height: INTEGER
 		do
 			if not implementation.is_header_item_resizing then
+				l_x_pos := x_pos + virtual_x_position
 				if not is_resize_mode then
-					l_resize := column_at_virtual_position (x_pos)
-					if l_resize /= Void then
+					l_resize := column_at_virtual_position (l_x_pos)
+					if is_header_displayed then
+						l_visible_height := viewable_height + header.height
+					else
+						l_visible_height := viewable_height
+					end
+					if l_resize /= Void and then (y_pos < l_visible_height) then
 						column_index := l_resize.index
 						start_x := l_resize.virtual_x_position
-						if column_index > 1 and then x_pos < start_x + 10 then
+						if column_index > 1 and then l_x_pos < start_x + 5 then
 							column_index := column_index - 1
 							l_near_border := True
-						elseif column_index < column_count and then x_pos > start_x + l_resize.width - 10  then
+						elseif column_index < column_count and then l_x_pos > start_x + l_resize.width - 5  then
 							l_near_border := True
 						end
 					end
@@ -166,8 +173,8 @@ feature {NONE} -- Actions implementation
 				else
 					l_resize := column (resize_index)
 					l_neighbor := column (resize_index + 1)
-					l_new_width := x_pos - l_resize.virtual_x_position
-					l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - x_pos
+					l_new_width := l_x_pos - l_resize.virtual_x_position
+					l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - l_x_pos
 					if l_new_width > 10 and l_new_neighbor > 10 then
 						l_resize.set_width (l_new_width)
 						l_neighbor.set_width (l_new_neighbor)

@@ -4635,6 +4635,12 @@ feature -- Implementation
 			process_eiffel_list (l_as)
 		end
 
+	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
+			-- Process `l_as'.
+		do
+			process_eiffel_list (l_as)
+		end
+
 	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
 			-- Process `l_as'.
 		do

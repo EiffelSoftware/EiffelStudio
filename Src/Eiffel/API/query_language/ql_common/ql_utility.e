@@ -107,6 +107,14 @@ feature{NONE} -- Implementation
 					find_path_from_conf_group (a_list, l_cluster.parent)
 				else
 					l_target := a_group.target
+					if l_target.system = l_target.application_target.system then
+						l_target := l_target.application_target
+					else
+						check
+							library_target: l_target.system.library_target /= Void
+						end
+						l_target := l_target.system.library_target
+					end
 					a_list.put_front (create{QL_TARGET}.make (l_target))
 					l_libs := l_target.used_in_libraries
 					if l_libs /= Void and then not l_libs.is_empty then
@@ -118,6 +126,14 @@ feature{NONE} -- Implementation
 				end
 			elseif a_group.is_library or a_group.is_assembly then
 				l_target := a_group.target
+				if l_target.system = l_target.application_target.system then
+					l_target := l_target.application_target
+				else
+					check
+						library_target: l_target.system.library_target /= Void
+					end
+					l_target := l_target.system.library_target
+				end
 				a_list.put_front (create{QL_TARGET}.make (l_target))
 				l_libs := l_target.used_in_libraries
 				if l_libs /= Void and then not l_libs.is_empty then

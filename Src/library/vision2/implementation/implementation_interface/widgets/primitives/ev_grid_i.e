@@ -5021,7 +5021,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			-- Result is Void if no item is found.
 		require
 			column_not_void: grid_column /= Void
-			starting_index_valid: starting_index > 0 and then starting_index <= grid_column.count
+			starting_index_valid_lower: (starting_index >= 0 and then look_down) or (starting_index > 0)
+			starting_index_valid_upper: starting_index <= grid_column.count
 		local
 			item_offset: INTEGER
 			item_index: INTEGER
@@ -5158,21 +5159,25 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					else
 						-- Do nothing
 					end
-					if a_sel_item /= Void then
-						if
-							a_sel_item.is_selected and then
-							last_selected_item /= Void and then
-							not ev_application.shift_pressed and then
-							last_selected_item /= a_sel_item.implementation
-						then
-							last_selected_item.disable_select
-						end
-						handle_newly_selected_item (a_sel_item, 0, True)
-						if is_row_selection_enabled then
-							last_selected_row := a_sel_item.row.implementation
-						end
-						last_selected_item := a_sel_item.implementation
+				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_down then
+					if column_count >= 1 then
+						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
+				end
+				if a_sel_item /= Void then
+					if
+						a_sel_item.is_selected and then
+						last_selected_item /= Void and then
+						not ev_application.shift_pressed and then
+						last_selected_item /= a_sel_item.implementation
+					then
+						last_selected_item.disable_select
+					end
+					handle_newly_selected_item (a_sel_item, 0, True)
+					if is_row_selection_enabled then
+						last_selected_row := a_sel_item.row.implementation
+					end
+					last_selected_item := a_sel_item.implementation
 				end
 			end
 		end

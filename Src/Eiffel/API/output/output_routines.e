@@ -28,18 +28,13 @@ feature -- Miscellaneous
 			text.process_keyword_text ("System", Void)
 			text.add_new_line
 			text.add_indent
-			text.process_indexing_tag_text ("name:     ")
+			text.process_indexing_tag_text ("name:        ")
 			text.process_basic_text (Eiffel_system.name)
 			text.add_new_line
 
 			text.add_indent
-			text.process_indexing_tag_text ("location: ")
-			text.process_basic_text (Eiffel_project.name)
-			text.add_new_line
-
-			text.add_indent
-			text.process_indexing_tag_text ("compilation: ")
-			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
+			text.process_indexing_tag_text ("target:      ")
+			text.process_basic_text (Eiffel_system.lace.target_name)
 			text.add_new_line
 
 			text.add_indent
@@ -47,6 +42,15 @@ feature -- Miscellaneous
 			text.process_basic_text (Eiffel_ace.file_name)
 			text.add_new_line
 
+			text.add_indent
+			text.process_indexing_tag_text ("location:    ")
+			text.process_basic_text (Eiffel_project.name)
+			text.add_new_line
+
+			text.add_indent
+			text.process_indexing_tag_text ("compilation: ")
+			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
+			text.add_new_line
 
 			text.add_new_line
 

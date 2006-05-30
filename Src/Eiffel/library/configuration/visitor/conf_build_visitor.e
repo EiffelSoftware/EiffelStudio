@@ -659,7 +659,7 @@ feature {NONE} -- Implementation
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
 						if current_classes.has (l_name) then
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
 						else
 							current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 									name_same: l_name.is_equal (l_class.renamed_name)
 								end
 								if current_classes.has (l_name) then
-									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
 								else
 									current_classes.force (l_class, l_name)
 									current_classes_by_filename.force (l_class, l_file_name)

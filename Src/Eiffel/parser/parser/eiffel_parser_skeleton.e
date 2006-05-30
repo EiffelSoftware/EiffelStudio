@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			formal_parameters.compare_objects
 			id_level := Normal_level
 			create counters.make (Initial_counters_capacity)
+			create counters2.make (Initial_counters_capacity)
 		end
 
 feature -- Parser type setting
@@ -87,7 +88,7 @@ feature -- Parser type setting
 			expression_parser: expression_parser
 			parsing_type_set: has_parsing_type
 		end
-		
+
 	set_feature_parser is
 			-- Create a new Eiffel feature parser.
 		require
@@ -109,7 +110,7 @@ feature -- Parser type setting
 			indexing_parser: indexing_parser
 			parsing_type_set: has_parsing_type
 		end
-		
+
 	set_invariant_parser is
 			-- Create a new Eiffel invariant clause parser.
 		require
@@ -168,13 +169,13 @@ feature -- Status report
 
 	expression_parser: BOOLEAN
 			-- Is current Eiffel parser an expression parser ?
-			
+
 	feature_parser: BOOLEAN
 			-- Feature parser
 
 	indexing_parser: BOOLEAN
 			-- Is current Eiffel parser an indexing clause parser ?
-			
+
 	invariant_parser: BOOLEAN
 			-- Is current Eiffel parser an invariant clause parser ?
 
@@ -238,7 +239,7 @@ feature -- Access: result nodes
 
 	feature_node: FEATURE_AS
 			-- Feature node of AST
-			
+
 	indexing_node: INDEXING_CLAUSE_AS
 			-- Indexing clause node of AST
 
@@ -378,6 +379,8 @@ feature {NONE} -- Implementation
 	last_type_list: TYPE_LIST_AS
 			-- Temporary locals in semantic actions.
 
+	last_rsqure: SYMBOL_AS
+
 feature {NONE} -- Counters
 
 	counter_value: INTEGER is
@@ -386,6 +389,16 @@ feature {NONE} -- Counters
 			counters_not_empty: not counters.is_empty
 		do
 			Result := counters.item
+		ensure
+			value_positive: Result >= 0
+		end
+
+	counter2_value: INTEGER is
+			-- Value of the last counter registered
+		require
+			counters2_not_empty: not counters2.is_empty
+		do
+			Result := counters2.item
 		ensure
 			value_positive: Result >= 0
 		end
@@ -399,6 +412,15 @@ feature {NONE} -- Counters
 			value_zero: counter_value = 0
 		end
 
+	add_counter2 is
+			-- Register a new counter.
+		do
+			counters2.force (0)
+		ensure
+			one_more: counters2.count = old counters2.count + 1
+			value_zero: counter2_value = 0
+		end
+
 	remove_counter is
 			-- Unregister last registered counter.
 		require
@@ -407,6 +429,16 @@ feature {NONE} -- Counters
 			counters.remove
 		ensure
 			one_less: counters.count = old counters.count - 1
+		end
+
+	remove_counter2 is
+			-- Unregister last registered counter.
+		require
+			counters2_not_empty: not counters2.is_empty
+		do
+			counters2.remove
+		ensure
+			one_less: counters2.count = old counters2.count - 1
 		end
 
 	increment_counter is
@@ -423,9 +455,26 @@ feature {NONE} -- Counters
 			one_more: counter_value = old counter_value + 1
 		end
 
+	increment_counter2 is
+			-- Increment `counter_value'.
+		require
+			counters2_not_empty: not counters2.is_empty
+		local
+			a_value: INTEGER
+		do
+			a_value := counters2.item
+			counters2.replace (a_value + 1)
+		ensure
+			same_counters2_count: counters2.count = old counters2.count
+			one_more: counter2_value = old counter2_value + 1
+		end
+
 	counters: DS_ARRAYED_STACK [INTEGER]
 			-- Counters currently in use by the parser
 			-- to build lists of AST nodes with the right size.
+
+	counters2: DS_ARRAYED_STACK [INTEGER]
+			-- Counters used for parsing tuples
 
 feature {NONE} -- Actions
 

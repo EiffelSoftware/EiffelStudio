@@ -1039,7 +1039,7 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
-	new_eiffel_list_type_dec_as (n: INTEGER): EIFFEL_LIST [TYPE_DEC_AS] is
+	new_eiffel_list_type_dec_as (n: INTEGER): TYPE_DEC_LIST_AS is
 			-- New empty list of TYPE_DEC_AS
 		require
 			n_non_negative: n >= 0
@@ -1513,7 +1513,7 @@ feature -- Access
 			end
 		end
 
-	new_type_dec_as (i: CONSTRUCT_LIST [INTEGER]; t: TYPE_AS; c_as: SYMBOL_AS): TYPE_DEC_AS is
+	new_type_dec_as (i: IDENTIFIER_LIST; t: TYPE_AS; c_as: SYMBOL_AS): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		do
 			if i /= Void and t /= Void then

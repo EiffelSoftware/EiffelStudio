@@ -165,9 +165,9 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type
+%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id
 %type <CLASS_TYPE_AS>		Parent_class_type
-%type <TYPE_DEC_AS>			Entity_declaration_group Tuple_declaration_group
+%type <TYPE_DEC_AS>			Entity_declaration_group
 %type <VARIANT_AS>			Variant
 %type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
@@ -177,7 +177,7 @@ create
 %type <EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
 %type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
-%type <EXPORT_CLAUSE_AS> 		New_exports New_exports_opt
+%type <EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
 %type <EIFFEL_LIST [EXPR_AS]>			Expression_list
 %type <PARAMETER_LIST_AS> 	Parameters
 %type <EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
@@ -197,12 +197,12 @@ create
 %type <DELAYED_ACTUAL_LIST_AS>	Delayed_actuals
 %type <PARENT_LIST_AS>					Inheritance Parent_list
 %type <EIFFEL_LIST [RENAME_AS]>			Rename_list
-%type <RENAME_CLAUSE_AS>					Rename
+%type <RENAME_CLAUSE_AS>				Rename 
 %type <EIFFEL_LIST [STRING_AS]>			String_list
 %type <DEBUG_KEY_LIST_AS>	Debug_keys
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
-%type <TYPE_LIST_AS>					Generics_opt Type_list Type_list_impl
-%type <EIFFEL_LIST [TYPE_DEC_AS]>		Entity_declaration_list Tuple_entity_declaration_list
+%type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
+%type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
 %type <LOCAL_DEC_LIST_AS>	Local_declarations
 %type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments
 %type <CONSTRAINT_TRIPLE>	Constraint
@@ -1111,7 +1111,7 @@ Formal_arguments:	TE_LPARAN TE_RPARAN
 	|	TE_LPARAN Add_counter Entity_declaration_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $5) }
 	;
-
+  
 Entity_declaration_list: Entity_declaration_group
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
@@ -1399,7 +1399,16 @@ Type: Class_or_tuple_type
 	|	Non_class_type
 			{ $$ := $1 }
 	;
-
+	
+Type_no_id: 
+		Class_identifier Generics
+			{}
+	|	Tuple_type
+			{}
+	|	Non_class_type
+			{ $$ := $1 }
+	;
+	
 Non_class_type: TE_EXPANDED Class_type
 			{
 				$$ := $2
@@ -1441,7 +1450,13 @@ Class_type: Class_identifier Generics_opt
 
 Generics_opt: -- Empty
 			-- { $$ := Void }
-	|	TE_LSQURE Type_list TE_RSQURE
+	|	Generics 
+			{
+				$$ := $1
+			}
+	;
+
+Generics:	TE_LSQURE Type_list TE_RSQURE
 			{
 				$$ := $2
 				if $$ /= Void then
@@ -1480,55 +1495,121 @@ Type_list_impl: Type
 
 Tuple_type: TE_TUPLE
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
-	|	TE_TUPLE TE_LSQURE TE_RSQURE
+	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
-				last_type_list := ast_factory.new_eiffel_list_type (0)
+			  	last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
-					last_type_list.set_positions ($2, $3)
+					last_type_list.set_positions ($4, $5)
 				end
 				$$ := ast_factory.new_class_type_as ($1, last_type_list)
 				last_type_list := Void
+				remove_counter
+				remove_counter2
 			}
-	|	TE_TUPLE TE_LSQURE Type_list TE_RSQURE
+	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Actual_parameter_list
 			{
-				if $3 /= Void then
-					$3.set_positions ($2, $4)
+				if $5 /= Void then
+					$5.set_positions ($4, last_rsqure)
 				end
-				$$ := ast_factory.new_class_type_as ($1, $3)
+				$$ := ast_factory.new_class_type_as ($1, $5)
+				remove_counter
+				remove_counter2
 			}
-	|	TE_TUPLE TE_LSQURE Add_counter Tuple_entity_declaration_list Remove_counter TE_RSQURE
-			{ $$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($4, $2, $6)) }
+	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Named_parameter_list
+			{
+				if $5 /= Void then
+					$5.set_positions ($4, last_rsqure)
+				end
+				$$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($5, $4, Void))
+				remove_counter
+				remove_counter2
+			}
 	;
 
-Tuple_entity_declaration_list: Tuple_declaration_group
+Actual_parameter_list:	Type TE_RSQURE				
 			{
-				$$ := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
+				$$ := ast_factory.new_eiffel_list_type (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
+				last_rsqure := $2
 			}
-	|	Tuple_declaration_group { increment_counter } ASemi Tuple_entity_declaration_list
+	|	TE_ID TE_COMMA Increment Actual_parameter_list		
+			{
+				$$ := $4
+				if $$ /= Void and $1 /= Void then
+					if not case_sensitive then
+						$1.to_upper		
+					end
+					$$.reverse_extend (new_class_type ($1, Void))
+					ast_factory.reverse_extend_separator ($$, $2)
+				end
+			}
+	|	Type_no_id TE_COMMA Increment Actual_Parameter_List
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
-
-Tuple_declaration_group: Identifier_as_lower TE_COLON Type
+	
+Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE 
 			{
-				last_identifier_list := ast_factory.new_identifier_list (1)
-				if last_identifier_list /= Void and $1 /= Void then
+				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
+				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
+				
+				if $$ /= Void and last_identifier_list /= Void and $1 /= Void then
+					if not case_sensitive then
+						$1.to_lower		
+					end
 					Names_heap.put ($1)
 					last_identifier_list.reverse_extend (Names_heap.found_item)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 				end
-				$$ := ast_factory.new_type_dec_as (last_identifier_list, $3, $2)
+				$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
+				last_identifier_list := Void     
+				last_rsqure := $4
+			}
+	|	TE_ID TE_COMMA Increment Named_parameter_list
+			{
+				$$ := $4
+				if $$ /= Void then
+					last_identifier_list := $$.reversed_first.id_list
+					if last_identifier_list /= Void then
+						if not case_sensitive then
+							$1.to_lower		
+						end
+						Names_heap.put ($1)
+						last_identifier_list.reverse_extend (Names_heap.found_item)
+						ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+						ast_factory.reverse_extend_separator (last_identifier_list.id_list, $2)
+					end
+					last_identifier_list := Void     
+				end
+			}
+	|	TE_ID TE_COLON Type ASemi Increment2 Named_parameter_list
+			{
+				$$ := $6
+				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
+				
+				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
+					if not case_sensitive then
+						$1.to_lower		
+					end
+					Names_heap.put ($1)
+					last_identifier_list.reverse_extend (Names_heap.found_item)
+					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					
+					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
+				end
 				last_identifier_list := Void
+				remove_counter
+				add_counter
 			}
 	;
-
+			
 
 -- Formal generics
 
@@ -2931,8 +3012,18 @@ Manifest_tuple: TE_LSQURE TE_RSQURE
 Add_counter: { add_counter }
 	;
 
+Add_counter2: { add_counter2 }
+	;
+	
+Increment: { increment_counter }
+	;
+
+Increment2: { increment_counter2 }
+	;
+
 Remove_counter: { remove_counter }
 	;
+
 
 %%
 

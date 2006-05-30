@@ -84,6 +84,13 @@ feature -- Access
 			end
 		end
 
+	reversed_first: T is
+		require
+			count >= 1
+		do
+			Result := area.item (capacity - count)
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is

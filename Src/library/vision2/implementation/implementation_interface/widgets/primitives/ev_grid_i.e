@@ -4063,29 +4063,19 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header.pointer_enter_actions.extend (agent pointer_enter_received)
 			header.pointer_leave_actions.extend (agent pointer_leave_received)
 
---			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
---			vertical_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			vertical_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			vertical_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
---			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
---
---			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
---			horizontal_scroll_bar.pointer_button_press_actions.extend (agent pointer_button_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			horizontal_scroll_bar.pointer_double_press_actions.extend (agent pointer_double_press_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			horizontal_scroll_bar.pointer_button_release_actions.extend (agent pointer_button_release_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?, ?))
---			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
---			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+			vertical_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_vertical_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+			vertical_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 
---			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
---			scroll_bar_spacer.pointer_button_press_actions.extend (agent pointer_button_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
---			scroll_bar_spacer.pointer_double_press_actions.extend (agent pointer_double_press_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
---			scroll_bar_spacer.pointer_button_release_actions.extend (agent pointer_button_release_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?, ?))
---			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
---			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
+			horizontal_scroll_bar.pointer_motion_actions.extend (agent pointer_motion_received_horizontal_scroll_bar (?, ?, ?, ?, ?, ?, ?))
+			horizontal_scroll_bar.pointer_enter_actions.extend (agent pointer_enter_received)
+			horizontal_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
+
+			scroll_bar_spacer.pointer_motion_actions.extend (agent pointer_motion_received_scroll_bar_spacer (?, ?, ?, ?, ?, ?, ?))
+			scroll_bar_spacer.pointer_enter_actions.extend (agent pointer_enter_received)
+			scroll_bar_spacer.pointer_leave_actions.extend (agent pointer_leave_received)
 
 			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates_wrapper)
-
 
 				-- Now ensure grid can be tabbed to as any other standard widget.
 			drawable.enable_tabable_to
@@ -4811,6 +4801,36 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
 				pointer_motion_item_actions_internal.call ([a_x, a_y, Void])
+			end
+		end
+
+	pointer_motion_received_vertical_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_motion_actions' of `vertical_scroll_bar'.
+		do
+			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
+				pointer_motion_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			end
+			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
+				pointer_motion_item_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y, Void])
+			end
+		end
+
+	pointer_motion_received_horizontal_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_motion_actions' of `horizontal_scroll_bar'.
+		do
+			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
+				pointer_motion_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			end
+			if pointer_motion_item_actions_internal /= Void and then not pointer_motion_item_actions_internal.is_empty then
+				pointer_motion_item_actions_internal.call ([a_x + viewable_x_offset, a_y + viewable_y_offset + viewable_height, Void])
+			end
+		end
+
+	pointer_motion_received_scroll_bar_spacer (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_motion_actions' of `scroll_bar_spacer'.
+		do
+			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
+				pointer_motion_actions_internal.call ([a_x + viewable_x_offset + viewable_width, a_y + viewable_y_offset + viewable_height, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
 		end
 

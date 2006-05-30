@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 					-- assembly and only the default rule? => don't print it
 				if is_assembly and then a_conditions.count = 1 then
 					l_condition := a_conditions.first
-					l_done := l_condition.build.is_empty and l_condition.multithreaded = Void and l_condition.custom.is_empty
+					l_done := l_condition.build = Void and l_condition.platform = Void and l_condition.multithreaded = Void and l_condition.version.is_empty and l_condition.custom.is_empty
 				end
 				if not l_done then
 					from
@@ -574,6 +574,9 @@ feature {NONE} -- Implementation
 			loop
 				l_action := an_actions.item
 				append_text_indent ("<"+a_name+"_compile_action")
+				if l_action.working_directory /= Void then
+					append_text (" working_directory=%""+l_action.working_directory.original_path+"%"")
+				end
 				append_text (" command=%""+l_action.command+"%">%N")
 				indent := indent + 1
 				append_description_tag (l_action.description)

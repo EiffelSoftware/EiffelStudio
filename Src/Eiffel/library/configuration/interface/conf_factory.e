@@ -147,7 +147,6 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-
 	new_class (a_file_name: STRING; a_group: CONF_CLUSTER; a_path: STRING): CONF_CLASS is
 			-- Create a `CONF_CLASS' object.
 		require

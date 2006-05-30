@@ -140,6 +140,22 @@ feature {NONE} -- Target names and descriptions
 	target_external_make_tree: STRING is "Makefiles"
 	target_external_resource_tree: STRING is "Resources"
 
+	target_task_pre_tree: STRING is "Pre compilation tasks"
+	target_task_post_tree: STRING is "Post compilatin tasks"
+
+	target_task_pre: STRING is "pre compilation"
+	target_task_post: STRING is "post compilation"
+	target_task_command_name: STRING is "Command"
+	target_task_command_description: STRING is "Command to execute."
+	target_task_description_name: STRING is "Description"
+	target_task_description_description: STRING is "Description of the task."
+	target_task_working_directory_name: STRING is "Working directory"
+	target_task_working_directory_description: STRING is "Directory where the command will be executed."
+	target_task_succeed_name: STRING is "Must succeed"
+	target_task_succeed_description: STRING is "Does this task have to finish successful for the compilation to continue?"
+	target_task_condition_name: STRING is "Condition"
+	target_task_condition_description: STRING is "Conditions for this task to be executed."
+
 feature {NONE} -- Option names and descriptions
 
 	option_require_name: STRING is "Require"

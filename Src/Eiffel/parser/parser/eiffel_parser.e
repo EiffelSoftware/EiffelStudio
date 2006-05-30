@@ -9841,7 +9841,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
+yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs111.item (yyvsp111)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp79 := yyvsp79 + 1
@@ -9877,7 +9877,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
+yyval79 := yyvs79.item (yyvsp79) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs79.put (yyval79, yyvsp79)

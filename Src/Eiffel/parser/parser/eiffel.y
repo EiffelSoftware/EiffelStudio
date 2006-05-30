@@ -1402,9 +1402,9 @@ Type: Class_or_tuple_type
 	
 Type_no_id: 
 		Class_identifier Generics
-			{}
+			{ $$ := new_class_type ($1, $2) }
 	|	Tuple_type
-			{}
+			{ $$ := $1 }
 	|	Non_class_type
 			{ $$ := $1 }
 	;

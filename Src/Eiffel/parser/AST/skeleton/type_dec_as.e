@@ -52,7 +52,7 @@ feature -- Roundtrip
 
 feature -- Access
 
-	id_list: CONSTRUCT_LIST [INTEGER]
+	id_list: IDENTIFIER_LIST
 			-- List of ids
 
 	type: TYPE_AS

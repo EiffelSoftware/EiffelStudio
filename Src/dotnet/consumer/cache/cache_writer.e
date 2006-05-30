@@ -98,11 +98,11 @@ feature -- Basic Operations
 			l_lower_path: like a_path
 			l_reader: like cache_reader
 			l_reason: SYSTEM_STRING
-			l_retried: BOOLEAN
+			retried: BOOLEAN
 			i: INTEGER
 		do
-			guard.lock
-			if not l_retried then
+			if not retried then
+				guard.lock
 				if notifier = Void then
 					create notifier.make
 				end
@@ -268,8 +268,10 @@ feature -- Basic Operations
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			l_retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	unconsume_assembly (a_path: STRING) is
@@ -286,13 +288,13 @@ feature -- Basic Operations
 			l_ca: CONSUMED_ASSEMBLY
 			l_info: CACHE_INFO
 			l_reader: like cache_reader
-			l_retried: BOOLEAN
+			retried: BOOLEAN
 		do
 			check
 				assembly_exists: cache_reader.is_assembly_in_cache (a_path, True)
 			end
-			guard.lock
-			if not l_retried then
+			if not retried then
+				guard.lock
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Unconsuming assembly '{0}'", a_path))
 
 				l_reader := cache_reader
@@ -322,9 +324,10 @@ feature -- Basic Operations
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to fully unconsuming the assembly '{0}'.", a_path))
-			l_retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	remove_recursive_assembly (a_path: STRING) is
@@ -335,12 +338,12 @@ feature -- Basic Operations
 		local
 			l_ca: CONSUMED_ASSEMBLY
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
-			l_retried: BOOLEAN
+			retried: BOOLEAN
 			l_reader: like cache_reader
 			i: INTEGER
 		do
-			guard.lock
-			if not l_retried then
+			if not retried then
+				guard.lock
 				l_reader := cache_reader
 				remove_assembly_internal (a_path)
 				l_ca := consumed_assembly_from_path (a_path)
@@ -364,8 +367,10 @@ feature -- Basic Operations
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			l_retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	clean_cache is
@@ -374,14 +379,14 @@ feature -- Basic Operations
 			l_cache_folder: DIRECTORY
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			l_ca: CONSUMED_ASSEMBLY
-			l_retried: BOOLEAN
+			retried: BOOLEAN
 			l_upper: INTEGER
 			l_remove: BOOLEAN
 			l_removed: BOOLEAN
 			i: INTEGER
 		do
-			guard.lock
-			if not l_retried then
+			if not retried then
+				guard.lock
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path))
 
 				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
@@ -417,8 +422,10 @@ feature -- Basic Operations
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			l_retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	compact_cache_info is
@@ -427,29 +434,40 @@ feature -- Basic Operations
 			l_info: CACHE_INFO
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			l_removed: BOOLEAN
+			retried: BOOLEAN
 			i: INTEGER
 		do
-			guard.lock
+			if not retried then
+				guard.lock
 
-			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Compacting EAC '{0}'.", cache_reader.eac_path))
 
-			l_info := cache_reader.info
-			l_assemblies := l_info.assemblies
-			from
-				i := 1
-			until
-				i > l_assemblies.count
-			loop
-				if l_assemblies.item (i) /= Void and then not l_assemblies.item (i).is_consumed then
-					l_info.remove_assembly (l_assemblies.item (i))
-					l_removed := True
+				l_info := cache_reader.info
+				l_assemblies := l_info.assemblies
+				from
+					i := 1
+				until
+					i > l_assemblies.count
+				loop
+					if l_assemblies.item (i) /= Void and then not l_assemblies.item (i).is_consumed then
+						l_info.remove_assembly (l_assemblies.item (i))
+						l_removed := True
+					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-			if l_removed then
-				update_info (l_info)
+				if l_removed then
+					update_info (l_info)
+				end
 			end
 			guard.unlock
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
@@ -462,21 +480,32 @@ feature -- Basic Operations
 			l_id: STRING
 			l_info: CACHE_INFO
 			l_path: like a_path
+			retried: BOOLEAN
 		do
-			guard.lock
-			l_path := {PATH}.get_full_path (a_path)
-			Result := cache_reader.consumed_assembly_from_path (l_path)
-			if Result = Void then
-				l_id := {GUID}.new_guid.to_string
-				l_id.to_upper
-				Result := create_consumed_assembly_from_path (l_id, l_path)
-				if Result /= Void then
-					l_info := cache_reader.info
-					l_info.add_assembly (Result)
-					update_info (l_info)
+			if not retried then
+				guard.lock
+				l_path := {PATH}.get_full_path (a_path)
+				Result := cache_reader.consumed_assembly_from_path (l_path)
+				if Result = Void then
+					l_id := {GUID}.new_guid.to_string
+					l_id.to_upper
+					Result := create_consumed_assembly_from_path (l_id, l_path)
+					if Result /= Void then
+						l_info := cache_reader.info
+						l_info.add_assembly (Result)
+						update_info (l_info)
+					end
 				end
 			end
 			guard.unlock
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	update_info (a_info: CACHE_INFO) is
@@ -486,17 +515,28 @@ feature -- Basic Operations
 		local
 			l_absolute_xml_info_path: STRING
 			serializer: EIFFEL_SERIALIZER
+			retried: BOOLEAN
 		do
-			guard.lock
-			if a_info.is_dirty then
-				a_info.set_is_dirty (False)
-				l_absolute_xml_info_path := cache_reader.Absolute_info_path
-				create serializer
-				serializer.serialize (a_info, l_absolute_xml_info_path, False)
+			if not retried then
+				guard.lock
+				if a_info.is_dirty then
+					a_info.set_is_dirty (False)
+					l_absolute_xml_info_path := cache_reader.Absolute_info_path
+					create serializer
+					serializer.serialize (a_info, l_absolute_xml_info_path, False)
+				end
 			end
 			guard.unlock
 		ensure
 			not_info_is_dirty: not a_info.is_dirty
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -566,10 +606,10 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 			l_info: CACHE_INFO
 			l_reader: like cache_reader
-			l_retried: BOOLEAN
+			retried: BOOLEAN
 		do
-			guard.lock
-			if not l_retried then
+			if not retried then
+				guard.lock
 				l_reader := cache_reader
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path))
 				l_ca := consumed_assembly_from_path (a_path)
@@ -590,9 +630,10 @@ feature {NONE} -- Implementation
 			debug ("log_exceptions")
 				log_last_exception
 			end
-			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to remove assembly '{0}'.", a_path))
-			l_retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	create_consumed_assembly_from_path (a_id: STRING; a_path: STRING): CONSUMED_ASSEMBLY is
@@ -645,32 +686,43 @@ feature {NONE} -- Implementation
 			l_mappings: CONSUMED_ASSEMBLY_MAPPING
 			l_serializer: EIFFEL_SERIALIZER
 			l_ref_ca: like consumed_assembly_from_path
+			retried: BOOLEAN
 			i: INTEGER
 		do
-			guard.lock
+			if not retried then
+				guard.lock
 
-			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.out))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.out))
 
-			create l_serializer
-			l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
+				create l_serializer
+				l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
 
-			from
-				i := 1
-			until
-				i > l_mappings.assemblies.count
-			loop
-				if l_mappings.assemblies.item (i) /= Void then
-					l_ref_ca := consumed_assembly_from_path (l_mappings.assemblies.item (i).location)
-					if l_ref_ca /= Void then
-						l_mappings.assemblies.put (l_ref_ca, i)
-					else
-						l_mappings.assemblies.item (i).set_is_consumed (False)
+				from
+					i := 1
+				until
+					i > l_mappings.assemblies.count
+				loop
+					if l_mappings.assemblies.item (i) /= Void then
+						l_ref_ca := consumed_assembly_from_path (l_mappings.assemblies.item (i).location)
+						if l_ref_ca /= Void then
+							l_mappings.assemblies.put (l_ref_ca, i)
+						else
+							l_mappings.assemblies.item (i).set_is_consumed (False)
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
+				l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly), False)
 			end
-			l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly), False)
 			guard.unlock
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	update_client_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY) is
@@ -679,24 +731,35 @@ feature {NONE} -- Implementation
 			non_void_assembly: a_assembly /= Void
 		local
 			l_clients: ARRAY [CONSUMED_ASSEMBLY]
+			retried: BOOLEAN
 			i: INTEGER
 		do
-			guard.lock
+			if not retried then
+				guard.lock
 
-			{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.out))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating client mappings for '{0}'.", a_assembly.out))
 
-			l_clients := cache_reader.client_assemblies (a_assembly)
-			from
-				i := 1
-			until
-				i > l_clients.count
-			loop
-				if l_clients.item (i) /= Void then
-					update_assembly_mappings (l_clients.item (i))
+				l_clients := cache_reader.client_assemblies (a_assembly)
+				from
+					i := 1
+				until
+					i > l_clients.count
+				loop
+					if l_clients.item (i) /= Void then
+						update_assembly_mappings (l_clients.item (i))
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 			guard.unlock
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	cache_reader: CACHE_READER

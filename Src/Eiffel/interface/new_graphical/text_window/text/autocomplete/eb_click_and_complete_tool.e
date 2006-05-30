@@ -445,6 +445,7 @@ feature -- Basic Operations
 			insertion.put ("")
 			is_create := False
 			is_static := False
+			last_was_constrained := False
 			create completion_possibilities.make (1, 30)
 			cp_index := 1
 			initialize_context
@@ -480,21 +481,25 @@ feature -- Basic Operations
 
 					feat_table := cls_c.api_feature_table
 					if is_create then
-							-- Creators
-						crtrs := cls_c.creators
-						if crtrs /= Void then
-							from
-								crtrs.start
-							until
-								crtrs.after
-							loop
-								if
-									feat_table.has (crtrs.key_for_iteration) and then
-									crtrs.item_for_iteration.is_exported_to (l_current_class_c)
-								then
-									add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
+						if last_was_constrained then
+							add_generics_creation_list (cls_c)
+						else
+								-- Creators
+							crtrs := cls_c.creators
+							if crtrs /= Void then
+								from
+									crtrs.start
+								until
+									crtrs.after
+								loop
+									if
+										feat_table.has (crtrs.key_for_iteration) and then
+										crtrs.item_for_iteration.is_exported_to (l_current_class_c)
+									then
+										add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
+									end
+									crtrs.forth
 								end
-								crtrs.forth
 							end
 						end
 					elseif is_static then
@@ -1097,12 +1102,16 @@ feature {NONE} -- Completion implementation
 					end
 				end
 				if Result /= Void then
+					last_was_constrained := Result.is_formal
+					last_constained_type ?= Result
 					Result := constrained_type (Result)
 				end
 			until
 				error or else after_searched_token
 			loop
 				name := current_token.image.as_lower
+				last_was_constrained := Result.is_formal
+				last_constained_type ?= Result
 				Result := constrained_type (Result)
 				l_named_tuple_type ?= Result
 				check
@@ -1134,6 +1143,8 @@ feature {NONE} -- Completion implementation
 							Result := type.instantiation_in (Result, Result.associated_class.class_id)
 							if Result /= Void then
 								Result := Result.actual_type
+								last_was_constrained := Result.is_formal
+								last_constained_type ?= Result
 								Result := constrained_type (Result)
 								error := False
 							end
@@ -1263,7 +1274,7 @@ feature {NONE} -- Completion implementation
 			end
 		end
 
-feature {EB_ADDRESS_MANAGER}-- Implementation
+feature {EB_ADDRESS_MANAGER} -- Implementation
 
 	insert_in_completion_possibilities (name: EB_NAME_FOR_COMPLETION) is
 			--
@@ -1553,6 +1564,42 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 				create l_feat_name.make (a_type.label_name (i).twin, l_type)
 				insert_in_completion_possibilities (l_feat_name)
 				i := i + 1
+			end
+		end
+
+	add_generics_creation_list (a_class_c: CLASS_C) is
+			-- Add constrained generics creation to completion possiblities.
+		local
+			l_generics: EIFFEL_LIST [FORMAL_DEC_AS]
+			l_formal_as: FORMAL_DEC_AS
+			l_list: EIFFEL_LIST [FEATURE_NAME]
+			l_table: E_FEATURE_TABLE
+			l_feat: E_FEATURE
+		do
+			check
+				current_class_c /= Void
+			end
+			l_generics := current_class_c.generics
+			l_table := a_class_c.api_feature_table
+			check
+				last_constained_type_not_void: last_constained_type /= Void
+			end
+			l_formal_as := l_generics.i_th (last_constained_type.position)
+			if l_formal_as /= Void then
+				from
+					l_list := l_formal_as.creation_feature_list
+					l_list.start
+				until
+					l_list.after
+				loop
+					if l_table.has (l_list.item.visual_name) then
+						l_feat := l_table.found_item
+						if l_feat.is_exported_to (current_class_c) then
+							add_feature_to_completion_possibilities (l_feat)
+						end
+					end
+					l_list.forth
+				end
 			end
 		end
 

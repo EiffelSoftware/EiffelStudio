@@ -397,6 +397,7 @@ feature {NONE}-- Clickable/Editable implementation
 					error := False
 					find_expression_start
 					if not error then
+						last_was_constrained := False
 						Result := searched_feature
 					end
 				end
@@ -552,6 +553,8 @@ feature {NONE}-- Clickable/Editable implementation
 				error or else after_searched_token
 			loop
 				name := current_token.image.as_lower
+				last_was_constrained := processed_type.is_formal
+				last_constained_type ?= processed_type
 				processed_type := constrained_type (processed_type)
 					-- We do not have named tuple problem before the second token.
 				l_named_tuple_type ?= processed_type
@@ -727,7 +730,7 @@ feature {NONE}-- Implementation
 								l_line := current_line
 
 								go_to_previous_token
-								
+
 								if current_token = Void then
 									error := True
 								else
@@ -1141,6 +1144,8 @@ feature {NONE}-- Implementation
 							Result := Result.instantiation_in (current_class_c.actual_type, current_class_c.class_id)
 							if Result /= Void then
 								Result := Result.actual_type
+								last_was_constrained := Result.is_formal
+								last_constained_type ?= Result
 								Result := constrained_type (Result)
 								found_class := Result.associated_class
 							end
@@ -1717,6 +1722,11 @@ feature {NONE} -- Implementation
 				Result := index_min
 			end
 		end
+
+	last_was_constrained: BOOLEAN
+			-- Last type of class name was constrained?
+
+	last_constained_type: FORMAL_A
 
 feature {SMART_TEXT} -- Constants
 

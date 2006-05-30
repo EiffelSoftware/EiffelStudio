@@ -67,10 +67,10 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Top level window containing `widget'.
 
-	select_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+	select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
 			-- Actions being triggered when item is selected.
 		do
-			Result := compiled_projects_list.item_select_actions
+			Result := compiled_projects_list.row_select_actions
 		ensure
 			select_actions_not_void: Result /= Void
 		end

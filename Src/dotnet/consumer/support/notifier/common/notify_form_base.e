@@ -12,6 +12,8 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_base
+		redefine
+			dispose_boolean
 		end
 
 feature {NONE} -- Initialization
@@ -47,6 +49,22 @@ feature {NONE} -- Initialization
 			notify_icon.text := "Eiffel Metadata Consumer Tool"
 			notify_icon.icon := l_icon
 			notify_icon.visible := True
+		end
+
+feature {NONE} -- Clean Up
+
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- Called when for has closed
+		do
+			Precursor {WINFORMS_FORM} (a_disposing)
+			if a_disposing then
+				if notify_icon /= Void then
+					notify_icon.dispose
+					notify_icon := Void
+				end
+			end
+		ensure then
+			notify_icon_unattached: notify_icon = Void
 		end
 
 feature -- Status Setting

@@ -1170,6 +1170,33 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_post_compile_action.extend (an_action)
 		end
 
+	remove_pre_action (an_action: CONF_ACTION) is
+			-- Remove `an_action'.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			internal_pre_compile_action.start
+			internal_pre_compile_action.search (an_action)
+			if not internal_pre_compile_action.exhausted then
+				internal_pre_compile_action.remove
+			end
+		ensure
+			removed: not internal_pre_compile_action.has (an_action)
+		end
+
+	remove_post_action (an_action: CONF_ACTION) is
+			-- Remove `an_action'.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			internal_post_compile_action.start
+			internal_post_compile_action.search (an_action)
+			if not internal_post_compile_action.exhausted then
+				internal_post_compile_action.remove
+			end
+		ensure
+			removed: not internal_post_compile_action.has (an_action)
+		end
 
 	add_variable (a_name, a_value: STRING) is
 			-- Add a variable with `a_name' and `a_value'.

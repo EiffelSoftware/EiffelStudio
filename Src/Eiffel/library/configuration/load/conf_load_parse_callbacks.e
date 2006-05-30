@@ -555,12 +555,14 @@ feature {NONE} -- Implementation attribute processing
 			if l_succeed = Void then
 				l_succeed := "false"
 			end
-			if l_wd = Void then
-				create l_wd.make_empty
-			end
 			if l_command /= Void then
 				if l_succeed.is_boolean then
-					current_action :=  factory.new_action (l_command, l_succeed.to_boolean, factory.new_location_from_path (l_wd, current_target))
+					if l_wd = Void then
+						current_action :=  factory.new_action (l_command, l_succeed.to_boolean, Void)
+					else
+						current_action :=  factory.new_action (l_command, l_succeed.to_boolean, factory.new_location_from_path (l_wd, current_target))
+					end
+
 					inspect
 						current_tag.item
 					when t_pre_compile_action then

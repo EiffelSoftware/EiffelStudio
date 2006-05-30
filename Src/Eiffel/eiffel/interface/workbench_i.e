@@ -228,6 +228,7 @@ feature -- Commands
 			l_prc_factory:  PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_success: BOOLEAN
+			l_wd: STRING
 		do
 			create l_prc_factory
 			from
@@ -236,7 +237,10 @@ feature -- Commands
 				an_actions.after
 			loop
 				l_action := an_actions.item
-				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_action.working_directory.evaluated_path)
+				if l_action.working_directory /= Void then
+					l_wd := l_action.working_directory.evaluated_path
+				end
+				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_wd)
 				l_prc_launcher.set_separate_console (is_gui)
 				l_prc_launcher.launch
 				if l_prc_launcher.launched then

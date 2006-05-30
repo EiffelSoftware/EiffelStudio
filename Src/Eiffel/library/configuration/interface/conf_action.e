@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			-- Create with `a_command'.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
-			a_working_directory_ok: a_working_directory /= Void
 		do
 			command := a_command
 			must_succeed := a_must_succeed
@@ -30,7 +29,6 @@ feature {NONE} -- Initialization
 			must_succeed_set: must_succeed = a_must_succeed
 			working_directory_set: working_directory = a_working_directory
 		end
-
 
 feature -- Access, stored in configuration file
 
@@ -60,28 +58,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_working_directory (a_directory: like working_directory) is
 			-- Set `working_directory' to `a_directory'.
-		require
-			a_directory_not_void: a_directory /= Void
 		do
 			working_directory := a_directory
 		ensure
 			working_directory_set: working_directory = a_directory
 		end
 
-	enable_must_succeed is
-			-- Command has to succeed.
+	set_must_succeed (a_succeed: like must_succeed) is
+			-- Set `must_succeed' to `a_succeed'.
 		do
-			must_succeed := True
+			must_succeed := a_succeed
 		ensure
-			must_succeed: must_succeed
-		end
-
-	disable_must_succeed is
-			-- Command doesn't have to succeed.
-		do
-			must_succeed := False
-		ensure
-			must_succeed: not must_succeed
+			must_succeed_set: must_succeed = a_succeed
 		end
 
 	set_description (a_description: like description) is
@@ -94,7 +82,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 invariant
 	command_ok: command /= Void and then not command.is_empty
-	working_directory_ok: working_directory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

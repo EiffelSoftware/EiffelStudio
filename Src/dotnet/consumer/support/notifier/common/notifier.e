@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			create l_start.make (Current, $on_init)
 			create l_thread.make (l_start)
 			l_thread.priority := {THREAD_PRIORITY}.highest
+			l_thread.name := "Notifer"
 			l_thread.start
 
 			from until
@@ -45,6 +46,8 @@ feature {NONE} -- Initialization
 			application_thread := {SYSTEM_THREAD}.current_thread
 			create notify_form.make
 			{WINFORMS_APPLICATION}.run (notify_form)
+			check notify_form_attached: notify_form /= Void end
+			notify_form.dispose
 		end
 
 feature -- Clean Up
@@ -58,7 +61,6 @@ feature -- Clean Up
 			end
 			if notify_form /= Void then
 				{WINFORMS_APPLICATION}.exit
-				notify_form := Void
 			end
 			if application_thread /= Void and then application_thread.is_alive then
 				application_thread.join

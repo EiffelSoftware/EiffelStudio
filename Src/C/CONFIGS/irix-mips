@@ -140,10 +140,18 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-cc='c99'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='c99'
+fi
 ccflags='-DLANGUAGE_C -G0 -xansi -n32 -mips4'
 ccldflags=''
-cpp='CC'
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='CC'
+fi
 cppflags='$ccflags'
 cpp_stuff='42'
 defvoidused='15'

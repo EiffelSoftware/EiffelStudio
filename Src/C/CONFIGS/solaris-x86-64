@@ -141,10 +141,18 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-cc='cc'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='cc'
+fi
 ccflags='-D__BUILTIN_VA_ARG_INCR -xarch=generic64'
 ccldflags='-xarch=generic64'
-cpp='CC'
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='CC'
+fi
 cppflags='$ccflags'
 cpp_stuff='42'
 defvoidused='15'

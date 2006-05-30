@@ -69,7 +69,11 @@ comm='/usr/bin/comm'
 compress=''
 cp='/usr/bin/cp'
 cpio=''
-cpp='/usr/lib/cpp'
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='/usr/lib/cpp'
+fi
 csh=''
 date='/usr/bin/date'
 echo='/usr/bin/echo'
@@ -145,7 +149,11 @@ binexp='/usr/local/bin'
 installbin='/usr/local/bin'
 bitpbyte='8'
 byteorder='4321'
-cc='gcc'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='gcc'
+fi
 gccversion=''
 lkflags=''
 cf_by='lully'

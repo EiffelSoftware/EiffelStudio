@@ -14,8 +14,16 @@ lngpad_2='8'
 command_makefile='make -f'
 d_bsdsig='undef'
 sh='/bin/sh'
-cc='cchppa'
-cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
+if [ -n "$CC" ]; then
+	cc=$CC
+else
+	cc='cchppa'
+fi
+if [ -n "$CPP" ]; then
+	cpp=$CPP
+else
+	cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
+fi
 ar='arhppa'
 ld='ld'
 

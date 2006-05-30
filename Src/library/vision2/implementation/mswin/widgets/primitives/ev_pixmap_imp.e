@@ -1309,8 +1309,8 @@ feature {NONE} -- Implementation
 
 				when Loadpixmap_rgb_data then
 						-- Compute the size of a row in bytes (here
-						-- we have 24 bits/color)
-					size_row := 4 * ((pixmap_width * 24 + 31) // 32)
+						-- we have 32 bits/color)
+					size_row := 4 * pixmap_width
 					create dib.make_by_content_pointer (
 						rgb_data,
 						size_row * pixmap_height + 40

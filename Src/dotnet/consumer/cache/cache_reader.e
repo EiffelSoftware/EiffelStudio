@@ -259,19 +259,28 @@ feature {CACHE_WRITER} -- Implementation
 		local
 			des: EIFFEL_DESERIALIZER
 			l_ci: CACHE_INFO
+			retried: BOOLEAN
 		do
-			guard.lock
-			if internal_info.item = Void then
-				if is_initialized then
-					create des
-					des.deserialize (Absolute_info_path, 0)
-					if des.successful then
-						l_ci ?= des.deserialized_object
-						if l_ci /= Void then
-							internal_info.put (l_ci)
+			if not retried then
+				guard.lock
+				if internal_info.item = Void then
+					if is_initialized then
+						create des
+						des.deserialize (Absolute_info_path, 0)
+						if des.successful then
+							l_ci ?= des.deserialized_object
+							if l_ci /= Void then
+								internal_info.put (l_ci)
+							end
 						end
 					end
+					if internal_info.item = Void then
+							-- cache info is not initalized or is outdated
+						internal_info.put (create {CACHE_INFO}.make)
+						(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
+					end
 				end
+			else
 				if internal_info.item = Void then
 						-- cache info is not initalized or is outdated
 					internal_info.put (create {CACHE_INFO}.make)
@@ -282,6 +291,14 @@ feature {CACHE_WRITER} -- Implementation
 			guard.unlock
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
+		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature -- Reset

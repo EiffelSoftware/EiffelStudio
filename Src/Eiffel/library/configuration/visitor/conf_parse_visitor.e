@@ -90,6 +90,9 @@ feature -- Visit nodes
 					l_uuid := l_load.last_uuid
 					l_target := libraries.item (l_uuid)
 					if l_target /= Void then
+						if level + 1 < l_target.system.level then
+							l_target.system.set_level (level + 1)
+						end
 						a_library.set_library_target (l_target)
 						a_library.set_uuid (l_uuid)
 						if a_library.options.is_warning_enabled (w_same_uuid) and not l_path.is_case_insensitive_equal (l_target.system.file_name) then
@@ -117,7 +120,10 @@ feature -- Visit nodes
 									end
 									libraries.force (l_target, l_uuid)
 
+									level := level + 1
+									l_target.system.set_level (level)
 									l_target.process (Current)
+									level := level - 1
 									a_library.set_library_target (l_target)
 									a_library.set_uuid (l_uuid)
 								end
@@ -156,6 +162,9 @@ feature {NONE} -- Implementation
 
 	libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
+
+	level: NATURAL_32
+			-- Current system level (application itself is 0, libraries of application 1, ...)
 
 feature {NONE} -- Size constants
 

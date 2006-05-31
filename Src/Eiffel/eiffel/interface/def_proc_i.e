@@ -5,16 +5,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DEF_PROC_I 
+class DEF_PROC_I
 
 inherit
 
-	PROCEDURE_I			
+	PROCEDURE_I
 		redefine
 			is_deferred, has_entry, to_generate_in, extension,
 			to_melt_in, update_api, transfer_to, access_for_feature
 		end
-	
+
 feature -- Status Report
 
 	has_entry: BOOLEAN is False;
@@ -27,7 +27,7 @@ feature -- Status Report
 
 feature -- Access
 
-	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B
@@ -54,7 +54,7 @@ feature -- Conversion
 			-- (Deferred routines with pre or post conditions are
 			-- melted)
 		do
-			Result := a_class.class_id = written_in and then 
+			Result := a_class.class_id = written_in and then
 					(has_precondition or else has_postcondition);
 		end;
 

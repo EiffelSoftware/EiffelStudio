@@ -597,6 +597,7 @@ feature {NONE} -- EXPR_B evaluation
 		local
 			fi: FEATURE_I
 			cl: CLASS_C
+			l_cl_type: CL_TYPE_I
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
 			if tmp_target /= Void then
@@ -612,8 +613,10 @@ feature {NONE} -- EXPR_B evaluation
 						Cst_feature_name_left_limit + a_feature_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
-				if a_feature_b.precursor_type /= Void then
-					cl := a_feature_b.precursor_type.base_class
+				if a_feature_b.precursor_type /= Void and then a_feature_b.precursor_type.is_standalone then
+					l_cl_type ?= a_feature_b.precursor_type
+					check l_cl_type_not_void_if_true_precursor: l_cl_type /= Void end
+					cl := l_cl_type.base_class
 					fi := cl.feature_table.feature_of_rout_id (a_feature_b.routine_id)
 				else
 					fi := feature_i_from_call_access_b_in_context (cl, a_feature_b)

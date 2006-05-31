@@ -50,7 +50,7 @@ feature -- Access
 	written_in: INTEGER
 			-- Class ID where Current is written.
 
-	precursor_type : CL_TYPE_I
+	precursor_type : TYPE_I
 			-- Type of parent in a precursor call if any.
 
 	enlarged: CALL_ACCESS_B is
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_precursor_type (p_type : CL_TYPE_I) is
+	set_precursor_type (p_type : like precursor_type) is
 			-- Assign `p_type' to `precursor_type'.
 		require
 			p_type_not_void: p_type /= Void

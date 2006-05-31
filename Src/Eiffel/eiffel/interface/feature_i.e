@@ -2272,7 +2272,7 @@ feature -- Byte code access
 			Result_exists: Result /= Void
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		require

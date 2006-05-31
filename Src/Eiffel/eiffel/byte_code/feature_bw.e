@@ -116,13 +116,9 @@ feature
 						-- Use dynamic type of parent instead
 						-- of dynamic type of Current.
 					buf.put_string ("RTUD(");
-
-					if context.class_type.is_generic then
-						cl_type_i := precursor_type.instantiation_in (context.class_type)
-						buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
-					else
-						buf.put_static_type_id (precursor_type.associated_class_type.static_type_id)
-					end
+					cl_type_i ?= context.real_type (precursor_type)
+					check cl_type_i_not_void: cl_type_i /= Void end
+					buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
 					buf.put_character (')');
 				else
 					context.generate_current_dtype;

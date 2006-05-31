@@ -152,7 +152,7 @@ feature
 			end
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
 		local
 			external_b: EXTERNAL_B;

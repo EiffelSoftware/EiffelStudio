@@ -1010,8 +1010,6 @@ end
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
 			vd71: VD71
-			l_file: PLAIN_TEXT_FILE
-			l_file_name: FILE_NAME
 			l_classdbl: CONF_ERROR_CLASSDBL
 		do
 			degree_output.put_start_degree_6
@@ -1046,12 +1044,6 @@ end
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 
-						-- removed classes
-					if workbench.automatic_backup then
-						create l_file_name.make_from_string (workbench.backup_subdirectory)
-						l_file_name.set_file_name (backup_info)
-						create l_file.make_open_write (l_file_name)
-					end
 					if l_vis_modified.is_error then
 						if l_vis_modified.last_errors.count = 1 then
 							l_classdbl ?= l_vis_modified.last_errors.first
@@ -1073,38 +1065,27 @@ end
 						end
 					end
 
-					l_classes := l_vis_modified.modified_classes
-					l_rebuild := l_vis_modified.is_force_rebuild
-					from
-						l_classes.start
-					until
-						l_rebuild or l_classes.after
-					loop
-						l_conf_class := l_classes.item
-						l_grp := l_conf_class.group
-						l_class ?= l_conf_class
-						check
-							class_i: l_class /= Void
-						end
-						l_rebuild := l_conf_class.is_renamed and then (l_grp.is_overriden or l_grp.is_override)
-						if l_conf_class.is_removed then
-							l_class.compiled_class.recompile_syntactical_clients
-							if workbench.automatic_backup then
-								l_file.put_string (l_class.name+": "+l_class.group.name+": "+l_class.file_name+"%N")
+					if not (l_vis_modified.is_force_rebuild or l_rebuild) then
+						from
+							l_classes := l_vis_modified.modified_classes
+							l_classes.start
+						until
+							l_rebuild or l_classes.after
+						loop
+							l_conf_class := l_classes.item
+							l_grp := l_conf_class.group
+							l_class ?= l_conf_class
+							check
+								class_i: l_class /= Void
 							end
-							remove_class (l_class.compiled_class)
-							real_removed_classes.force (l_class)
-						else
 							workbench.change_class (l_class)
+							l_conf_class.set_up_to_date
+							l_classes.forth
 						end
-						l_conf_class.set_up_to_date
-						l_classes.forth
-					end
-					if l_rebuild then
+						update_root_class
+					else
 						rebuild_configuration
 						is_rebuild := True
-					else
-						update_root_class
 					end
 				end
 

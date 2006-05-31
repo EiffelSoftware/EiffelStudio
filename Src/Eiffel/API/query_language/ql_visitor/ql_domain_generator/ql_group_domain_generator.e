@@ -60,7 +60,7 @@ feature -- Process
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_assembly: CONF_ASSEMBLY
-			l_group_set: LINKED_SET [CONF_GROUP]
+			l_group_set: DS_HASH_SET [CONF_GROUP]
 		do
 			l_conf_group := a_item.group
 			if l_conf_group.is_cluster then
@@ -145,7 +145,7 @@ feature{NONE} -- Implementation
 			create {QL_GROUP_IS_COMPILED_CRI}Result
 		end
 
-	process_groups_from_list (a_list: LIST [CONF_GROUP]; a_parent: QL_ITEM) is
+	process_groups_from_list (a_list: DS_LINEAR [CONF_GROUP]; a_parent: QL_ITEM) is
 			-- Iterate through groups in `a_list' is evaluate them using `actual_criterion'.
 			-- If satisfied, create new items that represent satisfied groups and insert them
 			-- in `domain', `a_parent' will be parent in newly created items.
@@ -154,23 +154,20 @@ feature{NONE} -- Implementation
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_valid_domain_item
 		local
-			l_cursor: CURSOR
+			l_cursor: DS_LINEAR_CURSOR [CONF_GROUP]
 			l_group: QL_GROUP
 		do
 			if not a_list.is_empty then
-				l_cursor := a_list.cursor
 				from
-					a_list.start
+					l_cursor := a_list.new_cursor
+					l_cursor.start
 				until
-					a_list.after
+					l_cursor.after
 				loop
-					create l_group.make_with_parent (a_list.item, a_parent)
-					l_group.set_name (a_list.item.name)
+					create l_group.make_with_parent (l_cursor.item, a_parent)
+					l_group.set_name (l_cursor.item.name)
 					evaluate_item (l_group)
-					a_list.forth
-				end
-				if l_cursor /= Void then
-					a_list.go_to (l_cursor)
+					l_cursor.forth
 				end
 			end
 		end

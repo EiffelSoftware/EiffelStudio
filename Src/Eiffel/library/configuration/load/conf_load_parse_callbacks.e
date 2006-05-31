@@ -983,7 +983,7 @@ feature {NONE} -- Implementation attribute processing
 			l_group := current_attributes.item (at_group)
 			if l_group /= Void then
 				if l_group.is_equal ("none") then
-					current_cluster.set_dependencies (create {LINKED_SET [CONF_GROUP]}.make)
+					current_cluster.set_dependencies (create {DS_HASH_SET [CONF_GROUP]}.make (0))
 				else
 					ll := uses_list.item (l_group)
 					if ll = Void then

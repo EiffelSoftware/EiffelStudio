@@ -728,6 +728,15 @@ end;
 									else
 										property_names.put (feature_i, property_name)
 									end
+										-- Check that there are no property setters with
+										-- several arguments as order of the arguments is
+										-- different in Eiffel and IL.
+									if feature_i.has_property_setter and then
+										(feature_i.type.is_void and then feature_i.argument_count /= 1 or else
+										not feature_i.type.is_void and then feature_i.argument_count > 0)
+									then
+										error_handler.insert_error (create {VIPS}.make (a_class, feature_i))
+									end
 								end
 							end
 							name_list.forth;

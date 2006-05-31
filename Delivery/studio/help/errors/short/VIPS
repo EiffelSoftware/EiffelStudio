@@ -1,0 +1,3 @@
+Error: Indexed properties are not supported.
+What to do: Remove property name declaration or ensure that a command
+    associated with a property has exactly 1 argument.

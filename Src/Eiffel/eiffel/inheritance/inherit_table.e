@@ -69,6 +69,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -664,9 +671,14 @@ end;
 			feat_name: FEATURE_NAME;
 			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS];
 			l_export_status: EXPORT_I;
+			property_name: STRING
+			property_names: HASH_TABLE [FEATURE_I, STRING]
 		do
 			clauses := class_info.features;
 			if clauses /= Void then
+				if system.il_generation then
+					create property_names.make (0)
+				end
 				from
 					clauses.start
 				until
@@ -702,6 +714,22 @@ end;
 							analyze_local (feature_i, feature_i.feature_name_id)
 								-- Set the export status
 							feature_i.set_export_status (l_export_status);
+							if property_names /= Void then
+									-- Check that there are no property name clashes
+								if feature_i.has_property then
+									property_name := single_feature.property_name
+									if property_name = Void then
+										property_name := il_casing.pascal_casing
+											(system.dotnet_naming_convention, feature_i.feature_name, {IL_CASING_CONVERSION}.lower_case)
+									end
+									if property_names.has (property_name) then
+										error_handler.insert_error (create {VIPM}.make
+											(a_class, feature_i, property_names.item (property_name), property_name))
+									else
+										property_names.put (feature_i, property_name)
+									end
+								end
+							end
 							name_list.forth;
 						end;
 

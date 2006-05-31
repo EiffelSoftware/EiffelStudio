@@ -34,10 +34,10 @@ feature -- Store/Retrieve
 			retried: BOOLEAN
 		do
 			if not retried then
+				create last_file_name.make_from_string (eiffel_home)
+				last_file_name.extend (a_options.uuid.out)
 				check_and_create_eiffel_home
 				if successful then
-					create last_file_name.make_from_string (eiffel_home)
-					last_file_name.extend (a_options.uuid.out)
 					create l_file.make (last_file_name)
 					l_file.open_write
 					if l_file.is_writable then
@@ -60,7 +60,8 @@ feature -- Store/Retrieve
 		end
 
 	load (a_uuid: UUID) is
-			-- Retrieve content of `a_filename' into `last_options'.
+			-- Retrieve content of user data associated with `a_uuid' into `last_options'.
+			-- If no such file is found, then `last_options' is set to Void.
 		require
 			a_uuid_not_void: a_uuid /= Void
 		local
@@ -70,28 +71,23 @@ feature -- Store/Retrieve
 			retried: BOOLEAN
 		do
 			if not retried then
+				last_options := Void
+				create last_file_name.make_from_string (eiffel_home)
+				last_file_name.extend (a_uuid.out)
 				check_and_create_eiffel_home
-				if successful then
-						-- if file exists, load it
-					create last_file_name.make_from_string (eiffel_home)
-					last_file_name.extend (a_uuid.out)
-					create l_file.make (last_file_name)
-					if l_file.exists then
-						l_file.open_read
-						if l_file.is_open_read then
-							create l_sed_rw.make (l_file)
-							l_sed_rw.set_for_reading
-							create l_sed_facilities
-							last_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
-							l_file.close
-							successful := True
-						else
-							successful := False
-						end
-					else
-							-- No file, it is still successful.
-						successful := True
-					end
+					-- Even if we could not create `eiffel_home', we simply handle
+					-- it as if they were not user file. This is why `successful' is
+					-- set to `True' in all cases.
+				successful := True
+					-- if file exists, load it
+				create l_file.make (last_file_name)
+				if l_file.exists and then l_file.is_readable then
+					l_file.open_read
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_reading
+					create l_sed_facilities
+					last_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+					l_file.close
 				end
 			else
 				successful := False

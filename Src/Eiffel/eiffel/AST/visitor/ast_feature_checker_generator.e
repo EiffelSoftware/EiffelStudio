@@ -631,7 +631,7 @@ feature -- Implementation
 			l_type := last_type
 
 				-- Check validity of type declaration for static access
-			if l_type.is_formal or l_type.has_like or l_type.is_none then
+			if l_type.is_none then
 				create l_vsta1.make (l_type.dump, l_as.feature_name)
 				l_vsta1.set_class (context.current_class)
 				l_vsta1.set_location (l_as.class_type.start_location)
@@ -646,6 +646,8 @@ feature -- Implementation
 
 			if not is_inherited then
 				l_as.set_routine_ids (last_routine_id_set)
+				l_type := l_type.actual_type
+				l_type := constrained_type (l_type)
 				l_as.set_class_id (l_type.associated_class.class_id)
 			end
 		end
@@ -1095,8 +1097,7 @@ feature -- Implementation
 								l_access := l_feature.access (l_result_type.type_i)
 							end
 						else
-							l_cl_type_i ?= a_type.type_i
-							l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+							l_access := l_feature.access_for_feature (l_result_type.type_i, a_type.type_i)
 							l_ext ?= l_access
 							if l_ext /= Void then
 								l_ext.enable_static_call

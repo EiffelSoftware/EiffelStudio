@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 				l_rout_ids_not_void: l_rout_ids /= Void
 			end
 			if not has_error_internal then
-				l_feat := feature_in_class (l_static_type.actual_type.associated_class, l_rout_ids)
+				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_rout_ids)
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_dot)

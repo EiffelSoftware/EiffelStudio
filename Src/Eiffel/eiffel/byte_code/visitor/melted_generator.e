@@ -1884,12 +1884,9 @@ feature {NONE} -- Implementation
 			l_cl_type: CL_TYPE_I
 		do
 			if a_node.precursor_type /= Void then
-				if context.class_type.is_generic then
-					l_cl_type := a_node.precursor_type.instantiation_in (context.class_type)
-					ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
-				else
-					ba.append_short_integer (a_node.precursor_type.associated_class_type.static_type_id - 1)
-				end
+				l_cl_type ?= context.real_type (a_node.precursor_type)
+				check l_cl_type_not_void: l_cl_type /= Void end
+				ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
 			else
 				ba.append_short_integer (-1)
 			end

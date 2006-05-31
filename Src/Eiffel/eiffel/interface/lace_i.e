@@ -261,7 +261,6 @@ feature -- Status setting
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)
 		local
-			l_user_file: STRING
 			vd21: VD21
 			vd72: VD72
 			l_changed: BOOLEAN
@@ -317,13 +316,8 @@ feature -- Status setting
 
 				-- store the updated config file
 			if l_changed and a_user_file_enabled then
+					-- We do not check that we could store the options.
 				l_user_factory.store (user_options)
-				if not l_user_factory.successful then
-					create vd72
-					vd72.set_file_name (l_user_file)
-					Error_handler.insert_error (vd72)
-					Error_handler.raise_error
-				end
 			end
 		ensure
 			user_options_set: user_options /= Void

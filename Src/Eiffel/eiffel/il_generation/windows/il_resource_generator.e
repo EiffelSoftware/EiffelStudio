@@ -217,8 +217,9 @@ feature {NONE} -- Implementation
 
 				-- Read content of `a_file' and add it to the list of known resources
 				-- of `a_module'.
-			create l_raw_file.make_open_read (a_file)
-			if l_raw_file.exists then
+			create l_raw_file.make (a_file)
+			if l_raw_file.exists and l_raw_file.is_readable then
+				l_raw_file.open_read
 
 					-- Before putting the resource data in `l_data', we need to insert
 					-- the number of bytes in the first 4 bytes of `l_data' so that

@@ -80,6 +80,9 @@ feature -- Access, in compiled only
 	application_target: CONF_TARGET
 			-- Target of application this system is part of.
 
+	level: NATURAL_32
+			-- Level, used for path finding to root of configuration system.
+
 feature -- Update, in compiled only
 
 	set_file_name (a_file_name: like file_name) is
@@ -107,6 +110,14 @@ feature -- Update, in compiled only
 			application_target := a_target
 		ensure
 			application_target_set: application_target = a_target
+		end
+
+	set_level (a_level: like level) is
+			-- Set `level' to `level'.
+		do
+			level := a_level
+		ensure
+			level_set: level = a_level
 		end
 
 feature -- Store to disk

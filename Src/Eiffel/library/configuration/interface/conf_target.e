@@ -95,6 +95,27 @@ feature -- Access, in compiled only, not stored to configuration file
 	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
 			-- Libraries this target is used in.
 
+	lowest_used_in_library: CONF_LIBRARY is
+			-- Library which uses this target and has the lowest level.
+		local
+			l_level: NATURAL_32
+		do
+			if used_in_libraries /= Void then
+				l_level := {NATURAL_32}.max_value
+				from
+					used_in_libraries.start
+				until
+					used_in_libraries.after
+				loop
+					if l_level > used_in_libraries.item.target.system.level then
+						Result := used_in_libraries.item
+						l_level := used_in_libraries.item.target.system.level
+					end
+					used_in_libraries.forth
+				end
+			end
+		end
+
 	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- All libraries in current system.
 
@@ -1429,6 +1450,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Contract helper
+
+	valid_level: BOOLEAN is
+			-- Is the current level valid?
+			-- It has to be either 0 or the target has to be used in a library whose system has a lower level.
+		local
+			l_level: NATURAL_32
+		do
+			l_level := system.level
+			if l_level = 0 then
+				Result := True
+			else
+				if used_in_libraries /= Void then
+					from
+						used_in_libraries.start
+					until
+						Result or used_in_libraries.after
+					loop
+						Result := used_in_libraries.item.target.system.level < l_level
+						used_in_libraries.forth
+					end
+				end
+			end
+		end
+
 invariant
 	name_ok: name /= Void and not name.is_empty
 	name_lower: name.is_equal (name.as_lower)
@@ -1447,6 +1493,7 @@ invariant
 	internal_variables_not_void: internal_variables /= Void
 	internal_settings_not_void: internal_settings /= Void
 	environ_variables_not_void: environ_variables /= Void
+	valid_level: valid_level
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

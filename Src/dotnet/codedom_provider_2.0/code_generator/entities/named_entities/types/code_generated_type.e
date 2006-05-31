@@ -216,7 +216,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 feature -- Element Settings
 
 	set_partial (a_bool: BOOLEAN) is
@@ -292,11 +292,14 @@ feature -- Element Settings
 			-- Add `a_creation_routine' to `creation_routines'.
 		require
 			attached_creation_routine: a_creation_routine /= Void
+		local
+			l_indexing_clause: CODE_INDEXING_CLAUSE
 		do
-			if not features.has ("constructor_called") then
-				features.extend (create {CODE_SNIPPET_FEATURE}.make ("constructor_called", "%Tconstructor_called: BOOLEAN" + Line_return), "constructor_called")
-			end
 			creation_routines.put (a_creation_routine, a_creation_routine.eiffel_name)
+			create l_indexing_clause.make
+			l_indexing_clause.set_tag ("dotnet_constructors")
+			l_indexing_clause.set_text (a_creation_routine.eiffel_name)
+			add_indexing_clause (l_indexing_clause)
 		ensure
 			creation_routine_added: creation_routines.has (a_creation_routine.eiffel_name)
 		end

@@ -439,7 +439,7 @@ feature {CONF_ACCESS} -- Update, not stored in configuration file
 	wipe_class_cache is
 			-- Wipe out the class cache.
 		do
-			class_by_name_cache.wipe_out
+			class_by_name_cache.clear_all
 		end
 
 feature -- Equality

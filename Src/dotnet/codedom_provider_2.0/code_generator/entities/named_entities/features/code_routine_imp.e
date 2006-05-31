@@ -16,27 +16,6 @@ inherit
 create
 	make
 
-feature {NONE} -- Specific implementation
-
-	constructor_call: STRING is
-			-- Add constructor
-		do
-			create Result.make_empty
-			if not name.is_equal (".ctor") then
-				Result.append (indent_string)
-				Result.append (Ctor_eiffel_name.twin)
-				Result.append (Line_return)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	Ctor_eiffel_name: STRING is
-				-- Eiffel name for `.ctor'
-			once
-				Result := Name_formatter.valid_variable_name (".ctor")
-			end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

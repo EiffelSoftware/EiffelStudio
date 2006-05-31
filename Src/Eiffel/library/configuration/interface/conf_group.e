@@ -190,11 +190,11 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	accessible_groups: LINKED_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.
-		do
-			create Result.make
+		once
+			create Result.make_default
 		ensure
 			Result_not_void: Result /= Void
 		end

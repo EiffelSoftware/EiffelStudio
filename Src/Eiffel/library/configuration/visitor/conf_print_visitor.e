@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_deps: LINKED_SET [CONF_GROUP]
+			l_deps: DS_HASH_SET [CONF_GROUP]
 			l_visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cluster: CONF_CLUSTER
@@ -899,7 +899,7 @@ feature {NONE} -- Implementation
 				until
 					l_deps.after
 				loop
-					append_text_indent ("<uses group=%""+l_deps.item.name+"%"/>%N")
+					append_text_indent ("<uses group=%""+l_deps.item_for_iteration.name+"%"/>%N")
 					l_deps.forth
 				end
 			end

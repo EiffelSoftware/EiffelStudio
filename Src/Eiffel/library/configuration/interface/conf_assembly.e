@@ -140,7 +140,7 @@ feature -- Access, in compiled only
 	consumed_path: STRING
 			-- The path to the consumed assembly.
 
-	dependencies: LINKED_SET [CONF_ASSEMBLY]
+	dependencies: DS_HASH_SET [CONF_ASSEMBLY]
 			-- Dependencies on other assemblies.
 
 	date: INTEGER
@@ -151,21 +151,24 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	accessible_groups: LINKED_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else nothing.
 		do
-			if dependencies /= Void then
-				Result := dependencies
-			else
-				create Result.make
+			if accessible_groups_cache = Void then
+				if dependencies /= Void then
+					accessible_groups_cache := dependencies
+				else
+					create accessible_groups_cache.make (0)
+				end
 			end
+			Result := accessible_groups_cache
 		end
 
 	accessible_classes: like classes is
 			-- Classes that are accessible within `Current'.
 		local
-			l_groups: LINKED_SET [CONF_GROUP]
+			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
 		do
 			Result := Precursor
@@ -175,7 +178,7 @@ feature -- Access queries
 			until
 				l_groups.after
 			loop
-				l_grp := l_groups.item
+				l_grp := l_groups.item_for_iteration
 				if l_grp.classes_set then
 					Result.merge (l_grp.classes)
 				end
@@ -197,7 +200,7 @@ feature -- Access queries
 				until
 					l_groups.after
 				loop
-					l_dep := l_groups.item
+					l_dep := l_groups.item_for_iteration
 					if l_dep.classes_set then
 						Result.append (l_dep.class_by_name (a_class, False))
 					end
@@ -226,7 +229,7 @@ feature -- Access queries
 				until
 					dependencies.after
 				loop
-					l_dep := dependencies.item
+					l_dep := dependencies.item_for_iteration
 					if l_dep.classes_set then
 						Result.append (l_dep.class_by_dotnet_name (a_class, False))
 					end
@@ -282,8 +285,8 @@ feature -- Access queries
 				until
 					Result /= Void or dependencies.after
 				loop
-					if dependencies.item.name.is_equal (a_name) then
-						Result := dependencies.item
+					if dependencies.item_for_iteration.name.is_equal (a_name) then
+						Result := dependencies.item_for_iteration
 					end
 					dependencies.forth
 				end
@@ -378,7 +381,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			an_assembly_not_void: an_assembly /= Void
 		do
 			if dependencies = Void then
-				create dependencies.make
+				create dependencies.make_default
 			end
 			dependencies.force (an_assembly)
 		end
@@ -457,6 +460,10 @@ feature {NONE} -- Implementation
 				l_assemblies.forth
 			end
 		end
+
+feature {NONE} -- Caches
+
+	accessible_groups_cache: like accessible_groups
 
 feature {NONE} -- Class type anchor
 

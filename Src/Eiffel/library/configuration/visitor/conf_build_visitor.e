@@ -390,6 +390,7 @@ feature -- Visit nodes
 			l_old_cluster: CONF_CLUSTER
 		do
 			if not is_error then
+				a_cluster.wipe_class_cache
 				current_cluster := a_cluster
 				current_file_rule := a_cluster.active_file_rule (state)
 				create current_classes.make (Classes_per_cluster)

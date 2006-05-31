@@ -52,7 +52,8 @@ feature -- Statusupdate
 			l_library: CONF_LIBRARY
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
-			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
+			l_ass_dep: DS_HASH_SET [CONF_ASSEMBLY]
+			l_ass_dep_list: ARRAYED_LIST [CONF_ASSEMBLY]
 			l_libs: LIST [CONF_GROUP]
 			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cls_lst: ARRAYED_LIST [CONF_CLUSTER]
@@ -104,7 +105,16 @@ feature -- Statusupdate
 			elseif is_assembly then
 				l_ass_dep := actual_assembly.dependencies
 				if l_ass_dep /= Void then
-					assemblies := build_groups (l_ass_dep)
+					from
+						l_ass_dep.start
+						create l_ass_dep_list.make (l_ass_dep.count)
+					until
+						l_ass_dep.after
+					loop
+						l_ass_dep_list.force (l_ass_dep.item_for_iteration)
+						l_ass_dep.forth
+					end
+					assemblies := build_groups (l_ass_dep_list)
 				else
 					create assemblies.make_default
 				end
@@ -176,7 +186,7 @@ feature -- Access
 		local
 			l_sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			l_library_target: CONF_TARGET
-			l_assembly_deps: LINKED_SET [CONF_ASSEMBLY]
+			l_assembly_deps: DS_HASH_SET [CONF_ASSEMBLY]
 		do
 			Result := (actual_group.classes /= Void and then not actual_group.classes.is_empty)
 			if not Result then

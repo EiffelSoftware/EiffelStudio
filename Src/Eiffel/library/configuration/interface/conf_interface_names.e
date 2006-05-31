@@ -156,6 +156,17 @@ feature {NONE} -- Target names and descriptions
 	target_task_condition_name: STRING is "Condition"
 	target_task_condition_description: STRING is "Conditions for this task to be executed."
 
+	target_group_cluster_tree: STRING is "Clusters"
+	target_group_assembly_tree: STRING is "Assemblies"
+	target_group_library_tree: STRING is "Libraries"
+	target_group_precompile_tree: STRING is "Precompile"
+	target_group_override_tree: STRING is "Override"
+
+	target_group_name_name: STRING is "Name"
+	target_group_name_description: STRING is "Name of the group."
+	target_group_description_name: STRING is "Description"
+	target_group_description_description: STRING is "Description of the group."
+
 feature {NONE} -- Option names and descriptions
 
 	option_require_name: STRING is "Require"

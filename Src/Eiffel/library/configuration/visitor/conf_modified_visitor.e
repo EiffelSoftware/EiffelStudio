@@ -176,24 +176,22 @@ feature {NONE} -- Implementation
 					l_class := l_classes.item_for_iteration
 						-- check for changes
 					l_class.check_changed
-					if l_class.is_renamed then
+					if l_class.is_renamed or l_class.is_removed then
 						is_force_rebuild := True
 					else
 						if l_class.is_compiled or l_class.does_override then
 							if l_class.is_error then
 								add_error (l_class.last_error)
 							end
-							if l_class.is_modified or (l_class.is_removed and l_class.is_compiled) then
+							if l_class.is_modified then
 								modified_classes.extend (l_class)
 							end
 						end
-						if not l_class.is_removed then
-							l_name := l_class.renamed_name
-							if not l_new_classes.has (l_name) then
-								l_new_classes.force (l_class, l_name)
-							else
-								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name))
-							end
+						l_name := l_class.renamed_name
+						if not l_new_classes.has (l_name) then
+							l_new_classes.force (l_class, l_name)
+						else
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name))
 						end
 					end
 					l_classes.forth

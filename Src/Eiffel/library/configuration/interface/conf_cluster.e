@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_name, a_location, a_target)
 			create internal_file_rule.make (0)
+			create class_by_name_cache.make (20)
 		end
 
 feature -- Status
@@ -62,7 +63,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access queries
 
-	dependencies: LINKED_SET [CONF_GROUP] is
+	dependencies: DS_HASH_SET [CONF_GROUP] is
 			-- Dependencies to other groups.
 			-- Empty = No dependencies
 			-- Void = Depend on all
@@ -181,7 +182,7 @@ feature -- Access queries
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
 			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
 		local
-			l_groups: LINKED_SET [CONF_GROUP]
+			l_groups: like accessible_groups
 			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
 			l_name: STRING
@@ -193,56 +194,100 @@ feature -- Access queries
 				l_name := a_class
 			end
 
-				-- search in cluster itself
-			create Result.make
-			l_class := classes.item (l_name)
-			if l_class /= Void and then not l_class.does_override then
-				Result.extend (l_class)
-			end
+			if a_dependencies and then class_by_name_cache.has (l_name) then
+				Result := class_by_name_cache.found_item
+			else
+					-- search in cluster itself
+				create Result.make
+				l_class := classes.item (l_name)
+				if l_class /= Void and then not l_class.does_override then
+					Result.extend (l_class)
+				end
 
-				-- search in dependencies
-			if a_dependencies then
-				l_groups := accessible_groups
-				if l_groups /= Void then
+					-- search in dependencies
+				if a_dependencies then
+					l_groups := accessible_groups
 					from
 						l_groups.start
 					until
 						l_groups.after
 					loop
-						l_grp := l_groups.item
+						l_grp := l_groups.item_for_iteration
 						if l_grp.classes_set then
 							Result.append (l_grp.class_by_name (l_name, False))
 						end
 						l_groups.forth
 					end
+
+					class_by_name_cache.force (Result, l_name)
 				end
 			end
 		end
 
-	accessible_groups: LINKED_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.
+		local
+			l_grps: HASH_TABLE [CONF_GROUP, STRING]
 		do
-			if dependencies = Void then
-				create Result.make
-				Result.merge (target.assemblies)
-				Result.merge (target.libraries)
-				Result.merge (target.clusters)
-				Result.merge (target.overrides)
-				if target.precompile /= Void then
-					Result.extend (target.precompile)
+			if accessible_groups_cache = Void then
+				if dependencies = Void then
+					l_grps := target.clusters
+					create accessible_groups_cache.make (l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						accessible_groups.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+					l_grps := target.libraries
+					accessible_groups.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						accessible_groups.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+					l_grps := target.assemblies
+					accessible_groups.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						accessible_groups.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+					l_grps := target.overrides
+					accessible_groups.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						accessible_groups.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+
+					if target.precompile /= Void then
+						accessible_groups_cache.force (target.precompile)
+					end
+					accessible_groups_cache.remove (Current)
+				else
+					accessible_groups_cache := dependencies
 				end
-				Result.search (Current)
-				Result.remove
-			else
-				Result := dependencies
 			end
+			Result := accessible_groups_cache
 		end
 
 	accessible_classes: like classes is
 			-- Classes that are accessible within `Current'.
 		local
-			l_groups: LINKED_SET [CONF_GROUP]
+			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
 		do
 			Result :=  Precursor
@@ -253,7 +298,7 @@ feature -- Access queries
 				until
 					l_groups.after
 				loop
-					l_grp := l_groups.item
+					l_grp := l_groups.item_for_iteration
 					if l_grp.classes_set then
 						Result.merge (l_grp.classes)
 					end
@@ -350,9 +395,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_group_not_void: a_group /= Void
 		do
 			if internal_dependencies = Void then
-				create internal_dependencies.make
+				create internal_dependencies.make_default
 			end
-			internal_dependencies.extend (a_group)
+			internal_dependencies.force (a_group)
 		ensure
 			added: internal_dependencies.has (a_group)
 		end
@@ -389,6 +434,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end
 
+feature {CONF_ACCESS} -- Update, not stored in configuration file
+
+	wipe_class_cache is
+			-- Wipe out the class cache.
+		do
+			class_by_name_cache.wipe_out
+		end
+
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
@@ -410,7 +463,7 @@ feature -- Visit
 
 feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
-	internal_dependencies: LINKED_SET [CONF_GROUP]
+	internal_dependencies: DS_HASH_SET [CONF_GROUP]
 			-- Dependencies to other groups of this cluster itself.
 
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
@@ -453,6 +506,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+feature {NONE} -- Cached informations
+
+	accessible_groups_cache: like accessible_groups
+	class_by_name_cache: HASH_TABLE [like class_by_name, STRING]
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void

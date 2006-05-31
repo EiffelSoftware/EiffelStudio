@@ -209,6 +209,10 @@ feature -- Visit nodes
 					end
 				end
 
+				if a_target = application_target then
+					all_libraries := a_target.all_libraries
+				end
+
 					-- if it is the library or application target, add the target to the libraries
 				if a_target = a_target.system.library_target or a_target = application_target then
 					libraries.force (a_target, a_target.system.uuid)
@@ -519,6 +523,9 @@ feature {NONE} -- Implementation
 
 	libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
+
+	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
+			-- Mapping of all library targets (processed and unprocessed) that are in the new target, mapped with their uuid.
 
 	old_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets of the old target, mapped with their uuid.
@@ -1165,9 +1172,7 @@ feature {NONE} -- Implementation
 							check
 								library: l_library /= Void
 							end
-							if l_library.uuid /= Void and then libraries.has (l_library.uuid) then
-								l_done := True
-							end
+							l_done := l_library.uuid /= Void and then all_libraries.has (l_library.uuid)
 						end
 
 						if not l_done and then l_group.classes_set then

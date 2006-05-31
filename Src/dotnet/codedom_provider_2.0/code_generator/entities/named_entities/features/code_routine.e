@@ -83,8 +83,6 @@ feature -- Access
 			-- | `generate_body', `generate_postconditions' successively.
 
 			-- Eiffel code of routine
-		local
-			l_creation_routine: CODE_CREATION_ROUTINE
 		do
 			increase_tabulation
 			create Result.make (1000)
@@ -113,27 +111,9 @@ feature -- Access
 				decrease_tabulation
 				decrease_tabulation
 			end
-			l_creation_routine ?= Current
-			if l_creation_routine /= Void then
-				increase_tabulation
-				Result.append (indent_string)
-				Result.append ("if not constructor_called then")
-				Result.append (Line_return)
-				increase_tabulation
-				Result.append (indent_string)
-				Result.append ("constructor_called := True")
-				Result.append (Line_return)
-				Result.append (body)
-				decrease_tabulation
-				Result.append (indent_string)
-				Result.append ("end")
-				Result.append (Line_return)
-				decrease_tabulation
-			else
-				increase_tabulation
-				Result.append (body)
-				decrease_tabulation
-			end
+			increase_tabulation
+			Result.append (body)
+			decrease_tabulation
 			Result.append (indent_string)
 			Result.append ("end")
 			Result.append (Line_return)
@@ -404,7 +384,6 @@ feature {NONE} -- Implementation
 			in_code_generation: current_state = Code_generation
 		do
 			create Result.make (9000)
-			Result.append (constructor_call)
 			from
 				statements.start
 			until
@@ -443,17 +422,6 @@ feature {NONE} -- Implementation
 			-- Default value variable counter
 		once
 			create Result
-		end
-
-feature {NONE} -- Specific implementation
-
-	constructor_call: STRING is
-			-- Call to constructor, only generate for non designer code generation
-		require
-			in_code_generation: current_state = Code_generation
-		deferred
-		ensure
-			non_void_add_constructor: Result /= Void
 		end
 
 invariant

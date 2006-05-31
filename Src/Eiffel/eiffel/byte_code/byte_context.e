@@ -915,7 +915,7 @@ feature -- Access
 			end
 			f := feature_table.item_id ({PREDEFINED_NAMES}.twin_name_id)
 			if f = Void then
-					-- "copy" is not found in ANY
+					-- "twin" is not found in ANY
 				twin_body_index := -1
 			else
 				twin_body_index := f.body_index
@@ -1683,10 +1683,12 @@ feature -- Clearing
 				-- Wipe out once manifest strings records.
 			once_manifest_string_table.wipe_out
 			class_type_stack.wipe_out
+			generated_inlines.wipe_out
 		ensure
 			global_onces_is_empty: workbench_mode implies global_onces.is_empty
 			onces_is_empty: workbench_mode implies onces.is_empty
 			once_manifest_string_table_is_empty: once_manifest_string_table.is_empty
+			generated_inlines_empty: generated_inlines.is_empty
 		end
 
 	clear_system_data is

@@ -1136,35 +1136,35 @@ feature {NONE} -- Implementation
 			end
 			l_system := l_load.last_system
 
-				-- check if user file is ok and get EIFGENS location
-			create l_user_factory
-			l_user_factory.load (l_system.uuid)
-			if not l_user_factory.successful then
-				create vd21
-				vd21.set_file_name (l_user_factory.last_file_name)
-				Error_handler.insert_error (vd21)
+				-- check if we have a library target
+			if l_system.library_target = Void then
+				create vd78
+				Error_handler.insert_error (vd78)
 				Error_handler.raise_error
 			else
-					-- check if we have a library target
-				if l_system.library_target = Void then
-					create vd78
-					Error_handler.insert_error (vd78)
+					-- check if user file is ok and get EIFGENS location
+				create l_user_factory
+				l_user_factory.load (l_system.uuid)
+				if not l_user_factory.successful then
+					create vd21
+					vd21.set_file_name (l_user_factory.last_file_name)
+					Error_handler.insert_error (vd21)
 					Error_handler.raise_error
 				else
-						-- default
-					create l_user_options.make (l_system.uuid, l_load.last_system.library_target.name)
-					l_target_options := l_user_options.target
-					l_target_options.set_last_location (l_pre.location.build_path ("", ""))
+					if l_user_factory.last_options /= Void then
+						l_target_options := l_user_factory.last_options.target_of_name (l_system.library_target.name)
+					end
+					if l_target_options = Void or else l_target_options.last_location = Void then
+							-- default
+						create l_user_options.make (l_system.uuid, l_system.library_target.name)
+						l_target_options := l_user_options.target
+						l_target_options.set_last_location (l_pre.location.build_path ("", ""))
+					end
 				end
-			end
-			if l_target_options = Void or else l_target_options.last_location = Void then
-				create vd79
-				Error_handler.insert_error (vd79)
-				Error_handler.raise_error
 			end
 
 				-- retrieve precompile project
-			create l_project_location.make (l_target_options.last_location, l_user_options.target_name)
+			create l_project_location.make (l_target_options.last_location, l_target_options.name)
 			create l_precomp_r
 			l_precomp_r.retrieve_precompiled (l_project_location)
 
@@ -1175,6 +1175,8 @@ feature {NONE} -- Implementation
 			l_old_target.set_all_libraries (l_target.all_libraries)
 			l_old_target.set_all_assemblies (l_target.all_assemblies)
 			universe.set_new_target (l_old_target)
+
+			
 			universe.new_target_to_target
 
 				-- Force a rebuild for the first compilation of a system using

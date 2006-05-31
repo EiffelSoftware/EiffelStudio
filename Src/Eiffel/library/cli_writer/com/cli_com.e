@@ -18,7 +18,7 @@ feature -- High level
 		once
 			l_result := com_initialize_multithreaded
 			check
-				call_succeed: l_result = com_S_OK or else l_result = com_S_FALSE
+				call_succeed: l_result = com_S_OK or else l_result = com_S_FALSE or else l_result = com_RPC_E_CHANGED_MODE
 			end
 		end
 
@@ -31,7 +31,7 @@ feature -- Disposal
 		alias
 			"Release"
 		end
-		
+
 feature -- AddRef
 
 	frozen add_ref (a_pointer: POINTER): INTEGER is
@@ -41,7 +41,7 @@ feature -- AddRef
 		alias
 			"AddRef"
 		end
-		
+
 feature {NONE} -- Initialization
 
 	frozen com_uninitialize is
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
-		end	
+		end
 
 	frozen com_S_OK: INTEGER is
 		external
@@ -85,6 +85,15 @@ feature {NONE} -- Initialization
 		alias
 			"S_FALSE"
 		end
+
+	frozen com_RPC_E_CHANGED_MODE: INTEGER is
+		external
+			"C macro use %"unknwn.h%""
+		alias
+			"RPC_E_CHANGED_MODE"
+		end
+
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXTERNALS 
+	EXTERNALS
 
 inherit
 	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
@@ -18,7 +18,7 @@ inherit
 			{EXTERNALS} all
 			{ANY} has, remove, count, valid_key
 		end
-	
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -46,8 +46,15 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	SHARED_INCLUDE
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_GENERATION
 		export
 			{NONE} all
 		undefine
@@ -167,13 +174,13 @@ feature -- Comparison
 			end
 		end
 
-	
+
 feature -- Code generation
 
 	generate_il is
 			-- Generate C encapsulation for all calls.
 		local
-			buffer, header_buffer: GENERATION_BUFFER
+			buffer, headers, header_buffer, ext_inline_buffer: GENERATION_BUFFER
 			external_file, header_file: INDENT_FILE
 			final_mode: BOOLEAN
 			l_extension: STRING
@@ -190,11 +197,20 @@ feature -- Code generation
 				context.set_buffer (buffer)
 				context.set_header_buffer (header_buffer)
 				extern_declarations.wipe_out
-				buffer.put_string ("#include %"eif_eiffel.h%"%N")
-				buffer.put_string ("#include %"lib" + System.name + ".h%"%N")
+
 				buffer.start_c_specific_code
 				header_buffer.put_string ("#include %"eif_eiffel.h%"%N")
 				header_buffer.start_c_specific_code
+
+				create headers.make (100)
+				headers.put_string ("#include %"eif_eiffel.h%"%N")
+				headers.put_string ("#include %"lib" + System.name + ".h%"%N")
+
+				ext_inline_buffer := generation_ext_inline_buffer
+				ext_inline_buffer.clear_all
+				ext_inline_buffer.open_write_c
+				context.clear_class_type_data
+
 				start
 			until
 				after
@@ -207,7 +223,7 @@ feature -- Code generation
 					until
 						l_types.after
 					loop
-						generate_class_il (item_for_iteration, l_class, l_types.item, buffer)					
+						generate_class_il (item_for_iteration, l_class, l_types.item, buffer)
 						l_types.forth
 					end
 					buffer.put_new_line
@@ -216,6 +232,7 @@ feature -- Code generation
 			end
 			buffer.end_c_specific_code
 			header_buffer.end_c_specific_code
+			ext_inline_buffer.close_c
 
 			create header_file.make_open_write (
 				full_file_name (final_mode, Void, "lib" + System.name, Dot_h))
@@ -228,18 +245,20 @@ feature -- Code generation
 			else
 				l_extension := Dot_c
 			end
-			
+
 			create external_file.make_open_write (
 				full_file_name (final_mode, Void, "lib" + System.name, l_extension))
+			headers.put_in_file (external_file)
+			ext_inline_buffer.put_in_file (external_file)
 			buffer.put_in_file (external_file)
 			external_file.close
-			
+
 				-- Clean allocated data.
 			extern_declarations.wipe_out
 			buffer.clear_all
-			header_buffer.clear_all		
+			header_buffer.clear_all
 		end
-		
+
 feature {NONE} -- Implementation
 
 	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is

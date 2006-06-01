@@ -82,7 +82,7 @@ feature -- Access
 				gts := generic_type_selectors
 				if not gts.is_empty then
 					Result.append (" [")
-					from 
+					from
 						gts.start
 					until
 						gts.after
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 
 	generic_count: INTEGER
 			-- Current number of generic parameters.
-	
+
 	is_tuple: BOOLEAN
 			-- Is current a tuple?
 
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 					generic_box.extend (new_label ("]"))
 					generic_box.disable_item_expand (generic_box.last)
 				end
-			else
+			elseif not s.is_empty then
 				gen_count := generics_count (selector.text.as_upper)
 				if
 					generic_count /= gen_count or
@@ -306,7 +306,7 @@ feature {EV_ANY} -- Contract support
 			Result := (
 				not is_homogeneous and
 				border_width = 0 and
-				padding = 0			
+				padding = 0
 			)
 		end
 

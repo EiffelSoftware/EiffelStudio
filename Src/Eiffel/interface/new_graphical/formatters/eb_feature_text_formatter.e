@@ -17,6 +17,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	EXCEPTIONS
+
 feature -- Access
 
 	widget: EV_WIDGET is
@@ -107,6 +109,8 @@ feature -- Formatting
 
 	format is
 			-- Refresh `widget'.
+		local
+			l_msg: STRING
 		do
 			if
 				displayed and then
@@ -122,10 +126,15 @@ feature -- Formatting
 					else
 						editor.disable_has_breakable_slots
 					end
-				editor.set_read_only (not editable)
+					editor.set_read_only (not editable)
 				else
 					editor.clear_window
-					editor.display_message (Warning_messages.w_Formatter_failed)
+					l_msg := Warning_messages.w_Formatter_failed
+					if trace /= Void then
+						l_msg.append ("%N")
+						l_msg.append (trace)
+					end
+					editor.display_message (l_msg)
 				end
 				display_header
 			end
@@ -147,6 +156,7 @@ feature -- Formatting
 				last_was_error := True
 			end
 		rescue
+			trace := exception_trace
 			retried := True
 			retry
 		end
@@ -176,6 +186,9 @@ feature {NONE} -- Implementation
 		ensure
 			feature_cmd /= Void
 		end
+
+	trace: STRING;
+			-- Exception trace
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

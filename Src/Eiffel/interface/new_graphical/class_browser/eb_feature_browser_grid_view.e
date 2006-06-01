@@ -376,6 +376,8 @@ feature -- Notification
 
 	update_view is
 			-- Update current view according to change in `model'.
+		local
+			l_msg: STRING
 		do
 			if not is_up_to_date then
 				if data /= Void then
@@ -391,7 +393,12 @@ feature -- Notification
 				else
 					component_widget.hide
 					text.show
-					text.set_text (Warning_messages.w_Formatter_failed)
+					l_msg := Warning_messages.w_Formatter_failed
+					if trace /= Void then
+						l_msg.append ("%N")
+						l_msg.append (trace)
+					end
+					text.set_text (l_msg)
 				end
 				auto_resize
 				is_up_to_date := True

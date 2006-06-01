@@ -13,7 +13,8 @@ inherit
 
 	EB_CLASS_BROWSER_GRID_VIEW
 		redefine
-			data
+			data,
+			on_pointer_double_click
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -30,19 +31,7 @@ feature -- Access
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		do
-			if control_tool_bar = Void then
-				create control_tool_bar
-				control_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
-				control_tool_bar.extend (expand_button)
-				control_tool_bar.extend (collapse_button)
-			end
-			Result := control_tool_bar
-		ensure then
-			result_attached: Result /= Void
 		end
-
-	control_tool_bar: EV_TOOL_BAR
-			-- Tool bar of current view
 
 feature -- Actions
 
@@ -55,8 +44,19 @@ feature -- Actions
 			if is_tree_node_highlight_enabled then
 				l_selected_rows := grid.selected_rows
 				if not l_selected_rows.is_empty then
-					l_row := l_selected_rows.first
-					on_row_selected (l_row)
+					processed_rows.wipe_out
+					from
+						l_selected_rows.start
+					until
+						l_selected_rows.after
+					loop
+						l_row := l_selected_rows.item
+						if not processed_rows.has (l_row) then
+							on_row_selected (l_row)
+							processed_rows.extend (l_row)
+						end
+						l_selected_rows.forth
+					end
 				end
 			end
 		end
@@ -69,8 +69,19 @@ feature -- Actions
 		do
 			l_selected_rows := grid.selected_rows
 			if not l_selected_rows.is_empty then
-				l_row := l_selected_rows.first
-				on_row_deselected (l_row)
+				processed_rows.wipe_out
+				from
+					l_selected_rows.start
+				until
+					l_selected_rows.after
+				loop
+					l_row := l_selected_rows.item
+					if not processed_rows.has (l_row) then
+						on_row_deselected (l_row)
+						processed_rows.extend (l_row)
+					end
+					l_selected_rows.forth
+				end
 			end
 		end
 
@@ -159,13 +170,15 @@ feature -- Actions
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
 			if a_button = 1 then
-				l_grid_item := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - grid.header.height)
+				l_grid_item := grid_item_at_position (a_x, a_y)
 				if l_grid_item /= Void then
 					l_row ?= l_grid_item.row.data
 					if l_row /= Void and then l_row.is_collapsed then
 						l_row := first_occurrence (l_row)
 						ensure_visible (l_row.class_grid_item, True)
 						on_row_selected (l_row.grid_row)
+					else
+						Precursor (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
 			end
@@ -490,6 +503,20 @@ feature{NONE} -- Implementation
 	processed_classes_internal: like processed_classes
 			-- Implementation of `processed_classes'
 
+--	processed_rows: LINKED_LIST [EV_GRID_ROW] is
+--			-- Processed rows
+--		do
+--			if processed_rows_internal = Void then
+--				create processed_rows_internal.make
+--			end
+--			Result := process_rows_internal
+--		ensure
+--			result_attached: Result /= Void
+--		end
+--
+--	process_rows_internal: like processed_rows
+--			-- Implementation of `processed_rows'
+
 	bind_grid is
 			-- Bind `rows' in `grid'.
 		local
@@ -568,21 +595,36 @@ feature{NONE} -- Implementation
 		local
 			l_sorted_rows: DS_LIST [EV_GRID_ROW]
 			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_list: LIST [EV_GRID_ROW]
 		do
-			l_sorted_rows := sorted_rows (grid.selected_rows)
-			create Result.make (256)
-			from
-				l_sorted_rows.start
-			until
-				l_sorted_rows.after
-			loop
-				l_grid_item ?= l_sorted_rows.item_for_iteration.item (1)
-				if l_grid_item /= Void then
-					Result.append (tabs (row_depth (l_sorted_rows.item_for_iteration)))
-					Result.append (l_grid_item.text)
-					Result.append_character ('%N')
+			l_list := grid.selected_rows
+			if not l_list.is_empty then
+				create Result.make (256)
+				if l_list.count = 1 then
+						-- For single selected item
+					l_grid_item ?= l_list.first.item (1)
+					if l_grid_item /= Void then
+						Result.append (l_grid_item.text)
+					end
+				else
+						-- For multi selected items
+					l_sorted_rows := sorted_rows (l_list)
+					from
+						l_sorted_rows.start
+					until
+						l_sorted_rows.after
+					loop
+						l_grid_item ?= l_sorted_rows.item_for_iteration.item (1)
+						if l_grid_item /= Void then
+							Result.append (tabs (row_depth (l_sorted_rows.item_for_iteration)))
+							Result.append (l_grid_item.text)
+							Result.append_character ('%N')
+						end
+						l_sorted_rows.forth
+					end
 				end
-				l_sorted_rows.forth
+			else
+				create Result.make (0)
 			end
 		end
 
@@ -627,12 +669,16 @@ feature{NONE} -- Implementation
 		local
 			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
 		do
-			if a_row.parent_row /= Void then
-				l_grid_item ?= a_row.item (1)
-				a_row.disable_select
-				l_grid_item ?= a_row.parent_row.item (1)
-				check l_grid_item /= Void end
-				ensure_visible (l_grid_item, True)
+			if a_row.is_expandable and then a_row.is_expanded then
+				a_row.collapse
+			else
+				if a_row.parent_row /= Void then
+					l_grid_item ?= a_row.item (1)
+					a_row.disable_select
+					l_grid_item ?= a_row.parent_row.item (1)
+					check l_grid_item /= Void end
+					ensure_visible (l_grid_item, True)
+				end
 			end
 		end
 
@@ -781,7 +827,6 @@ feature{NONE} -- Initialization
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
 			grid.row_select_actions.extend (agent on_row_selected)
 			grid.row_deselect_actions.extend (agent on_row_deselected)
-			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_multiple_row_selection
 			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)

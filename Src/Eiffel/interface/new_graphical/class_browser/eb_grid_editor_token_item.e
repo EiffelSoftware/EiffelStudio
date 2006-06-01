@@ -370,7 +370,8 @@ feature -- Pick and drop
 		end
 
 	token_index_at_current_position: INTEGER is
-			-- Index of token that is below current pointer
+			-- Index of token that is current position
+			-- 0 if no token is below that position.
 		local
 			l_x: INTEGER
 			l_y: INTEGER

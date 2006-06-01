@@ -18,7 +18,7 @@ inherit
 			is_equal,
 			default_create
 		end
-		
+
 	EVS_GRID_SEARCHABLE_ITEM
 		undefine
 			copy,
@@ -122,7 +122,34 @@ feature -- Setting
 			tooltip_display_function_set: tooltip_display_function = a_function
 		end
 
+feature -- Setting
+
+	enable_invisible_pixmap is
+			-- Ensure `is_invisible_pixmap_enabled' is True.
+		do
+			is_invisible_pixmap_enabled := True
+			if is_pixmap_enabled then
+				set_pixmap (pixmaps.icon_invisible_icon)
+			end
+		ensure
+			is_invisible_pixmap_enabled_set: is_invisible_pixmap_enabled
+		end
+
+	disable_invisible_pixmap is
+			-- Ensure `is_invisible_pixmap_enabled' is False.
+		do
+			is_invisible_pixmap_enabled := False
+			if is_pixmap_enabled then
+				set_pixmap (item_pixmap)
+			end
+		ensure
+			is_invisible_pixmap_enabled_set: not is_invisible_pixmap_enabled
+		end
+
 feature -- Status report
+
+	is_invisible_pixmap_enabled: BOOLEAN
+			-- Is invisible pixmap enabled?
 
 	is_pixmap_enabled: BOOLEAN
 			-- Is pixmap display enabled?		

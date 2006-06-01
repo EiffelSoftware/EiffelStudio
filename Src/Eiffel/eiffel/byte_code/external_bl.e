@@ -230,7 +230,6 @@ feature
 						real_arg_types.subcopy (local_argument_types, 2, local_argument_types.upper, 1)
 
 						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
-						internal_name := inline_ext.inline_name (internal_name)
 					else
 						real_arg_types := local_argument_types
 					end
@@ -246,11 +245,16 @@ feature
 								internal_name, local_argument_types)
 					end
 
-					buf.put_character ('(')
-					type_c.generate_function_cast (buf, real_arg_types)
-					buf.put_string (internal_name)
-					buf.put_character (')')
-
+					if inline_ext /= Void then
+							-- No need for a function cast since the inline routine is defined
+							-- prior to the call.
+						buf.put_string (inline_ext.inline_name (internal_name))
+					else
+						buf.put_character ('(')
+						type_c.generate_function_cast (buf, real_arg_types)
+						buf.put_string (internal_name)
+						buf.put_character (')')
+					end
 				else
 					if not l_type_i.is_void then
 						type_c.generate_cast (buf);

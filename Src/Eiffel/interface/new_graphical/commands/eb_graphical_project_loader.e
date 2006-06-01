@@ -296,7 +296,7 @@ feature {NONE} -- Error reporting
 				l_title.append ("  (precompiled)")
 			end
 			window_manager.display_message (l_title)
-			recent_projects_manager.add_recent_project (project_file_name)
+			recent_projects_manager.add_recent_project (config_file_name)
 			Recent_projects_manager.save_recent_projects
 
 				--| IEK With project session handling this code is no longer needed, remove when fully integrated.

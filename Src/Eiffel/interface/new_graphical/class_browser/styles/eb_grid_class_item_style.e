@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a style for class item in class browser"
+	description: "Object that represents a style for compiled class item in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -11,14 +11,6 @@ deferred class
 
 inherit
 	EB_GRID_COMPILER_ITEM_STYLE
-		redefine
-			apply,
-			image,
-			tooltip,
-			setup_tooltip,
-			setup_text,
-			text
-		end
 
 feature -- Setting
 

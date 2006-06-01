@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a compiled class in class browser"
+	description: "Object that represents a noncompiled class displayed in just clas name in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,54 +7,39 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_COMPILED_CLASS_ITEM
+	EB_GRID_JUST_NAME_NONCOMPILED_CLASS_STYLE
 
 inherit
-	EB_GRID_CLASS_ITEM
+	EB_GRID_NONCOMPILED_CLASS_ITEM_STYLE
 		redefine
-			style
+			is_just_name_style
 		end
 
-create
-	make
+feature -- Style type
 
-feature{NONE} -- Initialization
-
-	make (a_class: like associated_class; a_style: like style) is
-			-- Initialize `associated_class' with `a_class'.
-			-- Display `associated_class' with `a_style'.
-		require
-			a_class_not_void: a_class /= Void
-			a_style_attached: a_style /= Void
+	is_just_name_style: BOOLEAN is
+			-- Does current represent a just name style?
 		do
-			default_create
-			associated_class := a_class
-			set_spacing (3)
-			set_style (a_style)
-		ensure
-			associated_class_set: associated_class = a_class
+			Result := True
 		end
 
-feature -- Access
+feature{NONE} -- Implementation
 
-	associated_class_i: CLASS_I is
-			-- CLASS_I associated with current item
+	setup_tooltip (a_item: EB_GRID_COMPILER_ITEM) is
+			-- Setup tooltip for `a_item'.
 		do
-			Result := associated_class.lace_class
 		end
 
-	associated_class: CLASS_C
-			-- Compiled class associated with current item
-
-	style: EB_GRID_CLASS_ITEM_STYLE
-			-- Style of current item
-
-invariant
-	associated_class_not_void: associated_class /= Void
-	style_attached: style /= Void
+	text (a_item: EB_GRID_NONCOMPILED_CLASS_ITEM): LIST [EDITOR_TOKEN] is
+			-- Text of current style for `a_item'
+		do
+			token_writer.new_line
+			a_item.associated_class_i.append_name (token_writer)
+			Result := token_writer.last_line.content
+		end
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+   		copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

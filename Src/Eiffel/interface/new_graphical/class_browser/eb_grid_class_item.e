@@ -1,57 +1,59 @@
 indexing
-	description: "Object that represents a compiled class in class browser"
+	description: "Object that represents a class in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EB_GRID_COMPILED_CLASS_ITEM
+deferred class
+	EB_GRID_CLASS_ITEM
 
 inherit
-	EB_GRID_CLASS_ITEM
+	EB_GRID_COMPILER_ITEM
 		redefine
-			style
+			general_tooltip
 		end
 
-create
-	make
-
-feature{NONE} -- Initialization
-
-	make (a_class: like associated_class; a_style: like style) is
-			-- Initialize `associated_class' with `a_class'.
-			-- Display `associated_class' with `a_style'.
-		require
-			a_class_not_void: a_class /= Void
-			a_style_attached: a_style /= Void
-		do
+	EB_CONSTANTS
+		undefine
+			copy,
+			is_equal,
 			default_create
-			associated_class := a_class
-			set_spacing (3)
-			set_style (a_style)
-		ensure
-			associated_class_set: associated_class = a_class
 		end
 
 feature -- Access
 
 	associated_class_i: CLASS_I is
 			-- CLASS_I associated with current item
-		do
-			Result := associated_class.lace_class
+		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	associated_class: CLASS_C
-			-- Compiled class associated with current item
+	general_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+			-- General tooltip used to display information
+			-- Use this tooltip if normal tooltip provided can not satisfy,
+			-- for example, you want to be able to pick and drop from/to tooltip.	
 
-	style: EB_GRID_CLASS_ITEM_STYLE
-			-- Style of current item
+feature{NONE} -- Pixmap
 
-invariant
-	associated_class_not_void: associated_class /= Void
-	style_attached: style /= Void
+	item_pixmap: EV_PIXMAP is
+			-- Pixmap associated to current compiler item
+		do
+			if not is_invisible_pixmap_enabled then
+				Result := pixmap_from_class_i (associated_class_i)
+			else
+				Result := pixmaps.icon_invisible_icon
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	internal_replace (original, new: STRING) is
+			-- Replace every occurrence of `original' with `new' in `image'.
+		do
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -84,6 +86,4 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
 end

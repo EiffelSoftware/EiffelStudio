@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a compiled class in class browser"
+	description: "Object that represents a non-compiled class in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,11 +7,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_COMPILED_CLASS_ITEM
+	EB_GRID_NONCOMPILED_CLASS_ITEM
 
 inherit
 	EB_GRID_CLASS_ITEM
 		redefine
+			associated_class_i,
 			style
 		end
 
@@ -20,37 +21,33 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_class: like associated_class; a_style: like style) is
-			-- Initialize `associated_class' with `a_class'.
-			-- Display `associated_class' with `a_style'.
+	make (a_class: like associated_class_i; a_style: like style) is
+			-- Initialize `associated_class_i' with `a_class'.
+			-- Display `associated_class_i' with `a_style'.
 		require
 			a_class_not_void: a_class /= Void
 			a_style_attached: a_style /= Void
 		do
 			default_create
-			associated_class := a_class
+			associated_class_i := a_class
 			set_spacing (3)
 			set_style (a_style)
 		ensure
-			associated_class_set: associated_class = a_class
+			associated_class_i_set: associated_class_i = a_class
 		end
 
 feature -- Access
 
-	associated_class_i: CLASS_I is
+	associated_class_i: CLASS_I
 			-- CLASS_I associated with current item
-		do
-			Result := associated_class.lace_class
-		end
 
 	associated_class: CLASS_C
 			-- Compiled class associated with current item
 
-	style: EB_GRID_CLASS_ITEM_STYLE
+	style: EB_GRID_NONCOMPILED_CLASS_ITEM_STYLE
 			-- Style of current item
 
 invariant
-	associated_class_not_void: associated_class /= Void
 	style_attached: style /= Void
 
 indexing
@@ -84,6 +81,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

@@ -135,6 +135,15 @@ feature -- Setting
 			tree_node_highlight_disabled: not is_tree_node_highlight_enabled
 		end
 
+
+	set_trace (a_msg: STRING) is
+			-- Set `trace' with `a_msg'.
+		require
+			a_msg_attached: a_msg /= Void
+		do
+			create trace.make_from_string (a_msg)
+		end
+
 feature -- View update
 
 	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
@@ -238,8 +247,13 @@ feature -- Access
 	grid_item_at_position (a_x, a_y: INTEGER): EV_GRID_ITEM is
 			-- Item at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
 			-- Void if no item is found.
+		local
+			l_header_height: INTEGER
 		do
-			Result := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - grid.header.height)
+			if grid.is_header_displayed then
+				l_header_height := grid.header.height
+			end
+			Result := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - l_header_height)
 		end
 
 	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
@@ -698,7 +712,10 @@ feature{NONE} -- Implementation
 			-- Implementation of `collapse_button'
 
 	show_tooltip_checkbox_internal: like show_tooltip_checkbox
-			-- Implementation of `show_tooltip_checkbox'			
+			-- Implementation of `show_tooltip_checkbox'
+
+	trace: STRING
+			-- Trace message						
 
 invariant
 	development_window_attached: development_window /= Void

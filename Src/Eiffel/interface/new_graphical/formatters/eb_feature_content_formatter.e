@@ -20,6 +20,8 @@ inherit
 
 	QL_SHARED
 
+	EXCEPTIONS
+
 feature -- Formatting
 
 	format is
@@ -159,6 +161,7 @@ feature{NONE} -- Implementation
 				browser.update (Void, Void)
 			end
 		rescue
+			browser.set_trace (exception_trace)
 			l_retried := True
 			retry
 		end

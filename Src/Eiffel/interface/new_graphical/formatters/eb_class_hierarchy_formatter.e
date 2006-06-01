@@ -19,6 +19,8 @@ inherit
 
 	QL_SHARED
 
+	EXCEPTIONS
+
 feature -- Status report
 
 	is_class_hierarchy_formatter: BOOLEAN is True
@@ -51,6 +53,7 @@ feature{NONE} -- Implementation
 				browser.update (Void, Void)
 			end
 		rescue
+			browser.set_trace (exception_trace)
 			l_retried := True
 			retry
 		end

@@ -33,7 +33,13 @@ feature -- Setting
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
 		do
-			-- Current metric doesn't need a criterion
+			-- Current metric doesn't need a criterion.
+		end
+
+	remove_criteria is
+			-- Remove all criteria
+		do
+			-- Nothing needs to be done here.
 		end
 
 indexing

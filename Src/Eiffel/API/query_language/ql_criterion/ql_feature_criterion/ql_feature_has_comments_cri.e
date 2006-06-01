@@ -22,12 +22,15 @@ feature -- Evaluate
 			l_comments: EIFFEL_COMMENTS
 			l_feature: E_FEATURE
 		do
-
 			Result := a_item.is_real_feature
 			if Result then
-				l_feature := a_item.e_feature
-				l_comments := l_feature.ast.comment (match_list_server.item (l_feature.written_class.class_id))
-				Result := not l_comments.is_empty
+				if a_item.e_feature.is_il_external then
+					Result := True
+				else
+					l_feature := a_item.e_feature
+					l_comments := l_feature.ast.comment (match_list_server.item (l_feature.written_class.class_id))
+					Result := not l_comments.is_empty
+				end
 			end
 		end
 

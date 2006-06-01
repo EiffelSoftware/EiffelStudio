@@ -32,10 +32,10 @@ feature -- Evaluate
 			check
 				a_item.is_compiled
 			end
-				-- Make sure we refresh delayed `criterion_domain' every time.
-			if criterion_domain.is_delayed then
-				initialize_delayed_domain
-			end
+--				-- Make sure we refresh delayed `criterion_domain' every time.
+--			if criterion_domain.is_delayed then
+--				initialize_delayed_domain
+--			end
 			Result := is_satisfied_by_internal (a_item)
 		end
 

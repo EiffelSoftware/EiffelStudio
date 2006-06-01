@@ -15,7 +15,8 @@ inherit
 			domain_generator,
 			path_domain_generator,
 			basic_scope,
-			empty_domain
+			empty_domain,
+			delayed_domain
 		end
 
 create
@@ -26,7 +27,7 @@ feature{QL_SHARED_SCOPES} -- Initialization
 	make is
 			-- Initialize.
 		do
-			index := line_scope_index
+			index := local_scope_index
 		ensure
 			scope_index_set: index = local_scope_index
 		end
@@ -61,6 +62,12 @@ feature -- Access
 			-- An empty domain whose scope is local
 		do
 			create Result.make
+		end
+
+	delayed_domain: QL_DELAYED_LOCAL_DOMAIN is
+			-- An empty delayed domain whose scope is same as current scope
+		do
+			create Result
 		end
 
 feature -- Metric support

@@ -15,7 +15,8 @@ inherit
 			domain_generator,
 			path_domain_generator,
 			basic_scope,
-			empty_domain
+			empty_domain,
+			delayed_domain
 		end
 
 create
@@ -61,6 +62,12 @@ feature -- Access
 			-- An empty domain whose scope is generic
 		do
 			create Result.make
+		end
+
+	delayed_domain: QL_DELAYED_GENERIC_DOMAIN is
+			-- An empty delayed domain whose scope is same as current scope
+		do
+			create Result
 		end
 
 feature -- Metric support

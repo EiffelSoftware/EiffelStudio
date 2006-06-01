@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Object that represents a criterion to decide whether a client is a descendant of a class
+					Object that represents a criterion to decide whether a class is a descendant of a class
 					Supported descendant relation includes:
 						descendant
 						proper descendant

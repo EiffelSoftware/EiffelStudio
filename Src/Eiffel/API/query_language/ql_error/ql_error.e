@@ -7,6 +7,12 @@ indexing
 deferred class
 	QL_ERROR
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 feature -- Access
 
 	code: STRING is
@@ -15,5 +21,18 @@ feature -- Access
 		ensure
 			code_not_void: Result /= Void
 		end
-		
+
+feature -- Access
+
+	text: STRING is
+			-- The error message.
+		deferred
+		end
+
+	out: STRING is
+			-- Output
+		do
+			Result := text
+		end
+
 end

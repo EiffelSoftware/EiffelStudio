@@ -15,7 +15,8 @@ inherit
 			basic_scope,
 			domain_generator,
 			path_domain_generator,
-			empty_domain
+			empty_domain,
+			delayed_domain
 		end
 
 create
@@ -46,6 +47,12 @@ feature -- Access
 
 	domain_generator: QL_TARGET_DOMAIN_GENERATOR is
 			-- Domain generator for current scope
+		do
+			create Result
+		end
+
+	delayed_domain: QL_DELAYED_TARGET_DOMAIN is
+			-- An empty delayed domain whose scope is same as current scope
 		do
 			create Result
 		end

@@ -38,10 +38,6 @@ feature -- Access
 			-- Given a CLASS_I object, return a QL_CLASS object representing it.
 		require
 			a_class_i_attached: a_class_i /= Void
---		local
---			l_class: CONF_CLASS
---			l_group: CONF_GROUP
---			l_path: LINKED_LIST [QL_ITEM]
 		do
 			Result := query_class_item_from_conf_class (a_class_i.config_class)
 		ensure
@@ -93,7 +89,6 @@ feature{NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
 			l_target: CONF_TARGET
-			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			if a_list.is_empty then
 				a_list.extend (create{QL_GROUP}.make (a_group))
@@ -116,11 +111,8 @@ feature{NONE} -- Implementation
 						l_target := l_target.system.library_target
 					end
 					a_list.put_front (create{QL_TARGET}.make (l_target))
-					l_libs := l_target.used_in_libraries
-					if l_libs /= Void and then not l_libs.is_empty then
-						l_lib := l_libs.first
-					end
-					if l_lib /= Void then
+					l_lib := l_target.lowest_used_in_library
+					if l_lib /= Void  then
 						find_path_from_conf_group (a_list, l_lib)
 					end
 				end
@@ -135,11 +127,8 @@ feature{NONE} -- Implementation
 					l_target := l_target.system.library_target
 				end
 				a_list.put_front (create{QL_TARGET}.make (l_target))
-				l_libs := l_target.used_in_libraries
-				if l_libs /= Void and then not l_libs.is_empty then
-					l_lib := l_libs.first
-				end
-				if l_lib /= Void then
+				l_lib := l_target.lowest_used_in_library
+				if l_lib /= Void  then
 					find_path_from_conf_group (a_list, l_lib)
 				end
 			end

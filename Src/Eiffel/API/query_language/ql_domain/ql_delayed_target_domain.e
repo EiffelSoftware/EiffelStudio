@@ -20,7 +20,9 @@ inherit
 
 	QL_TARGET_DOMAIN
 		undefine
-			is_delayed
+			is_delayed,
+			prepare_before_new_domain_generation,
+			cleanup_after_new_domain_generation
 		redefine
 			item_type
 		end

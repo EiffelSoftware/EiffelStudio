@@ -94,7 +94,7 @@ feature -- Scopes
 	scopes: LIST [QL_SCOPE] is
 			-- List of all supported scopes
 		once
-			create {ARRAYED_LIST [QL_SCOPE]}Result.make (10)
+			create {ARRAYED_LIST [QL_SCOPE]} Result.make (10)
 			Result.extend (target_scope)
 			Result.extend (group_scope)
 			Result.extend (class_scope)
@@ -107,6 +107,23 @@ feature -- Scopes
 			Result.extend (quantity_scope)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	scope_table: HASH_TABLE [QL_SCOPE, STRING] is
+			-- Table of all supported scopes
+		local
+			l_scopes: like scopes
+		once
+			create Result.make (10)
+			l_scopes := scopes
+			from
+				l_scopes.start
+			until
+				l_scopes.after
+			loop
+				Result.put (l_scopes.item, l_scopes.item.name)
+				l_scopes.forth
+			end
 		end
 
 indexing

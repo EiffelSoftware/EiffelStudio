@@ -47,7 +47,9 @@ feature -- Setting
 			else
 				l_delayed_domain ?= a_domain
 				check l_delayed_domain /= Void end
-				l_delayed_domain.actions.extend (agent prepare_clients)
+				if not l_delayed_domain.actions.has (initialize_agent) then
+					l_delayed_domain.actions.extend (initialize_agent)
+				end
 			end
 		ensure
 			criterion_domain_set: criterion_domain = a_domain
@@ -96,6 +98,20 @@ feature{NONE} -- Implementation
 
 	client_classes: QL_CLASS_DOMAIN
 			-- Client class domain
+
+	initialize_agent: PROCEDURE [ANY, TUPLE] is
+			-- Agent of `prepare_clients'
+		do
+			if initialize_agent_internal = Void then
+				initialize_agent_internal := agent prepare_clients
+			end
+			Result := initialize_agent_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	initialize_agent_internal: like initialize_agent
+			-- Implementation of `initialize_agent'
 
 invariant
 	criterion_domain_attached: criterion_domain /= Void

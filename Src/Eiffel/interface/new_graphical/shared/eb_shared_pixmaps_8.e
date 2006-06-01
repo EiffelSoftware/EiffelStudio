@@ -431,13 +431,14 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.add_pixmap (6, 3, small_close_cross_value)
 			Result.add_pixmap (7, 3, unpined_value)
 			Result.add_pixmap (8, 3, pined_value)
-			Result.add_pixmap (9, 3, icon_filter_value)
-			Result.add_pixmap (10, 3, icon_return_type_value)
-			Result.add_pixmap (11, 3, icon_show_signature_value)
-			Result.add_pixmap (12, 3, icon_show_disambiguated_name_value)
-			Result.add_pixmap (13, 3, enable_bkpt_value)
-			Result.add_pixmap (14, 3, disable_bkpt_value)
-			Result.add_pixmap (15, 3, clear_bkpt_value)
+			Result.add_pixmap (9, 3, enable_bkpt_value)
+			Result.add_pixmap (10, 3, disable_bkpt_value)
+			Result.add_pixmap (11, 3, clear_bkpt_value)
+			Result.add_pixmap (12, 3, icon_filter_value)
+			Result.add_pixmap (13, 3, icon_return_type_value)
+			Result.add_pixmap (14, 3, icon_show_signature_value)
+			Result.add_pixmap (15, 3, icon_show_disambiguated_name_value)
+
 		end
 
 feature {NONE} -- Constants

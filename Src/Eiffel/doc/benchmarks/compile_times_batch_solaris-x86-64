@@ -3,7 +3,17 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 5.7
 ===
 
-5.7.1002 RTEA new runtime:
+5.7.1031 RTEA with new configuration optimization:
+227.40u 7.86s 4:46.99 81.9%
+225.43u 7.06s 4:14.80 91.2%
+
+5.7.1028 RTEA (2367 classes):
+248.29u 7.62s 5:15.69 81.0%
+256.34u 7.67s 4:46.12 92.2%
+249.02u 7.06s 4:32.94 93.8%
+250.55u 7.04s 4:33.36 94.2%
+
+5.7.1002 RTEA new runtime (2058 classes):
 214.79u 6.19s 3:53.83 94.5%
 214.45u 6.62s 3:54.07 94.4%
 

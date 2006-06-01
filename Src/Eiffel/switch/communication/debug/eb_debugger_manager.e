@@ -60,6 +60,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	clear_bkpt: EB_CLEAR_STOP_POINTS_COMMAND
+			-- Command that can remove one or more breakpoints from the system.
+
+	enable_bkpt: EB_DEBUG_STOPIN_HOLE_COMMAND
+			-- Command that can enable one or more breakpoints in the system.
+
+	disable_bkpt: EB_DISABLE_STOP_POINTS_COMMAND
+			-- Command that can disable one or more breakpoints in the system.
+
 	debug_run_cmd: EB_DEBUG_RUN_COMMAND
 		-- Command to run the project under debugger.
 
@@ -1198,15 +1207,6 @@ feature {NONE} -- Implementation
 
 	normal_right_layout, normal_left_layout: ARRAY [STRING]
 			-- Used to save the display of the debugging window outside debugging sessions.
-
-	clear_bkpt: EB_CLEAR_STOP_POINTS_COMMAND
-			-- Command that can remove one or more breakpoints from the system.
-
-	enable_bkpt: EB_DEBUG_STOPIN_HOLE_COMMAND
-			-- Command that can enable one or more breakpoints in the system.
-
-	disable_bkpt: EB_DISABLE_STOP_POINTS_COMMAND
-			-- Command that can disable one or more breakpoints in the system.
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.

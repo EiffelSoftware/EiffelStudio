@@ -18,7 +18,6 @@ inherit
 			process_string_as, process_verbatim_string_as
 		end
 
-
 create
 	make
 
@@ -62,7 +61,7 @@ feature
 			Precursor (l_as)
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	 process_client_as (l_as: CLIENT_AS) is
 			-- Process export clauses
 		local
 			l_list: EIFFEL_LIST [ID_AS]
@@ -87,7 +86,7 @@ feature
 			-- Process breaks which could be comments.
 		do
 			if change_comments then
-				l_as.replace_subtext ("`"+old_class_name+"'", "`"+new_class_name+"'", False, match_list)
+				l_as.replace_subtext ("{"+old_class_name+"}", "{"+new_class_name+"}", False, match_list)
 				has_modified := True
 			end
 			Precursor (l_as)
@@ -96,7 +95,7 @@ feature
 	process_string_as (l_as: STRING_AS) is
 		do
 			if change_strings then
-				l_as.replace_subtext ("`"+old_class_name+"'", "`"+new_class_name+"'", False, match_list)
+				l_as.replace_subtext ("{"+old_class_name+"}", "{"+new_class_name+"}", False, match_list)
 				has_modified := True
 			end
 			Precursor (l_as)
@@ -105,7 +104,7 @@ feature
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
 		do
 			if change_strings then
-				l_as.replace_subtext ("`"+old_class_name+"'", "`"+new_class_name+"'", False, match_list)
+				l_as.replace_subtext ("{"+old_class_name+"}", "{"+new_class_name+"}", False, match_list)
 				has_modified := True
 			end
 			Precursor (l_as)

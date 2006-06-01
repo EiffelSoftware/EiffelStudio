@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 
 			a_cs := "justify"
 			{EV_GTK_EXTERNALS}.g_object_get_integer (text_label, a_cs.item, $int_value)
-
 		end
 
 feature -- Access

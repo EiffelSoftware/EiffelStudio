@@ -376,11 +376,15 @@ feature -- Pick and drop
 			l_x: INTEGER
 			l_y: INTEGER
 			l_editor_token_text: like editor_token_text
+			l_header_height: INTEGER
 		do
 			l_editor_token_text := editor_token_text
 			if not l_editor_token_text.tokens.is_empty then
 				l_x := parent.pointer_position.x - (virtual_x_position - parent.virtual_x_position )
-				l_y := parent.pointer_position.y - (virtual_y_position - parent.virtual_y_position ) - parent.header.height
+				if parent.is_header_displayed then
+					l_header_height := parent.header.height
+				end
+				l_y := parent.pointer_position.y - (virtual_y_position - parent.virtual_y_position ) - l_header_height
 				Result := l_editor_token_text.token_index_at_position (l_x, l_y)
 			end
 		end

@@ -23,7 +23,7 @@ inherit
 			pixmap_lookup_table
 		end
 
-feature -- Pixmap Icons
+feature -- Pixmap Icons from constant
 
 	icon_bon_deferred: EV_PIXMAP is
 			--
@@ -312,6 +312,27 @@ feature -- Pixmap Icons
 			result_not_void: Result /= Void
 		end
 
+	Icon_8_enable_bkpt: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (enable_bkpt_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	Icon_8_disable_bkpt: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (disable_bkpt_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	Icon_8_clear_bkpt: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (clear_bkpt_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 	pixmap_width: INTEGER is 8
@@ -378,6 +399,9 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.add_pixmap (6, 3, small_close_cross_value)
 			Result.add_pixmap (7, 3, unpined_value)
 			Result.add_pixmap (8, 3, pined_value)
+			Result.add_pixmap (9, 3, enable_bkpt_value)
+			Result.add_pixmap (10, 3, disable_bkpt_value)
+			Result.add_pixmap (11, 3, clear_bkpt_value)
 		end
 
 feature {NONE} -- Constants
@@ -421,7 +445,11 @@ feature {NONE} -- Constants
 	bon_deferred_value,
 	small_close_cross_value,
 	unpined_value,
-	pined_value: INTEGER is unique;
+	pined_value,
+	enable_bkpt_value,
+	disable_bkpt_value,
+	clear_bkpt_value
+		: INTEGER is unique;
 		-- Constants used for pixmap lookup.
 
 indexing

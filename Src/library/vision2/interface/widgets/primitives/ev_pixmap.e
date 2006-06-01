@@ -174,17 +174,17 @@ feature -- Status setting
 			height_assigned: height = a_height
 		end
 
---	set_mask (a_mask: EV_BITMAP) is
---			-- Set transparency mask of `Current' to `a_mask'.
---		require
---			not_destroyed: not is_destroyed
---			mask_not_void: a_mask /= Void
---			mask_same_dimensions: a_mask.width = width and then a_mask.height = height
---		do
---			implementation.set_mask (a_mask)
---		ensure
---			--mask_assigned
---		end
+	set_mask (a_mask: EV_BITMAP) is
+			-- set transparency mask of `current' to `a_mask'.
+		require
+			not_destroyed: not is_destroyed
+			mask_not_void: a_mask /= Void
+			mask_same_dimensions: a_mask.width = width and then a_mask.height = height
+		do
+			implementation.set_mask (a_mask)
+		ensure
+			mask_assigned:
+		end
 
 feature -- Duplication
 

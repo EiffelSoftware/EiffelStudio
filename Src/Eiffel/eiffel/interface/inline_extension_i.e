@@ -86,7 +86,6 @@ feature -- Code generation
 				if put_eif_test then
 					l_buffer.put_string ("EIF_TEST(")
 				end
-				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 
 			l_buffer.put_string (name)
@@ -140,7 +139,7 @@ feature -- Code generation
 			arg_types_not_void: arg_types /= Void
 		local
 			buf, old_buf: GENERATION_BUFFER
-			uc_name: STRING
+			uc_name, type: STRING
 		do
 			old_buf := context.generation_buffer
 			buf := context.generation_ext_inline_buffer
@@ -152,8 +151,14 @@ feature -- Code generation
 			buf.put_new_line
 			buf.put_new_line
 
+			if a_ret_type.is_boolean then
+				type := "int"
+			else
+				type := a_ret_type.c_type.c_string
+			end
+
 			buf.generate_pure_function_signature (
-				a_ret_type.c_type.c_string,
+				type,
 				inline_name (name),
 				False,
 				Void,

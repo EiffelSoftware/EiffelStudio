@@ -885,7 +885,11 @@ feature {NONE} -- Implementation
 				l_s := l_factory.new_location_from_path (l_s, a_target).evaluated_directory
 			end
 				-- value can't change from a precompile or in a compiled system
-			if l_s /= Void and then not equal (l_s, system.metadata_cache_path) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+			if
+				l_s /= Void and then
+				not (system.metadata_cache_path /= Void and then l_s.is_case_insensitive_equal (system.metadata_cache_path)) and then
+				(a_target.precompile /= Void or workbench.has_compilation_started)
+			then
 				create vd83.make (s_metadata_cache_path, system.metadata_cache_path, l_s)
 				Error_handler.insert_warning (vd83)
 				-- new system without precompile, set value

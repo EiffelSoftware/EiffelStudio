@@ -26,7 +26,7 @@ feature -- Access
 			-- Text of current style for `a_item'
 		do
 			token_writer.new_line
-			a_item.associated_class.append_signature (token_writer, is_starred_class_name_enabled)
+			a_item.associated_class.append_short_signature (token_writer, is_starred_class_name_enabled)
 			Result := token_writer.last_line.content
 		end
 

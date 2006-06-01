@@ -152,7 +152,7 @@ feature {NONE} -- Events
 			-- Set the preference value to the original default.
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
-			l_combo_item: EV_GRID_COMBO_ITEM
+			l_combo_item: EV_GRID_CHOICE_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_color_item: EV_GRID_DRAWABLE_ITEM
 			l_font: FONT_PREFERENCE
@@ -241,7 +241,7 @@ feature {NONE} -- Events
 		local
 			l_col_index: INTEGER
 			l_bool_preference: BOOLEAN_PREFERENCE
-			l_combo_widget: EV_GRID_COMBO_ITEM
+			l_combo_widget: EV_GRID_CHOICE_ITEM
 		do
 			if a_item /= Void then
 				l_col_index := a_item.column.index

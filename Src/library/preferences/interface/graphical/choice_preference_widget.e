@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	change_item_widget: EV_GRID_COMBO_ITEM
+	change_item_widget: EV_GRID_CHOICE_ITEM
 			-- Widget to change the value of this preference.
 
 	graphical_type: STRING is
@@ -117,10 +117,6 @@ feature {NONE} -- Implementation
 		do
 			if preference.selected_index > 0 then
 				change_item_widget.activate
-				change_item_widget.combo_box.focus_out_actions.block
-				change_item_widget.combo_box.disable_edit
-				change_item_widget.combo_box.focus_out_actions.resume
-				change_item_widget.combo_box.set_focus
 			end
 		end
 

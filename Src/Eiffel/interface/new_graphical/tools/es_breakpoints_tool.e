@@ -101,6 +101,18 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (tb)
 			toggle_layout_cmd := scmd
 
+			if eb_debugger_manager.enable_bkpt /= Void then
+				tb := eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (tb)
+			end
+			if eb_debugger_manager.disable_bkpt /= Void then
+				tb := eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (tb)
+			end
+			if eb_debugger_manager.clear_bkpt /= Void then
+				tb := eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (tb)
+			end
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end

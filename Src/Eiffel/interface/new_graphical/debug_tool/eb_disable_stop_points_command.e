@@ -12,7 +12,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
+			new_toolbar_item, new_mini_toolbar_item, mini_pixmap,
 			tooltext
 		end
 
@@ -57,6 +57,16 @@ feature -- Access
 --			Result.select_actions.extend (window_manager~quick_refresh_all_margins)
 		end
 
+	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for `Current'.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result.drop_actions.extend (agent drop_breakable (?))
+			Result.drop_actions.extend (agent drop_feature (?))
+			Result.drop_actions.extend (agent drop_class (?))
+			Result.drop_actions.set_veto_pebble_function (agent can_drop)
+		end
+
 	menu_name: STRING is
 			-- Menu entry corresponding to `Current'.
 		do
@@ -67,6 +77,12 @@ feature -- Access
 			-- Icon for `Current'.
 		do
 			Result := Pixmaps.Icon_disable_bkpt
+		end
+
+	mini_pixmap: EV_PIXMAP is
+			-- Icon for `Current'.
+		do
+			Result := Pixmaps.small_pixmaps.Icon_8_disable_bkpt
 		end
 
 	name: STRING is "Disable_bkpt"

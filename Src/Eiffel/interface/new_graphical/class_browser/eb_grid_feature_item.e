@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			default_create
 			associated_feature := a_feature
 			set_spacing (3)
-			enable_pixmap
 			set_style (a_style)
 		ensure
 			associated_feature_set: associated_feature = a_feature

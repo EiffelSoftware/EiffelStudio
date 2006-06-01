@@ -22,7 +22,7 @@ feature -- Style type
 
 feature -- Access
 
-	text (a_item: EB_GRID_CLASS_ITEM): LIST [EDITOR_TOKEN] is
+	text (a_item: EB_GRID_COMPILED_CLASS_ITEM): LIST [EDITOR_TOKEN] is
 			-- Text of current style for `a_item'
 		do
 			token_writer.new_line
@@ -33,7 +33,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	setup_tooltip (a_item: EB_GRID_CLASS_ITEM) is
+	setup_tooltip (a_item: EB_GRID_COMPILED_CLASS_ITEM) is
 			-- Setup tooltip for `a_item'.
 		do
 			a_item.remove_general_tooltip

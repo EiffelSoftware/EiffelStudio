@@ -23,13 +23,13 @@ feature -- Style type
 
 feature -- Access
 
-	image (a_item: EB_GRID_CLASS_ITEM): STRING is
+	image (a_item: EB_GRID_COMPILED_CLASS_ITEM): STRING is
 			-- Image of current style used in search
 		do
 			create Result.make (0)
 		end
 
-	text (a_item: EB_GRID_CLASS_ITEM): LIST [EDITOR_TOKEN] is
+	text (a_item: EB_GRID_COMPILED_CLASS_ITEM): LIST [EDITOR_TOKEN] is
 			-- Text of current style for `a_item'
 		do
 			token_writer.new_line
@@ -42,7 +42,7 @@ feature{NONE} -- Implementation
 	ellipse: STRING is ""
 			-- Ellipse used to display
 
-	setup_tooltip (a_item: EB_GRID_CLASS_ITEM) is
+	setup_tooltip (a_item: EB_GRID_COMPILED_CLASS_ITEM) is
 			-- Setup tooltip for `a_item'.
 		do
 			if a_item.general_tooltip /= Void then

@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a class in class browser"
+	description: "Object that represents a compiled class in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_CLASS_ITEM
+	EB_GRID_COMPILED_CLASS_ITEM
 
 inherit
 	EB_GRID_COMPILER_ITEM

@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Access
 
-	class_grid_item: EB_GRID_CLASS_ITEM is
+	class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
 			-- Class item
 		local
 			l_style: EB_GRID_CLASS_ITEM_STYLE
@@ -102,7 +102,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	written_class_grid_item: EB_GRID_CLASS_ITEM is
+	written_class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
 			-- Written class item
 		local
 			l_style: EB_GRID_CLASS_ITEM_STYLE

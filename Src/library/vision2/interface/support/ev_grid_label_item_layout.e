@@ -16,27 +16,31 @@ class
 
 create {EV_ANY_I}
 	default_create
-		
+
 feature -- Access
 
 	grid_label_item: EV_GRID_LABEL_ITEM
-		-- Associated EV_GRID_LABEL_ITEM to which the properties of `Current' are applied.
+			-- Associated EV_GRID_LABEL_ITEM to which the properties of `Current' are applied.
 
 	pixmap_x: INTEGER
-		-- Horizontal position to be used for drawing `grid_label_item.pixmap', relative
-		-- to the left edge of `grid_label_item'.
+			-- Horizontal position to be used for drawing `grid_label_item.pixmap', relative
+			-- to the left edge of `grid_label_item'.
 
 	pixmap_y: INTEGER
-		-- Vertical position to be used for frawing `grid_label_item.pixmap', relative
-		-- to the top edge of `grid_label_item'.
+			-- Vertical position to be used for frawing `grid_label_item.pixmap', relative
+			-- to the top edge of `grid_label_item'.
 
 	text_x: INTEGER
-		-- Horizontal position to be used for drawing `grid_label_item.text', relative
-		-- to the left edge of `grid_label_item'.
+			-- Horizontal position to be used for drawing `grid_label_item.text', relative
+			-- to the left edge of `grid_label_item'.
 
 	text_y: INTEGER
-		-- Vertical position to be used for drawing `grid_label_item.text', relative
-		-- to the top edge of `grid_label_item'.
+			-- Vertical position to be used for drawing `grid_label_item.text', relative
+			-- to the top edge of `grid_label_item'.
+
+	has_text_pixmap_overlapping: BOOLEAN
+			-- Can text and pixmap overlap? If not, text will be truncated to the smallest of `pixmap_x'
+			-- and `grid_label_item.width' when `text_x' is smaller than `pixmap_x'.
 
 feature -- Status Setting
 
@@ -72,6 +76,14 @@ feature -- Status Setting
 			text_y_set: text_y = a_text_y
 		end
 
+	set_has_text_pixmap_overlapping (v: like has_text_pixmap_overlapping) is
+			-- Assign `v' to `has_text_pixmap_overlapping'.
+		do
+			has_text_pixmap_overlapping := v
+		ensure
+			has_text_pixmap_overlapping_set: has_text_pixmap_overlapping = v
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	set_grid_label_item (a_grid_label_item: EV_GRID_LABEL_ITEM) is
@@ -81,7 +93,7 @@ feature {EV_ANY_I} -- Implementation
 		ensure
 			grid_label_item_set: grid_label_item =  a_grid_label_item
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

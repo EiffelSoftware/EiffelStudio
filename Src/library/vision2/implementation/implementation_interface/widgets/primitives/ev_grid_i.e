@@ -552,7 +552,11 @@ feature -- Access
 	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 		do
-			Result := drawable.tooltip
+			if internal_tooltip = Void then
+				create Result.make_empty
+			else
+				Result := internal_tooltip.twin
+			end
 		end
 
 	has_capture: BOOLEAN is
@@ -2412,11 +2416,7 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `Current'.
 		do
-
-			if (drawable.tooltip.is_empty) or (not a_tooltip.is_equal (tooltip)) then
-					-- Do not set the tooltip if already set.
-				drawable.set_tooltip (a_tooltip)
-			end
+			internal_tooltip := a_tooltip
 		end
 
 feature -- Removal
@@ -4688,6 +4688,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 			tooltip_drawable: EV_DRAWING_AREA
 			l_item: EV_GRID_ITEM_I
+			l_tooltip: STRING_32
 		do
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
@@ -4712,24 +4713,22 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				tooltip_drawable := drawable
 			end
 
-			-- Now handle the tooltips for items.
-
-			if
-				pointed_item /= Void and then
-				pointed_item.tooltip /= Void and then
-				not tooltip_drawable.tooltip.is_equal (pointed_item.tooltip)
-			then
-				tooltip_drawable.set_tooltip (pointed_item.tooltip)
-			elseif pointed_item = Void or else pointed_item /= Void and then pointed_item.tooltip = Void then
-				if tooltip.is_empty and not tooltip_drawable.tooltip.is_empty then
-						-- There is no tooltip at the item or grid level, but there
-						-- is still a tooltip set, so remove the tooltip.
-					tooltip_drawable.remove_tooltip
-				elseif (not tooltip_drawable.tooltip.is_equal (tooltip)) then
- 						-- Reset the tooltip back to the one of the grid, only
- 						-- if not already equal.
-					tooltip_drawable.set_tooltip (tooltip)
+				-- Now handle the tooltips for items.
+			if pointed_item /= Void then
+					-- We have an item. If the item has a tooltip we use that tooltip.
+					-- Otherwise, we use the tooltip from the grid.
+				l_tooltip := pointed_item.tooltip
+				if l_tooltip = Void or else l_tooltip.is_empty then
+					l_tooltip := internal_tooltip
 				end
+			else
+					-- Use the grid tooltip if any.
+				l_tooltip := internal_tooltip
+			end
+			if l_tooltip = Void or else l_tooltip.is_empty then
+				tooltip_drawable.remove_tooltip
+			elseif not tooltip_drawable.tooltip.is_equal (l_tooltip) then
+				tooltip_drawable.set_tooltip (l_tooltip)
 			end
 
 				-- Now handle the enter and leave actions. Note that these are fired before the motion events.
@@ -5727,6 +5726,9 @@ feature {NONE} -- Implementation
 				last_pointed_item := Void
 			end
 		end
+
+	internal_tooltip: like tooltip
+			-- Storage for tooltip.
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 

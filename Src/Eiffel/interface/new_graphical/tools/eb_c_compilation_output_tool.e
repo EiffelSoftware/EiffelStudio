@@ -123,6 +123,7 @@ feature{NONE} -- Initialization
 			output_text.set_background_color (preferences.editor_data.normal_background_color)
 			output_text.set_font (preferences.editor_data.font)
 			output_text.disable_edit
+			output_text.selection_change_actions.extend (agent on_selection_change)
 			message_label.set_foreground_color ((create{EV_STOCK_COLORS}).red)
 		end
 
@@ -261,18 +262,18 @@ feature -- Action
 		local
 			l_need_sensitive: BOOLEAN
 		do
-			if button = 1 and then has_selected_file then
-				l_need_sensitive := True
-			end
-			if l_need_sensitive then
-				if not open_editor_btn.is_sensitive then
-					open_editor_btn.enable_sensitive
-				end
-			else
-				if open_editor_btn.is_sensitive then
-					open_editor_btn.disable_sensitive
-				end
-			end
+--			if button = 1 and then has_selected_file then
+--				l_need_sensitive := True
+--			end
+--			if l_need_sensitive then
+--				if not open_editor_btn.is_sensitive then
+--					open_editor_btn.enable_sensitive
+--				end
+--			else
+--				if open_editor_btn.is_sensitive then
+--					open_editor_btn.disable_sensitive
+--				end
+--			end
 		end
 
 	on_text_change is
@@ -298,6 +299,22 @@ feature -- Action
 					clear_output_btn.disable_sensitive
 				end
 			end
+			if has_selected_file then
+				if not open_editor_btn.is_sensitive then
+					open_editor_btn.enable_sensitive
+				end
+			else
+				if open_editor_btn.is_sensitive then
+					open_editor_btn.disable_sensitive
+				end
+			end
+		end
+
+	on_selection_change	is
+			-- Action to be performed when selection changes in `output_text'.
+		local
+			l_need_sensitive: BOOLEAN
+		do
 			if has_selected_file then
 				if not open_editor_btn.is_sensitive then
 					open_editor_btn.enable_sensitive
@@ -386,11 +403,13 @@ feature{NONE}	-- Implementation
 					end
 					l_selected_text.left_adjust
 					l_selected_text.right_adjust
-					selected_file_path := file_in_path (l_path.i_th (1), l_selected_text)
-					Result := selected_file_path /= Void
-					if not Result then
-						selected_file_path := file_in_path (l_path.i_th (2), l_selected_text)
+					if not l_selected_text.is_empty then
+						selected_file_path := file_in_path (l_path.i_th (1), l_selected_text)
 						Result := selected_file_path /= Void
+						if not Result then
+							selected_file_path := file_in_path (l_path.i_th (2), l_selected_text)
+							Result := selected_file_path /= Void
+						end
 					end
 				end
 				if selected_file_path /= Void then
@@ -398,6 +417,8 @@ feature{NONE}	-- Implementation
 				else
 					display_status_message (interface_names.l_selected_file_not_found)
 				end
+			else
+				display_status_message ("")
 			end
 		end
 

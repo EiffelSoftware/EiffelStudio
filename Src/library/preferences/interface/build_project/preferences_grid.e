@@ -313,7 +313,7 @@ feature {NONE} -- Events
 		local
 			l_col_index: INTEGER
 			l_bool_preference: BOOLEAN_PREFERENCE
-			l_combo_widget: EV_GRID_COMBO_ITEM
+			l_combo_widget: EV_GRID_CHOICE_ITEM
 		do
 			if a_item /= Void then
 				l_col_index := a_item.column.index

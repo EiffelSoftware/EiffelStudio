@@ -29,7 +29,7 @@ feature -- Access
 			Result := "BOOLEAN"
 		end
 
-	change_item_widget: EV_GRID_COMBO_ITEM
+	change_item_widget: EV_GRID_CHOICE_ITEM
 
 feature -- Status Setting
 
@@ -73,17 +73,6 @@ feature {NONE} -- Implementation
 			-- Activate the combo
 		do
 			change_item_widget.activate
-			change_item_widget.combo_box.focus_out_actions.block
-			change_item_widget.combo_box.disable_edit
-			change_item_widget.combo_box.focus_out_actions.resume
-			change_item_widget.combo_box.select_actions.block
-			if preference.value then
-				change_item_widget.combo_box.i_th (1).enable_select
-			else
-				change_item_widget.combo_box.i_th (2).enable_select
-			end
-			change_item_widget.combo_box.select_actions.resume
-			change_item_widget.combo_box.set_focus
 		end
 
 	preference: BOOLEAN_PREFERENCE

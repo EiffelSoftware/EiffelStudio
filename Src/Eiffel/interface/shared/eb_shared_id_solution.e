@@ -173,7 +173,7 @@ feature -- UUID generation
 
 feature {NONE} -- Implementation. Encoding/Decoding
 
-	name_sep: CHARACTER is '&'
+	name_sep: CHARACTER is '@'
 			-- Name separator
 
 	escape_char: CHARACTER is '%%'

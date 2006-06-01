@@ -148,83 +148,84 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			top_border := interface.top_border
 			bottom_border := interface.bottom_border
 
-			if interface.layout_procedure /= Void then
-				grid_label_item_layout.set_pixmap_x (0)
-				grid_label_item_layout.set_pixmap_y (0)
-				grid_label_item_layout.set_text_x (0)
-				grid_label_item_layout.set_text_y (0)
-				grid_label_item_layout.set_grid_label_item (interface)
-				l_pixmap := interface.pixmap
-				if l_pixmap /= Void then
-					pixmap_width := l_pixmap.width
-					pixmap_height := l_pixmap.height
+				-- Retrieve properties from interface.
+			l_pixmap := interface.pixmap
+			spacing_used := interface.spacing
+
+				-- Now calculate the area to be used for displaying the text and pixmap
+				-- by subtracting the borders from the complete area.
+			client_x := an_x + left_border
+			client_y := a_y + top_border
+			client_width := a_width - left_border - right_border
+			client_height := a_height - top_border - bottom_border
+
+			if l_pixmap /= Void then
+				pixmap_width := l_pixmap.width
+				pixmap_height := l_pixmap.height
+			else
+				spacing_used := 0
+			end
+
+			space_remaining_for_text := client_width - pixmap_width - spacing_used
+			space_remaining_for_text_vertical := client_height
+
+				-- Note in the following text positioning calculations, we subtract 1 from
+				-- the calculation as this accounts for the 0-based drawing positions.
+			if interface.text /= Void and space_remaining_for_text > 0 then
+				if interface.is_left_aligned then
+					text_offset_into_available_space := 0
+				elseif interface.is_right_aligned then
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
+				else
+					text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
+					if text_offset_into_available_space /= 0 then
+						text_offset_into_available_space := text_offset_into_available_space // 2
+					end
 				end
+					-- Ensure that the text always respect the edge of the pixmap + the spacing in all alignment modes
+					-- when the width of the column is not enough to display all of the contents
+				text_offset_into_available_space := text_offset_into_available_space.max (0)
+
+				if interface.is_top_aligned then
+					vertical_text_offset_into_available_space := 0
+				elseif interface.is_bottom_aligned then
+					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
+				else
+					vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
+					if vertical_text_offset_into_available_space /= 0 then
+						vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
+					end
+				end
+
+					-- Ensure that the text always respects the top edge of the row in all alignment modes
+					-- when the height of the row is not enough to display the text fully.
+				vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
+			end
+			text_x := left_border + pixmap_width + spacing_used + text_offset_into_available_space
+			text_y := top_border + vertical_text_offset_into_available_space
+			pixmap_x := left_border
+			pixmap_y := top_border + (client_height - pixmap_height) // 2
+
+
+			if interface.layout_procedure /= Void then
+				grid_label_item_layout.set_pixmap_x (pixmap_x)
+				grid_label_item_layout.set_pixmap_y (pixmap_y)
+				grid_label_item_layout.set_text_x (text_x)
+				grid_label_item_layout.set_text_y (text_y)
+				grid_label_item_layout.set_grid_label_item (interface)
+				grid_label_item_layout.set_has_text_pixmap_overlapping (True)
 				interface.layout_procedure.call ([interface, grid_label_item_layout])
 				text_x := grid_label_item_layout.text_x
 				text_y := grid_label_item_layout.text_y
 				pixmap_x := grid_label_item_layout.pixmap_x
 				pixmap_y := grid_label_item_layout.pixmap_y
 
-				space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
-				space_remaining_for_text_vertical := grid_label_item_layout.grid_label_item.height - text_y
-			else
-					-- Retrieve properties from interface.
-				l_pixmap := interface.pixmap
-				spacing_used := interface.spacing
-
-					-- Now calculate the area to be used for displaying the text and pixmap
-					-- by subtracting the borders from the complete area.
-				client_x := an_x + left_border
-				client_y := a_y + top_border
-				client_width := a_width - left_border - right_border
-				client_height := a_height - top_border - bottom_border
-
-				if l_pixmap /= Void then
-					pixmap_width := l_pixmap.width
-					pixmap_height := l_pixmap.height
+				if pixmap_x > text_x and not grid_label_item_layout.has_text_pixmap_overlapping then
+					space_remaining_for_text := pixmap_x - text_x
 				else
-					spacing_used := 0
+					space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
 				end
-
-				space_remaining_for_text := client_width - pixmap_width - spacing_used
-				space_remaining_for_text_vertical := client_height
-
-					-- Note in the following text positioning calculations, we subtract 1 from
-					-- the calculation as this accounts for the 0-based drawing positions.
-				if interface.text /= Void and space_remaining_for_text > 0 then
-					if interface.is_left_aligned then
-						text_offset_into_available_space := 0
-					elseif interface.is_right_aligned then
-						text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
-					else
-						text_offset_into_available_space := space_remaining_for_text - internal_text_width - 1
-						if text_offset_into_available_space /= 0 then
-							text_offset_into_available_space := text_offset_into_available_space // 2
-						end
-					end
-						-- Ensure that the text always respect the edge of the pixmap + the spacing in all alignment modes
-						-- when the width of the column is not enough to display all of the contents
-					text_offset_into_available_space := text_offset_into_available_space.max (0)
-
-					if interface.is_top_aligned then
-						vertical_text_offset_into_available_space := 0
-					elseif interface.is_bottom_aligned then
-						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
-					else
-						vertical_text_offset_into_available_space := space_remaining_for_text_vertical - internal_text_height - 1
-						if vertical_text_offset_into_available_space /= 0 then
-							vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
-						end
-					end
-
-						-- Ensure that the text always respects the top edge of the row in all alignment modes
-						-- when the height of the row is not enough to display the text fully.
-					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
-				end
-				text_x := left_border + pixmap_width + spacing_used + text_offset_into_available_space
-				text_y := top_border + vertical_text_offset_into_available_space
-				pixmap_x := left_border
-				pixmap_y := top_border + (client_height - pixmap_height) // 2
+				space_remaining_for_text_vertical := grid_label_item_layout.grid_label_item.height - text_y
 			end
 
 			drawable.set_copy_mode

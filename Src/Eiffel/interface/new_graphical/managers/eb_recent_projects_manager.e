@@ -92,6 +92,7 @@ feature -- Basic operations
 		require
 			a_projects_list_not_void: a_projects_list /= Void
 		do
+			recent_projects := a_projects_list
 				-- Let observers know about the changes.
 			on_update
 				-- Save it.

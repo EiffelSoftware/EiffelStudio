@@ -191,7 +191,7 @@ feature{NONE} -- Implementation
 	metric_creator_table: HASH_TABLE [FUNCTION [ANY, TUPLE, QL_METRIC], QL_METRIC_UNIT] is
 			-- Table for metric creators
 			-- Key is metric unit, value is the creator for that unit
-		do
+		once
 			if metric_creator_table_internal = Void then
 				create metric_creator_table_internal.make (10)
 				metric_creator_table_internal.put (agent target_metric,      target_unit)

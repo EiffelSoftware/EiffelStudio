@@ -73,6 +73,13 @@ feature -- Set operation
 			internal_complement (Result, other)
 		end
 
+	distinct: like Current is
+			-- A new domain which only contain distinct items in Current		
+		do
+			create Result.make
+			internal_distinct (Result)
+		end
+
 feature{QL_CRITERION} -- Implementation for default criterion domain	
 
 	class_item_from_current_domain (a_class: CONF_CLASS): QL_CLASS is

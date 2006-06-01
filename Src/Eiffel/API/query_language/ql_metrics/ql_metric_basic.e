@@ -257,6 +257,7 @@ feature{NONE} -- Implementation
 				create internal_generator_table.make (l_scope_list.count)
 				l_scope_list.do_all (agent internal_generator_table.put (Void, ?))
 			end
+			Result := internal_generator_table
 		end
 
 	internal_generator_table: like basic_scope_table

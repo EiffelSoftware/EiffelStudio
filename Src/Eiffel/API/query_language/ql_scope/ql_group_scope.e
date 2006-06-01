@@ -15,7 +15,8 @@ inherit
 			basic_scope,
 			domain_generator,
 			path_domain_generator,
-			empty_domain
+			empty_domain,
+			delayed_domain
 		end
 
 create
@@ -95,6 +96,12 @@ feature -- Access
 			-- An empty domain whose scope is group
 		do
 			create Result.make
+		end
+
+	delayed_domain: QL_DELAYED_GROUP_DOMAIN is
+			-- An empty delayed domain whose scope is same as current scope
+		do
+			create Result
 		end
 
 indexing

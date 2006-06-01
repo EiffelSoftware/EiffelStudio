@@ -79,6 +79,14 @@ feature -- Access
 			result_is_empty: Result.is_empty
 		end
 
+	delayed_domain: QL_DELAYED_DOMAIN is
+			-- An empty delayed domain whose scope is same as current scope
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_is_empty: Result.is_empty
+		end
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

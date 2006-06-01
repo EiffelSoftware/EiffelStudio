@@ -184,6 +184,13 @@ feature -- Set operation
 			result_attached: Result /= Void
 		end
 
+	distinct: like Current is
+			-- A new domain which only contain distinct items in Current
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	is_subset_of (other: like Current): BOOLEAN is
 			-- Is current domain a subset of `other'?
 		require
@@ -457,6 +464,29 @@ feature{NONE} -- Implementation/Set operations
 					l_content2.extend (l_item_set.item_for_iteration)
 					l_item_set.forth
 				end
+			end
+		end
+
+	internal_distinct (a_domain: like Current) is
+			-- Fill `a_domain' with distinct items in Current
+		require
+			a_domain_attached: a_domain /= Void
+		local
+			l_hash_set: DS_HASH_SET [like item_type]
+			l_content: like content
+		do
+			create l_hash_set.make (count)
+			l_content := content
+
+			l_hash_set.set_equality_tester (create {KL_EQUALITY_TESTER [like item_type]})
+			l_content.do_all (agent l_hash_set.force_last)
+			from
+				l_hash_set.start
+			until
+				l_hash_set.after
+			loop
+				a_domain.content.extend (l_hash_set.item_for_iteration)
+				l_hash_set.forth
 			end
 		end
 

@@ -4,10 +4,10 @@ indexing
 		
 					 A delayed domain means that `content' of the domain is not defined until a certain time.
 					 For example, in query:
-					     from "base" select class where (count feature from current_class > 10)
-					 in this query, current_class is a delayed domain. Content of this delayed domain
+					     from "base" select class as c where (count feature from c > 10)
+					 in this query, c is a delayed domain. Content of this delayed domain
 					 is only meaningful when this query is executed. To be more detailed, when this query
-					 executes, it will iterate all classes in group "base", and for every class, current_class
+					 executes, it will iterate all classes in group "base", and for every class, c
 					 defines a domain which has one item which is the current iterated class in it.
 				]"
 	legal: "See notice at end of class."

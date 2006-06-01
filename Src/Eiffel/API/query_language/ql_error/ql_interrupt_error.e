@@ -17,4 +17,11 @@ feature -- Access
 		do
 			Result := "INTERRUPT"
 		end
+
+	text: STRING is
+			-- The error message.
+		do
+			Result := "Interrupted by user."
+		end
+
 end

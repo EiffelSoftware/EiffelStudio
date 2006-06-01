@@ -59,16 +59,16 @@ feature -- Setting
 
 	set_criterion (a_criterion: like criterion) is
 			-- Set `criterion' with `a_criterion'.
-		require
-			a_criterion_attached: a_criterion /= Void
 		do
 			if criterion /= Void then
 				is_setting_new_criterion := False
 				process_criterion_item (criterion)
 			end
-			is_setting_new_criterion := True
 			criterion := a_criterion
-			process_criterion_item (criterion)
+			if criterion /= Void then
+				is_setting_new_criterion := True
+				process_criterion_item (criterion)
+			end
 			internal_actual_criterion := Void
 		ensure
 			criterion_set: criterion = a_criterion

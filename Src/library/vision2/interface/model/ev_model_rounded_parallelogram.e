@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 		end
-		
+
 	make_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y') 
+			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y')
 			-- and `width' `a_width' and `height' `a_height'
 		do
 			default_create
-			center.set (a_x + a_width // 2, a_y + a_width // 2)
+			center.set (a_x + a_width // 2, a_y + a_height // 2)
 			point_array.item (0).set (a_x, a_y)
 			point_array.item (1).set (a_x + a_width, a_y)
 			point_array.item (2).set (a_x + a_width, a_y + a_height)
@@ -80,28 +80,28 @@ feature -- Element change
 		ensure
 			radius_assigned: radius = a_radius
 		end
-		
+
 	set_width (a_width: INTEGER) is
 			-- Set `width' to `a_width'.
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (a_width)
 			set_rounded_points
 		end
-		
+
 	set_height (a_height: INTEGER) is
 			-- Set the lenght of the line p1 <-> p2 to a_height
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (a_height)
 			set_rounded_points
 		end
-		
+
 	set_point_a_position (ax, ay: INTEGER) is
 			-- Set position of `point_a' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (ax, ay)
 			set_rounded_points
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER) is
 			-- Set position of `point_b' to position (`ax', `ay').
 		do
@@ -149,9 +149,9 @@ feature {EV_MODEL_DRAWER} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -160,9 +160,9 @@ feature {EV_MODEL_GROUP} -- Transformation
 			Precursor {EV_MODEL_PARALLELOGRAM} (a_transformation)
 			set_rounded_points
 		end
-		
+
 feature {NONE} -- Implementation
-			
+
 	set_rounded_points is
 			-- Create the points needed to discribe the rounded edges.
 			-- Thats not easy, since it should work when rotated, scaled and shared.
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			-- p6 is calculated using the same strategy.
 			--
 			--    pa ------------ p4
-			--    |   
+			--    |
 			--    |    p5
 			--    |
 			--    |
@@ -207,10 +207,10 @@ feature {NONE} -- Implementation
 		local
 			pa, pb, pc, pd, p1, p2: EV_COORDINATE
 			l_point_array: like point_array
-			
+
 		do
 			l_point_array := point_array
-				
+
 			-- rearange points
 			if l_point_array.item (0).x_precise <= l_point_array.item (1).x_precise then
 				-- p0 and p3 are left
@@ -240,44 +240,44 @@ feature {NONE} -- Implementation
 					pd := l_point_array.item (1)
 				end
 			end
-			
+
 			-- set rounded points by pa
 			p1 := l_point_array.item (4)
 			set_rounded_point_on_line (pa, pb, p1)
 			p2 := l_point_array.item (6)
 			set_rounded_point_on_line (pa, pd, p2)
-			
+
 			l_point_array.item (5).set_precise (pa.x_precise / 2 + p1.x_precise / 4 + p2.x_precise / 4,
 					 						    pa.y_precise / 2 + p1.y_precise / 4 + p2.y_precise / 4)
-					 						    
+
 			-- set rounded points by pd
 			p1 := l_point_array.item (7)
 			set_rounded_point_on_line (pd, pa, p1)
 			p2 := l_point_array.item (9)
 			set_rounded_point_on_line (pd, pc, p2)
-			
+
 			l_point_array.item (8).set_precise (pd.x_precise / 2 + p1.x_precise / 4 + p2.x_precise / 4,
 					 						    pd.y_precise / 2 + p1.y_precise / 4 + p2.y_precise / 4)
-			
+
 			-- set rounded points by pc
 			p1 := l_point_array.item (10)
 			set_rounded_point_on_line (pc, pd, p1)
 			p2 := l_point_array.item (12)
 			set_rounded_point_on_line (pc, pb, p2)
-			
+
 			l_point_array.item (11).set_precise (pc.x_precise / 2 + p1.x_precise / 4 + p2.x_precise / 4,
 					 						     pc.y_precise / 2 + p1.y_precise / 4 + p2.y_precise / 4)
-			
+
 			-- set rounded points by pb
 			p1 := l_point_array.item (13)
 			set_rounded_point_on_line (pb, pc, p1)
 			p2 := l_point_array.item (15)
 			set_rounded_point_on_line (pb, pa, p2)
-			
+
 			l_point_array.item (14).set_precise (pb.x_precise / 2 + p1.x_precise / 4 + p2.x_precise / 4,
 					 						     pb.y_precise / 2 + p1.y_precise / 4 + p2.y_precise / 4)
 		end
-		
+
 	set_rounded_point_on_line (pa, pb, p: EV_COORDINATE) is
 			-- Set rounded point `p' lieing on the line from `pa' to `pb'.
 			-- (See set_rounded_points for more informations).
@@ -292,13 +292,13 @@ feature {NONE} -- Implementation
 			else
 				r := radius
 			end
-			if r > 0 and h /= 0 then	
+			if r > 0 and h /= 0 then
 				g := (h * r) / cd
 				a := g * ab / h
 			elseif r > 0 then
 				g := 0
-				if ab < 0 then			
-					a := -r	
+				if ab < 0 then
+					a := -r
 				else
 					a := r
 				end

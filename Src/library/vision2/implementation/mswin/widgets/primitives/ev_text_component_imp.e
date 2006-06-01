@@ -180,9 +180,8 @@ feature {EV_ANY_I} -- Resizing
 
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make a minimum of `nb' characters visible on one line.
-			-- We add nine characters for borders.
 		do
-			set_minimum_width ((nb * 2) * maximum_character_width + 9)
+			set_minimum_width (nb * maximum_character_width)
 		end
 
 feature -- Basic operation

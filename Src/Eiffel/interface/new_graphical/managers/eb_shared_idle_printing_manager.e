@@ -116,7 +116,7 @@ feature -- Printing
 				if process_manager.is_finalizing_running then
 					is_printing_finalizing := True
 				else
-					if not finalizing_storage.has_new_block then
+					if finalizing_storage.has_new_block then
 						is_printing_finalizing := True
 					else
 						is_printing_finalizing := False

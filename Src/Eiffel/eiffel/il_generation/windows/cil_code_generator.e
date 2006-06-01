@@ -2787,11 +2787,15 @@ feature -- Features info
 		do
 			if f.has_property_setter then
 				s := f.property_setter_in (t)
-				sn := il_casing.pascal_casing (t.is_dotnet_name, s.feature_name, {IL_CASING_CONVERSION}.lower_case)
-				if sn.is_equal (property_setter_prefix + f.property_name) then
-					Result := s.written_class.is_single and then s.written_in /= t.type.class_id
-				else
+				if s = Void then
 					Result := True
+				else
+					sn := il_casing.pascal_casing (t.is_dotnet_name, s.feature_name, {IL_CASING_CONVERSION}.lower_case)
+					if sn.is_equal (property_setter_prefix + f.property_name) then
+						Result := s.written_class.is_single and then s.written_in /= t.type.class_id
+					else
+						Result := True
+					end
 				end
 			end
 		end

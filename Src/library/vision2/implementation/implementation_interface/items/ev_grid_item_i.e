@@ -395,7 +395,13 @@ feature -- Element change
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
-			tooltip := a_tooltip
+				-- The `if' statement is necessary because of the conversion
+				-- from STRING_GENERAL to STRING_32
+			if a_tooltip = Void then
+				tooltip := Void
+			else
+				tooltip := a_tooltip
+			end
 		ensure
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
 			tooltip_set: a_tooltip /= Void implies (

@@ -3120,7 +3120,7 @@ feature {NONE} -- Implementation
 					end
 					if cluster_st /= Void and then cluster_st.is_cluster then
 	--| FIXME XR: Really manage cluster display in the main editor
-						formatted_context_for_cluster (cluster_st.cluster_i)
+						formatted_context_for_cluster (cluster_st.cluster_i, cluster_st.path)
 						if cluster_st.position > 0 then
 							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
 						end
@@ -3190,14 +3190,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	formatted_context_for_cluster (a_cluster: CLUSTER_I) is
+	formatted_context_for_cluster (a_cluster: CLUSTER_I; a_path: STRING) is
 			-- Formatted context representing the list of classes inside `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
+			a_path_not_void: a_path /= Void
 		local
 			l_assembly: ASSEMBLY_I
 			l_sorted_cluster: EB_SORTED_CLUSTER
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
+			l_in_classes: DS_ARRAYED_LIST [CLASS_I]
+			l_out_classes: DS_ARRAYED_LIST [CLASS_I]
+			l_over_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
 			l_cl_i, l_overridden_class: CLASS_I
 			l_cluster: CLUSTER_I
@@ -3206,7 +3210,7 @@ feature {NONE} -- Implementation
 			l_description: STRING
 		do
 			create l_format_context.make_for_case (editor_tool.text_area.text_displayed)
-			editor_tool.text_area.handle_before_processing (false)
+			editor_tool.text_area.handle_before_processing (False)
 			l_format_context.process_keyword_text (ti_indexing_keyword, Void)
 			l_format_context.put_new_line
 			l_format_context.indent
@@ -3231,7 +3235,7 @@ feature {NONE} -- Implementation
 			l_format_context.set_without_tabs
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
-			l_format_context.put_quoted_string_item (a_cluster.cluster_name)
+			l_format_context.add_group (a_cluster, a_cluster.cluster_name)
 
 			l_format_context.put_new_line
 			l_format_context.process_indexing_tag_text ("cluster_path")
@@ -3239,6 +3243,15 @@ feature {NONE} -- Implementation
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
 			l_format_context.put_quoted_string_item (a_cluster.path)
+
+			if a_path /= Void and then not a_path.is_empty then
+				l_format_context.put_space
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_l_parenthesis)
+				l_format_context.put_quoted_string_item (a_path)
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_r_parenthesis)
+			end
 			l_format_context.put_new_line
 
 				-- Now try to get the description of the cluster, and if not
@@ -3323,24 +3336,54 @@ feature {NONE} -- Implementation
 			end
 
 			if not l_sorted_cluster.classes.is_empty then
-				l_format_context.process_indexing_tag_text ("class(es)")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_new_line
-				l_format_context.indent
+				l_classes := l_sorted_cluster.classes
 				from
-					l_classes := l_sorted_cluster.classes
 					l_classes.start
+					create l_in_classes.make (l_classes.count)
+					create l_out_classes.make (l_classes.count)
+					create l_over_classes.make (l_classes.count)
 				until
 					l_classes.after
 				loop
 					l_cl_i := l_classes.item_for_iteration
-					l_assert_level := l_cl_i.assertion_level
-					l_format_context.put_manifest_string (" - ")
-					l_format_context.put_classi (l_cl_i)
+					if
+						a_path.is_empty
+						or else is_string_started_by (l_cl_i.path, a_path)
+					then
+						if l_cl_i.compiled then
+							l_in_classes.put_last (l_cl_i)
+							if l_cl_i.config_class.is_overriden then
+								l_over_classes.put_last (l_cl_i)
+							end
+						else
+							l_out_classes.put_last (l_cl_i)
+						end
+					end
+					l_classes.forth
+				end
+				l_classes := Void
+
+				if l_in_classes.count > 0 then
+					l_format_context.put_new_line
+					l_format_context.process_indexing_tag_text (l_in_classes.count.out + " compiled class(es)")
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_colon)
-					if l_cl_i.compiled then
+					l_format_context.put_new_line
+					l_format_context.indent
+
+					from
+						l_in_classes.start
+					until
+						l_in_classes.after
+					loop
+						l_cl_i := l_in_classes.item_for_iteration
+						check compiled: l_cl_i.compiled end
+
+						l_assert_level := l_cl_i.assertion_level
+						l_format_context.put_manifest_string (" - ")
+						l_format_context.put_classi (l_cl_i)
+						l_format_context.set_without_tabs
+						l_format_context.process_symbol_text (ti_colon)
 						if l_assert_level.check_all then
 							l_format_context.put_space
 							l_format_context.set_without_tabs
@@ -3375,49 +3418,73 @@ feature {NONE} -- Implementation
 								l_format_context.process_keyword_text (ti_Invariant_keyword, Void)
 							end
 						end
-					else
-						l_format_context.process_comment_text (" Not in system.", Void)
+						l_format_context.put_new_line
+						l_in_classes.forth
 					end
-					l_format_context.put_new_line
-					l_classes.forth
+					l_format_context.exdent
 				end
-				l_format_context.exdent
-			end
+				l_in_classes := Void
 
-			if
-				not l_sorted_cluster.classes.is_empty and then
-				a_cluster.overriders /= Void and not a_cluster.overriders.is_empty
-			then
-				l_format_context.process_indexing_tag_text ("overriden class(es)")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_new_line
-				l_format_context.indent
-				from
-					l_classes := l_sorted_cluster.classes
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_cl_i := l_classes.item_for_iteration
-					if l_cl_i.config_class.is_overriden then
+				if l_out_classes.count > 0 then
+					l_format_context.put_new_line
+					l_format_context.process_indexing_tag_text (l_out_classes.count.out + " class(es) not in system")
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_colon)
+					l_format_context.put_new_line
+					l_format_context.indent
+					from
+						l_out_classes.start
+					until
+						l_out_classes.after
+					loop
+						l_cl_i := l_out_classes.item_for_iteration
+						check not_in_system: not l_cl_i.compiled end
+						l_format_context.put_manifest_string (" - ")
+						l_format_context.put_classi (l_cl_i)
+						l_format_context.put_new_line
+						l_out_classes.forth
+					end
+					l_format_context.exdent
+				end
+				l_out_classes := Void
+
+				if
+					l_over_classes.count > 0 and then
+					a_cluster.overriders /= Void and then not a_cluster.overriders.is_empty
+				then
+					l_format_context.put_new_line
+					l_format_context.process_indexing_tag_text ("Overriden")
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_colon)
+					l_format_context.put_new_line
+					l_format_context.indent
+					from
+						l_over_classes.start
+					until
+						l_over_classes.after
+					loop
+						l_cl_i := l_over_classes.item_for_iteration
+						check is_overriden_class: l_cl_i.config_class.is_overriden end
+
+						l_format_context.put_manifest_string (" - ")
+						l_format_context.put_classi (l_cl_i)
+						l_format_context.process_comment_text (" overriden by", Void)
+						l_format_context.process_symbol_text (ti_colon)
+						l_format_context.put_space
+
 						l_overridden_class ?= l_cl_i.config_class.overriden_by
 						if l_overridden_class /= Void then
-							l_format_context.put_manifest_string (" - ")
-							l_format_context.put_classi (l_cl_i)
-							l_format_context.process_comment_text (" overriden by", Void)
-							l_format_context.process_symbol_text (ti_colon)
-							l_format_context.put_space
 							l_format_context.put_classi (l_overridden_class)
 							l_format_context.put_manifest_string (" in ")
 							l_format_context.add_group (l_cl_i.config_class.overriden_by.group, l_cl_i.config_class.overriden_by.group.name)
 							l_format_context.put_new_line
 						end
+						l_over_classes.forth
 					end
-					l_classes.forth
+					l_format_context.exdent
+					l_format_context.put_new_line
 				end
-				l_format_context.exdent
-				l_format_context.put_new_line
+				l_over_classes := Void
 			end
 
 			l_format_context.exdent
@@ -4441,6 +4508,28 @@ feature {NONE} -- Access
 
 	internal_development_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA;
 		-- Internal custom meta data for `Current'.
+
+feature {NONE} -- Implementation
+
+	is_string_started_by (s1, s2: STRING_GENERAL): BOOLEAN is
+			-- Is `s1' starting by `s2' characters
+		require
+			s2_not_void: s2 /= Void
+		local
+			i: INTEGER
+		do
+			if s1 /= Void and then s1.count >= s2.count then
+				from
+					i := 1
+					Result := True
+				until
+					i > s2.count or not Result
+				loop
+					Result := s1.code (i) = s2.code (i)
+					i := i + 1
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

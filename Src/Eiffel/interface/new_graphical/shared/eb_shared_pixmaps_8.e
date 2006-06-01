@@ -333,6 +333,38 @@ feature -- Pixmap Icons from constant
 			result_not_void: Result /= Void
 		end
 
+	icon_filter: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (icon_filter_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_return_type: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (icon_return_type_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_show_signature: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (icon_show_signature_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_show_disambiguated_name: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (icon_show_disambiguated_name_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 	pixmap_width: INTEGER is 8
@@ -399,9 +431,13 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.add_pixmap (6, 3, small_close_cross_value)
 			Result.add_pixmap (7, 3, unpined_value)
 			Result.add_pixmap (8, 3, pined_value)
-			Result.add_pixmap (9, 3, enable_bkpt_value)
-			Result.add_pixmap (10, 3, disable_bkpt_value)
-			Result.add_pixmap (11, 3, clear_bkpt_value)
+			Result.add_pixmap (9, 3, icon_filter_value)
+			Result.add_pixmap (10, 3, icon_return_type_value)
+			Result.add_pixmap (11, 3, icon_show_signature_value)
+			Result.add_pixmap (12, 3, icon_show_disambiguated_name_value)
+			Result.add_pixmap (13, 3, enable_bkpt_value)
+			Result.add_pixmap (14, 3, disable_bkpt_value)
+			Result.add_pixmap (15, 3, clear_bkpt_value)
 		end
 
 feature {NONE} -- Constants
@@ -448,7 +484,11 @@ feature {NONE} -- Constants
 	pined_value,
 	enable_bkpt_value,
 	disable_bkpt_value,
-	clear_bkpt_value
+	clear_bkpt_value,
+	icon_filter_value,
+	icon_return_type_value,
+	icon_show_signature_value,
+	icon_show_disambiguated_name_value
 		: INTEGER is unique;
 		-- Constants used for pixmap lookup.
 

@@ -126,13 +126,14 @@ feature {NONE} -- Implementation
 					l_text := item_strings.item (i)
 					create l_item.make_with_text (item_strings.item (i))
 					i := i + 1
+					choice_list.set_item (1, j, l_item)
+					j := j + 1
 					if l_text.is_equal (l_selected_text) then
 						create l_font
 						l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 						l_item.set_font (l_font)
+						l_item.enable_select
 					end
-					choice_list.set_item (1, j, l_item)
-					j := j + 1
 				end
 			end
 		end

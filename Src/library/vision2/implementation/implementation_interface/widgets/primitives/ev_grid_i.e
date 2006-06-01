@@ -5502,6 +5502,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 				-- Update the index of `row_i' and subsequent rows in `rows'
 			update_grid_row_indices (a_index)
 			set_vertical_computation_required (a_index)
+
+				-- Redraw content of shifted item if not inserting at the end. Otherwise
+				-- nothing to be done since a redraw will be done as soon as new items
+				-- are inserted.
+			if a_index <= old_count then
+				redraw_client_area
+			end
 		end
 
 	row_internal (a_row: INTEGER): EV_GRID_ROW_I is

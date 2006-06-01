@@ -1516,6 +1516,7 @@
 							<Directory Id="items" Name="items">
 								<Component Id="ev_dynamic_tree_item.e" Guid="30D7A7BB-627D-4331-AA07-D61443405073">
 									<File Id="ev_grid_drawable_item_e" Name="EVF755~1.E" LongName="ev_grid_drawable_item.e" />
+									<File Id="ev_grid_choice_item_e" Name="EV0610~1.E" LongName="ev_grid_choice_item.e" />
 									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
 									<File Id="ev_grid_combo_item_e" Name="EVE5EA~1.E" LongName="ev_grid_combo_item.e" />
 									<File Id="ev_grid_editable_item_e" Name="EV1ADD~1.E" LongName="ev_grid_editable_item.e" />

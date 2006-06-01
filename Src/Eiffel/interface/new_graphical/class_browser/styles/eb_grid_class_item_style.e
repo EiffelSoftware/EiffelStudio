@@ -22,7 +22,7 @@ inherit
 
 feature -- Setting
 
-	apply (a_item: EB_GRID_CLASS_ITEM) is
+	apply (a_item: EB_GRID_COMPILED_CLASS_ITEM) is
 			-- Apply current style to `a_item'.
 		do
 			setup_text (a_item)
@@ -53,7 +53,7 @@ feature -- Statue report
 	is_starred_class_name_enabled: BOOLEAN
 			-- Display a star "*" besides a deferred class?
 
-	image (a_item: EB_GRID_CLASS_ITEM): STRING is
+	image (a_item: EB_GRID_COMPILED_CLASS_ITEM): STRING is
 			-- Image of current style used in search
 		local
 			l_tokens: LIST [EDITOR_TOKEN]
@@ -72,12 +72,12 @@ feature -- Statue report
 			end
 		end
 
-	text (a_item: EB_GRID_CLASS_ITEM): LIST [EDITOR_TOKEN] is
+	text (a_item: EB_GRID_COMPILED_CLASS_ITEM): LIST [EDITOR_TOKEN] is
 			-- Text of current style for `a_item'
 		deferred
 		end
 
-	tooltip (a_item: EB_GRID_CLASS_ITEM): EB_EDITOR_TOKEN_TOOLTIP is
+	tooltip (a_item: EB_GRID_COMPILED_CLASS_ITEM): EB_EDITOR_TOKEN_TOOLTIP is
 			-- Setup related parameters for tooltip display.
 		do
 			create Result.make (a_item.pointer_enter_actions, a_item.pointer_leave_actions, agent a_item.is_destroyed)
@@ -118,7 +118,7 @@ feature -- Style type
 
 feature -- Setting
 
-	setup_text (a_item: EB_GRID_CLASS_ITEM) is
+	setup_text (a_item: EB_GRID_COMPILED_CLASS_ITEM) is
 			-- Setup text for `a_item'.
 		do
 			a_item.set_text_with_tokens (text (a_item))

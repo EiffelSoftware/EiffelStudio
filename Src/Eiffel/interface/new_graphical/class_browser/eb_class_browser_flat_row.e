@@ -171,7 +171,7 @@ feature -- Setting
 
 feature -- Grid operations
 
-	class_grid_item: EB_GRID_CLASS_ITEM is
+	class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
 			-- Class item
 		local
 			l_style: EB_GRID_CLASS_ITEM_STYLE
@@ -228,6 +228,7 @@ feature -- Grid operations
 					create feature_item_internal.make (feature_item, l_style)
 					feature_item_internal.disable_invisible_pixmap
 				end
+				feature_item_internal.enable_pixmap
 				feature_item_internal.set_data (Current)
 				feature_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
 			else

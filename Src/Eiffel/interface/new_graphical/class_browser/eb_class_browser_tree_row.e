@@ -121,7 +121,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	class_grid_item: EB_GRID_CLASS_ITEM is
+	class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
 			-- Class item
 		local
 			l_style: EB_GRID_CLASS_ITEM_STYLE

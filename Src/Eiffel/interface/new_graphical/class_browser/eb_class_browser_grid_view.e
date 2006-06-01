@@ -371,12 +371,12 @@ feature{NONE} -- Actions
 		local
 			l_editor_token: EDITOR_TOKEN
 		do
-			if a_button = 1 then
-				l_editor_token := editor_token_at_position (a_x, a_y)
-				if l_editor_token /= Void and then not l_editor_token.image.is_empty then
-					ev_application.clipboard.set_text (l_editor_token.image)
-				end
-			end
+--			if a_button = 1 then
+--				l_editor_token := editor_token_at_position (a_x, a_y)
+--				if l_editor_token /= Void and then not l_editor_token.image.is_empty then
+--					ev_application.clipboard.set_text (l_editor_token.image)
+--				end
+--			end
 		end
 
 	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is

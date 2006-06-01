@@ -85,7 +85,7 @@ feature -- Project file/directory warnings
 				Result.append (".")
 			else
 				create Result.make (30)
-				Result.append ("Incompatible version for project: ")
+				Result.append ("Incompatible version for project compiled in: ")
 				Result.append (dir_name)
 				Result.append (".%N")
 				Result.append (Workbench_name)
@@ -104,7 +104,7 @@ feature -- Project file/directory warnings
 			valid_incomp_version: incomp_version /= Void
 		do
 			create Result.make (30)
-			Result.append ("Incompatible version for project: ")
+			Result.append ("Incompatible version for project compiled in: ")
 			Result.append (dir_name)
 			Result.append (".%N")
 			Result.append (Workbench_name)

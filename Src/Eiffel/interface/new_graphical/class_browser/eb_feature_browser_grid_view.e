@@ -175,11 +175,15 @@ feature -- Actions
 		do
 			if a_item.column.index = 1 then
 				l_row := a_item.row
-				if l_row.parent_row /= Void then
-					l_row.disable_select
-					l_grid_item := l_row.parent_row.item (1)
-					l_grid_item.row.ensure_visible
-					l_grid_item.enable_select
+				if l_row.is_expandable and then l_row.is_expanded then
+					l_row.collapse
+				else
+					if l_row.parent_row /= Void then
+						l_row.disable_select
+						l_grid_item := l_row.parent_row.item (1)
+						l_grid_item.row.ensure_visible
+						l_grid_item.enable_select
+					end
 				end
 			end
 		end
@@ -250,37 +254,13 @@ feature -- Access
 				create control_tool_bar
 				create l_tool_bar
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				l_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
-				control_tool_bar.extend (show_tooltip_checkbox)
-				control_tool_bar.disable_item_expand (show_tooltip_checkbox)
-				create l_tool_bar2
-				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar2.extend (expand_button)
-				l_tool_bar2.extend (collapse_button)
-				control_tool_bar.extend (l_tool_bar2)
-				control_tool_bar.disable_item_expand (l_tool_bar2)
 			end
 			Result := control_tool_bar
 		ensure then
-			result_attached: Result /= Void
-		end
-
-	show_tooltip_checkbox: EV_CHECK_BUTTON is
-			-- Checkbox to indicate whether or not tooltip is displayed
-		do
-			if show_tooltip_checkbox_internal = Void then
-				create show_tooltip_checkbox_internal.make_with_text (interface_names.l_show_tooltip)
-				show_tooltip_checkbox_internal.set_tooltip (interface_names.h_show_tooltip)
-				if preferences.class_browser_data.is_tooltip_shown then
-					show_tooltip_checkbox_internal.enable_select
-				else
-					show_tooltip_checkbox_internal.disable_select
-				end
-			end
-			Result := show_tooltip_checkbox_internal
-		ensure
 			result_attached: Result /= Void
 		end
 
@@ -671,30 +651,45 @@ feature{NONE} -- Sorting
 			l_last_row_index: INTEGER
 			l_last_column_index: INTEGER
 			l_item: EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
 		do
-			l_sorted_items := sorted_items (grid.selected_items)
-			create Result.make (512)
-			from
-				l_last_column_index := 1
-				l_sorted_items.start
-			until
-				l_sorted_items.after
-			loop
-				l_item := l_sorted_items.item_for_iteration
-				if l_item.row.index /= l_last_row_index then
-					if l_last_row_index /= 0 then
-						Result.append_character ('%N')
+			l_list := grid.selected_items
+			if not l_list.is_empty then
+				create Result.make (512)
+				if l_list.count = 1 then
+						-- For single selected item
+					l_grid_item ?= l_list.first
+					if l_grid_item /= Void then
+						Result.append (l_grid_item.text)
 					end
-					l_last_row_index := l_item.row.index
-					l_last_column_index := 1
+				else
+						-- For multi selected items
+					l_sorted_items := sorted_items (l_list)
+					from
+						l_last_column_index := 1
+						l_sorted_items.start
+					until
+						l_sorted_items.after
+					loop
+						l_item := l_sorted_items.item_for_iteration
+						if l_item.row.index /= l_last_row_index then
+							if l_last_row_index /= 0 then
+								Result.append_character ('%N')
+							end
+							l_last_row_index := l_item.row.index
+							l_last_column_index := 1
+						end
+						Result.append (tabs (l_item.column.index - l_last_column_index))
+						l_last_column_index := l_item.column.index
+						l_grid_item ?= l_item
+						if l_grid_item /= Void then
+							Result.append (l_grid_item.text)
+						end
+						l_sorted_items.forth
+					end
 				end
-				Result.append (tabs (l_item.column.index - l_last_column_index))
-				l_last_column_index := l_item.column.index
-				l_grid_item ?= l_item
-				if l_grid_item /= Void then
-					Result.append (l_grid_item.text)
-				end
-				l_sorted_items.forth
+			else
+				create Result.make (0)
 			end
 		end
 
@@ -733,8 +728,8 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	show_tooltip_checkbox_internal: like show_tooltip_checkbox
-			-- Implementation of `show_tooltip_checkbox'
+--	show_tooltip_checkbox_internal: like show_tooltip_checkbox
+--			-- Implementation of `show_tooltip_checkbox'
 
 	branch_item (a_branch_id: INTEGER): EB_GRID_EDITOR_TOKEN_ITEM is
 			-- A grid item to display branch id

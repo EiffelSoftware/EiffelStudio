@@ -78,7 +78,7 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				text.drop_actions.fill (drop_actions)
 			end
-
+			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 
 			on_color_or_font_changed_agent := agent on_color_or_font_changed
 			editor_preferences.keyword_font_preference.change_actions.extend (on_color_or_font_changed_agent)
@@ -217,13 +217,52 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	show_tooltip_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Checkbox to indicate whether or not tooltip is displayed
+		do
+			if show_tooltip_checkbox_internal = Void then
+				create show_tooltip_checkbox_internal
+				show_tooltip_checkbox_internal.set_pixmap (pixmaps.icon_open_exception_dialog)
+				show_tooltip_checkbox_internal.set_tooltip (interface_names.h_show_tooltip)
+				if preferences.class_browser_data.is_tooltip_shown then
+					show_tooltip_checkbox_internal.enable_select
+				else
+					show_tooltip_checkbox_internal.disable_select
+				end
+			end
+			Result := show_tooltip_checkbox_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	grid_item_at_position (a_x, a_y: INTEGER): EV_GRID_ITEM is
+			-- Item at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found.
+		do
+			Result := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - grid.header.height)
+		end
+
+	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
+			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found.
+		local
+			l_grid_item: EV_GRID_ITEM
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_index: INTEGER
+		do
+			l_editor_token_item ?= grid_item_at_position (a_x, a_y)
+			if l_editor_token_item /= Void then
+				l_index := l_editor_token_item.token_index_at_current_position
+				if l_index > 0 then
+					Result := l_editor_token_item.editor_token_text.tokens.i_th (l_index)
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
 			-- Is current up-to_date?
-
-
-feature -- Status reporting
 
 	is_tree_node_highlight_enabled: BOOLEAN
 			-- Is tree node highlight enabled?
@@ -327,6 +366,87 @@ feature{NONE} -- Actions
 		deferred
 		end
 
+	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Action to be performed when pointer double clicked
+		local
+			l_editor_token: EDITOR_TOKEN
+		do
+			if a_button = 1 then
+				l_editor_token := editor_token_at_position (a_x, a_y)
+				if l_editor_token /= Void and then not l_editor_token.image.is_empty then
+					ev_application.clipboard.set_text (l_editor_token.image)
+				end
+			end
+		end
+
+	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is
+			-- Action to be performed when predefined function keys are pressed
+			-- If `a_key' is processed, return True, otherwise False.
+		require
+			a_key_attached: a_key /= Void
+		do
+			Result := True
+			if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
+				on_collapse_one_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
+				on_expand_one_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("collapse_all_levels")) then
+				on_collapse_all_level
+			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_all_levels")) then
+				on_expand_all_level
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				on_enter_pressed
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
+				on_ctrl_c_pressed
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
+				on_ctrl_a_pressed
+			else
+				Result := False
+			end
+		end
+
+	on_enter_pressed is
+			-- Action to be performed when enter key is pressed
+		deferred
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		local
+			l_text: STRING
+		do
+			l_text := selected_text
+			if not l_text.is_empty then
+				ev_application.clipboard.set_text (l_text)
+			end
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		do
+			grid.select_all_rows
+		end
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
+		deferred
+		end
+
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
+		deferred
+		end
+
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		deferred
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
+		deferred
+		end
+
 feature -- Recycle
 
 	recycle is
@@ -370,69 +490,6 @@ feature -- Recycle
 		deferred
 		ensure
 			result_attached: Result /= Void
-		end
-
-	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is
-			-- Action to be performed when predefined function keys are pressed
-			-- If `a_key' is processed, return True, otherwise False.
-		require
-			a_key_attached: a_key /= Void
-		do
-			Result := True
-			if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
-				on_collapse_one_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
-				on_expand_one_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("collapse_all_levels")) then
-				on_collapse_all_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_all_levels")) then
-				on_expand_all_level
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				on_enter_pressed
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
-				on_ctrl_c_pressed
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
-				on_ctrl_a_pressed
-			else
-				Result := False
-			end
-		end
-
-	on_enter_pressed is
-			-- Action to be performed when enter key is pressed
-		deferred
-		end
-
-	on_ctrl_c_pressed is
-			-- Action to be performed when Ctrl+C is pressed
-		do
-			ev_application.clipboard.set_text (selected_text)
-		end
-
-	on_ctrl_a_pressed is
-			-- Action to be performed when Ctrl+A is pressed
-		do
-			grid.select_all_rows
-		end
-
-	on_expand_all_level is
-			-- Action to be performed to recursively expand all selected rows.
-		deferred
-		end
-
-	on_collapse_all_level is
-			-- Action to be performed to recursively collapse all selected rows.
-		deferred
-		end
-
-	on_expand_one_level is
-			-- Action to be performed to expand all selected rows.
-		deferred
-		end
-
-	on_collapse_one_level is
-			-- Action to be performed to collapse all selected rows.
-		deferred
 		end
 
 feature{NONE} -- Sorting
@@ -639,6 +696,9 @@ feature{NONE} -- Implementation
 
 	collapse_button_internal: like collapse_button
 			-- Implementation of `collapse_button'
+
+	show_tooltip_checkbox_internal: like show_tooltip_checkbox
+			-- Implementation of `show_tooltip_checkbox'			
 
 invariant
 	development_window_attached: development_window /= Void

@@ -222,9 +222,11 @@ feature -- Grid operations
 				if is_parent and not is_expanded then
 					create {EB_GRID_MESSAGE_FEATURE_STYLE}l_style.make (summary)
 					create feature_item_internal.make (feature_item, l_style)
+					feature_item_internal.enable_invisible_pixmap
 				else
 					create {EB_GRID_FULL_FEATURE_STYLE}l_style
 					create feature_item_internal.make (feature_item, l_style)
+					feature_item_internal.disable_invisible_pixmap
 				end
 				feature_item_internal.set_data (Current)
 				feature_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
@@ -233,11 +235,13 @@ feature -- Grid operations
 					if not feature_item_internal.style.is_message_style then
 						create {EB_GRID_MESSAGE_FEATURE_STYLE}l_style.make (summary)
 						feature_item_internal.set_style (l_style)
+						feature_item_internal.enable_invisible_pixmap
 					end
 				else
 					if not feature_item_internal.style.is_full_signature_style then
 						create {EB_GRID_FULL_FEATURE_STYLE}l_style
 						feature_item_internal.set_style (l_style)
+						feature_item_internal.disable_invisible_pixmap
 					end
 				end
 			end

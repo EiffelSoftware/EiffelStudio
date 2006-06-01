@@ -56,35 +56,6 @@ feature -- Access
 	style: EB_GRID_CLASS_ITEM_STYLE
 			-- Style of current item
 
-feature -- Status report
-
-	is_invisible_pixmap_enabled: BOOLEAN
-			-- Is invisible pixmap enabled?
-
-feature -- Setting
-
-	enable_invisible_pixmap is
-			-- Ensure `is_invisible_pixmap_enabled' is True.
-		do
-			is_invisible_pixmap_enabled := True
-			if is_pixmap_enabled then
-				set_pixmap (item_pixmap)
-			end
-		ensure
-			is_invisible_pixmap_enabled_set: is_invisible_pixmap_enabled
-		end
-
-	disable_invisible_pixmap is
-			-- Ensure `is_invisible_pixmap_enabled' is False.
-		do
-			is_invisible_pixmap_enabled := False
-			if is_pixmap_enabled then
-				set_pixmap (item_pixmap)
-			end
-		ensure
-			is_invisible_pixmap_enabled_set: not is_invisible_pixmap_enabled
-		end
-
 feature{NONE} -- Pixmap
 
 	item_pixmap: EV_PIXMAP is

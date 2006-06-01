@@ -138,6 +138,13 @@ feature -- Actions
 			l_processed: BOOLEAN
 		do
 			l_processed := on_predefined_key_pressed (a_key)
+			if not l_processed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_right then
+					on_expand_one_level
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_left then
+					on_collapse_one_level
+				end
+			end
 		end
 
 	on_enter_pressed is
@@ -263,9 +270,7 @@ feature{NONE} -- Sorting
 			create l_agent_sorter.make (agent feature_name_tester)
 			create l_sorter.make (l_agent_sorter)
 			l_sorter.sort (rows)
-			if last_sorted_column /= feature_column then
-				expand_all_rows
-			end
+			expand_all_rows
 			bind_grid
 		end
 
@@ -350,12 +355,13 @@ feature -- Status report
 
 feature -- Access
 
-	show_feature_from_any_checkbox: EV_CHECK_BUTTON is
+	show_feature_from_any_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
 			if show_feature_from_any_checkbox_internal = Void then
-				create show_feature_from_any_checkbox_internal.make_with_text (interface_names.l_show_feature_from_any)
+				create show_feature_from_any_checkbox_internal
 				show_feature_from_any_checkbox_internal.set_tooltip (interface_names.h_show_feature_from_any)
+				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_feature)
 				if preferences.class_browser_data.is_feature_from_any_shown then
 					show_feature_from_any_checkbox_internal.enable_select
 				else
@@ -363,23 +369,6 @@ feature -- Access
 				end
 			end
 			Result := show_feature_from_any_checkbox_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	show_tooltip_checkbox: EV_CHECK_BUTTON is
-			-- Checkbox to indicate whether or not tooltip is displayed
-		do
-			if show_tooltip_checkbox_internal = Void then
-				create show_tooltip_checkbox_internal.make_with_text (interface_names.l_show_tooltip)
-				show_tooltip_checkbox_internal.set_tooltip (interface_names.h_show_tooltip)
-				if preferences.class_browser_data.is_tooltip_shown then
-					show_tooltip_checkbox_internal.enable_select
-				else
-					show_tooltip_checkbox_internal.disable_select
-				end
-			end
-			Result := show_tooltip_checkbox_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -418,22 +407,19 @@ feature -- Access
 			l_tool_bar: EV_TOOL_BAR
 			l_tool_bar2: EV_TOOL_BAR
 			l_label: EV_LABEL
+			l_tool_bar3: EV_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
 				create l_tool_bar
+				create l_tool_bar3
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				l_tool_bar.extend (show_tooltip_checkbox)
+				l_tool_bar.extend (show_feature_from_any_checkbox)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
-				control_tool_bar.extend (show_feature_from_any_checkbox)
-				control_tool_bar.disable_item_expand (show_feature_from_any_checkbox)
-				control_tool_bar.extend (show_tooltip_checkbox)
-				control_tool_bar.disable_item_expand (show_tooltip_checkbox)
 				create l_tool_bar2
-				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar2.extend (expand_button)
-				l_tool_bar2.extend (collapse_button)
 				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
 				control_tool_bar.extend (l_tool_bar2)
 				control_tool_bar.disable_item_expand (l_tool_bar2)
@@ -654,9 +640,6 @@ feature{NONE} -- Implementation/Data
 	show_feature_from_any_checkbox_internal: like show_feature_from_any_checkbox
 			-- Implementation of `show_feature_from_any_checkbox'
 
-	show_tooltip_checkbox_internal: like show_tooltip_checkbox
-			-- Implementation of `show_tooltip_checkbox'
-
 	selected_text: STRING is
 			-- String representation of selected rows/items
 			-- If no row/item is selected, return an empty string.
@@ -666,30 +649,45 @@ feature{NONE} -- Implementation/Data
 			l_last_row_index: INTEGER
 			l_last_column_index: INTEGER
 			l_item: EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
 		do
-			l_sorted_items := sorted_items (grid.selected_items)
-			create Result.make (512)
-			from
-				l_last_column_index := 1
-				l_sorted_items.start
-			until
-				l_sorted_items.after
-			loop
-				l_item := l_sorted_items.item_for_iteration
-				if l_item.row.index /= l_last_row_index then
-					if l_last_row_index /= 0 then
-						Result.append_character ('%N')
+			l_list := grid.selected_items
+			if not l_list.is_empty then
+				create Result.make (512)
+				if l_list.count = 1 then
+						-- If there is only one item selected				
+					l_grid_item ?= l_list.first
+					if l_grid_item /= Void then
+						Result.append (l_grid_item.text)
 					end
-					l_last_row_index := l_item.row.index
-					l_last_column_index := 1
+				else
+						-- For multi selected items
+					l_sorted_items := sorted_items (l_list)
+					from
+						l_last_column_index := 1
+						l_sorted_items.start
+					until
+						l_sorted_items.after
+					loop
+						l_item := l_sorted_items.item_for_iteration
+						if l_item.row.index /= l_last_row_index then
+							if l_last_row_index /= 0 then
+								Result.append_character ('%N')
+							end
+							l_last_row_index := l_item.row.index
+							l_last_column_index := 1
+						end
+						Result.append (tabs (l_item.column.index - l_last_column_index))
+						l_last_column_index := l_item.column.index
+						l_grid_item ?= l_item
+						if l_grid_item /= Void then
+							Result.append (l_grid_item.text)
+						end
+						l_sorted_items.forth
+					end
 				end
-				Result.append (tabs (l_item.column.index - l_last_column_index))
-				l_last_column_index := l_item.column.index
-				l_grid_item ?= l_item
-				if l_grid_item /= Void then
-					Result.append (l_grid_item.text)
-				end
-				l_sorted_items.forth
+			else
+				create Result.make (0)
 			end
 		end
 
@@ -813,10 +811,12 @@ feature{NONE} -- Implementation
 		local
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			l_row ?= a_item.row.data
-			if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
-				if a_item.row.is_expandable then
-					a_item.row.expand
+			if a_item.column.index = 1 then
+				l_row ?= a_item.row.data
+				if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
+					if a_item.row.is_expandable then
+						a_item.row.expand
+					end
 				end
 			end
 		end
@@ -841,10 +841,12 @@ feature{NONE} -- Implementation
 		local
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			l_row ?= a_item.row.data
-			if l_row /= Void and then l_row.is_parent and then l_row.is_expanded then
-				if a_item.row.is_expandable then
-					a_item.row.collapse
+			if a_item.column.index = 1 then
+				l_row ?= a_item.row.data
+				if l_row /= Void and then l_row.is_parent and then l_row.is_expanded then
+					if a_item.row.is_expandable then
+						a_item.row.collapse
+					end
 				end
 			end
 		end

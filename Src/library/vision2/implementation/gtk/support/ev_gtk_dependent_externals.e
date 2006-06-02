@@ -10,6 +10,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_widget_toplevel (a_widget: POINTER): BOOLEAN is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_WIDGET_TOPLEVEL"
+		end
+
 	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN) is
 		external
 			"C signature (GtkFixed*, gboolean) use <gtk/gtk.h>"

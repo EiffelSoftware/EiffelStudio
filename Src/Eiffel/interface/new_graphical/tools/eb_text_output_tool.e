@@ -26,7 +26,7 @@ feature -- Accelerator
 
 feature -- Access
 
-	output_text: EV_RICH_TEXT is
+	output_text: EV_TEXT is
 			-- Text pane used to display output
 		do
 			if internal_output_text = Void then

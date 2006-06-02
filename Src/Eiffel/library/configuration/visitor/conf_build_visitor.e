@@ -592,12 +592,12 @@ feature {NONE} -- Implementation
 			create l_dir.make (l_path)
 
 			if not l_dir.is_readable then
-				add_error (create {CONF_ERROR_DIR}.make (l_path))
+				add_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
 			else
 					-- look for classes in directory itself.
 				l_files := l_dir.filenames
 				if l_files = Void then
-					add_error (create {CONF_ERROR_DIR}.make (l_path))
+					add_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
 				else
 					from
 						i := l_files.lower
@@ -750,6 +750,7 @@ feature {NONE} -- Implementation
 			name_upper: a_name.is_equal (a_name.as_upper)
 			dotnet_name_ok: a_dotnet_name /= Void and then not a_dotnet_name.is_empty
 			a_position_ok: a_position >= 0
+			current_assembly: current_assembly /= Void
 		local
 			l_class: CONF_CLASS_ASSEMBLY
 			l_name: STRING
@@ -761,6 +762,7 @@ feature {NONE} -- Implementation
 				check
 					assembly_class: l_class /= Void
 				end
+				l_class.set_group (current_assembly)
 				l_class.check_changed
 				l_class.set_type_position (a_position)
 				if l_class.is_compiled and l_class.is_modified then
@@ -950,6 +952,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			classes_set: not is_error implies current_assembly.classes_set
+			valid: not is_error implies current_assembly.is_valid
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
 		end
@@ -957,22 +960,25 @@ feature {NONE} -- Implementation
 	build_assembly_information_from_other (an_assembly, an_other_assembly: CONF_ASSEMBLY): CONF_ASSEMBLY is
 			-- Build assembly for `an_assembly' out of the classes from `an_other_assembly'.
 		require
-			an_assembly_ok: an_assembly /= Void
+			an_assembly_ok: an_assembly /= Void and then an_assembly.is_valid
 			an_other_assembly_ok: an_other_assembly /= Void and then an_other_assembly.classes_set
 		local
 			l_classes, l_new_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_class: CONF_CLASS
+			l_class: CONF_CLASS_ASSEMBLY
 			l_renamings: HASH_TABLE [STRING, STRING]
 			l_prefix: STRING
 			l_name: STRING
+			l_other_invalid: BOOLEAN
 		do
 				-- if the renaming/prefixes are the same, directly use this assembly
 			if equal (an_other_assembly.name_prefix, an_assembly.name_prefix) and equal (an_other_assembly.renaming, an_assembly.renaming) then
 				an_assembly.target.remove_assembly (an_assembly.name)
 				an_assembly.target.add_assembly (an_other_assembly)
+				an_other_assembly.revalidate
 				Result := an_other_assembly
 			else
 				from
+					l_other_invalid := not an_other_assembly.is_valid
 					l_renamings := an_assembly.renaming
 					l_prefix := an_assembly.name_prefix
 					l_classes := an_other_assembly.classes
@@ -981,13 +987,20 @@ feature {NONE} -- Implementation
 				until
 					l_classes.after
 				loop
-					l_class := l_classes.item_for_iteration
+					l_class ?= l_classes.item_for_iteration
+					check
+						assembly_class: l_class /= Void
+					end
 					l_name := l_class.name.twin
 					if l_renamings /= Void and then l_renamings.has (l_name) then
 						l_name := l_renamings.found_item
 					end
 					if l_prefix /= Void then
 						l_name.prepend (l_prefix)
+					end
+						-- if the other assembly is not valid, we have the classes point to us.
+					if l_other_invalid then
+						l_class.set_group (an_assembly)
 					end
 					current_classes.force (l_class, l_name)
 					l_classes.forth
@@ -997,7 +1010,7 @@ feature {NONE} -- Implementation
 			end
 			an_assembly.set_dotnet_classes (an_other_assembly.dotnet_classes)
 		ensure
-			Result_built: Result /= Void and then Result.classes_set
+			Result_built: Result /= Void and then Result.classes_set and then Result.is_valid
 		end
 
 	process_assembly_dependencies_implementation (an_assembly: CONF_ASSEMBLY) is

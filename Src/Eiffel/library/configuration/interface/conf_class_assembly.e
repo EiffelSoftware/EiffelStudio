@@ -56,6 +56,16 @@ feature -- Access
 
 feature {CONF_ACCESS} -- Update
 
+		set_group (a_group: like group) is
+				-- Set `group' to `a_group'.
+			require
+				a_group_ok: a_group /= Void and then a_group.is_valid
+			do
+				group := a_group
+			ensure
+				group_set: group = a_group
+			end
+
 		set_name is
 				-- Compute `renamed_name' from `name'.
 			do

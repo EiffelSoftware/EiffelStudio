@@ -560,7 +560,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	vertical_scroll_bar: EV_HORIZONTAL_SCROLL_BAR is
+	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR is
 			-- Vertical scrollbar used for scrolling `Current'.
 		require
 			not_destroyed: not is_destroyed

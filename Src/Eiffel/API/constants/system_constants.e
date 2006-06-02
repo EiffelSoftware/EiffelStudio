@@ -208,6 +208,12 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 	Version_type_name: STRING is "GPL Edition";
 			-- Name of version, e.g. GPL edition, Enterprise Edition,...
 			-- Default: "GPL Edition"
+	
+	Version_info: STRING is "";
+			-- Information on the version
+			-- Default: ""
+			-- This can be used by developper to add specific information
+			-- displayed on About dialog
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

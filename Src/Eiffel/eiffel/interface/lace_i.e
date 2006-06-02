@@ -262,7 +262,6 @@ feature -- Status setting
 			valid_target: conf_system.targets.has (target_name)
 		local
 			vd21: VD21
-			vd72: VD72
 			l_changed: BOOLEAN
 			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
@@ -1107,7 +1106,6 @@ feature {NONE} -- Implementation
 			l_load: CONF_LOAD
 			vd77: VD77
 			vd78: VD78
-			vd79: VD79
 			vd21: VD21
 			l_file_name: STRING
 			l_user_options: USER_OPTIONS
@@ -1174,7 +1172,7 @@ feature {NONE} -- Implementation
 			l_old_target.set_all_assemblies (l_target.all_assemblies)
 			universe.set_new_target (l_old_target)
 
-			
+
 			universe.new_target_to_target
 
 				-- Force a rebuild for the first compilation of a system using

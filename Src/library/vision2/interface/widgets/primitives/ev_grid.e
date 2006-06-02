@@ -550,6 +550,26 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR is
+			-- Horizontal scrollbar used for scrolling `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.horizontal_scroll_bar
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	vertical_scroll_bar: EV_HORIZONTAL_SCROLL_BAR is
+			-- Vertical scrollbar used for scrolling `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.vertical_scroll_bar
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	is_header_displayed: BOOLEAN is
 			-- Is the header displayed in `Current'.
 		require

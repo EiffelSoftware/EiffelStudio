@@ -2069,7 +2069,7 @@ feature -- Features info
 							l_naming_convention, l_feat.feature_name,
 							{IL_CASING_CONVERSION}.lower_case)
 						if l_feat.has_property_getter then
-							prepare_property_getter (l_name, l_return_type)
+							prepare_property_getter (l_feat, l_name, l_return_type, l_class_type)
 							current_module.insert_property_getter (md_emit.define_member_ref
 								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
 						end
@@ -2078,7 +2078,7 @@ feature -- Features info
 							if l_type_i.is_void then
 								l_type_i := argument_actual_type_in (l_feat.arguments.first.type_i, l_class_type)
 							end
-							prepare_property_setter (l_name, l_type_i)
+							prepare_property_setter (l_feat, l_name, l_type_i, l_class_type)
 							current_module.insert_property_setter (md_emit.define_member_ref
 								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
 						end
@@ -2389,7 +2389,7 @@ feature -- Features info
 								l_type_i := argument_actual_type_in (l_feat_arg.first.type_i, signature_declaration_type)
 							end
 								-- Define setter method.
-							prepare_property_setter (l_property_name, l_type_i)
+							prepare_property_setter (feat, l_property_name, l_type_i, signature_declaration_type)
 							l_setter := md_emit.define_method (uni_string, current_class_token,
 								l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 							if is_override_or_c_external then
@@ -2408,7 +2408,7 @@ feature -- Features info
 							l_property_name := Override_prefix + l_property_name + override_counter.value.out
 						end
 							-- Define getter method.
-						prepare_property_getter (l_property_name, l_return_type)
+						prepare_property_getter (feat, l_property_name, l_return_type, signature_declaration_type)
 						l_getter := md_emit.define_method (uni_string, current_class_token,
 							l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 						if is_override_or_c_external then
@@ -2741,31 +2741,44 @@ feature -- Features info
 			end
 		end
 
-	prepare_property_getter (name: STRING; return_type: TYPE_I) is
-			-- Fill `uni_string' and `method_sig' with a property getter data.
+	prepare_property_getter (f: FEATURE_I; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
+			-- Fill `uni_string' and `method_sig' with a property getter data
+			-- in class type `t'.
 		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			return_type_not_void: return_type /= Void
+			f_attached: f /= Void
+			property_name_attached: property_name /= Void
+			property_name_not_empty: not property_name.is_empty
+			return_type_attached: return_type /= Void
+			t_attached: t /= Void
 		local
 			l_meth_sig: like method_sig
+			n: STRING
 		do
 			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			l_meth_sig.set_parameter_count (0)
 			set_signature_type (l_meth_sig, return_type)
-			uni_string.set_string (property_getter_prefix + name)
+			n := property_getter_prefix + property_name
+			if current_class.feature_named (n) /= Void then
+					-- Property getter name conflicts with the feature name.
+				n := property_getter_prefix + t.associated_class.name + "." + f.feature_name
+			end
+			uni_string.set_string (n)
 		end
 
-	prepare_property_setter (name: STRING; return_type: TYPE_I) is
-			-- Fill `uni_string' and `method_sig' with a property setter data.
+	prepare_property_setter (f: FEATURE_I; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
+			-- Fill `uni_string' and `method_sig' with a property setter data
+			-- in class type `t'.
 		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			return_type_not_void: return_type /= Void
+			f_attached: f /= Void
+			property_name_attached: property_name /= Void
+			property_name_not_empty: not property_name.is_empty
+			return_type_attached: return_type /= Void
+			t_attached: t /= Void
 		local
 			l_meth_sig: like method_sig
+			n: STRING
 		do
 			l_meth_sig := method_sig
 			l_meth_sig.reset
@@ -2773,7 +2786,12 @@ feature -- Features info
 			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 			set_signature_type (l_meth_sig, return_type)
-			uni_string.set_string (property_setter_prefix + name)
+			n := property_setter_prefix + property_name
+			if t.associated_class.feature_named (n) /= Void then
+					-- Property setter name conflicts with the feature name.
+				n := property_setter_prefix + t.associated_class.name + "." + f.feature_name
+			end
+			uni_string.set_string (n)
 		end
 
 	is_property_setter_generated (f: FEATURE_I; t: CLASS_TYPE): BOOLEAN is
@@ -2787,9 +2805,7 @@ feature -- Features info
 		do
 			if f.has_property_setter then
 				s := f.property_setter_in (t)
-				if s = Void then
-					Result := True
-				else
+				if s /= Void then
 					sn := il_casing.pascal_casing (t.is_dotnet_name, s.feature_name, {IL_CASING_CONVERSION}.lower_case)
 					if sn.is_equal (property_setter_prefix + f.property_name) then
 						Result := s.written_class.is_single and then s.written_in /= t.type.class_id

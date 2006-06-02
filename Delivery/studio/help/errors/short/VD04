@@ -1,3 +1,0 @@
-Lace error: class renaming clause lists non-existent class.
-What to do: check that name before `as' is the name of a class in
-  one of the clusters of the system.

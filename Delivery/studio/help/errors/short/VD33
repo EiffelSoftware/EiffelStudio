@@ -1,4 +1,0 @@
-Lace error: Generate clause lists name of unsupported language.
-What to do: Change name to that of a supported external language.
-  Currently only C is supported; specifying "C" may work for other
-  languages too if argument passing conventions are compatible.  

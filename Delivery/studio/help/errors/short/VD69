@@ -1,0 +1,2 @@
+Configuration error: target not specified and there are multiple targets in the ecf file.
+What to do: specify the target to use.

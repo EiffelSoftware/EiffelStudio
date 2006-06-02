@@ -1,0 +1,2 @@
+Configuration warning: pre or post compile task did not execute correctly.
+What to do: make sure that the command returns with a return value of 0.

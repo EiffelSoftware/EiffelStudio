@@ -1,3 +1,0 @@
-Lace error: cluster Name_adaptation clause refers to cluster itself.
-What to do: Make sure that Name_adaptation only refers to names of
-  other clusters of the system. 

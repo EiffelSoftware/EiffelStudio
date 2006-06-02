@@ -1,0 +1,2 @@
+Configuration error: target for the precompile is not clear.
+What to do: define a library target in the precompile configuration file.

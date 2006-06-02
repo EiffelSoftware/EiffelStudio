@@ -1,4 +1,0 @@
-Lace error: Root clause lists improper identifier as root class name.
-What to do: make sure that identifier given for root class is name of
-  one of the classes in the universe. If more than one such class,
-  specify cluster: ` ROOT_CLASS (root_cluster)'. See ETL D.2, p. 514.

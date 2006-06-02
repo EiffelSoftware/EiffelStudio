@@ -1,5 +1,0 @@
-Lace error: Visible clause lists class which is not reachable from root.
-What to do: if class is indeed not needed, remove it from Visible
-  clause. Otherwise change system so that it includes the class.
-  (Note: the class may have been originally reachable from the
-  root class, but disconnected later as a result of changes.)

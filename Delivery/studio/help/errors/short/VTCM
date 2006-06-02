@@ -1,0 +1,2 @@
+Warning: type referenced in a clients specification is based on unknown class.
+What to do: It is recommended to use an identifier that is the name of a class in the universe.

@@ -1,3 +1,0 @@
-Lace error: include file does not contain a class.
-What to do: make sure that content of include file is a syntactically
-  legal class text, or remove file from Include clause if not needed.

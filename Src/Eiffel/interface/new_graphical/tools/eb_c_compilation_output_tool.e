@@ -96,7 +96,6 @@ feature{NONE} -- Initialization
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
 			open_editor_btn.set_pixmap (icon_open_file)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
-			open_editor_btn.disable_sensitive
 			save_output_btn.set_pixmap (icon_save)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
@@ -118,12 +117,10 @@ feature{NONE} -- Initialization
 			output_text.drop_actions.extend (agent drop_breakable)
 			output_text.change_actions.extend (agent on_text_change)
 			on_text_change
-			output_text.pointer_button_release_actions.extend (agent on_pointer_release_in_console)
 			output_text.set_foreground_color (preferences.editor_data.normal_text_color)
 			output_text.set_background_color (preferences.editor_data.normal_background_color)
 			output_text.set_font (preferences.editor_data.font)
 			output_text.disable_edit
-			output_text.selection_change_actions.extend (agent on_selection_change)
 			message_label.set_foreground_color ((create{EV_STOCK_COLORS}).red)
 		end
 
@@ -222,58 +219,24 @@ feature -- Action
 	on_open_selected_text_in_external_editor is
 			-- Open selected text from `output_text' as file name in external editor.
 		local
-			l_dlg: EV_WARNING_DIALOG
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
-			l_dialog_needed: BOOLEAN
 			l_message: STRING
 		do
-			if output_text.has_selection then
-				if has_selected_file then
-					cmd_string := command_shell_name
-					if not cmd_string.is_empty then
-						check
-							selected_file_exists: selected_file_path /= Void
-						end
-						cmd_string.replace_substring_all ("$target", selected_file_path)
-						cmd_string.replace_substring_all ("$line", "")
-						create req
-						req.execute (cmd_string)
-					else
-						l_dialog_needed := True
-						l_message := interface_names.e_external_editor_not_defined
+			if has_selected_file then
+				cmd_string := command_shell_name
+				if not cmd_string.is_empty then
+					check
+						selected_file_exists: selected_file_path /= Void
 					end
+					cmd_string.replace_substring_all ("$target", selected_file_path)
+					cmd_string.replace_substring_all ("$line", "")
+					create req
+					req.execute (cmd_string)
 				else
-					l_dialog_needed := True
-					l_message := interface_names.e_selected_text_is_not_file
+					display_status_message (interface_names.e_external_editor_not_defined)
 				end
-			else
-				l_dialog_needed := True
-				l_message := interface_names.e_no_text_is_selected
 			end
-			if l_dialog_needed then
-				create l_dlg.make_with_text (l_message)
-				l_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
-			end
-		end
-
-	on_pointer_release_in_console (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer release in `output_text'
-		local
-			l_need_sensitive: BOOLEAN
-		do
---			if button = 1 and then has_selected_file then
---				l_need_sensitive := True
---			end
---			if l_need_sensitive then
---				if not open_editor_btn.is_sensitive then
---					open_editor_btn.enable_sensitive
---				end
---			else
---				if open_editor_btn.is_sensitive then
---					open_editor_btn.disable_sensitive
---				end
---			end
 		end
 
 	on_text_change is
@@ -299,23 +262,7 @@ feature -- Action
 					clear_output_btn.disable_sensitive
 				end
 			end
-			if has_selected_file then
-				if not open_editor_btn.is_sensitive then
-					open_editor_btn.enable_sensitive
-				end
-			else
-				if open_editor_btn.is_sensitive then
-					open_editor_btn.disable_sensitive
-				end
-			end
-		end
-
-	on_selection_change	is
-			-- Action to be performed when selection changes in `output_text'.
-		local
-			l_need_sensitive: BOOLEAN
-		do
-			if has_selected_file then
+			if not output_text.text.is_empty then
 				if not open_editor_btn.is_sensitive then
 					open_editor_btn.enable_sensitive
 				end
@@ -418,7 +365,7 @@ feature{NONE}	-- Implementation
 					display_status_message (interface_names.l_selected_file_not_found)
 				end
 			else
-				display_status_message ("")
+				display_status_message (interface_names.e_no_text_is_selected)
 			end
 		end
 

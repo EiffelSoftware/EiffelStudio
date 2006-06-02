@@ -1,3 +1,0 @@
-Lace error: use file contains a Use clause.
-What to do: replace the Use clause by a copy of the contents of the
-  desired use file. A use file may not itself contain a Use clause.

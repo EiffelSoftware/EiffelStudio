@@ -104,7 +104,7 @@ feature {NONE} -- Threads management
 		indexing
 			once_status: global
 		once
-			create Result
+			create Result.make
 		end
 
 	childrens_by_thread_id: HASH_TABLE [LIST [THREAD], INTEGER] is

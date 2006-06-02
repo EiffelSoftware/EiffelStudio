@@ -83,6 +83,8 @@ feature -- Status
 
 	is_used_library: BOOLEAN is
 			-- Is this this cluster used in a library? (as opposed to directly in the application system)
+		require
+			application_target_set: target.application_target /= Void
 		do
 			Result := target.application_target.system /= target.system
 		end

@@ -241,39 +241,9 @@ feature -- Access queries
 		end
 
 	options: CONF_OPTION is
-		local
-			l_assembly: CONF_ASSEMBLY
-			l_local: CONF_OPTION
-		do
-				-- get local options
-			if internal_options /= Void then
-				l_local := internal_options.twin
-			else
-				create l_local
-			end
-			l_local.merge (target.options)
-
-				-- if used as library, get options from application level
-				-- either if the assembly is defined there or otherwise directly from the application target
-			if is_used_library then
-				l_assembly := find_current_in_application_target
-				if l_assembly /= Void then
-					Result := l_assembly.options
-				else
-					Result := target.application_target.options
-						-- take namespace from local options if defined there
-					if l_local.namespace /= Void then
-						Result.set_namespace (l_local.namespace)
-					end
-				end
-				l_local.set_namespace (Void)
-			end
-
-			if Result /= Void then
-				Result.merge (l_local)
-			else
-				Result := l_local
-			end
+		once
+				-- assemblies have no options
+			create Result
 		end
 
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
@@ -435,30 +405,6 @@ feature -- Visit
 		do
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
-		end
-
-feature {NONE} -- Implementation
-
-	find_current_in_application_target: like Current is
-			-- Find `Current' in `application_target' if it is defined there directly.
-		require
-			application_target_not_void: target.application_target /= Void
-		local
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			l_assembly: like Current
-		do
-			from
-				l_assemblies := target.application_target.assemblies
-				l_assemblies.start
-			until
-				Result /= Void or l_assemblies.after
-			loop
-				l_assembly := l_assemblies.item_for_iteration
-				if l_assembly.guid = guid then
-					Result := l_assembly
-				end
-				l_assemblies.forth
-			end
 		end
 
 feature {NONE} -- Caches

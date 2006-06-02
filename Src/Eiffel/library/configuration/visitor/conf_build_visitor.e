@@ -756,10 +756,11 @@ feature {NONE} -- Implementation
 		do
 				-- Try to retrieve from old_assembly before creating a new one
 			l_name := get_class_assembly_name (a_name)
-			if old_group /= Void and then old_group.classes /= Void then
-				l_class ?= old_group.classes.item (l_name)
-			end
-			if l_class /= Void then
+			if old_assembly /= Void and then old_assembly.dotnet_classes.has (a_dotnet_name) then
+				l_class ?= old_assembly.dotnet_classes.found_item
+				check
+					assembly_class: l_class /= Void
+				end
 				l_class.check_changed
 				l_class.set_type_position (a_position)
 				if l_class.is_compiled and l_class.is_modified then
@@ -772,7 +773,7 @@ feature {NONE} -- Implementation
 				reused_classes.force (l_class)
 			else
 				l_class := factory.new_class_assembly (a_name, a_dotnet_name, current_assembly, a_position)
-				current_classes.force (l_class, l_class.renamed_name)
+				current_classes.force (l_class, l_name)
 				current_dotnet_classes.force (l_class, a_dotnet_name)
 				added_classes.force (l_class)
 			end
@@ -865,13 +866,13 @@ feature {NONE} -- Implementation
 						correct_path: l_path.string.has_substring (l_guid)
 					end
 
-						-- if we already have an assembly with the same guid we can directly use this assembly
+						-- if we already have an assembly with the same guid we can directly information from this assembly
 						-- used if an assembly is declared in multiple libraries/application in the same configuration
 					l_a := assemblies.item (l_guid)
+						-- same renaming/prefixes?
+						-- => directly use this assembly
 					if l_a /= Void then
-						an_assembly.target.remove_assembly (an_assembly.name)
-						an_assembly.target.add_assembly (l_a)
-						current_assembly := l_a
+						current_assembly := build_assembly_information_from_other (an_assembly, l_a)
 					else
 							-- set consumed path
 						an_assembly.set_consumed_path (l_path)
@@ -886,11 +887,11 @@ feature {NONE} -- Implementation
 							old_assemblies.remove (l_guid)
 							old_assembly.check_changed
 
-								-- if it wasn't modified, directly use the old assembly.
+								-- if it wasn't modified, directly use the old assembly information.
 							if not old_assembly.is_modified then
 								an_assembly.target.remove_assembly (an_assembly.name)
 								an_assembly.target.add_assembly (old_assembly)
-								current_assembly := old_assembly
+								current_assembly := build_assembly_information_from_other (an_assembly, old_assembly)
 								l_done := True
 								old_assembly := Void
 								old_group := Void
@@ -951,6 +952,52 @@ feature {NONE} -- Implementation
 			classes_set: not is_error implies current_assembly.classes_set
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
+		end
+
+	build_assembly_information_from_other (an_assembly, an_other_assembly: CONF_ASSEMBLY): CONF_ASSEMBLY is
+			-- Build assembly for `an_assembly' out of the classes from `an_other_assembly'.
+		require
+			an_assembly_ok: an_assembly /= Void
+			an_other_assembly_ok: an_other_assembly /= Void and then an_other_assembly.classes_set
+		local
+			l_classes, l_new_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_class: CONF_CLASS
+			l_renamings: HASH_TABLE [STRING, STRING]
+			l_prefix: STRING
+			l_name: STRING
+		do
+				-- if the renaming/prefixes are the same, directly use this assembly
+			if equal (an_other_assembly.name_prefix, an_assembly.name_prefix) and equal (an_other_assembly.renaming, an_assembly.renaming) then
+				an_assembly.target.remove_assembly (an_assembly.name)
+				an_assembly.target.add_assembly (an_other_assembly)
+				Result := an_other_assembly
+			else
+				from
+					l_renamings := an_assembly.renaming
+					l_prefix := an_assembly.name_prefix
+					l_classes := an_other_assembly.classes
+					create l_new_classes.make (l_classes.count)
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_class := l_classes.item_for_iteration
+					l_name := l_class.name.twin
+					if l_renamings /= Void and then l_renamings.has (l_name) then
+						l_name := l_renamings.found_item
+					end
+					if l_prefix /= Void then
+						l_name.prepend (l_prefix)
+					end
+					current_classes.force (l_class, l_name)
+					l_classes.forth
+				end
+				an_assembly.set_classes (l_classes)
+				Result := an_assembly
+			end
+			an_assembly.set_dotnet_classes (an_other_assembly.dotnet_classes)
+		ensure
+			Result_built: Result /= Void and then Result.classes_set
 		end
 
 	process_assembly_dependencies_implementation (an_assembly: CONF_ASSEMBLY) is

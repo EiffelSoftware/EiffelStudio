@@ -363,6 +363,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			child_added: children.has (a_cluster)
 		end
 
+	set_recursive (a_enabled: BOOLEAN) is
+			-- Set `is_recursive' to `a_enabled'.
+		do
+			is_recursive := a_enabled
+		ensure
+			is_recursive_set: is_recursive = a_enabled
+		end
+
 	enable_recursive is
 			-- Set `is_recursive' to true.
 		do
@@ -381,8 +389,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_dependencies (a_dependencies: like internal_dependencies) is
 			-- Set `a_dependencies'.
-		require
-			a_dependencies_not_void: a_dependencies /= Void
 		do
 			internal_dependencies := a_dependencies
 		ensure

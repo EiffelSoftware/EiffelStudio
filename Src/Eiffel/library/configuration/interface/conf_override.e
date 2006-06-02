@@ -37,8 +37,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_override (an_override: like override) is
 			-- Set `override' to `an_override'.
-		require
-			an_override_not_void: an_override /= Void
 		do
 			override := an_override
 		ensure

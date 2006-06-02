@@ -134,7 +134,11 @@ feature {NONE} -- Initialization
 			new_project_vb.set_border_width (Layout_constants.Small_border_size)
 			new_project_vb.set_padding (Layout_constants.Default_border_size)
 			create_and_fill_wizards_list
-			new_project_vb.extend (wizards_list)
+			create vb
+			vb.set_border_width (1)
+			vb.set_background_color ((create {EV_STOCK_COLORS}).black)
+			vb.extend (wizards_list)
+			new_project_vb.extend (vb)
 			create l_frame.make_with_text (interface_names.l_use_wizard)
 			l_frame.extend (new_project_vb)
 			main_container.extend (l_frame)
@@ -144,10 +148,14 @@ feature {NONE} -- Initialization
 			if show_open_project_frame then
 				create vb
 				create open_project.make (Current)
-				wizards_list.select_actions.extend (agent open_project.remove_selection)
-				wizards_list.select_actions.extend (agent ok_button.set_text (interface_names.b_create))
+				wizards_list.row_select_actions.force_extend (agent open_project.remove_selection)
+				wizards_list.row_select_actions.force_extend (agent ok_button.set_text (interface_names.b_create))
+				wizards_list.row_select_actions.force_extend (agent ok_button.enable_sensitive)
+				wizards_list.row_deselect_actions.force_extend (agent on_item_deselected)
 				open_project.select_actions.force_extend (agent wizards_list.remove_selection)
 				open_project.select_actions.force_extend (agent ok_button.set_text (interface_names.b_open))
+				open_project.select_actions.force_extend (agent ok_button.enable_sensitive)
+				open_project.deselect_actions.force_extend (agent on_item_deselected)
 
 				vb.extend (open_project.widget)
 				vb.merge_radio_button_groups (new_project_vb)
@@ -200,18 +208,20 @@ feature {NONE} -- Initialization
 
 				--| Set the initial size of the dialog.
 			if show_open_project_frame then
-				set_size (Layout_constants.dialog_unit_to_pixels(340), Layout_constants.dialog_unit_to_pixels(440))
+				set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(440))
 			else
-				set_size (Layout_constants.dialog_unit_to_pixels(340), Layout_constants.dialog_unit_to_pixels(270))
+				set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(270))
 			end
 
 				--| Select the default item
 			if show_open_project_frame then
 				if open_project.is_empty then
 					open_project.remove_selection
+					show_actions.extend (agent wizards_list.set_focus)
 					ok_button.set_text (Interface_names.b_create)
 				else
 					wizards_list.remove_selection
+					show_actions.extend (agent open_project.set_focus)
 					ok_button.set_text (Interface_names.b_open)
 				end
 			else
@@ -259,13 +269,24 @@ feature {NONE} -- Execution
 			update_preferences
 		end
 
+	on_item_deselected is
+			-- Handle case when an item has been deselected and whether or not
+			-- the `OK' button should be activated.
+		do
+			if wizards_list.selected_rows.is_empty and then not open_project.has_selected_item then
+				ok_button.disable_sensitive
+			else
+				ok_button.enable_sensitive
+			end
+		end
+
 	on_ok is
 			-- Ok button has been pressed
 		do
 			ok_selected := True
 
 				-- Create a new project using an ISE Wizard
-			if wizards_list.selected_item /= Void then
+			if not wizards_list.selected_rows.is_empty then
 				create_new_project_using_wizard
 
 				-- Open an existing project
@@ -312,15 +333,13 @@ feature {NONE} -- Execution
 	create_new_project_using_wizard is
 			-- Create a new project using the ISE Wizard.
 		local
-			li: EV_LIST_ITEM
+			li: EV_GRID_LABEL_ITEM
 			wd: EV_WARNING_DIALOG
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
-			selected_item_text: STRING
 		do
-			li := wizards_list.selected_item
-			if li /= Void then
-				selected_item_text := li.text
-				if selected_item_text.is_equal (Interface_names.l_Basic_application) then
+			if not wizards_list.selected_rows.is_empty then
+				li ?= wizards_list.selected_rows.first.item (1)
+				if li /= Void and then li.text.is_equal (Interface_names.l_basic_application) then
 						-- Create a blank project
 					create_blank_project
 				else
@@ -350,46 +369,49 @@ feature {NONE} -- Implementation
 
 	create_and_fill_wizards_list is
 			-- Create and fill `wizards_list'
-		local
-			retried: BOOLEAN
 		do
 			create wizards_list
-			wizards_list.set_minimum_height (layout_constants.dialog_unit_to_pixels (80))
+			wizards_list.hide_header
+			wizards_list.enable_single_row_selection
 
-			if not retried then
-				load_available_wizards
-				fill_list_with_available_wizards
-			end
+			load_available_wizards
+			fill_list_with_available_wizards
+
+			wizards_list.set_minimum_height ((wizards_list.row_count.min (10)) * wizards_list.row_height)
 		ensure
 			wizards_list_created: wizards_list /= Void
-		rescue
-			retried := True
-			retry
 		end
 
 	fill_list_with_available_wizards is
 			-- Fill in `wizard_list' with the available wizards
 		local
-			list_item: EV_LIST_ITEM
-			basic_application_item: EV_LIST_ITEM
+			list_item: EV_GRID_LABEL_ITEM
+			basic_application_item: EV_GRID_LABEL_ITEM
+			l_column: EV_GRID_COLUMN
+			i: INTEGER
 		do
 				-- Add the "blank project" item
-			create basic_application_item.make_with_text (Interface_names.l_Basic_application)
-			wizards_list.extend (basic_application_item)
+			create basic_application_item.make_with_text (Interface_names.l_basic_application)
+			wizards_list.set_item (1, 1, basic_application_item)
 
 				-- Add a line per wizard.
 			from
 				available_wizards.start
+				i := 2
 			until
 				available_wizards.after
 			loop
 				create list_item.make_with_text (available_wizards.item.name)
 				list_item.pointer_double_press_actions.extend (agent on_double_click)
-				wizards_list.extend (list_item)
+				wizards_list.set_item (1, i, list_item)
+				i := i + 1
 				available_wizards.forth
 			end
 
 			basic_application_item.enable_select
+
+			l_column := wizards_list.column (1)
+			l_column.set_width (l_column.required_width_of_item_span (1, wizards_list.row_count))
 		end
 
 	load_available_wizards is
@@ -438,9 +460,11 @@ feature {NONE} -- Implementation
 	selected_wizard: EB_NEW_PROJECT_WIZARD is
 			-- Currently selected wizard.
 		local
-			selected_item: EV_LIST_ITEM
+			selected_item: EV_GRID_LABEL_ITEM
 		do
-			selected_item := wizards_list.selected_item
+			if not wizards_list.selected_rows.is_empty then
+				selected_item ?= wizards_list.selected_rows.first.item (1)
+			end
 			if selected_item /= Void then
 				from
 					available_wizards.start
@@ -613,7 +637,7 @@ feature {NONE} -- Private attributes
 	cancel_button: EV_BUTTON
 			-- Cancel button
 
-	wizards_list: EV_LIST
+	wizards_list: ES_GRID
 			-- Widget representing the list of all available wizard.
 
 	parent_window: EV_WINDOW

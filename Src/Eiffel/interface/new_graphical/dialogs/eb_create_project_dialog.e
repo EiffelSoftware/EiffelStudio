@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Project directory
-			create project_directory_frame.make_with_text (Interface_names.l_Location)
+			create project_directory_frame.make_with_text (Interface_names.l_location_colon)
 			create vb
 			vb.set_border_width (Layout_constants.Small_border_size)
 			vb.set_padding (Layout_constants.Small_padding_size)

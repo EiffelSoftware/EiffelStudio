@@ -677,7 +677,7 @@ feature {NONE} -- Implementation
 			create dialog
 			create okb.make_with_text (Interface_names.B_ok)
 			create cb.make_with_text (Interface_names.B_cancel)
-			create nl.make_with_text (Interface_names.l_name)
+			create nl.make_with_text (Interface_names.l_name_colon)
 			create il.make_with_text (Interface_names.l_index)
 			create cl.make_with_text (Interface_names.l_Command_line)
 			create name_field

@@ -128,6 +128,9 @@ feature -- Project file/directory warnings
 			Result.append ("%Nwas interrupted. Cannot continue.")
 		end
 
+	w_no_compilable_target: STRING is "Cannot compile project: no valid target found."
+			-- Error when no compilable target was found.
+
 	w_None_system: STRING is "A system whose root class is NONE is not runnable."
 
 feature -- File warnings

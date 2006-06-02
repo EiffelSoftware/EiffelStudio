@@ -814,7 +814,7 @@ feature{NONE} -- Implementation
 				loop
 					l_token := l_tokens.item
 					if l_overriden_font_used then
-						l_width := overriden_font.width * l_token.image.count
+						l_width := overriden_font.string_width (l_token.image)
 						l_height := overriden_font.height
 					else
 						l_width := l_token.width

@@ -103,6 +103,27 @@ feature -- Settings
 				agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
 		end
 
+	precompile_project is
+			-- Compile newly created project.
+		do
+			ev_application.do_once_on_idle (
+				agent (window_manager.last_focused_development_window.precompilation_cmd).execute)
+		end
+
+	freeze_project is
+			-- Compile newly created project.
+		do
+			ev_application.do_once_on_idle (
+				agent (window_manager.last_focused_development_window.freeze_project_cmd).execute)
+		end
+
+	finalize_project is
+			-- Compile newly created project.
+		do
+			ev_application.do_once_on_idle (
+				agent (window_manager.last_focused_development_window.finalize_project_cmd).execute)
+		end
+
 feature {NONE} -- Actions
 
 	post_create_project is

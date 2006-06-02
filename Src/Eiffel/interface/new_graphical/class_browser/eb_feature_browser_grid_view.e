@@ -248,7 +248,6 @@ feature -- Access
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
 			l_tool_bar: EV_TOOL_BAR
-			l_tool_bar2: EV_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar

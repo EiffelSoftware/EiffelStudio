@@ -160,12 +160,47 @@ feature {NONE} -- Target names and descriptions
 	target_group_assembly_tree: STRING is "Assemblies"
 	target_group_library_tree: STRING is "Libraries"
 	target_group_precompile_tree: STRING is "Precompile"
-	target_group_override_tree: STRING is "Override"
+	target_group_override_tree: STRING is "Overrides"
 
+	target_group_cluster: STRING is "Cluster"
+	target_group_assembly: STRING is "Assembly"
+	target_group_library: STRING is "Library"
+	target_group_precompile: STRING is "Precompile"
+	target_group_override: STRING is "Override"
+
+	target_group_type_name: STRING is "Type"
+	target_group_type_description: STRING is "Type of the group."
 	target_group_name_name: STRING is "Name"
 	target_group_name_description: STRING is "Name of the group."
 	target_group_description_name: STRING is "Description"
 	target_group_description_description: STRING is "Description of the group."
+	target_group_condition_name: STRING is "Condition"
+	target_group_condition_description: STRING is "Conditions for this group to be used."
+	target_group_readonly_name: STRING is "Readonly"
+	target_group_readonly_description: STRING is "Is this group readonly?"
+	target_group_location_name: STRING is "Location"
+	target_group_location_description: STRING is "Location of this group."
+	target_group_prefix_name: STRING is "Prefix"
+	target_group_prefix_description: STRING is "Prefix which all classes in this group get."
+
+	cluster_file_rule_name: STRING is "File pattern"
+	cluster_file_rule_description: STRING is "Exclude/include file pattern."
+	cluster_recursive_name: STRING is "Recursive"
+	cluster_recursive_description: STRING is "Are subfolders recursively included?"
+	cluster_dependencies_name: STRING is "Dependencies"
+	cluster_dependencies_description: STRING is "Groups this cluster depends on."
+
+	assembly_name_name: STRING is "Assembly name"
+	assembly_name_description: STRING is "Name of the assembly."
+	assembly_culture_name: STRING is "Assembly culture"
+	assembly_culture_description: STRING is "Culture of the assembly"
+	assembly_version_name: STRING is "Assembly version"
+	assembly_version_description: STRING is "Version of the assembly"
+	assembly_public_key_token_name: STRING is "Assembly public key token"
+	assembly_public_key_token_description: STRING is "Public key token of the assembly."
+
+	override_override_name: STRING is "Overriding"
+	override_override_description: STRING is "Groups this override is overriding."
 
 feature {NONE} -- Option names and descriptions
 
@@ -224,5 +259,7 @@ feature {NONE} -- Validation warnings
 
 	target_name_duplicate: STRING is "Can not rename target because there is already a target with the new name."
 	root_no_class: STRING is "Can not specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
+	cluster_dependency_group_not_exist: STRING is "Can not add dependency. There is no group with this name."
+	override_group_not_exist: STRING is "Can not add override. There is no group with this name."
 
 end

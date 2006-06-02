@@ -234,6 +234,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `is_valid' to False.
 		do
 			is_valid := False
+		ensure
+			not_valid: not is_valid
+		end
+
+	revalidate is
+			-- Set `is_valid' to True.
+		do
+			is_valid := True
+		ensure
+			is_valid: is_valid
 		end
 
 	set_name (a_name: like name) is

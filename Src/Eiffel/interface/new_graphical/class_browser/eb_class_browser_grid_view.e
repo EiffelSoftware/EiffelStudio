@@ -260,7 +260,6 @@ feature -- Access
 			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
 			-- Void if no item is found.
 		local
-			l_grid_item: EV_GRID_ITEM
 			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_index: INTEGER
 		do

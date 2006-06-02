@@ -3489,6 +3489,12 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	header: EV_GRID_HEADER
 		-- Header displayed at top of `Current'.
 
+	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
+		-- Vertical scroll bar of `Current'.
+
+	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
+		-- Horizontal scroll bar of `Current'.
+
 	hidden_node_count: INTEGER
 		-- Total number of tree rows within `Current' that are not visible,
 		-- due to their parent row being collapsed. This is required for correctly
@@ -4485,12 +4491,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 			locked_indexes.go_to (cursor)
 		end
-
-	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
-		-- Vertical scroll bar of `Current'.
-
-	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
-		-- Horizontal scroll bar of `Current'.
 
 	header_viewport: EV_VIEWPORT
 

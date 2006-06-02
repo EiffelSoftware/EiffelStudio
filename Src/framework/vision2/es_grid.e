@@ -45,21 +45,18 @@ feature {NONE} -- Initialization
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
 			create scrolling_behavior.make (Current)
+			create resizing_behavior.make (Current)
+			resizing_behavior.enable_column_resizing
+
 			key_press_actions.extend (agent on_key_pressed)
 
 			build_delayed_last_column_auto_resizing
-			resize_actions.force_extend (agent delayed_last_column_auto_resizing.request_call)
-			virtual_size_changed_actions.extend (agent on_virtual_size_changed_action)
+
+			resize_actions.extend (agent on_resize_events)
+			virtual_size_changed_actions.extend (agent on_resize_events (0,0, ?,?))
 			last_column_use_all_width_enabled := True
 
 			cleaning_delay := 500
-
-				-- setup column resizing
-			create disabled_resize_columns.make_default
-			pointer_motion_actions.force (agent detect_border)
-			pointer_button_press_actions.force_extend (agent border_button_press)
-			pointer_button_release_actions.force_extend (agent border_button_release)
-			pointer_leave_actions.force_extend (agent border_button_release)
 		end
 
 	color_separator: EV_COLOR is
@@ -85,23 +82,20 @@ feature -- properties
 			-- Is border enabled ?
 			-- i.e: the pre draw cell's border, alias cell separators
 
+	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
+
 feature -- Change
 
-
-	disable_resize (a_column: INTEGER) is
+	disable_resize_column (a_column: INTEGER) is
 			-- Disable resize for `a_column'.
 		do
-			disabled_resize_columns.force (a_column)
-		ensure
-			disabled: disabled_resize_columns.has (a_column)
+			resizing_behavior.disable_resize_on_column (a_column)
 		end
 
-	enable_resize (a_column: INTEGER) is
+	enable_resize_column (a_column: INTEGER) is
 			-- Enable resize for `a_column'.
 		do
-			disabled_resize_columns.remove (a_column)
-		ensure
-			enabled: not disabled_resize_columns.has (a_column)
+			resizing_behavior.enable_resize_on_column (a_column)
 		end
 
 	enable_border is
@@ -129,76 +123,6 @@ feature -- Change
 	set_scrolling_common_line_count (i: INTEGER) is
 		do
 			scrolling_behavior.set_scrolling_common_line_count (i)
-		end
-
-feature {NONE} -- Actions implementation
-
-	detect_border (x_pos, y_pos: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER) is
-			-- Check if we reach a border and should enable resize.
-		local
-			start_x: INTEGER
-			column_index: INTEGER
-			l_near_border: BOOLEAN
-			l_new_width, l_new_neighbor, l_x_pos: INTEGER
-			l_resize, l_neighbor: EV_GRID_COLUMN
-			l_visible_height: INTEGER
-		do
-			if not implementation.is_header_item_resizing then
-				l_x_pos := x_pos + virtual_x_position
-				if not is_resize_mode then
-					l_resize := column_at_virtual_position (l_x_pos)
-					if is_header_displayed then
-						l_visible_height := viewable_height + header.height
-					else
-						l_visible_height := viewable_height
-					end
-					if l_resize /= Void and then (y_pos < l_visible_height) then
-						column_index := l_resize.index
-						start_x := l_resize.virtual_x_position
-						if column_index > 1 and then l_x_pos < start_x + 5 then
-							column_index := column_index - 1
-							l_near_border := True
-						elseif column_index < column_count and then l_x_pos > start_x + l_resize.width - 5  then
-							l_near_border := True
-						end
-					end
-					if not is_near_border and l_near_border and not (disabled_resize_columns.has (column_index) or disabled_resize_columns.has (column_index + 1)) then
-						is_near_border := True
-						set_pointer_style (default_pixmaps.sizewe_cursor)
-						resize_index := column_index
-					elseif is_near_border and not l_near_border then
-						is_near_border := False
-						set_pointer_style (default_pixmaps.standard_cursor)
-					end
-				else
-					l_resize := column (resize_index)
-					l_neighbor := column (resize_index + 1)
-					l_new_width := l_x_pos - l_resize.virtual_x_position
-					l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - l_x_pos
-					if l_new_width > 10 and l_new_neighbor > 10 then
-						l_resize.set_width (l_new_width)
-						l_neighbor.set_width (l_new_neighbor)
-					end
-				end
-			end
-		end
-
-	border_button_press is
-			-- If we are near a resizable border, enable column resizing moveing.
-		do
-			if is_near_border then
-				is_resize_mode := True
-				pointer_button_press_item_actions.block
-				pointer_button_press_actions.block
-			end
-		end
-
-	border_button_release is
-			-- If we were in `is_resize_mode' we loose the mode.
-		do
-			is_resize_mode := False
-			pointer_button_press_item_actions.resume
-			pointer_button_press_actions.resume
 		end
 
 	on_key_pressed (k: EV_KEY) is
@@ -448,6 +372,7 @@ feature {NONE} -- column resizing impl
 								resize_actions.block
 								virtual_size_changed_actions.block
 								last_col.set_width (viewable_width - col_left_x)
+								implementation.recompute_horizontal_scroll_bar
 								virtual_size_changed_actions.resume
 								resize_actions.resume
 							end
@@ -479,11 +404,6 @@ feature {NONE} -- column resizing impl
 									50
 							)
 			end
-		end
-
-	on_virtual_size_changed_action (w,h: INTEGER) is
-		do
-			delayed_last_column_auto_resizing.request_call
 		end
 
 	Additional_pixels_for_column_width: INTEGER is 5
@@ -528,6 +448,13 @@ feature {NONE} -- column resizing impl
 		end
 
 	auto_resized_columns: LINKED_LIST [INTEGER]
+
+feature {NONE} -- Events
+
+	on_resize_events (ax, ay, aw, ah: INTEGER) is
+		do
+			delayed_last_column_auto_resizing.request_call
+		end
 
 feature -- Grid helpers
 
@@ -664,18 +591,6 @@ feature {NONE} -- Implementation
 	cleaning_delay: INTEGER
 
 	delayed_cleaning: ES_DELAYED_ACTION;
-
-	is_near_border: BOOLEAN
-			-- Are we near a border, that we can resize?
-
-	resize_index: INTEGER
-			-- Column to resize.
-
-	disabled_resize_columns: DS_HASH_SET [INTEGER]
-			-- Columns that don't allow resizing.
-
-invariant
-	disabled_resize_columns_not_void: disabled_resize_columns /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

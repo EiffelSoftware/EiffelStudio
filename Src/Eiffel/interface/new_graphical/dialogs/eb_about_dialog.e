@@ -184,6 +184,10 @@ feature {NONE} -- Constant strings
 			Result.append (" (")
 			Result.append (Version_number)
 			Result.append (")")
+			if Version_info /= Void and then not Version_info.is_empty then
+				Result.append ("%N")
+				Result.append (Version_info)
+			end
 		end
 
 	t_Copyright_info: STRING is

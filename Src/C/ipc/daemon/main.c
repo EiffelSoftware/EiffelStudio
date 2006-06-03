@@ -248,13 +248,26 @@ rt_public void init_bench(int argc, char **argv)
 	if (argc == 2) {
 			/* It means that we give as an extra parameter the project file to open
 			 * with EiffelStudio */
-		strcat (ewb_path, " -config ");
+		strcat (ewb_path, " -config \"");
 		strcat (ewb_path, argv [1]);
+		strcat (ewb_path, "\"");
 	} else {
 			/* Simply copy all arguments to `ewb_path'. */
 		for (i = 1; i < argc; i++) {
 			strcat (ewb_path, " ");
 			strcat (ewb_path, argv[i]);
+			if (
+				(strcmp (argv[i], "-config") == 0) ||
+				(strcmp (argv[i], "-project_path") == 0) ||
+				(strcmp (argv[i], "-target")==0)
+			) {
+				i++;
+				if (i < argc) {
+					strcat (ewb_path, " \"");
+					strcat (ewb_path, argv[i]);
+					strcat (ewb_path, "\"");
+				}
+			}
 		}
 	}
 

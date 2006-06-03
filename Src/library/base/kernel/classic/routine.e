@@ -245,7 +245,7 @@ feature -- Obsolete
 			same_call_status: other.callable implies callable
 		end
 
-feature {ROUTINE, E_FEATURE} -- Implementation
+feature {ROUTINE} -- Implementation
 
 	frozen internal_operands: TUPLE
 			-- All open and closed arguments provided at creation time

@@ -1055,7 +1055,7 @@ feature {NONE} -- Implementation
 					if l_comments = Void or else l_comments.is_empty then
 						c := ""
 					else
-						c := l_comments.first
+						c := l_comments.first.content
 						if not c.is_equal (" ") then
 							c.left_adjust
 						end
@@ -1084,7 +1084,7 @@ feature {NONE} -- Implementation
 						if l_comments = Void or else l_comments.is_empty then
 							c := ""
 						else
-							c := l_comments.first
+							c := l_comments.first.content
 							if not c.is_equal (" ") then
 								c.left_adjust
 							end

@@ -148,7 +148,7 @@ feature -- Highlevel element change
 							last_export := l_clause.clients.text (match_list)
 							l_comment := l_clause.comment (match_list)
 							if l_comment /= Void and then not l_comment.is_empty then
-								last_comment := "--"+l_comment.first
+								last_comment := "--" + l_comment.first.content
 							end
 
 						end

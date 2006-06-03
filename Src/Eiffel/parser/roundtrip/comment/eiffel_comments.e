@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision $"
 
 class EIFFEL_COMMENTS
-	
+
 inherit
 	COMPARABLE
 		undefine
@@ -15,7 +15,7 @@ inherit
 			is_equal
 		end
 
-	ARRAYED_LIST [STRING]
+	ARRAYED_LIST [EIFFEL_COMMENT_LINE]
 		rename
 			make as list_make
 		redefine
@@ -24,12 +24,12 @@ inherit
 
 create
 	make
-	
+
 create {EIFFEL_COMMENTS}
 	make_filled
 
 feature {NONE}
-	
+
 	make is
 			-- Create Current.
 		do
@@ -37,18 +37,18 @@ feature {NONE}
 		end;
 
 feature -- Comparison
-	
+
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is Current less than `other'?
 		local
 			different: BOOLEAN;
 			i: INTEGER;
-			txt, other_item: STRING
+			txt, other_item: like item
 		do
 			if other /= Void then
 				from
 					i := 1
-				until 
+				until
 					different or else i > count or else i > other.count
 				loop
 					txt := i_th (i);
@@ -84,56 +84,55 @@ feature -- Comparison
 				end;
 			end;
 		end;
-	
-        merge (other: like Current) is
-                require
-                        valid_other: other /= Void
-                local
-                        other_count, i: INTEGER
-                do
-                        other_count := other.count;
-                        from
-                                i := 1;
-                        until
-                                i > other_count
-                        loop
-                                put_left (other.i_th (i))
-                                i := i + 1;
-                        end;
-                end;
 
-        diff (old_templ: like Current): like Current is
-                        -- Differences between Current and `old_templ';
+	merge (other: like Current) is
+		require
+			valid_other: other /= Void
+		local
+			other_count, i: INTEGER
+		do
+			other_count := other.count;
+			from
+				i := 1;
+			until
+				i > other_count
+			loop
+				put_left (other.i_th (i))
+				i := i + 1;
+			end;
+		end;
+
+	diff (old_templ: like Current): like Current is
+			-- Differences between Current and `old_templ';
 		require
 			valid_old_templ: old_templ /= Void
 		local
 			c, i: INTEGER
-                        s: STRING;
+			s: like item;
 		do
-                        create Result.make;
+			create Result.make;
 			c := count;
+			old_templ.compare_objects;
 
-                        old_templ.compare_objects;
-			
 			from
 				i := 1
 			until
 				i > count
 			loop
-                                s := i_th (i);
-                                if not old_templ.has (s) then
+				s := i_th (i);
+				if not old_templ.has (s) then
 					Result.put_left (s)
-                                end;
+				end;
 				i := i + 1
 			end;
-			--is this needed    
+			--is this needed
 			old_templ.compare_references;
-                ensure
-                        valid_result: Result /= Void
-        end;
+		ensure
+			valid_result: Result /= Void
+		end;
 
 feature -- Debug
-		
+
 	trace is
 		do
 			from
@@ -141,7 +140,7 @@ feature -- Debug
 			until
 				after
 			loop
-				io.error.put_string (item);
+				io.error.put_string (item.content);
 				io.error.put_new_line
 				forth
 			end

@@ -375,7 +375,7 @@ feature {FEATURE_ADAPTER} -- Element change
 				comments.start;
 				comments := comments.duplicate (comments.count)
 			end;
-			comments.extend (comment)
+			comments.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (comment))
 		end;
 
 feature {FORMAT_REGISTRATION} -- Element chage

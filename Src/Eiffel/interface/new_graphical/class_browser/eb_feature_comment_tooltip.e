@@ -132,7 +132,7 @@ feature -- Access
 							l_comments.after
 						loop
 							token_writer.new_line
-							l_comment := l_comments.item
+							l_comment := l_comments.item.content
 							l_comment.left_adjust
 							token_writer.add_comment_text (l_comment.out)
 							l_tokens.fill (token_writer.last_line.content)

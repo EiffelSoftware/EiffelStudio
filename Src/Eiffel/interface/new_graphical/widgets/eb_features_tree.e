@@ -196,7 +196,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						if l_comments = Void or else l_comments.is_empty then
 							name := " "
 						else
-							name := l_comments.first
+							name := l_comments.first.content
 						end
 						name.right_adjust
 					end

@@ -681,10 +681,10 @@ feature -- Output
 			until
 				comments.after
 			loop
-				txt := comments.item
+				txt := comments.item.content
 				if txt.is_empty or else txt.item (1) /= '|' then
 					process_comment_text (ti_Dashdash, Void)
-					put_comment_text (comments.item)
+					put_comment_text (comments.item.content)
 					put_new_line
 				end
 				comments.forth

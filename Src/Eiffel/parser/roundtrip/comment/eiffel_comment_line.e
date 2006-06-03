@@ -10,29 +10,35 @@ class
 	EIFFEL_COMMENT_LINE
 
 inherit
-	STRING
+	COMPARABLE
+		redefine
+			is_equal
+		end
 
 create
-	make,
-	make_empty,
-	make_filled,
 	make_from_string,
-	make_from_c,
-	make_from_cil,
 	make_with_data
 
 feature{NONE} -- Implementation
 
+	make_from_string (a_content: STRING) is
+		require
+			a_content_not_void: a_content /= Void
+		do
+			create content.make_from_string (a_content)
+		end
+
 	make_with_data (a_content: STRING; l, c, p: INTEGER; own_line: BOOLEAN; is_imp: BOOLEAN; b_id: INTEGER; b_offset: INTEGER) is
 			-- Initialize instance.
 		require
+			a_content_not_void: a_content /= Void
 			l_positive: l > 0
 			c_positive: c > 0
 			p_positive: p > 0
 			b_id_positive: b_id > 0
 			b_offset_positive: b_offset > 0
 		do
-			make_from_string (a_content)
+			create content.make_from_string (a_content)
 			line := l
 			column := c
 			position := p
@@ -48,6 +54,20 @@ feature{NONE} -- Implementation
 			offset_set: offset = b_offset
 			is_in_own_line_set: is_in_own_line = own_line
 			is_implementation_set: is_implementation = is_imp
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is comment made of the same character sequence as `other'?
+		do
+			Result := content.is_equal (other.content)
+		end
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is comment lexicographically lower than `other'?
+		do
+			Result := content < other.content
 		end
 
 feature -- Setting
@@ -113,6 +133,9 @@ feature
 
 	offset: INTEGER;
 			-- Offset in BREAK AST node
+
+invariant
+	content_not_void: content /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

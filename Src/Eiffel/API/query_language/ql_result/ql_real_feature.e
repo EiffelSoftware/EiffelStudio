@@ -79,7 +79,7 @@ feature -- Access
 				until
 					l_comments.after
 				loop
-					Result.append (l_comments.item)
+					Result.append (l_comments.item.content)
 					l_comments.forth
 				end
 			else

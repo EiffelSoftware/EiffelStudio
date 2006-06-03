@@ -87,32 +87,32 @@ feature -- Setting
 			text_wrap_disabled: not is_text_wrap_enabled
 		end
 
-	set_overriden_font (a_font: like overriden_font) is
-			-- Set `overriden_font' with `a_font'.
+	set_overriden_font (a_font: like overriden_fonts) is
+			-- Set `overriden_fonts' with `a_font'.
 		require
 			a_font_attached: a_font /= Void
 		do
 			lock_update
-			overriden_font := a_font
+			overriden_fonts := a_font
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			overriden_font_set: overriden_font = a_font
+			overriden_font_set: overriden_fonts = a_font
 		end
 
 	remove_overriden_font is
-			-- Remove `overriden_font'.
+			-- Remove `overriden_fonts'.
 		do
 			lock_update
-			overriden_font := Void
+			overriden_fonts := Void
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			overriden_font_removed: overriden_font = Void
+			overriden_font_removed: overriden_fonts = Void
 		end
 
 	set_overriden_line_height (a_line_height: like overriden_line_height) is
@@ -219,11 +219,11 @@ feature -- Setting
 feature -- Status report
 
 	is_overriden_font_set: BOOLEAN is
-			-- Will `overriden_font' be used instead of those fonts which are stored in editor tokens?
+			-- Will `overriden_fonts' be used instead of those fonts which are stored in editor tokens?
 		do
-			Result := overriden_font /= Void
+			Result := overriden_fonts /= Void
 		ensure
-			good_result: (Result implies overriden_font /= Void) and (not Result implies overriden_font = Void)
+			good_result: (Result implies overriden_fonts /= Void) and (not Result implies overriden_fonts = Void)
 		end
 
 	is_overriden_line_height_set: BOOLEAN
@@ -478,8 +478,11 @@ feature -- Measure
 
 feature -- Access
 
-	overriden_font: EV_FONT
-			-- Current set font which is used to display editor tokens
+	overriden_fonts: SPECIAL [EV_FONT]
+			-- Overriden fonts.
+			-- If it's Void, default fonts which are defined in editor tokens will be used to display tokens.
+			-- If it's not Void, given an editor token `a_token', font at position `a_token.font_id' will be used
+			-- to display that token.
 
 	overriden_line_height: INTEGER
 			-- Line height in pixel
@@ -558,12 +561,17 @@ feature -- Measure
 			l_tokens: like tokens
 			l_token: EDITOR_TOKEN
 			l_overriden_font_used: BOOLEAN
+			l_overriden_fonts: like overriden_fonts
+			l_overriden_font: EV_FONT
 		do
 			if not is_required_width_up_to_date then
 				l_tokens := tokens
 				if not l_tokens.is_empty then
 					l_cursor := l_tokens.cursor
 					l_overriden_font_used := is_overriden_font_set
+					if l_overriden_font_used then
+						l_overriden_fonts := overriden_fonts
+					end
 					from
 						l_tokens.start
 					until
@@ -577,7 +585,13 @@ feature -- Measure
 							l_cur_line_width := 0
 						else
 							if l_overriden_font_used then
-								l_cur_line_width := l_cur_line_width + overriden_font.width * l_token.image.count
+								check
+									l_token.font_id >= 0
+									l_token.font_id < overriden_fonts.count
+									overriden_fonts.item (l_token.font_id) /= Void
+								end
+								l_overriden_font := l_overriden_fonts.item (l_token.font_id)
+								l_cur_line_width := l_cur_line_width + l_overriden_font.string_width (l_token.image)
 							else
 								l_cur_line_width := l_cur_line_width + l_token.width
 							end
@@ -610,6 +624,8 @@ feature -- Measure
 			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
 			l_is_text_wrapped: BOOLEAN
+			l_overriden_font: EV_FONT
+			l_overriden_fonts: like overriden_fonts
 		do
 			l_tokens := tokens
 			if not l_tokens.is_empty then
@@ -619,6 +635,7 @@ feature -- Measure
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
 				l_is_text_wrapped := is_text_wrap_enabled
+				l_overriden_fonts := overriden_fonts
 				from
 					x := x_offset
 					y := y_offset
@@ -629,8 +646,14 @@ feature -- Measure
 				loop
 					l_token := l_tokens.item
 					if l_overriden_font_used then
-						l_width := overriden_font.width * l_token.image.count
-						l_height := overriden_font.height
+						check
+							l_token.font_id >= 0
+							l_token.font_id < overriden_fonts.count
+							overriden_fonts.item (l_token.font_id) /= Void
+						end
+						l_overriden_font := overriden_fonts.item (l_token.font_id)
+						l_width := l_overriden_font.string_width (l_token.image)
+						l_height := l_overriden_font.height
 					else
 						l_width := l_token.width
 						l_height := l_token.font.height
@@ -752,18 +775,24 @@ feature{NONE} -- Implementation
 
 	actual_token_font (a_token: EDITOR_TOKEN): EV_FONT is
 			-- Actual used font for `a_token'.
-			-- Will take `overriden_font' into account.
+			-- Will take `overriden_fonts' into account.
 		require
 			a_token_attached: a_token /= Void
+			overriden_font_valid: is_overriden_font_set implies (a_token.font_id >=0 and then a_token.font_id < overriden_fonts.count and then overriden_fonts.item (a_token.font_id) /= Void)
 		do
 			if is_overriden_font_set then
-				Result := overriden_font
+				check
+					a_token.font_id >= 0
+					a_token.font_id < overriden_fonts.count
+					overriden_fonts.item (a_token.font_id) /= Void
+				end
+				Result := overriden_fonts.item (a_token.font_id)
 			else
 				Result := a_token.font
 			end
 		ensure
 			result_set:
-				(is_overriden_font_set implies Result = overriden_font) and
+				(is_overriden_font_set implies Result = overriden_fonts.item (a_token.font_id)) and
 				(not is_overriden_font_set implies Result = a_token.font)
 		end
 
@@ -793,6 +822,8 @@ feature{NONE} -- Implementation
 			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
 			l_is_text_wrapped: BOOLEAN
+			l_overriden_fonts: like overriden_fonts
+			l_overriden_font: EV_FONT
 		do
 			l_tokens := tokens
 			if not l_tokens.is_empty then
@@ -800,6 +831,9 @@ feature{NONE} -- Implementation
 				l_pos.wipe_out
 				l_cursor := l_tokens.cursor
 				l_overriden_font_used := is_overriden_font_set
+				if l_overriden_font_used then
+					l_overriden_fonts := overriden_fonts
+				end
 				l_wrapped := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
@@ -814,8 +848,14 @@ feature{NONE} -- Implementation
 				loop
 					l_token := l_tokens.item
 					if l_overriden_font_used then
-						l_width := overriden_font.string_width (l_token.image)
-						l_height := overriden_font.height
+						check
+							l_token.font_id >= 0
+							l_token.font_id < overriden_fonts.count
+							overriden_fonts.item (l_token.font_id) /= Void
+						end
+						l_overriden_font := l_overriden_fonts.item (l_token.font_id)
+						l_width := l_overriden_font.string_width (l_token.image)
+						l_height := l_overriden_font.height
 					else
 						l_width := l_token.width
 						l_height := l_token.font.height

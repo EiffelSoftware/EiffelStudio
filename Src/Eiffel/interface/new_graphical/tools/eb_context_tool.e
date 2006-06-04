@@ -533,12 +533,12 @@ feature -- C output pixmap management
 	draw_pixmap_on_tab (a_tab: EV_NOTEBOOK_TAB; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' on `a_tab'.
 			-- If `a_pixmap' is Void, clear any existing pixmap on `a_tab'.
-		require
-			a_tab_not_void: a_tab /= Void
 		do
-			a_tab.remove_pixmap
-			if a_pixmap /= Void then
-				a_tab.set_pixmap (a_pixmap)
+			if a_tab /= Void then
+				a_tab.remove_pixmap
+				if a_pixmap /= Void then
+					a_tab.set_pixmap (a_pixmap)
+				end
 			end
 		end
 

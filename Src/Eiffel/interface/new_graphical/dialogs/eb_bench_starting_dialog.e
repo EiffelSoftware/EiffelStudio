@@ -158,7 +158,6 @@ feature {NONE} -- Initialization
 				open_project.deselect_actions.force_extend (agent on_item_deselected)
 
 				vb.extend (open_project.widget)
-				vb.merge_radio_button_groups (new_project_vb)
 
 				create l_frame.make_with_text (Interface_names.l_open_project)
 				l_frame.extend (vb)
@@ -505,20 +504,21 @@ feature {NONE} -- Implementation
 				l_loader.set_is_project_location_requested (False)
 				l_loader.open_project_file (ace_file_name, Void, directory_name, True)
 				if not l_loader.has_error and then compile_project then
-					check
-						project_is_new: l_loader.is_new_project
-					end
 					l_loader.set_is_compilation_requested (compile_project)
 					l_loader.compile_project
 				end
 			else
 				ebench_name := Estudio_command_name.twin
-				ebench_name.append (" -create %"")
-				ebench_name.append (dir_name)
-				ebench_name.append ("%" -ace %"")
+				ebench_name.append (" -clean")
+				if dir_name /= Void and not dir_name.is_empty then
+					ebench_name.append (" -project_path %"")
+					ebench_name.append (dir_name)
+					ebench_name.append ("%"")
+				end
+				ebench_name.append (" -config %"")
 				ebench_name.append (ace_name)
 				if compile_project then
-					ebench_name.append ("%" -compile")
+					ebench_name.append ("%" -melt")
 					compile_project := False
 				else
 					ebench_name.append ("%"")

@@ -222,9 +222,7 @@ feature -- Execution
 				l_project_loader.set_is_project_location_requested (False)
 				l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
 				if not l_project_loader.has_error and then compile_project then
-					check
-						project_is_new: l_project_loader.is_new_project
-					end
+					check not eiffel_project.initialized end
 					l_project_loader.set_is_compilation_requested (compile_project)
 					l_project_loader.compile_project
 				end

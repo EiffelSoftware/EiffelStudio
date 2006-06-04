@@ -109,32 +109,10 @@ feature -- Execution
 	execute is
 			-- Popup a dialog for the user to choose the project he wants to open,
 		local
-			fod: EB_FILE_OPEN_DIALOG
-			environment_variable: EXECUTION_ENVIRONMENT
-			last_directory_opened: STRING
+			l_dialog: EB_OPEN_PROJECT_DIALOG
 		do
-				-- User just asked for an open file dialog,
-				-- and we set it on the last opened directory.
-			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
-			create environment_variable
-			last_directory_opened := environment_variable.get (Studio_Directory_List)
-			if last_directory_opened /= Void then
-				fod.set_start_directory (last_directory_opened.substring (1,last_directory_opened.index_of(';',1) -1 ))
-			end
-			fod.set_title (Interface_names.t_Select_a_file)
-			set_dialog_filters_and_add_all (fod, <<config_files_filter, ace_files_filter, eiffel_project_files_filter>>)
-			fod.open_actions.extend (agent file_choice_callback (fod))
-			fod.show_modal_to_window (parent_window)
-		end
-
-feature {NONE} -- Callbacks
-
-	file_choice_callback (argument: EB_FILE_OPEN_DIALOG) is
-			-- This is a callback from the name chooser.
-			-- We get the project name and then open the project, if possible
-		do
-				-- We get the project name and then open the project, if possible
-			execute_with_file (argument.file_name, False)
+			create l_dialog.make (parent_window)
+			l_dialog.show
 		end
 
 feature {NONE} -- Implementation

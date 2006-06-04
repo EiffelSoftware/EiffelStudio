@@ -133,7 +133,6 @@ feature -- Initialization
 							end
 							ewb_loop ?= command
 							if
-								l_loader.is_new_project and then
 								compilation = Void and then ewb_loop = Void
 							then
 								create {EWB_QUICK_MELT} compilation

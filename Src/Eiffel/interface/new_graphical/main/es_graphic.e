@@ -131,12 +131,22 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				end
 				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0)
 				if
-					not l_loader.has_error and then l_loader.is_new_project and then
-					not l_loader.is_compilation_requested and then
-					index_of_word_option ("compile") /= 0
+					not l_loader.has_error and then
+					not l_loader.is_compilation_requested
 				then
-					l_loader.set_is_compilation_requested (True)
-					l_loader.compile_project
+					if index_of_word_option ("melt") /= 0 then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.melt_project (False)
+					elseif index_of_word_option ("freeze") /= 0 then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.freeze_project (False)
+					elseif index_of_word_option ("finalize") /= 0 then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.finalize_project (False)
+					elseif index_of_word_option ("precompile") /= 0 then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.precompile_project (False)
+					end
 				end
 			else
 					-- Show starting dialog.

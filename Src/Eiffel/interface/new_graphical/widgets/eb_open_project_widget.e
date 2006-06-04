@@ -156,6 +156,7 @@ feature -- Actions
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_item: EV_GRID_LABEL_ITEM
 			l_factory: USER_OPTIONS_FACTORY
+			l_project_initialized: BOOLEAN
 		do
 				-- Remove data associated to user file for selected project/target if any.
 			if remove_user_file.is_sensitive and then remove_user_file.is_selected then
@@ -167,8 +168,13 @@ feature -- Actions
 				-- Find which project was selected.
 			create l_loader.make (parent_window)
 			l_loader.set_is_project_location_requested (False)
+			l_project_initialized := eiffel_project.initialized
+			if l_project_initialized then
+				l_loader.enable_project_creation_or_opening_not_requested
+			end
 			l_item ?= projects_list.selected_rows.first.item (path_column_index)
 			check l_item_not_void: l_item /= Void end
+
 				-- Open selected project.
 			l_loader.open_project_file (l_item.text,
 				selected_target,
@@ -177,18 +183,26 @@ feature -- Actions
 
 			if not l_loader.has_error then
 					-- No error occurred, we can now perform action selected in `action_combo'.
+					-- Note that if `l_project_initialized' is set a new EiffelStudio instance
+					-- will be launched.
 				if action_combo.selected_item = compile_action_item then
 					l_loader.set_is_compilation_requested (True)
-					l_loader.compile_project
+					l_loader.melt_project (l_project_initialized)
 				elseif action_combo.selected_item = freeze_action_item then
 					l_loader.set_is_compilation_requested (True)
-					l_loader.freeze_project
+					l_loader.freeze_project (l_project_initialized)
 				elseif action_combo.selected_item = finalize_action_item then
 					l_loader.set_is_compilation_requested (True)
-					l_loader.finalize_project
+					l_loader.finalize_project (l_project_initialized)
 				elseif action_combo.selected_item = precompile_action_item then
 					l_loader.set_is_compilation_requested (True)
-					l_loader.precompile_project
+					l_loader.precompile_project (l_project_initialized)
+				elseif action_combo.selected_item = open_action_item then
+					if l_project_initialized and l_loader.is_project_ok then
+							-- Open a new EiffelStudio session for sure since current
+							-- system is already initialized.
+						l_loader.open_project (True)
+					end
 				end
 				parent_window.destroy
 			end

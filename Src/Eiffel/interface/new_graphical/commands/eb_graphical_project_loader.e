@@ -54,6 +54,13 @@ inherit
 			{NONE} all
 		end
 
+	COMMAND_EXECUTOR
+		rename
+			project_location as compiler_project_location
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -103,25 +110,75 @@ feature -- Settings
 				agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
 		end
 
-	precompile_project is
-			-- Compile newly created project.
+	open_project (in_new_studio: BOOLEAN) is
+			-- Open project.
+		require
+			not_has_error: not has_error
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
 		do
-			ev_application.do_once_on_idle (
-				agent (window_manager.last_focused_development_window.precompilation_cmd).execute)
+			if in_new_studio then
+				execute (estudio_cmd_line)
+			end
 		end
 
-	freeze_project is
-			-- Compile newly created project.
+	melt_project (in_new_studio: BOOLEAN) is
+			-- Open project.
+		require
+			not_has_error: not has_error
+			is_compilation_requested: is_compilation_requested
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
 		do
-			ev_application.do_once_on_idle (
-				agent (window_manager.last_focused_development_window.freeze_project_cmd).execute)
+			if not in_new_studio then
+				ev_application.do_once_on_idle (
+					agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
+			else
+				execute (estudio_cmd_line + " -melt")
+			end
 		end
 
-	finalize_project is
+	precompile_project (in_new_studio: BOOLEAN) is
 			-- Compile newly created project.
+		require
+			not_has_error: not has_error
+			is_compilation_requested: is_compilation_requested
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
 		do
-			ev_application.do_once_on_idle (
-				agent (window_manager.last_focused_development_window.finalize_project_cmd).execute)
+			if not in_new_studio then
+				ev_application.do_once_on_idle (
+					agent (window_manager.last_focused_development_window.precompilation_cmd).execute)
+			else
+				execute (estudio_cmd_line + " -precompile")
+			end
+		end
+
+	freeze_project (in_new_studio: BOOLEAN) is
+			-- Compile newly created project.
+		require
+			not_has_error: not has_error
+			is_compilation_requested: is_compilation_requested
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
+		do
+			if not in_new_studio then
+				ev_application.do_once_on_idle (
+					agent (window_manager.last_focused_development_window.freeze_project_cmd).execute)
+			else
+				execute (estudio_cmd_line + " -freeze")
+			end
+		end
+
+	finalize_project (in_new_studio: BOOLEAN) is
+			-- Compile newly created project.
+		require
+			not_has_error: not has_error
+			is_compilation_requested: is_compilation_requested
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
+		do
+			if not in_new_studio then
+				ev_application.do_once_on_idle (
+					agent (window_manager.last_focused_development_window.finalize_project_cmd).execute)
+			else
+				execute (estudio_cmd_line + " -finalize")
+			end
 		end
 
 feature {NONE} -- Actions
@@ -133,6 +190,25 @@ feature {NONE} -- Actions
 			if deleting_dialog /= Void and then not deleting_dialog.is_destroyed then
 				deleting_dialog.destroy
 				deleting_dialog := Void
+			end
+		end
+
+	estudio_cmd_line: STRING is
+			-- Command line to open/compile currently selected project.
+		require
+			not_has_error: not has_error
+		do
+			create Result.make (1024)
+			Result.append (estudio_command_name)
+			Result.append (" -config %"")
+			Result.append (config_file_name)
+			Result.append ("%" -project_path %"")
+			Result.append (project_location)
+			Result.append ("%" -target %"")
+			Result.append (target_name)
+			Result.append ("%"")
+			if is_recompile_from_scrach then
+				Result.append (" -clean ")
 			end
 		end
 

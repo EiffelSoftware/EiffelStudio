@@ -19,6 +19,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
+			{ANY} eiffel_project
 		end
 
 	PROJECT_CONTEXT
@@ -64,6 +65,7 @@ feature -- Loading
 			create l_factory
 			reset
 			is_recompile_from_scrach := from_scratch
+			project_location := a_project_path
 			if a_file_name = Void or else a_file_name.is_empty then
 					-- We are in the case where no file was specified, so we will try either to read
 					-- Ace or Ace.ecf from the current working directory.
@@ -139,11 +141,14 @@ feature -- Loading
 						compiler_project_location.set_target (target_name)
 						lace.set_file_name (config_file_name)
 
-							-- Try to retrieve project if already compiled.
-						retrieve_or_create_project (a_project_path)
-
-						if not has_error and then is_compilation_requested then
-							compile_project
+						if not is_project_creation_or_opening_not_requested then
+								-- Try to retrieve project if already compiled.
+							retrieve_or_create_project (a_project_path)
+							if not has_error and then is_compilation_requested then
+								compile_project
+							end
+						else
+							is_project_ok := True
 						end
 					end
 				end
@@ -187,8 +192,9 @@ feature -- Access
 	has_error: BOOLEAN
 			-- Did an error occur while trying to load a project file?
 
-	is_new_project: BOOLEAN
-			-- Did the loading of the project resulted in creating a new project?
+	is_project_ok: BOOLEAN
+			-- If `is_project_creation_or_opening_not_requested' is not set, `is_project_ok' states
+			-- whether or not current is properly set for a compilation.
 
 	is_recompile_from_scrach: BOOLEAN
 			-- Is a recompilation from scratch requested?
@@ -198,6 +204,9 @@ feature -- Access
 			-- project where configuration file is located.
 		do
 		end
+
+	is_project_creation_or_opening_not_requested: BOOLEAN
+			-- Will project be open or created when calling `open_project_file'.
 
 	is_compilation_requested: BOOLEAN
 			-- Is a compilation requested after loading the project?
@@ -218,6 +227,16 @@ feature -- Settings
 			is_compilation_requested_set: is_compilation_requested = v
 		end
 
+	enable_project_creation_or_opening_not_requested is
+			-- Ensure `is_project_creation_or_opening_not_requested'. This is of course
+			-- only possible if a compilation was not requested.
+		require
+			not_is_compilation_requested: not is_compilation_requested
+		do
+			is_project_creation_or_opening_not_requested := True
+		ensure
+			is_project_creation_or_opening_not_requested_set: is_project_creation_or_opening_not_requested
+		end
 
 	set_ignore_user_configuration_file (v: like ignore_user_configuration_file) is
 			-- Set `ignore_user_configuration_file' with `v'.
@@ -249,8 +268,8 @@ feature {NONE} -- Settings
 			-- Reset variabes.
 		do
 			has_error := False
-			is_new_project := False
 			is_compilation_requested := False
+			is_project_ok := False
 			config_file_name := Void
 			target_name := Void
 			project_location := Void
@@ -486,8 +505,6 @@ feature {NONE} -- Settings
 					eiffel_project.make_new (l_dir, compiler_project_location, True, deletion_agent, cancel_agent)
 					if is_deletion_cancelled then
 						set_has_error
-					else
-						is_new_project := True
 					end
 				end
 			else
@@ -510,8 +527,9 @@ feature {NONE} -- Settings
 	compile_project is
 			-- Compile newly created project.
 		require
-			is_new_project: is_new_project
+			not_has_error: not has_error
 			is_compilation_requested: is_compilation_requested
+			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested
 		deferred
 		end
 

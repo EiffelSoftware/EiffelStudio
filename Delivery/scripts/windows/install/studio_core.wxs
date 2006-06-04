@@ -470,61 +470,34 @@
 									<File Id="VCFG2" Name="VCFG2" />
 									<File Id="VCFG3" Name="VCFG3" />
 									<File Id="VCRN99" Name="VCRN" />
-									<File Id="VD01" Name="VD01" />
-									<File Id="VD02" Name="VD02" />
-									<File Id="VD03" Name="VD03" />
-									<File Id="VD04" Name="VD04" />
-									<File Id="VD05" Name="VD05" />
-									<File Id="VD07" Name="VD07" />
-									<File Id="VD08" Name="VD08" />
-									<File Id="VD09" Name="VD09" />
-									<File Id="VD10" Name="VD10" />
-									<File Id="VD12" Name="VD12" />
-									<File Id="VD13" Name="VD13" />
-									<File Id="VD14" Name="VD14" />
+									<File Id="VD00" Name="VD00" />
 									<File Id="VD15" Name="VD15" />
-									<File Id="VD16" Name="VD16" />
-									<File Id="VD17" Name="VD17" />
-									<File Id="VD18" Name="VD18" />
 									<File Id="VD19" Name="VD19" />
 									<File Id="VD20" Name="VD20" />
 									<File Id="VD21" Name="VD21" />
 									<File Id="VD23" Name="VD23" />
 									<File Id="VD24" Name="VD24" />
-									<File Id="VD25" Name="VD25" />
-									<File Id="VD26" Name="VD26" />
 									<File Id="VD27" Name="VD27" />
-									<File Id="VD28" Name="VD28" />
 									<File Id="VD29" Name="VD29" />
-									<File Id="VD30" Name="VD30" />
-									<File Id="VD31" Name="VD31" />
-									<File Id="VD32" Name="VD32" />
-									<File Id="VD33" Name="VD33" />
-									<File Id="VD34" Name="VD34" />
-									<File Id="VD35" Name="VD35" />
-									<File Id="VD36" Name="VD36" />
-									<File Id="VD38" Name="VD38" />
-									<File Id="VD39" Name="VD39" />
-									<File Id="VD40" Name="VD40" />
 									<File Id="VD41" Name="VD41" />
 									<File Id="VD42" Name="VD42" />
 									<File Id="VD43" Name="VD43" />
-									<File Id="VD44" Name="VD44" />
-									<File Id="VD46" Name="VD46" />
-									<File Id="VD47" Name="VD47" />
-									<File Id="VD51" Name="VD51" />
+									<File Id="VD45" Name="VD45" />
 									<File Id="VD52" Name="VD52" />
 									<File Id="VD53" Name="VD53" />
-									<File Id="VD54" Name="VD54" />
-									<File Id="VD60" Name="VD60" />
-									<File Id="VD61" Name="VD61" />
-									<File Id="VD62" Name="VD62" />
-									<File Id="VD63" Name="VD63" />
-									<File Id="VD64" Name="VD64" />
-									<File Id="VD65" Name="VD65" />
-									<File Id="VD66" Name="VD66" />
-									<File Id="VD67" Name="VD67" />
-									<File Id="VDCN94" Name="VDCN" />
+									<File Id="VD69" Name="VD69" />
+									<File Id="VD70" Name="VD70" />
+									<File Id="VD71" Name="VD71" />
+									<File Id="VD72" Name="VD72" />
+									<File Id="VD73" Name="VD73" />
+									<File Id="VD74" Name="VD74" />
+									<File Id="VD75" Name="VD75" />
+									<File Id="VD77" Name="VD77" />
+									<File Id="VD78" Name="VD78" />
+									<File Id="VD80" Name="VD80" />
+									<File Id="VD83" Name="VD83" />
+									<File Id="VD84" Name="VD84" />
+									<File Id="VD85" Name="VD85" />
 									<File Id="VDJR71" Name="VDJR" />
 									<File Id="VDOC65" Name="VDOC" />
 									<File Id="VDRD1" Name="VDRD1" />
@@ -538,7 +511,6 @@
 									<File Id="VDRS2" Name="VDRS2" />
 									<File Id="VDRS3" Name="VDRS3" />
 									<File Id="VDRS4" Name="VDRS4" />
-									<File Id="VDUC_2" Name="VDUC" />
 									<File Id="VDUS1" Name="VDUS1" />
 									<File Id="VDUS2" Name="VDUS2" />
 									<File Id="VDUS3" Name="VDUS3" />
@@ -659,6 +631,7 @@
 									<File Id="VTAT2" Name="VTAT2" />
 									<File Id="VTBT2" Name="VTBT" />
 									<File Id="VTCG_2" Name="VTCG" />
+									<File Id="VTCM" Name="VTCM" />
 									<File Id="VTCT2" Name="VTCT" />
 									<File Id="VTEC1" Name="VTEC1" />
 									<File Id="VTEC2" Name="VTEC2" />

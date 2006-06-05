@@ -4113,7 +4113,7 @@ feature -- Implementation
 			l_constrained_type := constrained_type (last_type.actual_type)
 			if
 				not l_constrained_type.is_integer and then not l_constrained_type.is_character and then
-				not l_constrained_type.is_natural
+				not l_constrained_type.is_natural and then not l_constrained_type.is_enum
 			then
 					-- Error
 				create l_vomb1

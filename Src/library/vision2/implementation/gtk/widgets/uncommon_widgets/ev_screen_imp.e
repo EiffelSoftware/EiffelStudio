@@ -14,7 +14,8 @@ class
 inherit
 	EV_SCREEN_I
 		redefine
-			interface
+			interface,
+			widget_at_mouse_pointer
 		end
 
 	EV_DRAWABLE_IMP
@@ -67,6 +68,17 @@ feature -- Status report
 			set_pointer_position (x, y)
 			l_widget_imp := widget_imp_at_pointer_position
 			set_pointer_position (l_pointer_position.x, l_pointer_position.y)
+			if l_widget_imp /= Void then
+				Result := l_widget_imp.interface
+			end
+		end
+
+	widget_at_mouse_pointer: EV_WIDGET is
+			-- Widget at mouse pointer if any.
+		local
+			l_widget_imp: EV_WIDGET_IMP
+		do
+			l_widget_imp := widget_imp_at_pointer_position
 			if l_widget_imp /= Void then
 				Result := l_widget_imp.interface
 			end

@@ -164,13 +164,13 @@ feature -- Roundtrip: process leaf
 	process_integer_as (l_as: INTEGER_AS) is
 		do
 			Precursor (l_as)
-			put_string (l_as)
+			context.add_string (l_as.number_text (match_list))
 		end
 
 	process_real_as (l_as: REAL_AS) is
 		do
 			Precursor (l_as)
-			put_string (l_as)
+			context.add_string (l_as.number_text (match_list))
 		end
 
 	process_id_as (l_as: ID_AS) is

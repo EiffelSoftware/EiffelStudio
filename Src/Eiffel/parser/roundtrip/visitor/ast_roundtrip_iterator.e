@@ -1173,7 +1173,7 @@ feature
 			-- Process `l_as'.
 		do
 			safe_process (l_as.lparan_symbol)
-			process_eiffel_list (l_as.parameters)
+			safe_process (l_as.parameters)
 			safe_process (l_as.rparan_symbol)
 		end
 

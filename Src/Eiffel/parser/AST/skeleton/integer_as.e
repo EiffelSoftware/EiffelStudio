@@ -108,12 +108,24 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := Current
 			else
-				if sign_symbol /= Void then
+				if constant_type /= Void then
+					Result := constant_type.first_token (a_list)
+				elseif sign_symbol /= Void then
 					Result := sign_symbol.first_token (a_list)
 				else
 					Result := Current
 				end
 			end
+		end
+
+feature -- Roundtrip/Text
+
+	number_text (a_match_list: LEAF_AS_LIST): STRING is
+			-- Text of the number part (not including `constant_type' and `sign_symbol')
+		require
+			a_match_list_attached: a_match_list /= Void
+		do
+			Result := a_match_list.text (create {ERT_TOKEN_REGION}.make (Current.index, Current.index))
 		end
 
 feature -- Access

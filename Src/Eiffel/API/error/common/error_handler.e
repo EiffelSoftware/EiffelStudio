@@ -11,7 +11,7 @@ inherit
 	EXCEPTIONS
 
 	SHARED_RESCUE_STATUS
-	
+
 	REFACTORING_HELPER
 
 create {SHARED_ERROR_HANDLER}
@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
 	trace is
 			-- Trace the output of the errors if there are any.
-		require	
+		require
 			non_void_error_displayer: error_displayer /= Void
 		do
 			if has_warning then
@@ -87,7 +87,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
 	trace_warnings is
 			-- Trace the output of the warnings if there are any.
-		require	
+		require
 			non_void_error_displayer: error_displayer /= Void
 		do
 			if has_warning then
@@ -152,7 +152,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 	checksum is
 			-- Check if there are errors in `error_list' and raise
 			-- an error if needed.
-		require	
+		require
 			non_void_error_displayer: error_displayer /= Void
 		do
 			if has_error then

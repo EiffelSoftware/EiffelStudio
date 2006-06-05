@@ -17,14 +17,17 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			create supplier_ids.make
-			supplier_ids.compare_objects
+			create supplier_ids.make (20)
+			create light_supplier_ids.make (10)
 		end
 
 feature -- Attributes
 
-	supplier_ids: TWO_WAY_SORTED_SET [ID_AS]
+	supplier_ids: SEARCH_TABLE [ID_AS]
 			-- Set of supplier class names
+
+	light_supplier_ids: SEARCH_TABLE [ID_AS]
+			-- Set of supplier class names which don't need the class to be compiled and in the system.
 
 	insert_supplier_id (id: ID_AS) is
 			-- Insert a new supplier name in `supplier_ids', if
@@ -32,22 +35,17 @@ feature -- Attributes
 		require else
 			good_argument: id /= Void
 		do
-			supplier_ids.extend (id)
-		end; 
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
-		local
-			o_supplier_ids: like supplier_ids
-		do
-			o_supplier_ids := other.supplier_ids
-			if supplier_ids.count = o_supplier_ids.count then
-					-- Same count and subset means equal
-				Result := supplier_ids.is_subset (o_supplier_ids)
-			end
+			supplier_ids.put (id)
 		end
+
+	insert_light_supplier_id (id: ID_AS) is
+			-- Insert a new supplier name in `light_supplier_ids', if
+			-- not already present.
+		require else
+			good_argument: id /= Void
+		do
+			light_supplier_ids.put (id)
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

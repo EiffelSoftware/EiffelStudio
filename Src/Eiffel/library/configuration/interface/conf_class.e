@@ -102,9 +102,6 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := visible /= Void
 		end
 
-	is_precompiled: BOOLEAN
-			-- Is the class precompiled?
-
 	is_partial: BOOLEAN
 			-- Is the class generated out of partial classes?
 
@@ -113,7 +110,7 @@ feature -- Access, in compiled only, not stored to configuration file
 		local
 			l_file: RAW_FILE
 		do
-			Result := is_precompiled or is_partial or group.is_readonly
+			Result := is_partial or group.is_readonly
 			if not Result then
 					-- check if the file itself is read only
 				create l_file.make (full_file_name)
@@ -365,13 +362,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overriden_by := Void
 
 			is_rebuilding := False
-		end
-
-
-	enable_precompiled is
-			-- Set `is_precompiled' to true.
-		do
-			is_precompiled := True
 		end
 
 	check_changed is

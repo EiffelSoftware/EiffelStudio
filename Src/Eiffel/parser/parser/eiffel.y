@@ -646,6 +646,7 @@ Class_list: Class_or_tuple_identifier
 				$$ := ast_factory.new_class_list_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
+					suppliers.insert_light_supplier_id ($1)
 				end
 			}
 	|	Class_or_tuple_identifier { increment_counter } TE_COMMA Class_list
@@ -653,6 +654,7 @@ Class_list: Class_or_tuple_identifier
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
+					suppliers.insert_light_supplier_id ($1)
 					ast_factory.reverse_extend_separator ($$, $3)
 				end
 			}

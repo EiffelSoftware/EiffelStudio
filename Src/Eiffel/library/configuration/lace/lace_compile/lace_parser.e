@@ -12,7 +12,7 @@ inherit
 
 	LACE_PARSER_SKELETON
 
-creation
+create
 
 	make
 
@@ -801,7 +801,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-ast := yyvs2.item (yyvsp2) 
+ast := yyvs2.item (yyvsp2)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -836,7 +836,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-ast := yyvs4.item (yyvsp4) 
+ast := yyvs4.item (yyvsp4)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -871,7 +871,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval2.initialize (yyvs9.item (yyvsp9), yyvs15.item (yyvsp15), yyvs22.item (yyvsp22), yyvs20.item (yyvsp20), yyvs21.item (yyvsp21), yyvs26.item (yyvsp26)) 
+create yyval2.initialize (yyvs9.item (yyvsp9), yyvs15.item (yyvsp15), yyvs22.item (yyvsp22), yyvs20.item (yyvsp20), yyvs21.item (yyvsp21), yyvs26.item (yyvsp26))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
 	yyvsp2 := yyvsp2 + 1
@@ -912,7 +912,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -931,7 +931,7 @@ debug ("GEYACC")
 end
 
 				create yyval15.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp15 := yyvsp15 + 1
@@ -1001,7 +1001,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -1053,7 +1053,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -1071,7 +1071,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval20 := yyvs20.item (yyvsp20) 
+yyval20 := yyvs20.item (yyvsp20)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -1089,7 +1089,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval20 := Void 
+yyval20 := Void
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp20 := yyvsp20 + 1
@@ -1126,7 +1126,7 @@ end
 
 				create yyval20.make (10)
 				yyval20.extend (yyvs6.item (yyvsp6))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp20 := yyvsp20 + 1
@@ -1164,7 +1164,7 @@ end
 
 				yyval20 := yyvs20.item (yyvsp20)
 				yyval20.extend (yyvs6.item (yyvsp6))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 -1
@@ -1183,7 +1183,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, False, False) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, False, False)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp6 := yyvsp6 + 1
@@ -1219,7 +1219,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, False) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, False)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
 	yyvsp6 := yyvsp6 + 1
@@ -1255,7 +1255,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, True) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, True)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
 	yyvsp6 := yyvsp6 + 1
@@ -1291,7 +1291,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), False, False) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), False, False)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
 	yyvsp6 := yyvsp6 + 1
@@ -1328,7 +1328,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, False) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, False)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
 	yyvsp6 := yyvsp6 + 1
@@ -1365,7 +1365,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, True) 
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, True)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
 	yyvsp6 := yyvsp6 + 1
@@ -1436,7 +1436,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -1454,7 +1454,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (yyvs29.item (yyvsp29), yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (yyvs29.item (yyvsp29), yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
 	yyvsp4 := yyvsp4 + 1
@@ -1495,7 +1495,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
 	yyvsp4 := yyvsp4 + 1
@@ -1535,7 +1535,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
 	yyvsp4 := yyvsp4 + 1
@@ -1574,7 +1574,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, Void, yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, Void, yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
 	yyvsp4 := yyvsp4 + 1
@@ -1613,7 +1613,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, Void, Void, yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, Void, Void, yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp4 := yyvsp4 + 1
@@ -1651,7 +1651,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, Void, Void, Void, yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, Void, Void, Void, yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 + 1
@@ -1688,7 +1688,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, Void, Void, Void, Void, yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, Void, Void, Void, Void, yyvs27.item (yyvsp27), yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 + 1
@@ -1724,7 +1724,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval4.initialize (Void, Void, Void, Void, Void, Void, Void, yyvs18.item (yyvsp18)) 
+create yyval4.initialize (Void, Void, Void, Void, Void, Void, Void, yyvs18.item (yyvsp18))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
@@ -1759,7 +1759,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval29 := yyvs29.item (yyvsp29) 
+yyval29 := yyvs29.item (yyvsp29)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -1814,7 +1814,7 @@ end
 
 				create yyval29.make (10)
 				yyval29.extend (yyvs17.item (yyvsp17))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp29 := yyvsp29 + 1
@@ -1852,7 +1852,7 @@ end
 
 				yyval29 := yyvs29.item (yyvsp29)
 				yyval29.extend (yyvs17.item (yyvsp17))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp17 := yyvsp17 -1
@@ -1871,7 +1871,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval17.initialize (yyvs23.item (yyvsp23), yyvs9.item (yyvsp9)) 
+create yyval17.initialize (yyvs23.item (yyvsp23), yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp17 := yyvsp17 + 1
@@ -1942,7 +1942,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs9.put (yyval9, yyvsp9)
@@ -1959,7 +1959,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2011,7 +2011,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval25 := yyvs25.item (yyvsp25) 
+yyval25 := yyvs25.item (yyvsp25)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs25.put (yyval25, yyvsp25)
@@ -2028,7 +2028,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval25 := yyvs25.item (yyvsp25) 
+yyval25 := yyvs25.item (yyvsp25)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2115,7 +2115,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval25 := yyvs25.item (yyvsp25) 
+yyval25 := yyvs25.item (yyvsp25)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs25.put (yyval25, yyvsp25)
@@ -2132,7 +2132,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval25 := yyvs25.item (yyvsp25) 
+yyval25 := yyvs25.item (yyvsp25)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2187,7 +2187,7 @@ end
 
 				create yyval25.make (10)
 				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp25 := yyvsp25 + 1
@@ -2225,7 +2225,7 @@ end
 
 				yyval25 := yyvs25.item (yyvsp25)
 				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp9 := yyvsp9 -1
@@ -2246,7 +2246,7 @@ end
 
 				create yyval25.make (10)
 				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp25 := yyvsp25 + 1
@@ -2284,7 +2284,7 @@ end
 
 				yyval25 := yyvs25.item (yyvsp25)
 				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp9 := yyvsp9 -1
@@ -2305,7 +2305,7 @@ end
 
 				create yyval23.make (10)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp23 := yyvsp23 + 1
@@ -2342,7 +2342,7 @@ end
 
 				yyval23 := yyvs23.item (yyvsp23)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -2395,7 +2395,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval19 := yyvs19.item (yyvsp19) 
+yyval19 := yyvs19.item (yyvsp19)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs19.put (yyval19, yyvsp19)
@@ -2412,7 +2412,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval19 := yyvs19.item (yyvsp19) 
+yyval19 := yyvs19.item (yyvsp19)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2467,7 +2467,7 @@ end
 
 				create yyval19.make (10)
 				yyval19.extend (yyvs5.item (yyvsp5))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp19 := yyvsp19 + 1
@@ -2505,7 +2505,7 @@ end
 
 				yyval19 := yyvs19.item (yyvsp19)
 				yyval19.extend (yyvs5.item (yyvsp5))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp5 := yyvsp5 -1
@@ -2524,7 +2524,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create {CLUST_IGN_SD} yyval5.initialize (yyvs9.item (yyvsp9)) 
+create {CLUST_IGN_SD} yyval5.initialize (yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp5 := yyvsp5 + 1
@@ -2560,7 +2560,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create {CLUST_REN_SD} yyval5.initialize (yyvs9.item (yyvsp9), yyvs28.item (yyvsp28)) 
+create {CLUST_REN_SD} yyval5.initialize (yyvs9.item (yyvsp9), yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 + 1
@@ -2599,7 +2599,7 @@ end
 
 				create yyval28.make (10)
 				yyval28.extend (yyvs16.item (yyvsp16))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp28 := yyvsp28 + 1
@@ -2636,7 +2636,7 @@ end
 
 				yyval28 := yyvs28.item (yyvsp28)
 				yyval28.extend (yyvs16.item (yyvsp16))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -2655,7 +2655,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9)) 
+create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp16 := yyvsp16 + 1
@@ -2725,7 +2725,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval22 := yyvs22.item (yyvsp22) 
+yyval22 := yyvs22.item (yyvsp22)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs22.put (yyval22, yyvsp22)
@@ -2742,7 +2742,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval22 := yyvs22.item (yyvsp22) 
+yyval22 := yyvs22.item (yyvsp22)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2829,7 +2829,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval27 := yyvs27.item (yyvsp27) 
+yyval27 := yyvs27.item (yyvsp27)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs27.put (yyval27, yyvsp27)
@@ -2846,7 +2846,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval27 := yyvs27.item (yyvsp27) 
+yyval27 := yyvs27.item (yyvsp27)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -2901,7 +2901,7 @@ end
 
 				create yyval22.make (10)
 				yyval22.extend (yyvs8.item (yyvsp8))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp22 := yyvsp22 + 1
@@ -2939,7 +2939,7 @@ end
 
 				yyval22 := yyvs22.item (yyvsp22)
 				yyval22.extend (yyvs8.item (yyvsp8))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp8 := yyvsp8 -1
@@ -2958,7 +2958,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void) 
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp8 := yyvsp8 + 1
@@ -2994,7 +2994,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void) 
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp8 := yyvsp8 + 1
@@ -3030,7 +3030,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), yyvs28.item (yyvsp28)) 
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp8 := yyvsp8 + 1
@@ -3067,7 +3067,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval8.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13)) 
+create yyval8.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp8 := yyvsp8 + 1
@@ -3103,7 +3103,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval14 := Assertion_keyword 
+yyval14 := Assertion_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3138,7 +3138,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval14 := Debug_keyword 
+yyval14 := Debug_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3173,7 +3173,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval14 := Disabled_debug_keyword 
+yyval14 := Disabled_debug_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3208,7 +3208,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval14 := Optimize_keyword 
+yyval14 := Optimize_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3243,7 +3243,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval14 := Trace_keyword 
+yyval14 := Trace_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3282,7 +3282,7 @@ end
 				if not yyval14.is_valid then
 					raise_error
 				end
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp14 := yyvsp14 + 1
@@ -3319,7 +3319,7 @@ end
 
 				create yyval27.make (10)
 				yyval27.extend (yyvs12.item (yyvsp12))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp27 := yyvsp27 + 1
@@ -3357,7 +3357,7 @@ end
 
 				yyval27 := yyvs27.item (yyvsp27)
 				yyval27.extend (yyvs12.item (yyvsp12))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp12 := yyvsp12 -1
@@ -3376,7 +3376,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval12.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13), yyvs23.item (yyvsp23)) 
+create yyval12.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13), yyvs23.item (yyvsp23))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp12 := yyvsp12 + 1
@@ -3447,7 +3447,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval23 := yyvs23.item (yyvsp23) 
+yyval23 := yyvs23.item (yyvsp23)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -3467,7 +3467,7 @@ end
 
 				create yyval23.make (10)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp23 := yyvsp23 + 1
@@ -3504,7 +3504,7 @@ end
 
 				yyval23 := yyvs23.item (yyvsp23)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -3557,7 +3557,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := yyvs13.item (yyvsp13) 
+yyval13 := yyvs13.item (yyvsp13)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -3575,7 +3575,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := yyvs13.item (yyvsp13) 
+yyval13 := yyvs13.item (yyvsp13)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs13.put (yyval13, yyvsp13)
@@ -3592,7 +3592,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := yyvs13.item (yyvsp13) 
+yyval13 := yyvs13.item (yyvsp13)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs13.put (yyval13, yyvsp13)
@@ -3609,7 +3609,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval13.make (yyvs9.item (yyvsp9)) 
+create yyval13.make (yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3644,7 +3644,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Yes_keyword 
+yyval13 := Yes_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3679,7 +3679,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := No_keyword 
+yyval13 := No_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3714,7 +3714,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := All_keyword 
+yyval13 := All_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3749,7 +3749,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Require_keyword 
+yyval13 := Require_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3784,7 +3784,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Ensure_keyword 
+yyval13 := Ensure_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3819,7 +3819,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Invariant_keyword 
+yyval13 := Invariant_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3854,7 +3854,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Loop_keyword 
+yyval13 := Loop_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3889,7 +3889,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval13 := Check_keyword 
+yyval13 := Check_keyword
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
@@ -3958,7 +3958,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval21 := yyvs21.item (yyvsp21) 
+yyval21 := yyvs21.item (yyvsp21)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -4013,7 +4013,7 @@ end
 
 				create yyval21.make (5)
 				yyval21.extend (yyvs7.item (yyvsp7))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp21 := yyvsp21 + 1
@@ -4051,7 +4051,7 @@ end
 
 				yyval21 := yyvs21.item (yyvsp21)
 				yyval21.extend (yyvs7.item (yyvsp7))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 -1
@@ -4072,7 +4072,7 @@ end
 
 					-- name: "assembly_name"
 				create yyval7.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, Void, Void)
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -4110,7 +4110,7 @@ end
 
 					-- name: "assembly_name", "version", "culture", "public_key_token"
 				create yyval7.initialize (yyvs9.item (yyvsp9 - 5), yyvs9.item (yyvsp9 - 4), yyvs9.item (yyvsp9), yyvs9.item (yyvsp9 - 3), yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 10
 	yyvsp7 := yyvsp7 + 1
@@ -4180,7 +4180,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -4232,7 +4232,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval26 := yyvs26.item (yyvsp26) 
+yyval26 := yyvs26.item (yyvsp26)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -4287,7 +4287,7 @@ end
 
 				create yyval26.make (10)
 				yyval26.extend (yyvs10.item (yyvsp10))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp26 := yyvsp26 + 1
@@ -4325,7 +4325,7 @@ end
 
 				yyval26 := yyvs26.item (yyvsp26)
 				yyval26.extend (yyvs10.item (yyvsp10))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 -1
@@ -4344,7 +4344,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval10.initialize (yyvs11.item (yyvsp11), yyvs23.item (yyvsp23)) 
+create yyval10.initialize (yyvs11.item (yyvsp11), yyvs23.item (yyvsp23))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 + 1
@@ -4381,7 +4381,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval11.initialize (yyvs9.item (yyvsp9)) 
+create yyval11.initialize (yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp11 := yyvsp11 + 1
@@ -4488,7 +4488,7 @@ end
 
 --		create $$.make (10)
 --		$$.extend ($1)
-	
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -4508,7 +4508,7 @@ end
 
 --		$$ := $1
 --		$$.extend ($2)
-	
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -4666,7 +4666,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval18 := yyvs18.item (yyvsp18) 
+yyval18 := yyvs18.item (yyvsp18)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs18.put (yyval18, yyvsp18)
@@ -4683,7 +4683,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval18 := yyvs18.item (yyvsp18) 
+yyval18 := yyvs18.item (yyvsp18)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -4738,7 +4738,7 @@ end
 
 				create yyval18.make (10)
 				yyval18.extend (yyvs3.item (yyvsp3))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp18 := yyvsp18 + 1
@@ -4776,7 +4776,7 @@ end
 
 				yyval18 := yyvs18.item (yyvsp18)
 				yyval18.extend (yyvs3.item (yyvsp3))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -4795,7 +4795,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void) 
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp3 := yyvsp3 + 1
@@ -4830,7 +4830,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void) 
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 + 1
@@ -4866,7 +4866,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, yyvs28.item (yyvsp28)) 
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 + 1
@@ -4903,7 +4903,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, yyvs23.item (yyvsp23), yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp3 := yyvsp3 + 1
@@ -4941,7 +4941,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9), Void, yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
 	yyvsp3 := yyvsp3 + 1
@@ -4979,7 +4979,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval3.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
+create yyval3.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
 	yyvsp3 := yyvsp3 + 1
@@ -5017,7 +5017,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := yyvs9.item (yyvsp9) 
+yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -5069,7 +5069,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval23 := yyvs23.item (yyvsp23) 
+yyval23 := yyvs23.item (yyvsp23)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs23.put (yyval23, yyvsp23)
@@ -5086,7 +5086,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval23 := yyvs23.item (yyvsp23) 
+yyval23 := yyvs23.item (yyvsp23)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -5138,7 +5138,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval23 := yyvs23.item (yyvsp23) 
+yyval23 := yyvs23.item (yyvsp23)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs23.put (yyval23, yyvsp23)
@@ -5155,7 +5155,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval23 := yyvs23.item (yyvsp23) 
+yyval23 := yyvs23.item (yyvsp23)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -5209,7 +5209,7 @@ end
 
 				create yyval23.make (10)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp23 := yyvsp23 + 1
@@ -5246,7 +5246,7 @@ end
 
 				yyval23 := yyvs23.item (yyvsp23)
 				yyval23.extend (yyvs9.item (yyvsp9))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -5299,7 +5299,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval28 := yyvs28.item (yyvsp28) 
+yyval28 := yyvs28.item (yyvsp28)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs28.put (yyval28, yyvsp28)
@@ -5316,7 +5316,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval28 := yyvs28.item (yyvsp28) 
+yyval28 := yyvs28.item (yyvsp28)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -5336,7 +5336,7 @@ end
 
 				create yyval28.make (10)
 				yyval28.extend (yyvs16.item (yyvsp16))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp28 := yyvsp28 + 1
@@ -5373,7 +5373,7 @@ end
 
 				yyval28 := yyvs28.item (yyvsp28)
 				yyval28.extend (yyvs16.item (yyvsp16))
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -5426,7 +5426,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9)) 
+create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp16 := yyvsp16 + 1
@@ -5462,7 +5462,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := new_id_sd (token_buffer, False) 
+yyval9 := new_id_sd (token_buffer, False)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp9 := yyvsp9 + 1
@@ -5497,7 +5497,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-yyval9 := new_id_sd (token_buffer, True) 
+yyval9 := new_id_sd (token_buffer, True)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp9 := yyvsp9 + 1

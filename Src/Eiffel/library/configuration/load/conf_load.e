@@ -48,7 +48,7 @@ feature -- Basic operation
 	retrieve_configuration (a_file: STRING) is
 			-- Retreive the configuration in `a_file' and make it available in `last_system'.
 		require
-			a_file_ok: a_file /= Void and then not a_file.is_empty
+			a_file_ok: a_file /= Void
 		local
 			l_callback: CONF_LOAD_PARSE_CALLBACKS
 			l_directory: STRING
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	parse_file (a_file: STRING; a_callback: CONF_LOAD_CALLBACKS) is
 			-- Parse `a_file' using `a_callbacks'.
 		require
-			a_file_ok: a_file /= Void and then not a_file.is_empty
+			a_file_ok: a_file /= Void
 			a_callback_not_void: a_callback /= Void
 		local
 			l_file: KL_TEXT_INPUT_FILE
@@ -127,20 +127,25 @@ feature {NONE} -- Implementation
 		do
 			is_error := False
 
-			create {XM_EIFFEL_PARSER} l_parser.make
-
-			create l_ns_cb.set_next (a_callback)
-			l_parser.set_callbacks (l_ns_cb)
-
-			create l_file.make (a_file)
-			create l_test_file.make (a_file)
-			l_file.open_read
-			if not l_file.is_open_read or else not l_test_file.is_plain then
+			if a_file.is_empty then
 				is_error := True
 				last_error := create {CONF_ERROR_FILE}.make (a_file)
 			else
-				l_parser.parse_from_stream (l_file)
-				l_file.close
+				create {XM_EIFFEL_PARSER} l_parser.make
+
+				create l_ns_cb.set_next (a_callback)
+				l_parser.set_callbacks (l_ns_cb)
+
+				create l_file.make (a_file)
+				create l_test_file.make (a_file)
+				l_file.open_read
+				if not l_file.is_open_read or else not l_test_file.is_plain then
+					is_error := True
+					last_error := create {CONF_ERROR_FILE}.make (a_file)
+				else
+					l_parser.parse_from_stream (l_file)
+					l_file.close
+				end
 			end
 		end
 

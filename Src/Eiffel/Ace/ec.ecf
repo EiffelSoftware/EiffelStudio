@@ -3,6 +3,10 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option trace="false" profile="false" debug="false" warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+		</option>
 		<setting name="check_vape" value="true"/>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="true"/>
@@ -75,14 +79,13 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<option>
-			<assertions postcondition="false" invariant="false" loop="false"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
 		<library name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf"/>
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
@@ -90,65 +93,6 @@
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
-		<option trace="false" profile="false" debug="false" warning="true">
-			<debug name="__unnamed_debug__" enabled="false"/>
-			<debug name="activity" enabled="false"/>
-			<debug name="actual_replication" enabled="false"/>
-			<debug name="anchored_features" enabled="false"/>
-			<debug name="assertion" enabled="false"/>
-			<debug name="assertions" enabled="false"/>
-			<debug name="c_debugger" enabled="false"/>
-			<debug name="cache" enabled="false"/>
-			<debug name="cache_compiler" enabled="false"/>
-			<debug name="cache_research" enabled="false"/>
-			<debug name="cache_server" enabled="false"/>
-			<debug name="cache_stat" enabled="false"/>
-			<debug name="cecil" enabled="false"/>
-			<debug name="check_expanded" enabled="false"/>
-			<debug name="class_of_id" enabled="false"/>
-			<debug name="com_object" enabled="false"/>
-			<debug name="count" enabled="false"/>
-			<debug name="dead_code" enabled="false"/>
-			<debug name="dead_code_removal" enabled="false"/>
-			<debug name="debbugger_hook" enabled="false"/>
-			<debug name="debugger_hook" enabled="false"/>
-			<debug name="debugger_il_info_trace" enabled="false"/>
-			<debug name="debugger_il_info_trace_extra" enabled="false"/>
-			<debug name="dle topo" enabled="false"/>
-			<debug name="dollar" enabled="false"/>
-			<debug name="filters" enabled="false"/>
-			<debug name="fixme" enabled="false"/>
-			<debug name="flat_short" enabled="false"/>
-			<debug name="flush_file" enabled="false"/>
-			<debug name="formal_generic" enabled="false"/>
-			<debug name="gelex" enabled="false"/>
-			<debug name="genericity" enabled="false"/>
-			<debug name="geyacc" enabled="false"/>
-			<debug name="has_calls" enabled="false"/>
-			<debug name="il_info_trace" enabled="false"/>
-			<debug name="local_feat_adaptation" enabled="false"/>
-			<debug name="log_exceptions" enabled="false"/>
-			<debug name="md out-of-order" enabled="false"/>
-			<debug name="optimization" enabled="false"/>
-			<debug name="options" enabled="false"/>
-			<debug name="parse" enabled="false"/>
-			<debug name="profile_convert" enabled="false"/>
-			<debug name="refactor_fixme" enabled="false"/>
-			<debug name="refactor_to_implement" enabled="false"/>
-			<debug name="regexp" enabled="false"/>
-			<debug name="remove_class" enabled="false"/>
-			<debug name="replication" enabled="false"/>
-			<debug name="server" enabled="false"/>
-			<debug name="show_prof_query" enabled="false"/>
-			<debug name="timing" enabled="false"/>
-			<debug name="to_implement" enabled="false"/>
-			<debug name="trace_table" enabled="false"/>
-			<debug name="transfer" enabled="false"/>
-			<debug name="verbose" enabled="false"/>
-			<debug name="xml_input_stream" enabled="false"/>
-			<debug name="xml_parser" enabled="false"/>
-			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
-		</option>
 		<variable name="batch_preferences" value="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf">
 			<condition>
@@ -269,115 +213,6 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option trace="false" profile="false" debug="false" warning="true">
-			<debug name="__unnamed_debug__" enabled="false"/>
-			<debug name="_jfiat" enabled="false"/>
-			<debug name="activity" enabled="false"/>
-			<debug name="actual_replication" enabled="false"/>
-			<debug name="anchored_features" enabled="false"/>
-			<debug name="assertion" enabled="false"/>
-			<debug name="assertions" enabled="false"/>
-			<debug name="auto_completion" enabled="false"/>
-			<debug name="c_debugger" enabled="false"/>
-			<debug name="cache" enabled="false"/>
-			<debug name="cache_compiler" enabled="false"/>
-			<debug name="cache_research" enabled="false"/>
-			<debug name="cache_server" enabled="false"/>
-			<debug name="cache_stat" enabled="false"/>
-			<debug name="cecil" enabled="false"/>
-			<debug name="check_expanded" enabled="false"/>
-			<debug name="class_of_id" enabled="false"/>
-			<debug name="com_object" enabled="false"/>
-			<debug name="count" enabled="false"/>
-			<debug name="dbg" enabled="false"/>
-			<debug name="dbg_extra_display" enabled="false"/>
-			<debug name="dbg_trace" enabled="false"/>
-			<debug name="dead_code" enabled="false"/>
-			<debug name="dead_code_removal" enabled="false"/>
-			<debug name="debbugger_hook" enabled="false"/>
-			<debug name="debug_recv" enabled="false"/>
-			<debug name="debugger" enabled="false"/>
-			<debug name="debugger_caching" enabled="false"/>
-			<debug name="debugger_eifnet_data" enabled="false"/>
-			<debug name="debugger_eifnet_data_extra" enabled="false"/>
-			<debug name="debugger_eifnet_synchro" enabled="false"/>
-			<debug name="debugger_evaluator" enabled="false"/>
-			<debug name="debugger_hook" enabled="false"/>
-			<debug name="debugger_icor_data" enabled="false"/>
-			<debug name="debugger_il_info_trace" enabled="false"/>
-			<debug name="debugger_il_info_trace_extra" enabled="false"/>
-			<debug name="debugger_interface" enabled="false"/>
-			<debug name="debugger_ipc" enabled="false"/>
-			<debug name="debugger_trace" enabled="false"/>
-			<debug name="debugger_trace_breakpoint" enabled="false"/>
-			<debug name="debugger_trace_cache" enabled="false"/>
-			<debug name="debugger_trace_callback" enabled="false"/>
-			<debug name="debugger_trace_callback_data" enabled="false"/>
-			<debug name="debugger_trace_callback_notify" enabled="false"/>
-			<debug name="debugger_trace_callstack" enabled="false"/>
-			<debug name="debugger_trace_callstack_data" enabled="false"/>
-			<debug name="debugger_trace_children" enabled="false"/>
-			<debug name="debugger_trace_eifnet" enabled="false"/>
-			<debug name="debugger_trace_eval" enabled="false"/>
-			<debug name="debugger_trace_eval_data" enabled="false"/>
-			<debug name="debugger_trace_operation" enabled="false"/>
-			<debug name="debugger_trace_stepping" enabled="false"/>
-			<debug name="debugger_trace_synchro" enabled="false"/>
-			<debug name="display_exception_trace" enabled="false"/>
-			<debug name="dle topo" enabled="false"/>
-			<debug name="dlg_dispatcher" enabled="false"/>
-			<debug name="document" enabled="false"/>
-			<debug name="dollar" enabled="false"/>
-			<debug name="editor" enabled="false"/>
-			<debug name="eiffelnet" enabled="false"/>
-			<debug name="eifnet_debugger" enabled="false"/>
-			<debug name="es_dockable_notebook" enabled="false"/>
-			<debug name="es_grid_layout" enabled="false"/>
-			<debug name="es_grid_layout_positioning" enabled="false"/>
-			<debug name="filters" enabled="false"/>
-			<debug name="fixme" enabled="false"/>
-			<debug name="flat_short" enabled="false"/>
-			<debug name="flush_file" enabled="false"/>
-			<debug name="formal_generic" enabled="false"/>
-			<debug name="gelex" enabled="false"/>
-			<debug name="genericity" enabled="false"/>
-			<debug name="geyacc" enabled="false"/>
-			<debug name="has_calls" enabled="false"/>
-			<debug name="hector" enabled="false"/>
-			<debug name="il_info_trace" enabled="false"/>
-			<debug name="larry" enabled="false"/>
-			<debug name="lex_output" enabled="false"/>
-			<debug name="local_feat_adaptation" enabled="false"/>
-			<debug name="log_exceptions" enabled="false"/>
-			<debug name="md out-of-order" enabled="false"/>
-			<debug name="once" enabled="false"/>
-			<debug name="optimization" enabled="false"/>
-			<debug name="options" enabled="false"/>
-			<debug name="parse" enabled="false"/>
-			<debug name="profile_convert" enabled="false"/>
-			<debug name="refactor_fixme" enabled="false"/>
-			<debug name="refactor_to_implement" enabled="false"/>
-			<debug name="regexp" enabled="false"/>
-			<debug name="remove_class" enabled="false"/>
-			<debug name="replication" enabled="false"/>
-			<debug name="server" enabled="false"/>
-			<debug name="show_prof_query" enabled="false"/>
-			<debug name="timing" enabled="false"/>
-			<debug name="to_implement" enabled="false"/>
-			<debug name="trace_table" enabled="false"/>
-			<debug name="transfer" enabled="false"/>
-			<debug name="update_on_idle" enabled="false"/>
-			<debug name="verbose" enabled="false"/>
-			<debug name="vision2_windows" enabled="false"/>
-			<debug name="vision2_windows_gdi" enabled="false"/>
-			<debug name="wel" enabled="false"/>
-			<debug name="wel_gdi_count" enabled="false"/>
-			<debug name="wel_gdi_references" enabled="false"/>
-			<debug name="win_dispatcher" enabled="false"/>
-			<debug name="xml_input_stream" enabled="false"/>
-			<debug name="xml_parser" enabled="false"/>
-			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
-		</option>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -503,6 +338,9 @@
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
 		<cluster name="eiffel_support" location="$EIFFEL_SRC\Eiffel\support\" recursive="true"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
+		<cluster name="framework" location="$EIFFEL_SRC\framework\">
+			<cluster name="fmwk_vision2" location="$|vision2\"/>
+		</cluster>
 		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -588,10 +426,6 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="framework" location="$EIFFEL_SRC\framework\">
-			<cluster name="fmwk_vision2" location="$|vision2\"/>
-		</cluster>
-
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 </system>

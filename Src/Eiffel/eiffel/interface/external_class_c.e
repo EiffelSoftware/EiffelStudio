@@ -708,8 +708,13 @@ feature {NONE} -- Initialization
 								-- object `l_ext', but that simpler this way.
 							create l_enum_ext
 							l_ext := l_enum_ext
-							create {EXTERNAL_FUNC_I} l_external.make (l_ext)
-							l_feat := l_external
+							if l_return_type.associated_class = Current then
+								create l_constant.make
+								l_feat := l_constant
+							else
+								create {EXTERNAL_FUNC_I} l_external.make (l_ext)
+								l_feat := l_external
+							end
 						else
 							create l_constant.make
 							l_feat := l_constant
@@ -991,10 +996,13 @@ feature {NONE} -- Initialization
 		local
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_property: CONSUMED_PROPERTY
+			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
+			l_field: CONSUMED_FIELD
 			l_getter, l_setter: CONSUMED_ENTITY
 			l_extrn_func_i: EXTERNAL_FUNC_I
 			l_def_func_i: DEF_FUNC_I
 			l_feat_i: FEATURE_I
+			l_attr_i: ATTRIBUTE_I
 		do
 			l_properties := external_class.properties
 			from
@@ -1028,6 +1036,29 @@ feature {NONE} -- Initialization
 					end
 				end
 				l_properties.forth
+			end
+
+			l_fields := external_class.fields
+			if l_fields.count > 0 then
+				from
+					l_fields.start
+				until
+					l_fields.after
+				loop
+					l_getter := l_fields.item
+					l_setter := l_fields.item.setter
+					if l_setter /= Void then
+						l_attr_i ?= a_feat_tbl.item (l_getter.eiffel_name)
+						check l_attr_i_attached: l_attr_i /= Void end
+
+						l_feat_i := a_feat_tbl.item (l_setter.eiffel_name)
+						check l_feat_i_attached: l_feat_i /= Void end
+						if l_feat_i /= Void and l_attr_i /= Void then
+							l_attr_i.set_type (l_attr_i.type, l_feat_i.feature_name_id)
+						end
+					end
+					l_fields.forth
+				end
 			end
 		end
 
@@ -1416,7 +1447,7 @@ feature {NONE} -- Implementation
 				end
 				($l_real32).memory_copy ($l_int32, 4)
 				create {REAL_VALUE_I} l_value.make_real_32 (l_real32)
-			elseif a_external_type.is_integer then
+			elseif a_external_type.is_integer or a_external_type.is_enum then
 				if a_value.item (1) = '-' then
 					l_val := a_value.substring (2, a_value.count)
 					l_is_negative := True

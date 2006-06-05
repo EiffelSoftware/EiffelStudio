@@ -932,12 +932,12 @@ feature {NONE} -- Actions
 						-- and show it.
 					insert_new_project (l_filename, 1)
 					update_project (projects_list.row (1), True, True, False)
+					projects_list.row (1).ensure_visible
+					projects_list.row (1).enable_select
 					if not has_error then
 						fill_locations
 					end
 
-					projects_list.row (1).ensure_visible
-					projects_list.row (1).enable_select
 					save_projects_list
 				end
 			end

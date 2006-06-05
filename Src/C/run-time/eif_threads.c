@@ -1331,8 +1331,11 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	if (nb > 1) {
 		for (i = 0; i < nb; i++) {
 			thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
-			if (thread_globals != rt_globals) {
-				if (thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) {
+			if (thread_globals != rt_globals) {	
+				if
+					((thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) &&
+					!(thread_globals->thread_exiting_cx))
+				{
 						/* Worst case scenario, some threads are still running. */
 					if (thread_globals->eif_thr_context_cx) {
 

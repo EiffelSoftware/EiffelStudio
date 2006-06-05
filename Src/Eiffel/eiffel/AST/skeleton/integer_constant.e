@@ -275,7 +275,8 @@ feature -- Type checking
 				else
 					create {INT_VAL_B} Result.make (integer_value.as_integer_32)
 				end
-			else
+			elseif value_type.is_natural then
+
 				check
 					natural_type: value_type.is_natural
 				end
@@ -285,6 +286,10 @@ feature -- Type checking
 				else
 					create {NAT_VAL_B} Result.make (natural_value.as_natural_32)
 				end
+			elseif value_type.is_enum then
+				create {INT_VAL_B} Result.make (integer_value.as_integer_32)
+			else
+				check False end
 			end
 		end
 
@@ -486,11 +491,12 @@ feature {NONE} -- Implementation
 		local
 			integer_a: INTEGER_A
 			natural_a: NATURAL_A
+
 		do
 			if t.is_integer then
 				integer_a ?= t
 				Result := integer_mask (integer_a.size)
-			else
+			elseif t.is_natural then
 				natural_a ?= t
 				Result := natural_mask (natural_a.size)
 			end

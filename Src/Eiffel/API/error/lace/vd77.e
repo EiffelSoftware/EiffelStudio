@@ -13,16 +13,16 @@ inherit
 	VD00
 		redefine
 			build_explain
-		end;
+		end
 
 feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Error in precompile configuration:");
-			st.add_string (error.out);
-			st.add_new_line;
-		end;
+			st.add_string ("Error in precompile configuration:")
+			st.add_multiline_string (error.out, 0)
+			st.add_new_line
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

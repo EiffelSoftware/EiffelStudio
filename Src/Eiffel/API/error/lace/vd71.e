@@ -39,7 +39,7 @@ feature -- Output
 	build_explain (st: TEXT_FORMATTER) is
 		do
 			st.add_string ("Error while building the configuration: ");
-			st.add_string (error.out);
+			st.add_multiline_string (error.out, 0)
 			st.add_new_line;
 		end;
 

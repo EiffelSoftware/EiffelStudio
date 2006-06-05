@@ -149,8 +149,8 @@ feature -- Multi-branch instruction processing
 			-- Inspect value of the given `value_type'
 		require
 			value_type_not_void: value_type /= Void
-			is_valid_inspect_type: value_type.is_character or value_type.is_integer or value_type.is_natural
-			is_valid_inspect_value: valid_type (value_type)
+			is_valid_inspect_type: value_type.is_character or value_type.is_integer or value_type.is_natural or value_type.is_enum
+			is_valid_inspect_value: valid_type (value_type) or value_type.is_enum
 		do
 			-- Do nothing here.
 		ensure

@@ -4940,8 +4940,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointed_widget: EV_WIDGET
 			pointed_item: EV_GRID_ITEM
 		do
-			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
-			if pointed_widget /= drawable and pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
+			pointed_widget := screen.widget_at_mouse_pointer
+			if pointed_widget /= drawable and then pointed_widget /= horizontal_scroll_bar and then pointed_widget /= vertical_scroll_bar and then pointed_widget /= header then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)
 				end
@@ -4963,7 +4963,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointed_widget: EV_WIDGET
 			pointed_item: EV_GRID_ITEM
 		do
-			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
+			pointed_widget := screen.widget_at_mouse_pointer
 			if pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)

@@ -135,6 +135,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_enum: BOOLEAN is
+			-- Is the current actual type an external enum one?
+		do
+			-- Do nothing
+		end
+
 	is_reference: BOOLEAN is
 			-- Is current actual type a reference one?
 		do

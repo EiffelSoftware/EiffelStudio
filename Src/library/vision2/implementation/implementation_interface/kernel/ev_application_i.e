@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 		do
 			if button = 1 then
 				disable_contextual_help
-				w := screen.widget_at_position (screen_x, screen_y)
+				w := screen.widget_at_mouse_pointer
 				if w /= Void then
 					display_help_for_widget (w)
 				end

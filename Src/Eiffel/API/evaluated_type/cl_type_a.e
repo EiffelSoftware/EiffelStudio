@@ -13,7 +13,7 @@ inherit
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format, convert_to,
-			is_full_named_type, is_external, is_conformant_to
+			is_full_named_type, is_external, is_enum, is_conformant_to
 		end
 
 	DEBUG_OUTPUT
@@ -112,6 +112,15 @@ feature -- Properties
 		do
 			l_base_class := associated_class
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
+		end
+
+	is_enum: BOOLEAN is
+			-- Is the current actual type an external enum one?
+		local
+			l_base_class: like associated_class
+		do
+			l_base_class := associated_class
+			Result := is_expanded and l_base_class.is_external and l_base_class.is_enum
 		end
 
 	is_system_object_or_any: BOOLEAN is

@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Facilities for direct drawing on the screen."
 	legal: "See notice at end of class."
@@ -30,14 +30,22 @@ feature -- Status report
 			Result := implementation.pointer_position
 		ensure
 			result_not_void: Result /= Void
-		end 
-	
+		end
+
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
 			-- Widget at position (`x', `y') if any.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.widget_at_position (x, y)
+		end
+
+	widget_at_mouse_pointer: EV_WIDGET is
+			-- Widget underneath mouse pointer if any.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.widget_at_mouse_pointer
 		end
 
 feature -- Basic operation
@@ -122,7 +130,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.height
 			positive: Result > 0
 		end
-		
+
 	vertical_resolution: INTEGER is
 			-- Number of pixels per inch along screen height.
 		do
@@ -130,7 +138,7 @@ feature -- Measurement
 		ensure
 			positive: Result > 0
 		end
-		
+
 	horizontal_resolution: INTEGER is
 			-- Number of pixels per inch along screen width.
 		do

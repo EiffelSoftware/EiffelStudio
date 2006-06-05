@@ -1759,6 +1759,7 @@ feature {NONE} -- Visitors
 			l_intervals: SORTED_TWO_WAY_LIST [INTERVAL_B]
 			l_spans: ARRAYED_LIST [INTERVAL_SPAN]
 			inspect_type: TYPE_I
+			l_cl_type_i: CL_TYPE_I
 			min_value: INTERVAL_VAL_B
 			max_value: INTERVAL_VAL_B
 			labels: ARRAY [IL_LABEL]
@@ -1780,8 +1781,15 @@ feature {NONE} -- Visitors
 				if l_intervals.count > 0 then
 						-- Calculate minimum and maximum values
 					inspect_type := a_node.switch.type
-					min_value := inspect_type.minimum_interval_value
-					max_value := inspect_type.maximum_interval_value
+					l_cl_type_i ?= inspect_type
+					if l_cl_type_i /= Void and then l_cl_type_i.is_enum then
+						create {INT_VAL_B}min_value.make ((-1) |<< (32 - 1))
+						create {INT_VAL_B}max_value.make ((1 |<< (32 - 1)) - 1)
+					else
+						min_value := inspect_type.minimum_interval_value
+						max_value := inspect_type.maximum_interval_value
+					end
+
 						-- Make sure there are no different objects for the same boundary
 					if l_intervals.first.lower.is_equal (min_value) then
 						min_value := l_intervals.first.lower

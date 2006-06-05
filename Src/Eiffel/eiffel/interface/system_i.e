@@ -1402,10 +1402,10 @@ feature -- Recompilation
 					loop
 						l_cli := new_classes.item
 						if l_cli.name.is_equal (l_clc.name) then
+							removed_classes.remove (l_clc)
+							real_removed_classes.remove (l_clc.original_class)
 							l_cli.reset_class_c_information (l_clc)
 							new_classes.remove
-							removed_classes.remove (l_clc)
-							l_cli.config_class.resurect
 							workbench.change_class (l_cli)
 							l_class_i_found := True
 						else

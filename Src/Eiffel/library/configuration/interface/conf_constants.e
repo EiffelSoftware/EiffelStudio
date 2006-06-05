@@ -42,6 +42,7 @@ feature -- Warnings
 	w_syntax: STRING is "syntax"
 	w_old_verbatim_strings: STRING is "old_verbatim_strings"
 	w_same_uuid: STRING is "same_uuid"
+	w_export_class_missing: STRING is "export_class_missing"
 
 feature -- Settings
 

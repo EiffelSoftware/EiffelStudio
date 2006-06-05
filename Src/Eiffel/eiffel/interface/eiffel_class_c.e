@@ -114,7 +114,7 @@ feature -- Action
 	record_precompiled_class_in_system is
 		local
 			ast_b: CLASS_AS
-			supplier_list: LINKED_LIST [ID_AS]
+			supplier_list: SEARCH_TABLE [ID_AS]
 			parent_list: EIFFEL_LIST [PARENT_AS]
 		do
 			if not is_in_system then
@@ -123,7 +123,7 @@ feature -- Action
 					ast_b := Ast_server.item (class_id)
 					supplier_list := ast_b.suppliers.supplier_ids
 					if not supplier_list.is_empty then
-						check_suppliers (supplier_list)
+						check_suppliers (supplier_list, False)
 					end
 					parent_list := ast_b.parents
 					if parent_list /= Void then
@@ -211,7 +211,7 @@ feature -- Action
 	end_of_pass1 (ast_b: CLASS_AS) is
 				-- End of the first pass after syntax analysis
 		local
-			supplier_list: LINKED_LIST [ID_AS]
+			supplier_list, light_supplier_list: SEARCH_TABLE [ID_AS]
 			parent_list: EIFFEL_LIST [PARENT_AS]
 			old_syntactical_suppliers: like syntactical_suppliers
 			unique_values: HASH_TABLE [INTEGER, STRING]
@@ -229,7 +229,13 @@ feature -- Action
 			create syntactical_suppliers.make (old_syntactical_suppliers.count)
 			supplier_list := ast_b.suppliers.supplier_ids
 			if not supplier_list.is_empty then
-				check_suppliers (supplier_list)
+				check_suppliers (supplier_list, False)
+			end
+			if lace_class.options.is_warning_enabled (w_export_class_missing) then
+				light_supplier_list := ast_b.suppliers.light_supplier_ids
+				if not light_supplier_list.is_empty then
+					check_suppliers (light_supplier_list, True)
+				end
 			end
 			parent_list := ast_b.parents
 			if parent_list /= Void then
@@ -1360,11 +1366,11 @@ feature {NONE} -- Class initialization
 				filters.make
 
 				fixme ("[
-					Manu: 01/12/2004:
-					This is not complete. We also need to type check and regenerate
-					the byte code for all the routines of descendants classes as even
-					though they haven't changed their code may refer to the former
-					generic type.
+						Manu: 01/12/2004:
+						This is not complete. We also need to type check and regenerate
+						the byte code for all the routines of descendants classes as even
+						though they haven't changed their code may refer to the former
+						generic type.
 					]")
 			end
 
@@ -1587,9 +1593,10 @@ feature -- Supplier checking
 			end
 		end
 
-	check_suppliers (supplier_list: LINKED_LIST [ID_AS]) is
+	check_suppliers (supplier_list: SEARCH_TABLE [ID_AS]; a_light_suppliers: BOOLEAN) is
 			-- Check the supplier ids of the current parsed class
 			-- and add perhaps classes to the system.
+			-- `a_light_suppliers' indicates that we only record classes that are already compiled and in the system.
 		require
 			good_argument: not
 				(supplier_list = Void or else supplier_list.is_empty)
@@ -1597,10 +1604,10 @@ feature -- Supplier checking
 			from
 				supplier_list.start
 			until
-				supplier_list.off
+				supplier_list.after
 			loop
-					-- Check supplier class_name `supplier_list.item' of the class
-				check_one_supplier (supplier_list.item)
+					-- Check supplier class_name `supplier_list.item_for_iteration' of the class
+				check_one_supplier (supplier_list.item_for_iteration, a_light_suppliers)
 				supplier_list.forth
 			end
 		end
@@ -1620,14 +1627,16 @@ feature -- Supplier checking
 			until
 				i = nb
 			loop
-				check_one_supplier (l_area.item (i).type.class_name)
+				check_one_supplier (l_area.item (i).type.class_name, False)
 				i := i + 1
 			end
 		end
 
-	check_one_supplier (cl_name: STRING) is
+	check_one_supplier (cl_name: STRING; a_light_supplier: BOOLEAN) is
 			-- Check if supplier class named `cl_name' is in the
 			-- universe.
+			-- `a_light_supplier' indicates that we only record it if it is already compiled but don't add it.
+			-- We also only generate a warning if the class cannot be found.
 		require
 			good_argument: cl_name /= Void
 		local
@@ -1642,29 +1651,38 @@ feature -- Supplier checking
 			if supplier_class /= Void and then not cl_name.is_equal ("NONE") then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
-				if not supplier_class.is_compiled then
-						-- Class is not in the system yet: ask the
-						-- workbench to mark it `changed'.
-						-- Mark the class `changed'.
-					Workbench.change_class (supplier_class)
-						-- Insertion the new compiler class (instance of
-						-- CLASS_C) in the system.
-				else
-					if
-						supplier_class.compiled_class.is_precompiled and then
-						not Compilation_modes.is_precompiling
-					then
-							-- Mark precompiled class as part of system.
-						supplier_class.compiled_class.record_precompiled_class_in_system
+				if not a_light_supplier then
+					if not supplier_class.is_compiled then
+							-- Class is not in the system yet: ask the
+							-- workbench to mark it `changed'.
+							-- Mark the class `changed'.
+						Workbench.change_class (supplier_class)
+							-- Insertion the new compiler class (instance of
+							-- CLASS_C) in the system.
+					else
+						if
+							supplier_class.compiled_class.is_precompiled and then
+							not Compilation_modes.is_precompiling
+						then
+								-- Mark precompiled class as part of system.
+							supplier_class.compiled_class.record_precompiled_class_in_system
+						end
 					end
 				end
 				comp_class := supplier_class.compiled_class
-				if comp_class /= Current then
+				check
+					not_light_implies_compiled: not a_light_supplier implies comp_class /= Void
+				end
+				if comp_class /= Current and comp_class /= Void then
 					syntactical_suppliers.start
 					syntactical_suppliers.search (comp_class)
 					if syntactical_suppliers.after then
 						syntactical_suppliers.extend (comp_class)
 					end
+				end
+			elseif a_light_supplier then
+				if not cl_name.is_equal ("NONE") then
+					system.record_potential_vtcm_warning (Current, cl_name)
 				end
 			else
 					-- We could not find class of name `cl_name', but it does not mean

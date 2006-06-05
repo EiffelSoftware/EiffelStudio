@@ -269,6 +269,10 @@ feature -- Properties
 			-- Table indexed by missing classnames where elements are
 			-- classes referencing the missing classname.
 
+	missing_classes_warning: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
+			-- Table indexed by missing classnames for which we only generate a
+			-- warning where elements are classes referencing the missing classname.
+
 	moved: BOOLEAN
 			-- Has the system potentially moved in terms of classes ?
 			-- [Each time a new class is inserted/removed in/from the system
@@ -626,6 +630,27 @@ end
 			l_table.put (a_class)
 		end
 
+	record_potential_vtcm_warning (a_class: CLASS_C; a_name: STRING) is
+			-- Record missing class name `a_name' in `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_table: SEARCH_TABLE [CLASS_C]
+		do
+			if missing_classes_warning = Void then
+				create missing_classes_warning.make (5)
+			end
+			missing_classes_warning.search (a_name)
+			if missing_classes_warning.found then
+				l_table := missing_classes_warning.found_item
+			else
+				create l_table.make (1)
+				missing_classes_warning.put (l_table, a_name)
+			end
+			l_table.put (a_class)
+		end
+
 	report_vtct_errors is
 			-- Report any remaining VTCT errors at the end of degree 5
 		local
@@ -698,6 +723,77 @@ end
 					end
 						-- Cannot go on here
 					Error_handler.raise_error
+				end
+			end
+		end
+
+	report_vtcm_warnings is
+			-- Report any remaining VTCM warnings at the end of degree 5
+		local
+			l_vtcm: VTCM
+			l_name: STRING
+			l_class: CLASS_C
+			l_table: SEARCH_TABLE [CLASS_C]
+			l_has_error: BOOLEAN
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [VTCM]
+			l_sorter: DS_QUICK_SORTER [VTCM]
+			l_list: DS_ARRAYED_LIST [VTCM]
+		do
+			if missing_classes_warning /= Void then
+				from
+						-- `l_list' is used to display errors in alphabetical order
+						-- This is mostly interesting for eweasel as the compiler does
+						-- not always give you the same order depending on the way
+						-- classes are written.
+					create l_list.make (missing_classes_warning.count)
+					missing_classes_warning.start
+				until
+					missing_classes_warning.after
+				loop
+					l_table := missing_classes_warning.item_for_iteration
+					l_name := missing_classes_warning.key_for_iteration
+					from
+						l_table.start
+					until
+						l_table.after
+					loop
+						l_class := l_table.item_for_iteration
+							-- At this stage classes have not yet been removed, so we simply
+							-- look into `removed_classes'.
+						if
+							l_class.original_class.is_compiled and
+							not (removed_classes /= Void and then removed_classes.has (l_class))
+						then
+							check
+								same_compiled_class: l_class.original_class.compiled_class = l_class
+							end
+								-- If class is still compiled then we should report the error.
+							create l_vtcm
+							l_vtcm.set_class (l_class)
+							l_vtcm.set_class_name (l_name)
+							l_list.force_last (l_vtcm)
+
+							l_has_error := True
+						end
+						l_table.forth
+					end
+					missing_classes_warning.forth
+				end
+
+				missing_classes_warning := Void
+
+				if l_has_error then
+					create l_agent_sorter.make (agent {VTCM}.less_than)
+					create l_sorter.make (l_agent_sorter)
+					l_sorter.sort (l_list)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						Error_handler.insert_warning (l_list.item_for_iteration)
+						l_list.forth
+					end
 				end
 			end
 		end
@@ -842,16 +938,15 @@ end
 			loop
 				l_conf_class := l_classes.item_for_iteration
 					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed external or precompiled classes
-				if not l_conf_class.is_class_assembly and not l_conf_class.is_precompiled then
+				if not l_conf_class.is_class_assembly then
 					l_class_i ?= l_conf_class
 					check l_class_i_not_void: l_class_i /= Void end
-					workbench.change_class (l_class_i)
-					if l_conf_class.is_renamed then
-						l_class_i.compiled_class.recompile_syntactical_clients
+					if not l_class_i.compiled_class.is_precompiled then
+						workbench.change_class (l_class_i)
+						if l_conf_class.is_renamed then
+							l_class_i.compiled_class.recompile_syntactical_clients
+						end
 					end
-				end
-				if compilation_modes.is_precompiling then
-					l_conf_class.enable_precompiled
 				end
 				l_conf_class.set_up_to_date
 				l_classes.forth
@@ -871,9 +966,6 @@ end
 						class_i: l_class_i /= Void
 					end
 					record_new_class_i (l_class_i)
-					if compilation_modes.is_precompiling then
-						l_conf_class.enable_precompiled
-					end
 					l_classes.forth
 				end
 			end
@@ -1482,6 +1574,7 @@ end
 					-- Let's report VTCT errors for classes not found at degree 5
 					-- It cannot be done at degree 5 (see eweasel test incr233 for why).
 				report_vtct_errors
+				report_vtcm_warnings
 
 					-- Fill parents.
 				process_post_degree_5

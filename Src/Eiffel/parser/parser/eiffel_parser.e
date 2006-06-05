@@ -4761,6 +4761,7 @@ end
 				yyval101 := ast_factory.new_class_list_as (counter_value + 1)
 				if yyval101 /= Void and yyvs2.item (yyvsp2) /= Void then
 					yyval101.reverse_extend (yyvs2.item (yyvsp2))
+					suppliers.insert_light_supplier_id (yyvs2.item (yyvsp2))
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -4800,6 +4801,7 @@ end
 				yyval101 := yyvs101.item (yyvsp101)
 				if yyval101 /= Void and yyvs2.item (yyvsp2) /= Void then
 					yyval101.reverse_extend (yyvs2.item (yyvsp2))
+					suppliers.insert_light_supplier_id (yyvs2.item (yyvsp2))
 					ast_factory.reverse_extend_separator (yyval101, yyvs4.item (yyvsp4))
 				end
 			

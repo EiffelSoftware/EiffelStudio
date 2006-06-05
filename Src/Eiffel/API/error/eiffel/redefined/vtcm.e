@@ -1,54 +1,79 @@
 indexing
-	description: "Precompiles are almost the same as libraries, except that on the first build they load the date as initial point for the incremental compilation"
+	description: "Warning when a class name of an export clause is not found in the surrounding universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_PRECOMPILE
+	VTCM
 
 inherit
-	CONF_LIBRARY
+	EIFFEL_WARNING
 		redefine
-			is_precompile,
-			process,
-			make,
-			is_readonly
+			build_explain
 		end
 
-create
-	make
+feature -- Properties
 
-feature {NONE} -- Initialization
+	class_name: STRING
+			-- Class name not found
 
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
-			-- Create associated to `a_target'.
+	code: STRING is "VTCM"
+			-- Error code
+
+feature -- Status report
+
+	less_than (other: VTCM): BOOLEAN is
+			-- Is `Current' less than `other'?
+		require
+			other_not_void: other /= Void
 		do
-			target := a_target
-			is_valid := True
-			set_name (a_name.as_lower)
-			set_location (a_location)
+			Result := associated_class.name < other.associated_class.name
 		end
 
-feature -- Status
+feature -- Output
 
-	is_precompile: BOOLEAN is
-			-- Is this a precompile?
-		once
-			Result := True
-		end
-
-	is_readonly: BOOLEAN is True
-			-- Precompiles are always readonly.
-
-feature -- Visit
-
-	process (a_visitor: CONF_VISITOR) is
-			-- Process `a_visitor'.
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
+			-- Build specific explanation explain for current error
+			-- in `a_text_formatter'.
 		do
-			a_visitor.process_group (Current)
-			a_visitor.process_precompile (Current)
+			a_text_formatter.add ("Class: ")
+			associated_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Unknown class name: ")
+			a_text_formatter.add (class_name)
+			a_text_formatter.add_new_line
+		end
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_class (c: like associated_class) is
+			-- Assign `c' to class_c.
+		require
+			valid_c: c /= Void
+		do
+			associated_class := c
+		end
+
+	set_class_name (s: STRING) is
+			-- Assign `s' to `class_name'.
+		require
+			s_not_void: s /= Void
+		do
+			class_name := s.as_upper
+		ensure
+			class_name_set: class_name /= Void
+		end
+
+	set_dotnet_class_name (s: STRING) is
+			-- Assign `s' to `class_name'.
+		require
+			s_not_void: s /= Void
+		do
+			class_name := s
+		ensure
+			class_name_set: class_name = s
 		end
 
 indexing
@@ -82,4 +107,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end
+
+end -- class VTCM

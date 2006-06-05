@@ -14,7 +14,7 @@ inherit
 			launch
 		end
 
-creation
+create
 	make,
 	make_with_start,
 	make_empty
@@ -59,7 +59,7 @@ feature -- Access
 				Result := 1
 			end
 		ensure then
-			start_position_in_the_scope: Result >= 1 and 
+			start_position_in_the_scope: Result >= 1 and
 										(is_keyword_set implies Result <= text_to_be_searched.count)
 		end
 

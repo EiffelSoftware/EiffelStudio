@@ -63,11 +63,18 @@ feature -- Status report
 		local
 			l_pointer_position: like pointer_position
 			l_widget_imp: EV_WIDGET_IMP
+			l_change: BOOLEAN
 		do
 			l_pointer_position := pointer_position
-			set_pointer_position (x, y)
+				-- If `x' and `y' are at the pointer position then as an optimization we do not change the position of the mouse.
+			l_change := l_pointer_position.x /= x or else l_pointer_position.y /= y
+			if l_change then
+				set_pointer_position (x, y)
+			end
 			l_widget_imp := widget_imp_at_pointer_position
-			set_pointer_position (l_pointer_position.x, l_pointer_position.y)
+			if l_change then
+				set_pointer_position (l_pointer_position.x, l_pointer_position.y)
+			end
 			if l_widget_imp /= Void then
 				Result := l_widget_imp.interface
 			end

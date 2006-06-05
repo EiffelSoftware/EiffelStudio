@@ -339,6 +339,10 @@ feature{NONE} -- Implementation/Search
 			search_enabled: searchable_component.is_search_enabled
 		do
 			search_with_direction (True, a_start_from_current)
+			if is_tool_attached then
+				searchable_component.grid.set_focus
+			end
+			searchable_component.grid.set_focus
 		end
 
 	search_next (a_start_from_current: BOOLEAN) is
@@ -350,6 +354,9 @@ feature{NONE} -- Implementation/Search
 			search_enabled: searchable_component.is_search_enabled
 		do
 			search_with_direction (False, a_start_from_current)
+			if is_tool_attached then
+				searchable_component.grid.set_focus
+			end
 		end
 
 	prepare_search_engine (a_engine: like search_engine) is

@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision screen. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,14 +26,23 @@ feature -- Status report
 			-- Widget at position (`x', `y') if any.
 		deferred
 		end
-		
+
+	widget_at_mouse_pointer: EV_WIDGET is
+			-- Widget at mouse pointer if any.
+		local
+			l_pointer_position: like pointer_position
+		do
+			l_pointer_position := pointer_position
+			Result := widget_at_position (l_pointer_position.x, l_pointer_position.y)
+		end
+
 	vertical_resolution: INTEGER is
 			-- Number of pixels per inch along screen height.
 		deferred
 		ensure
 			positive: Result > 0
 		end
-		
+
 	horizontal_resolution: INTEGER is
 			-- Number of pixels per inch along screen width.
 		deferred

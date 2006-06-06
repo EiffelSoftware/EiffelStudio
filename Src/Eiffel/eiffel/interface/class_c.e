@@ -2492,7 +2492,7 @@ feature -- IL code generation
 				class_name := precompiled_class_name
 				use_dotnet_naming := is_dotnet_naming
 			else
-				namespace := lace_class.actual_namespace
+				namespace := original_class.actual_namespace
 				class_name := name.as_lower
 				use_dotnet_naming := System.dotnet_naming_convention
 			end

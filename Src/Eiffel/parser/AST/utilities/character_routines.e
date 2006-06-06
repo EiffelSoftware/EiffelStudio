@@ -15,7 +15,7 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := char_to_string (char, False)
+			Result := char_to_string (char, False).twin
 		ensure
 			char_text_not_void: Result /= Void
 			refactoring_correct: Result.is_equal (old_char_text (char))
@@ -26,7 +26,7 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := code_to_string_32 (wchar.natural_32_code, False)
+			Result := code_to_string_32 (wchar.natural_32_code, False).twin
 		ensure
 			wchar_text_not_void: Result /= Void
 		end

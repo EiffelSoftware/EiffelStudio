@@ -57,11 +57,19 @@ feature {CONF_ACCESS} -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored to configuration file
 
+	set_visible (a_visible: like visible) is
+			-- Set `visible' to `a_visible'.
+		do
+			visible := a_visible
+		ensure
+			visible_set: visible = a_visible
+		end
+
 	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING) is
 			-- Add a visible.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_feature_ok: a_feature /= Void implies a_feature.is_equal (a_feature.as_lower) and not a_feature.is_empty
+			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
 			a_class_rename_ok: a_class_rename /= Void implies not a_class_rename.is_empty
 			a_feature_rename_ok: a_feature_rename /= Void implies not a_feature_rename.is_empty
 			a_feature_rename_implies_feature: a_feature_rename /= Void implies a_feature /= Void

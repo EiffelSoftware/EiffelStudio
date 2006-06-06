@@ -224,6 +224,9 @@ feature -- Visit nodes
 		do
 			append_pre_group ("library", a_library)
 			append_val_group (a_library)
+			if a_library.visible /= Void then
+				append_visible (a_library.visible)
+			end
 			append_post_group ("library")
 		ensure then
 			indent_back: indent = old indent
@@ -774,7 +777,7 @@ feature {NONE} -- Implementation
 						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
 							append_text (" class_rename=%""+l_class_rename+"%"")
 						end
-						if l_feat_rename /= Void and then not l_feat_rename.is_empty then
+						if l_feat_rename /= Void and then not l_feat_rename.is_empty and then not l_feat_rename.is_equal (l_feat) then
 							append_text (" feature_rename=%""+l_feat_rename+"%"")
 						end
 						append_text ("/>%N")

@@ -182,6 +182,10 @@ feature {NONE} -- Target names and descriptions
 	target_group_location_description: STRING is "Location of this group."
 	target_group_prefix_name: STRING is "Prefix"
 	target_group_prefix_description: STRING is "Prefix which all classes in this group get."
+	target_group_renaming_name: STRING is "Renaming"
+	target_group_renaming_description: STRING is "Renaming of classes in this group."
+	target_group_class_option_name: STRING is "Class options"
+	target_group_class_option_description: STRING is "Class specific options."
 
 	cluster_file_rule_name: STRING is "File pattern"
 	cluster_file_rule_description: STRING is "Exclude/include file pattern."
@@ -189,6 +193,10 @@ feature {NONE} -- Target names and descriptions
 	cluster_recursive_description: STRING is "Are subfolders recursively included?"
 	cluster_dependencies_name: STRING is "Dependencies"
 	cluster_dependencies_description: STRING is "Groups this cluster depends on."
+	cluster_visible_name: STRING is "Visible classes"
+	cluster_visible_description: STRING is "Classes visible for external code."
+	cluster_mapping_name: STRING is "Mapping"
+	cluster_mapping_description: STRING is "Special type mappings."
 
 	assembly_name_name: STRING is "Assembly name"
 	assembly_name_description: STRING is "Name of the assembly."
@@ -235,7 +243,7 @@ feature {NONE} -- Option names and descriptions
 	warning_descriptions: HASH_TABLE [STRING, STRING] is
 			-- Warning descriptions.
 		once
-			create Result.make (7)
+			create Result.make (8)
 			Result.force ("Locals that are not used.", w_unused_local)
 			Result.force ("Usage of obsolete classes.", w_obsolete_class)
 			Result.force ("Usage of obsolete features.", w_obsolete_feature)
@@ -243,6 +251,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Old syntax warning.", w_syntax)
 			Result.force ("Usage of old verbatim strings warning.", w_old_verbatim_strings)
 			Result.force ("Different files with the same uuid.", w_same_uuid)
+			Result.force ("Missing class in export clause.", w_export_class_missing)
 		end
 
 feature {NONE} -- Validation warnings

@@ -438,6 +438,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				create internal_mapping.make (1)
 			end
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+			cached_mapping := Void
+		end
+
+	set_mapping (a_mapping: like internal_mapping) is
+			-- Set `internal_mapping' to `a_mapping'.
+		do
+			internal_mapping := a_mapping
+			cached_mapping := Void
+		ensure
+			internal_mapping_set: internal_mapping = a_mapping
 		end
 
 feature {CONF_ACCESS} -- Update, not stored in configuration file

@@ -491,6 +491,18 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 			Result_not_void: Result /= Void
 		end
 
+	changable_class_options (a_class: STRING): like internal_options is
+			-- A possibility to change settings of `a_class' without knowing if we have some options already set.
+		do
+			if class_options /= Void then
+				Result := class_options.item (a_class)
+			end
+			if Result = Void then
+				create Result
+				add_class_options (Result, a_class)
+			end
+		end
+
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
 

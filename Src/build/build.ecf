@@ -24,14 +24,7 @@
 		</library>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf"/>
 
-		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
-			<cluster name="eiffel_parser_errors" location="$EIFFEL_SRC\Eiffel\API\error\misc\">
-				<file_rule>
-					<exclude>/error_handler.e$</exclude>
-					<exclude>/syntax_error.e$</exclude>
-				</file_rule>
-			</cluster>
-		</cluster>
+		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf"/>
 		<cluster name="build" location="$EIFFEL_SRC\build\" recursive="true">
 			<option>
 				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>

@@ -90,7 +90,7 @@ feature -- Status Report
 					end
 				else
 					l_content := file_content (a_file)
-					if l_content.substring (1, 8).is_equal ("--#line ") then
+					if l_content.substring (1, 8).is_equal ("--#line ") and Result.features /= Void then
 						l_index := l_content.index_of ('"', 1)
 						if l_index > 0 then
 							l_index2 := l_content.index_of ('%N', l_index + 1)

@@ -29,12 +29,12 @@ feature -- Initialization
 	tooltip: STRING_32 is
 			-- Tooltip that has been set.
 		local
-			tip_ptr: POINTER
+			tip_ptr, l_null: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := app_implementation.reusable_gtk_c_string
 			tip_ptr := {EV_GTK_EXTERNALS}.gtk_tooltips_data_get (visual_widget)
-			if tip_ptr /= NULL then
+			if tip_ptr /= l_null then
 				a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_tooltips_data_struct_tip_text (tip_ptr))
 				Result := a_cs.string
 			else
@@ -48,7 +48,7 @@ feature -- Element change
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
-			a_win: POINTER
+			a_win, l_null: POINTER
 		do
 			if not a_text.is_empty then
 				a_cs := app_implementation.c_string_from_eiffel_string (a_text)
@@ -56,14 +56,14 @@ feature -- Element change
 					tooltips_pointer,
 					visual_widget,
 					a_cs.item,
-					NULL
+					l_null
 				)
 			else
 				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 					tooltips_pointer,
 					visual_widget,
-					NULL,
-					NULL
+					l_null,
+					l_null
 				)
 				a_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 				if a_win /= default_pointer then

@@ -35,7 +35,10 @@ feature -- Basic operations
 		do
 			create file.make (new_name)
 			if file.exists then
-				file.change_name (original_name)
+					-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
+				if not original_name.is_equal (new_name) then
+					file.change_name (original_name)
+				end
 			end
 		end
 
@@ -46,7 +49,10 @@ feature -- Basic operations
 		do
 			create file.make (original_name)
 			if file.exists then
-				file.change_name (new_name)
+					-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
+				if not original_name.is_equal (new_name) then
+					file.change_name (new_name)
+				end
 			end
 		end
 

@@ -227,7 +227,9 @@ feature
 					if inline_needed (typ) then
 						inline_ext ?= extension
 						create real_arg_types.make (local_argument_types.lower, local_argument_types.upper-1)
-						real_arg_types.subcopy (local_argument_types, 2, local_argument_types.upper, 1)
+						if real_arg_types.count > 0 then
+							real_arg_types.subcopy (local_argument_types, 2, local_argument_types.upper, 1)
+						end
 
 						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
 					else

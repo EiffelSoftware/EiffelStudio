@@ -8896,7 +8896,12 @@ end
 
 					-- Call production should be used instead,
 					-- but this complicates the grammar.
-				yyval14 := new_call_instruction_from_expression (yyvs48.item (yyvsp48))
+				if has_type then
+					error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+					error_handler.raise_error
+				else
+					yyval14 := new_call_instruction_from_expression (yyvs48.item (yyvsp48))
+				end
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
@@ -15536,7 +15541,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs59.item (yyvsp59) 
+yyval48 := yyvs59.item (yyvsp59); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -15571,7 +15576,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs69.item (yyvsp69) 
+yyval48 := yyvs69.item (yyvsp69); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -15623,7 +15628,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs48.item (yyvsp48) 
+yyval48 := yyvs48.item (yyvsp48); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs48.put (yyval48, yyvsp48)
@@ -15640,7 +15645,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_bin_eq_as (yyvs48.item (yyvsp48 - 1), yyvs48.item (yyvsp48), yyvs4.item (yyvsp4)) 
+yyval48 := ast_factory.new_bin_eq_as (yyvs48.item (yyvsp48 - 1), yyvs48.item (yyvsp48), yyvs4.item (yyvsp4)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp48 := yyvsp48 -1
@@ -15659,7 +15664,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_bin_ne_as (yyvs48.item (yyvsp48 - 1), yyvs48.item (yyvsp48), yyvs4.item (yyvsp4)) 
+yyval48 := ast_factory.new_bin_ne_as (yyvs48.item (yyvsp48 - 1), yyvs48.item (yyvsp48), yyvs4.item (yyvsp4)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp48 := yyvsp48 -1
@@ -15678,7 +15683,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs32.item (yyvsp32) 
+yyval48 := yyvs32.item (yyvsp32); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -16361,7 +16366,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs11.item (yyvsp11) 
+yyval48 := yyvs11.item (yyvsp11); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -16396,7 +16401,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs28.item (yyvsp28) 
+yyval48 := yyvs28.item (yyvsp28); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -16431,7 +16436,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs75.item (yyvsp75) 
+yyval48 := yyvs75.item (yyvsp75); has_type := False 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -16466,7 +16471,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_un_old_as (yyvs48.item (yyvsp48), yyvs12.item (yyvsp12)) 
+yyval48 := ast_factory.new_un_old_as (yyvs48.item (yyvsp48), yyvs12.item (yyvsp12)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp12 := yyvsp12 -1
@@ -16484,7 +16489,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval48 := ast_factory.new_un_strip_as (yyvs20.item (yyvsp20), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				yyval48 := ast_factory.new_un_strip_as (yyvs20.item (yyvsp20), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)); has_type := True
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
@@ -16522,7 +16527,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_address_as (yyvs83.item (yyvsp83), yyvs4.item (yyvsp4)) 
+yyval48 := ast_factory.new_address_as (yyvs83.item (yyvsp83), yyvs4.item (yyvsp4)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp48 := yyvsp48 + 1
@@ -16558,7 +16563,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval48 := ast_factory.new_expr_address_as (yyvs48.item (yyvsp48), yyvs4.item (yyvsp4 - 2), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				yyval48 := ast_factory.new_expr_address_as (yyvs48.item (yyvsp48), yyvs4.item (yyvsp4 - 2), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)); has_type := True
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
@@ -16577,7 +16582,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval48 := ast_factory.new_address_current_as (yyvs9.item (yyvsp9), yyvs4.item (yyvsp4))
+				yyval48 := ast_factory.new_address_current_as (yyvs9.item (yyvsp9), yyvs4.item (yyvsp4)); has_type := True
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -16614,7 +16619,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval48 := ast_factory.new_address_result_as (yyvs6.item (yyvsp6), yyvs4.item (yyvsp4))
+				yyval48 := ast_factory.new_address_result_as (yyvs6.item (yyvsp6), yyvs4.item (yyvsp4)); has_type := True
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -16668,7 +16673,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs48.item (yyvsp48) 
+yyval48 := yyvs48.item (yyvsp48); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs48.put (yyval48, yyvsp48)
@@ -17517,7 +17522,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs31.item (yyvsp31) 
+yyval48 := yyvs31.item (yyvsp31); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17552,7 +17557,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := yyvs78.item (yyvsp78) 
+yyval48 := yyvs78.item (yyvsp78); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17587,7 +17592,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_expr_call_as (yyvs9.item (yyvsp9)) 
+yyval48 := ast_factory.new_expr_call_as (yyvs9.item (yyvsp9)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17622,7 +17627,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_expr_call_as (yyvs6.item (yyvsp6)) 
+yyval48 := ast_factory.new_expr_call_as (yyvs6.item (yyvsp6)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17657,7 +17662,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_expr_call_as (yyvs35.item (yyvsp35)) 
+yyval48 := ast_factory.new_expr_call_as (yyvs35.item (yyvsp35)); has_type := False 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17692,7 +17697,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_expr_call_as (yyvs43.item (yyvsp43)) 
+yyval48 := ast_factory.new_expr_call_as (yyvs43.item (yyvsp43)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp48 := yyvsp48 + 1
@@ -17727,7 +17732,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_paran_as (yyvs48.item (yyvsp48), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval48 := ast_factory.new_paran_as (yyvs48.item (yyvsp48), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)); has_type := True 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 -2

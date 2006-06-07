@@ -346,6 +346,9 @@ feature {NONE} -- Implementation
 	has_convert_mark: BOOLEAN
 			-- Boolean mark for alias names with convert mark
 
+	has_type: BOOLEAN
+			-- Is expression undoubtly typed?
+
 	initial_has_old_verbatim_strings_warning: BOOLEAN
 			-- Value of `has_old_verbatim_strings_warning' when parser was started
 

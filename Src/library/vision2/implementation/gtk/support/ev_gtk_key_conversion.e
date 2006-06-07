@@ -139,6 +139,8 @@ feature {NONE} -- Implementation
 			Result.put (Key_z_keysym, Key_z)
 			Result.put (Key_shift_keysym, Key_shift)
 			Result.put (Key_ctrl_keysym, Key_ctrl)
+			Result.put (key_left_alt_keysym, key_alt)
+			Result.put (key_right_alt_keysym, key_alt)
 			Result.put (Key_left_meta_keysym, Key_left_meta)
 			Result.put (Key_right_meta_keysym, Key_right_meta)
 		end
@@ -282,6 +284,8 @@ feature {NONE} -- Implementation
 			Result.put (Key_shift, Key_right_shift_keysym)
 			Result.put (Key_ctrl, Key_ctrl_keysym)
 			Result.put (Key_ctrl, Key_right_ctrl_keysym)
+			Result.put (key_alt, key_left_alt_keysym)
+			Result.put (key_alt, key_right_alt_keysym)
 			Result.put (Key_left_meta, Key_left_meta_keysym)
 			Result.put (Key_right_meta, Key_right_meta_keysym)
 			Result.put (Key_backquote, Key_tilde_keysym)
@@ -315,14 +319,14 @@ feature {EV_ANY_I} -- Externals
 		alias
 			"GDK_asciitilde"
 		end
-		
+
 	Key_exclamation_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_exclam"
 		end
-		
+
 	Key_at_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
@@ -336,14 +340,14 @@ feature {EV_ANY_I} -- Externals
 		alias
 			"GDK_numbersign"
 		end
-		
+
 	Key_dollar_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_dollar"
 		end
-		
+
 	Key_percent_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
@@ -357,98 +361,98 @@ feature {EV_ANY_I} -- Externals
 		alias
 			"GDK_asciicircum"
 		end
-		
+
 	Key_ampersand_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_ampersand"
 		end
-		
+
 	Key_asterisk_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_asterisk"
 		end
-		
+
 	Key_parenleft_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_parenleft"
 		end
-		
+
 	Key_parenright_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_parenright"
 		end
-		
+
 	Key_underscore_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_underscore"
 		end
-		
+
 	Key_plus_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_plus"
 		end
-		
+
 	Key_colon_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_colon"
 		end
-		
+
 	Key_quotedbl_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_quotedbl"
 		end
-		
+
 	Key_less_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_less"
 		end
-		
+
 	Key_greater_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_greater"
 		end
-		
+
 	Key_question_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_question"
 		end
-		
+
 	Key_braceleft_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_braceleft"
 		end
-		
+
 	Key_braceright_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_braceright"
 		end
-		
+
 	Key_bar_keysym: NATURAL_32 is
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
@@ -1414,6 +1418,21 @@ feature {EV_ANY_I} -- Externals
 		alias
 			"GDK_Meta_R"
 		end
+
+	Key_left_alt_keysym: NATURAL_32 is
+		external
+			"C macro use <gdk/gdkkeysyms.h>"
+		alias
+			"GDK_Alt_L"
+		end
+
+	Key_right_alt_keysym: NATURAL_32 is
+		external
+			"C macro use <gdk/gdkkeysyms.h>"
+		alias
+			"GDK_Alt_R"
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

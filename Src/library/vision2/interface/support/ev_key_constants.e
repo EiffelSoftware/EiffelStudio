@@ -108,8 +108,9 @@ feature -- Constants
 	Key_z: INTEGER is 93
 	Key_shift: INTEGER is 94
 	Key_ctrl: INTEGER is 95
-	Key_left_meta: INTEGER is 96
-	Key_right_meta: INTEGER is 97
+	Key_alt: INTEGER is 96
+	Key_left_meta: INTEGER is 97
+	Key_right_meta: INTEGER is 98
 
 feature -- Access
 
@@ -212,6 +213,7 @@ feature -- Access
 			Result.put ("z", Key_z)
 			Result.put ("Shift", Key_shift)
 			Result.put ("Ctrl", Key_ctrl)
+			Result.put ("Alt", Key_alt)
 			Result.put ("Left Meta", Key_left_meta)
 			Result.put ("Right Meta", Key_right_meta)
 		end

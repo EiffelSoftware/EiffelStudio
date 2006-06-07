@@ -173,9 +173,15 @@ feature {NONE} -- Implementation
 			-- Convert `a_path' into the internal representation.
 		require
 			a_path_not_void: a_path /= Void
+		local
+			l_net_share: BOOLEAN
 		do
+			l_net_share := a_path.count >= 2 and then ((a_path.item (1) = '\' or a_path.item (1) = '/') and (a_path.item (2) = '\' or a_path.item (2) = '/'))
 				-- always works, even if a_path is already in windows file format
 			Result := windows_file_system.pathname_from_file_system (a_path, unix_file_system)
+			if l_net_share then
+				Result.precede ('\')
+			end
 
 				-- convert $\ ($/ was converted into $\) at the beginning into $| because
 				-- internally we only accept this as indicator for the parent path.

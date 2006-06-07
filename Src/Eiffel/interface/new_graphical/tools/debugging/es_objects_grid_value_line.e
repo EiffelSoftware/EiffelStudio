@@ -66,7 +66,7 @@ feature -- Properties
 
 	object: ABSTRACT_DEBUG_VALUE
 
-	object_name: STRING is
+	object_name: STRING_32 is
 		do
 			Result := object.name
 		end

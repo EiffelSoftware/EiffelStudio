@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone representing an object address."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	OBJECT_STONE 
+	OBJECT_STONE
 
 inherit
 	CLASSC_STONE
@@ -19,13 +19,13 @@ inherit
 		end
 
 	SHARED_APPLICATION_EXECUTION
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (addr: STRING; a_name: STRING; dclass: CLASS_C) is
+	make (addr: STRING; a_name: STRING_32; dclass: CLASS_C) is
 		require
 			not_addr_void: addr /= Void
 			dclass_exists: dclass /= Void
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			object_address := addr
 			dynamic_class := dclass
 		end
- 
+
 feature -- Properties
 
-	name: STRING
+	name: STRING_32
 			-- Name associated with address (arg, local, result)
 
 	object_address: STRING
@@ -56,14 +56,14 @@ feature -- Access
 		do
 			Result := Cursors.cur_Object
 		end
- 
+
 	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_object
 		end
- 
+
 	stone_signature: STRING is
 		do
 			create Result.make (0)
@@ -73,7 +73,7 @@ feature -- Access
 			Result.append (" object at ")
 			Result.append (object_address)
 		end
- 
+
 	history_name: STRING is
 			-- Name used in the history list
 		do
@@ -134,7 +134,7 @@ feature -- Status report
 		do
 			Result ?= ev_item
 		end
-			
+
 invariant
 
 	address_exists: object_address /= Void

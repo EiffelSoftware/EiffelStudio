@@ -458,7 +458,7 @@ feature -- Status report
 			-- or conform to DEBUG_OUTPUT
 		local
 			dc: CLASS_C
-			string_c, system_string_c: CLASS_I
+			string_c, string_32_c, system_string_c: CLASS_I
 		do
 			if type = Type_string then
 				Result := True
@@ -467,11 +467,18 @@ feature -- Status report
 			elseif is_type_object and not is_void then
 				if dynamic_class /= Void then
 					string_c := Eiffel_system.system.string_class
+					string_32_c := Eiffel_system.system.string_32_class
 					system_string_c := eiffel_system.system.system_string_class
 					if
 						string_c /= Void
 						and then string_c.is_compiled
 						and then dynamic_class.simple_conform_to (string_c.compiled_class)
+					then
+						Result := True
+					elseif
+						string_32_c /= Void
+						and then string_32_c.is_compiled
+						and then dynamic_class.simple_conform_to (string_32_c.compiled_class)
 					then
 						Result := True
 					elseif
@@ -494,12 +501,12 @@ feature -- Status report
 			end
 		end
 
-	formatted_output: STRING is
+	formatted_output: STRING_32 is
 			-- Output of the call to `debug_output' on `Current', if any.
 		require
 			has_formatted_output
 		local
-			l_str: STRING
+			l_str: STRING_32
 			l_max: INTEGER
 		do
 			debug ("debugger_interface")
@@ -509,9 +516,9 @@ feature -- Status report
 				debug ("debugger_interface")
 					io.put_string ("Finding output value of constant string")
 				end
-				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""
+				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
 			elseif type = Type_string_dotnet and value_string_dotnet = Void then
-				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""
+				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
 			else
 				l_max := Application.displayed_string_size
 				l_str := truncated_string_representation (0, l_max)
@@ -521,7 +528,7 @@ feature -- Status report
 					end
 					create Result.make (Application.displayed_string_size + 2)
 					Result.append_character ('%"')
-					Result.append (Character_routines.eiffel_string (l_str))
+					Result.append (Character_routines.eiffel_string_32 (l_str))
 					Result.append_character ('%"')
 				else
 					Result := "`debug_output` disabled !"
@@ -549,7 +556,7 @@ feature -- Status report
 			end
 		end
 
-	output_for_debugger: STRING is
+	output_for_debugger: STRING_32 is
 			-- Displayed output, including string representation.
 			--| but remove address value
 		do
@@ -565,7 +572,7 @@ feature -- Status report
 			end
 		end
 
-	hexa_output_for_debugger: STRING is
+	hexa_output_for_debugger: STRING_32 is
 			-- Displayed output, including string representation.
 			--| but remove address value
 		do
@@ -584,13 +591,13 @@ feature -- Status report
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
 
-	formatted_truncated_string_representation (min, max: INTEGER): STRING is
+	formatted_truncated_string_representation (min, max: INTEGER): STRING_32 is
 		do
 			Result := truncated_string_representation (min, max)
 			Result.replace_substring_all ("%U", "%%U")
 		end
 
-	truncated_string_representation (min, max: INTEGER): STRING is
+	truncated_string_representation (min, max: INTEGER): STRING_32 is
 		do
 			Result := raw_string_representation (min, max)
 			if Result = Void then
@@ -602,7 +609,7 @@ feature -- Status report
 
 feature {DUMP_VALUE} -- string_representation Implementation
 
-	raw_string_representation (min, max: INTEGER): STRING is
+	raw_string_representation (min, max: INTEGER): STRING_32 is
 			-- Get the `debug_output' representation with bounds from `min' and `max'.
 			-- Special characters are not converted but '%U's are replaced by '%/1/' .
 		require
@@ -623,7 +630,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	classic_string_representation (min, max: INTEGER): STRING is
+	classic_string_representation (min, max: INTEGER): STRING_32 is
 			-- String representation for classic value
 			-- with bounds from `min' and `max'.
 		require
@@ -638,26 +645,36 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			area_attribute: SPECIAL_VALUE
 			count_attribute: DEBUG_VALUE [INTEGER]
 			l_count: INTEGER
-			sc: CLASS_C
-			l_conform_to_string, done: BOOLEAN
+			sc, sc8, sc32: CLASS_C
+			done: BOOLEAN
 			l_area_name, l_count_name: STRING
 			l_slice_max: INTEGER
 		do
-			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= Void
-										and then dynamic_class /= sc
-										and then dynamic_class.simple_conform_to (sc)
-			if dynamic_class = sc or l_conform_to_string then
-				if l_conform_to_string then
-						--| Take name of `area' and `count' from STRING in descendant version.
-					f := sc.feature_with_name (area_name).ancestor_version (dynamic_class)
-					l_area_name := f.name
-					f := sc.feature_with_name (count_name).ancestor_version (dynamic_class)
-					l_count_name := f.name
-				else
+			if dynamic_class /= Void then
+				sc8 := Eiffel_system.system.string_class.compiled_class
+				sc32 := Eiffel_system.system.string_32_class.compiled_class
+				if dynamic_class = sc8 or dynamic_class = sc32 then
+					sc := dynamic_class
 					l_area_name := area_name
 					l_count_name := count_name
+				else
+					if dynamic_class.simple_conform_to (sc8) then
+						sc := sc8
+					elseif dynamic_class.simple_conform_to (sc32) then
+						sc := sc32
+					end
+					if sc /= Void then
+							--| Take name of `area' and `count' from STRING or STRING_32 in descendant version.
+							--| since STRING.area and STRING_32.area are not inherited from STRING_GENERAL
+							--| we have to test the 2 cases : STRING and STRING_32
+						f := sc.feature_with_name (area_name).ancestor_version (dynamic_class)
+						l_area_name := f.name
+						f := sc.feature_with_name (count_name).ancestor_version (dynamic_class)
+						l_count_name := f.name
+					end
 				end
+			end
+			if l_area_name /= Void and l_count_name /= Void then
 					--| Getting count value and area object
 					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
 					--| since here only the printable characters matter
@@ -722,61 +739,72 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	dotnet_string_representation (min, max: INTEGER): STRING is
+	dotnet_string_representation (min, max: INTEGER): STRING_32 is
 			-- String representation for dotnet value
 			-- with bounds from `min' and `max'.
 		require
 			is_dotnet_system
 		local
-			sc: CLASS_C
+			sc, sc8, sc32: CLASS_C
 			si: CLASS_I
-			l_conformed_to_sc: BOOLEAN
 			l_eifnet_debugger: EIFNET_DEBUGGER
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_size: INTEGER
 		do
 			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
 
-			sc := Eiffel_system.system.string_class.compiled_class
-			l_conformed_to_sc := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
-			if dynamic_class = sc or l_conformed_to_sc then
-				l_icdov := new_value_object_dotnet
-				if l_icdov = Void then
-					Result := "Void"
+			if dynamic_class /= Void then
+				sc8 := Eiffel_system.system.string_class.compiled_class
+				sc32 := Eiffel_system.system.string_32_class.compiled_class
+				if dynamic_class = sc8 or dynamic_class = sc32 then
+					sc := dynamic_class
+				elseif dynamic_class.simple_conform_to (sc8) then
+					sc := sc8
+				elseif dynamic_class.simple_conform_to (sc32) then
+					sc := sc32
 				else
-					Result := l_eifnet_debugger.string_value_from_string_class_value (value_dotnet, l_icdov, min, max)
-					last_string_representation_length := l_eifnet_debugger.last_string_value_length
-					l_icdov.clean_on_dispose
+					sc := Void
 				end
-			else
-				si := Eiffel_system.system.system_string_class
-				if si /= Void and then si.is_compiled then
-					sc := si.compiled_class
-					l_conformed_to_sc := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
-					if dynamic_class = sc or l_conformed_to_sc then
-						if value_string_dotnet /= Void then
-							Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
-							last_string_representation_length := l_eifnet_debugger.last_string_value_length
-						elseif value_string /= Void then
-							Result := value_string
-							last_string_representation_length := value_string.count
-							if max < 0 then
-								l_size := last_string_representation_length
-							else
-								l_size := (max + 1).min (last_string_representation_length)
+				if sc /= Void then
+					l_icdov := new_value_object_dotnet
+					if l_icdov = Void then
+						Result := "Void"
+					else
+						Result := l_eifnet_debugger.string_value_from_string_class_value (sc, value_dotnet, l_icdov, min, max)
+						last_string_representation_length := l_eifnet_debugger.last_string_value_length
+						l_icdov.clean_on_dispose
+					end
+				else
+					si := Eiffel_system.system.system_string_class
+					if si /= Void and then si.is_compiled then
+						sc := si.compiled_class
+						if dynamic_class = sc or dynamic_class.simple_conform_to (sc) then
+							if value_string_dotnet /= Void then
+								Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
+								last_string_representation_length := l_eifnet_debugger.last_string_value_length
+							elseif value_string /= Void then
+								Result := value_string
+								last_string_representation_length := value_string.count
+								if max < 0 then
+									l_size := last_string_representation_length
+								else
+									l_size := (max + 1).min (last_string_representation_length)
+								end
+								Result := Result.substring ((min + 1).max (1), l_size)
 							end
-							Result := Result.substring ((min + 1).max (1), l_size)
+						else
+							Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 						end
 					else
 						Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 					end
-				else
-					Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 				end
+			else
+				Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 			end
 		end
 
-	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING is
+	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING_32 is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
 		require
 			is_dotnet_system
@@ -791,7 +819,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is
+	classic_debug_output_evaluated_string (min, max: INTEGER): STRING_32 is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
 		require
 			is_classic_system
@@ -935,7 +963,8 @@ feature -- Action
 				when Type_pointer then
 					send_ptr_value(value_pointer)
 				when Type_string then
-					value_string_c := value_string.to_c
+					fixme("We should handle STRING_32 on the runtime side of the debuger")
+					value_string_c := value_string.as_string_8.to_c
 					send_string_value($value_string_c)
 				when Type_object, Type_expanded_object then
 					if value_address /= Void then
@@ -952,29 +981,6 @@ feature -- Action
 		end
 
 feature -- Access
-
-	type_and_value: STRING is
-			-- String representation of the type and value of `Current'.
-			--| dynamic CLASS_NAME = `full_output'
-		do
-			create Result.make (100)
-
-			Result.append (generating_type_representation)
-			if is_void then
-				Result.append (" = Void")
-			elseif dynamic_class /= Void then
-				if is_type_object or type = Type_string_dotnet then
-					Result.append_character (' ')
-				else
-					Result.append_character (' ')
-					Result.append_character ('=')
-					Result.append_character (' ')
-				end
-				Result.append (full_output)
-			else
-				Result.append (full_output)
-			end
-		end
 
 	generating_type_representation: STRING is
 			-- {TYPE}.generating_type string representation
@@ -1013,7 +1019,7 @@ feature -- Access
 			end
 		end
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- String representation of the value of `Current'.
 			--| True
 			--| '/123/ :'C'
@@ -1035,7 +1041,7 @@ feature -- Access
 			when Type_wide_character then
 				create Result.make (10)
 				Result.append_character ('/')
-				Result.append_integer (value_wide_character.code)
+				Result.append_string (value_wide_character.natural_32_code.out)
 				Result.append ("/ : %'")
 				Result.append (Character_routines.wchar_text (value_wide_character))
 				Result.append_character ('%'')
@@ -1056,7 +1062,7 @@ feature -- Access
 			when Type_string then
 				create Result.make (value_string.count + 2)
 				Result.append_character ('%"')
-				Result.append (value_string)
+				Result.append (value_string.as_string_8)
 				Result.append_character ('%"')
 			when Type_string_dotnet , Type_object, type_expanded_object then
 				if value_address /= Void then
@@ -1080,7 +1086,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	hexa_output_value: STRING is
+	hexa_output_value: STRING_32 is
 			-- String representation of the value of `Current'.
 			--| True
 			--| '/123/ :'C'
@@ -1089,7 +1095,7 @@ feature -- Access
 			--| <0x12345678>
 			--| Void
 		local
-			l_0x: STRING
+			l_0x: STRING_32
 		do
 			l_0x := once "0x"
 			inspect type
@@ -1167,7 +1173,7 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	type_of_bits	: STRING
 	value_pointer	: POINTER
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
-	value_string    : STRING -- String value
+	value_string    : STRING_32 -- String value
 
 	value_exception : EXCEPTION_DEBUG_VALUE
 

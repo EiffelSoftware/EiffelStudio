@@ -138,12 +138,12 @@ feature {NONE} -- Computed Value access
 		deferred
 		end
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		deferred
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		deferred
 		end

@@ -258,7 +258,7 @@ feature -- Concrete evaluation
 				print (generating_type + ".evaluate_function :%N")
 				print ("%Taddr="); print (a_addr); print ("%N")
 				if a_target /= Void then
-					print ("%Ttarget=not Void : [" + a_target.type_and_value + "] %N")
+					print ("%Ttarget=not Void : [" + a_target.output_for_debugger + "] %N")
 				else
 					print ("%Ttarget=Void %N")
 				end

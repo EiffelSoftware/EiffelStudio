@@ -109,7 +109,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_wchar (v: WIDE_CHARACTER) is
 			-- Receive a character value.
 		do
-			create {DEBUG_VALUE [WIDE_CHARACTER]} item.make (sk_wchar, v)
+			create {WIDE_CHARACTER_VALUE} item.make (sk_wchar, v)
 		end
 
 	set_real (v: REAL) is

@@ -1420,10 +1420,10 @@ feature -- Exception
 	exception_info_retrieved: BOOLEAN
 			-- Are exception info retrieved ?
 
-	exception_info_to_string: STRING
+	exception_info_to_string: STRING_32
 			-- Exception "ToString" output.
 
-	exception_info_message: STRING
+	exception_info_message: STRING_32
 			-- Exception "GetMessage" output.
 
 	exception_info_class_name: STRING
@@ -1491,14 +1491,14 @@ feature -- Exception
 			retry
 		end
 
-	exception_text_from (icdv: ICOR_DEBUG_VALUE): STRING is
+	exception_text_from (icdv: ICOR_DEBUG_VALUE): STRING_32 is
 			-- Get `exception_info_to_string' and `exception_info_message'
 		local
 			retried: BOOLEAN
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_class_name, l_module_name: STRING
-			l_to_string, l_message: STRING
+			l_to_string, l_message: STRING_32
 		do
 			if not retried then
 				if
@@ -1844,39 +1844,41 @@ feature -- Specific function evaluation
 			end
 		end
 
-	icd_string_value_from_string_class_value (icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
+	icd_string_value_from_string_class_value (sc: CLASS_C; icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
 			-- ICorDebugStringValue for `icd_string_instance_ref' (STRING object)
+			--| `sc' represents the STRING or STRING_32 class_i
 		require
-			icd_string_instance /= Void
+			sc_not_void: sc /= Void
+			icd_string_instance_not_void: icd_string_instance /= Void
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
-			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
-			l_string_class: CLASS_C
 
 			l_feat_to_cil: FEATURE_I
 			l_feat_to_cil_token: INTEGER
 			l_function_to_cil: ICOR_DEBUG_FUNCTION
 		do
 				--| Get STRING info from compilo
-			l_string_class := Eiffel_system.String_class.compiled_class
-
 				--| Get token to access `to_cil'
-			l_feat_to_cil := l_string_class.feature_named ("to_cil")
+			l_feat_to_cil := sc.feature_named ("to_cil")
+
 			if l_feat_to_cil /= Void then
 				l_feat_to_cil_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_to_cil)
-				l_class := icd_string_instance.get_class
-				if l_class /= Void then
-					l_module := l_class.get_module
-					l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
-					l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
-					if eifnet_dbg_evaluator.last_eval_is_exception then
-						l_icd_value := Void
-					end
-						--| l_icd_value represents the `System.String' value
-					if l_icd_value /= Void then
-						Result := edv_formatter.icor_debug_string_value (l_icd_value)
-						l_icd_value.clean_on_dispose
+				if l_feat_to_cil_token > 0 then
+					l_module := icor_debug_module_for_class (l_feat_to_cil.written_class)
+					if l_module /= Void then
+						l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
+						if l_function_to_cil /= Void then
+							l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
+							if eifnet_dbg_evaluator.last_eval_is_exception then
+								l_icd_value := Void
+							end
+								--| l_icd_value represents the `System.String' value
+							if l_icd_value /= Void then
+								Result := edv_formatter.icor_debug_string_value (l_icd_value)
+								l_icd_value.clean_on_dispose
+							end
+						end
 					end
 				end
 			end
@@ -1885,8 +1887,12 @@ feature -- Specific function evaluation
 	last_string_value_length: INTEGER
 			-- Last length of the Result from `string_value_from_string_class_object_value'
 
-	string_value_from_string_class_value (icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE; min, max: INTEGER): STRING is
+	string_value_from_string_class_value (
+				sc: CLASS_C;
+				icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE;
+				min, max: INTEGER): STRING_32 is
 			-- STRING value for `icd_string_instance' with limits `min, max'
+			-- precise in `sc' if this is a STRING, or STRING_32
 		local
 			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
 		do
@@ -1894,7 +1900,7 @@ feature -- Specific function evaluation
 			if icd_string_instance = Void then
 				Result := Void
 			else
-				l_icd_string_value := icd_string_value_from_string_class_value (icd_string_instance_ref, icd_string_instance)
+				l_icd_string_value := icd_string_value_from_string_class_value (sc, icd_string_instance_ref, icd_string_instance)
 				if l_icd_string_value /= Void then
 					Result := string_value_from_system_string_class_value (l_icd_string_value, min, max)
 					l_icd_string_value.clean_on_dispose
@@ -1902,7 +1908,7 @@ feature -- Specific function evaluation
 			end
 		end
 
-	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING is
+	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING_32 is
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_size: INTEGER
@@ -1919,7 +1925,7 @@ feature -- Specific function evaluation
 					l_size := (max + 1).min (last_string_length)
 				end
 				Result := icd_string_value.get_string (l_size)
-				Result := Result.substring ((min + 1).max (1), l_size)
+				Result := Result.substring ((min + 1).max (1), l_size.min (Result.count))
 			end
 		end
 
@@ -1969,7 +1975,8 @@ feature -- Specific function evaluation
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
-						Result := string_value_from_string_class_value (l_icd, l_icdov, 0, -1)
+							--| the result should be a STRING instance
+						Result := string_value_from_string_class_value (Eiffel_system.system.string_class.compiled_class, l_icd, l_icdov, 0, -1)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose
@@ -1998,7 +2005,7 @@ feature -- Specific function evaluation
 
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE;
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE;
- 				min,max: INTEGER): STRING is
+ 				min,max: INTEGER): STRING_32 is
 			-- Debug ouput string value
 		local
 			l_icd_frame: ICOR_DEBUG_FRAME
@@ -2056,7 +2063,8 @@ feature -- Specific function evaluation
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
-						Result := string_value_from_string_class_value (l_icd, l_icdov, min, max)
+							--| This is a STRING instance
+						Result := string_value_from_string_class_value (Eiffel_system.system.string_class.compiled_class, l_icd, l_icdov, min, max)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose
@@ -2080,7 +2088,7 @@ feature -- Specific function evaluation
 			end
 		end
 
- 	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
+ 	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32 is
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE
@@ -2135,7 +2143,7 @@ feature -- Specific function evaluation
 			end
 		end
 
- 	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
+ 	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32 is
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE

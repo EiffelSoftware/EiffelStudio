@@ -68,7 +68,7 @@ feature -- Recycling
 
 feature -- Properties
 
-	object_name: STRING is
+	object_name: STRING_32 is
 		do
 			Result := title
 		end
@@ -105,7 +105,7 @@ feature -- Query
 			end
 		end
 
-	object_value: STRING is
+	object_value: STRING_32 is
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then

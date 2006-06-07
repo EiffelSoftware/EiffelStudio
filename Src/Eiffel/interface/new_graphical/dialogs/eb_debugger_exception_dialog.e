@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exception_tag, a_exception_message: STRING) is
+	make (a_exception_tag, a_exception_message: STRING_32) is
 			-- Create Current with Exception message
 		do
 			default_create
@@ -81,7 +81,7 @@ feature -- Show
 
 feature -- Details
 
-	set_title_and_label (t,l: STRING) is
+	set_title_and_label (t,l: STRING_GENERAL) is
 			-- Set the title and the label of the window
 		require
 			t /= Void
@@ -91,14 +91,14 @@ feature -- Details
 			label.set_text (l)
 		end
 
-	set_exception_tag (t: STRING) is
+	set_exception_tag (t: STRING_32) is
 			-- Set tag and refresh display
 		do
 			tag := t
 			display_exception_tag_and_message
 		end
 
-	set_exception_message (t: STRING) is
+	set_exception_message (t: STRING_32) is
 			-- Set message and refresh display
 		do
 			message := t
@@ -108,9 +108,9 @@ feature -- Details
 	display_exception_tag_and_message is
 			-- Display Exception's tag and message
 		local
-			s: STRING
+			s: STRING_32
 		do
-			s := ""
+			create s.make_empty
 			if tag /= Void then
 				s.append_string (tag)
 				s.append_string ("%N%N")
@@ -126,10 +126,10 @@ feature -- Details
 			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
 		end
 
-	set_details (d: STRING) is
+	set_details (d: STRING_32) is
 			-- Add additional details
 		local
-			s: STRING
+			s: STRING_32
 		do
 			s := d.twin
 			if s.occurrences ('%R') > 0 then
@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	tag, message: STRING
+	tag, message: STRING_32
 			-- Exception tag and message
 
 	save_exception_message is

@@ -122,7 +122,7 @@ feature -- Clipboard related
 	update_clipboard_string_with_selection (grid: ES_OBJECTS_GRID) is
 		local
 			dv: ABSTRACT_DEBUG_VALUE
-			text_data: STRING
+			text_data: STRING_GENERAL
 			lrow: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_LINE
 		do

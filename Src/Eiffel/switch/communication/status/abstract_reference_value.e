@@ -31,7 +31,7 @@ feature -- Properties
 	address: STRING;
 			-- Address of referenced object (Void if no object)
 
-	string_value: STRING;
+	string_value: STRING_32
 			-- Value if the reference object is a STRING
 
 	is_null: BOOLEAN
@@ -100,7 +100,7 @@ feature {NONE} -- Output
 			end
 		end;
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 			if is_null then

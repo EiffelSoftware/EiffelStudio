@@ -293,7 +293,9 @@ feature -- Access
 				l_tag ?= details.reference_item (2)
 				l_msg ?= details.reference_item (3)
 				if l_tag /= Void then
-					Result.append_string ("[" + l_tag + "] ")
+					Result.append_string ("[")
+					Result.append_string (l_tag)
+					Result.append_string ("] ")
 				end
 				Result.append_string (l_msg)
 				error_messages.forth

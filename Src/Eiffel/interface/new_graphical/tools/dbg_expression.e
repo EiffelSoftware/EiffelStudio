@@ -12,8 +12,8 @@ class
 
 inherit
 	DEBUG_OUTPUT
-		rename
-			debug_output as expression
+		redefine
+			debug_output
 		end
 
 --create
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_expression (new_expr: STRING) is
+	make_with_expression (new_expr: STRING_32) is
 		do
 			syntax_error := False
 			error_message := Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {EB_EXPRESSION} -- Parsing
 
-	set_expression (new_expr: STRING) is
+	set_expression (new_expr: STRING_32) is
 		require
 			valid_expression: valid_expression (expression)
 		do
@@ -51,18 +51,32 @@ feature {EB_EXPRESSION} -- Parsing
 
 feature -- Properties
 
-	expression: STRING
+	expression: STRING_32
 			-- String representation of the like Current.
+
+feature -- Debug output
+
+	debug_output: STRING is
+		do
+			if expression /= Void then
+				Result := expression.as_string_8
+			end
+		end
 
 feature -- Status
 
-	valid_expression (expr: STRING): BOOLEAN is
+	valid_expression (expr: STRING_32): BOOLEAN is
 			-- Is `expr' a valid expression?
 		do
 			Result := expr /= Void
 			if Result then
 				Result := not expr.has ('%R') and not expr.has ('%N')
 			end
+		end
+
+	has_unicode_character: BOOLEAN is
+		do
+			Result := expression /= Void and then not expression.is_equal (expression.as_string_8.as_string_32)
 		end
 
 feature -- Access

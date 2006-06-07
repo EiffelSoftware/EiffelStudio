@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			context_class := cl
 		end
 
-	make_with_object (obj: DEBUGGED_OBJECT; new_expr: STRING) is
+	make_with_object (obj: DEBUGGED_OBJECT; new_expr: STRING_32) is
 			-- Initialize `Current' and link it to an object `obj' whose dynamic type is `dtype'.
 			-- Initialize the expression to `new_expr'.
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			create_expression (new_expr)
 		end
 
-	make_with_class (cl: CLASS_C; new_expr: STRING) is
+	make_with_class (cl: CLASS_C; new_expr: STRING_32) is
 			-- Initialize `Current' and link it to a class `cl'.
 			-- Initialize the expression to `new_expr'.
 		require
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			create_expression (new_expr)
 		end
 
-	make_for_context (new_expr: STRING) is
+	make_for_context (new_expr: STRING_32) is
 			-- Initialize `Current' and link it to the context.
 			-- Initialize the expression to `new_expr'.
 		require
@@ -81,8 +81,8 @@ feature {NONE} -- Initialization
 			on_context := True
 			create_expression (new_expr)
 		end
-		
-	create_expression (new_expr: STRING) is
+
+	create_expression (new_expr: STRING_32) is
 			-- create `dbg_expression' from `new_expr' text
 		do
 			create {DBG_EXPRESSION_B} dbg_expression.make_with_expression (new_expr)
@@ -110,7 +110,7 @@ feature {NONE} -- Expression validator
 
 feature -- Properties
 
-	name: STRING
+	name: STRING_32
 			-- Optional name to qualify this expression.
 
 feature -- Change
@@ -150,16 +150,16 @@ feature -- Status
 		do
 			evaluation_disabled := False
 		end
-		
+
 	disable_evaluation is
 			-- Disable evaluation of Current expression
 		do
 			evaluation_disabled := True
 		end
-		
+
 	evaluation_disabled: BOOLEAN
 			-- Is Current expression evaluation disabled ?
-			
+
 	evaluation_enabled: BOOLEAN is
 			-- Is Current expression evaluation enabled ?	
 		do
@@ -211,7 +211,7 @@ feature -- Bridge to dbg_expression_evaluator
 	error_occurred: BOOLEAN is
 		do
 			Result := evaluation_error_code /= 0 or syntax_error_occurred
-		end		
+		end
 
 	evaluation_error_code: INTEGER is
 		local
@@ -220,18 +220,18 @@ feature -- Bridge to dbg_expression_evaluator
 			l_evaluator := expression_evaluator
 			if l_evaluator /= Void then
 				Result := l_evaluator.error
-			end			
-		end		
-		
+			end
+		end
+
 feature -- Bridge to dbg_expression
-		
+
 	syntax_error_occurred: BOOLEAN is
 			-- Is there a syntax error in dbg_expression ?
 		do
 			Result := not as_object and then dbg_expression.syntax_error
 		end
-		
-	expression: STRING is
+
+	expression: STRING_32 is
 			-- Expression text
 		do
 			if dbg_expression /= Void then
@@ -241,7 +241,7 @@ feature -- Bridge to dbg_expression
 
 feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Restricted Bridge to dbg_expression
 
-	set_expression (expr: STRING) is
+	set_expression (expr: like expression) is
 			-- Set string value for `dbg_expression'
 		require
 			expr /= Void

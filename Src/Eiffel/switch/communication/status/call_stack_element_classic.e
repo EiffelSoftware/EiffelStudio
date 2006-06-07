@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			until
 				error or item = Void
 			loop
-				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value%N"); end
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value : ARGUMENTS%N"); end
 				unprocessed_values.extend (item)
 				retrieved_arguments_count := retrieved_arguments_count + 1
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
@@ -236,13 +236,16 @@ feature {NONE} -- Implementation
 			until
 				error or item = Void
 			loop
-				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value%N"); end
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value LOCALS%N"); end
 				unprocessed_values.extend (item)
 				retrieved_locals_count := retrieved_locals_count + 1
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
 				recv_value (Current)
 			end
 			reset_recv_value
+			debug ("DEBUGGER_TRACE");
+				io.error.put_string (generator + ": receiving locals & arguments COMPLETED %N")
+			end
 		end
 
 	initialize_stack is

@@ -41,11 +41,12 @@ feature -- Access
 	message: STRING
 			-- Information message to display in object tool
 
-	display_message: STRING is
+	display_message: STRING_32 is
 			-- Computed information message to display in object tool
 		do
-			Result := message
-			if Result = Void then
+			if message /= Void then
+				Result := message.as_string_32
+			else
 				Result := "Unavailable value"
 			end
 		end
@@ -78,13 +79,13 @@ feature {NONE} -- Output
 			st.add_string (display_message)
 		end
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
 			Result := address
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 			Result := display_message

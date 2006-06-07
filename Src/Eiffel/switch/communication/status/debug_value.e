@@ -148,13 +148,13 @@ feature {NONE} -- Output
 			st.add_string (value.out)
 		end;
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 			Result := value.out
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 			create Result.make (40)

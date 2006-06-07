@@ -88,6 +88,7 @@ feature -- Access
 			l_info: EIFNET_DEBUG_VALUE_INFO
 			r: INTEGER
 			p: POINTER
+			s32: STRING_32
 		do
 			if not thread_details_fetched then
 				thread_details_fetched := True
@@ -111,7 +112,10 @@ feature -- Access
 										)
 						l_icdov.clean_on_dispose
 						if l_name_icd /= Void then
-							thread_name := Eifnet_debugger.Edv_external_formatter.system_string_value_to_string (l_name_icd)
+							s32 := Eifnet_debugger.Edv_external_formatter.system_string_value_to_string (l_name_icd)
+							if s32 /= Void then
+								thread_name := s32.as_string_8
+							end
 							l_name_icd.clean_on_dispose
 						end
 						if l_priority_icd /= Void then

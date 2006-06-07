@@ -164,7 +164,7 @@ feature -- Properties
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR
 
-	object_name: STRING is
+	object_name: STRING_32 is
 		do
 			if title /= Void then
 				Result := title
@@ -206,7 +206,7 @@ fixme ("find a smarter way to get a valid value")
 			end
 		end
 
-	object_value: STRING is
+	object_value: STRING_32 is
 			-- Full ouput representation for related object
 		require
 			last_dump_value /= Void
@@ -235,7 +235,7 @@ fixme ("find a smarter way to get a valid value")
 
 feature -- Graphical changes
 
-	set_expression_text (v: STRING) is
+	set_expression_text (v: STRING_32) is
 		require else
 			is_attached_to_row: row /= Void
 		local
@@ -332,10 +332,10 @@ feature -- Graphical changes
 			grid_cell_set_pixmap (gi, v)
 		end
 
-	show_error_dialog (txt: STRING) is
+	show_error_dialog (txt: STRING_32) is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
-			l_tag: STRING
+			l_tag: STRING_32
 		do
 			if expression /= Void then
 				l_tag := expression.expression.twin
@@ -378,13 +378,14 @@ feature -- Graphical changes
 
 	compute_grid_display is
 		local
-			l_tooltip: STRING
 			l_error_message: STRING
 			l_error_tag: STRING
+			l_tooltip: STRING_32
 			glab: EV_GRID_LABEL_ITEM
-			add,res,typ: STRING
+			add,typ: STRING
+			res: STRING_32
 			l_exception_dump_value: DUMP_VALUE
-			l_title: STRING
+			l_title: STRING_32
 		do
 			if not compute_grid_display_done and not refresh_requested then
 				if evaluation_requested then
@@ -404,7 +405,8 @@ feature -- Graphical changes
 							set_title (expression.context_address)
 						end
 						if title /= Void then
-							l_tooltip.append_string ("OBJECT NAME: " + title)
+							l_tooltip.append_string ("OBJECT NAME: ")
+							l_tooltip.append_string (title)
 						end
 					else
 						set_expression_text (expression.expression)
@@ -429,7 +431,12 @@ feature -- Graphical changes
 						if expression_evaluator.error_occurred then
 							l_error_message := expression_evaluator.text_from_error_messages
 							l_error_tag := expression_evaluator.short_text_from_error_messages
-							l_tooltip.prepend_string ("ERROR OCCURRED: %N" + l_error_message + "%N%N")
+
+							if l_error_message /= Void then
+								l_tooltip.prepend_string ("%N%N")
+								l_tooltip.prepend_string (l_error_message.as_string_32)
+							end
+							l_tooltip.prepend_string ("ERROR OCCURRED: %N")
 							if l_error_tag /= Void then
 								l_error_tag := "[" + l_error_tag + "] "
 							else

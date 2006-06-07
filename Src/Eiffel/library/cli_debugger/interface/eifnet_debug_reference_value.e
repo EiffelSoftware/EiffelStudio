@@ -167,7 +167,7 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;

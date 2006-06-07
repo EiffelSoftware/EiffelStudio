@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Run time value representing of reference object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -110,7 +110,7 @@ feature -- Access
 
 feature {NONE} -- Output value
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -136,7 +136,7 @@ feature {NONE} -- Output value
 feature -- Output
 
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
-			-- List of all sub-items of `Current'. 
+			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
 		local
@@ -154,7 +154,7 @@ feature -- Output
 			-- sort `children' and return it.
 		do
 			Result := children
-			if 
+			if
 				Result /= Void and then not is_already_sorted
 			then
 				sort_debug_values (Result)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			-- Does the children are attached to a Tuple or Special object?
 			-- i.e: is Current a Tuple or a Special object ?
 			--| Nota: may be used only after a call to `children'
-		
+
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
@@ -198,8 +198,8 @@ feature {NONE} -- Property
 			-- Dynamic type id of return type
 
 	private_dynamic_class: CLASS_C;
-			-- Saved class 
-			
+			-- Saved class
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

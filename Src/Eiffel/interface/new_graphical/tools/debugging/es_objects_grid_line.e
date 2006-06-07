@@ -108,7 +108,9 @@ feature -- Recycling
 		do
 			Result := generating_type
 			if object_name /= Void then
-				Result.append_string (" name=[" + object_name + "] ")
+				Result.append_string (" name=[")
+				Result.append_string (object_name.as_string_8)
+				Result.append_string ("] ")
 			end
 		end
 
@@ -236,7 +238,7 @@ feature -- Properties
 
 	object_is_special_value: BOOLEAN
 
-	object_name: STRING is
+	object_name: STRING_32 is
 		deferred
 		end
 
@@ -258,13 +260,13 @@ feature -- Properties
 
 feature -- Query
 
-	text_data_for_clipboard: STRING is
+	text_data_for_clipboard: STRING_32 is
 		local
 			dv: DUMP_VALUE
 		do
 			create Result.make (10)
 			if object_name /= Void then
-				Result.append_string (object_name + ": ")
+				Result.append_string (object_name.as_string_32 + ": ")
 			end
 			dv := associated_dump_value
 			if dv /= Void then
@@ -320,7 +322,7 @@ feature -- Pick and Drop
 			not object_stone_properties_computed
 		local
 			ost: OBJECT_STONE
-			ostn: STRING
+			ostn: STRING_32
 		do
 			object_stone_properties_computed := True
 
@@ -477,10 +479,10 @@ feature -- Graphical changes
 		deferred
 		end
 
-	title: STRING
+	title: STRING_32
 			-- `title' value overwrite name's value.
 
-	set_title (v: STRING) is
+	set_title (v: STRING_GENERAL) is
 		local
 			cell:EV_GRID_LABEL_ITEM
 		do
@@ -494,7 +496,7 @@ feature -- Graphical changes
 			end
 		end
 
-	set_name (v: STRING) is
+	set_name (v: STRING_GENERAL) is
 		require
 			is_attached_to_row: is_attached_to_row
 		local
@@ -527,7 +529,7 @@ feature -- Graphical changes
 			apply_cell_address_properties_on (glab)
 		end
 
-	set_value (v: STRING) is
+	set_value (v: STRING_GENERAL) is
 		require
 			is_attached_to_row: is_attached_to_row
 		local
@@ -637,7 +639,7 @@ feature -- Updating
 			-- Update numerical value
 		local
 			l_dmp: DUMP_VALUE
-			l_text: STRING
+			l_text: STRING_32
 		do
 			l_dmp := last_dump_value
 			if l_dmp /= Void then
@@ -943,7 +945,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING) is
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING_GENERAL) is
 			-- attach `dv' to row `a_row'
 		require
 			debug_value_not_void: dv /= Void
@@ -951,7 +953,7 @@ feature {NONE} -- Filling
 			parent_grid.attach_debug_value_from_line_to_grid_row (a_row, dv, a_line, a_title)
 		end
 
-	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING) is
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING_GENERAL) is
 			-- attach `dv' to row `a_row'
 			-- if `a_title' is not Void, use this string as name.
 		require
@@ -1009,7 +1011,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-	cell_text_updated (v: STRING; c: INTEGER): ES_OBJECTS_GRID_CELL is
+	cell_text_updated (v: STRING_GENERAL; c: INTEGER): ES_OBJECTS_GRID_CELL is
 		do
 			Result := es_cell (c)
 			if v /= Void then

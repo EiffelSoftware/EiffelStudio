@@ -48,8 +48,8 @@ feature -- Access
 	pointer_class: CLASS_I
 			-- Class POINTER
 
-	string_class, system_string_class: CLASS_I
-			-- Class STRING
+	string_32_class, string_class, system_string_class: CLASS_I
+			-- Class STRING ...
 
 	array_class: CLASS_I
 			-- Class ARRAY
@@ -522,6 +522,16 @@ feature -- Settings
 			pointer_class := c
 		ensure
 			pointer_class_set: pointer_class = c
+		end
+
+	set_string_32_class (c: CLASS_I) is
+			-- Assign `c' to `string_32_class'.
+		require
+			c_not_void: c /= Void
+		do
+			string_32_class := c
+		ensure
+			string_32_class_set: string_32_class = c
 		end
 
 	set_string_class (c: CLASS_I) is

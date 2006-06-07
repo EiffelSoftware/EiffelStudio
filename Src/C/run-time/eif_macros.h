@@ -1134,8 +1134,8 @@ RT_LNK int fcount;
 
 #define RTPOF(p,o)		(EIF_POINTER)((EIF_POINTER *)(((char *)(p))+(o)))
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
-#define RTXA(x,y)		xcopy(x, y)
-#define RTEQ(x,y)		xequal(x, y)
+#define RTXA(x,y)		eif_xcopy(x, y)
+#define RTEQ(x,y)		eif_xequal(x, y)
 #define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? eif_is_nested_expanded(HEADER(x)->ov_flags) : 0)
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x)			((x) - RTOF(x))

@@ -57,7 +57,7 @@ feature -- Status
 		end
 
 
-feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
+feature {EIFNET_EXPORTER} -- Evaluation primitives
 
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
 			-- Function evaluation result for `a_func' on `a_icd'
@@ -132,7 +132,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			Result := complete_function_evaluation
 		end
 
-feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
+feature {EIFNET_EXPORTER} -- Basic value creation
 
 	new_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with i4

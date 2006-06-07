@@ -1110,6 +1110,7 @@ feature -- Access
 			old_context_class: like context_class
 			old_context_class_type: like context_class_type
 			old_int_expression_byte_note: like internal_expression_byte_node
+			bak_byte_code: BYTE_CODE
 		do
 				--| Backup current context and values
 			old_context_feature := context_feature
@@ -1136,11 +1137,19 @@ feature -- Access
 					else
 						Byte_context.change_class_type_context (context_class_type, context_class_type)
 					end
+					bak_byte_code := Byte_context.byte_code
+					if context_feature /= Void then
+						Byte_context.set_current_feature (context_feature)
+						Byte_context.set_byte_code (context_feature.byte_server.item (context_feature.body_index))
+					end
 				end
 
 				Result := expression_byte_node.type.is_boolean
 				if context_class_type /= Void and Byte_context.is_class_type_changed then
 					Byte_context.restore_class_type_context
+				end
+				if bak_byte_code /= Void then
+					Byte_context.set_byte_code (bak_byte_code)
 				end
 			end
 
@@ -1242,6 +1251,9 @@ feature {NONE} -- Implementation
 							l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
 							if l_ct_locals /= Void then
 									--| if it failed .. let's continue anyway for now
+									
+									--| Last local return a new object
+									--| so there is no need to "twin" it
 								Ast_context.set_locals (l_ct_locals)
 							end
 						end

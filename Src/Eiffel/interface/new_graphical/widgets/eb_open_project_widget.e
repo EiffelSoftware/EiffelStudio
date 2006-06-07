@@ -1036,8 +1036,8 @@ feature {NONE} -- Actions
 		local
 			l_row: EV_GRID_ROW
 		do
-			if y > projects_list.header.height then
-				l_row := projects_list.row_at_virtual_position (y + projects_list.virtual_y_position, True)
+			if y > projects_list.viewable_y_offset then
+				l_row := projects_list.row_at_virtual_position (y + projects_list.virtual_y_position - projects_list.viewable_y_offset, True)
 				if l_row /= Void and not is_empty and has_selected_item then
 					on_project_selected (projects_list.selected_rows.first)
 					if not has_error then

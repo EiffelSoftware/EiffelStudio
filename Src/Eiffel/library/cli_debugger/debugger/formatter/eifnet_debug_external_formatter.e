@@ -16,11 +16,11 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 		export
 			{NONE} all
-		end		
+		end
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Provide info from debugger
 
@@ -37,7 +37,7 @@ feature {NONE} -- Debugger information
 
 feature -- Conversion String
 
-	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING is
+	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING_32 is
 			-- STRING value from `v' which is supposed to be a System.String value.
 		do
 			Result := Edv_formatter.icor_debug_value_as_string_to_string (v)
@@ -47,14 +47,14 @@ feature -- StringBuilder
 
 	icor_debug_string_value_from_string_builder (v: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
 		require
-			v_not_void: v /= Void			
+			v_not_void: v /= Void
 		do
 			Result := icor_debug_string_value_from (v, token_StringBuilder_m_StringValue)
-		end		
+		end
 
 	string_from_string_builder (v: ICOR_DEBUG_VALUE): STRING is
 		require
-			v_not_void: v /= Void	
+			v_not_void: v /= Void
 		do
 			Result := string_from (v, token_StringBuilder_m_StringValue)
 		end
@@ -72,7 +72,7 @@ feature -- exception
 				Result.append_string (" :: ")
 			end
 
-			l_str := string_from (v, token_Exception__message) 
+			l_str := string_from (v, token_Exception__message)
 			if l_str /= Void then
 				Result.append_string (l_str)
 			end
@@ -80,7 +80,7 @@ feature -- exception
 
 	classname_from_exception (v: ICOR_DEBUG_VALUE): STRING is
 		do
-			Result := string_from (v, token_Exception__className) 
+			Result := string_from (v, token_Exception__className)
 		end
 
 feature {NONE} -- get member data
@@ -111,9 +111,9 @@ feature {NONE} -- get member data
 				l_icd_obj_value.clean_on_dispose
 				l_value_info.icd_prepared_value.clean_on_dispose
 				l_value_info.clean
-			end	
+			end
 		end
-		
+
 	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
 		require
 			v_not_void: v /= Void
@@ -168,10 +168,10 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 					--| System.Threading.Thread |--
 				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Threading.Thread")
 				private_token_System_Threading_Thread_m_Name := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Name")
-				private_token_System_Threading_Thread_m_Priority := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Priority")				
+				private_token_System_Threading_Thread_m_Priority := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Priority")
 			end
-		end		
-		
+		end
+
 	token_StringBuilder_m_StringValue: INTEGER is
 			-- Attribute token of System.StringBuilder::m_StringValue	
 		do
@@ -181,7 +181,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				Result := private_token_StringBuilder_m_StringValue
 			end
 		end
-		
+
 	token_Exception__message: INTEGER is
 			-- Attribute token of System.Exception::_message
 		do
@@ -190,7 +190,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				get_system_exception_tokens
 				Result := private_token_Exception__message
 			end
-		end	
+		end
 
 	token_Exception__className: INTEGER is
 			-- Attribute token of System.Exception::_className
@@ -200,7 +200,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				get_system_exception_tokens
 				Result := private_token_Exception__className
 			end
-		end	
+		end
 
 	token_Exception_ToString: INTEGER is
 			-- Attribute token of System.Exception::ToString
@@ -210,7 +210,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				get_system_exception_tokens
 				Result := private_token_Exception_ToString
 			end
-		end	
+		end
 
 	token_Exception_get_Message: INTEGER is
 			-- Attribute token of System.Exception::get_Message
@@ -230,8 +230,8 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				get_system_threading_thread_tokens
 				Result := private_token_System_Threading_Thread_m_Name
 			end
-		end				
-		
+		end
+
 	token_Thread_m_Priority: INTEGER is
 			-- Attribute token of System.Threading.Thread::m_Priority
 		do
@@ -240,13 +240,13 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 				get_system_threading_thread_tokens
 				Result := private_token_System_Threading_Thread_m_Priority
 			end
-		end		
+		end
 
 feature {NONE} -- Once per instance implementation
 
 	private_token_StringBuilder_m_StringValue: INTEGER
 			-- Attribute token of System.StringBuilder::m_StringValue	
-		
+
 	private_token_Exception__message: INTEGER
 			-- Attribute token of System.Exception::ToString
 
@@ -258,13 +258,13 @@ feature {NONE} -- Once per instance implementation
 
 	private_token_Exception_get_Message: INTEGER
 			-- Attribute token of System.Exception::get_Message
-			
+
 	private_token_System_Threading_Thread_m_Name: INTEGER
 			-- Attribute token of System.Threading.Thread::m_Name
-			
+
 	private_token_System_Threading_Thread_m_Priority: INTEGER;
 			-- Attribute token of System.Threading.Thread::m_Priority
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

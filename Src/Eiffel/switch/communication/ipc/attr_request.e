@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 				when Sk_char then
 					create {CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character (c_tread))
 				when Sk_wchar then
-					create {DEBUG_VALUE [WIDE_CHARACTER]} attr.make_attribute (sk_type, attr_name, e_class, to_wide_char (c_tread))
+					create {WIDE_CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_wide_char (c_tread))
 				when Sk_uint8 then
 					create {DEBUG_VALUE [NATURAL_8]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_8 (c_tread))
 				when Sk_uint16 then

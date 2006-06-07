@@ -16,26 +16,26 @@ inherit
 			init_icor
 		end
 
-create 
+create
 	make_by_pointer
-	
+
 
 feature {NONE} -- Initialization
 
 	init_icor is
-			-- 
+			--
 		do
 			Precursor
 			length := get_length
 			string := get_string (10)
 		end
-		
+
 feature {ICOR_EXPORTER} -- Properties
 
 	length: INTEGER
-	
-	string: STRING
-	
+
+	string: STRING_32
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_length: INTEGER is
@@ -44,17 +44,19 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_length (item, $Result)
 		end
 
-	get_string (a_len: INTEGER): STRING is
+	get_string (a_len: INTEGER): STRING_32 is
 			-- GetString
 		local
 			p_nbfetched: INTEGER
 			mp_name: MANAGED_POINTER
+			ws: WEL_STRING
 		do
 			create mp_name.make (( 1 + a_len ) * sizeof_WCHAR)
-			
+
 			last_call_success := cpp_get_string (item, a_len, $p_nbfetched, mp_name.item)
 			if mp_name.item /= default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer_and_count (mp_name.item, a_len)).string_with_count (a_len)
+				create ws.make_by_pointer (mp_name.item)
+				Result := ws.string -- ubstring (1, a_len.min (p_nbfetched))
 			end
 		end
 

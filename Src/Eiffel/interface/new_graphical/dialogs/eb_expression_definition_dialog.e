@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			disable_all_but_object_radios
 		end
 
-	make_as_named_object (oa: STRING; on: STRING) is
+	make_as_named_object (oa: STRING; on: STRING_32) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			expression_field.set_text (a_exp)
 		end
 
-	make_with_named_object (oa: STRING; on: STRING) is
+	make_with_named_object (oa: STRING; on: STRING_32) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
@@ -511,15 +511,16 @@ feature {NONE} -- Event handling
 			cl_i: LIST [CLASS_I]
 			cl: CLASS_C
 			t: STRING
+			s32: STRING_32
 			wd: EV_WARNING_DIALOG
-			oe: STRING
+			oe: STRING_32
 			do_not_close_dialog: BOOLEAN
 			app_exec: APPLICATION_EXECUTION
 		do
 			if modified_expression = Void then
 				if class_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := class_field.text.as_upper
+					t := class_field.text.as_string_8.as_upper
 						--| First find the class given in `class_field'.
 					cl_i := Eiffel_universe.classes_with_name (t)
 					if not cl_i.is_empty then
@@ -536,7 +537,7 @@ feature {NONE} -- Event handling
 							create new_expression.make_with_class (cl, expression_field.text)
 							if new_expression.syntax_error_occurred then
 								set_focus (expression_field)
-								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
+								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8))
 								wd.show_modal_to_window (dialog)
 							end
 						else
@@ -551,7 +552,7 @@ feature {NONE} -- Event handling
 					end
 				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := address_field.text.as_upper
+					t := address_field.text.as_string_8.as_upper
 					if
 						t.item (1).is_equal ('0')
 						and then t.item (2).is_equal ('X')

@@ -21,16 +21,16 @@ inherit
 			address
 		redefine
 			output_value, kind, expandable
-		end		
-		
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal
 		end
-	
+
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
-	
+
 feature {NONE} -- Initialization
 
 	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 				length := icd_string_value.get_length
 				release_icd_string_value
 			end
-			
+
 			is_external_type := True
 			get_truncated_string_value (Application.displayed_string_size)
 
@@ -84,28 +84,28 @@ feature -- get
 		do
 			string_value := icd_value_info.value_to_truncated_string (a_size)
 		end
-		
+
 	get_icd_string_value is
 			-- Get `icd_string_value'
 		do
 			icd_string_value := icd_value_info.interface_debug_string_value
 		end
-		
+
 	release_icd_string_value is
 			-- Release `icd_string_value'
 		do
 			icd_string_value.clean_on_dispose
 			icd_string_value := Void
 		end
-		
+
 feature -- Access
-		
+
 	icd_string_value: ICOR_DEBUG_STRING_VALUE
 			-- String value
-			
+
 	length: INTEGER
 			-- Capacity/Size of the String value
-	
+
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
@@ -121,14 +121,14 @@ feature -- Access
 		end
 
 feature {NONE} -- Output
-	
-	output_value: STRING is
+
+	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
 			Result := string_value
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 			create Result.make (40)
@@ -136,7 +136,7 @@ feature {NONE} -- Output
 			Result.append (Equal_sign_str)
 			Result.append (output_value)
 		end
-		
+
 feature -- Output	
 
 	expandable: BOOLEAN is
@@ -158,10 +158,10 @@ feature -- Output
 			Result := attributes
 			if Result = Void then
 				Result := children_from_external_type
-				attributes := Result			
+				attributes := Result
 			end
 		end
-		
+
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 
 	kind: INTEGER is
@@ -169,7 +169,7 @@ feature -- Output
 			-- Used to display the corresponding icon.
 		do
 			if is_null then
-				Result := Void_value	
+				Result := Void_value
 			else
 				if is_static then
 					Result := Static_external_reference_value

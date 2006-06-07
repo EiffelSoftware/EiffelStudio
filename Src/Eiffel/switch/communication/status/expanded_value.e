@@ -136,10 +136,13 @@ feature {NONE} -- Output
 			end
 		end;
 
-	output_value: STRING is "Expanded object"
+	output_value: STRING_32 is
 			-- Return a string representing `Current'.
+		once
+			Result := "Expanded object"
+		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;

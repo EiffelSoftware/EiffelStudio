@@ -145,13 +145,13 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	new_string (str: STRING) is
+	new_string (str: STRING_GENERAL) is
 			-- NewString allocates a string object with the given contents.
 		local
-			l_uni_string: UNI_STRING
+			l_ws: WEL_STRING
 		do
-			create l_uni_string.make (str)
-			last_call_success := cpp_new_string (item, l_uni_string.item)
+			create l_ws.make (str)
+			last_call_success := cpp_new_string (item, l_ws.item)
 		end
 
 	new_object (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is

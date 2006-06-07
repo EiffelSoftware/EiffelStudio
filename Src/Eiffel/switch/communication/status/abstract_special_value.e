@@ -170,16 +170,16 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
-			str: STRING
+			str: STRING_32
 		do
 			if address = Void then
 				Result := NONE_representation
 			else
 				Result := Left_address_delim + address + Right_address_delim
-				str := string_value
+				str := string_value.as_string_8
 				if str /= Void then
 					Result.append (Equal_sign_str)
 					Result.append (str)
@@ -187,7 +187,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -219,7 +219,7 @@ feature -- Change
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING_GENERAL is
 		deferred
 		end
 

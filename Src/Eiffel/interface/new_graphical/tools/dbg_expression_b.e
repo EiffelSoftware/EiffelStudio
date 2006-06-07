@@ -21,16 +21,25 @@ feature -- Parsing
 	parse_expression is
 		local
 			sp: SHARED_EIFFEL_PARSER
+			s8: STRING
 			p: EIFFEL_PARSER
 			retried: BOOLEAN
 		do
 			if not retried then
-				create sp
-				p := sp.expression_parser
-				p.parse_from_string ("check " + expression)
-				expression_ast ?= p.expression_node
-				check
-					expression_ast /= Void
+				if has_unicode_character then
+					syntax_error := True
+					error_message := cst_syntax_error + ": the expression contains manisfest unicode string (STRING_32)"
+				else
+					create sp
+					p := sp.expression_parser
+					check expression_not_void: expression /= Void end
+					s8 := expression.as_string_8
+					p.parse_from_string (once "check " + s8)
+					expression_ast ?= p.expression_node
+					check
+						expression_ast /= Void
+					end
+
 				end
 			else
 				debug ("debugger_evaluator")

@@ -1,16 +1,16 @@
 indexing
 
 	description:
-		"Run time value representing a character."
+		"Run time value representing a wide character."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class CHARACTER_VALUE
+class WIDE_CHARACTER_VALUE
 
 inherit
-	DEBUG_VALUE [CHARACTER]
+	DEBUG_VALUE [WIDE_CHARACTER]
 		redefine
 			append_type_and_value, append_value, type_and_value, dump_value
 		end
@@ -29,12 +29,12 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		local
 			val: ANY
-			cval: CHARACTER_REF
+			cval: WIDE_CHARACTER_REF
 		do
 			val := value
 			cval ?= val
 			if cval /= Void then
-				create Result.make_character (cval.item, Dynamic_class)
+				create Result.make_wide_character (cval.item, Dynamic_class)
 			end
 		end
 
@@ -43,9 +43,9 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 	append_type_and_value (st: TEXT_FORMATTER) is
 		do
 			dynamic_class.append_name (st)
-			st.add_string (" = ");
-			st.add_char ('%'');
-			st.add_string (char_text (value));
+			st.add_string (" = ")
+			st.add_char ('%'')
+			st.add_string (wchar_text (value))
 			st.add_char ('%'')
 		end;
 
@@ -53,8 +53,8 @@ feature {NONE} -- Output
 
 	append_value (st: TEXT_FORMATTER) is
 		do
-			st.add_string (char_text (value))
-		end;
+			st.add_string (wchar_text (value))
+		end
 
 	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -62,9 +62,9 @@ feature {NONE} -- Output
 			create Result.make (30)
 			Result.append (dynamic_class.name_in_upper)
 			Result.append (Equal_slash)
-			Result.append (value.code.out)
+			Result.append (value.natural_32_code.out)
 			Result.append (Slash_colon)
-			Result.append (char_text (value))
+			Result.append (wchar_text (value))
 			Result.append (Quote)
 		end
 
@@ -106,4 +106,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class CHARACTER_VALUE
+end

@@ -94,13 +94,13 @@ feature {NONE} -- Output
 			a_text_formatter.add_string (address)
 		end
 
-	output_value: STRING is
+	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
 		do
 			Result := address
 		end
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;

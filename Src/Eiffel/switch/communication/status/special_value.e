@@ -82,24 +82,32 @@ feature -- Access
 			Result := Eiffel_system.special_class.compiled_class
 		end
 
-	string_value: STRING is
+	string_value: STRING_32 is
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 		local
 			char_value: CHARACTER_VALUE
-			l_children: like children
+			wchar_value: WIDE_CHARACTER_VALUE
+			l_items: like children
 		do
-			l_children := children
-			if l_children.count /= 0 then
-				char_value ?= l_children.first
+			l_items := children
+			if l_items.count /= 0 then
+				char_value ?= l_items.first
 				if char_value /= Void then
-					create Result.make (l_children.count + 8)
+					create Result.make (l_items.count + 8)
+				else
+					wchar_value ?= l_items.first
+					if wchar_value /= Void then
+						create Result.make (l_items.count + 8)
+					end
+				end
+				if Result /= Void then
 					if sp_lower > 0 then
 						Result.append ("...")
 					end
-					Result.append_character ('%"')
-					Result.append (eiffel_string (raw_string_value))
-					Result.append_character ('%"')
+					Result.append_code (('%"').natural_32_code)
+					Result.append (eiffel_string_32 (raw_string_value))
+					Result.append_code (('%"').natural_32_code)
 					if sp_upper <= capacity - 1 then
 						Result.append ("...")
 					end
@@ -107,28 +115,46 @@ feature -- Access
 			end
 		end
 
-	truncated_raw_string_value (a_size: INTEGER): STRING is
+	truncated_raw_string_value (a_size: INTEGER): STRING_32 is
 			-- If `Current' represents a string then return its value truncated to `a_size'.
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
 		local
 			char_value: CHARACTER_VALUE
+			wchar_value: WIDE_CHARACTER_VALUE
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_items: like children
 		do
-			if items.count /= 0 then
-				char_value ?= items.first
+			l_items := children
+			if l_items.count /= 0 then
+				char_value ?= l_items.first
 				if char_value /= Void then
-					create Result.make (a_size.min (items.count + 1))
+					create Result.make (a_size.min (l_items.count + 1))
 					from
-						l_cursor := items.new_cursor
+						l_cursor := l_items.new_cursor
 						l_cursor.start
 					until
 						l_cursor.after or Result.count = a_size
 					loop
 						char_value ?= l_cursor.item
-						Result.append_character (char_value.value)
+						Result.append_code (char_value.value.natural_32_code)
 						l_cursor.forth
-					end;
+					end
+				else
+					wchar_value ?= l_items.first
+					if wchar_value /= Void then
+						create Result.make (a_size.min (items.count + 1))
+						from
+							l_cursor := items.new_cursor
+							l_cursor.start
+						until
+							l_cursor.after or Result.count = a_size
+						loop
+							wchar_value ?= l_cursor.item
+							Result.append_code (wchar_value.value.natural_32_code)
+							l_cursor.forth
+						end
+					end
 				end
 			end
 			if Result = Void then
@@ -138,31 +164,16 @@ feature -- Access
 			raw_string_value_not_void: Result /= Void
 		end
 
-	raw_string_value: STRING is
+	raw_string_value: STRING_32 is
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
 		local
-			char_value: CHARACTER_VALUE
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-			l_children: like children
+			l_items: like children
 		do
-			l_children := children
-			if l_children.count /= 0 then
-				char_value ?= l_children.first
-				if char_value /= Void then
-					create Result.make (l_children.count + 4)
-					from
-						l_cursor := l_children.new_cursor
-						l_cursor.start
-					until
-						l_cursor.after
-					loop
-						char_value ?= l_cursor.item
-						Result.append_character (char_value.value)
-						l_cursor.forth
-					end;
-				end
+			l_items := children
+			if l_items.count /= 0 then
+				Result := truncated_raw_string_value (l_items.count + 4)
 			end
 			if Result = Void then
 				Result := ""
@@ -195,9 +206,9 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 					else
 						st.add_string (address)
 					end;
-					st.add_string (Right_address_delim);
+					st.add_string (Right_address_delim)
 				else
-					Any_class.append_name (st);
+					Any_class.append_name (st)
 					st.add_string (Is_unknown)
 				end
 			end

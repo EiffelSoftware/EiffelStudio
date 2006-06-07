@@ -368,12 +368,16 @@ feature -- Debug warnings
 									%The application was paused to let you%N%
 									%examine its current status."
 
-	w_Syntax_error_in_expression (expr: STRING): STRING is
+	w_Syntax_error_in_expression (expr: STRING_GENERAL): STRING_32 is
 			-- Message when an expression has an invalid syntax.
 		require
 			expr_not_void: expr /= Void
 		do
-			Result := "%'" + expr + "%' is an invalid or not supported syntax."
+			create Result.make (expr.count + 44)
+			Result.append_character ('%'')
+			Result.append_string (expr)
+			Result.append_character ('%'')
+			Result.append_string (" is an invalid or not supported syntax.")
 		end
 
 feature -- Cluster tree warnings

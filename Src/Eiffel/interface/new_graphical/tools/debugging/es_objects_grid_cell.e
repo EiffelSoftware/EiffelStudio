@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_with_text_and_provider (a_text: STRING; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
 			-- Set `text' with `a_text'.
 			-- Set `completion_possibilities_provider' with `a_provider'.
 		do

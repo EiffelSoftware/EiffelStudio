@@ -230,9 +230,9 @@ feature -- Status setting
 			-- Recompute the displayed text.
 		local
 			l_dlg: EV_WARNING_DIALOG
-			l_trunc_str: STRING
+			l_trunc_str: STRING_32
 			l_real_str_length: INTEGER
-			l_length_str: STRING
+			l_length_str: STRING_32
 			l_endpos: INTEGER
 		do
 			editor.remove_text

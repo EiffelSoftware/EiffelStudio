@@ -8,15 +8,15 @@ indexing
 
 class
 	EIFNET_DEBUG_VALUE_FORMATTER
-	
+
 inherit
 	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 
 	EIFNET_API_ERROR_CODE_FORMATTER
-	
+
 	ICOR_EXPORTER
-	
-	REFACTORING_HELPER	
+
+	REFACTORING_HELPER
 
 feature -- Access
 
@@ -34,7 +34,7 @@ feature -- Access
 -- but we should check this
 -- especially on whidbey
 			Result := unbox_debug_value (Result)
-			
+
 			if Result = icd then
 					--| Make sure Result is not the icd object
 					--| otherwise we may clean it by hasard
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Transforming
 
-	icor_debug_string_value_to_truncated_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE; 
+	icor_debug_string_value_to_truncated_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE;
 					a_size: INTEGER): STRING is
 		do
 			Result := get_truncated_string_value (a_icd_string_value, a_size)
@@ -70,8 +70,8 @@ feature -- Transforming
 		do
 			Result := get_string_value (a_icd_string_value)
 		end
-		
-	icor_debug_value_as_string_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
+
+	icor_debug_value_as_string_to_string (a_data: ICOR_DEBUG_VALUE): STRING_32 is
 			-- STRING value from `a_data' which is supposed to be a System.String value.
 		local
 			l_data: ICOR_DEBUG_VALUE
@@ -89,7 +89,7 @@ feature -- Transforming
 				l_data.clean_on_dispose
 			end
 		end
-		
+
 	icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_data: ICOR_DEBUG_VALUE
@@ -107,7 +107,7 @@ feature -- Transforming
 				l_data.clean_on_dispose
 			end
 		end
-		
+
 	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -118,7 +118,7 @@ feature -- Transforming
 				l_icdv.clean_on_dispose
 			end
 		end
-		
+
 	icor_debug_value_to_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -137,7 +137,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := a_data.is_null_reference
 		end
 
-	prepared_icor_debug_value_as_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING is
+	prepared_icor_debug_value_as_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING_32 is
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
@@ -148,7 +148,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			end
 		end
 
-	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING is
+	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING_32 is
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
@@ -197,15 +197,15 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		do
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_32 (0)
-		end		
-		
+		end
+
 	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): NATURAL_64 is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_64 (0)
-		end			
+		end
 
 	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8 is
 		local
@@ -214,7 +214,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_8 (0)
 		end
-		
+
 	prepared_icor_debug_value_as_integer_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16 is
 		local
 			l_mp: MANAGED_POINTER
@@ -230,7 +230,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_32 (0)
 		end
-		
+
 	prepared_icor_debug_value_as_integer_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64 is
 		local
 			l_mp: MANAGED_POINTER
@@ -283,10 +283,10 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_found_value := False
 			l_result_string := "TypeID ["+ l_type.out +"]::" + cor_element_type_to_string (l_type)
 			l_result_string.prepend_string ("[" + a_data.item.out +"] :: ")
-			
-				--| At this point the argument 
+
+				--| At this point the argument
 				--| of this feature is already ref-stripped and out of any box.
-	
+
 	            --| Is this object a string object ? |--
 			if not l_found_value then
 				l_string := a_data.query_interface_icor_debug_string_value
@@ -322,7 +322,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					else
 						l_result_string.append_string (" neutred (no class info) ")
 					end
-					
+
 					l_found_value := True
 					l_object.clean_on_dispose
 					l_object := Void
@@ -408,7 +408,7 @@ feature -- Dereferenced to Value
 
 				when {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
 				when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_class,
 					{MD_SIGNATURE_CONSTANTS}.element_type_object,
 					{MD_SIGNATURE_CONSTANTS}.element_type_szarray,
@@ -427,7 +427,7 @@ feature -- Dereferenced to Value
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_modifier then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
-				else			
+				else
 				end
 			else
 				debug ("debugger_icor_data")
@@ -448,7 +448,7 @@ feature -- Dereferenced to Value
 				Result := "Void"
 			end
 		end
-		
+
 	prepared_icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_result: ANY
@@ -460,11 +460,11 @@ feature -- Dereferenced to Value
 				Result := "Void"
 			end
 		end
-	
+
 feature -- internal Status
 
 	last_strip_references_call_success: INTEGER
-	
+
 	last_strip_references_call_succeed: BOOLEAN is
 			-- does last call to strip_references succeed ?
 		do
@@ -496,7 +496,7 @@ feature {NONE} -- preparing
 						io.error.put_string ("Not a ICorDebugReferenceValue %N")
 					end
 					if l_icor_ref /= Void then
-						l_icor_ref.clean_on_dispose						
+						l_icor_ref.clean_on_dispose
 					end
 					do_break := True
 				else --| IsNULL ?
@@ -540,24 +540,24 @@ feature {NONE} -- preparing
 						debug ("debugger_icor_data")
 							io.error.put_string ("Failed on ICorDebugReferenceValue->DereferenceStrong ()%N This may not be implemented on Whidbey (>1.1)%N")
 						end
-						l_new_value := l_icor_ref.dereference					
+						l_new_value := l_icor_ref.dereference
 					end
 
 					if not l_icor_ref.last_call_succeed then
 							--| we could have more information here
-							--	  CORDBG_E_BAD_REFERENCE_VALUE 
+							--	  CORDBG_E_BAD_REFERENCE_VALUE
 							--		-> "<invalid reference: 0x%p>", realObjectPtr
-							--	  CORDBG_E_CLASS_NOT_LOADED    
+							--	  CORDBG_E_CLASS_NOT_LOADED
 							--		-> "(0x%p) Note: CLR error -- referenced class not loaded.", realObjectPtr
-							--	  CORDBG_S_VALUE_POINTS_TO_VOID 
+							--	  CORDBG_S_VALUE_POINTS_TO_VOID
 							--		-> "0x%p", realObjectPtr
 						last_strip_references_call_success := l_icor_ref.last_call_success
 						debug ("debugger_icor_data")
-							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x" 
+							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x"
 													+ l_real_value_mp.out +"%N")
 						end
 						l_icor_ref.clean_on_dispose
-						
+
 							-- FIXME JFIAT 2004-07-06: we set this as Void for now
 							-- maybe one day we should handle this a better way
 							-- this case occurs mainly when we have unused local variables
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_string_value (icd: ICOR_DEBUG_STRING_VALUE): STRING is
+	get_string_value (icd: ICOR_DEBUG_STRING_VALUE): STRING_32 is
 		local
 			l_length: INTEGER
 		do
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_truncated_string_value (icd: ICOR_DEBUG_STRING_VALUE; a_size: INTEGER): STRING is
+	get_truncated_string_value (icd: ICOR_DEBUG_STRING_VALUE; a_size: INTEGER): STRING_32 is
 		require
 			a_size = -1 or a_size > 0
 		local
@@ -658,15 +658,6 @@ feature {NONE} -- Implementation
 					l_length := a_size.min (l_length)
 				end
 				Result := icd.get_string (l_length)
-			end
-		end
-
-	any_or_void_to_string (a_data: ANY): STRING is
-		do
-			if a_data /= Void then
-				Result := a_data.out
-			else
-				Result := "Void"
 			end
 		end
 

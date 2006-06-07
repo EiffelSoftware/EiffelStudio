@@ -601,7 +601,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
                 NULL,                           \
                 EIF_DEFAULT_PRIORITY,           \
                 EIF_THR_CREATION_FLAGS,         \
-                10000,                              \
+                50000,                              \
                 (FUNCPTR)(entry),               \
                 (EIF_THR_ENTRY_ARG_TYPE)(arg),  \
                 0,0,0,0,0,0,0,0,0               \
@@ -613,7 +613,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
                 NULL,                           \
                 attr,                           \
                 EIF_THR_CREATION_FLAGS,         \
-                10000,                              \
+                50000,                              \
                 (FUNCPTR)(entry),               \
                 (EIF_THR_ENTRY_ARG_TYPE)(arg),  \
                 0,0,0,0,0,0,0,0,0               \

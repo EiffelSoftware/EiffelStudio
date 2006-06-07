@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, text_label)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 		ensure
-			button_box /= NULL
+			button_box /= default_pointer
 		end
 
 	fontable_widget: POINTER is

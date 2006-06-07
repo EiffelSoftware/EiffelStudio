@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING) is
+	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL) is
 		require
 			cell_not_void: a_cell /= Void
 		do
@@ -25,7 +25,7 @@ feature -- Access
 			end
 		end
 
-	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING) is
+	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING_GENERAL) is
 		require
 			cell_not_void: a_cell /= Void
 		do
@@ -51,7 +51,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	grid_move_to_end_of_grid (a_row: EV_GRID_ROW) is
 		require
 			a_row /= Void
@@ -197,7 +197,7 @@ feature -- Access
 			r := a_row.index + a_row.subrow_count_recursive + 1
 			g.insert_new_row_parented (r, a_row)
 			Result := g.row (r)
-		end	
+		end
 
 	grid_remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
 			-- Remove all subrows of `a_row' and clear the subrows

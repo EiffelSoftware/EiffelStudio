@@ -87,7 +87,7 @@ feature -- Status setting
 			--| and set it back into the widget.
 			--| (See gtk/docs/styles.txt)
 		local
-			color: POINTER
+			l_null, color: POINTER
 			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
 			if a_color /= Void then
@@ -154,7 +154,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_bg (a_c_object, {EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM, color)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_base (a_c_object, {EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM, color)
 
-			if color /= NULL then
+			if color /= l_null then
 				color.memory_free
 			end
 		end
@@ -172,7 +172,7 @@ feature -- Status setting
 	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
 			-- Implementation of `set_foreground_color'
 		local
-			color: POINTER
+			color, l_null: POINTER
 		do
 			if a_color /= Void then
 				color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
@@ -191,7 +191,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_PRELIGHT_ENUM, color)
 			--{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
 
-			if color /= NULL  then
+			if color /= l_null  then
 				color.memory_free
 			end
 		end

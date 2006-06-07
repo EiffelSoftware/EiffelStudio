@@ -456,7 +456,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		expanded_update(source, clone, DEEP); /* Update intra expanded refs */
 }
 
-rt_public void xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
+rt_public void eif_xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
 {
 	/* Copy 'source' into expanded object 'target' if 'source' is not void,
 	 * or raise a "Void assigned to expanded" exception.

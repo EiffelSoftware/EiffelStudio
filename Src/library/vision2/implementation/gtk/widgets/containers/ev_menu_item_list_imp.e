@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_ITEM_LIST_IMP
-	
+
 inherit
 	EV_MENU_ITEM_LIST_I
 		redefine
@@ -33,7 +33,7 @@ inherit
 feature {EV_MENU_ITEM_IMP} -- implementation
 
 	list_widget: POINTER is
-			-- 
+			--
 		do
 			Result := c_object
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
-			radio_item_pointer: POINTER
+			radio_item_pointer, l_null: POINTER
 		do
 			an_item_imp ?= v.implementation
 			an_index := index
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			sep_imp ?= an_item_imp
 			if sep_imp /= Void then
 				check
-					sep_imp_radio_group_void: sep_imp.radio_group = NULL
+					sep_imp_radio_group_void: sep_imp.radio_group = default_pointer
 				end
 				from
 					go_i_th (pos + 1)
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 					radio_imp ?= i_th (index)
 					if radio_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
-						if sep_imp.radio_group /= NULL then
+						if sep_imp.radio_group /= l_null then
 							{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			end
 			go_to (cur)
 		end
-				
+
 	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN is
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			an_index: INTEGER
 			has_radio_item: BOOLEAN
-			temp_item_pointer: POINTER
+			temp_item_pointer, l_null: POINTER
 		do
 			item_imp ?= child_array.i_th (a_position).implementation
 			check
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (a_position)
 			child_array.remove
 			item_imp.set_item_parent_imp (Void)
-			
+
 			radio_imp ?= item_imp
 			if radio_imp /= Void then
 				if radio_imp.is_selected then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				{EV_GTK_EXTERNALS}.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
+				{EV_GTK_EXTERNALS}.gtk_radio_menu_item_set_group (radio_imp.c_object, l_null)
 			else
 				sep_imp ?= item_imp
 				if sep_imp /= Void and then a_position <= interface.count then
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 							has_radio_item := True
 							if sep_imp /= Void then
 								radio_imp.set_radio_group (sep_imp.radio_group)
-								sep_imp.set_radio_group (radio_imp.radio_group)	
+								sep_imp.set_radio_group (radio_imp.radio_group)
 							else
 								radio_imp.set_radio_group (radio_group)
 								set_radio_group (radio_imp.radio_group)
@@ -213,9 +213,9 @@ feature {NONE} -- Implementation
 						interface.forth
 					end
 					if not has_radio_item and then sep_imp = Void then
-						set_radio_group (NULL)
-					end						
-					interface.go_i_th (an_index)						
+						set_radio_group (l_null)
+					end
+					interface.go_i_th (an_index)
 				end
 			end
 		end
@@ -247,7 +247,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	radio_group_ref_internal: POINTER_REF
-	
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST;

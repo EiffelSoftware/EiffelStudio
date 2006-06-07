@@ -1,15 +1,15 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision pixmapable. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "pixmap, bitmap, icon, graphic, image"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_PIXMAPABLE_IMP
-	
+
 inherit
 	EV_PIXMAPABLE_I
 		redefine
@@ -39,7 +39,7 @@ feature -- Access
 		do
 			if internal_pixmap /= Void then
 				Result := internal_pixmap.interface.twin
-			end		
+			end
 		end
 
 feature -- Element change
@@ -53,16 +53,16 @@ feature -- Element change
 
 	remove_pixmap is
 			-- Assign Void to `pixmap'.
-		do	
+		do
 			internal_pixmap := Void
 			internal_remove_pixmap
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 		end
-		
+
 feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 
 	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
-			-- 
+			--
 		local
 			gtk_pix_wid: POINTER
 		do
@@ -74,20 +74,20 @@ feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 			gtk_pix_wid := {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pixmap_imp.drawable, a_pixmap_imp.mask)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
 			{EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)				
+			{EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)
 		end
-		
+
 	internal_remove_pixmap is
 			-- Remove pixmap from Current
 		local
 			p: POINTER
-		do	
+		do
 			p := gtk_pixmap
 			if p /= NULL then
 				--| We want p to be deallocated by gtk.
 				{EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
 			end
-		end	
+		end
 
 	internal_pixmap: EV_PIXMAP_IMP
 			-- Internal stored pixmap.		
@@ -97,10 +97,10 @@ feature {NONE} -- Implementation
 	gtk_pixmap: POINTER is
 			-- Pointer to the GtkPixmap widget.
 		local
-			a_child_list: POINTER
+			a_child_list, l_null: POINTER
 		do
 			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (pixmap_box)
-			if a_child_list /= NULL then
+			if a_child_list /= l_null then
 				Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
 				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			end

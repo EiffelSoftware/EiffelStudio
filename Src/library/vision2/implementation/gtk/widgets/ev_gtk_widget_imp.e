@@ -66,15 +66,16 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			a_x: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
+			l_null: POINTER
 		do
 			if is_displayed then
 					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				    	$a_x, NULL)
+				    	$a_x, l_null)
 					Result := a_x
 			else
 				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
+				if a_aux_info /= l_null then
 					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
 			end
@@ -86,15 +87,16 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			a_y: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
+			l_null: POINTER
 		do
 			if is_displayed then
 					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				    	NULL, $a_y)
+				    	l_null, $a_y)
 					Result := a_y
 			else
 				a_aux_info := aux_info_struct
-				if a_aux_info /= NULL then
+				if a_aux_info /= l_null then
 					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end

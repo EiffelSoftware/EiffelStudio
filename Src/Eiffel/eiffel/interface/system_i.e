@@ -1768,10 +1768,15 @@ end
 				unref_classes.after
 			loop
 				class_i := unref_classes.item
-				if class_i.compiled_class = Void then
-					Workbench.change_class (class_i)
+					-- remove class if it has become invalid
+				if not class_i.is_valid then
+					unref_classes.remove
+				else
+					if class_i.compiled_class = Void then
+						Workbench.change_class (class_i)
+					end
+					unref_classes.forth
 				end
-				unref_classes.forth
 			end
 
 				-- Launch syntax analyzis of modified/added classes to system.

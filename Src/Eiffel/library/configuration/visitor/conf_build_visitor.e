@@ -894,6 +894,9 @@ feature {NONE} -- Implementation
 								an_assembly.target.remove_assembly (an_assembly.name)
 								an_assembly.target.add_assembly (old_assembly)
 								current_assembly := build_assembly_information_from_other (an_assembly, old_assembly)
+								if current_assembly = old_assembly then
+									old_assemblies.remove (l_guid)
+								end
 								l_done := True
 								old_assembly := Void
 								old_group := Void
@@ -974,7 +977,10 @@ feature {NONE} -- Implementation
 			if equal (an_other_assembly.name_prefix, an_assembly.name_prefix) and equal (an_other_assembly.renaming, an_assembly.renaming) then
 				an_assembly.target.remove_assembly (an_assembly.name)
 				an_assembly.target.add_assembly (an_other_assembly)
-				an_other_assembly.revalidate
+				if not an_other_assembly.is_valid then
+					an_other_assembly.set_target (an_assembly.target)
+					an_other_assembly.revalidate
+				end
 				Result := an_other_assembly
 			else
 				from

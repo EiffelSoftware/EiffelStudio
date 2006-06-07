@@ -314,6 +314,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
+	set_target (a_target: like target) is
+			-- Set `target' to `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
 	set_dotnet_classes (a_classes: like dotnet_classes) is
 			-- Set `dotnet_classes' to `a_classes'.
 		require

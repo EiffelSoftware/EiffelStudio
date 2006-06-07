@@ -1,11 +1,11 @@
-indexing	
+indexing
 	description: "Eiffel Vision radio peer. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_RADIO_PEER_IMP
 
 inherit
@@ -21,23 +21,23 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Status report
 
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
 		local
-			cur, wid_obj: POINTER
+			cur, wid_obj, l_null: POINTER
 			peer_imp: like Current
 		do
 			create Result.make
-			if radio_group = NULL or else widget_object (radio_group) = NULL then
+			if radio_group = l_null or else widget_object (radio_group) = l_null then
 				Result.extend (interface)
 			else
 				from
 					cur := radio_group
 				until
-					cur = NULL
+					cur = l_null
 				loop
 					wid_obj := widget_object (cur)
 					if wid_obj /= NULL then
@@ -45,7 +45,7 @@ feature -- Status report
 						if peer_imp /= Void then
 							Result.extend (peer_imp.interface)
 						end
-					end		
+					end
 					cur := {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
 				end
 			end
@@ -54,19 +54,19 @@ feature -- Status report
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
 		local
-			cur, wid_obj: POINTER
+			cur, wid_obj, l_null: POINTER
 			peer_imp: like Current
 		do
-			if radio_group = NULL or else widget_object (radio_group) = NULL then
+			if radio_group = l_null or else widget_object (radio_group) = l_null then
 				Result := interface
 			else
 				from
 					cur := radio_group
 				until
-					cur = NULL or else Result /= void
+					cur = l_null or else Result /= void
 				loop
 					wid_obj := widget_object (cur)
-					if wid_obj /= NULL then
+					if wid_obj /= l_null then
 						peer_imp ?= eif_object_from_c (widget_object (cur))
 						if peer_imp /= Void and then peer_imp.is_selected then
 							Result := peer_imp.interface

@@ -13,7 +13,7 @@ inherit
 	ABSTRACT_REFERENCE_VALUE
 
 
-	EIFNET_ABSTRACT_DEBUG_VALUE	
+	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address
 		end
@@ -26,11 +26,11 @@ feature -- get
 			-- Get `object_value' value
 		do
 		end
-		
+
 	release_object_value is
 		do
 		end
-	
+
 feature -- properties
 
 	value_class_token: INTEGER is 0
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	type_and_value: STRING is
+	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
 		do
 		end

@@ -34,6 +34,7 @@ feature -- Initialize
 				-- Initialize custom styles for gtk.
 			initialize_combo_box_style
 			initialize_tool_bar_style
+			initialize_frame_style
 		end
 
 	gtk_dependent_launch_initialize is
@@ -348,13 +349,26 @@ feature {NONE} -- Externals
 		end
 
 	initialize_tool_bar_style is
-			-- Remove the default shadow from the toolbar
+			-- Remove the default shadow from the toolbar.
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
 				{
 					gtk_rc_parse_string ("style \"v2-toolbar-style\" {\n GtkToolbar::shadow-type = none\n }\n  widget \"*.v2toolbar\" style : highest  \"v2-toolbar-style\" " );
+				}
+			]"
+		end
+
+	initialize_frame_style is
+			-- Remove the ythickness padding from the frame.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gtk_rc_parse_string ("style \"v2-frame-style-no-padding\" {\n ythickness = 1\n xthickness = 1\n }\n  widget \"*.v2framenopadding\" style : highest  \"v2-frame-style-no-padding\" " );
+					gtk_rc_parse_string ("style \"v2-frame-style-some-padding\" {\n ythickness = 1\n xthickness = 2\n }\n  widget \"*.v2framesomepadding\" style : highest  \"v2-frame-style-some-padding\" " );
 				}
 			]"
 		end

@@ -39,7 +39,7 @@ feature {EV_ANY_I} -- Access
 			-- Set up Eiffel GC / GTK cooperation.
 			--| (See note at end of class)
 		require
-			a_c_object_not_null: a_c_object /= NULL
+			a_c_object_not_null: a_c_object /= default_pointer
 		local
 			l_c_object: POINTER
 		do
@@ -120,7 +120,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		) is
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
-			a_c_object_not_void: a_c_object /= NULL
+			a_c_object_not_void: a_c_object /= default_pointer
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
@@ -140,7 +140,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
 		require
-			a_c_object_not_void: a_c_object /= NULL
+			a_c_object_not_void: a_c_object /= default_pointer
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
@@ -180,11 +180,11 @@ feature {NONE} -- Implementation
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		local
-			l_c_object: POINTER
+			l_c_object, l_null: POINTER
 		do
 			if not is_in_final_collect then
 				l_c_object := c_object
-				if l_c_object /= NULL then
+				if l_c_object /= l_null then
 						-- Disconnect dispose signal for `c_object'.
 					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
 						-- Unref `c_object' so that is may get collected by gtk.
@@ -202,15 +202,17 @@ feature {NONE} -- Implementation
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
+		local
+			l_null: POINTER
 		do
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
 			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-			c_object := NULL
+			c_object := l_null
 			set_is_destroyed (True)
 		ensure
 			is_destroyed_set: is_destroyed
-			c_object_detached: c_object = NULL
+			c_object_detached: c_object = default_pointer
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation

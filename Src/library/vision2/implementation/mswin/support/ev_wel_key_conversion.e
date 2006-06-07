@@ -141,6 +141,7 @@ feature {NONE} -- Implementation
 			Result.put (90, Key_z)
 			Result.put (16, Key_shift)
 			Result.put (17, Key_ctrl)
+			Result.put (Vk_menu, Key_alt)
 			Result.put (91, Key_left_meta)
 			Result.put (92, Key_right_meta)
 		end
@@ -281,11 +282,10 @@ feature {NONE} -- Implementation
 			Result.put (Key_y, 89)
 			Result.put (Key_z, 90)
 			Result.put (Key_shift, 16)
-			Result.put (Key_shift, 16)
-			Result.put (Key_ctrl, 17)
 			Result.put (Key_ctrl, 17)
 			Result.put (Key_left_meta, 91)
 			Result.put (Key_right_meta, 92)
+			Result.put (Key_alt, vk_menu)
 		end
 
 indexing

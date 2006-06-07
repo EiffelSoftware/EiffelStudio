@@ -511,7 +511,6 @@ feature {NONE} -- Event handling
 			cl_i: LIST [CLASS_I]
 			cl: CLASS_C
 			t: STRING
-			s32: STRING_32
 			wd: EV_WARNING_DIALOG
 			oe: STRING_32
 			do_not_close_dialog: BOOLEAN

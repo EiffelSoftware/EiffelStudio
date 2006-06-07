@@ -1158,7 +1158,7 @@ feature -- Access
 			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

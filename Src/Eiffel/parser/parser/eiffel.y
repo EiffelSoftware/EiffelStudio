@@ -1281,7 +1281,12 @@ Instruction_impl: Creation
 			{
 					-- Call production should be used instead,
 					-- but this complicates the grammar.
-				$$ := new_call_instruction_from_expression ($1)
+				if has_type then
+					error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+					error_handler.raise_error
+				else
+					$$ := new_call_instruction_from_expression ($1)
+				end
 			}
 	|	Assigner_call
 			{ $$ := $1 }
@@ -2282,19 +2287,19 @@ Typed: TE_LCURLY Type TE_RCURLY
 
 Expression:
 		Nosigned_integer
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Nosigned_real
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Factor
 			{ $$ := $1 }
 	|	Typed_expression
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Expression TE_EQ Expression
-			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2) }
+			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2); has_type := True }
 	|	Expression TE_NE Expression
-			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2) }
+			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	;
 
 Qualified_binary_expression:
@@ -2337,35 +2342,35 @@ Qualified_binary_expression:
 	;
 
 Factor: TE_VOID
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Manifest_array
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Agent_call
-			{ $$ := $1 }
+			{ $$ := $1; has_type := False }
 	|	TE_OLD Expression
-			{ $$ := ast_factory.new_un_old_as ($2, $1) }
+			{ $$ := ast_factory.new_un_old_as ($2, $1); has_type := True }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
 			{
-				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4)
+				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4); has_type := True
 			}
 	|	TE_ADDRESS Feature_name
-			{ $$ := ast_factory.new_address_as ($2, $1) }
+			{ $$ := ast_factory.new_address_as ($2, $1); has_type := True }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
 			{
-				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4)
+				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4); has_type := True
 			}
 	|	TE_ADDRESS TE_CURRENT
 			{
-				$$ := ast_factory.new_address_current_as ($2, $1)
+				$$ := ast_factory.new_address_current_as ($2, $1); has_type := True
 			}
 	|	TE_ADDRESS TE_RESULT
 			{
-				$$ := ast_factory.new_address_result_as ($2, $1)
+				$$ := ast_factory.new_address_result_as ($2, $1); has_type := True
 			}
 	|	Bracket_target
 			{ $$ := $1 }
 	|	Qualified_factor
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	;
 
 Qualified_factor:
@@ -2505,19 +2510,19 @@ Feature_access: Feature_name_for_call Parameters
 
 Bracket_target:
 		Expression_constant
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	Manifest_tuple
-			{ $$ := $1 }
+			{ $$ := $1; has_type := True }
 	|	TE_CURRENT
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
 	|	TE_RESULT
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
 	|	Call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Creation_expression
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
 	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_paran_as ($2, $1, $3) }
+			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }
 	;
 
 Parameters: -- Empty

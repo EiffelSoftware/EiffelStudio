@@ -55,7 +55,6 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_debug.h"
 #include "rt_sig.h"
 #include "rt_bits.h"
-#include "eif_equal.h"	/* for xequal() */
 #include <math.h>
 #include "eif_main.h"
 #include "rt_gen_conf.h"

@@ -1395,7 +1395,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
-	changable_internal_options: like internal_options is
+	changeable_internal_options: like internal_options is
 			-- A possibility to change settings without knowing if we have some options already set.
 		do
 			if internal_options = Void then

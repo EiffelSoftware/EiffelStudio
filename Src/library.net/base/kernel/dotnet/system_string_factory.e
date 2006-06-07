@@ -29,7 +29,7 @@ feature -- Conversion
 				until
 					i > nb
 				loop
-					l_str := l_str.append (a_str.code (i))
+					l_str := l_str.append_character (a_str.code (i).to_character_8)
 					i := i + 1
 				end
 				Result := l_str.to_string

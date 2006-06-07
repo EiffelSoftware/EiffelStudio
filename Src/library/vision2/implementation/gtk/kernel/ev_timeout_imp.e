@@ -29,9 +29,11 @@ feature -- Initialization
 
 	make (an_interface: like interface) is
 			-- Call base make only.
+		local
+			l_null: POINTER
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (l_null))
 		end
 
 	initialize is

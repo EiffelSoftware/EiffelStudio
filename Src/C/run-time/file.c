@@ -124,6 +124,7 @@ struct utimbuf {
 #include "eif_file.h"
 #include "rt_lmalloc.h"
 #include "rt_constants.h"
+#include "rt_assert.h"
 
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
@@ -1252,16 +1253,63 @@ rt_public void file_rename(char *from, char *to)
 	
 	for (;;) {
 #if defined EIF_WINDOWS || defined EIF_OS2
-		if (file_exists (to))			/* To have the same behavior as Unix */
-			remove (to);
+		if (file_exists (to)) {
+				/* To have the same behavior as Unix, we need to remove the destination file if it exists.
+				 * Of course we can do this only if `from' and `to' do not represent the same file.
+				 * To check this, we use `CreateFile' to open both file, and then using the information
+				 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
+				 * the same. */
+			BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
+			HANDLE l_from_file = CreateFile (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			HANDLE l_to_file = CreateFile (to, GENERIC_READ, FILE_SHARE_READ, NULL,
+					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+			if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
+					/* We do not need the handles anymore, simply close them. Since Microsoft
+					 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+
+					/* For some reasons we cannot open the file. This should not happen, maybe the OS has
+					 * removed `from' or `to'. In that case, we simply try to remove destination as we were
+					 * doing in former revision of `file_rename'. */
+				remove (to);
+			} else {
+				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+				success = success && GetFileInformationByHandle (l_to_file, &l_to_info);
+					/* We do not need the handles anymore, simply close them. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+				if (success) {
+						/* Check that `from' and `to' do not represent the same file. */
+					if
+						((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
+						(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
+						(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
+					{
+						remove (to);
+					} else {
+							/* Files are identical, nothing to be done apart from */
+						break;
+					}
+				} else {
+						/* An error occurred while retrieving the information about `from' and `to'. Like
+						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+						 * the file. */
+					remove (to);
+				}
+			}
+		}
 #endif
 		errno = 0;						/* Reset error condition */
 		status = rename(from, to);		/* Rename file or directory */
 		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
+			if (errno == EINTR) {		/* Interrupted by signal */
 				continue;				/* Re-issue system call */
-			else
+			} else {
 				esys();					/* Raise exception */
+			}
 		}
 		break;
 	}

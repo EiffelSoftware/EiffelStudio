@@ -30,7 +30,7 @@ feature -- Tab and Docking datas.
 	split_position: INTEGER
 			-- If current is a split area, this is spliter position. -1 if current spliter not full.
 
-	set_split_position (a_value: INTEGER) is
+	set_split_position (a_value: like split_position) is
 			-- Set `split_position'.
 		do
 			split_position := a_value

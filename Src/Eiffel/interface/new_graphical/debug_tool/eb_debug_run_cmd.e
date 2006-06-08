@@ -113,6 +113,8 @@ feature -- Execution
 		local
 			cd: EV_CONFIRMATION_DIALOG
 			app_exec: APPLICATION_EXECUTION
+			l_dial: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			l_wb: WORKBENCH_I
 		do
 				--| At this point we define the 'type' on debug operation
 				--| either step next, step into, step out, continue ...
@@ -126,6 +128,14 @@ feature -- Execution
 				not Eiffel_project.Workbench.is_compiling
 			then
 				if not app_exec.is_running then
+						-- ask to compile if we changed some classes inside eiffel studio
+					l_wb := eiffel_project.workbench
+					if l_wb.is_changed then
+						create l_dial.make_initialized (2, preferences.debug_tool_data.always_compile_before_debug_string, "Do you want to compile before debugging?", interface_names.l_dont_ask_me_again, preferences.preferences)
+						l_dial.set_ok_action (agent quick_melt_project_cmd.execute)
+						l_dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+					end
+
 					if not Eiffel_project.Workbench.successful then
 							-- The last compilation was not successful.
 							-- It is VERY dangerous to launch the debugger in these conditions.

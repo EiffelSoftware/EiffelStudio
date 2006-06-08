@@ -109,6 +109,7 @@ feature -- Basic operations
 				end
 				last_saving_date := tmp_file.date
 				last_saving_success := true
+				workbench.set_changed
 			end
 		end
 

@@ -33,6 +33,11 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+feature -- Status
+
+	is_changed: BOOLEAN
+			-- Have classes been changed?
+
 feature -- Attributes
 
 	universe: UNIVERSE_I
@@ -85,6 +90,22 @@ feature -- Update
 			lace := a_lace
 		ensure
 			lace_set: lace = a_lace
+		end
+
+	set_changed is
+			-- Set `is_changed' to true.
+		do
+			is_changed := True
+		ensure
+			is_changed: is_changed
+		end
+
+	unset_changed is
+			-- Set `is_changed' to false.
+		do
+			is_changed := False
+		ensure
+			not_is_changed: not is_changed
 		end
 
 
@@ -323,6 +344,7 @@ feature -- Commands
 				end
 
 				if successful then
+					unset_changed
 					system.set_rebuild (False)
 					system.reset_has_compilation_started
 					compilation_counter := compilation_counter + 1

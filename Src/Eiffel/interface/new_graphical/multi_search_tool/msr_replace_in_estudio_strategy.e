@@ -172,6 +172,7 @@ feature {NONE} -- Implementation
 				save (class_i.file_name.out, a_item.source_text)
 					-- Notify Eiffel Studio.
 				editor.dev_window.eiffel_system.workbench.change_class (class_i)
+				editor.dev_window.eiffel_system.workbench.set_changed
 			end
 		end
 

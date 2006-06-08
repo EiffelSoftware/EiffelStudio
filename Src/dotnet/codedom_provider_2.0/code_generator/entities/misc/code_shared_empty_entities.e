@@ -42,7 +42,7 @@ feature -- Access
 	Empty_routine: CODE_ROUTINE is
 			-- Empty routine
 		once
-			create {CODE_ROUTINE_IMP} Result.make ("empty_", "empty_")
+			create Result.make ("empty_", "empty_")
 		end
 
 	Empty_type_reference: CODE_TYPE_REFERENCE is

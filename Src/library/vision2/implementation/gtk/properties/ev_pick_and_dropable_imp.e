@@ -107,8 +107,8 @@ feature {NONE} -- Implementation
 				)
 				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 				App_implementation.enable_debugger
+				App_implementation.set_captured_widget (Void)
 			end
-			App_implementation.set_captured_widget (Void)
 		end
 
 	has_capture: BOOLEAN is
@@ -123,9 +123,7 @@ feature -- Implementation
 	enable_transport is
 			-- Activate pick/drag and drop mechanism.
  		do
- 			if not is_destroyed then
-				is_transport_enabled := True
-			end
+			is_transport_enabled := True
 		end
 
 	disable_transport is
@@ -265,11 +263,9 @@ feature -- Implementation
 				if pointer_style /= Void then
 					internal_set_pointer_style (pointer_style)
 				else
-					-- Reset the cursors.
-					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
-					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
+						-- Reset the cursors.
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), NULL)
 				end
-				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 			end
 
 				-- Make sure 'in_transport' returns False before firing any drop actions.
@@ -294,11 +290,7 @@ feature -- Implementation
 			if pick_ended_actions_internal /= Void then
 				pick_ended_actions_internal.call ([target])
 			end
-
-			if not is_destroyed then
-				enable_transport
-			end
-
+			enable_transport
 			post_drop_steps (a_button)
 		end
 

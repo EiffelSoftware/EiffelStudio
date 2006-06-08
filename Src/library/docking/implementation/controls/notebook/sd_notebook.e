@@ -50,7 +50,7 @@ feature {NONE}  -- Initlization
 			create internal_border_for_tab_area.make
 			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
-			internal_border_for_tab_area.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
+			internal_border_for_tab_area.set_border_style ({SD_ENUMERATION}.top)
 			extend_vertical_box (internal_border_for_tab_area)
 
 			internal_border_for_tab_area.extend (internal_tab_box)
@@ -101,6 +101,8 @@ feature -- Command
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
+			-- The text let tab size changed, so it need resize.
+			on_resize (0, 0, internal_tab_box.width, internal_tab_box.height)
 		ensure
 			set:
 		end
@@ -125,10 +127,12 @@ feature -- Command
 			has: has (a_content)
 		do
 			if selected_item /= a_content then
+				internal_docking_manager.command.lock_update (Current, False)
 				if a_content.user_widget.parent /= Void then
 					a_content.user_widget.parent.prune (a_content.user_widget)
 				end
 				internal_cell.replace (a_content.user_widget)
+				internal_docking_manager.command.unlock_update
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
 			internal_tab_box.resize_tabs (internal_tab_box.width)

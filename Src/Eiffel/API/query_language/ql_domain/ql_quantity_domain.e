@@ -17,7 +17,8 @@ inherit
 		redefine
 			content,
 			item_type,
-			domain_generator
+			domain_generator,
+			is_quantity_domain
 		end
 
 	QL_VECTOR
@@ -47,6 +48,14 @@ feature -- Access
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
+		end
+
+feature -- Status report
+
+	is_quantity_domain: BOOLEAN is
+			-- Is current a quantity domain?
+		do
+			Result := True
 		end
 
 feature -- Set operation
@@ -143,6 +152,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

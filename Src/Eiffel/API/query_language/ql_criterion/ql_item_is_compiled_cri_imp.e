@@ -14,7 +14,8 @@ inherit
 		undefine
 			process
 		redefine
-			has_intrinsic_domain
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain
 		end
 
 feature -- Status report
@@ -22,12 +23,20 @@ feature -- Status report
 	require_compiled: BOOLEAN is True
 			-- Does current criterion require a compiled item?
 
-	has_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN is
 			-- Does current criterion has a domain by default?
 		do
-			Result := wrapped_criterion.has_intrinsic_domain
+			Result := wrapped_criterion.has_inclusive_intrinsic_domain
 		ensure then
-			good_result: Result implies wrapped_criterion.has_intrinsic_domain
+			good_result: Result implies wrapped_criterion.has_inclusive_intrinsic_domain
+		end
+
+	has_exclusive_intrinsic_domain: BOOLEAN is
+			-- Does current criterion has an exclusive intrinsic domain?
+		do
+			Result := wrapped_criterion.has_exclusive_intrinsic_domain
+		ensure then
+			good_result: Result implies wrapped_criterion.has_exclusive_intrinsic_domain
 		end
 
 feature -- Process
@@ -36,6 +45,36 @@ feature -- Process
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_compiled_imp_criterion (Current)
+		end
+
+feature{NONE} -- Implementation
+
+	fill_intrinsic_domain (a_source_domain, a_dest_domain: like intrinsic_domain) is
+			-- Fill compiled items in `a_source_domain' into `a_dest_domain'.
+		require
+			a_source_domain_attached: a_source_domain /= Void
+			a_dest_domain_attached: a_dest_domain /= Void
+		local
+			l_source_content: LIST [like item_type]
+			l_dest_content: LIST [like item_type]
+			l_cursor: CURSOR
+			l_item: like item_type
+		do
+			l_source_content := a_source_domain.content
+			l_dest_content := a_dest_domain.content
+			l_cursor := l_source_content.cursor
+			from
+				l_source_content.start
+			until
+				l_source_content.after
+			loop
+				l_item := l_source_content.item
+				if l_item.is_compiled then
+					l_dest_content.extend (l_item)
+				end
+				l_source_content.forth
+			end
+			l_source_content.go_to (l_cursor)
 		end
 
 indexing
@@ -69,6 +108,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

@@ -14,13 +14,19 @@ inherit
 		undefine
 			is_atomic,
 			set_source_domain,
-			process
+			process,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
+			set_used_in_domain_generator
+		redefine
+			intrinsic_domain
 		end
 
 	QL_OR_CRITERION
 		redefine
 			left,
-			right
+			right,
+			intrinsic_domain
 		end
 
 create
@@ -50,6 +56,14 @@ feature -- Status report
 			Result := left.require_compiled or right.require_compiled
 		ensure then
 			good_result: Result = left.require_compiled or right.require_compiled
+		end
+
+feature -- Access
+
+	intrinsic_domain: QL_CLASS_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			Result ?= intrinsic_domain_internal
 		end
 
 indexing
@@ -83,6 +97,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

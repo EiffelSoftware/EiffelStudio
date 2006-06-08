@@ -14,7 +14,6 @@ inherit
 		undefine
 			process
 		redefine
-			has_intrinsic_domain,
 			is_atomic
 		end
 
@@ -26,12 +25,6 @@ feature -- Status report
 			Result := wrapped_criterion.require_compiled
 		ensure then
 			good_result: Result implies wrapped_criterion.require_compiled
-		end
-
-	has_intrinsic_domain: BOOLEAN is
-			-- Does current criterion has a domain by default?
-		do
-			Result := False
 		end
 
 	is_atomic: BOOLEAN is
@@ -79,6 +72,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

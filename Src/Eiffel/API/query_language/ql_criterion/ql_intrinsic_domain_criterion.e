@@ -13,11 +13,12 @@ deferred class
 	QL_INTRINSIC_DOMAIN_CRITERION
 
 inherit
-	QL_CRITERION
+	QL_DOMAIN_CRITERION
 		undefine
 			process
 		redefine
-			has_intrinsic_domain
+			has_inclusive_intrinsic_domain,
+			intrinsic_domain
 		end
 
 feature{NONE} -- Initialization
@@ -34,15 +35,19 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	criterion_domain: QL_DOMAIN
-			-- Criterion domain from which `intrinsic_domain' are evaluated
+	intrinsic_domain: QL_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		deferred
+		ensure then
+			intrinsic_domain_found: is_criterion_domain_evaluated
+		end
 
 feature -- Status report
 
 	require_compiled: BOOLEAN is True
 			-- Does current criterion require a compiled item?
 
-	has_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN is
 			-- Does current criterion has a domain by default?
 		do
 			Result := not criterion_domain.is_delayed
@@ -54,24 +59,24 @@ feature -- Setting
 
 	set_criterion_domain (a_domain: QL_DOMAIN) is
 			-- Set `criterion_domain' with `a_domain'
-		require
-			a_domain_attached: a_domain /= Void
 		local
 			l_delayed_domain: QL_DELAYED_DOMAIN
 		do
+			if criterion_domain /= Void and then criterion_domain.is_delayed then
+				l_delayed_domain ?= criterion_domain
+				if l_delayed_domain.actions.has (initialize_agent) then
+					l_delayed_domain.actions.prune_all (initialize_agent)
+				end
+			end
 			criterion_domain := a_domain
-			reset
-			if not criterion_domain.is_delayed then
-				find_result
-			else
+			is_criterion_domain_evaluated := False
+			if criterion_domain.is_delayed then
 				l_delayed_domain ?= a_domain
 				check l_delayed_domain /= Void end
 				if not l_delayed_domain.actions.has (initialize_agent) then
 					l_delayed_domain.actions.extend (initialize_agent)
 				end
 			end
-		ensure
-			criterion_domain_set: criterion_domain = a_domain
 		end
 
 feature -- Process
@@ -87,6 +92,8 @@ feature{NONE} -- Implementation
 	find_result is
 			-- Find possible result (maybe classes or features) of current criterion.
 		deferred
+		ensure
+			intrinsic_result_found: is_criterion_domain_evaluated
 		end
 
 	reset is
@@ -94,28 +101,12 @@ feature{NONE} -- Implementation
 		deferred
 		end
 
-	initialize_delayed_domain is
-			-- Initialize_delayed_domain `criterion_domain' if it's a delayed domain.
-		require
-			criterion_domain_is_delayed: criterion_domain.is_delayed
+	initialize_domain is
+			-- Initialize for `criterion_domain'.
 		do
 			reset
 			find_result
 		end
-
-	initialize_agent: PROCEDURE [ANY, TUPLE] is
-			-- Agent of `initialize_delayed_domain'
-		do
-			if initialize_agent_internal = Void then
-				initialize_agent_internal := agent initialize_delayed_domain
-			end
-			Result := initialize_agent_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	initialize_agent_internal: like initialize_agent
-			-- Implementation of `initialize_agent'
 
 invariant
 	criterion_domain_attached: criterion_domain /= Void
@@ -151,6 +142,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

@@ -4,7 +4,7 @@ indexing
 					
 					This criterion will use `data' attribute in every QL_FEATURE candidate object.
 					IF a QL_FEATURE candidate is satisfied by this criterion. it's `data' attribute will
-					be set with branch id (of type INTEGER)					
+					be set with branch id (of type INTEGER)
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ class
 	QL_FEATURE_ANCESTOR_RELATION_CRI
 
 inherit
-	QL_FEATURE_HIERARCHY_CRI
+	QL_FEATURE_INHERITANCE_CRI
 
 create
 	make
@@ -36,6 +36,7 @@ feature{NONE} -- Implementation
 			l_branch_id_list: like user_data_list
 			l_feature_domain: like features_from_domain
 			l_feature: QL_FEATURE
+			l_cnt: INTEGER
 		do
 			l_feature_domain := features_from_domain (criterion_domain)
 			if not l_feature_domain.is_empty then
@@ -52,8 +53,9 @@ feature{NONE} -- Implementation
 					rout_id_set := l_feature.e_feature.rout_id_set
 					from
 						i := 1
+						l_cnt := rout_id_set.count
 					until
-						i > rout_id_set.count
+						i > l_cnt
 					loop
 						rout_id := rout_id_set.item (i)
 						from
@@ -107,6 +109,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

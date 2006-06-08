@@ -19,9 +19,11 @@ inherit
 
 	QL_CLASS_CRITERION
 		undefine
-			has_intrinsic_domain,
+			has_inclusive_intrinsic_domain,
 			process
 		end
+
+	QL_SHARED
 
 feature{NONE} -- Initialization
 
@@ -48,10 +50,9 @@ feature -- Evaluate
 			check
 				a_item.is_compiled
 			end
---				-- Make sure we refresh delayed `criterion_domain' every time.
---			if criterion_domain.is_delayed then
---				initialize_delayed_domain
---			end
+			if not is_criterion_domain_evaluated then
+				initialize_domain
+			end
 			Result := is_satisfied_by_internal (a_item)
 		end
 
@@ -88,6 +89,7 @@ feature{NONE} -- Implementation
 				l_finder.call ([l_class_tbl.item_for_iteration.class_c])
 				l_class_tbl.forth
 			end
+			is_criterion_domain_evaluated := True
 		end
 
 	reset is
@@ -110,14 +112,12 @@ feature{NONE} -- Implementation
 			a_domain_attached: a_domain /= Void
 		local
 			l_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_criterion: QL_CLASS_IS_COMPILED_CRI
 			l_domain: QL_CLASS_DOMAIN
 			l_class: QL_CLASS
 		do
-			create l_generator
-			create l_criterion
-			l_generator.enable_fill_domain
-			l_generator.set_criterion (l_criterion)
+			create l_generator.make (
+				class_criterion_factory.simple_criterion_with_index (
+					class_criterion_factory.c_is_compiled), True)
 			l_domain ?= a_domain.new_domain (l_generator)
 			check
 				l_domain /= Void
@@ -157,22 +157,6 @@ feature{NONE} -- Implemenation/Data
 	candidate_class_list: HASH_TABLE [CLASS_C, INTEGER]
 			-- Table of ancestor classes
 			-- Key is `class_id' of a descendant class, value is CLASS_C object of that class
-
-	compiled_classes_in_source: HASH_TABLE [QL_CLASS, INTEGER] is
-			-- Compiled classes in `source_domain'
-		require
-			source_domain_attached: source_domain /= Void
-		do
-			if internal_compiled_classes_in_source = Void then
-				internal_compiled_classes_in_source := compiled_classes_from_domain (source_domain)
-			end
-			Result := internal_compiled_classes_in_source
-		ensure
-			Result_attached: Result /= Void
-		end
-
-	internal_compiled_classes_in_source: like compiled_classes_in_source
-			-- Implementation of `compiled_classes_in_source'
 
 	finder_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_C]], QL_CLASS_RELATION] is
 			-- Table for finders of certain kind of class supplier (supplier, indirect supplier) relation.
@@ -216,6 +200,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

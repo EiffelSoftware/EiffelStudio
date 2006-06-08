@@ -17,7 +17,7 @@ inherit
 
 	QL_FEATURE_CRITERION
 		undefine
-			has_intrinsic_domain,
+			has_inclusive_intrinsic_domain,
 			require_compiled,
 			process
 		redefine
@@ -32,10 +32,9 @@ feature -- Evaluate
 			check
 				a_item.is_compiled
 			end
---				-- Make sure we refresh delayed `criterion_domain' every time.
---			if criterion_domain.is_delayed then
---				initialize_delayed_domain
---			end
+			if not is_criterion_domain_evaluated then
+				initialize_domain
+			end
 			Result := is_satisfied_by_internal (a_item)
 		end
 
@@ -49,7 +48,11 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_feature: QL_FEATURE
 			l_source_domain: like source_domain
 		do
+			if not is_criterion_domain_evaluated then
+				initialize_domain
+			end
 			l_source_domain := source_domain
+			l_source_domain.clear_cache
 			l_user_data_list := user_data_list
 			l_feature_list := feature_list
 			create Result.make
@@ -147,8 +150,7 @@ feature{NONE} -- Implementation
 		local
 			l_generator: QL_FEATURE_DOMAIN_GENERATOR
 		do
-			create l_generator
-			l_generator.enable_fill_domain
+			create l_generator.make (Void, True)
 			Result ?= a_domain.new_domain (l_generator)
 		ensure
 			result_attached: Result /= Void
@@ -162,28 +164,7 @@ feature{NONE} -- Evaluate
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 			source_domain_attached: source_domain /= Void
-		local
-			l_user_data_list: like user_data_list
-			l_feature_list: like feature_list
-			l_feature: E_FEATURE
-		do
-			if a_item.is_real_feature then
-				l_user_data_list := user_data_list
-				l_feature_list := feature_list
-				l_feature := a_item.e_feature
-				check l_feature /= Void end
-				from
-					l_feature_list.start
-				until
-					l_feature_list.after or Result
-				loop
-					if l_feature_list.item.same_as (l_feature) then
-						a_item.set_data (l_user_data_list.i_th (l_feature_list.index))
-						Result := True
-					end
-					l_feature_list.forth
-				end
-			end
+		deferred
 		end
 
 invariant
@@ -223,6 +204,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

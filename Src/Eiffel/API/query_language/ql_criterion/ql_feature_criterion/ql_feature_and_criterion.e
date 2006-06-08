@@ -14,13 +14,19 @@ inherit
 		undefine
 			is_atomic,
 			set_source_domain,
-			process
+			process,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
+			set_used_in_domain_generator
+		redefine
+			intrinsic_domain
 		end
 
 	QL_AND_CRITERION
 		redefine
 			left,
-			right
+			right,
+			intrinsic_domain
 		end
 
 create
@@ -39,8 +45,16 @@ feature -- Evaluate
 feature -- Criterion
 
 	left: QL_FEATURE_CRITERION
-	right: QL_FEATURE_CRITERION;
+	right: QL_FEATURE_CRITERION
 			-- Criteria to which AND operation is applied
+
+feature -- Access
+
+	intrinsic_domain: QL_FEATURE_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			Result ?= intrinsic_domain_internal
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -73,6 +87,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

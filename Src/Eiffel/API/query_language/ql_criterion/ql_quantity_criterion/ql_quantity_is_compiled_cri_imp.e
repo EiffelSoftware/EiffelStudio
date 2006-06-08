@@ -12,18 +12,22 @@ class
 inherit
 	QL_QUANTITY_CRITERION
 		undefine
-			has_intrinsic_domain,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
+			set_used_in_domain_generator,
 			set_source_domain,
 			require_compiled,
 			process
 		redefine
-			compiled_criterion
+			compiled_criterion,
+			intrinsic_domain
 		end
 
 	QL_ITEM_IS_COMPILED_CRI_IMP
 		redefine
 			compiled_criterion,
-			wrapped_criterion
+			wrapped_criterion,
+			intrinsic_domain
 		end
 
 create
@@ -42,9 +46,16 @@ feature -- Access
 			Result = Current
 		end
 
+	intrinsic_domain: QL_QUANTITY_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			create Result.make
+			fill_intrinsic_domain (wrapped_criterion.intrinsic_domain, Result)
+		end
+
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_QUANTITY): BOOLEAN is
+	is_satisfied_by (a_item: like item_type): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
 			if a_item.is_compiled then
@@ -85,6 +96,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

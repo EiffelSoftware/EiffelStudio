@@ -17,7 +17,8 @@ inherit
 		redefine
 			content,
 			item_type,
-			domain_generator
+			domain_generator,
+			is_class_domain
 		end
 
 	LINKED_LIST [QL_CLASS]
@@ -47,6 +48,14 @@ feature -- Access
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
+		end
+
+feature -- Status report
+
+	is_class_domain: BOOLEAN is
+			-- Is current a class domain?
+		do
+			Result := True
 		end
 
 feature -- Set operation
@@ -116,9 +125,14 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			until
 				after or Result /= Void
 			loop
-				l_feature_table := item.class_c.api_feature_table
-				if l_feature_table.has (e_feature.name) then
-					create {QL_REAL_FEATURE}Result.make_with_parent (l_feature_table.item (e_feature.name), item)
+				if
+					item.class_c /= Void and then
+					item.class_c.class_id = e_feature.associated_class.class_id
+				then
+					l_feature_table := item.class_c.api_feature_table
+					if l_feature_table.has (e_feature.name) then
+						create {QL_REAL_FEATURE}Result.make_with_parent (l_feature_table.item (e_feature.name), item)
+					end
 				end
 				forth
 			end
@@ -189,6 +203,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

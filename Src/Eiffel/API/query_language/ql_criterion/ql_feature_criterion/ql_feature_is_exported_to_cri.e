@@ -11,6 +11,14 @@ class
 
 inherit
 	QL_FEATURE_CRITERION
+		undefine
+			process
+		end
+
+	QL_DOMAIN_CRITERION
+
+	QL_SHARED
+
 
 create
 	make
@@ -27,32 +35,28 @@ feature{NONE} -- Initialization
 			criterion_domain_set: criterion_domain = a_domain
 		end
 
-feature -- Access
-
-	criterion_domain: QL_DOMAIN
-			-- Criterion domain from which `intrinsic_domain' are evaluated
-
 feature -- Setting
 
 	set_criterion_domain (a_domain: QL_DOMAIN) is
 			-- Set `criterion_domain' with `a_domain'
-		require
-			a_domain_attached: a_domain /= Void
 		local
 			l_delayed_domain: QL_DELAYED_DOMAIN
 		do
+			if criterion_domain /= Void and then criterion_domain.is_delayed then
+				l_delayed_domain ?= criterion_domain
+				if l_delayed_domain.actions.has (initialize_agent) then
+					l_delayed_domain.actions.prune_all (initialize_agent)
+				end
+			end
 			criterion_domain := a_domain
-			if not criterion_domain.is_delayed then
-				prepare_clients
-			else
+			is_criterion_domain_evaluated := False
+			if criterion_domain.is_delayed then
 				l_delayed_domain ?= a_domain
 				check l_delayed_domain /= Void end
 				if not l_delayed_domain.actions.has (initialize_agent) then
 					l_delayed_domain.actions.extend (initialize_agent)
 				end
 			end
-		ensure
-			criterion_domain_set: criterion_domain = a_domain
 		end
 
 feature -- Evaluate
@@ -63,6 +67,9 @@ feature -- Evaluate
 			l_client: like client_classes
 		do
 			if a_item.is_real_feature then
+				if not is_criterion_domain_evaluated then
+					initialize_domain
+				end
 				check client_classes /= Void end
 				l_client := client_classes
 				Result := True
@@ -81,37 +88,22 @@ feature -- Evaluate
 
 feature{NONE} -- Implementation
 
-	prepare_clients is
+	initialize_domain is
 			-- Prepare clients defined `criterion_domain'.
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_criterion: QL_CLASS_IS_COMPILED_CRI
 		do
-			create l_criterion
-			create l_domain_generator
-			l_domain_generator.set_criterion (l_criterion)
-			l_domain_generator.enable_fill_domain
+			create l_domain_generator.make (class_criterion_factory.simple_criterion_with_index (
+					class_criterion_factory.c_is_compiled), True)
 			client_classes ?= criterion_domain.new_domain (l_domain_generator)
-		ensure
+			is_criterion_domain_evaluated := True
+		ensure then
 			client_classes_attached: client_classes /= Void
+			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
 	client_classes: QL_CLASS_DOMAIN
 			-- Client class domain
-
-	initialize_agent: PROCEDURE [ANY, TUPLE] is
-			-- Agent of `prepare_clients'
-		do
-			if initialize_agent_internal = Void then
-				initialize_agent_internal := agent prepare_clients
-			end
-			Result := initialize_agent_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	initialize_agent_internal: like initialize_agent
-			-- Implementation of `initialize_agent'
 
 invariant
 	criterion_domain_attached: criterion_domain /= Void
@@ -147,6 +139,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

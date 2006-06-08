@@ -30,8 +30,15 @@ inherit
 
 	QL_CRITERION_ITERATOR
 		redefine
-			process_intrinsic_domain_criterion
+			process_intrinsic_domain_criterion,
+			process_domain_criterion
 		end
+
+	QL_DOMAIN_OPTIMIZABLE
+
+	QL_UTILITY
+
+	QL_SHARED
 
 feature{NONE} -- Initialization
 
@@ -59,15 +66,20 @@ feature -- Setting
 
 	set_criterion (a_criterion: like criterion) is
 			-- Set `criterion' with `a_criterion'.
+		require
+			a_criterion_not_used_in_other_domain_generator:
+				a_criterion /= Void implies a_criterion.used_in_domain_generator = Void
 		do
 			if criterion /= Void then
 				is_setting_new_criterion := False
 				process_criterion_item (criterion)
+				criterion.set_used_in_domain_generator (Void)
 			end
 			criterion := a_criterion
 			if criterion /= Void then
 				is_setting_new_criterion := True
 				process_criterion_item (criterion)
+				criterion.set_used_in_domain_generator (Current)
 			end
 			internal_actual_criterion := Void
 		ensure
@@ -111,6 +123,23 @@ feature -- Setting
 			fill_domain_disabled: not is_fill_domain_enabled
 		end
 
+	enable_distinct_item is
+			-- Enable distinct item in `domain'.
+			-- Note: Enable ditinct item may slow down domain generation.
+		do
+			distinct_required_cell.put (True)
+		ensure
+			distinct_item_enabled: is_distinct_required
+		end
+
+	disable_distinct_item is
+			-- Disable distinct item in `domain'.
+		do
+			distinct_required_cell.put (False)
+		ensure
+			distinct_item_disabled: not is_distinct_required
+		end
+
 feature -- Status report
 
 	is_fill_domain_enabled: BOOLEAN
@@ -124,10 +153,16 @@ feature -- Status report
 			Result := internal_counter \\ interval = 0
 		end
 
+	is_distinct_required: BOOLEAN is
+			-- Does distinct items in `domain' required?
+		do
+			Result := distinct_required_cell.item
+		end
+
 feature -- Access
 
 	actions: ACTION_SEQUENCE [TUPLE[like item_type]] is
-			-- Actions to be performed when a new item is generated
+			-- Actions to be performed when a new item (which is satisfied by current `criterion') is generated
 		do
 			if actions_internal = Void then
 				create actions_internal
@@ -154,14 +189,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	interval: NATURAL_64 is
-			-- Interval to decide if `interval_tick_actions' should be called.
-			-- `interval_tick_actions' will be called after every `interval' number of items have been processed.
-			-- Default value is `initial_interval'.
-		do
-			Result := interval_cell.item
-		end
-
 feature -- Domain visit
 
 	process_domain (a_item: QL_DOMAIN) is
@@ -173,14 +200,24 @@ feature -- Domain visit
 			current_source_domain := a_item
 			actual_criterion.set_source_domain (a_item)
 			l_criterion := actual_criterion
-			if l_criterion.is_atomic and l_criterion.has_intrinsic_domain then
-				l_domain := criterion.intrinsic_domain
-				l_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
-				domain.content.fill (l_domain.content)
+			if
+				is_optimization_enabled and
+				l_criterion.has_inclusive_intrinsic_domain
+			then
+					-- Evaluate result domain using optimization.
+				l_criterion.intrinsic_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
 			else
+					-- Evaluate result domain without optimization.
 				if not a_item.is_empty then
 					a_item.content.do_all (agent process_item ({QL_ITEM}?))
 				end
+			end
+			if is_distinct_required then
+					-- Retrieve distinct domain.
+					-- Note: Slow process.
+				l_domain := domain.distinct
+				domain.wipe_out
+				domain.content.fill (l_domain.content)
 			end
 		end
 
@@ -193,6 +230,12 @@ feature -- Domain visit
 feature -- Criterion visit
 
 	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+			-- Process `a_cri'.
+		do
+			process_domain_criterion (a_cri)
+		end
+
+	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION) is
 			-- Process `a_cri'.
 		local
 			l_delayed_domain: QL_DELAYED_DOMAIN
@@ -260,16 +303,12 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 		do
 			increase_internal_counter
-			check_interval_tick_actions
 			if observer_count > 0 then
 				set_changed
 				notify (a_item)
 			end
 			if actual_criterion.is_satisfied_by (a_item) then
 				on_item_satisfied_by_criterion (a_item, True)
-				if is_fill_domain_enabled then
-					domain.content.extend (a_item)
-				end
 			end
 		end
 
@@ -315,28 +354,27 @@ feature{NONE} -- Implementation
 			l_class: QL_CLASS
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_cursor: CURSOR
-			l_actual_criterion: like actual_criterion
-			l_class_cri: QL_CLASS_CRITERION
+			l_require_compiled: BOOLEAN
+			l_conf_class: CONF_CLASS
 		do
 			if a_group.classes_set then
-				l_classes := a_group.classes
-				l_actual_criterion := actual_criterion
-				if l_actual_criterion.require_compiled then
-					create {QL_CLASS_IS_COMPILED_CRI}l_class_cri
-				else
-					create {QL_CLASS_TRUE_CRI}l_class_cri
-				end
+				l_classes := a_group.classes.twin
+				l_require_compiled := actual_criterion.require_compiled
 				check current_source_domain /= Void end
-				l_class_cri.set_source_domain (current_source_domain)
 				l_cursor := l_classes.cursor
 				from
 					l_classes.start
 				until
 					l_classes.after
 				loop
-					create l_class.make_with_parent (l_classes.item_for_iteration, a_parent)
-					l_class.set_name (l_classes.key_for_iteration)
-					if l_class_cri.is_satisfied_by (l_class) then
+					l_conf_class := l_classes.item_for_iteration
+					if l_require_compiled then
+						if is_class_compiled (l_conf_class) then
+							create l_class.make_with_compiled_flag (l_conf_class, a_parent)
+							a_action.call ([l_class])
+						end
+					else
+						create l_class.make_with_parent (l_conf_class, a_parent)
 						a_action.call ([l_class])
 					end
 					l_classes.forth
@@ -404,6 +442,7 @@ feature{NONE} -- Implementation
 		do
 			l_class_c := a_class.class_c
 				-- Find real features.
+				-- All immediate and inherited real features are inserted.
 			l_feature_table := l_class_c.api_feature_table
 			from
 				l_feature_table.start
@@ -464,6 +503,25 @@ feature{NONE} -- Implementation
 	internal_domain: like domain
 			-- Implementation of `domain'
 
+	current_source_domain: QL_DOMAIN
+			-- Current processing source domain
+
+	item_type: QL_ITEM
+			-- Anchor type for items of generated domain
+
+	is_setting_new_criterion: BOOLEAN
+			-- Is setting new criterion	
+
+	distinct_required_cell: CELL [BOOLEAN] is
+			-- Cell to hold a flag to indicate whether or not distinct items in `domain' is required
+		once
+			create Result.put (False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
+
 	on_item_satisfied_by_criterion (a_item: like item_type; a_interval_actions_applied: BOOLEAN) is
 			-- Action to be performed when `a_item' is satisfied by `criterion'
 			-- If not `a_interval_actions_applied', `check_interval_tick_actions' will be called.
@@ -471,32 +529,14 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		do
+			if is_fill_domain_enabled then
+				domain.content.extend (a_item)
+			end
 			if not a_interval_actions_applied then
 				increase_internal_counter
-				check_interval_tick_actions
 			end
 			actions.call ([a_item])
 		end
-
-	current_source_domain: QL_DOMAIN
-			-- Current processing source domain
-
-	item_type: QL_ITEM
-			-- Anchor type for items of generated domain
-
-	interval_cell: CELL [NATURAL_64] is
-			-- Cell to hold `interval'
-		once
-			create Result.put (initial_interval)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	initial_interval: NATURAL_64 is 5000
-			-- Default value of `internval'	
-
-	is_setting_new_criterion: BOOLEAN
-			-- Is setting new criterion		
 
 invariant
 	domain_attached: domain /= Void
@@ -532,6 +572,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

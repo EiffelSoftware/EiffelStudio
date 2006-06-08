@@ -17,7 +17,8 @@ inherit
 		redefine
 			content,
 			item_type,
-			domain_generator
+			domain_generator,
+			is_local_domain
 		end
 
 	LINKED_LIST [QL_LOCAL]
@@ -47,6 +48,14 @@ feature -- Access
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
+		end
+
+feature -- Status report
+
+	is_local_domain: BOOLEAN is
+			-- Is current a local domain?
+		do
+			Result := True
 		end
 
 feature -- Set operation
@@ -142,6 +151,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

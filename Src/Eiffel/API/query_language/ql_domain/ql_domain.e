@@ -77,11 +77,67 @@ feature -- Status report
 		do
 		end
 
+	is_target_domain: BOOLEAN is
+			-- Is current a target domain?
+		do
+		end
+
+	is_group_domain: BOOLEAN is
+			-- Is current a group domain?
+		do
+		end
+
+	is_class_domain: BOOLEAN is
+			-- Is current a class domain?
+		do
+		end
+
+	is_generic_domain: BOOLEAN is
+			-- Is current a generic domain?
+		do
+		end
+
+	is_feature_domain: BOOLEAN is
+			-- Is current a feature domain?
+		do
+		end
+
+	is_argument_domain: BOOLEAN is
+			-- Is current a argument domain?
+		do
+		end
+
+	is_local_domain: BOOLEAN is
+			-- Is current a local domain?
+		do
+		end
+
+	is_assertion_domain: BOOLEAN is
+			-- Is current a assertion domain?
+		do
+		end
+
+	is_line_domain: BOOLEAN is
+			-- Is current a line domain?
+		do
+		end
+
+	is_quantity_domain: BOOLEAN is
+			-- Is current a quantity domain?
+		do
+		end
+
 feature -- Removal
 
 	wipe_out is
 			-- Remove all items.
 		deferred
+		end
+
+	clear_cache is
+			-- Clear cache information.
+			-- cache information is used for optimization.
+		do
 		end
 
 feature -- Domain creation
@@ -284,8 +340,6 @@ feature{QL_CRITERION} -- Implementation
 			good_result: Result /= Void implies (Result.is_valid_domain_item and then Result.is_invariant_feature)
 		end
 
-feature{NONE} -- Implementation
-
 	class_from_group (a_class: CONF_CLASS; a_group: QL_GROUP; a_class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]): QL_CLASS is
 			-- Find out if `a_class' is defined directly in `a_group'.
 			-- If yes, return a QL_CLASS object representing `a_class' in `a_group',
@@ -304,7 +358,7 @@ feature{NONE} -- Implementation
 			l_class_table := a_class_table.item (a_group.group)
 			if l_class_table = Void then
 				if a_group.group.classes_set then
-					l_classes := a_group.group.classes
+					l_classes := a_group.group.classes.twin
 					create l_class_table.make (l_classes.count)
 					a_class_table.put (l_class_table, a_group.group)
 					from
@@ -418,7 +472,6 @@ feature{NONE} -- Implementation/Set operations
 					l_content.forth
 				end
 				l_item_set.wipe_out
-				l_content2.fill (content)
 			end
 		end
 
@@ -451,7 +504,8 @@ feature{NONE} -- Implementation/Set operations
 					l_content.after
 				loop
 					l_item := l_content.item
-					if l_item_set.has (l_item) then
+					l_item_set.search (l_item)
+					if l_item_set.found then
 						l_item_set.remove_found_item
 					end
 					l_content.forth
@@ -542,6 +596,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

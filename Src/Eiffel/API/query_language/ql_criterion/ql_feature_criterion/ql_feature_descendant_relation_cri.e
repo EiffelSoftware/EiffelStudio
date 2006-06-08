@@ -4,7 +4,7 @@ indexing
 					
 					This criterion will use `data' attribute in every QL_FEATURE candidate object.
 					IF a QL_FEATURE candidate is satisfied by this criterion. it's `data' attribute will
-					be set with branch id (of type INTEGER)					
+					be set with branch id (of type INTEGER)
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ class
 	QL_FEATURE_DESCENDANT_RELATION_CRI
 
 inherit
-	QL_FEATURE_HIERARCHY_CRI
+	QL_FEATURE_INHERITANCE_CRI
 
 create
 	make
@@ -76,6 +76,7 @@ feature{NONE} -- Implementation
 					l_feature_domain.forth
 				end
 			end
+			is_criterion_domain_evaluated := True
 		end
 
 indexing
@@ -109,6 +110,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

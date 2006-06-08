@@ -14,13 +14,19 @@ inherit
 		undefine
 			is_atomic,
 			set_source_domain,
-			process
+			process,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
+			set_used_in_domain_generator
+		redefine
+			intrinsic_domain
 		end
 
 	QL_OR_CRITERION
 		redefine
 			left,
-			right
+			right,
+			intrinsic_domain
 		end
 
 create
@@ -42,6 +48,13 @@ feature -- Criterion
 	right: QL_LOCAL_CRITERION;
 			-- Criteria to which binary operation is applied
 
+feature -- Access
+
+	intrinsic_domain: QL_LOCAL_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			Result ?= intrinsic_domain_internal
+		end
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -73,6 +86,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

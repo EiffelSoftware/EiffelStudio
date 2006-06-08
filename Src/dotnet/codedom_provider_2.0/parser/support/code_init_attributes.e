@@ -663,6 +663,10 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
+	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
+		do
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

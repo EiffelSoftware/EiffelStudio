@@ -396,18 +396,6 @@ feature {NONE} -- Implementation
 			valid_params: name /= Void and then not name.is_empty and name.as_lower.is_equal (name)
 		do
 			manager.add_cluster (name, group, original_path)
-			conf_todo
---			if sub_cluster then
---				create cluster_i.make_with_parent (path, cluster)
---				cluster_i.set_cluster_name (name)
---				cluster_i.set_belongs_to_all (rec)
---				manager.add_cluster_i (cluster_i, cluster, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
---			else
---				create cluster_i.make_with_parent (path, Void)
---				cluster_i.set_cluster_name (name)
---				manager.add_top_cluster_i (cluster_i, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
---			end
---			destroy
 		end
 
 	create_directory (dir: DIRECTORY) is

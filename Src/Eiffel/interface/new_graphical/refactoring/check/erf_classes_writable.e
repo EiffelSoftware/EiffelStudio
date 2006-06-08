@@ -33,7 +33,6 @@ feature -- Basic operation
         local
         	l_class: CLASS_I
         do
-        	conf_todo
         	success := True
         	from
         		classes.start

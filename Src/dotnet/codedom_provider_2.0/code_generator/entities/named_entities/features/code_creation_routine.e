@@ -9,7 +9,7 @@ class
 	CODE_CREATION_ROUTINE
 
 inherit
-	CODE_ROUTINE_IMP
+	CODE_ROUTINE
 
 create 
 	make

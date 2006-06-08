@@ -320,6 +320,8 @@ feature -- Project settings warnings
 
 feature -- Debug warnings
 
+	w_Compile_before_debug: STRING is "Do you want to compile before debugging?"
+
 	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled.%N%
 						%Cannot use debugging facilities."
 

@@ -365,6 +365,13 @@ feature -- Pixmap Icons from constant
 			result_not_void: Result /= Void
 		end
 
+	icon_clipboard: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_clipboard_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 	pixmap_width: INTEGER is 8
@@ -438,7 +445,7 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.add_pixmap (13, 3, icon_return_type_value)
 			Result.add_pixmap (14, 3, icon_show_signature_value)
 			Result.add_pixmap (15, 3, icon_show_disambiguated_name_value)
-
+			Result.add_pixmap (16, 3, icon_clipboard_value)
 		end
 
 feature {NONE} -- Constants
@@ -489,7 +496,8 @@ feature {NONE} -- Constants
 	icon_filter_value,
 	icon_return_type_value,
 	icon_show_signature_value,
-	icon_show_disambiguated_name_value
+	icon_show_disambiguated_name_value,
+	icon_clipboard_value
 		: INTEGER is unique;
 		-- Constants used for pixmap lookup.
 

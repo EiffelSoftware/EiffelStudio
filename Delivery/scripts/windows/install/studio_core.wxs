@@ -809,21 +809,13 @@
 							</Component>
 						</Directory>
 						<Directory Id="dotnet1" Name="dotnet">
-							<Directory Id="vision23" Name="vision2">
-								<Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
-									<File Id="ace.ace2" Name="vision2.ace"/>
-								</Component>
-							</Directory>
-							<Directory Id="wel2" Name="wel">
-								<Component Id="wel2" Guid="7B4957D5-F93E-4CB4-BF19-8F185BB0FF5E">
-									<File Id="ace.ace3" Name="wel.ace" />
-								</Component>
-							</Directory>
-							<Directory Id="base4" Name="base">
-								<Component Id="base4" Guid="23CFD01E-AE9F-40DE-96E5-2005039047B6">
-									<File Id="ace_ecf4" Name="base.ecf"/>
-								</Component>
-							</Directory>
+							<Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
+								<File Id="ace_ecf145" Name="base-mt.ecf"/>
+								<File Id="ace_ecf146" Name="base.ecf"/>
+								<File Id="ace_ace147" Name="vision2.ecf"/>
+								<File Id="ace_ace148" Name="wel-mt.ecf"/>
+								<File Id="ace_ace149" Name="wel.ecf"/>
+							</Component>
 						</Directory>
 					</Directory>
 				</Directory>

@@ -17,6 +17,8 @@ inherit
 
 	EXCEPTIONS
 
+	QL_SHARED
+
 feature -- Status report
 
 	is_class_feature_formatter: BOOLEAN is True
@@ -50,6 +52,8 @@ feature{NONE} -- Implementation
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
 			Result.enable_fill_domain
 			Result.set_criterion (criterion)
+			Result.enable_optimization
+			Result.disable_distinct_item
 		end
 
 	start_class: QL_CLASS is

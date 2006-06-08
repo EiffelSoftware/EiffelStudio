@@ -22,19 +22,6 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create criterion_table.make (13)
-			criterion_table.put (agent new_false_criterion, query_language_names.ql_cri_false)
-			criterion_table.put (agent new_is_assembly_criterion, query_language_names.ql_cri_is_assembly)
-			criterion_table.put (agent new_is_cluster_criterion, query_language_names.ql_cri_is_cluster)
-			criterion_table.put (agent new_is_compiled_criterion, query_language_names.ql_cri_is_compiled)
-			criterion_table.put (agent new_is_library_criterion, query_language_names.ql_cri_is_library)
-			criterion_table.put (agent new_is_override_criterion, query_language_names.ql_cri_is_override)
-			criterion_table.put (agent new_is_valid_criterion, query_language_names.ql_cri_is_valid)
-			criterion_table.put (agent new_is_used_in_library_criterion, query_language_names.ql_cri_is_used_in_library)
-			criterion_table.put (agent new_is_valid_criterion, query_language_names.ql_cri_is_class_set)
-			criterion_table.put (agent new_true_criterion, query_language_names.ql_cri_true)
-			criterion_table.put (agent new_name_is_criterion, query_language_names.ql_cri_name_is)
-
 			create agent_table.make (20)
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_is_assembly_criterion, c_is_assembly)

@@ -76,6 +76,7 @@ feature{NONE} -- Implementation
 					l_feature_domain.forth
 				end
 			end
+			is_criterion_domain_evaluated := True
 		end
 
 indexing

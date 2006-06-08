@@ -417,6 +417,7 @@ feature{NONE} -- Implementation
 			l_data: like data
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 			l_rows: like rows
+			l_start_class: QL_CLASS
 		do
 			l_rows := rows
 			l_rows.wipe_out
@@ -432,18 +433,28 @@ feature{NONE} -- Implementation
 					l_data.forth
 				end
 			else
+				class_table.wipe_out
+				l_start_class := Void
+				from
+					l_data.start
+				until
+					l_data.after
+				loop
+					class_table.force (l_data.item, l_data.item.class_c.class_id)
+					if l_start_class = Void and then l_data.item.is_equal (start_class) then
+						l_start_class := l_data.item
+					end
+					l_data.forth
+				end
 				processed_classes.wipe_out
-				data.compare_objects
-				data.start
-				data.search (start_class)
-				check not data.exhausted end
-				create l_row.make (data.item, False)
+				check l_start_class /= Void end
+				create l_row.make (l_start_class, False)
 				l_rows.force_last (l_row)
-				fill_row_tree (l_row)
+				fill_row_tree (l_row, l_data)
 			end
 		end
 
-	fill_row_tree (a_row: EB_CLASS_BROWSER_TREE_ROW) is
+	fill_row_tree (a_row: EB_CLASS_BROWSER_TREE_ROW; a_class_domain: like data) is
 			-- Fill row tree.
 		require
 			a_row_attached: a_row /= Void
@@ -457,7 +468,8 @@ feature{NONE} -- Implementation
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [QL_CLASS]
 			l_sorter: DS_QUICK_SORTER [QL_CLASS]
 		do
-			l_list2 ?= a_row.class_item.data
+			l_class := class_table.item (a_row.class_item.class_c.class_id)
+			l_list2 ?= l_class.data
 			if l_list2 /= Void and then not l_list2.is_empty then
 				l_processed_classes := processed_classes
 				any_class_id := system.any_id
@@ -466,6 +478,7 @@ feature{NONE} -- Implementation
 				create l_agent_sorter.make (agent class_tester)
 				create l_sorter.make (l_agent_sorter)
 				l_sorter.sort (l_list)
+				a_class_domain.compare_objects
 				from
 					l_list.start
 				until
@@ -488,7 +501,7 @@ feature{NONE} -- Implementation
 								l_processed_classes.resize (l_processed_classes.capacity + 50)
 							end
 							l_processed_classes.force_last (l_class)
-							fill_row_tree (l_row)
+							fill_row_tree (l_row, a_class_domain)
 						end
 					end
 					l_list.forth
@@ -509,20 +522,6 @@ feature{NONE} -- Implementation
 
 	processed_classes_internal: like processed_classes
 			-- Implementation of `processed_classes'
-
---	processed_rows: LINKED_LIST [EV_GRID_ROW] is
---			-- Processed rows
---		do
---			if processed_rows_internal = Void then
---				create processed_rows_internal.make
---			end
---			Result := process_rows_internal
---		ensure
---			result_attached: Result /= Void
---		end
---
---	process_rows_internal: like processed_rows
---			-- Implementation of `processed_rows'
 
 	bind_grid is
 			-- Bind `rows' in `grid'.
@@ -812,6 +811,21 @@ feature{NONE} -- Implementation
 				Result.extend (grid.row (1))
 			end
 		end
+
+	class_table: HASH_TABLE [QL_CLASS, INTEGER] is
+			-- Table for classes in `data'
+			-- Key is class_id, value is that class
+		do
+			if class_table_internal = Void then
+				create class_table_internal.make (100)
+			end
+			Result := class_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	class_table_internal: like class_table
+			-- Implementation of `class_table'		
 
 feature{NONE} -- Initialization
 

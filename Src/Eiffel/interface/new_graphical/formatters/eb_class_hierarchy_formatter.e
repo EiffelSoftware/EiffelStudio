@@ -64,6 +64,8 @@ feature{NONE} -- Implementation
 			create {QL_CLASS_DOMAIN_GENERATOR}Result
 			Result.enable_fill_domain
 			Result.set_criterion (criterion)
+			Result.enable_optimization
+			Result.disable_distinct_item
 		end
 
 indexing

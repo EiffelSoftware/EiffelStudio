@@ -21,6 +21,8 @@ inherit
 
 	QL_UTILITY
 
+	QL_SHARED
+
 create
 	make
 
@@ -70,7 +72,8 @@ feature -- Search
 			create l_ql_group.make (group)
 			l_ql_group := query_group_item_from_conf_group (group)
 			if only_compiled_class_searched then
-				l_class_cri := create{QL_CLASS_IS_COMPILED_CRI}
+				l_class_cri := class_criterion_factory.simple_criterion_with_index (
+					class_criterion_factory.c_is_compiled)
 			end
 			if is_subgroup_searched then
 				if l_class_cri = Void then

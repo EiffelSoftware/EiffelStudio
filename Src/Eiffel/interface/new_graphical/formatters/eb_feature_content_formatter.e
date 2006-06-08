@@ -172,6 +172,8 @@ feature{NONE} -- Implementation
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
 			Result.enable_fill_domain
 			Result.set_criterion (criterion)
+			Result.enable_optimization
+			Result.disable_distinct_item
 		end
 
 	criterion: QL_CRITERION is

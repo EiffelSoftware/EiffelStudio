@@ -121,6 +121,15 @@ feature -- Access
 			set: show_all_feedback_indicator = a_bool
 		end
 
+	tool_bar_font: EV_FONT is
+			-- Tool bar font
+		local
+			l_drawing_area: EV_DRAWING_AREA
+		once
+			create l_drawing_area
+			Result := l_drawing_area.font
+		end
+
 feature  -- Colors
 
 	non_focused_color: EV_COLOR is
@@ -260,12 +269,6 @@ feature -- Contract Support
 			Result := internal_icons /= Void
 		end
 
-	type_valid (a_type: INTEGER): BOOLEAN is
-			-- If `a_type' valid?
-		do
-			Result := a_type = type_editor or a_type = type_tool
-		end
-
 feature -- Constants
 
 	Border_width: INTEGER is 1
@@ -352,13 +355,8 @@ feature -- Constants
 	Floating_title_bar_height: INTEGER is 13
 			-- Height of SD_FLOATING_TOOL_BAR_ZONE's title bar.
 
-feature -- Zone type constants
-
-	Type_tool: INTEGER is 1
-			-- Normal hot zones which normal zones have.
-
-	Type_editor: INTEGER is 2
-			-- Editor hot zones which editor zones have.
+	Editor_place_holder_content_name: STRING is "docking manager editor place holder"
+			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
 
 feature {NONE} -- Implementation
 

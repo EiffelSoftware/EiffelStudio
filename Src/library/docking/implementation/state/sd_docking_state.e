@@ -91,7 +91,7 @@ feature -- Redefine.
 			if l_content /= Void then
 				internal_content := l_content
 				Precursor {SD_STATE} (a_titles, a_container, a_direction)
-				make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)
+				make (l_content, {SD_ENUMERATION}.left, 1)
 				a_container.extend (zone)
 				change_state (Current)
 				direction := a_direction
@@ -128,6 +128,10 @@ feature -- Redefine.
 		do
 			if not l_retried then
 				internal_docking_manager.command.lock_update (zone, False)
+
+				-- Only in this case, del editor place holder make sense.
+				del_place_holder
+
 				record_state
 				if zone.parent /= Void then
 					zone.parent.prune (zone)
@@ -145,7 +149,7 @@ feature -- Redefine.
 					a_multi_dock_area.prune (l_old_stuff)
 				end
 
-				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 					create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
 				else
 					create {SD_VERTICAL_SPLIT_AREA} l_new_container
@@ -153,7 +157,7 @@ feature -- Redefine.
 
 				a_multi_dock_area.extend (l_new_container)
 
-				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
+				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.top then
 					l_new_container.set_first (zone)
 					if l_old_stuff /= Void then
 						l_new_container.set_second (l_old_stuff)
@@ -305,6 +309,7 @@ stick (a_direction: INTEGER) is
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
+			Precursor {SD_STATE}
 			zone.hide
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
@@ -372,12 +377,12 @@ feature {NONE} -- Implementation
 			end
 			check not l_target_zone_parent.full end
 			-- Then, insert current zone to new split area base on  `a_direction'.
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
 				create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
+			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
 				l_new_split_area.set_first (zone)
 				l_new_split_area.set_second (a_target_zone)
 			else

@@ -333,6 +333,9 @@ feature {NONE} -- Implementation
 				create l_target.make (Target_name, l_system)
 				l_system.add_target (l_target)
 				create l_cluster.make ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
+				if Compilation_context.namespace /= Void then
+					l_cluster.changeable_internal_options.set_namespace (Compilation_context.namespace)
+				end
 				l_target.add_cluster (l_cluster)
 
 				l_root_class := Compilation_context.root_class_name
@@ -388,6 +391,7 @@ feature {NONE} -- Implementation
 				l_target.add_setting ("msil_generation", "true")
 				l_target.add_setting ("msil_generation_type", "dll")
 				l_target.add_setting ("msil_clr_version", Clr_version)
+				l_target.add_setting ("dotnet_naming_convention", "true")
 
 				-- Setup Precompile
 				l_precompile_file := Compilation_context.precompile_file
@@ -400,7 +404,7 @@ feature {NONE} -- Implementation
 					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
-						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_FILE_LOCATION}.make (l_precompile_file, l_target), l_target))
+						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_FILE_LOCATION}.make (l_precompiler.configuration_path, l_target), l_target))
 						precompile_files := l_precompiler.precompile_files
 					else
 						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
@@ -471,7 +475,7 @@ feature {NONE} -- Implementation
 				end
 
 				if a_options.include_debug_information then
-					l_target.add_setting ("line_generation", "yes")
+					l_target.add_setting ("line_generation", "true")
 				end
 
 				l_system.set_file_name (ace_file_path)

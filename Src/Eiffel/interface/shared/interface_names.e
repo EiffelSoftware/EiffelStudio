@@ -974,6 +974,7 @@ feature -- Description texts
 	e_C_compilation_succeeded: STRING is "Background C compilation succeeded"
 	e_C_compilation_running: STRING is  "Background C compilation in progress"
 	e_Compiling: STRING is				"System is being compiled"
+	e_Copy_call_stack_to_clipboard: STRING is "Copy call stack to clipboard"
 	e_Cursor_position: STRING is		"Cursor position (line:column)"
 	e_Diagram_hole: STRING is			"Please drop a class or a cluster on this button %N%
 										%to view its diagram.%N%

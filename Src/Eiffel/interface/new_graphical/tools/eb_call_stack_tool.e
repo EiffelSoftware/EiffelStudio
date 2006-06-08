@@ -221,6 +221,8 @@ feature {NONE} -- Initialization
 
 	build_mini_toolbar is
 			-- Build the associated tool bar
+		local
+			cmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar
 			create save_call_stack_cmd.make
@@ -228,6 +230,15 @@ feature {NONE} -- Initialization
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
 			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
+
+			create cmd.make
+			cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_clipboard)
+			cmd.set_tooltip (Interface_names.e_Copy_call_stack_to_clipboard)
+			cmd.add_agent (agent copy_call_stack_to_clipboard)
+			mini_toolbar.extend (cmd.new_mini_toolbar_item)
+			copy_call_stack_cmd := cmd
+
+
 			create set_stack_depth_cmd.make
 			set_stack_depth_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_set_stack_depth)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
@@ -473,6 +484,9 @@ feature {NONE} -- Implementation
 	save_call_stack_cmd: EB_STANDARD_CMD
 			-- Command that saves the call stack to a file.
 
+	copy_call_stack_cmd: EB_STANDARD_CMD
+			-- Command that copy the call stack to the clipboard.
+
 	set_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that alters the displayed depth of the call stack.
 
@@ -516,6 +530,7 @@ feature {NONE} -- Implementation
 					stack := l_status.current_call_stack
 					if stack /= Void and then not stack.is_empty then
 						save_call_stack_cmd.enable_sensitive
+						copy_call_stack_cmd.enable_sensitive
 						from
 							stack.start
 							stack_grid.insert_new_rows (stack.count, 1)
@@ -544,6 +559,7 @@ feature {NONE} -- Implementation
 					stack_grid.request_columns_auto_resizing
 				else
 					save_call_stack_cmd.disable_sensitive
+					copy_call_stack_cmd.disable_sensitive
 				end
 			end
 		end
@@ -1003,6 +1019,24 @@ feature {NONE} -- Implementation
 					-- The file name was probably incorrect (not creatable).
 				create wd.make_with_text (Warning_messages.w_Not_creatable (a_fn))
 				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	copy_call_stack_to_clipboard is
+		local
+			l_output: YANK_STRING_WINDOW
+			retried: BOOLEAN
+			wd: EV_WARNING_DIALOG
+		do
+			if not retried then
+					--| We generate the call stack.
+				create l_output.make
+				eb_debugger_manager.Application.status.current_call_stack.display_stack (l_output)
+				ev_application.clipboard.set_text (l_output.stored_output)
+				l_output.reset_output
 			end
 		rescue
 			retried := True

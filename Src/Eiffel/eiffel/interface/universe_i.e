@@ -192,6 +192,7 @@ feature -- Access
 		require
 			class_name_not_void: class_name /= Void and then not class_name.is_empty
 			class_name_upper: class_name.is_equal (class_name.as_upper)
+			target_not_void: target /= Void
 		local
 			l_vis: CONF_FIND_CLASS_VISITOR
 		do

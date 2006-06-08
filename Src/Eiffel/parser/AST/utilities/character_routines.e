@@ -101,9 +101,10 @@ feature {NONE} -- Implementation
 				or else code = ('%B').natural_32_code
 				or else code = esc_char.natural_32_code
 			then
-				create Result.make_from_string (special_chars.item (code))
+					-- Conversion is taking place here, no need for twin.
+				Result := special_chars.item (code)
 			elseif code = ('%U').natural_32_code then
-				create Result.make_from_string ("%%U")
+				Result := "%%U"
 			else
 				if code < {ASCII}.First_printable.to_natural_32 then
 					create Result.make (6)
@@ -117,6 +118,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+			Result_different: Result /= code_to_string_32 (code, for_string)
 		end
 
 	char_to_string (char: CHARACTER; for_string: BOOLEAN): STRING is
@@ -143,7 +145,7 @@ feature {NONE} -- Implementation
 			then
 				create Result.make_from_string (special_chars.item (char.natural_32_code))
 			elseif char = '%U' then
-				create Result.make_from_string ("%%U")
+				Result := "%%U"
 			else
 				code := char.code;
 				if code < {ASCII}.First_printable then
@@ -157,6 +159,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+			Result_different: Result /= char_to_string (char, for_string)
 		end
 
 	special_chars: HASH_TABLE [STRING, NATURAL_32] is

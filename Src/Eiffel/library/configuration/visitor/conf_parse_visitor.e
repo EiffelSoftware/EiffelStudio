@@ -147,6 +147,14 @@ feature -- Visit nodes
 				l_libs := a_precompile.library_target.all_libraries
 			end
 			if l_libs /= Void then
+				from
+					l_libs.start
+				until
+					l_libs.after
+				loop
+					l_libs.item_for_iteration.system.set_application_target (application_target)
+					l_libs.forth
+				end
 				libraries.merge (l_libs)
 			end
 			process_library (a_precompile)

@@ -40,7 +40,7 @@ feature -- Access
 	Vk_control: INTEGER is 17
 			-- Declared in Windows as VK_CONTROL
 
-	Vk_menu: INTEGER is 18
+	Vk_menu, vk_alt: INTEGER is 18
 			-- Declared in Windows as VK_MENU
 
 	Vk_pause: INTEGER is 19

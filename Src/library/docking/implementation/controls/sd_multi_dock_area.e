@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that is the center mulit docking area."
+	description: "Container in top conainter level, contain other SD_ZONEs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,6 +15,7 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
@@ -131,24 +132,189 @@ feature -- Query
 			a_list_not_void: a_list /= Void
 		local
 			l_zone: SD_ZONE
-			l_container: EV_SPLIT_AREA
+			l_container: EV_CONTAINER
+			l_list: LINEAR [EV_WIDGET]
 		do
 			l_zone ?= a_widget
 			l_container ?= a_widget
+			-- Must first judge if is a SD_ZONE, becaue a SD_ZONE is a EV_CONTAINER too.
 			if l_zone /= Void then
 				a_list.extend (l_zone)
 			elseif l_container /= Void then
-				zones_recursive (l_container.first, a_list)
-				zones_recursive (l_container.second, a_list)
+				l_list := l_container.linear_representation
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					zones_recursive (l_list.item, a_list)
+					l_list.forth
+				end
 			end
 		end
 
 	parent_floating_zone: SD_FLOATING_ZONE
 			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 
+	editor_zone_count: INTEGER is
+			-- If current have eidtor zone?
+		local
+			l_zones: like zones
+		do
+			l_zones := zones
+			from
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				if l_zones.item.type = {SD_ENUMERATION}.editor then
+					Result := Result + 1
+				end
+				l_zones.forth
+			end
+		end
+
+	editor_parent: EV_CONTAINER is
+			-- All editor zones top level parent.
+		require
+			has_editor: editor_zone_count > 0
+		local
+			l_zone: SD_ZONE
+			l_parent, l_last_parent: EV_CONTAINER
+			l_list: ARRAYED_LIST [SD_ZONE]
+		do
+			Result := editor_place_holder_parent
+			if Result = Void then
+				from
+					l_zone := all_editors.first
+					l_parent := l_zone.parent
+					l_last_parent := l_zone
+				until
+					l_parent = Void or Result /= Void
+				loop
+					if l_parent = Current then
+						Result := Current
+					else
+						create l_list.make (5)
+						zones_recursive (l_parent, l_list)
+						if not is_all_editors (l_list) then
+							-- Now we find the top container of all editors
+							Result := l_last_parent
+						end
+						l_last_parent := l_parent
+						l_parent := l_parent.parent
+					end
+
+				end
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	all_editors: ARRAYED_LIST [SD_ZONE] is
+			-- One editor in Current.
+		local
+			l_zones: like zones
+		do
+			l_zones := zones
+			from
+				create Result.make (5)
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				if l_zones.item.type = {SD_ENUMERATION}.editor then
+					Result.extend (l_zones.item)
+				end
+				l_zones.forth
+			end
+		ensure
+			not_void: Result /= Void
+			is_all_editors: is_all_editors (Result)
+		end
+
 feature {NONE} -- Implementation
 
-	 set_all_title_bar (a_widget: EV_WIDGET) is
+	is_all_editors (a_list: ARRAYED_LIST [SD_ZONE]): BOOLEAN is
+			-- If `a_list' all eidtor type zones?
+		require
+			not_void: a_list /= Void
+			at_least_one: a_list.count > 0
+		do
+			from
+				Result := True
+				a_list.start
+			until
+				a_list.after or not Result
+			loop
+				if a_list.item.content.type /= {SD_ENUMERATION}.editor then
+					Result := False
+				end
+				a_list.forth
+			end
+		end
+
+	has_editor (a_list: ARRAYED_LIST [SD_ZONE]): BOOLEAN is
+			-- If `a_list' has editor type zone?
+		require
+			not_void: a_list /= Void
+			at_least_one: a_list.count > 0
+		do
+			from
+				a_list.start
+			until
+				a_list.after or Result
+			loop
+				if a_list.item.content.type = {SD_ENUMERATION}.editor then
+					Result := True
+				end
+				a_list.forth
+			end
+		end
+
+	is_all_tools (a_list: ARRAYED_LIST [SD_ZONE]): BOOLEAN is
+	 		-- If `a_list' all tool type zones?
+	 	require
+	 		not_void: a_list /= Void
+	 		at_least_one: a_list.count > 0
+	 	do
+	 		from
+	 			Result := True
+	 			a_list.start
+	 		until
+	 			a_list.after or not Result
+	 		loop
+	 			if a_list.item.content.type /= {SD_ENUMERATION}.tool then
+	 				Result := False
+	 			end
+	 			a_list.forth
+	 		end
+	 	end
+
+	editor_place_holder_parent: EV_CONTAINER is
+			-- Editor place holder parent, if exits.
+		local
+			l_zones: like zones
+			l_place_holder: SD_PLACE_HOLDER_ZONE
+		do
+			from
+				l_zones := zones
+				l_zones.start
+			until
+				l_zones.after or l_place_holder /= Void
+			loop
+				if l_zones.item.content.type = {SD_ENUMERATION}.place_holder then
+					l_place_holder ?= l_zones.item
+					check not_void: l_place_holder /= Void end
+				end
+				l_zones.forth
+			end
+			if l_place_holder /= Void then
+				Result := l_place_holder.parent
+			end
+		end
+
+	set_all_title_bar (a_widget: EV_WIDGET) is
 	 		-- Set all SD_ZONE's title bar in `Current'.
 	 	require
 	 		a_widget_not_void: a_widget /= Void
@@ -268,7 +434,7 @@ feature {NONE} -- Implementation
 				-- There should by only one, because Postorder, so NO recursive needed.
 				-- The split area must full, because Postorder recursive.
 
-				-- FIXIT: following If cluse if for GTK, on MsWin is not needed.
+				-- FIXIT: following If cluse is for GTK, on MsWin is not needed.
 					if l_spliter_position < l_temp_spliter.minimum_split_position then
 						l_spliter_position := l_temp_spliter.minimum_split_position
 					end

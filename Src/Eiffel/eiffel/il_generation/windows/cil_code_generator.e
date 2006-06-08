@@ -2069,7 +2069,7 @@ feature -- Features info
 							l_naming_convention, l_feat.feature_name,
 							{IL_CASING_CONVERSION}.lower_case)
 						if l_feat.has_property_getter then
-							prepare_property_getter (l_feat, l_name, l_return_type, l_class_type)
+							prepare_property_getter (l_feat, l_class_type, l_name, l_return_type, l_class_type)
 							current_module.insert_property_getter (md_emit.define_member_ref
 								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
 						end
@@ -2408,7 +2408,7 @@ feature -- Features info
 							l_property_name := Override_prefix + l_property_name + override_counter.value.out
 						end
 							-- Define getter method.
-						prepare_property_getter (feat, l_property_name, l_return_type, signature_declaration_type)
+						prepare_property_getter (feat, current_class_type, l_property_name, l_return_type, signature_declaration_type)
 						l_getter := md_emit.define_method (uni_string, current_class_token,
 							l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 						if is_override_or_c_external then
@@ -2741,11 +2741,12 @@ feature -- Features info
 			end
 		end
 
-	prepare_property_getter (f: FEATURE_I; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
+	prepare_property_getter (f: FEATURE_I; s: CLASS_TYPE; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
 			-- Fill `uni_string' and `method_sig' with a property getter data
 			-- in class type `t'.
 		require
 			f_attached: f /= Void
+			s_attached: s /= Void
 			property_name_attached: property_name /= Void
 			property_name_not_empty: not property_name.is_empty
 			return_type_attached: return_type /= Void
@@ -2760,7 +2761,7 @@ feature -- Features info
 			l_meth_sig.set_parameter_count (0)
 			set_signature_type (l_meth_sig, return_type)
 			n := property_getter_prefix + property_name
-			if current_class.feature_named (n) /= Void then
+			if s.associated_class.feature_named (n) /= Void then
 					-- Property getter name conflicts with the feature name.
 				n := property_getter_prefix + t.associated_class.name + "." + f.feature_name
 			end
@@ -3302,10 +3303,13 @@ feature -- IL Generation
 			end
 		end
 
-	generate_property (f: FEATURE_I) is
-			-- Generate property methods associated with feature `f' (if any).
+	generate_property (f: FEATURE_I; i: FEATURE_I; parent_type: CLASS_TYPE) is
+			-- Generate property methods associated with feature `f' (if any)
+			-- given that the inherited feature is `i' (if any) from parent
+			-- class type `parent_type'.
 		require
-			f_not_void: f /= Void
+			f_attached: f /= Void
+			parent_type_attached: i /= Void implies parent_type /= Void
 		do
 			if is_property_setter_generated (f, current_class_type) then
 				start_new_body (current_module.property_setter_token (current_type_id, f.feature_id))
@@ -3317,6 +3321,11 @@ feature -- IL Generation
 				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
 				generate_property_getter_body (f)
 				method_writer.write_current_body
+				if i /= Void and then i.has_property_getter then
+					md_emit.define_method_impl (current_class_token,
+						current_module.property_getter_token (current_type_id, f.feature_id),
+						current_module.property_getter_token (parent_type.static_type_id, i.feature_id))
+				end
 			end
 		end
 

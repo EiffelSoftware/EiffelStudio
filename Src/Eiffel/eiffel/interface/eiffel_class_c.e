@@ -210,6 +210,8 @@ feature -- Action
 
 	end_of_pass1 (ast_b: CLASS_AS) is
 				-- End of the first pass after syntax analysis
+		require
+			ast_b_not_void: ast_b /= Void
 		local
 			supplier_list, light_supplier_list: SEARCH_TABLE [ID_AS]
 			parent_list: EIFFEL_LIST [PARENT_AS]

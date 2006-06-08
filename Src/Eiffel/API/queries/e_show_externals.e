@@ -23,8 +23,11 @@ feature -- Access
 
 	criterion: QL_CRITERION is
 			-- Criterion used in current command
+		local
+			l_factory: like feature_criterion_factory
 		do
-			create {QL_FEATURE_IS_EXTERNAL_CRI}Result
+			l_factory := feature_criterion_factory
+			Result := l_factory.simple_criterion_with_index (l_factory.c_is_external)
 		end
 
 indexing

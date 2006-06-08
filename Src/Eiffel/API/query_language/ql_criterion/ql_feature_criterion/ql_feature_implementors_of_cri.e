@@ -16,7 +16,7 @@ class
 	QL_FEATURE_IMPLEMENTORS_OF_CRI
 
 inherit
-	QL_FEATURE_HIERARCHY_CRI
+	QL_FEATURE_INHERITANCE_CRI
 
 create
 	make
@@ -94,6 +94,7 @@ feature{NONE} -- Implementation
 					l_feature_domain.forth
 				end
 			end
+			is_criterion_domain_evaluated := True
 		end
 
 indexing
@@ -127,6 +128,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

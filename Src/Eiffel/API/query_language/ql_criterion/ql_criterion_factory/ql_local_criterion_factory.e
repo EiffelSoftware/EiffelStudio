@@ -22,13 +22,21 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create criterion_table.make (10)
-			criterion_table.put (agent new_false_criterion, query_language_names.ql_cri_false)
-			criterion_table.put (agent new_is_compiled_criterion, query_language_names.ql_cri_is_compiled)
-			criterion_table.put (agent new_is_used_criterion, query_language_names.ql_cri_is_used)
-			criterion_table.put (agent new_true_criterion, query_language_names.ql_cri_true)
-			criterion_table.put (agent new_name_is_criterion, query_language_names.ql_cri_name_is)
-			criterion_table.put (agent new_text_contain_criterion, query_language_names.ql_cri_text_contain)
+			create agent_table.make (10)
+			agent_table.put (agent new_false_criterion, c_false)
+			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
+			agent_table.put (agent new_is_used_criterion, c_is_used)
+			agent_table.put (agent new_true_criterion, c_true)
+			agent_table.put (agent new_name_is_criterion, c_name_is)
+			agent_table.put (agent new_text_contain_criterion, c_text_contain)
+
+			create name_table.make (10)
+			name_table.put (c_false, query_language_names.ql_cri_false)
+			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_is_used, query_language_names.ql_cri_is_used)
+			name_table.put (c_true, query_language_names.ql_cri_true)
+			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
+			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
 		end
 
 feature{NONE} -- Implementation
@@ -38,18 +46,18 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_LOCAL_FALSE_CRI is
-			-- New {QL_LOCAL_FALSE_CRI} criterion.
+	new_false_criterion: QL_SIMPLE_LOCAL_CRITERION is
+			-- New criterion that always returns False
 		do
-			create Result
+			create Result.make (agent false_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_LOCAL_IS_COMPILED_CRI is
-			-- New {QL_LOCAL_IS_COMPILED_CRI} criterion.
+	new_is_compiled_criterion: QL_SIMPLE_LOCAL_CRITERION is
+			-- New criterion to test if a local is compiled
 		do
-			create Result
+			create Result.make (agent is_compiled_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -62,10 +70,10 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_LOCAL_TRUE_CRI is
-			-- New {QL_LOCAL_TRUE_CRI} criterion.
+	new_true_criterion: QL_SIMPLE_LOCAL_CRITERION is
+			-- New criterion that always returns True (tautology criterion)
 		do
-			create Result
+			create Result.make (agent true_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -90,7 +98,38 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+feature -- Criterion index
 
+	c_false,
+	c_is_compiled,
+	c_is_used,
+	c_true,
+	c_name_is,
+	c_text_contain: INTEGER is unique
+
+feature{NONE} -- Implementation
+
+feature{NONE} -- Implementation
+
+	false_agent (a_item: QL_LOCAL): BOOLEAN is
+			-- Agent that always returns False.
+			-- Require compiled: False
+		do
+		end
+
+	true_agent (a_item: QL_LOCAL): BOOLEAN is
+			-- Agent that always returns True (tautology criterion)
+			-- Require compiled: False
+		do
+			Result := True
+		end
+
+	is_compiled_agent (a_item: QL_LOCAL): BOOLEAN is
+			-- Agent to test if `a_item' is compiled
+			-- Require compiled: False
+		do
+			Result := a_item.is_compiled
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -123,6 +162,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

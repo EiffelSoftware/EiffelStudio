@@ -26,6 +26,26 @@ feature -- Access
 			good_result: Result = '.'
 		end
 
+	criterion_with_index (a_scope: QL_SCOPE; a_index: INTEGER; a_argu: TUPLE): QL_CRITERION is
+			-- Criterion with `a_index' and argument `a_argu' in `a_scope'
+		require
+			a_scope_attached: a_scope /= Void
+			criterion_exists: criterion_factory_table.item (a_scope).has_criterion_with_index (a_index)
+		do
+			Result := criterion_factory_table.item (a_scope).criterion_with_index (a_index, a_argu)
+		end
+
+	criterion_with_name (a_scope: QL_SCOPE; a_name: STRING; a_argu: TUPLE): QL_CRITERION is
+			-- Criterion with `a_name' and argument `a_argu' in `a_scope'
+		require
+			a_scope_attached: a_scope /= Void
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			criterion_exists: criterion_factory_table.item (a_scope).has_criterion_with_name (a_name)
+		do
+			Result := criterion_factory_table.item (a_scope).criterion_with_name (a_name, a_argu)
+		end
+
 feature -- Domain
 
 	system_target_domain: QL_TARGET_DOMAIN is
@@ -54,15 +74,96 @@ feature -- Criterion factory
 			-- Key is criterion scope type, value is the factory of that scope type.
 		once
 			create Result.make (10)
-			Result.put (create{QL_TARGET_CRITERION_FACTORY}.make, target_scope)
-			Result.put (create{QL_GROUP_CRITERION_FACTORY}.make, group_scope)
-			Result.put (create{QL_CLASS_CRITERION_FACTORY}.make, class_scope)
-			Result.put (create{QL_GENERIC_CRITERION_FACTORY}.make, generic_scope)
-			Result.put (create{QL_FEATURE_CRITERION_FACTORY}.make, feature_scope)
-			Result.put (create{QL_ARGUMENT_CRITERION_FACTORY}.make, argument_scope)
-			Result.put (create{QL_LOCAL_CRITERION_FACTORY}.make, local_scope)
-			Result.put (create{QL_ASSERTION_CRITERION_FACTORY}.make, assertion_scope)
-			Result.put (create{QL_LINE_CRITERION_FACTORY}.make, line_scope)
+			Result.put (target_criterion_factory, target_scope)
+			Result.put (group_criterion_factory, group_scope)
+			Result.put (class_criterion_factory, class_scope)
+			Result.put (generic_criterion_factory, generic_scope)
+			Result.put (feature_criterion_factory, feature_scope)
+			Result.put (argument_criterion_factory, argument_scope)
+			Result.put (local_criterion_factory, local_scope)
+			Result.put (assertion_criterion_factory, assertion_scope)
+			Result.put (line_criterion_factory, line_scope)
+			Result.put (quantity_criterion_factory, quantity_scope)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	target_criterion_factory: QL_TARGET_CRITERION_FACTORY is
+			-- Target criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	group_criterion_factory: QL_GROUP_CRITERION_FACTORY is
+			-- Group criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	class_criterion_factory: QL_CLASS_CRITERION_FACTORY is
+			-- Class criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	generic_criterion_factory: QL_GENERIC_CRITERION_FACTORY is
+			-- Generic criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_criterion_factory: QL_FEATURE_CRITERION_FACTORY is
+			-- Feature criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	argument_criterion_factory: QL_ARGUMENT_CRITERION_FACTORY is
+			-- Argument criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	local_criterion_factory: QL_LOCAL_CRITERION_FACTORY is
+			-- Local criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	assertion_criterion_factory: QL_ASSERTION_CRITERION_FACTORY is
+			-- Assertion criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	line_criterion_factory: QL_LINE_CRITERION_FACTORY is
+			-- Line criterion factory
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	quantity_criterion_factory: QL_QUANTITY_CRITERION_FACTORY is
+			-- Line criterion factory
+		once
+			create Result.make
 		ensure
 			result_attached: Result /= Void
 		end
@@ -98,6 +199,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

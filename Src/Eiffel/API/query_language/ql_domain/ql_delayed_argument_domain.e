@@ -13,7 +13,8 @@ inherit
 	QL_DELAYED_DOMAIN
 		undefine
 			copy,
-			is_equal
+			is_equal,
+			is_argument_domain
 		redefine
 			item_type
 		end
@@ -61,6 +62,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

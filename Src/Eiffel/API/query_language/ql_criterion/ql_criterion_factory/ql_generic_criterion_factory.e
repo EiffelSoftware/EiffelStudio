@@ -22,16 +22,27 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create criterion_table.make (10)
-			criterion_table.put (agent new_false_criterion, query_language_names.ql_cri_false)
-			criterion_table.put (agent new_has_constraint_criterion, query_language_names.ql_cri_has_constraint)
-			criterion_table.put (agent new_has_creation_constraint_criterion, query_language_names.ql_cri_has_creation_constraint)
-			criterion_table.put (agent new_is_compiled_criterion, query_language_names.ql_cri_is_compiled)
-			criterion_table.put (agent new_is_expanded_criterion, query_language_names.ql_cri_is_expanded)
-			criterion_table.put (agent new_is_reference_criterion, query_language_names.ql_cri_is_reference)
-			criterion_table.put (agent new_true_criterion, query_language_names.ql_cri_true)
-			criterion_table.put (agent new_name_is_criterion, query_language_names.ql_cri_name_is)
-			criterion_table.put (agent new_text_contain_criterion, query_language_names.ql_cri_text_contain)
+			create agent_table.make (10)
+			agent_table.put (agent new_false_criterion, c_false)
+			agent_table.put (agent new_has_constraint_criterion, c_has_constraint)
+			agent_table.put (agent new_has_creation_constraint_criterion, c_has_creation_constraint)
+			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
+			agent_table.put (agent new_is_expanded_criterion, c_is_expanded)
+			agent_table.put (agent new_is_reference_criterion, c_is_reference)
+			agent_table.put (agent new_true_criterion, c_true)
+			agent_table.put (agent new_name_is_criterion, c_name_is)
+			agent_table.put (agent new_text_contain_criterion, c_text_contain)
+
+			create name_table.make (10)
+			name_table.put (c_false, query_language_names.ql_cri_false)
+			name_table.put (c_has_constraint, query_language_names.ql_cri_has_constraint)
+			name_table.put (c_has_creation_constraint, query_language_names.ql_cri_has_creation_constraint)
+			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_is_expanded, query_language_names.ql_cri_is_expanded)
+			name_table.put (c_is_reference, query_language_names.ql_cri_is_reference)
+			name_table.put (c_true, query_language_names.ql_cri_true)
+			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
+			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
 		end
 
 feature{NONE} -- Implementation
@@ -41,58 +52,58 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_GENERIC_FALSE_CRI is
-			-- New {QL_GENERIC_FALSE_CRI} criterion.
+	new_false_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion that always returns False
 		do
-			create Result
+			create Result.make (agent false_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_has_constraint_criterion: QL_GENERIC_HAS_CONSTRAINT_CRI is
-			-- New {QL_GENERIC_HAS_CONSTRAINT_CRI} criterion.
+	new_has_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic has constraint
 		do
-			create Result
+			create Result.make (agent has_constraint_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_has_creation_constraint_criterion: QL_GENERIC_HAS_CREATION_CONSTRAINT_CRI is
-			-- New {QL_GENERIC_HAS_CREATION_CONSTRAINT_CRI} criterion.
+	new_has_creation_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic has creation contraint
 		do
-			create Result
+			create Result.make (agent has_creation_constraint_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_GENERIC_IS_COMPILED_CRI is
-			-- New {QL_GENERIC_IS_COMPILED_CRI} criterion.
+	new_is_compiled_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic is compiled
 		do
-			create Result
+			create Result.make (agent is_compiled_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_expanded_criterion: QL_GENERIC_IS_EXPANDED_CRI is
-			-- New {QL_GENERIC_IS_EXPANDED_CRI} criterion.
+	new_is_expanded_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic is expanded
 		do
-			create Result
+			create Result.make (agent is_expanded_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_is_reference_criterion: QL_GENERIC_IS_REFERENCE_CRI is
-			-- New {QL_GENERIC_IS_REFERENCE_CRI} criterion.
+	new_is_reference_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic is reference
 		do
-			create Result
+			create Result.make (agent is_reference_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_GENERIC_TRUE_CRI is
-			-- New {QL_GENERIC_TRUE_CRI} criterion.
+	new_true_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion that always returns True (tautology criterion)
 		do
-			create Result
+			create Result.make (agent true_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -115,6 +126,68 @@ feature{NONE} -- New criterion
 			create Result.make_with_setting (a_text, a_case_sensitive, a_identical)
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Criterion index
+
+	c_false,
+	c_has_constraint,
+	c_has_creation_constraint,
+	c_is_compiled,
+	c_is_expanded,
+	c_is_reference,
+	c_true,
+	c_name_is,
+	c_text_contain: INTEGER is unique;
+
+feature{NONE} -- Implementation
+
+	false_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent that always returns False.
+			-- Require compiled: False
+		do
+		end
+
+	true_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent that always returns True (tautology criterion)
+			-- Require compiled: False
+		do
+			Result := True
+		end
+
+	is_compiled_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' is compiled
+			-- Require compiled: False
+		do
+			Result := a_item.is_compiled
+		end
+
+	has_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' has constaint
+			-- Require compiled: True
+		do
+			Result := a_item.has_constraint
+		end
+
+	has_creation_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' has creation constaint
+			-- Require compiled: True
+		do
+			Result := a_item.has_creation_constraint
+		end
+
+	is_expanded_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' is expanded
+			-- Require compiled: True
+		do
+			Result := a_item.is_expanded
+		end
+
+	is_reference_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' is reference
+			-- Require compiled: True
+		do
+			Result := a_item.is_reference
 		end
 
 indexing
@@ -148,6 +221,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

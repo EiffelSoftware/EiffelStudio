@@ -18,7 +18,9 @@ inherit
 			infix "or",
 			require_compiled,
 			compiled_criterion,
-			intrinsic_domain
+			intrinsic_domain,
+			domain_generator,
+			item_type
 		end
 
 feature -- Evaluate
@@ -36,12 +38,23 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Access
+
 	scope: QL_SCOPE is
 			-- Scope of current ciretrion
 		do
 			Result := argument_scope
 		ensure then
 			good_result: Result.is_equal (argument_scope)
+		end
+
+	domain_generator (a_enable_fill_domain: BOOLEAN; a_apply_current: BOOLEAN): QL_ARGUMENT_DOMAIN_GENERATOR is
+			-- Domain generator in which current criterion can be used
+			-- If `a_enable_fill_domain' is True, return a generator with `fill_domain_enabled' set to True.
+			-- If `a_apply_current' is True, return a generator with `criterion' set to Current.
+		do
+			create Result
+			setup_domain_generator (Result, a_enable_fill_domain, a_apply_current)
 		end
 
 feature -- Logic operations
@@ -76,10 +89,17 @@ feature -- Access
 			end
 		end
 
-feature{QL_DOMAIN} -- Intrinsic domain
+feature -- Intrinsic domain
 
 	intrinsic_domain: QL_ARGUMENT_DOMAIN is
 			-- Intrinsic_domain which can be inferred from current criterion
+		do
+		end
+
+feature{NONE} -- Implementation
+
+	item_type: QL_ARGUMENT is
+			-- Anchor type
 		do
 		end
 
@@ -114,6 +134,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

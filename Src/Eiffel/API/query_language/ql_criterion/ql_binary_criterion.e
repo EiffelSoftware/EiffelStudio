@@ -12,10 +12,12 @@ deferred class
 inherit
 	QL_CRITERION
 		undefine
-			process
+			process,
+			item_type
 		redefine
 			is_atomic,
-			set_source_domain
+			set_source_domain,
+			set_used_in_domain_generator
 		end
 
 feature{NONE} -- Initialization
@@ -68,6 +70,20 @@ feature -- Setting
 			current_domain_set_recursively: left.source_domain = right.source_domain and left.source_domain = source_domain
 		end
 
+feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
+
+	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR) is
+			-- Set `used_in_domain_generator' with
+			-- If `a_domain_generator' is Void, current `used_in_domain_generator' will be removed.
+		do
+			used_in_domain_generator := a_domain_generator
+			left.set_used_in_domain_generator (a_domain_generator)
+			right.set_used_in_domain_generator (a_domain_generator)
+		ensure then
+			left_used_in_domain_generator_set: left.used_in_domain_generator = a_domain_generator
+			right_used_in_domain_generator_set: right.used_in_domain_generator = a_domain_generator
+		end
+
 feature -- Status report
 
 	is_atomic: BOOLEAN is False
@@ -116,6 +132,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

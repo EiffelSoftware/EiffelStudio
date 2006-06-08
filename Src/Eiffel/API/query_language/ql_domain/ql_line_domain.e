@@ -17,7 +17,8 @@ inherit
 		redefine
 			content,
 			item_type,
-			domain_generator
+			domain_generator,
+			is_line_domain
 		end
 
 	LINKED_LIST [QL_LINE]
@@ -49,6 +50,14 @@ feature -- Access
 			create Result
 		end
 
+feature -- Status report
+
+	is_line_domain: BOOLEAN is
+			-- Is current a line domain?
+		do
+			Result := True
+		end
+
 feature -- Set operation
 
 	union (other: like Current): like Current is
@@ -57,7 +66,6 @@ feature -- Set operation
 			create Result.make
 			internal_union (Result, other)
 		end
-
 
 	intersect (other: like Current): like Current is
 			-- A new domain containing all the elements that are in both `Current' and `other'.
@@ -143,6 +151,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

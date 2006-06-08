@@ -12,9 +12,12 @@ deferred class
 inherit
 	QL_CRITERION
 		undefine
-			process
+			process,
+			item_type
 		redefine
-			set_source_domain
+			set_source_domain,
+			intrinsic_domain,
+			set_used_in_domain_generator
 		end
 
 feature{NONE} -- Initialization
@@ -34,6 +37,11 @@ feature -- Access
 	wrapped_criterion: QL_CRITERION
 			-- Criterion to which NOT operation is applied
 
+	intrinsic_domain: QL_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		deferred
+		end
+
 feature -- Setting
 
 	set_source_domain (a_domain: like source_domain) is
@@ -43,6 +51,18 @@ feature -- Setting
 			wrapped_criterion.set_source_domain (a_domain)
 		ensure then
 			current_domain_set_recursively: wrapped_criterion.source_domain = source_domain
+		end
+
+feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
+
+	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR) is
+			-- Set `used_in_domain_generator' with
+			-- If `a_domain_generator' is Void, current `used_in_domain_generator' will be removed.
+		do
+			used_in_domain_generator := a_domain_generator
+			wrapped_criterion.set_used_in_domain_generator (a_domain_generator)
+		ensure then
+			wrapped_criterion_used_in_domain_generator_set: wrapped_criterion.used_in_domain_generator = a_domain_generator
 		end
 
 feature -- Process
@@ -87,6 +107,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

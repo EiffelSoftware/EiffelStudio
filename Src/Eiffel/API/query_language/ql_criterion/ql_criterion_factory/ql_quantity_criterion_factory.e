@@ -23,13 +23,76 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create criterion_table.make (13)
+			create agent_table.make (3)
+			agent_table.put (agent new_false_criterion, c_false)
+			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
+			agent_table.put (agent new_true_criterion, c_true)
+
+			create name_table.make (3)
+			name_table.put (c_false, query_language_names.ql_cri_false)
+			name_table.put (c_true, query_language_names.ql_cri_true)
+			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 		end
 
 feature{NONE} -- Implementation
 
-	criterion_type: QL_QUANTITY_CRITERION;
+	criterion_type: QL_QUANTITY_CRITERION
 			-- Criterion anchor type
+
+feature{NONE} -- New criterion
+
+	new_false_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+			-- New criterion that always returns False.
+		do
+			create Result.make (agent false_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_compiled_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+			-- New criterion to test if a target is compiled
+		do
+			create Result.make (agent is_compiled_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_true_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+			-- New criterion that always returns True (tautology criterion)
+		do
+			create Result.make (agent true_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Criterion index
+
+	c_false,
+	c_true,
+	c_is_compiled: INTEGER is unique
+
+feature{NONE} -- Implementation
+
+	false_agent (a_item: QL_QUANTITY): BOOLEAN is
+			-- Agent that always returns False.
+			-- Require compiled: False
+		do
+		end
+
+	true_agent (a_item: QL_QUANTITY): BOOLEAN is
+			-- Agent that always returns True (tautology criterion)
+			-- Require compiled: False
+		do
+			Result := True
+		end
+
+	is_compiled_agent (a_item: QL_QUANTITY): BOOLEAN is
+			-- Agent to test if `a_item' is compiled
+			-- Require compiled: False
+		do
+			Result := a_item.is_compiled
+		end
+
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -62,6 +125,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

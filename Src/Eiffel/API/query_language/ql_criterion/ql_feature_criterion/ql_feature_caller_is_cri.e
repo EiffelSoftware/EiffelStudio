@@ -23,8 +23,7 @@ inherit
 			make as old_make
 		redefine
 			reset,
-			intrinsic_domain,
-			is_satisfied_by_internal
+			intrinsic_domain
 		end
 
 create
@@ -66,8 +65,12 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_feature_callee: like callee_list_for_feature
 			l_data_feature: QL_FEATURE
 		do
+			if not is_criterion_domain_evaluated then
+				initialize_domain
+			end
 				-- For normal feature callers
 			l_current_domain := source_domain
+			l_current_domain.clear_cache
 			l_feature_callee := callee_list_for_feature
 			l_feature_list := feature_list
 			create Result.make
@@ -117,6 +120,7 @@ feature{NONE} -- Implementation
 			-- Find callers to `criterion_domain'.
 		do
 			find_all_callees (caller_type.type)
+			is_criterion_domain_evaluated := True
 		end
 
 	find_current_callees (l_feat: E_FEATURE; a_flag: INTEGER_8) is
@@ -310,7 +314,7 @@ feature{NONE} -- Evaluate
 				until
 					l_invariant_list.after or Result
 				loop
-					if a_item.class_c.class_id = l_invariant_list.item.class_id then
+					if a_item.written_class.class_id = l_invariant_list.item.class_id then
 						a_item.set_data (
 							l_current_domain.feature_item_from_current_domain (
 								l_invariant_callee.i_th (l_invariant_list.index)))
@@ -360,6 +364,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

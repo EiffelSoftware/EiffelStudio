@@ -16,14 +16,37 @@ inherit
 		redefine
 			name,
 			wrapped_domain,
-			ast
+			ast,
+			is_compiled
+		end
+
+	QL_UTILITY
+		undefine
+			is_equal
 		end
 
 create
+	make_with_compiled_flag,
 	make_with_parent,
 	make
 
 feature{NONE} -- Initialization
+
+	make_with_compiled_flag (a_class: like conf_class; a_parent: like parent) is
+			-- Initialize `conf_class' with `a_class' and `parent' with `a_parent'.
+			-- And set `is_compiled' to True. (For optimization concern)
+		require
+			a_class_attached: a_class /= Void
+			a_parent_attached: a_parent /= Void
+			a_parent_valid: a_parent.is_group and a_parent.is_valid_domain_item
+		do
+			make_with_parent (a_class, a_parent)
+			is_compiled_internal := True
+		ensure
+			class_item_set: conf_class = a_class
+			parent_set: parent = a_parent
+			is_compiled: is_compiled
+		end
 
 	make_with_parent (a_class: like conf_class; a_parent: like parent) is
 			-- Initialize `conf_class' with `a_class' and `parent' with `a_parent'.
@@ -32,18 +55,23 @@ feature{NONE} -- Initialization
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_group and a_parent.is_valid_domain_item
 		do
+			make (a_class)
 			set_parent (a_parent)
-			conf_class := a_class
 		ensure
 			class_item_set: conf_class = a_class
+			parent_set: parent = a_parent
 		end
 
 	make (a_class: like conf_class) is
 			-- Initialize `conf_class' with `a_class'.
 		require
 			a_class_attached: a_class /= Void
+		local
+			l_class_i: CLASS_I
 		do
 			conf_class := a_class
+			class_i ?= a_class
+			class_c := class_i.compiled_representation
 		ensure
 			class_item_set: conf_class = a_class
 		end
@@ -134,11 +162,9 @@ feature -- Access
 			Result.content.extend (Current)
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- Compiled class of `conf_class'
-		do
-			Result := class_i.compiled_representation
-		end
+			-- Void if `conf_class' is not compiled
 
 	written_class: like class_c is
 			-- CLASS_C in which current is written
@@ -148,13 +174,8 @@ feature -- Access
 			good_result: Result = class_c
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- Un-compiled class information of `conf_class'
-		do
-			Result ?= conf_class
-		ensure
-			result_attached: Result /= Void
-		end
 
 	ast: CLASS_AS is
 			-- AST node associated with current class
@@ -179,17 +200,11 @@ feature -- Status report
 
 	is_compiled: BOOLEAN is
 			-- Is Current item compiled?
-		local
-			l_class_i: CLASS_I
-			l_conf_class: CONF_CLASS
 		do
-			l_conf_class := conf_class
-			if not (l_conf_class.is_overriden or l_conf_class.does_override) then
-				Result := conf_class.is_compiled
-			else
-				l_class_i ?= conf_class
-				Result := l_class_i.compiled_representation /= Void
+			if is_compiled_internal = Void then
+				is_compiled_internal := is_class_compiled (conf_class)
 			end
+			Result := is_compiled_internal
 		end
 
 	scope: QL_SCOPE is
@@ -224,8 +239,12 @@ feature{NONE} -- Implementation
 	name_internal: like name
 			-- Implementation of `name'
 
+	is_compiled_internal: BOOLEAN_REF
+			-- Implementation of `is_compiled'
+
 invariant
 	class_item_attached: conf_class /= Void
+	class_i_attached: class_i /= Void
 	parent_valid: parent /= Void implies parent.is_group and parent.is_valid_domain_item
 
 indexing
@@ -259,6 +278,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

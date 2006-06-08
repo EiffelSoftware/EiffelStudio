@@ -17,7 +17,11 @@ inherit
 		redefine
 			content,
 			item_type,
-			domain_generator
+			domain_generator,
+			is_group_domain,
+			prepare_before_new_domain_generation,
+			cleanup_after_new_domain_generation,
+			clear_cache
 		end
 
 	LINKED_LIST [QL_GROUP]
@@ -47,6 +51,45 @@ feature -- Access
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
+		end
+
+feature -- Status report
+
+	is_group_domain: BOOLEAN is
+			-- Is current a group domain?
+		do
+			Result := True
+		end
+
+feature -- Preparation and cleanup
+
+	prepare_before_new_domain_generation is
+			-- Prepare before new domain generation.
+		do
+			Precursor
+			clear_cache
+		ensure then
+			class_table_is_empty: class_table.is_empty
+		end
+
+	cleanup_after_new_domain_generation is
+			-- Clean up after new domain generation.
+		do
+			Precursor
+			clear_cache
+		ensure then
+			class_table_is_empty: class_table.is_empty
+		end
+
+feature -- Removal
+
+	clear_cache is
+			-- Clear cache information.
+			-- cache information is used for optimization.
+		do
+			if not class_table.is_empty then
+				class_table.wipe_out
+			end
 		end
 
 feature -- Set operation
@@ -87,6 +130,10 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 		local
 			l_cursor: CURSOR
 			l_class_table: like class_table
+			l_conf_group: CONF_GROUP
+			l_library: CONF_LIBRARY
+			l_found: BOOLEAN
+			l_used_in_libraries: LIST [CONF_LIBRARY]
 		do
 			l_cursor := cursor
 			from
@@ -96,12 +143,24 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			until
 				after or Result /= Void
 			loop
-				Result := class_from_group (a_class, item, l_class_table)
+				l_conf_group := item.group
+				if l_conf_group.is_library then
+					l_used_in_libraries := a_class.group.target.used_in_libraries
+					if l_used_in_libraries /= Void then
+						l_library ?= l_conf_group
+						l_found := l_used_in_libraries.has (l_library)
+					else
+						l_found := False
+					end
+				else
+					l_found := l_conf_group = a_class.group
+				end
+				if l_found then
+					Result := class_from_group (a_class, item, l_class_table)
+				end
 				forth
 			end
-			if l_cursor /= Void then
-				go_to (l_cursor)
-			end
+			go_to (l_cursor)
 		end
 
 	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE is
@@ -133,11 +192,22 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			end
 		end
 
-	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]
+feature{NONE} -- Type ancher
+
+	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP] is
 			-- Table of classes in a group.
 			-- Key is the group, value is a hash table containing all classes in that group.
+		do
+			if class_table_internal = Void then
+				create class_table_internal.make (10)
+			end
+			Result := class_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
 
-feature{NONE} -- Type ancher
+	class_table_internal: like class_table
+			-- Implementation of `class_table'
 
 	item_type: QL_GROUP;
 			-- Anchor type for items in current domain
@@ -173,6 +243,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

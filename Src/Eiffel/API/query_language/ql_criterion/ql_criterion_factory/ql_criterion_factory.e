@@ -23,36 +23,109 @@ feature{NONE} -- Initialization
 
 feature -- Criterion creation
 
-	criterion (a_name: STRING; a_argu: TUPLE): like criterion_type is
-			-- Criterion with `a_name' as `a_argu' as its initialization arguments
-			-- Void if no criterion with `a_name' is applicable with respect to current scope
+	simple_criterion_with_index (a_index: INTEGER): like criterion_type is
+			-- Simple criterion with index `a_index'
+			-- A simple criterion is a criterion that needs no argument to initialize,
+			-- such as is_compiled for all kinds of items, and is_deferred for class and feature item.
+			-- In contrast, a criterion that is not simple needs some argument to initialize,
+			-- for example, name_is criterion needs a name, a case-sensitive flag, and a regular
+			-- expression usage flag as arguments.
+		require
+			criterion_exists: has_criterion_with_index (a_index)
+		do
+			Result := criterion_with_index (a_index, [])
+		end
+
+	simple_criterion_with_name (a_name: STRING): like criterion_type is
+			-- Simple criterion with name `a_name'
+			-- `a_name' should be in lower case and without heading and trailing spaces.			
+			-- A simple criterion is a criterion that needs no argument to initialize.
+			-- See `simple_criterion_with_index' for more information.
 		require
 			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
+			criterion_exists: has_criterion_with_name (a_name)
+		do
+			Result := simple_criterion_with_index (name_table.item (a_name))
+		end
+
+	criterion_with_index (a_index: INTEGER; a_argu: TUPLE): like criterion_type is
+			-- Criterion with `index' and `a_argu' as its initialization arguments
+			-- Void if no criterion with `a_name' is applicable with respect to current scope
+		require
+			criterion_exists: has_criterion_with_index (a_index)
 		local
 			l_creation_function: like creation_function
 		do
-			l_creation_function := criterion_table.item (a_name.as_lower)
-			if l_creation_function /= Void and then l_creation_function.valid_operands (a_argu) then
+			l_creation_function := agent_table.item (a_index)
+			if l_creation_function.valid_operands (a_argu) then
 				Result := l_creation_function.item (a_argu)
 			end
 		end
 
+	criterion_with_name (a_name: STRING; a_argu: TUPLE): like criterion_type is
+			-- Criterion with `a_name' as `a_argu' as its initialization arguments
+			-- Void if no criterion with `a_name' is applicable with respect to current scope
+		require
+			a_name_attached: a_name /= Void
+			criterion_exists: has_criterion_with_name (a_name)
+		do
+			Result := criterion_with_index (name_table.item (a_name), a_argu)
+		end
+
+	avaliable_indexes: LIST [INTEGER] is
+			-- List of indexes for all supported criteria
+		local
+			l_index_table: like agent_table
+		do
+			l_index_table := agent_table
+			create {ARRAYED_LIST [INTEGER]} Result.make (l_index_table.count)
+			from
+				l_index_table.start
+			until
+				l_index_table.after
+			loop
+				Result.extend (l_index_table.key_for_iteration)
+				l_index_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	available_names: LIST [STRING] is
+			-- List of names for all supported criteria
+		local
+			l_index_table: like name_table
+		do
+			l_index_table := name_table
+			create {ARRAYED_LIST [STRING]} Result.make (l_index_table.count)
+			from
+				l_index_table.start
+			until
+				l_index_table.after
+			loop
+				Result.extend (l_index_table.key_for_iteration)
+				l_index_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
-	has_criterion (a_name: STRING): BOOLEAN is
+	has_criterion_with_index (a_index: INTEGER): BOOLEAN is
+			-- Does Current contain criterion with index `a_index'?
+		do
+			Result := agent_table.has (a_index)
+		end
+
+	has_criterion_with_name (a_name: STRING): BOOLEAN is
 			-- Does Current contain criterion named `a_name'?
+			-- `a_name' should be in lower case and without heading and trailing spaces.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_name: STRING
 		do
-			l_name := a_name.twin
-			l_name.left_adjust
-			l_name.right_adjust
-			l_name.to_lower
-			Result := criterion_table.has (l_name)
+			Result := name_table.has (a_name)
 		end
 
 feature{NONE} -- Implementation
@@ -66,8 +139,18 @@ feature{NONE} -- Implementation
 	criterion_type: QL_CRITERION
 			-- Criterion anchor type
 
+	agent_table: HASH_TABLE [like creation_function, INTEGER]
+			-- Agent table for create a criterion.
+			-- Key is agent index, value is that agent.
+
+	name_table: HASH_TABLE [INTEGER, STRING]
+			-- Name-index table
+			-- Key is agent index, value is name of the criterion that the agent creates
+
 invariant
 	criterion_table_attached: criterion_table /= Void
+	agent_index_table_attached: agent_table /= Void
+	index_name_table_attached: name_table /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -100,6 +183,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

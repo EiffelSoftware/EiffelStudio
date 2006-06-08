@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	QL_CRITERION
+		undefine
+			item_type
+		end
 
 feature{NONE} -- Initialization
 
@@ -187,6 +190,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

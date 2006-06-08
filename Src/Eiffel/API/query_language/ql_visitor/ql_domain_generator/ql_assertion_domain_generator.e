@@ -165,13 +165,13 @@ feature{NONE} -- Implementation
 	tautology_criterion: like criterion is
 			-- Tautology criterion
 		do
-			create {QL_ASSERTION_TRUE_CRI}Result
+			Result := assertion_criterion_factory.simple_criterion_with_index (assertion_criterion_factory.c_true)
 		end
 
 	compiled_criterion: like criterion is
 			-- A criterion that only compiled items can satisfy
 		do
-			create {QL_ASSERTION_IS_COMPILED_CRI}Result
+			Result := assertion_criterion_factory.simple_criterion_with_index (assertion_criterion_factory.c_is_compiled)
 		end
 
 	process_assertion_list (a_assert_list: EIFFEL_LIST [TAGGED_AS]; a_written_in_ast: AST_EIFFEL; a_assert_type: QL_ASSERTION_TYPE; a_written_class: CLASS_C; a_parent: QL_FEATURE) is
@@ -284,6 +284,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

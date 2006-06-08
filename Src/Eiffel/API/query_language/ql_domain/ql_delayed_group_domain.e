@@ -13,14 +13,18 @@ inherit
 	QL_DELAYED_DOMAIN
 		undefine
 			copy,
-			is_equal
+			is_equal,
+			is_group_domain,
+			clear_cache
 		redefine
 			item_type
 		end
 
 	QL_GROUP_DOMAIN
 		undefine
-			is_delayed
+			is_delayed,
+			prepare_before_new_domain_generation,
+			cleanup_after_new_domain_generation
 		redefine
 			item_type
 		end
@@ -61,6 +65,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

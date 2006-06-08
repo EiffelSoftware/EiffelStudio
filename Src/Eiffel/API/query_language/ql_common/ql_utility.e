@@ -9,6 +9,21 @@ indexing
 class
 	QL_UTILITY
 
+feature -- Status report
+
+	is_class_compiled (a_conf_class: CONF_CLASS): BOOLEAN is
+			-- Does `a_conf_class' represent a compiled class?
+		local
+			l_class_i: CLASS_I
+		do
+			if not (a_conf_class.is_overriden or a_conf_class.does_override) then
+				Result := a_conf_class.is_compiled
+			else
+				l_class_i ?= a_conf_class
+				Result := l_class_i.compiled_representation /= Void
+			end
+		end
+
 feature -- Access
 
 	query_feature_item_from_e_feature (a_feature: E_FEATURE): QL_FEATURE is
@@ -187,5 +202,7 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 end

@@ -29,21 +29,23 @@ feature{QL_DOMAIN} -- Intrinsic domain
 		local
 			l_list: like candidate_class_list
 			l_class: QL_CLASS
-			l_compiled_classes_in_source: like compiled_classes_from_domain
 			l_class_c: CLASS_C
-			l_class_id: INTEGER
+			l_source_domain: like source_domain
 		do
-			l_compiled_classes_in_source := compiled_classes_from_domain (source_domain)
+			if not is_criterion_domain_evaluated then
+				initialize_domain
+			end
 			create Result.make
 			l_list := candidate_class_list
+			l_source_domain := source_domain
+			l_source_domain.clear_cache
 			from
 				l_list.start
 			until
 				l_list.after
 			loop
 				l_class_c := l_list.item_for_iteration
-				l_class_id := l_class_c.class_id
-				l_class := l_compiled_classes_in_source.item (l_class_id)
+				l_class := l_source_domain.class_item_from_current_domain (l_class_c.lace_class.config_class)
 				if l_class /= Void then
 					Result.extend (l_class)
 				end
@@ -165,6 +167,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

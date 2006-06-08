@@ -14,14 +14,18 @@ inherit
 		undefine
 			is_atomic,
 			set_source_domain,
-			has_intrinsic_domain,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
 			require_compiled,
 			process
+		redefine
+			intrinsic_domain
 		end
 
 	QL_NOT_CRITERION
 		redefine
-			wrapped_criterion
+			wrapped_criterion,
+			intrinsic_domain
 		end
 
 create
@@ -29,7 +33,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_QUANTITY): BOOLEAN is
+	is_satisfied_by (a_item: like item_type): BOOLEAN is
 			-- Evaluate `a_item'.
 		do
 			Result := not wrapped_criterion.is_satisfied_by (a_item)
@@ -37,8 +41,14 @@ feature -- Evaluate
 
 feature -- Access
 
-	wrapped_criterion: QL_QUANTITY_CRITERION;
+	wrapped_criterion: QL_QUANTITY_CRITERION
 			-- Criterion to which NOT operation is applied
+
+	intrinsic_domain: QL_QUANTITY_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			Result := wrapped_criterion.intrinsic_domain
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -71,6 +81,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

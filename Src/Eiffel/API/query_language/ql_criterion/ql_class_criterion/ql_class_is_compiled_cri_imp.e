@@ -13,16 +13,20 @@ inherit
 	QL_ITEM_IS_COMPILED_CRI_IMP
 		redefine
 			compiled_criterion,
-			wrapped_criterion
+			wrapped_criterion,
+			intrinsic_domain
 		end
 
 	QL_CLASS_CRITERION
 		undefine
-			has_intrinsic_domain,
+			has_inclusive_intrinsic_domain,
+			has_exclusive_intrinsic_domain,
 			set_source_domain,
-			process
+			process,
+			set_used_in_domain_generator
 		redefine
-			compiled_criterion
+			compiled_criterion,
+			intrinsic_domain
 		end
 
 create
@@ -39,6 +43,13 @@ feature -- Access
 			Result := Current
 		ensure then
 			Result = Current
+		end
+
+	intrinsic_domain: QL_CLASS_DOMAIN is
+			-- Intrinsic_domain which can be inferred from current criterion
+		do
+			create Result.make
+			fill_intrinsic_domain (wrapped_criterion.intrinsic_domain, Result)
 		end
 
 feature -- Evaluate
@@ -84,6 +95,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

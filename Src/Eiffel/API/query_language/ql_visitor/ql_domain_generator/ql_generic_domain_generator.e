@@ -134,13 +134,13 @@ feature{NONE} -- Implementation
 	tautology_criterion: like criterion is
 			-- Tautology criterion
 		do
-			create {QL_GENERIC_TRUE_CRI}Result
+			Result := generic_criterion_factory.simple_criterion_with_index (generic_criterion_factory.c_true)
 		end
 
 	compiled_criterion: like criterion is
 			-- A criterion that only compiled items can satisfy
 		do
-			create {QL_GENERIC_IS_COMPILED_CRI}Result
+			Result := generic_criterion_factory.simple_criterion_with_index (generic_criterion_factory.c_is_compiled)
 		end
 
 feature{NONE} -- Observable
@@ -179,6 +179,8 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
+
+
 
 
 end

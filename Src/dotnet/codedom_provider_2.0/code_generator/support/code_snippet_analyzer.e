@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SPECIAL_TAGS
+		export
+			{NONE} all
+		end
+
 feature -- Basic Operations
 
 	parse (a_snippet: STRING) is

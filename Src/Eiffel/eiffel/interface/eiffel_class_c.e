@@ -867,6 +867,10 @@ feature -- Third pass: byte code production and type check
 		local
 			l_ast: like ast
 			l_ca_feature: INVARIANT_FEAT_I
+			l_constructors: LIST [STRING]
+			l_error: BOOLEAN
+			l_cursor: CURSOR
+			l_routine, l_other_routine: FEATURE_I
 		do
 				-- No need to initialize `context' because we are called from `pass3' which already
 				-- initializes it.
@@ -910,6 +914,52 @@ feature -- Third pass: byte code production and type check
 				end
 			else
 				assembly_custom_attributes := Void
+			end
+			if l_ast.top_indexes /= Void then
+				l_constructors := l_ast.top_indexes.dotnet_constructors
+				if l_constructors /= Void then
+					-- Check that all features listed in dotnet_contructors indexing clause
+					-- correspond to a creation routine
+					from
+						l_constructors.start
+					until
+						l_constructors.after or l_error
+					loop
+						l_error := not creators.has (l_constructors.item)
+						if not l_error then
+							l_constructors.forth
+						end
+					end
+					if l_error then
+						error_handler.insert_error (create {VICR}.make (Current, l_constructors.item))
+					end
+
+					-- Now check that there are no two creation routine with same
+					-- signature in dotnet_constructors indexing clause
+					from
+						l_constructors.start
+					until
+						l_constructors.after or l_error
+					loop
+						l_cursor := l_constructors.cursor
+						l_routine := feature_table.item (l_constructors.item)
+						from
+							l_constructors.start
+						until
+							l_constructors.after or l_error
+						loop
+							l_other_routine := feature_table.item (l_constructors.item)
+							l_error := l_other_routine /= l_routine and l_other_routine.same_interface (l_routine)
+							l_constructors.forth
+						end
+						if l_error then
+							error_handler.insert_error (create {VISC}.make (Current, l_routine.feature_name, l_other_routine.feature_name))
+						else
+							l_constructors.go_to (l_cursor)
+							l_constructors.forth
+						end
+					end
+				end
 			end
 		end
 

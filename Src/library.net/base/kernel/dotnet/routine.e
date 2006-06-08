@@ -237,7 +237,7 @@ feature -- Obsolete
 		end
 
 
-feature {ROUTINE, E_FEATURE} -- Implementation
+feature {ROUTINE} -- Implementation
 
 	frozen target_object: SYSTEM_OBJECT
 			-- Target of call.

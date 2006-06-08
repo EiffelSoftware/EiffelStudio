@@ -11,14 +11,14 @@ deferred class
 
 inherit
 	EB_STONABLE
-	
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
-	
+
 feature -- Access
-	
+
 	stone: STONE
 			-- Stone for current.
 
@@ -179,6 +179,7 @@ feature -- "Save command" related features
 			if cst /= Void then
 				Eiffel_project.Workbench.change_class (cst.class_i)
 				cst.class_i.set_date
+				Eiffel_project.Workbench.set_changed
 			end
 		end
 

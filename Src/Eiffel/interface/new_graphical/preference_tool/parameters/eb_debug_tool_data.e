@@ -136,6 +136,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
+	always_compile_before_debug_preference: BOOLEAN_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
@@ -179,6 +180,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature -- Preference Strings
 
+	always_compile_before_debug_string: STRING is "debugger.always_compile_before_debug"
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
 	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"
@@ -211,6 +213,7 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "debug_tool")
 
+			always_compile_before_debug_preference := l_manager.new_boolean_preference_value (l_manager, always_compile_before_debug_string, True)
 			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
 			last_saved_stack_path_preference.set_hidden (True)
 			interrupt_every_n_instructions_preference := l_manager.new_integer_preference_value (l_manager, interrupt_every_n_instructions_string, 1)

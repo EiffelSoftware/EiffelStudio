@@ -3,17 +3,19 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 		name="framework"
-		uuid="ce94f276-b57c-496f-b44d-b7300113b1fc"
-		library_target="framework">
+		uuid="e8301e84-30f3-48a0-907d-8569594a1d51"
+		library_target="framework" >
 
 	<target name="framework">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<cluster name="fmwk_vision2" location="./vision2" >
+
+		<cluster name="fmwk_vision2" location="./vision2" recursive="true" >
 			<condition><custom name="batch_framework" excluded_value="true"/></condition>
 		</cluster>
 	</target>

@@ -5,7 +5,7 @@ indexing
 	date: "$$"
 	revision: "$$"
 
-deferred class
+class
 	CODE_ROUTINE
 
 inherit
@@ -28,6 +28,9 @@ inherit
 		export
 			{NONE} all
 		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 

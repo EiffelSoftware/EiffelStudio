@@ -19,6 +19,9 @@ feature -- Access
 	precompile_file: STRING
 			-- Path to precompile definition file
 
+	namespace: STRING
+			-- Namespace in which type should be generated
+
 feature -- Element Settings
 
 	set_root_class_name (a_name: like root_class_name) is
@@ -49,6 +52,14 @@ feature -- Element Settings
 			precompile_file := a_file
 		ensure
 			precompile_file_set: precompile_file = a_file
+		end
+
+	set_namespace (a_namespace: like namespace) is
+			-- Set `namespace' with `a_namespace'.
+		do
+			namespace := a_namespace
+		ensure
+			namespace_set: namespace = a_namespace
 		end
 
 indexing

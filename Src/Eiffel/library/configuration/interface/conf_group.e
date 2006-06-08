@@ -399,11 +399,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overriders_set: overriders = an_overriders
 		end
 
-	add_overriders (an_overrider: CONF_OVERRIDE; a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS]) is
+	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS]) is
 			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'
 			-- and classes that where compiled but do now override something in `a_removed_classes'.
 		require
 			an_overrider_not_void: an_overrider /= Void
+			a_added_classes_not_void: a_added_classes /= Void
 			a_modified_classes_not_void: a_modified_classes /= Void
 			a_removed_classes_not_void: a_removed_classes /= Void
 			classes_set: classes_set
@@ -440,14 +441,23 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 						else
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)
-							if l_overridee.is_modified then
-								a_modified_classes.force (l_overridee)
+							if l_overrider.is_modified then
+								if not l_overridee.is_compiled then
+									a_added_classes.force (l_overridee)
+								else
+									a_modified_classes.force (l_overridee)
+								end
 							else
+								a_added_classes.remove (l_overridee)
 								a_modified_classes.remove (l_overridee)
 							end
+								-- Make sure that `l_overrider' is not referenced
+								-- for normal compilation since it is now overriding `l_overidee'.
 							if l_overrider.is_compiled then
 								a_removed_classes.force (l_overrider)
 							end
+							a_added_classes.remove (l_overrider)
+							a_modified_classes.remove (l_overrider)
 						end
 					end
 					l_classes.forth

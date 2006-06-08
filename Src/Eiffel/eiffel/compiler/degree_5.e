@@ -158,6 +158,7 @@ feature {NONE} -- Processing
 					No_error: not Error_handler.has_error
 				end
 			end
+			a_class.lace_class.config_class.set_up_to_date
 		end
 
 feature -- Element change

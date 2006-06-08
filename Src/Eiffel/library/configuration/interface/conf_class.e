@@ -191,6 +191,8 @@ feature -- Access queries
 			else
 				Result := Current
 			end
+		ensure
+			actual_class_not_void: Result /= Void
 		end
 
 feature -- Access
@@ -482,6 +484,7 @@ invariant
 	group_not_void: group /= Void
 	path_not_void: path /= Void
 	is_error_set: is_error implies last_error /= Void
+	compiled_or_overrides: is_compiled implies not does_override
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

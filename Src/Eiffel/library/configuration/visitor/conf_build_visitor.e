@@ -462,7 +462,7 @@ feature -- Visit nodes
 				loop
 					l_overridee := l_groups.item
 					if l_overridee.is_enabled (state) then
-						l_overridee.add_overriders (an_override, modified_classes, removed_classes)
+						l_overridee.add_overriders (an_override, added_classes, modified_classes, removed_classes)
 						if l_overridee.is_error then
 							add_error (l_overridee.last_error)
 						end
@@ -661,8 +661,6 @@ feature {NONE} -- Implementation
 						l_name := l_class.renamed_name
 						if l_class.is_compiled and l_class.is_modified then
 							modified_classes.force (l_class)
-						else
-							l_class.set_up_to_date
 						end
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
@@ -722,7 +720,6 @@ feature {NONE} -- Implementation
 									add_error (l_class.last_error)
 								end
 								added_classes.force (l_class)
-								l_class.set_up_to_date
 								check
 									name_same: l_name.is_equal (l_class.renamed_name)
 								end
@@ -779,7 +776,6 @@ feature {NONE} -- Implementation
 				current_dotnet_classes.force (l_class, a_dotnet_name)
 				added_classes.force (l_class)
 			end
-			l_class.set_up_to_date
 		ensure
 			added: not is_error implies (current_classes.count = old current_classes.count + 1)
 		end

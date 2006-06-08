@@ -1319,7 +1319,7 @@ feature -- Metadata description
 			end
 		end
 
-	define_constructor (class_type: CLASS_TYPE; signature: like method_sig; is_reference: BOOLEAN; parent_token: INTEGER; feature_id: INTEGER) is
+	define_constructor (class_type: CLASS_TYPE; signature: like method_sig; is_reference: BOOLEAN; external_token, eiffel_token: INTEGER; feature_id: INTEGER) is
 			-- Define constructor for implementation of `class_type'
 		require
 			is_generated: is_generated
@@ -1333,7 +1333,6 @@ feature -- Metadata description
 			l_arg_count: INTEGER
 			l_method_body: MD_METHOD_BODY
 			l_tokens: HASH_TABLE [INTEGER, INTEGER]
-			i: INTEGER
 		do
 				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
 			create l_uni_string.make (".ctor")
@@ -1360,40 +1359,20 @@ feature -- Metadata description
 				l_method_body := il_code_generator.method_body
 
 				if not class_type.is_expanded then
-
 						-- Call constructor from super-class for reference type
 					il_code_generator.generate_current
 					l_arg_count := signature.parameter_count
-					from
-						i := 1
-					until
-						i > l_arg_count
-					loop
-						inspect i
-						when 0 then
-							check
-								already_defined: False
-							end
-						when 1 then
-							l_method_body.put_opcode ({MD_OPCODES}.ldarg_1)
-						when 2 then
-							l_method_body.put_opcode ({MD_OPCODES}.ldarg_2)
-						when 3 then
-							l_method_body.put_opcode ({MD_OPCODES}.ldarg_3)
-						else
-							if i <= 255 then
-								l_method_body.put_opcode_integer_8 ({MD_OPCODES}.ldarg_s, i.to_integer_8)
-							else
-								l_method_body.put_opcode_integer_16 ({MD_OPCODES}.ldarg, i.to_integer_16)
-							end
-						end
-						i := i + 1
-					end
-					if parent_token = 0 then
+					if external_token = 0 then
 						l_method_body.put_call ({MD_OPCODES}.Call,
-							constructor_token (single_parent_mapping.item (class_type.implementation_id)) , l_arg_count, False)
+							constructor_token (single_parent_mapping.item (class_type.implementation_id)), 0, False)
 					else
-						l_method_body.put_call ({MD_OPCODES}.Call, parent_token, l_arg_count, False)
+						put_args_on_stack (l_arg_count, l_method_body)
+						l_method_body.put_call ({MD_OPCODES}.Call, external_token, l_arg_count, False)
+					end
+					if eiffel_token /= 0 then
+						il_code_generator.generate_current
+						put_args_on_stack (l_arg_count, l_method_body)
+						l_method_body.put_call ({MD_OPCODES}.Callvirt, eiffel_token, l_arg_count, False)
 					end
 				end
 
@@ -1421,6 +1400,41 @@ feature -- Metadata description
 			end
 		end
 
+
+	put_args_on_stack (a_count: INTEGER; a_body: MD_METHOD_BODY) is
+			-- Put arguments on stack
+		require
+			attached_body: a_body /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > a_count
+			loop
+				inspect i
+				when 0 then
+					check
+						already_defined: False
+					end
+				when 1 then
+					a_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				when 2 then
+					a_body.put_opcode ({MD_OPCODES}.ldarg_2)
+				when 3 then
+					a_body.put_opcode ({MD_OPCODES}.ldarg_3)
+				else
+					if i <= 255 then
+						a_body.put_opcode_integer_8 ({MD_OPCODES}.ldarg_s, i.to_integer_8)
+					else
+						a_body.put_opcode_integer_16 ({MD_OPCODES}.ldarg, i.to_integer_16)
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
 			-- Define default constructor for implementation of `class_type'
 		require
@@ -1428,7 +1442,7 @@ feature -- Metadata description
 			class_type_not_void: class_type /= Void
 			class_type_can_be_created: not class_type.associated_class.is_interface
 		do
-			define_constructor (class_type, default_sig, is_reference, 0, 0)
+			define_constructor (class_type, default_sig, is_reference, 0, 0, 0)
 		end
 
 	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
@@ -1450,6 +1464,8 @@ feature -- Metadata description
 			l_type_i: TYPE_I
 			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
 			i: INTEGER
+			l_constructors: LIST [STRING]
+			l_eiffel_constructor: BOOLEAN
 		do
 			l_class := class_type.associated_class
 
@@ -1459,6 +1475,9 @@ feature -- Metadata description
 			end
 
 			if l_creators /= Void and then not l_creators.is_empty then
+				if l_class.ast.top_indexes /= Void then
+					l_constructors := l_class.ast.top_indexes.dotnet_constructors
+				end
 				from
 					i := l_creators.lower
 					l_creators_count := l_creators.upper
@@ -1469,18 +1488,9 @@ feature -- Metadata description
 					check
 						l_feature_attached: l_feature /= Void
 					end
-					if l_feature.is_il_external then
+					l_eiffel_constructor := l_constructors /= Void and then l_constructors.has (l_creators [i])
+					if l_feature.is_il_external or l_eiffel_constructor then
 						if l_feature.has_arguments then
-
-							l_external_feature ?= l_feature
-							check
-								l_external_feature_attached: l_external_feature /= Void
-							end
-							l_il_extension ?= l_external_feature.extension
-							check
-								l_il_extension_attached: l_il_extension /= Void
-							end
-
 							create l_sig.make
 							l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 							l_sig.set_parameter_count (l_feature.argument_count)
@@ -1495,9 +1505,17 @@ feature -- Metadata description
 								set_signature_type (l_sig, l_type_i)
 								l_feat_arg.forth
 							end
-							define_constructor (class_type, l_sig, is_reference, l_il_extension.token, l_feature.feature_id)
 						else
-							l_define_default_ctor := True
+							l_sig := default_sig
+						end
+						if l_feature.is_il_external then
+							if l_eiffel_constructor then
+								define_constructor (class_type, l_sig, is_reference, l_il_extension.token, feature_token (class_type.static_type_id, l_feature.feature_id), l_feature.feature_id)
+							else
+								define_constructor (class_type, l_sig, is_reference, l_il_extension.token, 0, l_feature.feature_id)
+							end
+						else
+							define_constructor (class_type, l_sig, is_reference, 0, feature_token (class_type.static_type_id, l_feature.feature_id), l_feature.feature_id)
 						end
 					else
 						l_define_default_ctor := True
@@ -1730,7 +1748,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_arguments.forth
 					end
 				end
-				define_constructor (l_class_type, l_meth_sig, True, 0, a_feature_id)
+				define_constructor (l_class_type, l_meth_sig, True, 0, 0, a_feature_id)
 				l_tokens := internal_constructors [a_type_id]
 				if l_tokens /= Void then
 					Result := l_tokens [a_feature_id]

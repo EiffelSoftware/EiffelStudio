@@ -57,7 +57,7 @@ feature -- Access
 			l_group_domain: QL_GROUP_DOMAIN
 		do
 			create l_domain_generator
-			l_domain_generator.set_criterion (create{QL_GROUP_IS_CLUSTER_CRI})
+			l_domain_generator.set_criterion (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_cluster))
 			l_domain_generator.enable_fill_domain
 			l_group_domain ?= system_target_domain.new_domain (l_domain_generator)
 			check l_group_domain /= Void end
@@ -122,19 +122,19 @@ feature -- Access
 	number_of_clusters: INTEGER is
 			-- Number of clusters in the system
 		do
-			Result := number_of_groups (create{QL_GROUP_IS_CLUSTER_CRI})
+			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_cluster))
 		end
 
 	number_of_assemblies: INTEGER is
 			-- Number of assemblies
 		do
-			Result := number_of_groups (create{QL_GROUP_IS_ASSEMBLY_CRI})
+			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_assembly))
 		end
 
 	number_of_libraries: INTEGER is
 			-- Number of libraries
 		do
-			Result := number_of_groups (create{QL_GROUP_IS_LIBRARY_CRI})
+			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_library))
 		end
 
 	number_of_melted_classes: INTEGER

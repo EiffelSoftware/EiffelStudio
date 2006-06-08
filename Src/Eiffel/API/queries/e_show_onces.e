@@ -23,10 +23,14 @@ feature -- Access
 
 	criterion: QL_CRITERION is
 			-- Criterion used in current command
+		local
+			l_factory: like feature_criterion_factory
 		do
-			Result := create {QL_FEATURE_IS_ONCE_CRI} or create {QL_FEATURE_IS_CONSTANT_CRI}
+			l_factory := feature_criterion_factory
+			Result := l_factory.simple_criterion_with_index (l_factory.c_is_once) or
+					 l_factory.simple_criterion_with_index (l_factory.c_is_constant)
 		end
-		
+
 feature -- Output
 
 	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is

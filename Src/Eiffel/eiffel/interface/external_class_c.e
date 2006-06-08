@@ -997,7 +997,6 @@ feature {NONE} -- Initialization
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_property: CONSUMED_PROPERTY
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
-			l_field: CONSUMED_FIELD
 			l_getter, l_setter: CONSUMED_ENTITY
 			l_extrn_func_i: EXTERNAL_FUNC_I
 			l_def_func_i: DEF_FUNC_I

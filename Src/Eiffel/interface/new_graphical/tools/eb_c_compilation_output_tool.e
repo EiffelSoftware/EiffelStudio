@@ -221,7 +221,6 @@ feature -- Action
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
-			l_message: STRING
 		do
 			if has_selected_file then
 				cmd_string := command_shell_name

@@ -1029,7 +1029,6 @@ feature {NONE} -- Implementation
 		local
 			l_output: YANK_STRING_WINDOW
 			retried: BOOLEAN
-			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
 					--| We generate the call stack.

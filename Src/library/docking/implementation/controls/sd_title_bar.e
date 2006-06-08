@@ -37,7 +37,7 @@ feature {NONE} -- Initlization
 
 			internal_border.set_border_width (internal_shared.border_width)
 			internal_border.set_border_color (internal_shared.border_color)
-			internal_border.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
+			internal_border.set_border_style ({SD_ENUMERATION}.bottom)
 
 			internal_border.extend (container)
 
@@ -174,7 +174,8 @@ feature -- Command
 				end
 			else
 				if internal_tool_bar.has (normal_max) then
-					internal_tool_bar.prune_all (normal_max)
+					internal_tool_bar.start
+					internal_tool_bar.prune (normal_max)
 				end
 			end
 		ensure
@@ -191,7 +192,8 @@ feature -- Command
 				end
 			else
 				if internal_tool_bar.has (stick) then
-					internal_tool_bar.prune_all (stick)
+					internal_tool_bar.start
+					internal_tool_bar.prune (stick)
 				end
 			end
 		ensure
@@ -256,31 +258,10 @@ feature -- Command
 
 	extend_custom_area (a_widget: EV_WIDGET) is
 			-- Extend `custom_area' with a_widget
-		local
---			l_parent: EV_CONTAINER
 		do
-			internal_custom_widget := a_widget
 			custom_area.wipe_out
-
---			-- This is a trick. Not work!~~~
---			-- Because on Windows, if windows level is too deep (20+),
---			-- setParent (from WEL_WINDOW) of toolbar will not work.
---			-- So we first prune it, then extend it.
-
---			l_parent := parent
---			if l_parent /= Void then
---				l_parent.prune (Current)
---			end
-
---			check not_void: l_parent /= Void end
-
 			custom_area.extend (a_widget)
-
---			if l_parent /= Void then
---				l_parent.extend (Current)
---			end
-
---			l_parent.disable_item_expand (Current)
+			internal_custom_widget := a_widget
 		ensure
 			set: internal_custom_widget = a_widget
 			added: custom_area.has (a_widget)
@@ -291,13 +272,13 @@ feature -- Command
 		do
 			custom_area.wipe_out
 		ensure
-			wiped_out: custom_area.count = 0
+			wuped_out: custom_area.count = 0
 		end
 
 feature -- Query
 
 	title: STRING is
-			-- Title.
+			-- Title
 		do
 			Result := internal_title
 		ensure
@@ -523,7 +504,6 @@ feature {NONE} -- Implementation
 
 	internal_custom_widget: EV_WIDGET
 			-- Custom widget which is setted by client programmer.
-
 
 	internal_title: STRING
 			-- Internal_title

@@ -1509,6 +1509,7 @@ feature -- Metadata description
 							l_sig := default_sig
 						end
 						if l_feature.is_il_external then
+							l_il_extension ?= l_feature.extension
 							if l_eiffel_constructor then
 								define_constructor (class_type, l_sig, is_reference, l_il_extension.token, feature_token (class_type.static_type_id, l_feature.feature_id), l_feature.feature_id)
 							else

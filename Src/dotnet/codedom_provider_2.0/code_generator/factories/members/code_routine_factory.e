@@ -38,7 +38,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		local
-			l_routine: CODE_ROUTINE_IMP
+			l_routine: CODE_ROUTINE
 			l_member: CODE_MEMBER_REFERENCE
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			l_type: CODE_TYPE_REFERENCE
@@ -176,7 +176,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		local
-			l_property_getter, l_property_setter: CODE_ROUTINE_IMP
+			l_property_getter, l_property_setter: CODE_ROUTINE
 			l_getter, l_setter: CODE_MEMBER_REFERENCE
 			l_getter_name, l_setter_name, l_name: STRING
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]

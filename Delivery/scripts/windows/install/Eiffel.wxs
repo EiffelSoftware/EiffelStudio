@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Product Name="EiffelStudio 5.7" Id="FFE8FDEB-9EFE-41f5-AEEB-E739648921CD"
-			Language="1033" Codepage="1252" Version="5.7" Manufacturer="Eiffel Software">
+	<?if $(var.IsWin64)="yes" ?>
+		<?define P_GUID = "4B1FB95B-4E4F-4ee3-B94C-7A3BF41BCBA2" ?>
+	<?else?>
+		<?define P_GUID = "FFE8FDEB-9EFE-41f5-AEEB-E739648921CD" ?>
+	<?endif?>
+	<Product Name="EiffelStudio 5.7" Id="$(var.P_GUID)" Language="1033" Codepage="1252" Version="5.7" Manufacturer="Eiffel Software">
 
 		<Package Id="????????-????-????-????-????????????" Keywords="Installer" Description="EiffelStudio 5.7 Installer"
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"

@@ -825,7 +825,6 @@ end
 			-- [Semnatic for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void
-			same_names: other.feature_name_id = feature_name_id
 --			export_statuses_exist: not (export_status = Void
 --										or else	other.export_status = Void)
 		do

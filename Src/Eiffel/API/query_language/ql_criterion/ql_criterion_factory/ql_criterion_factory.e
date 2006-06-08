@@ -18,7 +18,8 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		deferred
 		ensure
-			criterion_table_attached: criterion_table /= Void
+			agent_table_attached: agent_table /= Void
+			name_table_attached: name_table /= Void
 		end
 
 feature -- Criterion creation
@@ -133,9 +134,6 @@ feature{NONE} -- Implementation
 	creation_function: FUNCTION [ANY, TUPLE, like criterion_type]
 			-- Creation function type anchor
 
-	criterion_table: HASH_TABLE [like creation_function, STRING]
-			-- Hashtable to store criterion creation agents
-
 	criterion_type: QL_CRITERION
 			-- Criterion anchor type
 
@@ -148,7 +146,6 @@ feature{NONE} -- Implementation
 			-- Key is agent index, value is name of the criterion that the agent creates
 
 invariant
-	criterion_table_attached: criterion_table /= Void
 	agent_index_table_attached: agent_table /= Void
 	index_name_table_attached: name_table /= Void
 

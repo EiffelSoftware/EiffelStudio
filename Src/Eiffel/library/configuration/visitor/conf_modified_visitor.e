@@ -24,6 +24,8 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_VALIDITY
+
 create
 	make
 
@@ -98,6 +100,8 @@ feature -- Visit nodes
 			-- Process `an_override'.
 		do
 			if not is_error then
+					-- check if any classes have been added and force a rebuild if this is the case
+				find_added_override_classes ("", an_override, an_override.active_file_rule (state))
 				process_cluster (an_override)
 			end
 		end
@@ -198,6 +202,63 @@ feature {NONE} -- Implementation
 				end
 				if not (is_error or is_force_rebuild) then
 					a_group.set_classes (l_new_classes)
+				end
+			end
+		end
+
+	find_added_override_classes (a_path: STRING; an_override: CONF_OVERRIDE; a_file_rule: CONF_FILE_RULE) is
+			-- Recursively process `a_path'.
+			-- To find added classes in an override.
+		require
+			a_file_rule_not_void: a_file_rule /= Void
+			an_override_not_void: an_override /= Void
+			a_path_not_void: a_path /= Void
+		local
+			l_dir: KL_DIRECTORY
+			l_files: ARRAY [STRING]
+			l_subdirs: ARRAY [STRING]
+			i, cnt: INTEGER
+			l_name: STRING
+			l_path: STRING
+		do
+			if not is_error and not is_force_rebuild then
+				l_path := an_override.location.build_path (a_path, "")
+				create l_dir.make (l_path)
+				if not l_dir.is_readable then
+					add_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
+				else
+					l_files := l_dir.filenames
+					if l_files = Void then
+						add_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
+					else
+						from
+							i := l_files.lower
+							cnt := l_files.upper
+						until
+							i > cnt
+						loop
+							l_name := l_files.item (i)
+							if a_file_rule.is_included (a_path + "/" + l_name) and valid_eiffel_extension (l_name) then
+								is_force_rebuild := not an_override.classes_by_filename.has (a_path + "/" + l_name)
+							end
+							i := i + 1
+						end
+						if an_override.is_recursive then
+							l_subdirs := l_dir.directory_names
+							from
+								i := 1
+								cnt := l_subdirs.count
+							until
+								i > cnt
+							loop
+								l_name := l_subdirs.item (i)
+								if a_file_rule.is_included (a_path + "/" + l_name) then
+									find_added_override_classes (a_path + "/" + l_name, an_override, a_file_rule)
+								end
+								i := i + 1
+							end
+						end
+					end
 				end
 			end
 		end

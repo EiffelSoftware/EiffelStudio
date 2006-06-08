@@ -793,17 +793,6 @@ feature {NONE} -- Implementation
 			current_classes.merge (a_group.classes)
 		end
 
-	valid_eiffel_extension (a_file: STRING): BOOLEAN is
-			-- Does `a_file' have a correct eiffel file extension?
-		local
-			l_ext: CHARACTER
-		do
-			if a_file.count > 1 and then a_file.item (a_file.count -1 ) = '.' then
-				l_ext := a_file.item (a_file.count)
-				Result := l_ext = 'e' or l_ext = 'E'
-			end
-		end
-
 	process_assembly_implementation (an_assembly: CONF_ASSEMBLY) is
 			-- Process `an_assembly' (without dependencies).
 			-- tries to reuse information from `libraries'

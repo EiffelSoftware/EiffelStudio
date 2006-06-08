@@ -76,15 +76,69 @@ feature -- Access
 	precompile_files: LIST [STRING]
 			-- List of generated dlls filenames (including path)
 
+	configuration_path: STRING is
+			-- Path to configuration file in project path
+		local
+			l_file_name, l_dir: STRING
+		do
+			l_file_name := ace_file_name.substring (ace_file_name.last_index_of (Directory_separator, ace_file_name.count) + 1, ace_file_name.count)
+			l_dir := compilation_directory
+			create Result.make (l_dir.count + 1 + l_file_name.count)
+			Result.append (l_dir)
+			Result.append_character (Directory_separator)
+			Result.append (l_file_name)
+		end
+
+	compilation_directory: STRING is
+			-- Project path
+		local
+			l_index, l_index_2: INTEGER
+			l_rel_dir: STRING
+		do
+			if internal_compilation_directory = Void then
+				l_index := ace_file_name.last_index_of ('.', ace_file_name.count)
+				l_index_2 := ace_file_name.last_index_of (Directory_separator, ace_file_name.count)
+				if l_index_2 = 0 then
+					if l_index = 0 then
+						l_rel_dir := ace_file_name
+					else
+						l_rel_dir := ace_file_name.substring (1, l_index - 1)
+					end
+				else
+					if l_index > l_index_2 + 1 then
+						l_rel_dir := ace_file_name.substring (l_index_2 + 1, l_index - 1)
+					elseif l_index = l_index_2 + 1 then -- weird, the path has "\." in it
+						l_rel_dir := "precomp"
+					else
+						check
+							valid_file_name: l_index_2 < ace_file_name.count
+						end
+						l_rel_dir := ace_file_name.substring (l_index_2 + 1, ace_file_name.count)
+					end
+				end
+				check
+					non_void_rel_dir: l_rel_dir /= Void
+					valid_rel_dir: not l_rel_dir.is_empty
+				end
+				create Result.make (root_directory.count + 1 + l_rel_dir.count)
+				Result.append (root_directory)
+				Result.append_character (Directory_separator)
+				Result.append (l_rel_dir)
+				internal_compilation_directory := Result
+			else
+				Result := internal_compilation_directory
+			end
+		end
+
 feature -- Basic Operations
 
 	precompile is
 			-- Try precompiling or recover cached precompile
 			-- Set `successful' and `precompile_path'.
 		local
-			l_dir_file, l_ace_file: RAW_FILE
+			l_dir_file, l_ace_file, l_new_config: RAW_FILE
 			l_rel_dir, l_abs_dir, l_compiler_path, l_file, l_dll, l_fcode_path: STRING
-			l_index, l_index_2, l_counter: INTEGER
+			l_counter: INTEGER
 			l_exists, l_retried: BOOLEAN
 			l_start_info: SYSTEM_DLL_PROCESS_START_INFO
 			l_process: SYSTEM_DLL_PROCESS
@@ -117,37 +171,7 @@ feature -- Basic Operations
 						end
 					end
 					if not successful then
-
-						-- Extract ace file name for directory name
-						l_index := ace_file_name.last_index_of ('.', ace_file_name.count)
-						l_index_2 := ace_file_name.last_index_of (Directory_separator, ace_file_name.count)
-						if l_index_2 = 0 then
-							if l_index = 0 then
-								l_rel_dir := ace_file_name
-							else
-								l_rel_dir := ace_file_name.substring (1, l_index - 1)
-							end
-						else
-							if l_index > l_index_2 + 1 then
-								l_rel_dir := ace_file_name.substring (l_index_2 + 1, l_index - 1)
-							elseif l_index = l_index_2 + 1 then -- weird, the path has "\." in it
-								l_rel_dir := "precomp"
-							else
-								check
-									valid_file_name: l_index_2 < ace_file_name.count
-								end
-								l_rel_dir := ace_file_name.substring (l_index_2 + 1, ace_file_name.count)
-							end
-						end
-						check
-							non_void_rel_dir: l_rel_dir /= Void
-							valid_rel_dir: not l_rel_dir.is_empty
-						end
-						create l_abs_dir.make (root_directory.count + 1 + l_rel_dir.count)
-						create l_abs_dir.make (root_directory.count + 1 + l_rel_dir.count)
-						l_abs_dir.append (root_directory)
-						l_abs_dir.append (Directory_separator.out)
-						l_abs_dir.append (l_rel_dir)
+						l_abs_dir := compilation_directory
 						from
 							l_exists := {SYSTEM_DIRECTORY}.exists (l_abs_dir)
 							if l_exists then
@@ -165,6 +189,9 @@ feature -- Basic Operations
 						end
 						l_res := {SYSTEM_DIRECTORY}.create_directory (l_abs_dir)
 						
+						-- Update compilation directory cache
+						internal_compilation_directory := l_abs_dir
+						
 						-- Now precompile in directory `l_abs_dir'
 						l_compiler_path := Compiler_path
 						if l_compiler_path = Void then
@@ -181,6 +208,13 @@ feature -- Basic Operations
 							if l_process.start then
 								l_process.wait_for_exit
 							end
+							
+							-- Copy configuration file to precompile folder so that compiler can use '-local' option
+							create l_new_config.make_open_write (configuration_path)
+							l_ace_file.open_read
+							l_ace_file.copy_to (l_new_config)
+							l_ace_file.close
+							l_new_config.close
 						end
 					end
 					-- Check if precompile was successful
@@ -247,6 +281,9 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
+
+	internal_compilation_directory: STRING
+			-- Cache for `compilation_directory'
 
 	safe_directory_delete (a_dir: STRING) is
 			-- Delete directory `a_dir'.

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="wel_mt" uuid="178082BF-D4B8-46d3-8C7C-B130655723F6">
+	<target name="wel-mt">
+		<description>WEL library in MT mode</description>
+		<root class="ANY"/>
+		<setting name="multithreaded" value="True"/>
+		<setting name="cls_compliant" value="true"/>
+		<setting name="il_verifiable" value="true"/>
+		<setting name="msil_generation" value="true"/>
+		<setting name="msil_generation_type" value="dll"/>
+		<setting name="use_all_cluster_name_as_namespace" value="true"/>
+		<setting name="use_cluster_name_as_namespace" value="true"/>
+		<option trace="false" profile="false" debug="false" warning="false">
+			<assertions precondition="true" postcondition="false" check"false" invariant"false" loop"false"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+	</target>
+</system>

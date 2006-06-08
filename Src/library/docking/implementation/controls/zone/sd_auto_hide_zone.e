@@ -59,12 +59,12 @@ feature	{NONE} -- Initlization
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			create internal_shared
 			internal_docking_manager := a_content.docking_manager
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (False)
 			else
 				init (True)
@@ -85,10 +85,10 @@ feature	{NONE} -- Initlization
 			end
 			create resize_bar.make (a_direction, Current)
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_top then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.top then
 				extend_hor_ver_box (window)
 				extend_hor_ver_box (resize_bar)
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_right or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			elseif a_direction = {SD_ENUMERATION}.right or a_direction = {SD_ENUMERATION}.bottom then
 				extend_hor_ver_box (resize_bar)
 				extend_hor_ver_box (window)
 			end
@@ -121,16 +121,16 @@ feature {NONE} -- Implementation
 			-- Redefine.
 		do
 			-- Set the area which allow user to resize the window.
-			if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
+			if internal_direction = {SD_ENUMERATION}.left then
 				a_screen_boundary.set_right (internal_docking_manager.query.container_rectangle_screen.right)
 				a_screen_boundary.set_left (window.screen_x + minimum_width)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+			elseif internal_direction = {SD_ENUMERATION}.right then
 				a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
 				a_screen_boundary.set_left (internal_docking_manager.query.container_rectangle_screen.left)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
+			elseif internal_direction = {SD_ENUMERATION}.top then
 				a_screen_boundary.set_bottom (internal_docking_manager.query.container_rectangle_screen.bottom)
 				a_screen_boundary.set_top (window.screen_y + minimum_height)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			elseif internal_direction = {SD_ENUMERATION}.bottom then
 				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
 				a_screen_boundary.set_top (internal_docking_manager.query.container_rectangle_screen.top)
 			end
@@ -143,9 +143,9 @@ feature {NONE} -- Implementation
 			-- Redefine.
 		do
 			disable_item_expand (resize_bar)
-			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if internal_direction = {SD_ENUMERATION}.left or internal_direction = {SD_ENUMERATION}.right then
 				internal_docking_manager.zones.set_zone_size (Current, width + a_delta, height)
-				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_right then
+				if a_bar.direction = {SD_ENUMERATION}.right then
 					internal_docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
 				end
 			else
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE after set zone height: " + height.out)
 				end
-				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				if a_bar.direction = {SD_ENUMERATION}.bottom then
 					internal_docking_manager.fixed_area.set_item_position (Current, x_position, y_position - a_delta)
 				end
 			end

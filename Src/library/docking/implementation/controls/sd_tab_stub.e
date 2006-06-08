@@ -20,14 +20,14 @@ feature {NONE} -- Initlization
 			-- Creation method. If a_vertical True then vertical style otherwise horizontal style.
 		require
 			a_content_not_void: a_content /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_cell: EV_CELL
 		do
 			create internal_shared
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (True)
 				create internal_box.init (True)
 			else
@@ -63,24 +63,24 @@ feature {NONE} -- Initlization
 	init_separator (a_direction: INTEGER) is
 			-- Initialization base on `a_direction'
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			inspect
 				a_direction
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				set_draw_separator_left (True)
 				set_draw_separator_bottom (True)
 				set_draw_separator_right (True)
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				set_draw_separator_left (True)
 				set_draw_separator_top (True)
 				set_draw_separator_right (True)
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				set_draw_separator_top (True)
 				set_draw_separator_right (True)
 				set_draw_separator_bottom (True)
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				set_draw_separator_top (True)
 				set_draw_separator_left (True)
 				set_draw_separator_bottom (True)

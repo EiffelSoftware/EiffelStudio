@@ -32,14 +32,14 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			create internal_shared
 			internal_content := a_content
 			internal_docking_manager := a_content.docking_manager
 			direction := a_direction
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				width_height := (internal_docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
 			else
 				width_height := (internal_docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
@@ -66,8 +66,8 @@ feature {NONE} -- Initlization
 			-- Creation with a size.
 		require
 			a_content_not_void: a_content /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			make (a_content, a_direction)
 			width_height := max_size_by_zone (a_width_height)
@@ -143,7 +143,7 @@ feature -- Redefine.
 	record_state is
 			-- Redefine.
 		do
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				width_height := zone.width
 			else
 				width_height := zone.height
@@ -152,9 +152,9 @@ feature -- Redefine.
 			internal_animation.remove_close_timer
 
 		ensure then
-			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
+			width_height_set: direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 				implies width_height = zone.width
-			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
+			width_height_set: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 				implies width_height = zone.height
 		end
 
@@ -165,7 +165,7 @@ feature -- Redefine.
 			l_docking_state: SD_DOCKING_STATE
 		do
 			internal_docking_manager.command.lock_update (Void, True)
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
 			else
 				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
@@ -237,7 +237,7 @@ feature -- Query
 	is_width_height_valid (a_width_height: INTEGER): BOOLEAN is
 			-- If a_width_height valid?
 		do
-			if direction  = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction  = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				Result := a_width_height <= (internal_docking_manager.fixed_area.width * 0.8).ceiling
 			else
 				Result := a_width_height <= (internal_docking_manager.fixed_area.height * 0.8).ceiling
@@ -249,8 +249,8 @@ feature {NONE} -- Implementation functions.
 	stick_zones (a_direction: INTEGER) is
 			-- Stick zones which should together with current zone.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_tab_state: SD_TAB_STATE
@@ -321,7 +321,7 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal issues.
 		require
 			valid: a_width_height >= 0
 		do
-			if direction  = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction  = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				if (a_width_height <= (internal_docking_manager.fixed_area.width * 0.8).ceiling) then
 					Result := a_width_height
 				else
@@ -369,8 +369,8 @@ invariant
 	not_void: tab_stub /= Void
 	not_void: auto_hide_panel /= Void
 	not_void: internal_animation /= Void
-	direction_valid: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
-		or direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
+	direction_valid: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
+		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

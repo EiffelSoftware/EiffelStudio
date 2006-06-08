@@ -183,7 +183,7 @@ feature -- Properties
 	type: INTEGER is
 			-- Redefine.
 		do
-			Result := {SD_SHARED}.type_tool
+			Result := {SD_ENUMERATION}.tool
 		end
 
 	state: SD_STATE is

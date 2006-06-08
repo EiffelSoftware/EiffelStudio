@@ -115,7 +115,7 @@ feature -- Command
 	stick is
 			-- Stick window.
 		do
-			internal_content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
+			internal_content.state.stick ({SD_ENUMERATION}.left)
 		end
 
 feature -- Query

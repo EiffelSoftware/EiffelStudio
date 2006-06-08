@@ -43,7 +43,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				l_content := state.content
 				state.tab_zone.prune (l_content, False)
 				internal_docking_manager.command.unlock_update
-				create l_docking_state.make (l_content, {SD_DOCKING_MANAGER}.dock_left, {SD_SHARED}.title_bar_height)
+				create l_docking_state.make (l_content, {SD_ENUMERATION}.left, {SD_SHARED}.title_bar_height)
 				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 				l_content.change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (state.zone, False)
@@ -58,8 +58,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			-- May should merge functions.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
-			direction_valid: state.direction = {SD_DOCKING_MANAGER}.dock_top or state.direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or state.direction = {SD_DOCKING_MANAGER}.dock_left or state.direction = {SD_DOCKING_MANAGER}.dock_right
+			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (state.direction)
 		local
 			l_new_split_area: EV_SPLIT_AREA
 			l_target_zone_parent: EV_CONTAINER
@@ -85,12 +84,12 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			end
 			check not l_target_zone_parent.full end
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
 				create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
+			if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
 				l_new_split_area.set_first (state.tab_zone)
 				l_new_split_area.set_second (a_target_zone)
 			else
@@ -219,13 +218,13 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
-			if state.direction = {SD_DOCKING_MANAGER}.dock_left or state.direction = {SD_DOCKING_MANAGER}.dock_right then
+			if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.right then
 				create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
 			else
 				create {SD_VERTICAL_SPLIT_AREA} l_new_container
 			end
 
-			if state.direction = {SD_DOCKING_MANAGER}.dock_left or state.direction = {SD_DOCKING_MANAGER}.dock_top then
+			if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.top then
 				l_new_container.set_first (state.tab_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)

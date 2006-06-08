@@ -35,17 +35,17 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 			remove_close_timer
 			if internal_docking_manager.zones.has_zone_by_content (state.content) then
 				l_rect := internal_docking_manager.query.fixed_area_rectangle
-				if state.direction = {SD_DOCKING_MANAGER}.dock_left then
+				if state.direction = {SD_ENUMERATION}.left then
 					internal_final_position := l_rect.left - state.zone.width
-				elseif state.direction = {SD_DOCKING_MANAGER}.dock_right then
+				elseif state.direction = {SD_ENUMERATION}.right then
 					internal_final_position := l_rect.right
-				elseif state.direction = {SD_DOCKING_MANAGER}.dock_top then
+				elseif state.direction = {SD_ENUMERATION}.top then
 					internal_final_position := l_rect.top - state.zone.height
-				elseif state.direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				elseif state.direction = {SD_ENUMERATION}.bottom then
 					internal_final_position := l_rect.bottom
 				end
 			end
-			if state.direction = {SD_DOCKING_MANAGER}.dock_left or state.direction = {SD_DOCKING_MANAGER}.dock_right then
+			if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.right then
 				state.set_width_height (state.zone.width)
 			else
 				state.set_width_height (state.zone.height)
@@ -194,16 +194,16 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_whole_area /= Void
 		do
-			if state.direction = {SD_DOCKING_MANAGER}.dock_left then
+			if state.direction = {SD_ENUMERATION}.left then
 				internal_docking_manager.fixed_area.set_item_position (state.zone, a_whole_area.left - state.zone.width, a_whole_area.top)
 				internal_final_position := a_whole_area.left
-			elseif state.direction = {SD_DOCKING_MANAGER}.dock_right then
+			elseif state.direction = {SD_ENUMERATION}.right then
 				internal_docking_manager.fixed_area.set_item_position (state.zone, a_whole_area.right, a_whole_area.top)
 				internal_final_position := a_whole_area.right - state.zone.width
-			elseif state.direction = {SD_DOCKING_MANAGER}.dock_top then
+			elseif state.direction = {SD_ENUMERATION}.top then
 				internal_docking_manager.fixed_area.set_item_position (state.zone, a_whole_area.left, a_whole_area.top - state.zone.height)
 				internal_final_position := a_whole_area.top
-			elseif state.direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			elseif state.direction = {SD_ENUMERATION}.bottom then
 				internal_docking_manager.fixed_area.set_item_position (state.zone, a_whole_area.left, a_whole_area.bottom)
 				internal_final_position := a_whole_area.bottom - state.zone.height
 			end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_whole_area /= Void
 		do
-			if state.direction = {SD_DOCKING_MANAGER}.dock_left or state.direction = {SD_DOCKING_MANAGER}.dock_right then
+			if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.right then
 				if state.width_height > state.zone.minimum_width then
 					internal_docking_manager.fixed_area.set_item_width (state.zone, state.width_height)
 				end
@@ -236,28 +236,28 @@ feature {NONE} -- Implementation functions
 		do
 			inspect
 				state.direction
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				if state.zone.x_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position + internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				if state.zone.x_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position - internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				if state.zone.y_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_y_position (state.zone, internal_final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position + internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				if state.zone.y_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_y_position (state.zone, internal_final_position)
@@ -272,25 +272,25 @@ feature {NONE} -- Implementation functions
 		do
 			inspect
 				state.direction
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				if state.zone.x_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (False)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position - internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				if state.zone.x_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (False)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (state.zone, state.zone.x_position + internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				if state.zone.y_position - internal_show_step <= internal_final_position then
 					remove_moving_timer (False)
 				else
 					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position - internal_show_step)
 				end
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				if state.zone.y_position + internal_show_step >= internal_final_position then
 					remove_moving_timer (False)
 				else

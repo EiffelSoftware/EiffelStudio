@@ -92,30 +92,30 @@ feature -- Command
 	set_show_border (a_direction: INTEGER; a_show: BOOLEAN) is
 			-- Set show border at a_direction base on a_show. a_direction is one enumeration from SD_DOCKING_MANAGER.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			inspect
 				a_direction
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				if a_show then
 					internal_border_up.show
 				else
 					internal_border_up.hide
 				end
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				if a_show then
 					internal_border_bottom.show
 				else
 					internal_border_bottom.hide
 				end
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				if a_show then
 					internal_border_left.show
 				else
 					internal_border_left.hide
 				end
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				if a_show then
 					internal_border_right.show
 				else
@@ -129,31 +129,31 @@ feature -- Command
 	set_border_style (a_style: INTEGER) is
 			--  Set border with a_sttyle, a_style is one emueration from SD_DOCKING_MANAGER.
 		require
-			a_style_valid: a_style = {SD_DOCKING_MANAGER}.dock_top or a_style = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_style = {SD_DOCKING_MANAGER}.dock_left or a_style = {SD_DOCKING_MANAGER}.dock_right
+			a_style_valid: a_style = {SD_ENUMERATION}.top or a_style = {SD_ENUMERATION}.bottom
+				or a_style = {SD_ENUMERATION}.left or a_style = {SD_ENUMERATION}.right
 		do
 			inspect
 				a_style
-			when {SD_DOCKING_MANAGER}.dock_top then
-				set_show_border ({SD_DOCKING_MANAGER}.dock_top, False)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_left, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_right, True)
-			when {SD_DOCKING_MANAGER}.dock_bottom then
-				set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_left, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_right, True)
-			when {SD_DOCKING_MANAGER}.dock_left then
-				set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_left, False)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_right, True)
-			when {SD_DOCKING_MANAGER}.dock_right then
-				set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_left, True)
-				set_show_border ({SD_DOCKING_MANAGER}.dock_right, False)
+			when {SD_ENUMERATION}.top then
+				set_show_border ({SD_ENUMERATION}.top, False)
+				set_show_border ({SD_ENUMERATION}.bottom, True)
+				set_show_border ({SD_ENUMERATION}.left, True)
+				set_show_border ({SD_ENUMERATION}.right, True)
+			when {SD_ENUMERATION}.bottom then
+				set_show_border ({SD_ENUMERATION}.top, True)
+				set_show_border ({SD_ENUMERATION}.bottom, False)
+				set_show_border ({SD_ENUMERATION}.left, True)
+				set_show_border ({SD_ENUMERATION}.right, True)
+			when {SD_ENUMERATION}.left then
+				set_show_border ({SD_ENUMERATION}.top, True)
+				set_show_border ({SD_ENUMERATION}.bottom, True)
+				set_show_border ({SD_ENUMERATION}.left, False)
+				set_show_border ({SD_ENUMERATION}.right, True)
+			when {SD_ENUMERATION}.right then
+				set_show_border ({SD_ENUMERATION}.top, True)
+				set_show_border ({SD_ENUMERATION}.bottom, True)
+				set_show_border ({SD_ENUMERATION}.left, True)
+				set_show_border ({SD_ENUMERATION}.right, False)
 			end
 		ensure
 			set:

@@ -42,8 +42,8 @@ feature {NONE} -- Initlization
 			a_content_parent_void: a_content.user_widget.parent = Void
 			a_target_zone_not_void: a_target_zone /= Void
 			a_target_zone_parent_not_void: a_target_zone.parent /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_parent: EV_CONTAINER
 			l_target_zone_tab_state: SD_TAB_STATE
@@ -87,8 +87,8 @@ feature {NONE} -- Initlization
 		require
 			a_content_not_void: a_content /= Void
 			a_target_zone: a_target_zone /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			init_common (a_content, a_direction)
 			tab_zone := a_target_zone

@@ -42,8 +42,8 @@ feature {NONE} -- Initlization
 			disable_item_expand (internal_title_bar)
 
 			create internal_border_box.make
-			internal_border_box.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
-			internal_border_box.set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
+			internal_border_box.set_border_style ({SD_ENUMERATION}.top)
+			internal_border_box.set_show_border ({SD_ENUMERATION}.top, True)
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 
 			extend (internal_border_box)

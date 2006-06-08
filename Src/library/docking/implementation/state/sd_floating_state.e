@@ -11,6 +11,7 @@ class
 inherit
 	SD_STATE
 		redefine
+			dock_at_top_level,
 			change_zone_split_area,
 			stick,
 			move_to_docking_zone,
@@ -54,7 +55,7 @@ feature -- Redefine.
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
 			internal_zone.destroy
-			if 	direction	= {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if 	direction	= {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
 				l_split_area := create {SD_HORIZONTAL_SPLIT_AREA}
 			else
@@ -65,7 +66,7 @@ feature -- Redefine.
 			internal_docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget)
 			internal_docking_manager.query.inner_container_main.wipe_out
 			internal_docking_manager.query.inner_container_main.extend (l_split_area)
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.top then
 				l_split_area.set_first (l_widget)
 				l_split_area.set_second (l_main_container_widget)
 			else
@@ -228,8 +229,8 @@ feature {NONE} -- Implementation
 			-- Change whole floating zone contents to `a_target_zone'.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_container: EV_CONTAINER
 			l_widget: EV_WIDGET
@@ -253,13 +254,13 @@ feature {NONE} -- Implementation
 			l_container.prune_all (l_widget)
 			inner_container.wipe_out
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				l_spliter := create {SD_HORIZONTAL_SPLIT_AREA}
 			else
 				l_spliter := create {SD_VERTICAL_SPLIT_AREA}
 			end
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_top then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.top then
 				l_spliter.set_first (l_current_item)
 				l_spliter.set_second (l_widget)
 			else

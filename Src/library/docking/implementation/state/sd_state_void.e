@@ -33,7 +33,7 @@ feature {NONE}  -- Initlization
 		require
 			a_content_not_void: a_content /= Void
 		do
-			direction := {SD_DOCKING_MANAGER}.dock_left
+			direction := {SD_ENUMERATION}.left
 			internal_content := a_content
 			create internal_shared
 			internal_docking_manager := a_content.docking_manager
@@ -64,7 +64,7 @@ feature -- Redefine.
 		do
 			content.set_visible (True)
 			internal_docking_manager.command.lock_update (Void, True)
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
 			else
 				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
@@ -193,7 +193,7 @@ feature -- Redefine.
 			-- Redefine
 		do
 		end
-		
+
 feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
 	set_relative (a_content: SD_CONTENT) is
@@ -220,8 +220,8 @@ feature -- Contract support
 
 invariant
 
-	direction_valid: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
-		or direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
+	direction_valid: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
+		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

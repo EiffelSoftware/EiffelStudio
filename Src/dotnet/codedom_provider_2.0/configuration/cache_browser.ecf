@@ -27,8 +27,14 @@
 		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser"/>
 		
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\base.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Base" />
+		</library>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.Support" />
+		</library>
+
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
@@ -44,22 +50,6 @@
 		</cluster>
 		<cluster name="common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\common" recursive="true">
 			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</cluster>
-		<cluster name="compliance_checker" location="$EIFFEL_SRC\tools\compliance_checker\engine" recursive="true">
-			<option namespace="EiffelSoftware.Library.ComplianceChecker" />
-			<file_rule>
-				<exclude>/reporting$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="emitter" location="$EIFFEL_SRC\dotnet\consumer" recursive="true">
-			<option namespace="EiffelSoftware.Library.Emitter" />
-		</cluster>
-		<cluster name="helpers" location="$EIFFEL_SRC\dotnet\helpers" recursive="true">
-			<option namespace="EiffelSoftware.Library.Helpers" />
-			<file_rule>
-				<exclude>/example$</exclude>
-				<exclude>/classic$</exclude>
-			</file_rule>
 		</cluster>
 	</target>
 </system>

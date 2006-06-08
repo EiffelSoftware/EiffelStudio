@@ -984,6 +984,9 @@ feature {NONE} -- Actions
 			has_selected_item: has_selected_item
 		do
 			if not location_combo.text.is_empty and then not selected_target.is_empty then
+					-- Location has changed, we need to clear `clean_button'.
+				clean_button.disable_select
+					-- Then update interface
 				update_project (projects_list.selected_rows.first, False, False, False)
 			end
 		end

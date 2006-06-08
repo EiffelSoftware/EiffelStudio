@@ -101,10 +101,9 @@ feature {NONE} -- Initialization
 				l_label.pointer_button_press_actions.force_extend (agent select_label_and_destroy)
 				l_label.set_pixmap (l_contents.item.pixmap)
 				l_label.set_text (l_contents.item.short_title)
-				if l_contents.item.type = {SD_SHARED}.type_tool then
+				if l_contents.item.type = {SD_ENUMERATION}.tool and l_contents.item.is_visible then
 					tools_box.extend (l_label)
-				else
-					check only_two_type: l_contents.item.type = {SD_SHARED}.type_editor end
+				elseif l_contents.item.type = {SD_ENUMERATION}.editor and l_contents.item.is_visible then
 					files_box.extend (l_label)
 					if l_pass_first_editor and then not l_pass_second_editor then
 						focus_label (l_label)
@@ -115,6 +114,8 @@ feature {NONE} -- Initialization
 						l_pass_first_editor := True
 					end
 					l_last_label := l_label
+				else
+					check only_three_type: l_contents.item.is_visible implies l_contents.item.type = {SD_ENUMERATION}.place_holder end
 				end
 
 				l_contents.forth

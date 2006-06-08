@@ -66,7 +66,7 @@ feature -- Access
 			  ]")
 			Result ?= group
 		ensure
-			cluster_i_not_void: cluster_i /= Void
+			cluster_i_not_void: Result /= Void
 		end
 
 	group: CONF_GROUP

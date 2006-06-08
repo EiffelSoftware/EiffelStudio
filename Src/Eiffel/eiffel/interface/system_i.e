@@ -948,7 +948,6 @@ end
 						end
 					end
 				end
-				l_conf_class.set_up_to_date
 				l_classes.forth
 			end
 				-- added classes
@@ -1171,7 +1170,6 @@ end
 								class_i: l_class /= Void
 							end
 							workbench.change_class (l_class)
-							l_conf_class.set_up_to_date
 							l_classes.forth
 						end
 						update_root_class

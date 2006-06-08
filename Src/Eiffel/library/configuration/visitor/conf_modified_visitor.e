@@ -183,11 +183,17 @@ feature {NONE} -- Implementation
 					if l_class.is_renamed or l_class.is_removed then
 						is_force_rebuild := True
 					else
-						if l_class.is_compiled or l_class.does_override then
+						if l_class.is_compiled then
+								-- Invariant of CONF_CLASS tell us that it cannot be an override class.
 							if l_class.is_error then
 								add_error (l_class.last_error)
 							end
-							if l_class.is_modified then
+							if l_class.is_overriden then
+								l_class.actual_class.check_changed
+								if l_class.actual_class.is_modified then
+									modified_classes.extend (l_class)
+								end
+							elseif l_class.is_modified then
 								modified_classes.extend (l_class)
 							end
 						end

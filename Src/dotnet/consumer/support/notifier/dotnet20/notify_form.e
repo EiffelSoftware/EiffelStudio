@@ -40,7 +40,6 @@ feature -- Status Setting
 		local
 			l_message: SYSTEM_STRING
 		do
-			show_ballon := True
 			l_message := a_message.message
 			if l_message.length > 255 then
 				l_message := {SYSTEM_STRING}.concat (l_message.substring (0, 251), ({SYSTEM_STRING})["..."])

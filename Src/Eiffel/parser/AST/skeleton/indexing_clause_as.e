@@ -203,6 +203,40 @@ feature -- Access
 			end
 		end
 
+	dotnet_constructors: ARRAYED_LIST [STRING] is
+			-- Dotnet constructors indexing clause value
+		local
+			l_index: INDEX_AS
+			l_list: EIFFEL_LIST [ATOMIC_AS]
+			l_string: STRING_AS
+			l_id: ID_AS
+		do
+			l_index := find_index_as (Dotnet_constructors_header)
+			if l_index /= Void then
+				l_list := l_index.index_list
+				if not l_list.is_empty then
+					create Result.make (l_list.count)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_string ?= l_list.item
+						if l_string /= Void then
+							Result.extend (l_string.value)
+						else
+							l_id ?= l_list.item
+							if l_id /= Void then
+								Result.extend (l_id.string_value)
+							end
+						end
+						l_list.forth
+					end
+					Result.compare_objects
+				end
+			end
+		end
+
 	has_global_once: BOOLEAN is
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
@@ -326,6 +360,9 @@ feature {NONE} -- Constants
 	Assembly_attribute_header: STRING is "assembly_attribute"
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
+
+	Dotnet_constructors_header: STRING is "dotnet_constructors"
+			-- Index name which holds list of creation routines to be used as type constructors.
 
 	Description_header: STRING is "description"
 			-- Index name which holds class/feature desciption.

@@ -131,6 +131,8 @@ feature {NONE} -- Initialization
 
 			foreground_color := implementation.foreground_color
 			background_color := implementation.background_color
+
+			key_press_actions.extend (agent on_key_press)
 		end
 
 feature -- Access
@@ -354,6 +356,7 @@ feature {NONE} -- Implementation
 			a_text_not_void: a_text /= Void
 		local
 			new_button: EV_BUTTON
+			l_default_button: BOOLEAN
 		do
 			create new_button.make_with_text (a_text)
 
@@ -361,11 +364,17 @@ feature {NONE} -- Implementation
 			--| user access to it.
 			buttons.put (new_button, a_text.as_string_32)
 
+			l_default_button := button_box.is_empty
+
 			new_button.select_actions.extend (agent on_button_press (a_text))
 			button_box.extend (new_button)
 			button_box.disable_item_expand (new_button)
 			new_button.set_minimum_width (new_button.minimum_width.max (75))
 			new_button.align_text_center
+
+			if l_default_button then
+				set_default_push_button (new_button)
+			end
 		end
 
 	add_button_with_action
@@ -387,6 +396,61 @@ feature {NONE} -- Implementation
 		do
 			selected_button := a_button_text
 			destroy
+		end
+
+	on_key_press (a_key: EV_KEY) is
+			-- Called when user presses a key on the dialog.
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+				move_to_next_button (-1)
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+				move_to_next_button (1)
+			end
+		end
+
+	move_to_next_button (a_delta: INTEGER) is
+			-- Moves focus to next or previous button based on `a_delta'.
+		require
+			valid_delta: a_delta = -1 or a_delta = 1
+		local
+			l_buttons: like button_box
+			l_cursor: CURSOR
+			l_focused_widget: EV_WIDGET
+			l_focused: BOOLEAN
+		do
+			l_buttons := button_box
+			if l_buttons.count > 1 then
+				l_cursor := l_buttons.cursor
+				from l_buttons.start until l_buttons.after or l_focused loop
+					l_focused_widget := l_buttons.item
+					l_focused := l_focused_widget.has_focus
+					if not l_focused then
+						l_buttons.forth
+					end
+				end
+				if l_focused then
+					if l_focused_widget /= Void then
+						if a_delta = -1 then
+							if l_buttons.first = l_focused_widget then
+								l_buttons.last.set_focus
+							else
+								l_buttons.back
+								l_buttons.item.set_focus
+							end
+						else
+							if l_buttons.last = l_focused_widget then
+								l_buttons.first.set_focus
+							else
+								l_buttons.forth
+								l_buttons.item.set_focus
+							end
+						end
+					end
+				else
+					l_buttons.first.set_focus
+				end
+				l_buttons.go_to (l_cursor)
+			end
 		end
 
 indexing

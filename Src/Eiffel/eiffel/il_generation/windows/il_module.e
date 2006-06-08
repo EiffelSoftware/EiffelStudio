@@ -1457,7 +1457,6 @@ feature -- Metadata description
 			l_creators: ARRAY [STRING]
 			l_creators_count: INTEGER
 			l_feature: FEATURE_I
-			l_external_feature: EXTERNAL_I
 			l_il_extension: IL_EXTENSION_I
 			l_define_default_ctor: BOOLEAN
 			l_feat_arg: FEAT_ARG

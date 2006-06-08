@@ -66,8 +66,6 @@ feature{NONE} -- Initialization
 			-- Initialize `conf_class' with `a_class'.
 		require
 			a_class_attached: a_class /= Void
-		local
-			l_class_i: CLASS_I
 		do
 			conf_class := a_class
 			class_i ?= a_class

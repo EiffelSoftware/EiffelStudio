@@ -210,7 +210,6 @@ feature {NONE} -- Implementation
 			l_data: MANAGED_POINTER
 			l_platform: PLATFORM
 			l_raw_file: RAW_FILE
-			virc: VIRC
 		do
 				-- Get resources of `a_module' if already initialized,
 				-- otherwise create a new one.

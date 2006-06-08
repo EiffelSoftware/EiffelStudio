@@ -21,7 +21,6 @@ feature{NONE} -- Evaluate
 			l_feature_list: like feature_list
 			l_feature: E_FEATURE
 			l_item: QL_FEATURE
-			l_generator: like used_in_domain_generator
 		do
 			if a_item.is_real_feature then
 				l_user_data_list := user_data_list

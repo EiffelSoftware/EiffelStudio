@@ -41,11 +41,13 @@ feature {NONE} -- Initialization
 	on_init is
 			-- Initialize worker application thread.
 		local
+			l_context: WINFORMS_APPLICATION_CONTEXT
 			retried: BOOLEAN
 		do
 			application_thread := {SYSTEM_THREAD}.current_thread
 			create notify_form.make
-			{WINFORMS_APPLICATION}.run (notify_form)
+			create l_context.make_from_main_form (notify_form)
+			{WINFORMS_APPLICATION}.run (l_context)
 			check notify_form_attached: notify_form /= Void end
 			notify_form.dispose
 		end

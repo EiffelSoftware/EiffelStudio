@@ -48,6 +48,17 @@ feature -- Basic validity queries
 			Result := a_version_type /= Void and then valid_version_types.has (a_version_type)
 		end
 
+	valid_eiffel_extension (a_file: STRING): BOOLEAN is
+			-- Does `a_file' have a correct eiffel file extension?
+		local
+			l_ext: CHARACTER
+		do
+			if a_file.count > 1 and then a_file.item (a_file.count -1 ) = '.' then
+				l_ext := a_file.item (a_file.count)
+				Result := l_ext = 'e' or l_ext = 'E'
+			end
+		end
+
 feature {NONE} -- Basic operation
 
 	get_platform_name (a_platform: INTEGER): STRING is

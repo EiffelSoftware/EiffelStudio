@@ -38,13 +38,13 @@ feature -- Properties
 		end
 
 	width_height: INTEGER
-				-- Width of zone if dock_left or dock_right.
-				-- Height of zone if dock_top or dock_bottom.
+			-- Width of zone if dock_left or dock_right.
+			-- Height of zone if dock_top or dock_bottom.
 
 	width_height_by_direction: INTEGER is
 			-- Width of zone if dock left/right, Height of zone if dock top/bottom.
 		do
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				Result := zone.width
 			else
 				Result := zone.height
@@ -64,8 +64,6 @@ feature -- Properties
 	zone: SD_ZONE is
 			-- Zone which is managed by `Current'.
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
 
 feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
@@ -86,8 +84,8 @@ feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 			more_than_one_title: content_count_valid (a_titles)
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			content.set_visible (True)
 		end
@@ -133,7 +131,14 @@ feature -- Commands
 			l_state: SD_STATE_VOID
 		do
 			internal_docking_manager.command.lock_update (zone, False)
-			zone.close
+
+			if content /= internal_docking_manager.zones.place_holder_content then
+				add_place_holder
+			end
+
+			if zone /= Void then
+				zone.close
+			end
 			internal_docking_manager.zones.prune_zone_by_content (internal_content)
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
@@ -227,14 +232,14 @@ feature -- Properties
 feature {SD_CONTENT} -- SD_CONTENT called functions.
 
 	change_title (a_title: STRING; a_content: SD_CONTENT) is
-			--
+			-- Change title
 		require
 			a_title_not_void: a_title /= Void
 		do
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
-			--
+			-- Change pixmap
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
@@ -271,7 +276,7 @@ feature  -- States report
 		end
 
 	content_count_valid (a_titles: ARRAYED_LIST [STRING]): BOOLEAN is
-			-- If
+			-- If `a_titles' vaild?
 		require
 			a_titles_not_void: a_titles /= Void
 		do
@@ -294,11 +299,40 @@ feature  -- States report
 
 feature {NONE} -- Implementation
 
+	add_place_holder is
+			-- Adde editor place holder if possible.
+			-- Call this before editor zone closed.
+		local
+			l_mutli_dock_area: SD_MULTI_DOCK_AREA
+		do
+			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
+			l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
+			if l_mutli_dock_area.editor_zone_count = 1 and zone.content.type = {SD_ENUMERATION}.editor then
+				check not_has: not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
+				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
+				check is_editor: zone.content.type = {SD_ENUMERATION}.editor end
+				internal_docking_manager.zones.place_holder_content.set_relative (zone.content, {SD_ENUMERATION}.top)
+			end
+		end
+
+	del_place_holder is
+			-- Del editor place holder if possible.
+			-- Call this after zone added.
+		local
+			l_mutli_dock_area: SD_MULTI_DOCK_AREA
+		do
+			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
+			l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
+			if l_mutli_dock_area.editor_zone_count > 1 and then internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
+				internal_docking_manager.zones.place_holder_content.close
+			end
+		end
+
 	top_split_position (a_direction: INTEGER; a_spliter: EV_SPLIT_AREA): INTEGER is
 			-- Calculate top split position  when dock at top.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 			a_spliter_not_void: a_spliter /= Void
 			a_spliter_full: a_spliter.full
 		local
@@ -308,7 +342,7 @@ feature {NONE} -- Implementation
 			l_main_rect := internal_docking_manager.query.container_rectangle
 			inspect
 				a_direction
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				if width_height > a_spliter.minimum_split_position and width_height < a_spliter.maximum_split_position then
 					Result := width_height
 				else
@@ -318,7 +352,7 @@ feature {NONE} -- Implementation
 						Result := a_spliter.minimum_split_position
 					end
 				end
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				if l_main_rect.height -width_height > a_spliter.minimum_split_position and l_main_rect.height - width_height < a_spliter.maximum_split_position then
 					Result := l_main_rect.height -width_height
 				else
@@ -328,7 +362,7 @@ feature {NONE} -- Implementation
 						Result := a_spliter.maximum_split_position
 					end
 				end
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				if width_height > a_spliter.minimum_split_position and width_height < a_spliter.maximum_split_position then
 					Result :=width_height
 				else
@@ -338,7 +372,7 @@ feature {NONE} -- Implementation
 						Result := a_spliter.minimum_split_position
 					end
 				end
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				if l_main_rect.width - width_height > a_spliter.minimum_split_position and l_main_rect.width - width_height < a_spliter.maximum_split_position then
 					Result :=  l_main_rect.width -width_height
 				else

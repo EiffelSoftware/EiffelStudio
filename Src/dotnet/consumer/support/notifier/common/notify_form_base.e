@@ -38,14 +38,13 @@ feature {NONE} -- Initialization
 			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 			create notify_icon.make
 
-			create l_location.make_from_x_and_y (-32000, -32000)
+			create l_location.make_from_x_and_y (-1000, -1000)
 			set_location (l_location)
-			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.normal)
+			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.minimized)
 			set_start_position ({WINFORMS_FORM_START_POSITION}.manual)
 			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_tool_window)
 			set_show_in_taskbar (False)
 
-			notify_icon.visible := True
 			notify_icon.text := "Eiffel Metadata Consumer Tool"
 			notify_icon.icon := l_icon
 			notify_icon.visible := True

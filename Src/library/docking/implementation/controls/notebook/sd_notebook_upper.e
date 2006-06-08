@@ -39,7 +39,7 @@ feature {NONE} -- Initlization
 			prune_vertical_box (internal_border_for_tab_area)
 			start
 			put_left (internal_border_for_tab_area)
-			internal_border_for_tab_area.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
+			internal_border_for_tab_area.set_border_style ({SD_ENUMERATION}.bottom)
 			internal_border_for_tab_area.wipe_out
 			internal_border_for_tab_area.extend (internal_top_box)
 			internal_top_box.extend (internal_tab_box)

@@ -63,16 +63,16 @@ feature -- Redefine
 			end
 			if not Result then
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
 					Result := True
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
 					Result := True
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
 					Result := True
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
 					l_tab_zone ?= internal_zone

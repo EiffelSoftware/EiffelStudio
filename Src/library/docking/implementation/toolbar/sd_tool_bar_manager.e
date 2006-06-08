@@ -122,7 +122,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 	set_top (a_content: SD_TOOL_BAR_CONTENT; a_direction: INTEGER) is
 			-- Set `a_content' dock at `a_direction'
 		require
-			direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+			direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 			not_void: a_content /= Void
 			main_window_not_has:
 		local
@@ -150,18 +150,18 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 	tool_bar_container (a_direction: INTEGER): EV_BOX is
 			-- Tool bar container base on `a_direction'.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			inspect
 				a_direction
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				Result := internal_docking_manager.tool_bar_container.top
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				Result := internal_docking_manager.tool_bar_container.bottom
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				Result := internal_docking_manager.tool_bar_container.left
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				Result := internal_docking_manager.tool_bar_container.right
 			end
 		ensure
@@ -176,17 +176,17 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 			has: contents.has (a_tool_bar.content)
 		do
 			if internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_DOCKING_MANAGER}.dock_top
+				Result := {SD_ENUMERATION}.top
 			elseif internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_DOCKING_MANAGER}.dock_bottom
+				Result := {SD_ENUMERATION}.bottom
 			elseif internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_DOCKING_MANAGER}.dock_left
+				Result := {SD_ENUMERATION}.left
 			elseif internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar.tool_bar) then
-				Result := {SD_DOCKING_MANAGER}.dock_right
+				Result := {SD_ENUMERATION}.right
 			end
 		ensure
-			vaild: Result = {SD_DOCKING_MANAGER}.dock_top or Result = {SD_DOCKING_MANAGER}.dock_bottom
-				or Result = {SD_DOCKING_MANAGER}.dock_left or Result = {SD_DOCKING_MANAGER}.dock_right
+			vaild: Result = {SD_ENUMERATION}.top or Result = {SD_ENUMERATION}.bottom
+				or Result = {SD_ENUMERATION}.left or Result = {SD_ENUMERATION}.right
 		end
 
 	floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
@@ -241,17 +241,17 @@ feature {NONE} -- Implementation
 			l_tool_bar_container: SD_TOOL_BAR_CONTAINER
 		do
 			if a_resize_horizontal then
-				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_top)
+				l_container := tool_bar_container ({SD_ENUMERATION}.top)
 				notify_each_row (l_container, a_width)
-				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_bottom)
+				l_container := tool_bar_container ({SD_ENUMERATION}.bottom)
 				notify_each_row (l_container, a_width)
 			else
 				l_tool_bar_container := internal_docking_manager.tool_bar_container
 				l_vertical_height := a_height - l_tool_bar_container.top.height - l_tool_bar_container.bottom.height
 				if l_vertical_height >= 0  then
-					l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_left)
+					l_container := tool_bar_container ({SD_ENUMERATION}.left)
 					notify_each_row (l_container, l_vertical_height)
-					l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_right)
+					l_container := tool_bar_container ({SD_ENUMERATION}.right)
 					notify_each_row (l_container, l_vertical_height)
 				end
 			end

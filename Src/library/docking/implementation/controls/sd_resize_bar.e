@@ -20,14 +20,14 @@ feature -- Access
 			-- Creation method.
 		require
 			a_source_not_void: a_source /= Void
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_background_color: EV_GRID
 		do
 			create internal_shared
 			default_create
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				set_minimum_size (internal_shared.resize_bar_width_height, internal_shared.resize_bar_width_height)
 			else
 				set_minimum_size (internal_shared.resize_bar_width_height, internal_shared.resize_bar_width_height)
@@ -38,9 +38,9 @@ feature -- Access
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_press_actions.extend (agent on_pointer_button_press)
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				set_pointer_style (default_pixmaps.sizewe_cursor)
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_bottom or a_direction = {SD_DOCKING_MANAGER}.dock_top then
+			elseif a_direction = {SD_ENUMERATION}.bottom or a_direction = {SD_ENUMERATION}.top then
 				set_pointer_style (default_pixmaps.sizens_cursor)
 			end
 
@@ -67,7 +67,7 @@ feature {NONE} -- Agents
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
 					internal_shared.feedback.draw_line_area (screen_x, screen_y, width, height)
-					if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right  then
+					if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right  then
 						last_screen_pointer_position := screen_x
 					else
 						last_screen_pointer_position := screen_y
@@ -85,7 +85,7 @@ feature {NONE} -- Agents
 			-- Handle expose action.
 		do
 			clear
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				draw_segment (0, 0, 0, height)
 				set_foreground_color ((create {EV_STOCK_COLORS}).black)
@@ -106,7 +106,7 @@ feature {NONE} -- Agents
 
 				clear_graph_last_drawn
 
-				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 					if a_screen_x > screen_boundary.left and a_screen_x < screen_boundary.right then
 						last_screen_pointer_position := a_screen_x
 					elseif a_screen_x <= screen_boundary.left then
@@ -137,13 +137,13 @@ feature {NONE} -- Agents
 				resizing := False
 				disable_capture
 
-				if direction = {SD_DOCKING_MANAGER}.dock_left then
+				if direction = {SD_ENUMERATION}.left then
 					resize_source.end_resize_operation (Current, last_screen_pointer_position  - old_screen_x)
-				elseif direction = {SD_DOCKING_MANAGER}.dock_right then
+				elseif direction = {SD_ENUMERATION}.right then
 					resize_source.end_resize_operation (Current, old_screen_x - last_screen_pointer_position)
-				elseif direction = {SD_DOCKING_MANAGER}.dock_top then
+				elseif direction = {SD_ENUMERATION}.top then
 					resize_source.end_resize_operation (Current, last_screen_pointer_position - old_screen_y)
-				elseif direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				elseif direction = {SD_ENUMERATION}.bottom then
 					resize_source.end_resize_operation (Current, old_screen_y - last_screen_pointer_position)
 				end
 			end
@@ -159,7 +159,7 @@ feature {NONE}  -- Implemenetation
 	clear_graph_last_drawn is
 			-- Clear the graph last drawn on the screen.
 		do
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				internal_shared.feedback.draw_line_area (last_screen_pointer_position, screen_y, width, height)
 			else
 				internal_shared.feedback.draw_line_area (screen_x, last_screen_pointer_position, width, height)

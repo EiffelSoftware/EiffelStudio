@@ -36,9 +36,9 @@ feature -- Factory method
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
 			-- Redefine
 		do
-			if a_zone.type = {SD_SHARED}.type_tool then
+			if a_zone.type = {SD_ENUMERATION}.tool then
 				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
-			elseif a_zone.type = {SD_SHARED}.type_editor then
+			elseif a_zone.type = {SD_ENUMERATION}.editor then
 				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (docker_mediator, a_docking_manager)
 			end
 		end

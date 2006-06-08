@@ -25,13 +25,13 @@ feature {NONE} -- Initlization
 	make (a_direction: INTEGER; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method. If not vertical style, it'll be horizontal style.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (True)
 			else
 				init (False)
@@ -389,13 +389,13 @@ feature {NONE} -- Implementation functions.
 			end
 			inspect
 				internal_direction
-			when {SD_DOCKING_MANAGER}.dock_top then
+			when {SD_ENUMERATION}.top then
 				a_tab.set_draw_separator_right (False)
-			when {SD_DOCKING_MANAGER}.dock_bottom then
+			when {SD_ENUMERATION}.bottom then
 				a_tab.set_draw_separator_right (False)
-			when {SD_DOCKING_MANAGER}.dock_left then
+			when {SD_ENUMERATION}.left then
 				a_tab.set_draw_separator_bottom (False)
-			when {SD_DOCKING_MANAGER}.dock_right then
+			when {SD_ENUMERATION}.right then
 				a_tab.set_draw_separator_bottom (False)
 			end
 			if a_last then

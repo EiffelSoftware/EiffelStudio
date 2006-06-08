@@ -59,7 +59,7 @@ feature -- Propertites which record row infomations.
 
 	container_direction: INTEGER
 			-- Tool bar container direction.
-			-- One value of {SD_DOCKING_MANAGER}.dock_top, dock_bottom, dock_left, dock_right.
+			-- One value of {SD_ENUMERATION}.top, dock_bottom, dock_left, dock_right.
 
 	set_container_direction (a_direction: INTEGER) is
 			-- Set `container_direction'
@@ -177,8 +177,8 @@ feature -- Query
 	is_direction_valid (a_direction: INTEGER): BOOLEAN is
 			-- If `a_direction' valid?
 		do
-			Result :=  a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			Result :=  a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		end
 
 	is_vertical: BOOLEAN is
@@ -186,7 +186,7 @@ feature -- Query
 		require
 			valid: is_direction_valid (container_direction)
 		do
-			Result := container_direction = {SD_DOCKING_MANAGER}.dock_left or container_direction = {SD_DOCKING_MANAGER}.dock_right
+			Result := container_direction = {SD_ENUMERATION}.left or container_direction = {SD_ENUMERATION}.right
 		end
 
 feature {NONE} -- Implementation

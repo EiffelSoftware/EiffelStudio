@@ -1183,6 +1183,7 @@ feature -- Element change
 			-- Change file name to `new_name'
 		require
 			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
 			file_exists: exists
 		local
 			l_info: FILE_INFO

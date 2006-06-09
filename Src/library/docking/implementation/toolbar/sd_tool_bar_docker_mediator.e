@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			internal_left_hot_zone.start_drag
 			internal_right_hot_zone.start_drag
 
-			internal_dockable := True
 			init_key_actions
 
 			create cancel_actions
@@ -86,24 +85,20 @@ feature -- Command
 			screen_y := a_screen_y
 
 			if not is_resizing_mode then
-				if internal_dockable then
-					l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
+				if internal_dockable  then
+					-- Vertical easy drag area is different from horizontal easy drag area.
+					-- Otherwise, horizontal tool bar row hot area will cover vertical easy drag area, so there is no vertical easy drag area.
+					if not is_vertical_easy_drag_area (a_screen_y) then
+						l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
+					end
 				end
 				if not l_in_four_side then
 					if not caller.is_floating then
-						docking_manager.command.lock_update (Void, True)
-						caller.assistant.record_docking_state
-
-						-- On windows, following disable/enable capture lines is not needed,
-						-- But on Gtk, we need first disable_capture then enable capture,
-						-- because it's off-screen widget, it'll not have capture when it show again.
-						caller.tool_bar.disable_capture
-						caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
-						caller.tool_bar.enable_capture
-
-						docking_manager.command.unlock_update
+						float_tool_bar_zone (a_screen_x, a_screen_y)
 					end
-					caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
+					if caller.is_floating then
+						caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
+					end
 				end
 			else
 				if not caller.row.is_vertical then
@@ -167,7 +162,11 @@ feature {NONE} -- Implementation functions
 			l_changed: BOOLEAN
 		do
 			if internal_left_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+				-- For left vertical bar, we should first check if it's in horizontal easy drag area.
+				-- Otherwise, user can't drag to the top of the horizontal tool bar area easily.
+				if not is_horizontal_easy_drag_area (a_screen_x) then
+					l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+				end
 				Result := True
 			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
 				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
@@ -179,7 +178,7 @@ feature {NONE} -- Implementation functions
 				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			end
-			if Result then
+			if Result and then caller.row /= Void then
 				if not caller.row.is_vertical then
 					caller.row.on_pointer_motion (a_screen_x)
 				else
@@ -196,13 +195,7 @@ feature {NONE} -- Implementation functions
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_ctrl then
-				if internal_dockable /= False then
-					debug ("docking")
-						print ("%N SD_TOOL_BAR_DOCKER_MEDIATOR on_key_press")
-					end
-					internal_dockable := False
-					on_pointer_motion (internal_last_screen_x, internal_last_screen_y)
-				end
+				on_pointer_motion (internal_last_screen_x, internal_last_screen_y)
 			when {EV_KEY_CONSTANTS}.key_escape then
 				cancel_tracing_pointer
 			else
@@ -216,10 +209,6 @@ feature {NONE} -- Implementation functions
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_ctrl then
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_DOCKER_MEDIATOR on_key_release")
-				end
-				internal_dockable := True
 				on_pointer_motion (internal_last_screen_x, internal_last_screen_y)
 			else
 
@@ -288,6 +277,83 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
+	float_tool_bar_zone (a_screen_x, a_screen_y: INTEGER) is
+			-- Float tool bar zone base on `a_screen_x' and `a_screen_y' if possible.
+		require
+			not_floating: not caller.is_floating
+		local
+			l_should_float: BOOLEAN
+		do
+			-- We should detect if user dragging at the beginning of a tool bar row/column
+			-- This is let user easily drag a tool bar to the begnning of a row/column
+			l_should_float := not is_easy_drag_area (a_screen_x, a_screen_y)
+
+			if l_should_float then
+				docking_manager.command.lock_update (Void, True)
+				caller.assistant.record_docking_state
+
+				-- On windows, following disable/enable capture lines is not needed,
+				-- But on Gtk, we need first disable_capture then enable capture,
+				-- because it's off-screen widget, it'll not have capture when it show again.
+				caller.tool_bar.disable_capture
+				caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
+				caller.tool_bar.enable_capture
+
+				docking_manager.command.unlock_update
+			else
+				caller.row.set_item_position_relative (caller.tool_bar, 0)
+				caller.row.reposition
+			end
+		end
+
+	is_easy_drag_area (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If `a_screen_x', `a_screen_y' in easy drag area?
+			-- We made a area sepcial at the beginning of tool bar row, in this area
+			-- user can easily drag a tool bar to the begining of tool bar row.
+			-- Otherwise, user must drag a tool bar very carefully.
+		require
+			not_floating: not caller.is_floating
+		do
+			if not caller.is_vertical then
+				Result := is_horizontal_easy_drag_area (a_screen_x)
+			else
+				Result := is_vertical_easy_drag_area (a_screen_y)
+			end
+		end
+
+	is_horizontal_easy_drag_area (a_screen_x: INTEGER): BOOLEAN is
+			-- If `a_screen_x' in caller's horizontal easy drag area?
+		local
+			l_top_container: EV_CONTAINER
+		do
+			if not caller.is_floating and not caller.is_vertical then
+					l_top_container := docking_manager.top_container
+				if a_screen_x >= l_top_container.screen_x - easy_drag_offset and
+					a_screen_x <= l_top_container.screen_x + easy_drag_offset then
+					Result := True
+				else
+					Result := False
+				end
+			end
+
+		end
+
+	is_vertical_easy_drag_area (a_screen_y: INTEGER): BOOLEAN is
+			-- If `a_screen_y' in caller's vertical easy drag area?
+		local
+			l_main_container: SD_MAIN_CONTAINER
+		do
+			l_main_container := docking_manager.main_container
+			if not caller.is_floating and caller.is_vertical then
+				if a_screen_y - offset_y >= l_main_container.left_bar.screen_y - easy_drag_offset and
+					a_screen_y - offset_y <= l_main_container.left_bar.screen_y then
+					Result := True
+				else
+					Result := False
+				end
+			end
+		end
+
 feature {NONE} -- Implementation attributes.
 
 	orignal_row: SD_TOOL_BAR_ROW
@@ -299,11 +365,20 @@ feature {NONE} -- Implementation attributes.
 	motion_count_max: INTEGER is 20
 			-- Max number start to change to resizing mode.
 
+	easy_drag_offset: INTEGER is 50
+			-- Left user can easily drag to the begin of a tool bar row.
+
 	motion_count: INTEGER
 			-- How many times `on_pointer_motion' is called?
 
-	internal_dockable: BOOLEAN
+	internal_dockable: BOOLEAN is
 			-- If `caller' dockable?
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			Result := not l_env.application.ctrl_pressed
+		end
 
 	internal_key_press_actions, internal_key_release_actions: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET, EV_KEY]]
 			-- Golbal key press/release action, so we can prune it after dragging.

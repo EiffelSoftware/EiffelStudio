@@ -28,16 +28,16 @@ feature -- Querys
 	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL is
 			-- Auto hide panel at `a_direction'.
 		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
-			if a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+			if a_direction = {SD_ENUMERATION}.bottom then
 				Result := internal_docking_manager.internal_auto_hide_panel_bottom
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_top then
+			elseif a_direction = {SD_ENUMERATION}.top then
 				Result := internal_docking_manager.internal_auto_hide_panel_top
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left then
+			elseif a_direction = {SD_ENUMERATION}.left then
 				Result := internal_docking_manager.internal_auto_hide_panel_left
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			elseif a_direction = {SD_ENUMERATION}.right then
 				Result := internal_docking_manager.internal_auto_hide_panel_right
 			end
 		ensure
@@ -50,6 +50,27 @@ feature -- Querys
 			a_title_not_void: a_unique_title /= Void
 		do
 			Result := content_by_title_for_restore (a_unique_title)
+		ensure
+			not_void: Result /= Void
+		end
+
+	contents_editors: ARRAYED_LIST [SD_CONTENT] is
+			-- All editor type contents
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				create Result.make (5)
+				l_contents := internal_docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					Result.extend (l_contents.item)
+				end
+				l_contents.forth
+			end
 		ensure
 			not_void: Result /= Void
 		end

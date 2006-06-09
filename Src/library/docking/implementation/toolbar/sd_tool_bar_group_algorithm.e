@@ -40,6 +40,7 @@ feature -- Command
 			not_void: a_items_width /= Void
 		do
 			item_width := a_items_width
+			calculate_all_best_grouping
 		ensure
 			set: item_width = a_items_width
 		end
@@ -49,12 +50,23 @@ feature -- Query
 	best_grouping: SD_TOOL_BAR_GROUP_INFO is
 			-- Best grouping. Integer is the group index.
 		do
-			calculate_possible_groups
-			Result := minmum_space_groups
-			Result.set_items_width (item_width)
+			Result := best_grouping_when (group_count)
 		ensure
 			not_void: Result /= Void
-			valid: Result.count = group_count
+			valid: Result.group_count = group_count
+			right_order: is_right_order (Result)
+			right_count: is_right_count (Result)
+		end
+
+	best_grouping_when (a_group_count: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+			--
+		require
+			valid: a_group_count >= 1 and a_group_count <= max_group_count
+		do
+			Result := all_best_grouping.item (a_group_count)
+		ensure
+			not_void: Result /= Void
+			valid: Result.group_count = a_group_count
 			right_order: is_right_order (Result)
 			right_count: is_right_count (Result)
 		end
@@ -64,11 +76,12 @@ feature -- Query
 		require
 			not_void: a_grouping /= Void
 		local
-			l_one_group: ARRAYED_LIST [INTEGER]
+			l_one_group: DS_HASH_TABLE [INTEGER, INTEGER]
 			l_check_index: INTEGER
 		do
 			Result := True
-			l_check_index := a_grouping.i_th (1).first
+			a_grouping.i_th (1).start
+			l_check_index := a_grouping.i_th (1).key_for_iteration
 			from
 				a_grouping.start
 			until
@@ -80,7 +93,7 @@ feature -- Query
 				until
 					l_one_group.after or not Result
 				loop
-					if not (l_check_index = l_one_group.item) then
+					if not (l_check_index = l_one_group.key_for_iteration) then
 						Result := False
 					end
 					l_check_index := l_check_index + 1
@@ -119,8 +132,7 @@ feature -- Query
 		require
 			valid: a_group_count > 0 and a_group_count <= max_group_count
 		do
-			group_count := a_group_count
-			Result := maximum_row_width (best_grouping)
+			Result := maximum_row_width (best_grouping_when (a_group_count))
 		end
 
 	maximum_group_width_index (a_group_count: INTEGER): INTEGER is
@@ -130,8 +142,7 @@ feature -- Query
 		local
 			l_fack: INTEGER
 		do
-			group_count := a_group_count
-			l_fack := maximum_row_width (best_grouping)
+			l_fack := maximum_row_width (best_grouping_when (a_group_count))
 			Result := internal_maximum_group_index
 		ensure
 			valid: Result >0 and Result <= max_group_count
@@ -142,128 +153,115 @@ feature -- Query
 
 feature {NONE} -- Implementation functions
 
-	calculate_possible_groups is
-			-- Calculate all possible item_with_width.
+	calculate_all_best_grouping is
+			--
 		local
-			l_next_possible_group: like one_possible_group
+			l_group_count: INTEGER
+			l_last_best_grouping: SD_TOOL_BAR_GROUP_INFO
 		do
-			create all_possible_groups.make (1)
-			-- The start condition
-			l_next_possible_group := prepare_start_condition (1, 1)
-			check is_count_right: is_right_count (l_next_possible_group) end
-			all_possible_groups.extend (l_next_possible_group)
-
 			from
-			until
-				l_next_possible_group = Void
-			loop
-				l_next_possible_group := next_possible_group (l_next_possible_group.deep_twin)
-				if l_next_possible_group /= Void then
-					check is_count_right: is_right_count (l_next_possible_group) end
-					all_possible_groups.extend (l_next_possible_group)
-				end
-			end
+				create all_best_grouping.make (max_group_count)
+				l_group_count := max_group_count
 
+			until
+				l_group_count < 1
+			loop
+-- FIXIT: we should do something like following.
+--				if l_group_count < item_width.count then
+--					-- Calculate one step before
+--					calculate_one_step_before
+--				end
+				if l_group_count = max_group_count then
+					l_last_best_grouping := start_condition
+				else
+					l_last_best_grouping := next_best_grouping (l_last_best_grouping)
+				end
+
+				check count_right: l_last_best_grouping.group_count = l_group_count end
+				all_best_grouping.force_last (l_last_best_grouping, l_group_count)
+
+				l_group_count := l_group_count - 1
+			end
 		end
 
-	prepare_start_condition (a_group_start_index: INTEGER; a_item_start_index: INTEGER): like one_possible_group is
-			-- Prepare start condition (from a_group_start_index to `group_count')
-			-- 1 to (group_count - 1) all only have one index. The rest indexs all allocate at last group.
-		require
-			valid: a_group_start_index >= 1 and a_group_start_index <= group_count
-			valid: a_item_start_index >= 1 and a_item_start_index <= item_width.count
+	next_best_grouping (a_previous_info: SD_TOOL_BAR_GROUP_INFO): SD_TOOL_BAR_GROUP_INFO is
+			-- Next best grouping info of `a_previous_infos'.
 		local
-			l_one_group: ARRAYED_LIST [INTEGER]
-			l_item_index: INTEGER
-			l_group_count: INTEGER
+			l_group_index: INTEGER
+			l_group_item_index: INTEGER
 		do
-			from
-				l_item_index := a_item_start_index
-				create Result.make
-				l_group_count := a_group_start_index
-			until
-				l_group_count > group_count
-			loop
-				create l_one_group.make (1)
-				l_one_group.extend (l_item_index)
-				if l_group_count = group_count then
-					-- Last group, extend rest indexs.
-					from
-						l_item_index := l_item_index + 1
-					until
-						l_item_index > item_width.count
-					loop
-						l_one_group.extend (l_item_index)
-						l_item_index := l_item_index + 1
-					end
-				else
-					l_item_index := l_item_index + 1
-				end
-				Result.extend (l_one_group, True)
+			Result := a_previous_info.deep_twin
+			l_group_index := minimum_two_group_index (a_previous_info)
+			l_group_item_index := Result.group_item_start_index (l_group_index)
+			Result.go_i_th (l_group_item_index + Result.group_item_count (l_group_index))
+			check is_new_group: Result.is_new_group end
+			Result.replace (Result.item, False)
+		ensure
+			not_same: Result /= a_previous_info
+			group_count_right: Result.group_count = a_previous_info.group_count - 1
+		end
 
-				l_group_count := l_group_count + 1
+	all_best_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
+			-- 2nd INTEGER parameter is group count.
+
+	start_condition: SD_TOOL_BAR_GROUP_INFO is
+			-- Prepare start condition
+		local
+			l_count: INTEGER
+			l_temp: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_item_count: INTEGER
+		do
+			create Result.make
+			from
+				l_item_count := 1
+				l_count := item_width.lower
+			until
+				l_count > item_width.upper
+			loop
+				create l_temp.make (1)
+				l_temp.force_last (item_width.item (l_count), l_item_count)
+				if l_item_count = 1 then
+					Result.extend (l_temp, False)
+				else
+					Result.extend (l_temp, True)
+				end
+				l_count := l_count + 1
+				l_item_count := l_item_count + 1
 			end
 		ensure
 			not_void: Result /= Void
-			count_right: Result.count = group_count - a_group_start_index + 1
+			valid: Result.count = item_width.count
 		end
 
-	next_possible_group (a_current_group: like one_possible_group): like one_possible_group is
-			-- Next possible group, if no possible group, Result is Void.
-			-- End codition is:
-			-- All the item_with_width after current index only have one index.
+	minimum_two_group_index (a_condition: SD_TOOL_BAR_GROUP_INFO): INTEGER is
+			-- Which two items should be together. Result is first index, second item index is Result + 1.
+			-- For example:
+			-- After calculation:  	  11  2	  2	  2	  2   10
+			-- Before calculation:	10	1	1	1	1	1	9
+			-- Then Result is 2, bacause item 2 and item 3 should be together.
 		require
-			not_void: a_current_group /= Void
+			not_void: a_condition /= Void
+			valid: a_condition.group_count > 1
 		local
-			l_temp_group: ARRAYED_LIST [INTEGER]
-			l_group_before: ARRAYED_LIST [INTEGER]
-			l_part_result: like one_possible_group
+			l_minimum_two_width: INTEGER
+			l_temp_two_width: INTEGER
+			l_group_count: INTEGER
 		do
-			-- Find last group which have more than one index.
 			from
-				a_current_group.finish
-				-- Loop in back order
+				l_group_count := 1
+				l_minimum_two_width := {INTEGER}.max_value
 			until
-				a_current_group.before or Result /= Void
+				l_group_count >= a_condition.group_count
 			loop
-				l_temp_group := a_current_group.item
-				check at_least_one: l_temp_group.count >= 1 end
-				if l_temp_group.count > 1 and then a_current_group.index /= 1 then
-					-- Move first index to the last position of group before.
-					l_group_before := a_current_group.i_th (a_current_group.index - 1)
-					l_group_before.extend (l_temp_group.first)
-
-					-- Reset item_with_width from l_index to start condition.
-					l_part_result := prepare_start_condition (a_current_group.index, l_temp_group.first + 1)
-					-- Replace item with start condition order.
-					replace_array_items (a_current_group, l_part_result, a_current_group.index)
-					Result := a_current_group
+				l_temp_two_width := a_condition.group_width (l_group_count) + a_condition.group_width (l_group_count + 1)
+				if l_temp_two_width < l_minimum_two_width then
+					l_minimum_two_width := l_temp_two_width
+					Result := l_group_count
 				end
-				a_current_group.back
-			end
-		end
-
-	replace_array_items (a_be_replaced: like one_possible_group; a_array: like one_possible_group; a_start_index: INTEGER) is
-			-- Replace a_be_replaced from a_start_index with a_array.
-		require
-			not_void: a_be_replaced /= Void
-			not_void: a_array /= Void
-			valid: a_be_replaced.count - a_start_index + 1 = a_array.count
-		local
-			l_count: INTEGER
-		do
-			from
-				l_count := 1
-				a_be_replaced.go_i_th (a_start_index)
-			until
-				a_be_replaced.after
-			loop
-				a_be_replaced.replace (a_array.i_th (l_count), True)
-				a_be_replaced.forth
-				l_count := l_count + 1
+				l_group_count := l_group_count + 1
 			end
 		ensure
-
+			valid: 0 < Result and Result < a_condition.group_count
 		end
 
 	maximum_row_width (a_group: like one_possible_group): INTEGER is
@@ -272,7 +270,7 @@ feature {NONE} -- Implementation functions
 			not_void: a_group /= Void
 			valid: a_group.count = group_count
 		local
-			l_one_group: ARRAYED_LIST [INTEGER]
+			l_one_group: DS_HASH_TABLE [INTEGER, INTEGER]
 			l_one_group_width: INTEGER
 		do
 			from
@@ -293,64 +291,11 @@ feature {NONE} -- Implementation functions
 		ensure
 			valid: Result > 0
 		end
-		
+
 	internal_maximum_group_index: INTEGER
-			-- When use `maximum_row_width', store maximum group index here.
+			-- Maximum width group index.
 
-	minmum_space_groups: like one_possible_group is
-			-- Compare groups, first one is minmum space occupied.
-		require
-			not_void: all_possible_groups /= Void
-		local
-			l_temp_result_index: INTEGER
-			l_minmum_total_redundance_space: INTEGER
-			l_total_redundance_space: INTEGER
-			l_one_possible: like one_possible_group
-		do
-			from
-				l_minmum_total_redundance_space := l_minmum_total_redundance_space.max_value
-				all_possible_groups.start
-			until
-				all_possible_groups.after
- 			loop
- 				l_one_possible := all_possible_groups.item
-
-				l_total_redundance_space := total_redundance_space (l_one_possible)
-				if l_minmum_total_redundance_space > l_total_redundance_space then
-					l_temp_result_index := all_possible_groups.index
-					l_minmum_total_redundance_space := l_total_redundance_space
-				end
-				all_possible_groups.forth
-			end
-
-			Result := all_possible_groups.i_th (l_temp_result_index)
-		ensure
-			not_void: Result /= Void
-		end
-
-	total_redundance_space (a_group: like one_possible_group): INTEGER is
-			-- Total redundance of one group
-		require
-			not_void: a_group /= Void
-			valid: a_group.count = group_count
-		local
-			l_maximum_space: INTEGER
-		do
-			l_maximum_space := maximum_row_width (a_group)
-			from
-				a_group.start
-			until
-				a_group.after
-			loop
-				check maximum_space_right: l_maximum_space >= one_row_width (a_group.item) end
-				Result := Result + (l_maximum_space - one_row_width (a_group.item))
-				a_group.forth
-			end
-		ensure
-			non_negative: Result >= 0
-		end
-
-	one_row_width (a_row: ARRAYED_LIST [INTEGER]): INTEGER is
+	one_row_width (a_row: DS_HASH_TABLE [INTEGER, INTEGER]): INTEGER is
 			-- Group width of a_row.
 		require
 			not_void: a_row /= Void
@@ -360,7 +305,7 @@ feature {NONE} -- Implementation functions
 			until
 				a_row.after
 			loop
-				Result := item_width.item (a_row.item) + Result
+				Result := a_row.value (a_row.key_for_iteration) + Result
 				a_row.forth
 			end
 		ensure
@@ -375,9 +320,6 @@ feature {NONE} -- Implementation attributes
 			only_used_for_type_anchor: False
 		do
 		end
-
-	all_possible_groups: ARRAYED_LIST [like one_possible_group]
-			-- All possible item_with_width.
 
 invariant
 	valid: group_count >= 1 and group_count <= max_group_count

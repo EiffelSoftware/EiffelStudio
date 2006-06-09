@@ -71,7 +71,7 @@ feature -- Query
 		local
 			l_group_count: INTEGER
 			l_group_info: SD_TOOL_BAR_GROUP_INFO
-			l_one_group: ARRAYED_LIST [INTEGER]
+			l_one_group: DS_HASH_TABLE [INTEGER, INTEGER]
 			l_stop: BOOLEAN
 		do
 			from
@@ -94,10 +94,10 @@ feature -- Query
 						until
 							l_one_group.after
 						loop
-							if l_one_group.index /= l_one_group.count then
-								internal_items.i_th (l_one_group.item).set_wrap (False)
+							if not l_one_group.is_last then
+								internal_items.i_th (l_one_group.key_for_iteration).set_wrap (False)
 							else
-								internal_items.i_th (l_one_group.item).set_wrap (True)
+								internal_items.i_th (l_one_group.key_for_iteration).set_wrap (True)
 							end
 							l_one_group.forth
 						end

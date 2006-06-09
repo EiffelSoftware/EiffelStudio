@@ -265,6 +265,7 @@ feature {NONE}  -- Implementation
 					locked_windows.last.unlock_update
 				end
 				locked_windows.remove (0)
+				remove_empty_split_area
 				check no_windows_in_locked_window: locked_windows.count = 0 end
 			else
 				if locked_windows.has (lock_call_time) then
@@ -277,7 +278,6 @@ feature {NONE}  -- Implementation
 					end
 				end
 			end
-			remove_empty_split_area
 		end
 
 	locked_windows: DS_HASH_TABLE [EV_WINDOW, INTEGER]

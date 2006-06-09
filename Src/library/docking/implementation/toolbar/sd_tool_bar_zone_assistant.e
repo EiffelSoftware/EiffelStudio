@@ -144,33 +144,38 @@ feature -- Command
 			l_shared: SD_SHARED
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			if zone.has (zone.tail_indicator) then
-				create l_shared
-				if internal_hidden_items.count > 0 then
-					if not zone.is_vertical then
-						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
+			if zone.is_floating then
+				zone.prune (zone.tail_indicator)
+			else
+				if zone.has (zone.tail_indicator) then
+					create l_shared
+					if internal_hidden_items.count > 0 then
+						if not zone.is_vertical then
+							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
+						else
+							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
+						end
 					else
-						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
+						if not zone.is_vertical then
+							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
+						else
+							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
+						end
 					end
-				else
-					if not zone.is_vertical then
-						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
-					else
-						zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
+					l_items := zone.tool_bar.items
+					if l_items.last  /= zone.tail_indicator then
+						zone.tool_bar.prune (zone.tail_indicator)
+--						l_items.prune_all (zone.tail_indicator)
+						zone.tool_bar.extend (zone.tail_indicator)
+--						l_items.extend (zone.tail_indicator)
 					end
-				end
---				l_items := tool_bar.internal_items
-				l_items := zone.tool_bar.items
-				if l_items.last /= zone.tail_indicator then
-					l_items.prune_all (zone.tail_indicator)
-					l_items.extend (zone.tail_indicator)
-				end
-				if l_items.count > 1 then
-					if zone.is_vertical and not l_items.i_th (l_items.count - 1).is_wrap then
-						l_items.i_th (l_items.count - 1).set_wrap (True)
-					end
-					if not zone.is_vertical and l_items.i_th (l_items.count - 1).is_wrap then
-						l_items.i_th (l_items.count - 1).set_wrap (False)
+					if l_items.count > 1 then
+						if zone.is_vertical and not l_items.i_th (l_items.count - 1).is_wrap then
+							l_items.i_th (l_items.count - 1).set_wrap (True)
+						end
+						if not zone.is_vertical and l_items.i_th (l_items.count - 1).is_wrap then
+							l_items.i_th (l_items.count - 1).set_wrap (False)
+						end
 					end
 				end
 			end
@@ -234,10 +239,10 @@ feature -- Command
 			if l_container.count < last_state.container_row_number or last_state.is_only_zone then
 				-- The row it missing, we should create a new one.
 				-- Or the row last time is in the only one in row.
-				if last_state.container_direction = {SD_DOCKING_MANAGER}.dock_top or last_state.container_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				if last_state.container_direction = {SD_ENUMERATION}.top or last_state.container_direction = {SD_ENUMERATION}.bottom then
 					create l_row.make (False)
 				else
-					check direction_valid: last_state.container_direction = {SD_DOCKING_MANAGER}.dock_left or last_state.container_direction = {SD_DOCKING_MANAGER}.dock_right end
+					check direction_valid: last_state.container_direction = {SD_ENUMERATION}.left or last_state.container_direction = {SD_ENUMERATION}.right end
 					create l_row.make (True)
 				end
 				if l_container.count > last_state.container_row_number then
@@ -344,7 +349,15 @@ feature -- Command
 				l_datas.forth
 			end
 			zone.wipe_out
+			l_content.clear_widget_items_parents
 			zone.extend (l_content)
+			update_indicator
+			if zone.row /= Void then
+				zone.docking_manager.command.resize (True)
+			end
+			if zone.is_floating then
+				zone.floating_tool_bar.regroup_after_customize
+			end
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Special setting.

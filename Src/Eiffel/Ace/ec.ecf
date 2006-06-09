@@ -257,6 +257,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
+		<variable name="batch_framework" value="false"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf"/>
 		<library name="event" location="$ISE_LIBRARY\library\event\event.ecf">
@@ -264,6 +265,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
+		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
@@ -281,10 +283,6 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
-
-		<variable name="batch_framework" value="false"/>
-		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" />
-
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\" recursive="true"/>
 		<cluster name="cli_debugger" location="$EIFFEL_SRC\Eiffel\library\cli_debugger\" recursive="true">
 			<condition>

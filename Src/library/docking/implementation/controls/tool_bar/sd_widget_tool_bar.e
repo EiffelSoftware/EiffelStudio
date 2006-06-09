@@ -22,6 +22,7 @@ inherit
 			set_row_height,
 			row_height,
 			extend,
+			force,
 			prune,
 			compute_minmum_size,
 			wipe_out,
@@ -59,7 +60,8 @@ inherit
 			extend as extend_fixed,
 			wipe_out as wipe_out_fixed,
 			has as has_fixed,
-			prune as prune_fixed
+			prune as prune_fixed,
+			force as force_fixed
 		export
 			{NONE} all
 			{ANY} is_destroyed
@@ -118,6 +120,19 @@ feature -- Command
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.extend (a_item)
+			l_widget_item ?= a_item
+			if l_widget_item /= Void then
+				extend_fixed (l_widget_item.widget)
+				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
+			end
+		end
+
+	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER) is
+			-- Extend `a_item' at `a_index'
+		local
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+		do
+			tool_bar.force (a_item, a_index)
 			l_widget_item ?= a_item
 			if l_widget_item /= Void then
 				extend_fixed (l_widget_item.widget)

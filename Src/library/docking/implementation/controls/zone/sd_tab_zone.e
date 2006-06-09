@@ -273,7 +273,7 @@ feature {NONE} -- Agents for user
 	on_stick is
 			-- Handle user click button.
 		do
-			content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
+			content.state.stick ({SD_ENUMERATION}.left)
 		ensure
 			state_changed:
 		end

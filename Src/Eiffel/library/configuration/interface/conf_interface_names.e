@@ -9,8 +9,22 @@ class
 inherit
 	CONF_CONSTANTS
 
+feature {NONE} -- Configuration
+
+	configuration_title: STRING is "System configuration"
+
 feature {NONE} -- Section names
 
+	section_system: STRING is "System"
+	section_target: STRING is "Target"
+	section_assertions: STRING is "Assertions"
+	section_groups: STRING is "Groups"
+	section_warning: STRING is "Warning"
+	section_debug: STRING is "Debug"
+	section_external: STRING is "Externals"
+	section_tasks: STRING is "Tasks"
+	section_variables: STRING is "Variables"
+	section_mapping: STRING is "Type mapping"
 	section_general: STRING is "General"
 	section_dotnet: STRING is ".NET"
 	section_advanced: STRING is "Advanced"
@@ -195,7 +209,7 @@ feature {NONE} -- Target names and descriptions
 	cluster_dependencies_description: STRING is "Groups this cluster depends on."
 	cluster_visible_name: STRING is "Visible classes"
 	cluster_visible_description: STRING is "Classes visible for external code."
-	cluster_mapping_name: STRING is "Mapping"
+	cluster_mapping_name: STRING is "Type Mapping"
 	cluster_mapping_description: STRING is "Special type mappings."
 
 	assembly_name_name: STRING is "Assembly name"

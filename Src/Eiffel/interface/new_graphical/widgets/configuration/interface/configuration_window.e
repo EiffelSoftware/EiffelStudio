@@ -106,7 +106,7 @@ feature {NONE}-- Initialization
 		do
 				-- window
 			Precursor {EV_DIALOG}
-			set_title ("System configuration")
+			set_title (configuration_title)
 			set_width (initial_window_width)
 			set_height (initial_window_height)
 
@@ -761,42 +761,42 @@ feature {NONE} -- Implementation
 			l_item, l_subitem: EV_TREE_ITEM
 		do
 			create section_tree
-			create l_item.make_with_text ("System")
+			create l_item.make_with_text (section_system)
 			section_tree.extend (l_item)
 			l_item.enable_select
 			l_item.select_actions.extend (agent show_properties_system)
 
-			create l_item.make_with_text ("Target")
+			create l_item.make_with_text (section_target)
 			section_tree.extend (l_item)
 			l_item.select_actions.extend (agent show_properties_target_general)
-			create l_subitem.make_with_text ("Assertions")
+			create l_subitem.make_with_text (section_assertions)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_assertions)
-			create l_subitem.make_with_text ("Groups")
+			create l_subitem.make_with_text (section_groups)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_groups)
 
-			create l_subitem.make_with_text ("Advanced")
+			create l_subitem.make_with_text (section_advanced)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_advanced)
 			l_item.expand
 			l_item := l_subitem
-			create l_subitem.make_with_text ("Warning")
+			create l_subitem.make_with_text (section_warning)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_warning)
-			create l_subitem.make_with_text ("Debugs")
+			create l_subitem.make_with_text (section_debug)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_debugs)
-			create l_subitem.make_with_text ("Externals")
+			create l_subitem.make_with_text (section_external)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_externals)
-			create l_subitem.make_with_text ("Tasks")
+			create l_subitem.make_with_text (section_tasks)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_tasks)
-			create l_subitem.make_with_text ("Variables")
+			create l_subitem.make_with_text (section_variables)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_variables)
-			create l_subitem.make_with_text ("Mapping")
+			create l_subitem.make_with_text (section_mapping)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_mapping)
 
@@ -1492,14 +1492,6 @@ feature {NONE} -- Implementation
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_group.set_description))
 			properties.add_property (l_mls_prop)
 
-				-- condition
-			create l_dial.make_with_dialog (group_condition_name, create {CONDITION_DIALOG})
-			l_dial.set_description (group_condition_description)
-			l_dial.set_value (a_group.internal_conditions)
-			l_dial.disable_text_editing
-			l_dial.change_value_actions.extend (agent a_group.set_conditions)
-			properties.add_property (l_dial)
-
 				-- readonly
 			create l_bool_prop.make_with_value (group_readonly_name, a_group.internal_read_only)
 			l_bool_prop.set_description (group_readonly_description)
@@ -1520,6 +1512,19 @@ feature {NONE} -- Implementation
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?))
 				properties.add_property (l_file_prop)
 			end
+
+			properties.current_section.expand
+
+			properties.add_section (section_advanced)
+
+				-- condition
+			create l_dial.make_with_dialog (group_condition_name, create {CONDITION_DIALOG})
+			l_dial.set_description (group_condition_description)
+			l_dial.set_value (a_group.internal_conditions)
+			l_dial.disable_text_editing
+			l_dial.change_value_actions.extend (agent a_group.set_conditions)
+			properties.add_property (l_dial)
+
 
 				-- prefix
 			create l_text_prop.make (group_prefix_name)
@@ -1574,8 +1579,6 @@ feature {NONE} -- Implementation
 				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?))
 				properties.add_property (l_list_prop)
 			end
-
-			properties.current_section.expand
 
 			if l_cluster /= Void then
 					-- recursive
@@ -2692,7 +2695,7 @@ feature {NONE} -- Constants
 
 	initial_window_width: INTEGER is 600
 	initial_window_height: INTEGER is 600
-	section_tree_width: INTEGER is 120
+	section_tree_width: INTEGER is 140
 	description_height: INTEGER is 50
 
 	frame_border_size: INTEGER is 1

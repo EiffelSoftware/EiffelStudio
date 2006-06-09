@@ -1,0 +1,157 @@
+indexing
+	description: "Simple text properties."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	TEXT_PROPERTY [G]
+
+inherit
+	TYPED_PROPERTY [G]
+		undefine
+			deactivate,
+			create_implementation
+		redefine
+			activate_action,
+			initialize,
+			implementation,
+			value,
+			set_value
+		end
+
+	EV_GRID_EDITABLE_ITEM
+		undefine
+			is_in_default_state,
+			activate,
+			set_data
+		redefine
+			initialize,
+			activate_action,
+			implementation,
+			data
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize
+		do
+			pointer_button_press_actions.force_extend (agent activate)
+			deactivate_actions.extend (agent update_text_on_deactivation)
+			Precursor {EV_GRID_EDITABLE_ITEM}
+		end
+
+feature -- Access
+
+	value: G
+			-- Data
+
+	displayed_value: STRING_32 is
+			-- Displayed format of the data.
+		do
+			if value /= Void then
+				if display_agent /= Void then
+					Result := display_agent.item ([value])
+				else
+					Result := value.out.twin
+					Result.replace_substring_all ("%N", "%%N")
+				end
+			else
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Update
+
+	set_value (a_value: like value) is
+			-- Set `value' to `a_value'.
+		do
+			Precursor {TYPED_PROPERTY} (a_value)
+			set_text (displayed_value)
+			if text_field /= Void then
+				text_field.set_text (displayed_value)
+			end
+		end
+
+	set_display_agent (an_agent: like display_agent) is
+			-- Set `display_agent' to `an_agent'.
+		do
+			display_agent := an_agent
+		ensure
+			display_agent_set: display_agent = an_agent
+		end
+
+feature {NONE} -- Agents
+
+	update_text_on_deactivation is
+			-- Update text on deactivation.
+		require
+			text_field: text_field /= Void
+		local
+			l_data: like value
+		do
+			l_data := convert_to_data (text_field.text)
+			if is_valid_value (l_data) then
+				set_value (l_data)
+			else
+				set_text (displayed_value)
+			end
+		end
+
+	activate_action (popup_window: EV_POPUP_WINDOW) is
+			-- Activate action.
+		local
+		do
+			create text_field
+			text_field.implementation.hide_border
+			text_field.set_text (text)
+			text_field.set_background_color (implementation.displayed_background_color)
+			popup_window.set_background_color (implementation.displayed_background_color)
+			text_field.set_foreground_color (implementation.displayed_foreground_color)
+
+			popup_window.extend (text_field)
+
+			popup_window.show_actions.extend (agent initialize_actions)
+			popup_window.set_x_position (popup_window.x_position + 1)
+			popup_window.set_size (popup_window.width - 1, popup_window.height -1 )
+		end
+
+	save_set_text (a_text: G) is
+			-- Save `set_text'.
+		do
+			set_text (displayed_value)
+			if text_field /= Void then
+				text_field.set_text (displayed_value)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	display_agent: FUNCTION [ANY, TUPLE [G], STRING_32]
+
+	convert_to_data (a_string: like displayed_value): like value is
+			-- Convert displayed data into data.
+		local
+			l_string: like displayed_value
+		do
+				-- default implementation is to just do an assignement attempt
+			l_string := a_string.twin
+			l_string.replace_substring_all ("%%N", "%N")
+			Result ?= l_string.to_string_32
+			if Result = Void then
+				Result ?= l_string.to_string_8
+			end
+		end
+
+
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
+
+	implementation: EV_GRID_LABEL_ITEM_I
+			-- Responsible for interaction with native graphics toolkit.
+
+end

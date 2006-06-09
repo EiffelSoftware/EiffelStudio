@@ -20,7 +20,7 @@ feature -- Initlization
 		local
 			l_screen: SD_SCREEN
 			l_env: EV_ENVIRONMENT
-			l_imp: SD_SYSTEM_COLOR_IMP
+			l_factory: SD_HOT_ZONE_FACTORY_FACTORY
 		do
 			debug ("docking")
 				print ("%NSD_DOCKER_MEDIATOR creating.....")
@@ -29,8 +29,8 @@ feature -- Initlization
 			docking_manager := a_docking_manager
 			docking_manager.command.recover_normal_state
 
-			create l_imp.make
-			internal_shared.set_hot_zone_factory (l_imp.hot_zone_factory)
+			create {SD_HOT_ZONE_FACTORY_FACTORY_IMP} l_factory
+			internal_shared.set_hot_zone_factory (l_factory.hot_zone_factory)
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			caller := a_caller
@@ -236,30 +236,15 @@ feature {NONE} -- Implementation functions
 				is_dockable := False
 				clear_all_indicator
 				on_pointer_motion (screen_x, screen_y)
+				-- FIXIT: Vision2 bugs here
+				-- key press actions only called for one time.
+				debug ("docking")
+					print ("%N on key press")
+				end
 			else
 
 			end
 		end
-
---	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
---			--
---		local
---			l_drawed: BOOLEAN
---		do
---			from
---				hot_zones.start
---			until
---				hot_zones.after or l_drawed
---			loop
---				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
---
---				hot_zones.forth
---			end
---
---			if not hot_zones.after then
---				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
---			end
---		end
 
 	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY) is
 			-- Handle user release key to allow dock.
@@ -268,7 +253,7 @@ feature {NONE} -- Implementation functions
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_ctrl then
 				is_dockable := True
---				on_pointer_motion_for_indicator (screen_x, screen_y)
+				build_all_indicator
 				on_pointer_motion (screen_x, screen_y)
 			else
 
@@ -284,6 +269,19 @@ feature {NONE} -- Implementation functions
 				hot_zones.after
 			loop
 				hot_zones.item.clear_indicator
+				hot_zones.forth
+			end
+		end
+
+	build_all_indicator is
+			-- Build all indicators.
+		do
+			from
+				hot_zones.start
+			until
+				hot_zones.after
+			loop
+				hot_zones.item.build_indicator
 				hot_zones.forth
 			end
 		end

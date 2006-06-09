@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			create internal_shared
 			docking_manager := a_docking_manager
 			create {SD_WIDGET_TOOL_BAR} tool_bar.make (create {SD_TOOL_BAR}.make)
-
 			is_vertical := a_vertical
 
 			create internal_tool_bar_dot_drawer.make (tool_bar.background_color)
@@ -60,20 +59,26 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	change_direction (a_hortizontal: BOOLEAN) is
+	change_direction (a_horizontal: BOOLEAN) is
 			-- Change layout direction.
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_widget_button: SD_TOOL_BAR_WIDGET_ITEM
+			l_widget_item_count: INTEGER
 		do
-			set_drag_area (a_hortizontal)
+			set_drag_area (a_horizontal)
 			from
-				if not a_hortizontal then
+				if not a_horizontal then
 					create internal_text.make (1)
+					create internal_hidden_widget_items.make (1)
 				else
 					if internal_text /= Void then
 						internal_text.start
+					end
+					if internal_hidden_widget_items /= Void then
+						internal_hidden_widget_items.start
 					end
 				end
 				l_items := tool_bar.items
@@ -82,31 +87,40 @@ feature -- Command
 				l_items.after
 			loop
 				l_button ?= l_items.item
-				l_items.item.set_wrap (not a_hortizontal)
-				if not a_hortizontal and then l_items.index /= l_items.count then
+				l_items.item.set_wrap (not a_horizontal)
+				if not a_horizontal and then l_items.index /= l_items.count then
 					l_separator ?= l_items.i_th (l_items.index + 1)
 					if l_separator /= Void then
 						l_items.item.set_wrap (False)
 					end
 				end
 
-				if not a_hortizontal and l_button /= Void then
+				if not a_horizontal and l_button /= Void then
 					-- We may record Void text here.
 					internal_text.extend (l_button.text)
 					l_button.set_text ("")
-				elseif a_hortizontal and l_button /= Void then
+				elseif a_horizontal and l_button /= Void then
 					if internal_text /= Void then
 						l_button.set_text (internal_text.item)
 						internal_text.forth
 					end
 				end
+
+				l_widget_button ?= l_items.item
+				if not a_horizontal and l_widget_button /= Void then
+					internal_hidden_widget_items.force_last (l_widget_button, l_items.index)
+					tool_bar.prune (l_widget_button)
+				end
 				l_items.forth
 			end
+			if a_horizontal and is_need_restore_hidden_items then
+				restore_hidden_widget_items
+			end
 			compute_minmum_size
-			is_vertical := not a_hortizontal
+			is_vertical := not a_horizontal
 			update_maximum_size
 		ensure
-			direction_changed: is_vertical = not a_hortizontal
+			direction_changed: is_vertical = not a_horizontal
 		end
 
 	float (a_screen_x, a_screen_y: INTEGER) is
@@ -291,7 +305,6 @@ feature -- Query
 			-- Parent which contain `Current'.
 		do
 			Result ?= tool_bar.parent
-			check really_void: Result = Void implies tool_bar.parent = Void end
 		end
 
 	maximize_size: INTEGER
@@ -414,6 +427,37 @@ feature {NONE} -- Implmentation
 
 	internal_text: ARRAYED_LIST [STRING]
 			-- When `is_vertical' we hide all texts, store orignal texts here.
+
+	internal_hidden_widget_items: DS_HASH_TABLE [SD_TOOL_BAR_WIDGET_ITEM, INTEGER]
+			-- When `is_vertical' we hide all widget tool bar items, store orignal items here.
+
+	is_need_restore_hidden_items: BOOLEAN is
+			-- If need restore hidden items?
+		local
+			l_item: SD_TOOL_BAR_WIDGET_ITEM
+		do
+			if internal_hidden_widget_items /= Void and tool_bar /= Void then
+				l_item := internal_hidden_widget_items.first
+				if not tool_bar.has (l_item)  then
+					Result := True
+				end
+			end
+		end
+
+	restore_hidden_widget_items is
+			-- Restore hidden widget items
+		require
+			not_void: internal_hidden_widget_items /= Void
+		do
+			from
+				internal_hidden_widget_items.start
+			until
+				internal_hidden_widget_items.after
+			loop
+				tool_bar.force (internal_hidden_widget_items.item (internal_hidden_widget_items.key_for_iteration), internal_hidden_widget_items.key_for_iteration)
+				internal_hidden_widget_items.forth
+			end
+		end
 
 	update_maximum_size is
 			-- Update `maximize_size'

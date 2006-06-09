@@ -457,24 +457,44 @@ feature {NONE} -- Implementation
 			s, class_array, location_array, goto_text: STRING
 			textfile: PLAIN_TEXT_FILE
 			fn: FILE_NAME
+			l_groups: like groups
+			l_group: CONF_GROUP
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_add: BOOLEAN
 		do
 			create class_array.make (5000)
 			create location_array.make (8000)
+			l_groups := groups
 			from
-				classes.start
+				l_groups.start
 			until
-				classes.after
+				l_groups.after
 			loop
-				s := classes.item_for_iteration.name.as_lower
-				class_array.append ("%T%T%"" + s + "%"")
-				s.to_lower
---				s := "" + classes.item.cluster.relative_path ('/') +
---					"/" + s + class_links + ".html"
-				location_array.append ("%T%T%"" + s + "%"")
-				classes.forth
-				if not classes.after then
-					class_array.append (",%N")
-					location_array.append (",%N")
+				l_group := l_groups.item_for_iteration
+				l_groups.forth
+				l_classes := l_group.classes
+				if l_classes /= Void then
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						if l_classes.item_for_iteration.is_compiled then
+							s := l_classes.item_for_iteration.name.as_upper
+							class_array.append ("%T%T%"" + s + "%"")
+							s.to_lower
+							s := "" + relative_path (l_group) +
+								"/" + s + class_links + ".html"
+							location_array.append ("%T%T%"" + s + "%"")
+							l_add := True
+						end
+						l_classes.forth
+						if l_add and then not (not l_classes.after implies not l_groups.after) then
+							class_array.append (",%N")
+							location_array.append (",%N")
+							l_add := False
+						end
+					end
 				end
 			end
 
@@ -492,7 +512,7 @@ feature {NONE} -- Implementation
 				%			if (name == classList[i]) return i;%N%
 				%		}%N%
 				%		return -1;%N%
-				%	}%N%
+				%	};%N%
 				%%N%
 				%	function go_to (baseLocation, className) {%N%
 				%		var index = indexOfClass (className.toUpperCase ());%N%
@@ -527,7 +547,7 @@ feature {NONE} -- Implementation
 --				if (name == classList[i]) return i;
 --			}
 --			return -1;
---		}
+--		};
 --	
 --		function go_to (baseLocation, className) {
 --			var index = indexOfClass (className.toUpperCase ());

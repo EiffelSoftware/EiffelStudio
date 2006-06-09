@@ -245,7 +245,6 @@ feature {NONE}  -- Implementation
 				l_zones := internal_tool_bar_row.zones
 				l_last_start_position := a_size
 				l_zones.finish
-				l_zones.finish
 			until
 				l_zones.before or l_need_reposition
 			loop

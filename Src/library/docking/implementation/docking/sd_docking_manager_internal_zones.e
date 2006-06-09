@@ -20,8 +20,20 @@ feature {NONE}  -- Initlization
 		do
 			internal_docking_manager := a_docking_manager
 			create zones
+			init_place_holder
 		ensure
 			set: internal_docking_manager = a_docking_manager
+		end
+
+	init_place_holder is
+			-- Init `place_holder_content'
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			create place_holder_widget
+			create place_holder_content.make_with_widget (place_holder_widget, l_shared.Editor_place_holder_content_name)
+			place_holder_content.set_type ({SD_ENUMERATION}.place_holder)
 		end
 
 feature -- Zones managements
@@ -99,19 +111,14 @@ feature -- Zones managements
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_container: EV_CONTAINER
 		do
-			l_container ?= a_zone
-			check l_container /= Void end
-			if l_container.parent /= Void then
-				l_container.parent.prune (l_container)
+			if a_zone.parent /= Void then
+				a_zone.parent.prune (a_zone)
 			end
-
+			-- FIXIT: call prune_all from ACTIVE_LIST contract broken?
 			zones.start
 			zones.prune (a_zone)
-			-- FIXIT: call prune_all from ACTIVE_LIST contract broken
---			zones.prune_all (a_zone)
+
 			if a_zone.content.user_widget.parent /= Void then
 				a_zone.content.user_widget.parent.prune (a_zone.content.user_widget)
 			end
@@ -178,6 +185,14 @@ feature -- Zones managements
 			end
 		end
 
+feature -- Query
+
+	place_holder_content: SD_CONTENT
+			-- Editor place holder zone content. One instance per docking manager.
+
+	place_holder_widget: EV_CELL
+			-- Widget in `place_holder_content'
+
 feature -- Contract support
 
 	has_content (a_content: SD_CONTENT): BOOLEAN is
@@ -193,8 +208,9 @@ feature {NONE}  -- Implementation
 
 invariant
 
-	zones_not_void: zones /= Void
-	internal_docking_manager_not_void: internal_docking_manager /= Void
+	not_void: zones /= Void
+	not_void: internal_docking_manager /= Void
+	not_void: place_holder_content /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

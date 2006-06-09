@@ -6,15 +6,6 @@ indexing
 deferred class
 	SD_TOOL_BAR_ITEM
 
-inherit
-	EV_ITEM
-		redefine
-			pixmap,
-			set_pixmap,
-			is_destroyed,
-			drop_actions
-		end
-
 feature -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
@@ -42,6 +33,11 @@ feature -- Agents
 		deferred
 		end
 
+	on_pointer_press_forwarding (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Pointer press actions forwarding.
+		deferred
+		end
+
 feature -- Query
 
 	is_need_redraw: BOOLEAN
@@ -49,9 +45,15 @@ feature -- Query
 
 	width: INTEGER is
 			-- Width of Current item.
+		deferred
+		end
+
+	height: INTEGER is
+			-- Height of Current item
 		require
 			not_void: tool_bar /= Void
-		deferred
+		do
+			Result :=  tool_bar.row_height
 		end
 
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN is
@@ -163,7 +165,6 @@ feature {NONE} -- Implementation
 		do
 			is_need_redraw := True
 			if tool_bar /= Void then
---				check has: tool_bar.has (Current) end
 				tool_bar.update
 			end
 		end
@@ -175,11 +176,6 @@ feature {SD_TOOL_BAR} -- Internal issues
 		require
 			not_void: a_starting implies a_pebble /= Void
 		deferred
-		end
-
-	create_implementation is
-			-- Fack function.
-		do
 		end
 
 	disable_redraw is
@@ -205,3 +201,4 @@ invariant
 	not_void: name /= Void
 
 end
+

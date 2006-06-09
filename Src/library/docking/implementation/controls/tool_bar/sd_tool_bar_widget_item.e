@@ -27,6 +27,7 @@ feature {NONE} -- Initlization
 		do
 			widget := a_widget
 			description := "Widget item"
+			name := generating_type
 			create l_pixmaps
 			pixmap := l_pixmaps.default_window_icon
 			is_displayed := True
@@ -74,6 +75,11 @@ feature -- Agents
 		end
 
 	on_pointer_leave is
+			-- Do nothing.
+		do
+		end
+
+	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Do nothing.
 		do
 		end

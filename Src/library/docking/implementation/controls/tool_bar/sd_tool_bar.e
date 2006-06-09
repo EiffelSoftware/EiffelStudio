@@ -37,11 +37,12 @@ feature {NONE} -- Initlization
 			l_colors: EV_STOCK_COLORS
 		do
 			default_create
-			internal_row_height := 23
+			internal_row_height := standard_height
 			create internal_items.make (1)
 			expose_actions.extend (agent on_expose)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_press_actions.extend (agent on_pointer_press)
+			pointer_button_press_actions.extend (agent on_pointer_press_forwarding)
 			pointer_double_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
@@ -172,11 +173,14 @@ feature -- Query
 			Result := internal_items.has (a_item)
 		end
 
-	border_width: INTEGER is 2
+	border_width: INTEGER is 4
 			-- Border width.
 
-	padding_width: INTEGER is 2
+	padding_width: INTEGER is 4
 			-- Padding width.
+
+	standard_height: INTEGER is 23
+			-- Standard tool bar height.
 
 feature -- Contract support
 
@@ -276,7 +280,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 				l_separator ?= l_items.item
 				if l_items.item /= a_item then
 					if l_items.item.is_wrap then
-						Result := Result + row_height
+						Result := Result + l_items.item.height
 					end
 					if l_separator /= Void and then l_separator.is_wrap then
 						Result := Result + l_separator.width
@@ -284,7 +288,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 				else
 					l_stop := True
 					if l_separator /= Void and then l_separator.is_wrap then
-						Result := Result + row_height
+						Result := Result + l_items.item.height
 					end
 				end
 				l_items.forth
@@ -414,6 +418,22 @@ feature {NONE} -- Agents
 					end
 					l_items.forth
 				end
+			end
+		end
+
+	on_pointer_press_forwarding (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Handle pointer press actions for forwarding.
+		local
+			l_items: like internal_items
+		do
+			from
+				l_items := items
+				l_items.start
+			until
+				l_items.after
+			loop
+				l_items.item.on_pointer_press_forwarding (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+				l_items.forth
 			end
 		end
 

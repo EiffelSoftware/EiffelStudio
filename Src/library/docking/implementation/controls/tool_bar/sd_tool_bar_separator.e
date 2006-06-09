@@ -61,6 +61,11 @@ feature -- Redefine Agents
 			end
 		end
 
+	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Redefine
+		do
+		end
+
 feature -- Redefine querys
 
 	width: INTEGER is 6

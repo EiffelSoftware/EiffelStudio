@@ -78,10 +78,9 @@ feature -- Properties
 feature -- Command
 
 	extend (a_item: SD_TOOL_BAR_ITEM) is
-			-- Extend `a_item'
+			-- Extend `a_item' to the end.
 		require
 			not_void: a_item /= Void
---			parent_void: a_item.tool_bar = Void
 			valid: is_item_valid (a_item)
 		do
 			internal_items.extend (a_item)
@@ -89,6 +88,19 @@ feature -- Command
 		ensure
 			has: has (a_item)
 			is_parent_set: is_parent_set (a_item)
+		end
+
+	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER) is
+			-- Assign item `a_item' to `a_index'-th entry.
+			-- Always applicable: resize the array if `a_index' falls out of
+			-- currently defined bounds; preserve existing items.
+		require
+			not_void: a_item /= Void
+			valid: is_item_valid (a_item)
+		do
+			internal_items.go_i_th (a_index)
+			internal_items.put_left (a_item)
+			a_item.set_tool_bar (Current)
 		end
 
 	prune (a_item: SD_TOOL_BAR_ITEM) is

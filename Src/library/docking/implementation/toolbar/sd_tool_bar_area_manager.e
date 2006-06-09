@@ -123,6 +123,8 @@ feature {NONE} -- Implementation functions.
 						internal_docking_manager.command.lock_update (Void, True)
 						prune_internal_caller_from_parent
 						l_tool_bar_row.extend (internal_dock_mediator.caller)
+
+						internal_dock_mediator.caller.tool_bar.enable_capture
 						debug ("docking")
 							print ("%N SD_TOOL_BAR_HOT_ZONE move_in a_screen_x: " + a_screen_x.out + " .a_screen_y: " + a_screen_y.out)
 						end
@@ -223,12 +225,16 @@ feature {NONE} -- Implementation functions.
 					internal_docking_manager.command.resize (True)
 				end
 			end
+			-- Maybe parent is floating tool bar zone
+			if internal_dock_mediator.caller.tool_bar.parent /= Void then
+				check is_floating: internal_dock_mediator.caller.is_floating end
+				internal_dock_mediator.caller.dock
+			end
 		ensure
 			pruned: internal_dock_mediator.caller.row /= Void implies
 				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller.tool_bar)
--- FIXIT: why following line cann't be satisfied sometime? It's EV_VERTICAL_BOX ?
+			parent_row_void: internal_dock_mediator.caller.row = Void
 			parent_void: internal_dock_mediator.caller.tool_bar.parent = Void
-			parent_void: internal_dock_mediator.caller.row = Void
 		end
 
 feature {NONE}  -- Implementation query

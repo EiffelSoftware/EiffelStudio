@@ -114,6 +114,18 @@ feature -- Command
 			internal_set_item_position (a_widget, a_relative_x_y)
 		end
 
+	reposition is
+			-- Reposition zones, make sure there are not clip each other.
+		require
+			is_dragged: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
+		do
+			if is_vertical then
+				on_pointer_motion (screen_y)
+			else
+				on_pointer_motion (screen_x)
+			end
+		end
+
 	apply_change is
 			-- Handle user stopped dragging.
 		do

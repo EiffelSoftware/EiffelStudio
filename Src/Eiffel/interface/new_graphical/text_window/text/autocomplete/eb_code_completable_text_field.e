@@ -398,7 +398,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 				Result := preferences.development_window_data.completion_list_width
 			else
 					-- Calculate correct size to fit
-				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+				Result := Precursor {EB_TAB_CODE_COMPLETABLE}
 			end
 		end
 

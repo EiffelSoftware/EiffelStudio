@@ -275,15 +275,16 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 		end
 
 	calculate_completion_list_width: INTEGER is
-			-- Determine the width the completion list should have			
+			-- Determine the width the completion list should have
+		local
+			l_grid: EV_GRID
 		do
+			l_grid := choices.choice_list
 				-- Calculate correct size to fit
-			if choices.choice_list.column_count > 0 then
-				if choices.choice_list.row_count = 0 then
-					Result := 300
-				else
-					Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
-				end
+			if not l_grid.is_destroyed and then l_grid.column_count >= 1 then
+				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+			else
+				Result := default_window_width
 			end
 		end
 
@@ -430,7 +431,11 @@ feature {NONE} -- Timer
 			Result := l_env.application
 		end
 
-	default_timer_interval: INTEGER is 1500;
+	default_timer_interval: INTEGER is 1500
+
+	default_window_width: INTEGER is 300
+
+	default_window_height: INTEGER is 400;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -17,7 +17,8 @@ inherit
 			icon,
 			tooltip_text,
 			is_class,
-			full_insert_name
+			insert_name,
+			grid_item
 		end
 
 create
@@ -47,8 +48,8 @@ feature -- Access
 			Result := True
 		end
 
-	full_insert_name: STRING is
-			-- Full name to insert in editor
+	insert_name: STRING is
+			-- Name to insert in editor
 		do
 			Result := associated_class.name
 		end
@@ -64,6 +65,27 @@ feature -- Access
 			-- actual output of Current.
 		do
 			Result := Current.out.twin
+		end
+
+	grid_item : EB_GRID_CLASS_ITEM is
+			-- Corresponding grid item
+		local
+			l_class: CLASS_C
+			l_c_style: EB_GRID_JUST_NAME_CLASS_STYLE
+			l_nc_style: EB_GRID_JUST_NAME_NONCOMPILED_CLASS_STYLE
+		do
+			l_class := associated_class.compiled_representation
+			if l_class /= Void then
+				create l_c_style
+				create {EB_GRID_COMPILED_CLASS_ITEM}Result.make (l_class, l_c_style)
+			else
+				create l_nc_style
+				create {EB_GRID_NONCOMPILED_CLASS_ITEM}Result.make (associated_class, l_nc_style)
+			end
+			Result.set_tooltip_display_function (agent display_colorized_tooltip)
+			Result.enable_pixmap
+			Result.editor_token_text.set_overriden_font (label_font_table)
+			Result.set_data (Current)
 		end
 
 feature {NONE} -- Implementation

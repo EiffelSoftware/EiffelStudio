@@ -497,6 +497,14 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
+	go_left_char is
+			-- Go to right character.
+		do
+			if text_length > 0 and then caret_position >= 1 then
+				set_caret_position (caret_position - 1)
+			end
+		end
+
 	move_cursor_to (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE)is
 			-- Move cursor to `a_token' which is in `a_line'.
 		do

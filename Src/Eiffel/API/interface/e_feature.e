@@ -619,6 +619,15 @@ feature -- Output
 			-- Append just signature of feature in `a_text_formatter'.
 		require
 			st_not_void: a_text_formatter /= Void
+		do
+			append_arguments (a_text_formatter)
+			append_just_type (a_text_formatter)
+		end
+
+	append_arguments (a_text_formatter: TEXT_FORMATTER) is
+			-- Append just arguments to `a_text_formatter'.
+		require
+			st_not_void: a_text_formatter /= Void
 		local
 			args: like arguments
 			orig_type, cur_type: TYPE_A
@@ -657,13 +666,19 @@ feature -- Output
 				end
 				a_text_formatter.process_symbol_text (Ti_r_parenthesis)
 			end
+		end
+
+	append_just_type (a_text_formatter: TEXT_FORMATTER) is
+			-- Append type of the feature to `a_text_formatter'.
+		require
+			valid_st: a_text_formatter /= Void
+		do
 			if not is_procedure then
 				a_text_formatter.process_symbol_text (Ti_colon)
 				a_text_formatter.add_space
 				type.ext_append_to (a_text_formatter, Current)
 			end
 		end
-
 
 	append_name (a_text_formatter: TEXT_FORMATTER) is
 			-- Append the name of the feature in `a_text_formatter'

@@ -49,13 +49,22 @@ feature {NONE} -- Initialization
 			choice_list.disable_selection_key_handling
 
 			default_create
+			enable_user_resize
+			option_bar_box := build_option_bar
 			create vbox
 			vbox.extend (choice_list)
+			vbox.extend (option_bar_box)
+			vbox.disable_item_expand (option_bar_box)
 			extend (vbox)
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
-			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			focus_out_actions.extend (agent on_lose_focus)
 			resize_actions.force_extend (agent resize_column_to_window_width)
+		end
+
+	build_option_bar: EV_VERTICAL_BOX is
+			-- Build option bar.
+		do
+			create Result
 		end
 
 feature -- Initialization
@@ -76,19 +85,18 @@ feature -- Initialization
 			else
 				create buffered_input.make_empty
 			end
-			sorted_names.compare_objects
+			build_full_list
 			is_closing := False
-
 			build_displayed_list (before_complete)
 			is_first_show := True
 
-			if not sorted_names.is_empty then
+			if not full_list.is_empty then
+				if choice_list.row_count > 0 then
+					select_closest_match
+				end
 					-- If there is only one possibility, we insert it without displaying the window
 				determine_show_needed
 				if not show_needed then
-					if choice_list.row_count > 0 then
-						select_closest_match
-					end
 					close_and_complete
 				end
 			end
@@ -99,8 +107,17 @@ feature -- Access
 	code_completable: CODE_COMPLETABLE
 			-- associated code completable
 
-	choice_list: EV_GRID
+	choice_list: ES_GRID
 			-- list displaying possible feature signatures
+
+	option_bar_box: EV_VERTICAL_BOX
+			-- Option bar box
+
+	option_bar: EV_TOOL_BAR
+			-- Option tool bar
+
+	filter_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Filter option button.
 
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically
@@ -142,11 +159,10 @@ feature -- Status Setting
 			check
 				show_needed: show_needed
 			end
-			enable_user_resize
 			Precursor {EV_POPUP_WINDOW}
 			choice_list.set_focus
-			resize_column_to_window_width
 			select_closest_match
+			resize_column_to_window_width
 		end
 
 feature -- Query
@@ -157,7 +173,7 @@ feature -- Query
 			if rebuild_list_during_matching then
 				Result := not matches_based_on_name (buffered_input).is_empty
 			else
-				Result := not sorted_names.is_empty
+				Result := not full_list.is_empty
 			end
 		end
 
@@ -235,101 +251,18 @@ feature {NONE} -- Events handling
 			if ev_key /= Void then
 				inspect
 					ev_key.code
-				when Key_page_up then
-						-- Go up `nb_items_to_scroll' items
-					if choice_list.row_count > 0 then
-						if not choice_list.selected_items.is_empty then
-							ix:= choice_list.selected_rows.first.index
-							if ix <= nb_items_to_scroll then
-								if ix = 1 then
-									choice_list.remove_selection
-									choice_list.row (choice_list.row_count).enable_select
-								else
-									choice_list.remove_selection
-									choice_list.row (1).enable_select
-								end
-							else
-								choice_list.remove_selection
-								choice_list.row (ix - nb_items_to_scroll).enable_select
-							end
-						end
-
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
-				when Key_page_down then
-						-- Go down `nb_items_to_scroll' items
-					if choice_list.row_count > 0 then
-						if not choice_list.selected_items.is_empty then
-							ix:= choice_list.selected_rows.first.index
-							if ix > choice_list.row_count - nb_items_to_scroll then
-								if ix = choice_list.row_count then
-									choice_list.remove_selection
-									choice_list.row (1).enable_select
-								else
-									choice_list.remove_selection
-									choice_list.row (choice_list.row_count).enable_select
-									choice_list.row (choice_list.row_count).ensure_visible
-								end
-							else
-								choice_list.remove_selection
-								choice_list.row (ix + nb_items_to_scroll).enable_select
-								choice_list.row (ix + nb_items_to_scroll).ensure_visible
-							end
-						end
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
+				when key_left then
+					collapse_current_item
+				when key_right then
+					expand_current_item
 				when Key_up then
-					if choice_list.row_count > 0 then
-						if not choice_list.selected_items.is_empty then
-							ix := choice_list.selected_rows.first.index
-							choice_list.remove_selection
-							if ix = 1 then
-								choice_list.row (choice_list.row_count).enable_select
-							else
-								choice_list.row (ix - 1).enable_select
-							end
-						end
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
+					go_to_last_visible_item
 				when Key_down then
-					if choice_list.row_count > 0 then
-						if not choice_list.selected_items.is_empty then
-							ix := choice_list.selected_rows.first.index
-							choice_list.remove_selection
-							if ix = choice_list.row_count then
-								choice_list.row (1).enable_select
-							else
-								choice_list.row (ix + 1).enable_select
-							end
-						end
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
+					go_to_next_visible_item
 				when key_home then
-					if ev_application.ctrl_pressed and then choice_list.row_count > 0 then
-							-- Go to top
-						choice_list.remove_selection
-						choice_list.select_row (1)
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
+					select_row (1)
 				when key_end then
-					if ev_application.ctrl_pressed and then choice_list.row_count > 0 then
-							-- Go to bottom
-						choice_list.remove_selection
-						choice_list.select_row (choice_list.row_count)
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
+					select_row (choice_list.row_count)
 				else
 					-- Do nothing
 				end
@@ -386,6 +319,169 @@ feature {NONE} -- Events handling
 			end
 		end
 
+feature {NONE} -- Cursor movement
+
+	go_to_last_visible_item is
+			-- Go to last visible item.
+		local
+			i, ix: INTEGER
+			l_row : EV_GRID_ROW
+			l_loop_end: BOOLEAN
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					ix := choice_list.selected_rows.first.index
+					choice_list.remove_selection
+					from
+						if ix = 1 then
+							i := choice_list.row_count
+						else
+							i := ix - 1
+						end
+					until
+						l_loop_end
+					loop
+						l_row := choice_list.row (i).parent_row
+						if l_row = Void or else
+							l_row.is_expanded
+						then
+							choice_list.row (i).enable_select
+							l_loop_end := True
+						end
+						i := i - 1
+						if i < 1 then
+							i := choice_list.row_count
+						end
+					end
+				end
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible
+				end
+			end
+		end
+
+	go_to_next_visible_item is
+			-- Go to last visible item.
+		local
+			i, ix: INTEGER
+			l_row : EV_GRID_ROW
+			l_loop_end: BOOLEAN
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					ix := choice_list.selected_rows.first.index
+					choice_list.remove_selection
+					from
+						if ix = choice_list.row_count then
+							i := 1
+						else
+							i := ix + 1
+						end
+					until
+						l_loop_end
+					loop
+						l_row := choice_list.row (i).parent_row
+						if l_row = Void or else
+							l_row.is_expanded
+						then
+							choice_list.row (i).enable_select
+							l_loop_end := True
+						end
+						i := i + 1
+						if i > choice_list.row_count then
+							i := 1
+						end
+					end
+				end
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible
+				end
+			end
+		end
+
+	expand_current_item is
+			-- Expand current item.
+		local
+			ix: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					ix := choice_list.selected_rows.first.index
+					l_row := choice_list.row (ix)
+					if l_row.is_expandable then
+						if not l_row.is_expanded then
+							l_row.expand
+						else
+							if l_row.subrow_count > 0 then
+								choice_list.remove_selection
+								l_row.subrow (1).enable_select
+							end
+						end
+					end
+				end
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible
+				end
+			end
+		end
+
+	collapse_current_item is
+			-- Collapse current item.
+			-- If parented, collapse parent.
+		local
+			ix: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					ix := choice_list.selected_rows.first.index
+					l_row := choice_list.row (ix)
+					if l_row.is_expandable and then l_row.is_expanded then
+						l_row.collapse
+					else
+						l_row := l_row.parent_row
+						if l_row /= Void and then l_row.is_expandable and then l_row.is_expanded then
+							choice_list.remove_selection
+							l_row.enable_select
+						end
+					end
+				end
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible
+				end
+			end
+		end
+
+	select_row (a_row: INTEGER) is
+			-- Select row `i'
+			-- If invisible, select its parent
+		require
+			a_row_is_valid: a_row > 0 and a_row <= choice_list.row_count
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			if choice_list.row_count > 0 then
+					-- Go to bottom
+				choice_list.remove_selection
+				i := a_row
+				l_row := choice_list.row (i).parent_row
+				if l_row = Void then
+					choice_list.row (i).enable_select
+				else
+					if not l_row.is_expanded then
+						l_row.enable_select
+					else
+						choice_list.row (i).enable_select
+					end
+				end
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	buffered_input: STRING
@@ -396,7 +492,7 @@ feature {NONE} -- Implementation
 			-- '%U' if none.
 
 	index_offset: INTEGER
-			-- Index in `sorted_names' of the first element in `choice_list'
+			-- Index in `full_list' of the first element in `choice_list'
 
 	rebuild_list_during_matching: BOOLEAN is
 			-- Should the list be rebuilt according to current match?
@@ -410,46 +506,30 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	index_to_complete: INTEGER is
-			-- Index in `sorted_names'
-		require
-			select_rows_in_choice_list_not_empty: not choice_list.selected_rows.is_empty
-		do
-			if rebuild_list_during_matching then
-				if not choice_list.selected_rows.is_empty then
-					Result := choice_list.selected_rows.first.index + index_offset
-				else
-					Result := index_offset
-				end
-			else
-				if not choice_list.selected_rows.is_empty then
-					Result := choice_list.selected_rows.first.index
-				else
-					Result := index_offset
-				end
-			end
-		end
-
 	build_displayed_list (name: STRING) is
 			-- Build the list based on matches with `name'
 		require
-			sorted_names_not_void: sorted_names /= Void
+			full_list_not_void: full_list /= Void
 		local
 			l_count: INTEGER
-			matches: ARRAY [like name_type]
-			list_row: EV_GRID_LABEL_ITEM
+			matches: SORTABLE_ARRAY [like name_type]
+			list_row: EV_GRID_ITEM
 			match_item: like name_type
 			row_index: INTEGER
 			l_upper: INTEGER
+			l_child_items: ARRAYED_LIST [EV_GRID_ITEM]
+			l_parent_row_index: INTEGER
+			l_tree_view: BOOLEAN
+			l_parents_inserted: HASH_TABLE [like name_type, like name_type]
+			l_name: NAME_FOR_COMPLETION
 		do
 			choice_list.wipe_out
-
+			create l_parents_inserted.make (20)
 			if rebuild_list_during_matching then
 				matches := matches_based_on_name (name)
 			else
-				matches := sorted_names.subarray (1, sorted_names.count)
+				matches := full_list.subarray (1, full_list.count)
 			end
-
 
 			if matches.is_empty then
 				current_index := 0
@@ -465,17 +545,173 @@ feature {NONE} -- Implementation
 			loop
 				match_item := matches.item (l_count)
 				if match_item /= Void then
-					create list_row.make_with_text (match_item.out)
-					list_row.set_pixmap (match_item.icon)
-					list_row.set_tooltip (match_item.tooltip_text)
-							-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y,
-							-- whereas we need selected_item x/y.
-						--list_row.select_actions.extend (agent activate_tooltip)								
-					choice_list.set_item (1, row_index, list_row)
+					if match_item.has_parent then
+						match_item := match_item.parent
+					end
+					if not l_parents_inserted.has (match_item) then
+						list_row := match_item.grid_item
+								-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y,
+								-- whereas we need selected_item x/y.
+							--list_row.select_actions.extend (agent activate_tooltip)
+						choice_list.set_item (1, row_index, list_row)
+						list_row.row.expand_actions.extend (agent match_item.set_is_expanded ((True)))
+						list_row.row.collapse_actions.extend (agent match_item.set_is_expanded ((False)))
+						l_parent_row_index := row_index
+						row_index := row_index + 1
+
+						if match_item.has_child then
+							l_parents_inserted.put (match_item, match_item)
+							if not l_tree_view then
+								l_tree_view := True
+								choice_list.enable_tree
+							end
+							set_expanded_row_icon (list_row, match_item)
+							l_child_items := match_item.child_grid_items
+							from
+								l_child_items.start
+							until
+								l_child_items.after
+							loop
+								l_name ?= l_child_items.item.data
+								matches.binary_search (l_name)
+								if matches.found then
+									list_row.row.insert_subrow (list_row.row.subrow_count + 1)
+									list_row.row.subrow (list_row.row.subrow_count).set_item (1, l_child_items.item)
+									row_index := row_index + 1
+								end
+								l_child_items.forth
+							end
+							if match_item.is_expanded and then list_row.row.is_expandable then
+								list_row.row.expand
+							end
+						end
+					end
 				end
 				l_count := l_count + 1
-				row_index := row_index + 1
 			end
+			if not l_tree_view then
+				choice_list.disable_tree
+			end
+		end
+
+	build_full_list is
+			-- Build full list including children nodes.
+		local
+			i: INTEGER
+			l_upper: INTEGER
+			start_pos: INTEGER
+			l_name: like name_type
+		do
+			if not has_child_node then
+				full_list := sorted_names
+			else
+				create full_list.make (1, calculate_full_count)
+				start_pos := 1
+				from
+					i := sorted_names.lower
+					l_upper := sorted_names.upper
+				until
+					i > l_upper
+				loop
+					l_name := sorted_names.item (i)
+					start_pos := collect_names (l_name, full_list, start_pos)
+					i := i + 1
+				end
+				full_list.sort
+			end
+		ensure
+			full_list_not_void: full_list /= Void
+		end
+
+	full_list: like sorted_names
+			-- Sorted full list of name.
+
+	has_child_node: BOOLEAN is
+			-- Any child node?
+		local
+			i: INTEGER
+			l_upper: INTEGER
+			l_name: like name_type
+		do
+			from
+				i := sorted_names.lower
+				l_upper := sorted_names.upper
+			until
+				i > l_upper or Result
+			loop
+				l_name := sorted_names.item (i)
+				Result := l_name.has_child
+				i := i + 1
+			end
+		end
+
+	calculate_full_count: INTEGER is
+			-- Calculate total number of names including children.
+		local
+			i: INTEGER
+			l_upper: INTEGER
+			l_name: like name_type
+		do
+			from
+				i := sorted_names.lower
+				l_upper := sorted_names.upper
+			until
+				i > l_upper
+			loop
+				l_name := sorted_names.item (i)
+				Result := Result + flat_count_of_name (l_name)
+				i := i + 1
+			end
+		end
+
+	flat_count_of_name (a_name: like name_type): INTEGER is
+			-- Number of flat count of `a_name', including itself and its children.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i: INTEGER
+			l_upper: INTEGER
+		do
+			Result := 1
+			if a_name.has_child then
+				from
+					i := a_name.children.lower
+					l_upper := a_name.children.upper
+				until
+					i > l_upper
+				loop
+					Result := Result + flat_count_of_name (a_name.children.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+	collect_names (a_name: like name_type; a_list: like full_list; a_start_pos: INTEGER): INTEGER is
+			-- Collect all nodes of `a_name', including itself and its children.
+		require
+			a_name_not_void: a_name /= Void
+			full_list_not_void: full_list /= Void
+			a_start_pos_valid: a_start_pos <= full_list.upper and then a_start_pos >= full_list.lower
+		local
+			l_count: INTEGER
+			i: INTEGER
+			l_upper: INTEGER
+		do
+			l_count := a_start_pos
+			a_list.put (a_name, l_count)
+			l_count := l_count + 1
+			if a_name.has_child then
+				from
+					i := a_name.children.lower
+					l_upper := a_name.children.upper
+				until
+					i > l_upper
+				loop
+					l_count := collect_names (a_name.children.item (i), a_list, l_count)
+					i := i + 1
+				end
+			end
+			Result := l_count
 		end
 
 	close_and_complete is
@@ -497,14 +733,23 @@ feature {NONE} -- Implementation
 	complete is
 			-- Complete current name
 		local
-			ix: INTEGER
+			l_name: STRING
+			l_name_item: like name_type
 		do
 			if not choice_list.selected_rows.is_empty then
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
-				ix := index_to_complete
-				code_completable.complete_from_window (sorted_names.item (ix).full_insert_name, character_to_append, remainder)
+				l_name_item ?= choice_list.selected_rows.first.item (1).data
+				check
+					l_name_item_not_void: l_name_item /= Void
+				end
+				if ev_application.alt_pressed then
+					l_name := l_name_item.full_insert_name
+				else
+					l_name := l_name_item.insert_name
+				end
+				code_completable.complete_from_window (l_name, character_to_append, remainder)
 			end
 		end
 
@@ -602,14 +847,24 @@ feature {NONE} -- Implementation
 					else
 							-- There are no choices visible, but there are some available. The user
 							-- can delete a character or two to view refiltered list.
-						show_needed := not sorted_names.is_empty
+						show_needed := not full_list.is_empty
 					end
 				else
 					if user_completion then
 							-- User completed without a completion term so only show completion
 							-- list if there are mulitple items available
 						if automatically_complete_words then
-							show_needed := choice_list.row_count > 1
+							if choice_list.row_count = 1 then
+								show_needed := False
+							elseif choice_list.row_count = 2 then
+								if choice_list.row (1).is_expandable and then choice_list.row (2).is_selected then
+									show_needed := False
+								else
+									show_needed := True
+								end
+							else
+								show_needed := True
+							end
 						else
 							show_needed := True
 						end
@@ -638,6 +893,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_expanded_row_icon (a_item: EV_GRID_ITEM; a_name: like name_type) is
+			-- Set pixmap of `a_item'.
+		require
+			a_item_not_void: a_item /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_item: EV_GRID_LABEL_ITEM
+		do
+			l_item ?= a_item
+			check
+				l_item_not_void: l_item /= Void
+			end
+			l_item.set_pixmap (a_name.icon)
+		end
+
 	name_type: NAME_FOR_COMPLETION
 
 	mouse_wheel_scroll_full_page_internal: BOOLEAN is False
@@ -648,7 +918,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- String matching
 
-	pos_of_first_greater (table: like sorted_names; a_name: like name_type): INTEGER is
+	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER is
 			--
 		local
 			low, up, mid: INTEGER
@@ -679,86 +949,12 @@ feature {NONE} -- String matching
 				or else
 			table.item (table.upper) <= a_name
 				or else
-			(	table.item (Result - 1) < a_name and
+			(table.item (Result - 1) < a_name and
 				table.item (Result) >= a_name)
 		end
 
 	current_index: INTEGER
 			-- Index of selected item in `choice_list' (if any)
-
-	index_of_closest_match: INTEGER is
-			-- The index of the closest name match to `buffered_input' in `sorted_names'.  If there is no part or full
-			-- match return -1.
-		local
-			l_input: like buffered_input
-			l_input_count: INTEGER
-			l_names: like sorted_names
-			l_names_count: INTEGER
-			l_item: STRING
-			l_match_index: INTEGER
-			l_last_match: INTEGER
-			l_stop: BOOLEAN
-			c: CHARACTER
-			i: INTEGER
-		do
-			if not buffered_input.is_empty then
-				l_input := buffered_input.as_lower
-				l_input_count := l_input.count
-				l_names := sorted_names
-				l_names_count := l_names.count
-				c := l_input.item (1)
-				from
-					i := 1
-				until
-					i > l_names_count or l_stop
-				loop
-					l_item := (l_names.item (i)).name
-
-					l_match_index := match_names_until_done (l_item, l_input)
-					if l_match_index = l_input_count then
-							-- Exact match
-						Result := i
-						l_stop := True
-					elseif l_match_index > l_last_match then
-							-- Better match than last
-						l_last_match := l_match_index
-						Result := i
-					elseif Result = 0 then
-							-- There have been no matches yet.
-						if l_item.item (1) > c then
-								-- The first character of the current item is greater that the requested match
-								-- so we can stop here.
-							Result := i
-							l_stop := True
-						elseif i = l_names_count then
-								-- No match found and we are at the end
-							Result := i
-						end
-					elseif i > 1 and l_match_index = l_last_match and l_match_index < l_input_count then
-							-- This match was the same as the last
-						if l_item.item (l_match_index + 1) > l_input.item (l_match_index + 1) then
-							l_item := (l_names.item (i - 1)).name
-							if l_item.item (l_match_index + 1) < l_input.item (l_match_index + 1) then
-									-- Ensures `deep_twin' is chosen over `deep_equals' if l_input is `deep_f'
-									-- and ensures `deep_copy' is *NOT* chosen over `deep_clone' when l_input is `deef'
-								l_last_match := l_last_match + 1
-								Result := i
-							end
-						end
-					end
-
-					i := i + 1
-				end
-			else
-				Result := 0
-			end
-			if Result > l_names_count then
-				Result := l_names_count
-			end
-		ensure
-			result_greater_than_zero: Result >= 0
-			result_too_big: Result <= sorted_names.count
-		end
 
 	select_closest_match is
 			-- Select the closest match in the list
@@ -769,11 +965,39 @@ feature {NONE} -- String matching
 					resize_column_to_window_width
 				end
 			end
+			ensure_item_selection
+			is_first_show := False
+		end
 
+	ensure_item_selection is
+			-- Ensure item seletion in the list.
+		local
+			l_row: EV_GRID_ROW
+			l_name: like name_type
+			for_search: like name_type
+		do
 			if rebuild_list_during_matching then
 				current_index := 1
+				if choice_list.row_count > 0 then
+					if choice_list.row (1).subrow_count > 0 then
+						l_name ?= choice_list.row (1).item (1).data
+						check
+							l_name_not_void: l_name /= Void
+						end
+						if not l_name.begins_with (buffered_input) then
+							current_index := 2
+						end
+					end
+				end
 			else
-				current_index := index_of_closest_match
+				if not buffered_input.is_empty then
+					create for_search.make (buffered_input)
+					current_index := pos_of_first_greater (full_list, for_search)
+					if current_index > full_list.lower and current_index < full_list.upper then
+						l_name := full_list.item (current_index)
+						current_index := grid_row_by_data (l_name)
+					end
+				end
 				if current_index <= 0 then
 					current_index := 1
 				end
@@ -783,51 +1007,19 @@ feature {NONE} -- String matching
 				choice_list.remove_selection
 				choice_list.row (current_index).enable_select
 				if is_displayed then
+					l_row := choice_list.selected_rows.first
+					if l_row.parent_row /= Void and then l_row.parent_row.is_expandable and then not l_row.parent_row.is_expanded then
+						l_row.parent_row.expand
+					end
 					choice_list.selected_rows.first.ensure_visible
 				end
 			end
-			is_first_show := False
 		end
 
-	match_names_until_done (a_name, a_name2: STRING): INTEGER is
-			-- Match the characters of `a_name2' against `a_name' from the start of `a_name2' until no match is
-			-- found or all characters match.  Return the index where the match failed.
-		require
-			a_name_not_void: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			a_name2_not_void: a_name2 /= Void
-			not_a_name2_is_empty: not a_name2.is_empty
-			a_name2_formatted: a_name2.as_lower.is_equal (a_name2)
-		local
-			i: INTEGER
-			cnt: INTEGER
-			done: BOOLEAN
-			c: CHARACTER
-			l_count: INTEGER
-		do
-			from
-				i := 0
-				cnt := a_name.count
-				l_count := a_name2.count
-			until
-				i = cnt or done
-			loop
-				c := a_name.item (i + 1).as_lower
-				if (i + 1) > l_count or c /= a_name2.item (i + 1) then
-					done := True
-				else
-					i := i + 1
-				end
-			end
-			Result := i
-		ensure
-			index_returned_makes_sense: Result >= 0
-		end
-
-	matches_based_on_name (a_name: STRING): ARRAY [like name_type] is
+	matches_based_on_name (a_name: STRING): SORTABLE_ARRAY [like name_type] is
 			-- Array of matches based on `a_name'.  Always use this function before building lists to get correct matches.
 		require
-			sorted_names_not_void: sorted_names /= Void
+			full_list_not_void: full_list /= Void
 		local
 			cnt: INTEGER
 			for_search: like name_type
@@ -838,19 +1030,19 @@ feature {NONE} -- String matching
 					-- Matches are filtered according to `buffered_input'
 				from
 					create for_search.make (a_name)
-					l_index_offset := pos_of_first_greater (sorted_names, for_search) - 1
+					l_index_offset := pos_of_first_greater (full_list, for_search) - 1
 				until
-					sorted_names.upper < (l_index_offset + cnt + 1) or else not sorted_names.item (l_index_offset + cnt + 1).begins_with (a_name)
+					full_list.upper < (l_index_offset + cnt + 1) or else not full_list.item (l_index_offset + cnt + 1).begins_with (a_name)
 				loop
 					cnt := cnt + 1
 				end
 				if cnt > 0 then
-					Result := sorted_names.subarray (l_index_offset + 1, l_index_offset + cnt)
+					Result := full_list.subarray (l_index_offset + 1, l_index_offset + cnt)
 				end
 				index_offset := l_index_offset
 			else
 					-- Matches are just all matches
-				Result := sorted_names.subarray (1, sorted_names.count)
+				Result := full_list.subarray (1, full_list.count)
 				index_offset := 0
 			end
 		ensure
@@ -869,6 +1061,28 @@ feature {NONE} -- String matching
 			else
 					-- Calculate the number of rows to scroll based on `scrolling_common_line_count' preference.
 				Result := choice_list.last_visible_row.index - choice_list.first_visible_row.index - scrolling_common_line_count
+			end
+		end
+
+	grid_row_by_data (a_data: ANY) : INTEGER is
+			-- Find a row in a_grid that include a_data
+		local
+			i: INTEGER
+			l_item: EV_GRID_ITEM
+			loop_end: BOOLEAN
+		do
+			loop_end := false
+			from
+				i := 1
+			until
+				i > choice_list.row_count or loop_end
+			loop
+				l_item := choice_list.row (i).item (1)
+				if l_item.data /= Void and then l_item.data = a_data then
+					Result := i
+					loop_end := true
+				end
+				i := i + 1
 			end
 		end
 

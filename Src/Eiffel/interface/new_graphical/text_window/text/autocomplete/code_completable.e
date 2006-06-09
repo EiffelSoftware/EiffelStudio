@@ -279,7 +279,11 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 		do
 				-- Calculate correct size to fit
 			if choices.choice_list.column_count > 0 then
-				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+				if choices.choice_list.row_count = 0 then
+					Result := 300
+				else
+					Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+				end
 			end
 		end
 

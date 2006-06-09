@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a non-compiled class in class browser"
+	description: "Grid support editor token rendering, and internal item text pick and drop"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,49 +7,75 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_NONCOMPILED_CLASS_ITEM
+	EB_COMPLETION_LIST_GRID
 
 inherit
-	EB_GRID_CLASS_ITEM
+	ES_GRID
 		redefine
-			associated_class_i,
-			style
+			initialize
 		end
 
-create
-	make
+feature {NONE} -- Initialization
 
-feature{NONE} -- Initialization
-
-	make (a_class: like associated_class_i; a_style: like style) is
-			-- Initialize `associated_class_i' with `a_class'.
-			-- Display `associated_class_i' with `a_style'.
-		require
-			a_class_not_void: a_class /= Void
-			a_style_attached: a_style /= Void
+	initialize is
+			-- Initialization
 		do
-			default_create
-			associated_class_i := a_class
-			set_spacing (layout_constants.Tiny_padding_size)
-			set_style (a_style)
-		ensure
-			associated_class_i_set: associated_class_i = a_class
+			Precursor
+			pick_ended_actions.force_extend (agent on_pick_ended)
+			set_item_pebble_function (agent on_pick)
 		end
 
-feature -- Access
+feature {NONE} -- Implementation
 
-	associated_class_i: CLASS_I
-			-- CLASS_I associated with current item
+	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
+			-- Action performed when pick ends
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_item ?= last_picked_item
+			if l_item /= Void then
+				l_item.set_last_picked_token (0)
+				if l_item.is_parented then
+					l_item.redraw
+				end
+			end
+			last_picked_item := Void
+		ensure
+			last_picked_item_not_attached: last_picked_item = Void
+		end
 
-	associated_class: CLASS_C
-			-- Compiled class associated with current item
+	on_pick (a_item: EV_GRID_ITEM): ANY is
+			-- Action performed when pick on `a_item'.
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_stone: STONE
+			l_index: INTEGER
+		do
+			last_picked_item := Void
+			l_item ?= a_item
+			if l_item /= Void then
+				l_index := l_item.token_index_at_current_position
+				if l_index > 0 then
+					Result := l_item.editor_token_pebble (l_index)
+					l_stone ?= Result
+					if l_stone /= Void then
+						remove_selection
+						set_accept_cursor (l_stone.stone_cursor)
+						set_deny_cursor (l_stone.x_stone_cursor)
+						l_item.set_last_picked_token (l_index)
+						l_item.redraw
+						last_picked_item := l_item
+					end
+				end
+			end
+		end
 
-	style: EB_GRID_NONCOMPILED_CLASS_ITEM_STYLE
-			-- Style of current item
+	last_picked_item: EV_GRID_ITEM
+			-- Last picked item
 
 invariant
-	style_attached: style /= Void
-
+	invariant_clause: True -- Your invariant here
+	
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

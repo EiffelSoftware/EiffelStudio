@@ -113,6 +113,11 @@ feature -- Status report
 		deferred
 		end
 
+	is_editable: BOOLEAN is
+			-- Is editable?
+		deferred
+		end
+
 	discard_feature_signature: BOOLEAN
 			-- Discard feature signature?
 
@@ -426,35 +431,37 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			ind: INTEGER
 			lp: INTEGER
 		do
-			if is_feature_signature then
-				completed := cmp.twin
-				ind := completed.last_index_of (':', completed.count)
-				lp := completed.last_index_of (')', completed.count)
-				if ind > 0 and ind > lp then
-					completed.keep_head (ind - 1)
-				end
-				if discard_feature_signature and completed.has ('(') then
-					check
-						complete_is_not_preceded_with_open_brace: completed.index_of ('(', 1) - 2 >= 0
-					end
-					completed.keep_head (completed.index_of ('(', 1) - 2)
-				end
-			else
-				completed := cmp
-			end
-			if completed.is_empty then
-				if appended_character /= '%U' then
-					insert_char (appended_character)
-				end
-			else
-				complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+			if is_editable then
 				if is_feature_signature then
-					if completed.last_index_of (')',completed.count) = completed.count then
-						place_post_cursor
+					completed := cmp.twin
+					ind := completed.last_index_of (':', completed.count)
+					lp := completed.last_index_of (')', completed.count)
+					if ind > 0 and ind > lp then
+						completed.keep_head (ind - 1)
+					end
+					if discard_feature_signature and completed.has ('(') then
+						check
+							complete_is_not_preceded_with_open_brace: completed.index_of ('(', 1) - 2 >= 0
+						end
+						completed.keep_head (completed.index_of ('(', 1) - 2)
+					end
+				else
+					completed := cmp
+				end
+				if completed.is_empty then
+					if appended_character /= '%U' then
+						insert_char (appended_character)
+					end
+				else
+					complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+					if is_feature_signature then
+						if completed.last_index_of (')',completed.count) = completed.count then
+							place_post_cursor
+						end
 					end
 				end
+				refresh
 			end
-			refresh
 		end
 
 	complete_class_from_window (completed: STRING; appended_character: CHARACTER; remainder: INTEGER) is
@@ -462,23 +469,25 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 		local
 			i: INTEGER
 		do
-			if remainder > 0 then
-				from
-					i := 0
-				until
-					i = remainder
-				loop
-					delete_char
-					i := i + 1
+			if is_editable then
+				if remainder > 0 then
+					from
+						i := 0
+					until
+						i = remainder
+					loop
+						delete_char
+						i := i + 1
+					end
 				end
+				if not completed.is_empty then
+					insert_string (completed)
+				end
+				if appended_character /= '%U' then
+					insert_char (appended_character)
+				end
+				refresh
 			end
-			if not completed.is_empty then
-				insert_string (completed)
-			end
-			if appended_character /= '%U' then
-				insert_char (appended_character)
-			end
-			refresh
 		end
 
 	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is

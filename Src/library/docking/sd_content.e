@@ -26,12 +26,13 @@ feature {NONE} -- Initialization
 			create internal_shared
 			create drop_actions
 			internal_user_widget := a_widget
+			internal_user_widget.set_minimum_size (0, 0)
 			internal_unique_title := a_unique_title
 			internal_pixmap := a_pixmap
 
 			create l_state.make (Current)
 			internal_state := l_state
-			internal_type := {SD_SHARED}.type_tool
+			internal_type := {SD_ENUMERATION}.tool
 
 			long_title := ""
 			short_title := ""
@@ -157,7 +158,7 @@ feature -- Set
 	set_type (a_type: INTEGER) is
 			-- Set `internal_type'.
 		require
-			a_type_valid: a_type = {SD_SHARED}.type_tool or a_type = {SD_SHARED}.type_editor
+			a_type_valid: (create {SD_ENUMERATION}).is_type_valid (a_type)
 		do
 			internal_type := a_type
 		end
@@ -243,6 +244,18 @@ feature -- Set Position
 			set_focus
 		end
 
+	set_default_editor_position is
+			-- Set editor to default editor position.
+		require
+			manager_has_content: manager_has_content (Current)
+			editor_place_holder_in: manager_has_place_holder
+		do
+			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)
+			docking_manager.zones.place_holder_content.close
+		ensure
+			no_place_holder: not manager_has_place_holder
+		end
+
 feature -- Actions
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -313,11 +326,16 @@ feature -- States report
 			Result := docking_manager.has_content (a_content)
 		end
 
+	manager_has_place_holder: BOOLEAN is
+			-- If docking manager has editor place holder?
+		do
+			Result := docking_manager.has_content (docking_manager.zones.place_holder_content)
+		end
+
 	four_direction (a_direction: INTEGER): BOOLEAN is
 			-- If `a_direction' is one of four direction?
 		do
-			Result := a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right or
-				 a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+			Result := (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		end
 
 	target_content_shown (a_target_content: SD_CONTENT): BOOLEAN is

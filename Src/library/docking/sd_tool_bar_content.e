@@ -79,6 +79,7 @@ feature {NONE} -- Initlization
 
 	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING): SD_TOOL_BAR_ITEM is
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
+			-- Warning: use this method to convert pixmap will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
 			not_void: a_ev_item /= Void
 		local
@@ -178,7 +179,7 @@ feature -- Command
 	set_top (a_direction: INTEGER) is
 			-- Set dock at `a_direction'
 		require
-			valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+			valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 			added: is_added
 		do
 			manager.set_top (Current, a_direction)
@@ -355,6 +356,30 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			items.wipe_out
 		end
 
+	clear_widget_items_parents is
+			-- Clear widget items' parents.
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_parent: EV_CONTAINER
+		do
+			l_items := items
+			from
+				l_items.start
+			until
+				l_items.after
+			loop
+				l_widget_item ?= l_items.item
+				if l_widget_item /= Void then
+					l_parent := l_widget_item.widget.parent
+					if l_parent /= Void then
+						l_parent.prune (l_widget_item.widget)
+					end
+				end
+				l_items.forth
+			end
+		end
+
 	seperator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
 			-- Separator after `a_item' if exist.
 		require
@@ -364,6 +389,20 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			if not items.after then
 				items.forth
 				if not items.after then
+					Result ?= items.item
+				end
+			end
+		end
+
+	seperator_before_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
+			-- Separator after `a_item' if exist.
+		require
+			has: items.has (a_item)
+		do
+			items.go_i_th (items.index_of (a_item, 1))
+			if not items.before then
+				items.back
+				if not items.before then
 					Result ?= items.item
 				end
 			end

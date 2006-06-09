@@ -2078,7 +2078,7 @@ feature -- Features info
 							if l_type_i.is_void then
 								l_type_i := argument_actual_type_in (l_feat.arguments.first.type_i, l_class_type)
 							end
-							prepare_property_setter (l_feat, l_name, l_type_i, l_class_type)
+							prepare_property_setter (l_feat, l_class_type, l_name, l_type_i, l_class_type)
 							current_module.insert_property_setter (md_emit.define_member_ref
 								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
 						end
@@ -2389,7 +2389,7 @@ feature -- Features info
 								l_type_i := argument_actual_type_in (l_feat_arg.first.type_i, signature_declaration_type)
 							end
 								-- Define setter method.
-							prepare_property_setter (feat, l_property_name, l_type_i, signature_declaration_type)
+							prepare_property_setter (feat, current_class_type, l_property_name, l_type_i, signature_declaration_type)
 							l_setter := md_emit.define_method (uni_string, current_class_token,
 								l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 							if is_override_or_c_external then
@@ -2768,7 +2768,7 @@ feature -- Features info
 			uni_string.set_string (n)
 		end
 
-	prepare_property_setter (f: FEATURE_I; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
+	prepare_property_setter (f: FEATURE_I; s: CLASS_TYPE; property_name: STRING; return_type: TYPE_I; t: CLASS_TYPE) is
 			-- Fill `uni_string' and `method_sig' with a property setter data
 			-- in class type `t'.
 		require
@@ -2788,7 +2788,7 @@ feature -- Features info
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 			set_signature_type (l_meth_sig, return_type)
 			n := property_setter_prefix + property_name
-			if t.associated_class.feature_named (n) /= Void then
+			if s.associated_class.feature_named (n) /= Void then
 					-- Property setter name conflicts with the feature name.
 				n := property_setter_prefix + t.associated_class.name + "." + f.feature_name
 			end
@@ -3316,6 +3316,11 @@ feature -- IL Generation
 					-- Look for assigner command.
 				generate_property_setter_body (f)
 				method_writer.write_current_body
+				if i /= Void and then i.has_property_setter then
+					md_emit.define_method_impl (current_class_token,
+						current_module.property_setter_token (current_type_id, f.feature_id),
+						current_module.property_setter_token (parent_type.static_type_id, i.feature_id))
+				end
 			end
 			if f.has_property_getter then
 				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))

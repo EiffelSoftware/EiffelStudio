@@ -48,6 +48,12 @@ feature -- Redefine
 			internal_docking_manager.main_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
+	build_indicator is
+			-- Redefine
+		do
+
+		end
+		
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		do

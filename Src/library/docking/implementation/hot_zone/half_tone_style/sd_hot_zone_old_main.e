@@ -38,9 +38,9 @@ feature {NONE} -- Initlization
 			l_width := (l_area.width * hot_zone_size_proportion).ceiling
 			create top_rectangle.make (l_area.left, l_area.top - l_height, l_area.width, l_height)
 			create bottom_rectangle.make (l_area.left, l_area.bottom, l_area.width, l_height)
-			create left_rectangle.make (l_area.left - l_width, l_area.top, l_width, l_area.height)
-			create right_rectangle.make (l_area.right, l_area.top, l_width, l_area.height)
-			type := {SD_SHARED}.type_tool
+			create left_rectangle.make (l_area.left - l_width + 2, l_area.top, l_width, l_area.height)
+			create right_rectangle.make (l_area.right - 2, l_area.top, l_width, l_area.height)
+			type := {SD_ENUMERATION}.tool
 		ensure
 			set: internal_mediator = a_docker_mediator
 			set: internal_docking_manager = a_docking_manager
@@ -56,19 +56,19 @@ feature  -- Redefine
 		do
 			l_caller := internal_mediator.caller
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
+				l_caller.state.set_direction ({SD_ENUMERATION}.top)
 				Result := True
 			end
 			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
+				l_caller.state.set_direction ({SD_ENUMERATION}.bottom)
 				Result := True
 			end
 			if left_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
+				l_caller.state.set_direction ({SD_ENUMERATION}.left)
 				Result := True
 			end
 			if right_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
+				l_caller.state.set_direction ({SD_ENUMERATION}.right)
 				Result := True
 			end
 
@@ -92,7 +92,7 @@ feature  -- Redefine
 			l_left, l_top, l_width, l_height: INTEGER
 		do
 			debug ("docking")
-				print ("%NSD_HOT_ZONE_OLD_MAIN on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
+				print ("%NSD_HOT_ZONE_OLD_MAIN update_for_feedback: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
 			end
 			l_rect := internal_docking_manager.query.container_rectangle_screen
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
@@ -134,6 +134,12 @@ feature  -- Redefine
 			-- Redefine
 		do
 			internal_docking_manager.main_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+		end
+
+	build_indicator is
+			-- Redefine
+		do
+
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

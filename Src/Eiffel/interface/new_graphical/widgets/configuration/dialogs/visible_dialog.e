@@ -1,0 +1,294 @@
+indexing
+	description: "Dialog to choose visible classes."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	VISIBLE_DIALOG
+
+inherit
+	PROPERTY_DIALOG [CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]]
+		redefine
+			initialize
+		end
+
+	CONF_INTERFACE_NAMES
+		undefine
+			default_create,
+			copy
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialization
+		local
+			hb: EV_HORIZONTAL_BOX
+			l_lbl: EV_LABEL
+			l_btn: EV_BUTTON
+		do
+			Precursor {PROPERTY_DIALOG}
+
+			create tree
+			element_container.extend (tree)
+			append_small_margin (element_container)
+
+			create hb
+			element_container.extend (hb)
+			element_container.disable_item_expand (hb)
+
+			create l_lbl.make_with_text (dialog_visible_name)
+			hb.extend (l_lbl)
+			hb.disable_item_expand (l_lbl)
+
+			hb.extend (create {EV_CELL})
+
+			create original_name
+			hb.extend (original_name)
+			hb.disable_item_expand (original_name)
+			original_name.set_minimum_width (250)
+
+			create hb
+			element_container.extend (hb)
+			element_container.disable_item_expand (hb)
+
+			create l_lbl.make_with_text (dialog_visible_renamed_name)
+			hb.extend (l_lbl)
+			hb.disable_item_expand (l_lbl)
+
+			hb.extend (create {EV_CELL})
+
+			create renamed_name
+			hb.extend (renamed_name)
+			hb.disable_item_expand (renamed_name)
+			renamed_name.set_minimum_width (250)
+
+			create hb
+			element_container.extend (hb)
+			element_container.disable_item_expand (hb)
+
+			hb.extend (create {EV_CELL})
+
+			create l_btn.make_with_text_and_action (dialog_visible_add_class, agent add_class)
+			hb.extend (l_btn)
+			hb.disable_item_expand (l_btn)
+
+			create l_btn.make_with_text_and_action (dialog_visible_add_feature, agent add_feature)
+			hb.extend (l_btn)
+			hb.disable_item_expand (l_btn)
+
+			create l_btn.make_with_text_and_action (dialog_visible_remove, agent remove)
+			hb.extend (l_btn)
+			hb.disable_item_expand (l_btn)
+
+			set_size (350, 500)
+			show_actions.extend (agent on_show)
+		end
+
+feature {NONE} -- Gui elements
+
+	tree: EV_TREE
+			-- Tree that displays the visible classes/features.
+
+	original_name: EV_TEXT_FIELD
+			-- Original class/feature name.
+
+	renamed_name: EV_TEXT_FIELD
+			-- Renamed class/feature name.
+
+feature {NONE} -- Agents
+
+	on_show is
+			-- Called if the dialog is shown.
+		require
+			initialized: is_initialized
+		do
+			refresh
+		end
+
+	show_class (a_class: STRING) is
+			-- Show information about `a_class'.
+		require
+			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
+		do
+			current_class := a_class
+			current_feature := Void
+		ensure
+			current_class_set: current_class = a_class
+			current_feature_not_set: current_feature = Void
+		end
+
+	show_feature (a_class, a_feature: STRING) is
+			-- Show information about `a_feature' in `a_class'.
+		require
+			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
+			a_feature_ok: a_feature /= Void and then value.item (a_class).features /= Void and then value.item (a_class).features.has (a_feature)
+		do
+			current_class := a_class
+			current_feature := a_feature
+		ensure
+			current_class_set: current_class = a_class
+			current_feature_set: current_feature = a_feature
+		end
+
+	remove is
+			-- Remove `current_class' or `current_feature'.
+		local
+			l_features: CONF_HASH_TABLE [STRING, STRING]
+		do
+			if current_feature /= Void then
+				l_features := value.item (current_class).features
+				l_features.remove (current_feature)
+				if l_features.is_empty then
+					value.item (current_class).features := Void
+				end
+				refresh
+			elseif current_class /= Void then
+				value.remove (current_class)
+				if value.is_empty then
+					value := Void
+				end
+				refresh
+			end
+		end
+
+	add_class is
+			-- Add a new class.
+		local
+			l_name, l_vis_name: STRING
+		do
+			l_name := original_name.text.as_upper
+			if not l_name.is_empty and then (value = Void or else not value.has (l_name)) then
+				if value = Void then
+					create value.make (1)
+				end
+				l_vis_name := renamed_name.text.as_upper
+				if l_vis_name.is_empty then
+					value.force ([l_name, Void], l_name)
+				else
+					value.force ([l_vis_name, Void], l_name)
+				end
+				current_class := l_name
+				refresh
+			end
+		end
+
+	add_feature is
+			-- Add a new feature.
+		local
+			l_name, l_vis_name: STRING
+			l_feats: CONF_HASH_TABLE [STRING, STRING]
+		do
+			if current_class /= Void and then value /= Void and then value.has (current_class) then
+				l_name := original_name.text.as_lower
+				l_feats := value.item (current_class).features
+				if not l_name.is_empty and then (l_feats = Void or else not l_feats.has (l_name)) then
+					if l_feats = Void then
+						create l_feats.make (1)
+						value.item (current_class).features := l_feats
+					end
+					l_vis_name := renamed_name.text.as_lower
+					if l_vis_name.is_empty then
+						l_feats.force (l_name, l_name)
+					else
+						l_feats.force (l_vis_name, l_name)
+					end
+					current_feature := l_name
+					refresh
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	current_class: STRING
+			-- Currently displayed class.
+
+	current_feature: STRING
+			-- Currently displayed feature.
+
+	refresh is
+			-- Refresh the displayed values.
+		local
+			l_sort: DS_ARRAYED_LIST [STRING]
+			l_class_item, l_feat_item: EV_TREE_ITEM
+			l_rena: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
+			l_feat: CONF_HASH_TABLE [STRING, STRING]
+			l_class, l_feat_name, l_vis_name: STRING
+			l_cur_class: BOOLEAN
+		do
+			if value /= Void then
+					-- sort class names alphabetically
+				from
+					create l_sort.make (value.count)
+					value.start
+				until
+					value.after
+				loop
+					l_sort.put_last (value.key_for_iteration)
+					value.forth
+				end
+				l_sort.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+
+				from
+					tree.wipe_out
+					l_sort.start
+				until
+					l_sort.after
+				loop
+					l_class := l_sort.item_for_iteration
+					l_vis_name := value.item (l_class).class_renamed
+					if l_vis_name /= Void and then not l_vis_name.is_equal (l_class) then
+						create l_class_item.make_with_text (l_class+" ("+l_vis_name+")")
+					else
+						create l_class_item.make_with_text (l_class)
+					end
+
+					l_class_item.select_actions.extend (agent show_class (l_class))
+
+					tree.extend (l_class_item)
+					l_rena := value.item (l_class)
+					if current_class /= Void and then current_class.is_equal (l_class) then
+						if current_feature = Void then
+							l_class_item.enable_select
+						else
+							l_cur_class := True
+						end
+					end
+					if l_rena /= Void and then l_rena.features /= Void then
+						l_feat := l_rena.features
+						from
+							l_feat.start
+						until
+							l_feat.after
+						loop
+							l_vis_name := l_feat.item_for_iteration
+							l_feat_name := l_feat.key_for_iteration
+							if l_vis_name /= Void and then not l_vis_name.is_equal (l_feat_name) then
+								create l_feat_item.make_with_text (l_feat_name+" ("+l_vis_name+")")
+							else
+								create l_feat_item.make_with_text (l_feat_name)
+							end
+
+							l_class_item.extend (l_feat_item)
+							l_feat_item.select_actions.extend (agent show_feature (l_class, l_feat_name))
+							if l_cur_class and current_feature.is_equal (l_feat_name) then
+								l_feat_item.enable_select
+								l_cur_class := False
+							end
+
+							l_feat.forth
+						end
+						l_class_item.expand
+					end
+
+					l_cur_class := False
+					l_sort.forth
+				end
+			end
+		end
+
+invariant
+	elements: is_initialized implies tree /= Void and original_name /= Void and renamed_name /= Void
+
+end

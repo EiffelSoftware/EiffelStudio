@@ -50,7 +50,6 @@ feature -- Access
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
---			Result.select_actions.put_front (agent execute_from (Result))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
@@ -61,20 +60,47 @@ feature -- Basic operations
 		local
 			rescued: BOOLEAN
 			wd: EV_WARNING_DIALOG
+			l_debugs: SEARCH_TABLE [STRING]
+			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
+			l_config_window: CONFIGURATION_WINDOW
+			l_fact: CONF_COMP_FACTORY
+			l_load: CONF_LOAD
 		do
 			if not rescued then
 				if ev_application.ctrl_pressed then
 					gc_window.show
 				else
-					if
-						(not Workbench.is_compiling or else
-						Workbench.last_reached_degree <= 5)
-					then
-						fixme("add new configuration window")
-					else
-						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
+					create l_fact
+					create l_load.make (l_fact)
+					l_load.retrieve_configuration (lace.conf_system.file_name)
+					if l_load.is_error then
+						create wd.make_with_text (l_load.last_error.out)
 						wd.show_modal_to_window (window_manager.
 							last_focused_development_window.window)
+					else
+							-- sort debugs
+						if workbench.system_defined then
+							l_debugs := system.debug_clauses
+						end
+						if l_debugs /= Void then
+							create l_sorted_debugs.make (l_debugs.count)
+							from
+								l_debugs.start
+							until
+								l_debugs.after
+							loop
+								l_sorted_debugs.put_last (l_debugs.item_for_iteration)
+								l_debugs.forth
+							end
+							l_sorted_debugs.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+						else
+							create l_sorted_debugs.make_default
+						end
+
+						l_load.last_system.targets.start
+						l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
+						create l_config_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+						l_config_window.show
 					end
 				end
 			end
@@ -176,5 +202,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SYSTEM_CMD
-
+end

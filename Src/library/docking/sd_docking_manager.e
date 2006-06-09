@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			a_container_not_destroy: not a_container.is_destroyed
 			a_container_not_full: not a_container.full
 			a_widnow_valid: window_valid (a_window)
-			a_container_valid: container_valid (a_container, a_window)
+--			a_container_valid: container_valid (a_container, a_window)
 		do
 			create internal_shared
 			internal_shared.set_show_all_feedback_indicator (True)
@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 			create tool_bar_manager.make (Current)
 
 			init_actions
+
+			contents.extend (zones.place_holder_content)
+			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
@@ -74,10 +77,10 @@ feature {NONE} -- Initialization
 	init_auto_hide_panel is
 			-- Insert auto hide panels.
 		do
-			create internal_auto_hide_panel_left.make (dock_left, Current)
-			create internal_auto_hide_panel_right.make (dock_right, Current)
-			create internal_auto_hide_panel_top.make (dock_top, Current)
-			create internal_auto_hide_panel_bottom.make (dock_bottom, Current)
+			create internal_auto_hide_panel_left.make ({SD_ENUMERATION}.left, Current)
+			create internal_auto_hide_panel_right.make ({SD_ENUMERATION}.right, Current)
+			create internal_auto_hide_panel_top.make ({SD_ENUMERATION}.top, Current)
+			create internal_auto_hide_panel_bottom.make ({SD_ENUMERATION}.bottom, Current)
 			main_container.left_bar.extend (internal_auto_hide_panel_left)
 			main_container.right_bar.extend (internal_auto_hide_panel_right)
 			main_container.top_bar.extend (internal_auto_hide_panel_top)
@@ -144,6 +147,28 @@ feature -- Command
 			l_config.save_config (a_file)
 		end
 
+	save_editors_config (a_file: STRING) is
+			-- Save main window editor config.
+		require
+			not_void: a_file /= Void
+		local
+			l_config: SD_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			l_config.save_editors_config (a_file)
+		end
+
+	save_tools_config (a_file: STRING) is
+			-- Save tools config
+		require
+			not_void: a_file /= Void
+		local
+			l_config: SD_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			l_config.save_tools_config (a_file)
+		end
+
 	open_config (a_file: STRING): BOOLEAN is
 			-- Open a docking config from a_named_file.
 		require
@@ -157,12 +182,31 @@ feature -- Command
 			Result := l_config.open_config (a_file)
 		end
 
+	open_editors_config (a_file: STRING) is
+			-- Open main window editor config.
+		local
+			l_config: SD_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			l_config.open_editors_config (a_file)
+		end
+
+	open_tools_config (a_file: STRING): BOOLEAN is
+			-- Save tools contents config.
+		local
+			l_config: SD_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			Result := l_config.open_tools_config (a_file)
+		end
+
 	set_main_area_background_color (a_color: EV_COLOR) is
 			-- Set main area background color.
 		require
 			a_color_not_void: a_color /= Void
 		do
 			 query.inner_container_main.set_background_color (a_color)
+			 zones.place_holder_widget.set_background_color (a_color)
 		ensure
 			set: query.inner_container_main.background_color.is_equal (a_color)
 		end
@@ -253,13 +297,6 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 
 	main_container: SD_MAIN_CONTAINER
 			-- Container has four tab stub areas in four side and main area in center.
-
-feature -- Enumeration
-
-	Dock_top: INTEGER is 1
-	Dock_bottom: INTEGER is 2
-	Dock_left: INTEGER is 3
-	Dock_right: INTEGER is 4
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY,
 	SD_DOCKING_MANAGER_COMMAND} -- Implementation

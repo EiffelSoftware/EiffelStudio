@@ -9,6 +9,7 @@
 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="debugger.interrupt_every_N_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>	
 	<PREF NAME="debugger.main_splitter_position" HIDDEN="true" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>

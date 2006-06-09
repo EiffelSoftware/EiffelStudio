@@ -114,6 +114,19 @@ feature -- Command
 			set: zone = a_tool_bar_zone
 		end
 
+	regroup_after_customize is
+			-- Initlized group divider and regroup items
+		local
+			l_group_count: INTEGER
+		do
+			create group_divider.make_with_content (content)
+			l_group_count := group_count_by_height (height)
+			lock_update
+			assistant.position_groups (group_divider.best_grouping (l_group_count))
+			last_group_count := l_group_count
+			unlock_update
+		end
+
 feature -- Query
 
 	zone: SD_TOOL_BAR_ZONE
@@ -149,7 +162,7 @@ feature {NONE} -- Implementation of resize issues.
 			else
 				inspect
 					internal_pointer_direction
-				when {SD_DOCKING_MANAGER}.dock_left then
+				when {SD_ENUMERATION}.left then
 					l_old_position := screen_x + width
 					l_pointer_offset := (screen_x + width) - a_screen_x
 					if l_pointer_offset > 0 then
@@ -163,7 +176,7 @@ feature {NONE} -- Implementation of resize issues.
 							unlock_update
 						end
 					end
-				when {SD_DOCKING_MANAGER}.dock_right then
+				when {SD_ENUMERATION}.right then
 					if a_screen_x - screen_x > 0 then
 						l_temp_group_info := group_divider.best_grouping_by_width (a_screen_x - screen_x)
 						l_temp_group_count := group_divider.last_group_index
@@ -172,7 +185,7 @@ feature {NONE} -- Implementation of resize issues.
 							last_group_count := group_divider.last_group_index
 						end
 					end
-				when {SD_DOCKING_MANAGER}.dock_top then
+				when {SD_ENUMERATION}.top then
 					l_old_position := screen_y + height
 					l_pointer_offset := screen_y + height - a_screen_y - (tool_bar.screen_y - screen_y)
 					if l_pointer_offset > 0  then
@@ -185,13 +198,22 @@ feature {NONE} -- Implementation of resize issues.
 							unlock_update
 						end
 					end
-				when {SD_DOCKING_MANAGER}.dock_bottom then
+				when {SD_ENUMERATION}.bottom then
 					l_pointer_offset := a_screen_y - tool_bar.screen_y
 					if l_pointer_offset > 0 then
 						l_temp_group_count := group_count_by_height (l_pointer_offset)
 						if l_temp_group_count /= last_group_count and l_temp_group_count <= group_divider.max_row_count then
+							debug ("docking")
+								print ("%N SD_FLOATING_TOOL_BAR_ZONE on_border_box_pointer_motion bottom dragging:")
+								print ("%N        l_temp_group_count: " + l_temp_group_count.out)
+								print ("%N        last_group_count: " + last_group_count.out)
+							end
 							assistant.position_groups (group_divider.best_grouping (l_temp_group_count))
 							last_group_count := l_temp_group_count
+							debug ("docking")
+								print ("%N        postion tool bar items")
+								print ("%N        group infos: " + group_divider.best_grouping (l_temp_group_count).out)
+							end
 						end
 					end
 				else
@@ -238,15 +260,15 @@ feature {NONE} -- Implementation of resize issues.
 		do
 			create l_styles
 			if 0 <= a_x and a_x <= internal_border_width then
-				internal_pointer_direction := {SD_DOCKING_MANAGER}.dock_left
+				internal_pointer_direction := {SD_ENUMERATION}.left
 			elseif (internal_border_box.width - internal_border_width) <= a_x and a_x <= internal_border_box.width then
-				internal_pointer_direction := {SD_DOCKING_MANAGER}.dock_right
+				internal_pointer_direction := {SD_ENUMERATION}.right
 			elseif 0 <= a_y and a_y <= internal_border_width then
-				internal_pointer_direction := {SD_DOCKING_MANAGER}.dock_top
+				internal_pointer_direction := {SD_ENUMERATION}.top
 			else
-				internal_pointer_direction := {SD_DOCKING_MANAGER}.dock_bottom
+				internal_pointer_direction := {SD_ENUMERATION}.bottom
 			end
-			if internal_pointer_direction = {SD_DOCKING_MANAGER}.dock_left or internal_pointer_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if internal_pointer_direction = {SD_ENUMERATION}.left or internal_pointer_direction = {SD_ENUMERATION}.right then
 				internal_border_box.set_pointer_style (l_styles.sizewe_cursor)
 			else
 				internal_border_box.set_pointer_style (l_styles.sizens_cursor)

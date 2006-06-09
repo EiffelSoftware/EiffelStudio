@@ -51,22 +51,9 @@ feature {NONE} -- Initlization
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_height, l_bottom_width, l_bottom_height)
 			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - l_left_height // 2, l_left_width, l_left_height)
 			create right_rectangle.make (l_area.right - l_right_width, l_area.top + l_area.height // 2 - l_right_height // 2, l_right_width, l_right_height)
-			type := {SD_SHARED}.type_tool
+			type := {SD_ENUMERATION}.tool
 
-			create top_indicator.make (internal_shared.icons.arrow_indicator_up, internal_shared.feedback.feedback_rect)
-			create bottom_indicator.make (internal_shared.icons.arrow_indicator_down, internal_shared.feedback.feedback_rect)
-			create left_indicator.make (internal_shared.icons.arrow_indicator_left, internal_shared.feedback.feedback_rect)
-			create right_indicator.make (internal_shared.icons.arrow_indicator_right, internal_shared.feedback.feedback_rect)
-
-			top_indicator.set_position (top_rectangle.left, top_rectangle.top)
-			bottom_indicator.set_position (bottom_rectangle.left, bottom_rectangle.top)
-			left_indicator.set_position (left_rectangle.left, left_rectangle.top)
-			right_indicator.set_position (right_rectangle.left, right_rectangle.top)
-
-			top_indicator.show
-			bottom_indicator.show
-			left_indicator.show
-			right_indicator.show
+			build_indicator
 		ensure
 			set: a_docker_mediator = internal_mediator
 			set: internal_docking_manager = a_docking_manager
@@ -83,19 +70,19 @@ feature  -- Redefine
 		do
 			l_caller := internal_mediator.caller
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
+				l_caller.state.set_direction ({SD_ENUMERATION}.top)
 				Result := True
 			end
 			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
+				l_caller.state.set_direction ({SD_ENUMERATION}.bottom)
 				Result := True
 			end
 			if left_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
+				l_caller.state.set_direction ({SD_ENUMERATION}.left)
 				Result := True
 			end
 			if right_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
+				l_caller.state.set_direction ({SD_ENUMERATION}.right)
 				Result := True
 			end
 
@@ -223,6 +210,25 @@ feature  -- Redefine
 			if right_indicator.exists then
 				right_indicator.destroy
 			end
+		end
+
+	build_indicator is
+			-- Redeifne
+		do
+			create top_indicator.make (internal_shared.icons.arrow_indicator_up, internal_shared.feedback.feedback_rect)
+			create bottom_indicator.make (internal_shared.icons.arrow_indicator_down, internal_shared.feedback.feedback_rect)
+			create left_indicator.make (internal_shared.icons.arrow_indicator_left, internal_shared.feedback.feedback_rect)
+			create right_indicator.make (internal_shared.icons.arrow_indicator_right, internal_shared.feedback.feedback_rect)
+
+			top_indicator.set_position (top_rectangle.left, top_rectangle.top)
+			bottom_indicator.set_position (bottom_rectangle.left, bottom_rectangle.top)
+			left_indicator.set_position (left_rectangle.left, left_rectangle.top)
+			right_indicator.set_position (right_rectangle.left, right_rectangle.top)
+
+			top_indicator.show
+			bottom_indicator.show
+			left_indicator.show
+			right_indicator.show
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

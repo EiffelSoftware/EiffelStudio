@@ -31,10 +31,8 @@ feature {NONE} -- Initlization
 			internal_zone := a_zone
 			set_rectangle (a_rect)
 			internal_mediator := a_docker_mediator
-			create internal_arrow_indicator_center
-			internal_arrow_indicator_center.set_with_named_file (internal_shared.icons.arrow_indicator_center)
-			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
-			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
+
+			build_indicator
 		ensure
 			set: internal_zone = a_zone
 			set: internal_mediator = a_docker_mediator
@@ -50,16 +48,16 @@ feature -- Redefine
 			l_caller := internal_mediator.caller
 			if internal_mediator.is_dockable then
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
 					Result := True
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
 					Result := True
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
 					Result := True
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
 					l_caller.state.move_to_docking_zone (internal_zone, False)
@@ -125,6 +123,14 @@ feature -- Redefine
 			end
 		end
 
+	build_indicator is
+			-- Build indicator
+		do
+			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
+			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
+			internal_indicator.show
+		end
+
 feature {NONE} -- Implementation functions.
 
 	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE) is
@@ -154,7 +160,6 @@ feature {NONE} -- Implementation functions.
 				create l_bottom_rect.make (internal_rectangle.left + internal_shared.title_bar_height, internal_rectangle.bottom - internal_shared.title_bar_height, internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 				internal_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_bottom_rect)
 			end
-
 		end
 
 	draw_drag_window_indicator (a_screen_x, a_screen_y: INTEGER) is
@@ -167,21 +172,20 @@ feature {NONE} -- Implementation functions.
 			l_shared := internal_shared
 			l_icons := l_shared.icons
 			check rect_not_void: internal_rectangle /= Void end
-			check indicator_not_void: internal_arrow_indicator_center /= Void end
-			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_arrow_indicator_center.width // 2
-			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_arrow_indicator_center.height // 2
+			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
+			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_up)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_up)
 			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_down)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_down)
 			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_left)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_left)
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_right)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_right)
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_center)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_center)
 			else
-				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center)
+				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center)
 			end
 		end
 
@@ -230,9 +234,6 @@ feature {NONE} -- Implementation attributes.
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center, internal_rectangle_title_area: EV_RECTANGLE
 			-- Five rectangle areas which allow user dock a window in this zone.
 
-	internal_arrow_indicator_center: EV_PIXMAP
-			-- One pixmap instance per object.
-
 	internal_indicator: SD_FEEDBACK_INDICATOR
 			-- Feedback indicator at center of zone.
 
@@ -254,8 +255,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end

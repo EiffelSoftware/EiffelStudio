@@ -42,6 +42,9 @@ feature -- Redefine
 			l_left, l_top, l_width, l_height: INTEGER
 			l_in_five_hot_area: BOOLEAN
 		do
+			debug ("docking")
+				print ("%NSD_HOT_ZONE_OLD_DOCKING	update_for_pointer_position_feedback ")
+			end
 			l_in_five_hot_area := internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
 				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
 					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y)
@@ -116,13 +119,13 @@ feature -- Redefine
 				Result := True
 
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 					l_docking_zone ?= internal_zone
 					check must_be_docking_zone: l_docking_zone /= Void end
@@ -136,6 +139,12 @@ feature -- Redefine
 			-- Redefine
 		do
 --			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+		end
+
+	build_indicator is
+			-- Redefine
+		do
+
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

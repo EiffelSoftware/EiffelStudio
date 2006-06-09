@@ -23,6 +23,7 @@ feature {NONE} -- Initlization
 			description := generating_type
 			name := generating_type
 			create select_actions
+			create pointer_button_press_actions
 		end
 
 feature -- Properties
@@ -83,10 +84,15 @@ feature -- Query
 
 	width: INTEGER is
 			-- Redefine
+		local
+			l_shared: SD_SHARED
 		do
 			Result := {SD_TOOL_BAR}.padding_width
 			if text /= Void then
-				Result := Result + {SD_TOOL_BAR}.padding_width + tool_bar.font.string_width (text)
+				if tool_bar /= Void then
+					create l_shared
+					Result := Result + {SD_TOOL_BAR}.padding_width + l_shared.tool_bar_font.string_width (text)
+				end
 			end
 			if pixmap /= Void then
 				Result := Result + pixmap.width
@@ -97,6 +103,8 @@ feature -- Query
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to performed when pointer button is pressed then released.
 
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+			-- Actions to performed when pointer button is pressed.
 
 feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal issues
 
@@ -202,7 +210,7 @@ feature {SD_TOOL_BAR} -- Agents
 			if has_position (a_relative_x, a_relative_y) then
 				if tooltip /= Void and not tooltip.is_equal (tool_bar.tooltip) then
 					tool_bar.set_tooltip (tooltip)
-				else
+				elseif tooltip = Void then
 					tool_bar.remove_tooltip
 				end
 			end
@@ -254,6 +262,14 @@ feature {SD_TOOL_BAR} -- Agents
 				is_need_redraw := True
 			else
 				is_need_redraw := False
+			end
+		end
+
+	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Redefine
+		do
+			if is_sensitive and then has_position (a_x, a_y) then
+				pointer_button_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
 		end
 

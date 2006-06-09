@@ -62,6 +62,11 @@ feature -- Pngs
 
 feature -- Icons
 
+	Icon_blank: EV_PIXMAP is
+		once
+			create Result.make_with_size (16, 16)
+		end
+
 	Icon_dialog_window: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_dialog_window_value)
@@ -1203,6 +1208,11 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_descending_sort_color_value)
 		end
 
+	icon_expandable_right_arrow_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_expandable_right_arrow_color_value)
+		end
+
 	Icon_output_view_icon: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (Icon_output_view_icon_value)
@@ -1528,6 +1538,7 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (11, 13, icon_deferred_obsolete_assigner_value)
 			Result.add_pixmap (12, 13, icon_ascending_sort_color_value)
 			Result.add_pixmap (13, 13, icon_descending_sort_color_value)
+			Result.add_pixmap (14, 13, icon_expandable_right_arrow_color_value)
 			Result.add_pixmap (1, 14, icon_folder_symbol_color_value)
 			Result.add_pixmap (2, 14, icon_clusters_symbol_color_value)
 			Result.add_pixmap (3, 14, icon_overrides_symbol_color_value)
@@ -1775,6 +1786,7 @@ feature {NONE} -- Constants
 			icon_override_symbol_color_value,
 			icon_ascending_sort_color_value,
 			icon_descending_sort_color_value,
+			icon_expandable_right_arrow_color_value,
 			icon_assembly_namespace_symbol_color_value,
 			icon_overriden_class_color_value,
 			icon_overriden_light_class_color_value,

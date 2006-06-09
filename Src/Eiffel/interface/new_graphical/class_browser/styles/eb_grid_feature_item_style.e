@@ -49,6 +49,19 @@ feature -- Style type
 		do
 		end
 
+	is_overload_name_used: BOOLEAN
+			-- Is overload name used?
+
+feature -- Element change
+
+	use_overload_name (a_b: BOOLEAN) is
+			-- Use `overload_name' or not?
+		do
+			is_overload_name_used := a_b
+		ensure
+			is_overload_name_used_set: is_overload_name_used = a_b
+		end
+
 feature -- Image
 
 	image (a_item: EB_GRID_FEATURE_ITEM): STRING is
@@ -78,7 +91,6 @@ feature -- Image
 			-- Text of current style for `a_item'
 		deferred
 		end
-
 
 feature -- Tooltip
 

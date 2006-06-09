@@ -1251,8 +1251,8 @@ feature {NONE}-- Implementation
 								if name_id = id_list.item then
 									stop := True
 										-- Compute actual type for local
-									Result := local_evaluated_type (name_id,
-										entities_list.item.type, l_current_class_c,
+									Result := local_evaluated_type (entities_list.item.type,
+										l_current_class_c,
 										current_feature)
 								end
 								id_list.forth
@@ -1359,11 +1359,10 @@ feature {NONE}-- Implementation
 
 feature {NONE}-- Implementation
 
-	local_evaluated_type (a_local_name_id: INTEGER; a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A is
+	local_evaluated_type (a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A is
 			-- Given `a_type' from AST resolve its type in `a_current_class' for feature called
 			-- `a_feature_name'.
 		require
-			a_local_name_id_positive: a_local_name_id > 0
 			a_type_not_void: a_type /= Void
 			a_current_class_not_void: a_current_class /= Void
 			a_feature_not_void: a_feature /= Void

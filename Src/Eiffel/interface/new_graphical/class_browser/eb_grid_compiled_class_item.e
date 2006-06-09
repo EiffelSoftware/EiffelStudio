@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 		do
 			default_create
 			associated_class := a_class
-			set_spacing (3)
+			set_spacing (layout_constants.Tiny_padding_size)
 			set_style (a_style)
 		ensure
 			associated_class_set: associated_class = a_class

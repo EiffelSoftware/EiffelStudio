@@ -1,5 +1,5 @@
 indexing
-	description: "'name: TYPE' as one of completion possiblities."
+	description: "Only name is displayed as displaying a local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,53 +7,39 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_NAME_WITH_TYPE_FOR_COMPLETION
+	EB_GRID_LOCAL_ITEM_NAME_STYLE
 
 inherit
-	EB_NAME_FOR_COMPLETION
-		rename
-			make as old_make
-		redefine
-			grid_item
-		end
+	EB_GRID_LOCAL_ITEM_STYLE
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: STRING; a_type: TYPE_A) is
-			-- Init
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-		do
-			old_make (a_name)
-			return_type := a_type
-			if show_type then
-				append (completion_type)
-			end
-		end
+	SHARED_TEXT_ITEMS
 
 feature -- Access
 
-	grid_item: EB_GRID_LOCAL_ITEM is
-			-- Grid item
-		local
-			l_style: EB_GRID_LOCAL_ITEM_STYLE
+	text (a_item: EB_GRID_LOCAL_ITEM): LIST [EDITOR_TOKEN] is
+			-- Text of current style for `a_item'
 		do
-			if show_type then
-					-- We don't yet have a way to print colorized dumy.
-				create {EB_GRID_LOCAL_ITEM_NAME_STYLE}l_style
-			else
-				create {EB_GRID_LOCAL_ITEM_NAME_STYLE}l_style
-			end
-			create Result.make_with_type (name, return_type, l_style)
-			Result.set_tooltip_display_function (agent display_colorized_tooltip)
-			Result.enable_pixmap
-			Result.editor_token_text.set_overriden_font (label_font_table)
-			Result.set_data (Current)
+			token_writer.new_line
+			token_writer.process_local_text (a_item.name)
+			Result := token_writer.last_line.content
 		end
+
+feature{NONE} -- Implementation
+
+	setup_tooltip (a_item: EB_GRID_LOCAL_ITEM) is
+			-- Setup tooltip for `a_item'.
+		do
+			if a_item.general_tooltip /= Void then
+				a_item.remove_general_tooltip
+			end
+			a_item.set_general_tooltip (tooltip (a_item))
+			a_item.general_tooltip.veto_tooltip_display_functions.extend (agent a_item.should_tooltip_be_displayed)
+		end
+
+feature {NONE} -- Implementation
+
+invariant
+	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

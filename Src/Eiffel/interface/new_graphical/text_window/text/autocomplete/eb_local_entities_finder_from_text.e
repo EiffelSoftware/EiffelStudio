@@ -131,6 +131,7 @@ feature {NONE} -- Implementation
 			-- Build list of local types corresponding to a position a text defined by `line' and `token'.
 			-- Resulting local nodes will be put in `found_locals_list'.
 		require
+			line_not_void: line /= Void
 			found_locals_list_empty: found_locals_list.is_empty
 		local
 			l_local_string: STRING

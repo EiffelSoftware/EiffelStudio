@@ -231,8 +231,11 @@ feature{NONE} -- Redraw
 		do
 			l_parent := parent
 			l_focused := l_parent.has_focus
+
 				-- Clear item region
-			if row.background_color /= Void then
+			if background_color/= Void then
+				a_drawable.set_foreground_color (background_color)
+			elseif row.background_color /= Void then
 				a_drawable.set_foreground_color (row.background_color)
 			else
 				a_drawable.set_foreground_color (l_parent.background_color)

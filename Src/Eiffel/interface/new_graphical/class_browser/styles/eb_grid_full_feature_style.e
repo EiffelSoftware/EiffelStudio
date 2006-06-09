@@ -43,7 +43,12 @@ feature -- Access
 		do
 			token_writer.new_line
 			if a_item.associated_feature.is_real_feature then
-				a_item.associated_feature.e_feature.append_signature (token_writer)
+				if is_overload_name_used and then a_item.overload_name /= Void then
+					token_writer.process_feature_text (a_item.overload_name, a_item.associated_feature.e_feature, False)
+					a_item.associated_feature.e_feature.append_just_signature (token_writer)
+				else
+					a_item.associated_feature.e_feature.append_signature (token_writer)
+				end
 			else
 				token_writer.add (a_item.associated_feature.name)
 			end

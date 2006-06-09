@@ -53,7 +53,7 @@ feature{NONE} -- Initialization
 		require
 			a_class_attached: a_class /= Void
 			a_parent_attached: a_parent /= Void
-			a_parent_valid: a_parent.is_group and a_parent.is_valid_domain_item
+--			a_parent_valid: a_parent.is_group and a_parent.is_valid_domain_item
 		do
 			make (a_class)
 			set_parent (a_parent)

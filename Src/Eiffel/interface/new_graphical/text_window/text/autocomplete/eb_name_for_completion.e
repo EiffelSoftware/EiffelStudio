@@ -16,7 +16,10 @@ inherit
 			{NONE} set_icon
 		redefine
 			make,
-			icon
+			icon,
+			child_type,
+			grid_item,
+			child_grid_items
 		end
 
 	EB_SHARED_PREFERENCES
@@ -33,13 +36,22 @@ inherit
 			out
 		end
 
+	QL_UTILITY
+		undefine
+			copy,
+			is_equal,
+			out
+		end
+
 create
-	make
+	make,
+	make_token,
+	make_tokens
 
 create {EB_NAME_FOR_COMPLETION}
 	make_string
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name: STRING) is
 			-- Create feature name with value `name'
@@ -48,6 +60,32 @@ feature -- Initialization
 			has_dot := True
 		ensure then
 			name_set: name = a_name
+		end
+
+	make_token (a_token: EDITOR_TOKEN) is
+			-- Create with single token.
+		require
+			a_token_not_void: a_token /= Void
+		local
+			l_list: ARRAYED_LIST [EDITOR_TOKEN]
+		do
+			create l_list.make (1)
+			l_list.extend (a_token)
+			set_tokens (l_list)
+		ensure
+			name_not_void: name /= Void
+			token_exist: token_exist
+		end
+
+	make_tokens (a_tokens: like tokens) is
+			-- Create with `a_tokens'
+		require
+			a_tokens_not_void: a_tokens /= Void
+		do
+			set_tokens (a_tokens)
+		ensure
+			name_not_void: name /= Void
+			token_exist: token_exist
 		end
 
 feature -- Query
@@ -64,9 +102,54 @@ feature -- Query
 			Result := pixmaps.icon_other_feature
 		end
 
+	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
+			-- Corresponding grid item
+		local
+			l_local_item: EB_GRID_LOCAL_ITEM
+		do
+			if not token_exist then
+				create l_local_item.make (Current, create {EB_GRID_LOCAL_ITEM_NAME_STYLE})
+				l_local_item.set_tooltip_display_function (agent display_colorized_tooltip)
+				l_local_item.enable_pixmap
+				Result := l_local_item
+			else
+				create Result
+				Result.set_spacing (layout_constants.Tiny_padding_size)
+				Result.set_text_with_tokens (tokens)
+				Result.set_pixmap (icon)
+			end
+			Result.editor_token_text.set_overriden_font (label_font_table)
+			Result.set_data (Current)
+		end
+
+	child_grid_items: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM] is
+			-- Grid items of childrenS
+		local
+			i: INTEGER
+		do
+			create Result.make (children.count)
+			from
+				i := children.lower
+			until
+				i > children.upper
+			loop
+				Result.extend (children.item (i).grid_item)
+				i := i + 1
+			end
+		end
+
+	tokens: LIST [EDITOR_TOKEN]
+			-- Tokens to display		
+
 feature -- Status Report
 
 	has_dot: BOOLEAN
+
+	token_exist: BOOLEAN is
+			-- Does `tokens' exist?
+		do
+			Result := tokens /= Void
+		end
 
 	show_signature: BOOLEAN is
 			-- Should signature be displayed?
@@ -80,19 +163,56 @@ feature -- Status Report
 		    Result := preferences.editor_data.show_completion_type
 		end
 
+	show_disambiguated_name: BOOLEAN is
+			-- Should disambiguated name be displayed?
+		do
+			Result := preferences.editor_data.show_completion_disambiguated_name
+		end
+
+	display_colorized_tooltip: BOOLEAN is
+			-- Display colorized tooltip?
+			-- We do not display this tooltip since focus issue.
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_has_dot (hd: BOOLEAN) is
 			-- assign `hd' to `has_dot'
 		do
 			has_dot := hd
+		end
 
+	set_tokens (a_tokens: like tokens) is
+			-- Set `tokens' with `a_tokens'.
+		require
+			a_tokens_not_void: a_tokens /= Void
+		local
+			l_string: STRING
+		do
+			tokens := a_tokens
+			create l_string.make (50)
+			from
+				tokens.start
+			until
+				tokens.after
+			loop
+				l_string.append (tokens.item.image)
+				tokens.forth
+			end
+			make (l_string)
+		ensure
+			token_exist: token_exist
 		end
 
 feature {NONE} -- Implementation
 
 	return_type: TYPE_A
 			-- Associated feature's return type
+
+	child_type: EB_NAME_FOR_COMPLETION;
+		-- Child type
 
 	completion_type: STRING is
 			-- The type of the feature (for a function, attribute)
@@ -118,6 +238,18 @@ feature {NONE} -- Implementation
 
 	internal_completion_type: STRING;
 			-- cache `completion_type'
+
+	label_font_table: SPECIAL [EV_FONT] is
+			-- Font of a label
+		local
+			l_bold_font: EV_FONT
+		once
+			create Result.make (3)
+			Result.put ((create {EV_LABEL}).font, 1)
+			l_bold_font := (create {EV_LABEL}).font
+			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			Result.put (l_bold_font, 2)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

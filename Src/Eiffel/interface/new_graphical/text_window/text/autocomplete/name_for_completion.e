@@ -30,20 +30,42 @@ feature {NONE} -- Initialization
 		do
 			make_from_string (a_name)
 			name := a_name
+			full_name := a_name
 		end
 
 feature -- Access
 
 	name: STRING
 			-- Completion item name
+			-- i.e. Ambiguated name
 
-	full_insert_name: STRING is
-			-- Full name to insert in editor
+	full_name: STRING
+			-- Full completion item name
+
+	insert_name: STRING is
+			-- Name to insert in editor
 		do
 			Result := out
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
+		end
+
+	full_insert_name: STRING is
+			-- Full name to insert in editor
+		do
+			Result := insert_name
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	sort_name: STRING is
+			-- Name for sorting
+		do
+			Result := full_insert_name.as_lower
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	icon: EV_PIXMAP is
@@ -62,6 +84,52 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
+	grid_item: EV_GRID_ITEM is
+			-- Grid item
+		do
+			create {EV_GRID_LABEL_ITEM}Result.make_with_text (out)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	child_grid_items: ARRAYED_LIST [EV_GRID_ITEM] is
+			-- Grid items of children
+		require
+			has_child: has_child
+		local
+			i: INTEGER
+		do
+			create Result.make (children.count)
+			from
+				i := children.lower
+			until
+				i > children.upper
+			loop
+				Result.extend (children.item (i).grid_item)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	has_child: BOOLEAN is
+			-- Does current have child?
+		do
+			Result := children /= Void and then not children.is_empty
+		end
+
+	has_parent: BOOLEAN is
+			-- Does current have parent?
+		do
+			Result := parent /= Void
+		end
+
+
+	is_expanded: BOOLEAN
+			-- Is expanded?
+
 feature -- Element change
 
 	set_icon (a_icon: EV_PIXMAP) is
@@ -74,44 +142,123 @@ feature -- Element change
 			icon_internal_not_void: icon_internal /= Void
 		end
 
+	add_child (a_child: like child_type) is
+			-- Add `a_child' into `children'.
+		require
+			a_child_not_void: a_child /= Void
+		do
+			if children = Void then
+				create children.make (1, 10)
+			end
+			children_index := children_index + 1
+			if children_index > children.upper then
+				children.grow (children.capacity + 10)
+			end
+			children.put (a_child, children_index)
+			a_child.set_parent (Current)
+		ensure
+			a_child_added: children.has (a_child)
+		end
+
+	remove_child (a_child: like child_type) is
+			-- Remove `a_child' from `children'.
+		require
+			a_child_not_void: a_child /= Void
+		do
+			if children /= Void then
+				children.prune_all (a_child)
+			end
+		ensure
+			a_child_removed: not children.has (a_child)
+		end
+
+	sort_children is
+			-- Sort children
+		do
+			if children /= Void and children_index > 1 then
+				children := children.subarray (1, children_index)
+				children.sort
+			else
+				children := Void
+			end
+		end
+
+	set_parent (a_parent: like parent) is
+			-- Set `parent' with `a_parent'.
+		do
+			parent := a_parent
+		ensure
+			parent_set: parent = a_parent
+		end
+
+	set_is_expanded (a_b: BOOLEAN) is
+			-- Set `is_expanded' with `a_b'.
+		do
+			is_expanded := a_b
+		ensure
+			is_expanded_set: is_expanded = a_b
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is name made of same character sequence as `other' (case has no importance)
+		local
+			l_name: STRING
 		do
-			if name = Void or other.name = Void then
-				Result := Precursor {STRING} (other)
-			else
-				Result := name.as_lower.is_equal (other.name.as_lower)
-			end
+			l_name := sort_name
+			Result := l_name.is_equal (other.sort_name)
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is name lexicographically lower than `other'?
+		local
+			l_name: STRING
 		do
-			if name = Void or other.name = Void then
+			l_name := sort_name
+			if l_name.is_empty then
 				Result := Precursor {STRING} (other)
 			else
-				Result := name.as_lower < other.name.as_lower
+				Result := l_name < other.sort_name
 			end
 		end
 
-	begins_with (s:STRING): BOOLEAN is
+	begins_with (s: STRING): BOOLEAN is
 			-- Does this feature name begins with `s'?
+		require
+			s_not_void: s /= Void
 		local
 			lower_s: STRING
+			i : INTEGER
+			l_upper: INTEGER
+			l_b: BOOLEAN
+			l_first_found: BOOLEAN
 		do
-			if count >= s.count then
+			if full_name.count >= s.count then
 				lower_s := s.as_lower
-				Result := as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+				Result := full_name.as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
 			end
 		end
+
+feature {CODE_COMPLETION_WINDOW} -- Children
+
+	parent: like child_type
+			-- Parent of current
+
+	children: SORTABLE_ARRAY [like child_type]
+			-- Possible children nodes.
+			-- Normally void.
+
+	children_index: INTEGER
+			-- Children index
 
 feature {NONE} -- Implementation
 
 	icon_internal: EV_PIXMAP;
-			-- Icon	
+			-- Icon
 
+	child_type: NAME_FOR_COMPLETION;
+			-- Child type
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

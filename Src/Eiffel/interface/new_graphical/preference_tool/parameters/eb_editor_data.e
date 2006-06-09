@@ -217,6 +217,12 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := show_completion_type_preference.value
 		end
 
+	show_completion_disambiguated_name: BOOLEAN is
+			-- Should disambiguated name be shown in completion list?
+		do
+			Result := show_completion_disambiguated_name_preference.value
+		end
+
 	syntax_complete_enabled: BOOLEAN is
 			-- should main keywords be completed ?
 		do
@@ -306,6 +312,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_completion_type_preference: BOOLEAN_PREFERENCE
 			-- Should feature type be shown in completion list?
 
+	show_completion_disambiguated_name_preference: BOOLEAN_PREFERENCE
+			-- Should disambiguated name be shown in completion list?
+
 	syntax_complete_enabled_preference: BOOLEAN_PREFERENCE
 			-- should main keywords be completed ?
 
@@ -372,6 +381,9 @@ feature {NONE} -- Preference Strings
 
 	show_completion_type_string: STRING is "editor.eiffel.show_completion_type"
 			-- Should feature type be shown in completion list?
+
+	show_completion_disambiguated_name_string: STRING is "editor.eiffel.show_completion_disambiguated_name"
+			-- Should disambiguated name be shown in completion list?
 
 	syntax_complete_enabled_string: STRING is "editor.eiffel.syntax_complete_enabled"
 			-- should main keywords be completed ?
@@ -472,6 +484,7 @@ feature {NONE} -- Initialization
 			filter_completion_list_preference := l_manager.new_boolean_preference_value (l_manager, filter_completion_list_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_signature_string, True)
 			show_completion_type_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_type_string, True)
+			show_completion_disambiguated_name_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_disambiguated_name_string, False)
 			customized_string_1_preference := l_manager.new_string_preference_value (l_manager, customized_string_1_string, "")
 			customized_strings.extend (customized_string_1_preference)
 			customized_string_2_preference := l_manager.new_string_preference_value (l_manager, customized_string_2_string, "")
@@ -537,6 +550,7 @@ feature {NONE} -- Initialization
 			filter_completion_list_preference.change_actions.extend (agent update)
 			show_completion_signature_preference.change_actions.extend (agent update)
 			show_completion_type_preference.change_actions.extend (agent update)
+			show_completion_disambiguated_name_preference.change_actions.extend (agent update)
 			customized_string_1_preference.change_actions.extend (agent update)
 			customized_string_2_preference.change_actions.extend (agent update)
 			customized_string_3_preference.change_actions.extend (agent update)
@@ -941,6 +955,7 @@ invariant
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void
+	show_completion_disambiguated_name_preference_not_void: show_completion_disambiguated_name_preference /= Void
 	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void

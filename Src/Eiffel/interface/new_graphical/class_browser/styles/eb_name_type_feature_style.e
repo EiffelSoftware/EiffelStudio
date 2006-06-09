@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a non-compiled class in class browser"
+	description: "Objects that represent the feature style that only show full name and type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,48 +7,60 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_NONCOMPILED_CLASS_ITEM
+	EB_NAME_TYPE_FEATURE_STYLE
 
 inherit
-	EB_GRID_CLASS_ITEM
-		redefine
-			associated_class_i,
-			style
-		end
+	EB_GRID_FEATURE_ITEM_STYLE
 
-create
-	make
+feature -- Tooltip
 
-feature{NONE} -- Initialization
-
-	make (a_class: like associated_class_i; a_style: like style) is
-			-- Initialize `associated_class_i' with `a_class'.
-			-- Display `associated_class_i' with `a_style'.
-		require
-			a_class_not_void: a_class /= Void
-			a_style_attached: a_style /= Void
+	tooltip (a_item: EB_GRID_FEATURE_ITEM): EB_EDITOR_TOKEN_TOOLTIP is
+			-- Setup related parameters for tooltip display.
+		local
+			l_tooltip: EB_FEATURE_COMMENT_TOOLTIP
 		do
-			default_create
-			associated_class_i := a_class
-			set_spacing (layout_constants.Tiny_padding_size)
-			set_style (a_style)
-		ensure
-			associated_class_i_set: associated_class_i = a_class
+			if a_item.associated_feature.is_real_feature then
+				create l_tooltip.make (a_item.associated_feature.e_feature, a_item.pointer_enter_actions, a_item.pointer_leave_actions, agent a_item.is_destroyed)
+				initialize_tooltip (l_tooltip)
+				Result := l_tooltip
+			end
 		end
 
 feature -- Access
 
-	associated_class_i: CLASS_I
-			-- CLASS_I associated with current item
+	text (a_item: EB_GRID_FEATURE_ITEM): LIST [EDITOR_TOKEN] is
+			-- Text of current style for `a_item'
+		do
+			token_writer.new_line
+			if a_item.associated_feature.is_real_feature then
+				if is_overload_name_used and then a_item.overload_name /= Void then
+					token_writer.process_feature_text (a_item.overload_name, a_item.associated_feature.e_feature, False)
+				else
+					a_item.associated_feature.e_feature.append_full_name (token_writer)
+				end
+				a_item.associated_feature.e_feature.append_just_type (token_writer)
+			else
+				token_writer.add (a_item.associated_feature.name)
+			end
+			Result := token_writer.last_line.content
+		end
 
-	associated_class: CLASS_C
-			-- Compiled class associated with current item
+feature{NONE} -- Implementation
 
-	style: EB_GRID_NONCOMPILED_CLASS_ITEM_STYLE
-			-- Style of current item
-
-invariant
-	style_attached: style /= Void
+	setup_tooltip (a_item: EB_GRID_FEATURE_ITEM) is
+			-- Setup tooltip for `a_item'.
+		local
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+		do
+			if a_item.general_tooltip /= Void then
+				a_item.remove_general_tooltip
+			end
+			l_tooltip := tooltip (a_item)
+			if l_tooltip /= Void then
+				a_item.set_general_tooltip (l_tooltip)
+				a_item.general_tooltip.veto_tooltip_display_functions.extend (agent a_item.should_tooltip_be_displayed)
+			end
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -16,28 +16,56 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_overload
 
 feature {NONE} -- Initialization
 
 	make (a_feature: like associated_feature; a_style: like style) is
 			-- Initialize `associated_feature' with
 		require
-			a_feature_not_vid: a_feature /= Void
+			a_feature_not_void: a_feature /= Void
 			a_style_attached: a_style /= Void
 		do
 			default_create
 			associated_feature := a_feature
-			set_spacing (3)
+			set_spacing (layout_constants.Tiny_padding_size)
 			set_style (a_style)
 		ensure
 			associated_feature_set: associated_feature = a_feature
+		end
+
+	make_overload (a_feature: like associated_feature; a_style: like style; a_overload_name: like overload_name) is
+			-- Initialize with `overload_name'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_style_attached: a_style /= Void
+			a_overload_name_not_void: a_overload_name /= Void
+		do
+			overload_name := a_overload_name
+			make (a_feature, a_style)
+		ensure
+			associated_feature_set: associated_feature = a_feature
+			overload_name_set: overload_name = a_overload_name
 		end
 
 feature -- Access
 
 	associated_feature: QL_FEATURE
 			-- Feature associated with current item.
+
+	overload_name: STRING
+			-- Overload name.
+
+feature -- Element change
+
+	set_overload_name (a_name: STRING) is
+			-- Set `overload_name' with `a_name'.
+		do
+			overload_name := a_name
+		ensure
+			overload_name_is_set: overload_name = a_name
+		end
 
 feature{NONE} -- Pixmap
 

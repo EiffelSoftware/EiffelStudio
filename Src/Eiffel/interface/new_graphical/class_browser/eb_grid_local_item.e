@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a non-compiled class in class browser"
+	description: "Grid item that represents a local"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,48 +7,70 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_NONCOMPILED_CLASS_ITEM
+	EB_GRID_LOCAL_ITEM
 
 inherit
-	EB_GRID_CLASS_ITEM
-		redefine
-			associated_class_i,
-			style
+	EB_GRID_COMPILER_ITEM
+
+	EB_CONSTANTS
+		undefine
+			copy,
+			is_equal,
+			default_create
 		end
 
 create
-	make
+	make,
+	make_with_type
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_class: like associated_class_i; a_style: like style) is
-			-- Initialize `associated_class_i' with `a_class'.
-			-- Display `associated_class_i' with `a_style'.
+	make (a_name: STRING; a_style: EB_GRID_LOCAL_ITEM_STYLE) is
+			-- Initialization
 		require
-			a_class_not_void: a_class /= Void
-			a_style_attached: a_style /= Void
+			a_name_not_void: a_name /= Void
+			a_style_not_void: a_style /= Void
 		do
 			default_create
-			associated_class_i := a_class
+			name := a_name
 			set_spacing (layout_constants.Tiny_padding_size)
 			set_style (a_style)
-		ensure
-			associated_class_i_set: associated_class_i = a_class
+		end
+
+	make_with_type (a_name: STRING; a_type: TYPE_A; a_style: EB_GRID_LOCAL_ITEM_STYLE) is
+			-- Initialization
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_style_not_void: a_style /= Void
+		do
+			type := a_type
+			make (a_name, a_style)
 		end
 
 feature -- Access
 
-	associated_class_i: CLASS_I
-			-- CLASS_I associated with current item
+	name: STRING
+			-- Name of the local.
 
-	associated_class: CLASS_C
-			-- Compiled class associated with current item
+	type: TYPE_A
+			-- Type of the local.
 
-	style: EB_GRID_NONCOMPILED_CLASS_ITEM_STYLE
-			-- Style of current item
+	item_pixmap: EV_PIXMAP is
+			-- Pixmap associated to current compiler item
+		do
+			Result := pixmaps.icon_other_feature
+		end
+
+feature {NONE} -- Implementation
+
+	internal_replace (original, new: STRING) is
+			-- Replace every occurrence of `original' with `new' in image.
+		do
+		end
 
 invariant
-	style_attached: style /= Void
+	invariant_clause: True -- Your invariant here
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

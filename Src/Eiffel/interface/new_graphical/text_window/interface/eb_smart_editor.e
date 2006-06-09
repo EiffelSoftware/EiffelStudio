@@ -413,7 +413,7 @@ feature {NONE} -- Handle keystrokes
 			switch_auto_point := False
 		end
 
-feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
+feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 
 	auto_complete_after_dot: BOOLEAN is
 	        -- Should build autocomplete dialog after call on valid target?
@@ -429,13 +429,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			invalidate_cursor_rect (False)
 			resume_cursor_blinking
 			set_focus
-		end
-
-	insert_character_from_completion_dialog (a_character: CHARACTER) is
-			-- Insert `a_character' at current curosor position
-		do
-			text_displayed.insert_char (a_character)
-			invalidate_cursor_rect (True)
 		end
 
 	calculate_completion_list_x_position: INTEGER is
@@ -599,7 +592,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 				Result := preferences.development_window_data.completion_list_width
 			else
 					-- Calculate correct size to fit
-				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+				Result := Precursor {EB_TAB_CODE_COMPLETABLE}
 			end
 		end
 

@@ -17,7 +17,10 @@ inherit
 			icon,
 			tooltip_text,
 			is_class,
-			full_insert_name
+			insert_name,
+			grid_item,
+			full_insert_name,
+			begins_with
 		end
 
 	PREFIX_INFIX_NAMES
@@ -33,16 +36,24 @@ create {EB_FEATURE_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE) is
+	make (a_feature: E_FEATURE; a_name: STRING) is
 			-- Create and initialize a new completion feature using `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_s: STRING
 		do
 			if a_feature.is_infix then
-				make_old (extract_symbol_from_infix(a_feature.name))
+				l_s := extract_symbol_from_infix(a_feature.name)
 			else
-				make_old (a_feature.name)
+				l_s := a_feature.name
 			end
+			if a_name /= Void then
+				make_old (a_name)
+			else
+				make_old (l_s)
+			end
+			full_name := l_s
 
 			associated_feature := a_feature
 			return_type := a_feature.type
@@ -53,6 +64,14 @@ feature {NONE} -- Initialization
 			if show_type then
 				append (completion_type)
 			end
+
+			create insert_name_internal.make (name.count + feature_signature.count)
+			insert_name_internal.append (name)
+			insert_name_internal.append (feature_signature)
+
+			create full_insert_name_internal.make (associated_feature.name.count + feature_signature.count)
+			full_insert_name_internal.append (associated_feature.name)
+			full_insert_name_internal.append (feature_signature)
 		ensure
 			associated_feature_set: associated_feature = a_feature
 			return_type_set: return_type = a_feature.type
@@ -63,12 +82,16 @@ feature -- Access
 	is_class: BOOLEAN is False
 			-- Is completion feature a class, of course not.	
 
+	insert_name: STRING is
+			-- Name to insert in editor
+		do
+			Result := insert_name_internal
+		end
+
 	full_insert_name: STRING is
 			-- Full name to insert in editor
 		do
-			create Result.make (associated_feature.name.count + feature_signature.count)
-			Result.append (associated_feature.name)
-			Result.append (feature_signature)
+			Result := full_insert_name_internal
 		end
 
 	icon: EV_PIXMAP is
@@ -87,12 +110,55 @@ feature -- Access
 			Result.append (completion_type)
 		end
 
+	grid_item: EB_GRID_FEATURE_ITEM is
+			-- Grid item
+		local
+			l_f: QL_REAL_FEATURE
+			l_class: QL_CLASS
+			l_style: EB_GRID_FEATURE_ITEM_STYLE
+		do
+			l_class := query_class_item_from_class_c (associated_feature.associated_class)
+			create l_f.make_with_parent (associated_feature, l_class)
+			if not show_signature and then not show_type then
+				create {EB_GRID_JUST_NAME_FEATURE_STYLE}l_style
+			elseif show_signature and then not show_type then
+				create {EB_NAME_SIGNATURE_FEATURE_STYLE}l_style
+			elseif show_type and then not show_signature then
+				create {EB_NAME_TYPE_FEATURE_STYLE}l_style
+			elseif show_type and then show_signature then
+				create {EB_GRID_FULL_FEATURE_STYLE}l_style
+			end
+			l_style.use_overload_name (not show_disambiguated_name)
+			create Result.make_overload (l_f, l_style, name)
+			Result.set_tooltip_display_function (agent display_colorized_tooltip)
+			Result.enable_pixmap
+			Result.editor_token_text.set_overriden_font (label_font_table)
+			Result.set_data (Current)
+		end
+
 feature -- Query
 
 	has_arguments: BOOLEAN is
 			-- Does `associated_feature' have arguments?
 		do
 			Result := associated_feature.has_arguments
+		end
+
+feature -- Comparison
+
+	begins_with (s: STRING): BOOLEAN is
+			-- Does this feature name begins with `s'?
+		local
+			lower_s: STRING
+		do
+			if show_disambiguated_name then
+				Result := Precursor {EB_NAME_FOR_COMPLETION} (s)
+			else
+				if name.count >= s.count then
+					lower_s := s.as_lower
+					Result := name.as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -122,6 +188,10 @@ feature {NONE} -- Implementation
 
 	internal_feature_signature: STRING
 			-- cache `feature_signature'
+
+	insert_name_internal: STRING
+
+	full_insert_name_internal: STRING
 
 invariant
 	associated_feature_not_void: associated_feature /= Void

@@ -659,8 +659,7 @@ feature{NONE} -- Implementation
 				until
 					l_func.after or Result
 				loop
-					l_func.item.call ([])
-					Result := l_func.item.last_result
+					Result := l_func.item.item ([])
 					l_func.forth
 				end
 				if l_cursor /= Void then

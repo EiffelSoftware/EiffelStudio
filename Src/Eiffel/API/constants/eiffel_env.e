@@ -213,6 +213,13 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
 		end
 
+	Library_path: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (Eiffel_library)
+			Result.extend (library_directory_name)
+		end
+
+
 	Syntax_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
@@ -437,8 +444,11 @@ feature -- Version limitation
 
 feature -- Constants
 
-	ise_library_env: STRING is "ISE_LIBRARY";
+	ise_library_env: STRING is "ISE_LIBRARY"
 			-- Name of the ISE_LIBRARY environment variable.
+
+	library_directory_name: STRING is "library";
+			-- Name of the library directory.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

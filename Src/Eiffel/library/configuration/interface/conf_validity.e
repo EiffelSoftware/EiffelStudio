@@ -59,6 +59,20 @@ feature -- Basic validity queries
 			end
 		end
 
+	valid_config_extension (a_file: STRING): BOOLEAN is
+			-- Does `a_file' have a correct eiffel config file extension?
+		local
+			l_ext: STRING
+			sep, cnt: INTEGER
+		do
+			cnt := a_file.count
+			sep := a_file.last_index_of ('.', cnt)
+			if sep /= 0 then
+				l_ext := a_file.substring (sep+1, cnt)
+				Result := l_ext.is_case_insensitive_equal ("ecf")
+			end
+		end
+
 feature {NONE} -- Basic operation
 
 	get_platform_name (a_platform: INTEGER): STRING is

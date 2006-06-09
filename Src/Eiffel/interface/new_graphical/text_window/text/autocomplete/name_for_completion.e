@@ -229,10 +229,6 @@ feature -- Comparison
 			s_not_void: s /= Void
 		local
 			lower_s: STRING
-			i : INTEGER
-			l_upper: INTEGER
-			l_b: BOOLEAN
-			l_first_found: BOOLEAN
 		do
 			if full_name.count >= s.count then
 				lower_s := s.as_lower

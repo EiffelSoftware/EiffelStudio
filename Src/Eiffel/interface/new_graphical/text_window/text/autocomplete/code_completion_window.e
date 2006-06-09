@@ -245,8 +245,6 @@ feature {NONE} -- Events handling
 
 	on_key_down (ev_key: EV_KEY) is
 			-- process user input in `choice_list'	
-		local
-			ix: INTEGER
 		do
 			if ev_key /= Void then
 				inspect

@@ -27,17 +27,12 @@ feature -- Commands
 			-- Position tool_bar items by a_group_info.
 		require
 			not_void: a_groups_info /= Void
-		local
---			l_prof_setting: PROFILING_SETTING
 		do
---			create l_prof_setting.make
---			l_prof_setting.start_profiling
 			debug ("docking")
 				print ("%N=================== SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups ================")
 			end
 			position_groups_imp (a_groups_info)
 			zone.zone.assistant.last_state.set_floating_group_info (a_groups_info)
---			l_prof_setting.stop_profiling
 		end
 
 	to_minmum_size is
@@ -57,7 +52,6 @@ feature {NONE} -- Implementation functions
 			-- Position tool_bar items by a_group_info.
 		require
 			not_void: a_groups_info /= Void
-		local
 		do
 			debug ("docking")
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp")
@@ -72,7 +66,10 @@ feature {NONE} -- Implementation functions
 					print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp 2")
 				end
 				if not a_groups_info.has_sub_info then
-					position_top_level_items (a_groups_info.item)
+					if a_groups_info.is_new_group then
+						check not_more_than_one: a_groups_info.item.count = 1 end
+						position_top_level_items (a_groups_info.item)
+					end
 				else
 					position_sub_level_items (a_groups_info.sub_grouping.item (a_groups_info.index), a_groups_info.index)
 				end
@@ -82,13 +79,13 @@ feature {NONE} -- Implementation functions
 			to_minmum_size
 		end
 
-	position_top_level_items (a_group_indexs: ARRAYED_LIST [INTEGER]) is
+	position_top_level_items (a_group_indexs: DS_HASH_TABLE [INTEGER, INTEGER]) is
 			-- Position tool bar items' groups.
 		require
 			not_void: a_group_indexs /= Void
 		local
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_last_item: SD_TOOL_BAR_ITEM
+			l_first_item: SD_TOOL_BAR_ITEM
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
 			from
@@ -96,17 +93,18 @@ feature {NONE} -- Implementation functions
 			until
 				a_group_indexs.after
 			loop
-				l_group := zone.content.group (a_group_indexs.item)
-				l_last_item := l_group.last
+				l_group := zone.content.group (a_group_indexs.key_for_iteration)
+				l_first_item := l_group.first
 				a_group_indexs.forth
 			end
-			if l_last_item /= Void then
+			if l_first_item /= Void then
 				l_separator := Void
 				-- There should be a separator behind, otherwise this is the last tool bar item.
-				l_separator := zone.content.seperator_after_item (l_last_item)
+				l_separator := zone.content.seperator_before_item (l_first_item)
 				if l_separator /= Void then
 					l_separator.set_wrap (True)
 				else
+					l_first_item.set_wrap (True)
 				end
 			end
 		end
@@ -117,7 +115,7 @@ feature {NONE} -- Implementation functions
 			not_void: a_sub_info /= Void
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_last_item: SD_TOOL_BAR_ITEM
+			l_first_item: SD_TOOL_BAR_ITEM
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
 			l_items := zone.content.group (a_group_index)
@@ -126,18 +124,27 @@ feature {NONE} -- Implementation functions
 			until
 				a_sub_info.after
 			loop
-				l_last_item := l_items.i_th (a_sub_info.item.last)
-
-				l_separator := Void
-				l_separator := zone.content.seperator_after_item (l_last_item)
-				if l_separator = Void then
-					l_last_item.set_wrap (True)
-				else
-					l_separator.set_wrap (True)
+				a_sub_info.item.finish
+				if a_sub_info.item.key_for_iteration > 1 and l_items.valid_index (a_sub_info.item.key_for_iteration - 1) then
+					l_first_item := l_items.i_th (a_sub_info.item.key_for_iteration - 1)
+					l_separator := Void
+					l_separator := zone.content.seperator_before_item (l_first_item)
+					if a_sub_info.is_new_group or a_sub_info.index = 1 then
+						if l_separator = Void then
+							l_first_item.set_wrap (True)
+						else
+							l_separator.set_wrap (True)
+						end
+					end
+				elseif a_sub_info.item.key_for_iteration = 1 then
+					-- For first item, we should set group's separator wrap.
+					l_separator := zone.content.seperator_before_item (l_items.i_th (1))
+					if l_separator /= Void then
+						l_separator.set_wrap (True)
+					end
 				end
 				a_sub_info.forth
 			end
-
 		end
 
 	reset_all_items_wrap is

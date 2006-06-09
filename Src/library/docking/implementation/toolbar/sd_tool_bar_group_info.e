@@ -64,9 +64,11 @@ feature -- Query
 		do
 			create Result.make
 			l_maximum_group_index := maximum_width_group_index
+
 			from
 				start
 				l_new_group := True
+				l_group_index_count := 1
 			until
 				after or l_group_index_count > l_maximum_group_index
 			loop
@@ -113,36 +115,6 @@ feature -- Query
 			valid: Result > 0 and Result <= group_count
 		end
 
-	group_item_width (a_group_index: INTEGER): ARRAYED_LIST [INTEGER] is
-			-- Group items index.
-		require
-			valid: a_group_index > 0 and a_group_index <= group_count
-		local
-			l_start_index: INTEGER
-			l_end_index: INTEGER
-			l_count: INTEGER
-		do
-			l_start_index := group_item_start_index (a_group_index)
-			if a_group_index < group_count then
-				l_end_index := group_item_start_index (a_group_index + 1)
-			else
-				-- a_group_index must be the last group.
-				l_end_index := l_end_index.max_value
-			end
-
-			from
-				create Result.make (1)
-				l_count := l_start_index
-			until
-				l_count > items_width.count or l_count > l_end_index
-			loop
-				Result.extend (items_width.item (l_count))
-				l_count := l_count + 1
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
 	group_width (a_group_index: INTEGER): INTEGER is
 			-- Maximum group width of a_group_index.
 		require
@@ -151,6 +123,7 @@ feature -- Query
 			l_group_count: INTEGER
 		do
 			from
+				l_group_count := 1
 				start
 			until
 				after or l_group_count > a_group_index
@@ -176,7 +149,7 @@ feature -- Query
 		require
 			valid: a_row_index > 0 and a_row_index <= row_count
 		local
-			l_row: ARRAYED_LIST [INTEGER]
+			l_row: DS_HASH_TABLE [INTEGER, INTEGER]
 		do
 			l_row := internal_group_info.i_th (a_row_index)
 			from
@@ -184,7 +157,7 @@ feature -- Query
 			until
 				l_row.after
 			loop
-				Result := items_width.item (l_row.item) + Result
+				Result := l_row.value (l_row.key_for_iteration) + Result
 				l_row.forth
 			end
 		ensure
@@ -216,12 +189,10 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	items_width: ARRAY [INTEGER]
-			-- Store each item in `internal_group_info's width. It's serval EV_TOOL_BAR_ITEMs' width.
-
 	group_count: INTEGER is
-			-- Group count.
+			-- Group count. Start from 1 (not 0).
 		do
+			Result := 1
 			from
 				start
 			until
@@ -236,6 +207,31 @@ feature -- Query
 			valid: Result >= 0
 		end
 
+	total_group_count: INTEGER is
+			-- Total group count, include sub group count.
+		do
+			Result := 1
+			from
+				start
+			until
+				after
+			loop
+				if is_new_group and not has_sub_info then
+					Result := Result + 1
+				end
+				if has_sub_info then
+					check sub_group_must_new_group: index /= 1 implies is_new_group end
+					Result := Result + sub_grouping.item (index).total_group_count
+					if index = 1 then
+						-- We alreay plus 1 when index = 1
+						-- So we should subtract 1
+						Result := Result - 1
+					end
+				end
+				forth
+			end
+		end
+
 	group_item_count (a_group_index: INTEGER): INTEGER is
 			-- How many items in a group.
 		require
@@ -244,6 +240,7 @@ feature -- Query
 			l_group_count: INTEGER
 		do
 			from
+				l_group_count := 1
 				start
 			until
 				after or l_group_count > a_group_index
@@ -264,9 +261,13 @@ feature -- Query
 			-- Group item start index.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
+		local
+			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
 		do
 			go_group_i_th (a_group_index)
-			Result := item.first
+			l_item := item
+			l_item.start
+			Result := l_item.key_for_iteration
 		end
 
 	sub_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
@@ -278,30 +279,37 @@ feature -- Command
 	set_sub_group_info (a_sub_grouping_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER) is
 			-- Set sub grouping info.
 		require
-			valid: a_group_index > 0 and a_group_index <= items_width.count
+			valid: a_group_index > 0 and a_group_index <= count
 		do
 			sub_grouping.force (a_sub_grouping_info, a_group_index)
 		ensure
 			has: sub_grouping.has_item (a_sub_grouping_info)
 		end
 
-	set_items_width (a_items_width: ARRAY [INTEGER]) is
-			-- Set item width.
-		require
-			not_void: a_items_width /= Void
-			count_valid: a_items_width.count = total_items_count
-		do
-			items_width := a_items_width
-		ensure
-			set: items_width = a_items_width
-		end
-
 	out: STRING is
 			-- Redefine
 		do
-			Result := "%NSD_tool_bar_GROUP_INFO:"
+			Result := "%NSD_TOOL_BAR_GROUP_INFO:"
 			Result := Result + "%N                   group count: " + group_count.out
 			Result := Result + "%N                   total item count: " + total_items_count.out
+			Result := Result + "%N                   total group count: " + total_group_count.out
+			Result := Result + "%N                   ==========================================="
+			from
+				start
+			until
+				after
+			loop
+				Result := Result + "%N                   is_new_group? " + is_new_group.out
+				Result := Result + "%N                   has_sub_group?" + has_sub_info.out
+				Result := Result + "%N                   -------------------------------------------"
+				if has_sub_info then
+					Result := Result + "%N                   <<<<<<<<<<<<< sub info start >>>>>>>>>>>>>> "
+					Result := Result + sub_grouping.item (index).out
+					Result := Result + "%N                   <<<<<<<<<<<<< sub info end >>>>>>>>>>>>>> "
+				end
+				forth
+			end
+			Result := Result + "%N                   ==========================================="
 		end
 
 feature -- Query for iteration
@@ -330,7 +338,7 @@ feature -- Query for iteration
 			Result := internal_group_info.index
 		end
 
-	item: ARRAYED_LIST [INTEGER] is
+	item: DS_HASH_TABLE [INTEGER, INTEGER] is
 			-- One row info.
 		do
 			Result := internal_group_info.item
@@ -342,7 +350,7 @@ feature -- Query for iteration
 			Result := sub_grouping.has (index)
 		end
 
-	i_th (a_index: INTEGER): ARRAYED_LIST [INTEGER] is
+	i_th (a_index: INTEGER): DS_HASH_TABLE [INTEGER, INTEGER] is
 			-- Item at a_index.
 		do
 			Result := internal_group_info.i_th (a_index)
@@ -384,7 +392,7 @@ feature -- Command for iteration
 			internal_is_new_group.back
 		end
 
-	extend (a_group_index_info: ARRAYED_LIST [INTEGER]; a_new_group: BOOLEAN) is
+	extend (a_group_index_info: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN) is
 			-- Extend a_group_info
 		require
 			not_void:a_group_index_info /= Void
@@ -402,7 +410,7 @@ feature -- Command for iteration
 			internal_is_new_group.go_i_th (a_index)
 		end
 
-	replace (a_item: ARRAYED_LIST [INTEGER]; a_new_group: BOOLEAN) is
+	replace (a_item: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN) is
 			-- Replace current item by a_item.
 		do
 			internal_group_info.replace (a_item)
@@ -420,6 +428,7 @@ feature {NONE} -- Implementation
 			l_stop: BOOLEAN
 		do
 			from
+				l_group_count := 1
 				start
 			until
 				after or l_stop
@@ -429,13 +438,19 @@ feature {NONE} -- Implementation
 				end
 				if l_group_count = a_group_index then
 					l_stop := True
+				else
+					forth
 				end
-				forth
 			end
+		ensure
+			not_after: not after
 		end
 
-	internal_group_info: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]
-			-- Grouping formation, INTEGER is group_index of SD_TOOL_BAR_CONTENT.
+	internal_group_info: ARRAYED_LIST [DS_HASH_TABLE [INTEGER, INTEGER]]
+			-- Grouping formation.
+			-- The order of items in arrayed list is the same order as ..........
+			-- 1st INTEGER Store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width.			
+			-- 2nd INTEGER is group_index of SD_TOOL_BAR_CONTENT.
 
 	internal_is_new_group: ARRAYED_LIST [BOOLEAN]
 			-- Store each item in `internal_group_info' is a new row?

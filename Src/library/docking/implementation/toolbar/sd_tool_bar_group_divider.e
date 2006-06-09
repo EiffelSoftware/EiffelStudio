@@ -25,9 +25,8 @@ feature {NONE} -- Initlization
 			create algorithm.make (a_content.group_count)
 			content := a_content
 			l_items := a_content.items
---			algorithm.set_items_width (init_group_width (l_items))
-			algorithm.set_items_width (init_group_width (a_content.items))
 
+			algorithm.set_items_width (init_group_width (a_content.items_visible))
 			init_grouping_infos
 		ensure
 			set: content = a_content
@@ -68,23 +67,21 @@ feature {NONE} -- Initlization
 		local
 			l_count: INTEGER
 			l_max_group_count: INTEGER
---			l_setting: PROFILING_SETTING
 		do
---			create l_setting.make
---			l_setting.start_profiling
+			create grouping_algorithm.make_default
 			from
 				l_count := 1
 				l_max_group_count := content.item_count_except_separator
-				create group_infos.make_default
+				create group_infos.make (1)
 			until
 				l_count > l_max_group_count
 			loop
 				group_items (l_count)
-				group_infos.force_last (internal_refined_grouping, l_count)
+				check not_has: not group_infos.has_item (internal_refined_grouping) end
+				group_infos.put (internal_refined_grouping, l_count)
 
 				l_count := l_count + 1
 			end
---			l_setting.stop_profiling
 		end
 
 feature -- Query
@@ -151,22 +148,25 @@ feature -- Query
 			-- Best groupinp, Result is calculated by `a_width'.
 		require
 			valid: a_width > 0
+		local
+			l_list : ARRAYED_LIST [SD_TOOL_BAR_GROUP_INFO]
 		do
 			from
 				last_group_index := group_infos.count
-				group_infos.finish
+				l_list := group_infos.linear_representation
+				l_list.finish
 			until
-				group_infos.before or Result /= Void
+				l_list.before or Result /= Void
 			loop
-				if a_width < group_infos.item_for_iteration.maximum_width then
-					Result := group_infos.item_for_iteration
+				if a_width < l_list.item.maximum_width then
+					Result := l_list.item
 				else
 					last_group_index := last_group_index - 1
-					group_infos.back
+					l_list.back
 				end
 			end
 			if Result = Void then
-				Result := group_infos.first
+				Result := l_list.first
 				last_group_index := 1
 			end
 		ensure
@@ -187,16 +187,10 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	maximum_group_width (a_group_idnex: INTEGER): INTEGER is
-			-- Maximum group width.
-		do
-			Result := algorithm.maximum_group_width (a_group_idnex)
-		end
-
 	max_row_count: INTEGER is
 			-- Actual maximum row count.
 		do
-			Result := group_infos.last.row_total_count
+			Result := group_infos.linear_representation.first.row_total_count
 		end
 
 	content: SD_TOOL_BAR_CONTENT
@@ -214,11 +208,10 @@ feature {NONE} -- Implementation
 		do
 			if a_group_count >= 1 then
 				if a_group_count > algorithm.max_group_count then
-					algorithm.set_group_count (algorithm.max_group_count)
+					internal_refined_grouping := algorithm.best_grouping_when (algorithm.max_group_count).deep_twin
 				else
-					algorithm.set_group_count (a_group_count)
+					internal_refined_grouping := algorithm.best_grouping_when (a_group_count)
 				end
-				internal_refined_grouping := algorithm.best_grouping
 
 				if a_group_count > content.group_count and a_group_count <= content.item_count_except_separator then
 					l_row_left := a_group_count - content.group_count
@@ -228,10 +221,10 @@ feature {NONE} -- Implementation
 					compute_extra_groups (l_row_left)
 				end
 			end
+		ensure
+--			group_count_valid: internal_refined_grouping.total_group_count = a_group_count
 		end
-
-	group_infos: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
-			-- We record group infos here.
+	group_infos: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
 
 	compute_extra_groups (a_extra_group_count: INTEGER) is
 			-- Compute extra groups when all top groups are all in separated row.
@@ -243,28 +236,51 @@ feature {NONE} -- Implementation
 			l_sub_grouping: SD_TOOL_BAR_GROUP_INFO
 			l_reduced: INTEGER
 			l_stop: BOOLEAN
+			l_sub_group_item_count: INTEGER
 		do
 			from
+
 			until
 				l_reduced >= a_extra_group_count or l_stop
 			loop
 				l_max_group_info := internal_refined_grouping.maximum_width_group
 				l_max_group_info.start
-				create l_temp_algorithm.make ((content.group (internal_refined_grouping.maximum_width_group_index).count))
+				l_sub_group_item_count := content.group (internal_refined_grouping.maximum_width_group_index).count
+				if grouping_algorithm.has (internal_refined_grouping.maximum_width_group_index) then
+					l_temp_algorithm := grouping_algorithm.item (internal_refined_grouping.maximum_width_group_index)
+				else
+					create l_temp_algorithm.make (l_sub_group_item_count)
+					l_temp_algorithm.set_items_width (group_item_width (content.group (internal_refined_grouping.maximum_width_group_index)))
+					grouping_algorithm.put_last (l_temp_algorithm, internal_refined_grouping.maximum_width_group_index)
+				end
 
-				l_temp_algorithm.set_items_width (group_item_width (content.group (internal_refined_grouping.maximum_width_group_index)))
 				if l_temp_algorithm.max_group_count = l_max_group_info.group_count then
 					-- The maximum width row is already one iten per row.
 					l_stop := True
 				else
-					l_temp_algorithm.set_group_count (l_max_group_info.group_count + 1)
 					l_reduced := l_reduced + 1
-					l_sub_grouping := l_temp_algorithm.best_grouping
+					-- Because if `l_max_group_info' is not sub group info, then group count will be 1 larger than actual
+					if l_sub_group_item_count /= l_max_group_info.total_items_count and l_sub_group_item_count = 1 then
+						-- Is not from a sub group info
+						-- Or from sub group info which item count = 1
+						l_sub_grouping := l_temp_algorithm.best_grouping_when (l_max_group_info.group_count)
+					else
+						-- Is from a sub group info
+						l_sub_grouping := l_temp_algorithm.best_grouping_when (l_max_group_info.group_count + 1)
+					end
 
+				end
+
+				if l_sub_grouping /= Void then
 					internal_refined_grouping.set_sub_group_info (l_sub_grouping, internal_refined_grouping.maximum_width_group_index)
 				end
 			end
+
 		end
+
+	grouping_algorithm: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_ALGORITHM, INTEGER]
+			-- We store algorithm here, so it'll not need recompute.
+			-- 2nd INTEGER is sub group index count
 
 	internal_refined_grouping: SD_TOOL_BAR_GROUP_INFO
 			-- Refined grouping info.

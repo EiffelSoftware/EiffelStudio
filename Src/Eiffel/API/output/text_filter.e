@@ -488,7 +488,7 @@ feature -- Text processing
 					if format_table.has (f_Cluster_name) then
 						format := format_table.found_item
 						path_pre := path_representation (file_separator.out, a_cluster.name, a_cluster, False)
-						set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + a_cluster.name) + "." + file_suffix)
+						set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + "index") + "." + file_suffix)
 					end
 				else
 					if format_table.has (f_Non_generated_Cluster) then
@@ -783,6 +783,7 @@ feature -- Text processing
 			feat_suffix: STRING
 			l_class_i : CLASS_I
 			path_pre: STRING
+			l_name: STRING
 		do
 			written_class := f.written_class
 
@@ -800,7 +801,12 @@ feature -- Text processing
 			l_class_i := f.written_class.lace_class
 			path_pre := path_representation (file_separator.out, a_group.name, a_group, False)
 			set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + l_class_i.name.as_lower + feat_suffix))
-			set_keyword (kw_Feature, escaped_text (real_feature.name))
+			if real_feature = Void then
+				l_name := f.name
+			else
+				l_name := real_feature.name
+			end
+			set_keyword (kw_Feature, escaped_text (l_name))
 		end
 
 	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is

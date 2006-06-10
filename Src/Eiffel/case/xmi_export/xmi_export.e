@@ -719,10 +719,14 @@ feature {NONE} -- Implementation
 			a_feature_has_generics: a_feature.type.has_generics
 		local
 			feature_type: XMI_CLASS
+			l_type: TYPE_A
 		do
 			if a_feature.type.has_associated_class then
 					-- Is first generic known?
-				feature_type := xmi_class_by_class_c (a_feature.type.generics.item (1).associated_class)
+				l_type := a_feature.type.generics.item (1)
+				if l_type.has_associated_class then
+					feature_type := xmi_class_by_class_c (l_type.associated_class)
+				end
 				if feature_type = Void then
 					add_generics_association_unknown (a_feature, a_xmi_class)
 				else

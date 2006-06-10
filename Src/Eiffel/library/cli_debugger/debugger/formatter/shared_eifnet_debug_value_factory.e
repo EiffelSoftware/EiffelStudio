@@ -32,17 +32,17 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 		ensure
 			Result /= Void
 		end
-		
-	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
-		do		
+
+	error_value (a_name: STRING; a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
+		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
 		ensure
 			Result /= Void
-		end	
+		end
 
-	exception_value (a_name, a_tag: STRING; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
-		do		
+	exception_value (a_name: STRING; a_tag: STRING_GENERAL; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
+		do
 			create Result.make_with_name (a_name)
 			Result.set_tag (a_tag)
 			if a_value /= Void then
@@ -50,7 +50,7 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 			end
 		ensure
 			Result /= Void
-		end	
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -85,5 +85,4 @@ indexing
 		]"
 
 end -- class SHARED_EIFNET_DEBUG_VALUE_FACTORY
-
 

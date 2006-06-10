@@ -14,146 +14,261 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
-feature -- Status report
+	EB_SHARED_WINDOW_MANAGER
 
-	have_menu: BOOLEAN is
-			-- If the command alread have the EiffelStudio debug menu ?
-		require
-			window_not_void: window /= Void
+create
+	make
+
+feature {NONE} -- Creation
+
+	make is
 		do
-			if window.menu_bar /= Void then
-				Result := window.menu_bar.has (menu)
-			else
-				Result := False
-			end
-
+			create windows_lists.make
 		end
+
+feature -- Status report
 
 	preference_enable_menu: BOOLEAN is
 			-- If the preference_want_to_show_estudio_debug_menu ?
 		do
-			Result := preferences.debugger_data.enable_estudio_debug_menu
+			Result := preferences.development_window_data.estudio_dbg_menu_allowed_preference.value
+		end
+
+	preference_debug_menu_enabled: BOOLEAN_PREFERENCE is
+		do
+			Result := preferences.development_window_data.estudio_dbg_menu_enabled_preference
+		end
+
+	preference_debug_menu_on_accelerator_enabled: BOOLEAN_PREFERENCE is
+		do
+			Result := preferences.development_window_data.estudio_dbg_menu_accelerator_allowed_preference
 		end
 
 feature -- Element change
 
-	set_main_window (a_w: like window) is
+	attach_window (w: EB_VISION_WINDOW) is
 			-- Set main_window
-		require
-			a_window_not_void: a_w /= Void
+		local
+			lw: EB_VISION_WINDOW
 		do
-			window := a_w
-			if preference_enable_menu then
-				add_accelerator
+			if w /= Void then
+				lw := w
+			else
+				lw := window_manager.last_focused_development_window.window
 			end
-		ensure
-			a_window_set: a_w = window
+			check lw /= Void end
+			if preference_enable_menu then
+				if preference_debug_menu_on_accelerator_enabled.value then
+					add_accelerator (lw)
+				end
+				if preference_debug_menu_enabled.value then
+					add_menu (lw)
+				end
+			end
 		end
 
-feature -- Access
+	unattach_window (w: EB_VISION_WINDOW) is
+		local
+			lw: EB_VISION_WINDOW
+		do
+			if w /= Void then
+				lw := w
+			else
+				lw := window_manager.last_focused_development_window.window
+			end
+			check lw /= Void end
 
-	window: EB_VISION_WINDOW
-			-- Window related to current's accelerator.
-
-	accelerator: EV_ACCELERATOR
-			-- Accelerator used to trigger current command.
+			remove_menu (lw)
+			remove_accelerator (lw)
+		end
 
 feature {NONE} -- Implementation
 
-	menu: ESTUDIO_DEBUG_MENU
-			-- Menu created when current command is executed.
+	windows_lists: LINKED_LIST [TUPLE [EB_VISION_WINDOW, ESTUDIO_DEBUG_MENU, EV_ACCELERATOR]]
+
+	menu (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): ESTUDIO_DEBUG_MENU is
+		local
+			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
+		do
+			from
+				windows_lists.start
+			until
+				windows_lists.after or Result /= Void
+			loop
+				t := windows_lists.item
+				if t.window = w then
+					Result := t.menu
+					if remove_if_found then
+						if t.acc = Void then
+							windows_lists.remove
+						else
+							t.menu := Void
+							windows_lists.forth
+						end
+					else
+						windows_lists.forth
+					end
+				else
+					windows_lists.forth
+				end
+			end
+		end
+
+	accelerator (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): EV_ACCELERATOR is
+		local
+			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
+		do
+			from
+				windows_lists.start
+			until
+				windows_lists.after or Result /= Void
+			loop
+				t := windows_lists.item
+				if t.window = w then
+					Result := t.acc
+					if remove_if_found then
+						if t.menu = Void then
+							windows_lists.remove
+						else
+							t.acc := Void
+							windows_lists.forth
+						end
+					else
+						windows_lists.forth
+					end
+				else
+					windows_lists.forth
+				end
+			end
+		end
+
+	add_details_for (w: EB_VISION_WINDOW; m: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR) is
+		local
+			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
+		do
+			from
+				windows_lists.start
+			until
+				windows_lists.after or t /= Void
+			loop
+				t := windows_lists.item
+				if t.window /= w then
+					t := Void
+				end
+				windows_lists.forth
+			end
+			if t /= Void then
+				if m /= Void then
+					t.menu := m
+				end
+				if acc /= Void then
+					t.acc := acc
+				end
+			else
+				windows_lists.extend ([w, m, acc])
+			end
+		end
 
 feature -- Command
 
-	build_menu_bar is
-			-- Add/remove menu bar based on preference, don't change the preference.
-		require
-			window_not_void: window /= Void
-		do
-			if not window.is_destroyed and then window.menu_bar /= Void then
-				if menu /= Void and then menu.is_destroyed then
-					menu := Void
-				end
-		    	if preferences.development_window_data.show_eiffel_studio_debug_preference.value then
-					add_menu
-			    else
-					remove_menu
-		    	end
-			end
-		end
-
-	build_menu_bar_by_accelerator is
-			-- Add/remove menu bar by build_menu_bar_by_accelerator when `show_eiffel_studio_debug_preference' is True.
-		require
-			preference_set: preference_set
-		do
-			if menu /= Void then
-				window.menu_bar.prune (menu)
-		    	menu.wipe_out
-		    	menu := Void
-		    	preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (False)
-	    	else
-				create menu.make_with_window (window)
-	    		window.menu_bar.extend (menu)
-	    		preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (True)
-			end
-
-		end
-
-	add_accelerator is
+	add_accelerator (w: EB_VISION_WINDOW) is
 			-- Add accelerator related to Current command.
 		require
-			window_not_void: window /= Void
+			window_not_void: w /= Void
+		local
+			acc: like accelerator
 		do
-			create accelerator.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d) ,
-					True, True, False
-				)
-			accelerator.actions.extend (agent build_menu_bar_by_accelerator)
-			window.accelerators.extend (accelerator)
-
+			if not w.is_destroyed then
+				acc := accelerator (w, False)
+				if acc = Void then
+					create acc.make_with_key_combination (
+							create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d) ,
+							True, True, False
+						)
+					acc.actions.extend (agent update_menu (w))
+		    		add_details_for (w, Void, acc)
+					w.accelerators.extend (acc)
+				end
+			end
 		end
 
-	remove_accelerator is
+	remove_accelerator (w: EB_VISION_WINDOW) is
 			-- Remove `accelerator' from main development window.
+		local
+			acc: like accelerator
 		do
-			if accelerator /= Void then
-				window.accelerators.prune (accelerator)
+			if not w.is_destroyed then
+				acc := accelerator (w, True)
+	    		if acc /= Void then
+	    			from
+	    				w.accelerators.start
+	    			until
+	    				w.accelerators.after
+	    			loop
+	    				if w.accelerators.item = acc then
+	    					w.accelerators.remove
+	    				else
+	    					w.accelerators.forth
+	    				end
+	    			end
+--					w.accelerators.prune_all (acc)
+	    		end
 			end
 		end
 
-	remove_menu is
+	remove_menu (w: EB_VISION_WINDOW) is
 			-- Remove menu from menu bar then change the preference.
+		local
+			m: like menu
 		do
-    		if menu /= Void then
-				window.menu_bar.prune (menu)
-		    	menu.wipe_out
-		    	menu := Void
-    		end
-			preferences.development_window_data.show_eiffel_studio_debug_preference.set_value (False)
-			preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (True)
-		end
-
-	add_menu is
-			-- Add menu to menu bar then change the preference.
-		do
-			if preferences.development_window_data.show_debug_menu_with_accelerator_preference.value then
-	    		create menu.make_with_window (window)
-		    	window.menu_bar.extend (menu)
+			if not w.is_destroyed and then w.menu_bar /= Void then
+				m := menu (w, True)
+	    		if m /= Void then
+	    			m.set_text ("") -- to hide a refresh issue of vision2
+					w.menu_bar.prune (m)
+			    	m.wipe_out
+	    		end
+		    	preference_debug_menu_enabled.change_actions.block
+				preference_debug_menu_enabled.set_value (False)
+		    	preference_debug_menu_enabled.change_actions.resume
 			end
-			preferences.development_window_data.show_eiffel_studio_debug_preference.set_value (True)
 		end
 
-feature -- States report
-
-	preference_set: BOOLEAN is
-			-- If user preference want to show debug menu?
+	add_menu (w: EB_VISION_WINDOW) is
+			-- Add menu to menu bar then change the preference.
+		local
+			m: like menu
 		do
-			Result := preferences.development_window_data.show_eiffel_studio_debug_preference.value
+			if not w.is_destroyed and then w.menu_bar /= Void and then w.menu_bar.count > 1 then
+				m := menu (w, False)
+				if m = Void then
+		    		create m.make_with_window (w)
+		    		add_details_for (w, m, Void)
+		    	end
+		    	if not w.menu_bar.has (m) then
+				    w.menu_bar.extend (m)
+		    	end
+		    	preference_debug_menu_enabled.change_actions.block
+				preference_debug_menu_enabled.set_value (True)
+		    	preference_debug_menu_enabled.change_actions.resume
+			end
 		end
 
-invariant
-	accelerator_not_void: accelerator /= Void
+	update_menu (w: EB_VISION_WINDOW) is
+		require
+			window_not_void: w /= Void
+		local
+			m: like menu
+		do
+			if not w.is_destroyed and then w.menu_bar /= Void then
+				m := menu (w, False)
+				if m = Void then
+					add_menu (w)
+				else
+					remove_menu (w)
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

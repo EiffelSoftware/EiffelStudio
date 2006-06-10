@@ -366,7 +366,7 @@ feature -- Access
 			bp_tool: ES_BREAKPOINTS_TOOL
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= window_manager.last_focused_window
+			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
 				bp_tool := conv_dev.breakpoints_tool
 				if bp_tool /= Void then
@@ -386,7 +386,7 @@ feature -- Access
 			bp_tool: ES_BREAKPOINTS_TOOL
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= window_manager.last_focused_window
+			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
 				bp_tool := conv_dev.breakpoints_tool
 				if bp_tool /= Void then
@@ -396,6 +396,14 @@ feature -- Access
 						bp_tool.show
 					end
 				end
+			end
+		end
+
+	last_focused_development_window (create_if_void: BOOLEAN): EB_DEVELOPMENT_WINDOW is
+		do
+			Result := window_manager.last_focused_development_window
+			if Result = Void and create_if_void then
+				Result := window_manager.a_development_window
 			end
 		end
 
@@ -1411,7 +1419,7 @@ feature {NONE} -- Implementation
 			if not raised then
 					-- Update `Current'.
 				if debugging_window = Void then
-					debugging_window ?= Window_manager.last_focused_window
+					debugging_window := last_focused_development_window (False)
 				end
 				raise
 			end
@@ -1501,7 +1509,7 @@ feature {NONE} -- Implementation
 				dialog.show_actions.extend (agent element_nb.set_focus)
 			end
 
-			dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
+			dialog.show_modal_to_window (last_focused_development_window (True).window)
 		end
 
 	element_nb: EV_SPIN_BUTTON
@@ -1541,10 +1549,7 @@ feature {NONE} -- Implementation
 			-- Set `debugging_window' with window requesting a debug session.
 		do
 			if debugging_window = Void then
-				debugging_window ?= window_manager.last_focused_window
-				if debugging_window = Void then
-					debugging_window := window_manager.a_development_window
-				end
+				debugging_window := last_focused_development_window (True)
 			end
 		ensure
 			debugging_window_set: debugging_window /= Void

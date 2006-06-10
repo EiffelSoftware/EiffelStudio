@@ -11,6 +11,7 @@ class
 inherit
 	EB_DEVELOPMENT_WINDOW_DATA
 	ES_TOOLBAR_PREFERENCE
+	EB_SHARED_GRAPHICAL_COMMANDS
 
 create
 	make
@@ -233,11 +234,14 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
-	show_eiffel_studio_debug_preference: BOOLEAN_PREFERENCE
+	estudio_dbg_menu_allowed_preference: BOOLEAN_PREFERENCE
+			-- Is EiffelStudio's debug menu allowed ?
+
+	estudio_dbg_menu_enabled_preference: BOOLEAN_PREFERENCE
  			-- Should Eiffel Studio Debug menu be shown?
 
-	show_debug_menu_with_accelerator_preference: BOOLEAN_PREFERENCE
-			-- When `show_eiffel_studio_debug_preference' is Ture, whether show eiffel studio debug menu by accelerator?
+	estudio_dbg_menu_accelerator_allowed_preference: BOOLEAN_PREFERENCE
+			-- When `estudio_dbg_menu_enabled_preference' is True, whether show eiffel studio debug menu by accelerator ?
 
 	width_preference: INTEGER_PREFERENCE
 			-- Width for the development window
@@ -413,8 +417,6 @@ feature -- Basic operations
 
 feature {NONE} -- Preference Strings
 
-	show_eiffel_studio_debug_menu: STRING is "interface.development_window.show_eiffel_studio_debug_menu"
-	show_debug_menu_with_accelerator: STRING is "interface.development_window.show_debug_menu_with_accelerator"
 	width_string: STRING is "interface.development_window.width"
 	height_string: STRING is "interface.development_window.height"
 	x_position_string: STRING is "interface.development_window.x_position"
@@ -448,6 +450,10 @@ feature {NONE} -- Preference Strings
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
 	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
+
+	estudio_dbg_menu_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_allowed"
+	estudio_dbg_menu_accelerator_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_accelerator_allowed"
+	estudio_dbg_menu_enabled_string: STRING is "interface.development_window.estudio_dbg_menu_enabled"
 
 feature {NONE} -- Implementation
 
@@ -491,13 +497,31 @@ feature {NONE} -- Implementation
 			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
-			show_eiffel_studio_debug_preference := l_manager.new_boolean_preference_value (l_manager, show_eiffel_studio_debug_menu, False)
-			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_preference_value (l_manager, show_debug_menu_with_accelerator, True)
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
+
+			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
+			estudio_dbg_menu_allowed_preference.set_hidden (True)
+
+			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)
+			estudio_dbg_menu_accelerator_allowed_preference.set_hidden (True)
+
+			estudio_dbg_menu_enabled_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_enabled_string, False)
+			estudio_dbg_menu_enabled_preference.set_hidden (not estudio_dbg_menu_allowed_preference.value)
+			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
+
+	update_estudio_dbg_menu is
+			-- Show or hidden the Eiffel Studio Debug menu which is at the right side of the Help menu.
+		do
+			if estudio_dbg_menu_enabled_preference.value then
+				estudio_debug_cmd.attach_window (Void)
+			else
+				estudio_debug_cmd.unattach_window (Void)
+			end
+		end
 
 invariant
 	preferences_not_void_not_void: preferences /= Void
@@ -522,6 +546,10 @@ invariant
 	general_toolbar_layout_preference_not_void: general_toolbar_layout_preference /= Void
 	refactoring_toolbar_layout_preference_not_void: refactoring_toolbar_layout_preference /= Void
 	max_history_size_preference_not_void: max_history_size_preference /= Void
+
+	estudio_dbg_menu_allowed_preference_not_void: estudio_dbg_menu_allowed_preference /= Void
+	estudio_dbg_menu_accelerator_allowed_preference_not_void: estudio_dbg_menu_accelerator_allowed_preference /= Void
+	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

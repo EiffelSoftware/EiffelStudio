@@ -399,9 +399,6 @@ feature {NONE} -- Initialization
 			toggle_feature_assigner_cmd.disable_sensitive
 
 			create editors.make (5)
-				--|FIXME: Uncomment following line to activate debug menu.
-				--|Search estudio_debug_cmd to reach the other place.
---			estudio_debug_cmd.set_main_window (window)
 		end
 
 	set_up_accelerators is
@@ -1007,9 +1004,8 @@ feature -- Update
 			mb.extend (tools_menu)
 			mb.extend (window_menu)
 			mb.extend (help_menu)
-				--|FIXME: Uncomment following line to activate debug menu.
-				--|Search estudio_debug_cmd to reach the other place.
---			estudio_debug_cmd.build_menu_bar
+
+			estudio_debug_cmd.attach_window (window)
 		end
 
 feature -- Graphical Interface
@@ -2803,6 +2799,7 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 					-- Commit saves
 				preferences.preferences.save_preferences
 
+				estudio_debug_cmd.unattach_window (window)
 				toolbars_area.wipe_out
 				address_manager.recycle
 				project_customizable_toolbar.recycle

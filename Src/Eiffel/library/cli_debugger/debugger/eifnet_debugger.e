@@ -1591,7 +1591,7 @@ feature -- Exception
 			Result := exception_info_module_name
 		end
 
-	exception_to_string: STRING is
+	exception_to_string: STRING_32 is
 			-- Exception "ToString" output
 		require
 			exception_occurred: exception_occurred
@@ -1602,7 +1602,7 @@ feature -- Exception
 			Result := exception_info_to_string
 		end
 
-	exception_message: STRING is
+	exception_message: STRING_32 is
 			-- Exception "GetMessage" output
 		require
 			exception_occurred: exception_occurred

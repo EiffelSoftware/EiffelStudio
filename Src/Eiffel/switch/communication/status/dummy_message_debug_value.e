@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- change
 
-	set_message (a_msg: STRING) is
+	set_message (a_msg: like message) is
 		do
 			message := a_msg
 		end
@@ -59,24 +59,39 @@ feature -- Access
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
+		local
+			s: STRING_GENERAL
 		do
-			create Result.make_manifest_string (display_message, dynamic_class)
+			s := display_message
+			if s /= Void then
+				create Result.make_manifest_string (display_message.as_string_8, dynamic_class)
+			end
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 	append_type_and_value (st: TEXT_FORMATTER) is
 			-- Append type and value of Current to `st'.
+		local
+			s: STRING_GENERAL
 		do
-			st.add_string (display_message)
+			s := display_message
+			if s /= Void then
+				st.add_string (s.as_string_8)
+			end
 		end
 
 feature {NONE} -- Output
 
 	append_value (st: TEXT_FORMATTER) is
 			-- Append only the value of Current to `st'.
+		local
+			s: STRING_GENERAL
 		do
-			st.add_string (display_message)
+			s := display_message
+			if s /= Void then
+				st.add_string (s.as_string_8)
+			end
 		end
 
 	output_value: STRING_32 is

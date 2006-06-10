@@ -96,7 +96,7 @@ feature -- Values
 			Result := exception_code /= 0 or exception_tag /= Void
 		end
 
-	exception_message: STRING is
+	exception_message: STRING_32 is
 			-- For now, the exception message for classic system is the exception tag.
 		do
 			Result := exception_tag

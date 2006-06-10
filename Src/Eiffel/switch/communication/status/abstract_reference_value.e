@@ -60,7 +60,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 					st.add_string ("]");
 					if string_value /= Void then
 						st.add_string (" = ");
-						st.add_string (string_value)
+						st.add_string (string_value.as_string_8)
 					end
 				else
 					Any_class.append_name (st);
@@ -91,7 +91,7 @@ feature {NONE} -- Output
 					st.add_string ("]");
 					if string_value /= Void then
 						st.add_new_line
-						st.add_string (string_value)
+						st.add_string (string_value.as_string_8)
 					end
 				else
 					Any_class.append_name (st);

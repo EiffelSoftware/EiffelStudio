@@ -39,14 +39,26 @@ feature -- change
 			code := a_code
 		end
 
-	set_tag (a_tag: STRING) is
+	set_tag (a_tag: STRING_GENERAL) is
 		do
-			tag := a_tag
+			if a_tag /= Void then
+				if a_tag.is_string_32 then
+					tag := a_tag
+				else
+					tag := a_tag.as_string_32
+				end
+			end
 		end
 
-	set_message (a_mesg: STRING) is
+	set_message (a_mesg: STRING_GENERAL) is
 		do
-			message := a_mesg
+			if a_mesg /= Void then
+				if a_mesg.is_string_32 then
+					message := a_mesg
+				else
+					message := a_mesg.as_string_32
+				end
+			end
 		end
 
 	set_exception_value	(a_dbg_value: ABSTRACT_DEBUG_VALUE) is
@@ -63,10 +75,10 @@ feature -- Access
 	code: INTEGER
 			-- Exception code
 
-	tag: STRING
+	tag: STRING_32
 			-- Exception tag
 
-	message: STRING
+	message: STRING_32
 			-- Exception message to display in object tool
 
 	display_tag: STRING_32 is

@@ -201,10 +201,10 @@ feature -- Values
 	exception_code: INTEGER
 			-- Exception code if any
 
-	exception_tag: STRING
+	exception_tag: STRING_32
 			-- Exception tag if any
 
-	exception_message: STRING is
+	exception_message: STRING_32 is
 			-- Exception message if any
 		require
 			exception_occurred: exception_occurred
@@ -480,7 +480,7 @@ feature -- Setting
 			is_stopped := b
 		end
 
-	set_exception (i: INTEGER; s: STRING) is
+	set_exception (i: INTEGER; s: STRING_32) is
 		do
 			exception_code := i
 			exception_tag := s
@@ -600,7 +600,9 @@ feature -- Output
 			st.add_indent
 			st.add_indent
 			st.add_string ("Tag: ")
-			st.add_string (exception_tag)
+			if exception_tag /= Void then
+				st.add_string (exception_tag.as_string_8)
+			end
 			st.add_new_line
 		end
 

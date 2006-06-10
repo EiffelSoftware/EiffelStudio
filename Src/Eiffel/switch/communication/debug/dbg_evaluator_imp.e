@@ -106,10 +106,9 @@ feature -- Status
 					end
 					error_messages.forth
 					if not error_messages.after then
-						Result.append_String (once "%N--------------------------%N")
+						Result.append_string (once "%N--------------------------%N")
 					end
 				end
---				Result := Cst_error_messages @ error
 			end
 		end
 

@@ -345,12 +345,15 @@ feature -- Debug warnings
 			Result := "Could not launch system in %"" + wd + "%"."
 		end
 
-	w_Not_a_condition (expr: STRING): STRING is
+	w_Not_a_condition (expr: STRING_GENERAL): STRING_32 is
 			-- Message when an expression is not a condition.
 		require
 			expr_not_void: expr /= Void
 		do
-			Result := "%'" + expr + "%' is not a condition."
+			create Result.make_empty
+			Result.append_character ('%'')
+			Result.append (expr)
+			Result.append_string ("%' is not a condition.")
 		end
 
 	w_Invalid_address (addr: STRING): STRING is

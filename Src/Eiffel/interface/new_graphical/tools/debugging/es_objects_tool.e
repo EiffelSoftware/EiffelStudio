@@ -1352,7 +1352,7 @@ feature {NONE} -- Impl : Stack objects grid
 			es_glab: ES_OBJECTS_GRID_CELL
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING
-			l_exception_tag, l_exception_message: STRING
+			l_exception_tag, l_exception_message: STRING_32
 			dotnet_status: APPLICATION_STATUS_DOTNET
 			exc_dv: ABSTRACT_DEBUG_VALUE
 		do

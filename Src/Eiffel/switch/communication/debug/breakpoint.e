@@ -434,7 +434,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	expression: STRING
+	expression: STRING_32
 			-- String representation of the condition, if any, during save and load operations.
 
 feature -- Public constants

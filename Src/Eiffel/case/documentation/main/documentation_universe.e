@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Initialize with no groups in system.
 		do
 			create groups.make (10)
+			create classes_internal.make (100)
 			any_group_format_generated := True
 			any_class_format_generated := True
 			any_feature_format_generated := True
@@ -43,9 +44,29 @@ feature -- Element change
 		require
 			gr_not_void: gr /= Void
 			not_is_universe_completed: not is_universe_completed
+		local
+			cl: HASH_TABLE [CONF_CLASS, STRING]
+			l_class_i: CLASS_I
 		do
 			if not groups.has (gr) then
 				groups.force_last (gr)
+				cl := gr.classes
+				if cl /= Void then
+					from
+						cl.start
+					until
+						cl.after
+					loop
+						l_class_i ?= cl.item_for_iteration
+						check
+							l_class_i /= Void
+						end
+						if l_class_i.is_compiled then
+							classes_internal.force_last (cl.item_for_iteration)
+						end
+						cl.forth
+					end
+				end
 			end
 		end
 
@@ -55,10 +76,29 @@ feature -- Element change
 			not_is_universe_completed: not is_universe_completed
 		local
 			gr: ARRAYED_LIST [CONF_GROUP]
+			cl: HASH_TABLE [CONF_CLASS, STRING]
+			l_class_i: CLASS_I
 		do
 			gr := Universe.groups
 			from gr.start until gr.after loop
 				groups.force_last (gr.item)
+				cl := gr.item.classes
+				if cl /= Void then
+					from
+						cl.start
+					until
+						cl.after
+					loop
+						l_class_i ?= cl.item_for_iteration
+						check
+							l_class_i /= Void
+						end
+						if l_class_i.is_compiled then
+							classes_internal.force_last (cl.item_for_iteration)
+						end
+						cl.forth
+					end
+				end
 				gr.forth
 			end
 		end
@@ -86,28 +126,12 @@ feature -- Access
 			cl: HASH_TABLE [CONF_CLASS, STRING]
 			l_class_i: CLASS_I
 		do
-			create Result.make (100)
-			from groups.start until groups.after loop
-				cl := groups.item_for_iteration.classes
-				if cl /= Void then
-					from
-						cl.start
-					until
-						cl.after
-					loop
-						l_class_i ?= cl.item_for_iteration
-						check
-							l_class_i /= Void
-						end
-						if l_class_i.is_compiled then
-							Result.force_last (cl.item_for_iteration)
-						end
-						cl.forth
-					end
-				end
-				groups.forth
+			Result := classes_internal
+			if not class_sorted then
+				Result.sort (class_sorter)
+				class_sorted := True
 			end
-			Result.sort (class_sorter)
+
 		ensure
 			classes_not_void: Result /= Void
 			sorted: Result.sorted (class_sorter)
@@ -179,25 +203,36 @@ feature -- Status report
 		local
 			l_group: CONF_GROUP
 			l_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
+			l_index: INTEGER
 		do
-			from
-				l_cursor := groups.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after or Result
-			loop
-				l_group := l_cursor.item
-				if l_group.classes_set then
-					Result := l_group.class_by_name (a_class.name, False).has (a_class.config_class)
-					if Result then
-						found_group := l_group
-					end
-				end
-				l_cursor.forth
-			end
-			if not Result then
+--			from
+--				l_cursor := groups.new_cursor
+--				l_cursor.start
+--			until
+--				l_cursor.after or Result
+--			loop
+--				l_group := l_cursor.item
+--				if l_group.classes_set then
+--					Result := l_group.class_by_name (a_class.name, False).has (a_class.config_class)
+--					if Result then
+--						found_group := l_group
+--					end
+--				end
+--				l_cursor.forth
+--			end
+--			if not Result then
+--				found_group := Void
+--			end
+			l_index := classes.index
+			classes.start
+			classes.search_forth (a_class.config_class)
+			if not classes.after then
+				Result := True
+				found_group := classes.item_for_iteration.group
+			else
 				found_group := Void
 			end
+			classes.go_i_th (l_index)
 		ensure
 			found_group_reset: not Result implies found_group = Void
 			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
@@ -275,6 +310,12 @@ feature {NONE} -- Implementation: Access
 
 	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
 			-- Sorter object for groups.
+
+	classes_internal: DS_ARRAYED_LIST [CONF_CLASS]
+			-- Classes internal
+
+	class_sorted: BOOLEAN
+			-- Is classes sorted?
 
 invariant
 	groups_not_void: groups /= Void

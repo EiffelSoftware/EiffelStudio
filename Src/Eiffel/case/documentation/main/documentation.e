@@ -90,6 +90,7 @@ feature -- Actions
 
 				create filter.make (filter_name)
 				filter.set_universe (doc_universe)
+				classes := doc_universe.classes
 				base_path := ""
 				filter.set_keyword (kw_Class, "")
 				if filter.is_html then
@@ -103,14 +104,15 @@ feature -- Actions
 				set_defaults
 
 				if class_links /= Void then
-					if filter_name.is_equal ("html-stylesheet") then
-						copy_additional_file ("default.css")
-						generate_goto_html
-					end
 
 					prepare_for_file (Void, "index")
 					set_document_title (Eiffel_system.name + " documentation")
 					generate_index
+
+					if filter_name.is_equal ("html-stylesheet") then
+						copy_additional_file ("default.css")
+						generate_goto_html
+					end
 
 					if class_list_generated then
 						deg.put_string ("Building class list")
@@ -457,46 +459,39 @@ feature {NONE} -- Implementation
 			s, class_array, location_array, goto_text: STRING
 			textfile: PLAIN_TEXT_FILE
 			fn: FILE_NAME
-			l_groups: like groups
 			l_group: CONF_GROUP
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_add: BOOLEAN
+			l_index: INTEGER
+			l_classes: like classes
+			l_class: CONF_CLASS
 		do
 			create class_array.make (5000)
 			create location_array.make (8000)
-			l_groups := groups
+			l_classes := classes
+			l_index := l_classes.index
 			from
-				l_groups.start
+				l_classes.start
 			until
-				l_groups.after
+				classes.after
 			loop
-				l_group := l_groups.item_for_iteration
-				l_groups.forth
-				l_classes := l_group.classes
-				if l_classes /= Void then
-					from
-						l_classes.start
-					until
-						l_classes.after
-					loop
-						if l_classes.item_for_iteration.is_compiled then
-							s := l_classes.item_for_iteration.name.as_upper
-							class_array.append ("%T%T%"" + s + "%"")
-							s.to_lower
-							s := "" + relative_path (l_group) +
-								"/" + s + class_links + ".html"
-							location_array.append ("%T%T%"" + s + "%"")
-							l_add := True
-						end
-						l_classes.forth
-						if l_add and then not (not l_classes.after implies not l_groups.after) then
-							class_array.append (",%N")
-							location_array.append (",%N")
-							l_add := False
-						end
-					end
+				l_class := l_classes.item_for_iteration
+				if l_class.is_compiled then
+					s := l_class.name.as_upper
+					class_array.append ("%T%T%"" + s + "%"")
+					s.to_lower
+					s := "" + relative_path (l_class.group) +
+						"/" + s + class_links + ".html"
+					location_array.append ("%T%T%"" + s + "%"")
+					l_add := True
+				end
+				l_classes.forth
+				if l_add and then not l_classes.after then
+					class_array.append (",%N")
+					location_array.append (",%N")
+					l_add := False
 				end
 			end
+			l_classes.go_i_th (l_index)
 
 			goto_text := "<!--%N%
 				%	classList = new Array (%N%

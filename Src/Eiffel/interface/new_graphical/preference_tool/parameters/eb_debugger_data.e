@@ -10,7 +10,6 @@ class
 
 inherit
 	ES_TOOLBAR_PREFERENCE
-	EB_SHARED_GRAPHICAL_COMMANDS
 
 create
 	make
@@ -26,16 +25,6 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end
-
-feature {ESTUDIO_DEBUG_CMD, ESTUDIO_DEBUG_MENU} -- Element change
-
-	save_show_estudio_menu (a_boolean: BOOLEAN) is
-			-- Save the data of whether to show EiffelStudio self debug menu.
-		do
-			eiffel_studio_self_debug_preference.set_value (a_boolean)
-		ensure
-			a_boolean_set: a_boolean = enable_estudio_debug_menu
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Value
@@ -88,12 +77,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
-	enable_estudio_debug_menu: BOOLEAN is
-			-- Show Eiffel Studio Self Debug menu on the right side of Help menu?
-		do
-			Result := eiffel_studio_self_debug_preference.value
-		end
-
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
@@ -103,7 +86,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
-	eiffel_studio_self_debug_preference: BOOLEAN_PREFERENCE
 
 feature -- Toolbar Convenience
 
@@ -139,7 +121,6 @@ feature {NONE} -- Preference Strings
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
 	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
-	eiffel_studio_self_debug_tool: STRING is "debugger.show_EiffelStudio_debug_menu"
 
 feature {NONE} -- Implementation
 
@@ -158,24 +139,10 @@ feature {NONE} -- Implementation
 			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];cordbg;DbgCLR">>)
 			dotnet_debugger_preference.set_is_choice (True)
-			eiffel_studio_self_debug_preference := l_manager.new_boolean_preference_value (l_manager, eiffel_studio_self_debug_tool, True) -- larry
-			eiffel_studio_self_debug_preference.change_actions.extend (agent show_eiffel_studio_menu)
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
-
-	show_eiffel_studio_menu is
-			-- Show or hidden the Eiffel Studio Debug menu which is at the right side of the Help menu.
-		do
-			if eiffel_studio_self_debug_preference.value then
-				estudio_debug_cmd.add_accelerator
-				estudio_debug_cmd.add_menu
-			else
-				estudio_debug_cmd.remove_accelerator
-				estudio_debug_cmd.remove_menu
-			end
-		end
 
 invariant
 	preferences_not_void: preferences /= Void
@@ -185,7 +152,6 @@ invariant
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
 	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
-	eiffel_studio_self_debug_preference_not_void: eiffel_studio_self_debug_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

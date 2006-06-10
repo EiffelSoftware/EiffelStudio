@@ -142,7 +142,7 @@ feature -- Commands
 	Estudio_debug_cmd: ESTUDIO_DEBUG_CMD is
 			-- Show/Hide EiffelStudio self debug menu.
 		once
-			create Result
+			create Result.make
 		end
 
 indexing

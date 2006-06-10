@@ -42,6 +42,11 @@ feature {NONE} -- Initialization
 			menu_item.select_actions.extend (agent launch_memory_tool)
 			extend (menu_item)
 
+				--| UUID Generator
+			create menu_item.make_with_text ("UUID generator")
+			menu_item.select_actions.extend (agent launch_uuid_tool)
+			extend (menu_item)
+
 		end
 
 feature {NONE} -- Actions
@@ -68,6 +73,45 @@ feature {NONE} -- Actions
 				end
 			end
 			ma_window.show
+		end
+
+	launch_uuid_tool is
+			-- Launch UUID generator
+		local
+			l_env: EXECUTION_ENVIRONMENT
+			l_path: STRING
+			l_dir: DIRECTORY_NAME
+			l_dlg: EV_DIALOG
+			vb: EV_VERTICAL_BOX
+			tf: EV_TEXT_FIELD
+			but, cbut: EV_BUTTON
+		do
+			create l_dlg.make_with_title ("UUID Generator")
+			create vb
+			create tf.make_with_text ("")
+			create but.make_with_text_and_action ("New UUID", agent paste_new_uuid (tf))
+			create cbut.make_with_text_and_action ("Close", agent l_dlg.destroy)
+			vb.extend (tf)
+			vb.extend (but)
+			vb.disable_item_expand (tf)
+			vb.disable_item_expand (but)
+			l_dlg.extend (vb)
+			l_dlg.set_default_cancel_button (cbut)
+			l_dlg.set_width (200)
+			paste_new_uuid (tf)
+			if window /= Void then
+				l_dlg.show_relative_to_window (window)
+			else
+				l_dlg.show
+			end
+		end
+
+	paste_new_uuid (tf: EV_TEXTABLE) is
+		local
+			uuid_gene: UUID_GENERATOR
+		do
+			create uuid_gene
+			tf.set_text (uuid_gene.generate_uuid.out)
 		end
 
 feature {NONE} -- Implementation

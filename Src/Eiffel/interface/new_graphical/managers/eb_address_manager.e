@@ -1082,8 +1082,12 @@ feature {NONE} -- open new class
 						at_pos := 0
 					end
 					if at_pos = 0 then
-						class_list := Universe.classes_with_name (cname)
-						if class_list.is_empty then
+						if universe.target = Void then
+							class_list := Void
+						else
+							class_list := Universe.classes_with_name (cname)
+						end
+						if class_list = Void or else class_list.is_empty then
 							class_list := Void
 							if choosing_class then
 								process_class

@@ -117,7 +117,7 @@ feature -- Initialization
 							-- Load project
 						create l_loader
 						l_loader.set_should_stop_on_prompt (stop_on_error)
-						l_loader.set_ignore_user_configuration_file (is_local_compilation_requested)
+						l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
 						if old_project_file /= Void then
 							l_loader.open_project_file (old_project_file, Void, Void, is_clean_requested)
 						elseif old_ace_file /= Void then
@@ -231,7 +231,7 @@ feature -- Properties
 	is_clean_requested: BOOLEAN
 			-- Should we recompile from scratch?
 
-	is_local_compilation_requested: BOOLEAN
+	is_user_settings_requested: BOOLEAN
 			-- Should we compile without using the configuration file?
 
 	help_messages: HASH_TABLE [STRING, STRING] is
@@ -324,7 +324,7 @@ feature -- Output
 		do
 			io.put_string ("Usage:%N%T")
 			io.put_string (argument (0))
-			io.put_string (" [-help | -version | -batch | -clean | -local | ")
+			io.put_string (" [-help | -version | -batch | -clean | -use_settings ")
 			add_usage_special_cmds
 			io.put_string ("-loop | -quick_melt | -melt | ")
 			if Has_documentation_generation then
@@ -933,8 +933,11 @@ feature -- Update
 					-- asking.
 				is_clean_requested := True
 			elseif option.is_equal ("-local") then
-					-- Compiler will not read user configuration file for that project
-				is_local_compilation_requested := True
+					-- FIXME: for temporary measure so that we do not reject -local which
+					-- is the behavior by default.
+			elseif option.is_equal ("-use_settings") then
+					-- Compiler will read user configuration file for that project
+				is_user_settings_requested := True
 
 			elseif option.is_equal ("-file") then
 				if current_option < argument_count then

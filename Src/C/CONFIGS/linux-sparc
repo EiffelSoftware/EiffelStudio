@@ -169,7 +169,7 @@ mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="-O0 -g"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall'
+warning_level='-Wall -pedantic -std=gnu99'
 wkoptimize="-O0"
 
 #Makefiles

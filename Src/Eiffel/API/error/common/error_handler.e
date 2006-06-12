@@ -35,7 +35,7 @@ feature -- Properties
 	error_list: LINKED_LIST [ERROR]
 			-- Error list
 
-	warning_list: LINKED_LIST [WARNING]
+	warning_list: LINKED_LIST [ERROR]
 			-- Warning list
 
 	new_error: BOOLEAN
@@ -112,7 +112,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			error_list.finish
 		end
 
-	insert_warning (w: WARNING) is
+	insert_warning (w: ERROR) is
 			-- Insert `w' in `warning_list'.
 		require
 			good_argument: w /= Void

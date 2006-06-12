@@ -10,6 +10,8 @@ class
 	WEL_STRING_ARRAY
 
 inherit
+	ANY
+
 	PLATFORM
 		export
 			{NONE} all

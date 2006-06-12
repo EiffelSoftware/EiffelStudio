@@ -9,6 +9,8 @@ class
 	WEL_WINDOWS_ROUTINES
 
 inherit
+	ANY
+	
 	WEL_IDENTIFIED
 		export
 			{NONE} all

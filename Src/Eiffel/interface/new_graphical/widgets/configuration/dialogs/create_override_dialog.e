@@ -9,6 +9,7 @@ class
 inherit
 	CREATE_CLUSTER_DIALOG
 		redefine
+			make,
 			on_ok
 		end
 
@@ -20,6 +21,15 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
+		-- Create.
+	do
+		Precursor {CREATE_CLUSTER_DIALOG} (a_target, a_factory)
+		set_title (dialog_create_override_title)
+	end
 
 feature {NONE} -- Actions
 

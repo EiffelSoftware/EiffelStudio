@@ -49,12 +49,12 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb2)
 
 			hb2.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action ("+", agent add_class)
+			create l_btn.make_with_text_and_action (plus_button_text, agent add_class)
 			l_btn.set_minimum_width (small_button_width)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
-			create l_btn.make_with_text_and_action ("-", agent remove_class)
+			create l_btn.make_with_text_and_action (minus_button_text, agent remove_class)
 			l_btn.set_minimum_width (small_button_width)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)

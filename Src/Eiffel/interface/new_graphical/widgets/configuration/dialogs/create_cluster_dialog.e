@@ -30,6 +30,12 @@ inherit
 			default_create
 		end
 
+	CONF_INTERFACE_NAMES
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -44,6 +50,7 @@ feature {NONE} -- Initialization
 			target := a_target
 			factory := a_factory
 			default_create
+			set_title (dialog_create_cluster_title)
 		ensure
 			target_set: target = a_target
 			factory_set: factory = a_factory
@@ -68,7 +75,7 @@ feature {NONE} -- Initialization
 
 			append_margin (vb)
 
-			create l_lbl.make_with_text ("Name")
+			create l_lbl.make_with_text (dialog_create_cluster_name)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -79,7 +86,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (vb)
 
-			create l_lbl.make_with_text ("Location")
+			create l_lbl.make_with_text (dialog_create_cluster_location)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -91,7 +98,7 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action ("...", agent browse)
+			create l_btn.make_with_text_and_action (ellipsis_text, agent browse)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
@@ -102,13 +109,13 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			create l_btn.make_with_text ("Ok")
+			create l_btn.make_with_text (ev_ok)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
 
-			create l_btn.make_with_text ("Cancel")
+			create l_btn.make_with_text (ev_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
@@ -136,14 +143,14 @@ feature {NONE} -- Actions
 		local
 			l_brows_dial: EV_DIRECTORY_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
-			l_dir: STRING
+			l_dir: DIRECTORY
 		do
 			create l_brows_dial
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
-				l_dir := l_loc.evaluated_directory
-				if (create {DIRECTORY}.make (l_dir)).exists then
-					l_brows_dial.set_start_directory (l_dir)
+				create l_dir.make (l_loc.evaluated_directory)
+				if l_dir.exists then
+					l_brows_dial.set_start_directory (l_dir.name)
 				end
 			end
 
@@ -173,7 +180,7 @@ feature {NONE} -- Actions
 		do
 			if not name.text.is_empty and not location.text.is_empty then
 				if target.groups.has (name.text) then
-					create wd.make_with_text ("Already a group with name "+name.text+".")
+					create wd.make_with_text (group_already_exists (name.text))
 				end
 
 				if wd /= Void then

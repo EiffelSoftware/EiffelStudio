@@ -9,9 +9,13 @@ class
 inherit
 	CONF_CONSTANTS
 
+feature {NONE}
+
+	ellipsis_text: STRING is "..."
+
 feature {NONE} -- Configuration
 
-	configuration_title: STRING is "System configuration"
+	configuration_title: STRING is "Project Settings"
 
 feature {NONE} -- Section names
 
@@ -331,9 +335,33 @@ feature {NONE} -- Create external dialog
 
 feature {NONE} -- Create library dialog
 
+	dialog_create_library_title: STRING is "Add library"
 	dialog_create_library_defaults: STRING is "Default libraries"
 	dialog_create_library_name: STRING is "Name"
 	dialog_create_library_location: STRING is "Location"
+
+feature {NONE} -- Create assembly dialog
+
+	dialog_create_assembly_title: STRING is "Add assembly"
+	dialog_create_assembly_name: STRING is "Name"
+	dialog_create_assembly_location: STRING is "Location"
+	dialog_create_assembly_a_name: STRING is "Assembly Name"
+	dialog_create_assembly_a_version: STRING is "Assembly Version"
+	dialog_create_assembly_a_culture: STRING is "Assembly Culture"
+	dialog_create_assembly_a_key: STRING is "Assembly Key"
+
+feature {NONE} -- Create cluster dialog
+
+	dialog_create_cluster_title: STRING is "Add cluster"
+	dialog_create_cluster_name: STRING is "Name"
+	dialog_create_cluster_location: STRING is "Location"
+
+feature {NONE} -- Create override dialog
+
+	dialog_create_override_title: STRING is "Add override cluster"
+
+
+	remove_group_text: STRING is "Remove group"
 
 feature {NONE} -- Validation warnings
 
@@ -359,5 +387,8 @@ feature {NONE} -- Validation warnings
 		do
 			Result := "There is already a group with name "+a_group+"."
 		end
+
+	assembly_location_or_gac: STRING is "Specify either a location or GAC information."
+	assembly_no_location: STRING is "No location specified and GAC information not complete."
 
 end

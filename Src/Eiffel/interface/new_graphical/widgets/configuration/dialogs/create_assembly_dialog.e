@@ -30,6 +30,12 @@ inherit
 			default_create
 		end
 
+	CONF_INTERFACE_NAMES
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -44,6 +50,7 @@ feature {NONE} -- Initialization
 			target := a_target
 			factory := a_factory
 			default_create
+			set_title (dialog_create_assembly_title)
 		ensure
 			target_set: target = a_target
 			factory_set: factory = a_factory
@@ -68,7 +75,7 @@ feature {NONE} -- Initialization
 
 			append_margin (vb)
 
-			create l_lbl.make_with_text ("Name")
+			create l_lbl.make_with_text (dialog_create_assembly_name)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -79,7 +86,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (vb)
 
-			create l_lbl.make_with_text ("Location")
+			create l_lbl.make_with_text (dialog_create_assembly_location)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -91,14 +98,14 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action ("...", agent browse)
+			create l_btn.make_with_text_and_action (ellipsis_text, agent browse)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
 			append_margin (vb)
 			vb.extend (create {EV_CELL})
 
-			create l_lbl.make_with_text ("Assembly Name")
+			create l_lbl.make_with_text (dialog_create_assembly_a_name)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -109,7 +116,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (vb)
 
-			create l_lbl.make_with_text ("Assembly Version")
+			create l_lbl.make_with_text (dialog_create_assembly_a_version)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -120,7 +127,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (vb)
 
-			create l_lbl.make_with_text ("Assembly Culture")
+			create l_lbl.make_with_text (dialog_create_assembly_a_culture)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -131,7 +138,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (vb)
 
-			create l_lbl.make_with_text ("Assembly Key")
+			create l_lbl.make_with_text (dialog_create_assembly_a_key)
 			vb.extend (l_lbl)
 			vb.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -147,13 +154,13 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			create l_btn.make_with_text ("Ok")
+			create l_btn.make_with_text (ev_ok)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
 
-			create l_btn.make_with_text ("Cancel")
+			create l_btn.make_with_text (ev_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
@@ -187,14 +194,14 @@ feature {NONE} -- Actions
 		local
 			l_brows_dial: EV_FILE_OPEN_DIALOG
 			l_loc: CONF_FILE_LOCATION
-			l_dir: STRING
+			l_dir: DIRECTORY
 		do
 			create l_brows_dial
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
-				l_dir := l_loc.evaluated_directory
-				if (create {DIRECTORY}.make (l_dir)).exists then
-					l_brows_dial.set_start_directory (l_dir)
+				create l_dir.make (l_loc.evaluated_directory)
+				if l_dir.exists then
+					l_brows_dial.set_start_directory (l_dir.name)
 				end
 			end
 
@@ -230,16 +237,16 @@ feature {NONE} -- Actions
 				l_a_k := assembly_key.text
 
 				if target.groups.has (name.text) then
-					create wd.make_with_text ("Already a group with name "+name.text+".")
+					create wd.make_with_text (group_already_exists (name.text))
 				elseif not l_local.is_empty then
 					if l_a_n.is_empty and l_a_v.is_empty and l_a_c.is_empty and l_a_k.is_empty then
 						target.add_assembly (factory.new_assembly (name.text, location.text, target))
 					else
-						create wd.make_with_text ("Specify either a location or GAC information.")
+						create wd.make_with_text (assembly_location_or_gac)
 					end
 				else
 					if l_a_n.is_empty or l_a_v.is_empty or l_a_c.is_empty or l_a_k.is_empty then
-						create wd.make_with_text ("No location specified and GAC information not complete.")
+						create wd.make_with_text (assembly_no_location)
 					else
 						target.add_assembly (factory.new_assembly_from_gac (name.text, l_a_n, l_a_v, l_a_c, l_a_k, target))
 					end

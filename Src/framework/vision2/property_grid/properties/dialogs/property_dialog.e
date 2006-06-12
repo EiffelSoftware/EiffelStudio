@@ -52,11 +52,11 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			create cl
 			hb.extend (cl)
-			create ok_button.make_with_text_and_action (ok_button_text, agent on_ok)
+			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
 			ok_button.set_minimum_width (button_width)
-			create cancel_button.make_with_text_and_action (cancel_button_text, agent on_cancel)
+			create cancel_button.make_with_text_and_action (ev_cancel, agent on_cancel)
 			hb.extend (cancel_button)
 			hb.disable_item_expand (cancel_button)
 			cancel_button.set_minimum_width (button_width)

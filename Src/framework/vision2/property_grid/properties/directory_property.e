@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			ellipsis_actions.force_extend (agent show_dialog)
+			enable_text_editing
 		end
 
 feature -- Status
@@ -40,14 +41,16 @@ feature {NONE} -- Agents
 		local
 			l_parent: EV_WINDOW
 			l_dial: EV_DIRECTORY_DIALOG
+			l_dir: DIRECTORY
 		do
 			update_text_on_deactivation
 			l_parent := parent_window
 			is_dialog_open := True
 			create l_dial
 			if value /= Void and then not value.is_empty then
-				if (create {DIRECTORY}.make (value)).exists then
-					l_dial.set_start_directory (value)
+				create l_dir.make (location_value)
+				if l_dir.exists then
+					l_dial.set_start_directory (l_dir.name)
 				end
 			end
 
@@ -60,6 +63,18 @@ feature {NONE} -- Agents
 			-- If dialog is closed with ok.
 		do
 			set_value (a_dial.directory)
+		end
+
+	location_value: STRING_32 is
+			-- Location from the value (e.g. resolve variables).
+		do
+			if value /= Void then
+				Result := value
+			else
+				create Result.make_empty
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 end

@@ -108,6 +108,12 @@ feature -- Status report
 			Result := click_tool.feature_containing_cursor (cursor)
 		end
 
+	syntax_is_correct: BOOLEAN is
+			-- When text was parsed, was a syntax error found?
+		do
+			Result := click_tool_status /= syntax_error
+		end
+
 feature -- Status setting
 
 	enable_click_tool is
@@ -774,7 +780,7 @@ feature {NONE} -- Possiblilities provider
 	completion_possible: BOOLEAN is
 			-- Is completion possible?
 		do
-			Result := auto_complete_possible and then Precursor
+			Result := syntax_is_correct and then auto_complete_possible and then Precursor
 		end
 
 feature {NONE}-- click information update

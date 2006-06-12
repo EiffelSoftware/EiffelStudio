@@ -3,6 +3,25 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 5.7
 ===
 
+5.7.1112 RTEA (suppliers as SEARCH_TABLE; 2306 classes):
+204.81u 7.54s 3:49.56 92.5%
+203.46u 7.64s 3:47.12 92.9%
+
+5.7.1101 RTEA (suppliers as TWO_WAY_SORTED_SET; 2306 classes):
+212.63u 8.30s 5:01.85 73.1%
+
+5.7.1101 RTEA (suppliers as SEARCH_TABLE; 2367 classes):
+214.56u 7.07s 3:56.78 93.6%
+210.43u 7.59s 3:54.17 93.1%
+
+5.7.1101 RTEA (suppliers as TWO_WAY_SORTED_SET; 2367 classes):
+217.69u 7.57s 4:00.52 93.6%
+218.47u 7.62s 4:02.24 93.3%
+
+5.7.1031 RTEA graphic:
+204.72u 7.98s 4:39.49 76.1%
+217.75u 8.03s 5:10.05 72.8%
+
 5.7.1031 RTEA with new configuration optimization:
 227.40u 7.86s 4:46.99 81.9%
 225.43u 7.06s 4:14.80 91.2%

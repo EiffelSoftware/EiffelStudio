@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 		local
 			l_net_share: BOOLEAN
 		do
-			l_net_share := a_path.count >= 2 and then ((a_path.item (1) = '\' or a_path.item (1) = '/') and (a_path.item (2) = '\' or a_path.item (2) = '/'))
+			l_net_share := a_path.count >= 2 and then (a_path.item (1) = '/' and a_path.item (2) = '/')
 				-- always works, even if a_path is already in windows file format
 			Result := windows_file_system.pathname_from_file_system (a_path, unix_file_system)
 			if l_net_share then

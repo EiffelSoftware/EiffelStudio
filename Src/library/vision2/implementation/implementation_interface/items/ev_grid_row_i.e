@@ -31,7 +31,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.

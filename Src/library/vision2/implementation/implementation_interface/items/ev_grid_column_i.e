@@ -26,7 +26,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
@@ -382,6 +382,26 @@ feature -- Status setting
 			result_non_negative: Result >= 0
 		end
 
+	enable_select is
+			-- Select `Current' in `parent_i'.
+		do
+			internal_update_selection (True)
+			set_internal_is_selected (True)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
+		end
+
+	disable_select is
+			-- Deselect `Current' from `parent_i'.
+		do
+			internal_update_selection (False)
+			set_internal_is_selected (False)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
+		end
+
 feature -- Status report
 
 	locked_column: EV_GRID_LOCKED_COLUMN_I
@@ -572,26 +592,6 @@ feature {EV_GRID_I} -- Implementation
 			unparent
 		ensure
 			parent_i_unset: parent_i = Void
-		end
-
-	enable_select is
-			-- Select `Current' in `parent_i'.
-		do
-			internal_update_selection (True)
-			set_internal_is_selected (True)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
-		end
-
-	disable_select is
-			-- Deselect `Current' from `parent_i'.
-		do
-			internal_update_selection (False)
-			set_internal_is_selected (False)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
 		end
 
 	destroy is

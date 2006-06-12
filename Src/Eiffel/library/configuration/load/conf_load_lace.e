@@ -368,14 +368,14 @@ feature {NONE} -- Implementation of data retrieval
 					if warnings = Void then
 						create warnings.make (1)
 					end
-					warnings.extend ("Include option will not be automatically converted.")
+					warnings.extend ("Include option will not be automatically converted. Support for include options has been droped.")
 				end
 				if a_properties.adapt_option /= Void then
 					is_warning := True
 					if warnings = Void then
 						create warnings.make (1)
 					end
-					warnings.extend ("Adapt option will not be automatically converted.")
+					warnings.extend ("Adapt option will not be automatically converted. Please refer to the renaming and dependencies sections of your configuration.")
 				end
 			end
 

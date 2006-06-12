@@ -9,7 +9,7 @@ class
 	CONFIGURATION_WINDOW
 
 inherit
-	EV_DIALOG
+	EV_TITLED_WINDOW
 		redefine
 			initialize, is_in_default_state
 		end
@@ -105,10 +105,11 @@ feature {NONE}-- Initialization
 			l_btn: EV_BUTTON
 		do
 				-- window
-			Precursor {EV_DIALOG}
+			Precursor {EV_TITLED_WINDOW}
 			set_title (configuration_title)
 			set_width (initial_window_width)
 			set_height (initial_window_height)
+			enable_user_resize
 
 			create hb
 			extend (hb)
@@ -151,16 +152,17 @@ feature {NONE}-- Initialization
 
 			hb.extend (create {EV_CELL})
 
-			create l_btn.make_with_text_and_action ("Ok", agent on_ok)
+			create l_btn.make_with_text_and_action (ev_ok, agent on_ok)
 			l_btn.set_minimum_width (default_button_width)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			set_default_cancel_button (l_btn)
 
-			create l_btn.make_with_text_and_action ("Cancel", agent on_cancel)
+			create l_btn.make_with_text_and_action (ev_cancel, agent on_cancel)
 			l_btn.set_minimum_width (default_button_width)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
+
+			close_request_actions.extend (agent on_cancel)
 
 			append_margin (vb)
 		end
@@ -469,30 +471,35 @@ feature {NONE} -- Section tree selection agents
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			l_btn.set_pixmap (pixmaps.icon_cluster_symbol)
+			l_btn.set_tooltip (dialog_create_cluster_title)
 			l_btn.select_actions.extend (agent add_cluster)
 
 			create l_btn
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			l_btn.set_pixmap (pixmaps.icon_override_symbol)
+			l_btn.set_tooltip (dialog_create_override_title)
 			l_btn.select_actions.extend (agent add_override)
 
 			create l_btn
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			l_btn.set_pixmap (pixmaps.icon_library_symbol)
+			l_btn.set_tooltip (dialog_create_library_title)
 			l_btn.select_actions.extend (agent add_library)
 
 			create l_btn
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			l_btn.set_pixmap (pixmaps.icon_assemblies_symbol)
+			l_btn.set_tooltip (dialog_create_assembly_title)
 			l_btn.select_actions.extend (agent add_assembly)
 
 			create l_btn
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			l_btn.set_pixmap (pixmaps.icon_delete_small)
+			l_btn.set_tooltip (remove_group_text)
 			l_btn.select_actions.extend (agent remove_group)
 
 			append_groups_tree (vb)
@@ -1348,7 +1355,7 @@ feature {NONE} -- Implementation
 			a_name_valid: a_name /= Void and then (a_name.is_equal (task_pre_tree) or a_name.is_equal (task_post_tree))
 		local
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_dir_prop: DIRECTORY_PROPERTY
+			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
 			l_prop: TEXT_PROPERTY [STRING_32]
 			l_bool_prop: BOOLEAN_PROPERTY
@@ -1387,6 +1394,7 @@ feature {NONE} -- Implementation
 
 				-- working directory
 			create l_dir_prop.make (task_working_directory_name)
+			l_dir_prop.set_target (current_target)
 			l_dir_prop.set_description (task_working_directory_description)
 			if a_task.working_directory /= Void then
 				l_dir_prop.set_value (a_task.working_directory.original_path)
@@ -1425,8 +1433,8 @@ feature {NONE} -- Implementation
 			l_text_prop: TEXT_PROPERTY [STRING]
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
 			l_bool_prop: BOOLEAN_PROPERTY
-			l_dir_prop: DIRECTORY_PROPERTY
-			l_file_prop: FILE_PROPERTY
+			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
+			l_file_prop: FILE_LOCATION_PROPERTY
 			l_override: CONF_OVERRIDE
 			l_cluster: CONF_CLUSTER
 			l_assembly: CONF_ASSEMBLY
@@ -1501,12 +1509,14 @@ feature {NONE} -- Implementation
 				-- location
 			if a_group.is_cluster then
 				create l_dir_prop.make (group_location_name)
+				l_dir_prop.set_target (current_target)
 				l_dir_prop.set_description (group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (group_location_name)
+				l_file_prop.set_target (current_target)
 				l_file_prop.set_description (group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?))
@@ -1696,6 +1706,9 @@ feature {NONE} -- Implementation
 			l_pf_choices: ARRAYED_LIST [STRING_32]
 			l_dir_prop: DIRECTORY_PROPERTY
 			l_file_prop: FILE_PROPERTY
+			l_installed_runtimes: DS_LINEAR [STRING]
+			l_il_env: IL_ENVIRONMENT
+			l_il_choices: ARRAYED_LIST [STRING_32]
 		do
 			if properties /= Void then
 				properties.destroy
@@ -1826,10 +1839,22 @@ feature {NONE} -- Implementation
 				l_string_prop.validate_value_actions.extend (agent valid_classes_per_module)
 				properties.add_property (l_string_prop)
 
-				create l_string_prop.make (target_msil_clr_version_name)
-				l_string_prop.set_description (target_msil_clr_version_description)
-				add_string_setting_actions (l_string_prop, s_msil_clr_version, "")
-				properties.add_property (l_string_prop)
+				create l_il_env
+				l_installed_runtimes := l_il_env.installed_runtimes
+				create l_il_choices.make (l_installed_runtimes.count)
+				from
+					l_installed_runtimes.start
+				until
+					l_installed_runtimes.after
+				loop
+					l_il_choices.put_right (l_installed_runtimes.item_for_iteration)
+					l_installed_runtimes.forth
+				end
+				create l_choice_prop.make_with_choices (target_msil_clr_version_name, l_il_choices)
+
+				l_choice_prop.set_description (target_msil_clr_version_description)
+				add_string_setting_actions (l_choice_prop, s_msil_clr_version, "")
+				properties.add_property (l_choice_prop)
 
 				create l_choice_prop.make_with_choices (target_msil_generation_type_name, <<"exe", "dll">>)
 				l_choice_prop.set_description (target_msil_generation_type_description)

@@ -481,7 +481,13 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING]
 			cluster_generated: BOOLEAN
 			path_pre: STRING
+			l_string: STRING
 		do
+			if a_quote then
+				l_string := text_quoted (text)
+			else
+				l_string := text
+			end
 			if not skipping then
 				cluster_generated := doc_universe.is_group_generated (a_cluster)
 				if cluster_generated then
@@ -498,14 +504,14 @@ feature -- Text processing
 				if format /= Void then
 					image_append (format.item1)
 					if format.item2 /= Void then
-						print_escaped_text (text)
+						print_escaped_text (l_string)
 						image_append (format.item2)
 					end
 					if cluster_generated then
 						set_keyword (kw_File, Void)
 					end
 				else
-					print_escaped_text (text_quoted (text))
+					print_escaped_text (l_string)
 				end
 			end
 		end
@@ -516,7 +522,13 @@ feature -- Text processing
 			class_generated: BOOLEAN
 			l_group: CONF_GROUP
 			path_pre: STRING
+			l_string: STRING
 		do
+			if a_quote then
+				l_string := text_quoted (text)
+			else
+				l_string := text
+			end
 			if not skipping then
 				class_generated := doc_universe.is_class_generated (a_class)
 				if class_generated then
@@ -539,14 +551,14 @@ feature -- Text processing
 				if format /= Void then
 					image_append (format.item1)
 					if format.item2 /= Void then
-						print_escaped_text (text)
+						print_escaped_text (l_string)
 						image_append (format.item2)
 					end
 					if class_generated then
 						set_keyword (kw_File, Void)
 					end
 				else
-					print_escaped_text (text_quoted (text))
+					print_escaped_text (l_string)
 				end
 			end
 		end
@@ -814,7 +826,13 @@ feature -- Text processing
 		local
 			format: CELL2 [STRING, STRING]
 			feature_generated: BOOLEAN
+			l_string: STRING
 		do
+			if a_quote then
+				l_string := text_quoted (text)
+			else
+				l_string := text
+			end
 			if not skipping then
 				feature_generated := doc_universe.is_feature_generated (a_feature)
 				if feature_generated then
@@ -830,7 +848,7 @@ feature -- Text processing
 				if format /= Void then
 					image_append (format.item1)
 					if format.item2 /= Void then
-						print_escaped_text (text)
+						print_escaped_text (l_string)
 						image_append (format.item2)
 					end
 					if feature_generated then
@@ -838,7 +856,7 @@ feature -- Text processing
 						set_keyword (kw_Feature, Void)
 					end
 				else
-					print_escaped_text (text_quoted (text))
+					print_escaped_text (l_string)
 				end
 			end
 		end

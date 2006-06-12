@@ -256,12 +256,8 @@ feature -- Basic Operations
 					successful := precompile_assembly /= Void
 					if successful then
 						precompile_path := l_abs_dir
-
+						l_rel_dir := compilation_directory.substring (compilation_directory.last_index_of (Directory_separator, compilation_directory.count) + 1, compilation_directory.count)
 						-- Save precompile directory / ace file name association
-						if l_counter > 0 then
-							l_rel_dir.append_character ('_')
-							l_rel_dir.append (l_counter.out)
-						end
 						if has_directory (ace_file_name) then
 							change_precompile_directory (ace_file_name, l_rel_dir)
 						else

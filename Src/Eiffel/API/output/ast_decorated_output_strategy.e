@@ -1426,20 +1426,36 @@ feature {NONE} -- Implementation
 					end
 					l_right_type := l_right_type.actual_type
 					l_right_type := constrained_type (l_right_type)
-						-- Taking into account possible conversion of the target. If it is the
-						-- same class ID as the one recorded in BINARY_AS, it means that target
-						-- was not converted, otherwise target was converted and its type is the
-						-- one from the right-hand side.
-					if constrained_type (l_left_type).associated_class.class_id = l_as.class_id then
-						last_type := l_left_type
+					if current_class = source_class then
+							-- Taking into account possible conversion of the target. If it is the
+							-- same class ID as the one recorded in BINARY_AS, it means that target
+							-- was not converted, otherwise target was converted and its type is the
+							-- one from the right-hand side.
+						if l_left_type.associated_class.class_id = l_as.class_id then
+							last_type := l_left_type
+						else
+							last_type := l_right_type
+						end
 					else
-						last_type := l_right_type
+							-- We are not in the same class, so we cannot rely on `class_id' since
+							-- the type of the left target might be different in descendant class. Instead
+							-- we rely on the computed routine ID which will never change in descendants.
+						l_feat := l_left_type.associated_class.feature_with_rout_id (l_as.routine_ids.first)
+						if l_feat /= Void then
+							last_type := l_left_type
+						else
+							last_type := l_right_type
+						end
 					end
 					last_class := last_type.associated_class
 					l_left_type := last_type
 					l_left_class := last_class
 
-					l_feat := feature_in_class (l_left_class, l_as.routine_ids)
+						-- Minor optimization in case `l_feat' is computed when `source_class' is
+						-- an ancestor of `current_class'.
+					if l_feat = Void then
+						l_feat := feature_in_class (l_left_class, l_as.routine_ids)
+					end
 				end
 			end
 			if not expr_type_visiting then
@@ -2725,6 +2741,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_void, Void)
 			end
+			last_type := none_type
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS) is

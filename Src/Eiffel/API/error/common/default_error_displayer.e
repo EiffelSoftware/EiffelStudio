@@ -41,7 +41,7 @@ feature -- Output
 	trace_warnings (handler: ERROR_HANDLER) is
 			-- Display warnings messages from `handler'.
 		local
-			warning_list: LINKED_LIST [WARNING];
+			warning_list: LINKED_LIST [ERROR];
 			a_text_formatter: TEXT_FORMATTER
 		do
 			a_text_formatter := output_window

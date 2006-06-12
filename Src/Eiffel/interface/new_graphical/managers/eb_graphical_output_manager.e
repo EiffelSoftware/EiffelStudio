@@ -125,7 +125,7 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
-	process_warnings (warnings: LINKED_LIST [WARNING]) is
+	process_warnings (warnings: LINKED_LIST [ERROR]) is
 			-- Print `warnings' on all output tools.
 		do
 			from

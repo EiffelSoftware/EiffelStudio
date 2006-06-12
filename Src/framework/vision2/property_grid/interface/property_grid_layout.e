@@ -6,6 +6,9 @@ indexing
 class
 	PROPERTY_GRID_LAYOUT
 
+inherit
+	EV_DIALOG_CONSTANTS
+
 feature {NONE} -- Button constants
 
 	button_width: INTEGER is 75
@@ -63,8 +66,6 @@ feature {NONE} -- Text
 	force_inheritance: STRING is "Force inheritance on child elements."
 	use_inherited: STRING is "Use inherited value."
 
-	ok_button_text: STRING is "OK"
-	cancel_button_text: STRING is "Cancel"
 	up_button_text: STRING is "Up"
 	down_button_text: STRING is "Down"
 	plus_button_text: STRING is "+"

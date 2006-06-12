@@ -3075,13 +3075,13 @@ feature -- Implementation
 						if l_needs_byte_node then
 							l_left_expr := l_conv_info.byte_node (l_left_expr)
 						end
-					elseif not is_inherited then
+					elseif context.current_class.lace_class.options.is_warning_enabled (w_vweq) then
 						create l_vweq
 						context.init_error (l_vweq)
 						l_vweq.set_left_type (l_left_type)
 						l_vweq.set_right_type (l_right_type)
 						l_vweq.set_location (l_as.operator_location)
-						error_handler.insert_error (l_vweq)
+						error_handler.insert_warning (l_vweq)
 					end
 				end
 			end

@@ -13,7 +13,7 @@ inherit
 
 	FEATURE_ERROR
 		redefine
-			build_explain
+			build_explain, error_string
 		end
 
 feature -- Properties
@@ -26,6 +26,13 @@ feature -- Properties
 
 	code: STRING is "VWEQ";
 			-- Error code
+
+feature -- Property
+
+	Error_string: STRING is
+		do
+			Result := "Warning"
+		end
 
 feature -- Output
 

@@ -171,6 +171,7 @@ feature {NONE} -- Implementation
 			Result.force (w_old_verbatim_strings)
 			Result.force (w_same_uuid)
 			Result.force (w_export_class_missing)
+			Result.force (w_vweq)
 		ensure
 			Result_not_void: Result /= Void
 		end

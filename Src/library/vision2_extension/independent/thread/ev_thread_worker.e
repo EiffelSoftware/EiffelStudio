@@ -10,6 +10,8 @@ class
 	EV_THREAD_WORKER
 
 inherit
+	ANY
+
 	EV_THREAD_SEVERITY_CONSTANTS
 		export
 			{NONE} all

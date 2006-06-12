@@ -32,11 +32,6 @@ feature -- Externals
 			"C signature (GdkWindow*, GdkAtom, GdkAtom, guint32) use <gtk/gtk.h>"
 		end
 
-	frozen gdk_drag_drop_succeeded (a_drag_context: POINTER): BOOLEAN is
-		external
-			"C signature (GdkDragContext*): gboolean use <gtk/gtk.h>"
-		end
-
 	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER is
 		external
 			"C struct GdkDragContext access source_window use <gtk/gtk.h>"

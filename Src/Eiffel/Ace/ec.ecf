@@ -225,9 +225,10 @@
 				<build value="finalize"/>
 			</condition>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)/C/ipc/shared/libipc.a">
+		<external_object location="$(EIFFEL_SRC)/C/ipc/shared/libmtipc.a">
 			<condition>
 				<platform excluded_value="windows"/>
+				<build value="finalize"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\ipc\ewb\mtwewb.lib">
@@ -242,9 +243,10 @@
 				<build value="finalize"/>
 			</condition>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\ipc\shared\ipc.lib">
+		<external_object location="$(EIFFEL_SRC)\C\ipc\shared\mtipc.lib">
 			<condition>
 				<platform value="windows"/>
+				<build value="finalize"/>
 			</condition>
 		</external_object>
 		<external_object location="htmlhelp.lib">

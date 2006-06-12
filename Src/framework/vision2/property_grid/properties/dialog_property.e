@@ -59,7 +59,7 @@ feature {NONE} -- Agents
 			if dialog = Void then
 				create dialog
 			end
-			dialog.set_title ("Edit "+name)
+			dialog.set_title (dialog_title (name))
 			if value /= Void then
 				dialog.set_value (value.twin)
 			end

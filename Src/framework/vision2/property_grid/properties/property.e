@@ -135,7 +135,7 @@ feature  -- Update
 			is_readonly: is_readonly
 		end
 
-feature {PROPERTY_GRID} -- Agents
+feature {PROPERTY_GRID, TYPED_PROPERTY} -- Agents
 
 	check_right_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Check if we clicked the right mouse button and show inheritance menu.

@@ -13,6 +13,12 @@ inherit
 			on_ok
 		end
 
+	PROPERTY_GRID_LAYOUT
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	default_create,
 	make_with_title
@@ -42,10 +48,10 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (vb1)
 			create cl
 			vb1.extend (cl)
-			create up_button.make_with_text ("Up")
+			create up_button.make_with_text (up_button_text)
 			vb1.extend (up_button)
 			vb1.disable_item_expand (up_button)
-			create down_button.make_with_text ("Down")
+			create down_button.make_with_text (down_button_text)
 			vb1.extend (down_button)
 			vb1.disable_item_expand (down_button)
 			create cl
@@ -57,15 +63,15 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			create new_item_name
 			hb.extend (new_item_name)
-			create add_button.make_with_text ("+")
+			create add_button.make_with_text (plus_button_text)
 			add_button.set_minimum_width (small_button_width)
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
-			create remove_button.make_with_text ("-")
+			create remove_button.make_with_text (minus_button_text)
 			remove_button.set_minimum_width (small_button_width)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			create modify_button.make_with_text ("Change")
+			create modify_button.make_with_text (change_button_text)
 			hb.extend (modify_button)
 			hb.disable_item_expand (modify_button)
 

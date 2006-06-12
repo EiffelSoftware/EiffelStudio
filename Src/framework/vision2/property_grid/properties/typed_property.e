@@ -37,26 +37,24 @@ feature -- Access
 
 feature -- Update
 
-	add_sub_property (a_property: TYPED_PROPERTY [ANY]) is
+	add_sub_property (a_property: PROPERTY) is
 			-- Add `a_property'.
 		local
 			l_row: PROPERTY_ROW
 			l_index: INTEGER
+			l_name_item: EV_GRID_LABEL_ITEM
 		do
 			l_index := row.subrow_count + 1
 			row.insert_subrow (l_index)
 			l_row ?= row.subrow (l_index)
 			l_row.set_property (a_property)
-			l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_property.name))
+			create l_name_item.make_with_text (a_property.name)
+			if a_property.description /= Void then
+				l_name_item.set_tooltip (a_property.description)
+			end
+			l_row.set_item (1, l_name_item)
 			l_row.set_item (2, a_property)
-			if a_property.is_inherited then
-				l_row.set_item (3, create {INHERITED_ITEM})
-			elseif a_property.is_overriden then
-				l_row.set_item (3, create {OVERRIDEN_ITEM})
-			end
-			if a_property.is_forcable then
-				l_row.set_item (4, create {FORCE_INHERIT_ITEM})
-			end
+			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
 		end
 
 	set_refresh_action (an_action: like refresh_action) is

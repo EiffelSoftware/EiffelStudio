@@ -63,4 +63,16 @@ feature {NONE} -- Text
 	force_inheritance: STRING is "Force inheritance on child elements."
 	use_inherited: STRING is "Use inherited value."
 
+	ok_button_text: STRING is "OK"
+	cancel_button_text: STRING is "Cancel"
+	up_button_text: STRING is "Up"
+	down_button_text: STRING is "Down"
+	plus_button_text: STRING is "+"
+	minus_button_text: STRING is "-"
+	change_button_text: STRING is "Change"
+
+	dialog_title (a_name: STRING): STRING is
+		do
+			Result := "Edit "+a_name
+		end
 end

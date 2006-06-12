@@ -43,6 +43,7 @@ feature -- Warnings
 	w_old_verbatim_strings: STRING is "old_verbatim_strings"
 	w_same_uuid: STRING is "same_uuid"
 	w_export_class_missing: STRING is "export_class_missing"
+	w_vweq: STRING is "vweq"
 
 feature -- Settings
 

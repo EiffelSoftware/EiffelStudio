@@ -270,6 +270,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Usage of old verbatim strings warning.", w_old_verbatim_strings)
 			Result.force ("Different files with the same uuid.", w_same_uuid)
 			Result.force ("Missing class in export clause.", w_export_class_missing)
+			Result.force ("Incompatible types in equality comparison", w_vweq)
 		end
 
 feature {NONE} -- Condition dialog

@@ -115,25 +115,25 @@ feature -- Status Setting
 			-- Make object sensitive to user input.
 		do
 			sensitive_container.enable_sensitive
+			remove_project_button.enable_sensitive
 		end
 
 	disable_sensitive is
 			-- Make object non-sensitive to user input.
 		do
 			sensitive_container.disable_sensitive
+			remove_project_button.disable_sensitive
 			last_selected_row := Void
 		end
 
 	remove_selection is
 			-- Unselect currently selected item if any.
 		do
-			if has_selected_item then
-				projects_list.remove_selection
-				location_combo.wipe_out
-				clean_button.disable_select
-				remove_user_file.disable_select
-				disable_sensitive
-			end
+			projects_list.remove_selection
+			location_combo.wipe_out
+			clean_button.disable_select
+			remove_user_file.disable_select
+			disable_sensitive
 		end
 
 	set_focus is
@@ -226,6 +226,9 @@ feature {NONE} -- Implementation: Graphical Access
 	projects_list: ES_GRID
 			-- List containing the last opened projects.
 
+	remove_project_button: EV_BUTTON
+			-- Button for removing a project entry from list.
+
 	clean_button: EV_CHECK_BUTTON
 			-- Check button to recompile a project from scratch.
 
@@ -308,12 +311,12 @@ feature {NONE} -- Initialization
 			l_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			create l_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
-			l_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
-			projects_list.row_deselect_actions.force_extend (agent l_button.disable_sensitive)
-			projects_list.row_select_actions.force_extend (agent l_button.enable_sensitive)
-			hb.extend (l_button)
-			hb.disable_item_expand (l_button)
+			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
+			remove_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			projects_list.row_deselect_actions.force_extend (agent remove_project_button.disable_sensitive)
+			projects_list.row_select_actions.force_extend (agent remove_project_button.enable_sensitive)
+			hb.extend (remove_project_button)
+			hb.disable_item_expand (remove_project_button)
 			hb.extend (create {EV_CELL})
 			open_project_vb.extend (hb)
 			open_project_vb.disable_item_expand (hb)

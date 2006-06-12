@@ -1,2 +1,6 @@
-Type error: non-conforming Equality expression. 
-What to do: make sure that one of the operand types conforms to the other.
+Type warning: non-compatible Equality expression. 
+Possible to do: if you did not intend to have a non-compatible Equality
+  expression, make sure that one of the operand types is compatible to the
+  other, otherwise, even if statically it should be False, it might
+  be True at runtime when both operands are attached to types which are
+  compatible.

@@ -655,6 +655,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_external: LANG_TRIB_SD
 			l_type: LANGUAGE_NAME_SD
 			l_files: LACE_LIST [ID_SD]
+			l_loc: STRING
 		do
 			if a_externals /= Void then
 				from
@@ -671,7 +672,9 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							current_target.add_external_include (factory.new_external_include (l_files.item))
+							l_loc := l_files.item
+							l_loc.replace_substring_all ("%"", "&quot;")
+							current_target.add_external_include (factory.new_external_include (l_loc))
 							l_files.forth
 						end
 					elseif l_type.is_object then
@@ -680,7 +683,9 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							current_target.add_external_object (factory.new_external_object (l_files.item))
+							l_loc := l_files.item
+							l_loc.replace_substring_all ("%"", "&quot;")
+							current_target.add_external_object (factory.new_external_object (l_loc))
 							l_files.forth
 						end
 					elseif l_type.is_dotnet_resource then
@@ -689,7 +694,9 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							current_target.add_external_resource (factory.new_external_resource (l_files.item))
+							l_loc := l_files.item
+							l_loc.replace_substring_all ("%"", "&quot;")
+							current_target.add_external_resource (factory.new_external_resource (l_loc))
 							l_files.forth
 						end
 					elseif l_type.is_make then
@@ -698,7 +705,9 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							current_target.add_external_make (factory.new_external_make (l_files.item))
+							l_loc := l_files.item
+							l_loc.replace_substring_all ("%"", "&quot;")
+							current_target.add_external_make (factory.new_external_make (l_loc))
 							l_files.forth
 						end
 					else

@@ -1328,17 +1328,19 @@ feature {NONE}-- Implementation
 			end_loop: BOOLEAN
 		do
 			l_gens := current_class_c.generics
-			from
-				l_gens.start
-			until
-				l_gens.after or else end_loop
-			loop
-				if a_str.is_equal (l_gens.item.name) then
-					end_loop := True
-					l_des_as := l_gens.item
-					create {FORMAL_A}Result.make (l_des_as.is_reference, l_des_as.is_expanded, l_des_as.position)
+			if l_gens /= Void then
+				from
+					l_gens.start
+				until
+					l_gens.after or else end_loop
+				loop
+					if a_str.is_equal (l_gens.item.name) then
+						end_loop := True
+						l_des_as := l_gens.item
+						create {FORMAL_A}Result.make (l_des_as.is_reference, l_des_as.is_expanded, l_des_as.position)
+					end
+					l_gens.forth
 				end
-				l_gens.forth
 			end
 		end
 

@@ -110,7 +110,7 @@ feature -- Access
 		deferred
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: like item): INTEGER is
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -170,7 +170,7 @@ feature -- Iteration
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
 			cs: CURSOR_STRUCTURE [G]
@@ -200,7 +200,7 @@ feature -- Iteration
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
 			cs: CURSOR_STRUCTURE [G]
@@ -232,14 +232,14 @@ feature -- Iteration
 	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for at least one item?
 			-- Semantics not guaranteed if `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR
 			t: TUPLE [G]
 		do
 			create t
-			
+
 			cs ?= Current
 			if cs /= Void then
 				c := cs.cursor
@@ -263,14 +263,14 @@ feature -- Iteration
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for all items?
 			-- Semantics not guaranteed if `test' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead. 
+			-- in such a case, apply iterator to clone of structure instead.
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR
 			t: TUPLE [G]
 		do
 			create t
-			
+
 			cs ?= Current
 			if cs /= Void then
 				c := cs.cursor

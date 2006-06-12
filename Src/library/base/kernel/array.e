@@ -75,7 +75,7 @@ feature -- Initialization
 			upper := a.upper
 		end
 
-	make_from_cil (na: NATIVE_ARRAY [G]) is
+	make_from_cil (na: NATIVE_ARRAY [like item]) is
 			-- Initialize array from `na'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -315,7 +315,7 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
-	subcopy (other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: ARRAY [like item]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		require

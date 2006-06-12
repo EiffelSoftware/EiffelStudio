@@ -32,7 +32,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the widget with `par' as parent.

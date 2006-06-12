@@ -79,6 +79,10 @@ feature -- Action
 	show is
 			-- Show Current to `parent_window'.
 		do
+			if open_project.is_empty then
+				open_project.remove_selection
+				ok_button.disable_sensitive
+			end
 			dialog.show_modal_to_window (parent_window)
 		end
 

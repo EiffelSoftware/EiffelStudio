@@ -18,8 +18,6 @@
 		<cluster name="fmwk_vision2" location="./vision2" recursive="true" >
 			<condition><custom name="batch_framework" excluded_value="true"/></condition>
 		</cluster>
-		<cluster name="fmwk_property_grid" location="./property_grid" recursive="true">
-			<condition><custom name="batch_framework" excluded_value="true"/></condition>
-		</cluster>
+		<cluster name="fmwk_utilities" location="./utilities" recursive="true"/>
 	</target>
 </system>

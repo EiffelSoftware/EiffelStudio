@@ -104,6 +104,7 @@ feature -- Context output
 			-- Reconstitute text.
 		local
 			not_first: BOOLEAN
+			l_feature_i: FEATURE_I
 		do
 			ctxt.process_filter_item (f_feature_clause, true)
 			ctxt.process_filter_item (f_feature_clause_header, true)
@@ -135,7 +136,8 @@ feature -- Context output
 					not_first := True;
 					ctxt.put_separator
 				end;
-				if not features.item.source_feature.written_class.is_true_external then
+				l_feature_i := features.item.source_feature
+				if l_feature_i /= Void and then not l_feature_i.written_class.is_true_external then
 					features.item.format (ctxt);
 				end
 				features.forth;

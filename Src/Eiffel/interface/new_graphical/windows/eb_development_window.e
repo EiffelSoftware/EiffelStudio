@@ -2226,9 +2226,11 @@ feature -- Position provider
 			-- Current selected formatter
 		local
 			l_end : BOOLEAN
+			l_index: INTEGER
 			l_formatter: like managed_main_formatters
 		do
-			l_formatter := managed_main_formatters.twin
+			l_formatter := managed_main_formatters
+			l_index := l_formatter.index
 			from
 				l_formatter.start
 			until
@@ -2240,6 +2242,7 @@ feature -- Position provider
 				end
 				l_formatter.forth
 			end
+			l_formatter.go_i_th (l_index)
 		end
 
 feature -- Resource Update
@@ -2491,6 +2494,8 @@ feature -- Resource Update
 				set_title (str)
 			end
 			update_formatters
+			features_tool.synchronize
+			on_cursor_moved
 			if editor_tool.text_area.syntax_is_correct then
 				status_bar.display_message ("")
 			else
@@ -4068,12 +4073,20 @@ feature {NONE} -- Implementation: Editor commands
 					l_classc := l_class_i.compiled_class
 					if l_classc.has_feature_table then
 						l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)
+						if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
+							l_efeature := Void
+						end
 					end
+				end
+				if l_efeature /= Void then
+					seek_item_in_feature_tool (l_efeature)
+				else
+					features_tool.seek_ast_item_in_feature_tool (a_feature.feature_names.first.internal_name)
 				end
 			else
 				address_manager.set_feature_text_simply (once "")
+				seek_item_in_feature_tool (Void)
 			end
-			seek_item_in_feature_tool (l_efeature)
 		end
 
 	seek_item_in_feature_tool (a_feature: E_FEATURE) is

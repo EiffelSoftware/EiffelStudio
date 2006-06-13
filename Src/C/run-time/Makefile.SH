@@ -91,6 +91,15 @@ all:: .FORCE_DEPEND
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
+LIB_SHARED= $(TOP)/ipc/shared
+LIB_IPCNAME= ipc.o
+LIB_MTIPCNAME = mtipc.o
+LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
+LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
+
+EWB_PROTO_OBJ = $(TOP)/ipc/ewb/wewb_proto.o
+MTEWB_PROTO_OBJ = $(TOP)/ipc/ewb/MTwewb_proto.o
+
 IDRS_OBJ = $(TOP)/idrs/idrs.o
 MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
 NETWORK_OBJ = $(TOP)/ipc/app/network.o
@@ -111,6 +120,7 @@ WADD = debug.c interp.c update.c wbench.c
 
 WOBJ = \
 	       $(IDRS_OBJ) \
+	       $(LIB_IPC_ARCH) \
 	       $(NETWORK_OBJ) \
 	       debug.o \
 	       interp.o \
@@ -210,6 +220,8 @@ LOBJ = \
 
 EOBJ = \
 	       $(IDRS_OBJ) \
+	       $(LIB_IPC_ARCH) \
+	       $(EWB_PROTO_OBJ) \
 	       debug.o \
 	       interp.o \
 	       update.o \
@@ -261,6 +273,7 @@ EOBJ = \
 
 MT_WOBJ = \
 	       $(MTIDRS_OBJ) \
+	       $(LIB_MTIPC_ARCH) \
 	       $(MTNETWORK_OBJ) \
 	       MTdebug.o \
 	       MTinterp.o \
@@ -360,6 +373,8 @@ MT_LOBJ = \
 
 MT_EOBJ = \
 	       $(MTIDRS_OBJ) \
+	       $(LIB_MTIPC_ARCH) \
+	       $(MTEWB_PROTO_OBJ) \
 	       MTdebug.o \
 	       MTinterp.o \
 	       MTupdate.o \
@@ -1041,6 +1056,26 @@ $(TOP)/ipc/app/network.o: .FORCE
 $(TOP)/idrs/idrs.o: .FORCE
 	@echo "Checking "idrs.o" in "$(TOP)/idrs"..."
 	cd $(TOP)/idrs; $(MAKE) idrs.o
+	@echo "Continuing in $(CURRENT)..."
+
+$(LIB_SHARED)/$(LIB_IPCNAME): .FORCE
+	@echo "Checking "$(LIB_IPCNAME)" in "$(LIB_SHARED)"..."
+	cd $(LIB_SHARED); $(MAKE) $(LIB_IPCNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+$(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
+	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
+	cd $(LIB_SHARED); $(MAKE) $(LIB_MTIPCNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+$(TOP)/ipc/ewb/wewb_proto.o: .FORCE
+	@echo "Checking "wewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	cd $(TOP)/ipc/ewb; $(MAKE) wewb_proto.o
+	@echo "Continuing in $(CURRENT)..."
+
+$(TOP)/ipc/ewb/MTwewb_proto.o: .FORCE
+	@echo "Checking "MTwewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	cd $(TOP)/ipc/ewb; $(MAKE) MTwewb_proto.o
 	@echo "Continuing in $(CURRENT)..."
 
 TESTS = mram gram lram eram sram

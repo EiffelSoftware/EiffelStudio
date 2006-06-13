@@ -10,10 +10,6 @@
 LIB_RUNTIME = $(TOP)/run-time
 LIB_IDRS = $(TOP)/idrs
 LIB_SHARED = $(TOP)/ipc/shared
-LIB_IPCNAME = libipc.a
-LIB_MTIPCNAME = libmtipc.a
-LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
-LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 /* The following are understood by jmake to alter built-in commands */
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
@@ -45,11 +41,8 @@ MT!f:\.c=.o: !f
 -expand
 
 NormalObjectRule()
-RemoteTargetDependency(network.o,$(LIB_SHARED),$(LIB_IPCNAME))
-PrelinkedRelocatableTarget(network,$(OBJ),$(LIB_IPC_ARCH))
-
-RemoteTargetDependency(MTnetwork.o,$(LIB_SHARED),$(LIB_MTIPCNAME))
-PrelinkedRelocatableTarget(MTnetwork,$(MT_OBJ),$(LIB_MTIPC_ARCH))
+NormalRelocatableTarget(network,$(OBJ))
+NormalRelocatableTarget(MTnetwork,$(MT_OBJ))
 
 DependTarget()
 LintTarget()

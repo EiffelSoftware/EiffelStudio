@@ -118,7 +118,7 @@ feature -- Event handling
 			create Result
 		end
 
-	create_destory_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create  a destory actions sequence.
 		do
 			create Result

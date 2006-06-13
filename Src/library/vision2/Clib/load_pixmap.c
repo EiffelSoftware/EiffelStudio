@@ -23,16 +23,17 @@ indexing
 /*       Level 4 without issuing any warning message                         */
 /*****************************************************************************/
 
-#include "eif_portable.h"
-#include "eif_malloc.h"
+/* It is important to include `png.h' before anything else because they don't like when you
+ * include `setjmp.h' before they do. */
+#include <png.h>
+
+#include "eif_config.h"
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
-#include "png.h"
 #else
 #include <stdlib.h>
 #include <unistd.h>
-#include <png.h>
 #endif
 
 #include <stdio.h>

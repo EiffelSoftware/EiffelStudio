@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="gobo_extension" uuid="0DA7FB52-F457-4C7F-A8DD-9285E5EE2631" library_target="gobo_extension">
 	<target name="gobo_extension">
 		<description>gobo extension library</description>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf"/>
-		<cluster name="gobo_extension" location="." recursive="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true"/>
+		<cluster name="gobo_extension" location=".\" recursive="true"/>
 	</target>
 </system>

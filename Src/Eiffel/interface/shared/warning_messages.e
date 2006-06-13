@@ -310,6 +310,16 @@ feature -- File warnings
 									%classes can be opened."
 			-- An attempt was made to open a file that does not correspond to a class in the universe.
 
+	w_Not_rename_swp (a_file_name, a_new_name: STRING): STRING is
+			-- Can not rename the swp file into the original file during a save operation.
+		require
+			a_file_name_not_void: a_file_name /= Void
+			a_new_name_not_void: a_new_name /= Void
+		do
+			Result := "Could not rename "+a_file_name+" into "+a_new_name+"."
+		end
+
+
 feature -- Project settings warnings
 
 	w_cluster_with_name_exists: STRING is "A cluster with this name already exists. Please use another name."

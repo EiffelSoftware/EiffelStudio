@@ -30,9 +30,17 @@ inherit
 create
 	make
 
+create {SD_TOOL_BAR_DRAWER_IMP}
+	make_for_help
+
 feature{NONE} -- Initlization
 
-	make (a_drawing_area: EV_DRAWING_AREA; a_draw_at_top: BOOLEAN) is
+	make_for_help is
+			-- Used by SD_TOOL_BAR_DRAWER_IMP.
+		do
+		end
+
+	make (a_drawing_area: SD_NOTEBOOK_TAB; a_draw_at_top: BOOLEAN) is
 			-- Creation method
 		local
 			l_env: EV_ENVIRONMENT
@@ -103,7 +111,7 @@ feature -- Commands
 			l_brush.delete
 			l_wel_rect.dispose
 
-			draw_pixmap_text_selected (a_width)
+			draw_pixmap_text_selected (buffer_pixmap, a_width)
 
 			end_draw
 		end
@@ -112,6 +120,59 @@ feature -- Commands
 			-- Redefine
 		do
 			expose_unselected_or_hot (a_width, a_tab_info, True)
+		end
+
+feature -- FIXIT: maybe move to a helper class?
+
+	bits_of_image (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
+			--
+		require
+			not_void: a_bitmap /= Void
+		local
+			l_dc: WEL_MEMORY_DC
+			l_info: WEL_BITMAP_INFO
+		do
+			create l_dc.make
+			l_info := info_of_bitmap (a_bitmap)
+			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_info.header.dispose
+			l_info.dispose
+		ensure
+			not_void: Result /= Void
+		end
+
+	bits_of_image_bottom_up (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
+			--
+		require
+			not_void: a_bitmap /= Void
+		local
+			l_dc: WEL_MEMORY_DC
+			l_info: WEL_BITMAP_INFO
+		do
+			create l_dc.make
+			l_info := info_of_bitmap (a_bitmap)
+			l_info.header.set_height (- l_info.header.height)
+			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_info.header.dispose
+			l_info.dispose
+		end
+
+	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO is
+			--
+			-- Functions who invoke this function have to dispose the Result, otherwise there are memroy leaks.
+		local
+			l_dc: WEL_MEMORY_DC
+			l_info: WEL_BITMAP_INFO
+		do
+			create l_dc.make
+			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			-- We must make another header info, otherwise memory will crash when call GetDIBits.
+			-- For 32bits, it's 3
+			-- See WEL_DC save_bitmap
+			create Result.make (l_info.header, 3)
+
+			l_info.header.dispose
+			l_info.dispose
 		end
 
 feature{NONE} -- Implementation
@@ -128,13 +189,9 @@ feature{NONE} -- Implementation
 			l_result: INTEGER
 		do
 			create l_orignal_dc.make
+			l_info := info_of_bitmap (a_bitmap)
 
-			l_orignal_dc.select_bitmap (a_bitmap)
-			l_orignal_dc.get
-
-			create l_info.make_by_dc (l_orignal_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 			-- When use SetDiBits/GetDiBits Api, windows require bitmap is not selected by any dc.
-			l_orignal_dc.unselect_bitmap
 
 			l_bits := l_orignal_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 
@@ -142,6 +199,8 @@ feature{NONE} -- Implementation
 			l_info.header.set_height (- l_info.header.height)
 			l_result := l_orignal_dc.set_di_bits (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 
+			l_info.header.dispose
+			l_info.dispose
 			l_orignal_dc.delete
 		end
 
@@ -184,7 +243,7 @@ feature{NONE} -- Implementation
 				if a_info.is_tab_after then
 					-- There is tab before and tab after
 					if a_info.is_tab_before_selected then
-						l_temp_rect.set_left (l_temp_rect.left - 2)
+						l_temp_rect.set_left (l_temp_rect.left)
 						theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, {WEL_THEME_PART_CONSTANTS}.tabp_tabitem, {WEL_THEME_TTI_CONSTANTS}.ttis_normal, l_temp_rect, Void, a_brush)
 					elseif a_info.is_tab_after_selected then
 						l_temp_rect.set_right (l_temp_rect.right + 2)
@@ -270,26 +329,19 @@ feature{NONE} -- Implementation
 			if a_info.is_tab_before then
 				if a_info.is_tab_after then
 					-- There is tab after and tab before
-					draw_classic_tab (a_bitmap_dc, a_rect)
+					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
 				else
 					-- There is tab before but no tab after
-					draw_classic_tab (a_bitmap_dc, a_rect)
+					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
 				end
 			else
 				if a_info.is_tab_after then
 					-- There is no tab before, but a tab after
-					draw_classic_tab (a_bitmap_dc, a_rect)
+					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
 				else
 					-- There is no tab before and no tab after
-					draw_classic_tab (a_bitmap_dc, a_rect)
+					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
 				end
-			end
-
-			if not internal_draw_border_at_top then
-				a_bitmap_dc.unselect_bitmap
-				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
-				mirror_image (a_bitmap)
-				a_bitmap_dc.select_bitmap (a_bitmap)
 			end
 		end
 
@@ -299,13 +351,18 @@ feature{NONE} -- Implementation
 			l_temp_rect: WEL_RECT
 		do
 			theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, 0, 0, a_rect, Void, a_brush)
-			create l_temp_rect.make (a_rect.left, a_rect.top + 2, a_rect.right, a_rect.bottom)
+			if internal_draw_border_at_top then
+				create l_temp_rect.make (a_rect.left, a_rect.top + 2, a_rect.right, a_rect.bottom)
+			else
+				create l_temp_rect.make (a_rect.left, a_rect.top, a_rect.right, a_rect.bottom - 2)
+			end
+
 			if a_info.is_tab_before then
 				if a_info.is_tab_after then
 					-- There is tab before and tab after
 					if a_info.is_tab_before_selected then
 						l_temp_rect.set_left (l_temp_rect.left - 2)
-						draw_classic_tab (a_bitmap_dc, l_temp_rect)
+						draw_classic_tab (a_bitmap_dc, l_temp_rect, internal_draw_border_at_top)
 					elseif a_info.is_tab_after_selected then
 						l_temp_rect.set_right (l_temp_rect.right + 2)
 					else
@@ -328,7 +385,7 @@ feature{NONE} -- Implementation
 					-- There is no tab before and after
 				end
 			end
-			draw_classic_tab (a_bitmap_dc, l_temp_rect)
+			draw_classic_tab (a_bitmap_dc, l_temp_rect, internal_draw_border_at_top)
 		end
 
 	expose_unselected_or_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO; a_hot: BOOLEAN) is
@@ -363,7 +420,7 @@ feature{NONE} -- Implementation
 				draw_classic_unselected_tab (l_buffer_dc, l_buffer_pixmap, a_tab_info, l_wel_rect, l_brush)
 			end
 
-			if not internal_draw_border_at_top then
+			if theme_data /= default_pointer and then not internal_draw_border_at_top then
 				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
 				l_buffer_pixmap := l_buffer_dc.bitmap
 				l_buffer_dc.unselect_bitmap
@@ -374,13 +431,23 @@ feature{NONE} -- Implementation
 			l_brush.delete
 			l_wel_rect.dispose
 
-			draw_pixmap_text_unselected (a_width)
+			draw_pixmap_text_unselected (buffer_pixmap ,a_width)
 
 			end_draw
 		end
 
-	draw_classic_tab (a_dc: WEL_DC; a_rect: WEL_RECT)is
-			-- Draw classic tab
+	draw_classic_tab (a_dc: WEL_DC; a_rect: WEL_RECT; a_is_top: BOOLEAN) is
+			-- Draw classic tab.
+		do
+			if a_is_top then
+				draw_classic_tab_top (a_dc, a_rect)
+			else
+				draw_classic_tab_down (a_dc, a_rect)
+			end
+		end
+
+	draw_classic_tab_top (a_dc: WEL_DC; a_rect: WEL_RECT) is
+			-- Draw classic tab at top side.
 		local
 			l_color: WEL_COLOR_REF
 			l_drawer: SD_CLASSIC_THEME_DRAWER
@@ -405,6 +472,38 @@ feature{NONE} -- Implementation
 
 			-- Draw a at right top
 			l_drawer.draw_line (a_dc, a_rect.right - 2, a_rect.top + 1, a_rect.right - 2, a_rect.top + 2, l_color)
+
+		end
+
+	draw_classic_tab_down (a_dc: WEL_DC; a_rect: WEL_RECT) is
+			-- Draw classic tabs which at bottom side.
+		local
+			l_color: WEL_COLOR_REF
+			l_drawer: SD_CLASSIC_THEME_DRAWER
+		do
+			create l_drawer
+
+			-- Draw | at left
+			l_color := l_drawer.rhighlight
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.top, a_rect.left, a_rect.bottom - 2, l_color)
+
+			-- Draw . at left top
+			l_drawer.draw_line (a_dc, a_rect.left + 1, a_rect.bottom - 2, a_rect.left + 1, a_rect.bottom - 3, l_color)
+
+			-- Draw - at bottom
+			l_color := l_drawer.rshadow
+			l_drawer.draw_line (a_dc, a_rect.left + 2, a_rect.bottom - 2, a_rect.right - 2, a_rect.bottom - 2, l_color)
+			l_color := l_drawer.rdark_shadow
+			l_drawer.draw_line (a_dc, a_rect.left + 2, a_rect.bottom - 1, a_rect.right - 2, a_rect.bottom - 1, l_color)
+
+			-- Draw | at right
+			l_color := l_drawer.rshadow
+			l_drawer.draw_line (a_dc, a_rect.right - 2, a_rect.top, a_rect.right - 2, a_rect.bottom - 2, l_color)
+			l_color := l_drawer.rdark_shadow
+			l_drawer.draw_line (a_dc, a_rect.right - 1, a_rect.top, a_rect.right - 1, a_rect.bottom - 2, l_color)
+
+			-- Draw a at right bottom
+			l_drawer.draw_line (a_dc, a_rect.right - 2, a_rect.bottom - 2, a_rect.right - 2, a_rect.bottom - 3, l_color)
 
 		end
 

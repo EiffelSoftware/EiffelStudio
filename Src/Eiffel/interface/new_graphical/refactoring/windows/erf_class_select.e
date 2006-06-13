@@ -65,6 +65,8 @@ feature {NONE} -- Initialization
 
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
+
+			show_actions.extend (agent on_show)
 		end
 
 feature -- Status report
@@ -199,6 +201,13 @@ feature {NONE} -- Implementation
 			ok_pressed := False
 			destroy
 		end
+
+	on_show is
+			-- Triggered when the dialog is shown.
+		do
+			class_list.set_focus
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

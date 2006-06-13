@@ -226,6 +226,8 @@ feature {NONE} -- Implementation
 		do
 			create buffer_pixmap.make_with_size (internal_drawing_area.width, internal_drawing_area.height)
 			buffer_pixmap.set_font (internal_drawing_area.font)
+			buffer_pixmap.set_background_color (internal_drawing_area.background_color)
+			buffer_pixmap.clear
 		ensure
 			created: buffer_pixmap /= Void
 		end
@@ -303,6 +305,7 @@ invariant
 	not_void: internal_drawing_area /= Void
 
 indexing
+	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -312,6 +315,8 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
+
 
 
 

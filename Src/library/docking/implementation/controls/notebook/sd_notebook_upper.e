@@ -191,6 +191,7 @@ invariant
 	close_request_actions_not_void: close_request_actions /= Void
 	normal_max_actions_not_void: normal_max_actions /= Void
 indexing
+	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -200,6 +201,8 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
+
 
 
 

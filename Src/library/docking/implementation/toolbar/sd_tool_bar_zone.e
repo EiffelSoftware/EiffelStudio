@@ -437,9 +437,11 @@ feature {NONE} -- Implmentation
 			l_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			if internal_hidden_widget_items /= Void and tool_bar /= Void then
-				l_item := internal_hidden_widget_items.first
-				if not tool_bar.has (l_item)  then
-					Result := True
+				if not internal_hidden_widget_items.is_empty then
+					l_item := internal_hidden_widget_items.first
+					if not tool_bar.has (l_item)  then
+						Result := True
+					end
 				end
 			end
 		end

@@ -1188,28 +1188,28 @@ feature {NONE} -- Externals
 			-- Object structured retrieved from file of pointer
 			-- `file_handle'
 		external
-			"C blocking"
+			"C"
 		end;
 
 	eif_net_basic_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C blocking"
+			"C"
 		end;
 
 	eif_net_general_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C blocking"
+			"C"
 		end;
 
 	eif_net_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C blocking"
+			"C"
 		end;
 
 indexing

@@ -272,8 +272,9 @@ feature -- Status setting
 			if not is_border_enabled then
 				new_style := clear_flag (new_style, ws_dlgframe)
 			end
-			set_style (new_style)
-			set_style_and_redraw (new_style)
+			if is_displayed then
+				set_style_and_redraw (new_style)
+			end
 		end
 
 	allow_resize is
@@ -283,7 +284,9 @@ feature -- Status setting
 		do
 			new_style := style
 			new_style := set_flag (new_style, Ws_maximizebox | Ws_minimizebox | Ws_sizebox | ws_dlgframe)
-			set_style_and_redraw (new_style)
+			if is_displayed then
+				set_style_and_redraw (new_style)
+			end
 		end
 
 	internal_enable_border is
@@ -296,7 +299,9 @@ feature -- Status setting
 				new_style := set_flag (new_style, Ws_sizebox)
 			end
 			new_style := set_flag (new_style, ws_dlgframe)
-			set_style_and_redraw (new_style)
+			if is_displayed then
+				set_style_and_redraw (new_style)
+			end
 		end
 
 	internal_disable_border is
@@ -308,7 +313,9 @@ feature -- Status setting
 			if not user_can_resize then
 				new_style := clear_flag (new_style, Ws_sizebox | Ws_dlgframe)
 			end
-			set_style_and_redraw (new_style)
+			if is_displayed then
+				set_style_and_redraw (new_style)
+			end
 		end
 
 feature -- Element change

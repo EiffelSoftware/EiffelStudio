@@ -97,6 +97,7 @@ feature {NONE} -- Agents
 			Precursor
 			text_field.disable_edit
 			text_field.pointer_button_press_actions.force_extend (agent switch)
+			text_field.key_press_actions.extend (agent on_text_field_key)
 		end
 
 	show_ellipsis is
@@ -117,6 +118,7 @@ feature {NONE} -- Agents
 			create combo_grid
 			combo_grid.hide_header
 			combo_grid.pointer_button_press_item_actions.extend (agent combo_click)
+			combo_grid.key_press_actions.extend (agent on_combo_key)
 			l_frame.extend (combo_grid)
 			from
 				item_strings.start
@@ -147,6 +149,7 @@ feature {NONE} -- Agents
 
 			combo_popup.extend (l_frame)
 			combo_popup.show
+			combo_grid.set_focus
 		end
 
 	deactivate is
@@ -190,6 +193,34 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_combo_key (a_key: EV_KEY) is
+			-- A key was pressed in `combo_grid'.
+		require
+			a_key_not_void: a_key /= Void
+		local
+			l_item: GENERIC_GRID_ITEM [G]
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				if combo_grid.selected_items /= Void and then combo_grid.selected_items.count = 1 then
+					l_item ?= combo_grid.selected_items.first
+					if l_item /= Void and then is_valid_value (l_item.value) then
+						set_value (l_item.value)
+					end
+					deactivate
+				end
+			end
+		end
+
+	on_text_field_key (a_key: EV_KEY) is
+			-- A key was pressed in `text_field'.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter or a_key.code = {EV_KEY_CONSTANTS}.key_down then
+				ellipsis_actions.call ([])
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	ellipsis: EV_PIXMAP is
@@ -226,7 +257,7 @@ feature {NONE} -- Implementation
 		do
 			if combo_grid /= Void then
 				combo_grid.focus_out_actions.wipe_out
---				combo_grid.destroy
+				combo_grid.destroy
 				combo_grid := Void
 			end
 			if combo_popup /= Void then

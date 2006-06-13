@@ -15,7 +15,10 @@ feature {NONE}
 
 feature {NONE} -- Configuration
 
-	configuration_title: STRING is "Project Settings"
+	configuration_title (a_system_name: STRING): STRING is
+		do
+			Result := "Project Settings ("+a_system_name+")"
+		end
 
 feature {NONE} -- Section names
 
@@ -205,6 +208,8 @@ feature {NONE} -- Target names and descriptions
 	group_class_option_name: STRING is "Class options"
 	group_class_option_description: STRING is "Class specific options."
 
+	library_edit_configuration: STRING is "Edit library configuration"
+
 	cluster_file_rule_name: STRING is "File pattern"
 	cluster_file_rule_description: STRING is "Exclude/include file pattern."
 	cluster_recursive_name: STRING is "Recursive"
@@ -360,6 +365,10 @@ feature {NONE} -- Create cluster dialog
 feature {NONE} -- Create override dialog
 
 	dialog_create_override_title: STRING is "Add override cluster"
+
+feature {NONE} -- Class option dialog
+
+	dialog_class_option_class_name: STRING is "Class name"
 
 
 	remove_group_text: STRING is "Remove group"

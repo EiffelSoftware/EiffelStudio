@@ -62,7 +62,6 @@ feature -- Basic operations
 			wd: EV_WARNING_DIALOG
 			l_debugs: SEARCH_TABLE [STRING]
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
-			l_config_window: CONFIGURATION_WINDOW
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
 		do
@@ -99,8 +98,8 @@ feature -- Basic operations
 
 						l_load.last_system.targets.start
 						l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-						create l_config_window.make (l_load.last_system, l_fact, l_sorted_debugs)
-						l_config_window.show
+						create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+						configuration_window.show
 					end
 				end
 			end
@@ -113,6 +112,9 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	configuration_window: CONFIGURATION_WINDOW
+			-- Configuration window, as a class attribute in order for it to not get collecte by the gc.
 
 	gc_window: EB_GC_STATISTIC_WINDOW is
 		once

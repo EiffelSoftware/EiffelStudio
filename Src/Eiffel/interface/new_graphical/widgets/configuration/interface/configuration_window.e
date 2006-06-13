@@ -11,7 +11,8 @@ class
 inherit
 	EV_TITLED_WINDOW
 		redefine
-			initialize, is_in_default_state
+			initialize, is_in_default_state,
+			destroy
 		end
 
 	CONF_ACCESS
@@ -73,6 +74,12 @@ inherit
 			copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -90,6 +97,7 @@ feature {NONE}-- Initialization
 			conf_factory := a_factory
 			debug_clauses := a_debugs
 			default_create
+			config_windows.force (Current, conf_system.file_name)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
@@ -104,9 +112,12 @@ feature {NONE}-- Initialization
 			cl: EV_CELL
 			l_btn: EV_BUTTON
 		do
+				-- set default layout values
+			set_padding_size (default_padding_size)
+
 				-- window
 			Precursor {EV_TITLED_WINDOW}
-			set_title (configuration_title)
+			set_title (configuration_title (conf_system.name))
 			set_width (initial_window_width)
 			set_height (initial_window_height)
 			enable_user_resize
@@ -151,6 +162,7 @@ feature {NONE}-- Initialization
 			vb.disable_item_expand (hb)
 
 			hb.extend (create {EV_CELL})
+			hb.set_padding (default_padding_size)
 
 			create l_btn.make_with_text_and_action (ev_ok, agent on_ok)
 			l_btn.set_minimum_width (default_button_width)
@@ -165,6 +177,17 @@ feature {NONE}-- Initialization
 			close_request_actions.extend (agent on_cancel)
 
 			append_margin (vb)
+			show_actions.extend (agent section_tree.set_focus)
+		end
+
+feature -- Command
+
+	destroy is
+			-- Destroy underlying native toolkit object.
+			-- Render `Current' unusable.
+		do
+			Precursor
+			config_windows.remove (conf_system.file_name)
 		end
 
 feature {NONE} -- Agents
@@ -198,8 +221,39 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Quit with saving
 		do
+			close_request_actions.call ([])
 			conf_system.store
 			destroy
+		end
+
+	edit_configuration (a_configuration: STRING) is
+			-- Open a new dialog to edit the file `a_configuration'.
+		require
+			a_configuration_not_void: a_configuration /= Void
+		local
+			l_load: CONF_LOAD
+			wd: EV_WARNING_DIALOG
+			l_lib_conf: CONFIGURATION_WINDOW
+		do
+				-- see if we already have a window for this configuration and reuse it
+			config_windows.search (a_configuration)
+			if config_windows.found then
+				l_lib_conf := config_windows.found_item
+				l_lib_conf.set_focus
+			else
+				create l_load.make (conf_factory)
+				l_load.retrieve_configuration (a_configuration)
+				if l_load.is_error then
+					create wd.make_with_text (l_load.last_error.out)
+					wd.show_modal_to_window (Current)
+				else
+					l_load.last_system.targets.start
+					l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
+					create l_lib_conf.make (l_load.last_system, conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0))
+					l_lib_conf.show
+					l_lib_conf.close_request_actions.extend (agent config_windows.remove (a_configuration))
+				end
+			end
 		end
 
 feature {NONE} -- Layout components
@@ -215,6 +269,9 @@ feature {NONE} -- Layout components
 
 	target_configuration_space: EV_VERTICAL_BOX
 			-- Space to put configuration for `current_target'.
+
+	edit_library_button: EV_BUTTON
+			-- Button to edit the configuration file of a library.
 
 feature {NONE} -- Section tree selection agents
 
@@ -237,9 +294,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (configuration_space)
 			append_small_margin (configuration_space)
 			append_property_description (configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -261,9 +315,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -284,9 +335,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -307,9 +355,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -330,9 +375,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -371,6 +413,7 @@ feature {NONE} -- Section tree selection agents
 
 			create cl
 			hb.extend (cl)
+			hb.set_padding (default_padding_size)
 
 			create l_button.make_with_text ("Add")
 			hb.extend (l_button)
@@ -418,6 +461,7 @@ feature {NONE} -- Section tree selection agents
 			create hb
 			target_configuration_space.extend (hb)
 			target_configuration_space.disable_item_expand (hb)
+			hb.set_padding (default_padding_size)
 
 			create cl
 			hb.extend (cl)
@@ -445,9 +489,10 @@ feature {NONE} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			hb, hb1: EV_HORIZONTAL_BOX
+			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
-			l_btn: EV_BUTTON
+			l_tb: EV_TOOL_BAR
+			l_tb_btn: EV_TOOL_BAR_BUTTON
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_groups
@@ -463,50 +508,50 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
 			vb.set_minimum_width (group_tree_width)
-			create hb1
-			vb.extend (hb1)
-			vb.disable_item_expand (hb1)
 
-			create l_btn
-			hb1.extend (l_btn)
-			hb1.disable_item_expand (l_btn)
-			l_btn.set_pixmap (pixmaps.icon_cluster_symbol)
-			l_btn.set_tooltip (dialog_create_cluster_title)
-			l_btn.select_actions.extend (agent add_cluster)
+			create l_tb
+			vb.extend (l_tb)
+			vb.disable_item_expand (l_tb)
 
-			create l_btn
-			hb1.extend (l_btn)
-			hb1.disable_item_expand (l_btn)
-			l_btn.set_pixmap (pixmaps.icon_override_symbol)
-			l_btn.set_tooltip (dialog_create_override_title)
-			l_btn.select_actions.extend (agent add_override)
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_cluster_symbol)
+			l_tb_btn.set_tooltip (dialog_create_cluster_title)
+			l_tb_btn.select_actions.extend (agent add_cluster)
 
-			create l_btn
-			hb1.extend (l_btn)
-			hb1.disable_item_expand (l_btn)
-			l_btn.set_pixmap (pixmaps.icon_library_symbol)
-			l_btn.set_tooltip (dialog_create_library_title)
-			l_btn.select_actions.extend (agent add_library)
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_override_symbol)
+			l_tb_btn.set_tooltip (dialog_create_override_title)
+			l_tb_btn.select_actions.extend (agent add_override)
 
-			create l_btn
-			hb1.extend (l_btn)
-			hb1.disable_item_expand (l_btn)
-			l_btn.set_pixmap (pixmaps.icon_assemblies_symbol)
-			l_btn.set_tooltip (dialog_create_assembly_title)
-			l_btn.select_actions.extend (agent add_assembly)
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_library_symbol)
+			l_tb_btn.set_tooltip (dialog_create_library_title)
+			l_tb_btn.select_actions.extend (agent add_library)
 
-			create l_btn
-			hb1.extend (l_btn)
-			hb1.disable_item_expand (l_btn)
-			l_btn.set_pixmap (pixmaps.icon_delete_small)
-			l_btn.set_tooltip (remove_group_text)
-			l_btn.select_actions.extend (agent remove_group)
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_assemblies_symbol)
+			l_tb_btn.set_tooltip (dialog_create_assembly_title)
+			l_tb_btn.select_actions.extend (agent add_assembly)
+
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_delete_small)
+			l_tb_btn.set_tooltip (remove_group_text)
+			l_tb_btn.select_actions.extend (agent remove_group)
 
 			append_groups_tree (vb)
 			append_small_margin (hb)
 			target_configuration_space.extend (hb)
 			create vb
 			hb.extend (vb)
+			create edit_library_button.make_with_text (library_edit_configuration)
+			vb.extend (edit_library_button)
+			vb.disable_item_expand (edit_library_button)
+			edit_library_button.hide
 			append_property_grid (vb)
 			append_small_margin (vb)
 			append_property_description (vb)
@@ -583,7 +628,6 @@ feature {NONE} -- Section tree selection agents
 				end
 				l_vars.forth
 			end
-			set_focus
 
 			create hb
 			target_configuration_space.extend (hb)
@@ -671,7 +715,6 @@ feature {NONE} -- Section tree selection agents
 				end
 				l_vars.forth
 			end
-			set_focus
 
 			create hb
 			target_configuration_space.extend (hb)
@@ -703,9 +746,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
-			set_focus
-			properties.set_focus
-			properties.item (1, 1).enable_select
 
 			is_refreshing := False
 		ensure
@@ -747,6 +787,12 @@ feature {NONE} -- Implementation
 	current_group: CONF_GROUP
 			-- Current selected group.
 
+	config_windows: HASH_TABLE [CONFIGURATION_WINDOW, STRING] is
+			-- Open configuration windows, indexed by the configuration file the represent.
+		once
+			create Result.make (5)
+		end
+
 	is_refreshing: BOOLEAN
 			-- Are we currently refreshing?
 
@@ -756,6 +802,8 @@ feature {NONE} -- Implementation
 			if refresh_current /= Void then
 				Current.lock_update
 				refresh_current.call ([])
+				set_focus
+				section_tree.set_focus
 				Current.unlock_update
 			end
 		end
@@ -975,6 +1023,7 @@ feature {NONE} -- Implementation
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 			a_container.extend (l_frame)
 			create l_tree
+			l_tree.focus_out_actions.extend (agent dummy)
 			l_frame.extend (l_tree)
 
 			add_groups (current_target.internal_clusters, l_tree, group_cluster_tree, pixmaps.icon_clusters_symbol)
@@ -987,6 +1036,12 @@ feature {NONE} -- Implementation
 				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_libraries_symbol)
 			end
 		end
+
+	dummy is
+		do
+			do_nothing
+		end
+
 
 	initialize_properties_system is
 			-- Initialize `properties' for system settings.
@@ -1153,7 +1208,6 @@ feature {NONE} -- Implementation
 				l_choice_prop.set_value (target_compilation_type_standard)
 			end
 			l_choice_prop.change_value_actions.put_front (agent set_compilation_mode)
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 			l_choice_prop.use_inherited_actions.extend (agent current_target.update_setting (s_msil_generation, Void))
 			l_choice_prop.use_inherited_actions.extend (agent refresh)
 			properties.add_property (l_choice_prop)
@@ -1427,6 +1481,7 @@ feature {NONE} -- Implementation
 			-- Initialize `properties' for groups target settings.
 		require
 			properties_not_void: properties /= Void
+			edit_library_button_not_void: edit_library_button /= Void
 			a_group_not_void: a_group /= Void
 		local
 			l_mls_prop: MULTILINE_STRING_PROPERTY
@@ -1438,6 +1493,7 @@ feature {NONE} -- Implementation
 			l_override: CONF_OVERRIDE
 			l_cluster: CONF_CLUSTER
 			l_assembly: CONF_ASSEMBLY
+			l_library: CONF_LIBRARY
 			l_file_rule_prop: FILE_RULE_PROPERTY
 			l_list_prop: LIST_PROPERTY
 			l_deps: DS_HASH_SET [CONF_GROUP]
@@ -1457,6 +1513,9 @@ feature {NONE} -- Implementation
 			current_group := a_group
 			properties.reset
 
+			edit_library_button.hide
+			edit_library_button.select_actions.wipe_out
+
 			properties.add_section (section_general)
 
 				-- type
@@ -1473,7 +1532,14 @@ feature {NONE} -- Implementation
 				l_visible := l_cluster
 			elseif a_group.is_library then
 				l_text_prop.set_value (group_library)
-				l_visible ?= a_group
+				l_library ?= a_group
+				l_visible := l_library
+				edit_library_button.show
+				edit_library_button.disable_sensitive
+				if not l_library.is_readonly then
+					edit_library_button.enable_sensitive
+					edit_library_button.select_actions.extend (agent edit_configuration (l_library.location.evaluated_path))
+				end
 			elseif a_group.is_assembly then
 				l_text_prop.set_value (group_assembly)
 				l_assembly ?= a_group
@@ -2007,7 +2073,9 @@ feature {NONE} -- Configuration setting
 		do
 			create dial.make (current_target, conf_factory)
 			dial.show_modal_to_window (Current)
-			refresh
+			if dial.is_ok then
+				refresh
+			end
 		end
 
 	add_override is
@@ -2017,7 +2085,9 @@ feature {NONE} -- Configuration setting
 		do
 			create dial.make (current_target, conf_factory)
 			dial.show_modal_to_window (Current)
-			refresh
+			if dial.is_ok then
+				refresh
+			end
 		end
 
 	add_library is
@@ -2029,7 +2099,9 @@ feature {NONE} -- Configuration setting
 		do
 			create dial.make (current_target, conf_factory)
 			dial.show_modal_to_window (Current)
-			refresh
+			if dial.is_ok then
+				refresh
+			end
 		end
 
 	add_assembly is
@@ -2039,7 +2111,9 @@ feature {NONE} -- Configuration setting
 		do
 			create dial.make (current_target, conf_factory)
 			dial.show_modal_to_window (Current)
-			refresh
+			if dial.is_ok then
+				refresh
+			end
 		end
 
 	remove_group is

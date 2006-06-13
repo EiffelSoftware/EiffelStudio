@@ -18,6 +18,14 @@ inherit
 			copy
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		redefine
+			default_button_width
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -35,21 +43,26 @@ feature {NONE} -- Initialization
 			create hb
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
+			hb.set_padding (default_padding_size)
 
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (dialog_file_rule_add_rule, agent on_add)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (80)
+			l_btn.set_minimum_width (default_button_width)
 			create remove_button.make_with_text_and_action (dialog_file_rule_remove_rule, agent on_remove)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			remove_button.set_minimum_width (80)
+			remove_button.set_minimum_width (default_button_width)
+			cancel_button.set_minimum_width (default_button_width)
+			ok_button.set_minimum_width (default_button_width)
 
 			show_actions.extend (agent on_show)
 		end
 
 feature {NONE} -- GUI Elements
+
+	default_button_width: INTEGER is 80
 
 	notebook: EV_NOTEBOOK
 			-- Notebook for the file rule tabs.

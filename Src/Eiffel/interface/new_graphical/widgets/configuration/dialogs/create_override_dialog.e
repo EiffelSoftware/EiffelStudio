@@ -49,6 +49,7 @@ feature {NONE} -- Actions
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
 					target.add_override (factory.new_override (name.text, l_loc, target))
+					is_ok := True
 					destroy
 				end
 			end

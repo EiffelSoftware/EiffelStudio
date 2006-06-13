@@ -20,14 +20,28 @@ inherit
 			refresh
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
+	CONF_INTERFACE_NAMES
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialization
 		local
 			hb, hb2: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb, vb2: EV_VERTICAL_BOX
 			l_btn: EV_BUTTON
+			l_label: EV_LABEL
+			l_frame: EV_FRAME
 		do
 			Precursor {PROPERTY_DIALOG}
 
@@ -36,9 +50,18 @@ feature {NONE} -- Initialization
 
 			create vb
 			hb.extend (vb)
+			hb.disable_item_expand (vb)
+			vb.set_minimum_width (200)
+			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
 
 			create class_list
 			vb.extend (class_list)
+
+			create l_label.make_with_text (dialog_class_option_class_name)
+			l_label.align_text_left
+			vb.extend (l_label)
+			vb.disable_item_expand (l_label)
 
 			create new_class
 			vb.extend (new_class)
@@ -59,8 +82,27 @@ feature {NONE} -- Initialization
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
+			create vb2
+			hb.extend (vb2)
+			vb2.set_padding (default_padding_size)
+			vb2.set_border_width (default_border_size)
+
 			create properties
-			hb.extend (properties)
+			vb2.extend (properties)
+
+			create l_label
+			properties.set_description_field (l_label)
+			l_label.align_text_left
+			create vb
+			vb.set_minimum_height (50)
+			vb.extend (l_label)
+			vb.disable_item_expand (l_label)
+			vb.extend (create {EV_CELL})
+			create l_frame
+			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+			l_frame.extend (vb)
+			vb2.extend (l_frame)
+			vb2.disable_item_expand (l_frame)
 
 			set_size (500, 600)
 			show_actions.extend (agent on_show)

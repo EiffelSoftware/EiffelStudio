@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
+			hb.set_padding (default_padding_size)
 			create cl
 			hb.extend (cl)
 			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)

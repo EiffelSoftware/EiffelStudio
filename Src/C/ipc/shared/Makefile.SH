@@ -41,6 +41,8 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
+JLKFLAGS = \$(LDFLAGS) $ldflags
+LD = $ld
 LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -167,6 +169,24 @@ libmtipc.a: $(MT_LOBJ)
 	$(RM) $@
 	$(AR) $@ $(MT_LOBJ)
 	$(RANLIB) $@
+
+all:: ipc.o
+
+local_realclean::
+	$(RM) ipc.o
+
+ipc.o: $(LOBJ)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) -r $(LOBJ) -o $@
+
+all:: mtipc.o
+
+local_realclean::
+	$(RM) mtipc.o
+
+mtipc.o: $(MT_LOBJ)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) -r $(MT_LOBJ) -o $@
 
 depend:: ../../mkdep
 

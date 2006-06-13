@@ -79,10 +79,6 @@ all:: .FORCE_DEPEND
 LIB_RUNTIME = $(TOP)/run-time
 LIB_IDRS = $(TOP)/idrs
 LIB_SHARED = $(TOP)/ipc/shared
-LIB_IPCNAME = libipc.a
-LIB_MTIPCNAME = libmtipc.a
-LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
-LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
@@ -112,15 +108,6 @@ MTapp_server.o: app_server.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 
-.FORCE:
-
-$(LIB_SHARED)/$(LIB_IPCNAME): .FORCE
-	@echo "Checking "$(LIB_IPCNAME)" in "$(LIB_SHARED)"..."
-	cd $(LIB_SHARED); $(MAKE) $(LIB_IPCNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-network.o: $(LIB_SHARED)/$(LIB_IPCNAME)
-
 all:: network.o
 
 local_realclean::
@@ -128,14 +115,7 @@ local_realclean::
 
 network.o: $(OBJ)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH)
-
-$(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
-	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
-	cd $(LIB_SHARED); $(MAKE) $(LIB_MTIPCNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-MTnetwork.o: $(LIB_SHARED)/$(LIB_MTIPCNAME)
+	$(LD) $(JLKFLAGS) -r $(OBJ) -o $@
 
 all:: MTnetwork.o
 
@@ -144,7 +124,7 @@ local_realclean::
 
 MTnetwork.o: $(MT_OBJ)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH)
+	$(LD) $(JLKFLAGS) -r $(MT_OBJ) -o $@
 
 depend:: ../../mkdep
 

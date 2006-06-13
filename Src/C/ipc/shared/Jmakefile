@@ -38,6 +38,8 @@ AddSource($(LSRC))
 
 CustomLibraryTarget(ipc,$(LOBJ))
 CustomLibraryTarget(mtipc,$(MT_LOBJ))
+NormalRelocatableTarget(ipc,$(LOBJ))
+NormalRelocatableTarget(mtipc,$(MT_LOBJ))
 
 DependTarget()
 LintTarget()

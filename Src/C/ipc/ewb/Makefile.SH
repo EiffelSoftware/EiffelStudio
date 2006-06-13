@@ -54,7 +54,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ) \$(MT_LOBJ) \$(MT_WOBJ)
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) ewb_proto.o MTewb_proto.o wewb_proto.o MTwewb_proto.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -78,19 +78,25 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-LSRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+ALL_SRC = ewb_proto.c $(LSRC)
 
 # Derived object file names
 LOBJ = \
-	       ewb_proto.o \
 	       eproto.o \
 	       eif_in.o \
 	       eif_out.o \
 	       ewb_init.o \
 	       ewb_dumped.o 
 
+WOBJ = \
+	       weproto.o \
+	       weif_in.o \
+	       weif_out.o \
+	       wewb_init.o \
+	       wewb_dumped.o 
+
 MT_WOBJ = \
-	       MTwewb_proto.o \
 	       MTweproto.o \
 	       MTweif_in.o \
 	       MTweif_out.o \
@@ -98,7 +104,6 @@ MT_WOBJ = \
 	       MTwewb_dumped.o 
 
 MT_LOBJ = \
-	       MTewb_proto.o \
 	       MTeproto.o \
 	       MTeif_in.o \
 	       MTeif_out.o \
@@ -145,6 +150,26 @@ MTwewb_dumped.o: ewb_dumped.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
+# Rule for compiling w*.o files
+wewb_proto.o: ewb_proto.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+weproto.o: eproto.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+weif_in.o: eif_in.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+weif_out.o: eif_out.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wewb_init.o: ewb_init.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wewb_dumped.o: ewb_dumped.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+
 # Where shared archive is located (path and name)
 LIB_SHARED = ../shared
 LIB_IDR = ../../idrs
@@ -161,6 +186,16 @@ local_realclean::
 libewb.a: $(LOBJ)
 	$(RM) $@
 	$(AR) $@ $(LOBJ)
+	$(RANLIB) $@
+
+all:: libwewb.a
+
+local_realclean::
+	$(RM) libwewb.a
+
+libwewb.a: $(WOBJ)
+	$(RM) $@
+	$(AR) $@ $(WOBJ)
 	$(RANLIB) $@
 
 all:: libmtewb.a
@@ -182,6 +217,26 @@ libmtwewb.a: $(MT_WOBJ)
 	$(RM) $@
 	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
+
+all:: ewb_proto.o
+
+local_realclean::
+	$(RM) ewb_proto.o
+
+all:: MTewb_proto.o
+
+local_realclean::
+	$(RM) MTewb_proto.o
+
+all:: wewb_proto.o
+
+local_realclean::
+	$(RM) wewb_proto.o
+
+all:: MTwewb_proto.o
+
+local_realclean::
+	$(RM) MTwewb_proto.o
 
 depend:: ../../mkdep
 

@@ -406,20 +406,25 @@ feature {NONE} -- Implementation
 						f_item_name := f_names.item.internal_name
 						if a_class.has_feature_table then
 							ef := a_class.feature_with_name (f_item_name)
+							if ef /= Void and then ef.written_in /= a_class.class_id then
+								ef := Void
+							end
 						end
 						create tree_item
 						if ef = Void then
 							tree_item.set_text (f_item_name)
-							tree_item.pointer_button_press_actions.force_extend (
-								agent features_tool.go_to_line (fa.start_location.line))
-							tree_item.set_pixmap (pixmaps.Icon_feature)
-						else
+							tree_item.set_data (f_item_name)
 							if is_clickable then
-								tree_item.set_data (ef)
+								tree_item.pointer_button_press_actions.force_extend (
+									agent features_tool.go_to_feature_with_name (f_item_name))
+								tree_item.set_pixmap (pixmaps.Icon_feature)
+							end
+						else
+							tree_item.set_data (ef)
+							if is_clickable then
 								tree_item.pointer_button_press_actions.extend (
 									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
 							end
-
 							tree_item.set_text (feature_name (ef))
 							tree_item.set_pixmap (pixmap_from_e_feature (ef))
 							create st.make (ef)

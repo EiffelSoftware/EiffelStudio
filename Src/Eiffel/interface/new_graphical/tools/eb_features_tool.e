@@ -205,6 +205,28 @@ feature -- Element change
 			end
 		end
 
+	seek_ast_item_in_feature_tool (a_feature: STRING) is
+			-- Seek item with `a_feature' in feature tree.
+		local
+			l_node: EV_TREE_NODE
+			l_selected_node: EV_TREE_NODE
+		do
+			if tree /= Void then
+				l_selected_node := tree.selected_item
+				l_node := tree.retrieve_item_recursively_by_data (a_feature, true)
+				if l_node /= Void then
+					l_node.enable_select
+					if tree.is_displayed then
+						tree.ensure_item_visible (l_node)
+					end
+				else
+					if l_selected_node /= Void then
+						l_selected_node.disable_select
+					end
+				end
+			end
+		end
+
 	synchronize is
 			-- Should be called after recompilations.
 		local
@@ -351,6 +373,21 @@ feature {EB_FEATURES_TREE} -- Status setting
 				development_window.editor_tool.text_area.display_line_at_top_when_ready (
 					a_line)
 			end
+		end
+
+	go_to_feature_with_name (a_name: STRING) is
+			-- Go to feature with `a_name'
+			-- We use this to loacte a feature which is only parsed.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_formatter: EB_BASIC_TEXT_FORMATTER
+		do
+			l_formatter ?= development_window.pos_container
+			if l_formatter = Void then
+				development_window.managed_main_formatters.first.execute
+			end
+			development_window.editor_tool.text_area.find_feature_named (a_name)
 		end
 
 feature {EB_FEATURES_TREE} -- Implementation

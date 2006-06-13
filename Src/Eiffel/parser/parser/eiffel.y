@@ -95,7 +95,7 @@ create
 %token TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
 
 %type <SYMBOL_AS>ASemi
-%type <KEYWORD_AS> Alias_mark
+%type <KEYWORD_AS> Alias_mark Is_keyword
 %type <ALIAS_TRIPLE>Alias
 %type <PAIR[KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]> Else_part Rescue
 
@@ -207,7 +207,7 @@ create
 %type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments
 %type <CONSTRAINT_TRIPLE>	Constraint
 
-%expect 121
+%expect 122
 
 %%
 
@@ -337,14 +337,9 @@ End_feature_clause_pos: { feature_clause_end_position := position };
 
 Indexing: -- Empty
 			-- { $$ := Void }
-	|	TE_INDEXING
+	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter
 			{
-				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
-				set_has_old_verbatim_strings_warning (false)
-			}
-		Add_counter Index_list Remove_counter
-			{
-				$$ := $4
+				$$ := $3
 				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end				
@@ -371,20 +366,15 @@ Dotnet_indexing: -- Empty
 						$$.set_end_keyword ($2)
 				end		
 		}
-	|	TE_INDEXING
+	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter TE_END
 			{
-				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
-				set_has_old_verbatim_strings_warning (false)
-			}
-		Add_counter Index_list Remove_counter TE_END
-			{
-				$$ := $4
+				$$ := $3
 				if $$ /= Void then
 					if $1 /= Void then
 						$$.set_indexing_keyword ($1)
 					end
-					if $6 /= Void then	
-						$$.set_end_keyword ($6)
+					if $5 /= Void then	
+						$$.set_end_keyword ($5)
 					end
 				end				
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
@@ -771,6 +761,12 @@ Alias_mark: -- Empty
 			}
 	;
 
+Is_keyword: -- Empty
+			{ $$ := Void }
+	| TE_IS
+			{ $$ := $1 }
+	;
+
 Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Attribute case
@@ -780,6 +776,17 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 					$$ := ast_factory.new_body_as (Void, $2, $3.second, Void, $1, Void, $3.first, $4)
 				end				
 				feature_indexes := $4
+			}
+	|       TE_COLON Type Assigner_mark_opt TE_EQ Constant_attribute Dotnet_indexing
+			{
+					-- Constant case
+				if $3 = Void then
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, $4, Void, $6)
+				else
+					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, $4, $3.first, $6)
+				end
+				
+				feature_indexes := $6
 			}
 	|	TE_COLON Type Assigner_mark_opt TE_IS Constant_attribute Dotnet_indexing
 			{
@@ -792,14 +799,14 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 				
 				feature_indexes := $6
 			}
-	|	TE_IS Indexing Routine
+	|	Is_keyword Indexing Routine
 			{
 					-- procedure without arguments		
 				$$ := ast_factory.new_body_as (Void, Void, Void, $3, Void, $1, Void, $2)
 				feature_indexes := $2
 			}
 	|	TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
-			{
+		{
 					-- Function without arguments
 				if $3 = Void then
 					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, $4, Void, $5)
@@ -808,14 +815,25 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 				end
 				
 				feature_indexes := $5
+		}
+	|	TE_COLON Type Assigner_mark_opt Indexing Routine
+			{
+					-- Function without arguments
+				if $3 = Void then
+					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, Void, Void, $4)
+				else
+					$$ := ast_factory.new_body_as (Void, $2, $3.second, $5, $1, Void, $3.first, $4)
+				end
+				
+				feature_indexes := $4
 			}
-	|	Formal_arguments TE_IS Indexing Routine
+	|	Formal_arguments Is_keyword Indexing Routine
 			{
 					-- procedure with arguments
 				$$ := ast_factory.new_body_as ($1, Void, Void, $4, Void, $2, Void, $3)
 				feature_indexes := $3
 			}
-	|	Formal_arguments TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
+	|	Formal_arguments TE_COLON Type Assigner_mark_opt Is_keyword Indexing Routine
 			{
 					-- Function with arguments
 				if $4 = Void then
@@ -3014,6 +3032,14 @@ Manifest_tuple: TE_LSQURE TE_RSQURE
 			{ $$ := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) }
 	|	TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
 			{ $$ := ast_factory.new_tuple_as ($3, $1, $5) }
+	;
+
+Add_indexing_counter:
+			{
+				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
+				set_has_old_verbatim_strings_warning (false)
+				add_counter
+			}
 	;
 
 Add_counter: { add_counter }

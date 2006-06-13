@@ -62,7 +62,7 @@ feature -- Actions
 		do
 			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
-			else
+			elseif eiffel_project.initialized then
 				init;
 				if Eiffel_ace.file_name /= Void then
 					compile;

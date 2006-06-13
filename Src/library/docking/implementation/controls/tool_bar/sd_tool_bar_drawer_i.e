@@ -40,7 +40,7 @@ feature -- Commands
 		deferred
 		end
 
-	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
 			-- Desatuation `a_pixmap' with `a_k'.
 		require
 			valid: 0 <= a_k  and a_k <= 1

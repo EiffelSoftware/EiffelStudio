@@ -1,55 +1,63 @@
 indexing
-	description: "A command line switch that accepts a value."
+	description: "Represents a user passed argument option."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VALUE_SWITCH
-
-inherit
-	SWITCH
-		rename
-			make as make_base
-		end
+	ARGUMENT_OPTION
 
 create
-	make
+	make,
+	make_with_value
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple; a_optional: like is_value_optional) is
-			-- Initialize a new value option.
+	make (a_name: like name) is
+			-- Initializes option with just a name `a_name'
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-			a_desc_attached: a_desc /= Void
-			not_a_desc_is_empty: not a_desc.is_empty
 		do
-			make_base (a_name, a_desc, a_allow_mutliple)
-			is_value_optional := a_optional
+			name  := a_name
 		ensure
 			name_set: name = a_name
-			description_set: description = a_desc
-			is_value_optional_set: is_value_optional = a_optional
-			allow_multiple_set: allow_multiple = a_allow_mutliple
+		end
+
+	make_with_value (a_name: like name; a_value: like value) is
+			-- Initializes option with a name and an associated value.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_value_attached: a_value /= Void
+		do
+			make (a_name)
+			value := a_value
+		ensure
+			name_set: name = a_name
+			value_set: value = a_value
 		end
 
 feature -- Access
 
-	value_validator: SWITCH_VALUE_VALIDATOR is
-			-- Retrieves an validator used to check current switch value
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+	name: STRING
+			-- Option name
+
+	value: STRING
+			-- Option value, if any
 
 feature -- Status Report
 
-	is_value_optional: BOOLEAN;
-			-- Indicates if a option value is optional
+	has_value: BOOLEAN is
+			-- Indicicate if option has an associated value.
+		do
+			Result := value /= Void
+		end
+
+invariant
+	name_attached: name /= Void
+	not_name_is_empty: not name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -83,4 +91,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {VALUE_SWITCH}
+end -- class {ARGUMENT_OPTION}

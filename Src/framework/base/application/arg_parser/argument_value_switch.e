@@ -1,59 +1,55 @@
 indexing
-	description: "A command line switch."
+	description: "A command line switch that accepts a value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SWITCH
+	ARGUMENT_VALUE_SWITCH
+
+inherit
+	ARGUMENT_SWITCH
+		rename
+			make as make_base
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple) is
-			-- Initialize a new basic option.
+	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple; a_optional: like is_value_optional) is
+			-- Initialize a new value option.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
 		do
-			name := a_name
-			description := a_desc
-			allow_multiple := a_allow_mutliple
-			lower_case_name := name.as_lower
+			make_base (a_name, a_desc, a_allow_mutliple)
+			is_value_optional := a_optional
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
+			is_value_optional_set: is_value_optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 		end
 
 feature -- Access
 
-	name: STRING
-			-- Option name
-
-	description: STRING
-			-- Option description
-
-	lower_case_name: STRING
-			-- Option name in lower-case
+	value_validator: ARGUMENT_SWITCH_VALUE_VALIDATOR is
+			-- Retrieves an validator used to check current switch value
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Status Report
 
-	allow_multiple: BOOLEAN
-			-- Indicated if mutiple occurances permitted
-
-invariant
-	name_attached: name /= Void
-	not_name_is_empty: not name.is_empty
-	description_attached: description /= Void
-	not_description_is_empty: not description.is_empty
-	lower_case_name_attached: lower_case_name /= Void
-	lower_case_name_is_name_in_lower: name.as_lower.is_equal (lower_case_name)
+	is_value_optional: BOOLEAN;
+			-- Indicates if a option value is optional
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -87,4 +83,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {SWITCH}
+end -- class {ARGUMENT_VALUE_SWITCH}

@@ -477,7 +477,7 @@ feature -- Access
 		do
 		end
 
-	new_body_as (a: FORMAL_ARGU_DEC_LIST_AS; t: TYPE_AS; r: ID_AS; c: CONTENT_AS; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: INDEXING_CLAUSE_AS): BODY_AS is
+	new_body_as (a: FORMAL_ARGU_DEC_LIST_AS; t: TYPE_AS; r: ID_AS; c: CONTENT_AS; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: INDEXING_CLAUSE_AS): BODY_AS is
 			-- New BODY AST node
 		do
 		end

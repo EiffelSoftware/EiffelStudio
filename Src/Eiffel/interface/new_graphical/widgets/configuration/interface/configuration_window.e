@@ -1023,7 +1023,6 @@ feature {NONE} -- Implementation
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 			a_container.extend (l_frame)
 			create l_tree
-			l_tree.focus_out_actions.extend (agent dummy)
 			l_frame.extend (l_tree)
 
 			add_groups (current_target.internal_clusters, l_tree, group_cluster_tree, pixmaps.icon_clusters_symbol)
@@ -1035,13 +1034,9 @@ feature {NONE} -- Implementation
 				l_ht.force (current_target.precompile, current_target.precompile.name)
 				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_libraries_symbol)
 			end
-		end
 
-	dummy is
-		do
-			do_nothing
+			l_tree.key_press_actions.extend (agent on_group_tree_key)
 		end
-
 
 	initialize_properties_system is
 			-- Initialize `properties' for system settings.
@@ -2113,6 +2108,16 @@ feature {NONE} -- Configuration setting
 			dial.show_modal_to_window (Current)
 			if dial.is_ok then
 				refresh
+			end
+		end
+
+	on_group_tree_key (a_key: EV_KEY) is
+			-- Button was pressed while we are in the group tree.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+				remove_group
 			end
 		end
 

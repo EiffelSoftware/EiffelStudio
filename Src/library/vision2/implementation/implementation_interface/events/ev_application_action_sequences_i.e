@@ -35,7 +35,6 @@ feature {EV_ANY_I} -- Implementation
 	post_launch_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `post_launch_actions'.
 
-
 feature -- Event handling
 
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -435,6 +434,28 @@ feature {EV_ANY_I} -- Implementation
 
 	theme_changed_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `theme_changed_actions'.
+
+feature -- Event handling
+
+	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when current application is destroying.
+		do
+			if destroy_actions_internal = Void then
+				destroy_actions_internal :=
+					create_destroy_actions
+			end
+			Result := destroy_actions_internal
+		end
+
+feature {EV_ANY_I}	-- Implementation
+
+	create_destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a destroy_action sequence.
+		deferred
+		end
+
+	destroy_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+			-- Impplementation of once per object `destroy_actions'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

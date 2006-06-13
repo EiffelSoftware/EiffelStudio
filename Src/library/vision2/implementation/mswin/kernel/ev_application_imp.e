@@ -485,6 +485,7 @@ feature -- Basic operation
 			quit_requested := True
 			set_is_destroyed (True)
 			window_with_focus := Void
+			interface.destroy_actions.call ([])
 		end
 
 feature {NONE} -- WEL Implemenation

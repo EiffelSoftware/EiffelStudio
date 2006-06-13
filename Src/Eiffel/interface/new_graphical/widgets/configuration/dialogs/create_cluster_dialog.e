@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			factory := a_factory
 			default_create
 			set_title (dialog_create_cluster_title)
+			show_actions.extend (agent name.set_focus)
 		ensure
 			target_set: target = a_target
 			factory_set: factory = a_factory
@@ -128,6 +129,11 @@ feature {NONE} -- Initialization
 			set_minimum_width (300)
 		end
 
+feature -- Status
+
+	is_ok: BOOLEAN
+			-- Was the dialog closed with ok?
+
 feature {NONE} -- GUI elements
 
 	name: EV_TEXT_FIELD
@@ -188,6 +194,7 @@ feature {NONE} -- Actions
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
 					target.add_cluster (factory.new_cluster (name.text, l_loc, target))
+					is_ok := True
 					destroy
 				end
 			end

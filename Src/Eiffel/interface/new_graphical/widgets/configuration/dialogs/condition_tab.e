@@ -42,6 +42,13 @@ inherit
 			is_equal
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -70,16 +77,21 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
+			set_border_width (default_border_size)
+
 				-- top part (platforms, builds, multithreaded, .NET)
 			create hb_top
 			extend (hb_top)
 			disable_item_expand (hb_top)
+			hb_top.set_padding (default_padding_size)
 
+				-- platforms
 			create l_frame.make_with_text (dial_cond_platforms)
 			hb_top.extend (l_frame)
 			hb_top.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
+			vb.set_border_width (default_border_size)
 			create platforms
 			from
 				platform_names.start
@@ -102,8 +114,7 @@ feature {NONE} -- Initialization
 				exclude_platforms.enable_select
 			end
 
-			hb_top.extend (create {EV_CELL})
-
+				-- other
 			create l_frame.make_with_text (dial_cond_other)
 			hb_top.extend (l_frame)
 			l_frame.set_minimum_width (220)
@@ -111,6 +122,7 @@ feature {NONE} -- Initialization
 
 			create hb
 			l_frame.extend (hb)
+			hb.set_border_width (default_border_size)
 
 			create vb
 			vb.set_minimum_width (100)
@@ -193,6 +205,8 @@ feature {NONE} -- Initialization
 			disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
+			vb.set_border_width (default_border_size)
+			vb.set_padding (default_padding_size)
 			create hb_version
 			vb.extend (hb_version)
 			vb.disable_item_expand (hb_version)
@@ -231,10 +245,13 @@ feature {NONE} -- Initialization
 			version_max_msil_clr.set_minimum_width (version_field_width)
 			fill_msil_clr_version
 
+				-- custom
 			create l_frame.make_with_text (dial_cond_custom)
 			extend (l_frame)
 			create vb
 			l_frame.extend (vb)
+			vb.set_border_width (default_border_size)
+			vb.set_padding (default_padding_size)
 			create vb_grid
 			vb.extend (vb_grid)
 			vb_grid.set_border_width (1)

@@ -69,6 +69,8 @@ feature {NONE} -- Initialization
 			hb_main.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
+			vb.set_border_width (default_border_size)
+			vb.set_padding (default_padding_size)
 
 			if data.exclude /= Void then
 				create exclude_pattern.make_with_strings (data.exclude)
@@ -99,6 +101,8 @@ feature {NONE} -- Initialization
 			hb_main.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
+			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
 
 			if data.include /= Void then
 				create include_pattern.make_with_strings (data.include)

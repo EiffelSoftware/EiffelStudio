@@ -173,7 +173,14 @@ feature {NONE} -- Initialization
 			append_margin (hb_out)
 
 			set_minimum_size (400, 400)
+
+			show_actions.extend (agent default_libraries.set_focus)
 		end
+
+feature -- Status
+
+	is_ok: BOOLEAN
+			-- Was the dialog closed with ok?
 
 feature {NONE} -- GUI elements
 
@@ -246,6 +253,7 @@ feature {NONE} -- Actions
 				else
 					l_loc := factory.new_location_from_full_path (location.text, target)
 					target.add_library (factory.new_library (name.text, l_loc, target))
+					is_ok := True
 					destroy
 				end
 			end

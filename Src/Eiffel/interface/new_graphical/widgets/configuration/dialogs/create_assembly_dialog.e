@@ -171,7 +171,14 @@ feature {NONE} -- Initialization
 			append_margin (hb_out)
 
 			set_minimum_size (400, 325)
+
+			show_actions.extend (agent name.set_focus)
 		end
+
+feature -- Status
+
+	is_ok: BOOLEAN
+			-- Was the dialog closed with ok?
 
 feature {NONE} -- GUI elements
 
@@ -255,6 +262,7 @@ feature {NONE} -- Actions
 				if wd /= Void then
 					wd.show_modal_to_window (Current)
 				else
+					is_ok := True
 					destroy
 				end
 			end

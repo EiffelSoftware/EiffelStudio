@@ -63,7 +63,6 @@ feature {NONE} -- Agents
 			if value /= Void then
 				dialog.set_value (value.twin)
 			end
-			dialog.disable_user_resize
 			dialog.show_modal_to_window (l_parent)
 			if dialog.is_ok and then is_valid_value (dialog.value) then
 				set_value (dialog.value)

@@ -157,6 +157,9 @@ feature {NONE} -- Agents
 				button := Void
 			end
 			is_activated := False
+			if not parent.is_destroyed then
+				parent.set_focus
+			end
 		ensure then
 			button_void: button = Void
 			not_activated: not is_activated

@@ -9,6 +9,7 @@ class
 inherit
 	PROPERTY_DIALOG [CONF_CONDITION_LIST]
 		redefine
+			is_in_default_state,
 			initialize,
 			on_ok
 		end
@@ -23,6 +24,14 @@ inherit
 			default_create, copy
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		redefine
+			default_button_width
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -32,7 +41,6 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 		do
 			Precursor
-			enable_user_resize
 
 			create notebook
 			element_container.extend (notebook)
@@ -40,22 +48,27 @@ feature {NONE} -- Initialization
 			create hb
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
+			hb.set_padding (default_padding_size)
 
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (dial_cond_add_and_term, agent on_add)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (100)
+			l_btn.set_minimum_width (default_button_width)
 			create remove_button.make_with_text_and_action (dial_cond_remove_and_term, agent on_remove)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			remove_button.set_minimum_width (100)
+			remove_button.set_minimum_width (default_button_width)
+			ok_button.set_minimum_width (default_button_width)
+			cancel_button.set_minimum_width (default_button_width)
 
-			set_size (0, 420)
+			set_size (400, 530)
 			show_actions.extend (agent on_show)
 		end
 
 feature {NONE} -- Gui elements
+
+	default_button_width: INTEGER is 100
 
 	notebook: EV_NOTEBOOK
 			-- Tabs for each and term.
@@ -112,6 +125,7 @@ feature {NONE} -- Agents
 			-- Remove a file rule.
 		do
 			if notebook.selected_item /= Void and value /= Void then
+				lock_update
 				value.go_i_th (notebook.selected_item_index)
 				value.remove
 				notebook.go_i_th (notebook.selected_item_index)
@@ -119,6 +133,7 @@ feature {NONE} -- Agents
 				if value.is_empty then
 					remove_button.disable_sensitive
 				end
+				unlock_update
 			end
 		end
 
@@ -128,6 +143,7 @@ feature {NONE} -- Agents
 			l_cond: CONF_CONDITION
 			l_tab: CONDITION_TAB
 		do
+			lock_update
 			if value = Void then
 				create value.make (1)
 			end
@@ -142,6 +158,7 @@ feature {NONE} -- Agents
 			end
 			notebook.select_item (l_tab)
 			remove_button.enable_sensitive
+			unlock_update
 		end
 
 	on_ok is
@@ -156,6 +173,8 @@ feature {NONE} -- Agents
 			end
 		end
 
+	is_in_default_state: BOOLEAN is True
+			-- Contract.
 
 invariant
 	elements: is_initialized implies remove_button /= Void

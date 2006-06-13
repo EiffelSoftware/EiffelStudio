@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
+feature {EV_ANY_I}-- Status report
 
 	tooltip_delay: INTEGER
 			-- Time in milliseconds before tooltips pop up.

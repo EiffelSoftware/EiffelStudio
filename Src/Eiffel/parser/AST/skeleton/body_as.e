@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: like indexing_clause) is
+	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: like indexing_clause) is
 			-- Create a new BODY AST node.
 		do
 			set_arguments (a)
@@ -53,8 +53,8 @@ feature -- Roundtrip
 	colon_symbol: SYMBOL_AS
 			-- Symbol colon associated with this structure
 
-	is_keyword: KEYWORD_AS
-			-- Keyword "is" associated with this structure
+	is_keyword: LEAF_AS
+			-- Keyword "is" or equal sign associated with this structure
 
 	assign_keyword: KEYWORD_AS
 			-- Keyword "assign" associated with this structure
@@ -111,7 +111,7 @@ feature -- Roundtrip/Token
 					Result := internal_arguments.first_token (a_list)
 				elseif colon_symbol /= Void then
 					Result := colon_symbol.first_token (a_list)
-				else
+				elseif is_keyword /= Void then
 					Result := is_keyword.first_token (a_list)
 				end
 			end

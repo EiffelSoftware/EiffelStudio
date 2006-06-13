@@ -11,7 +11,8 @@ inherit
 		redefine
 			initialize,
 			is_in_default_state,
-			row_type
+			row_type,
+			on_key_pressed
 		end
 
 create
@@ -51,6 +52,7 @@ feature {NONE} -- Initialization
 			column (value_column).set_width (initial_value_column_width)
 
 			pointer_button_press_actions.extend (agent select_name_item)
+			key_press_actions.extend (agent on_key_pressed)
 			resize_actions.extend (agent resize)
 		end
 
@@ -116,6 +118,8 @@ feature -- Update
 			l_row ?= current_section.subrow (l_index)
 			l_row.set_property (a_property)
 			create l_name_item.make_with_text (a_property.name)
+			l_name_item.select_actions.extend (agent show_description (a_property))
+			a_property.select_actions.extend (agent show_description (a_property))
 			if a_property.description /= Void then
 				l_name_item.set_tooltip (a_property.description)
 			end
@@ -133,6 +137,17 @@ feature -- Update
 		end
 
 feature {NONE} -- Agents
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- `a_key' was pressed.
+		do
+			Precursor (a_key)
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				if selected_items /= Void and then selected_items.count = 1 then
+					selected_items.first.activate
+				end
+			end
+		end
 
 	resize (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Resize window.
@@ -157,7 +172,6 @@ feature {NONE} -- Agents
 			-- Select name item of the current row.
 		local
 			l_row: like row_type
-			l_prop: PROPERTY
 			l_y: INTEGER
 		do
 			l_y := y_pos + virtual_y_position
@@ -165,20 +179,27 @@ feature {NONE} -- Agents
 			if l_y >= 0 and l_y <= virtual_height then
 				l_row ?= row_at_virtual_position (l_y, False)
 				if l_row /= Void and then l_row.property /= Void then
-					l_prop := l_row.property
 					l_row.item (1).enable_select
-					if description_field /= Void then
-						if l_prop.name.is_empty then
-							description_field.set_text (l_prop.description)
-						elseif l_prop.description.is_empty then
-							description_field.set_text (l_prop.name)
-						else
-							description_field.set_text (l_prop.name + ": " + l_prop.description)
-						end
-					end
 				end
 			end
 		end
+
+	show_description (a_property: PROPERTY) is
+			-- Show description for `a_property'.
+		require
+			a_property_not_void: a_property /= Void
+		do
+			if description_field /= Void then
+				if a_property.name.is_empty then
+					description_field.set_text (a_property.description)
+				elseif a_property.description.is_empty then
+					description_field.set_text (a_property.name)
+				else
+					description_field.set_text (a_property.name + ": " + a_property.description)
+				end
+			end
+		end
+
 
 feature -- Type anchors
 

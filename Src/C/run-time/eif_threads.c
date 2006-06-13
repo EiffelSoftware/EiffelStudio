@@ -225,7 +225,6 @@ doc:	</routine>
 rt_shared int get_thread_index(rt_uint_ptr th_id)
 {
 #ifdef EIF_THREADS
-	RT_GET_CONTEXT
 	int count;
 	int i = 0;
 	rt_global_context_t ** lst;

@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			append_small_margin (vb)
 
 			create hb
+			hb.set_padding (padding_size)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			create cl

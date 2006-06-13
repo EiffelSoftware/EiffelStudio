@@ -14,6 +14,11 @@ feature {NONE} -- Button constants
 	button_width: INTEGER is 75
 	small_button_width: INTEGER is 20
 
+	padding_size: INTEGER is
+		do
+			Result := internal_padding_size.item
+		end
+
 feature {NONE} -- Margin constants
 
 	margin_size: INTEGER is 10
@@ -76,4 +81,21 @@ feature {NONE} -- Text
 		do
 			Result := "Edit "+a_name
 		end
+
+feature -- Update set default global settings.
+
+	set_padding_size (a_size: like padding_size) is
+			-- Set default padding size.
+		do
+			internal_padding_size.put (a_size)
+		end
+
+feature {NONE} -- Onces for global setting of layout values.
+
+	internal_padding_size: CELL [INTEGER] is
+		once
+			create Result
+		end
+
+
 end

@@ -513,7 +513,6 @@ rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
-		EIF_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
 		dnotify(THR_CREATED, (int) tid);
 		DBGMTX_UNLOCK; /* Leave critical section */
@@ -523,7 +522,6 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
-		EIF_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
 		dnotify(THR_EXITED, (int) tid);
 		DBGMTX_UNLOCK; /* Leave critical section */

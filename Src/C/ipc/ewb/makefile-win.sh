@@ -21,15 +21,20 @@ SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 # Derived object file names
 OBJECTS = \
 	ewb_dumped.$obj \
-	ewb_proto.$obj \
 	eproto.$obj \
 	eif_in.$obj \
 	eif_out.$obj \
 	ewb_init.$obj
 
+WOBJECTS = \
+	wewb_dumped.$obj \
+	weproto.$obj \
+	weif_in.$obj \
+	weif_out.$obj \
+	wewb_init.$obj
+
 MT_OBJECTS = \
 	MTewb_dumped.$obj \
-	MTewb_proto.$obj \
 	MTeproto.$obj \
 	MTeif_in.$obj \
 	MTeif_out.$obj \
@@ -37,7 +42,6 @@ MT_OBJECTS = \
 
 MT_WOBJECTS = \
 	MTwewb_dumped.$obj \
-	MTwewb_proto.$obj \
 	MTweproto.$obj \
 	MTweif_in.$obj \
 	MTweif_out.$obj \
@@ -46,11 +50,11 @@ MT_WOBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: $output_libraries
+all:: $output_libraries ewb_proto.$obj wewb_proto.$obj MTewb_proto.$obj MTwewb_proto.$obj
 
 dll: standard
 mtdll: mtstandard
-standard: ewb.$lib
+standard: ewb.$lib wewb.$lib
 mtstandard: mtewb.$lib mtwewb.$lib
 
 ewb.$lib: $(OBJECTS)
@@ -59,8 +63,30 @@ ewb.$lib: $(OBJECTS)
 mtewb.$lib: $(MT_OBJECTS)
 	$link_line
 
+wewb.$lib: $(WOBJECTS)
+	$link_line
+
 mtwewb.$lib: $(MT_WOBJECTS)
 	$link_line
+
+wewb_dumped.$obj: ewb_dumped.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+wewb_proto.$obj: ewb_proto.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+wewb_init.$obj: ewb_init.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+weproto.$obj: eproto.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+weif_in.$obj: eif_in.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+weif_out.$obj: eif_out.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
 
 MTewb_dumped.$obj: ewb_dumped.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

@@ -19,6 +19,8 @@ DLLFLAGS = $dllflags
 CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)\ipc\app\network.$lib
 MT_NETWORK = $(TOP)\ipc\app\mtnetwork.$lib
+LIBNAME = ipc.$lib
+LIBMTNAME = mtipc.$lib
 
 FINAL_OBJECTS = \
 	$(INDIR)\lmalloc.$obj \
@@ -73,8 +75,7 @@ FINAL_OBJECTS = \
 OBJECTS = $(FINAL_OBJECTS) \
 	$(INDIR)\main.$obj
 
-WOBJECTS = \
-	$(NETWORK) \
+WORKBENCH_OBJECTS = \
 	$(INDIR)\wlmalloc.$obj \
 	$(INDIR)\wmalloc.$obj \
 	$(INDIR)\wgarcol.$obj \
@@ -106,7 +107,6 @@ WOBJECTS = \
 	$(INDIR)\wargv.$obj \
 	$(INDIR)\wboolstr.$obj \
 	$(INDIR)\wsearch.$obj \
-	$(INDIR)\wmain.$obj \
 	$(INDIR)\debug.$obj \
 	$(INDIR)\interp.$obj \
 	$(INDIR)\woption.$obj \
@@ -127,113 +127,14 @@ WOBJECTS = \
 	$(INDIR)\wrout_obj.$obj \
 	$(TOP)\console\wwinconsole.$lib \
 
-EOBJECTS = \
-	$(INDIR)\wlmalloc.$obj \
-	$(INDIR)\wmalloc.$obj \
-	$(INDIR)\wgarcol.$obj \
-	$(INDIR)\wlocal.$obj \
-	$(INDIR)\bexcept.$obj \
-	$(INDIR)\wstore.$obj \
-	$(INDIR)\wretrieve.$obj \
-	$(INDIR)\whash.$obj \
-	$(INDIR)\wtraverse.$obj \
-	$(INDIR)\whashin.$obj \
-	$(INDIR)\wtools.$obj \
-	$(INDIR)\winternal.$obj \
-	$(INDIR)\wplug.$obj \
-	$(INDIR)\wcopy.$obj \
-	$(INDIR)\wequal.$obj \
-	$(INDIR)\wout.$obj \
-	$(INDIR)\wtimer.$obj \
-	$(INDIR)\wurgent.$obj \
-	$(INDIR)\wsig.$obj \
-	$(INDIR)\whector.$obj \
-	$(INDIR)\wcecil.$obj \
-	$(INDIR)\wbits.$obj \
-	$(INDIR)\wfile.$obj \
-	$(INDIR)\wdir.$obj \
-	$(INDIR)\wmisc.$obj \
-	$(INDIR)\werror.$obj \
-	$(INDIR)\wumain.$obj \
-	$(INDIR)\wmemory.$obj \
-	$(INDIR)\wargv.$obj \
-	$(INDIR)\wboolstr.$obj \
-	$(INDIR)\wsearch.$obj \
-	$(INDIR)\bmain.$obj \
-	$(INDIR)\debug.$obj \
-	$(INDIR)\interp.$obj \
-	$(INDIR)\woption.$obj \
-	$(INDIR)\update.$obj \
-	$(INDIR)\wbench.$obj \
-	$(INDIR)\wconsole.$obj \
-	$(TOP)\idrs\idrs.$obj \
-	$(INDIR)\wrun_idr.$obj \
-	$(INDIR)\wpath_name.$obj \
-	$(INDIR)\wobject_id.$obj \
-	$(INDIR)\compress.$obj \
-	$(INDIR)\weif_threads.$obj \
-	$(INDIR)\weif_cond_var.$obj \
-	$(INDIR)\eif_rw_lock.$obj \
-	$(INDIR)\weif_project.$obj \
-	$(INDIR)\wgen_conf.$obj \
-	$(INDIR)\weif_type_id.$obj \
-	$(INDIR)\wrout_obj.$obj \
-	$(TOP)\ipc\shared\networku.$obj \
-	$(TOP)\console\wwinconsole.$lib
+WOBJECTS = $(WORKBENCH_OBJECTS) \
+	$(INDIR)\wmain.$obj \
+	$(NETWORK)
 
-MT_EOBJECTS = \
-	$(INDIR)\MTwlmalloc.$obj \
-	$(INDIR)\MTwmalloc.$obj \
-	$(INDIR)\MTwgarcol.$obj \
-	$(INDIR)\MTwlocal.$obj \
-	$(INDIR)\MTbexcept.$obj \
-	$(INDIR)\MTwstore.$obj \
-	$(INDIR)\MTwretrieve.$obj \
-	$(INDIR)\MTwhash.$obj \
-	$(INDIR)\MTwtraverse.$obj \
-	$(INDIR)\MTwhashin.$obj \
-	$(INDIR)\MTwtools.$obj \
-	$(INDIR)\MTwinternal.$obj \
-	$(INDIR)\MTwplug.$obj \
-	$(INDIR)\MTwcopy.$obj \
-	$(INDIR)\MTwequal.$obj \
-	$(INDIR)\MTwout.$obj \
-	$(INDIR)\MTwtimer.$obj \
-	$(INDIR)\MTwurgent.$obj \
-	$(INDIR)\MTwsig.$obj \
-	$(INDIR)\MTwhector.$obj \
-	$(INDIR)\MTwcecil.$obj \
-	$(INDIR)\MTwbits.$obj \
-	$(INDIR)\MTwfile.$obj \
-	$(INDIR)\MTwdir.$obj \
-	$(INDIR)\MTwmisc.$obj \
-	$(INDIR)\MTwerror.$obj \
-	$(INDIR)\MTwumain.$obj \
-	$(INDIR)\MTwmemory.$obj \
-	$(INDIR)\MTwargv.$obj \
-	$(INDIR)\MTwboolstr.$obj \
-	$(INDIR)\MTwsearch.$obj \
-	$(INDIR)\MTbmain.$obj \
-	$(INDIR)\MTdebug.$obj \
-	$(INDIR)\MTinterp.$obj \
-	$(INDIR)\MTwoption.$obj \
-	$(INDIR)\MTupdate.$obj \
-	$(INDIR)\MTwbench.$obj \
-	$(INDIR)\MTwconsole.$obj \
-	$(TOP)\idrs\MTidrs.$obj \
-	$(INDIR)\MTwrun_idr.$obj \
-	$(INDIR)\MTwpath_name.$obj \
-	$(INDIR)\MTwobject_id.$obj \
-	$(INDIR)\MTcompress.$obj \
-	$(INDIR)\MTweif_threads.$obj \
-	$(INDIR)\MTweif_cond_var.$obj \
-	$(INDIR)\MTeif_rw_lock.$obj \
-	$(INDIR)\MTweif_project.$obj \
-	$(INDIR)\MTwgen_conf.$obj \
-	$(INDIR)\MTweif_type_id.$obj \
-	$(INDIR)\MTwrout_obj.$obj \
-	$(TOP)\ipc\shared\MTnetworku.$obj \
-	$(TOP)\console\MTwwinconsole.$lib
+EOBJECTS = $(WORKBENCH_OBJECTS) \
+	$(INDIR)\bmain.$obj \
+	$(TOP)\ipc\shared\$(LIBNAME) \
+	$(TOP)\ipc\ewb\wewb_proto.$obj
 
 MT_FINAL_OBJECTS = \
 	$(INDIR)\MTlmalloc.$obj \
@@ -288,8 +189,7 @@ MT_FINAL_OBJECTS = \
 MT_OBJECTS = $(MT_FINAL_OBJECTS) \
 	$(INDIR)\MTmain.$obj
 
-MT_WOBJECTS = \
-	$(MT_NETWORK) \
+MT_WORKBENCH_OBJECTS = \
 	$(INDIR)\MTwlmalloc.$obj \
 	$(INDIR)\MTwmalloc.$obj \
 	$(INDIR)\MTwgarcol.$obj \
@@ -321,7 +221,6 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwargv.$obj \
 	$(INDIR)\MTwboolstr.$obj \
 	$(INDIR)\MTwsearch.$obj \
-	$(INDIR)\MTwmain.$obj \
 	$(INDIR)\MTdebug.$obj \
 	$(INDIR)\MTinterp.$obj \
 	$(INDIR)\MTwoption.$obj \
@@ -341,6 +240,15 @@ MT_WOBJECTS = \
 	$(INDIR)\MTweif_type_id.$obj \
 	$(INDIR)\MTwrout_obj.$obj \
 	$(TOP)\console\mtwwinconsole.$lib \
+
+MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
+	$(INDIR)\MTwmain.$obj \
+	$(MT_NETWORK)
+
+MT_EOBJECTS = $(MT_WORKBENCH_OBJECTS) \
+	$(INDIR)\MTbmain.$obj \
+	$(TOP)\ipc\shared\$(LIBMTNAME) \
+	$(TOP)\ipc\ewb\mtwewb_proto.$obj
 
 all:: eif_size.h
 all:: $output_libraries

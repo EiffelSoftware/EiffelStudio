@@ -189,6 +189,12 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when destroying current application.
+		do
+			Result := implementation.destroy_actions
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

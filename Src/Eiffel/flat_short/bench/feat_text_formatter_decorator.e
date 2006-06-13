@@ -37,6 +37,7 @@ feature -- Execution
 			target_feat: FEATURE_I
 			prev_class: CLASS_C
 			prev_cluster: CONF_GROUP
+			l_match_list: LEAF_AS_LIST
 		do
 			if not rescued then
 				prev_class := System.current_class
@@ -70,8 +71,10 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
-
-				feature_comments := f_ast.comment (match_list_server.item (written_in_class.class_id))
+				l_match_list := match_list_server.item (written_in_class.class_id)
+				if l_match_list /= Void then
+					feature_comments := f_ast.comment (l_match_list)
+				end
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 

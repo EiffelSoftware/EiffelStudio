@@ -869,7 +869,7 @@ unsigned char c_ev_read_n_bytes( unsigned long nRequestedBufferSize, BufferedFil
 void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 {
 	HGDIOBJ handle;
-	EIF_INTEGER	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
+	unsigned int nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
 	handle = (void *) LoadImage(
 		NULL,				/* handle to instance */
@@ -1225,7 +1225,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 #endif
 	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
 	unsigned long 	row;			/* Current scan line */
-	volatile unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
+	volatile unsigned int	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
 		/* Retrieve File Stream */
 	fp = pCtx->pFile;

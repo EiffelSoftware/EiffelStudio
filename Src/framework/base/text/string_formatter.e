@@ -14,10 +14,10 @@ inherit
 			{NONE} all
 		end
 
-feature -- Conversion
+feature -- Formatting
 
 	format (a_str: STRING; a_args: TUPLE): STRING is
-			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to 
+			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
 			-- Example:
@@ -94,7 +94,7 @@ feature -- Conversion
 						else
 							raise ("NaN '" + l_digit + "'")
 						end
-						l_digit.wipe_out						
+						l_digit.wipe_out
 					end
 				elseif l_match then
 					l_digit.append_character (c)
@@ -107,7 +107,26 @@ feature -- Conversion
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
-		
+
+	ellipse (a_str: STRING; a_max_len: INTEGER): STRING is
+			-- If `a_str' is bigger than `ellipse_threshold'
+		require
+			a_str_attached: a_str /= Void
+			not_a_str_is_empty: not a_str.is_empty
+			a_max_len_big_enough: a_max_len > 3
+		do
+			Result := a_str.twin
+			if Result.count > a_max_len then
+				Result.keep_head (a_max_len - 3)
+				Result.append (once "...")
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_ellipsed: Result.count <= a_max_len
+			result_not_is_a_str: Result /= a_str
+		end
+
 feature {NONE} -- Symbols
 
 	open_char: CHARACTER is '{'

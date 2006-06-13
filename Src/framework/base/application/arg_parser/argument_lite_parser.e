@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_LITE_PARSER 
 
 feature -- Access
 
@@ -143,10 +143,10 @@ feature -- Basic Operations
 					end
 				end
 			else
-				display_errors
 				if display_usage_on_error then
 					display_usage
 				end
+				display_errors
 			end
 		end
 
@@ -366,6 +366,7 @@ feature {NONE} -- Output
 
 			if has_available_options then
 				display_options
+				io.new_line
 			end
 			display_extended_usage
 		end
@@ -461,6 +462,7 @@ feature {NONE} -- Output
 				io.put_string ("   Options should be prefixed with: ")
 				io.put_string (l_prefix)
 				io.new_line
+				io.new_line
 			end
 
 			l_options := available_switches
@@ -474,7 +476,7 @@ feature {NONE} -- Output
 				l_options.forth
 			end
 
-			create l_tabbed_nl.make_filled (' ', l_nl.count + 2 + l_max_len)
+			create l_tabbed_nl.make_filled (' ', l_nl.count + 5 + l_max_len)
 			l_tabbed_nl.insert (l_nl, 1)
 
 			l_def_prefix := switch_prefixes[1]
@@ -504,7 +506,6 @@ feature {NONE} -- Output
 			end
 			l_options.go_to (l_cursor)
 
-			io.new_line
 			io.new_line
 		ensure
 			available_options_unmoved: old available_switches /= Void implies available_switches.cursor.is_equal (old available_switches.cursor)

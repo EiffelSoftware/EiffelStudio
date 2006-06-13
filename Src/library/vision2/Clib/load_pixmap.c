@@ -1365,8 +1365,8 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	pbi_mask->biClrUsed = 2;     
 	pbi_mask->biClrImportant = 2;	
 	
-	hbitmap = CreateDIBSection(NULL, (BITMAPINFO *)pbi, DIB_RGB_COLORS, (VOID **) &pData, NULL, NULL);
-	hbitmap_mask = CreateDIBSection (NULL, (BITMAPINFO *)pbi_mask, DIB_RGB_COLORS, (VOID **) &pAlphaData, NULL, NULL);
+	hbitmap = CreateDIBSection(NULL, (BITMAPINFO *)pbi, DIB_RGB_COLORS, (VOID **) &pData, NULL, 0);
+	hbitmap_mask = CreateDIBSection (NULL, (BITMAPINFO *)pbi_mask, DIB_RGB_COLORS, (VOID **) &pAlphaData, NULL, 0);
 	
 	pImage = pData;
 	pAlphaImage = pAlphaData;

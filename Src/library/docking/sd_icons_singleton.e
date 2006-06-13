@@ -12,7 +12,11 @@ feature -- Initlization
 
 	init is
 			-- Initlization
+		local
+			l_shared: SD_SHARED
 		do
+			create l_shared
+			l_shared.set_icons (Current)
 		end
 
 feature -- Icons

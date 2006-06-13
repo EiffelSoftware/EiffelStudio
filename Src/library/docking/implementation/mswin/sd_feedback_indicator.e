@@ -19,6 +19,17 @@ inherit
 		export
 			{NONE} all
 			{ANY} exists
+		select
+			default_create,
+			copy
+		end
+
+	EV_ANY
+	-- Inherit for export features.	
+		rename
+			default_create as default_create_not_use,
+			copy as copy_not_use,
+			destroy as destroy_not_use
 		end
 
 create
@@ -257,6 +268,13 @@ feature {NONE} -- Externals
 				}
 			}
 			]"
+		end
+
+feature {NONE} -- Features inherit from EV_ANY.
+
+	create_implementation is
+			-- Fack.
+		do
 		end
 
 indexing

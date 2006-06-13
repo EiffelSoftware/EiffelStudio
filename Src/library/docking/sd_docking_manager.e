@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 
 			contents.extend (zones.place_holder_content)
 			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
+			internal_shared.set_show_all_feedback_indicator (True)
+			set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end

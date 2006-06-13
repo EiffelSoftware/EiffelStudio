@@ -32,11 +32,16 @@ feature{NONE} -- Initlization
 			not_void: a_tool_bar /= Void
 		local
 			l_env: EV_ENVIRONMENT
+			l_starter: WEL_GDI_PLUS_STARTER
 		do
 			tool_bar := a_tool_bar
 			init_theme
 			create l_env
 			l_env.application.theme_changed_actions.extend (agent init_theme)
+
+			create l_starter
+			l_starter.gdi_plus_init
+			l_env.application.destroy_actions.extend_kamikaze (agent l_starter.gdi_plus_shutdown)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -103,7 +108,7 @@ feature -- Redefine
 			create {WEL_CLIENT_DC} internal_client_dc.make (l_imp)
 			internal_client_dc.get
 
-			create {WEL_MEMORY_DC}internal_buffered_dc.make_by_dc (internal_client_dc)
+			create {WEL_MEMORY_DC} internal_buffered_dc.make_by_dc (internal_client_dc)
 
 			-- We must select font to draw.
 			-- See MSDN "Using Windows XP Visual Styles" section about drawThemeText.
@@ -223,13 +228,22 @@ feature {NONE} -- Implementation
 			l_coordinate: EV_COORDINATE
 			l_button: SD_TOOL_BAR_BUTTON
 			l_orignal_pixmap, l_grey_pixmap: EV_PIXMAP
+
+			l_imp: EV_PIXMAP_IMP
 		do
 			l_button ?= a_arguments.item
 			if l_button /= Void and then l_button.pixmap /= Void then
 				if not a_arguments.item.is_sensitive then
 					l_orignal_pixmap := a_arguments.item.pixmap
 					l_grey_pixmap := l_orignal_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal_pixmap.width, l_orignal_pixmap.height))
-					desatuation (l_grey_pixmap, 0.8)
+
+					l_imp ?= l_grey_pixmap.implementation
+					check l_imp /= Void end
+
+					arguments := a_arguments
+					dc_to_draw := a_dc_to_draw
+					pixmap_coordinate := l_button.pixmap_position
+					desaturation (l_grey_pixmap, 1)
 					l_pixmap_state ?= l_grey_pixmap.implementation
 				else
 					l_pixmap_state ?= l_button.pixmap.implementation
@@ -243,7 +257,11 @@ feature {NONE} -- Implementation
 				end
 				l_coordinate := l_button.pixmap_position
 
-				theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
+				if a_arguments.item.is_sensitive then
+					theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
+				else
+					-- It already drawn by GDI+.
+				end
 
 				l_wel_bitmap.decrement_reference
 				if l_mask_bitmap /= Void then
@@ -251,6 +269,15 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS
+			-- Temp arguments during draw desartuated tool bar icons.
+
+	dc_to_draw: WEL_DC
+			-- Temp arguments during draw desartuated tool bar icons.
+
+	pixmap_coordinate: EV_COORDINATE
+			-- Temp arguments during draw desartuated tool bar icons.
 
 	draw_text (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
 			-- Draw text
@@ -306,44 +333,162 @@ feature {NONE} -- Implementation
 				or Result = {WEL_THEME_PART_CONSTANTS}.tp_separator
 		end
 
-	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
 			-- Desatuation `a_pixmap' with `a_k'.
 		local
-			l_intensity: REAL
-			l_wel_dc: WEL_MEMORY_DC
-			l_bitmap_imp: EV_PIXMAP_IMP_STATE
-			l_width_count, l_height_count, l_width, l_height: INTEGER
-			l_wel_color,l_new_color: WEL_COLOR_REF
-		do
-			l_bitmap_imp ?= a_pixmap.implementation
-			check not_void: l_bitmap_imp /= Void end
-			create l_wel_dc.make
-			l_wel_dc.select_bitmap (l_bitmap_imp.get_bitmap)
+			l_imp: EV_PIXMAP_IMP
+			l_wel_rect: WEL_RECT
+			l_temp_bitmap: WEL_BITMAP
+			l_bits: WEL_CHARACTER_ARRAY
+			l_chars: ARRAY [CHARACTER]
+			l_helper: SD_NOTEBOOK_TAB_DRAWER_IMP
+			l_dc: WEL_MEMORY_DC
 
+		do
+			l_imp ?= a_pixmap.implementation
+			check not_void: l_imp /= Void end
+
+			create l_wel_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
+
+			create l_temp_bitmap.make_by_bitmap (l_imp.get_bitmap)
+
+			create l_dc.make
+			create l_helper.make_for_help
+			l_chars := l_helper.bits_of_image_bottom_up (l_temp_bitmap)
+
+			create l_bits.make (l_chars)
+
+			cpp_desaturate (l_bits.item, l_bits.count, disabled_color_matrix.item.item, l_wel_rect.width, l_wel_rect.height, pixmap_coordinate.x, pixmap_coordinate.y, dc_to_draw.item)
+
+			l_bits.dispose
+			l_wel_rect.dispose
+			l_temp_bitmap.delete
+		end
+
+	disabled_color_matrix: WEL_COLOR_MATRIX is
+			--
+		do
+			Result := mulitply_color_matix (disabled_color_matrix_2, disabled_color_matrix_1)
+		ensure
+			not_void: Result /= Void
+		end
+
+	disabled_color_matrix_1: WEL_COLOR_MATRIX is
+			-- Disabled color matrix used by GDI+ DrawImage.
+			-- See MSDN "A Twist in Color Space"
+		do
+			create Result.make
+			Result.set_m_row (<<0.2125, 0.2125, 0.2125, 0, 0>>, 0) -- Grey scale R channel
+			Result.set_m_row (<<0.2577, 0.2577, 0.2577, 0, 0>>, 1) -- Grey scale G channel
+			Result.set_m_row (<<0.0361, 0.0361, 0.0361, 0, 0>>, 2) -- Grey scale B channel			
+			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3) -- Opacity
+			Result.set_m_row (<<0.38, 0.38, 0.38, 0, 1>>, 4) -- Brightness
+		ensure
+			not_void: Result /= Void
+		end
+
+	disabled_color_matrix_2: WEL_COLOR_MATRIX is
+			-- Disabled color matrix used by GDI+ DrawImage.
+			-- See MSDN "A Twist in Color Space"
+		do
+			create Result.make
+			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0) -- Grey scale R channel
+			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1) -- Grey scale G channel
+			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2) -- Grey scale B channel			
+			Result.set_m_row (<<0, 0, 0, 0.7, 0>>, 3) -- Opacity
+			Result.set_m_row (<<0, 0, 0, 0, 0>>, 4) -- Brightness
+		ensure
+			not_void: Result /= Void
+		end
+
+	mulitply_color_matix (a_matrix_1, a_matrix_2: WEL_COLOR_MATRIX): WEL_COLOR_MATRIX is
+			--
+		require
+			not_void: a_matrix_1 /= Void
+			not_void: a_matrix_2 /= Void
+		local
+			l_i, l_j, l_k: INTEGER
+			l_temp_array: ARRAY [REAL]
+			l_sum: REAL
+		do
+			create Result.make
+			create l_temp_array.make (0, 4)
 			from
-				l_width := a_pixmap.width
-				l_height := a_pixmap.height
+				l_j := 0
 			until
-				l_width_count >= l_width
+				l_j > 4
 			loop
 				from
-					l_height_count := 0
+					l_k := 0
 				until
-					l_height_count >= l_height
+					l_k > 4
 				loop
-					l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
-					l_intensity := 0.3 * l_wel_color.red + 0.59 * l_wel_color.green + 0.11 * l_wel_color.blue
-					create l_new_color.make_rgb (
-										(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
-										(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,
-										(l_intensity * a_k + l_wel_color.blue * (1 - a_k)).rounded)
-					l_wel_dc.set_pixel (l_width_count, l_height_count, l_new_color)
-
-					l_height_count := l_height_count + 1
+					l_temp_array [l_k] := a_matrix_1.m (l_k, l_j)
+					l_k := l_k + 1
 				end
-				l_width_count := l_width_count + 1
+				from
+
+					l_i := 0
+				until
+					l_i > 4
+				loop
+					l_sum := 0
+					from
+						l_k := 0
+					until
+						l_k > 4
+					loop
+						l_sum := l_sum + a_matrix_2.m (l_i, l_k) * l_temp_array [l_k]
+						l_k := l_k + 1
+					end
+					Result.m (l_i, l_j) := l_sum
+					l_i := l_i + 1
+				end
+
+				l_j := l_j + 1
 			end
-			l_wel_dc.delete
+		end
+
+	cpp_desaturate (a_bitmap_bits: POINTER; a_bits_size: INTEGER; a_color_matrix: POINTER; a_width, a_height: INTEGER; a_draw_x, a_draw_y: INTEGER; a_dc: POINTER) is
+			-- Use color matrix to desaturate `a_bitmap'.
+		require
+			exist: a_color_matrix /= default_pointer
+		external
+			"C++ inline use <gdiplus.h>"
+		alias
+			"[
+			{	
+				using namespace Gdiplus;
+				Rect l_r (0, 0, $a_width, $a_height);
+				ImageAttributes *image_attributes = new ImageAttributes ();
+				image_attributes->ClearColorKey(ColorAdjustTypeBitmap);
+				image_attributes->SetColorMatrix((ColorMatrix *)$a_color_matrix);
+				Bitmap *bitmap = new Bitmap($a_width, $a_height, PixelFormat32bppPARGB);
+				Bitmap *bitmap_orignal = new Bitmap ($a_width, $a_height, PixelFormat32bppPARGB);				
+				// Should use Bitmap::FromHBITMAP to convert
+				// But FromHBITMAP will lose alpha datas.
+				// So we copy datas ourself.
+				BitmapData *bitmap_data = new BitmapData ();
+	   			bitmap_orignal->LockBits(&l_r, ImageLockModeWrite, PixelFormat32bppPARGB, bitmap_data);
+				memcpy (bitmap_data->Scan0, $a_bitmap_bits, $a_bits_size);
+				bitmap_orignal->UnlockBits (bitmap_data);
+				
+				Graphics *g = new Graphics (bitmap);
+				
+				g->DrawImage (bitmap_orignal, l_r, 0, 0, $a_width, $a_height, UnitPixel, image_attributes);
+  				delete g;
+				
+				Graphics *g_dc = Graphics::FromHDC ((HDC)$a_dc);
+				g_dc->DrawImage (bitmap, $a_draw_x, $a_draw_y);
+				
+				delete g_dc;
+				
+				delete bitmap;
+				delete bitmap_orignal;
+				
+				delete image_attributes;
+			}
+			]"
 		end
 
 invariant

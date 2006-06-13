@@ -2735,7 +2735,7 @@ feature {NONE} -- Multiple editor management
 	current_editor_index: INTEGER
 			-- Index in `editors' of the editor that has the focus.
 
-feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} -- Feature Clauses
+feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS} -- Feature Clauses
 
 	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
 			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed

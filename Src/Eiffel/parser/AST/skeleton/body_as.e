@@ -306,7 +306,7 @@ feature -- New feature description
 			end
 		end
 
-feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
+feature {BODY_AS, FEATURE_AS} -- Replication
 
 	set_arguments (a: like internal_arguments) is
 			-- Set `internal_arguments' with `a'.

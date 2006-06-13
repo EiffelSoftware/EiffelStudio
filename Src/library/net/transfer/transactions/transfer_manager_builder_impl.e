@@ -169,9 +169,13 @@ feature -- Status setting
 		require
 			non_negative: s >= 0
 		do
-			timeout := s
+			if timeout = Void then
+				create timeout.put (s)
+			else 
+				timeout.put (s)
+			end
 		ensure
-			timeout_set: timeout = s
+			timeout_set: timeout.item = s
 		end
 			
 	set_source_proxy (host: STRING; port: INTEGER) is
@@ -398,7 +402,7 @@ feature {NONE} -- Implementation
 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
 			-- Hash table of created resources
 
-	timeout: INTEGER_REF
+	timeout: CELL [INTEGER]
 			-- Duration of timeout in seconds
 			-- (If `Void' the default value is used.)
 			

@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
+			show_actions.extend (agent on_show)
 		end
 
 feature -- Status report
@@ -234,6 +235,13 @@ feature -- Element change
 
 
 feature {NONE} -- Implementation
+
+	on_show is
+			-- Triggered when the dialog is shown.
+		do
+			name_field.set_focus
+		end
+
 
 	comments_button, strings_button: EV_CHECK_BUTTON
 	rename_file_button: EV_CHECK_BUTTON

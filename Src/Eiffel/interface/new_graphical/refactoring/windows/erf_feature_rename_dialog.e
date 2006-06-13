@@ -107,6 +107,7 @@ feature {NONE} -- Initialization
 
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
+			show_actions.extend (agent on_show)
 		end
 
 feature -- Status report
@@ -186,6 +187,12 @@ feature {NONE} -- Implementation
 		do
 			ok_pressed := False
 			destroy
+		end
+
+	on_show is
+			-- Triggered when the dialog is shown.
+		do
+			name_field.set_focus
 		end
 
 indexing

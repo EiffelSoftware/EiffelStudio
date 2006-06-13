@@ -1,0 +1,86 @@
+indexing
+	description: "A command line switch that accepts a value."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	VALUE_SWITCH
+
+inherit
+	SWITCH
+		rename
+			make as make_base
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple; a_optional: like is_value_optional) is
+			-- Initialize a new value option.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
+		do
+			make_base (a_name, a_desc, a_allow_mutliple)
+			is_value_optional := a_optional
+		ensure
+			name_set: name = a_name
+			description_set: description = a_desc
+			is_value_optional_set: is_value_optional = a_optional
+			allow_multiple_set: allow_multiple = a_allow_mutliple
+		end
+
+feature -- Access
+
+	value_validator: SWITCH_VALUE_VALIDATOR is
+			-- Retrieves an validator used to check current switch value
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Status Report
+
+	is_value_optional: BOOLEAN;
+			-- Indicates if a option value is optional
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+end -- class {VALUE_SWITCH}

@@ -13,9 +13,7 @@ RM = del
 LIBDIR = ..\shared
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
-LIBIDRNAME = idr.$lib
 LIBNAME = ipc.$lib
-LIBMTIDRNAME = mtidr.$lib
 LIBMTNAME = mtipc.$lib
 
 .c.$obj:

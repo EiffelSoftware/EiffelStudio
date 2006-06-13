@@ -79,7 +79,8 @@ feature {NONE} -- Initlization
 
 	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING): SD_TOOL_BAR_ITEM is
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
-			-- Warning: use this method to convert pixmap will lose alpha data, which will show nothing when use AlphaBlend functions!
+		obsolete
+			"Warning: use this method to convert pixmap in `a_ev_item' will lose alpha data, which will show nothing when use AlphaBlend functions!"
 		require
 			not_void: a_ev_item /= Void
 		local

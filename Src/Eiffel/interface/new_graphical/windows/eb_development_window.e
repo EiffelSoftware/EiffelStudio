@@ -3149,7 +3149,18 @@ feature {NONE} -- Implementation
 					end
 					if error_line > 0 then
 							-- Scroll to the line of the error.
-						editor_tool.text_area.display_line_when_ready (error_line, True)
+						if not during_synchronization then
+							if not managed_main_formatters.first.selected then
+								managed_main_formatters.first.execute
+								check
+									new_class_stone_not_void: new_class_stone /= Void
+								end
+								if new_class_stone.class_i.is_read_only then
+									editor_tool.text_area.set_read_only (true)
+								end
+							end
+							editor_tool.text_area.display_line_when_ready (error_line, True)
+						end
 					end
 				end
 					-- Update the title of the window

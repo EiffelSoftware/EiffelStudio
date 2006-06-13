@@ -169,13 +169,15 @@ feature -- Possibly delayed operations
 			-- does not need the text to be fully loaded			
 		do
 			if text_is_fully_loaded then
-				if highlight then
-					text_displayed.select_line (l_num)
+				if l_num > 0 and then l_num <= number_of_lines then
+					if highlight then
+						text_displayed.select_line (l_num)
+					end
+					display_line_with_context (l_num)
+					refresh_now
 				end
-				display_line_with_context (l_num)
-				refresh_now
 			else
-				after_reading_text_actions.extend(agent display_line_when_ready (l_num, highlight))
+				after_reading_text_actions.extend (agent display_line_when_ready (l_num, highlight))
 			end
 		end
 

@@ -1,63 +1,36 @@
 indexing
-	description: "Represents a user passed argument option."
+	description: "A command line switch value validator for checking user specified command line switch values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	OPTION
-
-create
-	make,
-	make_with_value
-
-feature {NONE} -- Initialization
-
-	make (a_name: like name) is
-			-- Initializes option with just a name `a_name'
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-		do
-			name  := a_name
-		ensure
-			name_set: name = a_name
-		end
-
-	make_with_value (a_name: like name; a_value: like value) is
-			-- Initializes option with a name and an associated value.
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			a_value_attached: a_value /= Void
-		do
-			make (a_name)
-			value := a_value
-		ensure
-			name_set: name = a_name
-			value_set: value = a_value
-		end
+	ARGUMENT_SWITCH_VALUE_VALIDATOR
 
 feature -- Access
 
-	name: STRING
-			-- Option name
+	is_option_valid: BOOLEAN
+			-- Indicates if last validate option, using `validate_option' was valid
 
-	value: STRING
-			-- Option value, if any
+	reason: STRING
+			-- Reason why switch valud is invalid
 
-feature -- Status Report
+feature -- Validation
 
-	has_value: BOOLEAN is
-			-- Indicicate if option has an associated value.
+	validate_value (a_value: STRING) is
+			-- Validates option value against any defined rules.
+			-- `is_option_valid' will be set upon completion.
+		require
+			a_value_attached: a_value /= Void
 		do
-			Result := value /= Void
+			is_option_valid := True
+			reason := Void
+		ensure
+			reason_attached: not is_option_valid implies reason /= Void
+			not_reason_is_empty: is_option_valid implies not reason.is_empty
+			reason_unttached: is_option_valid implies reason = Void
 		end
-
-invariant
-	name_attached: name /= Void
-	not_name_is_empty: not name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -91,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {OPTION}
+end -- class {ARGUMENT_SWITCH_VALUE_VALIDATOR}

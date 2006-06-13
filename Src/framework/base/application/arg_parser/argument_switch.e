@@ -1,36 +1,59 @@
 indexing
-	description: "A command line switch value validator for checking user specified command line switch values."
+	description: "A command line switch."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SWITCH_VALUE_VALIDATOR
+	ARGUMENT_SWITCH
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple) is
+			-- Initialize a new basic option.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
+		do
+			name := a_name
+			description := a_desc
+			allow_multiple := a_allow_mutliple
+			lower_case_name := name.as_lower
+		ensure
+			name_set: name = a_name
+			description_set: description = a_desc
+			allow_multiple_set: allow_multiple = a_allow_mutliple
+		end
 
 feature -- Access
 
-	is_option_valid: BOOLEAN
-			-- Indicates if last validate option, using `validate_option' was valid
+	name: STRING
+			-- Option name
 
-	reason: STRING
-			-- Reason why switch valud is invalid
+	description: STRING
+			-- Option description
 
-feature -- Validation
+	lower_case_name: STRING
+			-- Option name in lower-case
 
-	validate_value (a_value: STRING) is
-			-- Validates option value against any defined rules.
-			-- `is_option_valid' will be set upon completion.
-		require
-			a_value_attached: a_value /= Void
-		do
-			is_option_valid := True
-			reason := Void
-		ensure
-			reason_attached: not is_option_valid implies reason /= Void
-			not_reason_is_empty: is_option_valid implies not reason.is_empty
-			reason_unttached: is_option_valid implies reason = Void
-		end
+feature -- Status Report
+
+	allow_multiple: BOOLEAN
+			-- Indicated if mutiple occurances permitted
+
+invariant
+	name_attached: name /= Void
+	not_name_is_empty: not name.is_empty
+	description_attached: description /= Void
+	not_description_is_empty: not description.is_empty
+	lower_case_name_attached: lower_case_name /= Void
+	lower_case_name_is_name_in_lower: name.as_lower.is_equal (lower_case_name)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -64,4 +87,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {SWITCH_VALUE_VALIDATOR}
+end -- class {ARGUMENT_SWITCH}

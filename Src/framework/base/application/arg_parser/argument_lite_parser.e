@@ -6,11 +6,11 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	LITE_PARSER
+	ARGUMENT_LITE_PARSER
 
 feature -- Access
 
-	frozen option_values: LIST [OPTION] is
+	frozen option_values: LIST [ARGUMENT_OPTION] is
 			-- Option values parsed via command line
 		require
 			parsed: parsed
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Query
 
-	options_of_name (a_name: STRING): LIST [OPTION] is
+	options_of_name (a_name: STRING): LIST [ARGUMENT_OPTION] is
 			-- Retrieves a list of options, passed by user, by name
 		require
 			a_name_attached: a_name /= Void
@@ -49,8 +49,8 @@ feature -- Query
 			l_options: like option_values
 			l_cursor: CURSOR
 			l_cs: like case_sensitive
-			l_result: ARRAYED_LIST [OPTION]
-			l_opt: OPTION
+			l_result: ARRAYED_LIST [ARGUMENT_OPTION]
+			l_opt: ARGUMENT_OPTION
 			l_equal: BOOLEAN
 		do
 			l_options := option_values
@@ -172,9 +172,9 @@ feature {NONE} -- Parsing
 			l_switches: like available_switches
 			l_option: STRING
 			l_value: STRING
-			l_switch: SWITCH
-			l_value_switch: VALUE_SWITCH
-			l_validator: SWITCH_VALUE_VALIDATOR
+			l_switch: ARGUMENT_SWITCH
+			l_value_switch: ARGUMENT_VALUE_SWITCH
+			l_validator: ARGUMENT_SWITCH_VALUE_VALIDATOR
 			l_prefixes: like switch_prefixes
 			l_args: ARRAY [STRING]
 			l_upper: INTEGER
@@ -257,7 +257,7 @@ feature {NONE} -- Parsing
 												l_validator.validate_value (l_value)
 												if l_validator.is_option_valid then
 														-- Create user option
-													internal_option_values.extend (create {OPTION}.make_with_value (l_option, l_value))
+													internal_option_values.extend (create {ARGUMENT_OPTION}.make_with_value (l_option, l_value))
 												else
 													add_template_error (invalid_switch_value, [ellipse_text (l_value)])
 												end
@@ -265,13 +265,13 @@ feature {NONE} -- Parsing
 												add_template_error (require_switch_value, [l_option])
 											else
 													-- Create user option
-												internal_option_values.extend (create {OPTION}.make (l_option))
+												internal_option_values.extend (create {ARGUMENT_OPTION}.make (l_option))
 											end
 										elseif l_value /= Void then
 											add_template_error (non_value_switch, [l_option])
 										else
 												-- Create user option
-											internal_option_values.extend (create {OPTION}.make (l_option))
+											internal_option_values.extend (create {ARGUMENT_OPTION}.make (l_option))
 										end
 									else
 										add_template_error (multiple_switch_error, [l_option])
@@ -427,7 +427,7 @@ feature {NONE} -- Output
 			l_max_len: INTEGER
 			l_options: like available_switches
 			l_cursor: CURSOR
-			l_opt: SWITCH
+			l_opt: ARGUMENT_SWITCH
 			l_name: STRING
 			l_desc: STRING
 			l_prefixes: like switch_prefixes
@@ -560,14 +560,14 @@ feature {NONE} -- Switches
 	help_switch: STRING is "?"
 			-- Display usage information switch
 
-	available_switches: ARRAYED_LIST [SWITCH] is
+	available_switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
 			-- Key: Option name
 			-- Value: Option description
 		do
 			create Result.make (2)
-			Result.extend (create {SWITCH}.make (nologo_switch, "Supresses copyright information.", False))
-			Result.extend (create {SWITCH}.make (help_switch, "Display usage information.", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", False))
 			Result.compare_objects
 		ensure
 			result_compares_objects: Result.object_comparison
@@ -659,7 +659,7 @@ feature {NONE} -- Error Constants
 
 feature {NONE} -- Internal Implementation Cache
 
-	internal_option_values: ARRAYED_LIST [OPTION]
+	internal_option_values: ARRAYED_LIST [ARGUMENT_OPTION]
 			-- Mutable, unprotected verion of `option_values'
 
 	internal_values: ARRAYED_LIST [STRING]
@@ -702,4 +702,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {LITE_PARSER}
+end -- class {ARGUMENT_LITE_PARSER}

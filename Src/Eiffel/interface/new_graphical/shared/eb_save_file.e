@@ -27,6 +27,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	last_saving_date: INTEGER
@@ -40,7 +45,7 @@ feature -- Basic operations
 	load (a_file_name: STRING): STRING is
 			-- Load the text from `a_file_name'
 		require
-			a_file_name_not_void: a_file_name /= void
+			a_file_name_not_void: a_file_name /= Void
 		do
 
 		end
@@ -49,7 +54,7 @@ feature -- Basic operations
 	save (a_file_name: STRING; a_text: STRING) is
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
 		require
-			a_file_name_not_void: a_file_name /= void
+			a_file_name_not_void: a_file_name /= Void
 		local
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok, create_backup, new_created: BOOLEAN
@@ -65,7 +70,7 @@ feature -- Basic operations
 					create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				else
-					new_created := true
+					new_created := True
 				end
 			else
 				if not new_file.is_plain then
@@ -102,19 +107,45 @@ feature -- Basic operations
 				end
 				tmp_file.close
 				if create_backup then
-					-- We need to copy the backup file to the original file and then
-					-- delete the backup file
-					new_file.delete
-					tmp_file.change_name (a_file_name)
+					robust_rename (tmp_file, a_file_name)
 				end
 				last_saving_date := tmp_file.date
-				last_saving_success := true
+				last_saving_success := True
 				workbench.set_changed
 			end
 		end
 
-
 feature {NONE} -- Implementation
+
+	robust_rename (a_file: FILE; a_new_name: STRING) is
+			-- More robust version of change_name, which tries multiple times before giving up.
+		require
+			a_file_ok: a_file /= Void
+			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
+		local
+			l_retried, l_user_ask_for_retry: BOOLEAN
+			l_ed: EV_ERROR_DIALOG
+			l_win: EV_WINDOW
+		do
+			if l_retried then
+				create l_ed.make_with_text (warning_messages.w_Not_rename_swp (a_file.name, a_new_name))
+				l_ed.set_buttons (<<ev_retry, ev_ignore>>)
+				l_win := window_manager.last_focused_development_window.window
+				l_win.focus_in_actions.block
+				l_ed.show_modal_to_window (l_win)
+				l_win.focus_in_actions.resume
+				l_user_ask_for_retry := l_ed.selected_button.is_equal (ev_retry)
+				l_retried := False
+			else
+				l_user_ask_for_retry := True
+			end
+			if l_user_ask_for_retry then
+				a_file.change_name (a_new_name)
+			end
+		rescue
+			l_retried := True
+			retry
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

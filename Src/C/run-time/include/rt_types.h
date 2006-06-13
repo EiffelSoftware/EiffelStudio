@@ -63,9 +63,11 @@ struct chunk {
 	size_t ck_length;		/* Length of block (w/o size of this struct) */
 							/* int's are split around the chunk pointers */
 							/*to provide correct padding for 64 bit machines*/
-#if MEM_ALIGNBYTES > 8
-	double ck_padding;		/* Alignment restrictions */
-#endif
+	double ck_padding;		/* Alignment restrictions, this entry is not conditioned with
+							 * MEM_ALIGNBYTES because it is absolutely necessary
+							 * to have this structure aligned in memory (in other words
+							 * sizeof(struct chunk) should be a multiple of MEM_ALIGNBYTES).
+							 * Also having an extra `double' does not hurt the memory usage. */
 };
 
 /* The following structure records the head and the tail of the

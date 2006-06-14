@@ -195,9 +195,12 @@ feature -- Redefine
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
+			l_width_height: INTEGER
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			Precursor {SD_STATE} (a_direction)
+			-- We must do it before the widget off-screen on GTK.
+			l_width_height := width_height_by_direction
 			internal_docking_manager.zones.prune_zone (tab_zone)
 			l_contents := tab_zone.contents
 			from
@@ -207,7 +210,7 @@ feature -- Redefine
 			loop
 				create l_auto_hide_state.make (l_contents.item, direction)
 
-				l_auto_hide_state.set_width_height (width_height_by_direction)
+				l_auto_hide_state.set_width_height (l_width_height)
 				l_contents.item.change_state (l_auto_hide_state)
 				l_contents.forth
 			end

@@ -10,6 +10,16 @@ class
 inherit
 	SHARED_WORKBENCH
 
+feature -- Access names
+
+	last_target_uuid: STRING
+	last_group_name: STRING
+	last_folder_path: STRING
+	last_class_name: STRING
+	last_feature_name: STRING
+			-- Last names extracted from ids when retrieving XXX_of_id
+			-- It is possible not valid in the system if XXX_of_id returns void.
+
 feature -- Access (Group)
 
 	id_of_group (a_group: CONF_GROUP): STRING is
@@ -36,10 +46,14 @@ feature -- Access (Group)
 			l_target: CONF_TARGET
 			l_uuid: UUID
 		do
+			last_target_uuid := Void
+			last_group_name := Void
 			strings := a_id.split (name_sep)
 			if strings.count >= 2 then
 				uuid := decode (strings.i_th (1))
 				group_name := decode (strings.i_th (2))
+				last_target_uuid := uuid
+				last_group_name := group_name
 				if universe.target.system.uuid.out.is_equal (uuid) then
 					l_target := universe.target
 				else
@@ -83,6 +97,7 @@ feature -- Access (Folder)
 			l_cluster: CONF_CLUSTER
 			l_dir: KL_DIRECTORY
 		do
+			last_folder_path := Void
 			l_cluster ?= group_of_id (a_id)
 			if l_cluster /= Void and then strings.count >= 3 then
 				l_path := decode (strings.i_th (3))
@@ -119,9 +134,11 @@ feature -- Access (Class)
 			class_name: STRING
 			l_group: CONF_CLUSTER
 		do
+			last_class_name := Void
 			l_group ?= group_of_id (a_id)
 			if l_group /= Void and then l_group.classes /= Void and then strings.count >= 3 then
 				class_name := decode (strings.i_th (3))
+				last_class_name := class_name
 				Result := l_group.classes.item (class_name)
 			end
 		end
@@ -135,12 +152,16 @@ feature -- Access (Feature)
 		local
 			l_class: CLASS_I
 			l_class_c: CLASS_C
+			l_feature_name: STRING
 		do
+			last_feature_name := Void
 			l_class ?= class_of_id (a_id)
 			if l_class /= Void and then strings.count >= 4 then
 				l_class_c := l_class.compiled_representation
 				if l_class_c /= Void then
-					Result := l_class_c.feature_with_name (decode (strings.i_th (4)))
+					l_feature_name := decode (strings.i_th (4))
+					last_feature_name := l_feature_name
+					Result := l_class_c.feature_with_name (l_feature_name)
 				end
 			end
 		end
@@ -311,6 +332,16 @@ feature {NONE} -- Implementation
 			-- UUID generator
 		once
 			create Result
+		end
+
+	reset_names is
+			-- Reset last names.
+		do
+			last_target_uuid := Void
+			last_group_name := Void
+			last_folder_path := Void
+			last_class_name := Void
+			last_feature_name := Void
 		end
 
 invariant

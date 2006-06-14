@@ -55,6 +55,28 @@ feature -- Access
 			create Result.make (0)
 		end
 
+	frozen application_base: STRING is
+			-- Base location of application.
+		local
+			l_path: STRING
+			i: INTEGER
+		once
+			l_path := arguments.argument (0)
+			if l_path /= Void and then not l_path.is_empty then
+				i := l_path.last_index_of (op_env.directory_separator, l_path.count)
+				if i > 0 then
+					Result := l_path.substring (1, i - 1)
+				end
+			end
+			if Result = Void or else Result.is_empty then
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			no_trailing_separator: Result.item (Result.count) /= op_env.directory_separator
+		end
+
 feature -- Query
 
 	options_of_name (a_name: STRING): LIST [ARGUMENT_OPTION] is
@@ -99,6 +121,41 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
+	option_of_name (a_name: STRING): ARGUMENT_OPTION is
+			-- Retrieves first of options, passed by user, by name
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			parsed: parsed
+		local
+			l_options: like option_values
+			l_cursor: CURSOR
+			l_cs: like case_sensitive
+			l_opt: ARGUMENT_OPTION
+			l_equal: BOOLEAN
+		do
+			l_options := option_values
+			if not l_options.is_empty then
+				l_cs := case_sensitive
+				l_cursor := l_options.cursor
+				from l_options.start until l_options.after or Result /= Void loop
+					l_opt := l_options.item
+					if l_cs then
+						l_equal := l_opt.name.is_equal (a_name)
+					else
+						l_equal := l_opt.name.is_case_insensitive_equal (a_name)
+					end
+					if l_equal then
+						Result := l_opt
+					end
+					l_options.forth
+				end
+				l_options.go_to (l_cursor)
+			end
+		ensure
+			result_attached: not options_of_name (a_name).is_empty implies Result /= Void
+		end
+
 feature -- Status Report
 
 	case_sensitive: BOOLEAN
@@ -128,7 +185,7 @@ feature -- Status Report
 	successful: BOOLEAN is
 			-- Indicates if parsing completed without errors
 		do
-			Result := error_messages.is_empty
+			Result := parsed and error_messages.is_empty
 		ensure
 			error_messages_is_empty: Result implies error_messages.is_empty
 		end
@@ -505,22 +562,22 @@ feature {NONE} -- Output
 		do
 			l_errors := error_messages
 			l_cursor := l_errors.cursor
-			io.put_string (string_formatter.format ("{1} error(s) occurred.%N", [error_messages.count]))
+			io.error.put_string (string_formatter.format ("{1} error(s) occurred.%N", [error_messages.count]))
 			from l_errors.start until l_errors.after loop
-				io.put_string (tab_string)
-				io.put_string ("> ")
+				io.error.put_string (tab_string)
+				io.error.put_string ("> ")
 
 				l_item := l_errors.item
 				create l_error.make (2 + tab_string.count + l_item.count)
 				l_error.append (l_item)
 				l_error.replace_substring_all ("%N", "%N" + tab_string + "  ")
 
-				io.put_string (l_error)
-				io.new_line
+				io.error.put_string (l_error)
+				io.error.new_line
 				l_errors.forth
 			end
 			l_errors.go_to (l_cursor)
-			io.new_line
+			io.error.new_line
 		ensure
 			error_messages_unmoved: error_messages.cursor.is_equal (old error_messages.cursor)
 		end
@@ -886,7 +943,7 @@ feature {NONE} -- Error Constants
 	missing_switch_error: STRING is "Switch '{1}' was not specified."
 	loose_argument_specified_error: STRING is "Arguments without a switch prefix are not valid arguments."
 	multiple_loose_argument_specified_error: STRING is "Only one argument without a switch prefix can be passed."
-	invalid_switch_value_with_reason: STRING is "'{1}' is an invalid option for switch '{2}'.%NReason: {3}"
+	invalid_switch_value_with_reason: STRING is "'{1}' is an invalid option for switch '{2}'.%N{3}"
 
 feature {NONE} -- Internal Implementation Cache
 

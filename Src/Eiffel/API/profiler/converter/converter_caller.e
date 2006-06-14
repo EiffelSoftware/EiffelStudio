@@ -64,7 +64,7 @@ feature {EWB_GENERATE} -- Initialization
 			end
 		end -- make
 
-feature {PROF_CONVERTER} -- Implementation
+feature {NONE} -- Implementation
 
 	check_profile_file (profile_name: STRING; comp_type: STRING) is
 			-- Checks if the file exists.

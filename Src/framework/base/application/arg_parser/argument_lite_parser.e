@@ -772,17 +772,33 @@ feature {NONE} -- Switches
 	help_switch: STRING is "?"
 			-- Display usage information switch
 
-	available_switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
+	frozen available_switches: LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
-			-- Key: Option name
-			-- Value: Option description
+		local
+			l_switches: like switches
+			l_result: ARRAYED_LIST [ARGUMENT_SWITCH]
 		do
-			create Result.make (2)
-			Result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", True, False))
-			Result.compare_objects
+			l_switches := switches
+			if l_switches /= Void then
+				create l_result.make (2 + l_switches.count)
+			else
+				create l_result.make (2)
+			end
+			l_result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", True, False))
+			if l_switches /= Void then
+				l_result.append (l_switches)
+			end
+			l_result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", True, False))
+			Result := l_result
 		ensure
-			result_compares_objects: Result.object_comparison
+			result_attached: Result /= Void
+		end
+
+	switches: LIST [ARGUMENT_SWITCH] is
+			-- Retrieve a list of switch used for a specific application
+		deferred
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 feature {NONE} -- Formatting

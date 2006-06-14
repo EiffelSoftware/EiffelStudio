@@ -346,19 +346,6 @@ feature {NONE} -- Validation
 				elseif not accepts_multiple_loose_arguments and l_values.count > 1 then
 					add_error (multiple_loose_argument_specified_error)
 				end
---				l_cursor := l_values.cursor
---
---
---				l_values.start
---				if accepts_loose_arguments then
---					l_values.forth
---
---				end
---				from until l_values.after loop
---					add_template_error (invalid_switch_error, [ellipse_text (l_values.item)])
---					l_values.forth
---				end
---				l_values.go_to (l_cursor)
 			end
 
 			l_switches := available_switches
@@ -400,7 +387,7 @@ feature {NONE} -- Validation
 								l_value := l_options.item.value
 								l_validator.validate_value (l_value)
 								if not l_validator.is_option_valid then
-									add_template_error (invalid_switch_value, [ellipse_text (l_value), l_switch.name])
+									add_template_error (invalid_switch_value_with_reason, [ellipse_text (l_value), l_switch.name, l_validator.reason])
 								end
 								l_options.forth
 							end
@@ -513,13 +500,22 @@ feature {NONE} -- Output
 		local
 			l_errors: like error_messages
 			l_cursor: CURSOR
+			l_item: STRING
+			l_error: STRING
 		do
 			l_errors := error_messages
 			l_cursor := l_errors.cursor
 			io.put_string (string_formatter.format ("{1} error(s) occurred.%N", [error_messages.count]))
 			from l_errors.start until l_errors.after loop
-				io.put_string ("   > ")
-				io.put_string (l_errors.item)
+				io.put_string (tab_string)
+				io.put_string ("> ")
+
+				l_item := l_errors.item
+				create l_error.make (2 + tab_string.count + l_item.count)
+				l_error.append (l_item)
+				l_error.replace_substring_all ("%N", "%N" + tab_string + "  ")
+
+				io.put_string (l_error)
 				io.new_line
 				l_errors.forth
 			end
@@ -890,6 +886,7 @@ feature {NONE} -- Error Constants
 	missing_switch_error: STRING is "Switch '{1}' was not specified."
 	loose_argument_specified_error: STRING is "Arguments without a switch prefix are not valid arguments."
 	multiple_loose_argument_specified_error: STRING is "Only one argument without a switch prefix can be passed."
+	invalid_switch_value_with_reason: STRING is "'{1}' is an invalid option for switch '{2}'.%NReason: {3}"
 
 feature {NONE} -- Internal Implementation Cache
 

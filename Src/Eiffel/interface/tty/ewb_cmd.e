@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"General notion of command line command%
 		%corresponding to an option of `ec'."
 	legal: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class EWB_CMD 
+deferred class EWB_CMD
 
 inherit
 	SHARED_EIFFEL_PROJECT
@@ -23,7 +23,7 @@ inherit
 		undefine
 			is_equal
 		end
-		
+
 	SHARED_WORKBENCH
 
 	EXCEPTIONS
@@ -64,7 +64,7 @@ feature {NONE} -- Error messages
 		once
 			create Result
 		end
-		
+
 feature -- Comparison
 
 	infix "<" (other: EWB_CMD): BOOLEAN is
@@ -73,7 +73,7 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
-feature {ES, EWB_BASIC_LOOP} -- Setting
+feature {ES} -- Setting
 
 	set_output_window (display: OUTPUT_WINDOW) is
 			-- Set the output window to `display'

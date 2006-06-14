@@ -14,7 +14,7 @@ inherit
 
 feature -- Shortcut
 
-	accelerator_from_shortcur (a_shortcut: SHORTCUT_PREFERENCE): EV_ACCELERATOR is
+	accelerator_from_shortcut (a_shortcut: SHORTCUT_PREFERENCE): EV_ACCELERATOR is
 			-- Accelerator from `a_shortcut'
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -38,10 +38,10 @@ feature -- Shortcut
 		do
 			l_shortcut := preferences.editor_data.shortcuts.item (a_preference_name)
 			if l_shortcut /= Void then
-				Result := accelerator_from_shortcur (l_shortcut)
+				Result := accelerator_from_shortcut (l_shortcut)
 			end
 		ensure
-			good_result: preferences.editor_data.shortcuts.item (a_preference_name) /= Void implies equal (Result, accelerator_from_shortcur (preferences.editor_data.shortcuts.item (a_preference_name)))
+			good_result: preferences.editor_data.shortcuts.item (a_preference_name) /= Void implies equal (Result, accelerator_from_shortcut (preferences.editor_data.shortcuts.item (a_preference_name)))
 		end
 
 indexing

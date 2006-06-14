@@ -12,7 +12,7 @@ ALL_SRC = ewb_proto.c $(LSRC)
 
 ;# Derived object file names
 LOBJ = \
-|expand f!$(LSRC)!
+|expand f!$(ALL_SRC)!
 	!f:\.c=.o \
 -expand \\
 
@@ -27,7 +27,7 @@ MT_WOBJ = \
 -expand \\
 
 MT_LOBJ = \
-|expand f!$(LSRC)!
+|expand f!$(ALL_SRC)!
 	MT!f:\.c=.o \
 -expand \\
 
@@ -69,8 +69,6 @@ NormalLibraryTarget(ewb,$(LSRC),$(LOBJ))
 CustomLibraryTarget(wewb, $(WOBJ))
 CustomLibraryTarget(mtewb, $(MT_LOBJ))
 CustomLibraryTarget(mtwewb, $(MT_WOBJ))
-CustomObjectTarget(ewb_proto.o)
-CustomObjectTarget(MTewb_proto.o)
 CustomObjectTarget(wewb_proto.o)
 CustomObjectTarget(MTwewb_proto.o)
 DependTarget()

@@ -54,7 +54,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) ewb_proto.o MTewb_proto.o wewb_proto.o MTwewb_proto.o
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -83,6 +83,7 @@ ALL_SRC = ewb_proto.c $(LSRC)
 
 # Derived object file names
 LOBJ = \
+	       ewb_proto.o \
 	       eproto.o \
 	       eif_in.o \
 	       eif_out.o \
@@ -104,6 +105,7 @@ MT_WOBJ = \
 	       MTwewb_dumped.o 
 
 MT_LOBJ = \
+	       MTewb_proto.o \
 	       MTeproto.o \
 	       MTeif_in.o \
 	       MTeif_out.o \
@@ -217,16 +219,6 @@ libmtwewb.a: $(MT_WOBJ)
 	$(RM) $@
 	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
-
-all:: ewb_proto.o
-
-local_realclean::
-	$(RM) ewb_proto.o
-
-all:: MTewb_proto.o
-
-local_realclean::
-	$(RM) MTewb_proto.o
 
 all:: wewb_proto.o
 

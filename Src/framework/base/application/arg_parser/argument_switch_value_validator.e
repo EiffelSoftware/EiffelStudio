@@ -28,7 +28,7 @@ feature -- Validation
 			reason := Void
 		ensure
 			reason_attached: not is_option_valid implies reason /= Void
-			not_reason_is_empty: is_option_valid implies not reason.is_empty
+			not_reason_is_empty: not is_option_valid implies not reason.is_empty
 			reason_unttached: is_option_valid implies reason = Void
 		end
 

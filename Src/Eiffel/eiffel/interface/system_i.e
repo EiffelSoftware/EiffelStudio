@@ -1046,6 +1046,18 @@ end
 
 				if l_root.cluster_name = Void then
 					l_classes_i := universe.classes_with_name (l_root.class_name.as_upper)
+						-- remove overriding classes
+					from
+						l_classes_i.start
+					until
+						l_classes_i.after
+					loop
+						if l_classes_i.item.config_class.does_override then
+							l_classes_i.remove
+						else
+							l_classes_i.forth
+						end
+					end
 					if l_classes_i.count = 0 then
 						create vd20
 						vd20.set_class_name (l_root.class_name.as_upper)
@@ -1069,8 +1081,9 @@ end
 						Error_handler.insert_error (vd19)
 						Error_handler.raise_error
 					else
+							-- do a class_named because this checks for VSCN errors
 						l_class := universe.class_named (root_class_name, l_group)
-						if l_class = Void or else not l_group.classes.has (root_class_name) then
+						if l_class = Void or else l_group.classes.item (root_class_name) /= l_class then
 							create vd20
 							vd20.set_class_name (l_root.class_name.as_upper)
 							Error_handler.insert_error (vd20)

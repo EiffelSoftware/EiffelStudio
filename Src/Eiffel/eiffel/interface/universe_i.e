@@ -251,19 +251,31 @@ feature -- Access
 						Result_not_void: Result /= Void
 					end
 				elseif l_cl.count > 1 then
-						-- if we have two results it's possible that we got a class which is overriden and the override itself
-						-- return the class that is overriden
-					if l_cl.count = 2 and then l_cl.i_th (1).actual_class = l_cl.i_th (2) then
-						Result ?= l_cl.i_th (1)
-					elseif l_cl.count = 2 and then l_cl.i_th (2).actual_class = l_cl.i_th (1) then
-						Result ?= l_cl.i_th (2)
-					else
-						create vscn
-						vscn.set_cluster (a_group)
-						vscn.set_first (l_cl.i_th (1))
-						vscn.set_second (l_cl.i_th (2))
-						error_handler.insert_error (vscn)
-						error_handler.raise_error
+					create vscn
+					vscn.set_cluster (a_group)
+					vscn.set_first (l_cl.i_th (1))
+					vscn.set_second (l_cl.i_th (2))
+					error_handler.insert_error (vscn)
+					error_handler.raise_error
+				end
+			end
+		end
+
+	save_class_named (class_name: STRING; a_group: CONF_GROUP): CLASS_I is
+			-- Class named `class_name' in cluster `a_cluster' which doesn't generate {VSCN} errors.
+		require
+			good_argument: class_name /= Void
+			good_group: a_group /= Void
+		local
+			l_cl: LINKED_SET [CONF_CLASS]
+		do
+			l_cl := a_group.class_by_name (class_name, True)
+
+			if l_cl /= Void then
+				if l_cl.count = 1 then
+					Result ?= l_cl.first
+					check
+						Result_not_void: Result /= Void
 					end
 				end
 			end

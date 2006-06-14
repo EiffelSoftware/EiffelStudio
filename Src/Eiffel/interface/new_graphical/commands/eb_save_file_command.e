@@ -86,9 +86,11 @@ feature -- Execution
 					compileok
 				then
 					save (target.file_name, target.text)
-					target.set_last_saving_date (last_saving_date)
-					target.on_text_saved
-					target.update_save_symbol
+					if last_saving_success then
+						target.set_last_saving_date (last_saving_date)
+						target.on_text_saved
+						target.update_save_symbol
+					end
 				end
 			end
 		end

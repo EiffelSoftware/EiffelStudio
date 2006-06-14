@@ -61,6 +61,8 @@ feature -- Basic operations
 			tmp_name: STRING
 			wd: EV_WARNING_DIALOG
 		do
+				-- Always assume a saving is successful.
+			last_saving_success := True
 			create new_file.make (a_file_name)
 
 			aok := True
@@ -108,14 +110,37 @@ feature -- Basic operations
 				tmp_file.close
 				if create_backup then
 					robust_rename (tmp_file, a_file_name)
+				elseif last_saving_success then
+					create new_file.make (tmp_name)
+					if new_file.exists then
+						robust_delete (new_file)
+					end
 				end
-				last_saving_date := tmp_file.date
-				last_saving_success := True
+				if last_saving_success then
+					last_saving_date := tmp_file.date
+				end
 				workbench.set_changed
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	robust_delete (a_file: FILE) is
+			-- More robust version of `delete'. If deletion is not successful, we abandon.
+		require
+			a_file_ok: a_file /= Void
+			a_file_exists: a_file.exists
+
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				a_file.delete
+			end
+		rescue
+			l_retried := True
+			retry
+		end
 
 	robust_rename (a_file: FILE; a_new_name: STRING) is
 			-- More robust version of change_name, which tries multiple times before giving up.
@@ -132,8 +157,10 @@ feature {NONE} -- Implementation
 				l_ed.set_buttons (<<ev_retry, ev_ignore>>)
 				l_win := window_manager.last_focused_development_window.window
 				l_win.focus_in_actions.block
+				window_manager.last_focused_development_window.editor_tool.text_area.editor_drawing_area.focus_in_actions.block
 				l_ed.show_modal_to_window (l_win)
 				l_win.focus_in_actions.resume
+				window_manager.last_focused_development_window.editor_tool.text_area.editor_drawing_area.focus_in_actions.resume
 				l_user_ask_for_retry := l_ed.selected_button.is_equal (ev_retry)
 				l_retried := False
 			else
@@ -141,6 +168,8 @@ feature {NONE} -- Implementation
 			end
 			if l_user_ask_for_retry then
 				a_file.change_name (a_new_name)
+			else
+				last_saving_success := False
 			end
 		rescue
 			l_retried := True

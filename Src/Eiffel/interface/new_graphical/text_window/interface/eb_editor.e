@@ -144,12 +144,15 @@ feature -- Text Loading
 			l_filename.add_extension ("swp")
 			create test_file_2.make (l_filename)
 			if test_file_2.exists and then test_file_2.is_readable and then ((not test_file.exists) or else test_file.date < test_file_2.date) then
-				ask_if_opens_backup
-				if not open_backup then
-					test_file_2.delete
-						-- Use original file
-					create l_filename.make_from_string (a_filename)
+				if test_file.exists then
+					ask_if_opens_backup
+					if not open_backup then
+						test_file_2.delete
+							-- Use original file
+						create l_filename.make_from_string (a_filename)
+					end
 				end
+					-- If `test_file' does not exist we force a loading of the backup file.
 				Precursor (l_filename)
 			else
 				create l_filename.make_from_string (a_filename)

@@ -147,10 +147,13 @@
 	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Search;closed;0;0;0;0;Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>	
 	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search options be shown in search tool?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_text_in_refactoring_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_all_text_in_refactoring_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>	

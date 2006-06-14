@@ -161,29 +161,6 @@ feature {NONE} -- Initialization
 			tools_initialized: tools_initialized
 		end
 
-	init_toolbars is
-			-- Create the toolbars, do not fill them.
-		do
-			create toolbars_area
-			toolbars_area.set_padding (1)
-
-			build_general_toolbar
-			toolbars_area.extend (general_toolbar)
-			toolbars_area.disable_item_expand (general_toolbar)
-
-			build_address_toolbar
-			toolbars_area.extend (address_toolbar)
-			toolbars_area.disable_item_expand (address_toolbar)
-
-			build_project_toolbar
-			toolbars_area.extend (project_toolbar)
-			toolbars_area.disable_item_expand (project_toolbar)
-
-			build_refactoring_toolbar
-			toolbars_area.extend (refactoring_toolbar)
-			toolbars_area.disable_item_expand (refactoring_toolbar)
-		end
-
 	build_toolbars_area is
 			-- Set up the toolbars area (general toolbar, address toolbar, ...).
 		do
@@ -722,6 +699,7 @@ feature {NONE} -- Implementation / Commands
 			preferences.development_window_data.show_general_toolbar_preference.set_value (show_general_toolbar_command.is_visible)
 			preferences.development_window_data.show_address_toolbar_preference.set_value (show_address_toolbar_command.is_visible)
 			preferences.development_window_data.show_project_toolbar_preference.set_value (show_project_toolbar_command.is_visible)
+			preferences.development_window_data.show_refactoring_toolbar_preference.set_value (show_refactoring_toolbar_command.is_visible)
 --			preference.preferences.save
 		end
 

@@ -316,7 +316,7 @@ feature
 			create Result.make (System.procedure_class_id, generics)
 		end
 
-feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
+feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 
 	Array_type: GEN_TYPE_I is
 			-- Default array type

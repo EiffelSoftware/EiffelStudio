@@ -658,7 +658,7 @@ feature {NONE} -- Usage
 	copyright: STRING is
 			-- Copyright information
 		once
-			Result := "Copyright Eiffel Software 1985-2006 . All Rights Reserved."
+			Result := "Copyright Eiffel Software 1985-2006. All Rights Reserved."
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -684,10 +684,10 @@ feature {NONE} -- Usage
 				l_switch := l_switches.item
 				l_val_switch ?= l_switch
 				l_opt := l_switch.optional
-				if l_opt then
-					Result.append_character ('[')
-				end
 				if not l_switch.name.is_equal (help_switch) then
+					if l_opt then
+						Result.append_character ('[')
+					end
 					Result.append_character (l_prefix)
 					Result.append (l_switch.name)
 					if l_val_switch /= Void then

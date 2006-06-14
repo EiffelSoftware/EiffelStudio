@@ -1785,7 +1785,7 @@ feature -- Actual class type
 			actual_type_not_void: Result /= Void
 		end
 
-feature {TYPE_AS, AST_TYPE_CHECKER, AST_TYPE_A_GENERATOR} -- Actual class type
+feature {TYPE_AS, AST_TYPE_A_GENERATOR} -- Actual class type
 
 	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared

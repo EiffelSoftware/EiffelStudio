@@ -16,6 +16,7 @@ inherit
 			is_group_equivalent,
 			process,
 			class_by_name,
+			name_by_class,
 			is_cluster,
 			is_readonly,
 			accessible_groups,
@@ -36,6 +37,7 @@ feature {NONE} -- Initialization
 			Precursor (a_name, a_location, a_target)
 			create internal_file_rule.make (0)
 			create class_by_name_cache.make (20)
+			create name_by_class_cache.make (20)
 		end
 
 feature -- Status
@@ -220,6 +222,65 @@ feature -- Access queries
 					end
 
 					class_by_name_cache.force (Result, l_name)
+				end
+			end
+		end
+
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
+		local
+			l_groups: like accessible_groups
+			l_grp: CONF_GROUP
+			l_reverse_mapping: like mapping
+		do
+			if a_dependencies and then name_by_class_cache.has (a_class) then
+				Result := name_by_class_cache.found_item
+			else
+					-- search in cluster itself
+				Result := Precursor {CONF_PHYSICAL_GROUP}(a_class, a_dependencies)
+
+					-- search in dependencies
+				if a_dependencies then
+					l_groups := accessible_groups
+					from
+						l_groups.start
+					until
+						l_groups.after
+					loop
+						l_grp := l_groups.item_for_iteration
+						if l_grp.classes_set then
+							Result.append (l_grp.name_by_class (a_class, False))
+						end
+						l_groups.forth
+					end
+				end
+
+				if mapping /= Void and then not mapping.is_empty then
+					create l_reverse_mapping.make (mapping.count)
+					from
+						mapping.start
+					until
+						mapping.after
+					loop
+						l_reverse_mapping.force (mapping.key_for_iteration, mapping.item_for_iteration)
+						mapping.forth
+					end
+
+						-- unapply mapping
+					from
+						Result.start
+					until
+						Result.after
+					loop
+						if l_reverse_mapping.has (Result.item) then
+							Result.replace (l_reverse_mapping.found_item)
+						end
+						Result.forth
+					end
+				end
+
+				if a_dependencies then
+					name_by_class_cache.force (Result, a_class)
 				end
 			end
 		end
@@ -456,6 +517,7 @@ feature {CONF_ACCESS} -- Update, not stored in configuration file
 			-- Wipe out the class cache.
 		do
 			class_by_name_cache.clear_all
+			name_by_class_cache.clear_all
 		end
 
 feature -- Equality
@@ -487,9 +549,6 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
-
-	cached_mapping: like internal_mapping
-			-- Special classes name mapping cash, has the fully merge version of the mapping.
 
 feature {NONE} -- Implementation
 
@@ -527,6 +586,9 @@ feature {NONE} -- Cached informations
 
 	accessible_groups_cache: like accessible_groups
 	class_by_name_cache: HASH_TABLE [like class_by_name, STRING]
+	name_by_class_cache: HASH_TABLE [like name_by_class, CONF_CLASS]
+	cached_mapping: like internal_mapping
+			-- Special classes name mapping cash, has the fully merge version of the mapping.
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void

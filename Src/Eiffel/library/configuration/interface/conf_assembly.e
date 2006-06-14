@@ -16,6 +16,7 @@ inherit
 			process,
 			is_assembly,
 			class_by_name,
+			name_by_class,
 			options,
 			is_group_equivalent,
 			class_type,
@@ -205,6 +206,29 @@ feature -- Access queries
 						Result.append (l_dep.class_by_name (a_class, False))
 					end
 					l_groups.forth
+				end
+			end
+		end
+
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
+		local
+			l_dep: CONF_GROUP
+			l_groups: like accessible_groups
+		do
+			Result := Precursor (a_class, a_dependencies)
+			if a_dependencies then
+				l_groups := accessible_groups
+				from
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					l_groups.forth
+					l_dep := l_groups.item_for_iteration
+					if l_dep.classes_set then
+						result.append (l_dep.name_by_class (a_class, False))
+					end
 				end
 			end
 		end

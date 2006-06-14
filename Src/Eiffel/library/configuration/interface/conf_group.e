@@ -192,6 +192,27 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
+		require
+			a_class_ok: a_class /= Void and then a_class.is_valid
+			classes_set: classes_set
+		do
+			create Result.make
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				if classes.item_for_iteration = a_class then
+					Result.force (classes.key_for_iteration)
+				end
+				classes.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.

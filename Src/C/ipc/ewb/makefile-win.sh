@@ -20,6 +20,7 @@ SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
 OBJECTS = \
+	ewb_proto.$obj \
 	ewb_dumped.$obj \
 	eproto.$obj \
 	eif_in.$obj \
@@ -34,6 +35,7 @@ WOBJECTS = \
 	wewb_init.$obj
 
 MT_OBJECTS = \
+	MTewb_proto.$obj \
 	MTewb_dumped.$obj \
 	MTeproto.$obj \
 	MTeif_in.$obj \
@@ -50,7 +52,7 @@ MT_WOBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: $output_libraries ewb_proto.$obj wewb_proto.$obj MTewb_proto.$obj MTwewb_proto.$obj
+all:: $output_libraries wewb_proto.$obj MTwewb_proto.$obj
 
 dll: standard
 mtdll: mtstandard

@@ -8,6 +8,25 @@ indexing
 deferred class
 	ARGUMENT_LITE_PARSER
 
+feature {NONE} -- Initialization
+
+	make (a_cs: like case_sensitive; a_allow_loose: like accepts_loose_arguments; a_allow_multi_loose: like accepts_multiple_loose_arguments; a_usage_on_error: like display_usage_on_error) is
+			-- Initializes argument parser
+		require
+			a_allow_multi_loose_with_a_allow_loose: a_allow_multi_loose implies a_allow_loose
+		do
+			case_sensitive := a_cs
+			accepts_loose_argument := a_allow_loose
+			accepts_multiple_loose_arguments := a_allow_multi_loose
+			display_usage_on_error := a_usage_on_error
+		ensure
+			case_sensitive_set: case_sensitive = a_cs
+			accepts_loose_argument_set: (accepts_loose_arguments and not a_allow_multi_loose) implies accepts_loose_argument
+			accepts_multiple_loose_arguments_set: accepts_multiple_loose_arguments = a_allow_multi_loose
+			accepts_loose_arguments: a_allow_loose implies accepts_loose_arguments
+			display_usage_on_error_set: display_usage_on_error = a_usage_on_error
+		end
+
 feature -- Access
 
 	frozen option_values: LIST [ARGUMENT_OPTION] is
@@ -23,7 +42,6 @@ feature -- Access
 	frozen values: LIST [STRING] is
 			-- List of values without options
 		require
-			accepts_loose_arguments: accepts_loose_arguments
 			parsed: parsed
 		once
 			Result := internal_values
@@ -86,8 +104,17 @@ feature -- Status Report
 	case_sensitive: BOOLEAN
 			-- Indicates if parser is case sensitive and will match options by case
 
-	accepts_loose_arguments: BOOLEAN
+	accepts_loose_arguments: BOOLEAN is
 			-- Indicates if arguments without option prefixes are accepted
+		do
+			Result := accepts_loose_argument or accepts_multiple_loose_arguments
+		end
+
+	accepts_loose_argument: BOOLEAN
+			-- Indicates if an argument without switch prefix is accepted
+
+	accepts_multiple_loose_arguments: BOOLEAN
+			-- Indicates if multiple arguments without switch prefixes are accepted
 
 	suppress_logo: BOOLEAN
 			-- Should logo be suppressed?
@@ -177,7 +204,6 @@ feature {NONE} -- Parsing
 			l_prefixes: like switch_prefixes
 			l_args: ARRAY [STRING]
 			l_upper: INTEGER
-			l_permit_loose: like accepts_loose_arguments
 			l_cs: like case_sensitive
 			l_match: BOOLEAN
 			l_options: like internal_option_values
@@ -198,7 +224,6 @@ feature {NONE} -- Parsing
 			if not l_args.is_empty then
 				l_switches := available_switches
 				l_prefixes := switch_prefixes
-				l_permit_loose := accepts_loose_arguments
 				l_cs := case_sensitive
 
 					-- Iterate arguments
@@ -314,74 +339,87 @@ feature {NONE} -- Validation
 			l_validator: ARGUMENT_SWITCH_VALUE_VALIDATOR
 		do
 			l_values := values
-			if not accepts_loose_arguments and not l_values.is_empty then
-				l_cursor := l_values.cursor
-				from l_values.start until l_values.after loop
-					add_template_error (invalid_switch_error, [ellipse_text (l_values.item)])
-					l_values.forth
+			if not l_values.is_empty then
+
+				if not accepts_loose_argument then
+					add_error (loose_argument_specified_error)
+				elseif not accepts_multiple_loose_arguments and l_values.count > 1 then
+					add_error (multiple_loose_argument_specified_error)
 				end
-				l_values.go_to (l_cursor)
-			else
-				l_switches := available_switches
-				l_cursor := l_switches.cursor
-				from l_switches.start until l_switches.after loop
-					l_switch := l_switches.item
-					l_options := options_of_name (l_switch.name)
+--				l_cursor := l_values.cursor
+--
+--
+--				l_values.start
+--				if accepts_loose_arguments then
+--					l_values.forth
+--
+--				end
+--				from until l_values.after loop
+--					add_template_error (invalid_switch_error, [ellipse_text (l_values.item)])
+--					l_values.forth
+--				end
+--				l_values.go_to (l_cursor)
+			end
 
-						-- Check optional
-					if not l_switch.optional and l_options.is_empty then
-						add_template_error (missing_switch_error, [l_switch.name])
-					elseif not l_options.is_empty then
+			l_switches := available_switches
+			l_cursor := l_switches.cursor
+			from l_switches.start until l_switches.after loop
+				l_switch := l_switches.item
+				l_options := options_of_name (l_switch.name)
 
-							-- Check multiple
-						if not l_switch.allow_multiple and l_options.count > 1 then
-							add_template_error (multiple_switch_error, [l_switch.name])
-						end
+					-- Check optional
+				if not l_switch.optional and l_options.is_empty then
+					add_template_error (missing_switch_error, [l_switch.name])
+				elseif not l_options.is_empty then
 
-						l_ocursor := l_options.cursor
-						l_val_switch ?= l_switch
-						if l_val_switch /= Void then
+						-- Check multiple
+					if not l_switch.allow_multiple and l_options.count > 1 then
+						add_template_error (multiple_switch_error, [l_switch.name])
+					end
 
-							if not l_val_switch.is_value_optional then
+					l_ocursor := l_options.cursor
+					l_val_switch ?= l_switch
+					if l_val_switch /= Void then
 
-									-- Check argument exists
-								from l_options.start until l_options.after loop
-									l_value := l_options.item.value
-									if l_value = Void or else l_value.is_empty then
-										add_template_error (require_switch_value, [l_switch.name])
-									end
-									l_options.forth
-								end
-							end
-							if successful then
+						if not l_val_switch.is_value_optional then
 
-									-- Check argument is valid
-								l_validator := l_val_switch.value_validator
-								from l_options.start until l_options.after loop
-									l_value := l_options.item.value
-									l_validator.validate_value (l_value)
-									if not l_validator.is_option_valid then
-										add_template_error (invalid_switch_value, [ellipse_text (l_value), l_switch.name])
-									end
-									l_options.forth
-								end
-							end
-						else
-								-- Check regular switches do not have values
+								-- Check argument exists
 							from l_options.start until l_options.after loop
 								l_value := l_options.item.value
-								if l_value /= Void and then not l_value.is_empty then
-									add_template_error (non_value_switch, [l_switch.name])
+								if l_value = Void or else l_value.is_empty then
+									add_template_error (require_switch_value, [l_switch.name])
 								end
 								l_options.forth
 							end
 						end
-						l_options.go_to (l_ocursor)
+						if successful then
+
+								-- Check argument is valid
+							l_validator := l_val_switch.value_validator
+							from l_options.start until l_options.after loop
+								l_value := l_options.item.value
+								l_validator.validate_value (l_value)
+								if not l_validator.is_option_valid then
+									add_template_error (invalid_switch_value, [ellipse_text (l_value), l_switch.name])
+								end
+								l_options.forth
+							end
+						end
+					else
+							-- Check regular switches do not have values
+						from l_options.start until l_options.after loop
+							l_value := l_options.item.value
+							if l_value /= Void and then not l_value.is_empty then
+								add_template_error (non_value_switch, [l_switch.name])
+							end
+							l_options.forth
+						end
 					end
-					l_switches.forth
+					l_options.go_to (l_ocursor)
 				end
-				l_switches.go_to (l_cursor)
+				l_switches.forth
 			end
+			l_switches.go_to (l_cursor)
 		ensure
 			switches_unmoved: available_switches.cursor.is_equal (old available_switches.cursor)
 			option_values_unmoved: option_values.cursor.is_equal (old option_values.cursor)
@@ -834,6 +872,8 @@ feature {NONE} -- Error Constants
 	multiple_switch_error: STRING is "Switch '{1}' can only be used once."
 	non_value_switch: STRING is "Switch '{1}' should not have any value paired with it."
 	missing_switch_error: STRING is "Switch '{1}' was not specified."
+	loose_argument_specified_error: STRING is "Arguments without a switch prefix are not valid arguments."
+	multiple_loose_argument_specified_error: STRING is "Only one argument without a switch prefix can be passed."
 
 feature {NONE} -- Internal Implementation Cache
 

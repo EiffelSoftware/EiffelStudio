@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_string_prop: TEXT_PROPERTY [STRING_32]
 		do
-			properties.add_section ("Misc")
+			properties.add_section (section_general)
 
 			create l_bool_prop.make_with_value (option_profile_name, an_inherited_options.is_profile)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_profile)
@@ -98,8 +98,6 @@ feature {NONE} -- Implementation
 				l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
 				properties.add_property (l_string_prop)
 			end
-
-			properties.current_section.expand
 		end
 
 	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
@@ -183,8 +181,6 @@ feature {NONE} -- Implementation
 					l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
 				end
 			end
-
-			properties.current_section.expand
 		end
 
 	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
@@ -231,8 +227,6 @@ feature {NONE} -- Implementation
 					valid_warnings.forth
 				end
 			end
-
-			properties.current_section.expand
 		end
 
 	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
@@ -282,8 +276,6 @@ feature {NONE} -- Implementation
 					debug_clauses.forth
 				end
 			end
-
-			properties.current_section.expand
 		end
 
 	update_assertion (an_option: CONF_OPTION; a_name: STRING; a_value: BOOLEAN) is

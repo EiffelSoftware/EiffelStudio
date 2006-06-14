@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			append_margin (hb_out)
 			create vb
 			hb_out.extend (vb)
+			vb.set_padding (default_padding_size)
 
 			append_margin (vb)
 
@@ -109,18 +110,21 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
+			hb.set_padding (default_padding_size)
 
 			create l_btn.make_with_text (ev_ok)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
+			l_btn.set_minimum_width (default_button_width)
 
 			create l_btn.make_with_text (ev_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
 			l_btn.select_actions.extend (agent on_cancel)
+			l_btn.set_minimum_width (default_button_width)
 
 			append_margin (vb)
 

@@ -98,6 +98,7 @@ feature {NONE}-- Initialization
 			debug_clauses := a_debugs
 			default_create
 			config_windows.force (Current, conf_system.file_name)
+			create group_section_expanded_status.make (20)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
@@ -793,6 +794,9 @@ feature {NONE} -- Implementation
 			create Result.make (5)
 		end
 
+	group_section_expanded_status: HASH_TABLE [HASH_TABLE [BOOLEAN, STRING], STRING]
+			-- Expanded status of sections of groups, indexed by group name.
+
 	is_refreshing: BOOLEAN
 			-- Are we currently refreshing?
 
@@ -1278,6 +1282,7 @@ feature {NONE} -- Implementation
 			l_extends := current_target.extends /= Void
 
 			add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1298,6 +1303,7 @@ feature {NONE} -- Implementation
 			l_extends := current_target.extends /= Void
 
 			add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1318,6 +1324,7 @@ feature {NONE} -- Implementation
 			l_extends := current_target.extends /= Void
 
 			add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1504,6 +1511,7 @@ feature {NONE} -- Implementation
 			l_vis_prop: DIALOG_PROPERTY [CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
+			l_expanded: HASH_TABLE [BOOLEAN, STRING]
 		do
 			current_group := a_group
 			properties.reset
@@ -1584,7 +1592,13 @@ feature {NONE} -- Implementation
 				properties.add_property (l_file_prop)
 			end
 
-			properties.current_section.expand
+				-- options
+			if not a_group.is_assembly then
+				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True)
+				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True)
+				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True)
+				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)
+			end
 
 			properties.add_section (section_advanced)
 
@@ -1741,15 +1755,18 @@ feature {NONE} -- Implementation
 				properties.add_property (l_vis_prop)
 			end
 
-				-- options
-			if not a_group.is_assembly then
-				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)
+			if group_section_expanded_status.has (a_group.name) then
+				l_expanded := group_section_expanded_status.found_item
+			else
+				create l_expanded.make (5)
+				l_expanded.force (True, section_general)
+				l_expanded.force (True, section_assertions)
+				l_expanded.force (True, section_warning)
+				l_expanded.force (True, section_debug)
+				l_expanded.force (False, section_advanced)
+				group_section_expanded_status.force (l_expanded, a_group.name)
 			end
-
-			properties.current_section.expand
+			properties.set_expanded_section_store (l_expanded)
 		ensure
 			properties_not_void: properties /= Void
 			current_group_set: current_group = a_group
@@ -2812,5 +2829,6 @@ invariant
 	config_factory: conf_factory /= Void
 	conf_system: conf_system /= Void
 	debug_clauses: debug_clauses /= Void
+	group_section_expanded_status: group_section_expanded_status /= Void
 
 end

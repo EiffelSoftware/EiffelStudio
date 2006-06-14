@@ -278,7 +278,7 @@ feature {NONE} -- Constants
 	GLU_string: STRING is "generates_leading_underscore";
 		-- generates_leading_underscore
 
-feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD, EB_GENERATE_PROFILE_INFO_CMD, EB_PROFILER_WIZARD_GENERATOR} -- Error handling
+feature {EWB_GENERATE, EB_PROFILER_WIZARD_GENERATOR} -- Error handling
 
 	error_occurred: BOOLEAN
 		-- Was there an error during the load of the config file?

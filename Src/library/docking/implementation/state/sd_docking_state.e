@@ -198,12 +198,14 @@ stick (a_direction: INTEGER) is
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			Precursor {SD_STATE} (a_direction)
+			-- We must do it before the widget off-screen on GTK.
+			l_width_height := width_height_by_direction
 			-- Change current content's zone to a SD_AUTO_HIDE_ZONE.
 			internal_docking_manager.zones.prune_zone (zone)
 
 			-- Change state.
 			create l_auto_hide_state.make_with_size (internal_content, direction, l_width_height)
-			l_auto_hide_state.set_width_height (width_height_by_direction)
+			l_auto_hide_state.set_width_height (l_width_height)
 			change_state (l_auto_hide_state)
 			internal_docking_manager.query.inner_container_main.remove_empty_split_area
 			internal_docking_manager.command.unlock_update

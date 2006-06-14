@@ -35,6 +35,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create.
 		do
+			create expanded_section_store.make (0)
+
 			Precursor
 			disable_last_column_use_all_width
 			disable_selection_on_click
@@ -75,6 +77,7 @@ feature -- Access
 		end
 
 	current_section: EV_GRID_ROW
+	current_section_name: STRING
 			-- Current section, that will be used for insertion.
 
 feature -- Update
@@ -84,22 +87,40 @@ feature -- Update
 		do
 			wipe_out
 			set_column_count_to (2)
+			sections.wipe_out
+			create expanded_section_store.make (0)
 			resize (0, 0, 0, 0)
 		end
 
 	add_section (a_name: STRING) is
-			-- Add a new section with `a_name' and use this section for further additions of properties.
+			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
+			-- Else use the existing section.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		local
 			l_row: EV_GRID_ROW
+			l_item: EV_GRID_LABEL_ITEM
+			l_font: EV_FONT
 		do
-			insert_new_row (row_count + 1)
-			l_row := row (row_count)
-			l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_name))
-			l_row.set_background_color (separator_color)
-			sections.force (l_row, a_name)
-			current_section := l_row
+			if not sections.has (a_name) then
+				insert_new_row (row_count + 1)
+				l_row := row (row_count)
+				create l_item.make_with_text (a_name)
+				create l_font
+				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+				l_item.set_font (l_font)
+
+				l_row.set_item (1, l_item)
+				l_row.set_background_color (separator_color)
+				sections.force (l_row, a_name)
+				current_section := l_row
+				current_section_name := a_name
+				l_row.collapse_actions.extend (agent update_expanded_status (False, a_name))
+				l_row.expand_actions.extend (agent update_expanded_status (True, a_name))
+			else
+				current_section := sections.found_item
+				current_section_name := a_name
+			end
 		ensure
 			valid_current_section: valid_current_section
 		end
@@ -126,6 +147,14 @@ feature -- Update
 			l_row.set_item (1, l_name_item)
 			l_row.set_item (2, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
+
+			if expanded_section_store.has (current_section_name) then
+				if expanded_section_store.found_item and not current_section.is_expanded then
+					current_section.expand
+				elseif not expanded_section_store.found_item and current_section.is_expanded then
+					current_section.collapse
+				end
+			end
 		end
 
 	set_description_field (a_field: like description_field) is
@@ -136,7 +165,39 @@ feature -- Update
 			description_field_set: description_field = a_field
 		end
 
+	set_expanded_section_store (a_store: HASH_TABLE [BOOLEAN, STRING]) is
+			-- Store for the expanded sections, will get updated if sections are expanded or collapsed.
+		require
+			a_store_not_void: a_store /= Void
+		do
+			expanded_section_store := a_store
+			from
+				a_store.start
+			until
+				a_store.after
+			loop
+				if sections.has (a_store.key_for_iteration) and then sections.found_item.is_expandable then
+					if a_store.item_for_iteration then
+						sections.found_item.expand
+					else
+						sections.found_item.collapse
+					end
+				end
+				a_store.forth
+			end
+		ensure
+			expanded_section_store_set: expanded_section_store = a_store
+		end
+
 feature {NONE} -- Agents
+
+	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING) is
+			-- Update expanded status to `a_is_expanded' of `a_section'.
+		require
+			a_section_ok: a_section /= Void and then not a_section.is_empty
+		do
+			expanded_section_store.force (a_is_expanded, a_section)
+		end
 
 	on_key_pressed (a_key: EV_KEY) is
 			-- `a_key' was pressed.
@@ -229,5 +290,11 @@ feature {NONE} -- Implementation
 
 	description_field: EV_TEXTABLE
 			-- Place to put descriptions.
+
+	expanded_section_store: HASH_TABLE [BOOLEAN, STRING]
+			-- Expanded status of the sections.
+
+invariant
+	expanded_section_store_not_void: expanded_section_store /= Void
 
 end

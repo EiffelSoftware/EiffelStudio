@@ -380,7 +380,10 @@ feature -- Visit nodes
 					end
 				end
 			end
+
+			current_classes := Void
 		ensure then
+			current_classes_void: current_classes = Void
 			classes_set: not is_error implies a_library.classes_set
 		end
 
@@ -435,8 +438,11 @@ feature -- Visit nodes
 				if a_cluster.last_warnings /= Void then
 					last_warnings.append (a_cluster.last_warnings)
 				end
+
+				current_classes := Void
 			end
 		ensure then
+			current_classes_void: current_classes = Void
 			classes_set: not is_error implies a_cluster.classes_set
 		end
 
@@ -798,6 +804,7 @@ feature {NONE} -- Implementation
 			dotnet: state.is_dotnet
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
+			current_classes_void: current_classes = Void
 		local
 			l_key, l_guid: STRING
 			l_path: like assembly_cache_folder
@@ -934,6 +941,9 @@ feature {NONE} -- Implementation
 								-- set classes
 							an_assembly.set_classes (current_classes)
 							an_assembly.set_dotnet_classes (current_dotnet_classes)
+
+							current_classes := Void
+							current_dotnet_classes := Void
 						end
 					end
 				end
@@ -943,6 +953,7 @@ feature {NONE} -- Implementation
 			valid: not is_error implies current_assembly.is_valid
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
+			current_classes_void: current_classes = Void
 		end
 
 	build_assembly_information_from_other (an_assembly, an_other_assembly: CONF_ASSEMBLY): CONF_ASSEMBLY is
@@ -957,6 +968,8 @@ feature {NONE} -- Implementation
 			l_prefix: STRING
 			l_name: STRING
 			l_other_invalid: BOOLEAN
+			l_deps: DS_HASH_SET [CONF_ASSEMBLY]
+			l_dep_as: CONF_ASSEMBLY
 		do
 				-- if the renaming/prefixes are the same, directly use this assembly
 			if equal (an_other_assembly.name_prefix, an_assembly.name_prefix) and equal (an_other_assembly.renaming, an_assembly.renaming) then
@@ -966,6 +979,22 @@ feature {NONE} -- Implementation
 					an_other_assembly.set_target (an_assembly.target)
 					an_other_assembly.revalidate
 				end
+				l_deps := an_other_assembly.dependencies
+				if l_deps /= Void then
+					from
+						l_deps.start
+					until
+						l_deps.after
+					loop
+						l_dep_as := l_deps.item_for_iteration
+						assemblies.force (l_dep_as, l_dep_as.guid)
+						if old_assemblies /= Void then
+							old_assemblies.remove (l_dep_as.guid)
+						end
+						l_deps.forth
+					end
+				end
+
 				Result := an_other_assembly
 			else
 				from
@@ -993,10 +1022,10 @@ feature {NONE} -- Implementation
 					if l_other_invalid then
 						l_class.set_group (an_assembly)
 					end
-					current_classes.force (l_class, l_name)
+					l_new_classes.force (l_class, l_name)
 					l_classes.forth
 				end
-				an_assembly.set_classes (l_classes)
+				an_assembly.set_classes (l_new_classes)
 				Result := an_assembly
 			end
 			an_assembly.set_dotnet_classes (an_other_assembly.dotnet_classes)

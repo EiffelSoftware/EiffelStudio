@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_allow_mutliple: like allow_multiple) is
+	make (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
 			-- Initialize a new basic option.
 		require
 			a_name_attached: a_name /= Void
@@ -23,11 +23,13 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			description := a_desc
+			optional := a_optional
 			allow_multiple := a_allow_mutliple
 			lower_case_name := name.as_lower
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
+			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 		end
 
@@ -43,6 +45,9 @@ feature -- Access
 			-- Option name in lower-case
 
 feature -- Status Report
+
+	optional: BOOLEAN
+			-- Indicates if switch is optional
 
 	allow_multiple: BOOLEAN
 			-- Indicated if mutiple occurances permitted

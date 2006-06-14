@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
+feature {INTERNAL_AS, INTERNAL_MERGER} -- Replication
 
 	set_compound (c: like compound) is
 		do

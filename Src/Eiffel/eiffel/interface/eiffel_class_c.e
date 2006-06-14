@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -142,7 +147,6 @@ feature -- Action
 			file: KL_BINARY_INPUT_FILE
 			l_dir: KL_DIRECTORY
 			l_dir_name: DIRECTORY_NAME
-			l_fname: FILE_NAME
 			vd21: VD21
 			l_options: CONF_OPTION
 		do
@@ -185,13 +189,17 @@ feature -- Action
 
 					-- Save the source class in a Backup directory
 				if save_copy and Workbench.automatic_backup then
+						-- check if the directory for the system has been created
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
-					l_dir_name.extend (lace_class.cluster.cluster_name)
+					l_dir_name.extend (lace_class.cluster.target.system.uuid.out)
 					create l_dir.make (l_dir_name)
-					l_dir.create_directory
-					create l_fname.make_from_string (l_dir_name)
-					l_fname.extend (lace_class.base_name)
-					file.copy_file (l_fname)
+					if not l_dir.exists then
+						l_dir.create_directory
+						adapt_and_copy_configuration (lace_class.cluster.target.system, l_dir_name)
+					end
+
+						-- copy class
+					copy_class (lace_class, l_dir_name)
 				end
 
 				Error_handler.checksum
@@ -1752,6 +1760,76 @@ feature -- Conformance table generation
 			feature_table.origin_table.add_units (class_id)
 		end
 
+feature {NONE} -- Backup implementation
+
+	copy_class (a_class: CONF_CLASS; a_location: STRING) is
+			-- Make a backup of `a_class' in `a_location'.
+		require
+			a_class_not_void: a_class /= Void
+			a_location_ok: a_location /= Void and then not a_location.is_empty
+		local
+			l_dir_name: DIRECTORY_NAME
+			l_fname: FILE_NAME
+			l_dir: KL_DIRECTORY
+			l_over: ARRAYED_LIST [CONF_CLASS]
+		do
+				-- create cluster directory if necessary
+			create l_dir_name.make_from_string (a_location)
+			l_dir_name.extend (a_class.group.name)
+			create l_dir.make (l_dir_name)
+			l_dir.create_directory
+
+				-- copy file
+			create l_fname.make_from_string (l_dir_name)
+			l_fname.extend (a_class.file_name)
+			file_system.copy_file (a_class.full_file_name, l_fname)
+
+				-- if the class does override, also copy the overriden classes
+			if a_class.does_override then
+				from
+					l_over := a_class.overrides
+					l_over.start
+				until
+					l_over.after
+				loop
+					copy_class (l_over.item, a_location)
+					l_over.forth
+				end
+			end
+		end
+
+	adapt_and_copy_configuration (a_system: CONF_SYSTEM; a_location: STRING) is
+			-- Adapt `a_system' for backup locations and copy the adapted configuration file and assemblies into `a_location'.
+		require
+			a_system_not_void: a_system /= Void
+			a_location_ok: a_location /= Void and then not a_location.is_empty
+		local
+			l_file_name: FILE_NAME
+			l_load: CONF_LOAD
+			l_fact: CONF_COMP_FACTORY
+			l_system: CONF_SYSTEM
+			l_vis: CONF_BACKUP_VISITOR
+		do
+				-- copy original configuration file
+			create l_file_name.make_from_string (a_location)
+			l_file_name.set_file_name (backup_config_file)
+			file_system.copy_file (a_system.file_name, l_file_name)
+
+				-- adapt configuration file
+			create l_fact
+			create l_load.make (l_fact)
+			l_load.retrieve_configuration (l_file_name)
+			if not l_load.is_error then
+				l_system := l_load.last_system
+				create l_vis
+				l_vis.set_backup_directory (create {DIRECTORY_NAME}.make_from_string (a_location))
+				l_system.process (l_vis)
+				create l_file_name.make_from_string (a_location)
+				l_file_name.set_file_name (backup_adapted_config_file)
+				l_system.set_file_name (l_file_name)
+				l_system.store
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

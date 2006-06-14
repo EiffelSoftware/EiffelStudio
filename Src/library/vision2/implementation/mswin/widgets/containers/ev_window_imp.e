@@ -274,6 +274,8 @@ feature -- Status setting
 			end
 			if is_displayed then
 				set_style_and_redraw (new_style)
+			else
+				set_style (new_style)
 			end
 		end
 
@@ -286,6 +288,8 @@ feature -- Status setting
 			new_style := set_flag (new_style, Ws_maximizebox | Ws_minimizebox | Ws_sizebox | ws_dlgframe)
 			if is_displayed then
 				set_style_and_redraw (new_style)
+			else
+				set_style (new_style)
 			end
 		end
 
@@ -301,6 +305,8 @@ feature -- Status setting
 			new_style := set_flag (new_style, ws_dlgframe)
 			if is_displayed then
 				set_style_and_redraw (new_style)
+			else
+				set_style (new_style)
 			end
 		end
 
@@ -315,6 +321,8 @@ feature -- Status setting
 			end
 			if is_displayed then
 				set_style_and_redraw (new_style)
+			else
+				set_style (new_style)
 			end
 		end
 

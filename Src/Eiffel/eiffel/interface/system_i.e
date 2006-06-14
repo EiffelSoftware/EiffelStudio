@@ -1083,7 +1083,7 @@ end
 					else
 							-- do a class_named because this checks for VSCN errors
 						l_class := universe.class_named (root_class_name, l_group)
-						if l_class = Void or else l_group.classes.item (root_class_name) /= l_class then
+						if l_class = Void or else l_group.classes.item (root_class_name) /= l_class.config_class then
 							create vd20
 							vd20.set_class_name (l_root.class_name.as_upper)
 							Error_handler.insert_error (vd20)

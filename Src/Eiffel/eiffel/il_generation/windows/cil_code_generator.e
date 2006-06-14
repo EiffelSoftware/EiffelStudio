@@ -2402,7 +2402,7 @@ feature -- Features info
 							postponed_property_setters.extend (create {PAIR [INTEGER, INTEGER]}.make (feat.feature_id, current_type_id))
 						end
 					end
-					if feat.has_property_getter then
+					if feat.has_property_getter and then not is_override then
 						l_property_name := feat.property_name
 						if is_override then
 							l_property_name := Override_prefix + l_property_name + override_counter.value.out
@@ -2793,6 +2793,24 @@ feature -- Features info
 				n := property_setter_prefix + t.associated_class.name + "." + f.feature_name
 			end
 			uni_string.set_string (n)
+		end
+
+	is_property_getter_generated (f: FEATURE_I; t: CLASS_TYPE): BOOLEAN is
+			-- Is property getter method explicitly generated for `f' in `t'?
+		require
+			f_attached: f /= Void
+			t_attached: t /= Void
+		local
+			n: STRING
+		do
+			if f.has_property_getter then
+				n := il_casing.pascal_casing (t.is_dotnet_name, f.feature_name, {IL_CASING_CONVERSION}.lower_case)
+				if n.is_equal (property_getter_prefix + f.property_name) then
+					Result := f.written_class.is_single and then f.written_in /= t.type.class_id
+				else
+					Result := True
+				end
+			end
 		end
 
 	is_property_setter_generated (f: FEATURE_I; t: CLASS_TYPE): BOOLEAN is
@@ -3322,7 +3340,7 @@ feature -- IL Generation
 						current_module.property_setter_token (parent_type.static_type_id, i.feature_id))
 				end
 			end
-			if f.has_property_getter then
+			if is_property_getter_generated (f, current_class_type) then
 				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
 				generate_property_getter_body (f)
 				method_writer.write_current_body
@@ -3549,11 +3567,11 @@ feature -- IL Generation
 					md_emit.define_method_impl (current_class_token, setter_token (current_type_id,
 						cur_feat.feature_id), setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
-				if inh_feat.has_property_getter then
+				if is_property_getter_generated (inh_feat, parent_type) then
 					md_emit.define_method_impl (current_class_token, current_module.property_getter_token
 						(current_type_id, cur_feat.feature_id), current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
 				end
-				if inh_feat.has_property_setter then
+				if is_property_setter_generated (inh_feat, parent_type) then
 					md_emit.define_method_impl (current_class_token, current_module.property_setter_token
 						(current_type_id, cur_feat.feature_id), current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
@@ -3672,7 +3690,7 @@ feature -- IL Generation
 					start_new_body (last_property_setter_token)
 					generate_property_setter_body (cur_feat)
 					method_writer.write_current_body
-					if inh_feat.has_property_setter then
+					if is_property_setter_generated (inh_feat, parent_type) then
 						md_emit.define_method_impl (current_class_token, last_property_setter_token,
 							current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 					end
@@ -3682,7 +3700,7 @@ feature -- IL Generation
 					start_new_body (last_property_getter_token)
 					generate_property_getter_body (cur_feat)
 					method_writer.write_current_body
-					if inh_feat.has_property_getter then
+					if is_property_getter_generated (inh_feat, parent_type) then
 						md_emit.define_method_impl (current_class_token, last_property_getter_token,
 							current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
 					end

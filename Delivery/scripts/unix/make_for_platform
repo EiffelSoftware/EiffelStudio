@@ -7,7 +7,6 @@ if [ $# -ge 3 ]; then
 	user=$2
 	platform=$3
 	echo $local
-	cp -f make_for_platform ~/
 		# Launch platform specific scripts
 	rsh $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
 	rsh $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"

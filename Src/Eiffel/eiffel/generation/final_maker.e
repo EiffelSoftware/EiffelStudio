@@ -18,7 +18,7 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.put_string ("%
-				%.SUFFIXES: .x .xpp .o%N%N%
+				%.SUFFIXES: .x .xpp .cpp .o%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.cpp.o:%N%
@@ -40,7 +40,7 @@ feature
 		end;
 
 	add_specific_objects is
-			-- Add objects specific to final C code 
+			-- Add objects specific to final C code
 			-- generation
 		local
 			file_name: STRING;
@@ -216,11 +216,11 @@ feature
 			-- Run time with which the application must be linked
 		do
 			create Result.make (256)
-			
+
 			if System.has_dynamic_runtime then
 				Result.append ("-L")
 			end
-			
+
 			Result.append (lib_location)
 
 			if System.has_dynamic_runtime then
@@ -238,7 +238,7 @@ feature
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
 			end
-			
+
 			Result.append (boehm_library)
 		end;
 

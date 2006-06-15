@@ -156,6 +156,28 @@ feature -- Query
 			result_attached: not options_of_name (a_name).is_empty implies Result /= Void
 		end
 
+	frozen has_option (a_name: STRING): BOOLEAN is
+			-- Determines if option `a_name' was specified in the command-line arguments
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			parsed: parsed
+		do
+			Result := option_of_name (a_name) /= Void
+		ensure
+			result_true: Result = (option_of_name (a_name) /= Void)
+		end
+
+	frozen has_loose_argument: BOOLEAN is
+			-- Determines if one or more loose arguments were specified in the command-line arguments
+		require
+			parsed: parsed
+		do
+			Result := not values.is_empty
+		ensure
+			result_true: Result = not values.is_empty
+		end
+
 feature -- Status Report
 
 	case_sensitive: BOOLEAN
@@ -354,9 +376,13 @@ feature {NONE} -- Parsing
 			end
 
 			if successful then
-				validate_arguments
-				if successful then
-					post_process_arguments
+				if not has_option (help_switch) then
+					validate_arguments
+					if successful then
+						post_process_arguments
+					end
+				else
+					display_help := True
 				end
 			end
 			parsed := successful
@@ -500,7 +526,7 @@ feature {NONE} -- Error Handling
 
 feature {NONE} -- Output
 
-	frozen display_usage is
+	display_usage is
 			-- Displays usage information
 		local
 			l_cfg: like command_option_configuration
@@ -527,7 +553,7 @@ feature {NONE} -- Output
 			io.new_line
 		end
 
-	frozen display_logo is
+	display_logo is
 			-- Displays copyright information
 		local
 			l_name: like name
@@ -582,7 +608,7 @@ feature {NONE} -- Output
 			error_messages_unmoved: error_messages.cursor.is_equal (old error_messages.cursor)
 		end
 
-	frozen display_options is
+	display_options is
 			-- Displays configurable options
 		require
 			has_available_options: has_available_options

@@ -302,7 +302,7 @@ feature -- Element change
 				from
 					i := 1
 				until
-					i = l_s_count
+					i > l_s_count
 				loop
 					append_code (s.code (i))
 					i := i + 1

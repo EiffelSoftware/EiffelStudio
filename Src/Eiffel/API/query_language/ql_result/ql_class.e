@@ -70,8 +70,10 @@ feature{NONE} -- Initialization
 			conf_class := a_class
 			class_i ?= a_class
 			class_c := class_i.compiled_representation
+			is_visible := True
 		ensure
 			class_item_set: conf_class = a_class
+			is_visible: is_visible
 		end
 
 feature -- Setting
@@ -86,6 +88,14 @@ feature -- Setting
 		ensure
 			name_internal_set: name_internal /= Void and then name.is_equal (a_name.as_upper)
 			name_set: name.is_equal (a_name.as_upper)
+		end
+
+	set_visible (b: BOOLEAN) is
+			-- Set `is_visible' with `b'.
+		do
+			is_visible := b
+		ensure
+			is_visible_set: is_visible = b
 		end
 
 feature -- Access
@@ -191,6 +201,14 @@ feature -- Access
 			good_result: Result = class_path_marker
 		end
 
+	scope: QL_SCOPE is
+			-- Scope of current
+		do
+			Result := class_scope
+		ensure then
+			good_result: Result = class_scope
+		end
+
 feature -- Status report
 
 	conf_class: CONF_CLASS
@@ -205,13 +223,22 @@ feature -- Status report
 			Result := is_compiled_internal
 		end
 
-	scope: QL_SCOPE is
-			-- Scope of current
-		do
-			Result := class_scope
-		ensure then
-			good_result: Result = class_scope
-		end
+	is_visible: BOOLEAN
+			-- Is current item visible in the level where current is generated?
+			-- For example,
+			--		System
+			--		 |
+			--       +-- Lib1
+			--			  |
+			--			  +-- Lib2
+			--
+			-- and there is a class C in System inherit class B in Lib1 which inherit class A in Lib2: C->B->A
+			-- So from System level, we can not see class A.
+			--
+			-- From application target level, we want to generate ancestor classes of
+			-- a centain class. But some of the ancestor classes are not visible from the application target level,
+			-- in this case, those invisible classes will also be in the result domain, with `is_visible' set to false.
+			-- To filter out invisible classes, use class criterion: is_visible (You can get it from {QL_CLASS_CRITERION_FACTORY}).
 
 feature -- Visit
 
@@ -257,13 +284,13 @@ indexing
                         the terms of the GNU General Public License as published
                         by the Free Software Foundation, version 2 of the License
                         (available at the URL listed under "license" above).
-                        
+
                         Eiffel Software's Eiffel Development Environment is
                         distributed in the hope that it will be useful,	but
                         WITHOUT ANY WARRANTY; without even the implied warranty
                         of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
                         See the	GNU General Public License for more details.
-                        
+
                         You should have received a copy of the GNU General Public
                         License along with Eiffel Software's Eiffel Development
                         Environment; if not, write to the Free Software Foundation,

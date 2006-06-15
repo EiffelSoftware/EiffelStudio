@@ -49,6 +49,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_read_only_criterion, c_is_read_only)
 			agent_table.put (agent new_is_overriden_criterion, c_is_overriden)
 			agent_table.put (agent new_is_overrider_criterion, c_is_overrider)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
 
 			agent_table.put (agent new_path_in_criterion, c_path_in)
 			agent_table.put (agent new_path_is_criterion, c_path_is)
@@ -91,6 +92,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_obsolete, query_language_names.ql_cri_is_obsolete)
 			name_table.put (c_is_precompiled, query_language_names.ql_cri_is_precompiled)
 			name_table.put (c_true, query_language_names.ql_cri_true)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 
 			name_table.put (c_path_in, query_language_names.ql_cri_path_in)
 			name_table.put (c_path_is, query_language_names.ql_cri_path_is)
@@ -289,6 +291,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a class is overrider
 		do
 			create Result.make (agent is_overrider_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_visible_criterion: QL_SIMPLE_CLASS_CRITERION is
+			-- New criterion to test if a class is visible
+		do
+			create Result.make (agent is_visible_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -566,7 +576,8 @@ feature -- Criterion index
 	c_is_partial,
 	c_is_read_only,
 	c_is_overriden,
-	c_is_overrider: INTEGER is unique;
+	c_is_overrider,
+	c_is_visible: INTEGER is unique;
 
 feature{NONE} -- Implementation/Evaluate agent
 
@@ -721,6 +732,12 @@ feature{NONE} -- Implementation/Evaluate agent
 			-- Require compiled: True
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.does_override
+		end
+
+	is_visible_agent (a_item: QL_CLASS): BOOLEAN is
+			-- Agent to test if a class is visible from its original generated level
+		do
+			Result := a_item.is_visible
 		end
 
 indexing

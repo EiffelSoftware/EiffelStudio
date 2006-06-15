@@ -107,6 +107,10 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 				end
 				forth
 			end
+			if Result = Void then
+				Result := query_class_item_from_conf_class (a_class)
+				Result.set_visible (False)
+			end
 			if l_cursor /= Void and then valid_cursor (l_cursor) then
 				go_to (l_cursor)
 			end

@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	interval_tick_actions: ACTION_SEQUENCE [TUPLE] is
+	interval_tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
 			-- Actions to be performaed after every `interval_counter' items have been processed.
 		do
 			Result := interval_tick_actions_cell.item
@@ -43,19 +43,7 @@ feature -- Status report
 
 feature -- Basic operations
 
---	check_interval_tick_actions is
---			-- Check if `interval_tick_actions' should be called,
---			-- and if it should, invoke all actions in `interval_tick_actions'.
---		do
---			if
---				internal_counter \\ interval = 0 and then
---				not interval_tick_actions.is_empty
---			then
---				interval_tick_actions.call ([])
---			end
---		end
-
-	increase_internal_counter is
+	increase_internal_counter (a_item: QL_ITEM) is
 			-- Increase `internal_counter' by 1.
 		local
 			l_counter: like internal_counter
@@ -68,16 +56,16 @@ feature -- Basic operations
 				l_counter \\ interval = 0 and then
 				not interval_tick_actions.is_empty
 			then
-				interval_tick_actions.call ([])
+				interval_tick_actions.call ([a_item])
 			end
 		end
 
 feature{NONE} -- Implementation
 
-	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE]] is
+	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE [QL_ITEM]]] is
 			-- Cell to hold `interval_tick_actions'.
 		once
-			create Result.put (create{ACTION_SEQUENCE[TUPLE]})
+			create Result.put (create{ACTION_SEQUENCE[TUPLE [QL_ITEM]]})
 		ensure
 			result_attached: Result /= Void
 		end

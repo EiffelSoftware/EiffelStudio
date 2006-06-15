@@ -23,25 +23,25 @@ feature -- Scope index
 	local_scope_index: INTEGER is 3
 			-- Scope index for local variable item
 
-	argument_scope_index: INTEGER is 3
+	argument_scope_index: INTEGER is 4
 			-- Scope index for argument item
 
-	assertion_scope_index: INTEGER is 3
+	assertion_scope_index: INTEGER is 5
 			-- Scope index for assertion item
 
-	feature_scope_index: INTEGER is 4
+	feature_scope_index: INTEGER is 6
 			-- Scope index for feature item
 
-	generic_scope_index: INTEGER is 4
+	generic_scope_index: INTEGER is 7
 			-- Scope index for class generic
 
-	class_scope_index: INTEGER is 5
+	class_scope_index: INTEGER is 8
 			-- Scope index for class item
 
-	group_scope_index: INTEGER is 6
+	group_scope_index: INTEGER is 9
 			-- Scope index for group item
 
-	target_scope_index: INTEGER is 7
+	target_scope_index: INTEGER is 10
 			-- Scope index for target item
 
 feature -- Scope names
@@ -54,6 +54,7 @@ feature -- Scope names
 			Result.put (query_language_names.ql_group, group_scope_index)
 			Result.put (query_language_names.ql_class, class_scope_index)
 			Result.put (query_language_names.ql_feature, feature_scope_index)
+			Result.put (query_language_names.ql_generic, generic_scope_index)
 			Result.put (query_language_names.ql_assertion, assertion_scope_index)
 			Result.put (query_language_names.ql_local, local_scope_index)
 			Result.put (query_language_names.ql_argument, argument_scope_index)

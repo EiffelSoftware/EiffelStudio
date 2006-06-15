@@ -103,6 +103,7 @@ feature -- Criterion names
 	ql_cri_is_read_only: STRING is "is_read_only"
 	ql_cri_is_overriden: STRING is "is_overriden"
 	ql_cri_is_overrider: STRING is "is_overrider"
+	ql_cri_is_visible: STRING is "is_visible"
 
 	ql_cri_has_argument: STRING is "has_argument"
 	ql_cri_has_assertion: STRING is "has_assertion"

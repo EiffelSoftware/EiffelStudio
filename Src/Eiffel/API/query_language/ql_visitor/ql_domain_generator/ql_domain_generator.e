@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 		do
-			increase_internal_counter
+			increase_internal_counter (a_item)
 			if observer_count > 0 then
 				set_changed
 				notify (a_item)
@@ -506,9 +506,6 @@ feature{NONE} -- Implementation
 	current_source_domain: QL_DOMAIN
 			-- Current processing source domain
 
-	item_type: QL_ITEM
-			-- Anchor type for items of generated domain
-
 	is_setting_new_criterion: BOOLEAN
 			-- Is setting new criterion	
 
@@ -519,6 +516,9 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+	item_type: QL_ITEM
+			-- Anchor type for items of generated domain
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 
@@ -533,7 +533,7 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 				domain.content.extend (a_item)
 			end
 			if not a_interval_actions_applied then
-				increase_internal_counter
+				increase_internal_counter (a_item)
 			end
 			actions.call ([a_item])
 		end

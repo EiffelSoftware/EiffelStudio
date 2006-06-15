@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffel_matrix_code_generator" uuid="9B77ADD2-9C67-4F5F-8699-50FEA6F23FD1">
+	<description>Eiffel code generator for Eiffel Matrix Pixmaps</description>
+	<target name="eiffel_matrix_code_generator">
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option profile="false" warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<setting name="array_optimization" value="false"/>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="false"/>
+		<setting name="dynamic_runtime" value="false"/>
+		<setting name="executable_name" value="emcgen"/>
+		<setting name="inlining" value="false"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="multithreaded" value="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<cluster name="base_ext" location="C:\development57_eth\framework\base\" recursive="true">
+			<option warning="true">
+			</option>
+		</cluster>
+		<cluster name="eiffel_matrix_code_generator" location="${ISE_SRC}\tools\eiffel_matrix_code_generator\" recursive="true">
+			<option warning="true">
+			</option>
+			<file_rule>
+				<exclude>/frames$</exclude>
+				<exclude>/example$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="ini_reader" location="${EIFFEL_SRC}\framework\file_formats\ini\" recursive="true"/>
+	</target>
+</system>

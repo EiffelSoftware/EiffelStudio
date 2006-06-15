@@ -43,7 +43,9 @@ feature -- Basic Operations
 			not_a_class_name_is_empty: a_class_name /= Void implies not a_class_name.is_empty
 			not_a_output_is_empty: a_output /= Void implies not a_output.is_empty
 		local
+			l_props: LIST [INI_PROPERTY]
 			l_prop: INI_PROPERTY
+			l_cursor: CURSOR
 			l_cn: STRING
 			l_of: STRING
 			l_pw: STRING
@@ -121,25 +123,37 @@ feature -- Basic Operations
 			else
 				l_hgt := default_nan
 			end
-			error_manager.raise_on_error
+			--error_manager.raise_on_error
 
-				-- If successful
-			create l_buffer.make (1024) -- 1mb should be big enough
-			l_buffer.append (a_frame)
+			if error_manager.successful then
+					-- If successful
+				create l_buffer.make (1024) -- 1mb should be big enough
+				l_buffer.append (a_frame)
 
-			process_sections (a_doc.sections)
+				process_sections (a_doc.sections)
 
-				-- Replace tokens
-			l_buffer.replace_substring_all (name_token, l_cn)
-			l_buffer.replace_substring_all (width_token, l_wid)
-			l_buffer.replace_substring_all (height_token, l_hgt)
-			l_buffer.replace_substring_all (pixel_width_token, l_pw)
-			l_buffer.replace_substring_all (pixel_height_token, l_ph)
-			l_buffer.replace_substring_all (implementation_token, text_buffer ({MATRIX_BUFFER_TYPE}.implementation))
-			l_buffer.replace_substring_all (access_token, text_buffer ({MATRIX_BUFFER_TYPE}.access))
+					-- Replace tokens
+				l_props := a_doc.named_properties
+				if not l_props.is_empty then
+					l_cursor := l_props.cursor
+					from l_props.start until l_props.after loop
+						l_prop := l_props.item
+						if l_prop.has_value then
+							l_buffer.replace_substring_all (token_variable (l_prop.name), l_prop.value)
+						else
+							l_buffer.replace_substring_all (token_variable (l_prop.name), "")
+						end
+						l_props.forth
+					end
+					l_props.go_to (l_cursor)
+				end
 
-			generate_output_file (l_of, l_buffer)
-			generated_file_name := l_of
+				l_buffer.replace_substring_all (implementation_token, text_buffer ({MATRIX_BUFFER_TYPE}.implementation))
+				l_buffer.replace_substring_all (access_token, text_buffer ({MATRIX_BUFFER_TYPE}.access))
+
+				generate_output_file (l_of, l_buffer)
+				generated_file_name := l_of
+			end
 		ensure
 			generated_file_name_attached: error_manager.successful implies generated_file_name /= Void
 		end
@@ -404,7 +418,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant Property Names
 
-	class_name_property: STRING is "class_name"
+	class_name_property: STRING is "name"
 	pixel_width_property: STRING is "pixel_width"
 	pixel_height_property: STRING is "pixel_height"
 	width_property: STRING is "width"
@@ -418,15 +432,25 @@ feature {NONE} -- Constant Default Values
 	default_class_name: STRING is "PIXMAP_MATRIX"
 	default_nan: STRING is "NaN"
 
-feature {NONE} -- Constant Tokesn
+feature {NONE} -- Tokens
 
-	name_token: STRING is "${NAME}"
-	width_token: STRING is "${WIDTH}"
-	height_token: STRING is "${HEIGHT}"
-	pixel_width_token: STRING is "${PIXEL_WIDTH}"
-	pixel_height_token: STRING is "${PIXEL_HEIGHT}"
 	access_token: STRING is "${ACCESS}"
 	implementation_token: STRING is "${IMPLEMENTATION}"
+
+	token_variable (a_name: STRING): STRING is
+			-- Returns a token varaible for token name `a_name'
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			create Result.make (a_name.count + 23)
+			Result.append ("${")
+			Result.append (a_name.as_upper)
+			Result.append_character ('}')
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 
 feature {NONE} -- Constant Templates
 

@@ -122,16 +122,12 @@ feature -- Access
 
 	classes: DS_ARRAYED_LIST [CONF_CLASS] is
 			-- All classes from `groups' sorted.
-		local
-			cl: HASH_TABLE [CONF_CLASS, STRING]
-			l_class_i: CLASS_I
 		do
 			Result := classes_internal
 			if not class_sorted then
 				Result.sort (class_sorter)
 				class_sorted := True
 			end
-
 		ensure
 			classes_not_void: Result /= Void
 			sorted: Result.sorted (class_sorter)

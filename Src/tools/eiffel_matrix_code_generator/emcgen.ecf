@@ -23,7 +23,7 @@
 			<option warning="true">
 			</option>
 		</cluster>
-		<cluster name="eiffel_matrix_code_generator" location="${ISE_SRC}\tools\eiffel_matrix_code_generator\" recursive="true">
+		<cluster name="eiffel_matrix_code_generator" location="${EIFFEL_SRC}\tools\eiffel_matrix_code_generator\" recursive="true">
 			<option warning="true">
 			</option>
 			<file_rule>

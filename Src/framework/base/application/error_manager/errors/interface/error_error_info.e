@@ -40,6 +40,9 @@ feature -- Access
 			-- Error code
 		do
 			Result := generating_type
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	context: TUPLE

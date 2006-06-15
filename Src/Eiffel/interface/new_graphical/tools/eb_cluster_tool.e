@@ -125,7 +125,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- pixmap as it may appear in toolbars and menus.
 		do
-			Result := Pixmaps.icon_cluster_symbol
+			Result := pixmaps.icon_pixmaps.tool_clusters_icon
 		end
 
 	show_current_class_cluster_cmd: EB_STANDARD_CMD

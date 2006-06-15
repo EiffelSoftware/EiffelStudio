@@ -82,7 +82,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' on buttons.
 		do
-			Result := Pixmaps.Icon_exec_stop
+			Result := pixmaps.icon_pixmaps.debug_pause_icon
 		end
 
 indexing

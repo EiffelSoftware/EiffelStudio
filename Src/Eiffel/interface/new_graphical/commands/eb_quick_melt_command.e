@@ -73,7 +73,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_quick_compile
+			Result := pixmaps.icon_pixmaps.project_quick_melt_icon
 		end
 
 indexing

@@ -539,7 +539,7 @@ feature {NONE} -- Implementation / Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_run
+			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
 	run_request: RUN_REQUEST

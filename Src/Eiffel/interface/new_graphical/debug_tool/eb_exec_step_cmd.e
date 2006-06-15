@@ -40,7 +40,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
 		do
-			Result := Pixmaps.Icon_exec_step
+			Result := pixmaps.icon_pixmaps.debug_step_over_icon
 		end
 
 	name: STRING is "Exec_step"

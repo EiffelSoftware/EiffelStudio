@@ -111,9 +111,9 @@ feature {NONE} -- Implementation
 		do
 			inspect style
 			when default_style then
-				Result := Pixmaps.icon_new_development_tool
+				Result := pixmaps.icon_pixmaps.new_window_icon
 			when editor_style then
-				Result := Pixmaps.icon_new_editor
+				Result := pixmaps.icon_pixmaps.new_editor_icon
 			when context_style then
 				Result := Pixmaps.icon_new_context_tool
 			end

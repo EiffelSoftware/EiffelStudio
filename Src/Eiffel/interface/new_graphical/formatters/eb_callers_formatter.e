@@ -49,14 +49,14 @@ feature -- Properties
 				inspect
 					flag
 				when {DEPEND_UNIT}.is_in_assignment_flag then
-					Result.put (pixmaps.icon_format_assigners, 1)
-					Result.put (pixmaps.icon_format_assigners, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_assigners_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_assigners_icon, 2)
 				when {DEPEND_UNIT}.is_in_creation_flag then
-					Result.put (pixmaps.icon_format_creator_callers, 1)
-					Result.put (pixmaps.icon_format_creator_callers, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_creators_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_creators_icon, 2)
 				else
-					Result.put (pixmaps.icon_format_feature_callers, 1)
-					Result.put (pixmaps.icon_format_feature_callers, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_callers_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_callers_icon, 2)
 				end
 				internal_symbol := Result
 			end

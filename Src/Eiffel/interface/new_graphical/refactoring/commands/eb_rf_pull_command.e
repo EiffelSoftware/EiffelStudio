@@ -83,7 +83,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := pixmaps.icon_feature
+			Result := pixmaps.icon_pixmaps.refactor_feature_up_icon
 		end
 
 	Name: STRING is "RF_pull"

@@ -27,8 +27,8 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_feature_homonyms, 1)
-			Result.put (Pixmaps.Icon_format_feature_homonyms, 2)
+			Result.put (pixmaps.icon_pixmaps.feature_homonyms_icon, 1)
+			Result.put (pixmaps.icon_pixmaps.feature_homonyms_icon, 2)
 		end
 
 	menu_name: STRING is

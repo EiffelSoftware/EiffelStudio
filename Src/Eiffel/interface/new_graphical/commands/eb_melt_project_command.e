@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_compile
+			Result := pixmaps.icon_pixmaps.project_melt_icon
 		end
 
 	tooltip: STRING is

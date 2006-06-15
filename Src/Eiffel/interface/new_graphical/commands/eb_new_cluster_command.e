@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := pixmaps.icon_new_cluster
+			Result := pixmaps.icon_pixmaps.new_cluster_icon
 		end
 
 	tooltip: STRING is

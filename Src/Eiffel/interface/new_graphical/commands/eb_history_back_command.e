@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := pixmaps.icon_back
+			Result := pixmaps.icon_pixmaps.view_previous_icon
 		end
 
 	tooltip: STRING is

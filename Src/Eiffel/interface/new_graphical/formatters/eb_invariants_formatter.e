@@ -24,7 +24,7 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_invariants, 1)
+			Result.put (pixmaps.icon_pixmaps.class_features_invariant_icon, 1)
 			Result.put (Pixmaps.Icon_format_invariants, 2)
 		end
 

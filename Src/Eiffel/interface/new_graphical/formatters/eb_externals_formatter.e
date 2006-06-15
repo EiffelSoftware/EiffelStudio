@@ -20,8 +20,8 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_externals, 1)
-			Result.put (Pixmaps.Icon_format_externals, 2)
+			Result.put (pixmaps.icon_pixmaps.class_features_external_icon, 1)
+			Result.put (pixmaps.icon_pixmaps.class_features_external_icon, 2)
 		end
 
 	class_cmd: E_SHOW_EXTERNALS

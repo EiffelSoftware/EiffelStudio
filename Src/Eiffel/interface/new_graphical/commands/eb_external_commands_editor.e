@@ -113,7 +113,7 @@ feature -- Status report
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_external_command_icon
+			Result := pixmaps.icon_pixmaps.tool_external_commands_icon
 		end
 
 	tooltip: STRING is

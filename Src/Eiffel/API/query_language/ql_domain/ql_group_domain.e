@@ -157,6 +157,9 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 				end
 				if l_found then
 					Result := class_from_group (a_class, item, l_class_table)
+				else
+					Result := query_class_item_from_conf_class (a_class)
+					Result.set_visible (False)
 				end
 				forth
 			end

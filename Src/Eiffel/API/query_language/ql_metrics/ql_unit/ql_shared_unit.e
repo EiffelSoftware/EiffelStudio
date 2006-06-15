@@ -83,6 +83,7 @@ feature -- Units
 			-- Line unit
 		once
 			create Result.make (query_language_names.ql_line_unit)
+			Result.set_scope (line_scope)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -107,6 +108,7 @@ feature -- Units
 			-- Target unit
 		once
 			create Result.make (query_language_names.ql_assertion_unit)
+			Result.set_scope (assertion_scope)
 		ensure
 			result_attached: Result /= Void
 		end

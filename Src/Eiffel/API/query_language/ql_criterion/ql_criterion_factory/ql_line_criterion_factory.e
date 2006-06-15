@@ -22,7 +22,7 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create name_table.make (10)
+			create agent_table.make (10)
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_is_blank_criterion, c_is_blank)
 			agent_table.put (agent new_is_comment_criterion, c_is_comment)

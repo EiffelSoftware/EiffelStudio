@@ -106,7 +106,7 @@ feature{NONE} -- Implementation
 		local
 			l_clients: LIST [CLASS_C]
 		do
-			l_clients := a_class_c.clients
+			l_clients := a_class_c.clients.twin
 			if not l_clients.is_empty then
 				from
 					l_clients.start

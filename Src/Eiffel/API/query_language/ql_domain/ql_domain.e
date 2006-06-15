@@ -1,5 +1,8 @@
 indexing
-	description: "Object that represents a domain used in Eiffel query language"
+	description: "[
+					Object that represents a domain used in Eiffel query language
+
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -25,6 +28,12 @@ inherit
 		end
 
 	QL_SHARED_SCOPES
+		undefine
+			is_equal,
+			copy
+		end
+
+	QL_UTILITY
 		undefine
 			is_equal,
 			copy

@@ -30,13 +30,13 @@ width       : Matrix width in the number of tiles, *not* pixel.
 height      : Matrix width in the number of tiles, *not* pixel.
               Note: Must be greater than 0!
 
-An optional 'class_name' property can be set to indicate the name of the generate class. This can be set or overridden
+An optional 'name' property can be set to indicate the name of the generate class. This can be set or overridden
 via the '-class' command-line switch.
 
-class_name  : Name of the class to generate
+name        : Name of the class to generate
               Note: If an invalid Eiffel class name is specified the name will be formatted.
 
-2.2 Sections
+2.3 Sections
 ------------
 INI sections are used for two purposes. (1) To prefix generate pixmap access feature names and (2) to skip to 
 the next line on the matrix.
@@ -119,6 +119,20 @@ be used in your frame files to function correctly. The following list details:
   ${PIXEL_HEIGHT}  : Height, in pixels, of a single matrix tile.
   ${WIDTH}         : Width, in tiles, of the matrix.
   ${HEIGHT}        : Height, in tiles, of the matrix.
+
+3.2 Custom Frame Variables
+--------------------------
+It's possible to define custom frame variable that can change between INI configuration files. To do this, simply add a named property
+in the form of:
+
+  name=value
+
+after the require configuration property declaration (such as 'pixel_height', etc.)
+
+Note: name, access, implementation, pixel_width, pixel_height, width and height have special meaning. If you try to set these your
+generated Eiffel class may not appear as it should.
+
+To use the custom variables in your frame file use a ${NAME}, where NAME is the upper-cased version of your property name.
 
 4.0 Matrix Pixmaps
 ------------------

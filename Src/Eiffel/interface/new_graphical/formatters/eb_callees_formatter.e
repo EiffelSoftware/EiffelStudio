@@ -32,14 +32,14 @@ feature -- Access
 				inspect
 					flag
 				when {DEPEND_UNIT}.is_in_assignment_flag then
-					Result.put (pixmaps.icon_assigner_callee_icon, 1)
-					Result.put (pixmaps.icon_assigner_callee_icon, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_assignees_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_assignees_icon, 2)
 				when {DEPEND_UNIT}.is_in_creation_flag then
-					Result.put (pixmaps.icon_creator_callee_icon, 1)
-					Result.put (pixmaps.icon_creator_callee_icon, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_creaters_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_creaters_icon, 2)
 				else
-					Result.put (pixmaps.icon_normal_callee_icon, 1)
-					Result.put (pixmaps.icon_normal_callee_icon, 2)
+					Result.put (pixmaps.icon_pixmaps.feature_callees_icon, 1)
+					Result.put (pixmaps.icon_pixmaps.feature_callees_icon, 2)
 				end
 				internal_symbol := Result
 			end

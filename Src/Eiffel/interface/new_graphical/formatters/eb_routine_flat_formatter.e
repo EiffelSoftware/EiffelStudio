@@ -106,8 +106,8 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_flat, 1)
-			Result.put (Pixmaps.Icon_format_flat, 2)
+			Result.put (pixmaps.icon_pixmaps.view_clickable_feature_icon, 1)
+			Result.put (pixmaps.icon_pixmaps.view_clickable_feature_icon, 2)
 		end
 
 	menu_name: STRING is

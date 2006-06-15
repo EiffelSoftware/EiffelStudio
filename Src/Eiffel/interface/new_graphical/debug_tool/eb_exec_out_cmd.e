@@ -40,7 +40,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
 		do
-			Result := Pixmaps.Icon_step_out
+			Result := pixmaps.icon_pixmaps.debug_step_out_icon
 		end
 
 	name: STRING is "Exec_out"

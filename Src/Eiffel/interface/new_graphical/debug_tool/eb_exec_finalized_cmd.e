@@ -117,7 +117,7 @@ feature -- Properties
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_run
+			Result := pixmaps.icon_pixmaps.debug_run_finalized_icon
 		end
 
 	description: STRING is

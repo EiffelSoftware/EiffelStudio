@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := pixmaps.icon_forth
+			Result :=pixmaps.icon_pixmaps.view_next_icon
 		end
 
 	menu_name: STRING is

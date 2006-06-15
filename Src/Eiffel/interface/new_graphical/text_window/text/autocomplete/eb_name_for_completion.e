@@ -99,7 +99,7 @@ feature -- Query
 	icon: EV_PIXMAP is
 			-- Icon
 		do
-			Result := pixmaps.icon_other_feature
+			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
 		end
 
 	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is

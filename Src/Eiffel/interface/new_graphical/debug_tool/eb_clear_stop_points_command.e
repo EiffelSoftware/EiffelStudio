@@ -73,7 +73,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := Pixmaps.Icon_forget_bkpt
+			Result := pixmaps.icon_forget_bkpt
 		end
 
 	mini_pixmap: EV_PIXMAP is

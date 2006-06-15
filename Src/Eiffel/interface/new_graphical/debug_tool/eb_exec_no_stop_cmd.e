@@ -40,7 +40,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
 		do
-			Result := Pixmaps.Icon_no_stop
+			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon
 		end
 
 	name: STRING is "Exec_no_stop"

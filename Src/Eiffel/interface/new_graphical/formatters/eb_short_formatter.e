@@ -29,8 +29,8 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_contract, 1)
-			Result.put (Pixmaps.Icon_format_contract, 2)
+			Result.put (pixmaps.icon_pixmaps.view_contracts_icon, 1)
+			Result.put (pixmaps.icon_pixmaps.view_contracts_icon, 2)
 		end
 
 	menu_name: STRING is

@@ -20,8 +20,8 @@ feature -- Properties
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
-			Result.put (Pixmaps.Icon_format_onces, 1)
-			Result.put (Pixmaps.Icon_format_onces, 2)
+			Result.put (pixmaps.icon_pixmaps.class_features_once_icon, 1)
+			Result.put (pixmaps.icon_pixmaps.class_features_once_icon, 2)
 		end
 
 	menu_name: STRING is

@@ -20,6 +20,9 @@ elif [ "$ISE_PLATFORM" = "hpux-11" ]; then
 elif [ "$ISE_PLATFORM" = "alpha" ]; then
 	cp scripts/makefile.dec .
 	make -f makefile.dec
+elif echo "$ISE_PLATFORM" | grep "openbsd" >/dev/null 2>&1; then
+	cp scripts/makefile.gcc .
+	make -f makefile.gcc
 elif echo "$ISE_PLATFORM" | grep "freebsd" >/dev/null 2>&1; then
 	cp scripts/makefile.gcc .
 	make -f makefile.gcc

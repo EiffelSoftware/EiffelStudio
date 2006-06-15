@@ -14,7 +14,7 @@ class
 inherit
 	STRING_GENERAL
 		redefine
-			copy, is_equal, out
+			copy, is_equal, out, append
 		end
 
 	INDEXABLE [CHARACTER, INTEGER]
@@ -1288,27 +1288,29 @@ feature -- Element change
 			end
 		end
 
-	append (s: STRING) is
+	append (s: STRING_GENERAL) is
 			-- Append a copy of `s' at end.
-		require
-			argument_not_void: s /= Void
 		local
 			l_count, l_s_count, l_new_size: INTEGER
+			l_s8: STRING
 		do
-			l_s_count := s.count
-			if l_s_count > 0 then
-				l_count := count
-				l_new_size := l_s_count + l_count
-				if l_new_size > capacity then
-					resize (l_new_size + additional_space)
+			if same_type (s) then
+				l_s8 ?= s
+				check l_s8_not_void: l_s8 /= Void end
+				l_s_count := l_s8.count
+				if l_s_count > 0 then
+					l_count := count
+					l_new_size := l_s_count + l_count
+					if l_new_size > capacity then
+						resize (l_new_size + additional_space)
+					end
+					area.copy_data (l_s8.area, 0, l_count, l_s_count)
+					count := l_new_size
+					internal_hash_code := 0
 				end
-				area.copy_data (s.area, 0, l_count, l_s_count)
-				count := l_new_size
-				internal_hash_code := 0
+			else
+				Precursor {STRING_GENERAL} (s)
 			end
-		ensure
-			new_count: count = old count + old s.count
-			appended: elks_checking implies is_equal (old twin + old s.twin)
 		end
 
 	infix "+" (s: STRING): like Current is
@@ -2225,12 +2227,8 @@ feature {NONE} -- Empty string implementation
 
 	frozen set_internal_hash_code (v: like internal_hash_code) is
 			-- Set `internal_hash_code' with `v'.
-		require
-			v_nonnegative: v >= 0
 		do
 			internal_hash_code := v
-		ensure
-			internal_hash_code_set: internal_hash_code = v
 		end
 
 feature {NONE} -- Implementation

@@ -88,6 +88,15 @@ feature {STRING_HANDLER} -- Settings
 			new_count: count = number
 		end
 
+	set_internal_hash_code (v: like internal_hash_code) is
+			-- Set `internal_hash_code' with `v'.
+		require
+			v_nonnegative: v >= 0
+		deferred
+		ensure
+			internal_hash_code_set: internal_hash_code = v
+		end
+
 feature -- Status report
 
 	count: INTEGER is
@@ -274,6 +283,38 @@ feature -- Element change
 			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
 		end
 
+	append (s: STRING_GENERAL) is
+			-- Append a copy of `s' at end.
+		require
+			argument_not_void: s /= Void
+			compatible_strings: is_string_8 implies s.is_valid_as_string_8
+		local
+			l_count, l_s_count, l_new_size: INTEGER
+			i: INTEGER
+		do
+			l_s_count := s.count
+			if l_s_count > 0 then
+				l_count := count
+				l_new_size := l_s_count + l_count
+				if l_new_size > capacity then
+					resize (l_new_size)
+				end
+				from
+					i := 1
+				until
+					i = l_s_count
+				loop
+					append_code (s.code (i))
+					i := i + 1
+				end
+				set_count (l_new_size)
+				set_internal_hash_code (0)
+			end
+		ensure
+			new_count: count = old count + old s.count
+			appended: elks_checking implies to_string_32.is_equal (old to_string_32.twin + old s.to_string_32.twin)
+		end
+
 feature -- Removal
 
 	remove (i: INTEGER) is
@@ -304,6 +345,11 @@ feature {NONE} -- Assertion helper
 			-- Are ELKS checkings verified? Must be True when changing implementation of STRING_GENERAL or descendant.
 
 feature {NONE} -- Implementation
+
+	internal_hash_code: INTEGER is
+			--
+		deferred
+		end
 
 	string_searcher: STRING_SEARCHER is
 			-- Facilities to search string in another string.

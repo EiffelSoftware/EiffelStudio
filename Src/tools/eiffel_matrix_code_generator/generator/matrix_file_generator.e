@@ -78,52 +78,41 @@ feature -- Basic Operations
 			end
 
 			l_prop := a_doc.property_of_name (pixel_width_property, True)
-			if l_prop /= Void then
-				if l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
-					l_pw := l_prop.value
-				else
-					error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_width_property]), False)
-					l_pw := default_nan
-				end
+			if l_prop /= Void and then l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
+				l_pw := l_prop.value
 			else
+				error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_width_property]), False)
 				l_pw := default_nan
 			end
 			l_prop := a_doc.property_of_name (pixel_height_property, True)
-			if l_prop /= Void then
-				if l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
-					l_ph := l_prop.value
-				else
-					error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_height_property]), False)
-					l_ph := default_nan
-				end
+			if l_prop /= Void and then l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
+				l_ph := l_prop.value
 			else
+				error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([pixel_height_property]), False)
 				l_ph := default_nan
 			end
 			l_prop := a_doc.property_of_name (width_property, True)
-			if l_prop /= Void then
-				if l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
-					l_wid := l_prop.value
-					width := l_wid.to_integer
-				else
-					error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([width_property]), False)
-					l_wid := default_nan
-				end
+			if l_prop /= Void and then l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
+				l_wid := l_prop.value
+				width := l_wid.to_integer
 			else
+				error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([width_property]), False)
 				l_wid := default_nan
 			end
 			l_prop := a_doc.property_of_name (height_property, True)
-			if l_prop /= Void then
-				if l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
-					l_hgt := l_prop.value
-					height := l_hgt.to_integer
-				else
-					error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([height_property]), False)
-					l_hgt := default_nan
-				end
+			if l_prop /= Void and then l_prop.value.is_integer and then l_prop.value.to_integer > 0 then
+				l_hgt := l_prop.value
+				height := l_hgt.to_integer
 			else
+				error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([height_property]), False)
 				l_hgt := default_nan
 			end
-			--error_manager.raise_on_error
+			if a_doc.property_of_name (access_property, True) /= Void then
+				error_manager.set_last_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([access_property]), False)
+			end
+			if a_doc.property_of_name (implementation_property, True) /= Void then
+				error_manager.set_last_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([implementation_property]), False)
+			end
 
 			if error_manager.successful then
 					-- If successful
@@ -423,6 +412,8 @@ feature {NONE} -- Constant Property Names
 	pixel_height_property: STRING is "pixel_height"
 	width_property: STRING is "width"
 	height_property: STRING is "height"
+	access_property: STRING is "access"
+	implementation_property: STRING is "implementation"
 
 	continue_mark: CHARACTER is '@'
 			-- Character mark on sections to indication a continuation

@@ -35,35 +35,35 @@ feature {NONE} -- Implementation
 		do
 			if not a_path.is_empty then
 				if a_group.is_override then
-					Result := pixmaps.icon_override_folder_symbol
+					Result := pixmaps.icon_pixmaps.folder_override_subcluster_icon
 				elseif a_group.is_cluster then
-					Result := pixmaps.icon_folder_symbol
+					Result := pixmaps.icon_pixmaps.folder_subcluster_icon
 				elseif a_group.is_assembly then
-					Result := pixmaps.icon_assembly_namespace
+					Result := pixmaps.icon_pixmaps.folder_assembly_icon
 				else
 					check should_not_reach: false end
 				end
 			else
 				if a_group.is_override then
 					if a_group.is_readonly then
-						Result := Pixmaps.icon_read_only_override
+						Result := pixmaps.icon_pixmaps.folder_override_cluster_readonly_icon
 					else
-						Result := Pixmaps.icon_override_symbol
+						Result := pixmaps.icon_pixmaps.folder_override_cluster_icon
 					end
 				elseif a_group.is_cluster then
 					if a_group.is_readonly then
-						Result := Pixmaps.Icon_read_only_cluster
+						Result := pixmaps.icon_pixmaps.folder_cluster_readonly_icon
 					else
-						Result := Pixmaps.Icon_cluster_symbol
+						Result := pixmaps.icon_pixmaps.folder_cluster_icon
 					end
 				elseif a_group.is_library then
 					if a_group.is_readonly then
-						Result := Pixmaps.icon_read_only_library
+						Result := pixmaps.icon_pixmaps.folder_library_readonly_icon
 					else
-						Result := Pixmaps.icon_library_symbol
+						Result := pixmaps.icon_pixmaps.folder_library_icon
 					end
 				elseif a_group.is_assembly then
-					Result := Pixmaps.icon_read_only_assembly
+					Result := pixmaps.icon_pixmaps.folder_assembly_icon
 				else
 					check should_not_reach: false end
 				end
@@ -77,6 +77,7 @@ feature {NONE} -- Implementation
 		require
 			a_class_not_void: a_class /= Void
 		local
+			l_compiled_class: CLASS_C
 			l_conf_class: CONF_CLASS
 			l_classi: CLASS_I
 			l_comp: CLASS_C
@@ -92,14 +93,23 @@ feature {NONE} -- Implementation
 				-- 3 compiled deferred
 				-- 4 overriden
 				-- 5 does_override
-				--				
+				-- 6 frozen
+				-- 7 expanded			
 			if a_class.is_read_only then
 				l_pixcode := l_pixcode | 0x1
 			end
 
+			if a_class.is_compiled then
+				l_compiled_class := a_class.compiled_class
+			end
+
 			if not l_conf_class.does_override and not l_conf_class.is_overriden and a_class.is_compiled then
-				if a_class.compiled_class.is_deferred then
+				if l_compiled_class.is_deferred then
 					l_pixcode := l_pixcode | 0x4
+				elseif l_compiled_class.is_expanded then
+					l_pixcode := l_pixcode | 0x40
+				elseif l_compiled_class.is_frozen then
+					l_pixcode := l_pixcode | 0x20
 				else
 					l_pixcode := l_pixcode | 0x2
 				end
@@ -137,31 +147,50 @@ feature {NONE} -- Implementation
 
 				-- add +1 to avoid problem with 0 value key
 			l_pixcode := l_pixcode + 1
-			create l_map.make (18)
-			l_map.force (pixmaps.icon_class_symbol, 0x2+1)
-			l_map.force (pixmaps.icon_read_only_class_color, 0x3+1)
-			l_map.force (pixmaps.icon_class_symbol_gray, 0+1)
-			l_map.force (pixmaps.icon_read_only_class_gray, 0x1+1)
-			l_map.force (pixmaps.icon_deferred_class_symbol_color, 0x4+1)
-			l_map.force (pixmaps.icon_deferred_read_only_class_color, 0x5+1)
-			l_map.force (pixmaps.icon_overriden_class, 0xA+1)
-			l_map.force (pixmaps.icon_overriden_light_class, 0xB+1)
-			l_map.force (pixmaps.icon_overriden_grey_class, 0x8+1)
-			l_map.force (pixmaps.icon_overriden_light_grey_class, 0x9+1)
-			l_map.force (pixmaps.icon_overriden_deferred_class, 0xC+1)
-			l_map.force (pixmaps.icon_overriden_deferred_light_class, 0xD+1)
-			l_map.force (pixmaps.icon_overrider_class, 0x12+1)
-			l_map.force (pixmaps.icon_overrider_light_class, 0x13+1)
-			l_map.force (pixmaps.icon_overrider_grey_class, 0x10+1)
-			l_map.force (pixmaps.icon_overrider_light_grey_class, 0x11+1)
-			l_map.force (pixmaps.icon_overrider_deferred_class, 0x14+1)
-			l_map.force (pixmaps.icon_overrider_deferred_light_class, 0x15+1)
+--			create l_map.make (18)
+--			l_map.force (pixmaps.icon_pixmaps.class_normal_icon, 0x2+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_frozen_icon, 0x22+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_readonly_icon, 0x3+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon, 0x23+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_uncompiled_icon, 0+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_uncompiled_readonly_icon, 0x1+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_deferred_icon, 0x4+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_deferred_readonly_icon, 0x5+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_normal_icon, 0xA+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_frozen_icon, 0x2A+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_readonly_icon, 0xB+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_frozen_readonly_icon, 0x2B+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_icon, 0x8+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_readonly_icon, 0x9+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_deferred_icon, 0xC+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_overriden_deferred_readonly_icon, 0xD+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_normal_icon, 0x12+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_frozen_icon, 0x32+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_readonly_icon, 0x13+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_frozen_readonly_icon, 0x33+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_uncompiled_icon, 0x10+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_uncompiled_readonly_icon, 0x11+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_deferred_icon, 0x14+1)
+--			l_map.force (pixmaps.icon_pixmaps.class_override_deferred_readonly_icon, 0x15+1)
+--
+--			l_map.force (pixmaps.icon_pixmaps.expanded_normal_icon, 0x42+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_readonly_icon, 0x43+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_uncompiled_icon, 0x40+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_uncompiled_readonly_icon, 0x41+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_overriden_normal_icon, 0x4A+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_overriden_readonly_icon, 0x4B+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_icon, 0x48+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_readonly_icon, 0x49+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_override_normal_icon, 0x52+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_override_readonly_icon, 0x53+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_icon, 0x50+1)
+--			l_map.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_readonly_icon, 0x51+1)
 
 			check
-				correct_pixcode: l_map.has (l_pixcode)
+				correct_pixcode: class_icon_map.has (l_pixcode)
 			end
 
-			Result := l_map.item (l_pixcode)
+			Result := class_icon_map.item (l_pixcode)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -177,60 +206,60 @@ feature {NONE} -- Implementation
 			if l_name = Void or else l_name.is_empty then
 				if a_feature.is_attribute then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_obsolete_attribute
+						Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon
 					elseif a_feature.is_frozen then
-						Result := Pixmaps.Icon_frozen_attribute
+						Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon
 					else
-						Result := Pixmaps.Icon_attributes
+						Result := pixmaps.icon_pixmaps.feature_attribute_icon
 					end
 				elseif a_feature.is_deferred then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_deferred_obsolete_feature
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon
 					else
-						Result := Pixmaps.Icon_deferred_feature
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon
 					end
 				elseif a_feature.is_once or else a_feature.is_constant then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_once_obsolete_objects
+						Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon
 					elseif a_feature.is_frozen then
-						Result := Pixmaps.Icon_once_frozen_objects
+						Result := pixmaps.icon_pixmaps.feature_frozen_once_icon
 					else
-						Result := Pixmaps.Icon_once_objects
+						Result := pixmaps.icon_pixmaps.feature_once_icon
 					end
 				elseif a_feature.is_external then
 					if a_feature.associated_class = Void or else not a_feature.associated_class.is_true_external then
 						if a_feature.is_obsolete then
-							Result := Pixmaps.Icon_external_obsolete_feature
+							Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon
 						elseif a_feature.is_frozen then
-							Result := Pixmaps.Icon_external_frozen_feature
+							Result := pixmaps.icon_pixmaps.feature_frozen_external_icon
 						else
-							Result := Pixmaps.Icon_external_feature
+							Result := pixmaps.icon_pixmaps.feature_external_icon
 						end
 					end
 				end
 				if Result = Void then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_obsolete_feature
+						Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon
 					elseif a_feature.is_frozen then
-						Result := Pixmaps.Icon_frozen_feature
+						Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon
 					else
-						Result := Pixmaps.Icon_feature
+						Result := pixmaps.icon_pixmaps.feature_routine_icon
 					end
 				end
 			else
 				if a_feature.is_deferred then
 					if a_feature.is_obsolete then
-						Result := Pixmaps.icon_deferred_obsolete_assigner
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon
 					else
-						Result := Pixmaps.icon_deferred_assigner
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon
 					end
 				else
 					if a_feature.is_obsolete then
-						Result := Pixmaps.Icon_obsolete_assigner
+						Result := pixmaps.icon_pixmaps.feature_obsolete_assigner_icon
 					elseif a_feature.is_frozen then
-						Result := Pixmaps.Icon_frozen_assigner
+						Result := pixmaps.icon_pixmaps.feature_frozen_assigner_icon
 					else
-						Result := Pixmaps.Icon_assigner
+						Result := pixmaps.icon_pixmaps.feature_assigner_icon
 					end
 				end
 			end
@@ -238,6 +267,54 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	class_icon_map: HASH_TABLE [EV_PIXMAP, INTEGER] is
+			-- Class icon map
+		once
+			create Result.make (37)
+			Result.force (pixmaps.icon_pixmaps.class_normal_icon, 0x2+1)
+			Result.force (pixmaps.icon_pixmaps.class_frozen_icon, 0x21+1)
+			Result.force (pixmaps.icon_pixmaps.class_readonly_icon, 0x3+1)
+			Result.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon, 0x22+1)
+			Result.force (pixmaps.icon_pixmaps.class_uncompiled_icon, 0+1)
+			Result.force (pixmaps.icon_pixmaps.class_uncompiled_readonly_icon, 0x1+1)
+			Result.force (pixmaps.icon_pixmaps.class_deferred_icon, 0x4+1)
+			Result.force (pixmaps.icon_pixmaps.class_deferred_readonly_icon, 0x5+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_normal_icon, 0xA+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_frozen_icon, 0x29+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_readonly_icon, 0xB+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_frozen_readonly_icon, 0x2A+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_icon, 0x8+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_readonly_icon, 0x9+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_icon, 0xC+1)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_readonly_icon, 0xD+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_normal_icon, 0x12+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_frozen_icon, 0x31+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_readonly_icon, 0x13+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_frozen_readonly_icon, 0x32+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_uncompiled_icon, 0x10+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_uncompiled_readonly_icon, 0x11+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_deferred_icon, 0x14+1)
+			Result.force (pixmaps.icon_pixmaps.class_override_deferred_readonly_icon, 0x15+1)
+
+			Result.force (pixmaps.icon_pixmaps.expanded_normal_icon, 0x42+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_readonly_icon, 0x43+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_icon, 0x40+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_readonly_icon, 0x41+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_normal_icon, 0x4A+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_readonly_icon, 0x4B+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_icon, 0x48+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_overriden_uncompiled_readonly_icon, 0x49+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_normal_icon, 0x52+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_readonly_icon, 0x53+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_icon, 0x50+1)
+			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_readonly_icon, 0x51+1)
+		ensure
+			result_attached: Result /= VOid
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

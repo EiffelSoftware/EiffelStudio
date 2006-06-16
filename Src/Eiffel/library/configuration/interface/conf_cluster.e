@@ -550,7 +550,7 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded of this cluster itself.
 
-	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
+	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
 
 feature {NONE} -- Implementation

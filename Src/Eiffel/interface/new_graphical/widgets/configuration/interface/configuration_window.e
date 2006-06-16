@@ -568,7 +568,7 @@ feature {NONE} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: CONF_HASH_TABLE [STRING, STRING]
+			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
 			l_item: TEXT_PROPERTY [STRING]
 			l_btn: EV_BUTTON
@@ -654,7 +654,7 @@ feature {NONE} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: CONF_HASH_TABLE [STRING, STRING]
+			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
 			l_item: TEXT_PROPERTY [STRING]
 			l_btn: EV_BUTTON
@@ -1504,11 +1504,11 @@ feature {NONE} -- Implementation
 			l_over: ARRAYED_LIST [CONF_GROUP]
 			l_over_list: ARRAYED_LIST [STRING_32]
 			l_over_dialog: OVERRIDE_DIALOG
-			l_rename_prop: DIALOG_PROPERTY [CONF_HASH_TABLE [STRING, STRING]]
-			l_mapping_prop: DIALOG_PROPERTY [CONF_HASH_TABLE [STRING, STRING]]
+			l_rename_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_mapping_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_class_opt_prop: DIALOG_PROPERTY [HASH_TABLE [CONF_OPTION, STRING]]
 			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]]
+			l_vis_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_expanded: HASH_TABLE [BOOLEAN, STRING]
@@ -2687,7 +2687,7 @@ feature {NONE} -- Validation and warning generation
 
 feature {NONE} -- Output generation
 
-	output_renaming (a_table: CONF_HASH_TABLE [STRING, STRING]): STRING_32 is
+	output_renaming (a_table: EQUALITY_HASH_TABLE [STRING, STRING]): STRING_32 is
 			-- Generate a text representation of `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -2729,7 +2729,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_visible (a_visible: CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]): STRING_32 is
+	output_visible (a_visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]): STRING_32 is
 			-- Generate a text representation for `a_visible'.
 		do
 			if a_visible /= Void and then not a_visible.is_empty then

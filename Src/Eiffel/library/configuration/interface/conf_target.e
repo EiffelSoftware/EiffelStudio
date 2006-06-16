@@ -1392,7 +1392,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this target itself.
 
-	internal_mapping: CONF_HASH_TABLE [STRING, STRING]
+	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
 	changeable_internal_options: like internal_options is
@@ -1427,7 +1427,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: CONF_HASH_TABLE [STRING, STRING]
+	internal_variables: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation

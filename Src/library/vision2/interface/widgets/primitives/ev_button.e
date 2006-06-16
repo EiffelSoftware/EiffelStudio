@@ -16,7 +16,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_BUTTON
 
 inherit
@@ -53,9 +53,9 @@ create
 	default_create,
 	make_with_text,
 	make_with_text_and_action
-	
+
 feature {NONE} -- Initialization
-	
+
 	make_with_text_and_action
 		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Create with 'a_text' as `text' and `an_action' in `select_actions'.
@@ -100,13 +100,13 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 			-- to a default push button.
 		require
 			not_destroyed: not is_destroyed
-			is_default_push_button: is_default_push_button
+--			is_default_push_button: is_default_push_button
 		do
 			implementation.disable_default_push_button
 		ensure
 			is_not_default_push_button: not is_default_push_button
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

@@ -103,10 +103,10 @@ feature -- Access, stored in configuration file
 
 feature -- Access, stored in configuration file.
 
-	debugs: CONF_HASH_TABLE [BOOLEAN, STRING]
+	debugs: EQUALITY_HASH_TABLE [BOOLEAN, STRING]
 			-- Debug settings.
 
-	warnings: CONF_HASH_TABLE [BOOLEAN, STRING]
+	warnings: EQUALITY_HASH_TABLE [BOOLEAN, STRING]
 			-- Warning settings.
 
 feature -- Access queries

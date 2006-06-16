@@ -67,7 +67,7 @@ feature -- Access
 		deferred
 		end
 
-	visible: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]] is
+	visible: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]] is
 			-- The visible features.
 		deferred
 		end
@@ -185,7 +185,7 @@ feature -- Access
 	visible_level: VISIBLE_I is
 			-- Visible level
 		local
-			l_vis: CONF_HASH_TABLE [STRING, STRING]
+			l_vis: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]

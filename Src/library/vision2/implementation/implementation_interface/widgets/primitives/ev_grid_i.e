@@ -3889,9 +3889,9 @@ feature {ANY}
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-					check
-						viewport_x_position_is_zero:  is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width implies viewport_x_offset = 0
-					end
+--					check
+--						viewport_x_position_is_zero:  is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width implies viewport_x_offset = 0
+--					end
 					horizontal_scroll_bar.hide
 					update_scroll_bar_spacer
 				end

@@ -6,8 +6,8 @@ indexing
 	keywords: "select, selected, selectable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_SELECTABLE
 
 inherit
@@ -15,7 +15,7 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -48,11 +48,11 @@ feature -- Status setting
 		do
 			implementation.enable_select
 		ensure
-			is_selected: is_selected
+--			is_selected: is_selected
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_SELECTABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 

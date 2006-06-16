@@ -7,7 +7,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]]
+	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
 		redefine
 			initialize
 		end
@@ -134,7 +134,7 @@ feature {NONE} -- Agents
 	remove is
 			-- Remove `current_class' or `current_feature'.
 		local
-			l_features: CONF_HASH_TABLE [STRING, STRING]
+			l_features: EQUALITY_HASH_TABLE [STRING, STRING]
 		do
 			if current_feature /= Void then
 				l_features := value.item (current_class).features
@@ -177,7 +177,7 @@ feature {NONE} -- Agents
 			-- Add a new feature.
 		local
 			l_name, l_vis_name: STRING
-			l_feats: CONF_HASH_TABLE [STRING, STRING]
+			l_feats: EQUALITY_HASH_TABLE [STRING, STRING]
 		do
 			if current_class /= Void and then value /= Void and then value.has (current_class) then
 				l_name := original_name.text.as_lower
@@ -212,8 +212,8 @@ feature {NONE} -- Implementation
 		local
 			l_sort: DS_ARRAYED_LIST [STRING]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
-			l_feat: CONF_HASH_TABLE [STRING, STRING]
+			l_rena: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_feat: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_class, l_feat_name, l_vis_name: STRING
 			l_cur_class: BOOLEAN
 		do

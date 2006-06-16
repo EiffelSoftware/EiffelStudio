@@ -383,7 +383,7 @@ feature -- File Properties
 		do
 			if not retried then
 				Result := True
-				if file_loaded then
+				if file_loaded and file_exists then
 					Result := date_of_file_when_loaded = file_date_ticks
 				end
 				file_date_already_checked := True
@@ -1496,6 +1496,7 @@ feature -- Implementation
 			-- Retrieve file last modified date in the number of ticks
 		require
 			file_loaded: file_loaded
+			file_exists: file_exists
 		local
 			l_file: RAW_FILE
 		do
@@ -1505,11 +1506,23 @@ feature -- Implementation
 			end
 		end
 
+	file_exists: BOOLEAN is
+			-- Retrieve file last modified date in the number of ticks
+		require
+			file_loaded: file_loaded
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (file_name.string)
+			Result := l_file.exists
+		end
+
 	continue_editing is
 			-- Continue editing document
 			-- Note: Called from the reload request prompt
 		require
 			file_loaded: file_loaded
+			file_exists: file_exists
 			text_is_fully_loaded: text_is_fully_loaded
 		do
 			text_displayed.set_changed (True, False)

@@ -162,7 +162,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := Pixmaps.icon_bkpt_info
+			Result := pixmaps.icon_pixmaps.tool_breakpoints_icon
 		end
 
 feature {NONE} -- Commands

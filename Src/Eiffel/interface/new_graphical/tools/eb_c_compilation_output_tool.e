@@ -94,9 +94,9 @@ feature{NONE} -- Initialization
 			l_ev_tool_bar_1.disable_vertical_button_style
 
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
-			open_editor_btn.set_pixmap (icon_open_file)
+			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
-			save_output_btn.set_pixmap (icon_save)
+			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 			w_code_btn.set_text (interface_names.e_w_code)
@@ -107,7 +107,7 @@ feature{NONE} -- Initialization
 
 			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)
 
-			clear_output_btn.set_pixmap (Icon_recycle_bin)
+			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 

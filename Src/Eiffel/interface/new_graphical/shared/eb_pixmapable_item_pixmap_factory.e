@@ -35,9 +35,17 @@ feature {NONE} -- Implementation
 		do
 			if not a_path.is_empty then
 				if a_group.is_override then
-					Result := pixmaps.icon_pixmaps.folder_override_subcluster_icon
+					if a_group.is_readonly then
+						Result := pixmaps.icon_pixmaps.folder_override_blank_readonly_icon
+					else
+						Result := pixmaps.icon_pixmaps.folder_override_blank_icon
+					end
 				elseif a_group.is_cluster then
-					Result := pixmaps.icon_pixmaps.folder_subcluster_icon
+					if a_group.is_readonly then
+						Result := pixmaps.icon_pixmaps.folder_blank_readonly_icon
+					else
+						Result := pixmaps.icon_pixmaps.folder_blank_icon
+					end
 				elseif a_group.is_assembly then
 					Result := pixmaps.icon_pixmaps.folder_assembly_icon
 				else

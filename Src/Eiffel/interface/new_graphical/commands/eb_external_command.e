@@ -689,7 +689,7 @@ feature {NONE} -- Implementation
 			create wd.make_with_text ("Working directory:")
 			wd.align_text_left
 			create dir_btn.default_create
-			dir_btn.set_pixmap (Icon_open_file)
+			dir_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			dir_btn.select_actions.extend (agent create_directory_dialog)
 			hb1.extend (working_directory_field)
 			hb1.extend (dir_btn)
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cb)
 			dialog.set_title (Interface_names.t_External_command)
-			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.tool_external_commands_icon)
 			dialog.set_maximum_height (dialog.minimum_height)
 			dialog.set_default_push_button (okb)
 			dialog.set_default_cancel_button (cb)

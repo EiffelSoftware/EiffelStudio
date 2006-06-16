@@ -111,19 +111,19 @@ feature {NONE} -- Initialization
 				l_target := Universe.target
 
 					-- sort clusters
-				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_clusters_symbol)
+				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
 				build_group_tree (manager.clusters, cluster_header)
 
 					-- sort overrides
-				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_overrides_symbol)
+				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
 				build_group_tree (manager.overrides, override_header)
 
 					-- sort libraries
-				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_libraries_symbol)
+				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_pixmaps.top_level_folder_library_icon)
 				build_group_tree (manager.libraries, library_header)
 
 					-- sort assemblies
-				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_assemblies_symbol)
+				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 				build_group_tree (manager.assemblies, assembly_header)
 
 				restore_expanded_state

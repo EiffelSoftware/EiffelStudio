@@ -161,7 +161,7 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_padding (4)
 			l_ev_vertical_box_1.set_border_width (4)
 
-			del_cmd_btn.set_pixmap (icon_trash_can_color)
+			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
@@ -174,7 +174,7 @@ feature{NONE} -- Initialization
 			output_text.set_font (preferences.editor_data.font)
 			output_text.disable_edit
 
-			terminate_btn.set_pixmap (Pixmaps.icon_exec_quit)
+			terminate_btn.set_pixmap (pixmaps.icon_pixmaps.debug_stop_icon)
 			output_text.drop_actions.extend (agent drop_class)
 			output_text.drop_actions.extend (agent drop_feature)
 			output_text.drop_actions.extend (agent drop_cluster)
@@ -185,7 +185,7 @@ feature{NONE} -- Initialization
 
 			edit_cmd_detail_btn.set_text ("")
 			edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
-			edit_cmd_detail_btn.set_pixmap (icon_save)
+			edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
@@ -195,7 +195,7 @@ feature{NONE} -- Initialization
 			state_label.drop_actions.extend (agent drop_cluster)
 			state_label.drop_actions.extend (agent drop_breakable)
 
-			run_btn.set_pixmap (Pixmaps.icon_run)
+			run_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
 			run_btn.set_tooltip (f_start_command_button)
 			run_btn.select_actions.extend (agent on_run_process)
 

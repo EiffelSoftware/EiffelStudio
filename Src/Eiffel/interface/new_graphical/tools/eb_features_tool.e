@@ -110,7 +110,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := Pixmaps.Icon_features
+			Result := pixmaps.icon_pixmaps.tool_features_icon
 		end
 
 feature -- Behavior

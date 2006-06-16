@@ -1029,10 +1029,10 @@ feature {NONE} -- Implementation
 			create l_tree
 			l_frame.extend (l_tree)
 
-			add_groups (current_target.internal_clusters, l_tree, group_cluster_tree, pixmaps.icon_clusters_symbol)
-			add_groups (current_target.internal_overrides, l_tree, group_override_tree, pixmaps.icon_overrides_symbol)
-			add_groups (current_target.internal_libraries, l_tree, group_library_tree, pixmaps.icon_libraries_symbol)
-			add_groups (current_target.internal_assemblies, l_tree, group_assembly_tree, pixmaps.icon_assemblies_symbol)
+			add_groups (current_target.internal_clusters, l_tree, group_cluster_tree, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
+			add_groups (current_target.internal_overrides, l_tree, group_override_tree, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
+			add_groups (current_target.internal_libraries, l_tree, group_library_tree, pixmaps.icon_pixmaps.top_level_folder_library_icon)
+			add_groups (current_target.internal_assemblies, l_tree, group_assembly_tree, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 			if current_target.internal_precompile /= Void then
 				create l_ht.make (1)
 				l_ht.force (current_target.precompile, current_target.precompile.name)

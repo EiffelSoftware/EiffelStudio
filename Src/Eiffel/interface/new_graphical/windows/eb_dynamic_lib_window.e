@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 
 				-- Create `open_cmd'.
 			create open_cmd.make
-			open_cmd.set_pixmap (Pixmaps.Icon_open_file)
+			open_cmd.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			open_cmd.set_tooltip (Interface_names.e_Open_dynamic_lib_definition)
 			open_cmd.set_menu_name (Interface_names.m_Open_new)
 			open_cmd.set_name ("open_dynamic_lib_definition")
@@ -147,7 +147,7 @@ feature {NONE} -- Initialization
 
 				-- Create `save_cmd'.
 			create save_cmd.make
-			save_cmd.set_pixmap (Pixmaps.Icon_save)
+			save_cmd.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 			save_cmd.set_tooltip (Interface_names.e_Save_dynamic_lib_definition)
 			save_cmd.set_menu_name (Interface_names.m_Save_new)
 			save_cmd.set_name ("save_dynamic_lib_definition")
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 
 				-- Create `add_feature_cmd'.
 			create add_feature_cmd.make
-			add_feature_cmd.set_pixmap (Pixmaps.Icon_add_exported_feature)
+			add_feature_cmd.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			add_feature_cmd.set_tooltip (Interface_names.e_Add_exported_feature)
 			add_feature_cmd.set_menu_name (Interface_names.	m_Add_exported_feature)
 			add_feature_cmd.set_name ("add_exported_feature")
@@ -176,7 +176,7 @@ feature {NONE} -- Initialization
 
 				-- Create `edit_feature_cmd'.
 			create edit_feature_cmd.make
-			edit_feature_cmd.set_pixmap (Pixmaps.Icon_edit_exported_feature)
+			edit_feature_cmd.set_pixmap (pixmaps.icon_pixmaps.general_edit_icon)
 			edit_feature_cmd.set_tooltip (Interface_names.e_Edit_exported_feature)
 			edit_feature_cmd.set_menu_name (Interface_names.m_Edit_exported_feature)
 			edit_feature_cmd.set_name ("edit_exported_feature")
@@ -187,7 +187,7 @@ feature {NONE} -- Initialization
 
 				-- Create `remove_feature_cmd'.
 			create remove_feature_cmd.make
-			remove_feature_cmd.set_pixmap (Pixmaps.Icon_remove_exported_feature)
+			remove_feature_cmd.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			remove_feature_cmd.set_tooltip (Interface_names.e_Remove_exported_feature)
 			remove_feature_cmd.set_menu_name (Interface_names.m_Remove_exported_feature)
 			remove_feature_cmd.set_name ("remove_exported_feature")

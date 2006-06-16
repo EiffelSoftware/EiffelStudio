@@ -905,6 +905,20 @@ feature {NONE} -- Implementation
 			cname, last_name: STRING
 			first_ambiguous: BOOLEAN
 		do
+				-- First remove all overriden classes if any before display the choice.
+			from
+				class_list.start
+			until
+				class_list.after
+			loop
+				if class_list.item.config_class.is_overriden then
+					class_list.remove
+				else
+					class_list.forth
+				end
+			end
+
+				-- Fill the choice list
 			create class_names.make (class_list.count)
 			create class_pixmaps.make (class_list.count)
 			from class_list.start until class_list.after loop

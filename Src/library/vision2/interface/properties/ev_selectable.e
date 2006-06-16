@@ -48,7 +48,7 @@ feature -- Status setting
 		do
 			implementation.enable_select
 		ensure
---			is_selected: is_selected
+			is_selected: is_selected
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

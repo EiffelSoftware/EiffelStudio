@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: CONF_HASH_TABLE [STRING, STRING]) is
+	append_mapping (a_mapping: EQUALITY_HASH_TABLE [STRING, STRING]) is
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -742,12 +742,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]) is
+	append_visible (a_visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]) is
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: CONF_HASH_TABLE [STRING, STRING]
+			l_vis_feat: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_class: STRING
 			l_feat, l_feat_rename, l_class_rename: STRING
 		do
@@ -887,7 +887,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: DS_HASH_SET [CONF_GROUP]
-			l_visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]
+			l_visible: EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cluster: CONF_CLUSTER
 			l_name: STRING

@@ -1,12 +1,12 @@
 indexing
-	description: "HASH_TABLE in configuration with different is_equal that checks the values."
+	description: "HASH_TABLE with different is_equal that checks the values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_HASH_TABLE [G, H -> HASHABLE]
+	EQUALITY_HASH_TABLE [G, H -> HASHABLE]
 
 inherit
 	HASH_TABLE [G, H]

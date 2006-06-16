@@ -52,7 +52,7 @@ feature -- Queries
 			a_state_not_void: a_state /= Void
 		local
 			l_cust_cond: TUPLE [value: STRING; invert: BOOLEAN]
-			l_vars: CONF_HASH_TABLE [STRING, STRING]
+			l_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 			l_ver_state: CONF_VERSION

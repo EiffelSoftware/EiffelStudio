@@ -112,7 +112,7 @@ feature -- Access, stored in configuration file
 	name_prefix: STRING
 			-- An optional name prefix for this group.
 
-	renaming: CONF_HASH_TABLE [STRING, STRING]
+	renaming: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
 	is_readonly: BOOLEAN is

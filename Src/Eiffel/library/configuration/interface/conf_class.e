@@ -84,7 +84,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_not_void: Result /= Void
 		end
 
-	visible: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
+	visible: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -236,7 +236,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_vis_not_void: a_vis /= Void
 			a_renamed_not_void: a_vis.class_renamed /= Void
 		local
-			l_vis_check, l_vis_other: CONF_HASH_TABLE [STRING, STRING]
+			l_vis_check, l_vis_other: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_other: STRING
 			l_error: BOOLEAN
 		do
@@ -334,7 +334,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_path_not_void: a_path /= Void
 		local
 			l_cluster: CONF_CLUSTER
-			l_old_ren, l_ren: CONF_HASH_TABLE [STRING, STRING]
+			l_old_ren, l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
 		do
 			is_rebuilding := True
 

@@ -54,7 +54,7 @@ feature -- Access
 	version: HASH_TABLE [CONF_VERSION, STRING]
 			-- Versions?
 
-	custom_variables: CONF_HASH_TABLE [STRING, STRING]
+	custom_variables: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- User defined variables.
 
 invariant

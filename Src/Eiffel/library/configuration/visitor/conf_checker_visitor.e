@@ -24,7 +24,7 @@ feature -- Visit nodes
 	process_group (a_group: CONF_GROUP) is
 			-- Visit `a_group'.
 		local
-			l_ren: CONF_HASH_TABLE [STRING, STRING]
+			l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
 			l_found: BOOLEAN

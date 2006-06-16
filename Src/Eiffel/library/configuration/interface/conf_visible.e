@@ -14,7 +14,7 @@ feature -- Basic commands
 	update_visible is
 			-- Update visible options on classes.
 		local
-			l_vis: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
+			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_class: CONF_CLASS
 			l_error: BOOLEAN
 		do
@@ -49,7 +49,7 @@ feature -- Status
 
 feature {CONF_ACCESS} -- Access, stored in configuration file
 
-	visible: CONF_HASH_TABLE [TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]], STRING]
+	visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]
 			-- Table of table of features of classes that are visible.
 			-- Mapped to their rename (if any).
 			-- CLASS_NAME => [CLASS_RENAMED, feature_name => feature_renamed]
@@ -74,8 +74,8 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			a_feature_rename_ok: a_feature_rename /= Void implies not a_feature_rename.is_empty
 			a_feature_rename_implies_feature: a_feature_rename /= Void implies a_feature /= Void
 		local
-			l_v_cl: CONF_HASH_TABLE [STRING, STRING]
-			l_tpl: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
+			l_v_cl: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_tpl: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_visible_name, l_feature_name: STRING
 			l_class, l_feature: STRING
 		do

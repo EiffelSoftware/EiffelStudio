@@ -212,6 +212,13 @@
 				<cell>Yes</cell>
 				<cell>Yes</cell>
 			</row>
+			<row>
+				<cell>Bracket expression as call target</cell>
+				<cell><local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol><symbol>.</symbol><feature_name>update</feature_name></cell>
+				<cell>No</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+			</row>
 		</table>
 		<heading><size>2</size>Expressions</heading>
 		<table>

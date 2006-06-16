@@ -25,3 +25,9 @@ sh ./make_for_platform mosis.ise manus solaris-sparc-64
 
 #Let's compile for Linux 64 bits in background
 (sh ./make_for_platform tokyo.ise manus linux-x86-64) &
+
+#Let's compile for OpenBSD in background
+(sh ./make_for_platform_secure sushi.inf.ethz.ch manus openbsd-x86 22) &
+
+#Let's compile for Linux Sparc in background
+(sh ./make_for_platform_secure calypso.frankengul.org manu linux-sparc 22) &

@@ -368,7 +368,7 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (toggle_stone_cmd)
 
 			create send_stone_to_context_cmd.make
-			send_stone_to_context_cmd.set_pixmap (Pixmaps.Icon_send_stone_down)
+			send_stone_to_context_cmd.set_pixmap (pixmaps.icon_pixmaps.context_sync_icon)
 			send_stone_to_context_cmd.set_tooltip (Interface_names.e_send_stone_to_context)
 			send_stone_to_context_cmd.set_menu_name (Interface_names.m_send_stone_to_context)
 			send_stone_to_context_cmd.set_name ("Send_to_context")

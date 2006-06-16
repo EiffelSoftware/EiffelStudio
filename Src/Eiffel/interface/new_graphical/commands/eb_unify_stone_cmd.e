@@ -42,7 +42,12 @@ feature -- Status report
 
 	pixmap: EV_PIXMAP is
 		do
-			Result := Pixmaps.Icon_unify_stone
+			if window.unified_stone then
+				Result := pixmaps.icon_pixmaps.context_unlink_icon
+			else
+				Result := pixmaps.icon_pixmaps.context_link_icon
+			end
+
 		end
 
 	tooltip: STRING is
@@ -85,6 +90,7 @@ feature -- Basic operations
 					loop
 						managed_menu_items.item.remove_text
 						managed_menu_items.item.set_text (menu_name)
+						managed_menu_items.item.set_pixmap (pixmap)
 						managed_menu_items.forth
 					end
 				end

@@ -100,7 +100,7 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 			-- to a default push button.
 		require
 			not_destroyed: not is_destroyed
---			is_default_push_button: is_default_push_button
+			is_default_push_button: is_default_push_button
 		do
 			implementation.disable_default_push_button
 		ensure

@@ -57,7 +57,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := Pixmaps.Icon_editor
+			Result := pixmaps.icon_pixmaps.view_editor_icon
 		end
 
 feature -- Status Report

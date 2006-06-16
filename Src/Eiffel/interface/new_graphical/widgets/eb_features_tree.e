@@ -204,11 +204,11 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					l_export_status := export_status_generator.
 					feature_clause_export_status (l_class, fcl.item)
 					if l_export_status.is_none then
-						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
+						tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 					elseif l_export_status.is_set then
-						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
+						tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_some_icon)
 					else
-						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+						tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_all_icon)
 					end
 					if is_clickable then
 						tree_item.set_data (fcl.item)

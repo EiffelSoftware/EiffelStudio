@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 		do
 			next_button.set_pixmap (icon_quick_search_next_color)
 			previous_button.set_pixmap (icon_quick_search_previous_color)
-			advanced_button.set_pixmap (icon_pixmaps.tool_search_icon)
+			advanced_button.set_pixmap (icon_pixmaps.tool_advanced_search_icon)
 			create first_reached_pixmap
 			create bottom_reached_pixmap
 			first_reached_pixmap.set_minimum_size (icon_first_result_reached_icon.width,

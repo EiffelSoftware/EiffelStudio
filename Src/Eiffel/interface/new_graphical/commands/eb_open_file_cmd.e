@@ -89,7 +89,7 @@ feature -- Properties
 
 	pixmap: EV_PIXMAP is
 		do
-			Result := Pixmaps.Icon_open_file
+			Result := pixmaps.icon_pixmaps.general_open_icon
 		end
 
 	name: STRING is "Open_file"

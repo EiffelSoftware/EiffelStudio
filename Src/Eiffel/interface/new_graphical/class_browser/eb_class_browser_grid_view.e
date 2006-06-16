@@ -23,6 +23,8 @@ inherit
 			make as old_make
 		undefine
 			ensure_visible
+		redefine
+			grid
 		end
 
 	SHARED_EDITOR_FONT
@@ -271,6 +273,9 @@ feature -- Access
 				end
 			end
 		end
+
+	grid: ES_GRID
+			-- Grid used to display information
 
 feature -- Status report
 

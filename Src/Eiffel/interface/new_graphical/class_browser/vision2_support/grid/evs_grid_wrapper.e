@@ -127,7 +127,7 @@ feature -- Sort
 			end
 		ensure
 			column_sorted:
-				(a_column_index <= column_sort_info.upper and then
+				(button = 1 and then a_column_index <= column_sort_info.upper and then
 				 column_sort_info.item (a_column_index) /= Void) implies last_sorted_column = a_column_index
 		end
 
@@ -274,7 +274,7 @@ feature -- Virtual grid
 
 feature -- Access
 
-	grid: ES_GRID
+	grid: EV_GRID
 			-- Grid for display
 
 feature{NONE} -- Implementation

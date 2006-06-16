@@ -256,14 +256,17 @@ feature -- Access queries
 				end
 
 				if mapping /= Void and then not mapping.is_empty then
-					create l_reverse_mapping.make (mapping.count)
-					from
-						mapping.start
-					until
-						mapping.after
-					loop
-						l_reverse_mapping.force (mapping.key_for_iteration, mapping.item_for_iteration)
-						mapping.forth
+					if reversed_mapping_cache = Void then
+						create reversed_mapping_cache.make (mapping.count)
+						create l_reverse_mapping.make (mapping.count)
+						from
+							mapping.start
+						until
+							mapping.after
+						loop
+							reversed_mapping_cache.force (mapping.key_for_iteration, mapping.item_for_iteration)
+							mapping.forth
+						end
 					end
 
 						-- unapply mapping
@@ -589,6 +592,7 @@ feature {NONE} -- Cached informations
 	name_by_class_cache: HASH_TABLE [like name_by_class, CONF_CLASS]
 	cached_mapping: like internal_mapping
 			-- Special classes name mapping cash, has the fully merge version of the mapping.
+	reversed_mapping_cache: HASH_TABLE [STRING, STRING]
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void

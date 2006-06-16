@@ -720,6 +720,11 @@
 									<File Id="sed_object_graph_depth_first_traversable_e" Name="SED_OB~2.E" LongName="sed_object_graph_depth_first_traversable.e" />
 									<File Id="sed_object_graph_traversable_e" Name="SED_OB~3.E" LongName="sed_object_graph_traversable.e" />
 								</Component>
+								<Directory Id="dotnet5" Name="dotnet">
+									<Component Id="dotnet5" Guid="803FEF0F-9C0E-4cfb-BA06-1E85E14CA7B6">
+										<File Id="sed_objects_table_e2" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
+									</Component>
+								</Directory>
 								<Directory Id="classic3" Name="classic">
 									<Component Id="classic3" Guid="78ADA375-4643-47c0-963D-21DB1D66D498">
 										<File Id="sed_objects_table_e" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
@@ -744,6 +749,22 @@
 								<File Id="primes.e" Name="primes.e" />
 								<File Id="random.e" Name="random.e" />
 							</Component>
+							<Directory Id="dotnet3" Name="dotnet">
+								<Component Id="operating_environment.e" Guid="1DFDDD79-210D-4DFB-9837-3328F1C2279E">
+									<File Id="bool_string_e" Name="BOOL_S~1.E" LongName="bool_string.e" />
+									<File Id="identified_e" Name="IDENTI~1.E" LongName="identified.e" />
+									<File Id="operating_environment_e" Name="OPERAT~1.E" LongName="operating_environment.e"/>
+									<File Id="profiling_setting_e" Name="PROFIL~1.E" LongName="profiling_setting.e" />
+									<File Id="execution_environment_e" Name="EXECUT~1.E" LongName="execution_environment.e" />
+									<File Id="internal_e" Name="internal.e" />
+									<File Id="identified_controller_e" Name="IDENTI~2.E" LongName="identified_controller.e" />
+									<File Id="double_math_e" Name="DOUBLE~1.E" LongName="double_math.e" />
+									<File Id="single_math_e" Name="SINGLE~1.E" LongName="single_math.e" />
+									<File Id="mismatch_information_e" Name="MISMAT~1.E" LongName="mismatch_information.e" />
+									<File Id="class_name_translations_e" Name="CLASS_~1.E" LongName="class_name_translations.e" />
+									<File Id="managed_pointer_e" Name="MANAGE~1.E" LongName="managed_pointer.e" />
+								</Component>
+							</Directory>
 							<Directory Id="classic" Name="classic">
 								<Component Id="classic" Guid="F1698B0E-6DE9-4F73-B1B1-9A025B540686">
 									<File Id="bool_string.e" Name="BOOL_S~1.E" LongName="bool_string.e" KeyPath="yes" />
@@ -814,6 +835,60 @@
 							<Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions">
 								<Component Id="exceptions" Guid="1EBF9024-74C3-4ab2-8454-3C82E4DADCBC">
 									<File Id="exception_e" Name="EXCEPT~1.E" LongName="exception.e" />
+								</Component>
+							</Directory>
+							<Directory Id="dotnet4" Name="dotnet">
+								<Component Id="dotnet4" Guid="23DA1C36-A57B-4A5D-9B1A-CA6B2D4AF39A">
+									<File Id="raw_file_e" Name="raw_file.e" KeyPath="yes" />
+									<File Id="procedure_e" Name="PROCED~1.E" LongName="procedure.e" />
+									<File Id="routine_e" Name="routine.e" />
+									<File Id="path_name_e" Name="PATH_N~1.E" LongName="path_name.e" />
+									<File Id="gc_info_e" Name="gc_info.e" />
+									<File Id="directory_e" Name="DIRECT~2.E" LongName="directory.e" />
+									<File Id="mem_info_e" Name="mem_info.e" />
+									<File Id="file_name_e" Name="FILE_N~1.E" LongName="file_name.e" />
+									<File Id="storable_e" Name="storable.e" />
+									<File Id="native_array_e2" Name="NATIVE~1.E" LongName="native_array.e" />
+									<File Id="real_ref_e" Name="real_ref.e" />
+									<File Id="pointer_e" Name="pointer.e" />
+									<File Id="console_e" Name="console.e" />
+									<File Id="unix_signals_e" Name="UNIX_S~1.E" LongName="unix_signals.e" />
+									<File Id="plain_text_file_e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
+									<File Id="arguments_e" Name="ARGUME~1.E" LongName="arguments.e" />
+									<File Id="file_e" Name="file.e" />
+									<File Id="bit_ref_e" Name="bit_ref.e" />
+									<File Id="exceptions_e" Name="EXCEPT~2.E" LongName="exceptions.e" />
+									<File Id="real_e" Name="real.e" />
+									<File Id="platform_e" Name="platform.e" />
+									<File Id="memory_e" Name="memory.e" />
+									<File Id="double_ref_e" Name="DOUBLE~2.E" LongName="double_ref.e" />
+									<File Id="directory_name_e" Name="DIRECT~3.E" LongName="directory_name.e" />
+									<File Id="pointer_ref_e" Name="POINTE~1.E" LongName="pointer_ref.e" />
+									<File Id="cli_cell_e" Name="cli_cell.e" />
+									<File Id="special_e" Name="special.e" />
+									<File Id="basic_routines_e" Name="BASIC_~1.E" LongName="basic_routines.e" />
+									<File Id="unix_file_info_e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
+									<File Id="stream_e" Name="stream.e" />
+									<File Id="double_e" Name="double.e" />
+									<File Id="function_e" Name="function.e" />
+									<File Id="tuple_e" Name="tuple.e" />
+									<File Id="any_e" Name="any.e" />
+									<File Id="disposable_e" Name="DISPOS~1.E" LongName="disposable.e" />
+									<File Id="dotnet_pointer_e" Name="DO5684~1.E" LongName="dotnet_pointer.e" />
+									<File Id="dotnet_integer_8_e" Name="DO0D19~1.E" LongName="dotnet_integer_8.e" />
+									<File Id="dotnet_integer_16_e" Name="DOAC1F~1.E" LongName="dotnet_integer_16.e" />
+									<File Id="dotnet_integer_e" Name="DOTNET~4.E" LongName="dotnet_integer.e" />
+									<File Id="dotnet_integer_64_e" Name="DOCC0B~1.E" LongName="dotnet_integer_64.e" />
+									<File Id="dotnet_natural_8_e" Name="DO00A8~1.E" LongName="dotnet_natural_8.e" />
+									<File Id="dotnet_natural_16_e" Name="DO2EDE~1.E" LongName="dotnet_natural_16.e" />
+									<File Id="dotnet_natural_32_e" Name="DO3EB6~1.E" LongName="dotnet_natural_32.e" />
+									<File Id="dotnet_natural_64_e" Name="DO4ECA~1.E" LongName="dotnet_natural_64.e" />
+									<File Id="dotnet_character_e" Name="DOTNET~2.E" LongName="dotnet_character.e" />
+									<File Id="dotnet_double_e" Name="DOTNET~3.E" LongName="dotnet_double.e" />
+									<File Id="dotnet_boolean_e" Name="DOTNET~1.E" LongName="dotnet_boolean.e" />
+									<File Id="dotnet_real_e" Name="DO9EFE~1.E" LongName="dotnet_real.e" />
+									<File Id="system_string_factory_e2" Name="SYSTEM~1.E" LongName="system_string_factory.e" />
+									<File Id="type_e2" Name="type.e" />
 								</Component>
 							</Directory>
 							<Directory Id="classic1" Name="classic">
@@ -1672,15 +1747,35 @@
 								<File Id="read_write_lock.e" Name="READ_W~1.E" LongName="read_write_lock.e" />
 							</Component>
 						</Directory>
+						<Directory Id="dotnet2" Name="dotnet">
+							<Component Id="read_write_lock.e" Guid="B7B3C805-366D-41B6-8F8D-C31F502E094A">
+								<File Id="read_write_lock_e2" Name="READ_W~1.E" LongName="read_write_lock.e" KeyPath="yes" />
+								<File Id="thread_control_e2" Name="THREAD~2.E" LongName="thread_control.e" />
+								<File Id="thread_attributes_e2" Name="THREAD~1.E" LongName="thread_attributes.e" />
+								<File Id="condition_variable_e2" Name="CONDIT~1.E" LongName="condition_variable.e" />
+								<File Id="mutex.e" Name="mutex.e" />
+								<File Id="thread.e" Name="thread.e" />
+								<File Id="semaphore.e" Name="SEMAPH~1.E" LongName="semaphore.e" />
+							</Component>
+						</Directory>
 					</Directory>
 					<Directory Id="time" Name="time">
-						<Component Id="time" Guid="FEFB58F4-B488-4948-BCF3-2F669FBC88C5">
+						<Directory Id="dotnet6" Name="dotnet">
+							<Component Id="c_date" Guid="177D119D-4E54-4156-A822-8A900EC4F822">
+								<File Id="c_date.e" Name="c_date.e" />
+							</Component>
+						</Directory>
+						<Directory Id="classic4" Name="classic">
+							<Component Id="time" Guid="D370F388-816D-43c3-83F5-B795382CD7B7">
+								<File Id="c_date_e2" Name="c_date.e" />
+							</Component>
+						</Directory>
+						<Component Id="time2" Guid="FEFB58F4-B488-4948-BCF3-2F669FBC88C5">
 							<File Id="time_ecf" Name="time.ecf" />
 							<File Id="time_duration.e" Name="TIME_D~1.E" LongName="time_duration.e" KeyPath="yes" />
 							<File Id="date_validity_checker.e" Name="DATE_V~1.E" LongName="date_validity_checker.e" />
 							<File Id="date_time_value.e" Name="DACEE1~1.E" LongName="date_time_value.e" />
 							<File Id="date_time_duration.e" Name="DATE_T~2.E" LongName="date_time_duration.e" />
-							<File Id="c_date.e" Name="c_date.e" />
 							<File Id="time_set.e" Name="time_set.e" />
 							<File Id="group_element.e" Name="GROUP_~1.E" LongName="group_element.e" />
 							<File Id="date_duration.e" Name="DATE_D~1.E" LongName="date_duration.e" />

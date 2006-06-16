@@ -50,9 +50,10 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN) is
+	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN) is
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
+			-- If `has_detached_console' is True, launch process without any console.
 		require
 			a_cmd_not_void: a_cmd /= Void
 			a_cmd_not_empty: not a_cmd.is_empty
@@ -60,11 +61,14 @@ feature -- Process operations
 			input_closed: not is_std_input_open
 			output_closed: not is_std_output_open
 			error_closed: not is_std_error_open
+			separate_xor_detached: not (has_separate_console and has_detached_console)
 		local
 			l_success: BOOLEAN
 		do
 			if has_separate_console then
 				spawn_with_flags (a_cmd, a_working_directory, create_new_console)
+			elseif has_detached_console then
+				spawn_with_flags (a_cmd, a_working_directory, detached_process)
 			else
 				spawn_with_flags (a_cmd, a_working_directory, 0)
 			end

@@ -227,9 +227,9 @@ feature -- IO redirection
 		require
 			process_not_running: not is_running
 		do
-			is_termianl_control_enabled := True
+			is_terminal_control_enabled := True
 		ensure
-			terminal_control_enabled: is_termianl_control_enabled
+			terminal_control_enabled: is_terminal_control_enabled
 		end
 
 	disable_terminal_control is
@@ -238,9 +238,9 @@ feature -- IO redirection
 		require
 			process_not_running: not is_running
 		do
-			is_termianl_control_enabled := False
+			is_terminal_control_enabled := False
 		ensure
-			is_termianl_control_disabled: not is_termianl_control_enabled
+			is_termianl_control_disabled: not is_terminal_control_enabled
 		end
 
 feature -- Control
@@ -357,6 +357,17 @@ feature -- Status setting
 			separate_console := b
 		ensure
 			separate_console_set: separate_console = b
+		end
+
+	set_detached_console (b: BOOLEAN) is
+			-- Set `detached_console' with `b'.
+			-- Has effects on Windows.
+		require
+			process_not_running: not is_running
+		do
+			detached_console := b
+		ensure
+			detached_console_set: detached_console = b
 		end
 
 	set_abort_termination_when_failed (b: BOOLEAN) is
@@ -534,6 +545,10 @@ feature -- Status report
 			-- Will process be launched with a new console instead of inheriting parent's console?
 			-- Has effects on Windows.
 
+	detached_console: BOOLEAN
+			-- Will process be launched without any console ?
+			-- Has effects on Windows.
+
 	command_line: STRING
 			-- Program name, with its arguments, if any, which will be run
 			-- in launched process
@@ -575,7 +590,7 @@ feature -- Status report
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
-	is_termianl_control_enabled: BOOLEAN
+	is_terminal_control_enabled: BOOLEAN
 			-- Should launched process has terminal control over standard input, output and error?
 			-- If terminal control is not enabled, launched process won't be able to get access to terminals.
 			-- Has effect only on Unix.

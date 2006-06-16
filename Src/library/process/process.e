@@ -240,7 +240,7 @@ feature -- IO redirection
 		do
 			is_terminal_control_enabled := False
 		ensure
-			is_termianl_control_disabled: not is_terminal_control_enabled
+			is_terminal_control_disabled: not is_terminal_control_enabled
 		end
 
 feature -- Control

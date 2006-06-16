@@ -10617,10 +10617,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs112.item (yyvsp112) /= Void then
-					yyvs112.item (yyvsp112).set_positions (yyvs4.item (yyvsp4), last_rsqure)
-				end
-				yyval79 := ast_factory.new_named_tuple_type_as (yyvs2.item (yyvsp2), ast_factory.new_formal_argu_dec_list_as (yyvs112.item (yyvsp112), yyvs4.item (yyvsp4), Void))
+--				if $5 /= Void then
+--					$5.set_positions ($4, last_rsqure)
+--				end
+				yyval79 := ast_factory.new_named_tuple_type_as (yyvs2.item (yyvsp2), ast_factory.new_formal_argu_dec_list_as (yyvs112.item (yyvsp112), yyvs4.item (yyvsp4), last_rsqure))
 				remove_counter
 				remove_counter2
 			

@@ -276,14 +276,14 @@ feature {CACHE_WRITER} -- Implementation
 					end
 					if internal_info.item = Void then
 							-- cache info is not initalized or is outdated
-						internal_info.put (create {CACHE_INFO}.make)
+						internal_info.put (create {CONSUMER_CACHE_INFO}.make)
 						(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
 					end
 				end
 			else
 				if internal_info.item = Void then
 						-- cache info is not initalized or is outdated
-					internal_info.put (create {CACHE_INFO}.make)
+					internal_info.put (create {CONSUMER_CACHE_INFO}.make)
 					(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
 				end
 			end

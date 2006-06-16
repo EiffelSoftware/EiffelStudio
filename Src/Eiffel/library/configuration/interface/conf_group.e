@@ -199,15 +199,19 @@ feature -- Access queries
 			classes_set: classes_set
 		do
 			create Result.make
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				if classes.item_for_iteration = a_class then
-					Result.force (classes.key_for_iteration)
+			if reverse_classes_cache = Void then
+				create reverse_classes_cache.make (classes.count)
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					reverse_classes_cache.force (classes.key_for_iteration, classes.item_for_iteration)
+					classes.forth
 				end
-				classes.forth
+			end
+			if reverse_classes_cache.has (a_class) then
+				Result.force (reverse_classes_cache.found_item)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -550,6 +554,8 @@ feature {NONE} -- Implementation
 
 	internal_hash_code: INTEGER
 			-- Cashed value of the hash_code
+
+	reverse_classes_cache: HASH_TABLE [STRING, like class_type]
 
 feature {CONF_ACCESS} -- Stored in configuration file
 

@@ -227,7 +227,7 @@ feature -- Access queries
 					l_groups.forth
 					l_dep := l_groups.item_for_iteration
 					if l_dep.classes_set then
-						result.append (l_dep.name_by_class (a_class, False))
+						Result.append (l_dep.name_by_class (a_class, False))
 					end
 				end
 			end

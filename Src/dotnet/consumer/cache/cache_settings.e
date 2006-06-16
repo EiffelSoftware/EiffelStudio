@@ -8,20 +8,10 @@ indexing
 class
 	CACHE_SETTINGS
 
+inherit
+	CACHE_CONSTANTS
+
 feature -- Access
-
-	short_cache_name: STRING is "md"
-			-- Short cache name.
-			-- Note: this should be as short as possible given file name
-			-- length restriction on Windows. This is name used when
-			-- running in `conservative_mode'
-
-	cache_name: STRING is "MetadataConsumer"
-			-- Cache name.
-
-	conservative_mode: BOOLEAN is True
-			-- State to indicate if cache should be conservative when creating paths
-			-- to cached contents
 
 	cache_lock_id: SYSTEM_STRING is
 			-- id used to lock cache.

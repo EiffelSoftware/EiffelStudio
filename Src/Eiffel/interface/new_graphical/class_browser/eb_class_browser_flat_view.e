@@ -87,9 +87,11 @@ feature -- Actions
 	on_show_feature_from_any_changed is
 			-- Action to be performed when selection status of `show_feature_from_any_checkbox' changes
 		do
-			is_up_to_date := False
-			update_view
-			preferences.class_browser_data.show_feature_from_any_preference.set_value (show_feature_from_any_checkbox.is_selected)
+			if not is_displaying_class_any then
+				is_up_to_date := False
+				update_view
+				preferences.class_browser_data.show_feature_from_any_preference.set_value (show_feature_from_any_checkbox.is_selected)
+			end
 		end
 
 	on_show_tooltip_changed is
@@ -120,12 +122,14 @@ feature -- Actions
 		local
 			l_displayed: BOOLEAN
 		do
-			l_displayed := preferences.class_browser_data.is_feature_from_any_shown
-			if l_displayed /= show_feature_from_any_checkbox.is_selected then
-				if l_displayed then
-					show_feature_from_any_checkbox.enable_select
-				else
-					show_feature_from_any_checkbox.disable_select
+			if not is_displaying_class_any then
+				l_displayed := preferences.class_browser_data.is_feature_from_any_shown
+				if l_displayed /= show_feature_from_any_checkbox.is_selected then
+					if l_displayed then
+						show_feature_from_any_checkbox.enable_select
+					else
+						show_feature_from_any_checkbox.disable_select
+					end
 				end
 			end
 		end
@@ -353,6 +357,12 @@ feature -- Status report
 			good_result: Result = show_tooltip_checkbox.is_selected
 		end
 
+	is_displaying_class_any: BOOLEAN is
+			-- Is class any been displayed currently?
+		do
+			Result := start_class /= Void and then start_class.is_compiled and then start_class.class_c.class_id = system.any_id
+		end
+
 feature -- Access
 
 	show_feature_from_any_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
@@ -464,6 +474,12 @@ feature{NONE} -- Update
 		do
 			if not is_up_to_date then
 				if data /= Void then
+					if is_displaying_class_any then
+						show_feature_from_any_checkbox.enable_select
+						show_feature_from_any_checkbox.disable_sensitive
+					else
+						show_feature_from_any_checkbox.enable_sensitive
+					end
 					text.hide
 					component_widget.show
 					fill_rows
@@ -723,7 +739,7 @@ feature{NONE} -- Implementation
 				rows.wipe_out
 			end
 			l_any_class_id := system.any_id
-			l_feature_from_any_displayed := show_feature_from_any_checkbox.is_selected
+			l_feature_from_any_displayed := show_feature_from_any_checkbox.is_selected or is_displaying_class_any
 			l_filter_name := feature_name_list.text
 			l_filter_name.left_adjust
 			l_filter_name.right_adjust

@@ -10,7 +10,7 @@ class
 	EVS_GRID_TWO_WAY_SORTING_ORDER
 
 inherit
-	EB_SHARED_PIXMAPS
+	EB_CONSTANTS
 
 feature -- Sorting order
 
@@ -32,13 +32,13 @@ feature -- Sorting order
 	ascending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `ascending_order'
 		do
-			Result := icon_ascending_sort_color
+			Result := pixmaps.icon_ascending_sort_color
 		end
 
 	descending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `decending_order'
 		do
-			Result := icon_descending_sort_color
+			Result := pixmaps.icon_descending_sort_color
 		end
 
 indexing

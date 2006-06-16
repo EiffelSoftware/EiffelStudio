@@ -324,7 +324,7 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 		}                                                             \
 	}
 
-rt_public void metamorphose_top()
+rt_public void metamorphose_top(struct stochunk * volatile scur, struct item * volatile stop)
 {
 	RT_GET_CONTEXT
 
@@ -332,10 +332,7 @@ rt_public void metamorphose_top()
 	uint32 head_type;
 	struct item * last;	/* Last pushed value */
 	unsigned long stagval;
-	struct item * stop;				
-	struct stochunk * scur;
 	
-	SAVE(op_stack, scur, stop);	/* Save operation stack */
 	last = opop();
 	stagval = tagval;
 	head_type = last->type & SK_HEAD;
@@ -359,7 +356,7 @@ rt_public void metamorphose_top()
 			new_obj = last->it_ref;
 			break;
 		default: 
-			eif_panic(MTC "illegal metamorphose type");
+			eif_panic("illegal metamorphose type");
 		}
 		last = iget();
 		last->type = SK_REF;
@@ -372,7 +369,7 @@ rt_public void metamorphose_top()
 		last->it_ref = new_obj;
 	}
 	if (tagval != stagval)				/* If G.C calls melted dispose */
-		sync_registers(MTC scur, stop);
+		sync_registers(scur, stop);
 }
 
 rt_public void xinterp(unsigned char *icval)
@@ -1983,7 +1980,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_METAMORPHOSE\n");
 #endif 	
-		metamorphose_top();
+		metamorphose_top(scur, stop);
 		break;
 
 	/*
@@ -4234,7 +4231,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 
 	if (is_basic_type)
 			/* We need to create a reference to the basic type on the fly */
-		metamorphose_top();
+		metamorphose_top(scur, stop);
 	if (! is_precompiled) {
 		rout_id = Routids(stype)[fid];
 		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));

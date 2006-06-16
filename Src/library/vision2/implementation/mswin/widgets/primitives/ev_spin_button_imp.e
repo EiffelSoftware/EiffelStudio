@@ -256,7 +256,7 @@ feature -- Setting
 			internal_text_field.set_focus
 		end
 
-feature {EV_INTERNAL_SPIN_BUTTON_IMP} -- Access
+feature {NONE} -- Access
 
 	internal_arrows_control: EV_INTERNAL_UP_DOWN_CONTROL
 			-- Windows up down control used internally.

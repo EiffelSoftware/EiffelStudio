@@ -1542,10 +1542,7 @@ Tuple_type: TE_TUPLE
 			}
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Named_parameter_list
 			{
-				if $5 /= Void then
-					$5.set_positions ($4, last_rsqure)
-				end
-				$$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($5, $4, Void))
+				$$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($5, $4, last_rsqure))
 				remove_counter
 				remove_counter2
 			}
@@ -1598,6 +1595,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				last_rsqure := $4
 			}
 	|	TE_ID TE_COMMA Increment Named_parameter_list
+
 			{
 				$$ := $4
 				if $$ /= Void then

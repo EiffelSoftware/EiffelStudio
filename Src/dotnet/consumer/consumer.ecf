@@ -49,8 +49,16 @@
 				<exclude>/interop$</exclude>
 				<exclude>/emitter$</exclude>
 				<exclude>/cache$</exclude>
-				<exclude>/support$</exclude>
 				<exclude>/resources$</exclude>
+				<exclude>/support/constants$</exclude>
+				<exclude>/support/errors$</exclude>
+				<exclude>/support/helpers$</exclude>
+				<exclude>/support/interop$</exclude>
+				<exclude>/support/notifier$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">

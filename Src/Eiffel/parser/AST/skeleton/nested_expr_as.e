@@ -67,7 +67,7 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
+			if a_list = Void or else lparan_symbol = Void then
 				Result := target.first_token (a_list)
 			else
 				Result := lparan_symbol.first_token (a_list)

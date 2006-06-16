@@ -71,6 +71,51 @@ feature -- Status setting
 			set_pixmap (pixmap_from_class_i (a_class))
 		end
 
+	load_overriden_children is
+			-- Add classes this class overrides as children.
+			-- (needs to be called after the class has been completely set up)
+		local
+			conf_class: CONF_CLASS
+			overs: ARRAYED_LIST [CONF_CLASS]
+			over_item: EB_CLASSES_TREE_CLASS_ITEM
+			class_i: CLASS_I
+		do
+			conf_class := data.config_class
+			if conf_class.does_override then
+				from
+					overs := conf_class.overrides
+					overs.start
+				until
+					overs.after
+				loop
+					class_i ?= overs.item
+					check
+						class_i: class_i /= Void
+					end
+					create over_item.make (class_i)
+
+					if associated_window /= Void then
+						over_item.set_associated_window (associated_window)
+					end
+					if associated_textable /= Void then
+						over_item.set_associated_textable (associated_textable)
+					end
+
+					from
+						pointer_double_press_actions.start
+					until
+						pointer_double_press_actions.after
+					loop
+						over_item.add_double_click_action (pointer_double_press_actions.item)
+						pointer_double_press_actions.forth
+					end
+
+					extend (over_item)
+					overs.forth
+				end
+			end
+		end
+
 	set_associated_textable (textable: EV_TEXT_COMPONENT) is
 			-- Associate `Current' with `textable' and change event handling.
 		require

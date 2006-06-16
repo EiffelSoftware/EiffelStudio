@@ -309,6 +309,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						a_class.add_double_click_action (classes_double_click_agents.item)
 						classes_double_click_agents.forth
 					end
+					a_class.load_overriden_children
 					extend (a_class)
 					classes.forth
 				end

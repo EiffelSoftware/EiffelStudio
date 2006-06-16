@@ -2434,6 +2434,8 @@ Qualified_call:
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_expr_as ($2, $5, $4, $1, $3) }
+	|	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_bracket_as ($1, $4, $2, $6), $8, $7, Void, Void) }
 	|	A_precursor TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	A_static_call TE_DOT Remote_call

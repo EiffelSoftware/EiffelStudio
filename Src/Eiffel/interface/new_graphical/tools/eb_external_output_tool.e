@@ -208,7 +208,7 @@ feature{NONE} -- Initialization
 			cmd_lst.drop_actions.extend (agent drop_cluster)
 			cmd_lst.drop_actions.extend (agent drop_breakable)
 
-			edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
+			edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
 
 			input_field.key_press_actions.extend (agent on_key_pressed_in_input_field (?))
@@ -224,7 +224,7 @@ feature{NONE} -- Initialization
 
 			output_toolbar.disable_vertical_button_style
 			save_output_btn.set_tooltip (f_save_output_button)
-			save_output_btn.set_pixmap (icon_save)
+			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 
 			l_ev_cmd_lbl.set_text (l_command)

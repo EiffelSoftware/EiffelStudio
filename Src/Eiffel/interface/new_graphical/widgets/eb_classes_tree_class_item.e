@@ -72,7 +72,7 @@ feature -- Status setting
 		end
 
 	load_overriden_children is
-			-- Add classes this class overrides as children.
+			-- Add classes this class overrides or the class that overrides this class as children.
 			-- (needs to be called after the class has been completely set up)
 		local
 			conf_class: CONF_CLASS
@@ -113,6 +113,30 @@ feature -- Status setting
 					extend (over_item)
 					overs.forth
 				end
+			elseif conf_class.is_overriden then
+				class_i ?= conf_class.overriden_by
+				check
+					class_i: class_i /= Void
+				end
+				create over_item.make (class_i)
+
+				if associated_window /= Void then
+					over_item.set_associated_window (associated_window)
+				end
+				if associated_textable /= Void then
+					over_item.set_associated_textable (associated_textable)
+				end
+
+				from
+					pointer_double_press_actions.start
+				until
+					pointer_double_press_actions.after
+				loop
+					over_item.add_double_click_action (pointer_double_press_actions.item)
+					pointer_double_press_actions.forth
+				end
+
+				extend (over_item)
 			end
 		end
 

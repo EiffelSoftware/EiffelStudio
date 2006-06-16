@@ -120,6 +120,7 @@ feature -- Initialization
 							-- Rename the old project to EIFGEN so that we can
 							-- delete it.
 						d.change_name (a_project_location.target_path)
+						delete_project_file (a_project_location.project_file_name)
 						delete_generation_directory (a_project_location.backup_path, deletion_agent, cancel_agent)
 						delete_generation_directory (a_project_location.compilation_path, deletion_agent, cancel_agent)
 						delete_generation_directory (a_project_location.final_path, deletion_agent,
@@ -693,6 +694,25 @@ feature -- Update
 					else
 						generation_directory.delete_content
 					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	delete_project_file (a_file_name: STRING) is
+			-- Delete `a_file_name' if possible.
+		require
+			a_file_name_not_void: a_file_name /= Void
+		local
+			l_file: RAW_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_file.make (a_file_name)
+				if l_file.exists then
+					l_file.delete
 				end
 			end
 		rescue

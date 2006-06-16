@@ -1,34 +1,18 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-		name="eiffelsoftware.metadataconsumer"
-		uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA"
-		library_target="consumer_library">
-
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<version major="5" minor="7" release="414" build="0"/>
-
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-
-		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
-
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
-			<debug name="assemblies_are_never_stale" enabled="false"/>
-			<debug name="log_illegal_non_cls_compliancy" enabled="false"/>
-			<debug name="press_enter_to_exit" enabled="false"/>
-			<debug name="press_enter_to_finish" enabled="false"/>
-			<debug name="refactor_fixme" enabled="false"/>
 			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
 		</option>
-	
 		<setting name="cls_compliant" value="True"/>
 		<setting name="console_application" value="True"/>
 		<setting name="dead_code_removal" value="True"/>
 		<setting name="dotnet_naming_convention" value="False"/>
+		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
 		<setting name="il_verifiable" value="True"/>
 		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_generation" value="True"/>
@@ -36,22 +20,21 @@
 		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
-
+		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
+		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
+		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf"/>
+		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
 		<assembly name="system.windows.forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
-
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf"/>
-		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
-		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf"/>
-		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
-
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
-			<condition><dotnet value="True" /></condition>
+			<condition>
+				<dotnet value="true"/>
+			</condition>
 			<file_rule>
 				<exclude>/interop$</exclude>
 				<exclude>/resources$</exclude>
@@ -59,7 +42,9 @@
 			</file_rule>
 		</cluster>
 		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
-			<condition><dotnet value="False" /></condition>
+			<condition>
+				<dotnet value="false"/>
+			</condition>
 			<file_rule>
 				<exclude>/interop$</exclude>
 				<exclude>/emitter$</exclude>
@@ -69,31 +54,29 @@
 			</file_rule>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
-			<condition><dotnet value="True" /></condition>
-			<option namespace="Interop"/>
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<option namespace="Interop">
+			</option>
 			<visible class="COM_CACHE_MANAGER"/>
 		</cluster>
 	</target>
-
 	<target name="consumer_20" extends="consumer_library">
-		<root feature="make" class="EMITTER"/>
+		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="False"/>
 	</target>
-
 	<target name="consumer_10" extends="consumer_library">
-		<root feature="make" class="EMITTER"/>
-		<setting name="msil_clr_version" value="v1.0.3705"/>
+		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="False"/>
-		<override name="dotnet10" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet10\" recursive="false"/>
+		<setting name="msil_clr_version" value="v1.0.3705"/>
+		<override name="dotnet10" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet10\"/>
 	</target>
-
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="True"/>
 	</target>
-
 	<target name="debug_10" extends="consumer_10">
 		<setting name="line_generation" value="True"/>
 		<setting name="msil_clr_version" value="v1.0.3705"/>
 	</target>
-
 </system>

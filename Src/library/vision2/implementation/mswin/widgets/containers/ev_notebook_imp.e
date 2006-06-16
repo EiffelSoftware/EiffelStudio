@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 			check_notebook_assertions := True
 		end
 
-feature {AV_ANY_I} --  Access
+feature {EV_ANY_I} --  Access
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.

@@ -70,7 +70,7 @@ feature -- Access
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
 					l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
 					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32 |<< 6
+					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
 					l_nat8 := l_ptr.read_natural_8 (i + 2)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
 					Result.extend (l_code.to_character_32)
@@ -80,9 +80,9 @@ feature -- Access
 					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
 					l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
 					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32 |<< 12
+					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
 					l_nat8 := l_ptr.read_natural_8 (i + 2)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32 |<< 6
+					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
 					l_nat8 := l_ptr.read_natural_8 (i + 3)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
 					Result.extend (l_code.to_character_32)

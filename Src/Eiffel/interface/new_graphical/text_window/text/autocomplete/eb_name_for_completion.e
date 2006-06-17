@@ -118,7 +118,7 @@ feature -- Query
 				Result.set_text_with_tokens (tokens)
 				Result.set_pixmap (icon)
 			end
-			Result.editor_token_text.set_overriden_font (label_font_table)
+			Result.set_overriden_fonts (label_font_table)
 			Result.set_data (Current)
 		end
 

@@ -269,7 +269,7 @@ feature -- Access
 			if l_editor_token_item /= Void then
 				l_index := l_editor_token_item.token_index_at_current_position
 				if l_index > 0 then
-					Result := l_editor_token_item.editor_token_text.tokens.i_th (l_index)
+					Result := l_editor_token_item.token_at_position (l_index)
 				end
 			end
 		end

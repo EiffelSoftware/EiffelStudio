@@ -143,6 +143,16 @@ feature -- Setting
 			text_set: text.is_equal (a_text)
 		end
 
+	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]) is
+			-- Set fonts of current tokens with `a_fonts'.
+			-- If `a_fonts' is Void, tokens will be displayed in default editor token fonts.
+		do
+			lock_update
+			editor_token_text.set_overriden_font (a_fonts)
+			unlock_update
+			try_call_setting_change_actions
+		end
+
 feature -- Access
 
 	pixmap: EV_PIXMAP
@@ -152,19 +162,6 @@ feature -- Access
 			-- Spacing between `text' and `pixmap' in pixels.
 			-- If both are not visible, this value does not affect appearance of `Current'.
 
-	editor_token_text: EB_EDITOR_TOKEN_TEXT is
-			-- Editor token text
-		require
-			not_destroyed: not is_destroyed
-		do
-			if editor_token_text_internal = Void then
-				create editor_token_text_internal
-			end
-			Result := editor_token_text_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	text: STRING is
 			-- Text of current item.
 		do
@@ -173,6 +170,16 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	token_at_position (a_pos: INTEGER): EDITOR_TOKEN is
+			-- Token at `a_pos' in `editor_token_text'
+		require
+			a_pos_positive: a_pos > 0
+		do
+			if a_pos <= editor_token_text.tokens.count then
+				Result := editor_token_text.tokens.i_th (a_pos)
+			end
+		end
+		
 feature{NONE} -- Redraw
 
 	black_color: EV_COLOR is
@@ -356,6 +363,19 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	editor_token_text: EB_EDITOR_TOKEN_TEXT is
+			-- Editor token text
+		require
+			not_destroyed: not is_destroyed
+		do
+			if editor_token_text_internal = Void then
+				create editor_token_text_internal
+			end
+			Result := editor_token_text_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Pick and drop
 
 	last_picked_token: INTEGER
@@ -365,8 +385,9 @@ feature -- Pick and drop
 	set_last_picked_token (a_index: INTEGER) is
 			-- Set `last_picked_token' with `a_index'.
 		require
-			a_index_valid: a_index >= 0 and a_index <= editor_token_text.tokens.count
+			a_index_valid: a_index >= 0
 		do
+			check a_index <= editor_token_text.tokens.count end
 			last_picked_token := a_index
 		ensure
 			last_picked_token_set: last_picked_token = a_index

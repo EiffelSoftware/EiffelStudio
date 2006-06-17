@@ -51,7 +51,7 @@ feature -- Access
 			create Result.make_with_type (name, return_type, l_style)
 			Result.set_tooltip_display_function (agent display_colorized_tooltip)
 			Result.enable_pixmap
-			Result.editor_token_text.set_overriden_font (label_font_table)
+			Result.set_overriden_fonts (label_font_table)
 			Result.set_data (Current)
 		end
 

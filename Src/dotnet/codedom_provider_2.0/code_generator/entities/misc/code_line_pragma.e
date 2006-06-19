@@ -9,6 +9,8 @@ class
 inherit
 	CODE_ENTITY
 
+	CODE_CONFIGURATION
+
 create
 	make
 
@@ -29,16 +31,20 @@ feature -- Access
 	code: STRING is
 			-- Eiffel code of the entity
 		do
-			if (pragma.file_name = Void) or else (pragma.file_name.length = 0) then
-				Result := "--#line default"
+			if generate_pragmas then
+				if (pragma.file_name = Void) or else (pragma.file_name.length = 0) then
+					Result := "--#line default"
+				else
+					create Result.make (260)
+					Result.append ("--#line ")
+					Result.append (pragma.line_number.out)
+					Result.append (" %"")
+					Result.append (pragma.file_name)
+					Result.append ("%"")
+					Result.append (Line_return)
+				end
 			else
-				create Result.make (260)
-				Result.append ("--#line ")
-				Result.append (pragma.line_number.out)
-				Result.append (" %"")
-				Result.append (pragma.file_name)
-				Result.append ("%"")
-				Result.append (Line_return)
+				Result := ""
 			end
 		end
 

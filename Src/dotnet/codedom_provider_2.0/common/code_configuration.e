@@ -31,6 +31,10 @@ indexing
 							<precompile_ace_file></precompile_ace_file>
 							<precompile_cache></precompile_cache>
 						</compiler>
+						<debug>
+							<generate_pragmas>true</generate_pragmas>
+							<backup_folder></backup_folder>
+						</debug>
 					</configuration>
 					]"
 	legal: "See notice at end of class."
@@ -189,6 +193,23 @@ feature -- Access
 			Result.extend ("WEB_", "system.web.ui.mobilecontrols.adapters.dll")
 		end
 		
+	generate_pragmas: BOOLEAN is
+			-- Should line pragmas be generated?
+		do
+			Result := config_values.item ("generate_pragmas").to_boolean
+		end
+
+	backup_folder: STRING is
+			-- If not Void then the codedom will generate a copy of all the files in that folder.
+		do
+			Result := config_values.item ("backup_folder")
+			if Result /= Void and then Result.item (Result.count) /= Directory_separator then
+				Result.append_character (Directory_separator)
+			end
+		ensure
+			valid_folder: Result /= Void implies Result.item (Result.count) = Directory_separator
+		end
+
 feature -- Basic Operations
 
 	load (a_config_file: STRING) is
@@ -279,6 +300,7 @@ feature {NONE} -- Implementation
 			if Default_precompile_cache /= Void then
 				internal_config_values.extend (Default_precompile_cache, "precompile_cache")
 			end
+			internal_config_values.extend ("True", "generate_pragmas")
 		end
 		
 	initialize_prefixes is

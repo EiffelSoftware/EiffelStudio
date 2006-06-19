@@ -245,7 +245,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			-- Ensure no close button is displayed for `Current'.
 		do
 			if close_button.parent /= Void then
-				close_button.parent.prune_all (close_button)
+				close_button.parent.prune (close_button)
 			end
 		end
 

@@ -22,6 +22,7 @@ inherit
 	CODE_SHARED_ACCESS_MUTEX
 	CONF_ACCESS
 	CODE_PROJECT_CONTEXT
+	CODE_SHARED_BACKUP
 
 create
 	default_create
@@ -481,6 +482,7 @@ feature {NONE} -- Implementation
 				l_system.set_file_name (ace_file_path)
 				l_system.store
 				if l_system.store_successful then
+					backup.backup_file_from_path (ace_file_path)
 					load_result_in_memory := a_options.generate_in_memory
 					cleanup -- to avoid error if a .epr file already exists in project folder
 					is_initialized := True

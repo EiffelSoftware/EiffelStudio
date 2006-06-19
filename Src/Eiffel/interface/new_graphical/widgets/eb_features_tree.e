@@ -270,9 +270,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						name.right_adjust
 						tree_item := build_tree_folder_for_external (name, l_clauses.item)
 						if not l_clauses.item.is_exported then
-							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
+							tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 						else
-							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+							tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_all_icon)
 						end
 						if is_clickable then
 							--FIXME: NC
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 							if is_clickable then
 								tree_item.pointer_button_press_actions.force_extend (
 									agent features_tool.go_to_feature_with_name (f_item_name))
-								tree_item.set_pixmap (pixmaps.Icon_feature)
+								tree_item.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
 							end
 						else
 							tree_item.set_data (ef)

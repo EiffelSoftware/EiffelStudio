@@ -435,7 +435,7 @@ feature -- Text operator
 				end
 			end
 			if l_name = Void then
-				l_name := class_i.name_in_upper + " (Invisible)"
+				l_name := class_i.name_in_upper
 			end
 			process_class_name_text (l_name, class_i, false)
 		end

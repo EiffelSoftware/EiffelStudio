@@ -1267,7 +1267,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (disable_bkpt)
 
 			create bkpt_info_cmd.make
-			bkpt_info_cmd.set_pixmap (Pixmaps.Icon_bkpt_info)
+			bkpt_info_cmd.set_pixmap (pixmaps.icon_pixmaps.tool_breakpoints_icon)
 			bkpt_info_cmd.set_tooltip (Interface_names.e_Bkpt_info)
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
 			bkpt_info_cmd.set_tooltext (Interface_names.b_Bkpt_info)

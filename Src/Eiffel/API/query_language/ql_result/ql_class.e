@@ -218,8 +218,6 @@ feature -- Access
 
 	text: STRING is
 			-- Text of `ast'
-		local
-			l_list: LEAF_AS_LIST
 		do
 			if is_compiled then
 				Result := Precursor

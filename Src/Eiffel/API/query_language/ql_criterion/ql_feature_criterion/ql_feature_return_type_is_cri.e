@@ -23,8 +23,6 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: like item_type): BOOLEAN is
 			-- Evaluate `a_item'.
-		local
-			l_type_table: like return_types
 		do
 			if a_item.is_real_feature then
 				if a_item.e_feature.type /= Void then

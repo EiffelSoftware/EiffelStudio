@@ -38,7 +38,8 @@ inherit
 			end_processing,
 			add,
 			add_string,
-			add_new_line
+			add_new_line,
+			set_context_group
 		end
 
 	EB_SHARED_DEBUG_TOOLS
@@ -288,6 +289,22 @@ feature -- Element change
 		do
 			managed_output_tools.start
 			managed_output_tools.prune_all (an_output_tool)
+		end
+
+	set_context_group (a_group: like context_group) is
+			-- Set context_group with `a_group'.
+		do
+			Precursor {EB_OUTPUT_MANAGER}(a_group)
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				if managed_output_tools.item.is_general then
+					managed_output_tools.item.text_area.text_displayed.set_context_group (a_group)
+				end
+				managed_output_tools.forth
+			end
 		end
 
 feature {NONE} -- Text formatter

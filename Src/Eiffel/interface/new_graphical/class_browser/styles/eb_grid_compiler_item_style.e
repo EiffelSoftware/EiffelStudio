@@ -13,6 +13,9 @@ inherit
 	EVS_GENERAL_TOOLTIP_UTILITY
 
 	EB_SHARED_MANAGERS
+
+	EB_SHARED_WRITER
+
 feature -- Setting
 
 	apply (a_item: EB_GRID_COMPILER_ITEM) is
@@ -52,14 +55,6 @@ feature -- Tooltip
 		end
 
 feature{NONE} -- Implementation
-
-	token_writer: EB_EDITOR_TOKEN_GENERATOR is
-			-- Editor token writer used to generate `tokens'
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
-		end
 
 	setup_text (a_item: EB_GRID_COMPILER_ITEM) is
 			-- Setup text for `a_item'.

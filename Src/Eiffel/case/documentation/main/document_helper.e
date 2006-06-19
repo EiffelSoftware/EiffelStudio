@@ -112,7 +112,6 @@ feature -- Helper
 			a_group_not_void: a_group /= Void
 		local
 			l_cluster: CONF_CLUSTER
-			l_assem: CONF_ASSEMBLY
 			l_lib: CONF_LIBRARY
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
@@ -136,17 +135,6 @@ feature -- Helper
 				elseif a_group.is_library then
 					l_lib ?= a_group
 					l_clusters := l_lib.library_target.clusters
-					from
-						l_clusters.start
-					until
-						l_clusters.after
-					loop
-						Result.force_last (l_clusters.item_for_iteration)
-						l_clusters.forth
-					end
-				elseif a_group.is_assembly then
-					l_assem ?= a_group
-					l_clusters := l_assem.target.application_target.clusters
 					from
 						l_clusters.start
 					until

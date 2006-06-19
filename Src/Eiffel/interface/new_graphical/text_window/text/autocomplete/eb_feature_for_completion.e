@@ -20,7 +20,8 @@ inherit
 			insert_name,
 			grid_item,
 			full_insert_name,
-			begins_with
+			begins_with,
+			completion_type
 		end
 
 	PREFIX_INFIX_NAMES
@@ -110,6 +111,23 @@ feature -- Access
 			Result.append (completion_type)
 		end
 
+	completion_type: STRING is
+			-- The type of the feature (for a function, attribute)
+		do
+			if internal_completion_type = Void then
+				if return_type /= Void then
+					token_writer.new_line
+					return_type.ext_append_to (token_writer, associated_feature)
+					Result := token_writer.last_line.image
+				else
+					create Result.make_empty
+				end
+				internal_completion_type := Result
+			else
+				Result := internal_completion_type
+			end
+		end
+
 	grid_item: EB_GRID_FEATURE_ITEM is
 			-- Grid item
 		local
@@ -133,7 +151,6 @@ feature -- Access
 			Result.set_tooltip_display_function (agent display_colorized_tooltip)
 			Result.enable_pixmap
 			Result.set_overriden_fonts (label_font_table)
-			Result.set_data (Current)
 		end
 
 feature -- Query
@@ -173,8 +190,9 @@ feature {NONE} -- Implementation
 		do
 			if internal_feature_signature = Void then
 				if associated_feature.has_arguments then
-					create Result.make (110)
-					associated_feature.append_arguments_to (Result)
+					token_writer.new_line
+					associated_feature.append_arguments (token_writer)
+					Result := token_writer.last_line.image
 				else
 					create Result.make_empty
 				end

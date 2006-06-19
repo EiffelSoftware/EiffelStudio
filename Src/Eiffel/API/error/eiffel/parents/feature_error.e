@@ -61,7 +61,11 @@ feature -- Output
 
 	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Output the error message.
+		local
+			l_group: CONF_GROUP
 		do
+			l_group := a_text_formatter.context_group
+			a_text_formatter.set_context_group (class_c.group)
 			print_error_message (a_text_formatter)
 			a_text_formatter.add ("Class: ")
 			class_c.append_signature (a_text_formatter, False)
@@ -96,6 +100,7 @@ feature -- Output
 					print_context_of_error (written_class, a_text_formatter)
 				end
 			end
+			a_text_formatter.set_context_group (l_group)
 		end
 
 feature {COMPILER_EXPORTER} -- Implementation

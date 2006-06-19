@@ -13,6 +13,24 @@ inherit
 
 	DOCUMENTATION_FACILITIES
 
+feature -- Access
+
+	context_group: CONF_GROUP is
+			-- Context group, i.e. can be used to retrive renamed name.
+		do
+			Result := internal_context_group
+		end
+
+feature -- Element change
+
+	set_context_group (a_group: like context_group) is
+			-- Set `context_group' with `a_group'.
+		do
+			internal_context_group := a_group
+		ensure
+			internal_context_group_set: internal_context_group = a_group
+		end
+
 feature -- Operation
 
 	start_processing (append: BOOLEAN) is
@@ -406,8 +424,20 @@ feature -- Text operator
 
 	add_class (class_i: CLASS_I) is
 			-- Append class item.
+		local
+			l_name: STRING
+			l_list: LINKED_LIST [STRING]
 		do
-			process_class_name_text (class_i.name_in_upper, class_i, false)
+			if context_group /= Void then -- and class_i.is_valid then
+				l_list := context_group.name_by_class (class_i.config_class, True)
+				if not l_list.is_empty then
+					l_name := l_list.first
+				end
+			end
+			if l_name = Void then
+				l_name := class_i.name_in_upper + " (Invisible)"
+			end
+			process_class_name_text (l_name, class_i, false)
 		end
 
 	add_error (error: ERROR; str: STRING) is
@@ -559,6 +589,9 @@ feature {NONE} -- Implementation
 		do
 			Result := eiffel_system.system.current_class
 		end
+
+	internal_context_group: like context_group;
+			-- Internal context group
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

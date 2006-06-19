@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			Result.disable_item_expand (l_hbox)
 
 				-- "Options" label
-			create l_label.make_with_text (interface_names.l_options)
+			create l_label.make_with_text (interface_names.l_options + ": ")
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 
@@ -396,9 +396,10 @@ feature {NONE} -- Option behaviour
 			l_name: like name_type
 			l_index: INTEGER
 		do
+			lock_update
 				-- Save selected item
 			if not choice_list.selected_rows.is_empty then
-				l_name ?= choice_list.selected_rows.first.item (1).data
+				l_name ?= choice_list.selected_rows.first.data
 				check
 					l_name_not_void: l_name /= Void
 				end
@@ -417,6 +418,7 @@ feature {NONE} -- Option behaviour
 				choice_list.row (l_index).ensure_visible
 			end
 			resize_column_to_window_width
+			unlock_update
 		end
 
 	apply_show_return_type (a_b: BOOLEAN) is
@@ -425,6 +427,7 @@ feature {NONE} -- Option behaviour
 			l_index: INTEGER
 			l_row: EV_GRID_ROW
 		do
+			lock_update
 			if not choice_list.selected_rows.is_empty then
 				l_index := choice_list.selected_rows.first.index
 			end
@@ -449,6 +452,7 @@ feature {NONE} -- Option behaviour
 				ensure_item_selection
 			end
 			resize_column_to_window_width
+			unlock_update
 		end
 
 	apply_show_completion_signature (a_b: BOOLEAN) is
@@ -466,12 +470,14 @@ feature {NONE} -- Option behaviour
 	apply_remember_window_size (a_b: BOOLEAN) is
 			-- Apply remembering window size.
 		do
+			lock_update
 			if a_b then
 				save_window_position
 			else
 				code_completable.position_completion_choice_window
-				resize_column_to_window_width
+				resize_window_to_column_width
 			end
+			unlock_update
 		end
 
 	filter_completion_list_agent: PROCEDURE [ANY, TUPLE]
@@ -613,7 +619,7 @@ feature {NONE} -- Implementation
 				if ev_application.ctrl_pressed and then l_row.is_expandable and then l_row.subrow_count > 0 then
 					l_row := l_row.subrow (1)
 				end
-				l_name_item ?= l_row.item (1).data
+				l_name_item ?= l_row.data
 				check
 					l_name_item_not_void: l_name_item /= Void
 				end
@@ -663,6 +669,23 @@ feature {NONE} -- Implementation
 			-- Set pixmap of `a_item'.
 		do
 			a_item.set_pixmap (pixmaps.icon_expandable_right_arrow_color)
+		end
+
+	resize_window_to_column_width is
+			-- Resize window to column width
+		local
+			i: INTEGER
+		do
+			if choice_list.column_count > 0 and then choice_list.row_count > 0 then
+				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
+				choice_list.column (1).set_width (i)
+				if choice_list.vertical_scroll_bar.is_displayed then
+					choice_list.set_minimum_width (i + choice_list.vertical_scroll_bar.width)
+				else
+					choice_list.set_minimum_width (i)
+				end
+				choice_list.set_minimum_width (0)
+			end
 		end
 
 	last_completed_feature_had_arguments: BOOLEAN;

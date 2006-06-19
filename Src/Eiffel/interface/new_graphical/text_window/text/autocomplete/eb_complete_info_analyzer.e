@@ -16,6 +16,8 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
+	EB_SHARED_WRITER
+
 feature -- Access
 
 	features_position: ARRAYED_LIST [INTEGER]
@@ -80,6 +82,7 @@ feature -- Basic operations
 			create inserted_feature_table.make (30)
 			cp_index := 1
 			initialize_context
+			token_writer.set_context_group (group)
 			if current_class_i /= Void and then current_class_c /= Void then
 				l_current_class_c := current_class_c
 				token := cursor_token
@@ -207,11 +210,6 @@ feature -- Internal access
 
 	cp_index: INTEGER
 
-	token_writer: EDITOR_TOKEN_WRITER is
-		once
-			create {EB_EDITOR_TOKEN_GENERATOR}Result.make
-		end
-
 	Any_name: STRING is "ANY";
 
 	current_pos_in_token: INTEGER is
@@ -265,6 +263,8 @@ feature -- Class names completion
 			insertion.put ("")
 			is_create := False
 			class_completion_possibilities := Void
+			token_writer.set_context_group (group)
+			build_overload_list := False
 			if workbench.is_already_compiled and then (not workbench.is_compiling) then
 				token := a_token.previous
 				if
@@ -290,7 +290,7 @@ feature -- Class names completion
 					create class_name.make (l_class_i)
 				 	class_list.extend (class_name)
 				else
-					if matches (l_class_i.name, cname) then
+					if matches (classes.key_for_iteration, cname) then
 						create class_name.make (l_class_i)
 					 	class_list.extend (class_name)
 					end

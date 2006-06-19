@@ -10,7 +10,7 @@ class
 	EB_COMPLETION_LIST_GRID
 
 inherit
-	ES_GRID
+	EV_GRID
 		redefine
 			initialize
 		end
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 
 invariant
 	invariant_clause: True -- Your invariant here
-	
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

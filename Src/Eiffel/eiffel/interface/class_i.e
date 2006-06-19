@@ -427,7 +427,7 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		do
-			st.add_classi (Current, name)
+			st.add_class (Current)
 		end
 
 feature {COMPILER_EXPORTER} -- Compiled class

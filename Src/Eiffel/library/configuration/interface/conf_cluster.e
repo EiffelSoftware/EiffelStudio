@@ -188,6 +188,7 @@ feature -- Access queries
 			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
 			l_name: STRING
+			l_cursor: DS_HASH_SET_CURSOR [CONF_GROUP]
 		do
 				-- apply mapping
 			if mapping.has (a_class) then
@@ -209,16 +210,17 @@ feature -- Access queries
 					-- search in dependencies
 				if a_dependencies then
 					l_groups := accessible_groups
+					l_cursor := l_groups.new_cursor
 					from
-						l_groups.start
+						l_cursor.start
 					until
-						l_groups.after
+						l_cursor.after
 					loop
-						l_grp := l_groups.item_for_iteration
+						l_grp := l_cursor.item
 						if l_grp.classes_set then
 							Result.append (l_grp.class_by_name (l_name, False))
 						end
-						l_groups.forth
+						l_cursor.forth
 					end
 
 					class_by_name_cache.force (Result, l_name)

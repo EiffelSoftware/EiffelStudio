@@ -2989,7 +2989,7 @@ feature -- Output
 		require
 			non_void_st: a_text_formatter /= Void
 		do
-			a_text_formatter.add_classi (lace_class, name)
+			a_text_formatter.add_class (lace_class)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -277,6 +277,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 					-- Shift x pos back so it fits on the screen
 				Result := Result - (list_width - right_space)
 			end
+			Result := Result.max (0)
 		end
 
 	calculate_completion_list_y_position: INTEGER is

@@ -43,6 +43,13 @@ inherit
 			out
 		end
 
+	EB_SHARED_WRITER
+		undefine
+			copy,
+			is_equal,
+			out
+		end
+
 create
 	make,
 	make_token,
@@ -118,8 +125,10 @@ feature -- Query
 				Result.set_text_with_tokens (tokens)
 				Result.set_pixmap (icon)
 			end
+			if has_child then
+				Result.set_pixmap (pixmaps.icon_expandable_right_arrow_color)
+			end
 			Result.set_overriden_fonts (label_font_table)
-			Result.set_data (Current)
 		end
 
 	child_grid_items: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM] is

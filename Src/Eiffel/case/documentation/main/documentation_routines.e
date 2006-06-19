@@ -116,8 +116,7 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			l_groups: ARRAYED_LIST [CONF_GROUP]
-			l_cluster: CONF_CLUSTER
+			l_groups: HASH_TABLE [CONF_GROUP, STRING]
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -127,20 +126,13 @@ feature -- Access
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
-			l_groups := du.universe.groups
+			l_groups := eiffel_universe.target.groups
 			from
 				l_groups.start
 			until
 				l_groups.after
 			loop
-				if l_groups.item.is_cluster then
-					l_cluster ?= l_groups.item
-					if l_cluster.parent = Void then
-						append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item, 1)
-					end
-				else
-					append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item, 1)
-				end
+				append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item_for_iteration, 1)
 				l_groups.forth
 			end
 
@@ -164,7 +156,9 @@ feature -- Access
 			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
 			l_name: STRING
 			l_cluster: CONF_CLUSTER
+			l_group_type: STRING
 		do
+			l_group_type := type_of_group (group)
 			l_name := group_name_presentation (".", "", group)
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -172,7 +166,7 @@ feature -- Access
 			insert_global_menu_bar (a_text_formatter, True, True, False)
 			a_text_formatter.process_filter_item (f_menu_bar, false)
 
-			a_text_formatter.process_keyword_text ("Clusters", Void)
+			a_text_formatter.process_keyword_text (l_group_type, Void)
 			a_text_formatter.add_new_line
 			a_text_formatter.add_indent
 			a_text_formatter.process_cluster_name_text (l_name, group, false)
@@ -354,7 +348,7 @@ feature -- Routines
 				add_string_multilined (text, "%"" + class_c.obsolete_message + "%"")
 				text.add_new_line
 			end
-			append_info_item (text, "cluster")
+			append_info_item (text, type_of_group (class_i.group))
 			text.process_cluster_name_text (class_i.group.name, class_i.group, false)
 			text.add_new_line
 
@@ -561,9 +555,9 @@ feature {NONE} -- Implementation
 				n := n + 1
 			end
 			if du.is_group_generated (a_group) then
-			 	text.process_cluster_name_text (group_name_presentation (".", "", a_group), a_group, false)
+			 	text.process_cluster_name_text (a_group.name, a_group, false)
 			else
-				text.process_basic_text (group_name_presentation (".", "", a_group))
+				text.process_basic_text (a_group.name)
 			end
 			text.add_new_line
 			subs := subclusters_of_group (a_group)
@@ -884,6 +878,22 @@ feature  -- Menu bars
 		end
 
 feature {NONE} -- Implementation
+
+	type_of_group (a_group: CONF_GROUP): STRING is
+			-- String representation of type of `a_group'
+		require
+			a_group_not_void: a_group /= Void
+		do
+			if a_group.is_library then
+				Result := "Library"
+			elseif a_group.is_assembly then
+				Result := "Assembly"
+			else
+				Result := "Cluster"
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

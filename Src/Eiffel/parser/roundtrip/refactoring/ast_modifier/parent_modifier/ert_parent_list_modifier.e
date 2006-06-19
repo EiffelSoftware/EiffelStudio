@@ -67,6 +67,7 @@ feature -- Applicability
 				destination.internal_parents.inherit_keyword.replace_text (source.internal_parents.text (source_match_list), destination_match_list)
 			else
 				compute_modification
+				last_computed_modifier.first.apply
 				last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
 			end
 			applied := True
@@ -126,12 +127,15 @@ feature{NONE} -- Implementation
 				if not done then
 					l_appended_parents.append ("%N%N%T")
 					l_appended_parents.append (source.internal_parents.item.text (source_match_list))
+				else
+					l_appended_parents.wipe_out
 				end
 				source.internal_parents.forth
 				if not l_appended_parents.is_empty then
 					create l_modifier.make (destination.internal_parents, destination_match_list)
 					l_modifier.set_arguments ("", "", "")
-					l_modifier.append (l_appended_parents)
+					l_modifier.append (l_appended_parents.twin)
+					l_appended_parents.wipe_out
 					last_computed_modifier.extend (l_modifier)
 				end
 			end

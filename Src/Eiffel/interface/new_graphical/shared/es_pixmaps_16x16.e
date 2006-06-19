@@ -1005,7 +1005,7 @@ feature {NONE} -- Query
 			a_x_positive: a_x > 0
 			a_x_small_enough: a_x <= width
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_x <= height
+			a_y_small_enough: a_y <= height
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER

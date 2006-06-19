@@ -18,10 +18,16 @@ inherit
 			is_real_feature,
 			is_invariant_feature,
 			process,
-			ast
+			ast,
+			return_type
 		end
 
 	SHARED_SERVER
+		undefine
+			is_equal
+		end
+
+	QL_UTILITY
 		undefine
 			is_equal
 		end
@@ -120,6 +126,16 @@ feature -- Access
 			Result := feature_path_marker
 		ensure then
 			good_result: Result = feature_path_marker
+		end
+
+	return_type: QL_CLASS is
+			-- Return type of current feature.
+		do
+			if e_feature.type /= Void then
+				Result := query_class_item_from_class_c (actual_type_from_type_a (class_c, e_feature.type))
+			end
+		ensure then
+			query_has_return_type: e_feature.type /= Void implies Result /= Void
 		end
 
 feature -- Status report

@@ -60,6 +60,8 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_prefix_criterion, c_is_prefix)
 			agent_table.put (agent new_is_procedure_criterion, c_is_procedure)
 			agent_table.put (agent new_is_unique_criterion, c_is_unique)
+			agent_table.put (agent new_is_query_criterion, c_is_query)
+			agent_table.put (agent new_is_command_criterion, c_is_command)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -73,6 +75,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_assigner_is_criterion, c_assigner_is)
 			agent_table.put (agent new_creators_of_criterion, c_createe_is)
 			agent_table.put (agent new_creator_is_criterion, c_creator_is)
+			agent_table.put (agent new_return_type_is_criterion, c_return_type_is)
 
 			create name_table.make (50)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -105,6 +108,8 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_prefix, query_language_names.ql_cri_is_prefix)
 			name_table.put (c_is_procedure, query_language_names.ql_cri_is_procedure)
 			name_table.put (c_is_unique, query_language_names.ql_cri_is_unique)
+			name_table.put (c_is_query, query_language_names.ql_cri_is_query)
+			name_table.put (c_is_command, query_language_names.ql_cri_is_command)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -118,6 +123,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_assigner_is, query_language_names.ql_cri_assigner_is)
 			name_table.put (c_createe_is, query_language_names.ql_cri_createe_is)
 			name_table.put (c_creator_is, query_language_names.ql_cri_creator_is)
+			name_table.put (c_return_type_is, query_language_names.ql_cri_return_type_is)
 		end
 
 feature{NONE} -- Implementation
@@ -368,6 +374,22 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_is_query_criterion: QL_SIMPLE_FEATURE_CRITERION is
+			-- New criterion to test if a feature is query
+		do
+			create Result.make (agent is_query_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_command_criterion: QL_SIMPLE_FEATURE_CRITERION is
+			-- New criterion to test if a feature is command
+		do
+			create Result.make (agent is_command_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_true_criterion: QL_SIMPLE_FEATURE_CRITERION is
 			-- New criterion that always returns True (tautology criterion)
 		do
@@ -496,6 +518,17 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_return_type_is_criterion (a_domain: QL_DOMAIN): QL_FEATURE_RETURN_TYPE_IS_CRI is
+			-- New {QL_FEATURE_RETURN_TYPE_IS_CRI} criterion.
+		require
+			a_domain_attached: a_domain /= Void
+		do
+			create Result.make (a_domain)
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 feature -- Criterion index
 
 	c_false,
@@ -528,6 +561,8 @@ feature -- Criterion index
 	c_is_prefix,
 	c_is_procedure,
 	c_is_unique,
+	c_is_query,
+	c_is_command,
 	c_true,
 	c_name_is,
 	c_text_contain,
@@ -540,7 +575,8 @@ feature -- Criterion index
 	c_assignee_is,
 	c_assigner_is,
 	c_createe_is,
-	c_creator_is: INTEGER is unique
+	c_creator_is,
+	c_return_type_is: INTEGER is unique
 
 feature{NONE} -- Implementation
 
@@ -812,6 +848,24 @@ feature{NONE} -- Implementation
 			Result := a_item.is_real_feature and then a_item.e_feature.is_unique
 		end
 
+	is_query_agent (a_item: QL_FEATURE): BOOLEAN is
+			-- Agent to test if `a_item' is query
+			-- Require compiled: True
+		local
+			l_feature: E_FEATURE
+		do
+			if a_item.is_real_feature then
+				l_feature := a_item.e_feature
+				Result := l_feature.is_function or l_feature.is_attribute or l_feature.is_constant or l_feature.is_unique
+			end
+		end
+
+	is_command_agent (a_item: QL_FEATURE): BOOLEAN is
+			-- Agent to test if `a_item' is command
+			-- Require compiled: True
+		do
+			Result := is_procedure_agent (a_item)
+		end
 	true_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False

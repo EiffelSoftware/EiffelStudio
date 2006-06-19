@@ -94,6 +94,9 @@ feature {NONE} -- Internal parsers
 			il_parser: Result.il_parser
 		end
 
+	match_list: LEAF_AS_LIST;
+			-- Match list of last class parsed by `roundtrip_eiffel_parser'
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

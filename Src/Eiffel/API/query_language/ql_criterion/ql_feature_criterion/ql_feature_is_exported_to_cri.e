@@ -10,68 +10,24 @@ class
 	QL_FEATURE_IS_EXPORTED_TO_CRI
 
 inherit
-	QL_FEATURE_CRITERION
-		undefine
-			process
-		end
-
-	QL_DOMAIN_CRITERION
-
-	QL_SHARED
-
+	QL_FEATURE_DOMAIN_CRITERION
 
 create
 	make
-
-feature{NONE} -- Initialization
-
-	make (a_domain: like criterion_domain) is
-			-- Initialize `criterion_domain' with `a_feature'.
-		require
-			a_domain_attached: a_domain /= Void
-		do
-			set_criterion_domain (a_domain)
-		ensure
-			criterion_domain_set: criterion_domain = a_domain
-		end
-
-feature -- Setting
-
-	set_criterion_domain (a_domain: QL_DOMAIN) is
-			-- Set `criterion_domain' with `a_domain'
-		local
-			l_delayed_domain: QL_DELAYED_DOMAIN
-		do
-			if criterion_domain /= Void and then criterion_domain.is_delayed then
-				l_delayed_domain ?= criterion_domain
-				if l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.prune_all (initialize_agent)
-				end
-			end
-			criterion_domain := a_domain
-			is_criterion_domain_evaluated := False
-			if criterion_domain.is_delayed then
-				l_delayed_domain ?= a_domain
-				check l_delayed_domain /= Void end
-				if not l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.extend (initialize_agent)
-				end
-			end
-		end
 
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
 			-- Evaluate `a_item'.
 		local
-			l_client: like client_classes
+			l_client: like clients
 		do
 			if a_item.is_real_feature then
 				if not is_criterion_domain_evaluated then
 					initialize_domain
 				end
-				check client_classes /= Void end
-				l_client := client_classes
+				check clients /= Void end
+				l_client := clients
 				Result := True
 				if not l_client.is_empty then
 					from
@@ -95,18 +51,15 @@ feature{NONE} -- Implementation
 		do
 			create l_domain_generator.make (class_criterion_factory.simple_criterion_with_index (
 					class_criterion_factory.c_is_compiled), True)
-			client_classes ?= criterion_domain.new_domain (l_domain_generator)
+			clients ?= criterion_domain.new_domain (l_domain_generator)
 			is_criterion_domain_evaluated := True
 		ensure then
-			client_classes_attached: client_classes /= Void
+			client_classes_attached: clients /= Void
 			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
-	client_classes: QL_CLASS_DOMAIN
+	clients: QL_CLASS_DOMAIN;
 			-- Client class domain
-
-invariant
-	criterion_domain_attached: criterion_domain /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

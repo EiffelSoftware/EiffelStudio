@@ -9,6 +9,9 @@ indexing
 class
 	QL_UTILITY
 
+inherit
+	COMPILER_EXPORTER
+
 feature -- Status report
 
 	is_class_compiled (a_conf_class: CONF_CLASS): BOOLEAN is
@@ -92,6 +95,25 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	actual_type_from_type_a (a_class: CLASS_C; a_type: TYPE_A): CLASS_C is
+			-- Actual type from `a_type' in context of `a_class'
+		require
+			a_class_attached: a_class /= Void
+			a_type_attached: a_type /= Void
+		local
+			l_type: TYPE_A
+		do
+			l_type := a_type
+			if l_type.is_loose then
+				l_type := l_type.instantiation_in (l_type, l_type.associated_class.class_id)
+				l_type := l_type.actual_type
+				l_type := constrained_type (a_class, l_type)
+			end
+			Result := l_type.associated_class
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP) is
@@ -168,6 +190,24 @@ feature{NONE} -- Implementation
 					l_last_item := a_list.item
 					a_list.forth
 				end
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	constrained_type (a_class_c: CLASS_C; a_type: TYPE_A): TYPE_A is
+			-- Constrained type of `a_type'.
+		require
+			a_class_c_attached: a_class_c /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_formal_type: FORMAL_A
+		do
+			if a_type.is_formal then
+				l_formal_type ?= a_type
+				Result := a_class_c.constraint (l_formal_type.position)
+			else
+				Result := a_type
 			end
 		end
 

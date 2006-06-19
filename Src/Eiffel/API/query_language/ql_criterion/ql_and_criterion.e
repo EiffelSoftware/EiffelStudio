@@ -94,6 +94,7 @@ feature{NONE} -- Implementation
 			l_subtrahend_domain: QL_DOMAIN
 			l_source_domain: QL_DOMAIN
 			l_filter_cri: QL_CRITERION
+			l_old_used_in_domain_generator: QL_DOMAIN_GENERATOR
 		do
 				-- For inclusive intrinsic domain
 			if has_inclusive_intrinsic_domain then
@@ -128,7 +129,10 @@ feature{NONE} -- Implementation
 						l_source_domain := right.intrinsic_domain
 						l_filter_cri := left
 					end
+					l_old_used_in_domain_generator := l_filter_cri.used_in_domain_generator
+					l_filter_cri.set_used_in_domain_generator (Void)
 					Result := l_source_domain.new_domain (l_filter_cri.domain_generator (True, True))
+					l_filter_cri.set_used_in_domain_generator (l_old_used_in_domain_generator)
 				end
 			elseif has_exclusive_intrinsic_domain then
 					-- For exclusive intrinsic domain

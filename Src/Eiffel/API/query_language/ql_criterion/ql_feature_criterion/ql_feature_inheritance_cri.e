@@ -37,12 +37,14 @@ feature{NONE} -- Evaluate
 							a_item.set_data (l_user_data_list.i_th (l_feature_list.index))
 							Result := True
 						else
-								-- Deal with different branch versions
+								-- Deal with different branch versions.
+								-- From source domain, when we list all features,
+								-- One feature will be listed only once, features with multi-branchs
+								-- are supposed to appear in result domain for several times (one branch per time).
 							l_item := a_item.twin
 							l_item.set_data (l_user_data_list.i_th (l_feature_list.index))
 							used_in_domain_generator.on_item_satisfied_by_criterion (l_item, False)
 						end
-
 					end
 					l_feature_list.forth
 				end

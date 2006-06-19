@@ -89,29 +89,38 @@ feature{NONE} -- Implementation
 			l_scopes := scopes
 				-- Setup `fast_generator_table'.
 			create fast_generator_table.make (l_scopes.count)
+			create normal_generator_table.make (l_scopes.count)
 			create l_line_basic_scope.make (Void)
+			l_line_basic_scope.set_metric (Current)
 			l_scopes.do_all (agent normal_generator_table.put (l_line_basic_scope, ?))
 
 				-- Setup `normal_generator_table'.
-			create normal_generator_table.make (l_scopes.count)
 			create l_class_basic_scope.make (agent number_of_lines_in_code_structure ({QL_CLASS}?))
+			l_class_basic_scope.set_metric (Current)
 			create l_generic_basic_scope.make (agent number_of_lines_in_code_structure ({QL_GENERIC}?))
-			create l_feature_basic_scope.make (agent number_of_lines_in_code_structure ({QL_FEATURE}?))
+			l_generic_basic_scope.set_metric (Current)
+			create l_feature_basic_scope.make (agent number_of_lines_in_feature ({QL_FEATURE}?))
+			l_feature_basic_scope.set_metric (Current)
 			create l_local_basic_scope.make (agent number_of_lines_in_code_structure ({QL_LOCAL}?))
+			l_local_basic_scope.set_metric (Current)
 			create l_argument_basic_scope.make (agent number_of_lines_in_code_structure ({QL_ARGUMENT}?))
+			l_argument_basic_scope.set_metric (Current)
 			create l_assertion_basic_scope.make (agent number_of_lines_in_code_structure ({QL_ASSERTION}?))
+			l_assertion_basic_scope.set_metric (Current)
 			create l_line_basic_scope.make (Void)
+			l_line_basic_scope.set_metric (Current)
 			create l_quantity_basic_scope.make (Void)
-			normal_generator_table.put (l_class_basic_scope, target_scope)
-			normal_generator_table.put (l_class_basic_scope, group_scope)
-			normal_generator_table.put (l_class_basic_scope, class_scope)
-			normal_generator_table.put (l_generic_basic_scope, generic_scope)
-			normal_generator_table.put (l_feature_basic_scope, feature_scope)
-			normal_generator_table.put (l_local_basic_scope, local_scope)
-			normal_generator_table.put (l_argument_basic_scope, argument_scope)
-			normal_generator_table.put (l_assertion_basic_scope, assertion_scope)
-			normal_generator_table.put (l_line_basic_scope, line_scope)
-			normal_generator_table.put (l_quantity_basic_scope, quantity_scope)
+			l_quantity_basic_scope.set_metric (Current)
+			fast_generator_table.put (l_class_basic_scope, target_scope)
+			fast_generator_table.put (l_class_basic_scope, group_scope)
+			fast_generator_table.put (l_class_basic_scope, class_scope)
+			fast_generator_table.put (l_generic_basic_scope, generic_scope)
+			fast_generator_table.put (l_feature_basic_scope, feature_scope)
+			fast_generator_table.put (l_local_basic_scope, local_scope)
+			fast_generator_table.put (l_argument_basic_scope, argument_scope)
+			fast_generator_table.put (l_assertion_basic_scope, assertion_scope)
+			fast_generator_table.put (l_line_basic_scope, line_scope)
+			fast_generator_table.put (l_quantity_basic_scope, quantity_scope)
 		ensure
 			fast_generator_table_attached: fast_generator_table /= Void
 			normal_generator_table_attached: normal_generator_table /= Void
@@ -128,6 +137,27 @@ feature{NONE} -- Implementation
 			l_last_new_line_position: INTEGER
 		do
 			l_text := a_item.text
+			check l_text /= Void end
+			Result := l_text.occurrences ('%N')
+			l_count := l_text.count
+			l_last_new_line_position := l_text.last_index_of ('%N', l_count)
+			if l_last_new_line_position /= l_count then
+				Result := Result + 1.0
+			end
+		end
+
+	number_of_lines_in_feature (a_item: QL_FEATURE): DOUBLE is
+			-- Number of lines in `a_item'.
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		local
+			l_text: STRING
+			l_count: INTEGER
+			l_last_new_line_position: INTEGER
+		do
+			l_text := a_item.text
+			l_text.right_adjust
 			check l_text /= Void end
 			Result := l_text.occurrences ('%N')
 			l_count := l_text.count

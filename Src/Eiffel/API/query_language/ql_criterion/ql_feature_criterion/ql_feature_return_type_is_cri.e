@@ -1,86 +1,89 @@
 indexing
-	description: "Criterion to test if indexing clause of a class contain certain text"
+	description: "Criterion to test if a feature is of certain return type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	QL_CLASS_INDEXING_CLAUSE_CONTAIN_CRI
+class
+	QL_FEATURE_RETURN_TYPE_IS_CRI
 
 inherit
-	QL_CLASS_INDEXING_CRI
-		rename
-			name as text
-		redefine
-			class_ast
-		end
+	QL_FEATURE_DOMAIN_CRITERION
 
-feature{NONE} -- Implementation
+	COMPILER_EXPORTER
 
-	indexing_clause_contain_text (a_indexing_clause: INDEXING_CLAUSE_AS; a_match_list: LEAF_AS_LIST): BOOLEAN is
-			-- Is `a_indexing_clause' contain text `text'?
-			-- Text of `a_indexing_clause' will be retrieved from `a_match_list'.
-		require
-			a_indexing_clause_attached: a_indexing_clause /= Void
-			a_match_list_attached: a_match_list /= Void
+	QL_UTILITY
+
+create
+	make
+
+feature -- Evaluate
+
+	is_satisfied_by (a_item: like item_type): BOOLEAN is
+			-- Evaluate `a_item'.
 		local
-			l_text: STRING
-			l_index_list: EIFFEL_LIST [ATOMIC_AS]
+			l_type_table: like return_types
 		do
-			if not a_indexing_clause.is_empty then
-				from
-					a_indexing_clause.start
-				until
-					a_indexing_clause.after or Result
-				loop
-					l_index_list := a_indexing_clause.item.index_list
-					if l_index_list /= Void then
-						l_text := l_index_list.original_text (a_match_list)
-						Result := is_name_same_as (l_text)
+			if a_item.is_real_feature then
+				if a_item.e_feature.type /= Void then
+					if not is_criterion_domain_evaluated then
+						initialize_domain
 					end
-					a_indexing_clause.forth
+					Result := return_types.has (return_type (a_item.e_feature).class_id)
 				end
 			end
-		end
-
-	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
-			-- Pure Eiffel parser
-		once
-			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
-		end
-
-	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
-			-- IL Eiffel parser.
-		once
-			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
-			Result.set_il_parser
 		end
 
 feature{NONE} -- Implementation
 
-	class_ast (a_item: QL_CLASS): CLASS_AS is
-			-- CLASS_AS of `a_item'.
-		local
-			l_retried: BOOLEAN
+	return_type (a_feature: E_FEATURE): CLASS_C is
+			-- Return type of `a_feature'
+		require
+			a_feature_attached: a_feature /= Void
+			a_feature_is_query: a_feature.type /= Void
 		do
-			if not l_retried then
-				if a_item.is_compiled then
-					Result := a_item.class_c.ast
-					match_list := match_list_server.item (a_item.class_c.class_id)
-				else
-					roundtrip_eiffel_parser.parse_from_string (a_item.class_i.text)
-					Result := roundtrip_eiffel_parser.root_node
-					match_list := roundtrip_eiffel_parser.match_list
-				end
-			end
-		rescue
-			Result := Void
-			match_list := Void
-			l_retried := True
-			retry
+			Result := actual_type_from_type_a (a_feature.associated_class, a_feature.type)
+		ensure
+			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implementation
+
+	initialize_domain is
+			-- Prepare clients defined `criterion_domain'.
+		local
+			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
+			l_class_domain: QL_CLASS_DOMAIN
+			l_types: like return_types
+			l_class_c: CLASS_C
+		do
+			create l_domain_generator.make (class_criterion_factory.simple_criterion_with_index (
+					class_criterion_factory.c_is_compiled), True)
+			l_class_domain ?= criterion_domain.new_domain (l_domain_generator)
+			create l_types.make (l_class_domain.count)
+
+			from
+				l_class_domain.start
+			until
+				l_class_domain.after
+			loop
+				l_class_c := l_class_domain.item.class_c
+				check l_class_c /= Void end
+				l_types.force (l_class_c.class_id)
+				l_class_domain.forth
+			end
+			return_types := l_types
+			is_criterion_domain_evaluated := True
+		ensure then
+			return_type_table_classes_attached: return_types /= Void
+			criterion_domain_evaluated: is_criterion_domain_evaluated
+		end
+
+	return_types: DS_HASH_SET [INTEGER];
+			-- Set of return types found in `criterion_domain'
+			-- Key is class id
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -113,6 +116,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

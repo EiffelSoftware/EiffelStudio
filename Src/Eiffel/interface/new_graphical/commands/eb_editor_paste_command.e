@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_paste
+			Result := pixmaps.icon_pixmaps.general_paste_icon
 		end
 
 	tooltip: STRING is

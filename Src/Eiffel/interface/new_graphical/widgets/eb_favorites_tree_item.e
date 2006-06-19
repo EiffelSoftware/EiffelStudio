@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 				if conv_class.associated_class_i /= Void then
 					set_pixmap (pixmap_from_class_i (conv_class.associated_class_i))
 				else
-					set_pixmap (Pixmaps.Icon_class_symbol_gray)
+					set_pixmap (pixmaps.icon_pixmaps.class_uncompiled_icon)
 				end
 				drop_actions.extend (agent drop_folder_after)
 				drop_actions.extend (agent drop_feature_stone_after)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				drop_actions.extend (agent conv_folder.add_feature_stone)
 				drop_actions.extend (agent conv_folder.add_class_stone)
 				drop_actions.extend (agent conv_folder.add_favorite_folder)
-				set_pixmap (Pixmaps.Icon_favorites_folder)
+				set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
 			elseif an_item.is_feature then
 					-- ...or a feature.
 				conv_feat ?= an_item
@@ -157,7 +157,7 @@ feature -- Status setting
 				if cl.associated_class_i /= Void then
 					set_pixmap (pixmap_from_class_i (cl.associated_class_i))
 				else
-					set_pixmap (Pixmaps.Icon_class_symbol_gray)
+					set_pixmap (pixmaps.icon_pixmaps.class_uncompiled_icon)
 				end
 			else
 				ff ?= data

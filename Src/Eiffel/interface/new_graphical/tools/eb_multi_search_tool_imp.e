@@ -345,7 +345,7 @@ feature -- EB_TOOL
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := pixmaps.icon_pixmaps.tool_search_icon
+			Result := pixmaps.icon_pixmaps.tool_advanced_search_icon
 		end
 
 	show_and_set_focus is

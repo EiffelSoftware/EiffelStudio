@@ -26,19 +26,19 @@ feature -- Sorting order
 	topology_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `topology_order'
 		do
-			Result := Void
+			Result := pixmaps.icon_pixmaps.sort_grouped_icon
 		end
 
 	ascending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `ascending_order'
 		do
-			Result := pixmaps.icon_ascending_sort_color
+			Result := pixmaps.icon_pixmaps.sort_acending_icon
 		end
 
 	descending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `decending_order'
 		do
-			Result := pixmaps.icon_descending_sort_color
+			Result := pixmaps.icon_pixmaps.sort_descending_icon
 		end
 
 indexing

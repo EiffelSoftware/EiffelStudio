@@ -676,6 +676,30 @@ feature -- Access
 			Result := pixmap_from_coords (12, 6)
 		end
 
+	debug_attribute_icon: EV_PIXMAP is
+			-- Access to 'attribute' pixmap.
+		once
+			Result := pixmap_from_coords (13, 6)
+		end
+
+	breakpoints_delete_icon: EV_PIXMAP is
+			-- Access to 'delete' pixmap.
+		once
+			Result := pixmap_from_coords (14, 6)
+		end
+
+	breakpoints_disable_icon: EV_PIXMAP is
+			-- Access to 'disable' pixmap.
+		once
+			Result := pixmap_from_coords (15, 6)
+		end
+
+	breakpoints_enable_icon: EV_PIXMAP is
+			-- Access to 'enable' pixmap.
+		once
+			Result := pixmap_from_coords (16, 6)
+		end
+
 	new_cluster_icon: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
@@ -742,16 +766,58 @@ feature -- Access
 			Result := pixmap_from_coords (5, 8)
 		end
 
+	general_remove_icon: EV_PIXMAP is
+			-- Access to 'remove' pixmap.
+		once
+			Result := pixmap_from_coords (6, 8)
+		end
+
 	general_delete_icon: EV_PIXMAP is
 			-- Access to 'delete' pixmap.
 		once
-			Result := pixmap_from_coords (6, 8)
+			Result := pixmap_from_coords (7, 8)
 		end
 
 	general_document_icon: EV_PIXMAP is
 			-- Access to 'document' pixmap.
 		once
-			Result := pixmap_from_coords (7, 8)
+			Result := pixmap_from_coords (8, 8)
+		end
+
+	general_cut_icon: EV_PIXMAP is
+			-- Access to 'cut' pixmap.
+		once
+			Result := pixmap_from_coords (9, 8)
+		end
+
+	general_copy_icon: EV_PIXMAP is
+			-- Access to 'copy' pixmap.
+		once
+			Result := pixmap_from_coords (10, 8)
+		end
+
+	general_paste_icon: EV_PIXMAP is
+			-- Access to 'paste' pixmap.
+		once
+			Result := pixmap_from_coords (11, 8)
+		end
+
+	sort_acending_icon: EV_PIXMAP is
+			-- Access to 'acending' pixmap.
+		once
+			Result := pixmap_from_coords (12, 8)
+		end
+
+	sort_descending_icon: EV_PIXMAP is
+			-- Access to 'descending' pixmap.
+		once
+			Result := pixmap_from_coords (13, 8)
+		end
+
+	sort_grouped_icon: EV_PIXMAP is
+			-- Access to 'grouped' pixmap.
+		once
+			Result := pixmap_from_coords (14, 8)
 		end
 
 	refactor_feature_up_icon: EV_PIXMAP is

@@ -90,19 +90,10 @@ feature {NONE} -- Implementation
 			l_classi: CLASS_I
 			l_comp: CLASS_C
 			l_pixcode: NATURAL_8
-			l_map: like class_icon_map
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
 			l_conf_class := a_class.config_class
-				-- state encoding instead of dozens of ifs
-				--
-				-- 1 read_only
-				-- 2 compiled not deferred
-				-- 3 compiled deferred
-				-- 4 overriden
-				-- 5 does_override
-				-- 6 frozen
-				-- 7 expanded			
+
 			if a_class.is_read_only then
 				l_pixcode := l_pixcode | readonly_flag
 			end
@@ -144,6 +135,9 @@ feature {NONE} -- Implementation
 				end
 			elseif l_conf_class.is_overriden then
 				l_pixcode := l_pixcode | overriden_flag
+			end
+			if l_pixcode = 0 then
+				l_pixcode := none_flag
 			end
 
 			check correct_pixcode: class_icon_map.has (l_pixcode) end
@@ -272,14 +266,14 @@ feature {NONE} -- Implementation
 			result_attached: Result /= VOid
 		end
 
-	none_flag:  NATURAL_8 is 0x00
-	compiled_flag: NATURAL_8 is 0x01
-	deferred_flag: NATURAL_8 is 0x02
-	expanded_flag: NATURAL_8 is 0x04
-	frozen_flag: NATURAL_8 is 0x08
-	overrides_flag: NATURAL_8 is 0x10
-	overriden_flag: NATURAL_8 is 0x20
-	readonly_flag: NATURAL_8 is 0x40;
+	none_flag:  NATURAL_8 is 0x01
+	compiled_flag: NATURAL_8 is 0x02
+	deferred_flag: NATURAL_8 is 0x04
+	expanded_flag: NATURAL_8 is 0x08
+	frozen_flag: NATURAL_8 is 0x010
+	overrides_flag: NATURAL_8 is 0x20
+	overriden_flag: NATURAL_8 is 0x40
+	readonly_flag: NATURAL_8 is 0x80;
 		-- Class icon state flags		
 
 

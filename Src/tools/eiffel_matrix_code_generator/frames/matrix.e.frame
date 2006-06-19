@@ -18,17 +18,14 @@ feature {NONE} -- Initialization
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_exists: (create {RAW_FILE}.make (a_file_name)).exists
 		local
-			l_warn: EV_WARNING_DIALOG
 			retried: BOOLEAN
 		do
-			if not retried and then (create {RAW_FILE}.make (l_file)).exists then
+			if not retried and then (create {RAW_FILE}.make (a_file_name)).exists then
 				create raw_matrix
-				raw_matrix.set_with_named_file (l_file)
+				raw_matrix.set_with_named_file (a_file_name)
 			else
-				create l_warn.make_with_text ("Cannot read pixmap file:%N" + l_file + ".%NPlease make sure the installation is not corrupted.")
-				l_warn.show
-
 					-- Fail safe, use blank pixmap
 				create raw_matrix.make_with_size ((width * pixel_width) + 1,(height * pixel_height) + 1)
 			end
@@ -62,7 +59,7 @@ feature {NONE} -- Query
 			a_x_positive: a_x > 0
 			a_x_small_enough: a_x <= width
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_x <= height
+			a_y_small_enough: a_y <= height
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER

@@ -24,6 +24,8 @@ inherit
 	CODE_SHARED_NAME_FORMATTER
 	CODE_SHARED_ACCESS_MUTEX
 	CODE_SHARED_PARTIAL_TREE_STORE
+	CODE_CONFIGURATION
+	CODE_SHARED_BACKUP
 
 create
 	default_create,
@@ -62,6 +64,8 @@ feature -- Interface
 	generate_code_from_compile_unit (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
 			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
+		local
+			l_code: STRING
 		do
 			if Access_mutex.wait_one then
 				reset
@@ -73,8 +77,10 @@ feature -- Interface
 					set_current_state (Code_analysis)
 					code_dom_generator.generate_compile_unit_from_dom (a_compile_unit)
 					set_current_state (Code_generation)
-					output.write_string (last_compile_unit.code)
+					l_code := last_compile_unit.code
+					output.write_string (l_code)
 					output := Void
+					Backup.backup_content (l_code, "compile_unit.es")
 				end
 				Type_reference_factory.reset_cache
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
@@ -88,6 +94,8 @@ feature -- Interface
 	generate_code_from_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_namespace_from_dom'.
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
+		local
+			l_code: STRING
 		do
 			if Access_mutex.wait_one then
 				reset
@@ -100,8 +108,10 @@ feature -- Interface
 					set_current_state (Code_analysis)
 					code_dom_generator.generate_namespace_from_dom (a_namespace)
 					set_current_state (Code_generation)
-					output.write_string (last_namespace.code)
+					l_code := last_namespace.code
+					output.write_string (l_code)
 					output := Void
+					Backup.backup_content (l_code, "namespace.es")
 				end
 				Type_reference_factory.reset_cache
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
@@ -115,6 +125,8 @@ feature -- Interface
 	generate_code_from_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_type_from_dom'.
 			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
+		local
+			l_code: STRING
 		do
 			if Access_mutex.wait_one then
 				reset
@@ -126,8 +138,10 @@ feature -- Interface
 					set_current_state (Code_analysis)
 					code_dom_generator.generate_type_from_dom (a_type)
 					set_current_state (Code_generation)
-					output.write_string (last_type.code)
+					l_code := last_type.code
+					output.write_string (l_code)
 					output := Void
+					Backup.backup_content (l_code, {SYSTEM_STRING}.concat (a_type.name, (".es").to_cil))
 				end
 				Type_reference_factory.reset_cache
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])

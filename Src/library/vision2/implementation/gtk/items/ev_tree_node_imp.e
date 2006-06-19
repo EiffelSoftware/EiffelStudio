@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			-- Clean up `Current'
 		do
 			if parent_imp /= Void then
-				parent_imp.interface.prune_all (interface)
+				parent_imp.interface.prune (interface)
 			end
 			set_is_destroyed (True)
 		end

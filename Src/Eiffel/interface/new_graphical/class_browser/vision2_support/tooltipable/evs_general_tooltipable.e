@@ -396,38 +396,33 @@ feature{NONE} -- Tooltip show/hide
 		local
 			l_window: like tooltip_window
 			l_show: BOOLEAN
---			l_is_vetoed: BOOLEAN
 		do
 			l_window := tooltip_window
-			if not is_my_tooltip then
-				if l_window.has_owner then
-						-- We only display tooltip of current if other's tooltip is not pined.
-					if not l_window.owner.is_tooltip_pined then
-						l_window.detach_owner
+			if not is_tooltip_display_vetoed then
+				if not is_my_tooltip then
+					if l_window.has_owner then
+							-- We only display tooltip of current if other's tooltip is not pined.
+						if not l_window.owner.is_tooltip_pined then
+							l_window.detach_owner
+							l_show := True
+						end
+					else
 						l_show := True
 					end
-				else
+					if l_show then
+						if is_tooltip_displayed then
+							l_window.hide_tooltip
+						end
+						l_window.attach_owner (Current)
+					end
+				elseif not is_my_tooltip_displayed then
 					l_show := True
 				end
 				if l_show then
-					if is_tooltip_displayed then
-						l_window.hide_tooltip
-					end
-					l_window.attach_owner (Current)
-				end
-			elseif not is_my_tooltip_displayed then
-				l_show := True
-			end
-			if l_show and then not is_tooltip_display_vetoed then
-					-- Use `veto_tooltip_display_funcitons' to do final tooltip display decision.
---				if veto_tooltip_display_function /= Void then
---					veto_tooltip_display_function.call ([])
---					l_is_vetoed := veto_tooltip_display_function.last_result
---				end
---				if not l_is_vetoed then
+						-- Use `veto_tooltip_display_funcitons' to do final tooltip display decision.
 					l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
 					setup_timer (tooltip_status_check_time, agent hide_tooltip)
---				end
+				end
 			end
 		ensure
 			my_tooltip_displayed:

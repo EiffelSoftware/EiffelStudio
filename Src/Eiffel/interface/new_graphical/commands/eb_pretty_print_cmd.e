@@ -37,7 +37,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- 8*8 pixmap representing `Current'.
 		do
-			Result := pixmaps.small_pixmaps.icon_expand_string
+			Result := pixmaps.mini_pixmaps.debugger_expand_info_icon
 		end
 
 	tooltip: STRING is

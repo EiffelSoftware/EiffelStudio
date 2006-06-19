@@ -99,15 +99,15 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			window.extend (container)
 			create right_panel.make (Current, False, True)
 			right_panel.enable_top_widget_resizing
-			right_panel.set_maximize_pixmap (pixmaps.small_pixmaps.icon_maximize)
-			right_panel.set_minimize_pixmap (pixmaps.small_pixmaps.icon_minimize)
-			right_panel.set_restore_pixmap (pixmaps.small_pixmaps.icon_restore)
-			right_panel.set_close_pixmap (pixmaps.small_pixmaps.icon_close)
+			right_panel.set_maximize_pixmap (pixmaps.mini_pixmaps.toolbar_maximize_icon)
+			right_panel.set_minimize_pixmap (pixmaps.mini_pixmaps.toolbar_minimize_icon)
+			right_panel.set_restore_pixmap (pixmaps.mini_pixmaps.toolbar_restore_icon)
+			right_panel.set_close_pixmap (pixmaps.mini_pixmaps.toolbar_close_icon)
 			create left_panel.make (Current, preferences.development_window_data.left_panel_use_explorer_style, False)
-			left_panel.set_maximize_pixmap (pixmaps.small_pixmaps.icon_maximize)
-			left_panel.set_minimize_pixmap (pixmaps.small_pixmaps.icon_minimize)
-			left_panel.set_restore_pixmap (pixmaps.small_pixmaps.icon_restore)
-			left_panel.set_close_pixmap (pixmaps.small_pixmaps.icon_close)
+			left_panel.set_maximize_pixmap (pixmaps.mini_pixmaps.toolbar_maximize_icon)
+			left_panel.set_minimize_pixmap (pixmaps.mini_pixmaps.toolbar_minimize_icon)
+			left_panel.set_restore_pixmap (pixmaps.mini_pixmaps.toolbar_restore_icon)
+			left_panel.set_close_pixmap (pixmaps.mini_pixmaps.toolbar_close_icon)
 			left_panel.enable_top_widget_resizing
 			create panel
 				-- As the side on which panels are displayed may be swapped,

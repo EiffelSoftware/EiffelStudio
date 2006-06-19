@@ -93,7 +93,7 @@ feature -- Properties
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' in toolbars.
 		do
-			Result := pixmaps.small_pixmaps.icon_delete
+			Result := pixmaps.mini_pixmaps.general_delete_icon
 		end
 
 	tooltip: STRING is

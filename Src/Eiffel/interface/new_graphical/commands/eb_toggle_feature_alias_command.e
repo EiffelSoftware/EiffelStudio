@@ -34,7 +34,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do
-			Result := pixmaps.small_pixmaps.icon_toggle_alias
+			Result := pixmaps.mini_pixmaps.completion_show_alias_icon
 		end
 
 feature {NONE} -- Implementation

@@ -226,13 +226,13 @@ feature {NONE} -- Initialization
 		do
 			create mini_toolbar
 			create save_call_stack_cmd.make
-			save_call_stack_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_save_call_stack)
+			save_call_stack_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_save_icon)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
 			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
 
 			create cmd.make
-			cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_clipboard)
+			cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
 			cmd.set_tooltip (Interface_names.e_Copy_call_stack_to_clipboard)
 			cmd.add_agent (agent copy_call_stack_to_clipboard)
 			mini_toolbar.extend (cmd.new_mini_toolbar_item)
@@ -240,7 +240,7 @@ feature {NONE} -- Initialization
 
 
 			create set_stack_depth_cmd.make
-			set_stack_depth_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_set_stack_depth)
+			set_stack_depth_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.debugger_callstack_depth_icon)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 						l_tooltipable_grid_row := stack_grid.grid_extended_new_row (stack_grid)
 						create glab.make_with_text ("Unable to get call stack data")
 						glab.set_tooltip ("Double click to refresh call stack")
-						glab.set_pixmap (Pixmaps.small_pixmaps.icon_dbg_error)
+						glab.set_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
 						glab.pointer_double_press_actions.force_extend (agent update)
 						l_tooltipable_grid_row.set_item (1, glab)
 					end

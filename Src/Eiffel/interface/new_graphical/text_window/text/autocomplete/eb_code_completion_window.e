@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 
 				-- Option buttons
 			create filter_button
-			filter_button.set_pixmap (pixmaps.small_pixmaps.icon_filter)
+			filter_button.set_pixmap (pixmaps.mini_pixmaps.completion_filter_icon)
 			l_tooltip := preferences.editor_data.filter_completion_list_preference.description
 			if l_tooltip /= Void then
 			 	filter_button.set_tooltip (l_tooltip)
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			option_bar.extend (filter_button)
 
 			create show_return_type_button
-			show_return_type_button.set_pixmap (pixmaps.small_pixmaps.icon_return_type)
+			show_return_type_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_return_type_icon)
 			l_tooltip := preferences.editor_data.show_completion_type_preference.description
 			if l_tooltip /= Void then
 				show_return_type_button.set_tooltip (l_tooltip)
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			option_bar.extend (show_return_type_button)
 
 			create show_signature_button
-			show_signature_button.set_pixmap (pixmaps.small_pixmaps.icon_show_signature)
+			show_signature_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_signature_icon)
 			l_tooltip := preferences.editor_data.show_completion_signature_preference.description
 			if l_tooltip /= Void then
 				show_signature_button.set_tooltip (l_tooltip)
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			option_bar.extend (show_signature_button)
 
 			create show_disambiguated_name_button
-			show_disambiguated_name_button.set_pixmap (pixmaps.small_pixmaps.icon_show_disambiguated_name)
+			show_disambiguated_name_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_disambiguants_icon)
 			l_tooltip := preferences.editor_data.show_completion_disambiguated_name_preference.description
 			if l_tooltip /= Void then
 				show_disambiguated_name_button.set_tooltip (l_tooltip)
@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 			option_bar.extend (show_disambiguated_name_button)
 
 			create remember_size_button
-			remember_size_button.set_pixmap (pixmaps.small_pixmaps.icon_remember_window_size)
+			remember_size_button.set_pixmap (pixmaps.mini_pixmaps.completion_remember_size_icon)
 			remember_size_button.set_tooltip (preferences.development_window_data.remember_completion_list_size_preference.description)
 			option_bar.extend (remember_size_button)
 		end

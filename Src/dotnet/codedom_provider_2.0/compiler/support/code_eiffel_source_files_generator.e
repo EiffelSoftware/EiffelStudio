@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_BACKUP
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -131,6 +136,7 @@ feature {NONE} -- Implementation
 			create l_source.make_open_write (l_path)
 			l_source.put_string (a_content)
 			l_source.close
+			Backup.backup_file (l_source)
 		end
 		
 	unique_file_name: STRING is

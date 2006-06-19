@@ -2494,8 +2494,11 @@ feature -- Resource Update
 				set_title (str)
 			end
 			update_formatters
+			lock_update
 			features_tool.synchronize
-			on_cursor_moved
+			refresh_cursor_position
+			refresh_context_info
+			unlock_update
 			if editor_tool.text_area.syntax_is_correct then
 				status_bar.display_message ("")
 			else

@@ -75,7 +75,7 @@ feature {EV_ANY_IMP} -- Implementation
 			-- Destroy `Current'
 		do
 			if parent_imp /= Void then
-					parent_imp.interface.prune_all (interface)
+					parent_imp.interface.prune (interface)
 			end
 			Precursor {EV_GTK_WIDGET_IMP}
 		end

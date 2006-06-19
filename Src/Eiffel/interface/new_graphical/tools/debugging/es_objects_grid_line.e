@@ -766,7 +766,7 @@ feature {NONE} -- Filling
 			grid := a_row.parent
 			if has_attributes_values then
 				glab := folder_label_item (Interface_names.l_Object_attributes)
-				grid_cell_set_pixmap (glab, Pixmaps.Icon_attributes)
+				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_attribute_icon)
 
 				i := a_row.index + a_row.subrow_count_recursive + 1
 				grid.insert_new_row_parented (i, a_row)
@@ -783,7 +783,7 @@ feature {NONE} -- Filling
 			end
 			if has_once_functions then
 				glab := folder_label_item (Interface_names.l_Once_functions)
-				grid_cell_set_pixmap (glab, Pixmaps.Icon_once_objects)
+				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_once_icon)
 
 				i := a_row.index + a_row.subrow_count_recursive + 1
 				grid.insert_new_row_parented (i, a_row)

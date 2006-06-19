@@ -162,8 +162,8 @@ feature -- Observer pattern
 		do
 				-- Remove the menu item that match `a_item' from the menu.
 			menu_item_to_remove ?= retrieve_item_by_data (an_item, True)
-			if menu_item_to_remove /= void then
-				prune_all (menu_item_to_remove)
+			if menu_item_to_remove /= Void then
+				prune (menu_item_to_remove)
 			end
 		end
 

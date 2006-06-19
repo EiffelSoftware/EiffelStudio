@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			add_argument_button := new_create_button
 			add_argument_button.select_actions.extend (agent on_new_argument)
 			vb.extend (routine_is_part)
-			
+
 			extend (hb)
 			disable_item_expand (hb)
 
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		local
 			asc: EB_ARGUMENT_SELECTOR
 		do
-			argument_list.prune_all (arg)
+			argument_list.prune (arg)
 			if not argument_list.is_empty then
 				asc ?= argument_list.last
 				asc.remove_semicolon

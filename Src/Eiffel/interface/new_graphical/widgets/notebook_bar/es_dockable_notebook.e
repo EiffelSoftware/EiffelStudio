@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 						end
 						create dockable_dialog
 						dockable_dialog.set_original_parent_index (dock_source_index)
-						dock_source.parent.prune_all (dock_source)
+						dock_source.parent.prune (dock_source)
 						dockable_dialog.set_original_parent (notebook)
 						dockable_dialog.extend (dock_source)
 						
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 					else
 						if dock_source_index /= pointed_tab_index then --and dock_source_index /= pointed_tab_index - 1 then
 								-- Do not move the widget if the location is the same.
-							notebook.prune_all (dock_source)
+							notebook.prune (dock_source)
 							if pointed_tab_index < dock_source_index then
 								notebook.go_i_th (pointed_tab_index)
 								notebook.put_left (dock_source)

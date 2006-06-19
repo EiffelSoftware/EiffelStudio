@@ -344,6 +344,7 @@ feature{NONE} -- Actions
 			l_item ?= last_picked_item
 			if l_item /= Void then
 				l_item.set_last_picked_token (0)
+				l_item.enable_select
 				if l_item.is_parented then
 					l_item.redraw
 				end

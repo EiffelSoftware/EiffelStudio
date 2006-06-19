@@ -571,7 +571,7 @@ feature -- Access
 			l_locked_column: EV_GRID_LOCKED_COLUMN_I
 		do
 			l_locked_column ?= a_column.locked_column
-			static_fixed.prune_all (l_locked_column.widget)
+			static_fixed.prune (l_locked_column.widget)
 			locked_indexes.go_i_th (l_locked_column.locked_index)
 			locked_indexes.remove
 			if not locked_indexes.off then
@@ -594,7 +594,7 @@ feature -- Access
 			l_locked_row: EV_GRID_LOCKED_ROW_I
 		do
 			l_locked_row ?= a_row.locked_row
-			static_fixed.prune_all (l_locked_row.widget)
+			static_fixed.prune (l_locked_row.widget)
 			locked_indexes.go_i_th (l_locked_row.locked_index)
 			locked_indexes.remove
 			if not locked_indexes.off then
@@ -1101,7 +1101,7 @@ feature -- Status setting
 				displayed_column_count := displayed_column_count - 1
 
 					-- Now hide the header
-				header.prune_all (a_col_i.header_item)
+				header.prune (a_col_i.header_item)
 
 				set_horizontal_computation_required (a_column)
 				redraw_client_area

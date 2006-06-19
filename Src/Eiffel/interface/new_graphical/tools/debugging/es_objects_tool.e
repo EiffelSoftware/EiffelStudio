@@ -1453,7 +1453,7 @@ feature {NONE} -- Impl : Stack objects grid
 			if cse.has_result then
 				internal_result_row := a_target_grid.extended_new_row
 				glab := a_target_grid.folder_label_item (Interface_names.l_result)
-				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
+				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
 				internal_result_row.set_item (1, glab)
 				dv := cse.result_value
 				if dv /= Void then
@@ -1479,7 +1479,7 @@ feature {NONE} -- Impl : Stack objects grid
 			if list /= Void and then not list.is_empty then
 				internal_arguments_row := a_target_grid.extended_new_row
 				glab := a_target_grid.folder_label_item (Interface_names.l_Arguments)
-				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
+				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
 				internal_arguments_row.set_item (1, glab)
 				from
 					internal_arguments_row.insert_subrows (list.count, 1)
@@ -1512,7 +1512,7 @@ feature {NONE} -- Impl : Stack objects grid
 			list := cse.locals
 			if list /= Void and then not list.is_empty then
 				glab := a_target_grid.folder_label_item (Interface_names.l_Locals)
-				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
+				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
 				internal_locals_row := a_target_grid.extended_new_row
 				internal_locals_row.set_item (1, glab)
 				dbg_nb := list.count

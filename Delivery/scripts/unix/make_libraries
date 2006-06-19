@@ -50,6 +50,9 @@ if [ "$1" = "gtk" ]; then
 fi
 remtrace web
 exprt $DEFAULT_ORIGO_SVN/Src/library/web web 
+remtrace wel
+exprt $DEFAULT_ORIGO_SVN/Src/library/wel wel 
+
 
 cd ../..
 

@@ -307,6 +307,7 @@
 					<Directory Id="bitmaps" Name="bitmaps">
 						<Directory Id="png" Name="png">
 							<Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
+								<File Id="matrix_10x10_png" Name="10x10.png" />
 								<File Id="matrix_16x16_png" Name="16x16.png" />
 								<File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
 								<File Id="bm_About.png" Name="bm_About.png" />

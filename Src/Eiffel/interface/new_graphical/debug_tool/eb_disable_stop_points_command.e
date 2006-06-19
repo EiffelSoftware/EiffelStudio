@@ -76,7 +76,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := Pixmaps.Icon_disable_bkpt
+			Result := pixmaps.icon_pixmaps.breakpoints_disable_icon
 		end
 
 	mini_pixmap: EV_PIXMAP is

@@ -73,7 +73,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := Pixmaps.Icon_favorites
+			Result := pixmaps.icon_pixmaps.tool_favorites_icon
 		end
 
 feature -- Memory management

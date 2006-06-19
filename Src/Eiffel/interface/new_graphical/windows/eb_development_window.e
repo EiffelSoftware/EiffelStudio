@@ -1396,7 +1396,7 @@ feature {NONE} -- Menu Building
 				-- Copy
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.M_copy)
-			os_cmd.set_pixmap (pixmaps.icon_copy)
+			os_cmd.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
 			os_cmd.set_name ("Editor_copy")
 			os_cmd.set_tooltip (interface_names.f_copy)
 			os_cmd.set_tooltext (Interface_names.b_copy)

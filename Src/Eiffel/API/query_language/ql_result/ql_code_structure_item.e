@@ -48,6 +48,7 @@ feature -- Access
 		local
 			l_list: LEAF_AS_LIST
 		do
+			check is_compiled end
 			l_list := match_list_server.item (written_class.class_id)
 			check l_list /= Void end
 			Result := ast.original_text (l_list)

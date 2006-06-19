@@ -56,7 +56,7 @@ feature -- Units
 			-- Local unit
 		once
 			create Result.make (query_language_names.ql_local_unit)
-			Result.set_scope (feature_scope)
+			Result.set_scope (local_scope)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -65,7 +65,7 @@ feature -- Units
 			-- Argument unit
 		once
 			create Result.make (query_language_names.ql_argument_unit)
-			Result.set_scope (feature_scope)
+			Result.set_scope (argument_scope)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -74,7 +74,7 @@ feature -- Units
 			-- Generic unit
 		once
 			create Result.make (query_language_names.ql_generic_unit)
-			Result.set_scope (feature_scope)
+			Result.set_scope (argument_scope)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -58,6 +58,11 @@ feature -- Access
 			good_result: Result = feature_scope
 		end
 
+	return_type: QL_CLASS is
+			-- Return type of current feature.
+		do
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is True

@@ -17,10 +17,17 @@ inherit
 			name,
 			wrapped_domain,
 			ast,
-			is_compiled
+			is_compiled,
+			text
 		end
 
 	QL_UTILITY
+		undefine
+			is_equal
+		end
+
+	SHARED_EIFFEL_PARSER
+		export{NONE}all
 		undefine
 			is_equal
 		end
@@ -209,6 +216,21 @@ feature -- Access
 			good_result: Result = class_scope
 		end
 
+	text: STRING is
+			-- Text of `ast'
+		local
+			l_list: LEAF_AS_LIST
+		do
+			if is_compiled then
+				Result := Precursor
+			else
+				if text_internal = Void then
+					text_internal := class_text
+				end
+				Result := text_internal
+			end
+		end
+
 feature -- Status report
 
 	conf_class: CONF_CLASS
@@ -266,6 +288,54 @@ feature{NONE} -- Implementation
 
 	is_compiled_internal: BOOLEAN_REF
 			-- Implementation of `is_compiled'
+
+	text_internal: like text
+			-- Internal stored text.
+			-- Used for non-compiled class
+
+	roundtrip_eiffel_parser: EIFFEL_PARSER is
+			-- Roundtrip parser used to retrieve indexing clause
+		do
+			if il_parsing then
+				Result := roundtrip_il_eiffel_parser
+			else
+				Result := roundtrip_pure_eiffel_parser
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+			-- Pure Eiffel parser
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+		end
+
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+			-- IL Eiffel parser.
+		once
+			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+			Result.set_il_parser
+		end
+
+	class_text: STRING is
+			-- Text of current class if it's a non-compiled class
+		require
+			not_compiled: not is_compiled
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				roundtrip_eiffel_parser.parse_from_string (class_i.text)
+				Result := roundtrip_eiffel_parser.root_node.original_text (roundtrip_eiffel_parser.match_list)
+			end
+		ensure
+			result_attached: Result /= Void
+		rescue
+			Result := ""
+			l_retried := True
+			retry
+		end
 
 invariant
 	class_item_attached: conf_class /= Void

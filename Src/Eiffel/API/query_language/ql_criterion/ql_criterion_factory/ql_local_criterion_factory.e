@@ -25,6 +25,7 @@ feature{NONE} -- Initialization
 			create agent_table.make (10)
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
+			agent_table.put (agent new_is_in_immediate_feature_criterion, c_is_in_immediate_feature)
 			agent_table.put (agent new_is_used_criterion, c_is_used)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
@@ -33,6 +34,7 @@ feature{NONE} -- Initialization
 			create name_table.make (10)
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_is_in_immediate_feature, query_language_names.ql_cri_is_in_immediate_feature)
 			name_table.put (c_is_used, query_language_names.ql_cri_is_used)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
@@ -58,6 +60,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a local is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_in_immediate_feature_criterion: QL_SIMPLE_LOCAL_CRITERION is
+			-- New criterion to test if a local is in immediate feature
+		do
+			create Result.make (agent is_in_immediate_feature_agent, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -105,7 +115,8 @@ feature -- Criterion index
 	c_is_used,
 	c_true,
 	c_name_is,
-	c_text_contain: INTEGER is unique
+	c_text_contain,
+	c_is_in_immediate_feature: INTEGER is unique
 
 feature{NONE} -- Implementation
 
@@ -129,6 +140,19 @@ feature{NONE} -- Implementation
 			-- Require compiled: False
 		do
 			Result := a_item.is_compiled
+		end
+
+	is_in_immediate_feature_agent (a_item: QL_LOCAL): BOOLEAN is
+			-- Agent to test if `a_item' is in immediate feature
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_valid: a_item.is_valid_domain_item
+		local
+			l_feature: QL_FEATURE
+		do
+			l_feature ?= a_item.parent
+			check l_feature /= Void end
+			Result := l_feature.is_immediate
 		end
 
 indexing

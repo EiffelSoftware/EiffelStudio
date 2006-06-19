@@ -130,7 +130,7 @@ feature -- Implementation
 			create vb
 				vb.set_border_width (1)
 				create metric_button
-				metric_button.set_pixmap (pixmaps.small_pixmaps.icon_down_triangle)
+				metric_button.set_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 				metric_button.select_actions.extend (agent display_metric_menu)
 				metric_button.set_minimum_size (15, 20)
 				vb.extend (metric_button)

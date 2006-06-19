@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 
 			create scmd.make
-			scmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_on_off)
+			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_toogle_icon)
 			scmd.set_tooltip ("Display breakpoints separated by status")
 			scmd.enable_sensitive
 			tb := scmd.new_mini_toolbar_item

@@ -256,7 +256,7 @@ feature {NONE} -- Interface
 			create mini_toolbar
 
 			create scmd.make
-			scmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_open_menu)
+			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_tooltip ("Open Objects tool menu")
 			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
@@ -264,7 +264,7 @@ feature {NONE} -- Interface
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
-			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_delete)
+			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
 			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
 			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
 			tbb := remove_debugged_object_cmd.new_mini_toolbar_item
@@ -1378,7 +1378,7 @@ feature {NONE} -- Impl : Stack objects grid
 				if l_exception_tag /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Tag")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
+					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.mini_pixmaps.debugger_error_icon)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_tag)
@@ -1390,7 +1390,7 @@ feature {NONE} -- Impl : Stack objects grid
 				if l_exception_class_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Class")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
+					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.mini_pixmaps.debugger_error_icon)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_class_detail)
@@ -1402,7 +1402,7 @@ feature {NONE} -- Impl : Stack objects grid
 				if l_exception_module_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Module")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
+					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.mini_pixmaps.debugger_error_icon)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_module_detail)
@@ -1415,7 +1415,7 @@ feature {NONE} -- Impl : Stack objects grid
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Nota")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
+					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.mini_pixmaps.debugger_error_icon)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_message)

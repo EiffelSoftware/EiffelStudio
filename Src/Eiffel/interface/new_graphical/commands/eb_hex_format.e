@@ -40,7 +40,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do
-			Result := pixmaps.small_pixmaps.icon_numeric_format
+			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon
 		end
 
 	tooltip: STRING is

@@ -53,7 +53,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		once
-			Result := pixmaps.small_pixmaps.icon_new_class
+			Result := pixmaps.mini_pixmaps.new_class_icon
 		end
 
 feature {NONE} -- Implementation

@@ -29,7 +29,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Mini pixmap representing the command.
 		do
-			Result := pixmaps.small_pixmaps.icon_mini_forth
+			Result := pixmaps.mini_pixmaps.general_next_icon
 		end
 
 feature {NONE} -- Implementation

@@ -78,7 +78,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := Pixmaps.small_pixmaps.Icon_8_enable_bkpt
+			Result := pixmaps.mini_pixmaps.breakpoints_enable_icon
 		end
 
 	name: STRING is "Enable_bkpt"

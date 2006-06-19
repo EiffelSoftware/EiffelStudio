@@ -79,7 +79,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := Pixmaps.Small_pixmaps.Icon_8_clear_bkpt
+			Result := pixmaps.mini_pixmaps.general_delete_icon
 		end
 
 	name: STRING is "Clear_bkpt"

@@ -35,7 +35,7 @@ feature -- Factory
 			-- Create button with a star.
 		do
 			create Result
-			Result.set_pixmap (pixmaps.small_pixmaps.icon_new)
+			Result.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
 			Result.set_minimum_size (16, 16)
 		end
 

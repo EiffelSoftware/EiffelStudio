@@ -62,7 +62,7 @@ feature -- Access
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do
-			Result := pixmaps.small_pixmaps.icon_slice_limits
+			Result := pixmaps.mini_pixmaps.debugger_set_sizes_icon
 		end
 
 	tooltip: STRING is

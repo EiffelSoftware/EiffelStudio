@@ -26,6 +26,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	mini_pixmaps: ES_PIXMAPS_10X10
+			-- Shared icon pixmaps
+		once
+			create Result.make ("10x10.png")
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	icon_pixmaps: ES_PIXMAPS_16X16 is
 			-- Shared icon pixmaps
 		once

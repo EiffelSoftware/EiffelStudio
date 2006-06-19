@@ -63,7 +63,7 @@ feature {NONE} -- Bon class
 		local
 			pic: EV_PIXMAP
 		once
-			pic := pixmaps.small_pixmaps.icon_bon_deferred
+			pic := pixmaps.mini_pixmaps.bon_deferred_icon
 			Result := pixmap_factory.registered_pixmap (pic)
 			pixmap_factory.register_pixmap (Result)
 		end
@@ -72,7 +72,7 @@ feature {NONE} -- Bon class
 		local
 			pic: EV_PIXMAP
 		once
-			pic := pixmaps.small_pixmaps.icon_bon_effective
+			pic := pixmaps.mini_pixmaps.bon_effective_icon
 			Result := pixmap_factory.registered_pixmap (pic)
 			pixmap_factory.register_pixmap (Result)
 		end
@@ -81,7 +81,7 @@ feature {NONE} -- Bon class
 		local
 			pic: EV_PIXMAP
 		once
-			pic := pixmaps.small_pixmaps.icon_bon_interfaced
+			pic := pixmaps.mini_pixmaps.bon_interfaces_icon
 			Result := pixmap_factory.registered_pixmap (pic)
 			pixmap_factory.register_pixmap (Result)
 		end
@@ -90,7 +90,7 @@ feature {NONE} -- Bon class
 		local
 			pic: EV_PIXMAP
 		once
-			pic := pixmaps.small_pixmaps.icon_bon_persistent
+			pic := pixmaps.mini_pixmaps.bon_persistent_icon
 			Result := pixmap_factory.registered_pixmap (pic)
 			pixmap_factory.register_pixmap (Result)
 		end

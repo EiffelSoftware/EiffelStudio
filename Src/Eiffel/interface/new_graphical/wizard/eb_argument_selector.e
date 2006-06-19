@@ -104,7 +104,7 @@ feature -- Status setting
 		do
 			lbl ?= last
 			if lbl /= Void then
-				prune_all (lbl)
+				prune (lbl)
 			end
 		end
 

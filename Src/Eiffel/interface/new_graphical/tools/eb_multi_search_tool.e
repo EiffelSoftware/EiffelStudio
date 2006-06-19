@@ -1428,7 +1428,7 @@ feature -- Custom search scope
 			l_item: EV_LIST_ITEM
 		do
 			l_item := scope_list.retrieve_item_by_data (a_class, false)
-			scope_list.prune_all (l_item)
+			scope_list.prune (l_item)
 			force_new_search
 		end
 
@@ -1463,7 +1463,7 @@ feature -- Custom search scope
 			l_item: EV_LIST_ITEM
 		do
 			l_item := scope_list.retrieve_item_by_data (a_group, false)
-			scope_list.prune_all (l_item)
+			scope_list.prune (l_item)
 			force_new_search
 		end
 
@@ -1496,7 +1496,7 @@ feature -- Custom search scope
 			l_item: EV_LIST_ITEM
 		do
 			l_item := scope_list.retrieve_item_by_data (a_folder, True)
-			scope_list.prune_all (l_item)
+			scope_list.prune (l_item)
 			force_new_search
 		end
 

@@ -235,7 +235,7 @@ feature -- Observer pattern
 			if item_list /= Void then
 				tree_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
 				if tree_item_to_remove /= Void then
-					item_list.prune_all (tree_item_to_remove)
+					item_list.prune (tree_item_to_remove)
 				end
 			end
 		end

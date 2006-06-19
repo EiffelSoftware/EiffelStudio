@@ -274,7 +274,7 @@ feature -- Observer pattern
 			if item_list /= Void then
 				menu_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
 				if menu_item_to_remove /= Void then
-					item_list.prune_all (menu_item_to_remove)
+					item_list.prune (menu_item_to_remove)
 				end
 				if a_item.is_feature then
 					a_class_item ?= item_list.data

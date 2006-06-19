@@ -428,7 +428,7 @@ feature -- Text operator
 			l_name: STRING
 			l_list: LINKED_LIST [STRING]
 		do
-			if context_group /= Void then -- and class_i.is_valid then
+			if context_group /= Void and then class_i.is_valid then
 				l_list := context_group.name_by_class (class_i.config_class, True)
 				if not l_list.is_empty then
 					l_name := l_list.first

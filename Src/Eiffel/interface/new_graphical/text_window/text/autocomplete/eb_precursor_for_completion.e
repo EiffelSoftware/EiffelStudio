@@ -103,7 +103,6 @@ feature -- Query
 			Result.set_spacing (layout_constants.Tiny_padding_size)
 			Result.set_pixmap (icon)
 			Result.set_overriden_fonts (label_font_table)
-			Result.set_data (Current)
 		end
 
 feature -- Element change

@@ -45,7 +45,9 @@ inherit
 			process_column_text,
 			process_call_stack_item,
 			process_menu_text,
-			process_class_menu_text
+			process_class_menu_text,
+			set_context_group,
+			context_group
 		end
 
 create
@@ -111,6 +113,7 @@ feature -- Initialization
 			source_class := a_source_class
 			source_feature := a_source_class.feature_of_feature_id (a_feature_as.id)
 			setup_output_strategy
+			set_context_group (current_class.group)
 		end
 
 	init_feature_context (source, target: FEATURE_I;
@@ -127,6 +130,7 @@ feature -- Initialization
 			target_feature := target
 			source_class := source.written_class
 			setup_output_strategy
+			set_context_group (current_class.group)
 		end
 
 	init_variant_context is
@@ -135,6 +139,7 @@ feature -- Initialization
 			source_feature := Void
 			setup_output_strategy
 			set_in_assertion
+			set_context_group (current_class.group)
 		end
 
 feature -- Case properties
@@ -246,6 +251,12 @@ feature -- Properties
 
 	special_nl_symbol: STRING
 			-- When set, we process `special_nl_symbol' within `put_new_line'.
+
+	context_group: CONF_GROUP is
+			-- Context group
+		do
+			Result := text_formatter.context_group
+		end
 
 feature -- Indentation
 
@@ -384,6 +395,12 @@ feature -- Setting
 			setup_output_strategy
 		end
 
+	set_context_group (a_group: like context_group) is
+			-- Set `context_group' with `a_group'.
+		do
+			text_formatter.set_context_group (a_group)
+		end
+
 feature -- Setting local format details
 
 	indent is
@@ -457,6 +474,7 @@ feature -- Execution
 						-- when processing the header of a class.
 					ast_output_strategy.set_current_class (current_class)
 					ast_output_strategy.set_source_class (current_class)
+					set_context_group (current_class.group)
 					ast_output_strategy.format (format_registration.target_ast)
 					Inst_context.set_group (Void)
 				else

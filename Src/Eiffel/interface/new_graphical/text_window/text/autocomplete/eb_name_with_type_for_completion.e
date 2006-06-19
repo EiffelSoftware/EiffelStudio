@@ -52,7 +52,6 @@ feature -- Access
 			Result.set_tooltip_display_function (agent display_colorized_tooltip)
 			Result.enable_pixmap
 			Result.set_overriden_fonts (label_font_table)
-			Result.set_data (Current)
 		end
 
 indexing

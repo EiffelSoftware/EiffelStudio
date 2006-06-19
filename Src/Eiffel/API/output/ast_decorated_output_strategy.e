@@ -823,7 +823,7 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.put_space
 					text_formatter_decorator.process_symbol_text (ti_l_curly)
 					if not has_error_internal then
-						text_formatter_decorator.process_class_name_text (l_as.parent_base_class.class_name, l_parent_class.lace_class, False)
+						text_formatter_decorator.add_class (l_parent_class.lace_class)
 					else
 						text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name)
 					end

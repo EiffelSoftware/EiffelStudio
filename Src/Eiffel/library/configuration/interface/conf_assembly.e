@@ -215,17 +215,19 @@ feature -- Access queries
 		local
 			l_dep: CONF_GROUP
 			l_groups: like accessible_groups
+			l_cursor: DS_HASH_SET_CURSOR [CONF_GROUP]
 		do
 			Result := Precursor (a_class, a_dependencies)
 			if a_dependencies then
 				l_groups := accessible_groups
+				l_cursor := l_groups.new_cursor
 				from
-					l_groups.start
+					l_cursor.start
 				until
-					l_groups.after
+					l_cursor.after
 				loop
-					l_groups.forth
-					l_dep := l_groups.item_for_iteration
+					l_dep := l_cursor.item
+					l_cursor.forth
 					if l_dep.classes_set then
 						Result.append (l_dep.name_by_class (a_class, False))
 					end

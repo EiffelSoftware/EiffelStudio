@@ -47,6 +47,10 @@ feature {NONE} -- Initialization
 			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
 			choice_list.hide_header
 			choice_list.disable_selection_key_handling
+			choice_list.enable_partial_dynamic_content
+			choice_list.set_dynamic_content_function (agent on_item_display)
+			choice_list.virtual_position_changed_actions.extend (agent on_scroll)
+			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 
 			default_create
 			enable_user_resize
@@ -107,7 +111,7 @@ feature -- Access
 	code_completable: CODE_COMPLETABLE
 			-- associated code completable
 
-	choice_list: ES_GRID
+	choice_list: EV_GRID
 			-- list displaying possible feature signatures
 
 	option_bar_box: EV_VERTICAL_BOX
@@ -257,6 +261,10 @@ feature {NONE} -- Events handling
 					go_to_last_visible_item
 				when Key_down then
 					go_to_next_visible_item
+				when Key_page_up then
+					page_up
+				when Key_page_down then
+					page_down
 				when key_home then
 					select_row (1)
 				when key_end then
@@ -305,7 +313,7 @@ feature {NONE} -- Events handling
 		do
 			if choice_list.virtual_height > choice_list.viewable_height then
 				if mouse_wheel_scroll_full_page then
-					l_row := choice_list.row ((choice_list.first_visible_row.index - a * nb_items_to_scroll).max (1).min (choice_list.row_count))
+					l_row := choice_list.row ((choice_list.first_visible_row.index - a * viewable_row_count).max (1).min (choice_list.row_count))
 					choice_list.set_virtual_position (choice_list.virtual_x_position,
 						l_row.virtual_y_position.min (choice_list.maximum_virtual_y_position))
 				else
@@ -317,7 +325,114 @@ feature {NONE} -- Events handling
 			end
 		end
 
+	on_row_expand (a_row: EV_GRID_ROW) is
+			-- On row expand
+		require
+			a_row_not_void: a_row /= Void
+		local
+			l_name: NAME_FOR_COMPLETION
+			l_children: SORTABLE_ARRAY [NAME_FOR_COMPLETION]
+			i, upper: INTEGER
+		do
+			if a_row.subrow_count = 0 then
+				l_name ?= a_row.data
+				check
+					l_name_not_void: l_name /= Void
+					matches_not_void: matches /= Void
+				end
+				l_children := l_name.children
+				from
+					i := l_children.lower
+					upper := l_children.upper
+				until
+					i > upper
+				loop
+					if matches.has (l_children.item (i)) then
+						a_row.insert_subrow (a_row.subrow_count + 1)
+						a_row.subrow (a_row.subrow_count).set_data (l_children.item (i))
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Cursor movement
+
+	page_up is
+			-- Page up
+		local
+			l_selected_row: INTEGER
+			i: INTEGER
+			l_viewable_row_count: INTEGER
+			l_count: INTEGER
+			end_loop: BOOLEAN
+			l_last_selectable: INTEGER
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					lock_update
+					l_selected_row := choice_list.selected_rows.first.index
+					l_viewable_row_count := viewable_row_count + 1 - scrolling_common_line_count
+					l_last_selectable := l_selected_row
+					from
+						i := l_selected_row
+					until
+						i < 1 or end_loop
+					loop
+						if choice_list.row (i).parent_row /= Void implies choice_list.row (i).parent_row.is_expanded then
+							l_count := l_count + 1
+							l_last_selectable := i
+						end
+						if l_count > l_viewable_row_count then
+							end_loop := True
+						end
+						i := i - 1
+					end
+					choice_list.remove_selection
+					choice_list.row (l_last_selectable).enable_select
+					choice_list.row (l_last_selectable).ensure_visible
+					unlock_update
+				end
+			end
+		end
+
+	page_down is
+			-- Page down
+		local
+			l_selected_row: INTEGER
+			i: INTEGER
+			l_viewable_row_count: INTEGER
+			l_count: INTEGER
+			end_loop: BOOLEAN
+			l_last_selectable: INTEGER
+		do
+			if choice_list.row_count > 0 then
+				if not choice_list.selected_items.is_empty then
+					lock_update
+					l_selected_row := choice_list.selected_rows.first.index
+					l_viewable_row_count := viewable_row_count + 1 - scrolling_common_line_count
+					l_last_selectable := l_selected_row
+					from
+						i := l_selected_row
+					until
+						i > choice_list.row_count or end_loop
+					loop
+						if choice_list.row (i).parent_row /= Void implies choice_list.row (i).parent_row.is_expanded then
+							l_count := l_count + 1
+							l_last_selectable := i
+						end
+						if l_count > l_viewable_row_count then
+							end_loop := True
+						end
+						i := i + 1
+					end
+					choice_list.remove_selection
+					choice_list.row (l_last_selectable).enable_select
+					choice_list.row (l_last_selectable).ensure_visible
+					unlock_update
+				end
+			end
+		end
 
 	go_to_last_visible_item is
 			-- Go to last visible item.
@@ -492,6 +607,9 @@ feature {NONE} -- Implementation
 	index_offset: INTEGER
 			-- Index in `full_list' of the first element in `choice_list'
 
+	matches: SORTABLE_ARRAY [like name_type]
+			-- Last matches
+
 	rebuild_list_during_matching: BOOLEAN is
 			-- Should the list be rebuilt according to current match?
 		do
@@ -510,24 +628,22 @@ feature {NONE} -- Implementation
 			full_list_not_void: full_list /= Void
 		local
 			l_count: INTEGER
-			matches: SORTABLE_ARRAY [like name_type]
-			list_row: EV_GRID_ITEM
 			match_item: like name_type
 			row_index: INTEGER
 			l_upper: INTEGER
-			l_child_items: ARRAYED_LIST [EV_GRID_ITEM]
-			l_parent_row_index: INTEGER
 			l_tree_view: BOOLEAN
-			l_parents_inserted: HASH_TABLE [like name_type, like name_type]
-			l_name: NAME_FOR_COMPLETION
+			l_row: EV_GRID_ROW
+			l_parents_inserted: HASH_TABLE [NAME_FOR_COMPLETION, NAME_FOR_COMPLETION]
 		do
 			choice_list.wipe_out
-			create l_parents_inserted.make (20)
 			if rebuild_list_during_matching then
 				matches := matches_based_on_name (name)
 			else
 				matches := full_list.subarray (1, full_list.count)
 			end
+			choice_list.set_column_count_to (1)
+			choice_list.set_row_count_to (top_node_count_of (matches))
+			create l_parents_inserted.make (matches.count)
 
 			if matches.is_empty then
 				current_index := 0
@@ -542,53 +658,62 @@ feature {NONE} -- Implementation
 				l_count > l_upper
 			loop
 				match_item := matches.item (l_count)
-				if match_item /= Void then
-					if match_item.has_parent then
-						match_item := match_item.parent
-					end
-					if not l_parents_inserted.has (match_item) then
-						list_row := match_item.grid_item
-								-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y,
-								-- whereas we need selected_item x/y.
-							--list_row.select_actions.extend (agent activate_tooltip)
-						choice_list.set_item (1, row_index, list_row)
-						list_row.row.expand_actions.extend (agent match_item.set_is_expanded ((True)))
-						list_row.row.collapse_actions.extend (agent match_item.set_is_expanded ((False)))
-						l_parent_row_index := row_index
-						row_index := row_index + 1
 
-						if match_item.has_child then
-							l_parents_inserted.put (match_item, match_item)
-							if not l_tree_view then
-								l_tree_view := True
-								choice_list.enable_tree
-							end
-							set_expanded_row_icon (list_row, match_item)
-							l_child_items := match_item.child_grid_items
-							from
-								l_child_items.start
-							until
-								l_child_items.after
-							loop
-								l_name ?= l_child_items.item.data
-								matches.binary_search (l_name)
-								if matches.found then
-									list_row.row.insert_subrow (list_row.row.subrow_count + 1)
-									list_row.row.subrow (list_row.row.subrow_count).set_item (1, l_child_items.item)
-									row_index := row_index + 1
-								end
-								l_child_items.forth
-							end
-							if match_item.is_expanded and then list_row.row.is_expandable then
-								list_row.row.expand
-							end
+				if match_item.has_parent then
+					match_item := match_item.parent
+				end
+				if not l_parents_inserted.has (match_item) then
+					l_row := choice_list.row (row_index)
+					l_row.set_data (match_item)
+					row_index := row_index + 1
+					if match_item.has_child then
+						if not l_tree_view then
+							l_tree_view := True
+							choice_list.enable_tree
+						end
+						l_row.ensure_expandable
+						l_row.expand_actions.extend (agent match_item.set_is_expanded ((True)))
+						l_row.expand_actions.extend (agent on_row_expand (l_row))
+						l_row.collapse_actions.extend (agent match_item.set_is_expanded ((False)))
+						if match_item.is_expanded and then l_row.is_expandable then
+							l_row.expand
+							row_index := row_index + l_row.subrow_count
 						end
 					end
+					l_parents_inserted.force (match_item, match_item)
 				end
 				l_count := l_count + 1
 			end
 			if not l_tree_view then
 				choice_list.disable_tree
+			end
+		end
+
+	top_node_count_of (a_names: SORTABLE_ARRAY [like name_type]): INTEGER is
+			-- Count of node with no parent
+		require
+			a_names_not_void: a_names /= Void
+		local
+			i, l_upper: INTEGER
+			l_name: NAME_FOR_COMPLETION
+			l_parents_inserted: HASH_TABLE [NAME_FOR_COMPLETION, NAME_FOR_COMPLETION]
+		do
+			create l_parents_inserted.make (a_names.count)
+			from
+				i := a_names.lower
+				l_upper := a_names.upper
+			until
+				i > l_upper
+			loop
+				l_name := a_names.item (i)
+				if l_name.has_parent then
+					l_name := l_name.parent
+				end
+				if not l_parents_inserted.has (l_name) then
+					Result := Result + 1
+					l_parents_inserted.force (l_name, l_name)
+				end
+				i := i + 1
 			end
 		end
 
@@ -812,14 +937,35 @@ feature {NONE} -- Implementation
 	resize_column_to_window_width is
 			-- Resize the column width to the width of the window
 		local
-			l_sb_wid: INTEGER
 			i: INTEGER
 		do
-			if choice_list.column_count > 0 then
-				l_sb_wid := choice_list.width - choice_list.viewable_width
+			if choice_list.column_count > 0 and then choice_list.row_count > 0 then
 				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
-				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
-				choice_list.column (1).set_width (i)
+				if choice_list.vertical_scroll_bar.is_displayed then
+					if i < choice_list.width - choice_list.vertical_scroll_bar.width then
+						choice_list.column (1).set_width (choice_list.width - choice_list.vertical_scroll_bar.width)
+					else
+						choice_list.column (1).set_width (i)
+					end
+				else
+					if i < choice_list.width then
+						choice_list.column (1).set_width (choice_list.width)
+					else
+						choice_list.column (1).set_width (i)
+					end
+				end
+			end
+		end
+
+	on_scroll (x, y: INTEGER) is
+			-- On vertical bar scroll
+		local
+			l_row: EV_GRID_ROW
+		do
+			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+			if not choice_list.selected_rows.is_empty then
+				l_row := choice_list.selected_rows.first
+				ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
 			end
 		end
 
@@ -1047,26 +1193,19 @@ feature {NONE} -- String matching
 			has_result: Result /= Void
 		end
 
-	nb_items_to_scroll: INTEGER is
+	viewable_row_count: INTEGER is
 			-- Number of items that will be scrolled when doing a page up or down operation.
 		require
 			choice_list_not_void: choice_list /= Void
 		do
-			if choice_list.viewable_height > choice_list.row_count * choice_list.row_height then
-					-- In this situation, all of the rows are displayed in the grid so we wish to scroll
-					-- by the number of rows (less one as one is already be selected).
-				Result := choice_list.row_count - 1
-			else
-					-- Calculate the number of rows to scroll based on `scrolling_common_line_count' preference.
-				Result := choice_list.last_visible_row.index - choice_list.first_visible_row.index - scrolling_common_line_count
-			end
+			Result := choice_list.viewable_height // choice_list.row_height
 		end
 
 	grid_row_by_data (a_data: ANY) : INTEGER is
 			-- Find a row in a_grid that include a_data
 		local
 			i: INTEGER
-			l_item: EV_GRID_ITEM
+			l_row: EV_GRID_ROW
 			loop_end: BOOLEAN
 		do
 			loop_end := false
@@ -1075,12 +1214,25 @@ feature {NONE} -- String matching
 			until
 				i > choice_list.row_count or loop_end
 			loop
-				l_item := choice_list.row (i).item (1)
-				if l_item.data /= Void and then l_item.data = a_data then
+				l_row := choice_list.row (i)
+				if l_row.data /= Void and then l_row.data = a_data then
 					Result := i
 					loop_end := true
 				end
 				i := i + 1
+			end
+		end
+
+	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			-- On item expose.
+		local
+			l_row: EV_GRID_ROW
+			l_name: NAME_FOR_COMPLETION
+		do
+			l_row := choice_list.row (a_row)
+			l_name ?= l_row.data
+			if l_name /= Void then
+				Result := l_name.grid_item
 			end
 		end
 

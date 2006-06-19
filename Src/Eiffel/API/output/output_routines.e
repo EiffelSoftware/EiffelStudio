@@ -55,13 +55,14 @@ feature -- Miscellaneous
 			text.add_new_line
 
 			root_class := Eiffel_system.root_class
+			root_cluster := Eiffel_system.root_cluster
+			text.set_context_group (root_cluster)
 			if root_class /= Void then
 				text.process_keyword_text ("Root class", Void)
 				text.add_new_line
 				text.add_indent
 				text.add_class (root_class)
 
-				root_cluster := Eiffel_system.root_cluster
 				if root_cluster /= Void then
 					text.add_space
 					text.process_symbol_text (ti_L_parenthesis)

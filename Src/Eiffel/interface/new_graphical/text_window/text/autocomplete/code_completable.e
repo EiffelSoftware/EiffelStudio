@@ -278,14 +278,39 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			-- Determine the width the completion list should have
 		local
 			l_grid: EV_GRID
+			l_screen: EV_SCREEN
+			l_height: INTEGER
+			l_count_to_calculate: INTEGER
+			i: INTEGER
+			l_name: EB_NAME_FOR_COMPLETION
 		do
+			create l_screen
 			l_grid := choices.choice_list
 				-- Calculate correct size to fit
-			if not l_grid.is_destroyed and then l_grid.column_count >= 1 then
-				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
+			if not l_grid.is_destroyed and then l_grid.column_count >= 1 and then l_grid.row_count > 0 then
+				Result := l_grid.column (1).required_width_of_item_span (1, l_grid.row_count)
+				if Result = 0 then
+					l_height := calculate_completion_list_height
+					l_count_to_calculate := l_height // l_grid.row_height + 1
+					l_count_to_calculate := l_count_to_calculate.min (l_grid.row_count)
+					from
+						i := 1
+					until
+						i > l_count_to_calculate
+					loop
+						l_name ?= l_grid.row (i).data
+						check
+							l_name_not_void: l_name /= Void
+						end
+						Result := Result.max (l_name.grid_item.required_width)
+						i := i + 1
+					end
+					Result := Result + completion_border_size
+				end
 			else
 				Result := default_window_width
 			end
+			Result := l_screen.width.min (Result)
 		end
 
 	handle_character (a_char: CHARACTER) is

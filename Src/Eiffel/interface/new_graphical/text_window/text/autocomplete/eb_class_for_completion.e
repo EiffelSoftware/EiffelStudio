@@ -34,7 +34,10 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			make_old (a_class.name)
+			token_writer.new_line
+			a_class.append_name (token_writer)
+			insert_name := token_writer.last_line.image
+			make_old (insert_name)
 			associated_class := a_class
 		ensure
 			associated_class_set: associated_class = a_class
@@ -48,11 +51,8 @@ feature -- Access
 			Result := True
 		end
 
-	insert_name: STRING is
+	insert_name: STRING
 			-- Name to insert in editor
-		do
-			Result := associated_class.name
-		end
 
 	icon: EV_PIXMAP is
 			-- Associated icon based on data
@@ -85,7 +85,6 @@ feature -- Access
 			Result.set_tooltip_display_function (agent display_colorized_tooltip)
 			Result.enable_pixmap
 			Result.set_overriden_fonts (label_font_table)
-			Result.set_data (Current)
 		end
 
 feature {NONE} -- Implementation

@@ -464,6 +464,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			end
 
 			Result := Result - 20
+			Result := Result.max (0)
 		end
 
 	calculate_completion_list_y_position: INTEGER is

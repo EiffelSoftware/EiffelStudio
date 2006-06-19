@@ -80,9 +80,10 @@ feature -- Actions
 			af: LINEAR [INTEGER]
 			cancelled: BOOLEAN
 			ir_error: INTERRUPT_ERROR
-			l_groups: like groups
+			l_groups_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
 			l_group: CONF_GROUP
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_cursor: CURSOR
 		do
 			eiffel_system.system.set_current_class (any_class)
 			if not cancelled then
@@ -135,14 +136,14 @@ feature -- Actions
 						generate_cluster_hierarchy
 					end
 
-					l_groups := groups
+					l_groups_cursor := groups.new_cursor
 					if cluster_chart_generated then
 						from
-							l_groups.start
+							l_groups_cursor.start
 						until
-							l_groups.after
+							l_groups_cursor.after
 						loop
-							l_group := l_groups.item_for_iteration
+							l_group := l_groups_cursor.item
 							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
 							if filter.is_html then
@@ -152,35 +153,38 @@ feature -- Actions
 							prepare_for_file (relative_path (l_group), "index")
 							set_document_title ("cluster " + l_group.name)
 							generate_cluster_index (l_group)
-							l_groups.forth
+							l_groups_cursor.forth
 						end
 					end
 
 					if filter.is_html and then cluster_diagram_generated then
+						l_groups_cursor := groups.new_cursor
 						from
-							l_groups.start
+							l_groups_cursor.start
 						until
-							l_groups.after
+							l_groups_cursor.after
 						loop
-							l_group := l_groups.item_for_iteration
+							l_group := l_groups_cursor.item
 							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
 							generate_cluster_diagram (l_group)
-							l_groups.forth
+							l_groups_cursor.forth
 						end
 					end
 
 					if any_class_format_generated then
 						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
+						l_groups_cursor := groups.new_cursor
 						from
-							l_groups.start
+							l_groups_cursor.start
 						until
-							l_groups.after
+							l_groups_cursor.after
 						loop
-							l_group := l_groups.item_for_iteration
-							l_groups.forth
+							l_group := l_groups_cursor.item
+							l_groups_cursor.forth
 							l_classes := l_group.classes
 							if l_classes /= Void then
+								l_cursor := l_classes.cursor
 								from
 									l_classes.start
 								until
@@ -211,6 +215,7 @@ feature -- Actions
 									end
 									l_classes.forth
 								end
+								l_classes.go_to (l_cursor)
 							end
 						end
 					end
@@ -459,7 +464,6 @@ feature {NONE} -- Implementation
 			s, class_array, location_array, goto_text: STRING
 			textfile: PLAIN_TEXT_FILE
 			fn: FILE_NAME
-			l_group: CONF_GROUP
 			l_add: BOOLEAN
 			l_index: INTEGER
 			l_classes: like classes
@@ -714,13 +718,18 @@ feature -- Specific Generation
 
 	generate_cluster_index (a_group: CONF_GROUP) is
 			-- Write project a_group index to `target_file_name'.
+		local
+			l_group: CONF_GROUP
 		do
+			l_group := filter.context_group
+			filter.set_context_group (a_group)
 			filter.prepend_to_file_suffix (class_links)
 			group_index_text (
 				a_group,
 				doc_universe.classes_in_group (a_group),
 				filter.is_html and cluster_diagram_generated,
 				filter)
+			filter.set_context_group (l_group)
 			generate_from_text_filter (filter)
 		end
 

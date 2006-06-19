@@ -56,7 +56,10 @@ feature -- Output
 		local
 			l_name: STRING
 			l_type: TYPE_A
+			l_group: CONF_GROUP
 		do
+			l_group := a_text_formatter.context_group
+			a_text_formatter.set_context_group (associated_class.group)
 			a_text_formatter.add ("Class: ")
 			associated_class.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
@@ -88,6 +91,7 @@ feature -- Output
 				a_text_formatter.add_new_line
 				unused_locals.forth
 			end
+			a_text_formatter.set_context_group (l_group)
 		end
 
 feature {COMPILER_EXPORTER}

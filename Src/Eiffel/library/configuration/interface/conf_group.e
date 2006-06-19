@@ -197,18 +197,22 @@ feature -- Access queries
 		require
 			a_class_ok: a_class /= Void and then a_class.is_valid
 			classes_set: classes_set
+		local
+			l_cursor: CURSOR
 		do
 			create Result.make
 			if reverse_classes_cache = Void then
 				create reverse_classes_cache.make (classes.count)
 				from
 					classes.start
+					l_cursor := classes.cursor
 				until
 					classes.after
 				loop
 					reverse_classes_cache.force (classes.key_for_iteration, classes.item_for_iteration)
 					classes.forth
 				end
+				classes.go_to (l_cursor)
 			end
 			if reverse_classes_cache.has (a_class) then
 				Result.force (reverse_classes_cache.found_item)

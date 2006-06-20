@@ -18,14 +18,6 @@ inherit
 
 feature -- Access
 
-	small_pixmaps: EB_SHARED_PIXMAPS_8 is
-			-- Shared small pixmaps
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	mini_pixmaps: ES_PIXMAPS_10X10 is
 			-- Shared icon pixmaps
 		once
@@ -93,11 +85,6 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_preference_root_value)
 		end
 
-	Icon_preference_folder: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_preference_folder_value)
-		end
-
 	Icon_preference_window: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_preference_window_value)
@@ -106,136 +93,6 @@ feature -- Icons
 	Icon_open_exception_dialog: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_open_exception_dialog_value)
-		end
-
-	Icon_format_feature_homonyms: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_feature_homonyms_color_value)
-		end
-
-	Icon_format_feature_implementers: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_feature_implementers_color_value)
-		end
-
-	Icon_format_feature_ancestors: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_feature_ancestors_color_value)
-		end
-
-	Icon_format_feature_descendants: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_feature_descendants_color_value)
-		end
-
-	Icon_format_feature_callers: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_feature_callers_color_value)
-		end
-
-	icon_format_assigners: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_assigners_color_value)
-		end
-
-	icon_format_creators: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_creators_color_value)
-		end
-
-	icon_format_creator_callers: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_creator_callers_color_value)
-		end
-
-	Icon_format_invariants: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_invariants_color_value)
-		end
-
-	Icon_format_ancestors: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_ancestors_color_value)
-		end
-
-	Icon_format_descendants: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_descendants_color_value)
-		end
-
-	Icon_format_clients: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_clients_color_value)
-		end
-
-	Icon_format_suppliers: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_suppliers_color_value)
-		end
-
-	Icon_format_externals: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_externals_color_value)
-		end
-
-	Icon_format_exporteds: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_exporteds_color_value)
-		end
-
-	Icon_format_deferreds: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_deferreds_color_value)
-		end
-
-	Icon_format_onces: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_onces_color_value)
-		end
-
-	Icon_format_attributes: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_attributes_color_value)
-		end
-
-	Icon_format_routines: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_routines_color_value)
-		end
-
-	Icon_format_text: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_text_color_value)
-		end
-
-	Icon_format_clickable: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_clickable_color_value)
-		end
-
-	Icon_format_flat: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_flat_color_value)
-		end
-
-	Icon_format_contract: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_contract_color_value)
-		end
-
-	Icon_format_interface: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_format_interface_color_value)
-		end
-
-	Icon_frozen_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_frozen_feature_value)
-		end
-
-	Icon_obsolete_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_obsolete_feature_value)
 		end
 
 	Icon_object_symbol: EV_PIXMAP is
@@ -256,61 +113,6 @@ feature -- Icons
 	Icon_static_external_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_static_external_symbol_value)
-		end
-
-	Icon_once_objects: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_once_symbol_value)
-		end
-
-	Icon_once_obsolete_objects: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_once_obsolete_symbol_value)
-		end
-
-	Icon_once_frozen_objects: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_once_frozen_symbol_value)
-		end
-
-	Icon_attributes: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_attribute_symbol_value)
-		end
-
-	Icon_obsolete_attribute: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_attribute_obsolete_symbol_value)
-		end
-
-	Icon_frozen_attribute: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_attribute_frozen_symbol_value)
-		end
-
-	Icon_deferred_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_deferred_feature_value)
-		end
-
-	Icon_deferred_obsolete_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_deferred_obsolete_feature_value)
-		end
-
-	Icon_external_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_external_feature_value)
-		end
-
-	Icon_external_frozen_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_external_frozen_feature_value)
-		end
-
-	Icon_external_obsolete_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_external_obsolete_feature_value)
 		end
 
 	Icon_other_feature: EV_PIXMAP is
@@ -336,26 +138,6 @@ feature -- Icons
 	Icon_immediate_value: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_immediate_value_value)
-		end
-
-	Icon_feature_clause_any: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_feature_clause_any_value)
-		end
-
-	Icon_feature_clause_some: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_feature_clause_some_value)
-		end
-
-	Icon_feature_clause_none: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_feature_clause_none_value)
-		end
-
-	Icon_nothing: EV_PIXMAP is
-		once
-			Result := small_pixmaps.icon_nothing
 		end
 
 	Icon_compilation_succeeded: EV_PIXMAP is
@@ -410,75 +192,16 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_compiling_4_value)
 		end
 
-	Icon_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_feature_color_value)
-		end
-
 	Icon_toolbar_separator: EV_PIXMAP is
 			-- Icon for toolbar separator.
 		once
 			Result := pixmap_from_constant (icon_toolbar_separator_value)
 		end
 
-	Icon_compile: EV_PIXMAP is
-			-- Icon for "Melt project" command.
-		once
-			Result := pixmap_from_constant (icon_compile_color_value)
-		end
-
-	Icon_quick_compile: EV_PIXMAP is
-			-- Icon for "Quick melt project" command.
-		once
-			Result := pixmap_from_constant (icon_quick_compile_color_value)
-		end
-
-	Icon_finalize: EV_PIXMAP is
-			-- Icon for "Finalize project" command
-		once
-			Result := pixmap_from_constant (icon_finalize_color_value)
-		end
-
-	Icon_freeze: EV_PIXMAP is
-			-- Icon for "Freeze project" command
-		once
-			Result := pixmap_from_constant (icon_freeze_color_value)
-		end
-
 	Icon_system_info: EV_PIXMAP is
 			-- Icon for "System Info" command
 		once
 			Result := pixmap_from_constant (icon_system_info_color_value)
-		end
-
-	Icon_unify_stone: EV_PIXMAP is
-			-- Icon for "Unify Stone" command
-		once
-			Result := pixmap_from_constant (icon_unify_stone_color_value)
-		end
-
-	Icon_send_stone_down: EV_PIXMAP is
-			-- Icon for "Send Stone" command
-		once
-			Result := pixmap_from_constant (icon_send_stone_down_color_value)
-		end
-
-	Icon_open_file: EV_PIXMAP is
-			-- Icon for "Open File" command
-		once
-			Result := pixmap_from_constant (icon_open_file_color_value)
-		end
-
-	Icon_run: EV_PIXMAP is
-			-- Icon for "Run" command
-		once
-			Result := pixmap_from_constant (icon_run_color_value)
-		end
-
-	Icon_run_debug: EV_PIXMAP is
-			-- Icon for "Run Debug" command
-		once
-			Result := pixmap_from_constant (icon_debug_run_color_value)
 		end
 
 	Icon_debugger_exception: EV_PIXMAP is
@@ -490,12 +213,12 @@ feature -- Icons
 
 	Icon_dbg_assert_checking_restore: EV_PIXMAP is
 		once
-			Result := Icon_exec_quit
+			Result := icon_pixmaps.debug_stop_icon
 		end
 
 	Icon_dbg_assert_checking_disable: EV_PIXMAP is
 		once
-			Result := Icon_exec_stop
+			Result := icon_pixmaps.debug_pause_icon
 		end
 
 	Icon_context_tool: EV_PIXMAP is
@@ -504,69 +227,16 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_context_tool_color_value)
 		end
 
-	Icon_cut: EV_PIXMAP is
-			-- Icon for cut.
-		once
-			Result := pixmap_from_constant (icon_cut_color_value)
-		end
-
-	Icon_copy: EV_PIXMAP is
-			-- Icon for copy.
-		once
-			Result := pixmap_from_constant (icon_copy_color_value)
-		end
-
-	Icon_paste: EV_PIXMAP is
-			-- Icon for paste
-		once
-			Result := pixmap_from_constant (icon_paste_color_value)
-		end
-
-	Icon_search: EV_PIXMAP is
-			-- Icon for search
-		once
-			Result := pixmap_from_constant (icon_search_color_value)
-		end
-
-	Icon_editor: EV_PIXMAP is
-			-- Icon for editor
-		once
-			Result := pixmap_from_constant (icon_format_text_color_value)
-		end
-
 	Icon_windows: EV_PIXMAP is
 			-- Icon for windows
 		once
 			Result := pixmap_from_constant (icon_windows_color_value)
 		end
 
-	Icon_favorites: EV_PIXMAP is
-			-- Icon for favorites
-		once
-			Result := pixmap_from_constant (icon_favorites_color_value)
-		end
-
-	Icon_features: EV_PIXMAP is
-			-- Icon for features
-		once
-			Result := pixmap_from_constant (icon_features_color_value)
-		end
-
 	Icon_help_tool: EV_PIXMAP is
 			-- Icon for help tool.
 		once
 			Result := pixmap_from_constant (icon_help_tool_color_value)
-		end
-
-	Icon_save: EV_PIXMAP is
-			-- Icon for save.
-		once
-			Result := pixmap_from_constant (icon_save_color_value)
-		end
-
-	Icon_save_all: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_save_all_color_value)
 		end
 
 	Icon_save_measure: EV_PIXMAP is
@@ -604,21 +274,6 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_shell_color_value)
 		end
 
-	Icon_new_development_tool: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_development_tool_color_value)
-		end
-
-	Icon_new_tab: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_tab_color_value)
-		end
-
-	Icon_new_editor: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_editor_color_value)
-		end
-
 	Icon_new_context_tool: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_new_context_window_color_value)
@@ -632,11 +287,6 @@ feature -- Icons
 	Icon_new_cluster: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_new_cluster_color_value)
-		end
-
-	Icon_new_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_class_color_value)
 		end
 
 	Icon_minimize_all: EV_PIXMAP is
@@ -659,229 +309,9 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_restore_all_unsaved_color_value)
 		end
 
-	Icon_add_exported_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_add_exported_feature_color_value)
-		end
-
-	Icon_edit_exported_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_edit_exported_feature_color_value)
-		end
-
 	Icon_check_exports: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_check_exports_color_value)
-		end
-
-	Icon_exec_step: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_exec_step_color_value)
-		end
-
-	Icon_step_into: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_step_into_color_value)
-		end
-
-	Icon_step_out: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_step_out_color_value)
-		end
-
-	Icon_exec_quit: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_exec_quit_color_value)
-		end
-
-	Icon_exec_stop: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_exec_stop_color_value)
-		end
-
-	Icon_no_stop: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_no_stop_color_value)
-		end
-
-	Icon_back: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_back_color_value)
-		end
-
-	Icon_forth: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_forth_color_value)
-		end
-
-	Icon_class_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_class_symbol_color_value)
-		end
-
-	Icon_class_symbol_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_class_symbol_color_value)
-		end
-
-	Icon_deferred_class_symbol_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_deferred_class_symbol_color_value)
-		end
-
-	Icon_class_symbol_gray: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_class_symbol_gray_value)
-		end
-
-	Icon_read_only_class_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_light_class_color_value)
-		end
-
-	Icon_deferred_read_only_class_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_light_deferred_class_color_value)
-		end
-
-	Icon_read_only_class_gray: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_light_class_gray_value)
-		end
-
-	Icon_overriden_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_class_color_value)
-		end
-
-	Icon_overriden_light_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_light_class_color_value)
-		end
-
-	Icon_overriden_grey_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_grey_class_color_value)
-		end
-
-	Icon_overriden_light_grey_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_light_grey_class_color_value)
-		end
-
-	Icon_overriden_deferred_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_deferred_class_color_value)
-		end
-
-	Icon_overriden_deferred_light_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overriden_deferred_light_class_color_value)
-		end
-
-	Icon_overrider_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_class_color_value)
-		end
-
-	Icon_overrider_light_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_light_class_color_value)
-		end
-
-	Icon_overrider_grey_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_grey_class_color_value)
-		end
-
-	Icon_overrider_light_grey_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_light_grey_class_color_value)
-		end
-
-	Icon_overrider_deferred_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_deferred_class_color_value)
-		end
-
-	Icon_overrider_deferred_light_class: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrider_deferred_light_class_color_value)
-		end
-
-	Icon_clusters_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_clusters_symbol_color_value)
-		end
-
-	Icon_overrides_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_overrides_symbol_color_value)
-		end
-
-	Icon_libraries_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_libraries_symbol_color_value)
-		end
-
-	Icon_assemblies_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_assemblies_symbol_color_value)
-		end
-
-	Icon_read_only_cluster: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_light_cluster_color_value)
-		end
-
-	Icon_read_only_assembly: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_read_only_assembly_symbol_color_value)
-		end
-
-	Icon_read_only_library: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_read_only_library_symbol_color_value)
-		end
-
-	Icon_read_only_override: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_read_only_override_symbol_color_value)
-		end
-
-	Icon_assembly_namespace: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_assembly_namespace_symbol_color_value)
-		end
-
-	Icon_favorites_folder: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_favorites_folder_color_value)
-		end
-
-	Icon_cluster_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_cluster_symbol_color_value)
-		end
-
-	Icon_folder_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_folder_symbol_color_value)
-		end
-
-	Icon_override_folder_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_override_folder_symbol_color_value)
-		end
-
-	Icon_library_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_library_symbol_color_value)
-		end
-
-	Icon_override_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_override_symbol_color_value)
 		end
 
 	Icon_development_window: EV_PIXMAP is
@@ -906,31 +336,6 @@ feature -- Icons
 			-- Pixmap representing a dynamic library builder window
 		once
 			Result := pixmap_from_constant (icon_progress_dialog_color_value)
-		end
-
-	Icon_enable_bkpt: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_enable_bkpt_color_value)
-		end
-
-	Icon_disable_bkpt: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_disable_bkpt_color_value)
-		end
-
-	Icon_forget_bkpt: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_del_bkpt_color_value)
-		end
-
-	Icon_bkpt_info: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_bkpt_info_color_value)
-		end
-
-	Icon_new_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_feature_color_value)
 		end
 
 	Icon_color: EV_PIXMAP is
@@ -1209,54 +614,10 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_quick_search_close_color_value)
 		end
 
-	Icon_trash_can_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_trash_can_color_value)
-		end
-
-	Icon_ascending_sort_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_ascending_sort_color_value)
-		end
-
-	Icon_descending_sort_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_descending_sort_color_value)
-		end
 
 	icon_expandable_right_arrow_color: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_expandable_right_arrow_color_value)
-		end
-
-	Icon_output_view_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_output_view_icon_value)
-		end
-
-	Icon_error_output_view_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_error_output_view_icon_value)
-		end
-
-	Icon_warning_output_view_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_warning_output_view_icon_value)
-		end
-
-	Icon_diagram_tool_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_diagram_tool_icon_value)
-		end
-
-	Icon_class_view_icon: EV_PIXMAP is
-		once
-			Result := icon_class_symbol_color
-		end
-
-	Icon_feature_view_icon: EV_PIXMAP is
-		once
-			Result := icon_feature
 		end
 
 	Icon_bottom_reached_icon: EV_PIXMAP is
@@ -1279,54 +640,9 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_collapse_all_value)
 		end
 
-	Icon_assigner: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_assigner_value)
-		end
-
-	Icon_frozen_assigner: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_frozen_assigner_value)
-		end
-
-	Icon_obsolete_assigner: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_obsolete_assigner_value)
-		end
-
-	Icon_deferred_assigner: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_deferred_assigner_value)
-		end
-
-	Icon_deferred_obsolete_assigner: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_deferred_obsolete_assigner_value)
-		end
-
 	Icon_invisible_icon: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (Icon_invisible_value)
-		end
-
-	Icon_external_command_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_external_command_icon_value)
-		end
-
-	Icon_normal_callee_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_normal_callee_icon_value)
-		end
-
-	Icon_creator_callee_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_creator_callee_icon_value)
-		end
-
-	Icon_assigner_callee_icon: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_assigner_callee_icon_value)
 		end
 
 feature -- Reading

@@ -1,7 +1,8 @@
 # vision2.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -MT -W3
+CFLAGS = -c -Ox -MT -W3 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+ILCFLAGS = $(CFLAGS) -DEIF_IL_DLL
 MTCFLAGS = $(CFLAGS) -DEIF_THREADS
 INCLUDE_PATH = -I..\spec\include \
 	-I..\..\..\C_library\libpng \
@@ -13,8 +14,9 @@ INCLUDE_PATH = -I..\spec\include \
 
 OBJ = load_pixmap.obj
 MT_OBJ = MTload_pixmap.obj
+IL_OBJ = ilload_pixmap.obj
 
-all:: vision2.lib mtvision2.lib
+all:: vision2.lib mtvision2.lib ilvision2.lib
 
 vision2.lib: $(OBJ)
 	if exist $@ del $@
@@ -34,6 +36,18 @@ mtvision2.lib: $(MT_OBJ)
 	del $@
 	del *.obj
 
+ilvision2.lib: $(IL_OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(IL_OBJ)
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
+	del $@
+	del *.obj
+
 MTload_pixmap.obj: load_pixmap.c
 	$(CC) $(MTCFLAGS) $(INCLUDE_PATH) -Fo$@ -c $?
+
+ilload_pixmap.obj: load_pixmap.c
+	$(CC) $(ILCFLAGS) $(INCLUDE_PATH) -Fo$@ -c $?
 

@@ -233,7 +233,6 @@ feature -- Access queries
 		local
 			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
-			l_reverse_mapping: like mapping
 		do
 			if a_dependencies and then name_by_class_cache.has (a_class) then
 				Result := name_by_class_cache.found_item
@@ -260,7 +259,6 @@ feature -- Access queries
 				if mapping /= Void and then not mapping.is_empty then
 					if reversed_mapping_cache = Void then
 						create reversed_mapping_cache.make (mapping.count)
-						create l_reverse_mapping.make (mapping.count)
 						from
 							mapping.start
 						until
@@ -277,8 +275,8 @@ feature -- Access queries
 					until
 						Result.after
 					loop
-						if l_reverse_mapping.has (Result.item) then
-							Result.replace (l_reverse_mapping.found_item)
+						if reversed_mapping_cache.has (Result.item) then
+							Result.replace (reversed_mapping_cache.found_item)
 						end
 						Result.forth
 					end

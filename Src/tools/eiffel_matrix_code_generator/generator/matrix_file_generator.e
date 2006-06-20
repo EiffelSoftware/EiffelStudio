@@ -279,6 +279,7 @@ feature {NONE} -- Processing
 						l_full_name := format_eiffel_name (l_full_name)
 
 						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_template, [l_full_name, l_lit.name, x, y]))
+						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_buffer_template, [l_full_name, l_lit.name, x, y]))
 					else
 						error_manager.add_warning (create {WARNING_OUT_OF_BOUNDS}.make_with_context ([l_lit.name, "item"]))
 					end
@@ -451,6 +452,13 @@ feature {NONE} -- Constant Templates
 		%%T%T%TResult := pixmap_from_coords ({3}, {4})%N%
 		%%T%Tend%N%N"
 			-- Template used for access features
+
+	access_buffer_template: STRING is "%T{1}_buffer: EV_PIXEL_BUFFER is%N%
+		%%T%T%T-- Access to '{2}' pixmap pixel buffer.%N%
+		%%T%Tonce%N%
+		%%T%T%TResult := pixel_buffer_from_coords ({3}, {4})%N%
+		%%T%Tend%N%N"
+			-- Template used for access pixel buffer features
 
 invariant
 	height_non_negative: height >= 0

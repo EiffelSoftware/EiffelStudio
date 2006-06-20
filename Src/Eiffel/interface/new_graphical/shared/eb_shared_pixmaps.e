@@ -211,16 +211,6 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_debugger_exception_value)
 		end
 
-	Icon_dbg_assert_checking_restore: EV_PIXMAP is
-		once
-			Result := icon_pixmaps.debug_stop_icon
-		end
-
-	Icon_dbg_assert_checking_disable: EV_PIXMAP is
-		once
-			Result := icon_pixmaps.debug_pause_icon
-		end
-
 	Icon_context_tool: EV_PIXMAP is
 			-- Icon for context tool
 		once
@@ -254,19 +244,9 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_view_measure_plus_color_value)
 		end
 
-	Icon_undo: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_undo_color_value)
-		end
-
 	Icon_cmd_history: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_cmd_history_color_value)
-		end
-
-	Icon_redo: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_redo_color_value)
 		end
 
 	Icon_shell: EV_PIXMAP is
@@ -540,16 +520,6 @@ feature -- Icons
 	Icon_bon_anchor: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_anchor_color_value)
-		end
-
-	Icon_system: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_system_color_value)
-		end
-
-	Icon_system_window: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_system_color_value)
 		end
 
 	Icon_green_arrow: EV_PIXMAP is

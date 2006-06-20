@@ -69,7 +69,7 @@ feature -- Status report
 	pixmap: EV_PIXMAP is
 			-- Image used for `Current's toolbar buttons.
 		do
-			Result := Pixmaps.Icon_help_tool
+			Result := pixmaps.icon_pixmaps.command_error_info_icon
 		end
 
 	menu_name: STRING is

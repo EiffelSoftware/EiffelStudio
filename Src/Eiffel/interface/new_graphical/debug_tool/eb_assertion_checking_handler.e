@@ -149,9 +149,9 @@ feature {NONE} -- Attributes
 			-- Pixmap representing `Current' on buttons.
 		do
 			if assertion_checking_changed then
-				Result := Pixmaps.icon_dbg_assert_checking_restore
+				Result := pixmaps.icon_pixmaps.debug_resume_assertions_icon
 			else
-				Result := Pixmaps.icon_dbg_assert_checking_disable
+				Result := pixmaps.icon_pixmaps.debug_disable_assertions_icon
 			end
 		end
 

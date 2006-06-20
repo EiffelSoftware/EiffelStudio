@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_redo
+			Result := pixmaps.icon_pixmaps.general_redo_icon
 		end
 
 	tooltip: STRING is

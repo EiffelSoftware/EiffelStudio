@@ -56,7 +56,7 @@ feature -- Element change
 
 	update_folder_item (m: EV_MENU_ITEM) is
 		do
-			m.set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
+			m.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 		end
 
 	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM) is

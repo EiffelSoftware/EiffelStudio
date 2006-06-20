@@ -391,6 +391,7 @@ feature -- Visit nodes
 			-- Visit `a_cluster'.
 		local
 			l_old_cluster: CONF_CLUSTER
+			l_class: CONF_CLASS
 		do
 			if not is_error then
 				a_cluster.wipe_class_cache
@@ -416,7 +417,10 @@ feature -- Visit nodes
 					until
 						current_classes.after
 					loop
-						modified_classes.force (current_classes.item_for_iteration)
+						l_class := current_classes.item_for_iteration
+						if l_class.is_compiled then
+							modified_classes.force (l_class)
+						end
 						current_classes.forth
 					end
 				end

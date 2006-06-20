@@ -470,12 +470,6 @@ feature -- Access queries
 					Result := internal_mapping
 				else
 					create Result.make (5)
-						-- commented until new bootstrap is done
---					Result.force ("STRING_8", "STRING")
---					Result.force ("INTEGER_32", "INTEGER")
---					Result.force ("NATURAL_32", "NATURAL")
---					Result.force ("CHARACTER_8", "CHARACTER")
---					Result.force ("REAL_32", "REAL")
 				end
 			end
 		ensure

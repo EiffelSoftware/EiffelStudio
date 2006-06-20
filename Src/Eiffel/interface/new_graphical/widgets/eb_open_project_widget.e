@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			end
 
 			if last_state.has_system_error then
-				l_pixmap := icon_error_output_view_icon
+				l_pixmap := icon_pixmaps.general_error_icon
 				l_tooltip := last_state.last_error_message
 			else
 				if is_new_selection or is_initializing then
@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 				if last_state.has_missing_target_error then
 						-- No compilable targets specified. It is an error and we cannot
 						-- compile project.
-					l_pixmap := icon_error_output_view_icon
+					l_pixmap := icon_pixmaps.general_error_icon
 					l_tooltip := warning_messages.w_no_compilable_target
 				else
 					create l_project_location.make (l_last_location, l_last_target)
@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 						l_project_file := l_project_location.project_file
 						l_project_file.check_version_number (0)
 						if l_project_file.has_error then
-							l_pixmap := icon_warning_output_view_icon
+							l_pixmap := pixmaps.icon_pixmaps.general_warning_icon
 							l_force_clean := True
 							if not is_initializing and not is_new_action then
 								action_combo.select_actions.block

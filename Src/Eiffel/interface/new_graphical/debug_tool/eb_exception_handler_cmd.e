@@ -196,12 +196,12 @@ feature -- Handler dialog by code
 
 	Continue_pixmap: EV_PIXMAP is
 		once
-			Result := pixmaps.icon_run
+			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
 	Stop_pixmap: EV_PIXMAP is
 		once
-			Result := pixmaps.icon_exec_stop
+			Result := pixmaps.icon_pixmaps.debug_pause_icon
 		end
 
 	handle_ignore_external_changed is

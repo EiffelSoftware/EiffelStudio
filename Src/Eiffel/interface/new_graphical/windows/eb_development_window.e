@@ -1381,7 +1381,7 @@ feature {NONE} -- Menu Building
 				-- Cut
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.M_cut)
-			os_cmd.set_pixmap (pixmaps.icon_cut)
+			os_cmd.set_pixmap (pixmaps.icon_pixmaps.general_cut_icon)
 			os_cmd.set_name ("Editor_cut")
 			os_cmd.set_tooltip (interface_names.f_cut)
 			os_cmd.add_agent (agent cut_selection)

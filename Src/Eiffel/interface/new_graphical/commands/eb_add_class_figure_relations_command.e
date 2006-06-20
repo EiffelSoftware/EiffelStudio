@@ -382,13 +382,13 @@ feature {NONE} -- Implementation
 			inspect
 				selected_implementation
 			when adds_suppliers then
-				Result := pixmaps.icon_format_suppliers
+				Result := pixmaps.icon_pixmaps.class_supliers_icon
 			when adds_clients then
-				Result := pixmaps.icon_format_clients
+				Result := pixmaps.icon_pixmaps.class_clients_icon
 			when adds_descendents then
-				Result := pixmaps.icon_format_descendants
+				Result := pixmaps.icon_pixmaps.class_descendents_icon
 			when adds_ancestors then
-				Result := pixmaps.icon_format_ancestors
+				Result := pixmaps.icon_pixmaps.class_ancestors_icon
 			end
 		end
 

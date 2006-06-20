@@ -14,7 +14,8 @@ inherit
 			process,
 			is_library,
 			is_readonly,
-			is_group_equivalent
+			is_group_equivalent,
+			class_by_name
 		end
 
 	CONF_VISIBLE
@@ -51,6 +52,14 @@ feature -- Access, in compiled only, not stored to configuration file
 	library_target: CONF_TARGET
 			-- The library target.
 
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+			-- We use the one from the target.
+		do
+			if library_target /= Void then
+				Result := library_target.mapping
+			end
+		end
+
 feature -- Access queries
 
 	uuid: UUID
@@ -61,6 +70,27 @@ feature -- Access queries
 		do
 			if library_target /= Void then
 				Result := library_target.groups.item (a_name)
+			end
+		end
+
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
+			-- Get the class with the final (after renaming/prefix) name `a_class'
+			-- (if `a_dependencies' then we check dependencies)
+		local
+			l_conf_class: CONF_CLASS
+			l_class: STRING
+			l_mapping: like mapping
+		do
+			l_mapping := mapping
+			if l_mapping /= Void and then l_mapping.has (a_class) then
+				l_class := l_mapping.found_item
+			else
+				l_class := a_class
+			end
+			create Result.make
+			l_conf_class := classes.item (l_class)
+			if l_conf_class /= Void and then not l_conf_class.does_override then
+				Result.extend (l_conf_class)
 			end
 		end
 

@@ -13,8 +13,7 @@ inherit
 
 	EB_CLASS_BROWSER_GRID_VIEW
 		redefine
-			data,
-			on_pointer_double_click
+			data
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -177,8 +176,6 @@ feature -- Actions
 						l_row := first_occurrence (l_row)
 						ensure_visible (l_row.class_grid_item, True)
 						on_row_selected (l_row.grid_row)
-					else
-						Precursor (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
 			end
@@ -844,6 +841,7 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
+			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
 			grid.row_select_actions.extend (agent on_row_selected)

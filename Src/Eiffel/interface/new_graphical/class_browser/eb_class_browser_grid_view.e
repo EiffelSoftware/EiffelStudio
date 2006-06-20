@@ -80,7 +80,6 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				text.drop_actions.fill (drop_actions)
 			end
-			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 
 			on_color_or_font_changed_agent := agent on_color_or_font_changed
 			editor_preferences.keyword_font_preference.change_actions.extend (on_color_or_font_changed_agent)
@@ -385,19 +384,6 @@ feature{NONE} -- Actions
 	on_notify is
 			-- Action to be performed when `update' is called.
 		deferred
-		end
-
-	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Action to be performed when pointer double clicked
-		local
-			l_editor_token: EDITOR_TOKEN
-		do
---			if a_button = 1 then
---				l_editor_token := editor_token_at_position (a_x, a_y)
---				if l_editor_token /= Void and then not l_editor_token.image.is_empty then
---					ev_application.clipboard.set_text (l_editor_token.image)
---				end
---			end
 		end
 
 	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is

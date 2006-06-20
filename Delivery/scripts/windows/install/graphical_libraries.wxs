@@ -1462,7 +1462,6 @@
 								<File Id="load_pixmap.c" Name="LOAD_P~1.C" LongName="load_pixmap.c" />
 								<File Id="make_bcb.bat" Name="make_bcb.bat" />
 								<File Id="makefile.msc" Name="makefile.msc" />
-								<File Id="makefile.il" Name="makefile.il" />
 								<File Id="makefile.bcb" Name="makefile.bcb" />
 								<File Id="readme.txt108" Name="readme.txt" />
 								<File Id="make_msc.bat" Name="make_msc.bat" />

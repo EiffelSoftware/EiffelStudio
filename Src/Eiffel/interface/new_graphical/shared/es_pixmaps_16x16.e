@@ -604,6 +604,18 @@ feature -- Access
 			Result := pixmap_from_coords (18, 5)
 		end
 
+	tool_c_output_icon: EV_PIXMAP is
+			-- Access to 'c output' pixmap.
+		once
+			Result := pixmap_from_coords (19, 5)
+		end
+
+	tool_config_icon: EV_PIXMAP is
+			-- Access to 'config' pixmap.
+		once
+			Result := pixmap_from_coords (20, 5)
+		end
+
 	project_melt_icon: EV_PIXMAP is
 			-- Access to 'melt' pixmap.
 		once
@@ -706,34 +718,52 @@ feature -- Access
 			Result := pixmap_from_coords (1, 7)
 		end
 
+	new_override_cluster_icon: EV_PIXMAP is
+			-- Access to 'override cluster' pixmap.
+		once
+			Result := pixmap_from_coords (2, 7)
+		end
+
+	new_library_icon: EV_PIXMAP is
+			-- Access to 'library' pixmap.
+		once
+			Result := pixmap_from_coords (3, 7)
+		end
+
+	new_reference_icon: EV_PIXMAP is
+			-- Access to 'reference' pixmap.
+		once
+			Result := pixmap_from_coords (4, 7)
+		end
+
 	new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once
-			Result := pixmap_from_coords (2, 7)
+			Result := pixmap_from_coords (5, 7)
 		end
 
 	new_class_icon: EV_PIXMAP is
 			-- Access to 'class' pixmap.
 		once
-			Result := pixmap_from_coords (3, 7)
+			Result := pixmap_from_coords (6, 7)
 		end
 
 	new_window_icon: EV_PIXMAP is
 			-- Access to 'window' pixmap.
 		once
-			Result := pixmap_from_coords (4, 7)
+			Result := pixmap_from_coords (7, 7)
 		end
 
 	new_editor_icon: EV_PIXMAP is
 			-- Access to 'editor' pixmap.
 		once
-			Result := pixmap_from_coords (5, 7)
+			Result := pixmap_from_coords (8, 7)
 		end
 
 	new_document_icon: EV_PIXMAP is
 			-- Access to 'document' pixmap.
 		once
-			Result := pixmap_from_coords (6, 7)
+			Result := pixmap_from_coords (9, 7)
 		end
 
 	general_open_icon: EV_PIXMAP is
@@ -802,22 +832,34 @@ feature -- Access
 			Result := pixmap_from_coords (11, 8)
 		end
 
+	general_error_icon: EV_PIXMAP is
+			-- Access to 'error' pixmap.
+		once
+			Result := pixmap_from_coords (12, 8)
+		end
+
+	general_warning_icon: EV_PIXMAP is
+			-- Access to 'warning' pixmap.
+		once
+			Result := pixmap_from_coords (13, 8)
+		end
+
 	sort_acending_icon: EV_PIXMAP is
 			-- Access to 'acending' pixmap.
 		once
-			Result := pixmap_from_coords (12, 8)
+			Result := pixmap_from_coords (14, 8)
 		end
 
 	sort_descending_icon: EV_PIXMAP is
 			-- Access to 'descending' pixmap.
 		once
-			Result := pixmap_from_coords (13, 8)
+			Result := pixmap_from_coords (15, 8)
 		end
 
 	sort_grouped_icon: EV_PIXMAP is
 			-- Access to 'grouped' pixmap.
 		once
-			Result := pixmap_from_coords (14, 8)
+			Result := pixmap_from_coords (16, 8)
 		end
 
 	refactor_feature_up_icon: EV_PIXMAP is
@@ -848,6 +890,30 @@ feature -- Access
 			-- Access to 'sync' pixmap.
 		once
 			Result := pixmap_from_coords (5, 9)
+		end
+
+	add_cluster_icon: EV_PIXMAP is
+			-- Access to 'cluster' pixmap.
+		once
+			Result := pixmap_from_coords (1, 10)
+		end
+
+	add_override_cluster_icon: EV_PIXMAP is
+			-- Access to 'override cluster' pixmap.
+		once
+			Result := pixmap_from_coords (2, 10)
+		end
+
+	add_library_icon: EV_PIXMAP is
+			-- Access to 'library' pixmap.
+		once
+			Result := pixmap_from_coords (3, 10)
+		end
+
+	add_reference_icon: EV_PIXMAP is
+			-- Access to 'reference' pixmap.
+		once
+			Result := pixmap_from_coords (4, 10)
 		end
 
 	diagram_zoom_in_icon: EV_PIXMAP is

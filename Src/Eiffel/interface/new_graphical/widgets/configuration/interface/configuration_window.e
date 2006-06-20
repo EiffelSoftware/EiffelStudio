@@ -516,31 +516,31 @@ feature {NONE} -- Section tree selection agents
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_cluster_symbol)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_cluster_icon)
 			l_tb_btn.set_tooltip (dialog_create_cluster_title)
 			l_tb_btn.select_actions.extend (agent add_cluster)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_override_symbol)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_override_cluster_icon)
 			l_tb_btn.set_tooltip (dialog_create_override_title)
 			l_tb_btn.select_actions.extend (agent add_override)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_library_symbol)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_library_icon)
 			l_tb_btn.set_tooltip (dialog_create_library_title)
 			l_tb_btn.select_actions.extend (agent add_library)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_assemblies_symbol)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_reference_icon)
 			l_tb_btn.set_tooltip (dialog_create_assembly_title)
 			l_tb_btn.select_actions.extend (agent add_assembly)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_delete_small)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			l_tb_btn.set_tooltip (remove_group_text)
 			l_tb_btn.select_actions.extend (agent remove_group)
 
@@ -1036,7 +1036,7 @@ feature {NONE} -- Implementation
 			if current_target.internal_precompile /= Void then
 				create l_ht.make (1)
 				l_ht.force (current_target.precompile, current_target.precompile.name)
-				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_libraries_symbol)
+				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_pixmaps.top_level_folder_library_icon)
 			end
 
 			l_tree.key_press_actions.extend (agent on_group_tree_key)

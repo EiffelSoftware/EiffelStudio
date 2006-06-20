@@ -64,7 +64,7 @@ feature -- Element change
 			if a_class_item.associated_class_i /= Void then
 				m.set_pixmap (pixmap_from_class_i (a_class_item.associated_class_i))
 			else
-				m.set_pixmap (Pixmaps.Icon_class_symbol_gray)
+				m.set_pixmap (pixmaps.icon_pixmaps.class_uncompiled_icon)
 			end
 		end
 

@@ -25,7 +25,7 @@ feature -- Properties
 		once
 			create Result.make (1, 2)
 			Result.put (pixmaps.icon_pixmaps.class_features_invariant_icon, 1)
-			Result.put (Pixmaps.Icon_format_invariants, 2)
+			Result.put (pixmaps.icon_pixmaps.class_features_invariant_icon, 2)
 		end
 
 	class_cmd: E_SHOW_INVARIANTS

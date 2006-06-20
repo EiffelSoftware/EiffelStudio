@@ -371,7 +371,7 @@ feature -- Access
 			if show_feature_from_any_checkbox_internal = Void then
 				create show_feature_from_any_checkbox_internal
 				show_feature_from_any_checkbox_internal.set_tooltip (interface_names.h_show_feature_from_any)
-				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_feature)
+				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
 				if preferences.class_browser_data.is_feature_from_any_shown then
 					show_feature_from_any_checkbox_internal.enable_select
 				else

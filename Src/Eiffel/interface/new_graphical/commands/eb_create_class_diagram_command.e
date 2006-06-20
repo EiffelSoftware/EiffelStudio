@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_new_class
+			Result := pixmaps.icon_pixmaps.new_class_icon
 		end
 
 	tooltip: STRING is

@@ -19,7 +19,7 @@
 		<setting name="line_generation" value="false"/>
 		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<cluster name="base_ext" location="C:\development57_eth\framework\base\" recursive="true">
+		<cluster name="base_ext" location="${EIFFEL_SRC}\framework\base\" recursive="true">
 			<option warning="true">
 			</option>
 		</cluster>

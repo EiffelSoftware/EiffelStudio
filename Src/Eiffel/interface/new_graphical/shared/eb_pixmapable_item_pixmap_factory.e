@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			Result.force (pixmaps.icon_pixmaps.class_normal_icon,							compiled_flag)
 			Result.force (pixmaps.icon_pixmaps.class_readonly_icon,							compiled_flag | readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.class_frozen_icon,							compiled_flag | frozen_flag)
-			Result.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon,					compiled_flag | readonly_flag)
+			Result.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon,					compiled_flag | readonly_flag | frozen_flag)
 			Result.force (pixmaps.icon_pixmaps.class_uncompiled_icon,						none_flag)
 			Result.force (pixmaps.icon_pixmaps.class_uncompiled_readonly_icon,				readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.class_deferred_icon,							compiled_flag | deferred_flag)

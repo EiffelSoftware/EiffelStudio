@@ -563,7 +563,7 @@ void c_ev_save_png (char image[], char *path, int array_width, int array_height,
 
 	png_write_info (png_ptr, info_ptr);
 	row_pointers = malloc (array_height*sizeof (png_bytep));
-	for (k = 0; k < array_height; k++){
+	for (k = 0; k < (png_uint_32) array_height; k++){
 		row_pointers[k] = (png_bytep) ((png_byte *)image +k* (array_width * 4));
 		/* printf ("Pointer value is %p\n", row_pointers[k]); */
 	}
@@ -839,10 +839,9 @@ unsigned char c_ev_read_n_bytes( unsigned long nRequestedBufferSize, BufferedFil
 		return TRUE;
 	}
 
-	nBytesToRead = max(nRequestedBufferSize - pBufFile->nCurrBufferSize,
-		MINIMUM_BYTES_TO_READ_PER_ACCESS);
+	nBytesToRead = max(nRequestedBufferSize - pBufFile->nCurrBufferSize, MINIMUM_BYTES_TO_READ_PER_ACCESS);
 
-	nBytesRead = fread(pBufFile->pBuffer + pBufFile->nCurrBufferSize, 1,
+	nBytesRead = (unsigned long) fread(pBufFile->pBuffer + pBufFile->nCurrBufferSize, 1,
 		(size_t) nBytesToRead, pBufFile->pFile);
 
 		/* Compute the new buffer size */
@@ -1219,7 +1218,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	volatile unsigned long 	iAlphaData = 0;
 #ifdef EIF_WINDOWS
 	unsigned long 	iData;
-	BITMAPINFOHEADER *pbi, *pbi_mask;
+	BITMAPINFO *pbi, *pbi_mask;
 	HBITMAP hbitmap, hbitmap_mask;
 
 #endif
@@ -1338,45 +1337,47 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
 #ifdef EIF_WINDOWS
+		/* Examples in WEL and others recommend to always allocate 3 RGBQUAD for 32 bits per
+		 * pixel image. */	
+	pbi = (BITMAPINFO*) malloc (sizeof (BITMAPINFOHEADER) + 3 * sizeof(RGBQUAD));
+	pbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	pbi->bmiHeader.biWidth = width;
+	pbi->bmiHeader.biHeight = height;
+	pbi->bmiHeader.biPlanes = 1;
+	pbi->bmiHeader.biBitCount = 32;
+	pbi->bmiHeader.biCompression = BI_RGB;   // No compression
+	pbi->bmiHeader.biSizeImage = 0;
+	pbi->bmiHeader.biXPelsPerMeter = 0;
+	pbi->bmiHeader.biYPelsPerMeter = 0;
+	pbi->bmiHeader.biClrUsed = 0;           // Always use the whole palette.
+	pbi->bmiHeader.biClrImportant = 0;
 	
-	pbi = (BITMAPINFOHEADER*) malloc (sizeof (BITMAPINFOHEADER));
-	pbi->biSize = sizeof(BITMAPINFOHEADER);
-	pbi->biWidth = width;
-	pbi->biHeight = height;
-	pbi->biPlanes = 1;
-	pbi->biBitCount = 32;
-	pbi->biCompression = BI_RGB;   // No compression
-	pbi->biSizeImage = 0;
-	pbi->biXPelsPerMeter = 0;
-	pbi->biYPelsPerMeter = 0;
-	pbi->biClrUsed = 0;           // Always use the whole palette.
-	pbi->biClrImportant = 0;
+		/* Since it has only 2 colors, there is only need to allocated 2 RGBQUAD. */
+	pbi_mask = (BITMAPINFO*) malloc (sizeof (BITMAPINFOHEADER) + 2 * sizeof(RGBQUAD));
+	pbi_mask->bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
+	pbi_mask->bmiHeader.biWidth = width;
+	pbi_mask->bmiHeader.biHeight = height;
+	pbi_mask->bmiHeader.biPlanes = 1;
+	pbi_mask->bmiHeader.biBitCount = 1;
+	pbi_mask->bmiHeader.biCompression = BI_RGB;
+	pbi_mask->bmiHeader.biSizeImage = 0;
+	pbi_mask->bmiHeader.biXPelsPerMeter = 0;
+	pbi_mask->bmiHeader.biYPelsPerMeter = 0;	
+	pbi_mask->bmiHeader.biClrUsed = 2;     
+	pbi_mask->bmiHeader.biClrImportant = 2;	
 	
-	pbi_mask = (BITMAPINFOHEADER*) malloc (sizeof (BITMAPINFOHEADER));
-	pbi_mask->biSize = sizeof (BITMAPINFOHEADER);
-	pbi_mask->biWidth = width;
-	pbi_mask->biHeight = height;
-	pbi_mask->biPlanes = 1;
-	pbi_mask->biBitCount = 1;
-	pbi_mask->biCompression = BI_RGB;
-	pbi_mask->biSizeImage = 0;
-	pbi_mask->biXPelsPerMeter = 0;
-	pbi_mask->biYPelsPerMeter = 0;	
-	pbi_mask->biClrUsed = 2;     
-	pbi_mask->biClrImportant = 2;	
-	
-	hbitmap = CreateDIBSection(NULL, (BITMAPINFO *)pbi, DIB_RGB_COLORS, (VOID **) &pData, NULL, 0);
-	hbitmap_mask = CreateDIBSection (NULL, (BITMAPINFO *)pbi_mask, DIB_RGB_COLORS, (VOID **) &pAlphaData, NULL, 0);
+	hbitmap = CreateDIBSection(NULL, pbi, DIB_RGB_COLORS, (VOID **) &pData, NULL, 0);
+	hbitmap_mask = CreateDIBSection (NULL, pbi_mask, DIB_RGB_COLORS, (VOID **) &pAlphaData, NULL, 0);
 	
 	pImage = pData;
 	pAlphaImage = pAlphaData;
 
   // We should copy datas to header.
   // Windows does not do this work for us.
-	memcpy (pData, pbi, sizeof (BITMAPINFOHEADER));	
+	memcpy (pData, &(pbi->bmiHeader), sizeof (BITMAPINFOHEADER));	
 	pData += sizeof (BITMAPINFOHEADER);
 	
-	memcpy (pAlphaData, pbi_mask, sizeof (BITMAPINFOHEADER));
+	memcpy (pAlphaData, &(pbi_mask->bmiHeader), sizeof (BITMAPINFOHEADER));
 	pAlphaData += sizeof (BITMAPINFOHEADER);
 		
 	// Color table

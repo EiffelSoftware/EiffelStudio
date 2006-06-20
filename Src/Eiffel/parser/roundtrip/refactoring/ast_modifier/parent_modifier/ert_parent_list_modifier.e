@@ -67,7 +67,6 @@ feature -- Applicability
 				destination.internal_parents.inherit_keyword.replace_text (source.internal_parents.text (source_match_list), destination_match_list)
 			else
 				compute_modification
-				last_computed_modifier.first.apply
 				last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
 			end
 			applied := True

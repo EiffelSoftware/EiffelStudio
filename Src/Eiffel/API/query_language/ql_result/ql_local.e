@@ -44,6 +44,18 @@ feature -- Access
 			good_result: Result = argument_path_marker
 		end
 
+feature -- Status report
+
+	is_visible: BOOLEAN is
+			-- Is current visible from source domain level?
+		local
+			l_feature: QL_FEATURE
+		do
+			l_feature ?= parent
+			check l_feature /= Void end
+			Result := l_feature.is_visible
+		end
+
 feature -- Visit
 
 	process (a_visitor: QL_VISITOR) is

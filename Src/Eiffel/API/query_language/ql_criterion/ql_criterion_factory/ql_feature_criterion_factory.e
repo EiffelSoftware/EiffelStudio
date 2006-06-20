@@ -62,6 +62,8 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_unique_criterion, c_is_unique)
 			agent_table.put (agent new_is_query_criterion, c_is_query)
 			agent_table.put (agent new_is_command_criterion, c_is_command)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
+
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -110,6 +112,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_unique, query_language_names.ql_cri_is_unique)
 			name_table.put (c_is_query, query_language_names.ql_cri_is_query)
 			name_table.put (c_is_command, query_language_names.ql_cri_is_command)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -390,6 +393,14 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_is_visible_criterion: QL_SIMPLE_FEATURE_CRITERION is
+			-- New criterion to test if a feature is visible
+		do
+			create Result.make (agent is_visible_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_true_criterion: QL_SIMPLE_FEATURE_CRITERION is
 			-- New criterion that always returns True (tautology criterion)
 		do
@@ -563,6 +574,7 @@ feature -- Criterion index
 	c_is_unique,
 	c_is_query,
 	c_is_command,
+	c_is_visible,
 	c_true,
 	c_name_is,
 	c_text_contain,
@@ -583,12 +595,18 @@ feature{NONE} -- Implementation
 	false_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	has_arguments_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has arguments
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.has_arguments
 		end
@@ -596,6 +614,9 @@ feature{NONE} -- Implementation
 	has_assertion_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has assertion
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_feature: E_FEATURE
 		do
@@ -609,6 +630,9 @@ feature{NONE} -- Implementation
 	has_assigner_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has assigner
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.assigner_name /= Void
 		end
@@ -616,6 +640,9 @@ feature{NONE} -- Implementation
 	has_comments_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has comments
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_feature: E_FEATURE
@@ -635,6 +662,9 @@ feature{NONE} -- Implementation
 	has_indexing_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has indexing clause
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.ast.body.indexing_clause /= Void
 		end
@@ -642,6 +672,9 @@ feature{NONE} -- Implementation
 	has_locals_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has locals
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_locals:  EIFFEL_LIST [TYPE_DEC_AS]
 		do
@@ -655,6 +688,9 @@ feature{NONE} -- Implementation
 	has_postcondition_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has postcondition
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.has_postcondition
 		end
@@ -662,6 +698,9 @@ feature{NONE} -- Implementation
 	has_precondition_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has precondition
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.has_precondition
 		end
@@ -669,6 +708,9 @@ feature{NONE} -- Implementation
 	has_rescue_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' has rescue clause
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_feature: E_FEATURE
 			l_routine: ROUTINE_AS
@@ -689,6 +731,9 @@ feature{NONE} -- Implementation
 	is_attribute_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is attribute
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_attribute
 		end
@@ -696,6 +741,9 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
 		end
@@ -703,6 +751,9 @@ feature{NONE} -- Implementation
 	is_constant_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is constant
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_constant
 		end
@@ -710,6 +761,9 @@ feature{NONE} -- Implementation
 	is_creator_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is creator
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_class: CLASS_C
 			l_creators: HASH_TABLE [EXPORT_I, STRING]
@@ -733,6 +787,9 @@ feature{NONE} -- Implementation
 	is_exported_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is exported (to {ANY})
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			if a_item.is_real_feature then
 				check a_item.e_feature.export_status /= Void end
@@ -743,6 +800,9 @@ feature{NONE} -- Implementation
 	is_deferred_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is deferred
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_deferred
 		end
@@ -750,6 +810,9 @@ feature{NONE} -- Implementation
 	is_external_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is external
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_external
 		end
@@ -757,6 +820,9 @@ feature{NONE} -- Implementation
 	is_feature_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is a real feature (while not an invariant)
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature
 		end
@@ -764,6 +830,9 @@ feature{NONE} -- Implementation
 	is_frozen_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is frozen
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_frozen
 		end
@@ -771,6 +840,9 @@ feature{NONE} -- Implementation
 	is_function_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is function
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_function
 		end
@@ -778,6 +850,9 @@ feature{NONE} -- Implementation
 	is_hidden_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is hidden (e.g., it is exported to {NONE})
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			if a_item.is_real_feature then
 				check a_item.e_feature.export_status /= Void end
@@ -788,6 +863,9 @@ feature{NONE} -- Implementation
 	is_immediate_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is immediate
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_immediate
 		end
@@ -795,6 +873,9 @@ feature{NONE} -- Implementation
 	is_infix_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is infix
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_infix
 		end
@@ -802,6 +883,9 @@ feature{NONE} -- Implementation
 	is_invariant_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is invariant (while not a real feature)
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_invariant_feature
 		end
@@ -809,6 +893,9 @@ feature{NONE} -- Implementation
 	is_obsolete_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is obsolete
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_obsolete
 		end
@@ -816,6 +903,9 @@ feature{NONE} -- Implementation
 	is_once_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is once
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_once
 		end
@@ -823,6 +913,9 @@ feature{NONE} -- Implementation
 	is_origin_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is origin
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_origin
 		end
@@ -830,6 +923,9 @@ feature{NONE} -- Implementation
 	is_prefix_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is prefix
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_prefix
 		end
@@ -837,6 +933,9 @@ feature{NONE} -- Implementation
 	is_procedure_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is procedure
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_procedure
 		end
@@ -844,6 +943,9 @@ feature{NONE} -- Implementation
 	is_unique_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is unique
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_unique
 		end
@@ -851,6 +953,9 @@ feature{NONE} -- Implementation
 	is_query_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is query
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_feature: E_FEATURE
 		do
@@ -863,12 +968,29 @@ feature{NONE} -- Implementation
 	is_command_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is command
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := is_procedure_agent (a_item)
 		end
+
+	is_visible_agent (a_item: QL_FEATURE): BOOLEAN is
+			-- Agent to test if `a_item' is visible
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_visible
+		end
+
 	true_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end

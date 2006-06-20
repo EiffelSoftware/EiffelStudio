@@ -25,6 +25,8 @@ inherit
 
 	QL_SHARED
 
+	QL_UTILITY
+
 feature{NONE} -- Initialization
 
 	make (a_criterion_domain: like criterion_domain; a_type: like relation_type) is
@@ -52,6 +54,9 @@ feature -- Evaluate
 			end
 			if not is_criterion_domain_evaluated then
 				initialize_domain
+			end
+			if used_in_domain_generator.is_temp_domain_used and then not is_intrinsic_domain_cached_in_domain_generator then
+				cache_intrinsic_domain
 			end
 			Result := is_satisfied_by_internal (a_item)
 		end
@@ -90,6 +95,7 @@ feature{NONE} -- Implementation
 				l_class_tbl.forth
 			end
 			is_criterion_domain_evaluated := True
+			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
 	reset is
@@ -150,6 +156,21 @@ feature{NONE} -- Implementation
 			Result := candidate_class_list.has (a_item.class_c.class_id)
 		ensure then
 			good_result: Result implies candidate_class_list.has (a_item.class_c.class_id)
+		end
+
+	query_class_item (a_class: CONF_CLASS): QL_CLASS is
+			-- Query class representation of `a_class'.
+			-- Take care of both visible and invisible situation.
+		require
+			a_class_attached: a_class /= Void
+		do
+			Result := source_domain.class_item_from_current_domain (a_class)
+			if Result = Void then
+				Result := query_class_item_from_conf_class (a_class)
+				Result.set_visible (False)
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature{NONE} -- Implemenation/Data

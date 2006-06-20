@@ -221,6 +221,16 @@ feature -- Status report
 			good_result: Result implies ast.is_expanded
 		end
 
+	is_visible: BOOLEAN is
+			-- Is current visible from source domain level?
+		local
+			l_class: QL_CLASS
+		do
+			l_class ?= parent
+			check l_class /= Void end
+			Result := l_class.is_visible
+		end
+
 feature -- Visit
 
 	process (a_visitor: QL_VISITOR) is

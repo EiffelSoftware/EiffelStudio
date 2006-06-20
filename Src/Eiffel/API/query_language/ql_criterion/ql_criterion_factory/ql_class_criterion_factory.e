@@ -591,6 +591,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	true_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent which always returns True. (Tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -598,12 +601,18 @@ feature{NONE} -- Implementation/Evaluate agent
 	false_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent which always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	has_bottom_indexing_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class has bottom indexing clause
 			-- Require compiled: True		
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.ast.bottom_indexes /= Void
 		end
@@ -611,6 +620,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	has_top_indexing_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class has top indexing clause
 			-- Require compiled: True		
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.ast.top_indexes /= Void
 		end
@@ -618,6 +630,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	has_indexing_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class has indexing clause (top or bottom or both)
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then (a_item.ast.top_indexes /= Void or a_item.ast.bottom_indexes /= Void)
 		end
@@ -625,6 +640,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	has_invariant_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class has invariant part
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.has_invariant
 		end
@@ -632,6 +650,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_compiled_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
 		end
@@ -639,6 +660,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_deferred_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is deferred
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_deferred
 		end
@@ -646,6 +670,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_effective_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is effective
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then not a_item.class_c.is_deferred
 		end
@@ -653,6 +680,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_enum_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is enum
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_enum
 		end
@@ -660,6 +690,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_expanded_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is expanded
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_expanded
 		end
@@ -667,6 +700,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_external_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is external
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_external
 		end
@@ -674,6 +710,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_frozen_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is frozen
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_frozen
 		end
@@ -681,6 +720,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_generic_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is generic
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_generic
 		end
@@ -688,6 +730,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_obsolete_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is obsolete
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_obsolete
 		end
@@ -695,6 +740,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_precompiled_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is precompiled
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_precompiled
 		end
@@ -702,6 +750,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_valid_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is valid
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.is_valid
 		end
@@ -709,6 +760,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_always_compiled_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is always compiled
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.is_always_compile
 		end
@@ -716,6 +770,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_partial_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is partial
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.is_partial
 		end
@@ -723,6 +780,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_read_only_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is read-only
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.is_read_only
 		end
@@ -730,6 +790,9 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_overriden_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is overriden
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.is_overriden
 		end
@@ -737,15 +800,23 @@ feature{NONE} -- Implementation/Evaluate agent
 	is_overrider_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is overrider
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.conf_class.does_override
 		end
 
 	is_visible_agent (a_item: QL_CLASS): BOOLEAN is
 			-- Agent to test if a class is visible from its original generated level
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_visible
 		end
+
+
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

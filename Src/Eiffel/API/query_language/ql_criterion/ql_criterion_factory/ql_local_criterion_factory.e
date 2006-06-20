@@ -27,6 +27,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_is_in_immediate_feature_criterion, c_is_in_immediate_feature)
 			agent_table.put (agent new_is_used_criterion, c_is_used)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -36,6 +37,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 			name_table.put (c_is_in_immediate_feature, query_language_names.ql_cri_is_in_immediate_feature)
 			name_table.put (c_is_used, query_language_names.ql_cri_is_used)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -67,7 +69,15 @@ feature{NONE} -- New criterion
 	new_is_in_immediate_feature_criterion: QL_SIMPLE_LOCAL_CRITERION is
 			-- New criterion to test if a local is in immediate feature
 		do
-			create Result.make (agent is_in_immediate_feature_agent, False)
+			create Result.make (agent is_in_immediate_feature_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_visible_criterion: QL_SIMPLE_LOCAL_CRITERION is
+			-- New criterion to test if a local is visible
+		do
+			create Result.make (agent is_visible_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -113,6 +123,7 @@ feature -- Criterion index
 	c_false,
 	c_is_compiled,
 	c_is_used,
+	c_is_visible,
 	c_true,
 	c_name_is,
 	c_text_contain,
@@ -120,17 +131,21 @@ feature -- Criterion index
 
 feature{NONE} -- Implementation
 
-feature{NONE} -- Implementation
-
 	false_agent (a_item: QL_LOCAL): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	true_agent (a_item: QL_LOCAL): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -138,8 +153,21 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_LOCAL): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
+		end
+
+	is_visible_agent (a_item: QL_LOCAL): BOOLEAN is
+			-- Agent to test if `a_item' is visible
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_visible
 		end
 
 	is_in_immediate_feature_agent (a_item: QL_LOCAL): BOOLEAN is

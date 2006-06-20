@@ -67,6 +67,15 @@ feature -- Access
 			Result := ast.first_token (l_list).line
 		end
 
+feature -- Status report
+
+	is_visible: BOOLEAN is
+			-- Is current item visible in the level where current is generated?
+		require
+			is_valid: is_valid_domain_item
+		deferred
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

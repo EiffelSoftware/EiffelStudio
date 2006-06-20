@@ -55,6 +55,13 @@ feature -- Status report
 			good_result: Result implies (not criterion_domain.is_delayed)
 		end
 
+	is_intrinsic_domain_cached_in_domain_generator: BOOLEAN
+			-- Is `intrinsic_domain' stored in `used_in_domain_generator'?
+			-- This is used only when `used_in_domain_generator' CAN NOT use intrinsic domain or optimization switch is turned off.
+			-- This is needed because if some items from `intrinsic_domain' is not visible from `source_domain', we will not get
+			-- them by going through `source_domain'. So we store those items in `used_in_domain_generator', and after the going through,
+			-- we processed those items separately.
+
 feature -- Setting
 
 	set_criterion_domain (a_domain: QL_DOMAIN) is
@@ -94,6 +101,8 @@ feature{NONE} -- Implementation
 		deferred
 		ensure
 			intrinsic_result_found: is_criterion_domain_evaluated
+			candidate_not_cached_in_domain_generator:
+				not is_intrinsic_domain_cached_in_domain_generator
 		end
 
 	reset is
@@ -106,6 +115,16 @@ feature{NONE} -- Implementation
 		do
 			reset
 			find_result
+		end
+
+	cache_intrinsic_domain is
+			-- Cache `intrinsic_domain' in `used_in_domain_generator'.
+		do
+			check used_in_domain_generator.is_temp_domain_used end
+			used_in_domain_generator.temp_domain.content.fill (intrinsic_domain.content)
+			is_intrinsic_domain_cached_in_domain_generator := True
+		ensure
+			candidate_cached: is_intrinsic_domain_cached_in_domain_generator
 		end
 
 invariant

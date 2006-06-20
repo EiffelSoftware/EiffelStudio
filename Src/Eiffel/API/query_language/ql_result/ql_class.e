@@ -18,7 +18,8 @@ inherit
 			wrapped_domain,
 			ast,
 			is_compiled,
-			text
+			text,
+			is_visible
 		end
 
 	QL_UTILITY

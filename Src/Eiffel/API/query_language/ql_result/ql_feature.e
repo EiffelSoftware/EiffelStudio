@@ -63,6 +63,13 @@ feature -- Access
 		do
 		end
 
+	e_feature: E_FEATURE is
+			-- Feature associated with Current
+		require
+			is_real_feature: is_real_feature
+		deferred
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is True
@@ -73,21 +80,14 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Visit
-
-	process (a_visitor: QL_VISITOR) is
-			-- Process `a_visitor'.
+	is_visible: BOOLEAN is
+			-- Is current visible from source domain level?
+		local
+			l_class: QL_CLASS
 		do
-			a_visitor.process_feature (Current)
-		end
-
-feature -- Feature body
-
-	e_feature: E_FEATURE is
-			-- Feature associated with Current
-		require
-			is_real_feature: is_real_feature
-		deferred
+			l_class ?= parent
+			check l_class /= Void end
+			Result := l_class.is_visible
 		end
 
 	is_equal (other: like Current): BOOLEAN is
@@ -101,6 +101,13 @@ feature -- Feature body
 			end
 		end
 
+feature -- Visit
+
+	process (a_visitor: QL_VISITOR) is
+			-- Process `a_visitor'.
+		do
+			a_visitor.process_feature (Current)
+		end
 
 invariant
 	class_c_attached: class_c /= Void

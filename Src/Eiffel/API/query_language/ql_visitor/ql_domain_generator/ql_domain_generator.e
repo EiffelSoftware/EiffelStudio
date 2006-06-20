@@ -205,13 +205,22 @@ feature -- Domain visit
 				l_criterion.has_inclusive_intrinsic_domain
 			then
 					-- Evaluate result domain using optimization.
+				is_temp_domain_used := False
 				l_criterion.intrinsic_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
 			else
 					-- Evaluate result domain without optimization.
+				is_temp_domain_used := True
+				temp_domain.wipe_out
 				if not a_item.is_empty then
 					a_item.content.do_all (agent process_item ({QL_ITEM}?))
 				end
+					-- There are maybe some candidate items from `actual_criterion' stored in `temp_domain',
+					-- so we process it now.
+				if not temp_domain.is_empty then
+					process_temp_domain
+				end
 			end
+			temp_domain.wipe_out
 			if is_distinct_required then
 					-- Retrieve distinct domain.
 					-- Note: Slow process.
@@ -219,6 +228,8 @@ feature -- Domain visit
 				domain.wipe_out
 				domain.content.fill (l_domain.content)
 			end
+		ensure then
+			temp_domain_is_empty: temp_domain.is_empty
 		end
 
 	process_item (a_item: QL_VISITABLE) is
@@ -311,6 +322,18 @@ feature{NONE} -- Implementation
 				on_item_satisfied_by_criterion (a_item, True)
 			end
 		end
+
+feature{QL_CRITERION} -- Implementation/Criterion interaction
+
+	temp_domain: like domain is
+			-- Temporary domain used to store candidate items from relation criterion such as "ancestor_is", "descendant_is"
+		deferred
+		end
+
+	is_temp_domain_used: BOOLEAN
+			-- Should `temp_domain' be used?
+			-- `temp_domain' should be used when `intrinsic_domain' of `criterion' is not available or optimization switch is turned off,
+			-- which means we have to go through every item in source domain to get all candidate items.
 
 feature{NONE} -- Implementation
 
@@ -520,6 +543,21 @@ feature{NONE} -- Implementation
 	item_type: QL_ITEM
 			-- Anchor type for items of generated domain
 
+	temp_domain_internal: like temp_domain
+			-- Implementation of `temp_domain'
+
+	process_temp_domain is
+			-- Process `temp_domain'.
+		local
+			l_domain: like domain
+		do
+			check is_temp_domain_used end
+				-- Get all distinct items in `temp_domain' which are not in `domain'.
+			l_domain := temp_domain.distinct.minus (domain)
+				-- Evaluate those items.
+			l_domain.content.do_all (agent evaluate_item)
+		end
+
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 
 	on_item_satisfied_by_criterion (a_item: like item_type; a_interval_actions_applied: BOOLEAN) is
@@ -540,6 +578,10 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 
 invariant
 	domain_attached: domain /= Void
+	temp_domain_attached: temp_domain /= Void
+	compiled_criterion_attached: compiled_criterion /= Void
+	actual_criterion_attached: actual_criterion /= Void
+	tautology_criterion_attached: tautology_criterion /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

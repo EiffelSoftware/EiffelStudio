@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing command.
 		do
-			Result := Pixmaps.Icon_system
+			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
 	description: STRING is

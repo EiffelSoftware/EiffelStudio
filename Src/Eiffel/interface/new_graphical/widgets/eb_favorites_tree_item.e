@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				drop_actions.extend (agent conv_folder.add_feature_stone)
 				drop_actions.extend (agent conv_folder.add_class_stone)
 				drop_actions.extend (agent conv_folder.add_favorite_folder)
-				set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
+				set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 			elseif an_item.is_feature then
 					-- ...or a feature.
 				conv_feat ?= an_item

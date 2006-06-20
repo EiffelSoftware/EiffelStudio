@@ -557,6 +557,8 @@ feature {NONE} -- Section tree selection agents
 			append_small_margin (vb)
 			append_property_description (vb)
 
+			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
+
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing

@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_undo
+			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
 	tooltip: STRING is

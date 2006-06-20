@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		do
 			create folders_tree
 			create root_node
-			root_node.set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
+			root_node.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 			root_node.set_text (root_folder_name)
 			root_node.set_data (favorites)
 			folders_tree.extend (root_node)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 				if an_item.is_folder and not an_item.is_class then
 					a_folder_item ?= an_item
 					tree_item := build_tree_folder (a_folder_item)
-					tree_item.set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
+					tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 					tree_item.set_text (an_item.name)
 					tree_item.set_data (a_folder_item)
 					root_node.extend (tree_item)
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 				if an_item.is_folder then
 					a_folder_item ?= an_item
 					tree_item := build_tree_folder (a_folder_item)
-					tree_item.set_pixmap (pixmaps.icon_pixmaps.tool_favorites_icon)
+					tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 					tree_item.set_text (an_item.name)
 					tree_item.set_data (a_folder_item)
 					Result.extend (tree_item)

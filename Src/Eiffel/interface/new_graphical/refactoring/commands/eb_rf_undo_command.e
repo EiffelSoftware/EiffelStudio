@@ -82,7 +82,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Icon for `Current'.
 		do
-			Result := pixmaps.icon_undo
+			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
 	Name: STRING is "RF_undo"

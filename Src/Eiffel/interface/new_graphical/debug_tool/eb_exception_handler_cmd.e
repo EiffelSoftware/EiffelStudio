@@ -103,7 +103,7 @@ feature {NONE} -- Attributes
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' on buttons.
 		do
-			Result := Pixmaps.icon_debugger_exception
+			Result := pixmaps.icon_pixmaps.debug_exception_handling_icon
 		end
 
 feature -- Handler dialog by code

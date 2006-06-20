@@ -199,7 +199,7 @@ feature {NONE} -- Implementation properties
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_shell
+			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon
 		end
 
 	tooltip: STRING is

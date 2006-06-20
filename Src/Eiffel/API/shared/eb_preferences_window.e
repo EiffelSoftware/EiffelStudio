@@ -43,7 +43,7 @@ feature -- Access
 			-- special preference types.
 		do
 			set_root_icon (icon_preference_root)
-			set_folder_icon (icon_preference_folder)
+			set_folder_icon (icon_pixmaps.folder_blank_icon)
 			Precursor {PREFERENCES_GRID} (a_preferences, a_parent_window)
 			set_icon_pixmap (icon_preference_window)
 			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)

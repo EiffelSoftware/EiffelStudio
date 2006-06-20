@@ -165,12 +165,18 @@ feature{NONE} -- Implementation
 	false_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	true_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -178,6 +184,9 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
 		end
@@ -192,6 +201,9 @@ feature{NONE} -- Implementation
 	is_cluster_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is cluster
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.is_cluster
 		end
@@ -199,6 +211,9 @@ feature{NONE} -- Implementation
 	is_library_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is library
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.is_library
 		end
@@ -206,6 +221,9 @@ feature{NONE} -- Implementation
 	is_override_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is override
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.is_override
 		end
@@ -213,6 +231,9 @@ feature{NONE} -- Implementation
 	is_valid_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is valid
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.is_valid
 		end
@@ -220,6 +241,9 @@ feature{NONE} -- Implementation
 	is_used_in_library_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if `a_item' is used in library
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.is_used_library
 		end
@@ -227,6 +251,9 @@ feature{NONE} -- Implementation
 	is_class_set_agent (a_item: QL_GROUP): BOOLEAN is
 			-- Agent to test if classes in `a_item' are set
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.group.classes_set
 		end

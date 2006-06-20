@@ -126,6 +126,7 @@ feature{NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
 			l_target: CONF_TARGET
+			l_is_application_target_reached: BOOLEAN
 		do
 			if a_list.is_empty then
 				a_list.extend (create{QL_GROUP}.make (a_group))
@@ -134,13 +135,13 @@ feature{NONE} -- Implementation
 			end
 			if a_group.is_cluster then
 				l_cluster ?= a_group
-				a_list.put_front (create{QL_GROUP}.make (l_cluster))
 				if l_cluster.parent /= Void then
 					find_path_from_conf_group (a_list, l_cluster.parent)
 				else
 					l_target := a_group.target
 					if l_target.system = l_target.application_target.system then
 						l_target := l_target.application_target
+						l_is_application_target_reached := True
 					else
 						check
 							library_target: l_target.system.library_target /= Void
@@ -148,9 +149,11 @@ feature{NONE} -- Implementation
 						l_target := l_target.system.library_target
 					end
 					a_list.put_front (create{QL_TARGET}.make (l_target))
-					l_lib := l_target.lowest_used_in_library
-					if l_lib /= Void  then
-						find_path_from_conf_group (a_list, l_lib)
+					if not l_is_application_target_reached then
+						l_lib := l_target.lowest_used_in_library
+						if l_lib /= Void  then
+							find_path_from_conf_group (a_list, l_lib)
+						end
 					end
 				end
 			elseif a_group.is_library or a_group.is_assembly then

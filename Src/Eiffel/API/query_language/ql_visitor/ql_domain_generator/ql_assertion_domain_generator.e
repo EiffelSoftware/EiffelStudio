@@ -250,8 +250,19 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Observable
 
-	item_type: QL_ASSERTION;
+	item_type: QL_ASSERTION
 			-- Anchor type for items of generated domain
+
+feature{NONE} -- Implementation/Criterion interaction
+
+	temp_domain: like domain is
+			-- Temporary domain used to store candidate items from relation criterion such as "ancestor_is", "descendant_is"
+		do
+			if temp_domain_internal = Void then
+				create temp_domain_internal.make
+			end
+			Result := temp_domain_internal
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

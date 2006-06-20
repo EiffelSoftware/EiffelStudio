@@ -79,14 +79,10 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			until
 				l_feature_list.after
 			loop
-				l_feature := l_current_domain.feature_item_from_current_domain (l_feature_list.item)
-				if l_feature /= Void then
-					l_data_feature := l_current_domain.feature_item_from_current_domain (l_feature_callee.i_th (l_feature_list.index))
-					if l_data_feature /= Void then
-						l_feature.set_data (l_data_feature)
-						Result.extend (l_feature)
-					end
-				end
+				l_feature := query_feature_item (l_feature_list.item)
+				l_data_feature := query_feature_item (l_feature_callee.i_th (l_feature_list.index))
+				l_feature.set_data (l_data_feature)
+				Result.extend (l_feature)
 				l_feature_list.forth
 			end
 				-- For invariant callers
@@ -100,14 +96,10 @@ feature{QL_DOMAIN} -- Intrinsic domain
 				until
 					l_invariant_list.after
 				loop
-					l_feature := l_current_domain.invariant_item_from_current_domain (l_invariant_list.item)
-					if l_feature /= Void then
-						l_data_feature := l_current_domain.feature_item_from_current_domain (l_invariant_callee.item)
-						if l_data_feature /= Void then
-							l_feature.set_data (l_data_feature)
-							Result.extend (l_feature)
-						end
-					end
+					l_feature := query_invariant_item (l_invariant_list.item)
+					l_data_feature := query_feature_item (l_invariant_callee.item)
+					l_feature.set_data (l_data_feature)
+					Result.extend (l_feature)
 					l_invariant_list.forth
 					l_invariant_callee.forth
 				end
@@ -121,6 +113,7 @@ feature{NONE} -- Implementation
 		do
 			find_all_callees (caller_type.type)
 			is_criterion_domain_evaluated := True
+			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
 	find_current_callees (l_feat: E_FEATURE; a_flag: INTEGER_8) is
@@ -297,9 +290,7 @@ feature{NONE} -- Evaluate
 					l_feature_list.after or Result
 				loop
 					if l_feature_list.item.same_as (l_feature) then
-						a_item.set_data (
-							l_current_domain.feature_item_from_current_domain (
-								l_feature_callee.i_th (l_feature_list.index)))
+						a_item.set_data (query_feature_item (l_feature_callee.i_th (l_feature_list.index)))
 						Result := True
 					end
 					l_feature_list.forth
@@ -316,7 +307,7 @@ feature{NONE} -- Evaluate
 				loop
 					if a_item.written_class.class_id = l_invariant_list.item.class_id then
 						a_item.set_data (
-							l_current_domain.feature_item_from_current_domain (
+							query_feature_item (
 								l_invariant_callee.i_th (l_invariant_list.index)))
 						Result := True
 					end

@@ -35,6 +35,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_precondition_criterion, c_is_precondition)
 			agent_table.put (agent new_is_require_criterion, c_is_require)
 			agent_table.put (agent new_is_require_else_criterion, c_is_require_else)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -52,6 +53,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_precondition, query_language_names.ql_cri_is_precondition)
 			name_table.put (c_is_require, query_language_names.ql_cri_is_require)
 			name_table.put (c_is_require_else, query_language_names.ql_cri_is_require_else)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -160,6 +162,14 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_is_visible_criterion: QL_SIMPLE_ASSERTION_CRITERION is
+			-- New criterion to test if an assertion is visible
+		do
+			create Result.make (agent is_visible_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_true_criterion: QL_SIMPLE_ASSERTION_CRITERION is
 			-- New criterion that always returns True (tautology criterion)
 		do
@@ -202,6 +212,7 @@ feature -- Criterion index
 	c_is_precondition,
 	c_is_require,
 	c_is_require_else,
+	c_is_visible,
 	c_true,
 	c_name_is,
 	c_text_contain: INTEGER is unique
@@ -211,12 +222,18 @@ feature{NONE} -- Implementation
 	false_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	true_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -224,6 +241,9 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
 		end
@@ -231,6 +251,9 @@ feature{NONE} -- Implementation
 	has_expression_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' has expression
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.ast.expr /= Void
 		end
@@ -238,6 +261,9 @@ feature{NONE} -- Implementation
 	has_tag_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' has tag
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := not a_item.name.is_empty
 		end
@@ -245,6 +271,9 @@ feature{NONE} -- Implementation
 	is_ensure_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is ensure
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_ensure
 		end
@@ -252,6 +281,9 @@ feature{NONE} -- Implementation
 	is_ensure_then_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is ensure then
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_ensure_then
 		end
@@ -259,6 +291,9 @@ feature{NONE} -- Implementation
 	is_immediate_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is immediate
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_immediate
 		end
@@ -266,6 +301,9 @@ feature{NONE} -- Implementation
 	is_invariant_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is invariant
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_invariant
 		end
@@ -273,6 +311,9 @@ feature{NONE} -- Implementation
 	is_postcondition_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is postcondition
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_postcondition
 		end
@@ -280,6 +321,9 @@ feature{NONE} -- Implementation
 	is_precondition_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is precondition
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_precondition
 		end
@@ -287,6 +331,9 @@ feature{NONE} -- Implementation
 	is_require_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is require
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_require
 		end
@@ -294,8 +341,21 @@ feature{NONE} -- Implementation
 	is_require_else_agent (a_item: QL_ASSERTION): BOOLEAN is
 			-- Agent to test if `a_item' is require else
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_require_else
+		end
+
+	is_visible_agent (a_item: QL_ASSERTION): BOOLEAN is
+			-- Agent to test if `a_item' is visible
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_visible
 		end
 
 indexing

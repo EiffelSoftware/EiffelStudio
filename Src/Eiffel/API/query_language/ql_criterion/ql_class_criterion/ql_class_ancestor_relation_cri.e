@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Object that represents a criterion about ancestor relation between classes
+					Criterion to test if a given class domain contain ancestor classes of a class.
 					Supported ancestor relation includes:
 						ancestor
 						proper ancestor
@@ -44,28 +44,22 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_list: like candidate_class_list
 			l_class: QL_CLASS
 			l_class_c: CLASS_C
-			l_class_id: INTEGER
-			l_source_domain: like source_domain
 		do
 			if not is_criterion_domain_evaluated then
 				initialize_domain
 			end
 			create Result.make
 			l_list := candidate_class_list
-			l_source_domain := source_domain
-			l_source_domain.clear_cache
+			source_domain.clear_cache
 			from
 				l_list.start
 			until
 				l_list.after
 			loop
 				l_class_c := l_list.item_for_iteration
-				l_class_id := l_class_c.class_id
-				l_class := l_source_domain.class_item_from_current_domain (l_class_c.lace_class.config_class)
-				if l_class /= Void then
-					Result.extend (l_class)
-					l_class.set_data (related_classes (l_class_id))
-				end
+				l_class := query_class_item (l_class_c.lace_class.config_class)
+				l_class.set_data (related_classes (l_class_c.class_id))
+				Result.extend (l_class)
 				l_list.forth
 			end
 		end
@@ -258,10 +252,8 @@ feature{NONE} -- Implementation
 				until
 					l_list.after
 				loop
-					l_class := l_source_domain.class_item_from_current_domain (l_list.item.lace_class.config_class)
-					if l_class /= Void then
-						Result.extend (l_class)
-					end
+					l_class := query_class_item (l_list.item.lace_class.config_class)
+					Result.extend (l_class)
 					l_list.forth
 				end
 			end

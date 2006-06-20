@@ -29,6 +29,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_is_expanded_criterion, c_is_expanded)
 			agent_table.put (agent new_is_reference_criterion, c_is_reference)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -40,6 +41,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 			name_table.put (c_is_expanded, query_language_names.ql_cri_is_expanded)
 			name_table.put (c_is_reference, query_language_names.ql_cri_is_reference)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -80,6 +82,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a generic is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_visible_criterion: QL_SIMPLE_GENERIC_CRITERION is
+			-- New criterion to test if a generic is visible
+		do
+			create Result.make (agent is_visible_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -136,6 +146,7 @@ feature -- Criterion index
 	c_is_compiled,
 	c_is_expanded,
 	c_is_reference,
+	c_is_visible,
 	c_true,
 	c_name_is,
 	c_text_contain: INTEGER is unique;
@@ -145,12 +156,18 @@ feature{NONE} -- Implementation
 	false_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	true_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -158,13 +175,29 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
+		end
+
+	is_visible_agent (a_item: QL_GENERIC): BOOLEAN is
+			-- Agent to test if `a_item' is visible
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_visible
 		end
 
 	has_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' has constaint
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.has_constraint
 		end
@@ -172,6 +205,9 @@ feature{NONE} -- Implementation
 	has_creation_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' has creation constaint
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.has_creation_constraint
 		end
@@ -179,6 +215,9 @@ feature{NONE} -- Implementation
 	is_expanded_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' is expanded
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_expanded
 		end
@@ -186,6 +225,9 @@ feature{NONE} -- Implementation
 	is_reference_agent (a_item: QL_GENERIC): BOOLEAN is
 			-- Agent to test if `a_item' is reference
 			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_reference
 		end

@@ -24,6 +24,8 @@ inherit
 			intrinsic_domain
 		end
 
+	QL_UTILITY
+
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
@@ -34,6 +36,9 @@ feature -- Evaluate
 			end
 			if not is_criterion_domain_evaluated then
 				initialize_domain
+			end
+			if used_in_domain_generator.is_temp_domain_used and then not is_intrinsic_domain_cached_in_domain_generator then
+				cache_intrinsic_domain
 			end
 			Result := is_satisfied_by_internal (a_item)
 		end
@@ -46,13 +51,11 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_user_data_list: like user_data_list
 			l_feature_list: like feature_list
 			l_feature: QL_FEATURE
-			l_source_domain: like source_domain
 		do
 			if not is_criterion_domain_evaluated then
 				initialize_domain
 			end
-			l_source_domain := source_domain
-			l_source_domain.clear_cache
+			source_domain.clear_cache
 			l_user_data_list := user_data_list
 			l_feature_list := feature_list
 			create Result.make
@@ -61,11 +64,9 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			until
 				l_feature_list.after
 			loop
-				l_feature := l_source_domain.feature_item_from_current_domain (l_feature_list.item)
-				if l_feature /= Void then
-					l_feature.set_data (l_user_data_list.i_th (l_feature_list.index))
-					Result.extend (l_feature)
-				end
+				l_feature := query_feature_item (l_feature_list.item)
+				l_feature.set_data (l_user_data_list.i_th (l_feature_list.index))
+				Result.extend (l_feature)
 				l_feature_list.forth
 			end
 		end
@@ -155,6 +156,42 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+	query_feature_item (a_feature: E_FEATURE): QL_FEATURE is
+			-- Query feature representation of `a_feature'
+			-- Take case of both visible and invisible features.
+		local
+			l_class: QL_CLASS
+		do
+			Result := source_domain.feature_item_from_current_domain (a_feature)
+			if Result = Void then
+				l_class := query_class_item_from_class_c (a_feature.associated_class)
+				l_class.set_visible (False)
+				create {QL_REAL_FEATURE} Result.make_with_parent (a_feature, l_class)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	query_invariant_item (a_class: CLASS_C): QL_FEATURE is
+			-- Query invariant representation of invariant part in `a_class'
+			-- Take case of both visible and invisible features.
+		require
+			a_class_attached: a_class /= Void
+			a_class_has_invariant: a_class.has_invariant
+		local
+			l_class: QL_CLASS
+		do
+			Result := source_domain.invariant_item_from_current_domain (a_class)
+			if Result = Void then
+				l_class := query_class_item_from_class_c (a_class)
+				l_class.set_visible (False)
+				create {QL_INVARIANT} Result.make_with_parent (a_class, a_class, l_class)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 feature{NONE} -- Evaluate
 

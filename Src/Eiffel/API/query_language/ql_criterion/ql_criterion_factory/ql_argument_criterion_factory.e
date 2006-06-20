@@ -26,17 +26,19 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_true_criterion, c_true)
+			agent_table.put (agent new_is_visible_criterion, c_is_visible)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
 
 			create name_table.make (10)
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
 		end
-		
+
 feature{NONE} -- Implementation
 
 	criterion_type: QL_ARGUMENT_CRITERION
@@ -56,6 +58,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if an argument is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_visible_criterion: QL_SIMPLE_ARGUMENT_CRITERION is
+			-- New criterion to test if an argument is visible
+		do
+			create Result.make (agent is_visible_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -92,6 +102,7 @@ feature -- Criterion index
 
 	c_false,
 	c_true,
+	c_is_visible,
 	c_name_is,
 	c_text_contain,
 	c_is_compiled: INTEGER is unique;
@@ -101,12 +112,18 @@ feature{NONE} -- Implementation
 	false_agent (a_item: QL_ARGUMENT): BOOLEAN is
 			-- Agent that always returns False.
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 		end
 
 	true_agent (a_item: QL_ARGUMENT): BOOLEAN is
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := True
 		end
@@ -114,8 +131,21 @@ feature{NONE} -- Implementation
 	is_compiled_agent (a_item: QL_ARGUMENT): BOOLEAN is
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled
+		end
+
+	is_visible_agent (a_item: QL_ARGUMENT): BOOLEAN is
+			-- Agent to test if `a_item' is visible
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_visible
 		end
 
 indexing

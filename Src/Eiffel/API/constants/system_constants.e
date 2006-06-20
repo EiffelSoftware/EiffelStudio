@@ -172,7 +172,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			-- Version of the compiler
 		once
 				-- 0000 because it will be replace by the svn version number by the build script
-			create Result.make_version (5, 7, 0000, 0)
+			create Result.make_version (5, 7, 1120, 0000)
 		end
 
 	Major_version_number: INTEGER is
@@ -208,7 +208,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 	Version_type_name: STRING is "GPL Edition";
 			-- Name of version, e.g. GPL edition, Enterprise Edition,...
 			-- Default: "GPL Edition"
-	
+
 	Version_info: STRING is "";
 			-- Information on the version
 			-- Default: ""

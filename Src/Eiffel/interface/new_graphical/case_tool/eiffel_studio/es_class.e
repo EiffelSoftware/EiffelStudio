@@ -612,6 +612,9 @@ feature {NONE} -- Implementation
 			ct ?= a_type
 			if ct /= Void then
 				l_class_i := class_i_by_name (ct.class_name)
+				check
+					l_class_i_not_void: l_class_i /= Void
+				end
 				if not suppliers.has (l_class_i.name) then
 					suppliers.put (l_class_i, l_class_i.name)
 				end
@@ -674,15 +677,18 @@ feature {NONE} -- Implementation
 			-- Return class with `a_name'.
 			-- `Void' if not in system.
 		local
-			cl: LIST [CLASS_I]
+			cl: LINKED_SET [CONF_CLASS]
 			l_nodes: ARRAYED_LIST [EG_NODE]
 			l_item: ES_CLASS
 		do
-			cl := eiffel_universe.classes_with_name (a_name)
+			cl := class_i.group.class_by_name (a_name, True)
 			if cl /= Void and then not cl.is_empty then
-				Result := cl.first
+				Result ?= cl.first
+				check
+					Result_not_void: Result /= Void
+				end
 			end
-			if Result = Void then
+			if Result = Void and graph /= Void then
 				from
 					l_nodes := graph.flat_nodes
 					l_nodes.start
@@ -699,6 +705,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	class_i_not_void: class_i /= Void
 	queries_not_void: queries /= Void
 	suppliers_not_void: suppliers /= Void
 	queries_changed_actions_not_void: queries_changed_actions /= Void

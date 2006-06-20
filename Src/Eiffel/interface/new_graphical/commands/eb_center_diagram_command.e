@@ -76,6 +76,7 @@ feature -- Basic operations
 			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_class_stone)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
+			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_fucntion)
 			Result.set_pebble_function (agent pebble)
 		end
 
@@ -101,6 +102,21 @@ feature {NONE} -- Implementation
 				end
 			else
 				was_dropped := False
+			end
+		end
+
+	veto_pebble_fucntion (a_any: ANY): BOOLEAN is
+			-- Veto function
+		local
+			cluster_stone: CLUSTER_STONE
+			class_stone: CLASSI_STONE
+		do
+			cluster_stone ?= a_any
+			if cluster_stone /= Void then
+				Result := not cluster_stone.group.is_assembly
+			else
+				class_stone ?= a_any
+				Result := class_stone /= Void
 			end
 		end
 

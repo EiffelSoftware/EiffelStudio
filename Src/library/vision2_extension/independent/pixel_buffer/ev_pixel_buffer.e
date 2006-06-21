@@ -1,7 +1,7 @@
 indexing
 	description: "[
 					Pixel buffer that always contain 32bits orignal pixmap pixels' datas.
-					So alpha datas will not lose. 
+					So alpha datas will not lose.
 																							]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,6 @@ inherit
 		redefine
 			implementation
 		end
-
 create
 	default_create,
 	make_with_size
@@ -40,8 +39,8 @@ feature -- Command
 			implementation.set_with_named_file (a_file_name)
 		end
 
-	draw_to_drawable (a_drawable: EV_DRAWABLE) is
-			-- Draw Current ot `a_drawable'.
+	draw_on_to (a_drawable: EV_DRAWABLE) is
+			-- Draw Current to drawable surface `a_drawable'.
 		require
 			not_void: a_drawable /= Void
 		do

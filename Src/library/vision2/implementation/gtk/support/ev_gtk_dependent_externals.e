@@ -10,6 +10,74 @@ class
 
 feature -- Externals
 
+	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
+		alias
+			"tip_label"
+		end
+
+	frozen events_pending: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_pending (g_main_context_default())"
+		end
+
+	frozen dispatch_events is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_dispatch(g_main_context_default())"
+		end
+
+	frozen new_g_static_rec_mutex: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"malloc (sizeof(GStaticRecMutex))"
+		end
+
+	frozen g_static_rec_mutex_init (a_static_mutex: POINTER) is
+		external
+			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_lock (a_static_mutex: POINTER) is
+		external
+			"C blocking signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_trylock (a_static_mutex: POINTER): BOOLEAN is
+		external
+			"C blocking signature (GStaticRecMutex*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_unlock (a_static_mutex: POINTER) is
+		external
+			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_thread_supported: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_thread_supported()"
+		end
+
+	frozen g_thread_init is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+			{
+				#ifdef EIF_THREADS
+					g_thread_init (NULL);
+				#endif
+			}
+			]"
+		end
+
 	frozen gtk_widget_toplevel (a_widget: POINTER): BOOLEAN is
 		external
 			"C macro use <gtk/gtk.h>"
@@ -20,31 +88,6 @@ feature -- Externals
 	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN) is
 		external
 			"C signature (GtkFixed*, gboolean) use <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER]): INTEGER is
-		external
-			"C signature (GdkWindow*, guchar**, GdkAtom*, gint*): gint use <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_convert (a_requestor, a_selection, a_target: POINTER; a_time: NATURAL_32) is
-		external
-			"C signature (GdkWindow*, GdkAtom, GdkAtom, guint32) use <gtk/gtk.h>"
-		end
-
-	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER is
-		external
-			"C struct GdkDragContext access source_window use <gtk/gtk.h>"
-		end
-
-	frozen gdk_drag_context_struct_dest_window (a_drag_context: POINTER): POINTER is
-		external
-			"C struct GdkDragContext access dest_window use <gtk/gtk.h>"
-		end
-
-	frozen gdk_drag_context_struct_targets (a_drag_context: POINTER): POINTER is
-		external
-			"C struct GdkDragContext access targets use <gtk/gtk.h>"
 		end
 
 	frozen gtk_toolbar_set_orientation (a_toolbar: POINTER; a_orientation: INTEGER) is
@@ -267,20 +310,6 @@ feature -- Externals
 	frozen gdk_drawable_get_image (a_drawable: POINTER; a_x, a_y, a_width, a_height: INTEGER): POINTER is
 		external
 			"C signature (GdkDrawable*, gint, gint, gint, gint): GdkImage* use <gtk/gtk.h>"
-		end
-
-	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
-		alias
-			"tip_label"
-		end
-
-	frozen gtk_win_pos_mouse_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_WIN_POS_MOUSE"
 		end
 
 	frozen gtk_window_get_focus (a_window: POINTER): POINTER is

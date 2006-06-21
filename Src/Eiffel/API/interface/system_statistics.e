@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 			create l_domain_generator
 			l_domain_generator.set_criterion (a_criterion)
 			number_count := 0
-			l_domain_generator.actions.extend (agent count_number)
+			l_domain_generator.item_satisfied_actions.extend (agent count_number)
 			l_group_domain ?= system_target_domain.new_domain (l_domain_generator)
 			Result := number_count
 		end

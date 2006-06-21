@@ -8,6 +8,26 @@ indexing
 class
 	CACHE_INFO
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_path: STRING) is
+			-- Initialize new instance
+		require
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			l_dir: DIRECTORY
+			info_path: STRING
+		do
+			create l_dir.make (a_path)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
+		end
+
 feature -- Access
 
 	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
@@ -41,7 +61,7 @@ feature -- Status report
 			end
 		end
 
-feature {CACHE_WRITER} -- Element Settings
+feature {CACHE_WRITER, CONSUMER_CACHE_INFO} -- Element Settings
 
 	add_assembly (ass: CONSUMED_ASSEMBLY) is
 			-- Add `ass' to `assemblies'.
@@ -49,7 +69,11 @@ feature {CACHE_WRITER} -- Element Settings
 			non_void_assembly: ass /= Void
 			valid_assembly: not has_assembly (ass)
 		do
-			check False end
+			if internal_assemblies = Void then
+				create internal_assemblies.make (1, 1)
+			end
+			internal_assemblies.force (ass, internal_assemblies.count + 1)
+			set_is_dirty (True)
 		ensure
 			is_dirty: is_dirty
 		end
@@ -59,8 +83,26 @@ feature {CACHE_WRITER} -- Element Settings
 		require
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: has_assembly (a_assembly)
+		local
+			i, nb: INTEGER
+			l_done: BOOLEAN
+			l_assemblies: like internal_assemblies
 		do
-			check False end
+			l_assemblies := internal_assemblies
+			from
+				i := 1
+				nb := l_assemblies.count
+			until
+				l_done or i > nb
+			loop
+				if l_assemblies.item (i) /= Void and then l_assemblies.item (i).is_equal (a_assembly) then
+					l_assemblies.put (a_assembly, i)
+					set_is_dirty (True)
+					l_done := True
+				else
+					i := i + 1
+				end
+			end
 		end
 
 	remove_assembly (ass: CONSUMED_ASSEMBLY) is
@@ -68,8 +110,31 @@ feature {CACHE_WRITER} -- Element Settings
 		require
 			non_void_assembly: ass /= Void
 			valid_assembly: assemblies.has (ass)
+		local
+			i, nb, j: INTEGER
+			new: ARRAY [CONSUMED_ASSEMBLY]
+			l_assemblies: like internal_assemblies
 		do
-			check False end
+			l_assemblies := internal_assemblies
+			create new.make (1, l_assemblies.count - 1)
+			if l_assemblies.object_comparison then
+				new.compare_objects
+			end
+			from
+				i := 1
+				j := 1
+				nb := l_assemblies.count
+			until
+				i > nb
+			loop
+				if l_assemblies.item (i) /= Void and then not l_assemblies.item (i).is_equal (ass) then
+					new.put (l_assemblies.item (i), j)
+					set_is_dirty (True)
+					j := j + 1
+				end
+				i := i + 1
+			end
+			internal_assemblies := new
 		ensure
 			removed: not has_assembly (ass)
 		end
@@ -77,11 +142,10 @@ feature {CACHE_WRITER} -- Element Settings
 	set_is_dirty (a_dirty: BOOLEAN) is
 			-- Sets `is_dirty' with `a_dirty'
 		do
-			check False end
+			is_dirty := a_dirty
 		ensure
 			is_dirty_set: is_dirty = a_dirty
 		end
-
 
 feature {NONE} -- Implementation
 

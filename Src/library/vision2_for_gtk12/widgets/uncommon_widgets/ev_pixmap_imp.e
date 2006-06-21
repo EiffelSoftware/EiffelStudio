@@ -391,7 +391,7 @@ feature -- Access
 					-- This is the way it is read in by the gdk function. (FIFO)
 				end
 				if array_offset \\ 8 = 7 then
-					Result.put (character_result.to_character, (array_offset // 8) + 1)
+					Result.put (character_result.to_character_8, (array_offset // 8) + 1)
 				end
 				n_character := n_character + 1
 				array_offset := array_offset + 1
@@ -426,7 +426,7 @@ feature -- Access
 				array_area := Result.area
 				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
 				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.to_character
+				temp_alpha := temp_alpha_int.to_character_8
 			until
 				array_offset = array_size
 			loop
@@ -437,9 +437,9 @@ feature -- Access
 				)
 				{EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character_8, array_offset)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character_8, array_offset + 1)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character_8, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end

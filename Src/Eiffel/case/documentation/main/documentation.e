@@ -84,6 +84,8 @@ feature -- Actions
 			l_group: CONF_GROUP
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_cursor: CURSOR
+			l_class: CONF_CLASS
+			l_context_group: CONF_GROUP
 		do
 			eiffel_system.system.set_current_class (any_class)
 			if not cancelled then
@@ -174,6 +176,7 @@ feature -- Actions
 
 					if any_class_format_generated then
 						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
+						l_context_group := filter.context_group
 						l_groups_cursor := groups.new_cursor
 						from
 							l_groups_cursor.start
@@ -190,11 +193,17 @@ feature -- Actions
 								until
 									l_classes.after
 								loop
-									if l_classes.item_for_iteration.is_compiled then
-										deg.put_case_class_message (l_classes.item_for_iteration)
+									l_class := l_classes.item_for_iteration
+									if l_class.is_class_assembly then
+										filter.set_context_group (Void)
+									else
+										filter.set_context_group (l_class.group)
+									end
+									if l_class.is_compiled then
+										deg.put_case_class_message (l_class)
 										deg.flush_output
 										set_base_cluster (l_group)
-										cl_name := l_classes.item_for_iteration.name.as_lower
+										cl_name := l_class.name.as_lower
 										set_class_name (cl_name)
 										if filter.is_html then
 											filter.set_keyword ("html_meta", html_meta_for_class (l_classes.item_for_iteration))
@@ -209,7 +218,7 @@ feature -- Actions
 													cl_name + cf.file_extension
 												)
 												set_document_title (cl_name + " " + cf.description)
-												generate_class (l_classes.item_for_iteration, cf)
+												generate_class (l_class, cf)
 											end
 										end
 									end
@@ -218,6 +227,7 @@ feature -- Actions
 								l_classes.go_to (l_cursor)
 							end
 						end
+						filter.set_context_group (l_context_group)
 					end
 				end
 			end

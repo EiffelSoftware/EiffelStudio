@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 			if not retried and associated_class /= Void then
 				set_is_without_breakable
 				editor.handle_before_processing (false)
+				setup_viewpoint
 				last_was_error := clickable_context_text (associated_class, editor.text_displayed)
 				editor.handle_after_processing
 				if has_breakpoints then

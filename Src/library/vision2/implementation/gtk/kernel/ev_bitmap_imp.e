@@ -58,7 +58,7 @@ feature -- Status Setting
 			clear
 
 			if oldpix /= default_pointer then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
+				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
 			end
 		end
 
@@ -81,7 +81,7 @@ feature -- Access
 			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_drawable_get_size (drawable, $Result, $a_y)
+				{EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $Result, $a_y)
 			end
 		end
 
@@ -90,7 +90,9 @@ feature -- Access
 		local
 			a_x: INTEGER
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_drawable_get_size (drawable, $a_x, $Result)
+			if drawable /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_window_get_size (drawable, $a_x, $Result)
+			end
 		end
 
 feature {EV_PIXMAP_IMP} -- Implementation

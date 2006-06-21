@@ -726,6 +726,7 @@ feature -- Label texts
 	l_assignees: STRING is "assignees"
 	l_created: STRING is "creators"
 	l_filter: STRING is "Filter"
+	l_viewpoints: STRING is "Viewpoints: "
 
 feature -- Stone names
 

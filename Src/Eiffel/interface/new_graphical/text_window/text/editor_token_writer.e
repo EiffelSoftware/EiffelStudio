@@ -224,7 +224,7 @@ feature -- Text processing
 			-- Process after class text `t'.
 		do
 			process_comment_text (" -- class ", Void)
-			process_class_name_text (a_class.name_in_upper, a_class.lace_class , false)
+			add_class (a_class.lace_class)
 			process_new_line
 		end
 

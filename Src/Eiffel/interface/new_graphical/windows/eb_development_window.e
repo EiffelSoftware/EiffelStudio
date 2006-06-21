@@ -205,8 +205,11 @@ feature {NONE} -- Initialization
 				-- Build the history manager, the address manager, ...
 			create history_manager.make (Current)
 			create address_manager.make (Current, False)
+			build_viewpoints
 			build_formatters
 			address_manager.set_formatters (managed_main_formatters)
+			address_manager.set_viewpoints (view_points_widget)
+
 
 				-- Init commands, build interface, build menus, ...
 			Precursor
@@ -505,6 +508,8 @@ feature {NONE} -- Initialization
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
+			form.set_viewpoints (view_points_combo)
+			form.post_execution_action.extend (agent update_viewpoints)
 			managed_main_formatters.extend (form)
 
 			create {EB_CLICKABLE_FORMATTER} form.make (Current)
@@ -513,6 +518,8 @@ feature {NONE} -- Initialization
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
+			form.set_viewpoints (view_points_combo)
+			form.post_execution_action.extend (agent update_viewpoints)
 			managed_main_formatters.extend (form)
 
 			create {EB_FLAT_FORMATTER} form.make (Current)
@@ -521,6 +528,8 @@ feature {NONE} -- Initialization
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
+			form.set_viewpoints (view_points_combo)
+			form.post_execution_action.extend (agent update_viewpoints)
 			managed_main_formatters.extend (form)
 
 			create {EB_SHORT_FORMATTER} form.make (Current)
@@ -529,6 +538,8 @@ feature {NONE} -- Initialization
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
+			form.set_viewpoints (view_points_combo)
+			form.post_execution_action.extend (agent update_viewpoints)
 			managed_main_formatters.extend (form)
 
 			create {EB_FLAT_SHORT_FORMATTER} form.make (Current)
@@ -537,6 +548,8 @@ feature {NONE} -- Initialization
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
+			form.set_viewpoints (view_points_combo)
+			form.post_execution_action.extend (agent update_viewpoints)
 			managed_main_formatters.extend (form)
 		end
 
@@ -727,6 +740,26 @@ feature {NONE} -- Initialization
 			window.accelerators.extend (undo_accelerator)
 			window.accelerators.extend (redo_accelerator)
 			unlock_update
+		end
+
+	build_viewpoints is
+			-- Build viewpoint selection list
+		local
+			l_label: EV_LABEL
+		do
+			create view_points_widget
+			create l_label.make_with_text (interface_names.l_viewpoints)
+			view_points_widget.extend (l_label)
+			view_points_widget.disable_item_expand (l_label)
+
+			create view_points_combo
+			view_points_combo.disable_sensitive
+			view_points_combo.select_actions.extend (agent on_viewpoint_changed)
+			view_points_combo.disable_edit
+			view_points_combo.set_minimum_width (120)
+
+			view_points_widget.extend (view_points_combo)
+			view_points_widget.disable_item_expand (view_points_combo)
 		end
 
 feature -- Access
@@ -2224,25 +2257,8 @@ feature -- Position provider
 
 	pos_container: like pos_container_internal is
 			-- Current selected formatter
-		local
-			l_end : BOOLEAN
-			l_index: INTEGER
-			l_formatter: like managed_main_formatters
 		do
-			l_formatter := managed_main_formatters
-			l_index := l_formatter.index
-			from
-				l_formatter.start
-			until
-				l_formatter.after or l_end
-			loop
-				if l_formatter.item.selected then
-					l_end := true
-					Result := l_formatter.item
-				end
-				l_formatter.forth
-			end
-			l_formatter.go_i_th (l_index)
+			Result := selected_formatter
 		end
 
 feature -- Resource Update
@@ -2530,6 +2546,33 @@ feature -- Resource Update
 			end
 		end
 
+	update_viewpoints is
+			-- Update viewpoints
+		local
+			l_formatter: EB_FORMATTER
+			l_end_loop: BOOLEAN
+			l_index: INTEGER
+		do
+			view_points_combo.disable_sensitive
+			if view_points_combo.has_renamed_view_point then
+				l_index := managed_main_formatters.index
+				from
+					managed_main_formatters.start
+					managed_main_formatters.forth
+				until
+					managed_main_formatters.after or l_end_loop
+				loop
+					l_formatter := managed_main_formatters.item
+					if l_formatter.selected and l_formatter.button.is_sensitive  then
+						l_end_loop := True
+						view_points_combo.enable_sensitive
+					end
+					managed_main_formatters.forth
+				end
+				managed_main_formatters.go_i_th (l_index)
+			end
+		end
+
 feature -- Window management
 
 	show_window is
@@ -2664,6 +2707,12 @@ feature -- Tools & Controls
 
 	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			-- All formatters that can be displayed in the main editor frame.
+
+	view_points_combo: EB_VIEWPOINT_COMBO_BOX
+			-- Combo box used to a select viewpoints
+
+	view_points_widget: EV_HORIZONTAL_BOX
+			-- Widget to contain viewpoints box
 
 	unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
@@ -2940,6 +2989,9 @@ feature {NONE} -- Implementation
 					-- Update the address manager if needed.
 				address_manager.refresh
 				if new_class_stone /= Void then
+					if not during_synchronization then
+						view_points_combo.set_conf_class (new_class_stone.class_i.config_class)
+					end
 						-- Text is now editable.
 					editor_tool.text_area.set_read_only (False)
 
@@ -3125,6 +3177,9 @@ feature {NONE} -- Implementation
 					end
 					if cluster_st /= Void and then cluster_st.is_cluster then
 	--| FIXME XR: Really manage cluster display in the main editor
+						if not during_synchronization then
+							view_points_combo.set_conf_group (cluster_st.group)
+						end
 						formatted_context_for_cluster (cluster_st.cluster_i, cluster_st.path)
 						if cluster_st.position > 0 then
 							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
@@ -3204,6 +3259,7 @@ feature {NONE} -- Implementation
 	--					cur_wid.disable_capture
 				cur_wid := Void
 			end
+			update_viewpoints
 		end
 
 	formatted_context_for_cluster (a_cluster: CLUSTER_I; a_path: STRING) is
@@ -3888,6 +3944,44 @@ feature {NONE} -- Implementation
 		end
 
 	context_refreshing_timer: EV_TIMEOUT
+			-- Timer to refresh feature tree address bar.
+
+	on_viewpoint_changed is
+			-- Switch viewpoint.
+		local
+			l_formatter: EB_CLASS_TEXT_FORMATTER
+			l_line: INTEGER
+		do
+			l_formatter := selected_formatter
+			if l_formatter.button.is_sensitive and then l_formatter /= managed_main_formatters.first then
+				l_line := editor_tool.text_area.first_line_displayed
+				l_formatter.execute
+				editor_tool.text_area.display_line_at_top_when_ready (l_line)
+			end
+		end
+
+	selected_formatter: EB_CLASS_TEXT_FORMATTER is
+			-- Current selected formatter
+		local
+			l_end : BOOLEAN
+			l_index: INTEGER
+			l_formatter: like managed_main_formatters
+		do
+			l_formatter := managed_main_formatters
+			l_index := l_formatter.index
+			from
+				l_formatter.start
+			until
+				l_formatter.after or l_end
+			loop
+				if l_formatter.item.selected then
+					l_end := true
+					Result := l_formatter.item
+				end
+				l_formatter.forth
+			end
+			l_formatter.go_i_th (l_index)
+		end
 
 feature -- Recycle
 

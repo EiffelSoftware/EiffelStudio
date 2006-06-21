@@ -89,6 +89,7 @@ feature {NONE} -- Implementation
 				set_is_with_breakable
 				if associated_class /= Void then
 					editor.handle_before_processing (false)
+					setup_viewpoint
 					last_was_error := flat_context_text (associated_class, editor.text_displayed)
 					editor.handle_after_processing
 				end

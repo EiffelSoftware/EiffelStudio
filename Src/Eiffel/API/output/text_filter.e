@@ -741,7 +741,7 @@ feature -- Text processing
 				process_comment_text (ti_dashdash, Void)
 				print_escaped_text (" ");
 				process_comment_text ("class ", Void);
-				print_escaped_text (a_class.name_in_upper)
+				add_class (a_class.lace_class)
 			end
 		end;
 

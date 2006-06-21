@@ -339,6 +339,7 @@ feature -- Routines
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			s: STRING
 			class_c: CLASS_C
+			l_external_class: EXTERNAL_CLASS_I
 		do
 			class_c := class_i.compiled_class
 			text.process_keyword_text ("General", Void)
@@ -348,7 +349,14 @@ feature -- Routines
 				add_string_multilined (text, "%"" + class_c.obsolete_message + "%"")
 				text.add_new_line
 			end
-			append_info_item (text, type_of_group (class_i.group))
+			if class_i.is_external_class then
+				l_external_class ?= class_i
+				append_info_item (text, "dotnet name")
+				text.process_string_text (l_external_class.dotnet_name, Void)
+				text.add_new_line
+			end
+			s := type_of_group (class_i.group)
+			append_info_item (text, s.as_lower)
 			text.process_cluster_name_text (class_i.group.name, class_i.group, false)
 			text.add_new_line
 

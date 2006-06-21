@@ -81,6 +81,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried and associated_class /= Void then
 				set_is_with_breakable
+				setup_viewpoint
 				if not is_dotnet_mode then
 					editor.handle_before_processing (false)
 					if associated_class /= Void then

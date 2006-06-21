@@ -263,6 +263,19 @@ feature -- Element change
 			widget.disable_item_expand (formatters_combo)
 		end
 
+	set_viewpoints (a_view: like viewpoints) is
+			-- Set `viewpoints' with `a_view'.
+		require
+			a_view_not_void: a_view /= Void
+		DO
+			widget.extend (a_view)
+			widget.disable_item_expand (a_view)
+			viewpoints := a_view
+		end
+
+	viewpoints: EV_HORIZONTAL_BOX
+			-- Viewpoints combo box
+
 	formatters_combo: EV_TOOL_BAR
 			-- Tool bar containing class format option buttons.
 

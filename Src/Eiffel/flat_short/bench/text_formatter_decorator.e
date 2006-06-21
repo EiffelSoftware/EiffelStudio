@@ -113,7 +113,6 @@ feature -- Initialization
 			source_class := a_source_class
 			source_feature := a_source_class.feature_of_feature_id (a_feature_as.id)
 			setup_output_strategy
-			set_context_group (current_class.group)
 		end
 
 	init_feature_context (source, target: FEATURE_I;
@@ -130,7 +129,6 @@ feature -- Initialization
 			target_feature := target
 			source_class := source.written_class
 			setup_output_strategy
-			set_context_group (current_class.group)
 		end
 
 	init_variant_context is
@@ -139,7 +137,6 @@ feature -- Initialization
 			source_feature := Void
 			setup_output_strategy
 			set_in_assertion
-			set_context_group (current_class.group)
 		end
 
 feature -- Case properties
@@ -474,7 +471,6 @@ feature -- Execution
 						-- when processing the header of a class.
 					ast_output_strategy.set_current_class (current_class)
 					ast_output_strategy.set_source_class (current_class)
-					set_context_group (current_class.group)
 					ast_output_strategy.format (format_registration.target_ast)
 					Inst_context.set_group (Void)
 				else
@@ -535,7 +531,7 @@ feature -- Element change
 				emit_tabs
 			end
 			without_tabs := false
-			text_formatter.process_class_name_text (c.name, c, false)
+			text_formatter.add_class (c)
 		end
 
 	put_origin_comment is

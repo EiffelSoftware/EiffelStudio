@@ -45,6 +45,12 @@ feature -- Properties
 		do
 		end
 
+	viewpoints: CLASS_VIEWPOINTS
+			-- Class view points
+
+	post_execution_action: EV_NOTIFY_ACTION_SEQUENCE
+			-- Called after execution
+
 feature -- Initialization
 
 	make (a_manager: like manager) is
@@ -55,6 +61,7 @@ feature -- Initialization
 			capital_command_name.left_adjust
 				-- Set the first character to upper case.
 			capital_command_name.put ((capital_command_name @ 1) - 32, 1)
+			create post_execution_action
 		ensure
 			valid_capital_command_name: valid_string (capital_command_name)
 		end
@@ -95,6 +102,14 @@ feature -- Setting
 		do
 			editor := an_editor
 			internal_widget := an_editor.widget
+		end
+
+	set_viewpoints (a_viewpoints: like viewpoints) is
+			-- Viewpoints of current formatting
+		do
+			viewpoints := a_viewpoints
+		ensure
+			viewpoints_is_set: viewpoints = a_viewpoints
 		end
 
 feature -- Formatting
@@ -197,6 +212,7 @@ feature -- Commands
 			popup
 			fresh_old_formatter
 			format
+			post_execution_action.call ([])
 		end
 
 	save_in_file is
@@ -290,6 +306,14 @@ feature {NONE} -- Location
 				manager.set_previous_position (manager.position)
 			end
 			manager.set_previous_pos_container (Current)
+		end
+
+	setup_viewpoint is
+			-- Setup viewpoint for formatting.
+		do
+			if viewpoints /= Void then
+				editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
+			end
 		end
 
 feature -- Recyclable

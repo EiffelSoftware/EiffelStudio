@@ -117,13 +117,16 @@ feature -- Text processing
 	process_after_class (a_class: CLASS_C) is
 			-- Process after class text `t'.
 		do
-			put_after_class (a_class, a_class.name_in_upper)
+			add_space
+			process_comment_text (ti_dashdash, Void)
+			add_space
+			process_comment_text ("class ", Void)
+			add_class (a_class.lace_class)
 		end
 
 	process_before_class (a_class: CLASS_C) is
 			-- Process before class `t'.
 		do
-			put_before_class (a_class)
 		end
 
 	process_filter_item (text: STRING; is_before: BOOLEAN) is

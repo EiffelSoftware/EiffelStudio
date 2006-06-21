@@ -61,8 +61,8 @@ feature {NONE} -- Implementation
 					if (success) {
 							/* Check that `path2' and `path1' do not represent the same file. */
 						if
-							((l_path2_info.dwVolumeSerialNumber == l_path1_info.dwVolumeSerialNumber) ||
-							(l_path2_info.nFileIndexLow == l_path1_info.nFileIndexLow) ||
+							((l_path2_info.dwVolumeSerialNumber == l_path1_info.dwVolumeSerialNumber) &&
+							(l_path2_info.nFileIndexLow == l_path1_info.nFileIndexLow) &&
 							(l_path2_info.nFileIndexHigh == l_path1_info.nFileIndexHigh))
 						{
 							Result = EIF_TRUE;

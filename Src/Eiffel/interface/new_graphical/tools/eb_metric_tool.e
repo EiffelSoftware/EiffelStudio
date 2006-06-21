@@ -235,7 +235,9 @@ feature -- Implementation
 			tool_built: development_window.metric_menu /= Void
 		do
 			is_shown := False
-			development_window.metric_menu.disable_sensitive
+			if development_window.metric_menu /= Void then
+				development_window.metric_menu.disable_sensitive
+			end
 		end
 
 	set_focus is

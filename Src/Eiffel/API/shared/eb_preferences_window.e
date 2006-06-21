@@ -16,6 +16,7 @@ inherit
 			make,
 			hide,
 			on_close,
+			preference_name_column,
 			preference_value_column
 		end
 
@@ -42,13 +43,72 @@ feature -- Access
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
-			set_root_icon (icon_preference_root)
-			set_folder_icon (icon_pixmaps.folder_blank_icon)
+			set_root_icon (icon_pixmaps.tool_preferences_icon)
+			set_folder_icon (icon_pixmaps.folder_preference_icon)
 			Precursor {PREFERENCES_GRID} (a_preferences, a_parent_window)
-			set_icon_pixmap (icon_preference_window)
+			set_icon_pixmap (icon_pixmaps.tool_preferences_icon)
 			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			close_request_actions.extend (agent on_close)
 		end
+
+	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
+			--
+		local
+			l_bp: BOOLEAN_PREFERENCE
+			l_sp: STRING_PREFERENCE
+			l_ip: INTEGER_PREFERENCE
+			l_cp: COLOR_PREFERENCE
+			l_lp: ARRAY_PREFERENCE
+			l_fp: FONT_PREFERENCE
+			l_ifp: IDENTIFIED_FONT_PREFERENCE
+			l_scp: SHORTCUT_PREFERENCE
+		do
+			Result := Precursor {PREFERENCES_GRID}(a_pref)
+			if Result /= Void then
+				l_bp ?= a_pref
+				if l_bp = Void then
+					l_ip ?= a_pref
+					if l_ip = Void then
+						l_sp ?= a_pref
+						if l_sp = Void then
+							l_cp ?= a_pref
+							if l_cp = Void then
+								l_fp ?= a_pref
+								if l_fp = Void then
+									l_ifp ?= a_pref
+									if l_ifp = Void then
+										l_lp ?= a_pref
+										if l_lp = Void then
+											l_scp ?= a_pref
+											if l_scp /= Void then
+												Result.set_pixmap (icon_pixmaps.preference_shortcut_icon)
+											else
+												check False end
+											end
+										else
+											Result.set_pixmap (icon_pixmaps.preference_list_icon)
+										end
+									else
+										Result.set_pixmap (icon_pixmaps.preference_font_icon)
+									end
+								else
+									Result.set_pixmap (icon_pixmaps.preference_font_icon)
+								end
+							else
+								Result.set_pixmap (icon_pixmaps.preference_color_icon)
+							end
+						else
+							Result.set_pixmap (icon_pixmaps.preference_string_icon)
+						end
+					else
+						Result.set_pixmap (icon_pixmaps.preference_numerical_icon)
+					end
+				else
+					Result.set_pixmap (icon_pixmaps.preference_boolean_icon)
+				end
+			end
+		end
+
 
 	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
 			--

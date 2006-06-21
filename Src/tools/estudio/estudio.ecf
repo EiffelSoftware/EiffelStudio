@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="estudio" uuid="4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD">
+	<target name="estudio">
+		<root class="EC_LAUNCHER" feature="make"/>
+		<option profile="false" debug="false">
+			<debug name="__unnamed_debug__" enabled="true"/>
+			<debug name="launcher" enabled="true"/>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="array_optimization" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dynamic_runtime" value="False"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="multithreaded" value="True"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="src" location=".\src\">
+			<cluster name="unix" location="$|spec\unix\">
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="windows" location="$|spec\windows\">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
+		</cluster>
+	</target>
+</system>

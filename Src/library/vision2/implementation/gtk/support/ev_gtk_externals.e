@@ -9,6 +9,13 @@ inherit
 
 feature -- MACROS
 
+	frozen gtk_win_pos_mouse_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WIN_POS_MOUSE"
+		end
+
 	frozen gtk_maj_ver: INTEGER is
 		external
 			"C [macro <gtk/gtk.h>]"
@@ -3932,6 +3939,11 @@ feature -- External C functions
 			"C (GdkWindow*, GList*): GdkDragContext* | <gtk/gtk.h>"
 		end
 
+	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER]): INTEGER is
+		external
+			"C signature (GdkWindow*, guchar**, GdkAtom*, gint*): gint use <gtk/gtk.h>"
+		end
+
 	frozen gdk_drag_context_new: POINTER is
 			-- GdkDragContext * gdk_drag_context_new        (void);
 			-- (from C_GDK)
@@ -4009,6 +4021,26 @@ feature -- External C functions
 			-- (from C_GDK)
 		external
 			"C (GdkDragContext*, GdkDragAction, guint32) | <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access source_window use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_dest_window (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access dest_window use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_targets (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access targets use <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_convert (a_requestor, a_selection, a_target: POINTER; a_time: NATURAL_32) is
+		external
+			"C signature (GdkWindow*, GdkAtom, GdkAtom, guint32) use <gtk/gtk.h>"
 		end
 
 	frozen gdk_draw_arc (a_drawable: POINTER; a_gc: POINTER; a_filled: INTEGER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_angle1: INTEGER; a_angle2: INTEGER) is

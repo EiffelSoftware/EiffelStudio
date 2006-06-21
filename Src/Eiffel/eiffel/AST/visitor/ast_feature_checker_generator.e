@@ -1093,6 +1093,12 @@ feature -- Implementation
 							if is_precursor then
 								l_cl_type_i ?= a_precursor_type.type_i
 								l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+									-- Strange situation where Precursor is an external, then we do as if
+									-- it was a static call.
+								l_ext ?= l_access
+								if l_ext /= Void then
+									l_ext.enable_static_call
+								end
 							else
 								l_access := l_feature.access (l_result_type.type_i)
 							end

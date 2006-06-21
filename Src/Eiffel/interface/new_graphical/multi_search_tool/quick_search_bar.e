@@ -93,8 +93,8 @@ feature {NONE} -- Initialization
 			message_box.extend (bottom_reached_pixmap)
 			first_reached_pixmap.hide
 			bottom_reached_pixmap.hide
-			first_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, first_reached_pixmap, icon_first_result_reached_icon))
-			bottom_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, bottom_reached_pixmap, icon_bottom_reached_icon))
+			first_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, first_reached_pixmap, icon_pixmaps.search_first_reached_icon))
+			bottom_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, bottom_reached_pixmap, icon_pixmaps.search_bottom_reached_icon))
 			close_button.set_pixmap (icon_quick_search_close_color)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
 			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))

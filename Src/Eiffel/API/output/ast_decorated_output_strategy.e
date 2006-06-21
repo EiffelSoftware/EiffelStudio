@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 			if not has_error_internal then
 				if l_as.parent_base_class /= Void then
-					l_parent_class_i := universe.class_named (l_as.parent_base_class.class_name, current_class.group)
+					l_parent_class_i := universe.safe_class_named (l_as.parent_base_class.class_name, current_class.group)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
@@ -2643,7 +2643,7 @@ feature {NONE} -- Implementation
 					l_as.clients.after
 				loop
 					temp := l_as.clients.item
-					client_classi := universe.class_named (temp, cluster)
+					client_classi := universe.safe_class_named (temp, cluster)
 					if client_classi /= Void then
 						text_formatter_decorator.put_classi (client_classi)
 					else

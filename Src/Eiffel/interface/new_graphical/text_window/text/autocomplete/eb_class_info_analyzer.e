@@ -357,7 +357,7 @@ feature {NONE}-- Clickable/Editable implementation
 					click_pos := clickable_position_list @ index_min
 					if a_position <= click_pos.stop then
 						if click_pos.is_feature then
-							class_i := Universe.class_named (click_pos.class_name, group)
+							class_i := Universe.safe_class_named (click_pos.class_name, group)
 							if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then
 								feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
 								if feat /= Void then
@@ -365,7 +365,7 @@ feature {NONE}-- Clickable/Editable implementation
 								end
 							end
 						elseif click_pos.is_class then
-							class_i := Universe.class_named (click_pos.class_name, group)
+							class_i := Universe.safe_class_named (click_pos.class_name, group)
 							if class_i /= Void then
 								if class_i.compiled then
 									create {CLASSC_STONE} Result.make (class_i.compiled_class)
@@ -1107,7 +1107,7 @@ feature {NONE}-- Implementation
 			end
 			if Result = Void then
 				image := current_token.image.as_upper
-				class_i := Universe.class_named (image, group)
+				class_i := Universe.safe_class_named (image, group)
 				if class_i /= Void and then class_i.compiled then
 					found_class := class_i.compiled_class
 					Result := found_class.actual_type

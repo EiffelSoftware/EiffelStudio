@@ -36,13 +36,15 @@ feature {NONE} -- Implementation
 			"[
 				EIF_BOOLEAN Result = EIF_FALSE;
 			#ifdef EIF_WINDOWS
-					/* To check this, we use `CreateFile' to open both file, and then using the information
+					/* To check this, we use `CreateFileA' to open both file, and then using the information
 					 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
-					 * the same. */
+					 * the same.
+					 * Note: it is important to use the A version of CreateFileA because arguments
+					 * are ASCII strings, not unicode. */
 				BY_HANDLE_FILE_INFORMATION l_path1_info, l_path2_info;
-				HANDLE l_path2_file = CreateFile ($a_path2, GENERIC_READ, FILE_SHARE_READ, NULL,
+				HANDLE l_path2_file = CreateFileA ($a_path2, GENERIC_READ, FILE_SHARE_READ, NULL,
 					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-				HANDLE l_path1_file = CreateFile ($a_path1, GENERIC_READ, FILE_SHARE_READ, NULL,
+				HANDLE l_path1_file = CreateFileA ($a_path1, GENERIC_READ, FILE_SHARE_READ, NULL,
 						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			
 				if ((l_path2_file == INVALID_HANDLE_VALUE) || (l_path1_file == INVALID_HANDLE_VALUE)) {

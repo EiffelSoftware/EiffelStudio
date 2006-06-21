@@ -26,7 +26,7 @@ feature{NONE} -- Initialization
 			-- Initialize `calculate_function' with `a_calculate_func'.
 		do
 			create domain_generator
-			domain_generator.actions.extend (agent evaluate_item)
+			domain_generator.item_satisfied_actions.extend (agent evaluate_item)
 			calculate_function := a_calculate_func
 		ensure
 			domain_generator_created: domain_generator /= Void

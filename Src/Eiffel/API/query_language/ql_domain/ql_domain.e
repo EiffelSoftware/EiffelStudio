@@ -3,6 +3,7 @@ indexing
 					Object that represents a domain used in Eiffel query language
 					
 					Basic conception
+					
 					The most basic conception in Eiffel Query Language (EQL) is domain. 
 					A domain is a list of some type of basic element. A domain is like a one column relation in SQL.
 					
@@ -12,20 +13,29 @@ indexing
 					2.	Group: Groups in a target, can be a cluster, a library or an assembly. See {QL_GROUP}.
 					3.	Class: Classes contained in a group. See {QL_CLASS}.
 					4.	Generic: Formal generics of a class. See {QL_GENERIC}.
-					5.	Feature: Features in a class, there two types of features: real feature and invariant (class invariant is treated as a special type of feature). See{QL_FEATURE}.
-					6.	Contract: Assertions associated with a feature. Class invariant assertions are considered associated with feature `invariant'. See{QL_ASSERTION}.
+					5.	Feature: Features in a class, there two types of features: 
+						real feature and invariant (class invariant is treated as a special type of feature). See{QL_FEATURE}.
+					6.	Contract: Assertions associated with a feature. Class invariant assertions are considered 
+						associated with feature `invariant'. See{QL_ASSERTION}.
 					7.	Local: Local variables of a feature. See {QL_LOCAL}.
 					8.	Argument: Formal arguments of a feature. See {QL_ARGUMENT}.
-					9.	Line: A line in a code-related element. Code-related element is an basic element which represents a piece of source code, including Class, Generic, Feature, Contract, Local and Argument. See{QL_LINE}.
+					9.	Line: A line in a code-related element. Code-related element is an basic element which represents 
+						a piece of source code, including Class, Generic, Feature, Contract, Local and Argument. See{QL_LINE}.
 					10.	Quantity: A double value element. See {QL_QUANTITY}.
 
+					-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 					Major operation
+
 					The major operation of EQL is domain projection or transformation using a domain generator with some criterion.
 					For more information of domain generator, see {QL_DOMAIN_GENERATOR}.
 					One domain of certain type can be projected to another domain of the same type using some criterion and
 					one domain of certain type can be transformed into another domain with a different type.
 					
+					-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 					Criterion
+	
 					Each kind of basic element has a set of criteria associated with it. 
 					For example, basic element class {QL_CLASS} has criteria such as "is_deferred", "is_effective", "name_is", "ancestor_is". 
 					And basic element feature has criteria such as "is_query", "is_command", "return_type_is".
@@ -34,9 +44,12 @@ indexing
 					And same type of criteria can be combined using logical operator "and", "or".
 					Different kinds of criteria CAN NOT be combined together.
 					For more information of criteria for each type of basic element,
-					look into {QL_CRITERION_FACTORY} and its descendant classes.
+					see {QL_CRITERION_FACTORY} and its descendant classes.
+
+					-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					
-					Example:
+					Example
+					
 						l_class_cri: QL_CLASS_CRITERION
 						l_class_domain: QL_CLASS_DOMAIN
 						l_class_domain_generator: QL_CLASS_DOMAIN_GENERATOR
@@ -72,7 +85,7 @@ indexing
 						Let's reuse system_target_domain, l_feature_cri, l_feature_domain, l_feature_domain_generator which
 						are defined before.
 						l_feature_domain ?= system_target_domain.new_domain (l_feature_domain_generator).
-							-- Now we get all commands in current system, no matter in which classes they belong to.
+							-- Now we get all commands in current system, no matter to which classes they belong.
 					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

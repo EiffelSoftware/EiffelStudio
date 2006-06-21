@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	interval_tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
+	tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
 			-- Actions to be performaed after every `interval_counter' items have been processed.
 		do
 			Result := interval_tick_actions_cell.item
@@ -20,8 +20,8 @@ feature -- Access
 		end
 
 	interval: NATURAL_64 is
-			-- Interval to decide if `interval_tick_actions' should be called.
-			-- `interval_tick_actions' will be called after every `interval' number of items have been processed.
+			-- Interval to decide if `tick_actions' should be called.
+			-- `tick_actions' will be called after every `interval' number of items have been processed.
 			-- Default value is `initial_interval'.
 		do
 			Result := interval_cell.item
@@ -38,7 +38,19 @@ feature -- Status report
 	has_interval_tick_actions: BOOLEAN is
 			-- Is there any tick actions registered?
 		do
-			Result := not interval_tick_actions.is_empty
+			Result := not tick_actions.is_empty
+		end
+
+feature -- Setting
+
+	set_interval (a_interval: NATURAL_64) is
+			-- Set `interval' with `a_interval'.
+		require
+			a_interval_positive: a_interval > 0
+		do
+			interval_cell.put (a_interval)
+		ensure
+			interval_set: interval = a_interval
 		end
 
 feature -- Basic operations
@@ -54,16 +66,16 @@ feature -- Basic operations
 			internal_counter_cell.put (l_counter)
 			if
 				l_counter \\ interval = 0 and then
-				not interval_tick_actions.is_empty
+				not tick_actions.is_empty
 			then
-				interval_tick_actions.call ([a_item])
+				tick_actions.call ([a_item])
 			end
 		end
 
 feature{NONE} -- Implementation
 
 	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE [QL_ITEM]]] is
-			-- Cell to hold `interval_tick_actions'.
+			-- Cell to hold `tick_actions'.
 		once
 			create Result.put (create{ACTION_SEQUENCE[TUPLE [QL_ITEM]]})
 		ensure
@@ -91,7 +103,7 @@ feature{NONE} -- Implementation
 
 invariant
 	interval_tick_actions_cell_attached: interval_tick_actions_cell /= Void
-	interval_tick_actions_attached: interval_tick_actions /= Void
+	interval_tick_actions_attached: tick_actions /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

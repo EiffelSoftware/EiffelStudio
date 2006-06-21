@@ -124,7 +124,6 @@ feature -- Status report
 			-- `a_name' should be in lower case and without heading and trailing spaces.
 		require
 			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
 		do
 			Result := name_table.has (a_name)
 		end

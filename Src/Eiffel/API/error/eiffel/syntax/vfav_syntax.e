@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 			feature_name_set: feature_name = f.visual_name
 			location_set: line = f.alias_name.start_location.line and column = f.alias_name.start_location.column
 		end
-	
+
 feature -- Access
 
 	code: STRING is "VFAV"
@@ -66,9 +66,14 @@ feature -- Output
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Column: ")
 			a_text_formatter.add_int (column)
-			display_line (a_text_formatter, previous_line)
-			display_syntax_line (a_text_formatter, current_line)
-			display_line (a_text_formatter, next_line)
+			if has_source_text then
+				display_line (a_text_formatter, previous_line)
+				display_syntax_line (a_text_formatter, current_line)
+				display_line (a_text_formatter, next_line)
+			else
+				a_text_formatter.add (" (source code is not available)")
+				a_text_formatter.add_new_line
+			end
 		end
 
 indexing

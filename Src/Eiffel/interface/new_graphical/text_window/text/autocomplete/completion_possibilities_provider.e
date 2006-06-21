@@ -61,6 +61,19 @@ feature -- Status report
 			Result := completion_possibilities /= Void and then not completion_possibilities.is_empty
 		end
 
+feature -- Element change
+
+	set_code_completable (a_completable: like code_completable) is
+			-- Set `code_completable' with `a_completable'.
+		require
+			a_completable_attached: a_completable /= Void
+		do
+			code_completable := a_completable
+			is_prepared := false
+		ensure
+			code_completable_not_void: code_completable /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

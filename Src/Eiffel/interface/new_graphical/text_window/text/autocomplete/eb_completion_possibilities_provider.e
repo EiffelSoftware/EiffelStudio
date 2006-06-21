@@ -63,17 +63,6 @@ feature {CODE_COMPLETABLE} -- Basic operation
 
 feature -- Element Change
 
-	set_code_completable (a_completable: EB_TAB_CODE_COMPLETABLE) is
-			-- Set `code_completable' with `a_completable'.
-		require
-			a_completable_attached: a_completable /= Void
-		do
-			code_completable := a_completable
-			is_prepared := false
-		ensure
-			code_completable_not_void: code_completable /= Void
-		end
-
 	set_provide_features (a_provide: BOOLEAN) is
 			-- Set `provide_features' with `a_provide'.
 		do

@@ -2089,18 +2089,32 @@ feature {NONE} -- Externals
 			"C inline use <Windows.h>"
 		alias
 			"[
-				AlphaBlend(
-					(HDC) $a_dc_dest,
-					(int) $a_x_dest,
-					(int) $a_y_dest,
-					(int) $a_width_dest,
-					(int) $a_height_dest,
-					(HDC) $a_dc_src,
-					(int) $a_x_src,
-					(int) $a_y_src,
-					(int) $a_width_src,
-					(int) $a_height_src,
-					*(BLENDFUNCTION*) $a_blend_function)
+				FARPROC alpha_blend = NULL;
+				HMODULE user32_module = LoadLibrary (L"Msimg32.dll");
+				if (user32_module) {
+					alpha_blend = GetProcAddress (user32_module, "AlphaBlend");
+					if (alpha_blend) {
+						*(EIF_INTEGER *) $a_result =
+							(FUNCTION_CAST_TYPE(BOOL, WINAPI, (HDC, int, int, int, int, HDC, int, int, int, int, BLENDFUNCTION)) alpha_blend)
+									((HDC) $a_dc_dest,
+									(int) $a_x_dest,
+									(int) $a_y_dest,
+									(int) $a_width_dest,
+									(int) $a_height_dest,
+									(HDC) $a_dc_src,
+									(int) $a_x_src,
+									(int) $a_y_src,
+									(int) $a_width_src,
+									(int) $a_height_src,
+									*(BLENDFUNCTION*) $a_blend_function);
+					}else
+					{
+						// There is no alpha blend function in the Dll.
+					}				
+				}else
+				{
+					// User does not have Msimg32.dll
+				}
 			]"
 		end
 

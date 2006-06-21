@@ -739,6 +739,7 @@
 								<File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
 								<File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
 								<File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
+								<File Id="file_comparer_e" Name="FILE_C~1.E" LongName="file_comparer.e" />
 								<File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />
 								<File Id="format_integer.e" Name="FORMAT~2.E" LongName="format_integer.e" />
 								<File Id="internal_helper_e" Name="INTERN~1.E" LongName="internal_helper.e" />

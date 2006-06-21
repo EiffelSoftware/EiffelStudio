@@ -261,7 +261,10 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			toggle_layout_cmd.recycle
+			toggle_layout_cmd := Void
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
+			set_row_highlight_bg_color_agent := Void
 			manager := Void
 		end
 

@@ -14,6 +14,8 @@ inherit
 			{ANY} all
 		end
 
+	CACHE_INFO_FACTORY
+
 	SHARED_CACHE_MUTEX_GUARD
 		export
 			{NONE} all
@@ -276,15 +278,13 @@ feature {CACHE_WRITER} -- Implementation
 					end
 					if internal_info.item = Void then
 							-- cache info is not initalized or is outdated
-						internal_info.put (create {CACHE_INFO}.make (absolute_info_path))
-						(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
+						internal_info.put (new_cache_info (absolute_info_path))
 					end
 				end
 			else
 				if internal_info.item = Void then
 						-- cache info is not initalized or is outdated
-					internal_info.put (create {CACHE_INFO}.make (absolute_info_path))
-					(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
+					internal_info.put (new_cache_info (absolute_info_path))
 				end
 			end
 			Result := internal_info.item

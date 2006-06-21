@@ -179,24 +179,6 @@ feature {EV_ANY_I} -- Implementation
 			Result := [{EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM, 0, 0, button_number, 0.5, 0.5, 0.5, 0, 0]
 		end
 
-	accel_activate_intermediary (a_object_id: INTEGER; n: INTEGER; p: POINTER) is
-			-- Call accelerators for window `a_object_id'
-		local
-			arg: POINTER
-			accel_key: NATURAL_32
-			accel_mods: INTEGER
-			a_titled_window_imp: EV_TITLED_WINDOW_IMP
-		do
-			a_titled_window_imp ?= eif_id_object (a_object_id)
-			arg := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 1)
-			accel_key := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (arg)
-			arg := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 2)
-			accel_mods := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_flags (arg)
-			if a_titled_window_imp /= Void and then not a_titled_window_imp.is_destroyed then
-				a_titled_window_imp.call_accelerators (key_code_from_gtk (accel_key), accel_mods)
-			end
-		end
-
 	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
 		local

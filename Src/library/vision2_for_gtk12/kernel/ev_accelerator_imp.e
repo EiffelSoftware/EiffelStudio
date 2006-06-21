@@ -27,7 +27,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Connect interface.
 		do
@@ -46,6 +46,8 @@ feature {NONE} -- Implementation
 
 	interface: EV_ACCELERATOR
 
+feature {EV_TITLED_WINDOW_IMP} -- Implementation
+
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
 		do
@@ -59,8 +61,6 @@ feature {NONE} -- Implementation
 				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
 		end
-
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
 	add_accel (a_accel_grp: POINTER) is
 			-- Add the current key combination to the invisible button.

@@ -18,17 +18,17 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create character format 
+			-- Create character format
 		do
 			base_make (an_interface)
 		end
-	
+
 	initialize is
 			-- Do nothing
 		do
 			set_is_initialized (True)
 		end
-		
+
 feature -- Access
 
 	font: EV_FONT is
@@ -36,7 +36,7 @@ feature -- Access
 		do
 			create Result
 		end
-	
+
 	color: EV_COLOR is
 			-- Color of the current format
 		do
@@ -48,7 +48,7 @@ feature -- Access
 		do
 			create Result
 		end
-		
+
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
 		do
@@ -56,7 +56,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	set_font (a_font: EV_FONT) is
 			-- Make `value' the new font
 		do
@@ -71,7 +71,7 @@ feature -- Status setting
 			-- Make `value' the new color
 		do
 		end
-		
+
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'
 		do
@@ -79,49 +79,49 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	name: STRING
+	name: STRING_32
 			-- Face name used by `Current'.
-		
+
 	family: INTEGER
 			-- Family used by `Current'.
-		
+
 	height: INTEGER
 			--  Height of `Current' in screen pixels.
 
 	height_in_points: INTEGER
 			-- Height of `Current' in points
-		
+
 	weight: INTEGER
 			-- Weight of `Current'.
-		
+
 	is_bold: BOOLEAN
 			-- Is `Current' bold?
-		
+
 	shape: INTEGER
 			-- Shape of `Current'.
 
 	char_set: INTEGER
 			-- Char set used by `Current'.
-		
+
 	is_underlined: BOOLEAN
 			-- Is `Current' underlined?
-		
+
 	is_striked_out: BOOLEAN
 			-- Is `Current' striken out?
-		
+
 	vertical_offset: INTEGER
 			-- Vertical offset of `Current'.
 
 	fcolor: INTEGER
 			-- foreground color RGB packed into 24 bit.
-		
+
 	bcolor: INTEGER
 			-- background color RGB packed into 24 bit.
 
 	destroy is
-			-- 
+			--
 		do
-			
+
 		end
 
 indexing

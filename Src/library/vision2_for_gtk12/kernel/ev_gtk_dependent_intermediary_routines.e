@@ -14,8 +14,8 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
-	ANY
+
+	EV_GTK_KEY_CONVERSION
 
 feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 
@@ -41,7 +41,7 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 			a_mcl_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			inspect
 				a_event_number
-			when 1 then		
+			when 1 then
 				a_mcl_imp.select_callback (a_int)
 			when 2 then
 				a_mcl_imp.deselect_callback (a_int)
@@ -73,7 +73,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 		end
 
 feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list item intermediary agent routines
-		
+
 	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- List item selected
 		local
@@ -82,7 +82,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			a_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
 			--a_list_item_list.on_key_pressed (a_key, a_key_string, a_key_press)
 		end
-		
+
 	on_list_item_list_item_clicked_intermediary (a_c_object: POINTER) is
 			-- List item clicked
 		local
@@ -101,19 +101,6 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			--a_list_imp.set_is_out (in_out_flag)
 		end
 
-	on_list_focus_intermediary (a_c_object: POINTER; in_out_flag: BOOLEAN) is
-			-- Focus gained or lost
-		local
-			a_list_imp: EV_LIST_IMP
-		do
-			a_list_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if in_out_flag then
-				a_list_imp.attain_focus
-			else
-				a_list_imp.lose_focus
-			end
-		end
-
 	list_item_select_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER) is
 			-- Item select callback
 		local
@@ -122,7 +109,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
 			l_list_item_list.select_callback (n_args, args)
 		end
-		
+
 	list_item_check_intermediary (a_c_object: POINTER) is
 			-- List item check button callback
 		local
@@ -142,7 +129,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 				l_list_item_list.deselect_callback (n_args, args)
 			end
 		end
-		
+
 	list_clicked_intermediary (a_c_object: POINTER) is
 			-- List clicked
 		local
@@ -151,7 +138,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
 			l_list_item_list.on_list_clicked
 		end
-		
+
 	list_key_pressed_intermediary (a_c_object: POINTER; ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Key pressed in list
 		local
@@ -160,7 +147,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
 			l_list_item_list.on_key_pressed (ev_key, a_key_string, a_key_press)
 		end
-		
+
 	list_item_clicked_intermediary (a_c_object: POINTER) is
 			-- List item clicked
 		local
@@ -183,7 +170,7 @@ feature {EV_ANY_IMP} -- Combo box intermediary agent routines
 
 
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	
-	
+
 	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is
 			-- Tree event
 		local
@@ -192,7 +179,7 @@ feature {EV_ANY_IMP} -- Tree intermediary agent routines
 			a_tree_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			inspect
 				a_event_number
-			when 1 then		
+			when 1 then
 				a_tree_imp.select_callback (a_tree_item)
 			when 2 then
 				a_tree_imp.deselect_callback (a_tree_item)
@@ -202,7 +189,7 @@ feature {EV_ANY_IMP} -- Tree intermediary agent routines
 				a_tree_imp.collapse_callback (a_tree_item)
 			end
 		end
-	
+
 feature {EV_ANY_I} -- Externals
 
 	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is

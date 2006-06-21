@@ -1203,7 +1203,7 @@ feature -- Element change
 			l_info: FILE_INFO
 		do
 			create l_info.make (new_name.to_cil)
-			if l_info.exists then
+			if l_info.exists and not same_file (new_name) then
 				l_info.delete
 			end
 			internal_file.refresh

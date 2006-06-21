@@ -87,7 +87,7 @@ feature -- Properties
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' in toolbars.
 		once
-			Result := Pixmaps.Icon_delete_small
+			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
 	mini_pixmap: EV_PIXMAP is

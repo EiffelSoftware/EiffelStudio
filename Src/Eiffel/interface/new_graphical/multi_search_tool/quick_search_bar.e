@@ -78,8 +78,8 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			next_button.set_pixmap (icon_quick_search_next_color)
-			previous_button.set_pixmap (icon_quick_search_previous_color)
+			next_button.set_pixmap (icon_pixmaps.general_arrow_down_icon)
+			previous_button.set_pixmap (icon_pixmaps.general_arrow_up_icon)
 			advanced_button.set_pixmap (icon_pixmaps.tool_advanced_search_icon)
 			create first_reached_pixmap
 			create bottom_reached_pixmap
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			bottom_reached_pixmap.hide
 			first_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, first_reached_pixmap, icon_pixmaps.search_first_reached_icon))
 			bottom_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, bottom_reached_pixmap, icon_pixmaps.search_bottom_reached_icon))
-			close_button.set_pixmap (icon_quick_search_close_color)
+			close_button.set_pixmap (icon_pixmaps.general_close_icon)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
 			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))
 			regular_expression_button.select_actions.extend (agent check_button_changed (regular_expression_button))

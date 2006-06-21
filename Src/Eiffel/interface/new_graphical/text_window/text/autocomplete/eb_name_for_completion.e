@@ -126,7 +126,7 @@ feature -- Query
 				Result.set_pixmap (icon)
 			end
 			if has_child then
-				Result.set_pixmap (pixmaps.icon_expandable_right_arrow_color)
+				Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
 			end
 			Result.set_overriden_fonts (label_font_table)
 		end

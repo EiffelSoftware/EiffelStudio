@@ -28,7 +28,7 @@ feature -- Menus
 
 feature -- Messages
 
-	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"

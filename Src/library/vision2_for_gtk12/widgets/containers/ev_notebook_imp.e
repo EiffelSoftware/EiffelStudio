@@ -1,14 +1,14 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision notebook. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_NOTEBOOK_IMP
-	
+
 inherit
 	EV_NOTEBOOK_I
 		undefine
@@ -18,7 +18,7 @@ inherit
 			interface,
 			replace
 		end
-		
+
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
@@ -28,12 +28,12 @@ inherit
 			remove_i_th,
 			needs_event_box
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface
 		end
-	  
+
 	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
 
 create
@@ -42,9 +42,9 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
-	
+
 	make (an_interface: like interface) is
-			-- Create a fixed widget. 
+			-- Create a fixed widget.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 		end
 
-feature -- Access
+feature {EV_NOTEBOOK_TAB_IMP} -- Access
 
 	pointed_tab_index: INTEGER is
 			-- index of tab currently under mouse pointer, or 0 if none.
@@ -102,7 +102,7 @@ feature -- Access
 			create Result.make_with_widgets (interface, an_item)
 		end
 
-	item_text (an_item: like item): STRING is
+	item_text (an_item: like item): STRING_32 is
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -110,11 +110,11 @@ feature -- Access
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			
+
 			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
 				a_tab_label
-			))			
-			
+			))
+
 --			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
 --
 --			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
@@ -133,7 +133,7 @@ feature -- Access
 		end
 
 	item_pixmap (an_item: like item): EV_PIXMAP is
-			-- 
+			--
 		local
 			item_imp: EV_WIDGET_IMP
 			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
@@ -177,15 +177,15 @@ feature -- Status report
 				check
 					p_has_eif_object: imp /= Void
 				end
-	
+
 				Result ?= imp.interface
-	
+
 				check
 					imp_has_interface: Result /= Void
 				end
 			end
 		end
-			
+
 	selected_item_index: INTEGER is
 			-- Page index of selected item
 		do
@@ -213,8 +213,8 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
-	
+feature {EV_NOTEBOOK} -- Status setting
+
 	set_tab_position (a_tab_position: INTEGER) is
 			-- Display tabs at `a_position'.
 		local
@@ -245,8 +245,8 @@ feature -- Status setting
 				visual_widget,
 				{EV_GTK_EXTERNALS}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
 			)
-		end	
-	
+		end
+
 feature -- Element change
 
 	remove_i_th (i: INTEGER) is
@@ -271,7 +271,9 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
 		end
 
-	set_item_text (an_item: like item; a_text: STRING) is
+feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Implementation
+
+	set_item_text (an_item: like item; a_text: STRING_32) is
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -280,9 +282,9 @@ feature -- Element change
 		do
 			item_imp ?= an_item.implementation
 			a_cs := a_text
-			
+
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (visual_widget, item_imp.c_object, a_cs.item)
-			
+
 --			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
 --			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
 --			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
@@ -329,7 +331,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 			end
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	selected_item_index_internal: INTEGER
@@ -347,6 +349,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Access
 
 	interface: EV_NOTEBOOK;
 			-- Provides a common user interface to platform dependent

@@ -2,7 +2,7 @@ indexing
 	description: "EiffelVision drawable. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figures, primitives, drawing, line, point, ellipse" 
+	keywords: "figures, primitives, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +48,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			-- Pointer to GdkGC struct.
 			-- The graphics context applied to the primitives.
 			-- Line style, width, colors, etc. are defined in here.
-	
+
 	gcvalues: POINTER
 			-- Pointer to GdkGCValues struct.
 			-- Is allocated during creation but has to be updated
@@ -97,7 +97,7 @@ feature -- Access
 
 	foreground_color: EV_COLOR
 			-- Color used to draw primitives.
-		
+
 	background_color: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
@@ -209,7 +209,7 @@ feature -- Element change
 			-- Assign `a_width' to `line_width'.
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, a_width,
-				line_style, cap_style, join_style)				
+				line_style, cap_style, join_style)
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
@@ -329,7 +329,14 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING) is
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL) is
+			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Rotation is number of radians counter-clockwise from horizontal plane.
+		do
+			draw_text (x, y, a_text)
+		end
+
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -457,7 +464,13 @@ feature -- Drawing operations
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		do
-			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)	
+			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)
+		end
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Pixmap region of `Current' represented by rectangle `area'
+		do
+			create Result.make_with_size (area.width, area.height)
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -474,7 +487,7 @@ feature -- Drawing operations
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
-			if drawable /= default_pointer then 
+			if drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
 					{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
@@ -520,12 +533,12 @@ feature -- Drawing operations
 			top := y
 			right := left + a_width
 			bottom := top + a_height
-			                     
+
 			semi_width := a_width / 2
 			semi_height := a_height / 2
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
-			                        
+
 			x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
 			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
 			if sine (a_start_angle) > 0 then
@@ -536,7 +549,7 @@ feature -- Drawing operations
 			end
 			x_start_arc := (x_tmp + left + semi_width).rounded
 			y_start_arc := (y_tmp + top + semi_height).rounded
-			
+
 			x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
 			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
 			if sine (a_start_angle + an_aperture) > 0 then
@@ -547,7 +560,7 @@ feature -- Drawing operations
 			end
 			x_end_arc := (x_tmp + left + semi_width).rounded
 			y_end_arc := (y_tmp + top + semi_height).rounded
-                        		
+
 			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
@@ -654,15 +667,15 @@ feature {NONE} -- Implemention
 		do
 			from
 				a_pts := pts
-				array_count := a_pts.count * 2 
+				array_count := a_pts.count * 2
 				create Result.make (1, array_count)
-				i := 2				
+				i := 2
 			until
 				i > array_count + 1
 			loop
 				a_coord := a_pts.item (i // 2)
 				Result.force (a_coord.x.to_integer_16, i - 1)
-				Result.force (a_coord.y.to_integer_16, i)			
+				Result.force (a_coord.y.to_integer_16, i)
 				i := i + 2
 			end
 		ensure
@@ -685,28 +698,28 @@ feature {NONE} -- Implementation
 
 	whole_circle: INTEGER is 23040
 		-- Number of 1/64 th degrees in a full circle (360 * 64)
-		
-	radians_to_gdk_angle: INTEGER is 3667 -- 
+
+	radians_to_gdk_angle: INTEGER is 3667 --
 			-- Multiply radian by this to get no of (1/64) degree segments.
-		
+
 	internal_font_ascent: INTEGER
 
 	internal_font_imp: EV_FONT_IMP
-	
+
 	interface: EV_DRAWABLE
-	
+
 	math: EV_FIGURE_MATH is
 		once
 			create Result
 		end
-		
+
 	system_colormap: POINTER is
 			-- Default system color map used for allocating colors.
 		once
 			Result := {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
 		end
-		
-	gdk_gc_unref (a_gc: POINTER) is 
+
+	gdk_gc_unref (a_gc: POINTER) is
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
 		external
 			"C (GdkGC*) | <gtk/gtk.h>"

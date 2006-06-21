@@ -18,7 +18,7 @@ inherit
 	EV_ITEM_ACTION_SEQUENCES_IMP
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-	
+
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
@@ -47,7 +47,10 @@ feature -- Initialization
 			-- Initialize `Current'.
 		do
 			textable_imp_initialize
+			align_text_left
 			set_width (80)
+			set_minimum_width (0)
+			set_maximum_width (32000)
 			set_is_initialized (True)
 		end
 
@@ -59,7 +62,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_32) is
 			-- Assign `a_text' to `text'.
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
@@ -83,8 +86,8 @@ feature -- Status setting
 		do
 			width := a_width
 		end
-		
-		
+
+
 	resize_to_content is
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
@@ -139,7 +142,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
         	-- Start PND transport (not needed)
 		do
 			check
@@ -165,7 +168,44 @@ feature -- PND
 			end
 		end
 
-feature
+feature -- Access
+
+	minimum_width: INTEGER
+		-- Lower bound on `width' in pixels.
+
+	maximum_width: INTEGER
+		-- Upper bound on `width' in pixels.
+
+	user_can_resize: BOOLEAN
+		-- Can a user resize `Current'?
+
+feature -- Status setting
+
+	disable_user_resize is
+			-- Prevent `Current' from being resized by users.
+		do
+			user_can_resize := False
+		end
+
+	enable_user_resize is
+			-- Permit `Current' to be resized by users.
+		do
+			user_can_resize := True
+		end
+
+	set_maximum_width (a_width: INTEGER) is
+			-- Assign `a_maximum_width' in pixels to `maximum_width'.
+			-- If `width' is greater than `a_maximum_width', resize.
+		do
+			maximum_width := a_width
+		end
+
+	set_minimum_width (a_width: INTEGER) is
+			-- Assign `a_minimum_width' in pixels to `minimum_width'.
+			-- If `width' is less than `a_minimum_width', resize.
+		do
+			minimum_width := a_width
+		end
 
 	set_parent_imp (par_imp: like parent_imp) is
 			-- Set `parent_imp' to `par_imp'.
@@ -175,7 +215,7 @@ feature
 
 	parent_imp: EV_HEADER_IMP
 		-- Parent of `Current'.
-	
+
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Create a drop action sequence.
 		do

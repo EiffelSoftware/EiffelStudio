@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize
+			default_wm_decorations
 		end
 
 create
@@ -38,12 +38,12 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
 
-	initialize is
-			-- Initialize `Current'.
+feature {NONE} -- Implementation
+
+	default_wm_decorations: INTEGER is
+			-- Default Window Manager decorations of `Current'.
 		do
-			Precursor {EV_WINDOW_IMP}
-				-- Remove all decoration for popup window.	
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			Result := 0
 		end
 
 feature {EV_ANY_I} -- Implementation

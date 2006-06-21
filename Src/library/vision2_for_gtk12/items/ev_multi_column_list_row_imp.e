@@ -22,7 +22,7 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Create the linked lists.
-		do			
+		do
 			set_is_initialized (True)
 		end
 
@@ -49,7 +49,7 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected.
-		do			
+		do
 			Result := (parent_imp.selected_items.has (interface))
 			 or (parent_imp.selected_item = interface)
 		end
@@ -82,7 +82,7 @@ feature -- Status setting
 
 feature -- PND
 
-	enable_transport is 
+	enable_transport is
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
@@ -129,7 +129,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				do_not_call: False
@@ -173,7 +173,7 @@ feature -- Element Change
 		do
 		end
 
-	tooltip: STRING
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 
 feature -- Basic operations
@@ -213,9 +213,9 @@ feature {EV_ANY_I} -- Implementation
 		do
 			update_needed := False
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	on_item_added_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
 		do
@@ -256,7 +256,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			parent_imp := par_imp
 		end
-	
+
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 			-- Implementation of the rows parent.
 

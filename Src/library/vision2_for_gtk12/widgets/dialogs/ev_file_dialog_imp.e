@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision file dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			a_cs := internal_accept
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_label, a_cs.item)
-			
+
 			real_signal_connect (
 				{EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: STRING_32 is
 			-- Full name of currently selected file including path.
 		do
 			if
@@ -83,15 +83,15 @@ feature -- Access
 			end
 		end
 
-	filter: STRING
+	filter: STRING_32
 			-- Filter currently applied to file list.
 
-	start_directory: STRING
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 
 feature -- Status report
 
-	file_title: STRING is
+	file_title: STRING_32 is
 			-- `file_name' without its path.
 		do
 			if not file_name.is_empty then
@@ -103,7 +103,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING is
+	file_path: STRING_32 is
 			-- Path of `file_name'.
 		do
 			if not file_name.is_empty then
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING_32) is
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -168,15 +168,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create temp_filename.make (0)
 			temp_filename.from_c ({EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
 			create temp_file.make (temp_filename)
-			if (not temp_file.exists or else not temp_file.is_directory) and not 
+			if (not temp_file.exists or else not temp_file.is_directory) and not
 					temp_filename.item (temp_filename.count).is_equal ('/') then
 				Precursor {EV_STANDARD_DIALOG_IMP}
-			end	
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	valid_file_name, valid_file_title (a_name: STRING): BOOLEAN is
+	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 		do
 			if a_name /= Void then

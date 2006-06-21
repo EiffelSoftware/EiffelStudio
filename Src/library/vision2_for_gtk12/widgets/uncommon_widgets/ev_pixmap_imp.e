@@ -5,10 +5,10 @@ indexing
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_PIXMAP_IMP
-	
+
 inherit
 	EV_PIXMAP_I
 		redefine
@@ -26,7 +26,8 @@ inherit
 			destroy,
 			drawable,
 			draw_full_pixmap,
-			draw_point
+			draw_point,
+			sub_pixmap
 		end
 
 	EV_PRIMITIVE_IMP
@@ -60,19 +61,19 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
-			
+
 				-- Create a new pixmap
 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
 				-- Box the pixmap into a container to receive events
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			gtk_pixmap := {EV_GTK_EXTERNALS}.gtk_pixmap_new (gdkpix, gdkmask)
 			{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, gtk_pixmap)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pixmap)
 
 			drawable := {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
-			
+
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
@@ -92,7 +93,7 @@ feature {NONE} -- Initialization
 			Result.clear
 			pix_imp ?= Result.implementation
 			Result.draw_sub_pixmap (0, 0, interface, area)
-			
+
 			if mask /= default_pointer then
 				a_mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (null, area.width, area.height, monochrome_color_depth)
 				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
@@ -107,9 +108,9 @@ feature {NONE} -- Initialization
 			-- Draw `a_pixmap' on to `Current' using given coordinates and dimensions.
 		do
 			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
-			flush	
+			flush
 		end
-		
+
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
 		local
@@ -125,6 +126,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Drawing operations
+
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+			flush
+		end
 
 	flush is
 		do
@@ -154,6 +161,26 @@ feature -- Measurement
 		end
 
 feature -- Element change
+
+	set_mask (a_mask: EV_BITMAP) is
+			-- Set the GdkBitmap used for masking `Current'.
+		local
+			a_mask_imp: EV_BITMAP_IMP
+		do
+			a_mask_imp ?= a_mask.implementation
+			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
+		end
+
+	reset_for_buffering (a_width, a_height: INTEGER) is
+			-- Resets the size of the pixmap without keeping original image or clearing background.
+		local
+			gdkpix: POINTER
+		do
+			if a_width /= width or else a_height /= height then
+				gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (drawable, a_width, a_height, Default_color_depth)
+				set_pixmap (gdkpix, default_pointer)
+			end
+		end
 
 	read_from_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
@@ -199,8 +226,8 @@ feature -- Element change
 				mapped_x := ((column_counter / a_x) * source_width).truncated_to_integer
 				mapped_x_lookup.put (mapped_x, column_counter)
 				column_counter := column_counter + 1
-			end		
-			
+			end
+
 			from
 				create mapped_y_lookup.make (0, a_y)
 				row_counter := 0
@@ -211,12 +238,12 @@ feature -- Element change
 				mapped_y_lookup.put (mapped_y, row_counter)
 				row_counter := row_counter + 1
 			end
-			
+
 				-- Create our new stretched pixmap canvas.
 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			
-			
+
+
 				-- Retrieve our existing image information
 			source_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
 			destination_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
@@ -226,7 +253,7 @@ feature -- Element change
 				destination_mask_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (gdkmask, 0, 0, a_x, a_y)
 				maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
 			end
-		
+
 			from
 					-- We are using zero-based arrays to match gdkimage lookup and thus gain performance
 				row_counter := 0
@@ -258,19 +285,19 @@ feature -- Element change
 				end
 				row_counter := row_counter + 1
 			end
-			
+
 				-- Copy image over to our new pixmap and cleanup
 			{EV_GTK_EXTERNALS}.gdk_draw_image (gdkpix, pixgc, destination_gdkimage, 0, 0, 0, 0, a_x, a_y)
 			if gdkmask /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_draw_image (gdkmask, maskgc, destination_mask_gdkimage, 0, 0, 0, 0, a_x, a_y)
 			end
-			
+
 			set_pixmap (gdkpix, gdkmask)
-			
+
 			{EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
 			{EV_GTK_EXTERNALS}.gdk_image_destroy (source_gdkimage)
 			{EV_GTK_EXTERNALS}.gdk_image_destroy (destination_gdkimage)
-			
+
 			if gdkmask /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_image_destroy (source_mask_gdkimage)
 				{EV_GTK_EXTERNALS}.gdk_image_destroy (destination_mask_gdkimage)
@@ -290,7 +317,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, {EV_GTK_EXTERNALS}.GDK_COPY_INVERT_ENUM)
 			{EV_GTK_EXTERNALS}.gdk_draw_rectangle (gdkpix, pixgc, 1, 0, 0, -1, -1)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_function (pixgc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
-			
+
 			{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkpix, pixgc, drawable, 0, 0, 0, 0, width, height)
 			{EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
 
@@ -328,7 +355,7 @@ feature -- Access
 			end
 			array_size := array_size // 8
 			create Result.make (1, array_size)
-			
+
 			a_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get ({EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
 			from
 				a_width := width
@@ -353,8 +380,8 @@ feature -- Access
 				if n_character = 8 then
 					n_character := 0
 					character_result := 0
-				end		
-				if 
+				end
+				if
 					{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 0
 					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) > 0
 					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) > 0
@@ -431,9 +458,9 @@ feature -- Duplication
 			other_imp ?= other.implementation
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
-		
+
 	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER) is
 			-- Update `Current' to use passed gdk pixmap data.
 		local
@@ -450,7 +477,7 @@ feature {EV_ANY_I} -- Implementation
 				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
 				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 			end
-			set_pixmap (gdkpix, gdkmask)			
+			set_pixmap (gdkpix, gdkmask)
 		end
 
 feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
@@ -478,7 +505,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 			if gdkmask /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end
-		end	
+		end
 
 	set_from_xpm_data (a_xpm_data: POINTER) is
 			-- Pixmap symbolizing a piece of information.
@@ -509,7 +536,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 				else
 					a_height := raw_image_data.height
 				end
-	
+
 				if png_format.scale_width /= 0 then
 					a_width := png_format.scale_width
 				else
@@ -517,10 +544,9 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 				end
 				c_ev_save_png ($char_array, $a_fn, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
 			end
-							
+
 			a_format.save (raw_image_data, a_filename)
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -545,7 +571,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_fields (
-		error_code		: INTEGER; -- Loadpixmap_error_xxxx 
+		error_code		: INTEGER; -- Loadpixmap_error_xxxx
 		data_type		: INTEGER; -- Loadpixmap_hicon, ...
 		pixmap_width	: INTEGER; -- Height of the loaded pixmap
 		pixmap_height	: INTEGER; -- Width of the loaded pixmap
@@ -553,7 +579,7 @@ feature {NONE} -- Implementation
 		alpha_data		: POINTER; -- Pointer on a C memory zone
 		) is
 			-- Callback function called from the C code by c_ev_load_pixmap.
-			-- 
+			--
 			-- See `read_from_named_file'
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
@@ -572,17 +598,17 @@ feature {NONE} -- Implementation
 			end
 			set_pixmap (gdkpix, gdkmask)
 		end
-		
+
 	destroy is
 			-- Destroy the pixmap and resources.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
-				gc := NULL	
+				gc := NULL
 			end
 		end
-		
+
 	dispose is
 			-- Clear up resources if needed in object disposal.
 		do
@@ -606,7 +632,7 @@ feature {NONE} -- Constants
 
 	Loadpixmap_rgb_data: INTEGER is 0
 			-- `c_ev_load_pixmap' has loaded an RBG bitmap (no mask).
-			
+
 	Loadpixmap_alpha_data: INTEGER is 1
 			-- `c_ev_load_pixmap' has loaded an RBGA bitmap.
 

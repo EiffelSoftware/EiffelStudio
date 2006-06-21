@@ -4,16 +4,16 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TEXT_FIELD_IMP
-	
+
 inherit
 	EV_TEXT_FIELD_I
 		redefine
 			interface
 		end
-	
+
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
@@ -21,7 +21,7 @@ inherit
 			on_key_event,
 			create_change_actions
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -56,15 +56,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in field.
 		do
 			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
 		end
 
 feature -- Status setting
-	
-	set_text (a_text: STRING) is
+
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -73,7 +73,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
-	append_text (txt: STRING) is
+	append_text (txt: STRING_GENERAL) is
 			-- Append `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
@@ -84,8 +84,8 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
-	
-	prepend_text (txt: STRING) is
+
+	prepend_text (txt: STRING_GENERAL) is
 			-- Prepend `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
@@ -96,12 +96,12 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
-		
+
 	set_capacity (len: INTEGER) is
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
-	
+
 	capacity: INTEGER is
 			-- Return the maximum number of characters that the
 			-- user may enter.
@@ -117,16 +117,16 @@ feature -- Status Report
 			if in_change_action and not last_key_backspace then
 				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
 			else
-				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1	
+				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 			end
 		end
-	
+
 	last_key_backspace: BOOLEAN
 			-- Was the last key pressed the backspace/delete key?
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
 			if a_key_press then
@@ -136,7 +136,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 						last_key_backspace := True
 					else
 						last_key_backspace := False
-					end	
+					end
 				end
 			end
 			Precursor (a_key, a_key_string, a_key_press)
@@ -147,7 +147,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result
 			real_signal_connect (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
-		
+
 feature -- Status report
 
 	is_editable: BOOLEAN is
@@ -166,7 +166,7 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /=
 				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
@@ -188,7 +188,7 @@ feature -- Status report
 			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -234,16 +234,16 @@ feature -- Basic operation
 		end
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (highlight) the text between 
+			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
 			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout_imp.interface.actions.extend 
+			internal_timeout_imp.interface.actions.extend
 				(agent select_region_internal (start_pos, end_pos))
 			internal_timeout_imp.set_interval_kamikaze (0)
-		end	
+		end
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
@@ -265,7 +265,7 @@ feature -- Basic operation
 
 	cut_selection is
 			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
+			-- the text and putting it in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
 			-- nothing.
@@ -283,10 +283,10 @@ feature -- Basic operation
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the string which is in the 
+			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
-			-- If the Clipboard is empty, it does nothing. 
+			-- If the Clipboard is empty, it does nothing.
 		local
 			pos: INTEGER
 		do
@@ -342,12 +342,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			toggle_in_change_action (False)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- A pointer on the text field
-		
+
 	visual_widget: POINTER is
 			-- Pointer to the widget shown on screen.
 		do
@@ -362,7 +362,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 
 invariant
 	entry_widget_set: entry_widget /= NULL
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -43,29 +43,44 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 		end
-		
+
 	initialize is
-			-- 
+			--
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			enable_vertical_button_style
 		end
-		
+
 	visual_widget: POINTER is
-			-- 
+			--
 		do
 			Result := list_widget
 		end
-		
+
 feature -- Status report
+
+	is_vertical: BOOLEAN
+			-- Is vertical items layout?
 
 	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
-		
+
 feature -- Status setting
+
+	enable_vertical is
+			-- Enable vertical items layout.
+		do
+			is_vertical := True
+		end
+
+	disable_vertical is
+			-- Disable vertical items layout.
+		do
+			is_vertical := False
+		end
 
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
@@ -73,18 +88,18 @@ feature -- Status setting
 			has_vertical_button_style := True
 			--| FIXME IEK Implement me
 		end
-		
+
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			has_vertical_button_style := False
 			--| FIXME IEK Implement me
 		end
-		
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
-		
+
 	block_selection_for_docking is
-			-- 
+			--
 		do
 			-- For now, do nothing.
 		end
@@ -117,13 +132,13 @@ feature -- Implementation
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
-			
+
 			a_tbb ?= v_imp
-			
+
 			if a_tbb /= Void then
 				a_tbb.initialize_button_box
 			end
-			
+
 			add_to_container (v, v_imp)
 			gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
 			add_radio_button (v)

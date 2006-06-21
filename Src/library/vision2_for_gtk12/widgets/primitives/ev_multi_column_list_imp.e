@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"EiffelVision multi-column-list, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,20 +23,18 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
-			enable_transport,
 			disable_transport,
 			pre_pick_steps,
 			call_pebble_function,
 			post_drop_steps,
-			start_transport_filter,
 			initialize,
 			interface,
 			destroy,
 			able_to_transport,
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
-			button_press_switch,
-			create_pointer_motion_actions
+			create_pointer_motion_actions,
+			on_mouse_button_event
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -52,7 +50,7 @@ inherit
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM_PARENT
 
 create
@@ -60,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is         
+	make (an_interface: like interface) is
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
@@ -72,9 +70,9 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			
+
 			update_children_agent := agent update_children
-			
+
 			create ev_children.make (0)
 
 				-- create a list with one column
@@ -89,7 +87,7 @@ feature {NONE} -- Initialization
 		end
 
 	call_selection_action_sequences is
-			-- 
+			--
 		do
 			-- Not needed for 1.2 implementation
 		end
@@ -118,7 +116,7 @@ feature {NONE} -- Initialization
 					pointer_button_press_actions_internal.call (t)
 				end
 				if
-					clicked_row /= Void and then 
+					clicked_row /= Void and then
 					clicked_row.pointer_button_press_actions_internal /= Void
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
@@ -128,7 +126,7 @@ feature {NONE} -- Initialization
 					pointer_double_press_actions_internal.call (t)
 				end
 				if
-					clicked_row /= Void and then 
+					clicked_row /= Void and then
 					clicked_row.pointer_double_press_actions_internal /= Void
 				then
 					clicked_row.pointer_double_press_actions_internal.call (t)
@@ -149,18 +147,17 @@ feature {NONE} -- Initialization
 			temp_alignment_code: INTEGER
 			p: POINTER
 			is_multiple_selected: BOOLEAN
-			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
 			old_list_widget := list_widget
 			if old_list_widget /= NULL then
 				is_multiple_selected := multiple_selection_enabled
 			end
 			create default_alignment
-			
+
 			list_widget := {EV_GTK_EXTERNALS}.gtk_clist_new (a_columns)
 			{EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			disable_multiple_selection
-		
+
 			real_signal_connect (
 				list_widget,
 				"select_row",
@@ -185,13 +182,9 @@ feature {NONE} -- Initialization
 				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 4, ?),
 				agent (App_implementation.gtk_marshal).column_resize_callback_translate
 			)
-			
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (list_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (list_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 
 			if user_set_row_height > 0 then
-				set_row_height (user_set_row_height)		
+				set_row_height (user_set_row_height)
 			else
 				set_row_height (App_implementation.default_font_height + 5)
 			end
@@ -212,13 +205,13 @@ feature {NONE} -- Initialization
 				else
 					temp_title := ""
 				end
-				if column_widths /= Void and then 
+				if column_widths /= Void and then
 								column_widths.valid_index (i) then
 					temp_width := column_widths.i_th (i)
 				else
 					temp_width := Default_column_width
 				end
-				if column_alignments /= Void and then 
+				if column_alignments /= Void and then
 							column_alignments.valid_index (i) then
 					-- Create alignment from alignment code.
 					temp_alignment_code := column_alignments.i_th (i)
@@ -236,7 +229,7 @@ feature {NONE} -- Initialization
 
 				column_title_changed (temp_title, i)
 				column_width_changed (temp_width, i)
-				
+
 				if i > 1 then
 					-- 1st column is always left aligned.
 					column_alignment_changed (temp_alignment, i)
@@ -273,7 +266,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
 			initialize_pixmaps
-			connect_button_press_switch
 			disable_multiple_selection
 		end
 
@@ -297,9 +289,9 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-		
+
 	pixmaps_size_changed is
-			-- 
+			--
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			if pixmaps_height > {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
@@ -313,7 +305,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if not ignore_select_callback then	
+			if not ignore_select_callback then
 				an_item := (ev_children @ (a_position + 1))
 				if an_item /= previously_selected_node then
 					if an_item.select_actions_internal /= Void then
@@ -327,7 +319,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				previously_selected_node := an_item
 			end
 		end
-		
+
 	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
 
 	deselect_callback (a_position: INTEGER) is
@@ -417,7 +409,7 @@ feature -- Access
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
+			-- should use `selected_item' rather than
 			-- `selected_items' for a single selection list.
 		local
 			i: INTEGER
@@ -531,7 +523,7 @@ feature -- Status setting
 			sel_items := selected_items
 			if not sel_items.is_empty then
 				sel_item := sel_items.first
-			end	
+			end
 			{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 				list_widget,
 				{EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
@@ -539,9 +531,9 @@ feature -- Status setting
 			if sel_item /= Void then
 				sel_item.enable_select
 				sel_item.select_actions.call (Void)
-			end	
+			end
 			ignore_select_callback := False
-		
+
 		end
 
 	select_item (an_index: INTEGER) is
@@ -587,7 +579,7 @@ feature -- Element change
 		do
 			{EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			Precursor (s)
-			{EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)			
+			{EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
@@ -642,7 +634,7 @@ feature -- Element change
 			end
 			user_set_row_height := value
 		end
-		
+
 	user_set_row_height: INTEGER
 		-- Row height set by user, 0 is not set.
 
@@ -651,11 +643,11 @@ feature -- Element change
 			-- (Remove them from the list and destroy them).
 		do
 			if rows > 0 then
-				ev_children.wipe_out	
+				ev_children.wipe_out
 				{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
 			end
 		end
-		
+
 	wipe_out is
 			-- Remove all items.
 		local
@@ -716,27 +708,6 @@ feature -- Implementation
 			end
 		end
 
-	enable_transport is
-		do
-			connect_pnd_callback
-		end
-
-	connect_pnd_callback is
-		do
-			check
-				button_release_not_connected: button_release_connection_id = 0
-			end
-			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, button_press_connection_id)
-			end
-			real_signal_connect (c_object,
-				"button-press-event", 
-				agent (App_implementation.gtk_marshal).mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate)
-			button_press_connection_id := last_signal_connection_id
-			is_transport_enabled := True
-		end
-
 	disable_transport is
 		do
 			Precursor
@@ -758,21 +729,20 @@ feature -- Implementation
 			end
 			update_pnd_connection (a_enable_flag)
 		end
-		
+
 	update_pnd_connection (a_enable: BOOLEAN) is
 			-- Update the PND connection of `Current' if needed.
 		do
 			if not is_transport_enabled then
 				if a_enable or pebble /= Void then
-					connect_pnd_callback
+					is_transport_enabled := True
 				end
 			elseif not a_enable and pebble = Void then
-				disable_transport_signals
 				is_transport_enabled := False
-			end		
+			end
 		end
 
-	start_transport_filter (
+	on_mouse_button_event (
 			a_type: INTEGER
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -792,11 +762,11 @@ feature -- Implementation
 			end
 
 			Precursor (
-				a_type,
-				a_x, a_y, a_button,
-				a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y
-			)		
+					a_type,
+					a_x, a_y, a_button,
+					a_x_tilt, a_y_tilt, a_pressure,
+					a_screen_x, a_screen_y
+				)
 		end
 
 	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -822,16 +792,15 @@ feature -- Implementation
 			if pebble_function /= Void then
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
-			end		
+			end
 		end
-	
+
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
-
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-			app_implementation.on_pick (pebble)
+			app_implementation.on_pick (Current, pebble)
 
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.pick_actions_internal /= Void then
@@ -845,39 +814,37 @@ feature -- Implementation
 				end
 			end
 
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > height then
-						pick_y := height
+						pick_y := height.to_integer_16
 					end
-					x_origin := pick_x + (a_screen_x - a_x)
-					y_origin := pick_y + (a_screen_y - a_y)
+					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
 			else
 				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > row_height then
-						pick_y := row_height
+						pick_y := row_height.to_integer_16
 					end
-					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
-					y_origin := 
+					App_implementation.set_x_y_origin (
+						pnd_row_imp.pick_x + (a_screen_x - a_x),
 						pnd_row_imp.pick_y +
-						(a_screen_y - a_y) + 
+						(a_screen_y - a_y) +
 						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+					)
 				end
 			end
 		end
@@ -885,16 +852,7 @@ feature -- Implementation
 	post_drop_steps (a_button: INTEGER) is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0 and then pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (c_object, "button-press-event")
-				end
-			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
-					signal_emit_stop (c_object, "button-press-event")
-			end
-			x_origin := 0
-			y_origin := 0
-			last_pointed_target := Void	
+			App_implementation.set_x_y_origin (0, 0)
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then
@@ -934,7 +892,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 				Result := 0
 			end
 		end
-		
+
 	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Returns the row at relative coordinate `a_y'
 		local
@@ -966,7 +924,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_cs := a_text
 			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then
 				pixmap_imp ?= ev_children.i_th (a_row).internal_pixmap.implementation
-				
+
 				{EV_GTK_EXTERNALS}.gtk_clist_set_pixtext (
 					list_widget,
 					a_row - 1,
@@ -1077,7 +1035,7 @@ feature {NONE} -- Implementation
 
 	selection_mode_is_single: BOOLEAN
 			-- Is selection mode set to SINGLE?
-	
+
 	switch_to_single_mode_if_necessary is
 			-- Change selection mode if the last selected
 			-- item is deselected.
@@ -1088,8 +1046,8 @@ feature {NONE} -- Implementation
 				ignore_select_callback := True
 				if multiple_selection_enabled then
 					sel_items := selected_items
-					if 
-						sel_items = Void 
+					if
+						sel_items = Void
 							or else
 						selected_items.count <= 1
 					then
@@ -1109,7 +1067,7 @@ feature {NONE} -- Implementation
 				ignore_select_callback := False
 			end
 		end
-		
+
 	switch_to_browse_mode_if_necessary is
 			-- Change selection mode to browse mode
 			-- if necessary.
@@ -1118,9 +1076,9 @@ feature {NONE} -- Implementation
 				ignore_select_callback := True
 				if multiple_selection_enabled then
 					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-						list_widget, 
+						list_widget,
 						{EV_GTK_EXTERNALS}.gtk_selection_extended_enum
-					)					
+					)
 				else
 					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 						list_widget,
@@ -1131,7 +1089,7 @@ feature {NONE} -- Implementation
 				selection_mode_is_single := False
 			end
 		end
-		
+
 	ignore_select_callback: BOOLEAN
 		-- Ignore the select callback should selection mode change
 
@@ -1170,14 +1128,14 @@ feature {NONE} -- Implementation
 				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
 			end
-			
+
 			if item_imp.is_transport_enabled then
 				update_pnd_connection (True)
 			end
-	
+
 			child_array.go_i_th (i)
-			child_array.put_left (v)		
-			
+			child_array.put_left (v)
+
 			if i < count then
 				-- reorder_child (v, v_imp, i)
 				{EV_GTK_EXTERNALS}.gtk_clist_row_move (
@@ -1210,7 +1168,7 @@ feature {NONE} -- Implementation
 		do
 			if list_widget /= NULL then
 				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) + 1
-			end			
+			end
 		end
 
 feature {NONE} -- Externals
@@ -1238,7 +1196,7 @@ feature {NONE} -- Externals
 		external
 			"C (size_t, size_t): void* | <stdlib.h>"
 		end
-		
+
 	sizeof_pointer: INTEGER is
 		external
 			"C [macro <stdio.h>]"
@@ -1251,7 +1209,7 @@ feature {EV_ANY_I} -- Implementation
 	list_widget: POINTER
 
 	interface: EV_MULTI_COLUMN_LIST
-	
+
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
 			-- Agent object for update_children
 

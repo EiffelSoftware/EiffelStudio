@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	directory: STRING is
+	directory: STRING_32 is
 			-- Path of the current selected file
 		do
 			if
@@ -93,12 +93,12 @@ feature -- Access
 			end
 		end
 
-	start_directory: STRING
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_32) is
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING

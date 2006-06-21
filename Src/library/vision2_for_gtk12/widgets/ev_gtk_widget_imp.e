@@ -12,17 +12,9 @@ deferred class
 inherit
 	EV_ANY_IMP
 
-feature {NONE} -- Agent functions.
-
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for key events
-		once
-			Result := agent (App_implementation.gtk_marshal).key_event_translate
-		end
-
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences, redefined by descendants
 		do
 
@@ -69,14 +61,14 @@ feature {EV_ANY_I} -- Implementation
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
-		do	
+		do
 			if not is_destroyed then
 				update_request_size
 				gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
 				Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
 			end
 		end
-		
+
 	minimum_height: INTEGER is
 			-- Minimum width that the widget may occupy.
 		local
@@ -115,10 +107,10 @@ feature {EV_ANY_I} -- Implementation
 				Result /= Void or else gtkwid = NULL
 			loop
 					Result := eif_object_from_c (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)				
+					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 			end
 		end
-		
+
 	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
@@ -148,7 +140,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if a_cursor /= pointer_style then
 				pointer_style := a_cursor
-				internal_set_pointer_style (a_cursor)				
+				internal_set_pointer_style (a_cursor)
 			end
 		end
 
@@ -219,9 +211,9 @@ feature {EV_ANY_I} -- Implementation
 			a_toplevel := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 			if a_toplevel /= default_pointer and then has_struct_flag (a_toplevel, {EV_GTK_ENUMS}.gtk_toplevel_enum) and then a_toplevel /= c_object then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-			end					
+			end
 		end
-		
+
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		local
@@ -254,6 +246,48 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature -- Status report
+
+	screen_x: INTEGER is
+			-- Horizontal position of the client area on screen,
+		local
+			a_x: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+			l_null: POINTER
+		do
+			if is_displayed then
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+				    	$a_x, l_null)
+					Result := a_x
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= l_null then
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+				end
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical position of the client area on screen,
+		local
+			a_y: INTEGER
+			a_aux_info: POINTER
+			i: INTEGER
+			l_null: POINTER
+		do
+			if is_displayed then
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+				    	l_null, $a_y)
+					Result := a_y
+			else
+				a_aux_info := aux_info_struct
+				if a_aux_info /= l_null then
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+				end
+			end
+		end
 
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?

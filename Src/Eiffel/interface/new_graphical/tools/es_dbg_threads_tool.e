@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 			create nota_on_threads.make (3)
 
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color)
+			set_row_highlight_bg_color_agent := agent set_row_highlight_bg_color
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (set_row_highlight_bg_color_agent)
 
 			create box
 			box.set_padding (3)
@@ -225,6 +226,7 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			nota_on_threads.wipe_out
 		end
 
@@ -361,6 +363,10 @@ feature {NONE} -- Implementation nota
 	nota_on_threads: HASH_TABLE [STRING, INTEGER]
 
 feature {NONE} -- Implementation, cosmetic
+
+	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
+			-- Store agent for `set_row_highlight_bg_color' so that it gets properly removed
+			-- when recycling.
 
 	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
 		do

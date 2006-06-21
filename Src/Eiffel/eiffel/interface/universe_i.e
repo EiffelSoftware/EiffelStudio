@@ -261,7 +261,7 @@ feature -- Access
 			end
 		end
 
-	save_class_named (class_name: STRING; a_group: CONF_GROUP): CLASS_I is
+	safe_class_named (class_name: STRING; a_group: CONF_GROUP): CLASS_I is
 			-- Class named `class_name' in cluster `a_cluster' which doesn't generate {VSCN} errors.
 		require
 			good_argument: class_name /= Void

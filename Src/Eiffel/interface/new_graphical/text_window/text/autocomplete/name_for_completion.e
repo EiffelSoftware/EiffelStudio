@@ -86,8 +86,14 @@ feature -- Access
 
 	grid_item: EV_GRID_ITEM is
 			-- Grid item
+		local
+			l_item: EV_GRID_LABEL_ITEM
 		do
-			create {EV_GRID_LABEL_ITEM}Result.make_with_text (out)
+			create l_item.make_with_text (out)
+			if icon /= Void then
+				l_item.set_pixmap (icon)
+			end
+			Result := l_item
 		ensure
 			Result_not_void: Result /= Void
 		end

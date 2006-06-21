@@ -632,6 +632,20 @@ feature -- Status report
 		do
 		end
 
+feature -- Comparison
+
+	same_file (fn: STRING): BOOLEAN is
+			-- Is current file the same as `a_filename'?
+		require
+			fn_not_void: fn /= Void
+			fn_not_empty: not fn.is_empty
+		local
+			l_comparer: FILE_COMPARER
+		do
+			create l_comparer
+			Result := l_comparer.same_files (name, fn)
+		end
+
 feature -- Status setting
 
 	open_read is

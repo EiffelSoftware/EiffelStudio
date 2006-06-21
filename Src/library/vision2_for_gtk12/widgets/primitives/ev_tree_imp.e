@@ -23,19 +23,18 @@ inherit
 		redefine
 			interface,
 			initialize,
-			button_press_switch,
 			create_pointer_motion_actions,
 			set_to_drag_and_drop,
 			able_to_transport,
 			ready_for_pnd_menu,
-			enable_transport,
 			disable_transport,
-			start_transport_filter,
 			pre_pick_steps,
 			post_drop_steps,
 			call_pebble_function,
 			visual_widget,
-			needs_event_box
+			needs_event_box,
+			on_mouse_button_event,
+			call_button_event_actions
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -51,7 +50,7 @@ inherit
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM_PARENT
 
 create
@@ -70,14 +69,14 @@ feature {NONE} -- Initialization
 			a_scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			set_c_object (a_scrolled_window)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				a_scrolled_window, 
+				a_scrolled_window,
 				{EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM
 			)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_placement (a_scrolled_window, {EV_GTK_EXTERNALS}.gTK_CORNER_TOP_LEFT_ENUM)
 
 			list_widget := {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, GTK_CTREE_LINES_DOTTED_ENUM)
 			{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.GTK_SELECTION_BROWSE_ENUM)
 			{EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, GTK_CTREE_EXPANDER_SQUARE_ENUM)
@@ -85,23 +84,23 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (a_scrolled_window, list_widget)
-			
+
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
-		
+
 			create tree_node_ptr_table.make (100)
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent on_time_out)
 		end
-	
+
 	tree_width: INTEGER
 		-- Width of tree widget
-	
+
 	timer: EV_TIMEOUT
 		-- Timer used for refresh hack.
-		
+
 	timer_interval: INTEGER is 50
-	
+
 	on_time_out is
 			-- Called on a timer, needed to correctly refresh tree widget.
 		local
@@ -116,11 +115,11 @@ feature {NONE} -- Initialization
 		end
 
 	call_selection_action_sequences is
-			-- 
+			--
 		do
 			-- Not needed for 1.2 implementation
 		end
-	
+
 	visual_widget: POINTER is
 			-- Visible widget on screen.
 		do
@@ -134,7 +133,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
 			initialize_pixmaps
-			
+
 			--| Event position 1 in intermediary
 			real_signal_connect (
 				list_widget,
@@ -142,7 +141,7 @@ feature {NONE} -- Initialization
 				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 1, ?),
 				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
-			
+
 			real_signal_connect (
 				list_widget,
 				"tree-unselect-row",
@@ -163,8 +162,6 @@ feature {NONE} -- Initialization
 				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 4, ?),
 				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
-			connect_button_press_switch
-				-- Needed so items are always hooked up, even though widget may not need to be.
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
@@ -181,8 +178,8 @@ feature {NONE} -- Initialization
 			--	Result := [(App_implementation.gtk_marshal).gtk_value_pointer (args)]
 		end
 
-	button_press_switch (
-			a_type: INTEGER;
+	call_button_event_actions (
+			a_type: INTEGER
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
@@ -194,16 +191,14 @@ feature {NONE} -- Initialization
 			timeout_imp: EV_TIMEOUT_IMP
 
 		do
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 
 			tree_item_imp := row_from_y_coord (a_y)
 
 			if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
-					pointer_button_press_actions_internal.call (t)
-				end
-				if 
+				if
 					tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
 							--| This prevents freezing on possible show_modal_to_window calls for dialogs
 						if not {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
@@ -213,13 +208,10 @@ feature {NONE} -- Initialization
 						end
 				end
 			elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				if pointer_double_press_actions_internal /= Void then
-					pointer_double_press_actions_internal.call (t)
-				end
 				if tree_item_imp /= Void and then tree_item_imp.pointer_double_press_actions_internal /= Void then
-						if not {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
-							tree_item_imp.pointer_double_press_actions_internal.call (t)
-						end
+					if not {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
+						tree_item_imp.pointer_double_press_actions_internal.call (t)
+					end
 				end
 			end
 		end
@@ -249,12 +241,12 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Hash table linking tree node pointers to eiffel implementation objects.
 
 feature {NONE} -- Implementation
-	
+
 	cached_width: INTEGER
 
 	dummy_tree_node: POINTER
 		-- Added to prevent seg fault on wipeout by adding temporarily
-		
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	expand_callback (a_tree_item: POINTER) is
@@ -268,7 +260,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			if timer.interval = 0 then
 				timer.set_interval (timer_interval)
-			end	
+			end
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -284,7 +276,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				timer.set_interval (timer_interval)
 			end
 		end
-		
+
 	selected_node: EV_TREE_NODE_IMP
 
 	select_callback (a_tree_item: POINTER) is
@@ -303,7 +295,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			selected_node := a_tree_node_imp
 		end
-		
+
 	deselect_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is deselected.
 		local
@@ -326,25 +318,25 @@ feature -- Status report
 			-- Item which is currently selected.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
-		do	
-			a_tree_node_imp := selected_item_imp		
+		do
+			a_tree_node_imp := selected_item_imp
 			if a_tree_node_imp /= Void then
 				Result := a_tree_node_imp.interface
 			end
 		end
-		
+
 	selected_item_imp: EV_TREE_NODE_IMP is
 			-- Item which is currently selected.
 		local
 			temp_item_ptr: POINTER
-		do	
-			temp_item_ptr := {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)			
+		do
+			temp_item_ptr := {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
 			if temp_item_ptr /= NULL then
 				temp_item_ptr := {EV_GTK_EXTERNALS}.g_list_nth_data (temp_item_ptr, 0)
 				-- This is incase of unwanted items due to wipeout hack.
 				Result := tree_node_ptr_table.item (temp_item_ptr)
 			end
-		end			
+		end
 
 	selected: BOOLEAN is
 			-- Is one item selected?
@@ -385,28 +377,6 @@ feature -- Implementation
 			end
 		end
 
-	enable_transport is
-		do
-			connect_pnd_callback
-		end
-
-	connect_pnd_callback is
-		do
-			check
-				button_release_not_connected: button_release_connection_id = 0
-			end
-			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
-			end
-			real_signal_connect (
-				visual_widget,
-				"button-press-event", 
-				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
-				App_implementation.default_translate)
-			button_press_connection_id := last_signal_connection_id
-			is_transport_enabled := True
-		end
-
 	disable_transport is
 		do
 			Precursor
@@ -431,21 +401,20 @@ feature -- Implementation
 			end
 			update_pnd_connection (a_enable_flag)
 		end
-		
+
 	update_pnd_connection (a_enable: BOOLEAN) is
 			-- Update the PND connection status for `Current'.
 		do
 			if not is_transport_enabled then
 				if a_enable or pebble /= Void then
-					connect_pnd_callback
+					is_transport_enabled := True
 				end
 			elseif not a_enable and pebble = Void then
-				disable_transport_signals
 				is_transport_enabled := False
-			end			
-		end		
+			end
+		end
 
-	start_transport_filter (
+	on_mouse_button_event (
 			a_type: INTEGER
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -463,7 +432,7 @@ feature -- Implementation
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y
-			)			
+			)
 		end
 
 	pnd_row_imp: EV_TREE_NODE_IMP
@@ -490,15 +459,15 @@ feature -- Implementation
 			if pebble_function /= Void then
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
-			end		
+			end
 		end
-	
+
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-			App_implementation.on_pick (pebble)
+			App_implementation.on_pick (Current, pebble)
 
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.pick_actions_internal /= Void then
@@ -512,56 +481,45 @@ feature -- Implementation
 				end
 			end
 
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > height then
-						pick_y := height
+						pick_y := height.to_integer_16
 					end
-					x_origin := pick_x + (a_screen_x - a_x)
-					y_origin := pick_y + (a_screen_y - a_y)
+					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
 			else
 				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > row_height then
-						pick_y := row_height
+						pick_y := row_height.to_integer_16
 					end
-					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
-					y_origin := 
+					App_implementation.set_x_y_origin (
+						pnd_row_imp.pick_x + (a_screen_x - a_x),
 						pnd_row_imp.pick_y +
-						(a_screen_y - a_y) + 
-						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+						(a_screen_y - a_y) +
+						((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+					)
 				end
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER) is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0 and then pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
-				end
-			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
-				signal_emit_stop (visual_widget, "button-press-event")
-			end
-			x_origin := 0
-			y_origin := 0
-			last_pointed_target := Void	
+			App_implementation.set_x_y_origin (0, 0)
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then
@@ -583,9 +541,9 @@ feature -- Implementation
 
 			pnd_row_imp := Void
 		end
-		
+
 feature {EV_TREE_NODE_IMP}
-		
+
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
 		local
 			temp_row_ptr: POINTER
@@ -604,7 +562,7 @@ feature {NONE} -- Implementation
 		local
 			tree_item_imp: EV_TREE_NODE_IMP
 			parent_item_imp: EV_TREE_ITEM_IMP
-		do	
+		do
 			from
 				tree_item_imp ?= an_item.implementation
 				parent_item_imp ?= tree_item_imp.parent_imp
@@ -621,7 +579,7 @@ feature {NONE} -- Implementation
 			tree_item_imp ?= an_item.implementation
 			{EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, tree_item_imp.tree_node_ptr, 0, 0.0, 1.0)
 		end
-			
+
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
 
@@ -636,7 +594,7 @@ feature {NONE} -- Implementation
 		do
 			Result := (ev_children @ i).interface
 		end
-		
+
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
 			-- Add 's' to 'Current'
 		do
@@ -665,27 +623,27 @@ feature {NONE} -- Implementation
 			create ev_children.make (0)
 			create child_array.make (5)
 			tree_node_ptr_table.clear_all
-			
+
 			index := 0
 
 			update_pnd_status
 		end
-		
+
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
-		do	
+		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			item_imp.set_item_and_children (NULL, NULL)
 			item_imp.check_branch_pixmaps
 			ev_children.force (item_imp)
-			
+
 			if item_imp.is_transport_enabled_iterator then
 				update_pnd_connection (True)
 			end
-			
+
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then
@@ -716,7 +674,7 @@ feature {NONE} -- Implementation
 				-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
-			
+
 			child_array.go_i_th (a_position)
 			child_array.remove
 
@@ -762,7 +720,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 	list_widget: POINTER
 			-- Pointer to the gtktree widget.
-			
+
 feature {NONE} -- Implementation
 
 	pixmaps_size_changed is
@@ -788,7 +746,7 @@ feature {NONE} -- Externals
 		alias
 			"GTK_CTREE_EXPANDER_SQUARE"
 		end
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE;

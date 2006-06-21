@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_LIST_IMP
 
 inherit
@@ -22,10 +22,9 @@ inherit
 			visual_widget,
 			initialize,
 			has_focus,
-			add_to_container,
 			clear_selection,
 			on_item_clicked
-		end	
+		end
 create
 	make
 
@@ -41,37 +40,12 @@ feature -- Initialize
 			-- Initialize the list.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			
-			real_signal_connect (
-					list_widget,
-					"leave-notify-event",
-					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, True),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					list_widget,
-					"enter-notify-event",
-					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, False),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					visual_widget,
-					"focus-in-event",
-					agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					visual_widget,
-					"focus-out-event",
-					agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object),
-					size_allocate_translate_agent
-			)
 				-- Set to single selection
 			multiple_selection_enabled := False
 			selection_mode_is_single := True
 			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 		end
-		
+
 feature -- Status Report
 
 	has_focus: BOOLEAN
@@ -87,10 +61,10 @@ feature -- Status setting
 		do
 			an_item_index := index_of (an_item, 1)
 			item_imp ?= an_item.implementation
-			
+
 				-- Show the item at position `item_index'
 			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
-			--| FIXME IEK This needs to be properly implement
+			--| FIXME IEK This needs to be properly implemented
 		end
 
 	enable_multiple_selection is
@@ -125,7 +99,7 @@ feature -- Status setting
 				sel_item.enable_select
 			end
 		end
-		
+
 	clear_selection is
 			-- Clear the selection of the list.
 		do
@@ -141,47 +115,15 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_LIST
-	
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
-	
+
 	set_is_out (a_value: BOOLEAN) is
 			-- Assign `a_value' to `is_out'.
 		do
 			is_out := a_value
 		end
-	
-	attain_focus is
-			-- The list has just grabbed the focus.
-		do
-			if not has_focus then
-				has_focus := True
-				top_level_window_imp.set_focus_widget (Current)
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (Void)				
-				end
-			end
-		end
 
-	lose_focus is
-			-- The list has just lost the focus.
-		do
-				-- This routine is called when an item loses the focus too.
-				-- The follwing test prevent call to `focus_out_actions' when
-				-- the user has only changed the selected item.
-			if (not has_capture) and then 
-				(is_out or else not button_is_pressed) and then
-				(not list_has_been_clicked) and then
-				(not arrow_used)
-			then
-				has_focus := False
-				top_level_window_imp.set_focus_widget (Void)
-				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (Void)
-				end
-			end
-			arrow_used := False
-		end
-	
 feature {NONE} -- Implementation
 
 	pixmaps_size_changed is
@@ -203,7 +145,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_LIST_ITEM_IMP
 		do
-			switch_to_browse_mode_if_necessary		
+			switch_to_browse_mode_if_necessary
 		 	l_item ?= eif_object_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args))
 			call_select_actions (l_item)
 		end
@@ -227,14 +169,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	switch_to_browse_mode_if_necessary is
 			-- Change selection mode to browse mode
 			-- if necessary.
 		do
 			if selection_mode_is_single then
 				if multiple_selection_enabled then
-					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_extended_enum)					
+					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_extended_enum)
 				else
 					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 				end
@@ -242,21 +184,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
-			-- Add `v' to end of list.
-		do
-			Precursor {EV_LIST_ITEM_LIST_IMP} (v, v_imp)
-			real_signal_connect (
-				v_imp.c_object,
-				"focus-out-event",
-				agent (App_implementation.gtk_marshal).on_list_focus_intermediary (c_object, False),
-				size_allocate_translate_agent
-				)
-		end
-		
 	is_out: BOOLEAN
 			-- Is the mouse pointer over the list?
-		
+
 	button_is_pressed: BOOLEAN is
 			-- Is one of the mouse buttons pressed?
 		local
@@ -267,7 +197,7 @@ feature {NONE} -- Implementation
 			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			button_pressed_mask := {EV_GTK_EXTERNALS}.gdk_button1_mask_enum + {EV_GTK_EXTERNALS}.gdk_button2_mask_enum + {EV_GTK_EXTERNALS}.gdk_button3_mask_enum
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
-		end	
+		end
 
 	on_item_clicked is
 			-- One of the item has been clicked.
@@ -278,7 +208,7 @@ feature {NONE} -- Implementation
 
 	selection_mode_is_single:BOOLEAN;
 
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

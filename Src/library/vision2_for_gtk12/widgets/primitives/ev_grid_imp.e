@@ -10,7 +10,7 @@ indexing
 
 class
 	EV_GRID_IMP
-	
+
 inherit
 	EV_GRID_I
 		undefine
@@ -37,7 +37,8 @@ inherit
 			set_deny_cursor,
 			disable_capture,
 			enable_capture,
-			has_capture
+			has_capture,
+			set_default_colors
 		redefine
 			interface,
 			initialize,
@@ -111,21 +112,46 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				a_font_imp ?= f.implementation
 				a_tuple := a_font_imp.string_size (s)
 				tuple.put_integer (a_tuple.integer_32_item (1), 1)
-				tuple.put_integer (a_tuple.integer_32_item (2), 2)				
+				tuple.put_integer (a_tuple.integer_32_item (2), 2)
 			end
 		end
 
-	set_focused_selection_text_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `focused_selection_text_color'.
+	color_from_state (style_type, a_state: INTEGER): EV_COLOR is
+			-- Return color of either fg or bg representing `a_state'
+		require
+			a_state_valid: a_state >= {EV_GTK_EXTERNALS}.gtk_state_normal_enum and a_state <= {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
+		local
+			a_widget, a_style: POINTER
+			a_gdk_color: POINTER
+			a_r, a_g, a_b: INTEGER
 		do
-			focused_selection_text_color := a_color
+			a_widget := {EV_GTK_EXTERNALS}.gtk_menu_item_new
+			a_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (a_widget)
+				-- Style is cached so it doesn't need to be unreffed.
+
+			inspect
+				style_type
+			when text_style  then
+				a_gdk_color := {EV_GTK_EXTERNALS}.gtk_style_struct_text (a_style)
+			when base_style then
+				a_gdk_color := {EV_GTK_EXTERNALS}.gtk_style_struct_base (a_style)
+			when bg_style then
+				a_gdk_color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (a_style)
+			when fg_style then
+				a_gdk_color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (a_style)
+			end
+
+			a_gdk_color := a_gdk_color + (a_state * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+			a_r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_gdk_color)
+			a_g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_gdk_color)
+			a_b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_gdk_color)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (a_widget)
+			create Result
+			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end
-		
-	set_non_focused_selection_text_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `non_focused_selection_text_color'.
-		do
-			non_focused_selection_text_color := a_color
-		end
+
+	text_style, base_style, fg_style, bg_style: INTEGER is unique
+		-- Different coloring styles used in gtk.
 
 feature {EV_ANY_I} -- Implementation
 

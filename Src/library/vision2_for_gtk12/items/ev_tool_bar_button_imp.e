@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_button_new)		
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_button_new)
 		end
 
 	initialize is
@@ -84,13 +84,13 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			if a_box /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_ref (text_label)
 				{EV_GTK_EXTERNALS}.gtk_container_remove (a_box, text_label)
-				
+
 				{EV_GTK_EXTERNALS}.object_ref (pixmap_box)
 				{EV_GTK_EXTERNALS}.gtk_container_remove (a_box, pixmap_box)
-				
+
 				{EV_GTK_EXTERNALS}.gtk_container_remove (visual_widget, a_box)
 			end
-			
+
 			if parent_imp /= Void then
 				par_imp ?= parent_imp
 			end
@@ -99,16 +99,16 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			else
 				box := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			end
-			
+
 			{EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
-			
+
 			if text.is_equal ("") then
 				{EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 			end
-			
+
 			if pixmap = Void then
 				{EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 			end
@@ -136,7 +136,13 @@ feature -- Element change
 		end
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
-	
+
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- 	Create a drop down action sequence.
+		do
+			create Result
+		end
+
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a select action sequence.
 			-- Attach to GTK "clicked" signal.

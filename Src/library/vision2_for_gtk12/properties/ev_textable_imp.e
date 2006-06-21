@@ -1,14 +1,14 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision textable. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXTABLE_IMP
-	
+
 inherit
 	EV_TEXTABLE_I
 		redefine
@@ -22,9 +22,9 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature {NONE} -- Initialization
-	
+
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
 		local
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the label
 		local
 			p: POINTER
@@ -66,7 +66,7 @@ feature -- Access
 				check alignment_code_not_set: False end
 			end
 		end
-	
+
 feature -- Status setting
 
 	align_text_center is
@@ -89,10 +89,10 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
-	
+
 feature -- Element change	
-	
-	set_text (a_text: STRING) is
+
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -101,9 +101,9 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
-	
+
 feature {EV_ANY_IMP} -- Implementation
-	
+
 	text_label: POINTER
 			-- GtkLabel containing `text'.
 

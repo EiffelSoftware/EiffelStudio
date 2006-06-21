@@ -10,6 +10,132 @@ class
 
 feature -- Externals
 
+	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen events_pending: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_pending()"
+		end
+
+	frozen dispatch_events is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_iteration(FALSE)"
+		end
+
+	frozen new_g_static_rec_mutex: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_static_rec_mutex_init (a_static_mutex: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_static_rec_mutex_lock (a_static_mutex: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_static_rec_mutex_trylock (a_static_mutex: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_static_rec_mutex_unlock (a_static_mutex: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_thread_supported: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen g_thread_init is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gdk_window_invalidate_rect (a_drawable, a_rectangle: POINTER; a_children: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gtk_widget_set_double_buffered (a_widget: POINTER; a_double_buffer: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gtk_widget_set_redraw_on_allocate (a_widget: POINTER; a_allocate: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gtk_window_move (a_window: POINTER; a_x, a_y: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_window_move (((GtkWidget*)$a_window)->window, (gint) $a_x, (gint) $a_y)"
+		end
+
+	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gtk_window_is_active (a_window: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"((GtkObject*) $a_window)->flags & GTK_HAS_FOCUS"
+		end
+
+	frozen gdk_window_process_all_updates is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gdk_window_process_updates (a_window: POINTER; process_children: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
 	frozen gdk_decor_resizeh_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -31,11 +157,6 @@ feature -- Externals
 			" "
 		end
 
-	frozen gdk_selection_convert (a_requestor: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER) is
-		external
-			"C (GdkWindow*, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
-		end
-
 	frozen gdk_selection_owner_get (a_selection: INTEGER): POINTER is
 			-- GdkWindow* gdk_selection_owner_get (GdkAtom	  selection);
 			-- (from C_GDK)
@@ -51,16 +172,6 @@ feature -- Externals
 			-- (from C_GDK)
 		external
 			"C (GdkWindow*, GdkAtom, guint32, gint): gboolean | <gtk/gtk.h>"
-		end
-
-	frozen gdk_selection_property_get (a_requestor: POINTER; a_data: POINTER; a_prop_type: POINTER; a_prop_format: POINTER): BOOLEAN is
-			-- gboolean   gdk_selection_property_get (GdkWindow  *requestor,
-			-- 				       guchar	 **data,
-			-- 				       GdkAtom	  *prop_type,
-			-- 				       gint	  *prop_format);
-			-- (from C_GDK)
-		external
-			"C (GdkWindow*, guchar**, GdkAtom*, gint*): gboolean | <gtk/gtk.h>"
 		end
 
 	frozen gdk_selection_send_notify (a_requestor: INTEGER; a_selection: INTEGER; a_target: INTEGER; a_property: INTEGER; a_time: INTEGER) is
@@ -209,7 +320,7 @@ feature -- Externals
 		alias
 			"GTK_VALUE_POINTER (*(GtkArg*) $arg )"
 		end
-		
+
 	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
@@ -224,6 +335,14 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GTK_VALUE_UINT (*(GtkArg*) $arg )"
+		end
+
+	frozen gtk_value_flags (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_VALUE_FLAGS (*(GtkArg*) $arg )"
 		end
 
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
@@ -265,14 +384,14 @@ feature -- Externals
 		alias
 			"gtk_signal_emit_stop_by_name"
 		end
-		
+
 	frozen gtk_editable_struct_selection_start (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
 		alias
 			"selection_start_pos"
 		end
-		
+
 	frozen gtk_editable_struct_selection_end (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"

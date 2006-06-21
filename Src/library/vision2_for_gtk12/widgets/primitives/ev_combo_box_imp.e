@@ -1,15 +1,15 @@
-indexing
+	indexing
 
-	description: 
+	description:
 		"EiffelVision combo box, gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_COMBO_BOX_IMP
-	
+
 inherit
 	EV_COMBO_BOX_I
 		undefine
@@ -40,7 +40,9 @@ inherit
 			on_focus_changed,
 			has_focus,
 			set_focus,
-			needs_event_box
+			needs_event_box,
+			background_color_pointer,
+			foreground_color_pointer
 		redefine
 			select_callback,
 			remove_i_th,
@@ -87,11 +89,8 @@ feature {NONE} -- Initialization
 
 			activate_id := {EV_GTK_EXTERNALS}.gtk_combo_struct_activate_id (container_widget)
 			{EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
-			
-			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
-			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
 		end
-		
+
 	initialize is
 			-- Connect action sequences to signals.
 		do
@@ -104,7 +103,7 @@ feature {NONE} -- Initialization
 			)
 			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
-		
+
 feature -- Status report
 
 	rows: INTEGER is
@@ -141,24 +140,24 @@ feature -- Status report
 						interface.forth
 					end
 					interface.go_to (cur)
-			end		
+			end
 		end
 
 feature -- Status setting
 
 	set_maximum_text_length (len: INTEGER) is
-			-- Set the length of the longest 
+			-- Set the length of the longest
 		do
 			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-		
+
 	container_widget: POINTER
 			-- Gtk combo struct
-			
+
 	launch_select_actions is
-			-- 
+			--
 		local
 			sel_item: EV_LIST_ITEM
 			sel_item_imp: EV_LIST_ITEM_IMP
@@ -168,11 +167,14 @@ feature {EV_LIST_ITEM_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementa
 				sel_item_imp ?= sel_item.implementation
 				if sel_item_imp /= Void then
 					call_select_actions (sel_item_imp)
-				end				
+				end
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	is_list_shown: BOOLEAN
+		-- Is combo list current shown?
 
 	dropdown_window: POINTER
 			-- Pointer to the GtkWindow that drops down on item selection.
@@ -184,12 +186,6 @@ feature {NONE} -- Implementation
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			--| For now, do nothing.
 		end
-			
-	on_key_pressed_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
-			-- Intermediary key agent that is reused for list items in `add_to_container'.
-			
-	on_item_clicked_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
-			-- Intermediary key agent that is reused for list items in `add_to_container'.
 
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to container.
@@ -200,8 +196,6 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
-			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
-			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 
 			-- Make sure the first item is always selected.
 			{EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, 0)
@@ -228,11 +222,11 @@ feature {NONE} -- Implementation
 		end
 
 	select_callback (n: INTEGER; an_item: POINTER) is
-			-- Redefined to counter repeated select signal of combo box. 
-		do	
+			-- Redefined to counter repeated select signal of combo box.
+		do
 			-- Do nothing, we handle selection via unmapping of popup window and explicit calling.
 		end
-		
+
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Focus for `Current' has changed'.
 		do

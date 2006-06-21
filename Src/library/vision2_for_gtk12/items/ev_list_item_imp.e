@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_LIST_ITEM_IMP
 
 inherit
@@ -45,7 +45,7 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is False
-	
+
 	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (item_box)
 				-- Add the pixmap box to the item but hide it so it
 				-- takes up no space in the item.
-				
+
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, check_box, False, False, 0)
 				-- The check box is only shown in an EV_CHECKABLE_LIST
 			real_signal_connect (check_box, "toggled", agent (App_implementation.gtk_marshal).list_item_check_intermediary (c_object), Void)
@@ -82,29 +82,29 @@ feature {NONE} -- Initialization
 			--feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)	
 			set_is_initialized (True)
 		end
-		
+
 	checkable_imp_initialize is
-			-- 
+			--
 		do
 			check_box := {EV_GTK_EXTERNALS}.gtk_check_button_new
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (check_box, {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
-		
+
 	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
-			-- 
+			--
 		do
 			Precursor {EV_ITEM_IMP} (a_parent)
 			if a_parent = Void then
-				{EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (check_box)
 			end
 		end
-		
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	check_callback is
-			-- 
+			--
 		local
 			check_list_par: EV_CHECKABLE_LIST_IMP
 		do
@@ -123,10 +123,10 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 			end
 		end
-		
+
 
 feature {EV_CHECKABLE_LIST_IMP} -- Implementation
-		
+
 	check_box: POINTER
 		-- Pointer to the check box used in EV_CHECKABLE_LIST_IMP
 
@@ -176,7 +176,7 @@ feature -- Status setting
 					if combo_par /= Void then
 						combo_par.launch_select_actions
 					end
-				end				
+				end
 			end
 		end
 
@@ -191,14 +191,14 @@ feature -- Status setting
 				par := par_imp.list_widget
 				if par /= NULL then
 					{EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
-				end				
+				end
 			end
 
 		end
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_32) is
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP

@@ -12,14 +12,11 @@ inherit
 	EV_TREE_NODE_I
 		redefine
 			interface
-		select
-			interface
 		end
-	
+
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
-		rename
-			interface as item_list_interface
 		redefine
+			interface,
 			insert_i_th,
 			remove_i_th,
 			i_th,
@@ -31,7 +28,7 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
-		
+
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -59,7 +56,7 @@ feature {NONE} -- Initialization
 			end
 			set_is_destroyed (True)
 		end
-		
+
 	dispose is
 			-- Clean up
 		do
@@ -69,11 +66,17 @@ feature {NONE} -- Initialization
 				end
 				if gdk_mask /= default_pointer then
 					{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_mask)
-				end				
+				end
 			end
 		end
 
 feature -- Status report
+
+	count: INTEGER is
+			-- Number of child nodes in 'Current'
+		do
+			Result := ev_children.count
+		end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
@@ -97,7 +100,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_ctree_select (
 				parent_tree_imp.list_widget,
 				tree_node_ptr
-			)		
+			)
 		end
 
 	disable_select is
@@ -108,7 +111,7 @@ feature -- Status setting
 				tree_node_ptr
 			)
 		end
-	
+
 	set_expand (a_flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		do
@@ -125,7 +128,7 @@ feature -- Status setting
 				)
 			end
 		end
-		
+
 	set_text (a_text: STRING) is
 			-- Set 'text' to 'a_text'
 		do
@@ -184,7 +187,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
         	-- Start PND transport (not needed)
 		do
 			check
@@ -287,7 +290,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	tree_node_ptr: POINTER
 			-- Pointer to the GtkCtreeNode of 'Current'.
-			
+
 	set_tree_node (a_tree_node_ptr: POINTER) is
 			-- Set 'tree_node_ptr' to 'a_tree_node_ptr'
 		do
@@ -335,7 +338,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
 				set_tree_node (default_pointer)
 			end
-			
+
 			from
 				ev_children.start
 			until
@@ -346,15 +349,27 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-feature {EV_TREE_IMP} -- Implementation
-		
+feature {EV_TREE_IMP, EV_TREE_NODE_I} -- Implementation
+
+	ensure_expandable is
+			-- Ensure `Current' is displayed as expandable.
+		do
+
+		end
+
+	remove_expandable is
+			-- Ensure `Current' is no longer displayed as expandable.
+		do
+
+		end
+
 	is_viewable: BOOLEAN is
 			-- Is Current viewable by user?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (parent_tree_imp.list_widget, tree_node_ptr)
 		end
-	
-	text: STRING is
+
+	text: STRING_32 is
 			-- Text displayed.
 		do
 			if internal_text = Void then
@@ -366,7 +381,7 @@ feature {EV_TREE_IMP} -- Implementation
 			text_not_void: Result /= Void
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip if any.
 		do
 			if internal_tooltip = Void then
@@ -378,13 +393,13 @@ feature {EV_TREE_IMP} -- Implementation
 			tooltip_not_void: Result /= Void
 		end
 
-	internal_text: STRING
+	internal_text: STRING_32
 		-- Internal representation of `text'.
-	
-	internal_tooltip: STRING
+
+	internal_tooltip: STRING_32
 		-- Internal representation of `tooltip'.
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_32) is
 			-- Set `a_text' to `tooltip'.
 		do
 			internal_tooltip := a_text
@@ -393,9 +408,9 @@ feature {EV_TREE_IMP} -- Implementation
 	remove_tooltip is
 			-- Remove text of `tooltip'.
 		do
-			internal_tooltip := ""		
+			internal_tooltip := ""
 		end
-	
+
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the pixmap for 'Current'
 		local
@@ -410,12 +425,12 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 			pix_width := a_pix_imp.width
 			pix_height := a_pix_imp.height
-			
+
 			if tree_node_ptr /= default_pointer then
 				insert_pixmap
 			end
 		end
-		
+
 	pix_width, pix_height: INTEGER
 			-- Height and width of pixmap in Tree.
 
@@ -423,7 +438,7 @@ feature {EV_TREE_IMP} -- Implementation
 		do
 			--| FIXME Remove pixmap from tree and reset pix attributes.
 		end
-		
+
 	pixmap: EV_PIXMAP is
 			-- Pixmap displayed in 'Current' if any.
 		local
@@ -432,25 +447,19 @@ feature {EV_TREE_IMP} -- Implementation
 			if gdk_pixmap /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
-				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
+				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)
 			end
 		end
 
 	gdk_pixmap, gdk_mask: POINTER
 		-- Stored gdk pixmap data.
 
-	count: INTEGER is
-			-- Number of child nodes in 'Current'
-		do
-			Result := ev_children.count
-		end
-	
 	i_th (i: INTEGER): EV_TREE_NODE is
 			-- i-th node of 'Current'
 		do
 			Result := (ev_children @ i).interface
 		end
-		
+
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
@@ -472,7 +481,7 @@ feature {EV_TREE_IMP} -- Implementation
 				item_imp.set_item_and_children (tree_node_ptr, sibling_ptr)
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
-				end	
+				end
 				item_imp.check_branch_pixmaps
 			end
 			child_array.go_i_th (i)
@@ -513,7 +522,7 @@ feature {EV_TREE_IMP} -- Implementation
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
-			
+
 			child_array.go_i_th (a_position)
 			child_array.remove
 
@@ -521,15 +530,15 @@ feature {EV_TREE_IMP} -- Implementation
 				par_tree_imp.update_pnd_status
 			end
 		end
-		
+
 	expanded_on_last_item_removal: BOOLEAN
-		
+
 	a_timeout_imp: EV_TIMEOUT_IMP
 			-- Timeout used for expand node removal hack.
-		
+
 	remove_on_expand_node: POINTER
 			-- Pointer used as hack to prevent gtk sigsegv on removal of last item.
-	
+
 	remove_dummy_node is
 			-- Remove the dummy node used to prevent seg fault on last item removal
 		local
@@ -542,7 +551,7 @@ feature {EV_TREE_IMP} -- Implementation
 				a_parent_tree_imp := parent_tree_imp
 				if a_parent_tree_imp /= Void then
 					{EV_GTK_EXTERNALS}.gtk_ctree_remove_node (a_parent_tree_imp.list_widget, a_d_node)
-				end		
+				end
 			end
 		end
 
@@ -577,9 +586,9 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 			end
 		end
 
-	list_widget: POINTER 
+	list_widget: POINTER
 			-- Pointer to the items own gtktree.
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE;

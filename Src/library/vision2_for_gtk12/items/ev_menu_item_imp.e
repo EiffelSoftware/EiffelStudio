@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_ITEM_IMP
-	
+
 inherit
 	EV_MENU_ITEM_I
 		redefine
@@ -41,7 +41,7 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is False
-	
+
 	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
 		end
-	
+
 	initialize is
 			-- Call to both precursors.		
 		do
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Displayed on menu item.
 		do
 			if real_text /= Void then
@@ -99,7 +99,7 @@ feature -- Element change
 		do
 			a_text.replace_substring_all ("%T", " ")
 				-- Replace tab characters with spaces.
-			real_text := a_text.twin	
+			real_text := a_text.twin
 			if a_text.has ('&') then
 				temp_string := a_text.twin
 				filter_ampersand (temp_string, '_')
@@ -110,7 +110,7 @@ feature -- Element change
 				key := 0
 				a_cs := a_text
 				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
-			end	
+			end
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
@@ -139,7 +139,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					else
 						i := i + 1
 					end
-				end					
+				end
 				i := i + 1
 			end
 			s.replace_substring_all ("&&", "&")
@@ -160,7 +160,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		ensure
 			copied_only_if_s_had_ampersand:
 				((old s.twin).has ('&')) = (s /= Result)
-			s_not_changed: (old s.twin).is_equal (s) 
+			s_not_changed: (old s.twin).is_equal (s)
 		end
 
 	on_activate is

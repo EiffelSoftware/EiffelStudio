@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_LIST_ITEM_LIST_IMP
 
 inherit
@@ -31,9 +31,9 @@ inherit
 			wipe_out,
 			initialize
 		end
-	
+
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
-	
+
 	EV_KEY_CONSTANTS
 
 feature {NONE} -- Initialization
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
-		
+
 					-- Creating the gtk_list, pointed by `list_widget':
 			list_widget := {EV_GTK_EXTERNALS}.gtk_list_new
 			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (
@@ -98,7 +98,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 			one_arg: n_args = 1
 		deferred
 		end
-		
+
 	deselect_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is deselected.
 		require
@@ -113,10 +113,10 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 				if l_item.deselect_actions_internal /= Void then
 					l_item.deselect_actions_internal.call (Void)
 				end
-	
+
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (Void)
-				end				
+				end
 			end
 			previous_selected_item_imp := Void
 		end
@@ -182,7 +182,7 @@ feature -- Removal
 			child_array.wipe_out
 			index := 0
 		end
-		
+
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	insert_i_th (v: like item; i: INTEGER) is
@@ -216,7 +216,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 			item_list := {EV_GTK_EXTERNALS}.g_list_nth (
 						a_child_list,
 						a_child_pos
-					)	
+					)
 			check
 				item_list_not_null: item_list /= NULL
 			end
@@ -232,21 +232,21 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	interface: EV_LIST_ITEM_LIST
 
 	list_widget: POINTER
-	
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
-	
+
 	on_list_clicked is
 			-- The list was clicked.
 		do
 			if not has_focus then
-				set_focus	
+				set_focus
 			end
 			if not list_has_been_clicked then
 				clear_selection
 			end
 			list_has_been_clicked := False
-		end	
-	
+		end
+
 feature {NONE} -- Implementation
 
 	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					previous_selected_item_imp.deselect_actions_internal.call (Void)
 				end
 			end
-			
+
 			if selected_item_imp.parent /= Void and then selected_item_imp.is_selected then
 					-- Parent check due to bug in combo box.
 				if selected_item_imp.select_actions_internal /= Void then
@@ -303,33 +303,17 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
 				-- Remove the row from the `ev_children'
 			child_array.go_i_th (child_array.index_of (item_imp.interface, 1))
-			child_array.remove	
+			child_array.remove
 		end
 
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to end of list.
-			-- (from EV_ITEM_LIST_IMP)
-			-- (export status {NONE})
 		do
 			if v_imp.internal_pixmap /= Void then
 				v_imp.internal_set_pixmap (v_imp.internal_pixmap, pixmaps_width, pixmaps_height)
 			end
 			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
-
-			v_imp.real_signal_connect (
-				v_imp.c_object,
-				"key-press-event",
-				agent (App_implementation.gtk_marshal).list_key_pressed_intermediary (c_object, ?, ?, ?),
-				key_event_translate_agent
-			)	
-			v_imp.real_signal_connect (
-				v_imp.c_object,
-				"button-press-event",
-				agent (App_implementation.gtk_marshal).list_item_clicked_intermediary (c_object),
-				App_implementation.default_translate
-				)
-		--	v_imp.key_press_actions.extend (agent on_key_pressed)
 		end
 
 	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -337,9 +321,9 @@ feature {NONE} -- Implementation
 		do
 			create Result
 		end
-	
+
 	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- 
+			--
 		do
 			create Result
 		end
@@ -370,12 +354,12 @@ feature {NONE} -- Implementation
 	arrow_used: BOOLEAN
 		-- Has the user just used up or down arrows
 		-- to change the focused item?
-		
+
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
-		
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-		
+
 	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Called when a list item is selected.
 		local
@@ -393,13 +377,13 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			on_key_event (ev_key, a_key_string, a_key_press)
 		end
-		
+
 	on_item_clicked is
 			-- One of the item has been clicked.
 		do
 				-- When the user clicks on one of the items of the list
 				-- this routine is called, then `lose_focus', then `attain_focus'
-				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
+				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the
 				-- `focus_out_actions' from being called.
 			list_has_been_clicked := True
 		end

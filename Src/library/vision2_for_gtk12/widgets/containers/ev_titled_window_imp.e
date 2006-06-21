@@ -19,29 +19,105 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_WINDOW_IMP
 		redefine
 			interface,
 			make,
-			has_wm_decorations,
-			is_displayed
+			default_wm_decorations,
+			is_displayed,
+			initialize
 		end
-		
+
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
 
 create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Create the titled window.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
-		
+
+	initialize is
+			-- Setup accelerators for window
+		local
+			app_imp: like app_implementation
+		do
+			app_imp := app_implementation
+			Precursor {EV_WINDOW_IMP}
+			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
+--			signal_connect (
+--				accel_group,
+--				app_imp.accel_activate_string,
+--				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
+--				Void,
+--				False
+--			)
+			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
+--			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, False)
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+--	call_window_state_event (a_window_state: INTEGER) is
+--			-- Call either minimize, maximize or restore actions for window
+--		do
+--			if a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+--				if not is_minimized then
+--					is_minimized := True
+--					is_maximized := False
+--					if minimize_actions_internal /= Void then
+--						minimize_actions_internal.call (Void)
+--					end
+--				end
+--			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+--				if not is_maximized then
+--					is_maximized := True
+--					is_minimized := False
+--					if maximize_actions_internal /= Void then
+--						maximize_actions_internal.call (Void)
+--					end
+--				end
+--
+--			else
+--				is_maximized := False
+--				is_minimized := False
+--				if restore_actions_internal /= Void then
+--					restore_actions_internal.call (Void)
+--				end
+--			end
+--		end
+
+	call_accelerators (a_v2_key_value, accel_mods: INTEGER) is
+			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
+		local
+			acc: EV_ACCELERATOR
+			acc_imp: EV_ACCELERATOR_IMP
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > accelerators_internal.count
+			loop
+				acc ?= accelerators_internal.i_th (i)
+				if acc /= Void then
+					acc_imp ?= acc.implementation
+					if acc_imp.key.code = a_v2_key_value and then acc_imp.modifier_mask = accel_mods then
+						if acc_imp.actions /= Void then
+							acc_imp.actions.call (Void)
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Accelerators
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -64,7 +140,7 @@ feature {NONE} -- Accelerators
 
 feature -- Access
 
-	icon_name: STRING is
+	icon_name: STRING_32 is
 			-- Alternative name, displayed when window is minimised.
 		do
 			if icon_name_holder /= Void then
@@ -72,11 +148,11 @@ feature -- Access
 			else
 				Result := title
 			end
-		end 
+		end
 
 	icon_pixmap: EV_PIXMAP
 			-- Window icon.
-	
+
 	icon_mask: EV_PIXMAP
 			-- Transparency mask for `icon_pixmap'.
 
@@ -101,7 +177,6 @@ feature -- Status report
 		do
 			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
 		end
-		
 
 feature -- Status setting
 
@@ -175,14 +250,22 @@ feature -- Element change
 
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	has_wm_decorations: BOOLEAN is
-			-- Does the current window object have WM decorations?
+	default_wm_decorations: INTEGER is
+			-- Default WM decorations of `Current'.?
 		do
-			Result := True
+			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
 		end
+
+feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
+
+	accel_group: POINTER
+			-- Pointer to GtkAccelGroup struct.
+
+	accel_box: POINTER
+			-- Pointer to the on screen zero size accelerator widget
 
 feature {EV_ANY_I} -- Implementation
 

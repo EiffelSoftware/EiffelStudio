@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision file open dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	multiple_selection_enabled: BOOLEAN
 		-- Is dialog enabled to select multiple files.
 
-	file_names: ARRAYED_LIST [STRING] is
+	file_names: ARRAYED_LIST [STRING_32] is
 			-- List of filenames selected by user
 		do
 			create Result.make (1)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			check
 				do_not_call: False
 			end
-			multiple_selection_enabled := True 
+			multiple_selection_enabled := True
 		end
 
 	disable_multiple_selection is

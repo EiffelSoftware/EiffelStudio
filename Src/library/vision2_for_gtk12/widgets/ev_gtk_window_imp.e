@@ -14,7 +14,23 @@ inherit
 		redefine
 			width,
 			height,
-			is_parentable
+			is_parentable,
+			screen_x,
+			screen_y
+		end
+
+feature {NONE} -- Agent functions.
+
+	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for key events
+		once
+			Result := agent (App_implementation.gtk_marshal).key_event_translate
+		end
+
+	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for set-focus events
+		once
+			Result := agent (App_implementation.gtk_marshal).set_focus_event_translate
 		end
 
 feature {NONE} -- Implementation
@@ -60,7 +76,7 @@ feature {NONE} -- Implementation
 			else
 				if not is_destroyed then
 					{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
-				end		
+				end
 			end
 		end
 
@@ -154,7 +170,7 @@ feature {NONE} -- Implementation
 				Result := user_x_position
 			else
 				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
-					if has_wm_decorations then
+					if default_wm_decorations /= 0 then
 						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $a_x, null)
 						Result := a_x
 					else
@@ -181,7 +197,7 @@ feature {NONE} -- Implementation
 				Result := user_y_position
 			else
 				if has_struct_flag (c_object, {EV_GTK_EXTERNALS}.gtk_mapped_enum) then
-					if has_wm_decorations then
+					if default_wm_decorations /= 0 then
 						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $a_y)
 						Result := a_y
 					else
@@ -197,11 +213,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_wm_decorations: BOOLEAN is
-			-- Does current Window object have WM decorations.
-			-- (export status {NONE})
+	default_wm_decorations: INTEGER is
+			-- Default WM decorations of `Current'.
 		do
-			Result := False
+			Result := 0 -- No decorations
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -222,7 +237,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Must the window be closed before application continues?
 		do
 			if not is_destroyed then
-				Result := {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object) = 1
+				Result := {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object).to_boolean
 			end
 		end
 

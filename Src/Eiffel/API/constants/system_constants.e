@@ -172,7 +172,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			-- Version of the compiler
 		once
 				-- 0000 because it will be replace by the svn version number by the build script
-			create Result.make_version (5, 7, 1120, 0000)
+			create Result.make_version (5, 7, 0000, 0)
 		end
 
 	Major_version_number: INTEGER is

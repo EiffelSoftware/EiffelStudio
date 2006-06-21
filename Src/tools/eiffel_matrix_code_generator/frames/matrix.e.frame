@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				raw_buffer.set_with_named_file (a_file_name)
 			else
 					-- Fail safe, use blank pixmap
-				create raw_matrix.make_with_size ((width * pixel_width) + 1,(height * pixel_height) + 1)
+				create raw_buffer.make_with_size ((width * pixel_width) + 1,(height * pixel_height) + 1)
 			end
 		rescue
 			retried := True

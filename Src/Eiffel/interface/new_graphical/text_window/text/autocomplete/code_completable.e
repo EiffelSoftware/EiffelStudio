@@ -282,7 +282,7 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			l_height: INTEGER
 			l_count_to_calculate: INTEGER
 			i: INTEGER
-			l_name: EB_NAME_FOR_COMPLETION
+			l_name: NAME_FOR_COMPLETION
 		do
 			create l_screen
 			l_grid := choices.choice_list

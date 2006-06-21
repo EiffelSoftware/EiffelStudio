@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
-				l_name_item ?= choice_list.selected_rows.first.item (1).data
+				l_name_item ?= choice_list.selected_rows.first.data
 				check
 					l_name_item_not_void: l_name_item /= Void
 				end

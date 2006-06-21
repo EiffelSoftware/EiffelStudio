@@ -22,7 +22,35 @@ feature -- Command
 			cpp_gdi_plus_shutdown
 		end
 
-feature {NONE} -- C++ externals
+feature -- Command
+
+	is_gdi_plus_installed: BOOLEAN is
+			--
+		local
+			l_result: INTEGER
+		do
+			c_load_gdip_dll ($l_result)
+			if l_result /= 0 then
+				Result := True
+			end
+		end
+
+feature {NONE} -- Externals
+
+	c_load_gdip_dll (a_result: TYPED_POINTER [INTEGER]) is
+			--
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+			{
+				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
+				if (user32_module) {
+					*(EIF_INTEGER *)($a_result) = TRUE;
+				}
+			}
+			]"
+		end
 
 	cpp_gdi_plus_initialize is
 			-- Before any GDI+ call, we should call this function.

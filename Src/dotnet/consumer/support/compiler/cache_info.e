@@ -8,25 +8,8 @@ indexing
 class
 	CACHE_INFO
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_path: STRING) is
-			-- Initialize new instance
-		require
-			a_path_attached: a_path /= Void
-			not_a_path_is_empty: not a_path.is_empty
-		local
-			l_dir: DIRECTORY
-			info_path: STRING
-		do
-			create l_dir.make (a_path)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-		end
+create {CACHE_INFO_FACTORY}
+	default_create
 
 feature -- Access
 

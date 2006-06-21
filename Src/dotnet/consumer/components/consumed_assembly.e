@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			valid_location: not loc.is_empty
 			non_void_gp: gp /= Void
 			valid_gp: not gp.is_empty
-		do			
+		do
 			name := n
 			version := v
 			culture := c
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			gac_path := format_path (gp)
 			unique_id := id
 			is_in_gac := a_in_gac
-			
+
 			folder_name := fn
 		ensure
 			name_set: name = n
@@ -77,28 +77,28 @@ feature -- Access
 
 	name: STRING
 			-- Assembly path (local) or fullname (in GAC)
-	
+
 	version: STRING
 			-- Assembly version number
-	
+
 	culture: STRING
 			-- Assembly culture
-	
+
 	key: STRING
 			-- Assembly public key token
-			
+
 	location: STRING
 			-- Assembly location (path loaded from)
-			
+
 	gac_path: STRING
 			-- Assembly code base (path of loaded assembly)
-			
+
 	is_consumed: BOOLEAN
 			-- Indicates if assembly has actually been consumed.
-			
+
 	is_in_gac: BOOLEAN
 			-- Indicates if assembly was consumed from GAC.
-	
+
 	out: STRING is
 			-- New string containing terse printable representation
 			-- of current object
@@ -115,7 +115,7 @@ feature -- Access
 			Result.append (", CodeBase=")
 			Result.append (location)
 		end
-		
+
 feature {CACHE_WRITER} -- Status Setting
 
 	set_is_consumed (a_consumed: BOOLEAN) is
@@ -125,7 +125,7 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			is_consumed_set: is_consumed = a_consumed
 		end
-		
+
 	set_location (a_location: STRING) is
 			-- Set `location' with `a_location'
 		require
@@ -136,7 +136,7 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			location_set: location = a_location.as_lower
 		end
-		
+
 	set_gac_path (a_gac_path: STRING) is
 			-- Set `gac_path' with `a_gac_path'
 		require
@@ -155,7 +155,7 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			is_in_gac_set: is_in_gac = a_in_gac
 		end
-		
+
 	set_version (a_ver: like version) is
 			-- Sets `version' with `a_ver'
 		require
@@ -166,7 +166,7 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			version_set: version = a_ver
 		end
-		
+
 	set_culture (a_culture: like culture) is
 			-- Sets `culture' with `a_culture'
 		require
@@ -177,7 +177,7 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			culture_set: culture = a_culture
 		end
-		
+
 	set_key (a_key: like key) is
 			-- Sets `key' with `a_key'
 		require
@@ -196,7 +196,7 @@ feature -- Comparison
 		do
 			Result := has_same_path (other.gac_path) or else has_same_path (other.location)
 		end
-		
+
 	is_assembly_info_equal (other: like Current): BOOLEAN is
 			-- Is `other' basic assembly information (name, version, culture and public key token)
 			-- equal to current instance?
@@ -206,7 +206,7 @@ feature -- Comparison
 			Result := name.is_equal (other.name) and then version.is_equal (other.version) and then
 						culture.is_equal (other.culture) and then key.is_equal (other.key)
 		end
-		
+
 	has_same_path (a_path: STRING): BOOLEAN is
 			-- does current instance have a path that equals `a_path'
 		require
@@ -214,11 +214,16 @@ feature -- Comparison
 			valid_path: not a_path.is_empty
 		local
 			l_path: STRING
+			l_file: RAW_FILE
 		do
 			l_path := format_path (a_path)
 			Result := l_path.is_equal (location) or l_path.is_equal (gac_path)
+			if not Result then
+				create l_file.make (l_path)
+				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
+			end
 		end
-		
+
 	has_same_ready_formatted_path (a_path: STRING): BOOLEAN is
 			-- does current instance have a path that equals `a_path'.
 			-- This is an optimized version of `has_same_path' that assumes `a_path' has already
@@ -227,10 +232,16 @@ feature -- Comparison
 			not_a_path_is_empty: a_path /= Void
 			a_path_not_void: not a_path.is_empty
 			a_path_is_formatted: a_path.is_equal (format_path (a_path))
+		local
+			l_file: RAW_FILE
 		do
 			Result := a_path.is_equal (location) or a_path.is_equal (gac_path)
+			if not Result then
+				create l_file.make (a_path)
+				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
+			end
 		end
-		
+
 feature -- Formatting
 
 	format_path (a_path: STRING): STRING is
@@ -245,13 +256,13 @@ feature -- Formatting
 			Result := a_path.as_lower
 			Result.replace_substring_all ("\\", "\")
 			if l_unc_path then
-				Result.prepend_character ('\')	
+				Result.prepend_character ('\')
 			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_still_unc_path: a_path.count > 2 implies (a_path.substring (1, 2).is_equal ("\\") implies Result.substring (1, 2).is_equal ("\\"))
-		end		
+		end
 
 invariant
 	non_void_assembly_name: name /= Void

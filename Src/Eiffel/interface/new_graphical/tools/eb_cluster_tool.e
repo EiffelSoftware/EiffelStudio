@@ -179,6 +179,8 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			show_current_class_cluster_cmd.recycle
+			show_current_class_cluster_cmd := Void
 			widget.recycle
 			widget := Void
 			window := Void

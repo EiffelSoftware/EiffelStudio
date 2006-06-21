@@ -3,38 +3,47 @@ indexing
 					Object that represents a criterion in Eiffel query lanagage
 					
 					Intrinsic domain
-						A criterion can have an inclusive intrinsic domain, exclusive intrinsic domain or 
-						no intrinsic domain. To understant what is an intrinsic domain, we should have a look at 
-						how query language works in general.
-						
-						For example, query:
-							select class where is_deferred
-						This query will list all classes in current application target and check if a classes is deferred, 
-						if it is, it will be put into result domain.
-						
-						And in query:
-							select class where ancestor_is "STRING"
-						To evaluate this query, in deed, we don't need to list all classes in current application target because, 
-						the compiler can provide us the descendant information of class STRING. In this case, 
-						the best way to evaluate the query is to get a list of descendant classes of class STRING first 
-						from the compiler, and then check those classes to see if they are in current application target 
-						(which is obviously true in our case), if so, we put them in the result domain.
+					
+					A criterion can have an inclusive intrinsic domain, exclusive intrinsic domain or 
+					no intrinsic domain. To understant what is an intrinsic domain, we should have a look at 
+					how query language works in general.
+					
+					For example, query:
+						select class where is_deferred
+					This query will list all classes in current application target and check if a classes is deferred, 
+					if it is, it will be put into result domain.
+					
+					And in query:
+						select class where ancestor_is "STRING"
+					To evaluate this query, in deed, we don't need to list all classes in current application target because, 
+					the compiler can provide us the descendant information of class STRING. In this case, 
+					the best way to evaluate the query is to get a list of descendant classes of class STRING first 
+					from the compiler, and then check those classes to see if they are in current application target 
+					(which is obviously true in our case), if so, we put them in the result domain.
 
-						So a criterion like ancestor_is is called criterion with an intrinsic domain. Other
-						intrinsic domain criterion include: descendant_is, parent_is, heir_is, caller_is,
-						callers_of, implementors_of.
-						And in this case, the intrinsic domain is an inclusive intrinsic domain.
+					So a criterion like ancestor_is is called criterion with an intrinsic domain. Other
+					intrinsic domain criterion include: descendant_is, parent_is, heir_is, caller_is,
+					callers_of, implementors_of.
+					And in this case, the intrinsic domain is an inclusive intrinsic domain.
 
-						When an inclusive intrinsic domain criterion is applied to a NOT criterion, its inclusive
-						intrinsic domain turns to an exclusive intrinsic domain of the not criterion.
+					When an inclusive intrinsic domain criterion is applied to a NOT criterion, its inclusive
+					intrinsic domain turns to an exclusive intrinsic domain of the not criterion.
 
-						For example,
-							select class where not ancestor_is "STRING"
-						here, not ancestor_is "STRING" is a NOT criterion with an exclusive intrinsic domain.
-						And this exclusive intrinsic domain is from the inclusive intrinsic domain of
-						the criterion ancestor_is.
+					For example,
+						select class where not ancestor_is "STRING"
+					here, not ancestor_is "STRING" is a NOT criterion with an exclusive intrinsic domain.
+					And this exclusive intrinsic domain is from the inclusive intrinsic domain of
+					the criterion ancestor_is.
 
-						A criterion such as is_deferred has no intrinsic domain.
+					A criterion such as is_deferred has no intrinsic domain.
+					
+					-------------------------------------------------------------------------------------------------------------------					
+					
+					Criterion retrieval
+					
+					Criterion object can be retrieved from criterion factories.
+					For more information about criterion factories, see {QL_CRIERION_FACTORY} and its
+					descendant classes.
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

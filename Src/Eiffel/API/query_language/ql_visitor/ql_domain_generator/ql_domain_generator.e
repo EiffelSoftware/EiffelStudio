@@ -1,5 +1,72 @@
 indexing
-	description: "Object to generate different domains used in Eiffel query language"
+	description: "[
+					Domain generator to perform domain transformation eigther between the same type of domains, or between
+					different type of domains.
+					
+					Basic conception
+					
+					A a certain type of domain generator is used to generate domain of that type.
+					For information about domain type, see {QL_DOMAIN}.
+					
+					Apply a domain generator to a domain to get a new domain:
+					For example:
+						result_domain: QL_CLASS_DOMAIN
+						source_domain: QL_TARGET_DOMAIN
+						domain_generator: QL_CLASS_DOMAIN_GENERATOR						
+						...
+							-- Some code to initialize source_domain and domain_generator
+						...
+						result_domain ?= source_domain.new_domain (domain_generator)
+						
+					Usually, a criterion is given to a domain generator to perform certain kind of filtering.
+					For example, a "is_deferred" criterion is given to a class domain generator to indicate that
+					we only want deferred classes in result domain. If no criterion is given to a domain generator, 
+					it will generate all possible result from source domain into result domain.
+					To set a criterion into a domain generator, invoke `set_criterion'
+					
+					-----------------------------------------------------------------------------------------------------------------
+					
+					Result domain
+					
+					By default, result items are not stored in result domain. This is because in some use cases,
+					we only want to go through items and have `item_satisfied_actions' (described below) invoked,
+					but do not want to store those items.
+					To enable the item storage, invoke `enable_filled_domain'.
+					Before domain generation, invoke `reset_domain' and then invoke `process_domain' 
+					to generate result domain, and result domain is store in `domain'.
+					
+					Every time an item is satisfied by `criterion', actions in `item_satisfied_actions' will be
+					invoked with the item that is been evaluated.
+					
+					Invoke `enable_distinct_item' to ensure that only distinct items remains in result domain,
+					of course, only when `is_fill_domain_enabled' is True.
+					`is_distinct_required' is an once attribute and shared by all domain generators.
+					
+					Generally speaking, all items in result domain should be visible from source domain,
+					but there are exceptions, especially when querying about relations such as ancestor, clients
+					of classes or features. In these cases, some items in result domain may not be visible from
+					source domain, but they are marked as *invisible*. See `is_visible' in {QL_CODE_STRUCTURE_ITEM}.
+					And there is a criterion named "is_visible" to filter these items.
+					For example of the invisible items, see comment of `is_visible' in {QL_CLASS}.
+
+
+					-----------------------------------------------------------------------------------------------------------------
+
+					Generation feedback and optimization
+
+					Domain generation can be a very long process, in order to get some response during the period,
+					an internal counter is maintained to remember how many items have been processed.
+					Attach agents to `tick_actions' and set `interval' (using `set_interval') to indicate
+					that attached agents get invoked every time when `interval' items have been processed.
+					`tick_actions' and `interval' are once attributes, they are shared by all domain generators
+					in system.
+					An example to use `tick_actions' is to terminate domain generation. A typical way to achieve this
+					is in an agent attached to `tick_actions', raise an error.
+					
+					By default, `is_optimization_enabled' is True, this ensures faster domain generation.
+					You can switch this flag using `enable_optimization' and `disable_optimization'.
+
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -11,15 +78,22 @@ deferred class
 
 inherit
 	QL_VISITOR
+		export
+			{NONE} all
 		redefine
 			process_item
 		end
 
 	QL_SHARED_SCOPES
+		export
+			{NONE} all
+		end
 
 	QL_OBSERVABLE
 		rename
 			observed_data_type as item_type
+		export
+			{NONE} all
 		redefine
 			item_type
 		end
@@ -29,6 +103,8 @@ inherit
 	QL_SHARED_ERROR_HANDLER
 
 	QL_CRITERION_ITERATOR
+		export
+			{NONE} all
 		redefine
 			process_intrinsic_domain_criterion,
 			process_domain_criterion
@@ -37,8 +113,14 @@ inherit
 	QL_DOMAIN_OPTIMIZABLE
 
 	QL_UTILITY
+		export
+			{NONE} all
+		end
 
 	QL_SHARED
+		export
+			{NONE} all
+		end
 
 feature{NONE} -- Initialization
 
@@ -66,6 +148,8 @@ feature -- Setting
 
 	set_criterion (a_criterion: like criterion) is
 			-- Set `criterion' with `a_criterion'.
+			-- If `a_criterion' is Void, current criterion in this domain generator
+			-- will be removed.
 		require
 			a_criterion_not_used_in_other_domain_generator:
 				a_criterion /= Void implies a_criterion.used_in_domain_generator = Void
@@ -84,26 +168,6 @@ feature -- Setting
 			internal_actual_criterion := Void
 		ensure
 			criterion_set: criterion = a_criterion
-			internal_actual_criterion_reset: internal_actual_criterion = Void
-		end
-
-	set_interval (a_interval: NATURAL_64) is
-			-- Set `interval' with `a_interval'.
-		require
-			a_interval_positive: a_interval > 0
-		do
-			interval_cell.put (a_interval)
-		ensure
-			interval_set: interval = a_interval
-		end
-
-	remove_criterion is
-			-- Remove `criterion'.
-		do
-			criterion := Void
-			internal_actual_criterion := Void
-		ensure
-			criterion_removed: criterion = Void
 			internal_actual_criterion_reset: internal_actual_criterion = Void
 		end
 
@@ -147,12 +211,6 @@ feature -- Status report
 			-- will it be inserted into `domain'?
 			-- Default: False
 
-	is_interval_reached: BOOLEAN is
-			-- Does `interval_counter' reach `interval'?
-		do
-			Result := internal_counter \\ interval = 0
-		end
-
 	is_distinct_required: BOOLEAN is
 			-- Does distinct items in `domain' required?
 		do
@@ -161,7 +219,7 @@ feature -- Status report
 
 feature -- Access
 
-	actions: ACTION_SEQUENCE [TUPLE[like item_type]] is
+	item_satisfied_actions: ACTION_SEQUENCE [TUPLE[like item_type]] is
 			-- Actions to be performed when a new item (which is satisfied by current `criterion') is generated
 		do
 			if actions_internal = Void then
@@ -232,13 +290,7 @@ feature -- Domain visit
 			temp_domain_is_empty: temp_domain.is_empty
 		end
 
-	process_item (a_item: QL_VISITABLE) is
-			-- Process `a_item'.
-		do
-			Precursor (a_item)
-		end
-
-feature -- Criterion visit
+feature{NONE} -- Criterion visit
 
 	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
 			-- Process `a_cri'.
@@ -266,10 +318,16 @@ feature -- Criterion visit
 			end
 		end
 
+	process_item (a_item: QL_VISITABLE) is
+			-- Process `a_item'.
+		do
+			Precursor (a_item)
+		end
+
 feature{NONE} -- Implementation
 
-	actions_internal: like actions
-			-- Implementation of `actions'
+	actions_internal: like item_satisfied_actions
+			-- Implementation of `item_satisfied_actions'
 
 	actual_criterion: like criterion is
 			-- Actual criterion used when generating items
@@ -309,7 +367,7 @@ feature{NONE} -- Implementation
 
 	evaluate_item (a_item: like item_type) is
 			-- Evaluate `a_item' using `actual_criterion'.
-			-- If `actual_criterion' is satisfied by `a_item', put `a_item' in `domain' and call `actions'.
+			-- If `actual_criterion' is satisfied by `a_item', put `a_item' in `domain' and call `item_satisfied_actions'.
 		require
 			a_item_attached: a_item /= Void
 		do
@@ -573,7 +631,7 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 			if not a_interval_actions_applied then
 				increase_internal_counter (a_item)
 			end
-			actions.call ([a_item])
+			item_satisfied_actions.call ([a_item])
 		end
 
 invariant

@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- `Result' is current clipboard content.
 		local
 			a_success: INTEGER
@@ -89,7 +89,7 @@ feature -- Status Setting
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (clipboard_widget, 0, -1)
 			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (clipboard_widget)
 		end
-		
+
 feature {NONE} -- Externals
 
 	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 		external
 			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
 		end
-		
+
 	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
 			-- void       gtk_text_insert          (GtkText       *text,
 			-- 				     GdkFont       *font,

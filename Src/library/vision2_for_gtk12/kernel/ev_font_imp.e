@@ -17,7 +17,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FONT_IMP 
+	EV_FONT_IMP
 
 inherit
  	EV_FONT_I
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			family := Family_sans
 			weight := Weight_regular
 			shape := Shape_regular
-			
+
 			-- The height of the default font needs to be returned from the current gtk style.
 			set_height_internal (App_implementation.default_font_height)
 
@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 
 			update_font_face
 		end
-		
-	initialize is 
+
+	initialize is
 		do
 			set_is_initialized (True)
 		end
@@ -73,7 +73,12 @@ feature -- Access
 
 	height_in_points: INTEGER
 			-- Preferred font height measure in points
-		
+
+	char_set: INTEGER is
+			-- Charset
+		do
+			Result := 1
+		end
 
 feature -- Element change
 
@@ -132,19 +137,19 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING
+	name: STRING_32
 			-- Face name chosen by toolkit.
 
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the top of the drawn character. 
+			-- operation to the top of the drawn character.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (c_object)
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the bottom of the drawn character. 
+			-- operation to the bottom of the drawn character.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent (c_object)
 		end
@@ -193,7 +198,7 @@ feature -- Status report
 		do
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_spacing).is_equal ("p")
 		end
- 
+
 feature {NONE} -- Implementation
 
 	preloaded: HASH_TABLE [EV_GDK_FONT, STRING] is
@@ -202,7 +207,7 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 			Result.compare_objects
 		end
-		
+
 	fonts_not_found: LINKED_LIST [STRING] is
 			-- List of XLFD not found on system.
 		once
@@ -224,7 +229,7 @@ feature {NONE} -- Implementation
 						create Result.make (exp_name)
 						if Result.c_object /= default_pointer then
 							preloaded.put (Result, a_try_string)
-							name := a_try_face						
+							name := a_try_face
 						else
 							fonts_not_found.extend (a_try_string)
 						end
@@ -238,7 +243,7 @@ feature {NONE} -- Implementation
 	match_preferred_face (
 		try_string_creator: FUNCTION[EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]
 	): EV_GDK_FONT is
-			-- Match the preferred face using the font 
+			-- Match the preferred face using the font
 			-- string creator `try_string_creator'
 		local
 			temp_font: EV_GDK_FONT
@@ -272,7 +277,7 @@ feature {NONE} -- Implementation
 			Result := temp_font
 		end
 
-	update_preferred_faces (a_face: STRING) is
+	update_preferred_faces (a_face: STRING_32) is
 		do
 			update_font_face
 		end
@@ -482,7 +487,7 @@ feature {EV_FONT_IMP} -- Implementation
 			-- It replaces "black" with "bold" and does not use a
 			-- preferred setwidth or addstyle.
 		local
-			wgt: STRING 
+			wgt: STRING
 		do
 			wgt := weight_string
 			if wgt.is_equal ("black") then
@@ -497,7 +502,7 @@ feature {EV_FONT_IMP} -- Implementation
 			-- If rescue-string-one does not match anything, use this.
 			-- It replaces "o" with "i".
 		local
-			wgt, shp: STRING 
+			wgt, shp: STRING
 		do
 			wgt := weight_string
 			if wgt.is_equal ("black") then
@@ -526,9 +531,9 @@ feature {EV_FONT_IMP} -- Implementation
 			-- the right name and you'll be OK.
 		do
 			Result := "-*-" + a_font_name + "-*-*-*-**-*-*-*-*-*-*-*"
-		end	
+		end
 
-	default_font (a_font_name: STRING): STRING is 
+	default_font (a_font_name: STRING): STRING is
 			-- If this font does not give a match, there is not
 			-- a single font installed on the system.
 		do
@@ -539,34 +544,34 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	c_object: POINTER
 		-- Reference to the GdkFont object.
-		
+
 feature {EV_FONTABLE_IMP} -- Implementation
-		
+
 	set_font_object (a_c_object: POINTER) is
-			-- 
+			--
 		do
 			c_object := a_c_object
 		end
-		
+
 	set_height_internal (a_height: INTEGER) is
-			-- 
+			--
 		do
 			internal_height := a_height
 		end
 
 feature {NONE} -- Implementation
-		
+
 	full_name: STRING
 			-- The full name of the string.
-			
+
 	internal_height: INTEGER
 			-- Height of font in screen pixels.
-			
+
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
-		end		
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -590,7 +595,7 @@ feature -- Obsolete
 
  	is_standard: BOOLEAN is True
  			-- Is the font standard and informations available (except for name) ?
-			
+
 	destroy is
 		do
 			set_is_destroyed (True)
@@ -599,7 +604,7 @@ feature -- Obsolete
 invariant
 	c_object_not_null: is_initialized implies c_object /= default_pointer
 	full_name_not_void: is_initialized implies full_name /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -81,10 +81,12 @@ feature {NONE} -- Initialization
 
 				--| UI look
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color)
+			set_row_highlight_bg_color_agent := agent set_row_highlight_bg_color
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (set_row_highlight_bg_color_agent)
 
 			row_unsensitive_fg_color := Preferences.debug_tool_data.row_unsensitive_foreground_color
-			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.extend (agent set_row_unsensitive_fg_color)
+			set_row_unsensitive_fg_color_agent := agent set_row_unsensitive_fg_color
+			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.extend (set_row_unsensitive_fg_color_agent)
 
 				--| UI structure			
 			create box
@@ -403,6 +405,10 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
+			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)
+
 			exception.remove_text
 			exception.remove_tooltip
 		end
@@ -1239,6 +1245,10 @@ feature {NONE} -- Implementation, cosmetic
 			end
 			lab.set_font (f)
 		end
+
+	set_row_unsensitive_fg_color_agent, set_row_highlight_bg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
+			-- Store agents for `set_row_highlight_bg_color' and `set_row_unsensitive_fg_color' so that they
+			-- get properly removed when recycling.
 
 	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
 		do

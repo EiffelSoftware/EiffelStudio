@@ -105,6 +105,12 @@ feature {NONE} -- Compute surrounding text around error
 	previous_line, current_line, next_line: STRING
 			-- Surrounding lines where error occurs.
 
+	has_source_text: BOOLEAN is
+			-- Did we get the source text?
+		do
+			Result := current_line /= Void
+		end
+
 	initialize_output is
 			-- Set `previous_line', `current_line' and `next_line' with their proper values
 			-- taken from file `file_name'.
@@ -114,26 +120,33 @@ feature {NONE} -- Compute surrounding text around error
 			file: PLAIN_TEXT_FILE
 			nb: INTEGER
 		do
-			create file.make_open_read (file_name)
-			from
-				nb := 1
-			until
-				nb > line or else file.end_of_file
-			loop
-				if nb >= line - 1 then
-					previous_line := current_line
+			current_line := Void
+			create file.make (file_name)
+			if file.exists then
+				file.open_read
+				from
+					nb := 1
+				until
+					nb > line or else file.end_of_file
+				loop
+					if nb >= line - 1 then
+						previous_line := current_line
+					end
+					file.read_line
+					nb := nb + 1
+					if nb >= line - 1 then
+						current_line := file.last_string.twin
+					end
 				end
-				file.read_line
-				nb := nb + 1
-				if nb >= line - 1 then
-					current_line := file.last_string.twin
+				if not file.end_of_file then
+					file.read_line
+					next_line := file.last_string.twin
+				end
+				file.close
+				check
+					current_line_not_void: current_line /= Void
 				end
 			end
-			if not file.end_of_file then
-				file.read_line
-				next_line := file.last_string.twin
-			end
-			file.close
 		end
 
 feature -- Output
@@ -234,6 +247,9 @@ feature {NONE} -- Implementation
 			a_text_formatter.add (line.out)
 			if a_context_class.lace_class.date_has_changed then
 				a_text_formatter.add (" (source code has changed)")
+				a_text_formatter.add_new_line
+			elseif not has_source_text then
+				a_text_formatter.add (" (source code is not available)")
 				a_text_formatter.add_new_line
 			elseif line > 0 then
 				a_text_formatter.add_new_line

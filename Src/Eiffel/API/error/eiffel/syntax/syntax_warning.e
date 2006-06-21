@@ -86,9 +86,14 @@ feature -- Output
 			end
 			a_text_formatter.add_new_line
 			build_explain (a_text_formatter)
-			display_line (a_text_formatter, previous_line)
-			display_syntax_line (a_text_formatter, current_line)
-			display_line (a_text_formatter, next_line)
+			if has_source_text then
+				display_line (a_text_formatter, previous_line)
+				display_syntax_line (a_text_formatter, current_line)
+				display_line (a_text_formatter, next_line)
+			else
+				a_text_formatter.add (" (source code is not available)")
+				a_text_formatter.add_new_line
+			end
 		end
 
 invariant

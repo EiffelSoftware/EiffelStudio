@@ -91,6 +91,24 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 
 feature {EV_ANY_IMP} -- Widget intermediary agent routines
 
+	accel_activate_intermediary (a_object_id: INTEGER; n: INTEGER; p: POINTER) is
+			-- Call accelerators for window `a_object_id'
+		local
+			arg: POINTER
+			accel_key: NATURAL_32
+			accel_mods: INTEGER
+			a_titled_window_imp: EV_TITLED_WINDOW_IMP
+		do
+			a_titled_window_imp ?= eif_id_object (a_object_id)
+			arg := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 1)
+			accel_key := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (arg)
+			arg := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 2)
+			accel_mods := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_flags (arg)
+			if a_titled_window_imp /= Void and then not a_titled_window_imp.is_destroyed then
+				a_titled_window_imp.call_accelerators (key_code_from_gtk (accel_key), accel_mods)
+			end
+		end
+
 	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER) is
 			-- Size allocate happened on widget.
 		local

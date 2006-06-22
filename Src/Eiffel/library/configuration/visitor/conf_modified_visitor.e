@@ -46,29 +46,8 @@ feature -- Visit nodes
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Process `an_assembly'.
---		local
---			l_deps: LINKED_SET [CONF_ASSEMBLY]
 		do
---
---			Patrickr 25/04/2006: To realy check if an assembly has changed we would need to start a consume.
---								 As the compiler doesn't handle changed assemblies yet anyway we save the time to do this.
---
---			if not is_error and then not processed_assemblies.has (an_assembly.guid) then
---				processed_assemblies.force (an_assembly.guid)
---				an_assembly.check_changed
---				find_modified (an_assembly)
---				l_deps := an_assembly.dependencies
---				if l_deps /= Void then
---					from
---						l_deps.start
---					until
---						l_deps.after
---					loop
---						l_deps.item.process (Current)
---						l_deps.forth
---					end
---				end
---			end
+--			Patrickr 25/04/2006: At the moment we don't check for changed assemblies as the compiler doesn't handle this anyway.
 		end
 
 	process_library (a_library: CONF_LIBRARY) is

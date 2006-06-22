@@ -88,6 +88,7 @@ feature {NONE} -- Initialization
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
 			create location.make ("", a_target)
+			is_non_local_assembly := True
 		ensure
 			is_valid: is_valid
 		end
@@ -109,6 +110,9 @@ feature -- Status
 
 	is_in_gac: BOOLEAN
 			-- Is this assembly in gac?
+
+	is_non_local_assembly: BOOLEAN
+			-- Was this assembly only specified by gac information (i.e. no location was set)?
 
 feature -- Access, stored in configuration file if location is empty
 
@@ -146,9 +150,6 @@ feature -- Access, in compiled only
 
 	date: INTEGER
 			-- Date of last modification of the cached information.
-
-	is_modified: BOOLEAN
-			-- Has the assembly been modified?
 
 feature -- Access queries
 
@@ -360,7 +361,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			dotnet_classes_set: dotnet_classes = a_classes
 		end
 
-
 	set_guid (a_guid: like guid) is
 			-- Set `guid' to `a_guid'
 		require
@@ -402,22 +402,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			-- Set `date' to `a_date'.
 		do
 			date := a_date
-		end
-
-	check_changed is
-			-- Check if the cached information of the assembly have changed.
-		require
-			consumed_path_ok: consumed_path /= void and then not consumed_path.is_empty
-		local
-			l_date: INTEGER
-		do
-			l_date := file_modified_date (consumed_path)
-			if date /= l_date then
-				date := l_date
-				is_modified := True
-			else
-				is_modified := False
-			end
 		end
 
 feature -- Equality

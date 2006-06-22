@@ -19,9 +19,24 @@ feature -- Access
 	cache_name: STRING is "MetadataConsumer"
 			-- Cache name.
 
-	conservative_mode: BOOLEAN is True;
+	conservative_mode: BOOLEAN is True
 			-- State to indicate if cache should be conservative when creating paths
 			-- to cached contents
+
+	cache_info_file: STRING is "eac.info"
+			-- Name of file with information about what is stored in the cache.
+
+	classe_info_file: STRING is "classes.info"
+			-- Name of file which has informations about which classes exist in an assembly.
+
+	referenced_assemblies_info_file: STRING is "referenced_assemblies.info"
+			-- Name of file which has information about referenced assemblies.
+
+	types_info_file: STRING is "types.info"
+			-- Name of file which has information about the types in an assembly.
+
+	null_key_string: STRING is "null";
+			-- Null key string.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

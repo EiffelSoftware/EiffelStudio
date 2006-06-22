@@ -224,12 +224,10 @@ feature -- Start output features
 
 feature -- Output on per class
 
-	put_consume_assemblies (a_target: CONF_TARGET) is
-			-- Put message to indicate that assemblies of `a_target' are consumed.
-		require
-			a_target_not_void: a_target /= Void
+	put_consume_assemblies is
+			-- Put message to indicate that assemblies are consumed.
 		do
-			display_message (consume_assemblies_message + a_target.name);
+			display_message (consume_assemblies_message);
 			display_new_line
 		end
 
@@ -553,7 +551,7 @@ feature {NONE} -- Constants
 	Case_class_message: STRING is "Analyzing class ";
 	Case_cluster_message: STRING is "Analyzing cluster ";
 	Document_class_message: STRING is "Generating class ";
-	Consume_assemblies_message: STRING is "Consuming assemblies of ";
+	Consume_assemblies_message: STRING is "Consuming assemblies";
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " group ";
 	Class_output_string: STRING is " class ";

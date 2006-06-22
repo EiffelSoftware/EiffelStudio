@@ -199,11 +199,6 @@ feature -- Cursor
 
 feature -- Selection
 
-	select_from_cursor_to_saved is
-			-- Select from cursor position to saved cursor position
-		deferred
-		end
-
 	disable_selection is
 			-- Disable selection
 		deferred
@@ -500,7 +495,6 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 					back_delete_char
 				end
 			end
-			save_cursor
 			if remainder > 0 then
 				from
 					i := 0
@@ -517,10 +511,6 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 
 			if appended_character /= '%U' then
 				insert_char (appended_character)
-			end
-
-			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
-				select_from_cursor_to_saved
 			end
 		end
 

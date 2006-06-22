@@ -53,11 +53,11 @@ feature -- Completion access
 
 feature -- Basic operations
 
-	build_completion_list (cursor_token: EDITOR_TOKEN) is
+	build_completion_list (a_cursor_token: EDITOR_TOKEN) is
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
 		require
-			cursor_token_not_void: cursor_token /= Void
+			cursor_token_not_void: a_cursor_token /= Void
 		local
 			token				: EDITOR_TOKEN
 			feat_table			: E_FEATURE_TABLE
@@ -344,6 +344,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	cursor_token: EDITOR_TOKEN is
+			-- Token at cursor position
+		deferred
+		end
+
 	class_c_to_complete_from (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): CLASS_C is
 			-- Class type to complete on from `token'
 		local
@@ -359,7 +364,7 @@ feature {NONE} -- Implementation
 				if token.image.is_equal (".") then
 					save_cursor_position
 					go_to_left_position
-					token := a_token
+					token := cursor_token
 					l_swapped := True
 				end
 			end
@@ -401,7 +406,7 @@ feature {NONE} -- Implementation
 					-- Restore faked cursor position so we can complete before '.'
 					-- User is completing before '.'
 				retrieve_cursor_position
-				token := current_token
+				token := cursor_token
 			end
 
 			if Result = Void then

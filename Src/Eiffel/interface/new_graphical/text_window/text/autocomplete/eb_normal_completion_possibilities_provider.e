@@ -296,7 +296,7 @@ feature {NONE} -- Class info analyzer
 	go_to_left_position is
 			-- Go to left position by charactor.
 		do
-			text_field.go_right_char
+			text_field.go_left_char
 		end
 
 feature {NONE} -- Build completion possibilities

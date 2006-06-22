@@ -21,6 +21,8 @@ inherit
 			init_fonts
 		end
 
+	EB_SHORTCUTS_DATA
+
 	EB_SHARED_MANAGERS
 
 	EV_KEY_CONSTANTS
@@ -557,7 +559,9 @@ feature {NONE} -- Initialization
 			normal_text_color_preference.change_actions.extend (agent update)
 
 			initialize_autocomplete_prefs
-			initialize_shortcuts_prefs
+
+			create l_manager.make (preferences, "editor.eiffel.keyboard_shortcuts")
+			initialize_shortcuts_prefs (l_manager)
 		end
 
 	initialize_autocomplete_prefs is
@@ -631,33 +635,6 @@ feature {NONE} -- Initialization
 					a_list.forth
 				end
 				complete_keywords_names_keys.forth
-			end
-		end
-
-	initialize_shortcuts_prefs is
-			-- Initialize shortcuts.  Create with default values stored in `default_shortcut_actions'.
-		local
-			action_name: STRING
-			default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]
-			l_name: STRING
-			l_s_pref: SHORTCUT_PREFERENCE
-			l_manager: EB_PREFERENCE_MANAGER
-			l_default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
-		do
-			create l_manager.make (preferences, "editor.eiffel.keyboard_shortcuts")
-			l_default_shortcut_actions := default_shortcut_actions
-			from
-				l_default_shortcut_actions.start
-			until
-				l_default_shortcut_actions.after
-			loop
-				action_name := default_shortcut_actions.key_for_iteration
-				default_value := default_shortcut_actions.item (action_name)
-				l_name := once "editor.eiffel.keyboard_shortcuts." + action_name
-				l_s_pref := l_manager.new_shortcut_preference_value (l_manager, l_name, default_value)
-				l_s_pref.change_actions.extend (agent update)
-				shortcuts.put (l_s_pref, action_name)
-				l_default_shortcut_actions.forth
 			end
 		end
 
@@ -878,29 +855,19 @@ feature -- Keybord shortcuts Customization
 			create Result.make (25)
 			Result.put ([False,  True, False, key_strings.item (Key_space).twin.as_string_8], "autocomplete")
 			Result.put ([False,  True,  True, key_strings.item (Key_space).twin.as_string_8], "class_autocomplete")
-			Result.put ([ True,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_panel")
-			Result.put ([False,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_quick_search_bar")
-			Result.put ([False,  True, False, key_strings.item (Key_h).twin.as_string_8], "show_search_and_replace_panel")
-			Result.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "search_selection")
-			Result.put ([False, True,  False, key_strings.item (Key_F3).twin.as_string_8], "search_last")
-			Result.put ([False,  False, True, key_strings.item (key_F3).twin.as_string_8], "search_backward")
+			Result.put ([False, False, True, key_strings.item (key_numpad_subtract).twin.as_string_8], "collapse_all_levels")
+			Result.put ([False, True,  False, key_strings.item (key_left).twin.as_string_8], "collapse_tree_node")
 			Result.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_1")
 			Result.put ([False,  True, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_2")
 			Result.put ([False, False,  True, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_3")
-			Result.put ([True, False,  False, key_strings.item (Key_0).twin.as_string_8], "external_command_0")
-			Result.put ([True, False,  False, key_strings.item (Key_1).twin.as_string_8], "external_command_1")
-			Result.put ([True, False,  False, key_strings.item (Key_2).twin.as_string_8], "external_command_2")
-			Result.put ([True, False,  False, key_strings.item (Key_3).twin.as_string_8], "external_command_3")
-			Result.put ([True, False,  False, key_strings.item (Key_4).twin.as_string_8], "external_command_4")
-			Result.put ([True, False,  False, key_strings.item (Key_5).twin.as_string_8], "external_command_5")
-			Result.put ([True, False,  False, key_strings.item (Key_6).twin.as_string_8], "external_command_6")
-			Result.put ([True, False,  False, key_strings.item (Key_7).twin.as_string_8], "external_command_7")
-			Result.put ([True, False,  False, key_strings.item (Key_8).twin.as_string_8], "external_command_8")
-			Result.put ([True, False,  False, key_strings.item (Key_9).twin.as_string_8], "external_command_9")
-			Result.put ([False, True,  False, key_strings.item (key_right).twin.as_string_8], "expand_tree_node")
-			Result.put ([False, True,  False, key_strings.item (key_left).twin.as_string_8], "collapse_tree_node")
 			Result.put ([False, False, True, key_strings.item (key_numpad_multiply).twin.as_string_8], "expand_all_levels")
-			Result.put ([False, False, True, key_strings.item (key_numpad_subtract).twin.as_string_8], "collapse_all_levels")
+			Result.put ([False, True,  False, key_strings.item (key_right).twin.as_string_8], "expand_tree_node")
+			Result.put ([False,  False, True, key_strings.item (key_F3).twin.as_string_8], "search_backward")
+			Result.put ([False, True,  False, key_strings.item (Key_F3).twin.as_string_8], "search_last")
+			Result.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "search_selection")
+			Result.put ([False,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_quick_search_bar")
+			Result.put ([False,  True, False, key_strings.item (Key_h).twin.as_string_8], "show_search_and_replace_panel")
+			Result.put ([ True,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_panel")
 		end
 
 invariant

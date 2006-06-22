@@ -101,11 +101,6 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
 		deferred
 		end
 
-	show_search_options: BOOLEAN is
-			-- Are search tool options displayed ?
-		deferred
-		end
-
 	context_unified_stone: BOOLEAN is
 			-- Is the context tool linked?
 		deferred
@@ -167,11 +162,6 @@ feature -- Element change
 	save_right_panel_layout (a_layout: ARRAY [STRING]) is
 			-- Save the layout of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
-		deferred
-		end
-
-	save_show_search_options (a_show: BOOLEAN) is
-			--
 		deferred
 		end
 

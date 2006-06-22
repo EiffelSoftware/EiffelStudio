@@ -28,39 +28,43 @@ feature {NONE} -- Initialization
 			create editor_data.make (a_preferences)
 			create search_tool_data.make (a_preferences)
 			create class_browser_data.make (a_preferences)
+			create external_command_data.make (a_preferences)
 		end
 
 feature -- Access
 
-	dialog_data: EB_DIALOGS_DATA
-		-- Preference data for vision and custom dialogs.
+	class_browser_data: EB_CLASS_BROWSER_DATA
+			-- Preference data for class browser
 
 	context_tool_data: EB_CONTEXT_TOOL_DATA
-		-- Preference data for the context tool.		
+			-- Preference data for the context tool.		
 
 	debug_tool_data: EB_DEBUG_TOOL_DATA
-		-- Preference data for debugger tool.
-
-	diagram_tool_data: EIFFEL_DIAGRAM_PREFERENCES
-		-- Preference data for the diagram tool.
+			-- Preference data for debugger tool.
 
 	debugger_data: EB_DEBUGGER_DATA
-		-- Preference data for debugger.		
+			-- Preference data for debugger.		
 
 	development_window_data: EB_DEVELOPMENT_WINDOW_PREFERENCES
-		-- Preference data for the EiffelStudio main development window.
+			-- Preference data for the EiffelStudio main development window.
 
-	recent_projects_data: EB_RECENT_PROJECTS
-		-- Preference data for recently loaded EiffelStudio projects.	
+	diagram_tool_data: EIFFEL_DIAGRAM_PREFERENCES
+			-- Preference data for the diagram tool.
+
+	dialog_data: EB_DIALOGS_DATA
+			-- Preference data for vision and custom dialogs.
 
 	editor_data: EB_EDITOR_DATA
-		-- Preference data for EiffelStudio editor
+			-- Preference data for EiffelStudio editor
+
+	external_command_data: EB_EXTERNAL_COMMAND_DATA
+			-- Preference data for external commands
+
+	recent_projects_data: EB_RECENT_PROJECTS
+			-- Preference data for recently loaded EiffelStudio projects.	
 
 	search_tool_data: EB_SEARCH_TOOL_DATA
-		-- Preference data for EiffelStudio search tool
-
-	class_browser_data: EB_CLASS_BROWSER_DATA
-		-- Preference data for class browser
+			-- Preference data for EiffelStudio search tool
 
 invariant
 	dialog_data_not_void: dialog_data /= Void

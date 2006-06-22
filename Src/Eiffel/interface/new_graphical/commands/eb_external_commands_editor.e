@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 				until
 					i > 9
 				loop
-					s := preferences.misc_data.i_th_external_preference_value (i)
+					s := preferences.external_command_data.i_th_external_preference_value (i)
 					if not s.is_empty and not s.is_equal (" ") then
 						create c.make_from_string (s)
 					end
@@ -100,7 +100,7 @@ feature -- Status report
 			until
 				i > 9
 			loop
-				l_shortcut := preferences.editor_data.shortcuts.item ("external_command_" + i.out)
+				l_shortcut := preferences.external_command_data.shortcuts.item ("shortcut_" + i.out)
 				l_shortcut.change_actions.extend (agent on_shortcut_change (i))
 				Result.put (create{EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift), i)
 				Result.item (i).actions.extend (agent execute_command_at_position (i))
@@ -156,7 +156,7 @@ feature -- Actions
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			l_shortcut := preferences.editor_data.shortcuts.item ("external_command_" + i.out)
+			l_shortcut := preferences.editor_data.shortcuts.item ("shortcut_" + i.out)
 			accelerators.put (create{EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift), i)
 			accelerators.item (i).actions.extend (agent execute_command_at_position (i))
 		end
@@ -321,12 +321,12 @@ feature {NONE} -- Implementation
 				i > 9
 			loop
 				if commands @ i /= Void then
-					preferences.misc_data.i_th_external_preference (i).set_value ((commands @ i).resource)
+					preferences.external_command_data.i_th_external_preference (i).set_value ((commands @ i).resource)
 				else
 						-- We use an empty string as value, because this is how the
 						-- preferences are initialized. That way, the entry is actually
 						-- removed from the preferences.
-					preferences.misc_data.i_th_external_preference (i).set_value ("")
+					preferences.external_command_data.i_th_external_preference (i).set_value ("")
 				end
 				i := i + 1
 			end

@@ -10,8 +10,6 @@ class
 
 inherit
 
-	EXECUTION_ENVIRONMENT
-
 	PLATFORM
 
 create
@@ -50,6 +48,7 @@ feature -- Launching
 	launch_ec is
 			-- Launch ec process
 		local
+			command_line: ARGUMENTS
 			cwd: STRING
 			args_ec_offset: INTEGER
 			args: LIST [STRING]
@@ -59,7 +58,7 @@ feature -- Launching
 			file: RAW_FILE
 		do
 				--| First we check if there is no specific `estudio' parameters
-
+			command_line := Execution_environment.command_line
 			if
 				command_line.argument_count - args_ec_offset > 0
 				and then (command_line.argument (1 + args_ec_offset).is_equal ("/?")
@@ -88,7 +87,7 @@ feature -- Launching
 			get_environment
 			check_environment
 			if is_environment_valid then
-				display_splash
+				display_splasher
 
 					--| Compute command line, args, and working directory
 				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
@@ -103,8 +102,8 @@ feature -- Launching
 						s := command_line.argument (1 + args_ec_offset).twin
 
 							--| Try to be smart and guess if the path is relative or not
-						cwd := current_working_directory
-						change_working_directory (working_directory)
+						cwd := Execution_environment.current_working_directory
+						Execution_environment.change_working_directory (working_directory)
 						create fn.make
 						if fn.is_file_name_valid (s) then
 							create file.make (s)
@@ -121,7 +120,7 @@ feature -- Launching
 							fn := Void
 							file := Void
 						end
-						change_working_directory (cwd)
+						Execution_environment.change_working_directory (cwd)
 
 							--| `s' is the path to the config file
 						if s.has (' ') and then not s.has ('"') then
@@ -178,7 +177,7 @@ feature -- Launching
 					io.output.put_new_line
 				end
 				start_process (ec_path, args, working_directory)
-				close_splash
+				close_splasher
 			end
 		end
 
@@ -214,7 +213,12 @@ feature -- Splash
 
 	splasher: SPLASH_DISPLAYER_I
 
-	display_splash is
+	new_splasher (t: STRING_GENERAL): like splasher is
+		do
+			create {NATIVE_SPLASH_DISPLAYER} Result.make_with_text (t)
+		end
+
+	display_splasher is
 			-- Display splash window (if available)
 		require
 			is_environment_valid: is_environment_valid
@@ -228,7 +232,8 @@ feature -- Splash
 				s.append_code (169)
 				s.append_string_general (" 2006  Eiffel Software ")
 
-				create {EV_SPLASH_DISPLAYER} splasher.make_with_text (s)
+				splasher := new_splasher (s)
+
 				create fn.make_from_string (ise_eiffel)
 				fn.extend_from_array (<<"studio", "bitmaps", "png">>)
 				fn.set_file_name ("splash.png")
@@ -242,7 +247,7 @@ feature -- Splash
 				splasher.show
 			else
 				if splasher /= Void then
-					close_splash
+					close_splasher
 				end
 			end
 		rescue
@@ -250,7 +255,7 @@ feature -- Splash
 			retry
 		end
 
-	close_splash is
+	close_splasher is
 		do
 			if splasher /= Void then
 				splasher.close
@@ -275,8 +280,8 @@ feature -- Environment
 		do
 			ise_eiffel := implementation.ise_eiffel_value
 			ise_platform := implementation.ise_platform_value
-			ec_name := get ("EC_NAME")
-			s := get ("EC_FOLDER")
+			ec_name := Execution_environment.get ("EC_NAME")
+			s := Execution_environment.get ("EC_FOLDER")
 			if s /= Void then
 				create ec_directory.make_from_string (s)
 			end
@@ -286,9 +291,9 @@ feature -- Environment
 			end
 
 			if ec_name /= Void then
-				s := get ("MELTED_PATH")
+				s := Execution_environment.get ("MELTED_PATH")
 				if s /= Void then
-					create melted_path.make_from_string (get ("MELTED_PATH"))
+					create melted_path.make_from_string (s)
 				end
 			else
 				ec_name := "ec"
@@ -402,6 +407,12 @@ feature {NONE} -- Implementations
 		once
 			create {EC_LAUNCHER_IMP} Result
 		end
+
+	Execution_environment: EXECUTION_ENVIRONMENT is
+		once
+			create Result
+		end
+
 
 feature {NONE} -- File system helpers
 

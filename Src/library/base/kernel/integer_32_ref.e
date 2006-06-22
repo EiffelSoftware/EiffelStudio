@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	INTEGER_REF
+	INTEGER_32_REF
 
 inherit
 	NUMERIC
@@ -627,14 +627,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class INTEGER_REF
-
-
-
-
+end

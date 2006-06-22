@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WIDE_CHARACTER_REF
+	CHARACTER_32_REF
 
 inherit
 	COMPARABLE
@@ -165,12 +165,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class WIDE_CHARACTER_REF
-
-
+end

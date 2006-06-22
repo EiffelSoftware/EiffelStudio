@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	STRING
+	STRING_8
 
 inherit
 	STRING_GENERAL

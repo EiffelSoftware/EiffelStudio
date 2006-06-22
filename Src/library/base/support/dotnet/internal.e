@@ -192,7 +192,7 @@ feature -- Access
 
 	Reference_type: INTEGER is 1
 
-	Character_type: INTEGER is 2
+	character_8_type, Character_type: INTEGER is 2
 
 	Boolean_type: INTEGER is 3
 
@@ -212,7 +212,7 @@ feature -- Access
 
 	Integer_64_type: INTEGER is 11
 
-	Wide_character_type: INTEGER is 12
+	character_32_type, Wide_character_type: INTEGER is 12
 
 	natural_8_type: INTEGER is 13
 
@@ -1680,7 +1680,7 @@ feature {NONE} -- Implementation
 			create l_basic_type.make
 			l_basic_type.set_type (({INTEGER}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
-			Result.put (l_list, "INTEGER")
+			Result.put (l_list, "INTEGER_32")
 
 			create l_list.make (1)
 			create l_basic_type.make
@@ -1698,19 +1698,19 @@ feature {NONE} -- Implementation
 			create l_basic_type.make
 			l_basic_type.set_type (({CHARACTER}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
-			Result.put (l_list, "CHARACTER")
+			Result.put (l_list, "CHARACTER_8")
 
 			create l_list.make (1)
 			create l_basic_type.make
 			l_basic_type.set_type (({REAL}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
-			Result.put (l_list, "REAL")
+			Result.put (l_list, "REAL_32")
 
 			create l_list.make (1)
 			create l_basic_type.make
 			l_basic_type.set_type (({DOUBLE}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
-			Result.put (l_list, "DOUBLE")
+			Result.put (l_list, "REAL_64")
 
 			create l_list.make (1)
 			create l_basic_type.make

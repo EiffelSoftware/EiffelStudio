@@ -1,30 +1,26 @@
 indexing
-	generator: "Eiffel Emitter 2.8b2"
-	external_name: "System.Single"
-	assembly: "mscorlib", "1.0.2411.0", "neutral", "b77a5c561934e089"
+	description: "Integer values"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	external_name: "System.Int32"
+	assembly: "mscorlib"
+	date: "$Date$"
+	revision: "$Revision$"
 
-frozen expanded external class
-	REAL
+frozen expanded class INTEGER_32 inherit
 
-inherit
-	REAL_REF
+	INTEGER_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({REAL_REF}),
-	to_reference: {REAL_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	to_double: {DOUBLE}
-
-feature -- Access
-
-	frozen min_value: REAL is -3.402823E+38
-
-	frozen epsilon: REAL is 1.401298E-45
-
-	frozen max_value: REAL is 3.402823E+38;
+	make_from_reference ({INTEGER_REF}),
+	to_reference: {INTEGER_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
+	to_real: {REAL},
+	to_double: {DOUBLE},
+	to_integer_64: {INTEGER_64}
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -38,5 +34,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class REAL
+end

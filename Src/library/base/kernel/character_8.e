@@ -1,26 +1,26 @@
 indexing
-	description: "Integer values"
+	description: "Characters, with comparison operations and an ASCII code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	external_name: "System.Int32"
+	external_name: "System.Char"
 	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class INTEGER inherit
+frozen expanded class
+	CHARACTER_8
 
-	INTEGER_REF
+inherit
+	CHARACTER_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({INTEGER_REF}),
-	to_reference: {INTEGER_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	to_real: {REAL},
-	to_double: {DOUBLE},
-	to_integer_64: {INTEGER_64}
+	make_from_reference ({CHARACTER_REF}),
+	to_reference: {CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY},
+	to_character_32: {WIDE_CHARACTER}
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -34,13 +34,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class INTEGER
-
-
-
+end

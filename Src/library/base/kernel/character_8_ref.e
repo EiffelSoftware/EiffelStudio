@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CHARACTER_REF inherit
+class CHARACTER_8_REF inherit
 
 	COMPARABLE
 		redefine
@@ -446,4 +446,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class CHARACTER_REF
+end

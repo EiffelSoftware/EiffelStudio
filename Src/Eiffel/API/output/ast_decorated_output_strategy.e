@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 		do
 			if not expr_type_visiting then
 				if l_as.is_once_string then
-					text_formatter_decorator.process_symbol_text (ti_once_keyword)
+					text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
 					text_formatter_decorator.put_space
 				end
 				text_formatter_decorator.put_string_item (l_as.string_value)

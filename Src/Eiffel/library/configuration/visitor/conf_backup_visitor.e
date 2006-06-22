@@ -90,8 +90,8 @@ feature -- Visit nodes
 		do
 			l_as := an_assembly.location.evaluated_path
 			if not l_as.is_empty then
-				l_new_as := an_assembly.name+backup_assembly_extension
-				create l_loc.make (l_new_as, an_assembly.target)
+				l_new_as := an_assembly.location.evaluated_file
+				create l_loc.make ("..\"+l_new_as, an_assembly.target)
 				an_assembly.set_location (l_loc)
 				create l_file.make_from_string (backup_directory)
 				l_file.set_file_name (l_new_as)

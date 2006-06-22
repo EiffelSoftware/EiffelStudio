@@ -1445,14 +1445,9 @@ feature -- Recompilation
 			l_file: KL_TEXT_INPUT_FILE
 			l_file_name: FILE_NAME
 		do
-				-- create new backup subdir and copy config file in there
+				-- create new backup subdir
 			if workbench.automatic_backup then
 				workbench.create_backup_directory
-				create l_file.make (lace.file_name)
-				create l_file_name.make_from_string (workbench.backup_subdirectory)
-				l_file_name.set_file_name ("config")
-				l_file_name.add_extension (config_extension)
-				l_file.copy_file (l_file_name)
 			end
 
 				-- Set ISE_DOTNET_FRAMEWORK environment variable			

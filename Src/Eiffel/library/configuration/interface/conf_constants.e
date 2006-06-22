@@ -89,6 +89,5 @@ feature -- Backup
 
 	backup_config_file: STRING is "original.ecf"
 	backup_adapted_config_file: STRING is "config.ecf"
-	backup_assembly_extension: STRING is ".dll"
 
 end

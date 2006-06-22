@@ -374,7 +374,7 @@ feature -- Access: file name
 			Result.append_character (l_separator)
 			Result.append ("$ISE_PLATFORM")
 			Result.append_character (l_separator)
-			Result.append ("bin")
+			Result.append ("lib")
 			Result.append_character (l_separator)
 			Result.append ("EiffelSoftware.Runtime.dll")
 		end

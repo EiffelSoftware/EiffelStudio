@@ -551,7 +551,9 @@ feature {EB_EDITOR_TOOL} -- Update
 			if open_backup then
 				fn := file_name.twin
 				create backup_file.make (file_name)
-				backup_file.delete
+				if backup_file.exists then
+					backup_file.delete
+				end
 				fn.keep_head (fn.count - 4)
 				create file_name.make_from_string (fn)
 				open_backup := False

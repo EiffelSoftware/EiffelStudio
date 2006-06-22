@@ -80,7 +80,7 @@ feature -- Basic Exportations
 			initialize (a_clr_version)
 			if not cr.is_initialized then
 				(create {EIFFEL_SERIALIZER}).serialize (
-					create {CACHE_INFO}.make (cr.absolute_info_path),
+					cr.new_cache_info (cr.absolute_info_path),
 					cr.absolute_info_path, False)
 			end
 			is_initialized := True

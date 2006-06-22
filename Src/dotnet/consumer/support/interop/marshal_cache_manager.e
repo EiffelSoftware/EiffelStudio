@@ -62,10 +62,6 @@ feature -- Basic Exportations
 			cr: CACHE_READER
 		do
 			create implementation.make_with_path (a_path)
-			create cr
-			if not cr.is_initialized then
-				(create {EIFFEL_SERIALIZER}).serialize (create {CACHE_INFO}.make (cr.absolute_info_path), cr.absolute_info_path, False)
-			end
 			internal_is_initialized := True
 		ensure
 			current_initialized: is_initialized

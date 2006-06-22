@@ -10,11 +10,24 @@ class
 
 inherit
 	SPLASH_DISPLAYER_I
+		undefine
+			default_create, copy
+		redefine
+			make_with_text
+		end
+
+	EV_APPLICATION
 
 create
 	make_with_text
 
 feature -- Access
+
+	make_with_text (t: STRING_GENERAL) is
+		do
+			default_create
+			Precursor {SPLASH_DISPLAYER_I} (t)
+		end
 
 	splash_pixmap: EV_PIXMAP is
 			-- background splash pixmaps.

@@ -73,7 +73,13 @@ feature -- Status change
 feature -- Status report
 
 	is_completing: BOOLEAN
-			-- Is completion currently being processed?	
+			-- Is completion currently being processed?
+
+	is_focus_back_needed: BOOLEAN is
+			-- Should focus be set back after code completion?
+		do
+			Result := True
+		end
 
 feature {NONE} -- Status report
 

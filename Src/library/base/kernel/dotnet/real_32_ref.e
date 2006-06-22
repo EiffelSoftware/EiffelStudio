@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REAL_REF inherit
+class REAL_32_REF inherit
 
 	NUMERIC
 		redefine
@@ -17,7 +17,7 @@ class REAL_REF inherit
 
 	COMPARABLE
 		redefine
-			out, is_equal
+			out, three_way_comparison, is_equal
 		end
 
 	HASHABLE
@@ -77,9 +77,20 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
+	three_way_comparison (other: REAL_REF): INTEGER is
+			-- If current object equal to `other', 0;
+			-- if smaller, -1; if greater, 1
+		do
+			if item < other.item then
+				Result := -1
+			elseif other.item < item then
+				Result := 1
+			end
+		end
+
 feature -- Element change
 
-	set_item (r: REAL) is
+	frozen set_item (r: REAL) is
 			-- Make `r' the value of `item'.
 		do
 			item := r
@@ -151,14 +162,22 @@ feature -- Conversion
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := c_truncated_to_integer (item)
+			if item >= 0.0 then
+				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
+			else
+				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
+			end
 		end
 
 	truncated_to_integer_64: INTEGER_64 is
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := c_truncated_to_integer_64 (item)
+			if item >= 0.0 then
+				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.floor (item))
+			else
+				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.ceiling (item))
+			end
 		end
 
 	to_double: DOUBLE is
@@ -170,7 +189,7 @@ feature -- Conversion
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := c_ceiling (item).truncated_to_integer
+			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -179,7 +198,7 @@ feature -- Conversion
 	floor: INTEGER is
 			-- Greatest integral value no greater than current object
 		do
-			Result := c_floor (item).truncated_to_integer
+			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -188,7 +207,7 @@ feature -- Conversion
 	rounded: INTEGER is
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor)
+			Result := sign * {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor ({MATH}.abs_real (item) + 0.5))
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
@@ -196,7 +215,7 @@ feature -- Conversion
 	ceiling_real_32: REAL is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := c_ceiling (item)
+			Result := {MATH}.ceiling (item)
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -205,7 +224,7 @@ feature -- Conversion
 	floor_real_32: REAL is
 			-- Greatest integral value no greater than current object
 		do
-			Result := c_floor (item)
+			Result := {MATH}.floor (item)
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -214,9 +233,9 @@ feature -- Conversion
 	rounded_real_32: REAL is
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor_real_32)
+			Result := sign * {MATH}.floor ({MATH}.abs_real (item) + 0.5)
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor)
+			definition: Result = sign * ((abs + 0.5).floor_real_32)
 		end
 
 feature -- Basic operations
@@ -283,7 +302,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of real value
 		do
-			Result := c_outr32 (item)
+			create Result.make_from_cil ({SYSTEM_CONVERT}.to_string_real (item))
 		end
 
 feature {NONE} -- Implementation
@@ -299,46 +318,6 @@ feature {NONE} -- Implementation
 		ensure
 			result_exists: Result /= Void
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
-		end
-
-	c_outr32 (r: REAL): STRING is
-			-- Printable representation of real value
-		external
-			"C | %"eif_out.h%""
-		end
-
-	c_truncated_to_integer (r: REAL): INTEGER is
-			-- Integer part of `r' (same sign, largest absolute
-			-- value no greater than `r''s)
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"((EIF_INTEGER) ($r))"
-		end
-
-	c_truncated_to_integer_64 (r: REAL): INTEGER_64 is
-			-- Integer part of `r' (same sign, largest absolute
-			-- value no greater than `r''s)
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"((EIF_INTEGER_64) ($r))"
-		end
-
-	c_ceiling (r: REAL): REAL is
-			-- Smallest integral value no smaller than `r'
-		external
-			"C signature (double): double use <math.h>"
-		alias
-			"ceil"
-		end
-
-	c_floor (r: REAL): REAL is
-			-- Greatest integral value no greater than `r'
-		external
-			"C signature (double): double use <math.h>"
-		alias
-			"floor"
 		end
 
 invariant
@@ -357,13 +336,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class REAL_REF
-
-
-
+end

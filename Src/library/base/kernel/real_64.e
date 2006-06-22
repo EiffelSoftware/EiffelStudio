@@ -1,12 +1,14 @@
 indexing
-	generator: "Eiffel Emitter 3.1rc1"
+	description: "Real values, double precision"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	external_name: "System.Double"
-	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
+	assembly: "mscorlib"
+	date: "$Date$"
+	revision: "$Revision$"
 
-frozen expanded external class
-	DOUBLE
+frozen expanded class REAL_64 inherit
 
-inherit
 	DOUBLE_REF
 
 create
@@ -17,14 +19,6 @@ convert
 	make_from_reference ({DOUBLE_REF}),
 	to_reference: {DOUBLE_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	truncated_to_real: {REAL}
-
-feature -- Access
-
-	frozen min_value: DOUBLE is -1.79769313486232E+308
-
-	frozen max_value: DOUBLE is 1.79769313486232E+308
-
-	frozen epsilon: DOUBLE is 4.94065645841247E-324;
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -38,5 +32,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DOUBLE
+end -- class REAL_64

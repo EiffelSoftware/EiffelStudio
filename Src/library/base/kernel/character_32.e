@@ -1,25 +1,25 @@
 indexing
-
-	description:
-		"Real values, double precision"
+	description: "Unicode characters, with comparison operations"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
+	assembly: "mscorlib"
+	external_name: "System.UInt32"
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class DOUBLE inherit
+frozen expanded class
+	CHARACTER_32
 
-	DOUBLE_REF
+inherit
+	WIDE_CHARACTER_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({DOUBLE_REF}),
-	to_reference: {DOUBLE_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
-	truncated_to_real: {REAL}
+	make_from_reference ({WIDE_CHARACTER_REF}),
+	to_reference: {WIDE_CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -33,13 +33,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class DOUBLE
-
-
-
+end

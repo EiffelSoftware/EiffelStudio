@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DOUBLE_REF inherit
+class REAL_64_REF inherit
 
 	NUMERIC
 		redefine
@@ -17,7 +17,7 @@ class DOUBLE_REF inherit
 
 	COMPARABLE
 		redefine
-			out, three_way_comparison, is_equal
+			out, is_equal
 		end
 
 	HASHABLE
@@ -77,20 +77,9 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: DOUBLE_REF): INTEGER is
-			-- If current object equal to `other', 0;
-			-- if smaller, -1; if greater, 1
-		do
-			if item < other.item then
-				Result := -1
-			elseif other.item < item then
-				Result := 1
-			end
-		end
-
 feature -- Element change
 
-	frozen set_item (d: DOUBLE) is
+	set_item (d: DOUBLE) is
 			-- Make `d' the `item' value.
 		do
 			item := d
@@ -162,35 +151,27 @@ feature -- Conversion
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			if item >= 0.0 then
-				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
-			else
-				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
-			end
+			Result := c_truncated_to_integer (item)
 		end
 
 	truncated_to_integer_64: INTEGER_64 is
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			if item >= 0.0 then
-				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.floor (item))
-			else
-				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.ceiling (item))
-			end
+			Result := c_truncated_to_integer_64 (item)
 		end
 
 	truncated_to_real: REAL is
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := {SYSTEM_CONVERT}.to_single_double (item)
+			Result := c_truncated_to_real (item)
 		end
 
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
+			Result := c_ceiling (item).truncated_to_integer
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -199,7 +180,7 @@ feature -- Conversion
 	floor: INTEGER is
 			-- Greatest integral value no greater than current object
 		do
-			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
+			Result := c_floor (item).truncated_to_integer
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -208,7 +189,7 @@ feature -- Conversion
 	rounded: INTEGER is
 			-- Rounded integral value
 		do
-			Result := sign * {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor ({MATH}.abs_double (item) + 0.5))
+			Result := sign * (c_floor (abs_ref.item + 0.5).truncated_to_integer)
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
@@ -216,7 +197,7 @@ feature -- Conversion
 	ceiling_real_64: DOUBLE is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := {MATH}.ceiling (item)
+			Result := c_ceiling (item)
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -225,7 +206,7 @@ feature -- Conversion
 	floor_real_64: DOUBLE is
 			-- Greatest integral value no greater than current object
 		do
-			Result := {MATH}.floor (item)
+			Result := c_floor (item)
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -234,7 +215,7 @@ feature -- Conversion
 	rounded_real_64: DOUBLE is
 			-- Rounded integral value
 		do
-			Result := sign * {MATH}.floor ({MATH}.abs_double (item) + 0.5)
+			Result := sign * c_floor (abs_ref.item + 0.5)
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor_real_64)
 		end
@@ -303,7 +284,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of double value
 		do
-			create Result.make_from_cil ({SYSTEM_CONVERT}.to_string_double (item))
+			Result := c_outr64 (item)
 		end
 
 feature {NONE} -- Implementation
@@ -319,6 +300,55 @@ feature {NONE} -- Implementation
 		ensure
 			result_exists: Result /= Void
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
+		end
+
+	c_outr64 (d: DOUBLE): STRING is
+			-- Printable representation of double value
+		external
+			"C | %"eif_out.h%""
+		end
+
+	c_truncated_to_integer (d: DOUBLE): INTEGER is
+			-- Integer part of `d' (same sign, largest absolute
+			-- value no greater than `d''s)
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_INTEGER) ($d))"
+		end
+
+	c_truncated_to_integer_64 (d: DOUBLE): INTEGER_64 is
+			-- Integer part of `d' (same sign, largest absolute
+			-- value no greater than `d''s)
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_INTEGER_64) ($d))"
+		end
+
+	c_truncated_to_real (d: DOUBLE): REAL is
+			-- Real part of `d' (same sign, largest absolute
+			-- value no greater than `d''s)
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((EIF_REAL) ($d))"
+		end
+
+	c_ceiling (d: DOUBLE): DOUBLE is
+			-- Smallest integral value no smaller than `d'
+		external
+			"C signature (double): double use <math.h>"
+		alias
+			"ceil"
+		end
+
+	c_floor (d: DOUBLE): DOUBLE is
+			-- Greatest integral value no greater than `d'
+		external
+			"C signature (double): double use <math.h>"
+		alias
+			"floor"
 		end
 
 invariant
@@ -337,9 +367,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class DOUBLE_REF
-
-
-
+end

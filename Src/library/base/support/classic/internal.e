@@ -155,7 +155,7 @@ feature -- Access
 
 	Reference_type: INTEGER is 1
 
-	Character_type: INTEGER is 2
+	character_8_type, Character_type: INTEGER is 2
 
 	Boolean_type: INTEGER is 3
 
@@ -175,7 +175,7 @@ feature -- Access
 
 	Integer_64_type: INTEGER is 11
 
-	Wide_character_type: INTEGER is 12
+	character_32_type, Wide_character_type: INTEGER is 12
 
 	natural_8_type: INTEGER is 13
 

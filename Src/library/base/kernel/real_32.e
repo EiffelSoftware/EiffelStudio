@@ -1,14 +1,13 @@
 indexing
-
-	description:
-		"Real values, single precision"
+	description: "Real values, single precision"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
+	external_name: "System.Single"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class REAL inherit
+frozen expanded class REAL_32 inherit
 
 	REAL_REF
 
@@ -33,13 +32,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class REAL
-
-
-
+end

@@ -23,7 +23,8 @@ feature {NONE} -- Implementation
 			create l_int
 			create Result.make (10)
 			Result.put ({INTERNAL}.boolean_type, l_int.dynamic_type_from_string ("BOOLEAN"))
-			Result.put ({INTERNAL}.character_type, l_int.dynamic_type_from_string ("CHARACTER"))
+			Result.put ({INTERNAL}.character_8_type, l_int.dynamic_type_from_string ("CHARACTER_8"))
+			Result.put ({INTERNAL}.character_32_type, l_int.dynamic_type_from_string ("CHARACTER_32"))
 
 			Result.put ({INTERNAL}.natural_8_type, l_int.dynamic_type_from_string ("NATURAL_8"))
 			Result.put ({INTERNAL}.natural_16_type, l_int.dynamic_type_from_string ("NATURAL_16"))
@@ -32,11 +33,11 @@ feature {NONE} -- Implementation
 
 			Result.put ({INTERNAL}.integer_8_type, l_int.dynamic_type_from_string ("INTEGER_8"))
 			Result.put ({INTERNAL}.integer_16_type, l_int.dynamic_type_from_string ("INTEGER_16"))
-			Result.put ({INTERNAL}.integer_32_type, l_int.dynamic_type_from_string ("INTEGER"))
+			Result.put ({INTERNAL}.integer_32_type, l_int.dynamic_type_from_string ("INTEGER_32"))
 			Result.put ({INTERNAL}.integer_64_type, l_int.dynamic_type_from_string ("INTEGER_64"))
 
-			Result.put ({INTERNAL}.real_32_type, l_int.dynamic_type_from_string ("REAL"))
-			Result.put ({INTERNAL}.real_64_type, l_int.dynamic_type_from_string ("DOUBLE"))
+			Result.put ({INTERNAL}.real_32_type, l_int.dynamic_type_from_string ("REAL_32"))
+			Result.put ({INTERNAL}.real_64_type, l_int.dynamic_type_from_string ("REAL_64"))
 
 			Result.put ({INTERNAL}.pointer_type, l_int.dynamic_type_from_string ("POINTER"))
 		ensure

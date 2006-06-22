@@ -15,10 +15,10 @@
 		<setting name="multithreaded" value="True"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
-			<condition>
-				<platform value="windows"/>
-			</condition>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+			<option>
+				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
 		</library>
 		<cluster name="src" location=".\src\">
 			<cluster name="unix" location="$|spec\unix\">

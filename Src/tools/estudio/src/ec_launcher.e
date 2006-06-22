@@ -60,12 +60,6 @@ feature -- Launching
 		do
 			if command_line.argument_count > 0 then
 					--| First we check if there is no specific `estudio' parameters
-				if
-					command_line.argument (1 + args_ec_offset).is_equal ("/s")
-				then
-					display_splash;
-					(create {EXCEPTIONS}).die (0)
-				end
 
 				if
 					command_line.argument (1 + args_ec_offset).is_equal ("/?")
@@ -84,11 +78,11 @@ feature -- Launching
 				end
 			end
 
-			display_splash
 
 			get_environment
 			check_environment
 			if is_environment_valid then
+				display_splash
 
 					--| Compute command line, args, and working directory
 				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
@@ -213,15 +207,25 @@ feature -- Splash
 
 	display_splash is
 			-- Display splash window (if available)
+		require
+			is_environment_valid: is_environment_valid
 		local
-			spl: SPLASH_DISPLAYER
+			spl: SPLASH_DISPLAYER_I
 			s: STRING_32
+			fn: FILE_NAME
 		do
 			create s.make_empty
 			s.append_code (169)
 			s.append_string_general (" 2006  Eiffel Software ")
 
-			create spl.make_with_text (s)
+			create {EV_SPLASH_DISPLAYER} spl.make_with_text (s)
+			create fn.make_from_string (ise_eiffel)
+			fn.extend_from_array (<<"studio", "bitmaps", "png">>)
+			fn.set_file_name ("splash.png")
+			if file_exists (fn) then
+				spl.set_splash_pixmap_filename (fn)
+			end
+
 			debug ("launcher")
 				spl.set_debug_text ("This is an experimental version")
 			end

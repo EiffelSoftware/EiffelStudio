@@ -16,7 +16,7 @@ inherit
 	SHARED_INCLUDE
 
 	SHARED_WORKBENCH
-	
+
 	SHARED_HASH_CODE
 
 feature -- Access
@@ -317,7 +317,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_32_name_id)
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
-			Result.put (to_real_32_type, {PREDEFINED_NAMES}.truncated_to_real_name_id)			
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.truncated_to_real_name_id)
 			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
@@ -342,7 +342,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (lower_type, {PREDEFINED_NAMES}.lower_name_id)
 			Result.put (lower_type, {PREDEFINED_NAMES}.as_lower_name_id)
 			Result.put (upper_type, {PREDEFINED_NAMES}.upper_name_id)
-			Result.put (upper_type, {PREDEFINED_NAMES}.as_upper_name_id)			
+			Result.put (upper_type, {PREDEFINED_NAMES}.as_upper_name_id)
 			Result.put (is_digit_type, {PREDEFINED_NAMES}.is_digit_name_id)
 			Result.put (is_space_type, {PREDEFINED_NAMES}.is_space_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
@@ -698,9 +698,9 @@ feature {NONE} -- C code generation
 				buffer.put_string (" RTMS_EX(%"BOOLEAN%", 7)")
 			when character_type then
 				if is_wide then
-					buffer.put_string (" RTMS_EX(%"WIDE_CHARACTER%", 14)")
+					buffer.put_string (" RTMS_EX(%"CHARACTER_32%", 12)")
 				else
-					buffer.put_string (" RTMS_EX(%"CHARACTER%", 9)")
+					buffer.put_string (" RTMS_EX(%"CHARACTER_8%", 11)")
 				end
 			when integer_type then
 				if is_signed_integer then
@@ -709,7 +709,7 @@ feature {NONE} -- C code generation
 						integer_size
 					when 8 then buffer.put_string ("_8%", 9)")
 					when 16 then buffer.put_string ("_16%", 10)")
-					when 32 then buffer.put_string ("%", 7)")
+					when 32 then buffer.put_string ("_32%", 10)")
 					when 64 then buffer.put_string ("_64%", 10)")
 					end
 				else
@@ -725,9 +725,9 @@ feature {NONE} -- C code generation
 			when pointer_type then
 				buffer.put_string (" RTMS_EX(%"POINTER%", 7)")
 			when real_32_type then
-				buffer.put_string (" RTMS_EX(%"REAL%", 4)")
+				buffer.put_string (" RTMS_EX(%"REAL_32%", 7)")
 			when real_64_type then
-				buffer.put_string (" RTMS_EX(%"DOUBLE%", 6)")
+				buffer.put_string (" RTMS_EX(%"REAL_64%", 7)")
 			end
 		end
 
@@ -756,7 +756,7 @@ feature {NONE} -- C code generation
 				inspect integer_size
 				when 8 then buffer.put_string ("int8 (")
 				when 16 then buffer.put_string ("int16 (")
-				when 32 then buffer.put_string ("int32 (")					
+				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
@@ -764,7 +764,7 @@ feature {NONE} -- C code generation
 			when real_64_type then
 				buffer.put_string ("eif_max_real64 (")
 			end
-			
+
 			target.print_register
 			buffer.put_character (',')
 			parameter.print_register
@@ -799,7 +799,7 @@ feature {NONE} -- C code generation
 				inspect integer_size
 				when 8 then buffer.put_string ("int8 (")
 				when 16 then buffer.put_string ("int16 (")
-				when 32 then buffer.put_string ("int32 (")					
+				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
@@ -807,7 +807,7 @@ feature {NONE} -- C code generation
 			when real_64_type then
 				buffer.put_string ("eif_min_real64 (")
 			end
-			
+
 			target.print_register
 			buffer.put_character (',')
 			parameter.print_register
@@ -842,7 +842,7 @@ feature {NONE} -- C code generation
 				inspect integer_size
 				when 8 then buffer.put_string ("int8 (")
 				when 16 then buffer.put_string ("int16 (")
-				when 32 then buffer.put_string ("int32 (")					
+				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
@@ -850,7 +850,7 @@ feature {NONE} -- C code generation
 			when real_64_type then
 				buffer.put_string ("eif_twc_real64 (")
 			end
-			
+
 			target.print_register
 			buffer.put_character (',')
 			parameter.print_register
@@ -878,7 +878,7 @@ feature {NONE} -- C code generation
 				inspect integer_size
 				when 8 then buffer.put_string ("int8 (")
 				when 16 then buffer.put_string ("int16 (")
-				when 32 then buffer.put_string ("int32 (")					
+				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
 			when real_32_type then
@@ -886,7 +886,7 @@ feature {NONE} -- C code generation
 			when real_64_type then
 				buffer.put_string ("eif_abs_real64 (")
 			end
-			
+
 			target.print_register
 			buffer.put_character (')')
 
@@ -923,11 +923,11 @@ feature {NONE} -- C code generation
 			when memory_free then
 				buffer.put_string ("free(")
 			end
-			
+
 			if f_type /= memory_alloc and f_type /= memory_calloc then
 				target.print_register
 			end
-			
+
 			inspect
 				f_type
 			when memory_free, memory_alloc, memory_calloc then
@@ -1137,7 +1137,7 @@ feature {NONE} -- Type information
 			when Pointer_code then Result := pointer_type
 			when Real_32_code then Result := real_32_type
 			when Real_64_code then Result := real_64_type
-			
+
 			else
 				t ?= b
 				if t /= Void then

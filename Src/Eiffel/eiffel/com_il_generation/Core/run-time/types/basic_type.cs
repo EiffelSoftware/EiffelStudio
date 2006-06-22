@@ -77,14 +77,15 @@ feature {NONE} -- Implementation
 				internal_basic_type_names.Add (typeof(System.SByte).TypeHandle, "INTEGER_8");
 				internal_basic_type_names.Add (typeof(System.Int16).TypeHandle, "INTEGER_16");
 				internal_basic_type_names.Add (typeof(System.UInt16).TypeHandle, "NATURAL_16");
-				internal_basic_type_names.Add (typeof(System.Int32).TypeHandle, "INTEGER");
+				internal_basic_type_names.Add (typeof(System.Int32).TypeHandle, "INTEGER_32");
 				internal_basic_type_names.Add (typeof(System.UInt32).TypeHandle, "NATURAL_32");
 				internal_basic_type_names.Add (typeof(System.Int64).TypeHandle, "INTEGER_64");
 				internal_basic_type_names.Add (typeof(System.UInt64).TypeHandle, "NATURAL_64");
-				internal_basic_type_names.Add (typeof(System.Char).TypeHandle, "CHARACTER");
+				internal_basic_type_names.Add (typeof(System.Char).TypeHandle, "CHARACTER_8");
+				internal_basic_type_names.Add (typeof(RT_CHARACTER_32_TYPE).TypeHandle, "CHARACTER_32");
 				internal_basic_type_names.Add (typeof(System.Boolean).TypeHandle, "BOOLEAN");
-				internal_basic_type_names.Add (typeof(System.Double).TypeHandle, "DOUBLE");
-				internal_basic_type_names.Add (typeof(System.Single).TypeHandle, "REAL");
+				internal_basic_type_names.Add (typeof(System.Double).TypeHandle, "REAL_64");
+				internal_basic_type_names.Add (typeof(System.Single).TypeHandle, "REAL_32");
 				internal_basic_type_names.Add (typeof(System.IntPtr).TypeHandle, "POINTER");
 			}
 			return internal_basic_type_names;

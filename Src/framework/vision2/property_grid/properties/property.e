@@ -145,7 +145,7 @@ feature {PROPERTY_GRID, TYPED_PROPERTY} -- Agents
 			end
 		end
 
-feature {NONE} -- Actions
+feature -- Actions
 
 	activate is
 			-- Activate.
@@ -159,6 +159,8 @@ feature {NONE} -- Actions
 				end
 			end
 		end
+
+feature {NONE} -- Actions
 
 	show_inheritance_menu is
 			-- Show menu that allows to control inheritance.

@@ -481,16 +481,22 @@ feature {NONE} -- Implementation
 										l_attribute := sub_node.attribute_by_name (once "Alt")
 										if l_attribute /= Void then
 											att_pref_value.append (l_attribute.value.as_lower + "+")
+										else
+											att_pref_value.append ("false+")
 										end
 
 										l_attribute := sub_node.attribute_by_name (once "Ctrl")
 										if l_attribute /= Void then
 											att_pref_value.append (l_attribute.value.as_lower + "+")
+										else
+											att_pref_value.append ("false+")
 										end
 
 										l_attribute := sub_node.attribute_by_name (once "Shift")
 										if l_attribute /= Void then
 											att_pref_value.append (l_attribute.value.as_lower  + "+")
+										else
+											att_pref_value.append ("false+")
 										end
 									else
 										att_pref_value := Void

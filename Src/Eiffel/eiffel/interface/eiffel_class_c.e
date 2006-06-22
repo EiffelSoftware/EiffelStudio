@@ -149,6 +149,10 @@ feature -- Action
 			l_dir_name: DIRECTORY_NAME
 			vd21: VD21
 			l_options: CONF_OPTION
+			l_dummy_file: RAW_FILE
+			l_dummy_file_name: FILE_NAME
+			l_uuid: STRING
+			l_system: CONF_SYSTEM
 		do
 			create file.make (file_name)
 			file.open_read
@@ -191,11 +195,25 @@ feature -- Action
 				if save_copy and Workbench.automatic_backup then
 						-- check if the directory for the system has been created
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
-					l_dir_name.extend (lace_class.cluster.target.system.uuid.out)
+
+						-- if this is the system of the application target, create an empty file with the uuid to make it easier to find the application configuration file.
+					l_system := lace_class.cluster.target.system
+					l_uuid := l_system.uuid.out
+					if l_system = l_system.application_target.system then
+						create l_dummy_file_name.make_from_string (workbench.backup_subdirectory)
+						l_dummy_file_name.set_file_name (l_uuid+".txt")
+						create l_dummy_file.make (l_dummy_file_name)
+						if not l_dummy_file.exists and then l_dummy_file.is_creatable then
+							l_dummy_file.create_read_write
+							l_dummy_file.close
+						end
+					end
+
+					l_dir_name.extend (l_uuid)
 					create l_dir.make (l_dir_name)
 					if not l_dir.exists then
 						l_dir.create_directory
-						adapt_and_copy_configuration (lace_class.cluster.target.system, l_dir_name)
+						adapt_and_copy_configuration (l_system, workbench.backup_subdirectory)
 					end
 
 						-- copy class
@@ -1812,6 +1830,7 @@ feature {NONE} -- Backup implementation
 		do
 				-- copy original configuration file
 			create l_file_name.make_from_string (a_location)
+			l_file_name.extend (a_system.uuid.out)
 			l_file_name.set_file_name (backup_config_file)
 			file_system.copy_file (a_system.file_name, l_file_name)
 
@@ -1825,6 +1844,7 @@ feature {NONE} -- Backup implementation
 				l_vis.set_backup_directory (create {DIRECTORY_NAME}.make_from_string (a_location))
 				l_system.process (l_vis)
 				create l_file_name.make_from_string (a_location)
+				l_file_name.extend (a_system.uuid.out)
 				l_file_name.set_file_name (backup_adapted_config_file)
 				l_system.set_file_name (l_file_name)
 				l_system.store

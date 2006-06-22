@@ -17,10 +17,66 @@ create
 feature
 
 	show is
+		local
+			sc: WEL_SCREEN_DC
+			bitmap: WEL_BITMAP
+			rect: WEL_RECT
+			x,y,w,h: INTEGER
+			c: WEL_COLOR_REF
+			f: WEL_FONT
+			wlf: WEL_LOG_FONT
 		do
-			--| no splash on unix
+			create bitmap.make_by_id (1024)
+			if bitmap.exists then
+				create sc
+				sc.get
+				x := (sc.width - bitmap.width) // 2
+				y := (sc.height - bitmap.height) // 2
+				w := bitmap.width
+				h := bitmap.height
+				sc.draw_bitmap (bitmap,x, y ,w, h)
+				sc.set_background_transparent
+
+				if text /= Void then
+					f := (create {WEL_SHARED_FONTS}).Gui_font
+
+					create wlf.make_by_font (f)
+					wlf.set_weight (600)
+					wlf.set_height (12)
+					wlf.set_stroke_output_precision
+					wlf.set_stroke_clipping_precision
+					wlf.set_proof_quality
+					wlf.set_decorative_family
+					f.set_indirect (wlf)
+					sc.select_font (f)
+
+					debug ("launcher")
+						if debug_text /= Void then
+							wlf.set_height (20)
+							wlf.set_weight (600)
+							f.set_indirect (wlf)
+							sc.select_font (f)
+
+							create rect.make (x + 1, y + 1, x + w - 2, y + f.height + 2)
+							create c.make_rgb (255, 0, 0)
+							sc.set_text_color (c)
+							sc.draw_text (debug_text, rect, {WEL_DT_CONSTANTS}.Dt_center)
+
+							wlf.set_height (12)
+							f.set_indirect (wlf)
+							sc.select_font (f)
+						end
+					end
+
+					create rect.make (x + 3, y + h - f.height - 4, x + w - 6, y + h - 2)
+					create c.make_rgb (255, 255, 255)
+					sc.set_text_color (c)
+
+					sc.draw_text (text, rect, {WEL_DT_CONSTANTS}.Dt_right)
+				end
+			end
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

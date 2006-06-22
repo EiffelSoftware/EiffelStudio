@@ -948,8 +948,8 @@ feature -- Title part
 	t_Diagram_disable_high_quality: STRING is	"Disable High Quality"
 	t_Diagram_enable_high_quality: STRING is	"Enable High Quality"
 
-	t_first_match_reached: STRING is	"The first match touched."
-	t_bottom_reached: STRING is 	"Bottom touched."
+	t_first_match_reached: STRING is	"Initial match reached."
+	t_bottom_reached: STRING is 	"Bottom reached."
 
 feature -- Description texts
 

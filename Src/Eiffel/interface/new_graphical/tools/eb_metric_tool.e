@@ -1185,7 +1185,7 @@ feature -- Displayed messages in column list form
 					check file_manager.metric_file.exists end
 					file_manager.store
 					file_manager.measure_notify_all_but (Current)
-					row.set_pixmap (Pixmaps.Icon_green_tick)
+					row.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 					row.put_i_th (fix_decimals_and_percentage (new_result, a_metric.percentage), 5)
 				end
 				progress_dialog.hide

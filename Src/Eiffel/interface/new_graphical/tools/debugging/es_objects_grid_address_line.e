@@ -155,7 +155,7 @@ feature -- Graphical changes
 				set_value (object_value)
 				set_type (object_type_representation)
 				set_address (object_address)
-				set_pixmap (Pixmaps.Icon_object_symbol)
+				set_pixmap (pixmaps.icon_pixmaps.debugger_object_eiffel_icon)
 				row.ensure_expandable
 				expand_actions.extend (agent on_row_expand)
 				collapse_actions.extend (agent on_row_collapse)

@@ -59,7 +59,7 @@ feature -- Access
 	item_pixmap: EV_PIXMAP is
 			-- Pixmap associated to current compiler item
 		do
-			Result := pixmaps.icon_other_feature
+			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
 		end
 
 feature {NONE} -- Implementation

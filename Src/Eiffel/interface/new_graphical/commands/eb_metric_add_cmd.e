@@ -96,7 +96,7 @@ feature -- Action
 			tool.file_manager.store
 			tool.file_manager.measure_notify_all_but (tool)
 			row.put_i_th (tool.fix_decimals_and_percentage (tool.metric_result, a_metric.percentage), 5)
-			row.set_pixmap (Pixmaps.Icon_green_tick)
+			row.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 			tool.multi_column_list.extend (row)
 			tool.resize_column_list_to_content (tool.multi_column_list)
 		ensure

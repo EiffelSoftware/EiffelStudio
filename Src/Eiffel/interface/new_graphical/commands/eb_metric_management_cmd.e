@@ -39,7 +39,7 @@ feature -- Initialization
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_select_metrics
+			Result := pixmaps.icon_pixmaps.tool_metric_icon
 		end
 
 	tooltip: STRING is

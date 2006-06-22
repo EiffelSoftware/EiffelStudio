@@ -485,7 +485,7 @@ feature -- Graphical changes
 							set_expression_info (typ)
 							set_expression_result_address (add)
 							set_expression_result (res)
-							set_expression_pixmap (Pixmaps.Icon_green_tick)
+							set_expression_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
 						end
 					end
 					set_context (expression.context)

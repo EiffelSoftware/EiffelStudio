@@ -440,7 +440,7 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
-			p := Pixmaps.icon_edited
+			p := pixmaps.icon_pixmaps.view_editor_icon
 			edition_icon.set_background_color (debugger_cell.background_color)
 			edition_icon.clear
 			edition_icon.draw_pixmap (0, 0, p)
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
-			p := Pixmaps.icon_not_edited
+			p := pixmaps.icon_pixmaps.view_unmodified_icon
 			edition_icon.set_background_color (debugger_cell.background_color)
 			edition_icon.clear
 			edition_icon.draw_pixmap (0, 0, p)

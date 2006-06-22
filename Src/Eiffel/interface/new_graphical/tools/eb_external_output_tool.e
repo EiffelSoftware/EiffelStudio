@@ -507,7 +507,7 @@ feature{NONE} -- Actions
 				eb := corresponding_external_command
 				if eb /= Void then
 					edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
-					edit_cmd_detail_btn.set_pixmap (icon_edited)
+					edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.view_editor_icon)
 				else
 					edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
 					edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)

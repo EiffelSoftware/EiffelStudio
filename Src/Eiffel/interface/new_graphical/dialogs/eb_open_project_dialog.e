@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 
 				--| Action buttons box
 			ok_button.select_actions.extend (agent on_ok)
+			ok_button.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			Layout_constants.set_default_size_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
 			Layout_constants.set_default_size_for_button (cancel_button)
@@ -70,6 +71,8 @@ feature {NONE} -- Initialization
 			dialog.set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(270))
 				--| Ensure `open_project' has focu when opened.
 			dialog.show_actions.extend (agent open_project.set_focus)
+
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 		ensure
 			parent_window_set: parent_window = a_parent
 		end

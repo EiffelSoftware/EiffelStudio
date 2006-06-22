@@ -674,14 +674,14 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (Immediate_value, Error_message_value)
 
-			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
-			Result.put (Pixmaps.Icon_void_object, Void_value)
-			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
-			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
-			Result.put (Pixmaps.Icon_object_symbol, Special_value)
-			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
-			Result.put (Pixmaps.Icon_static_external_symbol, Static_external_reference_value)
-			Result.put (Pixmaps.Icon_static_object_symbol, Static_reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_immediate_icon, Immediate_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_void_icon, Void_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, Reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_expanded_icon, Expanded_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, Special_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_icon, External_reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, Static_external_reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, Static_reference_value)
 			Result.put (pixmaps.mini_pixmaps.debugger_error_icon, Exception_message_value)
 			Result.put (pixmaps.mini_pixmaps.debugger_error_icon, Error_message_value)
 		end

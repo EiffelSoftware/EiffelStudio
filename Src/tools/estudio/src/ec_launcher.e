@@ -89,6 +89,7 @@ feature -- Launching
 			check_environment
 			if is_environment_valid then
 				display_splash
+				;(create {EXCEPTIONS}).die(0)
 
 					--| Compute command line, args, and working directory
 				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
@@ -219,23 +220,29 @@ feature -- Splash
 			spl: SPLASH_DISPLAYER_I
 			s: STRING_32
 			fn: FILE_NAME
+			retried: BOOLEAN
 		do
-			create s.make_empty
-			s.append_code (169)
-			s.append_string_general (" 2006  Eiffel Software ")
+			if not retried then
+				create s.make_empty
+				s.append_code (169)
+				s.append_string_general (" 2006  Eiffel Software ")
 
-			create {EV_SPLASH_DISPLAYER} spl.make_with_text (s)
-			create fn.make_from_string (ise_eiffel)
-			fn.extend_from_array (<<"studio", "bitmaps", "png">>)
-			fn.set_file_name ("splash.png")
-			if file_exists (fn) then
-				spl.set_splash_pixmap_filename (fn)
-			end
+				create {EV_SPLASH_DISPLAYER} spl.make_with_text (s)
+				create fn.make_from_string (ise_eiffel)
+				fn.extend_from_array (<<"studio", "bitmaps", "png">>)
+				fn.set_file_name ("splash.png")
+				if file_exists (fn) then
+					spl.set_splash_pixmap_filename (fn)
+				end
 
-			debug ("launcher")
-				spl.set_debug_text ("This is an experimental version")
+				debug ("launcher")
+					spl.set_debug_text ("This is an experimental version")
+				end
+				spl.show
 			end
-			spl.show
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Properties

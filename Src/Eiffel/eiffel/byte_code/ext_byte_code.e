@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXT_BYTE_CODE 
+class EXT_BYTE_CODE
 
 inherit
 	STD_BYTE_CODE
@@ -13,7 +13,7 @@ inherit
 			argument_names as std_argument_names,
 			argument_types as std_argument_types
 		redefine
-			generate, generate_compound,
+			generate, generate_compound, analyze,
 			is_external, pre_inlined_code, inlined_byte_code
 		end
 
@@ -41,7 +41,7 @@ feature -- Access
 		ensure
 			external_name_not_void: Result /= Void
 		end
-		
+
 	external_name_id: INTEGER
 			-- Name ID of external.
 
@@ -74,7 +74,7 @@ feature -- Access
 			end
 		ensure
 			argument_types_not_void: Result /= Void
-		end			
+		end
 
 	argument_names: like std_argument_names is
 			-- Type of arguments, not including Current.
@@ -98,6 +98,16 @@ feature -- Status report
 			-- Is the current byte code a byte code for external
 			-- features ?
 
+feature -- Analyzis
+
+	analyze is
+			-- Analyze external code
+		do
+			if not system.il_generation then
+				Precursor {STD_BYTE_CODE}
+			end
+		end
+
 feature -- C code generation
 
 	generate is
@@ -112,7 +122,7 @@ feature -- C code generation
 			if not result_type.is_void then
 				Context.mark_result_used
 			end
-			
+
 				-- Initialize protection if needed.
 			compute_hector_variables
 
@@ -158,7 +168,7 @@ feature -- C code generation
 			buf.put_new_line
 			context.inherited_assertion.wipe_out
 		end
-		
+
 	generate_compound is
 			-- Byte code generation
 		local
@@ -192,23 +202,23 @@ feature -- C code generation
 				buf.put_string ("EIF_ENTER_C;")
 				buf.put_new_line
 			end
-			
+
 				-- Generate call to external.
 			l_ext.generate_body (Current, l_result)
-			
+
 			if l_ext.is_blocking_call then
 				buf.put_string ("EIF_EXIT_C;")
 				buf.put_new_line
 				buf.put_string ("RTGC;")
 				buf.put_new_line
 			end
-			
+
 			if l_need_protection then
 				release_hector_variables
 				context.set_is_argument_protected (False)
 			end
 		end
-		
+
 feature -- Inlining
 
 	pre_inlined_code: like Current is
@@ -226,7 +236,7 @@ feature {NONE} -- Implementation
 
 	has_hector_variables: BOOLEAN
 			-- Does current external calls needs to protect some of its arguments?
-			
+
 	compute_hector_variables is
 			-- Set `has_hector_variables' to True if some arguments are references?
 		local
@@ -251,7 +261,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	generate_hector_variables is
 			-- Generate protection of arguments that needs one.
 		require
@@ -290,9 +300,9 @@ feature {NONE} -- Implementation
 				l_buf.put_new_line
 				i := i + 1
 			end
-			
+
 		end
-		
+
 	release_hector_variables is
 			-- Release protection of arguments.
 		local
@@ -307,7 +317,7 @@ feature {NONE} -- Implementation
 			l_buf.put_character ('}')
 			l_buf.put_new_line
 		end
-		
+
 	number_of_hector_variables: INTEGER is
 			-- Number of arguments to protect?
 		local

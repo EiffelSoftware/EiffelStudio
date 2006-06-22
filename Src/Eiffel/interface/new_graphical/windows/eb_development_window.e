@@ -2665,7 +2665,6 @@ feature -- Window management
 				a_window_data.save_window_state (window.is_minimized, window.is_maximized)
 				a_window_data.save_position (window.x_position, window.y_position)
 			end
-			a_window_data.save_show_search_options (search_tool.options_shown)
 		end
 
 
@@ -2850,7 +2849,6 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				development_window_data.save_size (window.width, window.height)
 				development_window_data.save_window_state (window.is_minimized, window.is_maximized)
 				development_window_data.save_position (window.x_position, window.y_position)
-				development_window_data.save_show_search_options (search_tool.options_shown)
 				hide
 
 					-- Commit saves

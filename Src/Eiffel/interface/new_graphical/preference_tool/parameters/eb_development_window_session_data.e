@@ -29,7 +29,6 @@ feature {NONE} -- Creation
 			save_left_panel_layout (a_window_data.left_panel_layout)
 			save_left_panel_width (a_window_data.left_panel_width)
 			save_right_panel_layout (a_window_data.right_panel_layout)
-			save_show_search_options (a_window_data.show_search_options)
 			general_toolbar_layout := a_window_data.general_toolbar_layout.twin
 			refactoring_toolbar_layout := a_window_data.refactoring_toolbar_layout.twin
 			show_general_toolbar := a_window_data.show_general_toolbar
@@ -114,9 +113,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Access
 	show_refactoring_toolbar: BOOLEAN
 			-- Show the refactoring toolbar.
 
-	show_search_options: BOOLEAN
-			-- Are search tool options displayed ?
-
 	context_unified_stone: BOOLEAN
 			-- Is the context tool linked?
 
@@ -194,12 +190,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			-- Save the layout of the left panel of the window.
 		do
 			right_panel_layout := a_layout.twin
-		end
-
-	save_show_search_options (a_show: BOOLEAN) is
-			--
-		do
-			show_search_options := a_show
 		end
 
 feature -- Basic operations

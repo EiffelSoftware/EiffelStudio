@@ -171,12 +171,12 @@ feature -- Basic operations
 				i > 9
 			loop
 				if commands @ i = Current then
-					preferences.misc_data.i_th_external_preference (i).set_value ((commands @ i).resource)
+					preferences.external_command_data.i_th_external_preference (i).set_value ((commands @ i).resource)
 --				else
 --						-- We use an empty string as value, because this is how the
 --						-- preferences are initialized. That way, the entry is actually
 --						-- removed from the preferences.
---					preferences.misc_data.i_th_external_preference (i).set_value ("")
+--					preferences.external_command_data.i_th_external_preference (i).set_value ("")
 				end
 				i := i + 1
 			end

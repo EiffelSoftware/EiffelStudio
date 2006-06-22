@@ -137,13 +137,6 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			Result := show_refactoring_toolbar_preference.value
 		end
 
-
-	show_search_options: BOOLEAN is
-			-- Are search tool options displayed ?
-		do
-			Result := show_search_options_preference.value
-		end
-
 	general_toolbar_layout: ARRAY [STRING] is
 			-- Toolbar organization
 		do
@@ -294,9 +287,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_refactoring_toolbar_preference: BOOLEAN_PREFERENCE
 			-- Show the refactoring toolbar.
 
-	show_search_options_preference: BOOLEAN_PREFERENCE
-			-- Are search tool options displayed ?
-
 	general_toolbar_layout_preference: ARRAY_PREFERENCE
 			-- General toolbar layout.
 
@@ -385,13 +375,6 @@ feature -- Element change
 			preferences.save_preference (right_panel_layout_preference)
 		end
 
-	save_show_search_options (a_show_options: BOOLEAN) is
-			--
-		do
-			show_search_options_preference.set_value (a_show_options)
-			preferences.save_preference (show_search_options_preference)
-		end
-
 	save_completion_list_size (a_width, a_height: INTEGER) is
 			-- Save the size of the completion list
 		do
@@ -434,7 +417,6 @@ feature {NONE} -- Preference Strings
 	show_address_toolbar_string: STRING is "interface.development_window.show_address_toolbar"
 	show_project_toolbar_string: STRING is "interface.development_window.show_project_toolbar"
 	show_refactoring_toolbar_string: STRING is "interface.development_window.show_refactoring_toolbar"
-	search_tool_show_options_string: STRING is "interface.development_window.search_tool_show_options"
 	general_toolbar_layout_string: STRING is "interface.development_window.general_toolbar_layout"
 	refactoring_toolbar_layout_string: STRING is "interface.development_window.refactoring_toolbar_layout"
 	max_history_size_string: STRING is "interface.development_window.maximum_history_size"
@@ -483,7 +465,6 @@ feature {NONE} -- Implementation
 			show_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_refactoring_toolbar_string, True)
 			show_address_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_address_toolbar_string, True)
 			show_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_project_toolbar_string, False)
-			show_search_options_preference := l_manager.new_boolean_preference_value (l_manager, search_tool_show_options_string, True)
 			max_history_size_preference := l_manager.new_integer_preference_value (l_manager, max_history_size_string, 10)
 			remember_completion_list_size_preference := l_manager.new_boolean_preference_value (l_manager, remember_completion_list_size_string, True)
 			completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, completion_list_height_string, 100)
@@ -500,11 +481,7 @@ feature {NONE} -- Implementation
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
 
 			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
-			estudio_dbg_menu_allowed_preference.set_hidden (True)
-
 			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)
-			estudio_dbg_menu_accelerator_allowed_preference.set_hidden (True)
-
 			estudio_dbg_menu_enabled_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_enabled_string, False)
 			estudio_dbg_menu_enabled_preference.set_hidden (not estudio_dbg_menu_allowed_preference.value)
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
@@ -542,7 +519,6 @@ invariant
 	show_all_text_in_refactoring_toolbar_preference_not_void: show_all_text_in_refactoring_toolbar_preference /= Void
 	show_address_toolbar_preference_not_void: show_address_toolbar_preference /= Void
 	show_project_toolbar_preference_not_void: show_project_toolbar_preference /= Void
-	show_search_options_preference_not_void: show_search_options_preference /= Void
 	general_toolbar_layout_preference_not_void: general_toolbar_layout_preference /= Void
 	refactoring_toolbar_layout_preference_not_void: refactoring_toolbar_layout_preference /= Void
 	max_history_size_preference_not_void: max_history_size_preference /= Void

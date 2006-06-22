@@ -266,9 +266,13 @@ feature {NONE} -- Events handling
 				when Key_page_down then
 					page_down
 				when key_home then
-					select_row (1)
+					if choice_list.row_count > 0 then
+						select_row (1)
+					end
 				when key_end then
-					select_row (choice_list.row_count)
+					if choice_list.row_count > 0 then
+						select_row (choice_list.row_count)
+					end
 				else
 					-- Do nothing
 				end

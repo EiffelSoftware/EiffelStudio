@@ -121,6 +121,7 @@ feature {NONE}-- Initialization
 			set_title (configuration_title (conf_system.name))
 			set_width (initial_window_width)
 			set_height (initial_window_height)
+			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
 			enable_user_resize
 
 			create hb
@@ -556,8 +557,6 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (vb)
 			append_small_margin (vb)
 			append_property_description (vb)
-
-			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
 
 			is_refreshing := False
 		ensure
@@ -1938,7 +1937,7 @@ feature {NONE} -- Implementation
 
 				create l_choice_prop.make_with_choices (target_msil_generation_type_name, <<"exe", "dll">>)
 				l_choice_prop.set_description (target_msil_generation_type_description)
-				add_string_setting_actions (l_string_prop, s_msil_generation_type, "")
+				add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
 				properties.add_property (l_choice_prop)
 
 				create l_file_prop.make (target_msil_key_file_name_name)

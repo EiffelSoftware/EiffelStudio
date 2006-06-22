@@ -1,17 +1,17 @@
-<EIFFEL_DOCUMENT>
+<EIFFEL_DOCUMENT>		
 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>	
 	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="debugger.delay_before_cleaning_objects_grid" DESCRIPTION="Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="debugger.interrupt_every_N_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
-	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>
+	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>	
 	<PREF NAME="debugger.main_splitter_position" HIDDEN="true" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>
 	<PREF NAME="debugger.max_evaluation_duration" DESCRIPTION="Maximum evaluation duration before cancelling evaluation. (this is only applicable for a .NET system)"><INTEGER>5</INTEGER></PREF>
 	<PREF NAME="debugger.max_slice" HIDDEN="true" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
@@ -20,13 +20,16 @@
 	<PREF NAME="debugger.project_toolbar_layout" HIDDEN="true" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
 	<PREF NAME="debugger.proportion" HIDDEN="true"  DESCRIPTION="Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."><INTEGER>0.5</INTEGER></PREF>
 	<PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Search;closed;0;0;0;0;Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
+	<PREF NAME="debugger.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
+	<PREF NAME="debugger.row_unsensitive_foreground_color" DESCRIPTION="Unsensitive foreground color"><COLOR>150;150;150</COLOR></PREF>
+	<PREF NAME="debugger.select_call_stack_level_on_double_click" DESCRIPTION="Select call stack entry on double click?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="debugger.stack_grid_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the stack values (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.debugged_grid_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the debugged values (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.watches_grids_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.grid_column_layout_stack_objects" DESCRIPTION="Configuration of the stack objects grid.%N This should be a list of 5 sequences: nature_id;is_shown;is_auto_resized;width;header_name; %NThe position in the list indicate the column.%NThe nature_id are: 1:name; 2:value; 3:type; 4:address; 5:context..." RESTART="True"><STRING>1;True;False;150;Name;2;True;False;76;Value;3;True;False;100;Type;4;True;False;173;Address;5;False;False;80;</STRING></PREF>
 	<PREF NAME="debugger.grid_column_layout_debugged_objects" DESCRIPTION="Configuration of the debugged objects grid.%NCheck grid_column_layout_stack_objects for full description." RESTART="True"><STRING>1;True;False;150;Name;2;True;False;150;Value;3;True;False;200;Type;4;True;False;80;Address;5;False;False;80;</STRING></PREF>
 	<PREF NAME="debugger.grid_column_layout_watches" DESCRIPTION="Configuration of the watches objects grid. %NCheck grid_column_layout_stack_objects for full description." RESTART="True"><STRING>1;True;False;150;Expression;2;True;False;150;Value;3;True;False;100;Type;4;True;False;80;Address;5;True;False;200;Context</STRING></PREF>
-	<PREF NAME="debugger.objects_tool_layout" HIDDEN="true" DESCRIPTION="Location of main objects tool's items &lt;&lt;'Current object', 'Stack information', 'Argument(s)', 'Local(s)', 'Result', 'Dropped references'&gt;&gt;. The left grid is represented by '1' and the right grid by '2'"><LIST>2;1;1;1;1;2</LIST></PREF>
+	<PREF NAME="debugger.objects_tool_layout" HIDDEN="true" DESCRIPTION="Location of main objects tool's items &lt;&lt;'Current object', 'Stack information', 'Argument(s)', 'Local(s)', 'Result', 'Dropped references'&gt;&gt;. The left grid is represented by '1' and the right grid by '2'"><LIST>2;1;1;1;1;2</LIST></PREF>	
 	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;235</COLOR></PREF>
@@ -70,7 +73,7 @@
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_line_width" DESCRIPTION="Line width for UML inheritance links."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links."><COLOR>0;0;0</COLOR></PREF>
-
+	
 	<PREF NAME="tools.diagram_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of preference value."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
@@ -85,9 +88,9 @@
 	<PREF NAME="tools.context_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 	<PREF NAME="tools.context_tool.default_class_formatter_index" DESCRIPTION="Class format that is selected by default."><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
+	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>	
 	<PREF NAME="tools.context_tool.formatters_history_size" DESCRIPTION="Number of cached formatted text in history."><INTEGER>60</INTEGER></PREF>
-
+	
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
@@ -99,7 +102,11 @@
 	<PREF NAME="interface.dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilationa of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
@@ -128,13 +135,17 @@
 	<PREF NAME="interface.dialogs.last_saved_system_generate_key_directory" DESCRIPTION="Directory of last system generate key saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
-	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="Screen y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
 	
+	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
 	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.estudio_dbg_menu_allowed" DESCRIPTION="Is EiffelStudio Debug menu allowed?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.estudio_dbg_menu_accelerator_allowed" DESCRIPTION="When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.estudio_dbg_menu_enabled" DESCRIPTION="Should EiffelStudio Debug menu be shown" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.features_tool.is_alias_enabled" DESCRIPTION="Display alias name ?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -148,8 +159,7 @@
 	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Search;closed;0;0;0;0;Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>
-	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search options be shown in search tool?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Search;closed;0;0;0;0;Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>	
 	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -160,35 +170,35 @@
 	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>	
 
-	<PREF NAME="interface.development_window.window_left_panel_width" HIDDEN="true" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="interface.development_window.window_left_panel_width" HIDDEN="true" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>	
 	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>950</INTEGER></PREF>
 	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.development_window.x_position" DESCRIPTION="Screen x position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="interface.development_window.y_position" DESCRIPTION="Screen y position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>
-
+	
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 
 	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Are brackets and parentheses closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_complete_words" DESCRIPTION="Should completion automatically complete words when a single best match is available?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_remove_trailing_blank_when_saving" DESCRIPTION="Should trailing blanks be auto-removed when saving?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Does completion change the first character of onces and constants with an upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_ANY_features" DESCRIPTION="Do features of class ANY appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Does completion list show feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_disambiguated_name" DESCRIPTION="Does completion list show disambiguated name?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
 	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Is underscore `_' used as a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
 
@@ -213,7 +223,7 @@
 	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for object addresses."><COLOR>0;0;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for object addresses."><COLOR>255;255;255</COLOR></PREF>
-
+	
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
@@ -255,7 +265,7 @@
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T%T-- $cursor$%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
-
+	
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.autocomplete_require" DESCRIPTION="Autocomplete require?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.use_default_require" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.custom_require_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
@@ -486,65 +496,26 @@
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_key" DESCRIPTION="Key"><STRING>Space</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_key" DESCRIPTION="Key">class_autocomplete_shortcut_key<STRING>Space</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_key" DESCRIPTION="Key"><STRING>F</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_key" DESCRIPTION="Key"><STRING>F</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_key" DESCRIPTION="Key"><STRING>H</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
+	
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
 
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.collapse_all_levels" DESCRIPTION="Trigger collapsing of all tree nodes."><SHORTCUT Shift="True">NumPad -</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.collapse_tree_node" DESCRIPTION="Trigger collapsing of current tree node."><SHORTCUT Ctrl="True">Left</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1" DESCRIPTION="Trigger insertion of customized string #1."><SHORTCUT>F2</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2" DESCRIPTION="Trigger insertion of customized string #2."><SHORTCUT Ctrl="True">F2</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3" DESCRIPTION="Trigger insertion of customized string #3."><SHORTCUT Shift="True">F2</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.expand_all_levels" DESCRIPTION="Trigger expansion of all tree nodes."><SHORTCUT Shift="True">NumPad *</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.expand_tree_node" DESCRIPTION="Trigger expansion of current tree node."><SHORTCUT Ctrl="True">Right</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward" DESCRIPTION="Trigger backward search."><SHORTCUT Shift="True">F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last" DESCRIPTION="Trigger search on last searched item."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection" DESCRIPTION="Trigger search on current selection."><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar" DESCRIPTION="Trigger quick search bar."><SHORTCUT Ctrl="True">F</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel" DESCRIPTION="Trigger display of search panel."><SHORTCUT Alt="True" Ctrl="True">F</SHORTCUT></PREF>
 
 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -557,7 +528,7 @@
 	<PREF NAME="editor.general.mouse_wheel_scroll_size" DESCRIPTION="Number of lines scrolled using the mouse wheel."><INTEGER>3</INTEGER></PREF>
 	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Does a quadruple click select the entire document?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.remove_trailing_white_space" HIDDEN="true" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="editor.general.tab_step" DESCRIPTION="Number of spaces that a tabulation character represents."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
@@ -570,10 +541,10 @@
 	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.focus_out_selection_background_color" DESCRIPTION="Background color of selected text when not focused."><COLOR>236;233;216</COLOR></PREF>
-	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>	
 	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>	
 	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
@@ -585,28 +556,38 @@
 	<PREF NAME="editor.general.use_buffered_line" DESCRIPTION="Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="When creating a new editor tab, add it at the left side of the target notebook area?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="When creating a new editor tab, add it at the left side of the target notebook area?"><BOOLEAN>True</BOOLEAN></PREF>	
+	
+	<PREF NAME="general.external_commands.external_command_0" DESCRIPTION="First external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_1" DESCRIPTION="Second external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_2" DESCRIPTION="Third external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_3" DESCRIPTION="Forth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_4" DESCRIPTION="Fifth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_5" DESCRIPTION="Sixth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_6" DESCRIPTION="Seventh external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_7" DESCRIPTION="Eighth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_8" DESCRIPTION="Ninth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.external_command_9" DESCRIPTION="Tenth external command."><STRING></STRING></PREF>
+	<PREF NAME="general.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_2" DESCRIPTION="Third external command shortcut."><SHORTCUT Alt="True">2</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_3" DESCRIPTION="Forth external command shortcut."><SHORTCUT Alt="True">3</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_4" DESCRIPTION="Fifth external command shortcut."><SHORTCUT Alt="True">4</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_5" DESCRIPTION="Sixth external command shortcut."><SHORTCUT Alt="True">5</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_6" DESCRIPTION="Seventh external command shortcut."><SHORTCUT Alt="True">6</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_7" DESCRIPTION="Eighth external command shortcut."><SHORTCUT Alt="True">7</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_8" DESCRIPTION="Ninth external command shortcut."><SHORTCUT Alt="True">8</SHORTCUT></PREF>
+	<PREF NAME="general.external_commands.shortcut_9" DESCRIPTION="Tenth external command shortcut."><SHORTCUT Alt="True">9</SHORTCUT></PREF>
 
-	<PREF NAME="general.external_command_0" DESCRIPTION="First external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_1" DESCRIPTION="Second external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_2" DESCRIPTION="Third external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_3" DESCRIPTION="Forth external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_4" DESCRIPTION="Fifth external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_5" DESCRIPTION="Sixth external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_6" DESCRIPTION="Seventh external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_7" DESCRIPTION="Eighth external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_8" DESCRIPTION="Ninth external command." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="general.external_command_9" DESCRIPTION="Tenth external command." HIDDEN="True"><STRING></STRING></PREF>
-
-	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>
+	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>iexplore.exe $url</STRING></PREF>
 
 	<PREF NAME="general.dynamic_library_window_width" DESCRIPTION="Height of dynamic library window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.dynamic_library_window_height" DESCRIPTION="Width of dynamic library window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="general.preference_window_width" DESCRIPTION="Height of preferences window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
-	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
-
+	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>	
+	
 	<PREF NAME="tools.search_tool.init_incremental" DESCRIPTION="Initial status of incremental search."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_match_case" DESCRIPTION="Initial status of match case."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_use_regular_expression" DESCRIPTION="Initial status of using regular_expression."><BOOLEAN>True</BOOLEAN></PREF>

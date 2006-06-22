@@ -58,27 +58,33 @@ feature -- Launching
 			fn: FILE_NAME
 			file: RAW_FILE
 		do
-			if command_line.argument_count > 0 then
-					--| First we check if there is no specific `estudio' parameters
+				--| First we check if there is no specific `estudio' parameters
 
-				if
-					command_line.argument (1 + args_ec_offset).is_equal ("/?")
-					or else	command_line.argument (1 + args_ec_offset).is_equal ("/h")
-				then
-					display_usage (True)
-				end
-				if command_line.argument (1 + args_ec_offset).is_equal ("/v") then
-					is_verbose := True
-					is_waiting := True
-					args_ec_offset := args_ec_offset + 1
-				end
-				if command_line.argument (1 + args_ec_offset).is_equal ("/w") then
-					is_waiting := True
-					args_ec_offset := args_ec_offset + 1
-				end
+			if
+				command_line.argument_count - args_ec_offset > 0
+				and then (command_line.argument (1 + args_ec_offset).is_equal ("/?")
+				or else	command_line.argument (1 + args_ec_offset).is_equal ("/h"))
+			then
+				display_usage (True)
+			end
+			if
+				command_line.argument_count - args_ec_offset > 0
+				and then command_line.argument (1 + args_ec_offset).is_equal ("/v")
+			then
+				is_verbose := True
+				is_waiting := True
+				args_ec_offset := args_ec_offset + 1
+			end
+			if
+				command_line.argument_count - args_ec_offset > 0
+				and then command_line.argument (1 + args_ec_offset).is_equal ("/w")
+			then
+				is_waiting := True
+				args_ec_offset := args_ec_offset + 1
 			end
 
 
+				--| Now get the estudio environment and arguments for `ec'
 			get_environment
 			check_environment
 			if is_environment_valid then

@@ -303,16 +303,20 @@ feature {NONE} -- Initialization
 
 				-- Computing minimum size for buttons so that they have the same size
 			l_minimum_size := 2 * layout_constants.large_border_size + l_font.string_width (interface_names.l_remove_project).max (
-				l_font.string_width (interface_names.l_add_project_config_file))
+				l_font.string_width (interface_names.l_add_project_config_file)) + 24
 
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			create l_button.make_with_text_and_action (Interface_names.l_add_project_config_file, agent open_existing_project_not_listed)
 			l_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			l_button.align_text_left
+			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
 			remove_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			remove_project_button.align_text_left
 			projects_list.row_deselect_actions.force_extend (agent remove_project_button.disable_sensitive)
 			projects_list.row_select_actions.force_extend (agent remove_project_button.enable_sensitive)
 			hb.extend (remove_project_button)
@@ -354,22 +358,27 @@ feature {NONE} -- Initialization
 				-- Create items
 			l_minimum_size := interface_names.l_open.count
 			create open_action_item.make_with_text (interface_names.l_open)
+			open_action_item.set_pixmap (icon_pixmaps.general_open_icon)
 			action_combo.extend (open_action_item)
 
 			l_minimum_size := l_minimum_size.max (interface_names.l_compile.count)
 			create compile_action_item.make_with_text (interface_names.l_compile)
+			compile_action_item.set_pixmap (icon_pixmaps.project_melt_icon)
 			action_combo.extend (compile_action_item)
 
 			l_minimum_size := l_minimum_size.max (interface_names.l_freeze.count)
 			create freeze_action_item.make_with_text (interface_names.l_freeze)
+			freeze_action_item.set_pixmap (icon_pixmaps.project_freeze_icon)
 			action_combo.extend (freeze_action_item)
 
 			l_minimum_size := l_minimum_size.max (interface_names.l_finalize.count)
 			create finalize_action_item.make_with_text (interface_names.l_finalize)
+			finalize_action_item.set_pixmap (icon_pixmaps.project_finalize_icon)
 			action_combo.extend (finalize_action_item)
 
 			l_minimum_size := l_minimum_size.max (interface_names.l_precompile.count)
 			create precompile_action_item.make_with_text (interface_names.l_precompile)
+			precompile_action_item.set_pixmap (icon_pixmaps.project_melt_icon)
 			action_combo.extend (precompile_action_item)
 
 			action_combo.select_actions.extend (agent on_action_selected)
@@ -614,7 +623,7 @@ feature {NONE} -- Implementation
 								open_action_item.enable_select
 								action_combo.select_actions.resume
 							end
-							l_pixmap := icon_compilation_succeeded
+							l_pixmap := icon_pixmaps.document_eiffel_project_compiled_icon
 						end
 					else
 						l_force_clean := True
@@ -623,7 +632,7 @@ feature {NONE} -- Implementation
 							compile_action_item.enable_select
 							action_combo.select_actions.resume
 						end
-						l_pixmap := icon_compilation_failed
+						l_pixmap := icon_pixmaps.document_eiffel_project_icon
 					end
 					if not is_initializing then
 						if

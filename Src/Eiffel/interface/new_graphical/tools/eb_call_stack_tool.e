@@ -859,13 +859,13 @@ feature {NONE} -- Implementation
 				--| Set GUI behavior
 			glab ?= a_row.item (1)
 			if level = current_level then
-				glab.set_pixmap (Pixmaps.Icon_green_arrow)
+				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
 				a_row.set_background_color (row_highlight_bg_color)
 			elseif level >= 0 then
-				glab.set_pixmap (Pixmaps.Icon_arrow_empty)
+				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_empty_arrow_icon)
 			else
 				glab.remove_pixmap
-				glab.set_left_border (glab.left_border + glab.spacing + pixmaps.icon_arrow_empty.width)
+				glab.set_left_border (glab.left_border + glab.spacing + pixmaps.icon_pixmaps.callstack_active_arrow_icon.width)
 				a_row.set_foreground_color (row_unsensitive_fg_color)
 			end
 		end
@@ -1093,7 +1093,7 @@ feature {NONE} -- Implementation
 
 						create mi
 						if tid = l_status.current_thread_id then
-							mi.set_pixmap (pixmaps.icon_green_arrow)
+							mi.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
 						end
 						mi.set_text (l_item_text)
 						mi.set_data (tid)

@@ -1363,7 +1363,7 @@ feature {NONE} -- Impl : Stack objects grid
 					--| Details
 				exception_row := a_target_grid.extended_new_row
 				glab := a_target_grid.folder_label_item (Cst_exception_raised_text)
-				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.icon_debugger_exception)
+				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.debug_exception_handling_icon)
 				exception_row.set_item (1, glab)
 				create glab
 				if dotnet_status.exception_handled then

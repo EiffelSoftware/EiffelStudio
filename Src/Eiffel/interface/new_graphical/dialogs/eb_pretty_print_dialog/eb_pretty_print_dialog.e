@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			set_slice_button.set_pixmap (icon_green_tick)
+			set_slice_button.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color)
 			word_wrap_button.set_pixmap (icon_word_wrap_color)
 

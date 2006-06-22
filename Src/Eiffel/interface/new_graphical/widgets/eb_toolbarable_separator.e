@@ -37,7 +37,7 @@ feature -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Picture representing a button in the customize toolbar dialog box
 		once
-			Result := Pixmaps.Icon_toolbar_separator
+			Result := pixmaps.icon_pixmaps.toolbar_separator_icon
 		end
 
 	description: STRING is "Separator"

@@ -171,10 +171,13 @@ feature {NONE} -- Initialization
 				vb.extend (create {EV_CELL})
 				main_container.extend (vb)
 				main_container.disable_item_expand (vb)
+
+				set_icon_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			end
 
 				--| Action buttons box
 			ok_button.select_actions.extend (agent on_ok)
+			ok_button.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			Layout_constants.set_default_size_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
 			Layout_constants.set_default_size_for_button (cancel_button)
@@ -391,7 +394,9 @@ feature {NONE} -- Implementation
 		do
 				-- Add the "blank project" item
 			create basic_application_item.make_with_text (Interface_names.l_basic_application)
+			basic_application_item.set_pixmap (pixmaps.icon_pixmaps.new_eiffel_project_icon)
 			wizards_list.set_item (1, 1, basic_application_item)
+
 
 				-- Add a line per wizard.
 			from
@@ -401,6 +406,7 @@ feature {NONE} -- Implementation
 				available_wizards.after
 			loop
 				create list_item.make_with_text (available_wizards.item.name)
+				list_item.set_pixmap (pixmaps.icon_pixmaps.new_eiffel_project_icon)
 				list_item.pointer_double_press_actions.extend (agent on_double_click)
 				wizards_list.set_item (1, i, list_item)
 				i := i + 1

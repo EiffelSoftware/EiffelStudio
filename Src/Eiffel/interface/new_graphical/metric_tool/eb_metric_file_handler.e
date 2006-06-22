@@ -554,7 +554,7 @@ feature -- Measures
 										if node.attribute_by_name ("STATUS").value.is_equal ("old") then
 											row.set_pixmap (Pixmaps.Icon_red_cross)
 										else
-											row.set_pixmap (Pixmaps.Icon_green_tick)
+											row.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 										end
 									end
 

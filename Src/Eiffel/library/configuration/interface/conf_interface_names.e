@@ -126,7 +126,7 @@ feature {NONE} -- Target names and descriptions
 	target_msil_generation_type_name: STRING is "MSIL generation type"
 	target_msil_generation_type_description: STRING is " "
 	target_msil_key_file_name_name: STRING is "MSIL key file"
-	target_msil_key_file_name_description: STRING is " "
+	target_msil_key_file_name_description: STRING is "Choose a new, non existing filename to create a new key file."
 	target_msil_use_optimized_precompile_name: STRING is "Use optimized precompile"
 	target_msil_use_optimized_precompile_description: STRING is " "
 	target_multithreaded_name: STRING is "Multithreaded"

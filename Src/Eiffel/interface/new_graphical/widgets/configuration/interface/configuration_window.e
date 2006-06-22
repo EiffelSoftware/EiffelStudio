@@ -1799,10 +1799,11 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_pf_choices: ARRAYED_LIST [STRING_32]
 			l_dir_prop: DIRECTORY_PROPERTY
-			l_file_prop: FILE_PROPERTY
+			l_key_file_prop: KEY_FILE_PROPERTY
 			l_installed_runtimes: DS_LINEAR [STRING]
 			l_il_env: IL_ENVIRONMENT
 			l_il_choices: ARRAYED_LIST [STRING_32]
+			l_il_version: STRING
 		do
 			if properties /= Void then
 				properties.destroy
@@ -1955,10 +1956,15 @@ feature {NONE} -- Implementation
 				add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
 				properties.add_property (l_choice_prop)
 
-				create l_file_prop.make (target_msil_key_file_name_name)
-				l_file_prop.set_description (target_msil_key_file_name_description)
-				add_string_setting_actions (l_file_prop, s_msil_key_file_name, "")
-				properties.add_property (l_file_prop)
+				create l_key_file_prop.make (target_msil_key_file_name_name)
+				l_key_file_prop.set_description (target_msil_key_file_name_description)
+				l_il_version := current_target.setting_msil_clr_version
+				if l_il_version.is_empty then
+					l_il_version := l_il_env.default_version
+				end
+				l_key_file_prop.set_il_version (l_il_version)
+				add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
+				properties.add_property (l_key_file_prop)
 
 				properties.current_section.expand
 			end

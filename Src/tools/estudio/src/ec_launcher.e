@@ -177,7 +177,6 @@ feature -- Launching
 					io.output.put_new_line
 				end
 				start_process (ec_path, args, working_directory)
-				close_splasher
 			end
 		end
 
@@ -202,11 +201,19 @@ feature -- Launching
 				process.set_on_exit_handler (agent on_event ("Exited"))
 				process.set_on_terminate_handler (agent on_event ("Terminated"))
 			end
+			if is_waiting then
+				process.set_on_exit_handler (agent exit_launcher)
+			end
 
 			process.launch
-			if process.launched and then is_waiting then
-				process.wait_for_exit
+			if not process.launched or not is_waiting then
+				exit_launcher
 			end
+		end
+
+	exit_launcher is
+		do
+			-- Bye bye
 		end
 
 feature -- Splash

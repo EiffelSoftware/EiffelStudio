@@ -3589,7 +3589,7 @@ rt_private void diadic_op(int code)
 	/* Minus operation. */
 	case BC_MINUS: {
 		uint32 sk_type = s->type & SK_HEAD;
-			/* Special case for `-' from CHARACTER and WIDE_CHARACTER class. */
+			/* Special case for `-' from CHARACTER_8 and CHARACTER_32 class. */
 		if ((f->type & SK_HEAD) == SK_CHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_char = f->it_char - s->it_int32;
@@ -3619,7 +3619,7 @@ rt_private void diadic_op(int code)
 	/* Plus operator. */
 	case BC_PLUS: {
 		uint32 sk_type = s->type & SK_HEAD;
-			/* Special case for `+' from CHARACTER and WIDE_CHARACTER class. */
+			/* Special case for `+' from CHARACTER_8 and CHARACTER_32 class. */
 		if ((f->type & SK_HEAD) == SK_CHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_char = f->it_char + s->it_int32;
@@ -3828,15 +3828,15 @@ rt_private void eif_interp_generator (void)
 	first = otop();				/* First operand will be replace by result */
 	switch (first->type & SK_HEAD) {
 		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
-		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER", 9); break;
-		case SK_WCHAR: first->it_ref = RTMS_EX("WIDE_CHARACTER", 14); break;
+		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER_8", 11); break;
+		case SK_WCHAR: first->it_ref = RTMS_EX("CHARACTER_32", 12); break;
 		case SK_UINT8: first->it_ref = RTMS_EX("NATURAL_8", 9); break;
 		case SK_UINT16: first->it_ref = RTMS_EX("NATURAL_16", 10); break;
 		case SK_UINT32: first->it_ref = RTMS_EX("NATURAL_32", 10); break;
 		case SK_UINT64: first->it_ref = RTMS_EX("NATURAL_64", 10); break;
 		case SK_INT8: first->it_ref = RTMS_EX("INTEGER_8", 9); break;
 		case SK_INT16: first->it_ref = RTMS_EX("INTEGER_16", 10); break;
-		case SK_INT32: first->it_ref = RTMS_EX("INTEGER", 7); break;
+		case SK_INT32: first->it_ref = RTMS_EX("INTEGER_32", 10); break;
 		case SK_INT64: first->it_ref = RTMS_EX("INTEGER_64", 10); break;
 		case SK_REAL32: first->it_ref = RTMS_EX("REAL_32", 7); break;
 		case SK_REAL64: first->it_ref = RTMS_EX("REAL_64", 7); break;
@@ -3848,7 +3848,7 @@ rt_private void eif_interp_generator (void)
 
 rt_private void eif_interp_min_max (int code)
 {
-	/* Execute the `max' or `min' operation (shown by "code") on CHARACTER,
+	/* Execute the `max' or `min' operation (shown by "code") on CHARACTER_8,
 	 * INTEGER, REAL and DOUBLE and push the result back on the stack.
 	 * Instead of poping the two operands and pushing the result back, we handle
 	 * the references of both, poping only the second. I am relying on the fact
@@ -3947,7 +3947,7 @@ rt_private void eif_three_way_comparison (void)
 
 rt_private void eif_interp_offset(void)
 {
-	/* Execute the `+' operator on CHARACTER or POINTER type and push
+	/* Execute the `+' operator on CHARACTER_8 or POINTER type and push
 	 * the result back on the stack.
 	 * Instead of poping the two operands and pushing the result back, we handle
 	 * the references of both, poping only the second. I am relying on the fact
@@ -3996,7 +3996,7 @@ rt_private void eif_interp_basic_operations (void)
 			eif_interp_generator ();
 			break;
 
-			/* Offset operation on CHARACTER and POINTER */
+			/* Offset operation on CHARACTER_8 and POINTER */
 		case BC_OFFSET:
 			eif_interp_offset();
 			break;

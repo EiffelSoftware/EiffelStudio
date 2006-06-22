@@ -1277,7 +1277,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (bkpt_info_cmd)
 
 			create system_info_cmd.make
-			system_info_cmd.set_pixmap (Pixmaps.Icon_system_info)
+			system_info_cmd.set_pixmap (pixmaps.icon_pixmaps.command_system_info_icon)
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")

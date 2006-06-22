@@ -8,7 +8,7 @@ class
 
 feature -- Comparison
 
-	same_files (a_path1, a_path2: STRING): BOOLEAN
+	same_files (a_path1, a_path2: STRING): BOOLEAN is
 			-- Are `a_path1' and `a_path1'
 		require
 			a_path1_not_void: a_path1 /= Void

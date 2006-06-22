@@ -17,8 +17,7 @@ inherit
 			process_assembly,
 			process_library,
 			process_cluster,
-			process_override,
-			process_group
+			process_override
 		end
 
 	SHARED_CLASSNAME_FINDER
@@ -48,11 +47,9 @@ feature {NONE} -- Initialization
 			reset_classes
 			make (a_state)
 			create libraries.make (Libraries_per_target)
-			create assemblies.make (1)
-			create old_assemblies_handled.make (1)
-			create consume_assembly_observer.make (1)
-			create process_group_observer.make (1)
-			create process_directory.make (1)
+			create consume_assembly_observer
+			create process_group_observer
+			create process_directory
 			create last_warnings.make
 			application_target := an_application_target
 		end
@@ -71,14 +68,6 @@ feature {NONE} -- Initialization
 			old_target := an_old_target
 		end
 
-feature -- Status
-
-	is_assembly_cache_folder_set: BOOLEAN is
-			-- Has `assembly_cache_folder' been set?
-		do
-			Result := assembly_cache_folder /= Void
-		end
-
 feature -- Access
 
 	modified_classes: DS_HASH_SET [CONF_CLASS]
@@ -89,6 +78,9 @@ feature -- Access
 
 	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
+
+	new_assemblies: DS_HASH_SET [CONF_ASSEMBLY]
+			-- List of assemblies in the current configuration.
 
 feature -- Update
 
@@ -122,49 +114,28 @@ feature -- Update
 			create modified_classes.make (modified_classes_per_system)
 			create added_classes.make (added_classes_per_system)
 			create removed_classes.make (removed_classes_per_system)
+			create new_assemblies.make (15)
 		end
 
 feature -- Observers
 
-	consume_assembly_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_TARGET]]]
+	consume_assembly_observer: ACTION_SEQUENCE [TUPLE []]
 			-- Observer if assemblies are consumed.
 
-	process_group_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_GROUP]]]
+	process_group_observer: ACTION_SEQUENCE [TUPLE [CONF_GROUP]]
 			-- Observer if a group is processed.
 
-	process_directory: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_CLUSTER, STRING]]]
+	process_directory: ACTION_SEQUENCE [TUPLE [CONF_CLUSTER, STRING]]
 			-- Observer if a cluster directory is processed.
 
 feature -- Events
-
-	on_consume_assemblies (a_target: CONF_TARGET) is
-			-- Assemblies of `a_target' are consumed.
-		require
-			a_target_not_void: a_target /= Void
-		do
-			from
-				consume_assembly_observer.start
-			until
-				consume_assembly_observer.after
-			loop
-				consume_assembly_observer.item.call ([a_target])
-				consume_assembly_observer.forth
-			end
-		end
 
 	on_process_group (a_group: CONF_GROUP) is
 			-- `A_group' is processed.
 		require
 			a_group_not_void: a_group /= Void
 		do
-			from
-				process_group_observer.start
-			until
-				process_group_observer.after
-			loop
-				process_group_observer.item.call ([a_group])
-				process_group_observer.forth
-			end
+			process_group_observer.call ([a_group])
 		end
 
 	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING) is
@@ -173,14 +144,7 @@ feature -- Events
 			a_cluster_not_void: a_cluster /= Void
 			a_path_not_void: a_path /= Void
 		do
-			from
-				process_directory.start
-			until
-				process_directory.after
-			loop
-				process_directory.item.call ([a_cluster, a_path])
-				process_directory.forth
-			end
+			process_directory.call ([a_cluster, a_path])
 		end
 
 feature -- Visit nodes
@@ -188,24 +152,23 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET) is
 			-- Visit `a_target'.
 		local
-			l_assemblies, l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
-			l_pre, l_old_pre: CONF_PRECOMPILE
+			l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
+			l_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
+			l_consumer_manager: CONF_CONSUMER_MANAGER
+			l_old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 		do
 			if not is_error then
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
-					l_assemblies := old_target.assemblies
 					l_libraries := old_target.libraries
 					l_clusters := old_target.clusters
 					l_overrides := old_target.overrides
-					l_old_pre := old_target.precompile
-						-- if it's the application target, set the old_libraries and old_assemblies
-						-- twin, so that we can remove the libraries/assemblies we have handled without
+						-- if it's the application target, set the old_libraries
+						-- twin, so that we can remove the libraries we have handled without
 						-- modifying the old data which is still needed in case of an error
 					if a_target = application_target then
 						old_libraries := old_target.all_libraries.twin
-						old_assemblies := old_target.all_assemblies.twin
 					end
 				end
 
@@ -229,13 +192,10 @@ feature -- Visit nodes
 					process_library (l_pre)
 				end
 
-				if not is_error and then not a_target.assemblies.is_empty and state.is_dotnet then
-					consume_assemblies (a_target)
-					process_with_old (a_target.assemblies, Void)
-				end
-
 				if not is_error then
-						-- do libraries after clusters, assemblies, so that the assemblies is already filled with the assemblies defined in the application configuration itself and the clusters have been processed
+					a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
+
+						-- do libraries after clusters so that the clusters have already been processed
 					process_with_old (a_target.libraries, Void)
 
 						-- must be done one time per system after everything is processed
@@ -243,19 +203,35 @@ feature -- Visit nodes
 							-- overrides can only be in the application target
 						process_with_old (a_target.overrides, l_overrides)
 
-						handle_assembly_dependencies
-							-- only assemblies that have not been reused remain in `old_assemblies'
-						if old_assemblies /= Void then
-							from
-								old_assemblies.start
-							until
-								old_assemblies.after
-							loop
-								l_old_group := old_assemblies.item_for_iteration
-								l_old_group.invalidate
-								process_removed_classes (l_old_group.classes)
-								old_assemblies.forth
+							-- only for .NET
+						if state.is_dotnet then
+							if old_target /= Void then
+								l_old_assemblies := old_target.all_assemblies.twin
 							end
+							create l_consumer_manager.make (factory, assembly_cache_folder, il_version, added_classes, removed_classes, modified_classes)
+							l_consumer_manager.consume_assembly_observer.append (consume_assembly_observer)
+							l_consumer_manager.build_assemblies (new_assemblies, l_old_assemblies)
+							if l_consumer_manager.is_error then
+								add_error (l_consumer_manager.last_error)
+							else
+								a_target.set_all_assemblies (l_consumer_manager.assemblies)
+
+									-- only assemblies that have not been reused remain in `old_assemblies'
+								if l_old_assemblies /= Void then
+									from
+										l_old_assemblies.start
+									until
+										l_old_assemblies.after
+									loop
+										l_old_group := l_old_assemblies.item_for_iteration
+										l_old_group.invalidate
+										process_removed_classes (l_old_group.classes)
+										l_old_assemblies.forth
+									end
+								end
+							end
+						else
+							a_target.set_all_assemblies (create {HASH_TABLE [CONF_ASSEMBLY, STRING]}.make (0))
 						end
 					end
 
@@ -267,23 +243,10 @@ feature -- Visit nodes
 						-- assemblies are already handled
 					process_removed (l_clusters)
 					process_removed (l_overrides)
-
-						-- set all assemblies
-					a_target.set_all_assemblies (assemblies)
 				end
 			end
-				-- at the complete end, if we are dotnet unload emitter
-			if not is_error and then a_target = application_target and state.is_dotnet and il_emitter /= Void then
-				il_emitter.unload
-			end
 		ensure then
-			all_assemblies_set: not is_error implies a_target.all_assemblies /= Void
-		end
-
-	process_group (a_group: CONF_GROUP) is
-			-- Visit `a_group'.
-		do
-			on_process_group (a_group)
+			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
@@ -293,17 +256,8 @@ feature -- Visit nodes
 				add_error (create {CONF_ERROR_DOTNET})
 			end
 			if not is_error then
-				check
-					is_assembly_cache_folder_set: is_assembly_cache_folder_set
-				end
-				current_assembly := an_assembly
-				process_assembly_implementation (an_assembly)
-					-- dependencies will be handled after all assemblies have been processed
-					-- because then we can get the correct assembly if the assembly is also used
-					-- directly
+				new_assemblies.force (an_assembly)
 			end
-		ensure then
-			classes_set: not is_error implies current_assembly.classes_set
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -317,6 +271,7 @@ feature -- Visit nodes
 			l_pre: STRING
 		do
 			if not is_error then
+				on_process_group (a_library)
 				l_uuid := a_library.uuid
 				l_target := a_library.library_target
 				check
@@ -394,6 +349,7 @@ feature -- Visit nodes
 			l_class: CONF_CLASS
 		do
 			if not is_error then
+				on_process_group (a_cluster)
 				a_cluster.wipe_class_cache
 				current_cluster := a_cluster
 				current_file_rule := a_cluster.active_file_rule (state)
@@ -490,12 +446,9 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 	reset is
 			-- Reset the values for the new visitor.
 		do
-			current_assembly := Void
 			current_classes := Void
 			current_cluster := Void
-			current_dotnet_classes := Void
 			current_system := Void
-			old_assembly := Void
 			old_group := Void
 			old_target := Void
 			partial_classes := Void
@@ -520,9 +473,6 @@ feature {NONE} -- Implementation
 	handled_groups: SEARCH_TABLE [CONF_GROUP]
 			-- List of groups that have been handled (and therefore don't need to be checked for removed classes).
 
-	old_assemblies_handled: SEARCH_TABLE [STRING]
-			-- Old assemblies where their removed classes have been handled.
-
 	assembly_cache_folder: PATH_NAME
 			-- Assembly cache folder.
 
@@ -541,29 +491,17 @@ feature {NONE} -- Implementation
 	old_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets of the old target, mapped with their uuid.
 
-	assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			-- Mapping of processed assemblies, mapped with their guid.
-
-	old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			-- Mapping of processed assemblies of the old target, mapped with their guid.
-
 	current_classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- The classes of the group we are currently processing.
 
 	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING]
 			-- Classes of the group we are currently processing indexed by filename.
 
-	current_dotnet_classes: HASH_TABLE [CONF_CLASS, STRING]
-			-- Same as `current_classes' but indexed by dotnet name.
-
 	current_cluster: CONF_CLUSTER
 			-- The cluster we are currently processing.
 
 	current_file_rule: CONF_FILE_RULE
 			-- File rule of `current_cluster'.
-
-	current_assembly: CONF_ASSEMBLY
-			-- The assembly we are currently processing.
 
 	current_system: CONF_SYSTEM
 			-- The system we are currently processing.
@@ -573,9 +511,6 @@ feature {NONE} -- Implementation
 
 	old_group: CONF_GROUP
 			-- The old group that corresponds to `current_group'.
-
-	old_assembly: CONF_ASSEMBLY
-			-- The old assembly that corresponds to `current_assembly'.
 
 	partial_classes: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- The partial classes in the current string mapped to their class name.
@@ -750,46 +685,6 @@ feature {NONE} -- Implementation
 				implies (current_classes.count = old current_classes.count + 1) or partial_classes /= Void)
 		end
 
-	put_class_assembly (a_name, a_dotnet_name: STRING; a_position: INTEGER) is
-			-- Put an class from `an_assembly' with `a_name', `a_dotnet_name' and `a_position' into `current_clases'.
-		require
-			name_ok: a_name /= Void and then not a_name.is_empty
-			name_upper: a_name.is_equal (a_name.as_upper)
-			dotnet_name_ok: a_dotnet_name /= Void and then not a_dotnet_name.is_empty
-			a_position_ok: a_position >= 0
-			current_assembly: current_assembly /= Void
-		local
-			l_class: CONF_CLASS_ASSEMBLY
-			l_name: STRING
-		do
-				-- Try to retrieve from old_assembly before creating a new one
-			l_name := get_class_assembly_name (a_name)
-			if old_assembly /= Void and then old_assembly.dotnet_classes.has (a_dotnet_name) then
-				l_class ?= old_assembly.dotnet_classes.found_item
-				check
-					assembly_class: l_class /= Void
-				end
-				l_class.set_group (current_assembly)
-				l_class.check_changed
-				l_class.set_type_position (a_position)
-				if l_class.is_compiled and l_class.is_modified then
-					modified_classes.force (l_class)
-				end
-				current_classes.force (l_class, l_name)
-				current_dotnet_classes.force (l_class, a_dotnet_name)
-
-					-- add it to `reused_classes'
-				reused_classes.force (l_class)
-			else
-				l_class := factory.new_class_assembly (a_name, a_dotnet_name, current_assembly, a_position)
-				current_classes.force (l_class, l_name)
-				current_dotnet_classes.force (l_class, a_dotnet_name)
-				added_classes.force (l_class)
-			end
-		ensure
-			added: not is_error implies (current_classes.count = old current_classes.count + 1)
-		end
-
 	merge_classes (a_group: CONF_GROUP) is
 			-- Merge the classes of `a_group' into `current_classes'.
 		require
@@ -797,384 +692,6 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		do
 			current_classes.merge (a_group.classes)
-		end
-
-	process_assembly_implementation (an_assembly: CONF_ASSEMBLY) is
-			-- Process `an_assembly' (without dependencies).
-			-- tries to reuse information from `libraries'
-			-- or from `old_libraries'
-		require
-			an_assembly_not_void: an_assembly /= Void
-			dotnet: state.is_dotnet
-			old_assembly_void: old_assembly = Void
-			old_group_void: old_group = Void
-			current_classes_void: current_classes = Void
-		local
-			l_key, l_guid: STRING
-			l_path: like assembly_cache_folder
-			l_types_file: FILE_NAME
-			l_reader: EIFFEL_DESERIALIZER
-			l_types: CONSUMED_ASSEMBLY_TYPES
-			i, cnt: INTEGER
-			l_name, l_dotnet_name: STRING
-			l_pos: INTEGER
-			l_p: STRING
-			l_a: CONF_ASSEMBLY
-			l_emitter: IL_EMITTER
-			l_done: BOOLEAN
-		do
-			l_emitter := il_emitter
-			if not is_error then
-				l_p := an_assembly.location.evaluated_path
-				l_path := assembly_cache_folder.twin
-
-					-- get assembly info for local assemblies
-				if not l_p.is_empty then
-					l_emitter.retrieve_assembly_info (l_p)
-
-					if not l_emitter.assembly_found or else not l_emitter.is_consumed then
-						add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
-					else
-						an_assembly.set_assembly_name (l_emitter.name)
-						an_assembly.set_assembly_version (l_emitter.version)
-						an_assembly.set_assembly_culture (l_emitter.culture)
-						l_key := l_emitter.public_key_token
-						if l_key /= Void and then not l_key.is_equal (null_key_string) then
-							an_assembly.set_assembly_public_key (l_key)
-						end
-						l_guid := l_emitter.consumed_folder_name
-						an_assembly.set_guid (l_guid)
-						l_path.extend (l_emitter.relative_folder_name_from_path (l_p))
-						an_assembly.set_is_in_gac (l_emitter.is_in_gac)
-					end
-				else
-					l_emitter.retrieve_assembly_info_by_fusion_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token)
-					if not l_emitter.assembly_found or else not l_emitter.is_consumed then
-						add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
-					else
-						l_guid := l_emitter.consumed_folder_name
-						an_assembly.set_guid (l_guid)
-						l_path.extend (l_emitter.relative_folder_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token))
-					end
-				end
-
-				if not is_error then
-					check
-							-- correct path has the guid in it
-						correct_path: l_path.string.has_substring (l_guid)
-					end
-
-						-- if we already have an assembly with the same guid we can directly information from this assembly
-						-- used if an assembly is declared in multiple libraries/application in the same configuration
-					l_a := assemblies.item (l_guid)
-						-- same renaming/prefixes?
-						-- => directly use this assembly
-					if l_a /= Void then
-						current_assembly := build_assembly_information_from_other (an_assembly, l_a)
-					else
-							-- set consumed path
-						an_assembly.set_consumed_path (l_path)
-
-							-- if we have an old assembly
-						if old_assemblies /= Void and then old_assemblies.has (l_guid) then
-							old_assembly := old_assemblies.found_item
-							old_group := old_assembly
-							if old_assembly /= an_assembly then
-								old_group.invalidate
-							end
-							old_assemblies.remove (l_guid)
-							old_assembly.check_changed
-
-								-- if it wasn't modified, directly use the old assembly information.
-							if not old_assembly.is_modified then
-								an_assembly.target.remove_assembly (an_assembly.name)
-								an_assembly.target.add_assembly (old_assembly)
-								current_assembly := build_assembly_information_from_other (an_assembly, old_assembly)
-								if current_assembly = old_assembly then
-									old_assemblies.remove (l_guid)
-								end
-								l_done := True
-								old_assembly := Void
-								old_group := Void
-							end
-						end
-						assemblies.force (current_assembly, l_guid)
-
-							-- (re)build
-						if not l_done then
-							create l_reader
-
-								-- get classes
-							create l_types_file.make_from_string (l_path)
-							l_types_file.set_file_name (type_list_file_name)
-							l_reader.deserialize (l_types_file, 0)
-							l_types ?= l_reader.deserialized_object
-
-								-- add classes
-							an_assembly.check_changed
-							create current_classes.make (classes_per_assembly)
-							create current_dotnet_classes.make (classes_per_assembly)
-							if l_types /= Void then
-								from
-									i := l_types.eiffel_names.lower
-									cnt := l_types.eiffel_names.upper
-									check
-										same_dotnet: l_types.dotnet_names.lower = i
-										same_dotnet: l_types.dotnet_names.upper = cnt
-									end
-								until
-									i > cnt
-								loop
-									l_name := l_types.eiffel_names.item (i)
-									l_dotnet_name := l_types.dotnet_names.item (i)
-									l_pos := l_types.positions.item (i)
-									if l_name /= Void and then not l_name.is_empty then
-										put_class_assembly (l_name.as_upper, l_dotnet_name, l_pos)
-									end
-									i := i + 1
-								end
-							end
-
-								-- process removed classes
-							if old_group /= Void then
-								process_removed_classes (old_group.classes)
-							end
-							old_assembly := Void
-							old_group := Void
-
-								-- set classes
-							an_assembly.set_classes (current_classes)
-							an_assembly.set_dotnet_classes (current_dotnet_classes)
-
-							current_classes := Void
-							current_dotnet_classes := Void
-						end
-					end
-				end
-			end
-		ensure
-			classes_set: not is_error implies current_assembly.classes_set
-			valid: not is_error implies current_assembly.is_valid
-			old_assembly_void: old_assembly = Void
-			old_group_void: old_group = Void
-			current_classes_void: current_classes = Void
-		end
-
-	build_assembly_information_from_other (an_assembly, an_other_assembly: CONF_ASSEMBLY): CONF_ASSEMBLY is
-			-- Build assembly for `an_assembly' out of the classes from `an_other_assembly'.
-		require
-			an_assembly_ok: an_assembly /= Void and then an_assembly.is_valid
-			an_other_assembly_ok: an_other_assembly /= Void and then an_other_assembly.classes_set
-		local
-			l_classes, l_new_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_class: CONF_CLASS_ASSEMBLY
-			l_renamings: HASH_TABLE [STRING, STRING]
-			l_prefix: STRING
-			l_name: STRING
-			l_other_invalid: BOOLEAN
-			l_deps: DS_HASH_SET [CONF_ASSEMBLY]
-			l_dep_as: CONF_ASSEMBLY
-		do
-				-- if the renaming/prefixes are the same, directly use this assembly
-			if equal (an_other_assembly.name_prefix, an_assembly.name_prefix) and equal (an_other_assembly.renaming, an_assembly.renaming) then
-				an_assembly.target.remove_assembly (an_assembly.name)
-				an_assembly.target.add_assembly (an_other_assembly)
-				if not an_other_assembly.is_valid then
-					an_other_assembly.set_target (an_assembly.target)
-					an_other_assembly.revalidate
-				end
-				l_deps := an_other_assembly.dependencies
-				if l_deps /= Void then
-					from
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						l_dep_as := l_deps.item_for_iteration
-						assemblies.force (l_dep_as, l_dep_as.guid)
-						if old_assemblies /= Void then
-							old_assemblies.remove (l_dep_as.guid)
-						end
-						l_deps.forth
-					end
-				end
-
-				Result := an_other_assembly
-			else
-				from
-					l_other_invalid := not an_other_assembly.is_valid
-					l_renamings := an_assembly.renaming
-					l_prefix := an_assembly.name_prefix
-					l_classes := an_other_assembly.classes
-					create l_new_classes.make (l_classes.count)
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_class ?= l_classes.item_for_iteration
-					check
-						assembly_class: l_class /= Void
-					end
-					l_name := l_class.name.twin
-					if l_renamings /= Void and then l_renamings.has (l_name) then
-						l_name := l_renamings.found_item
-					end
-					if l_prefix /= Void then
-						l_name.prepend (l_prefix)
-					end
-						-- if the other assembly is not valid, we have the classes point to us.
-					if l_other_invalid then
-						l_class.set_group (an_assembly)
-					end
-					l_new_classes.force (l_class, l_name)
-					l_classes.forth
-				end
-				an_assembly.set_classes (l_new_classes)
-				Result := an_assembly
-			end
-			an_assembly.set_dotnet_classes (an_other_assembly.dotnet_classes)
-		ensure
-			Result_built: Result /= Void and then Result.classes_set and then Result.is_valid
-		end
-
-	process_assembly_dependencies_implementation (an_assembly: CONF_ASSEMBLY) is
-			-- Process the dependencies of `an_assembly'.
-		require
-			an_assembly_ok: an_assembly /= Void and then an_assembly.guid /= Void
-			an_assembly_consumed: an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
-			dotnet: state.is_dotnet
-		local
-			l_path: STRING
-			l_reference_file: FILE_NAME
-			l_referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
-			i, cnt: INTEGER
-			l_cons_ass: CONSUMED_ASSEMBLY
-			l_assembly: CONF_ASSEMBLY
-			l_reader: EIFFEL_DESERIALIZER
-			l_guid, l_dep_guid: STRING
-			l_old_current_assembly: like current_assembly
-		do
-			if not is_error then
-				l_path := an_assembly.consumed_path
-				l_guid := an_assembly.guid
-				create l_reader
-				create l_reference_file.make_from_string (l_path)
-				l_reference_file.set_file_name (referenced_assemblies_file_name)
-				l_reader.deserialize (l_reference_file, 0)
-				l_referenced_assemblies ?= l_reader.deserialized_object
-				if l_referenced_assemblies /= Void then
-					from
-						i := l_referenced_assemblies.assemblies.lower
-						cnt := l_referenced_assemblies.assemblies.upper
-					until
-						i > cnt
-					loop
-						l_cons_ass := l_referenced_assemblies.assemblies.item (i)
-						if l_cons_ass /= Void then
-							l_dep_guid := l_cons_ass.unique_id
-								-- if it's not the assembly itself
-							if not l_dep_guid.is_equal (l_guid) then
-									-- try to retrieve the assembly
-								l_assembly := assemblies.item (l_dep_guid)
-								if l_assembly /= Void then
-									an_assembly.add_dependency (l_assembly)
-								else
-										-- create new assembly and process it
-									l_assembly := factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
-									l_old_current_assembly := current_assembly
-									current_assembly := l_assembly
-									process_assembly_implementation (l_assembly)
-									process_assembly_dependencies_implementation (l_assembly)
-									an_assembly.add_dependency (l_assembly)
-									current_assembly := l_old_current_assembly
-								end
-							end
-						end
-						i := i + 1
-					end
-				end
-			end
-		end
-
-	handle_assembly_dependencies is
-			-- Handle the dependencies of assemblies.
-		local
-			l_assemblies: like assemblies
-			l_a: CONF_ASSEMBLY
-		do
-			if not is_error then
-					-- holds the list of all assemblies
-				if not assemblies.is_empty then
-					if not state.is_dotnet then
-						add_error (create {CONF_ERROR_DOTNET})
-					else
-						from
-								-- work on a copy, because the processed dependencies get added to the original assemblies
-							l_assemblies := assemblies.twin
-							l_assemblies.start
-						until
-							l_assemblies.after
-						loop
-							l_a := l_assemblies.item_for_iteration
-								-- only process assemblies that have not yet been handled
-							if l_a.dependencies = Void then
-								process_assembly_dependencies_implementation (l_a)
-							end
-							l_assemblies.forth
-						end
-					end
-				end
-			end
-		end
-
-	consume_assemblies (a_target: CONF_TARGET) is
-			-- Consume all assemblies of `a_target'.
-		local
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			l_p, l_locals: STRING
-			l_a: CONF_ASSEMBLY
-			l_emitter: IL_EMITTER
-		do
-			on_consume_assemblies (a_target)
-			l_emitter := il_emitter
-			if not is_error then
-					-- consume all assemblies
-					-- first the named ones and then the local ones
-					-- this also consumes all referenced libraries
-				from
-					create l_locals.make_empty
-					l_assemblies := a_target.assemblies
-					l_assemblies.start
-				until
-					is_error or l_assemblies.after
-				loop
-					l_a := l_assemblies.item_for_iteration
-					if l_a.is_enabled (state) then
-						if not state.is_dotnet then
-							add_error (create {CONF_ERROR_DOTNET})
-						else
-							l_p := l_a.location.evaluated_path
-								-- named
-							if l_p.is_empty then
-								l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
-								l_emitter.retrieve_assembly_info_by_fusion_name (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
-								if not l_emitter.assembly_found or else not l_emitter.is_consumed then
-									add_error (create {CONF_ERROR_ASOP}.make (l_a.name))
-								end
-								l_a.set_guid (l_emitter.consumed_folder_name)
-								-- local
-							else
-								l_locals.append (l_p+";")
-							end
-						end
-					end
-					l_assemblies.forth
-				end
-				if not is_error and l_locals.count > 1 then
-					l_locals.remove_tail (1)
-					l_emitter.consume_assembly_from_path (l_locals)
-				end
-			end
 		end
 
 	get_class_name (a_file: STRING; a_group: CONF_GROUP): STRING is
@@ -1202,24 +719,6 @@ feature {NONE} -- Implementation
 				if a_group.name_prefix /= Void then
 					Result.prepend (a_group.name_prefix)
 				end
-			end
-		end
-
-	get_class_assembly_name (a_name: STRING): STRING is
-			-- Compute the renamed name from `a_name' in the `current_assembly'.
-		require
-			current_assembly_not_void: current_assembly /= Void
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-		local
-			l_renamings: HASH_TABLE [STRING, STRING]
-		do
-			Result := a_name.twin
-			l_renamings := current_assembly.renaming
-			if l_renamings /= Void and then l_renamings.has (Result) then
-				Result := l_renamings.item (Result)
-			end
-			if current_assembly.name_prefix /= Void then
-				Result.prepend (current_assembly.name_prefix)
 			end
 		end
 
@@ -1304,7 +803,7 @@ feature {NONE} -- Implementation
 								l_overrides.after
 							loop
 								l_cl_over := l_overrides.item
-								if l_cl_over.is_compiled and then reused_classes.has (l_cl_over) then
+								if l_cl_over.is_compiled and then l_cl_over.is_valid then
 									modified_classes.force (l_cl_over)
 								end
 								l_overrides.forth
@@ -1320,8 +819,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-
 
 	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING]) is
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
@@ -1425,44 +922,7 @@ feature {NONE} -- Implementation
 		end
 
 
-feature {NONE} -- shared instances
-
-	il_emitter: IL_EMITTER is
-			-- Instance of IL_EMITTER
-		local
-			l_il_env: IL_ENVIRONMENT
-		do
-			Result := internal_il_emitter.item
-			if Result = Void then
-				if il_version /= Void then
-					create Result.make (assembly_cache_folder, il_version)
-				else
-					create l_il_env
-					create Result.make (assembly_cache_folder, l_il_env.installed_runtimes.last)
-				end
-				if not Result.exists then
-						-- IL_EMITTER component could not be loaded.
-					add_error (create {CONF_ERROR_EMITTER})
-					Result := Void
-				elseif not Result.is_initialized then
-						-- Path to cache is not valid
-					add_error (create {CONF_ERROR_EMITTER_INIT})
-					Result := Void
-				else
-					internal_il_emitter.put (Result)
-				end
-			end
-		ensure
-			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
-		end
-
-	internal_il_emitter: CELL [IL_EMITTER] is
-			-- Unique instance of IL_EMITTER
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
+feature {NONE} -- contracts
 
 	libraries_intersection (a, b: like libraries): BOOLEAN is
 			-- Is there an intersection between `a' and `b'?
@@ -1492,54 +952,10 @@ feature {NONE} -- shared instances
 			end
 		end
 
-	assemblies_intersection (a, b: like assemblies): BOOLEAN is
-			-- Is there an intersection between `a' and `b'?
-		local
-			l1, l2: like assemblies
-		do
-			if a /= Void and b /= Void then
-				if a.count >= b.count then
-					l1 := a
-					l2 := b
-				else
-					l1 := b
-					l2 := a
-				end
-				check
-					l1_not_less_than_l2: l1.count >= l2.count
-				end
-
-				from
-					l1.start
-				until
-					l1.after or Result
-				loop
-					Result := l2.has (l1.key_for_iteration)
-					l1.forth
-				end
-			end
-		end
-
-	assemblies_classes_set: BOOLEAN is
-			-- Do all the assemblies in `assemblies' have their classes set?
-		do
-			Result := assemblies.linear_representation.for_all (agent {CONF_ASSEMBLY}.classes_set)
-		end
-
-
-feature {NONE} -- Constants
-
-	type_list_file_name: STRING is "types.info"
-	null_key_string: STRING is "null"
-	referenced_assemblies_file_name: STRING is "referenced_assemblies.info"
-
 feature {NONE} -- Size constants
 
 	Classes_per_cluster: INTEGER is 100
 			-- How many classes do we have per average cluster.
-
-	Classes_per_assembly: INTEGER is 100
-			-- How many classes do we have per average assembly.
 
 	Classes_per_system: INTEGER is 3000
 			-- How many classes do we have per average system.
@@ -1561,19 +977,15 @@ feature {NONE} -- Size constants
 
 invariant
 	libraries_not_void: libraries /= Void
-	assemblies_not_void: assemblies /= Void
-	assemblies_classes_set: assemblies_classes_set
-	old_assemblies_handled_not_void: old_assemblies_handled /= Void
 	reused_classes_not_void: reused_classes /= Void
 	modified_classes_not_void: modified_classes /= Void
 	added_classes_not_void: added_classes /= Void
 	removed_classes_not_void: removed_classes /= Void
-	old_assembly_group: old_assembly /= Void and old_group /= Void implies old_assembly = old_group
 	application_target_not_void: application_target /= Void
 	libraries_no_intersection: not libraries_intersection (libraries, old_libraries)
-	assemblies_no_intersection: not assemblies_intersection (assemblies, old_assemblies)
 	factory_not_void: factory /= Void
 	last_warnings_not_void: last_warnings /= Void
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

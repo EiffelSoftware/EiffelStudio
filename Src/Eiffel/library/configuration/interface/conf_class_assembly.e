@@ -12,7 +12,6 @@ inherit
 	CONF_CLASS
 		redefine
 			set_name,
-			check_changed,
 			group,
 			is_read_only,
 			is_class_assembly
@@ -78,12 +77,6 @@ feature {CONF_ACCESS} -- Update
 				a_position_ok: a_position >= 0
 			do
 				type_position := a_position
-			end
-
-		check_changed is
-				-- Check if `Current' has changed.
-			do
-				is_modified := group.is_modified
 			end
 
 feature -- Access

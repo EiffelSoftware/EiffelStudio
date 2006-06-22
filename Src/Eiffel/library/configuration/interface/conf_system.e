@@ -143,7 +143,6 @@ feature -- Store to disk
 			end
 		end
 
-
 feature -- Access queries
 
 	compilable_targets: like targets is

@@ -9,7 +9,7 @@ class
 	CONSUMED_ASSEMBLY
 
 inherit
-	ANY
+	SHARED_CONSUMER_UTILITIES
 		redefine
 			is_equal,
 			out
@@ -221,7 +221,7 @@ feature -- Comparison
 			if not Result then
 				create l_file.make (l_path)
 				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
-			end
+		end
 		end
 
 	has_same_ready_formatted_path (a_path: STRING): BOOLEAN is
@@ -239,30 +239,29 @@ feature -- Comparison
 			if not Result then
 				create l_file.make (a_path)
 				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
-			end
+		end
 		end
 
-feature -- Formatting
-
-	format_path (a_path: STRING): STRING is
-			-- Formats `a_path' to produce a comparable path.
+	has_same_gac_information (a_name: like name; a_version: like version; a_culture: like culture; a_key: like key): BOOLEAN is
+			-- does current instance have same gac information (and it is in the gac)
 		require
-			a_path_not_void: a_path /= Void
-			not_path_is_empty: not a_path.is_empty
-		local
-			l_unc_path: BOOLEAN
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_version_ok: a_version /= Void and then not a_version.is_empty
+			a_culture_ok: a_culture /= Void
+			a_key_ok: a_key /= Void
 		do
-			l_unc_path := a_path.count > 2 and then a_path.substring (1, 2).is_equal ("\\")
-			Result := a_path.as_lower
-			Result.replace_substring_all ("\\", "\")
-			if l_unc_path then
-				Result.prepend_character ('\')
+			if is_in_gac then
+				Result := a_name.is_equal (name) and a_version.is_equal (version) and a_key.is_equal (key) and
+						(a_culture.is_equal (culture) or
+							((a_culture.is_empty or a_culture.is_case_insensitive_equal (neutral_culture)) and
+							(culture.is_empty or culture.is_case_insensitive_equal (neutral_culture))))
 			end
-		ensure
-			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
-			result_still_unc_path: a_path.count > 2 implies (a_path.substring (1, 2).is_equal ("\\") implies Result.substring (1, 2).is_equal ("\\"))
 		end
+
+feature {NONE} -- Constants
+
+	neutral_culture: STRING is "neutral"
+			-- Neutral culture name.
 
 invariant
 	non_void_assembly_name: name /= Void

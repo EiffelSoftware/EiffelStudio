@@ -79,6 +79,7 @@ feature -- Visit nodes
 			l_load: CONF_LOAD
 			l_uuid: UUID
 			l_path: STRING
+			l_comparer: FILE_COMPARER
 		do
 			if not is_error then
 				l_path := a_library.location.evaluated_path
@@ -95,7 +96,9 @@ feature -- Visit nodes
 						end
 						a_library.set_library_target (l_target)
 						a_library.set_uuid (l_uuid)
-						if a_library.options.is_warning_enabled (w_same_uuid) and not l_path.is_case_insensitive_equal (l_target.system.file_name) then
+						create l_comparer
+
+						if a_library.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
 							add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
 						end
 					else
@@ -121,11 +124,11 @@ feature -- Visit nodes
 									libraries.force (l_target, l_uuid)
 
 									level := level + 1
+									a_library.set_library_target (l_target)
+									a_library.set_uuid (l_uuid)
 									l_target.system.set_level (level)
 									l_target.process (Current)
 									level := level - 1
-									a_library.set_library_target (l_target)
-									a_library.set_uuid (l_uuid)
 								end
 							end
 						end

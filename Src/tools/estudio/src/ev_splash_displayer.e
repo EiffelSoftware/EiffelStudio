@@ -10,24 +10,13 @@ class
 
 inherit
 	SPLASH_DISPLAYER_I
-		undefine
-			default_create, copy
-		redefine
-			make_with_text
-		end
 
-	EV_APPLICATION
+	EV_SHARED_APPLICATION
 
 create
 	make_with_text
 
 feature -- Access
-
-	make_with_text (t: STRING_GENERAL) is
-		do
-			default_create
-			Precursor {SPLASH_DISPLAYER_I} (t)
-		end
 
 	splash_pixmap: EV_PIXMAP is
 			-- background splash pixmaps.
@@ -41,26 +30,29 @@ feature -- Access
 				create Result
 				Result.set_with_named_file (splash_pixmap_filename)
 			else
-				pw := 350
+				create f.default_create
+				f.set_weight ({EV_FONT_CONSTANTS}.weight_black)
+				f.set_family ({EV_FONT_CONSTANTS}.family_roman)
+				f.set_height_in_points (38)
+
+				w := f.string_width ("Eiffel Studio")
+
+				pw := (w + 60).max (350)
 				ph := 180
+
 				create Result.make_with_size (pw, ph)
 				Result.set_background_color ((create {EV_COLOR}.make_with_8_bit_rgb (220,240,250)))
 				Result.clear
 				Result.set_foreground_color ((create {EV_COLOR}.make_with_8_bit_rgb (74,148,222)))
 				Result.fill_rectangle (0, ph - 22, pw, 22)
 
-				create f.default_create
-				f.set_weight ({EV_FONT_CONSTANTS}.weight_black)
-				f.set_family ({EV_FONT_CONSTANTS}.family_roman)
-				f.set_height_in_points (38)
 				Result.set_font (f)
 				y := (ph - f.height - 22) // 2
-				x := (pw - f.string_width ("  Eiffel Studio")) // 3
+				x := (pw - w) // 2
 				Result.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				Result.draw_text_top_left (x, y, "  Eiffel")
-
+				Result.draw_text_top_left (x, y, "Eiffel")
 				Result.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (65,130,200))
-				Result.draw_text_top_left (x + f.string_width ("  Eiffel"), y, " Studio")
+				Result.draw_text_top_left (x + f.string_width ("Eiffel"), y, " Studio")
 
 				Result.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (115, 173, 231))
 				Result.draw_rectangle (0, ph - 22, pw, 22)
@@ -124,12 +116,11 @@ feature -- Access
 			end
 				--| Mainly for GTK, we have to launch the ev_application
 				--| and let's destroy on the close action
-			launch
 		end
 
 	close is
 		do
-			destroy
+			ev_application.destroy
 		end
 
 indexing

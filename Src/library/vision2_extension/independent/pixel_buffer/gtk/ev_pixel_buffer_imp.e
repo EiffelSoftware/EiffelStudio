@@ -35,14 +35,6 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	destroy is
-			-- Destroy `Current'.
-		do
-			set_is_in_destroy (True)
-			set_gdkpixbuf (default_pointer)
-			set_is_destroyed (True)
-		end
-
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
@@ -111,6 +103,14 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
 	gdk_pixbuf: POINTER
 		-- Pointer to the GdkPixbuf structure.
+
+	destroy is
+			-- Destroy `Current'.
+		do
+			set_is_in_destroy (True)
+			set_gdkpixbuf (default_pointer)
+			set_is_destroyed (True)
+		end
 
 feature {NONE} -- Dispose
 

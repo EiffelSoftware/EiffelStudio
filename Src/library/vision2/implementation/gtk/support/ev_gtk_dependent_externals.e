@@ -10,6 +10,41 @@ class
 
 feature -- Externals
 
+	frozen gdk_pixbuf_copy (a_pixbuf: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf)"
+		end
+
+	frozen gdk_pixbuf_new_subpixbuf (a_pixbuf: POINTER; src_x, src_y, width, height: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height)"
+		end
+
+	frozen gdk_pixbuf_get_width (a_pixbuf: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf)"
+		end
+
+	frozen gdk_pixbuf_get_height (a_pixbuf: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf)"
+		end
+
+	frozen gdk_colorspace_rgb_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_COLORSPACE_RGB"
+		end
+
 	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"

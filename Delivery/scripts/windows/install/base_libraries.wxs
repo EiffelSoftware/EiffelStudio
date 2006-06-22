@@ -789,19 +789,21 @@
 								<File Id="array.e" Name="array.e" />
 								<File Id="boolean.e" Name="boolean.e" />
 								<File Id="boolean_ref_e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
-								<File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
-								<File Id="character_ref_e" Name="CHARAC~2.E" LongName="character_ref.e" />
+								<File Id="character_8.e" Name="CHARAC~1.E" LongName="character_8.e" />
+								<File Id="character_8_ref_e" Name="CHARAC~2.E" LongName="character_8_ref.e" />
+								<File Id="character_32.e" Name="CHARAC~3.E" LongName="character_32.e" />
+								<File Id="character_32_ref.e" Name="CHARAC~4.E" LongName="character_32_ref.e" />
 								<File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
 								<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
 								<File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
 								<File Id="hashable.e" Name="hashable.e" />
 								<File Id="integer_8.e" Name="INTEGE~1.E" LongName="integer_8.e" />
 								<File Id="integer_16.e" Name="INTEGE~2.E" LongName="integer_16.e" />
-								<File Id="integer.e" Name="integer.e" />
+								<File Id="integer_32.e" Name="INTEGE~3.E" LongName="integer_32.e" />
 								<File Id="integer_64.e" Name="INTEGE~4.E" LongName="integer_64.e" />
 								<File Id="integer_8_ref.e" Name="INTEGE~5.E" LongName="integer_8_ref.e" />
 								<File Id="integer_16_ref.e" Name="INTEGE~6.E" LongName="integer_16_ref.e" />
-								<File Id="integer_ref.e" Name="INTEGE~7.E" LongName="integer_ref.e" />
+								<File Id="integer_32_ref.e" Name="INTEGE~7.E" LongName="integer_32_ref.e" />
 								<File Id="integer_64_ref.e" Name="INTEGE~8.E" LongName="integer_64_ref.e" />
 								<File Id="integer_interval.e" Name="INTEGE~9.E" LongName="integer_interval.e" />
 								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
@@ -818,9 +820,11 @@
 								<File Id="numeric_information" Name="NUMERI~1.E" LongName="numeric_information.e" />
 								<File Id="integer_overflow_checker_e" Name="IN375A~1.E" LongName="integer_overflow_checker.e" />
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
+								<File Id="real_32.e" Name="real_32.e" />
+								<File Id="real_64.e" Name="real_64.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
-								<File Id="string.e" Name="string.e" />
+								<File Id="string_8.e" Name="string_8.e" />
 								<File Id="string_32.e" Name="STRING~6.E" LongName="string_32.e" />
 								<File Id="string_general.e" Name="STRING~7.E" LongName="string_general.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
@@ -830,8 +834,6 @@
 								<File Id="string_to_real_convertor_e" Name="STRING~5.E" LongName="string_to_real_convertor.e" />
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
-								<File Id="wide_character_ref.e" Name="WIDE_C~2.E" LongName="wide_character_ref.e" />
-								<File Id="wide_character.e" Name="WIDE_C~1.E" LongName="wide_character.e" />
 							</Component>
 							<Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions">
 								<Component Id="exceptions" Guid="1EBF9024-74C3-4ab2-8454-3C82E4DADCBC">
@@ -850,7 +852,6 @@
 									<File Id="file_name_e" Name="FILE_N~1.E" LongName="file_name.e" />
 									<File Id="storable_e" Name="storable.e" />
 									<File Id="native_array_e2" Name="NATIVE~1.E" LongName="native_array.e" />
-									<File Id="real_ref_e" Name="real_ref.e" />
 									<File Id="pointer_e" Name="pointer.e" />
 									<File Id="console_e" Name="console.e" />
 									<File Id="unix_signals_e" Name="UNIX_S~1.E" LongName="unix_signals.e" />
@@ -859,10 +860,10 @@
 									<File Id="file_e" Name="file.e" />
 									<File Id="bit_ref_e" Name="bit_ref.e" />
 									<File Id="exceptions_e" Name="EXCEPT~2.E" LongName="exceptions.e" />
-									<File Id="real_e" Name="real.e" />
+									<File Id="real_32_ref_e" Name="REAL_3~1.E" LongName="real_32_ref.e" />
+									<File Id="real_64_ref_e" Name="REAL_6~1.E" LongName="real_64_ref.e" />
 									<File Id="platform_e" Name="platform.e" />
 									<File Id="memory_e" Name="memory.e" />
-									<File Id="double_ref_e" Name="DOUBLE~2.E" LongName="double_ref.e" />
 									<File Id="directory_name_e" Name="DIRECT~3.E" LongName="directory_name.e" />
 									<File Id="pointer_ref_e" Name="POINTE~1.E" LongName="pointer_ref.e" />
 									<File Id="cli_cell_e" Name="cli_cell.e" />
@@ -870,7 +871,6 @@
 									<File Id="basic_routines_e" Name="BASIC_~1.E" LongName="basic_routines.e" />
 									<File Id="unix_file_info_e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
 									<File Id="stream_e" Name="stream.e" />
-									<File Id="double_e" Name="double.e" />
 									<File Id="function_e" Name="function.e" />
 									<File Id="tuple_e" Name="tuple.e" />
 									<File Id="any_e" Name="any.e" />
@@ -906,21 +906,19 @@
 									<File Id="raw_file.e" Name="raw_file.e" />
 									<File Id="console.e" Name="console.e" />
 									<File Id="stream.e" Name="stream.e" />
-									<File Id="double.e" Name="double.e" />
 									<File Id="bit_ref.e" Name="bit_ref.e" />
 									<File Id="directory_name.e" Name="DIRECT~2.E" LongName="directory_name.e" />
 									<File Id="storable.e" Name="storable.e" />
 									<File Id="mem_info.e" Name="mem_info.e" />
 									<File Id="file.e" Name="file.e" />
 									<File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
-									<File Id="real_ref.e" Name="real_ref.e" />
+									<File Id="real_32_ref_e" Name="REAL_3~1.E" LongName="real_32_ref.e" />
+									<File Id="real_64_ref_e" Name="REAL_6~1.E" LongName="real_64_ref.e" />
 									<File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
 									<File Id="special.e" Name="special.e" />
-									<File Id="real.e" Name="real.e" />
 									<File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />
 									<File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
 									<File Id="exceptions.e" Name="EXCEPT~1.E" LongName="exceptions.e" />
-									<File Id="double_ref.e" Name="DOUBLE~1.E" LongName="double_ref.e" />
 									<File Id="directory.e" Name="DIRECT~1.E" LongName="directory.e" />
 									<File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
 									<File Id="any.e" Name="any.e" />

@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					l_library := l_lib_list.item
 					l_sorted_list.put (l_library, l_lib_list.index)
 					if (l_library.name_prefix /= Void and then not l_library.name_prefix.is_empty) or
-					(conf_class /= Void and then l_library.renaming.has (conf_class.name))
+					(conf_class /= Void and then l_library.renaming /= Void and then l_library.renaming.has (conf_class.name))
 					then
 						l_renamed := True
 					end

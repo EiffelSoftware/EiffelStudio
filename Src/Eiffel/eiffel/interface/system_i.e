@@ -429,9 +429,6 @@ feature -- Properties
 				-- The root class is not protected
 				-- Godammit.
 			local_workbench.change_class (root_class)
-
-			-- Now add classes with visible features.
-			add_visible_classes
 		end
 
 	mark_only_used_precompiled_classes is
@@ -486,29 +483,6 @@ feature -- Properties
 				root_class.compiled_class.is_precompiled
 			then
 				root_class.compiled_class.record_precompiled_class_in_system
-			end
-		end
-
-	add_visible_classes is
-			-- Force visible classes into System
-		local
-			l_conf_class: CONF_CLASS
-			l_class_i: CLASS_I
-		do
-			from
-				new_classes.start
-			until
-				new_classes.after
-			loop
-				l_class_i := new_classes.item
-				l_conf_class ?= l_class_i
-				check
-					is_conf_class: l_conf_class /= Void
-				end
-				if l_conf_class.is_always_compile then
-					workbench.change_class (l_class_i)
-				end
-				new_classes.forth
 			end
 		end
 
@@ -951,22 +925,25 @@ end
 				l_classes.forth
 			end
 				-- added classes
-				-- we don't need them on the first compilation
-			if not first_compilation or else has_compilation_started or compilation_modes.is_precompiling then
-				l_classes := l_vis_build.added_classes
-				from
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_conf_class := l_classes.item_for_iteration
-					l_class_i ?= l_conf_class
-					check
-						class_i: l_class_i /= Void
-					end
-					record_new_class_i (l_class_i)
-					l_classes.forth
+			l_classes := l_vis_build.added_classes
+			from
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_conf_class := l_classes.item_for_iteration
+				l_class_i ?= l_conf_class
+				check
+					class_i: l_class_i /= Void
 				end
+
+					-- add visible classes
+				if l_conf_class.is_always_compile then
+					workbench.change_class (l_class_i)
+				end
+				record_new_class_i (l_class_i)
+
+				l_classes.forth
 			end
 
 				-- removed classes
@@ -1204,7 +1181,6 @@ end
 						-- changed_classes.
 					Workbench.change_class (root_class)
 				end
-				add_visible_classes
 			end
 
 				-- check configuration and add warnings

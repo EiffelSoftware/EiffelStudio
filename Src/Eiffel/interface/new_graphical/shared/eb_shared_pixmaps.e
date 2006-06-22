@@ -70,74 +70,14 @@ feature -- Pngs
 
 feature -- Icons
 
-	Icon_blank: EV_PIXMAP is
-		once
-			create Result.make_with_size (16, 16)
-		end
-
 	Icon_dialog_window: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_dialog_window_value)
 		end
 
-	Icon_preference_root: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_preference_root_value)
-		end
-
-	Icon_preference_window: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_preference_window_value)
-		end
-
-	Icon_open_exception_dialog: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_open_exception_dialog_value)
-		end
-
-	Icon_object_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_object_symbol_value)
-		end
-
-	Icon_static_object_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_static_object_symbol_value)
-		end
-
-	Icon_external_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_external_symbol_value)
-		end
-
-	Icon_static_external_symbol: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_static_external_symbol_value)
-		end
-
-	Icon_other_feature: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_other_feature_value)
-		end
-
-	Icon_void_object: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_void_pointer_value)
-		end
-
 	Icon_dotnet_import: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_dotnet_import_color_value)
-		end
-
-	Icon_expanded_object: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_expanded_object_value)
-		end
-
-	Icon_immediate_value: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_immediate_value_value)
 		end
 
 	Icon_compilation_succeeded: EV_PIXMAP is
@@ -158,16 +98,6 @@ feature -- Icons
 	Icon_expression_disabled: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_stopped_value)
-		end
-
-	Icon_edited: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_editing_value)
-		end
-
-	Icon_not_edited: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_exe_up_to_date_value)
 		end
 
 	Icon_running: ARRAY [EV_PIXMAP] is
@@ -192,23 +122,10 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_compiling_4_value)
 		end
 
-	Icon_toolbar_separator: EV_PIXMAP is
-			-- Icon for toolbar separator.
-		once
-			Result := pixmap_from_constant (icon_toolbar_separator_value)
-		end
-
 	Icon_system_info: EV_PIXMAP is
 			-- Icon for "System Info" command
 		once
 			Result := pixmap_from_constant (icon_system_info_color_value)
-		end
-
-	Icon_debugger_exception: EV_PIXMAP is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := pixmap_from_constant (icon_debugger_exception_value)
 		end
 
 	Icon_context_tool: EV_PIXMAP is
@@ -264,29 +181,9 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_new_dynamic_lib_color_value)
 		end
 
-	Icon_new_cluster: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_new_cluster_color_value)
-		end
-
-	Icon_minimize_all: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_minimize_all_color_value)
-		end
-
 	Icon_new_measure: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_new_measure_color_value)
-		end
-
-	Icon_raise_all: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_restore_all_color_value)
-		end
-
-	Icon_raise_all_unsaved: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_restore_all_unsaved_color_value)
 		end
 
 	Icon_check_exports: EV_PIXMAP is
@@ -407,6 +304,7 @@ feature -- Icons
 		once
 			Result := pixmap_from_constant (icon_delete_view_color_value)
 		end
+
 	Icon_reset_view: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_reset_view_color_value)
@@ -522,21 +420,6 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_anchor_color_value)
 		end
 
-	Icon_green_arrow: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_green_arrow_value)
-		end
-
-	Icon_arrow_empty: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_arrow_empty_value)
-		end
-
-	Icon_green_tick: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_green_tick_value)
-		end
-
 	Icon_red_cross: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_red_cross_value)
@@ -567,27 +450,6 @@ feature -- Icons
 			--
 		once
 			Result := pixmap_from_constant (icon_add_new_external_cmd_color_value)
-		end
-
-	Icon_quick_search_next_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_quick_search_next_color_value)
-		end
-
-	Icon_quick_search_previous_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_quick_search_previous_color_value)
-		end
-
-	Icon_quick_search_close_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_quick_search_close_color_value)
-		end
-
-
-	icon_expandable_right_arrow_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (icon_expandable_right_arrow_color_value)
 		end
 
 	Icon_bottom_reached_icon: EV_PIXMAP is

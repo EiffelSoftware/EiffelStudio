@@ -23,6 +23,11 @@ feature -- Access
 		deferred
 		end
 
+	close is
+			-- Close spash box
+		deferred
+		end
+
 feature -- Change
 
 	set_splash_pixmap_filename (fn: STRING) is

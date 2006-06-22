@@ -20,6 +20,10 @@ feature
 		do
 			--| no splash on unix
 		end
+
+	close is
+		do
+		end
 	
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

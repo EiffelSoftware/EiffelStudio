@@ -1080,9 +1080,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				if l_as.expression /= Void then
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 					l_as.expression.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				else
 					if l_as.target /= Void then
 						l_as.target.process (Current)

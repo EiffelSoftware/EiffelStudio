@@ -338,9 +338,6 @@ feature -- Retrieve information from ast
 			Result := current_cursor.pos_in_token
 		end
 
-	current_cursor: EDITOR_CURSOR
-			-- Current cursor
-
 feature -- Click list update
 
 	reset_positions_and_indexes is
@@ -499,19 +496,26 @@ feature {NONE} -- Retrieve information from text
 	save_cursor_position is
 			-- Save cursor position
 		do
-			old_token := current_cursor.token
-			old_position := current_cursor.pos_in_token
+			if saved_positions = Void then
+				create saved_positions.make
+			end
+			saved_positions.put_front (current_cursor.twin)
 		end
 
 	retrieve_cursor_position is
 			-- Retrieve cursor position
+		local
+			l_cursor: EDITOR_CURSOR
 		do
-			current_cursor.set_current_char (old_token, old_position)
+			if saved_positions /= Void and then not saved_positions.is_empty then
+				saved_positions.go_i_th (1)
+				l_cursor  := saved_positions.item
+				saved_positions.remove
+				current_cursor.set_current_char (l_cursor.token, l_cursor.pos_in_token)
+			end
 		end
 
-	old_token: EDITOR_TOKEN
-
-	old_position: INTEGER
+	saved_positions : LINKED_LIST [EDITOR_CURSOR]
 
 feature {NONE} -- Private Access : indexes
 
@@ -524,8 +528,19 @@ feature {NONE} -- Private Access : indexes
 	split_string: BOOLEAN
 			-- is processed token part of a split string?
 
-
 feature {NONE} -- Implementation
+
+	current_cursor: EDITOR_CURSOR
+		-- Current cursor
+
+	cursor_token: EDITOR_TOKEN is
+			-- Token at cursor position
+		do
+			check
+				current_cursor_not_void: current_cursor /= Void
+			end
+			Result := current_cursor.token
+		end
 
 	click_possible (a_token: EDITOR_TOKEN): BOOLEAN is
 			-- Is `a_token' possibly clickable?

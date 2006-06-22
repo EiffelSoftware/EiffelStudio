@@ -20,7 +20,8 @@ inherit
 			copy
 		redefine
 			calculate_completion_list_width,
-			can_complete
+			can_complete,
+			is_focus_back_needed
 		end
 
 	EV_TEXT_FIELD
@@ -121,8 +122,8 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			loop
 				l_offset := cursor_pos - token_start_pos
 				token_length := l_line.item.length
-				if l_offset <= token_length then
-					Result := l_offset
+				if l_offset < token_length then
+					Result := l_offset + 1
 					end_loop := true
 				else
 					token_start_pos := token_start_pos + token_length
@@ -201,6 +202,12 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
 		end
 
 	allow_tab_selecting: BOOLEAN is false
+
+	is_focus_back_needed: BOOLEAN is
+			-- Should focus be set back after code completion?
+		do
+			Result := not is_destroyed
+		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 
@@ -408,29 +415,19 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 	save_cursor is
 			-- Save cursor position for retrieving.
 		do
-			saved_cursor_position := caret_position
+			if saved_cursor_positions = Void then
+			 	create saved_cursor_positions.make
+			end
+			saved_cursor_positions.put_front (caret_position)
 		end
 
 	retrieve_cursor is
 			-- Retrieve cursor position from saving.
 		do
-			set_caret_position (saved_cursor_position)
-		end
-
-	select_from_cursor_to_saved is
-			-- Select from cursor position to saved cursor position
-		local
-			l_car, l_sav: INTEGER
-		do
-			l_car := caret_position.max (1).min (text_length)
-			l_sav := saved_cursor_position.max (1).min (text_length)
-			set_caret_position (l_sav)
-			if l_car > l_sav then
-				select_region (l_car - 1, l_sav)
-			elseif l_car < l_sav then
-				select_region (l_car, l_sav - 1)
-			elseif l_car = l_sav then
-				disable_selection
+			if saved_cursor_positions /= Void and then not saved_cursor_positions.is_empty then
+				saved_cursor_positions.go_i_th (1)
+				set_caret_position (saved_cursor_positions.item)
+				saved_cursor_positions.remove
 			end
 		end
 
@@ -512,7 +509,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			set_caret_position (token_position (a_token, a_line))
 		end
 
-	saved_cursor_position: INTEGER
+	saved_cursor_positions: LINKED_LIST [INTEGER]
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 
@@ -601,6 +598,52 @@ feature {NONE} -- Implementation
 				then
 					Result := true
 				end
+					-- We remove the 'key' character on windows platform.
+					-- On linux the key has not been inserted.
+					-- Fix needed.
+				precompletion_actions.wipe_out
+				precompletion_actions.extend_kamikaze (agent remove_keyed_character (a_key))
+			end
+		end
+
+	remove_keyed_character (a_key: EV_KEY) is
+			-- We remove the 'key' character on windows platform.
+			-- On linux the key has not been inserted.
+			-- Fix needed.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if not universe.platform_constants.is_unix then
+				if caret_position > 1 then
+					if is_same_key (a_key, text.item_code (caret_position - 1)) then
+						back_delete_char
+					end
+				end
+			end
+		end
+
+	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN is
+			-- Is `a_key' a `a_char_code' character?
+		require
+			a_key_not_void: a_key /= Void
+		local
+			l_string: STRING_32
+			l_keys: EV_KEY_CONSTANTS
+		do
+			create l_keys
+			l_string := l_keys.key_strings.item (a_key.code)
+			if l_string /= Void then
+				if l_string.count = 1 then
+					if l_string.item_code (1) = a_char_code and then a_char_code /= ('.').code then
+						Result := True
+					end
+				elseif l_string.is_equal ("Space") then
+					Result := True
+				elseif a_key.is_numpad then
+					if l_string.item_code (l_string.count) = a_char_code then
+						Result := True
+					end
+				end
 			end
 		end
 
@@ -623,11 +666,15 @@ feature {NONE} -- Lexer
 	line_from_lexer: EDITOR_LINE is
 			-- Editor line from lexer.
 		do
-			if text.is_empty then
-				create Result.make_empty_line
+			if not is_destroyed then
+				if text.is_empty then
+					create Result.make_empty_line
+				else
+					scanner.execute (text)
+					create Result.make_from_lexer (scanner)
+				end
 			else
-				scanner.execute (text)
-				create Result.make_from_lexer (scanner)
+				create Result.make_empty_line
 			end
 		end
 

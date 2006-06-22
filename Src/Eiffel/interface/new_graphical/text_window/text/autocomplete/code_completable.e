@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 			key_press_actions_attached: key_press_actions /= Void
 		do
 			key_press_actions.extend (agent on_key_pressed)
+			create precompletion_actions
 			key_completable := agent can_complete
 			create completion_timeout.make_with_interval (default_timer_interval)
 			completion_timeout.actions.extend (agent complete_code)
@@ -193,6 +194,7 @@ feature -- Basic operation
 			-- Prepare auto complete and show choice window directly.
 		do
 			if possibilities_provider /= Void then
+				precompletion_actions.call ([])
 				prepare_auto_complete
 				if possibilities_provider.completion_possible then
 					block_focus_out_actions
@@ -425,6 +427,9 @@ feature {NONE} -- Implementation
 		do
 			possibilities_provider.prepare_completion
 		end
+
+	precompletion_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions called before trying to complete
 
 feature {NONE} -- Complete essentials
 

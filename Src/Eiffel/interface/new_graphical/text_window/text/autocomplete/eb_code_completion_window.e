@@ -599,7 +599,9 @@ feature {NONE} -- Implementation
 			end
 			exit
 			code_completable.block_focus_in_actions
-			code_completable.set_focus
+			if code_completable.is_focus_back_needed then
+				code_completable.set_focus
+			end
 			code_completable.resume_focus_in_actions
 		end
 

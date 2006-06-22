@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_line_width (1)
 		end
 
-feature {EV_DRAWABLE_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	gc: POINTER
 			-- Pointer to GdkGC struct.
@@ -66,6 +66,8 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			-- Pointer to the mask used by `Current'
 		deferred
 		end
+
+feature {EV_DRAWABLE_IMP} -- Implementation
 
 	line_style: INTEGER
 			-- Dash-style used when drawing lines.

@@ -72,6 +72,7 @@ feature -- Command
 			create Result
 			l_imp ?= Result.implementation
 			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 			l_imp.set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pixbuf))
 			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
 		end

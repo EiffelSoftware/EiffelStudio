@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			create expanded_section_store.make (0)
 
 			Precursor
-			disable_last_column_use_all_width
 			disable_selection_on_click
 
 			enable_row_separators
@@ -51,10 +50,10 @@ feature {NONE} -- Initialization
 
 			set_column_count_to (2)
 			set_auto_resizing_column (name_column, True)
+			enable_last_column_use_all_width
 
 			pointer_button_press_actions.extend (agent select_name_item)
 			key_press_actions.extend (agent on_key_pressed)
-			resize_actions.extend (agent resize)
 		end
 
 feature -- Status
@@ -86,9 +85,11 @@ feature -- Update
 		do
 			wipe_out
 			set_column_count_to (2)
+			set_auto_resizing_column (name_column, True)
+			enable_last_column_use_all_width
+
 			sections.wipe_out
 			create expanded_section_store.make (0)
-			resize (0, 0, 0, 0)
 		end
 
 	add_section (a_name: STRING) is
@@ -215,25 +216,6 @@ feature {NONE} -- Agents
 				if selected_items /= Void and then selected_items.count = 1 then
 					selected_items.first.activate
 				end
-			end
-		end
-
-	resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Resize window.
-		local
-			l_w1, l_w2: INTEGER
-			l_available_width: INTEGER
-		do
-			if not is_destroyed then
-				l_w1 := column (name_column).width
-				l_w2 := column (value_column).width
-				l_available_width := width
-				l_w1 := l_w1 + (l_available_width - l_w1 - l_w2)//2
-				l_w2 := l_available_width - l_w1
-				l_w1 := l_w1.max (10)
-				l_w2 := l_w2.max (10)
-				column (name_column).set_width (l_w1)
-				column (value_column).set_width (l_w2)
 			end
 		end
 

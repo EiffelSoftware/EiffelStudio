@@ -118,7 +118,7 @@ feature {NONE} -- Agents
 
 			popup_window.show_actions.extend (agent initialize_actions)
 			popup_window.set_x_position (popup_window.x_position + 1)
-			popup_window.set_size (popup_window.width - 1, popup_window.height -1 )
+			popup_window.set_size (popup_window.width - 2, popup_window.height -1 )
 		end
 
 	save_set_text (a_text: G) is

@@ -127,6 +127,9 @@ feature {NONE} -- Initialization
 
 			append_small_margin (hb_main)
 
+			set_padding (default_padding_size)
+			set_border_width (default_border_size)
+
 			append_small_margin (Current)
 			create l_label.make_with_text (dialog_file_rule_description)
 			extend (l_label)

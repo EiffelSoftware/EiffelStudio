@@ -80,6 +80,12 @@ inherit
 			copy
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -110,7 +116,6 @@ feature {NONE}-- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
-			cl: EV_CELL
 			l_btn: EV_BUTTON
 		do
 				-- set default layout values
@@ -119,29 +124,28 @@ feature {NONE}-- Initialization
 				-- window
 			Precursor {EV_TITLED_WINDOW}
 			set_title (configuration_title (conf_system.name))
-			set_width (initial_window_width)
-			set_height (initial_window_height)
+			set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
+			set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
 			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
 			enable_user_resize
 
 			create hb
 			extend (hb)
+			append_margin (hb)
+			create vb
+			hb.extend (vb)
+			hb.disable_item_expand (vb)
+			append_margin (vb)
 
 					-- section tree
 			initialize_section_tree
-			hb.extend (section_tree)
-			hb.disable_item_expand (section_tree)
+			vb.extend (section_tree)
+			append_margin (vb)
 
-			create cl
-			cl.set_minimum_width (margin_size)
-			hb.extend (cl)
-			hb.disable_item_expand (cl)
+			append_margin (hb)
 			create vb
 			hb.extend (vb)
-			create cl
-			cl.set_minimum_height (margin_size)
-			vb.extend (cl)
-			vb.disable_item_expand (cl)
+			append_margin (vb)
 
 				-- configuration space
 			create configuration_space
@@ -150,14 +154,8 @@ feature {NONE}-- Initialization
 				-- property grid
 			show_actions.extend (agent show_properties_system)
 
-			create cl
-			cl.set_minimum_height (margin_size)
-			vb.extend (cl)
-			vb.disable_item_expand (cl)
-			create cl
-			cl.set_minimum_width (margin_size)
-			hb.extend (cl)
-			hb.disable_item_expand (cl)
+			append_margin (vb)
+			append_margin (hb)
 
 			create hb
 			vb.extend (hb)
@@ -176,9 +174,10 @@ feature {NONE}-- Initialization
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
-			close_request_actions.extend (agent on_cancel)
-
 			append_margin (vb)
+
+			key_press_actions.extend (agent on_key)
+			close_request_actions.extend (agent on_cancel)
 			show_actions.extend (agent section_tree.set_focus)
 		end
 
@@ -188,6 +187,10 @@ feature -- Command
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
+			preferences.dialog_data.project_settings_width_preference.set_value (width)
+			preferences.dialog_data.project_settings_height_preference.set_value (height)
+			preferences.dialog_data.project_settings_position_x_preference.set_value (x_position)
+			preferences.dialog_data.project_settings_position_y_preference.set_value (y_position)
 			Precursor
 			config_windows.remove (conf_system.file_name)
 		end
@@ -213,6 +216,17 @@ feature {NONE} -- Agents
 		ensure
 			current_target_set: current_target /= Void
 		end
+
+	on_key (a_key: EV_KEY) is
+			-- `a_key' was pressed.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+				on_cancel
+			end
+		end
+
 
 	on_cancel is
 			-- Quit without saving.
@@ -545,15 +559,16 @@ feature {NONE} -- Section tree selection agents
 			l_tb_btn.set_tooltip (remove_group_text)
 			l_tb_btn.select_actions.extend (agent remove_group)
 
+			create edit_library_button.make_with_text (library_edit_configuration)
+
 			append_groups_tree (vb)
 			append_small_margin (hb)
 			target_configuration_space.extend (hb)
 			create vb
 			hb.extend (vb)
-			create edit_library_button.make_with_text (library_edit_configuration)
 			vb.extend (edit_library_button)
 			vb.disable_item_expand (edit_library_button)
-			edit_library_button.hide
+			edit_library_button.disable_sensitive
 			append_property_grid (vb)
 			append_small_margin (vb)
 			append_property_description (vb)
@@ -1517,7 +1532,7 @@ feature {NONE} -- Implementation
 			current_group := a_group
 			properties.reset
 
-			edit_library_button.hide
+			edit_library_button.disable_sensitive
 			edit_library_button.select_actions.wipe_out
 
 			properties.add_section (section_general)
@@ -1538,7 +1553,6 @@ feature {NONE} -- Implementation
 				l_text_prop.set_value (group_library)
 				l_library ?= a_group
 				l_visible := l_library
-				edit_library_button.show
 				edit_library_button.disable_sensitive
 				if not l_library.is_readonly then
 					edit_library_button.enable_sensitive
@@ -2017,21 +2031,39 @@ feature {NONE} -- Implementation
 			-- Add `a_groups' to `a_tree' under a header with `a_name'.
 		require
 			a_tree: a_tree /= Void
+			properties: properties /= Void
+			edit_library_button: edit_library_button /= Void
 		local
 			l_head_item, l_item: EV_TREE_ITEM
 			l_group: CONF_GROUP
 			l_cluster: CONF_CLUSTER
+			l_sort_list: DS_ARRAYED_LIST [CONF_GROUP]
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
 				create l_head_item.make_with_text (a_name)
 				l_head_item.set_pixmap (a_head_pix)
+				l_head_item.select_actions.extend (agent properties.reset)
+				l_head_item.select_actions.extend (agent edit_library_button.disable_sensitive)
 				a_tree.extend (l_head_item)
+
+					-- sort groups alphabetically
+				create l_sort_list.make (a_groups.count)
 				from
 					a_groups.start
 				until
 					a_groups.after
 				loop
-					l_group := a_groups.item_for_iteration
+					l_sort_list.force_last (a_groups.item_for_iteration)
+					a_groups.forth
+				end
+				l_sort_list.sort (create {DS_QUICK_SORTER [CONF_GROUP]}.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make))
+
+				from
+					l_sort_list.start
+				until
+					l_sort_list.after
+				loop
+					l_group := l_sort_list.item_for_iteration
 					l_cluster ?= l_group
 					if l_cluster = Void or else l_cluster.parent = Void then
 						create l_item.make_with_text (l_group.name)
@@ -2046,7 +2078,7 @@ feature {NONE} -- Implementation
 						end
 						l_item.set_pixmap (pixmap_from_group (l_group))
 					end
-					a_groups.forth
+					l_sort_list.forth
 				end
 			end
 		end

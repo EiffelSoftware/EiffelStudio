@@ -50,8 +50,7 @@ feature {NONE} -- Initialization
 			create sections.make (5)
 
 			set_column_count_to (2)
-			column (name_column).set_width (initial_name_column_width)
-			column (value_column).set_width (initial_value_column_width)
+			set_auto_resizing_column (name_column, True)
 
 			pointer_button_press_actions.extend (agent select_name_item)
 			key_press_actions.extend (agent on_key_pressed)
@@ -144,6 +143,7 @@ feature -- Update
 			if a_property.description /= Void then
 				l_name_item.set_tooltip (a_property.description)
 			end
+			l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
 			l_row.set_item (1, l_name_item)
 			l_row.set_item (2, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
@@ -190,6 +190,14 @@ feature -- Update
 		end
 
 feature {NONE} -- Agents
+
+	activate_property (a_property: PROPERTY; a_dummy: EV_POPUP_WINDOW) is
+			-- Activate `a_property'.
+		require
+			a_property_ok: a_property /= void
+		do
+			a_property.activate
+		end
 
 	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING) is
 			-- Update expanded status to `a_is_expanded' of `a_section'.
@@ -270,12 +278,6 @@ feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is True
 			-- Is `Current' in its default state?
-
-feature {NONE} -- Layout constants
-
-		-- column sizes
-	initial_name_column_width: INTEGER is 230
-	initial_value_column_width: INTEGER is 200
 
 feature {NONE} -- Constants
 

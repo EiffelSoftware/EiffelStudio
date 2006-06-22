@@ -159,6 +159,26 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := executing_command_preference.value
 		end
 
+	project_settings_width: INTEGER is
+		do
+			Result := project_settings_width_preference.value
+		end
+
+	project_settings_height: INTEGER is
+		do
+			Result := project_settings_height_preference.value
+		end
+
+	project_settings_position_x: INTEGER is
+		do
+			Result := project_settings_position_x_preference.value
+		end
+
+	project_settings_position_y: INTEGER is
+		do
+			Result := project_settings_position_y_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	confirm_on_terminate_freezing_preference: BOOLEAN_PREFERENCE
@@ -243,6 +263,12 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	last_saved_system_generate_key_directory_preference: STRING_PREFERENCE
 	file_open_and_save_dialogs_remember_last_directory: BOOLEAN_PREFERENCE
 
+	project_settings_width_preference: INTEGER_PREFERENCE
+	project_settings_height_preference: INTEGER_PREFERENCE
+	project_settings_position_x_preference: INTEGER_PREFERENCE
+	project_settings_position_y_preference: INTEGER_PREFERENCE
+
+
 feature -- Preference strings
 
 	confirm_on_terminate_freezing_string: STRING is "interface.dialogs.confirm_on_terminate_freezing"
@@ -290,6 +316,11 @@ feature -- Preference strings
 	last_saved_save_file_as_directory_preference_string: STRING is "interface.dialogs.last_saved_save_file_as_directory"
 	last_saved_profile_result_directory_preference_string: STRING is "interface.dialogs.last_saved_profile_result_directory"
 	last_saved_system_generate_key_directory_preference_string: STRING is "interface.dialogs.last_saved_system_generate_key_directory"
+
+	project_settings_width_preference_string: STRING is "interface.dialogs.project_settings_width"
+	project_settings_height_preference_string: STRING is "interface.dialogs.project_settings_height"
+	project_settings_position_x_preference_string: STRING is "interface.dialogs.project_settings_position_x"
+	project_settings_position_y_preference_string: STRING is "interface.dialogs.project_settings_position_y"
 
 feature {NONE} -- Implementation
 
@@ -341,6 +372,11 @@ feature {NONE} -- Implementation
 			last_saved_save_file_as_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_save_file_as_directory_preference_string, "")
 			last_saved_profile_result_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_profile_result_directory_preference_string, "")
 			last_saved_system_generate_key_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_system_generate_key_directory_preference_string, "")
+
+			project_settings_width_preference := l_manager.new_integer_preference_value (l_manager, project_settings_width_preference_string, 400)
+			project_settings_height_preference := l_manager.new_integer_preference_value (l_manager, project_settings_height_preference_string, 400)
+			project_settings_position_x_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_x_preference_string, 10)
+			project_settings_position_y_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_y_preference_string, 10)
 		end
 
 	preferences: PREFERENCES
@@ -365,6 +401,10 @@ invariant
 	confirm_kill_preference_not_void: confirm_kill_preference /= Void
 	already_editing_class_preference_not_void: already_editing_class_preference /= Void
 	executing_command_preference_not_void:  executing_command_preference /= Void
+	project_settings_width_preference_not_void: project_settings_width_preference /= Void
+	project_settings_height_preference_not_void: project_settings_height_preference /= Void
+	project_settings_position_x_preference_not_void: project_settings_position_x_preference /= Void
+	project_settings_position_y_preference_not_void: project_settings_position_y_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

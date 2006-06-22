@@ -102,16 +102,16 @@ feature {NONE} -- Initialization
 			toggle_layout_cmd := scmd
 
 			if eb_debugger_manager.enable_bkpt /= Void then
-				tb := eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
-				mini_toolbar.extend (tb)
+				enable_bkpt_button := eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (enable_bkpt_button)
 			end
 			if eb_debugger_manager.disable_bkpt /= Void then
-				tb := eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
-				mini_toolbar.extend (tb)
+				disable_bkpt_button := eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (disable_bkpt_button)
 			end
 			if eb_debugger_manager.clear_bkpt /= Void then
-				tb := eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
-				mini_toolbar.extend (tb)
+				clear_bkpt_button := eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
+				mini_toolbar.extend (clear_bkpt_button)
 			end
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
@@ -254,6 +254,12 @@ feature -- Events
 
 feature -- Memory management
 
+	enable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+
+	disable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+
+	clear_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+
 	recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
@@ -261,6 +267,9 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			enable_bkpt_button.recycle
+			disable_bkpt_button.recycle
+			clear_bkpt_button.recycle
 			toggle_layout_cmd.recycle
 			toggle_layout_cmd := Void
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)

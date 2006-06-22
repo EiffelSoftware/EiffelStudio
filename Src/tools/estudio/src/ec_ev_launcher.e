@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 			timeout: EV_TIMEOUT
 		do
 			if is_launched then
-				close_splasher
+				Precursor
 			else
 				create timeout.make_with_interval (1000)
 				timeout.actions.extend (agent exit_launcher)

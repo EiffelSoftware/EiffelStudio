@@ -213,7 +213,7 @@ feature -- Launching
 
 	exit_launcher is
 		do
-			-- Bye bye
+			close_splasher
 		end
 
 feature -- Splash

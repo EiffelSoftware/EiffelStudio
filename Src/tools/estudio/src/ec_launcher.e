@@ -89,7 +89,6 @@ feature -- Launching
 			check_environment
 			if is_environment_valid then
 				display_splash
-				;(create {EXCEPTIONS}).die(0)
 
 					--| Compute command line, args, and working directory
 				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
@@ -179,6 +178,7 @@ feature -- Launching
 					io.output.put_new_line
 				end
 				start_process (ec_path, args, working_directory)
+				close_splash
 			end
 		end
 
@@ -212,12 +212,13 @@ feature -- Launching
 
 feature -- Splash
 
+	splasher: SPLASH_DISPLAYER_I
+
 	display_splash is
 			-- Display splash window (if available)
 		require
 			is_environment_valid: is_environment_valid
 		local
-			spl: SPLASH_DISPLAYER_I
 			s: STRING_32
 			fn: FILE_NAME
 			retried: BOOLEAN
@@ -227,22 +228,34 @@ feature -- Splash
 				s.append_code (169)
 				s.append_string_general (" 2006  Eiffel Software ")
 
-				create {EV_SPLASH_DISPLAYER} spl.make_with_text (s)
+				create {EV_SPLASH_DISPLAYER} splasher.make_with_text (s)
 				create fn.make_from_string (ise_eiffel)
 				fn.extend_from_array (<<"studio", "bitmaps", "png">>)
 				fn.set_file_name ("splash.png")
 				if file_exists (fn) then
-					spl.set_splash_pixmap_filename (fn)
+					splasher.set_splash_pixmap_filename (fn)
 				end
 
 				debug ("launcher")
-					spl.set_debug_text ("This is an experimental version")
+					splasher.set_debug_text ("This is an experimental version")
 				end
-				spl.show
+				splasher.show
+			else
+				if splasher /= Void then
+					close_splash
+				end
 			end
 		rescue
 			retried := True
 			retry
+		end
+
+	close_splash is
+		do
+			if splasher /= Void then
+				splasher.close
+				splasher := Void
+			end
 		end
 
 feature -- Properties

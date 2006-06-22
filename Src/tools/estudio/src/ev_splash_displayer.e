@@ -122,6 +122,14 @@ feature -- Access
 
 				sc.draw_pixmap (x,y, pix)
 			end
+				--| Mainly for GTK, we have to launch the ev_application
+				--| and let's destroy on the close action
+			launch
+		end
+
+	close is
+		do
+			destroy
 		end
 
 indexing

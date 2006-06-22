@@ -1558,6 +1558,7 @@ feature {NONE} -- Implementation
 			l_text_prop.set_description (group_name_description)
 			l_text_prop.set_value (a_group.name)
 			l_text_prop.change_value_actions.extend (agent a_group.set_name)
+			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent refresh))
 			properties.add_property (l_text_prop)
 
 				-- description

@@ -1442,8 +1442,6 @@ feature -- Recompilation
 			root_class_c: CLASS_C
 			d1, d2: DATE_TIME
 			l_il_env: IL_ENVIRONMENT
-			l_file: KL_TEXT_INPUT_FILE
-			l_file_name: FILE_NAME
 		do
 				-- create new backup subdir
 			if workbench.automatic_backup then

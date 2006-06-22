@@ -2378,7 +2378,7 @@ feature -- Features info
 						l_has_property := True
 						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
 					end
-					if feat.has_property_setter and then not is_override then
+					if feat.has_property_setter then
 						if is_property_setter_generated (feat, signature_declaration_type) then
 							l_property_name := feat.property_name
 							if is_override then
@@ -2402,7 +2402,7 @@ feature -- Features info
 							postponed_property_setters.extend (create {PAIR [INTEGER, INTEGER]}.make (feat.feature_id, current_type_id))
 						end
 					end
-					if feat.has_property_getter and then not is_override then
+					if is_property_getter_generated (feat, signature_declaration_type) then
 						l_property_name := feat.property_name
 						if is_override then
 							l_property_name := Override_prefix + l_property_name + override_counter.value.out
@@ -3321,7 +3321,7 @@ feature -- IL Generation
 			end
 		end
 
-	generate_property (f: FEATURE_I; i: FEATURE_I; parent_type: CLASS_TYPE) is
+	generate_property (f: FEATURE_I; i: FEATURE_I; parent_type: CLASS_TYPE; is_impl_required: BOOLEAN) is
 			-- Generate property methods associated with feature `f' (if any)
 			-- given that the inherited feature is `i' (if any) from parent
 			-- class type `parent_type'.
@@ -3334,7 +3334,7 @@ feature -- IL Generation
 					-- Look for assigner command.
 				generate_property_setter_body (f)
 				method_writer.write_current_body
-				if i /= Void and then i.has_property_setter then
+				if is_impl_required and then i /= Void and then is_property_setter_generated (i, parent_type) then
 					md_emit.define_method_impl (current_class_token,
 						current_module.property_setter_token (current_type_id, f.feature_id),
 						current_module.property_setter_token (parent_type.static_type_id, i.feature_id))
@@ -3344,7 +3344,7 @@ feature -- IL Generation
 				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
 				generate_property_getter_body (f)
 				method_writer.write_current_body
-				if i /= Void and then i.has_property_getter then
+				if is_impl_required and then i /= Void and then is_property_getter_generated (i, parent_type) then
 					md_emit.define_method_impl (current_class_token,
 						current_module.property_getter_token (current_type_id, f.feature_id),
 						current_module.property_getter_token (parent_type.static_type_id, i.feature_id))

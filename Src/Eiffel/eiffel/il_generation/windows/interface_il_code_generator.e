@@ -127,11 +127,11 @@ feature -- IL Generation
 				end
 				set_signature_type (property_sig, t)
 				st := current_module.defined_property_setter_token (tid, fid)
-				if st = 0 then
+				if st & {MD_TOKEN_TYPES}.md_method_def /= {MD_TOKEN_TYPES}.md_method_def then
 					st := {MD_TOKEN_TYPES}.md_method_def
 				end
 				gt := current_module.defined_property_getter_token (tid, fid)
-				if gt = 0 then
+				if gt & {MD_TOKEN_TYPES}.md_method_def /= {MD_TOKEN_TYPES}.md_method_def then
 					gt := {MD_TOKEN_TYPES}.md_method_def
 				end
 				pt := md_emit.define_property (ct, uni_string, 0, property_sig, st, gt)
@@ -456,7 +456,7 @@ feature -- IL Generation
 						-- inherited method to current defined one.
 					generate_method_impl (feat, impl_class_type, impl_feat)
 				end
-				generate_property (feat, inh_feat, class_type)
+				generate_property (feat, inh_feat, class_type, not l_is_method_impl_generated)
 			end
 		end
 
@@ -517,7 +517,7 @@ feature -- IL Generation
 							feat.written_feature_id)
 				end
 			end
-			generate_property (feat, inh_feat, class_type)
+			generate_property (feat, inh_feat, class_type, not l_is_method_impl_generated)
 			if old_class_type /= Void then
 				byte_context.set_class_type (old_class_type)
 			end

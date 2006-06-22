@@ -12,7 +12,7 @@ inherit
 		undefine
 			default_create, copy
 		redefine
-			make, new_splasher
+			make, new_splasher, exit_launcher
 		end
 
 	EV_APPLICATION
@@ -33,10 +33,21 @@ feature {NONE} -- Creation
 			ev_launch
 		end
 
+	exit_launcher is
+		local
+			timeout: EV_TIMEOUT
+		do
+			if is_launched then
+				close_splasher
+			else
+				create timeout.make_with_interval (1000)
+				timeout.actions.extend (agent exit_launcher)
+			end
+		end
+
 	new_splasher (t: STRING_GENERAL): EV_SPLASH_DISPLAYER is
 		do
 			create Result.make_with_text (t)
 		end
-
 
 end

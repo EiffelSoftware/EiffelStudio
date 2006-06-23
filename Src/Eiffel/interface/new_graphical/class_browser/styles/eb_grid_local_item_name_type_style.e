@@ -1,5 +1,5 @@
 indexing
-	description: "'name: TYPE' as one of completion possiblities."
+	description: "Name and type is displayed as displaying a local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,58 +7,44 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_NAME_WITH_TYPE_FOR_COMPLETION
+	EB_GRID_LOCAL_ITEM_NAME_TYPE_STYLE
 
 inherit
-	EB_NAME_FOR_COMPLETION
-		rename
-			make as old_make
-		redefine
-			grid_item
-		end
+	EB_GRID_LOCAL_ITEM_STYLE
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: STRING; a_type: TYPE_A; a_feature: FEATURE_I) is
-			-- Init
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-		do
-			old_make (a_name)
-			return_type := a_type
-			feature_i := a_feature
-			if show_type then
-				append (completion_type)
-			end
-		end
+	SHARED_TEXT_ITEMS
 
 feature -- Access
 
-	grid_item: EB_GRID_LOCAL_ITEM is
-			-- Grid item
-		local
-			l_style: EB_GRID_LOCAL_ITEM_STYLE
+	text (a_item: EB_GRID_LOCAL_ITEM): LIST [EDITOR_TOKEN] is
+			-- Text of current style for `a_item'
 		do
-			if show_type then
-				create {EB_GRID_LOCAL_ITEM_NAME_TYPE_STYLE}l_style
-			else
-				create {EB_GRID_LOCAL_ITEM_NAME_STYLE}l_style
+			token_writer.new_line
+			token_writer.process_local_text (a_item.name)
+			if a_item.type /= Void and then a_item.feature_i /= Void then
+				token_writer.process_symbol_text (ti_colon)
+				token_writer.add_space
+				a_item.type.ext_append_to (token_writer, a_item.feature_i.e_feature)
 			end
-			create Result.make_with_type (name, return_type, feature_i, l_style)
-			Result.set_tooltip_display_function (agent display_colorized_tooltip)
-			Result.enable_pixmap
-			if has_child then
-				Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
-			end
-			Result.set_overriden_fonts (label_font_table)
+			Result := token_writer.last_line.content
 		end
 
-	feature_i: FEATURE_I;
-			-- Feature used to print types
+feature{NONE} -- Implementation
+
+	setup_tooltip (a_item: EB_GRID_LOCAL_ITEM) is
+			-- Setup tooltip for `a_item'.
+		do
+			if a_item.general_tooltip /= Void then
+				a_item.remove_general_tooltip
+			end
+			a_item.set_general_tooltip (tooltip (a_item))
+			a_item.general_tooltip.veto_tooltip_display_functions.extend (agent a_item.should_tooltip_be_displayed)
+		end
+
+feature {NONE} -- Implementation
+
+invariant
+	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1211,23 +1211,7 @@ feature {NONE}-- Implementation
 				Result := Void
 			else
 				l_current_class_c := current_class_c
-				if l_current_class_c.has_feature_table then
-					if current_feature_as /= Void then
-						current_feature := l_current_class_c.feature_named (current_feature_as.feature_name)
-					end
-				end
-
-				if current_feature = Void then
-						-- We hack here to avoid current feature void.
-						-- type_a_checker only need a feature for like_argument checking.
-						-- So it goes here only when we try to analyse a name within a typed feature
-						-- which is after a saved but not compiled feature.
-						-- It 90% works, only fails when we try to find a type that is a like_argument.
-					current_feature := l_current_class_c.feature_named ("is_equal")
-					check
-						current_feature_not_void: current_feature /= Void
-					end
-				end
+				current_feature := current_feature_i
 
 				if current_token /= Void and then current_line /= Void then
 					set_up_local_analyzer (current_line, current_token, l_current_class_c)
@@ -1633,6 +1617,29 @@ feature {NONE} -- Implementation
 	current_class_c: CLASS_C
 			-- Current class_c
 			-- Temp class_c, it could be an overriding class_c, while `current_class_i' is not compiled.
+
+	current_feature_i: FEATURE_I is
+			-- Current feature_i
+		local
+			l_current_class_c: CLASS_C
+		do
+			if current_class_c /= Void then
+				l_current_class_c := current_class_c
+				if l_current_class_c.has_feature_table then
+					if current_feature_as /= Void then
+						Result := l_current_class_c.feature_named (current_feature_as.feature_name)
+					end
+				end
+					-- We hack here to avoid current feature void.
+					-- type_a_checker only need a feature for like_argument checking.
+					-- So it goes here only when we try to analyse a name within a typed feature
+					-- which is after a saved but not compiled feature.
+					-- It 90% works, only fails when we try to find a type that is a like_argument.
+				if Result = Void then
+					Result := l_current_class_c.feature_named ("is_equal")
+				end
+			end
+		end
 
 	platform_is_windows: BOOLEAN is
 			-- Is the current platform Windows?

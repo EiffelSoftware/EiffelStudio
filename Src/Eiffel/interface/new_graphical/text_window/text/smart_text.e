@@ -770,8 +770,11 @@ feature {NONE} -- Possiblilities provider
 			-- Prepare completion
 		do
 			Precursor
+			if click_tool.completion_possibilities /= Void then
+				click_tool.reset_completion_list
+			end
 			if provide_features and then click_and_complete_is_active then
-				prepare_auto_complete (false)
+				prepare_auto_complete (False)
 			elseif provide_classes then
 				prepare_class_name_complete
 			end

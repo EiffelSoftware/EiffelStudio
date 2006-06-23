@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			set_style (a_style)
 		end
 
-	make_with_type (a_name: STRING; a_type: TYPE_A; a_style: EB_GRID_LOCAL_ITEM_STYLE) is
+	make_with_type (a_name: STRING; a_type: TYPE_A; a_feature: FEATURE_I; a_style: EB_GRID_LOCAL_ITEM_STYLE) is
 			-- Initialization
 		require
 			a_name_not_void: a_name /= Void
@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			a_style_not_void: a_style /= Void
 		do
 			type := a_type
+			feature_i := a_feature
 			make (a_name, a_style)
 		end
 
@@ -55,6 +56,9 @@ feature -- Access
 
 	type: TYPE_A
 			-- Type of the local.
+
+	feature_i: FEATURE_I
+			-- Feature to print `type'
 
 	item_pixmap: EV_PIXMAP is
 			-- Pixmap associated to current compiler item

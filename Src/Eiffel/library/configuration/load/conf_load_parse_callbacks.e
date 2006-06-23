@@ -215,6 +215,10 @@ feature -- Callbacks
 						current_tag.item
 					when t_description then
 						process_description_content
+					when t_exclude then
+						process_exclude_content
+					when t_include then
+						process_include_content
 					else
 						set_parse_error_message ("Invalid content: "+current_content)
 					end

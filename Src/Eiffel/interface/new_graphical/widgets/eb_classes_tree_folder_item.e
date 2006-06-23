@@ -132,6 +132,7 @@ feature -- Status setting
 			conv_class_item: EB_CLASSES_TREE_CLASS_ITEM
 			found: BOOLEAN
 			new_class: EB_CLASSES_TREE_CLASS_ITEM
+			l_name: STRING
 		do
 			from
 				start
@@ -149,7 +150,12 @@ feature -- Status setting
 					forth
 				end
 			end
-			create new_class.make (a_class)
+			l_name := a_class.name.twin
+			if data.renaming.has (l_name)  then
+				l_name := data.renaming.item (l_name)
+			end
+			l_name.prepend (data.name_prefix)
+			create new_class.make (a_class, l_name)
 			put_left (new_class)
 
 			if associated_window /= Void then
@@ -186,6 +192,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			group: CONF_GROUP
 			l_sub_path: STRING
 			l_fr: CONF_FILE_RULE
+			l_name: STRING
 		do
 			orig_count := count
 
@@ -293,7 +300,12 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				until
 					classes.after
 				loop
-					create a_class.make (classes.item_for_iteration)
+					l_name := classes.item_for_iteration.name.twin
+					if data.renaming.has (l_name) then
+						l_name := data.renaming.item (l_name)
+					end
+					l_name.prepend (data.name_prefix)
+					create a_class.make (classes.item_for_iteration, l_name)
 					if associated_window /= Void then
 						a_class.set_associated_window (associated_window)
 					end
@@ -504,7 +516,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 			if l_has_children then
 					-- add a dummy item
 				if system.any_class /= Void then
-					extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class))
+					extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class, "DUMMY"))
 				end
 			end
 		end

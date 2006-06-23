@@ -68,10 +68,31 @@ feature -- Statusupdate
 				if sub_clusters /= Void then
 					clusters := build_groups (sub_clusters)
 				end
+
+					-- cluster apply their renamings/prefix directly to the classe
+					-- but we get the renamings/prefix from a possible parent (to have the correct name in libraries)
+				if parent /= Void then
+					name_prefix := parent.name_prefix
+					renaming := parent.renaming
+				else
+					create name_prefix.make_empty
+					create renaming.make (0)
+				end
+
 				-- handle libraries
 			elseif is_library then
 				l_library := actual_library
 				l_lib_target := l_library.library_target
+
+					-- get renaming/prefix
+				name_prefix := l_library.name_prefix
+				if name_prefix = Void then
+					create name_prefix.make_empty
+				end
+				renaming := l_library.renaming
+				if renaming = Void then
+					create renaming.make (0)
+				end
 
 					-- clusters
 				from
@@ -101,6 +122,7 @@ feature -- Statusupdate
 
 					-- assemblies
 				assemblies := build_groups (l_lib_target.assemblies.linear_representation)
+
 				-- handle assemblies
 			elseif is_assembly then
 				l_ass_dep := actual_assembly.dependencies
@@ -117,6 +139,15 @@ feature -- Statusupdate
 					assemblies := build_groups (l_ass_dep_list)
 				else
 					create assemblies.make_default
+				end
+
+				name_prefix := actual_group.name_prefix
+				if name_prefix = Void then
+					create name_prefix.make_empty
+				end
+				renaming := actual_group.renaming
+				if renaming = Void then
+					create renaming.make (0)
 				end
 			end
 
@@ -205,6 +236,12 @@ feature -- Access
 				end
 			end
 		end
+
+	name_prefix: STRING
+			-- Name prefix to be added to classes.
+
+	renaming: HASH_TABLE [STRING, STRING]
+			-- Renamings to be applied to classes.
 
 	actual_group: CONF_GROUP
 			-- group associated to `Current'.
@@ -398,6 +435,8 @@ invariant
 	libraries_not_void: is_initialized implies libraries /= Void
 	assemblies_not_void: is_initialized implies assemblies /= Void
 	sub_folders_not_void: is_initialized implies sub_folders /= Void
+	renamings_not_void: is_initialized implies renaming /= Void
+	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

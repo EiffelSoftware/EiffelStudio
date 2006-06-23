@@ -574,6 +574,7 @@ feature {NONE} -- Implementation
 	put_class (a_file, a_path: STRING) is
 			-- Put the class in `a_path' `a_file' into `current_classes'.
 		require
+			current_cluster_not_void: current_cluster /= Void
 			current_classes_not_void: current_classes /= Void
 			old_group_classes_set: old_group /= Void implies old_group.classes_set
 		local
@@ -588,8 +589,11 @@ feature {NONE} -- Implementation
 		do
 			if valid_eiffel_extension (a_file) then
 				l_file_name := a_path+"/"+a_file
-					-- try to get it directly from old_group by filename
-				if old_group /= Void and then old_group.classes_by_filename.has (l_file_name) then
+					-- try to get it directly from old_group by filename, also check that renamings/prefix didn't change
+				if
+					old_group /= Void and then old_group.classes_by_filename.has (l_file_name) and then
+					(equal (old_group.name_prefix, current_cluster.name_prefix) and equal (old_group.renaming, current_cluster.renaming))
+				then
 					l_class := old_group.classes_by_filename.found_item
 						-- update class
 					l_class.rebuild (a_file, current_cluster, a_path)

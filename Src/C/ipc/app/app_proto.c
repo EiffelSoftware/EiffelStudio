@@ -66,6 +66,7 @@
 #include "rt_gen_types.h"
 #include "rt_struct.h"
 #include "rt_globals.h"
+#include "rt_main.h" /* For debug_mode. */
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode

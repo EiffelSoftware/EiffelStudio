@@ -305,9 +305,9 @@ feature {NONE} -- Initialization
 			dotnet_enabled.select_actions.extend (agent on_dotnet_enabled)
 			dotnet.change_actions.extend (agent on_dotnet)
 			multithreaded_enabled.select_actions.extend (agent on_multithreaded_enabled)
-			multithreaded.change_actions.extend (agent on_multithreaded)
+			multithreaded.select_actions.extend (agent on_multithreaded)
 			dynamic_runtime_enabled.select_actions.extend (agent on_dynamic_runtime_enabled)
-			dynamic_runtime.change_actions.extend (agent on_dynamic_runtime)
+			dynamic_runtime.select_actions.extend (agent on_dynamic_runtime)
 
 				--version
 			version_min_compiler.focus_out_actions.extend (agent on_compiler_version)

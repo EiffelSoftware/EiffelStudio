@@ -399,10 +399,6 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
-					if not choice_list.selected_rows.is_empty then
-						l_row := choice_list.selected_rows.first
-						ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
-					end
 					unlock_update
 				end
 			end
@@ -445,10 +441,6 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
-					if not choice_list.selected_rows.is_empty then
-						l_row := choice_list.selected_rows.first
-						ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
-					end
 					unlock_update
 				end
 			end
@@ -960,8 +952,12 @@ feature {NONE} -- Implementation
 			-- Resize the column width to the width of the window
 		local
 			i: INTEGER
+			l_select_row_visible: BOOLEAN
 		do
 			if choice_list.column_count > 0 and then choice_list.row_count > 0 then
+				if choice_list.is_displayed and then not choice_list.selected_rows.is_empty then
+					l_select_row_visible := choice_list.visible_row_indexes.has (choice_list.selected_rows.first.index)
+				end
 				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
 				if choice_list.vertical_scroll_bar.is_displayed then
 					if i < choice_list.width - choice_list.vertical_scroll_bar.width then
@@ -975,6 +971,9 @@ feature {NONE} -- Implementation
 					else
 						choice_list.column (1).set_width (i)
 					end
+				end
+				if l_select_row_visible then
+					choice_list.selected_rows.first.ensure_visible
 				end
 			end
 		end

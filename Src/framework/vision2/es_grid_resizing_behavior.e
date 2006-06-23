@@ -161,6 +161,7 @@ feature {NONE} -- Actions
 								) then
 							is_near_border := True
 							grid.set_pointer_style (Stock_cursors.sizewe_cursor)
+							grid.set_focus
 							resize_index := column_index
 						elseif is_near_border and not l_near_border then
 							is_near_border := False

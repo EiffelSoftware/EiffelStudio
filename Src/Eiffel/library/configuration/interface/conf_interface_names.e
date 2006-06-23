@@ -286,6 +286,7 @@ feature {NONE} -- Condition dialog
 	dial_cond_build: STRING is "Build"
 	dial_cond_dotnet: STRING is ".NET"
 	dial_cond_multithreaded: STRING is "Multithreaded"
+	dial_cond_dynamic_runtime: STRING is "Dynamic runtime"
 	dial_cond_version: STRING is "Version"
 	dial_cond_version_compiler: STRING is "<= compiler version <= "
 	dial_cond_version_clr: STRING is "<= MSIL CLR version <= "

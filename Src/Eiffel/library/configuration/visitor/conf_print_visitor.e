@@ -459,6 +459,10 @@ feature {NONE} -- Implementation
 							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.item.out.as_lower+"%"/>%N")
 						end
 
+						if l_condition.dynamic_runtime /= Void then
+							append_text_indent ("<dynamic_runtime value=%""+l_condition.dynamic_runtime.item.out.as_lower+"%"/>%N")
+						end
+
 							-- don't print dotnet for assemblies
 						if not is_assembly and then l_condition.dotnet /= Void then
 							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"/>%N")

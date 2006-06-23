@@ -210,6 +210,7 @@
 			<xs:element name="build" type="build" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="multithreaded" type="multithreaded" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="dotnet" type="dotnet" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dynamic_runtime" type="dynamic_runtime" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="version" type="version_condition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="custom" type="custom" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -256,7 +257,11 @@
 	<xs:complexType name="dotnet">
 		<xs:attribute name="value" type="xs:boolean"/>
 	</xs:complexType>
-	
+
+	<xs:complexType name="dynamic_runtime">
+		<xs:attribute name="value" type="xs:boolean"/>
+	</xs:complexType>
+		
 	<xs:complexType name="version_condition">
 		<xs:attribute type="version_type" name="type"/>
 		<xs:attribute type="version_number" name="min" use="optional"/>

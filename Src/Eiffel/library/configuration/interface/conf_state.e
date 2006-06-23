@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform: like platform; a_build: like build; a_multithreaded: like is_multithreaded; a_dotnet: like is_dotnet; a_variables: like custom_variables; a_version: like version) is
+	make (a_platform: like platform; a_build: like build; a_multithreaded: like is_multithreaded; a_dotnet: like is_dotnet; a_dynamic_runtime: like is_dynamic_runtime; a_variables: like custom_variables; a_version: like version) is
 			-- Create.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			build := a_build
 			is_multithreaded := a_multithreaded
 			is_dotnet := a_dotnet
+			is_dynamic_runtime := a_dynamic_runtime
 			custom_variables := a_variables
 			version := a_version
 		ensure
@@ -33,6 +34,7 @@ feature {NONE} -- Initialization
 			build_set: build = a_build
 			multithreaded_set: is_multithreaded = a_multithreaded
 			dotnet_set: is_dotnet = a_dotnet
+			dynamic_runtime_set: is_dynamic_runtime = a_dynamic_runtime
 			variables_set: custom_variables = a_variables
 			version_set: version = a_version
 		end
@@ -50,6 +52,9 @@ feature -- Access
 
 	is_dotnet: BOOLEAN
 			-- Dotnet?
+
+	is_dynamic_runtime: BOOLEAN
+			-- Dynamic runtime?
 
 	version: HASH_TABLE [CONF_VERSION, STRING]
 			-- Versions?

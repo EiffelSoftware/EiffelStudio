@@ -13,19 +13,19 @@ feature -- Command
 	gdi_plus_init is
 			-- Initialized Gdi+.
 		once
-			cpp_gdi_plus_initialize
+			c_gdi_plus_startup
 		end
 
 	gdi_plus_shutdown is
 			-- Shutdown Gdi+.
 		once
-			cpp_gdi_plus_shutdown
+			c_gdi_plus_shutdown
 		end
 
 feature -- Command
 
 	is_gdi_plus_installed: BOOLEAN is
-			--
+			-- If gdiplus.dll can be fount on user's machine?
 		local
 			l_result: INTEGER
 		do
@@ -38,7 +38,7 @@ feature -- Command
 feature {NONE} -- Externals
 
 	c_load_gdip_dll (a_result: TYPED_POINTER [INTEGER]) is
-			--
+			-- Try to load gdiplus.dll, if fount return 1.
 		external
 			"C inline use <windows.h>"
 		alias
@@ -52,32 +52,46 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_gdi_plus_initialize is
+	c_gdi_plus_startup is
 			-- Before any GDI+ call, we should call this function.
 		external
-			"C++ inline use <gdiplus.h>"
+			"C inline use <gdiplus.h>"
 		alias
 			"[
 			{
-				using namespace Gdiplus;
-				GdiplusStartupInput gdiplusStartupInput;
+				GdiplusStartupInput gdiplusStartupInput = {1, NULL, FALSE, FALSE};
 		   		ULONG_PTR gdiplusToken;
-			   // Initialize GDI+.
-			   GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+			  	FARPROC GdiplusStartup = NULL;
+				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
+				
+				if (user32_module) {
+					GdiplusStartup = GetProcAddress (user32_module, "GdiplusStartup");
+					if (GdiplusStartup) {
+						(FUNCTION_CAST_TYPE(GpStatus, WINAPI, (ULONG_PTR *, const GdiplusStartupInput *,  GdiplusStartupOutput *)) GdiplusStartup)					
+									(&gdiplusToken, &gdiplusStartupInput, NULL);
+					}
+				}			  
    			}
    			]"
    		end
 
-	cpp_gdi_plus_shutdown is
+	c_gdi_plus_shutdown is
 			-- After delete all Gdi+ objects, we should call this function.
 		external
-			"C++ inline use <gdiplus.h>"
+			"C inline use <gdiplus.h>"
 		alias
 			"[
 			{
-				using namespace Gdiplus;
 				ULONG_PTR gdiplusToken;
-				GdiplusShutdown(gdiplusToken);
+			  	FARPROC GdiplusShutdown = NULL;
+				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
+				if (user32_module) {
+					GdiplusShutdown = GetProcAddress (user32_module, "GdiplusShutdown");
+					if (GdiplusShutdown) {
+						(FUNCTION_CAST_TYPE(void, WINAPI, (ULONG_PTR)) gdiplusToken)					
+									((ULONG_PTR) gdiplusToken);
+					}
+				}			
 			}
 			]"
 		end

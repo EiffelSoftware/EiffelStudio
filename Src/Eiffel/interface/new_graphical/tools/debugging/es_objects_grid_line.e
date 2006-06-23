@@ -682,8 +682,8 @@ feature {NONE} -- Implementation
 			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_icon, External_reference_value)
 			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, Static_external_reference_value)
 			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, Static_reference_value)
-			Result.put (pixmaps.mini_pixmaps.debugger_error_icon, Exception_message_value)
-			Result.put (pixmaps.mini_pixmaps.debugger_error_icon, Error_message_value)
+			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, Exception_message_value)
+			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN is

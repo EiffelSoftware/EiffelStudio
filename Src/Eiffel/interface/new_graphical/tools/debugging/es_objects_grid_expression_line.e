@@ -450,12 +450,12 @@ feature -- Graphical changes
 							row.set_item (Col_expression_result_index, glab)
 
 							if expression_evaluator.has_error_exception then
-								set_error_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
+								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							elseif expression_evaluator.has_error_expression
 								or expression_evaluator.has_error_syntax then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							elseif expression_evaluator.has_error_evaluation then
-								set_error_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
+								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							end

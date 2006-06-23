@@ -59,8 +59,8 @@ extern int eif_no_reclaim;		/* Call reclaim ion termination? */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 extern char *starting_working_directory;
 
-RT_LNK int debug_mode;
-RT_LNK unsigned TIMEOUT;		/* Time out on reads */
+extern int debug_mode;
+extern unsigned TIMEOUT;		/* Time out on reads */
 
 #ifdef EIF_WINDOWS
 /* Console management for Windows */

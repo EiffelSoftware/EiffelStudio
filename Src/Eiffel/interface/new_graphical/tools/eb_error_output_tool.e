@@ -13,13 +13,21 @@ inherit
 	EB_OUTPUT_TOOL
 		redefine
 			process_errors, is_general,
-			process_warnings
+			process_warnings,
+			clear
 		end
 
 create
 	make
 
-feature -- Implementation
+feature -- Basic Operations
+
+	clear is
+			-- Clear window
+		do
+			Precursor {EB_OUTPUT_TOOL}
+			set_title (0)
+		end
 
 	process_warnings (warnings: LINKED_LIST [ERROR]) is
 			-- Do nothing.
@@ -56,9 +64,34 @@ feature -- Implementation
 				end
 			end
 			parent_notebook.select_item (widget)
+			set_title (errors.count)
 		end
 
+feature {NONE} -- Implementation
+
 	is_general: BOOLEAN is false;
+
+	set_title (a_count: INTEGER) is
+			-- Sets tool title base on `a_count' of warnings
+		require
+			parent_notebook_attached: parent_notebook /= Void
+			widget_attached: widget /= Void
+		local
+			l_name: STRING
+			l_title: STRING
+		do
+			l_name := interface_names.l_tab_error_output
+			if a_count > 0 then
+				create l_title.make (l_name.count + 6)
+				l_title.append (l_name)
+				l_title.append (" (")
+				l_title.append_integer (a_count)
+				l_title.append_character (')')
+			else
+				l_title := l_name
+			end
+			parent_notebook.set_item_text (widget, l_title)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

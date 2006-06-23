@@ -48,7 +48,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_except.h"
 #include "rt_hashin.h"
 #include "eif_hector.h"
-#include "eif_cecil.h"
+#include "rt_cecil.h"
 #include "rt_retrieve.h"
 #include "rt_store.h"
 #include "rt_bits.h"
@@ -5105,6 +5105,9 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 	struct cecil_info * result;
 
 	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (conv != NULL));
+
+		/* Get updated name */
+	name = eif_pre_ecma_mapped_type (name);
 
 	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
 		if (conv->flags & EIF_IS_EXPANDED_FLAG) {

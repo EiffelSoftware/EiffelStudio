@@ -47,6 +47,8 @@ extern "C" {
 extern EIF_LW_MUTEX_TYPE *eif_cecil_mutex;
 #endif
 
+extern char * eif_pre_ecma_mapped_type (char *v);
+
 #ifdef __cplusplus
 }
 #endif

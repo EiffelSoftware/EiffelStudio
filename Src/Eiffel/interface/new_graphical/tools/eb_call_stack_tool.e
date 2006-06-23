@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 						l_tooltipable_grid_row := stack_grid.grid_extended_new_row (stack_grid)
 						create glab.make_with_text ("Unable to get call stack data")
 						glab.set_tooltip ("Double click to refresh call stack")
-						glab.set_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
+						glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 						glab.pointer_double_press_actions.force_extend (agent update)
 						l_tooltipable_grid_row.set_item (1, glab)
 					end

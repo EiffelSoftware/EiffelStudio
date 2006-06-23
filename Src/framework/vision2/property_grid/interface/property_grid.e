@@ -35,9 +35,11 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create.
 		do
-			create expanded_section_store.make (0)
-
 			Precursor
+
+			create expanded_section_store.make (0)
+			create sections.make (5)
+
 			disable_selection_on_click
 
 			enable_row_separators
@@ -46,11 +48,7 @@ feature {NONE} -- Initialization
 			hide_header
 			hide_tree_node_connectors
 
-			create sections.make (5)
-
-			set_column_count_to (2)
-			set_auto_resizing_column (name_column, True)
-			enable_last_column_use_all_width
+			reset
 
 			pointer_button_press_actions.extend (agent select_name_item)
 			key_press_actions.extend (agent on_key_pressed)
@@ -89,7 +87,7 @@ feature -- Update
 			enable_last_column_use_all_width
 
 			sections.wipe_out
-			create expanded_section_store.make (0)
+			expanded_section_store.wipe_out
 		end
 
 	add_section (a_name: STRING) is

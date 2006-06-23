@@ -12,6 +12,15 @@ class
 inherit
 	EV_PIXEL_BUFFER_I
 
+	WEL_GDIP_BITMAP
+		rename
+			make_with_size as gdip_make_with_size,
+			width as gdip_width,
+			height as gdip_height
+		export
+			{NONE} all
+			{ANY} is_gdi_plus_installed
+		end
 	DISPOSABLE
 
 feature {NONE} -- Initlization
@@ -22,8 +31,13 @@ feature {NONE} -- Initlization
 			if is_gdi_plus_installed then
 				initial_width := a_width
 				initial_height := a_height
-				cpp_bitmap_delete (item)
-				item := cpp_bitmap_create (initial_width, initial_height)
+
+				if item /= default_pointer then
+					delete
+				end
+
+				gdip_make_with_size (initial_width, initial_height)
+				check created: item /= default_pointer end
 			else
 				create pixmap
 			end
@@ -47,7 +61,8 @@ feature {NONE} -- Initlization
 			if is_gdi_plus_installed then
 				create l_starter
 				l_starter.gdi_plus_init
-				item := cpp_bitmap_create (initial_width, initial_height)
+
+				make_with_size (1, 1)
 			else
 				create pixmap
 			end
@@ -60,7 +75,7 @@ feature {NONE} -- Initlization
 		do
 			set_is_in_destroy (True)
 			if is_gdi_plus_installed then
-				cpp_bitmap_delete (item)
+				delete
 			else
 				-- FIXIT: Why there is a Unexcepted harmful signal in EC project ? complier bug?
 --				pixmap.destroy
@@ -75,13 +90,9 @@ feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
 			-- Load pixel datas from a file.
-		local
-			l_wel_string: WEL_STRING
 		do
 			if is_gdi_plus_installed then
-				cpp_bitmap_delete (item)
-				create l_wel_string.make (a_file_name)
-				item := cpp_bitmap_from_file (l_wel_string.item)
+				load_image_from_file (a_file_name)
 			else
 				pixmap.set_with_named_file (a_file_name)
 			end
@@ -108,13 +119,25 @@ feature -- Command
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
 			l_temp_pixmap: EV_PIXMAP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_dest_rect, l_src_rect: WEL_RECT
+			l_image: WEL_GDIP_IMAGE
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
 			l_imp ?= Result.implementation
 			check not_void: l_imp /= Void end
 
 			if is_gdi_plus_installed then
-				cpp_bitmap_draw_bitmap (l_imp.item, item, 0, 0, a_rect.width, a_rect.height, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+				l_image ?= Result.implementation
+				check not_void: l_image /= Void end
+				create l_graphics.make_from_image (l_image)
+				create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
+				create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
+				l_graphics.draw_image_with_src_rect_dest_rect (Current, l_dest_rect, l_src_rect)
+
+				l_dest_rect.dispose
+				l_src_rect.dispose
+				l_graphics.delete
 				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
 			else
 				l_temp_pixmap := pixmap.sub_pixmap (a_rect)
@@ -130,7 +153,7 @@ feature -- Query
 			-- Width
 		do
 			if is_gdi_plus_installed then
-				Result := cpp_bitmap_width (item).to_integer_32
+				Result := gdip_width
 			else
 				Result := pixmap.width
 			end
@@ -140,23 +163,11 @@ feature -- Query
 			-- Height
 		do
 			if is_gdi_plus_installed then
-				Result := cpp_bitmap_height (item).to_integer_32
+				Result := gdip_height
 			else
 				Result := pixmap.height
 			end
 		end
-
-	is_gdi_plus_installed: BOOLEAN is
-			-- If user installed GDI+ librarys?
-		local
-			l_starter: WEL_GDI_PLUS_STARTER
-		once
-			create l_starter
-			Result := l_starter.is_gdi_plus_installed
-		end
-
-	item: POINTER
-			-- Pointer to a GDI+ bitmap object.
 
 feature {NONE} -- Dispose
 
@@ -181,7 +192,7 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 		end
 
 	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX) is
-			--
+			-- Draw Current to `a_drawable' with `a_color_matrix'.
 		require
 			not_void: a_drawable /= Void
 			support: is_gdi_plus_installed
@@ -189,6 +200,9 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			l_imp: EV_DRAWABLE_IMP
 			l_drawing_area: EV_DRAWING_AREA_IMP
 			l_pixmap: EV_PIXMAP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_rect: WEL_RECT
+			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
 		do
 			l_imp ?= a_drawable.implementation
 			check not_void: l_imp /= Void end
@@ -196,11 +210,20 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
 			l_imp.get_dc
 
+			create l_graphics.make_from_dc (l_imp.dc)
+
 			if a_color_matrix = Void then
-				cpp_bitmap_draw_to_dc (item, l_imp.dc.item, 0, 0, width, height)
+				l_graphics.draw_image (Current, 0, 0)
 			else
-				cpp_bitmap_draw_to_dc_with_matrix (item, l_imp.dc.item, 0, 0, width, height, 0, 0, width, height, a_color_matrix.item.item)
+				create l_image_attributes.make
+				l_image_attributes.clear_color_key
+				l_image_attributes.set_color_matrix (a_color_matrix)
+				create l_rect.make (0, 0, width, height)
+				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (Current, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+				l_image_attributes.delete
 			end
+
+			l_graphics.delete
 
 			l_imp.release_dc
 
@@ -235,10 +258,9 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			support: is_gdi_plus_installed
 		local
 			l_imp: EV_BITMAP_IMP
-			l_not_1bpp_bitmap: WEL_BITMAP
-			l_screen_dc: WEL_SCREEN_DC
-			l_mem_dc: WEL_MEMORY_DC
-			l_test: WEL_BITMAP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
+			l_dest_rect, l_src_rect: WEL_RECT
 		do
 			create Result
 			Result.set_size (a_rect.width, a_rect.height)
@@ -251,174 +273,25 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			l_imp ?= Result.implementation
 			check not_void: l_imp /= Void end
 
-			cpp_bitmap_draw_to_dc_with_matrix (item, l_imp.dc.item, 0, 0, a_rect.width, a_rect.height, a_rect.x, a_rect.y, a_rect.width, a_rect.height, mask_color_matrix.item.item)
+			create l_graphics.make_from_dc (l_imp.dc)
+			create l_image_attributes.make
+			l_image_attributes.clear_color_key
+			l_image_attributes.set_color_matrix (mask_color_matrix)
+
+			create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
+			create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
+
+			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (Current, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+
+ 			l_dest_rect.dispose
+ 			l_src_rect.dispose
+			l_image_attributes.delete
+			l_graphics.delete
+
 			-- Then we have to invert mask bitmap colors to overcome the 32bits to 1bit bitmap convert problem.
 			l_imp.dc.bit_blt (0, 0, width, height, l_imp.dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
 		ensure
 			not_void: Result /= Void
-		end
-
-feature {NONE} -- C++ externals initlization
-
-	cpp_bitmap_create (a_width, a_height: INTEGER): POINTER is
-			-- Create a C++ bitmap object.
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-				(EIF_POINTER) new Gdiplus::Bitmap ($a_width, $a_height, PixelFormat32bppARGB);
-			]"
-		end
-
-	cpp_bitmap_from_file (a_wchar_file_name: POINTER): POINTER is
-			-- Create a C++ bitmap object name from file `a_wchar_file_name'.
-			-- Pixmap format include BMP, GIF, JPEG, PNG, TIFF, and EMF.
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-				(EIF_POINTER) Gdiplus::Bitmap::FromFile ((const WCHAR *)($a_wchar_file_name));
-			]"
-		end
-
-	cpp_bitmap_draw_bitmap (a_result_bitmap: POINTER; a_orignal_bitmap: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER) is
-			-- Draw `a_orignal_bitmap' onto `a_result_bitmap'.
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{
-				using namespace Gdiplus;
-				Graphics l_g ((Bitmap *)$a_result_bitmap);
-				RectF l_r_dest ($a_dest_x, $a_dest_y, $a_dest_width, $a_dest_height);
-				int l_states = l_g.DrawImage ((Bitmap *)$a_orignal_bitmap, l_r_dest, $a_src_x, $a_src_y, $a_src_width, $a_src_height, UnitPixel);
-				if (l_states != Ok)
-				{
-					printf ("\n cpp_bitmap_draw_bitmap failed, with Result: %d", l_states);
-				}
-			}
-			]"
-		end
-
-	cpp_bitmap_draw_bitmap_with_matrix (a_result_bitmap: POINTER; a_orignal_bitmap: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_color_matrix: POINTER) is
-			-- Draw `a_orignal_bitmap' onto `a_result_bitmap'.
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{
-				using namespace Gdiplus;
-				Graphics l_g ((Bitmap *)$a_result_bitmap);			
-				RectF l_r_dest ($a_dest_x, $a_dest_y, $a_dest_width, $a_dest_height);
-				ImageAttributes *image_attributes = new ImageAttributes ();
-				image_attributes->ClearColorKey(ColorAdjustTypeBitmap);
-				image_attributes->SetColorMatrix((ColorMatrix *)$a_color_matrix);				
-				int l_states = l_g.DrawImage ((Bitmap *)$a_orignal_bitmap, l_r_dest, $a_src_x, $a_src_y, $a_src_width, $a_src_height, UnitPixel, image_attributes);
-				if (l_states != Ok)
-				{
-					printf ("\n cpp_bitmap_draw_bitmap failed, with Result: %d", l_states);
-				}
-				delete image_attributes;
-			}
-			]"
-		end
-
-	cpp_bitmap_delete (a_item: POINTER)is
-			-- Destroy C++ Bitmap object which indicated by `a_item'
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{
-				delete (Gdiplus::Bitmap *)$a_item;
-			}
-			]"
-		end
-
-feature -- C++ externals operations
-
-	cpp_bitmap_draw_to_dc (a_item: POINTER; a_dc: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
-			-- Draw `a_item' onto `a_dc'.
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{
-				using namespace Gdiplus;
-				Graphics l_g ((HDC)$a_dc);
-				int l_states = l_g.DrawImage ((Bitmap *)$a_item, $a_x, $a_y, $a_width, $a_height);
-				if (l_states != Ok)
-				{
-					printf ("\n cpp_bitmap_draw_to_dc failed, with Result: %d", l_states);
-				}			
-			}
-			]"
-		end
-
-	cpp_bitmap_draw_to_dc_with_matrix (a_item: POINTER; a_dc: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_color_matrix: POINTER) is
-			-- Draw `a_item' onto `a_dc'.
-			-- FIXIT: We can merge several external features to one feature?
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{
-				using namespace Gdiplus;
-				Graphics l_g ((HDC)$a_dc);			
-				RectF l_r_dest ($a_dest_x, $a_dest_y, $a_dest_width, $a_dest_height);
-				ImageAttributes *image_attributes = new ImageAttributes ();
-				image_attributes->ClearColorKey(ColorAdjustTypeBitmap);
-				image_attributes->SetColorMatrix((ColorMatrix *)$a_color_matrix);				
-							
-				int l_states = l_g.DrawImage ((Bitmap *)$a_item, l_r_dest, $a_src_x, $a_src_y, $a_src_width, $a_src_height, UnitPixel, image_attributes);
-				if (l_states != Ok)
-				{
-					printf ("\n cpp_bitmap_draw_to_dc_with_matrix failed, with Result: %d", l_states);
-				}
-
-				delete image_attributes;
-			}
-			]"
-		end
-
-feature -- C++ externals querys
-
-	cpp_bitmap_width (a_item: POINTER): NATURAL_32 is
-			-- Width
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-				((Gdiplus::Bitmap*)$a_item)->GetWidth()
-			]"
-		end
-
-	cpp_bitmap_height (a_item: POINTER): NATURAL_32 is
-			-- Height
-		require
-			support: is_gdi_plus_installed
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-				((Gdiplus::Bitmap*)$a_item)->GetHeight()
-			]"
 		end
 
 indexing

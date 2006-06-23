@@ -358,6 +358,15 @@ feature {NONE} -- Events handling
 					i := i + 1
 				end
 			end
+			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+		end
+
+	on_row_collapse (a_row: EV_GRID_ROW) is
+			-- On row collapse
+		require
+			a_row_not_void: a_row /= Void
+		do
+			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
 		end
 
 feature {NONE} -- Cursor movement
@@ -371,7 +380,6 @@ feature {NONE} -- Cursor movement
 			l_count: INTEGER
 			end_loop: BOOLEAN
 			l_last_selectable: INTEGER
-			l_row: EV_GRID_ROW
 		do
 			if choice_list.row_count > 0 then
 				if not choice_list.selected_items.is_empty then
@@ -413,7 +421,6 @@ feature {NONE} -- Cursor movement
 			l_count: INTEGER
 			end_loop: BOOLEAN
 			l_last_selectable: INTEGER
-			l_row: EV_GRID_ROW
 		do
 			if choice_list.row_count > 0 then
 				if not choice_list.selected_items.is_empty then
@@ -687,6 +694,7 @@ feature {NONE} -- Implementation
 						l_row.expand_actions.extend (agent match_item.set_is_expanded ((True)))
 						l_row.expand_actions.extend (agent on_row_expand (l_row))
 						l_row.collapse_actions.extend (agent match_item.set_is_expanded ((False)))
+						l_row.collapse_actions.extend (agent on_row_collapse (l_row))
 						if match_item.is_expanded and then l_row.is_expandable then
 							l_row.expand
 							row_index := row_index + l_row.subrow_count

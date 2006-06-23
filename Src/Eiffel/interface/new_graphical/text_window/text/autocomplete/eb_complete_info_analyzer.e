@@ -53,6 +53,12 @@ feature -- Completion access
 
 feature -- Basic operations
 
+	reset_completion_list is
+			-- Reset completion possibilities
+		do
+			completion_possibilities := Void
+		end
+
 	build_completion_list (a_cursor_token: EDITOR_TOKEN) is
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
@@ -575,6 +581,7 @@ feature {NONE} -- Implementation
 			l_feature: EB_FEATURE_FOR_COMPLETION
 			l_father: EB_NAME_FOR_COMPLETION
 			l_father_name: STRING
+			l_e_feature: E_FEATURE
 		do
 			l_overloaded_names := a_class.feature_table.overloaded_names
 			if inserted_feature_table /= Void and then not inserted_feature_table.is_empty then
@@ -592,15 +599,20 @@ feature {NONE} -- Implementation
 						l_features.after
 					loop
 						if inserted_feature_table.has (l_features.item) then
+							l_e_feature := inserted_feature_table.found_item
 							if not l_new_group then
 								l_new_group := True
 									-- Create father NAME node
 								l_father_name := names_heap.item (l_overloaded_names.key_for_iteration)
-								create l_father.make (l_father_name)
+								if l_e_feature.type /= Void then
+									create {EB_NAME_WITH_TYPE_FOR_COMPLETION}l_father.make (l_father_name, l_e_feature.type, l_e_feature.associated_feature_i)
+								else
+									create l_father.make (l_father_name)
+								end
 								insert_in_completion_possibilities (l_father)
 							end
 								-- Create child node and insert it into father node.
-							create l_feature.make (inserted_feature_table.found_item,
+							create l_feature.make (l_e_feature,
 													names_heap.item (l_overloaded_names.key_for_iteration))
 							l_father.add_child (l_feature)
 								-- Remove child feature from inserted_feature_table.
@@ -962,7 +974,7 @@ feature {NONE} -- Implementation
 					--l_type := l_type.actual_type
 					--l_type := constrained_type (l_type)
 				end
-				create l_feat_name.make (a_type.label_name (i).twin, l_type)
+				create l_feat_name.make (a_type.label_name (i).twin, l_type, current_feature_i)
 				insert_in_completion_possibilities (l_feat_name)
 				i := i + 1
 			end

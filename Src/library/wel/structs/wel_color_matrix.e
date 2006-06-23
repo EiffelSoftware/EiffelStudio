@@ -77,33 +77,33 @@ feature -- Attributes
 feature {NONE} -- Externals
 
 	c_set_m (a_item: POINTER; a_x, a_y: INTEGER; a_value: REAL) is
-			--
+			-- Set cell at `a_x', `a_y' to `a_value'.
 		external
-			"C++ inline use <gdiplus.h>"
+			"C inline use <gdiplus.h>"
 		alias
 			"[
 			{
-				((Gdiplus::ColorMatrix*)$a_item)->m[$a_x][$a_y] = $a_value;
+				((ColorMatrix*)$a_item)->m[$a_x][$a_y] = $a_value;
 			}
 			]"
 		end
 
 	c_m (a_item: POINTER; a_x, a_y: INTEGER): REAL is
-			--
+			-- Value of cell at `a_x', `a_y'.
 		external
-			"C++ inline use <gdiplus.h>"
+			"C inline use <gdiplus.h>"
 		alias
 			"[
-				((Gdiplus::ColorMatrix*)$a_item)->m[$a_x][$a_y]
+				((ColorMatrix*)$a_item)->m[$a_x][$a_y]
 			]"
 		end
 
 	c_size_of_color_matrix: INTEGER is
 			-- Size of ColorMatrix structure.
 		external
-			"C++ [macro <gdiplus.h>]"
+			"C [macro <gdiplus.h>]"
 		alias
-			"sizeof (Gdiplus::ColorMatrix)"
+			"sizeof (ColorMatrix)"
 		end
 
 indexing

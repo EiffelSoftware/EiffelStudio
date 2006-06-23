@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			an_assembly_not_void: an_assembly /= Void
 		do
-			text := "Assembly open error: "+an_assembly
+			text := "Could not open assembly: "+an_assembly
 		end
 
 

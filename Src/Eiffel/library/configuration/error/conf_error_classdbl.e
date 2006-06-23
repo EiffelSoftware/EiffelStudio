@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_class: STRING; a_file1, a_file2: STRING) is
 			-- Create.
 		do
-			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2
+			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+"."
 		end
 
 feature -- Access

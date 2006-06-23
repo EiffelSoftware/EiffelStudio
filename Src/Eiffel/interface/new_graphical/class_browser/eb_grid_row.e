@@ -9,6 +9,14 @@ indexing
 class
 	EB_GRID_ROW
 
+feature -- Status report
+
+	is_binded_to_grid: BOOLEAN is
+			-- is current row binded to grid?
+		do
+			Result := grid_row /= Void
+		end
+
 feature -- Grid row
 
 	grid_row: EV_GRID_ROW

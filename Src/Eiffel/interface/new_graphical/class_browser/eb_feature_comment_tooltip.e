@@ -23,6 +23,8 @@ inherit
 
 	EB_SHARED_FORMAT_TABLES
 
+	EB_SHARED_WRITER
+
 create
 	make
 
@@ -152,16 +154,6 @@ feature -- Access
 				end
 			end
 			Result := internal_tokens
-		end
-
-feature{NONE} -- Implementation
-
-	token_writer: EB_EDITOR_TOKEN_GENERATOR is
-			-- Editor token writer used to generate `tokens'
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
 		end
 
 invariant

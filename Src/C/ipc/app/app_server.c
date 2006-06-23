@@ -47,6 +47,7 @@
 #include <signal.h>
 #include "rqst_const.h"
 #include "server.h"
+#include "rt_main.h" /* For debug_mode. */
 
 #ifndef EIF_WINDOWS
 #include <unistd.h>

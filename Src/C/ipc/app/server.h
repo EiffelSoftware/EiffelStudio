@@ -42,7 +42,6 @@
 extern void dserver(void);		/* Main entry point into server mode */
 extern char dinterrupt(void);	/* Wonder if application has been interrupted */
 extern char *dview(EIF_OBJECT root);	/* Computes debugger's view on objects */
-RT_LNK int debug_mode;
 extern void winit(void);		/* Workbench debugger initialization */
 
 #endif

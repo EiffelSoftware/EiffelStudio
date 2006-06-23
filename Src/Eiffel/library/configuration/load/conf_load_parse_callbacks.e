@@ -185,6 +185,8 @@ feature -- Callbacks
 					process_multithreaded_attributes
 				when t_dotnet then
 					process_dotnet_attributes
+				when t_dynamic_runtime then
+					process_dynamic_runtime_attributes
 				when t_version_condition then
 					process_version_condition_attributes
 				when t_custom then
@@ -1168,6 +1170,21 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_dynamic_runtime_attributes is
+			-- Process attributes of a dynamic_runtime tag.
+		require
+			current_condition: current_condition /= Void
+		local
+			l_value: STRING
+		do
+			l_value := current_attributes.item (at_value)
+			if l_value = Void or else not l_value.is_boolean then
+				set_parse_error_message ("No valid value specified in dynamic_runtime condition.")
+			else
+				current_condition.set_dynamic_runtime (l_value.to_boolean)
+			end
+		end
+
 	process_version_condition_attributes is
 			-- Process attributes of a condition version tag.
 		require
@@ -1488,13 +1505,15 @@ feature {NONE} -- Implementation state transitions
 				-- => build
 				-- => multithreaded
 				-- => dotnet
+				-- => dynamic_runtime
 				-- => version
 				-- => custom
-			create l_trans.make (6)
+			create l_trans.make (7)
 			l_trans.force (t_platform, "platform")
 			l_trans.force (t_build, "build")
 			l_trans.force (t_multithreaded, "multithreaded")
 			l_trans.force (t_dotnet, "dotnet")
+			l_trans.force (t_dynamic_runtime, "dynamic_runtime")
 			l_trans.force (t_version_condition, "version")
 			l_trans.force (t_custom, "custom")
 			Result.force (l_trans, t_condition)
@@ -1698,6 +1717,11 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			Result.force (l_attr, t_dotnet)
 
+				-- dynamic_runtime
+			create l_attr.make (1)
+			l_attr.force (at_value, "value")
+			Result.force (l_attr, t_dynamic_runtime)
+
 				-- version
 			create l_attr.make (3)
 			l_attr.force (at_min, "min")
@@ -1785,6 +1809,7 @@ feature {NONE} -- Implementation constants
 	t_build,
 	t_multithreaded,
 	t_dotnet,
+	t_dynamic_runtime,
 	t_version_condition,
 	t_custom,
 	t_renaming,

@@ -38,6 +38,9 @@ feature -- Access
 	dotnet: CELL [BOOLEAN]
 			-- Enabled for dotnet?
 
+	dynamic_runtime: CELL [BOOLEAN]
+			-- Enabled for dynamic runtime?
+
 	version: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
@@ -66,6 +69,11 @@ feature -- Queries
 				-- dotnet
 			if Result and dotnet /= Void then
 				Result := a_state.is_dotnet = dotnet.item
+			end
+
+				-- dynamic runtime
+			if Result and dynamic_runtime /= Void then
+				Result := a_state.is_dynamic_runtime = dynamic_runtime.item
 			end
 
 				-- platform
@@ -193,6 +201,12 @@ feature -- Update
 			create dotnet.put (a_value)
 		end
 
+	set_dynamic_runtime (a_value: BOOLEAN) is
+			-- Set `dynamic_runtime' to `a_value'.
+		do
+			create dynamic_runtime.put (a_value)
+		end
+
 	unset_multithreaded is
 			-- Unset `multithreaded'.
 		do
@@ -203,6 +217,12 @@ feature -- Update
 			-- Unset `dotnet'.
 		do
 			dotnet := Void
+		end
+
+	unset_dynamic_runtime is
+			-- Unset `dynamic_runtime'.
+		do
+			dynamic_runtime := Void
 		end
 
 	add_custom (a_name, a_value: STRING) is
@@ -338,6 +358,14 @@ feature -- Output
 					Result.append ("multithreaded and ")
 				else
 					Result.append ("not multithreaded and ")
+				end
+			end
+
+			if dynamic_runtime /= Void then
+				if dynamic_runtime.item then
+					Result.append ("dynamic_runtime and ")
+				else
+					Result.append ("not dynamic_runtime and ")
 				end
 			end
 

@@ -87,7 +87,7 @@ feature -- Properties
 				end
 				l_version.force (l_clr_version, v_msil_clr)
 			end
-			create Result.make (platform, build, system.has_multithreaded, system.il_generation, a_target.variables, l_version)
+			create Result.make (platform, build, system.has_multithreaded, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
 		end
 
 	platform: INTEGER is

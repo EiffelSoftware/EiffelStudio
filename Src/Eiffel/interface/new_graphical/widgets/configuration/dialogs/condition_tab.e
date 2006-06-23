@@ -124,6 +124,7 @@ feature {NONE} -- Initialization
 			l_frame.extend (hb)
 			hb.set_border_width (default_border_size)
 
+				-- build
 			create vb
 			vb.set_minimum_width (100)
 			hb.extend (vb)
@@ -154,8 +155,29 @@ feature {NONE} -- Initialization
 				builds.disable_sensitive
 			end
 
+				-- dynamic runtime
+			append_small_margin (vb)
+			create dynamic_runtime_enabled.make_with_text (dial_cond_dynamic_runtime)
+			vb.extend (dynamic_runtime_enabled)
+			vb.disable_item_expand (dynamic_runtime_enabled)
+			create dynamic_runtime.make_with_strings (<<"True", "False">>)
+			dynamic_runtime.disable_edit
+			vb.extend (dynamic_runtime)
+			vb.disable_item_expand (dynamic_runtime)
+			if data.dynamic_runtime /= Void then
+				dynamic_runtime_enabled.enable_select
+				if data.dynamic_runtime.item then
+					dynamic_runtime.first.enable_select
+				else
+					dynamic_runtime.last.enable_select
+				end
+			else
+				dynamic_runtime.disable_sensitive
+			end
+
 			hb.extend (create {EV_CELL})
 
+				-- dotnet
 			create vb
 			vb.set_minimum_width (100)
 			hb.extend (vb)
@@ -178,6 +200,7 @@ feature {NONE} -- Initialization
 				dotnet.disable_sensitive
 			end
 
+				-- multithreaded
 			append_small_margin (vb)
 			create multithreaded_enabled.make_with_text (dial_cond_multithreaded)
 			vb.extend (multithreaded_enabled)
@@ -280,9 +303,12 @@ feature {NONE} -- Initialization
 			build_enabled.select_actions.extend (agent on_build_enabled)
 			builds.select_actions.extend (agent on_build)
 			dotnet_enabled.select_actions.extend (agent on_dotnet_enabled)
-			multithreaded_enabled.select_actions.extend (agent on_multithreaded_enabled)
 			dotnet.change_actions.extend (agent on_dotnet)
+			multithreaded_enabled.select_actions.extend (agent on_multithreaded_enabled)
 			multithreaded.change_actions.extend (agent on_multithreaded)
+			dynamic_runtime_enabled.select_actions.extend (agent on_dynamic_runtime_enabled)
+			dynamic_runtime.change_actions.extend (agent on_dynamic_runtime)
+
 				--version
 			version_min_compiler.focus_out_actions.extend (agent on_compiler_version)
 			version_max_compiler.focus_out_actions.extend (agent on_compiler_version)
@@ -320,6 +346,12 @@ feature {NONE} -- GUI elements
 
 	dotnet: EV_COMBO_BOX
 			-- .NET
+
+	dynamic_runtime_enabled: EV_CHECK_BUTTON
+			-- Is the dynamic runtime value set?
+
+	dynamic_runtime: EV_COMBO_BOX
+			-- dynamic runtime
 
 	version_min_compiler: EV_TEXT_FIELD
 	version_max_compiler: EV_TEXT_FIELD
@@ -384,6 +416,18 @@ feature {NONE} -- Actions
 			end
 		end
 
+	on_dynamic_runtime_enabled is
+			-- enable/disable combo box to choose a value for dynamic runtime.
+		do
+			if dynamic_runtime_enabled.is_selected then
+				dynamic_runtime.enable_sensitive
+				on_dynamic_runtime
+			else
+				dynamic_runtime.disable_sensitive
+				data.unset_dynamic_runtime
+			end
+		end
+
 	on_build_enabled is
 			-- enable/disable combo box to choose a value for build.
 		do
@@ -413,6 +457,12 @@ feature {NONE} -- Actions
 			-- Multithreaded value hsas changed, udpate data.
 		do
 			data.set_multithreaded (multithreaded.text.to_boolean)
+		end
+
+	on_dynamic_runtime is
+			-- Dynamic_runtime value was changed, update data.
+		do
+			data.set_dynamic_runtime (dynamic_runtime.text.to_boolean)
 		end
 
 	on_compiler_version is

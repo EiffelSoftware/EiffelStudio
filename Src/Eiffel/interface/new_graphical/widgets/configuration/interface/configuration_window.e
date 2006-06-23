@@ -559,6 +559,7 @@ feature {NONE} -- Section tree selection agents
 			l_tb_btn.select_actions.extend (agent remove_group)
 
 			create edit_library_button.make_with_text (library_edit_configuration)
+			edit_library_button.disable_sensitive
 
 			append_groups_tree (vb)
 			append_small_margin (hb)
@@ -567,7 +568,6 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (vb)
 			vb.extend (edit_library_button)
 			vb.disable_item_expand (edit_library_button)
-			edit_library_button.disable_sensitive
 			append_property_grid (vb)
 			append_small_margin (vb)
 			append_property_description (vb)
@@ -1552,7 +1552,6 @@ feature {NONE} -- Implementation
 				l_text_prop.set_value (group_library)
 				l_library ?= a_group
 				l_visible := l_library
-				edit_library_button.disable_sensitive
 				if not l_library.is_readonly then
 					edit_library_button.enable_sensitive
 					edit_library_button.select_actions.extend (agent edit_configuration (l_library.location.evaluated_path))
@@ -1588,6 +1587,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (group_readonly_name, a_group.internal_read_only)
 			l_bool_prop.set_description (group_readonly_description)
 			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
 			properties.add_property (l_bool_prop)
 
 				-- location

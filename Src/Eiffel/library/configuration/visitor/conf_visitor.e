@@ -8,10 +8,19 @@ indexing
 deferred class
 	CONF_VISITOR
 
+inherit
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 feature -- Status
 
-	is_error: BOOLEAN
+	is_error: BOOLEAN is
 			-- Was there an error?
+		do
+			Result := last_errors /= Void and then not last_errors.is_empty
+		end
 
 	last_errors: LINKED_LIST [CONF_ERROR]
 			-- The last errors.
@@ -80,15 +89,26 @@ feature -- Visit nodes
 feature {NONE} -- Implementation
 
 	add_error (an_error: CONF_ERROR) is
-			-- Add `an_error'.
+			-- Add `an_error' without raising an exception.
 		require
 			an_error_not_void: an_error /= Void
 		do
 			if not is_error then
-				is_error := True
 				create last_errors.make
 			end
 			last_errors.extend (an_error)
+		end
+
+	add_and_raise_error (an_error: CONF_ERROR) is
+			-- Add `an_error' and raise an exception.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			if not is_error then
+				create last_errors.make
+			end
+			last_errors.extend (an_error)
+			raise_error
 		end
 
 	add_warning (a_warning: CONF_ERROR) is
@@ -102,7 +122,21 @@ feature {NONE} -- Implementation
 			last_warnings.extend (a_warning)
 		end
 
+	checksum is
+			-- Check if we have an error and throw an exception.
+		do
+			if is_error then
+				raise_error
+			end
+		end
 
+	raise_error is
+			-- Raise an exception because we have errors.
+		require
+			is_error: is_error
+		do
+			raise ("Configuration error")
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

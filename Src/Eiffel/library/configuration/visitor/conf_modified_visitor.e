@@ -53,7 +53,7 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY) is
 			-- Process `a_library'.
 		do
-			if not is_error and then not processed_libraries.has (a_library.uuid) then
+			if not processed_libraries.has (a_library.uuid) then
 				processed_libraries.force (a_library.uuid)
 				a_library.library_target.process (Current)
 			end
@@ -62,27 +62,21 @@ feature -- Visit nodes
 	process_precompile (a_precompile: CONF_PRECOMPILE) is
 			-- Process `a_precompile'.
 		do
-			if not is_error then
-				process_library (a_precompile)
-			end
+			process_library (a_precompile)
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER) is
 			-- Process `a_cluster'.
 		do
-			if not is_error then
-				find_modified (a_cluster)
-			end
+			find_modified (a_cluster)
 		end
 
 	process_override (an_override: CONF_OVERRIDE) is
 			-- Process `an_override'.
 		do
-			if not is_error then
-					-- check if any classes have been added and force a rebuild if this is the case
-				find_added_override_classes ("", an_override, an_override.active_file_rule (state))
-				process_cluster (an_override)
-			end
+				-- check if any classes have been added and force a rebuild if this is the case
+			find_added_override_classes ("", an_override, an_override.active_file_rule (state))
+			process_cluster (an_override)
 		end
 
 	process_group (a_group: CONF_GROUP) is
@@ -154,7 +148,7 @@ feature {NONE} -- Implementation
 				from
 					l_classes.start
 				until
-					l_classes.after or is_error or is_force_rebuild
+					l_classes.after or is_force_rebuild
 				loop
 					l_class := l_classes.item_for_iteration
 						-- check for changes
@@ -165,7 +159,7 @@ feature {NONE} -- Implementation
 						if l_class.is_compiled then
 								-- Invariant of CONF_CLASS tell us that it cannot be an override class.
 							if l_class.is_error then
-								add_error (l_class.last_error)
+								add_and_raise_error (l_class.last_error)
 							end
 							if l_class.is_overriden then
 								l_class.actual_class.check_changed
@@ -180,12 +174,12 @@ feature {NONE} -- Implementation
 						if not l_new_classes.has (l_name) then
 							l_new_classes.force (l_class, l_name)
 						else
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name))
+							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name))
 						end
 					end
 					l_classes.forth
 				end
-				if not (is_error or is_force_rebuild) then
+				if not is_force_rebuild then
 					a_group.set_classes (l_new_classes)
 				end
 			end
@@ -206,15 +200,15 @@ feature {NONE} -- Implementation
 			l_name: STRING
 			l_path: STRING
 		do
-			if not is_error and not is_force_rebuild then
+			if not is_force_rebuild then
 				l_path := an_override.location.build_path (a_path, "")
 				create l_dir.make (l_path)
 				if not l_dir.is_readable then
-					add_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
+					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
 				else
 					l_files := l_dir.filenames
 					if l_files = Void then
-						add_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
+						add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, an_override.target.system.file_name))
 					else
 						from
 							i := l_files.lower

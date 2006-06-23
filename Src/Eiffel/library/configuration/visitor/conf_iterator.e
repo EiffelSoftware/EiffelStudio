@@ -18,28 +18,36 @@ feature -- Visit nodes
 		local
 			l_targets: ARRAYED_LIST [CONF_TARGET]
 		do
-			from
-				l_targets := a_system.target_order
-				l_targets.start
-			until
-				l_targets.after
-			loop
-				l_targets.item.process (Current)
-				l_targets.forth
+			if not is_error then
+				from
+					l_targets := a_system.target_order
+					l_targets.start
+				until
+					l_targets.after
+				loop
+					l_targets.item.process (Current)
+					l_targets.forth
+				end
 			end
+		rescue
+			retry
 		end
 
 	process_target (a_target: CONF_TARGET) is
 			-- Visit `a_target'.
 		do
-			if a_target.precompile /= Void then
-				a_target.precompile.process (Current)
+			if not is_error then
+				if a_target.precompile /= Void then
+					a_target.precompile.process (Current)
+				end
+				a_target.libraries.linear_representation.do_all (agent {CONF_LIBRARY}.process (Current))
+				a_target.assemblies.linear_representation.do_all (agent {CONF_ASSEMBLY}.process (Current))
+				a_target.clusters.linear_representation.do_all (agent {CONF_CLUSTER}.process (Current))
+					-- overrides must be processed at the end
+				a_target.overrides.linear_representation.do_all (agent {CONF_OVERRIDE}.process (Current))
 			end
-			a_target.libraries.linear_representation.do_all (agent {CONF_LIBRARY}.process (Current))
-			a_target.assemblies.linear_representation.do_all (agent {CONF_ASSEMBLY}.process (Current))
-			a_target.clusters.linear_representation.do_all (agent {CONF_CLUSTER}.process (Current))
-				-- overrides must be processed at the end
-			a_target.overrides.linear_representation.do_all (agent {CONF_OVERRIDE}.process (Current))
+		rescue
+			retry
 		end
 
 	process_group (a_group: CONF_GROUP) is

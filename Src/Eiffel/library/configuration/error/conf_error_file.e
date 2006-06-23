@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "File open error: "+a_file
+			text := "Could not open file: "+a_file
 		end
 
 

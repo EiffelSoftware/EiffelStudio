@@ -106,7 +106,7 @@ feature -- Callbacks
 						if not a_value.is_empty then
 							current_attributes.force (a_value, l_attribute)
 						else
-							set_parse_error_message ("Invalid value for '"+a_local_part+"'")
+							set_parse_error_message ("Invalid (empty) value for '"+a_local_part+"'")
 						end
 					else
 						set_parse_error_message ("Invalid attribute '"+a_local_part+"'")
@@ -215,10 +215,6 @@ feature -- Callbacks
 						current_tag.item
 					when t_description then
 						process_description_content
-					when t_exclude then
-						process_exclude_content
-					when t_include then
-						process_include_content
 					else
 						set_parse_error_message ("Invalid content: "+current_content)
 					end
@@ -344,8 +340,10 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void and then l_uuid /= Void and then check_uuid (l_uuid) then
 				create l_uu.make_from_string (l_uuid)
 				last_system := factory.new_system (l_name.as_lower, l_uu)
+			elseif l_name = Void then
+				set_parse_error_message ("Incorrect system tag, no name specified.")
 			else
-				set_parse_error_message ("Incorrect system tag.")
+				set_parse_error_message ("Incorrect system tag "+l_name+" invalid uuid specified.")
 			end
 		ensure
 			last_system_not_void: not is_error implies last_system /= Void
@@ -376,9 +374,11 @@ feature {NONE} -- Implementation attribute processing
 						current_target.set_parent (l_target)
 						group_list := l_target.groups
 					else
-						set_parse_error_message ("Missing parent target: "+l_extends)
+						set_parse_error_message ("Missing parent target: "+l_extends+" in target"+l_name)
 					end
 				end
+			else
+				set_parse_error_message ("Target without a name specified.")
 			end
 		ensure
 			target_not_void: not is_error implies current_target /= Void
@@ -480,8 +480,10 @@ feature {NONE} -- Implementation attribute processing
 				else
 					set_parse_error_message ("Invalid setting: "+l_name)
 				end
-			else
+			elseif l_name = Void then
 				set_parse_error_message ("Invalid setting tag.")
+			else
+				set_parse_error_message ("Invalid setting tag "+l_name+".")
 			end
 		end
 
@@ -572,10 +574,10 @@ feature {NONE} -- Implementation attribute processing
 					when t_post_compile_action then
 						current_target.add_post_compile (current_action)
 					else
-						set_parse_error_message ("Invalid action tag.")
+						set_parse_error_message ("Invalid action tag "+l_command+".")
 					end
 				else
-					set_parse_error_message ("Non boolean value for succeed attribute.")
+					set_parse_error_message ("Non boolean value for succeed attribute of action "+l_command+".")
 				end
 			else
 				set_parse_error_message ("Invalid action tag.")
@@ -595,8 +597,10 @@ feature {NONE} -- Implementation attribute processing
 			l_value := current_attributes.item (at_value)
 			if l_name /= Void and l_value /= Void then
 				current_target.add_variable (l_name, l_value)
-			else
+			elseif l_name = Void then
 				set_parse_error_message ("Invalid variable tag.")
+			else
+				set_parse_error_message ("Invalid variable tag "+l_name+".")
 			end
 		end
 
@@ -624,8 +628,10 @@ feature {NONE} -- Implementation attribute processing
 				end
 				group_list.force (current_group, l_name)
 				current_target.add_library (current_library)
-			else
+			elseif l_name = Void then
 				set_parse_error_message ("Invalid library tag.")
+			else
+				set_parse_error_message ("Invalid library tag "+l_name+".")
 			end
 		ensure
 			library_and_group: not is_error implies current_library /= Void and current_group /= Void
@@ -658,8 +664,10 @@ feature {NONE} -- Implementation attribute processing
 				end
 				group_list.force (current_group, l_name)
 				current_target.set_precompile (l_pre)
-			else
+			elseif l_name = Void then
 				set_parse_error_message ("Invalid precompile tag.")
+			else
+				set_parse_error_message ("Invalid precompile tag "+l_name+".")
 			end
 		ensure
 			library_and_group: not is_error implies current_library /= Void and current_group /= Void
@@ -800,8 +808,10 @@ feature {NONE} -- Implementation attribute processing
 				end
 				group_list.force (current_group, l_name)
 				current_target.add_override (current_override)
-			else
+			elseif l_name = Void then
 				set_parse_error_message ("Invalid override tag.")
+			else
+				set_parse_error_message ("Invalid override tag "+l_name+".")
 			end
 		ensure
 			override_and_cluster_and_group: current_override /= Void and current_cluster /= Void and current_group /= Void
@@ -818,6 +828,10 @@ feature {NONE} -- Implementation attribute processing
 			l_enabled := current_attributes.item (at_enabled)
 			if l_name /= Void and l_enabled /= Void and then l_enabled.is_boolean then
 				current_option.add_debug (l_name.as_lower, l_enabled.to_boolean)
+			elseif l_name = Void then
+				set_parse_error_message ("Invalid debug tag.")
+			else
+				set_parse_error_message ("Invalid debug tag "+l_name+".")
 			end
 		end
 
@@ -836,6 +850,10 @@ feature {NONE} -- Implementation attribute processing
 				else
 					set_parse_error_message ("Invalid warning: "+l_name)
 				end
+			elseif l_name = Void then
+				set_parse_error_message ("Invalid warning tag.")
+			else
+				set_parse_error_message ("Invalid warning tag "+l_name+".")
 			end
 		end
 
@@ -882,6 +900,12 @@ feature {NONE} -- Implementation attribute processing
 			l_new_name := current_attributes.item (at_new_name)
 			if l_old_name /= Void and l_new_name /= Void then
 				current_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
+			elseif l_old_name /= Void then
+				set_parse_error_message ("Invalid renaming tag, no new name specified for "+l_old_name+".")
+			elseif l_new_name /= Void then
+				set_parse_error_message ("Invalid renaming tag, no old name specified for "+l_new_name+".")
+			else
+				set_parse_error_message ("Invalid renaming tag.")
 			end
 		end
 
@@ -967,9 +991,9 @@ feature {NONE} -- Implementation attribute processing
 				end
 			else
 				if current_cluster /= Void then
-					set_parse_error_message ("Invalid visible tag on ."+current_cluster.name)
+					set_parse_error_message ("Invalid visible tag on "+current_cluster.name+".")
 				else
-					set_parse_error_message ("Invalid visible tag on ."+current_library.name)
+					set_parse_error_message ("Invalid visible tag on "+current_library.name+".")
 				end
 			end
 		end
@@ -995,7 +1019,7 @@ feature {NONE} -- Implementation attribute processing
 					uses_list.force (ll, l_group)
 				end
 			else
-				set_parse_error_message ("Invalid uses tag.")
+				set_parse_error_message ("Invalid uses tag in group "+current_cluster.name+".")
 			end
 		end
 
@@ -1020,7 +1044,7 @@ feature {NONE} -- Implementation attribute processing
 					overrides_list.force (ll, l_group)
 				end
 			else
-				set_parse_error_message ("Invalid overrides tag.")
+				set_parse_error_message ("Invalid overrides tag in group "+current_override.name+".")
 			end
 		end
 

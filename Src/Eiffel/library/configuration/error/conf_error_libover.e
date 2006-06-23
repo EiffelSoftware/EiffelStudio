@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create.
 		do
-			message := "Library target has overrides."
+			message := "Library target has overrides. A library target can not have any override groups."
 		end
 
 indexing

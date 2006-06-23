@@ -21,7 +21,7 @@ class
 	EB_PROGRESS_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 		redefine
 			initialize,
 			show
@@ -47,14 +47,14 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -76,8 +76,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-			set_icon_pixmap (Pixmaps.Icon_progress_dialog)
-
 				-- Create the progress pixmap.			
 			create pixmap_cell
 			pixmap_cell.set_minimum_width (34)
@@ -94,7 +92,7 @@ feature {NONE} -- Initialization
 				labels.put (new_label, i)
 				i := i + 1
 			end
-				
+
 				-- put the labels in the left/right pane.
 			create left_pane
 			create space
@@ -189,13 +187,13 @@ feature -- Access
 		do
 			Result := labels.item (to_go_index).text
 		end
-		
+
 	value: INTEGER is
 			-- Progress value.
 		do
 			Result := progress_bar.value
 		end
-		
+
 	range: INTEGER_INTERVAL is
 			-- Range of progress bar.
 		do
@@ -230,7 +228,7 @@ feature -- Basic operation
 		do
 			update_progress_bar_color
 			if not is_show_requested then
-				Precursor {EV_DIALOG}
+				Precursor {EB_DIALOG}
 			end
 			if is_minimized then
 				restore
@@ -300,7 +298,7 @@ feature -- Element change
 			labels.item (current_degree_index).set_text (a_text)
 			remove_pixmap_degree
 		ensure
-			assigned: current_degree = Void and a_text.is_equal ("") 
+			assigned: current_degree = Void and a_text.is_equal ("")
 						or else current_degree.is_equal (a_text)
 		end
 
@@ -377,7 +375,7 @@ feature {NONE} -- Constants
 	current_entity_index: INTEGER is 4
 	to_go_label_index: INTEGER is 5
 	to_go_index: INTEGER is 6
-	
+
 feature {NONE} -- Implementation
 
 	pixmap_cell: EV_CELL
@@ -394,13 +392,13 @@ feature {NONE} -- Implementation
 			create progress_pixmap
 			progress_pixmap.copy (pixmaps.large_pixmaps.icons_progress_degree @ a_degree)
 			pixmap_cell.extend (progress_pixmap)
-		end 
-	
+		end
+
 	remove_pixmap_degree is
 			-- Remove the `progress_pixmap'.
 		do
 			pixmap_cell.wipe_out
-		end 
+		end
 
 	labels: ARRAY [EV_LABEL]
 			-- Labels for textual progress display.
@@ -417,7 +415,7 @@ feature {NONE} -- Implementation
 			disable_cancel
 			cancel_compilation_requested := True
 		end
-		
+
 	cancel_compilation_requested: BOOLEAN
 			-- Has the user requested to cancel the compilation?
 
@@ -425,7 +423,7 @@ feature {NONE} -- Implementation
 		do
 			Result := preferences.development_window_data.progress_bar_color
 		end
-		
+
 	update_progress_bar_color is
 			-- Set color of progress bar.
 		local

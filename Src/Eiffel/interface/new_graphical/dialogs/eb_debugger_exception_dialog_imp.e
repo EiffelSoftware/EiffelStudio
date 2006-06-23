@@ -27,7 +27,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create close_button
 			create l_ev_cell_4
-			
+
 				-- Build_widget_structure.
 			window.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -59,7 +59,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (l_ev_cell_3)
 			l_ev_horizontal_box_2.extend (close_button)
 			l_ev_horizontal_box_2.extend (l_ev_cell_4)
-			
+
 			l_ev_vertical_box_1.set_padding_width (tiny_padding)
 			l_ev_vertical_box_1.set_border_width (small_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
@@ -83,7 +83,7 @@ feature {NONE}-- Initialization
 			close_button.set_text (close_string)
 			close_button.set_minimum_width (default_button_width)
 			window.set_minimum_width (400)
-			
+
 				--Connect events.
 			wrapping_button.select_actions.extend (agent set_wrapping_mode)
 			save_button.select_actions.extend (agent save_exception_message)
@@ -126,27 +126,27 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	set_wrapping_mode is
 			-- Called by `select_actions' of `wrapping_button'.
 		deferred
 		end
-	
+
 	save_exception_message is
 			-- Called by `select_actions' of `save_button'.
 		deferred
 		end
-	
+
 	close_dialog is
 			-- Called by `select_actions' of `close_button'.
 		deferred
 		end
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

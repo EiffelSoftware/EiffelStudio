@@ -9,7 +9,7 @@ class
 	EB_CREATE_CLASS_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EB_CONSTANTS
 		export
@@ -109,7 +109,6 @@ feature {NONE} -- Initialization
 			make_with_title (Interface_names.t_new_class)
 			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
 			set_width (Layout_constants.dialog_unit_to_pixels (300).min ((create {EV_SCREEN}).width))
-			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 
 				-- Build the widgets
 			create class_entry

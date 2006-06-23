@@ -10,7 +10,7 @@ class
 	EB_CREATE_CLUSTER_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	COMPILER_EXPORTER
 		export
@@ -104,7 +104,6 @@ feature {NONE} -- Initialization
 
 			make_with_title (Interface_names.t_New_cluster)
 			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
-			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 
 				-- Build the widgets
 			create cluster_entry

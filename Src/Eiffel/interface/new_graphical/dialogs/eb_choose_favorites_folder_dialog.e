@@ -9,7 +9,7 @@ class
 	EB_CHOOSE_FAVORITES_FOLDER_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EB_CONSTANTS
 		undefine
@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			favorites_manager := a_favorites_manager
 			default_create
 			set_title (Interface_names.t_Choose_folder_name)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
 			prepare
 		end
 

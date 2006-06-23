@@ -10,7 +10,7 @@ deferred class
 	EB_DISCARDABLE_WARNING_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 		redefine
 			initialize,
 			destroy,
@@ -24,7 +24,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create, copy
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			pixmap_box: EV_CELL -- Container to display pixmap in.
 			button_box: EV_HORIZONTAL_BOX -- Bar with all buttons of the dialog.
 		do
-			Precursor {EV_DIALOG}
+			Precursor {EB_DIALOG}
 			set_icon_pixmap (Default_pixmaps.Warning_pixmap)
 
 			create check_button.make_with_text (Check_button_label)
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			vb2.extend (pixmap_box)
 			vb2.disable_item_expand (pixmap_box)
 			vb2.extend (create {EV_CELL})
-	
+
 			create hb
 			hb.extend (vb2)
 			hb.disable_item_expand (vb2)
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (ok_button)
 			disable_user_resize
 		end
-		
+
 	build_buttons_box: EV_HORIZONTAL_BOX is
 			-- Build the button box.
 		do
@@ -150,7 +150,7 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		do
 			save_check_button_state (check_button.is_selected)
 
-			Precursor {EV_DIALOG}
+			Precursor {EB_DIALOG}
 		end
 
 	create_button (a_text: STRING): EV_BUTTON is

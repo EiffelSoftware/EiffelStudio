@@ -9,7 +9,7 @@ class
 	EB_ORGANIZE_FAVORITES_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EB_CONSTANTS
 		export
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
-	
+
 			create button.make_with_text_and_action (Interface_names.b_New_favorite_class, agent new_favorite_class)
 			extend_no_expand (buttons_box, button)
 			create button.make_with_text_and_action (Interface_names.b_Create_folder, agent create_folder)
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent button.set_focus)
 			set_icon_pixmap (pixmaps.icon_dialog_window)
 		end
-		
+
 feature {EB_FAVORITES_MANAGER} -- Status Setting
 
 	refresh is
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_favorite_class is
-			-- Create a new "favorite class" and add it to the 
+			-- Create a new "favorite class" and add it to the
 			-- end of the root list.
 		local
 			choose_class_dialog: EB_CHOOSE_CLASS_DIALOG
@@ -151,9 +151,9 @@ feature {NONE} -- Implementation
 			folder_name_dialog.show_modal_to_window (Current)
 			if folder_name_dialog.selected then
 				folder_name := folder_name_dialog.folder_name
-				if 
-					folder_name.has ('(') 
-					or folder_name.has (')') 
+				if
+					folder_name.has ('(')
+					or folder_name.has (')')
 					or folder_name.has ('*')
 				then
 					create wd.make_with_text (Warning_messages.w_Invalid_folder_name + "%N A favorite folder name can not contain any ot the following characters: %N ( ) * ")
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 				else
 					favorites.add_folder (folder_name)
 				end
-			end		
+			end
 		end
 
 	move_to_folder is
@@ -280,4 +280,4 @@ indexing
 		]"
 
 end -- class EB_ORGANIZE_FAVORITES_DIALOG
-	
+

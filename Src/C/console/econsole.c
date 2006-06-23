@@ -52,7 +52,7 @@
 #include <fcntl.h>
 
 #ifdef WORKBENCH
-#include "server.h"	/* For `debug_mode' */
+#include "rt_main.h"	/* For `debug_mode' */
 #endif
 
 static BOOL eif_console_allocated = FALSE;

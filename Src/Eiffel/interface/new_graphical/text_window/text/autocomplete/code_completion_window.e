@@ -371,12 +371,16 @@ feature {NONE} -- Cursor movement
 			l_count: INTEGER
 			end_loop: BOOLEAN
 			l_last_selectable: INTEGER
+			l_row: EV_GRID_ROW
 		do
 			if choice_list.row_count > 0 then
 				if not choice_list.selected_items.is_empty then
 					lock_update
 					l_selected_row := choice_list.selected_rows.first.index
-					l_viewable_row_count := viewable_row_count + 1 - scrolling_common_line_count
+					if not choice_list.visible_row_indexes.has (l_selected_row) then
+						l_selected_row := choice_list.visible_row_indexes.first
+					end
+					l_viewable_row_count := viewable_row_count - scrolling_common_line_count
 					l_last_selectable := l_selected_row
 					from
 						i := l_selected_row
@@ -395,6 +399,10 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
+					if not choice_list.selected_rows.is_empty then
+						l_row := choice_list.selected_rows.first
+						ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
+					end
 					unlock_update
 				end
 			end
@@ -409,12 +417,16 @@ feature {NONE} -- Cursor movement
 			l_count: INTEGER
 			end_loop: BOOLEAN
 			l_last_selectable: INTEGER
+			l_row: EV_GRID_ROW
 		do
 			if choice_list.row_count > 0 then
 				if not choice_list.selected_items.is_empty then
 					lock_update
 					l_selected_row := choice_list.selected_rows.first.index
-					l_viewable_row_count := viewable_row_count + 1 - scrolling_common_line_count
+					if not choice_list.visible_row_indexes.has (l_selected_row) then
+						l_selected_row := choice_list.visible_row_indexes.last
+					end
+					l_viewable_row_count := viewable_row_count - scrolling_common_line_count
 					l_last_selectable := l_selected_row
 					from
 						i := l_selected_row
@@ -433,6 +445,10 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
+					if not choice_list.selected_rows.is_empty then
+						l_row := choice_list.selected_rows.first
+						ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
+					end
 					unlock_update
 				end
 			end
@@ -965,14 +981,8 @@ feature {NONE} -- Implementation
 
 	on_scroll (x, y: INTEGER) is
 			-- On vertical bar scroll
-		local
-			l_row: EV_GRID_ROW
 		do
 			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
-			if not choice_list.selected_rows.is_empty then
-				l_row := choice_list.selected_rows.first
-				ev_application.idle_actions.extend_kamikaze (agent l_row.ensure_visible)
-			end
 		end
 
 	is_first_show: BOOLEAN

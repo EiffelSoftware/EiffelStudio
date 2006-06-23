@@ -432,6 +432,6 @@
 	<target name="batch_unix" extends="batch">
 		<description>Compiling UNIX batch compiler on other platforms than Windows</description>
 		<root class="ES" feature="make"/>
-		<variable name="platform" value="unix"/>
+		<setting name="platform" value="unix"/>
 	</target>
 </system>

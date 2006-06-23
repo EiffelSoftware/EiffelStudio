@@ -211,6 +211,7 @@ feature -- Commands
 			enable_select
 			popup
 			fresh_old_formatter
+			setup_viewpoint
 			format
 			post_execution_action.call ([])
 		end

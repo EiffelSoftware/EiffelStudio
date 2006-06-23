@@ -1320,7 +1320,7 @@ feature {NONE} -- Implementation
 			l_class_type_name.right_adjust
 
 				-- Search for a non generic class type.
-			eiffel_meta_type_mapping.search (l_class_type_name)
+			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
 			if eiffel_meta_type_mapping.found then
 					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'.
 				check
@@ -1346,7 +1346,7 @@ feature {NONE} -- Implementation
 					l_type_name := l_class_type_name.substring (1, l_start_pos - 1)
 					l_type_name.left_adjust
 					l_type_name.right_adjust
-					eiffel_meta_type_mapping.search (l_type_name)
+					eiffel_meta_type_mapping.search (mapped_type (l_type_name))
 					if eiffel_meta_type_mapping.found then
 							-- Extract generic parameters and ensures that it matches the number of generic
 							-- parameter expected by the type `l_type_name'.
@@ -1580,7 +1580,7 @@ feature {NONE} -- Implementation
 							interface_to_implementation.add (l_interface_type, l_type)
 
 								-- Update `eiffel_meta_type_mapping'
-							eiffel_meta_type_mapping.search (l_name.name)
+							eiffel_meta_type_mapping.search (mapped_type (l_name.name))
 							if eiffel_meta_type_mapping.found then
 								eiffel_meta_type_mapping.found_item.extend (l_class_type)
 							else

@@ -46,6 +46,7 @@ feature -- Creation
 		local
 			l_cstr: C_STRING
 			l_table: like internal_dynamic_type_string_table
+			l_pre_ecma_status: BOOLEAN
 		do
 			l_table := internal_dynamic_type_string_table
 			l_table.search (class_type)
@@ -53,7 +54,11 @@ feature -- Creation
 				Result := l_table.found_item
 			else
 				create l_cstr.make (class_type)
+					-- Take into consideration possible pre-ECMA mapping.
+				l_pre_ecma_status := {ISE_RUNTIME}.pre_ecma_mapping_status
+				{ISE_RUNTIME}.set_pre_ecma_mapping (is_pre_ecma_mapping_enabled)
 				Result := {ISE_RUNTIME}.type_id_from_name (l_cstr.item)
+				{ISE_RUNTIME}.set_pre_ecma_mapping (l_pre_ecma_status)
 				l_table.put (Result, class_type)
 			end
 		ensure

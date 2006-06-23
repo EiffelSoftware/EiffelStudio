@@ -10,13 +10,17 @@ class
 
 feature -- Status report
 
+	is_pre_ecma_mapping_enabled: BOOLEAN
+			-- Are we mapping old names to new ECMA names?
+			-- I.e. mapping STRING to STRING_8, INTEGER to INTEGER_32,...
+
 	is_valid_type_string (s: STRING): BOOLEAN is
 			-- Is `s' a valid string representation for a TYPE.
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		local
-			l_parameters: ARRAYED_LIST [STRING]			
+			l_parameters: ARRAYED_LIST [STRING]
 			l_type_name: STRING
 			l_start_pos, l_end_pos: INTEGER
 			l_class_type_name: STRING
@@ -30,7 +34,7 @@ feature -- Status report
 
 			if l_start_pos > 1 then
 					-- Looks like it is a generic class.
-				l_end_pos := l_class_type_name.count				
+				l_end_pos := l_class_type_name.count
 				if l_class_type_name.item (l_end_pos) /= ']' then
 					l_end_pos := 0
 				end
@@ -62,6 +66,39 @@ feature -- Status report
 					-- Ensures that it is a valid type name.
 				Result := is_valid_identifier (l_class_type_name)
 			end
+		end
+
+	mapped_type (a_type: STRING): STRING is
+			-- If not `is_pre_ecma_mapping_enabled' `a_type', otherwise
+			-- the mapped typed.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if is_pre_ecma_mapping_enabled then
+				Result := pre_ecma_type_mapping.item (a_type)
+			else
+				Result := a_type
+			end
+		ensure
+			mapped_type_not_void: Result /= Void
+		end
+
+feature -- Status setting
+
+	enable_pre_ecma_mapping is
+			-- Set `is_pre_ecma_mapping_enabled' to True.
+		do
+			is_pre_ecma_mapping_enabled := True
+		ensure
+			is_pre_ecma_mapping_enabled_set: is_pre_ecma_mapping_enabled
+		end
+
+	disable_pre_ecma_mapping is
+			-- Set `is_pre_ecma_mapping_enabled' to False.
+		do
+			is_pre_ecma_mapping_enabled := False
+		ensure
+			is_pre_ecma_mapping_enabled_set: not is_pre_ecma_mapping_enabled
 		end
 
 feature {NONE} -- Implementation: status report
@@ -132,6 +169,27 @@ feature {NONE} -- Decompose string type
 			else
 				Result.extend (a_str.substring (l_first_pos, i - 1))
 			end
+		end
+
+feature {NONE} -- ECMA mapping helper
+
+	pre_ecma_type_mapping: HASH_TABLE [STRING, STRING] is
+			-- Mapping between pre-ECMA type naming and new names.
+		once
+			create Result.make (12)
+			Result.put ("STRING_8", "STRING")
+			Result.put ("INTEGER_32", "INTEGER")
+			Result.put ("INTEGER_32_REF", "INTEGER_REF")
+			Result.put ("CHARACTER_8", "CHARACTER")
+			Result.put ("CHARACTER_8_REF", "CHARACTER_REF")
+			Result.put ("CHARACTER_32", "WIDE_CHARACTER")
+			Result.put ("CHARACTER_32_REF", "WIDE_CHARACTER_REF")
+			Result.put ("REAL_32", "REAL")
+			Result.put ("REAL_32_REF", "REAL_REF")
+			Result.put ("REAL_64", "DOUBLE")
+			Result.put ("REAL_64_REF", "DOUBLE_REF")
+		ensure
+			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 
 indexing

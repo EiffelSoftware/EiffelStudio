@@ -237,7 +237,6 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Quit with saving
 		do
-			close_request_actions.call ([])
 			conf_system.store
 			destroy
 		end

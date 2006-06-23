@@ -152,7 +152,7 @@ feature -- Access
 				l_conjunctive := " was "
 				l_plurality := " warning "
 			end
-			a_formatter.add ("(There" + l_conjunctive + warning_count.out + l_plurality + "during compilation)")
+			a_formatter.add ("%TThere" + l_conjunctive + warning_count.out + l_plurality + "during compilation.")
 			a_formatter.add_new_line
 		end
 

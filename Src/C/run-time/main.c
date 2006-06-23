@@ -362,16 +362,6 @@ rt_public EIF_REFERENCE **EIF_oms = NULL;
 #endif /* EIF_THREADS */
 
 /*
-doc:	<attribute name="debug_mode" return_type="int" export="public">
-doc:		<summary>This variable records whether the workbench application was launched via the ised wrapper (i.e. in debug mode) or not.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Done by `winit' at the beginning and only one thread can modify `debug_mode' while debugging.</synchronization>
-doc:	</attribute>
-*/
-rt_public int debug_mode = 0;	/* Assume not in debug mode */
-
-/*
 doc:	<attribute name="starting_working_directory" return_type="char *" export="public">
 doc:		<summary>Store working directory during session, ie where to put output files from runtime</summary>
 doc:		<access>Read/Write once</access>
@@ -381,6 +371,29 @@ doc:		<fixme>Memory is allocated, we do chdir, but we never fill its content?</f
 doc:	</attribute>
 */
 rt_public char *starting_working_directory;
+
+/*
+doc:	<attribute name="debug_mode" return_type="int" export="private">
+doc:		<summary>This variable records whether the workbench application was launched via the ised wrapper (i.e. in debug mode) or not.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by `winit' at the beginning and only one thread can modify `debug_mode' while debugging.</synchronization>
+doc:	</attribute>
+*/
+rt_shared int debug_mode = 0;	/* Assume not in debug mode */
+
+/*
+doc:	<routine name="is_debug_mode" return_type="int" export="public">
+doc:		<summary>Public access to `debug_mode'.</summary>
+doc:		<return>Value of `debug_mode'</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since we only read the value.</synchronization>
+doc:	</routine>
+*/
+
+rt_public int is_debug_mode (void){
+	return debug_mode;
+}
 
 rt_public void once_init (void)
 {

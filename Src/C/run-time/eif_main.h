@@ -73,6 +73,8 @@ RT_LNK LPWSTR eif_lpCmdLine;
 RT_LNK int eif_nCmdShow;
 #endif
 
+RT_LNK int is_debug_mode (void);
+
 #ifdef __cplusplus
 }
 #endif

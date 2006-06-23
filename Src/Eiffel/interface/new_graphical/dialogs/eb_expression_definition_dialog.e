@@ -189,7 +189,7 @@ feature {NONE} -- Graphical initialization and changes
 				--| Create and set up the dialog.
 			create dialog
 			dialog.set_title (Interface_names.t_New_expression)
-			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 				--| Create and set up the radio buttons.
 			create class_radio.make_with_text (Interface_names.t_Class)

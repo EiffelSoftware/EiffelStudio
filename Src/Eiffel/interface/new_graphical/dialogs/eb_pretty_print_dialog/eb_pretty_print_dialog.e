@@ -89,8 +89,8 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_slice_button.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
-			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color)
-			word_wrap_button.set_pixmap (icon_word_wrap_color)
+			auto_set_slice_button.set_pixmap (icon_pixmaps.debugger_object_expand_icon)
+			word_wrap_button.set_pixmap (icon_pixmaps.general_word_wrap_icon)
 
 			editor.set_minimum_height (100)
 			editor.set_background_color (No_text_background_color)
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 			lower_slice_field.set_text (slice_min.out)
 			upper_slice_field.set_text (slice_max.out)
-			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
 
 	Text_format: EV_CHARACTER_FORMAT is

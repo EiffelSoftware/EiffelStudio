@@ -9,7 +9,7 @@ class
 	EB_CHOOSE_CLASS_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EB_CONSTANTS
 		export
@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Choose_class)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
 			prepare
 		end
 
@@ -57,7 +56,7 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
-	
+
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
@@ -72,7 +71,7 @@ feature {NONE} -- Initialization
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
 			classes_tree.refresh
-			
+
 				-- Create the left panel: a Combo Box to type the name of the class
 				-- and a tree to select the class.
 			create controls_box
@@ -202,4 +201,4 @@ indexing
 		]"
 
 end -- class EB_CHOOSE_CLASS_DIALOG
-	
+

@@ -10,7 +10,7 @@ class
 	EB_CREATE_PROJECT_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EXCEPTIONS
 		rename
@@ -286,7 +286,6 @@ feature {NONE} -- Implementation
 		do
 				-- Let the user choose the directory
 			default_create
-			set_icon_pixmap (Pixmaps.Default_window_icon)
 
 				-- Ask for the system name if it's not already known.
 			if ask_for_system_name then

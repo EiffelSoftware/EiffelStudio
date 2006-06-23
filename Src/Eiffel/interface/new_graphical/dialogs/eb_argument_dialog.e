@@ -11,7 +11,6 @@ class
 	EB_ARGUMENT_DIALOG
 
 inherit
-
 	EV_TITLED_WINDOW
 
 	EV_KEY_CONSTANTS
@@ -59,7 +58,7 @@ feature {NONE} -- Initialization
 			cmd_not_void: cmd /= Void
 		do
 			make_with_title ("Execution Control")
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			Eb_debugger_manager.observers.extend (Current)
 			set_size (600, 400)
 			run := cmd

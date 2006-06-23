@@ -9,7 +9,7 @@ class
 	EB_ABOUT_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	SYSTEM_CONSTANTS
 		undefine
@@ -64,7 +64,6 @@ feature -- Initialization
 			borland_image: EV_PIXMAP
 		do
 			default_create
-			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 			set_title (Interface_names.t_About)
 
 				-- Create controls.

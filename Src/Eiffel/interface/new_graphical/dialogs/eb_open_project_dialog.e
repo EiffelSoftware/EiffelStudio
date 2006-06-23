@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			parent_window := a_parent
 
 			create dialog
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create ok_button.make_with_text (interface_names.b_open)
 
 			create open_project.make (dialog)
@@ -71,8 +72,6 @@ feature {NONE} -- Initialization
 			dialog.set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(270))
 				--| Ensure `open_project' has focu when opened.
 			dialog.show_actions.extend (agent open_project.set_focus)
-
-			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 		ensure
 			parent_window_set: parent_window = a_parent
 		end

@@ -9,7 +9,7 @@ class
 	EB_TYPE_FOLDER_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 
 	EB_CONSTANTS
 		export
@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Choose_folder_name)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
 			prepare
 		end
 
@@ -51,7 +50,7 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Default_padding_size)
 			buttons_box.set_border_width (Layout_constants.Default_padding_size)
-	
+
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
@@ -61,7 +60,7 @@ feature {NONE} -- Initialization
 				-- Create the controls
 			create folder_name_entry
 			create label.make_with_text (Interface_names.l_Enter_folder_name)
-			
+
 				-- Create the left panel: a Combo Box to type the name of the class
 				-- and a tree to select the class.
 			create controls_box
@@ -159,4 +158,4 @@ indexing
 		]"
 
 end -- class EB_TYPE_FOLDER_DIALOG
-	
+

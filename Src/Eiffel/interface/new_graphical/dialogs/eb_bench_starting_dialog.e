@@ -10,7 +10,7 @@ class
 	EB_STARTING_DIALOG
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 		redefine
 			show_modal_to_window,
 			destroy
@@ -121,7 +121,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Starting_dialog)
-			set_icon_pixmap (Pixmaps.Icon_dialog_window)
 
 			create main_container
 			create ok_button
@@ -172,7 +171,7 @@ feature {NONE} -- Initialization
 				main_container.extend (vb)
 				main_container.disable_item_expand (vb)
 
-				set_icon_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+				set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			end
 
 				--| Action buttons box

@@ -27,17 +27,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_I) is
-			-- Create a tree item representing class `a_class'.
+	make (a_class: CLASS_I; a_name: STRING) is
+			-- Create a tree item representing class `a_class' with `a_name' in its context.
+		require
+			a_class_ok: a_class /= Void and then a_class.is_valid
+			a_name_ok: a_name /= Void
 		do
 			default_create
+			name := a_name
 			set_data (a_class)
+		ensure
+			name_set: name = a_name
+			data_set: data = a_class
 		end
 
 feature -- Status report
 
 	data: CLASS_I
 			-- Class represented by `Current'.
+
+	name: STRING
+			-- Renamed name in the context of this item in the classes tree.
 
 	stone: CLASSI_STONE is
 			-- Class stone representing `Current', can be a classi_stone or a classc_stone.
@@ -56,10 +66,7 @@ feature -- Status setting
 
 	set_data (a_class: CLASS_I) is
 			-- Change the associated class to `a_class'.
-		local
-			name: STRING
 		do
-			name := a_class.name_in_upper
 			set_text (name)
 			data := a_class
 			set_pebble_function (agent stone)
@@ -92,7 +99,7 @@ feature -- Status setting
 					check
 						class_i: class_i /= Void
 					end
-					create over_item.make (class_i)
+					create over_item.make (class_i, class_i.name_in_upper)
 
 					if associated_window /= Void then
 						over_item.set_associated_window (associated_window)
@@ -118,7 +125,7 @@ feature -- Status setting
 				check
 					class_i: class_i /= Void
 				end
-				create over_item.make (class_i)
+				create over_item.make (class_i, class_i.name_in_upper)
 
 				if associated_window /= Void then
 					over_item.set_associated_window (associated_window)

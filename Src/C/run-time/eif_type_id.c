@@ -72,6 +72,19 @@ struct rt_global_data {
 	uint32 count;
 	uint32 position;
 };
+
+
+/*
+doc:	<attribute name="eif_pre_ecma_mapping_status" return_type="int" export="public">
+doc:		<summary>Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...)</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public int eif_pre_ecma_mapping_status = 1;
+
 	
 /* Prototypes */
 /* String analysis */
@@ -121,6 +134,78 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 		result = EIF_NO_TYPE;
 	}
 	return result;
+}
+
+/*
+doc:	<routine name="eif_set_pre_ecma_mapping" export="public">
+doc:		<summary>Set `eif_pre_ecma_mapping_status' to `v'.</summary>
+doc:		<param name="v" type="int">New value for `eif_pre_ecma_mapping_status'.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</routine>
+*/
+rt_public void eif_set_pre_ecma_mapping (int v)
+{
+	eif_pre_ecma_mapping_status = v;
+}
+
+/*
+doc:	<routine name="eif_pre_ecma_mapped_type" return_type="char *" export="shared">
+doc:		<summary>If not `eif_pre_ecma_mapping_status' `v' otherwise the mapped type.</summary>
+doc:		<param name="v" type="char *">Type to be found.</param>
+doc:		<return>Mapped type if any.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</routine>
+*/
+
+rt_shared char * eif_pre_ecma_mapped_type (char *v)
+{
+	char *Result = v;
+
+	REQUIRE("v_not_null", v);
+
+	if (eif_pre_ecma_mapping_status) {
+		size_t l_count = strlen(v);
+		if (l_count > 1) {
+			if (v[0] == 'I') {
+				if ((l_count == 7) && (strncmp ("INTEGER", v, 7) == 0)) {
+					Result = "INTEGER_32";
+				} else if ((l_count == 11) && (strncmp ("INTEGER_REF", v, 11) == 0)) {
+					Result = "INTEGER_32_REF";
+				}
+			} else if (v[0] == 'C') {
+				if ((l_count == 9) && (strncmp ("CHARACTER", v, 9) == 0)) {
+					Result = "CHARACTER_8";
+				} else if ((l_count == 13) && (strncmp ("CHARACTER_REF", v, 13) == 0)) {
+					Result = "CHARACTER_8_REF";
+				}
+			} else if (v[0] == 'W') {
+				if ((l_count == 14) && (strncmp ("WIDE_CHARACTER", v, 14) == 0)) {
+					Result = "CHARACTER_32";
+				} else if ((l_count == 18) && (strncmp ("WIDE_CHARACTER_REF", v, 18) == 0)) {
+					Result = "CHARACTER_32_REF";
+				}
+			} else if (v[0] == 'R') {
+				if ((l_count == 4) && (strncmp ("REAL", v, 4) == 0)) {
+					Result = "REAL_32";
+				} else if ((l_count == 8) && (strncmp ("REAL_REF", v, 8) == 0)) {
+					Result = "REAL_32_REF";
+				}
+			} else if (v[0] == 'D') {
+				if ((l_count == 6) && (strncmp ("DOUBLE", v, 6) == 0)) {
+					Result = "REAL_64";
+				} else if ((l_count == 10) && (strncmp ("DOUBLE_REF", v, 10) == 0)) {
+					Result = "REAL_64_REF";
+				}
+			} else if ((l_count == 6) && (strncmp ("STRING", v, 6) == 0)) {
+				Result = "STRING_8";
+			}
+		}
+	}
+	return Result;
 }
 
 /*
@@ -219,7 +304,8 @@ rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_c
 {
 	int l_nesting = 0;
 	size_t i, l_count;
-	int l_valid = 1, l_first_pos = 0;
+	int l_valid = 1;
+	size_t l_first_pos = 0;
 	char c;
 	char * l_type_name;
 	struct rt_type l_type;
@@ -446,30 +532,34 @@ doc:	</routine>
 rt_private struct cecil_info *cecil_info_for_entry (struct rt_type *type_entry)
 {
 	struct cecil_info *result = NULL;
+	char *l_name;
 
 	REQUIRE("Valid type entry", type_entry);
 	REQUIRE("Has type name", type_entry->type_name);
 
+		/* Get updated name. */
+	l_name = eif_pre_ecma_mapped_type(type_entry->type_name);
+
 	if (type_entry->is_expanded) {
 			/* Lookup in CECIL expanded table. */
-		result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+		result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
 	} else if (type_entry->is_reference) {
 			/* Lookup in CECIL non-expanded table. */
-		result = (struct cecil_info *) ct_value (&egc_ce_type, type_entry->type_name);
+		result = (struct cecil_info *) ct_value (&egc_ce_type, l_name);
 	} else {
 			/* Lookup first in CECIL non-expanded table. */
-		result = (struct cecil_info *) ct_value(&egc_ce_type, type_entry->type_name);
+		result = (struct cecil_info *) ct_value(&egc_ce_type, l_name);
 		if (!result) {
 				/* It was not found in the non-expanded table, hopefully it is in
 				 * the expanded table. */
-			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
 		} else {
 				/* We found the type in the non-expanded classes table. Let's check
 				 * that indeed it is not declared as an expanded class. */
 			if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
 					/* The class is an expanded class therefore we need to look into the
 					 * expanded table to find what we are looking for. */
-				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
 			}
 		}
 	}

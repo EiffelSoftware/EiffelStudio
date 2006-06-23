@@ -318,6 +318,8 @@ RT_LNK EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
 /* Dynamic Type id of an object of type `type_string' */
 RT_LNK EIF_TYPE_ID eif_type_id (char *type_string);
+RT_LNK int eif_pre_ecma_mapping_status;
+RT_LNK void eif_set_pre_ecma_mapping(int);
 
 RT_LNK int eiflocate(EIF_OBJECT object, char *name); /* Return the index of attribute `name' in EIF_OBJECT `object'*/
 

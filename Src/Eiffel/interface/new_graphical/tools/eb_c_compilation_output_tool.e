@@ -94,15 +94,17 @@ feature{NONE} -- Initialization
 			l_ev_tool_bar_1.disable_vertical_button_style
 
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
-			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.command_send_to_external_editor_icon)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
 			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 			w_code_btn.set_text (interface_names.e_w_code)
+			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
 			w_code_btn.set_tooltip (interface_names.e_go_to_w_code_dir)
 			f_code_btn.set_text (interface_names.e_f_code)
+			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
 
 			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)

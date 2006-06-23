@@ -147,6 +147,22 @@ feature -- Internal C routines
 			"Dftype"
 		end
 
+	frozen pre_ecma_mapping_status: BOOLEAN is
+			-- Do we map old name to new name by default?
+		external
+			"C inline use %"eif_cecil.h%""
+		alias
+			"return eif_pre_ecma_mapping_status"
+		end
+
+	frozen set_pre_ecma_mapping (v: BOOLEAN) is
+			-- Set `pre_ecma_mapping_status' with `v'.
+		external
+			"C inline use %"eif_cecil.h%""
+		alias
+			"eif_set_pre_ecma_mapping($v)"
+		end
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -158,10 +174,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end -- class ISE_RUNTIME

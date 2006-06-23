@@ -429,4 +429,9 @@
 		</cluster>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
+	<target name="batch_unix" extends="batch">
+		<description>Compiling UNIX batch compiler on other platforms than Windows</description>
+		<root class="ES" feature="make"/>
+		<variable name="platform" value="unix"/>
+	</target>
 </system>

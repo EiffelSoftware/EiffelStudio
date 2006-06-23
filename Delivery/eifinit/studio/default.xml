@@ -165,6 +165,7 @@
 	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_text_in_refactoring_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_all_text_in_refactoring_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.refactoring_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in refactoring toolbar."><LIST>RF_pull__visible;RF_rename__visible;Separator;RF_undo__visible;RF_redo__visible</LIST></PREF>
 	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>

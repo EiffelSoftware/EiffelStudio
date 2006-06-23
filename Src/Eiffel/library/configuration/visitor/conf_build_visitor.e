@@ -11,7 +11,7 @@ class
 inherit
 	CONF_CONDITIONED_ITERATOR
 		export
-			{NONE} process_system
+			{NONE} process_system, process_assembly, process_library, process_cluster, process_override
 		redefine
 			process_target,
 			process_assembly,
@@ -192,72 +192,70 @@ feature -- Visit nodes
 					process_library (l_pre)
 				end
 
-				if not is_error then
-					a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
+				a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
 
-						-- do libraries after clusters so that the clusters have already been processed
-					process_with_old (a_target.libraries, Void)
+					-- do libraries after clusters so that the clusters have already been processed
+				process_with_old (a_target.libraries, Void)
 
-						-- must be done one time per system after everything is processed
-					if a_target = application_target then
-							-- overrides can only be in the application target
-						process_with_old (a_target.overrides, l_overrides)
+					-- must be done one time per system after everything is processed
+				if a_target = application_target then
+						-- only for .NET
+					if state.is_dotnet then
+						if old_target /= Void then
+							l_old_assemblies := old_target.all_assemblies.twin
+						end
+						create l_consumer_manager.make (factory, assembly_cache_folder, il_version, added_classes, removed_classes, modified_classes)
+						l_consumer_manager.consume_assembly_observer.append (consume_assembly_observer)
+						l_consumer_manager.build_assemblies (new_assemblies, l_old_assemblies)
+						if l_consumer_manager.is_error then
+							add_and_raise_error (l_consumer_manager.last_error)
+						else
+							a_target.set_all_assemblies (l_consumer_manager.assemblies)
 
-							-- only for .NET
-						if state.is_dotnet then
-							if old_target /= Void then
-								l_old_assemblies := old_target.all_assemblies.twin
-							end
-							create l_consumer_manager.make (factory, assembly_cache_folder, il_version, added_classes, removed_classes, modified_classes)
-							l_consumer_manager.consume_assembly_observer.append (consume_assembly_observer)
-							l_consumer_manager.build_assemblies (new_assemblies, l_old_assemblies)
-							if l_consumer_manager.is_error then
-								add_error (l_consumer_manager.last_error)
-							else
-								a_target.set_all_assemblies (l_consumer_manager.assemblies)
-
-									-- only assemblies that have not been reused remain in `old_assemblies'
-								if l_old_assemblies /= Void then
-									from
-										l_old_assemblies.start
-									until
-										l_old_assemblies.after
-									loop
-										l_old_group := l_old_assemblies.item_for_iteration
-										l_old_group.invalidate
-										process_removed_classes (l_old_group.classes)
-										l_old_assemblies.forth
-									end
+								-- only assemblies that have not been reused remain in `old_assemblies'
+							if l_old_assemblies /= Void then
+								from
+									l_old_assemblies.start
+								until
+									l_old_assemblies.after
+								loop
+									l_old_group := l_old_assemblies.item_for_iteration
+									l_old_group.invalidate
+									process_removed_classes (l_old_group.classes)
+									l_old_assemblies.forth
 								end
 							end
-						else
-							a_target.set_all_assemblies (create {HASH_TABLE [CONF_ASSEMBLY, STRING]}.make (0))
 						end
+
+							-- overrides can only be in the application target, must be done at the very end
+						process_with_old (a_target.overrides, l_overrides)
+					else
+						a_target.set_all_assemblies (create {HASH_TABLE [CONF_ASSEMBLY, STRING]}.make (0))
 					end
-
-						-- add the classes that are still in `old_target' to `removed_classes'
-							-- needed for libraries that have been removed
-							-- changes in libraries itself have already been handled
-					process_removed (l_libraries)
-
-						-- assemblies are already handled
-					process_removed (l_clusters)
-					process_removed (l_overrides)
 				end
+
+					-- add the classes that are still in `old_target' to `removed_classes'
+						-- needed for libraries that have been removed
+						-- changes in libraries itself have already been handled
+				process_removed (l_libraries)
+
+					-- assemblies are already handled
+				process_removed (l_clusters)
+				process_removed (l_overrides)
 			end
 		ensure then
 			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
+		rescue
+			retry
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
 			if not state.is_dotnet then
-				add_error (create {CONF_ERROR_DOTNET})
+				add_and_raise_error (create {CONF_ERROR_DOTNET})
 			end
-			if not is_error then
-				new_assemblies.force (an_assembly)
-			end
+			new_assemblies.force (an_assembly)
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -270,70 +268,67 @@ feature -- Visit nodes
 			l_prefixed_classes: like current_classes
 			l_pre: STRING
 		do
-			if not is_error then
-				on_process_group (a_library)
-				l_uuid := a_library.uuid
-				l_target := a_library.library_target
-				check
-					library_target_set: l_target /= Void
-					uuid_set: l_uuid /= Void
+			on_process_group (a_library)
+			l_uuid := a_library.uuid
+			l_target := a_library.library_target
+			check
+				library_target_set: l_target /= Void
+				uuid_set: l_uuid /= Void
+			end
+			if not libraries.has (l_uuid) then
+					-- get and initialize visitor
+				l_vis := twin
+				l_vis.reset
+				if old_libraries /= Void and then old_libraries.has (l_uuid) then
+					l_vis.set_old_target (old_libraries.found_item)
+					old_libraries.remove (l_uuid)
 				end
-				if not libraries.has (l_uuid) then
-						-- get and initialize visitor
-					l_vis := twin
-					l_vis.reset
-					if old_libraries /= Void and then old_libraries.has (l_uuid) then
-						l_vis.set_old_target (old_libraries.found_item)
-						old_libraries.remove (l_uuid)
-					end
-					libraries.force (l_target, l_uuid)
-					l_target.process (l_vis)
-					if l_vis.is_error then
-						is_error := True
-						last_errors := l_vis.last_errors
-					end
+				libraries.force (l_target, l_uuid)
+				l_target.process (l_vis)
+				if l_vis.is_error then
+					last_errors := l_vis.last_errors
+					raise_error
 				end
-				if not is_error then
-					handled_groups.force (a_library)
-					create current_classes.make (Classes_per_cluster)
-					l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
-						-- do renaming prefixing if necessary
-					l_ren := a_library.renaming
-					if l_ren /= Void then
-						from
-							l_ren.start
-						until
-							l_ren.after
-						loop
-							current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
-							l_ren.forth
-						end
-					end
-					l_pre := a_library.name_prefix
-					if l_pre /= Void and then not l_pre.is_empty then
-						create l_prefixed_classes.make (current_classes.count)
-						from
-							current_classes.start
-						until
-							current_classes.after
-						loop
-							l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
-							current_classes.forth
-						end
-						a_library.set_classes (l_prefixed_classes)
-					else
-						a_library.set_classes (current_classes)
-					end
+			end
 
-						-- update visibility
-					a_library.update_visible
-					if a_library.is_error then
-						add_error (a_library.last_error)
-					end
-					if a_library.last_warnings /= Void then
-						last_warnings.append (a_library.last_warnings)
-					end
+			handled_groups.force (a_library)
+			create current_classes.make (Classes_per_cluster)
+			l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
+				-- do renaming prefixing if necessary
+			l_ren := a_library.renaming
+			if l_ren /= Void then
+				from
+					l_ren.start
+				until
+					l_ren.after
+				loop
+					current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
+					l_ren.forth
 				end
+			end
+			l_pre := a_library.name_prefix
+			if l_pre /= Void and then not l_pre.is_empty then
+				create l_prefixed_classes.make (current_classes.count)
+				from
+					current_classes.start
+				until
+					current_classes.after
+				loop
+					l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
+					current_classes.forth
+				end
+				a_library.set_classes (l_prefixed_classes)
+			else
+				a_library.set_classes (current_classes)
+			end
+
+				-- update visibility
+			a_library.update_visible
+			if a_library.is_error then
+				add_and_raise_error (a_library.last_error)
+			end
+			if a_library.last_warnings /= Void then
+				last_warnings.append (a_library.last_warnings)
 			end
 
 			current_classes := Void
@@ -348,59 +343,57 @@ feature -- Visit nodes
 			l_old_cluster: CONF_CLUSTER
 			l_class: CONF_CLASS
 		do
-			if not is_error then
-				on_process_group (a_cluster)
-				a_cluster.wipe_class_cache
-				current_cluster := a_cluster
-				current_file_rule := a_cluster.active_file_rule (state)
-				create current_classes.make (Classes_per_cluster)
-				create current_classes_by_filename.make (Classes_per_cluster)
-				a_cluster.set_classes (current_classes)
-				a_cluster.set_classes_by_filename (current_classes_by_filename)
+			on_process_group (a_cluster)
+			a_cluster.wipe_class_cache
+			current_cluster := a_cluster
+			current_file_rule := a_cluster.active_file_rule (state)
+			create current_classes.make (Classes_per_cluster)
+			create current_classes_by_filename.make (Classes_per_cluster)
+			a_cluster.set_classes (current_classes)
+			a_cluster.set_classes_by_filename (current_classes_by_filename)
 
-				process_cluster_recursive ("")
+			process_cluster_recursive ("")
 
-				if partial_classes /= Void then
-					process_partial_classes
-					partial_classes := Void
-				end
-
-					-- if the mapping changed, mark everything in the cluster as modified
-				l_old_cluster ?= old_group
-				if l_old_cluster /= Void and then not l_old_cluster.mapping.is_equal (a_cluster.mapping) then
-					from
-						current_classes.start
-					until
-						current_classes.after
-					loop
-						l_class := current_classes.item_for_iteration
-						if l_class.is_compiled then
-							modified_classes.force (l_class)
-						end
-						current_classes.forth
-					end
-				end
-
-					-- cluster itself has been handled
-				handled_groups.force (a_cluster)
-
-					-- process removed classes
-				if old_group /= Void then
-					handled_groups.force (old_group)
-					process_removed_classes (old_group.classes)
-				end
-
-					-- update visibility
-				a_cluster.update_visible
-				if a_cluster.is_error then
-					add_error (a_cluster.last_error)
-				end
-				if a_cluster.last_warnings /= Void then
-					last_warnings.append (a_cluster.last_warnings)
-				end
-
-				current_classes := Void
+			if partial_classes /= Void then
+				process_partial_classes
+				partial_classes := Void
 			end
+
+				-- if the mapping changed, mark everything in the cluster as modified
+			l_old_cluster ?= old_group
+			if l_old_cluster /= Void and then not l_old_cluster.mapping.is_equal (a_cluster.mapping) then
+				from
+					current_classes.start
+				until
+					current_classes.after
+				loop
+					l_class := current_classes.item_for_iteration
+					if l_class.is_compiled then
+						modified_classes.force (l_class)
+					end
+					current_classes.forth
+				end
+			end
+
+				-- cluster itself has been handled
+			handled_groups.force (a_cluster)
+
+				-- process removed classes
+			if old_group /= Void then
+				handled_groups.force (old_group)
+				process_removed_classes (old_group.classes)
+			end
+
+				-- update visibility
+			a_cluster.update_visible
+			if a_cluster.is_error then
+				add_and_raise_error (a_cluster.last_error)
+			end
+			if a_cluster.last_warnings /= Void then
+				last_warnings.append (a_cluster.last_warnings)
+			end
+
+			current_classes := Void
 		ensure then
 			current_classes_void: current_classes = Void
 			classes_set: not is_error implies a_cluster.classes_set
@@ -413,29 +406,30 @@ feature -- Visit nodes
 			l_overridee: CONF_GROUP
 		do
 			process_cluster (an_override)
-			if not is_error then
-				if an_override.override = Void then
-					l_groups := application_target.assemblies.linear_representation
-					l_groups.merge_right (application_target.libraries.linear_representation)
-					l_groups.merge_right (application_target.clusters.linear_representation)
-				else
-					l_groups := an_override.override
-				end
-				from
-					l_groups.start
-				until
-					is_error or l_groups.after
-				loop
-					l_overridee := l_groups.item
-					if l_overridee.is_enabled (state) then
-						l_overridee.add_overriders (an_override, added_classes, modified_classes, removed_classes)
-						if l_overridee.is_error then
-							add_error (l_overridee.last_error)
-						end
+			if an_override.override = Void then
+				l_groups := application_target.assemblies.linear_representation
+				l_groups.merge_right (application_target.libraries.linear_representation)
+				l_groups.merge_right (application_target.clusters.linear_representation)
+			else
+				l_groups := an_override.override
+			end
+			from
+				l_groups.start
+			until
+				is_error or l_groups.after
+			loop
+				l_overridee := l_groups.item
+				if l_overridee.is_enabled (state) then
+					check
+						group_processed: l_overridee.classes_set
 					end
-
-					l_groups.forth
+					l_overridee.add_overriders (an_override, added_classes, modified_classes, removed_classes)
+					if l_overridee.is_error then
+						add_and_raise_error (l_overridee.last_error)
+					end
 				end
+
+				l_groups.forth
 			end
 		ensure then
 			classes_set: not is_error implies an_override.classes_set
@@ -537,12 +531,12 @@ feature {NONE} -- Implementation
 			create l_dir.make (l_path)
 
 			if not l_dir.is_readable then
-				add_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
+				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
 			else
 					-- look for classes in directory itself.
 				l_files := l_dir.filenames
 				if l_files = Void then
-					add_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
+					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
 				else
 					from
 						i := l_files.lower
@@ -600,7 +594,7 @@ feature {NONE} -- Implementation
 						-- update class
 					l_class.rebuild (a_file, current_cluster, a_path)
 					if l_class.is_error then
-						add_error (l_class.last_error)
+						add_and_raise_error (l_class.last_error)
 						-- don't update renamed classes, instead handle them on the class name basis
 					elseif not l_class.is_renamed then
 						l_name := l_class.renamed_name
@@ -610,7 +604,7 @@ feature {NONE} -- Implementation
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
 						if current_classes.has (l_name) then
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
+							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
 						else
 							current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
@@ -618,22 +612,22 @@ feature {NONE} -- Implementation
 						l_done := True
 					end
 				end
-				if not is_error and not l_done then
+				if not l_done then
 					l_full_file := current_cluster.location.evaluated_directory
 					l_full_file.append (l_file_name)
 					create l_file.make (l_full_file)
 					l_file.open_read
 					if not l_file.is_open_read then
-						add_error (create {CONF_ERROR_FILE}.make (l_full_file))
+						add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))
 					else
 							-- get class name
 						classname_finder.parse (l_file)
 						l_file.close
 						l_tmp := classname_finder.classname
 						if l_tmp = Void then
-							add_error (create {CONF_ERROR_CLASSN}.make (a_file))
+							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file))
 						elseif l_tmp.is_case_insensitive_equal ("NONE") then
-							add_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
+							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
 						else
 							l_tmp.to_upper
 							l_renamings := current_cluster.renaming
@@ -662,14 +656,14 @@ feature {NONE} -- Implementation
 									-- not found => new class
 								l_class := factory.new_class (a_file, current_cluster, a_path)
 								if l_class.is_error then
-									add_error (l_class.last_error)
+									add_and_raise_error (l_class.last_error)
 								end
 								added_classes.force (l_class)
 								check
 									name_same: l_name.is_equal (l_class.renamed_name)
 								end
 								if current_classes.has (l_name) then
-									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
+									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
 								else
 									current_classes.force (l_class, l_name)
 									current_classes_by_filename.force (l_class, l_file_name)
@@ -706,7 +700,7 @@ feature {NONE} -- Implementation
 				l_file.open_read
 				classname_finder.parse (l_file)
 				if classname_finder.classname = Void then
-					add_error (create {CONF_ERROR_CLASSN}.make (a_file))
+					add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file))
 				end
 				l_name := classname_finder.classname.as_upper
 				l_renamings := a_group.renaming
@@ -892,7 +886,7 @@ feature {NONE} -- Implementation
 					old_group.classes.remove (l_name)
 					l_class.rebuild_partial (partial_classes.item_for_iteration, current_cluster, partial_location)
 					if l_class.is_error then
-						add_error (l_class.last_error)
+						add_and_raise_error (l_class.last_error)
 					end
 					if l_class.is_compiled and l_class.is_modified then
 						modified_classes.force (l_class)
@@ -902,7 +896,7 @@ feature {NONE} -- Implementation
 				else
 					l_class := factory.new_class_partial (partial_classes.item_for_iteration, current_cluster, partial_location)
 					if l_class.is_error then
-						add_error (l_class.last_error)
+						add_and_raise_error (l_class.last_error)
 					else
 						check
 							correct_renamed_name: l_class.renamed_name.is_equal (l_name)
@@ -912,9 +906,8 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				if not is_error then
-					current_classes.force (l_class, l_class.renamed_name)
-				end
+				current_classes.force (l_class, l_class.renamed_name)
+
 				partial_classes.forth
 			end
 		ensure

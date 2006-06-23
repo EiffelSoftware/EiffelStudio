@@ -43,15 +43,19 @@ feature -- Visit nodes
 		local
 			l_pre: CONF_PRECOMPILE
 		do
-			l_pre := a_target.precompile
-			if l_pre /= Void and then l_pre.is_enabled (state) then
-				a_target.precompile.process (Current)
+			if not is_error then
+				l_pre := a_target.precompile
+				if l_pre /= Void and then l_pre.is_enabled (state) then
+					a_target.precompile.process (Current)
+				end
+				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
+				a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
+				a_target.clusters.linear_representation.do_if (agent {CONF_CLUSTER}.process (Current), agent {CONF_CLUSTER}.is_enabled (state))
+					-- overrides must be processed at the end
+				a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (state))
 			end
-			a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
-			a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
-			a_target.clusters.linear_representation.do_if (agent {CONF_CLUSTER}.process (Current), agent {CONF_CLUSTER}.is_enabled (state))
-				-- overrides must be processed at the end
-			a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (state))
+		rescue
+			retry
 		end
 
 invariant

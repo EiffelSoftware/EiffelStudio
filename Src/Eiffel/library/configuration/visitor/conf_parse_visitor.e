@@ -70,6 +70,8 @@ feature -- Visit nodes
 			end
 		ensure then
 			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+		rescue
+			retry
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -81,55 +83,53 @@ feature -- Visit nodes
 			l_path: STRING
 			l_comparer: FILE_COMPARER
 		do
-			if not is_error then
-				l_path := a_library.location.evaluated_path
-				create l_load.make (factory)
-				l_load.retrieve_uuid (l_path)
-				if l_load.is_error then
-					add_error (l_load.last_error)
+			l_path := a_library.location.evaluated_path
+			create l_load.make (factory)
+			l_load.retrieve_uuid (l_path)
+			if l_load.is_error then
+				add_and_raise_error (l_load.last_error)
+			else
+				l_uuid := l_load.last_uuid
+				l_target := libraries.item (l_uuid)
+				if l_target /= Void then
+					if level + 1 < l_target.system.level then
+						l_target.system.set_level (level + 1)
+					end
+					a_library.set_library_target (l_target)
+					a_library.set_uuid (l_uuid)
+					create l_comparer
+
+					if a_library.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
+						add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
+					end
 				else
-					l_uuid := l_load.last_uuid
-					l_target := libraries.item (l_uuid)
-					if l_target /= Void then
-						if level + 1 < l_target.system.level then
-							l_target.system.set_level (level + 1)
-						end
-						a_library.set_library_target (l_target)
-						a_library.set_uuid (l_uuid)
-						create l_comparer
-
-						if a_library.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
-							add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
-						end
+					l_load.retrieve_configuration (l_path)
+					if l_load.is_error then
+						add_and_raise_error (l_load.last_error)
 					else
-						l_load.retrieve_configuration (l_path)
-						if l_load.is_error then
-							add_error (l_load.last_error)
+						l_load.last_system.set_application_target (application_target)
+						l_target := l_load.last_system.library_target
+
+						if l_target = Void then
+							add_and_raise_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
 						else
-							l_load.last_system.set_application_target (application_target)
-							l_target := l_load.last_system.library_target
-
-							if l_target = Void then
-								add_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
+							if l_target.precompile /= Void and then not a_library.is_precompile then
+								add_and_raise_error (create {CONF_ERROR_PREINLIB}.make (a_library.name))
 							else
-								if l_target.precompile /= Void and then not a_library.is_precompile then
-									add_error (create {CONF_ERROR_PREINLIB}.make (a_library.name))
-								else
-										-- set environment to our global environment
-									l_target.set_environ_variables (application_target.environ_variables)
+									-- set environment to our global environment
+								l_target.set_environ_variables (application_target.environ_variables)
 
-									check
-										uuid_correct: l_uuid.is_equal (l_target.system.uuid)
-									end
-									libraries.force (l_target, l_uuid)
-
-									level := level + 1
-									a_library.set_library_target (l_target)
-									a_library.set_uuid (l_uuid)
-									l_target.system.set_level (level)
-									l_target.process (Current)
-									level := level - 1
+								check
+									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
 								end
+								libraries.force (l_target, l_uuid)
+
+								level := level + 1
+								a_library.set_library_target (l_target)
+								a_library.set_uuid (l_uuid)
+								l_target.system.set_level (level)
+								l_target.process (Current)
+								level := level - 1
 							end
 						end
 					end

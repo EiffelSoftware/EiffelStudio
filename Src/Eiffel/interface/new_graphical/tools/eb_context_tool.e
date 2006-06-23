@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 			notebook.item_tab (feature_view.widget).set_pixmap (icon_pixmaps.tool_feature_icon)
 			notebook.item_tab (metrics.widget).set_pixmap (pixmaps.icon_pixmaps.tool_metric_icon)
 			notebook.item_tab (external_output_view.widget).set_pixmap (icon_pixmaps.tool_external_output_icon)
-			notebook.item_tab (c_compilation_output_view.widget).set_pixmap (icon_compiling[icon_compiling.count])
+			notebook.item_tab (c_compilation_output_view.widget).set_pixmap (icon_pixmaps.tool_c_output_icon)
 			notebook.item_tab (error_output_view.widget).set_pixmap (icon_pixmaps.tool_error_icon)
 			notebook.item_tab (warning_output_view.widget).set_pixmap (icon_pixmaps.tool_warning_icon)
 

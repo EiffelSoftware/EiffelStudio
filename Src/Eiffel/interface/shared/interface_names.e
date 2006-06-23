@@ -1060,7 +1060,7 @@ feature -- Description texts
 	e_Print: STRING is					"Print the currently edited text"
 	e_Project_name: STRING is			"Name of the current project"
 	e_Project_settings: STRING is		"Change project settings"
-	e_Quick_compile: STRING is			"Recompile classes that were edited in EiffelStudio"
+	e_Quick_compile: STRING is			"Recompile current project"
 	e_Raise_all: STRING is				"Raise all windows"
 	e_Raise_all_unsaved: STRING is		"Raise all unsaved windows"
 	e_Redo: STRING is					"Redo"

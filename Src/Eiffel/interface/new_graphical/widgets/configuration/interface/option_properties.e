@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 				loop
 					l_warning := valid_warnings.item_for_iteration
 
-					create l_bool_prop.make_with_value (l_warning, an_inherited_options.is_warning_enabled (l_warning))
+					create l_bool_prop.make_with_value (warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
 					l_bool_prop.set_description (warning_descriptions.item (l_warning))
 					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
 					properties.add_property (l_bool_prop)

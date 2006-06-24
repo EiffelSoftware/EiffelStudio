@@ -263,10 +263,27 @@ feature {NONE} -- Option names and descriptions
 	option_warnings_name: STRING is "Enabled"
 	option_warnings_description: STRING is "Are warnings enabled?"
 
+	warning_names: HASH_TABLE [STRING, STRING] is
+			-- Warning names.
+		once
+			create Result.make (10)
+			Result.force ("unused locals", w_unused_local)
+			Result.force ("obsolete classes", w_obsolete_class)
+			Result.force ("obsolete features", w_obsolete_feature)
+			Result.force ("onces in generics", w_once_in_generic)
+			Result.force ("old syntax", w_syntax)
+			Result.force ("old verbatim strings", w_old_verbatim_strings)
+			Result.force ("same uuid", w_same_uuid)
+			Result.force ("missing class export", w_export_class_missing)
+			Result.force ("incompatible types equality", w_vweq)
+			Result.force ("renaming unknown class", w_renaming_unknown_class)
+			Result.force ("options unknown class.", w_option_unknown_class)
+		end
+
 	warning_descriptions: HASH_TABLE [STRING, STRING] is
 			-- Warning descriptions.
 		once
-			create Result.make (8)
+			create Result.make (10)
 			Result.force ("Locals that are not used.", w_unused_local)
 			Result.force ("Usage of obsolete classes.", w_obsolete_class)
 			Result.force ("Usage of obsolete features.", w_obsolete_feature)
@@ -275,7 +292,9 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Usage of old verbatim strings warning.", w_old_verbatim_strings)
 			Result.force ("Different files with the same uuid.", w_same_uuid)
 			Result.force ("Missing class in export clause.", w_export_class_missing)
-			Result.force ("Incompatible types in equality comparison", w_vweq)
+			Result.force ("Incompatible types in equality comparison.", w_vweq)
+			Result.force ("Renaming of an unknown class.", w_renaming_unknown_class)
+			Result.force ("Class options of an unknown class.", w_option_unknown_class)
 		end
 
 feature {NONE} -- Condition dialog

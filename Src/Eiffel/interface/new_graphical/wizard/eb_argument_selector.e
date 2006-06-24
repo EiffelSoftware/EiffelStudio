@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			hb.extend (type_selector)
 			hb.disable_item_expand (hb.last)
 			create remove_button
-			remove_button.set_pixmap (Pixmaps.icon_delete_small)
+			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			remove_button.set_minimum_size (16, 16)
 			hb.extend (remove_button)
 			hb.disable_item_expand (hb.last)

@@ -106,11 +106,11 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			if selected_type = inheritance then
-				Result := Pixmaps.Icon_new_inherit
+				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon
 			elseif selected_type = Supplier then
-				Result := Pixmaps.Icon_new_supplier
+				Result := pixmaps.icon_pixmaps.new_supplier_link_icon
 			else
-				Result := Pixmaps.Icon_new_aggregate_supplier
+				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			end
 		end
 

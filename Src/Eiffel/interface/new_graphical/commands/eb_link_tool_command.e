@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.context_link_icon
+			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon
 		end
 
 	menu_name: STRING is

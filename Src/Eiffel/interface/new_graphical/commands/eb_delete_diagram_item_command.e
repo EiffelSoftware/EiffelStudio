@@ -79,7 +79,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_delete_small
+			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
 	tooltip: STRING is

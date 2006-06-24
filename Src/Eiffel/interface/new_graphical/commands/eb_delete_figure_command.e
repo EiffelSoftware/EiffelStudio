@@ -44,7 +44,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_recycle_bin
+			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
 	tooltip: STRING is
@@ -65,6 +65,7 @@ feature -- Access
 
 	explain_dialog: EB_INFORMATION_DIALOG
 			-- Dialog explaining how to use `Current'.
+			
 feature {NONE} -- Implementation
 
 	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE) is

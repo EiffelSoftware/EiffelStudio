@@ -53,11 +53,11 @@ feature {NONE} -- Initialization
 			border.set_background_color (default_colors.white)
 			border.set_line_width (2)
 
-			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pin_legend_open)
+			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pixmaps.diagram_unpinned_icon)
 			create open_pin
 			open_pin.set_identified_pixmap (id_pixmap)
 
-			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pin_legend_closed)
+			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pixmaps.diagram_pinned_icon)
 			create closed_pin
 			closed_pin.set_identified_pixmap (id_pixmap)
 

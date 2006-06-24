@@ -109,7 +109,7 @@ feature{NONE} -- Initialization
 
 			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)
 
-			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 

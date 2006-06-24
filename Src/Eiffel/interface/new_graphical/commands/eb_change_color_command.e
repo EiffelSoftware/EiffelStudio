@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_color
+			Result := pixmaps.icon_pixmaps.diagram_choose_color_icon
 		end
 
 	tooltip: STRING is

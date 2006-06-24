@@ -161,11 +161,11 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_padding (4)
 			l_ev_vertical_box_1.set_border_width (4)
 
-			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
-			clear_output_btn.set_pixmap (Icon_recycle_bin)
+			clear_output_btn.set_pixmap (icon_pixmaps.general_reset_icon)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
@@ -218,7 +218,7 @@ feature{NONE} -- Initialization
 			input_field.drop_actions.extend (agent drop_cluster)
 			input_field.drop_actions.extend (agent drop_breakable)
 
-			send_input_btn.set_pixmap (icon_input_to_process)
+			send_input_btn.set_pixmap (icon_pixmaps.general_send_enter_icon)
 			send_input_btn.set_tooltip (f_send_input_button)
 			send_input_btn.select_actions.extend (agent on_send_input_btn_pressed)
 

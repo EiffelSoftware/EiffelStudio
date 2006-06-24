@@ -83,10 +83,10 @@ feature {NONE} -- Initialization
 			advanced_button.set_pixmap (icon_pixmaps.tool_advanced_search_icon)
 			create first_reached_pixmap
 			create bottom_reached_pixmap
-			first_reached_pixmap.set_minimum_size (icon_first_result_reached_icon.width,
-													icon_first_result_reached_icon.height)
-			bottom_reached_pixmap.set_minimum_size (icon_bottom_reached_icon.width,
-														icon_bottom_reached_icon.height)
+			first_reached_pixmap.set_minimum_size (icon_pixmaps.search_first_reached_icon.width,
+													icon_pixmaps.search_first_reached_icon.height)
+			bottom_reached_pixmap.set_minimum_size (icon_pixmaps.search_first_reached_icon.width,
+														icon_pixmaps.search_first_reached_icon.height)
 			first_reached_pixmap.set_tooltip (t_first_match_reached)
 			bottom_reached_pixmap.set_tooltip (t_bottom_reached)
 			message_box.extend (first_reached_pixmap)

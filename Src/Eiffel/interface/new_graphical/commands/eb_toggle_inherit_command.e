@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_inherit
+			Result := pixmaps.icon_pixmaps.diagram_inheritance_link_icon
 		end
 
 	description: STRING is

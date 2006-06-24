@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_reset_view
+			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
 	tooltip: STRING is

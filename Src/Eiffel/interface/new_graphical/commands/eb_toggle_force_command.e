@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.icon_toggle_force_directed
+			Result := pixmaps.icon_pixmaps.diagram_toogle_physics_icon
 		end
 
 	description: STRING is

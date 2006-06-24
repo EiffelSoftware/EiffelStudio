@@ -99,7 +99,7 @@ feature {NONE} -- Bon class
 		local
 			pic: EV_PIXMAP
 		once
-			pic := pixmaps.icon_bon_anchor
+			pic := pixmaps.icon_pixmaps.diagram_anchor_icon
 			Result := pixmap_factory.registered_pixmap (pic)
 			pixmap_factory.register_pixmap (Result)
 		end

@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_zoom_in
+			Result := pixmaps.icon_pixmaps.diagram_zoom_in_icon
 		end
 
 	tooltip: STRING is

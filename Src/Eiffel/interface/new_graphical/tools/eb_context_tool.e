@@ -523,9 +523,9 @@ feature -- C output pixmap management
 	on_draw_c_output_pixmap is
 			-- Draw pixmap animation for C output.
 		do
-			draw_pixmap_on_tab (c_output_panel_tab, Icon_compiling.item (c_output_timer_counter))
+			draw_pixmap_on_tab (c_output_panel_tab, icon_compiling.item (c_output_timer_counter))
 			c_output_timer_counter := c_output_timer_counter + 1
-			if c_output_timer_counter > 4 then
+			if c_output_timer_counter > 10 then
 				c_output_timer_counter := 1
 			end
 		end

@@ -103,7 +103,7 @@ feature -- Basic operations
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_export_to_png
+			Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
 		end
 
 	tooltip: STRING is

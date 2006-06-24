@@ -453,11 +453,11 @@ feature -- Graphical changes
 								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							elseif expression_evaluator.has_error_expression
 								or expression_evaluator.has_error_syntax then
-								set_error_pixmap (Pixmaps.Icon_compilation_failed)
+								set_error_pixmap (pixmaps.icon_pixmaps.compile_error_icon)
 							elseif expression_evaluator.has_error_evaluation then
 								set_error_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 							elseif expression_evaluator.has_error_not_implemented then
-								set_error_pixmap (Pixmaps.Icon_compilation_failed)
+								set_error_pixmap (pixmaps.icon_pixmaps.compile_error_icon)
 							end
 							l_exception_dump_value := expression_evaluator.final_result_value
 							if l_exception_dump_value /= Void and then l_exception_dump_value.is_type_exception then

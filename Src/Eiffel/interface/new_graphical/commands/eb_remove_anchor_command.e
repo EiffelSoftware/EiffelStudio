@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.icon_remove_anchor
+			Result := pixmaps.icon_pixmaps.diagram_remove_anchor_icon
 		end
 
 	tooltip: STRING is

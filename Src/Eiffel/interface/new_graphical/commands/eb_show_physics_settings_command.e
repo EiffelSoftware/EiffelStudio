@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.icon_force_settings
+			Result := pixmaps.icon_pixmaps.diagram_physics_settings_icon
 		end
 
 	description: STRING is

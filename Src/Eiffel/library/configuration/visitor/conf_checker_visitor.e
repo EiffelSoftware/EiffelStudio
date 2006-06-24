@@ -16,6 +16,11 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -35,39 +40,43 @@ feature -- Visit nodes
 			end
 
 				-- check renamings
-			l_ren := a_group.renaming
-			if l_ren /= Void then
-				from
-					l_ren.start
-				until
-					l_ren.after
-				loop
-					if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_ren.key_for_iteration) then
-						add_error (create {CONF_ERROR_RENAM}.make (l_ren.key_for_iteration))
+			if a_group.options.is_warning_enabled (w_renaming_unknown_class) then
+				l_ren := a_group.renaming
+				if l_ren /= Void then
+					from
+						l_ren.start
+					until
+						l_ren.after
+					loop
+						if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_ren.key_for_iteration) then
+							add_error (create {CONF_ERROR_RENAM}.make (l_ren.key_for_iteration))
+						end
+						l_ren.forth
 					end
-					l_ren.forth
 				end
 			end
 				-- check class options
-			l_c_opt := a_group.class_options
-			if l_c_opt /= Void then
-				from
-					l_c_opt.start
-				until
-					l_c_opt.after
-				loop
+			if a_group.options.is_warning_enabled (w_option_unknown_class) then
+				l_c_opt := a_group.class_options
+				if l_c_opt /= Void then
 					from
-						l_classes.start
+						l_c_opt.start
 					until
-						l_found or l_classes.after
+						l_c_opt.after
 					loop
-						l_found := l_classes.item_for_iteration.name.is_equal (l_c_opt.key_for_iteration)
-						l_classes.forth
+						from
+							l_classes.start
+						until
+							l_found or l_classes.after
+						loop
+							l_found := l_classes.item_for_iteration.name.is_equal (l_c_opt.key_for_iteration)
+							l_classes.forth
+						end
+						if not l_found then
+							add_error (create {CONF_ERROR_CLOPT}.make (l_c_opt.key_for_iteration))
+						end
+						l_c_opt.forth
 					end
-					if not l_found then
-						add_error (create {CONF_ERROR_CLOPT}.make (l_c_opt.key_for_iteration))
-					end
-					l_c_opt.forth
 				end
 			end
 		end

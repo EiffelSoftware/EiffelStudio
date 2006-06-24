@@ -186,6 +186,9 @@
 			  <xs:enumeration value = "syntax"/>
 			  <xs:enumeration value = "old_verbatim_strings"/>
 			  <xs:enumeration value = "same_uuid"/>
+			  <xs:enumeration value = "vweq"/>
+			  <xs:enumeration value = "renaming_unknown_class"/>
+			  <xs:enumeration value = "option_unknown_class"/>
 	    </xs:restriction>
 	</xs:simpleType>
 	

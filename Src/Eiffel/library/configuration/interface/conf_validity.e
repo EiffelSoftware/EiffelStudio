@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 	valid_warnings: SEARCH_TABLE [STRING] is
 			-- The codes of valid warnings.
 		once
-			create Result.make (8)
+			create Result.make (10)
 			Result.force (w_unused_local)
 			Result.force (w_obsolete_class)
 			Result.force (w_obsolete_feature)
@@ -172,6 +172,8 @@ feature {NONE} -- Implementation
 			Result.force (w_same_uuid)
 			Result.force (w_export_class_missing)
 			Result.force (w_vweq)
+			Result.force (w_renaming_unknown_class)
+			Result.force (w_option_unknown_class)
 		ensure
 			Result_not_void: Result /= Void
 		end

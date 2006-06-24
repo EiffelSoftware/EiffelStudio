@@ -25,7 +25,7 @@ inherit
 		redefine
 			default_create,
 			put, force, extend, replace,
-			clear_all, wipe_out
+			clear_all,
 			out
 		end
 
@@ -110,12 +110,6 @@ feature -- Removal
 		do
 			Precursor
 			class_translation_clear
-		end
-
-	wipe_out is
-			-- Reset all items to default values; reset status.
-		do
-			clear_all
 		end
 
 feature -- Output

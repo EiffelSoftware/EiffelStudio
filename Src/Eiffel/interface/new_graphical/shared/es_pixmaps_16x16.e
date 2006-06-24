@@ -1930,40 +1930,76 @@ feature -- Access
 			Result := pixel_buffer_from_coords (24, 7)
 		end
 
+	general_send_enter_icon: EV_PIXMAP is
+			-- Access to 'send enter' pixmap.
+		once
+			Result := pixmap_from_coords (25, 7)
+		end
+
+	general_send_enter_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'send enter' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (25, 7)
+		end
+
+	general_reset_icon: EV_PIXMAP is
+			-- Access to 'reset' pixmap.
+		once
+			Result := pixmap_from_coords (26, 7)
+		end
+
+	general_reset_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'reset' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (26, 7)
+		end
+
+	general_hand_icon: EV_PIXMAP is
+			-- Access to 'hand' pixmap.
+		once
+			Result := pixmap_from_coords (27, 7)
+		end
+
+	general_hand_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'hand' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (27, 7)
+		end
+
 	sort_acending_icon: EV_PIXMAP is
 			-- Access to 'acending' pixmap.
 		once
-			Result := pixmap_from_coords (25, 7)
+			Result := pixmap_from_coords (28, 7)
 		end
 
 	sort_acending_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'acending' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (25, 7)
+			Result := pixel_buffer_from_coords (28, 7)
 		end
 
 	sort_descending_icon: EV_PIXMAP is
 			-- Access to 'descending' pixmap.
 		once
-			Result := pixmap_from_coords (26, 7)
+			Result := pixmap_from_coords (29, 7)
 		end
 
 	sort_descending_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'descending' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (26, 7)
+			Result := pixel_buffer_from_coords (29, 7)
 		end
 
 	sort_grouped_icon: EV_PIXMAP is
 			-- Access to 'grouped' pixmap.
 		once
-			Result := pixmap_from_coords (27, 7)
+			Result := pixmap_from_coords (30, 7)
 		end
 
 	sort_grouped_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'grouped' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (27, 7)
+			Result := pixel_buffer_from_coords (30, 7)
 		end
 
 	command_send_to_external_editor_icon: EV_PIXMAP is
@@ -2386,52 +2422,100 @@ feature -- Access
 			Result := pixel_buffer_from_coords (10, 10)
 		end
 
+	new_metric_icon: EV_PIXMAP is
+			-- Access to 'metric' pixmap.
+		once
+			Result := pixmap_from_coords (11, 10)
+		end
+
+	new_metric_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'metric' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (11, 10)
+		end
+
+	new_supplier_link_icon: EV_PIXMAP is
+			-- Access to 'supplier link' pixmap.
+		once
+			Result := pixmap_from_coords (12, 10)
+		end
+
+	new_supplier_link_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'supplier link' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (12, 10)
+		end
+
+	new_aggregate_supplier_link_icon: EV_PIXMAP is
+			-- Access to 'aggregate supplier link' pixmap.
+		once
+			Result := pixmap_from_coords (13, 10)
+		end
+
+	new_aggregate_supplier_link_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'aggregate supplier link' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (13, 10)
+		end
+
+	new_inheritance_link_icon: EV_PIXMAP is
+			-- Access to 'inheritance link' pixmap.
+		once
+			Result := pixmap_from_coords (14, 10)
+		end
+
+	new_inheritance_link_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'inheritance link' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (14, 10)
+		end
+
 	add_cluster_icon: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
-			Result := pixmap_from_coords (11, 10)
+			Result := pixmap_from_coords (15, 10)
 		end
 
 	add_cluster_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'cluster' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (11, 10)
+			Result := pixel_buffer_from_coords (15, 10)
 		end
 
 	add_override_cluster_icon: EV_PIXMAP is
 			-- Access to 'override cluster' pixmap.
 		once
-			Result := pixmap_from_coords (12, 10)
+			Result := pixmap_from_coords (16, 10)
 		end
 
 	add_override_cluster_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'override cluster' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (12, 10)
+			Result := pixel_buffer_from_coords (16, 10)
 		end
 
 	add_library_icon: EV_PIXMAP is
 			-- Access to 'library' pixmap.
 		once
-			Result := pixmap_from_coords (13, 10)
+			Result := pixmap_from_coords (17, 10)
 		end
 
 	add_library_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'library' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (13, 10)
+			Result := pixel_buffer_from_coords (17, 10)
 		end
 
 	add_reference_icon: EV_PIXMAP is
 			-- Access to 'reference' pixmap.
 		once
-			Result := pixmap_from_coords (14, 10)
+			Result := pixmap_from_coords (18, 10)
 		end
 
 	add_reference_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'reference' pixmap pixel buffer.
 		once
-			Result := pixel_buffer_from_coords (14, 10)
+			Result := pixel_buffer_from_coords (18, 10)
 		end
 
 	feature_callers_icon: EV_PIXMAP is
@@ -2830,6 +2914,66 @@ feature -- Access
 			Result := pixel_buffer_from_coords (11, 12)
 		end
 
+	metric_not_common_criteria_icon: EV_PIXMAP is
+			-- Access to 'common criteria' pixmap.
+		once
+			Result := pixmap_from_coords (12, 12)
+		end
+
+	metric_not_common_criteria_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'common criteria' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (12, 12)
+		end
+
+	metric_not_relational_criteria_icon: EV_PIXMAP is
+			-- Access to 'relational criteria' pixmap.
+		once
+			Result := pixmap_from_coords (13, 12)
+		end
+
+	metric_not_relational_criteria_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'relational criteria' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (13, 12)
+		end
+
+	metric_not_text_criteria_icon: EV_PIXMAP is
+			-- Access to 'text criteria' pixmap.
+		once
+			Result := pixmap_from_coords (14, 12)
+		end
+
+	metric_not_text_criteria_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'text criteria' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (14, 12)
+		end
+
+	metric_not_intersect_icon: EV_PIXMAP is
+			-- Access to 'intersect' pixmap.
+		once
+			Result := pixmap_from_coords (15, 12)
+		end
+
+	metric_not_intersect_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'intersect' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (15, 12)
+		end
+
+	metric_not_union_icon: EV_PIXMAP is
+			-- Access to 'union' pixmap.
+		once
+			Result := pixmap_from_coords (16, 12)
+		end
+
+	metric_not_union_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'union' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (16, 12)
+		end
+
 	diagram_zoom_in_icon: EV_PIXMAP is
 			-- Access to 'zoom in' pixmap.
 		once
@@ -2852,6 +2996,174 @@ feature -- Access
 			-- Access to 'zoom out' pixmap pixel buffer.
 		once
 			Result := pixel_buffer_from_coords (2, 13)
+		end
+
+	diagram_target_cluster_or_class_icon: EV_PIXMAP is
+			-- Access to 'target cluster or class' pixmap.
+		once
+			Result := pixmap_from_coords (3, 13)
+		end
+
+	diagram_target_cluster_or_class_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'target cluster or class' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (3, 13)
+		end
+
+	diagram_show_legend_icon: EV_PIXMAP is
+			-- Access to 'show legend' pixmap.
+		once
+			Result := pixmap_from_coords (4, 13)
+		end
+
+	diagram_show_legend_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'show legend' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (4, 13)
+		end
+
+	diagram_crop_icon: EV_PIXMAP is
+			-- Access to 'crop' pixmap.
+		once
+			Result := pixmap_from_coords (5, 13)
+		end
+
+	diagram_crop_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'crop' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (5, 13)
+		end
+
+	diagram_choose_color_icon: EV_PIXMAP is
+			-- Access to 'choose color' pixmap.
+		once
+			Result := pixmap_from_coords (6, 13)
+		end
+
+	diagram_choose_color_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'choose color' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (6, 13)
+		end
+
+	diagram_force_right_angles_icon: EV_PIXMAP is
+			-- Access to 'force right angles' pixmap.
+		once
+			Result := pixmap_from_coords (7, 13)
+		end
+
+	diagram_force_right_angles_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'force right angles' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (7, 13)
+		end
+
+	diagram_toogle_physics_icon: EV_PIXMAP is
+			-- Access to 'toogle physics' pixmap.
+		once
+			Result := pixmap_from_coords (8, 13)
+		end
+
+	diagram_toogle_physics_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'toogle physics' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (8, 13)
+		end
+
+	diagram_physics_settings_icon: EV_PIXMAP is
+			-- Access to 'physics settings' pixmap.
+		once
+			Result := pixmap_from_coords (9, 13)
+		end
+
+	diagram_physics_settings_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'physics settings' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (9, 13)
+		end
+
+	diagram_supplier_link_icon: EV_PIXMAP is
+			-- Access to 'supplier link' pixmap.
+		once
+			Result := pixmap_from_coords (10, 13)
+		end
+
+	diagram_supplier_link_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'supplier link' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (10, 13)
+		end
+
+	diagram_inheritance_link_icon: EV_PIXMAP is
+			-- Access to 'inheritance link' pixmap.
+		once
+			Result := pixmap_from_coords (11, 13)
+		end
+
+	diagram_inheritance_link_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'inheritance link' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (11, 13)
+		end
+
+	diagram_export_to_png_icon: EV_PIXMAP is
+			-- Access to 'export to png' pixmap.
+		once
+			Result := pixmap_from_coords (12, 13)
+		end
+
+	diagram_export_to_png_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'export to png' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (12, 13)
+		end
+
+	diagram_pinned_icon: EV_PIXMAP is
+			-- Access to 'pinned' pixmap.
+		once
+			Result := pixmap_from_coords (13, 13)
+		end
+
+	diagram_pinned_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'pinned' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (13, 13)
+		end
+
+	diagram_unpinned_icon: EV_PIXMAP is
+			-- Access to 'unpinned' pixmap.
+		once
+			Result := pixmap_from_coords (14, 13)
+		end
+
+	diagram_unpinned_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'unpinned' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (14, 13)
+		end
+
+	diagram_anchor_icon: EV_PIXMAP is
+			-- Access to 'anchor' pixmap.
+		once
+			Result := pixmap_from_coords (15, 13)
+		end
+
+	diagram_anchor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'anchor' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (15, 13)
+		end
+
+	diagram_remove_anchor_icon: EV_PIXMAP is
+			-- Access to 'remove anchor' pixmap.
+		once
+			Result := pixmap_from_coords (16, 13)
+		end
+
+	diagram_remove_anchor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'remove anchor' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (16, 13)
 		end
 
 	preference_boolean_icon: EV_PIXMAP is
@@ -2974,6 +3286,186 @@ feature -- Access
 			Result := pixel_buffer_from_coords (3, 15)
 		end
 
+	compile_animation_1_icon: EV_PIXMAP is
+			-- Access to 'animation 1' pixmap.
+		once
+			Result := pixmap_from_coords (1, 16)
+		end
+
+	compile_animation_1_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 1' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (1, 16)
+		end
+
+	compile_animation_2_icon: EV_PIXMAP is
+			-- Access to 'animation 2' pixmap.
+		once
+			Result := pixmap_from_coords (2, 16)
+		end
+
+	compile_animation_2_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 2' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (2, 16)
+		end
+
+	compile_animation_3_icon: EV_PIXMAP is
+			-- Access to 'animation 3' pixmap.
+		once
+			Result := pixmap_from_coords (3, 16)
+		end
+
+	compile_animation_3_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 3' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (3, 16)
+		end
+
+	compile_animation_4_icon: EV_PIXMAP is
+			-- Access to 'animation 4' pixmap.
+		once
+			Result := pixmap_from_coords (4, 16)
+		end
+
+	compile_animation_4_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 4' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (4, 16)
+		end
+
+	compile_animation_5_icon: EV_PIXMAP is
+			-- Access to 'animation 5' pixmap.
+		once
+			Result := pixmap_from_coords (5, 16)
+		end
+
+	compile_animation_5_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 5' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (5, 16)
+		end
+
+	compile_animation_6_icon: EV_PIXMAP is
+			-- Access to 'animation 6' pixmap.
+		once
+			Result := pixmap_from_coords (6, 16)
+		end
+
+	compile_animation_6_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 6' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (6, 16)
+		end
+
+	compile_animation_7_icon: EV_PIXMAP is
+			-- Access to 'animation 7' pixmap.
+		once
+			Result := pixmap_from_coords (7, 16)
+		end
+
+	compile_animation_7_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 7' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (7, 16)
+		end
+
+	compile_animation_8_icon: EV_PIXMAP is
+			-- Access to 'animation 8' pixmap.
+		once
+			Result := pixmap_from_coords (8, 16)
+		end
+
+	compile_animation_8_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 8' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (8, 16)
+		end
+
+	compile_error_icon: EV_PIXMAP is
+			-- Access to 'error' pixmap.
+		once
+			Result := pixmap_from_coords (9, 16)
+		end
+
+	compile_error_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'error' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (9, 16)
+		end
+
+	compile_success_icon: EV_PIXMAP is
+			-- Access to 'success' pixmap.
+		once
+			Result := pixmap_from_coords (10, 16)
+		end
+
+	compile_success_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'success' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (10, 16)
+		end
+
+	run_animation_1_icon: EV_PIXMAP is
+			-- Access to 'animation 1' pixmap.
+		once
+			Result := pixmap_from_coords (11, 16)
+		end
+
+	run_animation_1_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 1' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (11, 16)
+		end
+
+	run_animation_2_icon: EV_PIXMAP is
+			-- Access to 'animation 2' pixmap.
+		once
+			Result := pixmap_from_coords (12, 16)
+		end
+
+	run_animation_2_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 2' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (12, 16)
+		end
+
+	run_animation_3_icon: EV_PIXMAP is
+			-- Access to 'animation 3' pixmap.
+		once
+			Result := pixmap_from_coords (13, 16)
+		end
+
+	run_animation_3_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 3' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (13, 16)
+		end
+
+	run_animation_4_icon: EV_PIXMAP is
+			-- Access to 'animation 4' pixmap.
+		once
+			Result := pixmap_from_coords (14, 16)
+		end
+
+	run_animation_4_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 4' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (14, 16)
+		end
+
+	run_animation_5_icon: EV_PIXMAP is
+			-- Access to 'animation 5' pixmap.
+		once
+			Result := pixmap_from_coords (15, 16)
+		end
+
+	run_animation_5_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'animation 5' pixmap pixel buffer.
+		once
+			Result := pixel_buffer_from_coords (15, 16)
+		end
+
 
 feature {NONE} -- Access
 
@@ -2986,7 +3478,7 @@ feature {NONE} -- Access
 	width: INTEGER is 32
 			-- Matrix width
 
-	height: INTEGER is 15
+	height: INTEGER is 16
 			-- Matrix height
 
 feature {NONE} -- Query
@@ -3033,8 +3525,6 @@ feature {NONE} -- Query
 			l_pw: INTEGER
 			l_ph: INTEGER
 			l_rectangle: like rectangle
-
-			l_temp_buffer: EV_PIXMAP
 		do
 			l_pw := pixel_width
 			l_ph := pixel_height

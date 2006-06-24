@@ -626,7 +626,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
-			conformance_on_formal, is_conform: BOOLEAN
+			conformance_on_formal, is_conform, l_future_convert_checking: BOOLEAN
 			formal_dec_as: FORMAL_CONSTRAINT_AS
 			l_vtug: VTUG
 		do
@@ -644,6 +644,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			until
 				i > count
 			loop
+					-- Reset data.
+				l_future_convert_checking := False
+
 					-- Take the current studied parameter of A [G,...]
 				gen_param := generics.item (i).actual_type
 				if gen_param.is_formal then
@@ -726,9 +729,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 									is_conform := False
 								end
 							else
-								add_future_checking (context_class,
-									agent delayed_convert_constraint_check (
-										context_class, Current, to_check, constraint_type, i, False))
+									-- We do not insert future checking here for convertion as otherwise
+									-- it would break test#valid176.
+								l_future_convert_checking := True
 							end
 						else
 							generate_constraint_error (Current, to_check, constraint_type, i)
@@ -762,10 +765,21 @@ feature {COMPILER_EXPORTER} -- Primitives
 									formal_dec_as, constraint_type, context_class,
 									to_check, i, formal_type)
 						else
-							add_future_checking (context_class,
-								agent delayed_creation_constraint_check (formal_dec_as,
-								constraint_type, context_class, to_check, i, formal_type))
+							if l_future_convert_checking then
+								add_future_checking (context_class,
+									agent delayed_convert_creation_constraint_check (context_class,
+									to_check, constraint_type, formal_dec_as, i, formal_type, False))
+							else
+								add_future_checking (context_class,
+									agent delayed_creation_constraint_check (context_class,
+									to_check, constraint_type, formal_dec_as, i, formal_type))
+							end
 						end
+					elseif l_future_convert_checking then
+							-- Convertion check was requested and we did not have creation constraints.
+						add_future_checking (context_class,
+							agent delayed_convert_constraint_check (
+							context_class, Current, to_check, constraint_type, i, False))
 					end
 				end
 
@@ -819,11 +833,60 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	delayed_creation_constraint_check (
-			formal_dec_as: FORMAL_CONSTRAINT_AS
-			constraint_type: TYPE_A;
+	delayed_convert_creation_constraint_check (
 			context_class: CLASS_C;
-			to_check: TYPE_A;
+			to_check, constraint_type: TYPE_A;
+			formal_dec_as: FORMAL_CONSTRAINT_AS
+			i: INTEGER;
+			formal_type: FORMAL_A;
+			in_constraint: BOOLEAN) is
+				-- Check that declaration of generic class is conform to
+				-- defined creation constraint in delayed mode.
+		require
+			context_class_not_void: context_class /= Void
+			to_check_not_void: to_check /= Void
+			constraint_type_not_void: constraint_type /= Void
+			to_check_is_expanded: to_check.is_expanded
+			constraint_type_is_reference: not constraint_type.is_expanded
+			formal_dec_as_not_void: formal_dec_as /= Void
+			creation_constraint_exists: formal_dec_as.has_creation_constraint
+		local
+			l_vtcg7: VTCG7
+		do
+			reset_constraint_error_list
+			if context_class.is_valid and to_check.is_valid then
+				if
+					not (to_check.convert_to (context_class, constraint_type) and
+					to_check.is_conformant_to (constraint_type))
+				then
+					generate_constraint_error (Current, to_check, constraint_type, i)
+						-- The feature listed in the creation constraint have
+						-- not been declared in the constraint class.
+					create l_vtcg7
+					l_vtcg7.set_in_constraint (in_constraint)
+					l_vtcg7.set_class (context_class)
+					l_vtcg7.set_error_list (constraint_error_list)
+					l_vtcg7.set_parent_type (Current)
+					Error_handler.insert_error (l_vtcg7)
+				else
+					creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+					if not constraint_error_list.is_empty then
+							-- The feature listed in the creation constraint have
+							-- not been declared in the constraint class.
+						create l_vtcg7
+						l_vtcg7.set_class (context_class)
+						l_vtcg7.set_error_list (constraint_error_list)
+						l_vtcg7.set_parent_type (Current)
+						Error_handler.insert_error (l_vtcg7)
+					end
+				end
+			end
+		end
+
+	delayed_creation_constraint_check (
+			context_class: CLASS_C;
+			to_check, constraint_type: TYPE_A;
+			formal_dec_as: FORMAL_CONSTRAINT_AS
 			i: INTEGER;
 			formal_type: FORMAL_A) is
 				-- Check that declaration of generic class is conform to

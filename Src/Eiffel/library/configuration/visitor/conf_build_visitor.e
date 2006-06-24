@@ -226,12 +226,12 @@ feature -- Visit nodes
 								end
 							end
 						end
-
-							-- overrides can only be in the application target, must be done at the very end
-						process_with_old (a_target.overrides, l_overrides)
 					else
 						a_target.set_all_assemblies (create {HASH_TABLE [CONF_ASSEMBLY, STRING]}.make (0))
 					end
+
+						-- overrides can only be in the application target, must be done at the very end
+					process_with_old (a_target.overrides, l_overrides)
 				end
 
 					-- add the classes that are still in `old_target' to `removed_classes'

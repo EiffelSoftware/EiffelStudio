@@ -3,7 +3,7 @@
 		<description>This ace file has been generated for you by "The Vision2 Application Wizard".</description>
 		<root cluster="root_cluster" feature="make" class="ROOT_CLASS"/>
 
-		<option profile="false" debug="false">
+		<option profile="false" debug="false" warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="array_optimization" value="False"/>

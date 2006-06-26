@@ -1424,7 +1424,7 @@ feature -- Recompilation
 					loop
 						l_cl := l_classes.item_for_iteration
 						if removed_classes = Void or else not removed_classes.has (l_cl) then
-							workbench.add_class_to_recompile (l_cl.lace_class)
+							workbench.add_class_to_recompile (l_cl.original_class)
 						end
 						l_classes.forth
 					end
@@ -2960,7 +2960,7 @@ feature {NONE} -- Implementation
 					-- `a_class' does not remove any subclasses from `unref_classes',
 					-- so that they are recompiled back
 				if a_depth = 0 then
-					unref_classes.prune_all (eif_class.lace_class)
+					unref_classes.prune_all (eif_class.original_class)
 				end
 
 
@@ -2984,7 +2984,7 @@ feature {NONE} -- Implementation
 				Degree_2.remove_class (eif_class)
 
 					-- Mark the class to remove uncompiled
-				eif_class.lace_class.reset_compiled_class
+				eif_class.original_class.reset_compiled_class
 
 					-- Remove its types
 				from

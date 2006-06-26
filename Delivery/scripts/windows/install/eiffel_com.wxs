@@ -7,7 +7,7 @@
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\com_wizard" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\com_wizard" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry2" Type="string" />
 			</Component>
-			<Directory Id="ProgramMenuFolder" Name="Redist">
+			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.7">
 					<Component Id="EiffelStudio" Guid="9549FFD8-507E-4AA4-A48C-F0EB5077E166">
 						<CreateFolder />

@@ -716,8 +716,8 @@
 							<Directory Id="traversing1" Name="TRAVER~1" LongName="traversing">
 								<Component Id="traversing1" Guid="77DD4BFA-F9DB-45ee-982D-9E83382A3943">
 									<File Id="sed_abstract_objects_table_e" Name="SED_AB~1.E" LongName="sed_abstract_objects_table.e" />
-									<File Id="sed_object_graph_breadth_first_traversable_e" Name="SED_OB~1.E" LongName="sed_object_graph_breadth_first_traversable.e" />
-									<File Id="sed_object_graph_depth_first_traversable_e" Name="SED_OB~2.E" LongName="sed_object_graph_depth_first_traversable.e" />
+									<File Id="sed_object_graph_breadth_first" Name="SED_OB~1.E" LongName="sed_object_graph_breadth_first_traversable.e" />
+									<File Id="sed_object_graph_depth_first" Name="SED_OB~2.E" LongName="sed_object_graph_depth_first_traversable.e" />
 									<File Id="sed_object_graph_traversable_e" Name="SED_OB~3.E" LongName="sed_object_graph_traversable.e" />
 								</Component>
 								<Directory Id="dotnet5" Name="dotnet">
@@ -1279,7 +1279,7 @@
 							<Directory Id="directory1" LongName="build_project" Name="BUILD_~1">
 								<Component Id="component2" Guid="7a80c241-625c-48bb-a36d-cc2614ad4b6f" >
 									<File Id="build_project_bpr" LongName="build_project.bpr" Name="BUILD_~1.BPR" />
-									<File Id="multi_column_list_row_string_comparator_e" LongName="multi_column_list_row_string_comparator.e" Name="MULTI_~1.E" />
+									<File Id="multi_column_list_row_string" LongName="multi_column_list_row_string_comparator.e" Name="MULTI_~1.E" />
 									<File Id="preferences_grid_e" LongName="preferences_grid.e" Name="PREFER~4.E" />
 									<File Id="preferences_grid_imp_e" LongName="preferences_grid_imp.e" Name="PR2CF0~1.E" />
 									<File Id="preferences_window_e" LongName="preferences_window.e" Name="PREFER~3.E" />
@@ -1300,7 +1300,7 @@
 								<Directory Id="directory3" Name="dialogs">
 									<Component Id="component4" Guid="4fd420b9-9b36-4e05-b394-2b171cd0b526" >
 										<File Id="discardable_confirmation_dialog_e" LongName="discardable_confirmation_dialog.e" Name="DISCAR~1.E" />
-										<File Id="standard_discardable_confirmation_dialog_e" LongName="standard_discardable_confirmation_dialog.e" Name="STANDA~1.E" />
+										<File Id="standard_discardable_confirmat" LongName="standard_discardable_confirmation_dialog.e" Name="STANDA~1.E" />
 									</Component>
 								</Directory>
 							</Directory>
@@ -1389,7 +1389,7 @@
 									<File Id="process_file66" LongName="process_input_listener_thread.e" Name="PR1C6F~1.E"/>
 									<File Id="process_file53" LongName="process_thread_timer.e" Name="PROCES~3.E"/>
 									<File Id="process_file42" LongName="file_handle.e" Name="FILE_H~1.E"/>
-									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~1.E"/>
+									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~2.E"/>
 									<File Id="process_file43" LongName="wel_process.e" Name="WEL_PR~4.E"/>
 									<File Id="process_file60" LongName="wel_process_entry_32.e" Name="WEL_PR~3.E" />
 									<File Id="process_file61" LongName="wel_process_id_pair.e" Name="WEL_PR~1.E" />

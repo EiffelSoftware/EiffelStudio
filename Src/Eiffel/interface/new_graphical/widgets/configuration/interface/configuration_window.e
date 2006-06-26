@@ -2883,9 +2883,9 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Constants
 
-	initial_window_width: INTEGER is 600
+	initial_window_width: INTEGER is 650
 	initial_window_height: INTEGER is 600
-	section_tree_width: INTEGER is 140
+	section_tree_width: INTEGER is 160
 	description_height: INTEGER is 50
 
 	frame_border_size: INTEGER is 1

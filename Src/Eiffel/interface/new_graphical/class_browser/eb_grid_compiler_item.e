@@ -129,7 +129,7 @@ feature -- Setting
 		do
 			is_invisible_pixmap_enabled := True
 			if is_pixmap_enabled then
-				set_pixmap (pixmaps.icon_invisible_icon)
+				set_pixmap (pixmaps.icon_pixmaps.general_blank_icon)
 			end
 		ensure
 			is_invisible_pixmap_enabled_set: is_invisible_pixmap_enabled

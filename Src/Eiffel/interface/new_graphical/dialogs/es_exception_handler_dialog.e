@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 			handling_external_checking.select_actions.extend (agent on_external_handling_changed)
 			set_default_cancel_button (cancel_button)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
 
 feature -- Properties

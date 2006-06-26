@@ -44,7 +44,7 @@ feature{NONE} -- Pixmap
 			if not is_invisible_pixmap_enabled then
 				Result := pixmap_from_class_i (associated_class_i)
 			else
-				Result := pixmaps.icon_invisible_icon
+				Result := pixmaps.icon_pixmaps.general_blank_icon
 			end
 		end
 

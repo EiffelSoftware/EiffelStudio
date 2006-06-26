@@ -8,21 +8,21 @@ indexing
 
 class
 	EB_FORCE_SETTINGS_DIALOG
-	
+
 inherit
 	EV_DIALOG
 		redefine
-			initialize, 
+			initialize,
 			is_in_default_state
 		end
-		
+
 	EV_LAYOUT_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -32,7 +32,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_physics: like physics; a_tool: like tool) is
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		ensure
 			set: physics = a_physics
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		local
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			l_ev_cell_2, l_ev_cell_3: EV_CELL
 		do
 			Precursor {EV_DIALOG}
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_frame_1
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			create l_ev_cell_2
 			create exit_button
 			create l_ev_cell_3
-			
+
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.set_border_width (default_border_size)
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 			l_ev_horizontal_box_6.extend (l_ev_cell_2)
 			l_ev_horizontal_box_6.extend (exit_button)
 			l_ev_horizontal_box_6.extend (l_ev_cell_3)
-			
+
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_3)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
@@ -198,14 +198,14 @@ feature {NONE} -- Initialization
 			exit_button.set_text ("Close")
 			exit_button.set_minimum_width (default_button_width)
 			set_title ("Physics settings")
-			
+
 			user_initialization
 		end
-		
+
 feature -- Access
 
 	physics: EIFFEL_FORCE_LAYOUT
-	
+
 	tool: EB_CONTEXT_EDITOR
 
 feature {NONE} -- Implementation
@@ -215,38 +215,38 @@ feature {NONE} -- Implementation
 		do
 			Result := True
 		end
-		
+
 	exit_button: EV_BUTTON
 	stiffness_slider, attraction_slider, repulsion_slider, inheritance_slider, client_slider: EV_HORIZONTAL_RANGE
 	stiffness_label, attraction_label, repulsion_label, inheritance_label, client_label: EV_LABEL
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		do
 			stiffness_slider.set_value (physics.stiffness)
 			update_stiffnes_label (physics.stiffness)
 			stiffness_slider.change_actions.extend (agent on_stiffness_change)
-			
+
 			attraction_slider.set_value (physics.center_attraction)
 			update_attraction_label (physics.center_attraction)
 			attraction_slider.change_actions.extend (agent on_attraction_change)
-			
+
 			repulsion_slider.set_value (physics.electrical_repulsion)
 			update_repulsion_label (physics.electrical_repulsion)
 			repulsion_slider.change_actions.extend (agent on_repulsion_change)
-			
+
 			inheritance_slider.set_value (physics.inheritance_stiffness)
 			update_inheritance_label (physics.inheritance_stiffness)
 			inheritance_slider.change_actions.extend (agent on_inheritance_change)
-			
+
 			client_slider.set_value (physics.client_supplier_stiffness)
 			update_client_label (physics.client_supplier_stiffness)
 			client_slider.change_actions.extend (agent on_client_change)
-			
+
 			exit_button.select_actions.extend (agent hide)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
-		
+
 	on_stiffness_change (a_value: INTEGER) is
 			-- Stiffnes slider was moved.
 		do
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			update_stiffnes_label (a_value)
 			tool.restart_force_directed
 		end
-		
+
 	on_attraction_change (a_value: INTEGER) is
 			-- `attraction_slider' was moved.
 		do
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			update_attraction_label (a_value)
 			tool.restart_force_directed
 		end
-		
+
 	on_repulsion_change (a_value: INTEGER) is
 			-- `repulsion_slider' was moved.
 		do
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			update_repulsion_label (a_value)
 			tool.restart_force_directed
 		end
-		
+
 	on_inheritance_change (a_value: INTEGER) is
 			-- `inheritance_slider' was moved.
 		do
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			update_inheritance_label (a_value)
 			tool.restart_force_directed
 		end
-		
+
 	on_client_change (a_value: INTEGER) is
 			-- `client_slider' was moved.
 		do
@@ -292,31 +292,31 @@ feature {NONE} -- Implementation
 		do
 			stiffness_label.set_text ("Stiffness (" + a_value.out + "%%)")
 		end
-		
+
 	update_attraction_label (a_value: INTEGER) is
 			-- Set text of `attraction_label'.
 		do
 			attraction_label.set_text ("Center attraction (" + a_value.out + "%%)")
 		end
-		
+
 	update_repulsion_label (a_value: INTEGER) is
 			-- Set text of `repulsion_label'.
 		do
 			repulsion_label.set_text ("Repulsion (" + a_value.out + "%%)")
 		end
-		
+
 	update_inheritance_label (a_value: INTEGER) is
 			-- Set text of `inheritance_label'.
 		do
 			inheritance_label.set_text ("Inheritance stiffness (" + a_value.out + "%%)")
 		end
-		
+
 	update_client_label (a_value: INTEGER) is
 			-- Set text of `client_label'.
 		do
 			client_label.set_text ("Client stiffness (" + a_value.out + "%%)")
 		end
-		
+
 	minimum_width_for_labels: INTEGER is
 		once
 			Result := (create {EV_FONT}).string_width ("Inheritance stiffness (100%%)") + 30
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 
 	minimum_width_for_sliders: INTEGER is 150;
 			-- Default width for sliders.
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			go_button.select_actions.extend (agent goto_line)
 			line_number_text.key_press_actions.extend (agent on_key_pressed)
 			line_number_text.change_actions.extend (agent on_value_changed (?))
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
 
 	initialize_line_number_label_text is

@@ -620,7 +620,7 @@ feature {NONE} -- Actions
 			deleting_dialog.extend (vb)
 			deleting_dialog.set_default_cancel_button (cancel_button)
 			deleting_dialog.set_title (Interface_names.t_deleting_files)
-			deleting_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			deleting_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			deleting_dialog.show_relative_to_window (parent_window)
 		end
 

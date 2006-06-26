@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_title ("Refactoring: Class rename")
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb
 			vb.set_padding (Layout_constants.small_padding_size)

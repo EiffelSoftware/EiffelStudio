@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.icon_display_uml
+			Result := pixmaps.icon_pixmaps.diagram_view_uml_icon
 		end
 
 	description: STRING is

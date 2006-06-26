@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_select_depth
+			Result := pixmaps.icon_pixmaps.diagram_depth_of_relations_icon
 		end
 
 	tooltip: STRING is

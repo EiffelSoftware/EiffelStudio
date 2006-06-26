@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			maincont.extend (butcont)
 			maincont.disable_item_expand (butcont)
 			dial.set_title ("Backup found")
-			dial.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dial.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			dial.extend (maincont)
 			dial.set_size (dial.minimum_width, dial.minimum_height)
 			dial.disable_user_resize

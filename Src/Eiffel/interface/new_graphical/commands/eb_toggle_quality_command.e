@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_toggle_quality
+			Result := pixmaps.icon_pixmaps.diagram_toggle_quality_icon
 		end
 
 	description: STRING is

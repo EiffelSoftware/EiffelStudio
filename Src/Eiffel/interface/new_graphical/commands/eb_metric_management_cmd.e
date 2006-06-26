@@ -72,7 +72,7 @@ feature -- Widget
 		do
 			create management_dialog
 			management_dialog.set_title ("Management")
-			management_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			management_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb1
 			vb1.set_padding (5)

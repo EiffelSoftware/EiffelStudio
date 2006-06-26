@@ -175,7 +175,7 @@ feature -- Initialization
 							del_button.select_actions.extend (agent remove_action)
 							del_button.set_minimum_size (22, 22)
 							del_button.set_tooltip ("Remove last term")
-							del_button.set_pixmap (Pixmaps.Icon_delete_small)
+							del_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 							del_button.key_press_actions.extend (agent dialog_key_press_action (?, del_button))
 							vb_min.extend (del_button)
 							vb_min.disable_item_expand (del_button)

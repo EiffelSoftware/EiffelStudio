@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			client_depth := 1
 			supplier_depth := 1
 			set_title (Interface_names.t_Diagram_context_depth)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
 			Layout_constants.set_default_size_for_button (ok_button)
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			vb_cluster.extend (cb_only)
 			create cb_all.make_with_text ("All classes in same cluster")
 			vb_cluster.extend (cb_all)
-			
+
 			hb_cluster.extend (create {EV_CELL})
 			hb_cluster.extend (vb_cluster)
 
@@ -105,19 +105,19 @@ feature {NONE} -- Initialization
 
             create sb_ancestor
 			sb_ancestor.set_minimum_width (125)
-			vb2.extend (sb_ancestor)	
+			vb2.extend (sb_ancestor)
 
             create sb_descendant
 			sb_descendant.set_minimum_width (125)
-			vb2.extend (sb_descendant)	
-			
+			vb2.extend (sb_descendant)
+
             create sb_client
 			sb_client.set_minimum_width (125)
-			vb2.extend (sb_client)	
-			
+			vb2.extend (sb_client)
+
 	        create sb_supplier
 			sb_supplier.set_minimum_width (125)
-			vb2.extend (sb_supplier)	
+			vb2.extend (sb_supplier)
 
 			vb_include.extend (hb)
 			vb_include.extend (create {EV_CELL})
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 			vb_view.extend (create {EV_CELL})
 			frm3.extend (vb_view)
 			main_vb.extend (frm3)
-			
+
 			hb2.set_padding (Layout_constants.Small_padding_size)
 			hb2.extend (create {EV_CELL})
 			hb2.extend (ok_button)
@@ -205,11 +205,11 @@ feature {NONE} -- Initialization
 
             create sb_supercluster
 			sb_supercluster.set_minimum_width (125)
-			vb2.extend (sb_supercluster)	
+			vb2.extend (sb_supercluster)
 
             create sb_subcluster
 			sb_subcluster.set_minimum_width (125)
-			vb2.extend (sb_subcluster)	
+			vb2.extend (sb_subcluster)
 
 			vb_include.extend (hb)
 			vb_include.extend (create {EV_CELL})
@@ -331,7 +331,7 @@ feature -- Access
 
 	ok_button: EV_BUTTON
 			-- Button with label "OK".
-			
+
 	cancel_button: EV_BUTTON
 			-- Button with label "Cancel".
 
@@ -340,22 +340,22 @@ feature -- Access
 
 feature -- Status report
 
-	client_depth: INTEGER 
+	client_depth: INTEGER
 			-- Client depth typed by the user.
 
-	supplier_depth: INTEGER 
+	supplier_depth: INTEGER
 			-- Supplier depth typed by the user.
 
-	ancestor_depth: INTEGER 
+	ancestor_depth: INTEGER
 			-- Ancestor depth typed by the user.
 
-	descendant_depth: INTEGER 
+	descendant_depth: INTEGER
 			-- Descendant depth typed by the user.
 
-	supercluster_depth: INTEGER 
+	supercluster_depth: INTEGER
 			-- Supercluster depth typed by the user.
 
-	subcluster_depth: INTEGER 
+	subcluster_depth: INTEGER
 			-- Subcluster depth typed by the user.
 
 	all_classes_of_cluster: BOOLEAN is
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			-- Assign `d' to `supplier_depth'
 		do
 			supplier_depth := d
-		end		
+		end
 
 	set_supercluster_depth (d: INTEGER) is
 			-- Assign `d' to `supercluster_depth'
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			-- Assign `d' to `subcluster_depth'
 		do
 			subcluster_depth := d
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

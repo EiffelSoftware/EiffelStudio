@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			extend (hb)
 			set_default_cancel_button (close_button)
 			show_actions.extend (agent button.set_focus)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
 
 feature {EB_FAVORITES_MANAGER} -- Status Setting

@@ -190,7 +190,7 @@ feature -- Basic operations
 				-- Create all widgets.
 			create d
 			d.set_title (Interface_names.t_Enter_condition)
-			d.set_icon_pixmap (pixmaps.icon_dialog_window)
+			d.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create fr.make_with_text (Interface_names.l_Condition)
 			create vb
 			vb.set_padding (Layout_constants.Default_padding_size)
@@ -246,7 +246,7 @@ feature -- Basic operations
 				-- Create all widgets.
 			create d
 			d.set_title (Interface_names.t_Enter_condition)
-			d.set_icon_pixmap (pixmaps.icon_dialog_window)
+			d.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create fr.make_with_text (Interface_names.l_Condition)
 			create vb
 			vb.set_padding (Layout_constants.Default_padding_size)

@@ -104,7 +104,7 @@ feature -- Dialogs
 		do
 			create import_metrics_dialog
 			import_metrics_dialog.set_title ("Select metrics")
-			import_metrics_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			import_metrics_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create vb1
 			vb1.set_border_width (5)
 

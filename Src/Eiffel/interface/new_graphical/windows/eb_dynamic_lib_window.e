@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			create kcsts
 				-- Create `new_cmd'.
 			create new_cmd.make
-			new_cmd.set_pixmap (Pixmaps.Icon_new_dynamic_lib)
+			new_cmd.set_pixmap (pixmaps.icon_pixmaps.new_document_icon)
 			new_cmd.set_tooltip (Interface_names.e_New_dynamic_lib_definition)
 			new_cmd.set_menu_name (Interface_names.m_New)
 			new_cmd.set_name ("new_dynamic_lib_definition")
@@ -198,7 +198,7 @@ feature {NONE} -- Initialization
 
 				-- Create `check_exports_cmd'.
 			create check_exports_cmd.make
-			check_exports_cmd.set_pixmap (Pixmaps.Icon_check_exports)
+			check_exports_cmd.set_pixmap (pixmaps.icon_pixmaps.general_check_document_icon)
 			check_exports_cmd.set_tooltip (Interface_names.e_Check_exports)
 			check_exports_cmd.set_menu_name (Interface_names.m_Check_exports)
 			check_exports_cmd.set_name ("check_exports")
@@ -368,7 +368,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing Current window.
 		do
-			Result := Pixmaps.Icon_dynamiclib_window
+			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
 	changed: BOOLEAN
@@ -1136,7 +1136,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			create properties_dialog
 			properties_dialog.set_title (Interface_names.t_Feature_properties)
-			properties_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			properties_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create mainvb
 			properties_dialog.extend (mainvb)
 			mainvb.set_padding (Layout_constants.small_padding_size)

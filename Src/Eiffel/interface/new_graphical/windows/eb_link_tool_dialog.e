@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			reset_selected := False
 			cancelled := False
 			set_title (Interface_names.t_Diagram_link_tool)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
 			create apply_button.make_with_text_and_action (Interface_names.b_apply, agent apply_action)
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			main_vb.disable_item_expand (frm2)
 			main_vb.extend (frm3)
 			main_vb.disable_item_expand (frm3)
-			main_vb.extend (hb5)			
+			main_vb.extend (hb5)
 			main_vb.disable_item_expand (hb5)
 
 			set_default_push_button (ok_button)
@@ -189,7 +189,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Status setting
 			set_minimum_size (width, height + 120)
 			set_maximum_width (width)
 		end
-		
+
 feature {NONE} -- Events
 
 	on_handle_left_selected is
@@ -299,7 +299,7 @@ feature {NONE} -- Events
 				two_handles_right_selected := False
 			end
 		end
-		
+
 	on_reset_selected is
 			-- The user has selected "Remove handles on this link".
 			-- Deselect any previously selected button.
@@ -377,7 +377,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Events
 			cancelled := True
 			hide
 			link_tool_command.on_dialog_closed
-		end	
+		end
 
 feature {EB_LINK_TOOL_COMMAND} -- Access
 
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			-- Close dialog.
 		do
 			applied := True
-			
+
 				-- We need to check if `link_figure' is still on the diagram.
 			if link_figure.world /= Void then
 				if not link_figure.is_reflexive then
@@ -419,11 +419,11 @@ feature {NONE} -- Implementation
 					link_tool_command.project
 					if handle_left_selected then
 							link_figure.put_handle_left
-					elseif handle_right_selected then			
+					elseif handle_right_selected then
 							link_figure.put_handle_right
-					elseif two_handles_left_selected then			
+					elseif two_handles_left_selected then
 							link_figure.put_two_handles_left
-					elseif two_handles_right_selected then			
+					elseif two_handles_right_selected then
 							link_figure.put_two_handles_right
 					elseif reset_selected then
 							link_figure.reset

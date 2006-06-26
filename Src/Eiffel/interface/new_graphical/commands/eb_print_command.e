@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do
-			Result := Pixmaps.Icon_print
+			Result := pixmaps.icon_pixmaps.general_print_icon
 		end
 
 	tooltip: STRING is

@@ -1510,6 +1510,7 @@
 									<File Id="ev_character_format_constants.e" Name="EV_CHA~6.E" LongName="ev_character_format_constants.e" />
 									<File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
 									<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
+									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
@@ -1906,6 +1907,7 @@
 										<File Id="ev_theme_drawer_imp_e" Name="EV_THE~1.E" LongName="ev_theme_drawer_imp.e" />
 										<File Id="ev_theme_window_e" Name="EV_THE~2.E" LongName="ev_theme_window.e" />
 										<File Id="ev_xp_theme_drawer_imp_e" Name="EV_XP_~1.E" LongName="ev_xp_theme_drawer_imp.e" />
+										<File Id="ev_pixel_buffer_imp_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="properties" Name="PROPER~1" LongName="properties">
@@ -2122,6 +2124,7 @@
 										<File Id="V138" Name="EV_RIC~8.E" LongName="ev_rich_text_buffering_structures_i.e" />
 										<File Id="ev_rich_text_constants_i.e" Name="EV_RIC~9.E" LongName="ev_rich_text_constants_i.e" />
 										<File Id="rtf_format_i.e" Name="RTF_FO~1.E" LongName="rtf_format_i.e" />
+										<File Id="ev_pixel_buffer_i_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer_i.e" />
 									</Component>
 								</Directory>
 								<Directory Id="items30" Name="items">
@@ -2903,6 +2906,22 @@
 							</Component>
 						</Directory>
 						<Directory Id="gdi" Name="gdi">
+							<Directory Id="gdiplus" Name="gdiplus">
+								<Component Id="gdiplus" Guid="C9D16072-011B-4ff7-9250-0D618A16D173">
+									<File Id="wel_gdip_any_e" Name="WEL_GD~4.E" LongName="wel_gdip_any.e" />
+									<File Id="wel_gdip_bitmap_e" Name="WEDC2C~1.E" LongName="wel_gdip_bitmap.e" />
+									<File Id="wel_gdip_color_e" Name="WE75CD~1.E" LongName="wel_gdip_color.e" />
+									<File Id="wel_gdip_color_adjust_type_e" Name="WE1F83~1.E" LongName="wel_gdip_color_adjust_type.e" />
+									<File Id="wel_gdip_color_matrix_flag_e" Name="WE72E8~1.E" LongName="wel_gdip_color_matrix_flag.e" />
+									<File Id="wel_gdip_graphics_e" Name="WEAB43~1.E" LongName="wel_gdip_graphics.e" />
+									<File Id="wel_gdip_image_e" Name="WEL_GD~1.E" LongName="wel_gdip_image.e" />
+									<File Id="wel_gdip_image_attributes_e" Name="WECE8B~1.E" LongName="wel_gdip_image_attributes.e" />
+									<File Id="wel_gdip_pen_e" Name="WEL_GD~2.E" LongName="wel_gdip_pen.e" />
+									<File Id="wel_gdip_statues_e" Name="WE8F95~1.E" LongName="wel_gdip_statues.e" />
+									<File Id="wel_gdip_unit_e" Name="WE2159~1.E" LongName="wel_gdip_unit.e" />
+									<File Id="wel_gdi_plus_starter_e" Name="WEL_GD~3.E" LongName="wel_gdi_plus_starter.e" />
+								</Component>
+							</Directory>
 							<Component Id="wel_log_font.e" Guid="234A76E6-AB33-4358-B31B-928794E787DD">
 								<File Id="wel_log_font.e" Name="WEL_LO~3.E" LongName="wel_log_font.e" KeyPath="yes" />
 								<File Id="wel_desktop_dc.e" Name="WEL_DE~2.E" LongName="wel_desktop_dc.e" />
@@ -3101,6 +3120,7 @@
 										<File Id="rebarinfo.h" Name="REBARI~1.H" LongName="rebarinfo.h" />
 										<File Id="lvcolumn.h" Name="lvcolumn.h" />
 										<File Id="logpen.h" Name="logpen.h" />
+										<File Id="gdiplus.h" Name="gdiplus.h" />
 										<File Id="wel_disk_space.h" Name="WEL_DI~1.H" LongName="wel_disk_space.h" />
 									</Component>
 								</Directory>

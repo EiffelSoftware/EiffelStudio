@@ -85,6 +85,9 @@ feature -- Visit nodes
 			if a_target.extends /= Void then
 				text.append (" extends=%""+a_target.extends.name+"%"")
 			end
+			if a_target.is_abstract then
+				text.append (" abstract=%"true%"")
+			end
 			append_text (">%N")
 			indent := indent + 1
 			append_description_tag (a_target.description)

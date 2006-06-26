@@ -157,7 +157,7 @@ feature -- Access queries
 				targets.after
 			loop
 				l_target := targets.item_for_iteration
-				if l_target.root /= Void then
+				if l_target.root /= Void and not l_target.is_abstract then
 					Result.force (l_target, l_target.name)
 				end
 				targets.forth

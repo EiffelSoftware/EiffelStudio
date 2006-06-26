@@ -84,6 +84,9 @@ feature -- Access, stored in configuration file
 	system: CONF_SYSTEM
 			-- The associated system
 
+	is_abstract: BOOLEAN
+			-- Is this an abstract target? (i.e. cannot be used to compile the system).
+
 feature -- Access, in compiled only, not stored to configuration file
 
 	environ_variables: HASH_TABLE [STRING, STRING]
@@ -1269,6 +1272,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		ensure
 			mapping_removed: not internal_mapping.has (a_name.as_upper)
+		end
+
+	set_abstract (an_enabled: like is_abstract) is
+			-- Set `is_abstract' to `an_enabled'.
+		do
+			is_abstract := an_enabled
+		ensure
+			is_abstract_set: is_abstract = an_enabled
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file

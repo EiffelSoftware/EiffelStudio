@@ -359,14 +359,18 @@ feature {NONE} -- Implementation attribute processing
 			last_system_not_void: last_system /= Void
 		local
 			l_target: CONF_TARGET
-			l_name, l_eifgen, l_extends: STRING
+			l_name, l_eifgen, l_extends, l_abstract: STRING
 		do
 			l_name := current_attributes.item (at_name)
 			l_eifgen := current_attributes.item (at_eifgen)
 			l_extends := current_attributes.item (at_extends)
+			l_abstract := current_attributes.item (at_abstract)
 			if l_name /= Void then
 				l_name.to_lower
 				current_target := factory.new_target (l_name, last_system)
+				if l_abstract /= Void and then l_abstract.is_boolean then
+					current_target.set_abstract (l_abstract.to_boolean)
+				end
 				if current_library_target /= Void and then l_name.is_equal (current_library_target) then
 					last_system.set_library_target (current_target)
 					current_library_target := Void
@@ -1570,10 +1574,11 @@ feature {NONE} -- Implementation state transitions
 				-- * name
 				-- * eifgen
 				-- * extends
-			create l_attr.make (3)
+			create l_attr.make (4)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_eifgen, "eifgen")
 			l_attr.force (at_extends, "extends")
+			l_attr.force (at_abstract, "abstract")
 			Result.force (l_attr, t_target)
 
 				-- root
@@ -1848,6 +1853,7 @@ feature {NONE} -- Implementation constants
 	t_mapping: INTEGER is unique
 
 		-- Attribute states
+	at_abstract,
 	at_name,
 	at_uuid,
 	at_library_target,

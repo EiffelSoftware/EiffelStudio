@@ -68,7 +68,7 @@ extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_show_console (void);					/* Show the DOS console if needed */
 #endif
 
-RT_LNK void dexit(int);
+extern void dexit(int);
 
 #ifdef __cplusplus
 }

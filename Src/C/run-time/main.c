@@ -833,12 +833,12 @@ rt_private Signal_t emergency(int sig)
  * archive. However, we need to define dummy dserver() and dinterrupt() entries.
  */
 
-rt_public void dserver(void) {}
-rt_public void dnotify(int evt_type, int evt_data) {}
-rt_public char dinterrupt(void) { return 0; }
+rt_shared void dserver(void) {}
+rt_shared void dnotify(int evt_type, int evt_data) {}
+rt_shared char dinterrupt(void) { return 0; }
 #endif
 
-rt_public void dexit(int code)
+rt_shared void dexit(int code)
 {
 	/* This routine is called by functions from libipc.a to raise immediate
 	 * termination with a chance to trap the action and perform some clean-up.

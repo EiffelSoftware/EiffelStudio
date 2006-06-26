@@ -1430,7 +1430,7 @@ feature {NONE} -- Class initialization
 					syntactical_clients.after
 				loop
 					a_client := syntactical_clients.item
-					Workbench.add_class_to_recompile (a_client.lace_class)
+					Workbench.add_class_to_recompile (a_client.original_class)
 					a_client.set_changed (True)
 					a_client.set_changed3a (True)
 					a_client.set_need_type_check (True)
@@ -1462,7 +1462,7 @@ feature {NONE} -- Class initialization
 					clients.after
 				loop
 					a_client := clients.item
-					Workbench.add_class_to_recompile (a_client.lace_class)
+					Workbench.add_class_to_recompile (a_client.original_class)
 					a_client.set_changed (True)
 					clients.forth
 				end
@@ -1658,13 +1658,13 @@ feature -- Supplier checking
 			loop
 				a_class := l_syntactical_suppliers.item
 				other_class := Universe.class_named (a_class.name, cluster)
-				if other_class /= a_class.lace_class then
+				if other_class /= a_class.original_class then
 						-- one of the suppliers has changed (different CLASS_I)
 						-- recompile the client (Current class)
-					a_class := lace_class.compiled_class
+					a_class := original_class.compiled_class
 					if a_class = Void or else not a_class.is_precompiled then
 						recompile := True
-						Workbench.add_class_to_recompile (lace_class)
+						Workbench.add_class_to_recompile (original_class)
 					end
 				end
 				l_syntactical_suppliers.forth

@@ -1482,7 +1482,7 @@ feature {NONE} -- Implementation
 
 				-- Set widget properties.
 			dialog.set_title (Interface_names.t_Set_critical_stack_depth)
-			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.disable_user_resize
 			rb2.enable_select
 			Layout_constants.set_default_size_for_button (okb)

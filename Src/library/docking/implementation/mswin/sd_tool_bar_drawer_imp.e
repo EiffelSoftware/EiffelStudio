@@ -245,7 +245,12 @@ feature {NONE} -- Implementation
 					arguments := a_arguments
 					dc_to_draw := a_dc_to_draw
 					pixmap_coordinate := l_button.pixmap_position
-					desaturation (l_grey_pixmap, 1)
+					if l_button.pixel_buffer /= Void and (create {WEL_GDI_PLUS_STARTER}).is_gdi_plus_installed then
+						desaturation_pixel_buffer (l_button.pixel_buffer)
+					else
+						desaturation (l_grey_pixmap, 1)
+					end
+
 					l_pixmap_state ?= l_grey_pixmap.implementation
 				else
 					l_pixmap_state ?= l_button.pixmap.implementation
@@ -336,39 +341,77 @@ feature {NONE} -- Implementation
 		end
 
 	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
-			-- Desatuation `a_pixmap' with `a_k'.
+			-- Desatuation `a_pixmap' with `a_k' when Gdi+ is not available.
 		local
-			l_imp: EV_PIXMAP_IMP
-			l_wel_rect: WEL_RECT
-			l_temp_bitmap: WEL_BITMAP
-			l_bits: WEL_CHARACTER_ARRAY
-			l_chars: ARRAY [CHARACTER]
-			l_helper: SD_NOTEBOOK_TAB_DRAWER_IMP
-			l_dc: WEL_MEMORY_DC
-
+			l_intensity: REAL
+			l_wel_dc: WEL_MEMORY_DC
+			l_bitmap_imp: EV_PIXMAP_IMP_STATE
+			l_width_count, l_height_count, l_width, l_height: INTEGER
+			l_wel_color,l_new_color: WEL_COLOR_REF
 		do
-			l_imp ?= a_pixmap.implementation
+			l_bitmap_imp ?= a_pixmap.implementation
+			check not_void: l_bitmap_imp /= Void end
+			create l_wel_dc.make
+			l_wel_dc.select_bitmap (l_bitmap_imp.get_bitmap)
+
+			from
+				l_width := a_pixmap.width
+				l_height := a_pixmap.height
+			until
+				l_width_count >= l_width
+			loop
+				from
+					l_height_count := 0
+				until
+					l_height_count >= l_height
+				loop
+					l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
+					l_intensity := 0.3 * l_wel_color.red + 0.59 * l_wel_color.green + 0.11 * l_wel_color.blue
+					create l_new_color.make_rgb (
+										(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
+										(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,
+										(l_intensity * a_k + l_wel_color.blue * (1 - a_k)).rounded)
+					l_wel_dc.set_pixel (l_width_count, l_height_count, l_new_color)
+
+					l_height_count := l_height_count + 1
+				end
+				l_width_count := l_width_count + 1
+			end
+			l_wel_dc.delete
+
+			dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, pixmap_coordinate.x, pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
+		end
+
+	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Disaturation `a_pixel_buffer' when Gdi+ is available.
+		require
+			not_void: a_pixel_buffer /= Void
+		local
+			l_imp: WEL_GDIP_IMAGE
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
+			l_src_rect, l_dest_rect: WEL_RECT
+		do
+
+			l_imp ?= a_pixel_buffer.implementation
 			check not_void: l_imp /= Void end
 
-			create l_wel_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
+			create l_image_attributes.make
+			l_image_attributes.clear_color_key
+			l_image_attributes.set_color_matrix (disabled_color_matrix)
+			create l_src_rect.make (0, 0, l_imp.width, l_imp.height)
+			create l_dest_rect.make (pixmap_coordinate.x, pixmap_coordinate.y, pixmap_coordinate.x + l_imp.width, pixmap_coordinate.y + l_imp.height)
+			create l_graphics.make_from_dc (dc_to_draw)
+			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_imp, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
 
-			create l_temp_bitmap.make_by_bitmap (l_imp.get_bitmap)
-
-			create l_dc.make
-			create l_helper.make_for_help
-			l_chars := l_helper.bits_of_image_bottom_up (l_temp_bitmap)
-
-			create l_bits.make (l_chars)
-
-			cpp_desaturate (l_bits.item, l_bits.count, disabled_color_matrix.item.item, l_wel_rect.width, l_wel_rect.height, pixmap_coordinate.x, pixmap_coordinate.y, dc_to_draw.item)
-
-			l_bits.dispose
-			l_wel_rect.dispose
-			l_temp_bitmap.delete
+			l_graphics.delete
+			l_dest_rect.dispose
+			l_src_rect.dispose
+			l_image_attributes.delete
 		end
 
 	disabled_color_matrix: WEL_COLOR_MATRIX is
-			--
+			-- Disable color matrix.
 		do
 			Result := mulitply_color_matix (disabled_color_matrix_2, disabled_color_matrix_1)
 		ensure
@@ -404,7 +447,7 @@ feature {NONE} -- Implementation
 		end
 
 	mulitply_color_matix (a_matrix_1, a_matrix_2: WEL_COLOR_MATRIX): WEL_COLOR_MATRIX is
-			--
+			-- Mulitply `a_matrix_1' and `a_matrix_2'
 		require
 			not_void: a_matrix_1 /= Void
 			not_void: a_matrix_2 /= Void
@@ -429,7 +472,6 @@ feature {NONE} -- Implementation
 					l_k := l_k + 1
 				end
 				from
-
 					l_i := 0
 				until
 					l_i > 4
@@ -449,48 +491,6 @@ feature {NONE} -- Implementation
 
 				l_j := l_j + 1
 			end
-		end
-
-	cpp_desaturate (a_bitmap_bits: POINTER; a_bits_size: INTEGER; a_color_matrix: POINTER; a_width, a_height: INTEGER; a_draw_x, a_draw_y: INTEGER; a_dc: POINTER) is
-			-- Use color matrix to desaturate `a_bitmap'.
-		require
-			exist: a_color_matrix /= default_pointer
-		external
-			"C++ inline use <gdiplus.h>"
-		alias
-			"[
-			{	
-				using namespace Gdiplus;
-				Rect l_r (0, 0, $a_width, $a_height);
-				ImageAttributes *image_attributes = new ImageAttributes ();
-				image_attributes->ClearColorKey(ColorAdjustTypeBitmap);
-				image_attributes->SetColorMatrix((ColorMatrix *)$a_color_matrix);
-				Bitmap *bitmap = new Bitmap($a_width, $a_height, PixelFormat32bppPARGB);
-				Bitmap *bitmap_orignal = new Bitmap ($a_width, $a_height, PixelFormat32bppPARGB);				
-				// Should use Bitmap::FromHBITMAP to convert
-				// But FromHBITMAP will lose alpha datas.
-				// So we copy datas ourself.
-				BitmapData *bitmap_data = new BitmapData ();
-	   			bitmap_orignal->LockBits(&l_r, ImageLockModeWrite, PixelFormat32bppPARGB, bitmap_data);
-				memcpy (bitmap_data->Scan0, $a_bitmap_bits, $a_bits_size);
-				bitmap_orignal->UnlockBits (bitmap_data);
-				
-				Graphics *g = new Graphics (bitmap);
-				
-				g->DrawImage (bitmap_orignal, l_r, 0, 0, $a_width, $a_height, UnitPixel, image_attributes);
-  				delete g;
-				
-				Graphics *g_dc = Graphics::FromHDC ((HDC)$a_dc);
-				g_dc->DrawImage (bitmap, $a_draw_x, $a_draw_y);
-				
-				delete g_dc;
-				
-				delete bitmap;
-				delete bitmap_orignal;
-				
-				delete image_attributes;
-			}
-			]"
 		end
 
 invariant

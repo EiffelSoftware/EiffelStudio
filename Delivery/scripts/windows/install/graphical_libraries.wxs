@@ -2567,6 +2567,7 @@
 								<File Id="wel_tc_keydown.e" Name="WEL_TC~2.E" LongName="wel_tc_keydown.e" />
 								<File Id="wel_nm_custom_draw_e" Name="WED58B~1.E" LongName="wel_nm_custom_draw.e" />
 								<File Id="wel_xform_e" LongName="wel_xform.e" Name="WEL_XF~1.E" />
+								<File Id="wel_color_matrix_e" Name="WEL_CO~3.E" LongName="wel_color_matrix.e" />
 							</Component>
 						</Directory>
 						<Directory Id="messages" Name="messages">

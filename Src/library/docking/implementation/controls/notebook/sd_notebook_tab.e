@@ -65,7 +65,6 @@ feature {NONE}  -- Initlization
 			-- Initialize actions
 		do
 			pointer_button_press_actions.extend (agent on_pointer_press)
-			pointer_double_press_actions.extend (agent on_double_press)
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -268,12 +267,6 @@ feature {NONE}  -- Implmentation for drag action
 			-- If pointer button pressed?
 
 feature {NONE}  -- Implementation agents
-
-	on_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Handle pointer double clicked actions.
-		do
-			pointer_double_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-		end
 
 	on_expose is
 			-- Handle expose actions.

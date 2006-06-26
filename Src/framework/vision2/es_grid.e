@@ -12,7 +12,8 @@ class
 inherit
 	EV_GRID
 		redefine
-			initialize
+			initialize,
+			destroy
 		end
 
 	EV_SHARED_APPLICATION
@@ -584,6 +585,25 @@ feature -- Delayed cleaning
 			delayed_cleaning_exists
 		do
 			delayed_cleaning.set_delayed_action (v)
+		end
+
+feature -- Commands
+
+	destroy is
+			-- Destroy underlying native toolkit object.
+			-- Render `Current' unusable.
+		do
+			if delayed_columns_auto_resizing /= Void then
+				delayed_columns_auto_resizing.cancel_request
+			end
+			if delayed_last_column_auto_resizing /= Void then
+				delayed_last_column_auto_resizing.cancel_request
+			end
+			if delayed_cleaning /= Void then
+				delayed_cleaning.cancel_request
+			end
+
+			Precursor {EV_GRID}
 		end
 
 feature {NONE} -- Implementation

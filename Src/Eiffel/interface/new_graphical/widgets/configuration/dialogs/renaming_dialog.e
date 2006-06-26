@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 		require
 			initialized: is_initialized
 		local
-			l_tp: TEXT_PROPERTY [STRING]
+			l_tp: STRING_PROPERTY [STRING]
 			i: INTEGER
 		do
 			grid.clear

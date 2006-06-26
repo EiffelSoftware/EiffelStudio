@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CHOICE_PROPERTY [G]
 
 inherit
@@ -15,9 +15,6 @@ inherit
 			deactivate,
 			has_focus
 		end
-
-create
-	make_with_choices
 
 feature {NONE} -- Initialization
 

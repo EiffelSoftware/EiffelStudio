@@ -58,6 +58,8 @@ feature {NONE} -- Target names and descriptions
 	target_description_description: STRING is "Description of the target."
 	target_base_name: STRING is "Base target"
 	target_base_description: STRING is "Base target of this target."
+	target_abstract_name: STRING is "Abstract"
+	target_abstract_description: STRING is "Is this an abstract target that can not be used to compile."
 	target_compilation_type_name: STRING is "Compilation type"
 	target_compilation_type_description: STRING is "Type of compilation."
 	target_compilation_type_standard: STRING is "Standard (C/byte code)"

@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_icon,				overriden_flag)
 			Result.force (pixmaps.icon_pixmaps.class_overriden_uncompiled_readonly_icon,	readonly_flag | overriden_flag)
 			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_icon,				compiled_flag | deferred_flag | overriden_flag)
-			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_readonly_icon,		compiled_flag | readonly_flag | deferred_flag)
+			Result.force (pixmaps.icon_pixmaps.class_overriden_deferred_readonly_icon,		compiled_flag | readonly_flag | deferred_flag | overriden_flag)
 			Result.force (pixmaps.icon_pixmaps.class_override_normal_icon,					compiled_flag | overrides_flag)
 			Result.force (pixmaps.icon_pixmaps.class_override_readonly_icon,				compiled_flag | readonly_flag | overrides_flag)
 			Result.force (pixmaps.icon_pixmaps.class_override_frozen_icon,					compiled_flag | frozen_flag | overrides_flag)

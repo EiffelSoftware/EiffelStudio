@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ELLIPSIS_PROPERTY [G]
 
 inherit
@@ -15,9 +15,6 @@ inherit
 			initialize,
 			update_text_on_deactivation
 		end
-
-create
-	make
 
 feature {NONE} -- Initialization
 

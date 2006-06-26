@@ -75,4 +75,12 @@ feature {NONE} -- Implementation
 	dialog: PROPERTY_DIALOG [G]
 			-- Dialog to show to change the value.
 
+
+feature {NONE} -- Implementation
+
+	convert_to_data (a_string: like displayed_value): like value is
+			-- Convert displayed data into data.
+		do
+		end
+
 end

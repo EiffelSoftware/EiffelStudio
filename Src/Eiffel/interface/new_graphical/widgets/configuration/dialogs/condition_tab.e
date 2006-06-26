@@ -653,8 +653,8 @@ feature {NONE} -- Implementation
 			-- Fill custom conditions.
 		local
 			l_cust: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
-			l_text: TEXT_PROPERTY [STRING]
-			l_choice: CHOICE_PROPERTY [STRING]
+			l_text: STRING_PROPERTY [STRING]
+			l_choice: STRING_CHOICE_PROPERTY [STRING]
 			i: INTEGER
 			l_key: STRING
 		do

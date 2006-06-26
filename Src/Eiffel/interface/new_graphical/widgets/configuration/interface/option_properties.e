@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			properties_not_void: properties /= Void
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
-			l_string_prop: TEXT_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY [STRING_32]
 		do
 			properties.add_section (section_general)
 

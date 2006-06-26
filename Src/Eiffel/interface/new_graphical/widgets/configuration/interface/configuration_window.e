@@ -585,7 +585,7 @@ feature {NONE} -- Section tree selection agents
 		local
 			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
-			l_item: TEXT_PROPERTY [STRING]
+			l_item: STRING_PROPERTY [STRING]
 			l_btn: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb_grid: EV_VERTICAL_BOX
@@ -671,7 +671,7 @@ feature {NONE} -- Section tree selection agents
 		local
 			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
-			l_item: TEXT_PROPERTY [STRING]
+			l_item: STRING_PROPERTY [STRING]
 			l_btn: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb_grid: EV_VERTICAL_BOX
@@ -1084,9 +1084,9 @@ feature {NONE} -- Implementation
 	initialize_properties_system is
 			-- Initialize `properties' for system settings.
 		local
-			l_string_prop: TEXT_PROPERTY [STRING]
+			l_string_prop: STRING_PROPERTY [STRING]
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_choice_prop: CHOICE_PROPERTY [STRING_32]
+			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
 			l_targ_ord: ARRAYED_LIST [CONF_TARGET]
 			l_targets, l_targets_none: ARRAYED_LIST [STRING_32]
 			l_osl_prop: LIST_PROPERTY
@@ -1167,9 +1167,9 @@ feature {NONE} -- Implementation
 		require
 			current_target: current_target /= Void
 		local
-			l_string_prop: TEXT_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY [STRING_32]
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_choice_prop: CHOICE_PROPERTY [STRING_32]
+			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
 			l_root_prop: DIALOG_PROPERTY [CONF_ROOT]
 			l_version_prop: DIALOG_PROPERTY [CONF_VERSION]
 			l_file_rule_prop: FILE_RULE_PROPERTY
@@ -1384,7 +1384,7 @@ feature {NONE} -- Implementation
 			l_dir_prop: DIRECTORY_PROPERTY
 			l_file_prop: FILE_PROPERTY
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
-			l_prop: TEXT_PROPERTY [STRING_32]
+			l_prop: STRING_PROPERTY [STRING_32]
 		do
 			current_external := an_external
 			properties.reset
@@ -1458,7 +1458,7 @@ feature {NONE} -- Implementation
 			l_mls_prop: MULTILINE_STRING_PROPERTY
 			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
-			l_prop: TEXT_PROPERTY [STRING_32]
+			l_prop: STRING_PROPERTY [STRING_32]
 			l_bool_prop: BOOLEAN_PROPERTY
 		do
 			current_task := a_task
@@ -1532,7 +1532,7 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		local
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_text_prop: TEXT_PROPERTY [STRING]
+			l_text_prop: STRING_PROPERTY [STRING]
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
@@ -1822,8 +1822,8 @@ feature {NONE} -- Implementation
 		require
 			current_target: current_target /= Void
 		local
-			l_string_prop: TEXT_PROPERTY [STRING_32]
-			l_choice_prop: CHOICE_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY [STRING_32]
+			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
 			l_extends: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_pf_choices: ARRAYED_LIST [STRING_32]

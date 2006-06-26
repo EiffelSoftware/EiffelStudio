@@ -19,7 +19,8 @@ inherit
 			icon,
 			child_type,
 			grid_item,
-			child_grid_items
+			child_grid_items,
+			name_matcher
 		end
 
 	EB_SHARED_PREFERENCES
@@ -216,6 +217,12 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	name_matcher: COMPLETION_NAME_MATCHER is
+			-- Name matcher
+		once
+			create {WILD_COMPLETION_NAME_MATCHER}Result
+		end
 
 	return_type: TYPE_A
 			-- Associated feature's return type

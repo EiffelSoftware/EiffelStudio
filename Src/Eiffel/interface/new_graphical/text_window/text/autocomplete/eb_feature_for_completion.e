@@ -165,16 +165,14 @@ feature -- Comparison
 
 	begins_with (s: STRING): BOOLEAN is
 			-- Does this feature name begins with `s'?
-		local
-			lower_s: STRING
 		do
 			if show_disambiguated_name then
 				Result := Precursor {EB_NAME_FOR_COMPLETION} (s)
 			else
-				if name.count >= s.count then
-					lower_s := s.as_lower
-					Result := name.as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+				if name_matcher = Void then
+					create name_matcher_internal
 				end
+				Result := name_matcher.prefix_string (s, name)
 			end
 		end
 

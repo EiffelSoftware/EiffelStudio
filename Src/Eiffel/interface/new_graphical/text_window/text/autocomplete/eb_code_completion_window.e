@@ -505,13 +505,13 @@ feature -- Recyclable
 feature {NONE} -- Implementation
 
 	on_char (character_string: STRING_32) is
-   			-- Process displayable character key press event.
-   		local
-   			c: CHARACTER
-   		do
+			-- Process displayable character key press event.
+		local
+			c: CHARACTER
+		do
 			if character_string.count = 1 then
 				c := character_string.item (1).to_character_8
-				if c.is_alpha or c.is_digit or c = '_' then
+				if c.is_alpha or c.is_digit or c = '_' or c = '*' or c = '?' then
 					buffered_input.append_character (c)
 					code_completable.handle_character (c)
 					select_closest_match

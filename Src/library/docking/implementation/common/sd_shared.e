@@ -289,7 +289,7 @@ feature -- Constants
 	Resize_bar_width_height: INTEGER is 5
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
 
-	Title_bar_height: INTEGER is 16
+	Title_bar_height: INTEGER is 18
 			-- Size of zone's title bar.
 
 	Zone_minmum_width: INTEGER is
@@ -352,7 +352,7 @@ feature -- Constants
 	Feedback_tab_width: INTEGER is 60
 			-- When user dragging, the width of feedback rectangle for tab.
 
-	Floating_title_bar_height: INTEGER is 13
+	Floating_title_bar_height: INTEGER is 15
 			-- Height of SD_FLOATING_TOOL_BAR_ZONE's title bar.
 
 	Editor_place_holder_content_name: STRING is "docking manager editor place holder"

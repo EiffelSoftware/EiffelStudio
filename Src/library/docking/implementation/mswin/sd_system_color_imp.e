@@ -43,10 +43,9 @@ feature -- Querys
 	focused_selection_color: EV_COLOR is
 			-- Redefine
 		local
-			l_grid: EV_GRID
+			l_pointer: POINTER
 		do
-			create l_grid
-			Result := l_grid.focused_selection_color
+			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_highlight)
 		end
 
 	focused_title_text_color: EV_COLOR is
@@ -60,10 +59,9 @@ feature -- Querys
 	non_focused_selection_color: EV_COLOR is
 			-- Redefine
 		local
-			l_grid: EV_GRID
+			l_pointer: POINTER
 		do
-			create l_grid
-			Result := l_grid.non_focused_selection_color
+			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_btnface)
 		end
 
 	non_focused_selection_title_color: EV_COLOR is

@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 	c_gdip_free (a_gdip_object: POINTER) is
 			-- Free `a_gdip_object' memory.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

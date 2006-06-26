@@ -35,7 +35,7 @@ feature -- C externals
 		require
 			support: is_gdi_plus_installed
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

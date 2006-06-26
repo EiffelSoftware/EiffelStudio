@@ -1,6 +1,11 @@
 /*
 indexing
-description: "WEL: library of reusable components for Windows."
+	description: "[
+			WEL: library of reusable components for Windows.
+			Custom wrapper of GDI+ runtime and structures as most C compilers do not come with
+			the `gdiplus.h' header file handy. The code below gives enough to use GDI+ through
+			DLL calls.
+		]"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

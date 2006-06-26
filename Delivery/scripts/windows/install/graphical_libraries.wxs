@@ -3121,7 +3121,7 @@
 										<File Id="rebarinfo.h" Name="REBARI~1.H" LongName="rebarinfo.h" />
 										<File Id="lvcolumn.h" Name="lvcolumn.h" />
 										<File Id="logpen.h" Name="logpen.h" />
-										<File Id="gdiplus.h" Name="gdiplus.h" />
+										<File Id="wel_gdi_plus.h" Name="WEL_GD~1.H" LongName="wel_gdi_plus.h" />
 										<File Id="wel_disk_space.h" Name="WEL_DI~1.H" LongName="wel_disk_space.h" />
 									</Component>
 								</Directory>

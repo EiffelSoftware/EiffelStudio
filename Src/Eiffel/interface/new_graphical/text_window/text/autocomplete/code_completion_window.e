@@ -287,14 +287,12 @@ feature {NONE} -- Events handling
    		do
 			if character_string.count = 1 then
 				c := character_string.item (1).to_character_8
-				if c.is_alpha or c.is_digit or c = '_' then
+				if code_completable.unwanted_characters.item (c.code) then
 					buffered_input.append_character (c)
 					code_completable.handle_character (c)
 					create c_name.make (buffered_input)
 					select_closest_match
-				elseif c = ' ' and ev_application.ctrl_pressed then
-						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
-				elseif not code_completable.unwanted_characters.item (c.code) then
+				else
 					close_and_complete
 					code_completable.handle_character (c)
 					exit
@@ -647,7 +645,7 @@ feature {NONE} -- Implementation
 			full_list_not_void: full_list /= Void
 		local
 			l_count: INTEGER
-			match_item: like name_type
+			match_item, parent_item: like name_type
 			row_index: INTEGER
 			l_upper: INTEGER
 			l_tree_view: BOOLEAN
@@ -677,30 +675,38 @@ feature {NONE} -- Implementation
 				l_count > l_upper
 			loop
 				match_item := matches.item (l_count)
-
+				parent_item := Void
 				if match_item.has_parent then
-					match_item := match_item.parent
+					parent_item := match_item.parent
+				else
+					if not match_item.has_child then
+						l_row := choice_list.row (row_index)
+						l_row.set_data (match_item)
+						row_index := row_index + 1
+					else
+						parent_item := match_item
+					end
 				end
-				if not l_parents_inserted.has (match_item) then
+				if parent_item /= Void and then not l_parents_inserted.has (parent_item) then
 					l_row := choice_list.row (row_index)
-					l_row.set_data (match_item)
+					l_row.set_data (parent_item)
 					row_index := row_index + 1
-					if match_item.has_child then
+					if parent_item.has_child then
 						if not l_tree_view then
 							l_tree_view := True
 							choice_list.enable_tree
 						end
 						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent match_item.set_is_expanded ((True)))
+						l_row.expand_actions.extend (agent parent_item.set_is_expanded (True))
 						l_row.expand_actions.extend (agent on_row_expand (l_row))
-						l_row.collapse_actions.extend (agent match_item.set_is_expanded ((False)))
+						l_row.collapse_actions.extend (agent parent_item.set_is_expanded (False))
 						l_row.collapse_actions.extend (agent on_row_collapse (l_row))
-						if match_item.is_expanded and then l_row.is_expandable then
+						if parent_item.is_expanded and then l_row.is_expandable then
 							l_row.expand
 							row_index := row_index + l_row.subrow_count
 						end
 					end
-					l_parents_inserted.force (match_item, match_item)
+					l_parents_inserted.force (parent_item, parent_item)
 				end
 				l_count := l_count + 1
 			end
@@ -1022,7 +1028,11 @@ feature {NONE} -- Implementation
 							-- list if there are mulitple items available
 						if automatically_complete_words then
 							if choice_list.row_count = 1 then
-								show_needed := False
+								if choice_list.row (1).is_expandable and then choice_list.row (1).subrow_count > 1 then
+									show_needed := True
+								else
+									show_needed := False
+								end
 							elseif choice_list.row_count = 2 then
 								if choice_list.row (1).is_expandable and then choice_list.row (2).is_selected then
 									show_needed := False
@@ -1085,8 +1095,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- String matching
 
+	pos_of_first (table: like full_list): INTEGER is
+		require
+			table_not_void: table /= Void
+		local
+			i, upper: INTEGER
+			end_loop: BOOLEAN
+		do
+			from
+				i := table.lower
+				upper := table.upper
+			until
+				i > upper or end_loop
+			loop
+				if table.item (i).begins_with (buffered_input) then
+					end_loop := True
+					Result := i
+				end
+				i := i + 1
+			end
+		end
+
 	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER is
-			--
 		local
 			low, up, mid: INTEGER
 		do
@@ -1141,27 +1171,36 @@ feature {NONE} -- String matching
 		local
 			l_row: EV_GRID_ROW
 			l_name: like name_type
-			for_search: like name_type
+			l_index: INTEGER
 		do
 			if rebuild_list_during_matching then
 				current_index := 1
 				if choice_list.row_count > 0 then
-					if choice_list.row (1).subrow_count > 0 then
-						l_name ?= choice_list.row (1).item (1).data
-						check
-							l_name_not_void: l_name /= Void
-						end
+					l_name ?= choice_list.row (1).data
+					check
+						l_name_not_void: l_name /= Void
+					end
+					if l_name.has_child then
+						on_row_expand (choice_list.row (1))
 						if not l_name.begins_with (buffered_input) then
+							choice_list.row (1).expand
 							current_index := 2
 						end
 					end
 				end
 			else
 				if not buffered_input.is_empty then
-					create for_search.make (buffered_input)
-					current_index := pos_of_first_greater (full_list, for_search)
+					current_index := pos_of_first (full_list)
 					if current_index > full_list.lower and current_index < full_list.upper then
 						l_name := full_list.item (current_index)
+						if l_name.has_parent then
+							l_index := grid_row_by_data (l_name.parent)
+							check
+								l_index_valid: l_index > 0
+							end
+							l_row := choice_list.row (l_index)
+							l_row.expand
+						end
 						current_index := grid_row_by_data (l_name)
 					end
 				end
@@ -1175,9 +1214,6 @@ feature {NONE} -- String matching
 				choice_list.row (current_index).enable_select
 				if is_displayed then
 					l_row := choice_list.selected_rows.first
-					if l_row.parent_row /= Void and then l_row.parent_row.is_expandable and then not l_row.parent_row.is_expanded then
-						l_row.parent_row.expand
-					end
 					choice_list.selected_rows.first.ensure_visible
 				end
 			end
@@ -1189,24 +1225,34 @@ feature {NONE} -- String matching
 			full_list_not_void: full_list /= Void
 		local
 			cnt: INTEGER
-			for_search: like name_type
-			l_index_offset: INTEGER
+			l_upper: INTEGER
+			i: INTEGER
 		do
-			create Result.make (2, 1)
+			create Result.make (1, 20)
 			if a_name /= Void and then not a_name.is_empty then
-					-- Matches are filtered according to `buffered_input'
 				from
-					create for_search.make (a_name)
-					l_index_offset := pos_of_first_greater (full_list, for_search) - 1
+					i := full_list.lower
+					l_upper := full_list.upper
 				until
-					full_list.upper < (l_index_offset + cnt + 1) or else not full_list.item (l_index_offset + cnt + 1).begins_with (a_name)
+					i > l_upper
 				loop
-					cnt := cnt + 1
+					if full_list.item (i).begins_with (a_name) then
+						cnt := cnt + 1
+						if cnt = 1 then
+							index_offset := i
+						end
+						if cnt > Result.upper then
+							Result.conservative_resize (1, Result.upper * 2)
+						end
+						Result.put (full_list.item (i), cnt)
+					end
+					i := i + 1
 				end
-				if cnt > 0 then
-					Result := full_list.subarray (l_index_offset + 1, l_index_offset + cnt)
+				if cnt = 0 then
+					create Result.make (2, 1)
+				else
+					Result := Result.subarray (1, cnt)
 				end
-				index_offset := l_index_offset
 			else
 					-- Matches are just all matches
 				Result := full_list.subarray (1, full_list.count)

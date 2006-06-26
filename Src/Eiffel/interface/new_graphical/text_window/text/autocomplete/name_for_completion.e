@@ -118,6 +118,12 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	name_matcher: COMPLETION_NAME_MATCHER is
+			-- Matcher
+		do
+			Result := name_matcher_internal
+		end
+
 feature -- Status report
 
 	has_child: BOOLEAN is
@@ -132,11 +138,18 @@ feature -- Status report
 			Result := parent /= Void
 		end
 
-
 	is_expanded: BOOLEAN
 			-- Is expanded?
 
 feature -- Element change
+
+	set_name_matcher (a_matcher: COMPLETION_NAME_MATCHER) is
+			-- Set `name_matcher' with `a_matcher'.
+		do
+			name_matcher_internal := a_matcher
+		ensure
+			name_matcher_is_set: name_matcher_internal = a_matcher
+		end
 
 	set_icon (a_icon: EV_PIXMAP) is
 			-- Set `icon_internal' with `a_icon'.
@@ -233,13 +246,11 @@ feature -- Comparison
 			-- Does this feature name begins with `s'?
 		require
 			s_not_void: s /= Void
-		local
-			lower_s: STRING
 		do
-			if full_name.count >= s.count then
-				lower_s := s.as_lower
-				Result := full_name.as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+			if name_matcher = Void then
+				create name_matcher_internal
 			end
+			Result := name_matcher.prefix_string (s, full_name)
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Children
@@ -261,6 +272,8 @@ feature {NONE} -- Implementation
 
 	child_type: NAME_FOR_COMPLETION;
 			-- Child type
+
+	name_matcher_internal: like name_matcher;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

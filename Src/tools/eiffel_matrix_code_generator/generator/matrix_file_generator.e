@@ -35,6 +35,40 @@ feature -- Access
 	generated_file_name: STRING
 			-- Location of generated file
 
+feature {NONE} -- Access
+
+	buffer_suffix: STRING is
+			-- Retrieves buffer feature name suffix
+		local
+			l_suffix: like suffix
+		once
+			l_suffix := suffix
+			if l_suffix /= Void then
+				create  Result.make (default_buffer_suffix.count + l_suffix.count)
+				Result.append (l_suffix)
+				Result.append (default_buffer_suffix)
+			else
+				Result := default_buffer_suffix
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	feature_suffix: STRING is
+			-- Retrieves buffer feature name suffix
+		local
+			l_suffix: like suffix
+		once
+			Result := suffix
+			if Result = Void then
+				Result := default_feature_suffix
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Basic Operations
 
 	generate (a_doc: INI_DOCUMENT; a_frame: STRING; a_class_name: STRING; a_output: STRING) is
@@ -107,6 +141,13 @@ feature -- Basic Operations
 				error_manager.set_last_error (create {ERROR_MISSING_INI_FILE_PROPERTIES}.make_with_context ([height_property]), False)
 				l_hgt := default_nan
 			end
+			l_prop := a_doc.property_of_name (suffix_property, True)
+			if l_prop /= Void and then not l_prop.value.is_empty then
+				suffix := l_prop.value
+			else
+				suffix := Void
+			end
+
 			if a_doc.property_of_name (access_property, True) /= Void then
 				error_manager.set_last_error (create {ERROR_MISSING_INI_RESERVED_PROPERTY}.make_with_context ([access_property]), False)
 			end
@@ -278,8 +319,8 @@ feature {NONE} -- Processing
 						l_full_name.append (l_name)
 						l_full_name := format_eiffel_name (l_full_name)
 
-						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_template, [l_full_name, l_lit.name, x, y]))
-						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_buffer_template, [l_full_name, l_lit.name, x, y]))
+						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_template, [l_full_name, l_lit.name, x, y, feature_suffix]))
+						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_buffer_template, [l_full_name, l_lit.name, x, y, buffer_suffix]))
 					else
 						error_manager.add_warning (create {WARNING_OUT_OF_BOUNDS}.make_with_context ([l_lit.name, "item"]))
 					end
@@ -400,6 +441,9 @@ feature {NONE} -- Implementation
 	current_y: INTEGER
 			-- Current Y position in pixmap file
 
+	suffix: STRING
+			-- Generated feature name suffix
+
 	frozen string_formatter: STRING_FORMATTER
 			-- Access to string formatter
 		once
@@ -408,11 +452,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant Property Names
 
+	default_buffer_suffix: STRING is "_buffer"
+	default_feature_suffix: STRING is "_icon"
+
+feature {NONE} -- Constant Property Names
+
 	class_name_property: STRING is "name"
 	pixel_width_property: STRING is "pixel_width"
 	pixel_height_property: STRING is "pixel_height"
 	width_property: STRING is "width"
 	height_property: STRING is "height"
+	suffix_property: STRING is "suffix"
 	access_property: STRING is "access"
 	implementation_property: STRING is "implementation"
 
@@ -446,14 +496,14 @@ feature {NONE} -- Tokens
 
 feature {NONE} -- Constant Templates
 
-	access_template: STRING is "%T{1}_icon: EV_PIXMAP is%N%
+	access_template: STRING is "%T{1}{5}: EV_PIXMAP is%N%
 		%%T%T%T-- Access to '{2}' pixmap.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixmap_from_coords ({3}, {4})%N%
 		%%T%Tend%N%N"
 			-- Template used for access features
 
-	access_buffer_template: STRING is "%T{1}_buffer: EV_PIXEL_BUFFER is%N%
+	access_buffer_template: STRING is "%T{1}{5}: EV_PIXEL_BUFFER is%N%
 		%%T%T%T-- Access to '{2}' pixmap pixel buffer.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixel_buffer_from_coords ({3}, {4})%N%
@@ -465,6 +515,7 @@ invariant
 	width_non_negative: width >= 0
 	current_x_non_negative: current_x >= 0
 	current_y_non_negative: current_y >= 0
+	not_suffix_is_empty: suffix /= Void implies not suffix.is_empty
 	generated_file_name_not_empty: generated_file_name /= Void implies not generated_file_name.is_empty
 
 indexing
@@ -498,4 +549,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class {MATRIX_FILE_GENERATOR}

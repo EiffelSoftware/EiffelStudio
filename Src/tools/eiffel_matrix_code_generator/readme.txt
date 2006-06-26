@@ -30,11 +30,14 @@ width       : Matrix width in the number of tiles, *not* pixel.
 height      : Matrix width in the number of tiles, *not* pixel.
               Note: Must be greater than 0!
 
-An optional 'name' property can be set to indicate the name of the generate class. This can be set or overridden
-via the '-class' command-line switch.
+Optional 'name' and 'suffix' properties can be set to indicate the name of the generate class and its contained
+features. The 'name' property can be set or overridden via the '-class' command-line switch.
 
 name        : Name of the class to generate
               Note: If an invalid Eiffel class name is specified the name will be formatted.
+
+suffix      : Suffix to give generated feature names
+              Note: If an invalid Eiffel feature name suffix is specified the suffix will be formatted.
 
 2.3 Sections
 ------------

@@ -912,8 +912,8 @@
 									<File Id="mem_info.e" Name="mem_info.e" />
 									<File Id="file.e" Name="file.e" />
 									<File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
-									<File Id="real_32_ref_e" Name="REAL_3~1.E" LongName="real_32_ref.e" />
-									<File Id="real_64_ref_e" Name="REAL_6~1.E" LongName="real_64_ref.e" />
+									<File Id="real_32_ref_e2" Name="REAL_3~1.E" LongName="real_32_ref.e" />
+									<File Id="real_64_ref_e2" Name="REAL_6~1.E" LongName="real_64_ref.e" />
 									<File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
 									<File Id="special.e" Name="special.e" />
 									<File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />

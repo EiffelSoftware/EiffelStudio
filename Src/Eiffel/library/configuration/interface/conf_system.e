@@ -71,6 +71,9 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only
 
+	directory: STRING
+			-- Directory where the configuration file is stored in platform specific format.
+
 	file_name: STRING
 			-- File name of config file.
 
@@ -86,13 +89,23 @@ feature -- Access, in compiled only
 feature -- Update, in compiled only
 
 	set_file_name (a_file_name: like file_name) is
-			-- Set `file_name' to `a_file_name'.
+			-- Set `file_name' to `a_file_name' and set `directory'.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
+		local
+			i, cnt: INTEGER
 		do
 			file_name := a_file_name
+
+			cnt := file_name.count
+			i := file_name.last_index_of (operating_environment.directory_separator, cnt)
+			if i <= 0 then
+				i := cnt
+			end
+			directory := file_name.substring (1, i-1)
 		ensure
 			name_set: file_name = a_file_name
+			directory_set: directory /= Void
 		end
 
 	set_file_date is

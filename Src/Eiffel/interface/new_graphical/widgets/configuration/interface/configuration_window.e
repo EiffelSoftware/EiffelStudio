@@ -839,40 +839,59 @@ feature {NONE} -- Implementation
 			section_tree.extend (l_item)
 			l_item.enable_select
 			l_item.select_actions.extend (agent show_properties_system)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.project_settings_system_icon)
 
 			create l_item.make_with_text (section_target)
 			section_tree.extend (l_item)
-			l_item.select_actions.extend (agent show_properties_target_general)
+			l_item.select_actions.extend (agent prepare_target_configuration_space)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
+			create l_subitem.make_with_text (section_general)
+			l_item.extend (l_subitem)
+			l_subitem.select_actions.extend (agent show_properties_target_general)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_target_icon)
 			create l_subitem.make_with_text (section_assertions)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_assertions)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_assertions_icon)
 			create l_subitem.make_with_text (section_groups)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_groups)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_groups_icon)
 
 			create l_subitem.make_with_text (section_advanced)
 			l_item.extend (l_subitem)
-			l_subitem.select_actions.extend (agent show_properties_target_advanced)
+			l_subitem.select_actions.extend (agent prepare_target_configuration_space)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 			l_item.expand
 			l_item := l_subitem
+			create l_subitem.make_with_text (section_general)
+			l_item.extend (l_subitem)
+			l_subitem.select_actions.extend (agent show_properties_target_advanced)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_advanced_icon)
 			create l_subitem.make_with_text (section_warning)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_warning)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_warnings_icon)
 			create l_subitem.make_with_text (section_debug)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_debugs)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_debug_icon)
 			create l_subitem.make_with_text (section_external)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_externals)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_externals_icon)
 			create l_subitem.make_with_text (section_tasks)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_tasks)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_tasks_icon)
 			create l_subitem.make_with_text (section_variables)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_variables)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_variables_icon)
 			create l_subitem.make_with_text (section_mapping)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_mapping)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_type_mappings_icon)
 
 			section_tree.set_minimum_width (section_tree_width)
 		ensure
@@ -881,7 +900,11 @@ feature {NONE} -- Implementation
 
 	prepare_target_configuration_space is
 			-- Add space for target configuration and necessary elements for it.
+		local
+			l_refresh: BOOLEAN
 		do
+			l_refresh := is_refreshing
+			is_refreshing := True
 			if target_configuration_space = Void then
 				configuration_space.wipe_out
 				append_target_selection (configuration_space)
@@ -891,6 +914,7 @@ feature {NONE} -- Implementation
 			else
 				target_configuration_space.wipe_out
 			end
+			is_refreshing := l_refresh
 		ensure
 			target_configuration_space: target_configuration_space /= Void
 		end
@@ -1210,6 +1234,12 @@ feature {NONE} -- Implementation
 				l_choice_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_parent_by_name))
 				properties.add_property (l_choice_prop)
 			end
+
+				-- abstract target
+			create l_bool_prop.make_with_value (target_abstract_name, current_target.is_abstract)
+			l_bool_prop.set_description (target_abstract_description)
+			l_bool_prop.change_value_actions.extend (agent current_target.set_abstract)
+			properties.add_property (l_bool_prop)
 
 				-- compilation type
 			create l_choice_prop.make_with_choices (target_compilation_type_name, <<target_compilation_type_standard, target_compilation_type_dotnet>>)

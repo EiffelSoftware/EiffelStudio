@@ -44,12 +44,12 @@ feature -- Output
 			end
 			a_text_formatter.add ("%"")
 			a_text_formatter.add_new_line
-			a_text_formatter.add ("Second class: ")
-			a_text_formatter.add_classi (l_cl, second.name)
 			l_cl ?= second
 			check
 				class_i: l_cl /= Void
 			end
+			a_text_formatter.add ("Second class: ")
+			a_text_formatter.add_classi (l_cl, second.name)
 			a_text_formatter.add_new_line
 			l_ext ?= second
 			if l_ext /= Void then

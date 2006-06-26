@@ -125,6 +125,7 @@ feature -- Commands
 
 				if an_old_assemblies /= Void then
 					old_assemblies := an_old_assemblies
+					check_old_assemblies_in_cache
 				else
 					create old_assemblies.make (0)
 				end
@@ -783,6 +784,42 @@ feature {NONE} -- helpers
 				end
 			end
 		end
+
+	check_old_assemblies_in_cache is
+			-- Check if all guids from `old_assemblies' are still in the cache.
+		require
+			old_assemblies_not_void: old_assemblies /= Void
+			cache_content_not_void: cache_content /= Void
+		local
+			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_guids: SEARCH_TABLE [STRING]
+			i, cnt: INTEGER
+		do
+				-- build list of guids in cache
+			from
+				l_assemblies := cache_content.assemblies
+				create l_guids.make (l_assemblies.count)
+				i := l_assemblies.lower
+				cnt := l_assemblies.upper
+			until
+				i > cnt
+			loop
+				l_guids.force (l_assemblies.item (i).unique_id)
+				i := i + 1
+			end
+
+			from
+				old_assemblies.start
+			until
+				old_assemblies.after
+			loop
+				if not l_guids.has (old_assemblies.item_for_iteration.guid) then
+					add_error (create {CONF_METADATA_CORRUPT})
+				end
+				old_assemblies.forth
+			end
+		end
+
 
 	is_cache_up_to_date (an_assembly: CONSUMED_ASSEMBLY): BOOLEAN is
 			-- Are the cache information for `an_assembly' up to date?

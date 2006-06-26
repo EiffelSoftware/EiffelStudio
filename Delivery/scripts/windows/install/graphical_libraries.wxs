@@ -749,7 +749,7 @@
 						<Directory Id="physics" Name="physics">
 							<Component Id="physics" Guid="3E835E6F-20C9-4de5-A240-6CB382E4BF46">
 								<File Id="eg_force_directed_layout_e" Name="EG_FOR~1.E" LongName="eg_force_directed_layout.e" />
-								<File Id="eg_force_directed_physics_properties_e" Name="EG_FOR~2.E" LongName="eg_force_directed_physics_properties.e" />
+								<File Id="eg_force_directed_physics_prop" Name="EG_FOR~2.E" LongName="eg_force_directed_physics_properties.e" />
 								<File Id="eg_particle_e" Name="EG_PAR~1.E" LongName="eg_particle.e" />
 								<File Id="eg_particle_simulation_bh_e" Name="EG_PAR~2.E" LongName="eg_particle_simulation_bh.e" />
 								<File Id="eg_particle_simulation_n2_e" Name="EG_PAR~3.E" LongName="eg_particle_simulation_n2.e" />
@@ -2486,7 +2486,7 @@
 								<File Id="wel_nm_tree_view.e" Name="WE2993~1.E" LongName="wel_nm_tree_view.e" />
 								<File Id="wel_hd_item.e" Name="WEL_HD~2.E" LongName="wel_hd_item.e" />
 								<File Id="wel_find_argument.e" Name="WEL_FI~2.E" LongName="wel_find_argument.e" />
-								<File Id="wel_combo_box_ex_item.e" Name="WEL_CO~3.E" LongName="wel_combo_box_ex_item.e" />
+								<File Id="wel_combo_box_ex_item.e" Name="WEL_CO~1.E" LongName="wel_combo_box_ex_item.e" />
 								<File Id="wel_window_pos.e" Name="WEL_WI~5.E" LongName="wel_window_pos.e" />
 								<File Id="wel_tree_view_insert_struct.e" Name="WEL_TR~2.E" LongName="wel_tree_view_insert_struct.e" />
 								<File Id="wel_registry_key_value.e" Name="WEL_RE~4.E" LongName="wel_registry_key_value.e" />
@@ -2507,7 +2507,7 @@
 								<File Id="wel_lv_keydown.e" Name="WEL_LV~3.E" LongName="wel_lv_keydown.e" />
 								<File Id="wel_list_view_search_info.e" Name="WEL_LI~3.E" LongName="wel_list_view_search_info.e" />
 								<File Id="wel_imalloc.e" Name="WEL_IM~2.E" LongName="wel_imalloc.e" />
-								<File Id="wel_compare_item_struct.e" Name="WEL_CO~6.E" LongName="wel_compare_item_struct.e" />
+								<File Id="wel_compare_item_struct.e" Name="WEL_CO~2.E" LongName="wel_compare_item_struct.e" />
 								<File Id="wel_character_range.e" Name="WEL_CH~3.E" LongName="wel_character_range.e" />
 								<File Id="wel_tv_hittestinfo.e" Name="WEL_TV~5.E" LongName="wel_tv_hittestinfo.e" />
 								<File Id="wel_tool_bar_button.e" Name="WEL_TO~4.E" LongName="wel_tool_bar_button.e" />

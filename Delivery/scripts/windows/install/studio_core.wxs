@@ -19,12 +19,12 @@
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" Type="string" />
-		</Component>
-		<Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
-			<Registry Root="HKCU" Key="Software\ISE\Eiffel57\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
-			<Registry Root="HKCU" Key="Software\ISE\Eiffel57\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
-		</Component>
-		<Directory Id="DesktopFolder" Name="." />
+			</Component>
+			<Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
+				<Registry Root="HKCU" Key="Software\ISE\Eiffel57\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
+				<Registry Root="HKCU" Key="Software\ISE\Eiffel57\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
+			</Component>
+			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.7">
 					<Component Id="EiffelStudio" Guid="96C73318-4E9A-414E-A2DE-222E40C1D981">
@@ -826,7 +826,7 @@
 						<File Id="eiffel.chm" Name="eiffel.chm" KeyPath="yes">
 							<Shortcut Id="eiffel.chm1" Directory="Documentation" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
 						</File>
-			<Shortcut Id="ResourceBench_Documentation" Directory="Documentation" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
+						<Shortcut Id="ResourceBench_Documentation" Directory="Documentation" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
 					</Component>
 				</Directory>
 			</Directory>

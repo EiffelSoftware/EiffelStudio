@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create.
 		do
-			text := "Metadata cache corrupt!"
+			text := "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
 		end
 
 

@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 
 			append_margin (hb_out)
 
-			set_minimum_size (400, 325)
+			set_minimum_width (400)
 
 			show_actions.extend (agent name.set_focus)
 		end
@@ -211,9 +211,11 @@ feature {NONE} -- Actions
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
 				create l_dir.make (l_loc.evaluated_directory)
-				if l_dir.exists then
-					l_brows_dial.set_start_directory (l_dir.name)
-				end
+			else
+				create l_dir.make (target.system.directory)
+			end
+			if l_dir.exists then
+				l_brows_dial.set_start_directory (l_dir.name)
 			end
 
 			l_brows_dial.open_actions.extend (agent set_location (l_brows_dial))

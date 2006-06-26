@@ -651,15 +651,20 @@ feature {NONE} -- Implementation
 	complete_class is
 			-- Complete class name
 		local
-			ix: INTEGER
+			l_row: EV_GRID_ROW
+			l_name_item: NAME_FOR_COMPLETION
+			l_name: STRING
 		do
 			if not choice_list.selected_rows.is_empty then
 				if rebuild_list_during_matching then
-					ix := choice_list.selected_rows.first.index + index_offset
-				else
-					ix := choice_list.selected_rows.first.index
+					l_row := choice_list.selected_rows.first
+					l_name_item ?= l_row.data
+					check
+						l_name_item_not_void: l_name_item /= Void
+					end
+					l_name := l_name_item.insert_name
+					code_completable.complete_class_from_window (l_name, '%U', remainder)
 				end
-				code_completable.complete_class_from_window (sorted_names.item (ix), '%U', remainder)
 			else
 				if not buffered_input.is_empty then
 					code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)

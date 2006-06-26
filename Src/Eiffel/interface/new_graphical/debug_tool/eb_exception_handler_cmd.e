@@ -126,7 +126,7 @@ feature -- Handler dialog by code
 
 			create handler_dialog
 			handler_dialog.set_title (interface_names.m_dbg_exception_handler)
-			handler_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			handler_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create fr
 			create vb

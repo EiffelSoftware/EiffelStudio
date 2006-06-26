@@ -29,7 +29,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (interface_names.b_create_new_feature)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create vb
 			vb.set_padding (layout_constants.small_padding_size)
 			vb.set_border_width (layout_constants.default_border_size)
@@ -251,13 +251,13 @@ feature {NONE} -- Implementation
 			ok_clicked := False
 			hide
 		end
-		
+
 	set_focus_to_feature_selector is
-			-- Assign focus to the first enabled radio button selected within 
+			-- Assign focus to the first enabled radio button selected within
 		do
 			proc_button.selected_peer.set_focus
 		end
-		
+
 
 	feature_select: EV_FRAME
 			-- Containing of the radio buttons.

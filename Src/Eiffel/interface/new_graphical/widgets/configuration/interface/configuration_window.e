@@ -530,25 +530,25 @@ feature {NONE} -- Section tree selection agents
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_cluster_icon)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
 			l_tb_btn.set_tooltip (dialog_create_cluster_title)
 			l_tb_btn.select_actions.extend (agent add_cluster)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_override_cluster_icon)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
 			l_tb_btn.set_tooltip (dialog_create_override_title)
 			l_tb_btn.select_actions.extend (agent add_override)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_library_icon)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
 			l_tb_btn.set_tooltip (dialog_create_library_title)
 			l_tb_btn.select_actions.extend (agent add_library)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.add_reference_icon)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
 			l_tb_btn.set_tooltip (dialog_create_assembly_title)
 			l_tb_btn.select_actions.extend (agent add_assembly)
 

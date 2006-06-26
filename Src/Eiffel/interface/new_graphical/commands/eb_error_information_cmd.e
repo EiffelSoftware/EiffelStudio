@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			create hb
 			create current_dialog
 			current_dialog.set_title (Interface_names.t_Extended_explanation)
-			current_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			current_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create but.make_with_text (Interface_names.b_Close)
 			Layout_constants.set_default_size_for_button (but)

@@ -418,7 +418,7 @@ feature -- Graphical changes
 						set_expression_info ("Disabled")
 						set_expression_result_address (Void)
 						set_expression_result ("")
-						set_pixmap (Pixmaps.Icon_expression_disabled)
+						set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_disabled_icon)
 					elseif not expression.is_evaluated then
 						set_expression_info ("Unevaluated")
 						set_expression_result_address (Void)

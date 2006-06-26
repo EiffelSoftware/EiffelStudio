@@ -161,7 +161,7 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_padding (4)
 			l_ev_vertical_box_1.set_border_width (4)
 
-			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
+			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
@@ -510,13 +510,13 @@ feature{NONE} -- Actions
 					edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.view_editor_icon)
 				else
 					edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
-					edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
+					edit_cmd_detail_btn.set_pixmap (icon_pixmaps.general_add_icon)
 				end
 			else
 				run_btn.disable_sensitive
 				del_cmd_btn.disable_sensitive
 				edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
-				edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
+				edit_cmd_detail_btn.set_pixmap (icon_pixmaps.general_add_icon)
 			end
 		end
 

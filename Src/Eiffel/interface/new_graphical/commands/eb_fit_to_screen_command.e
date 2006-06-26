@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_fit_to_screen
+			Result := pixmaps.icon_pixmaps.diagram_fit_to_screen_icon
 		end
 
 	tooltip: STRING is

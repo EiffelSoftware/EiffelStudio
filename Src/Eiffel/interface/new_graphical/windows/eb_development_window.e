@@ -858,7 +858,7 @@ feature -- Window Properties
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing Current window.
 		do
-			Result := Pixmaps.Icon_development_window
+			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
 feature -- Pulldown Menus

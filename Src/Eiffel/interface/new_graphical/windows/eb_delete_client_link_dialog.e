@@ -21,7 +21,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all
@@ -34,13 +34,13 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is 
+	initialize is
 			-- Build the dialog box.
 		do
 			Precursor
 			cancelled := False
 			set_title (Interface_names.t_Diagram_delete_client_link)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
 			create cancel_button.make_with_text_and_action (Interface_names.b_cancel, agent cancel_action)
@@ -70,7 +70,7 @@ feature -- Access
 
 	ok_button: EV_BUTTON
 			-- Button with label "OK".
-			
+
 	cancel_button: EV_BUTTON
 			-- Button with label "Cancel".
 
@@ -97,7 +97,7 @@ feature -- Access
 			loop
 				Result.extend (tmp.item.text)
 				tmp.forth
-			end	
+			end
 		end
 
 feature -- Element change

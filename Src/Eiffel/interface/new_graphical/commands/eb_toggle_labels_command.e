@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_display_labels
+			Result := pixmaps.icon_pixmaps.diagram_show_labels_icon
 		end
 
 	description: STRING is

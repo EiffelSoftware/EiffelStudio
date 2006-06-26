@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				add_button.disable_sensitive
 			end
 			dialog.set_title (Interface_names.t_external_commands)
-			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
+			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.set_default_push_button (close_button)
 			dialog.set_default_cancel_button (close_button)
 			list.disable_multiple_selection

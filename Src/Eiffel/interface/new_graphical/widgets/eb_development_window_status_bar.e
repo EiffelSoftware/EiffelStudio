@@ -338,7 +338,7 @@ feature {NONE} -- Implementation: event handling
 			p: EV_PIXMAP
 		do
 			running_timer.set_interval (0)
-			p := Pixmaps.icon_application_paused
+			p := pixmaps.icon_pixmaps.debug_pause_icon
 			debugger_icon.set_background_color (debugger_cell.background_color)
 			debugger_icon.clear
 			debugger_icon.draw_pixmap (0, 0, p)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation: event handling
 			else
 				compilation_icon.set_background_color (debugger_cell.background_color)
 				compilation_icon.clear
-				compilation_icon.draw_pixmap (0, 0, Pixmaps.Icon_is_compiling)
+				compilation_icon.draw_pixmap (0, 0, pixmaps.icon_pixmaps.compile_animation_1_icon)
 			end
 			if Eiffel_project.Manager.has_edited_classes then
 				on_project_edited

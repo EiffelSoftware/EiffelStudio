@@ -77,7 +77,7 @@ feature {EV_ANY} -- Initialization
 		do
 			Precursor
 			set_title ("Project documentation")
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			set_default_settings
 			create vb
 			create button_bar

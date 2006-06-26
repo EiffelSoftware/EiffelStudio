@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 			Precursor
 			set_title (Interface_names.t_Diagram_history_tool)
-			set_icon_pixmap (pixmaps.icon_dialog_window)
+			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			set_minimum_size (200, 230)
 
 			create cancel_button.make_with_text_and_action (Interface_names.b_Close, agent close_action)

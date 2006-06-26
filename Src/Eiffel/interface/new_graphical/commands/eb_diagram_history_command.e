@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := Pixmaps.Icon_cmd_history
+			Result := pixmaps.icon_pixmaps.general_undo_history_icon
 		end
 
 	tooltip: STRING is

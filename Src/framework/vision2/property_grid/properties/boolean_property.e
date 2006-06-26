@@ -8,6 +8,9 @@ class
 
 inherit
 	CHOICE_PROPERTY [BOOLEAN]
+		redefine
+			convert_to_data
+		end
 
 create
 	make_with_value
@@ -20,6 +23,16 @@ feature {NONE} -- Initialization
 			make_with_choices (a_name, <<True, False>>)
 			disable_text_editing
 			set_value (a_value)
+		end
+
+feature {NONE} -- Implementation
+
+	convert_to_data (a_string: like displayed_value): like value is
+			-- Convert displayed data into data.
+		do
+			if a_string.is_boolean then
+				Result := a_string.to_boolean
+			end
 		end
 
 end

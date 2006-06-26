@@ -147,15 +147,15 @@ feature -- Miscellaneous
 
 			inspect app_exec.breakpoint_status (pebble_routine, pebble_index)
 			when 0 then
-				pixmaps := icons.icon_group_bp_slot
+				pixmaps := icon_group_bp_slot
 			when 1 then
-				pixmaps := icons.icon_group_bp_enabled
+				pixmaps := icon_group_bp_enabled
 			when -1 then
-				pixmaps := icons.icon_group_bp_disabled
+				pixmaps := icon_group_bp_disabled
 			when 2 then
-				pixmaps := icons.icon_group_bp_enabled_condition
+				pixmaps := icon_group_bp_enabled_condition
 			when -2 then
-				pixmaps := icons.icon_group_bp_disabled_condition
+				pixmaps := icon_group_bp_disabled_condition
 			end
 
 			Result := pixmaps @ index
@@ -184,10 +184,50 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	icons: EB_SHARED_PIXMAPS_12 is
+	frozen icons: ES_PIXMAPS_12X12 is
 			-- Breakpoint icon resources
 		once
-			create Result
+			Result := shared_pixmaps.small_pixmaps
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_group_bp_slot: ARRAY [EV_PIXMAP] is
+			-- Regular (no modifiers) breakpoint icon group.
+		once
+			Result := <<icons.bp_slot_icon, icons.bp_slot_other_frame_icon, icons.bp_slot_current_line_icon>>
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_group_bp_enabled: ARRAY [EV_PIXMAP] is
+			-- Enabled breakpoint icon group.
+		once
+			Result := <<icons.bp_enabled_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_group_bp_disabled: ARRAY [EV_PIXMAP] is
+			-- Disabled breakpoint icon group.
+		once
+			Result := <<icons.bp_disabled_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP] is
+			-- Conditional, enabled breakpoint icon group.
+		once
+			Result := <<icons.bp_enabled_conditional_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP] is
+			-- Conditional, disabled breakpoint icon group.
+		once
+			Result := <<icons.bp_disabled_conditional_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void
 		end

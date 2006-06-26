@@ -553,16 +553,16 @@ feature {NONE} -- Impl bp
 						if bp.is_enabled then
 							create lab.make_with_text (" enabled")
 							if bp.has_condition then
-								lab.set_pixmap (Breakable_icons.icon_bp_enabled_condition)
+								lab.set_pixmap (breakable_icons.bp_enabled_conditional_icon)
 							else
-								lab.set_pixmap (Breakable_icons.icon_bp_enabled)
+								lab.set_pixmap (breakable_icons.bp_enabled_icon)
 							end
 						elseif bp.is_disabled then
 							create lab.make_with_text (" disabled")
 							if bp.has_condition then
-								lab.set_pixmap (Breakable_icons.icon_bp_disabled_condition)
+								lab.set_pixmap (breakable_icons.bp_disabled_conditional_icon)
 							else
-								lab.set_pixmap (Breakable_icons.icon_bp_disabled)
+								lab.set_pixmap (breakable_icons.bp_disabled_icon)
 							end
 						else
 							create lab.make_with_text (" error")
@@ -624,9 +624,14 @@ feature {NONE} -- Implementation, cosmetic
 	Conditional_bp_symbol: STRING is "*"
 	Disabled_conditional_bp_symbol: STRING is "*-"
 
-	Breakable_icons: EB_SHARED_PIXMAPS_12 is
+	Breakable_icons: ES_PIXMAPS_12X12 is
+		local
+			l_shared: EB_SHARED_PIXMAPS
 		once
-			create Result
+			create l_shared
+			Result := l_shared.small_pixmaps
+		ensure
+			result_attached: Result /= Void
 		end
 
 	bg_separator_color: EV_COLOR is

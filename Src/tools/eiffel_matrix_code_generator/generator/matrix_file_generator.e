@@ -285,10 +285,17 @@ feature {NONE} -- Processing
 			l_cursor: CURSOR
 			l_height: like height
 			l_width: like width
+			l_fsuffix: like feature_suffix
+			l_bsuffix: like buffer_suffix
+			l_fname: STRING
+			l_bname: STRING
 			x, y: INTEGER
 		do
 			l_literals := a_section.literals
 			if not l_literals.is_empty then
+
+				l_fsuffix := feature_suffix
+				l_bsuffix := buffer_suffix
 
 				l_height := height
 				l_width := width
@@ -319,8 +326,19 @@ feature {NONE} -- Processing
 						l_full_name.append (l_name)
 						l_full_name := format_eiffel_name (l_full_name)
 
-						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_template, [l_full_name, l_lit.name, x, y, feature_suffix]))
-						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_buffer_template, [l_full_name, l_lit.name, x, y, buffer_suffix]))
+						create l_fname.make (l_full_name.count + l_fsuffix.count)
+						l_fname.append (l_full_name)
+						l_fname.append (l_fsuffix)
+						l_full_name := format_eiffel_name (l_fname)
+
+						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_template, [l_full_name, l_lit.name, x, y]))
+
+						create l_bname.make (l_full_name.count + l_bsuffix.count)
+						l_bname.append (l_full_name)
+						l_bname.append (l_bsuffix)
+						l_full_name := format_eiffel_name (l_bname)
+
+						extend_buffer ({MATRIX_BUFFER_TYPE}.access, string_formatter.format (access_buffer_template, [l_full_name, l_lit.name, x, y]))
 					else
 						error_manager.add_warning (create {WARNING_OUT_OF_BOUNDS}.make_with_context ([l_lit.name, "item"]))
 					end
@@ -496,14 +514,14 @@ feature {NONE} -- Tokens
 
 feature {NONE} -- Constant Templates
 
-	access_template: STRING is "%T{1}{5}: EV_PIXMAP is%N%
+	access_template: STRING is "%T{1}: EV_PIXMAP is%N%
 		%%T%T%T-- Access to '{2}' pixmap.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixmap_from_coords ({3}, {4})%N%
 		%%T%Tend%N%N"
 			-- Template used for access features
 
-	access_buffer_template: STRING is "%T{1}{5}: EV_PIXEL_BUFFER is%N%
+	access_buffer_template: STRING is "%T{1}: EV_PIXEL_BUFFER is%N%
 		%%T%T%T-- Access to '{2}' pixmap pixel buffer.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixel_buffer_from_coords ({3}, {4})%N%

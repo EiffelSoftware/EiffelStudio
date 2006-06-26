@@ -13,7 +13,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+	
+	MUTEX_FACTORY
+		export
+			{NONE} all
+		end
+
 	DISPOSABLE
 
 create
@@ -98,7 +103,7 @@ feature {NONE} -- Implementation
 	guard: SYSTEM_MUTEX is
 			-- guard implementation
 		once
-			create Result.make (False, cache_lock_id)
+			Result := new_mutex (cache_lock_id)
 		ensure
 			result_not_void: Result /= Void
 		end

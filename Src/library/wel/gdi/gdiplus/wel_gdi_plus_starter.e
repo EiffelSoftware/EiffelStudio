@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 	c_gdi_plus_startup is
 			-- Before any GDI+ call, we should call this function.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -78,7 +78,7 @@ feature {NONE} -- Externals
 	c_gdi_plus_shutdown is
 			-- After delete all Gdi+ objects, we should call this function.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

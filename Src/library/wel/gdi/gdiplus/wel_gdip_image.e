@@ -69,7 +69,7 @@ feature -- C externals
 			-- Create a C++ bitmap object name from file `a_wchar_file_name'.
 			-- Pixmap format include BMP, GIF, JPEG, PNG, TIFF, and EMF.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -97,7 +97,7 @@ feature -- C externals
 	c_gdip_get_image_width (a_item: POINTER; a_result_width: TYPED_POINTER [NATURAL_32]; a_result_status: TYPED_POINTER [INTEGER])  is
 			-- Width
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 				FARPROC GdipGetImageWidth = NULL;
@@ -123,7 +123,7 @@ feature -- C externals
 	c_gdip_get_image_height (a_item: POINTER; a_result_height: TYPED_POINTER [NATURAL_32]; a_result_status: TYPED_POINTER [INTEGER])  is
 			-- Height
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -151,7 +151,7 @@ feature -- C externals
 	c_gdip_dispose_image (a_image: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Dispose `a_image'
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

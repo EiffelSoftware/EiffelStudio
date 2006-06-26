@@ -116,7 +116,7 @@ feature {NONE} -- C externals
 	c_gdip_create_from_hdc (a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]; a_result_graphic: TYPED_POINTER [POINTER]) is
 			-- Create `a_item' from a win32 `a_dc'.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -145,7 +145,7 @@ feature {NONE} -- C externals
 	c_gdip_get_image_graphics_context (a_image: POINTER; a_result_graphics: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Get `a_result_graphics' from `a_image'
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -174,7 +174,7 @@ feature {NONE} -- C externals
 	c_gdip_delete_graphics (a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Delete `a_graphics' gdi+ object.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -201,7 +201,7 @@ feature {NONE} -- C externals
 	c_gdip_draw_line_i (a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -233,7 +233,7 @@ feature {NONE} -- C externals
 	c_gdip_draw_image_rect_rect_i (a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Draw `a_image' on `a_graphics'.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

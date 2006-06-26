@@ -84,7 +84,7 @@ feature {NONE} -- C externals
 	c_gdip_create_image_attributes (a_result_image_attributes: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Create `a_result_image_attributes'
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -111,7 +111,7 @@ feature {NONE} -- C externals
 	c_gdip_dispose_image_attributes (a_image_attributes: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Dispose `a_image_attributes'
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -138,7 +138,7 @@ feature {NONE} -- C externals
 	c_gdip_set_image_attributes_color_keys (a_image_attributes: POINTER; a_color_adjust_type: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Set image attributes color keys.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -169,7 +169,7 @@ feature {NONE} -- C externals
 	c_gdip_set_image_attributes_color_matrix (a_image_attributes: POINTER; a_new_color_matrix: POINTER; a_color_adjust_type: INTEGER; a_color_matrix_flag: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Set `a_image_attributes''s color matrix.
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

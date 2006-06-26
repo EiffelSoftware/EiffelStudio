@@ -44,7 +44,7 @@ feature {NONE} -- C externals
 	c_gdip_create_pen_l (a_argb: INTEGER_64; a_width: REAL; a_unit: INTEGER; a_result_pen: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Create Current
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
@@ -74,7 +74,7 @@ feature {NONE} -- C externals
 	c_gdip_delete_pen (a_pen: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Delete Gdi+ object `a_pen'
 		external
-			"C inline use <gdiplus.h>"
+			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{

@@ -12,6 +12,8 @@ inherit
 	EV_HORIZONTAL_BOX
 		rename
 			pointer_double_press_actions as pointer_double_press_actions_horizontal_box
+		redefine
+			destroy
 		end
 
 create
@@ -79,9 +81,9 @@ feature {NONE} -- Initlization
 			create close
 			close.set_pixmap (internal_shared.icons.close)
 
-			stick.pointer_button_press_actions.force_extend (agent on_stick_select)
-			normal_max.pointer_button_press_actions.force_extend (agent on_normal_max)
-			close.pointer_button_press_actions.force_extend (agent on_close)
+			stick.select_actions.extend (agent on_stick_select)
+			normal_max.select_actions.extend (agent on_normal_max)
+			close.select_actions.extend (agent on_close)
 
 			init_actions
 
@@ -275,6 +277,15 @@ feature -- Command
 			wuped_out: custom_area.count = 0
 		end
 
+	destroy is
+			-- Destroy
+		do
+			Precursor {EV_HORIZONTAL_BOX}
+			-- FIXIT: Vision2 bug
+			-- If we don't destory it, it'll not be collected.
+			internal_tool_bar.destroy
+		end
+
 feature -- Query
 
 	title: STRING is
@@ -284,6 +295,7 @@ feature -- Query
 		ensure
 			not_void: Result /= Void
 		end
+		
 	is_stick: BOOLEAN
 			-- If current sticked?
 

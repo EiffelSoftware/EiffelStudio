@@ -8487,6 +8487,13 @@ feature -- External C functions
 			"C (): GtkWidget* | <gtk/gtk.h>"
 		end
 
+	frozen gtk_is_event_box (a_object: POINTER): BOOLEAN is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_IS_EVENT_BOX"
+		end
+
 	frozen gtk_events_pending: INTEGER is
 			-- gint	   gtk_events_pending	 (void);
 			-- (from C_GTK_EXTERNALS)

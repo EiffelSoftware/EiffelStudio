@@ -63,7 +63,7 @@ feature -- Status Report
 			i, l_index: INTEGER
 			l_marker: STRING
 			l_header, l_body: STRING
-			l_severity: INTEGER
+			l_severity, l_count: INTEGER
 		do
 			create l_header.make (64)
 			l_severity := event_severity (id)
@@ -94,13 +94,20 @@ feature -- Status Report
 				l_body.replace_substring (context.item (i).out, l_index, l_index + l_marker.count - 1)
 				i := i + 1
 			end
-			create Result.make (l_header.count + l_body.count + 1)
+			l_count := l_header.count + l_body.count + 1
+			if l_count > Max_message_count then
+				l_body.keep_tail (Max_message_count - l_header.count - 1)
+			end
+			create Result.make (l_count.min (Max_message_count))
 			Result.append (l_header)
 			Result.append (Line_return)
 			Result.append (l_body)
 		ensure
 			has_message: Result /= Void
 		end
+
+	Max_message_count: INTEGER is 32000
+			-- Maximum number of characters in `message'
 
 invariant
 	valid_id: is_event_id (id)

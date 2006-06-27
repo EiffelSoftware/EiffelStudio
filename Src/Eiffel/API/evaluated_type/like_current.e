@@ -13,7 +13,7 @@ inherit
 		redefine
 			actual_type, associated_class, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, instantiated_in,
-			is_basic, is_expanded, is_like_current, is_none, is_reference,
+			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, type_i
 		end
 
@@ -51,6 +51,9 @@ feature -- Properties
 				Result := conformance_type.is_reference
 			end
 		end
+
+	is_external: BOOLEAN is False
+			-- Is type external?
 
 	is_none: BOOLEAN is False
 			-- Is current actual type NONE?

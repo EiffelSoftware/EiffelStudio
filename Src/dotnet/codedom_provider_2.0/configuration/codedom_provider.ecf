@@ -95,9 +95,6 @@
 			<option namespace="EiffelSoftware.CodeDom" />
 		</cluster>
 		
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop" recursive="true">
-			<option namespace="EiffelSoftware.Library.Merger" />
-		</cluster>
 	</target>
 
 	<target name="debug" extends="common">

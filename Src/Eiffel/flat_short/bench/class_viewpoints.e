@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 				from
 					l_lib_list.start
 				until
-					l_lib_list.after or l_renamed
+					l_lib_list.after
 				loop
 					l_library := l_lib_list.item
 					l_sorted_list.put (l_library, l_lib_list.index)

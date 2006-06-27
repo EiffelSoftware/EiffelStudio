@@ -274,7 +274,6 @@ feature {NONE} -- Implementation
 			key_press_actions_internal := other_imp.key_press_actions_internal
 			key_press_string_actions_internal := other_imp.key_press_string_actions_internal
 			key_release_actions_internal := other_imp.key_release_actions_internal
-			last_pointed_target := other_imp.last_pointed_target
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
 			menu_bar := other_imp.menu_bar

@@ -2062,6 +2062,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	deselect_current_group is
+			-- Select no group in the groups tree.
+		require
+			properties_not_void: properties /= Void
+			edit_library_button_not_void: edit_library_button /= Void
+		do
+			properties.reset
+			edit_library_button.disable_sensitive
+			current_group := Void
+		ensure
+			current_group_void: current_group = Void
+		end
+
 	add_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]; a_tree: EV_TREE; a_name: STRING; a_head_pix: EV_PIXMAP) is
 			-- Add `a_groups' to `a_tree' under a header with `a_name'.
 		require
@@ -2077,8 +2090,7 @@ feature {NONE} -- Implementation
 			if a_groups /= Void and then not a_groups.is_empty then
 				create l_head_item.make_with_text (a_name)
 				l_head_item.set_pixmap (a_head_pix)
-				l_head_item.select_actions.extend (agent properties.reset)
-				l_head_item.select_actions.extend (agent edit_library_button.disable_sensitive)
+				l_head_item.select_actions.extend (agent deselect_current_group)
 				a_tree.extend (l_head_item)
 
 					-- sort groups alphabetically
@@ -2150,11 +2162,19 @@ feature {NONE} -- Configuration setting
 	add_cluster is
 			-- Add a new cluster.
 		local
-			dial: CREATE_CLUSTER_DIALOG
+			l_dial: CREATE_CLUSTER_DIALOG
+			l_cluster: CONF_CLUSTER
 		do
-			create dial.make (current_target, conf_factory)
-			dial.show_modal_to_window (Current)
-			if dial.is_ok then
+			create l_dial.make (current_target, conf_factory)
+			if current_group /= Void and then current_group.is_cluster then
+				l_cluster ?= current_group
+				check
+					cluster: l_cluster /= Void
+				end
+				l_dial.set_parent_cluster (l_cluster)
+			end
+			l_dial.show_modal_to_window (Current)
+			if l_dial.is_ok then
 				refresh
 			end
 		end
@@ -2162,11 +2182,19 @@ feature {NONE} -- Configuration setting
 	add_override is
 			-- Add a new override cluster.
 		local
-			dial: CREATE_OVERRIDE_DIALOG
+			l_dial: CREATE_OVERRIDE_DIALOG
+			l_cluster: CONF_CLUSTER
 		do
-			create dial.make (current_target, conf_factory)
-			dial.show_modal_to_window (Current)
-			if dial.is_ok then
+			create l_dial.make (current_target, conf_factory)
+			if current_group /= Void and then current_group.is_cluster then
+				l_cluster ?= current_group
+				check
+					cluster: l_cluster /= Void
+				end
+				l_dial.set_parent_cluster (l_cluster)
+			end
+			l_dial.show_modal_to_window (Current)
+			if l_dial.is_ok then
 				refresh
 			end
 		end
@@ -2176,11 +2204,11 @@ feature {NONE} -- Configuration setting
 		require
 			current_target_set: current_target /= Void
 		local
-			dial: CREATE_LIBRARY_DIALOG
+			l_dial: CREATE_LIBRARY_DIALOG
 		do
-			create dial.make (current_target, conf_factory)
-			dial.show_modal_to_window (Current)
-			if dial.is_ok then
+			create l_dial.make (current_target, conf_factory)
+			l_dial.show_modal_to_window (Current)
+			if l_dial.is_ok then
 				refresh
 			end
 		end
@@ -2188,11 +2216,11 @@ feature {NONE} -- Configuration setting
 	add_assembly is
 			-- Add a new assembly.
 		local
-			dial: CREATE_ASSEMBLY_DIALOG
+			l_dial: CREATE_ASSEMBLY_DIALOG
 		do
-			create dial.make (current_target, conf_factory)
-			dial.show_modal_to_window (Current)
-			if dial.is_ok then
+			create l_dial.make (current_target, conf_factory)
+			l_dial.show_modal_to_window (Current)
+			if l_dial.is_ok then
 				refresh
 			end
 		end
@@ -2225,11 +2253,26 @@ feature {NONE} -- Configuration setting
 			current_target_not_void: current_target /= Void
 		local
 			l_name: STRING
+			l_cluster: CONF_CLUSTER
 		do
 			l_name := a_group.name
 			if a_group.is_override then
+				l_cluster := current_target.overrides.item (l_name)
+				check
+					cluster: l_cluster /= Void
+				end
+				if l_cluster.parent /= Void then
+					l_cluster.parent.remove_child (l_cluster)
+				end
 				current_target.remove_override (l_name)
 			elseif a_group.is_cluster then
+				l_cluster := current_target.clusters.item (l_name)
+				check
+					cluster: l_cluster /= Void
+				end
+				if l_cluster.parent /= Void then
+					l_cluster.parent.remove_child (l_cluster)
+				end
 				current_target.remove_cluster (l_name)
 			elseif a_group.is_library then
 				current_target.remove_library (l_name)

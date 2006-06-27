@@ -287,7 +287,7 @@ feature {NONE} -- Events handling
    		do
 			if character_string.count = 1 then
 				c := character_string.item (1).to_character_8
-				if code_completable.unwanted_characters.item (c.code) then
+				if not code_completable.unwanted_characters.item (c.code) then
 					buffered_input.append_character (c)
 					code_completable.handle_character (c)
 					create c_name.make (buffered_input)

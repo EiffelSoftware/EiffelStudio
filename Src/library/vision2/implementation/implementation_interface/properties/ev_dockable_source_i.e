@@ -7,15 +7,15 @@ indexing
 
 deferred class
 	EV_DOCKABLE_SOURCE_I
-	
+
 inherit
 	EV_ANY_I
-		redefine	
+		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_SOURCE_ACTION_SEQUENCES_I
-	
+
 	EV_SHARED_TRANSPORT_I
 
 feature -- Access
@@ -23,25 +23,25 @@ feature -- Access
 	original_parent_position: INTEGER
 		-- Original position in parent. Required
 		-- to restore widget later.
-	
+
 	is_dock_executing: BOOLEAN is
 			-- Is `Current' in the process of a dockable transport?
 		do
 			Result := source_being_docked /= Void
 		end
-		
+
 	real_source: EV_DOCKABLE_SOURCE
 			-- `Result' is EV_DOCKABLE_SOURCE which should be
 			-- dragged when docking begins on `Current'.
-			
+
 	is_dockable: BOOLEAN
 		-- Is `Current' dockable?
-		
+
 	not_external_docking_enabled: BOOLEAN
 			-- Attribute used for `is_externally_dockable'. We must implement
 			-- `is_externally_dockable' this way as we have no easy solution to
 			-- assign `True' to `is_externally_dockable'.
-			
+
 	is_external_docking_enabled: BOOLEAN is
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -49,14 +49,14 @@ feature -- Access
 		do
 			Result := not not_external_docking_enabled
 		end
-		
+
 	not_is_external_docking_relative: BOOLEAN
 			-- Will dockable dialog displayed when `Current' is docked externally
 			-- be displayed relative to parent window of `Current'?
 			-- Otherwise displayed as a standard window.
 			-- Internal reversed value of `is_external_docking_relative' as we cannot
 			-- easily initialize a BOOLE to True in this case.
-			
+
 	is_external_docking_relative: BOOLEAN is
 			-- Will dockable dialog displayed when `Current' is docked externally
 			-- be displayed relative to parent window of `Current'?
@@ -164,7 +164,7 @@ feature -- Status setting
 		ensure
 			not_is_dockable: not is_dockable
 		end
-		
+
 	internal_disable_dockable is
 			-- Platform specific implementation of `disable_dockable'.
 		deferred
@@ -181,7 +181,7 @@ feature -- Status setting
 		ensure
 			real_source_assigned: real_source = dockable_source
 		end
-		
+
 	remove_real_source is
 			-- Ensure `real_source' is `Void'.
 		require
@@ -191,7 +191,7 @@ feature -- Status setting
 		ensure
 			real_source_void: real_source = Void
 		end
-		
+
 	enable_external_docking is
 			-- Allow `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -203,7 +203,7 @@ feature -- Status setting
 		ensure
 			is_externally_dockable: is_external_docking_enabled
 		end
-		
+
 	disable_external_docking is
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -215,7 +215,7 @@ feature -- Status setting
 		ensure
 			not_externally_dockable: not is_external_docking_enabled
 		end
-		
+
 	enable_external_docking_relative is
 			-- Assign `True' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
@@ -227,7 +227,7 @@ feature -- Status setting
 		ensure
 			external_docking_not_relative: is_external_docking_relative
 		end
-		
+
 	disable_external_docking_relative is
 			-- Assign `False' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
@@ -238,10 +238,10 @@ feature -- Status setting
 			not_is_external_docking_relative := True
 		ensure
 			external_docking_not_relative: not is_external_docking_relative
-		end	
+		end
 
 feature -- Basic operations
-			
+
 	complete_dock is
 			-- Complete a dock from `source_being_docked'.
 		require
@@ -249,7 +249,7 @@ feature -- Basic operations
 		local
 			target_container_interface: EV_CONTAINER
 			target_widget: EV_WIDGET_IMP
-			
+
 			dialog_imp: EV_DIALOG_I
 			dropping_in_source: BOOLEAN
 			original_widget_window: EV_WINDOW
@@ -277,7 +277,7 @@ feature -- Basic operations
 		do
 				-- Reset `dockable_dialog_target' as it should only be created in here if required.
 			dockable_dialog_target := Void
-			
+
 			dockable_target := closest_dockable_target
 				-- Note that if the parent is not a dialog, then we do not destroy the dialog.
 				-- If the parent is a dialog, it means that the drop of the newly transported widget
@@ -291,15 +291,15 @@ feature -- Basic operations
 					-- hold the item within the dialog.
 				dockable_dialog_source ?= item_source_being_docked.parent.parent
 			end
-			
-			
+
+
 			tool_bar ?= dockable_target
 			container ?= dockable_target
 			if ((widget_source_being_docked /= Void and container = Void) or (item_source_being_docked /= Void and tool_bar = Void)) then
 				dockable_target := Void
 			end
-			
-			
+
+
 			if dockable_target = Void then
 				if originating_source.is_external_docking_enabled then
 					if dockable_dialog_source = Void then
@@ -331,7 +331,7 @@ feature -- Basic operations
 								item_was_tool_bar_button: tool_bar_button_imp /= Void
 							end
 							dockable_dialog_target.set_original_parent_index (position_in_parent (tool_bar_button_imp))
-						
+
 								-- Now update the tool bar button to the left of the original position.
 								-- On Windows, it does not return back to its original state.
 							tool_bar ?= temp_parent
@@ -341,11 +341,11 @@ feature -- Basic operations
 							temp_index := dockable_dialog_target.original_parent_index - 1
 							if (not tool_bar.is_empty) and temp_index >= 1 then
 									-- We protected against the state of the toolbar after the transport.
-								update_buttons (tool_bar, temp_index, temp_index)		
+								update_buttons (tool_bar, temp_index, temp_index)
 							end
 						end
-						
-							-- Now check to see whether `source_being_docked' was originally 
+
+							-- Now check to see whether `source_being_docked' was originally
 							-- disabled and parented in a box. If so, flag this so it can be restored
 							-- as disabled.
 						if widget_source_being_docked /= Void then
@@ -354,7 +354,7 @@ feature -- Basic operations
 								dockable_dialog_target.set_expansion_was_disabled
 							end
 						end
-							
+
 						unparent_source_being_docked
 							-- Handle a special case for tool bar buttons.
 						if widget_source_being_docked /= Void then
@@ -368,7 +368,7 @@ feature -- Basic operations
 							end
 							tool_bar.extend (tool_bar_button)
 						end
-						
+
 						dialog_imp ?= dockable_dialog_target.implementation
 						check
 							dialog_imp_not_void: dialog_imp /= Void
@@ -399,8 +399,8 @@ feature -- Basic operations
 				end
 				target_container_interface ?= target_widget.interface
 			end
-			
-			
+
+
 			if (dockable_dialog_source = Void or dockable_target /= Void) and dockable_dialog_target = Void then
 					-- This section is executed if we are docking a widget not into a dockable dialog, hence
 					-- we check `dockable_dialog_target' is Void, to avoid the `dock_ended_actions' being fired twice,
@@ -419,7 +419,7 @@ feature -- Basic operations
 						if container_imp.top_level_window_imp /= Void then
 							container_imp.top_level_window_imp.lock_update
 						end
-					end		
+					end
 					if insert_label.parent /= Void then
 						unparent_source_being_docked
 						replace_insert_label
@@ -435,9 +435,9 @@ feature -- Basic operations
 --					end
 				else
 					move_dialog_to_pointer (dockable_dialog_source)
-				end		
+				end
 			end
-			
+
 			if widget_source_being_docked = Void then
 					-- We must now handle items that are supported by the docking mechanism.
 				tool_bar_button ?= source_being_docked.interface
@@ -460,17 +460,17 @@ feature -- Basic operations
 						insert_index := original_tool_bar.index_of (insert_sep, 1)
 						original_index := original_tool_bar.index_of (tool_bar_item, 1)
 						moved_within_same_parent := tool_bar_item.parent = tool_bar
-						
+
 						unparent_source_being_docked
 						replace_insert_sep
-						
+
 							-- We must now provide provisions for updating the state of the tool bar buttons.
 							-- In some cases, the state is affected by the transport. We provide a platform
 							-- specific implementation, as any work required will depend on the exact behaviour.
 					if moved_within_same_parent and then original_index = insert_index + 2 then
-						update_buttons (tool_bar, insert_index + 1, insert_index + 1)	
+						update_buttons (tool_bar, insert_index + 1, insert_index + 1)
 					end
-							
+
 							-- We have to ensure that a tool bar button does not become
 							-- selected as a result of the transport ending.
 						if original_tool_bar = tool_bar then
@@ -481,7 +481,7 @@ feature -- Basic operations
 							tool_bar_imp.block_selection_for_docking
 						end
 					else
-					
+
 					-- Now handle the insertion/removal of separators.
 					-- The dockable mechanism allows tool bar seperators to be inserted
 					-- or deleted by a user. Activated by completing a dock on the same button that
@@ -501,7 +501,7 @@ feature -- Basic operations
 						tool_bar_separator_right ?= tool_bar.i_th (temp_index + 1)
 					end
 					if temp_index > 1 then
-						tool_bar_separator_left ?= tool_bar.i_th (temp_index - 1)	
+						tool_bar_separator_left ?= tool_bar.i_th (temp_index - 1)
 					end
 					if internal_screen.pointer_position.x > pointer_x then
 						-- We have moved to the right since the transport started.
@@ -519,7 +519,7 @@ feature -- Basic operations
 							tool_bar.go_i_th (tool_bar.index_of (tool_bar_button, 1) + 1)
 							tool_bar.put_left (create {EV_TOOL_BAR_SEPARATOR})
 						end
-						
+
 					end
 					insert_index := tool_bar.index_of (tool_bar_button, 1)
 					update_buttons (tool_bar, insert_index, insert_index)
@@ -530,7 +530,7 @@ feature -- Basic operations
 					dock_ended_actions_internal.call (Void)
 				end
 			end
-			
+
 					-- We must also enable any action sequences that had been blocked.
 			widget ?= source_being_docked.interface
 			if widget /= Void then
@@ -545,11 +545,11 @@ feature -- Basic operations
 					end
 				end
 			end
-			
+
 				-- As the transport has completed, we need to ensure `source_being_docked'
 				-- is now `Void'.
 			source_being_docked := Void
-			
+
 				-- Ensure that the locked window is unlocked, if set in this feature.
 			if locked_in_here then
 				locked_in_here_window := ((create {EV_ENVIRONMENT}).application).locked_window
@@ -562,7 +562,7 @@ feature -- Basic operations
 			insert_separator_not_parented: insert_sep.parent = Void
 			insert_label_not_parented: insert_label.parent = Void
 		end
-		
+
 	close_dockable_dialog (dockable_dialog: EV_DOCKABLE_DIALOG) is
 			-- Close request received by `dockable_dialog' so
 			-- restore widget contained back to its original position
@@ -589,7 +589,7 @@ feature -- Basic operations
 			if widget_list /= Void then
 				original_index := dockable_dialog.original_parent_index
 				if widget_list.valid_index (original_index) then
-					widget_list.go_i_th (original_index)	
+					widget_list.go_i_th (original_index)
 				else
 					widget_list.go_i_th (widget_list.count + 1)
 				end
@@ -611,9 +611,9 @@ feature -- Basic operations
 				tool_bar_button ?= old_tool_bar.i_th (1)
 				old_tool_bar.wipe_out
 				original_index := dockable_dialog.original_parent_index
-				
+
 				if tool_bar.valid_index (original_index) then
-					tool_bar.go_i_th (original_index)	
+					tool_bar.go_i_th (original_index)
 				else
 					tool_bar.go_i_th (tool_bar.count + 1)
 				end
@@ -644,7 +644,7 @@ feature -- Inapplicable
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
 		end
-		
+
 
 feature {NONE} -- Implementation
 
@@ -660,11 +660,11 @@ feature {NONE} -- Implementation
 			if source_being_docked /= Void then
 				widget_i ?= source_being_docked.interface
 				if widget_i /= Void then
-					Result ?= source_being_docked	
+					Result ?= source_being_docked
 				end
 			end
 		end
-		
+
 	item_source_being_docked: EV_ITEM_I is
 			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not an item.
@@ -733,15 +733,15 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			
+
 			if source.real_source /= Void then
 				source_being_docked ?= source.real_source.implementation
 			else
 				source_being_docked ?= source.implementation
 			end
 			originating_source ?= source.implementation
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 		ensure
 			source_being_docked_set: source_being_docked /= Void
 		end
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 				if target /= Void and target /= insert_label then
 
 					 -- remove `insert_label' if the pointed target has changed
-					container ?= target 
+					container ?= target
 					if container /= Void then
 						if target.veto_dock_function /= Void then
 							veto_result := True
@@ -802,7 +802,7 @@ feature {NONE} -- Implementation
 						from
 							counter := 0
 						until
-							target = Void or (target /= Void and then target.veto_dock_function = Void) or 
+							target = Void or (target /= Void and then target.veto_dock_function = Void) or
 							(target /= Void and then target.veto_dock_function /= Void and (not veto_result))
 						loop
 							counter := counter + 1
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 								target.veto_dock_function.call ([widget_source_being_docked.interface])
 								veto_result := target.veto_dock_function.last_result
 								if veto_result then
-									target := get_next_target (container)										
+									target := get_next_target (container)
 								end
 							end
 						end
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation
 										-- or next to it, so there should be no insert label displayed.
 									temp_int := box.index_of (widget_source_being_docked.interface, 1)
 									if temp_int = insert_position or temp_int + 1 = insert_position then
-										remove_insert_label									
+										remove_insert_label
 									end
 								else
 									if insert_label.parent /= Void then
@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 									box.go_to (cursor)
 									box.top_level_window_imp.interface.unlock_update
 								end
-							end	
+							end
 						end
 					end
 					if cell /= Void then
@@ -865,7 +865,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				elseif target /= insert_label then
-					
+
 						-- As there is no valid target, the insert label should
 						-- not be parented.
 					remove_insert_label
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 							target.veto_dock_function.call ([tool_bar_button])
 						end
 					end
-							
+
 					if (not (target.veto_dock_function = Void) and then not target.veto_dock_function.last_result) or
 						target.veto_dock_function = Void then
 						tool_bar ?= target.implementation
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 						insert_position := tool_bar.insertion_position
 						if insert_position /= -1 then
 							if insert_position < tool_bar.count then
-								insert_position := insert_position + 1	
+								insert_position := insert_position + 1
 							end
 							if not ((tool_bar.i_th (insert_position.min (tool_bar.count)) = insert_sep) or (tool_bar.i_th ((insert_position - 1).max (1)) = insert_sep)) then
 								tool_bar_button ?= item_source_being_docked.interface
@@ -928,7 +928,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-			
+
 		unparent_source_being_docked is
 				-- Remove `widget_source_being_docked' from `parent' or
 				-- `item_source_being_docked' from `parent'.
@@ -936,18 +936,18 @@ feature {NONE} -- Implementation
 				widget_or_item: widget_source_being_docked /= Void or item_source_being_docked /= Void
 			do
 				if widget_source_being_docked /= Void then
-					widget_source_being_docked.interface.parent.prune (widget_source_being_docked.interface)	
+					widget_source_being_docked.interface.parent.prune (widget_source_being_docked.interface)
 					check
 						not_parented: widget_source_being_docked.parent = Void
 					end
 				else
-					item_source_being_docked.interface.parent.prune (item_source_being_docked.interface)	
+					item_source_being_docked.interface.parent.prune (item_source_being_docked.interface)
 					check
 						not_parented: item_source_being_docked.parent = Void
 					end
-				end 
+				end
 			end
-			
+
 		replace_insert_label is
 				-- Replace `insert_label' with `widget_source_being_docked'.
 			require
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 				insert_label_not_parented: insert_label.parent = Void
 				parent_swapped: old insert_label.parent = widget_source_being_docked.parent
 			end
-			
+
 		replace_insert_sep is
 				-- Replace `insert_sep' with item_source_being_docked'.
 			require
@@ -1004,14 +1004,14 @@ feature {NONE} -- Implementation
 				end
 				insert_index := tool_bar.index_of (insert_sep, 1)
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
-				
+
 					-- We must now provide provisions for updating the state of the tool bar buttons.
 					-- In some cases, the state is affected by the transport. We provide a platform
 					-- specific implementation, as any work required will depend on the exact behaviour.
 				if original_index = insert_index + 2 then
-					update_buttons (tool_bar, original_index, insert_index)	
+					update_buttons (tool_bar, original_index, insert_index)
 				end
-				
+
 				if tool_bar.implementation.docked_actions_internal /= Void then
 					tool_bar.docked_actions.call ([source])
 				end
@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation
 				insert_sep_not_parented: insert_sep.parent = Void
 				parent_swapped: old insert_sep.parent = item_source_being_docked.parent
 			end
-			
+
 	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 			end_index_valid: end_index <= a_parent.count
 		deferred
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_SOURCE

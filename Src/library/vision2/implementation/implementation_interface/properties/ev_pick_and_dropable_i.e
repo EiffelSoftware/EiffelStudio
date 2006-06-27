@@ -65,8 +65,8 @@ feature -- Status setting
 			-- Set the initial position for pick and drop relative to `Current'.
 		require
 		do
-			pick_x := a_x
-			pick_y := a_y
+			pick_x := a_x.to_integer_16
+			pick_y := a_y.to_integer_16
 		ensure
 			pick_x_assigned: pick_x = a_x
 			pick_y_assigned: pick_y = a_y
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	pick_x, pick_y: INTEGER
+	pick_x, pick_y: INTEGER_16
 		-- Initial point for the pick and drop.
 
 	internal_pebble_positioning_enabled: BOOLEAN
@@ -230,8 +230,6 @@ feature {EV_ANY_I} -- Implementation
 	is
 			-- Terminate the pick and drop mechanism.
 		deferred
-		ensure
-			last_pointed_target_is_void: last_pointed_target = Void
 		end
 
 	execute (
@@ -247,8 +245,8 @@ feature {EV_ANY_I} -- Implementation
 			application: EV_APPLICATION_IMP
 		do
 			draw_rubber_band
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 
 			target := pointed_target
 			real_target ?= target
@@ -272,16 +270,14 @@ feature {EV_ANY_I} -- Implementation
 					target.drop_actions.accepts_pebble (pebble)
 				)
 			then
-				over_valid_target := True
-				last_pointed_target := target
+--				last_pointed_target := target
 				if accept_cursor /= Void then
 					internal_set_pointer_style (accept_cursor)
 				else
 					internal_set_pointer_style (default_accept_cursor)
 				end
 			else
-				over_valid_target := False
-				last_pointed_target := Void
+--				last_pointed_target := Void
 				if deny_cursor /= Void then
 					internal_set_pointer_style (deny_cursor)
 				else
@@ -316,8 +312,8 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	last_pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE
-			-- Last target at mouse position
+--	last_pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE
+--			-- Last target at mouse position
 
 	draw_rubber_band  is
 			-- Erase previously drawn rubber band.

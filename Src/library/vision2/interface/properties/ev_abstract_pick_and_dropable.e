@@ -23,7 +23,7 @@ feature -- Access
 			-- Data to be transported by pick and drop mechanism.
 		deferred
 		end
-	
+
 	target_name: STRING_GENERAL
 			-- Optional textual name describing `Current' pick and drop hole.
 
@@ -46,7 +46,7 @@ feature -- Access
 		deferred
 		ensure
 			result_not_void: Result /= Void
-		end 
+		end
 
 feature -- Status setting
 
@@ -148,19 +148,26 @@ feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 	init_drop_actions (a_drop_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Setup drop action sequence.
 		local
-			pnd_targets: ARRAYED_LIST [INTEGER]
+			l_pnd_targets: HASH_TABLE [INTEGER, INTEGER]
+			l_object_id: like object_id
 		do
-			pnd_targets := (create {EV_ENVIRONMENT})
-				.application.implementation.pnd_targets
+			l_object_id := object_id
+			l_pnd_targets := pnd_targets
 			a_drop_actions.not_empty_actions.extend (agent
-					pnd_targets.extend (object_id)
+					l_pnd_targets.put (l_object_id, l_object_id)
 			)
 			a_drop_actions.empty_actions.extend (agent
-					pnd_targets.prune_all (object_id)
+					l_pnd_targets.remove (l_object_id)
 			)
 		end
-		
+
 feature {NONE} -- Implementation
+
+	pnd_targets: HASH_TABLE [INTEGER, INTEGER] is
+			-- Hash table of current pnd targets.
+		once
+			Result := (create {EV_ENVIRONMENT}).application.implementation.pnd_targets
+		end
 
 	Default_pixmaps: EV_STOCK_PIXMAPS is
 			-- Default pixmaps and cursors.

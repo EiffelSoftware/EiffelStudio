@@ -502,6 +502,12 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.toggle_filter" DESCRIPTION="Toggle filter button in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.toggle_show_type" DESCRIPTION="Toggle show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.toggle_show_signature" DESCRIPTION="Key"><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.toggle_show_disambiguated_name" DESCRIPTION="Key"><SHORTCUT>F4</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.toggle_remember_size" DESCRIPTION="Key"><SHORTCUT>F5</SHORTCUT></PREF>
+
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.collapse_all_levels" DESCRIPTION="Trigger collapsing of all tree nodes."><SHORTCUT Shift="True">NumPad -</SHORTCUT></PREF>

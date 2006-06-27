@@ -55,7 +55,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
 
 	scrollable_area: POINTER
 		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
@@ -460,18 +464,18 @@ feature -- Implementation
 				end
 			end
 
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > height then
-						pick_y := height
+						pick_y := height.to_integer_16
 					end
 					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
@@ -480,10 +484,10 @@ feature -- Implementation
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > row_height then
-						pick_y := row_height
+						pick_y := row_height.to_integer_16
 					end
 					App_implementation.set_x_y_origin (
 						pnd_row_imp.pick_x + (a_screen_x - a_x),
@@ -499,7 +503,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
-			last_pointed_target := Void
+--			last_pointed_target := Void
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then

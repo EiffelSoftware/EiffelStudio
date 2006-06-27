@@ -116,10 +116,10 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			if not retried then
 				process_gdk_events
-				if {EV_GTK_EXTERNALS}.g_main_context_pending ({EV_GTK_EXTERNALS}.g_main_context_default) then
+				if {EV_GTK_EXTERNALS}.events_pending then
 						-- This handles remaining idle handling such as timeouts, internal gtk/gdk idles and expose events.
 					if locked_window = Void then
-						{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
+						{EV_GTK_EXTERNALS}.dispatch_events
 					end
 				else
 					if a_relinquish_cpu then
@@ -389,6 +389,12 @@ feature -- Basic operation
 						when GDK_PROPERTY_NOTIFY then
 							debug ("GDK_EVENT")
 								print ("GDK_PROPERTY_NOTIFY%N")
+							end
+						when GDK_EXPOSE then
+								-- This is only called on gtk 1.2 as expose compression is
+								-- performed in gdk with 2.x and above.
+							debug ("GDK_EVENT")
+								print ("GDK_EXPOSE%N")
 							end
 						when GDK_NO_EXPOSE then
 							debug ("GDK_EVENT")
@@ -663,32 +669,8 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
 	on_pick (a_source: EV_PICK_AND_DROPABLE_IMP; a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
-		local
-			cur: CURSOR
-			trg: EV_PICK_AND_DROPABLE
-			i: INTEGER
-			l_pnd_targets: like pnd_targets
 		do
 			pebble_transporter := a_source
-			l_pnd_targets := pnd_targets
-			cur := l_pnd_targets.cursor
-			from
-				l_pnd_targets.start
-			until
-				l_pnd_targets.after
-			loop
-				trg ?= id_object (l_pnd_targets.item)
-				if trg = Void or else trg.is_destroyed then
-					i := l_pnd_targets.index
-					l_pnd_targets.remove
-					l_pnd_targets.go_i_th (i)
-				else
-					l_pnd_targets.forth
-				end
-			end
-			if l_pnd_targets.valid_cursor (cur) then
-				l_pnd_targets.go_to (cur)
-			end
 			interface.pick_actions.call ([a_pebble])
 		end
 
@@ -925,15 +907,15 @@ feature -- Thread Handling.
 			-- Initialize thread support.
 		do
 			if {PLATFORM}.is_thread_capable then
-				if not g_thread_supported then
-					g_thread_init
+				if not {EV_GTK_EXTERNALS}.g_thread_supported then
+					{EV_GTK_EXTERNALS}.g_thread_init
 				end
 				check
-					threading_supported: g_thread_supported
+					threading_supported: {EV_GTK_EXTERNALS}.g_thread_supported
 				end
 					-- Initialize the recursive mutex.
-				static_mutex := new_g_static_rec_mutex
-				g_static_rec_mutex_init (static_mutex)
+				static_mutex := {EV_GTK_EXTERNALS}.new_g_static_rec_mutex
+				{EV_GTK_EXTERNALS}.g_static_rec_mutex_init (static_mutex)
 			end
 		end
 
@@ -941,7 +923,7 @@ feature -- Thread Handling.
 			-- Lock the Mutex.
 		do
 			if {PLATFORM}.is_thread_capable then
-				g_static_rec_mutex_lock (static_mutex)
+				{EV_GTK_EXTERNALS}.g_static_rec_mutex_lock (static_mutex)
 			end
 		end
 
@@ -949,7 +931,7 @@ feature -- Thread Handling.
 			-- Try to see if we can lock, False means no lock could be attained
 		do
 			if {PLATFORM}.is_thread_capable then
-				Result := g_static_rec_mutex_trylock (static_mutex)
+				Result := {EV_GTK_EXTERNALS}.g_static_rec_mutex_trylock (static_mutex)
 			end
 		end
 
@@ -957,7 +939,7 @@ feature -- Thread Handling.
 			-- Unlock the Mutex.
 		do
 			if {PLATFORM}.is_thread_capable then
-				g_static_rec_mutex_unlock (static_mutex)
+				{EV_GTK_EXTERNALS}.g_static_rec_mutex_unlock (static_mutex)
 			end
 		end
 
@@ -1015,53 +997,6 @@ feature {NONE} -- Externals
 
 	static_mutex: POINTER
 		-- Pointer to the global static mutex
-
-	new_g_static_rec_mutex: POINTER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"malloc (sizeof(GStaticRecMutex))"
-		end
-
-	frozen g_static_rec_mutex_init (a_static_mutex: POINTER) is
-		external
-			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
-		end
-
-	frozen g_static_rec_mutex_lock (a_static_mutex: POINTER) is
-		external
-			"C blocking signature (GStaticRecMutex*) use <gtk/gtk.h>"
-		end
-
-	frozen g_static_rec_mutex_trylock (a_static_mutex: POINTER): BOOLEAN is
-		external
-			"C blocking signature (GStaticRecMutex*): gboolean use <gtk/gtk.h>"
-		end
-
-	frozen g_static_rec_mutex_unlock (a_static_mutex: POINTER) is
-		external
-			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
-		end
-
-	frozen g_thread_supported: BOOLEAN is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"g_thread_supported()"
-		end
-
-	frozen g_thread_init is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-			{
-				#ifdef EIF_THREADS
-					g_thread_init (NULL);
-				#endif
-			}
-			]"
-		end
 
 invariant
 	window_oids_not_void: is_usable implies window_oids /= void

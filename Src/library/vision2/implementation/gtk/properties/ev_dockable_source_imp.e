@@ -35,17 +35,17 @@ feature -- Status setting
 				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
 					if a_button = 1 and not dawaiting_movement and widget_imp_at_pointer_position = Current then
 							orig_cursor := pointer_style
-							original_x_offset := a_x
-							original_y_offset := a_y
-							original_screen_x := a_screen_x
-							original_screen_y := a_screen_y
+							original_x_offset := a_x.to_integer_16
+							original_y_offset := a_y.to_integer_16
+							original_screen_x := a_screen_x.to_integer_16
+							original_screen_y := a_screen_y.to_integer_16
 							dawaiting_movement := True
 					end
 				end
 			end
 
 	dawaiting_movement: BOOLEAN
-	original_screen_x, original_screen_y: INTEGER
+	original_screen_x, original_screen_y: INTEGER_16
 
 	dragable_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- If in drag/pick and drop then update.

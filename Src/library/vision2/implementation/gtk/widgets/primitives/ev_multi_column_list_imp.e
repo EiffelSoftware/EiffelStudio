@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 						an_item ?= new_selection.item.implementation
 						newly_selected_items.extend (an_item)
 					end
-					previous_selection.prune_all (new_selection.item)
+					previous_selection.prune (new_selection.item)
 					new_selection.forth
 				end
 				from
@@ -260,24 +260,24 @@ feature {NONE} -- Implementation
 			-- Call the selections actions for `clicked_row'
 		do
 			if not previous_selection.has (clicked_row.interface) then
-					if clicked_row.select_actions_internal /= Void then
-						clicked_row.select_actions_internal.call (void)
-					end
-					if select_actions_internal /= Void then
-						select_actions_internal.call ([clicked_row.interface])
-					end
+				if clicked_row.select_actions_internal /= Void then
+					clicked_row.select_actions_internal.call (void)
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([clicked_row.interface])
+				end
 			end
 		end
 
 	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Call deselect actions for `deselected_row'
 		do
-				if deselected_row.deselect_actions_internal /= Void then
-					deselected_row.deselect_actions_internal.call (Void)
-				end
-				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([deselected_row.interface])
-				end
+			if deselected_row.deselect_actions_internal /= Void then
+				deselected_row.deselect_actions_internal.call (Void)
+			end
+			if deselect_actions_internal /= Void then
+				deselect_actions_internal.call ([deselected_row.interface])
+			end
 		end
 
 	resize_model_if_needed (a_columns: INTEGER) is
@@ -893,18 +893,18 @@ feature -- Implementation
 				end
 			end
 
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > height then
-						pick_y := height
+						pick_y := height.to_integer_16
 					end
 					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
@@ -913,10 +913,10 @@ feature -- Implementation
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
-						pick_x := width
+						pick_x := width.to_integer_16
 					end
 					if pick_y > row_height then
-						pick_y := row_height
+						pick_y := row_height.to_integer_16
 					end
 					App_implementation.set_x_y_origin (
 						pnd_row_imp.pick_x + (a_screen_x - a_x),
@@ -932,7 +932,6 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
-			last_pointed_target := Void
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then

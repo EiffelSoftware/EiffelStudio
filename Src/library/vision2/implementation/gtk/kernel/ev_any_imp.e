@@ -43,11 +43,12 @@ feature {EV_ANY_I} -- Access
 		local
 			l_c_object: POINTER
 		do
-			l_c_object := a_c_object
 			if needs_event_box then
 				l_c_object := {EV_GTK_EXTERNALS}.gtk_event_box_new
 				{EV_GTK_EXTERNALS}.gtk_container_add (l_c_object, a_c_object)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
+			else
+				l_c_object := a_c_object
 			end
 
 				-- Remove floating state.

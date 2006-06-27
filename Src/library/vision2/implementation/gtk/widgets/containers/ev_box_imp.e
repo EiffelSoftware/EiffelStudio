@@ -115,7 +115,11 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 feature {EV_ANY_I} -- Implementation
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.

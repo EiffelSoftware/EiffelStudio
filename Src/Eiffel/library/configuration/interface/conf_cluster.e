@@ -398,6 +398,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			child_added: children.has (a_cluster)
 		end
 
+	remove_child (a_cluster: like Current) is
+			-- Remove `a_cluster' from `children'.
+		do
+			if children /= Void then
+				children.start
+				children.search (a_cluster)
+				if not children.exhausted then
+					children.remove
+				end
+			end
+		end
+
 	set_recursive (a_enabled: BOOLEAN) is
 			-- Set `is_recursive' to `a_enabled'.
 		do

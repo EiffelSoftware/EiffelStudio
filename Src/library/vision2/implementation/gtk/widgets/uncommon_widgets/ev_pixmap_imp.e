@@ -55,8 +55,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
-		-- Needed to receive events on GtkImage
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
 
 	make (an_interface: like interface) is
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
@@ -339,7 +342,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 	internal_xpm_data: POINTER
 		-- Pointer to the appropriate XPM image used for the default stock cursor if any
 
-feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.

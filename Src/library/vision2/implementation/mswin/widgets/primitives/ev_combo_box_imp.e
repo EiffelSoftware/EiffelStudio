@@ -69,7 +69,7 @@ inherit
 			set_background_color,
 			tooltip_window,
 			destroy,
-			propagate_key_to_dialog
+			propagate_key_event_to_toplevel_window
 		end
 
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -521,19 +521,16 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	on_set_focus is
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
-			top_level_titled_window: EV_TITLED_WINDOW
+			l_top_level_window: EV_WINDOW_IMP
 		do
-				-- We now store `Current' in `top_level_window_imp' so
-				-- we can restore the focus to it when required.
-				--| See window_process_message in EV_WINDOW_IMP.
-			if top_level_window_imp /= Void then
+			l_top_level_window := top_level_window_imp
+			if l_top_level_window /= Void then
 				if is_editable then
-					top_level_window_imp.set_last_focused_widget (text_field.item)
+					l_top_level_window.set_last_focused_widget (text_field.item)
 				else
-					top_level_window_imp.set_last_focused_widget (combo.item)
+					l_top_level_window.set_last_focused_widget (combo.item)
 				end
-				top_level_titled_window ?= top_level_window_imp.interface
-				application_imp.set_window_with_focus (top_level_titled_window)
+				application_imp.set_window_with_focus (l_top_level_window.interface)
 			end
 				--| `Current' is made up of
 				--| multiple widgets which propagate events accordingly.
@@ -557,7 +554,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 
 feature {NONE} -- Implementation
 
-	propagate_key_to_dialog (is_pressed: BOOLEAN): BOOLEAN is
+	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN is
 			-- Should we propagate a key event if `Current' is parented in a dialog?
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do

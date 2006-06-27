@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				raw_buffer.set_with_named_file (a_file_name)
 			else
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((width * pixel_width) + 1,(height * pixel_height) + 1)
+				create raw_buffer.make_with_size ((${WIDTH} * ${PIXEL_WIDTH}) + 1,(${HEIGHT} * ${PIXEL_HEIGHT}) + 1)
 			end
 		rescue
 			retried := True
@@ -36,95 +36,45 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-${ACCESS}
-feature {NONE} -- Access
-
 	pixel_width: INTEGER is ${PIXEL_WIDTH}
 			-- Element width
-			
+
 	pixel_height: INTEGER is ${PIXEL_HEIGHT}
 			-- Element width
-			
+
 	width: INTEGER is ${WIDTH}
 			-- Matrix width
-	
+
 	height: INTEGER is ${HEIGHT}
 			-- Matrix height
-			
+
+${ACCESS}		
 feature {NONE} -- Query
 
-	frozen pixmap_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXMAP is
+	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= width
+			a_x_small_enough: a_x <= ${WIDTH}
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_y <= height
+			a_y_small_enough: a_y <= ${HEIGHT}
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
-			l_pw: INTEGER
-			l_ph: INTEGER
-			l_rectangle: like rectangle
 		do
-			l_pw := pixel_width
-			l_ph := pixel_height
-			l_x_offset := ((a_x - 1) * (l_pw + 1)) + 1
-			l_y_offset := ((a_y - 1) * (l_ph + 1)) + 1
+			l_x_offset := ((a_x - 1) * (${PIXEL_WIDTH} + 1)) + 1
+			l_y_offset := ((a_y - 1) * (${PIXEL_HEIGHT} + 1)) + 1
 
-			l_rectangle := rectangle
-			l_rectangle.set_x (l_x_offset)
-			l_rectangle.set_y (l_y_offset)
-			l_rectangle.set_width (l_pw)
-			l_rectangle.set_height (l_ph)
-			Result := raw_matrix.implementation.sub_pixmap (l_rectangle)
-		ensure
-			result_attached: Result /= Void
-		end
-		
-	frozen pixel_buffer_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXEL_BUFFER is
-			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
-		require
-			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= width
-			a_y_positive: a_y > 0
-			a_y_small_enough: a_x <= height
-		local
-			l_x_offset: INTEGER
-			l_y_offset: INTEGER
-			l_pw: INTEGER
-			l_ph: INTEGER
-			l_rectangle: like rectangle
-
-			l_temp_buffer: EV_PIXMAP
-		do
-			l_pw := pixel_width
-			l_ph := pixel_height
-			l_x_offset := ((a_x - 1) * (l_pw + 1)) + 1
-			l_y_offset := ((a_y - 1) * (l_ph + 1)) + 1
-
-			l_rectangle := rectangle
-			l_rectangle.set_x (l_x_offset)
-			l_rectangle.set_y (l_y_offset)
-			l_rectangle.set_width (l_pw)
-			l_rectangle.set_height (l_ph)
-
-			Result := raw_buffer.sub_pixel_buffer (l_rectangle)
+			Result := rectangle
+			Result.set_x (l_x_offset)
+			Result.set_y (l_y_offset)
+			Result.set_width (${PIXEL_WIDTH})
+			Result.set_height (${PIXEL_HEIGHT})
 		ensure
 			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
-
-${IMPLEMENTATION}
-	raw_matrix: EV_PIXMAP is
-				-- raw matrix pixmap
-			once
-				create Result
-				raw_buffer.draw_on_to (Result)
-			ensure
-				result_attached: Result /= Void
-			end
 
 	raw_buffer: EV_PIXEL_BUFFER
 			-- raw matrix pixel buffer

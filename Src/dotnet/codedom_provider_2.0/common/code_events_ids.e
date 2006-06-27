@@ -302,6 +302,9 @@ feature -- Compiler Warnings
 
 feature -- Compiler Information
 
+	Compiler_output: INTEGER is 11001;
+			-- Compiler output
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

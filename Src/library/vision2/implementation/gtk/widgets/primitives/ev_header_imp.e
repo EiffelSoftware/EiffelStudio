@@ -42,8 +42,11 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is True
-		-- Does `Current' need a GtkEventBox as its `c_object' to receive events.
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	make (an_interface: like interface) is
 			-- Create an empty Tree.

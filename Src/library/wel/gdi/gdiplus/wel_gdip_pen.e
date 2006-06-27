@@ -11,7 +11,7 @@ class
 inherit
 	WEL_GDIP_ANY
 		redefine
-			delete
+			destroy_item
 		end
 
 create
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Destroy
 
-	delete is
+	destroy_item is
 			-- Redefine
 		local
 			l_result: INTEGER

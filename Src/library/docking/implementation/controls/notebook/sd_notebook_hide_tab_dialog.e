@@ -202,6 +202,10 @@ feature {NONE} -- Implementation agents.
 				destroy
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				destroy
+			else
+				internal_text_box.set_text (a_key.out)
+				internal_text_box.set_focus
+				internal_text_box.set_caret_position (internal_text_box.text.count + 1)
 			end
 
 		end

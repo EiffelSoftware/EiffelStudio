@@ -154,9 +154,12 @@ feature -- Status setting
 			-- Assign `an_agent' to `actual_drop_target_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
+		local
+			l_object_id: INTEGER
 		do
 			actual_drop_target_agent := an_agent;
-			(create {EV_ENVIRONMENT}).application.implementation.pnd_targets.extend (interface.object_id)
+			l_object_id := interface.object_id;
+			(create {EV_ENVIRONMENT}).application.implementation.pnd_targets.put (l_object_id, l_object_id)
 		ensure
 			assigned: actual_drop_target_agent = an_agent
 		end

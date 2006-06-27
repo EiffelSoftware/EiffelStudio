@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_BAR_IMP
-	
+
 inherit
 	EV_MENU_BAR_I
 		redefine
@@ -22,13 +22,17 @@ inherit
 			interface,
 			insert_menu_item
 		end
-	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	make (an_interface: like interface) is
 		do
@@ -36,7 +40,7 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_bar_new)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
-		
+
 feature {EV_WINDOW_IMP} -- Implementation
 
 	set_parent_window_imp (a_wind: EV_WINDOW_IMP) is
@@ -46,7 +50,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 		do
 			parent_imp := a_wind
 		end
-		
+
 	parent: EV_WINDOW is
 			-- Parent window of Current.
 		do
@@ -54,13 +58,13 @@ feature {EV_WINDOW_IMP} -- Implementation
 				Result := parent_imp.interface
 			end
 		end
-	
+
 	remove_parent_window is
 			-- Set `parent_window' to Void.
 		do
 			parent_imp := Void
 		end
-		
+
 	parent_imp: EV_WINDOW_IMP
 
 feature {NONE} -- Implementation

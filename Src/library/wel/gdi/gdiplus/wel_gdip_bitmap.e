@@ -24,44 +24,39 @@ feature {NONE} -- Initlization
 		local
 			l_result: INTEGER
 		do
-			cpp_bitmap_create (a_width, a_height, $item, $l_result)
+			default_create
+			item := cpp_bitmap_create (gdi_plus_handle, a_width, a_height, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 feature -- C externals
 
-	cpp_bitmap_create (a_width, a_height: INTEGER; a_result_bitmap: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER])  is
-			-- Create a C++ bitmap object.
+	cpp_bitmap_create (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+			-- Create a bitmap object.
 		require
-			support: is_gdi_plus_installed
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipCreateBitmapFromScan0 = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipCreateBitmapFromScan0 = NULL;
+				GpBitmap *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipCreateBitmapFromScan0 = GetProcAddress (user32_module, "GdipCreateBitmapFromScan0");
-					if (GdipCreateBitmapFromScan0) {
-
-						*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (INT, INT, INT, PixelFormat, BYTE*, GpBitmap **)) GdipCreateBitmapFromScan0)
-									((INT) $a_width,
-									(INT) $a_height,
-									(INT) 0,
-									(PixelFormat) PixelFormat32bppARGB,
-									(BYTE*) NULL,
-									(GpBitmap **) $a_result_bitmap);
-						
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipCreateBitmapFromScan0)	{
+					GdipCreateBitmapFromScan0 = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateBitmapFromScan0");
+				}					
+				if (GdipCreateBitmapFromScan0) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (INT, INT, INT, PixelFormat, BYTE*, GpBitmap **)) GdipCreateBitmapFromScan0)
+								((INT) $a_width,
+								(INT) $a_height,
+								(INT) 0,
+								(PixelFormat) PixelFormat32bppARGB,
+								(BYTE*) NULL,
+								(GpBitmap **) &l_result);
 				}
+				return (EIF_POINTER) l_result;
 			}
 			]"
 		end

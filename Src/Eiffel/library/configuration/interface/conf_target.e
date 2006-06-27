@@ -500,7 +500,10 @@ feature -- Access queries for settings
 					a_name.is_equal (s_check_generic_creation_constraint) or
 					a_name.is_equal (s_il_verifiable) or
 					a_name.is_equal (s_use_cluster_name_as_namespace) or
-					a_name.is_equal (s_use_all_cluster_name_as_namespace)
+					a_name.is_equal (s_use_all_cluster_name_as_namespace) or
+					a_name.is_equal (s_check_vape) or
+					a_name.is_equal (s_cls_compliant) or
+					a_name.is_equal (s_dead_code_removal)
 				then
 					Result := True
 				else

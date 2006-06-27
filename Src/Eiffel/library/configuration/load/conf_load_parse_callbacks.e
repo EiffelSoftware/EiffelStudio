@@ -627,9 +627,9 @@ feature {NONE} -- Implementation attribute processing
 				current_library := factory.new_library (l_name, factory.new_location_from_full_path (l_location, current_target), current_target)
 				current_group := current_library
 				if l_readonly /= Void and then l_readonly.is_boolean then
-					if l_readonly.to_boolean then
-						current_library.enable_readonly
-					end
+					current_library.set_readonly (l_readonly.to_boolean)
+				else
+					current_library.set_readonly (True)
 				end
 				if l_prefix /= Void then
 					current_library.set_name_prefix (l_prefix)
@@ -663,9 +663,9 @@ feature {NONE} -- Implementation attribute processing
 				current_library := l_pre
 				current_group := current_library
 				if l_readonly /= Void and then l_readonly.is_boolean then
-					if l_readonly.to_boolean then
-						current_library.enable_readonly
-					end
+					current_library.set_readonly (l_readonly.to_boolean)
+				else
+					current_library.set_readonly (True)
 				end
 				if l_prefix /= Void then
 					current_library.set_name_prefix (l_prefix)

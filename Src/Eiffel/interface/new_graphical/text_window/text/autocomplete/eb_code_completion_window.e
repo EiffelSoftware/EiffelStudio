@@ -531,16 +531,60 @@ feature {NONE} -- Implementation
 			-- process user input in `choice_list'.
 		do
 			if ev_key /= Void then
-				inspect
-					ev_key.code
-				when key_ctrl then
-					if not show_completion_disambiguated_name then
-						show_disambiguated_name_button.enable_select
-						temp_switching_show_disambiguated_name := True
-					end
+				if preferences.editor_data.shortcuts.item ("toggle_filter").matches (ev_key,
+																					ev_application.alt_pressed,
+																					ev_application.ctrl_pressed,
+																					ev_application.shift_pressed)
+				then
+					toggle_button (filter_button)
+				elseif preferences.editor_data.shortcuts.item ("toggle_show_type").matches (ev_key,
+																					ev_application.alt_pressed,
+																					ev_application.ctrl_pressed,
+																					ev_application.shift_pressed)
+				then
+					toggle_button (show_return_type_button)
+				elseif preferences.editor_data.shortcuts.item ("toggle_show_signature").matches (ev_key,
+																					ev_application.alt_pressed,
+																					ev_application.ctrl_pressed,
+																					ev_application.shift_pressed)
+				then
+					toggle_button (show_signature_button)
+				elseif preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name").matches (ev_key,
+																					ev_application.alt_pressed,
+																					ev_application.ctrl_pressed,
+																					ev_application.shift_pressed)
+				then
+					toggle_button (show_disambiguated_name_button)
+				elseif preferences.editor_data.shortcuts.item ("toggle_remember_size").matches (ev_key,
+																					ev_application.alt_pressed,
+																					ev_application.ctrl_pressed,
+																					ev_application.shift_pressed)
+				then
+					toggle_button (remember_size_button)
 				else
-					Precursor {CODE_COMPLETION_WINDOW} (ev_key)
+					inspect
+						ev_key.code
+					when key_ctrl then
+						if not show_completion_disambiguated_name then
+							show_disambiguated_name_button.enable_select
+							temp_switching_show_disambiguated_name := True
+						end
+					else
+						Precursor {CODE_COMPLETION_WINDOW} (ev_key)
+					end
 				end
+			end
+		end
+
+	toggle_button (a_button: like filter_button) is
+			-- Toggle button selection
+		require
+			a_button_not_void: a_button /= Void
+		do
+			if a_button.is_selected then
+				a_button.disable_select
+			else
+				a_button.enable_select
 			end
 		end
 

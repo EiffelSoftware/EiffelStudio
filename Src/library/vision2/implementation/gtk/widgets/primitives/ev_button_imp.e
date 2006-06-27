@@ -110,8 +110,11 @@ feature {NONE} -- Initialization
 			Result := visual_widget
 		end
 
-	needs_event_box: BOOLEAN is True
-		-- Make sure `Current' is placed within a GtkEventBox.
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
 
 feature -- Access
 

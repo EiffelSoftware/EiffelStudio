@@ -865,7 +865,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key press represented by `virtual_key'.
 		local
 			key: EV_KEY
-			common_dialog_imp: EV_DIALOG_I
+			l_top_level_window_imp: EV_WINDOW_I
 			l_current: EV_WIDGET_I
 		do
 				-- If escape or tab has been pressed then end pick and drop.
@@ -878,16 +878,12 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
-				if propagate_key_to_dialog (True) then
-						-- Windows does not seem to generate any messages when a key is
-						-- pressed in a modal or modeless dialog, so if `Current' is parented
-						-- in one of these, we must force the calling of the key_press_actions.
-						-- We also handle the case where `Current' is a dialog, as the escape key
-						-- is fired and we need to ignore it, to avoid the actions being called twice.
-					common_dialog_imp ?= top_level_window_imp
+				if propagate_key_event_to_toplevel_window (True) then
+						-- Propagate key event to top level window
+					l_top_level_window_imp ?= top_level_window_imp
 					l_current := Current
-					if common_dialog_imp /= Void and then common_dialog_imp /= l_current then
-						common_dialog_imp.key_press_actions.call ([key])
+					if l_top_level_window_imp /= Void and then l_top_level_window_imp /= l_current then
+						l_top_level_window_imp.key_press_actions.call ([key])
 					end
 				end
 				if application_imp.key_press_actions_internal /= Void then
@@ -909,7 +905,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
-				if propagate_key_to_dialog (False) then
+				if propagate_key_event_to_toplevel_window (False) then
 						-- Windows does not seem to generate any messages when a key is
 						-- pressed in a modal or modeless dialog, so if `Current' is parented
 						-- in one of these, we must force the calling of the key_release_actions.
@@ -930,7 +926,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	propagate_key_to_dialog (is_pressed: BOOLEAN): BOOLEAN is
+	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN is
 			-- Should we propagate a key event if `Current' is parented in a dialog?
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do
@@ -1023,26 +1019,21 @@ feature {NONE} -- Implementation, focus event
 	on_set_focus is
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
-			top_level_titled_window: EV_TITLED_WINDOW
+			l_top_level_window_imp: EV_WINDOW_IMP
 		do
-				-- We now store `Current' in `top_level_window_imp' so
-				-- we can restore the focus to it when required.
-				--| See window_process_message in EV_WINDOW_IMP.
-				-- Note that we do nothing if `top_level_window_imp' is Void.
-				-- It appears that this may occur during destruction, although
-				-- why `on_set_focus' gets called is another issue, as we are
-				-- not really sure why at the moment.
-			if top_level_window_imp /= Void then
-				top_level_window_imp.set_last_focused_widget (wel_item)
-				top_level_titled_window ?= top_level_window_imp.interface
-				application_imp.set_window_with_focus (top_level_titled_window)
-			end
-			Focus_on_widget.put (Current)
-			if application_imp.focus_in_actions /= Void then
-				application_imp.focus_in_actions.call ([interface])
-			end
-			if focus_in_actions_internal /= Void then
-				focus_in_actions_internal.call (Void)
+			l_top_level_window_imp := top_level_window_imp
+			if l_top_level_window_imp /= Void and then l_top_level_window_imp /= Current then
+					-- Ignore focusing for EV_WINDOW_IMP and descendants as this is performed
+					-- in {EV_WINDOW_IMP}.window_on_wm_activate
+				Focus_on_widget.put (Current)
+				if application_imp.focus_in_actions /= Void then
+					application_imp.focus_in_actions.call ([interface])
+				end
+				l_top_level_window_imp.set_last_focused_widget (wel_item)
+				application_imp.set_window_with_focus (l_top_level_window_imp.interface)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call (Void)
+				end
 			end
 				-- If we still have the focus after calling the focus_in
 				-- actions then we need to updated the current push button
@@ -1056,11 +1047,15 @@ feature {NONE} -- Implementation, focus event
 	on_kill_focus is
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
-			if application_imp.focus_out_actions /= Void then
-				application_imp.focus_out_actions.call ([interface])
-			end
-			if focus_out_actions_internal /= Void then
-				focus_out_actions_internal.call (Void)
+			if top_level_window_imp /= Current then
+					-- Ignore focusing for EV_WINDOW_IMP and descendants as this is performed
+					-- in {EV_WINDOW_IMP}.window_on_wm_activate
+				if application_imp.focus_out_actions /= Void then
+					application_imp.focus_out_actions.call ([interface])
+				end
+				if focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call (Void)
+				end
 			end
 		end
 

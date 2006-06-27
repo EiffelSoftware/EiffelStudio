@@ -20,7 +20,8 @@ feature {NONE} -- Initialization
 			a_container_not_destroy: not a_container.is_destroyed
 			a_container_not_full: not a_container.full
 			a_widnow_valid: window_valid (a_window)
---			a_container_valid: container_valid (a_container, a_window)
+		local
+			l_checker: SD_DEPENDENCY_CHECKER
 		do
 			create internal_shared
 			internal_shared.set_show_all_feedback_indicator (True)
@@ -41,12 +42,15 @@ feature {NONE} -- Initialization
 
 			create tool_bar_manager.make (Current)
 
-			init_actions
+			agents.init_actions
 
 			contents.extend (zones.place_holder_content)
 			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 			internal_shared.set_show_all_feedback_indicator (True)
 			set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+
+			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
+			l_checker.check_dependency (main_window)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
@@ -99,21 +103,6 @@ feature {NONE} -- Initialization
 			l_inner_container.set_minimum_size (0, 0)
 			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
-		end
-
-	init_actions is
-			-- Initlialize actions.
-		local
-			l_app: EV_ENVIRONMENT
-		do
-			contents.add_actions.extend (agent agents.on_added_content)
-			zones.zones.add_actions.extend (agent agents.on_added_zone)
-			zones.zones.remove_actions.extend (agent agents.on_pruned_zone)
-			internal_viewport.resize_actions.extend (agent agents.on_resize (?, ?, ?, ?, False))
-			create l_app
-			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
-			main_window.focus_out_actions.extend (agent agents.on_top_level_window_focus_out)
-			main_window.focus_in_actions.extend (agent agents.on_top_level_window_focus_in)
 		end
 
 feature -- Query
@@ -211,6 +200,12 @@ feature -- Command
 			 zones.place_holder_widget.set_background_color (a_color)
 		ensure
 			set: query.inner_container_main.background_color.is_equal (a_color)
+		end
+
+	destory is
+			-- Destory all underline objects.
+		do
+			agents.destroy
 		end
 
 feature -- Contract support

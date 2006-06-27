@@ -48,18 +48,19 @@ feature -- Command
 			set_gdkpixbuf ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error))
 		end
 
-	draw_to_drawable (a_drawable: EV_DRAWABLE) is
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Draw Current to `a_drawable'
 		local
-			l_pixmap: EV_PIXMAP
-			l_drawable_imp: EV_DRAWABLE_IMP
+			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixbuf: POINTER
+			l_gdkpix, l_gdkmask: POINTER
 		do
-			l_pixmap ?= a_drawable
-			if l_pixmap /= Void then
-				l_pixmap.set_size (width, height)
-			end
-			l_drawable_imp ?= a_drawable.implementation
-			{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (l_drawable_imp.drawable, l_drawable_imp.gc, gdk_pixbuf, 0, 0, 0, 0, width, height, 0, 0, 0)
+			create Result
+			l_pixmap_imp ?= Result.implementation
+			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
+			l_pixmap_imp.set_pixmap (l_gdkpix, l_gdkmask)
+			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is

@@ -51,7 +51,7 @@ feature -- Basic Operations
 					codedom_provider ?= {ACTIVATOR}.create_instance ({SYSTEM_TYPE}.get_type (l_config.language_provider (a_codedom_provider)))
 				else
 					if {SYSTEM_FILE}.exists (a_codedom_provider) then
-						l_assembly := {ASSEMBLY}.load_from (a_codedom_provider)
+						l_assembly := {ASSEMBLY}.load_file (a_codedom_provider)
 						from
 							l_types := l_assembly.get_types
 						until

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	AGENT_LIST_EQUALITY_TESTER [G]
+	AGENT_LIST_COMPARATOR [G]
 
 inherit
 	KL_PART_COMPARATOR [G]

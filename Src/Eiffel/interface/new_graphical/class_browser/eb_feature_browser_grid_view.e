@@ -670,7 +670,7 @@ feature{NONE} -- Sorting
 		local
 			l_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [u, v: EB_FEATURE_BROWSER_GRID_ROW], BOOLEAN]]
 			l_cursor: CURSOR
-			l_tester: AGENT_LIST_EQUALITY_TESTER [EB_FEATURE_BROWSER_GRID_ROW]
+			l_tester: AGENT_LIST_COMPARATOR [EB_FEATURE_BROWSER_GRID_ROW]
 			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
 			create l_list.make (a_column_list.count)

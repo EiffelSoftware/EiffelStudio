@@ -756,6 +756,7 @@ feature {NONE} -- Implementation
 			l_apps: LIST [STRING]
 			l_assemblies: LIST [STRING]
 			l_row: EV_MULTI_COLUMN_LIST_ROW
+			l_prefix: STRING
 		do
 			l_config := active_configuration
 			if l_config /= Void then
@@ -847,7 +848,11 @@ feature {NONE} -- Implementation
 					l_assemblies.after
 				loop
 					create l_row
-					l_row.extend (l_config.assembly_prefix (l_assemblies.item))
+					l_prefix := l_config.assembly_prefix (l_assemblies.item)
+					if l_prefix = Void then
+						create l_prefix.make_empty
+					end
+					l_row.extend (l_prefix)
 					l_row.extend (l_assemblies.item)
 					prefixes_list.extend (l_row)
 					l_assemblies.forth

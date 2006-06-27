@@ -2,7 +2,7 @@ indexing
 	description:
 		"View with information about a class."
 	legal: "See notice at end of class."
-	status: "See notice at end of class."N
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

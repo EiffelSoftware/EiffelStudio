@@ -123,8 +123,6 @@ feature -- Command
 
 	show is
 			-- Show Current.
-		local
-			l_fixed: EV_FIXED
 		do
 			if not is_visible then
 				if zone /= Void then
@@ -191,7 +189,7 @@ feature -- Query
 	title: STRING
 			-- Tool bar title.
 
-	items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current'.
 
 	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
@@ -364,7 +362,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 			l_parent: EV_CONTAINER
 		do
-			l_items := items
+			l_items := items.twin
 			from
 				l_items.start
 			until
@@ -381,12 +379,34 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			end
 		end
 
+	index_of (a_item: SD_TOOL_BAR_ITEM): INTEGER
+			-- Index of `a_item'
+		require
+			has: items.has (a_item)
+		local
+			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
+		do
+			from
+				l_items := items.twin
+				l_items.start
+			until
+				l_items.after or Result /= 0
+			loop
+				if l_items.item = a_item then
+					Result := l_items.index
+				end
+				l_items.forth
+			end
+		ensure
+			valid: Result /= 0
+		end
+
 	seperator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
 			-- Separator after `a_item' if exist.
 		require
 			has: items.has (a_item)
 		do
-			items.go_i_th (items.index_of (a_item, 1))
+			items.go_i_th (index_of (a_item))
 			if not items.after then
 				items.forth
 				if not items.after then
@@ -399,10 +419,13 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			-- Separator after `a_item' if exist.
 		require
 			has: items.has (a_item)
+		local
+			l_index: INTEGER
 		do
-			items.go_i_th (items.index_of (a_item, 1))
+			l_index := index_of (a_item)
+			items.go_i_th (l_index)
 			if not items.before then
-				items.back
+				items.go_i_th (l_index - 1)
 				if not items.before then
 					Result ?= items.item
 				end

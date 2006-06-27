@@ -306,8 +306,8 @@ feature {EV_ANY_I} -- Implementation
 					is_dnd_in_transport := True
 						-- Assign `True' to `is_dnd_in_transport'
 				end
-				pointer_x := a_screen_x
-				pointer_y := a_screen_y
+				pointer_x := a_screen_x.to_integer_16
+				pointer_y := a_screen_y.to_integer_16
 				if pebble_positioning_enabled then
 					create pt.make (pick_x, pick_y)
 					create win_pt.make (a_screen_x, a_screen_y)
@@ -428,7 +428,6 @@ feature {EV_ANY_I} -- Implementation
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
 
-
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
 
@@ -438,7 +437,6 @@ feature {EV_ANY_I} -- Implementation
 				-- Reset internal attributes.
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
-			last_pointed_target := Void
 				-- Assign `Void' to `last_pointed_target'.
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
@@ -563,12 +561,8 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 
-				global_pnd_targets.start
-				global_pnd_targets.search (current_target_object_id)
-				if not global_pnd_targets.exhausted then
-					-- If the target is valid then return the target.
-					-- Otherwise the target will be void.
-					Result ?= interface.id_object (global_pnd_targets.item)
+				if global_pnd_targets.has (current_target_object_id) then
+					Result ?= interface.id_object (current_target_object_id)
 				end
 			end
 		end

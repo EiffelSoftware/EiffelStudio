@@ -147,6 +147,20 @@ feature -- Properties
 			pixmap := a_pixmap
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER
+			-- Pixel buffer which is always 32bits.
+			-- It will not lose alpha datas.
+
+	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Set `pixel_buffer'
+		require
+			not_void: a_pixel_buffer /= Void
+		do
+			pixel_buffer := a_pixel_buffer
+		ensure
+			set: pixel_buffer = a_pixel_buffer
+		end
+
 	name: STRING
 			-- Name which is used for store configuration
 

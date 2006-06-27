@@ -10,6 +10,9 @@ class
 
 inherit
 	SD_HOR_VER_BOX
+		export
+			{ANY} screen_x, screen_y, width, height
+		end
 
 create
 	make
@@ -190,7 +193,7 @@ feature -- Properties
 	is_show_text: BOOLEAN
 			-- Draw text on `internal_drawing_area'?
 
-feature {NONE} -- Agents
+feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 	on_pointer_enter is
 			-- Handle pointer enter.
@@ -214,6 +217,8 @@ feature {NONE} -- Agents
 			internal_docking_manager.command.unlock_update
 			pointer_enter_actions.call ([])
 		end
+
+feature {NONE} -- Implementation
 
 	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle redraw.
@@ -248,8 +253,6 @@ feature {NONE} -- Agents
 				internal_drawing_area.draw_segment (internal_drawing_area.width - 1, 0, internal_drawing_area.width - 1, internal_drawing_area.height - 1)
 			end
 		end
-
-feature {NONE} -- Implementation
 
 	update_size_internal is
 			-- Update minmum size base on direction and `is_show_text'.
@@ -288,7 +291,7 @@ feature {NONE} -- Implementation
 			-- Start y position when `on_draw' draw pixmap.
 		do
 			if is_draw_separator_top then
-				Result := Result + 1
+				Result := Result + 3
 			end
 			if is_vertical then
 				Result := Result + padding_width // 2
@@ -309,7 +312,7 @@ feature {NONE} -- Implementation
 			-- Start y position when `on_draw' draw text.
 		do
 			if not is_vertical then
-				Result := start_y_pixmap_internal + padding_width // 2
+				Result := start_y_pixmap_internal - 2 + padding_width // 2
 			else
 				Result := start_y_pixmap_internal + content.pixmap.height + padding_width // 2
 			end

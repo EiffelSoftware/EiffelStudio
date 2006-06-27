@@ -862,7 +862,7 @@ feature{NONE} -- Initialization
 			last_sorted_column := 0
 			create l_class_sort_info.make (grid.column (1), agent class_sorter, ascending_order)
 			l_class_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info, 1)
+			set_sort_info (l_class_sort_info)
 
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)

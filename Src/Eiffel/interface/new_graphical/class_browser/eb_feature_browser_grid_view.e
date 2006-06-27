@@ -98,7 +98,7 @@ feature -- Setting
 				grid.header.i_th (3).set_text (interface_names.l_version_from)
 				create l_written_class_sort_info.make (grid.column (3), agent written_class_sorter, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
-				set_sort_info (l_written_class_sort_info, 3)
+				set_sort_info (l_written_class_sort_info)
 			else
 				grid.set_column_count_to (2)
 			end
@@ -359,16 +359,21 @@ feature{NONE} -- Initialization
 			if is_written_class_used then
 				create l_written_class_sort_info.make (grid.column (3), agent written_class_sorter, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
-				set_sort_info (l_written_class_sort_info, 3)
+				set_sort_info (l_written_class_sort_info)
 			end
 			l_class_sort_info.enable_auto_indicator
 			l_feature_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info, 1)
-			set_sort_info (l_feature_sort_info, 2)
+			set_sort_info (l_class_sort_info)
+			set_sort_info (l_feature_sort_info)
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
+			create column_tester_table.make (3)
+			column_tester_table.put (agent class_tester, 1)
+			column_tester_table.put (agent feature_name_tester, 2)
+			column_tester_table.put (agent written_class_tester, 3)
+			create {LINKED_LIST [INTEGER]}sort_column_list.make
 		end
 
 feature -- Notification
@@ -527,37 +532,41 @@ feature{NONE} -- Sorting
 
 	class_sorter (a_order: INTEGER) is
 			-- Sorter for class name
-		local
-			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
-			create l_agent_sorter.make (agent class_tester)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (rows)
+			if ev_application.ctrl_pressed then
+				extend_sort_column_list (class_column)
+			else
+				sort_column_list.wipe_out
+				sort_column_list.extend (class_column)
+			end
+			sort_rows (rows, sort_column_list)
 			bind_grid
 		end
 
 	written_class_sorter (a_order: INTEGER) is
 			-- Sorter for class name
-		local
-			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
-			create l_agent_sorter.make (agent written_class_tester)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (rows)
+			if ev_application.ctrl_pressed then
+				extend_sort_column_list (written_class_column)
+			else
+				sort_column_list.wipe_out
+				sort_column_list.extend (written_class_column)
+			end
+			sort_rows (rows, sort_column_list)
+
 			bind_grid
 		end
 
 	feature_sorter (a_order: INTEGER) is
 			-- Sorter for feature name
-		local
-			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
-			create l_agent_sorter.make (agent feature_name_tester)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (rows)
+			if ev_application.ctrl_pressed then
+				extend_sort_column_list (feature_column)
+			else
+				sort_column_list.wipe_out
+				sort_column_list.extend (feature_column)
+			end
+			sort_rows (rows, sort_column_list)
 			bind_grid
 		end
 
@@ -648,55 +657,48 @@ feature{NONE} -- Sorting
 			Result := column_sort_info.item (written_class_column).current_order
 		end
 
-	selected_text: STRING is
-			-- String representation of selected rows/items
-			-- If no row/item is selected, return an empty string.
+	column_tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [u, v: EB_FEATURE_BROWSER_GRID_ROW], BOOLEAN], INTEGER]
+			-- Table of column testers
+			-- Key is column index, value is the tester.
+
+	sort_rows (a_rows: like rows; a_column_list: LIST [INTEGER]) is
+			-- Sort `a_rows' column by column for every column whose indexes are in `a_column_list'.
+		require
+			a_rows_attached: a_rows /= Void
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty: not a_column_list.is_empty
 		local
-			l_sorted_items: DS_LIST [EV_GRID_ITEM]
-			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_last_row_index: INTEGER
-			l_last_column_index: INTEGER
-			l_item: EV_GRID_ITEM
-			l_list: LIST [EV_GRID_ITEM]
+			l_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [u, v: EB_FEATURE_BROWSER_GRID_ROW], BOOLEAN]]
+			l_cursor: CURSOR
+			l_tester: AGENT_LIST_EQUALITY_TESTER [EB_FEATURE_BROWSER_GRID_ROW]
+			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
-			l_list := grid.selected_items
-			if not l_list.is_empty then
-				create Result.make (512)
-				if l_list.count = 1 then
-						-- For single selected item
-					l_grid_item ?= l_list.first
-					if l_grid_item /= Void then
-						Result.append (l_grid_item.text)
-					end
-				else
-						-- For multi selected items
-					l_sorted_items := sorted_items (l_list)
-					from
-						l_last_column_index := 1
-						l_sorted_items.start
-					until
-						l_sorted_items.after
-					loop
-						l_item := l_sorted_items.item_for_iteration
-						if l_item.row.index /= l_last_row_index then
-							if l_last_row_index /= 0 then
-								Result.append_character ('%N')
-							end
-							l_last_row_index := l_item.row.index
-							l_last_column_index := 1
-						end
-						Result.append (tabs (l_item.column.index - l_last_column_index))
-						l_last_column_index := l_item.column.index
-						l_grid_item ?= l_item
-						if l_grid_item /= Void then
-							Result.append (l_grid_item.text)
-						end
-						l_sorted_items.forth
-					end
-				end
-			else
-				create Result.make (0)
+			create l_list.make (a_column_list.count)
+			l_cursor := a_column_list.cursor
+			from
+				a_column_list.start
+			until
+				a_column_list.after
+			loop
+				l_list.extend (column_tester_table.item (a_column_list.item))
+				a_column_list.forth
 			end
+			a_column_list.go_to (l_cursor)
+			create l_tester.make (l_list)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (a_rows)
+		end
+
+	sort_column_list: LIST [INTEGER]
+			-- List of columns to sort
+
+	extend_sort_column_list (a_column: INTEGER) is
+			-- Extend `a_column' in `sort_column_list'.
+		require
+			a_column_positive: a_column > 0
+		do
+			sort_column_list.prune_all (a_column)
+			sort_column_list.extend (a_column)
 		end
 
 feature -- Recyclable
@@ -768,6 +770,57 @@ feature{NONE} -- Implementation
 				if a_item.row.is_expandable then
 					a_item.row.collapse
 				end
+			end
+		end
+
+	selected_text: STRING is
+			-- String representation of selected rows/items
+			-- If no row/item is selected, return an empty string.
+		local
+			l_sorted_items: DS_LIST [EV_GRID_ITEM]
+			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_last_row_index: INTEGER
+			l_last_column_index: INTEGER
+			l_item: EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
+		do
+			l_list := grid.selected_items
+			if not l_list.is_empty then
+				create Result.make (512)
+				if l_list.count = 1 then
+						-- For single selected item
+					l_grid_item ?= l_list.first
+					if l_grid_item /= Void then
+						Result.append (l_grid_item.text)
+					end
+				else
+						-- For multi selected items
+					l_sorted_items := sorted_items (l_list)
+					from
+						l_last_column_index := 1
+						l_sorted_items.start
+					until
+						l_sorted_items.after
+					loop
+						l_item := l_sorted_items.item_for_iteration
+						if l_item.row.index /= l_last_row_index then
+							if l_last_row_index /= 0 then
+								Result.append_character ('%N')
+							end
+							l_last_row_index := l_item.row.index
+							l_last_column_index := 1
+						end
+						Result.append (tabs (l_item.column.index - l_last_column_index))
+						l_last_column_index := l_item.column.index
+						l_grid_item ?= l_item
+						if l_grid_item /= Void then
+							Result.append (l_grid_item.text)
+						end
+						l_sorted_items.forth
+					end
+				end
+			else
+				create Result.make (0)
 			end
 		end
 

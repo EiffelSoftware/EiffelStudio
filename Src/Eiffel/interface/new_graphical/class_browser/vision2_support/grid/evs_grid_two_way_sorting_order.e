@@ -32,13 +32,13 @@ feature -- Sorting order
 	ascending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `ascending_order'
 		do
-			Result := pixmaps.icon_pixmaps.sort_acending_icon
+			Result := pixmaps.icon_pixmaps.sort_descending_icon
 		end
 
 	descending_indicator_pixmap: EV_PIXMAP is
 			-- Indicator for `decending_order'
 		do
-			Result := pixmaps.icon_pixmaps.sort_descending_icon
+			Result := pixmaps.icon_pixmaps.sort_acending_icon
 		end
 
 indexing

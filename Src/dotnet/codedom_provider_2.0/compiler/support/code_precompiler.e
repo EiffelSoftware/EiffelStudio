@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				precompile_assembly := {ASSEMBLY}.load_from (a_path)
+				precompile_assembly := {ASSEMBLY}.load_file (a_path)
 			end
 		rescue
 			precompile_assembly := Void

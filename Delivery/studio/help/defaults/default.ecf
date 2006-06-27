@@ -4,14 +4,6 @@
 		<option profile="false">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<setting name="array_optimization" value="False"/>
-		<setting name="console_application" value="False"/>
-		<setting name="dead_code_removal" value="True"/>
-		<setting name="dynamic_runtime" value="False"/>
-		<setting name="inlining" value="True"/>
-		<setting name="inlining_size" value="0"/>
-		<setting name="line_generation" value="False"/>
-		<setting name="multithreaded" value="False"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="True"/>
 		<cluster name="$root_cluster_name" location="$root_cluster_location"/>
 	</target>

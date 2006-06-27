@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_VIEWPORT_IMP
-	
+
 inherit
 	EV_VIEWPORT_I
 		undefine
@@ -18,7 +18,7 @@ inherit
 			set_item_width,
 			set_item_height
 		end
-		
+
 	EV_CELL_IMP
 		redefine
 			interface,
@@ -30,16 +30,20 @@ inherit
 			minimum_height,
 			needs_event_box
 		end
-	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	make (an_interface: like interface) is
-			-- Initialize. 
+			-- Initialize.
 		do
 			base_make (an_interface)
 			viewport := {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
@@ -48,7 +52,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 			container_widget := viewport
 		end
-		
+
 feature -- Access
 
 	minimum_width: INTEGER is
@@ -58,7 +62,7 @@ feature -- Access
 			-- Result is as expected though as item has no effect on minimum_width
 			Result := internal_minimum_width.max (0)
 		end
-		
+
 	minimum_height: INTEGER is
 			-- Minimum_height of widget.
 		do
@@ -90,11 +94,11 @@ feature -- Element change
 				item_imp ?= item.implementation
 				-- The blocking of resize actions is due to set uposition causing temporary resizing.
 				if item_imp.resize_actions_internal /= Void then
-					item_imp.resize_actions_internal.block	
-				end				
+					item_imp.resize_actions_internal.block
+				end
 			end
 		end
-			
+
 	unblock_resize_actions is
 			-- Unblock all resize actions.
 		local
@@ -104,12 +108,14 @@ feature -- Element change
 				item_imp ?= item.implementation
 				if item_imp.resize_actions_internal /= Void then
 					item_imp.resize_actions_internal.resume
-				end	
+				end
 			end
 		end
 
 	set_x_offset (a_x: INTEGER) is
 			-- Set `x_offset' to `a_x'.
+		local
+			l_null: POINTER
 		do
 			if a_x /= internal_x_offset then
 				block_resize_actions
@@ -118,7 +124,7 @@ feature -- Element change
 					-- Code below is to ensure that if the widget is visible then
 					-- we only move the window, and not call the `expose_actions' on `item'
 					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= default_pointer then
+				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= l_null then
 					{EV_GTK_EXTERNALS}.gdk_window_move (
 						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -a_x, -internal_y_offset)
 				else
@@ -130,6 +136,8 @@ feature -- Element change
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
+		local
+			l_null: POINTER
 		do
 			if a_y /= internal_y_offset then
 				block_resize_actions
@@ -138,7 +146,7 @@ feature -- Element change
 					-- Code below is to ensure that if the widget is visible then
 					-- we only move the window, and not call the `expose_actions' on `item'
 					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= default_pointer then
+				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= l_null then
 					{EV_GTK_EXTERNALS}.gdk_window_move (
 						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -internal_x_offset, -a_y)
 				else
@@ -147,20 +155,20 @@ feature -- Element change
 				unblock_resize_actions
 			end
 		end
-		
+
 	set_item_size (a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		do
 			internal_set_item_size (a_width, a_height)
 		end
-		
+
 	set_item_width (a_width: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 		do
 			internal_set_item_size (a_width, -1)
 		end
-		
+
 	set_item_height (a_height: INTEGER) is
 			-- Set `a_widget.height' to `a_height'.
 		do
@@ -173,7 +181,7 @@ feature {NONE} -- Implementation
 			-- Pointer to the event box
 
 	visual_widget: POINTER is
-			--
+			-- Pointer to the GtkViewport widget.
 		do
 			Result := c_object
 		end
@@ -231,7 +239,7 @@ feature {NONE} -- Implementation
 			if {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (l_adj) > a_value then
 				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (l_adj, a_value)
 			elseif {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (l_adj) < a_value then
-				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)			
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)
 			end
 			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_value (l_adj, a_value)
 		ensure

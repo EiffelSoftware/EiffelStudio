@@ -130,7 +130,11 @@ feature -- Commands
 		local
 			l_state: SD_STATE_VOID
 		do
-			internal_docking_manager.command.lock_update (zone, False)
+			if zone /= Void then
+				internal_docking_manager.command.lock_update (zone, False)
+			else
+				internal_docking_manager.command.lock_update (Void, True)
+			end
 
 			if content /= internal_docking_manager.zones.place_holder_content then
 				add_place_holder
@@ -306,12 +310,14 @@ feature {NONE} -- Implementation
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
 			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
-			if l_mutli_dock_area.editor_zone_count = 1 and zone.content.type = {SD_ENUMERATION}.editor then
-				check not_has: not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
-				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
-				check is_editor: zone.content.type = {SD_ENUMERATION}.editor end
-				internal_docking_manager.zones.place_holder_content.set_relative (zone.content, {SD_ENUMERATION}.top)
+			if zone /= Void then -- Maybe it's auto hide state, zone = Void.
+				l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
+				if l_mutli_dock_area.editor_zone_count = 1 and zone.content.type = {SD_ENUMERATION}.editor then
+					check not_has: not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
+					internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
+					check is_editor: zone.content.type = {SD_ENUMERATION}.editor end
+					internal_docking_manager.zones.place_holder_content.set_relative (zone.content, {SD_ENUMERATION}.top)
+				end
 			end
 		end
 
@@ -322,9 +328,11 @@ feature {NONE} -- Implementation
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
 			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
-			if l_mutli_dock_area.editor_zone_count > 1 and then internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-				internal_docking_manager.zones.place_holder_content.close
+			if zone /= Void then
+				l_mutli_dock_area := internal_docking_manager.query.inner_container (zone)
+				if l_mutli_dock_area.editor_zone_count > 1 and then internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
+					internal_docking_manager.zones.place_holder_content.close
+				end
 			end
 		end
 

@@ -1,8 +1,5 @@
 indexing
-	description: "[
-					Pixel buffer that always contain 32bits orignal pixmap pixels' datas.
-					So alpha datas will not lose.
-																							]"
+	description: "Pixel buffer used for storing RGBA values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
@@ -24,7 +21,7 @@ create
 feature -- Initlize
 
 	make_with_size (a_width, a_height: INTEGER) is
-			-- Initialize current with size.
+			-- Create pixel buffer with width `a_width' and height `a_height'.
 		do
 			default_create
 			implementation.make_with_size (a_width, a_height)
@@ -33,47 +30,48 @@ feature -- Initlize
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
-			-- Load pixel datas from `a_file_name'
-			-- Pixmap type can be BMP, GIF, JPEG, PNG, TIFF, and EMF on Windows.
+			-- Load pixel data from file `a_file_name'
 		do
 			implementation.set_with_named_file (a_file_name)
 		end
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
-			-- Draw Current to drawable surface `a_drawable'.
+			-- Return a pixmap region of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
 		do
 			Result := implementation.sub_pixmap (a_rect)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
-			-- Create a new sub pixel buffer object.
+			-- Return a sub pixel buffer of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
 		do
 			Result := implementation.sub_pixel_buffer (a_rect)
 		ensure
-			not_void: Result /= Void
-			not_current: Result /= Current
+			result_not_void: Result /= Void
+			result_not_current: Result /= Current
 		end
 
 feature -- Query
 
 	width: INTEGER is
-			-- Width
+			-- Width of `Current' in pixels.
 		do
 			Result := implementation.width
 		ensure
-			valid: Result >= 0
+			valid_width: Result >= 0
 		end
 
 	height: INTEGER is
-			-- Height
+			-- Height of `Current' in pixels.
 		do
 			Result := implementation.height
 		ensure
-			valid: Result >= 0
+			valid_height: Result >= 0
 		end
 
 feature {NONE} -- Implementation
@@ -81,7 +79,7 @@ feature {NONE} -- Implementation
 	create_implementation is
 			-- Create implementation
 		do
-			create {EV_PIXEL_BUFFER_IMP}implementation
+			create {EV_PIXEL_BUFFER_IMP} implementation
 		end
 
 feature -- Implementation

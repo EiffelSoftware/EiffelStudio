@@ -57,8 +57,6 @@ feature {NONE} -- Access
 
 	feature_suffix: STRING is
 			-- Retrieves buffer feature name suffix
-		local
-			l_suffix: like suffix
 		once
 			Result := suffix
 			if Result = Void then
@@ -514,14 +512,14 @@ feature {NONE} -- Tokens
 
 feature {NONE} -- Constant Templates
 
-	access_template: STRING is "%T{1}: EV_PIXMAP is%N%
+	access_template: STRING is "%Tfrozen {1}: EV_PIXMAP is%N%
 		%%T%T%T-- Access to '{2}' pixmap.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixmap_from_coords ({3}, {4})%N%
 		%%T%Tend%N%N"
 			-- Template used for access features
 
-	access_buffer_template: STRING is "%T{1}: EV_PIXEL_BUFFER is%N%
+	access_buffer_template: STRING is "%Tfrozen {1}: EV_PIXEL_BUFFER is%N%
 		%%T%T%T-- Access to '{2}' pixmap pixel buffer.%N%
 		%%T%Tonce%N%
 		%%T%T%TResult := pixel_buffer_from_coords ({3}, {4})%N%

@@ -205,20 +205,18 @@ feature -- Element change
 			Application_windows_id.prune_all (w.item)
 		end
 
-	window_with_focus: EV_TITLED_WINDOW_IMP
-			-- `Result' is EV_TITLED_WINDOW with current focus.
+	window_with_focus: EV_WINDOW_IMP
+			-- `Result' is EV_WINDOW with current focus.
 
-	set_window_with_focus (a_window: EV_TITLED_WINDOW) is
+	set_window_with_focus (a_window: EV_WINDOW) is
 			-- Assign implementation of `a_window' to `window_with_focus'.
 		local
-			win_imp: EV_TITLED_WINDOW_IMP
+			win_imp: EV_WINDOW_IMP
 		do
 			if a_window /= Void then
 				win_imp ?= a_window.implementation
-				window_with_focus := win_imp
-			else
-				window_with_focus := Void
 			end
+			window_with_focus := win_imp
 		end
 
 feature {NONE} -- Implementation

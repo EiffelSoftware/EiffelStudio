@@ -19,6 +19,12 @@ inherit
 			set_non_focus_selection_color
 		end
 
+	SD_UPPER_ZONE
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -37,6 +43,7 @@ feature -- Initlization
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.close_request_actions.extend (agent on_close_request)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
+			internal_notebook.minimize_actions.extend (agent on_minimize)
 			internal_notebook.tab_drag_actions.extend (agent on_tab_drag)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -156,3 +163,4 @@ indexing
 
 
 end
+

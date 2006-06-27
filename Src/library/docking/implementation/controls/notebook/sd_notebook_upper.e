@@ -23,7 +23,8 @@ inherit
 			make,
 			set_tab_position,
 			extend,
-			on_resize
+			on_resize,
+			destroy
 		end
 create
 	make
@@ -50,10 +51,13 @@ feature {NONE} -- Initlization
 			internal_top_box.disable_item_expand (custom_area)
 
 			create internal_tool_bar
+			create internal_minimize_button
+			internal_minimize_button.set_pixmap (internal_shared.icons.minimize)
 			create internal_normal_max_button
 			internal_normal_max_button.set_pixmap (internal_shared.icons.maximize)
 			create internal_close_button
 			internal_close_button.set_pixmap (internal_shared.icons.close)
+			internal_tool_bar.extend (internal_minimize_button)
 			internal_tool_bar.extend (internal_normal_max_button)
 			internal_tool_bar.extend (internal_close_button)
 
@@ -71,8 +75,11 @@ feature {NONE} -- Initlization
 		do
 			create close_request_actions
 			create normal_max_actions
+			create minimize_actions
+
 			internal_normal_max_button.select_actions.extend (agent on_normal_max_window)
 			internal_close_button.select_actions.extend (agent on_close_request)
+			internal_minimize_button.select_actions.extend (agent on_minimize)
 		end
 
 feature -- Query
@@ -85,6 +92,9 @@ feature -- Query
 
 	normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Normal\max actions.
+
+	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Minimize actions.
 
 	is_maximized: BOOLEAN
 			-- If current is maximized?
@@ -148,6 +158,14 @@ feature -- Command
 			internal_tab_box.on_resize (a_x, a_y, a_width - internal_tool_bar.width, a_height)
 		end
 
+	destroy is
+			-- Refefine
+		do
+			Precursor {SD_NOTEBOOK}
+			-- If we don't call destory, there is 2 Gdi objects leak.
+			internal_tool_bar.destroy
+		end
+
 feature {NONE}  -- Agents
 
 	on_close_request is
@@ -162,6 +180,12 @@ feature {NONE}  -- Agents
 			normal_max_actions.call ([])
 		end
 
+	on_minimize is
+			-- Handle minimize actions.
+		do
+			minimize_actions.call ([])
+		end
+
 feature {NONE}  -- Implementation
 
 	internal_top_box: EV_HORIZONTAL_BOX
@@ -173,6 +197,9 @@ feature {NONE}  -- Implementation
 	internal_tool_bar: EV_TOOL_BAR
 			-- Tool bar has `internal_normal_max_button', `internal_close_button'.
 
+	internal_minimize_button: EV_TOOL_BAR_BUTTON
+			-- Minimize button.
+
 	internal_normal_max_button: EV_TOOL_BAR_BUTTON
 			-- Normal\max button
 
@@ -183,6 +210,7 @@ invariant
 
 	internal_tool_bar_not_void: internal_tool_bar /= Void
 	internal_normal_max_button_not_void: internal_normal_max_button /= Void
+	internal_minimize_button_not_void: internal_minimize_button /= Void
 	internal_clsoe_button_not_void: internal_close_button /= Void
 
 	custom_area_not_void: custom_area /= Void
@@ -190,6 +218,8 @@ invariant
 
 	close_request_actions_not_void: close_request_actions /= Void
 	normal_max_actions_not_void: normal_max_actions /= Void
+	minimize_actions_not_void: minimize_actions /= Void
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

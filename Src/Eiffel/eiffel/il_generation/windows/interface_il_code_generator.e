@@ -93,6 +93,11 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface, implemented_feature_processor,
 				local_feature_processor, inherited_feature_processor)
 
+				-- Generate features for inline agents.
+			if class_c.is_eiffel_class_c then
+				generate_il_inline_agents (class_c.eiffel_class_c, class_type, agent generate_local_feature)
+			end
+
 			from
 				postponed_property_setters.start
 			until

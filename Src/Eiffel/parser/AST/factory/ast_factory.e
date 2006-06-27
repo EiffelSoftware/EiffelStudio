@@ -86,6 +86,12 @@ feature -- Access
 			create Result.make (t, f, o, is_qualified, a_as)
 		end
 
+	new_inline_agent_creation_as (a_b: BODY_AS; a_o: DELAYED_ACTUAL_LIST_AS; a_as: KEYWORD_AS): INLINE_AGENT_CREATION_AS is
+			-- New INLINE_AGENT_CREATION AST node.
+		do
+			create Result.make (a_b, a_o, a_as)
+		end
+
 	new_create_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_AS is
 			-- New CREATE_CREATION AST node.
 		do

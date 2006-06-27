@@ -87,6 +87,12 @@ feature -- IL Generation
 			generate_il_main_parent (class_type)
 			generate_il_implementation_parents (class_interface)
 
+				-- Generate features for inline agents.
+			if class_c.is_eiffel_class_c then
+				generate_il_inline_agents (class_c.eiffel_class_c, class_type, agent generate_local_feature)
+			end
+
+
 				-- Reset global variable for collection.
 			current_select_tbl := Void
 			rout_ids_tbl.wipe_out

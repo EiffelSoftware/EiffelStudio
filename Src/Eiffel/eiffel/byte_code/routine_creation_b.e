@@ -27,7 +27,8 @@ feature  -- Initialization
 
 	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-		  omap: ARRAY_CONST_B) is
+		  omap: ARRAY_CONST_B
+		  a_is_attribute, a_is_inline_agent: BOOLEAN) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
@@ -43,16 +44,20 @@ feature  -- Initialization
 				class_id := f.written_in
 				feature_id := f.feature_id
 			end
+
 			rout_id := f.rout_id_set.first
 			type := r_type
 			arguments := args
 			open_positions := omap
-			record_feature (cl_id, feature_id)
+			record_feature (cl_id, feature_id, a_is_attribute)
+			is_attribute := a_is_attribute
+			is_inline_agent := a_is_inline_agent
 		end
 
 	set_ids (cl_type : like class_type; r_id: INTEGER; f_id: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-			 omap: ARRAY_CONST_B) is
+			 omap: ARRAY_CONST_B
+			 a_is_attribute, a_is_inline_agent: BOOLEAN) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -65,6 +70,8 @@ feature  -- Initialization
 			type := r_type
 			arguments := args
 			open_positions := omap
+			is_attribute := a_is_attribute
+			is_inline_agent := a_is_inline_agent
 		end
 
 feature -- Attributes
@@ -91,11 +98,18 @@ feature -- Attributes
 	open_positions: ARRAY_CONST_B
 			-- Index mapping for open arguments
 
+	is_attribute: BOOLEAN
+			-- Is this byte code representing an attribute creation
+
+	is_inline_agent: BOOLEAN
+			-- Is this byte code representing an inline agent creation
+
+
 feature -- Address table
 
-	record_feature (cl_id: INTEGER; f_id: INTEGER) is
+	record_feature (cl_id: INTEGER; f_id: INTEGER; a_is_attribute: BOOLEAN) is
 			-- Record the feature in the address table if it is not there.
-			-- A refreezing will occur.
+			-- If it is an attribute, a freezing will occur
 		local
 			address_table: ADDRESS_TABLE
 		do
@@ -103,7 +117,11 @@ feature -- Address table
 
 			if not address_table.has (cl_id, f_id) then
 					-- Record the feature
-				address_table.record (cl_id, f_id)
+				if a_is_attribute then
+					address_table.record (cl_id, f_id)
+				else
+					address_table.record_lazy (cl_id, f_id)
+				end
 			end
 		end
 
@@ -160,10 +178,11 @@ feature -- Status report
 
 			if arguments /= Void then
 				Result.set_ids (class_type, rout_id, feature_id, type,
-								arguments.enlarged, omap_enl)
+								arguments.enlarged, omap_enl, is_attribute,
+								is_inline_agent)
 			else
 				Result.set_ids (class_type, rout_id, feature_id, type,
-								Void, omap_enl)
+								Void, omap_enl, is_attribute, is_inline_agent)
 			end
 		end
 

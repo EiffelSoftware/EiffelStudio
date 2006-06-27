@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class MELTED_INFO 
+deferred class MELTED_INFO
 
 inherit
 	HASHABLE
@@ -14,7 +14,7 @@ inherit
 		redefine
 			is_equal
 		end
-		
+
 	SHARED_EXEC_TABLE
 		undefine
 			is_equal
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 feature -- Update
 
 	update_execution_unit (class_type: CLASS_TYPE) is
-			-- Update execution unit. 
+			-- Update execution unit.
 		local
 			exec_unit: EXECUTION_UNIT
 		do
@@ -62,20 +62,20 @@ feature -- Update
 			exec_unit: EXECUTION_UNIT
 		do
 			exec_unit := execution_unit (class_type)
-			associated_feature (feat_tbl).melt (exec_unit)
+			associated_feature (class_type.associated_class, feat_tbl).melt (exec_unit)
 		end
 
 feature -- Access
 
 	body_index: INTEGER
 			-- Body index of feature to melt.
-	
+
 	pattern_id: INTEGER
 			-- Pattern id of feature to mel.
-	
+
 	written_in: INTEGER
 			-- Class where current feature is to mel.
-	
+
 	result_type: TYPE_I
 			-- Return type of current feature to melt.
 
@@ -88,7 +88,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
-			-- Execution unit for Current. 
+			-- Execution unit for Current.
 		require
 			class_type_not_void: class_type /= Void
 		do
@@ -109,10 +109,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
 			-- Associated feature
 		require
-			good_argument: feat_tbl /= Void
+			class_c_not_void: class_c /= Void
+			feat_tbl__not_void: feat_tbl /= Void
 		deferred
 		ensure
 			Result_exists: Result /= Void

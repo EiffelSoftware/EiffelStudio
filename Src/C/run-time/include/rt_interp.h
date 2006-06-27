@@ -279,6 +279,10 @@ extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);	
 extern void idump(FILE *fd, char *start);
 extern void opstack_reset(struct opstack *stk);
 
+extern void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type);	/* Dynamic evaluation of a feature */
+extern struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
+
+
 #ifdef __cplusplus
 }
 #endif

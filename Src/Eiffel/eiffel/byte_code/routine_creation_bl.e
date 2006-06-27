@@ -10,7 +10,7 @@ class ROUTINE_CREATION_BL
 inherit
 	ROUTINE_CREATION_B
 		redefine
-			analyze, generate, 
+			analyze, generate,
 			register, set_register, free_register,
 			unanalyze
 		end
@@ -20,7 +20,7 @@ inherit
 	SHARED_DECLARATIONS
 	SHARED_INCLUDE
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Register for array containing the routine object
@@ -42,7 +42,7 @@ feature
 			end
 			set_register (Void)
 		end
-	
+
 	analyze is
 			-- Analyze expression
 		do
@@ -75,6 +75,10 @@ feature
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
 		do
+			check
+				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id)
+			end
+
 			if arguments /= Void then
 				arguments.generate
 			end
@@ -93,7 +97,11 @@ feature
 			buf.put_string ("RTLNR2(typres, ")
 			generate_routine_address
 			buf.put_string (", ")
-			generate_true_routine_address
+			if is_attribute then
+				buf.put_string ("NULL ")
+			else
+				generate_true_routine_address
+			end
 			buf.put_string (", ")
 
 			if arguments /= Void then
@@ -132,7 +140,11 @@ feature
 				buf.put_character (')')
 			else
 				cl_type ?= context.real_type (class_type)
-				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+
+				if not is_inline_agent then
+					array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+				end
+
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature without
 						-- any implementation
@@ -140,6 +152,7 @@ feature
 				else
 					table_name := "_f"
 					cl_type ?= context.real_type (class_type)
+
 					table_name.append (Encoder.address_table_name (feature_id,
 							cl_type.associated_class_type.static_type_id))
 
@@ -149,7 +162,7 @@ feature
 						-- Remember extern declarations
 					Extern_declarations.add_routine (type.c_type, table_name)
 
-					if array_index >= 0 then
+					if not is_inline_agent and then array_index >= 0 then
 							-- Mark table used
 						Eiffel_table.mark_used (rout_id)
 					end

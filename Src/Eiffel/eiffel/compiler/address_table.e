@@ -11,6 +11,7 @@ class
 inherit
 	HASH_TABLE [TWO_WAY_SORTED_SET [INTEGER], INTEGER]
 		rename
+			make as make_hash_table,
 			has as class_has_dollar_operator,
 			cursor as ht_cursor
 		export
@@ -46,6 +47,15 @@ inherit
 create {SYSTEM_I}
 	make
 
+feature -- Initialize
+
+	make is
+		do
+			make_hash_table (100)
+			create lazy_record
+			create lazy_records.make (50)
+		end
+
 feature -- Access
 
 	has (class_id: INTEGER; feature_id: INTEGER): BOOLEAN is
@@ -59,9 +69,34 @@ feature -- Access
 			end
 		end
 
+	is_lazy (class_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+		require
+			class_id_valid: class_id > 0
+			feature_id_valid: feature_id > 0
+		do
+			lazy_record.class_id := class_id
+			lazy_record.feature_id := feature_id
+			Result := lazy_records.has (lazy_record)
+		end
+
 feature -- Insert
 
 	record (class_id: INTEGER; feature_id: INTEGER) is
+			-- Record the feature in the
+		require
+			class_id_valid: class_id > 0
+			not_in_the_table: not has (class_id, feature_id)
+		local
+			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
+		do
+				-- The encapsulation needs to be generated
+				-- Freeze the system
+			System.set_freeze
+
+			record_lazy (class_id, feature_id)
+		end
+
+	record_lazy (class_id: INTEGER; feature_id: INTEGER) is
 			-- Record the feature in the
 		require
 			class_id_valid: class_id > 0
@@ -76,9 +111,6 @@ debug ("DOLLAR")
 	io.put_integer (feature_id)
 	io.put_new_line
 end
-				-- The encapsulation needs to be generated
-				-- Freeze the system
-			System.set_freeze
 
 			if class_has_dollar_operator (class_id) then
 				sorted_set := found_item
@@ -88,6 +120,8 @@ end
 			end
 
 			sorted_set.extend (feature_id)
+
+			lazy_records.force ([class_id, feature_id])
 		end
 
 feature -- Generation
@@ -102,17 +136,17 @@ feature -- Generation
 			a_class: CLASS_C
 			a_feature: FEATURE_I
 		do
+			lazy_records.wipe_out
+
 			buffer := Generation_buffer
 			buffer.clear_all
 
 			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 			buffer.put_string ("#include %"eif_rout_obj.h%"%N")
 
-			if final_mode then
-				buffer.put_string ("#include %"eaddress")
-				buffer.put_string (Dot_h)
-				buffer.put_string ("%"%N%N")
-			end
+			buffer.put_string ("#include %"eaddress")
+			buffer.put_string (Dot_h)
+			buffer.put_string ("%"%N%N")
 
 			buffer.start_c_specific_code
 
@@ -133,13 +167,17 @@ feature -- Generation
 					loop
 						feature_id := features.item
 						a_feature := a_class.feature_table.feature_of_feature_id (feature_id)
-						if a_feature = Void or a_feature.is_attribute then
+						if a_feature = Void and then a_class.is_eiffel_class_c then
+								-- maybe its an inline agent
+							a_feature := a_class.eiffel_class_c.inline_agent_of_id (feature_id)
+						end
+						if a_feature = Void then
 								-- Remove invalid entry or feature which has been converted
 								-- from a routine to an attribute.
 							features.remove
 						else
 								-- Feature exists
-							if a_feature.used then
+							if a_feature.is_attribute or a_feature.used then
 									-- Feature is not dead code removed
 
 debug ("DOLLAR")
@@ -166,33 +204,39 @@ end
 				forth
 			end
 
-			create cecil_file.make_c_code_file (gen_file_name (final_mode, Ececil));
+			create cecil_file.make_c_code_file (x_gen_file_name (final_mode, Ececil));
 			if final_mode then
 				buffer.end_c_specific_code
 				buffer.put_in_file (cecil_file)
 				cecil_file.close
-
-					-- Generate the extern declarations
-
-				buffer.clear_all
-				buffer.put_string ("#include %"eif_eiffel.h%"%N%
-									%#include %"eif_rout_obj.h%"%N")
-
-				buffer.start_c_specific_code
-				Extern_declarations.generate (buffer)
-				buffer.end_c_specific_code
-				Extern_declarations.wipe_out
-
-				create address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
-				buffer.put_in_file (address_file)
-				address_file.close
 			else
 					-- Generate the dispatch table in Workbench mode
 				generate_dispatch_table (buffer)
 				buffer.end_c_specific_code
 				buffer.put_in_file (cecil_file)
 				cecil_file.close
+
 			end
+
+				-- Generate the extern declarations
+
+			buffer.clear_all
+			buffer.put_string ("#include %"eif_eiffel.h%"%N%
+								%#include %"eif_rout_obj.h%"%N")
+
+			buffer.start_c_specific_code
+			Extern_declarations.generate (buffer)
+			buffer.end_c_specific_code
+			Extern_declarations.wipe_out
+
+			if final_mode then
+				create address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
+			else
+				create address_file.make_open_write (workbench_file_name ("eaddress", Dot_h, 1))
+			end
+
+			buffer.put_in_file (address_file)
+			address_file.close
 
 			clean_up
 		end
@@ -314,7 +358,7 @@ feature {NONE} -- Generation
 	solved_type (type_a: TYPE_A): TYPE_C is
 			-- Solved type associated with `a_type'.
 		local
-			s_type: TYPE_A
+			s_type: TYPE_A 
 		do
 			s_type := type_a.instantiated_in (a_type.type.type_a)
 			Result := s_type.type_i.c_type
@@ -389,7 +433,7 @@ feature {NONE} -- Generation
 			rout_id: INTEGER
 			args: FEAT_ARG
 			args_count: INTEGER
-			has_arguments, is_function: BOOLEAN
+			has_arguments, is_function, is_query, is_attribute: BOOLEAN
 			return_type: TYPE_A
 			return_type_string: STRING
 			c_return_type: TYPE_C
@@ -403,6 +447,7 @@ feature {NONE} -- Generation
 			l_type_id: INTEGER
 			l_current_name: STRING
 			l_is_implemented: BOOLEAN
+			l_attribute: ATTRIBUTE_I
 		do
 			feature_id := a_feature.feature_id
 			rout_id := a_feature.rout_id_set.first
@@ -413,6 +458,8 @@ feature {NONE} -- Generation
 			end
 			return_type := a_feature.type
 			is_function := a_feature.is_function
+			is_attribute := a_feature.is_attribute
+			is_query := is_function or else is_attribute
 
 			if is_for_routine then
 				l_current_name := "args[1].element.rarg"
@@ -464,105 +511,20 @@ feature {NONE} -- Generation
 				end
 				buffer.put_string ("%N%T")
 
-				if final_mode then
-						-- Routine is always implemented unless found otherwise (Deferred routine
-						-- with no implementation).
-					l_is_implemented := True
-					if is_function then
-						buffer.put_string ("return ")
-					end
+				if is_query then
+					buffer.put_string ("return ")
+				end
 
-					entry :=  Eiffel_table.poly_table (rout_id)
-
-					buffer.put_character ('(')
-					if entry = Void then
-						-- Function pointer associated to a deferred feature
-						-- without any implementation
-						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-						buffer.put_string ("RTNR) (");
-						buffer.put_string (l_current_name)
-						buffer.put_string( ");")
-					else
-						l_type_id := a_type.type_id
-						if entry.is_polymorphic (l_type_id) then
-							c_return_type.generate_function_cast (buffer, a_types)
-							table_name := Encoder.table_name (rout_id)
-							buffer.put_string (table_name)
-							buffer.put_string ("[Dtype(")
-							buffer.put_string (l_current_name)
-							buffer.put_string (") - ")
-							buffer.put_type_id (entry.min_used)
-							buffer.put_string ("])(")
-							buffer.put_string (l_current_name)
-
-								-- Mark table used.
-							Eiffel_table.mark_used (rout_id)
-								-- Remember extern declarations
-							Extern_declarations.add_routine_table (table_name)
-						else
-							rout_table ?= entry
-							rout_table.goto_implemented (l_type_id)
-							if rout_table.is_implemented then
-								c_return_type.generate_function_cast (buffer, a_types)
-								function_name := rout_table.feature_name
-								buffer.put_string (function_name)
-								buffer.put_string (")(")
-								buffer.put_string (l_current_name)
-								extern_declarations.add_routine_with_signature (c_return_type,
-									function_name, a_types)
-							else
-									-- Function pointer associated to a deferred feature
-									-- without any implementation. We mark `l_is_implemented'
-									-- to False to not generate the argument list since
-									-- RTNR takes only one argument.
-								l_is_implemented := False
-								c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-								buffer.put_string ("RTNR) (")
-								buffer.put_string (l_current_name)
-							end
-						end
-
-						if l_is_implemented and has_arguments then
-							if is_for_routine then
-								generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
-							else
-								generate_arg_list (buffer, args_count)
-							end
-						end
-
-						buffer.put_string (");%N")
-					end
-				else
-						-- Workbench mode
-
-					if is_function then
-						buffer.put_string ("return ")
-					end
-
+				if a_feature.is_inline_agent then
 					buffer.put_character ('(')
 					c_return_type.generate_function_cast (buffer, a_types)
+					function_name := Encoder.feature_name (a_type.static_type_id, a_feature.body_index)
+					buffer.put_string (function_name)
+					buffer.put_string (")(")
+					buffer.put_string (l_current_name)
+					extern_declarations.add_routine_with_signature (c_return_type,
+						function_name, a_types)
 
-					if
-						Compilation_modes.is_precompiling or else
-						a_type.associated_class.is_precompiled
-					then
-						rout_info := System.rout_info_table.item (rout_id)
-						buffer.put_string ("RTVPF(")
-						buffer.put_class_id (rout_info.origin)
-						buffer.put_string (gc_comma)
-						buffer.put_integer (rout_info.offset)
-					else
-						buffer.put_string ("RTVF(")
-						buffer.put_static_type_id (a_type.static_type_id)
-						buffer.put_string (gc_comma)
-						buffer.put_integer (feature_id)
-					end
-					buffer.put_string (gc_comma)
-					buffer.put_string_literal (a_feature.feature_name)
-					buffer.put_string (gc_comma)
-					buffer.put_string (l_current_name)
-					buffer.put_string ("))(")
-					buffer.put_string (l_current_name)
 					if has_arguments then
 						if is_for_routine then
 							generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
@@ -571,6 +533,115 @@ feature {NONE} -- Generation
 						end
 					end
 					buffer.put_string (");%N")
+				else
+					if is_attribute then
+						entry :=  Eiffel_table.poly_table (rout_id)
+						buffer.put_character ('(')
+						l_attribute ?= a_feature
+						l_attribute.generate_attribute_access (a_type, buffer, l_current_name)
+						buffer.put_string (");%N")
+					else
+						if final_mode then
+								-- Routine is always implemented unless found otherwise (Deferred routine
+								-- with no implementation).
+							l_is_implemented := True
+
+							entry :=  Eiffel_table.poly_table (rout_id)
+
+							buffer.put_character ('(')
+							if entry = Void then
+								-- Function pointer associated to a deferred feature
+								-- without any implementation
+								c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+								buffer.put_string ("RTNR) (");
+								buffer.put_string (l_current_name)
+								buffer.put_string( ");")
+							else
+								l_type_id := a_type.type_id
+								if entry.is_polymorphic (l_type_id) then
+									table_name := Encoder.table_name (rout_id)
+									c_return_type.generate_function_cast (buffer, a_types)
+									buffer.put_string (table_name)
+									buffer.put_string ("[Dtype(")
+									buffer.put_string (l_current_name)
+									buffer.put_string (") - ")
+									buffer.put_type_id (entry.min_used)
+									buffer.put_string ("])(")
+									buffer.put_string (l_current_name)
+										-- Remember extern declarations
+									Extern_declarations.add_routine_table (table_name)
+										-- Mark table used.
+									Eiffel_table.mark_used (rout_id)
+								else
+									rout_table ?= entry
+
+									rout_table.goto_implemented (l_type_id)
+									if rout_table.is_implemented then
+										c_return_type.generate_function_cast (buffer, a_types)
+										function_name := rout_table.feature_name
+										buffer.put_string (function_name)
+										buffer.put_string (")(")
+										buffer.put_string (l_current_name)
+										extern_declarations.add_routine_with_signature (c_return_type,
+											function_name, a_types)
+									else
+											-- Function pointer associated to a deferred feature
+											-- without any implementation. We mark `l_is_implemented'
+											-- to False to not generate the argument list since
+											-- RTNR takes only one argument.
+										l_is_implemented := False
+										c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+										buffer.put_string ("RTNR) (")
+										buffer.put_string (l_current_name)
+									end
+
+									if l_is_implemented and has_arguments then
+										if is_for_routine then
+											generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
+										else
+											generate_arg_list (buffer, args_count)
+										end
+									end
+								end
+								buffer.put_string (");%N")
+							end
+						else
+								-- Workbench mode
+
+							buffer.put_character ('(')
+							c_return_type.generate_function_cast (buffer, a_types)
+
+							if
+								Compilation_modes.is_precompiling or else
+								a_type.associated_class.is_precompiled
+							then
+								rout_info := System.rout_info_table.item (rout_id)
+								buffer.put_string ("RTVPF(")
+								buffer.put_class_id (rout_info.origin)
+								buffer.put_string (gc_comma)
+								buffer.put_integer (rout_info.offset)
+							else
+								buffer.put_string ("RTVF(")
+								buffer.put_static_type_id (a_type.static_type_id)
+								buffer.put_string (gc_comma)
+								buffer.put_integer (feature_id)
+							end
+							buffer.put_string (gc_comma)
+							buffer.put_string_literal (a_feature.feature_name)
+							buffer.put_string (gc_comma)
+							buffer.put_string (l_current_name)
+							buffer.put_string ("))(")
+							buffer.put_string (l_current_name)
+							if has_arguments then
+								if is_for_routine then
+									generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
+								else
+									generate_arg_list (buffer, args_count)
+								end
+							end
+							buffer.put_string (");%N")
+						end
+					end
 				end
 
 				buffer.put_string ("%N}%N%N")
@@ -618,6 +689,13 @@ feature {NONE} -- Generation
 				i := i + 1
 			end
 		end
+
+
+feature --implementation
+
+	lazy_record: TUPLE [class_id: INTEGER; feature_id: INTEGER]
+
+	lazy_records: SEARCH_TABLE [like lazy_record];
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

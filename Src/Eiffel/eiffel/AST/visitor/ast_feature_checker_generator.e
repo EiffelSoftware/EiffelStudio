@@ -76,6 +76,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEGREES
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
@@ -545,6 +550,100 @@ feature -- Roundtrip
 			process_routine_creation_as (l_as)
 		end
 
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+			-- Process `l_as'.
+		local
+			l_feature_name: ID_AS
+			l_context: like context
+			l_feature_as: FEATURE_AS
+			l_feature_generator: AST_FEATURE_I_GENERATOR
+			l_feature, l_old_feature, l_enclosing_feature: FEATURE_I
+			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
+			l_new_rout_id_set: ROUT_ID_SET
+			l_cur_class: EIFFEL_CLASS_C
+			l_body_code: BYTE_CODE
+			l_new_feature_dep: FEATURE_DEPENDANCE
+			l_ak: LOCATION_AS
+		do
+			l_cur_class ?= context.current_class
+
+				-- This is the first place, where inline agents are looked at as features.
+				-- They are ignored by degree 2. So a new FEATURE_I has to be created
+			create l_feature_names.make (0)
+			create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
+			l_old_feature := current_feature
+			create l_feature_generator
+			l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
+			l_feature.set_body_index (system.body_index_counter.next_id)
+
+			create l_new_rout_id_set.make
+			l_new_rout_id_set.put (l_feature.new_rout_id)
+			l_feature.set_rout_id_set (l_new_rout_id_set)
+
+			l_feature.set_feature_id (l_cur_class.feature_id_counter.next)
+			l_feature.set_origin_feature_id (l_feature.feature_id)
+			l_feature.set_feature_name ("inline_agent_" + l_feature.body_index.out)
+			l_feature.set_written_in (l_cur_class.class_id)
+			l_feature.set_origin_class_id (l_feature.written_in)
+			l_feature.set_export_status (create {EXPORT_NONE_I})
+
+			if is_byte_node_enabled then
+					-- calculate the enclosing feature
+				from
+					l_enclosing_feature := current_feature
+				until
+					not l_enclosing_feature.is_inline_agent
+				loop
+					l_enclosing_feature :=
+						l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
+				end
+				l_feature.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
+				l_cur_class.put_inline_agent (l_feature)
+				create l_feature_name.initialize (
+					"inline_agent_" +
+					l_enclosing_feature.feature_name + "_" +
+					l_cur_class.inline_agent_table.count.out)
+				l_ak := l_as.agent_keyword
+				l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
+				l_as.set_feature_name (l_feature_name)
+
+
+				degree_2.insert_class (l_cur_class)
+			end
+				-- The context is modified, for the processing of the body of the inline agent.
+			l_context := context.save
+			current_feature := l_feature
+			context.set_current_feature (l_feature)
+
+			l_as.body.process (Current)
+			l_body_code ?= last_byte_node
+
+			current_feature := l_old_feature
+			l_new_feature_dep := context.supplier_ids
+			context.restore (l_context)
+
+			if is_byte_node_enabled then
+				l_body_code.set_start_line_number (l_as.body.start_location.line)
+					-- When an inline agent X of an enclosing feature f is a client of
+					-- feature g, we make the enclosing feature f a client of g.
+				byte_server.put (l_body_code)
+				from
+					l_new_feature_dep.start
+				until
+					l_new_feature_dep.after
+				loop
+					context.supplier_ids.extend (l_new_feature_dep.item)
+					l_new_feature_dep.forth
+				end
+				l_feature.process_pattern
+				l_cur_class.insert_changed_assertion (l_feature)
+			end
+				-- Now as the features is generated the inline agent creation is
+				-- threaten like a normal routine creation
+			process_routine_creation_as_ext (l_as, l_feature)
+		end
+
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
 			-- Process `l_as'.
 		do
@@ -661,7 +760,7 @@ feature -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 			a_precursor_type_not_void: is_precursor implies a_precursor_type /= Void
-			a_name_not_void: a_name /= Void
+			a_name_not_void: a_feature = Void implies a_name /= Void
 		local
 			l_arg_nodes: BYTE_LIST [EXPR_B]
 			l_arg_types: like last_expressions_type
@@ -1071,18 +1170,18 @@ feature -- Implementation
 					end
 
 						-- Supplier dependances update
-					if l_is_target_of_creation_instruction then
-						create l_depend_unit.make_with_level (l_last_id, l_feature,
-							{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
-					else
-						if is_precursor then
-							create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
-								depend_unit_level)
-							context.supplier_ids.extend (l_depend_unit)
+						if l_is_target_of_creation_instruction then
+							create l_depend_unit.make_with_level (l_last_id, l_feature,
+								{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+						else
+							if is_precursor then
+								create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+									depend_unit_level)
+								context.supplier_ids.extend (l_depend_unit)
+							end
+							create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 						end
-						create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
-					end
-					context.supplier_ids.extend (l_depend_unit)
+						context.supplier_ids.extend (l_depend_unit)
 
 					if l_is_assigner_call then
 						process_assigner_command (l_last_id, l_feature)
@@ -2447,7 +2546,7 @@ feature -- Implementation
 			end
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as_ext (l_as: ROUTINE_CREATION_AS; a_feature: FEATURE_I) is
 		local
 			l_class: CLASS_C
 			l_feature: FEATURE_I
@@ -2503,15 +2602,17 @@ feature -- Implementation
 			end
 
 				-- Type check the call
-			process_call (l_target_type, Void, l_feature_name, Void, l_as.operands, False, True, l_as.has_target, False)
+			process_call (l_target_type, Void, l_feature_name, a_feature, l_as.operands, False, True, l_as.has_target, False)
 
-				-- Check that it's a function or procedure
-				-- which is not external.
 			check has_class: l_target_type.has_associated_class end
 			l_class := l_target_type.associated_class
 			l_table := l_class.feature_table
-			l_feature := l_table.item (l_feature_name)
-			if (l_feature = Void) or else (not l_feature.is_routine or else l_feature.is_external) then
+			if a_feature = Void then
+				l_feature := l_table.item (l_feature_name)
+			else
+				l_feature := a_feature
+			end
+			if l_feature = Void then
 				create l_unsupported
 				context.init_error (l_unsupported)
 				l_unsupported.set_message ("Agent creation on `" + l_feature_name + "' is%
@@ -2530,6 +2631,11 @@ feature -- Implementation
 				System.instantiator.dispatch (last_type, context.current_class)
 			end
 			error_handler.checksum
+		end
+
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+		do
+			process_routine_creation_as_ext (l_as, Void)
 		end
 
 	process_unary_as (l_as: UNARY_AS) is
@@ -5713,8 +5819,6 @@ feature {NONE} -- Agents
 		require
 			valid_table: a_table /= Void
 			valid_feature: a_feature /= Void;
-			function_or_procedure: a_feature.is_routine
-			not_external: not a_feature.is_external
 		local
 			l_arg_type:TYPE_A
 			l_generics: ARRAY [TYPE_A]
@@ -5737,11 +5841,17 @@ feature {NONE} -- Agents
 			l_actual_target_type: TYPE_A
 		do
 
-			if a_feature.is_function then
-					-- generics are: base_type, open_types, result_type
-				create l_generics.make (1, 3)
-				l_generics.put (a_feat_type, 3)
-				create l_result_type.make (System.function_class_id, l_generics)
+			if a_feature.is_function or else a_feature.is_attribute then
+				if a_feature.type.is_boolean then
+						-- generics are: base_type, open_types
+					create l_generics.make (1, 2)
+					create l_result_type.make (System.predicate_class_id, l_generics)
+				else
+						-- generics are: base_type, open_types, result_type
+					create l_generics.make (1, 3)
+					l_generics.put (a_feat_type, 3)
+					create l_result_type.make (System.function_class_id, l_generics)
+				end
 			else
 					-- generics are: base_type, open_types
 				create l_generics.make (1, 2)
@@ -5958,7 +6068,9 @@ feature {NONE} -- Agents
 
 					-- Initialize ROUTINE_CREATION_B instance
 				l_routine_creation.init (a_target_type.type_i, a_target_type.associated_class.class_id,
-					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens)
+					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens, a_feature.is_attribute,
+					a_feature.is_inline_agent)
+
 				last_byte_node := l_routine_creation
 			end
 			last_type := l_result_type

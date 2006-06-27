@@ -23,7 +23,12 @@ feature -- Calls
 	apply is
 			-- Call procedure with `args' as last set.
 		do
-			rout_obj_call_procedure (rout_disp, $internal_operands)
+			if class_id /= -1 then
+				rout_obj_call_procedure_lazy (class_id, feature_id, is_precompiled,
+											  is_basic, $internal_operands, internal_operands.count)
+			else
+				rout_obj_call_procedure (rout_disp, $internal_operands)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -33,7 +38,24 @@ feature {NONE} -- Implementation
 		external
 			"C inline use %"eif_rout_obj.h%""
 		alias
-			"rout_obj_call_agent($rout, $args, $$_result_type)"
+			"rout_obj_call_agent($rout, $args, $$_result_type);"
+		end
+
+
+	rout_obj_call_procedure_lazy (a_class_id, a_feature_id: INTEGER;
+								 a_is_precompiled, a_is_basic: BOOLEAN
+								 args: POINTER
+								 arg_count: INTEGER) is
+			-- Perform call to `rout' with `args' as operands.
+		external
+			"C inline use %"eif_rout_obj.h%""
+		alias
+			"[
+				#ifdef WORKBENCH
+				 	rout_obj_call_procedure_dynamic (
+				 		$a_class_id, $a_feature_id, $a_is_precompiled, $a_is_basic, $args, $arg_count);
+				#endif
+			]"
 		end
 
 indexing

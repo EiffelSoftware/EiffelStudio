@@ -49,13 +49,6 @@ feature -- Process
 			create min_id_table.make (0, count)
 		end
 
-	finish_degree_minus_3 is
-			-- Clean all the data structures used during degree -3.
-		do
-			min_id_table := Void
-			is_polymorphic_table := Void
-		end
-
 feature -- Status
 
 	is_polymorphic (rout_id: INTEGER; class_type_id: INTEGER
@@ -85,7 +78,7 @@ feature -- Status
 			if bool_array /= Void then
 					-- Compute minimum class type id for current `rout_id'.
 				min_id := min_id_table.item (rout_id)
-				
+
 					-- We already have computed something for this polymorphic
 					-- table, we just need to search for the requested `class_type_id'
 					-- to know if we can retrieve the value or if we had to compute it.
@@ -117,7 +110,7 @@ feature -- Status
 				entry := poly_table (rout_id)
 
 				if entry /= Void then
-						-- Store the polymorphic status of the searched entry. 
+						-- Store the polymorphic status of the searched entry.
 					status := entry.is_polymorphic (class_type_id)
 
 						-- When we are handling with a ROUT_TABLE, we need to store
@@ -139,10 +132,10 @@ feature -- Status
 					if class_type_id >= min_id then
 						put_value (bool_array, class_type_id - min_id, status)
 					end
-	
+
 						-- Insert the new computed table in the array of computed tables.
 					is_polymorphic_table.put (bool_array, rout_id)
-	
+
 						-- Return the result
 					if status then
 						Result := min_id
@@ -179,6 +172,8 @@ feature -- Element change
 	wipe_out is
 			-- Wipe out the structure
 		do
+			min_id_table := Void
+			is_polymorphic_table := Void
 			used.wipe_out
 		end
 

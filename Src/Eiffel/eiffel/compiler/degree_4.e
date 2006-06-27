@@ -373,7 +373,7 @@ feature {INHERIT_TABLE} -- Propagation
 
 				a_class.set_skeleton (resulting_table.skeleton)
 				if not System.freeze then
-					resulting_table.melt
+					degree_2.insert_class (a_class)
 				end
 			end
 		end

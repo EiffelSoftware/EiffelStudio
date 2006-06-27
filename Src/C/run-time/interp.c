@@ -240,7 +240,8 @@ rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
+rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type);
+rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -1753,35 +1754,46 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
-			short has_args, has_open;
+			EIF_BOOLEAN has_args, has_open, is_lazy, is_precompiled, is_basic;
 			struct item *addr, *true_addr, *aargs, *aopen;
+			int32 class_id, feature_id;
 			EIF_REFERENCE args, open, closed;
 
 			args = open = closed = (EIF_REFERENCE) 0;
-			has_args = get_int16(&IC); /* Do we have an argument tuple? */
-			has_open = get_int16(&IC); /* Do we have an open map array? */
+			has_args = get_bool(&IC); /* Do we have an argument tuple? */
+			has_open = get_bool(&IC); /* Do we have an open map array? */
+			is_lazy = get_bool(&IC); /* Is the address table entry not yet generated (in ececil.c)? */
 			type = get_int16(&IC);
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			true_addr = opop();  /* True address of routine */
-			addr = opop();  /* Address of routine */
-			if (has_open)
-			{
+			if (is_lazy) {
+				class_id = get_int32(&IC);
+				feature_id = get_int32(&IC);
+				is_precompiled = get_bool(&IC);
+				is_basic = get_bool(&IC);
+			} else {
+				true_addr = opop();  /* True address of routine */
+				addr = opop();  /* Address of routine */
+			}
+			if (has_open) {
 				aopen = opop();
 				open = (EIF_REFERENCE) (aopen->it_ref);
-			}
-			if (has_args)
-			{
+			} 
+			if (has_args) {
 				aargs = opop();
 				args = (EIF_REFERENCE) (aargs->it_ref);
 			}
 			stagval = tagval;
 				/* Create new object */
-			new_obj = RTLNR2((int16)type, addr->it_ptr, true_addr->it_ptr, args, open);
+			if (is_lazy) {
+				new_obj = RTLNR3((int16)type, class_id, feature_id, is_precompiled, is_basic, args, open);
+			} else {
+				new_obj = RTLNR2((int16)type, addr->it_ptr, true_addr->it_ptr, args, open);
+			}
 
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
-			if (tagval != stagval)		/* If type is expanded we may
+			if (tagval != stagval) {		/* If type is expanded we may
 										 * need to sync the registers if it
 										 * called the interpreter for the
 										 * creation routine.
@@ -1790,6 +1802,7 @@ rt_private void interpret(int flag, int where)
 										 * has to be called. 
 										 */
 				sync_registers(MTC scur, stop);
+			}
 		}
 		break;
 
@@ -2479,7 +2492,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);			/* Get the feature id */
 		code = get_int16(&IC);				/* Get the static type */
-		address((int32)offset, code, (int) get_int16(&IC));
+		address((int32)offset, code, (int) get_bool(&IC));
 		break;
 
 	/*
@@ -4179,10 +4192,9 @@ rt_private void eif_interp_bit_operations (void)
 }
 
 /*
- * Function calling routines
+ * Function calling routines for debugger
  */
-
-rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured)
+rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
@@ -4202,23 +4214,15 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 	 * so if someone understands what I have written and feels like clearing it up,
 	 * they're welcome to do so (I give up: I think it works and that's enough).
 	 */
-
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	RTED;
 	int				saved_debug_mode = debug_mode;
-	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
-	unsigned long 	stagval = tagval;	/* Save tag value */
 	unsigned char *	OLD_IC = NULL;		/* IC back-up */
-	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
-	uint32 			pid = 0;			/* Pattern id of the frozen feature */
-	int32 			rout_id = 0;		/* routine id of the requested feature */
-	struct item 	*result = NULL;		/* Result of the function (NULL if none) */
-	struct stochunk *previous_scur = saved_scur;
-	struct item		*previous_stop = saved_stop;
 	uint32			type = 0;			/* Dynamic type of the result */
+	struct item 	*result = NULL;		/* Result of the function (NULL if none) */
 	uint32 EIF_VOLATILE db_cstack;
-	STACK_PRESERVE;
+ 	STACK_PRESERVE;
 	RTXD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
@@ -4228,19 +4232,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 	SAVE(db_stack, dcur, dtop);
 	SAVE(op_stack, scur, stop);
 	db_cstack = d_data.db_callstack_depth;
-
-	if (is_basic_type)
-			/* We need to create a reference to the basic type on the fly */
-		metamorphose_top(scur, stop);
-	if (! is_precompiled) {
-		rout_id = Routids(stype)[fid];
-		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
-	}
-	else {
-		body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
-	}
-	OLD_IC = IC;					/* IC back up */
-	discard_breakpoints();			/* discard all breakpoints. We don't want to stop */ 
+	
 	debug_mode = 0; /* We don't want exceptions to be caught */
 
 	excatch(&exenv);
@@ -4251,7 +4243,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 		result->type = SK_STRING;
 		result->it_ref = (char*) stack_trace_str();
 		result->it_addr = NULL;
-
+		
 		RESTORE(op_stack,scur,stop);
 		RESTORE(db_stack,dcur,dtop);
 		dpop();
@@ -4261,12 +4253,83 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 		IC = OLD_IC;
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
-		tagval = stagval;
 		in_assertion = saved_assertion; /* Corresponds to RTED */
 		exclear ();
 		return result;
 	}
 
+	dynamic_eval (fid, stype, is_precompiled, is_basic_type);
+
+	if (otop()!=previous_otop) {/* a result has been pushed on the stack */
+		result = opop(); 
+		type = result->type & SK_HEAD;
+		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL))
+			result->type = type | Dtype(result->it_ref);
+	}
+
+	debug_mode = saved_debug_mode;
+
+	dpop();
+	undiscard_breakpoints();		/* restore previous state. */
+	d_data.db_callstack_depth = db_cstack;
+	IC = OLD_IC;					/* Restore IC back-up */
+
+	return result;
+}
+
+/*
+ * Function calling routines
+ */
+rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type)
+						/* Feature ID or offset if the feature is precompiled */
+						/* Static type (entity where feature is applied) */
+						/* Is it an external or an Eiffel feature */
+						/* Precompiled ? (0=no, other=yes) */
+						/* Is the call performed on a basic type? (INTEGER...) */
+	{
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+	RTED;
+	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
+	unsigned long 	stagval = tagval;	/* Save tag value */
+	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
+	uint32 			pid = 0;			/* Pattern id of the frozen feature */
+	int32 			rout_id = 0;		/* routine id of the requested feature */
+	struct stochunk *previous_scur = saved_scur;
+	struct item		*previous_stop = saved_stop;
+	uint32 EIF_VOLATILE db_cstack;
+	STACK_PRESERVE;
+	RTXD; /* declares the variables used to save the run-time stacks context */
+	RTLXD;
+
+	RTLXL;
+	dstart();
+	SAVE(db_stack, dcur, dtop);
+	SAVE(op_stack, scur, stop);
+	db_cstack = d_data.db_callstack_depth;
+
+	if (is_basic_type) {
+			/* We need to create a reference to the basic type on the fly */
+		metamorphose_top(scur, stop);
+	}
+	if (! is_precompiled) {
+		rout_id = Routids(stype)[fid];
+		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+	} else {
+		body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
+	}
+	excatch(&exenv);
+	if (setjmp(exenv)) {
+		RESTORE(op_stack,scur,stop);
+		RESTORE(db_stack,dcur,dtop);
+		dpop();
+		RTLXE;
+		d_data.db_callstack_depth = db_cstack;
+		RTXSC;
+		tagval = stagval;
+		in_assertion = saved_assertion; /* Corresponds to RTED */
+		ereturn(MTC_NOARG);
+	}
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
@@ -4279,27 +4342,13 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 		 */
 		xinterp(MTC melt[body_id]);
 		sync_needed = 1;					/* Compulsory synchronisation */
-		}
-	if (otop()!=previous_otop) {/* a result has been pushed on the stack */
-		result = opop(); 
-		type = result->type & SK_HEAD;
-		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL))
-			result->type = type | Dtype(result->it_ref);
-
 	}
-
 	expop(&eif_stack);
-	dpop();
-	debug_mode = saved_debug_mode;
-	
+	dpop();	
 	/* restore operational stack if needed */
 	if (sync_needed==1 && previous_scur!=NULL && previous_stop!=NULL)
 		sync_registers(previous_scur, previous_stop); 
-
-	undiscard_breakpoints();		/* restore previous state. */
 	d_data.db_callstack_depth = db_cstack;
-	IC = OLD_IC;					/* Restore IC back-up */
-	return result;
 }
 
 rt_private int icall(int fid, int stype, int ptype)

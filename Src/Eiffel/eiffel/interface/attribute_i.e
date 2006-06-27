@@ -142,41 +142,55 @@ feature -- Element Change
 			-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_file: buffer /= Void
+		local
+			result_type: TYPE_I
+			internal_name: STRING
 		do
 			if used then
 					-- Generation of a routine to access the attribute
-				generate_attribute_access (class_type, buffer)
+				generate_header (buffer)
+				result_type := type.type_i.instantiation_in (class_type)
+				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
+				add_in_log (class_type, internal_name)
+
+				buffer.generate_function_signature (result_type.c_type.c_string,
+					internal_name, True, Byte_context.header_buffer,
+					<<"Current">>, <<"EIF_REFERENCE">>)
+				buffer.indent
+				buffer.put_string ("return ")
+
+				generate_attribute_access (class_type, buffer, "Current")
+
+				buffer.put_character (';')
+				buffer.exdent
+				buffer.put_new_line
+				buffer.put_character ('}')
+				buffer.put_new_line
+				buffer.put_new_line
 			end
 		end
 
-	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
-			-- Generates attribute access function.
+	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING) is
+			-- Generates attribute access.
 			-- [Redecalaration of a function into an attribute]
 		local
 			result_type: TYPE_I
-			table_name, internal_name: STRING
+			table_name: STRING
 			rout_id: INTEGER
 			rout_info: ROUT_INFO
 			array_index: INTEGER
 		do
-			generate_header (buffer)
 			result_type := type.type_i.instantiation_in (class_type)
-			internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
-			add_in_log (class_type, internal_name)
 
-			buffer.generate_function_signature (result_type.c_type.c_string,
-				internal_name, True, Byte_context.header_buffer,
-				<<"Current">>, <<"EIF_REFERENCE">>)
-			buffer.indent
 			if not result_type.is_true_expanded and then not result_type.is_bit then
-				buffer.put_string ("return *")
+				buffer.put_string ("*")
 				result_type.c_type.generate_access_cast (buffer)
 			else
 					-- We do not need to generate a cast since what we are computed is
-					-- already good.
-				buffer.put_string ("return ")
+				-- already good.
 			end
-			buffer.put_string ("(Current")
+			buffer.put_string ("(")
+			buffer.put_string (cur);
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
@@ -187,10 +201,11 @@ feature -- Element Change
 						-- table [Actual_offset - base_offset]
 					buffer.put_string (" + ")
 					buffer.put_string (table_name)
-					buffer.put_string ("[Dtype(Current) - ")
+					buffer.put_string ("[Dtype(")
+					buffer.put_string (cur)
+					buffer.put_string (") - ")
 					buffer.put_integer (array_index)
 					buffer.put_character (']')
-
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)
 						-- Remember external attribute offset declaration
@@ -211,20 +226,19 @@ feature -- Element Change
 				buffer.put_class_id (rout_info.origin)
 				buffer.put_character (',')
 				buffer.put_integer (rout_info.offset)
-				buffer.put_string (", Dtype(Current))")
+				buffer.put_string (", Dtype(")
+				buffer.put_string (cur)
+				buffer.put_string("))")
 			else
 				buffer.put_string (" + RTWA(")
 				buffer.put_static_type_id (class_type.static_type_id)
 				buffer.put_character (',')
 				buffer.put_integer (feature_id)
-				buffer.put_string (", Dtype(Current))")
+				buffer.put_string (", Dtype(")
+				buffer.put_string (cur)
+				buffer.put_string("))")
 			end;
-			buffer.put_string(");")
-			buffer.exdent
-			buffer.put_new_line
-			buffer.put_character ('}')
-			buffer.put_new_line
-			buffer.put_new_line
+			buffer.put_string(")")
 		end
 
 	replicated: FEATURE_I is

@@ -185,6 +185,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNSMART(x)		smart_emalloc(x)
 #define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
 #define RTLNR2(x,y,z,a,o)	rout_obj_create2((x),(y),(z),(a),(o))
+#define RTLNR3(t,c,f,p,b,a,o)	rout_obj_create_lazy((t),(c),(f),(p),(b),(a),(o))
 #define RTLNC(x)			eclone(x)
 #define RTLNSP(t,n,e,b)		special_malloc(t,n,e,b)
 #define RTLB(x)				bmalloc(x)

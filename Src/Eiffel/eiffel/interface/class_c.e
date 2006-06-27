@@ -2663,6 +2663,15 @@ feature -- Access
 			end
 		end
 
+	feature_i_with_body_index (a_body_index: INTEGER): FEATURE_I is
+			-- Feature whose body index is `a_body_index'.
+		require
+			a_body_index_non_negative: a_body_index >= 0
+			has_feature_table: has_feature_table
+		do
+			Result := feature_table.feature_of_body_index (a_body_index)
+		end
+
 	feature_with_body_index (a_body_index: INTEGER): E_FEATURE is
 			-- Feature whose body index is `a_body_index'.
 		require

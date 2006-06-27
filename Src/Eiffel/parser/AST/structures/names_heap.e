@@ -313,6 +313,7 @@ feature {NONE} -- Implementation: access
 			put ("to_character_8") check found_item = to_character_8_name_id end
 			put ("to_character_32") check found_item = to_character_32_name_id end
 			put ("natural_32_code") check found_item = natural_32_code_name_id end
+			put ("set_lazy_rout_disp") check found_item = set_lazy_rout_disp_name_id end
 		end
 
 invariant

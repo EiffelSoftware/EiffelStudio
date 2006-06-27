@@ -410,8 +410,9 @@ end
 					has_same_type := True
 					same_interface := old_feature_i.same_interface (new_feature_i)
 					if not same_interface then
-						-- Check whether it was in the address table
+							-- Check whether it was in the address table if it is an attribute
 						if
+							old_feature_i.is_attribute and then
 							System.address_table.has (old_feature_i.written_in,
 								old_feature_i.feature_id)
 						then
@@ -910,6 +911,7 @@ end
 			-- Routine id array
 		local
 			feature_i: FEATURE_I
+			eiffel_class: EIFFEL_CLASS_C
 		do
 			create Result.make (0, associated_class.feature_id_counter.value)
 			from
@@ -921,6 +923,20 @@ end
 				Result.put (feature_i, feature_i.feature_id)
 				forth
 			end
+			eiffel_class ?= associated_class
+
+			if eiffel_class /= Void then
+				from
+					eiffel_class.inline_agent_table.start
+				until
+					eiffel_class.inline_agent_table.after
+				loop
+					feature_i := eiffel_class.inline_agent_table.item_for_iteration
+					Result.put (feature_i, feature_i.feature_id)
+					eiffel_class.inline_agent_table.forth
+				end
+			end
+
 		end
 
 	replicated_features: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is

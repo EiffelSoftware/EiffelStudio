@@ -19,7 +19,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 	SHARED_HISTORY_CONTROL
 		undefine
 			copy, is_equal
@@ -78,7 +78,7 @@ feature -- Incrementality
 						check
 							item_for_iteration.feature_name.is_equal (f2.feature_name)
 						end
-						Result := item_for_iteration.select_table_equiv (f2);					
+						Result := item_for_iteration.select_table_equiv (f2);
 					end
 					forth
 				end
@@ -92,6 +92,9 @@ feature -- Generation
 			-- with class `c'
 		require
 			c_not_void: c /= Void
+		local
+			eiffel_class: EIFFEL_CLASS_C
+			inline_agent: FEATURE_I
 		do
 			create Result.make (c, count)
 			if c.has_invariant then
@@ -106,10 +109,23 @@ feature -- Generation
 				Result.put (key_for_iteration, item_for_iteration)
 				forth
 			end
+
+			eiffel_class ?= c
+			if eiffel_class /= Void then
+				from
+					eiffel_class.inline_agent_table.start
+				until
+					eiffel_class.inline_agent_table.after
+				loop
+					inline_agent := eiffel_class.inline_agent_table.item_for_iteration
+					Result.put (inline_agent.rout_id_set.first, inline_agent)
+					eiffel_class.inline_agent_table.forth
+				end
+			end
 		end
 
 	generate (c: CLASS_C) is
-			-- Generate descriptor C tables of class 
+			-- Generate descriptor C tables of class
 			-- types associated with class `c'.
 		require
 			c_not_void: c /= Void
@@ -136,7 +152,7 @@ feature -- Melting
 	melt (c: CLASS_C) is
 			-- Melt descriptors of class types
 			-- associated with class `c'.
-			--| (The result is put in the melted 
+			--| (The result is put in the melted
 			--| descriptor server).
 		require
 			c_not_void: c /= Void

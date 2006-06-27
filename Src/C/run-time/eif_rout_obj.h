@@ -77,6 +77,7 @@ typedef struct {
 */
 RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
 RT_LNK EIF_REFERENCE rout_obj_create2 (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap);
+RT_LNK EIF_REFERENCE rout_obj_create_lazy (int16 dftype, EIF_INTEGER class_id, EIF_INTEGER feature_id, EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_REFERENCE args, EIF_REFERENCE omap);
 
 /* Argument structure (alloc/free) */
 
@@ -87,9 +88,10 @@ RT_LNK void rout_obj_free_args (EIF_POINTER);
 
 RT_LNK void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args);
 
+
 #ifdef WORKBENCH
-RT_LNK void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types);
-RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res);
+RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count);
+RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, EIF_ARG_UNION* result);
 #endif
 
 /* Macros */

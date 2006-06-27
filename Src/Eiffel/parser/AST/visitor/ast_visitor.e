@@ -38,6 +38,13 @@ feature -- Roundtrip
 		deferred
 		end
 
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+			-- Process `l_as'.
+		require
+			l_as_not_void: l_as /= Void
+		deferred
+		end
+
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
 			-- Process `l_as'.
 		require

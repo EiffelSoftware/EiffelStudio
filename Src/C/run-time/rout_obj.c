@@ -110,6 +110,35 @@ rt_public EIF_REFERENCE rout_obj_create2 (int16 dftype, EIF_POINTER rout_disp, E
 	RTLE;
 	return result;
 }
+
+rt_public EIF_REFERENCE rout_obj_create_lazy (int16 dftype, EIF_INTEGER class_id, EIF_INTEGER feature_id, EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_REFERENCE args, EIF_REFERENCE omap)
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	RTLD;
+
+		/* Protect address in case it moves */
+	RTLI(3);
+	RTLR (0, result);
+	RTLR (1, args);
+	RTLR (2, omap);
+
+		/* Create ROUTINE object */
+	result = emalloc(dftype);
+	nstcall = 0;
+		/* Call 'set_lazy_rout_disp' from ROUTINE */
+	(FUNCTION_CAST (void, (EIF_REFERENCE,
+						   EIF_INTEGER,
+						   EIF_INTEGER,
+						   EIF_BOOLEAN,
+						   EIF_BOOLEAN,
+						   EIF_REFERENCE,
+						   EIF_REFERENCE))egc_lazy_routdisp)(result, class_id, feature_id, is_precompiled, is_basic, args, omap);
+
+	RTLE;
+	return result;
+}
+
 /*------------------------------------------------------------------*/
 /* Allocate argument structure for `count' arguments.               */
 /*------------------------------------------------------------------*/
@@ -212,140 +241,110 @@ rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_
 
 #ifdef WORKBENCH
 
-rt_public void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types)
+#include "eif_setup.h"
+rt_public void rout_obj_call_procedure_dynamic (
+	int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count)
 {
 	EIF_GET_CONTEXT
-	void* body_addr;
-	void* patt_addr;
-	struct item* it;
-	size_t count;
-	size_t i = 0;
+	struct item* it = 0;
+	size_t i = 1;
 
-	count = strlen ((char*)types);
-
-	RT_GC_PROTECT(types); /* iget() may call GC */
+	RT_GC_PROTECT(args); /* iget() may call GC */
 
 	do {
 		it = iget();
-		if (i == count-1) {
-			i = 0;
+		if (i == arg_count) {
+			i = 1;
 		} else {
 			i++;
 		}
-		switch (((char*)types)[i])
+		switch (args[i].type)
 		{
-			case EIF_BOOLEAN_CODE: it->type = SK_BOOL; it->itu.itu_char = (args[i]).barg; break;
-			case EIF_CHARACTER_CODE: it->type = SK_CHAR; it->itu.itu_char = (args[i]).carg; break;
-			case EIF_REAL_64_CODE: it->type = SK_REAL64; it->itu.itu_real64 = (args[i]).darg; break;
-			case EIF_NATURAL_8_CODE: it->type = SK_UINT8; it->itu.itu_uint8 = (args[i]).u8arg; break;
-			case EIF_NATURAL_16_CODE: it->type = SK_UINT16; it->itu.itu_uint16 = (args[i]).u16arg; break;
-			case EIF_NATURAL_32_CODE: it->type = SK_UINT32; it->itu.itu_uint32 = (args[i]).u32arg; break;
-			case EIF_NATURAL_64_CODE: it->type = SK_UINT64; it->itu.itu_uint64 = (args[i]).u64arg; break;
-			case EIF_INTEGER_8_CODE: it->type = SK_INT8; it->itu.itu_int8 = (args[i]).i8arg; break;
-			case EIF_INTEGER_16_CODE: it->type = SK_INT16; it->itu.itu_int16 = (args[i]).i16arg; break;
-			case EIF_INTEGER_32_CODE: it->type = SK_INT32; it->itu.itu_int32 = (args[i]).i32arg; break;
-			case EIF_INTEGER_64_CODE: it->type = SK_INT64; it->itu.itu_int64 = (args[i]).i64arg; break;
-			case EIF_POINTER_CODE: it->type = SK_POINTER; it->itu.itu_ptr = (args[i]).parg; break;
-			case EIF_REAL_32_CODE: it->type = SK_REAL32; it->itu.itu_real32 = (args[i]).farg; break;
-			case EIF_WIDE_CHAR_CODE: it->type = SK_WCHAR; it->itu.itu_wchar = (args[i]).wcarg; break;
+			case EIF_BOOLEAN_CODE: it->type = SK_BOOL; it->itu.itu_char = (args[i]).element.barg; break;
+			case EIF_CHARACTER_CODE: it->type = SK_CHAR; it->itu.itu_char = (args[i]).element.carg; break;
+			case EIF_REAL_64_CODE: it->type = SK_REAL64; it->itu.itu_real64 = (args[i]).element.darg; break;
+			case EIF_NATURAL_8_CODE: it->type = SK_UINT8; it->itu.itu_uint8 = (args[i]).element.u8arg; break;
+			case EIF_NATURAL_16_CODE: it->type = SK_UINT16; it->itu.itu_uint16 = (args[i]).element.u16arg; break;
+			case EIF_NATURAL_32_CODE: it->type = SK_UINT32; it->itu.itu_uint32 = (args[i]).element.u32arg; break;
+			case EIF_NATURAL_64_CODE: it->type = SK_UINT64; it->itu.itu_uint64 = (args[i]).element.u64arg; break;
+			case EIF_INTEGER_8_CODE: it->type = SK_INT8; it->itu.itu_int8 = (args[i]).element.i8arg; break;
+			case EIF_INTEGER_16_CODE: it->type = SK_INT16; it->itu.itu_int16 = (args[i]).element.i16arg; break;
+			case EIF_INTEGER_32_CODE: it->type = SK_INT32; it->itu.itu_int32 = (args[i]).element.i32arg; break;
+			case EIF_INTEGER_64_CODE: it->type = SK_INT64; it->itu.itu_int64 = (args[i]).element.i64arg; break;
+			case EIF_POINTER_CODE: it->type = SK_POINTER; it->itu.itu_ptr = (args[i]).element.parg; break;
+			case EIF_REAL_32_CODE: it->type = SK_REAL32; it->itu.itu_real32 = (args[i]).element.farg; break;
+			case EIF_WIDE_CHAR_CODE: it->type = SK_WCHAR; it->itu.itu_wchar = (args[i]).element.wcarg; break;
 			default:
-				it->type = SK_REF; it->itu.itu_ref = (args[i]).rarg;
+				it->type = SK_REF; it->itu.itu_ref = (args[i]).element.rarg;
 		}
-	} while (i);
+	} while (i > 1);
+	RT_GC_WEAN(args);
 
-	RT_GC_WEAN(types);
-
-	body_addr = (void *) egc_frozen[body_id];
-	if (body_addr == NULL) {    /* feature is melted */
-		IC = melt[body_id];
-		xinterp (IC);
-	} else {                    /* feature is frozen */
-  	    patt_addr = (void *) pattern[FPatId (body_id)].toc;
-  	    (FUNCTION_CAST (void, (fnptr, int))patt_addr) (
-		   	(fnptr) body_addr,
-			0 /* not external */
-		);
-	}
+	dynamic_eval (feature_id, stype_id, is_precompiled, is_basic_type);
 }
 
-rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res)
+
+rt_public void rout_obj_call_function_dynamic (
+	int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, EIF_ARG_UNION* res)
 {
 	EIF_GET_CONTEXT
-	void* body_addr;
-	void* patt_addr;
-	void* resp;
-	struct item* it;
-	size_t count;
-	size_t i = 0;
+	struct item* it = 0;
+	size_t i = 1;
 
-	count = strlen ((char*)types);
-	resp = *(EIF_REFERENCE *) res;
-
-	RT_GC_PROTECT(types); /* iget() may call GC */
+	RT_GC_PROTECT(args); /* iget() may call GC */
 	RT_GC_PROTECT(res);
 
 	do {
 		it = iget();
-		if (i == count - 1) {
-			i = 0;
+		if (i == arg_count) {
+			i = 1;
 		} else {
 			i++;
 		}
-		switch (((char*)types)[i])
+		switch (args[i].type)
 		{
-			case EIF_BOOLEAN_CODE: it->type = SK_BOOL; it->itu.itu_char = (args[i]).barg; break;
-			case EIF_CHARACTER_CODE: it->type = SK_CHAR; it->itu.itu_char = (args[i]).carg; break;
-			case EIF_REAL_64_CODE: it->type = SK_REAL64; it->itu.itu_real64 = (args[i]).darg; break;
-			case EIF_NATURAL_8_CODE: it->type = SK_UINT8; it->itu.itu_uint8 = (args[i]).u8arg; break;
-			case EIF_NATURAL_16_CODE: it->type = SK_UINT16; it->itu.itu_uint16 = (args[i]).u16arg; break;
-			case EIF_NATURAL_32_CODE: it->type = SK_UINT32; it->itu.itu_uint32 = (args[i]).u32arg; break;
-			case EIF_NATURAL_64_CODE: it->type = SK_UINT64; it->itu.itu_uint64 = (args[i]).u64arg; break;
-			case EIF_INTEGER_8_CODE: it->type = SK_INT8; it->itu.itu_int8 = (args[i]).i8arg; break;
-			case EIF_INTEGER_16_CODE: it->type = SK_INT16; it->itu.itu_int16 = (args[i]).i16arg; break;
-			case EIF_INTEGER_32_CODE: it->type = SK_INT32; it->itu.itu_int32 = (args[i]).i32arg; break;
-			case EIF_INTEGER_64_CODE: it->type = SK_INT64; it->itu.itu_int64 = (args[i]).i64arg; break;
-			case EIF_POINTER_CODE: it->type = SK_POINTER; it->itu.itu_ptr = (args[i]).parg; break;
-			case EIF_REAL_32_CODE: it->type = SK_REAL32; it->itu.itu_real32 = (args[i]).farg; break;
-			case EIF_WIDE_CHAR_CODE: it->type = SK_WCHAR; it->itu.itu_wchar = (args[i]).wcarg; break;
+			case EIF_BOOLEAN_CODE: it->type = SK_BOOL; it->itu.itu_char = (args[i]).element.barg; break;
+			case EIF_CHARACTER_CODE: it->type = SK_CHAR; it->itu.itu_char = (args[i]).element.carg; break;
+			case EIF_REAL_64_CODE: it->type = SK_REAL64; it->itu.itu_real64 = (args[i]).element.darg; break;
+			case EIF_NATURAL_8_CODE: it->type = SK_UINT8; it->itu.itu_uint8 = (args[i]).element.u8arg; break;
+			case EIF_NATURAL_16_CODE: it->type = SK_UINT16; it->itu.itu_uint16 = (args[i]).element.u16arg; break;
+			case EIF_NATURAL_32_CODE: it->type = SK_UINT32; it->itu.itu_uint32 = (args[i]).element.u32arg; break;
+			case EIF_NATURAL_64_CODE: it->type = SK_UINT64; it->itu.itu_uint64 = (args[i]).element.u64arg; break;
+			case EIF_INTEGER_8_CODE: it->type = SK_INT8; it->itu.itu_int8 = (args[i]).element.i8arg; break;
+			case EIF_INTEGER_16_CODE: it->type = SK_INT16; it->itu.itu_int16 = (args[i]).element.i16arg; break;
+			case EIF_INTEGER_32_CODE: it->type = SK_INT32; it->itu.itu_int32 = (args[i]).element.i32arg; break;
+			case EIF_INTEGER_64_CODE: it->type = SK_INT64; it->itu.itu_int64 = (args[i]).element.i64arg; break;
+			case EIF_POINTER_CODE: it->type = SK_POINTER; it->itu.itu_ptr = (args[i]).element.parg; break;
+			case EIF_REAL_32_CODE: it->type = SK_REAL32; it->itu.itu_real32 = (args[i]).element.farg; break;
+			case EIF_WIDE_CHAR_CODE: it->type = SK_WCHAR; it->itu.itu_wchar = (args[i]).element.wcarg; break;
 			default:
-				it->type = SK_REF; it->itu.itu_ref = (args[i]).rarg;
+				it->type = SK_REF; it->itu.itu_ref = (args[i]).element.rarg;
 		}
-	} while (i);
-	RT_GC_WEAN(types);
+	} while (i > 1);
+	RT_GC_WEAN(args);
 
-	body_addr = (void *) egc_frozen[body_id];
-	if (body_addr == NULL) {    /* feature is melted */
-		IC = melt[body_id];
-		xinterp (IC);
-	} else {                    /* feature is frozen */
-  	    patt_addr =(void *) pattern[FPatId (body_id)].toc;
-  	    (FUNCTION_CAST (void, (fnptr, int))patt_addr) (
-		   	(fnptr) body_addr,
-			0 /* not external */
-		);
-	}
+	dynamic_eval (feature_id, stype_id, is_precompiled, is_basic_type);
 	it = opop();
 
 	switch (it->type)
 	{
 		case SK_BOOL:
 		case SK_CHAR:
-			*((EIF_CHARACTER *) resp) = it->itu.itu_char; break;
-		case SK_REAL64: *((EIF_REAL_64 *) resp) = it->itu.itu_real64; break;
-		case SK_UINT8: *((EIF_NATURAL_8 *) resp) = it->itu.itu_uint8; break;
-		case SK_UINT16: *((EIF_NATURAL_16 *) resp) = it->itu.itu_uint16; break;
-		case SK_UINT32: *((EIF_NATURAL_32 *) resp) = it->itu.itu_uint32; break;
-		case SK_UINT64: *((EIF_NATURAL_64 *) resp) = it->itu.itu_uint64; break;
-		case SK_INT8: *((EIF_INTEGER_8 *) resp) = it->itu.itu_int8; break;
-		case SK_INT16: *((EIF_INTEGER_16 *) resp) = it->itu.itu_int16; break;
-		case SK_INT32: *((EIF_INTEGER_32 *) resp) = it->itu.itu_int32; break;
-		case SK_INT64: *((EIF_INTEGER_64 *) resp) = it->itu.itu_int64; break;
-		case SK_POINTER: *((EIF_POINTER *) resp) = it->itu.itu_ptr; break;
-		case SK_REAL32: *((EIF_REAL_32 *) resp) = it->itu.itu_real32; break;
-		case SK_WCHAR: *((EIF_WIDE_CHAR *) resp) = it->itu.itu_wchar; break;
+			*((EIF_CHARACTER *) res) = it->itu.itu_char; break;
+		case SK_REAL64: *((EIF_REAL_64 *)res) = it->itu.itu_real64; break;
+		case SK_UINT8: *((EIF_NATURAL_8* )res) = it->itu.itu_uint8; break;
+		case SK_UINT16: *((EIF_NATURAL_16 *)res) = it->itu.itu_uint16; break;
+		case SK_UINT32: *((EIF_NATURAL_32 *)res) = it->itu.itu_uint32; break;
+		case SK_UINT64: *((EIF_NATURAL_64 *)res)= it->itu.itu_uint64; break;
+		case SK_INT8: *((EIF_INTEGER_8 *)res) = it->itu.itu_int8; break;
+		case SK_INT16: *((EIF_INTEGER_16 *)res) = it->itu.itu_int16; break;
+		case SK_INT32: *((EIF_INTEGER_32 *)res) = it->itu.itu_int32; break;
+		case SK_INT64: *((EIF_INTEGER_64 *)res) = it->itu.itu_int64; break;
+		case SK_POINTER: *((EIF_POINTER *)res) = it->itu.itu_ptr; break;
+		case SK_REAL32: *((EIF_REAL_32 *)res) = it->itu.itu_real32; break;
+		case SK_WCHAR: *((EIF_WIDE_CHAR* )res) = it->itu.itu_wchar; break;
 		default:
-			*((EIF_REFERENCE *) resp) = it->itu.itu_ref;
-			RTAR(resp, it->itu.itu_ref);
+			*((EIF_REFERENCE *)res) = it->itu.itu_ref;
 	}
 	RT_GC_WEAN(res);
 }

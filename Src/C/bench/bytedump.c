@@ -701,13 +701,22 @@ static  void    print_instructions ()
 
 /* Creation */
 			case  BC_RCREATE:
-				fprintf (ofp, " Args:%d ", get_int16(&ip));
-				fprintf (ofp, " Open map:%d ", get_int16(&ip));
-				fprintf (ofp, " Closed map:%d ", get_int16(&ip));
+				{
+				int is_lazy;
+				fprintf (ofp, " Args:%d ", get_bool(&ip));
+				fprintf (ofp, " Open map:%d ", get_bool(&ip));
+				is_lazy = get_bool(&ip);
+				fprintf (ofp, " Is lazy:%d ", is_lazy);
 				print_ctype (get_int16(&ip));
 				print_cid ();
+				if (is_lazy) {
+					fprintf (ofp, " Class_id:%d ", get_int32(&ip));
+					fprintf (ofp, " Feature_id:%d ", get_int32(&ip));
+					fprintf (ofp, " Is_precompiled:%d ", get_bool(&ip));
+					fprintf (ofp, " Is_basic:%d ", get_bool(&ip));
+				}
 				break;
-
+				}
 			case  BC_CREATE :
 				/* Kind of creation */
 
@@ -1019,7 +1028,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"%d ", get_int32(&ip));
 				/* Static type */
 				print_ctype (get_int16(&ip));
-				fprintf (ofp," %d ", (int) get_int16(&ip));
+				fprintf (ofp," %d ", (int) get_bool(&ip));
 				break;
 			case  BC_OBJECT_ADDR :
 				/* Address of object */

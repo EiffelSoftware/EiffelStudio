@@ -439,6 +439,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_routine_class, "ROUTINE")
 			l_actions.put (agent system.set_procedure_class, "PROCEDURE")
 			l_actions.put (agent system.set_function_class, "FUNCTION")
+			l_actions.put (agent system.set_predicate_class, "PREDICATE")
 			l_actions.put (agent system.set_type_class, "TYPE")
 
 				-- XX_REF classes

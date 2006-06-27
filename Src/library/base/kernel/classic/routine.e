@@ -21,7 +21,7 @@ inherit
 		end
 
 feature -- Initialization
-
+	
 	adapt (other: like Current) is
 			-- Initialize from `other'.
 			-- Useful in descendants.
@@ -34,6 +34,11 @@ feature -- Initialization
 			rout_disp := other.rout_disp
 			eiffel_rout_disp := other.eiffel_rout_disp
 			is_cleanup_needed := other.is_cleanup_needed
+			class_id := other.class_id
+			feature_id := other.feature_id
+			is_basic := other.is_basic
+			is_precompiled := other.is_precompiled
+
 		ensure
 			same_call_status: other.callable implies callable
 		end
@@ -98,7 +103,7 @@ feature -- Access
 		ensure
 			empty_operands_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	callable: BOOLEAN is
@@ -106,7 +111,7 @@ feature -- Status report
 		local
 			null_ptr: POINTER
 		do
-			Result := (rout_disp /= null_ptr)
+			Result := (rout_disp /= null_ptr) or else class_id > 0 and feature_id > 0
 		end
 
 	is_equal (other: like Current): BOOLEAN is
@@ -263,14 +268,22 @@ feature {ROUTINE} -- Implementation
 			-- If open arguments contain some references, we need
 			-- to clean them up after call.
 
-	frozen set_rout_disp (p: POINTER; tp: POINTER; args: TUPLE; 
+	frozen class_id: INTEGER
+
+	frozen feature_id: INTEGER
+
+	frozen is_precompiled: BOOLEAN
+
+	frozen is_basic: BOOLEAN
+
+	frozen set_rout_disp (p: POINTER; tp: POINTER; args: TUPLE;
 						 omap: ARRAY [INTEGER]) is
-			-- Initialize object. 
+			-- Initialize object.
 		require
 			p_not_void: p /= Default_pointer
-			tp_not_void: tp /= Default_pointer
 			args_not_void: args /= Void
 		do
+
 			rout_disp := p
 			eiffel_rout_disp := tp
 			internal_operands := args
@@ -280,6 +293,7 @@ feature {ROUTINE} -- Implementation
 				open_map := Void
 			end
 			compute_is_cleanup_needed
+			class_id := -1
 		ensure
 			rout_disp_set: rout_disp = p
 			eiffel_rout_disp_set: eiffel_rout_disp = tp
@@ -288,11 +302,40 @@ feature {ROUTINE} -- Implementation
 				(omap /= Void and then open_map = omap.area)
 		end
 
+	frozen set_lazy_rout_disp (a_class_id, a_feature_id: INTEGER
+							   a_is_precompiled, a_is_basic: BOOLEAN
+							   a_args: TUPLE; a_omap: ARRAY [INTEGER]) is
+		require
+			a_class_id_valid: a_class_id > -1
+			a_feature_id_valid: a_feature_id > 0
+			args_not_void: a_args /= Void
+		do
+			class_id := a_class_id
+			feature_id := a_feature_id
+			internal_operands := a_args
+			if a_omap /= Void then
+				open_map := a_omap.area
+			else
+				open_map := Void
+			end
+			is_precompiled := a_is_precompiled
+			is_basic := a_is_basic
+			compute_is_cleanup_needed
+		ensure
+			class_id = a_class_id
+			feature_id = a_feature_id
+			internal_operands_set: internal_operands = a_args
+			open_map_set: (a_omap = Void and open_map = Void) or
+				(a_omap /= Void and then open_map = a_omap.area)
+			is_precompiled = a_is_precompiled
+			is_basic = a_is_basic
+		end
+
 feature {NONE} -- Implementation
 
 	frozen open_types: ARRAY [INTEGER]
 			-- Types of open operands
-			
+
 	frozen remove_gc_reference is
 			-- Remove all references from `internal_operands' so that GC
 			-- can collect them if necessary.
@@ -321,7 +364,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	frozen compute_is_cleanup_needed is
 			-- Set `is_cleanup_needed' to True if some open arguments are references.
 		local

@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			Precursor {MELTED_INFO} (f, associated_class)
 			is_encapsulated_call := f.can_be_encapsulated
 			feature_name_id := f.feature_name_id
+			is_inline_agent := f.is_inline_agent
+			enclosing_feature := associated_class.feature_i_with_body_index (f.enclosing_body_id)
 		end
 
 feature {NONE} -- Implementation
@@ -35,10 +37,18 @@ feature {NONE} -- Implementation
 			-- Is Current a feature encapsulation of something that we usually do
 			-- not generate (eg attribute or constant)?
 
+	is_inline_agent: BOOLEAN
+			-- Is this feature an inline agent?
+
+	enclosing_feature: FEATURE_I
+			-- The feature in which the inline agent (if it is one) is enclosed in
+
 	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Create new EXECUTION_UNIT corresponding to Current type.
 		do
-			if is_encapsulated_call then
+			if is_inline_agent then
+				create {INLINE_AGENT_EXECUTION_UNIT} Result.make (class_type, enclosing_feature)
+			elseif is_encapsulated_call then
 				create {ENCAPSULATED_EXECUTION_UNIT} Result.make (class_type)
 			else
 				create Result.make (class_type)
@@ -50,14 +60,26 @@ feature {NONE} -- Implementation
 			Result.set_type (result_type.instantiation_in (class_type).c_type)
 		end
 
-	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
 			-- Associated feature
+		local
+			eiffel_class: EIFFEL_CLASS_C
 		do
-			check
-				consistency: feat_tbl.has_id (feature_name_id)
+			eiffel_class ?= class_c
+			if eiffel_class /= Void then
+				Result := eiffel_class.inline_agent_of_name_id (feature_name_id)
 			end
-			Result := feat_tbl.item_id (feature_name_id)
+
+			if Result = Void then	--Its not an inline agent
+				check
+					consistency: feat_tbl.has_id (feature_name_id)
+				end
+				Result := feat_tbl.item_id (feature_name_id)
+			end
 		end
+
+invariant
+	valid_enclosing_feature: is_inline_agent implies enclosing_feature /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

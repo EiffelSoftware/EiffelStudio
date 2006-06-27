@@ -208,6 +208,11 @@ feature -- Variables access
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
 		end
+	
+	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate access to feature of `a_feature_id' in `type_i'.
+		do
+		end
 
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.

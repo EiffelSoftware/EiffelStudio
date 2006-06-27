@@ -245,6 +245,18 @@ feature -- Access
 			end
 		end
 
+	is_inline_agent: BOOLEAN is
+			-- is the feature an inline angent
+	do
+		Result := inline_agent_nr > 0
+	end
+
+	enclosing_body_id: INTEGER
+			-- The feature id of the enclosing feature of an inline agent
+
+	inline_agent_nr: INTEGER
+			-- the number of this inline agent in the enclosing feature
+
 feature -- Comparison
 
 	infix "<" (other: FEATURE_I): BOOLEAN is
@@ -712,6 +724,15 @@ feature -- Setting
 			-- Do a clone of arguments (for replication)
 		do
 			-- Do nothing
+		end
+
+	set_inline_agent (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER) is
+		require
+			enclosing_body_id_valid: a_enclosing_body_id > 0
+			inline_agent_nr_valid: a_inline_agent_nr > 0
+		do
+			enclosing_body_id := a_enclosing_body_id
+			inline_agent_nr := a_inline_agent_nr
 		end
 
 feature -- Incrementality
@@ -1243,6 +1264,24 @@ feature -- Export checking
 		end
 
 feature -- Check
+
+	real_body: BODY_AS is
+			-- Body of feature
+		local
+			feat_as: FEATURE_AS
+			inline_agent_lookup: AST_INLINE_AGENT_LOOKUP
+		do
+			if is_inline_agent then
+				create inline_agent_lookup
+				Result :=
+					inline_agent_lookup.lookup_inline_agent (body_server.item (enclosing_body_id), inline_agent_nr)
+			else
+				feat_as := body
+				if feat_as /= Void then
+					Result := feat_as.body
+				end
+			end
+		end
 
 	body: FEATURE_AS is
 			-- Body of feature
@@ -2518,6 +2557,10 @@ feature {NONE} -- Debug output
 				Result := "Name not yet assigned"
 			end
 		end
+
+invariant
+	valid_enclosing_feature: is_inline_agent implies enclosing_body_id > 0
+	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

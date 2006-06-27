@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 	initialize (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
 			-- When `t' is Void it means it is a question mark.
-		require
-			f_not_void: f /= Void
 		do
 			target := t
 			feature_name := f
@@ -126,7 +124,6 @@ feature -- Setting
 		end
 
 invariant
-	feature_name_not_void: feature_name /= Void
 	operands_correct: (internal_operands /= Void implies operands = internal_operands.meaningful_content) and
 					  (internal_operands = Void implies operands = Void)
 

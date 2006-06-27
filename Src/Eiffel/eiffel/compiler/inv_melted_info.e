@@ -22,7 +22,7 @@ create
 
 feature
 
-	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
 			-- Associated feature
 		do
 			check

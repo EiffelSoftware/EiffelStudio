@@ -124,6 +124,10 @@ feature -- Status report
 	completing_feature: BOOLEAN
 			-- Completing feature? Otherwise completing classes.
 
+	need_tabbing: BOOLEAN
+			-- Need tabbing after completion?
+			-- If false, tabbing is automatically triggered.
+
 feature {NONE} -- Status report
 
 	end_of_line: BOOLEAN is
@@ -450,7 +454,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 				else
 					complete_feature_call (completed, is_feature_signature, appended_character, remainder)
 					if is_feature_signature then
-						if completed.last_index_of (')',completed.count) = completed.count then
+						if need_tabbing or else completed.last_index_of (')',completed.count) = completed.count then
 							place_post_cursor
 						end
 					end

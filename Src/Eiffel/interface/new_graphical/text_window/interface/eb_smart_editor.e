@@ -856,45 +856,14 @@ feature {NONE} -- Code completable implementation
 			l_token: EDITOR_TOKEN
 			l_found_blank: BOOLEAN
 		do
+			set_discard_feature_signature (False)
+			need_tabbing := False
 			if not is_empty then
-				from
-					l_token := text_displayed.cursor.token
-				until
-					l_token = Void or l_end_loop or l_quit
-				loop
-					l_token := l_token.previous
-					if l_token /= Void then
-						if l_token.is_blank then
-							l_found_blank := True
-						else
-							if l_found_blank then
-									-- We do not need signature after "like feature"
-									-- We do not need feature signature when it is a pointer reference. case: "$  feature"
-								if l_token.image.as_lower.is_equal ("like") or l_token.image.is_equal ("$") then
-									l_end_loop := True
-									set_discard_feature_signature (True)
-								else
-									l_quit := True
-								end
-							end
-								-- Prevent create {like a}.input (a, b) from signature being discarded.
-							if l_token.image.as_lower.is_equal ("}") then
-								l_end_loop := True
-							end
-						end
-						-- We do not need feature signature when it is a pointer reference. case2: "$feature"
-						if not l_found_blank and then not l_quit and then not l_end_loop then
-							if l_token.image.is_equal ("$") then
-								l_end_loop := True
-								set_discard_feature_signature (True)
-							end
-						end
-					end
-				end
 					-- Look for the fist feature within the whole editor.
 					-- We do not need signature before the first feature clause of a class.
 				from
 					text_displayed.start
+					l_end_loop := False
 				until
 					text_displayed.after or l_end_loop
 				loop
@@ -920,9 +889,70 @@ feature {NONE} -- Code completable implementation
 					end
 					text_displayed.forth
 				end
-			end
-			if not l_end_loop then
-				set_discard_feature_signature (False)
+				if not discard_feature_signature then
+					from
+						l_token := text_displayed.cursor.token
+						l_end_loop := False
+					until
+						l_token = Void or l_end_loop or l_quit
+					loop
+						l_token := l_token.previous
+						if l_token /= Void then
+							if l_token.is_blank then
+								l_found_blank := True
+							else
+								if l_found_blank then
+										-- We do not need signature after "like feature"
+										-- We do not need feature signature when it is a pointer reference. case: "$  feature"
+									if l_token.image.as_lower.is_equal ("like") or l_token.image.is_equal ("$") then
+										l_end_loop := True
+										set_discard_feature_signature (True)
+									else
+										l_quit := True
+									end
+								end
+									-- Prevent create {like a}.input (a, b) from signature being discarded.
+								if l_token.image.as_lower.is_equal ("}") then
+									l_end_loop := True
+								end
+							end
+							-- We do not need feature signature when it is a pointer reference. case2: "$feature"
+							if not l_found_blank and then not l_quit and then not l_end_loop then
+								if l_token.image.is_equal ("$") then
+									l_end_loop := True
+									set_discard_feature_signature (True)
+								end
+							end
+						end
+					end
+				end
+
+					-- Check if there is already signature following when we discard signature.
+				if not discard_feature_signature then
+					from
+						l_token := text_displayed.cursor.token
+						l_end_loop := False
+						if l_token /= Void then
+							if l_token.image.is_equal ("(") then
+								l_end_loop := True
+								set_discard_feature_signature (True)
+							end
+						end
+					until
+						l_token = Void or l_end_loop
+					loop
+						l_token := l_token.next
+						if l_token /= Void then
+							if not l_token.is_blank then
+								l_end_loop := True
+								if l_token.image.is_equal ("(") then
+									need_tabbing := True
+									set_discard_feature_signature (True)
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 

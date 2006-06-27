@@ -1021,31 +1021,41 @@ feature {EV_ANY_I} -- Implementation
 	window_on_wm_activate (wparam, lparam: POINTER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		local
-			titled_window: EV_TITLED_WINDOW_IMP
+			l_is_minimized: BOOLEAN
 		do
+			l_is_minimized := cwin_hi_word (wparam) /= 0
 			if cwin_lo_word (wparam) /= Wel_window_constants.Wa_inactive then
 						-- We must now restore the focus to `last_focused_widget'
 						-- as the window is now being re-activated.
-				if is_window (last_focused_widget) then
-					window_of_item (last_focused_widget).set_focus
-							-- Calling disable_default_processing is required in order to
-							-- stop the focus being removed from `last_focused_widget' after
-							-- we set it. However, this stops on_set_focus being called, so we
-							-- call the relevent parts by ourself.
-					disable_default_processing
-					titled_window ?= Current
-					if titled_window /= Void then
-						application_imp.set_window_with_focus (titled_window.interface)
-					else
-						application_imp.set_window_with_focus (Void)
+				if not l_is_minimized then
+					application_imp.set_window_with_focus (interface)
+					if application_imp.focus_in_actions /= Void then
+						application_imp.focus_in_actions.call ([interface])
 					end
 					if focus_in_actions_internal /= Void then
 						focus_in_actions_internal.call (Void)
 					end
+					if is_window (last_focused_widget) then
+						window_of_item (last_focused_widget).set_focus
+							-- Calling disable_default_processing is required in order to
+							-- stop the focus being removed from `last_focused_widget' after
+							-- we set it. However, this stops on_set_focus being called, so we
+							-- execute the code ourselves.
+						disable_default_processing
+					end
+				end
+			else
+					-- Window is losing focus so reset once functions.
+				application_imp.set_window_with_focus (Void)
+				focus_on_widget.put (Void)
+				if application_imp.focus_out_actions /= Void then
+					application_imp.focus_out_actions.call ([interface])
+				end
+				if focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call (Void)
 				end
 			end
 		end
-
 
 	fire_dialog_show_actions (dialog: POINTER) is
 			-- Call `show_actions' on a dialog referenced by `dialog'.
@@ -1077,7 +1087,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-
 	override_movement: BOOLEAN
 			-- Used to override on_window_pos_changing.
 			-- If `True', then on_window_pos_changing will not raise
@@ -1094,6 +1103,11 @@ feature {EV_ANY_I} -- Implementation
 		-- and restore them in on_show if necessary.
 
 feature {EV_ANY_I} -- Implementation
+
+	accelerators: WEL_ACCELERATORS
+			-- List of accelerators connected to this window.
+			-- Used in EV_TITLED_WINDOW_IMP but added here to
+			-- avoid assignment attempt in {EV_APPLICATION_IMP}.process_message.
 
 	allow_movement is
 		do

@@ -357,9 +357,6 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 			-- List of accelerators connected to `Current' indexed by
 			-- their `id'.
 
-	accelerators: WEL_ACCELERATORS
-			-- List of accelerators connected to this window.
-
 	wel_acc_size: INTEGER is
 			-- Used to initialize WEL_ARRAY.
 		local

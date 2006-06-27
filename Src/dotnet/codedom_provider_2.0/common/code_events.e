@@ -297,8 +297,6 @@ feature {NONE} -- Implementation
 			Result.extend (["Failed Configuration Save", "compiler", "Configuration file could not be saved at {1}", Error],
 						Failed_config_save)
 
-			-- Compilation directory is missing
-
 			-- Compiler Warnings
 			Result.extend (["File Already Exists", "compiler", "File `{1}' is being overwritten", Warning],
 						File_exists)
@@ -315,9 +313,9 @@ feature {NONE} -- Implementation
 			Result.extend (["Precompilation Failed", "compiler", "Could not precompile ace file `{1}' in cache `{2}'", Warning],
 						Precompile_failed)
 
-			-- Overwriting existing Eiffel source file
-
 			-- Compiler Information
+			Result.extend (["Compiler Output", "compiler", "{1}", Information],
+						Compiler_output)
 
 		end
 

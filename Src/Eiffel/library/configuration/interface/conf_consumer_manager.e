@@ -873,6 +873,7 @@ feature {NONE} -- helpers
 				if l_key /= Void and then not l_key.is_equal (null_key_string) then
 					an_assembly.set_assembly_public_key (l_key)
 				end
+				an_assembly.set_is_in_gac (l_cons_as.is_in_gac)
 			end
 		end
 

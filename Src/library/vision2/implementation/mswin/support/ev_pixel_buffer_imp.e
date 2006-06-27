@@ -98,6 +98,19 @@ feature -- Command
 			end
 		end
 
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
+			-- Create asub pixmap from Current.
+		local
+			l_temp_buffer: EV_PIXEL_BUFFER
+			l_imp: EV_PIXEL_BUFFER_IMP
+		do
+			l_temp_buffer := sub_pixel_buffer (a_rect)
+			l_imp ?= l_temp_buffer.implementation
+			check not_void: l_imp /= Void end
+			create Result
+			l_imp.draw_to_drawable (Result)
+		end
+
 	draw_to_drawable (a_drawable: EV_DRAWABLE) is
 			-- Draw Current to `a_drawable'
 		local

@@ -142,16 +142,16 @@ feature -- Implementation
 			if pick_actions_internal /= Void then
 				pick_actions_internal.call ([a_x, a_y])
 			end
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
+			pointer_x := a_screen_x.to_integer_16
+			pointer_y := a_screen_y.to_integer_16
 			if pick_x = 0 and pick_y = 0 then
 				App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 			else
 				if pick_x > width then
-					pick_x := width
+					pick_x := width.to_integer_16
 				end
 				if pick_y > height then
-					pick_y := height
+					pick_y := height.to_integer_16
 				end
 				App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 			end
@@ -255,10 +255,7 @@ feature -- Implementation
 		do
 			disable_capture
 			app_imp := app_implementation
-			if rubber_band_is_drawn then
-				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
-				rubber_band_is_drawn := False
-			end
+			erase_rubber_band
 			if not is_destroyed then
 				if pointer_style /= Void then
 					internal_set_pointer_style (pointer_style)
@@ -298,7 +295,6 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
-			last_pointed_target := Void
 			if pebble_function /= Void then
 				pebble_function.clear_last_result
 				pebble := Void

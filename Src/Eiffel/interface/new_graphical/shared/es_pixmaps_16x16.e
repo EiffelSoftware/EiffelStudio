@@ -2014,26 +2014,26 @@ feature -- Access
 			Result := pixel_buffer_from_coords (30, 7)
 		end
 
-	frozen sort_acending_icon: EV_PIXMAP is
-			-- Access to 'acending' pixmap.
+	frozen sort_descending_icon: EV_PIXMAP is
+			-- Access to 'descending' pixmap.
 		once
 			Result := pixmap_from_coords (1, 8)
 		end
 
-	frozen sort_acending_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'acending' pixmap pixel buffer.
+	frozen sort_descending_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'descending' pixmap pixel buffer.
 		once
 			Result := pixel_buffer_from_coords (1, 8)
 		end
 
-	frozen sort_descending_icon: EV_PIXMAP is
-			-- Access to 'descending' pixmap.
+	frozen sort_acending_icon: EV_PIXMAP is
+			-- Access to 'acending' pixmap.
 		once
 			Result := pixmap_from_coords (2, 8)
 		end
 
-	frozen sort_descending_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'descending' pixmap pixel buffer.
+	frozen sort_acending_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'acending' pixmap pixel buffer.
 		once
 			Result := pixel_buffer_from_coords (2, 8)
 		end

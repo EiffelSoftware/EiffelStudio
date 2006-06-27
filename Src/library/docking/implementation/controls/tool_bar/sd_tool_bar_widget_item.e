@@ -25,13 +25,13 @@ feature {NONE} -- Initlization
 			not_void: a_widget /= Void
 			parent_void: a_widget.parent = Void
 		local
-			l_pixmaps: EV_STOCK_PIXMAPS
+			l_shared: SD_SHARED
 		do
 			widget := a_widget
 			description := "Widget item"
 			name := generating_type
-			create l_pixmaps
-			pixmap := l_pixmaps.default_window_icon
+			create l_shared
+			pixmap := l_shared.icons.tool_bar_widget_item_icon
 			is_displayed := True
 		ensure
 			set: widget = a_widget

@@ -27,10 +27,10 @@ feature {NONE} -- Initlization
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive := True
 			is_displayed := True
-			description := generating_type
+			description := "Separator"
 			name := generating_type
 			create l_shared
-			pixmap := l_shared.icons.default_icon
+			pixmap := l_shared.icons.tool_bar_separator_icon
 		end
 
 feature -- Redefine Agents

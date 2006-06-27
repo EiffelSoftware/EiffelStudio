@@ -35,6 +35,13 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
+	minimize: EV_PIXMAP is
+			-- Minimize icon pixmap
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 	maximize: EV_PIXMAP is
 			-- Maximize icon pixmap.
 		deferred
@@ -63,9 +70,23 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
-	pebble: EV_PIXMAP is
-			-- Pebble.
-		deferred
+	tool_bar_separator_icon: EV_PIXMAP is
+			-- Tool bar separator icon.
+		do
+			Result := default_icon
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_widget_item_icon: EV_PIXMAP is
+			-- Tool bar widget item icon.
+		local
+			l_bitmap: EV_BITMAP
+		do
+			create Result.make_with_size (16, 16)
+			create l_bitmap.make_with_size (16, 16)
+			l_bitmap.fill_rectangle (0, 0, 16, 16)
+			Result.set_mask (l_bitmap)
 		ensure
 			not_void: Result /= Void
 		end

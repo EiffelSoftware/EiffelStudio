@@ -8,11 +8,6 @@ class
 	AGENT_LIST_EQUALITY_TESTER [G]
 
 inherit
-	KL_EQUALITY_TESTER [G]
-		redefine
-			test
-		end
-
 	KL_PART_COMPARATOR [G]
 
 create
@@ -38,28 +33,7 @@ feature -- Access
 
 feature -- Status report
 
-	test (v, u: G): BOOLEAN is
-			-- Are `v' and `u' considered equal?
-			-- (Use `equal' by default.)
-		do
-			if v = Void then
-				Result := (u = Void)
-			elseif u = Void then
-				Result := False
-			else
-				Result := not less_than_internal (v, u) and not less_than_internal (u, v)
-			end
-		end
-
 	less_than (u, v: G): BOOLEAN is
-			-- Is `u' considered less than `v'?
-		do
-			Result := less_than_internal (u, v)
-		end
-
-feature {NONE} -- Implementation
-
-	less_than_internal (u, v: G): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
 			l_cursor: CURSOR

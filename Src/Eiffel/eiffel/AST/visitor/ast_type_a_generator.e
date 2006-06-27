@@ -173,7 +173,7 @@ feature {NONE} -- Visitor implementation
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
 			l_actual_generic: ARRAY [TYPE_A]
-			i, count: INTEGER
+			i, g, count: INTEGER
 			l_type: NAMED_TUPLE_TYPE_A
 			l_generics: EIFFEL_LIST [TYPE_DEC_AS]
 			l_names: SPECIAL [INTEGER]
@@ -187,6 +187,7 @@ feature {NONE} -- Visitor implementation
 				l_generics := l_as.generics
 				from
 					i := 1
+					g := 1
 					count := l_as.generic_count
 					create l_actual_generic.make (1, count)
 					create l_names.make (count)
@@ -194,9 +195,9 @@ feature {NONE} -- Visitor implementation
 				until
 					i > count or l_has_error
 				loop
-					l_generics.i_th (i).process (Current)
+					l_generics.i_th (g).process (Current)
 					l_has_error := last_type = Void
-					l_id_list := l_generics.i_th (i).id_list
+					l_id_list := l_generics.i_th (g).id_list
 					from
 						l_id_list.start
 					until
@@ -207,6 +208,7 @@ feature {NONE} -- Visitor implementation
 						i := i + 1
 						l_id_list.forth
 					end
+					g := g + 1
 				end
 				if l_has_error then
 					check failure_enabled: is_failure_enabled end

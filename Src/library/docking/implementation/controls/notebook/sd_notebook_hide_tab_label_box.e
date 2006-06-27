@@ -304,7 +304,7 @@ feature {NONE} -- Implementation functions
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				key_press_actions.call ([a_key])
 			else
-
+				key_press_actions.call ([a_key])
 			end
 		end
 

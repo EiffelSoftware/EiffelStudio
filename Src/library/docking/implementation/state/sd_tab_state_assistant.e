@@ -304,6 +304,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 					end
 				end
 				state.zone.destroy
+				internal_docking_manager.command.resize (False)
 				internal_docking_manager.command.update_title_bar
 			end
 		ensure

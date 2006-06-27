@@ -275,10 +275,6 @@ rt_public void idump(FILE *, char *);						/* Byte code dumping */
 rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumping */
 #endif
 
-/* debug functions */
-extern void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */ 
-extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
-
 /* Those macros are used to save and restore the ``x'' stack context to/from 
  * ``y'' and ``z'', which are respectively the current chunk and the current
  * top pointer on the stack. The STACK_PRESERVE declares the variables ``dcur''
@@ -4218,7 +4214,6 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 	EIF_GET_CONTEXT
 	RTED;
 	int				saved_debug_mode = debug_mode;
-	unsigned char *	OLD_IC = NULL;		/* IC back-up */
 	uint32			type = 0;			/* Dynamic type of the result */
 	struct item 	*result = NULL;		/* Result of the function (NULL if none) */
 	uint32 EIF_VOLATILE db_cstack;
@@ -4249,8 +4244,6 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 		dpop();
 		RTLXE;
 		debug_mode = saved_debug_mode;
-		undiscard_breakpoints();
-		IC = OLD_IC;
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
 		in_assertion = saved_assertion; /* Corresponds to RTED */
@@ -4270,9 +4263,7 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 	debug_mode = saved_debug_mode;
 
 	dpop();
-	undiscard_breakpoints();		/* restore previous state. */
 	d_data.db_callstack_depth = db_cstack;
-	IC = OLD_IC;					/* Restore IC back-up */
 
 	return result;
 }
@@ -4293,6 +4284,7 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
 	unsigned long 	stagval = tagval;	/* Save tag value */
 	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
+	unsigned char*	OLD_IC = IC;		/* IC back up */
 	uint32 			pid = 0;			/* Pattern id of the frozen feature */
 	int32 			rout_id = 0;		/* routine id of the requested feature */
 	struct stochunk *previous_scur = saved_scur;
@@ -4327,6 +4319,7 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
 		tagval = stagval;
+		IC = OLD_IC;					/* Restore IC back-up */
 		in_assertion = saved_assertion; /* Corresponds to RTED */
 		ereturn(MTC_NOARG);
 	}
@@ -4343,6 +4336,7 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 		xinterp(MTC melt[body_id]);
 		sync_needed = 1;					/* Compulsory synchronisation */
 	}
+	IC = OLD_IC;					/* Restore IC back-up */
 	expop(&eif_stack);
 	dpop();	
 	/* restore operational stack if needed */

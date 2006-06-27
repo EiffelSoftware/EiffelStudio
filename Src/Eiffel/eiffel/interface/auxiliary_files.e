@@ -390,11 +390,11 @@ feature -- Plug and Makefile file
 			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
-			set_rout_disp_feat: FEATURE_I
+			set_rout_disp_feat, set_lazy_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, exp_init_name,
 			set_count_name: STRING
-			arr_make_name, set_rout_disp_name: STRING
+			arr_make_name, set_rout_disp_name, set_lazy_rout_disp_name: STRING
 			correct_mismatch_name: STRING
 			twin_name: STRING
 			special_cl: SPECIAL_B
@@ -507,6 +507,13 @@ feature -- Plug and Makefile file
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string ("();%N")
+
+				set_lazy_rout_disp_feat := rout_cl.feature_table.item_id (Names_heap.set_lazy_rout_disp_name_id)
+				set_lazy_rout_disp_name := Encoder.feature_name (id, set_lazy_rout_disp_feat.body_index).twin
+
+				buffer.put_string ("extern void ")
+				buffer.put_string (set_lazy_rout_disp_name)
+				buffer.put_string ("();%N")
 			end
 
 			if final_mode then
@@ -594,6 +601,13 @@ feature -- Plug and Makefile file
 			if set_rout_disp_name /= Void then
 				buffer.put_string ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 				buffer.put_string (set_rout_disp_name)
+				buffer.put_string (";%N")
+			end
+
+				--Pointer on `set_lazy_rout_disp' of class ROUTINE
+			if set_lazy_rout_disp_name /= Void then
+				buffer.put_string ("%Tegc_lazy_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.put_string (set_lazy_rout_disp_name)
 				buffer.put_string (";%N")
 			end
 

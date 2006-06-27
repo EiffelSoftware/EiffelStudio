@@ -35,6 +35,12 @@ feature -- Roundtrip
 			process_routine_creation_as (l_as)
 		end
 
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_agent_routine_creation_as (l_as)
+		end
+
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
 			-- Process `l_as'.
 		do

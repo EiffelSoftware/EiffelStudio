@@ -75,6 +75,9 @@ feature -- Access
 	function_class: CLASS_I
 			-- Class FUNCTION
 
+	predicate_class: CLASS_I
+			-- Class PREDICATE
+
 	typed_pointer_class: CLASS_I
 			-- Class TYPED_POINTER
 
@@ -253,6 +256,17 @@ feature -- Access
 			compiled: function_class.is_compiled
 		do
 			Result := function_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	predicate_class_id: INTEGER is
+			-- Id of class PREDICATE
+		require
+			predicate_class_exists: predicate_class /= Void
+			compiled: predicate_class.is_compiled
+		do
+			Result := predicate_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -652,6 +666,16 @@ feature -- Settings
 			function_class := c
 		ensure
 			function_class_set: function_class = c
+		end
+
+	set_predicate_class (c: CLASS_I) is
+			-- Assign `c' to `predicate_class'.
+		require
+			c_not_void: c /= Void
+		do
+			predicate_class := c
+		ensure
+			predicate_class_set: predicate_class = c
 		end
 
 	set_arguments_class (c: CLASS_I) is

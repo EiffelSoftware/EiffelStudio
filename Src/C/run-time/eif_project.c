@@ -150,6 +150,16 @@ doc:	</attribute>
 rt_public void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); 
 
 /*
+doc:	<attribute name="egc_lazy_routdisp" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ROUTINE.set_lazy_rout_disp used to initialize new ROUTINE objects of type PROCEDURE, FUNCTION or PREDICATE.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_lazy_routdisp)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN, EIF_BOOLEAN,EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); 
+
+/*
 doc:	<attribute name="egc_correct_mismatch" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine ANY.internal_correct_mismatch which is used to fix a mismatch while retrieving objects from a storable.</summary>
 doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>

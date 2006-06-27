@@ -130,7 +130,7 @@ rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_precompiled, int is_basic_type);
-extern struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
+extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -1678,7 +1678,9 @@ rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
-	ip = dynamic_eval(fid,stype, is_precompiled, is_basic_type, previous_otop, &exception_occured);
+	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
+	ip = dynamic_eval_dbg(fid,stype, is_precompiled, is_basic_type, previous_otop, &exception_occured);
+	c_opop();
 	if (ip == (struct item *) 0) {
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
 		dumped.dmp_item = NULL;			/* arguments to be sent. */

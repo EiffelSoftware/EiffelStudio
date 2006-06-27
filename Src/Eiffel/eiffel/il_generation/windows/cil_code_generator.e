@@ -4368,6 +4368,14 @@ feature -- Variables access
 				feature_token (type_i.static_type_id, a_feature_id))
 		end
 
+	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate access to feature of `a_feature_id' in `type_i'.
+		do
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
+				feature_token (type_i.implementation_id, a_feature_id))
+		end
+
+
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.
 		do
@@ -7402,6 +7410,33 @@ feature {NONE} -- Implementation
 			create {ARRAYED_LIST [PAIR [INTEGER, INTEGER]]} Result.make (0)
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Inline agents
+
+	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; class_type: CLASS_TYPE
+			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]])
+		is
+			-- Generate IL code for inline agents in `eif_cl'
+		require
+			eif_cl_not_void: eif_cl /= Void
+			class_type /= Void
+			local_feature_processor /= Void
+		local
+			feat: FEATURE_I
+			inl_tbl: HASH_TABLE [FEATURE_I, INTEGER]
+		do
+			from
+				inl_tbl := eif_cl.inline_agent_table
+				inl_tbl.start
+			until
+				inl_tbl.after
+			loop
+				feat := inl_tbl.item_for_iteration
+				generate_feature (feat, False, False, False)
+				generate_feature_code (feat, False)
+				inl_tbl.forth
+			end
 		end
 
 indexing

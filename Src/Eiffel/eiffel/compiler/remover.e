@@ -91,7 +91,6 @@ feature {NONE}
 				if depend_unit.is_needed_for_dead_code_removal then
 					rout_id := depend_unit.rout_id
 					if
-						not System.Routine_id_counter.is_attribute (rout_id) and then
 						not is_treated (depend_unit.body_index, rout_id)
 					then
 						control.extend (depend_unit)
@@ -108,7 +107,7 @@ feature {NONE}
 		-- Number of features for the current dot
 
 	features_per_message: INTEGER is 50
-	
+
 	mark_alive (body_index: INTEGER) is
 			-- Record feature `feat'
 		do
@@ -149,7 +148,7 @@ feature -- for debug purpose
 			io.put_integer (a_class.class_id)
 			io.put_string (")%N")
 		end
-			
+
 	dump_alive is
 		local
 			i, j: INTEGER
@@ -200,7 +199,7 @@ feature -- for debug purpose
 			io.put_string ("nb of body_index marked: ")
 			io.put_integer (j)
 			io.put_string ("%N%N%N")
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

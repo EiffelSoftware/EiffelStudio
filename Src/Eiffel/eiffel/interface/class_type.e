@@ -518,6 +518,7 @@ feature -- Generation
 		local
 			feature_table: FEATURE_TABLE
 			current_class: CLASS_C
+			current_eiffel_class: EIFFEL_CLASS_C
 			feature_i: FEATURE_I
 			file, extern_decl_file: INDENT_FILE
 			inv_byte_code: INVARIANT_B
@@ -528,6 +529,7 @@ feature -- Generation
 			final_mode := byte_context.final_mode
 
 			current_class := associated_class
+			current_eiffel_class ?= current_class
 
 				-- Clear buffers for the new generation
 			buffer := generation_buffer
@@ -550,6 +552,7 @@ feature -- Generation
 				generate_c_code := has_creation_routine or else
 						(current_class.has_invariant and then
 						 current_class.assertion_level.check_invariant)
+
 				from
 					feature_table.start
 				until
@@ -627,6 +630,20 @@ feature -- Generation
 						generate_feature (feature_i, buffer)
 					end
 					feature_table.forth
+				end
+
+				if current_eiffel_class /= Void then
+					from
+						current_eiffel_class.inline_agent_table.start
+					until
+						current_eiffel_class.inline_agent_table.after
+					loop
+						feature_i := current_eiffel_class.inline_agent_table.item_for_iteration
+							-- Generate the C code of `feature_i'
+						generate_feature (feature_i, buffer)
+
+						current_eiffel_class.inline_agent_table.forth
+					end
 				end
 
 				if

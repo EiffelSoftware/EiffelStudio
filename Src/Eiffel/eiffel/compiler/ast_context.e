@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			create locals.make (10)
 			create supplier_ids.make
+			create inline_agent_counter
 		end
 
 feature -- Access
@@ -61,6 +62,10 @@ feature -- Access
 
 	supplier_ids: FEATURE_DEPENDANCE
 			-- Supplier units
+
+	inline_agent_counter: COUNTER
+		-- counter for managing the inline agents that are enclosed in the current feature
+
 
 feature -- Status report
 
@@ -221,6 +226,23 @@ feature -- Managing the type stack
 			last_conversion_info := Void
 			supplier_ids.wipe_out
 		end;
+
+feature	-- Saving contexts
+
+	save: AST_CONTEXT is
+			--Returns a saved context
+		do
+			Result := twin
+
+			create locals.make (10)
+			create supplier_ids.make
+		end
+
+	restore (context: AST_CONTEXT) is
+			--Restores a given context
+		do
+			copy (context)
+		end
 
 invariant
 	locals_not_void: locals /= Void

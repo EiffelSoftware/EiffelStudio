@@ -126,6 +126,9 @@ feature -- Attributes
 				-- Check function class
 			check_function_class
 
+				-- Check predicate class
+			check_predicate_class
+
 				-- Check procedure class
 			check_procedure_class
 
@@ -244,6 +247,20 @@ feature {NONE}
 			dispatch (Procedure_type_a, proc_cl);
 		end;
 
+	check_predicate_class is
+			-- Force a predicate type in the system
+		require
+			predicate_compiled: System.predicate_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
+		local
+			pred_cl: CLASS_C;
+		do
+			pred_cl := System.predicate_class.compiled_class;
+			dispatch (Predicate_type_a, pred_cl);
+		end;
+
 feature
 
 	Array_type_a: GEN_TYPE_A is
@@ -294,6 +311,26 @@ feature
 			generics.put (any_type, 3)
 
 			create Result.make (System.function_class_id, generics)
+		end
+
+	Predicate_type_a: GEN_TYPE_A is
+			-- Default function type: PREDICATE [ANY, TUPLE]
+		require
+			predicate_compiled: System.predicate_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
+		local
+			any_type: CL_TYPE_A
+			generics: ARRAY [TYPE_A]
+		do
+				-- Not once because function_id can change
+			create generics.make (1, 2)
+			create any_type.make (System.any_id)
+			generics.put (any_type, 1)
+			generics.put (Tuple_type_a, 2)
+
+			create Result.make (System.predicate_class_id, generics)
 		end
 
 	Procedure_type_a: GEN_TYPE_A is

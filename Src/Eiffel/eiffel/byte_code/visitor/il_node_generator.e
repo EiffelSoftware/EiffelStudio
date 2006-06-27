@@ -472,7 +472,6 @@ feature {NONE} -- Implementation
 			local_list_not_void: local_list /= Void
 			local_list_not_empty: not local_list.is_empty
 		local
-			feature_as: FEATURE_AS
 			routine_as: ROUTINE_AS
 			id_list: ARRAYED_LIST [INTEGER]
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
@@ -483,14 +482,14 @@ feature {NONE} -- Implementation
 			debug_generation := System.line_generation or context.workbench_mode
 
 			if debug_generation then
-				feature_as := context.current_feature.body
-				routine_as ?= feature_as.body.content
+
+				routine_as ?= context.current_feature.real_body.content
 				if routine_as /= Void and then routine_as.locals /= Void then
 						-- `local_list' is in the same order as `routine_as.locals'
 						-- so this is easy to find for each element of `local_list'
 						-- its name in `routine_as.locals'.
-					rout_locals := routine_as.locals
 					from
+						rout_locals := routine_as.locals
 						rout_locals.start
 						local_list.start
 					until
@@ -550,7 +549,7 @@ feature {NONE} -- Implementation
 			local_type: CL_TYPE_I
 			i: INTEGER
 		do
-			routine_as ?= context.current_feature.body.body.content
+			routine_as ?= context.current_feature.real_body.content
 			if routine_as /= Void and then routine_as.locals /= Void then
 					-- `local_list' is in the same order as `routine_as.locals'
 					-- so this is easy to find for each element of `local_list'
@@ -2257,9 +2256,13 @@ feature {NONE} -- Visitors
 				l_real_ty)
 
 			l_cl_type ?= context.real_type (a_node.class_type)
-			il_generator.put_method_token (il_generator.implemented_type (a_node.class_id, l_cl_type),
-				a_node.feature_id)
-
+			if a_node.is_inline_agent then
+				il_generator.put_impl_method_token (il_generator.implemented_type (a_node.class_id, l_cl_type),
+					a_node.feature_id)
+			else
+				il_generator.put_method_token (il_generator.implemented_type (a_node.class_id, l_cl_type),
+					a_node.feature_id)
+			end
 				-- Arguments
 			if a_node.arguments /= Void then
 				a_node.arguments.process (Current)

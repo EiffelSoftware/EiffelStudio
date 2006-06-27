@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			id_level := Normal_level
 			create counters.make (Initial_counters_capacity)
 			create counters2.make (Initial_counters_capacity)
+			create last_rsqure.make (initial_counters_capacity)
 		end
 
 feature -- Parser type setting
@@ -157,6 +158,7 @@ feature -- Initialization
 			has_externals := False
 			once_manifest_string_count := 0
 			counters.wipe_out
+			last_rsqure.wipe_out
 		end
 
 feature -- Status report
@@ -382,7 +384,14 @@ feature {NONE} -- Implementation
 	last_type_list: TYPE_LIST_AS
 			-- Temporary locals in semantic actions.
 
-	last_rsqure: SYMBOL_AS
+	last_type: TYPE_AS
+			-- Temporary locals in semantic actions.
+
+	last_symbol: SYMBOL_AS
+			-- Temporary locals in semantic actions.
+
+	last_rsqure: DS_ARRAYED_STACK [SYMBOL_AS]
+			-- Stack of ']'s used for parsing named tuples
 
 feature {NONE} -- Counters
 

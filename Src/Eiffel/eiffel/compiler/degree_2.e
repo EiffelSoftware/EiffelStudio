@@ -55,6 +55,7 @@ feature -- Processing
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_2_needed then
 						System.set_current_class (a_class)
+						a_class.feature_table.melt
 						if a_class.has_features_to_melt then
 							Degree_output.put_degree_2 (a_class, nb)
 							a_class.melt

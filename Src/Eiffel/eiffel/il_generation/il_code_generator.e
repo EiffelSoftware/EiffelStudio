@@ -254,6 +254,14 @@ feature -- Variables access
 		deferred
 		end
 
+	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate access to feature of `a_feature_id' in implementation of `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		deferred
+		end
+
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.
 		require

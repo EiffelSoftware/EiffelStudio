@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			create optimization_tables.make (300)
 
 				-- Address table
-			create address_table.make (100)
+			create address_table.make
 
 				-- Names heap creation
 			create names.make
@@ -399,6 +399,7 @@ feature -- Properties
 			local_workbench.change_class (routine_class)
 			local_workbench.change_class (procedure_class)
 			local_workbench.change_class (function_class)
+			local_workbench.change_class (predicate_class)
 			local_workbench.change_class (typed_pointer_class)
 			local_workbench.change_class (type_class)
 
@@ -466,6 +467,7 @@ feature -- Properties
 			routine_class.compiled_class.record_precompiled_class_in_system
 			procedure_class.compiled_class.record_precompiled_class_in_system
 			function_class.compiled_class.record_precompiled_class_in_system
+			predicate_class.compiled_class.record_precompiled_class_in_system
 			typed_pointer_class.compiled_class.record_precompiled_class_in_system
 			type_class.compiled_class.record_precompiled_class_in_system
 
@@ -1908,6 +1910,7 @@ end
 			routine_class.compiled_class.mark_class (marked_classes)
 			procedure_class.compiled_class.mark_class (marked_classes)
 			function_class.compiled_class.mark_class (marked_classes)
+			predicate_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
 
@@ -2856,7 +2859,6 @@ feature -- Final mode generation
 					byte_context.clear_system_data
 					byte_context.compute_expanded_descendants
 					process_degree_minus_3
-					Eiffel_table.finish_degree_minus_3
 
 					debug ("Timing")
 						create d2.make_now
@@ -3313,6 +3315,10 @@ feature -- Dead code removal
 				-- Protection of feature `set_rout_disp' of ROUTINE classes
 			l_class := routine_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
+
+				-- Protection of feature `set_rout_disp_lazy' of ROUTINE classes
+			l_class := routine_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_lazy_rout_disp_name_id), l_class)
 
 				-- Protection of feature `internal_correct_mismatch' of ANY
 			l_class := any_class.compiled_class

@@ -15,7 +15,7 @@ inherit
 	EIFFEL_PARSER_SKELETON
 
 	SHARED_NAMES_HEAP
-
+	
 create
 	make,
 	make_with_factory
@@ -159,13 +159,14 @@ create
 %type <REQUIRE_AS>			Precondition
 %type <REVERSE_AS>			Reverse_assignment
 %type <ROUT_BODY_AS>		Routine_body
-%type <ROUTINE_AS>			Routine
+%type <ROUTINE_AS>			Routine Optional_attribute_or_routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <PAIR[ROUTINE_CREATION_AS, LOCATION_AS]> Tilda_agent_call
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id
+%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id 
+%type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
 %type <VARIANT_AS>			Variant
@@ -204,13 +205,12 @@ create
 %type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
 %type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
 %type <LOCAL_DEC_LIST_AS>	Local_declarations
-%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments
+%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
 %type <CONSTRAINT_TRIPLE>	Constraint
 
-%expect 122
+%expect 125
 
 %%
-
 
 --###################################################################
 --# Root rule actually divided in 4 different parsers:
@@ -389,7 +389,7 @@ Index_list: Index_clause
 					$$.update_lookup ($1)
 				end
 			}
-	|	Index_clause { increment_counter } Index_list
+	|	Index_clause Increment_counter Index_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -426,12 +426,12 @@ Index_terms: Index_value
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Index_value { increment_counter } TE_COMMA Index_terms
+	|	Index_value TE_COMMA Increment_counter Index_terms
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	|	TE_SEMICOLON
@@ -574,7 +574,7 @@ Feature_clause_list: Feature_clause
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Feature_clause { increment_counter } Feature_clause_list
+	|	Feature_clause Increment_counter Feature_clause_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -639,13 +639,13 @@ Class_list: Class_or_tuple_identifier
 					suppliers.insert_light_supplier_id ($1)
 				end
 			}
-	|	Class_or_tuple_identifier { increment_counter } TE_COMMA Class_list
+	|	Class_or_tuple_identifier TE_COMMA Increment_counter Class_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 					suppliers.insert_light_supplier_id ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -657,7 +657,7 @@ Feature_declaration_list: Feature_declaration
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Feature_declaration { increment_counter} Feature_declaration_list
+	|	Feature_declaration Increment_counter Feature_declaration_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -684,12 +684,12 @@ New_feature_list: New_feature
 					$$.reverse_extend ($1)
 				end
 			}
-	|	New_feature { increment_counter } TE_COMMA New_feature_list
+	|	New_feature TE_COMMA Increment_counter New_feature_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -895,7 +895,7 @@ Parent_list: Parent
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Parent { increment_counter } Parent_list
+	|	Parent Increment_counter Parent_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -951,12 +951,12 @@ Rename_list: Rename_pair
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Rename_pair { increment_counter } TE_COMMA Rename_list
+	|	Rename_pair TE_COMMA Increment_counter Rename_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -984,7 +984,7 @@ New_export_list: New_export_item
 					$$.reverse_extend ($1)
 				end
 			}
-	|	New_export_item { increment_counter } New_export_list
+	|	New_export_item Increment_counter New_export_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -1025,12 +1025,12 @@ Convert_list: Convert_feature
 				$$.reverse_extend ($1)
 			end
 		}
-	|	Convert_feature { increment_counter } TE_COMMA Convert_list
+	|	Convert_feature TE_COMMA Increment_counter Convert_list
 		{	
 			$$ := $4
 			if $$ /= Void and $1 /= Void then
 				$$.reverse_extend ($1)
-				ast_factory.reverse_extend_separator ($$, $3)
+				ast_factory.reverse_extend_separator ($$, $2)
 			end
 		}
 	;
@@ -1061,12 +1061,12 @@ Feature_list_impl: Feature_name
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Feature_name { increment_counter } TE_COMMA Feature_list_impl
+	|	Feature_name TE_COMMA Increment_counter Feature_list_impl
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -1139,7 +1139,7 @@ Entity_declaration_list: Entity_declaration_group
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Entity_declaration_group { increment_counter } Entity_declaration_list
+	|	Entity_declaration_group Increment_counter Entity_declaration_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -1161,14 +1161,14 @@ Identifier_list: Identifier_as_lower
 					ast_factory.reverse_extend_identifier ($$.id_list, $1)
 				end
 			}
-	|	Identifier_as_lower { increment_counter } TE_COMMA Identifier_list
+	|	Identifier_as_lower TE_COMMA Increment_counter Identifier_list 
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					Names_heap.put ($1)
 					$$.reverse_extend (Names_heap.found_item)
 					ast_factory.reverse_extend_identifier ($$.id_list, $1)
-					ast_factory.reverse_extend_separator ($$.id_list, $3)
+					ast_factory.reverse_extend_separator ($$.id_list, $2)
 				end
 			}
 	;
@@ -1271,7 +1271,7 @@ Instruction_list: Instruction
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Instruction { increment_counter } Instruction_list
+	|	Instruction Increment_counter Instruction_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -1508,12 +1508,12 @@ Type_list_impl: Type
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Type { increment_counter } TE_COMMA Type_list_impl
+	|	Type TE_COMMA Increment_counter Type_list_impl
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -1534,15 +1534,18 @@ Tuple_type: TE_TUPLE
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Actual_parameter_list
 			{
 				if $5 /= Void then
-					$5.set_positions ($4, last_rsqure)
+					$5.set_positions ($4, last_rsqure.item)
 				end
 				$$ := ast_factory.new_class_type_as ($1, $5)
+				last_rsqure.remove
 				remove_counter
 				remove_counter2
 			}
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE Named_parameter_list
 			{
-				$$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($5, $4, last_rsqure))
+				$$ := ast_factory.new_named_tuple_type_as (
+					$1, ast_factory.new_formal_argu_dec_list_as ($5, $4, last_rsqure.item))
+				last_rsqure.remove
 				remove_counter
 				remove_counter2
 			}
@@ -1554,9 +1557,9 @@ Actual_parameter_list:	Type TE_RSQURE
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
-				last_rsqure := $2
+				last_rsqure.force ($2)
 			}
-	|	TE_ID TE_COMMA Increment Actual_parameter_list		
+	|	TE_ID TE_COMMA Increment_counter Actual_parameter_list		
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -1567,7 +1570,7 @@ Actual_parameter_list:	Type TE_RSQURE
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
-	|	Type_no_id TE_COMMA Increment Actual_Parameter_List
+	|	Type_no_id TE_COMMA Increment_counter Actual_Parameter_List
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -1577,7 +1580,7 @@ Actual_parameter_list:	Type TE_RSQURE
 			}
 	;
 	
-Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE 
+Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
 				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
@@ -1592,9 +1595,9 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				end
 				$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				last_identifier_list := Void     
-				last_rsqure := $4
+				last_rsqure.force ($4)
 			}
-	|	TE_ID TE_COMMA Increment Named_parameter_list
+	|	TE_ID TE_COMMA Increment_counter Named_parameter_list
 
 			{
 				$$ := $4
@@ -1612,9 +1615,10 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					last_identifier_list := Void     
 				end
 			}
-	|	TE_ID TE_COLON Type ASemi Increment2 Named_parameter_list
+	|	TE_ID TE_COLON Type ASemi Increment_counter2 Add_counter Named_parameter_list
 			{
-				$$ := $6
+				remove_counter
+				$$ := $7
 				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
 				
 				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
@@ -1628,8 +1632,6 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void
-				remove_counter
-				add_counter
 			}
 	;
 			
@@ -1667,12 +1669,12 @@ Formal_generic_list: Formal_generic
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Formal_generic { increment_counter } TE_COMMA Formal_generic_list
+	|	Formal_generic TE_COMMA Increment_counter Formal_generic_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -1799,7 +1801,7 @@ Elseif_part_list: Elseif_part
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Elseif_part { increment_counter } Elseif_part_list
+	|	Elseif_part Increment_counter Elseif_part_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -1842,7 +1844,7 @@ When_part_list: When_part
 					$$.reverse_extend ($1)
 				end
 			}
-	|	When_part { increment_counter } When_part_list
+	|	When_part Increment_counter When_part_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -1862,12 +1864,12 @@ Choices: Choice
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Choice { increment_counter } TE_COMMA Choices
+	|	Choice TE_COMMA Increment_counter Choices
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -1966,12 +1968,12 @@ String_list: Non_empty_string
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Non_empty_string { increment_counter } TE_COMMA String_list
+	|	Non_empty_string TE_COMMA Increment_counter String_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -2028,7 +2030,7 @@ Creation_clause_list: Creation_clause
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Creation_clause { increment_counter } Creation_clause_list
+	|	Creation_clause Increment_counter Creation_clause_list
 			{
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
@@ -2079,12 +2081,28 @@ Creation_clause:
 			}
 	;
 
-Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
+Agent_call: 
+		TE_AGENT Optional_formal_arguments Type_mark Optional_attribute_or_routine Delayed_actuals
+		{
+			if $3 /= Void then
+				last_type := $3.second
+				last_symbol := $3.first
+			else
+				last_type := Void
+				last_symbol := Void
+			end
+			
+			$$ := ast_factory.new_inline_agent_creation_as (
+				ast_factory.new_body_as ($2, last_type, Void, $4, last_symbol, Void, Void, Void), $5, $1)
+		}
+	|	
+		TE_AGENT Feature_name_for_call Delayed_actuals
 		{
 			$$ := ast_factory.new_agent_routine_creation_as (
 				Void, $2, $3, False, $1, Void)
 		}
-	|	TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
+	|	
+		TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
 		{
 			if $2 /= Void then
 				$$ := ast_factory.new_agent_routine_creation_as ($2.operand, $4, $5, True, $1, $3)
@@ -2108,12 +2126,33 @@ Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
 			end
 		}
 	;
+	
+Optional_formal_arguments:
+	|	Formal_arguments
+		{
+			$$ := $1
+		}
+	;
+	
+Type_mark:
+	|	TE_COLON Type
+		{
+			create $$.make ($1, $2)
+		}
+	;
+
+Optional_attribute_or_routine:
+		Routine
+		{
+			$$ := $1
+		}
+	;
 
 --Note: Manu 02/07/2004: we need to expand `Agent_target' otherwise it causes some
 -- Reduce/Reduce conflict. `Tilda_agent_call' should be written as:
 --Tilda_agent_call:	TE_TILDE Identifier_as_lower Delayed_actuals
 --		{ $$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, Void), $2, $3, False) }
---	|	Agent_target TE_TILDE Identifier_as_lower Delayed_actuals
+--	|	Agent_targt TE_TILDE Identifier_as_lower Delayed_actuals
 --		{ $$ := ast_factory.new_old_routine_creation_as ($3, $1, $3, $4, True) }
 --	;
 Tilda_agent_call: TE_TILDE Identifier_as_lower Delayed_actuals
@@ -2159,8 +2198,8 @@ Tilda_agent_call: TE_TILDE Identifier_as_lower Delayed_actuals
 
 Agent_target: Identifier_as_lower
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void)) }
-	|	TE_LPARAN Expression TE_RPARAN
-		{ $$ := ast_factory.new_agent_target_triple ($1, $3, ast_factory.new_operand_as (Void, Void, $2)) }	
+	|	TE_LPARAN Add_counter Add_counter Expression Remove_counter Remove_counter TE_RPARAN
+		{ $$ := ast_factory.new_agent_target_triple ($1, $7, ast_factory.new_operand_as (Void, Void, $4)) }	
 	|	TE_RESULT
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void)) }
 	|	TE_CURRENT
@@ -2192,12 +2231,12 @@ Delayed_actual_list: Delayed_actual
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Delayed_actual { increment_counter } TE_COMMA Delayed_actual_list
+	|	Delayed_actual TE_COMMA Increment_counter Delayed_actual_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -2558,12 +2597,12 @@ Expression_list: Expression
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Expression { increment_counter } TE_COMMA Expression_list
+	|	Expression TE_COMMA Increment_counter Expression_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $3)
+					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
 	;
@@ -3048,10 +3087,10 @@ Add_counter: { add_counter }
 Add_counter2: { add_counter2 }
 	;
 	
-Increment: { increment_counter }
+Increment_counter: { increment_counter }
 	;
-
-Increment2: { increment_counter2 }
+	
+Increment_counter2: { increment_counter2 }
 	;
 
 Remove_counter: { remove_counter }

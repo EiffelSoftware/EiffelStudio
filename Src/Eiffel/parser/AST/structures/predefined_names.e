@@ -156,6 +156,7 @@ feature -- Constants
 	to_character_8_name_id: INTEGER is 144
 	to_character_32_name_id: INTEGER is 145
 	natural_32_code_name_id: INTEGER is 146
+	set_lazy_rout_disp_name_id: INTEGER is 147
 			-- Predefined name IDs constants
 
 feature -- Classification

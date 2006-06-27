@@ -11,7 +11,7 @@ class
 inherit
 	CLASS_C
 		rename
-			group as cluster
+			group as cluster, make as init_class_c
 		redefine
 			cluster, original_class,
 			is_eiffel_class_c,
@@ -20,7 +20,8 @@ inherit
 			pass4, melt, update_execution_table, has_features_to_melt,
 			melt_all, check_generics, check_generic_parameters,
 			check_creation_constraint_genericity,
-			check_constraint_genericity
+			check_constraint_genericity,
+			feature_of_feature_id
 		end
 
 	CONF_CONSTANTS
@@ -35,6 +36,18 @@ inherit
 
 create
 	make
+
+feature -- Initialization
+
+	make (l: CLASS_I) is
+			-- Creation of Current class
+		require
+			good_argument: l /= Void
+		do
+			create inline_agent_table.make (0)
+			init_class_c (l)
+		end
+
 
 feature -- Access
 
@@ -55,6 +68,38 @@ feature -- Access
 		do
 			Result := lace_class.cluster
 		end
+
+	inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
+			-- Table of inline agents indexed by their alias names
+
+	remove_inline_agents_of_feature (a_feature_i: FEATURE_I) is
+			-- Removes all the inline agents of a given feature
+		local
+			l_feat: FEATURE_I
+		do
+			from
+				inline_agent_table.start
+			until
+				inline_agent_table.after
+			loop
+				l_feat := inline_agent_table.item_for_iteration
+				if l_feat.enclosing_body_id = a_feature_i.body_index then
+					inline_agent_table.remove (inline_agent_table.key_for_iteration)
+					system.execution_table.add_dead_function (l_feat.body_index)
+				end
+				inline_agent_table.forth
+			end
+		end
+
+
+	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
+		do
+			Result := precursor (a_feature_id)
+			if Result = Void then
+				Result := inline_agent_of_id (a_feature_id)
+			end
+		end
+
 
 feature -- Action
 
@@ -512,6 +557,7 @@ feature -- Third pass: byte code production and type check
 						then
 								-- Type check
 							Error_handler.mark
+							remove_inline_agents_of_feature (feature_i)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := Error_handler.new_error
@@ -1063,10 +1109,6 @@ feature -- Melting
 				add_feature_to_melted_set (invariant_feature)
 			end
 
-			if not Tmp_m_rout_id_server.has (class_id) then
-					-- If not already done, Melt routine id array
-				tbl.melt
-			end
 				-- Mark the class to be frozen later again.
 			Degree_1.insert_class (Current)
 			Degree_2.insert_new_class (Current)
@@ -1767,6 +1809,60 @@ feature -- Supplier checking
 					-- that we actually need the class, as maybe, at the end of
 					-- the compilation, Current might not be needed anymore.
 				system.record_potential_vtct_error (Current, cl_name)
+			end
+		end
+
+feature -- Inline agents
+
+	put_inline_agent (new: FEATURE_I) is
+		do
+			inline_agent_table.put (new, new.feature_name_id)
+		end
+
+	inline_agent_of_name_id (feature_name_id: INTEGER): FEATURE_I is
+		require
+			valid_feature_name_id: feature_name_id > 0
+		do
+			Result := inline_agent_table.item (feature_name_id)
+		end
+
+	inline_agent_of_id (feature_id: INTEGER): FEATURE_I is
+		require
+			valid_feature_id: feature_id > 0
+		local
+			feat: FEATURE_I
+		do
+			from
+				inline_agent_table.start
+			until
+				Result /= Void or else inline_agent_table.after
+			loop
+				feat := inline_agent_table.item_for_iteration
+				if feat.feature_id = feature_id  then
+					Result := feat
+				else
+					inline_agent_table.forth
+				end
+			end
+		end
+
+	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN is
+		require
+			valid_body_index: body_index > 0
+		local
+			feat: FEATURE_I
+		do
+			from
+				inline_agent_table.start
+			until
+				Result or else inline_agent_table.after
+			loop
+				feat := inline_agent_table.item_for_iteration
+				if feat.body_index = body_index  then
+					Result := True
+				else
+					inline_agent_table.forth
+				end
 			end
 		end
 

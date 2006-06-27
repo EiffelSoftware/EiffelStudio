@@ -47,8 +47,7 @@ feature {NONE} -- Initialization
 		do
 			if not retried then
 					-- Set ini document
-				l_opt := a_parser.ini_file_option
-				l_source_fn := l_opt.value
+				l_source_fn := a_parser.ini_file_option
 				l_doc := open_ini_document (l_source_fn)
 				if l_doc /= Void then
 						-- Set frame file option

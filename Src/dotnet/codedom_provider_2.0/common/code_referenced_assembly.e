@@ -36,16 +36,20 @@ feature {NONE} -- Initialization
 			if l_index > 0 then
 				l_name.keep_tail (l_name.count - l_index)
 			end
-			assembly_prefix := config_assembly_prefix (l_name)
 			-- Force a prefix if there isn't one so that if an Eiffel assembly is
 			-- referenced base classes names don't clash.
-			if (assembly_prefix = Void or else assembly_prefix.is_empty) and not l_name.is_equal ("mscorlib.dll") then
-				generated_prefixes.search (l_name)
-				if generated_prefixes.found then
-					assembly_prefix := generated_prefixes.found_item
-				else
-					assembly_prefix := new_prefix
-					generated_prefixes.put (assembly_prefix, l_name)
+			if l_name.is_equal ("mscorlib.dll") then
+				create assembly_prefix.make_empty
+			else
+				assembly_prefix := config_assembly_prefix (l_name)
+				if assembly_prefix = Void then
+					generated_prefixes.search (l_name)
+					if generated_prefixes.found then
+						assembly_prefix := generated_prefixes.found_item
+					else
+						assembly_prefix := new_prefix
+						generated_prefixes.put (assembly_prefix, l_name)
+					end
 				end
 			end
 		ensure

@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				if not Referenced_assemblies.has_file (a_assembly_path) then
-					l_asm := {ASSEMBLY}.load_from (a_assembly_path)
+					l_asm := {ASSEMBLY}.load_file (a_assembly_path)
 					if l_asm /= Void then
 						if a_prefix /= Void and then not a_prefix.is_empty then
 							Referenced_assemblies.extend_file_with_prefix (a_assembly_path, a_prefix)

@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_ITEM_IMP
-	
+
 inherit
 	EV_MENU_ITEM_I
 		redefine
@@ -40,8 +40,12 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
-	
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
+
 	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
@@ -52,7 +56,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (c_object, pixmap_box)
 		end
-	
+
 	initialize is
 			-- Initialize `Current'
 		local

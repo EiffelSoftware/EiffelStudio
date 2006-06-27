@@ -60,41 +60,47 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
-			hb_out: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb, vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
 		do
 			Precursor {EV_DIALOG}
 
-			create hb_out
-			extend (hb_out)
-			append_margin (hb_out)
 			create vb
-			hb_out.extend (vb)
+			extend (vb)
 			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
 
-			append_margin (vb)
+				-- name
+			create vb2
+			vb.extend (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
 
 			create l_lbl.make_with_text (dialog_create_assembly_name)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
 			create name
-			vb.extend (name)
-			vb.disable_item_expand (name)
+			vb2.extend (name)
+			vb2.disable_item_expand (name)
 
-			append_small_margin (vb)
+				-- location
+			create vb2
+			vb.extend (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
 
 			create l_lbl.make_with_text (dialog_create_assembly_location)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
 			create hb2
-			vb.extend (hb2)
-			vb.disable_item_expand (hb2)
+			vb2.extend (hb2)
+			vb2.disable_item_expand (hb2)
+			hb2.set_padding (small_padding_size)
 
 			create location
 			hb2.extend (location)
@@ -103,53 +109,7 @@ feature {NONE} -- Initialization
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
-			append_margin (vb)
-			vb.extend (create {EV_CELL})
-
-			create l_lbl.make_with_text (dialog_create_assembly_a_name)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
-
-			create assembly_name
-			vb.extend (assembly_name)
-			vb.disable_item_expand (assembly_name)
-
-			append_small_margin (vb)
-
-			create l_lbl.make_with_text (dialog_create_assembly_a_version)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
-
-			create assembly_version
-			vb.extend (assembly_version)
-			vb.disable_item_expand (assembly_version)
-
-			append_small_margin (vb)
-
-			create l_lbl.make_with_text (dialog_create_assembly_a_culture)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
-
-			create assembly_culture
-			vb.extend (assembly_culture)
-			vb.disable_item_expand (assembly_culture)
-
-			append_small_margin (vb)
-
-			create l_lbl.make_with_text (dialog_create_assembly_a_key)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
-
-			create assembly_key
-			vb.extend (assembly_key)
-			vb.disable_item_expand (assembly_key)
-
-			append_small_margin (vb)
-
+				-- ok/cancel
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
@@ -170,11 +130,7 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			l_btn.set_minimum_width (default_button_width)
 
-			append_margin (vb)
-
-			append_margin (hb_out)
-
-			set_minimum_width (400)
+			set_minimum_width (300)
 
 			show_actions.extend (agent name.set_focus)
 		end
@@ -191,12 +147,6 @@ feature {NONE} -- GUI elements
 
 	location: EV_TEXT_FIELD
 			-- Location of the assembly (for local assemblies).
-
-	assembly_name: EV_TEXT_FIELD
-	assembly_version: EV_TEXT_FIELD
-	assembly_culture: EV_TEXT_FIELD
-	assembly_key: EV_TEXT_FIELD
-			-- Information if a gac assembly should be added.
 
 feature {NONE} -- Actions
 
@@ -239,30 +189,18 @@ feature {NONE} -- Actions
 	on_ok is
 			-- Add group and close the dialog.
 		local
-			l_local, l_a_n, l_a_v, l_a_c, l_a_k: STRING
+			l_local: STRING
 			wd: EV_WARNING_DIALOG
 		do
 			if not name.text.is_empty then
 				l_local := location.text
-				l_a_n := assembly_name.text
-				l_a_v := assembly_version.text
-				l_a_c := assembly_culture.text
-				l_a_k := assembly_key.text
 
 				if target.groups.has (name.text) then
 					create wd.make_with_text (group_already_exists (name.text))
-				elseif not l_local.is_empty then
-					if l_a_n.is_empty and l_a_v.is_empty and l_a_c.is_empty and l_a_k.is_empty then
-						target.add_assembly (factory.new_assembly (name.text, location.text, target))
-					else
-						create wd.make_with_text (assembly_location_or_gac)
-					end
+				elseif l_local.is_empty then
+					create wd.make_with_text (assembly_no_location)
 				else
-					if l_a_n.is_empty or l_a_v.is_empty or l_a_c.is_empty or l_a_k.is_empty then
-						create wd.make_with_text (assembly_no_location)
-					else
-						target.add_assembly (factory.new_assembly_from_gac (name.text, l_a_n, l_a_v, l_a_c, l_a_k, target))
-					end
+					target.add_assembly (factory.new_assembly (name.text, location.text, target))
 				end
 
 				if wd /= Void then

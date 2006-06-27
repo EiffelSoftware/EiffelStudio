@@ -732,7 +732,7 @@ feature -- Label texts
 	l_callees: STRING is "callees"
 	l_assignees: STRING is "assignees"
 	l_created: STRING is "creators"
-	l_filter: STRING is "Filter"
+	l_filter: STRING is "Filter: "
 	l_viewpoints: STRING is "Viewpoints: "
 	l_application_scope: STRING is "Application"
 	l_custom_scope: STRING is "Custom"

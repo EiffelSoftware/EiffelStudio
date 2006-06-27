@@ -2,7 +2,7 @@ indexing
 	description:
 		"View with information about a class."
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class."N
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,13 +10,13 @@ class
 	EB_CLASS_VIEW
 
 inherit
-	EB_CONSTANTS
-
 	WIDGET_OWNER
 
 	SHARED_WORKBENCH
 
 	EB_SHARED_PREFERENCES
+
+	EB_VIEWPOINT_AREA
 
 create
 	make_with_tool
@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 				conv_ct ?= formatters.item
 				if conv_ct /= Void then
 					conv_ct.set_editor (shared_editor)
+					conv_ct.set_viewpoints (viewpoints)
 				end
 				l_class_formatter ?= formatters.item
 				if l_class_formatter /= Void then
@@ -148,7 +149,9 @@ feature -- Status setting
 			else
 				enable_dotnet_formatters (False)
 			end
-
+			if cst /= Void then
+				update_viewpoints (cst.e_class)
+			end
 			if cst = Void or else internal_stone = Void or else not internal_stone.same_as (cst) then
 					-- Set the stones.
 				from
@@ -344,6 +347,13 @@ feature -- Status setting
 			shared_editor.set_focus
 		end
 
+	on_context_change is
+			-- Action to be performed when `viewpoints' changes
+		do
+			token_writer.set_context_group (viewpoints.current_viewpoint)
+			refresh
+		end
+
 feature -- Memory management
 
 	recycle is
@@ -410,6 +420,10 @@ feature {NONE} -- Implementation
 			tool_bar_area.extend (tool_bar)
 			tool_bar_area.disable_item_expand (tool_bar)
 			tool_bar_area.extend (formatter_tool_bar_area)
+			tool_bar_area.disable_item_expand (formatter_tool_bar_area)
+			tool_bar_area.extend (viewpoint_area)
+			tool_bar_area.disable_item_expand (viewpoint_area)
+			viewpoint_area.hide
 			from
 				managed_formatters.start
 			until

@@ -10,8 +10,6 @@ class
 	EB_FEATURES_VIEW
 
 inherit
-	EB_CONSTANTS
-
 	WIDGET_OWNER
 
 	SHARED_WORKBENCH
@@ -19,6 +17,8 @@ inherit
 	EB_SHARED_PREFERENCES
 
 	E_FEATURE_COMPARER
+
+	EB_VIEWPOINT_AREA
 
 create
 	make_with_tool
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		local
 			formatters: like managed_formatters
 			conv_ft: EB_FEATURE_TEXT_FORMATTER
+			l_base_ft: EB_BASIC_FEATURE_FORMATTER
 			l_flat_formatter: EB_ROUTINE_FLAT_FORMATTER
 			l_formatter: EB_FEATURE_INFO_FORMATTER
 			l_browser: EB_FEATURE_BROWSER_GRID_VIEW
@@ -56,9 +57,18 @@ feature {NONE} -- Initialization
 				conv_ft ?= l_formatter
 				if conv_ft /= Void then
 					conv_ft.set_editor (shared_editor)
+					conv_ft.set_viewpoints (viewpoints)
 					l_flat_formatter ?= l_formatter
 					if l_flat_formatter /= Void then
 						flat_formatter := l_flat_formatter
+					end
+				end
+				if l_formatter /= Void then
+					l_base_ft ?= l_formatter
+					if l_base_ft /= Void then
+						l_formatter.popup_actions.extend (agent hide_viewpoint_area)
+					else
+						l_formatter.popup_actions.extend (agent show_viewpoint_area)
 					end
 				end
 				l_feature_content_formatter ?= formatters.item
@@ -138,7 +148,9 @@ feature -- Status setting
 			else
 				enable_dotnet_formatters (False)
 			end
-
+			if fst /= Void then
+				update_viewpoints (fst.e_class)
+			end
 			if fst = Void then
 				managed_formatters.first.enable_sensitive
 				from
@@ -397,6 +409,15 @@ feature -- Status setting
 			shared_editor.set_focus
 		end
 
+feature -- Actions
+
+	on_context_change is
+			-- Action to be performed when `viewpoints' changes
+		do
+			token_writer.set_context_group (viewpoints.current_viewpoint)
+			refresh
+		end
+
 feature -- Memory management
 
 	recycle is
@@ -513,6 +534,10 @@ feature {NONE} -- Implementation
 			tool_bar_area.extend (tool_bar)
 			tool_bar_area.disable_item_expand (tool_bar)
 			tool_bar_area.extend (formatter_tool_bar_area)
+			tool_bar_area.disable_item_expand (formatter_tool_bar_area)
+			tool_bar_area.extend (viewpoint_area)
+			tool_bar_area.disable_item_expand (viewpoint_area)
+			viewpoint_area.hide
 			from
 				managed_formatters.start
 			until

@@ -371,7 +371,7 @@ feature -- Access
 			if show_feature_from_any_checkbox_internal = Void then
 				create show_feature_from_any_checkbox_internal
 				show_feature_from_any_checkbox_internal.set_tooltip (interface_names.h_show_feature_from_any)
-				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
+				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.command_show_features_of_any_icon)
 				if preferences.class_browser_data.is_feature_from_any_shown then
 					show_feature_from_any_checkbox_internal.enable_select
 				else
@@ -436,7 +436,7 @@ feature -- Access
 				create l_label.make_with_text (interface_names.l_filter)
 				control_tool_bar.extend (l_label)
 				control_tool_bar.disable_item_expand (l_label)
-				feature_name_list.set_minimum_width (150)
+				feature_name_list.set_minimum_width (100)
 				control_tool_bar.extend (feature_name_list)
 				control_tool_bar.disable_item_expand (feature_name_list)
 			end

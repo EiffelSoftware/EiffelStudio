@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 				view_points.forth
 			end
 			select_actions.resume
-			if has_renamed_view_point then
+			if not has_renamed_view_point then
 				disable_sensitive
 			else
 				enable_sensitive

@@ -33,6 +33,7 @@ feature -- Formatting
 					widget.show
 				end
 				rebuild_browser
+				setup_viewpoint
 				generate_result
 				display_header
 			end

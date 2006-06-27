@@ -36,7 +36,11 @@ create
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.

@@ -103,6 +103,9 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	typres = eif_typeof_array_of ((int16)egc_str_dtype);
 	array = emalloc((uint32)typres);		/* If we return, it succeeded */
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
+#ifdef WORKBENCH
+	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
+#endif
 	nstcall = 0;					/* Turn invariant checking off */
 	(egc_arrmake)(array, (EIF_INTEGER) 0, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(EIF_REFERENCE *) array;			/* Get the area of the ARRAY */
@@ -116,6 +119,9 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 		RTAR(sp, ((EIF_REFERENCE *)sp)[i]);
 	}
 
+#ifdef WORKBENCH
+	undiscard_breakpoints(); /* the debugger can now stop again */
+#endif
 	RT_GC_WEAN_N(2);		/* Remove protection for the area and the array */
 	return array;
 }

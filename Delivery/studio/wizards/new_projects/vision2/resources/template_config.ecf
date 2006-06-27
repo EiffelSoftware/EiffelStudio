@@ -2,12 +2,9 @@
 	<target name="${FL_PROJECT_NAME}">
 		<description>This ace file has been generated for you by "The Vision2 Application Wizard".</description>
 		<root cluster="root_cluster" feature="make_and_launch" class="APPLICATION"/>
-
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<setting name="inlining" value="True"/>
-		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf"/>
 		<cluster name="root_cluster" location="${FL_LOCATION}"/>

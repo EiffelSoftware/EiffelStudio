@@ -5,8 +5,6 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<setting name="inlining" value="True"/>
-		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.ecf"/>
 		<cluster name="root_cluster" location="${FL_LOCATION}"/>

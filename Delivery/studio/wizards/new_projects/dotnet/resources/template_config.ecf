@@ -6,8 +6,6 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<setting name="inlining" value="True"/>
-		<setting name="inlining_size" value="0"/>
 		<setting name="console_application" value="${FL_CONSOLE_APPLICATION}"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="${FL_APPLICATION_TYPE}"/>

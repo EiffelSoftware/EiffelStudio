@@ -142,12 +142,23 @@ feature {NONE} -- Implementation of data retrieval
 			current_target_not_void: current_target /= Void
 			an_assembly_not_void: an_assembly /= Void
 		local
+			l_name: STRING
 			l_assembly: CONF_ASSEMBLY
 		do
 			if an_assembly.version /= Void then
 				l_assembly := factory.new_assembly_from_gac (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
 			else
-				l_assembly := factory.new_assembly (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, current_target)
+					-- correct path of mscorlib, system and system_xml
+				l_name := an_assembly.assembly_name.as_lower
+				if l_name.is_equal ("mscorlib") then
+					l_assembly := factory.new_assembly ("mscorlib", "$ISE_DOTNET_FRAMEWORK\mscorlib.dll", current_target)
+				elseif l_name.is_equal ("system_") then
+					l_assembly := factory.new_assembly ("system_", "$ISE_DOTNET_FRAMEWORK\System.dll", current_target)
+				elseif l_name.is_equal ("system_xml") then
+					l_assembly := factory.new_assembly ("system_xml", "$ISE_DOTNET_FRAMEWORK\System.Xml.dll", current_target)
+				else
+					l_assembly := factory.new_assembly (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, current_target)
+				end
 			end
 			l_assembly.set_name_prefix (an_assembly.prefix_name)
 			current_target.add_assembly (l_assembly)
@@ -169,23 +180,20 @@ feature {NONE} -- Implementation of data retrieval
 			l_name := a_cluster.cluster_name
 				-- convert base, wel, vision2 and time clusters into library equivalents
 			if l_name.is_case_insensitive_equal ("base") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\base\base.ecf", current_target)
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\base\base.ecf", current_target)
 				l_lib := factory.new_library ("base", l_file_loc, current_target)
 			elseif l_name.is_case_insensitive_equal ("wel") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\wel\wel.ecf", current_target)
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", current_target)
 				l_lib := factory.new_library ("wel", l_file_loc, current_target)
 			elseif l_name.is_case_insensitive_equal ("vision2") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\vision2\vision2.ecf", current_target)
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
 				l_lib := factory.new_library ("vision2", l_file_loc, current_target)
 			elseif l_name.is_case_insensitive_equal ("time") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\time\time.ecf", current_target)
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
 				l_lib := factory.new_library ("time", l_file_loc, current_target)
 			end
 			if l_lib /= Void then
 				current_target.add_library (l_lib)
-				if a_cluster.is_library then
-					l_lib.set_readonly (True)
-				end
 			elseif a_cluster.directory_name.has_substring ("library.net") then
 				-- ignore it
 			else
@@ -424,7 +432,6 @@ feature {NONE} -- Implementation of data retrieval
 			l_str: STRING
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_rename: LACE_LIST [TWO_NAME_SD]
-			i: INTEGER
 		do
 			if a_defaults /= Void then
 				from
@@ -523,17 +530,11 @@ feature {NONE} -- Implementation of data retrieval
 						else
 								-- we try to guess the correct configuration location, may not always work
 								-- what we guess is that the path looks like this something/base and
-								-- we convert it into somethings/base/base.`extension_name'.
+								-- we convert it into something/base.`extension_name'.
 							l_str := l_precomp.value.value
-							if l_str.count > 2 then
-								i := l_str.last_index_of ('/', l_str.count)
-								if i = 0 then
-									i := l_str.last_index_of ('\', l_str.count)
-								end
-								if i > 0 then
-									l_str := l_str + "\" + l_str.substring (i+1, l_str.count) + "." + extension_name
-								end
-							end
+							l_str.append ("." + extension_name)
+								-- replace $ISE_LIBRARY with $ISE_EIFFEL for precompiles
+							l_str.replace_substring_all ("$ISE_LIBRARY", "$ISE_EIFFEL")
 
 							l_conf_pre := factory.new_precompile ("precompile", l_str, current_target)
 							l_rename := l_precomp.renamings

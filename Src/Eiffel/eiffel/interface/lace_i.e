@@ -678,7 +678,14 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_cls_compliant)
 			if l_s /= Void then
 				if l_s.is_boolean then
-					system.set_cls_compliant (l_s.to_boolean)
+					l_b := l_s.to_boolean
+						-- value can't change from a precompile or in a compiled system
+					if l_b /= system.cls_compliant and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+						create vd83.make (s_cls_compliant, system.cls_compliant.out, l_s)
+						Error_handler.insert_warning (vd83)
+					else
+						system.set_cls_compliant (l_b)
+					end
 				else
 					create vd15
 					vd15.set_option_name (s_cls_compliant)
@@ -686,7 +693,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				-- once set don't loose it
+				system.set_cls_compliant (True)
 			end
 
 			l_s := l_settings.item (s_console_application)

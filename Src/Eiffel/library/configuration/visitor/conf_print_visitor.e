@@ -817,8 +817,10 @@ feature {NONE} -- Implementation
 			end
 			append_text_indent ("<"+a_tag+" name=%""+a_group.name+"%"")
 			append_text (" location=%""+l_str+"%"")
-			if a_group.internal_read_only then
+			if not a_group.is_library and a_group.internal_read_only then
 				append_text (" readonly=%"true%"")
+			elseif a_group.is_library and not a_group.internal_read_only then
+				append_text (" readonly=%"false%"")
 			end
 			l_str := a_group.name_prefix
 			if l_str /= Void and then not l_str.is_empty then

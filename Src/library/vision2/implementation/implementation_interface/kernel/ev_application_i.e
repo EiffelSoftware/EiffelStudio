@@ -58,7 +58,7 @@ feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- A
 
 feature -- Access
 
-	pnd_targets: ARRAYED_LIST [INTEGER]
+	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.
 
 	windows: LINEAR [EV_WINDOW] is
@@ -380,7 +380,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			until
 				targets.after
 			loop
-				trg ?= identified.id_object (targets.item)
+				trg ?= identified.id_object (targets.item_for_iteration)
 				if trg /= Void then
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
@@ -420,7 +420,7 @@ feature {NONE} -- Debug
 			until
 				pnd_targets.after
 			loop
-				trg ?= identified.id_object (pnd_targets.item)
+				trg ?= identified.id_object (pnd_targets.item_for_iteration)
 				if trg /= Void then
 					io.error.put_string (trg.target_name.as_string_8)
 				end

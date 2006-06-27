@@ -264,7 +264,11 @@ feature {NONE} -- Basic Operations
 			a_agent_attached: a_agent /= Void
 			option_values_is_empty: option_values.is_empty or option_values.count = 1 and suppress_logo
 		do
-			display_usage
+			if accepts_loose_argument or accepts_multiple_loose_arguments then
+				display_usage
+			else
+				a_agent.call ([])
+			end
 		end
 
 feature {NONE} -- Parsing
@@ -300,7 +304,7 @@ feature {NONE} -- Parsing
 			parsed := True
 
 			l_args := arguments.argument_array
-			if not l_args.is_empty then
+			if l_args.count > 1 then
 				l_switches := available_switches
 				l_prefixes := switch_prefixes
 				l_cs := case_sensitive
@@ -311,7 +315,7 @@ feature {NONE} -- Parsing
 					l_upper := l_args.upper
 				until i > l_upper loop
 					l_arg := l_args[i]
-					if l_prefixes.has (l_arg.item (1)) then
+					if not l_arg.is_empty and then l_prefixes.has (l_arg.item (1)) then
 
 							-- Indicates a switch option
 						if l_arg.count > 1 then
@@ -676,7 +680,7 @@ feature {NONE} -- Output
 				l_options.forth
 			end
 
-			create l_tabbed_nl.make_filled (' ', l_nl.count + 5 + l_max_len)
+			create l_tabbed_nl.make_filled (' ', l_nl.count + tab_string.count + 2 + l_max_len)
 			l_tabbed_nl.insert_string (l_nl, 1)
 
 			l_def_prefix := switch_prefixes[1]
@@ -886,12 +890,15 @@ feature {NONE} -- Formatting
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
 			a_str_attached: a_str /= Void
-			not_a_str_is_empty: not a_str.is_empty
 		do
-			Result :=string_formatter.ellipse (a_str, ellipse_threshold)
+			if not a_str.is_empty then
+				Result := string_formatter.ellipse (a_str, ellipse_threshold)
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
+			not_result_is_empty: not a_str.is_empty implies not Result.is_empty
 			result_ellipsed: Result.count <= ellipse_threshold
 		end
 

@@ -36,7 +36,11 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	make (an_interface: like interface) is
 			-- Create the tree item.

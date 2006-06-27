@@ -52,7 +52,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is do Result := False end
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	make (an_interface: like interface) is
 			-- Create the tool bar button.

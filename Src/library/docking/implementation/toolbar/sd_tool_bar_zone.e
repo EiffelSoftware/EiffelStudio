@@ -66,7 +66,6 @@ feature -- Command
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_widget_button: SD_TOOL_BAR_WIDGET_ITEM
-			l_widget_item_count: INTEGER
 		do
 			set_drag_area (a_horizontal)
 			from
@@ -206,7 +205,7 @@ feature -- Command
 		do
 			content := a_content
 			a_content.set_zone (Current)
-			l_items := a_content.items
+			l_items := a_content.items.twin
 			from
 				l_items.start
 			until

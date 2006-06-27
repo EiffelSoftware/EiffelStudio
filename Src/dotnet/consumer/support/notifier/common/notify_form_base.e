@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			set_start_position ({WINFORMS_FORM_START_POSITION}.manual)
 			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_tool_window)
 			set_show_in_taskbar (False)
+			set_opacity (0)
 
 			notify_icon.text := "Eiffel Metadata Consumer Tool"
 			notify_icon.icon := l_icon

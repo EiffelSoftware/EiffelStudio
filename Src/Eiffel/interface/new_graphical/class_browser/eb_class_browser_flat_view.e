@@ -252,13 +252,14 @@ feature{NONE} -- Sorting
 
 	class_sorter (a_order: INTEGER) is
 			-- Sorter for class name
-		local
-			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_CLASS_BROWSER_FLAT_ROW]
 		do
-			create l_agent_sorter.make (agent class_name_tester)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (rows)
+			if ev_application.ctrl_pressed then
+				extend_sort_column_list (class_column)
+			else
+				sort_column_list.wipe_out
+				sort_column_list.extend (class_column)
+			end
+			sort_rows (rows, sort_column_list)
 			if last_sorted_column /= class_column then
 				expand_all_rows
 			end
@@ -267,13 +268,14 @@ feature{NONE} -- Sorting
 
 	feature_sorter (a_order: INTEGER) is
 			-- Sorter for feature name
-		local
-			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_CLASS_BROWSER_FLAT_ROW]
 		do
-			create l_agent_sorter.make (agent feature_name_tester)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (rows)
+			if ev_application.ctrl_pressed then
+				extend_sort_column_list (feature_column)
+			else
+				sort_column_list.wipe_out
+				sort_column_list.extend (feature_column)
+			end
+			sort_rows (rows, sort_column_list)
 			expand_all_rows
 			bind_grid
 		end
@@ -309,26 +311,40 @@ feature{NONE} -- Sorting
 			l_class_a_name := l_written_class_a.name
 			l_class_b_name := l_written_class_b.name
 			if l_order = topology_order then
-				if l_written_class_a.topological_id = l_written_class_b.topological_id then
-					if current_feature_sort_order = ascending_order then
-						Result := row_a.e_feature.name < row_b.e_feature.name
+				if sort_column_list.count = 1 then
+					if l_written_class_a.topological_id = l_written_class_b.topological_id then
+						if current_feature_sort_order = ascending_order then
+							Result := row_a.e_feature.name < row_b.e_feature.name
+						else
+							Result := row_a.e_feature.name > row_b.e_feature.name
+						end
 					else
-						Result := row_a.e_feature.name > row_b.e_feature.name
+						Result := l_written_class_a.topological_id < l_written_class_b.topological_id
 					end
 				else
 					Result := l_written_class_a.topological_id < l_written_class_b.topological_id
 				end
-			elseif l_class_a_name.is_equal (l_class_b_name) then
-				if current_feature_sort_order = ascending_order then
-					Result := row_a.e_feature.name < row_b.e_feature.name
-				else
-					Result := row_a.e_feature.name > row_b.e_feature.name
-				end
 			else
-				if l_order = ascending_order then
-					Result := l_class_a_name < l_class_b_name
+				if sort_column_list.count = 1 then
+					if l_class_a_name.is_equal (l_class_b_name) then
+						if current_feature_sort_order = ascending_order then
+							Result := row_a.e_feature.name < row_b.e_feature.name
+						else
+							Result := row_a.e_feature.name > row_b.e_feature.name
+						end
+					else
+						if l_order = ascending_order then
+							Result := l_class_a_name < l_class_b_name
+						else
+							Result := l_class_a_name > l_class_b_name
+						end
+					end
 				else
-					Result := l_class_a_name > l_class_b_name
+					if l_order = ascending_order then
+						Result := l_class_a_name < l_class_b_name
+					else
+						Result := l_class_a_name > l_class_b_name
+					end
 				end
 			end
 		end
@@ -345,6 +361,50 @@ feature{NONE} -- Sorting
 			Result := column_sort_info.item (feature_column).current_order
 		ensure
 			good_result: Result = ascending_order or Result = descending_order
+		end
+
+	column_tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [u, v: EB_CLASS_BROWSER_FLAT_ROW], BOOLEAN], INTEGER]
+			-- Table of column testers
+			-- Key is column index, value is the tester.
+
+	sort_rows (a_rows: like rows; a_column_list: LIST [INTEGER]) is
+			-- Sort `a_rows' column by column for every column whose indexes are in `a_column_list'.
+		require
+			a_rows_attached: a_rows /= Void
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty: not a_column_list.is_empty
+		local
+			l_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [u, v: EB_CLASS_BROWSER_FLAT_ROW], BOOLEAN]]
+			l_cursor: CURSOR
+			l_tester: AGENT_LIST_EQUALITY_TESTER [EB_CLASS_BROWSER_FLAT_ROW]
+			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
+		do
+			create l_list.make (a_column_list.count)
+			l_cursor := a_column_list.cursor
+			from
+				a_column_list.start
+			until
+				a_column_list.after
+			loop
+				l_list.extend (column_tester_table.item (a_column_list.item))
+				a_column_list.forth
+			end
+			a_column_list.go_to (l_cursor)
+			create l_tester.make (l_list)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (a_rows)
+		end
+
+	sort_column_list: LIST [INTEGER]
+			-- List of columns to sort
+
+	extend_sort_column_list (a_column: INTEGER) is
+			-- Extend `a_column' in `sort_column_list'.
+		require
+			a_column_positive: a_column > 0
+		do
+			sort_column_list.prune_all (a_column)
+			sort_column_list.extend (a_column)
 		end
 
 feature -- Status report
@@ -646,13 +706,20 @@ feature{NONE} -- Initialization
 			create l_feature_sort_info.make (grid.column (2), agent feature_sorter, ascending_order)
 			l_class_sort_info.enable_auto_indicator
 			l_feature_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info, 1)
-			set_sort_info (l_feature_sort_info, 2)
+			set_sort_info (l_class_sort_info)
+			set_sort_info (l_feature_sort_info)
 
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
+			create column_tester_table.make (2)
+			column_tester_table.put (agent class_name_tester, 1)
+			column_tester_table.put (agent feature_name_tester, 2)
+			create {LINKED_LIST [INTEGER]}sort_column_list.make
+		ensure then
+			column_tester_table_attached: column_tester_table /= Void
+			sort_column_list_attached: sort_column_list /= Void
 		end
 
 feature{NONE} -- Implementation/Data

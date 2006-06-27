@@ -31,25 +31,27 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_sort_info (a_sort_info: EVS_GRID_SORTING_INFO; a_column_index: INTEGER) is
-			-- Associate `a_sort_info' with `a_column_index'-th column in `grid'.
+	set_sort_info (a_sort_info: EVS_GRID_SORTING_INFO) is
+			-- Set `a_sort_info' in `grid'.
 		require
 			a_sort_info_attached: a_sort_info /= Void
-			a_column_index_valid: is_column_index_valid (a_column_index)
+			a_column_index_valid: is_column_index_valid (a_sort_info.column.index)
 		local
 			l_sort_agent: PROCEDURE [ANY, TUPLE]
+			l_column_index: INTEGER
 		do
-			if a_column_index > column_sort_info.upper then
-				column_sort_info.conservative_resize (1, a_column_index)
+			l_column_index := a_sort_info.column.index
+			if l_column_index > column_sort_info.upper then
+				column_sort_info.conservative_resize (1, l_column_index)
 			end
-			column_sort_info.put (a_sort_info, a_column_index)
-			if not sort_agent_table.has (a_column_index) then
-				sort_agent_table.force (agent sort (?, ?, ?, ?, ?, ?, ?, ?, a_column_index), a_column_index)
+			column_sort_info.put (a_sort_info, l_column_index)
+			if not sort_agent_table.has (l_column_index) then
+				sort_agent_table.force (agent sort (?, ?, ?, ?, ?, ?, ?, ?, l_column_index), l_column_index)
 			end
-			l_sort_agent := sort_agent_table.item (a_column_index)
-			safe_register_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
+			l_sort_agent := sort_agent_table.item (l_column_index)
+			safe_register_agent (l_sort_agent, grid.column (l_column_index).header_item.pointer_button_press_actions)
 		ensure
-			sort_info_set: column_sort_info.item (a_column_index) = a_sort_info
+			sort_info_set: column_sort_info.item (a_sort_info.column.index) = a_sort_info
 		end
 
 	remove_sort_info (a_column_index: INTEGER) is

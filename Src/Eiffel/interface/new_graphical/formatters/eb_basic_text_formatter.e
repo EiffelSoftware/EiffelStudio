@@ -68,6 +68,7 @@ feature -- Formatting
 				displayed
 			then
 				display_temp_header
+				setup_viewpoint
 				create class_file.make (classi.file_name)
 				if class_file.exists then
 					if not equal (classi.file_name, editor.file_name) then

@@ -192,6 +192,9 @@ feature -- Pop up
 				widget_owner.force_display
 			end
 			display_header
+			if not popup_actions.is_empty then
+				popup_actions.call ([])
+			end
 		end
 
 	widget_owner: WIDGET_OWNER
@@ -211,7 +214,6 @@ feature -- Commands
 			enable_select
 			popup
 			fresh_old_formatter
-			setup_viewpoint
 			format
 			post_execution_action.call ([])
 		end
@@ -283,6 +285,19 @@ feature -- Loacation
 			then
 				editor.display_line_at_top_when_ready (stone.position)
 			end
+		end
+
+feature -- Agents
+
+	popup_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed when current format `popup's.
+		do
+			if popup_actions_internal = Void then
+				create popup_actions_internal
+			end
+			Result := popup_actions_internal
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Location
@@ -412,6 +427,9 @@ feature {NONE} -- Implementation
 
 	line_numbers_allowed: BOOLEAN is deferred end
 		-- Does it make sense to show line numbers in Current?
+
+	popup_actions_internal: like popup_actions;
+			-- Implementation of `popup_actions'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

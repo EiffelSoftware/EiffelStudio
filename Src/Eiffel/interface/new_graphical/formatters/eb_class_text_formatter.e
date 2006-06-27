@@ -53,6 +53,7 @@ feature -- Formatting
 				if associated_class /= Void then
 					display_temp_header
 					reset_display
+					setup_viewpoint
 					generate_text
 					if not last_was_error then
 						go_to_position

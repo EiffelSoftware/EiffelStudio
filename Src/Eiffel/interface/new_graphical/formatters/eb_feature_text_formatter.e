@@ -119,6 +119,7 @@ feature -- Formatting
 			then
 				editor.disable_feature_click
 				display_temp_header
+				setup_viewpoint
 				generate_text
 				if not last_was_error then
 					if has_breakpoints then

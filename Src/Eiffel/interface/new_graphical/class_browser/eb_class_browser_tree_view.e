@@ -32,6 +32,7 @@ feature -- Access
 		do
 		end
 
+
 feature -- Actions
 
 	on_grid_focus_in is

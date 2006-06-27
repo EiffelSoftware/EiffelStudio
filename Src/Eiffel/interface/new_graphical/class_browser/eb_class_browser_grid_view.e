@@ -40,6 +40,8 @@ inherit
 
 	EB_SHARED_PIXMAPS
 
+	EB_SHARED_WRITER
+
 feature{NONE} -- Initialization
 
 	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
@@ -708,7 +710,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `show_tooltip_checkbox'
 
 	trace: STRING
-			-- Trace message						
+			-- Trace message	
 
 invariant
 	development_window_attached: development_window /= Void

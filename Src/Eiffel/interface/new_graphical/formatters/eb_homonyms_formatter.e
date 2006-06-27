@@ -63,6 +63,7 @@ feature -- Formatting
 		do
 			if associated_feature /= Void and then selected and then displayed then
 				display_temp_header
+				setup_viewpoint
 				confirmed := False
 				create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again, preferences.preferences)
 				cf.set_ok_action (agent confirm_generate)

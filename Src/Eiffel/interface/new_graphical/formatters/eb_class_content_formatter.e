@@ -32,6 +32,7 @@ feature -- Formatting
 				if not widget.is_displayed then
 					widget.show
 				end
+				setup_viewpoint
 				generate_result
 				display_header
 			end

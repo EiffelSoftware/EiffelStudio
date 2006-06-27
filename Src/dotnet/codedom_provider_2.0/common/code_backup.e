@@ -58,10 +58,17 @@ feature -- Basic Operations
 		local
 			l_backup_file: RAW_FILE
 			l_retried: BOOLEAN
+			l_index: INTEGER
+			l_file_name: STRING
 		do
 			backup_successful := False
-			if not l_retried then		
-				create l_backup_file.make (unique_file_name (a_file.name, backup_folder))
+			if not l_retried then
+				l_file_name := a_file.name
+				l_index := l_file_name.last_index_of (Directory_separator, l_file_name.count)
+				if l_index > 0 then
+					l_file_name := l_file_name.substring (l_index + 1, l_file_name.count)
+				end
+				create l_backup_file.make (unique_file_name (l_file_name, backup_folder))
 				l_backup_file.open_write
 				a_file.open_read
 				a_file.copy_to (l_backup_file)

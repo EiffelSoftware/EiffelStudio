@@ -713,10 +713,9 @@ feature {NONE} -- Output
 				l_options.forth
 			end
 			l_options.go_to (l_cursor)
-			io.new_line
 
 			if not l_value_switches.is_empty then
-				io.put_string ("ARGUMENTS:%N")
+				io.put_string ("%NARGUMENTS:%N")
 
 				l_max_len := 0
 				from l_value_switches.start until l_value_switches.after loop
@@ -751,7 +750,6 @@ feature {NONE} -- Output
 					io.new_line
 					l_value_switches.forth
 				end
-				io.new_line
 			end
 
 		ensure

@@ -148,6 +148,8 @@ feature -- Common properties
 			-- Set `state'.
 		do
 			state := a_class_name
+		ensure
+			set: state = a_class_name
 		end
 
 	direction: INTEGER
@@ -158,7 +160,18 @@ feature -- Common properties
 		do
 			direction := a_direction
 		ensure
-			direction = a_direction
+			set: direction = a_direction
+		end
+
+	is_visible: BOOLEAN
+			-- If it's widget is visible?
+
+	set_visible (a_visible: like is_visible) is
+			-- Set `a_visible'
+		do
+			is_visible := a_visible
+		ensure
+			set: is_visible = a_visible
 		end
 
 indexing

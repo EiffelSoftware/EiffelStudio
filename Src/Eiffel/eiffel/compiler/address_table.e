@@ -86,8 +86,6 @@ feature -- Insert
 		require
 			class_id_valid: class_id > 0
 			not_in_the_table: not has (class_id, feature_id)
-		local
-			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
 		do
 				-- The encapsulation needs to be generated
 				-- Freeze the system
@@ -358,7 +356,7 @@ feature {NONE} -- Generation
 	solved_type (type_a: TYPE_A): TYPE_C is
 			-- Solved type associated with `a_type'.
 		local
-			s_type: TYPE_A 
+			s_type: TYPE_A
 		do
 			s_type := type_a.instantiated_in (a_type.type.type_a)
 			Result := s_type.type_i.c_type

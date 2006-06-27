@@ -20,6 +20,14 @@ inherit
 			set_max,
 			title_area
 		end
+
+	SD_UPPER_ZONE
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -32,7 +40,7 @@ feature {NONE} -- Initlization
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.close_request_actions.extend (agent on_close_request)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
-
+			internal_notebook.minimize_actions.extend (agent on_minimize)
 			internal_notebook.tab_double_click_actions.extend (agent on_normal_max_window)
 		end
 

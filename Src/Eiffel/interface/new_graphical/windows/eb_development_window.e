@@ -349,6 +349,12 @@ feature {NONE} -- Initialization
 			create new_cluster_cmd.make (Current)
 			toolbarable_commands.extend (new_cluster_cmd)
 
+			create new_library_cmd.make (Current)
+			toolbarable_commands.extend (new_library_cmd)
+
+			create new_assembly_cmd.make (Current)
+			toolbarable_commands.extend (new_assembly_cmd)
+
 			create new_class_cmd.make (Current)
 			toolbarable_commands.extend (new_class_cmd)
 
@@ -1919,6 +1925,16 @@ feature {NONE} -- Menu Building
 
 				-- New Cluster command.
 			command_menu_item := new_cluster_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- New Library command.
+			command_menu_item := new_library_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- New Assembly command.
+			command_menu_item := new_assembly_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
 
@@ -4021,6 +4037,8 @@ feature -- Recycle
 			editor_paste_cmd.recycle
 			new_class_cmd.recycle
 			new_cluster_cmd.recycle
+			new_library_cmd.recycle
+			new_assembly_cmd.recycle
 			new_feature_cmd.recycle
 			shell_cmd.recycle
 			toggle_feature_alias_cmd.recycle
@@ -4360,6 +4378,12 @@ feature{EB_TOOL}
 	new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
 			-- Command to create a new cluster.
 
+	new_library_cmd: EB_NEW_LIBRARY_COMMAND
+			-- Command to create a new library.
+
+	new_assembly_cmd: EB_NEW_ASSEMBLY_COMMAND
+			-- Command to create a new assembly.
+
 	new_class_cmd: EB_NEW_CLASS_COMMAND
 			-- Command to create a new class.
 
@@ -4573,6 +4597,8 @@ feature {NONE} -- Execution
 			open_cmd.enable_sensitive
 			new_class_cmd.enable_sensitive
 			new_cluster_cmd.enable_sensitive
+			new_library_cmd.enable_sensitive
+			new_assembly_cmd.enable_sensitive
 			system_info_cmd.enable_sensitive
 			if unified_stone then
 				send_stone_to_context_cmd.disable_sensitive
@@ -4599,6 +4625,8 @@ feature {NONE} -- Execution
 			open_cmd.disable_sensitive
 			new_class_cmd.disable_sensitive
 			new_cluster_cmd.disable_sensitive
+			new_library_cmd.disable_sensitive
+			new_assembly_cmd.disable_sensitive
 			if not project_manager.is_created then
 				system_info_cmd.disable_sensitive
 				send_stone_to_context_cmd.disable_sensitive

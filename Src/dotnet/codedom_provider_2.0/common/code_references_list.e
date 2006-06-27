@@ -10,8 +10,21 @@ class
 
 inherit
 	ARRAYED_LIST [CODE_REFERENCED_ASSEMBLY]
+		redefine
+			extend
+		end
 
 	CODE_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		undefine
+			is_equal,
+			copy
+		end
+
+	CODE_CONFIGURATION
+		rename
+			put as env_put
 		export
 			{NONE} all
 		undefine
@@ -35,12 +48,12 @@ feature -- Access
 		do
 			if not l_retried then
 				if {SYSTEM_FILE}.exists (a_file_name) then
-					Result := {ASSEMBLY}.load_from (a_file_name)
+					Result := {ASSEMBLY}.load_file (a_file_name)
 				else
 					l_path := {RUNTIME_ENVIRONMENT}.get_runtime_directory
 					l_path.append (a_file_name)
 					if {SYSTEM_FILE}.exists (l_path) then
-						Result := {ASSEMBLY}.load_from (l_path)
+						Result := {ASSEMBLY}.load_file (l_path)
 					end
 				end
 			end
@@ -108,6 +121,21 @@ feature -- Status Report
 		end
 		
 feature -- Status Setting
+
+	extend (a_assembly: CODE_REFERENCED_ASSEMBLY) is
+			-- First check for overrides in configuration file
+			-- Then add assembly
+		local
+			l_overrides: like override_assemblies
+		do
+			l_overrides := override_assemblies
+			l_overrides.search (a_assembly.assembly.full_name)
+			if l_overrides.found then
+				Precursor (l_overrides.found_item)
+			else
+				Precursor (a_assembly)
+			end
+		end
 
 	extend_file_with_prefix (a_file_name, a_prefix: STRING) is
 			-- Add assembly with file name `a_file_name' and prefix `a_prefix' if found.

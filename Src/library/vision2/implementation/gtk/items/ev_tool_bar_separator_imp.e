@@ -26,7 +26,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
 
 	is_dockable: BOOLEAN is False
 

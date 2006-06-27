@@ -11,7 +11,7 @@ class
 inherit
 	WEL_GDIP_ANY
 		redefine
-			delete
+			destroy_item
 		end
 
 feature -- Command
@@ -22,7 +22,7 @@ feature -- Command
 			l_wel_string: WEL_STRING
 			l_result: INTEGER
 		do
-			delete
+			destroy_item
 			create l_wel_string.make (a_file_name)
 			c_gdip_load_image_from_file (l_wel_string.item, $item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
@@ -54,7 +54,7 @@ feature -- Query
 
 feature -- Destory
 
-	delete is
+	destroy_item is
 			-- Redefine
 		local
 			l_result: INTEGER

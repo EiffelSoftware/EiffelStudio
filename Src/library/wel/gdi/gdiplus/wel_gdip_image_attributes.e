@@ -11,7 +11,7 @@ class
 inherit
 	WEL_GDIP_ANY
 		redefine
-			delete
+			destroy_item
 		end
 
 create
@@ -70,7 +70,7 @@ feature -- Command
 
 feature -- Destory
 
-	delete is
+	destroy_item is
 			-- Destory Gdi+ object.
 		local
 			l_result: INTEGER

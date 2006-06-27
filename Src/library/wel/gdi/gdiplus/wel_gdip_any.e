@@ -8,74 +8,80 @@ indexing
 class
 	WEL_GDIP_ANY
 
+inherit
+	WEL_ANY
+		redefine
+			destroy_item
+		end
+
+feature {NONE} -- Initialization
+
+	initialize_gdi_plus is
+			-- Properly initialize Current.
+		do
+			gdi_plus_handle := gdi_plus_starter.gdi_plus_handle
+		end
+
+feature -- Access
+
+	gdi_plus_handle: POINTER
+			-- Handle to gdiplus.dll if present.	
+
 feature -- Query
 
 	is_gdi_plus_installed: BOOLEAN is
 			-- If gdiplus.dll can be found on user's machine?
-		local
-			l_result: INTEGER
 		do
-			c_load_gdip_dll ($l_result)
-			if l_result /= 0 then
-				Result := True
-			end
+			Result := gdi_plus_starter.is_gdi_plus_installed
 		end
-
-feature {WEL_GDIP_ANY} -- Implementation
-
-	item: POINTER
-			-- Pointer to a GDI+ object.
 
 feature -- Destroy
 
-	delete is
+	destroy_item is
 			-- Free Current Gdi+ object memory.
+		local
+			l_null: POINTER
 		do
-			c_gdip_free (item)
+			check
+				item_valid: item /= l_null implies gdi_plus_handle /= l_null
+			end
+			if gdi_plus_handle /= l_null then
+				c_gdip_free (gdi_plus_handle, item)
+			end
 		end
-
 
 feature {NONE} -- Externals
 
-	c_load_gdip_dll (a_result: TYPED_POINTER [INTEGER]) is
-			-- Try to loca gdiplus.dll, if found result is 1.
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-			{
-				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
-				if (user32_module) {
-					*(EIF_INTEGER *)($a_result) = TRUE;
-				}
-			}
-			]"
-		end
-
-	c_gdip_free (a_gdip_object: POINTER) is
+	c_gdip_free (a_gdiplus_handle, a_gdip_object: POINTER) is
 			-- Free `a_gdip_object' memory.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_gdip_object_not_null: a_gdip_object /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipFree = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
-				if (user32_module) {
+				static FARPROC GdipFree = NULL;
+				if (!GdipFree) {
+					HMODULE user32_module = (HMODULE) $a_gdiplus_handle;
 					GdipFree = GetProcAddress (user32_module, "GdipFree");
-					if (GdipFree) {
-							(FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (void *)) GdipFree)
-									((void *) $a_gdip_object);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
-				}				
+				}
+				if (GdipFree) {
+					(FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (void *)) GdipFree) ((void *) $a_gdip_object);
+				}
 			}
 			]"
+		end
+
+feature {WEL_GDIP_ANY} -- Convenience
+
+	gdi_plus_starter: WEL_GDI_PLUS_STARTER is
+			-- Control loading of GDI+.
+		once
+			create Result
+		ensure
+			gdiplus_starter_not_void: Result /= Void
 		end
 
 invariant

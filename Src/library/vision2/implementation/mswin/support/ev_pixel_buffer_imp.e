@@ -21,7 +21,6 @@ inherit
 			{NONE} all
 			{ANY} is_gdi_plus_installed
 		end
-	DISPOSABLE
 
 feature {NONE} -- Initlization
 
@@ -33,7 +32,7 @@ feature {NONE} -- Initlization
 				initial_height := a_height
 
 				if item /= default_pointer then
-					delete
+					destroy_item
 				end
 
 				gdip_make_with_size (initial_width, initial_height)
@@ -55,13 +54,9 @@ feature {NONE} -- Initlization
 
 	initialize is
 			-- Initialize
-		local
-			l_starter: WEL_GDI_PLUS_STARTER
 		do
 			if is_gdi_plus_installed then
-				create l_starter
-				l_starter.gdi_plus_init
-
+				gdi_plus_starter.gdi_plus_init
 				make_with_size (1, 1)
 			else
 				create pixmap
@@ -75,7 +70,7 @@ feature {NONE} -- Initlization
 		do
 			set_is_in_destroy (True)
 			if is_gdi_plus_installed then
-				delete
+				destroy_item
 			else
 				-- FIXIT: Why there is a Unexcepted harmful signal in EC project ? complier bug?
 --				pixmap.destroy
@@ -150,7 +145,7 @@ feature -- Command
 
 				l_dest_rect.dispose
 				l_src_rect.dispose
-				l_graphics.delete
+				l_graphics.destroy_item
 				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
 			else
 				l_temp_pixmap := pixmap.sub_pixmap (a_rect)
@@ -180,14 +175,6 @@ feature -- Query
 			else
 				Result := pixmap.height
 			end
-		end
-
-feature {NONE} -- Dispose
-
-	dispose is
-			-- Dispose current.
-		do
-			destroy
 		end
 
 feature {EV_PIXEL_BUFFER_IMP} -- Implementation
@@ -233,10 +220,10 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 				l_image_attributes.set_color_matrix (a_color_matrix)
 				create l_rect.make (0, 0, width, height)
 				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (Current, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
-				l_image_attributes.delete
+				l_image_attributes.destroy_item
 			end
 
-			l_graphics.delete
+			l_graphics.destroy_item
 
 			l_imp.release_dc
 
@@ -298,8 +285,8 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
  			l_dest_rect.dispose
  			l_src_rect.dispose
-			l_image_attributes.delete
-			l_graphics.delete
+			l_image_attributes.destroy_item
+			l_graphics.destroy_item
 
 			-- Then we have to invert mask bitmap colors to overcome the 32bits to 1bit bitmap convert problem.
 			l_imp.dc.bit_blt (0, 0, width, height, l_imp.dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)

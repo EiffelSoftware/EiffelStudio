@@ -11,49 +11,49 @@ class
 feature -- Command
 
 	gdi_plus_init is
-			-- Initialized Gdi+.
+			-- Initialize Gdi+.
 		once
-			c_gdi_plus_startup
+			if is_gdi_plus_installed then
+				c_gdi_plus_startup (gdi_plus_handle)
+			end
 		end
 
 	gdi_plus_shutdown is
 			-- Shutdown Gdi+.
 		once
-			c_gdi_plus_shutdown
+			if is_gdi_plus_installed then
+				c_gdi_plus_shutdown (gdi_plus_handle)
+			end
+		end
+
+	gdi_plus_handle: POINTER is
+			-- Handle for `gdiplus.dll' if present.
+		once
+			Result := c_load_gdip_dll
 		end
 
 feature -- Command
 
 	is_gdi_plus_installed: BOOLEAN is
 			-- If gdiplus.dll can be fount on user's machine?
-		local
-			l_result: INTEGER
 		do
-			c_load_gdip_dll ($l_result)
-			if l_result /= 0 then
-				Result := True
-			end
+			Result := gdi_plus_handle /= default_pointer
 		end
 
 feature {NONE} -- Externals
 
-	c_load_gdip_dll (a_result: TYPED_POINTER [INTEGER]) is
+	c_load_gdip_dll: POINTER is
 			-- Try to load gdiplus.dll, if fount return 1.
 		external
 			"C inline use <windows.h>"
 		alias
-			"[
-			{
-				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
-				if (user32_module) {
-					*(EIF_INTEGER *)($a_result) = TRUE;
-				}
-			}
-			]"
+			"return (EIF_POINTER) LoadLibrary (L%"gdiplus.dll%");"
 		end
 
-	c_gdi_plus_startup is
+	c_gdi_plus_startup (a_gdiplus_handle: POINTER) is
 			-- Before any GDI+ call, we should call this function.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
@@ -62,21 +62,21 @@ feature {NONE} -- Externals
 				GdiplusStartupInput gdiplusStartupInput = {1, NULL, FALSE, FALSE};
 		   		ULONG_PTR gdiplusToken;
 			  	FARPROC GdiplusStartup = NULL;
-				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
+				HMODULE user32_module = (HMODULE) $a_gdiplus_handle;
 				
-				if (user32_module) {
-					GdiplusStartup = GetProcAddress (user32_module, "GdiplusStartup");
-					if (GdiplusStartup) {
-						(FUNCTION_CAST_TYPE(GpStatus, WINAPI, (ULONG_PTR *, const GdiplusStartupInput *,  GdiplusStartupOutput *)) GdiplusStartup)					
-									(&gdiplusToken, &gdiplusStartupInput, NULL);
-					}
-				}			  
+				GdiplusStartup = GetProcAddress (user32_module, "GdiplusStartup");
+				if (GdiplusStartup) {
+					(FUNCTION_CAST_TYPE(GpStatus, WINAPI, (ULONG_PTR *, const GdiplusStartupInput *,  GdiplusStartupOutput *)) GdiplusStartup)					
+								(&gdiplusToken, &gdiplusStartupInput, NULL);
+				}
    			}
    			]"
    		end
 
-	c_gdi_plus_shutdown is
+	c_gdi_plus_shutdown (a_gdiplus_handle: POINTER) is
 			-- After delete all Gdi+ objects, we should call this function.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
@@ -84,14 +84,12 @@ feature {NONE} -- Externals
 			{
 				ULONG_PTR gdiplusToken;
 			  	FARPROC GdiplusShutdown = NULL;
-				HMODULE user32_module = LoadLibrary (L"gdiplus.dll");
-				if (user32_module) {
-					GdiplusShutdown = GetProcAddress (user32_module, "GdiplusShutdown");
-					if (GdiplusShutdown) {
-						(FUNCTION_CAST_TYPE(void, WINAPI, (ULONG_PTR)) gdiplusToken)					
-									((ULONG_PTR) gdiplusToken);
-					}
-				}			
+				HMODULE user32_module = (HMODULE) $a_gdiplus_handle;
+				GdiplusShutdown = GetProcAddress (user32_module, "GdiplusShutdown");
+				if (GdiplusShutdown) {
+					(FUNCTION_CAST_TYPE(void, WINAPI, (ULONG_PTR)) gdiplusToken)					
+								((ULONG_PTR) gdiplusToken);
+				}
 			}
 			]"
 		end

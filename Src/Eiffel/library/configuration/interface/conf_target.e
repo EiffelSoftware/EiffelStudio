@@ -503,7 +503,8 @@ feature -- Access queries for settings
 					a_name.is_equal (s_use_all_cluster_name_as_namespace) or
 					a_name.is_equal (s_check_vape) or
 					a_name.is_equal (s_cls_compliant) or
-					a_name.is_equal (s_dead_code_removal)
+					a_name.is_equal (s_dead_code_removal) or
+					a_name.is_equal (s_inlining)
 				then
 					Result := True
 				else

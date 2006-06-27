@@ -832,7 +832,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				system.set_inlining_on (False)
+				system.set_inlining_on (True)
 			end
 
 			l_s := l_settings.item (s_inlining_size)
@@ -846,7 +846,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				system.set_inlining_size (4)
+				system.set_inlining_size (0)
 			end
 
 			l_s := l_settings.item (s_java_generation)

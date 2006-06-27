@@ -9,11 +9,9 @@ class
 	ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_SINGLE_PARSER
 		rename
-			make as make_base
-		redefine
-			post_process_arguments
+			make as make_parser
 		end
 
 create
@@ -24,24 +22,24 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_base (False, True, False, False)
+			make_parser (False, False)
 		end
 
 feature -- Access
 
-	ini_file_option: ARGUMENT_OPTION is
+	ini_file_option: STRING is
 			-- Frame template file name option
 		require
-			--parsed: parsed
 			successful: successful
 		do
-			Result := option_of_name (ini_switch)
+			if values /= Void and then not values.is_empty then
+				Result := values.first
+			end
 		end
 
 	frame_file_option: ARGUMENT_OPTION is
 			-- Frame template file path option
 		require
-			--parsed: parsed
 			successful: successful
 		do
 			Result := option_of_name (frame_switch)
@@ -50,7 +48,6 @@ feature -- Access
 	class_name_option: ARGUMENT_OPTION is
 			-- Class name option
 		require
-			--parsed: parsed
 			successful: successful
 		do
 			Result := option_of_name (class_switch)
@@ -59,24 +56,9 @@ feature -- Access
 	output_file_name_option: ARGUMENT_OPTION is
 			-- Generated output file name option
 		require
-			--parsed: parsed
 			successful: successful
 		do
 			Result := option_of_name (output_switch)
-		end
-
-feature {NONE} -- Parsing
-
-	post_process_arguments is
-			--
-		local
-			l_opt: ARGUMENT_OPTION
-		do
-			Precursor
-			l_opt := option_of_name (frame_switch)
-			if l_opt /= Void then
-
-			end
 		end
 
 feature {NONE} -- Usage
@@ -90,7 +72,26 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "1.0"
+			Result := "1.2"
+		end
+
+	loose_argument_name: STRING_8 is
+			-- Name of lose argument, used in usage information
+		do
+			Result := "cfg_file2"
+		end
+
+	loose_argument_description: STRING_8 is
+			-- Description of lose argument, used in usage information
+		do
+			Result := "Configuration file, representing a pixmap matrix,%Nto generate an Eiffel class for."
+		end
+
+	loose_argument_type: STRING_8 is
+			-- Type of lose argument, used in usage information.
+			-- A type is a short description of the argument. I.E. "Configuration File"
+		do
+			Result := "Configuration File"
 		end
 
 	switches: LIST [ARGUMENT_SWITCH] is
@@ -99,17 +100,13 @@ feature {NONE} -- Usage
 			l_result: ARRAYED_LIST [ARGUMENT_SWITCH]
 		do
 			create l_result.make (3)
-			l_result.extend (create {ARGUMENT_FILE_SWITCH}.make (ini_switch, "Input INI file", False, "inifile", "INI file path containing pixmap descriptions.", False, False))
 			l_result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional output file name", True, "file", "Frame template file path.", False, False))
-			l_result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated%Nfile", True, "name", "An Eiffel class name.", False, False))
+			l_result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, "name", "An Eiffel class name.", False, False))
 			l_result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, "filename", "File name to give output file.", False, False))
 			Result := l_result
 		end
 
 feature {NONE} -- Option Names
-
-	ini_switch: STRING is "ini"
-		-- INI source file switch
 
 	frame_switch: STRING is "frame"
 		-- Frame file switch

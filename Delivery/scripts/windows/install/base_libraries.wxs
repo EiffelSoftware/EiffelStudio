@@ -820,6 +820,7 @@
 								<File Id="numeric_information" Name="NUMERI~1.E" LongName="numeric_information.e" />
 								<File Id="integer_overflow_checker_e" Name="IN375A~1.E" LongName="integer_overflow_checker.e" />
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
+								<File Id="predicate.e" Name="PREDIC~1.E" LongName="predicate.e" />
 								<File Id="real_32.e" Name="real_32.e" />
 								<File Id="real_64.e" Name="real_64.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />

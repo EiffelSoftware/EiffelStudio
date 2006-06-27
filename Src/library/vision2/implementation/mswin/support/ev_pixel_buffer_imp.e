@@ -12,16 +12,6 @@ class
 inherit
 	EV_PIXEL_BUFFER_I
 
-	WEL_GDIP_BITMAP
-		rename
-			make_with_size as gdip_make_with_size,
-			width as gdip_width,
-			height as gdip_height
-		export
-			{NONE} all
-			{ANY} is_gdi_plus_installed
-		end
-
 feature {NONE} -- Initlization
 
 	make_with_size (a_width, a_height: INTEGER) is
@@ -31,12 +21,11 @@ feature {NONE} -- Initlization
 				initial_width := a_width
 				initial_height := a_height
 
-				if item /= default_pointer then
-					destroy_item
+				if gdip_bitmap /= Void then
+					gdip_bitmap.destroy_item
 				end
-
-				gdip_make_with_size (initial_width, initial_height)
-				check created: item /= default_pointer end
+				create gdip_bitmap.make_with_size (initial_width, initial_height)
+				check created: gdip_bitmap.item /= default_pointer end
 			else
 				create pixmap
 			end
@@ -56,8 +45,7 @@ feature {NONE} -- Initlization
 			-- Initialize
 		do
 			if is_gdi_plus_installed then
-				gdi_plus_starter.gdi_plus_init
-				make_with_size (1, 1)
+				create gdip_bitmap.make_with_size (1, 1)
 			else
 				create pixmap
 			end
@@ -70,7 +58,7 @@ feature {NONE} -- Initlization
 		do
 			set_is_in_destroy (True)
 			if is_gdi_plus_installed then
-				destroy_item
+				gdip_bitmap.destroy_item
 			else
 				-- FIXIT: Why there is a Unexcepted harmful signal in EC project ? complier bug?
 --				pixmap.destroy
@@ -87,7 +75,7 @@ feature -- Command
 			-- Load pixel datas from a file.
 		do
 			if is_gdi_plus_installed then
-				load_image_from_file (a_file_name)
+				gdip_bitmap.load_image_from_file (a_file_name)
 			else
 				pixmap.set_with_named_file (a_file_name)
 			end
@@ -129,19 +117,18 @@ feature -- Command
 			l_temp_pixmap: EV_PIXMAP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
-			l_image: WEL_GDIP_IMAGE
+			l_image: WEL_GDIP_BITMAP
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
 			l_imp ?= Result.implementation
 			check not_void: l_imp /= Void end
 
 			if is_gdi_plus_installed then
-				l_image ?= Result.implementation
-				check not_void: l_image /= Void end
+				l_image := l_imp.gdip_bitmap
 				create l_graphics.make_from_image (l_image)
 				create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
 				create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
-				l_graphics.draw_image_with_src_rect_dest_rect (Current, l_dest_rect, l_src_rect)
+				l_graphics.draw_image_with_src_rect_dest_rect (gdip_bitmap, l_dest_rect, l_src_rect)
 
 				l_dest_rect.dispose
 				l_src_rect.dispose
@@ -161,7 +148,7 @@ feature -- Query
 			-- Width
 		do
 			if is_gdi_plus_installed then
-				Result := gdip_width
+				Result := gdip_bitmap.width
 			else
 				Result := pixmap.width
 			end
@@ -171,83 +158,10 @@ feature -- Query
 			-- Height
 		do
 			if is_gdi_plus_installed then
-				Result := gdip_height
+				Result := gdip_bitmap.height
 			else
 				Result := pixmap.height
 			end
-		end
-
-feature {EV_PIXEL_BUFFER_IMP} -- Implementation
-
-	pixmap: EV_PIXMAP
-			-- If not `is_gdi_plus_installed' then we use this to emulate the functions.
-
-	draw_mask_bitmap: EV_BITMAP is
-			-- Draw bitmap's mask bitmap base on it alpha datas.
-		local
-			l_matrix: WEL_COLOR_MATRIX
-		do
-			create Result.make_with_size (width, height)
-			l_matrix := mask_color_matrix
-		end
-
-	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX) is
-			-- Draw Current to `a_drawable' with `a_color_matrix'.
-		require
-			not_void: a_drawable /= Void
-			support: is_gdi_plus_installed
-		local
-			l_imp: EV_DRAWABLE_IMP
-			l_drawing_area: EV_DRAWING_AREA_IMP
-			l_pixmap: EV_PIXMAP
-			l_graphics: WEL_GDIP_GRAPHICS
-			l_rect: WEL_RECT
-			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
-		do
-			l_imp ?= a_drawable.implementation
-			check not_void: l_imp /= Void end
-			l_drawing_area ?= l_imp
-
-			l_imp.get_dc
-
-			create l_graphics.make_from_dc (l_imp.dc)
-
-			if a_color_matrix = Void then
-				l_graphics.draw_image (Current, 0, 0)
-			else
-				create l_image_attributes.make
-				l_image_attributes.clear_color_key
-				l_image_attributes.set_color_matrix (a_color_matrix)
-				create l_rect.make (0, 0, width, height)
-				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (Current, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
-				l_image_attributes.destroy_item
-			end
-
-			l_graphics.destroy_item
-
-			l_imp.release_dc
-
-			-- Set mask bitmap
-			l_pixmap ?= a_drawable
-			if l_pixmap /= Void then
-				l_pixmap.set_mask (mask_bitmap (create {EV_RECTANGLE}.make (0, 0, width, height)))
-			end
-		end
-
-	mask_color_matrix: WEL_COLOR_MATRIX is
-			-- Color matrix used for make a EV_BITMAP base on image's alpha data.
-			-- See www.codeproject.com: "ColorMatrix Basics - Simple Image Color Adjustment" to know how color matrix works.
-		require
-			support: is_gdi_plus_installed
-		do
-			create Result.make
-			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0)
-			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1)
-			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2)
-			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3)
-			Result.set_m_row (<<-1, -1, -1, 0, 0>>, 4)
-		ensure
-			not_void: Result /= Void
 		end
 
 	mask_bitmap (a_rect: EV_RECTANGLE): EV_BITMAP is
@@ -281,7 +195,7 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
 			create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
 
-			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (Current, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (gdip_bitmap, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
 
  			l_dest_rect.dispose
  			l_src_rect.dispose
@@ -290,6 +204,91 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
 			-- Then we have to invert mask bitmap colors to overcome the 32bits to 1bit bitmap convert problem.
 			l_imp.dc.bit_blt (0, 0, width, height, l_imp.dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_gdi_plus_installed: BOOLEAN is
+			--
+		local
+			l_starter: WEL_GDIP_STARTER
+		once
+			create l_starter
+			Result := l_starter.is_gdi_plus_installed
+		end
+
+feature {EV_PIXEL_BUFFER_IMP} -- Implementation
+
+	pixmap: EV_PIXMAP
+			-- If not `is_gdi_plus_installed' then we use this to emulate the functions.
+
+	gdip_bitmap: WEL_GDIP_BITMAP
+			-- If `is_gdi_plus_installed' then we use this to function.
+
+	draw_mask_bitmap: EV_BITMAP is
+			-- Draw bitmap's mask bitmap base on it alpha datas.
+		local
+			l_matrix: WEL_COLOR_MATRIX
+		do
+			create Result.make_with_size (width, height)
+			l_matrix := mask_color_matrix
+		end
+
+	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX) is
+			-- Draw Current to `a_drawable' with `a_color_matrix'.
+		require
+			not_void: a_drawable /= Void
+			support: is_gdi_plus_installed
+		local
+			l_imp: EV_DRAWABLE_IMP
+			l_drawing_area: EV_DRAWING_AREA_IMP
+			l_pixmap: EV_PIXMAP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_rect: WEL_RECT
+			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
+		do
+			l_imp ?= a_drawable.implementation
+			check not_void: l_imp /= Void end
+			l_drawing_area ?= l_imp
+
+			l_imp.get_dc
+
+			create l_graphics.make_from_dc (l_imp.dc)
+
+			if a_color_matrix = Void then
+				l_graphics.draw_image (gdip_bitmap, 0, 0)
+			else
+				create l_image_attributes.make
+				l_image_attributes.clear_color_key
+				l_image_attributes.set_color_matrix (a_color_matrix)
+				create l_rect.make (0, 0, width, height)
+				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (gdip_bitmap, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+				l_image_attributes.destroy_item
+			end
+
+			l_graphics.destroy_item
+
+			l_imp.release_dc
+
+			-- Set mask bitmap
+			l_pixmap ?= a_drawable
+			if l_pixmap /= Void then
+				l_pixmap.set_mask (mask_bitmap (create {EV_RECTANGLE}.make (0, 0, width, height)))
+			end
+		end
+
+	mask_color_matrix: WEL_COLOR_MATRIX is
+			-- Color matrix used for make a EV_BITMAP base on image's alpha data.
+			-- See www.codeproject.com: "ColorMatrix Basics - Simple Image Color Adjustment" to know how color matrix works.
+		require
+			support: is_gdi_plus_installed
+		do
+			create Result.make
+			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0)
+			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1)
+			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2)
+			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3)
+			Result.set_m_row (<<-1, -1, -1, 0, 0>>, 4)
 		ensure
 			not_void: Result /= Void
 		end

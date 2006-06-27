@@ -45,7 +45,14 @@ feature -- Command
 			filepixbuf: POINTER
 		do
 			a_cs := a_file_name
-			set_gdkpixbuf ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error))
+			filepixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			if g_error /= default_pointer then
+					-- GdkPixbuf could not load the image so we raise an exception.
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			else
+				set_gdkpixbuf (filepixbuf)
+			end
+
 		end
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is

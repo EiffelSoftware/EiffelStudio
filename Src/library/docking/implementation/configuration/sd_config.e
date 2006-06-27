@@ -117,7 +117,7 @@ feature -- Save/Open inner container data.
 			clean_up_mini_tool_bar
 			clean_up_tool_bars
 			clear_up_containers
-
+			internal_docking_manager.zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 			retry
 		end
 
@@ -241,12 +241,9 @@ feature -- Save/Open inner container data.
 			l_parent: EV_CONTAINER
 			l_split: EV_SPLIT_AREA
 			l_split_position: REAL
-			l_orignal_widget: EV_WIDGET
-			l_cell: EV_CELL
 			l_only_one_item: EV_WIDGET
 			l_temp_split: SD_VERTICAL_SPLIT_AREA
 			l_container: EV_CONTAINER
-			l_sub_container: EV_CONTAINER
 		do
 			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 				top_container := internal_docking_manager.query.inner_container_main.editor_parent
@@ -362,6 +359,7 @@ feature {NONE} -- Implementation for save config.
 					l_zone.save_content_title (a_config_data)
 					a_config_data.set_state (l_zone.content.state.generating_type)
 					a_config_data.set_direction (l_zone.content.state.direction)
+					a_config_data.set_visible (l_zone.is_displayed)
 					check valid: l_zone.content.state.last_floating_width > 0 end
 					check valid: l_zone.content.state.last_floating_height > 0 end
 					a_config_data.set_width (l_zone.content.state.last_floating_width)
@@ -838,8 +836,7 @@ feature {NONE} -- Implementation for open config.
 			l_internal: INTERNAL
 			l_type_id: INTEGER
 		do
-			-- If it's a zone.
-			if not a_config_data.is_split_area then
+			if not a_config_data.is_split_area then -- If it's a zone.
 				create l_internal
 				l_type_id := l_internal.dynamic_type_from_string (a_config_data.state)
 				check a_type_exist: l_type_id /= -1 end
@@ -848,6 +845,9 @@ feature {NONE} -- Implementation for open config.
 				l_state.restore (a_config_data.titles, a_container, a_config_data.direction)
 				l_state.set_last_floating_height (a_config_data.height)
 				l_state.set_last_floating_width (a_config_data.width)
+				if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
+					l_state.content.hide
+				end
 			else	-- If it's a split_area
 				if a_config_data.is_horizontal_split_area then
 					create {SD_HORIZONTAL_SPLIT_AREA} l_temp_spliter

@@ -30,6 +30,7 @@ indexing
 							<compiler_metadata_cache></compiler_metadata_cache>
 							<precompile_ace_file></precompile_ace_file>
 							<precompile_cache></precompile_cache>
+							<override_assemblies></override_assemblies>
 						</compiler>
 						<debug>
 							<generate_pragmas>true</generate_pragmas>
@@ -158,6 +159,36 @@ feature -- Access
 			Result := config_values.item ("default_root_class")
 		end
 
+	override_assemblies: HASH_TABLE [CODE_REFERENCED_ASSEMBLY, STRING] is
+			-- Override assemblies indexed by full name
+		local
+			l_list: LIST [STRING]
+			l_value: STRING
+			l_assembly: ASSEMBLY
+		do
+			if internal_override_assemblies = Void then
+				create Result.make (5)
+				l_value := config_values.item ("override_assemblies")
+				if l_value /= Void then
+					l_list := l_value.split (';')
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_assembly := safely_loaded_assembly (l_list.item)
+						if l_assembly /= Void then
+							Result.force (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly), l_assembly.full_name)
+						end
+						l_list.forth
+					end
+				end
+				internal_override_assemblies := Result
+			else
+				Result := internal_override_assemblies
+			end
+		end
+
 	prefixed_assemblies: LIST [STRING] is
 			-- Assemblies with associated prefixes
 		do
@@ -172,8 +203,6 @@ feature -- Access
 			prefixes.search (a_file_name.as_lower)
 			if prefixes.found then
 				Result := prefixes.found_item
-			else
-				create Result.make_empty
 			end
 		end
 		
@@ -238,7 +267,7 @@ feature -- Basic Operations
 								not l_xml_reader.read or else l_xml_reader.node_type = {XML_XML_NODE_TYPE}.End_element
 							loop
 								if l_xml_reader.node_type = {XML_XML_NODE_TYPE}.Element then
-									internal_prefixes.force (l_xml_reader.get_attribute ("value"), l_xml_reader.get_attribute ("assembly"))
+									internal_prefixes.force (l_xml_reader.get_attribute ("value"), l_xml_reader.get_attribute ("assembly").to_lower)
 								end
 							end
 							l_value_name := l_xml_reader.name
@@ -317,11 +346,30 @@ feature {NONE} -- Implementation
 			end
 		end
 	
+	safely_loaded_assembly (a_path: STRING): ASSEMBLY is
+			-- Load assembly at path `a_path'.
+			-- Void if file does not exist or does not correspond to an assembly
+		require	
+			attached_path: a_path /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				Result := {ASSEMBLY}.load_file (a_path)
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
 	internal_config_values: HASH_TABLE [STRING, STRING]
 			-- Internal object for once per object implementation
 
 	internal_prefixes: HASH_TABLE [STRING, STRING]
 			-- Internal object for once per object implementation
+
+	internal_override_assemblies: HASH_TABLE [CODE_REFERENCED_ASSEMBLY, STRING]
+			-- Internal object for override assemblies
 
 invariant
 	has_log_source_name: log_source_name /= Void

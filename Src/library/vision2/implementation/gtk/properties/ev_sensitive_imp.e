@@ -1,15 +1,15 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision sensitive. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "sensitive"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_SENSITIVE_IMP
-	
+
 inherit
 	EV_SENSITIVE_I
 		redefine
@@ -34,7 +34,7 @@ feature -- Status report
 				Result := (
 					({EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)
 					// {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
-				) = 1				
+				) = 1
 			end
 		end
 
@@ -44,7 +44,7 @@ feature -- Status setting
 			-- Allow the object to be sensitive to user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
-			if needs_event_box then
+			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
 					-- Restore visible window for event box.
 				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
 			end
@@ -54,7 +54,7 @@ feature -- Status setting
 			-- Set the object to ignore all user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			if needs_event_box then
+			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
 					-- We hide the event box Window so that it cannot be seen disabled.
 				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 			end

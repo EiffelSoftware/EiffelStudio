@@ -7,7 +7,7 @@ indexing
 
 class
 	ES_PIXMAPS_16X16
-	
+
 create
 	make
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	frozen expanded_normal_icon: EV_PIXMAP is
@@ -3687,16 +3687,16 @@ feature {NONE} -- Access
 
 	pixel_width: INTEGER is 16
 			-- Element width
-			
+
 	pixel_height: INTEGER is 16
 			-- Element width
-			
+
 	width: INTEGER is 32
 			-- Matrix width
-	
+
 	height: INTEGER is 17
 			-- Matrix height
-			
+
 feature {NONE} -- Query
 
 	frozen pixmap_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXMAP is
@@ -3727,14 +3727,12 @@ feature {NONE} -- Query
 		ensure
 			result_attached: Result /= Void
 		end
-		
+
 	frozen pixel_buffer_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXEL_BUFFER is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= width
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_x <= height
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
@@ -3764,8 +3762,7 @@ feature {NONE} -- Implementation
 	raw_matrix: EV_PIXMAP is
 				-- raw matrix pixmap
 			once
-				create Result
-				raw_buffer.draw_on_to (Result)
+				Result := raw_buffer.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, raw_buffer.width, raw_buffer.height))
 			ensure
 				result_attached: Result /= Void
 			end

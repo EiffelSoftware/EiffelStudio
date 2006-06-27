@@ -7,7 +7,7 @@ indexing
 
 class
 	ES_PIXMAPS_10X10
-	
+
 create
 	make
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	frozen toolbar_close_icon: EV_PIXMAP is
@@ -615,16 +615,16 @@ feature {NONE} -- Access
 
 	pixel_width: INTEGER is 10
 			-- Element width
-			
+
 	pixel_height: INTEGER is 10
 			-- Element width
-			
+
 	width: INTEGER is 12
 			-- Matrix width
-	
+
 	height: INTEGER is 6
 			-- Matrix height
-			
+
 feature {NONE} -- Query
 
 	frozen pixmap_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXMAP is
@@ -655,7 +655,7 @@ feature {NONE} -- Query
 		ensure
 			result_attached: Result /= Void
 		end
-		
+
 	frozen pixel_buffer_from_coords (a_x: INTEGER; a_y: INTEGER): EV_PIXEL_BUFFER is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
@@ -692,8 +692,7 @@ feature {NONE} -- Implementation
 	raw_matrix: EV_PIXMAP is
 				-- raw matrix pixmap
 			once
-				create Result
-				raw_buffer.draw_on_to (Result)
+				Result := raw_buffer.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, raw_buffer.width, raw_buffer.height))
 			ensure
 				result_attached: Result /= Void
 			end

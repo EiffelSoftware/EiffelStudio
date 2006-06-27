@@ -297,8 +297,12 @@ stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
+
 		do
 			zone.show
+			show_all_split_parent (zone)
+			docking_manager.command.resize (False)
+
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.show
@@ -310,9 +314,17 @@ stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
+			l_spliter: EV_SPLIT_AREA
 		do
 			Precursor {SD_STATE}
 			zone.hide
+			l_spliter ?= zone.parent
+			if l_spliter /= Void then
+				if not l_spliter.first.is_displayed and not l_spliter.second.is_displayed then
+					l_spliter.hide
+				end
+			end
+
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.update_title_bar
@@ -407,6 +419,28 @@ feature {NONE} -- Implementation
 			internal_docking_manager.command.remove_empty_split_area
 		ensure
 			changed:
+		end
+
+	show_all_split_parent (a_zone: SD_ZONE) is
+			-- Show all spliter parent of `a_zone' to make sure `a_zone' will displayed.
+		require
+			not_void: a_zone /= Void
+		local
+			l_spliter: EV_SPLIT_AREA
+			l_widget: EV_WIDGET
+		do
+			from
+				l_widget := a_zone
+				l_spliter ?= l_widget.parent
+			until
+				l_spliter = Void
+			loop
+				if l_spliter /= Void and then not l_spliter.is_displayed then
+					l_spliter.show
+				end
+				l_widget := l_widget.parent
+				l_spliter ?= l_widget.parent
+			end
 		end
 
 invariant

@@ -29,8 +29,8 @@ feature -- Command
 		deferred
 		end
 
-	draw_to_drawable (a_drawable: EV_DRAWABLE) is
-			-- Draw current to `a_drawable'.
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
+			-- Create a new sub pixmap from Current.
 		deferred
 		end
 

@@ -39,12 +39,12 @@ feature -- Command
 			implementation.set_with_named_file (a_file_name)
 		end
 
-	draw_on_to (a_drawable: EV_DRAWABLE) is
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Draw Current to drawable surface `a_drawable'.
 		require
-			not_void: a_drawable /= Void
+			not_void: a_rect /= Void
 		do
-			implementation.draw_to_drawable (a_drawable)
+			Result := implementation.sub_pixmap (a_rect)
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is

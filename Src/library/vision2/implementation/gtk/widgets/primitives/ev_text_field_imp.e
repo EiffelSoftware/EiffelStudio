@@ -44,7 +44,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is do Result := True end
+	needs_event_box: BOOLEAN is
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
 
 	make (an_interface: like interface) is
 			-- Create a gtk entry.

@@ -11,10 +11,17 @@ class
 inherit
 	WEL_ANY
 		redefine
-			destroy_item
+			destroy_item,
+			default_create
 		end
 
 feature {NONE} -- Initialization
+
+	frozen default_create is
+			-- Default creation method.
+		do
+			initialize_gdi_plus
+		end
 
 	initialize_gdi_plus is
 			-- Properly initialize Current.
@@ -64,8 +71,7 @@ feature {NONE} -- Externals
 			{
 				static FARPROC GdipFree = NULL;
 				if (!GdipFree) {
-					HMODULE user32_module = (HMODULE) $a_gdiplus_handle;
-					GdipFree = GetProcAddress (user32_module, "GdipFree");
+					GdipFree = GetProcAddress ((HMODULE)$a_gdiplus_handle, "GdipFree");
 				}
 				if (GdipFree) {
 					(FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (void *)) GdipFree) ((void *) $a_gdip_object);
@@ -76,10 +82,13 @@ feature {NONE} -- Externals
 
 feature {WEL_GDIP_ANY} -- Convenience
 
-	gdi_plus_starter: WEL_GDI_PLUS_STARTER is
+	gdi_plus_starter: WEL_GDIP_STARTER is
 			-- Control loading of GDI+.
 		once
 			create Result
+			if Result.is_gdi_plus_installed then
+				Result.gdi_plus_init
+			end
 		ensure
 			gdiplus_starter_not_void: Result /= Void
 		end

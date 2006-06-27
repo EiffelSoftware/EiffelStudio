@@ -27,7 +27,8 @@ feature {NONE} -- Initlization
 		local
 			l_result: INTEGER
 		do
-			c_gdip_get_image_graphics_context (a_image.item, $item, $l_result)
+			default_create
+			item := c_gdip_get_image_graphics_context (gdi_plus_handle, a_image.item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -39,7 +40,8 @@ feature {NONE} -- Initlization
 		local
 			l_result: INTEGER
 		do
-			c_gdip_create_from_hdc (a_dc.item, $l_result, $item)
+			default_create
+			item := c_gdip_create_from_hdc (gdi_plus_handle, a_dc.item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -52,7 +54,7 @@ feature -- Command
 		local
 			l_result: INTEGER
 		do
-			c_gdip_draw_line_i (item, a_pen.item, a_x_1, a_y_1, a_x_2, a_y_2, $l_result)
+			c_gdip_draw_line_i (gdi_plus_handle, item, a_pen.item, a_x_1, a_y_1, a_x_2, a_y_2, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -94,9 +96,9 @@ feature -- Command
 			l_null_pointer: POINTER
 		do
 			if a_image_attributes = Void then
-				c_gdip_draw_image_rect_rect_i (item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, l_null_pointer, l_null_pointer, l_null_pointer, $l_result)
+				c_gdip_draw_image_rect_rect_i (gdi_plus_handle, item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, l_null_pointer, l_null_pointer, l_null_pointer, $l_result)
 			else
-				c_gdip_draw_image_rect_rect_i (item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, a_image_attributes.item, l_null_pointer, l_null_pointer, $l_result)
+				c_gdip_draw_image_rect_rect_i (gdi_plus_handle, item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, a_image_attributes.item, l_null_pointer, l_null_pointer, $l_result)
 			end
 		end
 
@@ -107,165 +109,152 @@ feature -- Destroy
 		local
 			l_result: INTEGER
 		do
-			c_gdip_delete_graphics (item, $l_result)
+			c_gdip_delete_graphics (gdi_plus_handle, item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 feature {NONE} -- C externals
 
-	c_gdip_create_from_hdc (a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]; a_result_graphic: TYPED_POINTER [POINTER]) is
-			-- Create `a_item' from a win32 `a_dc'.
+	c_gdip_create_from_hdc (a_gdiplus_handle: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+			-- Create a graphics object from a win32 `a_dc'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipCreateFromHDC = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipCreateFromHDC = NULL;
+				GpGraphics *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipCreateFromHDC = GetProcAddress (user32_module, "GdipCreateFromHDC");
-					if (GdipCreateFromHDC) {
-						
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (HDC, GpGraphics **)) GdipCreateFromHDC)
-									((HDC) $a_dc,
-									(GpGraphics **) $a_result_graphic);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipCreateFromHDC) {
+					GdipCreateFromHDC = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateFromHDC");
 				}
+				if (GdipCreateFromHDC) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (HDC, GpGraphics **)) GdipCreateFromHDC)
+								((HDC) $a_dc,
+								(GpGraphics **) &l_result);
+				}
+				return (EIF_POINTER) l_result;
 			}
 			]"
 		end
 
-	c_gdip_get_image_graphics_context (a_image: POINTER; a_result_graphics: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_get_image_graphics_context (a_gdiplus_handle: POINTER; a_image: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
 			-- Get `a_result_graphics' from `a_image'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipGetImageGraphicsContext = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipGetImageGraphicsContext = NULL;
+				GpGraphics *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipGetImageGraphicsContext = GetProcAddress (user32_module, "GdipGetImageGraphicsContext");
-					if (GdipGetImageGraphicsContext) {
-						
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, GpGraphics **)) GdipGetImageGraphicsContext)
-									((GpImage *) $a_image,
-									(GpGraphics **) $a_result_graphics);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipGetImageGraphicsContext) {
+					GdipGetImageGraphicsContext = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetImageGraphicsContext");
 				}
-			}
-			]"
-		end
-
-	c_gdip_delete_graphics (a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
-			-- Delete `a_graphics' gdi+ object.
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				FARPROC GdipDeleteGraphics = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
-				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipDeleteGraphics = GetProcAddress (user32_module, "GdipDeleteGraphics");
-					if (GdipDeleteGraphics) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *)) GdipDeleteGraphics)
-									((GpGraphics *) $a_graphics);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				if (GdipGetImageGraphicsContext) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, GpGraphics **)) GdipGetImageGraphicsContext)
+								((GpImage *) $a_image,
+								(GpGraphics **) &l_result);
 				}				
+				return (EIF_POINTER) l_result;
 			}
 			]"
 		end
 
-	c_gdip_draw_line_i (a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
-			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
+	c_gdip_delete_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Delete `a_graphics' gdi+ object.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_handle_not_null: a_graphics /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipDrawLineI = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipDeleteGraphics = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipDrawLineI = GetProcAddress (user32_module, "GdipDrawLineI");
-					if (GdipDrawLineI) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawLineI)
-									((GpGraphics *) $a_graphics,
-									(GpPen *) $a_pen,
-									(INT) $a_x_1,
-									(INT) $a_y_1,
-									(INT) $a_x_2,
-									(INT) $a_y_2);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipDeleteGraphics) {
+					GdipDeleteGraphics = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDeleteGraphics");
+				}
+				
+				if (GdipDeleteGraphics) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *)) GdipDeleteGraphics)
+								((GpGraphics *) $a_graphics);
+				}					
+			}
+			]"
+		end
+
+	c_gdip_draw_line_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawLineI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDrawLineI) {
+					GdipDrawLineI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawLineI");
+				}
+				
+				if (GdipDrawLineI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawLineI)
+								((GpGraphics *) $a_graphics,
+								(GpPen *) $a_pen,
+								(INT) $a_x_1,
+								(INT) $a_y_1,
+								(INT) $a_x_2,
+								(INT) $a_y_2);
 				}
 			}
 			]"
 		end
 
-	c_gdip_draw_image_rect_rect_i (a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_draw_image_rect_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Draw `a_image' on `a_graphics'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipDrawImageRectRectI = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipDrawImageRectRectI = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipDrawImageRectRectI = GetProcAddress (user32_module, "GdipDrawImageRectRectI");
-					if (GdipDrawImageRectRectI) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpImage *, INT, INT, INT, INT, INT, INT, INT, INT, GpUnit, GDIPCONST GpImageAttributes*, DrawImageAbort, VOID *)) GdipDrawImageRectRectI)
-									((GpGraphics *) $a_graphics,
-									(GpImage *) $a_image,
-									(INT) $a_dest_x,
-									(INT) $a_dest_y,
-									(INT) $a_dest_width,
-									(INT) $a_dest_height,
-									(INT) $a_src_x,
-									(INT) $a_src_y,
-									(INT) $a_src_width,
-									(INT) $a_src_height,
-									(GpUnit) $a_unit,
-									(GDIPCONST GpImageAttributes*) $a_image_attributes,
-									(DrawImageAbort) $a_abort_callback,
-									(VOID *) $a_callback_data);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
-				}							
+				
+				if (!GdipDrawImageRectRectI) {
+					GdipDrawImageRectRectI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawImageRectRectI");
+				}
+				if (GdipDrawImageRectRectI) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpImage *, INT, INT, INT, INT, INT, INT, INT, INT, GpUnit, GDIPCONST GpImageAttributes*, DrawImageAbort, VOID *)) GdipDrawImageRectRectI)
+								((GpGraphics *) $a_graphics,
+								(GpImage *) $a_image,
+								(INT) $a_dest_x,
+								(INT) $a_dest_y,
+								(INT) $a_dest_width,
+								(INT) $a_dest_height,
+								(INT) $a_src_x,
+								(INT) $a_src_y,
+								(INT) $a_src_width,
+								(INT) $a_src_height,
+								(GpUnit) $a_unit,
+								(GDIPCONST GpImageAttributes*) $a_image_attributes,
+								(DrawImageAbort) $a_abort_callback,
+								(VOID *) $a_callback_data);
+				}
 			}
 			]"
 		end

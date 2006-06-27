@@ -24,7 +24,8 @@ feature -- Initlization
 		local
 			l_result: INTEGER
 		do
-			c_gdip_create_image_attributes ($item, $l_result)
+			default_create
+			item := c_gdip_create_image_attributes (gdi_plus_handle, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -43,7 +44,7 @@ feature -- Command
 		local
 			l_result: INTEGER
 		do
-			c_gdip_set_image_attributes_color_keys (item, a_type, $l_result)
+			c_gdip_set_image_attributes_color_keys (gdi_plus_handle, item, a_type, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -64,7 +65,7 @@ feature -- Command
 		local
 			l_result: INTEGER
 		do
-			c_gdip_set_image_attributes_color_matrix (item, a_color_matrix.item.item, a_color_matrix_adjust_type, a_color_matrix_flags, $l_result)
+			c_gdip_set_image_attributes_color_matrix (gdi_plus_handle, item, a_color_matrix.item.item, a_color_matrix_adjust_type, a_color_matrix_flags, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -75,125 +76,118 @@ feature -- Destory
 		local
 			l_result: INTEGER
 		do
-			c_gdip_dispose_image_attributes (item, $l_result)
+			c_gdip_dispose_image_attributes (gdi_plus_handle, item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 feature {NONE} -- C externals
 
-	c_gdip_create_image_attributes (a_result_image_attributes: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_create_image_attributes (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
 			-- Create `a_result_image_attributes'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipCreateImageAttributes = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipCreateImageAttributes = NULL;
+				GpImageAttributes *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipCreateImageAttributes = GetProcAddress (user32_module, "GdipCreateImageAttributes");
-					if (GdipCreateImageAttributes) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes **)) GdipCreateImageAttributes)
-									((GpImageAttributes **) $a_result_image_attributes);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipCreateImageAttributes) {
+					GdipCreateImageAttributes = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateImageAttributes");
 				}			
+				if (GdipCreateImageAttributes) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes **)) GdipCreateImageAttributes)
+								((GpImageAttributes **) &l_result);
+				}					
+				return (EIF_POINTER)l_result;
 			}
 			]"
 		end
 
-	c_gdip_dispose_image_attributes (a_image_attributes: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_dispose_image_attributes (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Dispose `a_image_attributes'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_image_attributes_not_null: a_image_attributes /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipDisposeImageAttributes = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipDisposeImageAttributes = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipDisposeImageAttributes = GetProcAddress (user32_module, "GdipDisposeImageAttributes");
-					if (GdipDisposeImageAttributes) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *)) GdipDisposeImageAttributes)
-									((GpImageAttributes *) $a_image_attributes);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
-				}			
-			}
-			]"
-		end
-
-	c_gdip_set_image_attributes_color_keys (a_image_attributes: POINTER; a_color_adjust_type: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
-			-- Set image attributes color keys.
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				FARPROC GdipSetImageAttributesColorKeys = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
-				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipSetImageAttributesColorKeys = GetProcAddress (user32_module, "GdipSetImageAttributesColorKeys");
-					if (GdipSetImageAttributesColorKeys) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *, ColorAdjustType, BOOL, ARGB, ARGB)) GdipSetImageAttributesColorKeys)
-									((GpImageAttributes *) $a_image_attributes,
-									(ColorAdjustType) $a_color_adjust_type,
-									(BOOL) FALSE,
-									(ARGB) 0,
-									(ARGB) 0);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipDisposeImageAttributes) {
+					GdipDisposeImageAttributes = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDisposeImageAttributes");
+				}		
+				
+				if (GdipDisposeImageAttributes) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *)) GdipDisposeImageAttributes)
+								((GpImageAttributes *) $a_image_attributes);
 				}				
 			}
 			]"
 		end
 
-	c_gdip_set_image_attributes_color_matrix (a_image_attributes: POINTER; a_new_color_matrix: POINTER; a_color_adjust_type: INTEGER; a_color_matrix_flag: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
-			-- Set `a_image_attributes''s color matrix.
+	c_gdip_set_image_attributes_color_keys (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_color_adjust_type: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Set image attributes color keys.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_image_attributes_not_null: a_image_attributes /= default_pointer
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"[
 			{
-				FARPROC GdipSetImageAttributesColorMatrix = NULL;
-				HMODULE user32_module = LoadLibrary (L"Gdiplus.dll");
+				static FARPROC GdipSetImageAttributesColorKeys = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				if (user32_module) {
-					GdipSetImageAttributesColorMatrix = GetProcAddress (user32_module, "GdipSetImageAttributesColorMatrix");
-					if (GdipSetImageAttributesColorMatrix) {			
-						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *, ColorAdjustType, BOOL, GDIPCONST ColorMatrix*, GDIPCONST ColorMatrix*, ColorMatrixFlags)) GdipSetImageAttributesColorMatrix)
-									((GpImageAttributes *) $a_image_attributes,
-									(ColorAdjustType) $a_color_adjust_type,
-									(BOOL) TRUE,
-									(ColorMatrix*) $a_new_color_matrix,
-									(ColorMatrix*) NULL,
-									(ColorMatrixFlags) $a_color_matrix_flag);
-					}else
-					{
-						// There is no this function in the dll.
-					}				
-				}else
-				{
-					// User does not have the dll.
+				
+				if (!GdipSetImageAttributesColorKeys) {
+					GdipSetImageAttributesColorKeys = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetImageAttributesColorKeys");				
+				}				
+				if (GdipSetImageAttributesColorKeys) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *, ColorAdjustType, BOOL, ARGB, ARGB)) GdipSetImageAttributesColorKeys)
+								((GpImageAttributes *) $a_image_attributes,
+								(ColorAdjustType) $a_color_adjust_type,
+								(BOOL) FALSE,
+								(ARGB) 0,
+								(ARGB) 0);
+				}				
+			}
+			]"
+		end
+
+	c_gdip_set_image_attributes_color_matrix (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_new_color_matrix: POINTER; a_color_adjust_type: INTEGER; a_color_matrix_flag: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Set `a_image_attributes''s color matrix.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_image_attributes_not_null: a_image_attributes /= default_pointer
+			a_new_color_matrix_not_null: a_new_color_matrix /= default_pointer
+			a_color_adjust_type_valid: (create {WEL_GDIP_COLOR_ADJUST_TYPE}).is_valid (a_color_adjust_type)
+			a_color_matrix_flag_valid: (create {WEL_GDIP_COLOR_MATRIX_FLAGS}).is_valid (a_color_matrix_flag)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetImageAttributesColorMatrix = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipSetImageAttributesColorMatrix) {
+					GdipSetImageAttributesColorMatrix = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetImageAttributesColorMatrix");			
 				}						
+				if (GdipSetImageAttributesColorMatrix) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImageAttributes *, ColorAdjustType, BOOL, GDIPCONST ColorMatrix*, GDIPCONST ColorMatrix*, ColorMatrixFlags)) GdipSetImageAttributesColorMatrix)
+								((GpImageAttributes *) $a_image_attributes,
+								(ColorAdjustType) $a_color_adjust_type,
+								(BOOL) TRUE,
+								(ColorMatrix*) $a_new_color_matrix,
+								(ColorMatrix*) NULL,
+								(ColorMatrixFlags) $a_color_matrix_flag);
+				}				
 			}
 			]"
 		end

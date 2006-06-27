@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WEL_GDI_PLUS_STARTER
+	WEL_GDIP_STARTER
 
 feature -- Command
 

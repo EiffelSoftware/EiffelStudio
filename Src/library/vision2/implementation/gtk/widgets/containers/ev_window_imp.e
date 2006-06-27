@@ -170,10 +170,8 @@ feature -- Status setting
 			-- Ensure no border is displayed around `Current'.
 		local
 			l_decor: INTEGER
-			l_success: BOOLEAN
 		do
-			l_success := gdk_window_get_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $l_decor)
-			l_decor := l_decor.bit_and ({EV_GTK_EXTERNALS}.gdk_decor_border_enum.bit_not)
+			l_decor := default_wm_decorations.bit_and ({EV_GTK_EXTERNALS}.gdk_decor_border_enum.bit_not)
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
 		end
 
@@ -181,17 +179,9 @@ feature -- Status setting
 			-- Ensure a border is displayed around `Current'.
 		local
 			l_decor: INTEGER
-			l_success: BOOLEAN
 		do
-			l_success := gdk_window_get_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $l_decor)
-			l_decor := l_decor.bit_or ({EV_GTK_EXTERNALS}.gdk_decor_border_enum)
+			l_decor := default_wm_decorations.bit_or ({EV_GTK_EXTERNALS}.gdk_decor_border_enum)
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
-		end
-
-	frozen gdk_window_get_decorations (a_window: POINTER; a_decorations: TYPED_POINTER [INTEGER]): BOOLEAN is
-			-- Retrieve set decorations for `a_window'.
-		external
-			"C (GdkWindow*, GdkWMDecoration*): gboolean | <gtk/gtk.h>"
 		end
 
 	block is
@@ -409,7 +399,7 @@ feature {NONE} -- Implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 			if a_has_focus then
-				on_set_focus_event ({EV_GTK_EXTERNALS}.gtk_window_get_focus (c_object))
+				on_set_focus_event ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 			else
 				on_set_focus_event (default_pointer)
 			end
@@ -425,12 +415,11 @@ feature {NONE} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_app_imp: like app_implementation
 			a_focus_widget: EV_WIDGET_IMP
-			l_pnd_transporter: EV_PICK_AND_DROPABLE_IMP
 		do
 			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
 			l_app_imp := app_implementation
 				-- Fire the widget events.
-			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_get_focus (c_object))
+			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then

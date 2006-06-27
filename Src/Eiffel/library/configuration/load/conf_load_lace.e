@@ -163,34 +163,59 @@ feature {NONE} -- Implementation of data retrieval
 			l_over: CONF_OVERRIDE
 			l_name: STRING
 			l_location: CONF_DIRECTORY_LOCATION
+			l_file_loc: CONF_FILE_LOCATION
+			l_lib: CONF_LIBRARY
 		do
 			l_name := a_cluster.cluster_name
-			l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)
-			if current_overrides.has (l_name) then
-				l_over := factory.new_override (l_name, l_location, current_target)
-				current_cluster := l_over
-				current_target.add_override (l_over)
-			else
-				current_cluster := factory.new_cluster (l_name, l_location, current_target)
-				current_target.add_cluster (current_cluster)
+				-- convert base, wel, vision2 and time clusters into library equivalents
+			if l_name.is_case_insensitive_equal ("base") then
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\base\base.ecf", current_target)
+				l_lib := factory.new_library ("base", l_file_loc, current_target)
+			elseif l_name.is_case_insensitive_equal ("wel") then
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\wel\wel.ecf", current_target)
+				l_lib := factory.new_library ("wel", l_file_loc, current_target)
+			elseif l_name.is_case_insensitive_equal ("vision2") then
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\vision2\vision2.ecf", current_target)
+				l_lib := factory.new_library ("vision2", l_file_loc, current_target)
+			elseif l_name.is_case_insensitive_equal ("time") then
+				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\librar\time\time.ecf", current_target)
+				l_lib := factory.new_library ("time", l_file_loc, current_target)
 			end
-			if a_cluster.is_library then
-				current_cluster.enable_readonly
-				current_cluster.enable_recursive
-			end
-			if a_cluster.is_recursive then
-				current_cluster.enable_recursive
-			end
-			if a_cluster.has_parent then
-				if not current_target.clusters.has (a_cluster.parent_name) then
-					set_error (create {CONF_ERROR_PARSE}.make ("Parent not found: "+a_cluster.parent_name))
-				else
-					current_cluster.set_parent (current_target.clusters.item (a_cluster.parent_name))
-					l_location.set_parent (current_cluster.parent.location)
+			if l_lib /= Void then
+				current_target.add_library (l_lib)
+				if a_cluster.is_library then
+					l_lib.set_readonly (True)
 				end
-			end
+			elseif a_cluster.directory_name.has_substring ("library.net") then
+				-- ignore it
+			else
+				l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)
+				if current_overrides.has (l_name) then
+					l_over := factory.new_override (l_name, l_location, current_target)
+					current_cluster := l_over
+					current_target.add_override (l_over)
+				else
+					current_cluster := factory.new_cluster (l_name, l_location, current_target)
+					current_target.add_cluster (current_cluster)
+				end
+				if a_cluster.is_library then
+					current_cluster.enable_readonly
+					current_cluster.enable_recursive
+				end
+				if a_cluster.is_recursive then
+					current_cluster.enable_recursive
+				end
+				if a_cluster.has_parent then
+					if not current_target.clusters.has (a_cluster.parent_name) then
+						set_error (create {CONF_ERROR_PARSE}.make ("Parent not found: "+a_cluster.parent_name))
+					else
+						current_cluster.set_parent (current_target.clusters.item (a_cluster.parent_name))
+						l_location.set_parent (current_cluster.parent.location)
+					end
+				end
 
-			process_cluster_properties (a_cluster.cluster_properties)
+				process_cluster_properties (a_cluster.cluster_properties)
+			end
 		ensure
 			current_options_void: current_options = Void
 		end

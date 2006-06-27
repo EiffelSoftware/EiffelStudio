@@ -420,7 +420,6 @@ feature {NONE} -- Validation warnings
 			Result := "There is already a group with name "+a_group+"."
 		end
 
-	assembly_location_or_gac: STRING is "Specify either a location or GAC information."
-	assembly_no_location: STRING is "No location specified and GAC information not complete."
+	assembly_no_location: STRING is "No location specified."
 
 end

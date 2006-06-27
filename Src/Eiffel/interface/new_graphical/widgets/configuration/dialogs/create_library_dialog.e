@@ -72,8 +72,7 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
-			hb_out: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb, vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
 			l_dir: KL_DIRECTORY
@@ -83,22 +82,25 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_DIALOG}
 
-			create hb_out
-			extend (hb_out)
-			append_margin (hb_out)
 			create vb
-			hb_out.extend (vb)
+			extend (vb)
 			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
 
-			append_margin (vb)
+				-- default libraries
+			create vb2
+			vb.extend (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
 
 			create l_lbl.make_with_text (dialog_create_library_defaults)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
 			create default_libraries
-			vb.extend (default_libraries)
+			vb2.extend (default_libraries)
+			default_libraries.set_minimum_height (200)
 
 				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
 			create l_dir.make (Library_path)
@@ -121,27 +123,38 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			append_small_margin (vb)
+				-- name
+			create vb2
+			vb.extend (vb2)
+			vb.disable_item_expand (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
 
 			create l_lbl.make_with_text (dialog_create_library_name)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
 			create name
-			vb.extend (name)
-			vb.disable_item_expand (name)
+			vb2.extend (name)
+			vb2.disable_item_expand (name)
 
-			append_small_margin (vb)
+				-- location
+			create vb2
+			vb.extend (vb2)
+			vb.disable_item_expand (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
 
 			create l_lbl.make_with_text (dialog_create_library_location)
-			vb.extend (l_lbl)
-			vb.disable_item_expand (l_lbl)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
 			create hb2
-			vb.extend (hb2)
-			vb.disable_item_expand (hb2)
+			vb2.extend (hb2)
+			vb2.disable_item_expand (hb2)
+			hb2.set_padding (small_padding_size)
 
 			create location
 			hb2.extend (location)
@@ -149,8 +162,6 @@ feature {NONE} -- Initialization
 			create l_btn.make_with_text_and_action (ellipsis_text, agent browse)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
-
-			append_small_margin (vb)
 
 			create hb
 			vb.extend (hb)
@@ -172,11 +183,7 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			l_btn.set_minimum_width (default_button_width)
 
-			append_margin (vb)
-
-			append_margin (hb_out)
-
-			set_minimum_size (400, 450)
+			set_minimum_width (300)
 
 			show_actions.extend (agent default_libraries.set_focus)
 		end

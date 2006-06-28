@@ -54,6 +54,7 @@ feature -- Destroy
 			end
 			if gdi_plus_handle /= l_null then
 				c_gdip_free (gdi_plus_handle, item)
+				item := default_pointer
 			end
 		end
 

@@ -109,8 +109,11 @@ feature -- Destroy
 		local
 			l_result: INTEGER
 		do
-			c_gdip_delete_graphics (gdi_plus_handle, item, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			if item /= default_pointer then
+				c_gdip_delete_graphics (gdi_plus_handle, item, $l_result)
+				check ok: l_result = {WEL_GDIP_STATUS}.ok end
+				item := default_pointer
+			end
 		end
 
 feature {NONE} -- C externals

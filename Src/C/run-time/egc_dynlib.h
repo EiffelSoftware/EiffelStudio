@@ -44,13 +44,8 @@
 extern "C" {
 #endif
 
-/* Initialization and destruction of runtime.
- * Both routines are defined in `egc_dynlib.c' */
-extern void init_rt(void);
-extern void reclaim_rt(void);
-	
+/* Initialization and destruction of runtime. */
 #define DYNAMIC_LIB_RT_INITIALIZE(x)\
-	init_rt(); \
 	{ \
 		RTLD; \
 		RTLI(x); \
@@ -58,9 +53,6 @@ extern void reclaim_rt(void);
 #define DYNAMIC_LIB_RT_END \
 		RTLE; \
 	}
-			
-#define DYNAMIC_LIB_RT_RECLAIM(x) \
-	reclaim_rt(); 
 			
 #ifdef __cplusplus
 }

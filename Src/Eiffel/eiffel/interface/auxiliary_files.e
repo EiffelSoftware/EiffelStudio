@@ -606,7 +606,7 @@ feature -- Plug and Makefile file
 
 				--Pointer on `set_lazy_rout_disp' of class ROUTINE
 			if set_lazy_rout_disp_name /= Void then
-				buffer.put_string ("%Tegc_lazy_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.put_string ("%Tegc_lazy_routdisp = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN, EIF_BOOLEAN,EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 				buffer.put_string (set_lazy_rout_disp_name)
 				buffer.put_string (";%N")
 			end

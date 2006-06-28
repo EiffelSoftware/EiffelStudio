@@ -12,9 +12,11 @@ feature -- Command
 
 	gdi_plus_init is
 			-- Initialize Gdi+.
+		local
+			l_token: POINTER
 		once
 			if is_gdi_plus_installed then
-				c_gdi_plus_startup (gdi_plus_handle)
+				l_token := gdi_plus_token
 			end
 		end
 
@@ -22,7 +24,7 @@ feature -- Command
 			-- Shutdown Gdi+.
 		once
 			if is_gdi_plus_installed then
-				c_gdi_plus_shutdown (gdi_plus_handle)
+				c_gdi_plus_shutdown (gdi_plus_handle, gdi_plus_token)
 			end
 		end
 
@@ -30,6 +32,12 @@ feature -- Command
 			-- Handle for `gdiplus.dll' if present.
 		once
 			Result := c_load_gdip_dll
+		end
+
+	gdi_plus_token: POINTER is
+			-- Token for GDI+ startup.
+		once
+			Result := c_gdi_plus_startup (gdi_plus_handle)
 		end
 
 feature -- Command
@@ -50,7 +58,7 @@ feature {NONE} -- Externals
 			"return (EIF_POINTER) LoadLibrary (L%"gdiplus.dll%");"
 		end
 
-	c_gdi_plus_startup (a_gdiplus_handle: POINTER) is
+	c_gdi_plus_startup (a_gdiplus_handle: POINTER): POINTER is
 			-- Before any GDI+ call, we should call this function.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -69,11 +77,12 @@ feature {NONE} -- Externals
 					(FUNCTION_CAST_TYPE(GpStatus, WINAPI, (ULONG_PTR *, const GdiplusStartupInput *,  GdiplusStartupOutput *)) GdiplusStartup)					
 								(&gdiplusToken, &gdiplusStartupInput, NULL);
 				}
+				return (EIF_POINTER) gdiplusToken;
    			}
    			]"
    		end
 
-	c_gdi_plus_shutdown (a_gdiplus_handle: POINTER) is
+	c_gdi_plus_shutdown (a_gdiplus_handle, a_token: POINTER) is
 			-- After delete all Gdi+ objects, we should call this function.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -82,13 +91,11 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				ULONG_PTR gdiplusToken;
 			  	FARPROC GdiplusShutdown = NULL;
 				HMODULE user32_module = (HMODULE) $a_gdiplus_handle;
 				GdiplusShutdown = GetProcAddress (user32_module, "GdiplusShutdown");
 				if (GdiplusShutdown) {
-					(FUNCTION_CAST_TYPE(void, WINAPI, (ULONG_PTR)) gdiplusToken)					
-								((ULONG_PTR) gdiplusToken);
+					(FUNCTION_CAST_TYPE(void, WINAPI, (ULONG_PTR)) GdiplusShutdown) ((ULONG_PTR) $a_token);
 				}
 			}
 			]"

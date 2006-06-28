@@ -217,13 +217,13 @@ feature -- Query
 			Result := l_starter.is_gdi_plus_installed
 		end
 
-feature {EV_PIXEL_BUFFER_IMP} -- Implementation
-
 	pixmap: EV_PIXMAP
 			-- If not `is_gdi_plus_installed' then we use this to emulate the functions.
 
 	gdip_bitmap: WEL_GDIP_BITMAP
 			-- If `is_gdi_plus_installed' then we use this to function.
+
+feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
 	draw_mask_bitmap: EV_BITMAP is
 			-- Draw bitmap's mask bitmap base on it alpha datas.

@@ -34,7 +34,6 @@ feature -- Query
 			-- Width
 		local
 			l_result_status: INTEGER
-			l_result_width: NATURAL_32
 		do
 			Result := c_gdip_get_image_width (gdi_plus_handle, item, $l_result_status).to_integer_32
 			check ok: l_result_status = {WEL_GDIP_STATUS}.ok end
@@ -44,7 +43,6 @@ feature -- Query
 			-- Height
 		local
 			l_result_status: INTEGER
-			l_result_height: NATURAL_32
 		do
 			Result := c_gdip_get_image_height (gdi_plus_handle, item, $l_result_status).to_integer_32
 			check ok: l_result_status = {WEL_GDIP_STATUS}.ok end
@@ -57,8 +55,11 @@ feature -- Destory
 		local
 			l_result: INTEGER
 		do
-			c_gdip_dispose_image (gdi_plus_handle, item, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			if item /= default_pointer then
+				c_gdip_dispose_image (gdi_plus_handle, item, $l_result)
+				check ok: l_result = {WEL_GDIP_STATUS}.ok end
+				item := default_pointer
+			end
 		end
 
 feature -- C externals
@@ -105,7 +106,7 @@ feature -- C externals
 				static FARPROC GdipGetImageWidth = NULL;
 				EIF_NATURAL_32 l_result;
 				
-				*(EIF_INTEGER *) $a_result_status = 1;
+				*(EIF_NATURAL_32 *) $a_result_status = 1;
 				
 				if (!GdipGetImageWidth) {
 					GdipGetImageWidth = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetImageWidth");
@@ -133,7 +134,7 @@ feature -- C externals
 				static FARPROC GdipGetImageHeight = NULL;
 				EIF_NATURAL_32 l_result;
 				
-				*(EIF_INTEGER *) $a_result_status = 1;
+				*(EIF_NATURAL_32 *) $a_result_status = 1;
 				
 				if (!GdipGetImageHeight) {
 					GdipGetImageHeight = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetImageHeight");
@@ -143,7 +144,7 @@ feature -- C externals
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *, UINT *)) GdipGetImageHeight)
 								((GpImage *) $a_item,
 								(UINT *) &l_result);
-				}				
+				}
 				return l_result;
 			}
 			]"
@@ -168,7 +169,7 @@ feature -- C externals
 				if (GdipDisposeImage) {
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpImage *)) GdipDisposeImage)
 								((GpImage *) $a_image);
-				}					
+				}
 			}
 			]"
 		end

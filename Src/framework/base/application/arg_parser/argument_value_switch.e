@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_optional: like optional; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_allow_mutliple: like allow_multiple; a_val_optional: like is_value_optional) is
+	make (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional) is
 			-- Initialize a new value option.
 		require
 			a_name_attached: a_name /= Void

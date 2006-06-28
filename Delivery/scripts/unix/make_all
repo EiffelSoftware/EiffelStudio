@@ -18,6 +18,9 @@ rm -f tmp
 sed -e "s/\/PorterPackage//g" set_aliases > tmp
 rm -f set_aliases
 mv -f tmp set_aliases
+sed -e "s/^SVN_VERSION.*$/SVN_VERSION=$SVN_VERSION/g" set_aliases > tmp
+rm -f set_aliases
+mv -f tmp set_aliases
 cd ..
 
 # Let's keep an archive of this package

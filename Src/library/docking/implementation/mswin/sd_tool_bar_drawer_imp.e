@@ -34,16 +34,11 @@ feature{NONE} -- Initlization
 			not_void: a_tool_bar /= Void
 		local
 			l_env: EV_ENVIRONMENT
-			l_starter: WEL_GDI_PLUS_STARTER
 		do
 			tool_bar := a_tool_bar
 			init_theme
 			create l_env
 			l_env.application.theme_changed_actions.extend (agent init_theme)
-
-			create l_starter
-			l_starter.gdi_plus_init
-			l_env.application.destroy_actions.extend_kamikaze (agent l_starter.gdi_plus_shutdown)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -245,7 +240,7 @@ feature {NONE} -- Implementation
 					arguments := a_arguments
 					dc_to_draw := a_dc_to_draw
 					pixmap_coordinate := l_button.pixmap_position
-					if l_button.pixel_buffer /= Void and (create {WEL_GDI_PLUS_STARTER}).is_gdi_plus_installed then
+					if l_button.pixel_buffer /= Void and (create {WEL_GDIP_STARTER}).is_gdi_plus_installed then
 						desaturation_pixel_buffer (l_button.pixel_buffer)
 					else
 						desaturation (l_grey_pixmap, 1)
@@ -387,7 +382,9 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_pixel_buffer /= Void
 		local
-			l_imp: WEL_GDIP_IMAGE
+			l_imp: EV_PIXEL_BUFFER_IMP
+			l_image: WEL_GDIP_BITMAP
+
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
 			l_src_rect, l_dest_rect: WEL_RECT
@@ -395,19 +392,20 @@ feature {NONE} -- Implementation
 
 			l_imp ?= a_pixel_buffer.implementation
 			check not_void: l_imp /= Void end
+			l_image := l_imp.gdip_bitmap
 
 			create l_image_attributes.make
 			l_image_attributes.clear_color_key
 			l_image_attributes.set_color_matrix (disabled_color_matrix)
-			create l_src_rect.make (0, 0, l_imp.width, l_imp.height)
-			create l_dest_rect.make (pixmap_coordinate.x, pixmap_coordinate.y, pixmap_coordinate.x + l_imp.width, pixmap_coordinate.y + l_imp.height)
+			create l_src_rect.make (0, 0, l_image.width, l_image.height)
+			create l_dest_rect.make (pixmap_coordinate.x, pixmap_coordinate.y, pixmap_coordinate.x + l_image.width, pixmap_coordinate.y + l_image.height)
 			create l_graphics.make_from_dc (dc_to_draw)
-			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_imp, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_image, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
 
-			l_graphics.delete
+			l_graphics.destroy_item
 			l_dest_rect.dispose
 			l_src_rect.dispose
-			l_image_attributes.delete
+			l_image_attributes.destroy_item
 		end
 
 	disabled_color_matrix: WEL_COLOR_MATRIX is

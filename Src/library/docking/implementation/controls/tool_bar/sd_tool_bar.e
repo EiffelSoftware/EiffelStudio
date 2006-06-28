@@ -240,6 +240,13 @@ feature -- Contract support
 			end
 		end
 
+	is_item_position_valid (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If `a_screen_x' and `a_screen_y' within tool bar items area?
+		do
+			Result := a_screen_x >= screen_x and a_screen_y >= screen_y
+								and a_screen_x < width + screen_x and a_screen_y < height + screen_y
+		end
+
 feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
@@ -518,9 +525,11 @@ feature {NONE} -- Agents
 			l_item: SD_TOOL_BAR_ITEM
 		do
 			create l_screen
-			l_item := item_at_position (l_screen.pointer_position.x, l_screen.pointer_position.y)
-			if l_item /= Void then
-				Result := l_item.drop_actions.accepts_pebble (a_any)
+			if is_item_position_valid (l_screen.pointer_position.x, l_screen.pointer_position.y)  then
+				l_item := item_at_position (l_screen.pointer_position.x, l_screen.pointer_position.y)
+				if l_item /= Void then
+					Result := l_item.drop_actions.accepts_pebble (a_any)
+				end
 			end
 		end
 
@@ -581,8 +590,7 @@ feature {SD_TOOL_BAR} -- Implementation
 			-- Item at `a_screen_x', `a_screen_y'
 			-- Result may be void when there wraps.
 		require
-			in_position: a_screen_x >= screen_x and a_screen_y >= screen_y
-					and a_screen_x < width + screen_x and a_screen_y < height + screen_y
+			in_position: is_item_position_valid (a_screen_x, a_screen_y)
 		local
 			l_x, l_y: INTEGER
 		do

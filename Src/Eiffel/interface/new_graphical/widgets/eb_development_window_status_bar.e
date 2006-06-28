@@ -194,7 +194,7 @@ feature -- Status setting
 			display_progress_value (0)
 		end
 
-	display_message (mess: STRING) is
+	display_message (mess: STRING_GENERAL) is
 			-- Display `mess'.
 		do
 			label.set_text (mess)
@@ -265,7 +265,7 @@ feature {EB_RECYCLER} -- Status setting
 
 feature -- Status report
 
-	message: STRING is
+	message: STRING_32 is
 			-- Return the currently displayed message.
 		do
 			Result := label.text

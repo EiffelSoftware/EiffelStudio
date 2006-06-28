@@ -377,6 +377,7 @@ feature {NONE} -- Implementation
 			fa: FEATURE_AS
 			f_names: EIFFEL_LIST [FEATURE_NAME]
 			f_item_name: STRING
+			l_first_item_name: STRING
 			l_external: BOOLEAN
 		do
 			create Result
@@ -399,6 +400,7 @@ feature {NONE} -- Implementation
 					Result.extend (create {EV_TREE_ITEM}.make_with_text (
 						warning_messages.w_short_internal_error ("Void feature")))
 				else
+					l_first_item_name := Void
 					from
 						f_names := fa.feature_names
 						f_names.start
@@ -406,6 +408,9 @@ feature {NONE} -- Implementation
 						f_names.after
 					loop
 						f_item_name := f_names.item.internal_name
+						if l_first_item_name = Void then
+							l_first_item_name := f_item_name
+						end
 						if a_class.has_feature_table then
 							ef := a_class.feature_with_name (f_item_name)
 							if ef /= Void and then ef.written_in /= a_class.class_id then
@@ -418,7 +423,7 @@ feature {NONE} -- Implementation
 							tree_item.set_data (f_item_name)
 							if is_clickable then
 								tree_item.pointer_button_press_actions.force_extend (
-									agent features_tool.go_to_feature_with_name (f_item_name))
+									agent features_tool.go_to_feature_with_name (l_first_item_name))
 								tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
 							end
 						else

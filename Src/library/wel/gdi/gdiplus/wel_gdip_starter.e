@@ -37,7 +37,9 @@ feature -- Command
 	gdi_plus_token: POINTER is
 			-- Token for GDI+ startup.
 		once
-			Result := c_gdi_plus_startup (gdi_plus_handle)
+			if is_gdi_plus_installed then
+				Result := c_gdi_plus_startup (gdi_plus_handle)
+			end
 		end
 
 feature -- Command

@@ -1353,28 +1353,34 @@ feature {NONE} -- Impl : Stack objects grid
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING
 			l_exception_tag, l_exception_message: STRING_32
+			appstat: APPLICATION_STATUS
 			dotnet_status: APPLICATION_STATUS_DOTNET
 			exc_dv: ABSTRACT_DEBUG_VALUE
 		do
-			if application.is_dotnet and then application.status.exception_occurred then
-				dotnet_status ?= application.status
-				check dotnet_status /= Void end
-
+			appstat := application.status
+			if appstat.exception_occurred then
 					--| Details
 				exception_row := a_target_grid.extended_new_row
 				glab := a_target_grid.folder_label_item (Cst_exception_raised_text)
 				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.debug_exception_handling_icon)
 				exception_row.set_item (1, glab)
 				create glab
-				if dotnet_status.exception_handled then
-					a_target_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
+
+				dotnet_status ?= appstat
+				if dotnet_status /= Void then
+					if dotnet_status.exception_handled then
+						a_target_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
+					else
+						a_target_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
+					end
+					exception_row.set_item (2, glab)
 				else
-					a_target_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
+					a_target_grid.grid_cell_set_text (glab, appstat.exception_description)
+					exception_row.set_item (2, glab)
 				end
-				exception_row.set_item (2, glab)
 
 					--| Tag
-				l_exception_tag := dotnet_status.exception_message
+				l_exception_tag := appstat.exception_tag
 				if l_exception_tag /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Tag")
@@ -1385,17 +1391,32 @@ feature {NONE} -- Impl : Stack objects grid
 					a_target_grid.grid_cell_set_text (es_glab, l_exception_tag)
 					row.set_item (2, es_glab)
 				end
-					--| Class
-				l_exception_class_detail := dotnet_status.exception_class_name
-				if l_exception_class_detail /= Void then
-					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item ("Class")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					row.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_class_detail)
-					a_target_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
-					row.set_item (2, es_glab)
+
+				if dotnet_status /= Void then
+						--| Class
+					l_exception_class_detail := dotnet_status.exception_class_name
+					if l_exception_class_detail /= Void then
+						row := a_target_grid.extended_new_subrow (exception_row)
+						glab := a_target_grid.name_label_item ("Class")
+						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+						row.set_item (1, glab)
+						create es_glab
+						es_glab.set_data (l_exception_class_detail)
+						a_target_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
+						row.set_item (2, es_glab)
+					end
+						--| Module
+					l_exception_module_detail := dotnet_status.exception_module_name
+					if l_exception_module_detail /= Void then
+						row := a_target_grid.extended_new_subrow (exception_row)
+						glab := a_target_grid.name_label_item ("Module")
+						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+						row.set_item (1, glab)
+						create es_glab
+						es_glab.set_data (l_exception_module_detail)
+						a_target_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
+						row.set_item (2, es_glab)
+					end
 				end
 					--| Module
 				l_exception_module_detail := dotnet_status.exception_module_name
@@ -1411,7 +1432,8 @@ feature {NONE} -- Impl : Stack objects grid
 				end
 
 					--| Nota/Message
-				l_exception_message := dotnet_status.exception_to_string
+				l_exception_message := appstat.exception_message
+--				l_exception_message := dotnet_status.exception_to_string
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := a_target_grid.name_label_item ("Nota")
@@ -1424,11 +1446,12 @@ feature {NONE} -- Impl : Stack objects grid
 					es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 					row.set_item (2, es_glab)
 				end
-
-				exc_dv := dotnet_status.exception_debug_value
-				if exc_dv /= Void then
-					row := a_target_grid.extended_new_subrow (exception_row)
-					a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, "Exception object")
+				if dotnet_status /= Void then
+					exc_dv := dotnet_status.exception_debug_value
+					if exc_dv /= Void then
+						row := a_target_grid.extended_new_subrow (exception_row)
+						a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, "Exception object")
+					end
 				end
 			end
 		end

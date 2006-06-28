@@ -198,6 +198,21 @@ feature -- Values
 		deferred
 		end
 
+	exception_description: STRING_32 is
+		local
+			e: EXCEPTIONS
+			s32: STRING_32
+		do
+			create Result.make (100)
+			Result.append ("Tag: ")
+			s32 := exception_tag
+			if s32 /= Void then
+				Result.append_string (s32)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	exception_code: INTEGER
 			-- Exception code if any
 
@@ -483,7 +498,11 @@ feature -- Setting
 	set_exception (i: INTEGER; s: STRING_32) is
 		do
 			exception_code := i
-			exception_tag := s
+			if s /= Void and then s.is_empty then
+				exception_tag := Void
+			else
+				exception_tag := s
+			end
 		end
 
 	set_max_depth (n: INTEGER) is

@@ -13,7 +13,8 @@ inherit
 	APPLICATION_STATUS
 		redefine
 			current_call_stack,
-			switch_to_current_thread_id
+			switch_to_current_thread_id,
+			exception_description
 		end
 
 	IPC_SHARED
@@ -100,6 +101,25 @@ feature -- Values
 			-- For now, the exception message for classic system is the exception tag.
 		do
 			Result := exception_tag
+		end
+
+	exception_description: STRING_32 is
+		local
+			e: EXCEPTIONS
+			s8: STRING_8
+		do
+			create Result.make (10)
+			Result.append_string ("Code: ")
+			Result.append_integer (exception_code)
+			Result.append (" (")
+			create e
+			s8 := e.meaning (exception_code)
+			if s8 = Void then
+				s8 := "Undefined"
+			end
+			Result.append (s8.as_string_32)
+			Result.append (") ")
+			Result.append (Precursor {APPLICATION_STATUS})
 		end
 
 	current_call_stack: EIFFEL_CALL_STACK_CLASSIC

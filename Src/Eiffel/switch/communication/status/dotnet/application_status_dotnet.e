@@ -17,7 +17,8 @@ inherit
 			current_call_stack,
 			update_on_stopped_state,
 			set_current_thread_id,
-			thread_name, thread_priority
+			thread_name, thread_priority,
+			exception_description
 		end
 
 	SHARED_EIFNET_DEBUGGER
@@ -131,6 +132,9 @@ feature -- Update
 			exception_occurred: exception_occurred
 		do
 			Result := Eifnet_debugger.exception_message
+			if Result = Void then
+				Result := exception_to_string
+			end
 		end
 
 	update_on_stopped_state is
@@ -141,6 +145,15 @@ feature -- Update
 			else
 				exception_tag := Void
 			end
+		end
+
+	exception_description: STRING_32 is
+		local
+			e: EXCEPTIONS
+			s8: STRING
+			s32: STRING_32
+		do
+			Result := Precursor {APPLICATION_STATUS}
 		end
 
 feature -- Values

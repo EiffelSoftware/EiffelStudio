@@ -14,6 +14,8 @@ inherit
 			has as has_hor_ver_box,
 			extend as extend_hor_ver_box,
 			has_focus as has_focus_vertical_box
+		redefine
+			destroy
 		select
 			pointer_enter_actions,
 			implementation,
@@ -42,7 +44,8 @@ inherit
 			set_background_color,
 			background_color
 		redefine
-			set_focus_color
+			set_focus_color,
+			destroy
 		end
 
 	SD_RESIZE_SOURCE
@@ -196,6 +199,20 @@ feature -- Command
 			else
 				window.title_bar.disable_focus_color
 			end
+		end
+
+	destroy is
+			-- Redefine.
+		do
+			Precursor {SD_SINGLE_CONTENT_ZONE}
+			window.title_bar.destroy
+			window.destroy
+			resize_bar.destroy
+			if horizontal_box /= Void then
+				horizontal_box.destroy
+			end
+			pointer_enter_actions.wipe_out
+			pointer_enter_actions := Void
 		end
 
 invariant

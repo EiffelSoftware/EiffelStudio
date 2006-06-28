@@ -168,7 +168,7 @@ feature -- Redefine.
 			l_auto_hide_state, l_new_state: SD_AUTO_HIDE_STATE
 			l_restired: BOOLEAN
 		do
-			if relative /= Void and not l_restired then
+			if relative /= Void and not l_restired and relative.is_visible then
 				l_tab_zone ?= relative.state.zone
 				l_docking_zone ?= relative.state.zone
 				if l_tab_zone /= Void then

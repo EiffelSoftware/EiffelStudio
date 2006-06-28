@@ -54,7 +54,7 @@ feature {NONE} -- Initlization
 			tab_stub.pointer_enter_actions.extend (agent show)
 			auto_hide_panel.tab_stubs.extend (tab_stub)
 
-			create internal_animation.make (Current, internal_docking_manager)
+			create animation.make (Current, internal_docking_manager)
 			last_floating_height := a_content.state.last_floating_height
 			last_floating_width := a_content.state.last_floating_width
 		ensure
@@ -148,8 +148,8 @@ feature -- Redefine.
 			else
 				width_height := zone.height
 			end
-			internal_animation.remove_moving_timer (False)
-			internal_animation.remove_close_timer
+			animation.remove_moving_timer (False)
+			animation.remove_close_timer
 
 		ensure then
 			width_height_set: direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
@@ -187,7 +187,7 @@ feature -- Redefine.
 				if is_hide then
 					auto_hide_panel.tab_stubs.extend (tab_stub)
 				end
-				internal_animation.show (True)
+				animation.show (True)
 				internal_docking_manager.command.unlock_update
 			end
 		ensure then
@@ -206,7 +206,7 @@ feature -- Redefine.
 		do
 			if not is_hide then
 				internal_docking_manager.command.remove_auto_hide_zones (False)
-				-- Change to SD_STATE_VOID.... wait for user call show.... then back to speciall state.
+				-- Change to SD_STATE_VOID.... wait for user call show.... then back to special state.
 				create l_state.make (internal_content)
 				l_tab_group := auto_hide_panel.tab_group (tab_stub)
 				internal_close
@@ -223,7 +223,7 @@ feature -- Command
 	close_animation is
 			-- Close with animation
 		do
-			internal_animation.close_animation
+			animation.close_animation
 		end
 
 feature -- Query
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation functions.
 	internal_close is
 			-- Prune internal widgets.
 		do
- 			internal_animation.remove_close_timer
+ 			animation.remove_close_timer
 
 			-- Remove tab stub from the SD_AUTO_HIDE_PANEL
 			auto_hide_panel.tab_stubs.start
@@ -357,9 +357,9 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal issues.
 	tab_stub: SD_TAB_STUB
 			-- Tab stub related to `internal_content'.	
 
-feature {NONE} -- Implemation
+feature {SD_DOCKING_MANAGER_AGENTS} -- Implemation
 
-	internal_animation: SD_AUTO_HIDE_ANIMATION
+	animation: SD_AUTO_HIDE_ANIMATION
 			-- Animation helper.
 
 invariant
@@ -368,7 +368,7 @@ invariant
 	not_void: internal_shared /= Void
 	not_void: tab_stub /= Void
 	not_void: auto_hide_panel /= Void
-	not_void: internal_animation /= Void
+	not_void: animation /= Void
 	direction_valid: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 

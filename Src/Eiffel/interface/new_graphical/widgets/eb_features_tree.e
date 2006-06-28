@@ -377,8 +377,10 @@ feature {NONE} -- Implementation
 			fa: FEATURE_AS
 			f_names: EIFFEL_LIST [FEATURE_NAME]
 			f_item_name: STRING
+			l_external: BOOLEAN
 		do
 			create Result
+			l_external := a_class.is_external
 			if
 				n /= Void and then
 				not n.is_equal ("")
@@ -417,7 +419,7 @@ feature {NONE} -- Implementation
 							if is_clickable then
 								tree_item.pointer_button_press_actions.force_extend (
 									agent features_tool.go_to_feature_with_name (f_item_name))
-								tree_item.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
+								tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
 							end
 						else
 							tree_item.set_data (ef)
@@ -426,7 +428,7 @@ feature {NONE} -- Implementation
 									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
 							end
 							tree_item.set_text (feature_name (ef))
-							tree_item.set_pixmap (pixmap_from_e_feature (ef))
+							tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
 							create st.make (ef)
 							tree_item.set_pebble (st)
 							tree_item.set_accept_cursor (st.stone_cursor)

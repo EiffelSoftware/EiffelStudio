@@ -214,7 +214,70 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
+	pixmap_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXMAP is
+			-- Pixmaps from features.
+		require
+			a_feature_as_not_void: a_feature_as /= Void
+			a_feature_has_name: a_feature_as.feature_names /= Void
+			a_name_pos_valid: a_name_pos >= 1 and a_name_pos <= a_feature_as.feature_names.count
+		local
+			a_name: FEATURE_NAME
+			a_body: BODY_AS
+			a_routine: ROUTINE_AS
+			l_is_obsolete: BOOLEAN
+			l_is_frozen: BOOLEAN
+		do
+			a_name := a_feature_as.feature_names.i_th (a_name_pos)
+			a_body := a_feature_as.body
+			a_routine ?= a_body.content
+			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
+			l_is_frozen := a_name.is_frozen
+			if a_feature_as.is_attribute then
+				if l_is_obsolete then
+					Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon
+				elseif l_is_frozen then
+					Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon
+				else
+					Result := pixmaps.icon_pixmaps.feature_attribute_icon
+				end
+			elseif a_feature_as.is_deferred then
+				if l_is_obsolete then
+					Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon
+				else
+					Result := pixmaps.icon_pixmaps.feature_deferred_icon
+				end
+			elseif (a_routine /= Void and then a_routine.is_once) or else a_feature_as.is_constant then
+				if l_is_obsolete then
+					Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon
+				elseif l_is_frozen then
+					Result := pixmaps.icon_pixmaps.feature_frozen_once_icon
+				else
+					Result := pixmaps.icon_pixmaps.feature_once_icon
+				end
+			elseif not is_class_external then
+				if a_routine /= Void and then a_routine.is_external then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_external_icon
+					else
+						Result := pixmaps.icon_pixmaps.feature_external_icon
+					end
+				end
+			end
+			if Result = Void then
+				if l_is_obsolete then
+					Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon
+				elseif l_is_frozen then
+					Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon
+				else
+					Result := pixmaps.icon_pixmaps.feature_routine_icon
+				end
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

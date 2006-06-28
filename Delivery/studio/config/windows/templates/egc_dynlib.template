@@ -5,12 +5,20 @@
 #include "egc_dynlib.h"
 #include "eif_sig.h"
 
-static int is_rt_initialized = 0;
-extern void egc_init_plug(void);
-
 RT_LNK HANDLE ghInstance;
 RT_LNK HINSTANCE eif_hInstance;
 RT_LNK HINSTANCE eif_hPrevInstance;
+
+extern void egc_init_plug();
+
+void init_rt (void)
+{
+#ifdef EIF_THREADS
+	eif_thr_register();
+	initsig(); 
+	initstk(); 
+#endif
+}
 
 BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 {
@@ -19,55 +27,30 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 			ghInstance = hInst;
 			eif_hInstance = hInst;
 			eif_hPrevInstance = hInst;
-			init_rt();
+			{
+				int argc = 1; 
+				char *argv[] = {"",""}; 
+				
+				eif_alloc_init();
+				eif_thr_init_root ();
+				{
+					GTCX;
+					egc_init_plug(); 
+					initsig(); 
+					initstk(); 
+					eif_rtinit(argc, argv, (char **)0);  
+				}
+			}
 			break;
 		case DLL_PROCESS_DETACH:
-			reclaim_rt ();
+			reclaim ();
 			break;
 		case DLL_THREAD_ATTACH:
+			init_rt();
+			break;
 		case DLL_THREAD_DETACH:
+			eif_thr_exit();
 			break;
 	}
 	return TRUE;
 }
-
-void init_rt (void)
-{
-	struct ex_vect *exvect; 
-	jmp_buf exenv; 
-	int argc = 1; 
-	char *argv[] = {"",""}; 
-	
-	if (is_rt_initialized == 0) {
-		is_rt_initialized = 1;
-		eif_alloc_init();
-#ifdef EIF_THREADS
-		eif_thr_init_root ();
-#endif
-		{
-			GTCX;
-			egc_init_plug(); 
-			initsig(); 
-			initstk(); 
-			exvect = exset((char *) 0, 0, (char *) 0); 
-			exvect->ex_jbuf = &exenv; 
-			if (setjmp(exenv)) 
-				failure(); 
-
-			eif_rtinit(argc, argv, (char **)0);  
-			if (root_obj == (char *)0)
-				root_obj = cmalloc(1);
-			}
-	}
-}
-
-void reclaim_rt (void)
-{
-	if (is_rt_initialized == 1) 
-	{
-		reclaim();
-		is_rt_initialized = 0; 
-	}
-}
-
-

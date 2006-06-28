@@ -16,6 +16,7 @@ EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
 DEFAULT_ORIGO_SVN=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
+SVN_VERSION=`set_version.sh $DEFAULT_ORIGO_SVN`
 # Version of GTK
 GTK_DIR=gtk2
 

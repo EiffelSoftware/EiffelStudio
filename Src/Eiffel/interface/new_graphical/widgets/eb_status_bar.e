@@ -11,10 +11,10 @@ deferred class
 
 feature -- Status setting
 
-	display_message (mess: STRING) is
+	display_message (mess: STRING_GENERAL) is
 			-- Display a one-line message.
 		require
-			one_line_message: mess /= Void and then (not mess.has ('%N') and not mess.has ('%R'))
+			one_line_message: mess /= Void and then (not mess.as_string_8.has ('%N') and not mess.as_string_8.has ('%R'))
 		deferred
 		ensure
 			message_displayed: message.is_equal (mess)
@@ -22,7 +22,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	message: STRING is
+	message: STRING_32 is
 			-- Currently displayed message.
 		deferred
 		ensure

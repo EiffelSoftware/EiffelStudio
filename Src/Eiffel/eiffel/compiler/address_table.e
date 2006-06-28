@@ -593,12 +593,12 @@ feature {NONE} -- Generation
 										buffer.put_string (l_current_name)
 									end
 
-									if l_is_implemented and has_arguments then
-										if is_for_routine then
-											generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
-										else
-											generate_arg_list (buffer, args_count)
-										end
+								end
+								if l_is_implemented and has_arguments then
+									if is_for_routine then
+										generate_arg_list_for_rout (buffer, args_count, arg_tags (args))
+									else
+										generate_arg_list (buffer, args_count)
 									end
 								end
 								buffer.put_string (");%N")

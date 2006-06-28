@@ -230,52 +230,65 @@ feature {NONE} -- Implementation
 			a_routine: ROUTINE_AS
 			l_is_obsolete: BOOLEAN
 			l_is_frozen: BOOLEAN
+			l_assinger: BOOLEAN
 		do
 			a_name := a_feature_as.feature_names.i_th (a_name_pos)
 			a_body := a_feature_as.body
+			l_assinger := a_body.assigner /= Void and then not a_body.assigner.is_empty
 			a_routine ?= a_body.content
 			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
 			l_is_frozen := a_name.is_frozen
-			if a_feature_as.is_attribute then
-				if l_is_obsolete then
-					Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon
-				elseif l_is_frozen then
-					Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon
-				else
-					Result := pixmaps.icon_pixmaps.feature_attribute_icon
-				end
-			elseif a_feature_as.is_deferred then
-				if l_is_obsolete then
-					Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon
-				else
-					Result := pixmaps.icon_pixmaps.feature_deferred_icon
-				end
-			elseif (a_routine /= Void and then a_routine.is_once) or else a_feature_as.is_constant then
-				if l_is_obsolete then
-					Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon
-				elseif l_is_frozen then
-					Result := pixmaps.icon_pixmaps.feature_frozen_once_icon
-				else
-					Result := pixmaps.icon_pixmaps.feature_once_icon
-				end
-			elseif not is_class_external then
-				if a_routine /= Void and then a_routine.is_external then
+
+			if not l_assinger then
+				if a_feature_as.is_attribute then
 					if l_is_obsolete then
-						Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon
+						Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon
 					elseif l_is_frozen then
-						Result := pixmaps.icon_pixmaps.feature_frozen_external_icon
+						Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon
 					else
-						Result := pixmaps.icon_pixmaps.feature_external_icon
+						Result := pixmaps.icon_pixmaps.feature_attribute_icon
+					end
+				elseif a_feature_as.is_deferred then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon
+					else
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon
+					end
+				elseif (a_routine /= Void and then a_routine.is_once) or else a_feature_as.is_constant then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_once_icon
+					else
+						Result := pixmaps.icon_pixmaps.feature_once_icon
+					end
+				elseif not is_class_external then
+					if a_routine /= Void and then a_routine.is_external then
+						if l_is_obsolete then
+							Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon
+						elseif l_is_frozen then
+							Result := pixmaps.icon_pixmaps.feature_frozen_external_icon
+						else
+							Result := pixmaps.icon_pixmaps.feature_external_icon
+						end
 					end
 				end
-			end
-			if Result = Void then
+				if Result = Void then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon
+					else
+						Result := pixmaps.icon_pixmaps.feature_routine_icon
+					end
+				end
+			else
 				if l_is_obsolete then
-					Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon
+					Result := pixmaps.icon_pixmaps.feature_obsolete_assigner_icon
 				elseif l_is_frozen then
-					Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon
+					Result := pixmaps.icon_pixmaps.feature_frozen_assigner_icon
 				else
-					Result := pixmaps.icon_pixmaps.feature_routine_icon
+					Result := pixmaps.icon_pixmaps.feature_assigner_icon
 				end
 			end
 		ensure

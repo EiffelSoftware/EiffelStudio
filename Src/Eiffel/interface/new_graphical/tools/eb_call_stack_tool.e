@@ -18,11 +18,6 @@ inherit
 
 	EB_RECYCLABLE
 
---	SHARED_APPLICATION_EXECUTION
---		export
---			{NONE} all
---		end
-
 	IPC_SHARED
 		export
 			{NONE} all
@@ -574,7 +569,7 @@ feature {NONE} -- Implementation
 			-- Fill in the `stop_cause' label with a message describing the application status.
 			-- arg_is_stopped is ignore if Application/Debugger is not running
 		local
-			m: STRING
+			m: STRING_32
 		do
 			if not eb_debugger_manager.application_is_executing then
 				stop_cause.set_text (Interface_names.l_System_launched)
@@ -625,10 +620,9 @@ feature {NONE} -- Implementation
 	display_exception is
 			-- Fill in the `exception' label with a text describing the exception, if any.
 		local
-			m: STRING
+			m: STRING_32
 		do
 			m := exception_tag_text
---			exception.set_text (m)
 --| FIXME jfiat [2004/03/19] : NewFeature keep only first line of exception text for callstack_tool
 --| We'll enable this, once we have an exception window to display the full message
 			exception.set_text (first_line_of (m))
@@ -662,7 +656,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	first_line_of (m: STRING): STRING is
+	first_line_of (m: STRING_32): STRING_32 is
 			-- keep the first line of the exception message
 			-- the rest can be seen by double clicking on the widget
 		local
@@ -681,32 +675,16 @@ feature {NONE} -- Implementation
 			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
 
-	exception_tag_text: STRING is
+	exception_tag_text: STRING_32 is
 			-- Text corresponding to the current exception.
 		local
-			e: EXCEPTIONS
-			s: STRING
-			l_status: APPLICATION_STATUS
+			s32: STRING_32
 		do
-			create Result.make (100)
-			fixme ("check how to get rid of the condition is_dotnet")
-			l_status := eb_debugger_manager.Application.status
-			if not eb_debugger_manager.Application.is_dotnet then
-				Result.append ("Code: ")
-				Result.append (l_status.exception_code.out)
-				Result.append (" (")
-				create e
-				s := e.meaning (l_status.exception_code)
-				if s = Void then
-					s := "Undefined"
-				end
-				Result.append (s)
-				Result.append (")")
-			end
-			Result.append (" Tag: ")
-			s := l_status.exception_tag
-			if s /= Void then
-				Result.append_string (s)
+			s32 := eb_debugger_manager.Application.status.exception_description
+			if s32 /= Void then
+				Result := s32
+			else
+				Result := ""
 			end
 
 -- FIXME JFIAT: 2003/03/12 : what for this postcondition limitation ?

@@ -271,6 +271,7 @@
 		
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
+		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf">
@@ -372,7 +373,6 @@
 				<exclude>/ewb_case_storage.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer\" recursive="true"/>
 		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN$</exclude>

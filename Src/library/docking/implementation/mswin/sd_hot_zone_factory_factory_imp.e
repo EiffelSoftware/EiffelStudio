@@ -1,5 +1,5 @@
 indexing
-	description: "Implementation of SD_HOT_ZONE_FACTORY_FACTORY."
+	description: "Windows implementation of SD_HOT_ZONE_FACTORY_FACTORY."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

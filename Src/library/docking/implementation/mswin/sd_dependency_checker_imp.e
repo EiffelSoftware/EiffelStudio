@@ -14,7 +14,7 @@ feature -- Command
 	check_dependency (a_parent_window: EV_WINDOW) is
 			-- Check if GDI+ exists.
 		local
-			l_starter: WEL_GDI_PLUS_STARTER
+			l_starter: WEL_GDIP_STARTER
 			l_warning: EV_WARNING_DIALOG
 		do
 			create l_starter

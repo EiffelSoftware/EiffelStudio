@@ -853,7 +853,7 @@ feature {NONE} -- Switches
 	help_switch: STRING is "?"
 			-- Display usage information switch
 
-	frozen available_switches: LIST [ARGUMENT_SWITCH] is
+	frozen available_switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
 		local
 			l_switches: like switches
@@ -875,7 +875,7 @@ feature {NONE} -- Switches
 			result_attached: Result /= Void
 		end
 
-	switches: LIST [ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of switch used for a specific application
 		deferred
 		ensure

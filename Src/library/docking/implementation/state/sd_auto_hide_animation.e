@@ -100,14 +100,15 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		do
 			if internal_moving_timer /= Void then
 				internal_moving_timer.actions.wipe_out
+				internal_moving_timer.destroy
 				internal_moving_timer := Void
 			end
 			if not a_open then
 				internal_docking_manager.zones.prune_zone (state.zone)
 				internal_docking_manager.fixed_area.prune (state.zone)
+				state.zone.destroy
 			end
 		ensure
---			timer_wipe_out: old internal_moving_timer.actions.count = 0
 			timer_void: internal_moving_timer = Void
 		end
 
@@ -118,22 +119,21 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		do
 			if internal_close_timer /= Void then
 				internal_close_timer.actions.wipe_out
+				internal_close_timer.destroy
 				internal_close_timer := Void
 
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
+				internal_motion_procudure := Void
 				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion actions pruned")
 				end
 			end
 		ensure
---			timer_wipe_out: old internal_close_timer.actions.count = 0
 			timer_void: internal_close_timer = Void
 			applcation_pointer_motion_pruned:
 		end
-
-
 
 feature -- Query
 
@@ -146,35 +146,37 @@ feature -- Query
 	state: SD_AUTO_HIDE_STATE
 			-- Auto hide state which Current help it's animation issues.
 
-feature {NONE} -- Agents
+feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 	on_timer_for_close is
 			-- Handle close timer event.
 		require
 			internal_timer_not_void: is_close_timer_exist
 		do
-			if internal_pointer_outside and not state.zone.has_focus then
+			if pointer_outside and not state.zone.has_focus then
 				remove_close_timer
 				close_animation
 			end
 		ensure
---			timer_wipe_out: old internal_close_timer.actions.count = 0
-			timer_void: internal_pointer_outside and not state.zone.has_focus implies internal_close_timer = Void
+			timer_void: pointer_outside and not state.zone.has_focus implies internal_close_timer = Void
 		end
 
 	on_pointer_motion (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER) is
 			-- Use timer to detect pointer outside zone and tab stub?
+		local
+			l_rect, l_rect_zone: EV_RECTANGLE
 		do
-			if not state.tab_stub.has_recursive (a_widget) and not state.zone.has_recursive (a_widget) then
-				internal_pointer_outside := True
-			else
-				internal_pointer_outside := False
+			create l_rect.make (state.tab_stub.screen_x, state.tab_stub.screen_y, state.tab_stub.width, state.tab_stub.height)
+			if state.zone /= Void and not state.zone.is_destroyed then
+				create l_rect_zone.make (state.zone.screen_x, state.zone.screen_y, state.zone.width, state.zone.height)
+				-- During pick and drop target is not correct, so we can't use this:
+				-- if not state.tab_stub.has_recursive (a_widget) and not state.zone.has_recursive (a_widget) then
+				if not l_rect.has_x_y (a_screen_x, a_screen_y) and not l_rect_zone.has_x_y (a_screen_x, a_screen_y) then
+					pointer_outside := True
+				else
+					pointer_outside := False
+				end
 			end
-		ensure
-			set_true: not state.tab_stub.has_recursive (a_widget) and not state.zone.has_recursive (a_widget) implies
-				internal_pointer_outside = True
-			set_false: state.tab_stub.has_recursive (a_widget) or state.zone.has_recursive (a_widget) implies
-				internal_pointer_outside = False
 		end
 
 	on_timer_for_moving (a_open: BOOLEAN) is
@@ -303,6 +305,9 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation
 
+	pointer_outside: BOOLEAN
+			-- If pointer outside tab stub and zone?
+
 	internal_motion_procudure: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 			-- Motion procedure for animation.
 
@@ -317,9 +322,6 @@ feature {NONE} -- Implementation
 
 	internal_close_timer: EV_TIMEOUT
 			-- Timer for close window.
-
-	internal_pointer_outside: BOOLEAN
-			-- If pointer outside tab stub and zone?
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager.

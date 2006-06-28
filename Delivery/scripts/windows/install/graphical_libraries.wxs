@@ -2918,9 +2918,9 @@
 									<File Id="wel_gdip_image_e" Name="WEL_GD~1.E" LongName="wel_gdip_image.e" />
 									<File Id="wel_gdip_image_attributes_e" Name="WECE8B~1.E" LongName="wel_gdip_image_attributes.e" />
 									<File Id="wel_gdip_pen_e" Name="WEL_GD~2.E" LongName="wel_gdip_pen.e" />
+									<File Id="wel_gdip_starter_e" Name="WEL_GD~3.E" LongName="wel_gdip_starter.e" />
 									<File Id="wel_gdip_statues_e" Name="WE8F95~1.E" LongName="wel_gdip_statues.e" />
 									<File Id="wel_gdip_unit_e" Name="WE2159~1.E" LongName="wel_gdip_unit.e" />
-									<File Id="wel_gdi_plus_starter_e" Name="WEL_GD~3.E" LongName="wel_gdi_plus_starter.e" />
 								</Component>
 							</Directory>
 							<Component Id="wel_log_font.e" Guid="234A76E6-AB33-4358-B31B-928794E787DD">

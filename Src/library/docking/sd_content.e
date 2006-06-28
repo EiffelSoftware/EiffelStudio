@@ -92,6 +92,14 @@ feature -- Access
 			result_valid: Result = internal_pixmap
 		end
 
+	pixel_buffer: like internal_pixel_buffer is
+			-- Client programmer's widget's pixel buffer
+		do
+			Result := internal_pixel_buffer
+		ensure
+			result_valid: Result = internal_pixel_buffer
+		end
+
 	mini_toolbar: like internal_mini_toolbar is
 			-- Mini toolbar.
 		do
@@ -143,6 +151,18 @@ feature -- Set
 			internal_state.change_pixmap (a_pixmap, Current)
 		ensure
 			a_pixmap_set: a_pixmap = internal_pixmap
+		end
+
+	set_pixel_buffer (a_buffer: like internal_pixel_buffer) is
+			-- Set `internal_pixel_buffer'
+		require
+			a_buffer_not_void: a_buffer /= Void
+		do
+			internal_pixel_buffer := a_buffer
+			-- FIXIT: should have something like this.
+--			internal_state.change_pixmap (a_pixmap: EV_PIXMAP, a_content: SD_CONTENT)
+		ensure
+			a_buffer_set: a_buffer = internal_pixel_buffer
 		end
 
 	set_mini_toolbar (a_bar: like internal_mini_toolbar) is
@@ -290,7 +310,7 @@ feature -- Actions
 		end
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Drop actions.
+			-- Drop actions to performed when user drop a pebble on notebook tab.
 
 feature -- Command
 
@@ -422,6 +442,9 @@ feature {NONE}  -- Implemention.
 
 	internal_pixmap: EV_PIXMAP
 			-- The internal_pixmap at the head of internal_unique_title.
+
+	internal_pixel_buffer: EV_PIXEL_BUFFER
+			-- The pixel buffer at the head of `internal_unique_title'
 
 	internal_mini_toolbar: EV_WIDGET
 			-- Mini toolbar at the titlt bar.

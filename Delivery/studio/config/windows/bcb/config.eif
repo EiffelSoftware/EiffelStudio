@@ -117,12 +117,12 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%N%
 %precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$** %N%
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$** %N%
 %%N"
 
 cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$**"
 
 il_system_compilation_line: "%
 	%ILSHAREDLIBS = IMPORT32 OLE2w32 CW32MT%N%
@@ -145,7 +145,7 @@ all: "all:: "
 intermediate_file_ext: "lib"
 
 make_intermediate: "%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**%N%T$(CREATE_TEST)%
+%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$**%N%T$(CREATE_TEST)%
 %%N%
 %.c.obj:%N%
 %%T$(CC) @&&|%N%T$(CFLAGS) $<%N|%

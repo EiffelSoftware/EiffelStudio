@@ -102,20 +102,21 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	load_rgba_dib: WEL_BITMAP is
-			-- Load a image which is locate at `a_filename' to RGBA DIB.
+	rgba_dib: WEL_BITMAP is
+			-- Load a image which has RGBA DIB datas.
 		local
 			l_imp: EV_PIXMAP_IMP
 		do
 			l_imp ?= pixmap.implementation
 			check not_void: l_imp /= Void end
+			-- FIXIT: it only works in 32bits.
 			create Result.make_by_bitmap (l_imp.get_bitmap)
 		ensure
 			exists: Result /= Void and then Result.exists
 		end
 
 	update_layered_window_rgba (a_alpha: INTEGER) is
-			-- Call `c_updatelayerwindow' with `file_name'.
+			-- Call `c_updatelayerwindow' with `a_alpha'.
 		require
 			valid: 0 <= a_alpha and a_alpha <= 255
 		local
@@ -145,7 +146,7 @@ feature {NONE} -- Implementation
 			create l_size.make (pixmap.width, pixmap.height)
 
 			create l_dc_src.make_by_dc (l_dc)
-			l_dc_src.select_bitmap (load_rgba_dib)
+			l_dc_src.select_bitmap (rgba_dib)
 			check l_dc_src.exists end
 
 			create l_point_src.make (0, 0)

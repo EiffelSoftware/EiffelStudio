@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		name="arg_parser" uuid="f2cc3814-b342-4e64-9830-a39f6c1448d7" library_target="arg_parser" >
+
+	<target name="arg_parser">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
+		<cluster name="arg_parser" location="." recursive="true"/>
+    <cluster name="text" location="../../text"/>
+	</target>
+</system>

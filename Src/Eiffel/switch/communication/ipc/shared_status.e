@@ -8,22 +8,30 @@ feature -- Access
 	server_mode: BOOLEAN is
 			-- Is the compiler in server mode?
 		do
-			Result := server_mode_ref.item
+			Result := server_mode_cell.item
 		end
 
 	enable_server_mode is
 			-- Set `server_mode' to True.
 		do
-			server_mode_ref.set_item (True)
+			server_mode_cell.replace (True)
 		ensure
 			server_mode: server_mode
-		end;
+		end
+
+	disable_server_mode is
+			-- Set `server_mode' to True.
+		do
+			server_mode_cell.replace (False)
+		ensure
+			server_mode: not server_mode
+		end
 
 feature {NONE} -- Implementation
 
-	server_mode_ref: BOOLEAN_REF is
+	server_mode_cell: CELL [BOOLEAN] is
 		once
-			create Result
+			create Result.put (False)
 		end
 
 indexing

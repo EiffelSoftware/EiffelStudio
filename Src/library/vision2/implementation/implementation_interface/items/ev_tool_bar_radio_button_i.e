@@ -26,7 +26,7 @@ inherit
 			interface
 		end
 
-feature {AV_ANY_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON;
 

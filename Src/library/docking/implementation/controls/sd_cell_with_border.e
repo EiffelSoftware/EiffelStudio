@@ -26,6 +26,7 @@ inherit
 			set_border_width as set_border_width_vertical_box
 		export
 			{NONE} all
+			{ANY} destroy
 		end
 
 create

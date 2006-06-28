@@ -172,7 +172,7 @@ feature {NONE} -- Implementation of data retrieval
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_over: CONF_OVERRIDE
-			l_name: STRING
+			l_name, l_parent: STRING
 			l_location: CONF_DIRECTORY_LOCATION
 			l_file_loc: CONF_FILE_LOCATION
 			l_lib: CONF_LIBRARY
@@ -192,9 +192,17 @@ feature {NONE} -- Implementation of data retrieval
 				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
 				l_lib := factory.new_library ("time", l_file_loc, current_target)
 			end
+			l_parent := a_cluster.parent_name
+			if l_parent /= Void then
+				l_parent.to_lower
+			end
 			if l_lib /= Void then
 				current_target.add_library (l_lib)
-			elseif a_cluster.directory_name.has_substring ("library.net") then
+			elseif
+				a_cluster.directory_name.has_substring ("library.net") or
+				(l_parent /= Void and then (l_parent.is_equal ("base") or l_parent.is_equal ("wel") or
+				l_parent.is_equal ("vision2") or l_parent.is_equal ("time")))
+			then
 				-- ignore it
 			else
 				l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)
@@ -682,8 +690,13 @@ feature {NONE} -- Implementation of data retrieval
 			l_type: LANGUAGE_NAME_SD
 			l_files: LACE_LIST [ID_SD]
 			l_loc: STRING
+			l_ignore: RX_PCRE_REGULAR_EXPRESSION
 		do
 			if a_externals /= Void then
+				create l_ignore.make
+				l_ignore.compile (".*library.(vision2|wel)")
+				l_ignore.optimize
+
 				from
 					a_externals.start
 				until
@@ -692,52 +705,30 @@ feature {NONE} -- Implementation of data retrieval
 					l_external := a_externals.item
 					l_type := l_external.language_name
 					l_files := l_external.file_names
-					if l_type.is_include_path then
-						from
-							l_files.start
-						until
-							l_files.after
-						loop
-							l_loc := l_files.item
-							l_loc.replace_substring_all ("%"", "&quot;")
-							current_target.add_external_include (factory.new_external_include (l_loc))
-							l_files.forth
+					from
+						l_files.start
+					until
+						l_files.after
+					loop
+						l_loc := l_files.item
+						l_loc.replace_substring_all ("%"", "&quot;")
+							-- ignore externals of vision2 and wel
+						l_ignore.match (l_loc)
+						if not l_ignore.has_matched then
+							if l_type.is_include_path then
+								current_target.add_external_include (factory.new_external_include (l_loc))
+							elseif l_type.is_object then
+								current_target.add_external_object (factory.new_external_object (l_loc))
+							elseif l_type.is_dotnet_resource then
+								current_target.add_external_resource (factory.new_external_resource (l_loc))
+							elseif l_type.is_make then
+								current_target.add_external_make (factory.new_external_make (l_loc))
+							else
+								set_error (create {CONF_ERROR_PARSE}.make ("Unkown external: "+l_type.language_name))
+							end
 						end
-					elseif l_type.is_object then
-						from
-							l_files.start
-						until
-							l_files.after
-						loop
-							l_loc := l_files.item
-							l_loc.replace_substring_all ("%"", "&quot;")
-							current_target.add_external_object (factory.new_external_object (l_loc))
-							l_files.forth
-						end
-					elseif l_type.is_dotnet_resource then
-						from
-							l_files.start
-						until
-							l_files.after
-						loop
-							l_loc := l_files.item
-							l_loc.replace_substring_all ("%"", "&quot;")
-							current_target.add_external_resource (factory.new_external_resource (l_loc))
-							l_files.forth
-						end
-					elseif l_type.is_make then
-						from
-							l_files.start
-						until
-							l_files.after
-						loop
-							l_loc := l_files.item
-							l_loc.replace_substring_all ("%"", "&quot;")
-							current_target.add_external_make (factory.new_external_make (l_loc))
-							l_files.forth
-						end
-					else
-						set_error (create {CONF_ERROR_PARSE}.make ("Unkown external: "+l_type.language_name))
+
+						l_files.forth
 					end
 
 					a_externals.forth

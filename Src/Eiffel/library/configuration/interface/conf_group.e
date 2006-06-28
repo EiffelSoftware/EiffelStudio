@@ -35,8 +35,10 @@ feature {NONE} -- Initialization
 			set_name (a_name.as_lower)
 			set_location (a_location)
 			is_valid := True
+			internal_read_only := True
 		ensure
 			is_valid: is_valid
+			is_readonly: is_readonly
 		end
 
 feature -- Status

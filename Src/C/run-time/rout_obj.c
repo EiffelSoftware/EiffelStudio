@@ -285,7 +285,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 
 
 rt_public void rout_obj_call_function_dynamic (
-	int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, EIF_ARG_UNION* res)
+	int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, void* res)
 {
 	EIF_GET_CONTEXT
 	struct item* it = 0;

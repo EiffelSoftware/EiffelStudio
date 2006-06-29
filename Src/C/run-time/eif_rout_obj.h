@@ -91,7 +91,7 @@ RT_LNK void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POI
 
 #ifdef WORKBENCH
 RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count);
-RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, EIF_ARG_UNION* result);
+RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, void* result);
 #endif
 
 /* Macros */

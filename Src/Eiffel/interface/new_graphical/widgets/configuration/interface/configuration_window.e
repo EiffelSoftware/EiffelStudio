@@ -435,16 +435,18 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (cl)
 			hb.set_padding (default_padding_size)
 
-			create l_button.make_with_text ("Add")
+			create l_button.make_with_text (general_add)
+			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width)
+			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent new_external)
 
-			create l_button.make_with_text ("Remove")
+			create l_button.make_with_text (general_remove)
+			l_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width)
+			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent remove_external)
 
 			is_refreshing := False
@@ -486,16 +488,18 @@ feature {NONE} -- Section tree selection agents
 			create cl
 			hb.extend (cl)
 
-			create l_button.make_with_text ("Add")
+			create l_button.make_with_text (general_add)
+			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width)
+			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent new_task)
 
-			create l_button.make_with_text ("Remove")
+			create l_button.make_with_text (general_remove)
+			l_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width)
+			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent remove_task)
 
 			is_refreshing := False
@@ -611,8 +615,8 @@ feature {NONE} -- Section tree selection agents
 			grid.enable_single_row_selection
 			grid.column (1).set_width (200)
 			grid.column (2).set_width (200)
-			grid.column (1).set_title ("Variable name")
-			grid.column (2).set_title ("Value")
+			grid.column (1).set_title (variables_name)
+			grid.column (2).set_title (variables_value)
 			if current_target.extends /= Void then
 				l_inh_vars := current_target.extends.variables
 			else
@@ -651,15 +655,18 @@ feature {NONE} -- Section tree selection agents
 			end
 
 			create hb
+			hb.set_padding (default_padding_size)
 			target_configuration_space.extend (hb)
 			target_configuration_space.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action ("+", agent add_variable)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_add, agent add_variable)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			create l_btn.make_with_text_and_action ("-", agent remove_variable)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_remove, agent remove_variable)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
@@ -698,8 +705,8 @@ feature {NONE} -- Section tree selection agents
 			grid.enable_single_row_selection
 			grid.column (1).set_width (200)
 			grid.column (2).set_width (200)
-			grid.column (1).set_title ("Old name")
-			grid.column (2).set_title ("New Name")
+			grid.column (1).set_title (mapping_old_name)
+			grid.column (2).set_title (mapping_new_name)
 			if current_target.extends /= Void then
 				l_inh_vars := current_target.extends.mapping
 			else
@@ -738,15 +745,18 @@ feature {NONE} -- Section tree selection agents
 			end
 
 			create hb
+			hb.set_padding (default_padding_size)
 			target_configuration_space.extend (hb)
 			target_configuration_space.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action ("+", agent add_mapping)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_add, agent add_mapping)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			create l_btn.make_with_text_and_action ("-", agent remove_mapping)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_remove, agent remove_mapping)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
@@ -1419,6 +1429,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.enable_text_editing
 				l_dir_prop.set_value (an_external.location)
 				l_dir_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (external_location_name)
@@ -1426,6 +1437,7 @@ feature {NONE} -- Implementation
 				l_file_prop.enable_text_editing
 				l_file_prop.set_value (an_external.location)
 				l_file_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 				properties.add_property (l_file_prop)
 			end
 
@@ -1486,6 +1498,7 @@ feature {NONE} -- Implementation
 			l_prop.set_description (task_command_description)
 			l_prop.set_value (a_task.command)
 			l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_command))
+			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 			properties.add_property (l_prop)
 
 				-- description

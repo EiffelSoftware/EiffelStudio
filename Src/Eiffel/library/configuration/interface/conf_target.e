@@ -584,6 +584,12 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_exception_trace)
 		end
 
+	setting_force_32bits: BOOLEAN is
+			-- Value for the force_32bits setting.
+		do
+			Result := setting_boolean (s_force_32bits)
+		end
+
 	setting_full_type_checking: BOOLEAN is
 			-- Value for the full_type_checking setting.
 		do

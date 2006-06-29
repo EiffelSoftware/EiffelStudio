@@ -50,7 +50,6 @@ feature {NONE} -- Initialization
 			reset
 
 			pointer_button_press_actions.extend (agent select_name_item)
-			key_press_actions.extend (agent on_key_pressed)
 		end
 
 feature -- Status
@@ -103,6 +102,7 @@ feature -- Update
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
 				create l_item.make_with_text (a_name)
+				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				create l_font
 				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				l_item.set_font (l_font)
@@ -189,6 +189,20 @@ feature -- Update
 
 feature {NONE} -- Agents
 
+	switch_expand_section (a_section: EV_GRID_ROW; a_dummy: EV_POPUP_WINDOW) is
+			-- Expand/collapse `a_section'.
+		require
+			a_section_not_void: a_section /= Void
+		do
+			if a_section.is_expandable then
+				if a_section.is_expanded then
+					a_section.collapse
+				else
+					a_section.expand
+				end
+			end
+		end
+
 	activate_property (a_property: PROPERTY; a_dummy: EV_POPUP_WINDOW) is
 			-- Activate `a_property'.
 		require
@@ -207,11 +221,27 @@ feature {NONE} -- Agents
 
 	on_key_pressed (a_key: EV_KEY) is
 			-- `a_key' was pressed.
+		local
+			l_row: EV_GRID_ROW
 		do
 			Precursor (a_key)
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				if selected_items /= Void and then selected_items.count = 1 then
 					selected_items.first.activate
+				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_left then
+				if selected_items /= Void and then selected_items.count = 1 then
+					l_row := selected_items.first.row
+					if l_row.is_expanded then
+						l_row.collapse
+					end
+				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+				if selected_items /= Void and then selected_items.count = 1 then
+					l_row := selected_items.first.row
+					if l_row.is_expandable and not l_row.is_expanded then
+						l_row.expand
+					end
 				end
 			end
 		end

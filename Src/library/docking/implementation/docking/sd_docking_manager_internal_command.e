@@ -145,7 +145,7 @@ feature -- Commands
 				l_zones_snapshot.after
 			loop
 				l_auto_hide_zone ?= l_zones_snapshot.item
-				if l_auto_hide_zone /= Void then
+				if l_auto_hide_zone /= Void then 
 					if not a_animation then
 						internal_docking_manager.zones.zones.prune (l_auto_hide_zone)
 						l_auto_hide_zone.content.state.record_state

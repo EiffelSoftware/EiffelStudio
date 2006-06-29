@@ -9,6 +9,116 @@ inherit
 
 feature -- MACROS
 
+	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_window_set_skip_taskbar_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
+				#endif
+			]"
+		end
+
+	frozen gtk_window_set_skip_pager_hint (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
+				#endif
+			]"
+		end
+
+	frozen gdk_colorspace_rgb_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return GDK_COLORSPACE_RGB;
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_copy (a_pixbuf: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_get_width (a_pixbuf: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_get_height (a_pixbuf: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_new_from_file ((char*) $a_filename, (GError**) $a_error);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gdk_pixbuf_render_pixmap_and_mask ((GdkPixbuf*) $a_pixbuf, (GdkPixmap**) $a_pixmap, (GdkBitmap**) $a_mask, (int) $alpha_threshold);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_new (a_colorspace: INTEGER; a_has_alpha: BOOLEAN; a_bits_per_sample, a_width, a_height: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_new ((GdkColorspace) $a_colorspace, (gboolean) $a_has_alpha, (int) $a_bits_per_sample, (int) $a_width, (int) $a_height);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_new_subpixbuf (a_pixbuf: POINTER; src_x, src_y, width, height: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+						return gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height);
+				#endif
+			]"
+		end
+
 	frozen gtk_win_pos_mouse_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -223,6 +223,15 @@ feature {NONE} -- Status Report
 			Result := not available_switches.is_empty
 		end
 
+	frozen has_visible_available_options: BOOLEAN is
+			-- Indicates if there are options available
+		local
+			l_switches: like available_switches
+			l_cursor: CURSOR
+		do
+			Result := not available_visible_switches.is_empty
+		end
+
 feature -- Basic Operations
 
 	execute (a_agent: PROCEDURE [ANY, TUPLE]) is
@@ -545,7 +554,7 @@ feature {NONE} -- Output
 				io.put_string  (l_cfg)
 			end
 
-			if has_available_options then
+			if has_visible_available_options then
 				io.new_line
 				display_options
 			end
@@ -615,7 +624,7 @@ feature {NONE} -- Output
 	display_options is
 			-- Displays configurable options
 		require
-			has_available_options: has_available_options
+			has_visible_available_options: has_visible_available_options
 		local
 			l_nl: STRING
 			l_tabbed_nl: STRING
@@ -632,6 +641,7 @@ feature {NONE} -- Output
 			l_value_switches: ARRAYED_LIST [ARGUMENT_VALUE_SWITCH]
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_count: INTEGER
+			l_has_visible_switches: BOOLEAN
 			i: INTEGER
 		do
 			io.put_string ("%NOPTIONS:%N")
@@ -669,14 +679,16 @@ feature {NONE} -- Output
 				io.new_line
 			end
 
-			l_options := available_switches
+			l_options := available_visible_switches
 			l_nl := "%N"
 
 				-- Retrieve option max length for alignment
 			l_cursor := l_options.cursor
 			from l_options.start until l_options.after loop
-				l_name := l_options.item.name
-				l_max_len := l_max_len.max (l_name.count)
+				if not l_options.item.hidden then
+					l_name := l_options.item.name
+					l_max_len := l_max_len.max (l_name.count)
+				end
 				l_options.forth
 			end
 
@@ -751,7 +763,6 @@ feature {NONE} -- Output
 					l_value_switches.forth
 				end
 			end
-
 		ensure
 			available_options_unmoved: old available_switches /= Void implies available_switches.cursor.is_equal (old available_switches.cursor)
 		end
@@ -794,43 +805,45 @@ feature {NONE} -- Usage
 			l_opt: BOOLEAN
 			l_opt_val: BOOLEAN
 		once
-			l_switches := available_switches
-			l_prefix := switch_prefixes[1]
+			l_switches := available_visible_switches
+			if not l_switches.is_empty then
+				l_prefix := switch_prefixes[1]
 
-			create Result.make  (l_switches.count * 10)
-			l_cursor := l_switches.cursor
-			from l_switches.start until l_switches.after loop
-				l_switch := l_switches.item
-				l_val_switch ?= l_switch
-				l_opt := l_switch.optional
-				if not l_switch.name.is_equal (help_switch) then
-					if l_opt then
-						Result.append_character ('[')
-					end
-					Result.append_character (l_prefix)
-					Result.append (l_switch.name)
-					if l_val_switch /= Void then
-						l_opt_val := l_val_switch.is_value_optional
-						if l_opt_val then
+				create Result.make  (l_switches.count * 10)
+				l_cursor := l_switches.cursor
+				from l_switches.start until l_switches.after loop
+					l_switch := l_switches.item
+					l_val_switch ?= l_switch
+					l_opt := l_switch.optional
+					if not l_switch.name.is_equal (help_switch) and not l_switch.hidden then
+						if l_opt then
 							Result.append_character ('[')
 						end
-						Result.append (":<")
-						Result.append (l_val_switch.arg_name)
-						Result.append_character ('>')
-						if l_opt_val then
+						Result.append_character (l_prefix)
+						Result.append (l_switch.name)
+						if l_val_switch /= Void then
+							l_opt_val := l_val_switch.is_value_optional
+							if l_opt_val then
+								Result.append_character ('[')
+							end
+							Result.append (":<")
+							Result.append (l_val_switch.arg_name)
+							Result.append_character ('>')
+							if l_opt_val then
+								Result.append_character (']')
+							end
+						end
+						if l_opt then
 							Result.append_character (']')
 						end
+						if not l_switches.islast then
+							Result.append_character (' ')
+						end
 					end
-					if l_opt then
-						Result.append_character (']')
-					end
-					if not l_switches.islast then
-						Result.append_character (' ')
-					end
+					l_switches.forth
 				end
-				l_switches.forth
+				l_switches.go_to (l_cursor)
 			end
-			l_switches.go_to (l_cursor)
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 			available_switches_unmoved: available_switches.cursor.is_equal (available_switches.cursor)
@@ -857,20 +870,45 @@ feature {NONE} -- Switches
 			-- Retrieve a list of available switch
 		local
 			l_switches: like switches
-			l_result: ARRAYED_LIST [ARGUMENT_SWITCH]
-		do
+		once
 			l_switches := switches
 			if l_switches /= Void then
-				create l_result.make (2 + l_switches.count)
+				create Result.make (2 + l_switches.count)
 			else
-				create l_result.make (2)
+				create Result.make (2)
 			end
-			l_result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", True, False))
 			if l_switches /= Void then
-				l_result.append (l_switches)
+				Result.append (l_switches)
 			end
-			l_result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", True, False))
-			Result := l_result
+			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", True, False))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen available_visible_switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
+			-- Retrieve a list of available visible (not hidden) switch
+		local
+			l_switches: like available_switches
+			l_switch: ARGUMENT_SWITCH
+			l_cursor: CURSOR
+		once
+			if has_available_options then
+				l_switches := available_switches
+				create Result.make (l_switches.count)
+
+				l_cursor := l_switches.cursor
+				from l_switches.start until l_switches.after loop
+					l_switch := l_switches.item
+					if not l_switch.hidden then
+						Result.extend (l_switch)
+					end
+					l_switches.forth
+				end
+				l_switches.go_to (l_cursor)
+			else
+				create Result.make (0)
+			end
 		ensure
 			result_attached: Result /= Void
 		end

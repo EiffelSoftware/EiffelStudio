@@ -589,6 +589,12 @@ feature -- Update
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
+			if comp_system.il_generation and (not platform_constants.is_windows_64_bits or Comp_system.force_32bits) then
+					-- Force 32bit compilation
+				l_cmd.append (" -x86")
+			end
+			print (l_cmd)
+			print ("%N")
 			invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
 
@@ -608,6 +614,10 @@ feature -- Update
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
+			if comp_system.il_generation and (not platform_constants.is_windows_64_bits or Comp_system.force_32bits) then
+					-- Force 32bit compilation
+				l_cmd.append (" -x86")
+			end
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			timeout: EV_TIMEOUT_IMP
 		do
 			timeout ?= eif_id_any_object (id)
-			if timeout /= Void then
+			if timeout /= Void and then not timeout.is_destroyed then
 				timeout.on_timeout
 			else
 				remove_timeout (id)

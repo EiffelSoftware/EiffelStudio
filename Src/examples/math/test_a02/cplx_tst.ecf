@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="cplx_tst" uuid="96379100-86BE-4076-A2DF-B8F78854BFC6">
+	<target name="cplx_tst">
+		<root cluster="root_cluster" class="COMPLEX_TEST" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<external_include location="$(NAGCL04_32)\include"/>
+		<external_include location="$(ISE_LIBRARY)\library\math\clib"/>
+		<external_object location="$(ISE_LIBRARY)\library\math\clib\eifmathc.lib"/>
+		<external_object location="$(NAGCL04_32)\dll\nagc.lib"/>
+		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf" readonly="false"/>
+		<cluster name="bvp" location="$ISE_LIBRARY\library\math\bvp\"/>
+		<cluster name="eifmath" location="$ISE_LIBRARY\library\math\eifmath\"/>
+		<cluster name="integrat" location="$ISE_LIBRARY\library\math\integrat\"/>
+		<cluster name="interpol" location="$ISE_LIBRARY\library\math\interpol\"/>
+		<cluster name="linear" location="$ISE_LIBRARY\library\math\linear\"/>
+		<cluster name="ode" location="$ISE_LIBRARY\library\math\ode\"/>
+		<cluster name="optima" location="$ISE_LIBRARY\library\math\optima\"/>
+		<cluster name="random" location="$ISE_LIBRARY\library\math\random\"/>
+		<cluster name="regress" location="$ISE_LIBRARY\library\math\regress\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="roots" location="$ISE_LIBRARY\library\math\roots\"/>
+		<cluster name="special" location="$ISE_LIBRARY\library\math\special\"/>
+		<cluster name="transp" location="$ISE_LIBRARY\library\math\transp\"/>
+		<cluster name="tsa" location="$ISE_LIBRARY\library\math\tsa\"/>
+	</target>
+</system>

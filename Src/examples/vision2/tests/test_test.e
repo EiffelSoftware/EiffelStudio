@@ -14,7 +14,7 @@ inherit
 
 	EV_KEY_CONSTANTS
 		undefine
-			default_create
+			default_create, copy
 		end
 
 create

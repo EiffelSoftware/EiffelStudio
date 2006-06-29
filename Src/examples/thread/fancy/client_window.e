@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_overlappedwindow
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Name of window class.
 		once
 			Result := "Client Window"

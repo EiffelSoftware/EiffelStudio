@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eiffel_scan" uuid="0B80447F-59D4-4A57-B683-65906CC4D778">
+	<target name="common" abstract="true">
+		<root cluster="root_cluster" class="EIFFEL_SCAN" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>		
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+	<target name="classic" extends="common">
+		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
+	</target>
+	<target name="dotnet" extends="common">
+		<setting name="msil_generation" value="true"/>
+	</target>	
+</system>

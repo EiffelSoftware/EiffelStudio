@@ -11,12 +11,12 @@ class
 
 inherit
 	EV_APPLICATION
-	
+
 	PAINTBRUSH_CONSTANTS
 		export
 			{NONE} all
 		undefine
-			default_create
+			default_create, copy
 		end
 
 create
@@ -87,7 +87,7 @@ feature -- Initialization
 
 				-- Add widgets to our window
 			first_window.extend (my_container)
-			
+
 				-- Request that close actions emulate "File menu / Exit"
 				-- (close actions are fired when the user click on the small
 				-- cross in the title bar for example)
@@ -132,7 +132,7 @@ feature {NONE} -- Graphical interface
 	my_toolbar: EV_TOOL_BAR
 
 feature -- Process Vision2 events
-	
+
 	new_bitmap is
 			-- create a new blank pixmap
 		do
@@ -154,10 +154,10 @@ feature -- Process Vision2 events
 			ofd.ok_actions.extend (agent effective_load_file (ofd))
 			ofd.show_modal_to_window (first_window)
 		end
-	
+
 	on_file_new is
 			-- Feature executed when the user select file/new
-			-- in the menu. 
+			-- in the menu.
 		local
 			create_new_pixmap_dialog: PAINTBRUSH_CREATE_NEW_PIXMAP_DIALOG
 		do
@@ -169,20 +169,20 @@ feature -- Process Vision2 events
 				my_pixmap.clear
 			end
 		end
-	
+
 	on_file_save is
 			-- Feature executed when the user select file/close
 			-- in the menu.
 		do
 		end
-	
+
 	on_file_exit is
 			-- Feature executed when the user select file/exit
 			-- in the menu.
 		do
 				-- Destroy the main window
 			first_window.destroy;
-			
+
 				-- Stop the message loop causing the application
 				-- to exit.
 			(create {EV_ENVIRONMENT}).application.destroy
@@ -203,7 +203,7 @@ feature {NONE} -- Initialisations and File status
 
 	file_name: STRING;
 			-- Name of the current displayed pixmap.
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

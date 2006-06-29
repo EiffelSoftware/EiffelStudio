@@ -11,49 +11,9 @@ class
 
 inherit
 	EV_APPLICATION_IMP
-		redefine
-			make,
-			lock,
-			try_lock,
-			unlock
-		end
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (an_interface: like interface) is
-			-- Create mutex and call precursor.
-		do
-			create idle_action_mutex
-			Precursor {EV_APPLICATION_IMP} (an_interface)
-		end
-
-feature -- Thread Handling.
-
-	lock is
-			-- Lock the Mutex.
-		do
-			idle_action_mutex.lock
-		end
-
-	try_lock: BOOLEAN is
-			-- Try to see if we can lock, False means no lock could be attained
-		do
-			Result := idle_action_mutex.trylock
-		end
-
-	unlock is
-			-- Unlock the Mutex.
-		do
-			idle_action_mutex.unlock
-		end
-
-feature {NONE} -- Implementation
-
-	idle_action_mutex: MUTEX;
-			-- Mutex used to access `idle_actions'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-			create expanded_section_store.make (0)
 			create sections.make (5)
 
 			disable_selection_on_click
@@ -87,7 +86,7 @@ feature -- Update
 			enable_last_column_use_all_width
 
 			sections.wipe_out
-			expanded_section_store.wipe_out
+			create expanded_section_store.make (5)
 		end
 
 	add_section (a_name: STRING) is

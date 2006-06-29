@@ -19,6 +19,17 @@ create
 feature -- Initialization
 
 	make is
+			--
+		local
+			l_parser: ARGUMENT_PARSER
+		do
+			create l_parser.make (False, False)
+			l_parser.execute (agent start (l_parser))
+		end
+
+	start (a_parser: ARGUMENT_PARSER) is
+		require
+			a_parser_attached: a_parser /= Void
 		local
 			retried: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
@@ -36,13 +47,13 @@ feature -- Initialization
 				location := current_working_directory
 
 					-- if location has been specified, update it
-				location_index := index_of_word_option ("location")
-				if location_index /= 0 and then argument_count >= location_index + 1 then
-					location := argument (location_index + 1)
+
+				if a_parser.has_location then
+					location := a_parser.location
 				end
 
 					-- if generate_only is specified then only generate makefile
-				gen_only := index_of_word_option ("generate_only") /= 0
+				gen_only := a_parser.generate_only
 
 					-- Map `location' if it is a network path if needed
 				if location.substring (1, 2).is_equal ("\\") then
@@ -59,7 +70,7 @@ feature -- Initialization
 				end
 
 				set_option_sign ('-')
-				create translator.make (mapped_path)
+				create translator.make (mapped_path, a_parser.force_32bit_code_generation)
 
 				translator.translate
 				if not gen_only and translator.has_makefile_sh then
@@ -80,7 +91,7 @@ feature -- Initialization
 					l_msg := "Internal error during Makefile translation preparation.%N%N%
 							%Please report this problem to Eiffel Software at:%N%
 							%http://support.eiffel.com"
-					if index_of_word_option ("silent") = 0 then
+					if not a_parser.silent then
 						create status_box.make_fatal (l_msg)
 					else
 						io.put_string (l_msg)
@@ -88,7 +99,7 @@ feature -- Initialization
 					end
 				else
 					if translator.has_makefile_sh then
-						if index_of_word_option ("silent") = 0 then
+						if not a_parser.silent then
 							make_util := translator.options.get_string ("make", "make utility")
 							create status_box.make (make_util, retried, c_error, False, False)
 						else

@@ -8,20 +8,11 @@ indexing
 class
 	EV_THREAD_APPLICATION
 
+obsolete
+	"Use EV_APPLICATION instead as it is now thread-aware via `add_idle_action' and `do_once_on_idle'"
+
 inherit
 	EV_APPLICATION
-		redefine
-			create_implementation
-		end
-
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-			-- Add thread safe operations to standard implementation.
-		do
-			create {EV_THREAD_APPLICATION_IMP} implementation.make (Current)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

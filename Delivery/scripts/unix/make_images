@@ -65,7 +65,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	make_cd_image Eiffel57_enterprise Eiffel57_enterprise.iso cdrom
 	gzip Eiffel57_enterprise.iso
 	mv cdrom/Eiffel57 Eiffel57
-	tar czf Eiffel57_enterprise.tgz Eiffel57 
+	tar czf Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tgz Eiffel57 
 fi
 
 remtrace Preparing GPL version
@@ -78,4 +78,4 @@ mv Eiffel57 cdrom
 make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
 gzip Eiffel57_gpl.iso
 mv cdrom/Eiffel57 Eiffel57
-tar czf Eiffel57_gpl.tgz Eiffel57
+tar czf Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tgz Eiffel57

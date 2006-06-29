@@ -301,6 +301,15 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Class options of an unknown class.", w_option_unknown_class)
 		end
 
+feature {NONE} -- Misc
+
+	general_add: STRING is "Add"
+	general_remove: STRING is "Remove"
+	variables_name: STRING is "Name"
+	variables_value: STRING is "Value"
+	mapping_old_name: STRING is "Old name"
+	mapping_new_name: STRING is "New name"
+
 feature {NONE} -- Condition dialog
 
 	dial_cond_platforms: STRING is "Platforms"

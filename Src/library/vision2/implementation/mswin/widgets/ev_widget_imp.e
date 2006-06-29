@@ -899,22 +899,17 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key release represented by `virtual_key'.
 		local
 			key: EV_KEY
-			common_dialog_imp: EV_DIALOG_I
+			l_top_level_window_imp: EV_WINDOW_I
 			l_current: EV_WIDGET_I
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
 				if propagate_key_event_to_toplevel_window (False) then
-						-- Windows does not seem to generate any messages when a key is
-						-- pressed in a modal or modeless dialog, so if `Current' is parented
-						-- in one of these, we must force the calling of the key_release_actions.
-						-- We also handle the case where `Current' is a dialog, as the escape key
-						-- is fired and we need to ignore it, to avoid the actions being called twice.
-					common_dialog_imp ?= top_level_window_imp
+					l_top_level_window_imp ?= top_level_window_imp
 					l_current := Current
-					if common_dialog_imp /= Void and common_dialog_imp /= l_current then
-						common_dialog_imp.key_release_actions.call ([key])
+					if l_top_level_window_imp /= Void and l_top_level_window_imp /= l_current then
+						l_top_level_window_imp.key_release_actions.call ([key])
 					end
 				end
 				if application_imp.key_release_actions_internal /= Void then

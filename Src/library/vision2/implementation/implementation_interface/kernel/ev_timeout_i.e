@@ -51,14 +51,22 @@ feature -- Status setting
 feature -- Implementation
 
 	on_timeout is
-			-- Call actions and increment count.
+			-- Call actions and increment count if not already executing.
 		do
-			interface.actions.call (Void)
-			count := count + 1
+				-- Do not process timeout if `Current' is already executing.
+			if not is_timeout_executing then
+				is_timeout_executing := True
+				interface.actions.call (Void)
+				count := count + 1
+				is_timeout_executing := False
+			end
 		ensure
 			count_incremented_or_reset:
-				count = old count + 1 or else count = 1
+				not is_timeout_executing implies (count = old count + 1 or else count = 1)
 		end
+
+	is_timeout_executing: BOOLEAN
+		-- Is the timeout currently executing?
 
 feature {EV_ANY_I} --Implementation
 

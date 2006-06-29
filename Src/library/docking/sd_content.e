@@ -118,6 +118,29 @@ feature -- Access
 	is_visible: BOOLEAN
 			-- If Current visible?
 
+	is_title_unique_except_current (a_title: STRING): BOOLEAN is
+			-- If `a_title' unique?
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			if docking_manager /= Void then
+				l_contents := docking_manager.contents
+				from
+					Result := True
+					l_contents.start
+				until
+					l_contents.after or not Result
+				loop
+					if l_contents.item /= Current then
+						if l_contents.item.unique_title.is_equal (a_title) then
+							Result := False
+						end
+					end
+					l_contents.forth
+				end
+			end
+		end
+
 feature -- Set
 
 	set_long_title (a_long_title: STRING) is
@@ -140,6 +163,17 @@ feature -- Set
 			internal_state.change_title (a_short_title, Current)
 		ensure
 			set: a_short_title = short_title
+		end
+
+	set_unique_title (a_unique_title: STRING) is
+			-- Set `unique_title'
+		require
+			a_unique_title_not_void: a_unique_title /= Void
+			title_valid: is_title_unique_except_current (a_unique_title)
+		do
+			internal_unique_title := a_unique_title
+		ensure
+			set: unique_title = a_unique_title
 		end
 
 	set_pixmap (a_pixmap: like internal_pixmap) is
@@ -239,8 +273,9 @@ feature -- Set Position
 			set_focus
 		end
 
-	set_tab_with (a_content: SD_CONTENT; a_first: BOOLEAN) is
-			-- Set `Current' tab whit `a_content'.
+	set_tab_with (a_content: SD_CONTENT; a_left: BOOLEAN) is
+			-- Set `Current' tab with `a_content'.
+			-- If `a_left' then put new tab at left, otherwise put new tab at right
 		require
 			manager_has_content: manager_has_content (Current)
 			manager_has_content: manager_has_content (a_content)
@@ -251,7 +286,7 @@ feature -- Set Position
 		do
 			l_tab_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
-				if not a_first then
+				if not a_left then
 				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
 				 	state.move_to_tab_zone (l_tab_zone, 1)
@@ -259,7 +294,7 @@ feature -- Set Position
 			else
 				l_docking_zone ?= a_content.state.zone
 				check l_docking_zone /= Void end
-				state.move_to_docking_zone (l_docking_zone, a_first)
+				state.move_to_docking_zone (l_docking_zone, a_left)
 			end
 			set_focus
 		end

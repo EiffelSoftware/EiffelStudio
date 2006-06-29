@@ -138,30 +138,32 @@ feature -- Hanlde pointer events
 			debug ("docking")
 				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
 			end
-			screen_x := a_screen_x
-			screen_y := a_screen_y
+			-- We only handle the case that pointer position changed
+			if screen_x /= a_screen_x or screen_y /= a_screen_y then
+				screen_x := a_screen_x
+				screen_y := a_screen_y
 
-			from
-				hot_zones.start
-			until
-				hot_zones.after or l_drawed
-			loop
-				l_drawed := hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
-				hot_zones.forth
+				from
+					hot_zones.start
+				until
+					hot_zones.after or l_drawed
+				loop
+					l_drawed := hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
+					hot_zones.forth
+					debug ("docking")
+						print ("%N SD_DOCKER_MEDIATOR on_pointer_motion")
+					end
+				end
 				debug ("docking")
-					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion")
+					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion step 2")
+				end
+				if is_dockable then
+					on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
+					if not internal_shared.show_all_feedback_indicator then
+						on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
+					end
 				end
 			end
-			debug ("docking")
-				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion step 2")
-			end
-			if is_dockable then
-				on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
-				if not internal_shared.show_all_feedback_indicator then
-					on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
-				end
-			end
-
 		end
 
 feature -- Query

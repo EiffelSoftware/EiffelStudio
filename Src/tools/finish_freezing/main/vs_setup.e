@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} non_used_command_line
 		end
-		
+
 	PATH_CONVERTER
 
 create
@@ -23,10 +23,12 @@ create
 
 feature -- Initialization
 
-	make is
+	make (a_force_32bit_generation: like force_32bit) is
 			-- Create and setup environment variables for currently installed
 			-- version of Visual Studio.
 		do
+			force_32bit := a_force_32bit_generation
+
 			create variables.make (5)
 			initialize_env_vars
 		end
@@ -43,7 +45,7 @@ feature -- Initialization
 				create l_batch_file.make_open_write ("finish_freezing.bat")
 						-- Unset the INCLUDE, LIB and PATH.
 				l_batch_file.put_string ("@echo off")
-				l_batch_file.put_new_line		
+				l_batch_file.put_new_line
 				l_batch_file.put_string ("set INCLUDE=")
 				l_batch_file.put_new_line
 				l_batch_file.put_string ("set LIB=")
@@ -86,7 +88,7 @@ feature -- Initialization
 				end
 			end
 		end
-		
+
 feature -- Implementation
 
 	parse_variable_string (a_string: STRING) is
@@ -99,19 +101,19 @@ feature -- Implementation
 			l_split_list: LIST [STRING]
 		do
 			l_split_list := a_string.split ('=')
-			if 
-				l_split_list.first.is_equal ("INCLUDE") or 
+			if
+				l_split_list.first.is_equal ("INCLUDE") or
 				l_split_list.first.is_equal ("LIB") or
 				l_split_list.first.is_equal ("PATH")
 			then
 				variables.put (l_split_list.i_th (2), l_split_list.first)
-				synchronize_variable (l_split_list.first)				
+				synchronize_variable (l_split_list.first)
 			end
 		end
-		
+
 	synchronize_variable (a_string: STRING) is
 			-- Compare the variable value in 'variables' hashed by 'a_string' against
-			-- actual system variable value known by 'a_string'. Result will contain 
+			-- actual system variable value known by 'a_string'. Result will contain
 			-- all values in 'a_string' and in system without duplication.
 		require
 			a_string_not_void: a_string /= Void
@@ -127,7 +129,7 @@ feature -- Implementation
 			check
 				variables_has_a_string: variables.has (a_string)
 			end
-			l_local_var_values := variables.item (a_string).split (';')	
+			l_local_var_values := variables.item (a_string).split (';')
 			if l_local_var_values /= Void and not l_local_var_values.is_empty then
 						-- Get the corresponding system environment variable if it existed before.
 				l_var_value := env.get (a_string)
@@ -153,7 +155,7 @@ feature -- Implementation
 						l_local_var_values.after
 					loop
 						l_new_var_value.append (l_local_var_values.item + ";")
-						l_local_var_values.forth 
+						l_local_var_values.forth
 					end
 					create l_value.make (l_new_var_value)
 					success := set_environment_variable (l_name.item, l_value.item)
@@ -175,7 +177,7 @@ feature -- Keys
 			l_file: PLAIN_TEXT_FILE
 			l_platform: PLATFORM
 		once
-			if is_windows_64_bits then
+			if not force_32bit and is_windows_64_bits then
 					-- We have been compiled for 64bits, meaning that we can only compile 64 bits code
 					-- and we require at least Visual Studio .NET 2005.
 				l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 64)
@@ -208,7 +210,7 @@ feature -- Keys
 						end
 					end
 				end
-				
+
 					-- VS.NET 2002
 				if Result = Void then
 					l_buffer := vc_product_dir_for_vs_dotnet ("7.0", 32)
@@ -219,7 +221,7 @@ feature -- Keys
 						end
 					end
 				end
-				
+
 					-- VS 6.0
 				if Result = Void then
 					l_buffer := vc_product_dir_for_vs_6
@@ -228,15 +230,15 @@ feature -- Keys
 						if l_file.exists then
 							Result := l_file.name
 						end
-					end	
+					end
 				end
 			end
 		ensure
 			valid_result: Result /= Void implies not Result.is_empty
 		end
-		
+
 feature {NONE} -- Keys
-		
+
 	vc_product_dir_for_vs_dotnet (a_version: STRING; a_platform: INTEGER): STRING is
 			--Retrieve product dir for VC from a Visual Studio .NET installation
 		require
@@ -251,7 +253,7 @@ feature {NONE} -- Keys
 			l_key_path.append (a_version)
 			l_key_path.append ("\Setup\VC")
 			Result := vc_product_dir_from_key (l_key_path)
-			
+
 			if Result = Void and a_platform = 64 then
 					-- Search the key in the `Wow6432Node'.
 				create l_key_path.make (60 + a_version.count)
@@ -271,7 +273,7 @@ feature {NONE} -- Keys
 		ensure
 			valid_result: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 		end
-		
+
 	vc_product_dir_from_key (a_key_path: STRING): STRING is
 			-- retrieve product dur from `a_key_path' in registry
 		require
@@ -287,7 +289,7 @@ feature {NONE} -- Keys
 			l_reg_key := l_reg.open_key_with_access (a_key_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 			if l_reg_key /= default_pointer then
 				l_key_value := l_reg.key_value (l_reg_key, "ProductDir")
-				l_reg.close_key (l_reg_key)	
+				l_reg.close_key (l_reg_key)
 				if l_key_value /= Void then
 					Result := l_key_value.string_value
 					l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
@@ -308,7 +310,7 @@ feature {NONE} -- Keys
 			valid_a_bit: a_bits = 32 or a_bits = 64
 			valid_64_bits: a_bits = 64 implies is_windows_64_bits
 		do
-			if a_bits = 64 then 
+			if a_bits = 64 then
 				Result := a_product_dir + "bin\amd64\vcvarsamd64.bat"
 			else
 				Result := a_product_dir + "bin\vcvars" + a_bits.out + ".bat"
@@ -328,7 +330,7 @@ feature -- Access
 
 	valid_vcvars: BOOLEAN is
 			-- Is the vc_vars32.bat file a valid file?
-		once			
+		once
 			Result := vcvars_full_path /= Void
 		end
 
@@ -342,7 +344,10 @@ feature -- Access
 		do
 			Result := vs_version = 6 or vs_version = 7
 		end
-		
+
+	force_32bit: BOOLEAN
+			-- Should 32bit tools be used?
+
 feature -- Externals
 
 	set_environment_variable (name, value: POINTER): BOOLEAN is
@@ -353,7 +358,7 @@ feature -- Externals
 		alias
 			"SetEnvironmentVariable"
 		end
-		
+
 	is_windows_64_bits: BOOLEAN is
 			-- Is Current running on Windows 64 bits?
 		external
@@ -361,7 +366,7 @@ feature -- Externals
 		alias
 			"EIF_IS_64_BITS"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

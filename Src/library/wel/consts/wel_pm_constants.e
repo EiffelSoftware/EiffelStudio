@@ -16,6 +16,8 @@ feature -- Access
 
 	Pm_noyield: INTEGER is 2;
 
+	Pm_qs_paint: INTEGER is 0x200000;
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

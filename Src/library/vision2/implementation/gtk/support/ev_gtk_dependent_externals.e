@@ -10,41 +10,6 @@ class
 
 feature -- Externals
 
-	frozen gdk_pixbuf_copy (a_pixbuf: POINTER): POINTER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf)"
-		end
-
-	frozen gdk_pixbuf_new_subpixbuf (a_pixbuf: POINTER; src_x, src_y, width, height: INTEGER): POINTER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height)"
-		end
-
-	frozen gdk_pixbuf_get_width (a_pixbuf: POINTER): INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf)"
-		end
-
-	frozen gdk_pixbuf_get_height (a_pixbuf: POINTER): INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf)"
-		end
-
-	frozen gdk_colorspace_rgb_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GDK_COLORSPACE_RGB"
-		end
-
 	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
@@ -172,122 +137,227 @@ feature -- Externals
 
 -- ***************** Gtk 2.6 only ****************************
 
---	frozen pango_renderer_draw_layout (a_pango_renderer, a_pango_layout: POINTER; a_x, a_y: INTEGER) is
---		external
---			"C signature (PangoRenderer*, PangoContext*, gint, gint) use <gtk/gtk.h>"
---		end
---
---	frozen gdk_pango_renderer_new (a_screen: POINTER): POINTER is
---		external
---			"C signature (GdkScreen*): PangoRenderer use <gtk/gtk.h>"
---		end
---
---	frozen gdk_pango_renderer_get_default (a_screen: POINTER): POINTER is
---		external
---			"C signature (GdkScreen*): PangoRenderer use <gtk/gtk.h>"
---		end
---
---	frozen gdk_pango_renderer_set_drawable (a_renderer, a_drawable: POINTER) is
---		external
---			"C signature (PangoRenderer*, GdkDrawable*) use <gtk/gtk.h>"
---		end
---
---	frozen gdk_pango_renderer_set_gc (a_renderer, a_gc: POINTER) is
---		external
---			"C signature (PangoRenderer*, GdkGC*) use <gtk/gtk.h>"
---		end
---
---	frozen gtk_label_set_angle (a_label: POINTER; a_angle: REAL) is
---		external
---			"C signature (GtkLabel*, double) use <gtk/gtk.h>"
---		end
---
---	frozen pango_matrix_init (a_pango_matrix: TYPED_POINTER [POINTER]) is
---		external
---			"C inline use <gtk/gtk.h>"
---		alias
---			"[
---				PangoMatrix matrix = PANGO_MATRIX_INIT;
---				*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
---			]"
---		end
---
---	frozen pango_matrix_free (a_pango_matrix: POINTER) is
---		external
---			"C signature (PangoMatrix*) use <gtk/gtk.h>"
---		end
---
---	frozen pango_matrix_rotate (a_matrix: POINTER; a_degrees: REAL) is
---		external
---			"C signature (PangoMatrix*, double) use <gtk/gtk.h>"
---		end
---
---	frozen pango_matrix_translate (a_matrix: POINTER; a_x, a_y: REAL) is
---		external
---			"C signature (PangoMatrix*, double, double) use <gtk/gtk.h>"
---		end
---
---	frozen pango_matrix_scale (a_matrix: POINTER; a_x_scale, a_y_scale: REAL) is
---		external
---			"C signature (PangoMatrix*, double, double) use <gtk/gtk.h>"
---		end
---
---	frozen pango_matrix_concat (a_matrix, a_new_matrix: POINTER) is
---		external
---			"C signature (PangoMatrix*, PangoMatrix*) use <gtk/gtk.h>"
---		end
---
---	frozen set_pango_matrix_struct_xx (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"xx"
---		end
---
---	frozen set_pango_matrix_struct_xy (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"xy"
---		end
---
---	frozen set_pango_matrix_struct_yx (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"yx"
---		end
---
---	frozen set_pango_matrix_struct_yy (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"yy"
---		end
---
---	frozen set_pango_matrix_struct_x0 (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"x0"
---		end
---
---	frozen set_pango_matrix_struct_y0 (a_c_struct: POINTER; a_x: DOUBLE) is
---		external
---			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
---		alias
---			"y0"
---		end
---
---	frozen pango_context_set_matrix (a_context, a_matrix: POINTER) is
---		external
---			"C signature (PangoContext*, PangoMatrix*) use <gtk/gtk.h>"
---		end
---
---	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
---		external
---			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
---		end
+	frozen pango_renderer_draw_layout (a_pango_renderer, a_pango_layout: POINTER; a_x, a_y: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_renderer_draw_layout ((PangoRenderer*) $a_pango_renderer, (PangoLayout*) $a_pango_layout, (gint) $a_x, (gint) $a_y);
+				#endif
+			]"
+		end
+
+	frozen gdk_pango_renderer_new (a_screen: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					return gdk_pango_renderer_new ((GdkScreen*) $a_screen);
+				#endif
+			]"
+		end
+
+	frozen gdk_pango_renderer_get_default (a_screen: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					return gdk_pango_renderer_get_default ((GdkScreen*) $a_screen);
+				#endif
+			]"
+		end
+
+	frozen gdk_pango_renderer_set_drawable (a_renderer, a_drawable: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					gdk_pango_renderer_set_drawable ((GdkPangoRenderer*) $a_renderer, (GdkDrawable*) $a_drawable);
+				#endif
+			]"
+		end
+
+	frozen gdk_pango_renderer_set_gc (a_renderer, a_gc: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					gdk_pango_renderer_set_gc ((GdkPangoRenderer*) $a_renderer, (GdkGC*) $a_gc);
+				#endif
+			]"
+		end
+
+	frozen gtk_label_set_angle (a_label: POINTER; a_angle: REAL) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					gtk_label_set_angle ((GtkLabel*) $a_label, (double) $a_angle);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_init (a_pango_matrix: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					PangoMatrix matrix = PANGO_MATRIX_INIT;
+					*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_free (a_pango_matrix: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_matrix_free ((PangoMatrix*) $a_pango_matrix);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_rotate (a_matrix: POINTER; a_degrees: REAL) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_translate (a_matrix: POINTER; a_x, a_y: REAL) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_scale (a_matrix: POINTER; a_x_scale, a_y_scale: REAL) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_matrix_scale ((PangoMatrix*) $a_matrix, (double) $a_x_scale, (double) $a_y_scale);
+				#endif
+			]"
+		end
+
+	frozen pango_matrix_concat (a_matrix, a_new_matrix: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_matrix_concat ((PangoMatrix*) $a_matrix, (PangoMatrix*) $a_new_matrix);
+				#endif
+			]"
+		end
+
+	frozen pango_context_set_matrix (a_context, a_matrix: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);
+				#endif
+			]"
+		end
+
+	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					pango_layout_set_ellipsize ((PangoLayout*) $a_layout, (PangoEllipsizeMode) $a_mode);
+				#endif
+			]"
+		end
+
+	frozen set_pango_matrix_struct_xx (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;
+				#endif
+			]"
+		end
+
+	frozen set_pango_matrix_struct_xy (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->xy = (gdouble) $a_x;
+				#endif
+			]"
+		end
+
+	frozen set_pango_matrix_struct_yx (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->yx = (gdouble) $a_x;
+				#endif
+			]"
+		end
+
+	frozen set_pango_matrix_struct_yy (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->yy = (gdouble) $a_x;
+				#endif
+			]"
+		end
+
+
+	frozen set_pango_matrix_struct_x0 (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->x0 = (gdouble) $a_x;
+				#endif
+			]"
+		end
+
+	frozen set_pango_matrix_struct_y0 (a_c_struct: POINTER; a_x: DOUBLE) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					((PangoMatrix*)$a_c_struct)->y0 = (gdouble) $a_x;
+				#endif
+			]"
+		end
 
 -- ***********************************************************
 
@@ -484,16 +554,6 @@ feature -- Externals
 	frozen gtk_combo_box_popdown (a_combo: POINTER) is
 		external
 			"C signature (GtkComboBox*) use <gtk/gtk.h>"
-		end
-
-	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN) is
-		external
-			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
-		end
-
-	frozen gtk_window_set_skip_pager_hint (a_window: POINTER; a_setting: BOOLEAN) is
-		external
-			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_entry_set_has_frame (a_entry: POINTER; has_frame: BOOLEAN) is
@@ -2448,21 +2508,6 @@ feature -- Externals
 	frozen gdk_pixbuf_get_from_image (a_pixbuf, a_drawable, a_colormap: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
 		external
 			"C signature (GdkPixbuf*, GdkImage*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <gtk/gtk.h>"
-		end
-
-	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
-		external
-			"C signature (GdkPixbuf*, GdkPixmap**, GdkBitmap**, int) use <gtk/gtk.h>"
-		end
-
-	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER is
-		external
-			"C signature (char*, GError**): GdkPixbuf* use <gtk/gtk.h>"
-		end
-
-	frozen gdk_pixbuf_new (a_colorspace: INTEGER; a_has_alpha: BOOLEAN; a_bits_per_sample, a_width, a_height: INTEGER): POINTER is
-		external
-			"C signature (GdkColorspace, gboolean, int, int, int): GdkPixbuf* use <gtk/gtk.h>"
 		end
 
 	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is

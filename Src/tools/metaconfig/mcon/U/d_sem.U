@@ -1,0 +1,48 @@
+?RCS: $Id: d_sem.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:03  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_sem: test d_semctl d_semget d_semop Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_sem:
+?S:	This variable conditionally defines the HAS_SEM symbol, which
+?S:	indicates that the entire sem*(2) library is present.
+?S:.
+?C:HAS_SEM:
+?C:	This symbol, if defined, indicates that the entire sem*(2) library is
+?C:	supported.
+?C:.
+?H:#$d_sem HAS_SEM		/**/
+?H:.
+?T:h_sem
+?LINT:set d_sem
+: see how much of the 'sem*(2)' library is present.
+h_sem=true
+echo " "
+case "$d_semctl$d_semget$d_semop" in
+*"$undef"*) h_sem=false;;
+esac
+: we could also check for sys/ipc.h ...
+if $h_sem && $test `./findhdr sys/sem.h`; then
+	echo "You have the full sem*(2) library." >&4
+	val="$define"
+else
+	echo "You don't have the full sem*(2) library." >&4
+	val="$undef"
+fi
+set d_sem
+eval $setvar
+

@@ -1,0 +1,124 @@
+?RCS: $Id: usenm.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:26:40  ram
+?RCS: patch61: don't use nm with the GNU C library
+?RCS: patch61: added support for Linux shared libs
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:57  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:usenm runnm nm_opt nm_so_opt: cat test Myread Oldconfig myuname grep \
+	d_gnulibc
+?MAKE:	-pick add $@ %<
+?S:usenm:
+?S:	This variable contains 'true' or 'false' depending whether the
+?S:	nm extraction is wanted or not.
+?S:.
+?S:runnm:
+?S:	This variable contains 'true' or 'false' depending whether the
+?S:	nm extraction should be performed or not, according to the value
+?S:	of usenm and the flags on the Configure command line.
+?S:.
+?S:nm_opt:
+?S:	This variable holds the options that may be necessary for nm.
+?S:.
+?S:nm_so_opt:
+?S:	This variable holds the options that may be necessary for nm
+?S:	to work on a shared library but that can not be used on an
+?S:	archive library.  Currently, this is only used by Linux, where
+?S:	nm --dynamic is *required* to get symbols from an ELF library which
+?S:	has been stripped, but nm --dynamic is *fatal* on an archive library.
+?S:	Maybe Linux should just always set usenm=false.
+?S:.
+: see if nm is to be used to determine whether a symbol is defined or not
+?X: If there is enough enquiries, it might be worth to wait for the nm
+?X: extraction. Otherwise, the C compilations might be a better deal.
+?X:
+?X: Don't bother if we're using GNU libc -- skimo
+case "$usenm" in
+'')
+	case "$d_gnulibc" in
+	$define)
+		dflt=n
+		;;
+	*)
+		dflt=`egrep 'inlibc|csym' ../Configure | wc -l 2>/dev/null`
+		if $test $dflt -gt 20; then
+			dflt=y
+		else
+			dflt=n
+		fi
+		;;
+	esac
+	;;
+*)
+	case "$usenm" in
+	true) dflt=y;;
+	*) dflt=n;;
+	esac
+	;;
+esac
+$cat <<EOM
+
+I can use 'nm' to extract the symbols from your C libraries. This is a time
+consuming task which may generate huge output on the disk (up to 3 megabytes)
+but that should make the symbols extraction faster. The alternative is to skip
+the 'nm' extraction part and to compile a small test program instead to
+determine whether each symbol is present. If you have a fast C compiler and/or
+if your 'nm' output cannot be parsed, this may be the best solution.
+You shouldn't let me use 'nm' if you have the GNU C Library.
+
+EOM
+rp='Shall I use nm to extract C symbols from the libraries?'
+. ./myread
+case "$ans" in
+n|N) usenm=false;;
+*) usenm=true;;
+esac
+
+?X: Name extraction is to be run if 'nm' usage is wanted and if no -r flag
+?X: was provided to configure (in which case we simply re-use the previous
+?X: values).
+runnm=$usenm
+case "$reuseval" in
+true) runnm=false;;
+esac
+
+: nm options which may be necessary
+case "$nm_opt" in
+'') if $test -f /mach_boot; then
+		nm_opt=''
+	elif $test -d /usr/ccs/lib; then
+		nm_opt='-p'
+	elif $test -f /dgux; then
+		nm_opt='-p'
+	else
+		nm_opt=''
+	fi;;
+esac
+
+: nm options which may be necessary for shared libraries but illegal
+: for archive libraries.  Thank you, Linux.
+case "$nm_so_opt" in
+'')	case "$myuname" in
+	*linux*)
+		if nm --help | $grep 'dynamic' > /dev/null 2>&1; then
+			nm_so_opt='--dynamic'
+		fi
+		;;
+	esac
+	;;
+esac
+

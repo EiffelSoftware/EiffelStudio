@@ -1,0 +1,136 @@
+                             dist 3.0
+
+                   Copyright (c) 1988, Larry Wall
+                Copyright (c) 1990-1992, Harlan Stenn
+              Copyright (c) 1991-1997, Raphael Manfredi
+
+------------------------------------------------------------------------
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the Artistic License, a copy of which can be
+    found with this package.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Artistic License for more details.
+------------------------------------------------------------------------
+
+This version of dist requires you to have at least perl 4.0 PL36.
+It has also been ported to work with perl 5.0 PL0, provided you have
+at least integrated patches 0a-0h, issued by Andy Dougherty and made
+available at the following ftp sites:
+
+	ftp.demon.co.uk:/pub/perl/db/perl5.000-p0a-p0h.tar.gz
+	ftp.funet.fi:/pub/languages/perl/ports/perl5/perl5.000-p0a-p0h.tar.gz
+
+Please read all the directions below before you proceed any further, and
+then follow them carefully.
+
+After you have unpacked your kit, you should have all the files listed
+in MANIFEST.
+
+========================================================================
+                           It's not the way I wrote it, but the
+                           way you play it makes it sound a lot better.
+                                -- Camille Saint-Saens (French composer)
+
+The dist package consists of four parts:
+
+    1) The Configure generator (metaconfig) and its supporting files.
+    2) The distribution kit maker (makedist) and its supporting files.
+    3) The patch distribution system (pat*) and its supporting files.
+    4) The Makefile generator (jmake) and its supporting files.
+
+Each of these can be used separately from the others.  Before you can
+use any of those, however, the directory containing your package (not this
+package) must be initialized by putting a .package file into it.  This
+can be done by running packinit in that directory.
+
+There is a mailing list hosted in Japan and set up by Shigeya Suzuki
+<shigeya@foretune.co.jp>, for discussion about the dist package as a
+whole. It's a good place to ask questions (or answer them) and to
+send your patches. I will post official patches to the net, as well
+as to the dist-users list.
+
+To send a mail to the list, address it to <dist-users@foretune.co.jp>.
+To subscribe, send a mail to <majordomo@foretune.co.jp>. If you don't
+know how to use majordomo, the syntax of the subscribe command is:
+
+	subscribe dist-users [address]
+
+where the address part is optional. You may unsubscribe automatically
+at any time by sending:
+
+	unsubscribe dist-users
+
+If you have a problem with this version of dist, it is recommended that
+you subscribe to the list, then send a description of your problem to it.
+If you send mail to me personally, I may not be able to answer in a
+timely fashion.
+
+This mailing list has low traffic (a few articles per week, typically),
+and it is expected to remain so, with a high signal/noise ratio.
+
+Notes:
+
+    If you are running on a system with <= 14 char filenames, don't
+    distribute any files with filenames longer than 12 chars (with the
+    exception of patchlevel.h), so that there will be room for a
+    2-digit extension indicating patch number in your bugs direcory.
+    This includes .SH files, so any shell script built by a .SH file
+    should be 9 characters or less.  On systems with flexfilenames you
+    don't have to worry about it.
+
+    This package has been designed on top of dist 2.0, which has been
+    written by Larry Wall <lwall@netlabs.com>.
+========================================================================
+
+INSTALLATION
+
+1) Run Configure. This will figure out various things about your
+system. After it has completed, it will produce config.h and config.sh.
+
+You might possibly have to trim # comments from the front of Configure
+if your shell doesn't handle them, but all other comments will be taken
+care of.
+
+2) Run make.
+
+3) If make succeeded, you may wish to do "make install install.man". Be
+sure your rights are correct (if you install manual pages, you may need
+super-user privileges). By not running "make install.man", you avoid the
+installation of the manual pages.
+
+4) Read the manual entry before running.
+
+5) IMPORTANT!  Communicate any problem and suggested patches to me,
+ram@hptnos02.grenoble.hp.com (Raphael Manfredi), so we can keep this
+distribution in sync.  If you have a problem, there will be someone else
+who had it or will have it too...
+
+If possible, send me patches such that the patch program will apply
+them.  Context diffs are the best, then normal diffs.  Do not send ed
+scripts, I have probably changed my copy since the version you got.
+
+6) After everything is installed, you can do make clobber. This will
+clean up everything and let you re-distribute this kit, without
+carrying useless files. You should keep this distribution intact, so
+that future patches will be applyable.
+
+7) I have an automatic patch sender. Send me the following mail:
+
+	Subject: Command
+	@SH mailhelp PATH
+
+and you'll get instructions (PATH stands for YOUR e-mail address, either
+in INTERNET or in bang notation). I would recommend you to get all the
+issued patches before you start making some modifications on this
+package.
+
+8) If you wish to deinstall the package, you may run "make deinstall".
+A separate "make deinstall.man" will remove the manual pages. Be sure
+the makefiles are correctly set before running any deinstall target.
+On USG systems, some executable have a chance to remain despite the
+deinstall (text file busy...).
+
+	Raphael Manfredi <Raphael_Manfredi@grenoble.hp.com>

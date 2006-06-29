@@ -1,0 +1,145 @@
+?RCS: $Id: d_castneg.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/05/12  12:11:21  ram
+?RCS: patch54: made sure cc and ccflags are conditional dependencies
+?RCS: patch54: added improved test case for Interactive Unix
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:10:50  ram
+?RCS: patch36: don't forget to tell user about compilation failures (ADO)
+?RCS: patch36: declare signal handler correctly using 'signal_t' (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:47  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X:	Can the compiler cast negative / odd floats to unsigned values.
+?X:
+?MAKE:d_castneg castflags: cat +cc +ccflags rm Setvar signal_t
+?MAKE:	-pick add $@ %<
+?S:d_castneg:
+?S:	This variable conditionally defines CASTNEG, which indicates
+?S:	wether the C compiler can cast negative float to unsigned.
+?S:.
+?S:castflags:
+?S:	This variable contains a flag that precise difficulties the
+?S:	compiler has casting odd floating values to unsigned long:
+?S:		0 = ok
+?S:		1 = couldn't cast < 0
+?S:		2 = couldn't cast >= 0x80000000
+?S:		4 = couldn't cast in argument expression list
+?S:.
+?C:CASTNEGFLOAT:
+?C:	This symbol is defined if the C compiler can cast negative
+?C:	numbers to unsigned longs, ints and shorts.
+?C:.
+?C:CASTFLAGS:
+?C:	This symbol contains flags that say what difficulties the compiler
+?C:	has casting odd floating values to unsigned long:
+?C:		0 = ok
+?C:		1 = couldn't cast < 0
+?C:		2 = couldn't cast >= 0x80000000
+?C:		4 = couldn't cast in argument expression list
+?C:.
+?H:#$d_castneg	CASTNEGFLOAT		/**/
+?H:#define CASTFLAGS $castflags		/**/
+?H:.
+?LINT:set d_castneg
+: check for ability to cast negative floats to unsigned
+echo " "
+echo 'Checking whether your C compiler can cast negative float to unsigned.' >&4
+$cat >try.c <<EOCP
+#include <sys/types.h>
+#include <signal.h>
+$signal_t blech() { exit(7); }
+$signal_t blech_in_list() { exit(4); }
+unsigned long dummy_long(p) unsigned long p; { return p; }
+unsigned int dummy_int(p) unsigned int p; { return p; }
+unsigned short dummy_short(p) unsigned short p; { return p; }
+main()
+{
+	double f = -123.;
+	unsigned long along;
+	unsigned int aint;
+	unsigned short ashort;
+	int result = 0;
+
+	signal(SIGFPE, blech);
+	along = (unsigned long)f;
+	aint = (unsigned int)f;
+	ashort = (unsigned short)f;
+	if (along != (unsigned long)-123)
+		result |= 1;
+	if (aint != (unsigned int)-123)
+		result |= 1;
+	if (ashort != (unsigned short)-123)
+		result |= 1;
+	f = (double)0x40000000;
+	f = f + f;
+	along = 0;
+	along = (unsigned long)f;
+	if (along != 0x80000000)
+		result |= 2;
+	f -= 1.;
+	along = 0;
+	along = (unsigned long)f;
+	if (along != 0x7fffffff)
+		result |= 1;
+	f += 2.;
+	along = 0;
+	along = (unsigned long)f;
+	if (along != 0x80000001)
+		result |= 2;
+	if (result)
+		exit(result);
+?X:
+?X: The following is a test for Interactive Unix Version 4.1, which
+?X: has an 'improved' compiler which can correctly cast negative
+?X: floats in expression lists, but apparently not in argument lists.
+?X:	Contributed by Winfried Koenig <win@incom.rhein-main.de>
+?X:
+	signal(SIGFPE, blech_in_list);
+	f = 123.;
+	along = dummy_long((unsigned long)f);
+	aint = dummy_int((unsigned int)f);
+	ashort = dummy_short((unsigned short)f);
+	if (along != (unsigned long)123)
+		result |= 4;
+	if (aint != (unsigned int)123)
+		result |= 4;
+	if (ashort != (unsigned short)123)
+		result |= 4;
+	exit(result);
+
+}
+EOCP
+if $cc -o try $ccflags try.c >/dev/null 2>&1; then
+	./try
+	castflags=$?
+else
+	echo "(I can't seem to compile the test program--assuming it can't)"
+	castflags=7
+fi
+case "$castflags" in
+0)	val="$define"
+	echo "Yup, it can."
+	;;
+*)	val="$undef"
+	echo "Nope, it can't."
+	;;
+esac
+set d_castneg
+eval $setvar
+$rm -f try.*
+

@@ -1,0 +1,54 @@
+?RCS: $Id: d_charsprf.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:49  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_charsprf: cat rm +cc Setvar
+?MAKE:	-pick add $@ %<
+?S:d_charsprf:
+?S:	This variable conditionally defines CHARSPRINTF if this system
+?S:	declares "char *sprintf()" in stdio.h.  The trend seems to be to
+?S:	declare it as "int sprintf()".
+?S:.
+?C:CHARSPRINTF:
+?C:	This symbol is defined if this system declares "char *sprintf()" in
+?C:	stdio.h.  The trend seems to be to declare it as "int sprintf()".  It
+?C:	is up to the package author to declare sprintf correctly based on the
+?C:	symbol.
+?C:.
+?H:#$d_charsprf	CHARSPRINTF 	/**/
+?H:.
+?LINT:set d_charsprf
+: see if sprintf is declared as int or pointer to char
+echo " "
+$cat >ucbsprf.c <<'EOF'
+main()
+{
+	int sprintf();
+	char buf[10];
+	exit((unsigned long)sprintf(buf,"%s","foo") > 10L);
+}
+EOF
+if $cc ucbsprf.c -o ucbsprf >/dev/null 2>&1 && ./ucbsprf; then
+	echo "Your sprintf() returns (int)." >&4
+	val="$undef"
+else
+	echo "Your sprintf() returns (char*)." >&4
+	val="$define"
+fi
+set d_charsprf
+eval $setvar
+$rm -f ucbsprf*
+

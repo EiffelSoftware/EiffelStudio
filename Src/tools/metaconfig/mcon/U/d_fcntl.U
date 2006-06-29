@@ -1,0 +1,34 @@
+?RCS: $Id: d_fcntl.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:01  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_fcntl: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_fcntl:
+?S:	This variable conditionally defines the HAS_FCNTL symbol, and indicates
+?S:	whether the fcntl() function exists
+?S:.
+?C:HAS_FCNTL:
+?C:	This symbol, if defined, indicates to the C program that
+?C:	the fcntl() function exists.
+?C:.
+?H:#$d_fcntl HAS_FCNTL		/**/
+?H:.
+?LINT:set d_fcntl
+: see if this is an fcntl system
+set fcntl d_fcntl
+eval $inlibc
+

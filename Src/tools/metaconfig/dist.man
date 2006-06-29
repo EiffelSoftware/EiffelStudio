@@ -1,0 +1,320 @@
+''' $Id: dist.man 78389 2004-11-30 00:17:17Z manus $
+'''
+'''  Copyright (c) 1991-1993, Raphael Manfredi
+'''  
+'''  You may redistribute only under the terms of the Artistic Licence,
+'''  as specified in the README file that comes with the distribution.
+'''  You may reuse parts of this distribution only within the terms of
+'''  that same Artistic Licence; a copy of which may be found at the root
+'''  of the source tree for dist 3.0.
+'''
+''' $Log$
+''' Revision 1.1  2004/11/30 00:17:18  manus
+''' Initial revision
+'''
+''' Revision 3.0.1.6  1995/05/12  11:57:53  ram
+''' patch54: updated my e-mail address
+'''
+''' Revision 3.0.1.5  1994/10/29  15:46:03  ram
+''' patch36: mentions new patlog script and ChangeLog file
+'''
+''' Revision 3.0.1.4  1994/05/06  13:54:17  ram
+''' patch23: extended copyright notice to 1994
+''' patch23: new script kitpost
+'''
+''' Revision 3.0.1.3  1994/01/24  13:55:41  ram
+''' patch16: documents profile and its components
+'''
+''' Revision 3.0.1.2  1993/11/10  17:31:03  ram
+''' patch14: added mention for new confmagic.h file
+'''
+''' Revision 3.0.1.1  1993/08/24  12:12:00  ram
+''' patch3: added entries for patnotify and patsnap
+'''
+''' Revision 3.0  1993/08/18  12:04:07  ram
+''' Baseline for dist 3.0 netwide release.
+'''
+''' 
+.de Ex		\" Start of Example
+.sp
+.in +5
+.nf
+..
+.de Ef		\" End of Example
+.sp
+.in -5
+.fi
+..
+.TH DIST 1 ram
+.SH NAME
+dist \- introduction to dist
+.SH DESCRIPTION
+The \fIdist\fR package is a set of tools meant to ease the construction and
+maintenance of portable software. There are four distinct parts in \fIdist\fR,
+and it is also meant to be used with two external products, which are
+publicly available: \fImailagent\fR and \fIpatch\fR.
+.PP
+The first component is the \fIConfigure\fR script generator, which is a
+portability tool. It is automatically build up by \fImetaconfig\fR from your
+sources and a set of units. Ideally, the end-user receiving your source code
+will simply have to read your README file, run the \fIConfigure\fR script
+(which is self-documented), and then run \fImake\fR. Your package should then
+build cleanly on every UNIX platform.
+.PP
+The second component is the \fIMakefile.SH\fR generator, which is a generic
+configured Makefile, reusing some of the information figured out by
+.I Configure.
+Although you may write your own Makefile and then use \fImakeSH\fR to transform
+it into a \fIMakefile.SH\fR, it is better to write a generic \fIJmakefile\fR
+description, which does not rely on a particular position within the source
+tree, and then use \fIjmake\fR to recursively build your Makefiles.
+.PP
+The third component is the package generator, which is used when it's time
+to build up the shell archives used to distribute your program. Although you
+may use your own archiving mechanism, the one included here knows about RCS
+files and will properly check out the lattest revisions, leaving your working
+files alone. The \fImakedist\fR program will also perform Copyright expansion,
+an useful feature when you share source files among more than one program,
+placed under distinct  Copyright information.
+.PP
+The fourth and latest component is the patch generator, used to make updates
+of your sources, which can later be applied on the original distribution by
+using the \fIpatch\fR program.
+.PP
+Before using any of the \fIdist\fR programs, you should probably identify your
+package by running the \fIpackinit\fR program, which will create
+a \fI.package\fR file in the top-level directory of your package.
+.SH COMMANDS
+The \fIdist\fR package implements the following commands (those
+tagged as \fIlibrary\fR commands are to be found in the dist
+library and should not be made publicly available in everyone's path):
+.TP 15
+bindex
+builds the \fIIndex\fR file (library).
+.PD 0
+.TP
+jmake
+a Makefile.SH generator.
+.TP
+jmkmf
+bootstraps top-level Makefile.SH file.
+.TP
+kitpost
+posts distribution kits made by \fImakedist\fR.
+.TP
+kitsend
+sends distribution kits made by \fImakedist\fR.
+.TP
+makeSH
+wraps existing scripts into a .SH file.
+.TP
+makedist
+builds up distribution kits.
+.TP
+makegloss
+builds the \fIGlossary\fR file (library).
+.TP
+manicheck
+checks MANIFEST.new accuracy
+.TP
+manifake
+makes MANIFEST.new out of an existing MANIFEST.
+.TP
+manilist
+builds MANIFEST.new reports.
+.TP
+metaconfig
+a Configure script generator.
+.TP
+metalint
+a metaconfig unit consistency checker.
+.TP
+metaxref
+a metaconfig cross-reference builder.
+.TP
+packinit
+initializes a package (creates a  .package file).
+.TP
+pat
+main patch generator.
+.TP
+patbase
+resets patch base to current version.
+.TP
+patcil
+checks new version in.
+.TP
+patclean
+remove working version of up-to-date files.
+.TP
+patcol
+checks file out.
+.TP
+patdiff
+builds (contextual) diffs for the patch.
+.TP
+patftp
+copies patches to public ftp directory.
+.TP
+patindex
+builds a patch index.
+.TP
+patlog
+handles ChangeLog file updates.
+.TP
+patmake
+puts diffs together into a patch.
+.TP
+patnotify
+notifies users that new patches have been released.
+.TP
+patpost
+posts patch to some newsgroup.
+.TP
+patsend
+mails patch to some people.
+.TP
+patsnap
+builds a release snapshot with files and RCS revisions.
+.PD
+.SH PROFILE
+Commands having a set of meaningful options (other
+than \fB\-h\fR or \fB\-V\fR) can also take arguments from
+the \fI~/.dist_profile\fR file, or whatever file the \fIDIST\fR
+environment variable points to. Each line of the file is in the
+format:
+.Ex
+profile-component: \fIvalue\fR
+.Ef
+whith shell-style comments (#) allowed provided they start the line.
+.PP
+Each command looks for a profile component entry matching its
+name and loads the \fIvalue\fR as if it were arguments specified
+on the command line. Those arguments precede any other argument
+specified manually, in case order is meaningful.
+.PP
+Some commands may also be configured from within the profile, by setting
+a specific \fIvariable\fR attached to the command by a profile
+entry looking like this:
+.Ex
+cmdname-\fIvariable\fR: \fIvalue\fR
+.Ef
+For instance, assuming the variable \fIc-files\fR is recognized by the
+\fImetaconfig\fR program, its default value could be overwritten by
+this profile entry:
+.Ex
+metaconfig-c-files: \fIsuitable value\fR
+.Ef
+Only the first '-' after the command name is part of the syntax, the
+other one used in the variable name is pure convention. Please refer to the
+manual page of each command for a list of valid profile variables
+which may be set.
+.SH FILES
+.PD 0
+.TP 15
+\&.MT
+Temporary directory created by \fImetaconfig\fR and friends.
+.TP
+\&.newer
+A list of files newer than \fIpatchlevel.h\fR, used by the patching tools.
+.TP
+\&.package
+Main configuration file used by most of the dist tools to make them smart.
+.TP
+ChangeLog
+The file where changes are recorded. Its name may be configured by
+running \fIpackinit\fR, but this is the default "generic" name under
+which it is referred to within the documentation.
+.TP
+Configure
+The generated configuration script.
+.TP
+Glossary
+A list of all the known portability symbols known by \fImetaconfig\fR. This
+file is located in the dist library directory.
+.TP
+I.fui
+Cross-reference file generated by \fImetaxref\fR, sorted by file, unit, item.
+.TP
+I.uif
+Cross-reference file generated by \fImetaxref\fR, sorted by unit, item, file.
+.TP
+Index
+A list of all the rules known by \fIjmake\fR. This file is located in the
+dist library directory.
+.TP
+Jmakefile
+Generic makefile description used by \fIjmake\fR.
+.TP
+MANIFEST
+List of all the files to be included in the distribution. Usually a copy (not
+a link) of MANIFEST.new.
+.TP
+MANIFEST.new
+List of all the files to be taken into account by the dist tools.
+.TP
+Makefile.SH
+The generated configured makefile (via Jmakefile) or hand-generated Makefile
+making use of known metaconfig symbols.
+.TP
+Obsolete
+A list of obsolete symbol used and their new equivalents.
+.TP
+RCS
+Directory where RCS files are stored.
+.TP
+README
+Main file explaining how to build your package.
+.TP
+U
+Private unit directory.
+.TP
+Wanted
+File used by \fImetaconfig\fR, listing all the symbols used by the sources.
+.TP
+bugs
+Directory where patches are stored.
+.TP
+check.extra
+Extra files present in MANIFEST.new, generated by \fImanicheck\fR.
+.TP
+check.want
+Missing files from MANIFEST.new, generated by \fImanicheck\fR.
+.TP
+config_h.SH
+Generated config.h template.
+.TP
+confmagic.h
+Magic symbol remapping, activated via metaconfig's \fB\-M\fR option.
+.TP
+hints
+This directory lists all the configuration hints for your package.
+.TP
+patchlevel.h
+File recording your package patch level, should not be part of MANIFEST.new,
+but may be listed in MANIFEST, at your discretion.
+.TP
+users
+File recording the users of your package, generated by mailagent's \fIpackage\fR
+command (see the MailAuthor.U unit and mailagent 3.0).
+.PD
+.SH ENVIRONMENT
+The following environment variable is paid attention to:
+.TP 15
+DIST
+Location of the dist profile, defaults to ~/.dist_profile. This variable is
+subject to ~name substitution, even if your shell does not support it.
+.SH AUTHORS
+By chronological order:
+.sp
+Larry Wall <lwall@netlabs.com> (dist 2.0 in 1988)
+.br
+Harlan Stenn <harlan@mumps.pfcs.com> (worked on dist 3.0 1990-1992)
+.br
+Raphael Manfredi <ram@hptnos02.grenoble.hp.com> (dist 3.0 and
+integration 1991-1995)
+.sp
+Please look at the \fICredits\fR file in the distribution source tree for a
+list of all the known contributors.
+.SH "SEE ALSO"
+jmake(1), metaconfig(1), pat(1).

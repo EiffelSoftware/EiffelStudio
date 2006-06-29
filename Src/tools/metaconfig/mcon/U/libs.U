@@ -1,0 +1,160 @@
+?RCS: $Id: libs.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.6  1997/02/28  16:09:11  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0.1.5  1995/07/25  14:12:05  ram
+?RCS: patch56: now knows about OS/2 platforms
+?RCS:
+?RCS: Revision 3.0.1.4  1994/10/29  16:24:22  ram
+?RCS: patch36: removed old broken thislib/thatlib processing (ADO)
+?RCS:
+?RCS: Revision 3.0.1.3  1994/06/20  07:05:44  ram
+?RCS: patch30: code cleanup with if/elif by ADO and RAM
+?RCS: patch30: undone patch23 for libswanted default setting
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  15:08:45  ram
+?RCS: patch23: now includes ordered default libswanted variable (ADO)
+?RCS: patch23: major cleanup for library lookups (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/25  14:02:31  ram
+?RCS: patch6: added default for libs
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:03  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:libs: test cat Myread Oldconfig Loc libpth package xlibpth so _a
+?MAKE:	-pick add $@ %<
+?S:libs:
+?S:	This variable holds the additional libraries we want to use.
+?S: It is up to the Makefile to deal with it.
+?S:.
+?T:xxx thislib libswanted
+?D:libs=''
+?X:
+?X: This order is chosen so that libraries  -lndir, -ldir, -lucb, -lbsd,
+?X: -lBSD, -lPW, and -lx only get used if there are unresolved
+?X: routines at link time.  Usually, these are backwards compatability
+?X: libraries, and may not be as reliable as the standard c library.
+?X:
+?X: The -lsocket -linet -lnsl order has been reported to be necessary
+?X: for at least one SVR4 implementation.
+?X: -lc must proceed -lucb or -lbsd for most Solaris applications.
+?X: -lc_s proceeds -lc so we pick up the shared library version, if
+?X: it is available.
+?X:
+?X: The ordering of c, posix, and cposix is a guess and almost
+?X: certainly wrong on about half of all systems.
+?X:
+?X: Set proper libswanted in your private Myinit.U if needed.
+?X:
+?X:: default ordered library list
+?X:libswanted='net socket inet nsl nm sdbm gdbm ndbm dbm malloc dl'
+?X:libswanted="$libswanted dld sun m c_s c posix cposix ndir dir ucb"
+?X:libswanted="$libswanted bsd BSD PW x"
+?X:
+?INIT:: default library list
+?INIT:libswanted=''
+: Looking for optional libraries
+echo " "
+echo "Checking for optional libraries..." >&4
+case "$libs" in
+' '|'') dflt='';;
+*) dflt="$libs";;
+esac
+case "$libswanted" in
+'') libswanted='c_s';;
+esac
+for thislib in $libswanted; do
+	
+?X:
+?X: Comparaisons via case statement use the string " $dflt " to ensure that
+?X: each library is separated by a space. That way, by looking to something
+?X: like *"-l$thislib "*, we ensure we find -lm and not -lmalloc (which was
+?X: the case with the old looking pattern *-l$thislib*.
+?X:
+	if xxx=`./loc lib$thislib.$so.[0-9]'*' X $libpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib (shared)."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+	elif xxx=`./loc lib$thislib.$so X $libpth` ; $test -f "$xxx"; then
+		echo "Found -l$thislib (shared)."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+	elif xxx=`./loc lib$thislib$_a X $libpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+?X: Don't forget about OS/2 where -lmalloc is spelled out malloc.a
+	elif xxx=`./loc $thislib$_a X $libpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+	elif xxx=`./loc lib${thislib}_s$_a X $libpth`; $test -f "$xxx"; then
+		echo "Found -l${thislib}_s."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l${thislib}_s";;
+		esac
+	elif xxx=`./loc Slib$thislib$_a X $xlibpth`; $test -f "$xxx"; then
+		echo "Found -l$thislib."
+		case " $dflt " in
+		*"-l$thislib "*);;
+		*) dflt="$dflt -l$thislib";;
+		esac
+	else
+		echo "No -l$thislib."
+	fi
+done
+set X $dflt
+shift
+dflt="$*"
+case "$libs" in
+'') dflt="$dflt";;
+*) dflt="$libs";;
+esac
+case "$dflt" in
+' '|'') dflt='none';;
+esac
+
+$cat <<EOM
+ 
+Some versions of Unix support shared libraries, which make executables smaller
+but make load time slightly longer.
+
+On some systems, mostly System V Release 3's, the shared library is included
+by putting the option "-lc_s" as the last thing on the cc command line when
+linking.  Other systems use shared libraries by default.  There may be other
+libraries needed to compile $package on your machine as well.  If your system
+needs the "-lc_s" option, include it here.  Include any other special libraries
+here as well.  Say "none" for none.
+EOM
+
+echo " "
+rp="Any additional libraries?"
+. ./myread
+case "$ans" in
+none) libs=' ';;
+*) libs="$ans";;
+esac
+

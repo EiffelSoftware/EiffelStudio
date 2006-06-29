@@ -1,0 +1,92 @@
+?RCS: $Id: d_voidsig.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/05/12  12:12:46  ram
+?RCS: patch54: made cppflags dependency optional
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:20:35  ram
+?RCS: patch32: now sets signal_t only once d_voidsig is known (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  06:59:54  ram
+?RCS: patch30: now properly sets signal_t when re-using previous value
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:56  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_voidsig signal_t: rm contains cppstdin cppminus +cppflags test Myread \
+	Oldconfig Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_voidsig:
+?S:	This variable conditionally defines VOIDSIG if this system
+?S:	declares "void (*signal(...))()" in signal.h.  The old way was to
+?S:	declare it as "int (*signal(...))()".
+?S:.
+?S:signal_t:
+?S:	This variable holds the type of the signal handler (void or int).
+?S:.
+?C:VOIDSIG:
+?C:	This symbol is defined if this system declares "void (*signal(...))()" in
+?C:	signal.h.  The old way was to declare it as "int (*signal(...))()".  It
+?C:	is up to the package author to declare things correctly based on the
+?C:	symbol.
+?C:.
+?C:Signal_t (SIGNAL_T):
+?C:	This symbol's value is either "void" or "int", corresponding to the
+?C:	appropriate return type of a signal handler.  Thus, you can declare
+?C:	a signal handler using "Signal_t (*handler)()", and define the
+?C:	handler using "Signal_t handler(sig)".
+?C:.
+?H:#$d_voidsig VOIDSIG 	/**/
+?H:#define Signal_t $signal_t	/* Signal handler's return type */
+?H:.
+?T:xxx
+?LINT:set d_voidsig
+: see if signal is declared as pointer to function returning int or void
+echo " "
+xxx=`./findhdr signal.h`
+$test "$xxx" && $cppstdin $cppminus $cppflags < $xxx >$$.tmp 2>/dev/null
+if $contains 'int.*\*[ 	]*signal' $$.tmp >/dev/null 2>&1 ; then
+	echo "You have int (*signal())() instead of void." >&4
+	val="$undef"
+elif $contains 'void.*\*[ 	]*signal' $$.tmp >/dev/null 2>&1 ; then
+	echo "You have void (*signal())() instead of int." >&4
+	val="$define"
+elif $contains 'extern[ 	]*[(\*]*signal' $$.tmp >/dev/null 2>&1 ; then
+	echo "You have int (*signal())() instead of void." >&4
+	val="$undef"
+else
+	case "$d_voidsig" in
+	'')
+	echo "I can't determine whether signal handler returns void or int..." >&4
+		dflt=void
+		rp="What type does your signal handler return?"
+		. ./myread
+		case "$ans" in
+		v*) val="$define";;
+		*) val="$undef";;
+		esac;;
+	"$define")
+		echo "As you already told me, signal handler returns void." >&4;;
+	*)
+		echo "As you already told me, signal handler returns int." >&4;;
+	esac
+fi
+set d_voidsig
+eval $setvar
+case "$d_voidsig" in
+"$define") signal_t="void";;
+*) signal_t="int";;
+esac
+$rm -f $$.tmp
+

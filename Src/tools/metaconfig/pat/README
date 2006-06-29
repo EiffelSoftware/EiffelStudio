@@ -1,0 +1,120 @@
+This is the root directory for pat tools.
+
+This directory contains an automatic patch generator.  You must have RCS
+to use this.  You must also have run packinit in the top level directory
+of your package to create a .package file.
+
+When you've modified a file in your package, the pat program is used to
+control the whole process.  The other programs can be called by hand, but
+usually needn't be.  Run pat from the top level directory of your package.
+
+The pat, patcil, patdiff, and patbase programs take a list of filenames as
+arguments.  Alternately, a -a means all files listed in MANIFEST.
+
+Patcil will create an RCS directory if necessary.  However, it may not check in
+things which require special initializaton properly.  For example, if you
+want to check in a shell script, you'd better make your RCS directory yourself
+and then say
+
+	rcs -i -c'# ' blurfl.xsh
+
+before running pat or patcil.  Otherwise the RCS log may not be commented
+properly.  Unless of course you are using a standard extension (like .c for
+a C file) or have placed the proper comments in front of the $Log marker
+within the file itself--patcil will then correctly guess the type of
+comment required.
+
+Patdiff will create a bugs directory in your top level directory, and will want
+to find a patchlevel.h file in that same directory.  Everything is done from
+that top level directory--don't put any patchlevel.h or bugs directories in
+your subdirectories.  Each subdirectory has its own RCS directory though.
+
+Patpost, patsend and patftp may be used to post to Usenet, mail to someone,
+or copy patches to your ftp directory.  They take a destination and a list
+of patches to process.
+
+Those pat tools are an hopefully enhanced version of the tools that
+came with Larry Wall's dist 2.0. There are however a few new scripts:
+
+    - patclean, which checks in the mods and removes the working files.
+    - patcol, which restores the files removed by a patclean.
+    - patname, which sets a symbolic version number.
+
+Here is the way I am using the pat tools...
+
+First, I set up a MANIFEST.new file. If you are converting an existing
+distribution to use dist, the manifake script will convert a MANIFEST
+into a MANIFEST.new (removing the possible archive number column).
+
+Then I run packinit to modify the version number and set up things
+correctly. The package is then ready to be placed under pat control.
+I make sure the file patchlevel.h is correctly set and I run:
+
+	patcil -f -a -s
+	touch patchlevel.h
+	find . -name "*~" -exec /bin/rm -f {} \; -print
+
+There is a prototypical patchlevel.h file in this directory, so you
+might want to have a look at it.
+
+[If you are planning on using the mailagent to send the patches (and sort
+your mail -- that's its primary goal now), the you must make sure
+the patchelevel.h file is locatated in the root directory of your package.
+The mailagent program is available separately, and was posted on the
+comp.sources.misc newsgroup]
+
+Now everything is ready. The distribution is frozen, the bugs directory
+has been created. I issue a makedist -v to create the distribution kits.
+Eventually I set up the mailagent so that people can request for the
+distribution automatically. If I want to create a directory containing
+the lattest sources (to be able to `kit' them to someone using the kit
+program -- posted to comp.sources.unix), I use:
+
+	makedist -c <package>-<version>@<patchlevel>
+
+for instance, for dist 2.9 at PL26
+
+	makedist -c dist-2.9@26
+
+which I can then send to people directly with kit (which is NOT part
+of this release).
+
+As I receive patches or find some bugs, I edit the files and make the
+modifications. When I want to issue an official patch, I run:
+
+	pat -n
+
+and one or more patches are issued. You can compress the patches in the
+bugs subdirectory, since the mailpatch program knows about that. Also
+patindex will correctly uncompress them.
+
+When I need to clean up the distribution directory, I use:
+
+	patclean -a
+
+which checks in every changes and removes the working files. The whole
+set of working files can then be restored by:
+
+	patcol -a
+
+Sometimes, I made a couple of modification and I don't want to issue
+a patch right now. I then run:
+
+	patcil -a
+
+which checks in the changes. You can run this as many times as you want,
+because patcil will skip unchanged file and remembers the last time you
+issued a patch.
+
+If you are still using RCS 4.3, be sure you use makedist and not your
+own shell archiver, as the $Locker symbol has an annoying expansion
+which makes patch to fail when applyed. I'm not sure this was correctly
+fixed with RCS 5.5 as I am not using it yet for various reasons.
+
+In any case, if you are using the copyright expansion feature (i.e. the
+stuffing of the COPYRIGHT token surrounded by '@' -- can't do it here
+or it will get expanded...), then you must use makedist to make sure
+the copyright is properly written in all your files. Distributing files
+with an un-expanded COPYRIGHT token in them would be a disaster, since
+the patching system will also expand them before building a patch and
+some of your hunks may not apply correctly.

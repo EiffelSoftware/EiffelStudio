@@ -1,0 +1,48 @@
+?RCS: $Id: i_niin.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:24  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit looks wether <netinet/in.h> is available or not
+?X:
+?MAKE:i_niin i_sysin: Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_niin:
+?S:	This variable conditionally defines I_NETINET_IN, which indicates
+?S:	to the C program that it should include <netinet/in.h>. Otherwise,
+?S: you may try <sys/in.h>.
+?S:.
+?S:i_sysin:
+?S:	This variable conditionally defines I_SYS_IN, which indicates
+?S:	to the C program that it should include <sys/in.h> instead of
+?S: <netinet/in.h>.
+?S:.
+?C:I_NETINET_IN:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <netinet/in.h>. Otherwise, you may try <sys/in.h>.
+?C:.
+?C:I_SYS_IN (I_SYSIN):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/in.h> instead of <netinet/in.h>.
+?C:.
+?H:#$i_niin I_NETINET_IN	/**/
+?H:#$i_sysin I_SYS_IN		/**/
+?H:.
+?LINT:set i_niin i_sysin
+: see if this is a netinet/in.h or sys/in.h system
+set netinet/in.h i_niin sys/in.h i_sysin
+eval $inhdr
+

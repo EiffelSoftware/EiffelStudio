@@ -1,0 +1,35 @@
+?RCS: $Id: d_setegid.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:07  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_setegid: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_setegid:
+?S:	This variable conditionally defines the HAS_SETEGID symbol, which
+?S:	indicates to the C program that the setegid() routine is available
+?S:	to change the effective gid of the current program.
+?S:.
+?C:HAS_SETEGID (SETEGID):
+?C:	This symbol, if defined, indicates that the setegid routine is available
+?C:	to change the effective gid of the current program.
+?C:.
+?H:#$d_setegid HAS_SETEGID		/**/
+?H:.
+?LINT:set d_setegid
+: see if setegid exists
+set setegid d_setegid
+eval $inlibc
+

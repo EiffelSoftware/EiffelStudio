@@ -1,0 +1,205 @@
+?RCS: $Id: i_sysioctl.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  15:04:57  ram
+?RCS: patch23: added knowledge for <sys/filio.h> (WED)
+?RCS: patch23: optimized amount of findhdr calls
+?RCS:
+?RCS: Revision 3.0.1.1  1993/11/10  17:36:09  ram
+?RCS: patch14: now use a compiler check for TIOCNOTTY because of HP-UX 9.x
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:32  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:i_sysioctl i_bsdioctl i_sysfilio i_syssockio d_voidtty: test contains \
+	cat i_termio i_termios i_sgtty Setvar Findhdr +cc rm Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_sysioctl:
+?S:	This variable conditionally defines the I_SYS_IOCTL symbol, which
+?S:	indicates to the C program that <sys/ioctl.h> exists and should
+?S:	be included.
+?S:.
+?S:i_sysfilio:
+?S:	This variable conditionally defines the I_SYS_FILIO symbol, which
+?S:	indicates to the C program that <sys/filio.h> exists and should
+?S:	be included in preference to <sys/ioctl.h>.
+?S:.
+?S:i_bsdioctl:
+?S:	This variable conditionally defines the I_SYS_BSDIOCTL symbol, which
+?S:	indicates to the C program that <sys/bsdioctl.h> exists and should
+?S:	be included.
+?S:.
+?S:i_syssockio:
+?S:	This variable conditionally defines I_SYS_SOCKIO to indicate to the
+?S:	C program that socket ioctl codes may be found in <sys/sockio.h>
+?S:	instead of <sys/ioctl.h>.
+?S:.
+?S:d_voidtty:
+?S:	This variable conditionally defines USE_IOCNOTTY to indicate that the
+?S:	ioctl() call with TIOCNOTTY should be used to void tty association.
+?S:	Otherwise (on USG probably), it is enough to close the standard file
+?S:	decriptors and do a setpgrp().
+?S:.
+?C:I_SYS_IOCTL (I_SYSIOCTL):
+?C:	This symbol, if defined, indicates that <sys/ioctl.h> exists and should
+?C:	be included. Otherwise, include <sgtty.h> or <termio.h>.
+?C:.
+?C:I_SYS_FILIO:
+?C:	This symbol, if defined, indicates that <sys/filio.h> exists and
+?C:	should be included instead of <sys/ioctl.h>.
+?C:.
+?C:I_SYS_BSDIOCTL (I_BSDIOCTL):
+?C:	This symbol, if defined, indicates that <sys/bsdioctl.h> exists and should
+?C:	be included. Otherwise, try <sys/ioctl.h>. This is primarly intended for
+?C:	definitions of sockets options, like SIOCATMARK.
+?C:.
+?C:I_SYS_SOCKIO (I_SYSSOCKIO):
+?C:	This symbol, if defined, indicates the <sys/sockio.h> should be included
+?C:	to get socket ioctl options, like SIOCATMARK.
+?C:.
+?C:USE_TIOCNOTTY (VOIDTTY):
+?C:	This symbol, if defined indicate to the C program that the ioctl()
+?C:	call with TIOCNOTTY should be used to void tty association.
+?C:	Otherwise (on USG probably), it is enough to close the standard file
+?C:	decriptors and do a setpgrp().
+?C:.
+?H:#$i_sysioctl	I_SYS_IOCTL		/**/
+?H:#$i_sysfilio	I_SYS_FILIO		/**/
+?H:#$i_bsdioctl	I_SYS_BSDIOCTL		/**/
+?H:#$i_syssockio I_SYS_SOCKIO	/**/
+?H:#$d_voidtty USE_TIOCNOTTY	/**/
+?H:.
+?T:xxx
+: see if ioctl defs are in sgtty, termio, sys/filio or sys/ioctl
+?LINT:set i_sysfilio
+set sys/filio.h i_sysfilio
+eval $inhdr
+echo " "
+if $test `./findhdr sys/ioctl.h`; then
+	val="$define"
+	echo '<sys/ioctl.h> found.' >&4
+else
+	val="$undef"
+	if $test $i_sysfilio = "$define"; then
+	    echo '<sys/ioctl.h> NOT found.' >&4
+	else
+		$test $i_sgtty = "$define" && xxx="sgtty.h"
+		$test $i_termio = "$define" && xxx="termio.h"
+		$test $i_termios = "$define" && xxx="termios.h"
+echo "No <sys/ioctl.h> found, assuming ioctl args are defined in <$xxx>." >&4
+	fi
+fi
+?LINT:set i_sysioctl
+set i_sysioctl
+eval $setvar
+
+@if I_BSDIOCTL || i_bsdioctl
+?X:
+?X:	The only machine I know where this inclusion was necessary is a
+?X:	BULL DPX 5000 (a French machine).
+?X:
+: see if socket ioctl defs are in sys/bsdioctl or sys/ioctl
+echo " "
+xxx=`./findhdr sys/bsdioctl.h`
+if $test "$xxx"; then
+	if $contains SIOCATMARK $xxx >/dev/null 2>&1; then
+		val="$define"
+		echo "You have socket ioctls defined in <sys/bsdioctl.h>." >&4
+	else
+		val="$undef"
+		echo "No socket ioctls found in <sys/bsdioctl.h>." >&4
+	fi
+else
+	val="$undef"
+	echo "<sys/bsdioctl.h> not found, but that's ok." >&4
+fi
+?LINT:set i_bsdioctl
+set i_bsdioctl
+eval $setvar
+
+@end
+@if I_SYSSOCKIO || i_syssockio
+: see if socket ioctl defs are in sys/sockio.h
+echo " "
+xxx=`./findhdr sys/sockio.h`
+if $test "$xxx"; then
+	if $contains SIOCATMARK $xxx >/dev/null 2>&1; then
+		val="$define"
+		echo "You have socket ioctls defined in <sys/sockio.h>." >&4
+	else
+		val="$undef"
+		echo "No socket ioctls found in <sys/sockio.h>." >&4
+	fi
+else
+	val="$undef"
+@if I_BSDIOCTL
+	case "$i_bsdioctl" in
+	"$define") $cat <<EOM
+<sys/sockio.h> not found, using ioctls from <sys/bsdioctl.h>.
+EOM
+	;;
+	*) $cat <<EOM
+<sys/sockio.h> not found, assuming socket ioctls are in <sys/ioctl.h>.
+EOM
+	;;
+	esac
+@else
+	$cat <<EOM
+<sys/sockio.h> not found, assuming socket ioctls are in <sys/ioctl.h>.
+EOM
+@end
+fi
+?LINT:set i_syssockio
+set i_syssockio
+eval $setvar
+
+@end
+@if VOIDTTY || d_voidtty
+: check how to void tty association
+echo " "
+case "$i_sysioctl" in
+"$define") xxx='sys/ioctl.h';;
+?X: otherwise $xxx was set during the determination of i_sysioctl, above.
+esac
+?X:
+?X: Can't use $contains here since HP-UX 9.x has TIOCNOTTY between a pair
+?X: of #ifdef/#endif and is never actually defined. Oh well...
+?X:
+$cat > tcio.c <<EOM
+#include <sys/types.h>	/* Just in case */
+#include <$xxx>
+
+main()
+{
+#ifdef TIOCNOTTY
+	exit(0);
+#else
+	exit(1);
+#endif
+}
+EOM
+if ($cc -o tcio tcio.c && ./tcio) >/dev/null 2>&1; then
+	val="$define"
+	echo "TIOCNOTTY found in <$xxx>." >&4
+	echo "Using ioctl() call on /dev/tty to void tty association." >&4
+else
+	val="$undef"
+	echo "Closing standard file descriptors should void tty association." >&4
+fi
+?LINT:set d_voidtty
+set d_voidtty
+eval $setvar
+$rm -f tcio tcio.? core
+
+@end

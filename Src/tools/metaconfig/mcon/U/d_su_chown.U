@@ -1,0 +1,44 @@
+?RCS: $Id: d_su_chown.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:40  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_su_chown: Csym Setvar
+?MAKE:	-pick add $@ %<
+?S:d_su_chown (d_rootchown):
+?S:	This variable conditionally defines the SU_CHOWN symbol, which
+?S:	indicates to the C program that only root can chown() the owner
+?S:	of a file.
+?S:.
+?C:SU_CHOWN (ROOT_CHOWN):
+?C:	This symbol, if defined, indicates that the system allows only root
+?C:	can change the owner of a file with chown().
+?C:.
+?H:#$d_su_chown SU_CHOWN	/**/
+?H:.
+?LINT:set d_su_chown
+: see if 'chown()' is restricted.
+: but not too hard, as it is late and I am tired. -- HMS
+echo " "
+if set setreuid val -f d_su_chown; eval $csym; $val; then
+	echo 'It looks like only root can chown() the owner of a file.' >&4
+	val="$define"
+else
+	echo 'It looks like root or the owner can chown() a file away.' >&4
+	val="$undef"
+fi
+set d_su_chown
+eval $setvar
+

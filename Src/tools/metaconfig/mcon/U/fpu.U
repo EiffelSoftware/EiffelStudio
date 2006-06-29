@@ -1,0 +1,76 @@
+?RCS: $Id: fpu.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:10  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:fpu: test cat cc Myread
+?MAKE:	-pick add $@ %<
+?S:fpu (fpunit):
+?S:	Set to be the compile flag for the local floating point unit.
+?S:.
+?C:FPU (FPUNIT):
+?C:	String containing the flags for the local floating point unit.
+?C:.
+?H:#define FPU "$fpu" /**/
+?H:.
+: see what floating point compile flags should be used.
+fpu=''
+if $test -r /dev/fpa; then
+	$cat>fpa.c << GOOP
+	main(){return(1);}
+GOOP
+	$cc -ffpa fpa.c -o fpa
+	fpa > fpa.out 2>&1
+	if $test ! -s fpa.out; then
+		dflt='y'
+		$cat <<'EOM'
+
+You seem to have a sun fpa...  I can compile the code to use the fpa but it will
+mean that the code can ONLY run on a machine with a fpa...
+
+EOM
+		rp="Should I compile for fpa?"
+		. ./myread
+		if $test $ans = "n"; then
+			fpu=''
+		else
+			fpu='-ffpa'
+		fi
+	else
+		$cat <<'EOM'
+
+You have the fpa device but I can't seem to use it.  Maybe you should talk to
+your sysadmin about this.  For now, I am not going to compile it in.
+
+EOM
+	fi
+fi
+if $test "$fpu" = ''; then
+	if $test -r /usr/etc/mc68881version; then
+		dflt='y'
+		$cat <<'EOM'
+
+There also seems to be the pieces for a 68881.  If I compile this in, it will
+work on almost all Sun 3's except for a few Sun-3/50s without a 68881...
+
+EOM
+		rp="Should I compile for a 68881?"
+		. ./myread
+		if $test $ans = "y"; then
+			fpu='-f68881'
+		fi
+	fi
+fi
+

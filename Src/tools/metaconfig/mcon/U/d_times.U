@@ -1,0 +1,77 @@
+?RCS: $Id: d_times.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:07:50  ram
+?RCS: patch56: typo fix, sytem -> system
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:14:00  ram
+?RCS: patch32: now uses new Typedef unit to compute type information
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:46  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X:	What is the type returned by times() ?
+?X:
+?X: Force inclusion of <sys/types.h>
+?X:INC: i_systypes
+?MAKE:d_times clocktype: Csym Myread Typedef i_systimes
+?MAKE:	-pick add $@ %<
+?S:d_times:
+?S:	This variable conditionally defines the HAS_TIMES symbol, which indicates
+?S:	that the times() routine exists.  The times() routine is normaly
+?S:	provided on UNIX systems. You may have to include <sys/times.h>.
+?S:.
+?S:clocktype:
+?S:	This variable holds the type returned by times(). It can be long,
+?S:	or clock_t on BSD sites (in which case <sys/types.h> should be
+?S:	included).
+?S:.
+?C:HAS_TIMES (TIMES):
+?C:	This symbol, if defined, indicates that the times() routine exists.
+?C:	Note that this became obsolete on some systems (SUNOS), which now
+?C: use getrusage(). It may be necessary to include <sys/times.h>.
+?C:.
+?C:Clock_t (CLOCKTYPE):
+?C:	This symbol holds the type returned by times(). It can be long,
+?C:	or clock_t on BSD sites (in which case <sys/types.h> should be
+?C:	included).
+?C:.
+?H:#$d_times HAS_TIMES		/**/
+?H:#define Clock_t $clocktype	/* Clock time */
+?H:.
+?T:val inc
+: see if times exists
+echo " "
+if set times val -f d_times; eval $csym; $val; then
+	echo 'times() found.' >&4
+	d_times="$define"
+	inc=''
+	case "$i_systimes" in
+	"$define") inc='sys/times.h';;
+	esac
+	set clock_t clocktype long stdio.h sys/types.h $inc
+	eval $typedef
+	dflt="$clocktype"
+	echo " "
+	rp="What type is returned by times() on this system?"
+	. ./myread
+	clocktype="$ans"
+else
+	echo 'times() NOT found, hope that will do.' >&4
+	d_times="$undef"
+?X: The following is needed for typedef (won't like an empty variable)
+	clocktype='int'
+fi
+

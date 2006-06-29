@@ -1,0 +1,36 @@
+?RCS: $Id: Warn_v7ND.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:01:46  ram
+?RCS: patch36: call ./v7 explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:18  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: 
+?X: This unit warns V7 sites that they may not have a non-blocking read.
+?X: This unit needs to be mentioned in End.U to get included.
+?X: 
+?MAKE:Warn_v7ND: package Guess 
+?MAKE:	-pick add $@ %<
+: Warnings
+if ./v7; then
+	cat <<'EOM'
+
+NOTE: many V7 systems do not have a way to do a non-blocking read.  If you
+don't have any of FIONREAD, O_NDELAY, or rdchk(), the $package package
+may not work as well as it might.  It might not work at all.
+EOM
+fi
+

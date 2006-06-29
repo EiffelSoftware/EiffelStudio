@@ -1,0 +1,68 @@
+?RCS: $Id: i_memory.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/06/20  07:01:55  ram
+?RCS: patch30: cosmetic changes
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:23:56  ram
+?RCS: patch27: modified to avoid spurious Whoa warnings (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:02:25  ram
+?RCS: patch23: avoid conflicts with <string.h>
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:22  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:i_memory: Inhdr strings cppstdin cppflags cppminus contains rm Setvar
+?MAKE:	-pick add $@ %<
+?S:i_memory:
+?S:	This variable conditionally defines the I_MEMORY symbol, and indicates
+?S:	whether a C program should include <memory.h>.
+?S:.
+?C:I_MEMORY:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <memory.h>.
+?C:.
+?H:#$i_memory I_MEMORY		/**/
+?H:.
+?LINT:set i_memory
+?X:
+?X:	Unfortunately, the definitions of memory functions sometimes
+?X:	conflict with those in <string.h>.  We'll assume that if 
+?X:	<string.h> contains memcpy, then we don't need memory.h
+?X:
+: see if memory.h is available.
+val=''
+set memory.h val
+eval $inhdr
+
+: See if it conflicts with string.h
+case "$val" in
+$define)
+	case "$strings" in
+	'') ;;
+	*)
+		$cppstdin $cppflags $cppminus < $strings > mem.h
+		if $contains 'memcpy' mem.h >/dev/null 2>&1; then
+			echo " "
+			echo "We won't be including <memory.h>."
+			val="$undef"
+		fi
+		$rm -f mem.h
+		;;
+	esac
+esac
+set i_memory
+eval $setvar
+

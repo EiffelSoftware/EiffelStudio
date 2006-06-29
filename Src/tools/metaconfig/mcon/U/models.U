@@ -1,0 +1,207 @@
+?RCS: $Id: models.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  16:13:17  ram
+?RCS: patch61: added ?F: metalint hint
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/25  14:02:39  ram
+?RCS: patch6: added default for large
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:17  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:models split small medium large huge: test cat Myread sysman Oldconfig \
+	Loc contains
+?MAKE:	-pick add $@ %<
+?S:models:
+?S:	This variable contains the list of memory models supported by this
+?S:	system.  Possible component values are none, split, unsplit, small,
+?S:	medium, large, and huge.  The component values are space separated.
+?S:.
+?S:split:
+?S:	This variable contains a flag which will tell the C compiler and loader
+?S:	to produce a program that will run in separate I and D space, for those
+?S:	machines that support separation of instruction and data space.  It is
+?S:	up to the Makefile to use this.
+?S:.
+?S:small:
+?S:	This variable contains a flag which will tell the C compiler and loader
+?S:	to produce a program running with a small memory model.  It is up to
+?S:	the Makefile to use this.
+?S:.
+?S:medium:
+?S:	This variable contains a flag which will tell the C compiler and loader
+?S:	to produce a program running with a medium memory model.  If the
+?S:	medium model is not supported, contains the flag to produce large
+?S:	model programs.  It is up to the Makefile to use this.
+?S:.
+?S:large:
+?S:	This variable contains a flag which will tell the C compiler and loader
+?S:	to produce a program running with a large memory model.  It is up to
+?S:	the Makefile to use this.
+?S:.
+?S:huge:
+?S:	This variable contains a flag which will tell the C compiler and loader
+?S:	to produce a program running with a huge memory model.  If the
+?S:	huge model is not supported, contains the flag to produce large
+?S:	model programs.  It is up to the Makefile to use this.
+?S:.
+?T:unsplit tans
+?F:!pdp11
+?D:large=''
+: see what memory models we can support
+case "$models" in
+'')
+?X: We may not use Cppsym or we get a circular dependency through cc.
+?X: But this should work regardless of which cc we eventually use.
+	$cat >pdp11.c <<'EOP'
+main() {
+#ifdef pdp11
+	exit(0);
+#else
+	exit(1);
+#endif
+}
+EOP
+	cc -o pdp11 pdp11.c >/dev/null 2>&1
+	if ./pdp11 2>/dev/null; then
+		dflt='unsplit split'
+	else
+		tans=`./loc . X /lib/small /lib/large /usr/lib/small /usr/lib/large /lib/medium /usr/lib/medium /lib/huge`
+		case "$tans" in
+		X) dflt='none';;
+		*) if $test -d /lib/small || $test -d /usr/lib/small; then
+				dflt='small'
+			else
+				dflt=''
+			fi
+			if $test -d /lib/medium || $test -d /usr/lib/medium; then
+				dflt="$dflt medium"
+			fi
+			if $test -d /lib/large || $test -d /usr/lib/large; then
+				dflt="$dflt large"
+			fi
+			if $test -d /lib/huge || $test -d /usr/lib/huge; then
+				dflt="$dflt huge"
+			fi
+		esac
+	fi;;
+*) dflt="$models";;
+esac
+$cat <<EOM
+ 
+Some systems have different model sizes.  On most systems they are called
+small, medium, large, and huge.  On the PDP11 they are called unsplit and
+split.  If your system doesn't support different memory models, say "none".
+If you wish to force everything to one memory model, say "none" here and
+put the appropriate flags later when it asks you for other cc and ld flags.
+Venix systems may wish to put "none" and let the compiler figure things out.
+(In the following question multiple model names should be space separated.)
+
+EOM
+rp="Which memory models are supported?"
+. ./myread
+models="$ans"
+
+case "$models" in
+none)
+	small=''
+	medium=''
+	large=''
+	huge=''
+	unsplit=''
+	split=''
+	;;
+*split)
+	case "$split" in
+	'') if $contains '\-i' $sysman/ld.1 >/dev/null 2>&1 || \
+			 $contains '\-i' $sysman/cc.1 >/dev/null 2>&1; then
+			dflt='-i'
+		else
+			dflt='none'
+		fi;;
+	*) dflt="$split";;
+	esac
+	rp="What flag indicates separate I and D space?"
+	. ./myread
+	tans="$ans"
+	case "$tans" in
+	none) tans='';;
+	esac
+	split="$tans"
+	unsplit='';;
+*large*|*small*|*medium*|*huge*)
+	case "$models" in
+	*large*)
+		case "$large" in
+		'') dflt='-Ml';;
+		*) dflt="$large";;
+		esac
+	rp="What flag indicates large model?"
+	. ./myread
+	tans="$ans"
+	case "$tans" in
+	none) tans='';
+	esac
+	large="$tans";;
+	*) large='';;
+	esac
+	case "$models" in
+	*huge*) case "$huge" in
+		'') dflt='-Mh';;
+		*) dflt="$huge";;
+		esac
+		rp="What flag indicates huge model?"
+		. ./myread
+		tans="$ans"
+		case "$tans" in
+		none) tans='';
+		esac
+		huge="$tans";;
+	*) huge="$large";;
+	esac
+	case "$models" in
+	*medium*) case "$medium" in
+		'') dflt='-Mm';;
+		*) dflt="$medium";;
+		esac
+		rp="What flag indicates medium model?"
+		. ./myread
+		tans="$ans"
+		case "$tans" in
+		none) tans='';
+		esac
+		medium="$tans";;
+	*) medium="$large";;
+	esac
+	case "$models" in
+	*small*) case "$small" in
+		'') dflt='none';;
+		*) dflt="$small";;
+		esac
+		rp="What flag indicates small model?"
+		. ./myread
+		tans="$ans"
+		case "$tans" in
+		none) tans='';
+		esac
+		small="$tans";;
+	*) small='';;
+	esac
+	;;
+*)
+	echo "Unrecognized memory models--you may have to edit Makefile.SH" >&4
+	;;
+esac
+

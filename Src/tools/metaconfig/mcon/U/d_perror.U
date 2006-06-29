@@ -1,0 +1,47 @@
+?RCS: $Id: d_perror.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:11:38  ram
+?RCS: patch32: always define HAS_PERROR even when not used in C code
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:45  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_perror: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_perror:
+?S:	This variable conditionally remaps perror to a null action and
+?S:	defines the symbol HAS_PERROR, which indicates to the C program
+?S:	that the perror() routine is not available to print system
+?S:	error messages.
+?S:.
+?C:HAS_PERROR ~ %<:
+?C:	This symbol, if defined, indicates that the perror() routine is
+?C:	available to print system error messages. If not defined, you should
+?C:	use your own diagnostic routine...
+?C:.
+?C:perror ~ %<:
+?C:	This symbol is maped to null if the  perror() routine is not
+?C:	available to print system error messages.
+?C:.
+?H:?%<:#$d_perror HAS_PERROR	/**/
+?H:?%<:#ifndef HAS_PERROR
+?H:?%<:#define perror(s)	;		/* mapped to a null statement */
+?H:?%<:#endif
+?H:.
+?LINT:set d_perror
+: see if perror exists
+set perror d_perror
+eval $inlibc
+

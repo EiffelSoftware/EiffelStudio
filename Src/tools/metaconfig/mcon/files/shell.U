@@ -1,0 +1,71 @@
+?RCS: $Id: shell.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS:  Copyright (c) 1991-1993, Raphael Manfredi
+?RCS:  
+?RCS:  You may redistribute only under the terms of the Artistic Licence,
+?RCS:  as specified in the README file that comes with the distribution.
+?RCS:  You may reuse parts of this distribution only within the terms of
+?RCS:  that same Artistic Licence; a copy of which may be found at the root
+?RCS:  of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:10  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:cc: cat contains sysman +large Mcc Myread Guess Oldconfig Loc
+?MAKE:	-pick add $@ %<
+?DEF:cc=cc
+?S:cc:
+?S:	This variable holds the name of a command to execute a C compiler which
+?S:	can resolve multiple global references that happen to have the same
+?S:	name.  Usual values are "cc", "Mcc", "cc -M", and "gcc".
+?S:.
+: see if we need a special compiler
+echo " "
+if usg; then
+	case "$cc" in
+	'') case "$Mcc" in
+		/*) dflt='Mcc';;
+		*) case "$large" in
+			-M*) dflt='cc';;
+			*)	if $contains '\-M' $sysman/cc.1 >/dev/null 2>&1 ; then
+					if $contains '\-M' $sysman/cpp.1 >/dev/null 2>&1; then
+						dflt='cc'
+					else
+						dflt='cc -M'
+					fi
+				else
+					dflt='cc'
+				fi;;
+			esac;;
+		esac;;
+	*)  dflt="$cc";;
+	esac
+	$cat <<'EOM'
+On some systems the default C compiler will not resolve multiple global
+references that happen to have the same name.  On some such systems the "Mcc"
+command may be used to force these to be resolved.  On other systems a "cc -M"
+command is required.  (Note that the -M flag on other systems indicates a
+memory model to use!) If you have the Gnu C compiler, you might wish to use
+that instead.
+
+EOM
+	rp="What command will force resolution on this system?"
+	. myread
+	cc="$ans"
+else
+	case "$cc" in
+	'') dflt=cc;;
+	*) dflt="$cc";;
+	esac
+	rp="Use which C compiler?"
+	. myread
+	cc="$ans"
+fi
+case "$cc" in
+gcc*) cpp=`loc gcc-cpp $cpp $pth`;;
+esac
+

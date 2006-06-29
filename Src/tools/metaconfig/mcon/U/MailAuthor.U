@@ -1,0 +1,195 @@
+?RCS: $Id: MailAuthor.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.5  1997/02/28  15:04:41  ram
+?RCS: patch61: added support for src.U
+?RCS:
+?RCS: Revision 3.0.1.4  1994/08/29  16:05:09  ram
+?RCS: patch32: avoid message sending if they said no previously
+?RCS:
+?RCS: Revision 3.0.1.3  1993/10/16  13:47:30  ram
+?RCS: patch12: now makes sure user-specified address is in Internet format
+?RCS:
+?RCS: Revision 3.0.1.2  1993/09/13  15:48:49  ram
+?RCS: patch10: reverted to original intent by the Author himself
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/27  14:38:38  ram
+?RCS: patch7: now prompts user for its e-mail address
+?RCS: patch7: no longer silent when mail has been sent
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:06  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?RCS:
+?X:
+?X:	This unit asks the user to please send a message to the author.
+?X:	To force inclusion of this unit, you must add it's name to the
+?X:	dependancies on the MAKE line in your private copy of End.U.
+?X:	This allows a smart mailagent program to automatically let users know
+?X:	when their package is out of date, and to allow users to be notified of
+?X:	any future patches.
+?X:
+?MAKE:MailAuthor mailpatches notifypatches usermail: test cat mailer \
+	package Myread patchlevel baserev rm rsrc Oldconfig Configdir
+?MAKE:	-pick wipe $@ %<
+?S:mailpatches:
+?S:	Indicates whether the user would like future patches to be mailed
+?S:	directly to them.
+?S:.
+?S:notifypatches:
+?S:	Indicates whether the user would like notification of future patches
+?S:	mailed to them.
+?S:.
+?S:usermail:
+?S:	This variable is used internally by Configure to keep track of the
+?S:	user e-mail address, where notifications or patches should be sent.
+?S:	A '-' value means the return address will be extracted by parsing
+?S:	the mail headers.
+?S:.
+?T:opt mailpatches notifypatches atsh status
+: notify author that his package is used
+if $test -f ../.config/mailauthor &&
+	cmp $rsrc/patchlevel.h ../.config/mailauthor >/dev/null 2>&1
+then
+	status="say that you're using $package";
+	case "$mailpatches" in
+	true) status='have patches mailed to you as they are issued';;
+	esac
+	case "$notifypatches" in
+	true) status='be notified when new patches are issued';;
+	esac
+	$cat <<EOM
+
+You have already sent the author of $package (<MAINTLOC>) mail to
+$status. If you wish, you may modify
+your previous request by sending a new mail with different options.
+
+EOM
+	rp='Should I send a status update to <MAINTLOC>?'
+	dflt=n
+else
+	$cat <<EOM
+
+If you are able to send mail to the Internet, the author of $package would
+really appreciate you letting me send off a quick note, just to say that you've
+tried it. The author is more likely to spend time maintaining $package if it's
+known that many people are using it, and you can even ask to get sent new
+patches automagically this way if you wish. To protect your privacy, all I'll
+say in the mail is the version of $package that you're using.
+
+EOM
+	rp='Should I send mail to <MAINTLOC>?'
+	dflt=y
+?X: Ensure default is 'n' if question has been asked already, in case they
+?X: run Configure -d next time and answered 'n' the first time. Therefore,
+?X: an empty nomail will be created later on even if no mail is sent.
+	$test -f ../.config/nomail && dflt=n
+fi
+. ./myread
+case "$ans" in
+[yY]*)
+	echo " "
+	echo "Great! Your cooperation is really appreciated."
+	$cat <<EOM
+
+Some braindead sites do not set a proper return address in the From: header of
+their outgoing mail, making it impossible to reply to mail they generate.
+If your site is broken in this way, write to your system administrator and get
+it fixed!!! In the mean time, you can manually specify the Internet e-mail
+address by which the author can get back to you, should there be a need to do
+so. If manually specified, it should be something like "user@domain.top".
+If your mail system generates addresses correctly, specify "none".
+
+EOM
+	case "$usermail" in
+	'-'|'') dflt=none;;
+	*) dflt="$usermail";;
+	esac
+	rp='Manually specify a return address to use:'
+	. ./myread
+	case "$ans" in
+	none|*@*.*)
+		case "$ans" in
+		none) usermail='-';;
+		*) usermail="$ans";;
+		esac
+		;;
+	*)
+		echo "(Address does not look like an Internet one -- ignoring it.)"
+?X:
+?X: If we can't trust their mailer or their return address, it's highly
+?X: suggested that they only register and don't ask to get anything from
+?X: the author, since it's likely to bounce in null-land -- RAM.
+?X:
+		usermail='-'
+		mailpatches=false
+		notifypatches=false
+		;;
+	esac
+	echo " "
+	opt=''
+	rp='Would you like to have new patches automatically mailed to you?'
+	case "$mailpatches" in
+	true) dflt=y;;
+	*) dflt=n;;
+	esac
+	. ./myread
+	case "$ans" in
+	[yY]*) opt=' mailpatches'; mailpatches=true;;
+	*)
+		mailpatches=false
+		echo " "
+		rp='Ok, would you like to simply be notified of new patches?'
+		case "$notifypatches" in
+		false) dflt=n;;
+		*) dflt=y;;
+		esac
+		. ./myread
+		echo " "
+		case "$ans" in
+		[yY]*) opt=' notifypatches'; notifypatches=true;;
+		*)
+			echo "Fine, I'll simply say that you've tried it then."
+			notifypatches=false
+			;;
+		esac
+		;;
+	esac
+	echo "Sending mail to <MAINTLOC>..." >&4
+?X: Bizarre hack here. We can't just put @SH in the hereis lines below, because
+?X: metaconfig will interpret it as a command, and there's no quoting mechanism.
+?X: Do it via a variable instead.
+	atsh='@SH'
+	$mailer <MAINTLOC> <<EOM >/dev/null 2>&1
+Subject: Command
+Precedence: junk
+To: <MAINTLOC>
+
+$atsh package $usermail $package $baserev $patchlevel$opt
+EOM
+	$rm -f ../.config/mailauthor ../.config/nomail
+	cp $rsrc/patchlevel.h ../.config/mailauthor
+	;;
+*)
+	case "$dflt" in
+	"y")
+		echo "Oh well, maybe next time."
+		cp /dev/null ../.config/nomail
+		;;
+	esac
+	;;
+esac
+

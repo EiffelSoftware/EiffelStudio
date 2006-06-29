@@ -1,0 +1,6 @@
+This directory contains unit templates.
+
+It is hoped metaconfig will have a tool to generate "standard" units based
+on some well-known templates.
+
+For now, it has a documentary-only value.

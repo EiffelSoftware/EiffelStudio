@@ -1,0 +1,60 @@
+?RCS: $Id: d_raster.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:50  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_raster rasterlib: cat test Setvar Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:d_raster:
+?S:	Conditionally defines RASTER_TEK if this is a raster tech machine.
+?S:.
+?S:rasterlib (d_rasterlib):
+?S:	Set to the needed compile flag if this is a raster tech machine.
+?S:	It is up to the Makefile to use this variable.
+?S:.
+?C:RASTER_TEK:
+?C:	Defined if this is a rastertech machine.
+?C:.
+?H:#$d_raster RASTER_TEK /**/
+?H:.
+?LINT:set d_raster
+: See if this is a raster tech machine.
+val="$undef"
+rasterlib=''
+if $test -r /dev/mirage; then
+	$cat <<'EOM'
+
+You seem to have a mirage device... this is normally associated with a raster
+technologies graphics workstation. If this is right, you may want to use raster
+tech in this program.
+
+EOM
+	dflt=y
+	case "$d_raster" in
+	"$undef") dflt=n;;
+	esac
+	rp='Use raster tech?'
+	. ./myread
+	case "$ans" in
+	y*) val="$define";;
+	esac
+fi
+set d_raster
+eval $setvar
+
+case "$d_raster" in
+"$define") rasterlib='-lphigs';;
+esac
+

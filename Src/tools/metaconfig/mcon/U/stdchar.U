@@ -1,0 +1,39 @@
+?RCS: $Id: stdchar.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:52  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:stdchar: contains Findhdr
+?MAKE:	-pick add $@ %<
+?S:stdchar:
+?S:	This variable conditionally defines STDCHAR to be the type of char
+?S:	used in stdio.h.  It has the values "unsigned char" or "char".
+?S:.
+?C:STDCHAR:
+?C:	This symbol is defined to be the type of char used in stdio.h.
+?C:	It has the values "unsigned char" or "char".
+?C:.
+?H:#define STDCHAR $stdchar	/**/
+?H:.
+: see what type of char stdio uses.
+echo " "
+if $contains 'unsigned.*char.*_ptr;' `./findhdr stdio.h` >/dev/null 2>&1 ; then
+	echo "Your stdio uses unsigned chars." >&4
+	stdchar="unsigned char"
+else
+	echo "Your stdio uses signed chars." >&4
+	stdchar="char"
+fi
+

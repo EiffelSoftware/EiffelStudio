@@ -1,0 +1,82 @@
+?RCS: $Id: d_PORTAR.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:08:42  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:40  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_PORTAR: cat +cc rm Setvar
+?MAKE:	-pick add $@ %<
+?S:d_PORTAR:
+?S:	This variable conditionally handles definition of PORTAR,
+?S:	a creation of greater minds than I can imagine.
+?S:.
+?C:PORTAR:
+?C:	This manifest constant must be defined to 1 for some implementations
+?C:	of ar.h to get the portable ar most everybody uses.
+?C:.
+?L:ar_fmag:
+?L:ARFMAG:
+?L:SARMAG:
+?H:#$d_PORTAR PORTAR 1	/**/
+?H:.
+?F:!portar
+?LINT:set d_PORTAR
+: see if we need to define PORTAR
+echo " "
+echo 'Checking to see if we need to define PORTAR for portable archives...' >&4
+$cat >portar.c <<'EOCP'
+#include <ar.h>
+main() {
+	char *arfmag = ARFMAG;
+	int sarmag = SARMAG;
+	struct ar_hdr arh;
+
+	strncpy(arh.ar_fmag, arfmag, 2);
+
+#ifdef PORTAR
+	printf("D\n");
+#else
+	printf("U\n");
+#endif
+	exit(0);}
+EOCP
+if $cc portar.c -o portar >/dev/null 2>&1 || \
+	$cc -DPORTAR=1 portar.c -o portar >/dev/null 2>&1 ; then
+	case "`./portar`" in
+	D)
+		val="$define"
+		echo "We'll be defining PORTAR for you."
+		;;
+	U)
+		val="$undef"
+		echo "We don't seem to need PORTAR defined here."
+		;;
+	*)
+		val="$define"
+		echo "(My test program gave me an unexpected value!)"
+		echo "I'll just define PORTAR to be sure."
+		;;
+	esac
+else
+	echo "(Strange, I couldn't get my test program to compile.)"
+	echo "We'll just define PORTAR in this case."
+	val="$define"
+fi
+set d_PORTAR
+eval $setvar
+$rm -f portar*
+

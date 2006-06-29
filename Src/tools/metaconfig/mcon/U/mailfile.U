@@ -1,0 +1,59 @@
+?RCS: $Id: mailfile.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:24:57  ram
+?RCS: patch36: the Loc unit was missing from the dependency line
+?RCS:
+?RCS: Revision 3.0.1.1  1993/12/15  08:22:08  ram
+?RCS: patch15: now also looks under /var/mail for BSD/386
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:11  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:mailfile: Myread Oldconfig Filexp Loc
+?MAKE:	-pick add $@ %<
+?S:mailfile:
+?S:	This variable contains the eventual value of the MAILFILE symbol,
+?S:	which contains an interpretable name of the mail spool file for the
+?S:	current user.
+?S:.
+?C:MAILFILE:
+?C:	This symbol contains the interpretable name of the mail spool file
+?C:	for the current user.  The program must be prepared to substitute
+?C:	the HOME directory for %~, and the login id for %L.
+?C:.
+?H:#define MAILFILE "$mailfile"		/**/
+?H:.
+: determine where mail is spooled
+case "$mailfile" in
+'')
+	dflt=`./loc . XXX /usr/spool/mail /usr/mail /var/mail`
+	case "$dflt" in
+	XXX) dflt='%~/mailbox';;
+	*) dflt="$dflt/%L";;
+	esac
+	;;
+*)  dflt="$mailfile"
+	;;
+esac
+cat <<'EOM'
+
+In the following question, you may use %~ to represent the user's home
+directory, and %L to represent a users name.
+
+EOM
+rp='In which file is yet-to-be-read mail spooled? (~name ok)'
+. ./myread
+mailfile=`./filexp "$ans"`
+

@@ -1,0 +1,54 @@
+?RCS: $Id: package.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  16:27:21  ram
+?RCS: patch36: beware of non-ascii character sets when translating case
+?RCS:
+?RCS: Revision 3.0.1.2  1993/11/10  17:37:02  ram
+?RCS: patch14: skip definition of spackage if not otherwise used
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:11:10  ram
+?RCS: patch10: added spackage, suitable for starting sentences
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:28  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:package spackage: Null
+?MAKE:	-pick wipe $@ %<
+?S:package:
+?S:	This variable contains the name of the package being constructed.
+?S:	It is primarily intended for the use of later Configure units.
+?S:.
+?S:spackage:
+?S:	This variable contains the name of the package being constructed,
+?S:	with the first letter uppercased, i.e. suitable for starting
+?S:	sentences.
+?S:.
+?T:first last
+: set package name
+package=<PACKAGENAME>
+@if spackage
+first=`echo $package | sed -e 's/^\(.\).*/\1/'`
+last=`echo $package | sed -e 's/^.\(.*\)/\1/'`
+?X:
+?X: So early in the Configure script, we don't have ./tr set up and can't
+?X: include Tr in our dependency or that would create a cycle. Therefore,
+?X: we have to somehow duplicate the work done in Tr. That's life.
+?X:
+case "`echo AbyZ | tr '[:lower:]' '[:upper:]' 2>/dev/null`" in
+ABYZ) spackage=`echo $first | tr '[:lower:]' '[:upper:]'`$last;;
+*) spackage=`echo $first | tr '[a-z]' '[A-Z]'`$last;;
+esac
+@end
+

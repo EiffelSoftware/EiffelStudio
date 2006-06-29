@@ -1,0 +1,83 @@
+?RCS: $Id: d_regcmp.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/30  14:34:45  ram
+?RCS: patch49: now looks for POSIX regcomp() routine
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:53  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_regcmp d_re_comp d_regcomp: Csym cat
+?MAKE:	-pick add $@ %<
+?S:d_regcomp:
+?S:	This variable conditionally defines the HAS_REGCOMP symbol, which
+?S:	indicates to the C program that the regcomp() routine is available
+?S:	for regular patern matching (usally on POSIX.2 conforming systems).
+?S:.
+?S:d_regcmp:
+?S:	This variable conditionally defines the HAS_REGCMP symbol, which
+?S:	indicates to the C program that the regcmp() routine is available
+?S:	for regular patern matching (usally on System V).
+?S:.
+?S:d_re_comp:
+?S:	This variable conditionally defines the HAS_RECOMP symbol, which
+?S:	indicates to the C program that the re_comp() routine is available
+?S:	for regular patern matching (usally on BSD). If so, it is likely that
+?S:	re_exec() exists.
+?S:.
+?C:HAS_REGCOMP (REGCOMP):
+?C:	This symbol, if defined, indicates that the regcomp() routine is
+?C:	available to do some regular patern matching (usually on POSIX.2
+?C:	conforming systems).
+?C:.
+?C:HAS_REGCMP (REGCMP):
+?C:	This symbol, if defined, indicates that the regcmp() routine is
+?C:	available to do some regular patern matching (usually on System V).
+?C:.
+?C:HAS_RECOMP (RECOMP):
+?C:	This symbol, if defined, indicates that the re_comp() routine is
+?C:	available to do some regular patern matching (usually on BSD). If so,
+?C:	it is likely that re_exec() be available.
+?C:.
+?H:#$d_regcomp HAS_REGCOMP		/* POSIX.2 */
+?H:#$d_regcmp HAS_REGCMP		/* sysV */
+?H:#$d_re_comp HAS_RECOMP		/* BSD */
+?H:.
+?T:val
+: see if regcomp, regcmp, or re_comp exist, for regular pattern matching
+echo " "
+if set regcomp val -f d_regcomp; eval $csym; $val; then
+	echo 'regcomp() found.' >&4
+	d_regcomp="$define"
+	d_regcmp="$undef"
+	d_re_comp="$undef"
+elif set regcmp val -f d_regcmp; eval $csym; $val; then
+	echo 'regcmp() found.' >&4
+	d_regcmp="$define"
+	d_regcomp="$undef"
+	d_re_comp="$undef"
+elif set re_comp val -f d_re_comp; eval $csym; $val; then
+	echo 're_comp() found, assuming re_exec() also exists.' >&4
+	d_re_comp="$define"
+	d_regcomp="$undef"
+	d_regcmp="$undef"
+else
+	$cat >&4 <<EOM
+No regcomp(), regcmp() nor re_comp() found !! No regular pattern matching.
+EOM
+	d_regcmp="$undef"
+	d_re_comp="$undef"
+	d_regcomp="$undef"
+fi
+

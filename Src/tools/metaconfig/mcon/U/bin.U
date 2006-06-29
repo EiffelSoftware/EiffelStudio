@@ -1,0 +1,91 @@
+?RCS: $Id: bin.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1995/09/25  09:15:32  ram
+?RCS: patch59: unit is now forced to the top of Configure, if possible
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/30  14:32:40  ram
+?RCS: patch49: can now handle installation prefix changes (from WED)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:05:28  ram
+?RCS: patch32: now uses installation prefix
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  15:56:51  ram
+?RCS: patch10: made prompting more explicit (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:26  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:bin binexp installbin: Prefixit Getfile Oldconfig afs cat test
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:bin:
+?S:	This variable holds the name of the directory in which the user wants
+?S:	to put publicly executable images for the package in question.  It
+?S:	is most often a local directory such as /usr/local/bin. Programs using
+?S:	this variable must be prepared to deal with ~name substitution.
+?S:.
+?S:binexp:
+?S:	This is the same as the bin variable, but is filename expanded at
+?S:	configuration time, for use in your makefiles.
+?S:.
+?S:installbin:
+?S:	This variable is the same as binexp unless AFS is running in which case
+?S:	the user is explicitely prompted for it. This variable should always
+?S:	be used in your makefiles for maximum portability.
+?S:.
+?C:BIN:
+?C:	This symbol holds the path of the bin directory where the package will
+?C:	be installed. Program must be prepared to deal with ~name substitution.
+?C:.
+?C:BIN_EXP:
+?C:	This symbol is the filename expanded version of the BIN symbol, for
+?C:	programs that do not want to deal with that at run-time.
+?C:.
+?H:#define BIN "$bin"	/**/
+?H:#define BIN_EXP "$binexp"	/**/
+?H:.
+?D:bin='/usr/local/bin'
+: determine where public executables go
+echo " "
+set dflt bin bin
+eval $prefixit
+fn=d~
+rp='Pathname where the public executables will reside?'
+. ./getfile
+if $test "X$ansexp" != "X$binexp"; then
+	installbin=''
+fi
+bin="$ans"
+binexp="$ansexp"
+if $afs; then
+	$cat <<EOM
+
+Since you are running AFS, I need to distinguish the directory in which
+executables reside from the directory in which they are installed (and from
+which they are presumably copied to the former directory by occult means).
+
+EOM
+	case "$installbin" in
+	'') dflt=`echo $binexp | sed 's#^/afs/#/afs/.#'`;;
+	*) dflt="$installbin";;
+	esac
+	fn=de~
+	rp='Where will public executables be installed?'
+	. ./getfile
+	installbin="$ans"
+else
+	installbin="$binexp"
+fi
+

@@ -1,0 +1,174 @@
+?RCS: $Id: i_time.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:45  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit finds which "time" include to use. If 'timezone' is used by the
+?X: program, we also try to find which header should be included. Eventually,
+?X: we look for <sys/select.h> if I_SYSSELECT is used, to get struct timeval.
+?X:
+?MAKE:i_time i_systime i_systimek timeincl: cat cc ccflags contains rm \
+	echo n c +i_sysselct Findhdr
+?MAKE:	-pick add $@ %<
+?S:i_time:
+?S:	This variable conditionally defines I_TIME, which indicates
+?S:	to the C program that it should include <time.h>.
+?S:.
+?S:i_systime:
+?S:	This variable conditionally defines I_SYS_TIME, which indicates
+?S:	to the C program that it should include <sys/time.h>.
+?S:.
+?S:i_systimek:
+?S:	This variable conditionally defines I_SYS_TIME_KERNEL, which
+?S:	indicates to the C program that it should include <sys/time.h>
+?S:	with KERNEL defined.
+?S:.
+?S:timeincl:
+?S:	This variable holds the full path of the included time header(s).
+?S:.
+?C:I_TIME (USE_TIME_H):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <time.h>.
+?C:.
+?C:I_SYS_TIME (I_SYSTIME USE_SYS_TIME_H NO_TIME_WITH_SYS_TIME):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/time.h>.
+?C:.
+?C:I_SYS_TIME_KERNEL (I_SYSTIMEKERNEL):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/time.h> with KERNEL defined.
+?C:.
+?H:#$i_time I_TIME		/**/
+?H:#$i_systime I_SYS_TIME		/**/
+?H:#$i_systimek I_SYS_TIME_KERNEL		/**/
+?H:.
+?W::timezone
+?T:xselect flags sysselect s_timeval s_timezone
+?LINT:change i_sysselct
+: see if we should include time.h, sys/time.h, or both
+echo " "
+echo "Testing to see if we should include <time.h>, <sys/time.h> or both." >&4
+$echo $n "I'm now running the test program...$c"
+$cat >try.c <<'EOCP'
+#include <sys/types.h>
+#ifdef I_TIME
+#include <time.h>
+#endif
+#ifdef I_SYSTIME
+#ifdef SYSTIMEKERNEL
+#define KERNEL
+#endif
+#include <sys/time.h>
+#endif
+#ifdef I_SYSSELECT
+#include <sys/select.h>
+#endif
+main()
+{
+	struct tm foo;
+#ifdef S_TIMEVAL
+	struct timeval bar;
+#endif
+#ifdef S_TIMEZONE
+	struct timezone tzp;
+#endif
+	if (foo.tm_sec == foo.tm_sec)
+		exit(0);
+#ifdef S_TIMEVAL
+	if (bar.tv_sec == bar.tv_sec)
+		exit(0);
+#endif
+	exit(1);
+}
+EOCP
+flags=''
+@if I_SYSSELECT
+if $contains 'timeval.*{' `./findhdr sys/select.h` >/dev/null 2>&1; then
+	xselect='-DI_SYSSELECT'
+else
+	xselect=''
+fi
+@end
+@if timezone
+for s_timezone in '-DS_TIMEZONE' ''; do
+@else
+s_timezone=''
+@end
+?X: Every package is given a try with 'struct timeval'
+@if I_SYSSELECT
+for sysselect in $xselect ''; do
+@else
+sysselect=''
+@end
+for s_timeval in '-DS_TIMEVAL' ''; do
+for i_systimek in '' '-DSYSTIMEKERNEL'; do
+for i_time in '' '-DI_TIME'; do
+for i_systime in '-DI_SYSTIME' ''; do
+	case "$flags" in
+	'') $echo $n ".$c"
+		if $cc $ccflags \
+		$i_time $i_systime $i_systimek $sysselect $s_timeval $s_timezone \
+		try.c -o try >/dev/null 2>&1 ; then
+			set X $i_time $i_systime $i_systimek $sysselect $s_timeval
+			shift
+			flags="$*"
+			echo " "
+			$echo $n "Succeeded with $flags$c"
+		fi
+		;;
+	esac
+done
+done
+done
+done
+@if I_SYSSELECT
+done
+@end
+@if timezone
+done
+@end
+timeincl=''
+echo " "
+case "$flags" in
+*SYSTIMEKERNEL*) i_systimek="$define"
+	timeincl=`./findhdr sys/time.h`
+	echo "We'll include <sys/time.h> with KERNEL defined." >&4;;
+*) i_systimek="$undef";;
+esac
+case "$flags" in
+*I_TIME*) i_time="$define"
+	timeincl=`./findhdr time.h`" $timeincl"
+	echo "We'll include <time.h>." >&4;;
+*) i_time="$undef";;
+esac
+case "$flags" in
+*I_SYSTIME*) i_systime="$define"
+	timeincl=`./findhdr sys/time.h`" $timeincl"
+	echo "We'll include <sys/time.h>." >&4;;
+*) i_systime="$undef";;
+esac
+@if I_SYSSELECT
+case "$flags" in
+*I_SYSSELECT*) i_sysselct="$define"
+	timeincl=`./findhdr sys/select.h`" $timeincl"
+	echo "We'll also include <sys/select.h> to get struct timeval." >&4;;
+*) case "$i_sysselct" in
+	'') i_sysselct="$undef";;
+	esac
+esac
+@end
+$rm -f try.c try
+

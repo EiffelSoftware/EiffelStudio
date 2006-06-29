@@ -1,0 +1,83 @@
+?RCS: $Id: prefix.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/01/30  14:44:05  ram
+?RCS: patch49: new prefixexp variable holding a fully expanded prefix
+?RCS: patch49: save off previous prefix value in oldprefix if changed (WED)
+?RCS: patch49: added the INSTALLPREFIX define for C programs to use (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:31:34  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:prefix prefixexp +oldprefix: Getfile Loc Oldconfig cat package
+?MAKE:	-pick add $@ %<
+?S:prefix:
+?S:	This variable holds the name of the directory below which the
+?S:	user will install the package.  Usually, this is /usr/local, and
+?S:	executables go in /usr/local/bin, library stuff in /usr/local/lib,
+?S:	man pages in /usr/local/man, etc.  It is only used to set defaults
+?S:	for things in bin.U, mansrc.U, privlib.U, or scriptdir.U.
+?S:.
+?S:prefixexp:
+?S:	This variable holds the full absolute path of the directory below
+?S:	which the user will install the package.  Derived from prefix.
+?S:.
+?S:oldprefix:
+?S:	This variable is set non-null if the prefix was previously defined
+?S:	and gets set to a new value. Used internally by Configure only.
+?S:.
+?C:INSTALLPREFIX:
+?C:	This symbol contains the name of the install prefix for this package.
+?C:.
+?H:#define INSTALLPREFIX "$prefix"		/**/
+?H:.
+: determine root of directory hierarchy where package will be installed.
+case "$prefix" in
+'')
+	dflt=`./loc . /usr/local /usr/local /local /opt /usr`
+	;;
+*)
+	dflt="$prefix"
+	;;
+esac
+$cat <<EOM
+
+By default, $package will be installed in $dflt/bin, manual
+pages under $dflt/man, etc..., i.e. with $dflt as prefix for
+all installation directories. Typically set to /usr/local, but you
+may choose /usr if you wish to install $package among your system
+binaries. If you wish to have binaries under /bin but manual pages
+under /usr/local/man, that's ok: you will be prompted separately
+for each of the installation directories, the prefix being only used
+to set the defaults.
+
+EOM
+fn=d~
+rp='Installation prefix to use?'
+. ./getfile
+oldprefix=''
+case "$prefix" in
+'') ;;
+*)
+	case "$ans" in
+	"$prefix") ;;
+	*) oldprefix="$prefix";;
+	esac
+	;;
+esac
+prefix="$ans"
+prefixexp="$ansexp"
+

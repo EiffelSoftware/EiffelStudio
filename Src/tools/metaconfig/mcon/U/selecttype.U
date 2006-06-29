@@ -1,0 +1,112 @@
+?RCS: $Id: selecttype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  16:20:09  ram
+?RCS: patch61: always include <sys/select.h> when available for test
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:14:06  ram
+?RCS: patch56: removed harmful spaces in assignment
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  07:06:31  ram
+?RCS: patch30: created by ADO
+?RCS:
+?MAKE:selecttype: cat +cc +ccflags rm Oldconfig Myread \
+	d_fd_set d_select d_socket i_systime i_sysselct
+?MAKE:	-pick add $@ %<
+?S:selecttype:
+?S:	This variable holds the type used for the 2nd, 3rd, and 4th
+?S:	arguments to select.  Usually, this is 'fd_set *', if HAS_FD_SET
+?S:	is defined, and 'int *' otherwise.  This is only useful if you 
+?S:	have select(), naturally.
+?S:.
+?C:Select_fd_set_t:
+?C:	This symbol holds the type used for the 2nd, 3rd, and 4th
+?C:	arguments to select.  Usually, this is 'fd_set *', if HAS_FD_SET
+?C:	is defined, and 'int *' otherwise.  This is only useful if you 
+?C:	have select(), of course.
+?C:.
+?H:#define Select_fd_set_t 	$selecttype	/**/
+?H:.
+?T:xxx yyy
+: check for type of arguments to select.  This will only really
+: work if the system supports prototypes and provides one for
+: select.
+case "$d_select" in
+$define)
+	: Make initial guess
+	case "$selecttype" in
+	''|' ')
+		case "$d_fd_set" in
+		$define) xxx='fd_set *' ;;
+		*) xxx='int *' ;;
+		esac
+		;;
+	*) 	xxx="$selecttype" 
+		;;
+	esac
+	: backup guess
+	case "$xxx" in
+	'fd_set *') yyy='int *' ;;
+	'int *') yyy='fd_set *' ;;
+	esac
+
+	$cat <<EOM
+
+Checking to see what type of arguments are expected by select().
+EOM
+	$cat >try.c <<EOCP
+#$i_systime I_SYS_TIME
+#$i_sysselct I_SYS_SELECT
+#$d_socket HAS_SOCKET
+#include <sys/types.h>
+#ifdef HAS_SOCKET
+#include <sys/socket.h> /* Might include <sys/bsdtypes.h> */
+#endif
+#ifdef I_SYS_TIME
+#include <sys/time.h>
+#endif
+#ifdef I_SYS_SELECT
+#include <sys/select.h>
+#endif
+main()
+{
+	int width;
+	Select_fd_set_t readfds;
+	Select_fd_set_t writefds;
+	Select_fd_set_t exceptfds;
+	struct timeval timeout;
+	select(width, readfds, writefds, exceptfds, &timeout);
+	exit(0);
+}
+EOCP
+	if $cc $ccflags -c -DSelect_fd_set_t="$xxx" try.c >/dev/null 2>&1 ; then
+		selecttype="$xxx"
+		echo "Your system uses $xxx for the arguments to select." >&4
+	elif $cc $ccflags -c -DSelect_fd_set_t="$yyy" try.c >/dev/null 2>&1 ; then
+		selecttype="$yyy"
+		echo "Your system uses $yyy for the arguments to select." >&4
+	else
+		rp='What is the type for the 2nd, 3rd, and 4th arguments to select?'
+		dflt="$xxx"
+		. ./myread
+		selecttype="$ans"
+	fi
+	$rm -f try.[co]
+	;;
+*)	selecttype='int *'
+	;;
+esac
+

@@ -1,0 +1,63 @@
+?RCS: $Id: prefshell.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:28:13  ram
+?RCS: patch36: added SHELL temporary since metalint now sees ${SHELL}
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:11:47  ram
+?RCS: patch10: non-portable var substitution was used (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:34  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:prefshell: cat package Getfile Oldconfig ksh csh bash
+?MAKE:	-pick add $@ %<
+?S:prefshell:
+?S:	This variable contains the eventual value of the PREFSHELL symbol,
+?S:	which contains the full name of the preferred user shell on this
+?S:	system.  Usual values are /bin/csh, /bin/ksh, /bin/sh.
+?S:.
+?C:PREFSHELL:
+?C:	This symbol contains the full name of the preferred user shell on this
+?C:	system.  Usual values are /bin/csh, /bin/ksh, /bin/sh.
+?C:.
+?H:#define PREFSHELL "$prefshell"		/**/
+?H:.
+?T:SHELL
+: find out which shell people like to use most
+case "$prefshell" in
+'')
+	case "$ksh $bash $csh" in
+	*/ksh*) dflt="$ksh" ;;
+	*/bash*) dflt="$bash" ;;
+	*/csh*) dflt="$csh" ;;
+	*) dflt='/bin/sh' ;;
+	esac
+	;;
+*)  dflt="$prefshell";;
+esac
+?X: Some shells (Ultrix) do not understand ${SHELL:-/bin/sh}, sigh!
+$cat <<EOM
+
+Give the full path name of the shell most people like to use on your system.
+This will be used by $package whenever the user wants to get a shell
+escape (for instance) and is not necessarily the same as the shell you are
+currently using (${SHELL-/bin/sh}).
+
+EOM
+fn=f/~
+rp='Preferred shell to be used?'
+. ./getfile
+prefshell=$ans
+

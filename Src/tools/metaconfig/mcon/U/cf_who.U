@@ -1,0 +1,63 @@
+?RCS: $Id: cf_who.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  15:28:50  ram
+?RCS: patch61: new computation method avoiding use of temporary file
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  14:42:34  ram
+?RCS: patch23: login name now computed the hard way
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:32  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: Oldconfig dependency is there to ensure computation occurs after old values
+?X: from config.sh have been loaded, so that we can supersede them.
+?X:
+?MAKE:cf_time cf_by: date Oldconfig
+?MAKE:	-pick add $@ %<
+?S:cf_time:
+?S:	Holds the output of the "date" command when the configuration file was
+?S:	produced. This is used to tag both config.sh and config_h.SH.
+?S:.
+?S:cf_by:
+?S:	Login name of the person who ran the Configure script and answered the
+?S:	questions. This is used to tag both config.sh and config_h.SH.
+?S:.
+: who configured the system
+cf_time=`$date 2>&1`
+?X:
+?X: Leave a white space between first two '(' for ksh. The sub-shell is needed
+?X: on some machines to avoid the error message when logname is not found; e.g.
+?X: on SUN-OS 3.2, (logname || whoami) would not execute whoami if logname was
+?X: not found. Sigh!
+?X:
+?X: Convex had a broken logname executable which returned a non-zero status,
+?X: and that broke the previous:
+?X:   cf_by=`( (logname) 2>/dev/null || whoami) 2>&1`
+?X: Switch to emergency mode... -- RAM, 19/04/94
+?X:
+?X: Parens needed to avoid error message if the program does not exist.
+?X: Uses case instead of $test so it can be put before $test is defined.
+?X: Don't redirect to a file because on Ultrix (under script?) logname
+?X: outputs a blank line first.  This method will apparently work.
+cf_by=`(logname) 2>/dev/null`
+case "$cf_by" in
+"")
+	cf_by=`(whoami) 2>/dev/null`
+	case "$cf_by" in
+	"") cf_by=unknown ;;
+	esac ;;
+esac
+

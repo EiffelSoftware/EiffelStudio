@@ -1,0 +1,174 @@
+?RCS: $Id: ipc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:53  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:ipc serve_shm serve_msg serve_inet_udp serve_inet_tcp serve_unix_udp \
+	serve_unix_tcp: test Myread Oldconfig d_socket d_msg d_shm d_sem
+?MAKE:	-pick add $@ %<
+?LINT:use d_msg d_sem
+?S:ipc:
+?S:	This variable holds the type of IPC service we'll be using.  Values
+?S:	include "ip", "shm", "msg", "cms" and "os9".  We don't worry about
+?S:	cms or os9 here, because Configure doesn't run in those places--HMS.
+?S:.
+?S:serve_shm:
+?S:	This variable controls the definition of SERVE_SHM, which tells the
+?S:	C program to use USG shared memory for IPC.
+?S:.
+?S:serve_msg:
+?S:	This variable controls the definition of SERVE_MSG, which tells the
+?S:	C program to use USG message queues for IPC.
+?S:.
+?S:serve_inet_udp:
+?S:	This variable controls the definition of SERVE_INET_UDP, which tells
+?S:	the C program to enable InterNet-domain UDP support for IPC.
+?S:.
+?S:serve_inet_tcp:
+?S:	This variable controls the definition of SERVE_INET_TCP, which tells
+?S:	the C program to enable InterNet-domain TCP support for IPC.
+?S:.
+?S:serve_unix_udp:
+?S:	This variable controls the definition of SERVE_UNIX_UDP, which tells
+?S:	the C program to enable Unix-domain UDP support for IPC.
+?S:.
+?S:serve_unix_tcp:
+?S:	This variable controls the definition of SERVE_UNIX_TCP, which tells
+?S:	the C program to enable Unix-domain TCP support for IPC.
+?S:.
+?C:SERVE_SHM:
+?C:	If defined, tells the C program to use USG shared memory for IPC.
+?C:.
+?C:SERVE_MSG:
+?C:	If defined, tells the C program to use USG message queues for IPC.
+?C:.
+?C:SERVE_INET_UDP:
+?C:	If defined, tells the C program to enable InterNet-domain UDP
+?C:	support for IPC.
+?C:.
+?C:SERVE_INET_TCP:
+?C:	If defined, tells the C program to enable InterNet-domain TCP
+?C:	support for IPC.
+?C:.
+?C:SERVE_UNIX_UDP:
+?C:	If defined, tells the C program to enable Unix-domain UDP
+?C:	support for IPC.
+?C:.
+?C:SERVE_UNIX_TCP:
+?C:	If defined, tells the C program to enable Unix-domain TCP
+?C:	support for IPC.
+?C:.
+?H:#$serve_shm	SERVE_SHM	/**/
+?H:#$serve_msg	SERVE_MSG	/**/
+?H:#$serve_inet_udp	SERVE_INET_UDP	/**/
+?H:#$serve_inet_tcp	SERVE_INET_TCP	/**/
+?H:#$serve_unix_udp	SERVE_UNIX_UDP	/**/
+?H:#$serve_unix_tcp	SERVE_UNIX_TCP	/**/
+?H:.
+?X: FIXME -- RAM
+?INIT:serve_shm=''
+?INIT:serve_msg="$undef"
+?INIT:serve_inet_udp=''
+?INIT:serve_inet_tcp=''
+?INIT:serve_unix_udp=''
+?INIT:serve_unix_tcp=''
+: get IPC mechanism
+echo " "
+ipc=''
+while $test -z "$ipc"
+do
+	if $test "$ipc" != "shm" -a "$d_socket" = "$define"; then
+		ipc=''
+		if $test "$serve_inet_udp" = "$undef"; then
+			dflt=n
+		else
+			dflt=y
+		fi
+		rp='Provide InterNet-domain UDP service?'
+		. ./myread
+		dflt=''
+		case "$ans" in
+		n*) serve_inet_udp="$undef";;
+		*)
+			serve_inet_udp="$define"
+			ipc='ip'
+			;;
+		esac
+
+		if $test "$serve_inet_tcp" = "$define"; then
+			dflt=y
+		else
+			dflt=n
+		fi
+		rp='Provide InterNet-domain TCP service?'
+		. ./myread
+		dflt=''
+		case "$ans" in
+		n*) serve_inet_tcp="$undef";;
+		*)
+			serve_inet_tcp="$define"
+			ipc='ip'
+			;;
+		esac
+
+		if $test "$serve_unix_udp" = "$define"; then
+			dflt=y
+		else
+			dflt=n
+		fi
+		rp='Provide Unix-domain UDP service?'
+		. ./myread
+		dflt=''
+		case "$ans" in
+		n*) serve_unix_udp="$undef";;
+		*)
+			serve_unix_udp="$define"
+			ipc='ip'
+			;;
+		esac
+
+		if $test "$serve_unix_tcp" = "$define"; then
+			dflt=y
+		else
+			dflt=n
+		fi
+		rp='Provide Unix-domain TCP service?'
+		. ./myread
+		dflt=''
+		case "$ans" in
+		n*) serve_unix_tcp="$undef";;
+		*)
+			serve_unix_tcp="$define"
+			ipc='ip'
+			;;
+		esac
+	else
+		serve_inet_udp="$undef"
+		serve_inet_tcp="$undef"
+		serve_unix_udp="$undef"
+		serve_unix_tcp="$undef"
+	fi
+	if $test "$ipc" != "ip" -a "$d_shm" = "$define"; then
+		echo "Providing USG shared memory IPC support." >&4
+		serve_shm="$define"
+		ipc='shm'
+	else
+		serve_shm="$undef"
+	fi
+	if $test -z "$ipc"; then
+		echo "You must select an IPC mechanism." >&4
+	fi
+done
+

@@ -1,0 +1,54 @@
+?RCS: $Id: pager.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/01/30  14:41:26  ram
+?RCS: patch49: ensure dflt gets initialized in case no pagers are found (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:27:45  ram
+?RCS: patch36: replaced Myread by Getfile in the dependency line
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:30  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:pager: pg more less Getfile Oldconfig
+?MAKE:	-pick add $@ %<
+?S:pager:
+?S:	This variable contains the name of the preferred pager on the system.
+?S:	Usual values are (the full pathnames of) more, less, pg, or cat.
+?S:.
+: locate the preferred pager for this system
+case "$pager" in
+'')
+	dflt=''
+	case "$pg" in
+	/*) dflt=$pg;;
+	esac
+	case "$more" in
+	/*) dflt=$more;;
+	esac
+	case "$less" in
+	/*) dflt=$less;;
+	esac
+	case "$dflt" in
+	'') dflt=/usr/ucb/more;;
+	esac
+	;;
+*) dflt="$pager";;
+esac
+echo " "
+fn=f/
+rp='What pager is used on your system?'
+. ./getfile
+pager="$ans"
+

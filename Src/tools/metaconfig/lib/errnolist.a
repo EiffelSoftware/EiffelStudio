@@ -1,0 +1,55 @@
+# $Id: errnolist.a 78394 2004-11-30 00:26:25Z manus $
+#
+#  Copyright (c) 1991-1993, Raphael Manfredi
+#  
+#  You may redistribute only under the terms of the Artistic Licence,
+#  as specified in the README file that comes with the distribution.
+#  You may reuse parts of this distribution only within the terms of
+#  that same Artistic Licence; a copy of which may be found at the root
+#  of the source tree for dist 3.0.
+#
+# Original Author: Harlan Stenn <harlan@mumps.pfcs.com>
+#
+# $Log$
+# Revision 1.1  2004/11/30 00:26:25  manus
+# Added missing files from original distribution.
+#
+# Revision 3.0  1993/08/18  12:04:35  ram
+# Baseline for dist 3.0 netwide release.
+#
+#
+# This is a simple-minded awk script to generate an initialization for
+# sys_errnolist on systems that don't have it.
+# This file now depends only on sys/errno.h error numbers under maxerr being
+# in order.  It will complain and die if not.  NOTE: It will still produce
+# a compilable output file, even with errors, so you must check the output.
+
+
+BEGIN		{
+			format = "\t\"%s\",\n"
+			printf("/*\n** This is a generated file.  Do NOT edit it unless you really have to...\n*/\n\n")
+			printf("char *sys_errnolist[] = {\n")
+			maxerr = 89
+		}
+
+$1=="#define"	{	
+			if(count > maxerr || substr($2,1,1) != "E")
+				next   # we're not interested
+			if($3 < count) {	# this is bad
+				printf("Fatal error: %s out of order at %s\n",\
+				FILENAME, $2)>"/dev/tty"
+				exit 1
+			}
+			# fill in the blanks
+			while($3 > count) {
+				dummy=sprintf("EDUMMY%d",count)
+				printf(format,dummy)
+				count++
+			}
+			printf(format,$2)
+			count++
+		}
+
+END		{
+			printf("\t0\n};\n")
+		}

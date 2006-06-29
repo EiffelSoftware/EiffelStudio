@@ -1,0 +1,34 @@
+?RCS: $Id: d_stat.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:28  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_stat: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_stat:
+?S:	This variable conditionally defines HAS_STAT if stat() is
+?S:	available to get file status.
+?S:.
+?C:HAS_STAT (STAT):
+?C:	This symbol, if defined, indicates that the stat routine is
+?C:	available to get file status.
+?C:.
+?H:#$d_stat HAS_STAT	/**/
+?H:.
+?LINT:set d_stat
+: see if stat exists
+set stat d_stat
+eval $inlibc
+

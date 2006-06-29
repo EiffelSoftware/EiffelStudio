@@ -1,0 +1,60 @@
+?RCS: $Id: cf_email.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS: 
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:05:06  ram
+?RCS: patch16: created
+?RCS:
+?RCS:
+?MAKE:cf_email: cat cf_by myhostname mydomain Oldconfig Myread
+?MAKE:	-pick add $@ %<
+?S:cf_email:
+?S:	Electronic mail address of the person who ran Configure. This can be
+?S:	used by units that require the user's e-mail, like MailList.U.
+?S:.
+?T:cont
+$cat <<EOM
+
+I need to get your e-mail address in Internet format if possible, i.e.
+something like user@host.domain. Please answer accurately since I have
+no easy means to double check it. The default value provided below
+is most probably close to the reality but may not be valid from outside
+your organization...
+
+EOM
+cont=x
+while test "$cont"; do
+	case "$cf_email" in
+	'') dflt="$cf_by@$myhostname$mydomain";;
+	*) dflt="$cf_email";;
+	esac
+	rp='What is your e-mail address?'
+	. ./myread
+	cf_email="$ans"
+	case "$cf_email" in
+	*@*.*) cont='' ;;
+	*)
+		rp='Address does not look like an Internet one.  Use it anyway?'
+		case "$fastread" in
+		yes) dflt=y ;;
+		*) dflt=n ;;
+		esac
+		. ./myread
+		case "$ans" in
+		y*) cont='' ;;
+		*) echo " " ;;
+		esac
+		;;
+	esac
+done
+

@@ -1,0 +1,103 @@
+?RCS: $Id: d_vfork.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.6  1994/08/29  16:18:21  ram
+?RCS: patch32: set default to 'y' the first time
+?RCS:
+?RCS: Revision 3.0.1.5  1994/06/20  06:59:14  ram
+?RCS: patch30: usevfork was not always properly set
+?RCS:
+?RCS: Revision 3.0.1.4  1994/05/13  15:20:56  ram
+?RCS: patch27: modified to avoid spurious Whoa warnings (ADO)
+?RCS:
+?RCS: Revision 3.0.1.3  1994/05/06  14:59:09  ram
+?RCS: patch23: now explicitely ask whether vfork() should be used (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1993/10/16  13:49:39  ram
+?RCS: patch12: added magic for vfork()
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:06:57  ram
+?RCS: patch10: removed automatic remapping of vfork on fork (WAD)
+?RCS: patch10: added compatibility code for older config.sh (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:55  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_vfork usevfork: Inlibc Myread Oldconfig Setvar
+?MAKE:	-pick add $@ %<
+?S:d_vfork:
+?S:	This variable conditionally defines the HAS_VFORK symbol, which
+?S:	indicates the vfork() routine is available.
+?S:.
+?S:usevfork:
+?S:	This variable is set to true when the user accepts to use vfork.
+?S:	It is set to false when no vfork is available or when the user
+?S:	explicitely requests not to use vfork.
+?S:.
+?C:HAS_VFORK (VFORK):
+?C:	This symbol, if defined, indicates that vfork() exists.
+?C:.
+?H:#$d_vfork HAS_VFORK	/**/
+?H:.
+?M:vfork: HAS_VFORK
+?M:#ifndef HAS_VFORK
+?M:#define vfork fork
+?M:#endif
+?M:.
+?LINT:set d_vfork
+?X: TO BE REMOVED in dist 4.0
+?X:==========================
+?T:d_hvfork
+: backward compatibility for d_hvfork
+if test X$d_hvfork != X; then
+	d_vfork="$d_hvfork"
+	d_hvfork=''
+fi
+?X:==========================
+: see if there is a vfork
+val=''
+set vfork val
+eval $inlibc
+
+: Ok, but do we want to use it. vfork is reportedly unreliable in 
+: perl on Solaris 2.x, and probably elsewhere.
+case "$val" in
+$define)
+	echo " "
+	case "$usevfork" in
+	false) dflt='n';;
+	*) dflt='y';;
+	esac
+	rp="Some systems have problems with vfork().  Do you want to use it?"
+	. ./myread
+	case "$ans" in
+	y|Y) ;;
+	*)
+		echo "Ok, we won't use vfork()."
+		val="$undef"
+		;;
+	esac
+	;;
+esac
+?X:
+?X: Only set it when final value is known to avoid spurious Whoas
+?X: Then set usevfork accordingly to the current value, for next run
+?X:
+set d_vfork
+eval $setvar
+case "$d_vfork" in
+$define) usevfork='true';;
+*) usevfork='false';;
+esac
+

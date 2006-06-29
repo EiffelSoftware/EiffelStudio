@@ -1,0 +1,59 @@
+?RCS: $Id: perlpath.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/09/25  09:17:04  ram
+?RCS: patch59: unit is now forced to the top of Configure, if possible
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/11  15:33:53  ram
+?RCS: patch45: can now use Loc variables since path stripping is deferred
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:32  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: The purpose of this unit is to locate perl good enough to construct a #!
+?X:
+?MAKE:perlpath: Getfile Oldconfig Loc perl
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:perlpath:
+?S:	This variable contains the eventual value of the PERLPATH symbol,
+?S:	which contains the absolute location of the perl interpeter.
+?S:.
+?C:PERLPATH:
+?C:	This symbol contains the absolute location of the perl interpeter.
+?C:.
+?H:#define PERLPATH "$perlpath"		/**/
+?H:.
+: determine perl absolute location
+case "$perlpath" in
+'')
+	if test -f /usr/bin/perl; then
+		dflt=/usr/bin/perl
+	else
+		case "$perl" in
+		*/*) dflt="$perl";;
+		*) dflt=/usr/bin/perl;;
+		esac
+	fi
+	;;
+*)  dflt="$perlpath"
+	;;
+esac
+echo " "
+fn=f~/
+rp="Where is perl located on your system?"
+. ./getfile
+perlpath="$ans"
+

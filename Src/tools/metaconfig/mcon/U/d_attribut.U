@@ -1,0 +1,67 @@
+?RCS: $Id: d_attribut.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/30  14:33:45  ram
+?RCS: patch49: test C program now includes <stdio.h> (WED)
+?RCS:
+?RCS: Revision 3.0.1.2  1995/01/11  15:25:47  ram
+?RCS: patch45: fixed typo in the d_attribut variable (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:08:55  ram
+?RCS: patch36: created by ADO
+?RCS:
+?MAKE:d_attribut: Myread Oldconfig cat cc ccflags rm Setvar contains
+?MAKE:	-pick add $@ %<
+?S:d_attribut (d_attrib):
+?S:	This variable conditionally defines HASATTRIBUTE, which
+?S:	indicates the C compiler can check for function attributes,
+?S:	such as printf formats.
+?S:.
+?C:HASATTRIBUTE ~ %< (GNUC_ATTRIBUTE_CHECK):
+?C:	This symbol indicates the C compiler can check for function attributes,
+?C:	such as printf formats. This is normally only supported by GNU cc.
+?C:.
+?H:?%<:#$d_attribut HASATTRIBUTE 	/**/
+?H:?%<:#ifndef HASATTRIBUTE
+?H:?%<:#define __attribute__(_arg_)
+?H:?%<:#endif
+?H:.
+?W:%<:__attribute__
+?LINT:set d_attribut
+?LINT:known __attribute__
+: Look for GNU-cc style attribute checking
+echo " "
+echo "Checking whether your compiler can handle __attribute__ ..." >&4
+$cat >attrib.c <<'EOCP'
+#include <stdio.h>
+void croak (char* pat,...) __attribute__((format(printf,1,2),noreturn));
+EOCP
+if $cc $ccflags -c attrib.c >attrib.out 2>&1 ; then
+	if $contains 'warning' attrib.out >/dev/null 2>&1; then
+		echo "Your C compiler doesn't fully support __attribute__."
+		val="$undef"
+	else
+		echo "Your C compiler supports __attribute__."
+		val="$define"
+	fi
+else
+	echo "Your C compiler doesn't seem to understand __attribute__ at all."
+	val="$undef"
+fi
+set d_attribut
+eval $setvar
+$rm -f attrib*
+

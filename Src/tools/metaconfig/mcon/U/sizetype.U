@@ -1,0 +1,43 @@
+?RCS: $Id: sizetype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:32:10  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:sizetype: Myread Typedef
+?MAKE:	-pick add $@ %<
+?S:sizetype:
+?S:	This variable defines sizetype to be something like size_t, 
+?S:	unsigned long, or whatever type is used to declare length 
+?S:	parameters for string functions.
+?S:.
+?C:Size_t:
+?C:	This symbol holds the type used to declare length parameters
+?C:	for string functions.  It is usually size_t, but may be
+?C:	unsigned long, int, etc.  It may be necessary to include
+?C:	<sys/types.h> to get any typedef'ed information.
+?C:.
+?H:#define Size_t $sizetype	 /* length paramater for string functions */
+?H:.
+: see what type is used for size_t
+set size_t sizetype 'unsigned int' stdio.h sys/types.h
+eval $typedef
+dflt="$sizetype"
+echo " "
+rp="What type is used for the length parameter for string functions?"
+. ./myread
+sizetype="$ans"
+

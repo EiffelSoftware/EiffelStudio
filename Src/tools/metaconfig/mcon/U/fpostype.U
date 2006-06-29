@@ -1,0 +1,42 @@
+?RCS: $Id: fpostype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:20:52  ram
+?RCS: patch32: now uses new Typedef unit to compute type information
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  06:59:59  ram
+?RCS: patch30: created
+?RCS:
+?MAKE:fpostype: Myread Typedef
+?MAKE:	-pick add $@ %<
+?S:fpostype:
+?S:	This variable defines Fpos_t to be something like fpost_t, long, 
+?S:	uint, or whatever type is used to declare file positions in libc.
+?S:.
+?C:Fpos_t:
+?C:	This symbol holds the type used to declare file positions in libc.
+?C:	It can be fpos_t, long, uint, etc... It may be necessary to include
+?C:	<sys/types.h> to get any typedef'ed information.
+?C:.
+?H:#define Fpos_t $fpostype		/* File position type */
+?H:.
+: see what type file positions are declared as in the library
+set fpos_t fpostype long stdio.h sys/types.h
+eval $typedef
+echo " "
+dflt="$fpostype"
+rp="What is the type for file position used by fsetpos()?"
+. ./myread
+fpostype="$ans"
+

@@ -1,0 +1,97 @@
+?RCS: $Id: startperl.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:25:06  ram
+?RCS: patch61: warn them if the #! line is too long for their OS
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:50  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:startperl: cat rm sharpbang perlpath d_portable Myread
+?MAKE:	-pick add $@ %<
+?S:startperl:
+?S:	This variable contains the string to put on the front of a perl
+?S:	script to make sure (hopefully) that it runs with perl and not some
+?S:	shell. Of course, that leading line must be followed by the classical
+?S:	perl idiom:
+?S:		eval 'exec perl -S $0 ${1+"$@"}'
+?S:			if $running_under_some_shell;
+?S:	to guarantee perl startup should the shell execute the script. Note
+?S:	that this magic incatation is not understood by csh.
+?S:.
+?C:STARTPERL:
+?C:	This symbol is the string that should be put on the front of a
+?C:	perl script to make sure (hopefully) that it runs with perl and
+?C:	not under some shell. That line should be followed by the classical
+?C:	invocation magic:
+?C:		eval 'exec perl -S $0 ${1+"$@"}'
+?C:			if $running_under_some_shell;
+?C:	to guarantee perl startup should the shell execute the script at first.
+?C:.
+?H:#define STARTPERL "$startperl"
+?H:.
+?T:pdflt
+?F:!xtry
+: figure out how to guarantee perl startup
+case "$sharpbang" in
+*!)
+?X:
+?X: Make sure the #!$perlpath magic incantation indeed works on this
+?X: system... It might not if the length of the #! hook is greater
+?X: than some hardwired kernel limit. -- RAM, 15/03/96
+?X:
+	$cat >xtry <<EOP
+#!$perlpath
+system("exit 0");
+EOP
+	chmod a+x xtry
+	if ./xtry >/dev/null 2>&1; then
+		$cat <<EOH
+
+I can use the #! construct to start perl on your system. This will make
+startup of perl scripts faster, but may cause problems if you want to share
+those scripts and perl is not in a standard place (/usr/bin/perl) on all your
+platforms. The alternative is to force a shell by starting the script with a
+single ':' character.
+
+EOH
+		pdflt=y
+	else
+		$cat <<EOH
+
+I could use the #! construct to start perl on your system, but using
+    #!$perlpath
+would be too long for your kernel to grok. Indeed, most systems do
+limit the size of the leading #! string to 32 characters.
+
+EOH
+		pdflt=n
+	fi
+	$rm -f xtry
+	case "$startperl" in
+	*!*) dflt=y;;
+	'') case "$d_portable" in
+		"$define") dflt=n;;
+		*) dflt=$pdflt;;
+		esac;;
+	esac
+	rp='Shall I use #! to start up perl?'
+	. ./myread
+	case "$ans" in
+	y*|Y*) startperl="#!$perlpath";;
+	*) startperl=": # use perl";;
+	esac;;
+*) startperl=": # use perl";;
+esac
+

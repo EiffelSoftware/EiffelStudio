@@ -1,0 +1,50 @@
+?RCS: $Id: basicshell.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:25  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:basicshell: Getfile Oldconfig bash csh ksh sh
+?MAKE:	-pick add $@ %<
+?S:basicshell:
+?S:	This variable contains the eventual value of the BASICSHELL symbol,
+?S:	which contains the full name of the basic script shell on this
+?S:	system.  Usual values are /bin/sh, /bin/ksh, /bin/csh.
+?S:.
+?C:BASICSHELL:
+?C:	This symbol contains the full name of the basic script shell on this
+?C:	system.  Usual values are /bin/sh, /bin/ksh, /bin/csh.
+?C:.
+?H:#define BASICSHELL "$basicshell"		/**/
+?H:.
+: find the most basic shell for scripts
+echo " "
+case "$basicshell" in
+'')
+	case "$sh $bash $csh $ksh" in
+	*/sh*) dflt="$sh" ;;
+	*/ksh*) dflt="$ksh" ;;
+	*/csh*) dflt="$csh" ;;
+	*/bash*) dflt="$bash" ;;
+	*) dflt='/bin/sh' ;;
+	esac
+	;;
+*)
+	dflt="$basicshell";;
+esac
+fn=f
+rp="Give the full path name of the most basic shell used on your system"
+. ./getfile
+basicshell=$ans
+

@@ -1,0 +1,49 @@
+?RCS: $Id: AAAAA.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1994/06/20  06:50:26  ram
+?RCS: patch30: changes from Jarkko Hietaniemi are tagged with JHI
+?RCS:
+?RCS: Revision 3.0.1.3  1994/05/06  14:01:39  ram
+?RCS: patch23: initials for Wayne Davison are now WED
+?RCS: patch23: added initials for new unit contributor Andy Dougherty
+?RCS:
+?RCS: Revision 3.0.1.2  1994/01/24  14:01:09  ram
+?RCS: patch16: make metalint shut up on special unit definition for All target
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  15:43:57  ram
+?RCS: patch10: documents initials used for Wayne Davison's contributions
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:04:44  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: 
+?X: The purpose of this file is to supply the head of the Makefile created
+?X: by metaconfig.  For this reason it must be first in alphabetical order.
+?X: The leading '+' in front of the unit name is a hint for metalint, since
+?X: the use of that special unit name as a "made" unit is legitimate here.
+?X: 
+?MAKE:+All: Finish
+?X:
+?X: Throughout the units, the following initials are used to identify comments:
+?X:
+?X:		HMS: Harlan Stenn
+?X:		RAM: Raphael Manfredi
+?X:		WED: Wayne Davison (was WAD by mistake--RAM)
+?X:		ADO: Andy Dougherty
+?X:		JHI: Jarkko Hietaniemi
+?X:
+?X: Agreed, this is a weird place to document it, but I couldn't find a better
+?X: place to do so. I've bet on the curiosity of users, who would probably
+?X: want to know what's in this strangely-named file--RAM.

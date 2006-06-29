@@ -1,0 +1,37 @@
+?RCS: $Id: d_memmove.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:35  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_memmove: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_memmove:
+?S:	This variable conditionally defines the HAS_MEMMOVE symbol, which
+?S:	indicates to the C program that the memmove() routine is available
+?S:	to copy potentatially overlapping blocks of memory.
+?S:.
+?C:HAS_MEMMOVE:
+?C:	This symbol, if defined, indicates that the memmove routine is available
+?C:	to copy potentially overlapping blocks of memory. This should be used
+?C:	only when HAS_SAFE_BCOPY is not defined. If neither is there, roll your
+?C:	own version.
+?C:.
+?H:#$d_memmove HAS_MEMMOVE	/**/
+?H:.
+?LINT:set d_memmove
+: see if memmove exists
+set memmove d_memmove
+eval $inlibc
+

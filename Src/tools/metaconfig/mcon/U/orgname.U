@@ -1,0 +1,68 @@
+?RCS: $Id: orgname.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:10:25  ram
+?RCS: patch10: added support for /local/src to the search (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:27  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:orgname: sed cat Myread Loc Oldconfig
+?MAKE:	-pick add $@ %<
+?S:orgname:
+?S:	This variable contains the eventual value of the ORGNAME symbol,
+?S:	which contains either the organizaton name or the full pathname
+?S:	of a file containing the organization name.
+?S:.
+?C:ORGNAME:
+?C:	This symbol contains either the organizaton name or the full pathname
+?C:	of a file containing the organization name, which the program must
+?C:	be prepared to open and substitute the contents of.
+?C:.
+?H:#define ORGNAME "$orgname"		/**/
+?H:.
+?T:longshots xxx
+: get organization name
+longshots='/local/src /usr/src/new /usr/src/local /usr/local/src'
+case "$orgname" in
+'') if xxx=`./loc news/src/defs.h x $longshots`; then
+		dflt=`$sed -n 's/^.*MYORG[ 	]*"\(.*\)".*$/\1/p' $xxx`
+	else
+		dflt=''
+	fi
+	;;
+*)  dflt="$orgname";;
+esac
+$cat << 'EOH'
+ 
+Please type the name of your organization as you want it to appear on the
+Organization line of outgoing articles.  (It's nice if this also specifies
+your location.  Your city name is probably sufficient if well known.)
+For example:
+
+    University of Southern North Dakota, Hoople
+
+You may also put the name of a file, as long as it begins with a slash.
+For example:
+
+    /etc/organization
+
+EOH
+orgname=""
+while test "X$orgname" = "X"; do
+	rp='Organization:'
+	. ./myread
+	orgname="$ans"
+done
+

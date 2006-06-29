@@ -1,0 +1,70 @@
+This is the root directory for jmake.
+
+The jmake program is a Makefile generator. It comes from 'imake' one
+may find in the X11R4 distribution, but it produces a Makefile.SH
+instead of a Makefile. Jmake has a template which knows some metaconfig
+symbols and has built-in commands which make it more powerful than imake.
+
+The jmkmf script may be used to produce the Makefile.SH from a Jmakefile.
+Once the bootstrap is done, you can run 'make Makefile.SH' to rebuild the
+Makefile.SH in the current directory, or 'make Makefiles.SH' to build the
+Makefiles in a recursive manner.
+
+All the rules used by jmake are listed in an automatically built index.
+The jmake's cryptic syntax is documented in file NOTES. You may also
+have a look at the sample Jmakefiles that come with this package.
+Usually, you do not include them in the release, but I kept them so
+that you may have a real example and see how things are organized.
+
+If you choose to use jmake, then you will have to use metaconfig, in
+order to get a meaningful value for all the needed symbol. Thus, each
+time you change your Jmakefiles, it may be necessary to update the
+Configure script.
+
+Here is how to use jmake...
+
+First, you have to write a Jmakefile for each directory where you want
+to put a Makefile. Be sure to declare all the sub-directories with the
+SetSubdirs rule. Usually, the order of the rules is not significant,
+but you should make sure the Makefile begins with an 'all::' target,
+so that a default 'make' does not run a clean for instance.
+
+Then, if this is the first time, you have to bootstrap. Go to the main
+directory of your package and run:
+
+	jmkmf
+	make Makefiles.SH
+
+which will first produce the main makefile and then recursively build
+all the makefiles.
+
+Once you have bootstrapped once, you can edit a Jmakefile and rebuild
+the local makefile with
+
+	make Makefile
+
+or all the hierachy below with:
+
+	make Makefiles.SH
+
+If you want to extract all the makefiles, you may run
+
+	sh Makefile.SH
+	make Makefiles
+
+in the top-level directory. Finally, if you only want to test the
+generated Makefile.SH without disturbing the Makefile, run
+
+	make Makefile.SH
+
+which will stop before running the produced file through sh.
+
+
+CAUTION:
+
+On machines whose cpp eats up tabs in macro expansion, the Makefile.SH
+produced might not be indented properly inside rules.
+
+Perl 4.0 PL10 sometimes dumps core, while PL3 does not. Thus, perl 4.0
+PL10 should NOT be used with jmake, at least on a MIPS.
+

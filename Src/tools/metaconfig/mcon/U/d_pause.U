@@ -1,0 +1,37 @@
+?RCS: $Id: d_pause.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:09:54  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:d_pause: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_pause:
+?S:	This variable conditionally defines the HAS_PAUSE symbol, which
+?S:	indicates to the C program that the pause() routine is available
+?S:	to suspend a process until a signal is received.
+?S:.
+?C:HAS_PAUSE :
+?C:	This symbol, if defined, indicates that the pause routine is
+?C:	available to suspend a process until a signal is received.
+?C:.
+?H:#$d_pause HAS_PAUSE		/**/
+?H:.
+?LINT:set d_pause
+: see if pause exists
+set pause d_pause
+eval $inlibc
+

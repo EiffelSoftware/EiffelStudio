@@ -1,0 +1,39 @@
+?RCS: $Id: d_poll.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  15:38:17  ram
+?RCS: patch61: mention that <poll.h> can be included if HAS_POLL defined
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/11  15:26:31  ram
+?RCS: patch45: created
+?RCS:
+?MAKE:d_poll: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_poll:
+?S:	This variable conditionally defines the HAS_POLL symbol, which
+?S:	indicates to the C program that the poll() routine is available
+?S:	to poll active file descriptors.
+?S:.
+?C:HAS_POLL :
+?C:	This symbol, if defined, indicates that the poll routine is
+?C:	available to poll active file descriptors. You may safely
+?C:	include <poll.h> when this symbol is defined.
+?C:.
+?H:#$d_poll HAS_POLL		/**/
+?H:.
+?LINT:set d_poll
+: see if poll exists
+set poll d_poll
+eval $inlibc
+

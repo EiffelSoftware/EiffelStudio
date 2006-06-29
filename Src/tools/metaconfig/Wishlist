@@ -1,0 +1,60 @@
+*** List of wishes for dist version 3.0 ***
+
+=======================================================================
+If you wish to implement one of the following, you're welcome :-). In
+that case, please let me know about it.  I will probably integrate your
+changes in my version (after some sanity checks, because I can't
+maintain something I don't understand).
+
+This list has no priority order whatsoever, so you may pick up one of
+the following suggestion and start working on it. In that case, you
+may want to get all the official patches for dist 3.0 first and make
+sure nobody is already working on that topic.
+=======================================================================
+
+*** jmake
+
+Make the names used more uniform. For instance, 'Simple' appears in
+many rules, but with different meanings, thus making the Jmakefile
+harder to understand at a first glance.
+
+Allow per-system compilation rules, so that objects and source file
+do not inter-mix but are kept in separate directories.
+
+*** metaconfig
+
+Write some "generic" templates for writing new units, so that the user
+only needs to fill up some fields. For instance, there could be a
+template for d_* and i_* units. [That's done, they are under mcon/files.
+Now I only need to write the generator on top of them]
+
+Make Configure know about cross-compiling.
+
+Make Configure know about VPATH for separate object directory, with
+proper support from jmake.
+
+Implement the ?I: and ?L: lines. The ?I: fills in inclwanted for you,
+while ?L: fills in the libswanted variable. For instance, when using
+a socket() call, one may need to look at -lbsd. If d_socket.U lists
+'bsd' within its ?L: line, then the libswanted variable will be
+correctly set. [Note: there are some hooks for this already]
+
+Build a library of PD routines that may be otherwise missing on
+some older systems, eg: getopt(). Those routines will be automagically
+added to the package by relying on ?P: lines, something like:
+
+	?P:getopt (HAS_GETOPT): getopt.c
+
+which would include getopt.c in the package (under some PD dir)
+when getopt is used and HAS_GETOPT is *not* used within the sources,
+in order to achieve transparent implementation.
+
+*** metalint
+
+Process '@' pre-processor lines, and signal mismatches, unrecognized
+commands, etc... Also warn when testing wantedness of unknown symbols
+or obsolete ones, etc...
+
+*** pat tools
+
+Clean that stuff.

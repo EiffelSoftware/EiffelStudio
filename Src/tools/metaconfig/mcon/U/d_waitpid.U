@@ -1,0 +1,34 @@
+?RCS: $Id: d_waitpid.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:02  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_waitpid: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_waitpid:
+?S:	This variable conditionally defines HAS_WAITPID if waitpid() is
+?S:	available to wait for child process.
+?S:.
+?C:HAS_WAITPID (WAITPID):
+?C:	This symbol, if defined, indicates that the waitpid routine is
+?C:	available to wait for child process.
+?C:.
+?H:#$d_waitpid HAS_WAITPID	/**/
+?H:.
+?LINT:set d_waitpid
+: see if waitpid exists
+set waitpid d_waitpid
+eval $inlibc
+

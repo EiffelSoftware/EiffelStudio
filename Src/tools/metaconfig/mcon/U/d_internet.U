@@ -1,0 +1,55 @@
+?RCS: $Id: d_internet.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:02:04  ram
+?RCS: patch10: most mailers support Internet addresses nowadays (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:24  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_internet: Myread Oldconfig Setvar
+?MAKE:	-pick add $@ %<
+?S:d_internet:
+?S:	This variable conditionally defines the INTERNET symbol, which
+?S:	indicates to the C program that there is a mailer available which
+?S:	supports internet-style addresses (user@site.domain).
+?S:.
+?C:INTERNET:
+?C:	This symbol, if defined, indicates that there is a mailer available
+?C:	which supports internet-style addresses (user@site.domain).
+?C:.
+?H:#$d_internet	INTERNET	/**/
+?H:.
+?LINT:set d_internet
+: check for internet mailer
+dflt=y
+case "$d_internet" in
+"$undef") dflt=n;;
+esac
+cat <<EOM
+ 
+Most mailers can deliver mail to addresses of the INTERNET persuasion,
+such as user@host.edu.  Some older mailers, however, require the complete
+path to the destination to be specified in the address.
+
+EOM
+rp="Does your mailer understand INTERNET addresses?"
+. ./myread
+case "$ans" in
+y*) val="$define";;
+*)  val="$undef";;
+esac
+set d_internet
+eval $setvar
+

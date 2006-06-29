@@ -1,0 +1,38 @@
+?RCS: $Id: rootid.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/30  14:45:36  ram
+?RCS: patch49: now only prints a single empty line when outputting something
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:42  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:rootid: sed
+?MAKE:	-pick add $@ %<
+?S:rootid:
+?S:	This variable contains the eventual value of the ROOTID symbol,
+?S:	which is the uid of root.
+?S:.
+?C:ROOTID:
+?C:	This symbol contains the uid of root, normally 0.
+?C:.
+?H:#define ROOTID $rootid		/**/
+?H:.
+: determine root id
+rootid=`$sed -e "/^root:/{s/^[^:]*:[^:]*:\([^:]*\).*"'$'"/\1/" -e "q" -e "}" -e "d" </etc/passwd`
+case "$rootid" in
+'') rootid=0 ;;
+*) echo " "; echo "Root uid = $rootid" >&4 ;;
+esac
+

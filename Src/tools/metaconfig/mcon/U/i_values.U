@@ -1,0 +1,38 @@
+?RCS: $Id: i_values.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  15:48:34  ram
+?RCS: patch61: created
+?RCS:
+?MAKE:i_values: Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_values:
+?S:	This variable conditionally defines the I_VALUES symbol, and indicates
+?S:	whether a C program may include <values.h> to get symbols like MAXLONG
+?S:	and friends.
+?S:.
+?C:I_VALUES:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <values.h> to get definition of symbols like MINFLOAT or
+?C:	MAXLONG, i.e. machine dependant limitations.  Probably, you
+?C:	should use <limits.h> instead, if it is available.
+?C:.
+?H:#$i_values I_VALUES		/**/
+?H:.
+?LINT:set i_values
+: see if this is a values.h system
+set values.h i_values
+eval $inhdr
+

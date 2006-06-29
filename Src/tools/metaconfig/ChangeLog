@@ -1,0 +1,1457 @@
+Fri Feb 28 17:48:41 MET 1997   Raphael Manfredi <Raphael_Manfredi@grenoble.hp.com>
+
+. Description:
+
+	This huge set of patch results from an integration of the
+	perl5 units into the dist-3.0 package. A few improvements
+	of mine are also incorporated here, but this patch set should
+	mainly be credited to Andy Dougherty and Chip Salzenberg, who
+	have both assumed the perl5 Patch Pumpkin with success and brio.
+
+	I won't document most of the changes in detail. Only the obvious
+	ones were kept here. You can look closer to the patches themselves
+	to see what really changed. Especially the new units, since you
+	now have more symbols to check for in your C code...
+
+	Regenerated Configure with current set of units.
+
+	Added Perl Patch Pumpkin credits. Thanks to Andy Dougherty and
+	to Chip Salzenberg for their incredible contributions to
+	metaconfig.
+
+	Changed my email address and updated copyright dates
+
+	Added support for src.U. This means you can now run Configure
+	from a remote directory to separate the build directory and
+	the (possibly read-only) source tree.
+	Note that some of your private units may require some changes
+	due to that...
+
+	Removed support for NO_PROTOTYPE detection on SCO.
+
+	Added cute quoting trick for wild stringify support, which
+	allows non-ANSI stringification to occur.
+
+	Replaced .a with $_a all over the place.
+	Likewise for .o replaced by $_o.
+	You'll have to do that to your own private units.
+
+	Integrated new units from perl5. I will not document most
+	of the perl5-related changes here. People interested can
+	look at Andy's notes in the perl5 distribution.
+
+	New USE_BSD_GETPGRP to detect the getpgrp() flavour. The old
+	USE_BSDPGRP has been obsoleted in favor of USE_BSD_SETPGRP.
+	Indeed, setpgrp() and getpgrp() can have distinct flavors,
+	so we need two distinct tests for them.
+
+	Useless units dropped: d_group.U and d_passwd.U.
+
+	Mention that <poll.h> can be included if HAS_POLL defined.
+
+	Improved overlapping copy check.
+
+	Added support for Free_t, the type of free().
+
+	Don't use nm with the GNU C library.
+	Added support for Linux shared libs.
+
+	Don't prompt them if the void support is high enough for us
+	and don't ask for the include path unless they are on a MIPS.
+
+	Added the srcdir support to "configure" now that we have src.U.
+
+	Documented the runnning environment and the src.U unit in
+	the metaconfig man page. The $_a and $_o are also mentionned.
+	All the generated scripts must now start with a "$startsh"
+	to ensure proper shell execution.
+
+	New "create" and "empty" lint directives.
+
+	New -L option for metaxref to match metaconfig and metalint.
+
+	Documents contents of the message sent by patnotify:
+	we now let them know the patch priority and description.
+
+	Added a whole bunch of new units, mostly from the perl5 team.
+
+. Files changed:
+
+	* bin/packinit.SH: Fixed one wrong ':' comment in .package.
+
+	* jmake/files/Jmake.rules: Now handles USRINC for dependencies. 
+	Smarter about dependencies computation.
+
+	* jmake/files/Jmake.tmpl: Lex path can now be configured.
+
+	* mcon/U/Begin.U: Added Extractall dependency.
+
+	* mcon/U/Config_sh.U, mcon/U/Oldsym.U, mcon/U/Extract.U,
+	mcon/U/patchlevel.U, mcon/U/MailAuthor.U, mcon/U/Chk_MANI.U,
+	mcon/U/Config_h.U: Added support for src.U.
+
+	* mcon/U/Configdir.U: Have README explicitely mention the package
+	name.
+
+	* mcon/U/make.U, mcon/U/d_strtoul.U, mcon/U/Unix.U,
+	mcon/U/d_inetaton.U, mcon/U/sitearch.U, mcon/U/d_sanemcmp.U,
+	mcon/U/i_locale.U, mcon/U/d_sigaction.U, mcon/U/d_getpgid.U,
+	mcon/U/src.U, mcon/U/sitelib.U, mcon/U/d_brokstat.U, mcon/U/man3dir.U,
+	, mcon/U/d_sigsetjmp.U, mcon/U/i_sysstat.U, mcon/U/d_strtod.U,
+	mcon/U/d_byacc.U, mcon/U/sh.U, mcon/U/Signal.U, mcon/U/d_gnulibc.U,
+	mcon/U/man1dir.U, mcon/U/Extractall.U, mcon/U/i_values.U,
+	mcon/U/i_sfio.U: Created.
+
+	* mcon/U/Getfile.U: Getfile script now begins with "startsh".
+
+	* mcon/U/Head.U: Make sure we unset CDPATH for shells that support
+	this.  Improved Korn shell detection and handling.
+
+	* mcon/U/Instruct.U: Logname / whoami sequence rewritten to use case.
+
+	* mcon/U/Loc.U: Allow users to specify paths on the command line. 
+	Will now substitute cp for ln if not supported.
+
+	* mcon/U/Myread.U: Myread script now starts with a "startsh". 
+	Miscellaneous fixes.
+
+	* mcon/U/Oldconfig.U: Added support for src.U.  New OSNAME define. 
+	Can now sense new OSes.
+
+	* mcon/U/Options.U: Optdef.sh now starts with a "startsh".  Moved
+	some code from Head.U.
+
+	* mcon/U/Whoa.U: Whoa script now starts with leading "startsh".
+
+	* mcon/U/afs.U: Can now explicitely tell Configure whether AFS is
+	running.
+
+	* mcon/U/archlib.U: Skip existence checks for archlib.
+
+	* mcon/U/archname.U: Changed the way the archname is mangled from
+	uname.
+
+	* mcon/U/byteorder.U: No longer ask the user if the test runs ok.
+
+	* mcon/U/ccflags.U: Removed support for NO_PROTOTYPE detection on
+	SCO.  New locincpth variable.  Added info on the "additional ld
+	flags" question.
+
+	* mcon/U/cf_who.U: New computation method avoiding use of temporary
+	file.
+
+	* mcon/U/cpp_stuff.U: Added cute quoting trick for wild stringify
+	support.
+
+	* mcon/U/d_bsdjmp.U, mcon/U/d_fd_set.U, mcon/U/models.U,
+	mcon/U/d_scannl.U, mcon/U/d_open3.U, mcon/U/d_closedir.U: Added ?F:
+	metalint hint.
+
+	* mcon/U/libs.U, mcon/U/libnm.U, mcon/U/libyacc.U, mcon/U/libflex.U,
+	mcon/U/libdbm.U, mcon/U/d_socket.U, mcon/U/d_normsig.U,
+	mcon/U/d_crypt.U: Replaced .a with $_a all over the place.
+
+	* mcon/U/d_csh.U: Added full_csh to preserve the full path even when
+	portable.
+
+	* mcon/U/d_dosuid.U: Moved unit to TOP via a ?Y: layout directive. 
+	Tell them /dev/fd is not about floppy disks.
+
+	* mcon/U/d_gconvert.U: Integrated new unit from perl5.
+
+	* mcon/U/d_getpgrp.U: New USE_BSD_GETPGRP to detect the getpgrp()
+	flavour.
+
+	* mcon/U/d_group.U, mcon/U/d_passwd.U: Useless unit dropped.
+
+	* mcon/U/d_usendir.U, mcon/U/d_havetlib.U, mcon/U/errnolist.U:
+	Replaced .a with $_a all over the place.  Likewise for .o replaced by
+	$_o.
+
+	* mcon/U/d_newsadm.U: Added Guess dependency.
+
+	* mcon/U/d_pidcheck.U: Replaced .o with $_o all over the place. 
+	Added ?F: metalint hint.
+
+	* mcon/U/d_poll.U: Mention that <poll.h> can be included if HAS_POLL
+	defined.
+
+	* mcon/U/d_safebcpy.U, mcon/U/d_safemcpy.U: Improved overlapping copy
+	check.  Comfort them if they have memmove.  Added ?F: metalint hint.
+
+	* mcon/U/d_setpgid.U: Reworded symbol comments.
+
+	* mcon/U/d_setpgrp.U: Obsoleted USE_BSDGRP in favor of
+	USE_BSD_SETPGRP.  Another unit now also defines a USE_BSD_GETPGRP. 
+	Fallback for test program failure improved.
+
+	* mcon/U/d_sgndchr.U, mcon/U/d_wifstat.U: Added a ?F: metalint hint.
+
+	* mcon/U/d_sigvec.U: There is now a separate routine for sigaction().
+
+	* mcon/U/d_stdstdio.U: Merged with perl5's unit.
+
+	* mcon/U/d_syslog.U, mcon/U/mkdep.U: Replaced .o with $_o all over
+	the place.
+
+	* mcon/U/i_dbm.U: Added I_RPCSVC_DBM check.
+
+	* mcon/U/i_varhdr.U: Varargs script now starts with leading "startsh".
+
+	* mcon/U/intsize.U: Avoid prompting the user if the test runs ok. 
+	Moved code from longsize.U into there.  New tests for shortsize as
+	well.
+
+	* mcon/U/libc.U: Replaced .a with $_a all over the place.  Added
+	support for HPUX-10 nm output.
+
+	* mcon/U/libnlist.U: Added usrinc and mips on the dependency line. 
+	Make sure we call ./mips.  Added a ?LINT: hint.
+
+	* mcon/U/libpth.U: New loclibpth variable.
+
+	* mcon/U/longsize.U: Code moved to intsize.U.
+
+	* mcon/U/mallocsrc.U: Added support for Free_t, the type of free(). 
+	Replaced .o with $_o all over the place.
+
+	* mcon/U/manfmt.U, mcon/U/mansrc.U: Don't ask for AFS when they
+	choose to not install pages.
+
+	* mcon/U/myhostname.U: Improved hostname lookup by using ypmatch when
+	NIS is used.
+
+	* mcon/U/nblock_io.U: Simplify here document for shells that can't
+	handle them well.  Force use of "startsh" at the head of the
+	generated script.  Added new files to the ?F: metalint hint.
+
+	* mcon/U/nis.U: Ensure suitable defaults for hostcat and friends.
+
+	* mcon/U/orderlib.U: Replaced .a with $_a all over the place. 
+	Likewise for .o replaced by $_o.  Now uses the ar located by Loc.U.
+
+	* mcon/U/randbits.U: Added <unistd.h> and <stdlib.h> to the C program
+	test.
+
+	* mcon/U/registers.U: Removed empty ?LINT lines.
+
+	* mcon/U/selecttype.U: Always include <sys/select.h> when available
+	for test.
+
+	* mcon/U/sig_name.U: Brand new algorithm for sig_name and (new!)
+	sig_num.
+
+	* mcon/U/spitshell.U: Removed useless chatter as this is now done
+	very early.
+
+	* mcon/U/ssizetype.U: Integrated perl5 concerns for mis-configured
+	sfio.
+
+	* mcon/U/startperl.U: Warn them if the #! line is too long for their
+	OS.
+
+	* mcon/U/startsh.U: Avoid needless chatter since this is now done
+	very early.
+
+	* mcon/U/usenm.U: Don't use nm with the GNU C library.  Added support
+	for Linux shared libs.
+
+	* mcon/U/usrinc.U: Don't ask for the include path unless they are on
+	a MIPS.
+
+	* mcon/U/voidflags.U: Don't prompt them if the void support is high
+	enough for us.
+
+	* mcon/configure: Added the srcdir support now that we have src.U. 
+	Random cleanup for nicer help message.
+
+	* mcon/man/mconfig.SH: Documents the runnning environment and the
+	src.U unit.  Added warnings for $_a and $_o, as well as "startsh".
+
+	* mcon/man/mlint.SH: New "create" and "empty" lint directives. 
+	Documented new messages.
+
+	* mcon/mxref.SH, mcon/man/mxref.SH: New -L option to match metaconfig
+	and metalint.
+
+	* mcon/pl/lint.pl: Added support for ?F: lines to monitor file usage.
+	Now honours "create" and "empty" lint directives.
+
+	* pat/pat.man: Documents contents of the message sent by patnotify.
+
+	* pat/patlog.SH: Typo fix.
+
+	* pat/patnotify.SH: Let them know the patch priority and description.
+
+Mon Sep 25 10:33:26 MET 1995   Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+
+. Description:
+
+	Smarter sed command to strip /usr/include dependencies in
+	jmake-generated Makfiles. Thanks to Ulrich Pfeifer
+	<pfeifer@buster.informatik.uni-dortmund.de> for contributing it.
+
+	In response to the discussion on dist-users, jmake will now force
+	macro definitions to the left in the generated Makefile, even
+	though they may be nicely formatted in the imake-style within
+	the Jmakefile itself (centered on the =).
+
+	Commented the purpose of the #un-def directive in the relevant
+	unit, since I tend to forget about this hack and almost considered
+	removing it without seeing the consequences. ;-)
+
+	Configure will now abort when a mandatory command is missing.
+	Indeed, Configure relies on such commands to perform its various
+	tasks, and a miss can have dreadful consequences, without the
+	end-users noticing it.
+
+	Protected option parsing code against 'echo -*' option failure.
+
+	Various units are now forced to the top of Configure, if possible.
+	This is mainly interactive questions. Note that dependencies are
+	still respected, i.e. all the units on which those depend will
+	come before, so the top-ness is a relative issue.
+
+	All possible install programs are now looked for, instead of
+	breaking the loop once one was found. Also, to optimize cache
+	access on AFS directories, the lookup is done on directories
+	first, then on programs instead of the other way round.
+
+	New ?Y: directive to change unit layout. You may specify a
+	TOP, DEFAULT or BOTTOM request on that line to respectively
+	force the unit to the earliest possible, default or latest
+	possible place in the Configure script, as dependencies
+	permit.
+
+	Symbols are now sorted according to the ?Y: layout directive.
+
+	If you use the MailAuthor.U unit, you will be interested by the
+	new -i option for patsend to add extra instructions for people
+	receiving mailed patches. patnotify also tells users how to directly
+	request for mailed patches. The patch making process now automatically
+	supply the -i when invoking patsend. Changes contributed by Graham
+	Stoney <greyham@research.canon.oz.au>.
+
+. Files changed:
+
+	* jmake/files/Jmake.rules: Smarter sed command to strip /usr/include
+	dependencies.
+
+	* jmake/jmake.SH: Will now force macro definitions to the left.
+
+	* mcon/U/Config_h.U: Commented the purpose of the #un-def directive.
+
+	* mcon/U/Loc.U: Commented the purpose of the #un-def directive. 
+	Abort Configure run when mandatory command is missing.
+
+	* mcon/U/Options.U: Protected option parsing code against 'echo -*'
+	option failure.
+
+	* mcon/U/perlpath.U, mcon/U/manfmt.U, mcon/U/mansrc.U,
+	mcon/U/scriptdir.U, mcon/U/archlib.U, mcon/U/lib.U, mcon/U/privlib.U,
+	mcon/U/bin.U: Unit is now forced to the top of Configure, if possible.
+
+	* mcon/U/install.U: All possible install programs are now looked for.
+
+	* mcon/man/mconfig.SH, mcon/man/mlint.SH: Documented new ?Y:
+	directive.  Fixed my e-mail address.
+
+	* mcon/pl/depend.pl, mcon/pl/init.pl, mcon/pl/lint.pl: New ?Y:
+	directive to change unit layout.
+
+	* mcon/pl/makefile.pl: Symbols are now sorted according to the ?Y:
+	layout directive.
+
+	* mcon/pl/xref.pl: Added empty p_layout stub for new ?Y: directives.
+
+	* pat/pat.man: New -i option for patsend to add extra instructions.
+
+	* pat/patmake.SH: Now calls patsend with -i to add more instructions.
+
+	* pat/patnotify.SH: Now tells users how to directly request for
+	mailed patches.
+
+	* pat/patsend.SH: New -i option to add more instructions for
+	end-users.
+
+Tue Jul 25 16:41:40 METDST 1995   Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+
+. Description:
+
+	pat/Jmakefile was missing an entry for the patlog program, which
+	prevented it from being installed, leading to chaos when patmake
+	was run.
+
+	New contributions from Ilya Zakharevich <ilya@math.ohio-state.edu>
+	to provide OS/2 support. Configure can now be run under OS/2 using
+	a ksh shell interpreter. Support for pdksh is undergoing, as far
+	as I understand.
+
+	The installation of script man pages can now cope with missing
+	files. The jmake rules used to require that all scripts or none
+	have .man files associated with them. From now on, the generated
+	Makefile will check for the manual page existence before trying
+	to install it.
+
+	The clobber target now removes the .config directory as well,
+	which is generated by Configure to cache various information
+	over runs. Since clobber is intended to make a clean distribution,
+	that directory must be removed at that stage.
+
+	All jmake error messages are now prefixed with the program name.
+
+	Re-arranged compile line to include ldflags before objects
+	within all the compile-link tests in the metaconfig units, since
+	some systems require that ld flags be specfied at that place.
+	The only exception to this being the -llib directive, which stays
+	at the end of the line (from Spider Boardman).
+
+	added SVR4-ish /opt directories to path list (ADO)
+
+	Added backslash escapes within evals in Typedef.U to prevent problems
+	when the assigned variables have space in them (such as 'int *')...
+
+	Force compile-link test for dl* routines since those symbols might lie
+	in crt0.o, and not in any other library (ADO)
+
+	Improved comments about the Gconvert macro and forced a compile-link
+	test since the gconvert routine may exist but be unusable because
+	it would refer to otherwise missing routines... Sigh! (ADO)
+
+	Made cc and ccflags optional dependencies in several units.
+
+	Added knowledge of the O_NONBLOCK symbol in d_open3.U (required for
+	non-blocking I/O support, which is now computed by the new nblock_io.U
+	unit).
+
+	Use findhdr to find <sys/shm.h>, to get the right one (ADO)
+
+	Typo fix on ?C: line for FILE_bufsiz in d_stdstdio.U.
+	Also fixed unbalanced parenthesis and check whether FILE_cnt
+	and FILE_ptr can be assigned to, i.e. may be used as lvalues. (ADO)
+
+	Typo fix, sytem -> system in d_time.U and d_times.U.
+
+	Conditionally use const in test programs for i_db.U (ADO)
+
+	Use setvar so hint file values can override our guesses in
+	i_pwd.U. (ADO)
+
+	Removed <> characters from comments, per metalint suggestion
+
+	Ensure ctrl-A characters are visible in prompt within the
+	mboxchar.U unit (WED)
+
+	Removed harmful spaces in assignment for selecttype.U.
+
+	Added <asm/signal.h> lookup for correct signal name lookup
+	under linux. That's probably as far as we'll get to support
+	those idiosyncracies.
+
+	Obsoleted KEEPALIVE in favor of CAN_KEEPALIVE for consistency
+	with the 3.0 naming scheme.
+
+	New metaconfig -G option to include a GNU configure-like
+	wrapper over the generated Configure script. That way,
+	people with a GNU background will be able to use (some) of
+	the GNU configure options to configure the package. The
+	wrapper computes suitable Configure options and then launches
+	that script.
+
+	Manual page for metaconfig now documents the new -G option,
+	includes an extended description of the Csym.U unit and
+	mentions what a compile-link test line should look like.
+
+	Metalint will now check : comments line for potential danger,
+	since those lines are really interpreted by the shell. Therefore,
+	unbalanced quotes could cause huge parts of the Configure script
+	to be ignored at run time, yielding weird results. Anyway,
+	metalint will tell you about them.
+
+	Two new files: a new unit, and the GNU configure-like wrapper.
+
+. Files changed:
+
+	* Jmakefile: Re-ordered macros, moving the install at the end.
+
+	* bin/packinit.man: Fixed a typo.
+
+	* jmake/files/Jmake.rules: Install of script man pages can now cope
+	with missing files.  The clobber target now removes the .config
+	directory as well.
+
+	* jmake/jmake.SH: All error messages are now prefixed with the
+	program name.
+
+	* mcon/Jmakefile: Installs the GNU configure-like front-end to
+	Configure.
+
+	* mcon/U/Csym.U: Re-arranged compile line to include ldflags before
+	objects.  Added quotes for OS/2 support.
+
+	* mcon/U/libs.U, mcon/U/Loc.U, mcon/U/Guess.U, mcon/U/Oldconfig.U,
+	mcon/U/libc.U: Now knows about OS/2 platforms.
+
+	* mcon/U/Head.U: Added SVR4-ish /opt directories to path list (ADO). 
+	OS/2 platforms are using another path separator.
+
+	* mcon/U/Typedef.U: Added backslash escapes within evals to prevent
+	space problems.
+
+	* mcon/U/d_safebcpy.U, mcon/U/d_wifstat.U, mcon/U/d_setpgrp.U,
+	mcon/U/ccflags.U, mcon/U/d_safemcpy.U: Re-arranged compile line to
+	include ldflags before objects.
+
+	* mcon/U/d_dlerror.U, mcon/U/d_dlopen.U: Force compile-link test
+	since symbol might lie in crt0.o (ADO).
+
+	* mcon/U/d_gconvert.U: Improved comments about the Gconvert macro
+	(ADO).  Force compile-link test since it may exist but be unusable
+	(ADO).
+
+	* mcon/U/d_volatile.U, mcon/U/d_sgndchr.U, mcon/U/d_scannl.U,
+	mcon/U/d_keepsig.U: Made cc and ccflags optional dependencies.
+
+	* mcon/U/d_open3.U: Added knowledge of the O_NONBLOCK symbol.
+
+	* mcon/U/d_shmat.U: Use findhdr to find <sys/shm.h>, to get the right
+	one (ADO).
+
+	* mcon/U/d_stdstdio.U: Typo fix on ?C: line for FILE_bufsiz.  Fixed
+	unbalanced parenthesis (ADO).  Check whether FILE_cnt and FILE_ptr
+	can be assigned to (ADO).
+
+	* mcon/U/d_times.U, mcon/U/d_time.U: Typo fix, sytem -> system.
+
+	* mcon/U/i_db.U: Conditionally use const in test programs (ADO).
+
+	* mcon/U/i_pwd.U: Use setvar so hint file values can override our
+	guesses (ADO).
+
+	* mcon/U/i_sysfile.U: Removed <> characters from comment, per
+	metalint suggestion.
+
+	* mcon/U/mboxchar.U: Ensure ctrl-A characters are visible in prompt
+	(WED).
+
+	* mcon/U/nblock_io.U, mcon/configure: Created.
+
+	* mcon/U/selecttype.U: Removed harmful spaces in assignment.
+
+	* mcon/U/sig_name.U: Added <asm/signal.h> lookup for linux.
+
+	* mcon/U/sockopt.U: Obsoleted KEEPALIVE in favor of CAN_KEEPALIVE for
+	consistency.
+
+	* mcon/man/mconfig.SH: Added extra nroff escapes at line heads to
+	keep leading dots.  Documented new -G option.  Extended description
+	of the Csym.U unit.  Now mentions what a compile-link test line
+	should look like.
+
+	* mcon/man/mlint.SH: Added two new warnings for : comments lines in
+	Configure.
+
+	* mcon/mconfig.SH: New -G option.
+
+	* mcon/pl/cosmetic.pl: Added support for new -G option.
+
+	* mcon/pl/lint.pl: Will now check : comments line for potential
+	danger.
+
+	* pat/Jmakefile: Was missing an entry for the patlog program.
+
+Fri May 12 14:39:16 METDST 1995   Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+
+. Description:
+
+	Regenerated Configure with pre-release of PL54.
+
+	Updated my e-mail address in all manual pages. I had forgotten
+	about that in my previous patch.
+
+	Various fixes in units from Andy Dougherty. Thanks to him and
+	to the efficient perl5-porters team that strive to port perl5
+	to every possible existing platform on Earth, hence making
+	Configure more and more robust ;-). Here are Andy's fixes:
+
+	. split awk command onto two lines for older awks
+	. fixed C test program to bypasss gcc builtin type checks
+	. deleted tabs that caused some /bin/sh to core dump
+	. cleaned up and extended osvers for DEC OSF/1
+	. added MachTen detection
+	. protect against spaces in "uname -m" output
+	. extended for more intimate DB probing
+	. made more robust [ng]dbm units by checking both header
+	  and libraries for features
+	. can now grok linux nm output with leading __IO
+	. added support for linux ELF output, using 'W' for alias
+	. now looks for <linux/signal.h> too
+	. ensure that ./mips always exists
+
+	Added -K option for experts. That Configure option should only
+	be used when you know what you are doing. The config.sh reload
+	logic now knows about new -K switch so that you now have to say:
+		Configure -dK
+	to get the old
+		Configure -d
+	behaviour.
+
+	Configure now checks for a valid C compiler and that the
+	specified ccflags and ldflags are coherent with the choice
+	of the C compiler. It aborts if the C compiler does not
+	work (since it might be used for feature testing), but only
+	offers to abort when a flag inconsistency is detected.
+	Contributed by Tye McQueen (again!).
+
+	Complete rewrite of d_stdstdio.U by Tye McQueen to fit modern
+	systems. The USE_STD_STDIO symbol has been obsoleted by the
+	new USE_STDIO_PTR symbol. Also, access to _ptr, _cnt and
+	_base fields in the FILE structure should be made only via the
+	new metaconfig macros FILE_ptr, FILE_cnt, etc...
+
+	Made sure only most recent version of shared lib is picked.
+	This is for systems where libc.so.3 and libc.so.13 might
+	co-exist. We really need to pick the second one, whereas the
+	previous alphabetic sort was picking the first.
+
+	Final "nm -p" check now uses xscan and xrun like everybody.
+	It used to do its checking manually. Using xscan and xrun allows
+	for the printing of the busy dots while scanning.
+
+	The patpost script will now add an explicit From: header line
+	pointing to the maintainer address, as configured in your
+	.package. This is to prevent broken inews to insert the hostname
+	where patpost is ran, which might not be visible from the outside.
+
+. Files changed:
+
+	* pat/pat.man, bin/packinit.man, jmake/jmake.man, kit/kitpost.man,
+	bin/manilist.man, kit/makedist.man, jmake/jmkmf.man, kit/manifake.man,
+	, dist.man: Updated my e-mail address.
+
+	* mcon/U/Cppsym.U: Split awk command onto two lines for older awks
+	(ADO).
+
+	* mcon/U/Csym.U: Fixed C test program to bypasss gcc builtin type
+	checks (ADO).
+
+	* mcon/U/Inhdr.U: Deleted tabs that caused some /bin/sh to core dump
+	(ADO).
+
+	* mcon/U/Oldconfig.U: Config.sh reload logic now knows about new -K
+	switch.  Cleaned up and extended osvers for DEC OSF/1 (ADO).  Added
+	MachTen detection (ADO).
+
+	* mcon/U/Options.U: Added -K option for experts.
+
+	* mcon/U/archname.U: Protect against spaces in "uname -m" output
+	(ADO).
+
+	* mcon/U/cc.U: May now abort Configure when cc does not work.
+
+	* mcon/U/ccflags.U: Now checks for cc/ccflags/ldflags coherency.
+
+	* mcon/U/d_casti32.U: Made sure cc and ccflags are conditional
+	dependencies.
+
+	* mcon/U/d_castneg.U: Made sure cc and ccflags are conditional
+	dependencies.  Added improved test case for Interactive Unix.
+
+	* mcon/U/d_stdstdio.U: Complete rewrite by Tye McQueen to fit modern
+	systems.
+
+	* mcon/U/d_voidsig.U: Made cppflags dependency optional.
+
+	* mcon/U/i_db.U: Extended for more intimate DB probing (ADO).
+
+	* mcon/U/i_gdbm.U, mcon/U/i_ndbm.U, mcon/U/i_dbm.U: Made more robust
+	by checking both header and lib (ADO).
+
+	* mcon/U/libc.U: Made sure only most recent version of shared lib is
+	picked.  Final "nm -p" check now uses xscan and xrun like everybody. 
+	Can now grok linux nm output with lead __IO (ADO).  Added support for
+	linux ELF output, using 'W' for alias (ADO).
+
+	* mcon/U/sig_name.U: Now looks for <linux/signal.h> too (ADO).
+
+	* mcon/U/usrinc.U: Ensure that ./mips always exists (ADO).
+
+	* mcon/man/mconfig.SH: Documented new -K switch for knowledgeable
+	users.
+
+	* pat/patpost.SH: Added explicit From: header line pointing to the
+	maintainer.
+
+Tue Mar 21 09:55:57 MET 1995   Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+
+. Description:
+
+	Regenerated Configure to reflect my email address change. I moved
+	from ACRI to HP, and my email is now: <ram@hptnos02.grenoble.hp.com>.
+	The "critical" nature of this patch is due to that mere fix.
+
+	Jmake was not working at all on HP-UX due to the way their cpp
+	systematically removes trailing backslashes in text. The new
+	fixcpp script is now a wrapper over cpp to first escape those
+	backslashes that should be preserved accross cpp before feeding
+	it with the text of the Jmakefile...
+
+	Suppressed extra argument to NormalProgramTarget call in jmake rules.
+
+	Definition of the paths variable in Head.U wrongly added spurious
+	':' chars. Thanks to Karst Koymans <Karst.Koymans@phil.ruu.nl> for
+	pointing it out.
+
+	Swapped two first arguments of memcpy() calls for memcpy safe
+	overlapping copy tests. Indeed, the memcpy() calling sequence used
+	was the same as bcopy(), but the first two arguments should be
+	swapped to preserve the same semantics.
+
+	Continued fix for NeXT NIS/NetInfo handling, from Graham Stoney.
+
+	Two new files.
+
+. Files changed:
+
+	* jmake/Jmakefile: Now installs new fixcpp script in the private
+	libdir.
+
+	* jmake/files/Jmake.rules: Suppressed extra argument to
+	NormalProgramTarget call.
+
+	* jmake/fixcpp.SH, mcon/U/d_wifstat.U: Created.
+
+	* jmake/jmake.SH: Now invokes cpp through new fixcpp script.  First
+	pass now skips cpp comments alltogether.
+
+	* mcon/U/Head.U: Definition of paths wrongly added spurious ':' chars.
+
+	* mcon/U/d_safemcpy.U: Swapped two first arguments of memcpy() calls.
+
+	* mcon/U/nis.U: Continued fix for NeXT NIS/NetInfo handling.
+
+Wed Feb 15 15:23:06 MET 1995   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	This patch only contains random cleanup and minor fixes that were
+	brought to my attention on the dist-users list.
+
+	Regenerated Configure with pre-release of 3.0 PL51, since it
+	was a little outdated.
+
+	Wayne Davison's changes:
+	. now clearer about how to edit config.sh at the end of Configure.
+	. Getfile was not working if ~'s allowed with d_portable on
+	. Instruct.U: author name now appears at the end of a paragraph
+
+	Andy Dougherty adapted osvers computation for AIX. He also
+	fixed mansrc.U where I had mistakenly duplicated /usr/local/man/man1.
+	He added /opt/man/man1 to the lookpath instead, a change originating
+	from Tye McQueen <tye@metronet.com>.
+
+	Architecture name is now computed by a separate unit. This allows
+	authors to precompute it in a hint file, while warning the user
+	when the machine's architecture name changes (because for instance
+	the OS was upgraded), preventing mistakes.
+
+	Now correctly handles NeXT using NIS rather than NetInfo, thanks
+	to a patch sent by Graham Stoney <greyham@research.canon.oz.au>.
+
+	One new file (unit archname.U).
+
+. Files changed:
+
+	* mcon/U/Finish.U: Now clearer about how to edit config.sh at the
+	prompt (WED).
+
+	* mcon/U/Getfile.U: Was not working if ~'s allowed with d_portable on
+	(WED).
+
+	* mcon/U/Instruct.U: Author name now appears at the end of the
+	paragraph (WED).
+
+	* mcon/U/Oldconfig.U: Adapted osvers computation for AIX (ADO).
+
+	* mcon/U/archlib.U: Architecture name is now computed by a separate
+	unit.
+
+	* mcon/U/archname.U: Created.
+
+	* mcon/U/mansrc.U: Was mistakenly duplicating /usr/local/man/man1
+	(ADO).  Added /opt/man/man1 to the lookpath (ADO).
+
+	* mcon/U/nis.U: Now correctly handles NeXT using NIS rather than
+	NetInfo.
+
+Mon Jan 30 15:59:00 MET 1995   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	The dist-3.0 package now works with perl 5.0. I have made perl 5.0
+	the default perl on my machine and ran the whole set of pat* tools,
+	jmake and metaconfig without any trouble so far. However, you need
+	a patched-up version of perl 5.0 PL0, as explained in README.
+
+	This set of patches is mainly an integration of Wayne Davison's
+	changes for trn. His changes are flagged as WED.
+
+	Begin.U:
+	  Avoid an empty rmlist: systems might choke on it (WED).
+
+	Config_h.U:
+	  Typo fixes in leading config.h comment (WED).
+
+	Oldconfig.U:
+	  Update code for myuname changed (WED).
+
+	Configure can now handle installation prefix changes. I have
+	slightly adapted the changes proposed by Wayne, introducing two
+	new special units (Prefixit.U and Prefixup.U) to factorize code.
+
+	d_attribut.U:
+	  Test C program now includes <stdio.h> (WED)
+
+	page.U:
+	  Ensure dflt gets initialized in case no pagers are found (WED)
+
+	prefix.U:
+	  Save off previous prefix value in oldprefix if changed (WED)
+	  Added the INSTALLPREFIX define for C programs to use (WED)
+
+	Archname is now systematically recomputed. This avoids problem when
+	the user changes his mind about the OS name.
+
+	Now looks for POSIX regcomp() routine, and for <regex.h>, thanks
+	to Sidney C. Smith <scsmith@cbda9.apgea.army.mil>.
+
+	New installmanfmt and AFS-lookup for formatted man pages, derived
+	from what is done for troffed man pages.
+
+	New prefixexp variable holding a fully expanded prefix, in case
+	they use ~name expansion in their prefix.
+
+	Documented new special units Prefixit.U and Prefixup.U.
+
+	Clean-up and workarounds for perl 5.0 PL0 port:
+	  Removed old "do name()" routine call constructs.
+	  Forgot to localize the spaces variable.
+	  Random clean-up in &record_obsolete.
+
+	Three new files.
+
+. Files changed:
+
+	* mcon/U/Begin.U: Avoid an empty rmlist: systems might choke on it
+	(WED).
+
+	* mcon/U/Config_h.U: Typo fixes in leading config.h comment (WED).
+
+	* mcon/U/Oldconfig.U: Unit Options.U now exports file optdef.sh, not
+	a variable.  Update code for myuname changed (WED).
+
+	* mcon/U/Options.U: This unit now exports file optdef.sh, not a
+	variable.
+
+	* mcon/U/i_regex.U, mcon/U/Prefixit.U, mcon/U/Prefixup.U: Created.
+
+	* mcon/U/archlib.U: Archname is now systematically recomputed.  Can
+	now handle installation prefix changes (from WED).
+
+	* mcon/U/mansrc.U, mcon/U/scriptdir.U, mcon/U/lib.U, mcon/U/privlib.U,
+	, mcon/U/bin.U: Can now handle installation prefix changes (from WED).
+
+	* mcon/U/d_attribut.U: Test C program now includes <stdio.h> (WED).
+
+	* mcon/U/d_regcmp.U: Now looks for POSIX regcomp() routine.
+
+	* mcon/U/manfmt.U: New installmanfmt and AFS-lookup for formatted man
+	pages.  Can now handle installation prefix changes (from WED).
+
+	* mcon/U/pager.U: Ensure dflt gets initialized in case no pagers are
+	found (WED).
+
+	* mcon/U/prefix.U: New prefixexp variable holding a fully expanded
+	prefix.  Save off previous prefix value in oldprefix if changed
+	(WED).  Added the INSTALLPREFIX define for C programs to use (WED).
+
+	* mcon/U/rootid.U: Now only prints a single empty line when
+	outputting something.
+
+	* mcon/man/mconfig.SH: Documented new special units Prefixit.U and
+	Prefixup.U.
+
+	* mcon/pl/configure.pl, mcon/pl/eval.pl: Removed old "do name()"
+	routine call constructs.
+
+	* mcon/pl/cosmetic.pl: Forgot to localize the spaces variable.
+
+	* mcon/pl/obsolete.pl: Random clean-up in &record_obsolete.
+
+Wed Jan 11 17:03:22 MET 1995   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	Regenerated Configure with pre-release of metaconfig PL45 to
+	benefit from the new install program lookup. From now on, the
+	supplied install.SH script will not be used if a BSD-compatible
+	install executable is found on your host (to accelerate the whole
+	install procedure).
+
+	Regenerated many Makefile.SH files with pre-release of jmake PL45
+	to correctly handle the new install and installdir configuration
+	variables.
+
+	Updated the Wishlist file.
+
+	New jmake macros. Also the MakeDirs macro was modified to benefit
+	from the information gathered by Configure concerning the way to
+	install nested directories (uses the new installdir variable).
+
+	As a consequence, Makefile.SH files now pre-compute INSTALL and
+	INSTALLDIR variables before substituting (concerns jmake-generated
+	makefiles).
+
+	Moved path stripping from d_portable.U to end of Configure. This
+	lets Configure use $vi and $perl, etc... set to their fully
+	qualified path name, hence making it easier for units to know
+	whether a particular program was located. Formerly, you had to
+	use $_vi, $_perl, etc... in case they asked for portability, which
+	stripped out executable paths.
+
+	New cc vs. cpp symbol checking, as well as more cpp symbols in
+	the attribute list. Configure will now try to determine separately
+	symbols defined by cpp and by the cc wrapper, letting you know about
+	what is defined and by whom. Thanks to Jarkko Hietaniemi for this
+	suggestion.
+
+	Added support for escaping answers to skip various checks in the
+	Getfile.U unit. For instance, you may now say:
+		fn='/fe~(foo)'
+		. ./getfile
+	and let them answer only fully qualified paths OR the string 'foo'.
+	You may supply a comma-separated list between the parenthesis. See
+	the manual page or the new install.U unit for more information.
+
+	Modified message issued after file expansion in the Getfile unit.
+
+	Protected various "sh -c" calls within backquotes for Linux and
+	SGI shells (to prevent an "ambiguous output redirection" message).
+	Thanks to Xavier Le Vourch for suggesting it.
+
+	Added & escape allowing user to turn on -d from the prompt. Several
+	people have expressed the need for such a feature, arguing that
+	once they have re-run a Configure script to fix the answer to a
+	particular question, they would like to have the remaining of the
+	script ran as if -d had been given to Configure. Well, they now
+	may reply '& -d' at the Myread prompt to turn -d on.
+
+	New -O option allowing -D and -U to override config.sh setttings.
+	This may be used to alter particular variables but still re-use
+	most of the previously guessed-at ones. Still, this may produce
+	inconsistencies and therefore is not the default behaviour (the
+	-D and -U switches have no effect by default if a previous config
+	file is loaded).
+
+	Therefore, file optdef.sh is no longer removed after sourcing from
+	the UU directory.
+
+	Changed gcc checking message to a more explicit one (WED)
+	Call ./mips instead of just mips (WED)
+	Use 'test -f' instead of 'test -r' for exec-only cat progs (WED)
+	Fixed typo in the d_attribut variable (ADO)
+
+	New unit install.U to locate BSD-compatible install programs.
+	New unit poll.U to check for the poll() routine availability.
+
+	Allows hint files to specify their own value for 'ranlib', to
+	overcome a bug in the NeXT ranlib program. Suggested by
+	Andreas Koenig <k@franz.ww.tu-berlin.de> on the perl5-porters
+	mailing list. Thanks!
+
+	Now sets sbrksmart to undef explicitely when lacking sbrk().
+	Forgot a cast when using return value from sbrk(). Both fixes
+	reported by Xavier Le Vourch <xavierl@eiffel.com>.
+
+	Now allows @if statements for the add.Config_sh unit inclusion.
+
+	Metaconfig will now tell users about possible extra file-extension
+	lookups they have requested via 'packinit'.
+
+. Files changed:
+
+	* jmake/files/Jmake.rules: New macros ShellScriptTargetExt and
+	SimpleShellScriptTargetExt.  Directory installation is now made via
+	INSTALLDIR (Configure).
+
+	* jmake/files/Jmake.tmpl: Now pre-computes INSTALL and INSTALLDIR
+	variables.
+
+	* mcon/U/Config_sh.U: Moved path stripping from d_portable.U to end
+	of Configure.
+
+	* mcon/U/Cppsym.U: New cc vs. cpp symbol checking suggested by JHI. 
+	Added more cpp symbols (JHI).
+
+	* mcon/U/Getfile.U: Added support for escaping answers to skip
+	various checks.  Modified message issued after file expansion.
+
+	* mcon/U/Instruct.U: Now documents the & escape to turn -d on at the
+	read prompt.
+
+	* mcon/U/Loc.U: Protected "sh -c" within backquotes for Linux and
+	SGI.  Added path lookup for the 'comm' program.
+
+	* mcon/U/Myread.U: Added & escape allowing user to turn on -d from
+	the prompt.
+
+	* mcon/U/Oldconfig.U: Added quotes around the INITPROG variable
+	(ADO).  Allows variable overriding after config file loading.
+
+	* mcon/U/Options.U: New -O option allowing -D and -U to override
+	config.sh setttings.  File optdef.sh is no longer removed after
+	sourcing.
+
+	* mcon/U/cc.U: Changed gcc checking message to a more explicit one
+	(WED).
+
+	* mcon/U/d_attribut.U: Fixed typo in the d_attribut variable (ADO).
+
+	* mcon/U/d_keepsig.U: Protected "sh -c" within backquotes for Linux
+	and SGI.
+
+	* mcon/U/install.U, mcon/U/d_poll.U: Created.
+
+	* mcon/U/d_portable.U: Executable path stripping moved to the end in
+	Config_sh.U.
+
+	* mcon/U/d_safebcpy.U: Added 'ldflags' to the test compile line (ADO).
+
+	* mcon/U/defeditor.U: Can now use the 'vi' variable since path
+	stripping is deferred.
+
+	* mcon/U/libpth.U: Call ./mips instead of just mips (WED).
+
+	* mcon/U/perlpath.U, mcon/U/mansrc.U, mcon/U/mailer.U: Can now use
+	Loc variables since path stripping is deferred.
+
+	* mcon/U/orderlib.U: Allows hint files to specify their own value for
+	'ranlib'.
+
+	* mcon/U/sbrksmart.U: Now sets sbrksmart to undef explicitely when
+	lacking sbrk().  Forgot a cast when using return value from sbrk().
+
+	* mcon/U/spitshell.U: Use 'test -f' instead of 'test -r' for
+	exec-only cat progs (WED).  Protected "sh -c" within backquotes for
+	Linux and SGI.
+
+	* mcon/U/voidflags.U: Cosmetic change to avoid spurious blank lines
+	when using -s.
+
+	* mcon/man/mconfig.SH: Documents new -O option and new Getfile escape
+	supports.  Documents the & escape in Myread and the new cc symbol
+	lookup.
+
+	* mcon/pl/configure.pl: Now allows @if statements for the
+	add.Config_sh unit inclusion.
+
+	* mcon/pl/wanted.pl: Added % in front of hash table names for perl5's
+	each() (ADO).  Tell users about possible extra file-extension lookups.
+
+Mon Oct 31 10:57:05 MET 1994   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	It used to be that option processing was done before Configure
+	initializations were performed, because Options was listed in
+	the dependency line of Init.U. However, this was wrong because
+	-D and -U command line switches were then unable to override any
+	default setting done in Myinit.U, which is counter-intuitive at
+	best. Thanks to Andras Salamon <andras@is.co.za> for pointing
+	this out.
+
+	I therefore created a new unit Begin.U, which clearly marks
+	the beginning of the configuration questions (so End.U now
+	has its pending unit). On that unit, we list Myinit followed
+	by Options on the ?MAKE: line, so that option processing
+	comes after user-defined or default initializations but before
+	the real interactive start (which is mandatory for a correct
+	Configure -h processing, for instance).
+
+	A few units were making use of variables set up in Options.U
+	and made visible. However, those did not need to list Options
+	in their ?MAKE: line due to the way metalint performs its visible
+	symbol lookup (by following dependencies recursively and implicitely
+	placing Init at the top). Since Options is no longer a dependency
+	of Init, Myread.U and Csym.U now explicitely mention Options in
+	their dependency line.
+
+	Also, the leading comment in Chk_MANI.U now explains how this
+	unit gets included into the Configure script. There used to be
+	an explaination there, but it was no longer accurate.
+
+	One new unit file (Begin.U).
+
+. Files changed:
+
+	* mcon/U/Begin.U: Created.
+
+	* mcon/U/Chk_MANI.U: Now lists Begin instead of Myinit in its
+	dependencies.  Leading comment now explains how this unit is included.
+
+	* mcon/U/Myread.U, mcon/U/Csym.U: Added Options to the MAKE line
+	since it's no longer in Init.U.
+
+	* mcon/U/Init.U: Removed Options from MAKE to prevent Init overrides.
+	Option processing now done after Myinit thanks to new Begin.U.  Moved
+	"Beginning of configuration questions" to Begin.U.  Moved signal
+	trapping instruction to Begin.U as well.
+
+	* mcon/U/Myinit.U: Leading comment states this unit comes before
+	option processing.
+
+Sat Oct 29 19:05:42 MET 1994   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	I forgot to quote $@ to protect against "evil" characters.
+	Unfortunately, this causes Configure to output an error message
+	when calling the created 'tr' script (which it does all the time
+	given the leading '.' in PATH) with arguments like '\012'. The
+	final
+		exec tr $@
+	line causes a 'tr' failure because it does not understand the
+	arguments it is given. Saying
+		exec tr "$@"
+	fixes the problem since then the original quotes are "propagated"
+	to the new call.
+
+	The amazing thing is that I have tested this, but apparently the
+	simple Configure script I generated for that purpose did not make
+	use of the "tr '/012' ' '" construct. Hence I missed it. Sorry.
+
+. Files changed:
+
+	* mcon/U/Tr.U: Forgot to quote $@ to protect against "evil"
+	characters.
+
+Sat Oct 29 18:16:03 MET 1994   Raphael Manfredi <ram@acri.fr>
+
+. Description:
+
+	Regenerated Configure with metaconfig 3.0 PL35 to benefit from
+	the lattest enhancements. Unfortunately, I have not pre-installed
+	the patch relased before regenerating, so Configure is still behind
+	the current patchlevel. I hope you don't mind ;-)
+
+	The good news is: I've made sure all the scripts compile fine
+	with perl 5.0. This involved fixing an open precedence problem
+	in manilist, and some escapes in strings and regexps to make
+	sure all dangerous '@' are protected since they now interpolate.
+	I also fixed perload since perl5's packages are now introduced
+	by '::' instead of the single quote.
+
+	The bad news is: it's not guaranteed to work. At least with the
+	pre-release version of perl 5.0 I have, metaconfig (the dataloaded
+	version) fails, and I've not been able to narrow down the problem
+	to a small test-case so I don't know what's happening. The non
+	dataloaded version appears to be running fine, but if you get
+	strange problems, make sure you use perl 4.0 PL36 before sending
+	me a bug report. :-)
+
+	Added support for user-defined C and shell file extensions. This
+	was needed in perl5 for instance (.xs files are containing C
+	symbols and metaconfig should really look at those). Well, you
+	may now add as many extensions (C or SH) from within packinit.
+
+	Packinit also asks whether a ChangeLog file is to be managed.
+	This is a new feature relying on the new patlog script. If you
+	don't ask for a ChangeLog file, you should get the old behaviour.
+	If you do, well you will have to read the documentation to know
+	what changes it involves (mainly at the user-interface level when
+	running 'patmake', which now calls 'patlog'). Don't forget to
+	add ChangeLog to your MANIFEST.new before running patmake anyway.
+
+	Optionally, you can include the RCS logs within your ChangeLog
+	file, and they will follow the description (what you are reading
+	now) which normally appears within the Description: section of
+	the patch itself.
+
+	Packinit now creates new variables cext, shext, changelog and
+	changercs in the .package file to handle user-defined file extensions
+	and the ChangeLog file.
+
+	Added new RemoteDependency rule for jmake.
+
+	Don't use rootid as a variable, it is known by metaconfig and
+	results in having Configure compute the root uid when it's not
+	needed. Renamed it to rootmsgid to avoid this kind of problem.
+
+	Added ?F: lines in units creating files for metalint checking.
+	This incurred many small changes in units where things like
+		if usg; then
+	were written when in fact meaning:
+		if ./usg; then
+	Well, I know Configure sets '.' at the beginning of the PATH, but
+	since metalint now systematically warns about such abuse (provided
+	files are declared in the ?F: lines in the special unit defining
+	them), it was the only way to shut up metalint.
+
+	Metalint also now checks for variables used as ${var}.
+
+	Symbols ardent and titan are now looked at for cpp definition. (ADO)
+
+	Make sure ENV is unset before calling /bin/ksh. Not doing this
+	is known to produce strange results. For instance, if one has
+	a ~/.kshrc aliasing 'cd' to something else. Configure might
+	get confused and do the wrong thing. Not setting ENV ensures
+	no such startup file will be used. Of course, this does not
+	work if you say 'ksh Configure', but then you are supposed to
+	know what you are doing.
+
+	The loc script can now perform safe wildcard searching. (ADO)
+
+	The Oldconfig.U unit was merged with the version used for perl5's
+	Configure (ADO). Be careful if you use hints, the behaviour you
+	will now get might not be fully backward compatible. Since the
+	Author currently does not have any such package, he did not test
+	that specific feature. You have been warned. (But everything
+	should be fine).
+
+	Configure now protects variable definitions with spaces in them,
+	so that people saying:
+		Configure -D cc='cc -posix'
+	will get what they expect.
+
+	Added checks for secure setuid scripts. (Tye McQueen)
+
+	Spurious single quote in the lex.U unit could cause Configure
+	to crash, reported by Xavier Le Vourch <xavierl@eiffel.com>.
+	Indeed, the unit was saying something like
+		: .... and they'll ...
+	so the shell happily began to eat everything up to the next
+	single quote it could found, resulting in weird behaviours...
+
+	Now looks for shared libraries before anything else and
+	removed the old broken thislib/thatlib processing in libs.U.
+	This has been tested in the perl5 distribution and is believed
+	to be better than the previous scheme. (ADO)
+
+	New Tr unit to convert to/from lowercase. Whenever you need
+	to say:
+		tr '[A-Z]' '[a-z]'
+	or the other way round, add Tr in your dependency line and
+	say something like
+		./tr '[A-Z]' '[a-z]'
+	i.e. you need to call a local tr script that will trap the
+	arguments and possibly call
+		tr '[:upper:]' '[:lower:]'
+	if your machine supports this. Otherwise, with a non-ascii
+	character set, you will get strange results (HP is know
+	to exercise this, thanks to Andreas Sahlbach
+	<a.sahlbach@tu-bs.de> for letting me know about it).
+
+	ranlib checking is more accurate now (ADO)
+
+	Newer RCS programs chop trailing spaces in log messages, and
+	that could cause 'patcil -s' to fail stripping the RSC logs.
+
+	separated V/E and v/e commands in the patcil built-in prompter.
+	The new 'v' command now edits the file being patcil'ed.
+	added hook for 'V' command (not implemented yet)
+	The 'e' and 'E' commands have retained their semantics.
+
+	19 new files, mostly metaconfig units.
+
+. Files changed:
+
+	* bin/manilist.SH: Fixed open precedence problem for perl5.
+
+	* bin/packinit.SH: Added support for user-defined C and shell file
+	extensions.  Now asks whether a ChangeLog file is to be managed.
+
+	* bin/packinit.man: Added new variables cext, shext, changelog and
+	changercs.
+
+	* bin/perload: Added minimal support for perl5 dataloading.
+
+	* dist.man: Mentions new patlog script and ChangeLog file.
+
+	* jmake/files/Jmake.rules: Added RemoteDependency rule.
+
+	* jmake/jmake.SH, pat/patnotify.SH, mcon/pl/depend.pl: Added various
+	escapes in strings for perl5 support.
+
+	* kit/kitpost.SH: Don't use rootid as a variable, it is known by
+	metaconfig.
+
+	* mcon/U/bitpbyte.U, mcon/U/d_NOFILE.U, mcon/U/mkdep.U,
+	mcon/U/d_PORTAR.U, mcon/U/alignbytes.U, mcon/U/byteorder.U,
+	mcon/U/Finish.U, mcon/U/nlist_pfx.U, mcon/U/charorder.U,
+	mcon/U/d_getpagsz.U, mcon/U/ptrsize.U, mcon/U/intsize.U,
+	mcon/U/Getfile.U, mcon/U/Extract.U, mcon/U/Myread.U, mcon/U/Whoa.U,
+	mcon/U/longsize.U, mcon/U/floatsize.U, mcon/U/Config_sh.U,
+	mcon/U/cppstdin.U, mcon/U/doublesize.U, mcon/U/Findhdr.U,
+	mcon/U/i_varhdr.U, mcon/U/charsize.U: Added ?F: line for metalint
+	file checking.
+
+	* mcon/U/Cppsym.U: Added ?F: line for metalint file checking.  New
+	symbols ardent and titan (ADO).
+
+	* mcon/U/Filexp.U: Added ?F: line for metalint file checking.  Added
+	HOME to the ?T: line since metalint now checks ${HOME}.
+
+	* mcon/U/Guess.U: Added ?F: line for metalint file checking.  Call
+	./xenix explicitely instead of relying on PATH.
+
+	* mcon/U/Head.U: Make sure ENV is unset before calling /bin/ksh.
+
+	* mcon/U/Setvar.U, mcon/U/Inhdr.U, mcon/U/Inlibc.U: Call ./whoa
+	explicitely instead of relying on PATH.
+
+	* mcon/U/Loc.U: Added ?F: line for metalint file checking.  Be
+	careful and guard against wildcard searching (ADO).
+
+	* mcon/U/Oldconfig.U: Added ?F: line for metalint file checking. 
+	Merged with the version used for perl5's Configure (ADO).
+
+	* mcon/U/Options.U: Ensure option definition file is removed before
+	appending.  Protect variable definitions with spaces in them.
+
+	* pat/patlog.SH, mcon/U/Tr.U: Created.
+
+	* mcon/U/Typedef.U: Don't clobber visible 'val' variable, use
+	'varval' instead.
+
+	* mcon/U/Warn_v7EXT.U, mcon/U/Warn_v7ND.U: Call ./v7 explicitely
+	instead of relying on PATH.
+
+	* mcon/U/abortsig.U, mcon/U/d_bsdjmp.U: Call ./usg explicitely
+	instead of relying on PATH.
+
+	* mcon/U/d_attribut.U, mcon/U/d_gconvert.U, mcon/U/d_drem.U,
+	mcon/U/d_locconv.U, mcon/U/d_mkfifo.U, mcon/U/d_fmod.U,
+	mcon/U/d_linuxstd.U, mcon/U/d_pathconf.U, mcon/U/archlib.U,
+	mcon/U/d_dlerror.U, mcon/U/d_sysconf.U, mcon/U/i_dld.U,
+	mcon/U/modetype.U: Created by ADO.
+
+	* mcon/U/cc.U: Detect gcc even when not called as 'gcc' (ADO). 
+	Simplified gcc version checking (ADO).  Added ?F: line for metalint
+	file checking.
+
+	* mcon/U/ccflags.U: Gcc versionning no longer relies on the C
+	compiler's name.  Simplified check for gcc version checking (ADO).
+
+	* mcon/U/cpp_stuff.U: Now uses cppstdin instead of plain cpp for
+	consistency (ADO).  Remove temporary files when done.
+
+	* mcon/U/d_casti32.U: Declare signal handler correctly (ADO).
+
+	* mcon/U/d_castneg.U: Don't forget to tell user about compilation
+	failures (ADO).  Declare signal handler correctly using 'signal_t'
+	(ADO).
+
+	* mcon/U/d_closedir.U, mcon/U/d_safemcpy.U, mcon/U/d_isascii.U: Added
+	'ldflags' to the test compile line (ADO).
+
+	* mcon/U/d_dosuid.U: Added checks for secure setuid scripts (Tye
+	McQueen).
+
+	* mcon/U/d_keepsig.U, mcon/U/d_eofpipe.U, mcon/U/d_normsig.U,
+	mcon/U/d_tzmin.U: Call ./bsd explicitely instead of relying on PATH.
+
+	* mcon/U/d_gethname.U: Call ./xenix explicitely instead of relying on
+	PATH.
+
+	* mcon/U/d_newsadm.U: Call ./eunice explicitely instead of relying on
+	PATH.
+
+	* mcon/U/d_setpgrp.U: Added 'ldflags' to the test compile line (ADO).
+	Call ./usg explicitely instead of relying on PATH.
+
+	* mcon/U/registers.U, mcon/U/shm_for.U, mcon/U/d_speedopt.U: Call
+	./Cppsym explicitely instead of relying on PATH.
+
+	* mcon/U/d_time.U: Now uses new Typedef unit to compute type
+	information (ADO).
+
+	* mcon/U/groupstype.U: No longer uses Setvar to set 'groupstype'
+	(ADO).  Typo fix in the word 'argument' (ADO).
+
+	* mcon/U/i_dirent.U: Failed scanning for 'd_namlen' with missing
+	<dirent.h> (ADO).
+
+	* mcon/U/i_neterrno.U: Forgot to initialize 'val' to an empty value
+	(ADO).
+
+	* mcon/U/i_termio.U: Call ./usg and ./Cppsym explicitely instead of
+	relying on PATH.
+
+	* mcon/U/lex.U: Spurious single quote could cause Configure to crash.
+	(reported by Xavier Le Vourch <xavierl@eiffel.com>.).
+
+	* mcon/U/libc.U: Now looks for shared libraries before anything else
+	(ADO).  Added new nm output format (ADO).
+
+	* mcon/U/libs.U: Removed old broken thislib/thatlib processing (ADO).
+
+	* mcon/U/mailfile.U: The Loc unit was missing from the dependency
+	line.
+
+	* mcon/U/myhostname.U: Call ./xenix explicitely instead of relying on
+	PATH.  Now uses new Tr unit to convert to/from lowercase.
+
+	* mcon/U/nametype.U: Call ./usg and ./bsd explicitely instead of
+	relying on PATH.
+
+	* mcon/U/orderlib.U: Now performs a real small compile for accurate
+	checks (ADO).
+
+	* mcon/U/package.U: Beware of non-ascii character sets when
+	translating case.
+
+	* mcon/U/pager.U: Replaced Myread by Getfile in the dependency line.
+
+	* mcon/U/prefshell.U: Added SHELL temporary since metalint now sees
+	${SHELL}.
+
+	* mcon/U/so.U: Now tells user how he can suppress shared lib lookup
+	(ADO).  Removed echo at the top, since it's now in the here-doc (ADO).
+
+	* mcon/U/ssizetype.U: Added ?F: line for metalint file checking. 
+	Added 'ldflags' to the test compile line (ADO).
+
+	* mcon/man/mconfig.SH: Added nroff protection for lines beginning
+	with '.'.  Documents new ?F: line for file declarations.  Added
+	example showing how ./loc can be used.
+
+	* mcon/man/mlint.SH: Documents new ?F: lines and the related metalint
+	warnings.  Removed statement in BUGS since all warnings may now be
+	shut.
+
+	* mcon/man/mxref.SH: The leading .TH was referring to metaconfig.
+
+	* mcon/pl/common.pl: Metaconfig and metaxref ignore ?F: lines from
+	now on.
+
+	* mcon/pl/files.pl: Added user-defined file extension support for
+	lookups.
+
+	* mcon/pl/lint.pl: Now extensively checks created files thanks to new
+	?F: lines.
+
+	* mcon/pl/locate.pl: Misspelled a 'closedir' as a 'close' statement.
+
+	* pat/pat.SH: Now unlinks all the files created by patlog in bugs.
+
+	* pat/pat.man: Documents new patlog script and the files it uses. 
+	The RCS layer section has been extended slightly.
+
+	* pat/patcil.SH: Now honors the VISUAL and EDITOR environment
+	variables.  Newer RCS programs chop trailing spaces in log messages. 
+	Separated V/E and v/e commands.  New 'v' command to edit the file
+	being patcil'ed.  Added hook for 'V' command (not implemented yet).
+
+	* pat/patmake.SH: A lot of setup is now performed by patlog.  Added
+	various escapes in strings for perl5 support.
+

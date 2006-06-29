@@ -1,0 +1,39 @@
+?RCS: $Id: d_rusage.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:57  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:	We may need to include <sys/resource.h> and <sys/time.h> FIXME
+?X:INC: i_sysresrc i_systime
+?MAKE:d_rusage: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_rusage (d_getrusg):
+?S:	This variable conditionally defines the HAS_GETRUSAGE symbol, which
+?S:	indicates that the getrusage() routine exists.  The getrusage() routine
+?S:	supports sub-second accuracy for process cpu accounting. You may need
+?S:	to include <sys/resource.h> and <sys/time.h>.
+?S:.
+?C:HAS_GETRUSAGE (RUSAGE GETRUSAGE):
+?C:	This symbol, if defined, indicates that the getrusage() routine is
+?C:	available to get process statistics with a sub-second accuracy.
+?C:	Inclusion of <sys/resource.h> and <sys/time.h> may be necessary.
+?C:.
+?H:#$d_rusage HAS_GETRUSAGE		/**/
+?H:.
+?LINT:set d_rusage
+: see if getrusage exists
+set getrusage d_rusage
+eval $inlibc
+

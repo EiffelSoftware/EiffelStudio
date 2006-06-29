@@ -1,0 +1,53 @@
+?RCS: $Id: active.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:21  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:active activeexp: newslib Oldconfig Getfile
+?MAKE:	-pick add $@ %<
+?S:active:
+?S:	The name of the active file for the news system.  This file contains
+?S:	the list of active newsgroups.  The name may have ~ on the front.
+?S:	The variable myactive is the expanded form.
+?S:.
+?S:activeexp (myactive):
+?S:	This is the same as the active variable, but is filename expanded
+?S:	so that later Configure units can look at the active file if desired.
+?S:.
+?C:ACTIVE:
+?C:	The name of the active file for the news system.  This file contains
+?C:	the list of active newsgroups.  The name may have ~ on the front.
+?C:.
+?C:ACTIVE_EXP:
+?C:	This is the same as ACTIVE, but is filename expanded at configuration
+?C:	time, for programs that do not want to deal with it themselves.
+?C:.
+?H:#define ACTIVE "$active"	/**/
+?H:#define ACTIVE_EXP "$activeexp"	/**/
+?H:.
+: locate active file
+echo " "
+case "$active" in
+'')
+	dflt=$newslib/active
+	;;
+*)  dflt="$active";;
+esac
+fn=l~:active
+rp='Where is the active file?'
+. ./getfile
+active="$ans"
+activeexp="$ansexp"
+

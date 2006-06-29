@@ -1,0 +1,126 @@
+?RCS: $Id: i_termio.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1994/10/29  16:20:54  ram
+?RCS: patch36: call ./usg and ./Cppsym explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0.1.3  1994/08/29  16:26:38  ram
+?RCS: patch32: don't include all threee I_* symbols in config.h
+?RCS: patch32: (had forgotten to undo this part last time)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:25:03  ram
+?RCS: patch27: undone ADO's fix in previous patch since it was useless
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:05:23  ram
+?RCS: patch23: now include all three defines in config.h (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:44  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:i_termio i_sgtty i_termios: test Inlibc Cppsym Guess Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:i_termio:
+?S:	This variable conditionally defines the I_TERMIO symbol, which
+?S:	indicates to the C program that it should include <termio.h> rather
+?S:	than <sgtty.h>.
+?S:.
+?S:i_termios:
+?S:	This variable conditionally defines the I_TERMIOS symbol, which
+?S:	indicates to the C program that the POSIX <termios.h> file is
+?S:	to be included.
+?S:.
+?S:i_sgtty:
+?S:	This variable conditionally defines the I_SGTTY symbol, which
+?S:	indicates to the C program that it should include <sgtty.h> rather
+?S:	than <termio.h>.
+?S:.
+?C:I_TERMIO:
+?C:	This symbol, if defined, indicates that the program should include
+?C:	<termio.h> rather than <sgtty.h>.  There are also differences in
+?C:	the ioctl() calls that depend on the value of this symbol.
+?C:.
+?C:I_TERMIOS:
+?C:	This symbol, if defined, indicates that the program should include
+?C:	the POSIX termios.h rather than sgtty.h or termio.h.
+?C:	There are also differences in the ioctl() calls that depend on the
+?C:	value of this symbol.
+?C:.
+?C:I_SGTTY:
+?C:	This symbol, if defined, indicates that the program should include
+?C:	<sgtty.h> rather than <termio.h>.  There are also differences in
+?C:	the ioctl() calls that depend on the value of this symbol.
+?C:.
+?H:#$i_termio I_TERMIO		/**/
+?H:#$i_termios I_TERMIOS		/**/
+?H:#$i_sgtty I_SGTTY		/**/
+?H:.
+?T:val2 val3
+?LINT:set i_termio i_sgtty i_termios
+: see if this is a termio system
+val="$undef"
+val2="$undef"
+val3="$undef"
+?X: Prefer POSIX-approved termios.h over all else
+if $test `./findhdr termios.h`; then
+	set tcsetattr i_termios
+	eval $inlibc
+	val3="$i_termios"
+fi
+echo " "
+case "$val3" in
+"$define") echo "You have POSIX termios.h... good!" >&4;;
+*) if ./Cppsym pyr; then
+		case "`/bin/universe`" in
+		ucb) if $test `./findhdr sgtty.h`; then
+				val2="$define"
+				echo "<sgtty.h> found." >&4
+			else
+				echo "System is pyramid with BSD universe."
+				echo "<sgtty.h> not found--you could have problems." >&4
+			fi;;
+		*) if $test `./findhdr termio.h`; then
+				val="$define"
+				echo "<termio.h> found." >&4
+			else
+				echo "System is pyramid with USG universe."
+				echo "<termio.h> not found--you could have problems." >&4
+			fi;;
+		esac
+?X: Start with USG to avoid problems if both usg/bsd was guessed
+	elif ./usg; then
+		if $test `./findhdr termio.h`; then
+			echo "<termio.h> found." >&4
+			val="$define"
+		elif $test `./findhdr sgtty.h`; then
+			echo "<sgtty.h> found." >&4
+			val2="$define"
+		else
+echo "Neither <termio.h> nor <sgtty.h> found--you could have problems." >&4
+		fi
+	else
+		if $test `./findhdr sgtty.h`; then
+			echo "<sgtty.h> found." >&4
+			val2="$define"
+		elif $test `./findhdr termio.h`; then
+			echo "<termio.h> found." >&4
+			val="$define"
+		else
+echo "Neither <sgtty.h> nor <termio.h> found--you could have problems." >&4
+		fi
+	fi;;
+esac
+set i_termio; eval $setvar
+val=$val2; set i_sgtty; eval $setvar
+val=$val3; set i_termios; eval $setvar
+

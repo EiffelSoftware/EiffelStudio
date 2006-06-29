@@ -1,0 +1,63 @@
+?RCS: $Id: i_sysfile.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:11:36  ram
+?RCS: patch56: removed <> characters from comment, per metalint suggestion
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/25  14:01:23  ram
+?RCS: patch6: added default for i_sysfile
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:31  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:i_sysfile: h_sysfile Inhdr Setvar
+?MAKE:	-pick add $@ %<
+?S:i_sysfile:
+?S:	This variable conditionally defines the I_SYS_FILE symbol, and indicates
+?S:	whether a C program should include <sys/file.h> to get R_OK and friends.
+?S:.
+?C:I_SYS_FILE (I_SYSFILE):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/file.h> to get definition of R_OK and friends.
+?C:.
+?H:#$i_sysfile I_SYS_FILE		/**/
+?H:.
+?T:val
+?D:i_sysfile=''
+?LINT:set i_sysfile
+?LINT:change h_sysfile
+: see if this is a sys/file.h system
+val=''
+set sys/file.h val
+eval $inhdr
+
+: do we need to include sys/file.h ?
+case "$val" in
+"$define")
+	echo " "
+	if $h_sysfile; then
+		val="$define"
+		echo "We'll be including <sys/file.h>." >&4
+	else
+		val="$undef"
+		echo "We won't be including <sys/file.h>." >&4
+	fi
+	;;
+*)
+	h_sysfile=false
+	;;
+esac
+set i_sysfile
+eval $setvar
+

@@ -1,0 +1,121 @@
+?RCS: $Id: cpp_stuff.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  15:30:48  ram
+?RCS: patch61: added cute quoting trick for wild stringify support
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:08:24  ram
+?RCS: patch36: now uses cppstdin instead of plain cpp for consistency (ADO)
+?RCS: patch36: remove temporary files when done
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:36  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:cpp_stuff: cat contains cppstdin cppflags cppminus rm
+?MAKE:	-pick add $@ %<
+?S:cpp_stuff:
+?S:	This variable contains an identification of the catenation mechanism
+?S:	used by the C preprocessor.
+?S:.
+?C:CAT2:
+?C:	This macro catenates 2 tokens together.
+?C:.
+?C:CAT3:
+?C:	This macro catenates 3 tokens together.
+?C:.
+?C:CAT4:
+?C:	This macro catenates 4 tokens together.
+?C:.
+?C:CAT5:
+?C:	This macro catenates 5 tokens together.
+?C:.
+?C:STRINGIFY:
+?C:	This macro surrounds its token with double quotes.
+?C:.
+?C:SCAT2:
+?C:	This macro catenates 2 tokens together and stringifies the result.
+?C:.
+?C:SCAT3:
+?C:	This macro catenates 3 tokens together and stringifies the result.
+?C:.
+?C:SCAT4:
+?C:	This macro catenates 4 tokens together and stringifies the result.
+?C:.
+?C:SCAT5:
+?C:	This macro catenates 5 tokens together and stringifies the result.
+?C:.
+?H:?%<:#if $cpp_stuff == 1
+?H:?CAT2:#define CAT2(a,b)a/**/b
+?H:?CAT3:#define CAT3(a,b,c)a/**/b/**/c
+?H:?CAT4:#define CAT4(a,b,c,d)a/**/b/**/c/**/d
+?H:?CAT5:#define CAT5(a,b,c,d,e)a/**/b/**/c/**/d/**/e
+?H:?STRINGIFY:#define STRINGIFY(a)"a"
+?H:?%<:#define SQuoTe(a)"a
+?H:?%<:#define EQuoTe(a)a"
+?H:?SCAT2:#define SCAT2(a,b)EQuoTe(SQuoTe(a)b)
+?H:?SCAT3:#define SCAT3(a,b,c)EQuoTe(SQuoTe(a)b/**/c)
+?H:?SCAT4:#define SCAT4(a,b,c,d)EQuoTe(SQuoTe(a)b/**/c/**/d)
+?H:?SCAT5:#define SCAT5(a,b,c,d,e)EQuoTe(SQuoTe(a)b/**/c/**/d/**/e)
+?H:?%<:#endif
+?H:?%<:#if $cpp_stuff == 42
+?H:?CAT2:#define CAT2(a,b)a ## b
+?H:?CAT3:#define CAT3(a,b,c)a ## b ## c
+?H:?CAT4:#define CAT4(a,b,c,d)a ## b ## c ## d
+?H:?CAT5:#define CAT5(a,b,c,d,e)a ## b ## c ## d ## e
+?H:?%<:#define StGiFy(a)# a
+?H:?STRINGIFY:#define STRINGIFY(a)StGiFy(a)
+?H:?SCAT2:#define SCAT2(a,b)StGiFy(a) StGiFy(b)
+?H:?SCAT3:#define SCAT3(a,b,c)StGiFy(a) StGiFy(b) StGiFy(c)
+?H:?SCAT4:#define SCAT4(a,b,c,d)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d)
+?H:?SCAT5:#define SCAT5(a,b,c,d,e)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d) StGiFy(e)
+?H:?%<:#endif
+?H:?%<:#if $cpp_stuff != 1 && $cpp_stuff != 42
+?H:?%<:#include "Bletch: How does this C preprocessor catenate tokens?"
+?H:?%<:#endif
+?H:.
+?W:%<:CAT2 CAT3 CAT4 CAT5 STRINGIFY SCAT2 SCAT3 SCAT4 SCAT5
+?LINT:known StGiFy EQuoTe SQuoTe
+: how do we catenate cpp tokens here?
+echo " "
+echo "Checking to see how your cpp does stuff like catenate tokens..." >&4
+$cat >cpp_stuff.c <<'EOCP'
+#define RCAT(a,b)a/**/b
+#define ACAT(a,b)a ## b
+RCAT(Rei,ser)
+ACAT(Cir,cus)
+EOCP
+$cppstdin $cppflags $cppminus <cpp_stuff.c >cpp_stuff.out 2>&1
+if $contains 'Circus' cpp_stuff.out >/dev/null 2>&1; then
+	echo "Oh!  Smells like ANSI's been here."
+	echo "We can catify or stringify, separately or together!"
+	cpp_stuff=42
+elif $contains 'Reiser' cpp_stuff.out >/dev/null 2>&1; then
+	$cat <<EOM
+Ah, yes!  The good old days!
+However, in the good old days we don't know how to stringify and
+catify at the same time...
+Unless we have a cute trick...  which I have!
+EOM
+	cpp_stuff=1
+else
+	$cat >&4 <<EOM
+Hmm, I don't seem to be able to catenate tokens with your cpp.  You're going
+to have to edit the values of CAT[2-5] and SCAT[2-5] in config.h...
+EOM
+?X: It would be nice to have configure remind us at the end that some manual
+?X: intervention is needed -- FIXME
+	cpp_stuff="/* Help! How do we handle cpp_stuff? */*/"
+fi
+$rm -f cpp_stuff.*
+

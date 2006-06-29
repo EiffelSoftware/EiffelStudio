@@ -1,0 +1,52 @@
+?RCS: $Id: libnlist.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:08:02  ram
+?RCS: patch61: added usrinc and mips on the dependency line
+?RCS: patch61: make sure we call ./mips
+?RCS: patch61: added a ?LINT: hint
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:00  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:libnlist: Loc libpth Guess usrinc mips _a
+?MAKE:	-pick add $@ %<
+?S:libnlist (libmld):
+?S:	This variable contains the name of the library required to get the
+?S:	definition of the nlist() function.  On a MIPS RISC/OS box, it is -lmld.
+?S:	Under Sys Vr4, it is -lelf.  Otherwise, its value is empty.
+?S:.
+?T:xxx
+?LINT:use usrinc mips
+: see if we need a special library for 'nlist()'
+echo " "
+: How about doing this of nlist is not in libc...
+if ./mips ; then
+	libnlist='-lmld'
+else
+	xxx=`./loc libelf$_a x $libpth`
+	case "$xxx" in
+	x)  ;;
+	*)
+		libnlist="$xxx"
+		;;
+	esac
+fi
+case "$libnlist" in
+'') echo "No special library for nlist() seems necessary." >&4
+	;;
+*)  echo "nlist() can be found in $libnlist." >&4
+	;;
+esac
+

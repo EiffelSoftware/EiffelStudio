@@ -1,0 +1,69 @@
+?RCS: $Id: d_time.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:07:43  ram
+?RCS: patch56: typo fix, sytem -> system
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:16:38  ram
+?RCS: patch36: now uses new Typedef unit to compute type information (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:45  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: Maybe <sys/types.h> should be included?
+?X:INC: i_systypes
+?MAKE:d_time timetype: Csym Setvar Findhdr Myread Typedef
+?MAKE:	-pick add $@ %<
+?S:d_time:
+?S:	This variable conditionally defines the HAS_TIME symbol, which indicates
+?S:	that the time() routine exists.  The time() routine is normaly
+?S:	provided on UNIX systems.
+?S:.
+?S:timetype:
+?S:	This variable holds the type returned by time(). It can be long,
+?S:	or time_t on BSD sites (in which case <sys/types.h> should be
+?S:	included). Anyway, the type Time_t should be used.
+?S:.
+?C:HAS_TIME (TIMER):
+?C:	This symbol, if defined, indicates that the time() routine exists.
+?C:.
+?C:Time_t (TIMETYPE):
+?C:	This symbol holds the type returned by time(). It can be long,
+?C:	or time_t on BSD sites (in which case <sys/types.h> should be
+?C:	included).
+?C:.
+?H:#$d_time HAS_TIME		/**/
+?H:#define Time_t $timetype		/* Time type */
+?H:.
+?LINT:set d_time
+: see if time exists
+echo " "
+if set time val -f d_time; eval $csym; $val; then
+	echo 'time() found.' >&4
+	val="$define"
+	set time_t timetype long stdio.h sys/types.h
+	eval $typedef
+	dflt="$timetype"
+	echo " "
+	rp="What type is returned by time() on this system?"
+	. ./myread
+	timetype="$ans"
+else
+	echo 'time() not found, hope that will do.' >&4
+	val="$undef"
+	timetype='int';
+fi
+set d_time
+eval $setvar
+

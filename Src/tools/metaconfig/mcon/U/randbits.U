@@ -1,0 +1,86 @@
+?RCS: $Id: randbits.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:19:29  ram
+?RCS: patch61: added <unistd.h> and <stdlib.h> to the C program test
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:38  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X:	This unit has been somewhat made obsolete with creation of the
+?X:	randfunc function (which finds out how to generate random
+?X:	numbers between 0 and 1.
+?X:
+?MAKE:randbits: cat rm Myread cc i_unistd i_stdlib
+?MAKE:	-pick add $@ %<
+?S:randbits:
+?S:	This variable contains the eventual value of the RANDBITS symbol,
+?S:	which indicates to the C program how many bits of random number
+?S:	the rand() function produces.
+?S:.
+?C:RANDBITS:
+?C:	This symbol contains the number of bits of random number the rand()
+?C:	function produces.  Usual values are 15, 16, and 31.
+?C:.
+?H:#define RANDBITS $randbits		/**/
+?H:.
+: check for size of random number generator
+echo " "
+case "$randbits" in
+'')
+	echo "Checking to see how many bits your rand function produces..." >&4
+	$cat >try.c <<EOCP
+#$i_unistd I_UNISTD
+#$i_stdlib I_STDLIB
+#include <stdio.h>
+#ifdef I_UNISTD
+#  include <unistd.h>
+#endif
+#ifdef I_STDLIB
+#  include <stdlib.h>
+#endif
+EOCP
+	$cat >>try.c <<'EOCP'
+main()
+{
+	register int i;
+	register unsigned long tmp;
+	register unsigned long max = 0L;
+
+	for (i = 1000; i; i--) {
+		tmp = (unsigned long)rand();
+		if (tmp > max) max = tmp;
+	}
+	for (i = 0; max; i++)
+		max /= 2;
+	printf("%d\n",i);
+}
+EOCP
+	if $cc try.c -o try >/dev/null 2>&1 ; then
+		dflt=`try`
+	else
+		dflt='?'
+		echo "(I can't seem to compile the test program...)"
+	fi
+	;;
+*)
+	dflt="$randbits"
+	;;
+esac
+rp='How many bits does your rand() function produce?'
+. ./myread
+randbits="$ans"
+$rm -f try.c try
+

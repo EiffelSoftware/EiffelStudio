@@ -1,0 +1,43 @@
+?RCS: $Id: lseektype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:30:10  ram
+?RCS: patch32: now uses new Typedef unit to compute type information
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:08  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:lseektype: Myread Typedef
+?MAKE:	-pick add $@ %<
+?S:lseektype:
+?S:	This variable defines lseektype to be something like off_t, long, 
+?S:	or whatever type is used to declare lseek offset's type in the
+?S:	kernel (which also appears to be lseek's return type).
+?S:.
+?C:Off_t (LSEEKTYPE):
+?C:	This symbol holds the type used to declare offsets in the kernel.
+?C:	It can be int, long, off_t, etc... It may be necessary to include
+?C:	<sys/types.h> to get any typedef'ed information.
+?C:.
+?H:#define Off_t $lseektype		/* <offset> type */
+?H:.
+: see what type lseek is declared as in the kernel
+set off_t lseektype long stdio.h sys/types.h
+eval $typedef
+echo " "
+dflt="$lseektype"
+rp="What type is lseek's offset on this system declared as?"
+. ./myread
+lseektype="$ans"
+

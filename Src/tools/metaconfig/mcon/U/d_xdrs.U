@@ -1,0 +1,45 @@
+?RCS: $Id: d_xdrs.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:04  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_xdrs: cat Csym Setvar
+?MAKE:	-pick add $@ %<
+?S:d_xdrs:
+?S:	This symbol conditionally defines HAS_XDRS which indicates to the C
+?S:	program that XDR serialization routines are available.
+?S:.
+?C:HAS_XDRS (XDRS):
+?C:	This symbol if defined indicates to the C program that the XDR
+?C:	serialization routines are available to transfer data accross
+?C:	various architectures.
+?C:.
+?H:#$d_xdrs HAS_XDRS	/**/
+?H:.
+?LINT:set d_xdrs
+: see if XDR is available
+echo " "
+if set xdr_int val -f d_xdrs; eval $csym; $val; then
+	echo "Ahh! You have XDR routines for network communications." >&4
+	val="$define"
+else
+	$cat >&4 <<EOM
+Sigh! You do not have XDR routines -- Network communications may be hazardous.
+EOM
+	val="$undef"
+fi
+set d_xdrs
+eval $setvar
+

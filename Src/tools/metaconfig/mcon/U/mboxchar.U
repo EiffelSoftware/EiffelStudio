@@ -1,0 +1,73 @@
+?RCS: $Id: mboxchar.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:13:12  ram
+?RCS: patch56: ensure ctrl-A characters are visible in prompt (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:11:22  ram
+?RCS: patch23: added support for MMDF mailboxes (WED)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:15  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:mboxchar: cat package shsharp Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:mboxchar:
+?S:	This variable contains the eventual value of the MBOXCHAR symbol,
+?S:	which is how a C program can identify a file as a mailbox.
+?S:.
+?C:MBOXCHAR:
+?C:	This symbol contains a character which will match the beginning
+?C:	of a mailbox file.
+?C:.
+?H:#define MBOXCHAR '$mboxchar'		/**/
+?H:.
+?T:CTRLA
+?INIT:CTRLA=`echo a | tr a '\001'`
+: determine how to determine when a file is a mailbox
+case "$mboxchar" in
+'') dflt=F;;
+?X: The following ^A is two-chars to ensure it will print out -- WED
+"$CTRLA") dflt='^A';;
+*)  dflt="$mboxchar";;
+esac
+$cat <<EOM
+ 
+In saving articles, $package wants to differentiate between saving to
+mailbox format files and normal files.  It does this by examining the
+first character of the file in question.  On most systems the first line
+starts with "From ...", so the first character is an F.  Other systems
+use magic cookies like control codes between articles, so one of those
+would be first.  For example, MMDF messages are separated with lines of
+four control-A's (you may specify one as ^A, i.e. caret A).
+
+EOM
+rp="What's the first character of a mailbox file?"
+. ./myread
+mboxchar="$ans"
+case "$mboxchar" in
+'F') ;;
+"$CTRLA") ;;
+'^A'|'^a') mboxchar="$CTRLA";;
+*)  cat <<'EOM'
+
+You will need to edit the shell script mbox.saver to properly append an
+article to a mailbox.  The arguments to the script are documented in
+EOM
+	case "$shsharp" in
+	false) echo "comments in mbox.saver.std.";;
+	true) echo "comments in the shell script itself.";;
+	esac
+esac
+

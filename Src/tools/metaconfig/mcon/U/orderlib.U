@@ -1,0 +1,97 @@
+?RCS: $Id: orderlib.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1997/02/28  16:18:18  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS: patch61: likewise for .o replaced by $_o
+?RCS: patch61: now uses the ar located by Loc.U
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/11  15:33:04  ram
+?RCS: patch45: allows hint files to specify their own value for 'ranlib'
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:26:48  ram
+?RCS: patch36: now performs a real small compile for accurate checks (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:31:17  ram
+?RCS: patch32: use cc variable instead of hardwired 'cc' in 1st compile
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:26  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:orderlib ranlib: Loc ar cat test rm +cc +ccflags +ldflags +libs _a _o
+?MAKE:	-pick add $@ %<
+?S:orderlib:
+?S:	This variable is "true" if the components of libraries must be ordered
+?S:	(with `lorder $* | tsort`) before placing them in an archive.  Set to
+?S:	"false" if ranlib or ar can generate random libraries.
+?S:.
+?S:ranlib:
+?S:	This variable is set to the pathname of the ranlib program, if it is
+?S:	needed to generate random libraries.  Set to ":" if ar can generate
+?S:	random libraries or if random libraries are not supported
+?S:.
+: see if ar generates random libraries by itself
+echo " "
+echo "Checking how to generate random libraries on your machine..." >&4
+?X: Some systems (like MIPS) complain when running ar... Others like Ultrix
+?X: need an explicit 'ar ts' to add the table of contents.
+?X: Still others like Linux run ar ts successfully, but still need ranlib.
+?X: This set of tests seems the minimum necessary to check out Linux.
+?X: We need to explicitly put the entries in out-of-order so that Sun's ld
+?X: will fail.  (Otherwise it complains, but gives an exit status of 0.)
+echo 'int bar1() { return bar2(); }' > bar1.c
+echo 'int bar2() { return 2; }' > bar2.c
+$cat > foo.c <<'EOP'
+main() { printf("%d\n", bar1()); exit(0); }
+EOP
+$cc $ccflags -c bar1.c >/dev/null 2>&1
+$cc $ccflags -c bar2.c >/dev/null 2>&1
+$cc $ccflags -c foo.c >/dev/null 2>&1
+$ar rc bar$_a bar2$_o bar1$_o >/dev/null 2>&1
+if $cc $ccflags $ldflags -o foobar foo$_o bar$_a $libs > /dev/null 2>&1 &&
+	./foobar >/dev/null 2>&1; then
+	echo "ar appears to generate random libraries itself."
+	orderlib=false
+	ranlib=":"
+elif $ar ts bar$_a >/dev/null 2>&1 &&
+	$cc $ccflags $ldflags -o foobar foo$_o bar$_a $libs > /dev/null 2>&1 &&
+	./foobar >/dev/null 2>&1; then
+		echo "a table of contents needs to be added with 'ar ts'."
+		orderlib=false
+		ranlib="$ar ts"
+else
+?X: Allow hints to specify their own ranlib "script". For instance, on
+?X: some NeXT machines, the timestamp put by ranlib is not correct, and this
+?X: may raise tedious recompiles for nothing. Therefore, NeXT may add the
+?X: ranlib='sleep 5; /bin/ranlib' line in their hints to "fix" that.
+?X: (reported by Andreas Koenig <k@franz.ww.tu-berlin.de>)
+	case "$ranlib" in
+	:) ranlib='';;
+	'')
+		ranlib=`./loc ranlib X /usr/bin /bin /usr/local/bin`
+		$test -f $ranlib || ranlib=''
+		;;
+	esac
+	if $test -n "$ranlib"; then
+		echo "your system has '$ranlib'; we'll use that."
+		orderlib=false
+	else
+		echo "your system doesn't seem to support random libraries"
+		echo "so we'll use lorder and tsort to order the libraries."
+		orderlib=true
+		ranlib=":"
+	fi
+fi
+$rm -f foo* bar* 
+

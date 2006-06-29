@@ -1,0 +1,60 @@
+?RCS: $Id: d_normsig.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  15:37:03  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:14:48  ram
+?RCS: patch36: call ./bsd explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:44  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_normsig jobslib: test Setvar Guess _a
+?MAKE:	-pick add $@ %<
+?S:d_normsig:
+?S:	This variable conditionally defines the NORMSIG symbol, which
+?S:	indicates to the C program that the normal signal handling routines
+?S:	should be used, as opposed to the ones in 4.1bsd (sigset, etc.).
+?S:.
+?S:jobslib:
+?S:	This variable holds the argument to be passed to the loader to include
+?S:	the strange signal handling routines from 4.1bsd.  On systems that
+?S:	have NORMSIG defined this variable is null.
+?S:.
+?C:NORMSIG:
+?C:	This symbol, if defined, indicates that normal signal handling routines
+?C:	should be used, as opposed to the ones in 4.1bsd (sigset, etc.).
+?C:.
+?H:#$d_normsig NORMSIG		/**/
+?H:.
+?LINT:set d_normsig
+: see if we need -ljobs and if we have sigset, etc.
+echo " "
+if $test -r /usr/lib/libjobs$_a || $test -r /usr/local/lib/libjobs$_a ; then
+	echo "Jobs library found." >&4
+	val="$undef"
+	jobslib='-ljobs'
+else
+	if ./bsd; then
+		echo "No jobs library found. (I suppose this is at least 4.2...)" >&4
+	else
+		echo "No jobs library found. (That's okay, we all have our faults.)" >&4
+	fi
+	val="$define"
+	jobslib=''
+fi
+set d_normsig
+eval $setvar
+

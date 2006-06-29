@@ -1,0 +1,67 @@
+?RCS: $Id: libyacc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1997/02/28  16:09:19  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0.1.3  1994/05/13  15:27:12  ram
+?RCS: patch27: added byacc case (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  15:09:01  ram
+?RCS: patch23: now uses full library path instead of -l notation
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:13:49  ram
+?RCS: patch16: un-obsoleted this unit for smooth yacc compilations
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:04  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:libyacc: Loc yacc libpth _a
+?MAKE:	-pick add $@ %<
+?S:libyacc:
+?S:	This variable contains the argument to pass to the loader in order
+?S:	to get the yacc library routines.  If there is no yacc or yacc
+?S:	library, it is null.
+?S:.
+?T:xxx
+: see if we should include -ly
+echo " "
+case "$yacc" in
+*byacc*)
+	echo "You are using byacc, so I won't look for a yacc library." >&4
+	libyacc=''
+	;;
+*yacc)
+	xxx=`./loc liby$_a x $libpth`
+	case "$xxx" in
+	x)
+		echo "No yacc library found." >&4
+		libyacc=''
+		;;
+	*)
+		echo "yacc library found in $xxx." >&4
+		libyacc="$xxx"
+		;;
+	esac
+	;;
+*bison*)
+	echo "You are using bison, so I won't look for a yacc library." >&4
+	libyacc=''
+	;;
+*)
+echo "You don't seem to have yacc, so I won't look for the yacc library." >&4
+	libyacc=''
+	;;
+esac
+

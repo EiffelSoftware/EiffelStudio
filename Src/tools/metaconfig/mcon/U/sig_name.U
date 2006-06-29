@@ -1,0 +1,120 @@
+?RCS: $Id: sig_name.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.5  1997/02/28  16:21:25  ram
+?RCS: patch61: brand new algorithm for sig_name and (new!) sig_num
+?RCS:
+?RCS: Revision 3.0.1.4  1995/07/25  14:14:54  ram
+?RCS: patch56: added <asm/signal.h> lookup for linux
+?RCS:
+?RCS: Revision 3.0.1.3  1995/05/12  12:24:11  ram
+?RCS: patch54: now looks for <linux/signal.h> too (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/06/20  07:06:57  ram
+?RCS: patch30: final echo was missing to close awk-printed string
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:17:55  ram
+?RCS: patch23: signal list now formatted to avoid scroll-ups (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:47  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:sig_name sig_num: awk Signal Oldconfig rm
+?MAKE:	-pick add $@ %<
+?S:sig_name:
+?S:	This variable holds the signal names, space separated. The leading
+?S:	SIG in signals name is removed. See sig_num.
+?S:.
+?S:sig_num:
+?S:	This variable holds the signal numbers, space separated. Those numbers
+?S:	correspond to the value of the signal listed in the same place within
+?S:	the sig_name list.
+?S:.
+?C:SIG_NAME:
+?C:	This symbol contains a list of signal names in order of
+?C:	signal number. This is intended
+?C:	to be used as a static array initialization, like this:
+?C:		char *sig_name[] = { SIG_NAME };
+?C:	The signals in the list are separated with commas, and each signal
+?C:	is surrounded by double quotes. There is no leading SIG in the signal
+?C:	name, i.e. SIGQUIT is known as "QUIT".
+?C:	Gaps in the signal numbers (up to NSIG) are filled in with NUMnn,
+?C:	etc., where nn is the actual signal number (e.g. NUM37).
+?C:	The signal number for sig_name[i] is stored in sig_num[i].
+?C:	The last element is 0 to terminate the list with a NULL.  This
+?C:	corresponds to the 0 at the end of the sig_num list.
+?C:.
+?C:SIG_NUM:
+?C:	This symbol contains a list of signal numbers, in the same order as the
+?C:	SIG_NAME list. It is suitable for static array initialization, as in:
+?C:		int sig_num[] = { SIG_NUM };
+?C:	The signals in the list are separated with commas, and the indices
+?C:	within that list and the SIG_NAME list match, so it's easy to compute
+?C:	the signal name from a number or vice versa at the price of a small
+?C:	dynamic linear lookup. 
+?C:	Duplicates are allowed, but are moved to the end of the list.
+?C:	The signal number corresponding to sig_name[i] is sig_number[i].
+?C:	if (i < NSIG) then sig_number[i] == i.  
+?C:	The last element is 0, corresponding to the 0 at the end of
+?C:	the sig_name list.
+?C:.
+?H:#define SIG_NAME "`echo $sig_name | sed 's/ /","/g'`",0	/**/
+?H:#define SIG_NUM `echo $sig_num 0 | sed 's/ /,/g'`	/**/
+?H:.
+?T:i
+?X:	signal.cmd creates a file  signal.lst which has two columns:
+?X:	NAME  number, e.g.
+?X:	 HUP 1
+?X:	The list is sorted on signal number, with duplicates moved to
+?X:	the end..
+: generate list of signal names
+echo " "
+?X:	Previous versions used a different algorithm to get sig_name,
+?X:	and didn't get sig_num at all.  If either sig_name or sig_num
+?X:	is empty, compute both all over again.  If both are set, it
+?X:	could be a hint file or a previous value, so let it stay.
+case "$sig_name" in
+'')	sig_num='' ;;
+esac
+case "$sig_num" in
+'')	sig_name='' ;;
+esac
+case "$sig_name" in
+'')
+	echo "Generating a list of signal names and numbers..." >&4
+	./signal_cmd
+	sig_name=`$awk '{printf "%s ", $1}' signal.lst`
+	sig_name="ZERO $sig_name"
+	sig_num=`$awk '{printf "%d ", $2}' signal.lst`
+	sig_num="0 $sig_num"
+	;;
+esac
+echo "The following signals are available:"
+echo " "
+echo $sig_name | $awk \
+'BEGIN { linelen = 0 }
+{
+	for (i = 1; i <= NF; i++) {
+		name = "SIG" $i " "
+		linelen = linelen + length(name)
+		if (linelen > 70) {
+			printf "\n"
+			linelen = length(name)
+		}
+		printf "%s", name
+	}
+	printf "\n"
+}'
+$rm -f signal signal.c signal.awk signal.lst signal_cmd 
+

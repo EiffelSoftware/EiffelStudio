@@ -1,0 +1,31 @@
+?RCS: $Id: d_mkfifo.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:14:17  ram
+?RCS: patch36: created by ADO
+?RCS:
+?RCS:
+?MAKE:d_mkfifo: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_mkfifo:
+?S:	This variable conditionally defines the HAS_MKFIFO symbol, which
+?S:	indicates to the C program that the mkfifo() routine is available.
+?S:.
+?C:HAS_MKFIFO :
+?C:	This symbol, if defined, indicates that the mkfifo routine is
+?C:	available to create FIFOs. Otherwise, mknod should be able to
+?C:	do it for you. However, if mkfifo is there, mknod might require
+?C:	super-user privileges which mkfifo will not.
+?C:.
+?H:#$d_mkfifo HAS_MKFIFO		/**/
+?H:.
+?LINT:set d_mkfifo
+: see if mkfifo exists
+set mkfifo d_mkfifo
+eval $inlibc
+

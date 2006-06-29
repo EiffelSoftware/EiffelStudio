@@ -1,0 +1,335 @@
+''' $Id: manilist.man 78389 2004-11-30 00:17:17Z manus $
+'''
+'''  Copyright (c) 1991-1993, Raphael Manfredi
+'''  
+'''  You may redistribute only under the terms of the Artistic Licence,
+'''  as specified in the README file that comes with the distribution.
+'''  You may reuse parts of this distribution only within the terms of
+'''  that same Artistic Licence; a copy of which may be found at the root
+'''  of the source tree for dist 3.0.
+'''
+''' $Log$
+''' Revision 1.1  2004/11/30 00:17:18  manus
+''' Initial revision
+'''
+''' Revision 3.0.1.3  1995/05/12  11:57:31  ram
+''' patch54: updated my e-mail address
+'''
+''' Revision 3.0.1.2  1994/01/24  13:52:55  ram
+''' patch16: typo fix
+'''
+''' Revision 3.0.1.1  1993/08/24  12:11:02  ram
+''' patch3: typo fix
+'''
+''' Revision 3.0  1993/08/18  12:04:04  ram
+''' Baseline for dist 3.0 netwide release.
+'''
+''' 
+.TH MANILIST 1 ram
+.SH NAME
+manilist \- report status of files in a source directory
+.SH SYNOPSIS
+.B manilist
+[
+.B \-abcdhnptV
+] [
+.B \-i
+.I extension
+] [
+.B \-f
+.I manifest
+] [
+.B \-p
+.I format
+] [
+.B \-s
+.I string
+] [
+.B \-w
+.I which
+] [
+.B \-x
+.I extension
+] [
+.B \-C
+.I separator
+] [
+.B \-I
+.I included
+] [
+.B \-L
+.I colsize
+] [
+.B \-X
+.I excluded
+] [
+.I files or directories
+]
+.SH DESCRIPTION
+.I Manilist
+scans a source directory and produces a report on the status of each file:
+whether it is up-to-date or not with respect to
+.I patchlevel.h ,
+if it is missing from MANIFEST.new, and some other useful information which
+may be dynamically configured. It can be use to maintain a MANIFEST.new file,
+produce a detailed listing and status of a group of directories, etc... The
+rich set of options concur to make \fImanilist\fR a perfect low-level tool.
+.PP
+Under its simplest invocation form at the top level directory of a package,
+with no arguments, \fImanilist\fR will scan the MANIFEST.new and produce
+a report on the status of each file listed there. Each line starts with a
+single character flag which indicates the state of the file, followed by the
+name of the file.
+.PP
+What happens in fact is more complex than that. \fIManilist\fR scans the
+MANIFEST.new file and then loops over all the files listed there. Internally,
+\fImanilist\fR maintains an inclusion and an exclusion list, both specifying
+extensions for files. For instance, the inclusion list could be ('.c', '.h')
+and the exclusion ('.o', ',v') so that C sources are included and object
+or RCS files excluded. By default, all files but those excluded are used.
+Some other selections may be applied at this stage, as will be explained later
+on. For those files which pass this selection process, a report is issued
+according to a report \fIformat\fR, which by default is "\fIA:%c %n\fR".
+The letter \fIA\fR (or anything before the initial ':' character is the
+file selection specification we've been talking about. The remaining is the
+formatting, a string which is printed as-is, modulo some escape sequences.
+It so happens that \fI%c\fR is the character flag and \fI%n\fR is the name
+of the current file.
+.PP
+Generally speaking, \fImanilist\fR should be regarded as a tool which emits
+configurable reports on a set of files, selectively picking them among a list
+or by directly scanning the directories to see what's out there...
+.PP
+By specifying a set of directories or files as arguments on the command line,
+you restrict the scanning area, limiting to reports concerning those files
+or directories. If you do not specify any, manilist restricts its report to
+the current directory and its subdirectories, unless the \fB\-t\fR option is
+given.
+.SH OPTIONS
+.I Manilist
+recognizes the following options:
+.TP 15
+.B \-a
+Make a report for \fIall\fR the files, regardless of what is specified by
+the \fIincluded\fR and \fIexcluded\fR suffix lists.
+.TP
+.B \-b
+Assume current directory is the base (root) of the package tree. When this
+option is not specified, \fImanilist\fR will look for a \fI.package\fR file
+to indicate the root directory of the package (also called the top) and
+complain if it does not find it.
+.TP
+.B \-c
+Check files against those listed in MANIFEST.new (or whatever file specified
+via the \fB\-f\fR option) and report discrepancies via the \fI%c\fR macro.
+.TP
+.B \-d
+Dump included and excluded suffix lists on stderr, extensions being space
+separated. A good way to know the default lists is to run: \fImanilist
+\-f /dev/null \-bd.
+.TP
+.B \-f\fI manifest
+Specify an alternate manifest file, the default being to use MANIFEST.new.
+.TP
+.B \-h
+Print the usage help message and exit.
+.TP
+.B \-i\fI extensions
+Add new extensions to the included suffix list. The \fIextensions\fR argument
+must list the suffixes separated by spaces, as in \fB\-i\fI '.ph .pl'\fR to add
+both \fI.ph\fR and \fI.pl\fR to the existing suffixes. Note that the argument
+needs to be quoted to protect spaces against shell interpretation.
+.TP
+.B \-n
+Do not use any manifest file. Rather scan the directories and act as with all
+the files there were already listed in a manifest.
+.TP
+.B \-p\fI format
+Set the new printing format, which has the form \fIselection\fR:\fIstring\fR,
+with \fIselection\fR being a list of single letters specifying which files
+from the manifest are to be used for reports, and \fIstring\fR being a
+message to print as report, with some macro substitutions. It is also possible
+to have column formatting by specifying a '|' inside the string to delimit
+the different columns you wish to see. See also \fB\-C\fR and \fB\-L\fR for
+more formatting parameters.
+.TP
+.B \-s\fI string
+Specify the \fIstring\fR part of the printing format (see \fB\-p\fR for a
+general description of the \fIformat\fR). Available macros are listed further
+down the manual page.
+.TP
+.B \-t
+Start from the top directory (the root directory of the distribution) regardless
+of the current directory. There must be a \fI.package\fR file to indicate
+what the top directory is.
+.TP
+.B \-w\fI selection
+Specifiy the \fIselection\fR part of the printing format. Available selections
+will be discussed later.
+.TP
+.B \-x\fI extensions
+Add new extensions to the excluded suffix list. The \fIextensions\fR argument
+must list the suffixes separated by spaces, as in \fB\-x\fI '.s .p'\fR to add
+both \fI.s\fR and \fI.p\fR to the existing list. Note that the argument
+needs to be quoted to protect spaces against shell interpretation.
+.TP
+.B \-C\fI separator
+Give the column separator, which is to be used in place of the '|' character
+in the report format string. By default, it is a single space.
+.TP
+.B \-I\fI included
+Specify a new list of suffixes to be included in the reports. This overrides
+the original default list (whereas \fB\-i\fR is used to \fIadd\fR suffixes to
+the list). Suffixes must be space separated.
+.TP
+.B \-L\fI colsize
+When using column formatting (the '|' character being used to denote columns),
+this option may be used to specify the maximum column width, separating each
+width by a single ','. Leaving a width unspecified does not impose any limit
+on its width. For instance, if the format string is \fI%n|%d|%t\fR, one could
+limit the middle column (descriptions from MANIFEST.new) to 40 characters and
+the name column (first one) to 15 characters, leaving the last one with no
+imposed limits, by using \fB\-L\fI 15,40,\fR.
+.TP
+.B \-V
+Print version number and exit.
+.TP
+.B \-X\fI excluded
+Specify a new list of suffixes to be excluded in the reports. This overrides
+the original default list (whereas \fB\-x\fR is used to \fIadd\fR suffixes to
+the list). Suffixes must be space separated.
+.SH USING FORMATS
+The flexibility of \fImanilist\fR is brought by its use of a dynamic formatting
+string for providing its reports. It is possible to specify a format via the
+\fB\-p\fR option or just parts of it: the text string via \fB\-s\fR and the
+file selection with \fB\-w\fR.
+.SS "File Selection"
+.PP
+The leading part of the formatting string tells \fImanilist\fR which files you
+wish to see in the final report. Available selectors are:
+.sp
+.PD 0
+.TP 5
+.B A
+All the files but the excluded ones (i.e. those files whose suffix is listed
+in the exclusion list). This is the default action.
+.TP
+.B a
+All the files included and/or excluded (shortcut for \fIix\fR). Note that files
+which are neither included nor excluded will not appear in the report.
+.TP
+.B d
+Report only for directories.
+.TP
+.B f
+Report only for files.
+.TP
+.B i
+Only included files are listed.
+.TP
+.B m
+Only those files or directories found in the manifest are listed.
+.TP
+.B n
+Only those files or directories \fInot\fR found in the manifest are listed.
+.TP
+.B x
+Only excluded files are listed.
+.PD
+.PP
+When you specify more than one letter, the resulting report depends on the
+nature of the selection. For \fId\fR, \fIf\fR, \fIm\fR and \fIn\fR, a logical
+union is performed. This means specifying \fIfd\fR or \fImn\fR is the same
+as not specifying anything, but it's less efficient since \fImanilist\fR is
+forced to perform the checks it would otherwise bypass. The \fIi\fR and \fIx\fR
+selectors are special: by default, all the files not excluded are reported.
+Specifying \fIx\fR also asks for excluded files. Specifying \fIi\fR restricts
+the report to the included files. Using both at the same time (\fIix\fR) will
+force a report for files which are included or excluded.
+.SS "Macro Substitution"
+.PP
+The string part of the report format can make use of the following macros:
+.sp
+.PD 0
+.TP 5
+%c
+A character coding the status of the file.
+.TP
+%d
+Description from the manifest file, if any.
+.TP
+%n
+Name of the file (its path from the top directory).
+.TP
+%s
+Size of the file, in bytes.
+.TP
+%t
+Time stamp of the last modification.
+.PD
+.SS "File Status"
+.PP
+The \fI%c\fR macro, giving a single character coding the file status, can
+expand into one of the following.
+.PD 0
+.TP 5
+\&.
+The file is up to date (not newer than \fIpatchlevel.h\fR).
+.TP
+-
+The file is present in the manifest but is missing.
+.TP
+>
+The file has been modified since last patch (newer than \fIpatchlevel.h\fR).
+.TP
++
+The file exists but is not listed in the manifest.
+.TP
+o
+The file exists but is not listed in the manifest and is older than
+\fIpatchlevel.h\fR
+.TP
+x
+The file is listed in the manifest and exists, but has been excluded. Naturally,
+this will appear in the report only if the \fIx\fR selector is given in the
+report format.
+.TP
+?
+The file is listed in the manifest, does not exist, and was excluded.
+.PD
+.SH EXAMPLES
+The command
+.in +5
+.nf
+.sp
+\fImanilist -ct -p 'ni:%n'\fR
+.sp
+.fi
+.in -5
+will list all the source files from your distribution which are not listed
+in your MANIFEST.new file. Note that this includes only "source" files, that
+is to say files whose extension is listed in the inclusion list.
+If you do not wish this restriction, replace the formatting string with
+\fIn:%n\fR (only the excluded files will not appear).
+.PP
+To build an initial MANIFEST file, use:
+.in +5
+.nf
+.sp
+\fImanilist -n -p 'Af:%n' > MANIFEST\fR
+.sp
+.fi
+.in -5
+from the top directory. You will eventually want to fill in descriptions for
+each file listed in the manifest.
+.SH FILES
+.PD 0
+.TP 20
+MANIFEST.new
+Default manifest file, listing files and giving a small description for each
+of them.
+.PD
+.SH AUTHOR
+Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+.SH "SEE ALSO"
+manifake(1), makedist(1), pat(1).

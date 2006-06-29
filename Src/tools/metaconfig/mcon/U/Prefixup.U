@@ -1,0 +1,41 @@
+?RCS: $Id: Prefixup.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/30  14:30:40  ram
+?RCS: patch49: created
+?RCS:
+?X:
+?X: Used as: "set dflt; eval $prefixup" to set $dflt to be $prefix/dir
+?X: instead of $prefixexp/dir, in case portability was involved somehow
+?X: and $prefix uses ~name expansion.
+?X:
+?MAKE:Prefixup: prefix prefixexp
+?MAKE:	-pick add $@ %<
+?LINT:define prefixup
+?S:prefixup:
+?S:	This shell variable is used internally by Configure to reset
+?S:	the leading installation prefix correctly when $prefix uses
+?S:	~name expansion.
+?S:		set dflt
+?S:		eval $prefixup
+?S:	That will set $dflt to $prefix/dir if it was $prefixexp/dir and
+?S:	$prefix differs from $prefixexp.
+?S:.
+?V:prefixup
+: set the prefixup variable, to restore leading tilda escape
+prefixup='case "$prefixexp" in
+"$prefix") ;;
+*) eval "$1=\`echo \$$1 | sed \"s,^$prefixexp,$prefix,\"\`";;
+esac'
+

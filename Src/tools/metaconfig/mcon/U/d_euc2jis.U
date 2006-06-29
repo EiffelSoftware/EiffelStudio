@@ -1,0 +1,35 @@
+?RCS: $Id: d_euc2jis.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:58  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_euc2jis: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_euc2jis:
+?S:	This variable conditionally defines the HAS_EUC2JIS symbol, which
+?S:	indicates to the C program that the euc2jis() routine is available
+?S:	to convert EUC to JIS.
+?S:.
+?C:HAS_EUC2JIS:
+?C:	This symbol, if defined, indicates that the euc2jis routine is
+?C:	available to convert EUC to JIS.
+?C:.
+?H:#$d_euc2jis	HAS_EUC2JIS		/**/
+?H:.
+?LINT:set d_euc2jis
+: see if euc2jis exists
+set euc2jis d_euc2jis
+eval $inlibc
+

@@ -1,0 +1,270 @@
+?RCS: $Id: myhostname.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  16:15:55  ram
+?RCS: patch61: improved hostname lookup by using ypmatch when NIS is used
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:25:43  ram
+?RCS: patch36: call ./xenix explicitely instead of relying on PATH
+?RCS: patch36: now uses new Tr unit to convert to/from lowercase
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  07:06:20  ram
+?RCS: patch30: now a little more clever for domain name guessing
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:18  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:myhostname phostname mydomain: contains sed test Myread Oldconfig \
+	Guess Loc awk echo sort uniq +usrinc rm hostcat Tr
+?MAKE:	-pick add $@ %<
+?S:myhostname (hostname):
+?S:	This variable contains the eventual value of the MYHOSTNAME symbol,
+?S:	which is the name of the host the program is going to run on.
+?S:	The domain is not kept with hostname, but must be gotten from mydomain.
+?S:	The dot comes with mydomain, and need not be supplied by the program.
+?S:.
+?S:mydomain:
+?S:	This variable contains the eventual value of the MYDOMAIN symbol,
+?S:	which is the domain of the host the program is going to run on.
+?S:	The domain must be appended to myhostname to form a complete host name.
+?S:	The dot comes with mydomain, and need not be supplied by the program.
+?S:.
+?S:phostname:
+?S:	This variable contains the eventual value of the PHOSTNAME symbol,
+?S:	which is a command that can be fed to popen() to get the host name.
+?S:	The program should probably not presume that the domain is or isn't
+?S:	there already.
+?S:.
+?C:MYHOSTNAME (HOSTNAME):
+?C:	This symbol contains name of the host the program is going to run on.
+?C:	The domain is not kept with hostname, but must be gotten from MYDOMAIN.
+?C:	The dot comes with MYDOMAIN, and need not be supplied by the program.
+?C:	If gethostname() or uname() exist, MYHOSTNAME may be ignored. If MYDOMAIN
+?C:	is not used, MYHOSTNAME will hold the name derived from PHOSTNAME.
+?C:.
+?C:MYDOMAIN:
+?C:	This symbol contains the domain of the host the program is going to
+?C:	run on.  The domain must be appended to HOSTNAME to form a complete
+?C:	host name.  The dot comes with MYDOMAIN, and need not be supplied by
+?C:	the program.  If the host name is derived from PHOSTNAME, the domain
+?C:	may or may not already be there, and the program should check.
+?C:.
+?H:#define MYHOSTNAME "$myhostname"		/**/
+?H:#define MYDOMAIN "$mydomain"		/**/
+?H:.
+?T:cont i tans tmp_re
+: now get the host name
+echo " "
+echo "Figuring out host name..." >&4
+case "$myhostname" in
+'') cont=true
+	echo 'Maybe "hostname" will work...'
+	if tans=`sh -c hostname 2>&1` ; then
+		myhostname=$tans
+		phostname=hostname
+		cont=''
+	fi
+	;;
+*) cont='';;
+esac
+if $test "$cont"; then
+	if ./xenix; then
+		echo 'Oh, dear.  Maybe "/etc/systemid" is the key...'
+		if tans=`cat /etc/systemid 2>&1` ; then
+			myhostname=$tans
+			phostname='cat /etc/systemid'
+			echo "Whadyaknow.  Xenix always was a bit strange..."
+			cont=''
+		fi
+	elif $test -r /etc/systemid; then
+		echo "(What is a non-Xenix system doing with /etc/systemid?)"
+	fi
+fi
+if $test "$cont"; then
+	echo 'No, maybe "uuname -l" will work...'
+	if tans=`sh -c 'uuname -l' 2>&1` ; then
+		myhostname=$tans
+		phostname='uuname -l'
+	else
+		echo 'Strange.  Maybe "uname -n" will work...'
+		if tans=`sh -c 'uname -n' 2>&1` ; then
+			myhostname=$tans
+			phostname='uname -n'
+		else
+			echo 'Oh well, maybe I can mine it out of whoami.h...'
+			if tans=`sh -c $contains' sysname $usrinc/whoami.h' 2>&1` ; then
+				myhostname=`echo "$tans" | $sed 's/^.*"\(.*\)"/\1/'`
+				phostname="sed -n -e '"'/sysname/s/^.*\"\\(.*\\)\"/\1/{'"' -e p -e q -e '}' <$usrinc/whoami.h"
+			else
+				case "$myhostname" in
+				'') echo "Does this machine have an identity crisis or something?"
+					phostname='';;
+				*)
+					echo "Well, you said $myhostname before..."
+					phostname='echo $myhostname';;
+				esac
+			fi
+		fi
+	fi
+fi
+: you do not want to know about this
+set $myhostname
+myhostname=$1
+
+: verify guess
+if $test "$myhostname" ; then
+	dflt=y
+	rp='Your host name appears to be "'$myhostname'".'" Right?"
+	. ./myread
+	case "$ans" in
+	y*) ;;
+	*) myhostname='';;
+	esac
+fi
+
+: bad guess or no guess
+while $test "X$myhostname" = X ; do
+	dflt=''
+	rp="Please type the (one word) name of your host:"
+	. ./myread
+	myhostname="$ans"
+done
+
+: translate upper to lower if necessary
+case "$myhostname" in
+*[A-Z]*)
+	echo "(Normalizing case in your host name)"
+	myhostname=`echo $myhostname | ./tr '[A-Z]' '[a-z]'`
+	;;
+esac
+
+?X: Do not ask for domain name if this is not used later on. In that
+?X: case, the hostname may keep its domain name, but it doesn't matter.
+@if MYDOMAIN || mydomain
+case "$myhostname" in
+*.*)
+	dflt=`expr "X$myhostname" : "X[^.]*\(\..*\)"`
+	myhostname=`expr "X$myhostname" : "X\([^.]*\)\."`
+	echo "(Trimming domain name from host name--host name is now $myhostname)"
+	;;
+*) case "$mydomain" in
+	'')
+?X:
+?X: There is currently no way to say we do not want hostcat if mydomain is not
+?X: used. One way to achieve that would be to put that code in a mydomain.U
+?X: unit. However, we want to stick the sanity checks right after the domain
+?X: name computation, or if none is done, right after the hostname computation.
+?X:
+		{
+?X: If we use NIS, try ypmatch.
+			test "X$hostcat" = "Xypcat hosts" &&
+			ypmatch "$myhostname" hosts 2>/dev/null |\
+				$sed -e 's/[	 ]*#.*//; s/$/ /' > hosts && \
+			$test -s hosts
+		} || {
+?X: Extract only the relevant hosts, reducing file size,
+?X: remove comments, insert trailing space for later use.
+		     	$hostcat | $sed -n -e "s/[	 ]*#.*//; s/\$/ /
+					/[	 ]$myhostname[	. ]/p" > hosts
+		}
+		tmp_re="[	. ]"
+		$test x`$awk "/[0-9].*[	 ]$myhostname$tmp_re/ { sum++ }
+			     END { print sum }" hosts` = x1 || tmp_re="[	 ]"
+		dflt=.`$awk "/[0-9].*[	 ]$myhostname$tmp_re/ {for(i=2; i<=NF;i++) print \\\$i}" \
+			hosts | $sort | $uniq | \
+			$sed -n -e "s/$myhostname\.\([-a-zA-Z0-9_.]\)/\1/p"`
+		case `$echo X$dflt` in
+		X*\ *)	echo "(Several hosts in /etc/hosts matched hostname)"
+			dflt=.
+			;;
+		X.) echo "(You do not have fully-qualified names in /etc/hosts)"
+			;;
+		esac
+		case "$dflt" in
+		.)
+			tans=`./loc resolv.conf X /etc /usr/etc`
+			if $test -f "$tans"; then
+				echo "(Attempting domain name extraction from $tans)"
+?X: Look for either a search or a domain directive.
+				dflt=.`$sed -n -e 's/	/ /g' \
+				  -e 's/^search  *\([^ ]*\).*/\1/p' $tans \
+				  | ./tr '[A-Z]' '[a-z]' 2>/dev/null`
+				case "$dflt" in
+				.) dflt=.`$sed -n -e 's/	/ /g' \
+				     -e 's/^domain  *\([^ ]*\).*/\1/p' $tans \
+				     | ./tr '[A-Z]' '[a-z]' 2>/dev/null`
+  					;;
+				esac
+			fi
+			;;
+		esac
+		case "$dflt" in
+		.) echo "(No help from resolv.conf either -- attempting clever guess)"
+			dflt=.`sh -c domainname 2>/dev/null`
+			case "$dflt" in
+			'') dflt='.';;
+			.nis.*|.yp.*|.main.*) dflt=`echo $dflt | $sed -e 's/^\.[^.]*//'`;;
+			esac
+			;;
+		esac
+		case "$dflt" in
+		.) echo "(Lost all hope -- silly guess then)"
+			dflt='.uucp'
+			;;
+		esac
+		$rm -f hosts
+		;;
+	*) dflt="$mydomain";;
+	esac;;
+esac
+echo " "
+rp="What is your domain name?"
+. ./myread
+tans="$ans"
+case "$ans" in
+'') ;;
+.*) ;;
+*) tans=".$tans";;
+esac
+mydomain="$tans"
+
+: translate upper to lower if necessary
+case "$mydomain" in
+*[A-Z]*)
+	echo "(Normalizing case in your domain name)"
+	mydomain=`echo $mydomain | ./tr '[A-Z]' '[a-z]'`
+	;;
+esac
+
+@end
+: a little sanity check here
+case "$phostname" in
+'') ;;
+*)
+	case `$phostname | ./tr '[A-Z]' '[a-z]'` in
+	$myhostname$mydomain|$myhostname) ;;
+	*)
+		case "$phostname" in
+		sed*)
+			echo "(That doesn't agree with your whoami.h file, by the way.)"
+			;;
+		*)
+			echo "(That doesn't agree with your $phostname command, by the way.)"
+			;;
+		esac
+	;;
+	esac
+	;;
+esac
+

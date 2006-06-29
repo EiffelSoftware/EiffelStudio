@@ -1,0 +1,290 @@
+?RCS: $Id: d_gethname.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:13:00  ram
+?RCS: patch36: call ./xenix explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:11  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_gethname d_uname d_phostname aphostname: phostname cat \
+	myhostname package d_portable Loc libc echo n c +i_whoami +usrinc \
+	Myread Guess Oldconfig Csym
+?MAKE:	-pick add $@ %<
+?S:d_gethname:
+?S:	This variable conditionally defines the HAS_GETHOSTNAME symbol, which
+?S:	indicates to the C program that the gethostname() routine may be
+?S:	used to derive the host name.
+?S:.
+?S:d_uname:
+?S:	This variable conditionally defines the HAS_UNAME symbol, which
+?S:	indicates to the C program that the uname() routine may be
+?S:	used to derive the host name.
+?S:.
+?S:d_phostname:
+?S:	This variable conditionally defines the PHOSTNAME symbol, which
+?S:	contains the shell command which, when fed to popen(), may be
+?S:	used to derive the host name.
+?S:.
+?S:aphostname:
+?S:	Thie variable contains the command which can be used to compute the
+?S:	host name. The command is fully qualified by its absolute path, to make
+?S:	it safe when used by a process with super-user privileges.
+?S:.
+?C:HAS_GETHOSTNAME (GETHOSTNAME):
+?C:	This symbol, if defined, indicates that the C program may use the
+?C:	gethostname() routine to derive the host name.  See also HAS_UNAME
+?C:	and PHOSTNAME.
+?C:.
+?C:HAS_UNAME (UNAME):
+?C:	This symbol, if defined, indicates that the C program may use the
+?C:	uname() routine to derive the host name.  See also HAS_GETHOSTNAME
+?C:	and PHOSTNAME.
+?C:.
+?C:PHOSTNAME:
+?C:	This symbol, if defined, indicates that the C program may use the
+?C:	contents of PHOSTNAME as a command to feed to the popen() routine
+?C:	to derive the host name.  See also HAS_GETHOSTNAME and HAS_UNAME.
+?C:	Note that the command uses a fully qualified path, so that it is safe
+?C:	even if used by a process with super-user privileges.
+?C:.
+?H:#$d_gethname HAS_GETHOSTNAME	/**/
+?H:#$d_uname HAS_UNAME		/**/
+?H:#$d_phostname PHOSTNAME "$aphostname"	/* How to get the host name */
+?H:.
+?T:file val call
+?LINT:change i_whoami
+: see how we will look up host name
+echo " "
+if false; then
+	: dummy stub to allow use of elif
+@if HAS_GETHOSTNAME
+elif set gethostname val -f d_gethname; eval $csym; $val; then
+	echo 'gethostname() found.' >&4
+	d_gethname="$define"
+	call=gethostname
+@end
+@if HAS_UNAME
+elif set uname val -f d_uname; eval $csym; $val; then
+	if ./xenix; then
+		$cat <<'EOM'
+uname() was found, but you're running xenix, and older versions of xenix
+have a broken uname(). If you don't really know whether your xenix is old
+enough to have a broken system call, use the default answer.
+
+EOM
+		dflt=y
+		case "$d_uname" in
+		"$define") dflt=n;;
+		esac
+		rp='Is your uname() broken?'
+		. ./myread
+		case "$ans" in
+		n*) d_uname="$define"; call=uname;;
+		esac
+	else
+		echo 'uname() found.' >&4
+		d_uname="$define"
+		call=uname
+	fi
+@end
+fi
+case "$d_gethname" in
+'') d_gethname="$undef";;
+esac
+case "$d_uname" in
+'') d_uname="$undef";;
+esac
+@if PHOSTNAME || MYHOSTNAME
+case "$d_uname$d_gethname" in
+*define*)
+	dflt=n
+	cat <<EOM
+ 
+Every now and then someone has a $call() that lies about the hostname
+but can't be fixed for political or economic reasons.  If you wish, I can
+@if MYHOSTNAME && PHOSTNAME
+pretend $call() isn't there and maybe compile in the hostname or
+compute it from the '$phostname' command at run-time.
+@elsif MYHOSTNAME
+pretend $call() isn't there and maybe compile in the hostname.
+@elsif PHOSTNAME
+pretend $call() isn't there and maybe compute hostname at run-time
+thanks to the '$phostname' command.
+@elsif WHOAMI
+get the hostname from whomai.h (provided you have one).
+@else
+simply ignore your host name and use someting like "noname" instead.
+@end
+
+EOM
+	rp="Shall I ignore $call() from now on?"
+	. ./myread
+	case "$ans" in
+	y*) d_uname="$undef" d_gethname="$undef"; $echo $n "Okay...$c";;
+	esac;;
+esac
+@end
+@if PHOSTNAME || aphostname
+?X: Compute the full path name for the command
+case "$phostname" in
+'') aphostname='';;
+*) case "$aphostname" in
+	/*) ;;
+	*) set X $phostname
+		shift
+		file=$1
+		shift
+		file=`./loc $file $file $pth`
+		aphostname=`echo $file $*`
+		;;
+	esac
+	;;
+esac
+@end
+@if PHOSTNAME && MYHOSTNAME
+case "$d_uname$d_gethname" in
+*define*) ;;
+*)
+	case "$phostname" in
+	'') ;;
+	*)
+		$cat <<EOT
+
+There is no gethostname() or uname() on this system.  You have two
+possibilities at this point:
+
+1)  You can have your host name ($myhostname) compiled into $package, which
+    lets $package start up faster, but makes your binaries non-portable, or
+2)  you can have $package use a
+	
+	popen("$aphostname","r")
+
+    which will start slower but be more portable.
+
+@	if WHOAMI
+Option 1 will give you the option of using whoami.h if you have one.
+@	end
+If you want option 2 but with a different command, you can edit config.sh at
+the end of this shell script.
+
+EOT
+		case "$d_phostname" in
+		"$define") dflt=n;;
+		"$undef")  dflt=y;;
+		'')
+			case "$d_portable" in
+			"$define") dflt=n ;;
+			*) dflt=y ;;
+			esac;;
+		esac
+		rp="Do you want your host name compiled in?"
+		. ./myread
+		case "$ans" in
+		n*) d_phostname="$define" ;;
+		*) aphostname=''; d_phostname="$undef";;
+		esac;;
+	esac
+	case "$aphostname" in
+	'')
+@	if WHOAMI
+		case "$i_whoami" in
+		"$define")
+			dflt=y
+			$cat <<EOM
+ 
+No hostname function--you can either use the whoami.h file, which has this line:
+
+	`grep sysname $usrinc/whoami.h`
+
+or you can have the name we came up with earlier ($myhostname) hardwired in.
+EOM
+			rp="Use whoami.h to get hostname?"
+			. ./myread
+			case "$ans" in
+			n*) i_whoami="$undef";;
+			esac
+			;;
+		"$undef")
+			$cat <<EOM
+No hostname function and no whoami.h -- hardwiring "$myhostname".
+EOM
+			;;
+		esac;;
+@	else
+		echo 'No hostname function -- hardwiring "'$myhostname'".' >&4;;
+@	end
+	esac;;
+esac
+@elsif PHOSTNAME
+case "$d_uname$d_gethname" in
+*define*) ;;
+*)
+	case "$phostname" in
+	'')
+@	if WHOAMI
+		case "$i_whoami" in
+		"$define")
+			$cat <<EOM
+
+No hostname function--we'll use the whoami.h file, which has this line:
+
+	`grep sysname $usrinc/whoami.h`
+
+EOM
+			;;
+		*) echo "There will be no way for $package to get your hostname." >&4;;
+		esac;;
+@	else
+		echo "There will be no way for $package to get your hostname." >&4;;
+@	end
+	*)
+	echo "I'll use 'popen("'"'$aphostname'", "r")'"' to get your hostname." >&4
+		;;
+	esac;;
+esac
+@elsif MYHOSTNAME
+case "$d_uname$d_gethname" in
+*define*) ;;
+*)
+@	if WHOAMI
+	case "$i_whoami" in
+	"$define")
+		dflt=y
+		$cat <<EOM
+ 
+No hostname function--you can either use the whoami.h file, which has this line:
+
+	`grep sysname $usrinc/whoami.h`
+
+or you can have the name we came up with earlier ($myhostname) hardwired in.
+EOM
+		rp="Use whoami.h to get hostname?"
+		. ./myread
+		case "$ans" in
+		n*) i_whoami="$undef";;
+		esac
+		;;
+	"$undef")
+		echo 'No whoami.h--hardwiring "'$myhostname'".' >&4;;
+	esac;;
+@	else
+	echo 'Hardwiring "'$myhostname'".' >&4;;
+@	end
+esac
+@end
+case "$d_phostname" in
+'') d_phostname="$undef";;
+esac
+

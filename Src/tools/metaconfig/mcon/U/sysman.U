@@ -1,0 +1,52 @@
+?RCS: $Id: sysman.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/06/20  07:08:43  ram
+?RCS: patch30: now explicitely states that /usr/man/man1 is the default
+?RCS: patch30: added /usr/local/man/man1 to the search list
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:13:50  ram
+?RCS: patch10: added support for /local/man/man1 (WAD)
+?RCS: patch10: added temporary syspath variable to cut down on line length
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:55  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:sysman: test Loc Oldconfig
+?MAKE:	-pick add $@ %<
+?S:sysman:
+?S:	This variable holds the place where the manual is located on this
+?S:	system. It is not the place where the user wants to put his manual
+?S:	pages. Rather it is the place where Configure may look to find manual
+?S:	for unix commands (section 1 of the manual usually). See mansrc.
+?S:.
+?T:syspath
+: determine where manual pages are on this system
+echo " "
+case "$sysman" in
+'') 
+	syspath='/usr/man/man1 /usr/man/mann /usr/man/manl /usr/man/local/man1'
+	syspath="$syspath /usr/man/u_man/man1 /usr/share/man/man1"
+	syspath="$syspath /usr/catman/u_man/man1 /usr/man/l_man/man1"
+	syspath="$syspath /usr/local/man/u_man/man1 /usr/local/man/l_man/man1"
+	syspath="$syspath /usr/man/man.L /local/man/man1 /usr/local/man/man1"
+	sysman=`./loc . /usr/man/man1 $syspath`
+	;;
+esac
+if $test -d "$sysman"; then
+	echo "System manual is in $sysman." >&4
+else
+	echo "Could not find manual pages in source form." >&4
+fi
+

@@ -1,0 +1,96 @@
+?RCS: $Id: d_shmat.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/07/25  14:04:23  ram
+?RCS: patch56: use findhdr to find <sys/shm.h>, to get the right one (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:18:56  ram
+?RCS: patch27: added new symbol HAS_SHMAT_PROTOTYPE (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  14:54:18  ram
+?RCS: patch23: new Shmat_t symbol to declare return type of shmat()
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:18  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_shmat shmattype d_shmatprototype: Inlibc cat +cc +ccflags \
+	rm cppstdin cppflags cppminus Findhdr Setvar contains
+?MAKE:	-pick add $@ %<
+?S:d_shmat:
+?S:	This variable conditionally defines the HAS_SHMAT symbol, which
+?S:	indicates to the C program that the shmat() routine is available.
+?S:.
+?S:shmattype:
+?S:	This symbol contains the type of pointer returned by shmat().
+?S:	It can be 'void *' or 'char *'.
+?S:.
+?S:d_shmatprototype:
+?S:	This variable conditionally defines the HAS_SHMAT_PROTOTYPE 
+?S:	symbol, which indicates that sys/shm.h has a prototype for
+?S:	shmat.
+?S:.
+?C:HAS_SHMAT:
+?C:	This symbol, if defined, indicates that the shmat() routine is
+?C:	available to attach a shared memory segment to the process space.
+?C:.
+?C:Shmat_t:
+?C:	This symbol holds the return type of the shmat() system call.
+?C:	Usually set to 'void *' or 'char *'.
+?C:.
+?C:HAS_SHMAT_PROTOTYPE:
+?C:	This symbol, if defined, indicates that the sys/shm.h includes
+?C:	a prototype for shmat().  Otherwise, it is up to the program to
+?C:	guess one.  Shmat_t shmat _((int, Shmat_t, int)) is a good guess,
+?C:	but not always right so it should be emitted by the program only
+?C:	when HAS_SHMAT_PROTOTYPE is not defined to avoid conflicting defs.
+?C:.
+?H:#$d_shmat HAS_SHMAT		/**/
+?H:#define Shmat_t $shmattype	/**/
+?H:#$d_shmatprototype HAS_SHMAT_PROTOTYPE	/**/
+?H:.
+?LINT:set d_shmat d_shmatprototype
+?T:xxx
+: see if shmat exists
+set shmat d_shmat
+eval $inlibc
+: see what shmat returns
+case "$d_shmat" in
+"$define")
+	$cat >shmat.c <<'END'
+#include <sys/shm.h>
+void *shmat();
+END
+	if $cc $ccflags -c shmat.c >/dev/null 2>&1; then
+		shmattype='void *'
+	else
+		shmattype='char *'
+	fi
+	echo "and it returns ($shmattype)." >&4
+	: see if a prototype for shmat is available
+	xxx=`./findhdr sys/shm.h`
+	$cppstdin $cppflags $cppminus < $xxx > shmat.c 2>/dev/null
+	if $contains 'shmat.*(' shmat.c >/dev/null 2>&1; then
+		val="$define"
+	else
+		val="$undef"
+	fi
+	$rm -f shmat.[co]
+	;;
+*)
+	val="$undef"
+	;;
+esac
+set d_shmatprototype
+eval $setvar
+

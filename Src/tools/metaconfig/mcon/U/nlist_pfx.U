@@ -1,0 +1,138 @@
+?RCS: $Id: nlist_pfx.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:26:18  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:25  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:nlist_pfx nlist_fnd: cat test Myread Oldconfig libnlist \
+	+cc +ccflags
+?MAKE:	-pick add $@ %<
+?S:nlist_pfx:
+?S:	This variable holds any characters which preceed the symbol name
+?S:	when doing an nlist search.
+?S:.
+?S:nlist_fnd:
+?S:	This variable holds the member of the nlist structure which is
+?S:	nonzero if an nlist search succeeds.  Presently, it is always "n_value".
+?S:.
+?C:NLIST_PREFIX:
+?C:	This manifest constant holds the string of characters which should
+?C:	preceed the symbol name when doing an nlist search.
+?C:.
+?C:NLIST_FOUND:
+?C:	This manifest constant holds the member of the nlist structure which
+?C:	is nonzero if an nlist search succeeds.
+?C:.
+?H:#define NLIST_PREFIX $nlist_pfx	/**/
+?H:#define NLIST_FOUND $nlist_fnd	/**/
+?H:.
+?F:!nlisttest
+?T:nlist_loc
+: Nose around for nlist stuff
+echo " "
+echo "Checking out nlist stuff..." >&4
+$cat >nlisttest.c <<'EOCP'
+#include <stdio.h>
+#include <nlist.h>
+
+main(argc, argv)
+int argc;
+char **argv;
+{
+	int (*loc)();
+	extern int hereIam();
+	static struct nlist nl[] = {
+		{ "IamNotFound", 0 },
+		{ "hereIam", 0 },
+		{ "_hereIam", 0 },
+		{ ".hereIam", 0 },
+		{ "", 0 }
+	};
+
+	loc = hereIam;
+
+	if(argc == 1) {
+		printf("%ld\n", loc);}
+	else {
+		int i;
+		int rc;
+
+		if(nlist("./nlisttest", nl) == -1) exit(-1);
+		i = argv[1][0] - '0';
+		printf("%d %d %d\n", nl[i].n_name, nl[i].n_type, nl[i].n_value);
+		}
+	exit(0);}
+
+int hereIam() {
+
+	return;}
+EOCP
+nlist_fnd=n_value
+if $cc $ccflags -o nlisttest nlisttest.c $libnlist >/dev/null 2>&1 ; then
+	set `./nlisttest`
+	nlist_loc=$1
+
+	set `./nlisttest 0`
+	if $test "$3" = "0" ; then
+		echo "$nlist_fnd is 0 if nlist() fails, as I expected."
+	else
+		$cat <<EOM
+Hello, Jim.  We have just discovered that $nlist_fnd was nonzero on an
+nlist() lookup failure!  Your mission, should you choose to accept it, is to
+edit either config.sh (to provide a Good value for nlist_fnd) or The Code
+(to find an alternative to NLIST_FOUND), and reporting the full details of
+your success to the MetaConfig Police.  Of course, should you fail...
+EOM
+		nlist_fnd="/* Bletch! */ */"
+	fi
+
+	set `./nlisttest 1`
+	if $test "$nlist_loc" = "$3" ; then
+		echo "Symbols are stored with no initial characters."
+		nlist_pfx=
+	else
+		set `./nlisttest 2`
+		if $test "$nlist_loc" = "$3" ; then
+			echo "Symbols are stored with an initial underscore."
+			nlist_pfx=_
+		else
+			set `./nlisttest 3`
+			if $test "$nlist_loc" = "$3" ; then
+				echo "Symbols are stored with an initial dot."
+				nlist_pfx=.
+			else
+				$cat <<EOM
+I can't figure out the symbol prefix!
+You get to edit config.sh and fix 'nlist_pfx' (Configure will let you do this
+at the end of its configuration questions), or config.h and fix the value of
+the NLIST_PREFIX symbol.
+EOM
+				nlist_pfx="/* Bletch! */ */"
+			fi
+		fi
+	fi
+else
+	$cat <<EOM
+I can't get the nlist test program working!
+You get to edit config.sh and fix 'nlist_pfx' (Configure will let you do this
+at the end of its configuration questions) and 'nlist_fnd', or config.h and
+fix the value of the NLIST_PREFIX and NLIST_FOUND symbols.
+EOM
+	nlist_pfx="/* Bletch! */ */"
+	nlist_fnd="/* Bletch! */ */"
+fi
+

@@ -1,0 +1,104 @@
+?RCS: $Id: d_NeWS.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:39  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_news d_news0 d_newshome d_textcan: test rm Myread Getfile
+?MAKE:	-pick add $@ %<
+?S:d_news:
+?S:	Set if running NeWS 1.1
+?S:.
+?S:d_news0:
+?S:	Set if running NeWS 1.0
+?S:.
+?S:d_newshome:
+?S:	Path to the top directory of the NeWS structure.
+?S:.
+?S:d_textcan:
+?S:	Path to where the textcan.ps stuff is...
+?S:.
+?C:HAS_NEWS1_1 (NEWS1_1):
+?C:	This symbol defined if running NeWS 1.1.
+?C:.
+?C:HAS_NEWS1_0 (NEWS1_0):
+?C:	This symbol defined if running NeWS 1.0.
+?C:.
+?C:TEXTCAN:
+?C:	Tells path to where the textcan.ps stuff is...
+?C:.
+?H:#$d_news HAS_NEWS1_1     /**/
+?H:#$d_news0 HAS_NEWS1_0     /**/
+?H:#define TEXTCAN $d_textcan /**/
+?H:.
+?INIT:: default path for NeWS
+?INIT:d_newshome="/usr/NeWS"
+?INIT:
+: Check to see what version of NeWS is being run?
+cd ..
+echo " "
+echo "Now for the interesting stuff... Lets see what kind of NeWS"
+echo "they grow round here...."
+echo " "
+dflt='y'
+if $test -d $d_newshome; then
+	d_newshome=`(cd $d_newshome ; /bin/pwd)`
+	echo "Ah...found myself a NeWS in $d_newshome..."
+	dflt='y'
+	rp="Is this the NeWS you want your children to grow up with?"
+	. UU/myread
+fi
+while $test $ans = "n"; do
+dflt=$d_newshome
+fn=d
+rp="Path to NeWS you want:"
+. UU/getfile
+d_newshome=$ans
+
+echo " "
+if $test ! -d $d_newshome/lib; then
+	echo "ARG!  No lib directory in $d_newshome!!!"
+	: heavy medicine.  I wonder what the disease is...
+	$rm -f kit*isdone
+	$rm -rf UU
+	: bye bye
+	set -t; echo "Sorry... no NeWS is bad news..."
+fi
+
+if $test -r $d_newshome/lib/NeWS/colors.ps ; then
+	echo 'Ahh... your running NeWS 1.1!  Boy... that makes stuff easy....'
+	echo " "
+	d_news="$define" 
+	d_news0="$undef"
+	if $test -r $d_newshome/lib/NeWS/textcan.ps; then
+		d_textcan=$d_newshome/lib/NeWS
+		echo "The textcan.ps stuff seems to be in : $d_textcan"
+	else
+		d_textcan=$d_newshome/clientsrc/client/nterm
+		if $test ! -r $d_textcan/textcan.ps; then
+			d_news="$undef"
+			d_news0="$define"
+			echo 'Hmm... must have been fooled... gotta be NeWS 1.1 beta!'
+		else
+			echo "The textcan.ps stuff seems to be in : $d_textcan"
+		fi
+	fi
+else
+	echo 'snif... snif... I smell the dilapidated smell of NeWS 1.0..'
+	echo 'Some things will not work under NeWS 1.0...'
+	d_news="$undef"
+	d_news0="$define"
+fi
+cd UU
+

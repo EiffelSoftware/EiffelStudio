@@ -1,0 +1,80 @@
+?RCS: $Id: d_flexfnam.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:04  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_flexfnam: cat rm test Setvar
+?MAKE:	-pick add $@ %<
+?S:d_flexfnam:
+?S:	This variable conditionally defines the FLEXFILENAMES symbol, which
+?S:	indicates that the system supports filenames longer than 14 characters.
+?S:.
+?C:FLEXFILENAMES:
+?C:	This symbol, if defined, indicates that the system supports filenames
+?C:	longer than 14 characters.
+?C:.
+?H:#$d_flexfnam	FLEXFILENAMES		/**/
+?H:.
+?T:first second
+?LINT:set d_flexfnam
+: see if we can have long filenames
+echo " "
+?X:
+?X: We have to test in both /tmp and . because of NFS (remote server may allow
+?X: long filenames while the local filesystem cannot support them). If at least
+?X: one of those file systems cannot support long filenames, then we assume the
+?X: whole system can't.
+?X:
+rmlist="$rmlist /tmp/cf$$"
+$test -d /tmp/cf$$ || mkdir /tmp/cf$$
+first=123456789abcdef
+second=/tmp/cf$$/$first
+$rm -f $first $second
+if (echo hi >$first) 2>/dev/null; then
+	if $test -f 123456789abcde; then
+		echo 'You cannot have filenames longer than 14 characters.  Sigh.' >&4
+		val="$undef"
+	else
+		if (echo hi >$second) 2>/dev/null; then
+			if $test -f /tmp/cf$$/123456789abcde; then
+				$cat <<'EOM'
+That's peculiar... You can have filenames longer than 14 characters, but only
+on some of the filesystems.  Maybe you are using NFS.  Anyway, to avoid problems
+I shall consider your system cannot support long filenames at all.
+EOM
+				val="$undef"
+			else
+				echo 'You can have filenames longer than 14 characters.' >&4
+				val="$define"
+			fi
+		else
+			$cat <<'EOM'
+How confusing! Some of your filesystems are sane enough to allow filenames
+longer than 14 characters but some others like /tmp can't even think about them.
+So, for now on, I shall assume your kernel does not allow them at all.
+EOM
+			val="$undef"
+		fi
+	fi
+else
+	$cat <<'EOM'
+You can't have filenames longer than 14 chars.  You can't even think about them!
+EOM
+	val="$undef"
+fi 
+set d_flexfnam
+eval $setvar
+$rm -rf /tmp/cf$$ 123456789abcde*
+

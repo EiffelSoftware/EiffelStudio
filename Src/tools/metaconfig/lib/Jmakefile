@@ -1,0 +1,60 @@
+/*
+ * Jmakefile for lib subdirectory.
+ */
+
+;# $Id: Jmakefile 78389 2004-11-30 00:17:17Z manus $
+;#
+;#  Copyright (c) 1991-1993, Raphael Manfredi
+;#  
+;#  You may redistribute only under the terms of the Artistic Licence,
+;#  as specified in the README file that comes with the distribution.
+;#  You may reuse parts of this distribution only within the terms of
+;#  that same Artistic Licence; a copy of which may be found at the root
+;#  of the source tree for dist 3.0.
+;#
+;# $Log$
+;# Revision 1.1  2004/11/30 00:17:18  manus
+;# Initial revision
+;#
+;# Revision 3.0.1.1  1994/01/24  13:43:31  ram
+;# patch16: added new directory for C code sources
+;#
+;# Revision 3.0  1993/08/18  12:04:34  ram
+;# Baseline for dist 3.0 netwide release.
+;#
+
+FILES = errnolist.a errnolist.mk
+FILES_SH = errnolist makedepend makedir
+
+INSTALLFLAGS = -m 444
+
+all::		/* So that default make does not default to install */
+
+>PRIVLIB	/* Grrr.. Have to let jmake know I need this */
+
+MakeDirectories(install,$(PRIVLIB)/lib)
+InstallMultiple($(FILES),$(PRIVLIB)/lib)
+
+/*
+ * InstallSingleExt:
+ *	This rule installs a single file whose basename is 'file' and
+ *	extension is 'old' into 'file^^new'. This allows changing the
+ *	dot extension of a file, for instance file.sh can be installed as
+ *	file.SH.
+ */
+#define InstallSingleExt(step,file,dest,flags,old,new)	@!\
+>INSTALL @!\
+>RM @!\
+step:: file^^old						@@\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	(set -x; $(INSTALL) -c flags file^^old dest/file^^new)	@@\
+									@!\
+de^^step::						@@\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	(set -x; $(RM) dest/file^^new)
+
+#define install_rule \
+	InstallSingleExt(install,!f,$(PRIVLIB)/lib,-m 444,.sh,.SH)
+
+Expand(install_rule,f!$(FILES_SH)!)
+SetSubdirs(C)

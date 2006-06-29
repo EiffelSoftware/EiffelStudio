@@ -1,0 +1,65 @@
+?RCS: $Id: i_string.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1993/10/16  13:50:12  ram
+?RCS: patch12: special units Loc and Guess were missing from dependencies
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:07:26  ram
+?RCS: patch10: removed "(Actually, this looks more like...)" messages (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:28  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: See if we should include <string.h> or <strings.h>
+?X:
+?MAKE:i_string strings: test Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:i_string:
+?S:	This variable conditionally defines the I_STRING symbol, which
+?S:	indicates that <string.h> should be included rather than <strings.h>.
+?S:.
+?S:strings:
+?S:	This variable holds the full path of the string header that will be
+?S:	used. Typically /usr/include/string.h or /usr/include/strings.h.
+?S:.
+?C:I_STRING:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <string.h> (USG systems) instead of <strings.h> (BSD systems).
+?C:.
+?H:#$i_string I_STRING		/**/
+?H:.
+?LINT:set i_string
+: see which of string.h or strings.h is needed
+echo " "
+strings=`./findhdr string.h`
+if $test "$strings" && $test -r "$strings"; then
+	echo "Using <string.h> instead of <strings.h>." >&4
+	val="$define"
+else
+	val="$undef"
+	strings=`./findhdr strings.h`
+	if $test "$strings" && $test -r "$strings"; then
+		echo "Using <strings.h> instead of <string.h>." >&4
+	else
+		echo "No string header found -- You'll surely have problems." >&4
+	fi
+fi
+set i_string
+eval $setvar
+case "$i_string" in
+"$undef") strings=`./findhdr strings.h`;;
+*)	  strings=`./findhdr string.h`;;
+esac
+

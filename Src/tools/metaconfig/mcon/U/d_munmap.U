@@ -1,0 +1,34 @@
+?RCS: $Id: d_munmap.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/12/15  08:19:22  ram
+?RCS: patch15: created
+?RCS:
+?MAKE:d_munmap: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_munmap:
+?S:	This variable conditionally defines HAS_MUNMAP if munmap() is
+?S:	available to unmap a region mapped by mmap().
+?S:.
+?C:HAS_MUNMAP:
+?C:	This symbol, if defined, indicates that the munmap system call is
+?C:	available to unmap a region, usually mapped by mmap().
+?C:.
+?H:#$d_munmap HAS_MUNMAP		/**/
+?H:.
+?LINT:set d_munmap
+: see if munmap exists
+set munmap d_munmap
+eval $inlibc
+

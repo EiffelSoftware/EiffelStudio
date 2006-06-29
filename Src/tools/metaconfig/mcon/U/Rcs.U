@@ -1,0 +1,37 @@
+?RCS: $Id: Rcs.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:15  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: 
+?X: This is a unit that helps people who write SH scripts and keep them under
+?X: RCS, but don't think to protect the $Log and other $Id keywords from
+?X: variable substitution (or people like me who do not like to).
+?X: 
+?MAKE:Author Date Header Id Locker Log RCSfile Revision Source State: Oldconfig 
+?MAKE:	-pick weed $@ %<
+?LINT:describe Author Date Header Id Locker Log RCSfile Revision Source State
+: preserve RCS keywords in files with variable substitution, grrr
+?Author:Author='$Author'
+?Date:Date='$Date'
+?Header:Header='$Header'
+?Id:Id='$Id'
+?$Locker'
+?Log:Log='$Log'
+?RCSfile:RCSfile='$RCSfile'
+?Revision:Revision='$Revision'
+?Source:Source='$Source'
+?State:State='$State'
+

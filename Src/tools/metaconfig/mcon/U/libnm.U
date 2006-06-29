@@ -1,0 +1,48 @@
+?RCS: $Id: libnm.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:08:26  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:01  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:libnm: test Loc libpth _a
+?MAKE:	-pick add $@ %<
+?S:libnm:
+?S:	This variable contains the argument to pass to the loader in order
+?S:	to get the new math library routines.  If there is no new math
+?S:	library, it is null.
+?S:.
+?T:ans
+?O: use libswanted='-lnm' instead (see libs.U).
+: see if we should include -lnm
+echo " "
+if $test -r /usr/lib/libnm$_a || $test -r /usr/local/lib/libnm$_a ; then
+	echo "New math library found." >&4
+	libnm='-lnm'
+else
+	ans=`./loc libnm$_a x $libpth`
+	case "$ans" in
+	x)
+		echo "No nm library found--the normal math library will have to do." >&4
+		libnm=''
+		;;
+	*)
+		echo "New math library found in $ans." >&4
+		libnm="$ans"
+		;;
+	esac
+fi
+

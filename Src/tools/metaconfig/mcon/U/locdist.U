@@ -1,0 +1,177 @@
+?RCS: $Id: locdist.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:09:20  ram
+?RCS: patch23: added support for multi-state regions (WED)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:06  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:locdist orgdist citydist statedist multistatedist cntrydist contdist: \
+	test newslibexp cat Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:locdist:
+?S:	This variable contains the eventual value of the LOCDIST symbol,
+?S:	which is the local organization's distribution name for news.
+?S:.
+?S:orgdist:
+?S:	This variable contains the eventual value of the ORGDIST symbol,
+?S:	which is the organization's distribution name for news.
+?S:.
+?S:citydist:
+?S:	This variable contains the eventual value of the CITYDIST symbol,
+?S:	which is the city's distribution name for news.
+?S:.
+?S:statedist:
+?S:	This variable contains the eventual value of the STATEDIST symbol,
+?S:	which is the state's or province's distribution name for news.
+?S:.
+?S:multistatedist:
+?S:	This variable contains the eventual value of the MULTISTATEDIST symbol,
+?S:	which is the news distribution code for multi-state region.
+?S:.
+?S:cntrydist:
+?S:	This variable contains the eventual value of the CNTRYDIST symbol,
+?S:	which is the country's distribution name for news.
+?S:.
+?S:contdist:
+?S:	This variable contains the eventual value of the CONTDIST symbol,
+?S:	which is the continent's distribution name for news.
+?S:.
+?C:LOCDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the local organization.
+?C:.
+?C:ORGDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the organization.
+?C:.
+?C:CITYDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the city.
+?C:.
+?C:STATEDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the state or province.
+?C:.
+?C:MULTISTATEDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to a multi-state region.
+?C:.
+?C:CNTRYDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the country.
+?C:.
+?C:CONTDIST:
+?C:	This symbol contains the distribution name for the news system that
+?C:	restricts article distribution to the continent.
+?C:.
+?H:#define LOCDIST "$locdist"		/**/
+?H:#define ORGDIST "$orgdist"		/**/
+?H:#define CITYDIST "$citydist"		/**/
+?H:#define MULTISTATEDIST "$multistatedist"	/**/
+?H:#define STATEDIST "$statedist"		/**/
+?H:#define CNTRYDIST "$cntrydist"		/**/
+?H:#define CONTDIST "$contdist"		/**/
+?H:.
+: get the local distributions
+$cat <<'EOH'
+ 
+Distribution groups are the things you use on the Distribution line to limit
+where an article will go to.  You are likely to be a member of several
+distribution groups, such as organization, city, state, province, country,
+continent, etc.  For example, Los Angeles has the distribution code "la",
+New Jersey has the code "nj", and Europe has the code "eunet".
+
+The categories you will be asked are: 
+
+local organization	(Could be just one machine or a cluster or an office)
+organization		att, dec, kgb, ...
+city			la, ny, mosc, ...
+state/province		ca, nj, bc, ...
+multi-state region	pnw, ne, ...
+country			usa, can, rok, whatever
+continent		na (North America), asia, etc.
+
+EOH
+if $test -f $newslibexp/distributions; then
+	case "$silent" in
+	true) ;;
+	*)	dflt='Hit return to continue'
+		rp=''
+		. ./myread
+		;;
+	esac
+	echo "Here is your distributions file:" >&4
+	echo " " >&4
+	$cat >&4 $newslibexp/distributions
+	echo " " >&4
+fi
+echo "Use 'none' for any distributions you don't have."
+echo " "
+case "$locdist" in
+'') dflt="none";;
+*)  dflt="$locdist";;
+esac
+rp="What is the distribution code for your local organization?"
+. ./myread
+locdist="$ans"
+case "$orgdist" in
+'') dflt="none";;
+*)  dflt="$orgdist";;
+esac
+rp="What is the distribution code for your organization?"
+. ./myread
+orgdist="$ans"
+case "$citydist" in
+'') dflt="none";;
+*)  dflt="$citydist";;
+esac
+rp="What is the distribution code for your city?"
+. ./myread
+citydist="$ans"
+case "$statedist" in
+'') dflt="none";;
+*)  dflt="$statedist";;
+esac
+rp="What is the distribution code for your state/province?"
+. ./myread
+statedist="$ans"
+case "$multistatedist" in
+'') dflt="none";;
+*) dflt="$multistatedist";;
+esac
+rp="What is the distribution code for your multi-state region?"
+. ./myread
+multistatedist="$ans"
+case "$cntrydist" in
+'') dflt="none";;
+*)  dflt="$cntrydist";;
+esac
+rp="What is the distribution code for your country?"
+. ./myread
+cntrydist="$ans"
+case "$contdist" in
+'') dflt="none";;
+*)  dflt="$contdist";;
+esac
+rp="What is the distribution code for your continent?"
+. ./myread
+contdist="$ans"
+$cat <<'EOM'
+  
+If you have any other distribution groups you will need to edit Pnews
+and newsetup to add them.
+EOM
+

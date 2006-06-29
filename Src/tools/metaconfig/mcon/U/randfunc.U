@@ -1,0 +1,166 @@
+?RCS: $Id: randfunc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:39  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X:	This is the new unit that should be used when random
+?X:	functions are to be used. It thus makes randbits.U obsolete.
+?X:
+?MAKE:randfunc mrand seedfunc nrandbits: cat +cc rm test Myread Csym
+?MAKE:	-pick add $@ %<
+?S:randfunc:
+?S:	Indicates the name of the random number function to use.
+?S:	Values include drand48, random, and rand. In C programs,
+?S:	the 'nrand' macro is defined to generate uniformly distributed
+?S:	random numbers over the range [0., 1.] (see mrand and nrand).
+?S:.
+?S:mrand:
+?S:	Indicates the macro to be used to generate normalized
+?S:	random numbers.  Uses randfunc, often divided by
+?S:	(double) ((1 << nrandbits) -1) in order to normalize the result.
+?S:	In C programs, the macro 'nrand' is maped on mrand.
+?S:.
+?S:seedfunc:
+?S:	Indicates the random number generating seed function.
+?S:	Values include srand48, srandom, and srand.
+?S:.
+?S:nrandbits:
+?S:	Indicates how many bits are produced by the function used to
+?S:	generate normalized random numbers.
+?S:.
+?C:nrand:
+?C:	This macro is to be used to generate uniformly distributed
+?C:	random numbers over the range [0., 1.].
+?C:.
+?C:seednrand:
+?C:	This symbol defines the macro to be used in seeding the
+?C:	random number generator (see nrand).
+?C:.
+?H:#define nrand()		$mrand		/**/
+?H:#define seednrand(x)	$seedfunc(x)	/**/
+?H:.
+?T:cont val
+: How can we generate normalized random numbers ?
+echo " "
+case "$randfunc" in
+'')
+	if set drand48 val -f; eval $csym; $val; then
+		dflt="drand48"
+		echo "Good, found drand48()." >&4
+	elif set random val -f; eval $csym; $val; then
+		dflt="random"
+		echo "OK, found random()." >&4
+	else
+		dflt="rand"
+		echo "Yick, looks like I have to use rand()." >&4
+	fi
+	echo " "
+	;;
+*)
+	dflt="$randfunc"
+	;;
+esac
+cont=true
+while $test "$cont"; do
+	rp="Use which function to generate random numbers?"
+	. ./myread
+?X: Invalidates nrandbits if the answer is not the default so
+?X:	that the value stored in config.sh will not be used when
+?X:	we change our random function.
+	if $test "$ans" = "$dflt"; then
+		: null
+	else
+		nrandbits=''
+	fi
+	randfunc="$ans"
+	if set $ans val -f; eval $csym; $val; then
+		cont=''
+	else
+		dflt=n
+		rp="Function $ans does not exists. Use that name anyway?"
+		. ./myread
+		dflt=rand
+		case "$ans" in
+			[yY]*) cont='';;
+		esac
+	fi
+	case "$cont" in
+	'')
+		case "$randfunc" in
+		drand48)
+			mrand="drand48()"
+			seedfunc="srand48"
+			;;
+		rand*)
+			case "$nrandbits" in
+			'')
+echo "Checking to see how many bits your $randfunc() function produces..." >&4
+			$cat >try.c <<EOCP
+#include <stdio.h>
+main()
+{
+	register int i;
+	register unsigned long tmp;
+	register unsigned long max = 0L;
+	extern long random();
+
+	for (i = 1000; i; i--) {
+		tmp = (unsigned long)$randfunc();
+		if (tmp > max) max = tmp;
+	}
+	for (i = 0; max; i++)
+		max /= 2;
+	printf("%d\n",i);
+}
+EOCP
+			if $cc try.c -o try >/dev/null 2>&1 ; then
+			dflt=`try`
+			else
+			dflt='?'
+			echo "(I can't seem to compile the test program...)"
+			fi
+			;;
+			*)
+				dflt="$nrandbits"
+				;;
+			esac
+			rp="How many bits does your $randfunc() function produce?"
+			. ./myread
+			nrandbits="$ans"
+			$rm -f try.c try
+			mrand="($randfunc() / (double) ((1 << $nrandbits) -1))"
+			seedfunc="srand"
+			;;
+?X:	The following is provided just in case...
+		*)
+			dflt="31"
+			rp="How many bits does your $randfunc() function produce?"
+			. ./myread
+			nrandbits="$ans"
+			seedfunc="s$randfunc"
+			mrand="($randfunc() / (double) ((1 << $nrandbits) -1))"
+			if set $seedfunc val -f; eval $csym; $val; then
+				echo "(Using $seedfunc() to seed random generator)"
+			else
+				echo "(Warning: no $seedfunc() to seed random generator)"
+				seedfunc=rand
+			fi
+			;;
+		esac
+		;;
+	esac
+done
+

@@ -1,0 +1,95 @@
+?RCS: $Id: d_eofpipe.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:12:40  ram
+?RCS: patch36: call ./bsd explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:57  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_eofpipe: cat +cc +ccflags +libs rm Oldconfig Guess echo n c
+?MAKE:	-pick add $@ %<
+?S:d_eofpipe:
+?S:	This variable conditionally defines the EOFPIPE symbol, which
+?S:	indicates to the C program that select will correctly detect the EOF
+?S:	condition when pipe is closed from the other end.
+?S:.
+?C:EOFPIPE:
+?C:	This symbol, if defined, indicates that EOF condition will be detected
+?C:	by the reader of the pipe when it is closed by the writing process.
+?C:	That is, a select() call on that file descriptor will not block when
+?C:	only an EOF remains (typical behaviour for BSD systems).
+?C:.
+?H:#$d_eofpipe EOFPIPE		/**/
+?H:.
+: see if pipe correctly gives the EOF condition
+echo " "
+case "$d_eofpipe" in
+'')
+	echo "Let's see if your pipes return EOF to select() upon closing..." >&4
+	$cat >pipe.c <<'EOP'
+main()
+{
+	int pd[2];
+	int mask;
+
+	pipe(pd);
+	if (0 == fork()) {
+		close(pd[0]);
+		close(pd[1]);
+		exit(0);
+	}
+
+	close(pd[1]);
+	mask = 1 << pd[0];
+	alarm(2);
+	select(32, &mask, (int *) 0, (int *) 0, (char *) 0);
+	if (0 == read(pd[0], &mask, 1))
+		exit(0);
+	
+	exit(1);
+}
+EOP
+	if $cc $ccflags pipe.c -o pipe $libs >/dev/null 2>&1; then
+?X: Use a script to avoid the possible 'alarm call' message
+		echo "./pipe || exit 1" > mpipe
+		chmod +x mpipe
+		./mpipe >/dev/null 2>&1
+		case $? in
+		0) d_eofpipe="$define";;
+		*) d_eofpipe="$undef";;
+		esac
+	else
+		echo "(The test program did not compile correctly -- Guessing.)"
+		if ./bsd; then
+			d_eofpipe="$define"
+		else
+			d_eofpipe="$undef"
+		fi
+	fi
+	case "$d_eofpipe" in
+	"$define") echo "Yes, they do.";;
+	*) echo "No, they don't! (sigh)";;
+	esac
+	;;
+*)
+	$echo $n "Your pipes $c"
+	case "$d_eofpipe" in
+	"$define") echo "allow select() to see EOF upon closing.";;
+	*) echo "won't let select() see EOF on closing.";;
+	esac
+	;;
+esac
+$rm -f *pipe* core
+

@@ -1,0 +1,61 @@
+?RCS: $Id: d_scorfl.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:01  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_scorfl: cat Myread Oldconfig nametype Setvar
+?MAKE:	-pick add $@ %<
+?S:d_scorfl:
+?S:	This variable conditionally defines the SCOREFULL symbol, which
+?S:	indicates to the C program that any scoreboard kept by the program
+?S:	should be kept on the basis of the user's full name as opposed to
+?S:	the user's login name.
+?S:.
+?C:SCOREFULL:
+?C:	This symbol, if defined, indicates that any scoreboard kept by the
+?C:	program should be kept on the basis of the user's full name as opposed
+?C:	to the user's login name.  If the user can change his full name he
+?C:	can enter multiple scores if this is defined.
+?C:.
+?H:#$d_scorfl SCOREFULL	/**/
+?H:.
+?LINT:set d_scorfl
+: see how they want the scoreboard kept
+case "$d_scorfl" in
+"$define") dflt=y ;;
+*) dflt=n ;;
+esac
+case "$nametype" in
+other) val="$undef" ;;
+*)
+	$cat <<'EOM'
+
+The scoreboard can be kept with one score per login name, or one score per full
+name.  If users can change their full name, or if there is more than one person
+on your system with the same full name, you should keep the score by login name
+(the full name is still printed).
+
+EOM
+	rp='Do you want the scoreboard kept by full name?'
+	. ./myread
+	case "$ans" in
+	y*) val="$define" ;;
+	*) val="$undef" ;;
+	esac
+	;;
+esac
+set d_scorfl
+eval $setvar
+

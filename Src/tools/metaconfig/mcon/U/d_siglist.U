@@ -1,0 +1,42 @@
+?RCS: $Id: d_siglist.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:22  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_siglist: Csym Setvar
+?MAKE:	-pick add $@ %<
+?S:d_siglist:
+?S:	This variable conditionally defines HAS_SYS_SIGLIST if sys_siglist[] is
+?S:	available to translate signal numbers to strings.
+?S:.
+?C:HAS_SYS_SIGLIST (SYS_SIGLIST):
+?C:	This symbol, if defined, indicates that the sys_siglist array is
+?C:	available to translate signal numbers to strings.
+?C:.
+?H:#$d_siglist HAS_SYS_SIGLIST		/**/
+?H:.
+?LINT:set d_siglist
+: see if sys_siglist[] exist
+echo " "
+if set sys_siglist val -a d_siglist; eval $csym; $val; then	
+	echo "You have sys_siglist[] for signal description." >&4
+	val="$define"
+else
+	echo "You don't have sys_siglist[]." >&4
+	val="$undef"
+fi
+set d_siglist
+eval $setvar
+

@@ -1,0 +1,38 @@
+?RCS: $Id: d_memcpy.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:02:58  ram
+?RCS: patch10: removed text recommending bcopy over memcpy (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:34  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_memcpy: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_memcpy:
+?S:	This variable conditionally defines the HAS_MEMCPY symbol, which
+?S:	indicates to the C program that the memcpy() routine is available
+?S:	to copy blocks of memory.
+?S:.
+?C:HAS_MEMCPY (MEMCPY):
+?C:	This symbol, if defined, indicates that the memcpy routine is available
+?C:	to copy blocks of memory.
+?C:.
+?H:#$d_memcpy HAS_MEMCPY	/**/
+?H:.
+?LINT:set d_memcpy
+: see if memcpy exists
+set memcpy d_memcpy
+eval $inlibc
+

@@ -1,0 +1,81 @@
+?RCS: $Id: d_ftime.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:06  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_ftime d_gettimeod: Inlibc Setvar
+?MAKE:	-pick add $@ %<
+?S:d_ftime:
+?S:	This variable conditionally defines the HAS_FTIME symbol, which indicates
+?S:	that the ftime() routine exists.  The ftime() routine is basically
+?S:	a sub-second accuracy clock.
+?S:.
+?S:d_gettimeod:
+?S:	This variable conditionally defines the HAS_GETTIMEOFDAY symbol, which
+?S:	indicates that the gettimeofday() system call exists (to obtain a
+?S: sub-second accuracy clock). You should probably include <sys/resource.h>.
+?S:.
+?C:HAS_FTIME (FTIMER):
+?C:	This symbol, if defined, indicates that the ftime() routine exists.
+?C:	It is basically a sub-second accuracy clock, but is less accurate
+?C:	than gettimeofday(2) anyway. The type "Timeval" should be used to
+?C:	refer to "struct timeb".
+?C:.
+?C:HAS_GETTIMEOFDAY (GETTIMEOFDAY):
+?C:	This symbol, if defined, indicates that the gettimeofday() system
+?C:	call is available for a sub-second accuracy clock. Usually, the file
+?C:	<sys/resource.h> needs to be included (see I_SYS_RESOURCE).
+?C:	The type "Timeval" should be used to refer to "struct timeval".
+?C:.
+?H:#$d_ftime HAS_FTIME		/**/
+?H:#$d_gettimeod HAS_GETTIMEOFDAY	/**/
+?H:?%<:@if HAS_FTIME
+?H:?%<:#ifdef HAS_FTIME
+?H:?%<:#define Timeval struct timeb		/* Structure used by ftime() */
+?H:?%<:#endif
+?H:?%<:@end
+?H:?%<:@if HAS_GETTIMEOFDAY
+?H:?%<:#ifdef HAS_GETTIMEOFDAY
+?H:?%<:#define Timeval struct timeval	/* Structure used by gettimeofday() */
+?H:?%<:#endif
+?H:?%<:@end
+?H:.
+?X:FIXME
+?X:?I:?d_ftime:i_systimeb
+?X:?I:?d_gettimeod:i_sysresrc
+?LINT:set d_gettimeod d_ftime
+?LINT:known Timeval
+: see if gettimeofday or ftime exists
+?X:
+?X:	Give priority to gettimeofday(2) because timing is more accurate
+?X:
+set gettimeofday d_gettimeod
+eval $inlibc
+case "$d_gettimeod" in
+"$undef")
+	set ftime d_ftime 
+	eval $inlibc
+	;;
+*)
+	val="$undef"; set d_ftime; eval $setvar
+	;;
+esac
+case "$d_gettimeod$d_ftime" in
+"$undef$undef")
+	echo " "
+	echo 'No ftime() nor gettimeofday() -- timing may be less accurate.' >&4
+	;;
+esac
+

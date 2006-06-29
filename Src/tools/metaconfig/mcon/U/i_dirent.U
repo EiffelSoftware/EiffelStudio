@@ -1,0 +1,149 @@
+?RCS: $Id: i_dirent.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1994/10/29  16:20:01  ram
+?RCS: patch36: failed scanning for 'd_namlen' with missing <dirent.h> (ADO)
+?RCS:
+?RCS: Revision 3.0.1.3  1994/06/20  07:01:25  ram
+?RCS: patch30: added direntrytype for hints, merely for NeXT (ADO)
+?RCS: patch30: now checks for both struct dirent and direct (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:22:37  ram
+?RCS: patch27: new variable direntrytype for proper type setting (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:11:15  ram
+?RCS: patch16: added new Direntry_t pseudo-type for directory entries
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:17  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit looks whether there is a dirent system or not
+?X:
+?MAKE:i_dirent d_dirnamlen direntrytype: test contains Setvar \
+	Myread Findhdr cppstdin cppflags cppminus rm
+?MAKE:	-pick add $@ %<
+?S:i_dirent:
+?S:	This variable conditionally defines I_DIRENT, which indicates
+?S:	to the C program that it should include <dirent.h>.
+?S:.
+?S:d_dirnamlen:
+?S:	This variable conditionally defines DIRNAMLEN, which indicates
+?S:	to the C program that the length of directory entry names is
+?S:	provided by a d_namelen field.
+?S:.
+?S:direntrytype:
+?S:	This symbol is set to 'struct direct' or 'struct dirent' depending on
+?S:	whether dirent is available or not. You should use this pseudo type to
+?S:	portably declare your directory entries.
+?S:.
+?C:I_DIRENT:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <dirent.h>. Using this symbol also triggers the definition
+?C:	of the Direntry_t define which ends up being 'struct dirent' or
+?C:	'struct direct' depending on the availability of <dirent.h>.
+?C:.
+?C:DIRNAMLEN:
+?C:	This symbol, if defined, indicates to the C program that the length
+?C:	of directory entry names is provided by a d_namlen field.  Otherwise
+?C:	you need to do strlen() on the d_name field.
+?C:.
+?C:Direntry_t:
+?C:	This symbol is set to 'struct direct' or 'struct dirent' depending on
+?C:	whether dirent is available or not. You should use this pseudo type to
+?C:	portably declare your directory entries.
+?C:.
+?H:#$i_dirent I_DIRENT		/**/
+?H:#$d_dirnamlen DIRNAMLEN	/**/
+?H:?%<:@if I_DIRENT && Direntry_t
+?H:?%<:#define Direntry_t $direntrytype
+?H:?%<:@end
+?H:.
+?T:xinc guess1 guess2
+?LINT:set i_dirent d_dirnamlen direntrytype
+: see if this is a dirent system
+echo " "
+if xinc=`./findhdr dirent.h`; $test "$xinc"; then
+	val="$define"
+	echo "<dirent.h> found." >&4
+else
+	val="$undef"
+	if xinc=`./findhdr sys/dir.h`; $test "$xinc"; then
+		echo "<sys/dir.h> found." >&4
+		echo " "
+	else
+		xinc=`./findhdr sys/ndir.h`
+	fi
+	echo "<dirent.h> NOT found." >&4
+fi
+set i_dirent
+eval $setvar
+
+?X: Use struct dirent or struct direct?   If we're using dirent.h, 
+?X: it's probably struct dirent, but apparently not always.
+?X: Assume $xinc still contains the name of the header file we're using.
+@if direntrytype || Direntry_t
+: Look for type of directory structure.
+echo " "
+$cppstdin $cppflags $cppminus < "$xinc" > try.c
+
+case "$direntrytype" in
+''|' ')
+	case "$i_dirent" in
+	$define) guess1='struct dirent' ;;
+	*) guess1='struct direct'  ;;
+	esac
+	;;
+*)	guess1="$direntrytype"
+	;;
+esac
+
+case "$guess1" in
+'struct dirent') guess2='struct direct' ;;
+*) guess2='struct dirent' ;;
+esac
+		
+if $contains "$guess1" try.c >/dev/null 2>&1; then
+	direntrytype="$guess1"
+	echo "Your directory entries are $direntrytype." >&4
+elif $contains "$guess2" try.c >/dev/null 2>&1; then
+	direntrytype="$guess2"
+	echo "Your directory entries seem to be $direntrytype." >&4
+else
+	echo "I don't recognize your system's directory entries." >&4
+	rp="What type is used for directory entries on this system?"
+	dflt="$guess1"
+	. ./myread
+	direntrytype="$ans"
+fi
+$rm -f try.c
+
+@end
+
+@if d_dirnamlen || DIRNAMLEN
+: see if the directory entry stores field length
+echo " "
+$cppstdin $cppflags $cppminus < "$xinc" > try.c
+if $contains 'd_namlen' try.c >/dev/null 2>&1; then
+	echo "Good, your directory entry keeps length information in d_namlen." >&4
+	val="$define"
+else
+	echo "Your directory entry does not know about the d_namlen field." >&4
+	val="$undef"
+fi
+set d_dirnamlen
+eval $setvar
+$rm -f try.c
+
+@end

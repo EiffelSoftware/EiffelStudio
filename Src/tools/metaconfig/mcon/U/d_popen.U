@@ -1,0 +1,34 @@
+?RCS: $Id: d_popen.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:47  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_popen: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_popen:
+?S:	This variable conditionally defines HAS_POPEN if popen() is
+?S:	available to open a pipe from a process.
+?S:.
+?C:HAS_POPEN (POPEN):
+?C:	This symbol, if defined, indicates that the popen routine is
+?C:	available to open a pipe from a process.
+?C:.
+?H:#$d_popen HAS_POPEN		/**/
+?H:.
+?LINT:set d_popen
+: see if popen exists
+set popen d_popen
+eval $inlibc
+

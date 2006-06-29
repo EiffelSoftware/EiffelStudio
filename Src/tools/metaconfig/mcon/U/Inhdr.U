@@ -1,0 +1,81 @@
+?RCS: $Id: Inhdr.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/05/12  12:01:31  ram
+?RCS: patch54: deleted tabs that caused some /bin/sh to core dump (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  15:55:01  ram
+?RCS: patch36: call ./whoa explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:01  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit checks wether a set of header files exists or not.
+?X:	If the first header is not found, the function tries to locate
+?X: the next header, and so on, until one is found or there is no
+?X: more header in the list.
+?X:
+?X: To use it, say:
+?X: set header i_header [ header2 i_header2 ... ]
+?X: eval $inhdr
+?X:
+?MAKE:Inhdr: test Findhdr Whoa
+?MAKE:	-pick add $@ %<
+?LINT:define inhdr
+?LINT:use ccflags
+?V:inhdr
+?S:inhdr:
+?S:	This shell variable is used internally by Configure to check
+?S:	wether a set of headers exist or not. A typical use is:
+?S:		set header i_header [ header2 i_header2 ... ]
+?S:		eval $inhdr
+?S:	That will print a message, saying wether header was found or
+?S:	not and set i_header* accordingly. If the first header is not
+?S: found, we try the next one, until the list is empty or one is found.
+?S:.
+?T:xxx xxf var td xxnf tu yyy instead was cont
+: define an alternate in-header-list? function
+inhdr='echo " "; td=$define; tu=$undef; yyy=$@;
+cont=true; xxf="echo \"<\$1> found.\" >&4";
+case $# in 2) xxnf="echo \"<\$1> NOT found.\" >&4";;
+*) xxnf="echo \"<\$1> NOT found, ...\" >&4";;
+esac;
+case $# in 4) instead=instead;; *) instead="at last";; esac;
+while $test "$cont"; do
+	xxx=`./findhdr $1`
+	var=$2; eval "was=\$$2";
+	if $test "$xxx" && $test -r "$xxx";
+	then eval $xxf;
+?X: Next line shifted left 1 tabstop to avoid sh core dump on MachTen 2.1.1.
+	eval "case \"\$$var\" in $undef) . ./whoa; esac"; eval "$var=\$td";
+		cont="";
+	else eval $xxnf;
+?X: Likewise, the next line has been shifted left 1 tabstop -- ADO, 08/03/95
+	eval "case \"\$$var\" in $define) . ./whoa; esac"; eval "$var=\$tu"; fi;
+	set $yyy; shift; shift; yyy=$@;
+	case $# in 0) cont="";;
+	2) xxf="echo \"but I found <\$1> $instead.\" >&4";
+		xxnf="echo \"and I did not find <\$1> either.\" >&4";;
+	*) xxf="echo \"but I found <\$1\> instead.\" >&4";
+		xxnf="echo \"there is no <\$1>, ...\" >&4";;
+	esac;
+done;
+?X: Remaining values are set to 'undef'
+while $test "$yyy";
+do set $yyy; var=$2; eval "was=\$$2";
+	eval "case \"\$$var\" in $define) . ./whoa; esac"; eval "$var=\$tu";
+	set $yyy; shift; shift; yyy=$@;
+done'
+

@@ -1,0 +1,34 @@
+?RCS: $Id: d_fsetpos.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  06:57:38  ram
+?RCS: patch30: created
+?RCS:
+?MAKE:d_fsetpos: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_fsetpos:
+?S:	This variable conditionally defines HAS_FSETPOS if fsetpos() is
+?S:	available to set the file position indicator.
+?S:.
+?C:HAS_FSETPOS:
+?C:	This symbol, if defined, indicates that the fsetpos routine is
+?C:	available to set the file position indicator, similar to fseek().
+?C:.
+?H:#$d_fsetpos HAS_FSETPOS	/**/
+?H:.
+?LINT:set d_fsetpos
+: see if fsetpos exists
+set fsetpos d_fsetpos
+eval $inlibc
+

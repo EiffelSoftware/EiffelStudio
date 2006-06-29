@@ -1,0 +1,109 @@
+?RCS: $Id: Findhdr.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Thomas Neumann <tom@smart.bo.open.de>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  15:53:08  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  14:03:56  ram
+?RCS: patch23: cppminus must be after other cppflags, not before
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:04:54  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit produces a findhdr script which is used to locate the header
+?X: files in $usrinc or other stranger places using cpp capabilities. The
+?X: script is given an include file base name, like 'stdio.h' or 'sys/file.h'
+?X: and it returns the full path of the include file and a zero status or an
+?X: empty string with an error status if the file could not be located.
+?X:
+?MAKE:Findhdr: grep test tr rm +usrinc awk cat startsh \
+	cppstdin cppminus +cppflags
+?MAKE:	-pick add $@ %<
+?LINT:define fieldn
+?S:fieldn:
+?S:	This variable is used internally by Configure. It contains the position
+?S:	of the included file name in cpp output. That is to say, when cpp
+?S:	pre-processes a #include <file> line, it replaces it by a # line which
+?S:	contains the original position in the input file and the full name of
+?S:	included file, between "quotes".
+?S:.
+?V:fieldn
+?F:./findhdr !fieldn
+?T:cline pos wanted name awkprg
+: determine filename position in cpp output
+echo " "
+echo "Computing filename position in cpp output for #include directives..." >&4
+echo '#include <stdio.h>' > foo.c
+$cat >fieldn <<EOF
+$startsh
+$cppstdin $cppflags $cppminus <foo.c 2>/dev/null | \
+$grep '^[ 	]*#.*stdio\.h' | \
+while read cline; do
+	pos=1
+	set \$cline
+	while $test \$# -gt 0; do
+		if $test -r \`echo \$1 | $tr -d '"'\`; then
+			echo "\$pos"
+			exit 0
+		fi
+		shift
+		pos=\`expr \$pos + 1\`
+	done
+done
+EOF
+chmod +x fieldn
+fieldn=`./fieldn`
+$rm -f foo.c fieldn
+case $fieldn in
+'') pos='???';;
+1) pos=first;;
+2) pos=second;;
+3) pos=third;;
+*) pos="${fieldn}th";;
+esac
+echo "Your cpp writes the filename in the $pos field of the line."
+
+?X: To locate a header file, we cannot simply check for $usrinc/file.h, since
+?X: some machine have the headers in weird places and our only hope is that
+?X: the C pre-processor will know how to find those headers. Thank you NexT!
+: locate header file
+$cat >findhdr <<EOF
+$startsh
+wanted=\$1
+name=''
+if test -f $usrinc/\$wanted; then
+	echo "$usrinc/\$wanted"
+	exit 0
+fi
+awkprg='{ print \$$fieldn }'
+echo "#include <\$wanted>" > foo\$\$.c
+$cppstdin $cppminus $cppflags < foo\$\$.c 2>/dev/null | \
+$grep "^[ 	]*#.*\$wanted" | \
+while read cline; do
+	name=\`echo \$cline | $awk "\$awkprg" | $tr -d '"'\`
+	case "\$name" in
+	*/\$wanted) echo "\$name"; exit 0;;
+	*) name='';;
+	esac;
+done;
+$rm -f foo\$\$.c;
+case "\$name" in
+'') exit 1;;
+esac
+EOF
+chmod +x findhdr
+

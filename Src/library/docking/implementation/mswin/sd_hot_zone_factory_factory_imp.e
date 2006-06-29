@@ -44,7 +44,9 @@ feature -- Implementation
 		alias
 			"[
 			{
-				*(EIF_BOOLEAN *) $a_result = GetSystemMetrics(SM_REMOTESESSION);
+				// This is not defined in VC6
+				// define SM_REMOTESESSION  0x1000
+				*(EIF_BOOLEAN *) $a_result = GetSystemMetrics(0x1000);
 			}
 			]"
 		end

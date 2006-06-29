@@ -138,7 +138,7 @@ feature -- Element change
 			filepixbuf: POINTER
 		do
 			a_cs := file_name
-			filepixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 				-- We could not load the image so raise an exception
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
@@ -174,7 +174,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
 			a_gdkpixbuf := scaled_pixbuf
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			{EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
 		end
@@ -306,7 +306,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 		local
 			a_gdkpix, a_gdkmask: POINTER
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 255)
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 		end
 

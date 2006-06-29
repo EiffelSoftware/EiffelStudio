@@ -1,5 +1,12 @@
 #!/bin/sh
- 
+
+if [ $# -eq 0 ]; then 
+	echo Usage: make_images platform
+	exit 1
+fi
+
+export ISE_PLATFORM=$1
+
 # Set up the environment
 . set_aliases
 OLD_PATH=$PATH

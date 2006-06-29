@@ -54,6 +54,7 @@ feature -- Settings
 	s_check_generic_creation_constraint: STRING is "check_generic_creation_constraint"
 	s_check_vape: STRING is "check_vape"
 	s_console_application: STRING is "console_application"
+	s_force_32bits: STRING is "force_32bits"
 	s_cls_compliant: STRING is "cls_compliant"
 	s_dead_code_removal: STRING is "dead_code_removal"
 	s_dotnet_naming_convention: STRING is "dotnet_naming_convention"

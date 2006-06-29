@@ -1,33 +1,33 @@
 #!/bin/sh
 
 #Let's compile for PPC on lisbon in background
-(sh ./make_for_platform_secure lisbon.ise manus linux-ppc) &
+(sh ./make_for_platform lisbon.ise manus linux-ppc) &
 
 #Let's compile for Solaris on mosis in background
 (
 rsh mosis "\rm -f ~/local/gtkinstall" ;
 rsh mosis "\ln -s ~/local/gtk24install ~/local/gtkinstall" ;
-sh ./make_for_platform_secure mosis.ise manus solaris-sparc;
+sh ./make_for_platform mosis.ise manus solaris-sparc;
 
 rsh mosis "\rm -f ~/local/gtkinstall" ;
 rsh mosis "\ln -s ~/local/gtk269-64/gtkinstall ~/local/gtkinstall" ;
-sh ./make_for_platform_secure mosis.ise manus solaris-sparc-64
+sh ./make_for_platform mosis.ise manus solaris-sparc-64
 ) &
 
 #Let's compile for Solaris x86 in background
-(sh ./make_for_platform_secure rio.ise manus solaris-x86) &
+(sh ./make_for_platform rio.ise manus solaris-x86) &
 
 #Let's compile for Red Hat Fedora and FreeBSD (done together because they are on the same machine and we don't want to overload the machine
-(sh ./make_for_platform_secure mojo.ise manus linux-x86 ; sh ./make_for_platform_secure freebsd.ise manus freebsd-x86) &
+(sh ./make_for_platform mojo.ise manus linux-x86 ; sh ./make_for_platform freebsd.ise manus freebsd-x86) &
 
 #Let's compile for SGI in background
-(sh ./make_for_platform_secure iris.ise manus irix-mips ; sh ./make_for_platform_secure iris.ise manus irix-mips-64) &
+(sh ./make_for_platform iris.ise manus irix-mips ; sh ./make_for_platform iris.ise manus irix-mips-64) &
 
 #Let's compile for Linux 64 bits in background
-(sh ./make_for_platform_secure tokyo.ise manus linux-x86-64) &
+(sh ./make_for_platform tokyo.ise manus linux-x86-64) &
 
 #Let's compile for OpenBSD in background
-(sh ./make_for_platform_secure sushi.inf.ethz.ch manus openbsd-x86) &
+(sh ./make_for_platform sushi.inf.ethz.ch manus openbsd-x86) &
 
 #Let's compile for Linux Sparc in background
-(sh ./make_for_platform_secure calypso.frankengul.org manu linux-sparc) &
+(sh ./make_for_platform calypso.frankengul.org manu linux-sparc) &

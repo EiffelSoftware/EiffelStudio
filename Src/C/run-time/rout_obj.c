@@ -47,6 +47,7 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 #include "rt_lmalloc.h"
 #include "rt_garcol.h"
 #include "rt_gen_types.h"
+#include "rt_interp.h"
 #ifdef WORKBENCH
 #include <string.h>
 #endif

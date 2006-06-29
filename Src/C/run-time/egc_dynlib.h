@@ -47,11 +47,16 @@ extern "C" {
 /* Initialization and destruction of runtime. */
 #define DYNAMIC_LIB_RT_INITIALIZE(x)\
 	{ \
-		RTLD; \
-		RTLI(x); \
+		RTGC; \
+		EIF_ENTER_EIFFEL; \
+		{ \
+			RTLD; \
+			RTLI(x); \
 		
 #define DYNAMIC_LIB_RT_END \
-		RTLE; \
+			RTLE; \
+		} \
+		EIF_EXIT_EIFFEL; \
 	}
 			
 #ifdef __cplusplus

@@ -1637,6 +1637,14 @@ feature {NONE} -- Implementation
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
 			properties.add_property (l_bool_prop)
 
+			if l_cluster /= Void then
+					-- recursive
+				create l_bool_prop.make_with_value (cluster_recursive_name, l_cluster.is_recursive)
+				l_bool_prop.set_description (cluster_recursive_description)
+				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
+				properties.add_property (l_bool_prop)
+			end
+
 				-- location
 			if a_group.is_cluster then
 				create l_dir_prop.make (group_location_name)
@@ -1728,12 +1736,6 @@ feature {NONE} -- Implementation
 			end
 
 			if l_cluster /= Void then
-					-- recursive
-				create l_bool_prop.make_with_value (cluster_recursive_name, l_cluster.is_recursive)
-				l_bool_prop.set_description (cluster_recursive_description)
-				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
-				properties.add_property (l_bool_prop)
-
 					-- file rules
 				create l_file_rule_prop.make (cluster_file_rule_name)
 				l_file_rule_prop.set_description (cluster_file_rule_description)

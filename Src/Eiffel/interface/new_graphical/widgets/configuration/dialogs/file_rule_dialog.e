@@ -26,6 +26,12 @@ inherit
 			default_button_width
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -47,13 +53,15 @@ feature {NONE} -- Initialization
 
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (dialog_file_rule_add_rule, agent on_add)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (default_button_width)
+			l_btn.set_minimum_width (default_button_width+25)
 			create remove_button.make_with_text_and_action (dialog_file_rule_remove_rule, agent on_remove)
+			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			remove_button.set_minimum_width (default_button_width)
+			remove_button.set_minimum_width (default_button_width+25)
 			cancel_button.set_minimum_width (default_button_width)
 			ok_button.set_minimum_width (default_button_width)
 

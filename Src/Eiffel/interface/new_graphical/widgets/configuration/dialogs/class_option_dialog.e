@@ -32,6 +32,12 @@ inherit
 			copy
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -51,7 +57,7 @@ feature {NONE} -- Initialization
 			create vb
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
-			vb.set_minimum_width (200)
+			vb.set_minimum_width (220)
 			vb.set_padding (default_padding_size)
 			vb.set_border_width (default_border_size)
 
@@ -68,17 +74,20 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (new_class)
 
 			create hb2
+			hb2.set_padding (default_padding_size)
 			vb.extend (hb2)
 			vb.disable_item_expand (hb2)
 
 			hb2.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (plus_button_text, agent add_class)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_add, agent add_class)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
-			create l_btn.make_with_text_and_action (minus_button_text, agent remove_class)
-			l_btn.set_minimum_width (small_button_width)
+			create l_btn.make_with_text_and_action (general_remove, agent remove_class)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_minimum_width (default_button_width+10)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 

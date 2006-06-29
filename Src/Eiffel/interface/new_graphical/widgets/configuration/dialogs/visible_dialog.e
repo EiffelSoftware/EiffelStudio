@@ -18,6 +18,18 @@ inherit
 			copy
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -28,6 +40,7 @@ feature {NONE} -- Initialization
 			l_btn: EV_BUTTON
 		do
 			Precursor {PROPERTY_DIALOG}
+			element_container.set_padding (default_padding_size)
 
 			create tree
 			element_container.extend (tree)
@@ -64,20 +77,27 @@ feature {NONE} -- Initialization
 			renamed_name.set_minimum_width (250)
 
 			create hb
+			hb.set_padding (default_padding_size)
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 
 			hb.extend (create {EV_CELL})
 
 			create l_btn.make_with_text_and_action (dialog_visible_add_class, agent add_class)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (dialog_visible_add_feature, agent add_feature)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (dialog_visible_remove, agent remove)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 

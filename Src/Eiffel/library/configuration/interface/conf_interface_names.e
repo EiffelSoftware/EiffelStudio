@@ -353,9 +353,9 @@ feature {NONE} -- Visible dialog
 
 	dialog_visible_name: STRING is "Name: "
 	dialog_visible_renamed_name: STRING is "Renamed name: "
-	dialog_visible_add_class: STRING is "+ Class"
-	dialog_visible_add_feature: STRING is "+ Feature"
-	dialog_visible_remove: STRING is "-"
+	dialog_visible_add_class: STRING is "Add class"
+	dialog_visible_add_feature: STRING is "Add feature"
+	dialog_visible_remove: STRING is "Remove"
 
 feature {NONE} -- Renaming dialog
 

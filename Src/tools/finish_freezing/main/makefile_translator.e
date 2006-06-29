@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (mapped_path: BOOLEAN) is
+	make (mapped_path: BOOLEAN; a_force_32bit: BOOLEAN) is
 		local
 			error: BOOLEAN
 			error_msg: STRING
@@ -69,7 +69,7 @@ feature -- Initialization
 				smart_checking := options.get_boolean ("smart_checking", True)
 				if compiler.is_equal ("msc") and smart_checking then
 						-- Visual Studio C compiler.
-					create vs_setup.make
+					create vs_setup.make (a_force_32bit)
 				elseif compiler.is_equal ("bcb") then
 						-- Borland C compiler.
 					create borland_setup.make

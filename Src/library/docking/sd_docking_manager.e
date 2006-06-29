@@ -125,6 +125,14 @@ feature -- Query
 	open_actions: ACTION_SEQUENCE [ TUPLE [ANY]]
 			-- Open actions when open a config.
 
+	is_title_unique (a_title: STRING): BOOLEAN is
+			-- If `a_title' unique in all contents `unique_title's ?
+		require
+			a_title: a_title /= Void
+		do
+			Result := query.is_title_unique (a_title)
+		end
+
 feature -- Command
 
 	save_config (a_file: STRING) is

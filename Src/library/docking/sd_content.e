@@ -123,10 +123,10 @@ feature -- Access
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
+			Result := True
 			if docking_manager /= Void then
 				l_contents := docking_manager.contents
 				from
-					Result := True
 					l_contents.start
 				until
 					l_contents.after or not Result

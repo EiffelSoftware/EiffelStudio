@@ -11,26 +11,34 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
+			make as make_structure,
 			structure_size as count
-		redefine
-			make
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Allocate `item'.
+	make (a_32bits: BOOLEAN) is
+			-- Allocate item
+		local
+			l_flags: INTEGER
 		do
-			Precursor {WEL_STRUCTURE}
+			make_structure
 			c_set_cb (item, structure_size)
 			c_set_major_runtime_version (item, 2)
 			c_set_minor_runtime_version (item, 5)
-			c_set_flags (item, il_only)
+
+			l_flags := il_only
+			if a_32bits then
+				l_flags := l_flags | il_32bits
+			end
+			c_set_flags (item, l_flags)
+		ensure
+			not_shared: not shared
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -38,7 +46,7 @@ feature -- Measurement
 		do
 			Result := structure_size
 		end
-		
+
 	structure_size: INTEGER is
 			-- Size of `CLI_IMAGE_COR20_HEADER'.
 		external
@@ -64,7 +72,7 @@ feature -- Access
 		ensure
 			resources_directory_not_void: Result /= Void
 		end
-		
+
 	strong_name_directory: CLI_DIRECTORY is
 			-- Directory for strong name signature.
 		do
@@ -72,24 +80,25 @@ feature -- Access
 		ensure
 			strong_name_directory_not_void: Result /= Void
 		end
-		
+
 	flags: INTEGER is
 			-- Specified flags of header
 		do
 			Result := c_flags (item)
 		end
-		
+
 feature -- Settings
 
-	set_flags (i: INTEGER) is
+	add_flags (i: INTEGER) is
 			-- Set `flags' to `i'.
 		require
 			flags_valid: (i & il_only = il_only) or
-				(i & strong_name_signed = strong_name_signed)
+				(i & strong_name_signed = strong_name_signed) or
+				(i & il_32bits = il_32bits)
 		do
-			c_set_flags (item, i)
+			c_set_flags (item, flags | i)
 		ensure
-			flags_set: flags = i
+			flags_added: (flags & i) = i
 		end
 
 	set_entry_point_token (token: INTEGER) is
@@ -99,12 +108,15 @@ feature -- Settings
 		do
 			c_set_entry_point_token (item, token)
 		end
-		
+
 feature -- Constants
 
 	il_only: INTEGER is 0x00000001
 			-- Should always be set.
-			
+
+	il_32bits: INTEGER is 0x00000002
+			-- Should be set for 32bit generated assemblies
+
 	strong_name_signed: INTEGER is 0x00000008
 			-- Image has strong name signature.
 

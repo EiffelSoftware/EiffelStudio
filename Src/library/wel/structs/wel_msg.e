@@ -115,6 +115,13 @@ feature -- Basic operations
 				default_pointer, 0, 0)
 		end
 
+	peek_paint_messages is
+			-- Peel all paint messages.
+		do
+			last_boolean_result := cwin_peek_message (item,
+				default_pointer, 0, 0, Pm_qs_paint | Pm_remove)
+		end
+
 	peek_all is
 			-- Peek all messages.
 		do

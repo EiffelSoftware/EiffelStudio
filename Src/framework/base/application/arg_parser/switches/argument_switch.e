@@ -9,7 +9,8 @@ class
 	ARGUMENT_SWITCH
 
 create
-	make
+	make,
+	make_hidden
 
 feature {NONE} -- Initialization
 
@@ -31,6 +32,25 @@ feature {NONE} -- Initialization
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
+			not_hidden: not hidden
+		end
+
+	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+			-- Initialize a new basic option.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
+		do
+			make (a_name, a_desc, a_optional, a_allow_mutliple)
+			hidden := True
+		ensure
+			name_set: name = a_name
+			description_set: description = a_desc
+			optional: optional = a_optional
+			allow_multiple_set: allow_multiple = a_allow_mutliple
+			hidden: hidden
 		end
 
 feature -- Access
@@ -43,6 +63,9 @@ feature -- Access
 
 	lower_case_name: STRING
 			-- Option name in lower-case
+
+	hidden: BOOLEAN
+			-- Indicate if switch should be hidden
 
 feature -- Status Report
 

@@ -11,11 +11,13 @@ class
 inherit
 	ARGUMENT_SWITCH
 		rename
-			make as make_base
+			make as make_base,
+			make_hidden as make_hidden_base
 		end
 
 create
-	make
+	make,
+	make_hidden
 
 feature {NONE} -- Initialization
 
@@ -39,6 +41,28 @@ feature {NONE} -- Initialization
 			arg_description_set: arg_description = a_arg_desc
 			is_value_optional_set: is_value_optional = a_val_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
+			not_hidden: not hidden
+		end
+
+	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional) is
+			-- Initialize a new value option.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
+		do
+			make (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
+			hidden := True
+		ensure
+			name_set: name = a_name
+			description_set: description = a_desc
+			optional: optional = a_optional
+			arg_name_set: arg_name = a_arg_name
+			arg_description_set: arg_description = a_arg_desc
+			is_value_optional_set: is_value_optional = a_val_optional
+			allow_multiple_set: allow_multiple = a_allow_mutliple
+			hidden: hidden
 		end
 
 feature -- Access

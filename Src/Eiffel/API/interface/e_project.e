@@ -593,8 +593,6 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
-			print (l_cmd)
-			print ("%N")
 			invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
 

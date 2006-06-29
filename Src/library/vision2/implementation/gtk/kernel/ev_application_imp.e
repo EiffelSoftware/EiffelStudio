@@ -213,6 +213,12 @@ feature -- Basic operation
 			event_loop_iteration (False)
 		end
 
+	process_graphical_events is
+			-- Process all pending graphical events and redraws.
+		do
+			{EV_GTK_EXTERNALS}.gdk_window_process_all_updates
+		end
+
 	stop_processing is
 			-- Exit `process_events_until_stopped'.
 		do

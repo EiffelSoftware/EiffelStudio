@@ -11,6 +11,10 @@ class
 
 inherit
 	EV_TIMEOUT_I
+		export
+			{EV_INTERNAL_TIMEOUT_IMP}
+				is_destroyed
+		end
 
 	IDENTIFIED
 		rename

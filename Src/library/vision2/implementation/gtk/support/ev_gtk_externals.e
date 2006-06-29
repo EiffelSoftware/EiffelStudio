@@ -9,6 +9,17 @@ inherit
 
 feature -- MACROS
 
+	frozen gdk_window_process_all_updates is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gdk_window_process_all_updates();
+				#endif
+			]"
+		end
+
 	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN) is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -810,46 +810,58 @@ rt_public void eif_thr_exit(void)
 		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
 #endif
 		int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
+		int l_has_parent_thread = (eif_thr_context != NULL);
 
 			/* We need to keep a reference to the children mutex, 
 			 * the children condition variable and parent's thread number
 			 * of children after freeing ressources */
 #ifndef EIF_NO_CONDVAR
-		EIF_COND_TYPE *l_chld_cond = eif_thr_context->children_cond; 
+		EIF_COND_TYPE *l_chld_cond;
 #endif /* EIF_NO_CONDVAR */
-		EIF_MUTEX_TYPE *l_chld_mutex = eif_thr_context->children_mutex;
-		int *l_addr_n_children = eif_thr_context->addr_n_children;
+		EIF_MUTEX_TYPE *l_chld_mutex;
+		int *l_addr_n_children;
 		
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_REFERENCE thread_object = NULL;
 
-#ifdef WORKBENCH
-		dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
-#endif
 		thread_exiting = 1;
+
+		if (l_has_parent_thread) {
+			l_chld_cond = eif_thr_context->children_cond; 
+			l_chld_mutex = eif_thr_context->children_mutex;
+			l_addr_n_children = eif_thr_context->addr_n_children;
+
+#ifdef WORKBENCH
+			dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
+#endif
+		}
 		exitprf();
 
-		RT_GC_PROTECT(thread_object);
-		thread_object = eif_wean(eif_thr_context->current);
-		offset = eifaddr_offset (thread_object, "terminated", &ret);
-		CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
+		if (l_has_parent_thread) {
+			RT_GC_PROTECT(thread_object);
+			thread_object = eif_wean(eif_thr_context->current);
+			offset = eifaddr_offset (thread_object, "terminated", &ret);
+			CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-			/* Set the `terminated' field of the twin thread object to True so that
-			 * it knows the thread is terminated */
-		*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
-		RT_GC_WEAN(thread_object);
+				/* Set the `terminated' field of the twin thread object to True so that
+				 * it knows the thread is terminated */
+			*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
+			RT_GC_WEAN(thread_object);
 
-			/* Prevent other threads to wait for current thread in case 
-			 * one of the following calls is blocking. */
-		EIF_ENTER_C;
-		EIF_ASYNC_SAFE_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
-			/* Decrement the number of child threads of the parent */
-		*l_addr_n_children -= 1;
+				/* Prevent other threads to wait for current thread in case 
+				 * one of the following calls is blocking. */
+			EIF_ENTER_C;
+			EIF_ASYNC_SAFE_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
+				/* Decrement the number of child threads of the parent */
+			*l_addr_n_children -= 1;
 #ifndef EIF_NO_CONDVAR
-		EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
+			EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
 #endif
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+		} else {
+			EIF_ENTER_C;
+		}
 
 		/* 
 		 * Every thread that has created a child thread with eif_thr_create() or
@@ -891,8 +903,8 @@ rt_public void eif_thr_exit(void)
 		}
 #endif	/* LMALLOC_CHECK */
 
-		/* Clean per thread data. */
-	eif_free_context (rt_globals);
+			/* Clean per thread data. */
+		eif_free_context (rt_globals);
 
 #ifdef VXWORKS
 		/* The TSD is managed in a different way under VxWorks: each thread
@@ -910,7 +922,9 @@ rt_public void eif_thr_exit(void)
 #endif	/* VXWORKS */
 
 
-		EIF_THR_EXIT(0);
+		if (l_has_parent_thread) {
+			EIF_THR_EXIT(0);
+		}
 	}
 }	/* eif_thr_exit ().*/
 

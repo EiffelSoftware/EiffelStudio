@@ -928,11 +928,6 @@ feature -- Externals
 			"C signature (GdkWindow*): GList use <gtk/gtk.h>"
 		end
 
-	frozen gdk_window_process_all_updates is
-		external
-			"C use <gtk/gtk.h>"
-		end
-
 	frozen gdk_window_process_updates (a_window: POINTER; process_children: BOOLEAN) is
 		external
 			"C signature (GdkWindow*, gboolean) use <gtk/gtk.h>"

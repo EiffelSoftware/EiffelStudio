@@ -14,7 +14,7 @@ feature -- Access
 			-- Lock synchronizing creation and destruction
 			-- of EiffelThreads.
 		once
-			create Result
+			create Result.make
 		ensure
 			exit_mutex_not_void: exit_mutex /= Void
 		end

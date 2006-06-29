@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="string_manipulator_client" uuid="AD165F40-2615-4124-B38A-F3E996BDFFAA">
+	<target name="string_manipulator_client">
+		<description>StringManipulator EiffelCOM component client.</description>
+		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\client\Client\Include"/>
+		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\client\Common\Include"/>
+		<external_object location="$(ISE_LIBRARY)\examples\com\wizard\string_manipulator\generated\client\Client\Clib\$(ISE_C_COMPILER)\ecom.lib"/>
+
+		<precompile name="precompile" location="$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\client\client.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf"/>
+		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\client\"/>
+	</target>
+</system>

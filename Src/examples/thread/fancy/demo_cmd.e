@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	DEMO_CMD
 
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			client_window := a_client
 			display_mutex := a_mutex
-			create mutex_continue
+			create mutex_continue.make
 			create thread_continue
 			thread_continue.set_item (True)
 		ensure
@@ -43,7 +43,7 @@ feature -- Threads
 
 	thread_continue: BOOLEAN_REF
 			-- Flag, which indicates if the thread must continue.
-			
+
 feature -- Threads
 
 	execute is
@@ -54,7 +54,7 @@ feature -- Threads
 				-- Rebuilt the shared client window from C.
 			from
 				create l_msg.make
-			until 
+			until
 				not is_thread_continue
 			loop
 				display_mutex.lock
@@ -81,7 +81,7 @@ feature -- Threads
 
 feature -- Basic operations
 
-	draw (t_parent: CLIENT_WINDOW) is 
+	draw (t_parent: CLIENT_WINDOW) is
 			-- Routine executed by new thread.
 		require
 			t_parent_not_void: t_parent /= Void

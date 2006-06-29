@@ -16,12 +16,12 @@ inherit
 		redefine
 			show_modal_to_window
 		end
-	
+
 	PAINTBRUSH_CONSTANTS
 		export
 			{NONE} all
 		undefine
-			default_create
+			default_create, copy
 		end
 
 create
@@ -35,11 +35,11 @@ feature {NONE} -- Initialization
 			internal_desired_background_color := (create {EV_STOCK_COLORS}).White
 			internal_desired_width := 128
 			internal_desired_height := 128
-			
+
 			build_interface
 			update_preview_pixmap
 		end
-		
+
 feature -- Access
 
 	desired_background_color: EV_COLOR is
@@ -49,7 +49,7 @@ feature -- Access
 		do
 			Result := internal_desired_background_color
 		end
-			
+
 	desired_width: INTEGER is
 			-- Width for the new image
 		require
@@ -57,7 +57,7 @@ feature -- Access
 		do
 			Result := internal_desired_width
 		end
-	
+
 	desired_height: INTEGER is
 			-- Height for the new image
 		require
@@ -65,7 +65,7 @@ feature -- Access
 		do
 			Result := internal_desired_height
 		end
-			
+
 	ok_selected: BOOLEAN
 			-- Has the "OK" button been selected?
 
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			width_textfield.change_actions.extend (agent check_width_textfield_for_integer)
 			create height_textfield.make_with_text (internal_desired_height.out)
 			height_textfield.change_actions.extend (agent check_height_textfield_for_integer)
-			
+
 				-- Layout the widgets for entering "Width" and "Height"
 			create width_hbox
 			width_hbox.set_padding (Layout_constants.Small_padding_size)
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			image_dimension_vbox.extend (height_hbox)
 			create image_dimension_frame.make_with_text (Interface_names.Image_dimensions)
 			image_dimension_frame.extend (image_dimension_vbox)
-			
+
 				-- Create the widgets for entering the "backgound color"
 			create bgcolor_label.make_with_text (Interface_names.Background_color)
 			create preview_pixmap
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			bgcolor_hbox.extend (create {EV_CELL})
 			preview_pixmap.set_minimum_size (32, change_background_color_button.height)
 			preview_pixmap.set_size (32, change_background_color_button.height)
-			
+
 			create image_characteristics_frame.make_with_text (Interface_names.Image_characteristics)
 			image_characteristics_frame.extend (bgcolor_hbox)
 
@@ -168,28 +168,28 @@ feature {NONE} -- Implementation
 			buttons_box.disable_item_expand (ok_button)
 			buttons_box.extend (cancel_button)
 			buttons_box.disable_item_expand (cancel_button)
-			
+
 			create main_vbox
 			main_vbox.set_border_width (Layout_constants.Default_border_size)
 			main_vbox.set_padding (Layout_constants.Default_padding_size)
 			main_vbox.extend (image_dimension_frame)
 			main_vbox.extend (image_characteristics_frame)
 			main_vbox.extend (buttons_box)
-			
+
 			set_title (Interface_names.New_image)
 			disable_user_resize
 			extend (main_vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 		end
-		
+
 	update_preview_pixmap is
 			-- Update the preview of the desired background color
 		do
 			preview_pixmap.set_background_color (internal_desired_background_color)
 			preview_pixmap.clear
 		end
-		
+
 	change_background_color is
 			-- Let the user change the background color
 		local
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			create std_color_dialog
 			std_color_dialog.set_color (internal_desired_background_color)
 			std_color_dialog.show_modal_to_window (Current)
-			
+
 				-- If the user has clicked "Ok", then change the
 				-- `selected_color' and update the preview.
 			if std_color_dialog.selected_button.is_equal ("OK") then
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 				update_preview_pixmap
 			end
 		end
-		
+
 	check_width_textfield_for_integer is
 			-- Check that the text field `width_textfield' hold an integer value,
 			-- if so commit the new value, otherwise reset it to `desired_width'
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			width_textfield_is_integer: width_textfield.text.is_integer
 			width_textfield_is_positive: width_textfield.text.to_integer > 0
 		end
-		
+
 	check_height_textfield_for_integer is
 			-- Check that the text field `height_textfield' hold an integer value,
 			-- if so commit the new value, otherwise reset it to `desired_height'
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			height_textfield_is_integer: height_textfield.text.is_integer
 			height_textfield_is_positive: height_textfield.text.to_integer > 0
 		end
-		
+
 	check_textfield_for_integer (a_textfield: EV_TEXT_FIELD; default_value: INTEGER) is
 			-- Check that the text field `a_textfield' hold an integer value,
 			-- otherwise reset it to `default_value'
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			curr_value_text: STRING
 		do
 			curr_value_text := a_textfield.text
-			if (curr_value_text = Void) or else 
+			if (curr_value_text = Void) or else
 				(not curr_value_text.is_integer) or else
 				(curr_value_text.to_integer <= 0)
 			then
@@ -259,32 +259,32 @@ feature {NONE} -- Implementation
 			a_textfield_is_integer: a_textfield.text.is_integer
 			a_textfield_is_positive: a_textfield.text.to_integer > 0
 		end
-		
+
 	 on_ok is
 			-- Select `ok' and destroy the dialog
 		do
 			ok_selected := True
 			destroy
 		end
-		
+
 	preview_pixmap: EV_PIXMAP
 			-- Pixmap used to preview the background color.
 
 	width_textfield: EV_TEXT_FIELD
 			-- Text field for the "Width"
-	
+
 	height_textfield: EV_TEXT_FIELD
 			-- Text field for the "Height"
-	
+
 	internal_desired_background_color: EV_COLOR
 			-- Currently selected color for the background of the new image
-			
+
 	internal_desired_width: INTEGER
 			-- Width for the new image
-	
+
 	internal_desired_height: INTEGER;
 			-- Height for the new image
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

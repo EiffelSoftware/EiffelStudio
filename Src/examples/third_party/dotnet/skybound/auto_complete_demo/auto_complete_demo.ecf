@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="auto_complete_demo" uuid="12D0C350-3976-4752-968B-48352312335A">
+	<target name="auto_complete_demo">
+		<root class="STARTUP" feature="make_sta"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="cls_compliant" value="true"/>
+		<setting name="console_application" value="false"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="il_verifiable" value="true"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="msil_generation" value="true"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="use_all_cluster_name_as_namespace" value="false"/>
+		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<external_resource location="Form1.resx"/>
+		<external_resource location="Data.auto"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<assembly name="accessibility" location="${ISE_DOTNET_FRAMEWORK}\accessibility.dll" prefix="ACCESS_"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_LIBRARY\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
+		<assembly name="skybound.autocomplete" location="..\..\..\Skybound.AutoComplete.dll"/>
+		<assembly name="system" location="${ISE_DOTNET_FRAMEWORK}\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system.drawing" location="${ISE_DOTNET_FRAMEWORK}\system.drawing.dll" prefix="DRAWING_"/>
+		<assembly name="system.runtime.serialization.formatters.soap" location="${ISE_DOTNET_FRAMEWORK}\system.runtime.serialization.formatters.soap.dll" prefix="SOAP_"/>
+		<assembly name="system.windows.forms" location="${ISE_DOTNET_FRAMEWORK}\system.windows.forms.dll" prefix="WINFORMS_"/>
+		<assembly name="system.xml" location="${ISE_DOTNET_FRAMEWORK}\System.Xml.dll" prefix="XML_"/>
+		<cluster name="auto_complete" location=".\">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+			</option>
+		</cluster>
+	</target>
+</system>

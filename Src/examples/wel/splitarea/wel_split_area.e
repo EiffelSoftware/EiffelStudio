@@ -52,11 +52,11 @@ feature -- Access
 	left_control: WEL_WINDOW
 			-- Control in the left part of the split area.
 			-- Void if none
-	
+
 	right_control: WEL_WINDOW
 			-- Control in the right part of the split area.
 			-- Void if none
-	
+
 feature -- Element change
 
 	set_splitter_position (a_pos: INTEGER) is
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 
 	separator_width: INTEGER is 3
 			-- Width of the splitter.
-	
+
 	splitter_position: INTEGER
 			-- Width of the left control. Also the x-position of the
 			-- splitter.
@@ -112,7 +112,7 @@ feature {NONE} -- Windows message handling
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message handling
 		do
-				-- Stop to move the splitter. 
+				-- Stop to move the splitter.
 			if has_capture then
 				release_capture
 			end
@@ -128,7 +128,7 @@ feature {NONE} -- Windows message handling
 						-- Move the splitter. The splitter position
 						-- is now the mouse position
 					splitter_position := x_pos
-					
+
 						-- Resize the left & right controls.
 					on_size (0, width, height)
 				end
@@ -146,8 +146,8 @@ feature {NONE} -- Windows message handling
 				-- for example)
 			if left_control /= Void and then left_control.exists then
 				left_control.move_and_resize (
-					0, 0, 
-					splitter_position, a_height, 
+					0, 0,
+					splitter_position, a_height,
 					True
 					)
 			end
@@ -159,8 +159,8 @@ feature {NONE} -- Windows message handling
 				-- for example)
 			if right_control /= Void and then right_control.exists then
 				right_control.move_and_resize (
-					splitter_position + separator_width, 0, 
-					a_width - (splitter_position + separator_width), a_height, 
+					splitter_position + separator_width, 0,
+					a_width - (splitter_position + separator_width), a_height,
 					True
 					)
 			end
@@ -228,9 +228,9 @@ feature -- Standard window class values
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
-			Result := 
-				Wel_cs_constants.Cs_hredraw + 
-				Wel_cs_constants.Cs_vredraw + 
+			Result :=
+				Wel_cs_constants.Cs_hredraw +
+				Wel_cs_constants.Cs_vredraw +
 				Wel_cs_constants.Cs_dblclks
 		end
 
@@ -244,7 +244,7 @@ feature -- Standard window class values
 			result_not_void: Result /= Void
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
 		once
@@ -315,7 +315,7 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	valid_splitter_position: exists implies 
+	valid_splitter_position: exists implies
 		(splitter_position >= 0 and splitter_position <= width)
 
 indexing

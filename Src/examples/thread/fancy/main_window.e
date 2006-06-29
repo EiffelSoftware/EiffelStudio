@@ -38,7 +38,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	THREAD_CONTROL
 	EXIT_CONTROL
 
@@ -79,8 +79,8 @@ feature {NONE} -- Initialization
 			create client_window_oval.make (Current, "Client Window_Oval")
 			create client_window_rect.make (Current, "Client Window_Rect")
 
-			create display_mutex
-			
+			create display_mutex.make
+
 				-- Create threads (without launching them).
 			create oval_area.make_in (client_window_oval, display_mutex)
 			create rect_area.make_in (client_window_rect, display_mutex)
@@ -93,7 +93,7 @@ feature {NONE} -- Thread
 
 	rect_area: RECTANGLE_DEMO_CMD
 			-- Commands to draw rectangles.
-	
+
 	display_mutex: MUTEX
 			-- Since display is a bottleneck on Windows, serialization
 			-- of the drawing operations are done through this mutex.
@@ -132,13 +132,13 @@ feature {NONE} -- Behavior
 			when Cmd_win_rect then
 				create rect_demo.make (display_mutex)
 			when Cmd_win_oval then
-				create oval_demo.make (display_mutex) 
+				create oval_demo.make (display_mutex)
 			when Cmd_help_about then
 				about_box.activate
 
 			when Cmd_win_exit then
 				if closeable then
-					do_exit (Current) 
+					do_exit (Current)
 				end
 			end
 		end
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			-- Tell the threads to stop, and wait for their end.
 		do
 			exit_mutex.lock
-			from 
+			from
 				demos_list.start
 			until
 				demos_list.after
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 	closeable: BOOLEAN is
 			-- Show the standard dialog box.
 		do
-			msg_box.question_message_box (Current, "Do you want to exit?", "Exit") 			
+			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
 			if (msg_box.message_box_result = Idyes) then
 				stop_all_threads
 				Result := True

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create with size.
 		do
-			set_gdkpixbuf ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new ({EV_GTK_EXTERNALS}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
+			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_new ({EV_GTK_EXTERNALS}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
 		end
 
 	make (an_interface: EV_PIXEL_BUFFER) is
@@ -45,7 +45,7 @@ feature -- Command
 			filepixbuf: POINTER
 		do
 			a_cs := a_file_name
-			filepixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 					-- GdkPixbuf could not load the image so we raise an exception.
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
@@ -65,7 +65,7 @@ feature -- Command
 			create Result
 			l_pixmap_imp ?= Result.implementation
 			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
 			l_pixmap_imp.set_pixmap (l_gdkpix, l_gdkmask)
 			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
 		end
@@ -74,7 +74,6 @@ feature -- Command
 			-- Create a new sub pixel buffer object.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
-			l_temp_pixmap: EV_PIXMAP
 			l_pixbuf: POINTER
 		do
 			create Result

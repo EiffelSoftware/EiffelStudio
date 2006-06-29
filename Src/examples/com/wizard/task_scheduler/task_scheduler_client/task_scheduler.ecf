@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="task_scheduler" uuid="31044CCB-901A-4111-BBE3-5F4BF519197E">
+	<target name="task_scheduler">
+		<root class="TASK_SCHEDULER" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<precompile name="precompile" location="..\generated\client.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+</system>

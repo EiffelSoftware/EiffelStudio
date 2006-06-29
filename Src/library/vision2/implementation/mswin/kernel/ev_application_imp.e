@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 		local
 			l_result: BOOLEAN
 		do
+			create idle_action_mutex
 			base_make (an_interface)
 			set_application (Current)
 			create_dispatcher
@@ -175,18 +176,30 @@ feature -- Basic operation
 	lock is
 			-- Lock the Mutex.
 		do
+			idle_action_mutex.lock
 		end
 
 	try_lock: BOOLEAN is
 			-- Try to see if we can lock, False means no lock could be attained
 		do
-			Result := True
+			if {PLATFORM}.is_thread_capable then
+				Result := idle_action_mutex.trylock
+			else
+					-- Return true if mono-threaded.
+				Result := True
+			end
 		end
 
 	unlock is
 			-- Unlock the Mutex.
 		do
+			idle_action_mutex.unlock
 		end
+
+feature {NONE} -- Thread implementation
+
+	idle_action_mutex: MUTEX
+			-- Mutex used to access idle_actions.
 
 feature -- Root window
 

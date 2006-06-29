@@ -61,6 +61,9 @@ feature -- Access
 			-- Is the application going to be a console application?
 			--| ie on Windows only we need to link with the correct flags.
 
+	force_32bits: BOOLEAN
+			-- Is the application going to be a 32bit bound application?
+
 	has_dynamic_runtime: BOOLEAN
 			-- Does the application need to be linked with a dynamic runtime?
 			--| ie on Windows the application will run with a DLL and on UNIX it
@@ -439,6 +442,17 @@ feature -- Update
 			is_console_application := b
 		ensure
 			is_console_application_set: is_console_application = b
+		end
+
+	set_32bits (b: BOOLEAN) is
+			-- Set `force_32bits' to `b'
+		do
+			if force_32bits /= b then
+				set_freeze
+			end
+			force_32bits := b
+		ensure
+			is_32bits_set: force_32bits = b
 		end
 
 	set_dynamic_runtime (b: BOOLEAN) is

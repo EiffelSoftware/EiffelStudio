@@ -94,16 +94,13 @@ feature {NONE} -- Usage
 			Result := "Configuration File"
 		end
 
-	switches: LIST [ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
-		local
-			l_result: ARRAYED_LIST [ARGUMENT_SWITCH]
 		do
-			create l_result.make (3)
-			l_result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional output file name", True, "file", "Frame template file path.", False, False))
-			l_result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, "name", "An Eiffel class name.", False, False))
-			l_result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, "filename", "File name to give output file.", False, False))
-			Result := l_result
+			create Result.make (3)
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional output file name", True, False, "file", "Frame template file path.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "filename", "File name to give output file.", False))
 		end
 
 feature {NONE} -- Option Names

@@ -1170,7 +1170,7 @@ feature {NONE} -- String matching
 			-- Ensure item seletion in the list.
 		local
 			l_row: EV_GRID_ROW
-			l_name: like name_type
+			l_name, l_name_for_comparison: like name_type
 			l_index: INTEGER
 		do
 			if rebuild_list_during_matching then
@@ -1191,6 +1191,12 @@ feature {NONE} -- String matching
 			else
 				if not buffered_input.is_empty then
 					current_index := pos_of_first (full_list)
+						-- If we don't find the first match, we do binary search to find the closest one.
+						-- Wild card is discarded in this case.
+					if current_index = 0 then
+						create l_name_for_comparison.make (buffered_input)
+						current_index := pos_of_first_greater (full_list, l_name_for_comparison) - 1
+					end
 					if current_index > full_list.lower and current_index < full_list.upper then
 						l_name := full_list.item (current_index)
 						if l_name.has_parent then

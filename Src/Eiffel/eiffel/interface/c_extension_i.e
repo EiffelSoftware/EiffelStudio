@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			end
 			l_buffer.put_string (external_name)
 			l_buffer.put_character ('(')
-			generate_parameter_list (parameters, nb)
+			generate_parameter_list (parameters, nb, False)
 			l_buffer.put_character (')')
 			if a_ret_type.is_boolean then
 				l_buffer.put_character (')')

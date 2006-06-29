@@ -5,7 +5,7 @@ indexing
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
- 
+
 deferred class EXTERNAL_EXT_I
 
 inherit
@@ -37,13 +37,13 @@ inherit
 		redefine
 			is_equal
 		end
-		
+
 	SHARED_GENERATION
 		export
 			{NONE} all
 		undefine
 			is_equal
-		end		
+		end
 
 feature -- Status report
 
@@ -51,7 +51,7 @@ feature -- Status report
 			-- Is current external an IL one?
 		do
 		end
-		
+
 	is_cpp: BOOLEAN is
 		do
 		end
@@ -98,7 +98,7 @@ feature -- Status report
 		do
 			Result := is_blocking_call and System.has_multithreaded
 		end
-		
+
 feature -- Properties
 
 	argument_types: ARRAY [INTEGER]
@@ -235,7 +235,7 @@ feature -- Code generation
 		deferred
 		end
 
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER) is
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN) is
 			-- Generate parameters for C extension call. Does not include opening
 			-- and closing paranthesis.
 		require
@@ -260,6 +260,9 @@ feature -- Code generation
 				until
 					i > nb
 				loop
+					if a_protect_argument_for_macros then
+						buffer.put_character ('(')
+					end
 					if has_cast then
 						buffer.put_character ('(')
 						buffer.put_string (l_names_heap.item (arg_types.item (j)))
@@ -268,6 +271,9 @@ feature -- Code generation
 						j := j + 1
 					end
 					generate_i_th_parameter (parameters, i)
+					if a_protect_argument_for_macros then
+						buffer.put_character (')')
+					end
 					i := i + 1
 					if i <= nb then
 						buffer.put_string (gc_comma)

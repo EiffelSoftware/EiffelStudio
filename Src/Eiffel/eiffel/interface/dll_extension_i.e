@@ -190,7 +190,7 @@ feature {NONE} -- Internal generation
 				end
 			end
 			buf.put_string ("fp )(")
-			generate_parameter_list (Void, dll_byte_code.argument_count)
+			generate_parameter_list (Void, dll_byte_code.argument_count, False)
 			buf.put_character (')');
 			buf.put_character (')');
 			buf.put_character (';');

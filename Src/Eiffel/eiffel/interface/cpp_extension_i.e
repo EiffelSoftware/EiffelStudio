@@ -62,7 +62,7 @@ feature -- Code generation
 		do
 				-- Initialize generation buffer.
 			l_buffer := Context.buffer
-			
+
 				-- Check for null pointer to C++ object in workbench mode
 			if not Context.final_mode and not System.il_generation then
 				inspect
@@ -134,7 +134,7 @@ feature {NONE} -- Code generation
 				-- Set `has_cpp_externals_calls' of BYTE_CONTEXT to True since
 				-- we are currently generating one.
 			context.set_has_cpp_externals_calls (True)
-			
+
 			if a_ret_type.is_boolean then
 				buffer.put_string("EIF_TEST")
 			end
@@ -170,16 +170,16 @@ feature {NONE} -- Code generation
 			when standard, static, new then
 				buffer.put_character ('(')
 				if parameters /= Void then
-					generate_parameter_list (parameters, parameters.count)
+					generate_parameter_list (parameters, parameters.count, False)
 				else
-					generate_parameter_list (Void, nb)
+					generate_parameter_list (Void, nb, False)
 				end
 				buffer.put_character (')')
 			end
- 
+
 			buffer.put_character (')')
 		end
-	
+
 	generate_cpp_object_access (parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate the C++ access code.
 		require
@@ -194,7 +194,7 @@ feature {NONE} -- Code generation
 			generate_i_th_parameter (parameters, 1)
 		end
 
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER) is
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN) is
 			-- Generate the arguments to the C++ call
 		local
 			i, j: INTEGER

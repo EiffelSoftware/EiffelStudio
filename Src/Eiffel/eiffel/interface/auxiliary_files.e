@@ -69,7 +69,7 @@ feature -- Dynamic Library file
 			internal_creation_name: STRING
 			internal_feature_name: STRING
 			buffer, def_buffer: GENERATION_BUFFER
-			nb_ref: INTEGER
+			nb_ref, i: INTEGER
 		do
 				-- Clear buffers for current generation
 			buffer := generation_buffer
@@ -206,6 +206,8 @@ feature -- Dynamic Library file
 									buffer.put_string (" ")
 									buffer.put_string (internal_feature_name)
 									buffer.put_string (" (EIF_REFERENCE")
+										-- Reinitialize `nb_ref'.
+									nb_ref := 0
 									if args /= Void then
 										from
 											args.start
@@ -278,13 +280,17 @@ feature -- Dynamic Library file
 										-- AFFECTION OF THE LOCAL VARIABLES `l[i]'
 									if argument_names /= Void then
 										from
+												-- We start indexing at `1' because `0' is
+												-- reserved for `main_obj' below.
+											i := 1
 											argument_names.start
 										until
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
 												buffer.put_string ("%N%T")
-												buffer.put_local_registration (argument_names.index, argument_names.item)
+												buffer.put_local_registration (i, argument_names.item)
+												i := i + 1
 											end
 											argument_names.forth
 										end

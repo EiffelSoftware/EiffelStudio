@@ -16,14 +16,15 @@ if [ $# -ge 3 ]; then
 	ssh -p $port -l $user $remote_host "mkdir -p local/TEST_DELIV"
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
-		#Note: we use `export' because we expect the remote shell to be bash.
-	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; bash ./compile_exes"
-	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; bash ./make_images"
+		# Do the compilation
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; bash ./compile_exes $platform"
+		# Build the delivery
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; bash ./make_images $platform"
 
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_enterprise*gz" .
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_gpl*gz" .
 
 	echo Compilation for $platform is now done
 else
-	echo Usage: host username platform [port]
+	echo Usage: make_form_platform host username platform [port]
 fi

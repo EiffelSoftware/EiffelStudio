@@ -168,6 +168,9 @@ feature -- Status report
 	is_dll, is_console_application: BOOLEAN
 			-- Nature of generated module.
 
+	is_32bits: BOOLEAN
+			-- Should assembly be generated as a 32bit assembly
+
 feature -- Access: tokens
 
 	entry_point_token: INTEGER
@@ -674,6 +677,14 @@ feature -- Settings: Generation type
 			is_dll_set: is_dll
 		end
 
+	set_32bits is
+			-- Current module is a 32bit module?
+		do
+			is_32bits := True
+		ensure
+			is_32bits_set: is_32bits
+		end
+
 feature -- Settings
 
 	set_resources (r: like resources) is
@@ -941,7 +952,7 @@ feature -- Code generation
 			l_debug_info: MANAGED_POINTER
 			l_dbg_directory: CLI_DEBUG_DIRECTORY
 		do
-			create l_pe_file.make (module_file_name, is_dll or is_console_application, is_dll)
+			create l_pe_file.make (module_file_name, is_dll or is_console_application, is_dll, is_32bits)
 			if is_debug_info_enabled then
 				create l_dbg_directory.make
 				l_debug_info := dbg_writer.debug_info (l_dbg_directory)

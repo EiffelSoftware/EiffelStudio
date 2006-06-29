@@ -98,6 +98,16 @@ feature -- Status update
 			last_error := an_error
 		end
 
+	reset_error is
+			-- Reset error.
+		do
+			is_error := False
+			last_error := Void
+		ensure
+			not_is_error: not is_error
+		end
+
+
 feature -- Access, stored in configuration file
 
 	name: STRING
@@ -444,10 +454,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			l_er: CONF_ERROR_OVERRIDE
 		do
 			if is_override then
-				is_error := True
 				create l_er
 				l_er.set_group (name)
-				last_error := l_er
+				set_error (l_er)
 			else
 				if overriders = Void then
 					create overriders.make (1)
@@ -465,8 +474,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					if l_ovs /= Void and then l_ovs.count > 0 then
 						l_overridee := l_ovs.first
 						if l_overridee.is_overriden then
-							is_error := True
-							last_error := create {CONF_ERROR_MULOVER}.make (l_overridee.name)
+							set_error (create {CONF_ERROR_MULOVER}.make (l_overridee.name))
 						else
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)

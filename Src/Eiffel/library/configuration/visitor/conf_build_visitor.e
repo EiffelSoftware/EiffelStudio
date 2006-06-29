@@ -325,7 +325,9 @@ feature -- Visit nodes
 				-- update visibility
 			a_library.update_visible
 			if a_library.is_error then
-				add_and_raise_error (a_library.last_error)
+				add_error (a_library.last_error)
+				a_library.reset_error
+				raise_error
 			end
 			if a_library.last_warnings /= Void then
 				last_warnings.append (a_library.last_warnings)
@@ -387,7 +389,9 @@ feature -- Visit nodes
 				-- update visibility
 			a_cluster.update_visible
 			if a_cluster.is_error then
-				add_and_raise_error (a_cluster.last_error)
+				add_error (a_cluster.last_error)
+				a_cluster.reset_error
+				raise_error
 			end
 			if a_cluster.last_warnings /= Void then
 				last_warnings.append (a_cluster.last_warnings)
@@ -425,7 +429,9 @@ feature -- Visit nodes
 					end
 					l_overridee.add_overriders (an_override, added_classes, modified_classes, removed_classes)
 					if l_overridee.is_error then
-						add_and_raise_error (l_overridee.last_error)
+						add_error (l_overridee.last_error)
+						l_overridee.reset_error
+						raise_error
 					end
 				end
 

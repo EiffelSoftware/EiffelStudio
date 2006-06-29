@@ -37,7 +37,7 @@ feature -- Properties
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-		do	
+		do
 			Result := same_type (other) and then
 				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
@@ -45,7 +45,7 @@ feature -- Comparison
 		end
 
 feature -- Code generation
-		
+
 	generate_body (macro_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
 			-- Generate encapsulation to C/C++ macro external `macro_byte_code'.
 		local
@@ -60,7 +60,7 @@ feature -- Code generation
 				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
-			
+
 			nb := macro_byte_code.argument_count
 			internal_generate_access (macro_byte_code.external_name, Void, nb, l_ret_type)
 			l_buffer.put_character (';')
@@ -95,9 +95,9 @@ feature {NONE} -- Implementation
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
 			end
-			
+
 			generate_header_files
-			
+
 			if a_ret_type.is_boolean then
 					-- Only in case of a macro which is a function that we can generate paranthesis
 					-- around `external_name', as a procedure might be a multiline macro.
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			buffer.put_string (external_name)
 			if nb > 0 then
 				buffer.put_character ('(')
-				generate_parameter_list (parameters, nb)
+				generate_parameter_list (parameters, nb, True)
 				buffer.put_character (')')
 			end
 			if a_ret_type.is_boolean then

@@ -1,0 +1,64 @@
+?RCS: $Id: mailer.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/11  15:32:11  ram
+?RCS: patch45: can now use Loc variables since path stripping is deferred
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  15:10:04  ram
+?RCS: patch23: ensure full path value is used for rmail also
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:14:18  ram
+?RCS: patch16: now use _sendmail vars and friends for portability issues
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:10  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:mailer: test cat rmail mail smail sendmail Getfile Oldconfig
+?MAKE:	-pick add $@ %<
+?S:mailer:
+?S:	This variable contains the full pathname of a reasonable mailer.
+?S:	By reasonable, we mean some program which can understand internet
+?S:	addresses or at least forward them to some internet router. This
+?S:	mailer should be invoked as "mailer [options] recipients <mail".
+?S:.
+: determine the name of a reasonable mailer
+case "$mailer" in
+'')
+	if $test -f "$sendmail"; then
+		dflt="$sendmail"
+	elif $test -f "$smail"; then
+		dflt="$smail"
+	elif $test -f "$rmail"; then
+		dflt="$rmail"
+	elif $test -f /bin/mail; then
+		dflt=/bin/mail
+	else
+		dflt=$mail
+	fi
+	;;
+*)  dflt="$mailer";;
+esac
+$cat <<EOM
+
+I need the full pathname of the program used to deliver mail on your system.
+A typical answer would be /usr/lib/sendmail or /bin/rmail, but you may choose
+any other program, as long as it can be fed from standard input and will
+honour any user-supplied headers.
+
+EOM
+fn=f
+rp='Mail transport agent to be used?'
+. ./getfile
+mailer="$ans"
+

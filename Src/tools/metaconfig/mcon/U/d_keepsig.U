@@ -1,0 +1,82 @@
+?RCS: $Id: d_keepsig.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1995/07/25  13:57:56  ram
+?RCS: patch56: made cc and ccflags optional dependencies
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/11  15:26:25  ram
+?RCS: patch45: protected "sh -c" within backquotes for Linux and SGI
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:13:59  ram
+?RCS: patch36: call ./bsd explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0.1.1  1993/10/16  13:48:47  ram
+?RCS: patch12: comment for SIGNALS_KEPT was the other way round
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:26  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_keepsig: cat +cc +ccflags rm Guess contains echo n c Setvar
+?MAKE:	-pick add $@ %<
+?S:d_keepsig:
+?S:	This variable contains the eventual value of the SIGNALS_KEPT symbol,
+?S:	which indicates to the C program if signal handlers need not reinstated
+?S:	after receipt of a signal.
+?S:.
+?C:SIGNALS_KEPT (PERSISTENT_SIGNAL):
+?C:	This symbol is defined if signal handlers needn't be reinstated after
+?C:	receipt of a signal.
+?C:.
+?H:#$d_keepsig SIGNALS_KEPT	/**/
+?H:.
+?LINT:set d_keepsig
+: see if signals are kept
+val="$undef";
+echo " "
+echo "Checking to see if signal handlers stick around..." >&4
+$cat >try.c <<'EOCP'
+foo() {}
+
+main()
+{
+	signal(2, foo);
+	kill(getpid(), 2);
+	kill(getpid(), 2);
+	printf("abc\n");
+}
+EOCP
+if $cc -o try $ccflags try.c >/dev/null 2>&1; then
+?X: On AIX a single ./try will not work (with ksh)
+?X: Backquotes required on Linux and SGI (prevents "ambiguous output redirect")
+?X: (reported by Xavier LeVourch <xavierl@eiffel.com>)
+	`sh -c ./try >try.out 2>/dev/null`
+	if $contains abc try.out >/dev/null 2>&1; then
+		echo "Yes, they do."
+		val="$define";
+	else
+		echo "No, they don't."
+	fi
+else
+	$echo $n "(I can't seem to compile the test program. Assuming $c"
+	if ./bsd; then
+		echo "they do.)"
+		val="$define"
+	else
+		echo "they don't.)"
+	fi
+fi
+set d_keepsig
+eval $setvar
+$rm -f try*
+

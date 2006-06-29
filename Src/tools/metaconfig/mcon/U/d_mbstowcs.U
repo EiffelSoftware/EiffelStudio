@@ -1,0 +1,35 @@
+?RCS: $Id: d_mbstowcs.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:29  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_mbstowcs: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_mbstowcs:
+?S:	This variable conditionally defines the HAS_MBSTOWCS symbol, which
+?S:	indicates to the C program that the mbstowcs() routine is available
+?S:	to convert a multibyte string into a wide character string.
+?S:.
+?C:HAS_MBSTOWCS (MBSTOWCS):
+?C:	This symbol, if defined, indicates that the mbstowcs routine is
+?C:	available to covert a multibyte string into a wide character string.
+?C:.
+?H:#$d_mbstowcs	HAS_MBSTOWCS		/**/
+?H:.
+?LINT:set d_mbstowcs
+: see if mbstowcs exists
+set mbstowcs d_mbstowcs
+eval $inlibc
+

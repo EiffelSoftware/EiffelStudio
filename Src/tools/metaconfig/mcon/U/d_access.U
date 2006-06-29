@@ -1,0 +1,77 @@
+?RCS: $Id: d_access.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:42  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_access: test +cc cat +cppflags h_fcntl h_sysfile rm Inlibc Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_access:
+?S:	This variable conditionally defines HAS_ACCESS if the access() system
+?S:	call is available to check for access permissions using real IDs.
+?S:.
+?C:HAS_ACCESS:
+?C:	This manifest constant lets the C program know that the access()
+?C:	system call is available to check for accessibility using real UID/GID.
+?C:	(always present on UNIX.)
+?C:.
+?H:#$d_access HAS_ACCESS		/**/
+?H:.
+?W:%<:R_OK W_OK X_OK F_OK
+?LINT:set d_access
+?LINT:change h_fcntl h_sysfile
+: access call always available on UNIX
+set access d_access
+eval $inlibc
+
+: locate the flags for 'access()'
+case "$d_access" in
+"$define")
+	echo " "
+	$cat >access.c <<'EOCP'
+#include <sys/types.h>
+#ifdef I_FCNTL
+#include <fcntl.h>
+#endif
+#ifdef I_SYS_FILE
+#include <sys/file.h>
+#endif
+#ifdef I_UNISTD
+#include <unistd.h>
+#endif
+main() {
+	exit(R_OK);
+}
+EOCP
+	: check sys/file.h first, no particular reason here
+	if $test `./findhdr sys/file.h` && \
+		$cc $cppflags -DI_SYS_FILE access.c -o access >/dev/null 2>&1 ; then
+		h_sysfile=true;
+		echo "<sys/file.h> defines the *_OK access constants." >&4
+	elif $test `./findhdr fcntl.h` && \
+		$cc $cppflags -DI_FCNTL access.c -o access >/dev/null 2>&1 ; then
+		h_fcntl=true;
+		echo "<fcntl.h> defines the *_OK access constants." >&4
+@if I_UNISTD
+	elif $test `./findhdr unistd.h` && \
+		$cc $cppflags -DI_UNISTD access.c -o access >/dev/null 2>&1 ; then
+		echo "<unistd.h> defines the *_OK access constants." >&4
+@end
+	else
+		echo "I can't find the four *_OK access constants--I'll use mine." >&4
+	fi
+	;;
+esac
+$rm -f access*
+

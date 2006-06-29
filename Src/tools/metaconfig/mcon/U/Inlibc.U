@@ -1,0 +1,68 @@
+?RCS: $Id: Inlibc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  15:55:08  ram
+?RCS: patch36: call ./whoa explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:03  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit checks for the definition of a given function.
+?X:
+?X: To use it, say:
+?X: set function d_func
+?X: eval $inlibc
+?X:
+?MAKE:Inlibc: Csym Whoa Oldconfig
+?MAKE:	-pick add $@ %<
+?LINT:define inlibc
+?LINT:use libc
+?V:inlibc
+?S:inlibc:
+?S:	This shell variable is used internally by Configure to check
+?S:	wether a given function is defined or not. A typical use is:
+?S:		set function d_func
+?S:		eval $inlibc
+?S:	That will print a message, saying wether function was found or
+?S:	not and set d_func accordingly.
+?S:.
+?T:was tx sym tres td tu var
+: define an is-in-libc? function
+inlibc='echo " "; td=$define; tu=$undef;
+sym=$1; var=$2; eval "was=\$$2";
+tx=yes;
+case "$reuseval$was" in
+true) ;;
+true*) tx=no;;
+esac;
+case "$tx" in
+yes)
+	set $sym tres -f;
+	eval $csym;
+	case "$tres" in
+	true)
+		echo "$sym() found." >&4;
+		case "$was" in $undef) . ./whoa; esac; eval "$var=\$td";;
+	*)
+		echo "$sym() NOT found." >&4;
+		case "$was" in $define) . ./whoa; esac; eval "$var=\$tu";;
+	esac;;
+*)
+	case "$was" in
+	$define) echo "$sym() found." >&4;;
+	*) echo "$sym() NOT found." >&4;;
+	esac;;
+esac'
+

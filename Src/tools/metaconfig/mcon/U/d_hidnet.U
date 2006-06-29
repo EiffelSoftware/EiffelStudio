@@ -1,0 +1,71 @@
+?RCS: $Id: d_hidnet.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:20  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_hidnet hiddennet: cat sed myhostname mydomain Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:d_hidnet:
+?S:	This variable conditionally defines the symbol HIDDEN_NET, which
+?S:	tells the C program that it should pretend it is on a different
+?S:	host for purposes of advertising a mailing address.
+?S:.
+?S:hiddennet:
+?S:	This variable contains the value eventually given to the symbol
+?S:	HIDDEN_NET, if d_hidnet defines it.  If defined, it's the name
+?S:	of the host which serves as the mail server for a network that
+?S:	is invisible to the outside world.
+?S:.
+?C:HIDDEN_NET (HIDDENNET):
+?C:	This symbol, if defined, contains the host name that you want to
+?C:	advertise to the outside world.  This name can be different from
+?C:	your actual host name, as long as the machine you specify knows
+?C:	how to forward mail to you.
+?C:.
+?H:#$d_hidnet HIDDEN_NET "$hiddennet"	/**/
+?H:.
+: now get the host name to advertise as our mailing address
+case "$hiddennet" in
+'') dflt=n;;
+*) dflt=y;;
+esac
+$cat <<EOM
+ 
+Some sites are on "hidden" networks, in the sense that the network appears
+to the outside world as a single machine.  The advertised name of any host
+on this hidden network is the name of one machine on the local network which
+knows how to forward mail to any other host on the hidden network.
+
+Do you wish to advertise a different hostname to the world than the one your
+own host ($myhostname$mydomain) has?
+
+EOM
+rp='Use "hidden" network?'
+. ./myread
+case "$ans" in
+n*) d_hidnet="$undef" hiddennet='';;
+*)
+	d_hidnet="$define"
+	echo " "
+	case "$hiddennet" in
+	'') dflt=`echo $mydomain | $sed -e 's/^\.//'`;;
+	*) dflt="$hiddennet";;
+	esac
+	rp='What hostname do you wish to advertise?'
+	. ./myread
+	hiddennet="$ans"
+	;;
+esac
+

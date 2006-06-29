@@ -1,0 +1,34 @@
+?RCS: $Id: i_arpainet.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:15  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:i_arpainet: Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_arpainet:
+?S:	This variable conditionally defines the I_ARPA_INET symbol,
+?S:	and indicates whether a C program should include <arpa/inet.h>.
+?S:.
+?C:I_ARPA_INET:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <arpa/inet.h> to get inet_addr and friends declarations.
+?C:.
+?H:#$i_arpainet	I_ARPA_INET		/**/
+?H:.
+?LINT:set i_arpainet
+: see if arpa/inet.h has to be included
+set arpa/inet.h i_arpainet
+eval $inhdr
+

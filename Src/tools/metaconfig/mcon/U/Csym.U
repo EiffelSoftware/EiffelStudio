@@ -1,0 +1,99 @@
+?RCS: $Id: Csym.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1995/07/25  13:36:29  ram
+?RCS: patch56: re-arranged compile line to include ldflags before objects
+?RCS: patch56: added quotes for OS/2 support
+?RCS:
+?RCS: Revision 3.0.1.3  1995/05/12  12:00:33  ram
+?RCS: patch54: fixed C test program to bypasss gcc builtin type checks (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/31  09:34:13  ram
+?RCS: patch44: added Options to the MAKE line since it's no longer in Init.U
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/25  14:00:05  ram
+?RCS: patch6: added ldflags as a conditional dependency and to compile line
+?RCS: patch6: a final double quote was missing in csym variable after eval
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:04:50  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:Csym: Options contains libc libs runnm +cc +ccflags +ldflags rm
+?MAKE:	-pick add $@ %<
+?LINT:define csym
+?LINT:use libc
+?S:csym:
+?S:	This shell variable is used internally by Configure to check
+?S:	wether a given C symbol is defined or not. A typical use is:
+?S:		set symbol result [-fva] [previous]
+?S:		eval $csym
+?S:	That will set result to 'true' if the function [-f], variable [-v]
+?S:	or array [-a] is defined, 'false' otherwise. If a previous value is
+?S:	given and the -r flag was provided on the command line, that value
+?S:	is reused without questioning.
+?S:.
+?V:csym
+?T:tval tx tlook tf tdc tc
+: is a C symbol defined?
+csym='tlook=$1;
+case "$3" in
+-v) tf=libc.tmp; tc=""; tdc="";;
+-a) tf=libc.tmp; tc="[0]"; tdc="[]";;
+*) tlook="^$1\$"; tf=libc.list; tc="()"; tdc="()";;
+esac;
+tx=yes;
+case "$reuseval-$4" in
+true-) ;;
+true-*) tx=no; eval "tval=\$$4"; case "$tval" in "") tx=yes;; esac;;
+esac;
+case "$tx" in
+yes)
+	case "$runnm" in
+	true)
+		if $contains $tlook $tf >/dev/null 2>&1;
+		then tval=true;
+		else tval=false;
+		fi;;
+	*)
+?X:
+?X: Put symbol inside a printf to fool optimizing compilers...
+?X:
+?X: We use 'short' instead of 'int' to try to circumvent overzealous
+?X: optimizing compilers using built-in prototypes for commonly used
+?X: routines to complain when seeing a different external declaration. For
+?X: instance, gcc 2.6.3 fails if we use 'int' and we attempt a test against
+?X: memcpy() on machines where sizeof(int) == sizeof(char *) (the usual return
+?X: type), the compiler assuming it's a built-in declaration given that the
+?X: returned size matches. At least with 'short' we are safe! -- RAM, for ADO
+?X:
+?X: Let's thank GNU cc for making our lifes so easy! :-)
+?X: (An alternative for the future would be to use our knowledge about gcc
+?X: to force a -fno-builtin option in the compile test, in case the 'short'
+?X: trick is obsoleted by future gcc releases). -- RAM
+?X:
+		echo "main() { extern short $1$tdc; printf(\"%hd\", $1$tc); }" > t.c;
+		if $cc $ccflags $ldflags -o t t.c $libs >/dev/null 2>&1;
+		then tval=true;
+		else tval=false;
+		fi;
+		$rm -f t t.c;;
+	esac;;
+*)
+	case "$tval" in
+	$define) tval=true;;
+	*) tval=false;;
+	esac;;
+esac;
+eval "$2=$tval"'
+

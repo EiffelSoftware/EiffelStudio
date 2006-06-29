@@ -1,0 +1,56 @@
+?RCS: $Id: newslevel.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:21  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:newslevel: cat contains test activeexp newslib Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:newslevel: 
+?S:	The current revision level of the Usenet news system, encoded
+?S:	as 1000 * major rev + 10 * minor rev + sub rev.  For instance,
+?S:	news 2.10.3 is encode as 2103, and 2.11 as 2110.
+?S:.
+?C:NEWSLEVEL:
+?C:	The current revision level of the Usenet news system, encoded
+?C:	as 1000 * major rev + 10 * minor rev + sub rev.  For instance,
+?C:	news 2.10.3 is encode as 2103, and 2.11 as 2110.
+?C:.
+?H:#define NEWSLEVEL $newslevel	/**/
+?H:.
+: check for news version
+if $test -f $activeexp; then
+	if ??? >/dev/null 2>&1; then
+		dflt=2110
+	elif $test -f $newslib/cunbatch; then
+		dflt=2103
+	elif $contains ' [0-9][0-9]* [0-9]' "$activeexp" >/dev/null 2>&1; then
+		dflt=2102
+	else
+		dflt=2101
+	fi
+else
+	dflt=$newslevel
+fi
+$cat <<EOM
+
+The following news version number is a multiplexed integer:
+	1000 * major rev + 10 * minor rev + sub rev.
+News 2.10.3 would be 2103.  2.11 comes out as 2110.
+
+EOM
+rp="What version of news are you going to be running?"
+. ./myread
+newslevel="$ans"
+

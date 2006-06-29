@@ -1,0 +1,126 @@
+?RCS: $Id: d_uwait.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:10:49  ram
+?RCS: patch16: added knowledge about wait3()
+?RCS: patch16: revised 'union wait' look-up algorithm
+?RCS: patch16: fixed make dependency line accordingly
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:54  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_uwait d_uwait3: cat contains cppstdin cppminus +cppflags rm \
+	Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_uwait:
+?S:	This symbol conditionally defines UNION_WAIT which indicates to the C
+?S:	program that argument for the wait() system call should be declared as
+?S:	'union wait status' instead of 'int status'.
+?S:.
+?S:d_uwait3:
+?S:	This symbol conditionally defines UNION_WAIT3 which indicates to the C
+?S:	program that the first argument for the wait3() system call should be
+?S:	declared as 'union wait status' instead of 'int status'.
+?S:.
+?C:UNION_WAIT:
+?C:	This symbol if defined indicates to the C program that the argument
+?C:	for the wait() system call should be declared as 'union wait status'
+?C:	instead of 'int status'. You probably need to include <sys/wait.h>
+?C:	in the former case (see I_SYSWAIT).
+?C:.
+?C:UNION_WAIT3:
+?C:	This symbol if defined indicates to the C program that the first argument
+?C:	for the wait3() system call should be declared as 'union wait status'
+?C:	instead of 'int status'. You probably need to include <sys/wait.h>
+?C:	in the former case (see I_SYSWAIT). It seems safe to assume that the
+?C:	same rule applies to the second parameter of wait4().
+?C:.
+?H:#$d_uwait UNION_WAIT		/**/
+?H:#$d_uwait3 UNION_WAIT3	/**/
+?H:.
+?T:val2 flags f also
+?LINT:set d_uwait d_uwait3
+: see if union wait is available
+echo " "
+?X:
+?X: Unfortunately, we can't just grep <sys/wait.h> for "union wait" because
+?X: some weird systems (did I hear HP-UX?) define union wait only when _BSD
+?X: is defined. The same thing happens on OSF/1, who is pushing weirdness to
+?X: its limits by requiring wait() to use (int *) but wait3() to use
+?X: (union wait *), unless _BSD is defined and -lbsd is used, in which case
+?X: wait() also expects (union wait *). Aaargh!!--RAM
+?X:
+set X $cppflags
+shift
+flags=''
+also=''
+for f in $*; do
+	case "$f" in
+	*NO_PROTO*) ;;
+	*) flags="$flags $f";;
+	esac
+done
+$cat `./findhdr sys/wait.h` /dev/null | \
+	$cppstdin $flags $cppminus >wait.out 2>/dev/null
+if $contains 'union.*wait.*{' wait.out >/dev/null 2>&1 ; then
+	echo "Looks like your <sys/wait.h> knows about 'union wait'..." >&4
+	val="$define"
+@if UNION_WAIT
+	also='also '
+	if $contains 'extern.*wait[ 	]*([ 	]*int' wait.out >/dev/null 2>&1
+	then
+		echo "But wait() seems to expect an 'int' pointer (POSIX way)." >&4
+		val="$undef"
+		also=''
+	elif $contains 'extern.*wait[ 	]*([ 	]*union' wait.out >/dev/null 2>&1
+	then
+		echo "And indeed wait() expects an 'union wait' pointer (BSD way)." >&4
+	else
+		echo "So we'll use that for wait()." >&4
+	fi
+@end
+@if UNION_WAIT3 || d_uwait3
+	val2="$define"
+@end
+@if UNION_WAIT3
+	if $contains 'extern.*wait3[ 	]*([ 	]*int' wait.out >/dev/null 2>&1
+	then
+		echo "However wait3() seems to expect an 'int' pointer, weird." >&4
+		val2="$undef"
+	elif $contains 'extern.*wait3[ 	]*([ 	]*union' wait.out >/dev/null 2>&1
+	then
+		echo "And wait3() ${also}expects an 'union wait' pointer, fine." >&4
+	else
+		echo "As expected, wait3() ${also}uses an 'union wait' pointer." >&4
+	fi
+@end
+else
+	echo "No trace of 'union wait' in <sys/wait.h>..." >&4
+	val="$undef"
+@if UNION_WAIT && UNION_WAIT3
+	echo "Both wait() and wait3() will use a plain 'int' pointer then." >&4
+@elsif UNION_WAIT
+	echo "Your wait() should be happy with a plain 'int' pointer." >&4
+@elsif UNION_WAIT3
+	echo "Your wait3() should be happy with a plain 'int' pointer." >&4
+@end
+fi
+set d_uwait
+eval $setvar
+@if UNION_WAIT3 || d_uwait3
+val="$val2"; set d_uwait3
+eval $setvar
+@end
+$rm -f wait.out
+

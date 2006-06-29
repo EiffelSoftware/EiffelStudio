@@ -1,0 +1,56 @@
+?RCS: $Id: d_tzmin.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:16:58  ram
+?RCS: patch36: call ./bsd explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:49  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_tzmin: contains cppstdin cppminus timeincl rm Setvar Guess
+?MAKE:	-pick add $@ %<
+?S:d_tzmin:
+?S:	This symbol conditionally defines TZ_MINUTESWEST if the system uses
+?S:	tz_minuteswest in time header instead of timezone.
+?S:.
+?C:TZ_MINUTESWEST:
+?C:	This symbol is defined if this system uses tz_minuteswest
+?C:	in time header instead of timezone.
+?C: If not defined, you may have to use struct timeb and ftime() rather
+?C:	than the new gettimeofday() system call.
+?C:.
+?H:#$d_tzmin TZ_MINUTESWEST		/**/
+?H:.
+?LINT:set d_tzmin
+: see if tz_minuteswest is defined in time header
+echo " "
+val="$undef"
+$cppstdin $cppminus < $timeincl > try 2>&1
+if $contains 'tz_minuteswest' try >/dev/null 2>&1; then
+echo "You have tz_minuteswest defined in $timeincl rather than timezone." >&4
+	val="$define"
+elif $contains 'timezone' try >/dev/null 2>&1; then
+echo "You have timezone defined in $timeincl rather than tz_minuteswest." >&4
+else
+	echo "Your $timeincl file looks strange." >&4
+fi
+if ./bsd; then
+	case "$d_tzmin" in
+	"$undef") echo "(Maybe your system is an USG one after all?)";;
+	esac
+fi
+set d_tzmin
+eval $setvar
+$rm -f try
+

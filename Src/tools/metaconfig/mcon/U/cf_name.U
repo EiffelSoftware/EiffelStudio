@@ -1,0 +1,75 @@
+?RCS: $Id: cf_name.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS: 
+?RCS: Original Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  14:29:36  ram
+?RCS: patch23: fixed user name computation from /etc/passwd in bsd systems
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:05:11  ram
+?RCS: patch16: created
+?RCS:
+?RCS:
+?MAKE:+cf_name: cf_by passcat Filexp nametype cat test
+?MAKE:	-pick add $@ %<
+?S:cf_name:
+?S:	Full name of the person who ran the Configure script and answered the
+?S:	questions. This can be used by units that require the user's full name.
+?S:	This variable is for internal use only.
+?S:.
+?T:xxx fn NAME
+: figure out their full name
+case "$NAME" in
+'') case "$nametype" in
+	other)
+		fn=`./filexp ~/.fullname`
+		xxx=usg
+		$test -f $fn && xxx=other
+		;;
+	*)
+		xxx="$nametype"
+		;;
+	esac
+
+	case "$xxx" in
+	bsd)
+		cf_name=`$passcat | grep "^$cf_by:" | \
+			sed -e 's/^[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\):.*/\1/' \
+			-e 's/,.*//'`
+		;;
+    usg)
+		cf_name=`$passcat | grep "^$cf_by:" | \
+			sed -e 's/^[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\):.*/\1/' \
+			-e 's/[^-]*-\(.*\)(.*)/\1/'`
+		;;
+	*)
+		cf_name=`$cat $fn`
+		;;
+	esac
+	;;
+*)
+	cf_name="$NAME"
+	;;
+esac
+?X:
+?X: In the original unit, Graham asked for the user name, in case the above
+?X: code was unable to figure it out correctly. Since now cf_name has been
+?X: made an internal variable only (i.e. it is not saved in config.sh), letting
+?X: the user override the computed default each time would be a pain.
+?X: Therefore, I have decided to trust the above code to get it right, and for
+?X: those rare cases where it will fail, too bad :-) --RAM.
+?X:
+echo " "
+echo "Pleased to meet you, $cf_name."
+

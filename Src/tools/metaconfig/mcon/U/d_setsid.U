@@ -1,0 +1,37 @@
+?RCS: $Id: d_setsid.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:06:49  ram
+?RCS: patch16: created
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:56  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_setsid: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_setsid:
+?S:	This variable conditionally defines HAS_SETSID if setsid() is
+?S:	available to set the process group ID.
+?S:.
+?C:HAS_SETSID:
+?C:	This symbol, if defined, indicates that the setsid routine is
+?C:	available to set the process group ID.
+?C:.
+?H:#$d_setsid HAS_SETSID	/**/
+?H:.
+?LINT:set d_setsid
+: see if setsid exists
+set setsid d_setsid
+eval $inlibc
+

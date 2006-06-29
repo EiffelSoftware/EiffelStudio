@@ -1,0 +1,44 @@
+?RCS: $Id: d_tminsys.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:47  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_tminsys: contains Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_tminsys:
+?S:	This variable conditionally defines TM_IN_SYS if this system
+?S:	declares "struct tm" in <sys/time.h> rather than <time.h>.
+?S:.
+?C:TM_IN_SYS (TMINSYS):
+?C:	This symbol is defined if this system declares "struct tm" in
+?C:	in <sys/time.h> rather than <time.h>.  We can't just say
+?C:	-I/usr/include/sys because some systems have both time files, and
+?C:	the -I trick gets the wrong one.
+?C:.
+?H:#$d_tminsys TM_IN_SYS 	/**/
+?H:.
+?LINT:set d_tminsys
+: see if struct tm is defined in sys/time.h
+echo " "
+if $contains 'struct tm' `./findhdr time.h` >/dev/null 2>&1 ; then
+	echo "You have struct tm defined in <time.h> rather than <sys/time.h>." >&4
+	val="$undef"
+else
+	echo "You have struct tm defined in <sys/time.h> rather than <time.h>." >&4
+	val="$define"
+fi
+set d_tminsys
+eval $setvar
+

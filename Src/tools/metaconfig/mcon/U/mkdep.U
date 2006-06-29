@@ -1,0 +1,254 @@
+?RCS: $Id: mkdep.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1997/02/28  16:13:07  ram
+?RCS: patch61: replaced .o with $_o all over the place
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  16:25:02  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0.1.2  1994/01/24  14:15:12  ram
+?RCS: patch16: cppflags is now an optional dependency
+?RCS:
+?RCS: Revision 3.0.1.1  1993/12/15  08:22:39  ram
+?RCS: patch15: force zero exit status in all mkdep scripts
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:16  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit generates the script 'mkdep' in the top-level directory.
+?X:	It is up to the makefile to use it for automatic dependencies
+?X: generation (usage: 'mkdep [cppflags] -- *.c').
+?X:
+?MAKE:mkdep: spitshell startsh cpp +cppflags grep contains rm sed sort uniq \
+	Getfile Oldconfig eunicefix cat +cc cppminus test _o
+?MAKE:	-pick add $@ %<
+?S:mkdep:
+?S:	This variable holds the name of a command to generate makefile
+?S:	dependencies on the standard output. It is the pathname of the
+?S:	generated mkdep script.
+?S:.
+?F:mkdep
+?T:IFS arg flags takeflags srcfile toplev filebase inc dir files file dep c
+: find out how to generate dependencies
+echo " "
+echo "Checking how to generate makefile dependencies on your machine..." >&4
+?X: We are in the UU directory
+toplev=`cd ..;pwd`
+$cat >dep.c <<'EOCP'
+#include "dep.h"
+EOCP
+?X: Empty dep.h causes RIOS to barf
+$cat >dep.h <<'EOCP'
+
+EOCP
+takeflags='flags=""
+case "$@" in
+*--*)
+	for arg
+	do
+		shift
+		case "$arg" in
+		--) break;;
+		*) flags="$flags $arg";;
+		esac
+	done;;
+esac'
+case "$mkdep" in
+'')
+	;;
+*)
+	if test -x "$mkdep" &&
+		$mkdep dep.c >dep.out 2>/dev/null &&
+		$contains "dep$_o:.*dep\.h" dep.out >/dev/null 2>&1
+	then
+		echo "$mkdep works."
+	else
+		mkdep=
+	fi
+esac
+
+case "$mkdep" in
+'')
+?X: have to figure something out: Try cpp
+?X: have to pass source names one by one to cpp...
+	$spitshell > ../mkdep <<EOM
+$startsh
+$takeflags
+for srcfile
+do
+	$cpp -M -I. $cppflags \$flags \$srcfile 2>/dev/null
+done
+exit 0
+EOM
+	mkdep=$toplev/mkdep
+	chmod +x $mkdep
+	$eunicefix $mkdep
+	if $mkdep dep.c >dep.out 2>/dev/null &&
+		$contains "dep$_o:.*dep\.h" dep.out >/dev/null 2>&1
+	then
+		echo "Looks like we can use $cpp -M."
+	else
+		mkdep=
+	fi
+	;;
+esac
+
+case "$mkdep" in
+'')
+?X: have to figure something out: on NeXT, use cc -MM
+?X: have to pass source names one by one to cc...
+	$spitshell > ../mkdep <<EOM
+$startsh
+$takeflags
+for srcfile
+do
+	$cc -MM -I. $cppflags \$flags \$srcfile 2>/dev/null
+done
+exit 0
+EOM
+	mkdep=$toplev/mkdep
+	chmod +x $mkdep
+	$eunicefix $mkdep
+	if $mkdep dep.c >dep.out 2>/dev/null &&
+		$contains "dep$_o: dep.h" dep.out >/dev/null 2>&1
+	then
+		echo "Looks like we can use $cc -MM."
+	else
+		mkdep=
+	fi
+	;;
+esac
+
+case "$mkdep" in
+'')
+?X: still no luck -- try something fancier.
+	$spitshell >../mkdep <<EOS
+$startsh
+$takeflags
+for srcfile
+do
+	case "\$srcfile" in
+	*.c) c='.c';;
+	*.y) c='.y';;
+	*.l) c='.l';;
+	esac
+	filebase=\`basename \$srcfile \$c\`
+	<\$srcfile $cpp $cppminus $cppflags -I. \$flags 2>/dev/null | \\
+	$sed -e '/^# *[0-9]/!d' \\
+		-e 's/^.*"\(.*\)".*\$/'\$filebase'$_o: \1/' \\
+		-e 's|: \./|: |' \\
+		-e 's|: *$|: '\$srcfile'|' | \\
+	$grep -v '^#' | $sort | $uniq
+done
+exit 0
+EOS
+	mkdep=$toplev/mkdep
+	chmod +x $mkdep
+	$eunicefix $mkdep
+	if $mkdep dep.c >dep.out 2>/dev/null &&
+		$contains "dep$_o:.*dep\.h" dep.out >/dev/null 2>&1
+	then
+		echo "A shell script using $cpp does the trick."
+	else
+		echo "$cpp doesn't seem to be any use at all."
+		$spitshell >../mkdep <<EOS
+$startsh
+$takeflags
+files="\$@"
+set X \$flags
+shift
+inc='.'
+while test \$# -gt 0
+do
+	case "\$1" in
+	-I) 
+		shift
+		inc="\$inc:\$1"
+		;;
+	-I*)
+		dir=\`echo \$1 | sed -e 's/^-I//'\`
+		inc="\$inc:\$dir"
+		;;
+	esac
+	shift
+done
+set X \$files
+shift
+trap "$rm -f /tmp/mkdep\$\$; exit 1" 1 2 3 15
+for srcfile
+do
+	case "\$srcfile" in
+	*.c) c='.c';;
+	*.y) c='.y';;
+	*.l) c='.l';;
+	esac
+	filebase=\`basename \$srcfile \$c\`
+	echo \$filebase$_o: \$srcfile
+	$grep '^#[  ]*include' \$srcfile /dev/null | \
+	$sed -n -e 's/#[   ]*include[  ]*//' \\
+		-e '/<\(.*\)>/ d' \\
+		-e 's/:[^"]*"\([^"]*\)".*/: \1/' \\
+		-e "s/\\.c:/$_o:/p" > /tmp/mkdep\$\$
+?X: Deal with directories specified via -I requests to locate files
+	IFS=': '
+	while read file dep; do
+		for dir in \$inc; do
+			if $test -f "\$dir/\$dep"; then
+				dep="\$dir/\$dep"
+				break
+			fi
+		done
+		echo "\$file: \$dep" | $sed -e 's,: \./,: ,'
+	done </tmp/mkdep\$\$
+	IFS=' '
+	$rm -f /tmp/mkdep\$\$
+done
+exit 0
+EOS
+		mkdep=$toplev/mkdep
+		chmod +x $mkdep
+		$eunicefix $mkdep
+		if $mkdep dep.c >dep.out 2>/dev/null &&
+			$contains "dep$_o:.*dep\.h" dep.out >/dev/null 2>&1
+		then
+			cat << EOM
+
+I can use a script with grep instead, but it will make some incorrect
+dependencies, since it doesn't understand about conditional compilation.
+Moreover, some dependencies may be missing, because scanning won't be
+a recursive process.
+If you have a program which generates makefile dependencies, you may want
+to use it.  If not, you can use the script and edit the Makefile by hand
+if you need to.
+EOM
+		else
+			mkdep=
+			cat << EOM
+
+I can't seem to generate makefile dependencies at all!  Perhaps you have a
+program that does?  If you don't, you might look at the mkdep script to
+see if you can create one which works.
+EOM
+		fi
+	fi
+esac
+dflt="$mkdep"
+fn=f~/
+rp="Name of program to make makefile dependencies?"
+. ./getfile
+mkdep="$ans"
+$rm -f dep.c dep.h dep$_o dep.out
+

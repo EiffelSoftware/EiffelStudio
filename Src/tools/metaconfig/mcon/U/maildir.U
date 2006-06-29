@@ -1,0 +1,44 @@
+?RCS: $Id: maildir.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/12/15  08:21:56  ram
+?RCS: patch15: now also looks under /var/mail for BSD/386
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:09  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:maildir maildirexp: Getfile Loc Oldconfig
+?MAKE:	-pick add $@ %<
+?S:maildir:
+?S:	This variable contains the name of the directory in which mail is
+?S:	spooled. Programs using this variable must be prepared to deal with
+?S:	~name substitutions.
+?S:.
+?S:maildirexp:
+?S:	This is the same as the maildir variable, but is filename expanded
+?S:	at configuration time, for programs not willing to deal with it at
+?S:	run-time.
+?S:.
+: determine where mail is spooled
+case "$maildir" in
+'') dflt=`./loc . /usr/spool/mail /usr/spool/mail /usr/mail /var/mail`;;
+*) dflt="$maildir";;
+esac
+echo " "
+fn=d~
+rp='Where is yet-to-be-read mail spooled?'
+. ./getfile
+maildir="$ans"
+maildirexp="$ansexp"
+

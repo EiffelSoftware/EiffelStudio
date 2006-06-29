@@ -1,0 +1,109 @@
+This is a quick introduction to metaconfig.
+
+Metaconfig is a combination of a methodology and a program that will
+help you write portable programs.  It is well known that all UN*X
+systems are not the same.  Instead of writing lots of #ifdef/#endif for
+each machine the program is ported on, it seems better to directly rely
+on the actual possibilities of the system, without having to consider
+whether it comes from HP or SUN.  The idea is to write the program using
+some symbols, known by a "unit", for all the hardware- or kernel-
+specific parts of code.  A metaconfig unit will automatically define the
+symbol or not, depending on the system.  Source files are scanned by
+metaconfig and the necessary units are loaded and put into a shell
+script called Configure.  Running the Configure script will
+automatically determine a suitable value for each symbol.
+
+How does a Configure script work ? It studies the environment it runs on
+by extracting names in the C library, by compiling some small sample C
+programs, and by asking questions when in doubt, always providing a
+computed default answer.
+
+Here is a small example.
+
+It is said in the glossary of the symbols that RENAME is defined if the
+rename routine is available to rename files.  Without metaconfig, we
+could write (for each occurrence of a "rename" in the code):
+
+#if defined(HP-UX-7.0) || defined(SUN) || defined(BSD)
+	rename(old, new);
+#else
+	unlink(new);
+	link(old, new);
+	unlink(old);
+#endif
+
+With the help of metaconfig, we shall write (once !):
+
+#ifndef HAS_RENAME
+int rename(old, new)
+char *old, *new;
+{
+	(void) unlink(new);
+	if (-1 != link(old, new))
+		return unlink(old);
+	else
+		return -1;
+}
+#endif
+
+	....
+
+	rename(old, new);
+
+
+And that's all.  The Configure script will check whether `rename' is
+available on the target machine and accordingly define the RENAME
+symbol.  It is even more powerful that it may appear on a first glance,
+because "rename" was not there on old SUNOS3 systems or HP-UX older than
+6.5 (for series 800) and 7.0 (for series 300).  You cannot rely on the
+fact that the target machine has the latest OS release !
+
+Another problem is to determine whether a C program should include
+<time.h>, <sys/time.h> or <sys/time.h> with KERNEL defined.  With
+metaconfig, you simply write:
+
+#ifdef I_TIME
+#	include <time.h>
+#endif
+#ifdef I_SYS_TIME
+#	include <sys/time.h>
+#endif
+#ifdef I_SYS_TIME_KERNEL
+#	define KERNEL
+#	include <sys/time.h>
+#	undef KERNEL
+#endif
+
+and the Configure script will generate a small C program, compile it,
+and correctly define one of the three symbols I_TIME, I_SYS_TIME and
+I_SYS_TIME_KERNEL.
+
+Another kind of precious information can be collected by a Configure
+script.  For instance, the symbol USE_STRUCT_COPY will be defined if the
+C compiler can copy structures.  It is up to the programmer to use this
+information, of course.  The symbol VOIDSIG will be defined if the
+system declares "void (*signal())()" instead of "int (*signal())()".
+Thus you can say:
+
+#ifdef VOIDSIG
+extern void (*signal())();
+#else
+extern int (*signal())();
+#endif
+
+and no suspicious warning will be emitted by the C compiler.
+
+Finally, Configure can help you in shell scripts or in makefile.  By
+using a file called Makefile.SH, which will be run through a shell to
+produce a Makefile, you can use the variable substitution feature.  The
+variable $ranlib will be set to 'ranlib' or to ': ' (null statement) in
+a makefile, which is useful for random libraries generation.  Likewise,
+the variable $bin will hold the full path for installing binaries (a
+question will be issued by Configure).
+
+Needless to say, an initial amount of time must be spent before being
+able to use metaconfig.  The proper symbols must be known, and the
+program must be prepared to deal with all the possible configurations.
+But likewise, it will adapt itself to a greater number of systems
+without any further source code modification.
+

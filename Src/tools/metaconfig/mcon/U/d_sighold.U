@@ -1,0 +1,34 @@
+?RCS: $Id: d_sighold.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:21  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_sighold: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_sighold:
+?S:	This variable conditionally defines HAS_SIGHOLD if sighold() is
+?S:	available to hold signals.
+?S:.
+?C:HAS_SIGHOLD:
+?C:	This symbol, if defined, indicates that the sighold routine is
+?C:	available to hold signals.
+?C:.
+?H:#$d_sighold HAS_SIGHOLD	/**/
+?H:.
+?LINT:set d_sighold
+: see if sighold exists
+set sighold d_sighold
+eval $inlibc
+

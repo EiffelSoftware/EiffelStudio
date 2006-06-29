@@ -1,0 +1,46 @@
+?RCS: $Id: rcs_branch.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:40  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:rcs_branch: Myread contains Loc
+?MAKE:	-pick add $@ %<
+?S:rcs_branch:
+?S:	This variable will hold "true" if rcs can take the -b<revision>
+?S:	option, which can make Life Easier on those folks who like to run
+?S:	rcsdiff manually.
+?S:.
+?T:xxx
+: Tra la la la la
+echo " "
+echo "Checking to see if RCS understands the -b switch..." >&4
+xxx=`./loc rcs '' $pth`
+case "$xxx" in
+'')
+	rcs_branch=false
+	echo "Oh.  You don't seem to have RCS here."
+	;;
+*)
+	rcs > rcsbranch.out 2>&1
+	if $contains 'b\[rev\]' rcsbranch.out  >/dev/null 2>&1 ; then
+		rcs_branch=true
+		echo "Nice!  Your RCS is spiffy!"
+	else
+		rcs_branch=false
+	echo "Well, at least you have RCS.  You know, a newer version is available."
+	fi
+	;;
+esac
+

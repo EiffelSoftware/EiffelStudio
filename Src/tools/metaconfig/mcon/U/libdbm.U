@@ -1,0 +1,50 @@
+?RCS: $Id: libdbm.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  15:56:57  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:58  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:libdbm: test Loc libpth _a
+?MAKE:	-pick add $@ %<
+?S:libdbm:
+?S:	This variable contains the argument to pass to the loader in order
+?S:	to get the dbm library routines.  If there is no dbm or ndbm
+?S:	library, it is null.
+?S:.
+?T:xxx
+: see if we should include -ldbm
+echo " "
+if $test -r /usr/lib/libndbm$_a || $test -r /usr/local/lib/libndbm$_a ; then
+	echo "-lndbm found." >&4
+	libdbm='-lndbm'
+elif $test -r /usr/lib/libdbm$_a || $test -r /usr/local/lib/libdbm$_a ; then
+	echo "-ldbm found." >&4
+	libdbm='-ldbm'
+else
+	xxx=`./loc libdbm$_a x $libpth`
+	case "$xxx" in
+	x)
+		echo "No dbm library found." >&4
+		libdbm=''
+		;;
+	*)
+		echo "DBM library found in $xxx." >&4
+		libdbm="$xxx"
+		;;
+	esac
+fi
+

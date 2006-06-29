@@ -1,0 +1,57 @@
+?RCS: $Id: d_ckeypad.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:50  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_ckeypad: cat cc termlib Setvar
+?MAKE:	-pick add $@ %<
+?S:d_ckeypad:
+?S:	This variable controls the definition of HAS_CURSES_KEYPAD,
+?S:	which tells the application that the keypad() curses function
+?S:	is available.
+?S:.
+?C:HAS_CURSES_KEYPAD:
+?C:	This symbol indicates the availability of the keypad() function
+?C:	of the curses library.
+?C:.
+?H:#$d_ckeypad HAS_CURSES_KEYPAD	/**/
+?H:.
+?LINT:set d_ckeypad
+: check for the keypad() function in the curses library
+echo " "
+case "$termlib" in
+'')
+	echo "You don't have a curses library, so I won't waste time looking" >&4
+	echo "to see if has the keypad() function." >&4
+*)
+echo "Checking the curses library ($termlib) for the keypad() function..." >&4
+	$cat >c_keypad.c <<'EOCP'
+#include <curses.h>
+main() {
+	keypad(stdscr, TRUE);
+	exit(0);
+}
+EOCP
+	if $cc c_keypad.c >c_keypad.out 2>&1 ; then
+		val=$define
+		echo "It appears to have the keypad() function."
+	else
+		val=$undef
+		echo "Your curses library doesn't appear to have the keypad() function."
+	fi
+esac
+set d_ckeypad
+eval $setvar
+

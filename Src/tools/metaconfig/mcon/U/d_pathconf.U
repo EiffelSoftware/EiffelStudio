@@ -1,0 +1,58 @@
+?RCS: $Id: d_pathconf.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:14:54  ram
+?RCS: patch36: created by ADO
+?RCS:
+?MAKE:d_pathconf d_fpathconf: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_pathconf:
+?S:	This variable conditionally defines the HAS_PATHCONF symbol, which
+?S:	indicates to the C program that the pathconf() routine is available
+?S:	to determine file-system related limits and options associated
+?S:	with a given filename.
+?S:.
+?S:d_fpathconf:
+?S:	This variable conditionally defines the HAS_FPATHCONF symbol, which
+?S:	indicates to the C program that the pathconf() routine is available
+?S:	to determine file-system related limits and options associated
+?S:	with a given open file descriptor.
+?S:.
+?C:HAS_PATHCONF:
+?C:	This symbol, if defined, indicates that pathconf() is available
+?C:	to determine file-system related limits and options associated
+?C:	with a given filename.
+?C:.
+?C:HAS_FPATHCONF:
+?C:	This symbol, if defined, indicates that pathconf() is available
+?C:	to determine file-system related limits and options associated
+?C:	with a given open file descriptor.
+?C:.
+?H:#$d_pathconf HAS_PATHCONF		/**/
+?H:#$d_fpathconf HAS_FPATHCONF		/**/
+?H:.
+?LINT:set d_pathconf
+?LINT:set d_fpathconf
+: see if pathconf exists
+set pathconf d_pathconf
+eval $inlibc
+
+@if d_fpathconf || HAS_FPATHCONF
+: see if fpathconf exists
+set fpathconf d_fpathconf
+eval $inlibc
+
+@end

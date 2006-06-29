@@ -1,0 +1,50 @@
+?RCS: $Id: dir.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS:  Copyright (c) 1991-1993, Raphael Manfredi
+?RCS:  
+?RCS:  You may redistribute only under the terms of the Artistic Licence,
+?RCS:  as specified in the README file that comes with the distribution.
+?RCS:  You may reuse parts of this distribution only within the terms of
+?RCS:  that same Artistic Licence; a copy of which may be found at the root
+?RCS:  of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:06  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:<DIR> <DIR>exp: Oldconfig Getfile
+?MAKE:	-pick add $@ %<
+?S:<DIR>:
+?S:	Where <DIR> files are located. The name may have ~ on the front.
+?S:.
+?S:<DIR>exp:
+?S:	This is the same as the <DIR> variable, but is filename expanded
+?S:	so that later Configure units can look at the <DIR> directory if desired.
+?S:.
+?C:<%DIR>:
+?C:	The directory where <DIR> files are located. The name may have ~ on
+?C:	the front so the C program must be prepared to do ~ expansion.
+?C:.
+?C:<%DIR>_EXP:
+?C:	The same as <DIR>, but ~name expantion has been done by Configure.
+?C:.
+?H:#define <%DIR> "$<DIR>"		/**/
+?H:#define <%DIR>_EXP "$<DIR>exp"		/**/
+?H:.
+: locate <DIR> directory
+echo " "
+case "$<DIR>" in
+'')
+	dflt=<DFLT>
+	;;
+*)  dflt="$<DIR>";;
+esac
+fn=d~
+rp='Where is the <DIR> directory?'
+. getfile
+<DIR>="$ans"
+<DIR>exp="$ansexp"
+

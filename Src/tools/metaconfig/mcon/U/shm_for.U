@@ -1,0 +1,121 @@
+?RCS: $Id: shm_for.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:28:37  ram
+?RCS: patch36: call ./Cppsym explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:46  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:shm_for shm_att shm_lim: Cppsym Myread ipc uname
+?MAKE:	-pick add $@ %<
+?S:shm_for:
+?S:	This variable tells us the type of machine we're expecting the
+?S:	shared memory code to run on.  The value is available to C programs
+?S:	in the C_SHM_FOR manifest.
+?S:.
+?S:shm_att:
+?S:	This variable tells us where a shared memory segment should be
+?S:	attached.  Good values are HIGH, LOW, and ZERO.
+?S:.
+?S:shm_lim:
+?S:	This variable tells us if shared memory attached HIGH should
+?S:	have an upper limit.
+?S:.
+?X:	----------------------------------------------------------
+?X: It's a potential lose to define anything beginning with SHM...
+?X: At least we can think that S_ stands for "String version of ..." -- HMS
+?X:	----------------------------------------------------------
+?C:S_SHM_FOR ~ %<:
+?C:	This symbol identifies what we chose for the target system's
+?C:	default shared memory configuration parameters.
+?C:.
+?C:S_SHM_ATT ~ %<:
+?C:	This symbol holds the default "place" to attach shared memory.
+?C:	Values are "HIGH", "ZERO", and "LOW".
+?C:.
+?C:S_SHM_LIM ~ %<:
+?C:	This symbol holds the default upper bound address limit if shared
+?C:	memory is attached HIGH.  If zero, there is no upper limit.
+?C:.
+?H:?%<:#ifdef SERVE_SHM
+?H:?%<:#define S_SHM_FOR "$shm_for"
+?H:?%<:#define S_SHM_ATT "$shm_att"
+?H:?%<:#define S_SHM_LIM "$shm_lim"
+?H:?%<:#endif
+?H:.
+?W:%<:S_SHM_FOR S_SHM_ATT S_SHM_LIM
+: see how to attach shared memory
+echo " "
+echo "Deciding how to attach shared memory..." >&4
+
+case "$ipc" in
+shm)
+	shm_for='Default case'
+	shm_att='HIGH'
+	shm_lim='0x0'
+	if ./Cppsym tower32 tower32_600; then
+		echo "NCR Towers are usually normal..."
+		: echo "Oh, an NCR Tower."
+		: This works for the 600
+		shm_for='NCR Tower 32'
+		shm_att='LOW'
+	else
+		case "$uname" in
+		*/uname)
+			case "`uname -m`" in
+			ACS??68*)
+				echo "Oh, an Altos 3068."
+				shm_for='Altos 3068:'
+				shm_lim='0x800000'
+				;;
+				esac
+				;;
+		*)
+			echo "Looks normal to me..."
+			;;
+		esac
+	fi
+
+	dflt="$shm_for"
+	rp='Description of shared memory configuration?'
+	. ./myread
+	shm_for="$ans"
+
+	dflt="$shm_att"
+	rp='Where should shared memory be attached?'
+	. ./myread
+	shm_att="$ans"
+
+	case "$shm_att" in
+	HIGH)
+		dflt="$shm_lim"
+		rp='What is the upper address limit for shared memory?'
+		. ./myread
+		shm_lim="$ans"
+		;;
+	*)
+		shm_lim=''
+		;;
+	esac
+	;;
+
+*)
+	echo "but you aren't using shared memory so I won't bother." >&4
+	shm_for='NOT CONFIGURED'
+	shm_att='NONE'
+	shm_lim='-1'
+	;;
+esac
+

@@ -1,0 +1,45 @@
+?RCS: $Id: Magic_h.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1993/11/10  17:32:58  ram
+?RCS: patch14: forgot to mention Id in the dependencies
+?RCS:
+?RCS: Revision 3.0.1.1  1993/10/16  13:46:59  ram
+?RCS: patch12: created for ?M: lines support (magic symbols)
+?RCS:
+?X: 
+?X: This file ends up producing the confmagic.h include, which is used to
+?X: automagically remap some C symbols via cpp redefinitions.
+?X:
+?X: The file ./Magic_h below contains all the ?M: lines extracted out of all
+?X: the units.  Metaconfig itself adds the final #endif statement.
+?X: Note that this code isn't included into Configure, but must be shipped with.
+?X:
+?MAKE:Magic_h: Id Config_h
+?MAKE:	-pick cm_h_weed $@ %<
+?MAKE:	-pick cm_h_weed $@ ./Magic_h
+/*
+ * This file was produced by running metaconfig and is intended to be included
+ * after config.h and after all the other needed includes have been dealt with.
+ *
+ * This file may be empty, and should not be edited. Rerun metaconfig instead.
+ * If you wish to get rid of this magic, remove this file and rerun metaconfig
+ * without the -M option.
+ *
+ *  $Id: Magic_h.U 78389 2004-11-30 00:17:17Z manus $
+ */
+
+#ifndef _confmagic_h_
+#define _confmagic_h_
+

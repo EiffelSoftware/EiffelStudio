@@ -1,0 +1,137 @@
+?RCS: $Id: nametype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  16:26:09  ram
+?RCS: patch36: call ./usg and ./bsd explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:36:48  ram
+?RCS: patch32: fixed typo: /etc/password -> /etc/passwd (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:10:09  ram
+?RCS: patch10: made questions more explicit for 'Configure -s' prompting (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:20  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:nametype d_passnames d_berknames d_usgnames: Myread Guess Oldconfig cat
+?MAKE:	-pick add $@ %<
+?S:nametype:
+?S:	This variable indicates how full names are stored on this system.
+?S:	Values are bsd, usg, and other.
+?S:.
+?S:d_passnames:
+?S:	This variable conditionally defines the PASSNAMES symbol,
+?S:	which indicates to the C program that full names are stored in
+?S:	the /etc/passwd file.
+?S:.
+?S:d_berknames:
+?S:	This variable conditionally defines the PASSNAMES symbol,
+?S:	which indicates to the C program that full names are stored in
+?S:	the /etc/passwd file in Berkeley format.
+?S:.
+?S:d_usgnames:
+?S:	This variable conditionally defines the PASSNAMES symbol,
+?S:	which indicates to the C program that full names are stored in
+?S:	the /etc/passwd file in USG format.
+?S:.
+?C:PASSNAMES:
+?C:	This symbol, if defined, indicates that full names are stored in
+?C:	the /etc/passwd file.
+?C:.
+?C:BERKNAMES:
+?C:	This symbol, if defined, indicates that full names are stored in
+?C:	the /etc/passwd file in Berkeley format (name first thing, everything
+?C:	up to first comma, with & replaced by capitalized login id, yuck).
+?C:.
+?C:USGNAMES:
+?C:	This symbol, if defined, indicates that full names are stored in
+?C:	the /etc/passwd file in USG format (everything after - and before ( is
+?C:	the name).
+?C:.
+?H:#$d_passnames PASSNAMES /*  (undef to take name from ~/.fullname) */
+?H:#$d_berknames BERKNAMES /* (that is, ":name,stuff:") */
+?H:#$d_usgnames USGNAMES  /* (that is, ":stuff-name(stuff):") */
+?H:.
+: find out how to find out full name
+case "$d_berknames" in
+"$define")
+	dflt=y;;
+"$undef")
+	dflt=n;;
+*)
+	if ./bsd; then
+		dflt=y
+	elif ./xenix; then
+		dflt=y
+	else
+		dflt=n
+	fi
+	;;
+esac
+$cat <<'EOM'
+
+Does your /etc/passwd file keep full names in Berkeley/V7 format (name first
+thing after ':' in GCOS field)?  In that case, a typical entry in the password
+file looks like this:
+
+    guest:**paswword**:10:100:Mister Guest User:/usr/users:/bin/sh
+                              ^^^^^^^^^^^^^^^^^
+EOM
+rp="Berkeley/V7 format for full name in /etc/passwd?"
+. ./myread
+case "$ans" in
+y*) d_passnames="$define"
+	d_berknames="$define"
+	d_usgnames="$undef"
+	nametype=bsd
+	;;
+*)
+	case "$d_usgnames" in
+	"$define") dflt=y;;
+	"$undef") dflt=n;;
+	*)
+		if ./usg; then
+			dflt=y
+		else
+			dflt=n
+		fi
+		;;
+	esac
+$cat <<'EOM'
+
+Does your passwd file keep full names in USG format (name sandwiched between a
+'-' and a '(')?  In that case, a typical entry in the password file looks like
+this:
+
+    guest:**paswword**:10:100:000-Mister Guest User(000):/usr/users:/bin/sh
+                                  ^^^^^^^^^^^^^^^^^
+EOM
+	rp="USG format for full name in /etc/passwd?"
+	. ./myread
+	case "$ans" in
+	n*) echo "Full name will be taken from ~/.fullname"
+		d_passnames="$undef"
+		d_berknames="$undef"
+		d_usgnames="$undef"
+		nametype=other
+		;;
+	*)
+		d_passnames="$define"
+		d_berknames="$undef"
+		d_usgnames="$define"
+		nametype=usg
+		;;
+	esac;;
+esac
+

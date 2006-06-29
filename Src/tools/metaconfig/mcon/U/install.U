@@ -1,0 +1,191 @@
+?RCS: $Id: install.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/09/25  09:16:37  ram
+?RCS: patch59: all possible install programs are now looked for
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/11  15:30:41  ram
+?RCS: patch45: created
+?RCS:
+?MAKE:install installdir: Loc Oldconfig Getfile cat test startsh rm +cc \
+	eunicefix package contains mkdir echo n c
+?MAKE:	-pick add $@ %<
+?S:install:
+?S:	This variable contains the name of an install program that can accept
+?S:	BSD-style arguments. It must correctly support -c, -s, and -m at least.
+?S:	It is a fully qualified pathname when found. If you have a local
+?S:	install.SH file at the root directory of your package, it is assumed to
+?S:	be the default script emulating a BSD install and the variable will be
+?S:	set to ./install. Otherwise, it is set to plain 'install', relying on
+?S:	the user's PATH to perform miracles.
+?S:.
+?S:installdir:
+?S:	This variable contains the name of a program that can install nested
+?S:	directories. Often set to 'mkdir -p', it can also be 'install -d' if
+?S:	you have such a beast and lack the former. If you have an install.SH
+?S:	file at the root directory of your package, it will be used in last
+?S:	resort, setting the variable to './install -d'. Otherwise, it is set to
+?S:	plain 'mkdir', and cross your fingers!
+?S:.
+?T:dir file tryit prog creatdir either
+: locate a BSD compatible install program
+echo " "
+echo "Looking for a BSD-compatible install program..." >&4
+@if installdir
+creatdir=''
+@end
+case "$install" in
+'')
+	tryit=''
+	for dir in $pth; do
+		for file in ginstall installbsd scoinst install; do
+			if $test -f $dir/$file; then
+				tryit="$tryit $dir/$file"
+			fi
+		done
+	done
+	$cat >try.c <<EOC
+main()
+{
+	printf("OK\n");
+	exit(0);
+}
+EOC
+	if $cc try.c -o try >/dev/null 2>&1; then
+		cp try try.ns
+		strip try >/dev/null 2>&1
+	else
+		echo "(I can't seem to compile a trivial C program -- bypassing.)"
+		echo "try" >try
+		cp try try.ns
+	fi
+	$cat >tryinst <<EOS
+$startsh
+$rm -rf foo d
+@if installdir
+\$1 -d foo/bar
+@end
+$mkdir d
+\$1 -c -m 764 try.ns d
+\$1 -c -s -m 642 try.ns d/try
+EOS
+	chmod +x tryinst
+	$eunicefix tryinst
+	dflt=''
+	either=''
+	for prog in $tryit; do
+		$echo $n "Checking $prog... $c"
+		./tryinst $prog >/dev/null 2>&1
+@if installdir
+		if $test -d foo/bar; then
+			creatdir="$prog -d"
+		fi
+@end
+		(ls -l d/try >try.ls; ls -l d/try.ns >tryno.ls) 2>/dev/null
+		if (cmp -s d/try try && cmp -s d/try.ns try.ns && \
+			$contains 'rwxrw-r--' tryno.ls && \
+			$contains 'rw-r---w-' try.ls) >/dev/null 2>&1
+		then
+			dflt="$prog"
+			echo "ok, that will do."
+			break
+		fi
+		echo "not good$either."
+		either=' either'
+		$rm -f try*.ls
+	done
+	$rm -rf foo d tryinst try try*.ls try.*
+	case "$dflt" in
+	'')
+@if {test -f ../install.SH}
+		echo "Hopefully, $package comes with its own install script!"
+		dflt='./install'
+@else
+		dflt='install'
+@end
+		;;
+	esac
+	;;
+*) dflt="$install";;
+esac
+$cat <<EOM
+
+I will be requiring a BSD-compatible install program (one that allows
+options like -s to strip executables or -m to specify a file mode) to
+install $package.
+
+If the question below contains a fully qualified default path, then it
+is probably ok. If it is an unqualified name such as 'install', then it
+means I was unable to find out a good install program I could use. If
+@if {test -f ../install.SH}
+you know of one, please tell me about it. If the default is './install',
+then I shall be using the install script supplied with $package.
+@else
+you know of one, please tell me about it.
+@end
+
+EOM
+@if {test -f ../install.SH}
+fn='/fe~(install,./install)'
+@else
+fn='/fe~(install)'
+@end
+rp='Which install program shall I use?'
+. ./getfile
+install="$ans"
+
+@if installdir
+: how can we create nested directories?
+echo " "
+echo "Ok, let's see how we can create nested directories..." >&4
+case "$installdir" in
+'')
+?X: First time, maybe we already found out a working one in $creatdir above...
+	case "$creatdir" in
+	'')
+		$mkdir -p foo/bar >/dev/null 2>&1
+		if $test -d foo/bar; then
+			echo "Great, we can build them using 'mkdir -p'."
+			creatdir='mkdir -p'
+		elif eval "$install -d foo/bar"; $test -d foo/bar; then
+			creatdir="install -d"
+			echo "It looks like '$creatdir' will do it for us."
+		fi
+		;;
+	*)
+		eval "$creatdir foo/bar" >/dev/null 2>&1
+		if $test -d foo/bar; then
+			echo "Ah! We can use '$creatdir' to do just that."
+		fi
+		;;
+	esac
+	$rm -rf foo
+	case "$creatdir" in
+	'')
+		echo "Heck! Another ancient system lacking the comfort of modern ones!"
+@if {test -f ../install.SH}
+		echo "You can thank $package for bringing you its own install script!"
+		installdir='./install -d'
+@else
+		echo "We have no choice but to use plain old 'mkdir' -- wish me luck!"
+		installdir=mkdir
+@end
+		;;
+	*) installdir="$creatdir";;
+	esac
+	;;
+*) echo "As you already told me, '$installdir' should work.";;
+esac
+
+@end

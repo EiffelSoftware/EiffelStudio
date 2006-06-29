@@ -1,0 +1,60 @@
+?RCS: $Id: uidtype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/08/29  16:33:25  ram
+?RCS: patch32: now uses new Typedef unit to compute type information
+?RCS:
+?RCS: Revision 3.0.1.2  1994/06/20  07:09:36  ram
+?RCS: patch30: comment for uidtype referred to the obsoleted symbol
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/13  15:28:27  ram
+?RCS: patch27: made conformant to its gidtype.U companion
+?RCS: patch27: question now explicitely mentions getuid()
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:56  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:uidtype: Myread Typedef Findhdr
+?MAKE:	-pick add $@ %<
+?S:uidtype:
+?S:	This variable defines Uid_t to be something like uid_t, int, 
+?S:	ushort, or whatever type is used to declare user ids in the kernel.
+?S:.
+?C:Uid_t (UIDTYPE):
+?C:	This symbol holds the type used to declare user ids in the kernel.
+?C:	It can be int, ushort, uid_t, etc... It may be necessary to include
+?C:	<sys/types.h> to get any typedef'ed information.
+?C:.
+?H:#define Uid_t $uidtype		/* UID type */
+?H:.
+?T:xxx
+: see what type uids are declared as in the kernel
+set uid_t uidtype xxx stdio.h sys/types.h
+eval $typedef
+case "$uidtype" in
+xxx)
+	xxx=`./findhdr sys/user.h`
+	set `grep '_ruid;' "$xxx" 2>/dev/null` unsigned short
+	case $1 in
+	unsigned) dflt="$1 $2" ;;
+	*) dflt="$1" ;;
+	esac
+	;;
+*) dflt="$uidtype";;
+esac
+echo " "
+rp="What is the type for user ids returned by getuid()?"
+. ./myread
+uidtype="$ans"
+

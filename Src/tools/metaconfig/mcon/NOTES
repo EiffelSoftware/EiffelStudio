@@ -1,0 +1,174 @@
+This file shortly documents the built-in interpreter and other new
+features from metaconfig.
+
+The notion of "conditional unit" has been added.  In the ?MAKE:  line,
+each unit whose name begins with a "+" will not be loaded in the
+Configure script unless its exact value is a mandatory.  The default
+value specified in ?DEF:  will be used instead.  If no ?DEF:  line is
+found, then the symbol is initialized with a null default value.
+
+In the config.h.SH file, only the necessary symbols are loaded.  Note
+that the format in ?H:  line has changed.  It is no longer necessary to
+write ?H:?%1:  to get a line included in config.h.  First of all, the %1
+symbol is not defined any more.  Secondly, the unit's name is now %< and
+it does not matter whether the name appears first in the ?MAKE:  line or
+not.  Lastly, metaconfig can guess for itself whether to include a
+symbol or not.
+
+Sometimes, it is necessary to force a given value, because metaconfig is
+not smart enough to guess 100% of the time.  See voidflags.U for an
+example (look at the ?C: and ?H: lines and read the comments).
+
+The Myread.U unit changed. It is now able to do variable substitutions,
+and it sets the prompt correctly if there is no supplied default. Thus,
+instead of the old:
+
+	dflt=y
+	rp="Question? [$dflt]"
+	$echo $n "$rp $c"
+	. myread
+
+you must now write:
+
+	dflt=y
+	rp='Question?'
+	. myread
+
+and 'myread' will take care of echoing the question with the default
+put in square brakets.
+
+Likewise, question asking for filenames or pathnames may now use the Getfile.U
+unit to take care of all the burden. The presetting is the same as for myread
+and the answer is finally held in $ans. But the variable $fn must be set to
+indicate the type of file and enable/disable some of the sanity checks. See
+leading comments in Getfile.U. Here is a simple example to locate the active
+file:
+
+	dflt='~news/lib'
+	fn='l~:active'
+	rp='Where is the active file?'
+	. getfile
+	active="$ans"
+
+The user may answer the question by using ~substitution and giving only the
+directory where the active file is located (in which case getfile will try
+to locate a file named 'active' in that directory). A full path may also be
+given of course, if the basename of the file is not 'active'.
+
+The units are now filtered by a built-in interpreter before getting
+loaded in Configure.  That way, a Configure script can be more or less
+tuned.  See d_gethname.U for a complex example.
+
+All the interpreter commands start with a leading '@'.  Possible
+commands include:
+
+o if/elsif/else/end is the traditional conditional construct.
+o define <symbol> tells metaconfig the <symbol> is to be defined.
+
+Expressions in conditional constructs can include the &&, || and !
+operator with same meaning as in the shell.  Backslash at the end of a
+line stands for the continuation character.  All the symbols in the
+expression stands for themselves, and their value is true if they are
+defined/wanted and false otherwise.
+
+It is possible to include shell and perl test.  All the text enclosed in
+single brackets as {<text>} is expanded in a shell as
+
+	if <text> >/dev/null 2>&1; then exit 0; else exit 1; fi
+
+whereas text in double brackets as {{<text>}} is expanded in perl as
+
+	if (<text> {exit 0;} else {exit 1;}
+
+and the exit status is used in the standard way to get a boolean value
+(i.e 0 is true and everything else is false).  See Oldconfig.U for an
+example.
+
+Metaconfig's interpreter has standard C operator priority, but you may
+force the evaluation order with parenthesis.  A simple error recovery
+attempt is made, so that you should get meaningful error messages.
+
+The simple test ?sym:  means "keep the remaining of the line iff the
+symbol is defined" and %sym:  is the same for non-definedness.
+
+Some special symbols may be put in a unit and will get expanded,
+provided the ?MAKE:  command line is 'wipe' and not 'add'.  Here are the
+available symbols:
+
+	<PACKAGENAME> is the name $package as found in .package
+	<MAINTLOC> is the $maintloc variable as found in .pakcage
+	<VERSION> is metaconfig's version number
+	<PATCHLEVEL> is metaconfig's patchlevel
+	<DATE> is the current frozen date as given by `date`
+
+A 'wipe'ed unit is passed through the interpreter too.
+
+It is also possible to declare a symbol obsolete. A warning message
+will be issued if the symbol is used and the Glossary mentions it.
+the "Obsolete" clause. The syntax is:
+
+	?C:symbol (obsolete list):
+	?S:symbol (obsolete list):
+
+If metaconfig is used with the -o option, it will generate code to remap
+those old symbols to the new ones, so the old code does not have to be changed
+right away. If you do not use -o, the Obsolete file will still be generated
+to warn you about obsolete symbols but no maping will be done.
+
+The new ?W: line can be use to tie up the destiny of some symbols. The syntax
+is:
+
+	?W:shell symbols list:C symbol list
+
+and the symbols in the shell list will be defined if one of the C symbols is.
+For instance, unit d_const.U uses the following:
+
+	?W:%<:const
+
+so that any 'const' usage in the C code will have %< (the unit name) handled
+as a wanted symbol. In particular, this has the interesting side effect of
+loading the unit into Configure when the 'const' keyword is used.
+
+This shell symbol list part may be left empty. For example unit i_time.U uses:
+
+	?W::timezone
+
+for its side effect: the symbol 'timezone' may now be part of the interpreter
+tests to conditionally load some code into Configure when struct timezone is
+used.
+
+C symbol aliasing can be used to let metaconfig know that the symbol comment
+is to be loaded in config_h.SH even when the main symbol is not used in C.
+For instance, d_const.U writes:
+
+	?C:HASCONST ~ %<:
+
+so that the HASCONST hype is loaded iff the unit (%<) is wanted. This is why
+the ?H: lines are also explicitely tied to the wanted-ness of the d_const
+symbol, by writing:
+
+	?H:?%<:#$d_const HASCONST	/**/
+	?H:?%<:#ifndef HASCONST
+	?H:?%<:#define const
+	?H:?%<:#endif
+	?H:.
+
+because we want all those lines to appear in config_h.SH as soon as the d_const
+unit is loaded into Configure.
+
+Because of the new -s (silent) option of Configure, the important messages which
+are to appear even in silent mode must be written on file descriptor #4. Others
+will simply not be echoed under -s. Note that all the questions and default
+answers are written on #4. You should write:
+
+	echo " "
+	echo "Checking to see if......" >&4
+	.....
+	echo "Yes, it does"
+
+which will have the traditional behaviour unless -s is used, in which case only
+the line
+
+	Checking to see if.....
+
+will echo on the terminal.

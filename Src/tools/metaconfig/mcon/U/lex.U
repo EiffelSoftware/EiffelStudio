@@ -1,0 +1,70 @@
+?RCS: $Id: lex.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Orginal Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  16:22:50  ram
+?RCS: patch36: spurious single quote could cause Configure to crash
+?RCS: patch36: (reported by Xavier Le Vourch <xavierl@eiffel.com>.)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:27:09  ram
+?RCS: patch32: added lexflags variable for lex flags setting
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:06:01  ram
+?RCS: patch23: added trailing blank line for metalint
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:55  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:lex lexflags: Guess Myread Oldconfig flex test
+?MAKE:	-pick add $@ %<
+?S:lex:
+?S:	This variable holds the name of the lexical analyser generator we
+?S:	want to use in the Makefile. It can be lex or flex.
+?S:.
+?S:lexflags:
+?S:	This variable holds any flags that should be passed to the lexical
+?S:	analyzer.  It is up to the Makefile to use it.
+?S:.
+: determine lexical analyser generator
+case "$lex" in
+'')
+	dflt=lex;;
+*)
+	dflt="$lex";;
+esac
+echo " "
+if $test -f "$flex"; then
+	rp='Which lexical analyser generator (lex or flex) shall I use?'
+else
+	rp='Which lexical analyser generator shall I use?'
+fi
+. ./myread
+lex="$ans"
+
+@if lexflags
+: if using lex this will normally be useless, but flex frequently takes args
+echo " "
+case "$lexflags" in
+'') dflt='none';;
+*) dflt="$lexflags";;
+esac
+rp="What flags should be given to $lex?"
+. ./myread
+case "$ans" in
+none) lexflags='';;
+*) lexflags="$ans";;
+esac
+
+@end

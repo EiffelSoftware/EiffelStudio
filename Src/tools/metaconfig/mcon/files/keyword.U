@@ -1,0 +1,57 @@
+?RCS: $Id: keyword.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS:  Copyright (c) 1991-1993, Raphael Manfredi
+?RCS:  
+?RCS:  You may redistribute only under the terms of the Artistic Licence,
+?RCS:  as specified in the README file that comes with the distribution.
+?RCS:  You may reuse parts of this distribution only within the terms of
+?RCS:  that same Artistic Licence; a copy of which may be found at the root
+?RCS:  of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:08  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_const: cat cc ccflags Setvar
+?MAKE:	-pick add $@ %<
+?S:d_<KEY>:
+?S:	This variable conditionally defines the HASCONST symbol, which
+?S:	indicates to the C program that this C compiler knows about the
+?S:	<KEY> type.
+?S:.
+?C:HAS<%KEY> ~ %<:
+?C:	This symbol, if defined, indicates that this C compiler knows about
+?C:	the <KEY> type. There is no need to actually test for that symbol
+?C:	within your programs. The mere use of the "<KEY>" keyword will
+?C:	trigger the necessary tests.
+?C:.
+?H:?%<:#$d_<KEY> HAS<%KEY>	/**/
+?H:?%<:#ifndef HAS<%KEY>
+?H:?%<:#define <KEY>
+?H:?%<:#endif
+?H:.
+?W:%<:<KEY>
+?LINT:set d_<KEY>
+?LINT:known <KEY>
+: check for <KEY> keyword
+echo " "
+echo 'Checking to see if your C compiler knows about "<KEY>"...'
+$cat ><KEY>.c <<'EOCP'
+main()
+{
+	<KEY> char *foo;
+}
+EOCP
+if $cc -c $ccflags <KEY>.c >/dev/null 2>&1 ; then
+	val="$define"
+	echo "Yup, it does."
+else
+	val="$undef"
+	echo "Nope, it doesn't."
+fi
+set d_<KEY>
+eval $setvar
+

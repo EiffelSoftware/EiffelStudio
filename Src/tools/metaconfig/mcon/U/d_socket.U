@@ -1,0 +1,125 @@
+?RCS: $Id: d_socket.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  15:46:00  ram
+?RCS: patch61: replaced .a with $_a all over the place
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:08:04  ram
+?RCS: patch16: can now safely declare private nm_extract in dependencies
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:26  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_socket d_oldsock d_sockpair socketlib sockethdr: contains libc \
+	echo n c nm_opt nm_extract Inlibc Csym _a
+?MAKE:	-pick add $@ %<
+?S:d_socket:
+?S:	This variable conditionally defines HAS_SOCKET, which indicates
+?S:	that the BSD socket interface is supported.
+?S:.
+?S:d_sockpair:
+?S:	This variable conditionally defines the HAS_SOCKETPAIR symbol, which
+?S:	indicates that the BSD socketpair() is supported.
+?S:.
+?S:d_oldsock:
+?S:	This variable conditionally defines the OLDSOCKET symbol, which
+?S:	indicates that the BSD socket interface is based on 4.1c and not 4.2.
+?S:.
+?S:socketlib:
+?S:	This variable has the names of any libraries needed for socket support.
+?S:.
+?S:sockethdr:
+?S:	This variable has any cpp -I flags needed for socket support.
+?S:.
+?C:HAS_SOCKET (SOCKET):
+?C:	This symbol, if defined, indicates that the BSD socket interface is
+?C:	supported.
+?C:.
+?C:HAS_SOCKETPAIR (SOCKETPAIR):
+?C:	This symbol, if defined, indicates that the BSD socketpair() call is
+?C:	supported.
+?C:.
+?C:USE_OLDSOCKET (OLDSOCKET):
+?C:	This symbol, if defined, indicates that the 4.1c BSD socket interface
+?C:	is supported instead of the 4.2/4.3 BSD socket interface. For instance,
+?C:	there is no setsockopt() call.
+?C:.
+?H:#$d_socket HAS_SOCKET		/**/
+?H:#$d_sockpair HAS_SOCKETPAIR	/**/
+?H:#$d_oldsock USE_OLDSOCKET	/**/
+?H:.
+?T:val
+?LINT:set d_sockpair
+socketlib=''
+sockethdr=''
+: see whether socket exists
+echo " "
+$echo $n "Hmm... $c" >&4
+if set socket val -f d_socket; eval $csym; $val; then
+	echo "Looks like you have Berkeley networking support." >&4
+	d_socket="$define"
+?X: now check for advanced features
+	if set setsockopt val -f; eval $csym; $val; then
+		d_oldsock="$undef"
+	else
+		echo "...but it uses the old 4.1c interface, rather than 4.2" >&4
+		d_oldsock="$define"
+	fi
+else
+?X: HP-UX, for one, puts all the socket stuff in socklib.o. Note that if we
+?X:	come here on HP-UX, then we must have used nm to get symbols, or we really
+?X: don't have sockets anyway...
+	if $contains socklib libc.list >/dev/null 2>&1; then
+		echo "Looks like you have Berkeley networking support." >&4
+		d_socket="$define"
+		: we will have to assume that it supports the 4.2 BSD interface
+		d_oldsock="$undef"
+	else
+		echo "You don't have Berkeley networking in libc$_a..." >&4
+?X: look for an optional networking library
+		if test -f /usr/lib/libnet$_a; then
+?X: space between two  '(' needed for ksh
+			( (nm $nm_opt /usr/lib/libnet$_a | eval $nm_extract) ||  \
+			ar t /usr/lib/libnet$_a) 2>/dev/null >> libc.list
+			if $contains socket libc.list >/dev/null 2>&1; then
+			echo "...but the Wollongong group seems to have hacked it in." >&4
+				socketlib="-lnet"
+				sockethdr="-I/usr/netinclude"
+				d_socket="$define"
+?X: now check for advanced features
+				if $contains setsockopt libc.list >/dev/null 2>&1; then
+					d_oldsock="$undef"
+				else
+					echo "...using the old 4.1c interface, rather than 4.2" >&4
+					d_oldsock="$define"
+				fi
+			else
+				echo "or even in libnet$_a, which is peculiar." >&4
+				d_socket="$undef"
+				d_oldsock="$undef"
+			fi
+		else
+			echo "or anywhere else I see." >&4
+			d_socket="$undef"
+			d_oldsock="$undef"
+		fi
+	fi
+fi
+
+@if HAS_SOCKETPAIR || d_sockpair
+: see if socketpair exists
+set socketpair d_sockpair
+eval $inlibc
+
+@end

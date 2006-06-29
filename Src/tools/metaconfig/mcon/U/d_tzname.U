@@ -1,0 +1,45 @@
+?RCS: $Id: d_tzname.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:14:43  ram
+?RCS: patch32: forgot to set proper value in the val variable
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  06:57:55  ram
+?RCS: patch30: created
+?RCS:
+?MAKE:d_tzname: Csym Setvar
+?MAKE:	-pick add $@ %<
+?S:d_tzname:
+?S:	This variable conditionally defines HAS_TZNAME if tzname[] is
+?S:	available to access timezone names.
+?S:.
+?C:HAS_TZNAME:
+?C:	This symbol, if defined, indicates that the tzname[] array is
+?C:	available to access timezone names.
+?C:.
+?H:#$d_tzname HAS_TZNAME		/**/
+?H:.
+?LINT:set d_tzname
+: see if tzname[] exists
+echo " "
+if set tzname val -a d_tzname; eval $csym; $val; then
+	val="$define"
+	echo 'tzname[] found.' >&4
+else
+	val="$undef"
+	echo 'tzname[] NOT found.' >&4
+fi
+set d_tzname
+eval $setvar
+

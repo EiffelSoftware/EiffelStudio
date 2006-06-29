@@ -1,0 +1,47 @@
+?RCS: $Id: d_bcopy.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1993/10/16  13:48:04  ram
+?RCS: patch12: added magic support for bcopy()
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:01:11  ram
+?RCS: patch10: now only defines HAS_BCOPY, no macro remap on memcpy (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:44  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_bcopy: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_bcopy:
+?S:	This variable conditionally defines the HAS_BCOPY symbol if
+?S:	the bcopy() routine is available to copy strings.
+?S:.
+?C:HAS_BCOPY:
+?C:	This symbol is defined if the bcopy() routine is available to
+?C:	copy blocks of memory.
+?C:.
+?H:#$d_bcopy HAS_BCOPY	/**/
+?H:.
+?M:bcopy: HAS_BCOPY
+?M:#ifndef HAS_BCOPY
+?M:#ifndef bcopy
+?M:#define bcopy(s,d,l) memcpy((d),(s),(l))
+?M:#endif
+?M:#endif
+?M:.
+?LINT:set d_bcopy
+: see if bcopy exists
+set bcopy d_bcopy
+eval $inlibc
+

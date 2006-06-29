@@ -1,0 +1,92 @@
+''' $Id: kitpost.man 78389 2004-11-30 00:17:17Z manus $
+'''
+'''  Copyright (c) 1991-1993, Raphael Manfredi
+'''  
+'''  You may redistribute only under the terms of the Artistic Licence,
+'''  as specified in the README file that comes with the distribution.
+'''  You may reuse parts of this distribution only within the terms of
+'''  that same Artistic Licence; a copy of which may be found at the root
+'''  of the source tree for dist 3.0.
+'''
+''' $Log$
+''' Revision 1.1  2004/11/30 00:17:18  manus
+''' Initial revision
+'''
+''' Revision 3.0.1.2  1995/05/12  11:58:09  ram
+''' patch54: updated my e-mail address
+'''
+''' Revision 3.0.1.1  1994/05/06  13:55:01  ram
+''' patch23: created
+'''
+.TH KITSEND 1 ram
+.SH NAME
+kitpost \- posts distribution kits
+.SH SYNOPSIS
+.B kitpost
+[
+.B \-hrV
+] [
+.B -H
+.I file
+] [
+.B -D
+.I desc
+] [
+.B -m
+.I dest1,dest2
+] [ 
+.I kits
+] [
+.I newsgroups
+]
+.SH DESCRIPTION
+.I Kitpost
+posts distribution kits made by \fImakedist\fR to some (source) newsgroups
+specified on the command line. If you do not specify any kit list, then all the
+kits are sent. Otherwise, only the specified kits will be (re)sent.
+.PP
+A kit list may include ranges, \fI1-10\fR specifying kits 1 through 10,
+and \fI5-\fR meaning kits 5 up to the last one. You may also specify kit
+numbers by separating them with commas or spaces, and even mix with ranges,
+such as: \fI1 3 5-7 9\fR.
+.PP
+.I Kitpost
+ensures correct \fIReferences:\fR lines are inserted in your postings so that
+all parts but the first point to the root article. Threaded newsreaders and
+end-users traditionally appreciate that.
+.SH OPTIONS
+The following options are recognized by \fIkitpost\fR:
+.TP 10
+.B \-h
+Print help message and exit.
+.TP
+\fB\-m\fI dest1,destn\fR
+Sends kits by e-mail to the specified recipients. This option may be used in
+conjunction with newsgroup posting. It is mainly intended for sites where
+direct posting to a moderated newsgroup is not allowed by \fIinews\fR. You may
+thus send your kits to the newsgroup moderator in a form that will ease the
+whole posting process.
+.TP
+.B \-r
+Signals a repost.
+.TP
+\fB\-D\fI description\fR
+Specify a description string that will be added to the subject line. Usually
+a brief sentence (less than, say, 40 characters).
+.TP
+\fB\-H\fI file\fR
+Specify a file to be used as header introduction in the first part of your
+posting. Usually the root README file.
+.TP
+.B \-V
+Print version number and exit.
+.SH BUGS
+Article cross-referencing is properly set-up only when the whole package is
+(re)posted in one batch.
+.PP
+It is not currently possible to set-up the article headers manually or
+better, interactively.
+.SH AUTHOR
+Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+.SH "SEE ALSO"
+makedist(1), kitsend(1).

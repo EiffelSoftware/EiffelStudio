@@ -1,0 +1,14 @@
+Here are some known bugs that I plan to fix soon.
+
++ Patname ought to ask for a log message for the symbolic number.
+
++ A unit name is always wanted by Configure. Hence in a unit d_waitpid, if
+you write:
+
+	@if WAITPID || d_waitpid
+	.....
+	@end
+
+then the <....> part of the code will always be loaded even if no shell
+script references d_waitpid or C code references WAITPID.
+

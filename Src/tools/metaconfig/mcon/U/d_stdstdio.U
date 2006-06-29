@@ -1,0 +1,328 @@
+?RCS: $Id: d_stdstdio.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Tye McQueen <tye@metronet.com>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  15:46:32  ram
+?RCS: patch61: merged with perl5's unit
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:06:54  ram
+?RCS: patch56: typo fix on ?C: line for FILE_bufsiz
+?RCS: patch56: fixed unbalanced parenthesis (ADO)
+?RCS: patch56: check whether FILE_cnt and FILE_ptr can be assigned to (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1995/05/12  12:12:11  ram
+?RCS: patch54: complete rewrite by Tye McQueen to fit modern systems
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:31  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_stdstdio d_stdiobase stdio_ptr stdio_cnt stdio_base \
+	stdio_bufsiz d_stdio_cnt_lval d_stdio_ptr_lval stdio_filbuf: cat \
+	+cc +ccflags contains +ldflags +libs rm \
+	Setvar Findhdr Oldconfig
+?MAKE:	-pick add $@ %<
+?S:d_stdstdio:
+?S:	This variable conditionally defines USE_STDIO_PTR if this system
+?S:	has a FILE structure declaring usable _ptr and _cnt fields (or
+?S:	equivalent) in stdio.h.
+?S:.
+?S:stdio_ptr:
+?S:	This variable defines how, given a FILE pointer, fp, to access the
+?S:	_ptr field (or equivalent) of stdio.h's FILE structure.  This will
+?S:	be used to define the macro FILE_ptr(fp).
+?S:.
+?S:d_stdio_ptr_lval:
+?S:	This variable conditionally defines STDIO_PTR_LVALUE if the
+?S:	FILE_ptr macro can be used as an lvalue.
+?S:.
+?S:stdio_cnt:
+?S:	This variable defines how, given a FILE pointer, fp, to access the
+?S:	_cnt field (or equivalent) of stdio.h's FILE structure.  This will
+?S:	be used to define the macro FILE_cnt(fp).
+?S:.
+?S:d_stdio_cnt_lval:
+?S:	This variable conditionally defines STDIO_CNT_LVALUE if the
+?S:	FILE_cnt macro can be used as an lvalue.
+?S:.
+?S:stdio_filbuf:
+?S:	This variable defines how, given a FILE pointer, fp, to tell
+?S:	stdio to refill it's internal buffers (?).  This will
+?S:	be used to define the macro FILE_filbuf(fp).
+?S:.
+?S:d_stdiobase:
+?S:	This variable conditionally defines USE_STDIO_BASE if this system
+?S:	has a FILE structure declaring a usable _base field (or equivalent)
+?S:	in stdio.h.
+?S:.
+?S:stdio_base:
+?S:	This variable defines how, given a FILE pointer, fp, to access the
+?S:	_base field (or equivalent) of stdio.h's FILE structure.  This will
+?S:	be used to define the macro FILE_base(fp).
+?S:.
+?S:stdio_bufsiz:
+?S:	This variable defines how, given a FILE pointer, fp, to determine
+?S:	the number of bytes store in the I/O buffer pointer to by the
+?S:	_base field (or equivalent) of stdio.h's FILE structure.  This will
+?S:	be used to define the macro FILE_bufsiz(fp).
+?S:.
+?C:USE_STDIO_PTR ~ d_stdstdio (USE_STD_STDIO STDSTDIO):
+?C:	This symbol is defined if the _ptr and _cnt fields (or similar)
+?C:	of the stdio FILE structure can be used to access the stdio buffer
+?C:	for a file handle.  If this is defined, then the FILE_ptr(fp)
+?C:	and FILE_cnt(fp) macros will also be defined and should be used
+?C:	to access these fields.
+?C:.
+?C:FILE_ptr:
+?C:	This macro is used to access the _ptr field (or equivalent) of the
+?C:	FILE structure pointed to by its argument. This macro will always be
+?C:	defined if USE_STDIO_PTR is defined.
+?C:.
+?C:STDIO_PTR_LVALUE:
+?C:	This symbol is defined if the FILE_ptr macro can be used as an
+?C:	lvalue.
+?C:.
+?C:FILE_cnt:
+?C:	This macro is used to access the _cnt field (or equivalent) of the
+?C:	FILE structure pointed to by its argument. This macro will always be
+?C:	defined if USE_STDIO_PTR is defined.
+?C:.
+?C:STDIO_CNT_LVALUE:
+?C:	This symbol is defined if the FILE_cnt macro can be used as an
+?C:	lvalue.
+?C:.
+?C:FILE_filbuf:
+?C:	This macro is used to access the internal stdio _filbuf function
+?C:	(or equivalent), if STDIO_CNT_LVALUE and STDIO_PTR_LVALUE
+?C:	are defined.  It is typically either _filbuf or __filbuf.
+?C:	This macro will only be defined if both STDIO_CNT_LVALUE and
+?C:	STDIO_PTR_LVALUE are defined.
+?C:.
+?H:?d_stdstdio:#$d_stdstdio USE_STDIO_PTR 	/**/
+?H:?d_stdstdio:#ifdef USE_STDIO_PTR
+?H:#define FILE_ptr(fp)	$stdio_ptr
+?H:#$d_stdio_ptr_lval STDIO_PTR_LVALUE 		/**/
+?H:#define FILE_cnt(fp)	$stdio_cnt
+?H:#$d_stdio_cnt_lval STDIO_CNT_LVALUE 		/**/
+?H:?d_stdstdio:#if defined(STDIO_PTR_LVALUE) && defined(STDIO_CNT_LVALUE)
+?H:#define FILE_filbuf(fp)	$stdio_filbuf 		/**/
+?H:?d_stdstdio:#endif
+?H:?d_stdstdio:#endif
+?H:.
+?W:d_stdstdio:FILE_ptr FILE_cnt FILE_filbuf
+?C:USE_STDIO_BASE ~ d_stdiobase:
+?C:	This symbol is defined if the _base field (or similar) of the
+?C:	stdio FILE structure can be used to access the stdio buffer for
+?C:	a file handle.  If this is defined, then the FILE_base(fp) macro
+?C:	will also be defined and should be used to access this field.
+?C:	Also, the FILE_bufsiz(fp) macro will be defined and should be used
+?C:	to determine the number of bytes in the buffer.  USE_STDIO_BASE
+?C:	will never be defined unless USE_STDIO_PTR is.
+?C:.
+?C:FILE_base:
+?C:	This macro is used to access the _base field (or equivalent) of the
+?C:	FILE structure pointed to by its argument. This macro will always be
+?C:	defined if USE_STDIO_BASE is defined.
+?C:.
+?C:FILE_bufsiz:
+?C:	This macro is used to determine the number of bytes in the I/O
+?C:	buffer pointed to by _base field (or equivalent) of the FILE
+?C:	structure pointed to its argument. This macro will always be defined
+?C:	if USE_STDIO_BASE is defined.
+?C:.
+?H:?d_stdiobase:#$d_stdiobase USE_STDIO_BASE 	/**/
+?H:?d_stdiobase:#ifdef USE_STDIO_BASE
+?H:#define FILE_base(fp)	$stdio_base
+?H:#define FILE_bufsiz(fp)	$stdio_bufsiz
+?H:?d_stdiobase:#endif
+?H:.
+?W:d_stdiobase:FILE_base FILE_bufsiz
+?LINT:set d_stdstdio d_stdiobase d_stdio_ptr_lval d_stdio_cnt_lval
+?T:ptr_lval cnt_lval filbuf xxx
+?F:!try
+: see if _ptr and _cnt from stdio act std
+echo " "
+if $contains '_IO_fpos_t' `./findhdr stdio.h` >/dev/null 2>&1 ; then
+	echo "(Looks like you have stdio.h from Linux.)"
+	case "$stdio_ptr" in
+	'') stdio_ptr='((fp)->_IO_read_ptr)'
+		ptr_lval=$define
+		;;
+	*)	ptr_lval=$d_stdio_ptr_lval;;
+	esac
+	case "$stdio_cnt" in
+	'') stdio_cnt='((fp)->_IO_read_end - (fp)->_IO_read_ptr)'
+		cnt_lval=$undef
+		;;
+	*)	cnt_lval=$d_stdio_cnt_lval;;
+	esac
+	case "$stdio_base" in
+	'') stdio_base='((fp)->_IO_read_base)';;
+	esac
+	case "$stdio_bufsiz" in
+	'') stdio_bufsiz='((fp)->_IO_read_end - (fp)->_IO_read_base)';;
+	esac
+else
+	case "$stdio_ptr" in
+	'') stdio_ptr='((fp)->_ptr)'
+		ptr_lval=$define
+		;;
+	*)	ptr_lval=$d_stdio_ptr_lval;;
+	esac
+	case "$stdio_cnt" in
+	'') stdio_cnt='((fp)->_cnt)'
+		cnt_lval=$define
+		;;
+	*)	cnt_lval=$d_stdio_cnt_lval;;
+	esac
+	case "$stdio_base" in
+	'') stdio_base='((fp)->_base)';;
+	esac
+	case "$stdio_bufsiz" in
+	'') stdio_bufsiz='((fp)->_cnt + (fp)->_ptr - (fp)->_base)';;
+	esac
+fi
+: test whether _ptr and _cnt really work
+echo "Checking how std your stdio is..." >&4
+$cat >try.c <<EOP
+#include <stdio.h>
+#define FILE_ptr(fp)	$stdio_ptr
+#define FILE_cnt(fp)	$stdio_cnt
+main() {
+	FILE *fp = fopen("try.c", "r");
+	char c = getc(fp);
+	if (
+		18 <= FILE_cnt(fp) &&
+		strncmp(FILE_ptr(fp), "include <stdio.h>\n", 18) == 0
+	)
+		exit(0);
+	exit(1);
+}
+EOP
+val="$undef"
+if $cc $ccflags $ldflags -o try try.c $libs >/dev/null 2>&1; then
+	if ./try; then
+		echo "Your stdio acts pretty std."
+		val="$define"
+	else
+		echo "Your stdio isn't very std."
+	fi
+else
+	echo "Your stdio doesn't appear very std."
+fi
+$rm -f try.c try
+set d_stdstdio
+eval $setvar
+
+@if STDIO_PTR_LVALUE || d_stdio_ptr_lval
+: Can _ptr be used as an lvalue?
+?X: Only makes sense if we have a known stdio implementation.
+case "$d_stdstdio$ptr_lval" in
+$define$define) val=$define ;;
+*) val=$undef ;;
+esac
+set d_stdio_ptr_lval
+eval $setvar
+
+@end
+@if STDIO_CNT_LVALUE || d_stdio_cnt_lval
+: Can _cnt be used as an lvalue?
+?X: Only makes sense if we have a known stdio implementation.
+case "$d_stdstdio$cnt_lval" in
+$define$define) val=$define ;;
+*) val=$undef ;;
+esac
+set d_stdio_cnt_lval
+eval $setvar
+
+@end
+@if FILE_filbuf
+: How to access the stdio _filbuf or __filbuf function.
+: If this fails, check how the getc macro in stdio.h works.
+case "${d_stdio_ptr_lval}${d_stdio_cnt_lval}" in
+${define}${define})
+	: Try $hint value, if any, then _filbuf, __filbuf, _fill, then punt.
+	: _fill is for os/2.
+	xxx='notok'
+	for filbuf in $stdio_filbuf '_filbuf(fp)' '__filbuf(fp) ' '_fill(fp)' ; do
+		$cat >try.c <<EOP
+#include <stdio.h>
+#define FILE_ptr(fp)	$stdio_ptr
+#define FILE_cnt(fp)	$stdio_cnt
+#define FILE_filbuf(fp)	$filbuf
+main() {
+	FILE *fp = fopen("try.c", "r");
+	int c;
+	c = getc(fp);
+	c = FILE_filbuf(fp);  /* Just looking for linker errors.*/
+	exit(0);
+}
+EOP
+		if $cc $ccflags $ldflags -o try try.c $libs >/dev/null 2>&1 && ./try; then
+			echo "Your stdio appears to use $filbuf"
+			stdio_filbuf="$filbuf"
+			xxx='ok'
+			break
+		else
+			echo "Hmm.  $filbuf doesn't seem to work."
+		fi
+		$rm -f try.c try
+	done
+	case "$xxx" in
+	notok)	echo "I can't figure out how to access _filbuf"
+			echo "I'll just have to work around it."
+			d_stdio_ptr_lval="$undef"
+			d_stdio_cnt_lval="$undef"
+			;;
+	esac
+	;;
+esac
+@end
+@if d_stdiobase || USE_STDIO_BASE || FILE_base || FILE_bufsiz
+: see if _base is also standard
+val="$undef"
+case "$d_stdstdio" in
+$define)
+	$cat >try.c <<EOP
+#include <stdio.h>
+#define FILE_base(fp)	$stdio_base
+#define FILE_bufsiz(fp)	$stdio_bufsiz
+main() {
+	FILE *fp = fopen("try.c", "r");
+	char c = getc(fp);
+	if (
+		19 <= FILE_bufsiz(fp) &&
+		strncmp(FILE_base(fp), "#include <stdio.h>\n", 19) == 0
+	)
+		exit(0);
+	exit(1);
+}
+EOP
+	if $cc $ccflags $ldflags -o try try.c $libs > /dev/null 2>&1; then
+		if ./try; then
+			echo "And its _base field acts std."
+			val="$define"
+		else
+			echo "But its _base field isn't std."
+		fi
+	else
+		echo "However, it seems to be lacking the _base field."
+	fi
+	$rm -f try.c try
+	;;
+esac
+set d_stdiobase
+eval $setvar
+
+@end

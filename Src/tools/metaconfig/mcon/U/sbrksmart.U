@@ -1,0 +1,87 @@
+?RCS: $Id: sbrksmart.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/01/11  15:35:41  ram
+?RCS: patch45: now sets sbrksmart to undef explicitely when lacking sbrk()
+?RCS: patch45: forgot a cast when using return value from sbrk()
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:16:45  ram
+?RCS: patch16: created
+?RCS:
+?MAKE:sbrksmart: cat d_sbrk +cc +ccflags +libs rm
+?MAKE:	-pick add $@ %<
+?S:sbrksmart:
+?S:	This variable conditionally defines HAS_SMART_SBRK if the sbrk()
+?S:	routine honors a negative argument to lower the break value.
+?S:.
+?C:HAS_SMART_SBRK:
+?C:	This symbol is defined when the sbrk() system call may be used with
+?C:	a negative argument to lower the break value, therefore releasing
+?C:	core to the system. If not, you'd probably be better off using the
+?C:	mmap() system call.
+?C:.
+?H:#$sbrksmart HAS_SMART_SBRK /**/
+?H:.
+?T:dumb
+: see if sbrk can release core to the kernel
+echo " "
+case "$d_sbrk" in
+"$define")
+	echo "Let's see if your sbrk() is smart enough to release core..." >&4
+	$cat > sbrk.c <<'EOC'
+#define INC 256		/* Small enough to be less than a page size */
+
+main()
+{
+	char *obrk = (char *) sbrk(0);
+	char *nbrk;
+
+	nbrk = (char *) sbrk(INC);
+	if (nbrk == (char *) -1)
+		exit(1);	/* Not enough memory */
+	if (nbrk != obrk)
+		exit(2);	/* Unreliable sbrk() */
+	nbrk = (char *) sbrk(-INC);
+	if (nbrk == (char *) -1)
+		exit(3);	/* May have understood negative arg as huge positive */
+	if (obrk != (char *) sbrk(0))
+		exit(4);	/* Not smart, definitely */
+
+	exit(0);		/* Ok */
+}
+EOC
+	sbrksmart="$undef"
+	dumb='-- assuming dumb sbrk().'
+	if $cc $ccflags -o sbrk sbrk.c $libs >/dev/null 2>&1; then
+		./sbrk >/dev/null 2>&1
+		case $? in
+		0) sbrksmart="$define"
+			echo "Yes, it can be used with negative values." ;;
+		1) echo "Sorry, not enough memory $dumb" ;;
+		2) echo "No it's not, and besides it seems to be buggy..." ;;
+		3) echo "No, it fails with negative values." ;;
+		4) echo "Nope, your sbrk() is too dumb." ;;
+		*) echo "Err... Unexpected result $dumb" ;;
+		esac
+	else
+		echo "(Could not compile test program $dumb)"
+	fi
+	;;
+*)
+	echo "Since you don't have sbrk(), let's forget about the smart test!"
+	sbrksmart="$undef"
+	;;
+esac
+$rm -f sbrk sbrk.* core
+

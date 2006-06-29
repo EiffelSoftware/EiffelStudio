@@ -1,0 +1,37 @@
+?RCS: $Id: Warn_v7EXT.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:01:42  ram
+?RCS: patch36: call ./v7 explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:17  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: 
+?X: This unit issues warnings to V7 sites that they are living dangerously.
+?X: This unit needs to get mentioned in End.U to get included.
+?X: 
+?MAKE:Warn_v7EXT: package Guess 
+?MAKE:	-pick add $@ %<
+: Warnings
+if ./v7; then
+	cat <<'EOM'
+ 
+NOTE: the V7 compiler may ignore some #undefs that $package uses.  If so,
+you may get messages about redefining EXT.  Some V7 compilers also have
+difficulties with #defines near buffer boundaries, so beware.  You may have
+to play with the spacing in some .h files, believe it or not.
+EOM
+fi
+

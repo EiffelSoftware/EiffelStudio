@@ -1,0 +1,60 @@
+?RCS: $Id: make.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:09:40  ram
+?RCS: patch61: created
+?RCS:
+?MAKE:make_set_make : Loc rm sed make
+?MAKE:	-pick add $@ %<
+?S:make_set_make:
+?S:	Some versions of 'make' set the variable MAKE.  Others do not.
+?S:	This variable contains the string to be included in Makefile.SH
+?S:	so that MAKE is set if needed, and not if not needed.
+?S:	Possible values are:
+?S:	make_set_make='#'		# If your make program handles this for you,
+?S:	make_set_make="MAKE=$make"	# if it doesn't.
+?S:	I used a comment character so that we can distinguish a
+?S:	'set' value (from a previous config.sh or Configure -D option)
+?S:	from an uncomputed value.
+?S:.
+?LINT: extern MAKE
+?LINT: change MAKE
+?T:maketemp
+?X: This test is based on one from an autoconf-generated configure
+?X: script. Autoconf stole a lot from Configure, but now it's our
+?X: turn to do so... ;-) -- RAM, 21/02/97
+echo " "
+echo "Checking if your $make program sets \$(MAKE)..." >&4
+case "$make_set_make" in
+'')
+?X: Use sed so we don't have a line begining with @echo.  Metaconfig
+?X: will think that's a command like @if or @end.
+	$sed 's/^X //' > testmake.mak << 'EOF'
+Xall:
+X 	@echo 'maketemp="$(MAKE)"'
+EOF
+?X: GNU make sometimes prints "make[1]: Entering...", which would confuse us
+	case "`$make -f testmake.mak 2>/dev/null`" in
+	*maketemp=*) make_set_make='#' ;;
+	*)	make_set_make="MAKE=$make" ;;
+	esac
+	$rm -f testmake.mak
+	;;
+esac
+case "$make_set_make" in
+'#') echo "Yup, it does.";;
+*) echo "Nope, it doesn't.";;
+esac
+

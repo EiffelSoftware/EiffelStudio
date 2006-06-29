@@ -1,0 +1,112 @@
+INTRO
+
+This version of dist has been written by Raphael Manfredi based on
+previous work from Larry Wall and Harlan Stenn.
+
+HISTORY
+
+I started working on this in September 1990 while I was still a student
+at the Ecole des Mines de Saint-Etienne, France. From then on, I worked
+during two years at ISE (building the Eiffel 3.0 compiler -- the run-time
+part and code generation). Since I chose to use metaconfig for the run-time
+library, which is written in plain C, I had the chance to continue improving
+the whole dist package.
+
+By the end of  1991, I contacted Harlan Stenn <harlan@mumps.pfcs.com> who had
+been working separately on his own dist version. I started the painful merge.
+At the same time, I started releasing alpha version of dist 3.0.
+
+In 1992, I started a parallel project: mailagent. The dist 2.0 release upon
+which this work is based included a simple perl script called mailagent, whose
+sole job was to filter out @SH commands to automatically mail patches to some
+people. I liked the idea of having a perl mail filter and so I extended
+mailagent up to the point where it became really big and only marginally
+dist-related. I released it on the net (comp.sources.misc) on July 1992, after
+7 months of hard work.
+
+In March 1993, I left ISE and returned to France to join ACRI. The dist 3.0
+package was "almost" finished by that time, but the documentation was no
+longer accurate and needed a lot of work. My new job does not give me enough
+free time, so things have been longer than I expected.
+
+In July 1993, under the pressure of many of my alpha testers, I decided to
+go into the final process, sacrifying nights and week ends to finish up what
+turns out to have been a 3 years process...
+
+CREDITS
+
+My first thanks will go to Larry Wall <lwall@netlabs.com> who wrote perl
+and dist 2.0 in the first place. I would never have dived into dist 2.0
+if it had not been written in perl.
+
+During my work, I had the chance to benefit some useful comments and
+contributions from Craig Kolb <craig@weedeater.math.yale.edu> who
+has been the very first user of metaconfig (with a rather pre-historic
+version). He used it on its rayshade 4.0 release (a ray tracing program).
+
+Then of course, many thanks are due to my co-worker, Harlan Stenn
+<harlan@mumps.pfcs.com>. Although I did the integration of his work all by
+myself, I have found many good ideas in his early work. For instance, he wrote
+the first implementation of the metalint program, something I could not live
+without today! His remarks, comments and encouragements have always been
+appreciated, even though we did not always agree on the same things at the
+same time...
+
+Then I would like to thank the many contributors to the metaconfig units.
+I hope I'm not forgetting anybody! Here they come, in alphabetical order:
+(sorted on the first name)
+
+	Andy Dougherty <doughera@lafcol.lafayette.edu>
+	Craig Kolb <craig@weedeater.math.yale.edu>
+	Graham Stoney <greyham@research.canon.oz.au>
+	Harlan Stenn <harlan@mumps.pfcs.com>
+	Jan Djarv <Jan.Djarv@sa.erisoft.se>
+	Larry Wall <lwall@netlabs.com>
+	Ralf E. Stranzenbach <ralf@reswi.en.open.de>
+	Scott Grosch <garath@engin.umich.edu>
+	Syd Weinstein <syd@dsi.com>
+	Thomas Neumann <tom@smart.bo.open.de>
+	Wayne Davison <davison@borland.com>
+
+If I forgot your name, please let me know, and accept my apologies (not
+necessarily in that order ;-).
+
+Finally, thank you Shigeya Suzuki <shigeya@foretune.co.jp> for hosting the
+dist-users mailing list. Send mail to majordomo@foretune.co.jp to subscribe.
+
+	Raphael Manfredi <ram@acri.fr>
+	Lyon, France, August 1993
+
+[This section added by subsequent patches]
+
+PATCHES
+
+I'm grateful to the following people for sending me patches and/or reporting
+bugs and giving me some suggestions (sorted on the first name):
+
+	Andy Dougherty <andy@crystal.phys.lafayette.edu>
+	Graham Stoney <greyham@research.canon.oz.au>
+	Ilya Zakharevich <ilya@math.ohio-state.edu>
+	Jarkko Hietaniemi <jhi@snakemail.hut.fi>
+	Joseph H Buehler <jhpb@sarto.gaithersburg.md.us>
+	Keith Walker <kew@timesink.spk.wa.us>
+	Scott Presnell <srp@cgl.ucsf.edu>
+	Wayne Davison <davison@borland.com>
+
+Due to a mistake of mine, changes from Wayne Davison were flagged 'WAD',
+but his middle initial being an 'E', new ones are now flagged as 'WED'.
+Sorry Wayne, I did not know. We don't use middle initials here in Europe.
+
+Special thanks to the perl5 Patch Pumpkin Holders (in chronological order):
+
+	Andy Dougherty <andy@crystal.phys.lafayette.edu>
+	Chip Salzenberg <chip@atlantic.net>
+
+for their wonderful creativity. Perl5 is by far the largest metaconfig
+customer with the widest audience, so Configure got run on a variety
+of new platforms requiring specific fixes... which they provided,
+thereby greatly enhancing the metaconfig "portability database".
+
+	Raphael Manfredi <Raphael_Manfredi@grenoble.hp.com>
+	Grenoble, France, February 1997
+

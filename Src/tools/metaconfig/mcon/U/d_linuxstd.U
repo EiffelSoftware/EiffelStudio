@@ -1,0 +1,58 @@
+?RCS: $Id: d_linuxstd.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:14:05  ram
+?RCS: patch36: created by ADO
+?RCS:
+?MAKE:d_linuxstd: d_stdstdio cppstdin cppflags cppminus \
+	contains rm Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_linuxstd:
+?S:	This variable conditionally defines USE_LINUX_STDIO if this system
+?S:	has a FILE structure declaring _IO_read_base, _IO_read_ptr,
+?S:	and _IO_read_end in stdio.h.
+?S:.
+?C:USE_LINUX_STDIO:
+?C:	This symbol is defined if this system has a FILE structure declaring
+?C:	_IO_read_base, _IO_read_ptr, and _IO_read_end in stdio.h.
+?C:.
+?H:#$d_linuxstd USE_LINUX_STDIO 	/**/
+?H:.
+?T:xxx
+?LINT:set d_linuxstd
+: see if stdio is like that in linux
+case "$d_stdstdio" in
+"$undef")
+	echo " "
+	xxx=`./findhdr stdio.h`
+	$cppstdin $cppflags $cppminus < "$xxx" > stdio.E
+	if $contains 'char.*_IO_read_base' stdio.E >/dev/null 2>&1 && \
+		$contains '_IO_read_ptr' stdio.E >/dev/null 2>&1 && \
+		$contains '_IO_read_end' stdio.E >/dev/null 2>&1 ; then
+			echo "Your stdio looks like linux." >&4
+			val="$define"
+	else
+		echo "You don't have linux stdio, either." >&4
+		val="$undef"
+	fi
+	$rm -f stdio.E
+	;;
+*)	val="$undef" ;;
+esac
+
+set d_linuxstd
+eval $setvar
+

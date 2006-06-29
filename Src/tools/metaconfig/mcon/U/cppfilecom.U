@@ -1,0 +1,205 @@
+?RCS: $Id: cppfilecom.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Orginal Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:37  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:cppfilecom cppstdinflags d_cppignhdrs d_cppcanstdin: \
+	contains package test Myread Oldconfig Loc Setvar cpp cc cat rm
+?MAKE:	-pick add $@ %<
+?S:cppfilecom:
+?S:	This variable contains the first part of the string which will invoke
+?S:	the C preprocessor a file and produce to standard output, preserving
+?S:	comments. Typical value of "cc -E -C" or "/lib/cpp -C".
+?S:.
+?S:cppstdinflags:
+?S:	This variable contains any flags necessary to get cppfilecom to read
+?S:	from the standard input.
+?S:.
+?S:d_cppignhdrs:
+?S:	This symbol conditionally defines CPP_IGN_HDRS if CPP_FILE_COM ignores
+?S:	*.h files.
+?S:.
+?S:d_cppcanstdin:
+?S:	This symbol conditionally defines CPP_CAN_STDIN if CPP_FILE_COM can
+?S:	read standard input directly.
+?S:.
+?C:CPP_FILE_COM (CPPFILECOM):
+?C:	This symbol contains the first part of the string which will invoke
+?C:	the C preprocessor a file and produce to standard output, preserving
+?C:	comments. Typical value of "cc -E -C" or "/lib/cpp -C".
+?C:.
+?C:CPP_STDIN_FLAGS (CPPSTDINFLAGS):
+?C:	This variable contains any flags necessary to get CPP_FILE_COM to
+?C:	read from the standard input.
+?C:.
+?C:CPP_IGN_HDRS (CPPIGNHDRS):
+?C:	This symbol is defined if CPP_FILE_COM ignores *.h files.
+?C:.
+?C:CPP_CAN_STDIN (CPPCANSTDIN):
+?C:	This symbol is defined if CPP_FILE_COM can read standard input
+?C:	directly.
+?C:.
+?H:#define CPP_FILE_COM "$cppfilecom"
+?H:#define CPP_STDIN_FLAGS "$cppstdinflags"
+?H:#$d_cppignhdrs CPP_IGN_HDRS		/* does CPP ignore .h files? */
+?H:#$d_cppcanstdin CPP_CAN_STDIN 	/* can CPP read stdin directly? */
+?H:.
+?T:cont
+?LINT:set d_cppcanstdin d_cppignhdrs
+: see how we invoke the C preprocessor
+$cat <<EOM
+
+$package needs to be able to preprocess its input files in a mode which
+preserves comments, which is often not the default behaviour.  It should run
+the C preprocessor you will use when compiling your own source code, which
+should be ISO/ANSI C compliant if you want $package to handle the latest
+standard C.  I will try to guess, but I might guess wrongly because it is not
+necessarily the same preprocessor used to build $package.
+
+EOM
+$cat <<'EOT' >testcpp.c
+#define ABC abc
+#define XYZ xyz
+ABC.XYZ
+/* comment */
+EOT
+:
+if $test "X$cppfilecom" != "X" && \
+	$cppfilecom testcpp.c </dev/null >testcpp.out 2>/dev/null && \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "You used to use $cppfilecom so we'll use that again."
+elif echo 'Maybe "'$cc' -E -C" will work...' && \
+	$cc -E -C testcpp.c </dev/null >testcpp.out 2>/dev/null && \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "It works!"
+	cppfilecom="$cc -E -C"
+elif echo 'Nope...maybe "'"$cc"' -P -C" will work...' && \
+	$cc -P -C testcpp.c </dev/null >testcpp.out 2>/dev/null && \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "Yup, that does."
+	cppfilecom="$cc -P -C"
+elif echo 'No such luck, maybe "'"$cpp"' -C" will work...' && \
+	$cpp -C testcpp.c </dev/null >testcpp.out 2>/dev/null && \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "Yup, it does."
+	cppfilecom="$cpp -C"
+else
+	cppfilecom=''
+	$cat <<'EOM'
+I can't find a C preprocessor that will preserve comments. Please name one.
+EOM
+fi
+:
+dflt="$cppfilecom"
+cont=true
+while $test "$cont" ; do
+	echo " "
+	rp="How should $package run your preprocessor preserving comments?"
+	. ./myread
+	cppfilecom="$ans"
+	$cppfilecom testcpp.c >testcpp.out 2>&1
+	if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+		$contains comment testcpp.out >/dev/null 2>&1
+	then
+		echo "OK, that will do."
+		cont=''
+	else
+		echo "Sorry, I can't get that to work."
+	fi
+done
+
+@if CPP_IGN_HDRS || d_cppignhdrs
+: Now see if it ignores header files.
+cp testcpp.c testcpp.h
+$cppfilecom testcpp.h >testcpp.out 2>&1
+if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "Terrific; it processes .h files passed on the command line too."
+	val="$undef"
+else
+	echo "It ignores .h files on the command line; pity."
+	val="$define"
+fi
+set d_cppignhdrs
+eval $setvar
+
+@end
+@if CPP_STDIN_FLAGS || CPP_CAN_STDIN || cppstdinflags || d_cppcanstdin
+: Now see how to send stdin to it.
+echo " "
+cp testcpp.c testcpp.h
+$cppfilecom <testcpp.h >testcpp.out 2>&1
+if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+	$contains comment testcpp.out >/dev/null 2>&1
+then
+	echo "Great; and it will read stdin if passed no arguments."
+	val="$define"
+	cppstdinflags=''
+else
+	$cppfilecom - <testcpp.h >testcpp.out 2>&1
+	if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+		$contains comment testcpp.out >/dev/null 2>&1
+	then
+		echo "Great; and it can read stdin by passing it '-'."
+		val="$define"
+		cppstdinflags='-'
+	else
+		$cat <<FOO
+Unfortunately, I can't find an easy way to get that preprocessor to read from
+standard input. Do you know any flags I can pass it to get it to do so?
+If that preprocessor can't read directly form standard input, answer 'none'.
+
+FOO
+	val='dunno'
+	while $test "$val" = "dunno"; do
+		rp='Flags to get preprocessor to read stdin?'
+		dflt='none'
+		. ./myread
+		if $test $ans = 'none'; then
+			echo "Oh well, if $package wants it done, it will do it for itself."
+			val="$undef"
+		else
+			$cppfilecom $ans <testcpp.h >testcpp.out 2>&1
+			if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 && \
+				$contains comment testcpp.out >/dev/null 2>&1
+			then
+				echo "Good; that works fine."
+				val="$define"
+				cppstdinflags="$ans"
+			else
+				echo "Sorry, I couldn't get that to work."
+			fi
+		fi
+	done
+	fi
+fi
+set d_cppcanstdin
+eval $setvar
+
+@end
+: cleanup cpp test files anyway
+$rm -f testcpp.*
+

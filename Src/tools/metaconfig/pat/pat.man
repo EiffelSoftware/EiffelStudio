@@ -1,0 +1,516 @@
+.rn '' }`
+''' $Id: pat.man 78389 2004-11-30 00:17:17Z manus $
+'''
+'''  Copyright (c) 1991-1993, Raphael Manfredi
+'''  
+'''  You may redistribute only under the terms of the Artistic Licence,
+'''  as specified in the README file that comes with the distribution.
+'''  You may reuse parts of this distribution only within the terms of
+'''  that same Artistic Licence; a copy of which may be found at the root
+'''  of the source tree for dist 3.0.
+'''
+''' $Log$
+''' Revision 1.1  2004/11/30 00:17:18  manus
+''' Initial revision
+'''
+''' Revision 3.0.1.7  1997/02/28  16:32:45  ram
+''' patch61: documents contents of the message sent by patnotify
+'''
+''' Revision 3.0.1.6  1995/09/25  09:20:41  ram
+''' patch59: new -i option for patsend to add extra instructions
+'''
+''' Revision 3.0.1.5  1995/05/12  12:25:28  ram
+''' patch54: updated my e-mail address
+'''
+''' Revision 3.0.1.4  1994/10/29  16:38:31  ram
+''' patch36: documents new patlog script and the files it uses
+''' patch36: the RCS layer section has been extended slightly
+'''
+''' Revision 3.0.1.3  1993/08/27  14:40:19  ram
+''' patch7: random cleanup
+'''
+''' Revision 3.0.1.2  1993/08/25  14:05:02  ram
+''' patch6: new -q option for patsend and patnotify
+'''
+''' Revision 3.0.1.1  1993/08/24  12:15:42  ram
+''' patch3: added patnotify and patsnap
+''' patch3: patcol has a new -S option
+''' patch3: the users file built by mailagent is now listed under FILES
+'''
+''' Revision 3.0  1993/08/18  12:10:37  ram
+''' Baseline for dist 3.0 netwide release.
+'''
+.de Sh
+.br
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+'''
+'''     Set up \*(-- to give an unbreakable dash;
+'''     string Tr holds user defined translation string.
+'''
+.ie n \{\
+.tr \(*W-\*(Tr
+.ds -- \(*W-
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+.ds L' '
+.ds R' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds L' `
+.ds R' '
+'br\}
+.TH PAT 1 ram
+.SH NAME
+pat \- patch generator tools
+.SH SYNOPSIS
+.B pat
+[
+.B \-ahmnV
+] [
+.I filelist
+]
+.br
+.B patcil
+[
+.B \-abfhnpqsV
+] [
+.I filelist
+]
+.br
+.B patdiff
+[
+.B \-ahnV
+] [
+.I filelist
+]
+.br
+.B patbase
+[
+.B \-ahV
+] [
+.I filelist
+]
+.br
+.B patlog
+[
+.B \-hnruV
+]
+.br
+.B patmake
+[
+.B \-hV
+]
+.br
+.B patsend
+[
+.B \-hiquV
+] [
+.I patchlist
+] [
+.I recipients
+]
+.br
+.B patnotify
+[
+.B \-hquV
+] [
+.I recipients
+]
+.br
+.B patpost
+[
+.B \-hrV
+]
+.I patchlist
+.I newsgroups
+.br
+.B patftp
+[
+.B \-hV
+] [
+.I patchlist
+]
+.br
+.B patname
+[
+.B \-ahnmV
+]
+.B \-v
+.I version
+[
+.I filelist
+]
+.br
+.B patsnap
+[
+.B \-ahV
+] [
+.B \-o
+.I snapshot
+] [
+.I filelist
+]
+.br
+.B patcol
+[
+.B \-achnmsCV
+] [
+.B \-d
+.I directory
+] [
+.B \-f
+.I mani
+] [
+.B \-S
+.I snap
+] [
+.I filelist
+]
+.br
+.B patclean
+[
+.B \-ahnmV
+] [
+.I filelist
+]
+.br
+.B patindex
+.SH DESCRIPTION
+.I Pat
+and its associated programs generate patches for any package that has been
+stored under RCS.
+These programs hide many of the details of RCS that get in your way when
+constructing and maintaining a package.
+All you need to do to create a new patch is to edit your files, run pat,
+and furnish some descriptions to RCS and in the generated patch file.
+Details such as how to initialize a new RCS file, what the comment string should
+be, how create a new branch,
+how to deal with subdirectories, how to do diffs and how to
+organize the patch file are handled automatically.
+.PP
+Before using any of the pat programs you must initialize your package by
+running packinit in the top-level directory of your package.
+This produces a .package file that all of the dist programs make use of.
+.PP
+In any of the programs that want a filelist, if you specify
+.B \-a
+instead,
+all files in MANIFEST.new will be processed.
+In any of the programs that want a patchlist, a null patchlist means the
+current patch.
+You may use hyphens, commas and spaces to delimit patch numbers.
+If the right side of a hyphen is the null string, the current patchlevel
+is assumed as the maximum value. All the programs invoked with \fB\-h\fR
+will print a small usage message with the meaning of each available options.
+The \fB\-V\fR option gives the current version number.
+.PP
+Pat itself is a wrapper program that calls patcil, patdiff, and patmake.
+Usually you can just invoke pat and ignore all the others.
+Pat will update the MANIFEST file, if necessary (it will be an
+exact copy of the MANIFEST.new file, provided that a MANIFEST already
+existed), eventually calling patcil on it.
+.PP
+If you specify
+.B \-n
+instead of a filelist, pat will find all files that are
+newer than patchlevel.h, put you into an editor to trim down the list,
+then use that file list.
+If every file of the list is removed, \fIpat\fR will be aborted.
+.PP
+.I Patcil
+is used to do a ci -l on any listed files.
+(It is assumed that you always want to keep your files checked out.)
+In addition to the
+.B \-a
+switch, there is a
+.B \-b
+switch which does a quick checkin of
+a set of files.
+Instead of calling rcs on each file, it calls rcs on the whole list of
+files.
+This is useful for checking in a trunk revision.
+When you are checking in a new trunk revision you might also want to use
+the
+.B \-s
+flag which will strip out old RCS Log entries from the previous revision
+so that you can start over fresh.
+You probably should also use a
+.B \-f
+which is passed through to the ci to force unchanged files to be checked in.
+To check in a new trunk revision, I say
+.nf
+
+	patcil -s -f -a
+
+.fi
+.PP
+Patcil will ask for the log entry instead of letting ci do it, and has a little
+prompter built in that lets you manipulate the message in various ways.
+Type h for a listing of what you can do.
+One of the nicest things is that you can pop up into an editor, optionally
+with a diff listing of the changes since the last patch, in case you've
+forgotten what you changed.
+If you type a CR as the first thing, it includes the
+previous log message.
+Exit the prompter with a CR.
+.PP
+There are two different ways to use patcil.
+You can either call patcil yourself, or let pat call it for you.
+It doesn't matter how many times you call patcil before running pat, since
+patdiff knows what the last patch base is to compare with.
+Patcil can be called in any of your directories; the other programs must
+be called in your top-level directory (or in bugs, when meaningful).
+.PP
+When you are creating a new file at a given patchlevel, you must patcil it
+with the
+.B \-p
+option. Otherwise, it will simply be checked-in as
+a new trunk revision. The name of the file will be added to the MANIFEST.new
+if it does not already appear in it. If the name is found along with a
+description, that description will be passed through to rcs to properly
+initialize the RCS file.
+.PP
+.I Patbase
+can be used to reset the patch base to the current version when
+you've scrapped the previous patch sequence and are making a new distribution
+kit.
+What it really does is an rcs -Nlastpat:REV, where REV is the current
+revision.
+If patdiff blows up and you want to set the patch base back to some previous
+version, you have to call rcs -Nlastpat:REV yourself.
+.PP
+.I Patdiff
+actually does the diffs that go into the patch, comparing whatever
+version -Nlastpat points to with the most recently checked in version.
+It then updates -Nlastpat to point to the current version.
+It leaves the diff sitting in the bugs subdirectory for patmake to pick up.
+It can either use rcsdiff, or a diff command of your choice specified when
+you run packinit, in case your diff is better than rcsdiff.
+.PP
+.I Patlog
+is invoked by \fIpatmake\fR usually, to update the \fIChangeLog\fR file
+(or whatever name that file has been given when you ran \fIpackinit\fR).
+It will gather log messages and launch an editor for you to make the
+necessary updates.
+If you have configured your package to also include RCS logs
+in the \fIChangeLog\fR, another editor session will be launched for those
+too. Finally, a final log is built as a candidate entry for \fIChangeLog\fR,
+which you may also modify as you wish.
+.PP
+When you don't have configured a \fIChangeLog\fR file, \fIpatlog\fR will only
+gather the information it needs to pass on to \fIpatmake\fR and will exit.
+If you wish to call it yourself, you must do that after a least one
+sucessfull \fIpatdiff\fR run. I recommend using the \fB\-n\fR option the
+first time, and then use the \fB\-u\fR option along with \fB\-n\fR on
+subsequent runs to recreate files only when needed. The \fB\-r\fR option
+(which supersedes \fB\-u\fR) prevents \fIpatlog\fR from recreating an
+existing file, even if it is out of date.
+.PP
+.I Patlog
+will call \fIpatcil\fR and \fIpatdiff\fR on your \fIChangeLog\fR file
+(after having stuffed the candidate log entry you edited at the top of the
+file), unless prevented to do so by the \fB\-n\fR option. This means the
+issued patch will update \fIChangeLog\fR with current patch information, as
+you would expect it.
+.PP
+.I Patmake
+combines all the pieces of the patch into one file and invokes
+an editor so you can add the subject and description.
+It throws all your log messages in as Subjects and as Description, under
+the assumption
+that it's easier to delete what you don't want than to remember everything
+you did.
+You'll also want to expand each item in the Description so they don't just
+repeat the Subject lines. If you have a \fIChangeLog\fR file, this must have
+been done already, or your \fIChangeLog\fR will not accurately represent
+what is described in the patch, given that it has already been updated
+when \fIpatmake\fR puts together all the pieces (see the note
+about \fIpatlog\fR above).
+.PP
+Big patches will be split in order to keep size of each patch to a reasonable
+size. This is handled automatically, so you don't have to bother with it.
+The priority of each patch is merely intuited by \fIpatmake\fR, given the
+assumption that small changes have a great priority.
+.PP
+Patsend, patpost and patftp are used to distribute your patches to the world.
+.I Patsend
+mails a set of patches to a set of recipients. The \fB\-u\fR switch adds all
+the currently registered users who have asked for patches to be mailed to
+them, as well as the recipients specified while running \fIpackinit\fR.
+The \fB\-i\fR switch includes information with the patch about how the user
+may deregister themselves so they do not receive future patches automatically;
+this is also the default when the \fB\-u\fR switch is used.
+.I Patpost
+posts a set of patches to a set of newsgroups.
+.I Patftp
+merely copies the patch into your public ftp directory.
+.PP
+.I Patnotify
+simply notifies users that a new patch has been released so that
+they can retrieve it by themselves from an archive site or via e-mail if they
+are interested. The \fB\-u\fR switch can be used to include all the currently
+registered users who have asked for such a notification. The message includes
+the patch priority and description, as well as instructions on how to
+automatically request the patch (which will work only if you
+have \fImailagent\fR installed).
+.PP
+Both \fIpatsend\fR and \fIpatnotify\fR let you edit the address list before
+actually sending anything, unless you add the \fB\-q\fR option.
+.PP
+.I Patname
+can be used to tag a set of files with a symbolic name (specified with
+\fB\-v\fR). This will set the name for the most recent revision of each
+file.
+.PP
+.I Patsnap
+will get a snapshot of your release by creating a SNAPSHOT file (name can be
+changed via \fB\-o\fR) listing the file names and the latest RCS revision
+number for that file. Such snapshots can be used to identify the release
+at some random patchlevel and then later be able to retrieve it by feeding
+the snapshot file to \fIpatcol\fR.
+.PP
+.I Patcol
+will check out a locked version of a file, eventually in an alternate
+directory (specified with \fB\-d\fR, thus mirroring the distribution tree).
+All the files which have no RCS counterpart (e.g. patchlevel.h) will be
+simply copied by patcol. This is used by makedist to fake the distribution
+before making the kits. By default, patcol will not do the copyright expansion
+processing, but clients like \fImakedist\fR force it by using its \fB\-C\fR
+option. Alternatively, you may force copying of the checked-out version
+into a directory by using the \fB\-c\fR switch in conjunction with \fB\-d\fR
+(or that former switch is simply ignored).
+.PP
+.I Patcol
+can also take its file list from a SNAPSHOT file via the \fB\-S\fR switch, in
+which case it will check out the files using the RCS version specified by the
+snapshot file, such as one created by \fIpatsnap\fR. You may instead specify
+\fB-a\fR, \fB\-m\fR or \fB\-n\fR to respectively use all the files in
+MANIFEST.new, all the modified files (the one which have been \fIpatcil\fRed),
+or all the files newer than \fIpatchlevel.h\fR.
+.PP
+.I Patclean
+will remove the working files after having checked in all the
+changes. You may  restores your working files by using patcol.
+.PP
+.I Patindex
+may be used from the top level directory or within the \fIbugs\fR directory.
+It will list all the patches and their \fISubject:\fR lines. This program
+knows about compressed patches and will decompress them while producing
+the listing.
+'''
+''' R C S   L a y e r
+'''
+.SH RCS LAYER
+This section describes the RCS layer, in case  something in the tools breaks,
+so that you may fix your RCS files and restart the operation.
+.PP
+All the patch tools get the main RCS trunk revision number out of your
+\&\fI.package\fR files, say it's 2.5. Then, at the time you ran \fIpackinit\fR,
+you have chosen a branch for patches, usually number 1, which means all your
+modifications will be stored on the 2.5.1 RCS branch. The tools will create
+the branch for you when the time comes.
+.PP
+Each last released revision is tagged with an RCS \fIlastpat\fR symbol. When
+the patch is built by \fIpatdiff\fR, the lattest version on the 2.5.1 branch
+is compared with the one tagged as \fIlastpat\fR. This is why you may safely
+issue more than one \fIpatcil\fR beffore issuing the patch and still have
+it all worked out. Of course \fIpatdiff\fR will move the \fIlastpat\fR
+tag to the lattest branch revision after processing a given file.
+.PP
+All the log messages and the modified files are kept in your \fIbugs\fR
+directory, in hidden files (name starting with a dot). Those logs will be
+collected when the patch is issued and the modified files are used by
+\&\fIpat\fR's \fB\-m\fR switch.
+.PP
+.I Patdiff
+collects its patch hunks under the \fIbugs\fR directory, in files
+terminating with a \fI.nn\fR extension, where \fInn\fR represents the
+current patch level + 1. (Which is going to be the next patchlevel when the
+patch will be made by \fIpatmake\fR, unless it is too big to fit in one
+file).
+.PP
+.I Patlog
+prepares a set of files for \fIpatmake\fR: the \fI.clog\fR file collects
+the information that will go under the Description: section within the
+patch, and \fI.xlog\fR ones collect the \fIChangeLog\fR candidate entry.
+Finally, \fI.rlog\fR files store the RCS information that is to be included
+in the \fIChangeLog\fR, if requested. Note that the topmost three lines
+are garbage and are ignored by all the tools handling those files.
+.PP
+In order to start up a new baseline (i.e. to change the RCS trunk revision
+number), you need to rerun \fIpackinit\fR and change that number. Then issue
+a new \fIpatcil\fR, probably with the \fB\-s\fR, \fB\-a\fR and \fB\-f\fR
+options...
+.SH FILES
+.PD 0
+.TP 15
+bugs/*.[0-9]+
+Diffs for each file, gathered by \fIpatmake\fR to create a patch
+.TP
+bugs/patch*
+Issued patches (can be compressed with \fIcompress\fR only)
+.TP
+bugs/.clog[0-9]+
+Description to be filled into the patch (or the first part if the patch is
+split into several parts).
+.TP
+bugs/.logs[0-9]+
+Log messages for that patch
+.TP
+bugs/.mods[0-9]+
+Files modified in that patch (checked in with \fIpatcil\fR)
+.TP
+bugs/.pri[0-9]+
+The priority of the next patch, computed
+by \fIpatlog\fR for \fIpatmake\fR's perusal.
+.TP
+bugs/.rlog[0-9]+
+The RCS logs computed by \fIpatlog\fR.
+.TP
+bugs/.subj[0-9]+
+The Subject: lines for the next patch, computed
+by \fIpatlog\fR for \fIpatmake\fR's perusal.
+.TP
+bugs/.xlog[0-9]+
+The candidate entry for \fIChangeLog\fR.
+.TP
+users
+File filled in by \fImailagent\fR's "@SH package" command, normally
+issued by Configure, recording some of the users who kindly registered
+themselves.
+.PD
+.SH ENVIRONMENT
+.PD 0
+.TP 15
+PAGER
+Which pager to use in patcil (overrides default)
+.TP
+EDITOR
+What editor should be used (overrides default)
+.TP
+VISUAL
+Same role as EDITOR but this one is checked first
+.PD
+.SH SEE ALSO
+makedist(1), metaconfig(1).
+.SH BUGS
+Most of this should be built into RCS.
+.SH AUTHORS
+Larry Wall (version 2.0).
+.br
+Raphael Manfredi <ram@hptnos02.grenoble.hp.com>.
+.rn }` ''

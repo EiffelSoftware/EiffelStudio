@@ -1,0 +1,89 @@
+?RCS: $Id: d_casti32.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/05/12  12:10:45  ram
+?RCS: patch54: made sure cc and ccflags are conditional dependencies
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:09:37  ram
+?RCS: patch36: declare signal handler correctly (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:07:06  ram
+?RCS: patch32: created by ADO
+?RCS:
+?X:
+?X:	Can the compiler cast large floats to 32-bit integers?
+?X:
+?MAKE:d_casti32: cat +cc +ccflags rm intsize Setvar test signal_t
+?MAKE:	-pick add $@ %<
+?S:d_casti32:
+?S:	This variable conditionally defines CASTI32, which indicates
+?S:	whether the C compiler can cast large floats to 32-bit ints.
+?S:.
+?C:CASTI32:
+?C:	This symbol is defined if the C compiler can cast negative
+?C:	or large floating point numbers to 32-bit ints.
+?C:.
+?T:xxx yyy
+?H:#$d_casti32	CASTI32		/**/
+?H:.
+?LINT:set d_casti32
+: check for ability to cast large floats to 32-bit ints.
+echo " "
+echo 'Checking whether your C compiler can cast large floats to int32.' >&4
+if $test "$intsize" -eq 4; then
+	xxx=int
+else
+	xxx=long
+fi
+$cat >try.c <<EOCP
+#include <sys/types.h>
+#include <signal.h>
+$signal_t blech() { exit(3); }
+main()
+{
+	$xxx i32;
+	double f;
+	int result = 0;
+	signal(SIGFPE, blech);
+
+	f = (double) 0x7fffffff;
+	f = 10 * f;
+	i32  = ($xxx) f;
+
+	if (i32 != ($xxx) f)
+		result |= 1;
+	exit(result);
+}
+EOCP
+if $cc -o try $ccflags try.c >/dev/null 2>&1; then
+	./try
+	yyy=$?
+else
+	echo "(I can't seem to compile the test program--assuming it can't)"
+	yyy=1
+fi
+case "$yyy" in
+0)	val="$define"
+	echo "Yup, it can."
+	;;
+*)	val="$undef"
+	echo "Nope, it can't."
+	;;
+esac
+set d_casti32
+eval $setvar
+$rm -f try try.*
+

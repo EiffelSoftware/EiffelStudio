@@ -1,0 +1,90 @@
+?RCS: $Id: sockopt.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1995/07/25  14:16:14  ram
+?RCS: patch56: obsoleted KEEPALIVE in favor of CAN_KEEPALIVE for consistency
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:48  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_keepalive: cat rm contains +cc +ccflags socketlib sockethdr \
+	d_oldsock libs Oldconfig Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_keepalive:
+?S:	This symbol conditionally defines CAN_KEEPALIVE which indicates to the C
+?S:	program that setsockopt SO_KEEPALIVE will work properly.
+?S:.
+?C:CAN_KEEPALIVE (KEEPALIVE):
+?C:	This symbol if defined indicates to the C program that the SO_KEEPALIVE
+?C:	option of setsockopt() will work as advertised in the manual.
+?C:.
+?H:#$d_keepalive CAN_KEEPALIVE		/**/
+?H:.
+?LINT:set d_keepalive
+: see if setsockopt with SO_KEEPALIVE works as advertised
+echo " "
+case "$d_oldsock" in
+"$undef")
+	if $contains SO_KEEPALIVE `./findhdr sys/socket.h` \
+		/dev/null >/dev/null 2>&1
+	then
+		echo "OK, let's see if SO_KEEPALIVE works as advertised..." >&4
+		$cat > socket.c <<EOP
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+
+main()
+{
+	int s = socket(AF_INET, SOCK_STREAM, 0);
+	if (s == -1)
+		exit(1);
+	if (-1 == setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, 0, 0))
+		exit(2);
+	exit(0);
+}
+EOP
+		if $cc $ccflags $sockethdr socket.c -o socket $libs \
+			$socketlib >/dev/null 2>&1; then
+			./socket >/dev/null 2>&1
+			case $? in
+			0) echo "Yes, it does!"
+				val="$define";;
+			1) $cat <<EOM
+(Something went wrong -- Assuming SO_KEEPALIVE is broken)
+EOM
+				val="$undef";;
+			2) echo "No, it doesn't.  Don't trust your manuals!!"
+				val="$undef";;
+			esac
+		else
+			cat <<EOM
+(I can't compile the test program -- Assuming SO_KEEPALIVE is broken)
+EOM
+			val="$undef"
+		fi
+	else
+		echo "Strange!! You have BSD 4.2 sockets but no SO_KEEPALIVE option."
+		val="$undef"
+	fi;;
+*) cat <<EOM
+As you have an old socket interface, you can't have heard of SO_KEEPALIVE.
+EOM
+	val="$undef";;
+esac
+set d_keepalive
+eval $setvar
+$rm -f socket socket.c
+

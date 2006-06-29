@@ -1,0 +1,401 @@
+''' $Id: jmake.man 78389 2004-11-30 00:17:17Z manus $
+'''
+'''  Copyright (c) 1991-1993, Raphael Manfredi
+'''  
+'''  You may redistribute only under the terms of the Artistic Licence,
+'''  as specified in the README file that comes with the distribution.
+'''  You may reuse parts of this distribution only within the terms of
+'''  that same Artistic Licence; a copy of which may be found at the root
+'''  of the source tree for dist 3.0.
+'''
+''' $Log$
+''' Revision 1.1  2004/11/30 00:17:18  manus
+''' Initial revision
+'''
+''' Revision 3.0.1.1  1995/05/12  11:57:58  ram
+''' patch54: updated my e-mail address
+'''
+''' Revision 3.0  1993/08/18  12:04:18  ram
+''' Baseline for dist 3.0 netwide release.
+'''
+.TH JMAKE 1 ram
+.SH NAME
+jmake \- a generic makefile builder
+.SH SYNOPSIS
+.B jmake
+[
+.I cpp options
+]
+.SH DESCRIPTION
+.I Jmake
+builds a makefile out of a rather high level description held in a
+.I Jmakefile
+file. The generated file is a
+.I Makefile.SH
+rather than a simple makefile, which means it is ready to be used in
+conjonction with
+.I metaconfig.
+In particular, parameters such as "where to install executables" will
+be automatically determined by
+.I Configure
+and only the needed parameters will be taken into account.
+.PP
+To use
+.I jmake
+you have to write a
+.I Jmakefile
+first, which describes the way things are to be built. Your
+.I Jmakefile
+will be included inside a generic template through the C pre-processor.
+This means you may use the usual C /**/ comments, but not the shell # comments.
+The C comments will not appear in the generated
+.I Makefile.SH
+but lines starting with ;# will finally appear as shell comments. If you
+have to write the string /* in the generated
+.I Makefile.SH
+then you have to escape it (otherwise
+.I jmake
+will think of it as the start of a C comment). Simply put a # in front
+of the *, as in /#*.
+.PP
+You have a set of macros at your disposal, and all these macros are
+listed in the Index file, along with the piece of code they will
+expand to. Usually, a
+.I Jmakefile
+is fairly small and thus easier to maintain than a huge
+.I Makefile.
+Some internal powerful commands allow you to write
+portable makefiles easily, without having to spend many efforts, because
+someone else already did the job for you :-).
+.PP
+When you want to generate your makefile, you usually do not run
+.I jmake
+but use the
+.I jmkmf
+script which is a wrapper and will invoke
+.I jmake
+with the correct options.
+.PP
+All the knowledge of
+.I jmake
+is held in two files: the template
+.I Jmake.tmpl
+and the macro definition file
+.I Jmake.rules.
+The first file includes the second, along with the
+.I Jmakefile.
+It is sometimes necessary to know how things works to be able to correctly
+use all the features provided. For instance, you may have to write your
+own rules for a specific project. Although you cannot overwrite the
+predefined rules, you can extent the
+.I Jmake.rules
+file or simply add your macros in your
+.I Jmakefile.
+You may also use
+.I #include
+statements when you want to share these macros and do not want to duplicate
+the code.
+.PP
+The syntax in Jmake.rules is not elegant at all, but:
+.sp
+.PD 0
+.IP -
+It is easy to parse (like sendmail.cf or troff files).
+.IP -
+The rules are not supposed to change very often.
+.IP -
+It is simple enough to be mastered in five minutes. :-)
+.sp
+Here is a small description:
+.sp
+.IP 1)
+To deal with various \fIcpp\fR implementations:
+.sp
+.RS
+.IP \(bu
+Final @!\\ means: end of line, next line starts at the left margin.
+.IP \(bu
+Final @@\\ means: end of line, next line is to be indented by one tab.
+.sp
+.PP
+There should always be one of @!\\ or @@\\ at the end of each line.
+The only exception is for macros that are to be used as part of a
+rule body (e.g. \fIRemoveTargetProgram\fR). In that case, the first
+line (which holds the \fI#define\fR) should end with a single backslash.
+.RE
+.sp
+.IP 2)
+Symbol definitions:
+.sp
+.RS
+.IP \(bu
+>SYMBOL: defines the symbol.
+.IP \(bu
+?SYMBOL:<text>: keeps <text> iff SYMBOL is defined.
+.IP \(bu
+%SYMBOL:<text>: keeps <text> iff SYMBOL is not defined.
+.sp
+.PP
+The ?SYM can be nested (logical AND), as in:
+.sp
+.in +5
+?SYMBOL:%TOKEN:text
+.in -5
+.sp
+which will keep text if SYMBOL is defined and TOKEN undefined.
+To implement a logical OR, see below.
+.RE
+.sp
+.IP 3)
+Commands:
+.sp
+.RS
+Commands can be passed to \fIjmake\fR. They start with a leading '|'.
+Available commands are:
+.sp
+.IP \(bu
+|suffix <sx>: adds <sx> to the .SUFFIXES: list in the makefile.
+.IP \(bu
+|rule:<text>: adds <text> to the building rule section.
+.IP \(bu
+|rule: <text>: same as before, with a leading tab.
+.IP \(bu
+|skip: skips text until a line starting with '-skip' is found.
+.IP \(bu
+|expand <pattern>: expand lines until '-expand' with <pattern>. A
+complete example is shown below.
+.IP \(bu
+|once <symbol>: text up to '-once' appears only the first time.
+.sp
+.PP
+Here is a way to implement a logical OR:
+.sp
+.in +5
+.nf
+/* Implements SYMBOL or not TOKEN */
+?SYMBOL:text		/* Keeps text if SYMBOL */
+%SYMBOL:|skip
+	%TOKEN:text		/* Keeps text if not TOKEN */
+-skip
+.fi
+.in -5
+.sp
+Actually, this is ugly, because the text has to appear twice.
+Fortunately, I did not use it. :-)
+.sp
+.PP
+The '|' commands cannot be nested. In particular, due to the simple
+implementation of \fI|skip\fR, it is impossible to put \fI|skip\fR inside
+a skipped part. However, a \fI|once\fR section may have \fI|skip\fR sections.
+.sp
+But actually, as you have surely already guessed, the best way to
+implement a logical OR is to use De Morgan's Law:
+.sp
+.in +5
+.nf
+not (p or q) <=> not p and not q
+
+/* Implements SYMBOL or not TOKEN (attempt #2) */
+%SYMBOL:?TOKEN:|skip
+text					/* If SYMBOL or not TOKEN */
+-skip
+.sp
+.in -5
+.fi
+Who said they don't care ? ;-)
+.sp
+.PP
+Expansion is done with the \fIexpand\fR command.  It has been provided to
+avoid some cumbersome writings in makefiles when you have to repeat some
+silly lines that only differ in file names, for instance.  Let's look at
+an example first:
+.sp
+.in +5
+.nf
+|expand a!foo bar! b!yes no!
+!a::
+	echo !a, !b
+-expand
+.fi
+.in -5
+.sp
+.PP
+Then two rules will be printed, and the values of (a,b) for the first
+will be (foo, yes), for the second (bar, no).  Substitution is controled
+by the '!' character.  If the word to be substituted is part of another
+one, detach with the ^^ construct as in:  !b^^c.  It is possible to
+use Makefile macros in the <pattern>, and they will be expanded by
+jmake.  If this is not what you want, escape the first '$' sign (this is
+a Makefile escape, i.e. you must double the '$', not precede it with a
+backslash). A // stands for the null substitution value.
+.sp
+.PP
+Here is another example which shows how the macro Expand can be used.
+It is defined in \fIJmake.rules\fR as:
+.sp
+.in +5
+.nf
+#define Expand(rule, pattern) @!\\
+|expand pattern @!\\
+rule @!\\
+-expand
+.sp
+.in -5
+.fi
+So we can write in the \fIJmakefile\fR:
+.sp
+.in +5
+.nf
+|skip
+A = foo bar
+-skip
+
+#define Rule @!\\
+$(DIR)/!a^^.o: !a^^.o @@\\
+	$(CC) -c !a^^.c @@\\
+	$(MV) !a^^.o $(DIR)
+
+Expand(Rule, a!$(A)!)
+.sp
+.in -5
+.fi
+which will generate in \fIMakefile.SH\fR:
+.sp
+.in +5
+.nf
+$(DIR)/foo.o: foo.o
+	$(CC) -c foo.c
+	$(MV) foo.o $(DIR)
+
+$(DIR)/bar.o: bar.o
+	$(CC) -c bar.c
+	$(MV) bar.o $$(DIR)
+.sp
+.in -5
+.fi
+.sp
+.PP
+The 'A' declaration has been surrounded by \fIskip\fR, so that it does
+not appear in the generated Makefile.SH, but it will be taken into
+account by \fIjmake\fR for the substitution in the pattern.
+.sp
+.PP
+The number of expansions is determined by the number of possible
+values for the \fBfirst\fR parameter. If other parameters have less
+substitution values, they will get void ones.
+.sp
+.PP
+It is possible to add a regular expression at the end of '-expand'. This
+regular expression will be removed from the final set of expansion at the
+end of each line. It is also possible to do substitutions in the expanded
+item, by using the syntax (if 'f' is the expanded variable)
+!f:\fI<p>\fR=\fI<q>\fR
+where \fI<p>\fR and \fI<q>\fR are two regular expressions (without spaces).
+The pattern \fI<p>\fR will be replaced by the pattern \fI<q>\fR (only the first
+occurrence will be replaced).
+.sp
+.PP
+Finally, you may refer in the expanded section to variables whose value is
+computed via another expansion, which makes it easy to define generic
+\fIJmakefiles\fR.
+.sp
+Example:
+.sp
+.in +5
+.nf
+SRC = foo.c bar.c
+OBJ = \\
+|expand f!$(SRC)!
+	!f:\\.c=\\.o \\
+-expand \\\\
+INC = \\
+|expand f!$(OBJ)!
+	!f:\\.o=\\.h \\
+-expand \\\\
+.fi
+.in -5
+.sp
+which will generate in \fIMakefile.SH\fR:
+.sp
+.in +5
+.nf
+SRC = foo.c bar.c
+OBJ = \\
+	foo.o \\
+	bar.o
+INC = \\
+	foo.h \\
+	bar.h
+.in -5
+.fi
+.sp
+Do not forget to protect special characters in your regular expressions such
+as backslash, point, etc...
+.sp
+.PP
+The \fIonce\fR command is tagged with a name. The first time the name
+appears, the once construct is ignored and the text up to '-once' will
+be copied in the generated Makefile.SH.  However, future occurences of
+the same name will be ignored (\fIonce\fR will behave like \fIskip\fR).
+.sp
+Example:
+.sp
+.in +5
+.nf
+|once this_is_a_name
+<text>
+-once
+.sp
+.in -5
+.fi
+.sp
+.RE
+.IP 4)
+Initializations:
+.sp
+.RS
+.IP \(bu
++<line>: Puts the whole line in the initialization section.
+.IP \(bu
+++SYMBOL <value>: Adds <value> to the SYMBOL macro.
+.RE
+.sp
+.IP 5)
+User-defined variables:
+.sp
+The user may define CFLAGS, LDFLAGS or DPFLAGS as additional flags to be used
+in C compilation, linking phase or depend target. It is thus possible to add
+some extra flags such as -I or libraries for Makefiles in specific
+sub-directories.
+.sp
+.PD
+.SH AUTHOR
+Raphael Manfredi <ram@hptnos02.grenoble.hp.com>
+.SH FILES
+.PD 0
+.TP 20
+Jmakefile
+High level description of Makefile.SH
+.TP
+Jmake.rules
+File holding the macro definitions
+.TP
+Jmake.tmpl
+Template used to mould Makefile.SH
+.PD
+.SH BUGS
+On systems whose
+.I cpp
+reduces multiple tabs and spaces to a single space,
+.I jmake
+attempts to put back any necessary tabs (which
+.I make
+expects in front of rules) but does not properly formats the
+body of the rule itself.
+.PP
+There is a bootstraping problem when creating the first Makefile.SH, because
+you cannot run it through a shell until there is a decent Configure
+script, but you can't run \fImetaconfig\fR before there is a Makefile.SH
+or some needed symbols will not be defined.
+.SH "SEE ALSO"
+jmkmf(1), metaconfig(1).

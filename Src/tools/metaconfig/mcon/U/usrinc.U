@@ -1,0 +1,98 @@
+?RCS: $Id: usrinc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  16:27:12  ram
+?RCS: patch61: don't ask for the include path unless they are on a MIPS
+?RCS:
+?RCS: Revision 3.0.1.2  1995/05/12  12:24:36  ram
+?RCS: patch54: ensure that ./mips always exists (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:18:31  ram
+?RCS: patch23: ensure usrinc value is preserved accross sessions (WED)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:58  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:usrinc mips incpath mips_type: test cat echo n c +cc Getfile Guess \
+	Oldconfig eunicefix contains rm
+?MAKE:	-pick add $@ %<
+?S:usrinc:
+?S:	This variable holds the path of the include files, which is
+?S:	usually /usr/include. It is mainly used by other Configure units.
+?S:.
+?S:incpath:
+?S:	This variable must preceed the normal include path to get hte
+?S:	right one, as in "$incpath/usr/include" or "$incpath/usr/lib".
+?S:	Value can be "" or "/bsd43" on mips.
+?S:.
+?S:mips_type:
+?S:	This variable holds the environment type for the mips system.
+?S:	Possible values are "BSD 4.3" and "System V".
+?S:.
+?D:usrinc='/usr/include'
+?LINT:describe mips
+?LINT:set mips
+?LINT:create mips
+?T:xxx_prompt
+?F:./mips
+: What should the include directory be ?
+echo " "
+$echo $n "Hmm...  $c"
+dflt='/usr/include'
+incpath=''
+?X:	mips_type is used later, to add -DSYSTYPE_BSD43 to cppflags if needed.
+mips_type=''
+?X:
+?X:	Cannot put the following in Guess, or we get a circular dependency.
+?X:
+if $test -f /bin/mips && /bin/mips; then
+	echo "Looks like a MIPS system..."
+	$cat >usr.c <<'EOCP'
+#ifdef SYSTYPE_BSD43
+/bsd43
+#endif
+EOCP
+	if $cc -E usr.c > usr.out && $contains / usr.out >/dev/null 2>&1; then
+		dflt='/bsd43/usr/include'
+		incpath='/bsd43'
+		mips_type='BSD 4.3'
+	else
+		mips_type='System V'
+	fi
+	$rm -f usr.c usr.out
+	echo "and you're compiling with the $mips_type compiler and libraries."
+	xxx_prompt=y
+	echo "exit 0" >mips
+else
+	echo "Doesn't look like a MIPS system."
+	xxx_prompt=n
+	echo "exit 1" >mips
+fi
+chmod +x mips
+$eunicefix mips
+case "$usrinc" in
+'') ;;
+*) dflt="$usrinc";;
+esac
+case "$xxx_prompt" in
+y)	fn=d/
+	echo " "
+	rp='Where are the include files you want to use?'
+	. ./getfile
+	usrinc="$ans"
+	;;
+*)	usrinc="$dflt"
+	;;
+esac
+

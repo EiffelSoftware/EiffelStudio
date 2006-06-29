@@ -1,0 +1,98 @@
+?RCS: $Id: d_strchr.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1993/10/16  13:49:20  ram
+?RCS: patch12: added support for HAS_INDEX
+?RCS: patch12: added magic for index() and rindex()
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:05:26  ram
+?RCS: patch10: now only defines HAS_STRCHR, no macro remap of index (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:32  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_strchr d_index: contains strings Setvar Myread Oldconfig Csym
+?MAKE:	-pick add $@ %<
+?S:d_strchr:
+?S:	This variable conditionally defines HAS_STRCHR if strchr() and
+?S:	strrchr() are available for string searching.
+?S:.
+?S:d_index:
+?S:	This variable conditionally defines HAS_INDEX if index() and
+?S:	rindex() are available for string searching.
+?S:.
+?C:HAS_STRCHR:
+?C:	This symbol is defined to indicate that the strchr()/strrchr()
+?C:	functions are available for string searching. If not, try the
+?C:	index()/rindex() pair.
+?C:.
+?C:HAS_INDEX:
+?C:	This symbol is defined to indicate that the index()/rindex()
+?C:	functions are available for string searching.
+?C:.
+?H:#$d_strchr HAS_STRCHR	/**/
+?H:#$d_index HAS_INDEX	/**/
+?H:.
+?M:index: HAS_INDEX
+?M:#ifndef HAS_INDEX
+?M:#ifndef index
+?M:#define index strchr
+?M:#endif
+?M:#endif
+?M:.
+?M:rindex: HAS_INDEX
+?M:#ifndef HAS_INDEX
+?M:#ifndef rindex
+?M:#define rindex strrchr
+?M:#endif
+?M:#endif
+?M:.
+?T:vali
+?LINT:set d_strchr d_index
+: index or strchr
+echo " "
+if set index val -f; eval $csym; $val; then
+	if set strchr val -f d_strchr; eval $csym; $val; then
+		if $contains strchr "$strings" >/dev/null 2>&1 ; then
+?X: has index, strchr, and strchr in string header
+			val="$define"
+			vali="$undef"
+			echo "strchr() found." >&4
+		else
+?X: has index, strchr, and no strchr in string header
+			val="$undef"
+			vali="$define"
+			echo "index() found." >&4
+		fi
+	else
+?X: has only index, no strchr, string header is a moot point
+		val="$undef"
+		vali="$define"
+		echo "index() found." >&4
+	fi
+else
+	if set strchr val -f d_strchr; eval $csym; $val; then
+		val="$define"
+		vali="$undef"
+		echo "strchr() found." >&4
+	else
+		echo "No index() or strchr() found!" >&4
+		val="$undef"
+		vali="$undef"
+	fi
+fi
+set d_strchr; eval $setvar
+val="$vali"
+set d_index; eval $setvar
+

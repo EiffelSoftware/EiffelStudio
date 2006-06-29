@@ -1,0 +1,68 @@
+?RCS: $Id: i_neterrno.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  16:20:29  ram
+?RCS: patch36: forgot to initialize 'val' to an empty value (ADO)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:22:10  ram
+?RCS: patch32: removed spurious echo
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  07:02:05  ram
+?RCS: patch30: created by ADO
+?RCS:
+?MAKE:i_neterrno: Inhdr +cc +ccflags rm Setvar
+?MAKE:	-pick add $@ %<
+?S:i_neterrno:
+?S:	This variable conditionally defines the I_NET_ERRNO symbol, which
+?S:	indicates to the C program that <net/errno.h> exists and should
+?S:	be included.
+?S:.
+?C:I_NET_ERRNO:
+?C:	This symbol, if defined, indicates that <net/errno.h> exists and 
+?C:	should be included.
+?C:.
+?H:#$i_neterrno I_NET_ERRNO		/**/
+?H:.
+?LINT:set i_neterrno
+: see if net/errno.h is available
+val=''
+set net/errno.h val
+eval $inhdr
+
+: Unfortunately, it causes problems on some systems.  Arrgh.
+case "$val" in
+$define)
+	cat > try.c <<'EOM'
+#include <stdio.h>
+#include <errno.h>
+#include <net/errno.h>
+int func()
+{
+	return ENOTSOCK;
+}
+EOM
+	if $cc $ccflags -c try.c >/dev/null 2>&1; then
+		echo "We'll be including <net/errno.h>." >&4
+	else
+		echo "We won't be including <net/errno.h>." >&4
+		val="$undef"
+	fi
+	$rm -f try.* try
+	;;
+esac
+set i_neterrno
+eval $setvar
+

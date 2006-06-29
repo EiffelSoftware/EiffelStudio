@@ -1,0 +1,32 @@
+?RCS: $Id: packadmin.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?MAKE:packadmin: cf_email Oldconfig Myread cat spackage package
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:packadmin:
+?S:	Electronic mail address of the package administrator.
+?S:.
+$cat <<EOM
+
+If you or somebody else will be maintaining $package at your site, please
+fill in the correct e-mail address here so that they may be contacted
+if necessary.  You may enter "none" for no administrator.
+
+EOM
+case "$packadmin" in
+'') dflt="$cf_email";;
+*) dflt="$packadmin";;
+esac
+rp="$spackage administrator e-mail address"
+. ./myread
+packadmin="$ans"
+

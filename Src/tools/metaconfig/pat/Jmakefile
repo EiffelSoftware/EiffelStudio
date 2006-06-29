@@ -1,0 +1,71 @@
+/*
+ * Jmakefile for patching tools.
+ */
+
+;# $Id: Jmakefile 78389 2004-11-30 00:17:17Z manus $
+;#
+;#  Copyright (c) 1991-1993, Raphael Manfredi
+;#  
+;#  You may redistribute only under the terms of the Artistic Licence,
+;#  as specified in the README file that comes with the distribution.
+;#  You may reuse parts of this distribution only within the terms of
+;#  that same Artistic Licence; a copy of which may be found at the root
+;#  of the source tree for dist 3.0.
+;#
+;# $Log$
+;# Revision 1.1  2004/11/30 00:17:18  manus
+;# Initial revision
+;#
+;# Revision 3.0.1.3  1995/07/24  09:57:21  ram
+;# patch56: was missing an entry for the patlog program
+;#
+;# Revision 3.0.1.2  1994/01/24  13:42:48  ram
+;# patch16: added dependency generation stage
+;#
+;# Revision 3.0.1.1  1993/08/24  12:09:05  ram
+;# patch3: added patnotify and patsnap
+;#
+;# Revision 3.0  1993/08/18  12:10:32  ram
+;# Baseline for dist 3.0 netwide release.
+;#
+
+/* BASE is used to give the extensions for pat* files. Usually, '//' can be
+ * used to specify a null expansion pattern, but some of those new smart cpp
+ * now think it's a up-to-end-of-line comment--why do they do that to us?
+ */
+BASE = /^^/ cil base diff make clean col name ftp send \
+	index post notify snap log
+
+/* PAT is derived from BASE and is the list of all the files to produce */
+PAT = \
+|expand f!$(BASE)!
+	pat!f \
+-expand \\
+
+NoManPages()		/* There is a single man page for all tools */
+SimpleShellScriptTarget($(PAT))
+
+>SCRIPTDIR		/* Grrr... I have to find a nicer way!! */
+>MANSRC			/* Idem!! */
+
+InstallMultipleFlags($(PAT),$(SCRIPTDIR),-m 555)
+InstallManPage(pat,$(MANSRC))
+
+PATSH = \
+|expand f!$(PAT)!
+	!f.SH \
+-expand \\
+
+>SED
+>RM
+>MKDEP
+
+depend::
+	($(SED) '/^# DO NOT DELETE/q' Makefile && \
+	grep '^\$$grep' $(PATSH) | \
+	$(SED) -e "s/^.*' \([^ ]*\) >>\([^ ]*\)/\2: \1/" \
+	) > Makefile.new
+	cp Makefile Makefile.bak
+	cp Makefile.new Makefile
+	$(RM) Makefile.new
+

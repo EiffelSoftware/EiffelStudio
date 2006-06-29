@@ -1,0 +1,35 @@
+This directory contains a rudimentary kit maker.
+
+N.B.: This must not be confused with the kit package, which is a set of shell
+scripts for sending arbitrary files and directories by mail and unpacking them.
+One could call kit a binary tarmailer. The kit package has been released
+separately from dist (posted on comp.sources.unix in 1991).
+
+Larry Wall said:
+
+	Depending on where you are going to send your kits you might prefer
+	to use Rich $alz's kit maker instead--it makes more robust kits
+	but assumes more about the target system.
+
+I say:
+
+	If you are using RCS 4.3, be sure to use makedist instead of your
+	own shell archiver, unless you do not use $Id, $Header or $Locker
+	markers. Moreover, makedist will take the latest checked in
+	revision intead of the working file, so that you archive a coherent
+	package even if you made some mods since the last patch.
+
+You run makedist in the top level directory of your package and it uses
+the MANIFEST.new file to generate shar scripts of about 50000 bytes each.
+
+Just make sure MANIFEST.new contains everything you want, including any
+Configure, config.h.SH, or patchlevel.h files. A prototype patchlevel.h
+may be found in ../gen/patchlevel.h. See the manpage for more details.
+
+If you do not wish to build up shell archives but an up-to-date copy of
+your source tree, run someting like:
+
+	makedist -c dir
+
+to build an up-to-date source tree in dir, which you can then archive using
+your own shell archiver.

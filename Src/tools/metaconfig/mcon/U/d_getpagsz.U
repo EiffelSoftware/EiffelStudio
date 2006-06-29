@@ -1,0 +1,107 @@
+?RCS: $Id: d_getpagsz.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:13:10  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:14  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_getpagsz pagesize: Oldconfig Myread Inlibc cat contains +cc +ccflags \
+	libs rm Findhdr
+?MAKE:	-pick add $@ %<
+?S:d_getpagsz:
+?S:	This variable conditionally defines HAS_GETPAGESIZE if getpagesize()
+?S:	is available to get the system page size.
+?S:.
+?S:pagesize (pagsize):
+?S:	This variable holds the size in bytes of a system page.
+?S:.
+?C:HAS_GETPAGESIZE (GETPAGESIZE):
+?C:	This symbol, if defined, indicates that the getpagesize system call
+?C:	is available to get system page size, which is the granularity of
+?C:	many memory management calls.
+?C:.
+?X: Don't name it PAGESIZE, this is sometimes used by <sys/param.h>
+?C:PAGESIZE_VALUE (PAGSIZE):
+?C:	This symbol holds the size in bytes of a system page (obtained via
+?C:	the getpagesize() system call at configuration time or asked to the
+?C:	user if the system call is not available).
+?C:.
+?H:#$d_getpagsz HAS_GETPAGESIZE		/**/
+?H:#define PAGESIZE_VALUE $pagesize	/* System page size, in bytes */
+?H:.
+?F:!page
+?T:guess
+?LINT:set d_getpagsz
+: see if getpagesize exists
+set getpagesize d_getpagsz
+eval $inlibc
+
+@if pagesize || PAGESIZE_VALUE
+: determine the system page size
+echo " "
+guess=' (OK to guess)'
+case "$pagesize" in
+'')
+	$cat >page.c <<EOP
+extern int getpagesize();
+main()
+{
+	printf("%d\n", getpagesize());
+}
+EOP
+	echo "Computing the granularity of memory management calls..." >&4
+	dflt='4096'
+	case "$d_getpagsz" in
+	"$define")
+		if $cc $ccflags page.c -o page $libs >/dev/null 2>&1; then
+			dflt=`./page`
+			guess=''
+		else
+			echo "(I can't seem to compile the test program--guessing)"
+		fi
+		;;
+	*)
+		if $cc $ccflags page.c -o page $libs -lPW >/dev/null 2>&1; then
+			dflt=`./page`
+			guess=''
+			echo "(For your eyes only: I used the getpagesize() from -lPW.)"
+		else
+			if $contains PAGESIZE `./findhdr sys/param.h` >/dev/null 2>&1; then
+				$cat >page.c <<EOP
+#include <sys/param.h>
+main()
+{
+	printf("%d\n", PAGESIZE);
+}
+EOP
+				if $cc $ccflags page.c -o page $libs >/dev/null 2>&1; then
+					dflt=`./page`
+					guess=''
+					echo "(Using value of PAGESIZE found in <sys/param.h>.)"
+				fi
+			fi
+		fi
+		;;
+	esac
+	;;
+*) dflt="$pagesize"; guess='';;
+esac
+rp="What is the system page size, in bytes$guess?"
+. ./myread
+pagesize=$ans
+$rm -f page.c page
+
+@end

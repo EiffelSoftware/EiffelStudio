@@ -1,0 +1,73 @@
+?RCS: $Id: d_inetd.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:23  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_inetd: cat test package Myread Setvar
+?MAKE:	-pick add $@ %<
+?S:d_inetd:
+?S:	This symbol conditionally defines USE_INETD which indicates to the C
+?S:	program that the initial socket connection will be done via inetd.
+?S:.
+?C:USE_INETD (INETD):
+?C:	This symbol if defined indicates to the C program that inetd will be
+?C:	in charge of the initial socket connection. The file descriptors 0 and
+?C:	1 have been dup()ed from the original connected socket descriptor and
+?C:	are ready for send() and recv().
+?C:.
+?H:#$d_inetd USE_INETD		/**/
+?H:.
+?LINT:set d_inetd
+: ask whether initial socket connection is to be done via inetd
+echo " "
+dflt=n
+case "$d_inetd" in
+'') if $test -f /etc/inetd.conf; then
+		$cat <<EOM
+Your system provides a so called "Internet super-server", the inetd daemon.
+Network services like ftp or rlogin are usually handled via ftpd and rlogind
+daemons. Without inetd, these daemons must always be running for the service
+to be on. On the contrary, inetd listens to specific ports defined in file
+/etc/inetd.conf and will run the appropriate daemon upon request. This scheme
+avoids eating up the process table and memory with useless daemons.
+
+I can set up things so that internet connections for $package will be done
+using inetd, in which case you will have to edit /etc/inetd.conf to add some
+specific informations.
+
+EOM
+		dflt=y
+	else
+		$cat <<EOM
+I do not see any trace of a configuration file for inetd, hence I assume your
+system does not support the so called "Internet super-server". This means
+$package will need to have a daemon process running on this machine to allow
+network connections.
+
+EOM
+	fi;;
+*) case "$d_inetd" in
+	"$define") dflt=y;;
+	esac;;
+esac
+rp='Do you wish to use inetd for network connections?'
+. ./myread
+val="$undef"
+case "$ans" in
+y*|Y*) val="$define";;
+esac
+set d_inetd
+eval $setvar
+

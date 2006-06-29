@@ -1,0 +1,99 @@
+?RCS: $Id: privlib.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1995/09/25  09:17:09  ram
+?RCS: patch59: unit is now forced to the top of Configure, if possible
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/30  14:44:23  ram
+?RCS: patch49: can now handle installation prefix changes (from WED)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:31:52  ram
+?RCS: patch32: now uses installation prefix
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:12:34  ram
+?RCS: patch10: added support for /local/lib (WED)
+?RCS: patch10: prompt phrasing made more explicit (WED)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:35  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:privlib privlibexp installprivlib: afs package cat Getfile \
+	Oldconfig Prefixit test
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:privlib:
+?S:	This variable contains the eventual value of the PRIVLIB symbol,
+?S:	which is the name of the private library for this package.  It may
+?S:	have a ~ on the front. It is up to the makefile to eventually create
+?S:	this directory while performing installation (with ~ substitution).
+?S:.
+?S:privlibexp:
+?S:	This variable is the ~name expanded version of privlib, so that you
+?S:	may use it directly in Makefiles or shell scripts.
+?S:.
+?S:installprivlib:
+?S:	This variable is really the same as privlibexp but may differ on
+?S:	those systems using AFS. For extra portability, only this variable
+?S:	should be used in makefiles.
+?S:.
+?C:PRIVLIB:
+?C:	This symbol contains the name of the private library for this package.
+?C:	The library is private in the sense that it needn't be in anyone's
+?C:	execution path, but it should be accessible by the world.  The program
+?C:	should be prepared to do ~ expansion.
+?C:.
+?C:PRIVLIB_EXP:
+?C:	This symbol contains the ~name expanded version of PRIVLIB, to be used
+?C:	in programs that are not prepared to deal with ~ expansion at run-time.
+?C:.
+?H:#define PRIVLIB "$privlib"		/**/
+?H:#define PRIVLIB_EXP "$privlibexp"		/**/
+?H:.
+: determine where private executables go
+set dflt privlib lib/$package
+eval $prefixit
+$cat <<EOM
+
+There are some auxiliary files for $package that need to be put into a
+private library directory that is accessible by everyone.
+
+EOM
+fn=d~+
+rp='Pathname where the private library files will reside?'
+. ./getfile
+if $test "X$privlibexp" != "X$ansexp"; then
+	installprivlib=''
+fi
+privlib="$ans"
+privlibexp="$ansexp"
+if $afs; then
+	$cat <<EOM
+
+Since you are running AFS, I need to distinguish the directory in which
+private files reside from the directory in which they are installed (and from
+which they are presumably copied to the former directory by occult means).
+
+EOM
+	case "$installprivlib" in
+	'') dflt=`echo $privlibexp | sed 's#^/afs/#/afs/.#'`;;
+	*) dflt="$installprivlib";;
+	esac
+	fn=de~
+	rp='Where will private files be installed?'
+	. ./getfile
+	installprivlib="$ans"
+else
+	installprivlib="$privlibexp"
+fi
+

@@ -1,0 +1,24 @@
+This is the root directory for metaconfig.
+
+If you are new to metaconfig, you may wish to have a look at the INTRO
+file, which gives a quick introduction.
+
+The metaconfig you have here is a modified version of Larry Wall's 2.0
+release.  The units themselves have been ripped off from some Configure
+scripts (perl 4.0, elm 2.3).  They all carry a copyright from me, which
+is not true, but it was automatically produced and I had no time yet to
+set the proper copyrights for each unit.
+
+Although metaconfig, as being part of dist, is covered by the Artistic
+License, a Configure script is not copyrighted and belongs to the
+public domain. Units can be copyrighted, and credits for each unit may
+appear in the generated Configure script, at the author's request.
+
+The manual page for metaconfig is not up-to-date.  The built-in
+interpreter and the changes are documented in NOTES.
+
+The units that come from dist 2.0 need to be changed. A script should be
+provided in the final release to do an automatic conversion, which will
+be fine 90% of the time. If you want to see how new features can be used,
+I would recommend you to have a look at Oldconfig.U, d_gethname.U and
+voidflags.U.

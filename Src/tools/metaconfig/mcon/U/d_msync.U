@@ -1,0 +1,34 @@
+?RCS: $Id: d_msync.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/12/15  08:19:17  ram
+?RCS: patch15: created
+?RCS:
+?MAKE:d_msync: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_msync:
+?S:	This variable conditionally defines HAS_MSYNC if msync() is
+?S:	available to synchronize a mapped file.
+?S:.
+?C:HAS_MSYNC:
+?C:	This symbol, if defined, indicates that the msync system call is
+?C:	available to synchronize a mapped file.
+?C:.
+?H:#$d_msync HAS_MSYNC		/**/
+?H:.
+?LINT:set d_msync
+: see if msync exists
+set msync d_msync
+eval $inlibc
+

@@ -1,0 +1,129 @@
+?RCS: $Id: libpth.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.6  1997/02/28  16:08:49  ram
+?RCS: patch61: new loclibpth variable
+?RCS:
+?RCS: Revision 3.0.1.5  1995/01/11  15:31:30  ram
+?RCS: patch45: call ./mips instead of just mips (WED)
+?RCS:
+?RCS: Revision 3.0.1.4  1994/08/29  16:29:15  ram
+?RCS: patch32: added /lib/pa1.1 for HP-UX specially tuned PA-RISC libs (ADO)
+?RCS: patch32: fixed information message, making it clearer (ADO)
+?RCS:
+?RCS: Revision 3.0.1.3  1994/06/20  07:03:54  ram
+?RCS: patch30: added /usr/shlib to glibpth for shared-only libraries
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:26:57  ram
+?RCS: patch27: fixed a typo (libpth -> glibpth)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:07:53  ram
+?RCS: patch23: now asks for library directories to be searched (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:02  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X:	This unit initializes the path for C library lookup.
+?X:
+?MAKE:libpth glibpth xlibpth plibpth loclibpth: \
+	usrinc mips incpath test cat Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:libpth:
+?S:	This variable holds the general path used to find libraries. It is
+?S:	intended to be used by other units.
+?S:.
+?S:loclibpth:
+?S:	This variable holds the paths used to find local libraries.  It is
+?S:	prepended to libpth, and is intended to be easily set from the
+?S:	command line.
+?S:.
+?S:plibpth:
+?S:	Holds the private path used by Configure to find out the libraries.
+?S:	Its value is prepend to libpth. This variable takes care of special
+?S:	machines, like the mips.  Usually, it should be empty.
+?S:.
+?T: xxx dlist
+?INIT:: change the next line if compiling for Xenix/286 on Xenix/386
+?INIT:xlibpth='/usr/lib/386 /lib/386'
+?INIT:
+?INIT:: Possible local library directories to search.
+?INIT:loclibpth="/usr/local/lib /opt/local/lib /usr/gnu/lib"
+?INIT:loclibpth="$loclibpth /opt/gnu/lib /usr/GNU/lib /opt/GNU/lib"
+?INIT:
+?INIT:: general looking path for locating libraries
+?X:	/lib/pa1.1 is for HP-UX specially tuned PA-RISC libraries.
+?X:	/shlib is for Digital Unix 4.0
+?X:	/usr/shlib is for OSF/1 systems.
+?X:	I don't know why the large & small libraries are in this order.
+?INIT:glibpth="/shlib /usr/shlib /lib/pa1.1 /usr/lib/large"
+?INIT:glibpth="$glibpth /lib /usr/lib $xlibpth"
+?INIT:glibpth="$glibpth /lib/large /usr/lib/small /lib/small"
+?INIT:glibpth="$glibpth /usr/ccs/lib /usr/ucblib /usr/local/lib"
+?INIT:
+?INIT:: Private path used by Configure to find libraries.  Its value
+?INIT:: is prepended to libpth. This variable takes care of special
+?INIT:: machines, like the mips.  Usually, it should be empty.
+?INIT:plibpth=''
+?INIT:
+?LINT:describe xlibpth glibpth
+?LINT:use mips usrinc
+: Set private lib path
+case "$plibpth" in
+'') if ./mips; then
+?X: on mips, we DO NOT want /lib, and we want $incpath/usr/lib
+		plibpth="$incpath/usr/lib /usr/local/lib /usr/ccs/lib"
+	fi;;
+esac
+case "$libpth" in
+' ') dlist='';;
+'') dlist="$loclibpth $plibpth $glibpth";;
+*) dlist="$libpth";;
+esac
+
+: Now check and see which directories actually exist, avoiding duplicates
+libpth=''
+for xxx in $dlist
+do
+    if $test -d $xxx; then
+		case " $libpth " in
+		*" $xxx "*) ;;
+		*) libpth="$libpth $xxx";;
+		esac
+    fi
+done
+$cat <<'EOM'
+
+Some systems have incompatible or broken versions of libraries.  Among
+the directories listed in the question below, please remove any you
+know not to be holding relevant libraries, and add any that are needed.
+Say "none" for none.
+
+EOM
+case "$libpth" in
+'') dflt='none';;
+*)
+?X: strip leading space
+	set X $libpth
+	shift
+	dflt=${1+"$@"}
+	;;
+esac
+rp="Directories to use for library searches?"
+. ./myread
+case "$ans" in
+none) libpth=' ';;
+*) libpth="$ans";;
+esac
+

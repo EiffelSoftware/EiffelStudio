@@ -1,0 +1,45 @@
+?RCS: $Id: etc.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:07  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:etc etcexp: Getfile Loc Oldconfig
+?MAKE:	-pick add $@ %<
+?S:etc:
+?S:	This variable holds the name of the directory in which the user wants
+?S:	to put "administrative" executable images for the package in question.
+?S:	It is most often a local directory such as /usr/local/etc. Programs
+?S:	relying on this variable must be prepared to deal with ~name
+?S:	substitutions.
+?S:.
+?S:etcexp:
+?S:	This is the same as the etc variable, but is filename expanded at
+?S:	configuration time, for convenient use in makefiles.
+?S:.
+: determine where administrative executables go
+case "$etc" in
+'')
+	dflt=`./loc . /local/etc /usr/local/etc /local/etc /usr/etc /etc`
+	;;
+*)
+	dflt="$etc"
+	;;
+esac
+fn=d~
+rp='Where should the administrative executables go?'
+. ./getfile
+etc="$ans"
+etcexp="$ansexp"
+

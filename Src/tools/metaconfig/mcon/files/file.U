@@ -1,0 +1,50 @@
+?RCS: $Id: file.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS:  Copyright (c) 1991-1993, Raphael Manfredi
+?RCS:  
+?RCS:  You may redistribute only under the terms of the Artistic Licence,
+?RCS:  as specified in the README file that comes with the distribution.
+?RCS:  You may reuse parts of this distribution only within the terms of
+?RCS:  that same Artistic Licence; a copy of which may be found at the root
+?RCS:  of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:06  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:<FILE> <FILE>exp: Oldconfig Getfile
+?MAKE:	-pick add $@ %<
+?S:<FILE>:
+?S:	The name of the <FILE> file. The name may have ~ on the front.
+?S:.
+?S:<FILE>exp:
+?S:	This is the same as the <FILE> variable, but is filename expanded
+?S:	so that later Configure units can look at the <FILE> file if desired.
+?S:.
+?C:<%FILE>:
+?C:	The name of the <FILE> file. The name may have ~ on the front so the
+?C:	program must be prepared to do filename expansion.
+?C:.
+?C:<%FILE>_EXP:
+?C:	The same as <FILE> but ~name expansion has been done by Configure.
+?C:.
+?H:#define <%FILE> "$<FILE>"		/**/
+?H:#define <%FILE>_EXP "$<FILE>exp"		/**/
+?H:.
+: locate <FILE> file
+echo " "
+case "$<FILE>" in
+'')
+	dflt=<DFLT>
+	;;
+*)  dflt="$<FILE>";;
+esac
+fn=f~
+rp='Where is the <FILE> file?'
+. getfile
+<FILE>="$ans"
+<FILE>exp="$ansexp"
+

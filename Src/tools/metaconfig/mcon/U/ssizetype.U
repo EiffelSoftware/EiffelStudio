@@ -1,0 +1,94 @@
+?RCS: $Id: ssizetype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  16:24:21  ram
+?RCS: patch61: integrated perl5 concerns for mis-configured sfio
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:30:28  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS: patch36: added 'ldflags' to the test compile line (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:33:06  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:ssizetype: Myread Typedef sizetype cat rm \
+	+cc +optimize +ccflags +ldflags +libs _o
+?MAKE:	-pick add $@ %<
+?S:ssizetype:
+?S:	This variable defines ssizetype to be something like ssize_t, 
+?S:	long or int.  It is used by functions that return a count 
+?S:	of bytes or an error condition.  It must be a signed type.
+?S:	We will pick a type such that sizeof(SSize_t) == sizeof(Size_t).
+?S:.
+?C:SSize_t:
+?C:	This symbol holds the type used by functions that return
+?C:	a count of bytes or an error condition.  It must be a signed type.
+?C:	It is usually ssize_t, but may be long or int, etc.
+?C:	It may be necessary to include <sys/types.h> or <unistd.h>
+?C:	to get any typedef'ed information.
+?C:	We will pick a type such that sizeof(SSize_t) == sizeof(Size_t).
+?C:.
+?H:#define SSize_t $ssizetype	 /* signed count of bytes */
+?H:.
+?F:!ssize.out
+: see what type is used for signed size_t
+set ssize_t ssizetype int stdio.h sys/types.h
+eval $typedef
+dflt="$ssizetype"
+?X: Now check out whether sizeof(SSize_t) == sizeof(Size_t)
+$cat > ssize.c <<EOM
+#include <stdio.h>
+#include <sys/types.h>
+#define Size_t $sizetype
+#define SSize_t $dflt
+main()
+{
+	if (sizeof(Size_t) == sizeof(SSize_t))
+		printf("$dflt\n");
+	else if (sizeof(Size_t) == sizeof(int))
+		printf("int\n");
+	else 
+		printf("long\n");
+	fflush(stdout);
+	exit(0);
+}
+EOM
+echo " "
+?X: If $libs contains -lsfio, and sfio is mis-configured, then it
+?X: sometimes (apparently) runs and exits with a 0 status, but with no
+?X: output!.  Thus we check with test -s whether we actually got any
+?X: output.  I think it has to do with sfio's use of _exit vs. exit,
+?X: but I don't know for sure.  --Andy Dougherty  1/27/97.
+if $cc $optimize $ccflags $ldflags -o ssize ssize.c $libs > /dev/null 2>&1  &&
+		./ssize > ssize.out 2>/dev/null && test -s ssize.out ; then
+	ssizetype=`$cat ssize.out`
+	echo "I'll be using $ssizetype for functions returning a byte count." >&4
+else
+	$cat >&4 <<EOM
+Help! I can't compile and run the ssize_t test program: please enlighten me!
+(This is probably a misconfiguration in your system or libraries, and
+you really ought to fix it.  Still, I'll try anyway.)
+
+I need a type that is the same size as $sizetype, but is guaranteed to
+be signed.  Common values are ssize_t, int and long.
+
+EOM
+	rp="What signed type is the same size as $sizetype?"
+	. ./myread
+	ssizetype="$ans"
+fi
+$rm -f ssize ssize$_o ssize.*
+

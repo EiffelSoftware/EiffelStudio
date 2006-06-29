@@ -1,0 +1,202 @@
+?RCS: $Id: Myread.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.6  1997/02/28  15:05:39  ram
+?RCS: patch61: myread script now starts with a "startsh"
+?RCS: patch61: miscellaneous fixes
+?RCS:
+?RCS: Revision 3.0.1.5  1995/01/11  15:14:22  ram
+?RCS: patch45: added & escape allowing user to turn on -d from the prompt
+?RCS:
+?RCS: Revision 3.0.1.4  1994/10/31  09:48:04  ram
+?RCS: patch44: added Options to the MAKE line since it's no longer in Init.U
+?RCS:
+?RCS: Revision 3.0.1.3  1994/10/29  15:56:20  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0.1.2  1993/08/30  08:57:59  ram
+?RCS: patch8: added new visible 'nostick' symbol, mainly for Finish.U
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/27  14:39:20  ram
+?RCS: patch7: now sticks to the question when no default and empty answer
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:08  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X: 
+?X: This unit produces a bit of shell code that must be dotted in in order
+?X: to do a read.  It allows for shell escapes, default assignment and
+?X: parameter evaluation.
+?X:	
+?X: To use this unit, $rp and $dflt must hold the question and the
+?X: default answer. The question will be printed by the script itself.
+?X:	Neither $rp nor $dflt is altered by the script.
+?X: 
+?X: The myread script will stick to the question if no default is proposed
+?X: and the user answer is empty, which prevents mistakes. However, at the
+?X: end of Configure, there is an exception to this rule (Finish.U) where we
+?X: set nostick to a non-empty value to allow the Return key to play its role!
+?X:
+?MAKE:Myread: Options startsh n c
+?MAKE:	-pick add $@ %<
+?V:ans:dflt rp nostick
+?F:./myread
+?T:COLUMNS xxxm rp dflt answ aok myecho
+?LINT:change fastread
+?X: Some shells (Ultrix) do not understand ${COLUMNS:-80}, sigh!
+: compute the number of columns on the terminal for proper question formatting
+case "$COLUMNS" in
+'') COLUMNS='80';;
+esac
+
+: set up the echo used in my read
+?X:
+?X:	This variable is intended to be eval'ed. It will echo the two
+?X:	variables $rp and $dflt (provided this latter has a non null value).
+?X:	It is mainly used by the myread script to echo the questions.
+?X:
+?X: The $n and $c below are substituted before Loc does its silly echo check
+?X: so don't put a $ on the echo below so we get builtin, even if $echo is
+?X: pointing to /bin/echo.
+?X:
+myecho="case \"\$xxxm\" in
+'') echo $n \"\$rp $c\" >&4;;
+*) case \"\$rp\" in
+	'') echo $n \"[\$xxxm] $c\";;
+	*)
+		if test \`echo \"\$rp [\$xxxm]  \" | wc -c\` -ge $COLUMNS; then
+			echo \"\$rp\" >&4
+			echo $n \"[\$xxxm] $c\" >&4
+		else
+			echo $n \"\$rp [\$xxxm] $c\" >&4
+		fi
+		;;
+	esac;;
+esac"
+
+: now set up to do reads with possible shell escape and default assignment
+cat <<EOSC >myread
+$startsh
+?X:
+?X: Save value of default -- do not alter original in case of eval
+?X:
+xxxm=\$dflt
+$myecho
+?X:
+?X: If there is no default, then stop, regardless of the value in fastread.
+?X: In silent mode, no new-line is to be echoed if the question is empty,
+?X: since this is used to wait for the "return" key.
+?X:
+ans='!'
+case "\$fastread" in
+yes) case "\$dflt" in
+	'') ;;
+	*) ans='';
+		case "\$silent-\$rp" in
+		true-) ;;
+		*) echo " " >&4;;
+		esac;;
+	esac;;
+*) case "\$silent" in
+	true) case "\$rp" in
+		'') ans='';;
+		esac;;
+	esac;;
+esac
+while expr "X\$ans" : "X!" >/dev/null; do
+	read answ
+?X:
+?X: Run 'eval' on the answer, in order to do variable substitution, in case
+?X: the user types $HOME or $WHATEVER. Variables must be evaluated now.
+?X: Typing '\$HOME' won't currently prevent from substitution -- use '\\$HOME'
+?X: The $1 .. $9 and $*, as well as $@, are available to refer to the
+?X: default value.
+?X:
+	set x \$xxxm
+	shift
+	aok=''; eval "ans=\\"\$answ\\"" && aok=y
+	case  "\$answ" in
+?X:
+?X: Use "!" and not a plain ! because of a bug in BSD 4.4 shell
+?X: (reported by Wayne Davison)
+?X: We must handle the shell escapes before dealing with possible variable
+?X: substitution, since the shell we're launching in that case will be able
+?X: to do it as well as we can -- RAM, 15/03/96
+?X
+	"!")
+		sh 1>&4
+		echo " "
+		$myecho
+		;;
+	!*)
+		set x \`expr "X\$ans" : "X!\(.*\)\$"\`
+		shift
+		sh 1>&4 -c "\$*"
+		echo " "
+		$myecho
+		;;
+	"\$ans")
+		case "\$ans" in
+?X:
+?X: Answers starting with & are hooks allowing to dynamically turn on/off
+?X: some Configure options. That's for the future. -- RAM, 09/01/95
+?X: Today, we only recognize '& -d' to mean 'go on as if Configure -d, which
+?X: is a hardwired behaviour compatible with our general scheme.
+?X:
+		\\&*)
+			set x \`expr "X\$ans" : "X&\(.*\)\$"\`
+			shift
+			case "\$1" in
+			-d)
+				fastread=yes
+				echo "(OK, I'll run with -d after this question.)" >&4
+				;;
+			-*)
+				echo "*** Sorry, \$1 not supported yet." >&4
+				;;
+			esac
+			$myecho
+			ans=!
+			;;
+		esac;;
+	*)
+		case "\$aok" in
+		y)
+			echo "*** Substitution done -- please confirm."
+			xxxm="\$ans"
+			ans=\`echo $n "\$ans$c" | tr '\012' ' '\`
+			xxxm="\$ans"
+			ans=!
+			;;
+		*)
+			echo "*** Error -- try again."
+			ans=!
+			;;
+		esac
+		$myecho
+		;;
+	esac
+?X: Stick in myread if no default answer and nothing was answered
+	case "\$ans\$xxxm\$nostick" in
+	'')
+		ans=!
+		$myecho
+		;;
+	esac
+done
+case "\$ans" in
+'') ans="\$xxxm";;
+esac
+EOSC
+

@@ -1,0 +1,38 @@
+?RCS: $Id: d_memset.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:03:11  ram
+?RCS: patch10: removed text recommending bzero over memset (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:36  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_memset: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_memset:
+?S:	This variable conditionally defines the HAS_MEMSET symbol, which
+?S:	indicates to the C program that the memset() routine is available
+?S:	to set blocks of memory.
+?S:.
+?C:HAS_MEMSET (MEMSET):
+?C:	This symbol, if defined, indicates that the memset routine is available
+?C:	to set blocks of memory.
+?C:.
+?H:#$d_memset HAS_MEMSET	/**/
+?H:.
+?LINT:set d_memset
+: see if memset exists
+set memset d_memset
+eval $inlibc
+

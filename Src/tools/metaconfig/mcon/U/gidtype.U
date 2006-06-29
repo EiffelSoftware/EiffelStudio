@@ -1,0 +1,64 @@
+?RCS: $Id: gidtype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1994/08/29  16:21:44  ram
+?RCS: patch32: now uses new Typedef unit to compute type information
+?RCS: patch32: removed useless usage of Setvar (for now)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/13  15:21:07  ram
+?RCS: patch27: added lint hint
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  15:01:51  ram
+?RCS: patch23: protected gidtype setting via setvar (ADO)
+?RCS: patch23: made Gid_t comment more explicit (ADO)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:11  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:gidtype: Myread Typedef Findhdr
+?MAKE:	-pick add $@ %<
+?S:gidtype:
+?S:	This variable defines Gid_t to be something like gid_t, int,
+?S:	ushort, or whatever type is used to declare the return type
+?S:	of getgid().  Typically, it is the type of group ids in the kernel.
+?S:.
+?C:Gid_t (GIDTYPE):
+?C:	This symbol holds the return type of getgid() and the type of
+?C:	argument to setrgid() and related functions.  Typically,
+?C:	it is the type of group ids in the kernel. It can be int, ushort,
+?C:	uid_t, etc... It may be necessary to include <sys/types.h> to get
+?C:	any typedef'ed information.
+?C:.
+?H:#define Gid_t $gidtype		/* Type for getgid(), etc... */
+?H:.
+?T:xxx
+: see what type gids are declared as in the kernel
+set gid_t gidtype xxx stdio.h sys/types.h
+eval $typedef
+case "$gidtype" in
+xxx)
+	xxx=`./findhdr sys/user.h`
+	set `grep 'groups\[NGROUPS\];' "$xxx" 2>/dev/null` unsigned short
+	case $1 in
+	unsigned) dflt="$1 $2" ;;
+	*) dflt="$1" ;;
+	esac
+	;;
+*) dflt="$gidtype";;
+esac
+echo " "
+rp="What is the type for group ids returned by getgid()?"
+. ./myread
+gidtype="$ans"
+

@@ -1,0 +1,144 @@
+?RCS: $Id: d_SHM_MAC.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:41  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_SHM_MAC d_SHM_PRM d_SHM_SEG d_SHM_IMMU: cat d_shm test rm +cc +ccflags
+?MAKE:	-pick add $@ %<
+?S:d_SHM_MAC:
+?S:	Sometimes, the SHMLBA manifest needs sys/sysmacros.h, usually for
+?S:	the ctob() macro.
+?S:.
+?S:d_SHM_PRM:
+?S:	Sometimes, the SHMLBA manifest needs sys/param.h, usually for the
+?S:	NBPC constant.
+?S:.
+?S:d_SHM_SEG:
+?S:	Sometimes, the SHMLBA manifest needs sys/seg.h, usually for the
+?S:	SNUMSHFT constant.
+?S:.
+?S:d_SHM_IMMU:
+?S:	Sometimes, the SHMLBA manifest needs sys/immu.h, usually for the
+?S:	stob() macro.
+?S:.
+?C:SHMLBA_WANTS_SYSMACROS:
+?C:	This value tells us to include <sys/sysmacros.h> because SHMLBA
+?C:	needs something from there, probably the ctob() macro.
+?C:.
+?C:SHMLBA_WANTS_PARAM:
+?C:	This value tells us to include <sys/param.h> because SHMLBA needs
+?C:	something from there, probably the NBPC constant.
+?C:.
+?C:SHMLBA_WANTS_SEG:
+?C:	This value tells us to include <sys/seg.h> because SHMLBA needs
+?C:	something from there, probably the SNUMSHFT constant.
+?C:.
+?C:SHMLBA_WANTS_IMMU:
+?C:	This value tells us to include <sys/immu.h> because SHMLBA needs
+?C:	something from there, probably the stob() macro.  (tower_600 only?)
+?C:.
+?H:#$d_SHM_MAC	SHMLBA_WANTS_SYSMACROS	/* SHMLBA wants ctob()? */
+?H:#$d_SHM_PRM	SHMLBA_WANTS_PARAM	/* SHMLBA wants NBPC? */
+?H:#$d_SHM_SEG	SHMLBA_WANTS_SEG	/* SHMLBA wants SNUMSHFT? */
+?H:#$d_SHM_IMMU	SHMLBA_WANTS_IMMU	/* SHMLBA wants stob()? */
+?H:.
+?T:flags D_sys_immu D_sys_seg D_sys_sysmacros D_sys_param
+: check for SHMLBA braindamage
+d_SHM_MAC="$undef"
+d_SHM_PRM="$undef"
+d_SHM_SEG="$undef"
+d_SHM_IMMU="$undef"
+if $test "$d_shm" = "$define" ; then
+	echo " "
+	$cat >&4 <<EOM
+Checking to see if SHMLBA needs additional headers.
+The headers I'll be checking are:
+
+    sys/macros.h (for the ctob() macro)
+    sys/param.h  (for NBPC)
+    sys/seg.h    (for SNUMSHFT)
+    sys/immu.h	 (for the stob() macro)
+
+EOM
+	$cat >shm_mac.c <<'EOCP'
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#ifdef I_SYS_IMMU
+#include <sys/immu.h>
+#endif
+#ifdef I_SYS_SYSMACROS
+#include <sys/sysmacros.h>
+#endif
+#ifdef I_SYS_PARAM
+#include <sys/param.h>
+#endif
+#ifdef I_SYS_SEG
+#include <sys/seg.h>
+#endif
+
+main() {
+	int foo = SHMLBA ;
+	}
+EOCP
+	flags='xxx'
+	for D_sys_immu in '' '-DI_SYS_IMMU'; do
+	for D_sys_seg in '' '-DI_SYS_SEG'; do
+	for D_sys_sysmacros in '' '-DI_SYS_SYSMACROS'; do
+	for D_sys_param in '' '-DI_SYS_PARAM'; do
+		case "$flags" in
+		'xxx')
+			case "$D_sys_immu$D_sys_param$D_sys_sysmacros$D_sys_seg" in
+			'')
+				echo "Trying it normally..."
+				;;
+			*)
+			echo "Trying $D_sys_immu $D_sys_param $D_sys_sysmacros $D_sys_seg"
+			;;
+			esac
+			if $cc shm_mac.c $ccflags \
+			$D_sys_immu $D_sys_param $D_sys_sysmacros $D_sys_seg \
+			-o shm_mac >/dev/null 2>&1 ; then
+				set X $D_sys_immu $D_sys_param $D_sys_sysmacros $D_sys_seg
+				shift
+				flags="$*"
+				echo "Succeeded with $flags"
+			fi
+			;;
+		esac
+	done
+	done
+	done
+	done
+	case "$flags" in
+	xxx)
+		echo "I don't know how to keep SHMLBA happy.  Good luck!"
+		;;
+	esac
+	case "$flags" in
+	*I_SYS_PARAM*) d_SHM_PRM="$define";;
+	esac
+	case "$flags" in
+	*I_SYS_SYSMACROS*) d_SHM_MAC="$define";;
+	esac
+	case "$flags" in
+	*I_SYS_SEG*) d_SHM_SEG="$define";;
+	esac
+	case "$flags" in
+	*I_SYS_IMMU*) d_SHM_IMMU="$define";;
+	esac
+fi
+$rm -f shm_mac*
+

@@ -1,0 +1,77 @@
+?RCS: $Id: d_volatile.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1995/07/25  14:08:49  ram
+?RCS: patch56: made cc and ccflags optional dependencies
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/09  11:49:51  ram
+?RCS: patch9: volatile definition was swapped over with undef
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:57  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_volatile: cat +cc +ccflags rm Setvar
+?MAKE:	-pick add $@ %<
+?S:d_volatile:
+?S:	This variable conditionally defines the HASVOLATILE symbol, which
+?S:	indicates to the C program that this C compiler knows about the
+?S:	volatile declaration.
+?S:.
+?C:HASVOLATILE ~ %<:
+?C:	This symbol, if defined, indicates that this C compiler knows about
+?C:	the volatile declaration.
+?C:.
+?H:?%<:#$d_volatile	HASVOLATILE	/**/
+?H:?%<:#ifndef HASVOLATILE
+?H:?%<:#define volatile
+?H:?%<:#endif
+?H:.
+?W:%<:volatile
+?LINT:set d_volatile
+?LINT:known volatile
+: check for volatile keyword
+echo " "
+echo 'Checking to see if your C compiler knows about "volatile"...' >&4
+$cat >try.c <<'EOCP'
+main()
+{
+?X:
+?X: The following seven lines added by Bill Campbell <billc@sierra.com>
+?X: detect that MIPS compilers do not handle volatile in all situations.
+?X:
+	typedef struct _goo_struct goo_struct;
+	goo_struct * volatile goo = ((goo_struct *)0);
+	struct _goo_struct {
+		long long_int;
+		int reg_int;
+		char char_var;
+	};
+	typedef unsigned short foo_t;
+	char *volatile foo;
+	volatile int bar;
+	volatile foo_t blech;
+	foo = foo;
+}
+EOCP
+if $cc -c $ccflags try.c >/dev/null 2>&1 ; then
+	val="$define"
+	echo "Yup, it does."
+else
+	val="$undef"
+	echo "Nope, it doesn't."
+fi
+set d_volatile
+eval $setvar
+$rm -f try.*
+

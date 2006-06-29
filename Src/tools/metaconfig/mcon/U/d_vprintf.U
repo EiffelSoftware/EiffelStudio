@@ -1,0 +1,83 @@
+?RCS: $Id: d_vprintf.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:59  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_vprintf d_charvspr: Guess cat +cc +ccflags Csym Setvar
+?MAKE:	-pick add $@ %<
+?S:d_vprintf:
+?S:	This variable conditionally defines the HAS_VPRINTF symbol, which
+?S:	indicates to the C program that the vprintf() routine is available
+?S:	to printf with a pointer to an argument list.
+?S:.
+?S:d_charvspr:
+?S:	This variable conditionally defines CHARVSPRINTF if this system
+?S:	has vsprintf returning type (char*).  The trend seems to be to
+?S:	declare it as "int vsprintf()".
+?S:.
+?C:HAS_VPRINTF (VPRINTF):
+?C:	This symbol, if defined, indicates that the vprintf routine is available
+?C:	to printf with a pointer to an argument list.  If unavailable, you
+?C:	may need to write your own, probably in terms of _doprnt().
+?C:.
+?C:USE_CHAR_VSPRINTF (CHARVSPRINTF):
+?C:	This symbol is defined if this system has vsprintf() returning type
+?C:	(char*).  The trend seems to be to declare it as "int vsprintf()".  It
+?C:	is up to the package author to declare vsprintf correctly based on the
+?C:	symbol.
+?C:.
+?H:#$d_vprintf HAS_VPRINTF	/**/
+?H:#$d_charvspr USE_CHAR_VSPRINTF 	/**/
+?H:.
+?T:val2
+?LINT:set d_vprintf d_charvspr
+: see if vprintf exists
+echo " "
+if set vprintf val -f d_vprintf; eval $csym; $val; then
+	echo 'vprintf() found.' >&4
+	val="$define"
+	$cat >vprintf.c <<'EOF'
+#include <varargs.h>
+
+main() { xxx("foo"); }
+
+xxx(va_alist)
+va_dcl
+{
+	va_list args;
+	char buf[10];
+
+	va_start(args);
+	exit((unsigned long)vsprintf(buf,"%s",args) > 10L);
+}
+EOF
+	if $cc $ccflags vprintf.c -o vprintf >/dev/null 2>&1 && ./vprintf; then
+		echo "Your vsprintf() returns (int)." >&4
+		val2="$undef"
+	else
+		echo "Your vsprintf() returns (char*)." >&4
+		val2="$define"
+	fi
+else
+	echo 'vprintf() NOT found.' >&4
+		val="$undef"
+		val2="$undef"
+fi
+set d_vprintf
+eval $setvar
+val=$val2
+set d_charvspr
+eval $setvar
+

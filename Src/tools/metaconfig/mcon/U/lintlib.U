@@ -1,0 +1,41 @@
+?RCS: $Id: lintlib.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:05  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:lintlib lintlibexp: Getfile Loc Oldconfig
+?MAKE:	-pick add $@ %<
+?S:lintlib:
+?S:	This variable holds the name of the directory in which the user wants
+?S:	to put public lint-library files for the package in question.  It is
+?S:	most often a local directory such as /usr/local/lib/lint. Programs using
+?S:	this variable must be prepared to deal with ~name expansion.
+?S:.
+?S:lintlibexp:
+?S:	This variable is the same as the lintlib variable, but is filename
+?S:	expanded at configuration time, for convenient use in your makefiles.
+?S:.
+: determine where public lint libraries go
+case "$lintlib" in
+'') dflt=`./loc . "." /usr/local/lib/lint /usr/lib/lint /usr/lib`;;
+*) dflt="$lintlib" ;;
+esac
+echo " "
+fn=d~
+rp='Where do you want to put the public lint libraries?'
+. ./getfile
+lintlib="$ans"
+lintlibexp="$ansexp"
+

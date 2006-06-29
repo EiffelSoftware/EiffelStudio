@@ -1,0 +1,49 @@
+?RCS: $Id: d_setreuid.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:13  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_setreuid d_setresuid: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_setreuid:
+?S:	This variable conditionally defines HAS_SETREUID if setreuid() is
+?S:	available to change the real and effective uid of the current
+?S:	process.
+?S:.
+?S:d_setresuid:
+?S:	This variable conditionally defines HAS_SETREUID if setresuid() is
+?S:	available to change the real, effective and saved uid of the current
+?S:	process.
+?S:.
+?C:HAS_SETREUID (SETREUID):
+?C:	This symbol, if defined, indicates that the setreuid routine is
+?C:	available to change the real and effective uid of the current
+?C:	process.
+?C:.
+?C:HAS_SETRESUID (SETRESUID):
+?C:	This symbol, if defined, indicates that the setresuid routine is
+?C:	available to change the real, effective and saved uid of the current
+?C:	process.
+?C:.
+?H:#$d_setreuid HAS_SETREUID		/**/
+?H:#$d_setresuid HAS_SETRESUID		/**/
+?H:.
+?LINT:set d_setreuid d_setresuid
+: see if setreuid exists
+set setreuid d_setreuid
+eval $inlibc
+set setresuid d_setresuid
+eval $inlibc
+

@@ -1,0 +1,58 @@
+?RCS: $Id: i_systimeb.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:37  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?X:
+?X: This unit looks wether <sys/timeb.h> should be included
+?X: or not when using ftime() (for struct timeb definition).
+?X:
+?X:	Force looking for <sys/time.h> for struct timeb.
+?X:INC: i_systime
+?MAKE:i_systimeb: test contains Loc Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:i_systimeb:
+?S:	This variable conditionally defines I_SYS_TIMEB, which indicates
+?S:	to the C program that it should include <sys/timeb.h>.
+?S:.
+?C:I_SYS_TIMEB (I_SYSTIMEB):
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/timeb.h>, in order to define struct timeb (some systems
+?C:	define this in <sys/time.h>). This is useful when using ftime().
+?C:	You should include <sys/time.h> if I_SYS_TIMEB is not defined,
+?C:	nor is I_SYS_TIME.
+?C:.
+?H:#$i_systimeb I_SYS_TIMEB		/**/
+?H:.
+?T:xxx
+?LINT:set i_systimeb
+: see where struct timeb is defined
+echo " "
+xxx=`./findhdr sys/timeb.h`
+if $test "$xxx"; then
+	if $contains 'struct timeb' $xxx >/dev/null 2>&1; then
+		val="$define"
+		echo "You have struct timeb defined in <sys/timeb.h>." >&4
+	else
+		val="$undef"
+		echo "Assuming struct timeb is defined in <sys/time.h>." >&4
+	fi
+else
+	val="$undef"
+echo "No <sys/timeb.h> -- Assuming struct timeb is defined in <sys/time.h>." >&4
+fi
+set i_systimeb
+eval $setvar
+

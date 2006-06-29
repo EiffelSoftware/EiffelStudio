@@ -1,0 +1,192 @@
+?RCS: $Id: d_NOFILE.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:08:38  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:39  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:nofile d_gettblsz tablesize: Myread Guess libc cat +cc +ccflags +libs \
+	test rm Csym
+?MAKE:	-pick add $@ %<
+?S:nofile:
+?S:	This variable contains the number of file descriptors available to the
+?S:	process.
+?S:.
+?S:d_gettblsz:
+?S:	This variable conditionally handles remapping of the getdtablesize()
+?S:	subroutine to ulimit(4,0), or the NOFILE manifest constant.
+?S:.
+?S:tablesize:
+?S:	This variable contains either the 'NOFILE' constant or 'ulimit(4, 0L)'
+?S:	and is used as the remapped value for the getdtablesize() macro.
+?S:.
+?C:getdtablesize:
+?C:	This catches use of the getdtablesize() subroutine, and remaps it
+?C:	to either ulimit(4,0) or NOFILE, if getdtablesize() isn't available.
+?C:.
+?C:VAL_NOFILE:
+?C:	This symbol contains the number of file descriptors available to the
+?C:	process, as determined at configuration time. Unless a static constant
+?C:	is needed, you should rely on getdtablesize() to obtain that number.
+?C:.
+?H:#$d_gettblsz getdtablesize() $tablesize	/**/
+?H:#define VAL_NOFILE $nofile	/* Number of file descriptors */
+?H:.
+?F:!nofile
+?T:d_ulimit4 val
+: see if getdtablesize exists
+echo " "
+?X: Revert logical value (d_gettblsz is undef iff getdtablesize is present)
+case "$d_gettblsz" in
+$define) d_gettblsz="$undef";;
+$undef) d_gettblsz="$define";;
+esac
+if set getdtablesize val -f d_gettblsz; eval $csym; $val; then
+	echo 'getdtablesize() found.' >&4
+	d_gettblsz="$undef"
+	tablesize=''
+@if VAL_NOFILE || nofile
+	$cat >nofile.c <<'EOCP'
+#include <stdio.h>
+main()
+{
+	printf("%d\n", getdtablesize());
+}
+EOCP
+	nofile=''
+	if $cc $ccflags nofile.c -o nofile $libs >/dev/null 2>&1; then
+		nofile=`./nofile 2>/dev/null`
+	fi
+	if $test "$nofile"; then
+		echo "(You have $nofile file descriptors available per process.)"
+	else
+		nofile='20'
+		if ./bsd; then
+			nofile='64'
+		fi
+	echo "(Hmm... Let's say you have $nofile file descriptors available.)"
+	fi
+@end
+else
+	echo 'getdtablesize() NOT found...' >&4
+	if set ulimit val -f; eval $csym; $val; then
+		echo 'Maybe ulimit(4,0) will work...'
+		$cat >nofile.c <<'EOCP'
+#include <stdio.h>
+#ifdef GETPARAM_H
+#include <sys/param.h>
+#endif
+main()
+{
+	printf("%d %d\n",
+#ifdef NOFILE
+		NOFILE,
+#else
+		0,
+#endif
+		ulimit(4,0));
+		exit(0);
+}
+EOCP
+		if $cc $ccflags -DGETPARAM_H nofile.c -o nofile $libs >/dev/null 2>&1 \
+			|| $cc $ccflags nofile.c -o nofile $libs >/dev/null 2>&1 ; then
+			set `./nofile`
+			d_gettblsz=$1
+			d_ulimit4=$2
+			if $test "$d_ulimit4" -lt 0; then
+				echo "Your ulimit() call doesn't tell me what I want to know."
+				echo "We'll just use NOFILE in this case."
+				nofile=$d_gettblsz
+				d_gettblsz="$define"
+				tablesize='NOFILE'
+			else
+				if $test "$d_gettblsz" -gt 0; then
+				echo "Your system defines NOFILE to be $d_gettblsz, and" >&4
+				else
+				echo "I had trouble getting NOFILE from your system, but" >&4
+				fi
+echo "ulimit returns $d_ulimit4 as the number of available file descriptors." >&4
+				dflt='y';
+				echo " "
+	rp='Should I use ulimit to get the number of available file descriptors?'
+				. ./myread
+				case "$ans" in
+				y*)
+					nofile=$d_ulimit4
+					d_gettblsz="$define"
+					tablesize='ulimit(4, 0L)'
+					echo "Using ulimit(4,0)."
+					;;
+				*)
+					nofile=$d_gettblsz
+					d_gettblsz="$define"
+					tablesize='NOFILE'
+					echo "Using NOFILE."
+					;;
+				esac
+			fi
+		else
+			echo "Strange, I couldn't get my test program to compile."
+			echo "We'll just use NOFILE in this case."
+			d_gettblsz="$define"
+			tablesize='NOFILE'
+			nofile=''
+		fi
+	else
+		echo 'Using NOFILE instead.'
+		d_gettblsz="$define"
+		tablesize='NOFILE'
+		nofile=''
+	fi
+fi
+@if VAL_NOFILE || nofile
+case "$nofile" in
+'')
+	$cat >nofile.c <<'EOCP'
+#include <stdio.h>
+#ifdef GETPARAM_H
+#include <sys/param.h>
+#endif
+main()
+{
+	printf("%d\n",
+#ifdef NOFILE
+		NOFILE,
+#else
+		0,
+#endif
+		);
+		exit(0);
+}
+EOCP
+	if $cc $ccflags -DGETPARAM_H nofile.c -o nofile $libs >/dev/null 2>&1 \
+		|| $cc $ccflags nofile.c -o nofile $libs >/dev/null 2>&1 ; then
+		nofile=`./nofile 2>/dev/null`
+	fi
+	if $test "$nofile"; then
+		echo "(You have $nofile file descriptors available per process.)"
+	else
+		nofile='20'
+		if ./bsd; then
+			nofile='64'
+		fi
+	echo "(Hmm... Let's say you have $nofile file descriptors available.)"
+	fi
+	;;
+esac
+@end
+$rm -f nofile*
+

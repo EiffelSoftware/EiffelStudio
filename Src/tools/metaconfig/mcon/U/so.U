@@ -1,0 +1,53 @@
+?RCS: $Id: so.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:30:04  ram
+?RCS: patch36: now tells user how he can suppress shared lib lookup (ADO)
+?RCS: patch36: removed echo at the top, since it's now in the here-doc (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/06/20  07:07:02  ram
+?RCS: patch30: created
+?RCS:
+?X:
+?X:	This unit computes the shared-object / shared-lib extension
+?X:
+?MAKE:so: test libpth Loc Myread Oldconfig cat
+?MAKE:	-pick add $@ %<
+?S:so:
+?S:	This variable holds the extension used to identify shared libraries
+?S:	(also known as shared objects) on the system. Usually set to 'so'.
+?S:.
+?T: xxx
+: compute shared library extension
+case "$so" in
+'')
+	if xxx=`./loc libc.sl X $libpth`; $test -f "$xxx"; then
+		dflt='sl'
+	else
+		dflt='so'
+	fi
+	;;
+*) dflt="$so";;
+esac
+$cat <<EOM
+
+On some systems, shared libraries may be available.  Answer 'none' if
+you want to suppress searching of shared libraries for the remaining
+of this configuration.
+
+EOM
+rp='What is the file extension used for shared libraries?'
+. ./myread
+so="$ans"
+

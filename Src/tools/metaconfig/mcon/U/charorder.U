@@ -1,0 +1,146 @@
+?RCS: $Id: charorder.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:07:08  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:33  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:chorder_int chorder_short chorder_long: Myread cat +cc +ccflags rm
+?MAKE:	-pick add $@ %<
+?S:chorder_short (d_cos d_bos):
+?S:	Holds the value describing the byte ordering of characters in a short.
+?S: On a Big-Endian machine, that would be "c0c1".
+?S:.
+?S:chorder_int (charoder):
+?S:	Holds the value describing the byte ordering of characters in an int.
+?S: For instance, on a Big-Endian machine, this would be: "c0c1c2c3".
+?S:.
+?S:chorder_long (d_col d_bol):
+?S:	Holds the value describing the byte ordering of characters in a long.
+?S: On a 64 bits Big-Endian machine, that would yield: "c0c1c2c3c4c5c6c7".
+?S:.
+?C:CHAR_ORDER_SHORT:
+?C:	Holds the byte ordering of characters in a short. It's a string
+?C:	value like "c0c1" on a Big-Endian machine.
+?C:.
+?C:CHAR_ORDER_INT:
+?C:	Holds the byte ordering of characters in an int. It's a string
+?C:	value like "c0c1c2c3" on a Big-Endian machine.
+?C:.
+?C:CHAR_ORDER_LONG:
+?C:	Holds the byte ordering of characters in a long. It's a string
+?C:	value like "c0c1c2c3c4c5c6c7" on a 64 bits Big-Endian machine.
+?C:.
+?H:#define CHAR_ORDER_SHORT	"$chorder_short" /* byte order in a short */
+?H:#define CHAR_ORDER_INT "$chorder_int" /* byte order in an int */
+?H:#define CHAR_ORDER_LONG "$chorder_long" /* byte order in a long */
+?H:.
+?F:!byteorder
+: check for character ordering
+echo " "
+echo "Checking out byte order..." >&4
+$cat >byteorder.c <<'EOCP'
+#include <stdio.h>
+
+main(argc, argv)
+	int argc;
+	char *argv[]; {
+	int i;
+	int max;
+	union {
+		short u_s;
+		int u_i;
+		long u_l;
+		char u_c[sizeof(long)];
+	} u;
+	switch (argv[1][0]) {
+	case 'l':
+		u.u_l = 0L;
+		/* HMS: ASSERT: sizeof(long) < 10. */
+		for(i = 0; i < sizeof(long); ++i) {
+			u.u_l *= 0x100L;
+			u.u_l += (0xc0 + i);
+		}
+		max = sizeof(long);
+		break;
+	case 's':
+		u.u_s = 0;
+		/* HMS: ASSERT: sizeof(short) < 10. */
+		for(i = 0; i < sizeof(short); ++i) {
+			u.u_s *= 0x100L;
+			u.u_s += (0xc0 + i);
+		}
+		max = sizeof(short);
+		break;
+	case 'i':
+		u.u_i = 0;
+		/* RAM: ASSERT: sizeof(int) < 10. */
+		for(i = 0; i < sizeof(int); ++i) {
+			u.u_l *= 0x100L;
+			u.u_l += (0xc0 + i);
+		}
+		max = sizeof(int);
+		break;
+	default:
+		max = 0;
+		break;
+	}
+	for(i = 0; i < max; i++) {
+		printf("%x", u.u_c[i] & 0x00FF);
+	}
+	printf("\n");
+	exit(0);
+}
+EOCP
+if $cc $ccflags -o byteorder byteorder.c >/dev/null 2>&1 ; then
+	: null statement
+@if chorder_short
+    chorder_short=`./byteorder s`
+@end
+@if chorder_int
+    chorder_int=`./byteorder i`
+@end
+@if chorder_long
+    chorder_long=`./byteorder l`
+@end
+else
+	$cat <<EOM
+(I can't seem to get my test program to work.  Guessing 32 bits big-endian.)
+EOM
+    chorder_short="c0c1"
+    chorder_int="c0c1c2c3"
+    chorder_long="c0c1c2c3"
+fi
+@if chorder_short
+dflt=$chorder_short
+rp='What is the order of characters in a short?'
+. ./myread
+chorder_short="$ans"
+@end
+@if chorder_int
+dflt=$chorder_int
+rp='What is the order of characters in an int?'
+. ./myread
+chorder_int="$ans"
+@end
+@if chorder_long
+dflt=$chorder_long
+rp='What is the order of characters in a long?'
+. ./myread
+chorder_long="$ans"
+@end
+$rm -f byteorder* core
+

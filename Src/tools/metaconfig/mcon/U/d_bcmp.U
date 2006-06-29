@@ -1,0 +1,47 @@
+?RCS: $Id: d_bcmp.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1993/10/16  13:47:52  ram
+?RCS: patch12: added magic support for bcmp()
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:00:44  ram
+?RCS: patch10: now only defines HAS_BCMP, no macro remap on memcmp (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:42  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_bcmp: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_bcmp:
+?S:	This variable conditionally defines the HAS_BCMP symbol if
+?S:	the bcmp() routine is available to compare strings.
+?S:.
+?C:HAS_BCMP:
+?C:	This symbol is defined if the bcmp() routine is available to
+?C:	compare blocks of memory.
+?C:.
+?H:#$d_bcmp HAS_BCMP	/**/
+?H:.
+?M:bcmp: HAS_BCMP
+?M:#ifndef HAS_BCMP
+?M:#ifndef bcmp
+?M:#define bcmp(s,d,l) memcmp((s),(d),(l))
+?M:#endif
+?M:#endif
+?M:.
+?LINT:set d_bcmp
+: see if bcmp exists
+set bcmp d_bcmp
+eval $inlibc
+

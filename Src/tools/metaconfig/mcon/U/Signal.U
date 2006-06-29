@@ -1,0 +1,195 @@
+?RCS: $Id: Signal.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  15:20:01  ram
+?RCS: patch61: created
+?RCS:
+?X:
+?X: This unit produces three files:
+?X: 1- A signal.c file, which, when compiled and ran, produces an output like:
+?X:
+?X:   HUP 1
+?X:   INT 2
+?X:   QUIT 3
+?X:   etc...
+?X:
+?X: 2- A signal.awk script to parse the output of signal.c, fill
+?X: in gaps (up to NSIG) and move duplicates to the end.
+?X: 3- A signal_cmd script to compile signal.c and run it
+?X: through sort -n +1 | uniq | awk -f signal.awk.
+?X: (This is called signal_cmd to avoid OS/2 confusion with
+?X: signal.cmd vs. signal.
+?X:
+?X: This unit is then used by sig_name.U.
+?X:
+?MAKE:Signal: test tr rm awk cat grep startsh eunicefix sed sort uniq \
+	Findhdr cppstdin +cppflags cppminus +cc +ccflags +ldflags _o
+?MAKE:	-pick add $@ %<
+?X:all files declared as "public" since they're used from other units
+?F:signal.c signal_cmd signal.lst signal signal.awk
+?T: xx xxx xxxfiles
+: Trace out the files included by signal.h, then look for SIGxxx names.
+: Remove SIGARRAYSIZE used by HPUX.
+: Remove SIGTYP void lines used by OS2.
+xxx=`echo '#include <signal.h>' |
+	$cppstdin $cppminus $cppflags 2>/dev/null |
+	$grep '^[ 	]*#.*include' | 
+	$awk "{print \\$$fieldn}" | $sed 's!"!!g' | $sort | $uniq`
+: Check this list of files to be sure we have parsed the cpp output ok.
+: This will also avoid potentially non-existent files, such 
+: as ../foo/bar.h
+xxxfiles=''
+?X: Add /dev/null in case the $xxx list is empty.
+for xx in $xxx /dev/null ; do
+	$test -f "$xx" && xxxfiles="$xxxfiles $xx"
+done
+: If we have found no files, at least try signal.h
+case "$xxxfiles" in
+'')	xxxfiles=`./findhdr signal.h` ;;
+esac
+xxx=`awk '
+$1 ~ /^#define$/ && $2 ~ /^SIG[A-Z0-9]*$/ && $2 !~ /SIGARRAYSIZE/ && $3 !~ /void/ {
+	print substr($2, 4, 20)
+}
+$1 == "#" && $2 ~ /^define$/ && $3 ~ /^SIG[A-Z0-9]*$/ && $3 !~ /SIGARRAYSIZE/ && $4 !~ /void/ {
+	print substr($3, 4, 20)
+}' $xxxfiles`
+: Append some common names just in case the awk scan failed.
+xxx="$xxx ABRT ALRM BUS CHLD CLD CONT DIL EMT FPE HUP ILL INT IO IOT KILL"
+xxx="$xxx LOST PHONE PIPE POLL PROF PWR QUIT SEGV STKFLT STOP SYS TERM TRAP"
+xxx="$xxx TSTP TTIN TTOU URG USR1 USR2 USR3 USR4 VTALRM"
+xxx="$xxx WINCH WIND WINDOW XCPU XFSZ"
+: generate a few handy files for later
+$cat > signal.c <<'EOP'
+#include <sys/types.h>
+#include <signal.h>
+int main() {
+
+/* Strange style to avoid deeply-nested #if/#else/#endif */
+#ifndef NSIG
+#  ifdef _NSIG
+#    define NSIG (_NSIG)
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef SIGMAX
+#    define NSIG (SIGMAX+1)
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef SIG_MAX
+#    define NSIG (SIG_MAX+1)
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef MAXSIG
+#    define NSIG (MAXSIG+1)
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef MAX_SIG
+#    define NSIG (MAX_SIG+1)
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef SIGARRAYSIZE
+#    define NSIG (SIGARRAYSIZE+1) /* Not sure of the +1 */
+#  endif
+#endif
+
+#ifndef NSIG
+#  ifdef _sys_nsig
+#    define NSIG (_sys_nsig) /* Solaris 2.5 */
+#  endif
+#endif
+
+/* Default to some arbitrary number that's big enough to get most
+   of the common signals.
+*/
+#ifndef NSIG
+#    define NSIG 50
+#endif
+
+printf("NSIG %d\n", NSIG);
+
+EOP
+echo $xxx | $tr ' ' '\012' | $sort | $uniq | $awk '
+{
+	printf "#ifdef SIG"; printf $1; printf "\n"
+	printf "printf(\""; printf $1; printf " %%d\\n\",SIG";
+	printf $1; printf ");\n"
+	printf "#endif\n"
+}
+END {
+	printf "}\n";
+}
+' >>signal.c
+$cat >signal.awk <<'EOP'
+BEGIN { ndups = 0 }
+$1 ~ /^NSIG$/ { nsig = $2 }
+($1 !~ /^NSIG$/) && (NF == 2) {
+    if ($2 > maxsig) { maxsig = $2 }
+    if (sig_name[$2]) {
+	dup_name[ndups] = $1
+	dup_num[ndups] = $2
+	ndups++ 
+    }
+    else {
+	sig_name[$2] = $1
+	sig_num[$2] = $2
+    }
+
+}
+END { 
+    if (nsig == 0) { nsig = maxsig + 1 }
+	for (n = 1; n < nsig; n++) {
+		if (sig_name[n]) {
+			printf("%s %d\n", sig_name[n], sig_num[n])
+		}
+		else {
+			printf("NUM%d %d\n", n, n) 
+		}
+	}
+    for (n = 0; n < ndups; n++) {
+		printf("%s %d\n", dup_name[n], dup_num[n])
+    }
+}
+EOP
+$cat >signal_cmd <<EOS
+$startsh
+$test -s signal.lst && exit 0
+if $cc $ccflags signal.c -o signal $ldflags >/dev/null 2>&1; then
+	./signal | $sort -n +1 | $uniq | $awk -f signal.awk >signal.lst
+else
+	echo "(I can't seem be able to compile the test program -- Guessing)"
+	echo 'kill -l' >signal
+	set X \`csh -f <signal\`
+	$rm -f signal
+	shift
+	case \$# in
+	0) set HUP INT QUIT ILL TRAP ABRT EMT FPE KILL BUS SEGV SYS PIPE ALRM TERM;;
+	esac
+	echo \$@ | $tr ' ' '\012' | \
+		$awk '{ printf $1; printf " %d\n", ++s; }' >signal.lst
+fi
+$rm -f signal.c signal signal$_o
+EOS
+chmod a+x signal_cmd
+$eunicefix signal_cmd
+

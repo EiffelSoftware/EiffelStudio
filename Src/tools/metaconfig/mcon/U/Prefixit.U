@@ -1,0 +1,71 @@
+?RCS: $Id: Prefixit.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1995/01/30  14:29:22  ram
+?RCS: patch49: created
+?RCS:
+?X:
+?X: Used as: "set dflt var dir; eval $prefixit" to set $dflt to be
+?X: $prefix/dir by default, or the previous $var depending on certain
+?X: conditions:
+?X: - If the $oldprefix variable is empty, then $prefix holds the same
+?X:   value as on previous runs. Therefore, reuse $var if set, otherwise
+?X:   set $dflt to $prefix/dir.
+?X: - If $oldprefix is not empty, then set $dflt to $prefix/dir if $var
+?X:   is empty (first run). Otherwise, if $var is $oldprefix/dir, then
+?X:   change it to $prefix/dir. If none of the above, reuse the old $var.
+?X:
+?X: When dir is omitted, the dflt variable is set to $var if prefix did not
+?X: change, to an empty value otherwise. If dir=none, then a single space
+?X: in var is kept as-is, even if the prefix changes.
+?X:
+?MAKE:Prefixit: prefix oldprefix
+?MAKE:	-pick add $@ %<
+?LINT:define prefixit
+?S:prefixit:
+?S:	This shell variable is used internally by Configure to reset
+?S:	the leading installation prefix correctly when it is changed.
+?S:		set dflt var [dir]
+?S:		eval $prefixit
+?S:	That will set $dflt to $var or $prefix/dir depending on the
+?S:	value of $var and $oldprefix.
+?S:.
+?V:prefixit
+?T:tp
+: set the prefixit variable, to compute a suitable default value
+prefixit='case "$3" in
+""|none)
+	case "$oldprefix" in
+	"") eval "$1=\"\$$2\"";;
+	*)
+		case "$3" in
+		"") eval "$1=";;
+		none)
+			eval "tp=\"\$$2\"";
+			case "$tp" in
+			""|" ") eval "$1=\"\$$2\"";;
+			*) eval "$1=";;
+			esac;;
+		esac;;
+	esac;;
+*)
+	eval "tp=\"$oldprefix-\$$2-\""; eval "tp=\"$tp\"";
+	case "$tp" in
+	--|/*--|\~*--) eval "$1=\"$prefix/$3\"";;
+	/*-$oldprefix/*|\~*-$oldprefix/*)
+		eval "$1=\`echo \$$2 | sed \"s,^$oldprefix,$prefix,\"\`";;
+	*) eval "$1=\"\$$2\"";;
+	esac;;
+esac'
+

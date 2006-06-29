@@ -1,0 +1,65 @@
+?RCS: $Id: d_speedopt.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:15:51  ram
+?RCS: patch36: call ./Cppsym explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:07:27  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_speedopt: Myread Cppsym Oldconfig cat models Setvar
+?MAKE:	-pick add $@ %<
+?S:d_speedopt:
+?S:	This variable conditionally defines the SPEED_OVER_MEM symbol, which
+?S:	indicates to the C program that it can burn memory in order to save
+?S:	CPU time.
+?S:.
+?C:SPEED_OVER_MEM (SPEEDOVERMEM):
+?C:	This symbol, if defined, indicates that the program can use more
+?C:	memory in order to reduce CPU time.  The symbol doesn't say whether
+?C:	we are more interested in saving text space or data space.
+?C:.
+?H:#$d_speedopt SPEED_OVER_MEM	/**/
+?H:.
+?LINT:set d_speedopt
+: do we want speed at the expense of memory
+$cat <<'EOM'
+ 
+I can try to optimize this package for either speed or memory.  If you have
+limited address space you may wish to optimize for memory.  Otherwise you
+should probably optimize for speed.
+
+EOM
+case "$d_speedopt" in
+'') if ./Cppsym $smallmach; then
+	case "$models" in
+		*large*|*huge*) dflt=speed;;
+		*) dflt=memory;;
+		esac
+	else
+		dflt=speed
+	fi
+	;;
+*define*) dflt=speed;;
+*) dflt=memory;;
+esac
+rp="What to optimize for?"
+. ./myread
+case "$ans" in
+mem*) val="$undef";;
+*) val="$define";;
+esac
+set d_speedopt
+eval $setvar
+

@@ -1,0 +1,57 @@
+?RCS: $Id: lib.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/09/25  09:16:47  ram
+?RCS: patch59: unit is now forced to the top of Configure, if possible
+?RCS:
+?RCS: Revision 3.0.1.2  1995/01/30  14:38:08  ram
+?RCS: patch49: can now handle installation prefix changes (from WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:27:40  ram
+?RCS: patch32: now uses installation prefix to set the default
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:08:56  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:lib libexp: Getfile Loc Oldconfig Prefixit Prefixup prefixexp
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:lib:
+?S:	This variable holds the name of the directory in which the user wants
+?S:	to put public library files for the package in question.  It is most
+?S:	often a local directory such as /usr/local/lib. Programs using this
+?S:	variable must be prepared to deal with filename expansion.
+?S:.
+?S:libexp:
+?S:	This variable is the same as the lib variable, but is filename expanded
+?S:	at configuration time, for convenient use in your makefiles.
+?S:.
+: determine where public libraries go
+set lib lib
+eval $prefixit
+case "$lib" in
+'')
+	dflt=`./loc . "." $prefixexp/lib /usr/local/lib /usr/lib /lib`
+	set dflt
+	eval $prefixup
+	;;
+*)  dflt="$lib";;
+esac
+echo " "
+fn=d~
+rp='Where do you want to put the public libraries?'
+. ./getfile
+lib="$ans"
+libexp="$ansexp"
+

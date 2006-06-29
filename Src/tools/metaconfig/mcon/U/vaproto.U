@@ -1,0 +1,68 @@
+?RCS: $Id: vaproto.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Orginal Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:17:16  ram
+?RCS: patch16: definition of _V now appears only when needed
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:59  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:vaproto: prototype i_stdarg Setvar
+?MAKE:	-pick add $@ %<
+?S:vaproto:
+?S:	This variable conditionally defines CAN_VAPROTO on systems supporting
+?S:	prototype declaration of functions with a variable number of
+?S:	arguments. See also prototype.
+?S:.
+?C:CAN_VAPROTO ~ %<:
+?C:	This variable is defined on systems supporting prototype declaration
+?C:	of functions with a variable number of arguments.
+?C:.
+?C:_V:
+?C:	This macro is used to declare function parameters in prototypes for
+?C:	functions with a variable number of parameters. Use double parentheses.
+?C:	For example:
+?C:
+?C:		int printf _V((char *fmt, ...));
+?C:
+?C:	Remember to use the plain simple _() macro when declaring a function
+?C:	with no variable number of arguments, since it might be possible to
+?C:	have a non-effect _V() macro and still get prototypes via _().
+?C:.
+?H:?%<:#$vaproto CAN_VAPROTO	/**/
+?H:?_V:#ifdef CAN_VAPROTO
+?H:?_V:#define	_V(args) args
+?H:?_V:#else
+?H:?_V:#define	_V(args) ()
+?H:?_V:#endif
+?H:.
+?W:%<:_V
+?LINT:set vaproto
+: see if prototypes support variable argument declarations
+echo " "
+case "$prototype$i_stdarg" in
+$define$define)
+	echo "It appears we'll be able to prototype varargs functions." >&4
+	val="$define"
+	;;
+*)
+	echo "Too bad... We won't be using prototyped varargs functions..." >&4
+	val="$undef"
+	;;
+esac
+set vaproto
+eval $setvar
+

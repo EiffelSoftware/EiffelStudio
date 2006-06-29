@@ -1,0 +1,60 @@
+?RCS: $Id: d_isascii.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:13:39  ram
+?RCS: patch36: added 'ldflags' to the test compile line (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:09:32  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:d_isascii: cc cat ccflags ldflags rm libs Setvar
+?MAKE:	-pick add $@ %<
+?S:d_isascii:
+?S:	This variable conditionally defines the HAS_ISASCII constant,
+?S:	which indicates to the C program that isascii() is available.
+?S:.
+?C:HAS_ISASCII:
+?C:	This manifest constant lets the C program know that isascii 
+?C:	is available.
+?C:.
+?H:#$d_isascii HAS_ISASCII		/**/
+?H:.
+?LINT:set d_isascii
+?X: Can't use Inlibc because isascii() might be a macro.
+: Look for isascii
+echo " "
+$cat >isascii.c <<'EOCP'
+#include <stdio.h>
+#include <ctype.h>
+main() {
+	int c = 'A';
+	if (isascii(c))
+		exit(0);
+	else
+		exit(1);
+}
+EOCP
+if $cc $ccflags $ldflags -o isascii isascii.c $libs >/dev/null 2>&1 ; then
+	echo "isascii() found." >&4
+	val="$define"
+else
+	echo "isascii() NOT found." >&4
+	val="$undef"
+fi
+set d_isascii
+eval $setvar
+$rm -f isascii*
+

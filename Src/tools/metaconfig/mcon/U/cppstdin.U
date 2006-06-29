@@ -1,0 +1,238 @@
+?RCS: $Id: cppstdin.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.4  1994/10/29  16:08:34  ram
+?RCS: patch36: added ?F: line for metalint file checking
+?RCS:
+?RCS: Revision 3.0.1.3  1994/01/24  14:05:38  ram
+?RCS: patch16: comment for CPPLAST was missing
+?RCS:
+?RCS: Revision 3.0.1.2  1993/12/15  08:18:58  ram
+?RCS: patch15: new variables cpprun and cpplast, guaranteed wrapper-free
+?RCS: patch15: cppstdin now tries to use cc, even at the cost of a wrapper
+?RCS:
+?RCS: Revision 3.0.1.1  1993/08/25  14:00:53  ram
+?RCS: patch6: remove wrapper when not actually used
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:05:38  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:cppstdin cppminus cpprun cpplast: contains test Myread Oldconfig Loc \
+	cpp +cc rm
+?MAKE:	-pick add $@ %<
+?S:cppstdin:
+?S:	This variable contains the command which will invoke the C
+?S:	preprocessor on standard input and put the output to stdout.
+?S:	It is primarily used by other Configure units that ask about
+?S:	preprocessor symbols.
+?S:.
+?S:cppminus:
+?S:	This variable contains the second part of the string which will invoke
+?S:	the C preprocessor on the standard input and produce to standard
+?S:	output.  This variable will have the value "-" if cppstdin needs a minus
+?S:	to specify standard input, otherwise the value is "".
+?S:.
+?S:cpprun:
+?S:	This variable contains the command which will invoke a C preprocessor
+?S:	on standard input and put the output to stdout. It is guaranteed not
+?S:	to be a wrapper and may be a null string if no preprocessor can be
+?S:	made directly available. This preprocessor might be different from the
+?S:	one used by the C compiler. Don't forget to append cpplast after the
+?S:	preprocessor options.
+?S:.
+?S:cpplast:
+?S:	This variable has the same functionality as cppminus, only it applies to
+?S:	cpprun and not cppstdin.
+?S:.
+?C:CPPSTDIN:
+?C:	This symbol contains the first part of the string which will invoke
+?C:	the C preprocessor on the standard input and produce to standard
+?C:	output.	 Typical value of "cc -E" or "/lib/cpp", but it can also
+?C:	call a wrapper. See CPPRUN.
+?C:.
+?C:CPPMINUS:
+?C:	This symbol contains the second part of the string which will invoke
+?C:	the C preprocessor on the standard input and produce to standard
+?C:	output.  This symbol will have the value "-" if CPPSTDIN needs a minus
+?C:	to specify standard input, otherwise the value is "".
+?C:.
+?C:CPPRUN:
+?C:	This symbol contains the string which will invoke a C preprocessor on
+?C:	the standard input and produce to standard output. It needs to end
+?C:	with CPPLAST, after all other preprocessor flags have been specified.
+?C:	The main difference with CPPSTDIN is that this program will never be a
+?C:	pointer to a shell wrapper, i.e. it will be empty if no preprocessor is
+?C:	available directly to the user. Note that it may well be different from
+?C:	the preprocessor used to compile the C program.
+?C:.
+?C:CPPLAST:
+?C: This symbol is intended to be used along with CPPRUN in the same manner
+?C:	symbol CPPMINUS is used with CPPSTDIN. It contains either "-" or "".
+?C:.
+?H:#define CPPSTDIN "$cppstdin"
+?H:#define CPPMINUS "$cppminus"
+?H:#define CPPRUN "$cpprun"
+?H:#define CPPLAST "$cpplast"
+?H:.
+?F:cppstdin
+?T:wrapper x_cpp x_minus ok
+: see how we invoke the C preprocessor
+echo " "
+echo "Now, how can we feed standard input to your C preprocessor..." >&4
+cat <<'EOT' >testcpp.c
+#define ABC abc
+#define XYZ xyz
+ABC.XYZ
+EOT
+cd ..
+echo 'cat >.$$.c; '"$cc"' -E ${1+"$@"} .$$.c; rm .$$.c' >cppstdin
+chmod 755 cppstdin
+wrapper=`pwd`/cppstdin
+ok='false'
+cd UU
+
+?X:
+?X: We'll run the cpp tests again if we don't have any valid C preprocessor
+?X: yet or don't know how to proceed without a wrapper (in which case cpprun
+?X: is empty and that's really annoying...)
+?X:
+if $test "X$cppstdin" != "X" && \
+	$cppstdin $cppminus <testcpp.c >testcpp.out 2>&1 && \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1
+then
+	echo "You used to use $cppstdin $cppminus so we'll use that again."
+	case "$cpprun" in
+	'') echo "But let's see if we can live without a wrapper..." ;;
+	*)
+		if $cpprun $cpplast <testcpp.c >testcpp.out 2>&1 && \
+			$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1
+		then
+			echo "(And we'll use $cpprun $cpplast to preprocess directly.)"
+			ok='true'
+		else
+			echo "(However, $cpprun $cpplast does not work, let's see...)"
+		fi
+		;;
+	esac
+else
+	case "$cppstdin" in
+	'') ;;
+	*)
+		echo "Good old $cppstdin $cppminus does not seem to be of any help..."
+		;;
+	esac
+fi
+
+if $ok; then
+	: nothing
+elif echo 'Maybe "'"$cc"' -E" will work...'; \
+	$cc -E <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "Yup, it does."
+	x_cpp="$cc -E"
+	x_minus='';
+elif echo 'Nope...maybe "'"$cc"' -E -" will work...'; \
+	$cc -E - <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "Yup, it does."
+	x_cpp="$cc -E"
+	x_minus='-';
+elif echo 'Nope...maybe "'"$cc"' -P" will work...'; \
+	$cc -P <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "Yipee, that works!"
+	x_cpp="$cc -P"
+	x_minus='';
+elif echo 'Nope...maybe "'"$cc"' -P -" will work...'; \
+	$cc -P - <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "At long last!"
+	x_cpp="$cc -P"
+	x_minus='-';
+elif echo 'No such luck, maybe "'$cpp'" will work...'; \
+	$cpp <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "It works!"
+	x_cpp="$cpp"
+	x_minus='';
+elif echo 'Nixed again...maybe "'$cpp' -" will work...'; \
+	$cpp - <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	echo "Hooray, it works!  I was beginning to wonder."
+	x_cpp="$cpp"
+	x_minus='-';
+elif echo 'Uh-uh.  Time to get fancy.  Trying a wrapper...'; \
+	$wrapper <testcpp.c >testcpp.out 2>&1; \
+	$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+	x_cpp="$wrapper"
+	x_minus=''
+	echo "Eureka!"
+else
+	dflt=''
+	rp="No dice.  I can't find a C preprocessor.  Name one:"
+	. ./myread
+	x_cpp="$ans"
+	x_minus=''
+	$x_cpp <testcpp.c >testcpp.out 2>&1
+	if $contains 'abc.*xyz' testcpp.out >/dev/null 2>&1 ; then
+		echo "OK, that will do." >&4
+	else
+echo "Sorry, I can't get that to work.  Go find one and rerun Configure." >&4
+		exit 1
+	fi
+fi
+
+case "$ok" in
+false)
+	cppstdin="$x_cpp"
+	cppminus="$x_minus"
+	cpprun="$x_cpp"
+	cpplast="$x_minus"
+?X:
+?X: If /lib/cpp is used, try using a wrapper to increase our chances to have
+?X: the C compiler and our $cppstdin agree on the same symbols... However,
+?X: since cpprun is guaranteed not to be a wrapper, we must clear it if the
+?X: only preprocessor we found was a wrapper, with all our luck...
+?X:
+	set X $x_cpp
+	shift
+	case "$1" in
+	"$cpp")
+		echo "Perhaps can we force $cc -E using a wrapper..."
+		if $wrapper <testcpp.c >testcpp.out 2>&1; \
+			$contains 'abc.*xyz' testcpp.out >/dev/null 2>&1
+		then
+			echo "Yup, we can."
+			cppstdin="$wrapper"
+			cppminus='';
+		else
+			echo "Nope, we'll have to live without it..."
+		fi
+		;;
+	esac
+	case "$cpprun" in
+	"$wrapper")
+		cpprun=''
+		cpplast=''
+		;;
+	esac
+	;;
+esac
+
+case "$cppstdin" in
+"$wrapper") ;;
+*) $rm -f $wrapper;;
+esac
+$rm -f testcpp.c testcpp.out
+

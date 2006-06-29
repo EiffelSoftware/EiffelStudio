@@ -1,0 +1,110 @@
+?RCS: $Id: d_closedir.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  15:31:26  ram
+?RCS: patch61: added ?F: metalint hint
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:11:18  ram
+?RCS: patch36: added 'ldflags' to the test compile line (ADO)
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:07:21  ram
+?RCS: patch32: created by ADO
+?RCS:
+?MAKE:d_closedir d_void_closedir: Inlibc i_dirent i_sysdir i_sysndir \
+	cc ccflags ldflags libs Setvar rm
+?MAKE:	-pick add $@ %<
+?S:d_closedir:
+?S:	This variable conditionally defines HAS_CLOSEDIR if closedir() is
+?S:	available.
+?S:.
+?C:HAS_CLOSEDIR:
+?C:	This symbol, if defined, indicates that the closedir() routine is
+?C:	available.
+?C:.
+?H:#$d_closedir HAS_CLOSEDIR		/**/
+?H:.
+?S:d_void_closedir:
+?S:	This variable conditionally defines VOID_CLOSEDIR if closedir()
+?S:	does not return a value.
+?S:.
+?C:VOID_CLOSEDIR:
+?C:	This symbol, if defined, indicates that the closedir() routine
+?C:	does not return a value.
+?C:.
+?H:#$d_void_closedir VOID_CLOSEDIR		/**/
+?H:.
+?F:!closedir
+?LINT:set d_closedir d_void_closedir
+: see if closedir exists
+set closedir d_closedir
+eval $inlibc
+
+@if VOID_CLOSEDIR || d_void_closedir
+?X: The following contortions are designed so we can call closedir()
+?X: and check whether it returns a value.  The contortions are designed
+?X:	to portably pick up the correct directory header, for those
+?X:	systems that support various mutually incompatible directory functions.
+?X:	This is from perl5's perl.h
+case "$d_closedir" in
+"$define")
+	echo " "
+	echo "Checking whether closedir() returns a status..." >&4
+	cat > closedir.c <<EOM
+#$i_dirent I_DIRENT		/**/
+#$i_sysdir I_SYS_DIR		/**/
+#$i_sysndir I_SYS_NDIR		/**/
+
+#if defined(I_DIRENT)
+#include <dirent.h>
+#if defined(NeXT) && defined(I_SYS_DIR) /* NeXT needs dirent + sys/dir.h */
+#include <sys/dir.h>
+#endif
+#else
+#ifdef I_SYS_NDIR
+#include <sys/ndir.h>
+#else
+#ifdef I_SYS_DIR
+#ifdef hp9000s500
+#include <ndir.h>	/* may be wrong in the future */
+#else
+#include <sys/dir.h>
+#endif
+#endif
+#endif
+#endif 
+int main() { return closedir(opendir(".")); }
+EOM
+	if $cc $ccflags $ldflags -o closedir closedir.c $libs > /dev/null 2>&1; then
+		if ./closedir > /dev/null 2>&1 ; then
+			echo "Yes, it does."
+			val="$undef"
+		else
+			echo "No, it doesn't."
+			val="$define"
+		fi
+	else
+		echo "(I can't seem to compile the test program--assuming it doesn't)"
+		val="$define"
+	fi
+	;;
+*)
+	val="$undef";
+	;;
+esac
+set d_void_closedir
+eval $setvar
+$rm -f closedir*
+@end

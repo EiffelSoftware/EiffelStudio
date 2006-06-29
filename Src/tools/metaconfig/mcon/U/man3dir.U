@@ -1,0 +1,161 @@
+?RCS: $Id: man3dir.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:10:34  ram
+?RCS: patch61: created
+?RCS:
+?X:
+?X:	This was originally specific to perl5.  Since perl5 has man pages that
+?X:	go in both man1/ and man3/ directories, we need both man1dir
+?X:	and man3dir.  This unit is basically dist's mansrc.U with 
+?X:	man3 used instead of man everywhere.
+?X:	I then added various tests because perl5 has *lots* of man3 
+?X:	pages with long file names. -- ADO
+?X:
+?MAKE:man3dir man3direxp man3ext installman3dir: afs cat nroff Loc Oldconfig \
+	sed man1dir spackage package Getfile prefix Prefixit Prefixup \
+	d_flexfnam privlib Myread
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:man3dir:
+?S:	This variable contains the name of the directory in which manual
+?S:	source pages are to be put.  It is the responsibility of the
+?S:	Makefile.SH to get the value of this into the proper command.
+?S:	You must be prepared to do the ~name expansion yourself.
+?S:.
+?S:man3direxp:
+?S:	This variable is the same as the man3dir variable, but is filename
+?S:	expanded at configuration time, for convenient use in makefiles.
+?S:.
+?S:installman3dir:
+?S:	This variable is really the same as man3direxp, unless you are using
+?S:	AFS in which case it points to the read/write location whereas
+?S:	man3direxp only points to the read-only access location. For extra
+?S:	portability, you should only use this variable within your makefiles.
+?S:.
+?S:man3ext:
+?S:	This variable contains the extension that the manual page should
+?S:	have: one of 'n', 'l', or '3'.  The Makefile must supply the '.'.
+?S:	See man3dir.
+?S:.
+: determine where library module manual pages go
+set man3dir man3dir none
+eval $prefixit
+$cat <<EOM
+
+$spackage has manual pages for many of the library modules.
+EOM
+
+case "$nroff" in
+nroff)
+	$cat <<'EOM'
+However, you don't have nroff, so they're probably useless to you.
+EOM
+	case "$man3dir" in
+	'') man3dir="none";;
+	esac;;
+esac
+
+case "$d_flexfnam" in
+undef)
+	$cat <<'EOM'
+However, your system can't handle the long file names like File::Basename.3. 
+EOM
+	case "$man3dir" in
+	'') man3dir="none";;
+	esac;;
+esac
+
+echo "If you don't want the manual sources installed, answer 'none'."
+?X: We dont use /usr/local/man/man3 because some man programs will
+?X: only show the /usr/local/man/man3 contents, and not the system ones,
+?X: thus man less will show the perl module less.pm, but not the system
+?X: less command.  We might also conflict with TCL man pages.
+?X: However, something like /opt/perl/man/man3 is fine.
+case "$man3dir" in
+'')	case "$prefix" in 
+	*$package*) dflt=`echo $man1dir | 
+			$sed -e 's/man1/man3/g' -e 's/man\.1/man\.3/g'` ;;
+	*)	dflt="$privlib/man/man3" ;;
+	esac
+	;;
+' ') dflt=none;;
+*)	dflt="$man3dir" ;;
+esac
+echo " "
+
+fn=dn+~
+rp="Where do the $package library man pages (source) go?"
+. ./getfile
+if test "X$man3direxp" != "X$ansexp"; then
+	installman3dir=''
+fi
+
+man3dir="$ans"
+man3direxp="$ansexp"
+case "$man3dir" in
+'') man3dir=' '
+	installman3dir='';;
+esac
+if $afs; then
+	$cat <<EOM
+
+Since you are running AFS, I need to distinguish the directory in which
+manual pages reside from the directory in which they are installed (and from
+which they are presumably copied to the former directory by occult means).
+
+EOM
+	case "$installman3dir" in
+	'') dflt=`echo $man3direxp | sed 's#^/afs/#/afs/.#'`;;
+	*) dflt="$installman3dir";;
+	esac
+	fn=de~
+	rp='Where will man pages be installed?'
+	. ./getfile
+	installman3dir="$ans"
+else
+	installman3dir="$man3direxp"
+fi
+
+: What suffix to use on installed man pages
+
+case "$man3dir" in
+' ')
+	man3ext='0'
+	;;
+*)
+	rp="What suffix should be used for the $package library man pages?"
+	case "$man3ext" in
+	'')	case "$man3dir" in
+		*3)  dflt=3 ;;
+		*3p) dflt=3p ;;
+		*3pm) dflt=3pm ;;
+		*l) dflt=l;;
+		*n) dflt=n;;
+		*o) dflt=o;;
+		*p) dflt=p;;
+		*C) dflt=C;;
+		*L) dflt=L;;
+		*L3) dflt=L3;;
+		*) dflt=3;;
+		esac
+		;;
+	*)	dflt="$man3ext";;
+	esac
+	. ./myread
+	man3ext="$ans"
+	;;
+esac
+

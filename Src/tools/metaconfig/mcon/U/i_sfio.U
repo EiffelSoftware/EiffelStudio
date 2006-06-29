@@ -1,0 +1,35 @@
+?RCS: $Id: i_sfio.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  15:48:27  ram
+?RCS: patch61: created
+?RCS:
+?MAKE:i_sfio: Inhdr Setvar
+?MAKE:	-pick add $@ %<
+?S:i_sfio:
+?S:	This variable conditionally defines the I_SFIO symbol,
+?S:	and indicates whether a C program should include <sfio.h>.
+?S:.
+?C:I_SFIO:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sfio.h>.
+?C:.
+?H:#$i_sfio	I_SFIO		/**/
+?H:.
+?LINT:set i_sfio
+: see if sfio.h is available
+set sfio.h i_sfio
+eval $inhdr
+

@@ -1,0 +1,121 @@
+?RCS: $Id: manfmt.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.5  1997/02/28  16:11:57  ram
+?RCS: patch61: don't ask for AFS when they choose to not install pages
+?RCS:
+?RCS: Revision 3.0.1.4  1995/09/25  09:16:52  ram
+?RCS: patch59: unit is now forced to the top of Configure, if possible
+?RCS:
+?RCS: Revision 3.0.1.3  1995/01/30  14:39:20  ram
+?RCS: patch49: new installmanfmt and AFS-lookup for formatted man pages
+?RCS: patch49: can now handle installation prefix changes (from WED)
+?RCS:
+?RCS: Revision 3.0.1.2  1994/08/29  16:30:31  ram
+?RCS: patch32: now uses installation prefix for default setting
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:09:22  ram
+?RCS: patch10: allows for L1 man page extension (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:13  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:manfmt manfmtexp installmanfmt: Getfile Loc Oldconfig cat manext \
+	spackage Prefixit prefixexp Prefixup afs test
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:manfmt:
+?S:	This variable contains the name of the directory in which formatted
+?S:	manual pages are to be put.  It is the responsibility of the
+?S:	Makefile.SH to get the value of this into the proper command. Note
+?S:	that you may have to do ~name substitution. Use manfmtexp otherwise.
+?S:.
+?S:manfmtexp:
+?S:	This is the same as the manfmt variable, but is filename expanded
+?S:	at configuration time, for programs not willing to deal with it at
+?S:	run-time.
+?S:.
+?S:installmanfmt:
+?S:	This variable is really the same as manfmtexp, unless you are using
+?S:	AFS in which case it points to the read/write location whereas
+?S:	mansrcexp only points to the read-only access location. For extra
+?S:	portability, you should only use this variable within your makefiles.
+?S:.
+?LINT:change manext
+?T:lookpath
+: determine where manual pages go
+set manfmt manfmt
+eval $prefixit
+$cat <<EOM
+  
+$spackage has pre-formatted manual pages.  If you don't want these installed,
+answer 'none' to the next question.
+
+EOM
+case "$manfmt" in
+'')
+	lookpath="$prefixexp/catman/man1 $prefixexp/man/cat1"
+	lookpath="$lookpath $prefixexp/catman/u_man/man1"
+	lookpath="$lookpath $prefixexp/catman/l_man/man1"
+	lookpath="$lookpath $prefixexp/catman/cat1 /usr/catman/local/man1"
+	lookpath="$lookpath /usr/catman/manl /usr/man/cat1"
+	lookpath="$lookpath /usr/catman/mann /usr/catman/l_man/man1"
+	lookpath="$lookpath /usr/catman/u_man/man1 /usr/catman/man1"
+	dflt=`./loc . none $lookpath`
+	set dflt
+	eval $prefixup
+	;;
+*)  dflt="$manfmt"
+	;;
+esac
+fn=dn~
+rp='Where do pre-formatted manual pages go?'
+. ./getfile
+if test "X$manfmtexp" != "X$ansexp"; then
+	installmanfmt=''
+fi
+manfmt="$ans"
+manfmtexp="$ansexp"
+if $afs && $test "$manfmt"; then
+	$cat <<EOM
+
+Since you are running AFS, I need to distinguish the directory in which
+manual pages reside from the directory in which they are installed (and from
+which they are presumably copied to the former directory by occult means).
+
+EOM
+	case "$installmanfmt" in
+	'') dflt=`echo $manfmtexp | sed 's#^/afs/#/afs/.#'`;;
+	*) dflt="$installmanfmt";;
+	esac
+	fn=de~
+	rp='Where will pre-formatted man pages be installed?'
+	. ./getfile
+	installmanfmt="$ans"
+else
+	installmanfmt="$manfmtexp"
+fi
+
+case "$manfmt" in
+'') manext='0';;
+*l) manext=l;;
+*n) manext=n;;
+*o) manext=l;;
+*p) manext=n;;
+*C) manext=C;;
+*L) manext=L;;
+*L1) manext=L1;;
+*) manext=1;;
+esac
+

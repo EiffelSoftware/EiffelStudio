@@ -1,0 +1,97 @@
+?RCS: $Id: sitearch.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1996, Andy Dougherty
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1997/02/28  16:21:30  ram
+?RCS: patch61: created
+?RCS:
+?MAKE:sitearch sitearchexp installsitearch: afs cat Getfile \
+	Oldconfig Prefixit prefix test archname sitelib
+?MAKE:	-pick add $@ %<
+?Y:TOP
+?S:sitearch:
+?S:	This variable contains the eventual value of the SITEARCH symbol,
+?S:	which is the name of the private library for this package.  It may
+?S:	have a ~ on the front. It is up to the makefile to eventually create
+?S:	this directory while performing installation (with ~ substitution).
+?S:.
+?S:sitearchexp:
+?S:	This variable is the ~name expanded version of sitearch, so that you
+?S:	may use it directly in Makefiles or shell scripts.
+?S:.
+?S:installsitearch:
+?S:	This variable is really the same as sitearchexp but may differ on
+?S:	those systems using AFS. For extra portability, only this variable
+?S:	should be used in makefiles.
+?S:.
+?C:SITEARCH:
+?C:	This symbol contains the name of the private library for this package.
+?C:	The library is private in the sense that it needn't be in anyone's
+?C:	execution path, but it should be accessible by the world.  The program
+?C:	should be prepared to do ~ expansion.
+?C:	The standard distribution will put nothing in this directory.
+?C:	Individual sites may place their own extensions and modules in
+?C:	this directory.
+?C:.
+?C:SITEARCH_EXP:
+?C:	This symbol contains the ~name expanded version of SITEARCH, to be used
+?C:	in programs that are not prepared to deal with ~ expansion at run-time.
+?C:.
+?H:#define SITEARCH "$sitearch"		/**/
+?H:#define SITEARCH_EXP "$sitearchexp"		/**/
+?H:.
+?T:xxx
+: determine where site specific architecture-dependent libraries go.
+xxx=`echo $sitelib/$archname | sed 's!^$prefix!!'`
+: xxx is usuually lib/site_perl/archname.
+set sitearch sitearch none
+eval $prefixit
+case "$sitearch" in
+'')	dflt="$sitelib/$archname" ;;
+*)	dflt="$sitearch" ;;
+esac
+$cat <<EOM
+
+The installation process will also create a directory for
+architecture-dependent site-specific extensions and modules.
+
+EOM
+fn=nd~+
+rp='Pathname for the site-specific architecture-dependent library files?'
+. ./getfile
+if $test "X$sitearchexp" != "X$ansexp"; then
+	installsitearch=''
+fi
+sitearch="$ans"
+sitearchexp="$ansexp"
+if $afs; then
+	$cat <<EOM
+
+Since you are running AFS, I need to distinguish the directory in which
+private files reside from the directory in which they are installed (and from
+which they are presumably copied to the former directory by occult means).
+
+EOM
+	case "$installsitearch" in
+	'') dflt=`echo $sitearchexp | sed 's#^/afs/#/afs/.#'`;;
+	*) dflt="$installsitearch";;
+	esac
+	fn=de~
+	rp='Where will private files be installed?'
+	. ./getfile
+	installsitearch="$ans"
+else
+	installsitearch="$sitearchexp"
+fi
+

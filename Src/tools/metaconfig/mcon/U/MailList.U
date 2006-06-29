@@ -1,0 +1,85 @@
+?RCS: $Id: MailList.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS: 
+?RCS: Original Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/01/24  14:01:49  ram
+?RCS: patch16: created
+?RCS:
+?RCS:
+?X:
+?X: This unit offers the user the option of subscribing to the mailing
+?X: list. To force inclusion of this unit, you must add it's name to the
+?X: dependancies on the MAKE line in your private copy of End.U.
+?X: The address of the mailing list server must be set via a "list_request=..."
+?X: entry in the .package file. This is usually done by running packinit and
+?X: answering the proper questions.
+?X:
+?MAKE:MailList: cat mailer package Myread cf_name cf_email
+?MAKE:	-pick wipe $@ %<
+?T:list_request list_sub list_unsub list_name
+?X:
+?X: The cf_name dependency is used through list_sub when the mailing list
+?X: manager happens to be listserv, whereas cf_email is used whith majordomo
+?X: or when the mailing list request address is scanned by a human. Since
+?X: they do not appear within the unit itself, we need a lint hint.
+?X:
+?LINT:use cf_name cf_email
+: offer to join the mailing list
+list_request='<$list_request>'
+list_sub="<$list_sub>"
+list_unsub="<$list_unsub>"
+list_name="<$list_name>"
+$cat <<EOM
+
+There is a mailing list for discussion about $package and related issues.
+This is the preferred place to ask questions about the program and discuss
+modifications and additions with the author and other users.  If you are able
+to send mail to the Internet, you are encouraged to subscribe.  You need only
+ever subscribe once, and you can unsubscribe automatically at any time in the
+future.  If you have already subscribed and you wish to unsubscribe now, you
+may do so by answering "unsubscribe".  Answer "subscribe" to subscribe to the
+list.
+
+EOM
+rp="Subscribe to or unsubscribe from the $list_name mailing list?"
+dflt=neither
+. ./myread
+case "$ans" in
+[sS]*)	$cat <<EOM
+
+You will be sent a message from the list server to let you know when your
+subscription has been successful and telling you how to submit articles and
+how to unsubscribe again when necessary. You may also unsubscribe by running
+this script again and asking it to do so for you.
+
+EOM
+	echo "Sending mail to subscribe you to the $list_name list..." >&4
+	$mailer $list_request <<EOM >/dev/null 2>&1
+Precedence: junk
+To: $list_request
+
+$list_sub
+EOM
+	;;
+[uU]*)	echo "Sending mail to unsubscribe you from the $list_name list..." >&4
+	$mailer $list_request <<EOM >/dev/null 2>&1
+Precedence: junk
+To: $list_request
+
+$list_unsub
+EOM
+	;;
+esac
+

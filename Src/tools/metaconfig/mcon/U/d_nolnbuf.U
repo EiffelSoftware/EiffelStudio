@@ -1,0 +1,101 @@
+?RCS: $Id: d_nolnbuf.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/05/06  14:46:07  ram
+?RCS: patch23: avoid looping in the "see that again?" prompt (WED)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:43  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_nolnbuf: test +cc cat rm Setvar Myread
+?MAKE:	-pick add $@ %<
+?S:d_nolnbuf:
+?S:	This variable conditionally defines the NOLINEBUF symbol, which
+?S:	indicates to the C program that stdout is not buffered, so that
+?S:	the program can call setbuf() or setlinebuf() for efficiency.
+?S:.
+?C:NOLINEBUF:
+?C:	This symbol, if defined, indicates that stdout is not buffered, so that
+?C:	the program can call setbuf() or setlinebuf() for efficiency.
+?C:.
+?H:#$d_nolnbuf	NOLINEBUF	/**/
+?H:.
+?T:xxx
+?LINT:set d_nolnbuf
+: check for buffering of stdout
+echo " "
+case "$d_nolnbuf" in
+'')
+	$cat <<'EOT' >blurfl.c
+#include <stdio.h>
+main()
+{
+	int i;
+
+	for (i = 0; i < 5; i++) {
+		putchar(i+'a');
+		sleep(1);
+	}
+	putchar('\n');
+}
+EOT
+	$cc blurfl.c -o blurfl >/dev/null 2>&1;
+	$rm -f blurfl.c
+	$cat >&4 <<'EOM'
+Checking for buffering of stdout to terminal.
+
+Observe the following characters as they are printed out, to see whether they
+print out all at once, or with a 1 second pause between each of them.  If they
+print out one by one, you don't have buffering.  If they print together (after
+about a 5 second pause), you do have buffering.
+
+EOM
+	dflt='Type return to start printing the test characters'
+	rp=''
+	. ./myread
+	xxx=y
+	while $test "$xxx" = 'y'; do
+		./blurfl 1>&4
+		dflt=n
+		rp='Would you like to see that again?'
+		. ./myread
+ 		case "$ans" in
+		[yY]*) xxx="y";;
+		*) xxx="n";;
+ 		esac
+	done
+	dflt=y
+	rp="Do you have buffering (printed all at once)?"
+	. ./myread
+	case "$ans" in
+	n*) val="$define";;
+	*)  val="$undef";;
+	esac
+	;;
+*)
+	case "$d_nolnbuf" in
+	"$define") dflt=n;;
+	*) dflt=y;;
+	esac
+	rp="Do you have buffering on stdout to terminals?"
+	. ./myread
+	case "$ans" in
+	n*) val="$define";;
+	*)  val="$undef";;
+	esac
+	;;
+esac
+set d_nolnbuf
+eval $setvar
+

@@ -1,0 +1,50 @@
+?RCS: $Id: type.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS:  Copyright (c) 1991-1993, Raphael Manfredi
+?RCS:  
+?RCS:  You may redistribute only under the terms of the Artistic Licence,
+?RCS:  as specified in the README file that comes with the distribution.
+?RCS:  You may reuse parts of this distribution only within the terms of
+?RCS:  that same Artistic Licence; a copy of which may be found at the root
+?RCS:  of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:11  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:uidtype: Myread Oldconfig contains usrinc
+?MAKE:	-pick add $@ %<
+?S:uidtype:
+?S:	This variable defines UIDTYPE to be something like uid_t, int, 
+?S:	ushort, or whatever type is used to declare user ids in the kernel.
+?S:.
+?C:Uid_t (UIDTYPE):
+?C:	This symbol holds the type used to declare user ids in the kernel.
+?C:	It can be int, ushort, uid_t, etc... It may be necessary to include
+?C:	<sys/types.h> to get any typedef'ed information.
+?C:.
+?H:#define Uid_t $uidtype		/* UID type */
+?H:.
+: see what type uids are declared as in the kernel
+case "$uidtype" in
+'')
+	if $contains 'uid_t;' $usrinc/sys/types.h >/dev/null 2>&1 ; then
+		dflt='uid_t';
+	else
+		set `grep '_ruid;' $usrinc/sys/user.h 2>/dev/null` unsigned short
+		case $1 in
+		unsigned) dflt="$1 $2" ;;
+		*) dflt="$1" ;;
+		esac
+	fi
+	;;
+*)  dflt="$uidtype";;
+esac
+echo " "
+rp="What type are user ids on this system declared as?"
+. myread
+uidtype="$ans"
+

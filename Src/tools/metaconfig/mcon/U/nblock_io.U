@@ -1,0 +1,257 @@
+?RCS: $Id: nblock_io.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  16:17:14  ram
+?RCS: patch61: simplify here document for shells that can't handle them well
+?RCS: patch61: force use of "startsh" at the head of the generated script
+?RCS: patch61: added new files to the ?F: metalint hint
+?RCS:
+?RCS: Revision 3.0.1.1  1995/07/25  14:13:22  ram
+?RCS: patch56: created
+?RCS:
+?X:
+?X: Simplify here document for shells that can't handle them well.
+?X: (Problem reported on FreeBSD; it's unclear if this helps.)  --AD
+?X:
+?MAKE:o_nonblock eagain rd_nodata d_eofnblk: cat rm +cc +ccflags +ldflags \
+	d_open3 h_sysfile h_fcntl signal_t hint Oldconfig Setvar startsh
+?MAKE:	-pick add $@ %<
+?S:o_nonblock:
+?S:	This variable bears the symbol value to be used during open() or fcntl()
+?S:	to turn on non-blocking I/O for a file descriptor. If you wish to switch
+?S:	between blocking and non-blocking, you may try ioctl(FIOSNBIO) instead,
+?S:	but that is only supported by some devices.
+?S:.
+?S:eagain:
+?S:	This variable bears the symbolic errno code set by read() when no
+?S:	data is present on the file and non-blocking I/O was enabled (otherwise,
+?S:	read() blocks naturally).
+?S:.
+?S:rd_nodata:
+?S:	This variable holds the return code from read() when no data is
+?S:	present. It should be -1, but some systems return 0 when O_NDELAY is
+?S:	used, which is a shame because you cannot make the difference between
+?S:	no data and an EOF.. Sigh!
+?S:.
+?S:d_eofnblk:
+?S:	This variable conditionally defines EOF_NONBLOCK if EOF can be seen
+?S:	when reading from a non-blocking I/O source.
+?S:.
+?C:VAL_O_NONBLOCK:
+?C:	This symbol is to be used during open() or fcntl(F_SETFL) to turn on
+?C:	non-blocking I/O for the file descriptor. Note that there is no way
+?C:	back, i.e. you cannot turn it blocking again this way. If you wish to
+?C:	alternatively switch between blocking and non-blocking, use the
+?C:	ioctl(FIOSNBIO) call instead, but that is not supported by all devices.
+?C:.
+?C:VAL_EAGAIN:
+?C:	This symbol holds the errno error code set by read() when no data was
+?C:	present on the non-blocking file descriptor.
+?C:.
+?C:RD_NODATA:
+?C:	This symbol holds the return code from read() when no data is present
+?C:	on the non-blocking file descriptor. Be careful! If EOF_NONBLOCK is
+?C:	not defined, then you can't distinguish between no data and EOF by
+?C:	issuing a read(). You'll have to find another way to tell for sure!
+?C:.
+?C:EOF_NONBLOCK:
+?C:	This symbol, if defined, indicates to the C program that a read() on
+?C:	a non-blocking file descriptor will return 0 on EOF, and not the value
+?C:	held in RD_NODATA (-1 usually, in that case!).
+?C:.
+?H:#define VAL_O_NONBLOCK $o_nonblock
+?H:#define VAL_EAGAIN $eagain
+?H:#define RD_NODATA $rd_nodata
+?H:#$d_eofnblk EOF_NONBLOCK
+?H:.
+?F:!try !try.out !try.ret !try.err
+?T:status
+?LINT:use d_open3
+: check for non-blocking I/O stuff
+case "$h_sysfile" in
+true) echo "#include <sys/file.h>" > head.c;;
+*)
+	case "$h_fcntl" in
+	true) echo "#include <fcntl.h>" > head.c;;
+	*) echo "#include <sys/fcntl.h>" > head.c;;
+	esac
+	;;
+esac
+echo " "
+echo "Figuring out the flag used by open() for non-blocking I/O..." >&4
+case "$o_nonblock" in
+'')
+	$cat head.c > try.c
+	$cat >>try.c <<'EOCP'
+main() {
+#ifdef O_NONBLOCK
+	printf("O_NONBLOCK\n");
+	exit(0);
+#endif
+#ifdef O_NDELAY
+	printf("O_NDELAY\n");
+	exit(0);
+#endif
+?X: Stevens "Advanced Programming in the UNIX Environment" page 364 mentions
+?X: the FNDELAY symbol, used in 4.33BSD (source: Paul Marquess).
+#ifdef FNDELAY
+	printf("FNDELAY\n");
+	exit(0);
+#endif
+	exit(0);
+}
+EOCP
+	if $cc $ccflags $ldflags try.c -o try >/dev/null 2>&1; then
+		o_nonblock=`./try`
+		case "$o_nonblock" in
+		'') echo "I can't figure it out, assuming O_NONBLOCK will do.";;
+		*) echo "Seems like we can use $o_nonblock.";;
+		esac
+	else
+		echo "(I can't compile the test program; pray O_NONBLOCK is right!)"
+	fi
+	;;
+*) echo "Using $hint value $o_nonblock.";;
+esac
+$rm -f try try.* .out core
+
+echo " "
+echo "Let's see what value errno gets from read() on a $o_nonblock file..." >&4
+case "$eagain" in
+'')
+	$cat head.c > try.c
+	$cat >>try.c <<EOCP
+#include <errno.h>
+#include <sys/types.h>
+#include <signal.h>
+#define MY_O_NONBLOCK $o_nonblock
+extern int errno;
+$signal_t blech(x) int x; { exit(3); }
+EOCP
+	$cat >> try.c <<'EOCP'
+main()
+{
+	int pd[2];
+	int pu[2];
+	char buf[1];
+	char string[100];
+
+	pipe(pd);	/* Down: child -> parent */
+	pipe(pu);	/* Up: parent -> child */
+	if (0 != fork()) {
+		int ret;
+		close(pd[1]);	/* Parent reads from pd[0] */
+		close(pu[0]);	/* Parent writes (blocking) to pu[1] */
+		if (-1 == fcntl(pd[0], F_SETFL, MY_O_NONBLOCK))
+			exit(1);
+		signal(SIGALRM, blech);
+		alarm(5);
+		if ((ret = read(pd[0], buf, 1)) > 0)	/* Nothing to read! */
+			exit(2);
+		sprintf(string, "%d\n", ret);
+		write(2, string, strlen(string));
+		alarm(0);
+#ifdef EAGAIN
+		if (errno == EAGAIN) {
+			printf("EAGAIN\n");
+			goto ok;
+		}
+#endif
+#ifdef EWOULDBLOCK
+		if (errno == EWOULDBLOCK)
+			printf("EWOULDBLOCK\n");
+#endif
+	ok:
+		write(pu[1], buf, 1);	/* Unblocks child, tell it to close our pipe */
+		sleep(2);				/* Give it time to close our pipe */
+		alarm(5);
+		ret = read(pd[0], buf, 1);	/* Should read EOF */
+		alarm(0);
+		sprintf(string, "%d\n", ret);
+		write(3, string, strlen(string));
+		exit(0);
+	}
+
+	close(pd[0]);			/* We write to pd[1] */
+	close(pu[1]);			/* We read from pu[0] */
+	read(pu[0], buf, 1);	/* Wait for parent to signal us we may continue */
+	close(pd[1]);			/* Pipe pd is now fully closed! */
+	exit(0);				/* Bye bye, thank you for playing! */
+}
+EOCP
+	if $cc $ccflags $ldflags try.c -o try >/dev/null 2>&1; then
+?X: Use script to avoid the possible 'alarm call' message
+		echo "$startsh" >mtry
+		echo "./try >try.out 2>try.ret 3>try.err || exit 4" >>mtry
+		chmod +x mtry
+		./mtry >/dev/null 2>&1
+		case $? in
+		0) eagain=`$cat try.out`;;
+		1) echo "Could not perform non-blocking setting!";;
+		2) echo "I did a successful read() for something that was not there!";;
+		3) echo "Hmm... non-blocking I/O does not seem to be working!";;
+		*) echo "Something terribly wrong happened during testing.";;
+		esac
+		rd_nodata=`$cat try.ret`
+		echo "A read() system call with no data present returns $rd_nodata."
+		case "$rd_nodata" in
+		0|-1) ;;
+		*)
+			echo "(That's peculiar, fixing that to be -1.)"
+			rd_nodata=-1
+			;;
+		esac
+		case "$eagain" in
+		'')
+			echo "Forcing errno EAGAIN on read() with no data available."
+			eagain=EAGAIN
+			;;
+		*)
+			echo "Your read() sets errno to $eagain when no data is available."
+			;;
+		esac
+		status=`$cat try.err`
+		case "$status" in
+		0) echo "And it correctly returns 0 to signal EOF.";;
+		-1) echo "But it also returns -1 to signal EOF, so be careful!";;
+		*) echo "However, your read() returns '$status' on EOF??";;
+		esac
+		val="$define"
+		if test "$status" = "$rd_nodata"; then
+			echo "WARNING: you can't distinguish between EOF and no data!"
+			val="$undef"
+		fi
+	else
+		echo "I can't compile the test program--assuming errno EAGAIN will do."
+		eagain=EAGAIN
+	fi
+	set d_eofnblk
+	eval $setvar
+	;;
+*)
+	echo "Using $hint value $eagain."
+	echo "Your read() returns $rd_nodata when no data is present."
+	case "$d_eofnblk" in
+	"$define") echo "And you can see EOF because read() returns 0.";;
+	"$undef") echo "But you can't see EOF status from read() returned value.";;
+	*)
+?X: Should not happen, but if it does, assume the worst!
+		echo "(Assuming you can't see EOF status from read anyway.)"
+		d_eofnblk=$undef
+		;;
+	esac
+	;;
+esac
+$rm -f try try.* .out core head.c mtry
+

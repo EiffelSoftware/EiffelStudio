@@ -1,0 +1,43 @@
+?RCS: $Id: modetype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Original Author: Andy Dougherty <doughera@lafcol.lafayette.edu>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:25:07  ram
+?RCS: patch36: created by ADO
+?RCS:
+?MAKE:modetype: Myread Typedef
+?MAKE:	-pick add $@ %<
+?S:modetype:
+?S:	This variable defines modetype to be something like mode_t, 
+?S:	int, unsigned short, or whatever type is used to declare file 
+?S:	modes for system calls.
+?S:.
+?C:Mode_t:
+?C:	This symbol holds the type used to declare file modes 
+?C:	for systems calls.  It is usually mode_t, but may be
+?C:	int or unsigned short.  It may be necessary to include <sys/types.h>
+?C:	to get any typedef'ed information.
+?C:.
+?H:#define Mode_t $modetype	 /* file mode parameter for system calls */
+?H:.
+: see what type is used for mode_t
+set mode_t modetype int stdio.h sys/types.h
+eval $typedef
+dflt="$modetype"
+echo " "
+rp="What type is used for file modes?"
+. ./myread
+modetype="$ans"
+

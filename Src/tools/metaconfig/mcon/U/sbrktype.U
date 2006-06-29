@@ -1,0 +1,47 @@
+?RCS: $Id: sbrktype.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:43  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:sbrktype: Myread Oldconfig Loc contains Findhdr
+?MAKE:	-pick add $@ %<
+?S:sbrktype:
+?S:	This variable defines sbrktype to be something like caddr_t, char *, 
+?S:	or whatever type is used to declare sbrk() in the kernel.
+?S:.
+?C:Caddr_t (SBRKTYPE):
+?C:	This symbol holds the type of a core address. It is inteded to be used
+?C:	to safely declare the return type of system calls like sbrk(). It might
+?C:	be necessary to include <sys/types.h> as well.
+?C:.
+?H:#define Caddr_t $sbrktype	/* <core address> type */
+?H:.
+: see what type sbrk is declared as in the kernel
+case "$sbrktype" in
+'')
+	if $contains 'caddr_t;' `./findhdr sys/types.h` >/dev/null 2>&1 ; then
+		dflt='caddr_t';
+	else
+		dflt='char *';
+	fi
+	;;
+*)  dflt="$sbrktype"
+	;;
+esac
+echo " "
+rp="What is the return type of sbrk() on this system?"
+. ./myread
+sbrktype="$ans"
+

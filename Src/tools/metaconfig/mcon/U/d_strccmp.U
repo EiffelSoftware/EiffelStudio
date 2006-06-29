@@ -1,0 +1,41 @@
+?RCS: $Id: d_strccmp.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS: 
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1994/05/06  14:54:34  ram
+?RCS: patch23: fixed a typo (WED)
+?RCS:
+?RCS: Revision 3.0.1.1  1993/09/13  16:04:39  ram
+?RCS: patch10: created (WAD)
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:06:24  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:d_strccmp: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_strccmp:
+?S:	This variable conditionally defines the HAS_STRCASECMP symbol, which
+?S:	indicates to the C program that the strcasecmp() routine is available
+?S:	for case-insensitive string compares.
+?S:.
+?C:HAS_STRCASECMP:
+?C:	This symbol, if defined, indicates that the strcasecmp() routine is
+?C:	available for case-insensitive string compares.
+?C:.
+?H:#$d_strccmp HAS_STRCASECMP	/**/
+?H:.
+?LINT:set d_strccmp
+: see if strcasecmp exists
+set strcasecmp d_strccmp
+eval $inlibc
+

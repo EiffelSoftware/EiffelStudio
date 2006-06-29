@@ -1,0 +1,65 @@
+?RCS: $Id: Typedef.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1995/07/25  13:42:07  ram
+?RCS: patch56: added backslash escapes within evals to prevent space problems
+?RCS:
+?RCS: Revision 3.0.1.2  1994/10/29  16:01:16  ram
+?RCS: patch36: don't clobber visible 'val' variable, use 'varval' instead
+?RCS:
+?RCS: Revision 3.0.1.1  1994/08/29  16:05:14  ram
+?RCS: patch32: created
+?RCS:
+?X:
+?X: This unit checks for the definition of a given typedef.
+?X:
+?X: To use it, say:
+?X: set typedef val_t default [includes]
+?X: eval $typedef
+?X:
+?MAKE:Typedef: cppstdin cppminus cppflags rm contains Oldconfig
+?MAKE:	-pick add $@ %<
+?LINT:define typedef
+?V:typedef
+?S:typedef:
+?S:	This shell variable is used internally by Configure to check
+?S:	wether a given typedef is defined or not. A typical use is:
+?S:		set typedef val_t default [includes]
+?S:		eval $typedef
+?S:	That will return val_t set to default if the typedef was not found,
+?S:	to typedef otherwise. If no includes are specified, look in sys/types.h.
+?S:.
+?T:type var def inclist varval inc
+: define an is-a-typedef? function
+typedef='type=$1; var=$2; def=$3; shift; shift; shift; inclist=$@;
+case "$inclist" in
+"") inclist="sys/types.h";;
+esac;
+eval "varval=\$$var";
+case "$varval" in
+"")
+	$rm -f temp.c;
+	for inc in $inclist; do
+		echo "#include <$inc>" >>temp.c;
+	done;
+	$cppstdin $cppflags $cppminus < temp.c >temp.E 2>/dev/null;
+	if $contains $type temp.E >/dev/null 2>&1; then
+		eval "$var=\$type";
+	else
+		eval "$var=\$def";
+	fi;
+	$rm -f temp.?;;
+*) eval "$var=\$varval";;
+esac'
+

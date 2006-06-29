@@ -1,0 +1,57 @@
+?RCS: $Id: warnflags.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: Orginal Author: Graham Stoney <greyham@research.canon.oz.au>
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:10:02  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:warnflags: cat cc contains Myread Guess Oldconfig Findhdr
+?MAKE:	-pick add $@ %<
+?S:warnflags:
+?S:	This variable contains any additional C compiler flags to generate
+?S:	warnings from the compiler. It is up to the Makefile to use this.
+?S:.
+$cat <<EOH
+
+You may wish to compile with extra compiler warnings enabled.
+Note that doing so enhances your chance of receiving your free set of steak
+knives, particularly if you find any bugs and report them.
+If you don't want extra warnings, answer "none".
+  
+EOH
+case "$warnflags" in
+'') case "$cc" in
+	*gcc*)
+		dflt="-Wall -Wno-comment"
+		if $contains 'fprintf' `./findhdr stdio.h` >/dev/null 2>&1; then
+			:
+		else
+			dflt="$dflt -Wno-implicit"
+		fi
+		;;
+	*) dflt="none";;
+	esac
+	;;
+' ') dflt="none";;
+*) dflt="$warnflags";;
+esac
+
+rp="Any $cc flags to enable warnings?"
+. ./myread
+case "$ans" in
+none) warnflags=' ';;
+*) warnflags="$ans";;
+esac
+

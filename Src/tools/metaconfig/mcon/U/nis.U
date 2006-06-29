@@ -1,0 +1,168 @@
+?RCS: $Id: nis.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.3  1997/02/28  16:17:38  ram
+?RCS: patch61: ensure suitable defaults for hostcat and friends
+?RCS:
+?RCS: Revision 3.0.1.2  1995/03/21  08:48:34  ram
+?RCS: patch52: continued fix for NeXT NIS/NetInfo handling
+?RCS:
+?RCS: Revision 3.0.1.1  1995/02/15  14:16:23  ram
+?RCS: patch51: now correctly handles NeXT using NIS rather than NetInfo
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:24  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:passcat groupcat hostcat: Myread Oldconfig test contains
+?MAKE:	-pick add $@ %<
+?S:passcat:
+?S:	This variable contains a command that produces the text of the
+?S:	/etc/passwd file.  This is normally "cat /etc/passwd", but can be
+?S:	"ypcat passwd" when NIS is used.
+?S:.
+?S:groupcat:
+?S:	This variable contains a command that produces the text of the
+?S:	/etc/group file.  This is normally "cat /etc/group", but can be
+?S:	"ypcat group" when NIS is used.
+?S:.
+?S:hostcat:
+?S:	This variable contains a command that produces the text of the
+?S:	/etc/hosts file.  This is normally "cat /etc/hosts", but can be
+?S:	"ypcat hosts" when NIS is used.
+?S:.
+: see if we have to deal with yellow pages, now NIS.
+?X: NeXT gives us some fun here, as always, by having both NIS (former YP)
+?X: and NetInfo. But since it has both, it's ok to put the test inside the if.
+?X: Contributed by Thomas Neumann <tom@smart.bo.open.de>.
+if $test -d /usr/etc/yp || $test -d /etc/yp; then
+	if $test -f /usr/etc/nibindd; then
+		echo " "
+		echo "I'm fairly confident you're on a NeXT."
+@if passcat || groupcat
+		echo " "
+		rp='Do you get the passwd file via NetInfo?'
+		dflt=y
+		case "$passcat" in
+		nidump*) ;;
+		'') ;;
+		*) dflt=n;;
+		esac
+		. ./myread
+		case "$ans" in
+		y*) passcat='nidump passwd .'
+@if groupcat
+			echo "(Assuming /etc/group is also distributed.)"
+			groupcat='nidump group .'
+@end
+			;;
+		*)	echo "You told me, so don't blame me."
+			case "$passcat" in
+			nidump*) passcat=''
+@if groupcat
+				 groupcat='';;
+@end
+			esac
+@if groupcat
+			echo "(Assuming /etc/group is handled the same way.)"
+@end
+			;;
+		esac
+@end
+@if hostcat
+		echo " "
+		rp='Do you get the hosts file via NetInfo?'
+		dflt=y
+		case "$hostcat" in
+		nidump*) ;;
+		'') ;;
+		*) dflt=n;;
+		esac
+		. ./myread
+		case "$ans" in
+		y*) hostcat='nidump hosts .';;
+		*)	case "$hostcat" in
+			nidump*) hostcat='';;
+			esac
+			;;
+		esac
+@end
+	fi
+@if passcat || groupcat
+	case "$passcat" in
+	nidump*) ;;
+	*)
+		case "$passcat" in
+		*ypcat*) dflt=y;;
+		'') if $contains '^\+' /etc/passwd >/dev/null 2>&1; then
+				dflt=y
+			else
+				dflt=n
+			fi;;
+		*) dflt=n;;
+		esac
+		echo " "
+		rp='Are you getting the passwd file via yellow pages?'
+		. ./myread
+		case "$ans" in
+		y*) passcat='ypcat passwd'
+@if groupcat
+			echo "(Assuming /etc/group is also distributed.)"
+			groupcat='ypcat group'
+@end
+			;;
+		*)	passcat='cat /etc/passwd'
+@if groupcat
+			echo "(Assuming /etc/group is also local.)"
+			groupcat='cat /etc/group'
+@end
+			;;
+		esac
+		;;
+	esac
+@end
+@if hostcat
+	case "$hostcat" in
+	nidump*) ;;
+	*)
+		case "$hostcat" in
+		*ypcat*) dflt=y;;
+		'') if $contains '^\+' /etc/passwd >/dev/null 2>&1; then
+				dflt=y
+			else
+				dflt=n
+			fi;;
+		*) dflt=n;;
+		esac
+		echo " "
+		rp='Are you getting the hosts file via yellow pages?'
+		. ./myread
+		case "$ans" in
+		y*) hostcat='ypcat hosts';;
+		*) hostcat='cat /etc/hosts';;
+		esac
+		;;
+	esac
+@end
+fi
+?X: Ensure suitable default -- Manoj Srivastava
+case "$hostcat" in
+'') hostcat='cat /etc/hosts';;
+esac
+case "$groupcat" in
+'') groupcat='cat /etc/group';;
+esac
+case "$passcat" in
+'') passcat='cat /etc/passwd';;
+esac
+

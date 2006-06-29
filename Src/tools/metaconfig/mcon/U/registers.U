@@ -1,0 +1,107 @@
+?RCS: $Id: registers.U 78389 2004-11-30 00:17:17Z manus $
+?RCS:
+?RCS: Copyright (c) 1991-1993, Raphael Manfredi
+?RCS: 
+?RCS: You may redistribute only under the terms of the Artistic Licence,
+?RCS: as specified in the README file that comes with the distribution.
+?RCS: You may reuse parts of this distribution only within the terms of
+?RCS: that same Artistic Licence; a copy of which may be found at the root
+?RCS: of the source tree for dist 3.0.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.1  2004/11/30 00:17:18  manus
+?RCS: Initial revision
+?RCS:
+?RCS: Revision 3.0.1.2  1997/02/28  16:19:41  ram
+?RCS: patch61: removed empty ?LINT lines
+?RCS:
+?RCS: Revision 3.0.1.1  1994/10/29  16:28:33  ram
+?RCS: patch36: call ./Cppsym explicitely instead of relying on PATH
+?RCS:
+?RCS: Revision 3.0  1993/08/18  12:09:41  ram
+?RCS: Baseline for dist 3.0 netwide release.
+?RCS:
+?MAKE:registers reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 reg10 reg11 \
+	reg12 reg13 reg14 reg15 reg16: awk rm Cppsym Myread Oldconfig
+?MAKE:	-pick add $@ %<
+?S:registers:
+?S:	This variable contains the number of register declarations paid
+?S:	attention to by the C compiler.
+?S:.
+?S:reg1:
+?S:	This variable, along with reg2, reg3, etc. contains the eventual
+?S:	value for the symbols register1, register2, register3, etc.  It has
+?S:	either the value "register" or is null.
+?S:.
+?C:register1:
+?C:	This symbol, along with register2, register3, etc. is either the word
+?C:	"register" or null, depending on whether the C compiler pays attention
+?C:	to this many register declarations.  The intent is that you don't have
+?C:	to order your register declarations in the order of importance, so you
+?C:	can freely declare register variables in sub-blocks of code and as
+?C:	function parameters.  Do not use register<n> more than once per routine.
+?C:.
+?LINT:describe reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 reg10 reg11
+?LINT:describe reg12 reg13 reg14 reg15 reg16
+?LINT:known register2 register3 register4 register5 register6 register7
+?LINT:known register8 register9 register10 register11 register12 register13
+?LINT:known register14 register15 register16
+?H:#define register1 $reg1		/**/
+?H:#define register2 $reg2		/**/
+?H:#define register3 $reg3		/**/
+?H:#define register4 $reg4		/**/
+?H:#define register5 $reg5		/**/
+?H:#define register6 $reg6		/**/
+?H:#define register7 $reg7		/**/
+?H:#define register8 $reg8		/**/
+?H:#define register9 $reg9		/**/
+?H:#define register10 $reg10	/**/
+?H:#define register11 $reg11	/**/
+?H:#define register12 $reg12	/**/
+?H:#define register13 $reg13	/**/
+?H:#define register14 $reg14	/**/
+?H:#define register15 $reg15	/**/
+?H:#define register16 $reg16	/**/
+?H:.
+?F:!.foo
+?T:i d
+: see how many register declarations we want to use
+case "$registers" in
+'')
+	if ./Cppsym vax; then
+		dflt=6
+	elif ./Cppsym sun mc68000 mips; then
+		dflt=10
+	elif ./Cppsym pyr; then
+		dflt=14
+	elif ./Cppsym ns32000 ns16000; then
+		dflt=5
+	elif ./Cppsym $smallmach; then
+		dflt=3
+	else
+		: if you have any other numbers for me, please send them in
+		dflt=6
+	fi;;
+*) dflt=$registers ;;
+esac
+?LINT:set reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8 reg9 reg10 reg11
+?LINT:set reg12 reg13 reg14 reg15 reg16
+cat <<EOM
+ 
+Different C compilers on different machines pay attention to different numbers
+of register declarations.  About how many register declarations in each routine
+does your C compiler pay attention to?  (OK to guess)
+
+EOM
+rp="Maximum register declarations?"
+. ./myread
+registers=$ans
+reg1=''
+$awk "BEGIN { for (i=1; i<=16; i++) printf \"reg%d=''\n\", i}" \
+	</dev/null >.foo
+. ./.foo
+$awk "BEGIN { for (i=1; i<=$registers; i++) printf \"reg%d=register\n\", i}" \
+	</dev/null >.foo
+. ./.foo
+$rm -f .foo
+

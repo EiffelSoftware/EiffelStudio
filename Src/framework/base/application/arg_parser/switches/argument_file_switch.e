@@ -15,7 +15,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_hidden
 
 feature -- Access
 

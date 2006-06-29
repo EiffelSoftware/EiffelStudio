@@ -179,6 +179,13 @@ feature -- Basic operation
 		deferred
 		end
 
+	process_graphical_events is
+			-- Process any pending paint events.
+			-- Pass control to the GUI toolkit so that it can
+			-- handle any paint events that may be in its queue.
+		deferred
+		end
+
 	process_events_until_stopped is
 			-- Process all events until 'stop_processing' is called.
 		deferred

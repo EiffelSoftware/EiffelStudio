@@ -104,7 +104,12 @@ feature {NONE}-- Initialization
 			debug_clauses := a_debugs
 			default_create
 			config_windows.force (Current, conf_system.file_name)
-			create group_section_expanded_status.make (20)
+			create group_section_expanded_status.make (5)
+			group_section_expanded_status.force (True, section_general)
+			group_section_expanded_status.force (True, section_assertions)
+			group_section_expanded_status.force (True, section_warning)
+			group_section_expanded_status.force (True, section_debug)
+			group_section_expanded_status.force (False, section_advanced)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
@@ -809,8 +814,8 @@ feature {NONE} -- Implementation
 			create Result.make (5)
 		end
 
-	group_section_expanded_status: HASH_TABLE [HASH_TABLE [BOOLEAN, STRING], STRING]
-			-- Expanded status of sections of groups, indexed by group name.
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING]
+			-- Expanded status of sections of groups.
 
 	is_refreshing: BOOLEAN
 			-- Are we currently refreshing?
@@ -1556,7 +1561,6 @@ feature {NONE} -- Implementation
 			l_vis_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
-			l_expanded: HASH_TABLE [BOOLEAN, STRING]
 		do
 			current_group := a_group
 			properties.reset
@@ -1800,18 +1804,7 @@ feature {NONE} -- Implementation
 				properties.add_property (l_vis_prop)
 			end
 
-			if group_section_expanded_status.has (a_group.name) then
-				l_expanded := group_section_expanded_status.found_item
-			else
-				create l_expanded.make (5)
-				l_expanded.force (True, section_general)
-				l_expanded.force (True, section_assertions)
-				l_expanded.force (True, section_warning)
-				l_expanded.force (True, section_debug)
-				l_expanded.force (False, section_advanced)
-				group_section_expanded_status.force (l_expanded, a_group.name)
-			end
-			properties.set_expanded_section_store (l_expanded)
+			properties.set_expanded_section_store (group_section_expanded_status)
 		ensure
 			properties_not_void: properties /= Void
 			current_group_set: current_group = a_group

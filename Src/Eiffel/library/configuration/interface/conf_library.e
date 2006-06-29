@@ -11,6 +11,7 @@ class
 inherit
 	CONF_GROUP
 		redefine
+			make,
 			process,
 			is_library,
 			is_readonly,
@@ -22,6 +23,17 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
+			-- Create associated to `a_target'.
+		do
+			Precursor {CONF_GROUP}(a_name, a_location, a_target)
+			internal_read_only := True
+		ensure then
+			readonly: is_readonly
+		end
 
 feature -- Status
 

@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like file_name; console_app, dll_app: BOOLEAN) is
+	make (a_name: like file_name; console_app, dll_app, is_32bits_app: BOOLEAN) is
 			-- Create new PE file with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			file_name := a_name
 			is_dll := dll_app
 			is_console := console_app
+			is_32bits := is_32bits_app
 
 				-- PE file header basic initialization.
 			create pe_header.make
@@ -62,7 +63,7 @@ feature {NONE} -- Initialization
 
 			create import_table.make (is_dll)
 
-			create cli_header.make
+			create cli_header.make (is_32bits)
 
 			create entry_data.make
 
@@ -84,6 +85,9 @@ feature -- Status
 
 	is_dll: BOOLEAN
 			-- Is current application a DLL?
+
+	is_32bits: BOOLEAN
+			-- Is current application a 32bit application?
 
 	file_name: STRING
 			-- Name of current PE file on disk.
@@ -202,15 +206,13 @@ feature -- Settings
 		do
 			public_key := a_key
 			has_strong_name := True
-			cli_header.set_flags ({CLI_HEADER}.il_only |
-				{CLI_HEADER}.strong_name_signed)
+			cli_header.add_flags ({CLI_HEADER}.strong_name_signed)
 			signing := a_signing
 		ensure
 			public_key_set: public_key = a_key
 			has_strong_name_set: has_strong_name
 			signing_set: signing = a_signing
-			cli_header_flags_set: cli_header.flags =
-				{CLI_HEADER}.il_only | {CLI_HEADER}.strong_name_signed
+			cli_header_flags_set: (cli_header.flags & {CLI_HEADER}.strong_name_signed) = {CLI_HEADER}.strong_name_signed
 		end
 
 	set_resources (r: like resources) is

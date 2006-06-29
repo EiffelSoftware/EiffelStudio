@@ -6,27 +6,24 @@ if [ $# -ge 3 ]; then
 	remote_host=$1
 	user=$2
 	platform=$3
-	echo $local
+	if [ $# -ge 4 ]; then
+		port=$4
+	else
+		port=22
+	fi
+	scp -P $port PorterPackage_all.tar $user@$remote_host:
 		# Launch platform specific scripts
-	rsh $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
-	rsh $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
-		#Note: we use `setenv' because we expect the remote shell to be csh.
-	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; setenv ISE_PLATFORM $platform ; sh ./compile_exes"
-	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; setenv ISE_PLATFORM $platform ; sh ./make_images"
+	ssh -p $port -l $user $remote_host "mkdir -p local/TEST_DELIV"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
+		#Note: we use `export' because we expect the remote shell to be bash.
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; bash ./compile_exes"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; bash ./make_images"
 
-ftp -n << EOF 
-verbose 
-open $remote_host 
-user $user $user 
-binary
-get local/TEST_DELIV/PorterPackage/Eiffel57_enterprise.tgz Eiffel57_$platform.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel57_gpl.tgz Eiffel57_gpl_$platform.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel57_enterprise.iso.gz Eiffel57_enterprise_$platform.iso.gz
-get local/TEST_DELIV/PorterPackage/Eiffel57_gpl.iso.gz Eiffel57_gpl_$platform.iso.gz
-close 
-EOF
+	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_enterprise*gz" .
+	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_gpl*gz" .
 
 	echo Compilation for $platform is now done
 else
-	echo Usage: [local] host username platform
+	echo Usage: host username platform [port]
 fi

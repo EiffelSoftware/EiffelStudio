@@ -11,8 +11,7 @@ class
 inherit
 	EV_TIMEOUT_I
 		redefine
-			interface,
-			on_timeout
+			interface
 		end
 
 	EV_ANY_IMP
@@ -68,18 +67,6 @@ feature -- Access
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
-
-	on_timeout is
-			-- Call the timeout actions.
-		do
-				-- Prevent nested calls by flagging intermediary to not call should a call be in progress.
-			actions_called := True
-			Precursor
-			actions_called := False
-		end
-
-	actions_called: BOOLEAN
-		-- Are the timeout actions in the process of being called.
 
 	interface: EV_TIMEOUT
 		-- Interface object.

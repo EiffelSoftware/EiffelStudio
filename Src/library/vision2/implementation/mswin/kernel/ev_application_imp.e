@@ -130,6 +130,24 @@ feature -- Access
 
 feature -- Basic operation
 
+	process_graphical_events is
+			-- Process any pending paint messages.
+			--| Pass control to the GUI toolkit so that it can
+			--| handle any paint events that may be in its queue.
+		local
+			msg: WEL_MSG
+		do
+			from
+				create msg.make
+				msg.peek_paint_messages
+			until
+				not msg.last_boolean_result
+			loop
+				process_message (msg)
+				msg.peek_paint_messages
+			end
+		end
+
 	process_events is
 			-- Process any pending events.
 			--| Pass control to the GUI toolkit so that it can

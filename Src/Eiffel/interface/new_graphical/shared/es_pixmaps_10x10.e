@@ -484,6 +484,18 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 4))
 		end
+
+	frozen new_watch_tool_icon: EV_PIXMAP is
+			-- Access to 'watch tool' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 4))
+		end
+
+	frozen new_watch_tool_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'watch tool' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 4))
+		end
 	frozen completion_remember_size_icon: EV_PIXMAP is
 			-- Access to 'remember size' pixmap.
 		once

@@ -710,6 +710,20 @@ feature {NONE} -- Implementation
 				system.set_console_application (False)
 			end
 
+			l_s := l_settings.item (s_force_32bits)
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_32bits (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name (s_force_32bits)
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_32bits (not platform_constants.is_windows_64_bits)
+			end
+
 			l_s := l_settings.item (s_dead_code_removal)
 			if l_s /= Void then
 				if l_s.is_boolean then

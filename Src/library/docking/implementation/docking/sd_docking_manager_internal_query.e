@@ -245,6 +245,25 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
+	is_title_unique (a_title: STRING): BOOLEAN is
+			-- If `a_title' unique in all contents unique_title?
+		local
+			l_content: ARRAYED_LIST [SD_CONTENT]
+		do
+			l_content := internal_docking_manager.contents
+			from
+				Result := True
+				l_content.start
+			until
+				l_content.after or not Result
+			loop
+				if l_content.item.unique_title.is_equal (a_title) then
+					Result := False
+				end
+				l_content.forth
+			end
+		end
+
 feature {NONE} -- Implemnetation
 
 	internal_docking_manager: SD_DOCKING_MANAGER;

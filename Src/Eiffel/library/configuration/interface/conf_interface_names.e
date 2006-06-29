@@ -145,6 +145,8 @@ feature {NONE} -- Target names and descriptions
 	target_use_cluster_name_as_namespace_description: STRING is " "
 	target_use_all_cluster_name_as_namespace_name: STRING is "Use recursive cluster name as namespace"
 	target_use_all_cluster_name_as_namespace_description: STRING is " "
+	target_force_32bits_name: STRING is "Force 32bits"
+	target_force_32bits_description: STRING is "Force compilation for 32bits."
 
 	external_location_name: STRING is "Location"
 	external_location_description: STRING is "Location of the external."

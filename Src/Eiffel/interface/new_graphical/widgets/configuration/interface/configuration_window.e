@@ -848,7 +848,7 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text (section_target)
 			section_tree.extend (l_item)
-			l_item.select_actions.extend (agent prepare_target_configuration_space)
+			l_item.select_actions.extend (agent show_properties_target_general)
 			l_item.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 			create l_subitem.make_with_text (section_general)
 			l_item.extend (l_subitem)
@@ -865,7 +865,7 @@ feature {NONE} -- Implementation
 
 			create l_subitem.make_with_text (section_advanced)
 			l_item.extend (l_subitem)
-			l_subitem.select_actions.extend (agent prepare_target_configuration_space)
+			l_subitem.select_actions.extend (agent show_properties_target_advanced)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 			l_item.expand
 			l_item := l_subitem
@@ -1988,6 +1988,11 @@ feature {NONE} -- Implementation
 				add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
 				properties.add_property (l_key_file_prop)
 
+				create l_bool_prop.make_with_value (target_force_32bits_name, current_target.setting_force_32bits)
+				l_bool_prop.set_description (target_force_32bits_description)
+				add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
+				properties.add_property (l_bool_prop)
+
 				properties.current_section.expand
 			end
 
@@ -2305,7 +2310,7 @@ feature {NONE} -- Configuration setting
 			if current_target.extends = Void and then a_value = a_default and current_target.internal_settings.has (a_name) then
 				current_target.update_setting (a_name, "")
 			else
-				current_target.update_setting (a_name, a_value.out)
+				current_target.update_setting (a_name, a_value.out.as_lower)
 			end
 		end
 

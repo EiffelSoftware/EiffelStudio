@@ -124,19 +124,21 @@ feature -- Command
 	extend (a_content: SD_CONTENT) is
 			-- Redefine
 		do
-			if a_content.user_widget.parent /= Void then
-				a_content.user_widget.parent.prune (a_content.user_widget)
-			end
-			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_title_bar.set_title (a_content.long_title)
-			internal_notebook.set_focus_color (True)
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+			if not has (a_content) then
+				if a_content.user_widget.parent /= Void then
+					a_content.user_widget.parent.prune (a_content.user_widget)
 				end
-				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
-			else
-				internal_title_bar.wipe_out_custom_area
+				Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
+				internal_title_bar.set_title (a_content.long_title)
+				internal_notebook.set_focus_color (True)
+				if a_content.mini_toolbar /= Void then
+					if a_content.mini_toolbar.parent /= Void then
+						a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+					end
+					internal_title_bar.extend_custom_area (a_content.mini_toolbar)
+				else
+					internal_title_bar.wipe_out_custom_area
+				end
 			end
 		end
 

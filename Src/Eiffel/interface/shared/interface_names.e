@@ -993,6 +993,9 @@ feature -- Title part
 
 	t_first_match_reached: STRING is	"Initial match reached."
 	t_bottom_reached: STRING is 	"Bottom reached."
+	t_refactoring_feature_rename: STRING is	"Refactoring: Feature rename (compiled classes)"
+	t_refactoring_class_select: STRING is "Select class"
+	t_refactoring_class_rename: STRING is "Refactoring: Class rename"
 
 feature -- Description texts
 

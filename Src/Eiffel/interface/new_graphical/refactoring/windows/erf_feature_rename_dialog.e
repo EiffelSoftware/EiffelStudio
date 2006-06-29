@@ -28,6 +28,13 @@ inherit
 			default_create, copy
 		end
 
+	INTERFACE_NAMES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -40,7 +47,7 @@ feature {NONE} -- Initialization
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
 			Precursor
-			set_title ("Refactoring: Feature rename (compiled classes)")
+			set_title (t_refactoring_feature_rename)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb
@@ -108,6 +115,8 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			show_actions.extend (agent on_show)
+
+			set_minimum_width (350)
 		end
 
 feature -- Status report

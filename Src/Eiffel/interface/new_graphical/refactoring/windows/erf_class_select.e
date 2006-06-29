@@ -28,6 +28,13 @@ inherit
 			default_create, copy
 		end
 
+	INTERFACE_NAMES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -38,7 +45,7 @@ feature {NONE} -- Initialization
 			f_top: EV_FRAME
 		do
 			Precursor
-			set_title ("Select class")
+			set_title (t_refactoring_class_select)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb
@@ -67,6 +74,8 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 
 			show_actions.extend (agent on_show)
+
+			set_minimum_size (300, 300)
 		end
 
 feature -- Status report
@@ -138,7 +147,7 @@ feature -- Element change
 			a_classes_not_void: a_classes /= Void
 		local
 			l_item: EV_LIST_ITEM
-			l_class: CLASS_C
+			l_classc: CLASS_C
 		do
 			class_list.wipe_out
 			if a_classes /= Void and then not a_classes.is_empty then
@@ -147,9 +156,9 @@ feature -- Element change
 				until
 					a_classes.after
 				loop
-					l_class := a_classes.item
-					create l_item.make_with_text (l_class.name_in_upper)
-					l_item.set_data (l_class)
+					l_classc := a_classes.item
+					create l_item.make_with_text (l_classc.name_in_upper)
+					l_item.set_data (l_classc)
 					class_list.extend (l_item)
 					a_classes.forth
 				end

@@ -20,7 +20,7 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
 			a_timeout_imp ?= eif_id_object (a_object_id)
-			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.actions_called then
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed then
 				-- Timeout may possibly have been gc'ed.
 				a_timeout_imp.on_timeout
 			end

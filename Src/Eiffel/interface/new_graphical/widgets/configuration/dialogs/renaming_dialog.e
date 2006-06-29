@@ -19,6 +19,18 @@ inherit
 			copy
 		end
 
+	EB_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -44,17 +56,20 @@ feature {NONE} -- Initialization
 			grid.enable_single_row_selection
 
 			create hb
+			hb.set_padding (default_padding_size)
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (plus_button_text, agent on_add)
+			create l_btn.make_with_text_and_action (general_add, agent on_add)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (small_button_width)
-			create l_btn.make_with_text_and_action (minus_button_text, agent on_remove)
+			l_btn.set_minimum_width (default_button_width+10)
+			create l_btn.make_with_text_and_action (general_remove, agent on_remove)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (small_button_width)
+			l_btn.set_minimum_width (default_button_width+10)
 
 			set_size (300, 400)
 			show_actions.extend (agent on_show)

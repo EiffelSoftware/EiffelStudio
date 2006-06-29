@@ -425,58 +425,66 @@ feature -- Drawing operations
 
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text
---					{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
 
-					-- Previous code for gtk 2.4 that set a clip area for text rendering.
-					a_clip_area := gc_clip_area
-					set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
---					{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+					if {EV_GTK_EXTERNALS}.gtk_min_ver >= 6 then
+						{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
+						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+					else
+						-- Previous code for gtk 2.4 that set a clip area for text rendering.
+						a_clip_area := gc_clip_area
+						set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
+					end
+
 				end
 
 				if a_angle /= 0 then
---					l_pango_renderer := {EV_GTK_EXTERNALS}.gdk_pango_renderer_get_default ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
---						-- This is reusable so do not free the renderer.
---						-- Renderer is needed to rotate text without a bounding box
---					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
---					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
---					
---					a_pango_context := {EV_GTK_EXTERNALS}.pango_layout_get_context (a_pango_layout)
---					
---					{EV_GTK_EXTERNALS}.pango_matrix_init ($a_pango_matrix)
---					
---					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, x, y)
---					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi * 180)
---					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y - a_y))
---					
---					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
---
---					{EV_GTK_EXTERNALS}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
---					
---						-- Clean up Pango renderer.
---					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
---					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
+					l_pango_renderer := {EV_GTK_EXTERNALS}.gdk_pango_renderer_get_default ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+						-- This is reusable so do not free the renderer.
+						-- Renderer is needed to rotate text without a bounding box
+					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
+					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
+
+					a_pango_context := {EV_GTK_EXTERNALS}.pango_layout_get_context (a_pango_layout)
+
+					{EV_GTK_EXTERNALS}.pango_matrix_init ($a_pango_matrix)
+
+					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, x, y)
+					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi * 180)
+					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y - a_y))
+
+					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
+
+					{EV_GTK_EXTERNALS}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
+
+						-- Clean up Pango renderer.
+					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
+					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
 				else
 					{EV_GTK_EXTERNALS}.gdk_draw_layout (drawable, gc, a_x, a_y, a_pango_layout)
 				end
 
 					-- Reset all changed values.
 				if a_width /= -1 then
-						-- Restore clip area (used for gtk 2.4)
-					if a_clip_area /= Void then
-						set_clip_area (a_clip_area)
+
+					if {EV_GTK_EXTERNALS}.gtk_min_ver >= 6 then
+						{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 0) -- PangoEllipsizeNone
 					else
-						remove_clip_area
+							-- Restore clip area (used for gtk 2.4 implementation)
+						if a_clip_area /= Void then
+							set_clip_area (a_clip_area)
+						else
+							remove_clip_area
+						end
 					end
-	--				{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 0) -- PangoEllipsizeNone
 				end
 
 				{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
 				{EV_GTK_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 
---				if a_pango_context /= default_pointer then
---					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, default_pointer)
---					{EV_GTK_EXTERNALS}.pango_matrix_free (a_pango_matrix)
---				end			
+				if a_pango_context /= default_pointer then
+					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, default_pointer)
+					{EV_GTK_EXTERNALS}.pango_matrix_free (a_pango_matrix)
+				end
 			end
 		end
 

@@ -242,7 +242,10 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				BLENDFUNCTION blendFunction = {AC_SRC_OVER, 0, $a_alpha, AC_SRC_ALPHA};
+				// This is not defined in VC6
+				// define AC_SRC_ALPHA 0x01
+				// define AC_SRC_OVER 0x00
+				BLENDFUNCTION blendFunction = {0x00, 0, $a_alpha, 0x01};
 
 				FARPROC update_layered_window = NULL;
 				HMODULE user32_module = LoadLibrary (L"user32.dll");

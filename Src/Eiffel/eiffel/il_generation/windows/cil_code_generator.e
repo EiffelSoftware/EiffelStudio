@@ -244,6 +244,9 @@ feature {NONE} -- Access
 	is_dll: BOOLEAN
 			-- Is current generated as a DLL?
 
+	is_32bits: BOOLEAN
+			-- Is current generated as a 32bit application?
+
 	is_verifiable: BOOLEAN
 			-- Does code generation has to be verifiable?
 
@@ -630,6 +633,9 @@ feature -- Generation Structure
 
 			if is_dll then
 				main_module.set_dll
+			end
+			if is_32bits then
+				main_module.set_32bits
 			end
 
 			main_module.prepare (md_dispenser, type_count)
@@ -1024,6 +1030,12 @@ feature -- Generation type
 		do
 			is_dll := True
 			is_console_application := True
+		end
+
+	set_32bits is
+			-- Current generated application is a 32bit application
+		do
+			is_32bits := True
 		end
 
 feature -- Generation Info

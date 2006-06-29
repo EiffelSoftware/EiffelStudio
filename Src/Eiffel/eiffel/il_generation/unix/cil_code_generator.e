@@ -42,6 +42,11 @@ feature -- Generation type
 			-- Current generated application is a DLL.
 		do
 		end
+		
+	set_32bits is
+			-- Current generated application is a 32bit application
+		do
+		end
 
 feature -- Generation Info
 

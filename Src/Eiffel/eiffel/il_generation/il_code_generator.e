@@ -35,6 +35,11 @@ feature -- Generation type
 		deferred
 		end
 
+	set_32bits is
+			-- Current generated application is a 32bit application
+		deferred
+		end
+
 feature -- Generation Info
 
 	set_version (build, major, minor, revision: INTEGER) is

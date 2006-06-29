@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39">
 	<target name="finish_freezing">
-		<root feature="make" class="FINISH_FREEZING"/>
+		<root class="FINISH_FREEZING" feature="make"/>
 		<option trace="false" profile="false" debug="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
@@ -10,7 +10,7 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="False"/>
-
+		<library name="arg_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>

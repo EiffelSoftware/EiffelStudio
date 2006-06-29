@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	Finish_freezing_script: STRING is 
+	Finish_freezing_script: STRING is
 			-- Name of post-eiffel compilation processing to launch
 			-- C code.
 		once
@@ -80,6 +80,14 @@ feature -- Access
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"EIF_IS_WINDOWS"
+		end
+
+	is_windows_64_bits: BOOLEAN is
+			-- Is Current running on Windows 64 bits?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_64_BITS"
 		end
 
 indexing

@@ -21,7 +21,7 @@ inherit
 		end
 
 feature -- Initialization
-	
+
 	adapt (other: like Current) is
 			-- Initialize from `other'.
 			-- Useful in descendants.
@@ -111,7 +111,7 @@ feature -- Status report
 		local
 			null_ptr: POINTER
 		do
-			Result := (rout_disp /= null_ptr) or else class_id > 0 and feature_id > 0
+			Result := (rout_disp /= null_ptr) or else (class_id > 0 and feature_id > 0)
 		end
 
 	is_equal (other: like Current): BOOLEAN is

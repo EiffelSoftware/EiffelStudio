@@ -13,11 +13,11 @@ feature -- Generation constants
 	template_file_location: FILE_NAME is
 			-- Location of templates.
 		do
-			create Result.make_from_string ((create {GB_EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			create Result.make_from_string ((create {GB_EIFFEL_ENV}).Eiffel_installation_dir_name)
 			Result.extend ("build")
 			Result.extend ("templates")
 		end
-		
+
 	window_template_file_name: FILE_NAME is
 			-- `Result' is location of build template file,
 			-- including the name.
@@ -25,7 +25,7 @@ feature -- Generation constants
 			Result := template_file_location
 			Result.extend ("build_class_template.e")
 		end
-		
+
 	window_template_imp_file_name: FILE_NAME is
 			-- `Result' is location of build template file,
 			-- including the name.
@@ -33,7 +33,7 @@ feature -- Generation constants
 			Result := template_file_location
 			Result.extend ("build_class_template_imp.e")
 		end
-		
+
 	constants_template_imp_file_name: FILE_NAME is
 			-- `Result' is location of build constants implementation template file,
 			-- including name.
@@ -41,7 +41,7 @@ feature -- Generation constants
 			Result := template_file_location
 			Result.extend ("constants_imp.e")
 		end
-		
+
 	constants_template_file_name: FILE_NAME is
 			-- `Result' is location of build constants template file,
 			-- including name.
@@ -49,7 +49,7 @@ feature -- Generation constants
 			Result := template_file_location
 			Result.extend ("constants.e")
 		end
-		
+
 	application_template_file_name: FILE_NAME is
 			-- `Result' is location of build application template file,
 			-- including the name.
@@ -57,52 +57,31 @@ feature -- Generation constants
 			Result := template_file_location
 			Result.extend ("build_application_template.e")
 		end
-		
-	windows_ace_file_name: FILE_NAME is
+
+	ecf_file_name: FILE_NAME is
 			-- `Result' is location of windows ace file template.
 		do
 			Result := template_file_location
-			Result.extend ("Windows")
-			Result.extend ("ace_template.ace")
+			Result.extend ("template.ecf")
 		end
-		
-	unix_ace_file_name: FILE_NAME is
-			-- `Result' is location of windows ace file template.
-		do
-			Result := template_file_location
-			Result.extend ("Unix")
-			Result.extend ("ace_template.ace")
-		end
-		
-	dotnet_ace_file_name: FILE_NAME is
-			-- `Result' is location of dotnet ace file template.
-		do
-			Result := template_file_location
-			Result.extend ("Windows")
-			Result.extend ("dotnet_ace_template.ace")
-		end
-		
+
 	eiffel_class_extension: STRING is ".e"
 			-- String constant for class file extension to be used.
 
 feature -- XML saving
-		
-	unix_ace_name: STRING is "ace.Unix.ace"
-	
-	windows_ace_name: STRING is "ace.Windows.ace"
-	
-	dotnet_ace_name: STRING is "ace.dotNet.ace"
-		
+
+	ecf_name: STRING is "build_project.ecf"
+
 	project_filename: STRING is "build_project.bpr"
 		-- File name for project settings.
-		
+
 	project_file_filter: STRING is "*.bpr"
 		-- Filter to be used for file dialogs searching
 		-- for build projects.
-		
+
 	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>";
 		-- XML format type, included at start of `document'.
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

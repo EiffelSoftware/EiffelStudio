@@ -289,6 +289,9 @@ feature -- Generation constants
 			Result := "<CUSTOM_FEATURE>"
 		end
 
+	uuid_tag: STRING is "<UUID>"
+			-- Tag used in templates for generating a new UUID.
+
 	clr_version_tag: STRING is
 			-- Used in templates as clr setting.
 		once

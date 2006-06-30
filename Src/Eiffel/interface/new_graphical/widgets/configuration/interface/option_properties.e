@@ -174,10 +174,15 @@ feature {NONE} -- Implementation
 					l_invariant.enable_inherited
 					l_loop.enable_inherited
 
+					l_require.change_value_actions.put_front (agent change_no_argument_boolean_wrapper (?, agent an_options.set_assertions (l_inh_assertions)))
 					l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+					l_ensure.change_value_actions.put_front (agent change_no_argument_boolean_wrapper (?, agent an_options.set_assertions (l_inh_assertions)))
 					l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+					l_check.change_value_actions.put_front (agent change_no_argument_boolean_wrapper (?, agent an_options.set_assertions (l_inh_assertions)))
 					l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+					l_invariant.change_value_actions.put_front (agent change_no_argument_boolean_wrapper (?, agent an_options.set_assertions (l_inh_assertions)))
 					l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+					l_loop.change_value_actions.put_front (agent change_no_argument_boolean_wrapper (?, agent an_options.set_assertions (l_inh_assertions)))
 					l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
 				end
 			end

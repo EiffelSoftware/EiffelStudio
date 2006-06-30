@@ -135,6 +135,7 @@
 			  <xs:enumeration value = "dynamic_runtime"/>
 			  <xs:enumeration value = "exception_trace"/>
 			  <xs:enumeration value = "executable_name"/>
+			  <xs:enumeration value = "force_32bits"/>
 			  <xs:enumeration value = "full_type_checking"/>
 			  <xs:enumeration value = "il_verifiable"/>
 			  <xs:enumeration value = "inlining"/>

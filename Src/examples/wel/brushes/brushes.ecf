@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="brushes_demo" uuid="18A2C216-13C4-48D3-B3A7-F76098836B1B">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="brushes" uuid="18A2C216-13C4-48D3-B3A7-F76098836B1B">
 	<target name="classic">
 		<root class="BRUSHES_DEMO" feature="make"/>
 		<option warning="true">

@@ -417,9 +417,7 @@ feature {NONE} -- Implementation
 			-- Note that For Visual Studio, we need to
 			-- generate a debug and a release ace file.
 		do
-			generate_ace_file (windows_ace_file_name.twin, windows_ace_name)
-			generate_ace_file (unix_ace_file_name.twin, unix_ace_name)
-			generate_ace_file (dotnet_ace_file_name.twin, dotnet_ace_name)
+			generate_ace_file (ecf_file_name.twin, ecf_name)
 		end
 
 	generate_ace_file (template_file_name, file_name: STRING) is
@@ -431,6 +429,7 @@ feature {NONE} -- Implementation
 			ace_file_name: FILE_NAME
 			ace_template_file, ace_output_file: PLAIN_TEXT_FILE
 			i, j: INTEGER
+			l_uuid: UUID_GENERATOR
 		do
 			ace_template_file := open_text_file_for_read (template_file_name)
 			if ace_template_file /= Void then
@@ -444,24 +443,16 @@ feature {NONE} -- Implementation
 					-- | FIXME
 					-- This code only supports two project location tags per ace file.
 					-- This should be made more general.
-				i := ace_text.substring_index (project_location_tag, 1)
-				j := ace_text.substring_index (project_location_tag, i + 1)
+				ace_text.replace_substring_all (project_location_tag, generated_path.out)
 
-				ace_text.replace_substring_all (project_location_tag, "")
-				temp_string := generated_path.out
-				ace_text.insert_string (temp_string, i)
-				if j > 0 then
-					ace_text.insert_string (temp_string, j - project_location_tag.count + temp_string.count)
-				end
+				create l_uuid
+				ace_text.replace_substring_all (uuid_tag, l_uuid.generate_uuid.out)
 
-					-- Now add the project_name. Note that we add double quotes around the name.
-					-- This allows use to use project names that clash with ace file settings,
-					-- for example, library is an invalid project name without double quotes
-
-				add_generated_string (ace_text, "%"" + project_settings.project_name.as_lower + "%"", project_name_tag)
+					-- Now add the project_name.
+				ace_text.replace_substring_all (project_name_tag, project_settings.project_name.as_lower)
 
 					-- Now add the application class name.
-				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+				ace_text.replace_substring_all (application_tag, project_settings.application_class_name.as_upper)
 
 				ace_file_name := generated_path.twin
 				ace_file_name.extend (file_name)

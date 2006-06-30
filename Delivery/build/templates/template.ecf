@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="<PROJECT_NAME>" uuid="<UUID>">
+	<target name="<PROJECT_NAME>">
+		<description>This configuration file has been generated for you by EiffelBuild.</description>
+		<root cluster="root_cluster" class="<APPLICATION>" feature="make_and_launch"/>
+		<option profile="false" debug="false" warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<setting name="array_optimization" value="false"/>
+		<setting name="console_application" value="false"/>
+		<setting name="dead_code_removal" value="true"/>
+		<setting name="dynamic_runtime" value="false"/>
+		<setting name="inlining" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="multithreaded" value="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
+		<cluster name="root_cluster" location="<PROJECT_LOCATION>\" recursive="true"/>
+	</target>
+	<target name="<PROJECT_NAME>_dotnet" extend="<PROJECT_NAME>">
+		<setting name="msil_generation" value="True"/>
+		<root cluster="root_cluster" class="<APPLICATION>" feature="make_and_launch"/>
+	</target>
+</system>

@@ -454,6 +454,7 @@ feature -- Commands
 			-- Change a class of the system.
 		require
 			good_argument: cl /= Void
+			not_override: not cl.config_class.does_override
 		do
 			add_class_to_recompile (cl)
 

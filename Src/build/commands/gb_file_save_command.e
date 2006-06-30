@@ -51,15 +51,15 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
-				-- Execute `Current'.
-			do
-				components.object_editors.force_name_change_completion_on_all_editors
-				components.system_status.current_project_settings.save
-				components.xml_handler.save
-					-- Notify the system that the saved version is now up to date.
-				components.system_status.mark_as_dirty
-			end
+	execute is
+			-- Execute `Current'.
+		do
+			components.object_editors.force_name_change_completion_on_all_editors
+			components.system_status.current_project_settings.save
+			components.xml_handler.save
+				-- Notify the system that the saved version is now up to date.
+			components.system_status.mark_as_clean
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

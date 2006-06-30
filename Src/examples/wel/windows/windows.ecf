@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="windows_demo" uuid="09D85EC8-92E3-4674-AC3B-67AD14C12A3E">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="windows" uuid="09D85EC8-92E3-4674-AC3B-67AD14C12A3E">
 	<target name="classic">
 		<root cluster="root_cluster" class="WINDOWS_DEMO" feature="make"/>
 		<option warning="true">

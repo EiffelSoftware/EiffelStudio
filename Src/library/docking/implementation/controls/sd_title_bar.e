@@ -295,7 +295,7 @@ feature -- Query
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	is_stick: BOOLEAN
 			-- If current sticked?
 
@@ -480,6 +480,7 @@ feature {NONE} -- Agents
 		do
 			if pressed then
 				drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
+				pressed := False
 			end
 		end
 

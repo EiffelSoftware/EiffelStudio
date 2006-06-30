@@ -17,7 +17,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<cluster name="root_cluster" location="<PROJECT_LOCATION>\" recursive="true"/>
 	</target>
-	<target name="<PROJECT_NAME>_dotnet" extend="<PROJECT_NAME>">
+	<target name="<PROJECT_NAME>_dotnet" extends="<PROJECT_NAME>">
 		<setting name="msil_generation" value="True"/>
 		<root cluster="root_cluster" class="<APPLICATION>" feature="make_and_launch"/>
 	</target>

@@ -25,13 +25,73 @@ feature {NONE} -- Initlization
 			l_result: INTEGER
 		do
 			default_create
-			item := cpp_bitmap_create (gdi_plus_handle, a_width, a_height, $l_result)
+			item := c_gdip_create_bitmap_from_scan0 (gdi_plus_handle, a_width, a_height, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+feature -- Command
+
+	lock_bits (a_rect: WEL_GDIP_RECT; a_lock_bitmode_flag: NATURAL_32; a_pixel_format: INTEGER): WEL_GDIP_BITMAP_DATA is
+			-- Lock image data bits.
+		require
+			not_void: a_rect /= Void
+			is_vaild: (create {WEL_GDIP_IMAGE_LOCK_MODE}).is_valid (a_lock_bitmode_flag)
+			is_valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid (a_pixel_format)
+		local
+			l_result: INTEGER
+			l_pointer: POINTER
+		do
+			create Result.make
+			c_gdip_bitmap_lock_bits (gdi_plus_handle, item, a_rect.item, a_lock_bitmode_flag, a_pixel_format, $l_result, Result.item)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		ensure
+			not_void: Result /= Void
+		end
+
+	unlock_bits (a_locked_data: WEL_GDIP_BITMAP_DATA) is
+			-- Unlock `a_lock_data' which is from Current datas.
+		require
+			not_void: a_locked_data /= Void
+		local
+			l_result: INTEGER
+		do
+			c_gdip_bitmap_unlock_bits (gdi_plus_handle, item, a_locked_data.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	new_bitmap: WEL_BITMAP is
+			-- Create a 32bits DIB prmulitplied ARGB bitmap from current data.
+		local
+			l_header_info: WEL_BITMAP_INFO_HEADER
+			l_result_pointer: POINTER
+			l_bitmap_data: WEL_GDIP_BITMAP_DATA
+		do
+			create l_header_info.make
+			l_header_info.set_width (width)
+			l_header_info.set_height (height)
+			l_header_info.set_planes (1)
+			l_header_info.set_bit_count (32)
+			l_header_info.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.Bi_rgb.to_integer_32)
+			l_header_info.set_size_image (0)
+			l_header_info.set_x_pels_per_meter (0)
+			l_header_info.set_y_pels_per_meter (0)
+			l_header_info.set_clr_used (0)
+			l_header_info.set_clr_important (0)
+
+			create Result.make_dib (l_header_info)
+			l_header_info.dispose
+
+			l_result_pointer := Result.ppv_bits
+
+			l_bitmap_data := lock_bits (create {WEL_GDIP_RECT}.make_with_size (0, 0, width, height), {WEL_GDIP_IMAGE_LOCK_MODE}.read_only, {WEL_GDIP_PIXEL_FORMAT}.format32bpppargb)
+			-- We are 32bits, so size is width * height * 4
+			l_result_pointer.memory_copy (l_bitmap_data.scan_0, width * height * 4)
+			unlock_bits (l_bitmap_data)
 		end
 
 feature -- C externals
 
-	cpp_bitmap_create (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
 			-- Create a bitmap object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -43,10 +103,10 @@ feature -- C externals
 				static FARPROC GdipCreateBitmapFromScan0 = NULL;
 				GpBitmap *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
-				
+
 				if (!GdipCreateBitmapFromScan0)	{
 					GdipCreateBitmapFromScan0 = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateBitmapFromScan0");
-				}					
+				}
 				if (GdipCreateBitmapFromScan0) {
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (INT, INT, INT, PixelFormat, BYTE*, GpBitmap **)) GdipCreateBitmapFromScan0)
 								((INT) $a_width,
@@ -57,6 +117,64 @@ feature -- C externals
 								(GpBitmap **) &l_result);
 				}
 				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
+	c_gdip_bitmap_lock_bits (a_gdiplus_handle, a_bitmap: POINTER; a_gp_rect: POINTER; a_image_lock_flag: NATURAL_32; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]; a_bitmap_data: POINTER) is
+			-- Lock data bits of `a_bitmap', Result is pointer to BitmapData.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_bitmap_not_null: a_bitmap /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipBitmapLockBits = NULL;
+					
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipBitmapLockBits)	{
+					GdipBitmapLockBits = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapLockBits");
+				}					
+				if (GdipBitmapLockBits) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*)) GdipBitmapLockBits)
+								((GpBitmap *) $a_bitmap,
+								(GDIPCONST GpRect *) $a_gp_rect,
+								(UINT) $a_image_lock_flag,
+								
+								
+								(PixelFormat) $a_pixel_format,
+								
+								
+								(BitmapData *) $a_bitmap_data);
+				}
+			}
+			]"
+		end
+
+	c_gdip_bitmap_unlock_bits (a_gdiplus_handle, a_bitmap, a_locked_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Unlock `a_locked_bitmap_data' which if from `a_bitmap'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_bitmap_not_null: a_bitmap /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipBitmapUnlockBits = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipBitmapUnlockBits) {
+					GdipBitmapUnlockBits = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapUnlockBits");
+				}
+				if (GdipBitmapUnlockBits) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap*, BitmapData*)) GdipBitmapUnlockBits)
+								((GpBitmap*) $a_bitmap,
+								(BitmapData*) $a_locked_bitmap_data);				
+				}
 			}
 			]"
 		end

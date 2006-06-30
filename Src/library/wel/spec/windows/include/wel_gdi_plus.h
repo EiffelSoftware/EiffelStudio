@@ -34,6 +34,19 @@ typedef INT PixelFormat;
 #define ULONG_PTR unsigned long*
 #endif
 
+typedef struct {
+	int X, Y, Width, Height;
+} GpRect;
+
+typedef struct {   
+	unsigned int Width;
+	unsigned int Height;
+	int          Stride;
+	int          PixelFormat;
+	void         *Scan0;
+	unsigned int Reserved;
+} BitmapData;	
+
 typedef DWORD ARGB;
 
 #define GDIPCONST const

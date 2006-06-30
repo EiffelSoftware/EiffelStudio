@@ -40,7 +40,8 @@ create
 	make_direct,
 	make_indirect,
 	make_by_pointer,
-	make_by_bitmap
+	make_by_bitmap,
+	make_dib
 
 feature {NONE} -- Initialization
 
@@ -130,6 +131,20 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
+	make_dib (a_header_info: WEL_BITMAP_INFO_HEADER) is
+			-- Create a DIB bitmap section.
+		require
+			a_header_info_not_void: a_header_info /= Void
+			a_header_info_exist: a_header_info.exists
+		local
+			l_null_pointer: POINTER
+		do
+			item := cwin_create_dib_section (l_null_pointer, a_header_info.item, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors, $ppv_bits, l_null_pointer, 0)
+		ensure
+			bitmap_created: item /= default_pointer
+			ppv_bits_assigned: ppv_bits /= default_pointer
+		end
+
 feature -- Access
 
 	width: INTEGER is
@@ -161,6 +176,10 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	ppv_bits: POINTER
+			-- If Current if Created by `make_dib', this is the pointer to the location of the DIB bit values.
+			-- Otherwise it's void.
 
 feature -- Basic operations
 
@@ -248,6 +267,23 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (int, int, UINT, UINT, CONST VOID *): EIF_POINTER"
 		alias
 			"CreateBitmap"
+		end
+
+	cwin_create_dib_section (a_dc, a_bitmap_info: POINTER; a_i_usage: INTEGER; a_ppv_bits: TYPED_POINTER [POINTER]; a_h_section: POINTER; a_offset: NATURAL_64): POINTER is
+			-- SDK CreateDIBSection
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				CreateDIBSection (
+								(HDC) $a_dc,
+								(CONST BITMAPINFO *) $a_bitmap_info,
+								(UINT) $a_i_usage,
+								(VOID **) $a_ppv_bits,
+								(HANDLE) $a_h_section,
+								(DWORD) $a_offset
+								)
+			]"
 		end
 
 	Cbm_init: INTEGER is

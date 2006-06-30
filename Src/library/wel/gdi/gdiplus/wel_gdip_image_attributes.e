@@ -65,7 +65,7 @@ feature -- Command
 		local
 			l_result: INTEGER
 		do
-			c_gdip_set_image_attributes_color_matrix (gdi_plus_handle, item, a_color_matrix.item.item, a_color_matrix_adjust_type, a_color_matrix_flags, $l_result)
+			c_gdip_set_image_attributes_color_matrix (gdi_plus_handle, item, a_color_matrix.item, a_color_matrix_adjust_type, a_color_matrix_flags, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 

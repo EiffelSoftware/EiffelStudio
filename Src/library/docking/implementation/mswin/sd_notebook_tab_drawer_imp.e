@@ -32,7 +32,7 @@ inherit
 create
 	make
 
-create {SD_TOOL_BAR_DRAWER_IMP}
+create {SD_TOOL_BAR_DRAWER_IMP, SD_FEEDBACK_INDICATOR}
 	make_for_help
 
 feature{NONE} -- Initlization
@@ -177,8 +177,6 @@ feature -- FIXIT: maybe move to a helper class?
 			l_info.dispose
 		end
 
-feature{NONE} -- Implementation
-
 	mirror_image (a_bitmap: WEL_BITMAP) is
 			-- Mirror image
 		require
@@ -205,6 +203,8 @@ feature{NONE} -- Implementation
 			l_info.dispose
 			l_orignal_dc.delete
 		end
+
+feature{NONE} -- Implementation
 
 	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH) is
 			-- Use theme manager to draw selected tab.

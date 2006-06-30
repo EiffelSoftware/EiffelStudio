@@ -162,11 +162,9 @@ feature -- Change
 				ghi ?= hi
 				if ghi /= Void and then header.pointed_divider_index = 0 then
 					col := column (ghi.column.index)
-					if col /= Void then
-							--| Col is the pointed header
-						m := header_menu_on_column (col)
-						m.show_at (header, header.item_x_offset (hi) + ax, ay)
-					end
+						--| Col is the pointed header
+					m := header_menu_on_column (col)
+					m.show_at (header, header.item_x_offset (hi) + ax, ay)
 				end
 			end
 		end
@@ -179,23 +177,29 @@ feature -- Change
 			hi: EV_HEADER_ITEM
 			gm: EV_MENU
 		do
-			hi := col.header_item
 			create Result
-			create mi.make_with_text (hi.text)
+			if col /= Void then
+				hi := col.header_item
+				create mi.make_with_text (hi.text)
+			else
+				create mi.make_with_text ("Grid menu")
+			end
 			mi.disable_sensitive
 			Result.extend (mi)
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
-			create mci.make_with_text ("Auto resize")
-			if column_has_auto_resizing (col.index) then
-				mci.enable_select
-				mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
-			else
-				mci.disable_select
-				mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
+			if col /= Void then
+				create mci.make_with_text ("Auto resize")
+				if column_has_auto_resizing (col.index) then
+					mci.enable_select
+					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
+				else
+					mci.disable_select
+					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
+				end
+				Result.extend (mci)
 			end
-			Result.extend (mci)
 
 			gm := grid_menu
 			if gm /= Void then
@@ -361,7 +365,7 @@ feature {NONE} -- column resizing impl
 						from
 							c := column_count
 						until
-							column (c).is_displayed or c = 0
+							c = 0 or else column (c).is_displayed
 						loop
 							c := c - 1
 						end

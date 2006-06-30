@@ -49,7 +49,14 @@ feature -- Access
 			set_icon_pixmap (icon_pixmaps.tool_preferences_icon)
 			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			close_request_actions.extend (agent on_close)
+
+			create scrolling_behavior.make (grid)
+			create resizing_behavior.make (grid)
+			resizing_behavior.enable_column_resizing
 		end
+
+	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
+	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
 
 	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
 			--

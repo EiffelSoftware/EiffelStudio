@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="magnify_demo" uuid="96E8DD3F-2576-4A23-9318-8CDAC090361A">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="magnify" uuid="96E8DD3F-2576-4A23-9318-8CDAC090361A">
 	<target name="classic">
 		<root cluster="root_cluster" class="MAGNIFY_DEMO" feature="make"/>
 		<option warning="true">

@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 				-- add the checks
         	checks.wipe_out
 			checks.extend (create {ERF_VALID_CLASS_NAME}.make (preferences.new_class_name))
-			checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (preferences.new_class_name))
+			checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (class_i.cluster, preferences.new_class_name))
         end
 
 

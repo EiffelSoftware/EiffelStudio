@@ -433,4 +433,219 @@ feature {NONE} -- Validation warnings
 
 	assembly_no_location: STRING is "No location specified."
 
+feature {NONE} -- Parse errors
+
+	e_parse_invalid_tag (a_tag: STRING): STRING is
+		do
+			Result := "Invalid tag/tag position '"+a_tag+"'"
+		end
+	e_parse_invalid_value (an_attribute: STRING): STRING is
+		do
+			Result := "Invalid (empty) value for '"+an_attribute+"'"
+		end
+	e_parse_invalid_attribute (an_attribute: STRING): STRING is
+		do
+			Result := "Invalid attribute '"+an_attribute+"'"
+		end
+	e_parse_invalid_content (a_content: STRING): STRING is
+		do
+			Result := "Invalid content: "+a_content
+		end
+
+	e_parse_incorrect_system_no_name: STRING is "Incorrect system tag, no name specified."
+	e_parse_incorrect_system_invalid_uuid (a_name: STRING): STRING is
+		do
+			Result := "Incorrect system tag "+a_name+" invalid uuid specified."
+		end
+
+	e_parse_incorrect_target_parent (a_parent, a_target: STRING): STRING is
+		do
+			Result := "Missing parent target: "+a_parent+" in target"+a_target
+		end
+	e_parse_incorrect_target_no_name: STRING is "Target without a name specified."
+
+	e_parse_incorrect_root_all: STRING is "Invalid value for all_classes attribute in root tag."
+	e_parse_incorrect_root: STRING is "Invalid root tag."
+
+	e_parse_incorrect_setting_no_name: STRING is "Invalid setting tag, no name specified."
+	e_parse_incorrect_setting (a_setting: STRING): STRING is
+		do
+			Result := "Invalid setting tag "+a_setting
+		end
+
+	e_parse_incorrect_file_rule: STRING is "Invalid file_rule tag."
+
+	e_parse_incorrect_external: STRING is "Invalid external tag."
+
+	e_parse_incorrect_action_invalid (an_action: STRING): STRING is
+		do
+			Result := "Invalid action tag "+an_action+"."
+		end
+	e_parse_incorrect_action_succeed (an_action: STRING): STRING is
+		do
+			Result := "Non boolean value for succeed attribute of action "+an_action+"."
+		end
+	e_parse_incorrect_action_no_command: STRING is
+		do
+			Result := "Invalid action tag."
+		end
+
+	e_parse_incorrect_variable_no_name: STRING is "Invalid variable tag."
+	e_parse_incorrect_variable (a_variable: STRING): STRING is
+		do
+			Result := "Invalid variable tag "+a_variable+"."
+		end
+
+	e_parse_incorrect_library_no_name: STRING is "Invalid library tag."
+	e_parse_incorrect_library (a_library: STRING): STRING is
+		do
+			Result := "Invalid library tag "+a_library+"."
+		end
+	e_parse_incorrect_library_conflict (a_group: STRING): STRING is
+		do
+			Result := "Invalid library tag there is already a group with the name "+a_group+"."
+		end
+
+	e_parse_incorrect_precompile_no_name: STRING is "Invalid precompile tag."
+	e_parse_incorrect_precompile (a_precompile: STRING): STRING is
+		do
+			Result := "Invalid precompile tag "+a_precompile+"."
+		end
+	e_parse_incorrect_precompile_conflict (a_group: STRING): STRING is
+		do
+			Result := "Invalid precompile tag there is already a group with the name "+a_group+"."
+		end
+	e_parse_incorrect_precompile_multiple (a_precompile, an_other_precompile: STRING): STRING is
+		do
+			Result := "Invalid precompile tag "+a_precompile+", there is already another precompile specified "+an_other_precompile+"."
+		end
+
+	e_parse_incorrect_assembly_no_name: STRING is "Invalid assembly tag no name specified."
+	e_parse_incorrect_assembly (an_assembly: STRING): STRING is
+		do
+			Result := "Invalid assembly tag "+an_assembly+" no location specified."
+		end
+	e_parse_incorrect_assembly_conflict (a_group: STRING): STRING is
+		do
+			Result := "Invalid assembly tag there is already a group with the name "+a_group+"."
+		end
+
+	e_parse_incorrect_cluster_no_name: STRING is "Invalid cluster tag no name specified."
+	e_parse_incorrect_cluster (a_cluster: STRING): STRING is
+		do
+			Result := "Invalid cluster tag "+a_cluster+" no location specified."
+		end
+	e_parse_incorrect_cluster_conflict (a_group: STRING): STRING is
+		do
+			Result := "Invalid cluster tag there is already a group with the name "+a_group+"."
+		end
+
+	e_parse_incorrect_override_no_name: STRING is "Invalid override tag no name specified."
+	e_parse_incorrect_override (an_override: STRING): STRING is
+		do
+			Result := "Invalid override tag "+an_override+" no location specified."
+		end
+	e_parse_incorrect_override_conflict (a_group: STRING): STRING is
+		do
+			Result := "Invalid override tag there is already a group with the name "+a_group+"."
+		end
+
+	e_parse_incorrect_debug_no_name: STRING is "Invalid debug tag."
+	e_parse_incorrect_debug (a_debug: STRING): STRING is
+		do
+			Result := "Invalid debug tag "+a_debug+"."
+		end
+
+	e_parse_incorrect_warning_no_name: STRING is "Invalid warning tag."
+	e_parse_incorrect_warning (a_warning: STRING): STRING is
+		do
+			Result := "Invalid warning tag "+a_warning+"."
+		end
+
+	e_parse_incorrect_renaming_no_name: STRING is "Invalid renaming tag."
+	e_parse_incorrect_renaming_no_new (an_old: STRING): STRING is
+		do
+			Result := "Invalid renaming tag, no new name specified for "+an_old+"."
+		end
+	e_parse_incorrect_renaming_no_old (a_new: STRING): STRING is
+		do
+			Result := "Invalid renaming tag, no old name specified for "+a_new+"."
+		end
+
+	e_parse_incorrect_class_opt: STRING is "Invalid class_option tag."
+
+	e_parse_incorrect_visible (a_parent: STRING): STRING is
+		do
+			Result := "Invalid visible tag on "+a_parent+"."
+		end
+
+	e_parse_incorrect_uses (a_group: STRING): STRING is
+		do
+			Result := "Invalid overrides tag in group "+a_group+"."
+		end
+
+	e_parse_incorrect_overrides (a_group: STRING): STRING is
+		do
+			Result := "Invalid overrides tag in group "+a_group+"."
+		end
+
+	e_parse_incorrect_condition: STRING is "Invalid condition tag."
+
+	e_parse_incorrect_platform_mult: STRING is "Can not have multiple platform specifications in one condition."
+	e_parse_incorrect_platform_conflict: STRING is "Value and exclude attribute in platform condition can not appear at the same time."
+	e_parse_incorrect_platform_none: STRING is "No value or excluded-value specified in platform condition."
+	e_parse_incorrect_platform (a_platform: STRING): STRING is
+		do
+			Result := "Invalid platform "+a_platform+"."
+		end
+
+	e_parse_incorrect_build_mult: STRING is "Can not have multiple build specifications in one condition."
+	e_parse_incorrect_build_conflict: STRING is "Value and exclude attribute in build condition can not appear at the same time."
+	e_parse_incorrect_build_none: STRING is "No value or excluded-value specified in build condition."
+	e_parse_incorrect_build (a_build: STRING): STRING is
+		do
+			Result := "Invalid build "+a_build+"."
+		end
+
+	e_parse_incorrect_multithreaded: STRING is "No valid value specified in multithreaded condition."
+	e_parse_incorrect_dotnet: STRING is "No valid value specified in dotnet condition."
+	e_parse_incorrect_dynamic_runtime: STRING is "No valid value specified in dynamic runtime condition."
+
+	e_parse_incorrect_version_min (a_version: STRING): STRING is
+		do
+			Result := "Invalid minimum version number in version condition: "+a_version
+		end
+	e_parse_incorrect_version_max (a_version: STRING): STRING is
+		do
+			Result := "Invalid maximum version number in version condition: "+a_version
+		end
+	e_parse_incorrect_version_no_type: STRING is "No version type specified in version condition."
+	e_parse_incorrect_version_no_version (a_version: STRING): STRING is
+		do
+			Result := "No minimum or maximum version in version condition "+a_version+" specified."
+		end
+	e_parse_incorrect_version_type (a_type: STRING): STRING is
+		do
+			Result := "Invalid version type "+a_type+" in version condition."
+		end
+	e_parse_incorrect_version_min_max (a_type: STRING): STRING is
+		do
+			Result := "Minimum version can not be greater than maximum version in version condition "+a_type+"."
+		end
+
+	e_parse_incorrect_custom_no_name: STRING is "No name attribute in custom condition."
+	e_parse_incorrect_custom_none (a_custom: STRING): STRING is
+		do
+			Result := "No value or excluded-value specified in custom condition "+a_custom+"."
+		end
+	e_parse_incorrect_custom_conflict (a_custom: STRING): STRING is
+		do
+			Result := "Value and exclude attribute in custom condition "+a_custom+" can not appear at the same time."
+		end
+
+	e_parse_incorrect_mapping: STRING is "Invalid mapping tag."
+
+	e_parse_incorrect_description: STRING is "Invalid description tag."
+
 end
+

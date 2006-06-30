@@ -19,6 +19,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} exists
+		redefine
+			dispose
 		select
 			default_create,
 			copy
@@ -37,10 +39,10 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_pixmap: EV_PIXMAP; a_parent_window: EV_WINDOW) is
+	make (a_pixel_buffer: like pixel_buffer; a_parent_window: EV_WINDOW) is
 			-- Creation method.
 		require
-			not_void: a_pixmap /= Void
+			not_void: a_pixel_buffer /= Void
 		local
 			l_composite_window: WEL_COMPOSITE_WINDOW
 		do
@@ -50,9 +52,10 @@ feature {NONE} -- Initlization
 
 			set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
 
-			pixmap := a_pixmap
+			pixel_buffer := a_pixel_buffer
+			wel_bitmap := rgba_dib
 		ensure
-			set: pixmap = a_pixmap
+			set: pixel_buffer = a_pixel_buffer
 		end
 
 feature -- Command
@@ -69,15 +72,21 @@ feature -- Command
 			wel_show
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set `pixmap'
+	set_pixel_buffer (a_pixel_buffer: like pixel_buffer) is
+			-- Set `pixel_buffer'
 		do
-			pixmap := a_pixmap
-			if exists then
-				update_layered_window_rgba (alpha)
+			if a_pixel_buffer /= pixel_buffer then
+				if should_destroy_bitmap then
+					wel_bitmap.delete
+				end
+				pixel_buffer := a_pixel_buffer
+				wel_bitmap := rgba_dib
+				if exists then
+					update_layered_window_rgba (alpha)
+				end
 			end
 		ensure
-			set: pixmap = a_pixmap
+			set: pixel_buffer = a_pixel_buffer
 		end
 
 	set_position (a_screen_x, a_screen_y: INTEGER) is
@@ -105,15 +114,37 @@ feature {NONE} -- Implementation
 	rgba_dib: WEL_BITMAP is
 			-- Load a image which has RGBA DIB datas.
 		local
-			l_imp: EV_PIXMAP_IMP
+			l_imp: EV_PIXEL_BUFFER_IMP
+			l_pixmap: EV_PIXMAP_IMP
+			l_gdip_bitmap: WEL_GDIP_BITMAP
+			l_helper: SD_NOTEBOOK_TAB_DRAWER_IMP
 		do
-			l_imp ?= pixmap.implementation
+			l_imp ?= pixel_buffer.implementation
 			check not_void: l_imp /= Void end
-			-- FIXIT: it only works in 32bits.
-			create Result.make_by_bitmap (l_imp.get_bitmap)
+
+			if l_imp.gdip_bitmap /= Void then
+				l_gdip_bitmap := l_imp.gdip_bitmap
+				Result := l_gdip_bitmap.new_bitmap
+				create l_helper.make_for_help
+				-- Windows store the bitmap from bottom to up, so we have to mirror it.
+				l_helper.mirror_image (Result)
+				should_destroy_bitmap := True
+			else
+				-- User not have GDI+
+				-- It only works in 32bits
+				l_pixmap ?= l_imp.pixmap.implementation
+				check not_void: l_pixmap /= Void end
+				create Result.make_by_bitmap (l_pixmap.get_bitmap)
+				should_destroy_bitmap := False
+			end
+
 		ensure
 			exists: Result /= Void and then Result.exists
 		end
+
+	should_destroy_bitmap: BOOLEAN
+			-- If we load rgba_dib from EV_PIXMAP we should not destroy WEL_BITMAP
+			-- If we load rgba_dib from EV_PIXEL_BUFFER we should destroy WEL_BITMAP
 
 	update_layered_window_rgba (a_alpha: INTEGER) is
 			-- Call `c_updatelayerwindow' with `a_alpha'.
@@ -143,10 +174,10 @@ feature {NONE} -- Implementation
 			create l_point.make (x, y)
 
 			-- Prepare source DC
-			create l_size.make (pixmap.width, pixmap.height)
+			create l_size.make (pixel_buffer.width, pixel_buffer.height)
 
 			create l_dc_src.make_by_dc (l_dc)
-			l_dc_src.select_bitmap (rgba_dib)
+			l_dc_src.select_bitmap (wel_bitmap)
 			check l_dc_src.exists end
 
 			create l_point_src.make (0, 0)
@@ -210,6 +241,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	dispose is
+			-- Redefine
+		do
+			Precursor {SD_DIALOG}
+			if should_destroy_bitmap then
+				wel_bitmap.delete
+			end
+		end
+
+	wel_bitmap: WEL_BITMAP
+			-- Wel bitmap.
+
 	timer: EV_TIMEOUT
 			-- Timer to show gradient effect.	
 
@@ -222,7 +265,7 @@ feature {NONE} -- Implementation
 	alpha_step: INTEGER is 50
 			-- Used by `timer', `alpha' increase step.
 
-	pixmap: EV_PIXMAP
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixmap to show.
 
 feature {NONE} -- Externals

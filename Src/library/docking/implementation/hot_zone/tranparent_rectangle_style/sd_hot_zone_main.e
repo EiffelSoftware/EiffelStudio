@@ -161,24 +161,24 @@ feature  -- Redefine
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) or internal_shared.show_all_feedback_indicator then
 				if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					top_indicator.set_pixmap (internal_shared.icons.arrow_indicator_up_lightening)
+					top_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_up_lightening)
 				else
-					top_indicator.set_pixmap (internal_shared.icons.arrow_indicator_up)
+					top_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_up)
 				end
 				if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					bottom_indicator.set_pixmap (internal_shared.icons.arrow_indicator_down_lightening)
+					bottom_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_down_lightening)
 				else
-					bottom_indicator.set_pixmap (internal_shared.icons.arrow_indicator_down)
+					bottom_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_down)
 				end
 				if left_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					left_indicator.set_pixmap (internal_shared.icons.arrow_indicator_left_lightening)
+					left_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_left_lightening)
 				else
-					left_indicator.set_pixmap (internal_shared.icons.arrow_indicator_left)
+					left_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_left)
 				end
 				if right_rectangle.has_x_y (a_screen_x, a_screen_y) then
-					right_indicator.set_pixmap (internal_shared.icons.arrow_indicator_right_lightening)
+					right_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_right_lightening)
 				else
-					right_indicator.set_pixmap (internal_shared.icons.arrow_indicator_right)
+					right_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_right)
 				end
 			end
 		ensure then

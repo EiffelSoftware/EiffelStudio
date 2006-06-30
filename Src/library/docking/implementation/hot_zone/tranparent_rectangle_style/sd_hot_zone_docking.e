@@ -175,17 +175,17 @@ feature {NONE} -- Implementation functions.
 			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
 			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_up)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_up)
 			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_down)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_down)
 			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_left)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_left)
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_right)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_right)
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center_lightening_center)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_center)
 			else
-				internal_indicator.set_pixmap (internal_shared.icons.arrow_indicator_center)
+				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center)
 			end
 		end
 

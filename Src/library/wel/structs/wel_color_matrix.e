@@ -16,16 +16,10 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method
 		do
-			create item.make (structure_size)
+			create internal_item.make (structure_size)
 		end
 
-feature -- Attributes
-
-	structure_size: INTEGER is
-			-- Structure size.
-		do
-			Result := c_size_of_color_matrix
-		end
+feature -- Commands
 
 	set_m (a_value: REAL; a_x, a_y: INTEGER) is
 			-- Set `m'
@@ -33,29 +27,7 @@ feature -- Attributes
 			valid: 0 <= a_x and a_x <= 4
 			valid: 0 <= a_y and a_y <= 4
 		do
-			c_set_m (item.item, a_x, a_y, a_value)
-		end
-
-	m alias "[]" (a_x, a_y: INTEGER): REAL assign set_m is
-			-- 5Ã-5 array of real numbers.
-		require
-			valid: 0 <= a_x and a_x <= 4
-			valid: 0 <= a_y and a_y <= 4
-		do
-			Result := c_m (item.item, a_x, a_y)
-		end
-
-	m_row (a_x: INTEGER): ARRAY [REAL] assign set_m_row is
-			-- Row at `a_x'
-		require
-			valid: 0 <= a_x and a_x <= 4
-		do
-			create Result.make (0, 4)
-			Result [0] := m (a_x, 0)
-			Result [1] := m (a_x, 1)
-			Result [2] := m (a_x, 2)
-			Result [3] := m (a_x, 3)
-			Result [4] := m (a_x, 4)
+			c_set_m (item, a_x, a_y, a_value)
 		end
 
 	set_m_row (a_value: ARRAY [REAL]; a_x: INTEGER) is
@@ -71,8 +43,46 @@ feature -- Attributes
 			set_m (a_value [a_value.lower + 4], a_x, 4)
 		end
 
-	item: MANAGED_POINTER;
-			-- Implementation item		
+feature -- Query
+
+	structure_size: INTEGER is
+			-- Structure size.
+		do
+			Result := c_size_of_color_matrix
+		end
+
+	m alias "[]" (a_x, a_y: INTEGER): REAL assign set_m is
+			-- 5Ã-5 array of real numbers.
+		require
+			valid: 0 <= a_x and a_x <= 4
+			valid: 0 <= a_y and a_y <= 4
+		do
+			Result := c_m (item, a_x, a_y)
+		end
+
+	m_row (a_x: INTEGER): ARRAY [REAL] assign set_m_row is
+			-- Row at `a_x'
+		require
+			valid: 0 <= a_x and a_x <= 4
+		do
+			create Result.make (0, 4)
+			Result [0] := m (a_x, 0)
+			Result [1] := m (a_x, 1)
+			Result [2] := m (a_x, 2)
+			Result [3] := m (a_x, 3)
+			Result [4] := m (a_x, 4)
+		end
+
+	item: POINTER is
+			-- Pointer to Current C struct
+		do
+			Result := internal_item.item
+		end
+
+feature {NONE} -- Implementation
+
+	internal_item: MANAGED_POINTER;
+			-- Implementation item
 
 feature {NONE} -- Externals
 

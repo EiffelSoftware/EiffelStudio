@@ -2027,6 +2027,30 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 7))
 		end
+
+	frozen general_move_up_icon: EV_PIXMAP is
+			-- Access to 'move up' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (31, 7))
+		end
+
+	frozen general_move_up_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'move up' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 7))
+		end
+
+	frozen general_move_down_icon: EV_PIXMAP is
+			-- Access to 'move down' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (32, 7))
+		end
+
+	frozen general_move_down_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'move down' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (32, 7))
+		end
 	frozen sort_descending_icon: EV_PIXMAP is
 			-- Access to 'descending' pixmap.
 		once

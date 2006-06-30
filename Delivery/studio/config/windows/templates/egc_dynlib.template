@@ -32,7 +32,9 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 				char *argv[] = {"",""}; 
 				
 				eif_alloc_init();
+#ifdef EIF_THREADS
 				eif_thr_init_root ();
+#endif
 				{
 					GTCX;
 					egc_init_plug(); 

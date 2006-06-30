@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			end
 
 			if has_error and not is_initializing then
-				disable_sensitive
+				sensitive_container.disable_sensitive
 			end
 		end
 

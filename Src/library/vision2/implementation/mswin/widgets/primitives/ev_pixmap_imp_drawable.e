@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	read_from_named_file (file_name: STRING) is
+	read_from_named_file (file_name: STRING_GENERAL) is
 			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",

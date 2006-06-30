@@ -391,15 +391,18 @@ feature {NONE} -- Implementation
 			-- Compute or retrieve the ast. The result will be available in ast and match_list.
 		require
 			text_managed: text_managed
-			class_compiled_or_parsing: not class_i.is_compiled implies is_parsing
+			class_compiled_or_parsing: class_i.compiled_representation = Void implies is_parsing
+		local
+			l_compiled: CLASS_C
 		do
 				-- only when necessary
 			if ast = Void then
-				if is_parsing and then not class_i.compiled then
+				l_compiled := class_i.compiled_representation
+				if is_parsing and then l_compiled = Void then
 					recompute_ast
 				else
-					ast := class_i.compiled_class.ast
-					match_list := match_list_server.item (class_i.compiled_class.class_id)
+					ast := l_compiled.ast
+					match_list := match_list_server.item (l_compiled.class_id)
 				end
 			end
 		ensure

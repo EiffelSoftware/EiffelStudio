@@ -1265,6 +1265,30 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (25, 5))
 		end
+
+	frozen tool_threads_icon: EV_PIXMAP is
+			-- Access to 'threads' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (26, 5))
+		end
+
+	frozen tool_threads_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'threads' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 5))
+		end
+
+	frozen tool_find_results_icon: EV_PIXMAP is
+			-- Access to 'find results' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (27, 5))
+		end
+
+	frozen tool_find_results_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'find results' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 5))
+		end
 	frozen project_melt_icon: EV_PIXMAP is
 			-- Access to 'melt' pixmap.
 		once

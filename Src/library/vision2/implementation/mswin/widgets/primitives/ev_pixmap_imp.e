@@ -106,7 +106,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	read_from_named_file (file_name: STRING) is
+	read_from_named_file (file_name: STRING_GENERAL) is
 			-- Load the pixmap described in 'file_name'. 
 			-- Exceptions "No such file or directory",
 			--            "Unable to retrieve icon information",
@@ -114,13 +114,13 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 		local
 			pixmap_file: RAW_FILE
 		do
-			create pixmap_file.make_open_read (file_name)
+			pixmap_filename := file_name.as_string_8.twin
+			create pixmap_file.make_open_read (pixmap_filename)
 			pixmap_file.close
 
 			reset_bitmap_content
 			reset_resource_content
 
-			pixmap_filename := file_name.twin
 			update_needed := True
 		end
 

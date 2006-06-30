@@ -21,12 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
-			-- Create check for class name `a_name'.
+	make (a_group: CONF_GROUP; a_name: STRING) is
+			-- Create check for class name `a_name' in the context of `a_group'.
 		require
-			a_name_not_void: a_name /= void
+			a_group_not_void: a_group /= Void
+			a_name_not_void: a_name /= Void
 		do
 			new_name := a_name
+			group := a_group
 			error_message := "There is already a class with the same name."
 		end
 
@@ -35,13 +37,16 @@ feature -- Basic operation
 	execute is
             -- Execute a check.
         do
-			success := universe.classes_with_name (new_name).count = 0
+        	success := universe.safe_class_named (new_name, group) = Void
         end
 
 feature {NONE} -- Implementation
 
-	new_name: STRING;
+	new_name: STRING
 			-- The name to check.
+
+	group: CONF_GROUP;
+			-- The context to check.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

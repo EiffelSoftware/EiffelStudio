@@ -198,6 +198,17 @@ feature {NONE} -- Implementation of data retrieval
 			end
 			if l_lib /= Void then
 				current_target.add_library (l_lib)
+					-- create a dummy cluster to get the cluster options and set the ones that make sense on the library
+				current_cluster := factory.new_cluster ("dummy", factory.new_location_from_path (".", current_target), current_target)
+				process_cluster_properties (a_cluster.cluster_properties)
+
+					-- take visible clause
+				l_lib.set_visible (current_cluster.visible)
+
+					-- take options
+				l_lib.set_options (current_cluster.internal_options)
+
+				current_cluster := Void
 			elseif
 				a_cluster.directory_name.has_substring ("library.net") or
 				(l_parent /= Void and then (l_parent.is_equal ("base") or l_parent.is_equal ("wel") or

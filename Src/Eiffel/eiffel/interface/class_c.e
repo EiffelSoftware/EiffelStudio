@@ -1502,7 +1502,7 @@ feature -- Propagation
 			until
 				l_syntactical_clients.after
 			loop
-				class_i := l_syntactical_clients.item.lace_class
+				class_i := l_syntactical_clients.item.original_class
 				debug ("REMOVE_CLASS")
 					io.error.put_string ("Propagation to client: ")
 					io.error.put_string (class_i.name)
@@ -2084,7 +2084,7 @@ feature {CLASS_C} -- Incrementality
 				class_filters_cursor := class_filters.cursor
 					-- Instantiation of the filter with `data'
 				filter := class_filters.item.anchor_instantiation_in (new_class_type)
-				if filter.base_class.lace_class /= system.native_array_class implies not filter.has_formal then
+				if filter.base_class.original_class /= system.native_array_class implies not filter.has_formal then
 debug ("GENERICITY")
 	io.error.put_string ("Propagation of ")
 	filter.trace
@@ -2173,7 +2173,7 @@ feature -- Validity class
 		local
 			l_feature: FEATURE_I
 		do
-			if System.any_class = lace_class then
+			if System.any_class = original_class then
 					-- We are checking ANY.
 				l_feature := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
 				if

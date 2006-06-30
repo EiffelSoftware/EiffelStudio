@@ -436,6 +436,7 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			-- Instance of a class to remcompile
 		require
 			name_exists: name /= Void
+			not_override: not config_class.does_override
 		local
 			local_system: SYSTEM_I
 		do

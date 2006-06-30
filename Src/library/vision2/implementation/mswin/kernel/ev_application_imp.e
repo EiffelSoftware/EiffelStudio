@@ -187,7 +187,7 @@ feature -- Basic operation
 			-- Try to see if we can lock, False means no lock could be attained
 		do
 			if idle_action_mutex /= Void then
-				Result := idle_action_mutex.trylock
+				Result := idle_action_mutex.try_lock
 			else
 					-- Return true if mono-threaded.
 				Result := True

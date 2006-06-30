@@ -62,7 +62,9 @@ feature {NONE} -- Initialization
 		local
 			l_result: BOOLEAN
 		do
-			create idle_action_mutex
+			if {PLATFORM}.is_thread_capable then
+				create idle_action_mutex.make
+			end
 			base_make (an_interface)
 			set_application (Current)
 			create_dispatcher
@@ -176,13 +178,15 @@ feature -- Basic operation
 	lock is
 			-- Lock the Mutex.
 		do
-			idle_action_mutex.lock
+			if idle_action_mutex /= Void then
+				idle_action_mutex.lock
+			end
 		end
 
 	try_lock: BOOLEAN is
 			-- Try to see if we can lock, False means no lock could be attained
 		do
-			if {PLATFORM}.is_thread_capable then
+			if idle_action_mutex /= Void then
 				Result := idle_action_mutex.trylock
 			else
 					-- Return true if mono-threaded.
@@ -193,7 +197,9 @@ feature -- Basic operation
 	unlock is
 			-- Unlock the Mutex.
 		do
-			idle_action_mutex.unlock
+			if idle_action_mutex /= Void then
+				idle_action_mutex.unlock
+			end
 		end
 
 feature {NONE} -- Thread implementation
@@ -739,6 +745,9 @@ feature {NONE} -- Externals
 		alias
 			"IsAppThemed"
 		end
+
+invariant
+	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

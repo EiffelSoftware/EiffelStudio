@@ -7,11 +7,9 @@
 				<Directory Id="examples" Name="examples">
 					<Directory Id="Eiffel2Java7" Name="EIFFEL~2" LongName="Eiffel2Java">
 						<Component Id="Eiffel2Java7" Guid="F773D936-6807-412B-BF82-B50280516FC4">
-							<File Id="Ace.unix.ace88" Name="ACEUNI~5.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
 							<File Id="test.java" Name="TEST~1.JAV" LongName="test.java" />
-							<File Id="Ace.mswin.ace89" Name="ACEMSW~5.ACE" LongName="Ace.mswin.ace" />
 							<File Id="root_class.e90" Name="ROOT_C~6.E" LongName="root_class.e" />
-							<File Id="Ace.dotnet.ace" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<File Id="sample_ecf" Name="sample.ecf" />
 							<File Id="test.class" Name="TEST~1.CLA" LongName="test.class" />
 						</Component>
 					</Directory>
@@ -20,8 +18,7 @@
 							<File Id="eiffel_scan.e" Name="EIFFEL~1.E" LongName="eiffel_scan.e" KeyPath="yes" />
 							<File Id="sample_file.e" Name="SAMPLE~1.E" LongName="sample_file.e" />
 							<File Id="eiffel_regular" Name="EIFFEL~1" LongName="eiffel_regular" />
-							<File Id="Ace.ace91" Name="Ace.ace" />
-							<File Id="Ace.dotnet.ace7" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<File Id="eiffel_scan_ecf" Name="EIFFEL~1.ECF" LongName="eiffel_scan.ecf" />
 							<File Id="Readme92" Name="Readme" />
 						</Component>
 					</Directory>
@@ -38,17 +35,15 @@
 							<Directory Id="client17" Name="client">
 								<Component Id="client17" Guid="D73F3510-44A0-49F2-BDD4-3EE47001798C">
 									<File Id="client.e102" Name="client.e" KeyPath="yes" />
-									<File Id="Ace.unix.ace103" Name="ACEUNI~8.ACE" LongName="Ace.unix.ace" />
 									<File Id="client_datagram_writer.e" Name="CLIENT~1.E" LongName="client_datagram_writer.e" />
-									<File Id="Ace.mswin.ace117" Name="ACEMSW~B.ACE" LongName="Ace.mswin.ace" />
+									<File Id="polling_client_ecf" Name="POLLIN~1.ECF" LongName="polling_client.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="server19" Name="server">
 								<Component Id="server19" Guid="A3848C87-6CF6-43F0-861E-5523AA4ED971">
 									<File Id="server.e105" Name="server.e" KeyPath="yes" />
 									<File Id="server_datagram_writer.e" Name="SERVER~1.E" LongName="server_datagram_writer.e" />
-									<File Id="Ace.mswin.ace116" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
-									<File Id="Ace.unix.ace119" Name="ACEUNI~F.ACE" LongName="Ace.unix.ace" />
+									<File Id="polling_server_ecf" Name="POLLIN~1.ECF" LongName="polling_server.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -62,13 +57,13 @@
 							<Directory Id="chat" Name="chat">
 								<Component Id="chat" Guid="AB0BE89D-B3FE-4AA3-951D-19E1670B9B61">
 									<File Id="chat.e" Name="chat.e" KeyPath="yes" />
-									<File Id="Ace.unix.ace111" Name="ACEUNI~B.ACE" LongName="Ace.unix.ace" />
+									<File Id="chat_ecf" Name="chat.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="join" Name="join">
 								<Component Id="join" Guid="829C418D-A38B-4985-AA59-BF0AB8FD841D">
 									<File Id="join.e" Name="join.e" KeyPath="yes" />
-									<File Id="Ace.unix.ace110" Name="ACEUNI~A.ACE" LongName="Ace.unix.ace" />
+									<File Id="join_ecf" Name="join.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -76,15 +71,13 @@
 							<Directory Id="client12" Name="client">
 								<Component Id="client12" Guid="0FF7BE68-7C3A-4608-9949-0BA577E12D1E">
 									<File Id="client.e95" Name="client.e" KeyPath="yes" />
-									<File Id="Ace.mswin.ace106" Name="ACEMSW~9.ACE" LongName="Ace.mswin.ace" />
-									<File Id="Ace.unix.ace118" Name="ACEUNI~E.ACE" LongName="Ace.unix.ace" />
+									<File Id="our_client_ecf" Name="OUR_CL~1.ECF" LongName="our_client.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="server" Name="server">
 								<Component Id="server" Guid="DC41B6C3-D0F4-4044-94C1-EB8D5D64FA16">
 									<File Id="server.e96" Name="server.e" KeyPath="yes" />
-									<File Id="Ace.mswin.ace99" Name="ACEMSW~7.ACE" LongName="Ace.mswin.ace" />
-									<File Id="Ace.unix.ace107" Name="ACEUNI~9.ACE" LongName="Ace.unix.ace" />
+									<File Id="our_server_ecf" Name="OUR_SE~1.ECF" LongName="our_server.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="common18" Name="common">
@@ -97,8 +90,7 @@
 							<Directory Id="smtp" Name="smtp">
 								<Component Id="smtp" Guid="1A00FA14-D481-4137-9944-13E00FE5AE44">
 									<File Id="smtp_client.e" Name="SMTP_C~1.E" LongName="smtp_client.e" KeyPath="yes" />
-									<File Id="Ace.mswin.ace7" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
-									<File Id="Ace.unix.ace8" Name="ACEUNI~A.ACE" LongName="Ace.unix.ace" />
+									<File Id="smtp_client_ecf" Name="SMTP_C~1.ECF" LongName="smtp_client.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -110,24 +102,22 @@
 							</Directory>
 							<Directory Id="server14" Name="server">
 								<Component Id="server14" Guid="0E337867-779A-4DA2-9F4F-9DCC70B98998">
-									<File Id="Ace.unix.ace97" Name="ACEUNI~7.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
-									<File Id="Ace.mswin.ace98" Name="ACEMSW~6.ACE" LongName="Ace.mswin.ace" />
 									<File Id="server.e115" Name="server.e" />
+									<File Id="our_server_ecf2" Name="OUR_SE~1.ECF" LongName="our_server.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="client16" Name="client">
 								<Component Id="client16" Guid="DA0B0FEB-A98C-47DB-BE37-4997766D1E28">
 									<File Id="client.e113" Name="client.e" KeyPath="yes" />
-									<File Id="Ace.unix.ace114" Name="ACEUNI~D.ACE" LongName="Ace.unix.ace" />
-									<File Id="Ace.mswin.ace87" Name="ACEMSW~A.ACE" LongName="Ace.mswin.ace" />
+									<File Id="our_client_ecf2" Name="OUR_CL~1.ECF" LongName="our_client.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
 						<Directory Id="same_mach" Name="SAME_M~1" LongName="same_mach">
 							<Directory Id="client" Name="client">
 								<Component Id="client" Guid="ED91F1BE-297B-4E91-AB76-E75786929A3B">
-									<File Id="Ace.unix.ace93" Name="ACEUNI~6.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
 									<File Id="client.e109" Name="client.e" />
+									<File Id="our_client_ecf3" Name="OUR_CL~1.ECF" LongName="our_client.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="common15" Name="common">
@@ -137,8 +127,8 @@
 							</Directory>
 							<Directory Id="server20" Name="server">
 								<Component Id="server20" Guid="0CF8474E-4F8F-4AE5-AC40-050BD888C01A">
-									<File Id="Ace.unix.ace112" Name="ACEUNI~C.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
 									<File Id="server.e85" Name="server.e" />
+									<File Id="our_server_ecf3" Name="OUR_SE~1.ECF" LongName="our_server.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -155,8 +145,7 @@
 							<File Id="nested.e" Name="nested.e" />
 							<File Id="variables.e" Name="VARIAB~1.E" LongName="variables.e" />
 							<File Id="process.e" Name="process.e" />
-							<File Id="Ace.ace120" Name="Ace.ace" />
-							<File Id="Ace.dotnet.ace8" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<File Id="process_ecf2" Name="process.ecf" />
 							<File Id="var.e" Name="var.e" />
 							<File Id="polynom_info.e" Name="POLYNO~1.E" LongName="polynom_info.e" />
 							<File Id="line.e" Name="line.e" />
@@ -182,9 +171,7 @@
 							<File Id="graphics_png" Name="graphics.png" />
 							<File Id="interface_names_e" LongName="interface_names.e" Name="INTERF~1.E" />
 							<File Id="main_window_e" LongName="main_window.e" Name="MAIN_W~1.E" />
-							<File Id="ace_unix_ace" Name="ACEUNI~1.ACE" LongName="ace.unix.ace" />
-							<File Id="ace_windows_ace" Name="ACEWIN~1.ACE" LongName="ace.windows.ace" />
-							<File Id="ace_windows_xml_ace" Name="ACEWIN~2.ACE" LongName="ace.windows.xml.ace" />
+							<File Id="preferences_example_ecf" Name="PREFER~1.ECF" LongName="preferences_example.ecf" />
 						</Component>
 					</Directory>
 					<Directory Id="store26" Name="store">
@@ -403,10 +390,8 @@
 					<Directory Id="base1" Name="base">
 						<Directory Id="support2" Name="support">
 							<Component Id="support2" Guid="5259A871-BC09-40D4-90E6-557DAE5A1DCE">
-								<File Id="Ace.mswin.ace" Name="ACEMSW~1.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace6" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="demo_driver_ecf" Name="DEMO_D~1.ECF" LongName="demo_driver.ecf" />
 								<File Id="formatting.e" Name="FORMAT~3.E" LongName="formatting.e" />
-								<File Id="Ace.unix.ace" Name="ACEUNI~1.ACE" LongName="Ace.unix.ace" />
 								<File Id="demo_driver.e" Name="DEMO_D~1.E" LongName="demo_driver.e" />
 								<File Id="countables.e" Name="COUNTA~3.E" LongName="countables.e" />
 							</Component>
@@ -416,8 +401,7 @@
 								<File Id="testdesc.lib" Name="testdesc.lib" KeyPath="yes" />
 								<File Id="readme.txt" Name="readme.txt" />
 								<File Id="makefile.m41" Name="makefile.m" />
-								<File Id="Ace.ace42" Name="Ace.ace" />
-								<File Id="Ace.dotnet.ace4" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="test_ecf" Name="test.ecf" />
 								<File Id="testdesc.c" Name="testdesc.c" />
 								<File Id="test.e" Name="test.e" />
 								<File Id="test.rc" Name="test.rc" />
@@ -431,7 +415,7 @@
 						<Directory Id="structures3" Name="STRUCT~2" LongName="structures">
 							<Component Id="structures3" Guid="BCCC07C6-7211-4C81-A00B-BEA9C619410B">
 								<File Id="mbsts.e" Name="mbsts.e" KeyPath="yes" />
-								<File Id="Ace.mswin.ace43" Name="ACEMSW~2.ACE" LongName="Ace.mswin.ace" />
+								<File Id="structures_ecf" Name="STRUCT~1.ECF" LongName="structures.ecf" />
 								<File Id="two_way_tree_demo.e" Name="TWO_WA~8.E" LongName="two_way_tree_demo.e" />
 								<File Id="Readme45" Name="Readme" />
 								<File Id="binary_tree_demo.e" Name="BINARY~4.E" LongName="binary_tree_demo.e" />
@@ -446,8 +430,6 @@
 								<File Id="set_demo.e" Name="set_demo.e" />
 								<File Id="priority_queue_demo.e" Name="PRIORI~2.E" LongName="priority_queue_demo.e" />
 								<File Id="mls.e" Name="mls.e" />
-								<File Id="Ace.unix.ace49" Name="ACEUNI~3.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace5" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="calculator" Name="CALCUL~1" LongName="calculator">
@@ -455,7 +437,7 @@
 								<File Id="interface.e" Name="INTERF~1.E" LongName="interface.e" KeyPath="yes" />
 								<File Id="quit.e" Name="quit.e" />
 								<File Id="divide.e" Name="divide.e" />
-								<File Id="Ace.mswin.ace44" Name="ACEMSW~3.ACE" LongName="Ace.mswin.ace" />
+								<File Id="calculator_ecf" Name="CALCUL~1.ECF" LongName="calculator.ecf" />
 								<File Id="minus.e" Name="minus.e" />
 								<File Id="help.e" Name="help.e" />
 								<File Id="empty.e" Name="empty.e" />
@@ -463,8 +445,6 @@
 								<File Id="set_up.e" Name="set_up.e" />
 								<File Id="question.e" Name="question.e" />
 								<File Id="calculator.e" Name="CALCUL~1.E" LongName="calculator.e" />
-								<File Id="Ace.unix.ace48" Name="ACEUNI~2.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace13" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="multiply.e" Name="multiply.e" />
 								<File Id="Readme50" Name="Readme" />
 								<File Id="plus.e" Name="plus.e" />
@@ -478,7 +458,7 @@
 									<File Id="root_class.e56" Name="ROOT_C~2.E" LongName="root_class.e" KeyPath="yes" />
 									<File Id="Makefile.SH57" Name="Makefile.SH" />
 									<File Id="my_array.e" Name="my_array.e" />
-									<File Id="Ace.ace73" Name="Ace.ace" />
+									<File Id="cecil.ecf1" Name="cecil.ecf" />
 									<File Id="Makefile.msc78" Name="Makefile.msc" />
 									<File Id="main.c79" Name="main.c" />
 									<File Id="Makefile.bcb85" Name="Makefile.bcb" />
@@ -487,7 +467,7 @@
 							<Directory Id="string6" Name="string">
 								<Component Id="string6" Guid="6EF7BB5E-9ADE-406E-970D-C43103484E0E">
 									<File Id="main.c59" Name="main.c" KeyPath="yes" />
-									<File Id="Ace.ace63" Name="Ace.ace" />
+									<File Id="cecil.ecf2" Name="cecil.ecf" />
 									<File Id="Makefile.msc68" Name="Makefile.msc" />
 									<File Id="Makefile.SH69" Name="Makefile.SH" />
 									<File Id="Makefile.bcb76" Name="Makefile.bcb" />
@@ -552,7 +532,7 @@
 						<Directory Id="ceciltest" Name="CECIL-~1" LongName="cecil-test">
 							<Component Id="ceciltest" Guid="148F570E-5E5C-42A8-ADB5-82CC74D63943">
 								<File Id="Makefile.msc" Name="Makefile.msc" KeyPath="yes" />
-								<File Id="Ace.ace53" Name="Ace.ace" />
+								<File Id="cecil.ecf6" Name="cecil.ecf" />
 								<File Id="Makefile.bcb" Name="Makefile.bcb" />
 								<File Id="main.c75" Name="main.c" />
 								<File Id="main.e" Name="main.e" />
@@ -563,13 +543,12 @@
 					<Directory Id="cpp" Name="cpp">
 						<Directory Id="mystring" Name="mystring">
 							<Component Id="mystring" Guid="785F9014-3017-41A9-9AF6-0540BD130357">
-								<File Id="Ace.mswin.ace86" Name="ACEMSW~4.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+								<File Id="test_cpp.ecf" Name="test_cpp.ecf" />
 								<File Id="test_cpp.ico" Name="test_cpp.ico" />
 								<File Id="test_cpp.rc" Name="test_cpp.rc" />
 								<File Id="mystring.cpp" Name="mystring.cpp" />
 								<File Id="mystring.e" Name="mystring.e" />
 								<File Id="mystring.h" Name="mystring.h" />
-								<File Id="Ace.unix.ace87" Name="ACEUNI~4.ACE" LongName="Ace.unix.ace" />
 								<File Id="test_cpp.e" Name="test_cpp.e" />
 							</Component>
 						</Directory>
@@ -579,18 +558,14 @@
 							<Component Id="tour" Guid="B25021FD-E2D8-4B3B-BBC9-F221A5D36222">
 								<File Id="invalid.e" Name="invalid.e" KeyPath="yes" />
 								<File Id="parent.e" Name="parent.e" />
-								<File Id="Ace.mswin.ace210" Name="ACEMSW~C.ACE" LongName="Ace.mswin.ace" />
-								<File Id="Ace.unix.ace215" Name="ACEUNI~I.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace11" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="simple_ecf" Name="simple.ecf" />
 								<File Id="testroot.e" Name="testroot.e" />
 								<File Id="heir.e" Name="heir.e" />
 							</Component>
 						</Directory>
 						<Directory Id="objtour" Name="objtour">
 							<Component Id="objtour" Guid="597E8F61-469E-4F9D-BB51-07327D3E5CBF">
-								<File Id="Ace.unix.ace209" Name="ACEUNI~G.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
-								<File Id="Ace.mswin.ace214" Name="ACEMSW~E.ACE" LongName="Ace.mswin.ace" />
-								<File Id="Ace.dotnet.ace10" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="simple_ecf2" Name="simple.ecf" />
 								<File Id="other.e" Name="other.e" />
 								<File Id="starter.e" Name="starter.e" />
 							</Component>
@@ -599,9 +574,7 @@
 							<Component Id="debuggin" Guid="FFB682BD-8D22-4FBC-A7FB-919C0E3E6DD2">
 								<File Id="example.e" Name="example.e" KeyPath="yes" />
 								<File Id="object.e211" Name="object.e" />
-								<File Id="Ace.mswin.ace212" Name="ACEMSW~D.ACE" LongName="Ace.mswin.ace" />
-								<File Id="Ace.unix.ace213" Name="ACEUNI~H.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace9" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="simple_ecf3" Name="simple.ecf" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -622,8 +595,7 @@
 								<File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
 								<File Id="ovaldemo_win.e" Name="OVALDE~2.E" LongName="ovaldemo_win.e" />
 								<File Id="ovaldemo_cmd.e" Name="OVALDE~1.E" LongName="ovaldemo_cmd.e" />
-								<File Id="ace.dotnet.ace2" Name="ACEDOT~4.ACE" LongName="ace.dotnet.ace" />
-								<File Id="ace.mswin.ace2" Name="ACEMSW~A.ACE" LongName="ace.mswin.ace" />
+								<File Id="fancy_ecf" Name="fancy.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="race" Name="race">
@@ -631,8 +603,7 @@
 								<File Id="race.e" Name="race.e" KeyPath="yes" />
 								<File Id="Readme216" Name="Readme" />
 								<File Id="runner.e218" Name="runner.e" />
-								<File Id="Ace.ace219" Name="Ace.ace" />
-								<File Id="Ace.dotnet.ace1" Name="ACEDOT~2.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="race_ecf" Name="race.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="producer_consumer" Name="PRODUC~1" LongName="producer_consumer">
@@ -640,10 +611,9 @@
 								<File Id="producer.e" Name="producer.e" KeyPath="yes" />
 								<File Id="Readme217" Name="Readme" />
 								<File Id="pc.e" Name="pc.e" />
-								<File Id="Ace.ace220" Name="Ace.ace" />
+								<File Id="pc_ecf" Name="pc.ecf" />
 								<File Id="consumer.e" Name="consumer.e" />
 								<File Id="pc_buffer.e" Name="PC_BUF~1.E" LongName="pc_buffer.e" />
-								<File Id="Ace.dotnet.ace3" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -667,7 +637,7 @@
 					<Directory Id="web1" Name="web">
 						<Directory Id="basic" Name="basic">
 							<Component Id="basic" Guid="C3E651AB-CDD6-43FA-8300-B8F0E1EAAA2D">
-								<File Id="Ace.ace221" Name="Ace.ace" KeyPath="yes" />
+								<File Id="web_ecf2" Name="web.ecf" />
 								<File Id="sample.e222" Name="sample.e" />
 								<File Id="sample.html" Name="SAMPLE~1.HTM" LongName="sample.html" />
 							</Component>

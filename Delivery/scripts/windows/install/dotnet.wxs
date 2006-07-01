@@ -59,46 +59,41 @@
 									<File Id="interface_names.e" Name="INTERF~1.E" LongName="interface_names.e" />
 									<File Id="main_window.e" Name="MAIN_W~1.E" LongName="main_window.e" />
 									<File Id="application.e18" Name="APPLIC~2.E" LongName="application.e" />
-									<File Id="ace.ace5" Name="ace.ace" />
+									<File Id="data_grid_ecf" Name="DATA_G~1.ECF" LongName="data_grid.ecf" />
 								</Component>
 							</Directory>
-						</Directory>
-						<Directory Id="calculator" Name="CALCUL~1" LongName="calculator">
-							<Component Id="ace.ace16" Guid="E78A7B5C-EF9F-4F02-8A3F-2B0A151D96D0">
-								<File Id="ace.ace21" Name="ace.ace" />
-							</Component>
 						</Directory>
 						<Directory Id="winforms" Name="winforms">
 							<Directory Id="hello_world_dlg" Name="HELLO_~1" LongName="hello_world_dlg">
 								<Component Id="hello_world.e" Guid="DF2C1E70-8FA1-44BC-8E74-97D9F3D4D8C3">
 									<File Id="hello_world.e" Name="HELLO_~1.E" LongName="hello_world.e" KeyPath="yes" />
-									<File Id="ace.ace18" Name="ace.ace" />
+									<File Id="hellow_world_ecf" Name="HELLO_~1.ECF" LongName="hello_world.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="mdi" Name="mdi">
-								<Component Id="ace.ace4" Guid="9FEB1761-5E10-4D92-A3FA-8EF545F3A959">
+								<Component Id="mdi" Guid="9FEB1761-5E10-4D92-A3FA-8EF545F3A959">
 									<File Id="document.e" Name="document.e" KeyPath="yes" />
 									<File Id="main_form.e" Name="MAIN_F~1.E" LongName="main_form.e" />
-									<File Id="ace.ace3" Name="ace.ace" />
+									<File Id="mdi_ecf" Name="mdi.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="basic" Name="basic">
 								<Component Id="application.e" Guid="D8555F0F-06C0-41D3-8057-E18E0919DCB6">
 									<File Id="application.e" Name="APPLIC~1.E" LongName="application.e" KeyPath="yes" />
-									<File Id="ace.ace7" Name="ace.ace" />
+									<File Id="app_ecf" Name="app.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="hello_world" Name="HELLO_~2" LongName="hello_world">
-								<Component Id="ace.ace11" Guid="C895AD1E-F365-4F28-85D6-9A9EA6042F8D">
-									<File Id="hello_world.e19" Name="HELLO_~2.E" LongName="hello_world.e" KeyPath="yes" />
-									<File Id="ace.ace12" Name="ace.ace" />
+								<Component Id="hello_world" Guid="C895AD1E-F365-4F28-85D6-9A9EA6042F8D">
+									<File Id="hello_world.e19" Name="HELLO_~1.E" LongName="hello_world.e" KeyPath="yes" />
+									<File Id="hellow_world_ecf2" Name="HELLO_~1.ECF" LongName="hello_world.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="applications" Name="APPLIC~2" LongName="applications">
 								<Directory Id="world_calc" Name="WORLD_~1" LongName="world_calc">
-									<Component Id="ace.ace3" Guid="B801D30C-CB34-4B46-8976-3D2E2FCAD8C1">
+									<Component Id="world_calc" Guid="B801D30C-CB34-4B46-8976-3D2E2FCAD8C1">
 										<File Id="world_calc.e" Name="WORLD_~1.E" LongName="world_calc.e" KeyPath="yes" />
-										<File Id="ace.ace24" Name="ace.ace" />
+										<File Id="world_calc_ecf" Name="WORLD~1.ECF" LongName="world_calc.ecf" />
 									</Component>
 									<Component Id="parserutils.dll" Guid="0ACB9FAA-182D-4400-AB9B-1E1B986373CA">
 										<File Id="parserutils.dll" Name="PARSER~1.DLL" LongName="parserutils.dll" KeyPath="yes" />
@@ -114,15 +109,15 @@
 										<File Id="gdip_text.e" Name="GDIP_T~1.E" LongName="gdip_text.e" KeyPath="yes" />
 										<File Id="marble.jpg" Name="marble.jpg" />
 										<File Id="colorbars.jpg" Name="COLORB~1.JPG" LongName="colorbars.jpg" />
-										<File Id="ace.ace25" Name="ace.ace" />
+										<File Id="text_ecf" Name="text.ecf" />
 									</Component>
 								</Directory>
 							</Directory>
 							<Directory Id="data" Name="data">
 								<Directory Id="grid" Name="grid">
 									<Component Id="data_grid.e9" Guid="53291981-AD7E-48ED-A419-2C294E1C2045">
-										<File Id="data_grid.e9" Name="DATA_G~2.E" LongName="data_grid.e" KeyPath="yes" />
-										<File Id="ace.ace33" Name="ace.ace" />
+										<File Id="data_grid.e9" Name="DATA_G~1.E" LongName="data_grid.e" />
+										<File Id="data_grid_ecf2" Name="DATA_G~1.ECF" LongName="data_grid.ecf" />
 									</Component>
 								</Directory>
 							</Directory>
@@ -136,27 +131,27 @@
 										<File Id="tree_view_ctl.e" Name="TREE_V~1.E" LongName="tree_view_ctl.e" />
 										<File Id="externals.e" Name="EXTERN~1.E" LongName="externals.e" />
 										<File Id="club.bmp" Name="club.bmp" />
-										<File Id="ace.ace11" Name="ace.ace" />
+										<File Id="tree_view_ctl_ecf" Name="TREE_V~1.ECF" LongName="tree_view_ctl.ecf" />
 									</Component>
 								</Directory>
 								<Directory Id="progress_bar_ctl" Name="PROGRE~1" LongName="progress_bar_ctl">
 									<Component Id="progress_bar_ctl.e" Guid="7349841A-A1F9-4B57-86AE-9494DDB0D5BE">
 										<File Id="progress_bar_ctl.e" Name="PROGRE~1.E" LongName="progress_bar_ctl.e" KeyPath="yes" />
-										<File Id="ace.ace26" Name="ace.ace" />
+										<File Id="progress_bar_ctl_ecf" Name="PROGRE~1.ECF" LongName="progress_bar_ctl.ecf" />
 									</Component>
 								</Directory>
 								<Directory Id="date_time_picker_ctl" Name="DATE_T~1" LongName="date_time_picker_ctl">
-									<Component Id="ace.ace2" Guid="DC9FB891-BCFE-4FE0-A61E-C492AA53B8BA">
+									<Component Id="date_time_picker_ctl" Guid="DC9FB891-BCFE-4FE0-A61E-C492AA53B8BA">
 										<File Id="change_color_dlg.e" Name="CHANGE~1.E" LongName="change_color_dlg.e" KeyPath="yes" />
 										<File Id="date_time_picker_ctl.e" Name="DATE_T~1.E" LongName="date_time_picker_ctl.e" />
-										<File Id="ace.ace30" Name="ace.ace" />
+										<File Id="date_time_picker_ctl_ecf" Name="DATE_T~1.ECF" LongName="date_time_picker_ctl.ecf" />
 									</Component>
 								</Directory>
 							</Directory>
 							<Directory Id="menu" Name="menu">
-								<Component Id="ace.ace" Guid="78EC0B07-57AC-4BE1-8CF0-314C9D5034BC">
+								<Component Id="menu" Guid="78EC0B07-57AC-4BE1-8CF0-314C9D5034BC">
 									<File Id="menus.e" Name="menus.e" KeyPath="yes" />
-									<File Id="ace.ace" Name="ace.ace" />
+									<File Id="menu_ecf" Name="menu.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -164,7 +159,7 @@
 							<Directory Id="ado3" Name="ado3">
 								<Component Id="ado.e" Guid="E24AD907-EEA1-4FAC-A04F-152668DD6AEF">
 									<File Id="ado.e" Name="ado.e" KeyPath="yes" />
-									<File Id="ace.ace8" Name="ace.ace" />
+									<File Id="ado_ecf" Name="ado.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -173,19 +168,19 @@
 								<Component Id="resource.e" Guid="00F08824-B699-47B4-AFE7-B6A3E6880C6D">
 									<File Id="resource.e" Name="resource.e" KeyPath="yes" />
 									<File Id="monitor.e" Name="monitor.e" />
-									<File Id="ace.ace20" Name="ace.ace" />
-								</Component>
-							</Directory>
-							<Directory Id="timers" Name="timers">
-								<Component Id="ace.ace1" Guid="7CCE6532-1C6E-4165-B52E-2783A9D014E0">
-									<File Id="timers.e" Name="timers.e" KeyPath="yes" />
-									<File Id="ace.ace34" Name="ace.ace" />
+									<File Id="monitor_ecf" Name="monitor.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="pools" Name="pools">
 								<Component Id="pools.e" Guid="462FAFF1-C46D-4F72-8037-3802F82A1FE6">
 									<File Id="pools.e" Name="pools.e" KeyPath="yes" />
-									<File Id="ace.ace13" Name="ace.ace" />
+									<File Id="pools_ecf" Name="pools.ecf" />
+								</Component>
+							</Directory>
+							<Directory Id="timers" Name="timers">
+								<Component Id="timers" Guid="7CCE6532-1C6E-4165-B52E-2783A9D014E0">
+									<File Id="timers.e" Name="timers.e" KeyPath="yes" />
+									<File Id="timers_ecf" Name="timers.ecf" />
 								</Component>
 							</Directory>
 						</Directory>

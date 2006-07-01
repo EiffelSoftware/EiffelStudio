@@ -6,9 +6,6 @@
 			<Directory Id="Application" Name=".">
 				<Directory Id="examples" Name="examples">
 					<Directory Id="wel53" Name="wel">
-						<Component Id="readme.txt156" Guid="3140E0CC-DD14-4036-9694-1BA4E304576A">
-							<File Id="readme.txt156" Name="readme.txt" KeyPath="yes" />
-						</Component>
 						<Directory Id="xcell" Name="xcell">
 							<Component Id="harts2.bmp" Guid="BFD021A7-585D-4974-8ED6-57FE41068076">
 								<File Id="harts2.bmp" Name="harts2.bmp" KeyPath="yes" />
@@ -17,7 +14,7 @@
 								<File Id="clubs8.bmp" Name="clubs8.bmp" />
 								<File Id="clubs13.bmp" Name="clubs13.bmp" />
 								<File Id="backgr.bmp" Name="backgr.bmp" />
-								<File Id="ace.ace" Name="ace.ace" />
+								<File Id="xcell_ecf" Name="xcell.ecf" />
 								<File Id="harts3.bmp" Name="harts3.bmp" />
 								<File Id="harts11.bmp" Name="harts11.bmp" />
 								<File Id="diamon4.bmp" Name="diamon4.bmp" />
@@ -56,8 +53,6 @@
 								<File Id="game_num.e" Name="game_num.e" />
 								<File Id="end.bmp" Name="end.bmp" />
 								<File Id="column.e" Name="column.e" />
-								<File Id="Ace.dotnet.ace39" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace231" Name="ACE_WI~I.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="spades9.bmp" Name="spades9.bmp" />
 								<File Id="h_harts.bmp" Name="h_harts.bmp" />
 								<File Id="clubs1.bmp" Name="clubs1.bmp" />
@@ -91,11 +86,9 @@
 						<Directory Id="tree_view" Name="TREE_V~1" LongName="tree_view">
 							<Component Id="treeview_demo.rc" Guid="E60B1490-4A75-4A6D-9FC7-F1E2353A2A80">
 								<File Id="treeview_demo.rc" Name="TREEVI~1.RC" LongName="treeview_demo.rc" KeyPath="yes" />
-								<File Id="ace.ace162" Name="ace.ace" />
+								<File Id="treeview_ecf" Name="treeview.ecf" />
 								<File Id="main_win.e173" Name="main_win.e" />
 								<File Id="treeview_demo.ico" Name="TREEVI~1.ICO" LongName="treeview_demo.ico" />
-								<File Id="ace_with_precompiled.ace190" Name="ACE_WI~9.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="Ace.dotnet.ace28" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="treeview_demo.e" Name="TREEVI~1.E" LongName="treeview_demo.e" />
 								<File Id="folder_normal.bmp" Name="FOLDER~1.BMP" LongName="folder_normal.bmp" />
 								<File Id="app_ids.e222" Name="app_ids.e" />
@@ -111,9 +104,7 @@
 								<File Id="timer_demo.rc" Name="TIMER_~1.RC" LongName="timer_demo.rc" />
 								<File Id="app_ids.e191" Name="app_ids.e" />
 								<File Id="main_win.e201" Name="main_win.e" />
-								<File Id="ace.ace223" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace27" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace252" Name="ACE_WI~P.ACE" LongName="ace_with_precompiled.ace" />
+								<File Id="timer_ecf" Name="timer.ecf" />
 								<File Id="timer_demo.ico" Name="TIMER_~1.ICO" LongName="timer_demo.ico" />
 							</Component>
 						</Directory>
@@ -121,10 +112,8 @@
 							<Component Id="file.rtf" Guid="4079D4FE-6FBB-42CB-9EE1-0A3407A3FC14">
 								<File Id="file.rtf" Name="file.rtf" KeyPath="yes" />
 								<File Id="main_win.e163" Name="main_win.e" />
-								<File Id="ace.ace182" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace25" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="richedit_ecf" Name="richedit.ecf" />
 								<File Id="app_ids.e202" Name="app_ids.e" />
-								<File Id="ace_with_precompiled.ace224" Name="ACE_WI~G.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="richedit_demo.ico" Name="RICHED~1.ICO" LongName="richedit_demo.ico" />
 								<File Id="toolbar.bmp244" Name="toolbar.bmp" />
 								<File Id="richedit_demo.e" Name="RICHED~1.E" LongName="richedit_demo.e" />
@@ -142,12 +131,10 @@
 								<File Id="togo.ico" Name="togo.ico" />
 								<File Id="pizza_demo.ico" Name="PIZZA_~1.ICO" LongName="pizza_demo.ico" />
 								<File Id="forhere.ico" Name="forhere.ico" />
-								<File Id="ace.ace236" Name="ace.ace" />
+								<File Id="pizza_ecf" Name="pizza.ecf" />
 								<File Id="pizza_demo.rc" Name="PIZZA_~1.RC" LongName="pizza_demo.rc" />
 								<File Id="thin.ico" Name="thin.ico" />
 								<File Id="pizza.ico" Name="pizza.ico" />
-								<File Id="Ace.dotnet.ace23" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace286" Name="ACE_WI~Y.ACE" LongName="ace_with_precompiled.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="magnify" Name="magnify">
@@ -156,10 +143,8 @@
 								<File Id="magnify_demo.ico" Name="MAGNIF~1.ICO" LongName="magnify_demo.ico" />
 								<File Id="magnify_demo.e" Name="MAGNIF~1.E" LongName="magnify_demo.e" />
 								<File Id="app_ids.e225" Name="app_ids.e" />
-								<File Id="ace_with_precompiled.ace245" Name="ACE_WI~M.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="main_win.e259" Name="main_win.e" />
-								<File Id="ace.ace260" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace19" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="magnify_ecf" Name="magnify.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="list_view" Name="LIST_V~1" LongName="list_view">
@@ -167,9 +152,7 @@
 								<File Id="magenta.ico" Name="magenta.ico" KeyPath="yes" />
 								<File Id="app_ids.e168" Name="app_ids.e" />
 								<File Id="green.ico" Name="green.ico" />
-								<File Id="Ace.dotnet.ace18" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace176" Name="ACE_WI~6.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="ace.ace177" Name="ace.ace" />
+								<File Id="listview_ecf" Name="listview.ecf" />
 								<File Id="listview_demo.rc" Name="LISTVI~1.RC" LongName="listview_demo.rc" />
 								<File Id="listview.e" Name="listview.e" />
 								<File Id="listview_demo.ico" Name="LISTVI~1.ICO" LongName="listview_demo.ico" />
@@ -180,16 +163,14 @@
 							</Component>
 						</Directory>
 						<Directory Id="header_ctrl" Name="HEADER~1" LongName="header_ctrl">
-							<Component Id="ace_with_precompiled.ace157" Guid="6ECF76FC-7E41-4C73-BA68-F63A32628268">
-								<File Id="ace_with_precompiled.ace157" Name="ACE_WI~2.ACE" LongName="ace_with_precompiled.ace" KeyPath="yes" />
+							<Component Id="header_ctrl" Guid="6ECF76FC-7E41-4C73-BA68-F63A32628268">
 								<File Id="header_ctrl_demo.rc" Name="HEADER~1.RC" LongName="header_ctrl_demo.rc" />
 								<File Id="main_win.e195" Name="main_win.e" />
 								<File Id="header_ctrl_demo.e" Name="HEADER~2.E" LongName="header_ctrl_demo.e" />
 								<File Id="app_ids.e206" Name="app_ids.e" />
 								<File Id="header_control.e" Name="HEADER~1.E" LongName="header_control.e" />
 								<File Id="header_ctrl_demo.ico" Name="HEADER~1.ICO" LongName="header_ctrl_demo.ico" />
-								<File Id="Ace.dotnet.ace16" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace.ace237" Name="ace.ace" />
+								<File Id="header_ctrl_ecf" Name="HEADER~1.ECF" LongName="header_ctrl.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="fun" Name="fun">
@@ -198,10 +179,8 @@
 								<File Id="iselogo.bmp" Name="iselogo.bmp" />
 								<File Id="artist.ico" Name="artist.ico" />
 								<File Id="fun_dlg.e" Name="fun_dlg.e" />
-								<File Id="ace_with_precompiled.ace196" Name="ACE_WI~A.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="Ace.dotnet.ace15" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="fun_demo.ico" Name="fun_demo.ico" />
-								<File Id="ace.ace207" Name="ace.ace" />
+								<File Id="fun_ecf" Name="fun.ecf" />
 								<File Id="maze.e" Name="maze.e" />
 								<File Id="invisibl.cur" Name="invisibl.cur" />
 								<File Id="fun_demo.e" Name="fun_demo.e" />
@@ -211,11 +190,9 @@
 							</Component>
 						</Directory>
 						<Directory Id="diskspace" Name="DISKSP~1" LongName="diskspace">
-							<Component Id="ace.ace158" Guid="8590001A-7DB1-441B-8179-63E58D4A5446">
-								<File Id="ace.ace158" Name="ace.ace" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace13" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<Component Id="diskspace" Guid="8590001A-7DB1-441B-8179-63E58D4A5446">
+								<File Id="diskspace_ecf" Name="DISKSP~2.ECF" LongName="diskspace.ecf" />
 								<File Id="diskspace_demo.e" Name="DISKSP~1.E" LongName="diskspace_demo.e" />
-								<File Id="ace_with_precompiled.ace275" Name="ACE_WI~V.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="diskspace_demo.rc" Name="DISKSP~1.RC" LongName="diskspace_demo.rc" />
 								<File Id="diskspace_demo.ico" Name="DISKSP~1.ICO" LongName="diskspace_demo.ico" />
 							</Component>
@@ -224,24 +201,20 @@
 							<Component Id="ctlcolor_demo.ico" Guid="2C58C47C-8C53-4EE3-B4C6-FD2DD1E89153">
 								<File Id="ctlcolor_demo.ico" Name="CTLCOL~1.ICO" LongName="ctlcolor_demo.ico" KeyPath="yes" />
 								<File Id="ctlcolor_demo.rc" Name="CTLCOL~1.RC" LongName="ctlcolor_demo.rc" />
-								<File Id="ace.ace197" Name="ace.ace" />
+								<File Id="ctlcolor_ecf" Name="ctlcolor.ecf" />
 								<File Id="main_win.e209" Name="main_win.e" />
 								<File Id="ctlcolor_demo.e" Name="CTLCOL~1.E" LongName="ctlcolor_demo.e" />
-								<File Id="ace_with_precompiled.ace239" Name="ACE_WI~K.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="Ace.dotnet.ace11" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="my_button.e" Name="MY_BUT~1.E" LongName="my_button.e" />
 							</Component>
 						</Directory>
 						<Directory Id="controls54" Name="controls">
 							<Component Id="controls_demo.e" Guid="C2C4A4A9-DF29-46B4-9871-6ACAF4F90AE8">
 								<File Id="controls_demo.e" Name="CONTRO~1.E" LongName="controls_demo.e" KeyPath="yes" />
-								<File Id="ace.ace210" Name="ace.ace" />
+								<File Id="controls_ecf" Name="controls.ecf" />
 								<File Id="app_ids.e240" Name="app_ids.e" />
 								<File Id="main_win.e247" Name="main_win.e" />
 								<File Id="controls_demo.rc" Name="CONTRO~1.RC" LongName="controls_demo.rc" />
 								<File Id="controls_demo.ico" Name="CONTRO~1.ICO" LongName="controls_demo.ico" />
-								<File Id="ace_with_precompiled.ace289" Name="ACE_WI~Z.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="Ace.dotnet.ace10" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="comctrls" Name="comctrls">
@@ -250,24 +223,20 @@
 								<File Id="toolbar.bmp" Name="toolbar.bmp" />
 								<File Id="main_win.e169" Name="main_win.e" />
 								<File Id="app_ids.e170" Name="app_ids.e" />
-								<File Id="ace.ace186" Name="ace.ace" />
+								<File Id="comctrls_ecf" Name="comctrls.ecf" />
 								<File Id="comctrls_demo.ico" Name="COMCTR~1.ICO" LongName="comctrls_demo.ico" />
 								<File Id="comctrls_demo.rc" Name="COMCTR~1.RC" LongName="comctrls_demo.rc" />
-								<File Id="ace_with_precompiled.ace290" Name="ACE_WI~Z.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="Ace.dotnet.ace8" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="brushes" Name="brushes">
 							<Component Id="rectdemo.e" Guid="B908DC41-CD0C-4ED3-BA90-D5EAA8ED3A52">
 								<File Id="rectdemo.e" Name="rectdemo.e" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace7" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace171" Name="ACE_WI~5.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="eiffel.bmp" Name="eiffel.bmp" />
 								<File Id="brushdem.e" Name="brushdem.e" />
 								<File Id="brushes_demo.e" Name="BRUSHE~1.E" LongName="brushes_demo.e" />
 								<File Id="demo_3d.e" Name="demo_3d.e" />
 								<File Id="project.e" Name="project.e" />
-								<File Id="ace.ace221" Name="ace.ace" />
+								<File Id="brushes_ecg" Name="brushes.ecf" />
 								<File Id="app_ids.e228" Name="app_ids.e" />
 								<File Id="brushes_demo.rc" Name="BRUSHE~1.RC" LongName="brushes_demo.rc" />
 								<File Id="main_win.e268" Name="main_win.e" />
@@ -279,26 +248,22 @@
 							<Component Id="wel16c.bmp" Guid="16436652-A85C-442D-968E-DF2EF7AFE2F1">
 								<File Id="wel16c.bmp" Name="wel-16c.bmp" KeyPath="yes" />
 								<File Id="app_ids.e159" Name="app_ids.e" />
-								<File Id="ace_with_precompiled.ace160" Name="ACE_WI~3.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="bmpview_demo.rc" Name="BMPVIE~1.RC" LongName="bmpview_demo.rc" />
 								<File Id="wel24bits.bmp" Name="WEL-24~1.BMP" LongName="wel-24bits.bmp" />
 								<File Id="childwin.e" Name="childwin.e" />
-								<File Id="ace.ace198" Name="ace.ace" />
+								<File Id="bmpview_ecf" Name="bmpview.ecf" />
 								<File Id="child.ico" Name="child.ico" />
 								<File Id="bmpview_demo.ico" Name="BMPVIE~1.ICO" LongName="bmpview_demo.ico" />
 								<File Id="wel256c.bmp" Name="wel-256c.bmp" />
 								<File Id="bmpview_demo.e" Name="BMPVIE~1.E" LongName="bmpview_demo.e" />
 								<File Id="main_win.e291" Name="main_win.e" />
-								<File Id="Ace.dotnet.ace6" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="mdi" Name="mdi">
 							<Component Id="app_ids.e166" Guid="E30A88F5-4D4D-4EAF-9A88-580BE1649DA7">
 								<File Id="app_ids.e166" Name="app_ids.e" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace20" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace.ace167" Name="ace.ace" />
+								<File Id="mdi_ecf" Name="mdi.ecf" />
 								<File Id="main_win.e194" Name="main_win.e" />
-								<File Id="ace_with_precompiled.ace204" Name="ACE_WI~D.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="mdi_demo.ico" Name="mdi_demo.ico" />
 								<File Id="mdi_demo.rc" Name="mdi_demo.rc" />
 								<File Id="mdi_demo.e" Name="mdi_demo.e" />
@@ -314,21 +279,17 @@
 								<File Id="onoff.e" Name="onoff.e" />
 								<File Id="on.bmp" Name="on.bmp" />
 								<File Id="modeless.e" Name="modeless.e" />
-								<File Id="ace.ace261" Name="ace.ace" />
+								<File Id="windows_ecf" Name="windows.ecf" />
 								<File Id="app_ids.e269" Name="app_ids.e" />
 								<File Id="main_win.e277" Name="main_win.e" />
-								<File Id="Ace.dotnet.ace38" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace278" Name="ACE_WI~W.ACE" LongName="ace_with_precompiled.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="printer" Name="printer">
 							<Component Id="printer_demo.e" Guid="7029CEEA-C8AC-4CCD-AC49-53B7AA11E75A">
 								<File Id="printer_demo.e" Name="PRINTE~1.E" LongName="printer_demo.e" KeyPath="yes" />
 								<File Id="app_ids.e174" Name="app_ids.e" />
-								<File Id="ace.ace183" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace24" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="printer_ecf" Name="printer.ecf" />
 								<File Id="main_win.e213" Name="main_win.e" />
-								<File Id="ace_with_precompiled.ace219" Name="ACE_WI~F.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="printer_demo.rc" Name="PRINTE~1.RC" LongName="printer_demo.rc" />
 								<File Id="output.ps" Name="output.ps" />
 								<File Id="printer_demo.ico" Name="PRINTE~1.ICO" LongName="printer_demo.ico" />
@@ -338,23 +299,19 @@
 							<Component Id="mouse.e" Guid="EF0CE233-40D6-4B46-8550-6677978BDAC7">
 								<File Id="mouse.e" Name="mouse.e" KeyPath="yes" />
 								<File Id="commands_demo.e" Name="COMMAN~2.E" LongName="commands_demo.e" />
-								<File Id="ace.ace178" Name="ace.ace" />
+								<File Id="commands_ecf" Name="commands.ecf" />
 								<File Id="move.e" Name="move.e" />
 								<File Id="main_dlg.e" Name="main_dlg.e" />
 								<File Id="app_ids.e227" Name="app_ids.e" />
 								<File Id="commands_demo.rc" Name="COMMAN~1.RC" LongName="commands_demo.rc" />
-								<File Id="Ace.dotnet.ace9" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace248" Name="ACE_WI~N.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="commands_demo.ico" Name="COMMAN~1.ICO" LongName="commands_demo.ico" />
 								<File Id="command.e276" Name="command.e" />
 							</Component>
 						</Directory>
 						<Directory Id="splitarea" Name="SPLITA~1" LongName="splitarea">
-							<Component Id="ace.ace181" Guid="7DDF42F4-DD52-4BE6-ABA8-5F8494E362A0">
-								<File Id="ace.ace181" Name="ace.ace" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace26" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<Component Id="splitarea" Guid="7DDF42F4-DD52-4BE6-ABA8-5F8494E362A0">
+								<File Id="split_area_ecf" Name="SPLIT_~2.ECF" LongName="split_area.ecf" />
 								<File Id="split_area_demo.e" Name="SPLIT_~9.E" LongName="split_area_demo.e" />
-								<File Id="ace_with_precompiled.ace243" Name="ACE_WI~L.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="split_area_demo.rc" Name="SPLIT_~1.RC" LongName="split_area_demo.rc" />
 								<File Id="wel_split_area.e" Name="WEL_SP~2.E" LongName="wel_split_area.e" />
 								<File Id="split_area_demo.ico" Name="SPLIT_~1.ICO" LongName="split_area_demo.ico" />
@@ -364,9 +321,7 @@
 						<Directory Id="menus" Name="menus">
 							<Component Id="menus_demo.ico" Guid="0B3E2386-07B4-4541-929E-4950FA3CC1E6">
 								<File Id="menus_demo.ico" Name="MENUS_~1.ICO" LongName="menus_demo.ico" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace21" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace184" Name="ACE_WI~8.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="ace.ace185" Name="ace.ace" />
+								<File Id="menus_ecf" Name="menus.ecf" />
 								<File Id="menus_demo.rc" Name="MENUS_~1.RC" LongName="menus_demo.rc" />
 								<File Id="main_win.e214" Name="main_win.e" />
 								<File Id="menus_demo.e" Name="MENUS_~1.E" LongName="menus_demo.e" />
@@ -375,33 +330,27 @@
 						<Directory Id="stddlgs57" Name="stddlgs">
 							<Component Id="app_ids.e192" Guid="EAD54432-B2F7-4CE0-9915-7B347C4927EB">
 								<File Id="app_ids.e192" Name="app_ids.e" KeyPath="yes" />
-								<File Id="ace.ace193" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="stddlgs_ecf" Name="stddlgs.ecf" />
 								<File Id="stddlg_demo.rc" Name="STDDLG~1.RC" LongName="stddlg_demo.rc" />
 								<File Id="stddlg_demo.e" Name="STDDLG~1.E" LongName="stddlg_demo.e" />
 								<File Id="main_win.e258" Name="main_win.e" />
-								<File Id="ace_with_precompiled.ace266" Name="ACE_WI~S.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="stddlg_demo.ico" Name="STDDLG~1.ICO" LongName="stddlg_demo.ico" />
 							</Component>
 						</Directory>
 						<Directory Id="minimal" Name="minimal">
 							<Component Id="minimal_demo.e" Guid="2477DFC2-A222-448E-9035-BA7B90FF3D08">
-								<File Id="Ace.dotnet.ace22" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="minimal_demo.e" Name="MINIMA~1.E" LongName="minimal_demo.e" KeyPath="yes" />
 								<File Id="minimal_demo.rc" Name="MINIMA~1.RC" LongName="minimal_demo.rc" />
-								<File Id="ace_with_precompiled.ace203" Name="ACE_WI~C.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="minimal_demo.ico" Name="MINIMA~1.ICO" LongName="minimal_demo.ico" />
-								<File Id="ace.ace282" Name="ace.ace" />
+								<File Id="minimal_ecf" Name="minimal.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="fontenum" Name="fontenum">
 							<Component Id="fontenum_demo.rc" Guid="19EEA2C8-3348-4866-913C-F8DB8A9263DD">
 								<File Id="fontenum_demo.rc" Name="FONTEN~1.RC" LongName="fontenum_demo.rc" KeyPath="yes" />
-								<File Id="ace_with_precompiled.ace208" Name="ACE_WI~E.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="fontenum_demo.e" Name="FONTEN~1.E" LongName="fontenum_demo.e" />
 								<File Id="fontenum_demo.ico" Name="FONTEN~1.ICO" LongName="fontenum_demo.ico" />
-								<File Id="ace.ace238" Name="ace.ace" />
-								<File Id="Ace.dotnet.ace14" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="fontenum_ecf" Name="fontenum.ecf" />
 								<File Id="main_dlg.e253" Name="main_dlg.e" />
 								<File Id="app_ids.e254" Name="app_ids.e" />
 							</Component>
@@ -410,23 +359,19 @@
 							<Component Id="xy_demo.e" Guid="AD35D4A1-2A2C-498F-8743-D810593F58F2">
 								<File Id="xy_demo.e" Name="xy_demo.e" KeyPath="yes" />
 								<File Id="main_win.e229" Name="main_win.e" />
-								<File Id="ace.ace249" Name="ace.ace" />
+								<File Id="xy_ecf" Name="xy.ecf" />
 								<File Id="xy_demo.rc" Name="xy_demo.rc" />
-								<File Id="Ace.dotnet.ace40" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace_with_precompiled.ace255" Name="ACE_WI~Q.ACE" LongName="ace_with_precompiled.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="cursors" Name="cursors">
 							<Component Id="app_ids.e220" Guid="FDFBFAC9-1206-4A03-9CED-2F88CB270F8D">
 								<File Id="app_ids.e220" Name="app_ids.e" KeyPath="yes" />
-								<File Id="ace_with_precompiled.ace226" Name="ACE_WI~H.ACE" LongName="ace_with_precompiled.ace" />
-								<File Id="ace.ace246" Name="ace.ace" />
+								<File Id="cursors_ecf" Name="cursors.ecf" />
 								<File Id="custom.cur" Name="custom.cur" />
 								<File Id="cursors_demo.e" Name="CURSOR~4.E" LongName="cursors_demo.e" />
 								<File Id="cursors_demo.ico" Name="CURSOR~1.ICO" LongName="cursors_demo.ico" />
 								<File Id="cursors_demo.rc" Name="CURSOR~1.RC" LongName="cursors_demo.rc" />
 								<File Id="main_win.e288" Name="main_win.e" />
-								<File Id="Ace.dotnet.ace12" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="tutorial" Name="tutorial">
@@ -435,28 +380,22 @@
 							</Component>
 							<Component Id="drawing.drw" Guid="C43BC2DE-10BC-4D23-B7E9-2311A3447901">
 								<File Id="drawing.drw" Name="drawing.drw" KeyPath="yes" />
-								<File Id="readme.txt265" Name="readme.txt" />
 							</Component>
 							<Directory Id="step8" Name="step8">
 								<Component Id="app_ids.e" Guid="E43ACAA7-4886-4128-A44C-5A49CC7E63C3">
 									<File Id="app_ids.e" Name="app_ids.e" KeyPath="yes" />
-									<File Id="ace_with_precompiled.ace179" Name="ACE_WI~7.ACE" LongName="ace_with_precompiled.ace" />
-									<File Id="Ace.dotnet.ace36" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 									<File Id="line.e187" Name="line.e" />
 									<File Id="lines.e" Name="lines.e" />
 									<File Id="point.e215" Name="point.e" />
 									<File Id="linedlg.e216" Name="linedlg.e" />
 									<File Id="tutorial_step8.e" Name="TUTORI~5.E" LongName="tutorial_step8.e" />
 									<File Id="tutorial_step8.rc" Name="TUTORI~5.RC" LongName="tutorial_step8.rc" />
-									<File Id="ace.ace262" Name="ace.ace" />
+									<File Id="tutorial_step8_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step8.ecf" />
 									<File Id="main_win.e284" Name="main_win.e" />
 								</Component>
 							</Directory>
 							<Directory Id="step7" Name="step7">
-								<Component Id="ace_with_precompiled.ace" Guid="EEB99585-5717-4456-AF6B-9323672397C0">
-									<File Id="ace_with_precompiled.ace" Name="ACE_WI~1.ACE" LongName="ace_with_precompiled.ace" KeyPath="yes" />
-									<File Id="ace.ace153" Name="ace.ace" />
-									<File Id="Ace.dotnet.ace35" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<Component Id="step7" Guid="EEB99585-5717-4456-AF6B-9323672397C0">
 									<File Id="tutorial_step7.e" Name="TUTORI~3.E" LongName="tutorial_step7.e" />
 									<File Id="app_ids.e211" Name="app_ids.e" />
 									<File Id="point.e241" Name="point.e" />
@@ -464,6 +403,7 @@
 									<File Id="tutorial_step7.rc" Name="TUTORI~6.RC" LongName="tutorial_step7.rc" />
 									<File Id="linedlg.e256" Name="linedlg.e" />
 									<File Id="line.e280" Name="line.e" />
+									<File Id="tutorial_step7_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step7.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step5" Name="step5">
@@ -471,79 +411,64 @@
 									<File Id="app_ids.e154" Name="app_ids.e" KeyPath="yes" />
 									<File Id="main_win.e172" Name="main_win.e" />
 									<File Id="linedlg.e212" Name="linedlg.e" />
-									<File Id="ace.ace218" Name="ace.ace" />
-									<File Id="Ace.dotnet.ace33" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-									<File Id="ace_with_precompiled.ace233" Name="ACE_WI~J.ACE" LongName="ace_with_precompiled.ace" />
 									<File Id="tutorial_step5.e" Name="TUTORI~7.E" LongName="tutorial_step5.e" />
 									<File Id="tutorial_step5.rc" Name="TUTORI~8.RC" LongName="tutorial_step5.rc" />
+									<File Id="tutorial_step5_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step5.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step4" Name="step4">
 								<Component Id="tutorial_step4.rc" Guid="167DF4E0-8E51-4F29-89AB-4FD782F26752">
 									<File Id="tutorial_step4.rc" Name="TUTORI~1.RC" LongName="tutorial_step4.rc" KeyPath="yes" />
-									<File Id="Ace.dotnet.ace32" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-									<File Id="ace_with_precompiled.ace200" Name="ACE_WI~B.ACE" LongName="ace_with_precompiled.ace" />
 									<File Id="app.ico234" Name="app.ico" />
 									<File Id="tutorial_step4.e" Name="TUTORI~6.E" LongName="tutorial_step4.e" />
-									<File Id="ace.ace242" Name="ace.ace" />
 									<File Id="main_win.e272" Name="main_win.e" />
+									<File Id="tutorial_step4_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step4.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step2" Name="step2">
-								<Component Id="ace.ace155" Guid="A9F65FC9-5397-4A62-8F60-9E26018433E3">
-									<File Id="ace.ace155" Name="ace.ace" KeyPath="yes" />
-									<File Id="Ace.dotnet.ace30" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<Component Id="step2" Guid="A9F65FC9-5397-4A62-8F60-9E26018433E3">
 									<File Id="tutorial_step2.e" Name="TUTORI~2.E" LongName="tutorial_step2.e" />
 									<File Id="tutorial_step2.rc" Name="TUTORI~3.RC" LongName="tutorial_step2.rc" />
 									<File Id="main_win.e188" Name="main_win.e" />
-									<File Id="ace_with_precompiled.ace281" Name="ACE_WI~X.ACE" LongName="ace_with_precompiled.ace" />
 									<File Id="app.ico285" Name="app.ico" />
+									<File Id="tutorial_step2_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step2.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step6" Name="step6">
 								<Component Id="tutorial_step6.e" Guid="BAA7C810-032A-4940-BC75-646CD20122D9">
 									<File Id="tutorial_step6.e" Name="TUTORI~1.E" LongName="tutorial_step6.e" KeyPath="yes" />
 									<File Id="linedlg.e" Name="linedlg.e" />
-									<File Id="ace.ace180" Name="ace.ace" />
-									<File Id="Ace.dotnet.ace34" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 									<File Id="main_win.e217" Name="main_win.e" />
 									<File Id="line.e232" Name="line.e" />
 									<File Id="app_ids.e257" Name="app_ids.e" />
-									<File Id="ace_with_precompiled.ace263" Name="ACE_WI~R.ACE" LongName="ace_with_precompiled.ace" />
 									<File Id="tutorial_step6.rc" Name="TUTORI~7.RC" LongName="tutorial_step6.rc" />
 									<File Id="point.e271" Name="point.e" />
+									<File Id="tutorial_step6_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step6.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step3" Name="step3">
-								<Component Id="ace_with_precompiled.ace161" Guid="46DB202D-CD02-43D6-B696-7709D0812BC3">
-									<File Id="ace_with_precompiled.ace161" Name="ACE_WI~4.ACE" LongName="ace_with_precompiled.ace" KeyPath="yes" />
-									<File Id="Ace.dotnet.ace31" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<Component Id="step3" Guid="46DB202D-CD02-43D6-B696-7709D0812BC3">
 									<File Id="tutorial_step3.rc" Name="TUTORI~2.RC" LongName="tutorial_step3.rc" />
 									<File Id="tutorial_step3.e" Name="TUTORI~4.E" LongName="tutorial_step3.e" />
 									<File Id="main_win.e235" Name="main_win.e" />
 									<File Id="app.ico264" Name="app.ico" />
-									<File Id="ace.ace273" Name="ace.ace" />
+									<File Id="tutorial_step3_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step3.ecf" />
 								</Component>
 							</Directory>
 							<Directory Id="step1" Name="step1">
 								<Component Id="app.ico" Guid="F51C43EB-ABD6-4217-AAF8-5C9BE755A7F8">
 									<File Id="app.ico" Name="app.ico" KeyPath="yes" />
-									<File Id="ace.ace189" Name="ace.ace" />
-									<File Id="Ace.dotnet.ace29" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 									<File Id="tutorial_step1.rc" Name="TUTORI~4.RC" LongName="tutorial_step1.rc" />
-									<File Id="ace_with_precompiled.ace251" Name="ACE_WI~O.ACE" LongName="ace_with_precompiled.ace" />
 									<File Id="tutorial_step1.e" Name="TUTORI~8.E" LongName="tutorial_step1.e" />
+									<File Id="tutorial_step1_ecf" Name="TUTORI~1.ECF" LongName="tutorial_step1.ecf" />
 								</Component>
 							</Directory>
 						</Directory>
-						<Directory Id="unicode" Name="unicode" />
 						<Directory Id="hello1" Name="hello">
-							<Component Id="ace.ace205" Guid="85FFCB94-F53E-4315-A503-184C9231CB60">
-								<File Id="ace.ace205" Name="ace.ace" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace37" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+							<Component Id="hello1" Guid="85FFCB94-F53E-4315-A503-184C9231CB60">
+								<File Id="hello_ecf" Name="hello.ecf" />
 								<File Id="hello_demo.rc" Name="HELLO_~1.RC" LongName="hello_demo.rc" />
 								<File Id="hello_demo.e" Name="HELLO_~1.E" LongName="hello_demo.e" />
-				<File Id="ace_with_precompiled.ace267" Name="ACE_WI~T.ACE" LongName="ace_with_precompiled.ace" />
 								<File Id="main_win.e287" Name="main_win.e" />
 							</Component>
 						</Directory>
@@ -602,7 +527,7 @@
 							<Component Id="egraph" Guid="9B2D263B-BCD5-49db-A5D9-949E4996F78A">
 								<File Id="application2_e" Name="APPLIC~1.E" LongName="application.e" />
 								<File Id="circle_layout_png" Name="CIRCLE~1.PNG" LongName="circle_layout.png" />
-								<File Id="egraph.ace" Name="egraph.ace" />
+								<File Id="egraph_ecf" Name="egraph.ecf" />
 								<File Id="graph_main_window_e" Name="GRAPH_~1.E" LongName="graph_main_window.e" />
 								<File Id="grid_layout_png" Name="GRID_L~1.PNG" LongName="grid_layout.png" />
 								<File Id="interface_names2_e" Name="INTERF~1.E" LongName="interface_names.e" />
@@ -648,53 +573,41 @@
 								<File Id="colorizable_control.e" Name="COLORI~1.E" LongName="colorizable_control.e" />
 								<File Id="gauge_control.e" Name="GAUGE_~1.E" LongName="gauge_control.e" />
 								<File Id="deselectable_control.e" Name="DESELE~1.E" LongName="deselectable_control.e" />
-								<File Id="Ace.unix.ace148" Name="ACEUNI~4.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.win.ace149" Name="ACEWIN~6.ACE" LongName="Ace.win.ace" />
-								<File Id="Ace.dotnet.ace101" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="widgets_ecf" Name="widgets.ecf" />
 								<File Id="bm_About.png151" Name="bm_About.png" />
 							</Component>
 						</Directory>
 						<Directory Id="gauges" Name="gauges">
-							<Component Id="Ace.win.ace" Guid="862C91AD-9EAE-47A9-9805-8ADCFB0180D7">
-								<File Id="Ace.win.ace" Name="ACEWIN~1.ACE" LongName="Ace.win.ace" KeyPath="yes" />
+							<Component Id="gauges" Guid="862C91AD-9EAE-47A9-9805-8ADCFB0180D7">
 								<File Id="gauges.e" Name="gauges.e" />
-								<File Id="Ace.unix.ace144" Name="ACEUNI~3.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace2" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="gauges_ecf" Name="gauges.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="accelerator" Name="ACCELE~1" LongName="accelerator">
 							<Component Id="accelerator.e" Guid="2E57C510-0932-4701-9564-FF7B70A4AE52">
-								<File Id="accelerator.e" Name="ACCELE~4.E" LongName="accelerator.e" KeyPath="yes" />
-								<File Id="Ace.unix.ace" Name="ACEUNI~1.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.win.ace147" Name="ACEWIN~5.ACE" LongName="Ace.win.ace" />
-								<File Id="Ace.dotnet.ace100" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="accelerator.e" Name="ACCELE~1.E" LongName="accelerator.e" KeyPath="yes" />
+								<File Id="accelerator_ecf" Name="ACCELE~1.ECF" LongName="accelerator.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="viewport" Name="viewport">
 							<Component Id="vp_test.e" Guid="104B0F1A-C9D8-4A59-91CC-D9857D1D1748">
 								<File Id="vp_test.e" Name="vp_test.e" KeyPath="yes" />
-								<File Id="Ace.unix.ace143" Name="ACEUNI~2.ACE" LongName="Ace.unix.ace" />
 								<File Id="bm_About.png" Name="bm_About.png" />
 								<File Id="viewport.e" Name="viewport.e" />
-								<File Id="Ace.win.ace145" Name="ACEWIN~2.ACE" LongName="Ace.win.ace" />
-								<File Id="Ace.dotnet.ace5" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="viewport_ecf" Name="viewport.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="standard_dialogs" Name="STANDA~1" LongName="standard_dialogs">
-							<Component Id="Ace.win.ace146" Guid="06231B47-7498-485E-AF63-D5F302F44BBB">
-								<File Id="Ace.win.ace146" Name="ACEWIN~3.ACE" LongName="Ace.win.ace" KeyPath="yes" />
+							<Component Id="standard_dialogs" Guid="06231B47-7498-485E-AF63-D5F302F44BBB">
 								<File Id="dialog_test.e" Name="DIALOG~7.E" LongName="dialog_test.e" />
 								<File Id="standard_dialogs.e" Name="STANDA~2.E" LongName="standard_dialogs.e" />
-								<File Id="Ace.unix.ace152" Name="ACEUNI~6.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace4" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="standard_dialogs_ecf" Name="STANDA~1.ECF" LongName="standard_dialogs.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="cursor" Name="cursor">
-							<Component Id="ace.win.ace2" Guid="D632C883-4DBB-4CDF-B7E8-D48645A7F627">
-								<File Id="ace.win.ace2" Name="ACEWIN~4.ACE" LongName="ace.win.ace" KeyPath="yes" />
+							<Component Id="cursor" Guid="D632C883-4DBB-4CDF-B7E8-D48645A7F627">
 								<File Id="cursor_test.e" Name="CURSOR~3.E" LongName="cursor_test.e" />
-								<File Id="Ace.unix.ace150" Name="ACEUNI~5.ACE" LongName="Ace.unix.ace" />
-								<File Id="Ace.dotnet.ace1" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="cursor_ecf" Name="cursor.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="rich_text" Name="RICH_T~1" LongName="rich_text">
@@ -703,11 +616,9 @@
 								<File Id="main_window.e137" Name="MAIN_W~3.E" LongName="main_window.e" />
 								<File Id="vision2_application.e" Name="VISION~2.E" LongName="vision2_application.e" />
 								<File Id="constants.e" Name="CONSTA~1.E" LongName="constants.e" />
-								<File Id="Ace.dotnet.ace3" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="ace.Unix.ace2" Name="ACEUNI~7.ACE" LongName="ace.Unix.ace" />
 								<File Id="constants_imp.e" Name="CONSTA~2.E" LongName="constants_imp.e" />
 								<File Id="main_window_imp.e" Name="MAIN_W~4.E" LongName="main_window_imp.e" />
-								<File Id="ace.Windows.ace" Name="ACEWIN~7.ACE" LongName="ace.Windows.ace" />
+								<File Id="rich_text_ecf" Name="RICH_T~1.ECF" LongName="rich_text.ecf" />
 								<File Id="system_interface.xml" Name="SYSTEM~1.XML" LongName="system_interface.xml" />
 								<File Id="right_alignment.png" Name="RIGHT_~1.PNG" LongName="right_alignment.png" />
 								<File Id="left_alignment.png" Name="LEFT_A~1.PNG" LongName="left_alignment.png" />
@@ -2658,6 +2569,7 @@
 						</Directory>
 						<Directory Id="consts" Name="consts">
 							<Component Id="wel_swp_constants.e" Guid="AFEB6CFB-3C86-4EFC-9A48-AD1E5720BB87">
+								<File Id="wel_bi_compression_constants_e" Name="WEL_BI~2.E" LongName="wel_bi_compression_constants.e" />
 								<File Id="wel_ccm_constants_e" Name="WEL_CC~2.E" LongName="wel_ccm_constants.e" />
 								<File Id="wel_composition_string_constants_e" Name="WEL_CO~1.E" LongName="wel_composition_string_constants.e" />
 								<File Id="wel_ime_constants_e" Name="WEL_IM~2.E" LongName="wel_ime_constants.e" />
@@ -2911,13 +2823,17 @@
 								<Component Id="gdiplus" Guid="C9D16072-011B-4ff7-9250-0D618A16D173">
 									<File Id="wel_gdip_any_e" Name="WEL_GD~4.E" LongName="wel_gdip_any.e" />
 									<File Id="wel_gdip_bitmap_e" Name="WEDC2C~1.E" LongName="wel_gdip_bitmap.e" />
+									<File Id="wel_gdip_bitmap_data_e" Name="WE7297~1.E" LongName="wel_gdip_bitmap_data.e" />
 									<File Id="wel_gdip_color_e" Name="WE75CD~1.E" LongName="wel_gdip_color.e" />
 									<File Id="wel_gdip_color_adjust_type_e" Name="WE1F83~1.E" LongName="wel_gdip_color_adjust_type.e" />
 									<File Id="wel_gdip_color_matrix_flag_e" Name="WE72E8~1.E" LongName="wel_gdip_color_matrix_flag.e" />
 									<File Id="wel_gdip_graphics_e" Name="WEAB43~1.E" LongName="wel_gdip_graphics.e" />
 									<File Id="wel_gdip_image_e" Name="WEL_GD~1.E" LongName="wel_gdip_image.e" />
 									<File Id="wel_gdip_image_attributes_e" Name="WECE8B~1.E" LongName="wel_gdip_image_attributes.e" />
+									<File Id="wel_gdip_image_lock_mode_e" Name="WEC949~1.E" LongName="wel_gdip_image_lock_mode.e" />
 									<File Id="wel_gdip_pen_e" Name="WEL_GD~2.E" LongName="wel_gdip_pen.e" />
+									<File Id="wel_gdip_pixel_format_e" Name="WEBCEA~1.E" LongName="wel_gdip_pixel_format.e" />
+									<File Id="wel_gdip_rect_e" Name="WE0D27~1.E" LongName="wel_gdip_rect.e" />
 									<File Id="wel_gdip_starter_e" Name="WEL_GD~3.E" LongName="wel_gdip_starter.e" />
 									<File Id="wel_gdip_statues_e" Name="WE8F95~1.E" LongName="wel_gdip_statues.e" />
 									<File Id="wel_gdip_unit_e" Name="WE2159~1.E" LongName="wel_gdip_unit.e" />
@@ -2959,7 +2875,6 @@
 							<Component Id="h2e.rc" Guid="C6E61411-F740-4535-9663-E178EDE171AF">
 								<File Id="h2e.rc" Name="h2e.rc" KeyPath="yes" />
 								<File Id="h2e_ids.e" Name="h2e_ids.e" />
-								<File Id="prcmpw32.ace" Name="prcmpw32.ace" />
 								<File Id="h2e.txt" Name="h2e.txt" />
 								<File Id="h2e.e" Name="h2e.e" />
 								<File Id="h2e_ecf" Name="h2e.ecf" />
@@ -3140,16 +3055,6 @@
 									<File Id="ev_thread_severity_constants_e" Name="EV_THR~3.E" LongName="ev_thread_severity_constants.e" />
 									<File Id="ev_thread_worker_e" Name="EV_THR~4.E" LongName="ev_thread_worker.e" />
 								</Component>
-								<Directory Id="gtk2" Name="gtk">
-									<Component Id="gtk2" Guid="8F6ACC3B-A849-45af-86DA-F633C2B9F5DC">
-										<File Id="ev_thread_application_imp_e" Name="EV_THR~1.E" LongName="ev_thread_application_imp.e" />
-									</Component>
-								</Directory>
-								<Directory Id="mswin4" Name="mswin">
-									<Component Id="mswin5" Guid="9A0AA568-A438-4e73-BFE2-7403E0405A6F">
-										<File Id="ev_thread_application_imp_e2" Name="EV_THR~1.E" LongName="ev_thread_application_imp.e" />
-									</Component>
-								</Directory>
 							</Directory>
 						</Directory>
 						<Directory Id="windows_dir" Name="windows">

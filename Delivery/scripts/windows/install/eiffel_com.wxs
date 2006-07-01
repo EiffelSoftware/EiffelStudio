@@ -221,7 +221,7 @@
 								<File Id="compound.e" Name="compound.e" />
 								<File Id="stream_display_window.e" Name="STREAM~1.E" LongName="stream_display_window.e" />
 								<File Id="main_win.e" Name="main_win.e" />
-								<File Id="Ace.ace2" Name="Ace.ace" />
+								<File Id="compound.ecf" Name="compound.ecf" />
 								<File Id="compound.rc" Name="compound.rc" />
 								<File Id="compound.ico" Name="compound.ico" />
 								<File Id="child.ico" Name="child.ico" />
@@ -239,7 +239,7 @@
 										<File Id="resource.h" Name="resource.h" />
 										<File Id="String_manipulator_client.rc" Name="STRING~1.RC" LongName="String_manipulator_client.rc" />
 										<File Id="application_ids.e" Name="APPLIC~2.E" LongName="application_ids.e" />
-										<File Id="ace.ace4" Name="ace.ace" />
+										<File Id="string_manipulator_client.ecf" Name="STRING~2.ECF" LongName="string_manipulator_client.ecf" />
 										<File Id="my_string_manipulator.e" Name="MY_STR~1.E" LongName="my_string_manipulator.e" />
 										<File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
 									</Component>
@@ -258,14 +258,14 @@
 								<Directory Id="task_scheduler_client" Name="TASK_S~2" LongName="task_scheduler_client">
 									<Component Id="task_scheduler_client" Guid="B334E8EC-58CE-4952-AAA9-67260DA9CF34">
 										<File Id="task_scheduler.e" Name="TASK_S~1.E" LongName="task_scheduler.e" KeyPath="yes" />
-										<File Id="ace.ace3" Name="ace.ace" />
+										<File Id="task_scheduler.ecf" Name="TASK_S~2.ECF" LongName="task_scheduler.ecf" />
 									</Component>
 								</Directory>
 							</Directory>
 							<Directory Id="e2idl" Name="e2idl">
 								<Directory Id="eproject" Name="eproject">
 									<Component Id="eproject" Guid="CEF30173-9725-4929-9020-559798BDE873">
-										<File Id="ace.ace" Name="ace.ace" KeyPath="yes" />
+										<File Id="string.ecf" Name="string.ecf" />
 										<File Id="root_class.e" Name="ROOT_C~1.E" LongName="root_class.e" />
 										<File Id="string_manipulator.e" Name="STRING~3.E" LongName="string_manipulator.e" />
 									</Component>

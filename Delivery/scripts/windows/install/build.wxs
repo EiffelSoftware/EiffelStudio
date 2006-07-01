@@ -33,18 +33,8 @@
 							<File Id="build_application_template.e" Name="BUILD_~1.E" LongName="build_application_template.e" />
 							<File Id="constants.e" Name="CONSTA~1.E" LongName="constants.e" />
 							<File Id="constants_imp.e" Name="CONSTA~2.E" LongName="constants_imp.e" />
+							<File Id="template_ecf" Name="template.ecf" />
 						</Component>
-						<Directory Id="Unix" Name="Unix">
-							<Component Id="Unix" Guid="20B7F500-8C6D-47F8-ACF1-E908D23EC0DE">
-								<File Id="ace_template.ace" Name="ACE_TE~1.ACE" LongName="ace_template.ace" KeyPath="yes" />
-							</Component>
-						</Directory>
-						<Directory Id="Windows" Name="Windows">
-							<Component Id="Windows" Guid="96A1A5A8-E024-471C-A413-402C61C19090">
-								<File Id="ace_template.ace2" Name="ACE_TE~2.ACE" LongName="ace_template.ace" />
-								<File Id="dotnet_ace_template.ace" Name="DOTNET~1.ACE" LongName="dotnet_ace_template.ace" />
-							</Component>
-						</Directory>
 					</Directory>
 					<Directory Id="components" Name="COMPON~1" LongName="components">
 						<Component Id="components" Guid="E2909719-7483-4DCF-8BF7-DB6E76904624">

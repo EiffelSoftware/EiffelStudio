@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 				end
 				if not use_bcb then
 					if smart_checking then
-						create l_vs_setup.make
+						create l_vs_setup.make (False)
 						if not l_vs_setup.valid_vcvars then
 							Environment.set_abort (No_c_compiler)
 						end

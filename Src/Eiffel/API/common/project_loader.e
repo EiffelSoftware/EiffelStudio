@@ -136,12 +136,12 @@ feature -- Loading
 						-- if one is specified.
 					find_target_name (a_target_name, l_load_config.last_system.compilable_targets)
 					if not has_error then
-						lace.set_conf_system (l_load_config.last_system)
-						lace.set_target_name (target_name)
-						compiler_project_location.set_target (target_name)
-						lace.set_file_name (config_file_name)
-
 						if not is_project_creation_or_opening_not_requested then
+							lace.set_conf_system (l_load_config.last_system)
+							lace.set_target_name (target_name)
+							compiler_project_location.set_target (target_name)
+							lace.set_file_name (config_file_name)
+
 								-- Try to retrieve project if already compiled.
 							retrieve_or_create_project (a_project_path)
 							if not has_error and then is_compilation_requested then

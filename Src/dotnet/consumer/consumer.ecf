@@ -79,6 +79,7 @@
 		<setting name="line_generation" value="False"/>
 		<setting name="msil_clr_version" value="v1.0.3705"/>
 		<override name="dotnet10" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet10\"/>
+		<override name="dotnet10_bis" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet10\"/>
 	</target>
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="True"/>

@@ -566,6 +566,7 @@
 									<File Id="VICA3" Name="VICA3" />
 									<File Id="VICA4" Name="VICA4" />
 									<File Id="VICF" Name="VICF" />
+									<File Id="VICR" Name="VICR" />
 									<File Id="VIFC" Name="VIFC" />
 									<File Id="VIFI1" Name="VIFI1" />
 									<File Id="VIFI2" Name="VIFI2" />
@@ -578,6 +579,7 @@
 									<File Id="VIPS" Name="VIPS" />
 									<File Id="VIRC" Name="VIRC" />
 									<File Id="VIRW85" Name="VIRW" />
+									<File Id="VISC" Name="VISC" />
 									<File Id="VISM" Name="VISM" />
 									<File Id="VJAR67" Name="VJAR" />
 									<File Id="VJAW92" Name="VJAW" />

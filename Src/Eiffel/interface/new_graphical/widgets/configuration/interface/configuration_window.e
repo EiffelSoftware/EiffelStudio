@@ -291,7 +291,7 @@ feature {NONE} -- Layout components
 	target_configuration_space: EV_VERTICAL_BOX
 			-- Space to put configuration for `current_target'.
 
-	edit_library_button: EV_BUTTON
+	edit_library_button: EV_TOOL_BAR_BUTTON
 			-- Button to edit the configuration file of a library.
 
 feature {NONE} -- Section tree selection agents
@@ -514,7 +514,7 @@ feature {NONE} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			hb: EV_HORIZONTAL_BOX
+			hb, hb2: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			l_tb: EV_TOOL_BAR
 			l_tb_btn: EV_TOOL_BAR_BUTTON
@@ -534,9 +534,13 @@ feature {NONE} -- Section tree selection agents
 			hb.disable_item_expand (vb)
 			vb.set_minimum_width (group_tree_width)
 
+			create hb2
+			vb.extend (hb2)
+			vb.disable_item_expand (hb2)
+
 			create l_tb
-			vb.extend (l_tb)
-			vb.disable_item_expand (l_tb)
+			hb2.extend (l_tb)
+			hb2.disable_item_expand (l_tb)
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
@@ -568,16 +572,23 @@ feature {NONE} -- Section tree selection agents
 			l_tb_btn.set_tooltip (remove_group_text)
 			l_tb_btn.select_actions.extend (agent remove_group)
 
-			create edit_library_button.make_with_text (library_edit_configuration)
+				-- edit library tool bar
+			hb2.extend (create {EV_CELL})
+			create l_tb
+			hb2.extend (l_tb)
+			hb2.disable_item_expand (l_tb)
+
+			create edit_library_button
 			edit_library_button.disable_sensitive
+			edit_library_button.set_pixmap (pixmaps.icon_pixmaps.project_settings_edit_library_icon)
+			edit_library_button.set_tooltip (library_edit_configuration)
+			l_tb.extend (edit_library_button)
 
 			append_groups_tree (vb)
 			append_small_margin (hb)
 			target_configuration_space.extend (hb)
 			create vb
 			hb.extend (vb)
-			vb.extend (edit_library_button)
-			vb.disable_item_expand (edit_library_button)
 			append_property_grid (vb)
 			append_small_margin (vb)
 			append_property_description (vb)

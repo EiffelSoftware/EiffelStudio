@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Shared class name finder."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

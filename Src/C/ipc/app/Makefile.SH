@@ -84,19 +84,21 @@ DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIM
 CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 
 # Files used to build the application
-LSRC = app_listen.c app_proto.c app_server.c
+LSRC = app_listen.c app_proto.c app_server.c app_transfer.c
 
 # Derived object file names
 OBJ = \
 	       app_listen.o \
 	       app_proto.o \
-	       app_server.o 
+	       app_server.o \
+	       app_transfer.o 
 
 # Derived library object file names
 MT_OBJ = \
 	       MTapp_listen.o \
 	       MTapp_proto.o \
-	       MTapp_server.o 
+	       MTapp_server.o \
+	       MTapp_transfer.o 
 
 MTapp_listen.o: app_listen.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
@@ -105,6 +107,9 @@ MTapp_proto.o: app_proto.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 MTapp_server.o: app_server.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
+
+MTapp_transfer.o: app_transfer.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
 
 

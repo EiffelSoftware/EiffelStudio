@@ -78,44 +78,51 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
-ALL_SRC = ewb_proto.c $(LSRC)
+LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c ewb_child.c ewb_transfer.c ewb_proto.c
+ALL_SRC = $(LSRC)
 
 # Derived object file names
 LOBJ = \
-	       ewb_proto.o \
 	       eproto.o \
 	       eif_in.o \
 	       eif_out.o \
 	       ewb_init.o \
-	       ewb_dumped.o 
+	       ewb_dumped.o \
+	       ewb_child.o \
+	       ewb_transfer.o \
+	       ewb_proto.o 
 
 WOBJ = \
 	       weproto.o \
 	       weif_in.o \
 	       weif_out.o \
 	       wewb_init.o \
-	       wewb_dumped.o 
+	       wewb_dumped.o \
+	       wewb_child.o \
+	       wewb_transfer.o \
+	       wewb_proto.o 
 
 MT_WOBJ = \
 	       MTweproto.o \
 	       MTweif_in.o \
 	       MTweif_out.o \
 	       MTwewb_init.o \
-	       MTwewb_dumped.o 
+	       MTwewb_dumped.o \
+	       MTwewb_child.o \
+	       MTwewb_transfer.o \
+	       MTwewb_proto.o 
 
 MT_LOBJ = \
-	       MTewb_proto.o \
 	       MTeproto.o \
 	       MTeif_in.o \
 	       MTeif_out.o \
 	       MTewb_init.o \
-	       MTewb_dumped.o 
+	       MTewb_dumped.o \
+	       MTewb_child.o \
+	       MTewb_transfer.o \
+	       MTewb_proto.o 
 
 # The following is to buiilt the multithreaded version, we creates rules to generate the MT*.o files
-MTewb_proto.o: ewb_proto.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
 MTeproto.o: eproto.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -131,11 +138,17 @@ MTewb_init.o: ewb_init.c
 MTewb_dumped.o: ewb_dumped.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTewb_child.o: ewb_child.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTewb_transfer.o: ewb_transfer.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTewb_proto.o: ewb_proto.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
 
 # Rule for compiling MTw*.o files
-MTwewb_proto.o: ewb_proto.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
 MTweproto.o: eproto.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
@@ -151,11 +164,17 @@ MTwewb_init.o: ewb_init.c
 MTwewb_dumped.o: ewb_dumped.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
+MTwewb_child.o: ewb_child.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwewb_transfer.o: ewb_transfer.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwewb_proto.o: ewb_proto.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 
 # Rule for compiling w*.o files
-wewb_proto.o: ewb_proto.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
-
 weproto.o: eproto.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -169,6 +188,15 @@ wewb_init.o: ewb_init.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wewb_dumped.o: ewb_dumped.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wewb_child.o: ewb_child.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wewb_transfer.o: ewb_transfer.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wewb_proto.o: ewb_proto.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 

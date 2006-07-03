@@ -34,6 +34,6 @@ cp -f PorterPackage_all.tar ~/
 
 #Compile and build CDs for current platform
 cd PorterPackage
-/bin/sh compile_exes
-/bin/sh make_images
+/bin/sh compile_exes $ISE_PLATFORM
+/bin/sh make_images $ISE_PLATFORM
 cd ..

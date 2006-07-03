@@ -145,6 +145,7 @@ feature -- Update
 			l_row.set_item (1, l_name_item)
 			l_row.set_item (2, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
+			a_property.set_name_item (l_name_item)
 
 			if expanded_section_store.has (current_section_name) then
 				if expanded_section_store.found_item and not current_section.is_expanded then

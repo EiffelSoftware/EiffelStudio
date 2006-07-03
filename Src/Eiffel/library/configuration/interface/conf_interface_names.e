@@ -141,6 +141,8 @@ feature {NONE} -- Target names and descriptions
 	target_external_runtime_description: STRING is " "
 	target_shared_library_definition_name: STRING is "Shared library definition"
 	target_shared_library_definition_description: STRING is " "
+	target_library_root_name: STRING is "Library root"
+	target_library_root_description: STRING is "Absolute path to use as base for relative paths."
 	target_use_cluster_name_as_namespace_name: STRING is "Use cluster name as namespace"
 	target_use_cluster_name_as_namespace_description: STRING is " "
 	target_use_all_cluster_name_as_namespace_name: STRING is "Use recursive cluster name as namespace"

@@ -66,6 +66,7 @@ feature -- Settings
 	s_inlining: STRING is "inlining"
 	s_inlining_size: STRING is "inlining_size"
 	s_java_generation: STRING is "java_generation"
+	s_library_root: STRING is "library_root"
 	s_line_generation: STRING is "line_generation"
 	s_metadata_cache_path: STRING is "metadata_cache_path"
 	s_msil_assembly_compatibility: STRING is "msil_assembly_compatibility"

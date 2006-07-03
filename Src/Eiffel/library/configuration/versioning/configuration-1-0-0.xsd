@@ -141,6 +141,7 @@
 			  <xs:enumeration value = "inlining"/>
 			  <xs:enumeration value = "inlining_size"/>
 			  <xs:enumeration value = "java_generation"/>
+			  <xs:enumeration value = "library_root"/>
 			  <xs:enumeration value = "line_generation"/>
 			  <xs:enumeration value = "metadata_cache_path"/>
 			  <xs:enumeration value = "msil_assembly_compatibility"/>

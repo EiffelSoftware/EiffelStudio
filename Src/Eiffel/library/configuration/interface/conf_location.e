@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 
 				-- handle relative path
 			if (Result.count >= 2 and then Result.item (1).is_alpha_numeric and Result.item (2) /= ':') or else Result.item (1) = '.' then
-				l_relative_base := target.location
+				l_relative_base := target.library_root
 				if l_relative_base /= Void then
 					Result.prepend (l_relative_base)
 				else

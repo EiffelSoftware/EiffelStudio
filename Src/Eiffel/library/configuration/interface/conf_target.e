@@ -95,6 +95,23 @@ feature -- Access, in compiled only, not stored to configuration file
 	location: STRING
 			-- Absolute location of the configuration file.
 
+	library_root: STRING
+			-- Root location to use for relative paths, defaults to `location' if the setting is not set.
+		local
+			l_target: CONF_TARGET
+			l_dir: CONF_DIRECTORY_LOCATION
+		do
+			Result := settings.item (s_library_root)
+			if Result /= Void then
+					-- create a new target instead of using Current because we could end in an infinite recursion otherwise.
+				create l_target.make ("dummy", system)
+				create l_dir.make (Result, l_target)
+				Result := l_dir.evaluated_path
+			else
+				Result := location
+			end
+		end
+
 	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
 			-- Libraries this target is used in.
 

@@ -1924,6 +1924,11 @@ feature {NONE} -- Implementation
 			add_string_setting_actions (l_string_prop, s_shared_library_definition, "")
 			properties.add_property (l_string_prop)
 
+			create l_string_prop.make (target_library_root_name)
+			l_string_prop.set_description (target_library_root_description)
+			add_string_setting_actions (l_string_prop, s_library_root, "")
+			properties.add_property (l_string_prop)
+
 			properties.current_section.expand
 
 				-- .NET section

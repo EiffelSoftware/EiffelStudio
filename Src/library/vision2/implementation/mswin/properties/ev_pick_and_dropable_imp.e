@@ -472,6 +472,7 @@ feature {EV_ANY_I} -- Implementation
 			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
 			item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
+			combo_box: EV_INTERNAL_COMBO_BOX_IMP
 			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
 			composite_window: WEL_COMPOSITE_WINDOW
 			ptr, null: POINTER
@@ -522,9 +523,14 @@ feature {EV_ANY_I} -- Implementation
 				if widget_imp_at_cursor_position = Void then
 						-- We must now check for an internal combo field, and
 						-- use its parent as the widget.
-					combo_field ?= wel_window_at_cursor_position
-					if combo_field /= Void then
-						widget_imp_at_cursor_position := combo_field.parent
+					combo_box ?= wel_window_at_cursor_position
+					if combo_box /= Void then
+						widget_imp_at_cursor_position := combo_box.parent
+					else
+						combo_field ?= wel_window_at_cursor_position
+						if combo_field /= Void then
+							widget_imp_at_cursor_position := combo_field.parent
+						end
 					end
 				end
 
@@ -561,7 +567,7 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 
-				if global_pnd_targets.has (current_target_object_id) then
+				if current_target_object_id /= 0 and then global_pnd_targets.has (current_target_object_id) then
 					Result ?= interface.id_object (current_target_object_id)
 				end
 			end

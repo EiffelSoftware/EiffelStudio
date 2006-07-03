@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			a_name_not_void_or_empty: a_name /= Void or not a_name.is_empty
 			a_components_not_void: a_components /= Void
 		do
-			components.xml_handler.add_new_component (an_object, a_name)
-			make_with_name (a_name, components)
+			a_components.xml_handler.add_new_component (an_object, a_name)
+			make_with_name (a_name, a_components)
 		ensure
 			components_set: components = a_components
 		end

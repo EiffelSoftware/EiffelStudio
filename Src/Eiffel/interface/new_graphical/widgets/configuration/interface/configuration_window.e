@@ -1075,6 +1075,7 @@ feature {NONE} -- Implementation
 
 			add_externals (current_target.internal_external_include, l_tree, external_include_tree)
 			add_externals (current_target.internal_external_object, l_tree, external_object_tree)
+			add_externals (current_target.internal_external_library, l_tree, external_library_tree)
 			add_externals (current_target.internal_external_make, l_tree, external_make_tree)
 			add_externals (current_target.internal_external_resource, l_tree, external_resource_tree)
 		end
@@ -1442,6 +1443,8 @@ feature {NONE} -- Implementation
 				l_prop.set_value (external_include)
 			elseif an_external.is_object then
 				l_prop.set_value (external_object)
+			elseif an_external.is_library then
+				l_prop.set_value (external_library)
 			elseif an_external.is_make then
 				l_prop.set_value (external_make)
 			elseif an_external.is_resource then
@@ -2383,6 +2386,7 @@ feature {NONE} -- Configuration setting
 			l_dia: NEW_EXTERNAL_DIALOG
 			l_new_include: CONF_EXTERNAL_INCLUDE
 			l_new_object: CONF_EXTERNAL_OBJECT
+			l_new_library: CONF_EXTERNAL_LIBRARY
 			l_new_make: CONF_EXTERNAL_MAKE
 			l_new_resource: CONF_EXTERNAL_RESOURCE
 		do
@@ -2397,6 +2401,10 @@ feature {NONE} -- Configuration setting
 					l_new_object := conf_factory.new_external_object ("new")
 					current_target.add_external_object (l_new_object)
 					current_external := l_new_object
+				elseif l_dia.is_library then
+					l_new_library := conf_factory.new_external_library ("new")
+					current_target.add_external_library (l_new_library)
+					current_external := l_new_library
 				elseif l_dia.is_make then
 					l_new_make := conf_factory.new_external_make ("new")
 					current_target.add_external_make (l_new_make)
@@ -2419,6 +2427,7 @@ feature {NONE} -- Configuration setting
 		local
 			l_include: CONF_EXTERNAL_INCLUDE
 			l_object: CONF_EXTERNAL_OBJECT
+			l_library: CONF_EXTERNAL_LIBRARY
 			l_make: CONF_EXTERNAL_MAKE
 			l_resource: CONF_EXTERNAL_RESOURCE
 		do
@@ -2431,6 +2440,10 @@ feature {NONE} -- Configuration setting
 					l_object ?= current_external
 					check object: l_object /= Void end
 					current_target.remove_external_object (l_object)
+				elseif current_external.is_library then
+					l_library ?= current_external
+					check library: l_library /= Void end
+					current_target.remove_external_library (l_library)
 				elseif current_external.is_make then
 					l_make ?= current_external
 					check make: l_make /= Void end

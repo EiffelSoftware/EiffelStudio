@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 
 			create internal_external_include.make (1)
 			create internal_external_object.make (1)
+			create internal_external_library.make (1)
 			create internal_external_resource.make (1)
 			create internal_external_make.make (1)
 			create internal_pre_compile_action.make (1)
@@ -320,6 +321,24 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	all_external_library: like internal_external_library is
+			-- All external library files including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_library)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	all_external_resource: like internal_external_resource is
 			-- All external ressource files including the ones from libraries.
 		require
@@ -373,6 +392,17 @@ feature -- Access queries
 			Result := internal_external_object.twin
 			if extends /= Void then
 				Result.append (extends.external_object)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	external_library: like internal_external_library is
+			-- Global external library files.
+		do
+			Result := internal_external_library.twin
+			if extends /= Void then
+				Result.append (extends.external_library)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -1062,6 +1092,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			objects_set: internal_external_object = an_objects
 		end
 
+	set_external_libraries (a_libraries: like internal_external_library) is
+			-- Set `a_libraries'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+		do
+			internal_external_library := a_libraries
+		ensure
+			libraries_set: internal_external_library = a_libraries
+		end
+
 	set_external_ressources (a_ressources: like internal_external_resource) is
 			-- Set `a_ressources'.
 		require
@@ -1100,6 +1140,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_object.extend (an_object)
 		ensure
 			added: internal_external_object.has (an_object)
+		end
+
+	add_external_library (a_library: CONF_EXTERNAL_LIBRARY) is
+			-- Add `a_library'.
+		require
+			a_library_not_void: a_library /= Void
+		do
+			internal_external_library.extend (a_library)
+		ensure
+			added: internal_external_library.has (a_library)
 		end
 
 	add_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
@@ -1149,6 +1199,19 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_object.remove
 		ensure
 			removed: not internal_external_object.has (an_object)
+		end
+
+	remove_external_library (a_library: CONF_EXTERNAL_LIBRARY) is
+			-- Remove `a_library'.
+		require
+			a_library_not_void: a_library /= Void
+			has_a_library: internal_external_library.has (a_library)
+		do
+			internal_external_library.start
+			internal_external_library.search (a_library)
+			internal_external_library.remove
+		ensure
+			removed: not internal_external_library.has (a_library)
 		end
 
 	remove_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
@@ -1446,6 +1509,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 	internal_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- Global external object files of this target itself.
+
+	internal_external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY]
+			-- Global external library files of this target itself.
 
 	internal_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 			-- Global external ressource files of this target itself.

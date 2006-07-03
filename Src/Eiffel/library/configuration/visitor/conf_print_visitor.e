@@ -153,6 +153,7 @@ feature -- Visit nodes
 			append_mapping (a_target.internal_mapping)
 			append_externals (a_target.internal_external_include, "include")
 			append_externals (a_target.internal_external_object, "object")
+			append_externals (a_target.internal_external_library, "library")
 			append_externals (a_target.internal_external_resource, "resource")
 			append_externals (a_target.internal_external_make, "make")
 			append_actions (a_target.internal_pre_compile_action, "pre")

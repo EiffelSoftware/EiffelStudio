@@ -45,6 +45,8 @@
 				maxOccurs="unbounded"/>
 			<xs:element name="external_object" type="external" minOccurs="0"
 				maxOccurs="unbounded"/>
+			<xs:element name="external_library" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
 			<xs:element name="external_resource" type="external" minOccurs="0"
 				maxOccurs="unbounded"/>
 			<xs:element name="external_make" type="external" minOccurs="0"

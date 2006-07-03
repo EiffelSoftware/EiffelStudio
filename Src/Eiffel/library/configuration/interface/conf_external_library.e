@@ -1,88 +1,29 @@
 indexing
-	description: "Objects that represent an external."
+	description: "External library files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_EXTERNAL
+	CONF_EXTERNAL_LIBRARY
 
 inherit
-	CONF_CONDITIONED
+	CONF_EXTERNAL
+		redefine
+			is_library
+		end
 
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_location: like location) is
-			-- Create with `a_location'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			location := a_location
-		ensure
-			location_set: location = a_location
-		end
-
 feature -- Status
-
-	is_include: BOOLEAN is
-			-- Is `Current' an include external?
-		once
-		end
-
-	is_object: BOOLEAN is
-			-- Is `Current' an object external?
-		once
-		end
 
 	is_library: BOOLEAN is
 			-- Is `Current' a library external?
 		once
+			Result := True
 		end
-
-	is_make: BOOLEAN is
-			-- Is `Current' a make external?
-		once
-		end
-
-	is_resource: BOOLEAN is
-			-- Is `Current' an external ressource?
-		once
-		end
-
-feature -- Access, stored in configuration file
-
-	location: STRING
-			-- The file location.
-
-	description: STRING
-			-- A description about the external.
-
-feature {CONF_ACCESS} -- Update, stored in configuration file
-
-	set_location (a_location: like location) is
-			-- Set `location' to `a_location'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			location := a_location
-		ensure
-			location_set: location = a_location
-		end
-
-	set_description (a_description: like description) is
-			-- Set `description' to `a_description'.
-		do
-			description := a_description
-		ensure
-			description_set: description = a_description
-		end
-
-invariant
-	location_not_void: location /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

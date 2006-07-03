@@ -115,6 +115,14 @@ feature
 			Result_not_void: Result /= Void
 		end
 
+	new_external_library (a_location: STRING): CONF_EXTERNAL_LIBRARY is
+			-- Create a `CONF_EXTERNAL_LIBRARY' object.
+		do
+			create Result.make (a_location)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_external_resource (a_location: STRING): CONF_EXTERNAL_RESOURCE is
 			-- Create a `CONF_EXTERNAL_RESOURCE' object.
 		do

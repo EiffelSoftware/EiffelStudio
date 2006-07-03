@@ -1769,11 +1769,11 @@ feature {NONE} -- Implementation
 			passed: BOOLEAN
 			an_object: EV_ANY
 		do
-			passed := feature {ISE_RUNTIME}.check_assert (False)
+			passed := {ISE_RUNTIME}.check_assert (False)
 			an_object ?= new_instance_of (dynamic_type_from_string (type))
 			an_object.default_create
 			if passed then
-				passed := feature {ISE_RUNTIME}.check_assert (True)
+				passed := {ISE_RUNTIME}.check_assert (True)
 			end
 			Result := an_object
 		ensure

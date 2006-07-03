@@ -114,21 +114,21 @@ feature {GB_CODE_GENERATOR} -- Output
 				else
 					info.enable_fonts_set
 					Result.extend ("create internal_font")
-					temp_string := "internal_font.set_family (feature {EV_FONT_CONSTANTS}."
+					temp_string := "internal_font.set_family ({EV_FONT_CONSTANTS}."
 					check
 						data_is_integer: element_info.data.is_integer
 					end
 					value := element_info.data.to_integer
 					inspect value
-					when feature {EV_FONT_CONSTANTS}.Family_screen then
+					when {EV_FONT_CONSTANTS}.Family_screen then
 						temp_string.append ("Family_screen)")
-					when feature {EV_FONT_CONSTANTS}.Family_roman then
+					when {EV_FONT_CONSTANTS}.Family_roman then
 						temp_string.append ("Family_roman)")
-					when feature {EV_FONT_CONSTANTS}.Family_sans then
+					when {EV_FONT_CONSTANTS}.Family_sans then
 						temp_string.append ("Family_sans)")
-					when feature {EV_FONT_CONSTANTS}.Family_typewriter then
+					when {EV_FONT_CONSTANTS}.Family_typewriter then
 						temp_string.append ("Family_typewriter)")
-					when feature {EV_FONT_CONSTANTS}.Family_modern then
+					when {EV_FONT_CONSTANTS}.Family_modern then
 						temp_string.append ("Family_modern)")
 					else
 						check
@@ -139,7 +139,7 @@ feature {GB_CODE_GENERATOR} -- Output
 
 					element_info := full_information @ (font_weight_string)
 					if element_info /= Void then
-						temp_string := "internal_font.set_weight (feature {EV_FONT_CONSTANTS}."
+						temp_string := "internal_font.set_weight ({EV_FONT_CONSTANTS}."
 						check
 							data_is_integer: element_info.data.is_integer
 						end		
@@ -163,7 +163,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					
 					element_info := full_information @ (font_shape_string)
 					if element_info /= Void then
-						temp_string := "internal_font.set_shape (feature {EV_FONT_CONSTANTS}."
+						temp_string := "internal_font.set_shape ({EV_FONT_CONSTANTS}."
 						check
 							data_is_integer: element_info.data.is_integer
 						end		

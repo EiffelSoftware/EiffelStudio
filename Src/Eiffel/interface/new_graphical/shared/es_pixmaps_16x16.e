@@ -966,6 +966,18 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 4))
 		end
+
+	frozen folder_config_icon: EV_PIXMAP is
+			-- Access to 'config' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 4))
+		end
+
+	frozen folder_config_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'config' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 4))
+		end
 	frozen tool_features_icon: EV_PIXMAP is
 			-- Access to 'features' pixmap.
 		once

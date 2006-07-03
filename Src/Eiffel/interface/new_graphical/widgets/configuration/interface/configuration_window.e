@@ -768,6 +768,9 @@ feature {NONE} -- Section tree selection agents
 		require
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
+		local
+			l_btn: EV_BUTTON
+			hb: EV_HORIZONTAL_BOX
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_advanced
@@ -777,6 +780,18 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
+
+			append_small_margin (target_configuration_space)
+
+			create hb
+			target_configuration_space.extend (hb)
+			target_configuration_space.disable_item_expand (hb)
+
+			hb.extend (create {EV_CELL})
+
+			create l_btn.make_with_text_and_action (target_edit_manually, agent open_text_editor)
+			hb.extend (l_btn)
+			hb.disable_item_expand (l_btn)
 
 			is_refreshing := False
 		ensure
@@ -839,6 +854,21 @@ feature {NONE} -- Implementation
 				set_focus
 				section_tree.set_focus
 				Current.unlock_update
+			end
+		end
+
+	open_text_editor is
+			-- Open editor to edit the configuration file by hand.
+		local
+			l_cmd_exec: COMMAND_EXECUTOR
+			l_cmd_string: STRING
+		do
+			l_cmd_string := preferences.misc_data.external_editor_command.twin
+			if not l_cmd_string.is_empty then
+				l_cmd_string.replace_substring_all ("$target", conf_system.file_name)
+				l_cmd_string.replace_substring_all ("$line", "0")
+				create l_cmd_exec
+				l_cmd_exec.execute (l_cmd_string)
 			end
 		end
 

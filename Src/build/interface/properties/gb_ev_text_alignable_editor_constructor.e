@@ -62,11 +62,11 @@ feature -- Access
 
 			alignment := first.text_alignment
 			inspect alignment
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
 				item_left.enable_select
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 				item_center.enable_select
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
 				item_right.enable_select	
 			else
 				check

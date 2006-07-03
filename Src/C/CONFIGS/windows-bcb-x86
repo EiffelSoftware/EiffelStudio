@@ -1,7 +1,7 @@
 #
 # This is the configuration file for BORLAND C++
 #
-borlandestudio='estudio'
+borlandecdbgd='ecdbgd'
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make'

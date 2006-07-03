@@ -9,12 +9,14 @@ inherit
 	SHARED_DEBUG;
 	OBJECT_ADDR
 
+	IPC_SHARED_ENGINE
+
 create
 
 	make
 
 feature
-	
+
 	make is
 			-- Create Current and pass addresses to C
 		do
@@ -27,7 +29,8 @@ feature
 		do
 			if Application.is_running then
 				Application.process_termination;
-			end;
+			end
+			Ipc_engine.end_of_debugging
 		end
 
 indexing

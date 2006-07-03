@@ -61,9 +61,6 @@ typedef struct stream {
 	HANDLE er;                      /* Event handle read awaiting */
 	HANDLE ew;                      /* Event handle write done */
 } STREAM, *EIF_LPSTREAM;
-
-#define readfd(sp)              ((sp)->sr)
-#define writefd(sp)             ((sp)->sw)
 #define readev(sp)              ((sp)->er)
 #define writeev(sp)             ((sp)->ew)
 
@@ -73,24 +70,26 @@ typedef struct stream {
 	int sw;			/* Writing stream */
 } STREAM;
 
+#endif
 #define readfd(sp)		((sp)->sr)
 #define writefd(sp)		((sp)->sw)
-#endif
+
+typedef STREAM *EIF_PSTREAM;
 
 /* Acesssing of reading and writing file descriptors is to be done via macros,
  * to keep a constant interface should the STREAM structure evolve over time.
  */
 
 #ifdef EIF_WINDOWS
-extern STREAM *new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew);
-extern int net_recv(STREAM *, char *, size_t, BOOL);
-extern int net_send(STREAM *, char *, size_t);
+extern EIF_PSTREAM new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew);
+extern int net_recv(EIF_PSTREAM , char *, size_t, BOOL);
+extern int net_send(EIF_PSTREAM , char *, size_t);
 #else
-extern STREAM *new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
-extern STREAM *stream_by_fd[];		/* Maps a fd to a STREAM */
-rt_public int net_send(int cs, char *buf, size_t size) ;
-rt_public int net_recv(int cs, char *buf, size_t size) ;
+extern EIF_PSTREAM new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
+extern EIF_PSTREAM stream_by_fd[];		/* Maps a fd to a STREAM */
+rt_public int net_send(EIF_PSTREAM, char *buf, size_t size) ;
+rt_public int net_recv(EIF_PSTREAM, char *buf, size_t size) ;
 #endif
 
-extern void close_stream(STREAM *sp);			/* Close stream connection */
+extern void close_stream(STREAM *);			/* Close stream connection */
 #endif

@@ -45,17 +45,164 @@
 #include "eif_logfile.h"
 #include "stream.h"
 #include "ewbio.h"
-#include "proto.h"
-#include "transfer.h"
+#include "ewb_child.h"
+#include "ewb_proto.h"
+#include "ewb_transfer.h"
 #include <string.h>
+#include <signal.h>
 
-extern int identify(void);		/* Make sure we are started via the wrapper */
+/* Data declaration */
+
+rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
+rt_public struct ewb_flags ewb_data = {	/* Internal ewb's flags */
+	(unsigned int) 0,	/* d_rqst */
+	(unsigned int) 0,	/* d_sent */
+	(STREAM *) 0,		/* d_cs */
+};
+
 
 #ifdef EIF_WINDOWS
-extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
+#	ifndef USE_ADD_LOG
+rt_public char progname[30];	/* Otherwise defined in logfile.c */
+#	endif
+#else
+#	ifndef USE_ADD_LOG
+rt_public char *progname;	/* Otherwise defined in logfile.c */
+#	endif
 #endif
 
-rt_public void init_connect(void)
+/* Function declaration */
+rt_public void ewb_exit(int code);			/* Daemon's exit */
+rt_public void clean_connection(void);	/* Clean connection with ecdbgd */
+rt_private Signal_t handler(int sig);	/* Signal handler */
+
+rt_private void set_signal(void)
+{
+	/* Set up the signal handler */
+
+#ifdef SIGHUP
+	signal(SIGHUP, handler);
+#endif
+#ifdef SIGINT
+	signal(SIGINT, handler);
+#endif
+#ifdef SIGQUIT
+	signal(SIGQUIT, handler);
+#endif
+#ifdef SIGTERM
+	signal(SIGTERM, handler);
+#endif
+#ifdef SIGCHLD
+	signal (SIGCHLD, SIG_IGN);
+#elif defined (SIGCLD)
+	signal (SIGCLD, SIG_IGN);
+#endif
+}
+
+rt_private Signal_t handler(int sig)
+{
+	/* A signal was caught */
+
+#ifndef SIGNALS_KEPT
+	signal(sig, handler);
+#endif
+
+#ifdef USE_ADD_LOG
+	add_log(12, "caught signal #%d", sig);
+#endif
+	ewb_exit(0);
+}
+
+
+rt_public void ewb_exit(int code)
+{
+#ifdef USE_ADD_LOG
+	add_log(12, "exiting with status %d", code);
+#endif
+	clean_connection();
+	exit(code);
+}
+
+rt_public int is_ecdbgd_alive (void) 
+{
+	return (ewb_active_check(ewb_data.d_cs, ewb_data.d_ecdbgd) == 0);
+}
+
+rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout) 
+{
+	STREAM *sp;			/* Stream used to talk to the child "ecdbgd" */
+#ifdef EIF_WINDOWS
+	HANDLE pid;			/* Pid of the spawned child */
+#else
+	Pid_t pid;			/* Pid of the spawned child */
+#endif
+
+	/* Check if the user wants to override the default timeout value
+	 * required by the children processes to launch and initialize
+	 * themselves. This new value is specified in the ISE_TIMEOUT
+	 * environment variable
+	 */
+	
+	TIMEOUT = (unsigned int) eif_timeout;
+
+	/* Compute program name, removing any leading path to keep only the name
+	 * of the executable file.
+	 */
+
+#ifdef USE_ADD_LOG
+	progpid = getpid();					/* Program's PID */
+	progname = egc_system_name;					/* Computed by Eiffel run-time */
+
+	/* Open a logfile in /tmp */
+
+#	ifdef EIF_WINDOWS
+	/* Open a logfile in /tmp */
+		(void) open_log("\\tmp\\ised.log");
+#	else
+#		ifdef EIF_VMS
+			(void) open_log("sys$scratch:ebench.log");
+#		else
+	/* Open a logfile in /tmp */
+			(void) open_log("/tmp/ised.log");
+#		endif
+#	endif /* platform */
+	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+#endif /* USE_ADD_LOG */
+
+
+	set_signal();						/* Set up signal handler */
+	signal (SIGABRT ,exit);
+#ifdef EIF_WINDOWS
+#ifdef SIGQUIT
+	signal (SIGQUIT, exit);
+#endif
+#else
+	signal (SIGQUIT, exit);
+#endif
+
+
+#ifdef EIF_WINDOWS
+		/* First argument is 1 because we are launching the Eiffel compiler here. */
+	sp = spawn_child("dbg", 0, cmd, NULL, 0, &pid, NULL);	/* Bring "ecdbgd" to life */
+#else
+	sp = spawn_child("dbg", cmd, NULL, 0, &pid);	/* Bring "ecdbgd" to life */
+#endif
+
+	if (sp == (STREAM *) 0) {
+		return -1;
+	}
+
+	ewb_data.d_cs = sp; /* Record ecdbgd stream */
+#ifdef EIF_WINDOWS
+	ewb_data.d_ecdbgd = (HANDLE) pid;		/* And keep track of the child pid */
+#else
+	ewb_data.d_ecdbgd = (int) pid;			/* And keep track of the child pid */
+#endif
+	
+	return 1;
+}
+
+rt_public void init_connection(int* err)
 {
 	STREAM *sp;		/* Stream used for communications with ised */
 
@@ -67,24 +214,20 @@ rt_public void init_connect(void)
 	set_loglvl(20);			/* Set debug level */
 #endif
 
-	if (-1 == identify())				/* Make sure ised started us */
-		dexit(1);
-
 	/* Create a stream, which associates the two ends of the pair of pipes
 	 * opened with the parent. The STREAM provides a bidrectional abstraction.
 	 */
 
-#ifdef EIF_WINDOWS
-	sp = new_stream(global_ewbin, global_ewbout, global_event_r, global_event_w);
-#else
-	sp = new_stream(EWBIN, EWBOUT);
-#endif
+	sp = ewb_data.d_cs;
 
-	if (sp == (STREAM *) 0)
-		dexit(1);
+	if (sp == (STREAM *) 0) {
+		*err = -1;
+		return ;
+	}
 
-	prt_init();				/* Initialize IDR filters */
-	tpipe(sp);				/* Initialize transfers with application */
+	ewb_prt_init();				/* Initialize IDR filters */
+	ewb_tpipe(sp);				/* Initialize transfers with application */
+
 
 #ifdef USE_ADD_LOG
 	progpid = getpid();					/* Program's PID */
@@ -96,10 +239,28 @@ rt_public void init_connect(void)
 #endif
 }
 
+rt_public void clean_connection(void)
+{
+#ifdef EIF_WINDOWS
+	if (ewb_data.d_cs) {
+		close_stream (ewb_data.d_cs);
+		free (ewb_data.d_cs);
+		ewb_data.d_cs = NULL;
+	}
+
+	if (ewb_data.d_ecdbgd != 0) {
+		CloseHandle (ewb_data.d_ecdbgd);
+	}
+
+#endif
+	ewb_tpipe(NULL);	/* Clear PIPE between ewb and ecdgbd */
+}
+
+extern STREAM *ewb_sp;
+
 #ifdef EIF_WINDOWS
 /* C routines for the communications of debugged application and debugger. */
 
-extern STREAM *sp;
 
 typedef void (* EVENT_CALLBACK)(EIF_REFERENCE);
 EVENT_CALLBACK event_callback;
@@ -119,14 +280,15 @@ void win_ioh_make_client(EIF_POINTER a, EIF_OBJECT o, EIF_INTEGER a_delay)
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	/* KillTimer */
-	if (WaitForSingleObject (readev(sp), 0) == WAIT_OBJECT_0)
+	if (WaitForSingleObject (readev(ewb_sp), 0) == WAIT_OBJECT_0) {
 		(event_callback)(eif_access(event_object));
+	}
 }
 
 void start_timer (void)
 {
 	/* Start the timer event to check for communications 
-	   between bench and the application */
+	   between ewb and the ecdbgd */
 	event_id = SetTimer (NULL, 0, delay, (TIMERPROC) ioh_timer);
 }
 
@@ -134,6 +296,29 @@ void stop_timer (void)
 {
 	/* Kill the timer event */
 	KillTimer (NULL, event_id);
+}
+
+void win_ioh_clean_client(void)
+{
+	stop_timer();
+	event_callback = NULL;
+	eif_wean (event_object);
+	delay = 0; 
+}
+
+DWORD ewb_current_process_id() 
+{
+	return GetCurrentProcessId();
+}
+#else
+
+int ewb_current_process_id() 
+{
+	return getpid();
+}
+
+int ewb_pipe_read_fd () {
+	return readfd(ewb_sp);
 }
 
 #endif

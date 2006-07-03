@@ -3,30 +3,33 @@ indexing
 	status: "See notice at end of class."
 -- Request to run the application.
 
-class RUN_REQUEST 
+class RUN_REQUEST
 
 inherit
-	
+
 	EWB_REQUEST
 		redefine
 			send
 		end
 
 	SHARED_STATUS
-	
-	APPLICATION_STATUS_EXPORTER	
+
+	APPLICATION_STATUS_EXPORTER
 
 create
 
-	make 
+	make
 
 feature -- Status report
 
 	application_name: STRING
 			-- Path to executable of application
-	
+
 	working_directory: STRING
 			-- Directory in which `application_name' will be launched.
+
+	ipc_timeout: INTEGER
+			-- Timeout used in IPC communication between dbg and app.
 
 feature -- Status setting
 
@@ -39,7 +42,7 @@ feature -- Status setting
 		ensure
 			application_name_set: application_name = s
 		end
-		
+
 	set_working_directory (s: STRING) is
 			-- Assign `s' to `working_directory'.
 		require
@@ -48,6 +51,16 @@ feature -- Status setting
 			working_directory := s
 		ensure
 			working_directory_set: working_directory = s
+		end
+
+	set_ipc_timeout (t: INTEGER) is
+			-- Assign `t' to `ipc_timeout'.
+		require
+			t > 0
+		do
+			ipc_timeout := t
+		ensure
+			ipc_timeout_set: ipc_timeout = t
 		end
 
 feature -- Update
@@ -66,28 +79,29 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	start_application: BOOLEAN is
-			-- Send a request to the Ised daemon to 
+			-- Send a request to the Ised daemon to
 			-- start application `application_name',
 			-- and perform a handshake with the
 			-- application to check that it is alive.
 			-- Return False if something went wrong
 			-- in the communication.
 		local
-			ext_str: ANY
+			c_string: C_STRING
 		do
 				-- Initialize sending of working directory
 			send_rqst_0 (Rqst_application_cwd)
-			
+
 				-- Send working directory of application
-			ext_str := working_directory.to_c
-			c_send_str ($ext_str)
-			
+			create c_string.make (working_directory)
+			c_send_str (c_string.item)
+
 				-- Start the application (in debug mode).
 			send_rqst_0 (Rqst_application)
 
 				-- Send the name of the application.
-			ext_str := application_name.to_c
-			c_send_str ($ext_str)
+			create c_string.make (application_name)
+			c_send_str (c_string.item)
+
 			Result := recv_ack
 
 			debug("DEBUGGER")
@@ -98,7 +112,6 @@ feature {NONE} -- Implementation
 				io.put_string("Performing a handshake with the application....");
 			end
 
-
 				-- Perform a handshake with the application.
 			if Result then
 				send_rqst_0 (Rqst_hello)
@@ -108,7 +121,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

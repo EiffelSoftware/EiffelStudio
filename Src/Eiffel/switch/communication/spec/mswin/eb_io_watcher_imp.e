@@ -38,15 +38,27 @@ feature {NONE} -- Initialization
 				-- Adjust timer range.
 			if delay < 5 then
 				delay := 5
-			elseif delay > 200 then	
+			elseif delay > 200 then
 				delay := 200
 			end
-				
+
 				-- Setup the callback mechanism.
-			win_ioh_make_client ($call_back, Current, delay) 
+			win_ioh_make_client ($call_back, Current, delay)
+			is_destroyed := False
 		end
 
 feature -- Access
+
+	destroy is
+		require
+			is_not_destroyed: not is_destroyed
+		do
+				-- Clean the callback mechanism.			
+			win_ioh_clean_client
+			is_destroyed := True
+		end
+
+	is_destroyed: BOOLEAN
 
 	action: PROCEDURE [ANY, TUPLE]
 			-- Callback feature called with the file/pipe is changed.
@@ -79,6 +91,8 @@ feature {NONE} -- Implementation
 	call_back is
 			-- Called back by the implementation when the
 			-- file/pipe is changed.
+		require
+			is_not_destroyed: not is_destroyed
 		do
 			-- We just call the action if any.
 			if action /= Void then
@@ -93,6 +107,12 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end
+
+	win_ioh_clean_client is
+			-- Clean the io handler function
+		external
+			"C"
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

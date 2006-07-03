@@ -267,7 +267,7 @@ rt_public uint32 eif_nb_org_routines;
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
-rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
+rt_public unsigned int TIMEOUT;     /* Time out for interprocess communications */
 
 /*
 doc:	<attribute name="EIF_once_count" return_type="long" export="public">

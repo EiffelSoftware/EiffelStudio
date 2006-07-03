@@ -22,7 +22,7 @@ create
 feature {NONE} -- Initialization
 
 	default_create is
-			-- Create a default IO-listener. No action is associated, and 
+			-- Create a default IO-listener. No action is associated, and
 			-- therefore nothing will happen when the file/pipe is changed.
 		do
 			create implementation
@@ -38,6 +38,16 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_destroyed: BOOLEAN is
+		do
+			Result := implementation.is_destroyed
+		end
+
+	destroy is
+		do
+			implementation.destroy
+		end
 
 	action: PROCEDURE [ANY, TUPLE] is
 			-- Callback feature called with the file/pipe is changed.

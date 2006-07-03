@@ -36,12 +36,12 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "proto.h"
+#include "app_proto.h"
 #include "ewbio.h"
 #include "stream.h"
 #include "com.h"
 #include "identify.h"
-#include "transfer.h"
+#include "app_transfer.h"
 #include "listen.h"
 #include "eif_logfile.h"
 #include <signal.h>
@@ -57,10 +57,8 @@
 rt_public unsigned char interrupt_flag = 0;	/* 1=interrupt asked by user, 2=new breakpoint added while runnning */
 #endif
 
-#ifdef EIF_WINDOWS
-extern STREAM *sp;
-extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
-#else
+extern STREAM *app_sp;
+#ifndef EIF_WINDOWS
 /* The USE_SIGNAL definition should be the same here and in /ipc/daemon/proto.c 
  * Otherwise a TRAP signal is sent to the application which cannot handle it and dies. */
 #define USE_SIGNAL
@@ -80,13 +78,8 @@ rt_shared void dserver(void)
 	add_log(9, "STOPPED");
 #endif
 
-#ifdef EIF_WINDOWS
-	stop_rqst(sp);		/* Notify workbench we stopped */
+	stop_rqst(app_sp);		/* Notify workbench we stopped */
 							/* was ifdef NEVER */
-#else
-	stop_rqst(EWBOUT);		/* Notify workbench we stopped */
-							/* was ifdef NEVER */
-#endif
 
 	wide_listen();			/* Listen on the socket, waiting for requests */
 
@@ -163,7 +156,7 @@ rt_shared char dinterrupt(void)
 		result = 1;
 		}
 #else	/* USE_SIGNAL */
-	send_info(EWBOUT, APP_INTERRUPT);
+	send_info(app_sp, APP_INTERRUPT);
 	wide_listen();			/* Listen on the socket, waiting for the answer */
 	result = 1;
 #endif	/* USE_SIGNAL */
@@ -180,14 +173,17 @@ rt_shared void winit(void)
 	 */
 
 #ifdef EIF_WINDOWS
+	HANDLE *p_ewbin, *p_ewbout, *p_event_r, *p_event_w;
 	LPVOID pFlagAddress;
 #else	/* EIF_WINDOWS */
-	STREAM *sp;					/* Stream used to talk to ised */
+	int fd_in, fd_out;
 #ifdef USE_SIGNAL
 	sigset_t	mask_set;
 	struct sigaction new_action;
 #endif
 #endif	/* EIF_WINDOWS */
+
+	STREAM *sp;					/* Stream used to talk to ised */
 
 #ifdef USE_ADD_LOG
 #ifndef EIF_WINDOWS
@@ -206,9 +202,30 @@ rt_shared void winit(void)
 	add_log(7, "identifying...");
 #endif
 
-	if (-1 == identify())		/* Did ised start us? */
-		return;					/* No, then debugging is not allowed */
+#ifdef EIF_WINDOWS
+	p_ewbin   = (HANDLE*) malloc(sizeof(HANDLE));
+	p_ewbout  = (HANDLE*) malloc(sizeof(HANDLE));
+	p_event_r = (HANDLE*) malloc(sizeof(HANDLE));
+	p_event_w = (HANDLE*) malloc(sizeof(HANDLE));
+	if (-1 == identify("app", p_ewbin, p_ewbout, p_event_r, p_event_w))
+#else
+	fd_in  = DBGIN;
+	fd_out = DBGOUT;
 
+	if (-1 == identify("app", fd_in, fd_out))
+#endif
+		/* Did ised start us? */
+	{
+#ifdef EIF_WINDOWS
+		free(p_ewbin);
+		free(p_ewbout);
+		free(p_event_r);
+		free(p_event_w);
+#endif
+		/* No, then debugging is not allowed */
+		return;		
+	}
+	
 	debug_mode = 1;				/* Debugging is allowed */
 
 	/* Create a stream, which associates the two ends of the pair of pipes
@@ -218,16 +235,22 @@ rt_shared void winit(void)
 	 */
 
 #ifdef EIF_WINDOWS
-	sp = new_stream(global_ewbin, global_ewbout, global_event_r, global_event_w);
+	sp = new_stream(*p_ewbin, *p_ewbout, *p_event_r, *p_event_w);
+	free(p_ewbin);
+	free(p_ewbout);
+	free(p_event_r);
+	free(p_event_w);
 #else
-	sp = new_stream(EWBIN, EWBOUT);
+	sp = new_stream(fd_in, fd_out);
 #endif
 
 	if (sp == (STREAM *) 0)
+	{
 		enomem();				/* A run-time critical exception */
+	}
 
-	tpipe(sp);					/* Initialize tread/twrite transfer pipe */
-	prt_init();					/* Initialize IDR filters */
+	app_tpipe(sp);					/* Initialize tread/twrite transfer pipe app_sp */
+	app_prt_init();					/* Initialize IDR filters */
 
 #ifdef USE_ADD_LOG
 	add_log(7, "application started in debug mode");

@@ -37,7 +37,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include <sys/types.h>
-#include "proto.h"
+#include "dbg_proto.h"
 #include "select.h"
 #include "timehdr.h"
 #include "stream.h"
@@ -89,9 +89,9 @@ rt_public void dwide_listen(void)
 	 */
 
 #ifdef EIF_WINDOWS
- 	if (-1 == add_input(daemon_data.d_cs, (HANDLE_FN) drqsthandle)) {
+ 	if (-1 == add_input(daemon_data.d_cs, (STREAM_FN) drqsthandle)) {
 #else
-	if (-1 == add_input(readfd(daemon_data.d_cs), drqsthandle)) {
+	if (-1 == add_input(daemon_data.d_cs, drqsthandle)) {
 #endif
 
 #ifdef USE_ADD_LOG
@@ -152,16 +152,20 @@ rt_public void dwide_listen(void)
 		add_log(12, "selected");
 #endif
 		if (!has_input(daemon_data.d_cs))		/* Stream connection broken */
+		{
 			return;				/* Abort processing */
+		}
 
 		if (daemon_data.d_app > 0 && !has_input(daemon_data.d_as)) {
 			CloseHandle (daemon_data.d_app);
 			daemon_data.d_app = NULL;
 #else
-		if (!has_input(readfd(daemon_data.d_cs)))	/* Stream connection broken */
+		if (!has_input(daemon_data.d_cs))	/* Stream connection broken */
+		{
 			return;								/* Abort processing */
+		}
 
-		if (daemon_data.d_app > 0 && !has_input(readfd(daemon_data.d_as))) {
+		if (daemon_data.d_app > 0 && !has_input(daemon_data.d_as)) {
 #endif
 			daemon_data.d_app = 0;
 			close_stream(daemon_data.d_as);
@@ -178,7 +182,10 @@ rt_public void dwide_listen(void)
 
 		if (nfd == 0) {				/* Select timed out */
 			if (0 != active_check(daemon_data.d_cs, daemon_data.d_ewb)) {
-				daemon_data.d_ewb = 0;
+				/* FIXME jfiat: maybe we should kill the d_app process too ?  */
+				/* The 'cleaning' will be done during the 'dexit(..)' call 
+				 * daemon_data.d_ewb = 0;
+				 */
 #ifdef USE_ADD_LOG
 				add_log(12, "ewb is dead");
 #endif
@@ -263,7 +270,7 @@ rt_private int active_check(STREAM *sp, int pid)
 			pid, st, strerror(EVMSERR, st));
 		}
 #endif /* USE_ADD_LOG */
-		    (void) rem_input(readfd(sp));	/* Remove its input */
+		    (void) rem_input(sp);	/* Remove its input */
 		    return 1;
 	    }
 	}
@@ -271,13 +278,13 @@ rt_private int active_check(STREAM *sp, int pid)
 #else /* not EIF_VMS */
 #ifdef PIDCHECK
 	if (-1 == kill(pid, 0)) {			/* If kill fails, the pid is gone */
-		(void) rem_input(readfd(sp));	/* Remove its input */
+		(void) rem_input(sp);	/* Remove its input */
 		return 1;
 	}
 #else
 	rqst.rq_type = KPALIVE;
-	send_packet(writefd(sp), &rqst);	/* Send dummy request */
-	if (!has_input(readfd(sp)))			/* Failure, could not send request */
+	dbg_send_packet(sp, &rqst);	/* Send dummy request */
+	if (!has_input(sp))			/* Failure, could not send request */
 		return 1;						/* Child is dead */
 	}
 #endif /* PIDCHECK */

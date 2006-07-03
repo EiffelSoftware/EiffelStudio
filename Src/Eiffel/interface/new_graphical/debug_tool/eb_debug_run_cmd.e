@@ -22,11 +22,6 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -82,8 +77,6 @@ feature -- Initialization
 			-- Add some actions as well.
 		do
 			is_sensitive := True
-			create run_request.make (Rqst_application)
-			create cont_request.make (Rqst_cont)
 		end
 
 feature -- Access
@@ -478,6 +471,7 @@ feature -- Execution
 			else
 				Eb_debugger_manager.raise
 				app_exec := eb_debugger_manager.application
+
 				app_exec.run (l_cmd_line_arg, working_dir)
 				if app_exec.is_running then
 					output_manager.add_string ("System is running")
@@ -488,13 +482,12 @@ feature -- Execution
 					app_exec.on_application_launched
 				else
 						-- Something went wrong
-					if Eiffel_system.system.il_generation then
-						create wd.make_with_text (app_exec.eiffel_error_dotnet_initialization_message)
-					else
-						create wd.make_with_text (app_exec.eiffel_timeout_message)
-					end
+					create wd.make_with_text (app_exec.can_not_launch_system_message)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					output_manager.add_string ("Could not launch system")
+
+					app_exec.on_application_quit
+
 					Eb_debugger_manager.unraise
 				end
 			end
@@ -541,12 +534,6 @@ feature {NONE} -- Implementation / Attributes
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
-
-	run_request: RUN_REQUEST
-			-- Request for the run.
-
-	cont_request: EWB_REQUEST
-			-- Request for continuation.
 
 	launch_program: BOOLEAN
 			-- Are we currently trying to launch the program.

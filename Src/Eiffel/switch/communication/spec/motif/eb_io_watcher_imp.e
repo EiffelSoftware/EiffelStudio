@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			--create io_watcher
 			--io_watcher.set_medium(a_medium)
+			is_destroyed := False
 		end
 
 feature -- Access
@@ -40,6 +41,14 @@ feature -- Access
 --		end
 
 feature -- Element change
+
+	destroy is
+		do
+			TO IMPLEMENT !!! jfiat
+			is_destroyed := True
+		end
+
+	is_destroyed: BOOLEAN
 
 	set_action (an_action: like action) is
 			-- Set `an_action' as callback feature.

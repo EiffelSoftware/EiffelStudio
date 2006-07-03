@@ -38,6 +38,9 @@
 #include "eif_portable.h"
 #include <sys/types.h>
 
+#include <stdio.h>
+#include <stdarg.h>
+
 #ifdef EIF_VMS
 #include "ipcvms.h"		/* only affects VMS */
 #endif
@@ -71,13 +74,13 @@
 
 #define MAX_STRING	1024			/* Maximum length for logging string */
 
-rt_private int logfile = -2;			/* File descriptor used for logging */
+rt_private FILE* logfile = NULL;			/* File descriptor used for logging */
 rt_private char *logname = (char *) 0;	/* Name of the logfile in use */
 rt_private int loglvl = 20;			/* Logging level */
 rt_private void expand(char *, char*);	/* Run the %m %e expansion on the string */
 rt_private int add_error(char *);			/* Prints description of error in errno */
 rt_private int add_errcode(char *);			/* Print the symbolic error name */
-rt_public void dexit(int);
+//rt_public void dexit(int);
 
 rt_public char *progname = "ram";	/* Program name */
 
@@ -90,18 +93,14 @@ extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
 extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
 extern void release_lock(void);		/* Release previous lock */
 
-rt_public void dexit(int status)
-{
-	add_log(12, "exiting with status %d", status);
-	exit(status);
-}
+//rt_public void dexit(int status)
+//{
+//	add_log(12, "exiting with status %d", status);
+//	exit(status);
+//}
 
 /* VARARGS2 */
-#ifdef EIF_WINDOWS
-rt_public void add_log(int level, char *format, int arg1, HANDLE arg2, HANDLE arg3, HANDLE arg4, HANDLE arg5)
-#else
-rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5)
-#endif
+rt_public void add_log (int level, char *StrFmt, ...)
 {
 	/* Add logging informations at specified level. Note that the arguments are
 	 * declared as 'int', but it should work fine, even when we give doubles,
@@ -117,21 +116,25 @@ rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, in
 	Time_t clock;				/* Number of seconds since the Epoch */
 	char buffer[MAX_STRING];	/* Buffer which holds the expanded %m string */
 	char message[MAX_STRING];	/* Where logging message is built */
-	int fd;						/* File descriptor to be used for message */
+	FILE* out;						/* File descriptor to be used for message */
+	va_list ap;
+	int r;
 
 	if (loglvl < level)			/* Logging level is not high enough */
 		return;
 
-	if (logfile == -2)			/* Logfile not opened for whatever reason */
-		fd = 2;					/* Use stderr if no logfile opened */
+	if (logfile == NULL)			/* Logfile not opened for whatever reason */
+		out = stderr;					/* Use stderr if no logfile opened */
 	else
-		fd = logfile;			/* Thie is the normal log file */
+		out = logfile;			/* Thie is the normal log file */
 
 	clock = time((Time_t *) 0);	/* Number of seconds */
 	ct = localtime(&clock);		/* Get local time from amount of seconds */
-	expand(format, buffer);		/* Expansion of %m and %e into buffer */
+//	expand(format, buffer);		/* Expansion of %m and %e into buffer */
 
-	sprintf(message, buffer, arg1, arg2, arg3, arg4, arg5);
+	va_start (ap, StrFmt);
+
+	r = vsprintf (message, StrFmt, ap);
 	sprintf(buffer, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
 		ct->tm_year, ct->tm_mon + 1, ct->tm_mday,
 		ct->tm_hour, ct->tm_min, ct->tm_sec,
@@ -140,7 +143,8 @@ rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, in
 #else
 		progname, progpid, message);
 #endif
-	(void) write(fd, buffer, strlen(buffer));
+	fprintf(out, buffer);
+//	(void) fwrite(fd, buffer, strlen(buffer));
 }
 
 rt_public int open_log(char *name)
@@ -149,27 +153,30 @@ rt_public int open_log(char *name)
 	 * it is closed before. The routine returns -1 in case of error.
 	 */
 
-	if (logfile != -2)
-		close(logfile);
+	if (logfile != NULL)
+		fclose(logfile);
 
 #ifdef __VMS	/* create a new file the first time called only */
 	{
 	    static int been_here_done_that = FALSE;
 	    if (been_here_done_that)
-	        logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	        logfile = fopen(name, "a+"); //, 0644);
+//	        logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	    else
-	        logfile = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	        logfile = fopen(name, "w"); //, 0644);
+//	        logfile = fopen(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	    been_here_done_that = TRUE;
 	}
 
 #else
-	logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	logfile = fopen(name, "a+"); //, 0644);
+//	logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 #endif  /* vms */
 
 	logname = name;					/* Save file name */
 
-	if (logfile == -1) {
-		logfile = -2;
+	if (logfile == NULL) {
+		logfile = NULL;
 		return -1;
 	}
 
@@ -182,10 +189,10 @@ rt_public void close_log(void)
 {
 	/* Close log file */
 
-	if (logfile != -2)			/* File not closed */
-		close(logfile);
+	if (logfile != NULL)			/* File not closed */
+		fclose(logfile);
 
-	logfile = -2;				/* Mark file as closed */
+	logfile = NULL;				/* Mark file as closed */
 }
 
 rt_public int reopen_log(void)
@@ -239,7 +246,7 @@ rt_private int add_error(char *where)
 
 #ifdef HAS_SYS_ERRLIST
 	extern int sys_nerr;					/* Size of sys_errlist[] */
-	extern char *sys_errlist[];				/* Maps error code to string */
+	extern char **sys_errlist;				/* Maps error code to string */
 #endif
 
 #if defined HAS_STRERROR || defined HAS_SYS_ERRLIST
@@ -248,7 +255,7 @@ rt_private int add_error(char *where)
 	sprintf(where, "error #%d", errno);
 #endif
 
-	return strlen(where);		/* FIXME */
+	return (int) strlen(where);		/* FIXME */
 }
 
 rt_private int add_errcode(char *where)

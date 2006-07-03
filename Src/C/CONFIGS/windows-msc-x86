@@ -1,7 +1,7 @@
 #
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
-microsoftestudio='estudio'
+microsoftecdbgd='ecdbgd'
 make='nmake'
 del='-del'
 #

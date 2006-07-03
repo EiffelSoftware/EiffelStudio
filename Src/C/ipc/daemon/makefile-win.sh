@@ -18,34 +18,35 @@ CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 LDFLAGS = /NOLOGO
 
 # Derived object file names
-OBJECTS = \
+
+DBGOBJECTS = \
 	child.$obj \
 	listen.$obj \
-	main.$obj \
+	ecdbgd.$obj \
 	proto.$obj \
 	env.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: estudio.exe
+all:: ecdbgd.exe
 
-$microsoftestudio.exe: $(LIBS) estudio.lmk
-	link $(LDFLAGS) $(LIBS) -SUBSYSTEM:WINDOWS -OUT:$@ @estudio.lmk
+$microsoftecdbgd.exe: $(LIBS) ecdbgd.lmk
+	link $(LDFLAGS) $(LIBS) -SUBSYSTEM:WINDOWS -OUT:$@ @ecdbgd.lmk
 
-estudio.res: estudio.rc
-	$resource_compiler -r estudio.rc
+ecdbgd.res: ecdbgd.rc
+	$resource_compiler -r ecdbgd.rc
 
-estudio.lmk: $(OBJECTS) estudio.res
-	echo $(OBJECTS) > estudio.lmk
-	echo GDI32.LIB ADVAPI32.LIB USER32.LIB estudio.res >> estudio.lmk
+ecdbgd.lmk: $(DBGOBJECTS) ecdbgd.res
+	echo $(DBGOBJECTS) > ecdbgd.lmk
+	echo GDI32.LIB ADVAPI32.LIB USER32.LIB ecdbgd.res >> ecdbgd.lmk
 
-$borlandestudio.exe: $(LIBS) estudio.lbk
-	ilink32 @estudio.lbk
+$borlandecdbgd.exe: $(LIBS) ecdbgd.lbk
+	ilink32 @ecdbgd.lbk
 
-estudio.lbk: $(OBJECTS) estudio.res
-	del estudio.lbk
-	echo $compiler_path\lib\c0w32.$obj $(OBJECTS), \
-	estudio.exe,, CW32 IMPORT32 $(LIBS),,estudio.res >> estudio.lbk
+ecdbgd.lbk: $(DBGOBJECTS) ecdbgd.res
+	del ecdbgd.lbk
+	echo $compiler_path\lib\c0w32.$obj $(DBGOBJECTS), \
+	ecdbgd.exe,, CW32 IMPORT32 $(LIBS),,ecdbgd.res >> ecdbgd.lbk
 
 listen.$obj: ..\shared\select.h

@@ -5,7 +5,7 @@
 			and CALL_INFO (cluster debug)
 
 			For Windows:
-				Simplified version from Unix using STREAM *sp from transfer.c:tpipe().
+				Simplified version from Unix using STREAM *ewb_sp from transfer.c:tpipe().
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
@@ -49,6 +49,9 @@
 #include "eif_in.h"
 #include <string.h>
 #include "rt_garcol.h"
+#include "stream.h"
+
+extern STREAM *ewb_sp;
 
 EIF_PROC set_rout;
 EIF_PROC set_natural_8;
@@ -71,9 +74,6 @@ EIF_PROC set_error;
 EIF_PROC set_exception_trace;
 EIF_PROC set_void;
 
-#ifdef EIF_WINDOWS
-extern STREAM *sp;
-#endif
 
 rt_public void c_recv_rout_info (EIF_OBJ target)
 
@@ -89,9 +89,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 {
 	EIF_GET_CONTEXT
 	Request pack;
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd [EWBOUT];
-#endif
+
 	Dump dump;
 	char *c_rout_name;
 	char string [128], *ptr = string;
@@ -102,9 +100,9 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 
 	Request_Clean (pack);
 #ifdef EIF_WINDOWS
-	if (-1 != recv_packet (sp, &pack, TRUE)){ /* else send error */
+	if (-1 != recv_packet (ewb_sp, &pack, TRUE)){ /* else send error */
 #else
-	if (-1 != recv_packet (readfd (sp), &pack)){ /* else send error */
+	if (-1 != recv_packet (ewb_sp, &pack)){ /* else send error */
 #endif
 		switch (pack.rq_type) {
 			case DUMPED:
@@ -175,17 +173,14 @@ rt_public void c_recv_value (EIF_OBJ target)
  */
 {
 	Request pack;
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd [EWBOUT];
-#endif
 	struct  item item;
 	uint32  type_flag;
 
 	Request_Clean (pack);
 #ifdef EIF_WINDOWS
-	if (-1 != recv_packet (sp, &pack, TRUE)) {
+	if (-1 != recv_packet (ewb_sp, &pack, TRUE)) {
 #else
-	if (-1 != recv_packet (readfd (sp), &pack)) {
+	if (-1 != recv_packet (ewb_sp, &pack)) {
 #endif
 		if (pack.rq_type == DUMPED) {
 			switch (pack.rq_dump.dmp_type) {

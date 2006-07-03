@@ -5,16 +5,16 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-deferred class RQST_HANDLER 
+deferred class RQST_HANDLER
 
 inherit
 
 	IPC_SHARED
 
-feature 
+feature
 
 	execute is
-			-- Execute Current action as 
+			-- Execute Current action as
 			-- requested by ised.
 		deferred
 		end;
@@ -31,7 +31,12 @@ feature -- Eiffel/C interface.
 			-- Pass addresses from Current to C.
 		do
 			rqst_handler_to_c (Current, request_type, $set)
-		end;
+		end
+
+	reset_addresses is
+		do
+			rqst_handler_to_c (Void, request_type, Default_pointer)
+		end
 
 	set (s: like detail) is
 			-- Assign `s' to `detail'

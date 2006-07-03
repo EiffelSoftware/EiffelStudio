@@ -37,19 +37,14 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include <sys/types.h>
-#include "proto.h"
+#include "app_proto.h"
 #include "select.h"
 #include "ewbio.h"
-#include "stream.h"
 #include "listen.h"
 #include "eif_logfile.h"
 
-#ifdef EIF_WINDOWS
-extern STREAM *sp;
-extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
-#else
-extern int ised;		/* Socket used to chat with the daemon */
-#endif
+#include "stream.h"
+extern STREAM *app_sp;	/* Socket used to chat with the daemon */
 
 rt_public void wide_listen(void)
 {
@@ -62,9 +57,9 @@ rt_public void wide_listen(void)
 	 */
 
 #ifdef EIF_WINDOWS
-	if (-1 == add_input(sp, (HANDLE_FN) arqsthandle)) {
+	if (-1 == add_input(app_sp, (STREAM_FN) arqsthandle)) {
 #else
-	if (-1 == add_input(EWBIN, arqsthandle)) {
+	if (-1 == add_input(app_sp, arqsthandle)) {
 #endif
 
 #ifdef USE_ADD_LOG
@@ -88,7 +83,7 @@ rt_public void wide_listen(void)
 #ifdef USE_ADD_LOG
 	add_log(12, "in while do_select");
 #endif
-		if (!has_input(sp)) {			/* Socket connection broken? */
+		if (!has_input(app_sp)) {			/* Socket connection broken? */
 #ifdef USE_ADD_LOG
 	add_log(12, "in !has_input which is what we want");
 #endif
@@ -102,7 +97,7 @@ rt_public void wide_listen(void)
 #else
 
 	while (0 < do_select((struct timeval *) 0)) {
-		if (!has_input(EWBIN))			/* Socket connection broken? */
+		if (!has_input(app_sp))			/* Socket connection broken? */
 			return;						/* Anyway, abort processing */
 	}
 #endif

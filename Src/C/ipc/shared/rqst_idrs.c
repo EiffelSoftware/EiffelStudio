@@ -115,6 +115,8 @@ rt_private struct idr_discrim u_Request[] = {
 	{ OVERFLOW_DETECT, idr_Opaque },
 	{ CHANGE_THREAD, idr_Opaque },
 	{ EWB_SET_ASSERTION_CHECK, idr_Opaque },
+	{ CLOSE_DBG, idr_void },
+	{ SET_IPC_PARAM, idr_Opaque },
 };
 
 /*

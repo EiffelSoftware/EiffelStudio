@@ -51,8 +51,11 @@
  * know what for--RAM).
  */
 
-#define EWBIN	8		/* Process reads from here */
-#define EWBOUT	7		/* And writes to there */
+#define DBGIN	12		/* Process reads from here */
+#define DBGOUT	11		/* And writes to there */
+
+#define EWBIN	10		/* Process reads from here */
+#define EWBOUT	9		/* And writes to there */
 
 #endif
 

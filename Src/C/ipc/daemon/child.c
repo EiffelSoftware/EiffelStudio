@@ -78,8 +78,9 @@
 #define PIPE_READ	0		/* File descriptor used for reading */
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
-extern unsigned TIMEOUT;	/* Time to let the child initialize */
+extern unsigned int TIMEOUT;	/* Time to let the child initialize */
 extern void dexit (int);
+#define SPAWN_CHILD_FAILED(i) dexit(i);
 
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
@@ -97,12 +98,12 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(int is_ec, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
-                 	/* Where pid of the child is writtten */
+                 	/* Where pid of the child is written */
 					/* Where ProcessId is written (can be NULL if you don't need it) */
 {
 	/* Launch the child process 'cmd' and return the stream structure which can
@@ -111,13 +112,12 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 */
 
 #ifdef EIF_WINDOWS
-	HANDLE pdn[2];						/* The opened downwards file descriptors */
-	HANDLE pup[2];						/* The opened upwards file descriptors */
+	HANDLE pp2c[2];						/* The opened downwards file descriptors : parent to child */
+	HANDLE pc2p[2];						/* The opened upwards file descriptors : child to parent */
 	HANDLE child_event_r;				/* Event for signalling readability */
 	HANDLE child_event_w;				/* Event for signalling writeability */
-	HANDLE pipe_to_dup;
+	HANDLE pp2c_write_to_dup;
 	CHAR   event_str[20];				/* Event name */
-	STREAM *sp;							/* Stream used for communications with ewb */
 
 	BOOL	fSuccess;					/* Did CreateProcess succeed? */
 	PROCESS_INFORMATION	piProcInfo;
@@ -129,41 +129,46 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	char *t_uu;				/* Result of UUEncode */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *startpath = NULL, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
+	char *startpath = NULL, *dotplace, *cmdline, *exe_path;	/* Paths for directory to start in */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
-	int pdn[2];					/* The opened downwards file descriptors */
-	int pup[2];					/* The opened upwards file descriptors */
+	int pp2c[2];				/* The opened downwards file descriptors : parent to child */
+	int pc2p[2];				/* The opened upwards file descriptors : child to parent */
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
-	STREAM *sp;					/* Stream used for communications with ewb */
 	char **argv;				/* Argument vector */
 #endif
+	STREAM *sp;							/* Stream used for communications with ewb */
 
 #ifdef EIF_WINDOWS
-		/* We encode 2 pointers, plus "? and ?" plus a space and a null terminating character. */
+		/* We encode 2 pointers, plus '\"?' and '?\"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6;
 
-	cmd2 = strdup(cmd);
-	/* Find the name of the command and place it in cmd2 */
+	exe_path = strdup(cmd);
+	/* Find the name of the command and place it in exe_path */
 	/* Find the args and place them in cmdline */
 	/* Set the starting  path to be the path of the executable io start_path */
-	for (dotplace = strchr (cmd2, '.');
-		dotplace && strnicmp (dotplace, ".exe", 4) != 0;
+
+	/* FIXME jfiat [2006/06/15] : 
+	 * we should make sure the .exe is at the end of following by a space
+	 * indeed if the executable is  e:/test.exe/eiffel57/...../bin/estudio.exe ... 
+	 * this will fail															*/
+	for (dotplace = strchr (exe_path, '.');
+		dotplace && (strnicmp (dotplace, ".exe", 4) != 0) ;
 		dotplace = strchr (dotplace+1 , '.') )
 		;
 	if (!dotplace) {
 		printf ("Error no .exe in executable");
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 	}
 	*(dotplace + 4) = '\0';
-	if (strchr (cmd2, ' ') != NULL) {
+	if ( (strchr (exe_path, ' ') != NULL) && (strchr (exe_path,'"') == NULL) ) {
 		cmdline = malloc (strlen (cmd) + 3 + uu_buffer_size);
 		memset  (cmdline, 0, strlen(cmd) + 3);
 		strcpy (cmdline , "\"");
-		strcat (cmdline, cmd2);
+		strcat (cmdline, exe_path);
 		strcat (cmdline, "\" ");
-		if (strlen (cmd2) != strlen (cmd))
+		if (strlen (exe_path) != strlen (cmd))
 			strcat (cmdline, dotplace + 5);
 	} else {
 		cmdline = malloc (strlen (cmd) + uu_buffer_size);
@@ -182,12 +187,12 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 
 #ifdef EIF_WINDOWS
-		meltpath = (char *) (strdup (cmd2));
+		meltpath = (char *) (strdup (exe_path));
 #else
 		meltpath = (char *) (strdup (argv [0]));
 #endif
 		if (meltpath == (char *)0){
-			dexit (1);
+			SPAWN_CHILD_FAILED(1);
 		}
 
 #if defined(EIF_VMS_V6_ONLY)
@@ -222,7 +227,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			envstring = (char *) realloc (envstring, strlen(meltpath) + strlen("MELT_PATH=") + 1);
 		}
 		if (!envstring){
-			dexit (1);
+			SPAWN_CHILD_FAILED(1);
 		}
 		sprintf (envstring, "MELT_PATH=%s", meltpath);
 		putenv (envstring);
@@ -256,63 +261,66 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	saAttr.bInheritHandle = TRUE;
 	saAttr.lpSecurityDescriptor = NULL;
 
-	if (!CreatePipe (&(pup[PIPE_READ]), &(pup[PIPE_WRITE]), &saAttr, 0)) {
+	if (!CreatePipe (&(pc2p[PIPE_READ]), &(pc2p[PIPE_WRITE]), &saAttr, 0)) {
 #else
-	if (-1 == pipe(pup)) {
+	if (-1 == pipe(pc2p)) {
 #endif
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR: pipe: %m (%e)");
 		add_log(2, "ERROR cannot set up upwards pipe");
 #endif
 		perror("pipe up");
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 	}
 
 #ifdef EIF_WINDOWS
-	if (!CreatePipe (&(pdn[PIPE_READ]), &(pipe_to_dup), &saAttr, 0)) {
+	if (!CreatePipe (&(pp2c[PIPE_READ]), &(pp2c_write_to_dup), &saAttr, 0)) {
 #else
-	if (-1 == pipe(pdn)) {
+	if (-1 == pipe(pp2c)) {
 #endif
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR: pipe: %m (%e)");
 		add_log(2, "ERROR cannot set up downwards pipe");
 #endif
 		perror("pipe down");
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 	}
 #ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
-	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
-		pup[PIPE_READ], pup[PIPE_WRITE], pdn[PIPE_READ], pipe_to_dup);
+	add_log(12, "opened pipes as pc2p(%d, %d), pp2c(%d, %d)",
+		pc2p[PIPE_READ], pc2p[PIPE_WRITE], pp2c[PIPE_READ], pp2c_write_to_dup);
 #endif
 #else
 #ifdef USE_ADD_LOG
-	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
-		pup[PIPE_READ], pup[PIPE_WRITE], pdn[PIPE_READ], pdn[PIPE_WRITE]);
+	add_log(12, "opened pipes as pc2p(%d, %d), pp2c(%d, %d)",
+		pc2p[PIPE_READ], pc2p[PIPE_WRITE], pp2c[PIPE_READ], pp2c[PIPE_WRITE]);
 #endif
 #endif
 
 
 #ifdef EIF_WINDOWS
-	if (!DuplicateHandle (GetCurrentProcess(), pipe_to_dup,
-		GetCurrentProcess(), &(pdn[PIPE_WRITE]), 0,
+/* NOTA jfiat: we could use SetHandleInformation if we were not supporting win9x
+ * SetHandleInformation( pp2c[PIPE_WRITE], HANDLE_FLAG_INHERIT, 0);
+ */
+
+	if (!DuplicateHandle (GetCurrentProcess(), pp2c_write_to_dup,
+		GetCurrentProcess(), &(pp2c[PIPE_WRITE]), 0,
 		FALSE, DUPLICATE_SAME_ACCESS)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot dup pipe %d", GetLastError());
 #endif
 		perror("duplicate handle");
-		dexit (1);
+		SPAWN_CHILD_FAILED(1);
 	}
 
-	if (!CloseHandle (pipe_to_dup)) {
+	if (!CloseHandle (pp2c_write_to_dup)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot close dupped pipe %d", GetLastError());
 #endif
 		perror("close handle");
-		dexit (1);
+		SPAWN_CHILD_FAILED(1);
 	}
-	pipe_to_dup = NULL;
-
+	pp2c_write_to_dup = NULL;
 
 		/* Working directory */
 	if (cwd) {
@@ -320,14 +328,15 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
-		startpath = strdup (cmd2);
+		startpath = strdup (exe_path);
 		*(strrchr (startpath, '\\')) = '\0';
 	}
 
 	/* Encode the pipes to start the child */
+	/* ... ' \"?' + UUENCODED2POINTERS + '?\"' */
 
-	uu_str [0] = pup [PIPE_WRITE];
-	uu_str [1] = pdn [PIPE_READ];
+	uu_str [0] = pc2p [PIPE_WRITE];
+	uu_str [1] = pp2c [PIPE_READ];
 	strcat (cmdline, " \"?");
 	t_uu = uuencode_str ((char *) uu_str, 2 * sizeof (HANDLE));
 	strcat (cmdline, t_uu);
@@ -336,7 +345,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 
 
 #ifdef USE_ADD_LOG
-		add_log(20, "Command line: %s %s", cmd2, cmdline);
+		add_log(20, "Command line: %s %s", exe_path, cmdline);
 #endif
 
 	/* Set up members of STARTUPINFO structure. */
@@ -355,12 +364,12 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		/* If we are launching the graphical version of the Eiffel compiler,
 		 * we use DETACHED_PROCESS since we do not want its DOS console
 		 * to appear. */
-	if (is_ec == 1) {
+	if (is_new_console_requested == 1) {
 		l_startup_flags = DETACHED_PROCESS;
 	} else {
 		l_startup_flags = CREATE_NEW_CONSOLE;
 	}
-	fSuccess = CreateProcess (cmd2,	/* Command 	*/
+	fSuccess = CreateProcess (exe_path,	/* Command 	*/
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
@@ -377,7 +386,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		add_log(20, "Error code %d", GetLastError());
 #endif
 		strcat (error_msg, "Cannot Launch the program \"");
-		strcat (error_msg, cmd2);
+		strcat (error_msg, exe_path);
 		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
 		MessageBox (NULL, error_msg, "Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
@@ -398,7 +407,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		add_log(2, "ERROR cannot fork, sorry");
 #endif
 		perror("fork");
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 	} else {	/* Parent process */
 				/* Let child initialize or print error */
 #ifdef USE_ADD_LOG
@@ -445,7 +454,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		add_log(2, "ERROR cannot fork, sorry");
 #endif
 		perror("fork");
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 
 	case 0:			/* Child process */
 #if defined(USE_ADD_LOG) && !defined(EIF_VMS)
@@ -454,32 +463,32 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 
 #ifdef EIF_VMS	/* On VMS, we're still executing in the parent process.	    */
 		/* Now we set up file descriptors for the child and ensure  */
-		/* that the parent ends of the pipes (pdn[WRITE] and	    */
-		/* pup[READ]) remain open and are not implicitly closed by  */
+		/* that the parent ends of the pipes (pp2c[WRITE] and	    */
+		/* pc2p[READ]) remain open and are not implicitly closed by  */
 		/* the dup2 fest below, and mark them FD_CLOEXEC.	    */
 		/* The required state for spawning the child is:	    */
-		/*   EWBOUT == pup[WRITE], EWBIN == pdn[READ]		    */
-/*DEBUG*/	ipcvms_fd_dump ("before adjust pipes for child: pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
-		if (EWBOUT == pdn[PIPE_WRITE] || EWBOUT == pup[PIPE_READ] 
-			|| EWBIN == pdn[PIPE_WRITE] || EWBIN == pup[PIPE_READ]) {
+		/*   DBGOUT == pc2p[WRITE], DBGIN == pp2c[READ]		    */
+/*DEBUG*/	ipcvms_fd_dump ("before adjust pipes for child: pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
+		if (DBGOUT == pp2c[PIPE_WRITE] || DBGOUT == pc2p[PIPE_READ] 
+			|| DBGIN == pp2c[PIPE_WRITE] || DBGIN == pc2p[PIPE_READ]) {
 		    int new_recv, new_send;
-		    new_recv = dup(pup[PIPE_READ]);
-		    new_send = dup(pdn[PIPE_WRITE]);
-		    close (pup[PIPE_READ]);
-		    close (pdn[PIPE_WRITE]);
-		    pup[PIPE_READ]  = new_recv;
-		    pdn[PIPE_WRITE] = new_send;
+		    new_recv = dup(pc2p[PIPE_READ]);
+		    new_send = dup(pp2c[PIPE_WRITE]);
+		    close (pc2p[PIPE_READ]);
+		    close (pp2c[PIPE_WRITE]);
+		    pc2p[PIPE_READ]  = new_recv;
+		    pp2c[PIPE_WRITE] = new_send;
 		}
-		close_on_exec (pup[PIPE_READ]);
-		close_on_exec (pdn[PIPE_WRITE]);
-/*DEBUG*/	ipcvms_fd_dump ("before dup2 pipes for child: pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
+		close_on_exec (pc2p[PIPE_READ]);
+		close_on_exec (pp2c[PIPE_WRITE]);
+/*DEBUG*/	ipcvms_fd_dump ("before dup2 pipes for child: pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
 
 #else /* (not) EIF_VMS */
 		/* FIXME why is it necessary to close each twice??? -- David_sS */
-		close(pdn[PIPE_WRITE]);
-		close(pup[PIPE_READ]);
-		close(pdn[PIPE_WRITE]);
-		close(pup[PIPE_READ]);
+		close(pp2c[PIPE_WRITE]);
+		close(pc2p[PIPE_READ]);
+		close(pp2c[PIPE_WRITE]);
+		close(pc2p[PIPE_READ]);
 #endif /* EIF_VMS */
 
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
@@ -488,27 +497,27 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		 * (Hint #1: dup2 closes its target fd before duping file)
 		 * (Hint #2: pipe() takes the lowest two file descriptors available)
 		 */
-		if (pdn[PIPE_READ] != EWBOUT) {
-			if (pup[PIPE_WRITE] != EWBOUT) {
-				dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				close(pup[PIPE_WRITE]);			/* Close dup'ed files before exec */
+		if (pp2c[PIPE_READ] != DBGOUT) {
+			if (pc2p[PIPE_WRITE] != DBGOUT) {
+				dup2(pc2p[PIPE_WRITE], DBGOUT);	/* Child writes to ewbout */
+				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
 			}
-			if (pdn[PIPE_READ] != EWBIN) {
-				dup2(pdn[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				close(pdn[PIPE_READ]);			/* (avoid child running out of fd!) */
+			if (pp2c[PIPE_READ] != DBGIN) {
+				dup2(pp2c[PIPE_READ], DBGIN);	/* Child reads from ewbin */
+				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
 			}
 		} else {
-			/* Bad case: pdn[PIPE_READ] == EWBOUT. We cannot use the code above since
-			 * the first dup2 will close EWBOUT, which unfortunately is used by a pipe
+			/* Bad case: pp2c[PIPE_READ] == DBGOUT. We cannot use the code above since
+			 * the first dup2 will close DBGOUT, which unfortunately is used by a pipe
 			 * end which also need to be kept alive until dup2'ed! Ouch--RAM
 			 */
-			if (pdn[PIPE_READ] != EWBIN) {
-				dup2(pdn[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				close(pdn[PIPE_READ]);			/* (avoid child running out of fd!) */
+			if (pp2c[PIPE_READ] != DBGIN) {
+				dup2(pp2c[PIPE_READ], DBGIN);	/* Child reads from ewbin */
+				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
 			}
-			if (pup[PIPE_WRITE] != EWBOUT) {
-				dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				close(pup[PIPE_WRITE]);			/* Close dup'ed files before exec */
+			if (pc2p[PIPE_WRITE] != DBGOUT) {
+				dup2(pc2p[PIPE_WRITE], DBGOUT);	/* Child writes to ewbout */
+				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
 			}
 		}
 		/* Now exec command. A successful launch should not return */
@@ -520,7 +529,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			}
 
 #ifdef EIF_VMS
-/*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pup[%d,%d], pdn[%d,%d]", pup[0],pup[1],pdn[0],pdn[1]);
+/*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
 			execv(argv[0], argv);
 #else
 			execvp(argv[0], argv);
@@ -536,41 +545,41 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		else
 			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-		dexit(1);
+		SPAWN_CHILD_FAILED(1);
 
 	default:		/* Parent process */
 		sleep(1);	/* Let child initialize or print error */
 #ifndef EIF_VMS
 		/* on VMS this was done in the case 0: code above when	*/
-		/* when the child's pipes were dup2'ed to EWBOUT/EWBIN	*/
-		close(pdn[PIPE_READ]);
-		close(pup[PIPE_WRITE]);
+		/* when the child's pipes were dup2'ed to DBGOUT/DBGIN	*/
+		close(pp2c[PIPE_READ]);
+		close(pc2p[PIPE_WRITE]);
 #endif
 		/* Reset those file descriptors to the lowest possible number, just to
 		 * remain clean (the pipe() system call allocating two files, multiple
 		 * calls to pipe() lead to a messy file allocation table)--RAM.
 		 */
-		new = dup(pup[PIPE_READ]);
-		if (new != -1 && new < pup[PIPE_READ]) {
-			close(pup[PIPE_READ]);
-			pup[PIPE_READ] = new;
+		new = dup(pc2p[PIPE_READ]);
+		if (new != -1 && new < pc2p[PIPE_READ]) {
+			close(pc2p[PIPE_READ]);
+			pc2p[PIPE_READ] = new;
 		} else if (new != -1)
 			close(new);
 		/* Same thing with writing file descriptor. Note that we only keep the
 		 * new duped descriptor when it is lower than the current original.
 		 */
-		new = dup(pdn[PIPE_WRITE]);
-		if (new != -1 && new < pdn[PIPE_WRITE]) {
-			close(pdn[PIPE_WRITE]);
-			pdn[PIPE_WRITE] = new;
+		new = dup(pp2c[PIPE_WRITE]);
+		if (new != -1 && new < pp2c[PIPE_WRITE]) {
+			close(pp2c[PIPE_WRITE]);
+			pp2c[PIPE_WRITE] = new;
 		} else if (new != -1)
 			close(new);
 		/* No need to dup2() file descriptors, we do not exec() anybody yet.
 		 * However, do make sure those remaining descriptors will be closed
 		 * by any further exec.
 		 */
-		close_on_exec(pup[PIPE_READ]);
-		close_on_exec(pdn[PIPE_WRITE]);
+		close_on_exec(pc2p[PIPE_READ]);
+		close_on_exec(pp2c[PIPE_WRITE]);
 	} /* end switch(pid) */
 #endif
 
@@ -580,28 +589,28 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	 */
 
 #ifdef EIF_WINDOWS
-	sprintf (event_str, "eif_event_r%x", piProcInfo.dwProcessId);
+	sprintf (event_str, "eif_event_r%x_%s", piProcInfo.dwProcessId, id);
 	child_event_r = CreateSemaphore (NULL, 0, 32767, event_str);
-	sprintf (event_str, "eif_event_w%x", piProcInfo.dwProcessId);
+	sprintf (event_str, "eif_event_w%x_%s", piProcInfo.dwProcessId, id);
 	child_event_w = CreateSemaphore (NULL, 0, 32767, event_str);
 #ifdef USE_ADD_LOG
 	add_log(12, "Opened Semaphores as %d %d",child_event_r,child_event_w);
 #endif
 
-	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE], child_event_r, child_event_w);
+	sp = new_stream(pc2p[PIPE_READ], pp2c[PIPE_WRITE], child_event_r, child_event_w);
 
-	CloseHandle (pup[PIPE_WRITE]);
-	CloseHandle (pdn[PIPE_READ]);
-	pup[PIPE_WRITE] = NULL;
-	pdn[PIPE_READ] = NULL;
+	CloseHandle (pc2p[PIPE_WRITE]);
+	CloseHandle (pp2c[PIPE_READ]);
+	pc2p[PIPE_WRITE] = NULL;
+	pp2c[PIPE_READ] = NULL;
 
-#else /* EIF_WINDOWS */
-	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE]);
+#else /* not EIF_WINDOWS */
+	sp = new_stream(pc2p[PIPE_READ], pp2c[PIPE_WRITE]);
 
 #ifdef EIF_VMS
 	/* now close files that we had to open to set up for child exec */
-	close (EWBOUT);
-	close (EWBIN);
+	close (DBGOUT);
+	close (DBGIN);
 #if defined(USE_ADD_LOG) 
 #define EIF_VMS 10 /* cause duplicate define warning */
 	ipcvms_fd_dump ("after spawn child");
@@ -634,7 +643,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	}
 
 	free (cmdline);
-	free (cmd2);
+	free (exe_path);
 	free (startpath);
 #else
 	if (child_pid != (Pid_t *) 0)
@@ -695,7 +704,7 @@ rt_private int comfort_child(STREAM *sp)
 		signal(SIGPIPE, oldpipe);
 		return -1;
 	}
-#endif
+#endif /* not EIF_WINDOWS */
 
 #ifdef EIF_WINDOWS
 	if (! WriteFile (writefd(sp), &c, 1, &count, NULL)) {
@@ -706,7 +715,7 @@ rt_private int comfort_child(STREAM *sp)
 		return -1;
 	}
 	ReleaseSemaphore (writeev(sp),1,NULL);
-#else
+#else /* NOT EIF_WINDOWS */
 	if (-1 == write(writefd(sp), &c, 1)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR write: %m (%e)");
@@ -716,7 +725,7 @@ rt_private int comfort_child(STREAM *sp)
 		return -1;
 	}
 	signal(SIGPIPE, oldpipe);			/* Restore previous handler */
-#endif
+#endif /* NOT EIF_WINDOWS */
 
 	/* Now wait for the acknowledgment -- no SIGPIPE to be feared */
 
@@ -727,13 +736,13 @@ rt_private int comfort_child(STREAM *sp)
 
 	wait = WaitForSingleObject (readev(sp), TIMEOUT * 1000);	/* Child should answer quickly */
 	if (wait == WAIT_FAILED) {
-#else
+#else /* NOT EIF_WINDOWS */
 	FD_ZERO(&mask);
 	FD_SET(readfd(sp), &mask);			/* We want to read from child */
 	tm.tv_sec = TIMEOUT;				/* Child should answer quickly */
 	tm.tv_usec = 0;
 	if (-1 == select(32, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
-#endif
+#endif /* NOT EIF_WINDOWS */
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");
 #endif
@@ -804,7 +813,7 @@ rt_private Signal_t broken(void)
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
-#else
+#else /* ifdef EIF_WINDOWS */
 LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	return DefWindowProc (hwnd, message, wParam, lParam);

@@ -12,34 +12,48 @@ inherit
 
 	SHARED_PLATFORM_CONSTANTS
 
-	IO_CONST
-		export
-			{NONE} all
-		end
-
 feature -- Initialization
 
 	init_connection (old_style: BOOLEAN) is
 			-- Connect with ised and watch for inputs from ised.
+		local
+			err: INTEGER
 		do
-			init_connect
-
-				-- Initialize the connection
-				-- with the ised daemon.
-			if old_style then
-				create_handler
+			c_init_connect ($err)
+			if err /= 0 then
+				connection_failed := True
 			else
-				create io_watcher.make_with_action (agent execute (Void))
+					-- Initialize the connection
+					-- with the ised daemon.
+				if old_style then
+					create_handler
+				else
+					create io_watcher.make_with_action (agent execute (Void))
+				end
+
+				pass_adresses
+					-- Pass adresses of RQST_HANDLER objects to
+					-- C, so they can be called when the
+					-- the workbench is in server mode.
+
+				enable_server_mode
+					-- Enable the server mode
+				connection_failed := False
 			end
-
-			pass_adresses
-				-- Pass adresses of RQST_HANDLER objects to
-				-- C, so they can be called when the
-				-- the workbench is in server mode.
-
-			enable_server_mode
-				-- Enable the server mode
 		end
+
+	clean_connection is
+		do
+			disable_server_mode
+			if io_watcher /= Void then
+				io_watcher.destroy
+				io_watcher := Void
+			end
+			c_clean_connect
+		end
+
+	connection_failed: BOOLEAN
+			-- Did last `init_connection' failed ?
 
 	create_handler is
 			-- Create an IO handler to listen to ebench
@@ -70,7 +84,7 @@ feature {NONE} -- Implementation
 
 	notified_handler: NOTIFIED_HDLR
 			-- Handler for notification event.
-			
+
 	stopped_handler: STOPPED_HDLR
 			-- Handler for stopped application event.
 			-- (Called when the application hit a breakpoint or when
@@ -88,12 +102,42 @@ feature {NONE} -- Implementation
 			create stopped_handler.make
 		end
 
+	reset_adresses is
+		do
+			if stopped_handler /= Void then
+				stopped_handler.reset_addresses
+				stopped_handler := Void
+			end
+			if notified_handler /= Void then
+				notified_handler.reset_addresses
+				notified_handler := Void
+			end
+			if dead_handler /= Void then
+				dead_handler.reset_addresses
+				dead_handler := Void
+			end
+			if failure_handler /= Void then
+				failure_handler.reset_addresses
+				failure_handler := Void
+			end
+		end
+
 feature {NONE} -- Externals
 
-	init_connect is
+	c_init_connect (perror: TYPED_POINTER[INTEGER]) is
 			-- Initialize the connection
 		external
-			"C"
+			"C signature (int*)"
+		alias
+			"init_connection"
+		end
+
+	c_clean_connect is
+			-- Initialize the connection
+		external
+			"C signature ()"
+		alias
+			"clean_connection"
 		end
 
 	request_handler: RQST_HANDLER is

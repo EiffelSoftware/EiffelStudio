@@ -83,8 +83,10 @@
 #define CHANGE_THREAD	42		/* Thread id used for inspection and other */
 
 #define EWB_SET_ASSERTION_CHECK 43		/* Change assertion checking on the application being debugged */
+#define CLOSE_DBG 44			/* Close ecdbgd */
+#define SET_IPC_PARAM 45			/* set IPC parameters value (pid, timeout in seconds, ...) */
 
-#define MAX_REQUEST_TYPE 43		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 45		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

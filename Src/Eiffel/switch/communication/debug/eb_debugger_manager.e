@@ -140,6 +140,12 @@ feature -- Access
 			create sep
 			Result.extend (sep)
 
+			Result.extend (options_cmd.new_menu_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
 			Result.extend (step_cmd.new_menu_item)
 			Result.extend (into_cmd.new_menu_item)
 			Result.extend (out_cmd.new_menu_item)
@@ -744,6 +750,8 @@ feature -- Status setting
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
+			enable_debugging_commands
+
 			update_all_debugging_tools_menu
 			debugging_window.window.unlock_update
 		ensure
@@ -1226,6 +1234,8 @@ feature {NONE} -- Implementation
 
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 
+	options_cmd: EB_DEBUG_OPTIONS_CMD
+
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.
 
@@ -1302,6 +1312,8 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (assertion_checking_handler_cmd)
 
 
+			create options_cmd.make (Current)
+			toolbarable_commands.extend (options_cmd)
 			create step_cmd.make (Current)
 			toolbarable_commands.extend (step_cmd)
 			create into_cmd.make (Current)
@@ -1360,7 +1372,11 @@ feature {NONE} -- Implementation
 			-- Enable commands when a new project has been created and compiled
 		do
 			display_error_help_cmd.enable_sensitive
+			enable_debugging_commands
+		end
 
+	enable_debugging_commands is
+		do
 			if is_msil_dll_system then
 				disable_debugging_commands (True)
 			else
@@ -1372,6 +1388,7 @@ feature {NONE} -- Implementation
 				bkpt_info_cmd.enable_sensitive
 				assertion_checking_handler_cmd.disable_sensitive
 
+				options_cmd.enable_sensitive
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
@@ -1392,6 +1409,7 @@ feature {NONE} -- Implementation
 			out_cmd.disable_sensitive
 			display_error_help_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
+			options_cmd.disable_sensitive
 		end
 
 	disable_debugging_commands (full: BOOLEAN) is

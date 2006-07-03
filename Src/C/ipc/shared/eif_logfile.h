@@ -43,12 +43,9 @@ extern void dexit(int);				/* Exit from the program by adding a log */
 #include <sys/types.h>
 #include "eif_config.h"
 
+
 /* Routine defined by logging package */
-#ifdef EIF_WINDOWS
-extern void add_log(int level, char *format, int arg1, HANDLE arg2, HANDLE arg3, HANDLE arg4, HANDLE arg5);
-#else
-extern void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5);			/* Add logging message */
-#endif
+extern void add_log (int level, char *StrFmt, ...);
 
 extern int open_log(char *name);	/* Open logging file */
 extern void close_log(void);		/* Close logging file */
@@ -61,6 +58,10 @@ extern char *progname;			/* Program name */
 extern Pid_t progpid;			/* Program PID */
 #endif
 
-#endif
-#endif
+#define ADD_LOG(level, format, ...) add_log(level, format, __VA_ARGS__);
+#else
+#define ADD_LOG(level, format, ...) 
+#endif /* USE_ADD_LOG */
+
+#endif /* _logfile_h_ */
 

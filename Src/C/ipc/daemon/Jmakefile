@@ -7,7 +7,7 @@
  */
 
 ;# Files used to build the daemon
-SRC = child.c listen.c main.c proto.c
+SRC = child.c listen.c ecdbgd.c proto.c
 
 ;# Derived object file names
 OBJ = \
@@ -28,9 +28,9 @@ DPFLAGS = -I$(TOP) -I$(LIBIDR) -I$(LIBIPC) -I$(TOP)/run-time -I$(TOP)/run-time/i
 CFLAGS = $(DPFLAGS)
 LDFLAGS = $(LIBIPCARCH) $(LIBIDRARCH)
 
-RemoteTargetDependency(estudio,$(LIBIPC),$(LIBIPCNAME))
-RemoteTargetDependency(estudio,$(LIBIDR),$(LIBIDRNAME))
+RemoteTargetDependency(ecdbgd,$(LIBIPC),$(LIBIPCNAME))
+RemoteTargetDependency(ecdbgd,$(LIBIDR),$(LIBIDRNAME))
 
-NormalProgramTarget(estudio,$(SRC),$(OBJ))
+NormalProgramTarget(ecdbgd,$(SRC),$(OBJ))
 DependTarget()
 LintTarget()

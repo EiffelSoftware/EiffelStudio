@@ -9,7 +9,7 @@ indexing
 
 class IPC_SHARED
 
-feature {NONE} -- Request constants
+feature {IPC_ENGINE} -- Request constants
 
 		-- Same as in file /ipc/shared/rqst_const.h
 
@@ -101,6 +101,12 @@ feature {NONE} -- Request constants
 	Rqst_set_assertion_check: INTEGER is 43
 			-- Set the assertion checking state.
 
+	Rqst_close_debugger: INTEGER is 44
+			-- Close the debugger daemon.
+
+	Rqst_set_ipc_param: INTEGER is 45
+			-- Set IPC parameters.
+			
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0

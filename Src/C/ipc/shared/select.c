@@ -56,6 +56,7 @@
 #include <errno.h>
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"
+#include "stream.h"
 #include "string.h"
 
 #ifdef EIF_WINDOWS
@@ -83,10 +84,10 @@
  */
 #ifdef EIF_WINDOWS
 rt_private STREAM *callback_handles [NOFILE];		/* Call backs on a per-fd basis */
-rt_private HANDLE_FN callback_array[NOFILE];		/* Call backs on a per-fd basis */
+rt_private STREAM_FN callback_array[NOFILE];		/* Call backs on a per-fd basis */
 
-rt_public HANDLE_FN callback (EIF_LPSTREAM);
-rt_private void set_callback (EIF_LPSTREAM, HANDLE_FN);
+rt_public STREAM_FN callback (EIF_LPSTREAM);
+rt_private void set_callback (EIF_LPSTREAM, STREAM_FN);
 void set_multiple_mask (EIF_LPSTREAM, HANDLE mask[NOFILE]);
 void unset_multiple_mask (EIF_LPSTREAM, HANDLE mask[NOFILE]);
 #else
@@ -144,11 +145,11 @@ extern int errno;						/* System call error status */
  */
 
 #ifdef EIF_WINDOWS
-rt_public int add_input(STREAM *sp, HANDLE_FN call)
+rt_public int add_input(EIF_PSTREAM sp, STREAM_FN call)
 		/* `sp': Stream on which select must be done */
 		/* `call': Function to be called when input is available */
 #else
-rt_public int add_input(int fd, void (*call) (/* ??? */))
+rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
 		/* File descriptor on which select must be done */
 		/* Function to be called when input is available */
 #endif
@@ -161,6 +162,7 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 #ifdef EIF_WINDOWS
 	if (nfds >= NOFILE) {					/* File descriptor out of range */
 #else
+	int fd = readfd(sp);
 	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
 #endif
 		s_errno = S_FDESC;					/* Invalid file descriptor */
@@ -199,47 +201,45 @@ rt_public int add_input(int fd, void (*call) (/* ??? */))
 	return 0;			/* Ok status */
 }
 
-#ifdef EIF_WINDOWS
-rt_public int tmp_input(STREAM *sp)
-#else
-rt_public int tmp_input(int fd)
-#endif
-{
-	/* Temporarily reset the selection for 'fd' in the temporary read mask. In
-	 * effect, we won't select for this file in the next TMP_TIMEOUT seconds.
-	 * This is to prevent remotely unavailable strems with high rate local
-	 * input to eat all our CPU resources.
-	 */
+/* Unused */
+//rt_public int tmp_input(EIF_PSTREAM sp)
+//{
+//	/* Temporarily reset the selection for 'fd' in the temporary read mask. In
+//	 * effect, we won't select for this file in the next TMP_TIMEOUT seconds.
+//	 * This is to prevent remotely unavailable strems with high rate local
+//	 * input to eat all our CPU resources.
+//	 */
+//
+//#ifdef EIF_WINDOWS
+// 	if (callback(sp) == NULL) {				/* No current selection */
+//#else
+//		int fd = readfd(sp);
+//	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
+//		s_errno = S_FDESC;					/* Invalid file descriptor */
+//		return -1;
+//	}
+//
+//  if (callback[fd] == (void (*)()) 0) {	/* No current selection */
+//#endif
+//		s_errno = S_NOCALBAK;				/* No callback was set */
+//		return -1;
+//	}
+//
+//#ifdef EIF_WINDOWS
+//	unset_multiple_mask(sp, rd_tmask);					/* Clear only temporary mask */
+//#else
+// 	FD_CLR(fd, &rd_tmask);					/* Clear only temporary mask */
+//#endif
+//
+//	return 0;
+//}
 
 #ifdef EIF_WINDOWS
- 	if (callback(sp) == NULL) {				/* No current selection */
-#else
-	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
-		s_errno = S_FDESC;					/* Invalid file descriptor */
-		return -1;
-	}
-
-  if (callback[fd] == (void (*)()) 0) {	/* No current selection */
-#endif
-		s_errno = S_NOCALBAK;				/* No callback was set */
-		return -1;
-	}
-
-#ifdef EIF_WINDOWS
-	unset_multiple_mask(sp, rd_tmask);					/* Clear only temporary mask */
-#else
- 	FD_CLR(fd, &rd_tmask);					/* Clear only temporary mask */
-#endif
-
-	return 0;
-}
-
-#ifdef EIF_WINDOWS
-rt_public HANDLE_FN new_callback(STREAM *sp, HANDLE_FN call)
+rt_public STREAM_FN new_callback(EIF_PSTREAM sp, STREAM_FN call)
 		/* `sp': STREAM on which select must be done */
 		/* `call': New function to be called when input is available */
 #else
-rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
+rt_public void (*new_callback(EIF_PSTREAM sp, void (*call) (/* ??? */)))(void)
 		/* File descriptor on which select must be done */
 		/* New function to be called when input is available */
 #endif
@@ -250,7 +250,7 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 	 */
 
 #ifdef EIF_WINDOWS
-	HANDLE_FN old_call;					/* The old call back set for that fd */
+	STREAM_FN old_call;					/* The old call back set for that fd */
 
 	if (call == NULL) {					/* Null pointer for callback */
 		s_errno = S_CALBAK;				/* Invalid callback pointer */
@@ -265,6 +265,7 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 		return NULL;					/* No change occurred */
 	}
 #else
+	int fd = readfd(sp);
 	void (*old_call)();					/* The old call back set for that fd */
 
 	if (fd < 0 || fd >= NOFILE) {		/* File descriptor out of range */
@@ -277,7 +278,7 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 	}
 	old_call = callback[fd];			/* Previously stored callback address */
 	callback[fd] = (void (*)()) 0;		/* Otherwise add_input() will fail */
-	if (-1 == add_input(fd, call)) {	/* Failed, restore old status */
+	if (-1 == add_input(sp, call)) {	/* Failed, restore old status */
 		callback[fd] = old_call;		/* Reset old callback value */
 		return (void (*)()) 0;			/* No change occurred */
 	}
@@ -287,19 +288,19 @@ rt_public void (*new_callback(int fd, void (*call) (/* ??? */)))(void)
 }
 
 #ifdef EIF_WINDOWS
-rt_public HANDLE_FN rem_input(STREAM *sp)
+rt_public STREAM_FN rem_input(EIF_PSTREAM sp)
 		/* `sp': Stream on which no select is to be done */
 #else
-rt_public void (*rem_input(int fd))(void)
+rt_public void (*rem_input(EIF_PSTREAM sp))(void)
 		/* File descriptor on which no select is to be done */
 #endif
 {
-	/* This function removes the input and associated callback for 'fd' and
+	/* This function removes the input and associated callback for 'sp' and
 	 * returns the old callback value.
 	 */
 
 #ifdef EIF_WINDOWS
-	HANDLE_FN old_call;					/* The old call back set for that fd */
+	STREAM_FN old_call;					/* The old call back set for that fd */
 
 	old_call = callback(sp);		/* Save previous callback value */
 	set_callback(sp, NULL);			/* And clear entry anyway */
@@ -319,6 +320,7 @@ rt_public void (*rem_input(int fd))(void)
 
 #else
 	int i;								/* To eventually update nfds */
+	int fd = readfd(sp);
 
 	void (*old_call)();					/* The old call back set for that fd */
 
@@ -354,11 +356,7 @@ rt_public void (*rem_input(int fd))(void)
 	return old_call;	/* Success: return old value (cannot be null) */
 }
 
-#ifdef EIF_WINDOWS
-rt_public int has_input(STREAM *sp)
-#else
-rt_public int has_input(int fd)
-#endif
+rt_public int has_input(EIF_PSTREAM sp)
 {
 	/* Returns 1 if the associated 'fd' has an input callback recorded, 0 if
 	 * the file is not selected, and -1 in case of error.
@@ -368,6 +366,7 @@ rt_public int has_input(int fd)
 	if (callback(sp) != NULL)
 		return 1;
 #else
+	int fd = readfd(sp);
 	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
 		s_errno = S_FDESC;					/* Invalid file descriptor */
 		return -1;
@@ -408,32 +407,34 @@ rt_public char *s_strname(void)
  * Altering the result from select
  */
 
-#ifdef EIF_WINDOWS
-rt_public void clear_fd(STREAM *sp)
-#else
-rt_public void clear_fd(int f)
-#endif
-{
-	/* It could happen that while processing one file descriptor, we have to
-	 * read another one (e.g. in streams, when we select on both the socket
-	 * carrier and the stream and we receive a stream I/O request while sending
-	 * one). This function takes care of that. It simply clears the specified
-	 * bit in the select mask.
-	 */
-
-#ifdef DEBUG
-#ifdef USE_ADD_LOG
-	if (FD_ISSET(f, &read_mask))
-		add_log(20, "removing input on file descriptor #%d", f);
-#endif
-#endif
-
-#ifdef EIF_WINDOWS
-	unset_multiple_mask(sp, read_mask);			/* Remove active input on the file */
-#else
-	FD_CLR(f, &read_mask);			/* Remove active input on the file */
-#endif
-}
+// FIXME jfiat [2006/06/23] : not used !!
+//
+//#ifdef EIF_WINDOWS
+//rt_public void clear_fd(STREAM *sp)
+//#else
+//rt_public void clear_fd(int f)
+//#endif
+//{
+//	/* It could happen that while processing one file descriptor, we have to
+//	 * read another one (e.g. in streams, when we select on both the socket
+//	 * carrier and the stream and we receive a stream I/O request while sending
+//	 * one). This function takes care of that. It simply clears the specified
+//	 * bit in the select mask.
+//	 */
+//
+//#ifdef DEBUG
+//#ifdef USE_ADD_LOG
+//	if (FD_ISSET(f, &read_mask))
+//		add_log(20, "removing input on file descriptor #%d", f);
+//#endif
+//#endif
+//
+//#ifdef EIF_WINDOWS
+//	unset_multiple_mask(sp, read_mask);			/* Remove active input on the file */
+//#else
+//	FD_CLR(f, &read_mask);			/* Remove active input on the file */
+//#endif
+//}
 
 /*
  * Perform select system call.
@@ -454,10 +455,10 @@ rt_public int do_select(struct timeval *timeout)
 	 * restarted automatically.
 	 */
 
+	STREAM* sp;						/* To loop over STREAM* */
 #ifdef EIF_WINDOWS
 	DWORD first_timeout;			/* Timeout used for first select */
 	DWORD nfd;						/* Status reported by select */
-	HANDLE fd;						/* To loop over file descriptors */
 	int isfirst = 1;				/* Mark first select */
 #else
 	struct timeval first_timeout;	/* Timeout used for first select */
@@ -516,8 +517,9 @@ rt_public int do_select(struct timeval *timeout)
 				first_timeout = timeout;
 				nfd = WaitForMultipleObjects (nfds, rd_tmask, FALSE, first_timeout * 1000);
 			}
-		} else
+		} else {
 			nfd = WaitForMultipleObjects (nfds, rd_mask, FALSE, timeout * 1000);
+		}
 
 		if (nfd == WAIT_FAILED) {
 #ifdef USE_ADD_LOG
@@ -529,8 +531,9 @@ rt_public int do_select(struct timeval *timeout)
 
 		if (isfirst) {
 			isfirst = 0;
-			if (nfd == WAIT_TIMEOUT && timeout == 0)
+			if (nfd == WAIT_TIMEOUT && timeout == 0) {
 				continue;				/* First select timed out */
+			}
 		}
 		break;							/* Exit from loop */
 #else
@@ -565,7 +568,7 @@ rt_public int do_select(struct timeval *timeout)
 		}
 		break;							/* Exit from loop */
 #endif
-	}
+	} /* end of for(;;) */
 
 	/* If we come here, then the select call must have succeded. If the timeout
 	 * value was reached, nfd is set to 0. Otherwise, it is set to the number
@@ -573,23 +576,23 @@ rt_public int do_select(struct timeval *timeout)
 	 */
 
 #ifdef EIF_WINDOWS
-	if (nfd == WAIT_TIMEOUT)			/* Select timed out */
-		return 0;						/* Propagate status */
+	if (nfd == WAIT_TIMEOUT) {			/* Select timed out */
 #else
-	if (nfd == 0)						/* Select timed out */
-		return 0;						/* Propagate status */
+	if (nfd == 0) {						/* Select timed out */
 #endif
+		return 0;						/* Propagate status */
+	}
 
 #ifdef EIF_WINDOWS
-	fd = callback_handles [nfd - WAIT_OBJECT_0];
+	sp = callback_handles [nfd - WAIT_OBJECT_0];
 #endif
 
 #ifdef DEBUG
 #ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
-			add_log(20, "file descriptor #%d is ready", fd);
+			add_log(20, "file descriptor #%d is ready", sp->sr);
 #endif
-#else
+#else /* if not EIF_WINDOWS */
 #ifdef USE_ADD_LOG
 	for (fd = 0; fd < nfds; fd++)
 		if (FD_ISSET(fd, &read_mask))	/* Something is present */
@@ -602,12 +605,16 @@ rt_public int do_select(struct timeval *timeout)
 	 * as ready for reading.
 	 */
 
+
 #ifdef EIF_WINDOWS
-	callback_array [nfd - WAIT_OBJECT_0](fd);	/* Wake up associated callback */
+	callback_array [nfd - WAIT_OBJECT_0](sp);	/* Wake up associated callback */
 #else
-	for (fd = 0; fd < nfds; fd++)
-		if (FD_ISSET(fd, &read_mask))	/* Something is present */
-			(callback[fd])(fd);			/* Wake up associated callback */
+	for (fd = 0; fd < nfds; fd++) {
+		if (FD_ISSET(fd, &read_mask)) {	/* Something is present */
+			sp = stream_by_fd[fd];
+			(callback[fd])(sp);			/* Wake up associated callback */
+		};
+	}
 #endif
 
 #ifdef DEBUG
@@ -615,6 +622,8 @@ rt_public int do_select(struct timeval *timeout)
 	add_log(20, "select call returning %d", nfd);
 #endif
 #endif
+
+
 
 #ifdef EIF_WINDOWS
 	return 1;				/* Number of files processed */
@@ -624,7 +633,7 @@ rt_public int do_select(struct timeval *timeout)
 }
 
 #ifdef EIF_WINDOWS
-HANDLE_FN callback(STREAM *h)
+STREAM_FN callback(STREAM *h)
 {
 	int i;
 
@@ -635,7 +644,7 @@ HANDLE_FN callback(STREAM *h)
 	return NULL;
 }
 
-void set_callback (STREAM *h, HANDLE_FN call)
+void set_callback (STREAM *h, STREAM_FN call)
 {
 	int i;
 
@@ -670,18 +679,21 @@ void set_multiple_mask (STREAM *h, HANDLE mask[NOFILE])
 {
 	int i;
 
-	for (i = 0; mask[i] != 0 && i < nfds; i++)
-		if (mask[i] == readev(h))
+	for (i = 0; mask[i] != 0 && i < nfds; i++) {
+		if (mask[i] == readev(h)) {
 			return ;
+		}
+	}
 
-	for (i = 0; i < nfds; i++)
-		if (mask[i] == 0)
-			{
+	for (i = 0; i < nfds; i++) {
+		if (mask[i] == 0) {
 			mask [i] = readev(h);
 			break;
-			}
-	if (i == nfds)
+		}
+	}
+	if (i == nfds) {
 		mask [i-1] = readev(h);
+	}
 }
 
 void unset_multiple_mask (STREAM *h, HANDLE mask[NOFILE])

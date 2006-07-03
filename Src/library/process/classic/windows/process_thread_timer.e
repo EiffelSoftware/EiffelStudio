@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		external
 			"C inline"
 		alias
-			"*(EIF_THR_TYPE *) $a_thread_id"
+			"return (EIF_POINTER) (*(EIF_THR_TYPE *) $a_thread_id);"
 		end
 
 feature{NONE} -- Implementation

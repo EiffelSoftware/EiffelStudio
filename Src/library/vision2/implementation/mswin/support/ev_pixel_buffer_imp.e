@@ -92,6 +92,9 @@ feature -- Command
 			check not_void: l_imp /= Void end
 			create Result
 			l_imp.draw_to_drawable (Result)
+				-- We use `twin' to ensure the implementation of EV_PIXMAP is EV_PIXMAP_IMP
+				-- and not EV_PIXMAP_IMP_DRAWABLE.
+			Result := Result.twin
 		end
 
 	draw_to_drawable (a_drawable: EV_DRAWABLE) is

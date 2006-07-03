@@ -62,6 +62,11 @@ inherit
 
 	SHARED_FLAGS
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -241,6 +246,18 @@ feature -- Execution
 				else
 					go_on_compile
 				end
+			end
+		end
+
+	execute_and_wait is
+			-- Execute current command and wait for it to finish.
+		do
+			execute
+			from
+			until
+				not process_manager.is_c_compilation_running
+			loop
+				process_events_and_idle
 			end
 		end
 

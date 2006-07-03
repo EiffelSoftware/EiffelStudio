@@ -91,15 +91,16 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			if is_il_generation then
-				create l_string_prop.make (option_namespace_name)
-				l_string_prop.set_description (option_namespace_description)
-				if an_options.namespace /= Void then
-					l_string_prop.set_value (an_options.namespace)
-				end
-				l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
-				properties.add_property (l_string_prop)
+			create l_string_prop.make (option_namespace_name)
+			l_string_prop.set_description (option_namespace_description)
+			if an_options.namespace /= Void then
+				l_string_prop.set_value (an_options.namespace)
 			end
+			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
+			if not is_il_generation then
+				l_string_prop.enable_readonly
+			end
+			properties.add_property (l_string_prop)
 		end
 
 	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is

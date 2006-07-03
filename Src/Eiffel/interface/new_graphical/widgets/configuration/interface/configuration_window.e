@@ -1977,90 +1977,123 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 
 				-- .NET section
-			if current_target.setting_msil_generation then
-				properties.add_section (section_dotnet)
+			properties.add_section (section_dotnet)
 
-				create l_bool_prop.make_with_value (target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
-				l_bool_prop.set_description (target_msil_use_optimized_precompile_description)
-				add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile, False)
-				properties.add_property (l_bool_prop)
-
-				create l_bool_prop.make_with_value (target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
-				l_bool_prop.set_description (target_use_cluster_name_as_namespace_description)
-				add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace, True)
-				properties.add_property (l_bool_prop)
-
-				create l_bool_prop.make_with_value (target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
-				l_bool_prop.set_description (target_use_all_cluster_name_as_namespace_description)
-				add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace, True)
-				properties.add_property (l_bool_prop)
-
-				create l_bool_prop.make_with_value (target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
-				l_bool_prop.set_description (target_dotnet_naming_convention_description)
-				add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention, False)
-				properties.add_property (l_bool_prop)
-
-				create l_bool_prop.make_with_value (target_il_verifiable_name, current_target.setting_il_verifiable)
-				l_bool_prop.set_description (target_il_verifiable_description)
-				add_boolean_setting_actions (l_bool_prop, s_il_verifiable, True)
-				properties.add_property (l_bool_prop)
-
-				create l_bool_prop.make_with_value (target_cls_compliant_name, current_target.setting_cls_compliant)
-				l_bool_prop.set_description (target_cls_compliant_description)
-				add_boolean_setting_actions (l_bool_prop, s_cls_compliant, False)
-				properties.add_property (l_bool_prop)
-
-				create l_dir_prop.make (target_metadata_cache_path_name)
-				l_dir_prop.set_description (target_metadata_cache_path_description)
-				add_string_setting_actions (l_dir_prop, s_metadata_cache_path, "")
-				properties.add_property (l_dir_prop)
-
-				create l_string_prop.make (target_msil_classes_per_module_name)
-				l_string_prop.set_description (target_msil_classes_per_module_description)
-				add_string_setting_actions (l_string_prop, s_msil_classes_per_module, "")
-				l_string_prop.validate_value_actions.extend (agent valid_classes_per_module)
-				properties.add_property (l_string_prop)
-
-				create l_il_env
-				l_installed_runtimes := l_il_env.installed_runtimes
-				create l_il_choices.make (l_installed_runtimes.count)
-				from
-					l_installed_runtimes.start
-				until
-					l_installed_runtimes.after
-				loop
-					l_il_choices.put_right (l_installed_runtimes.item_for_iteration)
-					l_installed_runtimes.forth
-				end
-				create l_choice_prop.make_with_choices (target_msil_clr_version_name, l_il_choices)
-
-				l_choice_prop.set_description (target_msil_clr_version_description)
-				add_string_setting_actions (l_choice_prop, s_msil_clr_version, "")
-				properties.add_property (l_choice_prop)
-
-				create l_choice_prop.make_with_choices (target_msil_generation_type_name, <<"exe", "dll">>)
-				l_choice_prop.set_description (target_msil_generation_type_description)
-				add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
-				properties.add_property (l_choice_prop)
-
-				create l_key_file_prop.make (target_msil_key_file_name_name)
-				l_key_file_prop.set_description (target_msil_key_file_name_description)
-				l_il_version := current_target.setting_msil_clr_version
-				if l_il_version.is_empty then
-					l_il_version := l_il_env.default_version
-				end
-				l_key_file_prop.set_il_version (l_il_version)
-				add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
-				properties.add_property (l_key_file_prop)
-
-				create l_bool_prop.make_with_value (target_force_32bits_name, current_target.setting_force_32bits)
-				l_bool_prop.set_description (target_force_32bits_description)
-				add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
-				properties.add_property (l_bool_prop)
-
-				properties.current_section.expand
+			create l_bool_prop.make_with_value (target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
+			l_bool_prop.set_description (target_msil_use_optimized_precompile_description)
+			add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile, False)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
 			end
+			properties.add_property (l_bool_prop)
 
+			create l_bool_prop.make_with_value (target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
+			l_bool_prop.set_description (target_use_cluster_name_as_namespace_description)
+			add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace, True)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			create l_bool_prop.make_with_value (target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
+			l_bool_prop.set_description (target_use_all_cluster_name_as_namespace_description)
+			add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace, True)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			create l_bool_prop.make_with_value (target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
+			l_bool_prop.set_description (target_dotnet_naming_convention_description)
+			add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention, False)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			create l_bool_prop.make_with_value (target_il_verifiable_name, current_target.setting_il_verifiable)
+			l_bool_prop.set_description (target_il_verifiable_description)
+			add_boolean_setting_actions (l_bool_prop, s_il_verifiable, True)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			create l_bool_prop.make_with_value (target_cls_compliant_name, current_target.setting_cls_compliant)
+			l_bool_prop.set_description (target_cls_compliant_description)
+			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, False)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			create l_dir_prop.make (target_metadata_cache_path_name)
+			l_dir_prop.set_description (target_metadata_cache_path_description)
+			add_string_setting_actions (l_dir_prop, s_metadata_cache_path, "")
+			if not current_target.setting_msil_generation then
+				l_dir_prop.enable_readonly
+			end
+			properties.add_property (l_dir_prop)
+
+			create l_string_prop.make (target_msil_classes_per_module_name)
+			l_string_prop.set_description (target_msil_classes_per_module_description)
+			add_string_setting_actions (l_string_prop, s_msil_classes_per_module, "")
+			l_string_prop.validate_value_actions.extend (agent valid_classes_per_module)
+			if not current_target.setting_msil_generation then
+				l_string_prop.enable_readonly
+			end
+			properties.add_property (l_string_prop)
+
+			create l_il_env
+			l_installed_runtimes := l_il_env.installed_runtimes
+			create l_il_choices.make (l_installed_runtimes.count)
+			from
+				l_installed_runtimes.start
+			until
+				l_installed_runtimes.after
+			loop
+				l_il_choices.put_right (l_installed_runtimes.item_for_iteration)
+				l_installed_runtimes.forth
+			end
+			create l_choice_prop.make_with_choices (target_msil_clr_version_name, l_il_choices)
+
+			l_choice_prop.set_description (target_msil_clr_version_description)
+			add_string_setting_actions (l_choice_prop, s_msil_clr_version, "")
+			if not current_target.setting_msil_generation then
+				l_choice_prop.enable_readonly
+			end
+			properties.add_property (l_choice_prop)
+
+			create l_choice_prop.make_with_choices (target_msil_generation_type_name, <<"exe", "dll">>)
+			l_choice_prop.set_description (target_msil_generation_type_description)
+			add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
+			if not current_target.setting_msil_generation then
+				l_choice_prop.enable_readonly
+			end
+			properties.add_property (l_choice_prop)
+
+			create l_key_file_prop.make (target_msil_key_file_name_name)
+			l_key_file_prop.set_description (target_msil_key_file_name_description)
+			l_il_version := current_target.setting_msil_clr_version
+			if l_il_version.is_empty then
+				l_il_version := l_il_env.default_version
+			end
+			l_key_file_prop.set_il_version (l_il_version)
+			add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
+			if not current_target.setting_msil_generation then
+				l_key_file_prop.enable_readonly
+			end
+			properties.add_property (l_key_file_prop)
+
+			create l_bool_prop.make_with_value (target_force_32bits_name, current_target.setting_force_32bits)
+			l_bool_prop.set_description (target_force_32bits_description)
+			add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
+			if not current_target.setting_msil_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end

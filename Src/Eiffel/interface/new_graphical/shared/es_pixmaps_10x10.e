@@ -413,6 +413,17 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 3))
 		end
+	frozen callstack_send_to_external_editor_icon: EV_PIXMAP is
+			-- Access to 'send to external editor' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 3))
+		end
+
+	frozen callstack_send_to_external_editor_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'send to external editor' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 3))
+		end
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once

@@ -1418,18 +1418,6 @@ feature {NONE} -- Impl : Stack objects grid
 						row.set_item (2, es_glab)
 					end
 				end
-					--| Module
-				l_exception_module_detail := dotnet_status.exception_module_name
-				if l_exception_module_detail /= Void then
-					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item ("Module")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					row.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_module_detail)
-					a_target_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
-					row.set_item (2, es_glab)
-				end
 
 					--| Nota/Message
 				l_exception_message := appstat.exception_message

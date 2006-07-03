@@ -34,8 +34,8 @@
 		]"
 */
 
-#ifndef _proto_h_
-#define _proto_h_
+#ifndef _dbg_proto_h_
+#define _dbg_proto_h_
 
 #include "request.h"
 #include "stream.h"
@@ -59,25 +59,23 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 #endif
 };
 
-#define rqstcnt		daemon_data.d_rqst
-#define rqstsent	daemon_data.d_sent
+#define dbg_rqstcnt		daemon_data.d_rqst
+#define dbg_rqstsent	daemon_data.d_sent
 
 extern struct d_flags daemon_data;	/* Global daemon's status */
 
 /* Routine declarations */
+extern void drqsthandle(EIF_PSTREAM);	/* General request processor */
+extern void dbg_send_packet(EIF_PSTREAM s, Request *dans);
 #ifdef EIF_WINDOWS
-extern void drqsthandle(EIF_LPSTREAM);	/* General request processor */
-extern void send_packet(STREAM *s, Request *dans);
-extern int recv_packet(STREAM *s, Request *rqst, BOOL reset);
-extern void prt_destroy (void);
+extern void dbg_prt_destroy (void);
+extern int dbg_recv_packet(EIF_PSTREAM s, Request *rqst, BOOL reset);
 #else
-extern void drqsthandle(int s);	/* General request processor */
-extern void send_packet(int s, Request *dans);	/* Send an asnwer to client */
-extern int recv_packet(int s, Request *rqst);	/* Receive data from client */
+extern int dbg_recv_packet(EIF_PSTREAM s, Request *rqst);	/* Receive data from client */
 #endif
 
 extern void apphandle();		/* Handle messages from application */ /* %%ss undefined not used in C */
 extern void dead_app(void);		/* Signals ewb that app is dead */
-extern void prt_init(void);		/* Initialize IDR filters */
+extern void dbg_prt_init(void);		/* Initialize IDR filters */
 
 #endif

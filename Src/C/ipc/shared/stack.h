@@ -42,12 +42,7 @@
 #include "eif_interp.h"
 
 /* Unified (Windows/Unix) Stream declaration */
-#ifdef EIF_WINDOWS
 #include "stream.h"
-typedef STREAM *eif_stream;
-#else
-typedef int eif_stream;
-#endif
 
 /* Once objects are sent as a structure instead of a tagged out string as
  * with other objects. Not only does it spares CPU cycles and headaches for
@@ -82,8 +77,8 @@ struct dump {
 #define DMP_EXCEPTION_TRACE	5	/* Returning Exception trace. */
 
 /* Visible routine */
-extern void send_stack(eif_stream s, uint32 nb_elems);	/* Send a stack dump to ewb */
-extern void send_stack_variables(eif_stream s, int where); /* dump the locals/arguments for a given feature on stack */
-extern void send_once_result(eif_stream s, MTOT OResult, int otype); /* Send result of once function to ewb */
+extern void send_stack(EIF_PSTREAM s, uint32 nb_elems);	/* Send a stack dump to ewb */
+extern void send_stack_variables(EIF_PSTREAM s, int where); /* dump the locals/arguments for a given feature on stack */
+extern void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype); /* Send result of once function to ewb */
 
 #endif /* _stack_h_ */

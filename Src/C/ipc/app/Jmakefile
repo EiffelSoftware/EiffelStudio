@@ -20,7 +20,7 @@ CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
  */
 
 ;# Files used to build the application
-LSRC = app_listen.c app_proto.c app_server.c
+LSRC = app_listen.c app_proto.c app_server.c app_transfer.c
 
 ;# Derived object file names
 OBJ = \

@@ -7,8 +7,8 @@
 >JMTCFLAGS
 
 ;# Files used to build the daemon
-LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
-ALL_SRC = ewb_proto.c $(LSRC)
+LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c ewb_child.c ewb_transfer.c ewb_proto.c
+ALL_SRC = $(LSRC)
 
 ;# Derived object file names
 LOBJ = \

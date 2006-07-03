@@ -42,13 +42,13 @@
 #include <stdio.h>     	 /* For error reports */
 #include <sys/types.h>
 #include "request.h"
-#include "proto.h"
+#include "ewb_proto.h"
 #include "com.h"
 #include "stream.h"
 #include "ewbio.h"
-#include "transfer.h"
+#include "ewb_transfer.h"
 
-extern int rqstcnt;		/* Request count (number of requests sent) */
+extern int ewb_rqstcnt;		/* Request count (number of requests sent) */
 
 /* FIX THIS CRAP -- RAM */
 #define APP_MSG 5

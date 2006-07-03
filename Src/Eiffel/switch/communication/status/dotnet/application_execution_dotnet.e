@@ -16,7 +16,8 @@ inherit
 
 	APPLICATION_EXECUTION_IMP
 		redefine
-			make, recycle, load_system_dependent_debug_info
+			make, recycle, load_system_dependent_debug_info,
+			can_not_launch_system_message
 		end
 
 	APPLICATION_STATUS_EXPORTER
@@ -346,6 +347,15 @@ feature -- Execution
 			end
 		end
 
+feature {APPLICATION_EXECUTION} -- Launching status
+
+	can_not_launch_system_message: STRING is
+			-- Message displayed when estudio is unable to launch the system
+		do
+			Result := "An error occurred during initialization of the ICorDebug Debugger%N"
+				+ "or during the Process creation (.NET)."
+		end
+
 feature -- Query
 
 	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
@@ -434,7 +444,7 @@ feature -- Query
 			end
 		end
 
-feature -- Controle execution
+feature -- Control execution
 
 	process_before_running is
 		local

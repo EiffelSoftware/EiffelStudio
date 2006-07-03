@@ -64,21 +64,20 @@
 #ifdef EIF_WINDOWS
 #include "uu.h"
 #include <windows.h>
-HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #else
 #include <unistd.h>
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public int identify()
+rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_event_r, HANDLE *p_event_w)
 {
 	/* Identification protocol, to make sure we have been started via the
-	 * ised wrapper. We expect a null character from file descriptor EWBIN and
-	 * write a ^A on EWBOUT.
+	 * ised wrapper. We expect a null character from file descriptor *p_ewbin and
+	 * write a ^A on *p_ewbout.
 	 */
 
-	HANDLE ewbin, ewbout;
 	HANDLE eif_conoutfile, eif_coninfile;
+	HANDLE ewbin, ewbout;
 	HANDLE event_r, event_w;
 	CHAR   event_str [20];
 	DWORD wait;
@@ -107,10 +106,10 @@ rt_public int identify()
 	uu_t = uudecode_str (uu_str);
 	memcpy ((char *)uu_handles, uu_t, 2 * sizeof (HANDLE));
 	free (uu_t);
-	ewbin = uu_handles [1];
 	ewbout = uu_handles [0];
+	ewbin = uu_handles [1];
 
-	sprintf (event_str, "eif_event_w%x", GetCurrentProcessId());
+	sprintf (event_str, "eif_event_w%x_%s", GetCurrentProcessId(), id);
 	event_r = NULL;
 
 /*      NT 3.51 is really fast - at this point we know we were launched by ebench.
@@ -127,7 +126,7 @@ rt_public int identify()
 #endif
 		return -1;
 	}
-	sprintf (event_str, "eif_event_r%x", GetCurrentProcessId());
+	sprintf (event_str, "eif_event_r%x_%s", GetCurrentProcessId(), id);
 	event_w = OpenSemaphore (SEMAPHORE_ALL_ACCESS, FALSE, event_str);
 	if (event_w == NULL) {
 #ifdef USE_ADD_LOG
@@ -136,11 +135,11 @@ rt_public int identify()
 		return -1;
 	}
 
-	global_event_r = event_r;
-	global_event_w = event_w;
+	*p_event_r = event_r;
+	*p_event_w = event_w;
 
-	global_ewbin = ewbin;
-	global_ewbout = ewbout;
+	*p_ewbin = ewbin;
+	*p_ewbout = ewbout;
 
 	/* Quickly poll on ewbin to see whether it's worth attempting a read on
 	 * it or not. Wait at most 10 seconds (to let our parent initialize) and
@@ -194,6 +193,7 @@ rt_public int identify()
 #ifdef USE_ADD_LOG
 	add_log(12, "started from wrapper");
 #endif
+
 	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
 	sa.lpSecurityDescriptor = NULL;
 	sa.bInheritHandle = TRUE;
@@ -225,11 +225,11 @@ rt_public int identify()
 }
 
 #else
-rt_public int identify(void)
+rt_public int identify(char* id, int fd_in, int fd_out)
 {
 	/* Identification protocol, to make sure we have been started via the
-	 * ised wrapper. We expect a null character from file descriptor EWBIN and
-	 * write a ^A on EWBOUT.
+	 * ised wrapper. We expect a null character from file descriptor fd_in and
+	 * write a ^A on fd_out.
 	 */
 
 	char c;
@@ -237,18 +237,18 @@ rt_public int identify(void)
 	struct timeval tm;			/* Timeout for select */
 	struct stat buf;			/* Statistics buffer */
 
-	/* Cut off the whole process if file EWBIN is not a valid file descriptor,
+	/* Cut off the whole process if file fd_in is not a valid file descriptor,
 	 * something the kernel will gladly tell us by making the fstat() system
 	 * call fail.
 	 */
 
 	FD_ZERO(&mask);
-	FD_SET(EWBIN, &mask);	/* Want to select of fd ewbin */
+	FD_SET(fd_in, &mask);	/* Want to select of fd ewbin */
 
-	if (-1 == fstat(EWBIN, &buf)) {
+	if (-1 == fstat(fd_in, &buf)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR fstat: %m (%e)");
-		add_log(2, "ERROR file EWBIN not initialized by parent");
+		add_log(2, "ERROR file fd_in not initialized by parent");
 #endif
 		return -1;
 	}
@@ -264,7 +264,7 @@ rt_public int identify(void)
 	tm.tv_sec = 2;
 #endif /* vms */
 	tm.tv_usec = 0;
-	if (-1 == select(EWBIN + 1, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
+	if (-1 == select(fd_in + 1, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");
 		add_log(2, "ERROR unexpected select failure");
@@ -273,14 +273,14 @@ rt_public int identify(void)
 	}
 
 	/* If nothing is available on ewbin, return with an error log message */
-	if (!FD_ISSET(EWBIN, &mask)) {
+	if (!FD_ISSET(fd_in, &mask)) {
 #ifdef USE_ADD_LOG
 		add_log(12, "nothing distilled by parent");
 #endif
 		return -1;
 	}
 
-	if (-1 == read(EWBIN, &c, 1)) {
+	if (-1 == read(fd_in, &c, 1)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR read: %m (%e)");
 		add_log(12, "not started from wrapper");
@@ -294,7 +294,7 @@ rt_public int identify(void)
 	} else {
 		c = '\01';
 		/* I don't care if we get SIGPIPE */
-		if (-1 == write(EWBOUT, &c, 1)) {
+		if (-1 == write(fd_out, &c, 1)) {
 #ifdef USE_ADD_LOG
 			add_log(1, "SYSERR read: %m (%e)");
 			add_log(12, "identification back failed");

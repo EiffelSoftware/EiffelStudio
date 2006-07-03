@@ -40,7 +40,7 @@ feature {NONE} -- Creation
 			if is_launched then
 				Precursor
 			else
-				create timeout.make_with_interval (1000)
+				create timeout.make_with_interval (3 * 1000) -- 3 seconds seems ok 
 				timeout.actions.extend (agent exit_launcher)
 			end
 		end

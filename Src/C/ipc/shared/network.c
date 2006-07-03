@@ -45,6 +45,7 @@
 
 #include "eif_portable.h"
 #include "eif_network.h"
+#include "eif_logfile.h"
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
@@ -54,9 +55,9 @@
 #include "rt_main.h"	/* for TIMEOUT */
 #include "rt_assert.h"
 
+#include "stream.h"
 #ifdef EIF_WINDOWS
 #include <windows.h>
-#include "stream.h"
 #else
 #include <unistd.h>
 #endif
@@ -94,18 +95,18 @@ extern int errno;	/* shouldn't this be #include <errno.h> for all platforms??? *
 #endif
 #endif
 
+rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 #ifdef EIF_WINDOWS
-rt_public int net_recv(STREAM *cs, char *buf, size_t size, BOOL reset)
+		,BOOL reset
+#endif
+		)
 			/* The connected socket descriptor */
 			/* Where data are to be stored */
 			/* Amount of data to be read */
 			/* Reset event associated with cs reader? */
-#else
-rt_public int net_recv(int cs, char *buf, size_t size)
-       				/* The connected socket descriptor */
-          			/* Where data are to be stored */
-         			/* Amount of data to be read */
-#endif
+			/* The connected socket descriptor */
+			/* Where data are to be stored */
+			/* Amount of data to be read */
 {
 	/* Read from network */
 
@@ -198,7 +199,7 @@ closed:
 	while (len < size) {
 
 		alarm(TIMEOUT);			/* Give read only TIMEOUT seconds to succeed */
-		length = read(cs, buf + len, size - len);
+		length = read(readfd(cs), buf + len, size - len);
 		alarm(0);
 
 		if (length == 0)	/* connection closed */
@@ -235,11 +236,7 @@ closed:
 #endif
 }
 
-#ifdef EIF_WINDOWS
-rt_public int net_send(STREAM *cs, char *buf, size_t size)
-#else
-rt_public int net_send(int cs, char *buf, size_t size)
-#endif
+rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
        				/* The connected socket descriptor */
           			/* Where data are stored */
          			/* Amount of data to be sent */
@@ -271,6 +268,7 @@ rt_public int net_send(int cs, char *buf, size_t size)
 		return -1;
 	}
 
+
 	ReleaseSemaphore (writeev(cs),1,NULL);
 	for (length = 0; length < size; buf += error, length += error) {
 		amount = size - length;
@@ -283,6 +281,7 @@ rt_public int net_send(int cs, char *buf, size_t size)
 		}
 	}
 
+
 #else  /* (not) EIF_WINDOWS */
 
 	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
@@ -293,19 +292,21 @@ rt_public int net_send(int cs, char *buf, size_t size)
 		return -1;
 	}
 
+
 	for (length = 0; length < size; buf += error, length += error) {
 		amount = size - length;
-		if (amount > BUFSIZ)	/* do not write more than BUFSIZ */
+		if (amount > BUFSIZ) {	/* do not write more than BUFSIZ */
 			amount = BUFSIZ;
-		error = write(cs, buf, amount);
+		}
+		error = write(writefd(cs), buf, amount);
 		if (error == -1){
 			if (errno != EINTR){
 #ifdef EIF_VMS
 				printf ("%s: net_send: write failed. fdesc = %i, errno = %i (VMS %i)\n", 
-					eifrt_vms_get_progname (NULL,0), cs, errno, vaxc$errno);
+					eifrt_vms_get_progname (NULL,0), writefd(cs), errno, vaxc$errno);
 				perror (" ");
 #else
-				printf ("net_send: write failed. fdesc = %i, errno = %i\n", cs,  errno);
+				printf ("net_send: write failed. fdesc = %i, errno = %i\n", writefd(cs),  errno);
 #endif
 				return -1;
 			}
@@ -313,7 +314,6 @@ rt_public int net_send(int cs, char *buf, size_t size)
 				error = 0;		/* number of bytes send */
 		}
 	}
-
 	signal(SIGPIPE, oldpipe);	/* restore default handler */
 
 #endif /* EIF_WINDOWS */

@@ -1,5 +1,5 @@
 /*
-	description: "Some structures and definitions used to ensure protocol."
+	description: "Declarations for transfer routines of app."
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
@@ -34,21 +34,14 @@
 		]"
 */
 
-#ifndef _proto_h_
-#define _proto_h_
+#ifndef _app_transfer_h_
+#define _app_transfer_h_
 
-#include "request.h"
+#include "stream.h" 	
+#include "transfer.h" 
 
-extern int rqstcnt;				/* Request count (number of requests sent) */
-
-extern void prt_init(void);			/* Initialize IDR filters */
-
-#ifdef EIF_WINDOWS
-extern void send_packet(STREAM *s, Request *rqst);		/* Send IDR packet to ised */
-extern int recv_packet(STREAM *s, Request *dans, BOOL reset); /* Receive IDR packet from ised */
-#else
-extern void send_packet(int s, Request *rqst);		/* Send IDR packet to ised */
-extern int recv_packet(int s, Request *dans);		/* Receive IDR packet from ised */	
-#endif
+extern void app_tpipe(STREAM *stream);		/* Open transfer "pipe" */
+extern char *app_tread(int *size);		/* Read from the transfer "pipe" */
+extern int app_twrite(void *buffer, size_t size);		/* Write to the transfer "pipe" */
 
 #endif

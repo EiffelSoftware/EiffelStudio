@@ -28,15 +28,25 @@ feature {NONE} -- Initialization
 
 	default_create is
 		do
-			create listen_to.make ("toto")
-			listen_to.fd_open_read (Listen_to_const)
+			create listen_to.make ("ec_io_watcher")
+			listen_to.fd_open_read (listen_to_pipe_fd) --Listen_to_const)
 			create io_watcher.make_with_medium (listen_to)
+			is_destroyed := False
 		end
 
 feature -- Access
 
 	action: PROCEDURE [ANY, TUPLE]
 			-- Callback feature called with the file/pipe is changed.
+
+	destroy is
+		do
+			io_watcher.remove_medium
+			io_watcher := Void
+			is_destroyed := True
+		end
+
+	is_destroyed: BOOLEAN
 
 feature -- Element change
 
@@ -74,6 +84,13 @@ feature {NONE} -- Implementation
 
 	listen_to: RAW_FILE;
 			-- File used to listen.
+
+	listen_to_pipe_fd: INTEGER is
+		external
+			"C"
+		alias
+			"ewb_pipe_read_fd"
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

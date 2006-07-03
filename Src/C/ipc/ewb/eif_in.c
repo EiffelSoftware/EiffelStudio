@@ -39,10 +39,9 @@
 #include "eif_in.h"
 #include "ewb.h"
 #include <string.h>
+#include "stream.h"
 
-#ifdef EIF_WINDOWS
-extern STREAM *sp;
-#endif
+extern STREAM *ewb_sp;
 
 /*
 	Eiffel/C interface routines
@@ -66,20 +65,48 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 
 	switch (rqst_type) {
 		case REP_FAILURE:
-			failure_handler = eif_adopt (eif_rqst_hdlr);
-			failure_hdlr_set = eif_set;
+			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+				if (failure_handler != NULL) {
+					eif_wean(failure_handler);
+				}
+				failure_hdlr_set = NULL;
+			} else {
+				failure_handler = eif_adopt (eif_rqst_hdlr);
+				failure_hdlr_set = eif_set;
+			}
 			break;
 		case REP_DEAD:
-			dead_handler = eif_adopt (eif_rqst_hdlr);
-			dead_hdlr_set = eif_set;
+			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+				if (dead_handler != NULL) {
+					eif_wean(dead_handler);
+				}
+				dead_hdlr_set = NULL;
+			} else {
+				dead_handler = eif_adopt (eif_rqst_hdlr);
+				dead_hdlr_set = eif_set;
+			}
 			break;
 		case REP_NOTIFIED:
-			notify_handler = eif_adopt (eif_rqst_hdlr);
-			notify_hdlr_set = eif_set;
+			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+				if (notify_handler != NULL) {
+					eif_wean(notify_handler);
+				}
+				notify_hdlr_set = NULL;
+			} else {
+				notify_handler = eif_adopt (eif_rqst_hdlr);
+				notify_hdlr_set = eif_set;
+			}
 			break;
 		case REP_STOPPED:
-			stopped_handler = eif_adopt (eif_rqst_hdlr);
-			stopped_hdlr_set = eif_set;
+			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+				if (stopped_handler != NULL) {
+					eif_wean(stopped_handler);
+				}
+				stopped_hdlr_set = NULL;
+			} else {
+				stopped_handler = eif_adopt (eif_rqst_hdlr);
+				stopped_hdlr_set = eif_set;
+			}
 			break;
 	}
 }
@@ -92,15 +119,13 @@ EIF_REFERENCE request_handler (void)
 	 */
 
 	Request rqst;
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd[EWBOUT];
-#endif
 	Request_Clean (rqst);
+
 		/* ensure Request is all 0 (recognized as non initialized) -- Didier */
 #ifdef EIF_WINDOWS
-	recv_packet (sp, &rqst, FALSE);
+	ewb_recv_packet (ewb_sp, &rqst, FALSE);
 #else
-	recv_packet (readfd(sp), &rqst);
+	ewb_recv_packet (ewb_sp, &rqst);
 #endif
 	return request_dispatch (rqst);
 }
@@ -176,10 +201,9 @@ EIF_REFERENCE request_dispatch (Request rqst)
 rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body_id, char *byte_array, EIF_INTEGER size)
 {
 /*
-	STREAM *sp;
 	Request rqst;
+	STREAM *sp = ewb_sp;
 
-	sp = stream_by_fd [EWBOUT];
 
 	Request_Clean (rqst);
 	rqst.rq_type = BCODE;
@@ -187,20 +211,16 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body
 	rqst.rq_opaque.op_second = (int) real_body_id;
 
 #ifdef EIF_WINDOWS
-	if (-1 == send_packet (sp, &rqst))
+	if (-1 == ewb_send_packet (sp, &rqst))
 #else
-	if (-1 == send_packet (writefd(sp), &rqst))
+	if (-1 == ewb_send_packet (sp, &rqst))
 #endif
 			printf ("error\n");
 
-	if (-1 == twrite (byte_array, size))
+	if (-1 == ewb_twrite (byte_array, size))
 			printf ("error\n");
 
-#ifdef EIF_WINDOWS
-	if (-1 == recv_packet (sp, &rqst))
-#else
-	if (-1 == recv_packet (readfd(sp), &rqst))
-#endif
+	if (-1 == ewb_recv_packet (sp, &rqst))
 			printf ("error\n");
 
 	if (rqst.rq_type != ACK || rqst.rq_ack.ak_type != AK_OK)
@@ -211,10 +231,8 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body
 rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BOOLEAN opcode)
 {
 /*
-	STREAM *sp;
 	Request rqst;
-
-	sp = stream_by_fd [EWBOUT];
+	STREAM *sp = ewb_sp;
 
 	Request_Clean (rqst);
 	rqst.rq_type = BREAK_ON;
@@ -222,11 +240,7 @@ rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BO
 	rqst.rq_opaque.op_second = (int) real_body_id;
 	rqst.rq_opaque.op_third = offset;
 
-#ifdef EIF_WINDOWS
-	if (-1 == send_packet (sp, &rqst))
-#else
-	if (-1 == send_packet (writefd(sp), &rqst))
-#endif
+	if (-1 == ewb_send_packet (sp, &rqst))
 		error
 
 	if (rqst.rq_type != ACK || rqst.rq_ack.ak_type != AK_OK)
@@ -237,12 +251,8 @@ rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BO
 rt_public void send_ack_end (void)
 {
 /*
-	STREAM *sp = stream_by_fd [EWBOUT];
+	STREAM *sp = ewb_sp;
 
-#ifdef EIF_WINDOWS
 	send_ack (sp, AK_OK);
-#else
-	send_ack (writefd(sp), AK_OK);
-#endif
 */
 }

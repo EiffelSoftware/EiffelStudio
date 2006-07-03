@@ -21,11 +21,6 @@ inherit
 			{NONE} all
 		end
 
-	ISED_X_SLAVE
-		export
-			{NONE} all
-		end
-
 	ARGUMENTS
 		rename
 			command_line as arguments_line
@@ -102,12 +97,6 @@ feature {NONE} -- Initialization
 			if not new_resources.error_occurred then
 				Eiffel_project.set_batch_mode (not l_is_gui)
 				if l_is_gui then
-
-						-- Initialize debugger communication
-					if argument (1).is_equal ("-bench") then
-							-- True is for binary
-						init_connection (False)
-					end
 
 						-- Formatting includes breakpoints
 					set_is_with_breakable

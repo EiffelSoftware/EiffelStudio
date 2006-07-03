@@ -43,6 +43,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_logfile.h"
 #include "shword.h"
 #include <string.h>
 

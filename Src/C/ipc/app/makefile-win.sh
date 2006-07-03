@@ -24,12 +24,14 @@ OBJECTS = \
 	app_listen.$obj \
 	app_proto.$obj \
 	app_server.$obj \
+	app_transfer.$obj \
 	$(LIBDIR)\$(LIBNAME)
 
 MT_OBJECTS = \
 	MTapp_listen.$obj \
 	MTapp_proto.$obj \
 	MTapp_server.$obj \
+	MTapp_transfer.$obj \
 	$(LIBDIR)\$(LIBMTNAME)
 
 all:: $output_libraries
@@ -52,5 +54,8 @@ MTapp_proto.$obj: app_proto.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTapp_server.$obj: app_server.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTapp_transfer.$obj: app_transfer.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 

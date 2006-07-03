@@ -70,7 +70,7 @@ rt_private struct dbstack dstk_context;	/* Saved calling stack context */
 rt_private struct opstack istk_context;	/* Operational stack (interpreter) */
 
 /* Private Routines declarations */
-rt_private void 		send_dump(eif_stream s, struct dump *dp);	/* Send XDR'ed dumped item to ewb */
+rt_private void 		send_dump(EIF_PSTREAM s, struct dump *dp);	/* Send XDR'ed dumped item to ewb */
 rt_private void 		save_stacks(void);							/* Initialize automaton */
 rt_private void 		restore_stacks(void);						/* Reset saved stack contexts */
 rt_private struct dump 	*get_next_execution_vector(void);			/* List execution stack */
@@ -81,11 +81,11 @@ rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level dow
 rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start); /* Dump a local or an argument of active feature */
 
 /* Public Routines declarations */
-rt_public void 			send_stack(eif_stream s, uint32 elem_nb);	/* Dump the application */
+rt_public void 			send_stack(EIF_PSTREAM s, uint32 elem_nb);	/* Dump the application */
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
                                      uint32 loc_number, struct item *new_value); /* modify a local value */
-rt_public void			send_stack_variables(eif_stream s, int where);	/* Dump the locals and arguments of a feature */
-rt_public void 			send_once_result(eif_stream s, MTOT OResult, int otype); /* dump the results of onces feature */
+rt_public void			send_stack_variables(EIF_PSTREAM s, int where);	/* Dump the locals and arguments of a feature */
+rt_public void 			send_once_result(EIF_PSTREAM s, MTOT OResult, int otype); /* dump the results of onces feature */
 
 /* extern Routines used */
 extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
@@ -103,7 +103,7 @@ extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to t
  * process through the connected socket and via XDR. The end of the dump  *
  * is indicated by a positive acknowledgment.                             *
  **************************************************************************/
- rt_public void send_stack(eif_stream s, uint32 elem_nb)
+ rt_public void send_stack(EIF_PSTREAM s, uint32 elem_nb)
 	{
 	struct dump *dp;			/* Pointer to static data where dump is */
 	uint32 sent = 0;
@@ -131,7 +131,7 @@ extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to t
  * stack. where=1 means dumping the locals of the feature located on top  *
  * of the stack                                                           *
  **************************************************************************/
-rt_public void send_stack_variables(eif_stream s, int where)
+rt_public void send_stack_variables(EIF_PSTREAM s, int where)
 {
 	/* This is the main routine. It send a whole stack dump to the remote
 	 * process through the connected socket and via XDR. The end of the dump
@@ -165,7 +165,7 @@ rt_public void send_stack_variables(eif_stream s, int where)
  *------------------------------------------------------------------------* 
  * Send a packed containing the dump item 'dp'                            *
  **************************************************************************/
-rt_private void send_dump(eif_stream s, struct dump *dp)
+rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
 	{
 	Request rqst;					/* What we send back */
 
@@ -476,7 +476,7 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
  * Ask the debugger for the result of already called once function        *
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
-rt_public void send_once_result(eif_stream s, MTOT OResult, int otype)
+rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	{
 	uint32 type;
 	struct item ip;					/* Partial item pointer */

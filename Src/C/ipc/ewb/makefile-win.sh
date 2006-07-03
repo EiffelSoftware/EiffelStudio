@@ -16,7 +16,7 @@ LIBDIR = ..\shared
 LIBIDR = $(TOP)\idrs
 
 # Files used to build the ewb
-SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_transfer.c ewb_init.c ewb_dumped.c ewb_child.c
 
 # Derived object file names
 OBJECTS = \
@@ -25,13 +25,18 @@ OBJECTS = \
 	eproto.$obj \
 	eif_in.$obj \
 	eif_out.$obj \
+	ewb_child.$obj \
+	ewb_transfer.$obj \
 	ewb_init.$obj
 
 WOBJECTS = \
 	wewb_dumped.$obj \
+	wewb_proto.$obj \
 	weproto.$obj \
 	weif_in.$obj \
 	weif_out.$obj \
+	wewb_child.$obj \
+	wewb_transfer.$obj \
 	wewb_init.$obj
 
 MT_OBJECTS = \
@@ -40,13 +45,18 @@ MT_OBJECTS = \
 	MTeproto.$obj \
 	MTeif_in.$obj \
 	MTeif_out.$obj \
+	MTewb_child.$obj \
+	MTewb_transfer.$obj \
 	MTewb_init.$obj
 
 MT_WOBJECTS = \
 	MTwewb_dumped.$obj \
+	MTwewb_proto.$obj \
 	MTweproto.$obj \
 	MTweif_in.$obj \
 	MTweif_out.$obj \
+	MTwewb_child.$obj \
+	MTwewb_transfer.$obj \
 	MTwewb_init.$obj
 
 .c.$obj:
@@ -80,6 +90,12 @@ wewb_proto.$obj: ewb_proto.c
 wewb_init.$obj: ewb_init.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
+wewb_transfer.$obj: ewb_transfer.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+wewb_child.$obj: ewb_child.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
 weproto.$obj: eproto.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
@@ -99,6 +115,12 @@ MTewb_proto.$obj: ewb_proto.c
 MTewb_init.$obj: ewb_init.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
+MTewb_transfer.$obj: ewb_transfer.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTewb_child.$obj: ewb_child.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
 MTeproto.$obj: eproto.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
@@ -116,6 +138,12 @@ MTwewb_proto.$obj: ewb_proto.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
 MTwewb_init.$obj: ewb_init.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTwewb_transfer.$obj: ewb_transfer.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTwewb_child.$obj: ewb_child.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
 MTweproto.$obj: eproto.c

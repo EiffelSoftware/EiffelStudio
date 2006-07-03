@@ -20,6 +20,7 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		do
+			is_splashing := True
 			launch_ec
 		end
 
@@ -35,9 +36,14 @@ feature -- Launching
 			io.error.put_string ("     /? or /h : display this help %N")
 			io.error.put_string ("     /v       : verbose %N")
 			io.error.put_string ("     /w       : wait until launched process exits %N")
+			io.error.put_string ("     /nosplash: no splash screen %N")
 			io.error.put_string ("  * ec's parameters %N")
 			io.error.put_string ("     any ec's command line parameters (-config, -target, -project_path ...)%N")
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
+			io.error.put_string ("%NOptional environment variables:%N")
+			io.error.put_string ("  * EC_NAME     : name of the compiler (default: ec)%N")
+			io.error.put_string ("  * EC_FOLDER   : folder which contains the compiler%N")
+			io.error.put_string ("  * MELTED_PATH : for workbench version %N")
 			io.error.put_string ("%NPress ENTER to continue ...%N")
 			io.read_line
 			if is_exiting then
@@ -82,12 +88,22 @@ feature -- Launching
 				args_ec_offset := args_ec_offset + 1
 			end
 
+			if
+				command_line.argument_count - args_ec_offset > 0
+				and then command_line.argument (1 + args_ec_offset).is_equal ("/nosplash")
+			then
+				is_splashing := False
+				args_ec_offset := args_ec_offset + 1
+			end
+
 
 				--| Now get the estudio environment and arguments for `ec'
 			get_environment
 			check_environment
 			if is_environment_valid then
-				display_splasher
+				if is_splashing then
+					display_splasher
+				end
 
 					--| Compute command line, args, and working directory
 				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
@@ -274,6 +290,9 @@ feature -- Properties
 
 	is_waiting: BOOLEAN
 			-- Stay alive until `ec' exits ?
+
+	is_splashing: BOOLEAN
+			-- Display splash screen ?
 
 	is_verbose: BOOLEAN
 			-- Display details ?

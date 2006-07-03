@@ -193,27 +193,6 @@ feature -- Properties
 	status: APPLICATION_STATUS
 			-- Status of the running application
 
---	termination_command: E_CMD
---			-- Command executed after application has been terminated
---			-- (is_running will be false after executing this command)
---
---	application_launched_command: E_CMD
---			-- Command executed after application has been launced
---			-- (If `is_running' is false then application was unable to
---			-- be executed because of a timeout)
---
---	before_stopped_command: E_CMD
---			-- Command executed before receiving information from
---			-- the application when an exception occur or a breakpoint
---			-- has been reached (useful to set waiting cursor and
---			-- `is_stopped' has not been flagged to true)
---
---	after_stopped_command: E_CMD
---			-- Command executed after the application is stopped due
---			-- to an exception or a breakpoint
---			-- (status.is_stopped is true when `after_stopped_command'
---			-- is called)
-
 	execution_mode: INTEGER
 			-- Execution mode (Step by step, stop at stoop points, ...)
 
@@ -329,17 +308,10 @@ feature -- Exception handling
 
 feature -- Access
 
-	eiffel_error_dotnet_initialization_message: STRING is "An error occurred during initialization of the ICorDebug Debugger or the Process creation (.NET) "
-			-- Message displayed when estudio is unable to launch
-			-- the system because unable to iniatialize the dotnet debugger
-
-	eiffel_timeout_message: STRING is
-			-- Message displayed when ebench is unable to launch
-			-- the system (because of a timeout)
-		external
-			"C"
-		alias
-			"eif_timeout_msg"
+	can_not_launch_system_message: STRING is
+			-- Message displayed when estudio is unable to launch the system
+		do
+			Result := implementation.can_not_launch_system_message
 		end
 
 	number_of_stack_elements: INTEGER is

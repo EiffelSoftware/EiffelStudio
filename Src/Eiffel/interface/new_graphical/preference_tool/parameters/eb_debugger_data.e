@@ -77,6 +77,22 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
+	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN is
+			-- Do we close the classic dbg daemon when the debugging is finished ?
+		do
+			Result := close_classic_dbg_daemon_on_end_of_debugging_preference.value
+		end
+
+	classic_debugger_timeout: INTEGER is
+		do
+			Result := classic_debugger_timeout_preference.value
+		end
+
+	classic_debugger_location: STRING is
+		do
+			Result := classic_debugger_location_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
@@ -86,6 +102,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
+	close_classic_dbg_daemon_on_end_of_debugging_preference: BOOLEAN_PREFERENCE
+	classic_debugger_timeout_preference: INTEGER_PREFERENCE
+	classic_debugger_location_preference: STRING_PREFERENCE
 
 feature -- Toolbar Convenience
 
@@ -121,6 +140,9 @@ feature {NONE} -- Preference Strings
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
 	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
+	close_classic_dbg_daemon_on_end_of_debugging_string: STRING is "debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging"
+	classic_debugger_timeout_string: STRING is "debugger.classic_debugger.timeout"
+	classic_debugger_location_string: STRING is "debugger.classic_debugger.debugger_location"
 
 feature {NONE} -- Implementation
 
@@ -139,6 +161,9 @@ feature {NONE} -- Implementation
 			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];cordbg;DbgCLR">>)
 			dotnet_debugger_preference.set_is_choice (True)
+			close_classic_dbg_daemon_on_end_of_debugging_preference := l_manager.new_boolean_preference_value (l_manager, close_classic_dbg_daemon_on_end_of_debugging_string, True)
+			classic_debugger_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_timeout_string, 0)
+			classic_debugger_location_preference := l_manager.new_string_preference_value (l_manager, classic_debugger_location_string, "")
 		end
 
 	preferences: PREFERENCES
@@ -152,6 +177,11 @@ invariant
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
 	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
+	close_classic_dbg_daemon_on_end_of_debugging_preference_not_void:  close_classic_dbg_daemon_on_end_of_debugging_preference /= Void
+	classic_debugger_timeout_preference_not_void: classic_debugger_timeout_preference /= Void
+	classic_debugger_location_preference_not_void: classic_debugger_location_preference /= Void
+
+--	_preference_not_void: _preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

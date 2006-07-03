@@ -1,5 +1,5 @@
 /*
-	description: "Some structures and definitions used to ensure protocol."
+	description: "Declarations for transfer routines of ewb."
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
@@ -34,26 +34,14 @@
 		]"
 */
 
-#ifndef _proto_h_
-#define _proto_h_
+#ifndef _ewb_transfer_h_
+#define _ewb_transfer_h_
 
-#include "request.h"
+#include "stream.h" 	
+#include "transfer.h" 
 
-extern int rqstcnt;				/* Request count (number of requests sent) */
-
-#ifdef EIF_WINDOWS
-extern void arqsthandle(STREAM *);		/* General request handler */
-extern void stop_rqst(STREAM *);		/* Stop notification to workbench */
-extern int recv_packet(STREAM *, Request *, BOOL); /* Receive IDR packet from ised */
-extern void notify_rqst(STREAM *, int, int); /* Send notification to ewb */
-#else
-extern void arqsthandle(int s);		/* General request handler */
-extern void stop_rqst(int s);		/* Stop notification to workbench */
-extern int recv_packet(int, Request *);		/* Receive IDR packet from ised */	
-extern void notify_rqst(int , int, int); /*Send notification to ewb */
-#endif
-
-extern void dnotify(int, int);		/* Send Notification */
-extern void prt_init(void);			/* Initialize IDR filters */
+extern void ewb_tpipe(STREAM *stream);		/* Open transfer "pipe" */
+extern char *ewb_tread(int *size);		/* Read from the transfer "pipe" */
+extern int ewb_twrite(void *buffer, size_t size);		/* Write to the transfer "pipe" */
 
 #endif

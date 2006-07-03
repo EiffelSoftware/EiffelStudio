@@ -1,7 +1,7 @@
 #
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
-microsoftestudio='estudio'
+microsoftecdbgd='ecdbgd'
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='nmake'

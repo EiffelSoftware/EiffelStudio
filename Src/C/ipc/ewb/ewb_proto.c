@@ -40,36 +40,36 @@
 #include <sys/types.h>
 #include "request.h"
 #include "rqst_idrs.h"
-#include "proto.h"
+#include "ewb_proto.h"
 #include "eif_network.h"
 #include "eif_logfile.h"
 
+#include "stream.h"
 #ifdef EIF_WINDOWS
 #include "eif_argcargv.h"
-#include "stream.h"
 #endif
 
-rt_public int rqstcnt = 0;		/* Request count, must match with daemon's one */
+rt_public int ewb_rqstcnt = 0;		/* Request count, must match with daemon's one */
 
-rt_private IDRF idrf;			/* IDR filter for serializations */
+rt_private IDRF ewb_idrf;			/* IDR filter for serializations */
 
 /*
  * IDR protocol initialization.
  */
 
 #ifdef EIF_WINDOWS
-rt_public void prt_destroy(EIF_BOOLEAN t)
+rt_public void ewb_prt_destroy(EIF_BOOLEAN t)
 {
-	idrf_destroy (&idrf);
+	idrf_destroy (&ewb_idrf);
 }
 #endif
 
-rt_public void prt_init(void)
+rt_public void ewb_prt_init(void)
 {
-	if (-1 == idrf_create(&idrf, IDRF_SIZE))
+	if (-1 == idrf_create(&ewb_idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
 #ifdef EIF_WINDOWS
-	eif_register_cleanup (prt_destroy);
+	eif_register_cleanup (ewb_prt_destroy);
 #endif
 }
 
@@ -77,21 +77,17 @@ rt_public void prt_init(void)
  * Sending requests - Receiving answers
  */
 
-#ifdef EIF_WINDOWS
-rt_public void send_packet(STREAM *s, Request *rqst)
-#else
-rt_public void send_packet(int s, Request *rqst)
-#endif
+rt_public void ewb_send_packet(EIF_PSTREAM sp, Request *rqst)
       				/* The connected socket */
               		/* The request to be sent */
 {
 	/* Sends an answer to the client */
 
-	rqstcnt++;			/* One more request sent to daemon */
-	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
+	ewb_rqstcnt++;			/* One more request sent to daemon */
+	idrf_reset_pos(&ewb_idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
-	if (!idr_Request(&idrf.i_encode, rqst)) {
+	if (!idr_Request(&ewb_idrf.i_encode, rqst)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
 #endif
@@ -99,7 +95,7 @@ rt_public void send_packet(int s, Request *rqst)
 	}
 
 	/* Send the answer and propagate error report */
-	if (-1 == net_send(s, idrs_buf(&idrf.i_encode), IDRF_SIZE)) {
+	if (-1 == net_send(sp, idrs_buf(&ewb_idrf.i_encode), IDRF_SIZE)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 #endif
@@ -112,9 +108,9 @@ rt_public void send_packet(int s, Request *rqst)
 }
 
 #ifdef EIF_WINDOWS
-rt_public int recv_packet(STREAM *s, Request *dans, BOOL reset)
+rt_public int ewb_recv_packet(EIF_PSTREAM sp, Request *dans , BOOL reset)
 #else
-rt_public int recv_packet(int s, Request *dans)
+rt_public int ewb_recv_packet(EIF_PSTREAM sp, Request *dans)
 #endif
       				/* The connected socket */
               		/* The daemon's answer */
@@ -123,14 +119,14 @@ rt_public int recv_packet(int s, Request *dans)
 	 * it. If an error occurs, return -1. Otherwise return 0;
 	 */
 
-	rqstcnt++;			/* One more request received */
-	idrf_reset_pos(&idrf);	/* Reposition IDR streams */
+	ewb_rqstcnt++;			/* One more request received */
+	idrf_reset_pos(&ewb_idrf);	/* Reposition IDR streams */
 
 	/* Wait for request */
 #ifdef EIF_WINDOWS
-	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE, reset)) {
+	if (-1 == net_recv(sp, idrs_buf(&ewb_idrf.i_decode), IDRF_SIZE, reset)) {
 #else
-	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE)) {
+	if (-1 == net_recv(sp, idrs_buf(&ewb_idrf.i_decode), IDRF_SIZE)) {
 #endif
 
 #ifdef USE_ADD_LOG
@@ -140,7 +136,7 @@ rt_public int recv_packet(int s, Request *dans)
 	}
 
 	/* Deserialize request */
-	if (!idr_Request(&idrf.i_decode, dans)) {
+	if (!idr_Request(&ewb_idrf.i_decode, dans)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot deserialize request");
 #endif

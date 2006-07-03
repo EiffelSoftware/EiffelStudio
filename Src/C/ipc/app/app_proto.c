@@ -43,7 +43,7 @@
 #include "rqst_idrs.h"
 #include "com.h"
 #include "stream.h"
-#include "transfer.h"
+#include "app_transfer.h"
 #include "ewbio.h"
 #include "stack.h"
 #include "idrs.h"
@@ -60,7 +60,7 @@
 #include "rt_interp.h"
 #include "eif_memory.h"
 #include "x2c.h"	/* For macro LNGPAD */
-#include "proto.h"
+#include "app_proto.h"
 #include "rt_assert.h"
 #include "rt_macros.h"
 #include "rt_gen_types.h"
@@ -73,25 +73,18 @@ This module should not be compiled in non-workbench mode
 #endif
 
 /* Unified (Windows/Unix) Stream declaration */
-#ifdef EIF_WINDOWS
-extern STREAM *sp;
-#endif
+extern STREAM *app_sp;
 
-rt_public int rqstcnt = 0;			/* Request count */
+rt_public int app_rqstcnt = 0;			/* Request count */
 rt_private char gc_stopped;
 rt_private IDRF app_idrf;				/* IDR filter for serialize communications */
 
-#ifdef EIF_WINDOWS
-rt_private void adopt(EIF_LPSTREAM s, Opaque *what);
-#else
-rt_private void adopt(int s, Opaque *what);
-#endif
-
-rt_private void process_request(eif_stream s, Request *rqst);/* Dispatch request processing */
-rt_private void inspect(eif_stream s, Opaque *what);		/* Object inspection */
-rt_private void ipc_access(eif_stream s, Opaque *what);		/* Access object through hector */
-rt_private void wean(eif_stream s, Opaque *what);			/* Wean adopted object */
-rt_private void once_inspect(eif_stream s, Opaque *what);	/* Once routines inspection */
+rt_private void adopt(EIF_PSTREAM s, Opaque *what);
+rt_private void process_request(EIF_PSTREAM s, Request *rqst);/* Dispatch request processing */
+rt_private void inspect(EIF_PSTREAM s, Opaque *what);		/* Object inspection */
+rt_private void ipc_access(EIF_PSTREAM s, Opaque *what);		/* Access object through hector */
+rt_private void wean(EIF_PSTREAM s, Opaque *what);			/* Wean adopted object */
+rt_private void once_inspect(EIF_PSTREAM s, Opaque *what);	/* Once routines inspection */
 rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
 rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
@@ -129,7 +122,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
-rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_precompiled, int is_basic_type);
+rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type);
 extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
@@ -142,7 +135,7 @@ extern int already_warned; /* Have we already warned the user concerning a possi
  * IDR protocol initialization.
  */
 
-rt_public void prt_init(void)
+rt_public void app_prt_init(void)
 {
 	if (-1 == idrf_create(&app_idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
@@ -152,7 +145,7 @@ rt_public void prt_init(void)
  * Handling requests.
  */
 
-rt_public void arqsthandle(eif_stream s)
+rt_public void arqsthandle(EIF_PSTREAM sp)
 {
 	/* Given a connected socket, wait for a request and process it. Since it
 	 * is an error at the application level to not be able to receive a packet,
@@ -164,27 +157,24 @@ rt_public void arqsthandle(eif_stream s)
 	Request_Clean (rqst); /* zero recognized as non initialized -- Didier */
 
 #ifdef EIF_WINDOWS
-	recv_packet(s, &rqst, FALSE);		/* Get request */
+	app_recv_packet(sp, &rqst, FALSE);		/* Get request */
 #else
-	recv_packet(s, &rqst);		/* Get request */
+	app_recv_packet(sp, &rqst);		/* Get request */
 #endif
 
-	process_request(s, &rqst);	/* Process the received request */
+	process_request(sp, &rqst);	/* Process the received request */
 
 #ifdef USE_ADD_LOG
-		add_log(9, "arqsthandle done");
+		add_log(9, "app_arqsthandle done");
 #endif
 }
 
-rt_private void process_request(eif_stream s, Request *rqst)
+rt_private void process_request(EIF_PSTREAM sp, Request *rqst)
       						/* The connected socket */
               				/* The received request to be processed */
 {
 	/* Process the received request */
 
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd[s];
-#endif
 
 static int curr_modify = NO_CURRMODIF;
 
@@ -198,11 +188,7 @@ static int curr_modify = NO_CURRMODIF;
 
 	switch (rqst->rq_type) {
 	case INSPECT:					/* Object inspection */
-#ifdef EIF_WINDOWS
 		inspect(sp, &rqst->rq_opaque);
-#else
-		inspect(writefd(sp), &rqst->rq_opaque);
-#endif
 		break;
 	case SP_LOWER:					/* Bounds for special object inspection */
 		sp_lower = arg_2;
@@ -216,11 +202,7 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DUMP_VARIABLES:
 		dthread_prepare();
-#ifdef EIF_WINDOWS
 		send_stack_variables(sp, arg_1);
-#else
-		send_stack_variables(writefd (sp), arg_1);
-#endif
 		dthread_restore();
 		break;
 	case DUMP_THREADS:
@@ -233,20 +215,12 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DUMP_STACK:						/* General stack dump request */
 		dthread_prepare();
-#ifdef EIF_WINDOWS
 		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
-#else
-		send_stack(writefd (sp), (uint32) arg_1);
-#endif
 		dthread_restore();
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
 		dthread_prepare();
-#ifdef EIF_WINDOWS
 		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
-#else
-		dynamic_evaluation(writefd (sp), arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
-#endif
 		dthread_restore();
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
@@ -296,21 +270,17 @@ static int curr_modify = NO_CURRMODIF;
 #else
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");
-		if ((void (*)()) 0 == rem_input(s))
+		if ((void (*)()) 0 == rem_input(sp))
 			add_log(12, "rem_input: %s (%s)", s_strerror(), s_strname());
 #else
-		(void) rem_input(s);		/* Stop selection -> exit listening loop */
+		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
 #endif
 #endif
 		break;
 	case QUIT:						/* Die, immediately */
 		esdie(0);
 	case HELLO:							/* Initial handshake */
-#ifdef EIF_WINDOWS
 		send_ack(sp, AK_OK);	/* Ok, we're up */
-#else
-		send_ack(writefd(sp), AK_OK);	/* Ok, we're up */
-#endif
 		break;
 	case KPALIVE:					/* Dummy request for connection checks */
 		break;
@@ -318,49 +288,25 @@ static int curr_modify = NO_CURRMODIF;
 		load_bc(arg_1, arg_2);
 		break;
 	case ADOPT:						/* Adopt object */
-#ifdef EIF_WINDOWS
 		adopt(sp, &rqst->rq_opaque);
-#else
-		adopt(writefd(sp), &rqst->rq_opaque);
-#endif
 		break;
 	case ACCESS:					/* Access object through hector */
-#ifdef EIF_WINDOWS
 		ipc_access(sp, &rqst->rq_opaque);
-#else
-		ipc_access(writefd(sp), &rqst->rq_opaque);
-#endif
 		break;
 	case WEAN:						/* Wean adopted object */
-#ifdef EIF_WINDOWS
 		wean(sp, &rqst->rq_opaque);
-#else
-		wean(writefd(sp), &rqst->rq_opaque);
-#endif
 		break;
 	case ONCE:						/* Once routines inspection */
 		dthread_prepare();
-#ifdef EIF_WINDOWS
 		once_inspect(sp, &rqst->rq_opaque);
-#else
-		once_inspect(writefd(sp), &rqst->rq_opaque);
-#endif
 		dthread_restore();
 		break;
 	case INTERRUPT_OK:				/* Stop execution and send call stack */
-#ifdef EIF_WINDOWS
 		(void) rem_input(sp);		/* exit listening loop */
-#else
-		(void) rem_input(s);		/* exit listening loop */
-#endif
 		dbreak(PG_INTERRUPT);
 		break;
 	case INTERRUPT_NO:				/* Resume execution with no further ado */
-#ifdef EIF_WINDOWS
 		(void) rem_input(sp);		/* exit listening loop */
-#else
-		(void) rem_input(s);		/* exit listening loop */
-#endif
 		break;
 	case OVERFLOW_DETECT:
 		critical_stack_depth = (uint32) arg_3; /* We convert int => uint32, so that passing -1 never checks for stack overflows */
@@ -380,17 +326,13 @@ static int curr_modify = NO_CURRMODIF;
  * Sending requests - Receiving answers
  */
 
-#ifdef EIF_WINDOWS
-rt_public void send_packet(STREAM *s, Request *rqst)
-#else
-rt_public void send_packet(int s, Request *rqst)
-#endif
+rt_public void app_send_packet(EIF_PSTREAM sp, Request *rqst)
       				/* The connected socket */
               		/* The request to be sent */
 {
 	/* Sends an answer to the client */
 
-	rqstcnt++;			/* One more request sent to daemon */
+	app_rqstcnt++;			/* One more request sent to daemon */
 	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
@@ -403,7 +345,7 @@ rt_public void send_packet(int s, Request *rqst)
 	}
 
 	/* Send the answer and propagate error report */
-	if (-1 == net_send(s, idrs_buf(&app_idrf.i_encode), IDRF_SIZE)) {
+	if (-1 == net_send(sp, idrs_buf(&app_idrf.i_encode), IDRF_SIZE)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 #endif
@@ -420,11 +362,11 @@ rt_public void send_packet(int s, Request *rqst)
 #endif
 }
 
+rt_public int app_recv_packet(EIF_PSTREAM s, Request *dans
 #ifdef EIF_WINDOWS
-rt_public int recv_packet(STREAM *s, Request *dans, BOOL reset)
-#else
-rt_public int recv_packet(int s, Request *dans)
+		, BOOL reset
 #endif
+		)
       				/* The connected socket */
               		/* The daemon's answer */
 {
@@ -460,11 +402,7 @@ rt_public int recv_packet(int s, Request *dans)
  * Protocol specific routines
  */
 
-#ifdef EIF_WINDOWS
-rt_public void stop_rqst(STREAM *s)
-#else
-rt_public void stop_rqst(int s)
-#endif
+rt_public void stop_rqst(EIF_PSTREAM sp)
 {
 	/* Send a stop request, using the Where structure to give the program
 	 * current location. We also indicate why the program stopped and set
@@ -530,14 +468,10 @@ rt_public void stop_rqst(int s)
 #undef st_excode
 #undef st_where
 
-	send_packet(s, &rqst);	/* Send stopped notification */
+	app_send_packet(sp, &rqst);	/* Send stopped notification */
 }
 
-#ifdef EIF_WINDOWS
-rt_public void notify_rqst(STREAM *s, int ev_type, int ev_data)
-#else
-rt_public void notify_rqst(int s, int ev_type, int ev_data)
-#endif
+rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, int ev_data)
 {
 	/* Send a notification
 	 */
@@ -546,7 +480,7 @@ rt_public void notify_rqst(int s, int ev_type, int ev_data)
 	rqst.rq_type = NOTIFIED;/* Notify request */
 	rqst.rq_event.st_type = ev_type;
 	rqst.rq_event.st_data = ev_data;
-	send_packet(s, &rqst);	/* Send notification */
+	app_send_packet(sp, &rqst);	/* Send notification */
 }
 
 
@@ -555,21 +489,13 @@ rt_shared void dnotify(int evt_type, int evt_data)
 	if (!debug_mode)		/* If not in debugging mode */
 		return ;			/* Resume execution immediately */
 #ifdef WORKBENCH
-#ifdef EIF_WINDOWS
-	notify_rqst(sp, evt_type, evt_data);		/* Notify workbench we stopped */
-#else	/* EIF_WINDOWS */
-	notify_rqst(EWBOUT, evt_type, evt_data);		/* Notify workbench we stopped */
-#endif	/* EIF_WINDOWS */
+	notify_rqst(app_sp, evt_type, evt_data);		/* Notify workbench we stopped */
 #endif	/* WORKBENCH */
 }
 
 /* Encapsulate the 'modify_local' function */
 rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, struct item *ip)
 {
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd[EWBOUT];
-#endif
-		
 	static long stack_depth = 0;
 	static long loc_type = 0;
 	static long loc_number = 0; 
@@ -585,11 +511,7 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 		result = modify_local(stack_depth, loc_type, loc_number, ip);
 		
 		/* send the acknowledgement */
-#ifdef EIF_WINDOWS
-		send_ack(sp, result);
-#else
-		send_ack(writefd(sp), result);
-#endif
+		send_ack(app_sp, result);
 
 		/* prepare next call (will be a 'first') */
 		stack_depth = 0;
@@ -601,10 +523,6 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 /* Encapsulate the 'modify_attr' function */
 rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value)
 {
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd[EWBOUT];
-#endif
-
 	static EIF_REFERENCE object = NULL;
 	static long attr_number = 0;
 	unsigned char result;
@@ -622,11 +540,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 		result = modify_attr(object, attr_number, new_value);
 		
 		/* send the acknowledgement */
-#ifdef EIF_WINDOWS
-		send_ack(sp, result);
-#else
-		send_ack(writefd(sp), result);
-#endif
+		send_ack(app_sp, result);
 
 		/* prepare next call (will be a 'first') */
 		object = NULL;
@@ -634,11 +548,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	}
 }
 
-#ifdef EIF_WINDOWS
-rt_private void inspect(STREAM *s, Opaque *what)
-#else
-rt_private void inspect(int s, Opaque *what)
-#endif
+rt_private void inspect(EIF_PSTREAM s, Opaque *what)
              		/* Generic structure describing request */
 {
 	/* Inspect an object and return its tagged out form back to ewb. The
@@ -700,15 +610,11 @@ rt_private void inspect(int s, Opaque *what)
 	 * object. Send it to the remote process verbatim and free it.
 	 */
 
-	twrite(out, strlen(out));
+	app_twrite(out, strlen(out));
 	free(out);
 }
 
-#ifdef EIF_WINDOWS
-rt_private void once_inspect(EIF_LPSTREAM s, Opaque *what)
-#else
-rt_private void once_inspect(int s, Opaque *what)
-#endif
+rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 					/* The connected socket */
              		/* Generic structure describing request */
 {
@@ -718,8 +624,6 @@ rt_private void once_inspect(int s, Opaque *what)
 
 	EIF_GET_CONTEXT
 
-	char *out = NULL;				/* Buffer where out form is stored */
-	struct item *val = NULL;		/* Value in operational stack */
 	int volatile is_process_once = 0;	/* Is once routine process-relative? */
 	static char buf[BUFSIZ];
 
@@ -750,16 +654,16 @@ rt_private void once_inspect(int s, Opaque *what)
 		} else 
 #endif
 			o_index = once_index (b_index);
-		sprintf(buf, "%ld", o_index);
-		twrite(buf, strlen(buf));
+		sprintf(buf, "%u", o_index);
+		app_twrite(buf, strlen(buf));
 		break;
 	case OUT_CALLED:				/* Has once routine already been called? */
 		o_index = (ONCE_INDEX) what->op_third;
 		GetOResult(o_index, (what->op_second == OUT_ONCE_PER_PROCESS));
 		if (MTOD(OResult)) {
-			twrite("true", 4);
+			app_twrite("true", 4);
 		} else {
-			twrite("false", 5);
+			app_twrite("false", 5);
 		}
 		break;
 	case OUT_DATA_PER_PROCESS:			/* Result of already called once function */
@@ -769,20 +673,20 @@ rt_private void once_inspect(int s, Opaque *what)
 		GetOResult(o_index, is_process_once);
 		if (MTOD(OResult)) {
 				/* Done ? */
-			twrite("true", 4);
+			app_twrite("true", 4);
 				/* Failed ? */
 			if (MTOF(OResult)) {
-				twrite("true", 4);
-				sprintf(buf, "%ld", MTOF(OResult));
-				twrite(buf, strlen(buf));
+				app_twrite("true", 4);
+				sprintf(buf, "%u", MTOF(OResult));
+				app_twrite(buf, strlen(buf));
 			} else {
-				twrite("false", 5);
+				app_twrite("false", 5);
 					/* Result */
-				send_once_result(s, OResult, (int) what->op_second);	/* Send result back to ewb */
+				send_once_result(sp, OResult, (int) what->op_second);	/* Send result back to ewb */
 														/* the last argument is the expected type */
 			}
 		} else {
-			twrite("false", 5);
+			app_twrite("false", 5);
 		}
 		break;
 	default:
@@ -796,17 +700,13 @@ rt_private void set_check_assert (int v)
 	EIF_BOOLEAN old_value;
 	old_value = c_check_assert ((v == 1)?EIF_TRUE:EIF_FALSE);
 	if (old_value == EIF_TRUE) {
-		twrite("true", 4);
+		app_twrite("true", 4);
 	} else {
-		twrite("false", 5);
+		app_twrite("false", 5);
 	}
 }
 
-#ifdef EIF_WINDOWS
-rt_private void adopt(EIF_LPSTREAM s, Opaque *what)
-#else
-rt_private void adopt(int s, Opaque *what)
-#endif
+rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
              		/* Generic structure describing request */
 {
 	/* Adopt an object and return its hector address back to ewb. The
@@ -820,14 +720,10 @@ rt_private void adopt(int s, Opaque *what)
 
 	physical_addr = (char *) what->op_third;
 	sprintf(hector_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
-	twrite(hector_addr, strlen(hector_addr));
+	app_twrite(hector_addr, strlen(hector_addr));
 }
 
-#ifdef EIF_WINDOWS
-rt_private void ipc_access(EIF_LPSTREAM s, Opaque *what)
-#else
-rt_private void ipc_access(int s, Opaque *what)
-#endif
+rt_private void ipc_access(EIF_PSTREAM sp, Opaque *what)
 
              		/* Generic structure describing request */
 {
@@ -843,15 +739,10 @@ rt_private void ipc_access(int s, Opaque *what)
 
 	hector_addr = (char *) what->op_third;
 	sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
-	twrite(physical_addr, strlen(physical_addr));
+	app_twrite(physical_addr, strlen(physical_addr));
 }
 
-#ifdef EIF_WINDOWS
-rt_private void wean(EIF_LPSTREAM s, Opaque *what)
-#else
-rt_private void wean(int s, Opaque *what)
-#endif
-
+rt_private void wean(EIF_PSTREAM sp, Opaque *what)
              		/* Generic structure describing request */
 {
 	/* Wean an adopted object. The opaque structure describes the object.
@@ -879,11 +770,7 @@ rt_private void load_bc(int slots, int amount)
 	 * error, of course.
 	 */
 
-#ifndef EIF_WINDOWS
-	STREAM *sp = stream_by_fd[EWBOUT];
-	int s = writefd(sp);		/* Writing "socket" */
-	int r = readfd(sp);			/* Reading "socket" */
-#endif
+	EIF_PSTREAM sp = app_sp;
 
 	Request rqst;				/* Loading BYTECODE request */
 	unsigned char *bc;					/* Location of loaded byte code */
@@ -894,11 +781,7 @@ rt_private void load_bc(int slots, int amount)
 #endif
 
 	Request_Clean (rqst);
-#ifdef EIF_WINDOWS
 	send_ack(sp, AK_OK);				/* Extension succeeded */
-#else
-	send_ack(s, AK_OK);				/* Extension succeeded */
-#endif
 
 #ifdef USE_ADD_LOG
 		add_log(9, "made room");
@@ -917,7 +800,7 @@ rt_private void load_bc(int slots, int amount)
 		add_log(9, "in load_bc loop");
 #endif
 #ifdef EIF_WINDOWS
-		recv_packet(sp, &rqst, TRUE);			/* Read BYTECODE request */
+		app_recv_packet(sp, &rqst, TRUE);			/* Read BYTECODE request */
 		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
 			send_ack(sp, AK_PROTO);		/* Protocol error */
 			return;
@@ -925,13 +808,13 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "received packet BYTECODE");
 #endif
-		bc = (unsigned char *) tread((int *) 0);			/* Get byte code in memory */
+		bc = (unsigned char *) app_tread((int *) 0);			/* Get byte code in memory */
 		if (bc == NULL) {			/* Not enough memory */
 			send_ack(sp, AK_ERROR);		/* Notify failure */
 			return;						/* And abort downloading */
 		}
 #ifdef USE_ADD_LOG
-		add_log(9, "tread bytecode");
+		add_log(9, "app_tread bytecode");
 #endif
 		drecord_bc((BODY_INDEX) arg_1, (BODY_INDEX) arg_2, bc);	/* Place byte code in run-time tables*/
 #ifdef USE_ADD_LOG
@@ -942,29 +825,28 @@ rt_private void load_bc(int slots, int amount)
 		add_log(9, "sent ack");
 #endif
 
-#else
-		recv_packet(r, &rqst);			/* Read BYTECODE request */
+#else /* NOT EIF_WINDOWS */
+		app_recv_packet(sp, &rqst);			/* Read BYTECODE request */
 		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
-			send_ack(s, AK_PROTO);		/* Protocol error */
+			send_ack(sp, AK_PROTO);		/* Protocol error */
 			return;
 		}
 #ifdef USE_ADD_LOG
 		add_log(9, "received packet BYTECODE");
 #endif
-		bc = (unsigned char *) tread((int *) 0);			/* Get byte code in memory */
+		bc = (unsigned char *) app_tread((int *) 0);			/* Get byte code in memory */
 		if (bc == NULL) {			/* Not enough memory */
-			send_ack(s, AK_ERROR);		/* Notify failure */
+			send_ack(sp, AK_ERROR);		/* Notify failure */
 			return;						/* And abort downloading */
 		}
 		drecord_bc((BODY_INDEX) arg_1, (BODY_INDEX) arg_2, bc);	/* Place byte code in run-time tables*/
-		send_ack(s, AK_OK);				/* Byte code loaded successfully */
-#endif
+		send_ack(sp, AK_OK);				/* Byte code loaded successfully */
+#endif /* NOT EIF_WINDOWS */
 	}
 
 #undef arg_1
 #undef arg_2
 }
-
 
 /*
  *		Routines for inspecting an Eiffel object.
@@ -985,11 +867,11 @@ rt_private void obj_inspect(EIF_OBJ object)
 	flags = HEADER(ref)->ov_flags;
 	is_special = EIF_TEST(flags & EO_SPEC);	
 	is_tuple = EIF_TEST(flags & EO_TUPLE);	
-	twrite (&is_special, sizeof(EIF_BOOLEAN));
-	twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+	app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+	app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 		/* Send class dynamic id */
 	dtype = Deif_bid(flags);
-	twrite (&dtype, sizeof(int32));
+	app_twrite (&dtype, sizeof(int32));
 					
 	if (is_special) {
 			/* Send items recursively */
@@ -1030,13 +912,13 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 	cn_attr = obj_desc->cn_attr;
 
 		/* Send the attribute number */
-	twrite (&nb_attr, sizeof(int32));
+	app_twrite (&nb_attr, sizeof(int32));
 
 	for (i = 0; i < nb_attr; i++) {
 
 		/* Send attribute name */
 		name = names[i];
-		twrite (name, strlen(name));
+		app_twrite (name, strlen(name));
 
 		/* Send attribute value */
 		type = types[i];
@@ -1044,34 +926,34 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		o_ref = object + offset;
 		sk_type = type & SK_HEAD;
 		if (sk_type != SK_REF)
-			twrite (&sk_type, sizeof(uint32));
+			app_twrite (&sk_type, sizeof(uint32));
 
 		switch(sk_type) {
-		case SK_POINTER: twrite (o_ref, sizeof(EIF_POINTER)); break;
-		case SK_BOOL: twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
-		case SK_CHAR: twrite (o_ref, sizeof(EIF_CHARACTER)); break;
-		case SK_WCHAR: twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
-		case SK_UINT8: twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
-		case SK_UINT16: twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
-		case SK_UINT32: twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
-		case SK_UINT64: twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
-		case SK_INT8: twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
-		case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
-		case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
-		case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
-		case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
-		case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
+		case SK_POINTER: app_twrite (o_ref, sizeof(EIF_POINTER)); break;
+		case SK_BOOL: app_twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
+		case SK_CHAR: app_twrite (o_ref, sizeof(EIF_CHARACTER)); break;
+		case SK_WCHAR: app_twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
+		case SK_UINT8: app_twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
+		case SK_UINT16: app_twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
+		case SK_UINT32: app_twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
+		case SK_UINT64: app_twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
+		case SK_INT8: app_twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
+		case SK_INT16: app_twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
+		case SK_INT32: app_twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
+		case SK_INT64: app_twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
+		case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
+		case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
 		case SK_BIT:
 			{
 				char *buf = b_out (o_ref);
-				twrite (buf, strlen(buf));
+				app_twrite (buf, strlen(buf));
 				eif_rt_xfree(buf);
 			}
 			break;
 		case SK_EXP:
 			{
 				int32 dtype = Dtype(o_ref);
-				twrite (&dtype, sizeof(int32));
+				app_twrite (&dtype, sizeof(int32));
 				rec_inspect(o_ref);
 			}
 			break;
@@ -1085,34 +967,34 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 					ref_flags = HEADER(reference)->ov_flags;
 					if (ref_flags & EO_C) {
 						sk_type = SK_POINTER;
-						twrite (&sk_type, sizeof(uint32));
-						twrite (reference, sizeof(EIF_POINTER));
+						app_twrite (&sk_type, sizeof(uint32));
+						app_twrite (reference, sizeof(EIF_POINTER));
 					} else {
 						int32 dtype = Dtype(reference);
-						twrite (&sk_type, sizeof(uint32));
+						app_twrite (&sk_type, sizeof(uint32));
 						if (ref_flags & EO_SPEC) {
 							EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
 							is_special = EIF_TRUE;
-							twrite (&is_special, sizeof(EIF_BOOLEAN));
-							twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 							if (is_tuple) {
-								twrite (&dtype, sizeof(int32));
-								twrite (&reference, sizeof(EIF_POINTER));
+								app_twrite (&dtype, sizeof(int32));
+								app_twrite (&reference, sizeof(EIF_POINTER));
 							} else {
 								rec_sinspect (reference, EIF_TRUE);
 							}
 						} else {
-							twrite (&is_special, sizeof(EIF_BOOLEAN));
-							twrite (&is_void, sizeof(EIF_BOOLEAN));
-							twrite (&dtype, sizeof(int32));
-							twrite (&reference, sizeof(EIF_POINTER));
+							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+							app_twrite (&dtype, sizeof(int32));
+							app_twrite (&reference, sizeof(EIF_POINTER));
 						}
 					}
 				} else {
 					is_void = EIF_TRUE;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&is_special, sizeof(EIF_BOOLEAN));
-					twrite (&is_void, sizeof(EIF_BOOLEAN));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+					app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 				}
 			}
 		}
@@ -1136,7 +1018,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
 		/* Send address of Current object */
-	twrite (&object, sizeof (EIF_POINTER));
+	app_twrite (&object, sizeof (EIF_POINTER));
 
 	zone = HEADER(object);
 	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
@@ -1146,7 +1028,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	dtype = Deif_bid(flags);
 
 		/* Send the capacity of the special object */
-	twrite (&count, sizeof(int32));
+	app_twrite (&count, sizeof(int32));
 
 	if (skip_items == EIF_FALSE) {
 		/* Compute the number of items within the bounds */
@@ -1168,7 +1050,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 			nb_attr = sp_end - sp_start + 1;
 	  
 			/* Send the number of items to be inspected */
-		twrite (&nb_attr, sizeof(uint32));
+		app_twrite (&nb_attr, sizeof(uint32));
 
 			/* Send the items within the bounds */
 		if (nb_attr > 0) {
@@ -1178,11 +1060,11 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 									sp_index = sp_start; sp_index <= sp_end;
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
-					twrite (buffer, strlen(buffer));
+					app_twrite (buffer, strlen(buffer));
 					sk_type = SK_EXP;
-					twrite (&sk_type, sizeof(uint32));
+					app_twrite (&sk_type, sizeof(uint32));
 					dtype = Dtype(o_ref);
-					twrite (&dtype, sizeof(int32));
+					app_twrite (&dtype, sizeof(int32));
 					rec_inspect(o_ref);
 				}
 			} else if (!(flags & EO_REF)) {
@@ -1224,29 +1106,29 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 									sp_index = sp_start; sp_index <= sp_end;
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
-					twrite (buffer, strlen(buffer));
+					app_twrite (buffer, strlen(buffer));
 
-					twrite (&sk_type, sizeof(uint32));
+					app_twrite (&sk_type, sizeof(uint32));
 
 					switch(sk_type) {
-					case SK_POINTER: twrite (o_ref, sizeof(EIF_POINTER)); break;
-					case SK_BOOL: twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
-					case SK_CHAR: twrite (o_ref, sizeof(EIF_CHARACTER)); break;
-					case SK_WCHAR: twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
-					case SK_UINT8: twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
-					case SK_UINT16: twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
-					case SK_UINT32: twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
-					case SK_UINT64: twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
-					case SK_INT8: twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
-					case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
-					case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
-					case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
-					case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
-					case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
+					case SK_POINTER: app_twrite (o_ref, sizeof(EIF_POINTER)); break;
+					case SK_BOOL: app_twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
+					case SK_CHAR: app_twrite (o_ref, sizeof(EIF_CHARACTER)); break;
+					case SK_WCHAR: app_twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
+					case SK_UINT8: app_twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
+					case SK_UINT16: app_twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
+					case SK_UINT32: app_twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
+					case SK_UINT64: app_twrite (o_ref, sizeof(EIF_NATURAL_64)); break;
+					case SK_INT8: app_twrite (o_ref, sizeof(EIF_INTEGER_8)); break;
+					case SK_INT16: app_twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
+					case SK_INT32: app_twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
+					case SK_INT64: app_twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
+					case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
+					case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
 					case SK_BIT:
 						{
 							char *buf = b_out (*(EIF_REFERENCE *) o_ref);
-							twrite (buf, strlen(buf));
+							app_twrite (buf, strlen(buf));
 							eif_rt_xfree(buf);
 						}
 						break;
@@ -1261,26 +1143,26 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 							sp_index = sp_start; sp_index <= sp_end; sp_index++,
 							o_ref = (char *) ((char **)o_ref + 1)) {
 					sprintf(buffer, "%ld", sp_index);
-					twrite (buffer, strlen(buffer));
+					app_twrite (buffer, strlen(buffer));
 					reference = *(char **)o_ref;
 					if (!reference) {
 						is_void = EIF_TRUE;
-						twrite (&sk_type, sizeof(uint32));
-						twrite (&is_special, sizeof(EIF_BOOLEAN));
-						twrite (&is_void, sizeof(EIF_BOOLEAN));
+						app_twrite (&sk_type, sizeof(uint32));
+						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 						is_void = EIF_FALSE;
 					} else if (HEADER(reference)->ov_flags & EO_C) {
 						sk_type = SK_POINTER;
-						twrite (&sk_type, sizeof(uint32));
-						twrite (&reference, sizeof(EIF_POINTER));
+						app_twrite (&sk_type, sizeof(uint32));
+						app_twrite (&reference, sizeof(EIF_POINTER));
 						sk_type = SK_REF;
 					} else {
 						dtype = Dtype(reference);
-						twrite (&sk_type, sizeof(uint32));
-						twrite (&is_special, sizeof(EIF_BOOLEAN));
-						twrite (&is_void, sizeof(EIF_BOOLEAN));
-						twrite (&dtype, sizeof(int32));
-						twrite (&reference, sizeof(EIF_POINTER));
+						app_twrite (&sk_type, sizeof(uint32));
+						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+						app_twrite (&dtype, sizeof(int32));
+						app_twrite (&reference, sizeof(EIF_POINTER));
 					}
 				}
 			}
@@ -1297,15 +1179,15 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
 		/* Send address of Current object */
-	twrite (&object, sizeof (EIF_POINTER));
+	app_twrite (&object, sizeof (EIF_POINTER));
 
 	count = RT_SPECIAL_COUNT(object) - 1;
 
 		/* Send the capacity of the special object */
-	twrite (&count, sizeof(int32));
+	app_twrite (&count, sizeof(int32));
 
 		/* Send the number of items to be inspected */
-	twrite (&count, sizeof(uint32));
+	app_twrite (&count, sizeof(uint32));
 
 		/* Send the items within the bounds */
 	if (count > 0) {
@@ -1315,84 +1197,84 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 		l_item++;
 		for (i = 1; count > 0; count--, i++, l_item++) {
 			sprintf (buffer, "%d", i);
-			twrite (buffer, strlen(buffer));
+			app_twrite (buffer, strlen(buffer));
 			switch (eif_tuple_item_type(l_item)) {
 				case EIF_NATURAL_8_CODE:
 					sk_type = SK_UINT8;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_natural_8_tuple_item(l_item), sizeof(EIF_NATURAL_8));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_natural_8_tuple_item(l_item), sizeof(EIF_NATURAL_8));
 					break;
 				case EIF_NATURAL_16_CODE:
 					sk_type = SK_UINT16;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_natural_16_tuple_item(l_item), sizeof(EIF_NATURAL_16));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_natural_16_tuple_item(l_item), sizeof(EIF_NATURAL_16));
 					break;
 				case EIF_NATURAL_32_CODE:
 					sk_type = SK_UINT32;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_natural_32_tuple_item(l_item), sizeof(EIF_NATURAL_32));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_natural_32_tuple_item(l_item), sizeof(EIF_NATURAL_32));
 					break;
 				case EIF_NATURAL_64_CODE:
 					sk_type = SK_UINT64;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_natural_64_tuple_item(l_item), sizeof(EIF_NATURAL_64));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_natural_64_tuple_item(l_item), sizeof(EIF_NATURAL_64));
 					break;
 				case EIF_INTEGER_8_CODE:
 					sk_type = SK_INT8;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_integer_8_tuple_item(l_item), sizeof(EIF_INTEGER_8));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_integer_8_tuple_item(l_item), sizeof(EIF_INTEGER_8));
 					break;
 				case EIF_INTEGER_16_CODE:
 					sk_type = SK_INT16;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_integer_16_tuple_item(l_item), sizeof(EIF_INTEGER_16));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_integer_16_tuple_item(l_item), sizeof(EIF_INTEGER_16));
 					break;
 				case EIF_INTEGER_32_CODE:
 					sk_type = SK_INT32;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_integer_32_tuple_item(l_item), sizeof(EIF_INTEGER_32));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_integer_32_tuple_item(l_item), sizeof(EIF_INTEGER_32));
 					break;
 				case EIF_INTEGER_64_CODE:
 					sk_type = SK_INT64;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_integer_64_tuple_item(l_item), sizeof(EIF_INTEGER_64));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_integer_64_tuple_item(l_item), sizeof(EIF_INTEGER_64));
 					break;
 				case EIF_BOOLEAN_CODE:
 					sk_type = SK_BOOL;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_boolean_tuple_item(l_item), sizeof(EIF_BOOLEAN));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_boolean_tuple_item(l_item), sizeof(EIF_BOOLEAN));
 					break;
 				case EIF_CHARACTER_CODE:
 					sk_type = SK_CHAR;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
 					break;
 				case EIF_REAL_64_CODE:
 					sk_type = SK_REAL64;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_real_64_tuple_item(l_item), sizeof(EIF_REAL_64));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_real_64_tuple_item(l_item), sizeof(EIF_REAL_64));
 					break;
 				case EIF_REAL_32_CODE:
 					sk_type = SK_REAL32;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_real_32_tuple_item(l_item), sizeof(EIF_REAL_32));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_real_32_tuple_item(l_item), sizeof(EIF_REAL_32));
 					break;
 				case EIF_POINTER_CODE:
 					sk_type = SK_POINTER;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_pointer_tuple_item(l_item), sizeof(EIF_POINTER));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_pointer_tuple_item(l_item), sizeof(EIF_POINTER));
 					break;
 				case EIF_WIDE_CHAR_CODE:
 					sk_type = SK_WCHAR;
-					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_WIDE_CHAR));
+					app_twrite (&sk_type, sizeof(uint32));
+					app_twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_WIDE_CHAR));
 					break;
 				case EIF_REFERENCE_CODE:
 					{
 						EIF_BOOLEAN is_special = EIF_FALSE, is_void = FALSE;
 						EIF_REFERENCE reference = eif_reference_tuple_item(l_item);
 						sk_type = SK_REF;
-						twrite (&sk_type, sizeof(uint32));
+						app_twrite (&sk_type, sizeof(uint32));
 
 						if (reference) {
 							uint32 ref_flags = HEADER(reference)->ov_flags;
@@ -1400,24 +1282,24 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 							if (ref_flags & EO_SPEC) {
 								EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
 								is_special = EIF_TRUE;
-								twrite (&is_special, sizeof(EIF_BOOLEAN));
-								twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+								app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+								app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 								if (is_tuple) {
-									twrite (&dtype, sizeof(int32));
-									twrite (&reference, sizeof(EIF_POINTER));
+									app_twrite (&dtype, sizeof(int32));
+									app_twrite (&reference, sizeof(EIF_POINTER));
 								} else {
 									rec_sinspect (reference, EIF_TRUE);
 								}
 							} else {
-								twrite (&is_special, sizeof(EIF_BOOLEAN));
-								twrite (&is_void, sizeof(EIF_BOOLEAN));
-								twrite (&dtype, sizeof(int32));
-								twrite (&reference, sizeof(EIF_POINTER));
+								app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+								app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+								app_twrite (&dtype, sizeof(int32));
+								app_twrite (&reference, sizeof(EIF_POINTER));
 							}
 						} else {
 							is_void = EIF_TRUE;
-							twrite (&is_special, sizeof(EIF_BOOLEAN));
-							twrite (&is_void, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 						}
 						break;
 					}
@@ -1430,7 +1312,7 @@ rt_private void bit_inspect(EIF_OBJ object)
                		/* Reference to a bit object (= BIT_REF) */
 {
 	char *buf = b_out(*(EIF_REFERENCE *) object);
-	twrite (buf, strlen(buf));
+	app_twrite (buf, strlen(buf));
 	eif_rt_xfree(buf);
 }
 
@@ -1468,7 +1350,7 @@ rt_private void string_inspect(EIF_OBJ object)
 	}
 	if (string_count > DEFAULT_SLICE + 1)	/* Send only the beginning of */
 		string_count = DEFAULT_SLICE + 1;	/* the string if it is too big */
-	twrite (string_area, string_count);
+	app_twrite (string_area, string_count);
 }
 
 rt_private unsigned char smodify_attr(char *object, long attr_number, struct item *new_value)
@@ -1664,12 +1546,8 @@ rt_private void opush_dmpitem(struct item *item)
 	opush(item);
 	}
 
-#ifdef EIF_WINDOWS
-rt_private void dynamic_evaluation(STREAM *s, int fid, int stype, int is_precompiled, int is_basic_type)
-#else
-rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled, int is_basic_type)
-#endif
-	{
+rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_precompiled, int is_basic_type)
+{
 	struct item *ip;
 	Request rqst;					/* What we send back */
 	struct dump dumped;			/* Item returned */
@@ -1693,10 +1571,10 @@ rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled
 		dumped.dmp_item = ip;
 	}
 	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
-	send_packet(s, &rqst);			/* Send to network */
+	app_send_packet(sp, &rqst);			/* Send to network */
 
 	/* reset info concerning otop */
 	previous_otop = NULL;
 	otop_recorded = 0;
-	}
+}
 

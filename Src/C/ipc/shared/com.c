@@ -60,12 +60,109 @@
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */
 #define MAX_STRING	512	/* Maximum string length for log messages */
 
-/* VARARGS2 */
+/*
+ * Registered send_packet and recv_packet functions management ... 
+ */
+
+typedef struct {				/* Daemon flags (protocol with client) */
+	EIF_PSTREAM sp;
+	void (*p_send_fct)(EIF_PSTREAM, Request*);
 #ifdef EIF_WINDOWS
-rt_public void send_bye(STREAM *s, int code)
+	int  (*p_recv_fct)(EIF_PSTREAM, Request*, BOOL) ;
 #else
-rt_public void send_bye(int s, int code)
+	int  (*p_recv_fct)(EIF_PSTREAM, Request*);
 #endif
+} send_recv_fct_by_sp;
+
+rt_private send_recv_fct_by_sp* registered_send_recv_fct_data[3]; // Max is 3
+rt_private int registered_send_recv_fct_data_max = 3;
+rt_private send_recv_fct_by_sp* send_recv_fct_data_for (EIF_PSTREAM sp)
+{
+	int i;
+	for (i = 0; i < registered_send_recv_fct_data_max; i++) {
+		if (registered_send_recv_fct_data[i] != NULL
+			&& registered_send_recv_fct_data[i]->sp == sp) 
+		{
+			return registered_send_recv_fct_data[i];
+		};
+	}
+	return NULL;
+}
+
+
+rt_public void unregister_packet_functions (EIF_PSTREAM sp)
+{
+	int i;
+	for (i = 0; i < registered_send_recv_fct_data_max; i++) {
+		if (registered_send_recv_fct_data[i] != NULL
+			&& registered_send_recv_fct_data[i]->sp == sp) 
+		{
+			registered_send_recv_fct_data[i] = NULL;
+			break;
+		}
+	}
+	return;
+}
+
+rt_public void register_packet_functions (EIF_PSTREAM sp, void(*p_send_fct)(EIF_PSTREAM, Request*) , 
+#ifdef EIF_WINDOWS
+			int (*p_recv_fct)(EIF_PSTREAM, Request*, BOOL) 
+#else
+			int (*p_recv_fct)(EIF_PSTREAM, Request*)
+#endif
+		) 
+{
+	int i;
+	send_recv_fct_by_sp *p_data;
+	REQUIRE("valid stream", sp != NULL);
+	p_data = send_recv_fct_data_for (sp);
+	if (p_data == NULL) {
+		for (i = 0; i < registered_send_recv_fct_data_max; i++) {
+			if (registered_send_recv_fct_data[i] == NULL) {
+				p_data = (send_recv_fct_by_sp*) malloc (sizeof(send_recv_fct_by_sp));
+				registered_send_recv_fct_data[i] = p_data;
+				break;
+			};
+		}
+	}
+	p_data->sp = sp;
+	p_data->p_send_fct = p_send_fct;
+	p_data->p_recv_fct = p_recv_fct;
+	return;
+}
+
+rt_public void send_packet(EIF_PSTREAM sp, Request *rqst)
+      				/* The connected socket */
+              		/* The request to be sent */
+{
+	send_recv_fct_by_sp* p_data;
+	REQUIRE("valid stream", sp != NULL);
+	p_data = send_recv_fct_data_for (sp);
+	CHECK("valid index", p_data != NULL);
+	(*p_data->p_send_fct)(sp, rqst);
+	return;
+}
+
+#ifdef EIF_WINDOWS
+rt_public int recv_packet(EIF_PSTREAM sp, Request *dans , BOOL reset)
+#else
+rt_public int recv_packet(EIF_PSTREAM sp, Request *dans)
+#endif
+      				/* The connected socket */
+              		/* The daemon's answer */
+{
+	send_recv_fct_by_sp* p_data;
+	p_data = send_recv_fct_data_for (sp);
+	CHECK("valid index", p_data != NULL);
+#ifdef EIF_WINDOWS
+	return (*p_data->p_recv_fct)(sp, dans, reset);
+#else
+	return (*p_data->p_recv_fct)(sp, dans);
+#endif
+}
+
+/* VARARGS2 */
+rt_public void send_bye(EIF_PSTREAM sp, int code)
       		/* The socket descriptor */
          	/* The acknowledgment code */
 {
@@ -73,7 +170,7 @@ rt_public void send_bye(int s, int code)
 	 * client will receive the message. Then exit properly.
 	 */
 
-	send_ack(s, code);			/* Send error message back */
+	send_ack(sp, code);			/* Send error message back */
 #ifdef EIF_WINDOWS
 	Sleep (GRACETIME * 1000);			/* Ensure client receives message */
 #else
@@ -83,11 +180,7 @@ rt_public void send_bye(int s, int code)
 }
 
 /* VARARGS2 */
-#ifdef EIF_WINDOWS
-rt_public void send_ack(STREAM *s, int code)
-#else
-rt_public void send_ack(int s, int code)
-#endif
+rt_public void send_ack(EIF_PSTREAM sp, int code)
       		/* The socket descriptor */
          	/* The acknowledgment code */
 {
@@ -103,20 +196,12 @@ rt_public void send_ack(int s, int code)
 	pack.rq_ack.ak_type = code;			/* Report code */
 
 #ifdef USE_ADD_LOG
-#ifdef EIF_WINDOWS
-	add_log(100, "sending ack %d on pipe %d", code, writefd (s));
-#else
-	add_log(100, "sending ack %d on pipe %d", code, s);
+	add_log(100, "sending ack %d on pipe %d", code, writefd (sp));
 #endif
-#endif
-	send_packet(s, &pack);
+	send_packet(sp, &pack);
 }
 
-#ifdef EIF_WINDOWS
-rt_public void send_info(STREAM *s, int code)
-#else
-rt_public void send_info(int s, int code)
-#endif
+rt_public void send_info(EIF_PSTREAM sp, int code)
       		/* The socket descriptor */
          		/* The information code */
 {
@@ -126,10 +211,10 @@ rt_public void send_info(int s, int code)
 
 	Request_Clean (rqst);
 	rqst.rq_type = code;
-	send_packet(s, &rqst);
+	send_packet(sp, &rqst);
 }
 
-rt_public int send_str(STREAM *sp, char *buffer)
+rt_public int send_str(EIF_PSTREAM sp, char *buffer)
            		/* The stream descriptor */
              	/* Where the string is held */
 {
@@ -154,16 +239,11 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	CHECK("valid size", size <= INT32_MAX);
 	pack.rq_opaque.op_size = size;	/* Send length without final null */
 
-
 #ifdef USE_ADD_LOG
         add_log(100, "sending string of size %d", size);
 #endif
 
-#ifdef EIF_WINDOWS
 	send_packet(sp, &pack);	/* Send the length */
-#else
-	send_packet(writefd(sp), &pack);	/* Send the length */
-#endif
 
 	if (size == 0)					/* Null-length string */
 		return 0;
@@ -171,11 +251,12 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	/* Wait for the acknowledgment */
 #ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))
-		return -1;
 #else
-	if (-1 == recv_packet(readfd(sp), &pack))
-		return -1;
+	if (-1 == recv_packet(sp, &pack))
 #endif
+	{
+		return -1;
+	}
 
 	/* Analyze the acknowledgment received */
 	switch (pack.rq_type) {
@@ -198,18 +279,15 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	 * for another acknowledgment.
 	 */
 
-#ifdef EIF_WINDOWS
 	if (-1 == net_send(sp, buffer, size))
+	{
 		return -1;
-#else
-	if (-1 == net_send(writefd(sp), buffer, size))
-		return -1;
-#endif
+	}
 
 	return 0;		/* Ok, string was sent */
 }
 
-rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
+rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)
            		/* The STREAM pointer */
              	/* Set to the size of the string if non null pointer */
 {
@@ -228,11 +306,12 @@ rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
 	Request_Clean (pack);
 #ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &pack, TRUE))	/* Wait for length */
-		return (char *) 0;
 #else
-	if (-1 == recv_packet(readfd(sp), &pack))	/* Wait for length */
-		return (char *) 0;
+	if (-1 == recv_packet(sp, &pack))	/* Wait for length */
 #endif
+	{
+		return (char *) 0;
+	}
 
 	size = pack.rq_opaque.op_size;			/* Fetch string's length */
 	if (sizeptr)				/* Fill in size pointer */
@@ -246,25 +325,18 @@ rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
 
 	buffer = (char *) malloc(size + 1);		/* Null byte not included */
 	if (buffer == (char *) 0) {				/* Unable to allocate memory */
-#ifdef EIF_WINDOWS
 		send_ack(sp, AK_ERROR);	/* Signal error to remote process */
-#else
-		send_ack(writefd(sp), AK_ERROR);	/* Signal error to remote process */
-#endif
 		return (char *) 0;
 	} else {
-#ifdef EIF_WINDOWS
 		send_ack(sp, AK_OK);		/* Ready to get string */
-#else
-		send_ack(writefd(sp), AK_OK);		/* Ready to get string */
-#endif
 	}
 
 #ifdef EIF_WINDOWS
-	if (-1 == net_recv(sp, buffer, size, TRUE)) {	/* Cannot receive string */
+	if (-1 == net_recv(sp, buffer, size, TRUE)) 	/* Cannot receive string */
 #else
-	if (-1 == net_recv(readfd(sp), buffer, size)) {	/* Cannot receive string */
+	if (-1 == net_recv(sp, buffer, size)) 	/* Cannot receive string */
 #endif
+	{
 		free(buffer);
 		return (char *) 0;
 	}

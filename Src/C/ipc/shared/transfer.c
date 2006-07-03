@@ -47,32 +47,11 @@
 #include <string.h>
 #include "rt_assert.h"
 
-#ifdef EIF_WINDOWS
-rt_shared STREAM *sp;				/* Stream used for communications */
-#else
-rt_private STREAM *sp;				/* Stream used for communications */
-#endif
 rt_private char* reading_buffer;		/* Buffer used for communication, grows as needed */
 rt_private size_t allocated_buffer_size; 	/* Currently allocated size for buffer */
 
-rt_public void tpipe(STREAM *stream)
-{
-	/* Initialize the file descriptor to be used in data exchanges with the
-	 * remote process. This enables us to omit this parameter whenever an I/O
-	 * with the remote process has to be made.
-	 */
 
-	sp = stream;
-
-#ifdef DEBUG
-#ifdef USE_ADD_LOG
-	add_log(20, "stream set up as (rd = #%d, wr = #%d)",
-		readfd(sp), writefd(sp));
-#endif
-#endif
-}
-
-rt_public char *tread(int *size)
+rt_public char *tread(STREAM *sp, int *size)
           		/* Filled in with size of read string */
 {
 	/* Read bytes from the "pipe" and put them into a new allocated buffer.
@@ -96,7 +75,7 @@ rt_public char *tread(int *size)
 #ifdef EIF_WINDOWS
 	if (-1 == recv_packet(sp, &rqst, TRUE)) {
 #else
-	if (-1 == recv_packet(readfd(sp), &rqst)) {
+	if (-1 == recv_packet(sp, &rqst)) {
 #endif
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot receive transfer request");
@@ -124,11 +103,7 @@ rt_public char *tread(int *size)
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
-#ifdef EIF_WINDOWS
 		swallow(sp, rqst.rq_ack.ak_type);
-#else
-		swallow(readfd(sp), rqst.rq_ack.ak_type);
-#endif
 		if (size != (int *) 0)
 			*size = 0;
 		return (char *) 0;
@@ -141,7 +116,7 @@ rt_public char *tread(int *size)
 
 	if (-1 == net_recv(sp, reading_buffer, rqst.rq_ack.ak_type, TRUE)) {
 #else
-	if (-1 == net_recv(readfd(sp), reading_buffer, rqst.rq_ack.ak_type)) {
+	if (-1 == net_recv(sp, reading_buffer, rqst.rq_ack.ak_type)) {
 #endif
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR net_recv: %m (%e)");
@@ -157,7 +132,7 @@ rt_public char *tread(int *size)
 	return reading_buffer;
 }
 
-rt_public int twrite(void *buffer, size_t size)
+rt_public int twrite(STREAM* sp, void *buffer, size_t size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occurred.
@@ -179,11 +154,7 @@ rt_public int twrite(void *buffer, size_t size)
 #endif
 #endif
 
-#ifdef EIF_WINDOWS
 	send_packet(sp, &rqst);
-#else
-	send_packet(writefd(sp), &rqst);
-#endif
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
@@ -191,24 +162,16 @@ rt_public int twrite(void *buffer, size_t size)
 #endif
 #endif
 
-#ifdef EIF_WINDOWS
 	t = net_send(sp, buffer, size);
 #ifdef USE_ADD_LOG
 	add_log(20, "net_send was %d", t);
-#endif
-#else
-	t = net_send(writefd(sp), buffer, size);
 #endif
 
 		/* Cast safe since size is less than INT32_MAX. */
 	return (int) t;
 }
 
-#ifdef EIF_WINDOWS
-rt_public void swallow(STREAM *fd, size_t size)
-#else
-rt_public void swallow(int fd, size_t size)
-#endif
+rt_public void swallow(EIF_PSTREAM sp, size_t size)
 {
 	/* Swallow 'size' bytes from 'fd' and discard them */
 
@@ -222,9 +185,9 @@ rt_public void swallow(int fd, size_t size)
 		if (amount > BUFSIZ)
 			amount = BUFSIZ;
 #ifdef EIF_WINDOWS
-		if (-1 == net_recv(fd, buf, amount, TRUE))
+		if (-1 == net_recv(sp, buf, amount, TRUE))
 #else
-		if (-1 == net_recv(fd, buf, amount))
+		if (-1 == net_recv(sp, buf, amount))
 #endif
 			return;
 		size -= amount;
@@ -238,3 +201,4 @@ rt_public void end_debug()
 	reading_buffer = NULL;
 	allocated_buffer_size = 0;
 }
+

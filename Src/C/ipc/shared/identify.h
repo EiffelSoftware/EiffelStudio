@@ -37,6 +37,11 @@
 #ifndef _identify_h_
 #define _identify_h_
 
-extern int identify();
+#ifdef EIF_WINDOWS
+#include <windows.h>
+extern int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_event_r, HANDLE *p_event_w);
+#else
+extern int identify(char* id, int fdr, int fdw);
+#endif
 
 #endif /* _identify_h_ */

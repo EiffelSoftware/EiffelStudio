@@ -13,7 +13,8 @@ inherit
 		redefine
 			recycle,
 			make,
-			apply_critical_stack_depth
+			apply_critical_stack_depth,
+			can_not_launch_system_message
 		end
 
 	OBJECT_ADDR
@@ -22,6 +23,11 @@ inherit
 		end
 
 	IPC_SHARED
+		export
+			{NONE} all
+		end
+
+	IPC_SHARED_ENGINE
 		export
 			{NONE} all
 		end
@@ -76,18 +82,22 @@ feature -- Execution
 			app: STRING
 			l_status: APPLICATION_STATUS
 		do
-			app := Eiffel_system.application_name (True)
-			if args /= Void then
-				app.extend (' ')
-				app.append (args)
-			end
-			run_request.set_application_name (app)
-			run_request.set_working_directory (cwd)
-			run_request.send
-			l_status := status
-			if l_status /= Void then
-					-- Application was able to be started
-				l_status.set_is_stopped (False)
+			Ipc_engine.launch_ec_dbg
+			if Ipc_engine.ec_dbg_launched then
+				app := Eiffel_system.application_name (True)
+				if args /= Void then
+					app.extend (' ')
+					app.append (args)
+				end
+				run_request.set_application_name (app)
+				run_request.set_working_directory (cwd)
+				run_request.set_ipc_timeout (ipc_engine.ise_timeout)
+				run_request.send
+				l_status := status
+				if l_status /= Void then
+						-- Application was able to be started
+					l_status.set_is_stopped (False)
+				end
 			end
 		end
 
@@ -148,7 +158,7 @@ feature -- Execution
 			Application.process_termination
 
 			quit_request.make (Rqst_kill)
-			quit_request.send;
+			quit_request.send
 
 				-- Don't wait until the next event loop to
 				-- to process the actual termination of the application.
@@ -159,6 +169,7 @@ feature -- Execution
 				quit_request.recv_dead
 			loop
 			end
+			ipc_engine.end_of_debugging
 		ensure then
 			app_is_not_running: not Application.is_running
 		end
@@ -234,7 +245,7 @@ feature -- Query
 --			debugged_object_manager.classic_debugged_object_with_class (a_addr, a_cl)
 --			Result := dump_value_at_address_with_class (a_addr, a_cl).
 			to_implement ("Need to be implemented, but for now this is not used.")
-			check FALSE end
+			check False end
 		end
 
 feature {RUN_REQUEST} -- Implementation
@@ -243,6 +254,37 @@ feature {RUN_REQUEST} -- Implementation
 			-- Process after the launch of the application according
 			-- to `successful' and the execute `application_launch_command'.
 		do
+		end
+
+feature {APPLICATION_EXECUTION} -- Launching status
+
+	can_not_launch_system_message: STRING is
+			-- Message displayed when estudio is unable to launch the system
+		local
+			env_var_str: STRING_8
+		do
+			if ipc_engine.is_vms then
+				env_var_str := "logical name"
+			else
+				env_var_str := "environment variable"
+			end
+
+			Result := "Could not launch system.%N"
+			if ipc_engine.ise_eiffel = Void or else ipc_engine.ise_platform = Void then
+				Result.append ("The following " + env_var_str + "s are not set%N")
+				Result.append ("%T- " + ipc_engine.ise_eiffel_varname + "%N")
+				Result.append ("%T- " + ipc_engine.ise_platform_varname + "%N")
+			elseif not ipc_engine.valid_ise_ecdbgd_executable then
+				Result.append ("The Eiffel debugger is not found or not executable%N")
+				Result.append ("  current path = "+ ipc_engine.ise_ecdbgd_path + " %N")
+				Result.append ("%NYou can change this value in the preferences%N")
+				Result.append (" or restart after setting the " + env_var_str + " " + ipc_engine.ise_ecdbgd_varname + "%N")
+			else
+				Result.append ("The system could not be launched in allotted time:%N")
+				Result.append ("%NYour current timeout is " + ipc_engine.ise_timeout.out + " seconds %N")
+				Result.append ("%NYou can change this value in the preferences%N")
+				Result.append (" or restart after setting the " + env_var_str + " " + ipc_engine.ise_timeout_varname + "%N")
+			end
 		end
 
 feature {APPLICATION_STATUS}

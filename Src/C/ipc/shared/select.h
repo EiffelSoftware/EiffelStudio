@@ -37,9 +37,8 @@
 #ifndef _select_h_
 #define _select_h_
 
-#ifdef EIF_WINDOWS
 #include "stream.h"
-#else
+#ifndef EIF_WINDOWS
 #include "timehdr.h"
 #endif
 
@@ -58,29 +57,28 @@ extern int s_errno;					/* Error number */
 #ifdef EIF_WINDOWS
 
 /* Type definition for functions that take a HANDLE as only argument and return void */
-typedef void(*HANDLE_FN)(HANDLE);
+typedef void(*STREAM_FN)(STREAM*);
 
 /* Function declarations */
-extern int add_input(EIF_LPSTREAM, HANDLE_FN);			/* Add STREAM input function */
-extern HANDLE_FN new_callback(EIF_LPSTREAM, HANDLE_FN);	/* Change call back for a given fd */
-extern HANDLE_FN rem_input(EIF_LPSTREAM);				/* Remove input selection */
+extern int add_input(EIF_PSTREAM, STREAM_FN);			/* Add STREAM input function */
+extern STREAM_FN new_callback(EIF_PSTREAM, STREAM_FN);	/* Change call back for a given fd */
+extern STREAM_FN rem_input(EIF_PSTREAM);				/* Remove input selection */
 extern char *s_strerror(void);							/* Return description of last error */
 extern char *s_strname(void);							/* Return symbolic name of last error */
-extern int has_input(STREAM *sp);						/* Check whether file is still selected */
-extern void clear_fd(STREAM *sp);						/* Clear selection in select result mask */
+//extern void clear_fd(STREAM *sp);						/* Clear selection in select result mask */
 extern int do_select(DWORD timeout);					/* Run the select system call */
 
 #else
 
 /* Function declarations */
-extern int add_input(int fd, void (*call) (/* ??? */));		/* Add file descriptor input function */
-extern void (*new_callback(int fd, void (*call) (/* ??? */)))(void);	/* Change call back for a given fd */
-extern void (*rem_input(int fd))(void);		/* Remove input selection */
+extern int add_input(EIF_PSTREAM, void (*call) (/* ??? */));		/* Add file descriptor input function */
+extern void (*new_callback(EIF_PSTREAM, void (*call) (/* ??? */)))(void);	/* Change call back for a given fd */
+extern void (*rem_input(EIF_PSTREAM))(void);		/* Remove input selection */
 extern char *s_strerror(void);		/* Return description of last error */
 extern char *s_strname(void);		/* Return symbolic name of last error */
-extern int has_input(int fd);		/* Check whether file is still selected */
-extern void clear_fd(int f);		/* Clear selection in select result mask */
+//extern void clear_fd(int f);		/* Clear selection in select result mask */
 extern int do_select(struct timeval *timeout);	/* Run the select system call */
 #endif
+extern int has_input(EIF_PSTREAM);		/* Check whether file is still selected */
 
 #endif

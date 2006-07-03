@@ -5,16 +5,16 @@ indexing
 -- Must match the declarations in ipc/shared/ewbio.h
 
 class IO_CONST
-	
+
 feature {NONE}
 
-	Listen_to_const: INTEGER is 8; 
+	Listen_to_const: INTEGER is 8;
 		--  Process reads from here
 		-- #define EWBIN 8
 
-	Send_to_to_const: INTEGER is 7; 
-		-- Process writes to there
-		-- #define EWBOUT 7
+--	Send_to_to_const: INTEGER is 7;
+--		-- Process writes to there
+--		-- #define EWBOUT 7
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -110,6 +110,7 @@ feature {NONE}-- Initialization
 			group_section_expanded_status.force (True, section_warning)
 			group_section_expanded_status.force (True, section_debug)
 			group_section_expanded_status.force (False, section_advanced)
+			create group_expanded_header.make (4)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
@@ -2126,6 +2127,9 @@ feature {NONE} -- Implementation
 			current_group_void: current_group = Void
 		end
 
+	group_expanded_header: SEARCH_TABLE [STRING]
+			-- Names of the group headers that are expanded.
+
 	add_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]; a_tree: EV_TREE; a_name: STRING; a_head_pix: EV_PIXMAP) is
 			-- Add `a_groups' to `a_tree' under a header with `a_name'.
 		require
@@ -2142,6 +2146,8 @@ feature {NONE} -- Implementation
 				create l_head_item.make_with_text (a_name)
 				l_head_item.set_pixmap (a_head_pix)
 				l_head_item.select_actions.extend (agent deselect_current_group)
+				l_head_item.expand_actions.extend (agent group_expanded_header.force (a_name))
+				l_head_item.collapse_actions.extend (agent group_expanded_header.remove (a_name))
 				a_tree.extend (l_head_item)
 
 					-- sort groups alphabetically
@@ -2177,6 +2183,10 @@ feature {NONE} -- Implementation
 						l_item.set_pixmap (pixmap_from_group (l_group))
 					end
 					l_sort_list.forth
+				end
+
+				if group_expanded_header.has (a_name) then
+					l_head_item.expand
 				end
 			end
 		end
@@ -3003,6 +3013,7 @@ invariant
 	conf_system: conf_system /= Void
 	debug_clauses: debug_clauses /= Void
 	group_section_expanded_status: group_section_expanded_status /= Void
+	group_expanded_header: group_expanded_header /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -323,11 +323,6 @@
 								<File Id="logo.png" Name="logo.png" />
 							</Component>
 						</Directory>
-						<Directory Id="cursor" Name="cursor">
-							<Component Id="cursor" Guid="92FC9A43-713E-4C3F-B345-6DA66513A309">
-								<File Id="studio_cursor_matrix_png" Name="STUDIO~1.PNG" LongName="studio_cursor_matrix.png" />
-							</Component>
-						</Directory>
 					</Directory>
 					<Directory Id="help" Name="help">
 						<Directory Id="errors" Name="errors">

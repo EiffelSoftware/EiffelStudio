@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 			element_container.extend (rb)
 			create rb.make_with_text_and_action (external_object, agent on_object)
 			element_container.extend (rb)
+			create rb.make_with_text_and_action (external_library, agent on_library)
+			element_container.extend (rb)
 			create rb.make_with_text_and_action (external_make, agent on_make)
 			element_container.extend (rb)
 			create rb.make_with_text_and_action (external_resource, agent on_resource)
@@ -100,6 +102,8 @@ feature -- Access
 			-- Was include as type of the new external choosen?
 	is_object: BOOLEAN
 			-- Was object as type of the new external choosen?
+	is_library: BOOLEAN
+			-- Was library as type of the new external choosen?
 	is_make: BOOLEAN
 			-- Was makefile as type of the new external choosen?
 	is_resource: BOOLEAN
@@ -123,6 +127,7 @@ feature {NONE} -- Agents
 		do
 			is_include := True
 			is_object := False
+			is_library := False
 			is_make := False
 			is_resource := False
 		end
@@ -132,6 +137,17 @@ feature {NONE} -- Agents
 		do
 			is_include := False
 			is_object := True
+			is_library := False
+			is_make := False
+			is_resource := False
+		end
+
+	on_library is
+			-- Library was choosen.
+		do
+			is_include := False
+			is_object := False
+			is_library := True
 			is_make := False
 			is_resource := False
 		end
@@ -141,6 +157,7 @@ feature {NONE} -- Agents
 		do
 			is_include := False
 			is_object := False
+			is_library := False
 			is_make := True
 			is_resource := False
 		end
@@ -150,6 +167,7 @@ feature {NONE} -- Agents
 		do
 			is_include := False
 			is_object := False
+			is_library := False
 			is_make := False
 			is_resource := True
 		end

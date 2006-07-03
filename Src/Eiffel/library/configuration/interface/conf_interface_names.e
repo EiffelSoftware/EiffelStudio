@@ -161,11 +161,13 @@ feature {NONE} -- Target names and descriptions
 
 	external_include: STRING is "Include"
 	external_object: STRING is "Object"
+	external_library: STRING is "Library"
 	external_make: STRING is "Makefile"
 	external_resource: STRING is "Resource"
 
 	external_include_tree: STRING is "Includes"
 	external_object_tree: STRING is "Objects"
+	external_library_tree: STRING is "Libraries"
 	external_make_tree: STRING is "Makefiles"
 	external_resource_tree: STRING is "Resources"
 

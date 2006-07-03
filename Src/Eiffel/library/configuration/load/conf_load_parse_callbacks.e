@@ -138,6 +138,8 @@ feature -- Callbacks
 					process_external_attributes
 				when t_external_object then
 					process_external_attributes
+				when t_external_library then
+					process_external_attributes
 				when t_external_resource then
 					process_external_attributes
 				when t_external_make then
@@ -199,7 +201,6 @@ feature -- Callbacks
 				current_attributes.clear_all
 			end
 		end
-
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
@@ -522,6 +523,7 @@ feature {NONE} -- Implementation attribute processing
 			l_location: STRING
 			l_inc: CONF_EXTERNAL_INCLUDE
 			l_obj: CONF_EXTERNAL_OBJECT
+			l_lib: CONF_EXTERNAL_LIBRARY
 			l_res: CONF_EXTERNAL_RESOURCE
 			l_make: CONF_EXTERNAL_MAKE
 		do
@@ -537,6 +539,10 @@ feature {NONE} -- Implementation attribute processing
 					l_obj := factory.new_external_object (l_location)
 					current_target.add_external_object (l_obj)
 					current_external := l_obj
+				when t_external_library then
+					l_lib := factory.new_external_library (l_location)
+					current_target.add_external_library (l_lib)
+					current_external := l_lib
 				when t_external_resource then
 					l_res := factory.new_external_resource (l_location)
 					current_target.add_external_resource (l_res)
@@ -1425,6 +1431,7 @@ feature {NONE} -- Implementation state transitions
 				-- => mapping
 				-- => external_include
 				-- => external_object
+				-- => external_library
 				-- => external_rssource
 				-- => external_make
 				-- => pre_compile_action
@@ -1435,7 +1442,7 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (18)
+			create l_trans.make (19)
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
@@ -1445,6 +1452,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_object, "external_object")
+			l_trans.force (t_external_library, "external_library")
 			l_trans.force (t_external_resource, "external_resource")
 			l_trans.force (t_external_make, "external_make")
 			l_trans.force (t_pre_compile_action, "pre_compile_action")
@@ -1499,6 +1507,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_condition, "condition")
 			Result.force (l_trans, t_external_include)
 			Result.force (l_trans, t_external_object)
+			Result.force (l_trans, t_external_library)
 			Result.force (l_trans, t_external_resource)
 			Result.force (l_trans, t_external_make)
 
@@ -1658,6 +1667,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_location, "location")
 			Result.force (l_attr, t_external_include)
 			Result.force (l_attr, t_external_object)
+			Result.force (l_attr, t_external_library)
 			Result.force (l_attr, t_external_resource)
 			Result.force (l_attr, t_external_make)
 
@@ -1831,6 +1841,7 @@ feature {NONE} -- Implementation constants
 	t_setting,
 	t_external_include,
 	t_external_object,
+	t_external_library,
 	t_external_resource,
 	t_external_make,
 	t_pre_compile_action,

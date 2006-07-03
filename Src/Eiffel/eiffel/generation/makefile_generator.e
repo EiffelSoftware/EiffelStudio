@@ -668,16 +668,19 @@ feature -- Generation, External archives and object files.
 	generate_externals is
 			-- Generate declaration fo the external variable
 		local
-			object_file_names: LIST [CONF_EXTERNAL_OBJECT]
+			object_file_names: LIST [CONF_EXTERNAL]
 			i, nb: INTEGER
-			l_ext: CONF_EXTERNAL_OBJECT
+			l_ext: CONF_EXTERNAL
 			l_added_objects: SEARCH_TABLE [STRING]
 			l_path: STRING
+			l_has_objects: BOOLEAN
 		do
 			create l_added_objects.make (10)
+				-- add the object files
 			object_file_names := universe.target.all_external_object
 			if object_file_names /= Void then
 				make_file.put_string ("EXTERNALS = ")
+				l_has_objects := True
 				from
 					i := 1
 					nb := object_file_names.count
@@ -698,6 +701,36 @@ feature -- Generation, External archives and object files.
 					end
 					i := i + 1
 				end
+			end
+
+				-- add the libraries
+			l_added_objects.wipe_out
+			object_file_names := universe.target.all_external_library
+			if object_file_names /= Void then
+				if not l_has_objects then
+					make_file.put_string ("EXTERNALS = ")
+				end
+				from
+					i := 1
+					nb := object_file_names.count
+				until
+					i > nb
+				loop
+					l_ext := object_file_names.i_th (i)
+					if l_ext.is_enabled (universe.conf_state) then
+						l_path := l_ext.location
+							-- don't add the same library multiple times
+						if not l_added_objects.has (l_path) then
+							l_added_objects.force (l_path)
+							make_file.put_character (' ')
+							make_file.put_character (Continuation)
+							make_file.put_string ("%N%T")
+							make_file.put_string (l_path)
+						end
+					end
+					i := i + 1
+				end
+
 				make_file.put_new_line
 				make_file.put_new_line
 			end
@@ -860,7 +893,7 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 			generate_other_objects
 			make_file.put_string ("%T%T")
-			if not universe.target.all_external_object.is_empty then
+			if not universe.target.all_external_object.is_empty and not universe.target.all_external_object.is_empty then
 				make_file.put_string ("$(EXTERNALS) ")
 			end
 			make_file.put_string ("$(EIFLIB)")

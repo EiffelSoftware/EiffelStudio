@@ -58,9 +58,7 @@ extern char *progname;			/* Program name */
 extern Pid_t progpid;			/* Program PID */
 #endif
 
-#define ADD_LOG(level, format, ...) add_log(level, format, __VA_ARGS__);
 #else
-#define ADD_LOG(level, format, ...) 
 #endif /* USE_ADD_LOG */
 
 #endif /* _logfile_h_ */

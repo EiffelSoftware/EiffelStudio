@@ -46,11 +46,11 @@ feature {GB_XML_STORE} -- Output
 			if not alignment.is_equal (default_alignment) then
 
 			inspect alignment
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
 				alignment_text := Ev_textable_left_string
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 				alignment_text := Ev_textable_center_string
-			when feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
 				alignment_text := Ev_textable_right_string
 			else
 				check

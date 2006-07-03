@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 			create l_item.make_with_text (section_target)
 			section_tree.extend (l_item)
 			l_item.select_actions.extend (agent show_properties_target_general)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.folder_config_icon)
 			create l_subitem.make_with_text (section_general)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_general)
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 			create l_subitem.make_with_text (section_advanced)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_advanced)
-			l_subitem.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
+			l_subitem.set_pixmap (pixmaps.icon_pixmaps.folder_config_icon)
 			l_item.expand
 			l_item := l_subitem
 			create l_subitem.make_with_text (section_general)
@@ -1924,10 +1924,10 @@ feature {NONE} -- Implementation
 			add_string_setting_actions (l_string_prop, s_shared_library_definition, "")
 			properties.add_property (l_string_prop)
 
-			create l_string_prop.make (target_library_root_name)
-			l_string_prop.set_description (target_library_root_description)
-			add_string_setting_actions (l_string_prop, s_library_root, "")
-			properties.add_property (l_string_prop)
+			create l_dir_prop.make (target_library_root_name)
+			l_dir_prop.set_description (target_library_root_description)
+			add_string_setting_actions (l_dir_prop, s_library_root, "")
+			properties.add_property (l_dir_prop)
 
 			properties.current_section.expand
 

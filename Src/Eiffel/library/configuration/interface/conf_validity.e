@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 	valid_settings: SEARCH_TABLE [STRING] is
 			-- The codes of valid settings.
 		once
-			create Result.make (50)
+			create Result.make (40)
 			Result.force (s_address_expression)
 			Result.force (s_array_optimization)
 			Result.force (s_check_generic_creation_constraint)
@@ -209,6 +209,7 @@ feature {NONE} -- Implementation
 			Result.force (s_inlining)
 			Result.force (s_inlining_size)
 			Result.force (s_java_generation)
+			Result.force (s_library_root)
 			Result.force (s_line_generation)
 			Result.force (s_metadata_cache_path)
 			Result.force (s_msil_assembly_compatibility)

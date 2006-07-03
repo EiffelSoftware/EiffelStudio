@@ -89,7 +89,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Alternative location to compile C code in.", True, False, "directory", "Location to compile C code in", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_only_switch, "Informs tool to only generate a Makefile.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
 		end
 
 feature {NONE} -- Switches

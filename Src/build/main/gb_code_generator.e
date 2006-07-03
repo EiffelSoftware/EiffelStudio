@@ -584,15 +584,15 @@ feature {NONE} -- Implementation
 							"Result.item.set_family ({EV_FONT_CONSTANTS}."
 
 							inspect font_constant.value.family
-							when feature {EV_FONT_CONSTANTS}.Family_screen then
+							when {EV_FONT_CONSTANTS}.Family_screen then
 								generated_constants_string.append ("Family_screen)")
-							when feature {EV_FONT_CONSTANTS}.Family_roman then
+							when {EV_FONT_CONSTANTS}.Family_roman then
 								generated_constants_string.append ("Family_roman)")
-							when feature {EV_FONT_CONSTANTS}.Family_sans then
+							when {EV_FONT_CONSTANTS}.Family_sans then
 								generated_constants_string.append ("Family_sans)")
-							when feature {EV_FONT_CONSTANTS}.Family_typewriter then
+							when {EV_FONT_CONSTANTS}.Family_typewriter then
 								generated_constants_string.append ("Family_typewriter)")
-							when feature {EV_FONT_CONSTANTS}.Family_modern then
+							when {EV_FONT_CONSTANTS}.Family_modern then
 								generated_constants_string.append ("Family_modern)")
 							else
 								check
@@ -603,13 +603,13 @@ feature {NONE} -- Implementation
 							generated_constants_string.append ("Result.item.set_weight ({EV_FONT_CONSTANTS}.")
 
 							inspect font_constant.value.weight
-							when feature {EV_FONT_CONSTANTS}.weight_thin then
+							when {EV_FONT_CONSTANTS}.weight_thin then
 								generated_constants_string.append ("Weight_thin)")
-							when feature {EV_FONT_CONSTANTS}.weight_regular then
+							when {EV_FONT_CONSTANTS}.weight_regular then
 								generated_constants_string.append ("Weight_regular)")
-							when feature {EV_FONT_CONSTANTS}.weight_bold then
+							when {EV_FONT_CONSTANTS}.weight_bold then
 								generated_constants_string.append ("Weight_bold)")
-							when feature {EV_FONT_CONSTANTS}.weight_black then
+							when {EV_FONT_CONSTANTS}.weight_black then
 								generated_constants_string.append ("Weight_black)")
 							else
 								check
@@ -620,9 +620,9 @@ feature {NONE} -- Implementation
 							generated_constants_string.append ("Result.item.set_shape ({EV_FONT_CONSTANTS}.")
 							inspect font_constant.value.shape
 
-							when feature {EV_FONT_CONSTANTS}.shape_regular then
+							when {EV_FONT_CONSTANTS}.shape_regular then
 								generated_constants_string.append ("Shape_regular)")
-							when feature {EV_FONT_CONSTANTS}.shape_italic then
+							when {EV_FONT_CONSTANTS}.shape_italic then
 								generated_constants_string.append ("Shape_italic)")
 							else
 								check

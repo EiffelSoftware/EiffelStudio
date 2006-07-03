@@ -161,6 +161,7 @@ feature {NONE} -- Agents
 		do
 			if not has_combo_focus then
 				destroy_combo_popup
+				focus_lost
 			end
 		end
 

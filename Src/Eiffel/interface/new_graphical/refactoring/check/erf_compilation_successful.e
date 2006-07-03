@@ -43,7 +43,7 @@ feature -- Basic operation
 			l_sensitive := quick_melt_project_cmd.is_sensitive
 			quick_melt_project_cmd.enable_sensitive
 			l_comp_count := workbench.compilation_counter
-			quick_melt_project_cmd.execute
+			quick_melt_project_cmd.execute_and_wait
 			success := workbench.successful and l_comp_count = workbench.compilation_counter - 1
 			if not l_sensitive then
 				quick_melt_project_cmd.disable_sensitive

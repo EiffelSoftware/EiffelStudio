@@ -816,10 +816,10 @@ rt_public void eif_thr_exit(void)
 			 * the children condition variable and parent's thread number
 			 * of children after freeing ressources */
 #ifndef EIF_NO_CONDVAR
-		EIF_COND_TYPE *l_chld_cond;
+		EIF_COND_TYPE *l_chld_cond = NULL;
 #endif /* EIF_NO_CONDVAR */
-		EIF_MUTEX_TYPE *l_chld_mutex;
-		int *l_addr_n_children;
+		EIF_MUTEX_TYPE *l_chld_mutex = NULL;
+		int *l_addr_n_children = NULL;
 		
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */

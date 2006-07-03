@@ -73,6 +73,8 @@ feature  -- Access
 	is_readonly: BOOLEAN
 			-- Is the value readonly?
 
+	name_item: EV_GRID_ITEM
+			-- Grid item with the name (if any).
 
 feature  -- Update
 
@@ -131,6 +133,10 @@ feature  -- Update
 			-- Enable `is_readonly'.
 		do
 			is_readonly := True
+			set_foreground_color (gray)
+			if name_item /= Void then
+				name_item.set_foreground_color (gray)
+			end
 		ensure
 			is_readonly: is_readonly
 		end
@@ -143,6 +149,21 @@ feature {PROPERTY_GRID, TYPED_PROPERTY} -- Agents
 			if a_button = 3 then
 				show_inheritance_menu
 			end
+		end
+
+feature {PROPERTY_GRID} -- Update during insert into grid
+
+	set_name_item (an_item: like name_item) is
+			-- Set `name_item' to `an_item'.
+		require
+			an_item_not_void: an_item /= Void
+		do
+			name_item := an_item
+			if is_readonly then
+				name_item.set_foreground_color (gray)
+			end
+		ensure
+			name_item_set: name_item = an_item
 		end
 
 feature -- Actions
@@ -196,10 +217,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Contract
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN is True
 			-- Default state.
-		do
-			Result := True
-		end
 
 end

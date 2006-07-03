@@ -169,6 +169,7 @@ feature -- Code generation
 			buf.put_new_line
 
 			internal_generate_inline (a_ret_type)
+			buf.put_character ('%N')
 			buf.put_character (';')
 
 			buf.put_new_line

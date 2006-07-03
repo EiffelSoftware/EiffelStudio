@@ -398,7 +398,22 @@
 						<platform value="windows"/>
 					</condition>
 				</cluster>
-				<cluster name="ipc" location="$|ipc\"/>
+				<cluster name="ipc_mswin" location="$|ipc\" recursive="true">
+					<condition>
+						<platform value="windows"/>
+					</condition>
+					<file_rule>
+						<exclude>/unix$</exclude>
+					</file_rule>
+				</cluster>
+				<cluster name="ipc_unix" location="$|ipc\" recursive="true">
+					<condition>
+						<platform excluded_value="windows"/>
+					</condition>
+					<file_rule>
+						<exclude>/windows$</exclude>
+					</file_rule>
+				</cluster>
 				<cluster name="status_mswin" location="$|status\" recursive="true">
 					<condition>
 						<platform value="windows"/>

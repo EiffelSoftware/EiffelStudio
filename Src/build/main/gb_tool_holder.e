@@ -39,12 +39,12 @@ feature {NONE} -- Initialization
 			default_create
 			tool := a_tool
 			tool.set_minimum_size (0, 0)
-			set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create vertical_box
 			extend (vertical_box)
 			create horizontal_box
 			create frame
-			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_raised)
+			frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_raised)
 			vertical_box.extend (frame)
 			frame.extend (horizontal_box)
 			create label.make_with_text (display_name)

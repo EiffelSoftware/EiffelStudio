@@ -150,6 +150,8 @@ feature {NONE} -- Target names and descriptions
 	target_force_32bits_name: STRING is "Force 32bits"
 	target_force_32bits_description: STRING is "Force compilation for 32bits."
 
+	target_edit_manually: STRING is "Manually edit configuration"
+
 	external_location_name: STRING is "Location"
 	external_location_description: STRING is "Location of the external."
 	external_description_name: STRING is "Description"

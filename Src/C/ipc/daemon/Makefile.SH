@@ -76,13 +76,13 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 # Files used to build the daemon
-SRC = child.c listen.c main.c proto.c
+SRC = child.c listen.c ecdbgd.c proto.c
 
 # Derived object file names
 OBJ = \
 	       child.o \
 	       listen.o \
-	       main.o \
+	       ecdbgd.o \
 	       proto.o 
 
 # Where shared archive is located (path and name)
@@ -104,21 +104,21 @@ $(LIBIPC)/$(LIBIPCNAME): .FORCE
 	cd $(LIBIPC); $(MAKE) $(LIBIPCNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-estudio: $(LIBIPC)/$(LIBIPCNAME)
+ecdbgd: $(LIBIPC)/$(LIBIPCNAME)
 
 $(LIBIDR)/$(LIBIDRNAME): .FORCE
 	@echo "Checking "$(LIBIDRNAME)" in "$(LIBIDR)"..."
 	cd $(LIBIDR); $(MAKE) $(LIBIDRNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-estudio: $(LIBIDR)/$(LIBIDRNAME)
+ecdbgd: $(LIBIDR)/$(LIBIDRNAME)
 
-all:: estudio
+all:: ecdbgd
 
 local_realclean::
-	$(RM) estudio
+	$(RM) ecdbgd
 
-estudio: $(OBJ)
+ecdbgd: $(OBJ)
 	$(RM) $@
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ $(OBJ) $(JLDFLAGS) $(LIBS)

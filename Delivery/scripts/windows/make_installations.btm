@@ -1,5 +1,5 @@
 .
-set SVN_VERSION=%@EXECSTR[bash set_version.sh]
+set SVN_VERSION=%@EXECSTR[bash set_version.sh %DEFAULT_ORIGO_SVN]
 
 cdd %INIT_DIR\install
 iff .%ISE_PLATFORM%.==.win64. then

@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	feature make_with_factory (a_factory: like factory) is
+	make_with_factory (a_factory: like factory) is
 			-- Create.
 		do
 			make

@@ -23,6 +23,9 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during the parsing.
 
+	is_invalid_xml: BOOLEAN
+			-- Is the file not even valid xml?
+
 	last_error: CONF_ERROR_PARSE
 			-- The last error message from the parser.
 
@@ -32,6 +35,7 @@ feature -- Callbacks
 			-- Event producer detected an error.
 		do
 			set_parse_error_message (a_message)
+			is_invalid_xml := True
 		end
 
 feature {NONE} -- Implementation

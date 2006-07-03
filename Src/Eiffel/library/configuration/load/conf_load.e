@@ -32,6 +32,9 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during the retrieval?
 
+	is_invalid_xml: BOOLEAN
+			-- Is the file not even valid xml?
+
 	last_error: CONF_ERROR
 			-- The last error message.
 
@@ -59,6 +62,7 @@ feature -- Basic operation
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
+				is_invalid_xml := l_callback.is_invalid_xml
 				l_callback.last_error.set_file (a_file)
 				last_error := l_callback.last_error
 			elseif not is_error then

@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 usage()
 {
@@ -7,6 +7,7 @@ Usage: vision2-gtk-config [OPTIONS]
 Options
 	[--include_path]
 	[--object]
+	[--library]
 	[--threads]
 EOF
 	exit $1
@@ -18,17 +19,21 @@ fi
 
 gtk_package_string=gtk+-2.0
 
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z $ISE_LIBRARY ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
 
 while test $# -gt 0; do
 	case $1 in
 		--object)
-		if [ -z $ISE_LIBRARY ]; then
-			ISE_LIBRARY=$ISE_EIFFEL
-		fi
+		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o
+		;;
+		--library)
 		if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
-			echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o `pkg-config $gtk_package_string $thread_string --libs` -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11
+			echo `pkg-config $gtk_package_string $thread_string --libs` -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11
 		else
-			echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 `pkg-config $gtk_package_string $thread_string --libs`
+			echo -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 `pkg-config $gtk_package_string $thread_string --libs`
  		fi
 		;;
 		--threads)

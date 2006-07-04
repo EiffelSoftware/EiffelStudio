@@ -51,7 +51,8 @@
 
 rt_public int ewb_rqstcnt = 0;		/* Request count, must match with daemon's one */
 
-rt_private IDRF ewb_idrf;			/* IDR filter for serializations */
+rt_private IDRF ewb_idrf;					/* IDR filter for serializations */
+rt_private char ewb_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 
 /*
  * IDR protocol initialization.
@@ -66,11 +67,14 @@ rt_public void ewb_prt_destroy(EIF_BOOLEAN t)
 
 rt_public void ewb_prt_init(void)
 {
-	if (-1 == idrf_create(&ewb_idrf, IDRF_SIZE))
-		fatal_error("cannot initialize streams");		/* Run-time routine */
+	if (!ewb_idrf_initialized) {
+		if (-1 == idrf_create(&ewb_idrf, IDRF_SIZE))
+			fatal_error("cannot initialize streams");		/* Run-time routine */
 #ifdef EIF_WINDOWS
-	eif_register_cleanup (ewb_prt_destroy);
+		eif_register_cleanup (ewb_prt_destroy);
 #endif
+		ewb_idrf_initialized = (char) 1;
+	}
 }
 
 /*

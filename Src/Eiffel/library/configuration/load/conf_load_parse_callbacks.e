@@ -291,6 +291,8 @@ feature -- Callbacks
 					current_external := Void
 				when t_external_object then
 					current_external := Void
+				when t_external_library then
+					current_external := Void
 				when t_external_resource then
 					current_external := Void
 				when t_pre_compile_action then

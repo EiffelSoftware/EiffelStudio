@@ -103,6 +103,7 @@ extern int errno;												/* System call error number */
 
 rt_private void kill_app(void);		/* Kill Eiffel application brutally*/
 rt_private IDRF dbg_idrf;				/* IDR filters used for serializing */
+rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 rt_private int interrupted;			/* Has application been asked to be interrupted */
 rt_private char *current_directory = NULL;	/* Directory where application is launched */
 
@@ -114,9 +115,12 @@ extern void dexit(int code);				/* Daemon exiting procedure */
 
 rt_public void dbg_prt_init(void)
 {
-	if (-1 == idrf_create(&dbg_idrf, IDRF_SIZE)) {
-		print_err_msg(stderr, "cannot initialize streams\n");
-		exit(1);
+	if (!dbg_idrf_initialized) {
+		if (-1 == idrf_create(&dbg_idrf, IDRF_SIZE)) {
+			print_err_msg(stderr, "cannot initialize streams\n");
+			exit(1);
+		}
+		dbg_idrf_initialized = (char) 1;
 	}
 }
 

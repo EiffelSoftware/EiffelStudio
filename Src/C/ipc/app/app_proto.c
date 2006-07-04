@@ -78,6 +78,7 @@ extern STREAM *app_sp;
 rt_public int app_rqstcnt = 0;			/* Request count */
 rt_private char gc_stopped;
 rt_private IDRF app_idrf;				/* IDR filter for serialize communications */
+rt_private char app_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 
 rt_private void adopt(EIF_PSTREAM s, Opaque *what);
 rt_private void process_request(EIF_PSTREAM s, Request *rqst);/* Dispatch request processing */
@@ -137,8 +138,11 @@ extern int already_warned; /* Have we already warned the user concerning a possi
 
 rt_public void app_prt_init(void)
 {
-	if (-1 == idrf_create(&app_idrf, IDRF_SIZE))
-		fatal_error("cannot initialize streams");		/* Run-time routine */
+	if (!app_idrf_initialized) {
+		if (-1 == idrf_create(&app_idrf, IDRF_SIZE))
+			fatal_error("cannot initialize streams");		/* Run-time routine */
+		app_idrf_initialized = (char) 1;
+	}
 }
 
 /*

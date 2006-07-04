@@ -32,7 +32,6 @@ feature -- Access
 		local
 			reg: WEL_REGISTRY
 			key: WEL_REGISTRY_KEY_VALUE
-			l_major_version: STRING
 			s32: STRING_32
 		do
 			Result := Precursor (vname, vapp)

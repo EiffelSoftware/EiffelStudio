@@ -63,11 +63,6 @@
 					</Directory>
 				</Directory>
 				<Directory Id="studio1" Name="studio">
-					<Directory Id="appdefaults" Name="APP-DE~1" LongName="app-defaults">
-						<Component Id="appdefaults" Guid="6DC22BFE-D98C-46C3-AD1D-84ED85C5F224">
-							<File Id="XKeysymDB" Name="XKEYSY~1" LongName="XKeysymDB" KeyPath="yes" />
-						</Component>
-					</Directory>
 					<Directory Id="profiler" Name="profiler">
 						<Component Id="profiler" Guid="C96FB383-E44A-45E8-A224-C260837E978D">
 							<File Id="profiler.info" Name="PROFIL~1.INF" LongName="profiler.info" KeyPath="yes" />

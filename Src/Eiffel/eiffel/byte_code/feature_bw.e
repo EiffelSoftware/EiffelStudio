@@ -74,7 +74,6 @@ feature
 			-- Generate feature call in a `typ' context
 		local
 			is_nested: BOOLEAN;
-			r_id: INTEGER;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
 			buf: GENERATION_BUFFER
@@ -95,8 +94,7 @@ feature
 				else
 					buf.put_string ("RTWPF(");
 				end;
-				r_id := routine_id
-				rout_info := System.rout_info_table.item (r_id);
+				rout_info := System.rout_info_table.item (routine_id);
 				buf.put_class_id (rout_info.origin)
 				buf.put_string (gc_comma);
 				buf.put_integer (rout_info.offset);

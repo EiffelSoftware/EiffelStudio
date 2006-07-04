@@ -28,6 +28,10 @@ feature -- Access
 		deferred
 		end
 
+	verbose_text: STRING_GENERAL;
+			-- verbose text to display if needed
+
+
 feature -- Change
 
 	set_splash_pixmap_filename (fn: STRING) is
@@ -37,9 +41,16 @@ feature -- Change
 			splash_pixmap_filename := fn
 		end
 
-	set_debug_text (s: STRING_GENERAL) is
+	set_verbose_text (s: STRING_GENERAL) is
 		do
-			debug_text := s
+			verbose_text := s
+		end
+
+	output_text (s: STRING_GENERAL) is
+		require
+			s /= Void
+		do
+			io.put_string (s.as_string_8)
 		end
 
 feature {NONE} -- Properties
@@ -47,11 +58,8 @@ feature {NONE} -- Properties
 	splash_pixmap_filename: STRING
 			-- File name of the splash pixmap
 
-	text: STRING_GENERAL
+	text: STRING_GENERAL;
 			-- bottom text to display
-
-	debug_text: STRING_GENERAL;
-			-- debiug text to display if needed
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

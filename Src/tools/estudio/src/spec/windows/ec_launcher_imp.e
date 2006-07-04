@@ -22,7 +22,7 @@ feature -- Access
 		local
 			dlg: WEL_MSG_BOX
 		do
-			Precursor (m)
+--			Precursor (m)
 			create dlg.make
 			dlg.error_message_box (Void, m, "estudio : error")
 		end

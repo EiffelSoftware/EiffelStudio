@@ -21,6 +21,23 @@ feature -- Initialization
 			-- Creation procedure.
 		do
 			is_splashing := True
+
+				--| Now get the estudio environment and arguments for `ec'
+			get_parameters
+			get_environment
+			check_environment
+			if is_environment_valid then
+				if is_splashing then
+					display_splasher
+				end
+				do_ec_launching
+			end
+		end
+
+	do_ec_launching is
+		require
+			is_environment_valid: is_environment_valid
+		do
 			launch_ec
 		end
 
@@ -33,10 +50,12 @@ feature -- Launching
 			io.error.put_string ("%N  If no parameter is provided, simply start EiffelStudio (aka ec)%N%N")
 			io.error.put_string ("  * estudio's parameters %N")
 			io.error.put_string ("  * estudio's parameters %N")
-			io.error.put_string ("     /? or /h : display this help %N")
-			io.error.put_string ("     /v       : verbose %N")
-			io.error.put_string ("     /w       : wait until launched process exits %N")
-			io.error.put_string ("     /nosplash: no splash screen %N")
+			io.error.put_string ("     /? or /h   : display this help %N")
+			io.error.put_string ("     /v         : verbose %N")
+			io.error.put_string ("     /w         : wait until launched process exits %N")
+			io.error.put_string ("     /nosplash  : no splash screen %N")
+			io.error.put_string ("     /ec_name   : overwrite EC_NAME value %N")
+			io.error.put_string ("     /ec_folder : overwrite EC_FOLDER value %N")
 			io.error.put_string ("  * ec's parameters %N")
 			io.error.put_string ("     any ec's command line parameters (-config, -target, -project_path ...)%N")
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
@@ -44,6 +63,7 @@ feature -- Launching
 			io.error.put_string ("  * EC_NAME     : name of the compiler (default: ec)%N")
 			io.error.put_string ("  * EC_FOLDER   : folder which contains the compiler%N")
 			io.error.put_string ("  * MELTED_PATH : for workbench version %N")
+
 			io.error.put_string ("%NPress ENTER to continue ...%N")
 			io.read_line
 			if is_exiting then
@@ -53,148 +73,48 @@ feature -- Launching
 
 	launch_ec is
 			-- Launch ec process
+		require
+			is_environment_valid: is_environment_valid
 		local
-			command_line: ARGUMENTS
-			cwd: STRING
-			args_ec_offset: INTEGER
-			args: LIST [STRING]
-			i: INTEGER
 			s: STRING
-			fn: FILE_NAME
-			file: RAW_FILE
+			retried: BOOLEAN
 		do
-				--| First we check if there is no specific `estudio' parameters
-			command_line := Execution_environment.command_line
-			if
-				command_line.argument_count - args_ec_offset > 0
-				and then (command_line.argument (1 + args_ec_offset).is_equal ("/?")
-				or else	command_line.argument (1 + args_ec_offset).is_equal ("/h"))
-			then
-				display_usage (True)
-			end
-			if
-				command_line.argument_count - args_ec_offset > 0
-				and then command_line.argument (1 + args_ec_offset).is_equal ("/v")
-			then
-				is_verbose := True
-				is_waiting := True
-				args_ec_offset := args_ec_offset + 1
-			end
-			if
-				command_line.argument_count - args_ec_offset > 0
-				and then command_line.argument (1 + args_ec_offset).is_equal ("/w")
-			then
-				is_waiting := True
-				args_ec_offset := args_ec_offset + 1
-			end
-
-			if
-				command_line.argument_count - args_ec_offset > 0
-				and then command_line.argument (1 + args_ec_offset).is_equal ("/nosplash")
-			then
-				is_splashing := False
-				args_ec_offset := args_ec_offset + 1
-			end
-
-
-				--| Now get the estudio environment and arguments for `ec'
-			get_environment
-			check_environment
-			if is_environment_valid then
-				if is_splashing then
-					display_splasher
-				end
-
-					--| Compute command line, args, and working directory
-				create {ARRAYED_LIST [STRING]} args.make (command_line.argument_count + 1)
-				args.extend ("-from_bench")
-
-				if command_line.argument_count - args_ec_offset > 0 then
-						--| And now we get the parameters for EiffelStudio
-
-					if command_line.argument_count - args_ec_offset = 1 then
-							--| use the -config argument
-						args.extend ("-config")
-						s := command_line.argument (1 + args_ec_offset).twin
-
-							--| Try to be smart and guess if the path is relative or not
-						cwd := Execution_environment.current_working_directory
-						Execution_environment.change_working_directory (working_directory)
-						create fn.make
-						if fn.is_file_name_valid (s) then
-							create file.make (s)
-						end
-						if file = Void or else not file.exists then
-							fn.set_directory (cwd)
-							fn.set_file_name (s)
-							if fn.is_valid then
-								create file.make (fn)
-								if file.exists then
-									s := fn
-								end
-							end
-							fn := Void
-							file := Void
-						end
-						Execution_environment.change_working_directory (cwd)
-
-							--| `s' is the path to the config file
-						if s.has (' ') and then not s.has ('"') then
-							s.left_adjust
-							s.right_adjust
-							s.prepend_character ('"')
-							s.append_character ('"')
-						end
-						args.extend (s)
-					elseif command_line.argument_count - args_ec_offset >= 1  then
-						args.fill (command_line.argument_array.subarray (1 + args_ec_offset,
-										command_line.argument_count))
-						from
-							args.start
-						until
-							args.after
-						loop
-							s := args.item
-							if
-								s.is_equal ("-config")
-								or s.is_equal ("-project_path")
-								or s.is_equal ("-target")
-							then
-								if not args.after then
-									args.forth
-									s := args.item
-									if s.has (' ') and then not s.has ('"') then
-										s.left_adjust
-										s.right_adjust
-										s.prepend_character ('"')
-										s.append_character ('"')
-									end
-								end
-							end
-							args.forth
-						end
-					end
-				end
+			if not retried then
+				get_ec_arguments
 				if is_verbose then
-					io.output.put_string ("*** estudio is using the following data : %N")
-					io.output.put_string (" ISE_EIFFEL   = " + ise_eiffel + "%N")
-					io.output.put_string (" ISE_PLATFORM = " + ise_platform + "%N")
-					io.output.put_string (" Path to ec   = " + ec_path + "%N")
-					io.output.put_string (" Arguments    = ")
+					create s.make_empty
+
+					s.append_string ("*** estudio is using the following data : %N")
+					s.append_string (" ISE_EIFFEL: " + ise_eiffel + "%N")
+					s.append_string (" ISE_PLATFORM: " + ise_platform + "%N")
+					s.append_string (" Path to ec: " + ec_path + "%N")
+					s.append_string (" Working directory: " + working_directory + "%N")
+					s.append_string (" Arguments: ")
 					from
-						args.start
+						ec_arguments.start
 					until
-						args.after
+						ec_arguments.after
 					loop
-						io.output.put_string (args.item + " ")
-						args.forth
+						s.append_string (ec_arguments.item + " ")
+						ec_arguments.forth
 					end
-					io.output.put_new_line
-					io.output.put_new_line
+					s.append_string ("%N")
+					if splasher /= Void then
+						splasher.set_verbose_text (s)
+					else
+						io.output.put_string (s)
+						io.output.put_new_line
+					end
 				end
-				start_process (ec_path, args, working_directory)
+				start_process (ec_path, ec_arguments, working_directory)
+			else
+				do_exit_launcher
 			end
+		rescue
+			retried := True
+			retry
 		end
+
 
 	start_process (cmd: STRING; args: LIST [STRING]; dir: STRING) is
 			-- Start process using command `cmd' and arguments `args'
@@ -203,28 +123,47 @@ feature -- Launching
 			is_environment_valid: is_environment_valid
 		local
 			process: PROCESS
+			has_exited_timeout: EV_TIMEOUT
 		do
 			process := process_factory.process_launcher (ec_path, args, dir)
 			process.set_hidden (False)
 			process.set_separate_console (False)
 			process.set_detached_console (True)
 
-			debug ("launcher")
-				process.redirect_output_to_agent (agent on_output)
-				process.set_on_fail_launch_handler (agent on_event ("Failed"))
-				process.set_on_successful_launch_handler (agent on_event ("Succeed"))
-				process.set_on_start_handler (agent on_event ("Started"))
-				process.set_on_exit_handler (agent on_event ("Exited"))
-				process.set_on_terminate_handler (agent on_event ("Terminated"))
-			end
 			if is_waiting then
-				process.set_on_exit_handler (agent exit_launcher)
+				process.redirect_output_to_agent (agent on_output)
+				process.redirect_error_to_agent (agent on_output)
+			else
+				process.set_on_successful_launch_handler (agent do_exit_launcher)
 			end
 
+			process.set_on_terminate_handler (agent do_exit_launcher)
+			process.set_on_exit_handler (agent do_exit_launcher)
+			process.set_on_fail_launch_handler (agent do_exit_launcher)
+
 			process.launch
-			if not process.launched or not is_waiting then
+
+			if is_waiting then
+				create has_exited_timeout
+				has_exited_timeout.actions.extend (agent exit_if_process_has_exited (process))
+				has_exited_timeout.set_interval (5* 1000)
+			else
+				do_exit_launcher
+			end
+		end
+
+	exit_if_process_has_exited (p: PROCESS) is
+		do
+			if not p.is_running or else p.has_exited then
 				exit_launcher
 			end
+		end
+
+feature {NONE} -- Application exit
+
+	do_exit_launcher is
+		do
+			exit_launcher
 		end
 
 	exit_launcher is
@@ -265,7 +204,7 @@ feature -- Splash
 				end
 
 				debug ("launcher")
-					splasher.set_debug_text ("This is an experimental version")
+					splasher.set_verbose_text ("This is an experimental version")
 				end
 				splasher.show
 			else
@@ -297,50 +236,217 @@ feature -- Properties
 	is_verbose: BOOLEAN
 			-- Display details ?
 
+	argument_variables: HASH_TABLE [STRING, STRING]
+
 feature -- Environment
+
+	cmdline_arguments: ARGUMENTS
+
+	cmdline_arguments_offset: INTEGER
+
+	cmdline_arguments_count: INTEGER
+
+	cmdline_remove_head (n: INTEGER) is
+		do
+			cmdline_arguments_offset := cmdline_arguments_offset + n
+			cmdline_arguments_count := cmdline_arguments_count - n
+		end
+
+	get_cmdline_arguments is
+		do
+			cmdline_arguments := Execution_environment.command_line
+			cmdline_arguments_count := cmdline_arguments.argument_count
+		end
+
+	cmdline_argument (i: INTEGER): STRING is
+		require
+			cmdline_arguments /= Void
+		do
+			Result := cmdline_arguments.argument (i + cmdline_arguments_offset)
+		end
+
+	ec_arguments: LIST [STRING]
+
+	get_parameters is
+		local
+			s: STRING
+		do
+			get_cmdline_arguments
+			create argument_variables.make (3)
+			argument_variables.compare_objects
+
+				--| First we check if there is no specific `estudio' parameters
+			from
+				s := "/?"
+			until
+				s @ 1 /= '/' or else cmdline_arguments_count = 0
+			loop
+				s := cmdline_argument (1)
+				if s @ 1 = '/' then
+					s.to_lower
+					if s.is_equal ("/h") or s.is_equal ("/?") then
+						display_usage (True)
+					elseif s.is_equal ("/v") then
+						is_verbose := True
+					elseif s.is_equal ("/w") then
+						is_waiting := True
+					elseif s.is_equal ("/nosplash") then
+						is_splashing := True
+					elseif s.is_equal ("/ec_name") then
+						cmdline_remove_head (1)
+						if cmdline_arguments_count > 0 then
+							argument_variables.put (cmdline_argument (1), Ec_name_varname)
+						end
+					elseif s.is_equal ("/ec_folder") then
+						cmdline_remove_head (1)
+						if cmdline_arguments_count > 0 then
+							argument_variables.put (cmdline_argument (1), Ec_fodler_varname)
+						end
+					elseif s.is_equal ("/melted_path") then
+						cmdline_remove_head (1)
+						if cmdline_arguments_count > 0 then
+							argument_variables.put (cmdline_argument (1), Melted_path_varname)
+						end
+					else
+						io.error.put_string (" * Ignoring flag [" + s + "]%N")
+					end
+					cmdline_remove_head (1)
+				end
+			end
+		end
+
+	get_ec_arguments is
+		require
+			is_environment_valid: is_environment_valid
+		local
+			s: STRING
+			cwd: STRING
+			fn: FILE_NAME
+			file: RAW_FILE
+			i: INTEGER
+		do
+				--| Compute command line, args, and working directory
+			create {ARRAYED_LIST [STRING]} ec_arguments.make (cmdline_arguments_count + 1)
+			ec_arguments.extend ("-from_bench")
+
+			if cmdline_arguments_count > 0 then
+					--| And now we get the parameters for EiffelStudio
+
+				if cmdline_arguments_count = 1 then
+						--| use the -config argument
+					ec_arguments.extend ("-config")
+					s := cmdline_argument (1).twin
+
+						--| Try to be smart and guess if the path is relative or not
+					cwd := Execution_environment.current_working_directory
+					Execution_environment.change_working_directory (working_directory)
+					create fn.make
+					if fn.is_file_name_valid (s) then
+						create file.make (s)
+					end
+					if file = Void or else not file.exists then
+						fn.set_directory (cwd)
+						fn.set_file_name (s)
+						if fn.is_valid then
+							create file.make (fn)
+							if file.exists then
+								s := fn
+							end
+						end
+						fn := Void
+						file := Void
+					end
+					Execution_environment.change_working_directory (cwd)
+
+						--| `s' is the path to the config file
+					if s.has (' ') and then not s.has ('"') then
+						s.left_adjust
+						s.right_adjust
+						s.prepend_character ('"')
+						s.append_character ('"')
+					end
+					ec_arguments.extend (s)
+				elseif cmdline_arguments_count >= 1  then
+					ec_arguments.fill (	cmdline_arguments.argument_array.subarray (1 + cmdline_arguments_offset,
+										cmdline_arguments_count))
+					from
+						i := 1
+					until
+						i > cmdline_arguments_count
+					loop
+						s := cmdline_argument (i)
+						if
+							s.is_equal ("-config")
+							or s.is_equal ("-project_path")
+							or s.is_equal ("-target")
+						then
+							if i < cmdline_arguments_count then
+								ec_arguments.extend (s)
+								i := i + 1
+								s := cmdline_argument (i)
+								if s.has (' ') and then not s.has ('"') then
+									s.left_adjust
+									s.right_adjust
+									s.prepend_character ('"')
+									s.append_character ('"')
+								end
+							end
+						end
+						ec_arguments.extend (s)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	get_environment_value (v: STRING; dft: STRING): STRING is
+		do
+			if argument_variables.has (v) then
+				Result := argument_variables.item (v)
+			else
+				Result := Execution_environment.get (v)
+			end
+			if Result = Void then
+				Result := dft
+			end
+		end
 
 	get_environment is
 			-- Get environment variables
+		require
+			cmdline_arguments_not_void: cmdline_arguments /= Void
 		local
 			s: STRING
 		do
 			ise_eiffel := implementation.ise_eiffel_value
 			ise_platform := implementation.ise_platform_value
-			ec_name := Execution_environment.get ("EC_NAME")
-			s := Execution_environment.get ("EC_FOLDER")
+
+				--| Get ec_name
+			ec_name := "ec"
+			if is_windows then
+				ec_name.append_string (".exe")
+			end
+			ec_name := get_environment_value (Ec_name_varname, ec_name)
+
+
+				--| Get ec directory
+			s := get_environment_value (Ec_fodler_varname, Void)
 			if s /= Void then
-				create ec_directory.make_from_string (s)
-			end
-
-			if ec_directory /= Void and then ec_name /= Void then
-				create ec_path.make_from_string (ec_directory)
-			end
-
-			if ec_name /= Void then
-				s := Execution_environment.get ("MELTED_PATH")
-				if s /= Void then
-					create melted_path.make_from_string (s)
-				end
-			else
-				ec_name := "ec"
-				if is_windows then
-					ec_name.append_string (".exe")
-				end
+				create ec_path.make_from_string (s)
 			end
 
 			if
 				ec_path = Void
-				and then ise_eiffel /= Void and then ise_platform /= Void
+				and then ise_eiffel /= Void
+				and then ise_platform /= Void
 			then
 				create ec_path.make_from_string (ise_eiffel)
 				ec_path.extend_from_array (<<"studio", "spec", ise_platform, "bin">>)
 			end
 
-			if melted_path = Void then
-				create working_directory.make_from_string (ec_path)
-			else
-				create working_directory.make_from_string (melted_path)
-			end
+				--| Melted path if workbench ec
+			s := get_environment_value (Melted_path_varname, ec_path)
+			create working_directory.make_from_string (s)
 
 			ec_path.set_file_name (ec_name)
 
@@ -392,6 +498,7 @@ feature -- Environment
 			if not is_environment_valid then
 				m.prepend_string ("Error, the environment is not valid :")
 				implementation.error (m)
+				exit_launcher
 			end
 		end
 
@@ -401,24 +508,24 @@ feature -- Environment
 	ise_eiffel,
 	ise_platform,
 	ec_name: STRING
-	melted_path,
-	ec_directory: DIRECTORY_NAME
+	melted_path: DIRECTORY_NAME
 	ec_path: FILE_NAME
 	working_directory: DIRECTORY_NAME
+
+feature {NONE} -- Constants
+
+	Ec_name_varname: STRING is "EC_NAME"
+
+	Ec_fodler_varname: STRING is "EC_FOLDER"
+
+	Melted_path_varname: STRING is "MELTED_PATH"
 
 feature {NONE} -- Events
 
 	on_output (s: STRING) is
 		do
-			debug ("launcher")
-				io.put_string ("Output["+ s +"]%N")
-			end
-		end
-
-	on_event (t: STRING) is
-		do
-			debug ("launcher")
-				io.put_string (t + "%N")
+			if splasher /= Void and s /= Void then
+				splasher.output_text (s)
 			end
 		end
 

@@ -4,6 +4,7 @@
 			<debug name="__unnamed_debug__" enabled="true"/>
 			<debug name="launcher" enabled="true"/>
 			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<setting name="array_optimization" value="False"/>
 		<setting name="dead_code_removal" value="True"/>

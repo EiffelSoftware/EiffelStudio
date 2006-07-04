@@ -51,7 +51,7 @@ feature
 					sc.select_font (f)
 
 					debug ("launcher")
-						if debug_text /= Void then
+						if verbose_text /= Void then
 							wlf.set_height (20)
 							wlf.set_weight (600)
 							f.set_indirect (wlf)
@@ -60,7 +60,7 @@ feature
 							create rect.make (x + 1, y + 1, x + w - 2, y + f.height + 2)
 							create c.make_rgb (255, 0, 0)
 							sc.set_text_color (c)
-							sc.draw_text (debug_text, rect, {WEL_DT_CONSTANTS}.Dt_center)
+							sc.draw_text (verbose_text, rect, {WEL_DT_CONSTANTS}.Dt_center)
 
 							wlf.set_height (12)
 							f.set_indirect (wlf)

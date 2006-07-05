@@ -790,7 +790,7 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
-			l_result_type: TYPE_A
+			l_result_type, l_pure_result_type: TYPE_A
 			l_veen: VEEN
 			l_vsta2: VSTA2
 			l_vica2: VICA2
@@ -1119,7 +1119,15 @@ feature -- Implementation
 						end
 					end
 					if l_arg_types /= Void then
+						l_pure_result_type := l_result_type
 						l_result_type := l_result_type.actual_argument_type (l_arg_types)
+						l_open_type ?= l_result_type
+						if l_open_type /= Void then
+								-- It means that the result type is a like argument. In that case,
+								-- we take the static signature of the feature to evaluate `l_result_type'.
+								-- This fix eweasel test#term141.
+							l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
+						end
 					end
 					l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
 						-- Export validity

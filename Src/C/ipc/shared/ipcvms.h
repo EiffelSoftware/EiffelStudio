@@ -117,12 +117,14 @@ int IPCVMS_SELECT_JACKET (int nfds, fd_set* rd, fd_set* wrt, fd_set* excp, struc
 # define O_NDELAY	004
 #endif
 
-//#ifndef NOFILE
-//#define NOFILE 64	/* max number of file descriptors per process */
-//#endif
+/* Max number of file descriptors per process
+#ifndef NOFILE
+#define NOFILE 64
+#endif
+*/
 
 /* special fcntl cmd to dump known fd's */
-//#define F_FDDUMP 9876                       
+/*#define F_FDDUMP 9876                 */
 
 /*** prototypes for IPCVMS_ jacket functions ***/
 int IPCVMS_CLOSE (int fd) ;

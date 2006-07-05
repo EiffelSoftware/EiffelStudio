@@ -233,7 +233,7 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 
 #if defined(EIF_VMS) && defined(IPCVMS_WAKE_EWB)  	/* this is probably no longer necessary */
 	case STOPPED:	/* application is stopped at a brkpoint */
-		//printf ("File: %s line: %d: IPCVMS_WAKE_EWB\n", __FILE__, __LINE__);
+		/*printf ("File: %s line: %d: IPCVMS_WAKE_EWB\n", __FILE__, __LINE__); */
 		dbg_send_packet(OTHER(sp), rqst);
 		IPCVMS_WAKE_EWB(writefd(OTHER(sp)));
 		break;

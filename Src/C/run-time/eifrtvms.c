@@ -44,7 +44,7 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
 
 #ifdef __VMS		/* this runs for the rest of the module */
 
-#pragma module EIFRTVMS	    // force uppercase module name
+#pragma module EIFRTVMS	    /* force uppercase module name */
 #include "eif_config.h"
 #include "eif_portable.h"
 
@@ -65,7 +65,7 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
 /* Define some useful macros for dealing with descriptors		*/
 /* (most are not portable because of aggregate initialization).		*/
 #pragma message disable (NEEDCONSTEXT,ADDRCONSTEXT)  /* skip non-constant address warnings */
-//#define DX_BUF(d,buf) DX d = { sizeof(buf), DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
+/*#define DX_BUF(d,buf) DX d = { sizeof(buf), DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf } */
 #define DX_BLD(d,ptr,len) DX d = { len, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)ptr }
 #define DX_STR(d,ptr) DX d = { strlen(ptr), DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
 #define DX_STRLIT(d,ptr) DX d = { sizeof(ptr)-1, DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
@@ -151,7 +151,7 @@ const char* eifrt_vms_get_progname (char* buf, size_t bufsiz)
     const char* result;
     /* I think that 4098 is the new maximum long filename length on VMS; I can't find a symbolic definition. */
     static char progname[FILENAME_MAX] = {'\0'};	/* like argv[0] - image file basename */
-    //static const int filename_max = FILENAME_MAX;
+    /*static const int filename_max = FILENAME_MAX; */
 
     if (*progname == '\0') {   /* if we have not done this yet */
 	char *p, imagename[4099];

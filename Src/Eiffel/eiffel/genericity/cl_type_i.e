@@ -295,13 +295,15 @@ feature -- Status
 	is_expanded: BOOLEAN is
 			-- Is the type expanded?
 		do
-			Result := has_expanded_mark or else has_no_mark and then base_class.is_expanded
+				-- Do not check for `has_separate_mark' because a separate class cannot be expanded.
+			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
 		end
 
 	is_reference: BOOLEAN is
 			-- Is the type a reference type?
 		do
-			Result := has_reference_mark or else has_no_mark and then not base_class.is_expanded
+			Result := has_reference_mark or else
+				((has_no_mark or has_separate_mark) and then not base_class.is_expanded)
 		end
 
 	is_separate: BOOLEAN is

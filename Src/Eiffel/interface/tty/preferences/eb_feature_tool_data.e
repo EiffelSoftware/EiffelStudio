@@ -64,8 +64,6 @@ feature {NONE} -- Preference
 	expand_feature_tree_preference: BOOLEAN_PREFERENCE
 		-- Automatically expand the feature tree
 
-feature {EB_FEATURES_TOOL} -- Preference
-
 	is_signature_enabled_preference: BOOLEAN_PREFERENCE
 			-- Do we display signature of feature ?
 

@@ -728,9 +728,7 @@ feature -- Status setting
 					Swp_const := set_flag (Swp_const, Swp_nozorder)
 				end
 			end
-			Swp_const := set_flag (Swp_const, Swp_nomove)
-			Swp_const := set_flag (Swp_const, Swp_nosize)
-			Swp_const := set_flag (Swp_const, Swp_framechanged)
+			Swp_const := Swp_const | Swp_nomove | Swp_nosize | Swp_framechanged | swp_noactivate
 			cwin_set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
 		end
 

@@ -27,6 +27,7 @@ inherit
 			create_implementation
 		redefine
 			implementation,
+			initialize,
 			is_in_default_state,
 			has
 		end
@@ -34,6 +35,7 @@ inherit
 	EV_POSITIONABLE
 		redefine
 			implementation,
+			initialize,
 			is_in_default_state
 		end
 
@@ -55,6 +57,16 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (a_title)
+		end
+
+	initialize is
+			-- Initialize
+		do
+			Precursor {EV_CELL}
+			accelerators.internal_add_actions.extend
+				(agent implementation.connect_accelerator (?))
+			accelerators.internal_remove_actions.extend
+				(agent implementation.disconnect_accelerator (?))
 		end
 
 feature -- Access
@@ -126,6 +138,14 @@ feature -- Access
 
 	maximum_dimension: INTEGER is 32000
 			-- Maximum width/height that a window can be set to.
+
+	accelerators: EV_ACCELERATOR_LIST is
+			-- Key combination shortcuts associated with this window.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.accelerator_list
+		end
 
 feature -- Status report
 

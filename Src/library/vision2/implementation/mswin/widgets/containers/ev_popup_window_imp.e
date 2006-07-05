@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
+			create accel_list.make (10)
 			make_child (application_imp.silly_main_window, "")
 		end
 

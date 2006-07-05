@@ -48,23 +48,10 @@ feature {NONE} -- Initialization
    			-- additional setup tasks.
 		do
 			set_icon_pixmap (default_pixmaps.Default_window_icon)
-			accelerators.internal_add_actions.extend
-				(agent implementation.connect_accelerator (?))
-			accelerators.internal_remove_actions.extend
-				(agent implementation.disconnect_accelerator (?))
 			Precursor {EV_WINDOW}
 		end
 
-
 feature -- Access
-
-	accelerators: EV_ACCELERATOR_LIST is
-			-- Key combination shortcuts associated with this window.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.accelerator_list
-		end
 
 	icon_name: STRING_32 is
 			-- Name displayed when `Current is minimized.

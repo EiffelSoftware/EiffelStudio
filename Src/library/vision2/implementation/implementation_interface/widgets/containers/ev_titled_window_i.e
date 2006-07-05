@@ -17,29 +17,7 @@ inherit
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_I
 
-feature {EV_TITLED_WINDOW} -- Accelerators
-
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Connect key combination `an_accel' to this window.
-		deferred
-		end
-
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Disconnect key combination `an_accel' from this window.
-		deferred
-		end
-
 feature -- Access
-
-	accelerator_list: EV_ACCELERATOR_LIST is
-			-- Key combination shortcuts associated with this window.
-		do
-			if accelerators_internal = Void then
-				create accelerators_internal
-				accelerators_internal.compare_objects
-			end
-			Result := accelerators_internal
-		end
 
 	icon_name: STRING_32 is
 			-- Alternative name, displayed when window is minimised.
@@ -137,8 +115,6 @@ feature {EV_WIDGET_I} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	accelerators_internal: EV_ACCELERATOR_LIST
 
 	interface: EV_TITLED_WINDOW;
 

@@ -64,6 +64,8 @@ feature {NONE} -- Initialization
 			choice_list.enable_tree
 			set_title (Interface_names.t_Autocomplete_window)
 			setup_option_buttons
+			setup_accelerators
+			register_accelerator_preference_change_actions
 		end
 
 	build_option_bar: EV_VERTICAL_BOX is
@@ -185,6 +187,52 @@ feature {NONE} -- Initialization
 			preferences.editor_data.show_completion_signature_preference.change_actions.extend (show_completion_signature_agent)
 			preferences.editor_data.show_completion_disambiguated_name_preference.change_actions.extend (show_completion_disambiguated_name_agent)
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.extend (remember_window_size_agent)
+		end
+
+	register_accelerator_preference_change_actions is
+		local
+			l_pre: SHORTCUT_PREFERENCE
+		do
+			setup_accelerators_agent := agent setup_accelerators
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_filter")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_type")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+		end
+
+	setup_accelerators is
+			-- Build accelerators.
+		local
+			l_acc: EV_ACCELERATOR
+			l_pre: SHORTCUT_PREFERENCE
+		do
+			accelerators.wipe_out
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_filter")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (filter_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_type")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (show_return_type_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (show_signature_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (show_disambiguated_name_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (remember_size_button))
+			accelerators.extend (l_acc)
 		end
 
 feature -- Initialization
@@ -476,19 +524,10 @@ feature {NONE} -- Option behaviour
 			else
 				code_completable.position_completion_choice_window
 				resize_window_to_column_width
+				resize_column_to_window_width
 			end
 			unlock_update
 		end
-
-	filter_completion_list_agent: PROCEDURE [ANY, TUPLE]
-
-	show_return_type_agent:  PROCEDURE [ANY, TUPLE]
-
-	show_completion_signature_agent: PROCEDURE [ANY, TUPLE]
-
-	show_completion_disambiguated_name_agent: PROCEDURE [ANY, TUPLE]
-
-	remember_window_size_agent: PROCEDURE [ANY, TUPLE]
 
 feature -- Recyclable
 
@@ -500,7 +539,36 @@ feature -- Recyclable
 			preferences.editor_data.show_completion_signature_preference.change_actions.prune_all (show_completion_signature_agent)
 			preferences.editor_data.show_completion_disambiguated_name_preference.change_actions.prune_all (show_completion_disambiguated_name_agent)
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.prune_all (remember_window_size_agent)
+			unregister_accelerator_preference_change_actions
 		end
+
+	unregister_accelerator_preference_change_actions is
+		local
+			l_pre: SHORTCUT_PREFERENCE
+		do
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_filter")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_type")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+		end
+
+	setup_accelerators_agent: PROCEDURE [ANY, TUPLE]
+
+	filter_completion_list_agent: PROCEDURE [ANY, TUPLE]
+
+	show_return_type_agent:  PROCEDURE [ANY, TUPLE]
+
+	show_completion_signature_agent: PROCEDURE [ANY, TUPLE]
+
+	show_completion_disambiguated_name_agent: PROCEDURE [ANY, TUPLE]
+
+	remember_window_size_agent: PROCEDURE [ANY, TUPLE]
 
 feature {NONE} -- Implementation
 
@@ -531,47 +599,15 @@ feature {NONE} -- Implementation
 			-- process user input in `choice_list'.
 		do
 			if ev_key /= Void then
-				if preferences.editor_data.shortcuts.item ("toggle_filter").matches (ev_key,
-																					ev_application.alt_pressed,
-																					ev_application.ctrl_pressed,
-																					ev_application.shift_pressed)
-				then
-					toggle_button (filter_button)
-				elseif preferences.editor_data.shortcuts.item ("toggle_show_type").matches (ev_key,
-																					ev_application.alt_pressed,
-																					ev_application.ctrl_pressed,
-																					ev_application.shift_pressed)
-				then
-					toggle_button (show_return_type_button)
-				elseif preferences.editor_data.shortcuts.item ("toggle_show_signature").matches (ev_key,
-																					ev_application.alt_pressed,
-																					ev_application.ctrl_pressed,
-																					ev_application.shift_pressed)
-				then
-					toggle_button (show_signature_button)
-				elseif preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name").matches (ev_key,
-																					ev_application.alt_pressed,
-																					ev_application.ctrl_pressed,
-																					ev_application.shift_pressed)
-				then
-					toggle_button (show_disambiguated_name_button)
-				elseif preferences.editor_data.shortcuts.item ("toggle_remember_size").matches (ev_key,
-																					ev_application.alt_pressed,
-																					ev_application.ctrl_pressed,
-																					ev_application.shift_pressed)
-				then
-					toggle_button (remember_size_button)
-				else
-					inspect
-						ev_key.code
-					when key_ctrl then
-						if not show_completion_disambiguated_name then
-							show_disambiguated_name_button.enable_select
-							temp_switching_show_disambiguated_name := True
-						end
-					else
-						Precursor {CODE_COMPLETION_WINDOW} (ev_key)
+				inspect
+					ev_key.code
+				when key_ctrl then
+					if not show_completion_disambiguated_name then
+						show_disambiguated_name_button.enable_select
+						temp_switching_show_disambiguated_name := True
 					end
+				else
+					Precursor {CODE_COMPLETION_WINDOW} (ev_key)
 				end
 			end
 		end

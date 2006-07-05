@@ -388,7 +388,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 	char *vu = decc$translate_vms ((char*)v);
 	/*** END DEBUG ***/
 	/* if unix path delimiters in either string use unix syntax, else use VMS syntax. */
-	//if ( IS_UNIX_FILESPEC(p) || IS_UNIX_FILESPEC(v) ) {
+	/*if ( IS_UNIX_FILESPEC(p) || IS_UNIX_FILESPEC(v) ) { */
 	if ( !IS_VMS_FILESPEC(p) && !IS_VMS_FILESPEC(v) ) {
 	    strcat (strcat ((char*)p, "/"), (char*)v);
 	} else if (!*p && !strcspn ((char*)v, vms_valid_filename_chars)) { 
@@ -551,10 +551,10 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 #ifdef EIF_WINDOWS
 #if (_WIN32_IE < 0x0500)
 #ifndef CSIDL_LOCAL_APPDATA
-#define CSIDL_LOCAL_APPDATA             0x001C      // non roaming, user\Local Settings\Application Data
+#define CSIDL_LOCAL_APPDATA             0x001C      /* non roaming, user\Local Settings\Application Data */
 #endif
 #ifndef CSIDL_FLAG_CREATE
-#define CSIDL_FLAG_CREATE               0x8000      // new for Win2K, or this in to force creation of folder
+#define CSIDL_FLAG_CREATE               0x8000      /* new for Win2K, or this in to force creation of folder */
 #endif
 #define SHGFP_TYPE_CURRENT				0
 #endif
@@ -692,10 +692,11 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 	VMS_STS sts;
 	char vms_dir [PATH_MAX +1];
 
-//	if (strchr(dir, '/')) {	    /* if dir contains a '/' it might be a Unix filespec */
+/*	if (strchr(dir, '/')) { */
+		/* if dir contains a '/' it might be a Unix filespec */
 		int res = decc$to_vms (dir, stupid_vms_trick, 0, 2);
 		if (res) dir = strcpy (vms_dir, stupid_vms_name);
-//	}
+/*	} */
 	/* perform a parse on the name supplied */
 	fab.fab$l_dna = (char*)dnm; fab.fab$b_dns = strlen(dnm);
 	fab.fab$l_fna = (char*)dir; fab.fab$b_fns = strlen(dir);

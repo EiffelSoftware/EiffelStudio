@@ -39,7 +39,7 @@
 
 #ifndef EIF_THREADS
 
-// Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time
+/* Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time */
 
 #define eif_thr_yield()
 #define eif_thr_join_all()

@@ -42,14 +42,14 @@ doc:<file name="eif_project.c" header="eif_project.h" version="$Id$" summary="De
 */
 
 #ifdef __VMS
-#pragma module EIF_PROJECT  // force uppercase module name
+#pragma module EIF_PROJECT  /* force uppercase module name */
 #endif
 
 #include "eif_project.h"
 
 #ifdef EIF_VMS
 /* The first one is to upcase the module name, but why the second? */
-//#pragma message disable EXTRAMODULE
+/*#pragma message disable EXTRAMODULE */
 #pragma module EIF_PROJECT
 #endif
 

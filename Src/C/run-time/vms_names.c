@@ -102,7 +102,8 @@
 */ 
 
 
-//#ifdef moose_cecil	// dont mask cecil calls; some modules must use /NAME=AS for proper extern configuration
+/*#ifdef moose_cecil*/
+/* dont mask cecil calls; some modules must use /NAME=AS for proper extern configuration */
 
 /* cecil.c */
 rt_public EIF_OBJECT EIFCREATE (EIF_TYPE_ID cid)
@@ -212,7 +213,7 @@ rt_public void EMAIN (int argc, char ** argv)
     { emain (argc, argv); }
 
 
-//#endif	// moose cecil
+/*#endif *//* moose cecil */
 
 
 /*

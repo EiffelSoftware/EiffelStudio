@@ -90,6 +90,7 @@ feature {NONE} -- Agents
 			l_fr: CONF_FILE_RULE
 		do
 			notebook.wipe_out
+			notebook.selection_actions.extend (agent on_show_tab)
 			if value /= Void and then not value.is_empty then
 					-- create a copy of the value, so that we can cancel without modifying anything
 				create l_new_value.make (value.count)
@@ -106,7 +107,6 @@ feature {NONE} -- Agents
 					value.forth
 				end
 				value := l_new_value
-				notebook.selection_actions.extend (agent on_show_tab)
 				remove_button.enable_sensitive
 			else
 				remove_button.disable_sensitive

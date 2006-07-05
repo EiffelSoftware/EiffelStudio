@@ -1282,16 +1282,17 @@ feature {NONE} -- Implementation
 				end
 				l_targ_ord.forth
 			end
-			if l_base_targets.count > 0 then
-				l_base_targets.put_front ("")
-				create l_choice_prop.make_with_choices (target_base_name, l_base_targets)
-				l_choice_prop.set_description (target_base_description)
-				if current_target.extends /= Void then
-					l_choice_prop.set_value (current_target.extends.name)
-				end
-				l_choice_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_parent_by_name))
-				properties.add_property (l_choice_prop)
+			l_base_targets.put_front ("")
+			create l_choice_prop.make_with_choices (target_base_name, l_base_targets)
+			l_choice_prop.set_description (target_base_description)
+			if current_target.extends /= Void then
+				l_choice_prop.set_value (current_target.extends.name)
 			end
+			l_choice_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_parent_by_name))
+			if l_base_targets.count = 1 then
+				l_choice_prop.enable_readonly
+			end
+			properties.add_property (l_choice_prop)
 
 				-- abstract target
 			create l_bool_prop.make_with_value (target_abstract_name, current_target.is_abstract)

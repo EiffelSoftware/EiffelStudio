@@ -201,39 +201,6 @@ rt_public int add_input(EIF_PSTREAM sp, void (*call) (/* ??? */))
 	return 0;			/* Ok status */
 }
 
-/* Unused */
-//rt_public int tmp_input(EIF_PSTREAM sp)
-//{
-//	/* Temporarily reset the selection for 'fd' in the temporary read mask. In
-//	 * effect, we won't select for this file in the next TMP_TIMEOUT seconds.
-//	 * This is to prevent remotely unavailable strems with high rate local
-//	 * input to eat all our CPU resources.
-//	 */
-//
-//#ifdef EIF_WINDOWS
-// 	if (callback(sp) == NULL) {				/* No current selection */
-//#else
-//		int fd = readfd(sp);
-//	if (fd < 0 || fd >= NOFILE) {			/* File descriptor out of range */
-//		s_errno = S_FDESC;					/* Invalid file descriptor */
-//		return -1;
-//	}
-//
-//  if (callback[fd] == (void (*)()) 0) {	/* No current selection */
-//#endif
-//		s_errno = S_NOCALBAK;				/* No callback was set */
-//		return -1;
-//	}
-//
-//#ifdef EIF_WINDOWS
-//	unset_multiple_mask(sp, rd_tmask);					/* Clear only temporary mask */
-//#else
-// 	FD_CLR(fd, &rd_tmask);					/* Clear only temporary mask */
-//#endif
-//
-//	return 0;
-//}
-
 #ifdef EIF_WINDOWS
 rt_public STREAM_FN new_callback(EIF_PSTREAM sp, STREAM_FN call)
 		/* `sp': STREAM on which select must be done */
@@ -402,39 +369,6 @@ rt_public char *s_strname(void)
 
 	return s_nerrlist[s_errno];				/* Symbolic name of error */
 }
-
-/*
- * Altering the result from select
- */
-
-// FIXME jfiat [2006/06/23] : not used !!
-//
-//#ifdef EIF_WINDOWS
-//rt_public void clear_fd(STREAM *sp)
-//#else
-//rt_public void clear_fd(int f)
-//#endif
-//{
-//	/* It could happen that while processing one file descriptor, we have to
-//	 * read another one (e.g. in streams, when we select on both the socket
-//	 * carrier and the stream and we receive a stream I/O request while sending
-//	 * one). This function takes care of that. It simply clears the specified
-//	 * bit in the select mask.
-//	 */
-//
-//#ifdef DEBUG
-//#ifdef USE_ADD_LOG
-//	if (FD_ISSET(f, &read_mask))
-//		add_log(20, "removing input on file descriptor #%d", f);
-//#endif
-//#endif
-//
-//#ifdef EIF_WINDOWS
-//	unset_multiple_mask(sp, read_mask);			/* Remove active input on the file */
-//#else
-//	FD_CLR(f, &read_mask);			/* Remove active input on the file */
-//#endif
-//}
 
 /*
  * Perform select system call.

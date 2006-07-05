@@ -92,7 +92,7 @@ USE_STDARG
 
 #ifdef __VMS	/* This runs for the rest of the module */
 
-#pragma module IPCVMS	// force uppercase module name
+#pragma module IPCVMS	/* force uppercase module name */
 
 /*** Define configuration control macros here ***/
 
@@ -190,7 +190,7 @@ USE_STDARG
 #include <lib$routines.h>	/* lib$ routines (gee, that was hard) */
 #include <libdtdef.h>		/* lib$format_date_time symbols */
 
-//#include "ipcvms.h"		/* public definitions */
+/*#include "ipcvms.h"		/* public definitions */
 #include "ipcvmsdef.h"		/* private definitions for ipcvms facility */
 /* This must come after most all other includes (not my fault) */
 /* #include "bitmask.h"		/* defines fd_mask and FD_ macros */
@@ -258,19 +258,19 @@ typedef struct fd_mask FD_MASK;
 
 
 /* Type definitions */
-/* typedef unsigned long VMS_STS;   	/* VMS status (condition) value */
+/* typedef unsigned long VMS_STS;   	*//* VMS status (condition) value */
 #include gen64def
 typedef struct _generic_64 VMS_BINTIM;	/* VMS binary time (64 bits) */
 typedef unsigned short UWORD;		/* 16-bit integer for VMS system calls */
 typedef unsigned long  ULONG;		/* 32-bit ditto */
 typedef int bool_t;			/* boolean type */
-/* typedef struct dsc$descriptor DX;	/* prototype descriptor */
+/* typedef struct dsc$descriptor DX;	*//* prototype descriptor */
 
 
 /* Define some useful macros for dealing with descriptors		*/
 /* (most are not portable because of aggregate initialization).		*/
-//#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
-//#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
+/* #pragma message disable (NEEDCONSTEXT)	*//* skip non-constant address warnings */
+/* #pragma message disable (ADDRCONSTEXT)	*//* skip non-constant address warnings */
 #define DX_BUF(d,buf) DX d = { sizeof(buf), DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
 #define DX_BLD(d,ptr,len) DX d = { len, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)ptr }
 #define DX_STR(d,ptr) DX d = { strlen(ptr), DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
@@ -523,17 +523,23 @@ static void print_filnam(FD fd)
 #undef write
 #undef select
 #undef pipe
-//#undef open
-//#undef fdopen
+/*
+#undef open
+#undef fdopen
+*/
 
 #ifdef USE_VMS_JACKETS	/* if use VMS Porting library (aka The Jackets) */
 #define DECC_FCNTL  GENERIC_FCNTL
 #define DECC_WRITE  GENERIC_WRITE
-//#define DECC_SELECT GENERIC_SELECT_JACKET
+/*
+#define DECC_SELECT GENERIC_SELECT_JACKET
+*/
 #else
 #define DECC_FCNTL  DECC$FCNTL
 #define DECC_WRITE  DECC$WRITE
-//#define DECC_SELECT DECC$SELECT
+/*
+#define DECC_SELECT DECC$SELECT
+*/
 #endif /* USE_VMS_JACKETS */
 #define DECC_PIPE   DECC$PIPE
 
@@ -549,7 +555,6 @@ int DECC_FCNTL (FD, int cmd, ...) ;
 FILE* DECC_FDOPEN (int fd, char* a_mode) ;
 int DECC_READ (FD, void* buf, size_t nbytes) ;
 int DECC_WRITE (FD, const void* buf, size_t nbytes) ;
-//int DECC_SELECT (int nfds, fd_set* rdfds, fd_set* wrtfds, fd_set* excpfds, struct timeval *tm) ;
 int DECC_PIPE (int fd[2], ...) ;
 
 /* local routine to return the file name associated with an open file	*/
@@ -1560,7 +1565,9 @@ static const char* get_fcntl_cmd_name (int cmd)
 /* Jacket routine for fcntl. Needs work for optional argument.		*/
 int IPCVMS_FCNTL_JACKET (FD fd, int cmd, ...)
 {
-//#ifdef USE_MY_JACKETS
+/*
+#ifdef USE_MY_JACKETS
+*/
     int result, argc, optarg;
     PCB* pcb = ipcvms_get_info(fd);
 
@@ -1581,8 +1588,10 @@ int IPCVMS_FCNTL_JACKET (FD fd, int cmd, ...)
 	do_log_oper (fd, pcb, result, "fcntl (%d, %d [%s])", fd, cmd, get_fcntl_cmd_name(cmd));
     }
     return result;
-//#else
-//#endif
+/*
+#else
+#endif
+*/
 } /* IPCVMS_FCNTL_JACKET */
 
 
@@ -2126,7 +2135,6 @@ static void select_attn_cleanup()
 
 /* local routine to setup attention ast's for selected mailboxes */
 static void select_attn_set(int efn, int nfds, int *fdset, int flag)
-//static void select_attn_set(int efn, int nfds, fd_set* fdset, int flag)
 {
     VMS_STS st; int ii;
 

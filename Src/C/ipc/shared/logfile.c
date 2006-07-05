@@ -80,7 +80,6 @@ rt_private int loglvl = 20;			/* Logging level */
 rt_private void expand(char *, char*);	/* Run the %m %e expansion on the string */
 rt_private int add_error(char *);			/* Prints description of error in errno */
 rt_private int add_errcode(char *);			/* Print the symbolic error name */
-//rt_public void dexit(int);
 
 rt_public char *progname = "ram";	/* Program name */
 
@@ -92,12 +91,6 @@ extern int errno;				/* System error report variable */
 extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
 extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
 extern void release_lock(void);		/* Release previous lock */
-
-//rt_public void dexit(int status)
-//{
-//	add_log(12, "exiting with status %d", status);
-//	exit(status);
-//}
 
 /* VARARGS2 */
 rt_public void add_log (int level, char *StrFmt, ...)
@@ -130,7 +123,6 @@ rt_public void add_log (int level, char *StrFmt, ...)
 
 	clock = time((Time_t *) 0);	/* Number of seconds */
 	ct = localtime(&clock);		/* Get local time from amount of seconds */
-//	expand(format, buffer);		/* Expansion of %m and %e into buffer */
 
 	va_start (ap, StrFmt);
 
@@ -144,7 +136,6 @@ rt_public void add_log (int level, char *StrFmt, ...)
 		progname, progpid, message);
 #endif
 	fprintf(out, buffer);
-//	(void) fwrite(fd, buffer, strlen(buffer));
 }
 
 rt_public int open_log(char *name)
@@ -160,17 +151,17 @@ rt_public int open_log(char *name)
 	{
 	    static int been_here_done_that = FALSE;
 	    if (been_here_done_that)
-	        logfile = fopen(name, "a+"); //, 0644);
-//	        logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	        logfile = fopen(name, "a+"); 
+/*	        logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644); */
 	    else
-	        logfile = fopen(name, "w"); //, 0644);
-//	        logfile = fopen(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	        logfile = fopen(name, "w");
+/*	        logfile = fopen(name, O_WRONLY | O_CREAT | O_TRUNC, 0644); */
 	    been_here_done_that = TRUE;
 	}
 
 #else
-	logfile = fopen(name, "a+"); //, 0644);
-//	logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	logfile = fopen(name, "a+");
+/*	logfile = fopen(name, O_WRONLY | O_CREAT | O_APPEND, 0644); */
 #endif  /* vms */
 
 	logname = name;					/* Save file name */

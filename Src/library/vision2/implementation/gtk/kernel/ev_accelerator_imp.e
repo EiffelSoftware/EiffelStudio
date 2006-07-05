@@ -22,7 +22,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Connect interface.
 		do
@@ -50,11 +50,11 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			if shift_required then
 				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
-		end		
+		end
 
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_WINDOW_IMP} -- Implementation
 
-	add_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+	add_accel (a_window_imp: EV_WINDOW_IMP) is
 			-- Add the current key combination
 		require
 			a_window_imp_not_void: a_window_imp /= Void
@@ -65,7 +65,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			a_success: BOOLEAN
 		do
 			a_cs := "activate"
-			
+
 			internal_gdk_key_code := key_code_to_gtk (key.code)
 			if shift_required and then not key.is_function and then not key.is_arrow then
 					-- We need to get the key val for the uppercase symbol
@@ -74,7 +74,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 				internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
 				{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
 			end
-			
+
 			if internal_gdk_key_code > 0 then
 					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist so we do nothing
 				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
@@ -84,11 +84,11 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 					internal_gdk_key_code,
 					modifier_mask,
 					0
-				)				
+				)
 			end
 		end
 
-	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+	remove_accel (a_window_imp: EV_WINDOW_IMP) is
 			-- Remove the current key combination
 		require
 			a_window_imp_not_void: a_window_imp /= Void

@@ -114,6 +114,16 @@ feature {NONE} -- Initialization
 
 			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
 
+			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
+			signal_connect (
+				accel_group,
+				app_imp.accel_activate_string,
+				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
+				Void,
+				False
+			)
+			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
+
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CONTAINER_IMP}
 				-- Need to set decorations after window is realized.
@@ -331,6 +341,36 @@ feature -- Element change
 			menu_bar := Void
 		end
 
+feature {NONE} -- Accelerators
+
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Connect key combination `an_accel' to this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
+			a_property, a_origin, a_value: EV_GTK_C_STRING
+		do
+			acc_imp ?= an_accel.implementation
+			acc_imp.add_accel (Current)
+
+			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
+					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
+				a_property := once "gtk-menu-bar-accel"
+				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
+					-- This is a value that is highly unlikely to be used
+				a_origin := once "Vision2"
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+			end
+		end
+
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
+		do
+			acc_imp ?= an_accel.implementation
+			acc_imp.remove_accel (Current)
+		end
+
 feature {EV_ANY_IMP} -- Implementation
 
 	destroy is
@@ -488,6 +528,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				a_widget.on_focus_changed (True)
 			end
 		end
+
+feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
+
+	accel_group: POINTER
+			-- Pointer to GtkAccelGroup struct.
+
+	accel_box: POINTER
+			-- Pointer to the on screen zero size accelerator widget
 
 feature {EV_ACCELERATOR_IMP} -- Implementation
 

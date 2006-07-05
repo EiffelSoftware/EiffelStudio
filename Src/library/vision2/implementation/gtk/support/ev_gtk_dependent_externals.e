@@ -1744,6 +1744,13 @@ feature -- Externals
 			"gtk_tree_view_get_column ((GtkTreeView*) $a_tree_view, (gint) $a_index)"
 		end
 
+	frozen gtk_tree_view_get_bin_window (a_tree_view: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_get_bin_window ((GtkTreeView*) $a_tree_view)"
+		end
+
 	frozen gtk_tree_view_get_columns (a_tree_view: POINTER): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"

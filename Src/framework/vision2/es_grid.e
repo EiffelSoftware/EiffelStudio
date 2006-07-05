@@ -373,7 +373,13 @@ feature {NONE} -- column resizing impl
 							last_col := column (c)
 							last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
 							col_left_x := (last_col.virtual_x_position - virtual_x_position)
-							if col_left_x + last_col_minimal_width < viewable_width then
+							if
+								viewable_width > col_left_x
+								and then (
+									col_left_x + last_col_minimal_width < viewable_width
+									or else	(last_col.width < last_col_minimal_width and col_left_x + last_col.width < viewable_width)
+								)
+							then
 								resize_actions.block
 								virtual_size_changed_actions.block
 								last_col.set_width (viewable_width - col_left_x)

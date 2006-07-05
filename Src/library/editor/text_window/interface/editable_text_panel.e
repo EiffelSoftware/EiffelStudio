@@ -273,7 +273,7 @@ feature {NONE} -- Handle keystokes
 					redo
 				end
 			when key_z then
-					-- Ctrl-L (Undo)
+					-- Ctrl-Z (Undo)
 				if text_displayed.undo_is_possible then
 					undo
 				end

@@ -17,7 +17,7 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="src" location=".\src\">
+		<cluster name="src" location="..\src\">
 			<cluster name="unix" location="$|spec\unix\">
 				<condition>
 					<platform excluded_value="windows"/>

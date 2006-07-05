@@ -1021,8 +1021,8 @@ feature {NONE} -- Implementation, focus event
 					-- Ignore focusing for EV_WINDOW_IMP and descendants as this is performed
 					-- in {EV_WINDOW_IMP}.window_on_wm_activate
 				Focus_on_widget.put (Current)
-				if application_imp.focus_in_actions /= Void then
-					application_imp.focus_in_actions.call ([interface])
+				if application_imp.focus_in_actions_internal /= Void then
+					application_imp.focus_in_actions_internal.call ([interface])
 				end
 				l_top_level_window_imp.set_last_focused_widget (wel_item)
 				application_imp.set_window_with_focus (l_top_level_window_imp.interface)
@@ -1045,8 +1045,8 @@ feature {NONE} -- Implementation, focus event
 			if top_level_window_imp /= Current then
 					-- Ignore focusing for EV_WINDOW_IMP and descendants as this is performed
 					-- in {EV_WINDOW_IMP}.window_on_wm_activate
-				if application_imp.focus_out_actions /= Void then
-					application_imp.focus_out_actions.call ([interface])
+				if application_imp.focus_out_actions_internal /= Void then
+					application_imp.focus_out_actions_internal.call ([interface])
 				end
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)

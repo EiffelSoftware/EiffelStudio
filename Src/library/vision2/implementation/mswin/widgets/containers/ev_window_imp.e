@@ -1029,8 +1029,8 @@ feature {EV_ANY_I} -- Implementation
 						-- as the window is now being re-activated.
 				if not l_is_minimized then
 					application_imp.set_window_with_focus (interface)
-					if application_imp.focus_in_actions /= Void then
-						application_imp.focus_in_actions.call ([interface])
+					if application_imp.focus_in_actions_internal /= Void then
+						application_imp.focus_in_actions_internal.call ([interface])
 					end
 					if focus_in_actions_internal /= Void then
 						focus_in_actions_internal.call (Void)
@@ -1048,8 +1048,8 @@ feature {EV_ANY_I} -- Implementation
 					-- Window is losing focus so reset once functions.
 				application_imp.set_window_with_focus (Void)
 				focus_on_widget.put (Void)
-				if application_imp.focus_out_actions /= Void then
-					application_imp.focus_out_actions.call ([interface])
+				if application_imp.focus_out_actions_internal /= Void then
+					application_imp.focus_out_actions_internal.call ([interface])
 				end
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)

@@ -34,7 +34,6 @@ inherit
 			compute_minimum_height,
 			compute_minimum_size,
 			interface,
-			on_accelerator_command,
 			class_name,
 			is_displayed,
 			execute_resize_actions,
@@ -340,82 +339,6 @@ feature {EV_ANY_I} -- Implementation
 			if not interface.lower_bar.is_empty then
 				Result := Result + interface.lower_bar.minimum_height + 1
 			end
-		end
-
-feature {EV_ANY, EV_ANY_I} -- Accelerators
-
-	on_accelerator_command (an_accel_id: INTEGER) is
-			-- Accelerator with `an_accel_id' has just been pressed.
-		do
-			check
-				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
-			end
-			accel_list.item (an_accel_id).actions.call (Void)
-		end
-
-	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
-			-- List of accelerators connected to `Current' indexed by
-			-- their `id'.
-
-	wel_acc_size: INTEGER is
-			-- Used to initialize WEL_ARRAY.
-		local
-			wel_acc: WEL_ACCELERATOR
-		once
-			wel_acc ?= (create {EV_ACCELERATOR}).implementation
-			Result := wel_acc.structure_size
-		end
-
-	create_accelerators is
-			-- Recreate the accelerators.
-		local
-			wel_array: WEL_ARRAY [WEL_ACCELERATOR]
-			acc: WEL_ACCELERATOR
-			n: INTEGER
-		do
-			if accel_list.is_empty then
-				accelerators := Void
-			else
-	 			from
-	 				accel_list.start
-		 			create wel_array.make (accel_list.count, wel_acc_size)
-					n := 0
-				until
-					accel_list.after
-				loop
-					acc ?= accel_list.item_for_iteration.implementation
-					wel_array.put (acc, n)
-					accel_list.forth
-					n := n + 1
-	 			end
-	 			create accelerators.make_with_array (wel_array)
-			end
-		end
-
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Connect key combination `an_accel' to `Current'.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
-		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
-			end
-			accel_list.put (an_accel, acc_imp.id)
-			create_accelerators
-		end
-
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Disconnect key combination `an_accel' from `Current'.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
-		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
-			end
-			accel_list.remove (acc_imp.id)
-			create_accelerators
 		end
 
 feature {NONE} -- WEL Implementation

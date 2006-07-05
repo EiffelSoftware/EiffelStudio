@@ -592,34 +592,24 @@ feature {NONE} -- Implementation
 							-- It is a dialog window
 						msg.process_dialog_message (focused_window.wel_item)
 						if not msg.last_boolean_result then
+							msg.translate
+							msg.dispatch
 							if focused_window.accelerators /= Void then
 								msg.translate_accelerator (focused_window,
 									focused_window.accelerators)
-								if not msg.last_boolean_result then
-									msg.translate
-									msg.dispatch
-								end
-							else
-								msg.translate
-								msg.dispatch
 							end
 						end
 					else
+						msg.translate
+						msg.dispatch
 							-- It is a normal window
 						if
-							focused_window /= Void and
+							focused_window /= Void and then
 							focused_window.exists and then
 							focused_window.accelerators /= Void
 						then
 							msg.translate_accelerator (focused_window,
 								focused_window.accelerators)
-							if not msg.last_boolean_result then
-								msg.translate
-								msg.dispatch
-							end
-						else
-							msg.translate
-							msg.dispatch
 						end
 					end
 				end

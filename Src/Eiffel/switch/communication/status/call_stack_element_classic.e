@@ -298,7 +298,9 @@ feature {NONE} -- Implementation
 					loop
 						value := unprocessed_l.item
 						value.set_name (arg_names.item)
-						value.set_static_class (arg_types.item.associated_class)
+						if arg_types.item.has_associated_class then
+							value.set_static_class (arg_types.item.associated_class)
+						end
 						args_list.replace (value)
 						args_list.forth
 						arg_names.forth
@@ -357,7 +359,9 @@ feature {NONE} -- Implementation
 				if rout.is_function and not unprocessed_values.is_empty then
 					private_result := unprocessed_values.last
 					private_result.set_name ("Result")
-					private_result.set_static_class (rout.type.associated_class)
+					if rout.type.has_associated_class then
+						private_result.set_static_class (rout.type.associated_class)
+					end
 				end
 			end
 

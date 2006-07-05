@@ -86,7 +86,7 @@ feature -- Properties
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
 		do
-			Result := pixmaps.icon_pixmaps.debug_run_icon
+			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
 	name: STRING is "Debugging_options"

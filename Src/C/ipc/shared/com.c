@@ -74,7 +74,7 @@ typedef struct {				/* Daemon flags (protocol with client) */
 #endif
 } send_recv_fct_by_sp;
 
-rt_private send_recv_fct_by_sp* registered_send_recv_fct_data[3]; // Max is 3
+rt_private send_recv_fct_by_sp* registered_send_recv_fct_data[3]; /* Max is 3 */
 rt_private int registered_send_recv_fct_data_max = 3;
 rt_private send_recv_fct_by_sp* send_recv_fct_data_for (EIF_PSTREAM sp)
 {

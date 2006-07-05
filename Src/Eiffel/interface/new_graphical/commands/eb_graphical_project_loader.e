@@ -341,6 +341,7 @@ feature {NONE} -- Error reporting
 				preferences.preferences
 			)
 			cd.set_ok_action (agent set_should_override_project (True))
+			cd.set_cancel_action (agent set_has_error)
 			cd.show_modal_to_window (parent_window)
 			if should_override_project then
 				is_compilation_requested := True

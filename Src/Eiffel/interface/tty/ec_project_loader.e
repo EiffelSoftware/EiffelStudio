@@ -137,6 +137,7 @@ feature {NONE} -- Error reporting
 							l_answered := True
 						elseif io.last_string.item (1).as_lower = 'n' then
 							should_override_project := False
+							set_has_error
 							l_answered := True
 						end
 					end

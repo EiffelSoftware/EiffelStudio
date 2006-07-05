@@ -95,12 +95,12 @@ feature -- Launching
 			ise_eiffel := Void
 			ise_platform := Void
 
-			ise_eiffel := implementation.eif_getenv_from_app (Ise_eiffel_varname, "ec")
-			ise_platform := implementation.eif_getenv_from_app (Ise_platform_varname, "ec")
+			ise_eiffel := Execution_environment.get (Ise_eiffel_varname)
+			ise_platform := Execution_environment.get (Ise_platform_varname)
 
 			ise_timeout := Preferences.debugger_data.classic_debugger_timeout
 			if ise_timeout <= 0 then
-				s := implementation.eif_getenv_from_app (Ise_timeout_varname, "ec")
+				s := Execution_environment.get (Ise_timeout_varname)
 				if s /= Void and then s.is_integer then
 					ise_timeout := s.to_integer
 				else
@@ -110,7 +110,7 @@ feature -- Launching
 
 			s := Preferences.debugger_data.classic_debugger_location
 			if s = Void or else s.is_empty then
-				s := implementation.eif_getenv_from_app (Ise_ecdbgd_varname, "ec")
+				s := Execution_environment.get (Ise_ecdbgd_varname)
 			end
 			if s /= Void then
 				create ise_ecdbgd_path.make_from_string (s)
@@ -241,11 +241,6 @@ feature {NONE} -- Implementation
 		end
 
 	Process_factory: PROCESS_FACTORY is
-		once
-			create Result
-		end
-
-	implementation: IPC_ENGINE_IMP is
 		once
 			create Result
 		end

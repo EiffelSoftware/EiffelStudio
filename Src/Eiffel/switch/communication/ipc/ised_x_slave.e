@@ -18,28 +18,36 @@ feature -- Initialization
 			-- Connect with ised and watch for inputs from ised.
 		local
 			err: INTEGER
+			retried: BOOLEAN
 		do
-			c_init_connect ($err)
-			if err /= 0 then
-				connection_failed := True
-			else
-					-- Initialize the connection
-					-- with the ised daemon.
-				if old_style then
-					create_handler
+			if not retried then
+				c_init_connect ($err)
+				if err /= 0 then
+					connection_failed := True
 				else
-					create io_watcher.make_with_action (agent execute (Void))
+						-- Initialize the connection
+						-- with the ised daemon.
+					if old_style then
+						create_handler
+					else
+						create io_watcher.make_with_action (agent execute (Void))
+					end
+
+					pass_adresses
+						-- Pass adresses of RQST_HANDLER objects to
+						-- C, so they can be called when the
+						-- the workbench is in server mode.
+
+					enable_server_mode
+						-- Enable the server mode
+					connection_failed := False
 				end
-
-				pass_adresses
-					-- Pass adresses of RQST_HANDLER objects to
-					-- C, so they can be called when the
-					-- the workbench is in server mode.
-
-				enable_server_mode
-					-- Enable the server mode
-				connection_failed := False
+			else
+				connection_failed := True
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	clean_connection is

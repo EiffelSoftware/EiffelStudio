@@ -1882,6 +1882,7 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_pf_choices: ARRAYED_LIST [STRING_32]
 			l_dir_prop: DIRECTORY_PROPERTY
+			l_file_prop: FILE_PROPERTY
 			l_key_file_prop: KEY_FILE_PROPERTY
 			l_installed_runtimes: DS_LINEAR [STRING]
 			l_il_env: IL_ENVIRONMENT
@@ -1965,10 +1966,10 @@ feature {NONE} -- Implementation
 			add_string_setting_actions (l_choice_prop, s_platform, "")
 			properties.add_property (l_choice_prop)
 
-			create l_string_prop.make (target_shared_library_definition_name)
-			l_string_prop.set_description (target_shared_library_definition_description)
-			add_string_setting_actions (l_string_prop, s_shared_library_definition, "")
-			properties.add_property (l_string_prop)
+			create l_file_prop.make (target_shared_library_definition_name)
+			l_file_prop.set_description (target_shared_library_definition_description)
+			add_string_setting_actions (l_file_prop, s_shared_library_definition, "")
+			properties.add_property (l_file_prop)
 
 			create l_dir_prop.make (target_library_root_name)
 			l_dir_prop.set_description (target_library_root_description)

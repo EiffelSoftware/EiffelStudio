@@ -855,9 +855,11 @@ feature {NONE} -- Implementation
 
 	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
 		do
-			if not expr_type_visiting and then l_as.lparan_symbol /= Void then
+			if not expr_type_visiting then
 				text_formatter_decorator.begin
-				text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				if l_as.lparan_symbol /= Void then
+					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				end
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then

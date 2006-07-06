@@ -254,9 +254,9 @@ feature {NONE} -- Agents for user
 			internal_docking_manager.command.remove_auto_hide_zones (True)
 			internal_title_bar.enable_focus_color
 			internal_notebook.set_focus_color (True)
-			update_mini_tool_bar (a_content)
-			internal_title_bar.set_title (a_content.long_title)
 			if a_content /= Void then
+				update_mini_tool_bar (a_content)
+				internal_title_bar.set_title (a_content.long_title)
 				internal_notebook.select_item (a_content, True)
 			end
 		ensure then

@@ -562,6 +562,15 @@ feature {NONE} -- Section tree selection agents
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
+			l_tb_btn.set_tooltip (dialog_create_precompile_title)
+			l_tb_btn.select_actions.extend (agent add_precompile)
+			if current_target.precompile /= Void then
+				l_tb_btn.disable_sensitive
+			end
+
+			create l_tb_btn
+			l_tb.extend (l_tb_btn)
 			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
 			l_tb_btn.set_tooltip (dialog_create_assembly_title)
 			l_tb_btn.select_actions.extend (agent add_assembly)
@@ -1922,6 +1931,9 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
 			l_bool_prop.set_description (target_dynamic_runtime_description)
 			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime, False)
+			if is_il_generation then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (target_exception_trace_name, current_target.setting_exception_trace)
@@ -1943,6 +1955,9 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (target_multithreaded_name, current_target.setting_multithreaded)
 			l_bool_prop.set_description (target_multithreaded_description)
 			add_boolean_setting_actions (l_bool_prop, s_multithreaded, False)
+			if is_il_generation then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (target_old_verbatim_strings_name, current_target.setting_old_verbatim_strings)
@@ -1969,6 +1984,9 @@ feature {NONE} -- Implementation
 			create l_file_prop.make (target_shared_library_definition_name)
 			l_file_prop.set_description (target_shared_library_definition_description)
 			add_string_setting_actions (l_file_prop, s_shared_library_definition, "")
+			if is_il_generation then
+				l_file_prop.enable_readonly
+			end
 			properties.add_property (l_file_prop)
 
 			create l_dir_prop.make (target_library_root_name)
@@ -2320,6 +2338,20 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
+	add_precompile is
+			-- Add a new precompile.
+		require
+			current_target_set: current_target /= Void
+		local
+			l_dial: CREATE_PRECOMPILE_DIALOG
+		do
+			create l_dial.make (current_target, conf_factory)
+			l_dial.show_modal_to_window (Current)
+			if l_dial.is_ok then
+				refresh
+			end
+		end
+
 	add_assembly is
 			-- Add a new assembly.
 		local
@@ -2381,6 +2413,8 @@ feature {NONE} -- Configuration setting
 					l_cluster.parent.remove_child (l_cluster)
 				end
 				current_target.remove_cluster (l_name)
+			elseif a_group.is_precompile then
+				current_target.set_precompile (Void)
 			elseif a_group.is_library then
 				current_target.remove_library (l_name)
 			elseif a_group.is_assembly then

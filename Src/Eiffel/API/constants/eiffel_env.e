@@ -219,7 +219,6 @@ feature -- Access: file name
 			Result.extend (library_directory_name)
 		end
 
-
 	Syntax_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
@@ -248,14 +247,6 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform>>)
-		end
-
-	Default_precompiled_base_location: DIRECTORY_NAME is
-			-- Default location for the precompiled base
-			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform, "base">>)
 		end
 
 	filter_path: DIRECTORY_NAME is

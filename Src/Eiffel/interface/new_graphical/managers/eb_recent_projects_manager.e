@@ -98,7 +98,7 @@ feature -- Basic operations
 				-- Update it.
 			preferences.recent_projects_data.last_opened_projects_preference.set_value (recent_projects)
 				-- Save it to disk.
-			preferences.preferences.save_resource (preferences.recent_projects_data.last_opened_projects_preference)
+			preferences.preferences.save_preference (preferences.recent_projects_data.last_opened_projects_preference)
 		end
 
 feature {EB_RECENT_PROJECTS_MANAGER_OBSERVER} -- Observer pattern / Registration

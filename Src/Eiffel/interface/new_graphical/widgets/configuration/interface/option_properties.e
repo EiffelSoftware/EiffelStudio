@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (option_profile_name, an_inherited_options.is_profile)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_profile)
 			if a_inherits then
-				l_bool_prop.set_refresh_action (agent is_profile_wrapper (an_inherited_options))
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_profile)
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_profile)
 				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
@@ -62,28 +62,12 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (option_trace_name, an_inherited_options.is_trace)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_trace)
 			if a_inherits then
-				l_bool_prop.set_refresh_action (agent is_trace_wrapper (an_inherited_options))
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_trace)
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_trace)
 				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
 
 				if an_options.is_trace_configured then
-					l_bool_prop.enable_overriden
-				else
-					l_bool_prop.enable_inherited
-				end
-			end
-			properties.add_property (l_bool_prop)
-
-			create l_bool_prop.make_with_value (option_optimize_name, an_inherited_options.is_optimize)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_optimize)
-			if a_inherits then
-				l_bool_prop.set_refresh_action (agent is_optimize_wrapper (an_inherited_options))
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_optimize)
-				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-
-				if an_options.is_optimize_configured then
 					l_bool_prop.enable_overriden
 				else
 					l_bool_prop.enable_inherited
@@ -360,32 +344,6 @@ feature {NONE} -- Wrappers
 			else
 				a_call.call (Void)
 			end
-		end
-
-feature {NONE} -- Attribute access wrappers.
-
-	is_profile_wrapper (an_options: CONF_OPTION): BOOLEAN is
-			-- Wrapper to access `is_profile' attribute of {CONF_OPTION}.
-		require
-			an_options_not_void: an_options /= Void
-		do
-			Result := an_options.is_profile
-		end
-
-	is_trace_wrapper (an_options: CONF_OPTION): BOOLEAN is
-			-- Wrapper to access `is_trace' attribute of {CONF_OPTION}.
-		require
-			an_options_not_void: an_options /= Void
-		do
-			Result := an_options.is_trace
-		end
-
-	is_optimize_wrapper (an_options: CONF_OPTION): BOOLEAN is
-			-- Wrapper to access `is_optimize' attribute of {CONF_OPTION}.
-		require
-			an_options_not_void: an_options /= Void
-		do
-			Result := an_options.is_optimize
 		end
 
 indexing

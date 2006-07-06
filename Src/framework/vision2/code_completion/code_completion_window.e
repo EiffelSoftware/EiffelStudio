@@ -973,6 +973,7 @@ feature {NONE} -- Implementation
 					l_select_row_visible := choice_list.visible_row_indexes.has (choice_list.selected_rows.first.index)
 				end
 				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
+				i := i.max (choice_list.width)
 				if choice_list.vertical_scroll_bar.is_displayed then
 					if i < choice_list.width - choice_list.vertical_scroll_bar.width then
 						choice_list.column (1).set_width (choice_list.width - choice_list.vertical_scroll_bar.width)

@@ -11,6 +11,7 @@
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
 			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
+		<Property Id="GDIPLUS">empty</Property>
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
@@ -35,6 +36,7 @@
 				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
 				<Merge Id="dotnet" Language="1033" src="MSMs\dotnet.msm" DiskId="1" />
 				<Merge Id="gobo" Language="1033" src="MSMs\gobo.msm" DiskId="1" />
+				<Merge Id="gdi_plus" Language="1033" src="MSMs\gdi_plus.msm" DiskId="1" />
 				<Merge Id="free_add_ons" Language="1033" src="MSMs\free_add_ons.msm" DiskId="1" />
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
@@ -71,6 +73,11 @@
 				<MergeRef Id="dotnet" />
 			</Feature>
 
+			<Feature Id="gdi_plus" Title="GDI+" TypicalDefault="install" Level="3" Display="hidden">
+				<Condition Level="0"><![CDATA[GDIPLUS = "empty"]]></Condition>
+				<MergeRef Id="dotnet" />
+			</Feature>
+
 			<Feature Id="EiffelStudio" Title="EiffelStudio" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="ec" />
 				<MergeRef Id="studio_core" />
@@ -98,6 +105,7 @@
 			</Feature>
 		</Feature>
 		
+		<CustomAction Id="is_gdi_plus_installed" BinaryKey="setup_dll" DllEntry="is_gdi_plus_installed" Win64="$(var.IsWin64)" />
 		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" Win64="$(var.IsWin64)" />
 		<CustomAction Id="retrieve_cd_key" BinaryKey="setup_dll" DllEntry="retrieve_cd_key" Win64="$(var.IsWin64)" />
 		<CustomAction Id="prepare_finalize_setup" BinaryKey="setup_dll" DllEntry="prepare_finalize_setup" Win64="$(var.IsWin64)" />
@@ -1307,6 +1315,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 
 		<InstallExecuteSequence>
 			<LaunchConditions After='AppSearch' />
+			<Custom Action="is_gdi_plus_installed" After="InstallValidate">NOT Installed</Custom>
 			<Custom Action="prepare_finalize_setup" Before="finalize_setup">NOT Installed</Custom>
 			<Custom Action="finalize_setup" Before="InstallFinalize">NOT Installed</Custom>
 			<RemoveExistingProducts After="InstallFinalize" />

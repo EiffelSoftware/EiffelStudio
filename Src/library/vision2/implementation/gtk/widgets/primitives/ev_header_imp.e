@@ -75,6 +75,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
 			dummy_imp.set_width (1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
+
 			resize_model (100)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
 
@@ -213,6 +214,10 @@ feature {NONE} -- Implementation
 			-- depending on event type in first position of `event_data'.
 		local
 			a_pointed_divider_index: INTEGER
+			a_pointer_x, a_pointer_y: INTEGER
+			gdkwin: POINTER
+			l_widget: POINTER
+			l_last_column: POINTER
 		do
 			set_call_item_resize_start_actions (False)
 			a_pointed_divider_index := pointed_divider_index
@@ -220,6 +225,23 @@ feature {NONE} -- Implementation
 				set_call_item_resize_start_actions (True)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+
+				-- If we are clicking on the Void area then we the item events passing Void items.
+			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum or a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum then
+				gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+				if gdkwin /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $l_widget)
+					l_last_column := {EV_GTK_EXTERNALS}.gtk_tree_view_get_column (c_object, count)
+					if l_widget = {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (l_last_column) then
+							-- Fire item press actions with a Void item.
+						if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
+							item_pointer_button_press_actions_internal.call (Void)
+						elseif a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
+							item_pointer_double_press_actions_internal.call (Void)
+						end
+					end
+				end
+			end
 		end
 
 	call_item_resize_actions is

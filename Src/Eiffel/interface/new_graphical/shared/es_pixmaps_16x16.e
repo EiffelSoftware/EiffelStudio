@@ -931,52 +931,76 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 4))
 		end
 
+	frozen folder_precompiled_library_icon: EV_PIXMAP is
+			-- Access to 'precompiled library' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 4))
+		end
+
+	frozen folder_precompiled_library_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'precompiled library' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 4))
+		end
+
+	frozen folder_precompiled_library_readonly_icon: EV_PIXMAP is
+			-- Access to 'precompiled library readonly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 4))
+		end
+
+	frozen folder_precompiled_library_readonly_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'precompiled library readonly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 4))
+		end
+
 	frozen folder_assembly_icon: EV_PIXMAP is
 			-- Access to 'assembly' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 4))
 		end
 
 	frozen folder_assembly_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'assembly' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 4))
 		end
 
 	frozen folder_namespace_icon: EV_PIXMAP is
 			-- Access to 'namespace' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 4))
 		end
 
 	frozen folder_namespace_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'namespace' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 4))
 		end
 
 	frozen folder_preference_icon: EV_PIXMAP is
 			-- Access to 'preference' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (22, 4))
 		end
 
 	frozen folder_preference_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'preference' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 4))
 		end
 
 	frozen folder_config_icon: EV_PIXMAP is
 			-- Access to 'config' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (23, 4))
 		end
 
 	frozen folder_config_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'config' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 4))
 		end
 	frozen tool_features_icon: EV_PIXMAP is
 			-- Access to 'features' pixmap.
@@ -2475,148 +2499,160 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 10))
 		end
 
+	frozen new_precompiled_library_icon: EV_PIXMAP is
+			-- Access to 'precompiled library' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 10))
+		end
+
+	frozen new_precompiled_library_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'precompiled library' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 10))
+		end
+
 	frozen new_reference_icon: EV_PIXMAP is
 			-- Access to 'reference' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 10))
 		end
 
 	frozen new_reference_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'reference' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 10))
 		end
 
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 10))
 		end
 
 	frozen new_feature_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'feature' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 10))
 		end
 
 	frozen new_class_icon: EV_PIXMAP is
 			-- Access to 'class' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 10))
 		end
 
 	frozen new_class_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'class' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 10))
 		end
 
 	frozen new_window_icon: EV_PIXMAP is
 			-- Access to 'window' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (9, 10))
 		end
 
 	frozen new_window_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'window' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 10))
 		end
 
 	frozen new_editor_icon: EV_PIXMAP is
 			-- Access to 'editor' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (9, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 10))
 		end
 
 	frozen new_editor_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'editor' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 10))
 		end
 
 	frozen new_document_icon: EV_PIXMAP is
 			-- Access to 'document' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 10))
 		end
 
 	frozen new_document_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'document' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 10))
 		end
 
 	frozen new_metric_icon: EV_PIXMAP is
 			-- Access to 'metric' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 10))
 		end
 
 	frozen new_metric_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'metric' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 10))
 		end
 
 	frozen new_supplier_link_icon: EV_PIXMAP is
 			-- Access to 'supplier link' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 10))
 		end
 
 	frozen new_supplier_link_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'supplier link' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 10))
 		end
 
 	frozen new_aggregate_supplier_link_icon: EV_PIXMAP is
 			-- Access to 'aggregate supplier link' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 10))
 		end
 
 	frozen new_aggregate_supplier_link_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'aggregate supplier link' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 10))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 10))
 		end
 
 	frozen new_inheritance_link_icon: EV_PIXMAP is
 			-- Access to 'inheritance link' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 10))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 10))
 		end
 
 	frozen new_inheritance_link_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'inheritance link' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 10))
-		end
-
-	frozen new_intersect_icon: EV_PIXMAP is
-			-- Access to 'intersect' pixmap.
-		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 10))
-		end
-
-	frozen new_intersect_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'intersect' pixmap pixel buffer.
-		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 10))
 		end
 
-	frozen new_union_icon: EV_PIXMAP is
-			-- Access to 'union' pixmap.
+	frozen new_and_icon: EV_PIXMAP is
+			-- Access to 'and' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 10))
 		end
 
-	frozen new_union_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'union' pixmap pixel buffer.
+	frozen new_and_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'and' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 10))
+		end
+
+	frozen new_or_icon: EV_PIXMAP is
+			-- Access to 'or' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 10))
+		end
+
+	frozen new_or_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'or' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 10))
 		end
 	frozen feature_callers_icon: EV_PIXMAP is
 			-- Access to 'callers' pixmap.
@@ -2987,87 +3023,277 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 12))
 		end
 
-	frozen metric_intersect_icon: EV_PIXMAP is
-			-- Access to 'intersect' pixmap.
+	frozen metric_quick_icon: EV_PIXMAP is
+			-- Access to 'quick' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 12))
 		end
 
-	frozen metric_intersect_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'intersect' pixmap pixel buffer.
+	frozen metric_quick_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'quick' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 12))
 		end
 
-	frozen metric_union_icon: EV_PIXMAP is
-			-- Access to 'union' pixmap.
+	frozen metric_show_details_icon: EV_PIXMAP is
+			-- Access to 'show details' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 12))
 		end
 
-	frozen metric_union_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'union' pixmap pixel buffer.
+	frozen metric_show_details_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'show details' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 12))
+		end
+
+	frozen metric_export_to_file_icon: EV_PIXMAP is
+			-- Access to 'export to file' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 12))
+		end
+
+	frozen metric_export_to_file_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'export to file' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 12))
+		end
+
+	frozen metric_and_icon: EV_PIXMAP is
+			-- Access to 'and' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 12))
+		end
+
+	frozen metric_and_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'and' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 12))
+		end
+
+	frozen metric_or_icon: EV_PIXMAP is
+			-- Access to 'or' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 12))
+		end
+
+	frozen metric_or_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'or' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 12))
 		end
 	frozen metric_not_common_criteria_icon: EV_PIXMAP is
 			-- Access to 'common criteria' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 12))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 12))
 		end
 
 	frozen metric_not_common_criteria_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'common criteria' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 12))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 12))
 		end
 
 	frozen metric_not_relational_criteria_icon: EV_PIXMAP is
 			-- Access to 'relational criteria' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 12))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 12))
 		end
 
 	frozen metric_not_relational_criteria_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'relational criteria' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 12))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 12))
 		end
 
 	frozen metric_not_text_criteria_icon: EV_PIXMAP is
 			-- Access to 'text criteria' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 12))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 12))
 		end
 
 	frozen metric_not_text_criteria_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'text criteria' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 12))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 12))
 		end
 
-	frozen metric_not_intersect_icon: EV_PIXMAP is
-			-- Access to 'intersect' pixmap.
+	frozen metric_not_and_icon: EV_PIXMAP is
+			-- Access to 'and' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 12))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 12))
 		end
 
-	frozen metric_not_intersect_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'intersect' pixmap pixel buffer.
+	frozen metric_not_and_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'and' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 12))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 12))
 		end
 
-	frozen metric_not_union_icon: EV_PIXMAP is
-			-- Access to 'union' pixmap.
+	frozen metric_not_or_icon: EV_PIXMAP is
+			-- Access to 'or' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 12))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 12))
 		end
 
-	frozen metric_not_union_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'union' pixmap pixel buffer.
+	frozen metric_not_or_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'or' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 12))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 12))
+		end
+	frozen metric_domain_application_icon: EV_PIXMAP is
+			-- Access to 'application' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 12))
+		end
+
+	frozen metric_domain_application_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'application' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 12))
+		end
+
+	frozen metric_domain_custom_icon: EV_PIXMAP is
+			-- Access to 'custom' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 12))
+		end
+
+	frozen metric_domain_custom_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'custom' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 12))
+		end
+
+	frozen metric_domain_delayed_icon: EV_PIXMAP is
+			-- Access to 'delayed' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (22, 12))
+		end
+
+	frozen metric_domain_delayed_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'delayed' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 12))
+		end
+	frozen metric_unit_target_icon: EV_PIXMAP is
+			-- Access to 'target' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (23, 12))
+		end
+
+	frozen metric_unit_target_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'target' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 12))
+		end
+
+	frozen metric_unit_group_icon: EV_PIXMAP is
+			-- Access to 'group' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (24, 12))
+		end
+
+	frozen metric_unit_group_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'group' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 12))
+		end
+
+	frozen metric_unit_class_icon: EV_PIXMAP is
+			-- Access to 'class' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (25, 12))
+		end
+
+	frozen metric_unit_class_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'class' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (25, 12))
+		end
+
+	frozen metric_unit_generic_icon: EV_PIXMAP is
+			-- Access to 'generic' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (26, 12))
+		end
+
+	frozen metric_unit_generic_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'generic' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 12))
+		end
+
+	frozen metric_unit_feature_icon: EV_PIXMAP is
+			-- Access to 'feature' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (27, 12))
+		end
+
+	frozen metric_unit_feature_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'feature' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 12))
+		end
+
+	frozen metric_unit_local_or_argument_icon: EV_PIXMAP is
+			-- Access to 'local or argument' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (28, 12))
+		end
+
+	frozen metric_unit_local_or_argument_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'local or argument' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (28, 12))
+		end
+
+	frozen metric_unit_assertion_icon: EV_PIXMAP is
+			-- Access to 'assertion' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (29, 12))
+		end
+
+	frozen metric_unit_assertion_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'assertion' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (29, 12))
+		end
+
+	frozen metric_unit_line_icon: EV_PIXMAP is
+			-- Access to 'line' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (30, 12))
+		end
+
+	frozen metric_unit_line_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'line' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 12))
+		end
+
+	frozen metric_unit_compilation_icon: EV_PIXMAP is
+			-- Access to 'compilation' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (31, 12))
+		end
+
+	frozen metric_unit_compilation_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'compilation' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 12))
+		end
+
+	frozen metric_unit_ratio_icon: EV_PIXMAP is
+			-- Access to 'ratio' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (32, 12))
+		end
+
+	frozen metric_unit_ratio_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'ratio' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (32, 12))
 		end
 	frozen diagram_zoom_in_icon: EV_PIXMAP is
 			-- Access to 'zoom in' pixmap.

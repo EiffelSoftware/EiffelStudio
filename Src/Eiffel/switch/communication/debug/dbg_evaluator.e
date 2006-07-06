@@ -131,7 +131,9 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 
 			if last_result_value /= Void then
-				last_result_static_type := f.type.associated_class
+				if f.type.has_associated_class then
+					last_result_static_type := f.type.associated_class
+				end
 			else
 				notify_error_evaluation ("Unable to evaluate {" + cl.name_in_upper + "}." + f.feature_name)
 			end
@@ -298,10 +300,10 @@ feature -- Concrete evaluation
 				l_dyntype := l_dynclass.types.first
 			end
 			if f.is_once then
-					effective_evaluate_once_function (f)
-					if last_result_value = Void then
-						notify_error_evaluation ("Unable to evaluate once {" + f.written_class.name_in_upper + "}." + f.feature_name)
-					end
+				effective_evaluate_once_function (f)
+				if last_result_value = Void then
+					notify_error_evaluation ("Unable to evaluate once {" + f.written_class.name_in_upper + "}." + f.feature_name)
+				end
 			elseif not error_occurred then
 					-- Get real feature
 				realf := ancestor_version_of (f, f.written_class)
@@ -330,7 +332,9 @@ feature -- Concrete evaluation
 
 				if not error_occurred and then last_result_value /= Void then
 					at := f.type
-					last_result_static_type := at.associated_class
+					if at.has_associated_class then
+						last_result_static_type := at.associated_class
+					end
 					if last_result_static_type = Void then
 						last_result_static_type:= Workbench.Eiffel_system.Any_class.compiled_class
 					end

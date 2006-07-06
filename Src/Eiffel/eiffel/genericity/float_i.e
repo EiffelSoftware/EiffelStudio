@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_real_32,
 			is_numeric,
-			same_as, element_type,
+			element_type,
 			description, sk_value, hash_code,
 			heaviest, default_create, tuple_code
 		end
@@ -110,19 +110,11 @@ feature -- Status report
 			end
 		end
 
-feature -- Comparison
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-		do
-			Result := other.is_real_32
-		end
-
 feature -- C code generation
 
 	c_string: STRING is "EIF_REAL_32"
 			-- String generated for the type.
-		
+
 	union_tag: STRING is "farg"
 
 	generate_union (buffer: GENERATION_BUFFER) is
@@ -147,7 +139,7 @@ feature
 				-- a double value.
 			ba.append (Bc_real32)
 			ba.append_double (0.0)
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

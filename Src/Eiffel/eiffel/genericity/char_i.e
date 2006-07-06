@@ -9,7 +9,7 @@ inherit
 			make as base_make
 		redefine
 			is_char,
-			same_as, element_type, tuple_code,
+			element_type, tuple_code,
 			description, sk_value, hash_code,
 			maximum_interval_value,
 			minimum_interval_value
@@ -88,17 +88,6 @@ feature -- Access
 				Result := C_wide_char
 			else
 				Result := C_char
-			end
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to `Current' ?
-		local
-			char: like Current
-		do
-			if other.is_char then
-				char ?= other
-				Result := is_wide = char.is_wide
 			end
 		end
 

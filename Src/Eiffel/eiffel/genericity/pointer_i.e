@@ -7,7 +7,6 @@ inherit
 	BASIC_I
 		redefine
 			is_feature_pointer,
-			same_as,
 			description, sk_value, hash_code,
 			element_type, default_create, tuple_code
 		end
@@ -54,15 +53,6 @@ feature
 	is_feature_pointer: BOOLEAN is True
 			-- Is the type a feature pointer type ?
 
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' the equal to Current ?
-		local
-			l_ptr: POINTER_I
-		do
-			l_ptr ?= other
-			Result := l_ptr /= Void
-		end
-
 	description: POINTER_DESC is
 			-- Type description for skeleton
 		do
@@ -71,7 +61,7 @@ feature
 
 	c_string: STRING is "EIF_POINTER"
 			-- String generated for the type.
-		
+
 	union_tag: STRING is "parg"
 
 	hash_code: INTEGER is
@@ -98,7 +88,7 @@ feature
 		do
 			buffer.put_string ("SK_POINTER")
 		end
-	
+
 	type_a: POINTER_A is
 		do
 			create Result
@@ -110,7 +100,7 @@ feature
 			-- Generate default value of basic type on stack.
 		do
 			ba.append (Bc_null_pointer)
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

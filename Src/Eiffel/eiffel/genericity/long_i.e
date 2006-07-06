@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class INTEGER_I
 
 inherit
@@ -14,7 +14,7 @@ inherit
 		redefine
 			is_integer,
 			is_numeric,
-			same_as, element_type,
+			element_type,
 			description, sk_value, hash_code,
 			heaviest, tuple_code,
 			maximum_interval_value,
@@ -25,7 +25,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
@@ -94,7 +94,7 @@ feature -- Access
 
 	size: INTEGER_8
 			-- Current is stored on `size' bits.
-	
+
 	level: INTEGER is
 			-- Internal code for generation
 		do
@@ -129,17 +129,6 @@ feature -- Access
 				else
 					Result := Current
 				end
-			end
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' the equal to Current ?
-		local
-			o: like Current
-		do
-			if other.is_integer then
-				o ?= other
-				Result := size = o.size
 			end
 		end
 
@@ -260,7 +249,7 @@ feature -- Byte code generation
 				ba.append (Bc_int64)
 				ba.append_integer_64 (0)
 			end
-		end 
+		end
 
 feature {NONE} -- Constants for generation
 

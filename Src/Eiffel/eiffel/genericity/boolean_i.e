@@ -7,7 +7,7 @@ inherit
 	BASIC_I
 		redefine
 			is_boolean,
-			same_as, element_type,
+			element_type,
 			description, hash_code, sk_value,
 			default_create, tuple_code
 		end
@@ -54,12 +54,6 @@ feature
 	is_boolean: BOOLEAN is True
 			-- Type is a boolean one.
 
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to `Current' ?
-		do
-			Result := other.is_boolean
-		end
-
 	description: BOOLEAN_DESC is
 			-- Type description for skeleton
 		do
@@ -68,7 +62,7 @@ feature
 
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
-		
+
 	union_tag: STRING is "barg"
 
 	hash_code: INTEGER is
@@ -108,7 +102,7 @@ feature
 		do
 			ba.append (Bc_bool)
 			ba.append ('%U')
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

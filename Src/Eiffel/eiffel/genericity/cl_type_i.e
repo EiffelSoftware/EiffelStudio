@@ -441,7 +441,7 @@ feature -- C generation
 	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING) is
 			-- Generate creation of expanded object associated to Current.
 		do
-			associated_class_type.generate_expanded_creation (buffer, target_name)
+			associated_class_type.generate_expanded_creation (buffer, target_name, Current)
 		end
 
 	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING) is

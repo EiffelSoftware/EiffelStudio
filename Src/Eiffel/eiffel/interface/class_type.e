@@ -1496,18 +1496,20 @@ feature -- Structure generation
 --			end
 		end
 
-	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING) is
+	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING; a_type: CL_TYPE_I) is
 			-- Generate initialization of expanded variable `a_name'.
 		require
 			is_expanded: is_expanded
 			buffer_not_void: buffer /= Void
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
+			a_type_not_void: a_type /= Void
+			compatible_type: a_type.same_as (type)
 		local
 			l_gen_type: GEN_TYPE_I
 			l_workbench_mode: BOOLEAN
 		do
-			l_gen_type ?= type
+			l_gen_type ?= a_type
 			l_workbench_mode := byte_context.workbench_mode
 --			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
 				if l_gen_type = Void then
@@ -1517,10 +1519,10 @@ feature -- Structure generation
 					buffer.put_string (".data)->ov_flags = EO_EXP | ")
 					if l_workbench_mode then
 						buffer.put_string ("RTUD(")
-						buffer.put_integer (type.generated_id (False))
+						buffer.put_integer (a_type.generated_id (False))
 						buffer.put_string (");")
 					else
-						buffer.put_integer (type.generated_id (True))
+						buffer.put_integer (a_type.generated_id (True))
 						buffer.put_character (';')
 					end
 				else
@@ -1534,18 +1536,20 @@ feature -- Structure generation
 			buffer.put_new_line
 		end
 
-	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING) is
+	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING; a_type: CL_TYPE_I) is
 			-- Allocate memory and call to `default_create' if needed on `a_target_name'.
 		require
 			is_expanded: is_expanded
 			buffer_not_void: buffer /= Void
 			a_target_name_not_void: a_target_name /= Void
 			a_target_name_not_empty: not a_target_name.is_empty
+			a_type_not_void: a_type /= Void
+			compatible_type: a_type.same_as (type)
 		local
 			l_gen_type: GEN_TYPE_I
 			l_workbench_mode: BOOLEAN
 		do
-			l_gen_type ?= type
+			l_gen_type ?= a_type
 			l_workbench_mode := byte_context.workbench_mode
 			if l_gen_type = Void then
 					-- Not a generic type.
@@ -1553,10 +1557,10 @@ feature -- Structure generation
 				buffer.put_string ("= RTLN(")
 				if l_workbench_mode then
 					buffer.put_string ("RTUD(")
-					buffer.put_integer (type.generated_id (False))
+					buffer.put_integer (a_type.generated_id (False))
 					buffer.put_string (")")
 				else
-					buffer.put_integer (type.generated_id (True))
+					buffer.put_integer (a_type.generated_id (True))
 				end
 				buffer.put_string (");")
 			else

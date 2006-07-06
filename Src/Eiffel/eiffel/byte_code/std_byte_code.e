@@ -683,7 +683,7 @@ end
 						buf.put_new_line
 
 							-- Then we update the type information
-						l_class_type.generate_expanded_type_initialization (buf, l_loc_name)
+						l_class_type.generate_expanded_type_initialization (buf, l_loc_name, l_type)
 					end
 					i := i + 1
 				end

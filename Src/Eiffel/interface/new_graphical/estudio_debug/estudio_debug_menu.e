@@ -78,9 +78,6 @@ feature {NONE} -- Actions
 	launch_uuid_tool is
 			-- Launch UUID generator
 		local
-			l_env: EXECUTION_ENVIRONMENT
-			l_path: STRING
-			l_dir: DIRECTORY_NAME
 			l_dlg: EV_DIALOG
 			vb: EV_VERTICAL_BOX
 			tf: EV_TEXT_FIELD

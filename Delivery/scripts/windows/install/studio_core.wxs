@@ -687,6 +687,9 @@
 										</Extension>
 									</ProgId>
 								</Component>
+								<Component Id="ecdbgd.exe" Guid="31E9AD81-C4F7-47c9-B6CA-369C6D9B6533">
+									<File Id="ecdbgd.exe" Name="ecdbgd.exe" />
+								</Component>
 								<Component Id="emake.exe" Guid="B97B86CD-F816-4e7c-97E3-0A101E346AF9">
 									<File Id="emake.exe" Name="emake.exe" />
 								</Component>

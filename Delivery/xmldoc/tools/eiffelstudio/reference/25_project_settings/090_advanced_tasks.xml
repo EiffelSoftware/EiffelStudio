@@ -1,0 +1,20 @@
+   <document title="Tasks Options" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>
+			<image>
+				<url/>
+				<alt_text>Tasks dialog</alt_text>
+			</image>
+		</paragraph>
+		<paragraph>It is possible to have a command executed before/after a compilation.</paragraph>
+		Tasks have these properties:
+		<list ordered="false">
+			<item>Command: command to execute</item>
+			<item>Description: an optional description about the external</item>
+			<item>Working directory: an optional working directory, if nothing is specified, the path to the configuration file will be used</item>
+			<item>Must succeed: does the task have to finish successful for the compilation to continue?</item>
+			<item>Condition: allows the same configuration with tasks to work in different situations (e.g. windows and unix) (see <link><url>020_target_general.xml</url><anchor_name>condition</anchor_name><label>conditions</label></link>)</item>
+		</list>
+	</paragraph>
+</document>

@@ -104,12 +104,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 	item_is_in_pnd: BOOLEAN is
 		do
 			if pnd_item_source /= Void then
-				if pnd_item_source.is_pnd_in_transport then
-					Result := True
-				end
-				if pnd_item_source.is_dnd_in_transport then
-					Result := True
-				end
+				Result := pnd_item_source.is_pnd_in_transport or else pnd_item_source.is_dnd_in_transport
 			end
 		end
 

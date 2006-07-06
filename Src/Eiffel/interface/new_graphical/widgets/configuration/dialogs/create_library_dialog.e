@@ -77,10 +77,6 @@ feature {NONE} -- Initialization
 			vb, vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
-			l_dir: KL_DIRECTORY
-			l_subdirs: ARRAY [STRING]
-			i, cnt: INTEGER
-			l_name: STRING
 		do
 			Precursor {EV_DIALOG}
 
@@ -104,26 +100,7 @@ feature {NONE} -- Initialization
 			vb2.extend (default_libraries)
 			default_libraries.set_minimum_height (200)
 
-				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
-			create l_dir.make (Library_path)
-			if l_dir.is_readable then
-				add_configs_in_dir (Library_path, library_directory_name)
-				l_subdirs := l_dir.directory_names
-				if l_subdirs /= Void then
-					from
-						i := 1
-						cnt := l_subdirs.count
-					until
-						i > cnt
-					loop
-						l_name := library_path.twin
-						l_name.append_character (platform_constants.directory_separator)
-						l_name.append (l_subdirs.item (i))
-						add_configs_in_dir (l_name, library_directory_name+"\"+l_subdirs.item (i))
-						i := i +1
-					end
-				end
-			end
+			fill_default_libraries
 
 				-- name
 			create vb2
@@ -238,14 +215,15 @@ feature {NONE} -- Actions
 			location.set_text (a_dial.file_name)
 		end
 
-	fill_library (a_name, a_location: STRING) is
+	fill_library (a_name, a_subdir, a_file: STRING) is
 			-- Fill in library informations.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_location_ok: a_location /= Void and then not a_location.is_empty
+			a_subdir_ok: a_subdir /= Void and then not a_subdir.is_empty
+			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
 			name.set_text (a_name)
-			location.set_text (a_location)
+			location.set_text ("$ISE_LIBRARY\"+a_subdir+"\"+a_file)
 		end
 
 	on_cancel is
@@ -283,10 +261,43 @@ feature {NONE} -- Implementation
 	factory: CONF_FACTORY
 			-- Factory to create a library.
 
+	fill_default_libraries is
+			-- Fill in the default libraries.
+		require
+			default_libraries_not_void: default_libraries /= Void
+		local
+			l_dir: KL_DIRECTORY
+			l_subdirs: ARRAY [STRING]
+			i, cnt: INTEGER
+			l_name: STRING
+		do
+				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
+			create l_dir.make (Library_path)
+			if l_dir.is_readable then
+				add_configs_in_dir (Library_path, library_directory_name)
+				l_subdirs := l_dir.directory_names
+				if l_subdirs /= Void then
+					from
+						i := 1
+						cnt := l_subdirs.count
+					until
+						i > cnt
+					loop
+						l_name := library_path.twin
+						l_name.append_character (platform_constants.directory_separator)
+						l_name.append (l_subdirs.item (i))
+						add_configs_in_dir (l_name, library_directory_name+"\"+l_subdirs.item (i))
+						i := i +1
+					end
+				end
+			end
+		end
+
 	add_configs_in_dir (a_path, a_subdir: STRING) is
 			-- Add config files in `a_path' to `default_libraries'.
 		require
 			a_path_not_void: a_path /= Void
+			default_libraries_not_void: default_libraries /= Void
 		local
 			l_dir: KL_DIRECTORY
 			l_files: ARRAY [STRING]
@@ -308,7 +319,7 @@ feature {NONE} -- Implementation
 						if valid_config_extension (l_file_name) then
 							l_name := l_file_name.substring (1, l_file_name.last_index_of ('.', l_file_name.count)-1)
 							create l_item.make_with_text (l_name)
-							l_item.select_actions.extend (agent fill_library (l_name, "$ISE_LIBRARY\"+a_subdir+"\"+l_file_name))
+							l_item.select_actions.extend (agent fill_library (l_name, a_subdir, l_file_name))
 							default_libraries.extend (l_item)
 						end
 						i := i + 1

@@ -387,6 +387,13 @@ feature {NONE} -- Create library dialog
 	dialog_create_library_name: STRING is "Name"
 	dialog_create_library_location: STRING is "Location"
 
+feature {NONE} -- Create precompile dialog
+
+	dialog_create_precompile_title: STRING is "Add precompile"
+	dialog_create_precompile_defaults: STRING is "Default precompiles"
+	dialog_create_precompile_name: STRING is "Name"
+	dialog_create_precompile_location: STRING is "Location"
+
 feature {NONE} -- Create assembly dialog
 
 	dialog_create_assembly_title: STRING is "Add assembly"

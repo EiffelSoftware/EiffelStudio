@@ -60,6 +60,12 @@ feature -- Status
 	extension_name: STRING
 			-- Name of the config file extension.
 
+	has_vision2: BOOLEAN
+			-- Did the old configuration have vision2?
+
+	has_wel: BOOLEAN
+			-- Did the old configuration have wel?
+
 feature -- Access
 
 	last_system: CONF_SYSTEM
@@ -110,13 +116,13 @@ feature -- Basic operation
 				current_options := Void
 
 				process_root (l_ast.root)
-				process_externals (l_ast.externals)
 				if l_ast.clusters /= Void then
 					l_ast.clusters.do_all (agent process_cluster)
 				end
 				if l_ast.assemblies /= Void then
 					l_ast.assemblies.do_all (agent process_assembly)
 				end
+				process_externals (l_ast.externals)
 				convert_old_default_boolean
 			end
 		ensure
@@ -185,9 +191,11 @@ feature {NONE} -- Implementation of data retrieval
 			elseif l_name.is_case_insensitive_equal ("wel") then
 				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", current_target)
 				l_lib := factory.new_library ("wel", l_file_loc, current_target)
+				has_wel := True
 			elseif l_name.is_case_insensitive_equal ("vision2") then
 				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
 				l_lib := factory.new_library ("vision2", l_file_loc, current_target)
+				has_vision2 := True
 			elseif l_name.is_case_insensitive_equal ("time") then
 				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
 				l_lib := factory.new_library ("time", l_file_loc, current_target)
@@ -702,11 +710,23 @@ feature {NONE} -- Implementation of data retrieval
 			l_files: LACE_LIST [ID_SD]
 			l_loc: STRING
 			l_ignore: RX_PCRE_REGULAR_EXPRESSION
+			l_has_ignores: BOOLEAN
 		do
 			if a_externals /= Void then
 				create l_ignore.make
-				l_ignore.compile (".*library.(vision2|wel)")
-				l_ignore.optimize
+				if has_wel and has_vision2 then
+					l_ignore.compile (".*library.(vision2|wel)")
+					l_has_ignores := True
+				elseif has_wel then
+					l_ignore.compile (".*library.wel")
+					l_has_ignores := True
+				elseif has_vision2 then
+					l_ignore.compile (".*library.vision2")
+					l_has_ignores := True
+				end
+				if l_has_ignores then
+					l_ignore.optimize
+				end
 
 				from
 					a_externals.start
@@ -723,9 +743,11 @@ feature {NONE} -- Implementation of data retrieval
 					loop
 						l_loc := l_files.item
 						l_loc.replace_substring_all ("%"", "&quot;")
-							-- ignore externals of vision2 and wel
-						l_ignore.match (l_loc)
-						if not l_ignore.has_matched then
+						if l_has_ignores then
+								-- ignore externals of vision2 and wel
+							l_ignore.match (l_loc)
+						end
+						if not l_has_ignores or else not l_ignore.has_matched then
 							if l_type.is_include_path then
 								current_target.add_external_include (factory.new_external_include (l_loc))
 							elseif l_type.is_object then

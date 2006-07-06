@@ -903,8 +903,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_precompile (a_precompile: CONF_PRECOMPILE) is
 			-- Set `a_precompile'.
-		require
-			a_precompile_not_void: a_precompile /= Void
 		do
 			internal_precompile := a_precompile
 		ensure

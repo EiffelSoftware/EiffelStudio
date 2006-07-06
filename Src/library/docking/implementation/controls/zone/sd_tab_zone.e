@@ -12,6 +12,7 @@ inherit
 	SD_MULTI_CONTENT_ZONE
 		redefine
 			extend,
+			prune,
 			on_focus_in,
 			on_focus_out,
 			on_normal_max_window,
@@ -76,12 +77,8 @@ feature {NONE} -- Initlization
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
 			internal_title_bar.close_request_actions.extend (agent on_close_request)
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
-				end
-				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
-			end
+
+			update_mini_tool_bar (a_content)
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -131,15 +128,19 @@ feature -- Command
 				Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 				internal_title_bar.set_title (a_content.long_title)
 				internal_notebook.set_focus_color (True)
-				if a_content.mini_toolbar /= Void then
-					if a_content.mini_toolbar.parent /= Void then
-						a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
-					end
-					internal_title_bar.extend_custom_area (a_content.mini_toolbar)
-				else
-					internal_title_bar.wipe_out_custom_area
-				end
+				update_mini_tool_bar (a_content)
 			end
+		end
+
+	prune (a_content: SD_CONTENT; a_focus: BOOLEAN) is
+			-- Redefine
+		local
+			l_selected: SD_CONTENT
+		do
+			Precursor {SD_MULTI_CONTENT_ZONE} (a_content, a_focus)
+			l_selected := contents.i_th (selected_item_index)
+			internal_title_bar.set_title (l_selected.long_title)
+			update_mini_tool_bar (l_selected)
 		end
 
 	set_show_normal_max (a_show: BOOLEAN) is
@@ -253,7 +254,8 @@ feature {NONE} -- Agents for user
 			internal_docking_manager.command.remove_auto_hide_zones (True)
 			internal_title_bar.enable_focus_color
 			internal_notebook.set_focus_color (True)
-
+			update_mini_tool_bar (a_content)
+			internal_title_bar.set_title (a_content.long_title)
 			if a_content /= Void then
 				internal_notebook.select_item (a_content, True)
 			end
@@ -297,14 +299,7 @@ feature {NONE} -- Agents for docker
 		do
 			l_content := contents.i_th (internal_notebook.selected_item_index)
 			internal_title_bar.set_title (l_content.long_title)
-			if l_content.mini_toolbar /= Void then
-				if l_content.mini_toolbar.parent /= Void then
-					l_content.mini_toolbar.parent.prune (l_content.mini_toolbar)
-				end
-				internal_title_bar.extend_custom_area (l_content.mini_toolbar)
-			else
-				internal_title_bar.wipe_out_custom_area
-			end
+			update_mini_tool_bar (l_content)
 			if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
 				l_content.internal_focus_in_actions.call ([])
 			end
@@ -383,6 +378,21 @@ feature {NONE} -- Agents for docker
 		end
 
 feature {NONE} -- Implementation
+
+	update_mini_tool_bar (a_content: SD_CONTENT) is
+			-- Show mini tool bar if exist, otherwise clear mini tool bar area.
+		require
+			not_void: a_content /= Void
+		do
+			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
+				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
+			else
+				internal_title_bar.wipe_out_custom_area
+			end
+		end
 
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar.

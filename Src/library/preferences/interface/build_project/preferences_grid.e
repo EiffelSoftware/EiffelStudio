@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 
 				-- Alphabetically sort the known preferences
-			l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, preferences.preferences.linear_representation)
+			l_sorted_preferences := sorted_known_preferences_by (-Name_sorting_mode, show_hidden_preferences, preferences.preferences.linear_representation)
 
 			if not l_sorted_preferences.is_empty then
 				create l_pref_hash.make (l_sorted_preferences.count)

@@ -1,0 +1,25 @@
+ <document title="Warning Options" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>
+			<image>
+				<url/>
+				<alt_text>Warning dialog</alt_text>
+			</image>
+		</paragraph>
+		<list ordered="false">
+			<item>Enabled: globally enabled/disable warnings.</item>
+			<item>old syntax: warn about the use of old syntax</item>
+			<item>same uuid: different configuration files with the same uuid</item>
+			<item>old verbatim strings: warn about usage of old verbatim strings</item>
+			<item>options unknown class: class options for an unknown class</item>
+			<item>onces in generics: once features in a generic</item>
+			<item>obsolete features: features that are obsolete</item>
+			<item>missing class export: features are exported to a class that does not exist</item>
+			<item>obsolete classes: classes that are obsolete</item>
+			<item>incompatible types equality: incompatible types in equality comparison</item>
+			<item>unused locals: locals that are not used</item>
+			<item>renaming unknown class: renaming was defined for a class that does not exist</item>
+		</list>
+	</paragraph>
+</document>

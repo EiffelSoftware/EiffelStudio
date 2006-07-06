@@ -134,7 +134,9 @@ feature{NONE} -- Implementation
 	tautology_criterion: like criterion is
 			-- Tautology criterion
 		do
-			Result := generic_criterion_factory.simple_criterion_with_index (generic_criterion_factory.c_true)
+			Result :=
+				generic_criterion_factory.simple_criterion_with_index (generic_criterion_factory.c_is_compiled) and
+				generic_criterion_factory.simple_criterion_with_index (generic_criterion_factory.c_true)
 		end
 
 	compiled_criterion: like criterion is

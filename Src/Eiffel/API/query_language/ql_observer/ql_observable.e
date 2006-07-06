@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	QL_OBSERVABLE
 
 feature -- Status report
@@ -32,6 +32,24 @@ feature -- Setting
 			changed_cleared: not changed
 		end
 
+	block is
+			-- Block `notify' (i.e., `notify' will not notify registered observers.)
+		do
+			block_count := block_count + 1
+		ensure
+			block_count_increased: block_count = old block_count + 1
+		end
+
+	resume is
+			-- Resume `notify'.
+		do
+			if block_count > 0 then
+				block_count := block_count - 1
+			end
+		ensure
+			block_count_decreased: (old block_count > 0) implies block_count = old block_count - 1
+		end
+
 feature -- Notification
 
 	notify (a_data: like observed_data_type) is
@@ -39,7 +57,7 @@ feature -- Notification
 		local
 			l_observers: like registered_observers
 		do
-			if changed then
+			if changed and then not is_blocked then
 				clear_changed
 				if observer_count > 0 then
 					from
@@ -119,6 +137,12 @@ feature -- Status report
 			good_result: Result implies registered_observers.has (a_observer)
 		end
 
+	is_blocked: BOOLEAN is
+			-- Is `notify' blocked?
+		do
+			Result := block_count > 0
+		end
+
 feature{NONE} -- Observers
 
 	registered_observers: LINKED_LIST [like observer_type] is
@@ -142,8 +166,15 @@ feature{NONE} -- Observers
 	observed_data_type: ANY
 			-- Anchor type for observed data
 
+feature{NONE} -- Implementation
+
+	block_count: INTEGER
+			-- Block count
+			-- if it's zero, `notify' is resumed, it it's positive, `notify' is blocked.
+
 invariant
 	observers_attached: registered_observers /= Void
+	block_count_non_negative: block_count >= 0
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

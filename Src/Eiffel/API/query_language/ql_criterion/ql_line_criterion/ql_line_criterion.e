@@ -35,7 +35,7 @@ feature -- Status report
 	require_compiled: BOOLEAN is
 			-- Does current criterion require a compiled item?
 		do
-			Result := True
+			Result := False
 		end
 
 feature -- Access

@@ -64,7 +64,9 @@ feature -- Visit
 	process_class (a_item: QL_CLASS) is
 			-- Process `a_item'.
 		do
-			process_feature_from_class (a_item, agent process_real_feature, agent process_invariant)
+			if a_item.is_compiled then
+				process_feature_from_class (a_item, agent process_real_feature, agent process_invariant)
+			end
 		end
 
 	process_feature (a_item: QL_FEATURE) is
@@ -165,7 +167,9 @@ feature{NONE} -- Implementation
 	tautology_criterion: like criterion is
 			-- Tautology criterion
 		do
-			Result := assertion_criterion_factory.simple_criterion_with_index (assertion_criterion_factory.c_true)
+			Result :=
+				assertion_criterion_factory.simple_criterion_with_index (assertion_criterion_factory.c_is_compiled) and
+				assertion_criterion_factory.simple_criterion_with_index (assertion_criterion_factory.c_true)
 		end
 
 	compiled_criterion: like criterion is

@@ -477,10 +477,16 @@ feature{NONE} -- Implementation
 			l_cur_line: STRING
 			l_new_line_char: CHARACTER
 		do
-			if a_item.is_compiled then
+			if a_item.is_compiled or else a_item.is_class then
 				l_new_line_char := '%N'
 				l_class_text := a_item.text
 				l_lines := l_class_text.split (l_new_line_char)
+				if not l_lines.is_empty then
+					if l_lines.last.is_empty then
+						l_lines.finish
+						l_lines.remove
+					end
+				end
 				from
 					l_lines.start
 					l_index := 1

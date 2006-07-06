@@ -511,9 +511,9 @@ feature{NONE} -- Implementation/Set operations
 				a_new_domain.content.fill (content)
 			else
 				create l_item_set.make (count)
-				content.do_all (agent l_item_set.put)
 				create l_tester.make (agent are_items_equivalent)
 				l_item_set.set_equality_tester (l_tester)
+				content.do_all (agent l_item_set.put)
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
 				from

@@ -118,6 +118,12 @@ feature -- Access
 	is_visible: BOOLEAN
 			-- If Current visible?
 
+	has_focus: BOOLEAN is
+			-- If Current content has focus?
+		do
+			Result := docking_manager.focused_content = Current
+		end
+
 	is_title_unique_except_current (a_title: STRING): BOOLEAN is
 			-- If `a_title' unique?
 		local

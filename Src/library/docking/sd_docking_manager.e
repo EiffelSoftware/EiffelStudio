@@ -125,6 +125,12 @@ feature -- Query
 	open_actions: ACTION_SEQUENCE [ TUPLE [ANY]]
 			-- Open actions when open a config.
 
+	focused_content: SD_CONTENT is
+			-- Current focused content. Maybe void.
+		do
+			Result := property.last_focus_content
+		end
+
 	is_title_unique (a_title: STRING): BOOLEAN is
 			-- If `a_title' unique in all contents `unique_title's ?
 		require

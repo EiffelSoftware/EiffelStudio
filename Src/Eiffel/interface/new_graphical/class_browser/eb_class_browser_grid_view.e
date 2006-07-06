@@ -234,7 +234,7 @@ feature -- Access
 		do
 			if show_tooltip_checkbox_internal = Void then
 				create show_tooltip_checkbox_internal
-				show_tooltip_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.debug_exception_dialog_icon)
+				show_tooltip_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.general_show_tool_tips_icon)
 				show_tooltip_checkbox_internal.set_tooltip (interface_names.h_show_tooltip)
 				if preferences.class_browser_data.is_tooltip_shown then
 					show_tooltip_checkbox_internal.enable_select

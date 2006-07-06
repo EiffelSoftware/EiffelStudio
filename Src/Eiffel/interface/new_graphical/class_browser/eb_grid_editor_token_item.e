@@ -179,42 +179,8 @@ feature -- Access
 				Result := editor_token_text.tokens.i_th (a_pos)
 			end
 		end
-		
+
 feature{NONE} -- Redraw
-
-	black_color: EV_COLOR is
-			--
-		local
-			l_colors: EV_STOCK_COLORS
-		once
-			create l_colors
-			Result := l_colors.black
-		end
-
-	gray_color: EV_COLOR is
-			--
-		local
-			l_colors: EV_STOCK_COLORS
-		once
-			create l_colors
-			Result := l_colors.gray
-		end
-
-	focused_selected_border_color: EV_COLOR is
-			-- Border color of a focused and selected item
-		do
-			Result := black_color
-		ensure
-			result_attached: Result /= Void
-		end
-
-	non_focused_selected_border_color: EV_COLOR is
-			-- Border color of a non-focused selected item
-		do
-			Result := gray_color
-		ensure
-			result_attached: Result /= Void
-		end
 
 	perform_redraw (a_drawable: EV_DRAWABLE) is
 			-- Draw current in `a_drawable'.

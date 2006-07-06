@@ -186,14 +186,14 @@ iff not exist quick_finalize.exe then
 endiff
 move quick_finalize.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
-remtrace Put estudio.exe in the new delivery
+remtrace Put ecdbgd.exe in the new delivery
 REM It should already have been compiled by the configure of the run-time.
 cdd %EIFFEL_SRC\C\ipc\daemon
-iff not exist estudio.exe then
-	remtrace Could not finalize a new estudio
+iff not exist ecdbgd.exe then
+	remtrace Could not finalize a new ecdbgd
 	CANCEL
 endiff
-move estudio.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+move ecdbgd.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Put x2c.exe in the new delivery
 REM It should already have been compiled by the configure of the run-time.
@@ -214,6 +214,18 @@ iff not exist h2e.exe then
 	CANCEL
 endiff
 move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+
+remtrace Recompile estudio.exe
+cdd %EIFFEL_SRC\tools\estudio\config
+clean_project
+finalize estudio.ecf estudio
+cleanup_eiffel estudio estudio.exe
+iff not exist estudio.exe then
+	remtrace Could not finalize a new estudio
+	CANCEL
+endiff
+move estudio.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC

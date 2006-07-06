@@ -54,6 +54,16 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 		deferred
 		end
 
+	default_pointer_style_width: INTEGER is
+			-- Default pointer style width.
+		deferred
+		end
+
+	default_pointer_style_height: INTEGER is
+			-- Default pointer style height.
+		deferred
+		end
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.

@@ -77,6 +77,24 @@ feature {NONE} -- Implementation
 			Result := get_wheel_scroll_lines
 		end
 
+	default_pointer_style_width: INTEGER is
+			-- Default pointer style width.
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.cursor_width
+		end
+
+	default_pointer_style_height: INTEGER is
+			-- Default pointer style height.
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.cursor_height
+		end
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.

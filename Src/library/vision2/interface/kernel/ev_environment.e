@@ -82,7 +82,6 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
@@ -90,6 +89,22 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.mouse_wheel_scroll_lines
+		end
+
+	default_pointer_style_width: INTEGER is
+			-- Default pointer style width.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.default_pointer_style_width
+		end
+
+	default_pointer_style_height: INTEGER is
+			-- Default pointer style height.
+		require
+			not_destoryed: not is_destroyed
+		do
+			Result := implementation.default_pointer_style_height
 		end
 
 	has_printer: BOOLEAN is

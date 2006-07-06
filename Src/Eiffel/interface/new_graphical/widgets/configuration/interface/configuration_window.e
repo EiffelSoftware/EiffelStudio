@@ -294,6 +294,9 @@ feature {NONE} -- Layout components
 	edit_library_button: EV_TOOL_BAR_BUTTON
 			-- Button to edit the configuration file of a library.
 
+	remove_group_button: EV_TOOL_BAR_BUTTON
+			-- Button to remove a group.
+
 feature {NONE} -- Section tree selection agents
 
 	show_properties_system is
@@ -562,7 +565,7 @@ feature {NONE} -- Section tree selection agents
 
 			create l_tb_btn
 			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
+			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.new_precompiled_library_icon)
 			l_tb_btn.set_tooltip (dialog_create_precompile_title)
 			l_tb_btn.select_actions.extend (agent add_precompile)
 			if current_target.precompile /= Void then
@@ -575,11 +578,11 @@ feature {NONE} -- Section tree selection agents
 			l_tb_btn.set_tooltip (dialog_create_assembly_title)
 			l_tb_btn.select_actions.extend (agent add_assembly)
 
-			create l_tb_btn
-			l_tb.extend (l_tb_btn)
-			l_tb_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
-			l_tb_btn.set_tooltip (remove_group_text)
-			l_tb_btn.select_actions.extend (agent remove_group)
+			create remove_group_button
+			l_tb.extend (remove_group_button)
+			remove_group_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			remove_group_button.set_tooltip (remove_group_text)
+			remove_group_button.select_actions.extend (agent remove_group)
 
 				-- edit library tool bar
 			hb2.extend (create {EV_CELL})
@@ -1142,7 +1145,7 @@ feature {NONE} -- Implementation
 			if current_target.internal_precompile /= Void then
 				create l_ht.make (1)
 				l_ht.force (current_target.precompile, current_target.precompile.name)
-				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_pixmaps.top_level_folder_library_icon)
+				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_pixmaps.top_level_folder_precompiles_icon)
 			end
 
 			l_tree.key_press_actions.extend (agent on_group_tree_key)
@@ -1631,6 +1634,7 @@ feature {NONE} -- Implementation
 			l_visible: CONF_VISIBLE
 		do
 			current_group := a_group
+			remove_group_button.enable_sensitive
 			properties.reset
 
 			edit_library_button.disable_sensitive
@@ -2186,6 +2190,7 @@ feature {NONE} -- Implementation
 		do
 			properties.reset
 			edit_library_button.disable_sensitive
+			remove_group_button.disable_sensitive
 			current_group := Void
 		ensure
 			current_group_void: current_group = Void

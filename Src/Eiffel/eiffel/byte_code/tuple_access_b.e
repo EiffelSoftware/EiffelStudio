@@ -65,7 +65,7 @@ feature -- Access
 	tuple_element_type: TYPE_I is
 			-- Type of element of tuple we are accessing.
 		do
-			Result := tuple_type.true_generics.item (position)
+			Result := context.real_type (tuple_type.true_generics.item (position))
 		end
 
 	position: INTEGER
@@ -229,7 +229,7 @@ feature -- C Code generation
 			inspect
 				tuple_element_type.sk_value
 			when {SK_CONST}.sk_bool then Result := once "boolean"
-			when {SK_CONST}.sk_char then Result := once "charater"
+			when {SK_CONST}.sk_char then Result := once "character"
 			when {SK_CONST}.sk_wchar then Result := once "wide_character"
 			when {SK_CONST}.sk_real32 then Result := once "real_32"
 			when {SK_CONST}.sk_real64 then Result := once "real_64"

@@ -60,7 +60,11 @@ feature -- Access
 					if l_pos = 0 then
 						l_item := target_object
 					else
-						l_item := l_internal.item (l_pos - 1)
+						if is_inline_agent then	
+							l_item := l_internal.item (l_pos)
+						else
+							l_item := l_internal.item (l_pos - 1)
+						end
 					end
 					Result.put (l_item, i + 1)
 					i := i + 1
@@ -174,7 +178,11 @@ feature -- Element change
 					if l_pos = 0 then
 						target_object := args.fast_item (i + 1)
 					else
-						l_internal.put (l_pos - 1, args.fast_item (i + 1))
+						if is_inline_agent then
+							l_internal.put (l_pos, args.fast_item (i + 1))
+						else
+							l_internal.put (l_pos - 1, args.fast_item (i + 1))
+						end
 					end
 					i := i + 1
 				end
@@ -255,28 +263,41 @@ feature {ROUTINE} -- Implementation
 			-- If open arguments contain some references, we need
 			-- to clean them up after call.
 
+	frozen is_inline_agent: BOOLEAN
+			-- Is the target feature an inline agent
+
 	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: OPEN_ARGS; 
-						 omap: ARRAY [INTEGER]) is
+						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN) is
 			-- Initialize object. 
 		require
 			args_not_void: args /= Void
 		local
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			l_internal: like internal_operands
 		do
+			is_inline_agent := a_is_inline_agent
 			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
-			target_object := args.fast_item (1)
-			nb := args.count - 1
+			if is_inline_agent then
+				nb := args.count
+				target_object := Void
+				i := 1
+			else
+				nb := args.count - 1
+				target_object := args.fast_item (1)
+				i := 2
+			end
+			
 			if nb > 0 then
 				from
-					i := 1
+					j := 0
 					create l_internal.make (nb)
 				until
 					i > nb
 				loop
-					l_internal.put (i - 1, args.fast_item (i + 1))
+					l_internal.put (j, args.fast_item (i))
 					i := i + 1
+					j := j + 1
 				end
 			end
 			internal_operands := l_internal

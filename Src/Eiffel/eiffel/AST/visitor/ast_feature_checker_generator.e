@@ -603,7 +603,7 @@ feature -- Roundtrip
 				create l_feature_name.initialize (
 					"inline_agent_" +
 					l_enclosing_feature.feature_name + "_" +
-					l_cur_class.inline_agent_table.count.out)
+					l_feature.inline_agent_nr.out)
 				l_ak := l_as.agent_keyword
 				l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
 				l_as.set_feature_name (l_feature_name)
@@ -3312,6 +3312,7 @@ feature -- Implementation
 			l_property_name: STRING
 			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			context.inline_agent_counter.reset
 			last_byte_node := Void
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)

@@ -1831,8 +1831,10 @@ feature -- Inline agents
 			valid_feature_id: feature_id > 0
 		local
 			feat: FEATURE_I
+			old_cursor: CURSOR
 		do
 			from
+				old_cursor := inline_agent_table.cursor
 				inline_agent_table.start
 			until
 				Result /= Void or else inline_agent_table.after
@@ -1844,6 +1846,7 @@ feature -- Inline agents
 					inline_agent_table.forth
 				end
 			end
+			inline_agent_table.go_to (old_cursor)
 		end
 
 	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN is

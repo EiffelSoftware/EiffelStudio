@@ -1890,7 +1890,8 @@ feature -- Features info
 				Void,
 				agent generate_local_feature_description,
 				agent generate_inherited_feature_description,
-				type_feature_processor)
+				type_feature_processor,
+				False)
 		end
 
 	generate_local_feature_description (local_feature: FEATURE_I; inherited_feature: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN) is
@@ -3067,7 +3068,8 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
+			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
+			generate_inline_agents: BOOLEAN)
 		is
 			-- Generate IL code for feature in `class_c'.
 		require
@@ -4384,7 +4386,7 @@ feature -- Variables access
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
-				feature_token (type_i.implementation_id, a_feature_id))
+				implementation_feature_token (type_i.implementation_id, a_feature_id))
 		end
 
 
@@ -7426,14 +7428,12 @@ feature {NONE} -- Implementation
 
 feature -- Inline agents
 
-	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; class_type: CLASS_TYPE
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]])
+	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; class_type: CLASS_TYPE)
 		is
 			-- Generate IL code for inline agents in `eif_cl'
 		require
 			eif_cl_not_void: eif_cl /= Void
 			class_type /= Void
-			local_feature_processor /= Void
 		local
 			feat: FEATURE_I
 			inl_tbl: HASH_TABLE [FEATURE_I, INTEGER]
@@ -7445,8 +7445,8 @@ feature -- Inline agents
 				inl_tbl.after
 			loop
 				feat := inl_tbl.item_for_iteration
-				generate_feature (feat, False, False, False)
-				generate_feature_code (feat, False)
+				generate_feature (feat, False, True, False)
+				generate_feature_code (feat, True)
 				inl_tbl.forth
 			end
 		end

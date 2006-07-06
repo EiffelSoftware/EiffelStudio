@@ -316,6 +316,7 @@
 								<File Id="icon_matrix_16.png" Name="ICON_M~2.PNG" LongName="icon_matrix_16.png" />
 								<File Id="icon_matrix_32.png" Name="ICON_M~3.PNG" LongName="icon_matrix_32.png" />
 								<File Id="logo.png" Name="logo.png" />
+								<File Id="splash.png" Name="splash.png" />
 							</Component>
 						</Directory>
 					</Directory>

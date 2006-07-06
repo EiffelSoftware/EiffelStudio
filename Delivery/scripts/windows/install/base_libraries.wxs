@@ -1242,10 +1242,6 @@
 						<Directory Id="directory0" LongName="interface" Name="INTERF~1">
 							<Component Id="component1" Guid="76ff3584-803c-4412-a72f-e30909845b76" >
 								<File Id="basic_preference_factory_e" LongName="basic_preference_factory.e" Name="BASIC_~1.E" />
-								<File Id="boolean_preference_widget_e" LongName="boolean_preference_widget.e" Name="BOOLEA~1.E" />
-								<File Id="preference_view_e" LongName="preference_view.e" Name="PREFER~1.E" />
-								<File Id="preference_widget_e" LongName="preference_widget.e" Name="PREFER~2.E" />
-								<File Id="string_preference_widget_e" LongName="string_preference_widget.e" Name="STRING~1.E" />
 							</Component>
 							<Directory Id="directory1" LongName="build_project" Name="BUILD_~1">
 								<Component Id="component2" Guid="7a80c241-625c-48bb-a36d-cc2614ad4b6f" >
@@ -1262,11 +1258,15 @@
 							</Directory>
 							<Directory Id="directory2" LongName="graphical" Name="GRAPHI~1">
 								<Component Id="component3" Guid="78308e1c-d490-477a-bb00-aab65d2c28a8" >
+									<File Id="boolean_preference_widget_e" LongName="boolean_preference_widget.e" Name="BOOLEA~1.E" />
 									<File Id="choice_preference_widget_e" LongName="choice_preference_widget.e" Name="CHOICE~1.E" />
 									<File Id="color_preference_widget_e" LongName="color_preference_widget.e" Name="COLOR_~1.E" />
 									<File Id="font_preference_widget_e" LongName="font_preference_widget.e" Name="FONT_P~1.E" />
 									<File Id="graphical_preference_factory_e" LongName="graphical_preference_factory.e" Name="GRAPHI~1.E" />
+									<File Id="preference_view_e" LongName="preference_view.e" Name="PREFER~1.E" />
+									<File Id="preference_widget_e" LongName="preference_widget.e" Name="PREFER~2.E" />
 									<File Id="shortcut_preference_widget_e" LongName="shortcut_preference_widget.e" Name="SHORTC~1.E" />
+									<File Id="string_preference_widget_e" LongName="string_preference_widget.e" Name="STRING~1.E" />
 								</Component>
 								<Directory Id="directory3" Name="dialogs">
 									<Component Id="component4" Guid="4fd420b9-9b36-4e05-b394-2b171cd0b526" >

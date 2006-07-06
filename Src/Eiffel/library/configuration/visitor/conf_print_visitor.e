@@ -78,7 +78,7 @@ feature -- Visit nodes
 			l_version: CONF_VERSION
 			l_settings, l_variables: HASH_TABLE [STRING, STRING]
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
+			l_sort_lst: DS_ARRAYED_LIST [STRING]
 		do
 			current_target := a_target
 			append_text_indent ("<target name=%""+a_target.name+"%"")
@@ -134,9 +134,8 @@ feature -- Visit nodes
 			append_options (a_target.internal_options, Void)
 			from
 				l_settings := a_target.internal_settings
-				create l_sort_lst.make
-				l_sort_lst.fill (l_settings.current_keys)
-				l_sort_lst.sort
+				create l_sort_lst.make_from_array (l_settings.current_keys)
+				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 				l_sort_lst.start
 			until
 				l_sort_lst.after
@@ -145,8 +144,8 @@ feature -- Visit nodes
 				l_a_name.force ("name")
 				l_a_name.force ("value")
 				create l_a_val.make (1)
-				l_a_val.force (l_sort_lst.item)
-				l_a_val.force (l_settings.item (l_sort_lst.item))
+				l_a_val.force (l_sort_lst.item_for_iteration)
+				l_a_val.force (l_settings.item (l_sort_lst.item_for_iteration))
 				append_tag ("setting", Void, l_a_name, l_a_val)
 				l_sort_lst.forth
 			end
@@ -310,17 +309,16 @@ feature {NONE} -- Implementation
 		require
 			a_groups_not_void: a_groups /= Void
 		local
-			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
+			l_sort_lst: DS_ARRAYED_LIST [STRING]
 		do
 			from
-				create l_sort_lst.make
-				l_sort_lst.fill (a_groups.current_keys)
-				l_sort_lst.sort
+				create l_sort_lst.make_from_array (a_groups.current_keys)
+				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 				l_sort_lst.start
 			until
 				l_sort_lst.after
 			loop
-				a_groups.item (l_sort_lst.item).process (Current)
+				a_groups.item (l_sort_lst.item_for_iteration).process (Current)
 				l_sort_lst.forth
 			end
 		end
@@ -654,7 +652,7 @@ feature {NONE} -- Implementation
 			l_debugs, l_warnings: HASH_TABLE [BOOLEAN, STRING]
 			l_assertions: CONF_ASSERTIONS
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
+			l_sort_lst: DS_ARRAYED_LIST [STRING]
 		do
 			if an_options /= Void and then not an_options.is_empty then
 				if a_class /= Void and then not a_class.is_empty then
@@ -689,18 +687,17 @@ feature {NONE} -- Implementation
 
 				l_debugs := an_options.debugs
 				if l_debugs /= Void and then not l_debugs.is_empty then
-					create l_sort_lst.make
-					l_sort_lst.fill (l_debugs.current_keys)
-					l_sort_lst.sort
+					create l_sort_lst.make_from_array (l_debugs.current_keys)
+					l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 					from
 						l_sort_lst.start
 					until
 						l_sort_lst.after
 					loop
 							-- only append enabled debugs
-						if l_debugs.item (l_sort_lst.item) then
-							append_text_indent ("<debug name=%""+l_sort_lst.item+"%"")
-							append_text (" enabled=%""+l_debugs.item (l_sort_lst.item).out.as_lower+"%"/>%N")
+						if l_debugs.item (l_sort_lst.item_for_iteration) then
+							append_text_indent ("<debug name=%""+l_sort_lst.item_for_iteration+"%"")
+							append_text (" enabled=%""+l_debugs.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
 						end
 						l_sort_lst.forth
 					end
@@ -726,16 +723,15 @@ feature {NONE} -- Implementation
 
 				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
-					create l_sort_lst.make
-					l_sort_lst.fill (l_warnings.current_keys)
-					l_sort_lst.sort
+					create l_sort_lst.make_from_array (l_warnings.current_keys)
+					l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 					from
 						l_sort_lst.start
 					until
 						l_sort_lst.after
 					loop
-						append_text_indent ("<warning name=%""+l_sort_lst.item+"%"")
-						append_text (" enabled=%""+l_warnings.item (l_sort_lst.item).out.as_lower+"%"/>%N")
+						append_text_indent ("<warning name=%""+l_sort_lst.item_for_iteration+"%"")
+						append_text (" enabled=%""+l_warnings.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
 						l_sort_lst.forth
 					end
 				end
@@ -901,7 +897,7 @@ feature {NONE} -- Implementation
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cluster: CONF_CLUSTER
 			l_name: STRING
-			l_sort_lst: SORTED_TWO_WAY_LIST [STRING]
+			l_sort_lst: DS_ARRAYED_LIST [STRING]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)
@@ -924,14 +920,14 @@ feature {NONE} -- Implementation
 			from
 				l_name := a_cluster.name
 				l_clusters := current_target.internal_clusters.twin
-				create l_sort_lst.make
-				l_sort_lst.fill (l_clusters.current_keys)
+				create l_sort_lst.make_from_array (l_clusters.current_keys)
+				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 
 				l_sort_lst.start
 			until
 				l_sort_lst.after
 			loop
-				l_cluster := l_clusters.item (l_sort_lst.item)
+				l_cluster := l_clusters.item (l_sort_lst.item_for_iteration)
 				if l_cluster.parent /= Void and then l_cluster.parent.name.is_equal (l_name) then
 					current_is_subcluster := True
 					l_cluster.process (Current)

@@ -47,6 +47,9 @@ feature{NONE} -- Access
 			if not last_is_used then
 				check last_local_name /= Void end
 				last_is_used := l_as.access_name.is_case_insensitive_equal (last_local_name)
+				if not last_is_used then
+					safe_process (l_as.internal_parameters)
+				end
 			end
 		end
 

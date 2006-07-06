@@ -646,15 +646,27 @@ feature{NONE} -- Implementation
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_feature: E_FEATURE
+			l_line: STRING
 		do
-			Result := a_item.is_real_feature
-			if Result then
+			if a_item.is_real_feature then
 				if a_item.e_feature.is_il_external then
 					Result := True
 				else
 					l_feature := a_item.e_feature
 					l_comments := l_feature.ast.comment (match_list_server.item (l_feature.written_class.class_id))
-					Result := not l_comments.is_empty
+					if not l_comments.is_empty then
+						from
+							l_comments.start
+						until
+							l_comments.after or Result
+						loop
+							l_line := l_comments.item.content
+							l_line.left_adjust
+							l_line.right_adjust
+							Result := not l_line.is_empty and then (l_line.count = 1 implies l_line.item (1) /= '|')
+							l_comments.forth
+						end
+					end
 				end
 			end
 		end

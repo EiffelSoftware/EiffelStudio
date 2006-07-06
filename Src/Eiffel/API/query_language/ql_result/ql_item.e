@@ -103,7 +103,7 @@ feature -- Access
 		end
 
 	path: STRING is
-			-- Full path of current item
+			-- Full path of current item (current item itself is included)
 		require
 			valid_item: is_valid_domain_item
 		local
@@ -123,6 +123,18 @@ feature -- Access
 					Result.append_character (path_separator)
 					Result.append (l_name)
 				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	partial_path: STRING is
+			-- Partial path of current item (current item itself is NOT included)
+		do
+			if parent = Void then
+				Result := ""
+			else
+				Result := parent.path
 			end
 		ensure
 			result_attached: Result /= Void

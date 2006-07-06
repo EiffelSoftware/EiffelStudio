@@ -120,7 +120,9 @@ feature{NONE} -- Implementation
 	tautology_criterion: like criterion is
 			-- Tautology criterion
 		do
-			Result := feature_criterion_factory.simple_criterion_with_index (feature_criterion_factory.c_true)
+			Result :=
+				feature_criterion_factory.simple_criterion_with_index (feature_criterion_factory.c_is_compiled) and
+				feature_criterion_factory.simple_criterion_with_index (feature_criterion_factory.c_true)
 		end
 
 	compiled_criterion: like criterion is

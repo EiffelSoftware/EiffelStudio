@@ -31,6 +31,8 @@ feature -- Actions
 			result_attached: Result /= Void
 		end
 
+feature{NONE} -- Implementation
+
 	internal_actions: like actions
 			-- Implementation of `actions'.
 

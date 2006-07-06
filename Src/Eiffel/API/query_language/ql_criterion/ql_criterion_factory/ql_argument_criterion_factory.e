@@ -27,6 +27,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_is_visible_criterion, c_is_visible)
+			agent_table.put (agent new_is_in_immediate_feature_criterion, c_is_in_immediate_feature)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
 
@@ -34,6 +35,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
+			name_table.put (c_is_in_immediate_feature, query_language_names.ql_cri_is_in_immediate_feature)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -66,6 +68,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if an argument is visible
 		do
 			create Result.make (agent is_visible_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_in_immediate_feature_criterion: QL_SIMPLE_ARGUMENT_CRITERION is
+			-- New criterion to test if an argument is in immediate feature
+		do
+			create Result.make (agent is_in_immediate_feature_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -105,7 +115,8 @@ feature -- Criterion index
 	c_is_visible,
 	c_name_is,
 	c_text_contain,
-	c_is_compiled: INTEGER is unique;
+	c_is_compiled,
+	c_is_in_immediate_feature: INTEGER is unique;
 
 feature{NONE} -- Implementation
 
@@ -146,6 +157,20 @@ feature{NONE} -- Implementation
 			a_item_is_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_visible
+		end
+
+	is_in_immediate_feature_agent (a_item: QL_ARGUMENT): BOOLEAN is
+			-- Agent to test if `a_item' is in immediate feature
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_valid: a_item.is_valid_domain_item
+		local
+			l_feature: QL_FEATURE
+		do
+			l_feature ?= a_item.parent
+			check l_feature /= Void end
+			Result := l_feature.is_immediate
 		end
 
 indexing

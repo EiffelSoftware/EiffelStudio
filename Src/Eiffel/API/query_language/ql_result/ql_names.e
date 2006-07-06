@@ -36,7 +36,7 @@ feature -- Units
 	ql_line_unit: STRING is "line"
 	ql_assertion_unit: STRING is "assertion"
 	ql_no_unit: STRING is "no unit"
-	ql_generic_unit: STRING is "generic unit"
+	ql_generic_unit: STRING is "generic"
 
 feature -- Titles
 
@@ -161,6 +161,7 @@ feature -- Criterion names
 
 	ql_cri_is_blank: STRING is "is_blank"
 	ql_cri_is_comment: STRING is "is_comment"
+
 
 feature -- Metric names
 

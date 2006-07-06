@@ -23,7 +23,11 @@
 		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+		</library>
 		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf"/>
 		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>

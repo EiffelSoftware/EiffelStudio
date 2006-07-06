@@ -64,6 +64,12 @@ feature {NONE} -- Implementation
 					else
 						Result := pixmaps.icon_pixmaps.folder_cluster_icon
 					end
+				elseif a_group.is_precompile then
+					if a_group.is_readonly then
+						Result := pixmaps.icon_pixmaps.folder_precompiled_library_readonly_icon
+					else
+						Result := pixmaps.icon_pixmaps.folder_precompiled_library_icon
+					end
 				elseif a_group.is_library then
 					if a_group.is_readonly then
 						Result := pixmaps.icon_pixmaps.folder_library_readonly_icon

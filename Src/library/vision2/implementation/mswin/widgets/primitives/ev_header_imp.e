@@ -375,83 +375,49 @@ feature {NONE} -- Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
-			pre_drop_it, post_drop_it: EV_HEADER_ITEM_IMP
-			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
+			l_pointed_divider_index: INTEGER
+			l_item_imp: EV_HEADER_ITEM_IMP
+			l_item: EV_HEADER_ITEM
+			l_x_offset: INTEGER
 		do
-			if pointed_divider_index = 0 then
-					-- Clicking on the divider should not register as an item button click.
-				pre_drop_it := find_item_at_position (x_pos, y_pos)
-			end
 			pt := client_to_screen (x_pos, y_pos)
-			if pre_drop_it /= Void and not transport_executing
-				and not item_is_in_pnd then
-				if pre_drop_it.pointer_button_press_actions_internal
-					/= Void then
-					pre_drop_it.pointer_button_press_actions_internal.call (
-						[x_pos - item_x_offset (pre_drop_it.interface) , y_pos, button, 0.0,
-						0.0, 0.0, pt.x, pt.y])
+			l_pointed_divider_index := pointed_divider_index
+			l_x_offset := x_pos
+			l_item_imp := find_item_at_position (x_pos, y_pos)
+			if transport_executing then
+				if l_item_imp /= Void and l_item_imp.is_transport_enabled and
+					not parent_is_pnd_source and l_item_imp.parent /= Void then
+					l_item_imp.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				elseif pnd_item_source /= Void then
+					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
-				if item_pointer_button_press_actions_internal /= Void then
-					item_pointer_button_press_actions_internal.call (
-						[pre_drop_it.interface,
-						x_pos - item_x_offset (pre_drop_it.interface),
-						y_pos, button]
-					)
+				if item_is_pnd_source_at_entry = item_is_pnd_source then
+					pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
-
-					-- We record that the press actions have been called.
-				item_press_actions_called := True
-			end
-				--| The pre_drop_it.parent /= Void is to check that the item that
-				--| was originally clicked on, has not been removed during the press actions.
-				--| If the parent is now void then it has, and there is no need to continue
-				--| with `pnd_press'.
-			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-				not parent_is_pnd_source and pre_drop_it.parent /= Void then
-				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then
-				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			end
-
-			if item_is_pnd_source_at_entry = item_is_pnd_source then
-				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			end
-
-			if not press_actions_called and call_press_event then
-				interface.pointer_button_press_actions.call
-					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
-			end
-
-			post_drop_it := find_item_at_position (x_pos, y_pos)
-
-				-- If the press actions have not already been called then
-				-- call them. If `press_actions_called' = False then it means
-				-- we were in a pick and drop when entering this procedure, so
-				-- we now call them after the PND has completed.
-			if not item_press_actions_called then
-
-					-- If there is an item where the button press was recieved,
-					-- and it has not changed from the start of this procedure
-					-- then call `pointer_button_press_actions'.
-					--| Internal_propagate_pointer_press in
-					--| EV_MULTI_COLUMN_LIST_IMP has a complete explanation.
-				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
-					if post_drop_it.pointer_button_press_actions_internal
-						/= Void then
-						post_drop_it.pointer_button_press_actions_internal.call(
-							[x_pos - item_x_offset (post_drop_it.interface), y_pos, button, 0.0,
-							0.0, 0.0, pt.x, pt.y])
-					end
+			else
+				if l_pointed_divider_index = 0 then
+						-- Clicking on the divider should not register as an item button click.
+					 if l_item_imp /= Void then
+					 	l_item := l_item_imp.interface
+					 	l_x_offset := l_x_offset - item_x_offset (l_item)
+					 	if l_item_imp.pointer_button_press_actions_internal /= Void then
+					 		l_item_imp.pointer_button_press_actions_internal.call (
+					 			[l_x_offset, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+					 	end
+					 end
 					if item_pointer_button_press_actions_internal /= Void then
 						item_pointer_button_press_actions_internal.call (
-							[pre_drop_it.interface,
-							x_pos - item_x_offset (pre_drop_it.interface),
-							y_pos, button]
+							[l_item, l_x_offset, y_pos, button]
 						)
 					end
 				end
+				if not press_actions_called and call_press_event then
+					interface.pointer_button_press_actions.call
+						([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				end
 			end
+
 				-- Reset `call_press_event'.
 			keep_press_event
 		end
@@ -461,23 +427,29 @@ feature {NONE} -- Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button double press.
 		local
-			it: EV_HEADER_ITEM_IMP
+			l_item_imp: EV_HEADER_ITEM_IMP
 			pt: WEL_POINT
+			l_x_offset: INTEGER
+			l_item: EV_HEADER_ITEM
 		do
 			if pointed_divider_index = 0 then
 					-- Clicking on the divider should not register as an item button click.
-				it := find_item_at_position (x_pos, y_pos)
-			end
-			if it /= Void then
-				pt := client_to_screen (x_pos, y_pos)
-				if it.pointer_double_press_actions_internal /= Void then
-					it.pointer_double_press_actions_internal.call
-						([x_pos- item_x_offset (it.interface), y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				l_item_imp := find_item_at_position (x_pos, y_pos)
+				l_x_offset := x_pos
+				if l_item_imp /= Void then
+					l_item := l_item_imp.interface
+					l_x_offset := l_x_offset - item_x_offset (l_item)
+					pt := client_to_screen (x_pos, y_pos)
+					if l_item_imp.pointer_double_press_actions_internal /= Void then
+						l_item_imp.pointer_double_press_actions_internal.call
+								([l_x_offset, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+					end
 				end
+
 				if item_pointer_double_press_actions_internal /= Void then
 					item_pointer_double_press_actions_internal.call (
-						[it.interface,
-						x_pos - item_x_offset (it.interface),
+						[l_item,
+						l_x_offset,
 						y_pos, button]
 					)
 				end

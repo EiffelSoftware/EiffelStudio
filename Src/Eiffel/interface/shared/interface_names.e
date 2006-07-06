@@ -744,6 +744,8 @@ feature -- Label texts
 	l_run_metric: STRING is "Run current metric"
 	l_stop_metric: STRING is "Stop running metric"
 	l_go_to_metric_definition: STRING is "Go to definition"
+	l_metric_path: STRING is "Path"
+	l_metric_number: STRING is "No."
 
 	l_metric_not_evaluated: STRING is "Not evaluated"
 	l_metric_evaluating: STRING is "Evaluating: "
@@ -754,6 +756,7 @@ feature -- Label texts
 	l_metric_definition_btn: STRING is "Definition"
 	l_metric_definition_tab: STRING is "Metric Definition"
 	l_metric_evaluation_tab: STRING is "Metric Evaluation"
+	l_metric_detail_result_tab: STRING is "Detail Result"
 	l_metric_basic: STRING is "basic"
 	l_metric_linear: STRING is "linear"
 	l_metric_ratio: STRING is "ratio"
@@ -773,6 +776,8 @@ feature -- Label texts
 	l_metric_normal_criterion: STRING is "Normal criteria"
 	l_metric_domain_criterion: STRING is "Domain criteria"
 	l_metric_text_criterion: STRING is "Text criteria"
+	l_metric_coefficient: STRING is "Coefficient"
+	l_metric_drop_metric_here: STRING is "Drop metric here or in the drop-down list area before"
 
 feature -- Stone names
 

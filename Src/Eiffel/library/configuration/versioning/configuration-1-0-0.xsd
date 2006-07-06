@@ -9,8 +9,8 @@
 				<xs:element name="description" type="xs:string" minOccurs="0"/>
 				<xs:element name="target" type="target" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string"/>
-			<xs:attribute name="uuid" type="uuid"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="uuid" type="uuid" use="required"/>
 			<xs:attribute name="library_target" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
@@ -68,27 +68,27 @@
 			<xs:element name="override" type="override" minOccurs="0"
 				maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="extends" type="xs:string" use="optional"/>
 		<xs:attribute name="abstract" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 	
 	<xs:complexType name="root">
 		<xs:attribute name="cluster" type="xs:string" use="optional"/>
-		<xs:attribute name="class" type="xs:string"/>
+		<xs:attribute name="class" type="xs:string" use="required"/>
 		<xs:attribute name="feature" type="xs:string" use="optional"/>
 		<xs:attribute name="all_classes" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="version">
-		<xs:attribute name="major" type="xs:unsignedInt"/>
-		<xs:attribute name="minor" type="xs:unsignedInt"/>
-		<xs:attribute name="release" type="xs:unsignedInt"/>
-		<xs:attribute name="build" type="xs:unsignedInt"/>
-		<xs:attribute name="product" type="xs:string"/>
-		<xs:attribute name="company" type="xs:string"/>
-		<xs:attribute name="copyright" type="xs:string"/>
-		<xs:attribute name="trademark" type="xs:string"/>
+		<xs:attribute name="major" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="minor" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="release" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="build" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="product" type="xs:string" use="optional"/>
+		<xs:attribute name="company" type="xs:string" use="optional"/>
+		<xs:attribute name="copyright" type="xs:string" use="optional"/>
+		<xs:attribute name="trademark" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	<xs:complexType name="file_rule">
@@ -120,8 +120,8 @@
 	</xs:complexType>
 
 	<xs:complexType name="setting">
-		<xs:attribute name="name" type="available_settings"/>
-		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="name" type="available_settings" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="available_settings">
@@ -165,8 +165,8 @@
 	</xs:simpleType>		
 
 	<xs:complexType name="debug">
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="enabled" type="xs:boolean"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	
 	<xs:complexType name="assertions">
@@ -178,8 +178,8 @@
 	</xs:complexType>
 	
 	<xs:complexType name="warning">
-		<xs:attribute name="name" type="available_warnings"/>
-		<xs:attribute name="enabled" type="xs:boolean"/>
+		<xs:attribute name="name" type="available_warnings" use="required"/>
+		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	
 	<xs:simpleType name="available_warnings">
@@ -198,8 +198,8 @@
 	</xs:simpleType>
 	
 	<xs:complexType name="variable">
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="value" type="xs:string"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="action">
@@ -207,7 +207,7 @@
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
 			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="command" type="xs:string"/>
+		<xs:attribute name="command" type="xs:string" use="required"/>
 		<xs:attribute name="working_directory" type="xs:string" use="optional"/>
 		<xs:attribute name="succeed" type="xs:boolean" use="optional"/>
 	</xs:complexType>
@@ -259,15 +259,15 @@
 	</xs:simpleType>	
 		
 	<xs:complexType name="multithreaded">
-		<xs:attribute name="value" type="xs:boolean"/>
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="dotnet">
-		<xs:attribute name="value" type="xs:boolean"/>
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="dynamic_runtime">
-		<xs:attribute name="value" type="xs:boolean"/>
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
 	</xs:complexType>
 		
 	<xs:complexType name="version_condition">
@@ -325,8 +325,8 @@
 			<xs:element name="class_option" type="class_option" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="location" type="location"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="location" type="location" use="required"/>
 		<xs:attribute name="readonly" type="xs:boolean" use="optional"/>
 		<xs:attribute name="prefix" type="xs:string" use="optional"/>
 	</xs:complexType>
@@ -375,16 +375,16 @@
 	</xs:complexType>
 	
 	<xs:complexType name="mapping">
-		<xs:attribute name="old_name" type="xs:string"/>
-		<xs:attribute name="new_name" type="xs:string"/>
+		<xs:attribute name="old_name" type="xs:string" use="required"/>
+		<xs:attribute name="new_name" type="xs:string" use="required"/>
 	</xs:complexType>
 	
 	<xs:complexType name="uses">
-		<xs:attribute name="group" type="xs:string"/>
+		<xs:attribute name="group" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="visible">
-		<xs:attribute name="class" type="xs:string"/>
+		<xs:attribute name="class" type="xs:string" use="required"/>
 		<xs:attribute name="feature" type="xs:string" use="optional"/>
 		<xs:attribute name="class_rename" type="xs:string" use="optional"/>
 		<xs:attribute name="feature_rename" type="xs:string" use="optional"/>
@@ -401,6 +401,6 @@
 	</xs:complexType>
 	
 	<xs:complexType name="overrides">
-		<xs:attribute name="group" type="xs:string"/>
+		<xs:attribute name="group" type="xs:string" use="required"/>
 	</xs:complexType>
 </xs:schema>

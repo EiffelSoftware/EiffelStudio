@@ -736,13 +736,11 @@ feature {NONE} -- Initialization
 			if has_case then
 				undo_accelerator.actions.extend (agent (context_tool.editor.undo_cmd).on_ctrl_z)
 			end
-			undo_accelerator.actions.extend (agent undo_cmd.accelerator_execute)
 			create redo_accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_y), True, False, False)
 			if has_case then
 				redo_accelerator.actions.extend (agent (context_tool.editor.redo_cmd).on_ctrl_y)
 			end
-			redo_accelerator.actions.extend (agent redo_cmd.accelerator_execute)
 			window.accelerators.extend (undo_accelerator)
 			window.accelerators.extend (redo_accelerator)
 			unlock_update

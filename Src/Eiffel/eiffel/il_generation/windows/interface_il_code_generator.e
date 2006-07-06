@@ -55,7 +55,8 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
+			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]];
+			generate_inline_agents: BOOLEAN)
 		is
 			-- Generate IL code for feature in `class_c'.
 		local
@@ -94,8 +95,8 @@ feature -- IL Generation
 				local_feature_processor, inherited_feature_processor)
 
 				-- Generate features for inline agents.
-			if class_c.is_eiffel_class_c then
-				generate_il_inline_agents (class_c.eiffel_class_c, class_type, agent generate_local_feature)
+			if class_c.is_eiffel_class_c and then generate_inline_agents then
+				generate_il_inline_agents (class_c.eiffel_class_c, class_type)
 			end
 
 			from
@@ -168,7 +169,8 @@ feature -- IL Generation
 				agent generate_method_impl,
 				agent generate_local_feature,
 				agent generate_inherited_feature,
-				agent generate_type_feature)
+				agent generate_type_feature,
+				True)
 				-- Generate class invariant and internal run-time features.
 			generate_class_features (class_c, class_type)
 

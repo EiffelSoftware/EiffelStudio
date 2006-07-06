@@ -2277,6 +2277,8 @@ feature {NONE} -- Visitors
 				il_generator.put_void
 			end
 
+			il_generator.put_boolean_constant (a_node.is_inline_agent)
+
 			il_generator.generate_feature_access (l_decl_type, l_set_rout_disp_feat.origin_feature_id,
 				l_set_rout_disp_feat.argument_count, l_set_rout_disp_feat.has_return_value, True)
 		end

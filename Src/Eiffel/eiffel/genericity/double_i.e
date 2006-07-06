@@ -9,7 +9,7 @@ inherit
 		redefine
 			is_real_64,
 			is_numeric,
-			same_as, element_type,
+			element_type,
 			description, sk_value, hash_code,
 			default_create, tuple_code
 		end
@@ -20,7 +20,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			make (system.real_64_class.compiled_class.class_id)
 		end
-		
+
 feature -- Status report
 
 	element_type: INTEGER_8 is
@@ -73,12 +73,6 @@ feature
 	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
 
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-		do
-			Result := other.is_real_64
-		end
-
 	description: REAL_64_DESC is
 			-- Type description for skeleton
 		do
@@ -87,7 +81,7 @@ feature
 
 	c_string: STRING is "EIF_REAL_64"
 			-- String generated for the type.
-		
+
 	union_tag: STRING is "darg"
 
 	hash_code: INTEGER is
@@ -127,7 +121,7 @@ feature
 		do
 			ba.append (Bc_real64)
 			ba.append_double (0.0)
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -739,6 +739,9 @@ feature {NONE} -- Blink Cursor Management
 				reset_blinking
 				let_blink := True
 			end
+			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
+				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+			end
 		ensure
 			not_blink_suspended: not blink_suspended
 		end

@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	set_pointer_style (a_cursor: EV_CURSOR) is
+	set_pointer_style (a_cursor: EV_POINTER_STYLE) is
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end

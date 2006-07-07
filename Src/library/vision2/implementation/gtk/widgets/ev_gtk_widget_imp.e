@@ -175,12 +175,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	set_pointer_style (a_cursor: like pointer_style) is
-			-- Assign `a_cursor' to `pointer_style'.
+	set_pointer_style (a_pointer: EV_POINTER_STYLE) is
+			-- Assign `a_pointer' to `pointer_style'.
 		do
-			if a_cursor /= pointer_style then
-				pointer_style := a_cursor
-				internal_set_pointer_style (a_cursor)
+			if a_pointer /= pointer_style then
+				pointer_style := a_pointer
+				internal_set_pointer_style (a_pointer)
 			end
 		end
 
@@ -195,7 +195,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	internal_set_pointer_style (a_cursor: like pointer_style) is
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER

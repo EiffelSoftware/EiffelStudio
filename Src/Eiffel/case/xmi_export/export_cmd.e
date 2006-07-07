@@ -10,9 +10,9 @@ class
 
 inherit
 	EB_MENUABLE_COMMAND
-	
+
 	SHARED_EIFFEL_PROJECT
-	
+
 	EB_SHARED_INTERFACE_TOOLS
 
 create
@@ -33,6 +33,9 @@ feature -- Access
 		do
 			Result := Interface_names.m_Export_XMI
 		end
+
+	pixmap: EV_PIXMAP
+			-- Pixmap
 
 feature -- Execution
 

@@ -213,13 +213,7 @@ feature -- Access
 
 		-- Manifest tuple
 	Bc_tuple:				CHARACTER is '%/168/'
-	Bc_ptuple:				CHARACTER is '%/169/'
-
-	Bc_java_rtype:			CHARACTER is '%/200/'
-		-- return type of a feature call or attribute access.
-		-- needed for features of formal generic type.
-	Bc_java_external:		CHARACTER is '%/201/';
-		-- name of external routine in an external call.
+	Bc_ptuple:				CHARACTER is '%/169/';
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

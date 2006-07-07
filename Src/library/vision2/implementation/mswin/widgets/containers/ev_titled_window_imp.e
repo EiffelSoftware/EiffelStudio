@@ -136,9 +136,9 @@ feature -- Status setting
 			-- Raise `Current'. ie: put the window on the front
 			-- of the screen.
 		local
-			hwnd: POINTER
+			l_bool: BOOLEAN
 		do
-			hwnd := {WEL_C_EXTERNALS}.set_active_window (wel_item)
+			l_bool := {WEL_API}.set_foreground_window (wel_item)
 		end
 
 	lower is

@@ -220,6 +220,12 @@ feature {NONE} -- Initialization
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Initialize from `a_pointer_style'
+		do
+			check should_not_be_called: False end
+		end
+
 feature {NONE} -- Saving
 
 	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
@@ -468,7 +474,6 @@ feature -- Element change
 
 			create s_dc
 			s_dc.get
-
 			create mask_dc.make_by_dc (s_dc)
 			mask_dc.enable_reference_tracking
 			mask_dc.select_bitmap (internal_mask_bitmap)
@@ -787,7 +792,7 @@ feature -- Delegated features
 			Result := interface.implementation.real_pointed_target
 		end
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Set `c' as new cursor pixmap.
 			-- Can be called through `interface'.
 		local
@@ -798,7 +803,7 @@ feature -- Delegated features
 			new_imp.set_pointer_style(c)
 		end
 
-	internal_set_pointer_style (c: EV_CURSOR) is
+	internal_set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		local

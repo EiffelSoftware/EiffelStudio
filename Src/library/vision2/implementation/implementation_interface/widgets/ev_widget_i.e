@@ -71,7 +71,7 @@ feature -- Access
 		deferred
 		end
 
-	internal_pointer_style: EV_CURSOR is
+	internal_pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when screen pointer is over current widget,
 			-- as seen from interface.
 		local

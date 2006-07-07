@@ -337,12 +337,12 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_WIDGET, EV_WIDGET_I}
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to `pointer_style'
 		deferred
 		end
 
-	internal_set_pointer_style (c: EV_CURSOR) is
+	internal_set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to `pointer_style'
 		deferred
 		end

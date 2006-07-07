@@ -363,7 +363,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 		deferred
 		end
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 		deferred
 		end
 

@@ -606,10 +606,10 @@ feature {EV_ANY_I} -- Implementation
 		-- Rubber band starting position.
 		-- Only initialised when a pick/drag and drop is started.
 
-	pnd_stored_cursor: EV_CURSOR
+	pnd_stored_cursor: EV_POINTER_STYLE
 			-- Cursor used on the widget before PND started.
 
-	set_pointer_style (new_cursor: EV_CURSOR) is
+	set_pointer_style (new_cursor: EV_POINTER_STYLE) is
 			-- Assign `new_cursor' to cursor used on `Current'.
 			-- Can be called through `interface'.
 		do

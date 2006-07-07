@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	refresh_now is
-			--
+			-- Refresh now.
 		do
 			update
 		end
@@ -833,6 +833,7 @@ feature {NONE} -- Implementation
 		end
 
 	last_x, last_y: INTEGER
+			-- Last x, y.
 
 	on_mouse_enter is
 			-- Called when the mouse enters `Current'.
@@ -1118,23 +1119,19 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementati
 			-- in `on_set_cursor', due to the event propagation from the internal controls.
 		local
 			wel_cursor: WEL_CURSOR
-			cursor_imp: EV_PIXMAP_IMP_STATE
+			cursor_imp: EV_POINTER_STYLE_IMP
 		do
 			cursor_imp ?= cursor_pixmap.implementation
-				wel_cursor := cursor_imp.cursor
-				if wel_cursor = Void then
-					wel_cursor := cursor_imp.build_cursor
-					wel_cursor.enable_reference_tracking
-				else
-					wel_cursor.increment_reference
-				end
+			wel_cursor := cursor_imp.wel_cursor
+			wel_cursor.increment_reference
 
-				if current_wel_cursor /= Void then
-					current_wel_cursor.decrement_reference
-					current_wel_cursor := Void
-				end
-				current_wel_cursor := wel_cursor
-				wel_cursor.set
+			if current_wel_cursor /= Void then
+				current_wel_cursor.decrement_reference
+				current_wel_cursor := Void
+			end
+
+			current_wel_cursor := wel_cursor
+			wel_cursor.set
 		end
 
 feature {NONE} -- Implementation, pick and drop

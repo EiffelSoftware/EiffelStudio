@@ -213,7 +213,7 @@ feature -- Measurement
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_POINTER_STYLE_IMP} -- Implementation
 
 	build_graphical_resource (is_icon: BOOLEAN): WEL_GRAPHICAL_RESOURCE is
 			-- Build an icon if `is_icon' is set, or a cursor

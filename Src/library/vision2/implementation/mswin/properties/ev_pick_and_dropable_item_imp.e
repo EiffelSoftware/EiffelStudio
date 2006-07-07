@@ -32,14 +32,14 @@ feature -- Access
 			--| within pnd_press as EV_TREE_ITEM_IMP needs to store
 			--| top_parent_imp. This allows a simply redefinition of
 			--| this feature rather than pnd_press which would lead
-			--| to unecessary code duplication. 
+			--| to unecessary code duplication.
 		do
 			pnd_original_parent ?= parent_imp
 			check
 				pnd_original_parent_not_void: pnd_original_parent /= Void
 			end
 		end
-		
+
 	parent_imp: EV_ITEM_LIST_I [EV_ITEM] is
 			-- Parent implementation of `Current'.
 		deferred
@@ -67,8 +67,8 @@ feature -- Access
 				-- We must now check that we are not currently in a pick and drop.
 					-- If we are, then we should do nothing, as the event was generated
 					-- as a result of clicking on a widget while dropping.
-				if application_imp.pick_and_drop_source = Void then				
-						-- Now check the correct pointer_button was pressed to start 
+				if application_imp.pick_and_drop_source = Void then
+						-- Now check the correct pointer_button was pressed to start
 						-- The transport, otherwise, do nothing.
 					if (a_button = 1 and not mode_is_pick_and_drop) or
 						(a_button = 3 and mode_is_pick_and_drop) then
@@ -112,7 +112,7 @@ feature -- Access
 			original_x := -1
 			original_y := -1
 			application_imp.end_awaiting_movement
-			awaiting_movement := False	
+			awaiting_movement := False
 			if mode_is_drag_and_drop and press_action =
 				Ev_pnd_end_transport then
 				end_transport (a_x, a_y, 1, 0, 0, 0, 0, 0)
@@ -124,7 +124,7 @@ feature -- Access
 			end
 		end
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to `parent_imp' pointer style.
 		local
 			pickable_parent: EV_PICK_AND_DROPABLE_IMP

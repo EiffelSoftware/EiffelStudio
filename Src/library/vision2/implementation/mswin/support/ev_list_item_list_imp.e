@@ -1,11 +1,11 @@
-indexing	
+indexing
 	description: "Eiffel Vision list item list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_LIST_ITEM_LIST_IMP
 
 inherit
@@ -37,7 +37,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- to `Current' if not already associated.
 		deferred
 		end
-	
+
 	remove_image_list is
 			-- disassociate `image_list' from `Current'.
 		deferred
@@ -53,7 +53,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				-- We only do this if there are images associated with
 				-- `Current'.
 			if image_list /= Void then
-					
+
 					-- Rebuild the image list.
 				remove_image_list
 				setup_image_list
@@ -73,7 +73,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 						ev_children.item.set_pixmap_in_parent
 					end
 					ev_children.forth
-				end		
+				end
 					-- Restore saved_position
 				ev_children.go_to (cur)
 			end
@@ -134,7 +134,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Index of item displayed at the top of `Current'.
 		deferred
 		end
-	
+
 	visible_count: INTEGER is
    			-- Number of items that can be displayed at once.
 		deferred
@@ -151,14 +151,14 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Refresh current so that it take into account 
-			-- changes made in `item_imp' 
+			-- Refresh current so that it take into account
+			-- changes made in `item_imp'
 		deferred
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pick & Drop
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to `parent_imp' pointer style.
 		deferred
 		end

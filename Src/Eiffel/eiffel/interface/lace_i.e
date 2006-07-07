@@ -603,8 +603,6 @@ feature {NONE} -- Implementation
 
 			l_settings := a_target.settings
 
-			update_settings_for_eweasel (l_settings)
-
 			l_s := l_settings.item (s_address_expression)
 			if l_s /= Void then
 				if l_s.is_boolean then
@@ -1088,32 +1086,6 @@ feature {NONE} -- Implementation
 			end
 
 			Error_handler.checksum
-		end
-
-	update_settings_for_eweasel (a_settings: HASH_TABLE [STRING, STRING]) is
-			-- Update settings to run with eweasel
-		local
-			l_shared: SHARED_CONFIGURE_RESOURCES
-			l_runtime_version: STRING
-		do
-			create l_shared
-			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
-				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
-
-				a_settings.force ("true", s_msil_generation)
-
-				if compilation_modes.is_precompiling then
-					a_settings.force ("dll", s_msil_generation_type)
-				else
-					a_settings.force ("exe", s_msil_generation_type)
-				end
-
-				if l_runtime_version /= Void then
-					a_settings.force (l_runtime_version, s_msil_clr_version)
-				end
-
-				a_settings.force ("true", s_console_application)
-			end
 		end
 
 	retrieve_precompile (a_target: CONF_TARGET) is

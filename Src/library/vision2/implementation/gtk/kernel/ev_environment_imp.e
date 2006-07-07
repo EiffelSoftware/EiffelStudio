@@ -56,6 +56,18 @@ feature -- Access
 			Result := 3
 		end
 
+	default_pointer_style_width: INTEGER is
+			-- Default pointer style width.
+		do
+			Result := 16
+		end
+
+	default_pointer_style_height: INTEGER is
+			-- Default pointer style height.
+		do
+			Result := 16
+		end
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.

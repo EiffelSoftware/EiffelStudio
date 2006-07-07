@@ -56,6 +56,15 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Initialize from not void `a_pointer_style'.
+		local
+			l_imp: EV_POINTER_STYLE_IMP
+		do
+			l_imp ?= a_pointer_style.implementation
+			set_with_resource (l_imp.wel_cursor)
+		end
+
 feature -- Basic Operation
 
 	refresh_now is
@@ -64,7 +73,7 @@ feature -- Basic Operation
 			-- No implementation needed as `Current' is always offscreen
 		end
 
-feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
+feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP, EV_CURSOR} -- Loading/Saving
 
 	set_with_resource (a_resource: WEL_GRAPHICAL_RESOURCE) is
 			-- Initialize the pixmap with the content of `a_resource'.
@@ -870,7 +879,7 @@ feature {EV_ANY_I} -- Delegated features
 			Result := interface.implementation.real_pointed_target
 		end
 
-	set_pointer_style (c: EV_CURSOR) is
+	set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to cursor pixmap.
 			-- Can be called through `interface'.
 		do
@@ -878,7 +887,7 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.set_pointer_style (c)
 		end
 
-	internal_set_pointer_style (c: EV_CURSOR) is
+	internal_set_pointer_style (c: EV_POINTER_STYLE) is
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		do
@@ -1224,7 +1233,7 @@ feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 
-feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP} -- Pixmap State
+feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP, EV_POINTER_STYLE_IMP} -- Pixmap State
 
 	private_width: INTEGER
 			-- Current width

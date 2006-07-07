@@ -39,7 +39,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_DOCKABLE_SOURCE
 		redefine
 			is_in_default_state,
@@ -86,7 +86,7 @@ feature -- Element change
 		do
 			implementation.set_gray_pixmap (a_gray_pixmap)
 		ensure
-			pixmap_assigned: a_gray_pixmap.is_equal (gray_pixmap) and 
+			pixmap_assigned: a_gray_pixmap.is_equal (gray_pixmap) and
 							 gray_pixmap /= a_gray_pixmap
 		end
 
@@ -99,7 +99,7 @@ feature -- Element change
 		ensure
 			gray_pixmap_remove: gray_pixmap = Void
 		end
-		
+
 feature -- Obsolete
 
 	align_text_left is
@@ -109,7 +109,7 @@ feature -- Obsolete
 			not_destroyed: not is_destroyed
 		do
 		end
-	
+
 	align_text_center is
 			-- Display text center aligned
 		obsolete "Was not implemented on all platforms."
@@ -117,7 +117,7 @@ feature -- Obsolete
 			not_destroyed: not is_destroyed
 		do
 		end
-		
+
 	align_text_right is
 			-- Display text right aligned
 		obsolete "Was not implemented on all platforms."
@@ -135,7 +135,7 @@ feature {NONE} -- Contract support
 				and Precursor {EV_TEXTABLE} and Precursor {EV_TOOLTIPABLE}
 				and Precursor {EV_SENSITIVE} and Precursor {EV_DOCKABLE_SOURCE}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_BUTTON_I

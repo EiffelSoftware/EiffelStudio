@@ -10,6 +10,9 @@ indexing
 class
 	EV_CURSOR
 
+obsolete
+	"Use EV_POINTER_STYLE instead."
+
 inherit
 	EV_PIXMAP
 		redefine
@@ -19,14 +22,18 @@ inherit
 create
 	default_create,
 	make_with_size,
-	make_with_pixmap
+	make_with_pixmap,
+	make_with_pointer_style
+
+convert
+	make_with_pointer_style ({EV_POINTER_STYLE})
 
 feature {NONE} -- Initialization
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, 
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot,
 	a_y_hotspot: INTEGER) is
 			-- Create a cursor initialized with `a_pixmap' as
-			-- pixmap and `a_x_hotspot' & `a_y_hotspot' as 
+			-- pixmap and `a_x_hotspot' & `a_y_hotspot' as
 			-- hotspot coordinates
 		do
 			default_create
@@ -35,13 +42,29 @@ feature {NONE} -- Initialization
 			set_y_hotspot (a_y_hotspot)
 		end
 
+	make_with_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Create from `a_pointer_style'
+		local
+			l_temp: EV_POINTER_STYLE
+		do
+			default_create
+			l_temp := a_pointer_style
+			if l_temp = Void then
+				create l_temp.make_from_cursor (Void)
+			end
+			implementation.init_from_pointer_style (l_temp)
+
+			set_x_hotspot (l_temp.x_hotspot)
+			set_y_hotspot (l_temp.y_hotspot)
+		end
+
 feature -- Access
 
 	x_hotspot: INTEGER
-			-- Specifies the x-coordinate of a cursor's hot spot. 
+			-- Specifies the x-coordinate of a cursor's hot spot.
 
 	y_hotspot: INTEGER
-			-- Specifies the y-coordinate of a cursor's hot spot. 
+			-- Specifies the y-coordinate of a cursor's hot spot.
 
 feature -- Status setting
 
@@ -69,7 +92,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: like current) is 
+	copy (other: like current) is
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local

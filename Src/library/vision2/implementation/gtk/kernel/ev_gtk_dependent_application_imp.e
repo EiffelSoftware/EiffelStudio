@@ -229,13 +229,19 @@ feature -- Implementation
 			previous_font_description := a_settings
 		end
 
+	default_gtk_settings: POINTER is
+			-- Default GtkSettings
+		once
+			Result := {EV_GTK_EXTERNALS}.gtk_settings_get_default
+		end
+
 	default_font_description: STRING_32 is
 			-- Description string of the current font used
 		local
 			font_name_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
 				Result := a_cs.string
@@ -250,12 +256,6 @@ feature -- Implementation
 			-- String optimization for gtk-font-name property string
 		once
 			Result := "gtk-font-name"
-		end
-
-	default_gtk_settings: POINTER is
-			-- Default GtkSettings
-		once
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
 		end
 
 	font_names_on_system: ARRAYED_LIST [STRING_32] is

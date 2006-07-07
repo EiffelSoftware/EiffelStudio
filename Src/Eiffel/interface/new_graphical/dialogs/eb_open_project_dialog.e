@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			parent_window := a_parent
 
 			create dialog
+			dialog.set_title (interface_names.l_open_project)
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			create ok_button.make_with_text (interface_names.b_open)
 

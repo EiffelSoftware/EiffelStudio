@@ -666,6 +666,8 @@ feature {NONE} -- Consuming
 			if cache_content = Void then
 				add_error (create {CONF_METADATA_CORRUPT})
 			end
+		ensure
+			cache_content_set: cache_content /= Void
 		end
 
 	consume_local_assemblies (an_assemblies: DS_HASH_SET [CONF_ASSEMBLY]) is

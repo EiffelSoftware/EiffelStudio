@@ -188,6 +188,35 @@ feature -- Update
 			expanded_section_store_set: expanded_section_store = a_store
 		end
 
+	mark_all_readonly is
+			-- Mark all properties as readonly.
+		local
+			l_section: EV_GRID_ROW
+			cnt, i: INTEGER
+			l_prop: PROPERTY
+		do
+			from
+				sections.start
+			until
+				sections.after
+			loop
+				l_section := sections.item_for_iteration
+				from
+					cnt := l_section.subrow_count
+					i := 1
+				until
+					i > cnt
+				loop
+					l_prop ?= l_section.subrow (i).item (2)
+					if l_prop /= Void then
+						l_prop.enable_readonly
+					end
+					i := i + 1
+				end
+				sections.forth
+			end
+		end
+
 feature {NONE} -- Agents
 
 	switch_expand_section (a_section: EV_GRID_ROW; a_dummy: EV_POPUP_WINDOW) is

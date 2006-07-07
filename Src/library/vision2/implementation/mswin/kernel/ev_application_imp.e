@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			dispatcher.set_exception_callback (agent on_exception_action)
 
 			create theme_window.make
+			create duplicated_message.make
 		end
 
 	launch  is
@@ -557,7 +558,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				create msg.make
-				create duplicated_message.make
 			until
 				quit_requested
 			loop
@@ -612,7 +612,6 @@ feature {NONE} -- Implementation
 			a_msg_not_void: a_msg /= Void
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
-			duplicated_message_not_void: duplicated_message /= Void
 		local
 			l_msg: WEL_MSG
 			l_f10_processed: BOOLEAN
@@ -638,7 +637,9 @@ feature {NONE} -- Implementation
 					-- and then we see if it matched one of our accelerator.
 				a_msg.translate
 				a_msg.dispatch
-				if a_window.accelerators /= Void then
+					-- We need to check for window existence because the previous call might
+					-- have destroyed the window.
+				if a_window.exists and then a_window.accelerators /= Void then
 					a_msg.translate_accelerator (a_window, a_window.accelerators)
 				end
 			end
@@ -784,6 +785,7 @@ feature {NONE} -- Externals
 
 invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
+	duplicated_message_not_void: duplicated_message /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

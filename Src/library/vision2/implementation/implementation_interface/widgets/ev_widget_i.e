@@ -65,7 +65,7 @@ feature -- Access
 		deferred
 		end
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when screen pointer is over current widget.
 			-- Void if none has been set using `set_pointer_position'.
 		deferred

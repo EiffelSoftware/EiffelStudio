@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Cursor used on `Current'.
 		deferred
 		end

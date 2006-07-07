@@ -1038,7 +1038,7 @@ feature {EV_ANY_I} -- Delegated features
 			Result.set (0, 0)
 		end
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when screen pointer is over current widget.
 		do
 			promote_to_widget

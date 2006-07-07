@@ -278,20 +278,20 @@ feature {ROUTINE} -- Implementation
 			is_inline_agent := a_is_inline_agent
 			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
+			nb := args.count
 			if is_inline_agent then
-				nb := args.count
 				target_object := Void
+				create l_internal.make (nb)
 				i := 1
 			else
-				nb := args.count - 1
 				target_object := args.fast_item (1)
+				create l_internal.make (nb - 1)
 				i := 2
 			end
 			
 			if nb > 0 then
 				from
 					j := 0
-					create l_internal.make (nb)
 				until
 					i > nb
 				loop

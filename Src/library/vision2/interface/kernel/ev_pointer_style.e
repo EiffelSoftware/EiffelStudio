@@ -45,7 +45,7 @@ feature {NONE} -- Initlization
 			l_cursors: EV_STOCK_PIXMAPS
 		do
 			default_create
-			-- We convert from EV_CURSOR, `a_cursor' maybe void.
+				-- We convert from EV_CURSOR, `a_cursor' maybe void.
 			l_temp := a_cursor
 			if l_temp = Void then
 				create l_cursors

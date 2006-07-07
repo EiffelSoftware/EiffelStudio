@@ -153,10 +153,9 @@ feature -- Commands
 					build_dependencies (new_assemblies.item_for_iteration)
 					new_assemblies.forth
 				end
-
-				if internal_il_emitter.item /= Void then
-					il_emitter.unload
-				end
+			end
+			if internal_il_emitter.item /= Void then
+				il_emitter.unload
 			end
 		ensure
 			assemblies_set: not is_error implies assemblies /= Void

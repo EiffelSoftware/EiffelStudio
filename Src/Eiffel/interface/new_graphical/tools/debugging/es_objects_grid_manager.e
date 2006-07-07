@@ -122,25 +122,41 @@ feature -- Clipboard related
 	update_clipboard_string_with_selection (grid: ES_OBJECTS_GRID) is
 		local
 			dv: ABSTRACT_DEBUG_VALUE
-			text_data: STRING_GENERAL
+			s, text_data: STRING_32
+			lrows: LIST [EV_GRID_ROW]
 			lrow: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_LINE
 		do
-			lrow := grid.selected_rows.first
-			if lrow /= Void then
-				gline ?= lrow.data
-				if gline /= Void then
-					text_data := gline.text_data_for_clipboard
-				else
-					dv ?= grid_data_from_widget (lrow)
-					if dv /= Void then
-						text_data := dv.dump_value.full_output
-					else
-						text_data ?= lrow.data
+			lrows := grid.selected_rows
+			if lrows.count > 0 then
+				from
+					create text_data.make_empty
+					lrows.start
+				until
+					lrows.after
+				loop
+					lrow := lrows.item
+					if lrow /= Void then
+						gline ?= lrow.data
+						if gline /= Void then
+							s := gline.text_data_for_clipboard
+						else
+							dv ?= grid_data_from_widget (lrow)
+							if dv /= Void then
+								s := dv.dump_value.full_output
+							else
+								s ?= lrow.data
+							end
+						end
+						if s /= Void then
+							text_data.append_string (s)
+							text_data.append_string ("%N")
+						end
 					end
+					lrows.forth
 				end
 			end
-			if text_data /= Void then
+			if text_data /= Void and then not text_data.is_empty then
 				ev_application.clipboard.set_text (text_data)
 			else
 				ev_application.clipboard.remove_text

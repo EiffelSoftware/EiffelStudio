@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			default_create
 			name := a_name
 			id := a_id
-			enable_single_row_selection
+			enable_multiple_row_selection
 			enable_border
 		end
 

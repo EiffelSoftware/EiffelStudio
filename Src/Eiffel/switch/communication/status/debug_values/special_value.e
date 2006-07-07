@@ -120,6 +120,8 @@ feature -- Access
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
 		local
+			int8_value: DEBUG_VALUE [INTEGER_8]
+			int32_value: DEBUG_VALUE [INTEGER_32]
 			char_value: CHARACTER_VALUE
 			wchar_value: WIDE_CHARACTER_VALUE
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
@@ -153,6 +155,36 @@ feature -- Access
 							wchar_value ?= l_cursor.item
 							Result.append_code (wchar_value.value.natural_32_code)
 							l_cursor.forth
+						end
+					else
+						int8_value ?= l_items.first
+						if int8_value /= Void then
+							create Result.make (a_size.min (items.count + 1))
+							from
+								l_cursor := items.new_cursor
+								l_cursor.start
+							until
+								l_cursor.after or Result.count = a_size
+							loop
+								int8_value ?= l_cursor.item
+								Result.append_code (int8_value.value.as_natural_32)
+								l_cursor.forth
+							end
+						else
+							int32_value ?= l_items.first
+							if int32_value /= Void then
+								create Result.make (a_size.min (items.count + 1))
+								from
+									l_cursor := items.new_cursor
+									l_cursor.start
+								until
+									l_cursor.after or Result.count = a_size
+								loop
+									int32_value ?= l_cursor.item
+									Result.append_code (int32_value.value.as_natural_32)
+									l_cursor.forth
+								end
+							end
 						end
 					end
 				end

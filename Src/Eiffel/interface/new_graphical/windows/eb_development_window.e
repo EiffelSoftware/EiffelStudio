@@ -669,6 +669,15 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (favorites_tool)
 
+				-- Build the properties tool
+			create properties_tool.make (Current)
+			properties_tool.attach_to_explorer_bar (left_panel)
+			left_tools.extend (properties_tool.explorer_bar_item)
+			create show_cmd.make (Current, properties_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
+			add_recyclable (properties_tool)
+
 				-- Build the windows tool (formerly known as Selector tool)
 			create windows_tool.make (Current)
 			windows_tool.attach_to_explorer_bar (left_panel)
@@ -2688,6 +2697,8 @@ feature -- Tools & Controls
 
 	favorites_tool: EB_FAVORITES_TOOL
 
+	properties_tool: EB_PROPERTIES_TOOL
+
 	cluster_tool: EB_CLUSTER_TOOL
 
 	search_tool: EB_MULTI_SEARCH_TOOL
@@ -3187,16 +3198,19 @@ feature {NONE} -- Implementation
 						managed_main_formatters.item.set_stone (Void)
 						managed_main_formatters.forth
 					end
-					if cluster_st /= Void and then cluster_st.is_cluster then
+					if cluster_st /= Void then
+						properties_tool.add_stone (cluster_st)
+						if cluster_st.is_cluster then
 	--| FIXME XR: Really manage cluster display in the main editor
-						if not during_synchronization then
-							view_points_combo.set_conf_group (cluster_st.group)
-						end
-						formatted_context_for_cluster (cluster_st.cluster_i, cluster_st.path)
-						if cluster_st.position > 0 then
-							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
-						end
+							if not during_synchronization then
+								view_points_combo.set_conf_group (cluster_st.group)
+							end
+							formatted_context_for_cluster (cluster_st.cluster_i, cluster_st.path)
+							if cluster_st.position > 0 then
+								editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
+							end
 	--| END FIXME
+						end
 					end
 				end
 				if class_text_exists then
@@ -4016,6 +4030,7 @@ feature -- Recycle
 			end
 			editor_tool := Void
 			favorites_tool := Void
+			properties_tool := Void
 			history_manager := Void
 			features_tool := Void
 			breakpoints_tool := Void

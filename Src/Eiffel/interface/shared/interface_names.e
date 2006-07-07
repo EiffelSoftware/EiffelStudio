@@ -340,6 +340,7 @@ feature -- Accelerator, focus label and menu name
 	m_Print: STRING is					"&Print"
 	f_preferences: STRING is			"Preferences"
 	m_Preferences: STRING is			"&Preferences..."
+	m_Properties_tool: STRING is		"Pr&operties"
 	m_Profile_tool: STRING is			"Pro&filer..."
 	m_Project_toolbar: STRING is		"&Project Bar"
 	m_Refactoring_toolbar: STRING is	"Re&factoring Bar"
@@ -838,6 +839,7 @@ feature -- Title part
 	t_Object_tool: STRING is					"Objects"
 	t_Open_backup: STRING is					"Backup Found"
 	t_Organize_favorites: STRING is				"Organize Favorites"
+	t_Properties_tool: STRING is				"Properties"
 	t_Profile_query_window: STRING is			"Profile Query Window"
 	t_Profiler_wizard: STRING is				"Profiler Wizard"
 	t_Project: STRING is

@@ -100,7 +100,7 @@ feature {NONE} -- Agents
 	focus_lost is
 			-- Check if no other element in the popup has the focus.
 		do
-			if is_activated and then not has_focus then
+			if is_activated and then not has_focus and then is_parented then
 				deactivate
 			end
 		end

@@ -225,7 +225,7 @@ fixme ("find a smarter way to get a valid value")
 	associated_dump_value: DUMP_VALUE is
 		do
 			Result := internal_associated_dump_value
-			if Result = Void then
+			if Result = Void and then object_address /= Void then
 				Result := Application.dump_value_at_address_with_class (object_address, object_dynamic_class)
 				internal_associated_dump_value := Result
 			end

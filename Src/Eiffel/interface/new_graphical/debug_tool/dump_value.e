@@ -1017,6 +1017,8 @@ feature -- Access
 			else
 				Result := "ANY"
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	output_value: STRING_32 is

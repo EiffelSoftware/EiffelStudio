@@ -270,6 +270,8 @@ feature -- Query
 			end
 			dv := associated_dump_value
 			if dv /= Void then
+				Result.append_string (": " + dv.generating_type_representation)
+				Result.append_string (" = ")
 				Result.append_string (dv.full_output)
 			end
 		end

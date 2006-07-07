@@ -1,0 +1,106 @@
+indexing
+	description: "[
+		A class to perform a system search for all assemblies registered as locatable.
+		Locatable does not refer to the Globabl Assembly Cache but assemblies that are found
+		in folders registers as an Assembly Folder in the registry.
+		
+		Note: Dummy unix implementation.
+	]"
+	date:        "$Date$"
+	revision:    "$Revision$"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+
+class
+	SYSTEM_ASSEMBLY_LIST_BUILDER
+
+create
+	make
+
+feature
+
+	make (a_fw_folder: like framework_folder; a_clr_version: like clr_version)
+			-- Create
+		require
+			a_fw_folder_attached: a_fw_folder /= Void
+			not_a_fw_folder_is_empty: not a_fw_folder.is_empty
+			a_fw_folder_has_no_trailing_separator: a_fw_folder.item (a_fw_folder.count) /= operating_environment.directory_separator
+			a_clr_version_attached: a_clr_version /= Void
+			not_a_clr_version_is_empty: not a_clr_version.is_empty
+			a_clr_version_has_v_prefix: (a_clr_version.item (1)).as_lower = 'v'
+		do
+			framework_folder := a_fw_folder
+			clr_version := a_clr_version
+		ensure
+			framework_folder_set: framework_folder = a_fw_folder
+			clr_version_set: clr_version = a_clr_version
+		end
+
+feature -- Access
+
+	framework_folder: STRING_32
+			-- Location of .NET framework folder
+
+	clr_version: STRING_32 
+			-- 'v' prefixed version of CLR
+
+	assembly_folders: LIST [STRING_32]
+			-- List of current assembly folder
+		local
+			l_result: like internal_assembly_folders
+		do
+			check False end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			internal_assembly_folders_set: internal_assembly_folders = Result
+		end
+
+	assemblies: ARRAYED_LIST [STRING_8]
+			-- Flat list of all assemblies in all `assembly_folders'.
+		do
+			check False end
+		ensure
+			result_attached: Result /= Void
+		end
+
+invariant
+	framework_folder_attached: framework_folder /= Void
+	not_framework_folder_is_empty: not framework_folder.is_empty
+	clr_version_attached: clr_version /= Void
+	not_clr_version_is_empty: not clr_version.is_empty
+	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+end -- class {SYSTEM_ASSEMBLY_LIST_BUILDER}

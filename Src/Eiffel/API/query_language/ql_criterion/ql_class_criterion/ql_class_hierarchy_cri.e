@@ -55,7 +55,11 @@ feature -- Evaluate
 			if not is_criterion_domain_evaluated then
 				initialize_domain
 			end
-			if used_in_domain_generator.is_temp_domain_used and then not is_intrinsic_domain_cached_in_domain_generator then
+			if
+				has_intrinsic_domain and then
+				used_in_domain_generator.is_temp_domain_used and then
+				not is_intrinsic_domain_cached_in_domain_generator
+			then
 				cache_intrinsic_domain
 			end
 			Result := is_satisfied_by_internal (a_item)

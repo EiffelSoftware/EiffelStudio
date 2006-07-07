@@ -358,7 +358,7 @@ feature {NONE} -- Accelerators
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
 					-- This is a value that is highly unlikely to be used
 				a_origin := once "Vision2"
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+				{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
 			end
 		end
 

@@ -557,6 +557,7 @@ feature {NONE} -- Implementation
 		do
 			from
 				create msg.make
+				create duplicated_message.make
 			until
 				quit_requested
 			loop
@@ -577,6 +578,8 @@ feature {NONE} -- Implementation
 	process_message (msg: WEL_MSG) is
 			-- Dispatch `msg'.
 			--| Different from WEL because of accelerators.
+		require
+			msg_not_void: msg /= Void
 		local
 			focused_window: like window_with_focus
 		do
@@ -585,35 +588,74 @@ feature {NONE} -- Implementation
 					quit_requested := True
 				else
 					focused_window := window_with_focus
-					if
-						focused_window /= Void and then
-						is_dialog (focused_window.wel_item)
-					then
-							-- It is a dialog window
-						msg.process_dialog_message (focused_window.wel_item)
-						if not msg.last_boolean_result then
-							msg.translate
-							msg.dispatch
-							if focused_window.accelerators /= Void then
-								msg.translate_accelerator (focused_window,
-									focused_window.accelerators)
+					if focused_window /= Void and then focused_window.exists then
+						if is_dialog (focused_window.wel_item) then
+							msg.process_dialog_message (focused_window.wel_item)
+							if not msg.last_boolean_result then
+								process_window_message (msg, focused_window)
 							end
-						end
-					else
-						msg.translate
-						msg.dispatch
-							-- It is a normal window
-						if
-							focused_window /= Void and then
-							focused_window.exists and then
-							focused_window.accelerators /= Void
-						then
-							msg.translate_accelerator (focused_window,
-								focused_window.accelerators)
+						else
+							process_window_message (msg, focused_window)
 						end
 					end
 				end
 			end
+		end
+
+	process_window_message (a_msg: WEL_MSG; a_window: EV_WINDOW_IMP) is
+			-- Process `a_msg' in `a_window'.
+		require
+			a_msg_not_void: a_msg /= Void
+			a_window_not_void: a_window /= Void
+			a_window_exists: a_window.exists
+			duplicated_message_not_void: duplicated_message /= Void
+		local
+			l_msg: WEL_MSG
+			l_f10_processed: BOOLEAN
+		do
+			l_msg := duplicated_message
+			if a_window.has_f10_accelerator and a_window.has_menu then
+					-- Test whether or not the F10 key was the reason for the call which
+					-- by default on Windows highlight the first menu entry. We use
+					-- `silly_main_window' for testing since no one has connected actions to it.
+				l_msg.copy (a_msg)
+				l_msg.translate_accelerator (silly_main_window, f10_accelerator_table)
+				if l_msg.last_boolean_result then
+						-- This was F10 because we cannot prevent Windows behavior for selecting the
+						-- first menu, so we will only process the accelerator message.
+					a_msg.translate_accelerator (a_window, a_window.accelerators)
+					check accelerator_processed: a_msg.last_boolean_result end
+					l_f10_processed := True
+				end
+			end
+
+			if not l_f10_processed then
+					-- Normal case, we first dispatch the message
+					-- and then we see if it matched one of our accelerator.
+				a_msg.translate
+				a_msg.dispatch
+				if a_window.accelerators /= Void then
+					a_msg.translate_accelerator (a_window, a_window.accelerators)
+				end
+			end
+		end
+
+	duplicated_message: WEL_MSG
+			-- To avoid creating too many duplicated WEL_MSG objects.
+
+	f10_accelerator_table: WEL_ACCELERATORS is
+			-- Create F10 accelerator. This is needed to see whether or not a received message
+			-- correspond to the F10 key or not.
+		local
+			l_accel: WEL_ACCELERATOR
+			l_array: WEL_ARRAY [WEL_ACCELERATOR]
+		once
+			create l_accel.make (vk_f10, 1, {WEL_ACCELERATOR_FLAG_CONSTANTS}.fvirtkey)
+			create l_array.make (1, l_accel.structure_size)
+			l_array.put (l_accel, 0)
+			create Result.make_with_array (l_array)
+		ensure
+			f10_accelerator_table_not_void: Result /= Void
 		end
 
 	process_events_until_stopped is

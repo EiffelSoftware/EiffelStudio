@@ -441,6 +441,9 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 			-- List of accelerators connected to `Current' indexed by
 			-- their `id'.
 
+	has_f10_accelerator: BOOLEAN
+			-- Does current window override F10 shortcut?
+
 	wel_acc_size: INTEGER is
 			-- Used to initialize WEL_ARRAY.
 		local
@@ -457,6 +460,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 			acc: WEL_ACCELERATOR
 			n: INTEGER
 		do
+			has_f10_accelerator := False
 			if accel_list.is_empty then
 				accelerators := Void
 			else
@@ -468,6 +472,9 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 					accel_list.after
 				loop
 					acc ?= accel_list.item_for_iteration.implementation
+					if not has_f10_accelerator then
+						has_f10_accelerator := acc.key = vk_f10
+					end
 					wel_array.put (acc, n)
 					accel_list.forth
 					n := n + 1

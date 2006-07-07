@@ -47,7 +47,7 @@ create
 
 feature {NONE} --
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			--
 		do
 

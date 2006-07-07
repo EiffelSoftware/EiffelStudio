@@ -107,7 +107,7 @@ feature -- Access
 				interface.screen_y)
 		end
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Pointer displayed when the pointing device is over `Current'.
 		do
 			Result := cursor_pixmap

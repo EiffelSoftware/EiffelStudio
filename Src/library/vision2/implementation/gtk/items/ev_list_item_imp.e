@@ -115,7 +115,7 @@ feature -- PND
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
+	set_pointer_style, internal_set_pointer_style (c: EV_POINTER_STYLE) is
 		do
 			check
 				do_not_call: False

@@ -34,6 +34,9 @@ feature -- Access
 			Result := Interface_names.m_Generate_documentation
 		end
 
+	pixmap: EV_PIXMAP
+			-- Pixmap
+
 feature -- Execution
 
 	execute is

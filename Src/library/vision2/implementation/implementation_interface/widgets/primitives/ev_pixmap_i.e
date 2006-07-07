@@ -83,6 +83,13 @@ feature -- Initialization
 		deferred
 		end
 
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Initialize from `a_pointer_style'
+		require
+			not_void: a_pointer_style /= Void
+		deferred
+		end
+
 feature -- Access
 
 	raw_image_data: EV_RAW_IMAGE_DATA is

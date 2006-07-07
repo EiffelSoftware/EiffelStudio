@@ -30,8 +30,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot,
-	a_y_hotspot: INTEGER) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, a_y_hotspot: INTEGER) is
 			-- Create a cursor initialized with `a_pixmap' as
 			-- pixmap and `a_x_hotspot' & `a_y_hotspot' as
 			-- hotspot coordinates

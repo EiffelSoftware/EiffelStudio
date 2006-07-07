@@ -46,12 +46,13 @@ feature -- Concrete initialization
 feature {DBG_EVALUATOR} -- Interface
 
 	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
-			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
+			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
 		local
 			fi: FEATURE_I
 			dmp: DUMP_VALUE
 			par: INTEGER
 			rout_info: ROUT_INFO
+			wclt: CLASS_TYPE
 		do
 				-- Initialize the communication.
 			fi := f
@@ -91,7 +92,14 @@ feature {DBG_EVALUATOR} -- Interface
 					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 				else
 					fixme ("it seems the runtime/debug is not designed to call precursor ...")
-					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, ctype.static_type_id - 1, par)
+					if orig_class.is_expanded and then orig_class.is_basic then
+							--| Take care of "2 > 3"
+						wclt := fi.written_type (ctype)
+					else
+						wclt := ctype
+					end
+
+					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, par)
 				end
 					-- Receive the Result.
 				recv_value (Current)

@@ -250,7 +250,7 @@ feature -- Concrete evaluation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		local
-			l_dynclass: CLASS_C
+			l_target_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE
 			realf: FEATURE_I
 			at: TYPE_A
@@ -271,33 +271,33 @@ feature -- Concrete evaluation
 
 				--| Get target data ...
 			if cl /= Void then
-				l_dynclass := cl
+				l_target_dynclass := cl
 			elseif a_target /= Void then
-				l_dynclass := a_target.dynamic_class
+				l_target_dynclass := a_target.dynamic_class
 			end
-			if l_dynclass /= Void and then l_dynclass.is_basic then
-				l_dyntype := associated_reference_basic_class_type (l_dynclass)
-			elseif l_dynclass /= Void and then l_dynclass.types.count = 1 then
-				l_dyntype := l_dynclass.types.first
-			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
+			if l_target_dynclass /= Void and then l_target_dynclass.is_basic then
+				l_dyntype := associated_reference_basic_class_type (l_target_dynclass)
+			elseif l_target_dynclass /= Void and then l_target_dynclass.types.count = 1 then
+				l_dyntype := l_target_dynclass.types.first
+			elseif l_target_dynclass = Void or else l_target_dynclass.types.count > 1 then
 				if a_addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
-					l_dyntype := class_type_from_object_relative_to (a_addr, l_dynclass)
+					l_dyntype := class_type_from_object_relative_to (a_addr, l_target_dynclass)
 					if l_dyntype = Void then
 						notify_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
-					elseif l_dynclass = Void then
-						l_dynclass := l_dyntype.associated_class
+					elseif l_target_dynclass = Void then
+						l_target_dynclass := l_dyntype.associated_class
 					end
 				elseif f.is_once then
 						--| Useless for once
-					l_dynclass := Void
+					l_target_dynclass := Void
 					l_dyntype := Void
 				else
 						--| Shouldn't happen: basic types are not generic.
 					notify_error_evaluation ("Cannot find complete dynamic type of an expanded type")
 				end
 			else
-				l_dyntype := l_dynclass.types.first
+				l_dyntype := l_target_dynclass.types.first
 			end
 			if f.is_once then
 				effective_evaluate_once_function (f)
@@ -312,8 +312,8 @@ feature -- Concrete evaluation
 						--| occurred for EV_RICH_TEXT_IMP.line_index (...)
 					debug ("debugger_trace_eval_data")
 						print ("f.ancestor_version (f.written_class) = Void%N")
-						print ("  f.feature_name = " + f.feature_name + "%N")
-						print ("  f.written_class     = " + f.written_class.name_in_upper + "%N")
+						print ("  f.feature_name  = " + f.feature_name + "%N")
+						print ("  f.written_class = " + f.written_class.name_in_upper + "%N")
 					end
 					realf := f
 				end
@@ -321,7 +321,7 @@ feature -- Concrete evaluation
 					valid_dyn_type: l_dyntype /= Void
 				end
 
-				effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, params)
+				effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params)
 				if last_result_value = Void then
 					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
 					if a_addr /= Void then
@@ -336,7 +336,7 @@ feature -- Concrete evaluation
 						last_result_static_type := at.associated_class
 					end
 					if last_result_static_type = Void then
-						last_result_static_type:= Workbench.Eiffel_system.Any_class.compiled_class
+						last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
 					end
 					if
 						last_result_static_type /= Void and then
@@ -372,11 +372,12 @@ feature -- Concrete evaluation
 		end
 
 	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
-			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
+			ctype: CLASS_TYPE; orig_class: CLASS_C;
+			params: LIST [DUMP_VALUE]) is
 		do
 			prepare_evaluation
 			implementation.effective_evaluate_function (
-								a_addr, a_target, f, realf, ctype, params
+								a_addr, a_target, f, realf, ctype, orig_class, params
 							)
 			retrieve_evaluation
 		end
@@ -481,7 +482,11 @@ feature {NONE} -- compiler helpers
 				n > nb or else Result /= Void
 			loop
 				rout_id := ris.item (n)
-				if rout_id /= 0 and then an_ancestor.is_valid and then an_ancestor.has_feature_table then
+				if
+					rout_id /= 0
+					and then an_ancestor.is_valid
+					and then an_ancestor.has_feature_table
+				then
 					Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
 				end
 				n := n + 1

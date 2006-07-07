@@ -86,6 +86,15 @@ feature {NONE} -- Initialization
 			clear
 		end
 
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Initialize from `a_pointer_style'
+		local
+			a_pointer_style_imp: EV_POINTER_STYLE_IMP
+		do
+			a_pointer_style_imp ?= a_pointer_style.implementation
+			set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+		end
+
 feature -- Drawing operations
 
 	redraw is

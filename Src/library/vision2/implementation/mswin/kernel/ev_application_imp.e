@@ -597,6 +597,10 @@ feature {NONE} -- Implementation
 						else
 							process_window_message (msg, focused_window)
 						end
+					else
+							-- No top window, simply dispatch message.
+						msg.translate
+						msg.dispatch
 					end
 				end
 			end

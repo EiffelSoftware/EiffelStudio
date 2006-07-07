@@ -116,10 +116,6 @@ feature -- Commands
 				retrieve_cache
 				if cache_content = Void then
 					consume_all_assemblies (a_new_assemblies)
-					retrieve_cache
-				end
-				if cache_content = Void then
-					add_error (create {CONF_METADATA_CORRUPT})
 				end
 				check
 					cache_retrieved: cache_content /= Void
@@ -666,6 +662,10 @@ feature {NONE} -- Consuming
 				l_paths.remove_tail (1)
 				l_emitter.consume_assembly_from_path (l_paths)
 			end
+			retrieve_cache
+			if cache_content = Void then
+				add_error (create {CONF_METADATA_CORRUPT})
+			end
 		end
 
 	consume_local_assemblies (an_assemblies: DS_HASH_SET [CONF_ASSEMBLY]) is
@@ -698,6 +698,9 @@ feature {NONE} -- Consuming
 				l_emitter.consume_assembly_from_path (l_paths)
 			end
 			retrieve_cache
+			if cache_content = Void then
+				add_error (create {CONF_METADATA_CORRUPT})
+			end
 		ensure
 			cache_content_set: cache_content /= Void
 		end
@@ -713,6 +716,9 @@ feature {NONE} -- Consuming
 			l_emitter := il_emitter
 			l_emitter.consume_assembly (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token)
 			retrieve_cache
+			if cache_content = Void then
+				add_error (create {CONF_METADATA_CORRUPT})
+			end
 		ensure
 			cache_content_set: cache_content /= Void
 		end

@@ -391,6 +391,77 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 3))
 		end
+	frozen docking_up_cursor: EV_PIXMAP is
+			-- Access to 'up' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 3))
+		end
+
+	frozen docking_up_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'up' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 3))
+		end
+
+	frozen docking_down_cursor: EV_PIXMAP is
+			-- Access to 'down' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 3))
+		end
+
+	frozen docking_down_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'down' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 3))
+		end
+
+	frozen docking_left_cursor: EV_PIXMAP is
+			-- Access to 'left' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 3))
+		end
+
+	frozen docking_left_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'left' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 3))
+		end
+
+	frozen docking_right_cursor: EV_PIXMAP is
+			-- Access to 'right' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 3))
+		end
+
+	frozen docking_right_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'right' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 3))
+		end
+
+	frozen docking_float_cursor: EV_PIXMAP is
+			-- Access to 'float' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (9, 3))
+		end
+
+	frozen docking_float_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'float' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 3))
+		end
+
+	frozen docking_tabify_cursor: EV_PIXMAP is
+			-- Access to 'tabify' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 3))
+		end
+
+	frozen docking_tabify_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'tabify' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 3))
+		end
 		
 feature {NONE} -- Query
 

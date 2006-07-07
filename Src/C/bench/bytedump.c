@@ -245,8 +245,6 @@ static  char    *names [] = {
 "BC_NOTUSED_197",
 "BC_NOTUSED_198",
 "BC_NOTUSED_199",
-"BC_JAVA_RTYPE",
-"BC_JAVA_EXTERNAL",
  (char *) 0
 };
 
@@ -1211,20 +1209,6 @@ static  void    print_instructions ()
 			case  BC_DEFERRED :
 				break;
 			case  BC_RESCUE :
-				break;
-			case  BC_JAVA_RTYPE :
-				/* Feature name */
-				(void) get_string8(&ip, -1);
-				print_dtype (0,get_uint32(&ip));
-				/* Class name */
-				(void) get_string8(&ip, -1);
-				break;
-			case  BC_JAVA_EXTERNAL :
-				/* External call */
-				/* Eiffel name of external */
-				(void) get_string8(&ip, -1);
-				/* True external C name */
-				fprintf (ofp,"\"%s\"", get_string8(&ip, -1));
 				break;
 
 /* NOTE: Separate codes not included yet */

@@ -262,10 +262,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_TUPLE	(unsigned char) 168
 #define BC_PTUPLE	(unsigned char) 169
 
-#define BC_JAVA_RTYPE           (unsigned char) 200
-#define BC_JAVA_EXTERNAL        (unsigned char) 201
-
-#define MAX_CODE                201     /* Maximum legal byte code */
+#define MAX_CODE                169     /* Maximum legal byte code */
 
 extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 

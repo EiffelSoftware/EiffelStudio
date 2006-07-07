@@ -87,27 +87,21 @@ feature -- Element change
 
 	block_resize_actions is
 			-- Block any resize actions that may occur.
-		local
-			item_imp: EV_WIDGET_IMP
 		do
 			if item /= Void then
-				item_imp ?= item.implementation
 				-- The blocking of resize actions is due to set uposition causing temporary resizing.
-				if item_imp.resize_actions_internal /= Void then
-					item_imp.resize_actions_internal.block
+				if item.implementation.resize_actions_internal /= Void then
+					item.implementation.resize_actions_internal.block
 				end
 			end
 		end
 
 	unblock_resize_actions is
 			-- Unblock all resize actions.
-		local
-			item_imp: EV_WIDGET_IMP
 		do
 			if item /= Void then
-				item_imp ?= item.implementation
-				if item_imp.resize_actions_internal /= Void then
-					item_imp.resize_actions_internal.resume
+				if item.implementation.resize_actions_internal /= Void then
+					item.implementation.resize_actions_internal.resume
 				end
 			end
 		end

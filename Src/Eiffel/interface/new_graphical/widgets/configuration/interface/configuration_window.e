@@ -56,6 +56,15 @@ inherit
 			refresh
 		end
 
+	GROUP_PROPERTIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		redefine
+			refresh
+		end
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -99,17 +108,12 @@ feature {NONE}-- Initialization
 			a_debugs_not_void: a_debugs /= Void
 			application_target_set: a_system.application_target /= Void
 		do
+			make_group_properties
 			conf_system := a_system
 			conf_factory := a_factory
 			debug_clauses := a_debugs
 			default_create
 			config_windows.force (Current, conf_system.file_name)
-			create group_section_expanded_status.make (5)
-			group_section_expanded_status.force (True, section_general)
-			group_section_expanded_status.force (True, section_assertions)
-			group_section_expanded_status.force (True, section_warning)
-			group_section_expanded_status.force (True, section_debug)
-			group_section_expanded_status.force (False, section_advanced)
 			create group_expanded_header.make (4)
 		ensure
 			system_set: conf_system = a_system
@@ -863,9 +867,6 @@ feature {NONE} -- Implementation
 			create Result.make (5)
 		end
 
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING]
-			-- Expanded status of sections of groups.
-
 	is_refreshing: BOOLEAN
 			-- Are we currently refreshing?
 
@@ -1605,33 +1606,9 @@ feature {NONE} -- Implementation
 		require
 			properties_not_void: properties /= Void
 			edit_library_button_not_void: edit_library_button /= Void
+			remove_group_button_not_void: remove_group_button /= Void
 			a_group_not_void: a_group /= Void
-		local
-			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_text_prop: STRING_PROPERTY [STRING]
-			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
-			l_bool_prop: BOOLEAN_PROPERTY
-			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
-			l_file_prop: FILE_LOCATION_PROPERTY
-			l_override: CONF_OVERRIDE
-			l_cluster: CONF_CLUSTER
-			l_assembly: CONF_ASSEMBLY
-			l_library: CONF_LIBRARY
-			l_file_rule_prop: FILE_RULE_PROPERTY
-			l_list_prop: LIST_PROPERTY
-			l_deps: DS_HASH_SET [CONF_GROUP]
-			l_deps_list: ARRAYED_LIST [STRING_32]
-			l_dep_dialog: DEPENDENCY_DIALOG
-			l_over: ARRAYED_LIST [CONF_GROUP]
-			l_over_list: ARRAYED_LIST [STRING_32]
-			l_over_dialog: OVERRIDE_DIALOG
-			l_rename_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
-			l_mapping_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
-			l_class_opt_prop: DIALOG_PROPERTY [HASH_TABLE [CONF_OPTION, STRING]]
-			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
-			l_vis_dial: VISIBLE_DIALOG
-			l_visible: CONF_VISIBLE
+			current_target: current_target /= Void
 		do
 			current_group := a_group
 			remove_group_button.enable_sensitive
@@ -1640,245 +1617,12 @@ feature {NONE} -- Implementation
 			edit_library_button.disable_sensitive
 			edit_library_button.select_actions.wipe_out
 
-			properties.add_section (section_general)
-
-				-- type
-			create l_text_prop.make (group_type_name)
-			l_text_prop.set_description (group_type_description)
-			if a_group.is_override then
-				l_text_prop.set_value (group_override)
-				l_override ?= a_group
-				l_cluster := l_override
-				l_visible := l_cluster
-			elseif a_group.is_cluster then
-				l_text_prop.set_value (group_cluster)
-				l_cluster ?= a_group
-				l_visible := l_cluster
-			elseif a_group.is_library then
-				l_text_prop.set_value (group_library)
-				l_library ?= a_group
-				l_visible := l_library
-				if not l_library.is_readonly then
-					edit_library_button.enable_sensitive
-					edit_library_button.select_actions.extend (agent edit_configuration (l_library.location.evaluated_path))
-				end
-			elseif a_group.is_assembly then
-				l_text_prop.set_value (group_assembly)
-				l_assembly ?= a_group
-			else
-				check should_not_reach: False end
-			end
-			l_text_prop.enable_readonly
-			properties.add_property (l_text_prop)
-
-				-- name
-			create l_text_prop.make (group_name_name)
-			l_text_prop.set_description (group_name_description)
-			l_text_prop.set_value (a_group.name)
-			l_text_prop.change_value_actions.extend (agent a_group.set_name)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent refresh))
-			properties.add_property (l_text_prop)
-
-				-- description
-			create l_mls_prop.make (group_description_name)
-			l_mls_prop.set_description (group_description_description)
-			l_mls_prop.enable_text_editing
-			if a_group.description /= Void then
-				l_mls_prop.set_value (a_group.description)
-			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_group.set_description))
-			properties.add_property (l_mls_prop)
-
-				-- readonly
-			create l_bool_prop.make_with_value (group_readonly_name, a_group.internal_read_only)
-			l_bool_prop.set_description (group_readonly_description)
-			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
-			properties.add_property (l_bool_prop)
-
-			if l_cluster /= Void then
-					-- recursive
-				create l_bool_prop.make_with_value (cluster_recursive_name, l_cluster.is_recursive)
-				l_bool_prop.set_description (cluster_recursive_description)
-				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
-				properties.add_property (l_bool_prop)
+			if a_group.is_library and not a_group.is_readonly then
+				edit_library_button.enable_sensitive
+				edit_library_button.select_actions.extend (agent edit_configuration (a_group.location.evaluated_path))
 			end
 
-				-- location
-			if a_group.is_cluster then
-				create l_dir_prop.make (group_location_name)
-				l_dir_prop.set_target (current_target)
-				l_dir_prop.set_description (group_location_description)
-				l_dir_prop.set_value (a_group.location.original_path)
-				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?))
-				properties.add_property (l_dir_prop)
-			else
-				create l_file_prop.make (group_location_name)
-				l_file_prop.set_target (current_target)
-				l_file_prop.set_description (group_location_description)
-				l_file_prop.set_value (a_group.location.original_path)
-				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?))
-				properties.add_property (l_file_prop)
-			end
-
-				-- options
-			if not a_group.is_assembly then
-				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)
-			end
-
-			properties.add_section (section_advanced)
-
-				-- condition
-			create l_dial.make_with_dialog (group_condition_name, create {CONDITION_DIALOG})
-			l_dial.set_description (group_condition_description)
-			l_dial.set_value (a_group.internal_conditions)
-			l_dial.disable_text_editing
-			l_dial.change_value_actions.extend (agent a_group.set_conditions)
-			properties.add_property (l_dial)
-
-
-				-- prefix
-			create l_text_prop.make (group_prefix_name)
-			l_text_prop.set_description (group_prefix_description)
-			l_text_prop.set_value (a_group.name_prefix)
-			l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
-			properties.add_property (l_text_prop)
-
-				-- renaming
-			create l_rename_prop.make_with_dialog (group_renaming_name, create {RENAMING_DIALOG})
-			l_rename_prop.set_description (group_renaming_description)
-			l_rename_prop.set_display_agent (agent output_renaming)
-			if a_group.renaming /= Void then
-				l_rename_prop.set_value (a_group.renaming)
-			end
-			l_rename_prop.change_value_actions.extend (agent a_group.set_renaming)
-			properties.add_property (l_rename_prop)
-
-				-- class options
-			if not a_group.is_assembly then
-				create l_class_opt_dial
-				l_class_opt_dial.set_group_options (a_group.options)
-				create l_class_opt_prop.make_with_dialog (group_class_option_name, l_class_opt_dial)
-				l_class_opt_prop.set_description (group_class_option_description)
-				l_class_opt_prop.set_display_agent (agent output_class_options)
-				if a_group.class_options /= Void then
-					l_class_opt_prop.set_value (a_group.class_options)
-				end
-				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options)
-				properties.add_property (l_class_opt_prop)
-			end
-
-			if l_override /= Void then
-					-- overrides
-				l_over := l_override.override
-				if l_over /= Void then
-					from
-						create l_over_list.make (l_over.count)
-						l_over.start
-					until
-						l_over.after
-					loop
-						l_over_list.force (l_over.item.name)
-						l_over.forth
-					end
-				end
-				create l_over_dialog
-				l_over_dialog.set_conf_target (current_target)
-				create l_list_prop.make_with_dialog (override_override_name, l_over_dialog)
-				l_list_prop.set_description (override_override_description)
-				l_list_prop.set_value (l_over_list)
-				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?))
-				properties.add_property (l_list_prop)
-			end
-
-			if l_cluster /= Void then
-					-- file rules
-				create l_file_rule_prop.make (cluster_file_rule_name)
-				l_file_rule_prop.set_description (cluster_file_rule_description)
-				l_file_rule_prop.set_refresh_action (agent l_cluster.file_rule)
-				l_file_rule_prop.refresh
-				l_file_rule_prop.change_value_actions.extend (agent l_cluster.set_file_rule)
-				l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule_cluster (?, l_file_rule_prop))
-				l_file_rule_prop.use_inherited_actions.extend (agent l_cluster.set_file_rule (create {ARRAYED_LIST [CONF_FILE_RULE]}.make (0)))
-				l_file_rule_prop.use_inherited_actions.extend (agent update_inheritance_file_rule_cluster (Void, l_file_rule_prop))
-				update_inheritance_file_rule (Void, l_file_rule_prop)
-				properties.add_property (l_file_rule_prop)
-
-					-- dependencies
-				l_deps := l_cluster.dependencies
-				if l_deps /= Void then
-					from
-						create l_deps_list.make (l_deps.count)
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						l_deps_list.force (l_deps.item_for_iteration.name)
-						l_deps.forth
-					end
-				end
-				create l_dep_dialog
-				l_dep_dialog.set_conf_target (current_target)
-				create l_list_prop.make_with_dialog (cluster_dependencies_name, l_dep_dialog)
-				l_list_prop.set_description (cluster_dependencies_description)
-				l_list_prop.set_value (l_deps_list)
-				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?))
-				properties.add_property (l_list_prop)
-
-					-- mapping
-				create l_mapping_prop.make_with_dialog (cluster_mapping_name, create {RENAMING_DIALOG})
-				l_mapping_prop.set_description (cluster_mapping_description)
-				l_mapping_prop.set_display_agent (agent output_renaming)
-				if l_cluster.mapping /= Void then
-					l_mapping_prop.set_value (l_cluster.mapping)
-				end
-				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
-				properties.add_property (l_mapping_prop)
-			elseif l_assembly /= Void then
-					-- assembly culture
-				create l_text_prop.make (assembly_name_name)
-				l_text_prop.set_description (assembly_name_description)
-				l_text_prop.set_value (l_assembly.assembly_name)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name)
-				properties.add_property (l_text_prop)
-
-					-- assembly culture
-				create l_text_prop.make (assembly_culture_name)
-				l_text_prop.set_description (assembly_culture_description)
-				l_text_prop.set_value (l_assembly.assembly_culture)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture)
-				properties.add_property (l_text_prop)
-
-					-- assembly version
-				create l_text_prop.make (assembly_version_name)
-				l_text_prop.set_description (assembly_version_description)
-				l_text_prop.set_value (l_assembly.assembly_version)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version)
-				properties.add_property (l_text_prop)
-
-					-- assembly public key token
-				create l_text_prop.make (assembly_public_key_token_name)
-				l_text_prop.set_description (assembly_public_key_token_description)
-				l_text_prop.set_value (l_assembly.assembly_public_key_token)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key)
-				properties.add_property (l_text_prop)
-			end
-
-			if l_visible /= Void then
-					-- visible
-				create l_vis_dial
-				create l_vis_prop.make_with_dialog (cluster_visible_name, l_vis_dial)
-				l_vis_prop.set_description (cluster_visible_description)
-				l_vis_prop.set_display_agent (agent output_visible)
-				l_vis_prop.set_value (l_visible.visible)
-				l_vis_prop.change_value_actions.extend (agent l_visible.set_visible)
-				properties.add_property (l_vis_prop)
-			end
-
-			properties.set_expanded_section_store (group_section_expanded_status)
+			add_group_properties (a_group, current_target)
 		ensure
 			properties_not_void: properties /= Void
 			current_group_set: current_group = a_group
@@ -2712,68 +2456,6 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	update_group_location (a_group: CONF_GROUP; a_location: STRING_32) is
-			-- Update location of `a_group' to be `a_location'.
-		require
-			a_group: a_group /= Void
-			current_target: current_target /= Void
-		local
-			l_location: CONF_LOCATION
-		do
-			if a_location /= Void and then not a_location.is_empty then
-				if a_group.is_cluster then
-					create {CONF_DIRECTORY_LOCATION}l_location.make (a_location, current_target)
-				elseif a_group.is_assembly then
-					create {CONF_FILE_LOCATION}l_location.make (a_location, current_target)
-				elseif a_group.is_library then
-					create {CONF_FILE_LOCATION}l_location.make (a_location, current_target)
-				end
-				a_group.set_location (l_location)
-			end
-		end
-
-	update_dependencies (a_cluster: CONF_CLUSTER; a_dependencies: LIST [STRING_32]) is
-			-- Update dependencies of `a_cluster'.
-		require
-			current_target_not_void: current_target /= Void
-		local
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
-		do
-			a_cluster.set_dependencies (Void)
-			if a_dependencies /= Void and then not a_dependencies.is_empty then
-				from
-					l_grps := current_target.groups
-					a_dependencies.start
-				until
-					a_dependencies.after
-				loop
-					a_cluster.add_dependency (l_grps.item (a_dependencies.item))
-					a_dependencies.forth
-				end
-			end
-		end
-
-	update_overrides (an_override: CONF_OVERRIDE; an_overriding: LIST [STRING_32]) is
-			-- Update groups we override of `a_cluster'.
-		require
-			current_target_not_void: current_target /= Void
-		local
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
-		do
-			an_override.set_override (Void)
-			if an_overriding /= Void and then not an_overriding.is_empty then
-				from
-					l_grps := current_target.groups
-					an_overriding.start
-				until
-					an_overriding.after
-				loop
-					an_override.add_override (l_grps.item (an_overriding.item))
-					an_overriding.forth
-				end
-			end
-		end
-
 feature {NONE} -- Implementation helper
 
 	add_string_setting_actions (a_property: TYPED_PROPERTY [STRING_32]; a_name: STRING; a_default: STRING) is
@@ -2871,22 +2553,6 @@ feature {NONE} -- Inheritance handling
 			end
 		end
 
-	update_inheritance_file_rule_cluster (a_dummy: ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY) is
-			-- Enable inheritance/override on `a_property' depending on if there are file rules in the `current_group'.
-		require
-			a_property_not_void: a_property /= Void
-			current_group_ok: current_group /= Void and then current_group.is_cluster
-		local
-			l_cluster: CONF_CLUSTER
-		do
-			l_cluster ?= current_group
-			if not l_cluster.internal_file_rule.is_empty then
-				a_property.enable_overriden
-			else
-				a_property.enable_inherited
-			end
-		end
-
 feature {NONE} -- Validation and warning generation
 
 	check_library_target (a_target: STRING_32): BOOLEAN is
@@ -2953,69 +2619,6 @@ feature {NONE} -- Validation and warning generation
 			end
 		end
 
-feature {NONE} -- Output generation
-
-	output_renaming (a_table: EQUALITY_HASH_TABLE [STRING, STRING]): STRING_32 is
-			-- Generate a text representation of `a_table'.
-		do
-			if a_table /= Void and then not a_table.is_empty then
-				from
-					create Result.make (20)
-					a_table.start
-				until
-					a_table.after
-				loop
-					Result.append (a_table.key_for_iteration+"=>"+a_table.item_for_iteration+";")
-					a_table.forth
-				end
-				Result.remove_tail (1)
-			else
-				create Result.make_empty
-			end
-		end
-
-	output_class_options (a_table: HASH_TABLE [CONF_OPTION, STRING]): STRING_32 is
-			-- Generate a text representation of class options table `a_table'.
-		do
-			if a_table /= Void and then not a_table.is_empty then
-				from
-					create Result.make (20)
-					a_table.start
-				until
-					a_table.after
-				loop
-					if not a_table.item_for_iteration.is_empty then
-						Result.append (a_table.key_for_iteration+";")
-					end
-					a_table.forth
-				end
-				if not Result.is_empty then
-					Result.remove_tail (1)
-				end
-			else
-				create Result.make_empty
-			end
-		end
-
-	output_visible (a_visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]): STRING_32 is
-			-- Generate a text representation for `a_visible'.
-		do
-			if a_visible /= Void and then not a_visible.is_empty then
-				from
-					create Result.make (20)
-					a_visible.start
-				until
-					a_visible.after
-				loop
-					Result.append (a_visible.key_for_iteration+";")
-					a_visible.forth
-				end
-				Result.remove_tail (1)
-			else
-				create Result.make_empty
-			end
-		end
-
 feature {NONE} -- Wrappers
 
 	get_setting (a_name: STRING): STRING_32 is
@@ -3030,14 +2633,6 @@ feature {NONE} -- Wrappers
 			if l_val /= Void then
 				Result := l_val
 			end
-		end
-
-	change_no_argument_wrapper (a_dummy: ANY; a_call: PROCEDURE [ANY, TUPLE[]]) is
-			-- Wrapper that allows to plugin in an agent without arguments on a change call (e.g. to refresh inheritance information).
-		require
-			a_call_not_void: a_call /= Void
-		do
-			a_call.call ([])
 		end
 
 	simple_validate_wrapper (a_string: STRING_GENERAL; a_call: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is

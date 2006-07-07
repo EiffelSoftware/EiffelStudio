@@ -11,48 +11,12 @@
 		<heading>
 			<size>2</size>Compiling your Eiffel system for CECIL
 		</heading>It is very simple to "Cecilize" your Eiffel system, that is to say make its features available from the outside through CECIL. You will compile it as you normally would - either freeze it or finalize it. The only supplementary precaution is to protect from the dead-code remover any Eiffel features that are not called from the Eiffel system's root, and might thus be dead-code-removed by the optimization mechanism.
-		<paragraph>To do this, include the appropriate features and classes in the 
-			<italic>visible</italic> clause of the Ace file, as in
+		<paragraph>To do this, make the appropriate features and classes <link>
+					<url>../../tools/eiffelstudio/reference/25_project_settings/040_target_groups.xml</url>
+					<anchor_name>visible</anchor_name>
+					<label>visible</label>
+				</link>.
 		</paragraph>
-		<code_block>
-	<keyword>system</keyword>
-		<italic>system_name</italic>
-	<keyword>root</keyword>
-		...
-	<keyword>default</keyword>
-		...
-	<keyword>cluster</keyword>
-		...
-		<italic>your_cluste</italic>r<symbol>:</symbol> "..."
-			<keyword>adapt</keyword>
-			...
-			<keyword>visible</keyword>
-				<italic>CLASS1;</italic>
-                			<italic>CLASS2</italic>
-				<keyword>creation</keyword>
-					"<italic>other_make</italic>"
-				<keyword>export</keyword>
-					"<italic>other_make</italic>", "<italic>feat1</italic>", "<italic>feat2</italic>"
-				<keyword>end</keyword>
-			<keyword>end</keyword>
-	
-		... Other clusters ...
-	
-	...
-	<keyword>end</keyword></code_block>
-		Here all features of 
-		<italic>CLASS1</italic> are available to the external software; for 
-		<italic>CLASS2</italic>, only 
-		<italic>other_make</italic> (for creation) and 
-		<italic>feat1</italic> and 
-		<italic>feat2</italic> (for normal call) are available. For the full set of 
-		<code>
-			<keyword>visible</keyword>
-		</code> options, see appendix D of 
-		<italic>Eiffel: The Language</italic>. If you omit the clause 
-		<code>
-			<keyword>export</keyword>
-		</code>, only the features with no export clause in the Eiffel code, will be available. The creation procedure of a visible class is always available.
 		<heading>
 			<size>2</size>Building a CECIL archive
 		</heading>The EiffelStudio compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory.
@@ -60,16 +24,16 @@
 		<code_block>
 		<bold>make cecil</bold> (on unix and on windows with Borland)<bold>
 		nmake cecil</bold> (on windows with VC++)</code_block>
-		<paragraph>This generates a CECIL archive whose name derived from the name &amp;lt;system name&amp;gt; of the Eiffel system, as follows:</paragraph>
+		<paragraph>This generates a CECIL archive whose name derived from the name system name of the Eiffel system, as follows:</paragraph>
 		<code_block>
-		lib&amp;lt;system name&amp;gt;.a (on unix)
-		lib&amp;lt;system name&amp;gt;. lib (on Windows)</code_block>For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest. a" (Unix) or libtest. lib (Windows).
+		lib&lt;system name&gt;.a (on unix)
+		lib&lt;system name&gt;.lib (on Windows)</code_block>For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest.a" (Unix) or "libtest.lib" (Windows).
 		<paragraph>Note that through CECIL you can use an Eiffel system compiled in any of the Eiffel compilation modes:</paragraph>
 		<list ordered="false">
 			<item>Finalized C code. </item>
 			<item>Workbench (melted/frozen) code, usually for development purposes. In this case you must copy the 
-				<italic>&lt;system name&gt;. melted</italic> file ( where 
-				<italic>&lt;system name&gt;</italic> is the name of your system) located in EIFGEN\W_code to the directory where you intend to execute your C application from.
+				<italic>&lt;system name&gt;.melted</italic> file ( where 
+				<italic>&lt;system name&gt;</italic> is the name of your system) located in EIFGENs\&lt;target_name&gt;\W_code to the directory where you intend to execute your C application from.
 			</item>
 		</list>
 		<note>

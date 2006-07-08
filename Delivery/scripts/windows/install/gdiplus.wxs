@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Module Id="gdi_plus" Guid="75F82EEF-E7DD-4753-8763-067F8F47F540" Language="0" Version="5.7">
+		<Package Id="75F82EEF-E7DD-4753-8763-067F8F47F540" Keywords="MergeModule, MSI, Database" Description="gdi_plus" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="Application" Name="." >
+				<Directory Id="studio" Name="studio">
+					<Directory Id="spec" Name="spec">
+						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
+							<Directory Id="bin" Name="bin">
+								<Component Id="gdiplus.dll" Guid="CB974BDD-2299-48cf-AEEE-D4F075D0EA09">
+									<File Id="gdiplus.dll" Name="gdiplus.dll" src="$(env.INSTALL_DIR)\releases\gdiplus.dll" />
+								</Component>
+							</Directory>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>
+

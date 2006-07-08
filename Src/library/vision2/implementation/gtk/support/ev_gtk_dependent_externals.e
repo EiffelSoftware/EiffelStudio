@@ -763,11 +763,6 @@ feature -- Externals
 			"C (GdkGC*, GdkColor*) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_settings_set_string_property (a_settings, a_property, a_value, a_origin: POINTER) is
-		external
-			"C signature (GtkSettings*, gchar*, gchar*, gchar*) use <gtk/gtk.h>"
-		end
-
 	frozen gtk_widget_class_find_style_property (a_widget_class, a_property_name: POINTER): POINTER is
 		external
 			"C signature (GtkWidgetClass*, gchar*): GParamSpec* use <gtk/gtk.h>"
@@ -2587,11 +2582,6 @@ feature -- Externals
 					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
 				}
 			]"
-		end
-
-	frozen gtk_settings_get_default: POINTER is
-		external
-			"C signature (): GtkSettings* use <gtk/gtk.h>"
 		end
 
 	frozen gtk_value_pointer (arg: POINTER): POINTER is

@@ -19,7 +19,11 @@ feature {NONE} -- Initialization
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create with size.
 		do
-			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_new ({EV_GTK_EXTERNALS}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_new ({EV_GTK_EXTERNALS}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
+			else
+				create internal_pixmap.make_with_size (a_width, a_height)
+			end
 		end
 
 	make (an_interface: EV_PIXEL_BUFFER) is
@@ -44,15 +48,18 @@ feature -- Command
 			g_error: POINTER
 			filepixbuf: POINTER
 		do
-			a_cs := a_file_name
-			filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
-			if g_error /= default_pointer then
-					-- GdkPixbuf could not load the image so we raise an exception.
-				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+				a_cs := a_file_name
+				filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+				if g_error /= default_pointer then
+						-- GdkPixbuf could not load the image so we raise an exception.
+					(create {EXCEPTIONS}).raise ("Could not load image file.")
+				else
+					set_gdkpixbuf (filepixbuf)
+				end
 			else
-				set_gdkpixbuf (filepixbuf)
+				internal_pixmap.set_with_named_file (a_file_name)
 			end
-
 		end
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
@@ -62,12 +69,16 @@ feature -- Command
 			l_pixbuf: POINTER
 			l_gdkpix, l_gdkmask: POINTER
 		do
-			create Result
-			l_pixmap_imp ?= Result.implementation
-			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-			{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
-			l_pixmap_imp.set_pixmap (l_gdkpix, l_gdkmask)
-			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+				create Result
+				l_pixmap_imp ?= Result.implementation
+				l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+				{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
+				l_pixmap_imp.set_pixmap (l_gdkpix, l_gdkmask)
+				{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+			else
+				Result := internal_pixmap.sub_pixmap (a_rect)
+			end
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
@@ -75,38 +86,65 @@ feature -- Command
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
 			l_pixbuf: POINTER
+			l_internal_pixmap: EV_PIXMAP
 		do
-			create Result
-			l_imp ?= Result.implementation
-			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
-			l_imp.set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pixbuf))
-			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+				create Result
+				l_imp ?= Result.implementation
+				l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
+				l_imp.set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pixbuf))
+				{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+			else
+				create Result
+				l_internal_pixmap := sub_pixmap (a_rect)
+				l_imp ?= Result.implementation
+				l_imp.set_internal_pixmap (l_internal_pixmap)
+			end
 		end
 
 feature -- Query
 
 	width: INTEGER is
-			-- Width
+			-- Width of buffer in pixels.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
+			else
+				Result := internal_pixmap.width
+			end
 		end
 
 	height: INTEGER is
-			-- Height
+			-- Height of buffer in pixels.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
+			else
+				Result := internal_pixmap.height
+			end
 		end
 
-feature {EV_PIXEL_BUFFER_IMP} -- Implementation
+feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
+
+	internal_pixmap: EV_PIXMAP
+		-- Pixmap used for fallback implementation on gtk 1.2
 
 	set_gdkpixbuf (a_pixbuf: POINTER) is
-			--
+			-- Set `gdk_pixbuf' to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
 			gdk_pixbuf := a_pixbuf
+		end
+
+	set_internal_pixmap (a_pixmap: like internal_pixmap) is
+			-- Set `internal_pixmap' to `a_pixmap'.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+		do
+			internal_pixmap := a_pixmap
 		end
 
 	gdk_pixbuf: POINTER

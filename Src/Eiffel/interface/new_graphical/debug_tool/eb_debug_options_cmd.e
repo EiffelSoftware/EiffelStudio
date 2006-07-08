@@ -45,8 +45,6 @@ feature -- Formatting
 	execute is
 			-- Set the execution format to `stone'.
 		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
-
 			args_dialog: EB_ARGUMENT_DIALOG
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW

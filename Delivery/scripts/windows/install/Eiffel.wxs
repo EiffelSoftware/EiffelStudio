@@ -36,7 +36,7 @@
 				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
 				<Merge Id="dotnet" Language="1033" src="MSMs\dotnet.msm" DiskId="1" />
 				<Merge Id="gobo" Language="1033" src="MSMs\gobo.msm" DiskId="1" />
-				<Merge Id="gdi_plus" Language="1033" src="MSMs\gdi_plus.msm" DiskId="1" />
+				<Merge Id="gdiplus" Language="1033" src="MSMs\gdiplus.msm" DiskId="1" />
 				<Merge Id="free_add_ons" Language="1033" src="MSMs\free_add_ons.msm" DiskId="1" />
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
@@ -73,7 +73,7 @@
 				<MergeRef Id="dotnet" />
 			</Feature>
 
-			<Feature Id="gdi_plus" Title="GDI+" TypicalDefault="install" Level="3" Display="hidden">
+			<Feature Id="gdiplus" Title="GDI+" TypicalDefault="install" Level="3" Display="hidden">
 				<Condition Level="0"><![CDATA[GDIPLUS = "empty"]]></Condition>
 				<MergeRef Id="dotnet" />
 			</Feature>

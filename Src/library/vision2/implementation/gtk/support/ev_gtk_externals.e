@@ -9,6 +9,50 @@ inherit
 
 feature -- MACROS
 
+	frozen gtk_settings_get_default: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gtk_settings_get_default();
+				#endif					
+			]"
+		end
+
+	frozen gtk_settings_set_string_property (a_settings, a_property, a_value, a_origin: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_settings_set_string_property ((GtkSettings*) $a_settings, (gchar*) $a_property, (gchar*) $a_value, (gchar*) $a_origin);
+				#endif
+			]"
+		end
+
+	frozen gtk_window_set_keep_above (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_window_set_keep_above ((GtkWindow*) $a_window, (gboolean) $a_setting);
+				#endif
+			]"
+		end
+
+	frozen gtk_window_set_keep_below (a_window: POINTER; a_setting: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_window_set_keep_below ((GtkWindow*) $a_window, (gboolean) $a_setting);
+				#endif
+			]"
+		end
+
 	frozen gdk_window_process_all_updates is
 		external
 			"C inline use <gtk/gtk.h>"

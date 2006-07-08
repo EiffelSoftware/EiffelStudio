@@ -1318,11 +1318,7 @@ feature {NONE} -- Visitors
 		local
 			l_cl_type_i: CL_TYPE_I
 			l_gen_type : GEN_TYPE_I
-			is_lazy: BOOLEAN
 		do
-				-- When the feature is lazy, there is no address table entry in ececil.c
-			is_lazy := System.address_table.is_lazy (a_node.class_id, a_node.feature_id)
-
 				-- Arguments
 			if a_node.arguments /= Void then
 				a_node.arguments.process (Current)
@@ -1333,25 +1329,6 @@ feature {NONE} -- Visitors
 				a_node.open_positions.process (Current)
 			end
 
-			if not is_lazy then
-					-- Get address of routine
-				l_cl_type_i ?= context.real_type (a_node.class_type)
-				ba.append (Bc_addr)
-				ba.append_integer (a_node.feature_id)
-
-				ba.append_short_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
-					-- Use RTWPPR
-				ba.append_boolean (True)
-
-					-- Get address of true Eiffel routine
-				ba.append (Bc_addr)
-				ba.append_integer (a_node.feature_id)
-
-				ba.append_short_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
-					-- Use RTWPP
-				ba.append_boolean (False)
-			end
-
 				-- Now create routine object
 			ba.append (Bc_rcreate)
 
@@ -1359,8 +1336,8 @@ feature {NONE} -- Visitors
 			ba.append_boolean (a_node.arguments /= Void)
 					-- Do we have an open map?
 			ba.append_boolean (a_node.open_positions /= Void)
-					-- Is this a lazy call
-			ba.append_boolean (is_lazy)
+					-- This is a lazy call
+			ba.append_boolean (True)
 
 			l_cl_type_i ?= context.real_type (a_node.type)
 			l_gen_type  ?= l_cl_type_i
@@ -1373,13 +1350,11 @@ feature {NONE} -- Visitors
 
 			ba.append_short_integer (-1)
 
-			if is_lazy then
-				l_cl_type_i ?= context.real_type (a_node.class_type)
-				ba.append_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
-				ba.append_integer (a_node.feature_id)
-				ba.append_boolean (l_cl_type_i.base_class.is_precompiled)
-				ba.append_boolean (l_cl_type_i.is_basic)
-			end
+			l_cl_type_i ?= context.real_type (a_node.class_type)
+			ba.append_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
+			ba.append_integer (a_node.feature_id)
+			ba.append_boolean (l_cl_type_i.base_class.is_precompiled)
+			ba.append_boolean (l_cl_type_i.is_basic)
 		end
 
 	process_string_b (a_node: STRING_B) is

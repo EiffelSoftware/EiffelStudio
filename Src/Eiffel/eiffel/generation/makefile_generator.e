@@ -914,9 +914,31 @@ feature -- Generation (Linking rules)
 	generate_system_objects_macros is
 			-- Generate the system object macros
 			-- (dependencies for final executable).
+		local
+			l_baskets: like system_baskets
+			l_basket: LIST [STRING]
 		do
-				-- System object files.
-			generate_basket_objects (System_baskets, system_object_prefix)
+			if system_baskets.count > 1 then
+					-- System object files.
+				l_baskets := system_baskets.subarray (system_baskets.lower + 1, system_baskets.upper)
+				generate_basket_objects (l_baskets, system_object_prefix)
+			end
+
+				-- Generate `system_baskets.item (1)' now.
+				-- It is needed because on some platforms (e.g SGI) Eobj1.o is too big
+				-- to be linked.
+			l_basket := system_baskets.item (1)
+			from
+				l_basket.start
+			until
+				l_basket.after
+			loop
+				make_file.put_character (' ')
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_character ('/')
+				make_file.put_string (l_basket.item)
+				l_basket.forth
+			end
 		end
 
 	generate_objects_macros is
@@ -1003,6 +1025,7 @@ feature -- Generation (Linking rules)
 		local
 			i, nb: INTEGER
 			emain_file: STRING
+			l_basket: LIST [STRING]
 		do
 			emain_file := "emain.template"
 
@@ -1046,8 +1069,27 @@ feature -- Generation (Linking rules)
 				make_file.new_line
 			end
 
+			l_basket := system_baskets.item (1)
 			from
-				i := 1
+				l_basket.start
+			until
+				l_basket.after
+			loop
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_character ('/')
+				make_file.put_string (l_basket.item)
+				make_file.put_string (": Makefile ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/Makefile%N%Tcd ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string (" ; $(MAKE) ")
+				make_file.put_string (l_basket.item)
+				make_file.put_string ("%N%N")
+				l_basket.forth
+			end
+
+			from
+				i := 2
 				nb := system_baskets.count
 			until
 				i > nb
@@ -1057,19 +1099,9 @@ feature -- Generation (Linking rules)
 				make_file.put_character (system_object_prefix)
 				make_file.put_string ("obj")
 				make_file.put_integer (i)
-				if i = 1 then
-					make_file.put_string (".o: Makefile ")
-					make_file.put_string (packet_name (system_object_prefix, i))
-					make_file.put_string ("/Makefile%N%Tcd ")
-				else
-					make_file.put_string (".o: Makefile%N%Tcd ")
-				end
+				make_file.put_string (".o: Makefile%N%Tcd ")
 				make_file.put_string (packet_name (system_object_prefix, i))
-				if i = 1 then
-					make_file.put_string (" ; $(START_TEST) $(MAKE) ")
-				else
-					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
-				end
+				make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
 				make_file.put_character (system_object_prefix)
 				make_file.put_string ("obj")
 				make_file.put_integer (i)
@@ -1177,10 +1209,10 @@ feature {NONE} -- Implementation
 			not_first: BOOLEAN
 		do
 			from
-				nb := baskets.count
-				i := nb
+				i := baskets.upper
+				nb := baskets.lower
 			until
-				i < 1
+				i < nb
 			loop
 				if not baskets.item (i).is_empty then
 					if not_first then

@@ -122,7 +122,7 @@ feature -- Access
 			-- Options read from config.eif
 
 	dependent_directories, system_dependent_directories,
-	object_dependent_directories: ARRAYED_LIST [STRING]
+	object_dependent_directories: ARRAYED_LIST [TUPLE [directory, file:STRING]]
 			-- Subdirs for this compilation
 
 	quick_compilation: BOOLEAN
@@ -302,7 +302,7 @@ feature {NONE} -- Translation
 			until
 				dependent_directories.after
 			loop
-				dir := dependent_directories.item
+				dir := dependent_directories.item.directory
 
 				if not dir.is_equal(old_dir) then
 					debug ("progress")
@@ -656,11 +656,11 @@ feature {NONE} -- Translation
 			dir_sep_pos: INTEGER -- the position of the directory separator
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
-			number: INTEGER -- the number of the Eobj file
-			is_emain, is_E1_makefile, is_E1_structure: BOOLEAN
+			l_need_test, is_emain, is_E1_makefile, is_E1_structure: BOOLEAN
 			emain_line: STRING
 			min: INTEGER
 			dependency: STRING
+			l_target_file: STRING
 		do
 			debug ("progress")
 				io.put_string ("%Tdependencies%N")
@@ -682,6 +682,7 @@ feature {NONE} -- Translation
 
 				is_E1_makefile := False
 				is_E1_structure := False
+				l_need_test := True
 
 				-- get directory name and filename
 				dir_sep_pos := lastline.index_of (directory_separator.item (1), 1)
@@ -699,6 +700,7 @@ feature {NONE} -- Translation
 					makefile.put_string (dir)
 					makefile.put_string (directory_separator)
 					is_emain := True
+					l_need_test := False
 					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
 					if emain_line.count > 0 then
 						subst_eiffel (emain_line)
@@ -723,20 +725,26 @@ feature {NONE} -- Translation
 				elseif filename.is_equal ("estructure") and then dir.is_equal ("E1") then
 					is_E1_structure := True
 				else
-					makefile.put_string (dir)
-					makefile.put_string (directory_separator)
-
-					if dir.item (1) = 'E' then
-						system_dependent_directories.put_front (dir)
-						dependent_directories.put_right (dir)
+					l_target_file := dir + directory_separator
+						-- Last check on filename is to know if we are handling the old code
+						-- generation where all objects file of E1 where in Eobj1 or if we do
+						-- on a per object file.
+					if dir.item (1) = 'E' and dir.item (2) = '1' and filename.item (1) /= 'E' then
+						filename.append (options.get_string ("obj_text", ".obj"))
+						l_need_test := True
 					else
-						object_dependent_directories.put_front (dir)
-						dependent_directories.put_front (dir)
+						filename.append_character ('.')
+						filename.append (options.get_string ("intermediate_file_ext", Void))
 					end
+					l_target_file.append (filename)
+					if dir.item (1) = 'E' then
+						system_dependent_directories.put_front ([dir, l_target_file])
+					else
+						object_dependent_directories.put_front ([dir, l_target_file])
+					end
+					dependent_directories.put_right ([dir, l_target_file])
 
-					makefile.put_string (filename)
-					makefile.put_string (".")
-					makefile.put_string (options.get_string ("intermediate_file_ext", Void))
+					makefile.put_string (l_target_file)
 					makefile.put_string (":")
 					makefile.put_string (dependency)
 					makefile.put_new_line
@@ -760,7 +768,7 @@ feature {NONE} -- Translation
 					makefile.put_string (" ")
 					makefile.put_string (dir)
 					makefile.put_string (options.get_string ("subcommand_separator", " && "))
-					if not is_emain then
+					if l_need_test then
 						makefile.put_string ("$(START_TEST) ")
 					end
 					makefile.put_string ("$(MAKE)")
@@ -770,11 +778,9 @@ feature {NONE} -- Translation
 						makefile.put_string (options.get_string ("emain_obj_text", Void))
 					else
 						makefile.put_string (filename)
-						makefile.put_string (".")
-						makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 					end
 
-					if not is_emain then
+					if l_need_test then
 						makefile.put_string (" $(END_TEST)")
 					end
 					makefile.put_string (options.get_string ("subcommand_separator", " && "))
@@ -810,14 +816,8 @@ feature {NONE} -- Translation
 			until
 				dependent_directories.after
 			loop
-				dir := dependent_directories.item
+				dir := dependent_directories.item.file
 				makefile.put_string (dir)
-				makefile.put_string (directory_separator)
-				makefile.put_character (dir.item (1))
-				makefile.put_string ("obj")
-				makefile.put_string (dir.substring (2, dir.count))
-				makefile.put_character ('.')
-				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 				makefile.put_character (' ')
 				dependent_directories.forth
 			end
@@ -830,16 +830,9 @@ feature {NONE} -- Translation
 			until
 				object_dependent_directories.after
 			loop
-				dir := object_dependent_directories.item
+				dir := object_dependent_directories.item.file
 				makefile.put_string (dir)
-				makefile.put_string (directory_separator)
-				makefile.put_character (dir.item (1))
-				makefile.put_string ("obj")
-				makefile.put_string (dir.substring (2, dir.count))
-				makefile.put_character ('.')
-				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 				makefile.put_character (' ')
-
 				object_dependent_directories.forth
 			end
 			if object_dependent_directories.is_empty then
@@ -849,23 +842,13 @@ feature {NONE} -- Translation
 			from
 				makefile.put_string ("%N%N")
 				makefile.put_string (options.get_string ("eobjects_text", Void))
-				number := 0
 				system_dependent_directories.start
 			until
 				system_dependent_directories.after
 			loop
-				dir := system_dependent_directories.item
-				number := number + 1
-
+				dir := system_dependent_directories.item.file
 				makefile.put_string (dir)
-				makefile.put_string (directory_separator)
-				makefile.put_character (dir.item (1))
-				makefile.put_string ("obj")
-				makefile.put_integer (number)
-				makefile.put_character ('.')
-				makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 				makefile.put_character (' ')
-
 				system_dependent_directories.forth
 			end
 
@@ -998,7 +981,7 @@ feature {NONE} -- Translation
 					end
 				end
 
-				dir := dependent_directories.item
+				dir := dependent_directories.item.directory
 
 				selected_object := options.get_string ("objects__text", Void).twin
 
@@ -1441,14 +1424,8 @@ feature {NONE}	-- substitutions
 						l_string.append_string ("%Techo ")
 						l_new_line_inserted := True
 					end
-					l_dir := dependent_directories.item
+					l_dir := dependent_directories.item.file
 					l_string.append (l_dir)
-					l_string.append (directory_separator)
-					l_string.append_character (l_dir.item (1))
-					l_string.append ("obj")
-					l_string.append (l_dir.substring (2, l_dir.count))
-					l_string.append_character ('.')
-					l_string.append_string (l_int)
 					l_string.append_character (' ')
 					if (i + 1) \\ 5 = 0 then
 						l_string.append (" >> $@ %N")

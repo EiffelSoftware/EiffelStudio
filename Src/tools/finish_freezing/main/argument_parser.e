@@ -90,6 +90,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_only_switch, "Informs tool to only generate a Makefile.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Does nothing, for UNIX compatibility only", True, True))
 		end
 
 feature {NONE} -- Switches
@@ -97,6 +98,7 @@ feature {NONE} -- Switches
 	location_switch: STRING is "location"
 	generate_only_switch: STRING is "generate_only"
 	silent_switch: STRING is "silent"
+	library_switch: STRING is "library"
 	x86_switch: STRING is "x86";
 			-- Argument switches
 

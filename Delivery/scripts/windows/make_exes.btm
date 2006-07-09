@@ -227,6 +227,11 @@ iff not exist estudio.exe then
 endiff
 move estudio.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
+remtrace get GDI+ for platforms that don't have it
+cdd %EIFFEL_SRC\tools
+co %DEFAULT_ISE_SVN/Src/tools/gdiplus gdiplus
+move gdiplus\gdiplus.dll %INSTALL_DIR\releases
+
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
 co %DEFAULT_ISE_SVN/Src/library/keygen library/keygen

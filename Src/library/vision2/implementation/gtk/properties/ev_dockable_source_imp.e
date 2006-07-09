@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			set_pointer_style (Drag_cursor)
 		end
 
-	orig_cursor: EV_CURSOR
+	orig_cursor: EV_POINTER_STYLE
 
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			--
 		deferred
 		end

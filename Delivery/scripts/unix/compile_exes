@@ -127,14 +127,14 @@ cd $EXPORT_DIR
 untgz_ccode quick_finalize
 move quick_finalize $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
-remtrace "Put estudio in the new delivery"
+remtrace "Put ecdbgd in the new delivery"
 # It should already have been compiled by the configure of the run-time.
 cd $EXPORT_DIR/C/ipc/daemon
-if [ ! -f estudio ]; then
-	echo Could not finalize a new estudio
+if [ ! -f ecdbgd ]; then
+	echo Could not finalize a new ecdbgd
 	CANCEL
 fi
-move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 remtrace Then the Eiffel libraries
 cd $EXPORT_DIR
@@ -208,6 +208,11 @@ else
 	gzip ec
 	move ec.gz $EXPORT_DIR/ecs/ec_ent.gz
 fi
+
+remtrace Recompile estudio
+cd $EXPORT_DIR
+untgz_ccode estudio
+move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
 
 cd $EXPORT_DIR
 . compile_wizards

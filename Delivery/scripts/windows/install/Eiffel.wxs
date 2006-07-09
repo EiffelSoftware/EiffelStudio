@@ -11,7 +11,6 @@
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
 			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
-		<Property Id="GDIPLUS">empty</Property>
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
@@ -74,8 +73,8 @@
 			</Feature>
 
 			<Feature Id="gdiplus" Title="GDI+" TypicalDefault="install" Level="3" Display="hidden">
-				<Condition Level="0"><![CDATA[GDIPLUS = "empty"]]></Condition>
-				<MergeRef Id="dotnet" />
+				<Condition Level="0">GDIPLUSNEEDED = "0"</Condition>
+				<MergeRef Id="gdiplus" />
 			</Feature>
 
 			<Feature Id="EiffelStudio" Title="EiffelStudio" TypicalDefault="install" Level="3" Display="hidden">
@@ -1315,7 +1314,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 
 		<InstallExecuteSequence>
 			<LaunchConditions After='AppSearch' />
-			<Custom Action="is_gdi_plus_installed" After="InstallValidate">NOT Installed</Custom>
+			<Custom Action="is_gdi_plus_installed" Before="LaunchConditions" />
 			<Custom Action="prepare_finalize_setup" Before="finalize_setup">NOT Installed</Custom>
 			<Custom Action="finalize_setup" Before="InstallFinalize">NOT Installed</Custom>
 			<RemoveExistingProducts After="InstallFinalize" />

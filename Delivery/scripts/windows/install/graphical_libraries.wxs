@@ -1635,6 +1635,7 @@
 									<File Id="ev_character_format.e" Name="EV_CHA~4.E" LongName="ev_character_format.e" />
 									<File Id="ev_paragraph_format.e" Name="EV_PAR~2.E" LongName="ev_paragraph_format.e" />
 									<File Id="ev_shared_application.e" Name="EV_SHA~1.E" LongName="ev_shared_application.e" />
+									<File Id="ev_pointer_style_e" Name="EV_POI~1.E" LongName="ev_pointer_style.e" />
 								</Component>
 							</Directory>
 							<Directory Id="properties39" Name="PROPER~3" LongName="properties">
@@ -1908,6 +1909,7 @@
 										<File Id="ev_color_imp.e" Name="EV_COL~9.E" LongName="ev_color_imp.e" />
 										<File Id="ev_character_format_imp.e" Name="EV_CHA~2.E" LongName="ev_character_format_imp.e" />
 										<File Id="ev_paragraph_format_imp.e" Name="EV_PAR~4.E" LongName="ev_paragraph_format_imp.e" />
+										<File Id="ev_pointer_style_imp_e" Name="EV_POI~1.E" LongName="ev_pointer_style_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="doc" Name="doc">
@@ -2102,6 +2104,7 @@
 										<File Id="ev_screen_i.e" Name="EV_SCR~7.E" LongName="ev_screen_i.e" />
 										<File Id="ev_character_format_i.e" Name="EV_CHA~3.E" LongName="ev_character_format_i.e" />
 										<File Id="ev_paragraph_format_i.e" Name="EV_PAR~5.E" LongName="ev_paragraph_format_i.e" />
+										<File Id="ev_pointer_style_i_e" Name="EV_POI~1.E" LongName="ev_pointer_style_i.e" />
 									</Component>
 								</Directory>
 								<Directory Id="events37" Name="events">

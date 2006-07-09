@@ -208,7 +208,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	pointer_style: EV_CURSOR
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
 

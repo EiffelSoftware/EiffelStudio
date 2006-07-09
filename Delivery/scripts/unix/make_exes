@@ -119,3 +119,15 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		move setup.tar.gz $EXPORT_DIR
 	fi
 fi
+
+remtrace Recompile estudio
+cd $EIFFEL_SRC/tools/estudio/config
+clean_project
+finalize estudio.ecf estudio
+tgz_ccode estudio estudio.tar.gz
+if [ ! -f estudio.tar.gz ]; then
+	echo Could not finalize a new estudio
+	CANCEL
+fi
+clean_project
+move estudio.tar.gz $EXPORT_DIR

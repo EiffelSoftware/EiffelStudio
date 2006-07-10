@@ -3655,7 +3655,7 @@ feature -- Implementation
 					l_vjrv1.set_target_name (l_as.target.access_name)
 					l_vjrv1.set_target_type (l_target_type)
 					l_vjrv1.set_location (l_as.target.end_location)
-					error_handler.insert_error (l_vjrv1)
+					error_handler.insert_warning (l_vjrv1)
 				end
 			elseif l_target_type.is_formal then
 				l_formal ?= l_target_type
@@ -3668,7 +3668,7 @@ feature -- Implementation
 					l_vjrv2.set_target_name (l_as.target.access_name)
 					l_vjrv2.set_target_type (l_target_type)
 					l_vjrv2.set_location (l_as.target.end_location)
-					error_handler.insert_error (l_vjrv2)
+					error_handler.insert_warning (l_vjrv2)
 				end
 			else
 					-- Target is a reference, but source is not.

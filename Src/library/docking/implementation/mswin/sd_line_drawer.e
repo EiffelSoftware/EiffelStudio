@@ -17,6 +17,7 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		do
 			create internal_shared
+			create internal_screen
 		end
 
 feature -- Command
@@ -36,6 +37,8 @@ feature -- Command
 			-- Draw a rectangle on screen which center is blank.
 		require
 			line_width_valid: line_width > 0
+			width_positive: width > 0
+			height_positive: height > 0
 		do
 			if internal_last_feedback_left /= 0 and internal_last_feedback_top /= 0
 				and internal_last_feedback_width /= 0 and internal_last_feedback_height /= 0 then
@@ -60,6 +63,23 @@ feature -- Command
 				internal_last_feedback_width := 0
 				internal_last_feedback_height := 0
 			end
+		end
+
+	reset_screen is
+			-- Because dc will change between user using Remote Desktop and normal video card.
+			-- So we need to recreate `internal_screen' to make sure line can be drawn.
+		do
+			create internal_screen
+		end
+
+feature -- Query
+
+	screen: EV_SCREEN is
+			-- Screen to draw.
+		do
+			result := internal_screen
+		ensure
+			not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation for draw_rectangle
@@ -115,6 +135,8 @@ feature {NONE} -- Implementation
 
 	half_tone_pixmap (a_width, a_height: INTEGER): EV_PIXMAP is
 			-- Get a dot line pixmap.
+		require
+			valid: a_width > 0 and a_height > 0
 		local
 			l_pixmap: EV_PIXMAP
 			l_x,l_y: INTEGER
@@ -159,10 +181,12 @@ feature {NONE} -- Implementation
 			-- Clear last drawn feedback rectangle.
 		do
 			draw_rectangle_internal (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height, internal_shared.line_width)
-
 		end
 
 	draw_rectangle_internal (left, top, width, height, line_width: INTEGER) is
+			-- Draw half-tone rectangle feedback.
+		require
+			valid: width > 0
 		do
 			-- Draw window area, top one.
 			draw_rectangle_internal_top (left, top, width, line_width)
@@ -179,11 +203,8 @@ feature {NONE}  -- Implementation
 	last_half_tone_pixmap: EV_PIXMAP
 			-- Half tone pixmap last time drawn.
 
-	screen: EV_SCREEN is
-			-- Screen to draw.
-		once
-			create Result
-		end
+	internal_screen: EV_SCREEN
+			-- Internal screen instance, one instance per a dragging process.
 
 	internal_shared: SD_SHARED;
 			-- All singletons.

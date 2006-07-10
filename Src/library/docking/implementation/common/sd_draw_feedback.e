@@ -27,8 +27,8 @@ feature -- Basic operations
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			screen.set_copy_mode
-			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
+			line_drawer.screen.set_copy_mode
+			line_drawer.screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
 	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask, orignal_screen: EV_PIXMAP) is
@@ -47,8 +47,8 @@ feature -- Basic operations
 			l_buffer.set_invert_mode
 			l_buffer.draw_pixmap (0, 0, a_target_pixmap)
 
-			screen.set_copy_mode
-			screen.draw_pixmap (a_screen_x, a_screen_y, l_buffer)
+			line_drawer.screen.set_copy_mode
+			line_drawer.screen.draw_pixmap (a_screen_x, a_screen_y, l_buffer)
 		end
 
 	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [SPECIAL [INTEGER]]) is
@@ -67,8 +67,8 @@ feature -- Basic operations
 		do
 			if a_colors.count /= 0 then
 				l_width := a_colors.item (0).count // 3
-				screen.set_copy_mode
-				l_pixmap := screen.sub_pixmap (create {EV_RECTANGLE}.make (a_screen_x, a_screen_y, l_width, a_colors.count))
+				line_drawer.screen.set_copy_mode
+				l_pixmap := line_drawer.screen.sub_pixmap (create {EV_RECTANGLE}.make (a_screen_x, a_screen_y, l_width, a_colors.count))
 				from
 					j := 0
 					j_count := a_colors.count
@@ -150,7 +150,7 @@ feature -- Basic operations
 					end
 					j := j + 1
 				end
-				screen.draw_pixmap (a_screen_x, a_screen_y, l_pixmap)
+				line_drawer.screen.draw_pixmap (a_screen_x, a_screen_y, l_pixmap)
 			end
 		end
 
@@ -176,8 +176,8 @@ feature -- Basic operations
 	draw_red_rectangle (left, top, width, height: INTEGER) is
 			-- Draw red rectangle.
 		do
-			screen.set_foreground_color ((create {EV_STOCK_COLORS}).red)
-			screen.draw_rectangle (left, top, width, height)
+			line_drawer.screen.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+			line_drawer.screen.draw_rectangle (left, top, width, height)
 		end
 
 	draw_rectangle (a_left, a_top, a_width, a_height, a_line_width: INTEGER) is
@@ -194,7 +194,6 @@ feature -- Basic operations
 			feedback_rect.show
 
 			feedback_rect.set_area (create {EV_RECTANGLE}.make (a_left, a_top, a_width, a_height))
-
 		end
 
 	draw_transparency_rectangle_for_tab (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
@@ -209,25 +208,16 @@ feature -- Query
 	feedback_rect: SD_FEEDBACK_RECT
 			-- Feedback rectangle window.
 
-	screen: EV_SCREEN is
-			-- Utility to draw things on screen.
-			-- FIXIT: should use once, but it not work when relogin to Windows.
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
+	line_drawer: SD_LINE_DRAWER
+			-- Drawer to draw lines.
 
 feature {NONE} -- Implementation
 
 	edge_lightness: REAL is 0.65
 			-- Lightness to to identify edge of icon.
 
-	internal_shared: SD_SHARED
+	internal_shared: SD_SHARED;
 			-- All singletons.
-
-	line_drawer: SD_LINE_DRAWER;
-			-- Drawer to draw lines.
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

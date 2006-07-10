@@ -257,12 +257,16 @@ RT_LNK int fcount;
 
 
 /* Macros used by reverse assignments:
- *  RTRC(x,y) is true if type 'y' conforms to type 'x'
- *  RTRA(x,y) calls RTRC(x, Dftype(y)) if 'y' is not void
- *  RTRV(x,y) returns 'y' if it conforms to type 'x', void otherwise
+ *  RTRC(x,y)     is true if type 'y' conforms to type 'x'
+ *  RTRA(x,y)     calls RTRC(x, Dftype(y)) if 'y' is not void
+ *  RTRB(x,y,z,t) assigns value of basic type 't' of 'y' to 'z' if 'y' conforms to type 'x'
+ *  RTRE(x,y,z)   copies 'y' to 'z' if 'y' conforms to type 'x'
+ *  RTRV(x,y)     returns 'y' if it conforms to type 'x', void otherwise
  */
 #define RTRC(x,y)		eif_gen_conf ((int16) (y), (int16) (x))
 #define RTRA(x,y)		((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
+#define RTRB(x,y,z,t)		{ if (RTRA((x),(y))) { z = t (y); } }
+#define RTRE(x,y,z)		{ if (RTRA((x),(y))) { RTXA ((y), z); } }
 #define RTRV(x,y)		(RTRA((x),(y)) ? (y) : (EIF_REFERENCE) 0)
 
 

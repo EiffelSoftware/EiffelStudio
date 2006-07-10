@@ -193,9 +193,9 @@ feature
 				analyze_simple_assignment
 			end
 			create saved_context.make_from_context (context)
+			target_type := context.real_type (target.type)
 			if simple_op_assignment = No_simple_op then
 				source_type := context.real_type (source.type)
-				target_type := context.real_type (target.type)
 				if target.is_predefined then
 					result_used := target.is_result
 						-- We won't attempt a propagation of the target if the
@@ -270,12 +270,18 @@ feature
 				-- must NOT be expanded in line (side effect in macro).
 			if not target.is_predefined then
 				string_b ?= source
-				if string_b /= Void and then string_b.register = No_register
+				if
+					string_b /= Void and then string_b.register = No_register
 				then
 						-- Take a register to hold the value of the string.
 					get_register
 					register.free_register
 				end
+			end
+			if target_type.is_true_expanded then
+					-- Take a register to hold the value of the cloned expanded object.
+				get_register
+				register.free_register
 			end
 				-- If source has GCable variables and is not a single call or
 				-- access, then we cannot expand that in a return after the
@@ -356,7 +362,7 @@ feature
 	source_print_register is
 			-- Generate source (the True one or the metamorphosed one)
 		do
-			if register_for_metamorphosis then
+			if register /= Void then
 				print_register
 			else
 				source.print_register
@@ -443,7 +449,6 @@ feature
 			need_aging_tests: BOOLEAN
 			buf: GENERATION_BUFFER
 			target_c_type: TYPE_C
-			target_type: CL_TYPE_I
 			source_type: TYPE_I
 		do
 			buf := buffer
@@ -487,52 +492,19 @@ feature
 				end
 			end
 			if how = Copy_assignment then
-				if not target.is_predefined and target_c_type.is_pointer then
-						-- Assignment on attribute. We need aging test, thus we use RTXA.
-						-- FIXME: Optimization for attributes which are known to not have
-						-- references in final mode, we should just do a `memmove' which
-						-- is much faster.
-					buf.put_string ("RTXA(")
-	                if register /= Void then
-	                    print_register
-	                    buf.put_string (" = ")
-	                    source.print_register
-	                else
-	                    source.print_register
-	                end
-	                buf.put_string (gc_comma)
-	                target.print_register
-	                buf.put_character (')')
-	                buf.put_character (';')
-	                buf.put_new_line
-				else
-					target_type ?= context.real_type (target.type)
-					check
-							-- An expanded is a valid class type.
-						target_type_not_void: target_type /= Void
-					end
-					buf.put_string ("memmove(")
-					target.print_register
-					buf.put_string (gc_comma)
-					if register /= Void then
-						print_register
-						buf.put_string (" = ")
-					end
+				if register /= Void then
+						-- Initialize temporary.
+					print_register
+					buf.put_string (" = ")
 					if not is_creation_instruction then
 						buf.put_string ("RTRCL")
 					end
 					buf.put_character ('(')
 					source.print_register
-					buf.put_string (gc_rparan_comma)
-					if context.workbench_mode then
-						target_type.associated_class_type.skeleton.generate_workbench_size (buf)
-					else
-						target_type.associated_class_type.skeleton.generate_size (buf)
-					end
-					buf.put_character (')')
-					buf.put_character (';')
+					buf.put_string (gc_rparan_semi_c)
 					buf.put_new_line
 				end
+				generate_expanded_assignment
 			else
 				if how = Simple_assignment or need_aging_tests then
 					if is_bit_assignment then
@@ -584,6 +556,47 @@ feature
 					buf.put_character (';')
 					buf.put_new_line
 				end
+			end
+		end
+
+	generate_expanded_assignment is
+			-- Generate reattachment between expanded `source' and `target'.
+		local
+			buf: GENERATION_BUFFER
+			target_type: CL_TYPE_I
+		do
+			buf := buffer
+			if not target.is_predefined and target.c_type.is_pointer then
+					-- Assignment on attribute. We need aging test, thus we use RTXA.
+					-- FIXME: Optimization for attributes which are known to not have
+					-- references in final mode, we should just do a `memmove' which
+					-- is much faster.
+				buf.put_string ("RTXA(")
+				source_print_register
+				buf.put_string (gc_comma)
+				target.print_register
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			else
+				target_type ?= context.real_type (target.type)
+				check
+						-- An expanded is a valid class type.
+					target_type_not_void: target_type /= Void
+				end
+				buf.put_string ("memmove(")
+				target.print_register
+				buf.put_string (gc_comma)
+				source_print_register
+				buf.put_string (gc_comma)
+				if context.workbench_mode then
+					target_type.associated_class_type.skeleton.generate_workbench_size (buf)
+				else
+					target_type.associated_class_type.skeleton.generate_size (buf)
+				end
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 

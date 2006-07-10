@@ -37,9 +37,9 @@ feature {NONE} -- Initlization
 		end
 
 	make_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
-			-- Creation method
+			-- Create pointer style using `a_pixel_buffer'.
 		require
-			a_pxiel_buffer_not_void: a_pixel_buffer /= Void
+			a_pixel_buffer_not_void: a_pixel_buffer /= Void
 		local
 			l_temp_buffer: EV_PIXEL_BUFFER
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Initlization
 		end
 
 	make_from_cursor (a_cursor: EV_CURSOR) is
-			-- Initialize from `a_cursor'
+			-- Initialize from `a_cursor'.
 		local
 			l_temp: EV_CURSOR
 			l_cursors: EV_STOCK_PIXMAPS

@@ -46,6 +46,7 @@ feature -- Agents
 				internal_pointer_pressed := True
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
+				zone.tool_bar.enable_capture
 			end
 		ensure
 			pointer_press_set: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = True
@@ -59,6 +60,7 @@ feature -- Agents
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
+				zone.tool_bar.disable_capture
 			end
 		ensure
 			pointer_press_set: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False
@@ -81,7 +83,7 @@ feature -- Agents
 			end
 			if internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating) then
 				if internal_docker_mediator = Void then
-					zone.tool_bar.enable_capture
+					-- Capture is alreadyed enable when `on_drag_area_pressed'
 					zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
 
 					create internal_docker_mediator.make (zone, internal_docking_manager)

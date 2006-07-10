@@ -31,7 +31,7 @@ debug=''
 warning_level='-w-8004 -w-8057'
 #
 cc='$compiler_path\bin\bcc32'
-compiler_path='f:\Eiffel56\BCC55'
+compiler_path='f:\Eiffel57\BCC55'
 all_dependency=''
 #
 
@@ -141,7 +141,7 @@ d_sbrk='undef'
 d_sbrksmart='undef'
 d_smartmmap='undef'
 d_strerror='define'
-d_syserrlst='undef'
+d_syserrlst='define'
 d_sysernlst='undef'
 d_strerrm='strerror(e)'
 d_usleep='undef'

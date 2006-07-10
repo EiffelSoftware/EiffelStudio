@@ -41,6 +41,12 @@ feature {NONE} -- Initlization
 			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
 		end
 
+	init_predefined (a_constant: INTEGER) is
+			-- Initialized a predefined cursor.
+		do
+			predefined_cursor_code := a_constant
+		end
+
 	init_from_cursor (a_cursor: EV_CURSOR) is
 			-- Initialize from `a_cursor'
 		local
@@ -63,13 +69,21 @@ feature -- Query
 	width: INTEGER is
 			-- Width of pointer style.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
+			if gdk_pixbuf /= default_pointer then
+				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
+			else
+				Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+			end
 		end
 
 	height: INTEGER is
 			-- Height of pointer style.
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
+			if gdk_pixbuf /= default_pointer then
+				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
+			else
+				Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
+			end
 		end
 
 feature -- Implementation
@@ -83,8 +97,13 @@ feature -- Implementation
 			gdk_pixbuf := a_pixbuf
 		end
 
-	gdk_pixbuf: POINTER;
+	gdk_pixbuf: POINTER
 		-- Pixbuf used for pointer style implementation.
+
+feature {EV_ANY_HANDLER} -- Implementation
+
+	predefined_cursor_code: INTEGER;
+		-- Predefined cursor code used for selecting platform cursors.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -10,6 +10,13 @@ class
 
 feature -- Externals
 
+	frozen gdk_display_get_default_cursor_size (a_display: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return (EIF_INTEGER) gdk_display_get_default_cursor_size ((GdkDisplay*) $a_display)"
+		end
+
 	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"

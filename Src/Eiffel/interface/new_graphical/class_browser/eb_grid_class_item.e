@@ -33,7 +33,7 @@ feature -- Access
 
 	general_tooltip: EB_EDITOR_TOKEN_TOOLTIP
 			-- General tooltip used to display information
-			-- Use this tooltip if normal tooltip provided can not satisfy,
+			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.	
 
 feature{NONE} -- Pixmap

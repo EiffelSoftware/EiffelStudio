@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 					or folder_name.has (')')
 					or folder_name.has ('*')
 				then
-					create wd.make_with_text (Warning_messages.w_Invalid_folder_name + "%N A favorite folder name can not contain any ot the following characters: %N ( ) * ")
+					create wd.make_with_text (Warning_messages.w_Invalid_folder_name + "%N A favorite folder name cannot contain any ot the following characters: %N ( ) * ")
 					wd.show_modal_to_window (Current)
 				else
 					favorites.add_folder (folder_name)

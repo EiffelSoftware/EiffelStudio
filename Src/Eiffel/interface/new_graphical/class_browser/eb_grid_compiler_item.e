@@ -166,7 +166,7 @@ feature -- Access
 
 	general_tooltip: EVS_GENERAL_TOOLTIP
 			-- General tooltip used to display information
-			-- Use this tooltip if normal tooltip provided can not satisfy,
+			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
 	style: EB_GRID_COMPILER_ITEM_STYLE

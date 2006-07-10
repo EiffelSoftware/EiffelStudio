@@ -1039,7 +1039,7 @@ feature -- Various continuing mode from callback
 		end
 
 	call_terminate_debugging is
-			-- If there is no CorDebugController, then we can not continue
+			-- If there is no CorDebugController, then we cannot continue
 			-- thus let's terminate debugging
 		do
 			debug ("debugger_trace_callstack")

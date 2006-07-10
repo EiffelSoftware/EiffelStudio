@@ -254,7 +254,7 @@ feature -- Status report
 			--			  +-- Lib2
 			--
 			-- and there is a class C in System inherit class B in Lib1 which inherit class A in Lib2: C->B->A
-			-- So from System level, we can not see class A.
+			-- So from System level, we cannot see class A.
 			--
 			-- From application target level, we want to generate ancestor classes of
 			-- a centain class. But some of the ancestor classes are not visible from the application target level,

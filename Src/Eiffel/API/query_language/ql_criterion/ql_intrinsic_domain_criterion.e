@@ -57,7 +57,7 @@ feature -- Status report
 
 	is_intrinsic_domain_cached_in_domain_generator: BOOLEAN
 			-- Is `intrinsic_domain' stored in `used_in_domain_generator'?
-			-- This is used only when `used_in_domain_generator' CAN NOT use intrinsic domain or optimization switch is turned off.
+			-- This is used only when `used_in_domain_generator' CANNOT use intrinsic domain or optimization switch is turned off.
 			-- This is needed because if some items from `intrinsic_domain' is not visible from `source_domain', we will not get
 			-- them by going through `source_domain'. So we store those items in `used_in_domain_generator', and after the going through,
 			-- we processed those items separately.

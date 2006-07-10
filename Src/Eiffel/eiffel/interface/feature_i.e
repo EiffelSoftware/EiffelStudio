@@ -1145,7 +1145,8 @@ feature -- Conveniences
 			if byte_server.has (body_index) then
 				Result := byte_server.item (body_index).property_name
 			end
-			if Result = Void then
+			if Result = Void or else Result.is_empty then
+					-- Explicit property name is not specified
 				Result := il_casing.pascal_casing (system.dotnet_naming_convention, feature_name, {IL_CASING_CONVERSION}.lower_case)
 			end
 		ensure

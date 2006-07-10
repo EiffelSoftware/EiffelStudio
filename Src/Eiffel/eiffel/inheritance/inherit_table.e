@@ -718,7 +718,8 @@ end;
 									-- Check that there are no property name clashes
 								if feature_i.has_property then
 									property_name := single_feature.property_name
-									if property_name = Void then
+									if property_name = Void or else property_name.is_empty then
+											-- Use implicit property name.
 										property_name := il_casing.pascal_casing
 											(system.dotnet_naming_convention, feature_i.feature_name, {IL_CASING_CONVERSION}.lower_case)
 									end

@@ -192,11 +192,13 @@ feature -- Access
 				if not list.is_empty then
 					s ?= list.first
 					if s /= Void then
+							-- Explicit property name
 						Result := s.value
 					else
 						id ?= list.first
-						if id /= Void then
-							Result := id.string_value
+						if id /= Void and then id.string_value.as_lower.is_equal ("auto") then
+								-- Implicit property name
+							Result := ""
 						end
 					end
 				end

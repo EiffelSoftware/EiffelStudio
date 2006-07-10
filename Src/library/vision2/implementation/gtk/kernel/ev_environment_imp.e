@@ -59,13 +59,13 @@ feature -- Access
 	default_pointer_style_width: INTEGER is
 			-- Default pointer style width.
 		do
-			Result := 16
+			Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
 		end
 
 	default_pointer_style_height: INTEGER is
 			-- Default pointer style height.
 		do
-			Result := 16
+			Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
 		end
 
 	has_printer: BOOLEAN is

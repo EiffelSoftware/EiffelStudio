@@ -10,6 +10,9 @@ class
 
 inherit
 	WEL_GDIP_IMAGE
+		redefine
+			load_image_from_file
+		end
 
 create
 	make_with_size
@@ -31,6 +34,34 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
+	load_image_from_file (a_file_name: STRING) is
+			-- Redefine
+		local
+			l_temp: WEL_GDIP_BITMAP
+			l_bitmap_data, l_current_data: WEL_GDIP_BITMAP_DATA
+			l_rect: WEL_GDIP_RECT
+			l_pointer: POINTER
+		do
+			create l_temp.make_with_size (1, 1)
+			l_temp.load_image_from_file_original (a_file_name)
+
+			-- We copy the bitmaps data to a new instance, then the file will not be locked by Gdi+.
+			create l_bitmap_data.make
+			create l_rect.make_with_size (0, 0, l_temp.width, l_temp.height)
+			l_bitmap_data := l_temp.lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.read_only, {WEL_GDIP_PIXEL_FORMAT}.format32bppargb)
+
+			destroy_item
+			make_with_size (l_temp.width, l_temp.height)
+			l_current_data := lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.write_only, {WEL_GDIP_PIXEL_FORMAT}.format32bppargb)
+
+			l_pointer := l_current_data.scan_0
+			l_pointer.memory_copy (l_bitmap_data.scan_0, l_temp.width * l_temp.height * 4)
+			unlock_bits (l_current_data)
+
+			l_temp.unlock_bits (l_bitmap_data)
+			l_temp.dispose
+		end
+
 	lock_bits (a_rect: WEL_GDIP_RECT; a_lock_bitmode_flag: NATURAL_32; a_pixel_format: INTEGER): WEL_GDIP_BITMAP_DATA is
 			-- Lock image data bits.
 		require
@@ -39,7 +70,6 @@ feature -- Command
 			is_valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid (a_pixel_format)
 		local
 			l_result: INTEGER
-			l_pointer: POINTER
 		do
 			create Result.make
 			c_gdip_bitmap_lock_bits (gdi_plus_handle, item, a_rect.item, a_lock_bitmode_flag, a_pixel_format, $l_result, Result.item)
@@ -65,6 +95,7 @@ feature -- Command
 			l_header_info: WEL_BITMAP_INFO_HEADER
 			l_result_pointer: POINTER
 			l_bitmap_data: WEL_GDIP_BITMAP_DATA
+			l_helper: WEL_BITMAP_HELPER
 		do
 			create l_header_info.make
 			l_header_info.set_width (width)
@@ -87,6 +118,10 @@ feature -- Command
 			-- We are 32bits, so size is width * height * 4
 			l_result_pointer.memory_copy (l_bitmap_data.scan_0, width * height * 4)
 			unlock_bits (l_bitmap_data)
+
+			-- WEL_BITMAP store datas bottom up, so we have to flip the datas.
+			create l_helper
+			l_helper.mirror_image (Result)
 		end
 
 feature -- C externals

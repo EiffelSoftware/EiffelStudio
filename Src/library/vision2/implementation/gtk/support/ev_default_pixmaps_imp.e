@@ -9,6 +9,9 @@ indexing
 class
 	EV_STOCK_PIXMAPS_IMP
 
+inherit
+	EV_ANY_HANDLER
+
 feature -- Access
 
 	Information_pixmap: EV_PIXMAP is
@@ -294,7 +297,7 @@ feature {NONE} -- Implementation
 				a_cs := a_stock_id
 				create Result
 				pixmap_imp ?= Result.implementation
-				pixmap_imp.set_from_stock_id (a_cs.item)				
+				pixmap_imp.set_from_stock_id (a_cs.item)
 			else
 				create Result
 			end
@@ -360,91 +363,91 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Externals
 		alias
 			"portrait_pixmap_xpm"
 		end
-		
+
 	frozen busy_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
 		end
-		
+
 	frozen crosshair_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
 		end
-		
+
 	frozen help_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
 		end
-		
+
 	frozen ibeam_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
 		end
-		
+
 	frozen no_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
 		end
-		
+
 	frozen sizeall_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
 		end
-		
+
 	frozen sizenesw_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
 		end
-		
+
 	frozen sizens_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
 		end
-		
+
 	frozen sizenwse_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
 		end
-		
+
 	frozen sizewe_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
 		end
-	
+
 	frozen standard_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
 		end
-		
+
 	frozen uparrow_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
 		end
-		
+
 	frozen wait_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""

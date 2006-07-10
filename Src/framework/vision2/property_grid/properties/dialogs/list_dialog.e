@@ -75,6 +75,7 @@ feature {NONE} -- Initialization
 			hb.extend (modify_button)
 			hb.disable_item_expand (modify_button)
 
+			show_actions.extend (agent refresh_list)
 			show_actions.extend (agent list.set_focus)
 			data_change_actions.extend (agent update_list)
 			up_button.select_actions.extend (agent on_up)
@@ -117,6 +118,14 @@ feature {NONE} -- Agents
 			Precursor {PROPERTY_DIALOG}
 		end
 
+	refresh_list is
+			-- Refresh `list'.
+		require
+			list_created: list /= Void
+		do
+			update_list (value)
+		end
+
 	update_list (a_value: like value) is
 			-- Update `list' with new `a_value'.
 		require
@@ -124,7 +133,7 @@ feature {NONE} -- Agents
 		do
 			list.wipe_out
 			if a_value /= Void then
-				list.set_strings (value)
+				list.set_strings (a_value)
 			end
 		end
 

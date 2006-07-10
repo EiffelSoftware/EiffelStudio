@@ -117,7 +117,6 @@ feature {NONE} -- Implementation
 			l_imp: EV_PIXEL_BUFFER_IMP
 			l_pixmap: EV_PIXMAP_IMP
 			l_gdip_bitmap: WEL_GDIP_BITMAP
-			l_helper: SD_NOTEBOOK_TAB_DRAWER_IMP
 		do
 			l_imp ?= pixel_buffer.implementation
 			check not_void: l_imp /= Void end
@@ -125,13 +124,10 @@ feature {NONE} -- Implementation
 			if l_imp.gdip_bitmap /= Void then
 				l_gdip_bitmap := l_imp.gdip_bitmap
 				Result := l_gdip_bitmap.new_bitmap
-				create l_helper.make_for_help
-				-- Windows store the bitmap from bottom to up, so we have to mirror it.
-				l_helper.mirror_image (Result)
 				should_destroy_bitmap := True
 			else
 				-- User not have GDI+
-				-- It only works in 32bits
+				-- It only works in 32 color depth.
 				l_pixmap ?= l_imp.pixmap.implementation
 				check not_void: l_pixmap /= Void end
 				create Result.make_by_bitmap (l_pixmap.get_bitmap)

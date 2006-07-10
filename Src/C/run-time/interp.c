@@ -248,6 +248,8 @@ rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to a
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
 rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
+rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
+rt_private void reverse_local(struct item * it, uint32 type);						/* Reverse assignment to local or result*/
 
 /* Calling protocol */
 rt_private void put_once_result (struct item * ptr, long int rtype, MTOT OResult); /* Save local result to permanent once storage */
@@ -335,20 +337,20 @@ rt_public void metamorphose_top(struct stochunk * volatile scur, struct item * v
 	head_type = last->type & SK_HEAD;
 	if (head_type != SK_BIT) {
 		switch (head_type) {
-		case SK_BOOL: new_obj = RTLN(egc_bool_ref_dtype); *new_obj = last->it_char; break;
-		case SK_CHAR:	new_obj = RTLN(egc_char_ref_dtype); *new_obj = last->it_char; break;
-		case SK_WCHAR:	new_obj = RTLN(egc_wchar_ref_dtype); *(EIF_WIDE_CHAR *) new_obj = last->it_wchar; break;
-		case SK_UINT8: new_obj = RTLN(egc_uint8_ref_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
-		case SK_UINT16: new_obj = RTLN(egc_uint16_ref_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
-		case SK_UINT32: new_obj = RTLN(egc_uint32_ref_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
-		case SK_UINT64: new_obj = RTLN(egc_uint64_ref_dtype); *(EIF_NATURAL_64 *) new_obj = last->it_uint64; break;
-		case SK_INT8: new_obj = RTLN(egc_int8_ref_dtype); *(EIF_INTEGER_8 *) new_obj = last->it_int8; break;
-		case SK_INT16: new_obj = RTLN(egc_int16_ref_dtype); *(EIF_INTEGER_16 *) new_obj = last->it_int16; break;
-		case SK_INT32: new_obj = RTLN(egc_int32_ref_dtype); *(EIF_INTEGER_32 *) new_obj = last->it_int32; break;
-		case SK_INT64: new_obj = RTLN(egc_int64_ref_dtype); *(EIF_INTEGER_64 *) new_obj = last->it_int64; break;
-		case SK_REAL32: new_obj = RTLN(egc_real32_ref_dtype); *(EIF_REAL_32 *) new_obj = last->it_real32; break;
-		case SK_REAL64: new_obj = RTLN(egc_real64_ref_dtype); *(EIF_REAL_64 *) new_obj = last->it_real64; break;
-		case SK_POINTER: new_obj = RTLN(egc_point_ref_dtype); *(EIF_REFERENCE *) new_obj = last->it_ptr; break;
+		case SK_BOOL: new_obj = RTLN(egc_bool_dtype); *new_obj = last->it_char; break;
+		case SK_CHAR:	new_obj = RTLN(egc_char_dtype); *new_obj = last->it_char; break;
+		case SK_WCHAR:	new_obj = RTLN(egc_wchar_dtype); *(EIF_WIDE_CHAR *) new_obj = last->it_wchar; break;
+		case SK_UINT8: new_obj = RTLN(egc_uint8_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
+		case SK_UINT16: new_obj = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
+		case SK_UINT32: new_obj = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
+		case SK_UINT64: new_obj = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) new_obj = last->it_uint64; break;
+		case SK_INT8: new_obj = RTLN(egc_int8_dtype); *(EIF_INTEGER_8 *) new_obj = last->it_int8; break;
+		case SK_INT16: new_obj = RTLN(egc_int16_dtype); *(EIF_INTEGER_16 *) new_obj = last->it_int16; break;
+		case SK_INT32: new_obj = RTLN(egc_int32_dtype); *(EIF_INTEGER_32 *) new_obj = last->it_int32; break;
+		case SK_INT64: new_obj = RTLN(egc_int64_dtype); *(EIF_INTEGER_64 *) new_obj = last->it_int64; break;
+		case SK_REAL32: new_obj = RTLN(egc_real32_dtype); *(EIF_REAL_32 *) new_obj = last->it_real32; break;
+		case SK_REAL64: new_obj = RTLN(egc_real64_dtype); *(EIF_REAL_64 *) new_obj = last->it_real64; break;
+		case SK_POINTER: new_obj = RTLN(egc_point_dtype); *(EIF_REFERENCE *) new_obj = last->it_ptr; break;
 		case SK_REF:			/* Had to do this for bit operations */
 			new_obj = last->it_ref;
 			break;
@@ -1378,20 +1380,18 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RREVERSE\n");
 #endif
 		type = get_creation_type();			/* Get the reverse type */
-		last = opop();
+		last = otop();
 
 		if (!RTRA(type, last->it_ref))
-			iresult->it_ref = (EIF_REFERENCE) 0;
-		else
-			iresult->it_ref = last->it_ref;
+			last->it_ref = (EIF_REFERENCE) 0;
+		reverse_local (iresult, type);
 
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
 		 * feature which is going to call this once feature again.
 		 */
 		if (is_once) {
-			last = iresult;
-			*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
+			put_once_result (iresult, rtype, OResult);
 		}
 		break;
 
@@ -1404,12 +1404,11 @@ rt_private void interpret(int flag, int where)
 #endif
 		code = get_int16(&IC);			/* Get local number */
 		type = get_creation_type ();
-		last = opop();
+		last = otop();
 
 		if (!RTRA(type, last->it_ref))
-			loc(code)->it_ref = (EIF_REFERENCE) 0;
-		else
-			loc(code)->it_ref = last->it_ref;
+			last->it_ref = (EIF_REFERENCE) 0;
+		reverse_local (loc(code), type);
 		break;
 	
 	/*
@@ -1430,7 +1429,7 @@ rt_private void interpret(int flag, int where)
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (EIF_REFERENCE) 0;
-			assign(RTWA(code, offset, icur_dtype), meta);
+			reverse_attribute (RTWA(code, offset, icur_dtype), meta);
 		}
 		break;
 
@@ -1453,7 +1452,7 @@ rt_private void interpret(int flag, int where)
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (EIF_REFERENCE) 0;
-			assign(RTWPA(origin, ooffset, icur_dtype), meta);
+			reverse_attribute (RTWPA(origin, ooffset, icur_dtype), meta);
 		}
 		break;
 
@@ -4598,6 +4597,105 @@ rt_private void assign(long offset, uint32 type)
 
 #undef i
 #undef l
+}
+
+rt_private void reverse_attribute(long offset, uint32 type)
+						/* offset of field in current object
+						 * type of object
+						 */
+{
+	/* Assign the value on top of the stack to the attribute described by its
+	 * offset. */
+	
+	RT_GET_CONTEXT
+	struct item *last;				/* Value on top of the stack */
+	EIF_REFERENCE ref;
+
+	last = opop();					/* Value to be assigned */
+
+	if (last->it_ref == (EIF_REFERENCE) 0) {
+			/* Source does not conform to target or is Void */
+		if ((type & SK_HEAD) == SK_REF)
+		{
+			*(EIF_REFERENCE *) (icurrent->it_ref + offset) = (EIF_REFERENCE) 0;
+		}
+	}
+	else {
+
+#define l last
+#define i icurrent
+
+		switch (type & SK_HEAD) {
+		case SK_BOOL:    *(EIF_BOOLEAN    *) (i->it_ref + offset) = * (EIF_BOOLEAN    *) last->it_ref; break;
+		case SK_CHAR:    *(EIF_CHARACTER  *) (i->it_ref + offset) = * (EIF_CHARACTER  *) last->it_ref; break;
+		case SK_WCHAR:   *(EIF_WIDE_CHAR  *) (i->it_ref + offset) = * (EIF_WIDE_CHAR  *) last->it_ref; break;
+		case SK_UINT8:   *(EIF_NATURAL_8  *) (i->it_ref + offset) = * (EIF_NATURAL_8  *) last->it_ref; break;
+		case SK_UINT16:  *(EIF_NATURAL_16 *) (i->it_ref + offset) = * (EIF_NATURAL_16 *) last->it_ref; break;
+		case SK_UINT32:  *(EIF_NATURAL_32 *) (i->it_ref + offset) = * (EIF_NATURAL_32 *) last->it_ref; break;
+		case SK_UINT64:  *(EIF_NATURAL_64 *) (i->it_ref + offset) = * (EIF_NATURAL_64 *) last->it_ref; break;
+		case SK_INT8:    *(EIF_INTEGER_8  *) (i->it_ref + offset) = * (EIF_INTEGER_8  *) last->it_ref; break;
+		case SK_INT16:   *(EIF_INTEGER_16 *) (i->it_ref + offset) = * (EIF_INTEGER_16 *) last->it_ref; break;
+		case SK_INT32:   *(EIF_INTEGER_32 *) (i->it_ref + offset) = * (EIF_INTEGER_32 *) last->it_ref; break;
+		case SK_INT64:   *(EIF_INTEGER_64 *) (i->it_ref + offset) = * (EIF_INTEGER_64 *) last->it_ref; break;
+		case SK_REAL32:  *(EIF_REAL_32    *) (i->it_ref + offset) = * (EIF_REAL_32    *) last->it_ref; break;
+		case SK_REAL64:  *(EIF_REAL_64    *) (i->it_ref + offset) = * (EIF_REAL_64    *) last->it_ref; break;
+		case SK_POINTER: *(EIF_POINTER    *) (i->it_ref + offset) = * (EIF_POINTER    *) last->it_ref; break;
+		case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
+		case SK_EXP:
+			eif_std_ref_copy (last->it_ref, icurrent->it_ref + offset);
+			break;
+		case SK_REF:
+			/* Perform aging tests: if the reference is new and is assigned to an
+			 * old object which is not yet remembered, then we need to put it in
+			 * the remembered set. This has to be done before doing the actual
+			 * assignment, as RTAR may call eremb() which in turn may call the GC.
+			 */
+			ref = icurrent->it_ref;
+			*(EIF_REFERENCE *) (ref + offset) = last->it_ref;
+			RTAR(ref, last->it_ref);
+			break;
+		default: eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
+		}
+#undef i
+#undef l
+	}
+}
+
+rt_private void reverse_local(struct item * it, uint32 type) {
+			/* pointer to local to assign to
+			 * type of object
+			 */
+	struct item *last;				/* Value on top of the stack */
+
+	last = opop();					/* Value to be assigned */
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[type]))) {
+		if (last->it_ref != (EIF_REFERENCE) 0) {
+			switch (it->type & SK_HEAD) {
+			case SK_BOOL: 	 it->it_char   = * (EIF_BOOLEAN    *) last->it_ref; break;
+			case SK_CHAR:	 it->it_char   = * (EIF_CHARACTER  *) last->it_ref; break;
+			case SK_WCHAR:	 it->it_wchar  = * (EIF_WIDE_CHAR  *) last->it_ref; break;
+			case SK_UINT8: 	 it->it_uint8  = * (EIF_NATURAL_8  *) last->it_ref; break;
+			case SK_UINT16:  it->it_uint16 = * (EIF_NATURAL_16 *) last->it_ref; break;
+			case SK_UINT32:  it->it_uint32 = * (EIF_NATURAL_32 *) last->it_ref; break;
+			case SK_UINT64:  it->it_uint64 = * (EIF_NATURAL_64 *) last->it_ref; break;
+			case SK_INT8: 	 it->it_int8   = * (EIF_INTEGER_8  *) last->it_ref; break;
+			case SK_INT16: 	 it->it_int16  = * (EIF_INTEGER_16 *) last->it_ref; break;
+			case SK_INT32: 	 it->it_int32  = * (EIF_INTEGER_32 *) last->it_ref; break;
+			case SK_INT64: 	 it->it_int64  = * (EIF_INTEGER_64 *) last->it_ref; break;
+			case SK_REAL32:  it->it_real32 = * (EIF_REAL_32    *) last->it_ref; break;
+			case SK_REAL64:  it->it_real64 = * (EIF_REAL_64    *) last->it_ref; break;
+			case SK_POINTER: it->it_ptr    = * (EIF_POINTER    *) last->it_ref; break;
+			case SK_EXP:
+			case SK_REF:
+				eif_std_ref_copy(last->it_ref, it->it_ref);		/* Copy */
+				break;
+			default:
+				eif_panic(MTC RT_UNKNOWN_TYPE_MSG);
+			}
+		}
+	}
+	else
+		it->it_ref = last->it_ref;
 }
 
 rt_shared void call_disp(uint32 dtype, EIF_REFERENCE object)

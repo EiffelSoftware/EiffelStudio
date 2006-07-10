@@ -1276,6 +1276,8 @@ feature {NONE} -- Visitors
 		local
 			l_source_type: TYPE_I
 			l_target_type: TYPE_I
+			l_source_class_type: CL_TYPE_I
+			l_target_class_type: CL_TYPE_I
 		do
 			generate_melted_debugger_hook
 
@@ -1285,12 +1287,30 @@ feature {NONE} -- Visitors
 			l_source_type := context.real_type (a_node.source.type)
 			l_target_type := context.creation_type (a_node.target.type)
 
-			check
-				not_expanded: not l_target_type.is_true_expanded
-				not_basic: not l_target_type.is_basic
-			end
 			if l_target_type.is_none then
 				ba.append (Bc_none_assign)
+			elseif l_target_type.is_expanded and then l_source_type.is_expanded then
+					-- NOOP if classes are different or normal assignment otherwise.
+				l_source_class_type ?= l_source_type
+				l_target_class_type ?= l_target_type
+				if
+					l_target_class_type /= Void and then l_source_class_type /= Void and then
+					l_target_class_type.class_id = l_source_class_type.class_id
+				then
+						-- Do normal assignment.
+					if l_target_type.is_bit then
+						ba.append (a_node.target.bit_assign_code)
+					elseif l_target_type.is_basic then
+						ba.append (a_node.target.assign_code)
+					else
+						ba.append (bc_clone)
+						ba.append (a_node.target.expanded_assign_code)
+					end
+					melted_assignment_generator.generate_assignment (ba, a_node.target)
+				else
+						-- Remove expression value because it is not used.
+					ba.append (bc_pop)
+				end
 			else
 					-- Target is a reference
 				if l_source_type.is_basic then

@@ -3,15 +3,24 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class VJRV
 
 inherit
+	WARNING
+		undefine
+			has_associated_file,
+			is_defined,
+			trace
+		end
+
 	FEATURE_ERROR
+		undefine
+			error_string
 		redefine
 			build_explain
-		end;
+		end
 
 feature -- Properties
 

@@ -67,10 +67,10 @@ feature -- Element change
 				v_imp ?= item_imp
 				check
 					v_imp_not_void: v_imp /= Void
-				end	
+				end
+				item := Void
 				v_imp.set_parent (Void)
 				v_imp.on_orphaned
-				item := Void
 				notify_change (2 + 1, Current)
 			end
 		end

@@ -55,7 +55,7 @@ feature -- Factory
 						fixme ("support process-relative constants (e.g., string constants)")
 					end
 				end
-				if a_node.property_name /= Void or else a_node.is_attribute then
+				if a_node.property_name /= Void then
 					Result.set_has_property (True)
 					if Result.type.is_void then
 						Result.set_has_property_setter (True)
@@ -65,12 +65,6 @@ feature -- Factory
 							Result.set_has_property_setter (True)
 						end
 					end
-				end
-			elseif a_node.is_attribute then
-				Result.set_has_property (True)
-				Result.set_has_property_getter (True)
-				if Result.assigner_name_id /= 0 then
-					Result.set_has_property_setter (True)
 				end
 			end
 		end

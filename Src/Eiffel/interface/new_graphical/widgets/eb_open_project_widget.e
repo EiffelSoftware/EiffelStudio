@@ -573,15 +573,18 @@ feature {NONE} -- Implementation
 					else
 						l_last_location := file_system.dirname (last_state.system.file_name)
 					end
-					if l_options /= Void then
-						l_last_target := l_options.target_name
+					l_targets := available_targets (last_state.system)
+					if l_targets.is_empty then
+						last_state.has_missing_target_error := True
 					else
-						l_targets := available_targets (last_state.system)
-						if not l_targets.is_empty then
-							l_last_target := l_targets.first
-							last_state.has_missing_target_error := False
+						last_state.has_missing_target_error := False
+						if l_options /= Void then
+							l_last_target := l_options.target_name
+							if not l_targets.has (l_last_target) then
+								l_last_target := l_targets.first
+							end
 						else
-							last_state.has_missing_target_error := True
+							l_last_target := l_targets.first
 						end
 					end
 				else
@@ -734,7 +737,7 @@ feature {NONE} -- Implementation
 				-- Order targets in alphabetical order.
 			from
 				l_targets := a_config.compilable_targets
-				create Result.make (l_targets.count)
+				create Result.make_equal (l_targets.count)
 				l_targets.start
 			until
 				l_targets.after

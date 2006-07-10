@@ -35,7 +35,7 @@
 			<item>Multithreaded runtime: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system. (C code generation mode only)</item>
 			<item>Old verbatim strings: Use the old format for verbatim strings</item>
 			<item>Platform: override platform value used for checking conditions, useful for cross compilation</item>
-			<item>Shared library definition: lets you specify a `file_name.def' as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you a redeveloping (C code generation mode only). To have more information concerning definition files, see the 
+			<item>Shared library definition: lets you specify a `file_name.def' as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you are developing (C code generation mode only). To have more information concerning definition files, see the 
 				<link>
 					<url>../30_compiler/40_dynamic_library_generation/00_introduction.xml</url>
 					<label>Dynamic library builder reference</label>
@@ -62,16 +62,16 @@
 					<label>Class and feature naming</label>
 				</link>
 			</item>
-			<item>.NET Naming convention: See  
+			<item>.NET naming convention: See  
 				<link>
 					<url>50_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
-			<item>Verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
+			<item>IL verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
 			<item>CLS compliant: mark generated assemblies as CLS compliant</item>
-			<item>Metadata cache path: Location where information about external assemblies are stored.</item>
+			<item>Metadata cache path: Location where information about external assemblies is stored.</item>
 			<item>Classes per module: How many classes per generated module?</item>
 			<item>.NET runtime version: .NET version to use</item>
 			<item>Generation type: generate an exe or a dll (exe is default)</item>

@@ -10,9 +10,21 @@ class
 
 inherit
 	ARGUMENT_OPTION_PARSER
+		redefine
+			make
+		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_cs: like case_sensitive; a_usage_on_error: like display_usage_on_error) is
+			-- Initializes argument parser
+		do
+			Precursor {ARGUMENT_OPTION_PARSER} (a_cs, a_usage_on_error)
+			set_use_separated_switch_values (True)
+		end
 
 feature -- Access
 

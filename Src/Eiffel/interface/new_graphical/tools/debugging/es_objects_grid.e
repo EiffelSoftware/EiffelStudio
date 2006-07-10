@@ -399,10 +399,8 @@ feature -- Menu
 
 					create mci.make_with_text ("Displayed")
 					if col.is_displayed then
-						if displayed_column_count > 1 then
-							mci.enable_select
-							mci.select_actions.extend (agent col.hide)
-						end
+						mci.enable_select
+						mci.select_actions.extend (agent col.hide)
 					else
 						mci.select_actions.extend (agent col.show)
 					end

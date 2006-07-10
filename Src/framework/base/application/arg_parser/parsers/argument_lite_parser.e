@@ -229,9 +229,6 @@ feature {NONE} -- Status Report
 
 	frozen has_visible_available_options: BOOLEAN is
 			-- Indicates if there are options available
-		local
-			l_switches: like available_switches
-			l_cursor: CURSOR
 		do
 			Result := not available_visible_switches.is_empty
 		end
@@ -265,7 +262,7 @@ feature -- Basic Operations
 					display_usage
 				else
 					l_options := option_values
-					if option_values.is_empty or option_values.count = 1 and suppress_logo then
+					if option_values.is_empty and values.is_empty then
 						execute_noop (a_agent)
 					else
 						a_agent.call ([])
@@ -285,7 +282,7 @@ feature {NONE} -- Basic Operations
 			-- Executes `a_agent' when no arguments of any worth are passed.
 		require
 			a_agent_attached: a_agent /= Void
-			option_values_is_empty: option_values.is_empty or option_values.count = 1 and suppress_logo
+			option_values_is_empty: option_values.is_empty and values.is_empty
 		do
 			if accepts_loose_argument or accepts_multiple_loose_arguments then
 				display_usage
@@ -681,7 +678,6 @@ feature {NONE} -- Output
 			l_value_switches: ARRAYED_LIST [ARGUMENT_VALUE_SWITCH]
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_count: INTEGER
-			l_has_visible_switches: BOOLEAN
 			i: INTEGER
 		do
 			io.put_string ("%NOPTIONS:%N")

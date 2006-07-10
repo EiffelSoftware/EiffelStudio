@@ -189,7 +189,7 @@ feature {NONE} -- Actions
 			-- If we are near a resizable border, enable column resizing moveing.
 		do
 			if is_near_border and a_button = 1 then
-				start_resizing
+				start_resizing (x_pos, y_pos)
 			end
 		end
 
@@ -205,9 +205,26 @@ feature {NONE} -- Actions
 			end_resizing
 		end
 
-	start_resizing is
+	clicked_item: EV_GRID_ITEM
+
+	start_resizing (x_pos, y_pos: INTEGER_32) is
+		local
+			vx,vy: INTEGER_32
 		do
 			is_resize_mode := True
+
+			vx := grid.virtual_x_position + x_pos
+			vy := grid.virtual_y_position + y_pos
+			if
+				vx >= 0 and vx <= grid.virtual_width
+				and vy >= 0 and vy <= grid.virtual_height
+			then
+				clicked_item := grid.item_at_virtual_position (vx, vy)
+				if clicked_item /= Void then
+					clicked_item.pointer_button_press_actions.block
+				end
+			end
+
 			grid.pointer_button_press_item_actions.block
 			grid.pointer_button_press_actions.block
 			grid.pointer_button_release_actions.extend (release_resize_agent)
@@ -216,11 +233,15 @@ feature {NONE} -- Actions
 
 	end_resizing is
 		do
-			is_resize_mode := False
 			grid.pointer_button_release_actions.prune_all (release_resize_agent)
 			grid.pointer_leave_actions.prune_all (leave_resize_agent)
+			if clicked_item /= Void then
+				clicked_item.pointer_button_press_actions.resume
+				clicked_item := Void
+			end
 			grid.pointer_button_press_item_actions.resume
 			grid.pointer_button_press_actions.resume
+			is_resize_mode := False
 		end
 
 feature -- Status

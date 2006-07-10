@@ -44,8 +44,19 @@ feature -- Access
 	name: STRING
 			-- Option name
 
-	value: STRING
+	value: STRING assign set_value
 			-- Option value, if any
+
+feature {ARGUMENT_LITE_PARSER} -- Element Change
+
+	set_value (a_value: like value) is
+			-- Sets `value' with `a_value'.
+		do
+			value := a_value
+		ensure
+			value_set: value = a_value
+		end
+
 
 feature -- Status Report
 

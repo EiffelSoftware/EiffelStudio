@@ -224,10 +224,13 @@ feature -- Redefine
 
 	close is
 			-- Redefine.
+		local
+			l_parent: EV_CONTAINER
 		do
 			internal_docking_manager.command.lock_update (zone, False)
+			l_parent := tab_zone.parent
 			tab_zone.prune (internal_content, True)
-			assistant.update_last_content_state
+			assistant.update_last_content_state (l_parent)
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.unlock_update
 		end
@@ -236,6 +239,7 @@ feature -- Redefine
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
+			l_parent: EV_CONTAINER
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			if not zone.is_drag_title_bar then
@@ -244,7 +248,8 @@ feature -- Redefine
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (zone, False)
-				assistant.update_last_content_state
+				l_parent := tab_zone.parent
+				assistant.update_last_content_state (l_parent)
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			else
@@ -326,6 +331,7 @@ feature -- Redefine
 					assistant.move_tab_to_zone (a_target_zone, 2)
 				end
 			end
+			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 		ensure then

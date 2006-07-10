@@ -145,7 +145,7 @@ feature -- Commands
 				l_zones_snapshot.after
 			loop
 				l_auto_hide_zone ?= l_zones_snapshot.item
-				if l_auto_hide_zone /= Void then 
+				if l_auto_hide_zone /= Void then
 					if not a_animation then
 						internal_docking_manager.zones.zones.prune (l_auto_hide_zone)
 						l_auto_hide_zone.content.state.record_state
@@ -180,6 +180,7 @@ feature -- Commands
 
 	update_title_bar is
 			-- Update all title bar.
+			-- Also prune and destroy floating zones which are not used anymore.
 		local
 			l_inner_container_snapshot: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do

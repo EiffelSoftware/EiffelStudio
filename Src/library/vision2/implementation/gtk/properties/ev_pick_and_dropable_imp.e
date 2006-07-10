@@ -114,8 +114,8 @@ feature {NONE} -- Implementation
 	has_capture: BOOLEAN is
 			-- Does Current have the keyboard and mouse event capture?
 		do
-			Result := has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM) or else
-				has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
+			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (event_widget) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM or else
+			{EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM
 		end
 
 feature -- Implementation
@@ -356,7 +356,7 @@ feature -- Implementation
 				end
 				if
 					a_wid_imp /= Void and then
-					has_struct_flag (a_wid_imp.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) and then
+					{EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_wid_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM and then
 					not a_wid_imp.is_destroyed
 				then
 					if l_app_imp.pnd_targets.has (a_wid_imp.interface.object_id) then

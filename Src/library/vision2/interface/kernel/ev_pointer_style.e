@@ -31,7 +31,6 @@ feature {NONE} -- Initlization
 			a_pxiel_buffer_not_void: a_pixel_buffer /= Void
 		local
 			l_temp_buffer: EV_PIXEL_BUFFER
-			l_env: EV_ENVIRONMENT
 		do
 			default_create
 			l_temp_buffer := a_pixel_buffer

@@ -2295,14 +2295,14 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"(GValue*)$args_array + (int)($an_index)"
+			"((GValue*)$args_array + (int)($an_index))"
 		end
 
 	frozen g_value_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"(GValue*)$args_array + (int)($an_index - 1)"
+			"((GValue*)$args_array + (int)($an_index - 1))"
 		end
 
 	frozen g_value_array_get_nth (a_value_array: POINTER; n_th: INTEGER): POINTER is

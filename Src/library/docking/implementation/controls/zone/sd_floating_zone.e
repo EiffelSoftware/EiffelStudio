@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 	internal_inner_container: SD_MULTI_DOCK_AREA
 			-- Main container allow dock SD_ZONEs.
 
-	internal_title_bar: SD_FLOATING_ZONE_TITLE_BAR
+	internal_title_bar: SD_TITLE_BAR
 			-- Title bar.
 
 	docker_mediator: SD_DOCKER_MEDIATOR

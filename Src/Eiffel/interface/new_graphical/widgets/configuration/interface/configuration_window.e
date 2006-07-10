@@ -1229,6 +1229,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_osl_prop)
 
 			properties.current_section.expand
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1379,6 +1380,8 @@ feature {NONE} -- Implementation
 			l_bool_prop.set_description (target_line_generation_description)
 			add_boolean_setting_actions (l_bool_prop, s_line_generation, False)
 			properties.add_property (l_bool_prop)
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1400,6 +1403,8 @@ feature {NONE} -- Implementation
 
 			add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1421,6 +1426,8 @@ feature {NONE} -- Implementation
 
 			add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1442,6 +1449,8 @@ feature {NONE} -- Implementation
 
 			add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1519,6 +1528,8 @@ feature {NONE} -- Implementation
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_external_set: current_external = an_external
@@ -1596,6 +1607,8 @@ feature {NONE} -- Implementation
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_task_set: current_task = a_task
@@ -1623,6 +1636,8 @@ feature {NONE} -- Implementation
 			end
 
 			add_group_properties (a_group, current_target)
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_group_set: current_group = a_group
@@ -1862,6 +1877,8 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 			properties.current_section.expand
+
+			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -2677,7 +2694,7 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Constants
 
-	initial_window_width: INTEGER is 650
+	initial_window_width: INTEGER is 670
 	initial_window_height: INTEGER is 600
 	section_tree_width: INTEGER is 160
 	description_height: INTEGER is 50

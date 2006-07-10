@@ -136,6 +136,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 						properties.mark_all_readonly
 					end
 				end
+				properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			end
 		ensure
 			stone_set: stone = a_stone

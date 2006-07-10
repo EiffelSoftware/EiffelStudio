@@ -1,4 +1,14 @@
-.
+iff not defined INSTALL_DIR then 
+	echo INSTALL_DIR not defined
+	CANCEL
+endiff
+iff not defined INIT_DIR then
+	set INIT_DIR=%@EXECSTR[cd]
+endiff
+iff "%@SEARCH[candle.exe]" == "" then
+	set PATH=%PATH;%INIT_DIR\wix
+endiff 
+
 set SVN_VERSION=%@EXECSTR[bash set_version.sh %DEFAULT_ORIGO_SVN]
 
 cdd %INIT_DIR\install
@@ -22,6 +32,7 @@ call build.btm c_library
 call build.btm dotnet
 call build.btm eiffel_com
 call build.btm free_add_ons
+call build.btm gdiplus
 call build.btm gobo
 call build.btm graphical_libraries
 call build.btm studio_core

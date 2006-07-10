@@ -327,7 +327,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_can_focus: BOOLEAN
 		do
-			l_can_focus := has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			l_can_focus := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM /= 0
 			if not l_can_focus then
 				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure the tooltip is hidden if any button events occur.
 			update_tooltip (False)
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) and then (a_button = 1 and then a_button <= 3) then
+			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.gtk_has_focus_enum = 0 and then (a_button = 1 and then a_button <= 3) then
 					-- As a button has been pressed on the drawing area then
 				set_focus
 			end

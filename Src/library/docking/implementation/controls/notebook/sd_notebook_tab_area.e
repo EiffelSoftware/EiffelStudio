@@ -167,6 +167,7 @@ feature -- Command
 			internal_tab_box.swap (internal_tab_box.index_of (a_tab_2, 1))
 			internal_tab_box.disable_item_expand (a_tab)
 			internal_tab_box.disable_item_expand (a_tab_2)
+			resize_tabs (width)
 		end
 
 	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER) is
@@ -181,6 +182,7 @@ feature -- Command
 			internal_tab_box.prune (a_tab)
 			internal_tab_box.go_i_th (a_index)
 			internal_tab_box.put_left (a_tab)
+			resize_tabs (width)
 		ensure
 			set: internal_tab_box.i_th (a_index) = a_tab
 			not_changed: old internal_tab_box.count =  internal_tab_box.count

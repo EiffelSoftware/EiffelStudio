@@ -26,6 +26,8 @@ inherit
 
 	PLATFORM
 
+	EV_ANY_HANDLER
+
 feature -- Initialize
 
 	gtk_dependent_initialize is

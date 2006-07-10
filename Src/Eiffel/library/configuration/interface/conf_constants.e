@@ -8,6 +8,9 @@ indexing
 class
 	CONF_CONSTANTS
 
+inherit
+	XM_MARKUP_CONSTANTS
+
 feature -- Platforms
 
 	Pf_windows: INTEGER is 0x0001
@@ -95,6 +98,32 @@ feature -- Backup
 
 	backup_config_file: STRING is "original.ecf"
 	backup_adapted_config_file: STRING is "config.ecf";
+
+feature -- XML parsing/printing
+
+	Lt_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (lt_char)
+		end
+
+	Gt_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (gt_char)
+		end
+
+	Amp_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (amp_char)
+		end
+
+	Quot_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (quot_char)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

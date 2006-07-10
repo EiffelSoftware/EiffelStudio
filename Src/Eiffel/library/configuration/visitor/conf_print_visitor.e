@@ -54,10 +54,10 @@ feature -- Visit nodes
 			append_text (" xmlns=%""+Namespace+"%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%""+Schema+"%"")
-			append_text (" name=%""+a_system.name+"%" uuid=%""+a_system.uuid.out+"%"")
+			append_text (" name=%""+escape_xml (a_system.name)+"%" uuid=%""+a_system.uuid.out+"%"")
 			l_target := a_system.library_target
 			if l_target /= Void then
-				append_text (" library_target=%""+l_target.name+"%"")
+				append_text (" library_target=%""+escape_xml (l_target.name)+"%"")
 			end
 			append_text (">%N")
 			indent := indent + 1
@@ -81,9 +81,9 @@ feature -- Visit nodes
 			l_sort_lst: DS_ARRAYED_LIST [STRING]
 		do
 			current_target := a_target
-			append_text_indent ("<target name=%""+a_target.name+"%"")
+			append_text_indent ("<target name=%""+escape_xml (a_target.name)+"%"")
 			if a_target.extends /= Void then
-				text.append (" extends=%""+a_target.extends.name+"%"")
+				text.append (" extends=%""+escape_xml (a_target.extends.name)+"%"")
 			end
 			if a_target.is_abstract then
 				text.append (" abstract=%"true%"")
@@ -201,19 +201,19 @@ feature -- Visit nodes
 			if l_p.is_empty then
 				l_str := an_assembly.assembly_name
 				if l_str /= Void and then not l_str.is_empty then
-					append_text (" assembly_name=%""+l_str+"%"")
+					append_text (" assembly_name=%""+escape_xml (l_str)+"%"")
 				end
 				l_str := an_assembly.assembly_version
 				if l_str /= Void and then not l_str.is_empty then
-					append_text (" assembly_version=%""+l_str+"%"")
+					append_text (" assembly_version=%""+escape_xml (l_str)+"%"")
 				end
 				l_str := an_assembly.assembly_culture
 				if l_str /= Void and then not l_str.is_empty then
-					append_text (" assembly_culture=%""+l_str+"%"")
+					append_text (" assembly_culture=%""+escape_xml (l_str)+"%"")
 				end
 				l_str := an_assembly.assembly_public_key_token
 				if l_str /= Void and then not l_str.is_empty then
-					append_text (" assembly_key=%""+l_str+"%"")
+					append_text (" assembly_key=%""+escape_xml (l_str)+"%"")
 				end
 			end
 			append_val_group (an_assembly)
@@ -280,7 +280,7 @@ feature -- Visit nodes
 					until
 						l_overrides.after
 					loop
-						append_text_indent ("<overrides group=%""+l_overrides.item.name+"%"/>%N")
+						append_text_indent ("<overrides group=%""+escape_xml (l_overrides.item.name)+"%"/>%N")
 						l_overrides.forth
 					end
 				end
@@ -323,6 +323,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	escape_xml (a_string: STRING): STRING is
+			-- Escape xml entities in `a_string'.
+		do
+			if a_string /= Void then
+				Result := a_string.twin
+				Result.replace_substring_all (Lt_string, Lt_entity)
+				Result.replace_substring_all (Gt_string, Gt_entity)
+				Result.replace_substring_all (Amp_string, amp_entity)
+				Result.replace_substring_all (Quot_string, quot_entity)
+			end
+		ensure
+			result_void_iff_a_string_void: (Result = Void) = (a_string = Void)
+		end
 
 	append_tag (a_name, a_value: STRING; an_attribute_names, an_attribute_values: ARRAYED_LIST [STRING]) is
 			-- Append a tag with `a_name', `a_value' and `an_attributes' to `text', intendend it with `indent' tabs.
@@ -344,14 +357,14 @@ feature {NONE} -- Implementation
 					l_val := an_attribute_values.item
 					if l_val /= Void and then not l_val.is_empty then
 						append_text (" "+an_attribute_names.item)
-						append_text ("=%""+l_val+"%"")
+						append_text ("=%""+escape_xml (l_val)+"%"")
 					end
 					an_attribute_names.forth
 					an_attribute_values.forth
 				end
 			end
 			if a_value /= Void and not a_value.is_empty then
-				append_text (">"+a_value+"</"+a_name+">%N")
+				append_text (">"+escape_xml (a_value)+"</"+a_name+">%N")
 			else
 				append_text ("/>%N")
 			end
@@ -524,7 +537,7 @@ feature {NONE} -- Implementation
 				until
 					a_mapping.after
 				loop
-					append_text_indent ("<mapping old_name=%""+a_mapping.key_for_iteration+"%" new_name=%""+a_mapping.item_for_iteration+"%"/>%N")
+					append_text_indent ("<mapping old_name=%""+escape_xml (a_mapping.key_for_iteration)+"%" new_name=%""+escape_xml (a_mapping.item_for_iteration)+"%"/>%N")
 					a_mapping.forth
 				end
 			end
@@ -547,7 +560,7 @@ feature {NONE} -- Implementation
 				loop
 					l_ext := an_externals.item
 					append_text_indent ("<external_"+a_name)
-					append_text (" location=%""+l_ext.location+"%">%N")
+					append_text (" location=%""+escape_xml (l_ext.location)+"%">%N")
 					indent := indent + 1
 					last_count := text.count
 
@@ -584,7 +597,7 @@ feature {NONE} -- Implementation
 				l_action := an_actions.item
 				append_text_indent ("<"+a_name+"_compile_action")
 				if l_action.working_directory /= Void then
-					append_text (" working_directory=%""+l_action.working_directory.original_path+"%"")
+					append_text (" working_directory=%""+escape_xml (l_action.working_directory.original_path)+"%"")
 				end
 				append_text (" command=%""+l_action.command+"%">%N")
 				indent := indent + 1
@@ -656,7 +669,7 @@ feature {NONE} -- Implementation
 		do
 			if an_options /= Void and then not an_options.is_empty then
 				if a_class /= Void and then not a_class.is_empty then
-					append_text_indent ("<class_option class=%""+a_class+"%"")
+					append_text_indent ("<class_option class=%""+escape_xml (a_class)+"%"")
 				else
 					append_text_indent ("<option")
 				end
@@ -678,7 +691,7 @@ feature {NONE} -- Implementation
 				end
 				l_str := an_options.namespace
 				if l_str /= Void and then not l_str.is_empty then
-					append_text (" namespace=%""+l_str+"%"")
+					append_text (" namespace=%""+escape_xml (l_str)+"%"")
 				end
 				append_text (">%N")
 
@@ -696,7 +709,7 @@ feature {NONE} -- Implementation
 					loop
 							-- only append enabled debugs
 						if l_debugs.item (l_sort_lst.item_for_iteration) then
-							append_text_indent ("<debug name=%""+l_sort_lst.item_for_iteration+"%"")
+							append_text_indent ("<debug name=%""+escape_xml (l_sort_lst.item_for_iteration)+"%"")
 							append_text (" enabled=%""+l_debugs.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
 						end
 						l_sort_lst.forth
@@ -774,23 +787,23 @@ feature {NONE} -- Implementation
 						if l_feat.is_equal ("*") then
 							l_feat := Void
 						end
-						append_text_indent ("<visible class=%""+l_class+"%"")
+						append_text_indent ("<visible class=%""+escape_xml (l_class)+"%"")
 						if l_feat /= Void then
-							append_text (" feature=%""+l_feat+"%"")
+							append_text (" feature=%""+escape_xml (l_feat)+"%"")
 						end
 						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
-							append_text (" class_rename=%""+l_class_rename+"%"")
+							append_text (" class_rename=%""+escape_xml (l_class_rename)+"%"")
 						end
 						if l_feat_rename /= Void and then not l_feat_rename.is_empty and then not l_feat_rename.is_equal (l_feat) then
-							append_text (" feature_rename=%""+l_feat_rename+"%"")
+							append_text (" feature_rename=%""+escape_xml (l_feat_rename)+"%"")
 						end
 						append_text ("/>%N")
 						l_vis_feat.forth
 					end
 				else
-					append_text_indent ("<visible class=%""+l_class+"%"")
+					append_text_indent ("<visible class=%""+escape_xml (l_class)+"%"")
 					if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
-						append_text (" class_rename=%""+l_class_rename+"%"")
+						append_text (" class_rename=%""+escape_xml (l_class_rename)+"%"")
 					end
 					append_text ("/>%N")
 				end
@@ -812,8 +825,8 @@ feature {NONE} -- Implementation
 			if l_str.is_empty then
 				l_str := "none"
 			end
-			append_text_indent ("<"+a_tag+" name=%""+a_group.name+"%"")
-			append_text (" location=%""+l_str+"%"")
+			append_text_indent ("<"+a_tag+" name=%""+escape_xml (a_group.name)+"%"")
+			append_text (" location=%""+escape_xml (l_str)+"%"")
 			if not a_group.is_library and a_group.internal_read_only then
 				append_text (" readonly=%"true%"")
 			elseif a_group.is_library and not a_group.internal_read_only then
@@ -821,7 +834,7 @@ feature {NONE} -- Implementation
 			end
 			l_str := a_group.name_prefix
 			if l_str /= Void and then not l_str.is_empty then
-				append_text (" prefix=%""+l_str+"%"")
+				append_text (" prefix=%""+escape_xml (l_str)+"%"")
 			end
 		end
 
@@ -846,7 +859,7 @@ feature {NONE} -- Implementation
 				until
 					l_renaming.after
 				loop
-					append_text_indent ("<renaming old_name=%""+l_renaming.key_for_iteration+"%" new_name=%""+l_renaming.item_for_iteration+"%"/>%N")
+					append_text_indent ("<renaming old_name=%""+escape_xml (l_renaming.key_for_iteration)+"%" new_name=%""+escape_xml (l_renaming.item_for_iteration)+"%"/>%N")
 					l_renaming.forth
 				end
 			end
@@ -908,7 +921,7 @@ feature {NONE} -- Implementation
 				until
 					l_deps.after
 				loop
-					append_text_indent ("<uses group=%""+l_deps.item_for_iteration.name+"%"/>%N")
+					append_text_indent ("<uses group=%""+escape_xml (l_deps.item_for_iteration.name)+"%"/>%N")
 					l_deps.forth
 				end
 			end

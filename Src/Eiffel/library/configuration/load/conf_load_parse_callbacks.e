@@ -105,6 +105,8 @@ feature -- Callbacks
 					end
 					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
 						if not a_value.is_empty then
+							a_value.replace_substring_all (lt_entity, lt_string)
+							a_value.replace_substring_all (gt_entity, gt_string)
 							current_attributes.force (a_value, l_attribute)
 						else
 							set_parse_error_message (e_parse_invalid_value (a_local_part))
@@ -213,6 +215,9 @@ feature -- Callbacks
 				current_content.left_adjust
 				current_content.right_adjust
 				if not current_content.is_empty then
+					current_content.replace_substring_all (lt_entity, lt_string)
+					current_content.replace_substring_all (gt_entity, gt_string)
+
 					inspect
 						current_tag.item
 					when t_description then

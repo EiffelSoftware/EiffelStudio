@@ -18,14 +18,10 @@ feature -- Command
 
 	load_image_from_file (a_file_name: STRING) is
 			-- Load datas from a file.
-		local
-			l_wel_string: WEL_STRING
-			l_result: INTEGER
+		require
+			not_void: a_file_name /= Void
 		do
-			destroy_item
-			create l_wel_string.make (a_file_name)
-			item := c_gdip_load_image_from_file (gdi_plus_handle, l_wel_string.item, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			load_image_from_file_original (a_file_name)
 		end
 
 feature -- Query
@@ -60,6 +56,22 @@ feature -- Destory
 				check ok: l_result = {WEL_GDIP_STATUS}.ok end
 				item := default_pointer
 			end
+		end
+
+feature {WEL_GDIP_IMAGE} -- Implementation
+
+	load_image_from_file_original (a_file_name: STRING) is
+			-- Load datas from a file. Orignal Gdi+ implementation.
+		require
+			not_void: a_file_name /= Void
+		local
+			l_wel_string: WEL_STRING
+			l_result: INTEGER
+		do
+			destroy_item
+			create l_wel_string.make (a_file_name)
+			item := c_gdip_load_image_from_file (gdi_plus_handle, l_wel_string.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 feature -- C externals

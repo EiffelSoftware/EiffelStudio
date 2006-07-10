@@ -195,6 +195,10 @@ feature -- Status Report
 	accepts_multiple_loose_arguments: BOOLEAN
 			-- Indicates if multiple arguments without switch prefixes are accepted
 
+	use_separated_switch_values: BOOLEAN assign set_use_separated_switch_values
+			-- Indicates if switch values are separated from their switch and not
+			-- qualified using a ':' (by default)
+
 	suppress_logo: BOOLEAN
 			-- Should logo be suppressed?
 
@@ -230,6 +234,16 @@ feature {NONE} -- Status Report
 			l_cursor: CURSOR
 		do
 			Result := not available_visible_switches.is_empty
+		end
+
+feature -- Status Setting
+
+	set_use_separated_switch_values (a_use: like use_separated_switch_values) is
+			-- Sets `use_separated_switch_values' with `a_use'.
+		do
+			use_separated_switch_values := a_use
+		ensure
+			use_separated_switch_values_set: use_separated_switch_values = a_use
 		end
 
 feature -- Basic Operations
@@ -289,6 +303,9 @@ feature {NONE} -- Parsing
 			not_parsed: not parsed
 		local
 			l_switches: like available_switches
+			l_use_separated: like use_separated_switch_values
+			l_last_switch: ARGUMENT_SWITCH
+			l_arg_option: ARGUMENT_OPTION
 			l_cursor: CURSOR
 			l_option: STRING
 			l_value: STRING
@@ -317,14 +334,19 @@ feature {NONE} -- Parsing
 				l_switches := available_switches
 				l_prefixes := switch_prefixes
 				l_cs := case_sensitive
+				l_use_separated := use_separated_switch_values
 
 					-- Iterate arguments
 				from
 					i := 1
 					l_upper := l_args.upper
 				until i > l_upper loop
+					check
+						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
+					end
 					l_arg := l_args[i]
 					if not l_arg.is_empty and then l_prefixes.has (l_arg.item (1)) then
+						l_last_switch := Void
 
 							-- Indicates a switch option
 						if l_arg.count > 1 then
@@ -332,14 +354,16 @@ feature {NONE} -- Parsing
 							l_value := Void
 							l_option := l_arg.substring (2, l_arg.count)
 
-							j := l_option.index_of (switch_value_qualifer, 1)
-							if j > 0 then
-								if j = 1 then
-									add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
-									l_err := True
-								else
-									l_value := l_option.substring (j + 1, l_option.count)
-									l_option := l_option.substring (1, j - 1)
+							if not l_use_separated then
+								j := l_option.index_of (switch_value_qualifer, 1)
+								if j > 0 then
+									if j = 1 then
+										add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
+										l_err := True
+									else
+										l_value := l_option.substring (j + 1, l_option.count)
+										l_option := l_option.substring (1, j - 1)
+									end
 								end
 							end
 
@@ -369,6 +393,9 @@ feature {NONE} -- Parsing
 											-- Create user option
 										internal_option_values.extend (create {ARGUMENT_OPTION}.make (l_option))
 									end
+									if l_use_separated then
+										l_last_switch := l_switch
+									end
 								else
 									add_template_error (unreconized_switch_error, [ellipse_text (l_arg)])
 								end
@@ -377,12 +404,23 @@ feature {NONE} -- Parsing
 							add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
 						end
 					else
-						if not l_arg.is_empty then
-								-- Create loose option
-							internal_values.extend (l_arg)
+						if l_last_switch = Void then
+							if not l_arg.is_empty then
+									-- Create loose option
+								internal_values.extend (l_arg)
+							else
+								add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
+							end
 						else
-							add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
+							check
+								not_internal_option_values_is_empty: not internal_option_values.is_empty
+								same_name: internal_option_values.last.name.is_equal (l_last_switch.name)
+							end
+							l_arg_option := internal_option_values.last
+							l_arg_option.value := l_arg
+							l_last_switch := Void
 						end
+
 					end
 					i := i + 1
 				end
@@ -481,9 +519,11 @@ feature {NONE} -- Validation
 							l_validator := l_val_switch.value_validator
 							from l_options.start until l_options.after loop
 								l_value := l_options.item.value
-								l_validator.validate_value (l_value)
-								if not l_validator.is_option_valid then
-									add_template_error (invalid_switch_value_with_reason, [ellipse_text (l_value), l_switch.name, l_validator.reason])
+								if not l_val_switch.is_value_optional then
+									l_validator.validate_value (l_value)
+									if not l_validator.is_option_valid then
+										add_template_error (invalid_switch_value_with_reason, [ellipse_text (l_value), l_switch.name, l_validator.reason])
+									end
 								end
 								l_options.forth
 							end
@@ -798,6 +838,7 @@ feature {NONE} -- Usage
 			-- Command line option configuration string (to display in usage)
 		local
 			l_switches: like available_switches
+			l_use_separated: like use_separated_switch_values
 			l_cursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
 			l_val_switch: ARGUMENT_VALUE_SWITCH
@@ -808,6 +849,7 @@ feature {NONE} -- Usage
 			l_switches := available_visible_switches
 			if not l_switches.is_empty then
 				l_prefix := switch_prefixes[1]
+				l_use_separated := use_separated_switch_values
 
 				create Result.make  (l_switches.count * 10)
 				l_cursor := l_switches.cursor
@@ -826,7 +868,11 @@ feature {NONE} -- Usage
 							if l_opt_val then
 								Result.append_character ('[')
 							end
-							Result.append (":<")
+							if l_use_separated then
+								Result.append (" <")
+							else
+								Result.append (":<")
+							end
 							Result.append (l_val_switch.arg_name)
 							Result.append_character ('>')
 							if l_opt_val then

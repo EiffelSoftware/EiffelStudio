@@ -262,7 +262,7 @@ feature -- Basic operation
 			end
 			if
 				l_pnd_item /= Void and then
-				l_pnd_item.has_struct_flag (l_pnd_item.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM)
+				{EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM
 			then
 				l_pnd_item.on_mouse_button_event (
 					{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
@@ -335,7 +335,7 @@ feature -- Basic operation
 										)
 									end
 								end
-								if l_pnd_imp.has_struct_flag (l_pnd_imp.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) then
+								if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
 									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_x, 1)
 									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_y, 2)
 									l_motion_tuple.put_double (0.5, 3)

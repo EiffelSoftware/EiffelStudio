@@ -50,6 +50,7 @@ feature {NONE} -- Implementation
 			properties.add_section (section_general)
 
 			create l_bool_prop.make_with_value (option_profile_name, an_inherited_options.is_profile)
+			l_bool_prop.set_description (option_profile_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_profile)
 			if a_inherits then
 				l_bool_prop.set_refresh_action (agent an_inherited_options.is_profile)
@@ -68,6 +69,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (option_trace_name, an_inherited_options.is_trace)
+			l_bool_prop.set_description (option_trace_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_trace)
 			if a_inherits then
 				l_bool_prop.set_refresh_action (agent an_inherited_options.is_trace)

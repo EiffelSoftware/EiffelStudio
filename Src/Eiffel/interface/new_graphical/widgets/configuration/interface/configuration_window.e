@@ -1316,7 +1316,7 @@ feature {NONE} -- Implementation
 
 				-- compilation type
 			create l_choice_prop.make_with_choices (target_compilation_type_name, <<target_compilation_type_standard, target_compilation_type_dotnet>>)
-			l_choice_prop.set_description (target_company_description)
+			l_choice_prop.set_description (target_compilation_type_description)
 			l_choice_prop.disable_text_editing
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (s_msil_generation, l_choice_prop)))
 			if current_target.setting_msil_generation then
@@ -1689,6 +1689,9 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (target_dead_code_removal_description)
 			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, False)
+			if is_il_generation then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
@@ -1700,19 +1703,28 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (target_exception_trace_name, current_target.setting_exception_trace)
-			l_bool_prop.set_description (s_exception_trace)
+			l_bool_prop.set_description (target_exception_trace_description)
 			add_boolean_setting_actions (l_bool_prop, s_exception_trace, False)
+			if is_il_generation then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (target_inlining_description)
 			add_boolean_setting_actions (l_bool_prop, s_inlining, False)
+			if is_il_generation then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			create l_string_prop.make (target_inlining_size_name)
 			l_string_prop.set_description (target_inlining_size_description)
 			add_string_setting_actions (l_string_prop, s_inlining_size, "")
 			l_string_prop.validate_value_actions.extend (agent valid_inlining_size)
+			if is_il_generation then
+				l_string_prop.enable_readonly
+			end
 			properties.add_property (l_string_prop)
 
 			create l_bool_prop.make_with_value (target_multithreaded_name, current_target.setting_multithreaded)
@@ -2208,6 +2220,7 @@ feature {NONE} -- Configuration setting
 			else
 				current_target.update_setting (s_msil_generation, "true")
 			end
+			is_il_generation := current_target.setting_msil_generation
 		end
 
 	set_boolean_setting (a_name: STRING; a_default: BOOLEAN; a_value: BOOLEAN) is

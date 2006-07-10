@@ -28,7 +28,7 @@ feature {NONE} -- Section names
 	section_target: STRING is "Target"
 	section_assertions: STRING is "Assertions"
 	section_groups: STRING is "Groups"
-	section_warning: STRING is "Warning"
+	section_warning: STRING is "Warnings"
 	section_debug: STRING is "Debug"
 	section_external: STRING is "Externals"
 	section_tasks: STRING is "Tasks"
@@ -48,7 +48,7 @@ feature {NONE} -- System names and descriptions
 	system_library_target_name: STRING is "Library target"
 	system_library_target_description: STRING is "Target used if system is used as a library."
 	system_uuid_name: STRING is "UUID"
-	system_uuid_description: STRING is "Unique identifier for the system."
+	system_uuid_description: STRING is "Universal unique identifier for the system."
 	system_targets_name: STRING is "Targets"
 	system_targets_description: STRING is "Targets of the system."
 
@@ -61,7 +61,7 @@ feature {NONE} -- Target names and descriptions
 	target_base_name: STRING is "Base target"
 	target_base_description: STRING is "Base target of this target."
 	target_abstract_name: STRING is "Abstract"
-	target_abstract_description: STRING is "Is this an abstract target that cannot be used to compile."
+	target_abstract_description: STRING is "Is this an abstract target that cannot be used to compile?"
 	target_compilation_type_name: STRING is "Compilation type"
 	target_compilation_type_description: STRING is "Type of compilation."
 	target_compilation_type_standard: STRING is "Standard (C/byte code)"
@@ -83,74 +83,62 @@ feature {NONE} -- Target names and descriptions
 	target_dialog_root_cluster: STRING is "Root cluster"
 	target_dialog_root_class: STRING is "Root class"
 	target_dialog_root_feature: STRING is "Root feature"
-	target_dialog_root_all: STRING is "Compile all classes"
+	target_dialog_root_all: STRING is "Compile all classes?"
 	target_file_rule_name: STRING is "File pattern"
-	target_file_rule_description: STRING is "Regular expression that exclude/include subfolders and/or files."
+	target_file_rule_description: STRING is "Regular expressions which exclude/include subfolders and/or files."
 
 	target_address_expression_name: STRING is "Address expression"
-	target_address_expression_description: STRING is " "
-	target_array_optimization_name: STRING is "Array optimization"
-	target_array_optimization_description: STRING is " "
-	target_check_generic_creation_constraint_name: STRING is "Check generic creation constraints"
-	target_check_generic_creation_constraint_description: STRING is " "
+	target_address_expression_description: STRING is "Are simplified address expressions enabled?"
 	target_check_vape_name: STRING is "Check vape"
-	target_check_vape_description: STRING is " "
+	target_check_vape_description: STRING is "Enforce VAPE  validity constraint?"
 	target_console_application_name: STRING is "Console application"
-	target_console_application_description: STRING is " "
+	target_console_application_description: STRING is "Is the project a console application?"
 	target_cls_compliant_name: STRING is "CLS compliant"
-	target_cls_compliant_description: STRING is " "
+	target_cls_compliant_description: STRING is "Should generated assemblies be marked as CLS compliant?"
 	target_dead_code_removal_name: STRING is "Dead code removal"
-	target_dead_code_removal_description: STRING is " "
-	target_dotnet_naming_convention_name: STRING is "Dotnet naming convention"
-	target_dotnet_naming_convention_description: STRING is " "
+	target_dead_code_removal_description: STRING is "Should unused code be removed?"
+	target_dotnet_naming_convention_name: STRING is ".NET naming convention"
+	target_dotnet_naming_convention_description: STRING is "Should names follow the .NET naming convention?"
 	target_dynamic_runtime_name: STRING is "Dynamic runtime"
-	target_dynamic_runtime_description: STRING is " "
+	target_dynamic_runtime_description: STRING is "Should the generated executable use a shared library of the runtime?"
 	target_exception_trace_name: STRING is "Exception trace"
-	target_exception_trace_description: STRING is " "
-	target_full_type_checking_name: STRING is "Full type checking"
-	target_full_type_checking_description: STRING is " "
+	target_exception_trace_description: STRING is "Should a complete exception trace be generated in the finalized version?"
 	target_il_verifiable_name: STRING is "IL verifiable"
-	target_il_verifiable_description: STRING is " "
+	target_il_verifiable_description: STRING is "Should the generated binary be IL verifiable?"
 	target_inlining_name: STRING is "Inlinining"
-	target_inlining_description: STRING is " "
+	target_inlining_description: STRING is "Should inlining be enabled?"
 	target_inlining_size_name: STRING is "Inlining size"
-	target_inlining_size_description: STRING is " "
+	target_inlining_size_description: STRING is "Maximal number of instructions in a feature for the feature to be inlined."
 	target_line_generation_name: STRING is "Line generation"
-	target_line_generation_description: STRING is " "
+	target_line_generation_description: STRING is "Generated extra information for external debuggers?"
 	target_metadata_cache_path_name: STRING is "Metadata cache path"
-	target_metadata_cache_path_description: STRING is " "
-	target_msil_assembly_compatibility_name: STRING is "MSIL assembly compatibility"
-	target_msil_assembly_compatibility_description: STRING is " "
+	target_metadata_cache_path_description: STRING is "Location where information about external assemblies is stored."
 	target_msil_classes_per_module_name: STRING is "MSIL classes per module"
-	target_msil_classes_per_module_description: STRING is " "
+	target_msil_classes_per_module_description: STRING is "How many classes per generated module?"
 	target_msil_clr_version_name: STRING is "MSIL CLR version"
-	target_msil_clr_version_description: STRING is " "
-	target_msil_culture_name: STRING is "MSIL culture"
-	target_msil_culture_description: STRING is " "
-	target_msil_generation_type_name: STRING is "MSIL generation type"
-	target_msil_generation_type_description: STRING is " "
-	target_msil_key_file_name_name: STRING is "MSIL key file"
-	target_msil_key_file_name_description: STRING is "Choose a new, non existing filename to create a new key file."
+	target_msil_clr_version_description: STRING is "Version of the .NET runtime to use."
+	target_msil_generation_type_name: STRING is "Generation type"
+	target_msil_generation_type_description: STRING is "Type of binary to generate."
+	target_msil_key_file_name_name: STRING is "Signing key"
+	target_msil_key_file_name_description: STRING is "Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChoose a new, non existing filename to create a new key file."
 	target_msil_use_optimized_precompile_name: STRING is "Use optimized precompile"
-	target_msil_use_optimized_precompile_description: STRING is " "
+	target_msil_use_optimized_precompile_description: STRING is "Use an optimized version of a precompile?"
 	target_multithreaded_name: STRING is "Multithreaded"
-	target_multithreaded_description: STRING is " "
+	target_multithreaded_description: STRING is "Generate a multithreaded application?"
 	target_old_verbatim_strings_name: STRING is "Old verbatim strings"
-	target_old_verbatim_strings_description: STRING is " "
+	target_old_verbatim_strings_description: STRING is "Use the old format for verbatim strings?"
 	target_platform_name: STRING is "Platform"
 	target_platform_description: STRING is "Override the detected platform to use in conditions."
-	target_external_runtime_name: STRING is "External runtime"
-	target_external_runtime_description: STRING is " "
 	target_shared_library_definition_name: STRING is "Shared library definition"
-	target_shared_library_definition_description: STRING is " "
+	target_shared_library_definition_description: STRING is "Specify the file the compiler uses to generate the exported functions."
 	target_library_root_name: STRING is "Library root"
 	target_library_root_description: STRING is "Absolute path to use as base for relative paths."
 	target_use_cluster_name_as_namespace_name: STRING is "Use cluster name as namespace"
-	target_use_cluster_name_as_namespace_description: STRING is " "
+	target_use_cluster_name_as_namespace_description: STRING is "Should cluster names be used as namespaces?"
 	target_use_all_cluster_name_as_namespace_name: STRING is "Use recursive cluster name as namespace"
-	target_use_all_cluster_name_as_namespace_description: STRING is " "
+	target_use_all_cluster_name_as_namespace_description: STRING is "Should names of folders in recursive clusters be used as namespaces?"
 	target_force_32bits_name: STRING is "Force 32bits"
-	target_force_32bits_description: STRING is "Force compilation for 32bits."
+	target_force_32bits_description: STRING is "Force compilation for 32bits?"
 
 	target_edit_manually: STRING is "Manually edit configuration"
 
@@ -236,9 +224,9 @@ feature {NONE} -- Target names and descriptions
 	assembly_name_name: STRING is "Assembly name"
 	assembly_name_description: STRING is "Name of the assembly."
 	assembly_culture_name: STRING is "Assembly culture"
-	assembly_culture_description: STRING is "Culture of the assembly"
+	assembly_culture_description: STRING is "Culture of the assembly."
 	assembly_version_name: STRING is "Assembly version"
-	assembly_version_description: STRING is "Version of the assembly"
+	assembly_version_description: STRING is "Version of the assembly."
 	assembly_public_key_token_name: STRING is "Assembly public key token"
 	assembly_public_key_token_description: STRING is "Public key token of the assembly."
 
@@ -248,22 +236,20 @@ feature {NONE} -- Target names and descriptions
 feature {NONE} -- Option names and descriptions
 
 	option_require_name: STRING is "Require"
-	option_require_description: STRING is "Evaluate precondition assertions."
+	option_require_description: STRING is "Evaluate precondition assertions?"
 	option_ensure_name: STRING is "Ensure"
-	option_ensure_description: STRING is "Evaluate postcondition assertions."
+	option_ensure_description: STRING is "Evaluate postcondition assertions?"
 	option_check_name: STRING is "Check"
-	option_check_description: STRING is "Evaluate check assertions."
+	option_check_description: STRING is "Evaluate check assertions?"
 	option_invariant_name: STRING is "Invariant"
-	option_invariant_description: STRING is "Evaluate invariant assertions."
+	option_invariant_description: STRING is "Evaluate invariant assertions?"
 	option_loop_name: STRING is "Loop"
-	option_loop_description: STRING is "Evaluate loop assertions."
+	option_loop_description: STRING is "Evaluate loop assertions?"
 
 	option_profile_name: STRING is "Profile"
-	option_profile_description: STRING is "Generate profiling information."
+	option_profile_description: STRING is "Generate profiling information?"
 	option_trace_name: STRING is "Trace"
-	option_trace_description: STRING is ""
-	option_optimize_name: STRING is "Optimize"
-	option_optimize_description: STRING is ""
+	option_trace_description: STRING is "Display name of all called features during execution?"
 
 	option_namespace_name: STRING is ".NET Namespace"
 	option_namespace_description: STRING is "Namespace for .NET"
@@ -279,34 +265,34 @@ feature {NONE} -- Option names and descriptions
 			-- Warning names.
 		once
 			create Result.make (10)
-			Result.force ("unused locals", w_unused_local)
-			Result.force ("obsolete classes", w_obsolete_class)
-			Result.force ("obsolete features", w_obsolete_feature)
-			Result.force ("onces in generics", w_once_in_generic)
-			Result.force ("old syntax", w_syntax)
-			Result.force ("old verbatim strings", w_old_verbatim_strings)
-			Result.force ("same uuid", w_same_uuid)
-			Result.force ("missing class export", w_export_class_missing)
-			Result.force ("incompatible types equality", w_vweq)
-			Result.force ("renaming unknown class", w_renaming_unknown_class)
-			Result.force ("options unknown class.", w_option_unknown_class)
+			Result.force ("Unused locals", w_unused_local)
+			Result.force ("Obsolete classes", w_obsolete_class)
+			Result.force ("Obsolete features", w_obsolete_feature)
+			Result.force ("Onces in generics", w_once_in_generic)
+			Result.force ("Old syntax", w_syntax)
+			Result.force ("Old verbatim strings", w_old_verbatim_strings)
+			Result.force ("Same uuid", w_same_uuid)
+			Result.force ("Missing class export", w_export_class_missing)
+			Result.force ("Incompatible types equality", w_vweq)
+			Result.force ("Renaming unknown class", w_renaming_unknown_class)
+			Result.force ("Options unknown class.", w_option_unknown_class)
 		end
 
 	warning_descriptions: HASH_TABLE [STRING, STRING] is
 			-- Warning descriptions.
 		once
 			create Result.make (10)
-			Result.force ("Locals that are not used.", w_unused_local)
-			Result.force ("Usage of obsolete classes.", w_obsolete_class)
-			Result.force ("Usage of obsolete features.", w_obsolete_feature)
-			Result.force ("Usage of onces in generics.", w_once_in_generic)
-			Result.force ("Old syntax warning.", w_syntax)
-			Result.force ("Usage of old verbatim strings warning.", w_old_verbatim_strings)
-			Result.force ("Different files with the same uuid.", w_same_uuid)
-			Result.force ("Missing class in export clause.", w_export_class_missing)
-			Result.force ("Incompatible types in equality comparison.", w_vweq)
-			Result.force ("Renaming of an unknown class.", w_renaming_unknown_class)
-			Result.force ("Class options of an unknown class.", w_option_unknown_class)
+			Result.force ("Warn about locals that are not used?", w_unused_local)
+			Result.force ("Warn about usage of obsolete classes?", w_obsolete_class)
+			Result.force ("Warn about usage of obsolete features?", w_obsolete_feature)
+			Result.force ("Warn about usage of onces in generics?", w_once_in_generic)
+			Result.force ("Warn about usage of old syntax?", w_syntax)
+			Result.force ("Warn about usage of old verbatim strings?", w_old_verbatim_strings)
+			Result.force ("Warn about different files with the same UUID?", w_same_uuid)
+			Result.force ("Warn about missing classes in export clauses?", w_export_class_missing)
+			Result.force ("Warn about incompatible types in equality comparisons?", w_vweq)
+			Result.force ("Warn about renamings of unknown classes?", w_renaming_unknown_class)
+			Result.force ("Warn about class options of unknown classes?", w_option_unknown_class)
 		end
 
 feature {NONE} -- Misc

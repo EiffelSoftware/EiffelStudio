@@ -32,15 +32,7 @@ inherit
 create
 	make
 
-create {SD_TOOL_BAR_DRAWER_IMP, SD_FEEDBACK_INDICATOR}
-	make_for_help
-
 feature{NONE} -- Initlization
-
-	make_for_help is
-			-- Used by SD_TOOL_BAR_DRAWER_IMP.
-		do
-		end
 
 	make (a_drawing_area: SD_NOTEBOOK_TAB; a_draw_at_top: BOOLEAN) is
 			-- Creation method
@@ -126,88 +118,13 @@ feature -- Commands
 
 feature -- FIXIT: maybe move to a helper class?
 
-	bits_of_image (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
-			--
-		require
-			not_void: a_bitmap /= Void
-		local
-			l_dc: WEL_MEMORY_DC
-			l_info: WEL_BITMAP_INFO
-		do
-			create l_dc.make
-			l_info := info_of_bitmap (a_bitmap)
-			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			l_info.header.dispose
-			l_info.dispose
-		ensure
-			not_void: Result /= Void
-		end
-
-	bits_of_image_bottom_up (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
-			--
-		require
-			not_void: a_bitmap /= Void
-		local
-			l_dc: WEL_MEMORY_DC
-			l_info: WEL_BITMAP_INFO
-		do
-			create l_dc.make
-			l_info := info_of_bitmap (a_bitmap)
-			l_info.header.set_height (- l_info.header.height)
-			Result := l_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			l_info.header.dispose
-			l_info.dispose
-		end
-
-	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO is
-			--
-			-- Functions who invoke this function have to dispose the Result, otherwise there are memroy leaks.
-		local
-			l_dc: WEL_MEMORY_DC
-			l_info: WEL_BITMAP_INFO
-		do
-			create l_dc.make
-			create l_info.make_by_dc (l_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-			-- We must make another header info, otherwise memory will crash when call GetDIBits.
-			-- For 32bits, it's 3
-			-- See WEL_DC save_bitmap
-			create Result.make (l_info.header, 3)
-
-			l_info.header.dispose
-			l_info.dispose
-		end
-
-	mirror_image (a_bitmap: WEL_BITMAP) is
-			-- Mirror image
-		require
-			not_void: a_bitmap /= Void
-			bitmap_not_selected_by_dc: True
-		local
-			l_orignal_dc: WEL_MEMORY_DC
-			l_bits: ARRAY [CHARACTER]
-			l_info: WEL_BITMAP_INFO
-			l_result: INTEGER
-		do
-			create l_orignal_dc.make
-			l_info := info_of_bitmap (a_bitmap)
-
-			-- When use SetDiBits/GetDiBits Api, windows require bitmap is not selected by any dc.
-
-			l_bits := l_orignal_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-
-			-- Following line is KEY to mirror bitmap
-			l_info.header.set_height (- l_info.header.height)
-			l_result := l_orignal_dc.set_di_bits (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-
-			l_info.header.dispose
-			l_info.dispose
-			l_orignal_dc.delete
-		end
 
 feature{NONE} -- Implementation
 
 	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH) is
 			-- Use theme manager to draw selected tab.
+		local
+			l_helper: WEL_BITMAP_HELPER
 		do
 			if a_info.is_tab_before then
 				if a_info.is_tab_after then
@@ -230,7 +147,8 @@ feature{NONE} -- Implementation
 			if not internal_draw_border_at_top then
 				a_bitmap_dc.unselect_bitmap
 				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
-				mirror_image (a_bitmap)
+				create l_helper
+				l_helper.mirror_image (a_bitmap)
 				a_bitmap_dc.select_bitmap (a_bitmap)
 			end
 		end
@@ -323,8 +241,6 @@ feature{NONE} -- Implementation
 
 	draw_classic_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
 			-- Use GDI to draw classic tab.
-		local
-			l_temp_rect: WEL_RECT
 		do
 			theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, 0, 0, a_rect, Void, a_brush)
 
@@ -399,6 +315,7 @@ feature{NONE} -- Implementation
 
 			l_wel_rect: WEL_RECT
 			l_brush: WEL_BRUSH
+			l_helper: WEL_BITMAP_HELPER
 		do
 			start_draw
 
@@ -426,7 +343,8 @@ feature{NONE} -- Implementation
 				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
 				l_buffer_pixmap := l_buffer_dc.bitmap
 				l_buffer_dc.unselect_bitmap
-				mirror_image (l_buffer_pixmap)
+				create l_helper
+				l_helper.mirror_image (l_buffer_pixmap)
 				l_buffer_dc.select_bitmap (l_buffer_pixmap)
 			end
 

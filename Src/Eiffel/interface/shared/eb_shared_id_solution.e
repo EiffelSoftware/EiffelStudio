@@ -21,6 +21,47 @@ feature -- Access names
 			-- Last names extracted from ids when retrieving XXX_of_id
 			-- It is possible not valid in the system if XXX_of_id returns void.
 
+feature -- Access (Target)
+
+	id_of_target (a_target: CONF_TARGET): STRING is
+			-- UUID of `a_target'
+		require
+			a_target_not_void: a_target /= Void
+		do
+			Result := a_target.system.uuid.out
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	target_of_id (a_id: STRING): CONF_TARGET is
+			-- Target of `a_id'
+		require
+			a_id_not_void: a_id /= Void
+		local
+			uuid: STRING
+			group_name: STRING
+			l_target: CONF_TARGET
+			l_uuid: UUID
+		do
+			last_target_uuid := Void
+			strings := a_id.split (name_sep)
+			if strings.count > 1 then
+				uuid := decode (strings.i_th (1))
+				last_target_uuid := uuid
+				if universe.target.system.uuid.out.is_equal (uuid) then
+					l_target := universe.target
+				else
+					create l_uuid
+					if l_uuid.is_valid_uuid (uuid) then
+						l_target := universe.target.all_libraries.item (create {UUID}.make_from_string (uuid))
+					end
+				end
+			end
+			Result := l_target
+		ensure
+			strings_not_void: strings /= Void
+		end
+
 feature -- Access (Group)
 
 	id_of_group (a_group: CONF_GROUP): STRING is
@@ -47,28 +88,13 @@ feature -- Access (Group)
 			l_target: CONF_TARGET
 			l_uuid: UUID
 		do
-			last_target_uuid := Void
 			last_group_name := Void
-			strings := a_id.split (name_sep)
-			if strings.count >= 2 then
-				uuid := decode (strings.i_th (1))
+			l_target := target_of_id (a_id)
+			if l_target /= Void and then strings.count >= 2 then
 				group_name := decode (strings.i_th (2))
-				last_target_uuid := uuid
 				last_group_name := group_name
-				if universe.target.system.uuid.out.is_equal (uuid) then
-					l_target := universe.target
-				else
-					create l_uuid
-					if l_uuid.is_valid_uuid (uuid) then
-						l_target := universe.target.all_libraries.item (create {UUID}.make_from_string (uuid))
-					end
-				end
-				if l_target /= Void then
-					Result := l_target.groups.item (group_name)
-				end
+				Result := l_target.groups.item (group_name)
 			end
-		ensure
-			strings_not_void: strings /= Void
 		end
 
 feature -- Access (Folder)

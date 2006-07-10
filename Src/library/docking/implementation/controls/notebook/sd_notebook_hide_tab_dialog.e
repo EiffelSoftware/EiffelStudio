@@ -53,7 +53,7 @@ feature {NONE}  -- Initlization
 			internal_label_box.focus_out_actions.extend (agent on_focus_out)
 
 			enable_border
-			enable_user_resize
+			disable_user_resize
 		ensure
 			set: internal_notebook = a_note_book
 			extended: has_dialog (internal_vertical_box) and internal_vertical_box.has (internal_text_box)

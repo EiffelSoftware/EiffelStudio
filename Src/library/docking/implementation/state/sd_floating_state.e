@@ -54,7 +54,7 @@ feature -- Redefine.
 			set_all_zones_direction (direction)
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
-			internal_zone.destroy
+
 			if 	direction	= {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
 				l_split_area := create {SD_HORIZONTAL_SPLIT_AREA}
@@ -99,8 +99,7 @@ feature -- Redefine.
 			else
 				change_zone_split_area_whole_content (a_target_zone, a_direction)
 			end
-
-			internal_zone.destroy
+			internal_docking_manager.command.update_title_bar
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
@@ -130,8 +129,7 @@ feature -- Redefine.
 				end
 				l_zones.forth
 			end
-
-			internal_zone.destroy
+			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 		end
 
@@ -151,10 +149,8 @@ feature -- Redefine.
 				l_zones.forth
 			end
 
-			internal_zone.destroy
-
+			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
-
 		end
 
 	change_state (a_state: SD_STATE) is

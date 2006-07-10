@@ -33,6 +33,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_floating_state: SD_FLOATING_STATE
 			l_docking_state: SD_DOCKING_STATE
 			l_content: SD_CONTENT
+			l_parent: EV_CONTAINER
 		do
 			internal_docking_manager.command.lock_update (state.zone, False)
 			create l_floating_state.make (a_x, a_y, internal_docking_manager)
@@ -43,13 +44,14 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				l_floating_state.update_title_bar
 			else
 				l_content := state.content
+				l_parent := state.tab_zone.parent
 				state.tab_zone.prune (l_content, False)
 				internal_docking_manager.command.unlock_update
 				create l_docking_state.make (l_content, {SD_ENUMERATION}.left, {SD_SHARED}.title_bar_height)
 				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 				l_content.change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (state.zone, False)
-				update_last_content_state
+				update_last_content_state (l_parent)
 			end
 			internal_docking_manager.command.unlock_update
 		end
@@ -180,8 +182,10 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_orignal_direction: INTEGER
 			l_docking_zone: SD_DOCKING_ZONE
 			l_tab_zone: SD_TAB_ZONE
+			l_parent: EV_CONTAINER
 		do
 			l_orignal_direction := a_target_zone.state.direction
+			l_parent := state.tab_zone.parent
 			state.tab_zone.prune (state.internal_content, False)
 			if state.internal_content.user_widget.parent /= Void then
 				state.internal_content.user_widget.parent.prune (state.internal_content.user_widget)
@@ -198,7 +202,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 
 			l_tab_state.set_direction (l_orignal_direction)
 			state.change_state (l_tab_state)
-			update_last_content_state
+			update_last_content_state (l_parent)
 		ensure
 --			has: a_target_zone.has (content)
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
@@ -255,22 +259,25 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			a_multi_dock_area_not_void: a_multi_dock_area /= Void
 		local
 			l_docking_state: SD_DOCKING_STATE
+			l_parent: EV_CONTAINER
 		do
 --			tab_zone.disable_on_select_tab
-
+			l_parent := state.tab_zone.parent
 			state.tab_zone.prune (state.internal_content, False)
 			create l_docking_state.make (state.internal_content, state.direction, state.width_height)
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
 			state.change_state (l_docking_state)
 
-			update_last_content_state
+			update_last_content_state (l_parent)
 --			tab_zone.enable_on_select_tab
 		ensure
 			docked:
 		end
 
-	update_last_content_state is
+	update_last_content_state (a_parent: EV_CONTAINER) is
 			-- If there only on content left, change it's state to SD_DOCKING_STATE
+		require
+			not_void: a_parent /= Void
 		local
 			l_parent: EV_CONTAINER
 			l_docking_state: SD_DOCKING_STATE
@@ -283,11 +290,8 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				if l_split_area /= Void then
 					l_split_position := l_split_area.split_position
 				end
-				l_parent := state.tab_zone.parent
 				internal_docking_manager.zones.prune_zone (state.tab_zone)
-
-				create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, l_parent, state.direction)
-
+				create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, a_parent, state.direction)
 				if state.zone.is_maximized then
 					l_docking_state.set_widget_main_area (state.zone.main_area_widget , state.zone.main_area, state.zone.internal_parent, state.zone.internal_parent_split_position)
 				end

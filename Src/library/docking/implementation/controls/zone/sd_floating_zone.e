@@ -15,9 +15,14 @@ inherit
 			extend_widget as extend_dialog,
 			has_widget as has_untitled_dialog,
 			is_maximized as is_maximized_zone
+		export
+			{NONE} all
+			{ANY} has_focus, width, height, is_destroyed
+			{SD_CONFIG_MEDIATOR} destroy
 		undefine
 			initialize,
 			show
+
 		redefine
 			type,
 			state
@@ -108,11 +113,12 @@ feature -- Command
 
 	update_title_bar is
 			-- Remove/add title bar if `Current' content count changed.
+			-- Destroy Current if no zone in.
 		local
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
 		do
 			if not is_destroyed then
-				if internal_inner_container.readable then
+				if internal_inner_container.readable and then all_zones.count > 0 then
 					count_zone_displayed
 					if zone_display_count = 1 then
 						l_title_zone ?= only_one_zone_displayed
@@ -142,7 +148,6 @@ feature -- Command
 					destroy
 				end
 			end
-
 		end
 
 	show is
@@ -256,7 +261,7 @@ feature {NONE} -- Implementation
 	internal_inner_container: SD_MULTI_DOCK_AREA
 			-- Main container allow dock SD_ZONEs.
 
-	internal_title_bar: SD_TITLE_BAR
+	internal_title_bar: SD_FLOATING_ZONE_TITLE_BAR
 			-- Title bar.
 
 	docker_mediator: SD_DOCKER_MEDIATOR
@@ -366,17 +371,19 @@ feature {NONE} -- Agents
 			l_last_zone: SD_ZONE
 			l_zones: like all_zones
 		do
-			l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
-			if not has_recursive (l_last_zone) then
-				l_zones := all_zones
-				if l_zones.count > 0 then
-					l_zones.first.on_focus_in (l_zones.first.content)
-					internal_docking_manager.property.set_last_focus_content (l_zones.first.content)
+			if internal_docking_manager.property.last_focus_content /= Void then
+				l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
+				if not has_recursive (l_last_zone) then
+					l_zones := all_zones
+					if l_zones.count > 0 then
+						l_zones.first.on_focus_in (l_zones.first.content)
+						internal_docking_manager.property.set_last_focus_content (l_zones.first.content)
+					end
+				else
+					l_last_zone.set_focus_color (True)
 				end
-			else
-				l_last_zone.set_focus_color (True)
+				internal_title_bar.enable_focus_color
 			end
-			internal_title_bar.enable_focus_color
 		end
 
 	on_dialog_focus_out is
@@ -384,10 +391,12 @@ feature {NONE} -- Agents
 		local
 			l_last_zone: SD_ZONE
 		do
-			l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
-			if has_recursive (l_last_zone) then
-				internal_title_bar.enable_non_focus_active_color
-				l_last_zone.set_non_focus_selection_color
+			if internal_docking_manager.property.last_focus_content /= Void then
+				l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
+				if has_recursive (l_last_zone) then
+					internal_title_bar.enable_non_focus_active_color
+					l_last_zone.set_non_focus_selection_color
+				end
 			end
 		end
 

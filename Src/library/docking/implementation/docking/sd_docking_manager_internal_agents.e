@@ -146,10 +146,6 @@ feature  -- Agents
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 		do
-			l_floating_zone ?= a_zone
-			if l_floating_zone /= Void then
-				l_floating_zone.destroy
-			end
 		end
 
 	on_added_content (a_content: SD_CONTENT) is

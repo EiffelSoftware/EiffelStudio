@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			l_rectangle.set_y (a_y_offset)
 			l_rectangle.set_width (l_pix_width)
 			l_rectangle.set_height (l_pix_height)
-			Result := image_matrix.implementation.sub_pixmap (l_rectangle)
+			Result := image_matrix.sub_pixmap (l_rectangle)
 		end
 
 	load_pixmap_from_repository (fn: STRING): EV_PIXMAP is

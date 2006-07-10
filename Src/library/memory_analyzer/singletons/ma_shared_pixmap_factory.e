@@ -19,7 +19,6 @@ feature
 			warning_dialog: EV_WARNING_DIALOG
 			a_coord: TUPLE [INTEGER, INTEGER]
 			a_row, a_column, a_x_offset, a_y_offset: INTEGER
-			a_icon_matrix: EV_PIXMAP_I
 		do
 			if not retried then
 				a_coord := pixmap_lookup @ fn
@@ -27,10 +26,10 @@ feature
 						-- We are looking up an icon with dimension `pixmap_width' by `pixmap_height'
 					a_column := a_coord.integer_32_item (2)
 					a_row := a_coord.integer_32_item (1)
-					a_icon_matrix ?= image_matrix.implementation
 					a_x_offset := (a_column - 1) * (1 + pixmap_width) + 1
 					a_y_offset := (a_row - 1) * (1 + pixmap_height) + 1
-					Result := a_icon_matrix.sub_pixmap (create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, pixmap_width, pixmap_height))
+					Result := image_matrix.sub_pixmap (
+						create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, pixmap_width, pixmap_height))
 				else
 						-- Initialize the pathname & load the file
 					create Result
@@ -67,7 +66,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			result_positive: Result > 0
-		end	
+		end
 
 	Pixmap_suffix: STRING is
 			-- Suffix for pixmaps.

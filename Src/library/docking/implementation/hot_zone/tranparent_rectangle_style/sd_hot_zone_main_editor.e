@@ -38,7 +38,6 @@ feature {NONE} -- Implementation
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		do
-			internal_shared.feedback.clear
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -64,7 +63,7 @@ feature {NONE} -- Implementation
 		do
 
 		end
-		
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

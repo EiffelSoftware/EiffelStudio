@@ -293,16 +293,12 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
 			-- Item x position on Current.
-		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			Result := tool_bar.item_x (a_item)
 		end
 
 	item_y (a_item: SD_TOOL_BAR_ITEM): INTEGER is
 			-- Item y position on Current.
-		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			Result := tool_bar.item_y (a_item)
 		end

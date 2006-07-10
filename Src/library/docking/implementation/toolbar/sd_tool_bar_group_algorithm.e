@@ -61,7 +61,7 @@ feature -- Query
 		end
 
 	best_grouping_when (a_group_count: INTEGER): SD_TOOL_BAR_GROUP_INFO is
-			--
+			-- Best grouping when `a_group_count'
 		require
 			valid: a_group_count >= 1 and a_group_count <= max_group_count
 		do
@@ -156,7 +156,7 @@ feature -- Query
 feature {NONE} -- Implementation functions
 
 	calculate_all_best_grouping is
-			--
+			-- Calculate all best groupings, added the result to `all_best_grouping'.
 		local
 			l_group_count: INTEGER
 			l_last_best_grouping: SD_TOOL_BAR_GROUP_INFO
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation functions
 			until
 				l_group_count < 1
 			loop
--- FIXIT: we should do something like following.
+-- If the result is not good enough, maybe we should do something like this:
 --				if l_group_count < item_width.count then
 --					-- Calculate one step before
 --					calculate_one_step_before
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation functions
 			until
 				l_group_count >= a_condition.group_count
 			loop
-				l_temp_two_width := a_condition.group_width (l_group_count) + a_condition.group_width (l_group_count + 1)
+				l_temp_two_width := a_condition.group_maximum_width (l_group_count) + a_condition.group_maximum_width (l_group_count + 1)
 				if l_temp_two_width < l_minimum_two_width then
 					l_minimum_two_width := l_temp_two_width
 					Result := l_group_count

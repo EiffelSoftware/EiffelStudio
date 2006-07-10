@@ -207,6 +207,7 @@ feature {NONE} -- Implementation of resize issues.
 								print ("%N SD_FLOATING_TOOL_BAR_ZONE on_border_box_pointer_motion bottom dragging:")
 								print ("%N        l_temp_group_count: " + l_temp_group_count.out)
 								print ("%N        last_group_count: " + last_group_count.out)
+								print ("%N        max_row_count: " + group_divider.max_row_count.out)
 							end
 							assistant.position_groups (group_divider.best_grouping (l_temp_group_count))
 							last_group_count := l_temp_group_count
@@ -243,6 +244,10 @@ feature {NONE} -- Implementation of resize issues.
 				Result := content.item_count_except_separator
 			elseif Result = 0 then
 				Result := 1
+			end
+
+			debug ("docking")
+				print ("%N SD_FLOATING_TOOL_BAR_ZONE group_count_by_height Result: " + Result.out)
 			end
 		ensure
 			valid: 0 < Result and Result <= content.item_count_except_separator

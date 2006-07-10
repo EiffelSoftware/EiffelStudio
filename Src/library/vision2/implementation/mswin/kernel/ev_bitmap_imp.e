@@ -1,9 +1,11 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Windows implementation for EB_BITMAP_I."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	keywords: "pixmap, mask, bitmap"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	
 class
 	EV_BITMAP_IMP
 
@@ -36,8 +38,8 @@ feature -- Initialization
 		do
 			create dc.make
 			dc.set_background_opaque
-
 			create drawable.make_compatible (dc, 0, 0)
+
 			drawable.enable_reference_tracking
 				-- Set colors used for mask.  White means opaque, black means transparent
 				-- As we need to draw what parts of the picture you see, the foreground color
@@ -52,14 +54,17 @@ feature -- Initialization
 feature -- Status setting
 
 	set_size (a_width, a_height: INTEGER) is
-			--
+			-- Set size with `a_width' and `a_height'.
 		local
 			old_drawable: like drawable
 		do
 			old_drawable := drawable
+
 			create drawable.make_compatible (dc, a_width, a_height)
+
 			drawable.enable_reference_tracking
 			dc.select_bitmap (drawable)
+
 			width := a_width
 			height := a_height
 			old_drawable.decrement_reference
@@ -68,21 +73,22 @@ feature -- Status setting
 feature -- Access
 
 	width: INTEGER
+			-- Width
 
 	height: INTEGER
+			-- Height
 
 feature -- Implementation
 
 	drawable: WEL_BITMAP
-		-- Bitmap used for masking.
+			-- Bitmap used for masking.
 
 	dc: WEL_MEMORY_DC
-		-- Device Context used for performing drawing operations on `drawable'.
+			-- Device Context used for performing drawing operations on `drawable'.
 
 	redraw is
 			-- Redraw the entire area.
 		do
-
 		end
 
 	set_default_colors is
@@ -96,6 +102,7 @@ feature -- Implementation
 		end
 
 	destroy is
+			-- Destroy
 		do
 			set_is_destroyed (True)
 		end
@@ -115,23 +122,21 @@ feature -- Implementation
 		do
 		end
 
-	interface: EV_BITMAP
+	interface: EV_BITMAP;
+			-- Interface
 
-end -- class EV_SCREEN_IMP
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+end -- class EV_BITMAP_IMP
+

@@ -27,6 +27,13 @@ feature {EV_POINTER_STYLE} -- Initlization
 		deferred
 		end
 
+	init_predefined (a_constants: INTEGER) is
+			-- Initialized a predefined cursor.
+		require
+			valid: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_constants)
+		deferred
+		end
+
 feature -- Query
 
 	width: INTEGER is

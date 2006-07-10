@@ -288,11 +288,19 @@ feature {NONE} -- Implementation
 				if a_ret_type.is_void then
 					l_buffer.put_string (l_code)
 				else
-					if not alias_contains_return (l_code) then
+					if alias_contains_return (l_code) then
+						l_buffer.put_string (l_code)
+					else
 						l_buffer.put_string ("return ")
-						a_ret_type.c_type.generate_cast (l_buffer)
+						if a_ret_type.is_boolean then
+							l_buffer.put_string ("(int) ")
+						else
+							a_ret_type.c_type.generate_cast (l_buffer)
+						end
+						l_buffer.put_character ('(')
+						l_buffer.put_string (l_code)
+						l_buffer.put_character (')')
 					end
-					l_buffer.put_string (l_code)
 				end
 			end
 		end

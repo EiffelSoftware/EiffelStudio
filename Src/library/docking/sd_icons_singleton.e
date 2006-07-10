@@ -181,42 +181,42 @@ feature -- Center indicators
 
 feature -- Old half-tone style icons.
 
-	drag_pointer_up: EV_CURSOR is
+	drag_pointer_up: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed at top area.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_pointer_down: EV_CURSOR is
+	drag_pointer_down: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed at top area.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_pointer_left: EV_CURSOR is
+	drag_pointer_left: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed at top area.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_pointer_right: EV_CURSOR is
+	drag_pointer_right: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed at top area.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_pointer_center: EV_CURSOR is
+	drag_pointer_center: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed at top area.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_pointer_float: EV_CURSOR is
+	drag_pointer_float: EV_POINTER_STYLE is
 			-- When user drag a zone, pointer showed when should float.
 		deferred
 		ensure

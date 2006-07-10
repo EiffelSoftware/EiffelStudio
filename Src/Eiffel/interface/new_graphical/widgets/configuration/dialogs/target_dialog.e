@@ -109,11 +109,22 @@ feature {NONE} -- Agents
 			-- Called if an item should be added.
 		local
 			wd: EV_WARNING_DIALOG
+			l_found: BOOLEAN
+			l_target: STRING
 		do
 			check
 				conf_system_set: conf_system /= Void
 			end
-			if conf_system.targets.has (new_item_name.text.to_string_8) then
+			l_target := new_item_name.text
+			from
+				list.start
+			until
+				l_found or list.after
+			loop
+				l_found := list.item.text.is_equal (l_target)
+				list.forth
+			end
+			if l_found then
 				create wd.make_with_text (target_add_duplicate)
 				wd.show_modal_to_window (Current)
 			else

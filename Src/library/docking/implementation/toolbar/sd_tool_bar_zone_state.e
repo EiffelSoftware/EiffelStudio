@@ -16,6 +16,7 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method
 		do
+			container_direction := {SD_ENUMERATION}.top
 		end
 
 feature -- Properties which record information in one row.

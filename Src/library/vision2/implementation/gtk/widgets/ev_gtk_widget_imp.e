@@ -212,14 +212,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
 
-	frozen has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
-			-- Has this widget the flag `a_flag' set in struct_flags?
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"((GtkObject*) $a_gtk_object)->flags & $a_flag"
-		end
-
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
 		local
@@ -278,13 +270,13 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
+			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM = {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
+			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
 		end
 
 feature {NONE} -- Implementation

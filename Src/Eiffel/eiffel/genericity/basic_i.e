@@ -89,7 +89,14 @@ feature -- Byte code generation
 			reg.print_register
 			buffer.put_string (" = ")
 				-- Create associated reference type of Current.
-			(create {CREATE_TYPE}.make (reference_type)).generate
+			if true_generics = Void then
+				(create {CREATE_TYPE}.make (Current)).generate
+			else
+				debug ("refactor_fixme")
+					(create {REFACTORING_HELPER}).fixme ("Provide correct code generation for TYPED_POINTER [...] so that it uses an expanded type rather than a POINTER_REF type.")
+				end
+				(create {CREATE_TYPE}.make (reference_type)).generate
+			end
 			buffer.put_string (", *")
 			generate_access_cast (buffer)
 			reg.print_register

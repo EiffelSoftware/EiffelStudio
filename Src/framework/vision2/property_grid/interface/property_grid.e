@@ -81,7 +81,6 @@ feature -- Update
 		do
 			wipe_out
 			set_column_count_to (2)
-			set_auto_resizing_column (name_column, True)
 			enable_last_column_use_all_width
 
 			sections.wipe_out

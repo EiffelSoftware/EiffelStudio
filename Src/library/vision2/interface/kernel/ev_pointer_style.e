@@ -17,6 +17,8 @@ inherit
 		end
 
 create
+	default_create,
+	make_predefined,
 	make_from_pixel_buffer,
 	make_from_cursor
 
@@ -24,6 +26,15 @@ convert
 	make_from_cursor ({EV_CURSOR})
 
 feature {NONE} -- Initlization
+
+	make_predefined (a_contants: INTEGER) is
+			-- Make a predefined pointer style
+		require
+			valid: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_contants)
+		do
+			default_create
+			implementation.init_predefined (a_contants)
+		end
 
 	make_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Creation method

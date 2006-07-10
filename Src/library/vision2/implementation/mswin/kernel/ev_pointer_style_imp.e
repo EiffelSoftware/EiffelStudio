@@ -29,12 +29,14 @@ feature {NONE} -- Initlization
 	initialize is
 			-- Initialize
 		do
+			build_default_icon (to_windows_constants ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor))
 			set_is_initialized (True)
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Initialize from `a_pixel_buffer'
 		do
+			destroy_gdi_objects
 			build_mask_bitmap (a_pixel_buffer.width, a_pixel_buffer.height)
 			build_bitmap (a_pixel_buffer)
 			build_native_cursor (a_pixel_buffer.width, a_pixel_buffer.height)
@@ -50,9 +52,9 @@ feature {NONE} -- Initlization
 			l_simple_imp: EV_PIXMAP_IMP
 			l_imp: EV_PIXMAP_IMP_STATE
 		do
+			destroy_gdi_objects
 			l_simple_imp ?= a_cursor.implementation
 			l_imp ?= a_cursor.implementation
-
 			if l_simple_imp /= Void and then l_simple_imp.private_cursor /= Void then
 				-- If already have one, then we don't need to create a new gdi cursor.
 				wel_cursor := l_simple_imp.private_cursor
@@ -66,23 +68,21 @@ feature {NONE} -- Initlization
 			not_void: wel_cursor /= Void
 		end
 
+	init_predefined (a_constants: INTEGER) is
+			-- Initialized a predefined cursor.
+		do
+			destroy_gdi_objects
+			build_default_icon (to_windows_constants (a_constants))
+		end
+
 feature -- Command
 
 	destroy is
 			-- Destroy
 		do
-			if wel_cursor /= Void and then wel_cursor.exists then
-				wel_cursor.decrement_reference
-				wel_cursor := Void
-			end
-			if wel_bitmap /= Void and then wel_bitmap.exists then
-				wel_bitmap.delete
-				wel_bitmap := Void
-			end
-			if wel_mask_bitmap /= Void and then wel_mask_bitmap.exists then
-				wel_mask_bitmap.delete
-				wel_mask_bitmap := Void
-			end
+			set_is_in_destroy (True)
+			destroy_gdi_objects
+			set_is_destroyed (True)
 		end
 
 feature -- Query
@@ -96,12 +96,61 @@ feature -- Query
 	height: INTEGER
 			-- Height
 
+	to_windows_constants (a_constants: INTEGER): POINTER is
+			-- Convert from EV_POINTER_STYLE_CONSTANTS to windows native constants
+		require
+			vaild: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_constants)
+		do
+			inspect
+				a_constants
+			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+				Result := Idc_constants.Idc_appstarting
+			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+				Result := Idc_constants.Idc_cross
+			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+				Result := Idc_constants.Idc_help
+			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+				Result := Idc_constants.Idc_ibeam
+			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+				Result := Idc_constants.Idc_no
+			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+				Result := Idc_constants.Idc_sizeall
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+				Result := Idc_constants.Idc_sizenesw
+			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+				Result := Idc_constants.Idc_sizens
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+				Result := Idc_constants.Idc_sizenwse
+			when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+				Result := Idc_constants.Idc_sizewe
+			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+				Result := Idc_constants.Idc_arrow
+			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+				Result := Idc_constants.Idc_uparrow
+			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+				Result := Idc_constants.Idc_wait
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	build_default_icon (a_idi_constant: POINTER) is
+			-- Create the pixmap corresponding to the
+			-- Windows Icon constants `Idi_constant'.
+		require
+			not_created: wel_cursor = Void
+		do
+			create wel_cursor.make_by_predefined_id (a_idi_constant)
+			wel_cursor.enable_reference_tracking
+		ensure
+			created: wel_cursor /= Void and then wel_cursor.exists
+		end
 
 	build_native_cursor (a_width, a_height: INTEGER) is
 			-- Build `wel_cursor'
 		require
 			valid: a_width > 0 and a_height > 0
+			not_created: wel_cursor = Void
 			not_void: wel_bitmap /= Void
 			not_void: wel_mask_bitmap /= Void
 		local
@@ -120,9 +169,8 @@ feature {NONE} -- Implementation
 			create wel_cursor.make_by_icon_info (l_icon_info)
 			wel_cursor.enable_reference_tracking
 			l_icon_info.delete
-
 		ensure
-			created: wel_cursor /= Void
+			created: wel_cursor /= Void and then wel_cursor.exists
 		end
 
 	build_bitmap (a_pixel_buffer: EV_PIXEL_BUFFER) is
@@ -161,11 +209,34 @@ feature {NONE} -- Implementation
 			created: wel_mask_bitmap /= Void
 		end
 
+	destroy_gdi_objects is
+			-- destroy all gdi objects
+		do
+			if wel_cursor /= Void and then wel_cursor.exists then
+				wel_cursor.decrement_reference
+				wel_cursor := Void
+			end
+			if wel_bitmap /= Void and then wel_bitmap.exists then
+				wel_bitmap.delete
+				wel_bitmap := Void
+			end
+			if wel_mask_bitmap /= Void and then wel_mask_bitmap.exists then
+				wel_mask_bitmap.delete
+				wel_mask_bitmap := Void
+			end
+		end
+
 	wel_bitmap: WEL_BITMAP
 			-- Dib 32bits rbga bitmap.
 
 	wel_mask_bitmap: WEL_BITMAP;
 			-- Mask bitmap
+
+	Idc_constants: WEL_IDC_CONSTANTS is
+			-- Idc constants
+		once
+			create Result
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

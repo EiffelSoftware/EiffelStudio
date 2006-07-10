@@ -416,13 +416,16 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 		end
 
 	seperator_before_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
-			-- Separator after `a_item' if exist.
+			-- Separator before `a_item' if exist.
 		require
 			has: items.has (a_item)
 		local
 			l_index: INTEGER
 		do
 			l_index := index_of (a_item)
+			debug ("docking")
+				print ("%N SD_TOOL_BAR_CONTENT: seperator_before_item: index_of `a_item' is: " + l_index.out)
+			end
 			items.go_i_th (l_index)
 			if not items.before then
 				items.go_i_th (l_index - 1)

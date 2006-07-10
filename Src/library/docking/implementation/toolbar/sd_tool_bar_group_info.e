@@ -44,56 +44,55 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	maximum_width: INTEGER is
+	maximum_width_sub: INTEGER is
 			-- Maximum width
+			-- Calculation include sub level items.
 		local
 			l_maximum_index: INTEGER
 		do
 			l_maximum_index := maximum_width_group_index
 			if not has_sub_info then
-				Result := group_width (l_maximum_index)
+			-- This function is calculate inlclude sub level
+			-- But it's not calcule sub sub level, so we pass True here
+				Result := group_maximum_width (l_maximum_index)
 			else
-				Result := sub_grouping.item (l_maximum_index).maximum_width
+				Result := sub_grouping.item (l_maximum_index).maximum_width_sub
 			end
 		end
 
-	maximum_width_group: SD_TOOL_BAR_GROUP_INFO is
-			-- Group which has maximum width.
+	maximum_width: INTEGER is
+			-- Maximum width
+			-- The calculation not include sub level groups.
 		local
-			l_maximum_group_index: INTEGER
-			l_group_index_count: INTEGER
-			l_new_group: BOOLEAN
+			l_snapshot: like internal_group_info
+			l_new_group_snapshot: like internal_is_new_group
+			l_temp_size: INTEGER
 		do
-			create Result.make
-			l_maximum_group_index := maximum_width_group_index
-
 			from
-				start
-				l_new_group := True
-				l_group_index_count := 1
+				l_snapshot := internal_group_info.twin
+				l_new_group_snapshot := internal_is_new_group.twin
+				check same_size: l_new_group_snapshot.count = l_snapshot.count end
+				l_snapshot.start
+				l_new_group_snapshot.start
 			until
-				after or l_group_index_count > l_maximum_group_index
+				l_snapshot.after or l_new_group_snapshot.after
 			loop
-				if is_new_group then
-					l_group_index_count := 1 + l_group_index_count
+				l_snapshot.item.finish
+				if l_new_group_snapshot.item then
+					l_temp_size := 0
 				end
-				if l_group_index_count = l_maximum_group_index then
-					if not has_sub_info then
-						Result.extend (item, l_new_group)
-					else
-						Result := sub_grouping.item (l_maximum_group_index)
-					end
-					l_new_group := False
+				l_temp_size := l_temp_size + l_snapshot.item.value (l_snapshot.item.key_for_iteration)
+				if l_temp_size > Result then
+					Result := l_temp_size
 				end
-				forth
+				l_snapshot.forth
+				l_new_group_snapshot.forth
 			end
-		ensure
-			not_void: Result /= Void
-			positive: Result.group_count >= 1
 		end
 
 	maximum_width_group_index: INTEGER is
 			-- Maximum width group index.
+			-- It compute sub-level groups
 		local
 			l_group_count: INTEGER
 			l_total_group: INTEGER
@@ -106,41 +105,145 @@ feature -- Query
 			until
 				l_group_count > l_total_group
 			loop
-				l_group_width := group_width (l_group_count)
+				l_group_width := group_maximum_width (l_group_count)
+
 				if l_group_width > l_maximum_width then
 					l_maximum_width := l_group_width
 					Result := l_group_count
 				end
 				l_group_count := l_group_count + 1
 			end
+
 		ensure
 			valid: Result > 0 and Result <= group_count
 		end
 
+	maximum_width_top_group: SD_TOOL_BAR_GROUP_INFO is
+			-- The group which have maximum width.
+			-- The maximum width calculation inlucde sub level group items width calculation.
+		local
+			l_result_index: INTEGER
+		do
+			l_result_index := maximum_width_top_group_index
+			create Result.make
+			go_i_th (l_result_index)
+			if not has_sub_info then
+				Result.extend (item, True)
+			else
+				Result := sub_grouping.item (l_result_index)
+			end
+		end
+
+	maximum_width_top_group_index: INTEGER is
+			-- Maximum width top group index.
+			-- Calculation include sub level items width.
+		local
+			l_group_count: INTEGER
+			l_total_group: INTEGER
+			l_maximum_width: INTEGER
+			l_group_width: INTEGER
+		do
+			from
+				l_group_count := 1
+				l_total_group := group_count
+			until
+				l_group_count > l_total_group
+			loop
+
+				l_group_width := group_maximum_width (l_group_count)
+				if l_group_width > l_maximum_width then
+					l_maximum_width := l_group_width
+					Result := l_group_count
+				end
+
+				l_group_count := l_group_count + 1
+			end
+		ensure
+			valid: Result > 0 and Result <= total_group_count
+		end
+
 	group_width (a_group_index: INTEGER): INTEGER is
+			-- Group width
+			-- Calculation include sub level items.
+		require
+			valid: a_group_index > 0 and a_group_index <= total_group_count
+		local
+			l_count_include_sub: INTEGER
+			l_sub_group_info: SD_TOOL_BAR_GROUP_INFO
+			l_stop: BOOLEAN
+			l_sub_group_count: INTEGER
+		do
+			from
+				l_count_include_sub := 1
+				start
+			until
+				after or l_count_include_sub > a_group_index or l_stop
+			loop
+				if is_new_group then
+					l_count_include_sub := l_count_include_sub + 1
+				end
+				if has_sub_info then
+					l_sub_group_info := sub_grouping.item (index)
+					from
+						l_sub_group_info.start
+						l_sub_group_count := 1
+					until
+						l_sub_group_info.after or l_stop
+					loop
+						if l_sub_group_info.is_new_group then
+							l_count_include_sub := l_count_include_sub + 1
+						end
+						if l_count_include_sub = a_group_index then
+							l_stop := True
+							Result := l_sub_group_info.row_width (l_sub_group_count)
+						end
+						l_sub_group_info.forth
+						l_sub_group_count := l_sub_group_count + 1
+					end
+				else
+					if l_count_include_sub = a_group_index then
+						l_stop := True
+						Result := row_width (index)
+					end
+				end
+				forth
+			end
+		end
+
+	group_maximum_width (a_group_index: INTEGER): INTEGER is
 			-- Maximum group width of a_group_index.
+			-- `a_group_index' is top level group index.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
 			l_group_count: INTEGER
+			l_index_count, l_index_max: INTEGER
+			l_temp_result: INTEGER
 		do
 			from
 				l_group_count := 1
-				start
+				l_index_count := 1
+				l_index_max := count
 			until
-				after or l_group_count > a_group_index
+
+				l_index_count > l_index_max or l_group_count > a_group_index
 			loop
+				go_i_th (l_index_count)
 				if is_new_group then
 					l_group_count := l_group_count + 1
 				end
 				if l_group_count = a_group_index then
+					go_i_th (l_index_count)
 					if not has_sub_info then
-						Result := row_width (index)
+						l_temp_result := row_width (l_index_count)
 					else
-						Result := sub_grouping.item (index).maximum_width
+						l_temp_result := sub_grouping.item (l_index_count).maximum_width
+					end
+					if l_temp_result > Result then
+						Result := l_temp_result
 					end
 				end
-				forth
+				l_index_count := l_index_count + 1
 			end
 		ensure
 			valid: Result >= 0
@@ -200,7 +303,7 @@ feature -- Query
 			until
 				after
 			loop
-				if is_new_group then
+				if index /= 1 and then is_new_group then
 					Result := Result + 1
 				end
 				forth

@@ -56,7 +56,7 @@ feature {NONE} -- Implementation functions
 			not_void: a_groups_info /= Void
 		do
 			debug ("docking")
-				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp")
+				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp START")
 			end
 			reset_all_items_wrap
 			from
@@ -65,20 +65,29 @@ feature {NONE} -- Implementation functions
 				a_groups_info.after
 			loop
 				debug ("docking")
-					print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp 2")
+					print ("%N                                a_groups_info.index: " + a_groups_info.index.out)
 				end
 				if not a_groups_info.has_sub_info then
 					if a_groups_info.is_new_group then
 						check not_more_than_one: a_groups_info.item.count = 1 end
 						position_top_level_items (a_groups_info.item)
 					end
+					debug ("docking")
+						print ("%N                                not has sub group info")
+					end
 				else
 					position_sub_level_items (a_groups_info.sub_grouping.item (a_groups_info.index), a_groups_info.index)
+					debug ("docking")
+						print ("%N                                has sub group info")
+					end
 				end
 				a_groups_info.forth
 			end
 			zone.tool_bar.compute_minmum_size
 			to_minmum_size
+			debug ("docking")
+				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp END")
+			end
 		end
 
 	position_top_level_items (a_group_indexs: DS_HASH_TABLE [INTEGER, INTEGER]) is
@@ -120,6 +129,9 @@ feature {NONE} -- Implementation functions
 			l_first_item: SD_TOOL_BAR_ITEM
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
+			debug ("docking")
+				print ("%N                                  position_sub_level_items START: ")
+			end
 			l_items := zone.content.group (a_group_index)
 			from
 				a_sub_info.start
@@ -127,16 +139,21 @@ feature {NONE} -- Implementation functions
 				a_sub_info.after
 			loop
 				a_sub_info.item.finish
+				debug ("docking")
+					print ("%N                                  position a_sub_info.item.key_for_iteration: " + a_sub_info.item.key_for_iteration.out)
+				end
 				if a_sub_info.item.key_for_iteration > 1 and l_items.valid_index (a_sub_info.item.key_for_iteration - 1) then
 					l_first_item := l_items.i_th (a_sub_info.item.key_for_iteration - 1)
 					l_separator := Void
 					l_separator := zone.content.seperator_before_item (l_first_item)
-					if a_sub_info.is_new_group or a_sub_info.index = 1 then
-						if l_separator = Void then
-							l_first_item.set_wrap (True)
-						else
-							l_separator.set_wrap (True)
+					if (a_sub_info.is_new_group or a_sub_info.index = 1) and then zone.content.seperator_after_item (l_first_item) = Void then
+						l_first_item.set_wrap (True)
+						debug ("docking")
+							print ("%N                                  l_first_item set wrap")
 						end
+					end
+					debug ("docking")
+						print ("%N                                  larger than 1: a_sub_info.is_new_group" + a_sub_info.is_new_group.out)
 					end
 				elseif a_sub_info.item.key_for_iteration = 1 then
 					-- For first item, we should set group's separator wrap.
@@ -146,6 +163,9 @@ feature {NONE} -- Implementation functions
 					end
 				end
 				a_sub_info.forth
+			end
+			debug ("docking")
+				print ("%N                                  position_sub_level_items END. ")
 			end
 		end
 

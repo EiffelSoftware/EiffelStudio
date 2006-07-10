@@ -157,15 +157,20 @@ feature -- Change
 			m: EV_MENU
 			col: EV_GRID_COLUMN
 			ghi: EV_GRID_HEADER_ITEM
+			lx: INTEGER_32
 		do
 			if abutton = 3 then
 				ghi ?= hi
 				if ghi /= Void and then header.pointed_divider_index = 0 then
 					col := column (ghi.column.index)
 						--| Col is the pointed header
-					m := header_menu_on_column (col)
-					m.show_at (header, header.item_x_offset (hi) + ax, ay)
 				end
+				m := header_menu_on_column (col)
+				lx := ax
+				if hi /= Void then
+					lx := lx + header.item_x_offset (hi)
+				end
+				m.show_at (header, lx, ay)
 			end
 		end
 
@@ -187,9 +192,9 @@ feature -- Change
 			mi.disable_sensitive
 			Result.extend (mi)
 
-			Result.extend (create {EV_MENU_SEPARATOR})
 
 			if col /= Void then
+				Result.extend (create {EV_MENU_SEPARATOR})
 				create mci.make_with_text ("Auto resize")
 				if column_has_auto_resizing (col.index) then
 					mci.enable_select
@@ -198,6 +203,11 @@ feature -- Change
 					mci.disable_select
 					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
 				end
+				Result.extend (mci)
+
+				create mci.make_with_text ("Displayed")
+				mci.enable_select
+				mci.select_actions.extend (agent col.hide)
 				Result.extend (mci)
 			end
 

@@ -247,7 +247,6 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
-   			set_focus
    		end
 
 	set_top (a_direction: INTEGER) is
@@ -257,7 +256,6 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
-			set_focus
 		end
 
 	set_auto_hide (a_direction: INTEGER) is
@@ -267,7 +265,6 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.stick (a_direction)
-			set_focus
 		end
 
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
@@ -276,7 +273,6 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 		do
 			state.float (a_screen_x, a_screen_y)
-			set_focus
 		end
 
 	set_tab_with (a_content: SD_CONTENT; a_left: BOOLEAN) is
@@ -302,7 +298,6 @@ feature -- Set Position
 				check l_docking_zone /= Void end
 				state.move_to_docking_zone (l_docking_zone, a_left)
 			end
-			set_focus
 		end
 
 	set_default_editor_position is

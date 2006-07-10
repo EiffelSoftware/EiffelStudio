@@ -311,7 +311,7 @@ feature -- File warnings
 			-- An attempt was made to open a file that does not correspond to a class in the universe.
 
 	w_Not_rename_swp (a_file_name, a_new_name: STRING): STRING is
-			-- Can not rename the swp file into the original file during a save operation.
+			-- Cannot rename the swp file into the original file during a save operation.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_new_name_not_void: a_new_name /= Void
@@ -1138,7 +1138,7 @@ feature -- Warning messages
 									%an optimized version as well as a workbench version.%N%
 									%Would you like to create a finalized verion?"
 
-	w_Replace_all: STRING is "This operation can not be undone %N%
+	w_Replace_all: STRING is "This operation cannot be undone %N%
 									%to files not loaded to the editor.%N%
 									%Would you like to continue replacing all?"
 

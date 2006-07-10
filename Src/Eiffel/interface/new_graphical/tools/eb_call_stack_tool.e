@@ -1085,7 +1085,7 @@ feature {NONE} -- Implementation
 					wd.show
 				end
 			else
-				create wd.make_with_text ("Sorry you can not change thread while execution is running")
+				create wd.make_with_text ("Sorry you cannot change thread while execution is running")
 				wd.show
 			end
 		end

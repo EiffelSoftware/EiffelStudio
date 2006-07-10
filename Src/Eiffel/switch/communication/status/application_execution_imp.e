@@ -164,7 +164,7 @@ feature {APPLICATION_EXECUTION} -- Launching status
 	can_not_launch_system_message: STRING is
 			-- Message displayed when estudio is unable to launch the system
 		do
-			Result := "Can not launch system"
+			Result := "Cannot launch system"
 		end
 
 feature -- Change

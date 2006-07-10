@@ -188,7 +188,7 @@ feature {NONE} -- Access
 	has_error_internal: BOOLEAN
 			-- If error when processing.
 			-- For the case we only have old AST,
-			-- `last_type' can not be evaluated correctly.
+			-- `last_type' cannot be evaluated correctly.
 			-- If `has_error', we give up type evaluating and send
 			-- simple text to output.
 

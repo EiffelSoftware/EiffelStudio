@@ -42,7 +42,7 @@ indexing
 
 					A criterion can be prefixed with logical operator "not".
 					And same type of criteria can be combined using logical operator "and", "or".
-					Different kinds of criteria CAN NOT be combined together.
+					Different kinds of criteria CANNOT be combined together.
 					For more information of criteria for each type of basic element,
 					see {QL_CRITERION_FACTORY} and its descendant classes.
 

@@ -61,7 +61,7 @@ feature {NONE} -- Target names and descriptions
 	target_base_name: STRING is "Base target"
 	target_base_description: STRING is "Base target of this target."
 	target_abstract_name: STRING is "Abstract"
-	target_abstract_description: STRING is "Is this an abstract target that can not be used to compile."
+	target_abstract_description: STRING is "Is this an abstract target that cannot be used to compile."
 	target_compilation_type_name: STRING is "Compilation type"
 	target_compilation_type_description: STRING is "Type of compilation."
 	target_compilation_type_standard: STRING is "Standard (C/byte code)"
@@ -424,21 +424,21 @@ feature {NONE} -- Class option dialog
 feature {NONE} -- Validation warnings
 
 	version_valid_format: STRING is "Version is not valid. It has to be in the form XXX.XXX.XXX.XXX"
-	version_min_max: STRING is "Minimum version can not be greater than maximum version."
-	library_target_override: STRING is "Library target can not be used because it contains overrides which is forbidden."
-	target_move_up_extends: STRING is "Target can not be moved up because it extends the target that is above it."
-	target_move_down_extends: STRING is "Target can not be moved down because the target below it extends this target."
-	target_add_duplicate: STRING is "Can not add target because there is already a target with the same name."
-	target_remove_library_target: STRING is "Target can not be rmeoved because it is the library target."
+	version_min_max: STRING is "Minimum version cannot be greater than maximum version."
+	library_target_override: STRING is "Library target cannot be used because it contains overrides which is forbidden."
+	target_move_up_extends: STRING is "Target cannot be moved up because it extends the target that is above it."
+	target_move_down_extends: STRING is "Target cannot be moved down because the target below it extends this target."
+	target_add_duplicate: STRING is "Cannot add target because there is already a target with the same name."
+	target_remove_library_target: STRING is "Target cannot be removed because it is the library target."
 	target_remove_extends (other_target: STRING): STRING is
 		do
-			Result := "Target can not be removed because "+other_target+" extends it."
+			Result := "Target cannot be removed because "+other_target+" extends it."
 		end
 
-	target_name_duplicate: STRING is "Can not rename target because there is already a target with the new name."
-	root_no_class: STRING is "Can not specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
-	cluster_dependency_group_not_exist: STRING is "Can not add dependency. There is no group with this name."
-	override_group_not_exist: STRING is "Can not add override. There is no group with this name."
+	target_name_duplicate: STRING is "Cannot rename target because there is already a target with the new name."
+	root_no_class: STRING is "Cannot specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
+	cluster_dependency_group_not_exist: STRING is "Cannot add dependency. There is no group with this name."
+	override_group_not_exist: STRING is "Cannot add override. There is no group with this name."
 	group_already_exists (a_group: STRING): STRING is
 		require
 			a_group_not_void: a_group /= Void
@@ -606,16 +606,16 @@ feature {NONE} -- Parse errors
 
 	e_parse_incorrect_condition: STRING is "Invalid condition tag."
 
-	e_parse_incorrect_platform_mult: STRING is "Can not have multiple platform specifications in one condition."
-	e_parse_incorrect_platform_conflict: STRING is "Value and exclude attribute in platform condition can not appear at the same time."
+	e_parse_incorrect_platform_mult: STRING is "Cannot have multiple platform specifications in one condition."
+	e_parse_incorrect_platform_conflict: STRING is "Value and exclude attribute in platform condition cannot appear at the same time."
 	e_parse_incorrect_platform_none: STRING is "No value or excluded-value specified in platform condition."
 	e_parse_incorrect_platform (a_platform: STRING): STRING is
 		do
 			Result := "Invalid platform "+a_platform+"."
 		end
 
-	e_parse_incorrect_build_mult: STRING is "Can not have multiple build specifications in one condition."
-	e_parse_incorrect_build_conflict: STRING is "Value and exclude attribute in build condition can not appear at the same time."
+	e_parse_incorrect_build_mult: STRING is "Cannot have multiple build specifications in one condition."
+	e_parse_incorrect_build_conflict: STRING is "Value and exclude attribute in build condition cannot appear at the same time."
 	e_parse_incorrect_build_none: STRING is "No value or excluded-value specified in build condition."
 	e_parse_incorrect_build (a_build: STRING): STRING is
 		do
@@ -645,7 +645,7 @@ feature {NONE} -- Parse errors
 		end
 	e_parse_incorrect_version_min_max (a_type: STRING): STRING is
 		do
-			Result := "Minimum version can not be greater than maximum version in version condition "+a_type+"."
+			Result := "Minimum version cannot be greater than maximum version in version condition "+a_type+"."
 		end
 
 	e_parse_incorrect_custom_no_name: STRING is "No name attribute in custom condition."
@@ -655,7 +655,7 @@ feature {NONE} -- Parse errors
 		end
 	e_parse_incorrect_custom_conflict (a_custom: STRING): STRING is
 		do
-			Result := "Value and exclude attribute in custom condition "+a_custom+" can not appear at the same time."
+			Result := "Value and exclude attribute in custom condition "+a_custom+" cannot appear at the same time."
 		end
 
 	e_parse_incorrect_mapping: STRING is "Invalid mapping tag."

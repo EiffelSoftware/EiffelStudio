@@ -211,7 +211,7 @@ feature
 			until
 				i = capacity or not Result
 			loop
-					-- add + 1 because 0 can not be hashed with the old HASH_TABLE.
+					-- add + 1 because 0 cannot be hashed with the old HASH_TABLE.
 				if l_free_positions.has (free_cells.item (i) + 1) then
 					Result := False
 				else

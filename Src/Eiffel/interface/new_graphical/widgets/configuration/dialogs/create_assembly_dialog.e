@@ -65,6 +65,12 @@ feature {NONE} -- Initialization
 			vb, vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
+			l_il_env: IL_ENVIRONMENT
+			l_alb: SYSTEM_ASSEMBLY_LIST_BUILDER
+			l_assemblies: LIST  [STRING]
+			l_item: EV_LIST_ITEM
+			l_path, l_name: STRING
+			i, j, cnt: INTEGER
 		do
 			Precursor {EV_DIALOG}
 
@@ -72,6 +78,49 @@ feature {NONE} -- Initialization
 			extend (vb)
 			vb.set_padding (default_padding_size)
 			vb.set_border_width (default_border_size)
+
+				-- assemblies found in default locations
+			create vb2
+			vb.extend (vb2)
+			vb2.set_padding (small_padding_size)
+			vb2.set_border_width (small_border_size)
+
+			create l_lbl.make_with_text (dialog_create_assembly_found)
+			vb2.extend (l_lbl)
+			vb2.disable_item_expand (l_lbl)
+			l_lbl.align_text_left
+
+			create assemblies
+			vb2.extend (assemblies)
+			assemblies.set_minimum_height (200)
+
+				-- get clr version
+			if target.setting_msil_clr_version.is_empty then
+				create l_il_env
+			else
+				create l_il_env.make (target.setting_msil_clr_version)
+			end
+			create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
+			from
+				l_assemblies := l_alb.assemblies
+				l_assemblies.start
+			until
+				l_assemblies.after
+			loop
+				l_path := l_assemblies.item
+				cnt := l_path.count
+				i := l_path.last_index_of (operating_environment.directory_separator, cnt)
+				j := l_path.last_index_of ('.', cnt)
+				if i > 0 and j > 0 then
+					l_name := l_path.substring (i+1, j-1)
+				else
+					l_name := l_path
+				end
+				create l_item.make_with_text (l_name)
+				l_item.select_actions.extend (agent fill_assembly (l_name, l_path))
+				assemblies.extend (l_item)
+				l_assemblies.forth
+			end
 
 				-- name
 			create vb2
@@ -144,6 +193,9 @@ feature -- Status
 
 feature {NONE} -- GUI elements
 
+	assemblies: EV_LIST
+			-- Assemblies found in default locations.
+
 	name: EV_TEXT_FIELD
 			-- Name of the group.
 
@@ -151,6 +203,29 @@ feature {NONE} -- GUI elements
 			-- Location of the assembly (for local assemblies).
 
 feature {NONE} -- Actions
+
+	fill_assembly (a_name, a_path: STRING) is
+			-- Fill location and name from `a_path' and `a_name'.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_path_ok: a_path /= Void and then not a_path.is_empty
+			name_ok: name /= Void
+			location_ok: location /= Void
+		local
+			l_il_env: IL_ENVIRONMENT
+			l_loc: STRING
+		do
+			name.set_text (a_name)
+
+			if target.setting_msil_clr_version.is_empty then
+				create l_il_env
+			else
+				create l_il_env.make (target.setting_msil_clr_version)
+			end
+			l_loc := a_path.twin
+			l_loc.replace_substring_all (l_il_env.dotnet_framework_path, "$ISE_DOTNET_FRAMEWORK")
+			location.set_text (l_loc)
+		end
 
 	browse is
 			-- Browse for a location.

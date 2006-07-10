@@ -17,12 +17,17 @@ feature -- Hot zone factory
 			-- Redefine
 		local
 			l_version: WEL_WINDOWS_VERSION
+			l_shared: SD_SHARED
+			l_line_drawer: SD_LINE_DRAWER
 		do
 			create l_version
 			if l_version.is_windows_2000_compatible and then not is_terminal_service then
 				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result
 			else
 				create {SD_HOT_ZONE_OLD_FACTORY} Result
+				create l_shared
+				l_line_drawer := l_shared.feedback.line_drawer
+				l_line_drawer.reset_screen
 			end
 		end
 

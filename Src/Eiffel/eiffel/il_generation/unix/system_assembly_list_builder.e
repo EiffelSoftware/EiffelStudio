@@ -46,14 +46,11 @@ feature -- Access
 
 	assembly_folders: LIST [STRING_32]
 			-- List of current assembly folder
-		local
-			l_result: like internal_assembly_folders
 		do
 			check False end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			internal_assembly_folders_set: internal_assembly_folders = Result
 		end
 
 	assemblies: ARRAYED_LIST [STRING_8]

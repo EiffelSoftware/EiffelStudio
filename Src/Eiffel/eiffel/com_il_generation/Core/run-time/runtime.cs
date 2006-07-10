@@ -57,6 +57,21 @@ public delegate int WEL_RICH_EDIT_STREAM_OUT_DELEGATE (IntPtr a_buffer, int leng
 public delegate void WEL_DISK_SPACE_DELEGATE (int free_space, int total_space, int free_space_in_bytes, int total_space_in_bytes);
 public delegate void EIFFEL_PROCEDURE_DELEGATE (object args);
 public delegate object EIFFEL_FUNCTION_DELEGATE (object args);
+public delegate void EIFFEL_EVENT_HANDLER (object sender, EIFFEL_EVENT_ARGS a);
+
+// Generic event arguments
+public class EIFFEL_EVENT_ARGS : EventArgs
+{
+	public EIFFEL_EVENT_ARGS(string s)
+	{
+		msg = s;
+	}
+	private string msg;
+	public string Message
+	{
+		get { return msg; }
+	}
+}
 
 
 [Serializable]

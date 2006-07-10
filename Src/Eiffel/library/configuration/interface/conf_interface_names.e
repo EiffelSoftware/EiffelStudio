@@ -396,6 +396,7 @@ feature {NONE} -- Create precompile dialog
 
 feature {NONE} -- Create assembly dialog
 
+	dialog_create_assembly_found: STRING is "Assemblies"
 	dialog_create_assembly_title: STRING is "Add assembly"
 	dialog_create_assembly_name: STRING is "Name"
 	dialog_create_assembly_location: STRING is "Location"

@@ -15,6 +15,8 @@ inherit
 			dispose
 		end
 
+	EV_ANY_HANDLER
+
 	WEL_REFERENCE_TRACKABLE
 
 create

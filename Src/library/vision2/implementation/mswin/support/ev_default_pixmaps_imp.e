@@ -10,6 +10,9 @@ indexing
 class
 	EV_STOCK_PIXMAPS_IMP
 
+inherit
+	EV_ANY_HANDLER
+
 feature -- Default pixmaps
 
 	Information_pixmap: EV_PIXMAP is
@@ -37,7 +40,7 @@ feature -- Default pixmaps
 		end
 
 	Default_window_icon: EV_PIXMAP is
-			-- Pixmap used as default icon for new windows 
+			-- Pixmap used as default icon for new windows
 			-- (Vision2 logo)
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -145,7 +148,7 @@ feature {NONE} -- Implementation
 				-- Read the predefined Cursor.
 			create wel_icon.make_by_predefined_id (Idi_constant)
 			wel_icon.enable_reference_tracking
-			
+
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_with_resource (wel_icon)
@@ -166,7 +169,7 @@ feature {NONE} -- Implementation
 				-- Read the predefined Cursor.
 			create wel_cursor.make_by_predefined_id (Idc_constant)
 			wel_cursor.enable_reference_tracking
-			
+
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_with_resource (wel_cursor)

@@ -208,7 +208,7 @@ feature -- Duplication
 			implementation.copy_pixmap (other)
 		end
 
-feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT_DRAWER, ANY} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_PIXMAP_I
 			-- Responsible for interaction with native graphics toolkit.

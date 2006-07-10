@@ -149,6 +149,9 @@ feature {NONE} -- Agents
 				if conf_system.library_target = l_target then
 					create wd.make_with_text (target_remove_library_target)
 					wd.show_modal_to_window (Current)
+				elseif conf_system.targets.count = 1 then
+					create wd.make_with_text (target_remove_last)
+					wd.show_modal_to_window (Current)
 				else
 					from
 						l_targets := conf_system.targets

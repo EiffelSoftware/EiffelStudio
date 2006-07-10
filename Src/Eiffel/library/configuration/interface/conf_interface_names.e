@@ -431,6 +431,7 @@ feature {NONE} -- Validation warnings
 	target_move_down_extends: STRING is "Target cannot be moved down because the target below it extends this target."
 	target_add_duplicate: STRING is "Cannot add target because there is already a target with the same name."
 	target_remove_library_target: STRING is "Target cannot be removed because it is the library target."
+	target_remove_last: STRING is "Target cannot be removed because it is the last target."
 	target_remove_extends (other_target: STRING): STRING is
 		do
 			Result := "Target cannot be removed because "+other_target+" extends it."

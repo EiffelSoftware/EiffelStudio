@@ -146,19 +146,19 @@ feature -- Access
 	ctrl_pressed: BOOLEAN is
 			-- Is ctrl key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_control_mask_enum)).to_boolean
+			Result := keyboard_modifier_mask & {EV_GTK_EXTERNALS}.gdk_control_mask_enum = {EV_GTK_EXTERNALS}.gdk_control_mask_enum
 		end
 
 	alt_pressed: BOOLEAN is
 			-- Is alt key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_mod1_mask_enum)).to_boolean
+			Result := keyboard_modifier_mask & {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum = {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum
 		end
 
 	shift_pressed: BOOLEAN is
 			-- Is shift key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_shift_mask_enum)).to_boolean
+			Result := keyboard_modifier_mask & {EV_GTK_EXTERNALS}.gdk_shift_mask_enum = {EV_GTK_EXTERNALS}.gdk_shift_mask_enum
 		end
 
 	window_oids: LINKED_LIST [INTEGER]

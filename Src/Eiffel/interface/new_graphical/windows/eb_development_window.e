@@ -1258,7 +1258,6 @@ feature {NONE} -- Menu Building
 		local
 			new_project_cmd: EB_NEW_PROJECT_COMMAND
 			open_project_cmd: EB_OPEN_PROJECT_COMMAND
-			send_to_menu: EV_MENU
 			menu_item: EV_MENU_ITEM
 			command_menu_item: EB_COMMAND_MENU_ITEM
 		do
@@ -1302,13 +1301,10 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			file_menu.extend (command_menu_item)
 
-				-- Sent to
-			create send_to_menu.make_with_text (Interface_names.m_send_to)
-					-- External editor
-				command_menu_item := shell_cmd.new_menu_item
-				add_recyclable (command_menu_item)
-				send_to_menu.extend (command_menu_item)
-			file_menu.extend (send_to_menu)
+				-- External editor
+			command_menu_item := shell_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			file_menu.extend (command_menu_item)
 
 				-- Separator --------------------------------------
 			file_menu.extend (create {EV_MENU_SEPARATOR})

@@ -786,7 +786,9 @@ feature {NONE} -- Mouse copy cut
 		do
 			Precursor
 			if mouse_copy_cut then
-				editor_drawing_area.disable_capture
+				if not editor_drawing_area.is_destroyed then
+					editor_drawing_area.disable_capture
+				end
 				mouse_left_button_down := False
 			end
 		end

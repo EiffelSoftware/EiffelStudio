@@ -466,8 +466,10 @@ feature {NONE} -- Process Vision2 events
 		do
 				-- Redraw the line where the cursor is (we will erase the cursor)
 			show_cursor := False
-			invalidate_selection_rect (True)
-			suspend_cursor_blinking
+			if not editor_drawing_area.is_destroyed then
+				invalidate_selection_rect (True)
+				suspend_cursor_blinking
+			end
 		end
 
 feature {NONE} -- Handle keystrokes

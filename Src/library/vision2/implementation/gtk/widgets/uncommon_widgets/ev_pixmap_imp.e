@@ -90,9 +90,16 @@ feature {NONE} -- Initialization
 			-- Initialize from `a_pointer_style'
 		local
 			a_pointer_style_imp: EV_POINTER_STYLE_IMP
+			l_pixbuf: POINTER
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
-			set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+			l_pixbuf := a_pointer_style_imp.gdk_pixbuf
+			if l_pixbuf /= default_pointer then
+				set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+			else
+				set_size (a_pointer_style.width, a_pointer_style.height)
+				clear
+			end
 		end
 
 feature -- Drawing operations

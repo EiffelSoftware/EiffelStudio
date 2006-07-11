@@ -20,6 +20,7 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		do
+			print (generator + ".make %N")
 			is_splashing := True
 
 				--| Now get the estudio environment and arguments for `ec'
@@ -115,7 +116,6 @@ feature -- Launching
 			retry
 		end
 
-
 	start_process (cmd: STRING; args: LIST [STRING]; dir: STRING) is
 			-- Start process using command `cmd' and arguments `args'
 			-- in the working directory `dir'
@@ -124,7 +124,12 @@ feature -- Launching
 		local
 			process: PROCESS
 			has_exited_timeout: EV_TIMEOUT
+			keep_estudio_terminal: BOOLEAN
 		do
+				--| To keep terminal stdin , stderr, stdout
+				--| estudio must stay alive ...
+			keep_estudio_terminal := not is_windows or is_waiting
+
 			process := process_factory.process_launcher (ec_path, args, dir)
 			process.set_hidden (False)
 
@@ -137,7 +142,7 @@ feature -- Launching
 				process.enable_terminal_control
 			end
 
-			if is_waiting then
+			if keep_estudio_terminal then
 				if is_windows then
 					process.redirect_input_to_stream --| useful ?
 					process.redirect_output_to_agent (agent on_output)
@@ -151,13 +156,20 @@ feature -- Launching
 			process.set_on_exit_handler (agent do_exit_launcher)
 			process.set_on_fail_launch_handler (agent do_exit_launcher)
 
+			debug ("LAUNCHER")
+				print (generator + " : launching process ... %N")
+			end
 			process.launch
 
-			if process.launched and  is_waiting then
+			if process.launched and keep_estudio_terminal then
+				if not is_waiting then
+					close_splasher (splash_delay)
+				end
 				create has_exited_timeout
 				has_exited_timeout.actions.extend (agent exit_if_process_has_exited (process))
 				has_exited_timeout.set_interval (5 * 1000)
 			else
+				is_waiting := False
 				do_exit_launcher
 			end
 		end
@@ -165,6 +177,7 @@ feature -- Launching
 	exit_if_process_has_exited (p: PROCESS) is
 		do
 			if not p.is_running or else p.has_exited then
+				is_waiting := False
 				exit_launcher
 			end
 		end
@@ -177,11 +190,16 @@ feature {NONE} -- Application exit
 		end
 
 	exit_launcher is
+		require
+			is_not_waiting: not is_waiting
 		do
 			close_splasher (0)
 		end
 
 feature -- Splash
+
+	splash_delay: INTEGER_32 is 3_000
+			-- 2 seconds seems ok
 
 	splasher: SPLASH_DISPLAYER_I
 
@@ -199,6 +217,10 @@ feature -- Splash
 			fn: FILE_NAME
 			retried: BOOLEAN
 		do
+			debug ("LAUNCHER")
+				print (generator + ".display_splasher %N")
+			end
+
 			if not retried then
 				create s.make_empty
 				s.append_code (169)
@@ -230,6 +252,9 @@ feature -- Splash
 	close_splasher (delay: INTEGER_32) is
 			-- 'delay' has no sense in none graphical context
 		do
+			debug ("LAUNCHER")
+				print (generator + ".close_splasher (delay: " + delay.out + ") %N")
+			end
 			if splasher /= Void then
 				splasher.close
 				splasher := Void
@@ -282,10 +307,6 @@ feature -- Environment
 		local
 			s: STRING
 		do
-				--| to keep terminal stdin , stderr, stdout
-				--| estudio must stay alive ...
-			is_waiting := not is_windows
-
 			get_cmdline_arguments
 			create argument_variables.make (3)
 			argument_variables.compare_objects
@@ -560,7 +581,6 @@ feature {NONE} -- Implementations
 		once
 			create Result
 		end
-
 
 feature {NONE} -- File system helpers
 

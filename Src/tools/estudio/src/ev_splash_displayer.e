@@ -46,6 +46,8 @@ feature -- Access
 			Precursor
 			create main_box
 			extend (main_box)
+			create pixmap_box
+			main_box.extend (pixmap_box)
 		end
 
 	splash_pixmap: EV_PIXMAP is
@@ -133,13 +135,11 @@ feature -- Access
 			if pix /= Void then
 				create cell
 				cell.set_background_pixmap (pix)
-				main_box.extend (cell)
+				pixmap_box.extend (cell)
 				cell.set_minimum_size (pix.width , pix.height)
 
 				set_size (pix.width, pix.height)
-
 				center_splash
-
 				Precursor
 			end
 		end
@@ -213,6 +213,8 @@ feature {NONE} -- Properties
 		end
 
 	main_box: EV_VERTICAL_BOX
+
+	pixmap_box: EV_HORIZONTAL_BOX
 
 	verbose_panel: EV_LABEL;
 

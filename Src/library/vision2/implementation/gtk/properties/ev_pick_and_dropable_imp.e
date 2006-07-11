@@ -71,9 +71,19 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			l_interface: EV_WIDGET
+			l_grab_widget: POINTER
 		do
 			if not has_capture then
 				App_implementation.disable_debugger
+					-- On Solaris, if a menu is selected, then `enable_capture' will not close the menu
+					-- as GTK does on other platforms. Note that `gtk_menu_shell_cancel' will only
+					-- work on GTK 2.4 or above, it is a no-op otherwise.
+				l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
+				if l_grab_widget /= default_pointer then
+					if {EV_GTK_EXTERNALS}.gtk_is_menu (l_grab_widget) then
+						{EV_GTK_EXTERNALS}.gtk_menu_shell_cancel (l_grab_widget)
+					end
+				end
 				if not has_focus then
 					set_focus
 				end

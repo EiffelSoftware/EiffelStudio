@@ -135,8 +135,9 @@ feature -- Access
 			if pix /= Void then
 				create cell
 				cell.set_background_pixmap (pix)
-				pixmap_box.extend (cell)
 				cell.set_minimum_size (pix.width , pix.height)
+				pixmap_box.extend (cell)
+				pixmap_box.extend (create {EV_CELL})
 
 				set_size (pix.width, pix.height)
 				center_splash
@@ -176,10 +177,22 @@ feature -- Change
 	set_verbose_text (s: STRING_GENERAL) is
 		local
 			l_size: TUPLE [w: INTEGER; h: INTEGER; lo: INTEGER_32; ro: INTEGER_32]
-			b: EV_VERTICAL_BOX
-			l: EV_LABEL
 		do
 			Precursor (s)
+			build_verbose_panel
+			l_size := verbose_panel.font.string_size (verbose_text)
+			verbose_panel.set_minimum_size (l_size.w, l_size.h)
+			verbose_panel.set_text (verbose_text)
+			verbose_panel.refresh_now
+--			center_splash
+		end
+
+	build_verbose_panel is
+		local
+			b: EV_VERTICAL_BOX
+			h: EV_HORIZONTAL_BOX
+			l: EV_LABEL
+		do
 			if verbose_panel = Void then
 				create verbose_panel
 
@@ -188,21 +201,20 @@ feature -- Change
 				b.set_foreground_color (Stock_colors.white)
 				b.set_border_width (10)
 				b.extend (verbose_panel)
-				create l.make_with_text ("Click here to close ...")
+				create l.make_with_text ("Double click here to close ...")
 				l.align_text_right
-				l.pointer_button_press_actions.force_extend (agent exit)
-				b.extend (l)
+				l.pointer_double_press_actions.force_extend (agent exit)
+				create h
+				h.extend (create {EV_CELL})
+				h.extend (l)
+				h.disable_item_expand (l)
+				b.extend (h)
 				b.propagate_background_color
 				b.propagate_foreground_color
 				main_box.extend (b)
 				verbose_panel.show
 				verbose_panel.align_text_left
 			end
-			l_size := verbose_panel.font.string_size (verbose_text)
-			verbose_panel.set_minimum_size (l_size.w, l_size.h)
-			verbose_panel.set_text (verbose_text)
-			verbose_panel.refresh_now
---			center_splash
 		end
 
 feature {NONE} -- Properties

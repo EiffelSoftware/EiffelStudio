@@ -47,6 +47,7 @@ feature {NONE} -- Creation
 		local
 			timeout: EV_TIMEOUT
 		do
+			is_waiting := False
 			create timeout.make_with_interval (splash_delay)
 			timeout.actions.extend (agent exit_launcher)
 			timeout.actions.extend_kamikaze (agent timeout.destroy)

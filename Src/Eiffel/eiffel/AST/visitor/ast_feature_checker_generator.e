@@ -3560,6 +3560,7 @@ feature -- Implementation
 						-- access by giving a source.
 					l_tuple_access ?= access_b
 					check l_tuple_access_not_void: l_tuple_access /= Void end
+					l_tuple_access.set_line_number (l_as.start_location.line)
 					l_tuple_access.set_source (source_byte_node)
 					last_byte_node := target_byte_node
 				else

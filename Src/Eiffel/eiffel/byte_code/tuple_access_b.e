@@ -201,6 +201,7 @@ feature -- C Code generation
 			buf := buffer
 			if source /= Void then
 				generate_line_info
+				generate_frozen_debugger_hook
 				source.generate
 				buf.put_string (once "eif_put_")
 				buf.put_string (tuple_element_name)

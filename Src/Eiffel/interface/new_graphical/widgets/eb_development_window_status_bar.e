@@ -421,6 +421,9 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
+			if eiffel_project.initialized and then eiffel_project.system_defined then
+				set_project_name (eiffel_system.name)
+			end
 			compiling_timer.set_interval (0)
 			if eiffel_project.workbench.successful then
 				p := pixmaps.icon_pixmaps.compile_success_icon

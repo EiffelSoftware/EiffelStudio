@@ -44,7 +44,7 @@ feature {NONE} -- Creation
 		local
 			timeout: EV_TIMEOUT
 		do
-			create timeout.make_with_interval (2 * 1000) -- 2 seconds seems ok
+			create timeout.make_with_interval (splash_delay)
 			timeout.actions.extend (agent exit_launcher)
 		end
 
@@ -58,5 +58,7 @@ feature {NONE} -- Creation
 		do
 			create Result.make_with_text (t)
 		end
+
+	splash_delay: INTEGER_32 is 2000 -- 2 seconds seems o
 
 end

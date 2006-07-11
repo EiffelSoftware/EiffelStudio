@@ -11,9 +11,14 @@ class
 
 inherit
 	EV_POINTER_STYLE_I
+		export
+			{EV_ANY_HANDLER}
+				interface
 		redefine
 			destroy
 		end
+
+	EV_ANY_HANDLER
 
 create
 	make
@@ -87,6 +92,59 @@ feature -- Query
 		end
 
 feature -- Implementation
+
+	gdk_cursor_from_pointer_style: POINTER is
+			-- Return a GdkCursor constructed from `a_cursor'
+		local
+			a_pixbuf: POINTER
+		do
+			inspect
+				predefined_cursor_code
+					-- Return a predefined cursor if available.
+			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+
+
+			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+			else
+				a_pixbuf := gdk_pixbuf
+				{EV_GTK_EXTERNALS}.object_ref (a_pixbuf)
+			end
+
+			if Result = default_pointer then
+				check
+					a_pixbuf_not_null: a_pixbuf /= default_pointer
+				end
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (
+					{EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default,
+					gdk_pixbuf,
+					interface.x_hotspot,
+					interface.y_hotspot
+				)
+				{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			end
+		end
 
 	set_gdkpixbuf (a_pixbuf: POINTER) is
 			-- Set gdk_pixbuf to `a_pixbuf'.

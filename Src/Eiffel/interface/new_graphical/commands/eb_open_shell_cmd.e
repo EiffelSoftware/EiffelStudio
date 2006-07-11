@@ -149,6 +149,8 @@ feature {NONE} -- Implementation
 				target_string := ""
 			else
 				target_string := fn.twin
+				target_string.prepend_character ('%"')
+				target_string.append_character ('%"')
 			end
 			cmd.replace_substring_all ("$target", target_string)
 		end

@@ -1068,6 +1068,9 @@ feature -- Metadata description
 				if class_type.is_generated_as_single_type then
 					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_class |
 						{MD_TYPE_ATTRIBUTES}.Serializable
+					if class_c.is_deferred then
+						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.abstract
+					end
 					if class_c.is_frozen or class_type.is_expanded then
 						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 					end

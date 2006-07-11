@@ -37,9 +37,19 @@ inherit
 		end
 
 feature -- Command
+
 	set_title (a_title: STRING) is
-			--
+			-- Set title
+		require
+			not_void: a_title /= Void
 		deferred
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set pixmap
+		require
+			not_void: a_pixmap /= Void
+		do
 		end
 
 	close is

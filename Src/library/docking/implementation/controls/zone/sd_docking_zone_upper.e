@@ -16,7 +16,8 @@ inherit
 			is_maximized,
 			set_max,
 			set_focus_color,
-			set_non_focus_selection_color
+			set_non_focus_selection_color,
+			set_pixmap
 		end
 
 	SD_UPPER_ZONE
@@ -92,9 +93,15 @@ feature -- Redefine
 		end
 
 	set_max (a_max: BOOLEAN) is
-			--
+			-- Redefine
 		do
 			internal_notebook.set_show_maximized (a_max)
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Redefine
+		do
+			internal_notebook.set_item_pixmap (content, a_pixmap)
 		end
 
 	is_maximized: BOOLEAN is

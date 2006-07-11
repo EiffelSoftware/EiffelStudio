@@ -16,7 +16,7 @@ feature -- MACROS
 			"[
 				#if GTK_MAJOR_VERSION == 2
 					return gtk_settings_get_default();
-				#endif					
+				#endif
 			]"
 		end
 
@@ -602,6 +602,14 @@ feature -- GTK Macros
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"GTK_IS_WINDOW"
+		end
+
+	frozen gtk_is_menu (w: POINTER): BOOLEAN is
+			-- (from EV_GTK_WIDGETS_EXTERNALS)
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_IS_MENU"
 		end
 
 feature -- C enums
@@ -9651,6 +9659,19 @@ feature -- External C functions
 			-- (from C_GTK_MENU_SHELL)
 		external
 			"C (GtkMenuShell*, GtkWidget*) | <gtk/gtk.h>"
+		end
+
+	frozen gtk_menu_shell_cancel (a_menu_shell: POINTER) is
+			-- void	gtk_menu_shell_deactivate (GtkMenuShell *menu_shell);
+			-- (from C_GTK_MENU_SHELL)
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);
+				#endif					
+			]"
 		end
 
 	frozen gtk_menu_shell_deactivate (a_menu_shell: POINTER) is

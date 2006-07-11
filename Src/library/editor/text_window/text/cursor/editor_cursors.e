@@ -10,20 +10,20 @@ deferred class
 
 feature -- Cursor
 
-	cur_cut_selection: EV_CURSOR is
+	cur_cut_selection: EV_POINTER_STYLE is
 			-- Editor cut cursor icon
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	cur_copy_selection: EV_CURSOR is
+	cur_copy_selection: EV_POINTER_STYLE is
 			-- Editor copy cursor icon
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

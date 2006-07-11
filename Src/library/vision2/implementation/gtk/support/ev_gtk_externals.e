@@ -141,6 +141,17 @@ feature -- MACROS
 			]"
 		end
 
+	frozen gdk_pixbuf_new_from_xpm_data (a_data: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_new_from_xpm_data ((char**) $a_data);
+				#endif
+			]"
+		end
+
 	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"

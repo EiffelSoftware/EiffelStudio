@@ -44,79 +44,79 @@ feature -- Default pixmaps
 
 feature -- Default cursors
 
-	Busy_cursor: EV_CURSOR is
+	Busy_cursor: EV_POINTER_STYLE is
 			-- Standard arrow and small hourglass
 		once
 			Result := Implementation.Busy_cursor
 		end
 
-	Standard_cursor: EV_CURSOR is
+	Standard_cursor: EV_POINTER_STYLE is
 			-- Standard arrow
 		once
 			Result := Implementation.Standard_cursor
 		end
 
-	Crosshair_cursor: EV_CURSOR is
+	Crosshair_cursor: EV_POINTER_STYLE is
 			-- Crosshair
 		once
 			Result := Implementation.Crosshair_cursor
 		end
 
-	Help_cursor: EV_CURSOR is
+	Help_cursor: EV_POINTER_STYLE is
 			-- Arrow and question mark
 		once
 			Result := Implementation.Help_cursor
 		end
 
-	Ibeam_cursor: EV_CURSOR is
+	Ibeam_cursor: EV_POINTER_STYLE is
 			-- I-beam displayed in editable widgets.
 		once
 			Result := Implementation.Ibeam_cursor
 		end
 
-	No_cursor: EV_CURSOR is
+	No_cursor: EV_POINTER_STYLE is
 			-- Slashed_circle
 		once
 			Result := Implementation.No_cursor
 		end
 
-	Sizeall_cursor: EV_CURSOR is
+	Sizeall_cursor: EV_POINTER_STYLE is
 			-- Four-pointed arrow pointing north, south, east and west
 		once
 			Result := Implementation.Sizeall_cursor
 		end
 
-	Sizens_cursor: EV_CURSOR is
+	Sizens_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north and south
 		once
 			Result := Implementation.Sizens_cursor
 		end
 
-	Sizenwse_cursor: EV_CURSOR is
+	Sizenwse_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-west and south-east
 		once
 			Result := Implementation.Sizenwse_cursor
 		end
 
-	Sizenesw_cursor: EV_CURSOR is
+	Sizenesw_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-east and south-west
 		once
 			Result := Implementation.Sizenesw_cursor
 		end
 
-	Sizewe_cursor: EV_CURSOR is
+	Sizewe_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing west and east
 		once
 			Result := Implementation.Sizewe_cursor
 		end
 
-	Uparrow_cursor: EV_CURSOR is
+	Uparrow_cursor: EV_POINTER_STYLE is
 			-- Vertical arrow
 		once
 			Result := Implementation.Uparrow_cursor
 		end
 
-	Wait_cursor: EV_CURSOR is
+	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
 		once
 			Result := Implementation.Wait_cursor

@@ -55,19 +55,7 @@ feature -- Query
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' is valid?
 		do
-			Result := a_integer = Busy_cursor
-				or a_integer = Standard_cursor
-				or a_integer = Crosshair_cursor
-				or a_integer = Help_cursor
-				or a_integer = Ibeam_cursor
-				or a_integer = No_cursor
-				or a_integer = Sizeall_cursor
-				or a_integer = Sizens_cursor
-				or a_integer = Sizenwse_cursor
-				or a_integer = Sizenesw_cursor
-				or a_integer = Sizewe_cursor
-				or a_integer = Uparrow_cursor
-				or a_integer = Wait_cursor
+			Result := (Busy_cursor |..| Wait_cursor).valid_index (a_integer)
 		end
 
 indexing

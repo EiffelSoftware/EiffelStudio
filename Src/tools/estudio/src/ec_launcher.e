@@ -20,7 +20,6 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		do
-			print (generator + ".make %N")
 			is_splashing := True
 
 				--| Now get the estudio environment and arguments for `ec'
@@ -186,6 +185,7 @@ feature {NONE} -- Application exit
 
 	do_exit_launcher is
 		do
+			is_waiting := False
 			exit_launcher
 		end
 

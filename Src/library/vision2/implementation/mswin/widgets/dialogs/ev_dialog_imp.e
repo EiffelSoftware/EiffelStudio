@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 				new_style := bit_op.clear_flag (new_style, Ws_sysmenu)
 			end
 			new_style := bit_op.set_flag (new_style, Ws_minimizebox)
-			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
+			new_style := bit_op.set_flag (new_style, Ws_maximizebox)
 			set_style (new_style)
 		end
 

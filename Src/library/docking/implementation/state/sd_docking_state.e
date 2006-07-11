@@ -19,6 +19,7 @@ inherit
 			restore,
 			zone,
 			change_title,
+			change_pixmap,
 			show,
 			hide,
 			record_state
@@ -115,6 +116,12 @@ feature -- Redefine.
 			zone.set_title (a_title)
 		ensure then
 			set: zone.title = a_title
+		end
+
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+			-- Refine
+		do
+			zone.set_pixmap (a_pixmap)
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is

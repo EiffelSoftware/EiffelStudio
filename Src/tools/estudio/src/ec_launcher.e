@@ -127,12 +127,22 @@ feature -- Launching
 		do
 			process := process_factory.process_launcher (ec_path, args, dir)
 			process.set_hidden (False)
-			process.set_separate_console (False)
-			process.set_detached_console (True)
+
+			if is_windows then
+					--| Windows specific
+				process.set_separate_console (False)
+				process.set_detached_console (True)
+			else
+					--| Unix specific
+				process.enable_terminal_control
+			end
 
 			if is_waiting then
-				process.redirect_output_to_agent (agent on_output)
-				process.redirect_error_to_agent (agent on_output)
+				if is_windows then
+					process.redirect_input_to_stream --| useful ?
+					process.redirect_output_to_agent (agent on_output)
+					process.redirect_error_to_agent (agent on_output)
+				end
 			else
 				process.set_on_successful_launch_handler (agent do_exit_launcher)
 			end
@@ -143,10 +153,10 @@ feature -- Launching
 
 			process.launch
 
-			if is_waiting then
+			if process.launched and  is_waiting then
 				create has_exited_timeout
 				has_exited_timeout.actions.extend (agent exit_if_process_has_exited (process))
-				has_exited_timeout.set_interval (5* 1000)
+				has_exited_timeout.set_interval (5 * 1000)
 			else
 				do_exit_launcher
 			end
@@ -168,7 +178,7 @@ feature {NONE} -- Application exit
 
 	exit_launcher is
 		do
-			close_splasher
+			close_splasher (0)
 		end
 
 feature -- Splash
@@ -209,7 +219,7 @@ feature -- Splash
 				splasher.show
 			else
 				if splasher /= Void then
-					close_splasher
+					close_splasher (0)
 				end
 			end
 		rescue
@@ -217,7 +227,8 @@ feature -- Splash
 			retry
 		end
 
-	close_splasher is
+	close_splasher (delay: INTEGER_32) is
+			-- 'delay' has no sense in none graphical context
 		do
 			if splasher /= Void then
 				splasher.close
@@ -271,6 +282,10 @@ feature -- Environment
 		local
 			s: STRING
 		do
+				--| to keep terminal stdin , stderr, stdout
+				--| estudio must stay alive ...
+			is_waiting := not is_windows
+
 			get_cmdline_arguments
 			create argument_variables.make (3)
 			argument_variables.compare_objects

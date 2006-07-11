@@ -20,6 +20,8 @@ inherit
 
 	IPC_REQUEST
 
+	THREAD_CONTROL
+
 create
 	make
 
@@ -136,12 +138,24 @@ feature -- Launching
 
 	close_ecdbgd is
 			-- Close the Eiffel debugger's daemon
+		local
+			n: INTEGER
 		do
 			stop_ecdbgd_alive_checking
 			if is_ecdbgd_alive then
 				Close_debugger_request.send
 
+				from
+					n := 0
+				until
+					not is_ecdbgd_alive or n > 100 --| timeout: 100ms
+				loop
+					sleep (1_000_000) -- i.e: 1 ms
+					n := n + 1
+				end
 				check not is_ecdbgd_alive end
+				--| it is not that critical to be sure ecdbgd is closed
+				--| but it should be very quick .. so let's check
 
 				clean_connection
 				ec_dbg_launched := False

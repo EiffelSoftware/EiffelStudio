@@ -84,11 +84,11 @@ feature -- Interactivity
 			parent.put_right (new_item)
 		end
 
-	mouse_cursor: EV_CURSOR is
+	mouse_cursor: EV_POINTER_STYLE is
 		deferred
 		end
 
-	Xmouse_cursor: EV_CURSOR is
+	Xmouse_cursor: EV_POINTER_STYLE is
 		deferred
 		end
 

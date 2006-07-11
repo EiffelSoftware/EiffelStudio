@@ -178,7 +178,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_CURSOR is
+	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
 		local
 			st: STONE
 		do
@@ -188,7 +188,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_CURSOR is
+	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
 		local
 			st: STONE
 		do

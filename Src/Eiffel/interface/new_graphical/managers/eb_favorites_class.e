@@ -87,12 +87,12 @@ feature -- Status
 
 feature -- Graphical interface
 
-	mouse_cursor: EV_CURSOR is
+	mouse_cursor: EV_POINTER_STYLE is
 		once
 			Result := Cursors.cur_Class
 		end
 
-	Xmouse_cursor: EV_CURSOR is
+	Xmouse_cursor: EV_POINTER_STYLE is
 		once
 			Result := Cursors.cur_X_Class
 		end

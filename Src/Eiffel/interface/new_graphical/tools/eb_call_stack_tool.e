@@ -472,7 +472,7 @@ feature {NONE} -- Grid Implementation
 			end
 		end
 
-	on_grid_item_accept_cursor_function	(a_item: EV_GRID_ITEM): EV_CURSOR is
+	on_grid_item_accept_cursor_function	(a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
 		do
 			Result := Cursors.cur_Setstop
 		end

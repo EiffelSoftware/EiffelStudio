@@ -88,14 +88,14 @@ feature -- Access
 	code: STRING is "Syntax error"
 			-- Error code
 
-	stone_cursor: EV_CURSOR is
+	stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_interro
 		end
 
-	x_stone_cursor: EV_CURSOR is
+	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do

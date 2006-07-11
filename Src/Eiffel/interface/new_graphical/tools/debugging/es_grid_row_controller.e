@@ -50,13 +50,13 @@ feature -- Access
 		do
 		end
 		
-	pnd_accept_cursor: EV_CURSOR is
+	pnd_accept_cursor: EV_POINTER_STYLE is
 		require
 			pebble /= Void
 		do
 		end
 
-	pnd_deny_cursor: EV_CURSOR is
+	pnd_deny_cursor: EV_POINTER_STYLE is
 		require
 			pebble /= Void
 		do

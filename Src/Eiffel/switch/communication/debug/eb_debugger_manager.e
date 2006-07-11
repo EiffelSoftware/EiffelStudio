@@ -506,7 +506,7 @@ feature -- Status setting
 			-- Make the debug tools appear in `debugging_window'.
 		require
 			not_already_raised: not raised
-			debugging_window_set: debugging_window /= Void
+
 		local
 			split: EV_SPLIT_AREA
 			i: INTEGER
@@ -516,6 +516,9 @@ feature -- Status setting
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
+			check
+				debugging_window_set: debugging_window /= Void
+			end
 			debugging_window.window.lock_update
 
 			normal_left_layout := debugging_window.left_panel.save_to_resource

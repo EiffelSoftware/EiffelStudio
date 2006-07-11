@@ -20,7 +20,7 @@
 			<list ordered="false">
 				<item>New configuration system. EiffelStudio will automatically convert your existing ace or epr files to the new format.</item>
 				<item>Compilation progress is now displayed in the status bar and in the output pane, no more dialog box.</item>
-				<item>Display of errors and warnings is now done in different panes, so that you do not loose their content when the output pane was changed.</item>
+				<item>Display of errors and warnings is now done in different panes, so that you do not lose their content when the output pane was changed.</item>
 			</list>
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">

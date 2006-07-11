@@ -14,7 +14,8 @@ inherit
 		redefine
 			make, new_splasher,
 			exit_launcher, do_exit_launcher,
-			do_ec_launching
+			do_ec_launching,
+			close_splasher
 		end
 
 	EV_APPLICATION
@@ -32,7 +33,9 @@ feature {NONE} -- Creation
 		do
 			default_create
 			Precursor
-			ev_launch
+			if not is_destroyed then
+				ev_launch
+			end
 		end
 
 	do_ec_launching is
@@ -46,6 +49,7 @@ feature {NONE} -- Creation
 		do
 			create timeout.make_with_interval (splash_delay)
 			timeout.actions.extend (agent exit_launcher)
+			timeout.actions.extend_kamikaze (agent timeout.destroy)
 		end
 
 	exit_launcher is
@@ -54,11 +58,22 @@ feature {NONE} -- Creation
 			destroy
 		end
 
+	close_splasher (delay: INTEGER_32) is
+		local
+			timeout: EV_TIMEOUT
+		do
+			if delay = 0 then
+				Precursor {EC_LAUNCHER} (0)
+			else
+				create timeout.make_with_interval (splash_delay)
+				timeout.actions.extend (agent close_splasher (0))
+				timeout.actions.extend_kamikaze (agent timeout.destroy)
+			end
+		end
+
 	new_splasher (t: STRING_GENERAL): EV_SPLASH_DISPLAYER is
 		do
 			create Result.make_with_text (t)
 		end
-
-	splash_delay: INTEGER_32 is 2000 -- 2 seconds seems o
 
 end

@@ -92,13 +92,13 @@ feature -- Basic operations
 
 feature -- Graphical interface
 
-	mouse_cursor: EV_CURSOR is
+	mouse_cursor: EV_POINTER_STYLE is
 			-- mouse pointer representing a class.
 		once
 			Result := Cursors.cur_Favorites_folder
 		end
 
-	Xmouse_cursor: EV_CURSOR is
+	Xmouse_cursor: EV_POINTER_STYLE is
 			-- mouse pointer representing a class.
 		once
 			Result := Cursors.cur_X_Favorites_folder

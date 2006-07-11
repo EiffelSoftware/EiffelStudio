@@ -343,7 +343,7 @@ feature -- Recyclable
 
 feature {NONE} -- Implementation
 
-	old_cur: EV_CURSOR
+	old_cur: EV_POINTER_STYLE
 			-- Cursor saved while displaying the hourglass cursor.
 
 	cur_wid: EV_WIDGET

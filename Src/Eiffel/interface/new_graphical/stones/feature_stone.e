@@ -211,13 +211,13 @@ feature -- dragging
 			end
 		end
 
-	stone_cursor: EV_CURSOR is
+	stone_cursor: EV_POINTER_STYLE is
 			-- Cursor representing `Current' when dropping is allowed.
 		once
 			Result := Cursors.cur_feature
 		end
  
-	x_stone_cursor: EV_CURSOR is
+	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor representing `Current' when dropping is forbidden.
 		once
 			Result := Cursors.cur_X_feature

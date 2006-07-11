@@ -445,7 +445,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pnd_accept_cursor_function (a_item: EV_GRID_ITEM): EV_CURSOR is
+	on_pnd_accept_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
 		do
@@ -457,7 +457,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pnd_deny_cursor_function (a_item: EV_GRID_ITEM): EV_CURSOR is
+	on_pnd_deny_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
 		do

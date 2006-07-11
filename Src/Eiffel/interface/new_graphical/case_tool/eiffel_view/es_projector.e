@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_cursor: EV_CURSOR is
+	default_cursor: EV_POINTER_STYLE is
 			-- Default cursor on eiffel world.
 		do
 			Result := cursors.open_hand_cursor

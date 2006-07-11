@@ -78,14 +78,14 @@ feature -- Access
 
 	stone_signature: STRING is do Result := code end
 
-	stone_cursor: EV_CURSOR is
+	stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Interro
 		end
 
-	x_stone_cursor: EV_CURSOR is
+	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do

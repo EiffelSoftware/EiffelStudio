@@ -11,148 +11,148 @@ class
 
 feature -- Accepting cursor shapes
 
-	frozen cur_class: EV_CURSOR is
+	frozen cur_class: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_class_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_class_cursor_cursor_buffer)
 		end
 
-	frozen cur_class_list: EV_CURSOR is
+	frozen cur_class_list: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_classes_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_classes_cursor_cursor_buffer)
 		end
 
-	frozen cur_favorites_folder: EV_CURSOR is
+	frozen cur_favorites_folder: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_favorite_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_favorite_cursor_cursor_buffer)
 		end
 
-	frozen cur_object: EV_CURSOR is
+	frozen cur_object: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_debug_object_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_debug_object_cursor_cursor_buffer)
 		end
 
-	frozen cur_setstop: EV_CURSOR is
+	frozen cur_setstop: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_debugger_step_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_debugger_step_cursor_cursor_buffer)
 		end
 
-	frozen cur_interro: EV_CURSOR is
+	frozen cur_interro: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_help_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_help_cursor_cursor_buffer)
 		end
 
-	frozen cur_feature: EV_CURSOR is
+	frozen cur_feature: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_feature_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_feature_cursor_cursor_buffer)
 		end
 
-	frozen cur_cluster: EV_CURSOR is
+	frozen cur_cluster: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_cluster_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_cluster_cursor_cursor_buffer)
 		end
 
-	frozen cur_inherit_link: EV_CURSOR is
+	frozen cur_inherit_link: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_inherit_link_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_inherit_link_cursor_cursor_buffer)
 		end
 
-	frozen cur_client_link: EV_CURSOR is
+	frozen cur_client_link: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_client_link_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_client_link_cursor_cursor_buffer)
 		end
 
-	frozen cur_metric: EV_CURSOR is
+	frozen cur_metric: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_metric_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_metric_cursor_cursor_buffer)
 		end
 
-	frozen cur_criteria: EV_CURSOR is
+	frozen cur_criteria: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_criteria_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_criteria_cursor_cursor_buffer)
 		end
 
 feature -- Non-Accepting cursor shapes
 
-	frozen cur_x_class: EV_CURSOR is
+	frozen cur_x_class: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_class_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_class_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_class_list: EV_CURSOR is
+	frozen cur_x_class_list: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_classes_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_classes_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_favorites_folder: EV_CURSOR is
+	frozen cur_x_favorites_folder: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_favorite_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_favorite_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_object: EV_CURSOR is
+	frozen cur_x_object: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_debug_object_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_debug_object_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_setstop: EV_CURSOR is
+	frozen cur_x_setstop: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_debugger_step_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_debugger_step_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_interro: EV_CURSOR is
+	frozen cur_x_interro: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_help_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_help_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_feature: EV_CURSOR is
+	frozen cur_x_feature: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_feature_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_feature_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_cluster: EV_CURSOR is
+	frozen cur_x_cluster: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_cluster_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_cluster_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_inherit_link: EV_CURSOR is
+	frozen cur_x_inherit_link: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_inherit_link_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_inherit_link_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_client_link: EV_CURSOR is
+	frozen cur_x_client_link: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_client_link_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_client_link_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_metric: EV_CURSOR is
+	frozen cur_x_metric: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_metric_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_metric_cursor_cursor_buffer)
 		end
 
-	frozen cur_x_criteria: EV_CURSOR is
+	frozen cur_x_criteria: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.context_disabled_criteria_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.context_disabled_criteria_cursor_cursor_buffer)
 		end
 
 feature -- Other cursor
 
-	frozen cur_cut_selection: EV_CURSOR is
+	frozen cur_cut_selection: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.cursor_move_cursor, 0, 0)
+			create Result.make_from_pixel_buffer (icon_cursors.cursor_move_cursor_cursor_buffer)
 		end
 
-	frozen cur_copy_selection: EV_CURSOR is
+	frozen cur_copy_selection: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.cursor_copy_cursor, 0, 0)
+			create Result.make_from_pixel_buffer (icon_cursors.cursor_copy_cursor_cursor_buffer)
 		end
 
-	frozen open_hand_cursor: EV_CURSOR is
+	frozen open_hand_cursor: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.cursor_hand_open_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.cursor_hand_open_cursor_cursor_buffer)
 		end
 
-	frozen closed_hand_cursor: EV_CURSOR is
+	frozen closed_hand_cursor: EV_POINTER_STYLE is
 		once
-			create Result.make_with_pixmap (icon_cursors.cursor_hand_clasped_cursor, 16, 16)
+			create Result.make_from_pixel_buffer (icon_cursors.cursor_hand_clasped_cursor_cursor_buffer)
 		end
 
 feature {NONE} -- Implementation

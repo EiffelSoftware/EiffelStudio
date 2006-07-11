@@ -193,13 +193,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	drag_cursor: EV_CURSOR is
+	drag_cursor: EV_POINTER_STYLE is
 			-- Cursor used when `Current' is being transported.
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
 		end
 
-	orig_cursor: EV_CURSOR
+	orig_cursor: EV_POINTER_STYLE
 		
 	awaiting_movement: BOOLEAN
 		

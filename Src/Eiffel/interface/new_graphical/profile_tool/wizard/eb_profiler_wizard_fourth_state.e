@@ -132,7 +132,7 @@ feature -- Basic Operation
 	proceed_with_current_info is 
 		local
 			wizard_generator: EB_PROFILER_WIZARD_GENERATOR
-			old_cursor: EV_CURSOR
+			old_cursor: EV_POINTER_STYLE
 		do
 			old_cursor := first_window.pointer_style
 			first_window.set_pointer_style (Pixmaps.Busy_cursor)

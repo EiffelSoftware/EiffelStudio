@@ -354,7 +354,7 @@ feature -- Pick and Drop
 			Result := internal_object_stone
 		end
 
-	object_stone_accept_cursor: EV_CURSOR is
+	object_stone_accept_cursor: EV_POINTER_STYLE is
 		do
 			if not object_stone_properties_computed then
 				get_object_stone_properties
@@ -362,7 +362,7 @@ feature -- Pick and Drop
 			Result := internal_object_stone_accept_cursor
 		end
 
-	object_stone_deny_cursor: EV_CURSOR is
+	object_stone_deny_cursor: EV_POINTER_STYLE is
 		do
 			if not object_stone_properties_computed then
 				get_object_stone_properties

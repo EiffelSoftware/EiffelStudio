@@ -4337,7 +4337,7 @@ feature {NONE} -- Implementation / Menus
 	number_of_displayed_external_commands: INTEGER
 			-- Number of external commands in the tools menu.
 
-	old_cur: EV_CURSOR
+	old_cur: EV_POINTER_STYLE
 			-- Cursor saved while displaying the hourglass cursor.
 
 	cur_wid: EV_WIDGET

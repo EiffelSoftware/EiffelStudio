@@ -57,8 +57,8 @@ feature -- Status Report
 		local
 			l_errors: LIST [ERROR]
 			l_syntax_error: SYNTAX_ERROR
-			l_content, l_new_pragma: STRING
-			l_index, l_index2: INTEGER
+			l_new_pragma: STRING
+			l_index: INTEGER
 			l_match_list: LEAF_AS_LIST
 			l_retried: BOOLEAN
 			l_file: KL_BINARY_INPUT_FILE
@@ -89,19 +89,17 @@ feature -- Status Report
 						error_message := "Syntax error"
 					end
 				else
-					l_content := file_content (a_file)
-					if l_content.substring (1, 8).is_equal ("--#line ") and Result.features /= Void then
-						l_index := l_content.index_of ('"', 1)
+					analyze_file (a_file)
+					if first_line_pragma /= Void and Result.features /= Void then
+						l_index := first_line_pragma.index_of ('"', 1)
 						if l_index > 0 then
-							l_index2 := l_content.index_of ('%N', l_index + 1)
-							if l_index2 > 0 then
-								l_match_list := roundtrip_eiffel_parser.match_list
-								create l_new_pragma.make (300)
-								l_new_pragma.append ("--#line ")
-								l_new_pragma.append ((Result.features.first_token (l_match_list).line - 1).out)
-								l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
-								Result.features.prepend_text (l_new_pragma, l_match_list)
-							end
+							l_match_list := roundtrip_eiffel_parser.match_list
+							create l_new_pragma.make (300)
+							l_new_pragma.append ("--#line ")
+							l_new_pragma.append ((Result.features.first_token (l_match_list).line - 1).out)
+							l_new_pragma.append (first_line_pragma.substring (l_index - 1, first_line_pragma.count))
+							l_new_pragma.append (line_return)
+							Result.features.prepend_text (l_new_pragma, l_match_list)
 						end
 					end
 					successful := True
@@ -229,18 +227,19 @@ feature {NONE} -- Implementation
 			l_list: EIFFEL_LIST [TAGGED_AS]
 			l_invariant, l_new_invariant: INVARIANT_AS
 		do
-			if a_new_ast.invariant_part /= Void then
-				l_new_invariant := a_new_ast.invariant_part
+			l_new_invariant := a_new_ast.invariant_part
+			if l_new_invariant /= Void then
 				l_invariant := a_ast.internal_invariant
 				if l_invariant /= Void then
 					l_list := l_invariant.full_assertion_list
 					if l_list /= Void and then not l_list.is_empty and then l_list.i_th (l_list.count).expr = Void then
 						l_list.i_th (l_list.count).replace_text ("", a_match_list)
 					end
-					l_invariant.append_text ("%N%T", a_match_list)
+					l_invariant.append_text (line_return, a_match_list)
+					l_invariant.append_text ("%T", a_match_list)
 					l_invariant.append_text (l_new_invariant.assertion_list.text (a_new_match_list), a_match_list)
 				else
-					a_ast.features.append_text (a_new_ast.invariant_part.text (a_new_match_list) + "%N", a_match_list)
+					a_ast.features.append_text (a_new_ast.invariant_part.text (a_new_match_list) + line_return, a_match_list)
 				end
 			end
 		end
@@ -277,7 +276,7 @@ feature {NONE} -- Implementation
 				if l_indexes /= Void then
 					l_count := l_indexes.count
 					create l_mod.make (l_indexes, a_match_list)
-					l_mod.set_separator ("%N%T")
+					l_mod.set_separator (line_return + "%T")
 					from
 						l_new_indexes.start
 					until
@@ -288,7 +287,7 @@ feature {NONE} -- Implementation
 					end
 					l_mod.apply
 				else
-					a_ast.first_token (a_match_list).prepend_text (a_new_ast.internal_top_indexes.text (a_new_match_list) + "%N%N", a_match_list)
+					a_ast.first_token (a_match_list).prepend_text (a_new_ast.internal_top_indexes.text (a_new_match_list) + line_return + line_return, a_match_list)
 				end
 			end
 		end
@@ -336,14 +335,14 @@ feature {NONE} -- Implementation
 							end
 						else
 							create l_mod.make (l_creators, a_match_list)
-							l_mod.set_separator ("%N")
+							l_mod.set_separator (line_return)
 							l_mod.append (l_new_creator.text (a_new_match_list))
 							l_mod.apply
 						end
 						l_new_creators.forth
 					end
 				else
-					a_ast.features.prepend_text (a_new_ast.creators.text (a_new_match_list) + "%N%N", a_match_list)
+					a_ast.features.prepend_text (a_new_ast.creators.text (a_new_match_list) + line_return + line_return, a_match_list)
 				end
 			end
 		end
@@ -374,22 +373,55 @@ feature {NONE} -- Implementation
 			Definition: (Result > 0) implies ((a_creators.i_th (Result).clients = Void and a_creator.clients = Void) or a_creators.i_th (Result).clients.is_equiv (a_creator.clients))
 		end
 
-	file_content (a_file_name: STRING): STRING is
-			-- File content of `a_file_name'
-			-- `Void' if file doesn't exist or cannot be opened
+	analyze_file (a_file_path: STRING) is
+			-- Analyze file located at `a_file_path'.
+			-- Set `line_return' accordingly.
+			-- Set `first_line_pragma' accodingly.
 		require
-			attached_file_name: a_file_name /= Void
+			attached_path: a_file_path /= Void
 		local
-			l_file: PLAIN_TEXT_FILE
-			l_retried: BOOLEAN
+			l_retried, l_done: BOOLEAN
+			l_file: RAW_FILE
+			l_read: STRING
+			c: INTEGER_8
 		do
+			line_return := Default_line_return
+			first_line_pragma := Void
 			if not l_retried then
-				create l_file.make (a_file_name)
+				create l_file.make (a_file_path)
 				if l_file.exists then
 					l_file.open_read
-					l_file.read_stream (l_file.count)
+					if l_file.count > 8 then
+						from
+							create l_read.make (1024)
+						until
+							l_done
+						loop
+							l_file.read_integer_8
+							c := l_file.last_integer_8
+							if c = 13 then
+								l_file.read_integer_8
+								if l_file.last_integer_8 = 10 then
+									line_return := "%R%N"
+									l_done := True
+								else
+									l_read.append_character (c.to_character_8)
+									l_read.append_character (l_file.last_integer_8.to_character_8)
+								end
+							elseif c = 10 then
+								line_return := "%N"
+								l_done := True
+							elseif c = -1 then
+								l_done := True
+							else
+								l_read.append_character (c.to_character_8)
+							end
+						end
+					end
 					l_file.close
-					Result := l_file.last_string
+					if l_read.substring (1, 8).is_equal ("--#line ") then
+						first_line_pragma := l_read
+					end
 				end
 			end
 		rescue
@@ -397,9 +429,23 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+feature {NONE} -- Private Access
+
+	line_return: STRING
+			-- String to use for line returns (i.e. "%N" or "%R%N")
+
+	first_line_pragma: STRING
+			-- First line pragma of last partial class analyzed with `ast_from_file' if any
+
+	Default_line_return: STRING is "%R%N"
+			-- Default line return in case `analyze' fails.
+			-- Use Windows convention as partial classes have more chances to be used on that platform.
+
 invariant
 	successful_iff_attached_class_text_and_name: successful = (class_text /= Void)
 	error_message_void_iff_successful: successful = (error_message = Void)
+	valid_line_return: line_return /= Void implies (line_return.is_equal ("%N") or line_return.is_equal ("%R%N"))
+	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

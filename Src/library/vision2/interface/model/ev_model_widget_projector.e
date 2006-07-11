@@ -588,7 +588,7 @@ feature {NONE} -- Event implementation
 
 feature {NONE} -- Implementation
 
-	default_cursor: EV_CURSOR is
+	default_cursor: EV_POINTER_STYLE is
 			-- Default cursor on world.
 		do
 			Result := default_pixmaps.standard_cursor

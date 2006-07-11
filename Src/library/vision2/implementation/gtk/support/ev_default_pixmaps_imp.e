@@ -92,194 +92,100 @@ feature -- Access
 
 feature -- Default cursors
 
-	Busy_cursor: EV_CURSOR is
+	Busy_cursor: EV_POINTER_STYLE is
 			-- Standard arrow and small hourglass
-		local
-			pixmap_imp: EV_PIXMAP_IMP
---			a_pix, a_mask: POINTER
---			pix_array, mask_array: MANAGED_POINTER
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (busy_cursor_xpm)
-
---			create pix_array.make_from_array (busy_cursor_bits)
---			create mask_array.make_from_array (busy_cursor_mask)
---
---			a_pix := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, pix_array.item, 32, 32)
---			a_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, mask_array.item, 32, 32)
---
---			pixmap_imp.set_pixmap (a_pix, a_mask)
---			Result.set_x_hotspot (2)
---			Result.set_y_hotspot (2)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 		end
 
---	busy_cursor_bits: ARRAY [INTEGER_8] is
---			--
---		do
---			Result := <<0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x0c,
---                0x00,0x00,0x00,0x1c,0x00,0x00,0x00,0x3c,0x00,0x00,0x00,0x7c,0x00,
---                0x00,0x00,0xfc,0x00,0x00,0x00,0xfc,0x01,0x00,0x00,0xfc,0x3b,0x00,
---                0x00,0x7c,0x38,0x00,0x00,0x6c,0x54,0x00,0x00,0xc4,0xdc,0x00,0x00,
---                0xc0,0x44,0x00,0x00,0x80,0x39,0x00,0x00,0x80,0x39,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00>>
---		end
---
---	busy_cursor_mask: ARRAY [INTEGER_8] is
---			--
---		do
---			Result := <<0x00,0x00,0x00,0x00,0x06,0x00,0x00,0x00,0x0e,0x00,0x00,0x00,0x1e,
---                0x00,0x00,0x00,0x3e,0x00,0x00,0x00,0x7e,0x00,0x00,0x00,0xfe,0x00,
---                0x00,0x00,0xfe,0x01,0x00,0x00,0xfe,0x3b,0x00,0x00,0xfe,0x7f,0x00,
---                0x00,0xfe,0x7f,0x00,0x00,0xfe,0xfe,0x00,0x00,0xee,0xff,0x01,0x00,
---                0xe4,0xff,0x00,0x00,0xc0,0x7f,0x00,0x00,0xc0,0x7f,0x00,0x00,0x80,
---                0x39,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
---                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00>>
---		end
-
-	Standard_cursor: EV_CURSOR is
+	Standard_cursor: EV_POINTER_STYLE is
 			-- Standard arrow
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (standard_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor)
 		end
 
-	Crosshair_cursor: EV_CURSOR is
+	Crosshair_cursor: EV_POINTER_STYLE is
 			-- Crosshair
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (crosshair_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor)
 			Result.set_x_hotspot (15)
 			Result.set_y_hotspot (15)
 		end
 
-	Help_cursor: EV_CURSOR is
+	Help_cursor: EV_POINTER_STYLE is
 			-- Arrow and question mark
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (help_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.help_cursor)
 		end
 
-	Ibeam_cursor: EV_CURSOR is
+	Ibeam_cursor: EV_POINTER_STYLE is
 			-- I-beam
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (ibeam_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (10)
 		end
 
-	No_cursor: EV_CURSOR is
+	No_cursor: EV_POINTER_STYLE is
 			-- Slashed_circle
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (no_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.no_cursor)
 			Result.set_x_hotspot (10)
 			Result.set_y_hotspot (10)
 		end
 
-	Sizeall_cursor: EV_CURSOR is
+	Sizeall_cursor: EV_POINTER_STYLE is
 			-- Four-pointed arrow pointing north, south, east and west
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizeall_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor)
 			Result.set_x_hotspot (8)
 			Result.set_y_hotspot (8)
 		end
 
-	Sizens_cursor: EV_CURSOR is
+	Sizens_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north and south
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizens_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizens_cursor)
 			Result.set_x_hotspot (5)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenwse_cursor: EV_CURSOR is
+	Sizenwse_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-west and south-east
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizenwse_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor)
 			Result.set_x_hotspot (8)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenesw_cursor: EV_CURSOR is
+	Sizenesw_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-east and south-west
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizenesw_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizewe_cursor: EV_CURSOR is
+	Sizewe_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing west and east
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizewe_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (5)
 		end
 
-	Uparrow_cursor: EV_CURSOR is
+	Uparrow_cursor: EV_POINTER_STYLE is
 			-- Vertical arrow
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (uparrow_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor)
 			Result.set_x_hotspot (0)
 			Result.set_y_hotspot (5)
 		end
 
-	Wait_cursor: EV_CURSOR is
+	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (wait_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 			Result.set_x_hotspot (16)
 			Result.set_y_hotspot (16)
 		end
@@ -306,7 +212,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Externals
+feature {EV_ANY_HANDLER} -- Externals
 
 	frozen information_pixmap_xpm: POINTER is
 		external

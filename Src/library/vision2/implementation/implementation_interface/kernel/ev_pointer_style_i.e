@@ -27,10 +27,10 @@ feature {EV_POINTER_STYLE} -- Initlization
 		deferred
 		end
 
-	init_predefined (a_constants: INTEGER) is
-			-- Initialized a predefined cursor.
+	init_predefined (a_constant: INTEGER) is
+			-- Initialize a predefined cursor from `a_constant'
 		require
-			valid: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_constants)
+			valid: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_constant)
 		deferred
 		end
 

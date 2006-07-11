@@ -659,7 +659,7 @@ feature -- Pick and Drop
 			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
-	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
 			-- Assign `a_function' to `item_accept_cursor_function'.
 		do
 			item_accept_cursor_function := a_function
@@ -667,10 +667,10 @@ feature -- Pick and Drop
 			item_accept_cursor_function_set: item_accept_cursor_function = a_function
 		end
 
-	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]
+	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 
-	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]) is
+	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
 			-- Assign `a_function' to `item_deny_cursor_function'.
 		do
 			item_deny_cursor_function := a_function
@@ -678,7 +678,7 @@ feature -- Pick and Drop
 			item_deny_cursor_function_set: item_deny_cursor_function = a_function
 		end
 
-	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_CURSOR]
+	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 
 	drop_action_intermediary (a_pebble: ANY) is

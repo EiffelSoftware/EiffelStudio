@@ -88,8 +88,15 @@ feature -- Access
 				exit_loop or else font_names.after
 			loop
 				if font_desc.substring_index (font_names.item.as_lower, 1) = 1 then
-					selected_font_name := font_names.item
-					exit_loop := True
+					if selected_font_name = Void then
+						selected_font_name := font_names.item
+					else
+						if font_names.item.count > selected_font_name.count then
+							selected_font_name := font_names.item
+						end
+					end
+					exit_loop := selected_font_name.count = font_desc.count
+						-- If the match is perfect then we exit, otherwise we keep looping for the best match.
 				end
 				font_names.forth
 			end

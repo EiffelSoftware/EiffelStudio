@@ -67,8 +67,8 @@ feature {NONE} -- Agents
 				i := list.index_of (l_item, 1)
 				if i > 1 then
 						-- we can't move an item up if we inherit from the item.
-					l_parent := conf_system.targets.item (l_item.text.to_string_8).extends
-					if l_parent /= Void and then l_parent.name.is_equal (list.i_th (i-1).text.to_string_8) then
+					l_parent := conf_system.targets.item (l_item.text.to_string_8)
+					if l_parent /= Void and then l_parent.extends /= Void and then l_parent.extends.name.is_equal (list.i_th (i-1).text.to_string_8) then
 						create wd.make_with_text (target_move_up_extends)
 						wd.show_modal_to_window (Current)
 					else
@@ -94,8 +94,8 @@ feature {NONE} -- Agents
 				i := list.index_of (l_item, 1)
 				if i > 1 then
 						-- we can't move an item down if the item below inherits from us.
-					l_parent := conf_system.targets.item (list.i_th (i+1).text.to_string_8).extends
-					if l_parent /= Void and then l_parent.name.is_equal (l_item.text.to_string_8) then
+					l_parent := conf_system.targets.item (list.i_th (i+1).text.to_string_8)
+					if l_parent /= Void and then l_parent.extends /= Void and then l_parent.extends.name.is_equal (l_item.text.to_string_8) then
 						create wd.make_with_text (target_move_down_extends)
 						wd.show_modal_to_window (Current)
 					else

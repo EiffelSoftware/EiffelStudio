@@ -126,6 +126,9 @@ feature {NONE} -- Initialization
 				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 				build_group_tree (manager.assemblies, assembly_header)
 
+					-- targets
+				build_target_tree
+
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
 					-- `store_expanded_state'				
@@ -141,57 +144,24 @@ feature {NONE} -- Initialization
 feature -- Activation
 
 	associate_textable_with_classes (a_textable: EV_TEXT_COMPONENT) is
-			-- Tell classes recursively to print their names in textable when they're being clicked on.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			-- Set `textable' to `a_textable'
 		do
 			textable := a_textable
-			from
-				start
-			until
-				after
-			loop
-				conv_folder ?= item
-				conv_folder.associate_textable_with_classes (textable)
-				forth
-			end
 		end
 
 	associate_with_window (a_window: EB_DEVELOPMENT_WINDOW) is
-			-- Tell classes recursively to call `set_stone' on a_window when they are clicked on.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			-- Set `window' to `a_window'.
 		do
 			if window = Void then
 				key_press_actions.extend (agent on_key_pushed)
 			end
 			window := a_window
-			from
-				start
-			until
-				after
-			loop
-				conv_folder ?= item
-				conv_folder.associate_with_window (a_window)
-				forth
-			end
 		end
 
 	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
-			-- Tell classes recursively to execute p when they're being double-clicked on.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			-- Add a double click action for classes.
 		do
 			classes_double_click_agents.extend (p)
-			from
-				start
-			until
-				after
-			loop
-				conv_folder ?= item
-				conv_folder.add_double_click_action_to_classes (p)
-				forth
-			end
 		end
 
 	show_stone (a_stone: STONE) is
@@ -387,6 +357,9 @@ feature {NONE} -- Rebuilding
 
 	library_header: EB_CLASSES_TREE_HEADER_ITEM
 			-- Header for libraries.
+
+	target: EB_CLASSES_TREE_TARGET_ITEM
+			-- Targets.
 
 	expanded_clusters: HASH_TABLE [STRING, STRING]
 		-- All cluster names marked as expanded during last call to
@@ -766,6 +739,28 @@ feature {NONE} -- Implementation
 			if not a_header.is_empty then
 				extend (a_header)
 			end
+		end
+
+	build_target_tree is
+			-- Build a tree for the targets of the current system, that make up the application target.
+		local
+			l_target: CONF_TARGET
+			l_item, l_new_item: EB_CLASSES_TREE_TARGET_ITEM
+		do
+			from
+				l_target := universe.target
+				create l_item.make (l_target)
+			until
+				l_target.extends = Void
+			loop
+				l_target := l_target.extends
+				create l_new_item.make (l_target)
+				l_new_item.extend (l_item)
+				l_item := l_new_item
+			end
+			target := l_item
+			extend (target)
+			target.associate_with_window (window)
 		end
 
 invariant

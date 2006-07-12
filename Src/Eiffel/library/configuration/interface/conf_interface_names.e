@@ -232,6 +232,7 @@ feature {NONE} -- Target names and descriptions
 
 	override_override_name: STRING is "Overriding"
 	override_override_description: STRING is "Groups this override is overriding."
+	class_option_class_name: STRING is "Class name"
 
 feature {NONE} -- Option names and descriptions
 

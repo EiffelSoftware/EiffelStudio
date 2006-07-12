@@ -136,11 +136,6 @@ feature {NONE} -- Text formatter
 		do
 		end
 
-	process_ace_syntax (text: STRING; a_error: SYNTAX_ERROR) is
-			-- Process Ace syntax text.
-		do
-		end
-
 feature -- Basic Operations / Information message
 
 	display_system_info is

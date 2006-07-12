@@ -287,14 +287,6 @@ feature -- Process
 		deferred
 		end
 
-	process_ace_syntax (text: STRING; a_error: ERROR) is
-			-- Process Ace syntax text.
-		require
-			text_not_void: text /= Void
-			a_error_not_void: a_error /= Void
-		deferred
-		end
-
 	process_column_text (a_column_number: INTEGER) is
 			-- Process `a_column_number'.
 		do
@@ -501,12 +493,6 @@ feature -- Text operator
 			-- Put `syn' for `e_class'.
 		do
 			process_cl_syntax (str, syn, e_class)
-		end
-
-	add_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
-			-- Put `syn' of `str'.
-		do
-			process_ace_syntax (str, syn)
 		end
 
 	add_column_number (column_num: INTEGER) is

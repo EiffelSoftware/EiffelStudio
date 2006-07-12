@@ -244,14 +244,6 @@ feature -- Operation
 		deferred
 		end
 
-	add_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
-			-- Put `address' for `e_class'.
-		require
-			valid_syn: syn /= Void
-			valid_str: str /= Void
-		deferred
-		end
-
 	add_column_number (column_num: INTEGER) is
 			-- Add column number `i' to structure text.
 		require

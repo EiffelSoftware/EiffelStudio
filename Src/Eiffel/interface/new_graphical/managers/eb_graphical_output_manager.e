@@ -33,7 +33,6 @@ inherit
 			process_address_text,
 			process_error_text,
 			process_cl_syntax,
-			process_ace_syntax,
 			start_processing,
 			end_processing,
 			add,
@@ -640,21 +639,6 @@ feature {NONE} -- Text formatter
 			loop
 				if managed_output_tools.item.is_general then
 					managed_output_tools.item.text_area.text_displayed.process_cl_syntax (text, a_syntax_message, a_class)
-				end
-				managed_output_tools.forth
-			end
-		end
-
-	process_ace_syntax (text: STRING; a_error: SYNTAX_ERROR) is
-			-- Process Ace syntax text.
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				if managed_output_tools.item.is_general then
-					managed_output_tools.item.text_area.text_displayed.process_ace_syntax (text, a_error)
 				end
 				managed_output_tools.forth
 			end

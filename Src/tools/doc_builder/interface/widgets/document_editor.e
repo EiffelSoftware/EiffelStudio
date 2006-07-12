@@ -10,7 +10,7 @@ class
 	DOCUMENT_EDITOR
 
 inherit
-	EDITABLE_TEXT_PANEL		
+	EDITABLE_TEXT_PANEL
 		redefine
 			on_mouse_button_up,
 			handle_extended_key,
@@ -18,36 +18,36 @@ inherit
 			reference_window,
 			initialize_editor_context
 		end
-	
+
 	SHARED_OBJECTS
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-	
+
 	UTILITY_FUNCTIONS
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-		
+
 	EDITOR_CURSORS
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-		
-	
+
+
 create
 	make
 
 feature -- Initialization
 
 	make is
-			-- 
+			--
 		do
 			default_create
 			register_document ("xml", xml_class)
@@ -57,17 +57,17 @@ feature -- Initialization
 			editor_drawing_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))
 			editor_drawing_area.drop_actions.extend (agent pebble_dropped)
 		end
-		
+
 	update_observers is
 			-- Update observers of text editing
 		do
 			add_edition_observer (shared_web_browser)
 			add_edition_observer (application_window)
 		end
-		
+
 	handle_extended_key (ev_key: EV_KEY) is
  			-- Process the push on an extended key.
-		local			
+		local
 			l_cursor: TEXT_CURSOR
 		do
 			l_cursor := text_displayed.cursor
@@ -89,7 +89,7 @@ feature -- Initialization
 		do
 			inspect
 				ev_key.code
-				
+
 			when Key_s then
 					-- Ctrl-S (save)
 				shared_document_manager.save_document
@@ -98,31 +98,31 @@ feature -- Initialization
 				open_search_dialog
 			when Key_r then
 					-- Ctrl-R (refresh web browser)
-				shared_document_manager.save_document	
+				shared_document_manager.save_document
 				shared_web_browser.refresh
 			when Key_d then
 					-- Ctrl-D (validate to XML/Schema)
 				shared_document_editor_commands.validate_document
 			else
 				Precursor (ev_key)
-			end			
+			end
 		end
-		
+
 	initialize_editor_context is
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
 --			set_cursors (create {DOC_BUILDER_CURSORS})
 --			set_icons (create {DOC_BUILDER_ICONS})
-		end		
-		
+		end
+
 feature -- Editing		
-		
+
 	pretty_print_text is
 			-- Pretty XML format the current document
 		do
 			if current_document /= Void then
-				if current_document.is_valid_xml (text) then								
+				if current_document.is_valid_xml (text) then
 					current_document.set_text (current_document.pretty_xml (text))
 					reset
 					load_text (current_document.text)
@@ -134,48 +134,48 @@ feature -- Editing
 
 	pretty_format_code_text is
 			-- Pretty format the selected text as Eiffel code
-		local		
+		local
 			l_code_formatter: CODE_FORMATTER
 		do
 			if current_document /= Void and then text_displayed.has_selection then
 				create l_code_formatter
-				l_code_formatter.format (text_displayed.selected_string.twin)																		
+				l_code_formatter.format (text_displayed.selected_string.twin)
 				clipboard.set_text (l_code_formatter.text)
 				paste
 			end
-		end			
+		end
 
 	reference_window: EV_WINDOW is
-			-- 
+			--
 		once
 			Result := application_window
-		end		
+		end
 
 feature -- Commands
-		
+
 	update_date (a_date: INTEGER) is
-			-- 
+			--
 		do
 			date_of_file_when_loaded := a_date
-		end	
-		
+		end
+
 	validate_document is
 			-- Validate current document to loaded schema
 		do
-			if Shared_document_manager.has_schema then 
-				if Shared_document_manager.has_open_document then					
+			if Shared_document_manager.has_schema then
+				if Shared_document_manager.has_open_document then
 					if not current_document.is_valid_xml (text) then
 						shared_error_reporter.show
 					elseif not current_document.is_valid_to_schema then
 						shared_error_reporter.show
-					else 
-						application_window.update_status_report (False, (create {MESSAGE_CONSTANTS}).file_schema_valid_report)						
+					else
+						application_window.update_status_report (False, (create {MESSAGE_CONSTANTS}).file_schema_valid_report)
 						Shared_project.remove_invalid_file (current_document.name)
 					end
 				end
 			end
 		end
-		
+
 	validate_document_links is
 			-- Validate current document links/hrefs
 		local
@@ -183,17 +183,17 @@ feature -- Commands
 			l_manager: LINK_MANAGER
 			l_links: ARRAYED_LIST [DOCUMENT_LINK]
 			l_error: ERROR
-		do			
+		do
 			if current_document /= Void then
 				if not current_document.is_valid_xml (text) then
 					shared_error_reporter.show
-				else								
+				else
 					create l_manager
 					l_manager.add_document (current_document)
 					l_manager.check_links
 					if l_manager.invalid_links.is_empty then
 						application_window.update_status_report (True, ("All links valid"))
-					else	
+					else
 						from
 							l_has_error := True
 							l_links := l_manager.invalid_links
@@ -210,16 +210,16 @@ feature -- Commands
 				end
 				if l_has_error and then Shared_constants.Application_constants.is_gui_mode then
 					shared_error_reporter.show
-				end			
+				end
 			end
-		end		
-		
+		end
+
 	open_search_dialog is
 			-- Open the search dialog for text searching
 		do
 			if Shared_document_manager.has_open_document then
 				shared_search_control.search_text.set_focus
-			end			
+			end
 		end
 
 	tag_selection (a_tag: STRING) is
@@ -232,20 +232,20 @@ feature -- Commands
 			if a_tag.has_substring ("[tag]") then
 				l_text := a_tag.twin
 				if current_document /= Void and then text_displayed.has_selection then
-					cut_selection	
+					cut_selection
 					l_text.replace_substring_all ("[tag]", clipboard.text)
 				end
 			else
-				create l_text.make_from_string ("<" + a_tag + ">")	
+				create l_text.make_from_string ("<" + a_tag + ">")
 				if current_document /= Void and then text_displayed.has_selection then
-					cut_selection												
+					cut_selection
 					l_text.append (clipboard.text)
-				end				
-				l_text.append ("</" + a_tag + ">")								
+				end
+				l_text.append ("</" + a_tag + ">")
 			end
 			l_text := unescape_content (l_text)
 			clipboard.set_text (l_text)
-			paste			
+			paste
 --			if l_selected then
 --				select_region (caret_position + (a_tag.count + 2), caret_position + (l_text.count - 1) - (a_tag.count + 3))
 --			else
@@ -254,12 +254,12 @@ feature -- Commands
 		end
 
 feature -- Query				
-		
+
 	clipboard_empty: BOOLEAN is
 			-- Is clipboard empty?
 		do
 			Result := clipboard.text.is_empty
-		end			
+		end
 
 feature -- Access
 
@@ -268,7 +268,7 @@ feature -- Access
 		do
 				-- TODO: Remove, make all call direct to manager
 			Result := shared_document_manager.current_document
-		end	
+		end
 
 feature {NONE} -- Implementation
 
@@ -304,31 +304,35 @@ feature {NONE} -- Implementation
 
 feature -- Cursors
 
-	cur_cut_selection: EV_CURSOR is
+	cur_cut_selection: EV_POINTER_STYLE is
 			-- Editor cut cursor icon
 		local
 			l_filename: FILE_NAME
-		once		
+			l_pixmap: EV_PIXMAP
+		once
 			create l_filename.make_from_string (shared_constants.application_constants.cursor_resources_directory)
 			l_filename.extend ("cut_selection.png")
-			create Result
-			Result.set_with_named_file (l_filename.string)			
+			create l_pixmap
+			l_pixmap.set_with_named_file (l_filename.string)
+			create Result.make_with_pixmap (l_pixmap, l_pixmap.width // 2, l_pixmap.height // 2)
 		end
 
-	cur_copy_selection: EV_CURSOR is
+	cur_copy_selection: EV_POINTER_STYLE is
 			-- Editor copy cursor icon
 		local
 			l_filename: FILE_NAME
-		once		
+			l_pixmap: EV_PIXMAP
+		once
 			create l_filename.make_from_string (shared_constants.application_constants.cursor_resources_directory)
 			l_filename.extend ("copy_selection.png")
-			create Result
-			Result.set_with_named_file (l_filename.string)
+			create l_pixmap
+			l_pixmap.set_with_named_file (l_filename.string)
+			create Result.make_with_pixmap (l_pixmap, l_pixmap.width // 2, l_pixmap.height // 2)
 		end
-		
+
 
 feature {NONE} -- Events
-	
+
 	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
 			-- Process release of mouse buttons.
 		do
@@ -345,7 +349,7 @@ feature {NONE} -- Events
 					build_tag_menu_popup
 					tag_menu.show_at (application_window, a_screen_x - application_window.x_position, a_screen_y - application_window.y_position - a_y)
 				end
-			end				
+			end
 		end
 
 	pointer_released is
@@ -358,8 +362,8 @@ feature {NONE} -- Events
 				if l_parent /= Void and then not l_parent.is_empty then
 					Application_window.update_sub_element_list (l_parent, sub_element_list (l_parent))
 				end
-			end			
-		end		
+			end
+		end
 
 	xml_parent: STRING is
 			-- Determine the parent XML text based on the current
@@ -367,7 +371,7 @@ feature {NONE} -- Events
 		local
 			found_end_tag, found_start_tag, is_child_tag, invalid: BOOLEAN
 			start_pos, end_pos, curr_pos, cnt, ch_cnt: INTEGER
-		do			
+		do
 			if text_displayed.cursor /= Void then
 				from
 					Result := text.substring (1, text_displayed.cursor.pos_in_text)
@@ -389,7 +393,7 @@ feature {NONE} -- Events
 							end
 						end
 						end_pos := curr_pos
-					else			
+					else
 						found_start_tag := Result.substring (curr_pos, curr_pos).is_equal ("<")
 						if found_start_tag then
 							if Result.substring (cnt, cnt).is_equal ("/") then
@@ -414,11 +418,11 @@ feature {NONE} -- Events
 					Result.prune_all_trailing ('%T')
 					Result.prune_all_trailing ('%N')
 				end
-				
+
 						-- Prune out any attribute declarations
 				if Result.occurrences (' ') > 0 then
 					Result := Result.substring (1, Result.index_of (' ', 1) - 1)
-				end	
+				end
 			end
 		end
 
@@ -446,10 +450,10 @@ feature {NONE} -- Events
 						children.forth
 					end
 					Result.sort
-				end					
+				end
 			end
 		end
-		
+
 	pebble_dropped (a_url: STRING) is
 			-- Pebble dropped on target
 		local
@@ -461,7 +465,7 @@ feature {NONE} -- Events
 			if current_document /= Void then
 				set_focus
 				l_start_pos := text_displayed.cursor.pos_in_text
-				if current_document.is_persisted then				
+				if current_document.is_persisted then
 					create l_link.make (current_document.name, a_url)
 					l_url := l_link.relative_url
 				else
@@ -474,7 +478,7 @@ feature {NONE} -- Events
 				text_displayed.insert_string (l_url)
 				select_region (l_start_pos, l_end_pos)
 			end
-		end		
+		end
 
 	build_tag_menu_popup is
 			-- Build `tag_menu'
@@ -520,20 +524,20 @@ feature {NONE} -- Events
 			tok := cursor.token
 			tok.update_position
 			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset
-		end		
-		
+		end
+
 	calculate_menu_popup_y_position: INTEGER is
 			-- Determine the y position to display the completion list
 		local
 			cursor: EDITOR_CURSOR
-			screen: EV_SCREEN			
+			screen: EV_SCREEN
 			show_below: BOOLEAN
 		do
 				-- Get y pos of cursor
 			create screen
-			cursor := text_displayed.cursor			
+			cursor := text_displayed.cursor
 			show_below := True
-			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
+			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
 			Result := Result + line_height + 5
 		end
 

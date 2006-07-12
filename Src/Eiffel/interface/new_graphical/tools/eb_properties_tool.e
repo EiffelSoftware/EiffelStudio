@@ -23,6 +23,14 @@ inherit
 			refresh
 		end
 
+	TARGET_PROPERTIES
+		rename
+			conf_system as current_system
+		redefine
+			store_changes,
+			refresh
+		end
+
 create
 	make
 
@@ -34,7 +42,6 @@ feature {NONE} -- Initialization
 			a_manager_exists: a_manager /= Void
 		do
 			tool_make (a_manager)
-			make_group_properties
 		end
 
 	build_interface is
@@ -105,21 +112,49 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			a_stone_not_void: a_stone /= Void
 		local
 			l_gs: CLUSTER_STONE
+			l_cs: CLASSI_STONE
+			l_ts: TARGET_STONE
 			l_group: CONF_GROUP
 			l_lib_use: ARRAYED_LIST [CONF_LIBRARY]
 			l_writable: BOOLEAN
 			l_app_sys: CONF_SYSTEM
+			l_class_options, l_group_options: CONF_OPTION
+			l_name_prop: STRING_PROPERTY [STRING]
+			l_extends: BOOLEAN
 		do
 			check
 				properties: properties /= Void
 			end
 			stone := a_stone
 			l_gs ?= a_stone
-			if l_gs /= Void then
-				l_group := l_gs.group
-				current_system := l_group.target.system
-				properties.reset
-				add_group_properties (l_group, l_group.target)
+			l_cs ?= a_stone
+			l_ts ?= a_stone
+			if l_gs /= Void or l_cs /= Void then
+				if l_gs /= Void then
+					l_group := l_gs.group
+					current_system := l_group.target.system
+					properties.reset
+					add_group_properties (l_group, l_group.target)
+					properties.set_expanded_section_store (group_section_expanded_status)
+				elseif l_cs /= Void then
+					l_group := l_cs.class_i.group
+					current_system := l_group.target.system
+					l_group_options := l_group.options
+					l_class_options := l_group.changeable_class_options (l_cs.class_name)
+					properties.reset
+					properties.add_section (section_general)
+					create l_name_prop.make (class_option_class_name)
+					l_name_prop.set_value (l_cs.class_name)
+					l_name_prop.enable_readonly
+					properties.add_property (l_name_prop)
+					add_misc_option_properties (l_class_options, l_group_options, True)
+					add_assertion_option_properties (l_class_options, l_group_options, True)
+					add_warning_option_properties (l_class_options, l_group_options, True)
+					add_debug_option_properties (l_class_options, l_group_options, True)
+					properties.set_expanded_section_store (class_section_expanded_status)
+				else
+					check should_not_reach: False end
+				end
 				l_lib_use := l_group.target.used_in_libraries
 				if l_lib_use /= Void then
 					l_app_sys := l_group.target.application_target.system
@@ -137,6 +172,17 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					end
 				end
 				properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
+			elseif l_ts /= Void then
+				properties.reset
+				current_target := l_ts.target
+				current_system := current_target.system
+				l_extends := current_target.extends /= Void
+				add_general_properties
+				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+
+				properties.set_expanded_section_store (target_section_expanded_status)
 			end
 		ensure
 			stone_set: stone = a_stone
@@ -148,9 +194,13 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			a_pebble_not_void: a_pebble /= Void
 		local
 			l_gs: CLUSTER_STONE
+			l_cs: CLASSI_STONE
+			l_ts: TARGET_STONE
 		do
 			l_gs ?= a_pebble
-			Result := l_gs /= Void
+			l_cs ?= a_pebble
+			l_ts ?= a_pebble
+			Result := l_gs /= Void or l_cs /= Void or l_ts /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -158,8 +208,37 @@ feature {NONE} -- Implementation
 	stone: STONE
 			-- Stone we display properties for.
 
-	current_system: CONF_SYSTEM
-			-- System currently editing.	
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+			-- Expanded status of sections of groups.
+		once
+			create Result.make (5)
+			Result.force (True, section_general)
+			Result.force (True, section_assertions)
+			Result.force (False, section_warning)
+			Result.force (False, section_debug)
+			Result.force (False, section_advanced)
+		end
+
+	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+			-- Expanded status of sections of class options.
+		once
+			create Result.make (4)
+			Result.force (True, section_general)
+			Result.force (True, section_assertions)
+			Result.force (False, section_warning)
+			Result.force (False, section_debug)
+		end
+
+	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+			-- Expanded status of sections of targets.
+		once
+			create Result.make (5)
+			Result.force (True, section_general)
+			Result.force (True, section_assertions)
+			Result.force (False, section_warning)
+			Result.force (False, section_debug)
+			Result.force (False, section_advanced)
+		end
 
 	store_changes is
 			-- Store changes to disk.

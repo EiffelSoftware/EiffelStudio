@@ -1056,16 +1056,6 @@ feature -- Text formatter decorator
 			text_formatter.process_cl_syntax (text, a_syntax_message, a_class)
 		end
 
-	process_ace_syntax (text: STRING; a_error: ERROR) is
-			-- Process Ace syntax text.
-		do
-			if not without_tabs and then not tabs_emitted then
-				emit_tabs
-			end
-			without_tabs := false
-			text_formatter.process_ace_syntax (text, a_error)
-		end
-
 	process_column_text (a_column_number: INTEGER) is
 			-- Process `a_column_number'.
 		do

@@ -282,17 +282,6 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_ace_syntax (text: STRING; a_error: SYNTAX_ERROR) is
-			-- Process Ace syntax text.
-		local
-			tok: EDITOR_TOKEN_STRING
-			stone: ACE_SYNTAX_STONE
-		do
-			create tok.make (text)
-			create stone.make (a_error)
-			last_line.append_token (tok)
-		end
-
 	process_assertion_tag_text (t: STRING) is
 			-- Process string text `t'.
 		local

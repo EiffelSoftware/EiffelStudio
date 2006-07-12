@@ -709,7 +709,6 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(print_cmd)
 			editor_tool.text_area.add_edition_observer(Current)
 			editor_tool.text_area.add_edition_observer(search_tool)
-			editor_tool.text_area.drop_actions.set_veto_pebble_function (agent can_drop)
 			editor_tool.text_area.add_cursor_observer (Current)
 			create show_cmd.make(Current, editor_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -2086,7 +2085,6 @@ feature -- Stone process
 			ef_stone: EXTERNAL_FILE_STONE
 			cluster_st: CLUSTER_STONE
 			new_class_stone: CLASSI_STONE
-			conv_ace: ACE_SYNTAX_STONE
 			conv_errst: ERROR_STONE
 			conv_brkstone: BREAKABLE_STONE
 		do
@@ -2099,11 +2097,9 @@ feature -- Stone process
 				-- Update the history.
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
-			conv_ace ?= a_stone
 			if
 				conv_brkstone = Void and
 				conv_errst = Void and
-				conv_ace = Void and
 				ef_stone = Void
 			then
 				if
@@ -2924,6 +2920,7 @@ feature {NONE} -- Implementation
 			old_cluster_st: CLUSTER_STONE
 			feature_stone: FEATURE_STONE
 			conv_ferrst: FEATURE_ERROR_STONE
+			target_stone: TARGET_STONE
 
 			ef_stone: EXTERNAL_FILE_STONE
 			f: FILE
@@ -2935,7 +2932,6 @@ feature {NONE} -- Implementation
 			class_text_exists: BOOLEAN
 			same_class: BOOLEAN
 			test_stone: CLASSI_STONE
-			conv_ace: ACE_SYNTAX_STONE
 			externali: EXTERNAL_CLASS_I
 			external_cons: CONSUMED_TYPE
 			str: STRING
@@ -2959,8 +2955,8 @@ feature {NONE} -- Implementation
 
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
-			conv_ace ?= a_stone
 			ef_stone ?= a_stone
+			target_stone ?= a_stone
 			if conv_brkstone /= Void then
 				app_exec := Debugger_manager.application
 				if app_exec.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
@@ -2971,8 +2967,6 @@ feature {NONE} -- Implementation
 				Debugger_manager.notify_breakpoints_changes
 			elseif conv_errst /= Void then
 				display_error_help_cmd.execute_with_stone (conv_errst)
-			elseif conv_ace /= Void then
-				--| FIXME XR: What should we do?!
 			elseif ef_stone /= Void then
 				f := ef_stone.file
 				f.make_open_read (f.name)
@@ -2980,6 +2974,8 @@ feature {NONE} -- Implementation
 				f.close
 				editor_tool.text_area.set_stone (a_stone)
 				editor_tool.text_area.load_text (f.last_string)
+			elseif target_stone /= Void then
+				properties_tool.add_stone (target_stone)
 			else
 					-- Remember previous stone.
 				old_stone := stone
@@ -3013,6 +3009,8 @@ feature {NONE} -- Implementation
 					end
 						-- Text is now editable.
 					editor_tool.text_area.set_read_only (False)
+
+					properties_tool.add_stone (new_class_stone)
 
 						-- class stone was dropped
 					create class_file.make (new_class_stone.class_i.file_name)
@@ -3884,15 +3882,6 @@ feature {NONE} -- Implementation
 
 	saved_cursor: CURSOR
 			-- Saved cursor position for displaying the stack.
-
-	can_drop (st: ANY): BOOLEAN is
-			-- Can the user drop the stone `st'?
-		local
-			conv_ace: ACE_SYNTAX_STONE
-		do
-			conv_ace ?= st
-			Result := conv_ace = Void
-		end
 
 	send_stone_to_context is
 			-- Send current stone to the context tool.

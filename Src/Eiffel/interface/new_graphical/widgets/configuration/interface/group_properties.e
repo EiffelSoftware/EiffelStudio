@@ -14,26 +14,7 @@ inherit
 			{NONE} all
 		end
 
-create
-	make_group_properties
-
-feature {NONE} -- Initialization
-
-	make_group_properties is
-			-- Create.
-		do
-			create group_section_expanded_status.make (5)
-			group_section_expanded_status.force (True, section_general)
-			group_section_expanded_status.force (True, section_assertions)
-			group_section_expanded_status.force (True, section_warning)
-			group_section_expanded_status.force (True, section_debug)
-			group_section_expanded_status.force (False, section_advanced)
-		end
-
 feature {NONE} -- Implementation
-
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING]
-			-- Expanded status of sections of groups.
 
 	add_group_properties (a_group: CONF_GROUP; a_target: CONF_TARGET) is
 			-- Add `properties' for `a_group'.
@@ -323,8 +304,6 @@ feature {NONE} -- Implementation
 				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]}?, agent store_changes))
 				properties.add_property (l_vis_prop)
 			end
-
-			properties.set_expanded_section_store (group_section_expanded_status)
 		ensure
 			properties_not_void: properties /= Void
 		end

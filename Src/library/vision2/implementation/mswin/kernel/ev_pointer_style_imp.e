@@ -70,9 +70,14 @@ feature {NONE} -- Initlization
 
 	init_predefined (a_constants: INTEGER) is
 			-- Initialized a predefined cursor.
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			destroy_gdi_objects
 			build_default_icon (to_windows_constants (a_constants))
+			create l_env
+			width := l_env.default_pointer_style_width
+			height := l_env.default_pointer_style_height
 		end
 
 feature -- Command

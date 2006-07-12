@@ -641,7 +641,7 @@ feature -- Basic Operations
 
 feature -- Graphical interface
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Pointer style over the text.
 		do
 			Result := editor_drawing_area.pointer_style

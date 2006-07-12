@@ -799,7 +799,7 @@ feature {NONE} -- Mouse copy cut
 			Result := Precursor or else mouse_copy_cut
 		end
 
-	basic_pointer: EV_CURSOR
+	basic_pointer: EV_POINTER_STYLE
 			-- Normal shape of the mouse pointer.
 
 	mouse_copy_cut: BOOLEAN

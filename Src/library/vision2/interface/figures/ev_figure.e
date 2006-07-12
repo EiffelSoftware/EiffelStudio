@@ -76,7 +76,7 @@ feature -- Access
 			end
 		end
 
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when pointer is over this figure.
 		do
 			if internal_pointer_style /= Void then
@@ -244,12 +244,12 @@ feature -- Status report
 			end
 		end
 		
-	accept_cursor: EV_CURSOR
+	accept_cursor: EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
 			-- `pebble' during pick and drop.
 
-	deny_cursor: EV_CURSOR
+	deny_cursor: EV_POINTER_STYLE
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
@@ -285,14 +285,14 @@ feature -- Element change
 			pointer_style_assigned: pointer_style = a_cursor
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: EV_POINTER_STYLE) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: EV_POINTER_STYLE) is
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -545,7 +545,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_PROJECTION_ROUTINES} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_pointer_style: EV_CURSOR
+	internal_pointer_style: EV_POINTER_STYLE
 			-- `pointer_style'.
 
 	internal_is_sensitive: BOOLEAN
@@ -584,13 +584,13 @@ feature {NONE} -- Implementation
 
 feature {EV_WIDGET_PROJECTOR} -- Implementation
 
-	Default_accept_cursor: EV_CURSOR is
+	Default_accept_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `accept_cursor'.
 		once
 			Result := Default_pixmaps.Standard_cursor
 		end
 
-	Default_deny_cursor: EV_CURSOR is
+	Default_deny_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `deny_cursor'.
 		once
 			Result := Default_pixmaps.No_cursor

@@ -67,15 +67,12 @@ feature {NONE} -- Initlization
 			default_create
 				-- We convert from EV_CURSOR, `a_cursor' maybe void.
 			l_temp := a_cursor
-			if l_temp = Void then
-				create l_cursors
-				l_temp := l_cursors.standard_cursor
+			if l_temp /= Void then
+				implementation.init_from_cursor (l_temp)
+
+				set_x_hotspot (l_temp.x_hotspot)
+				set_y_hotspot (l_temp.y_hotspot)
 			end
-
-			implementation.init_from_cursor (l_temp)
-
-			set_x_hotspot (l_temp.x_hotspot)
-			set_y_hotspot (l_temp.y_hotspot)
 		end
 
 feature -- Command

@@ -107,7 +107,7 @@ feature -- States Report
 		
 feature -- Cursors
 
-	accept_node: EV_CURSOR is
+	accept_node: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -118,7 +118,7 @@ feature -- Cursors
 			accept_node_not_void: Result /= Void
 		end
 		
-	deny_node: EV_CURSOR is
+	deny_node: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -129,7 +129,7 @@ feature -- Cursors
 			deny_node_not_void: Result /= Void
 		end	
 	
-	accept_node_class: EV_CURSOR is
+	accept_node_class: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -140,7 +140,7 @@ feature -- Cursors
 			accept_node_class: Result /= Void
 		end
 
-	deny_node_class: EV_CURSOR is
+	deny_node_class: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP

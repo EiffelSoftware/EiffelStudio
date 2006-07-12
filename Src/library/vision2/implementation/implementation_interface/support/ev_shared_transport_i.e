@@ -10,13 +10,13 @@ class
 
 feature -- Access EV_PICK_AND_DROPABLE.
 
-	default_accept_cursor: EV_CURSOR is
+	default_accept_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `accept_cursor'.
 		once
 			Result := Default_pixmaps.Standard_cursor
 		end
 
-	default_deny_cursor: EV_CURSOR is
+	default_deny_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `deny_cursor'.
 		once
 			Result := Default_pixmaps.No_cursor

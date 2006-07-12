@@ -32,7 +32,7 @@ feature -- Access
 		deferred
 		end
 
-	accept_cursor: EV_CURSOR is
+	accept_cursor: EV_POINTER_STYLE is
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred
@@ -40,7 +40,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	deny_cursor: EV_CURSOR is
+	deny_cursor: EV_POINTER_STYLE is
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		deferred
@@ -99,7 +99,7 @@ feature -- Status setting
 				a_name /= target_name and a_name.is_equal (target_name)
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: like accept_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		require
@@ -109,7 +109,7 @@ feature -- Status setting
 			accept_cursor_assigned: accept_cursor.is_equal (a_cursor)
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: like deny_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		require

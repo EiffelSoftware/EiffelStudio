@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	orig_cursor: EV_CURSOR
+	orig_cursor: EV_POINTER_STYLE
 		-- Cursor originally used on `Current'.
 
 	application_imp: EV_APPLICATION_IMP is

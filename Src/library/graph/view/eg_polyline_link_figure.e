@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_edge_cursor: EV_CURSOR is
+	new_edge_cursor: EV_POINTER_STYLE is
 			-- Cursor displayed when pointer over a line (white dot).
 		local
 			pix_map: EV_PIXMAP

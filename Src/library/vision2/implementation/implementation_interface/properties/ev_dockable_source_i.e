@@ -639,7 +639,7 @@ feature -- Basic operations
 
 feature -- Inapplicable
 
-	drag_cursor: EV_CURSOR is
+	drag_cursor: EV_POINTER_STYLE is
 			-- Cursor used when `Current' is being transported.
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor

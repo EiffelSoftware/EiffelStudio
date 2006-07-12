@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 	clipboard_internal: EV_CLIPBOARD
 			-- Internal clipboard object.
 
-	old_pointer_style: EV_CURSOR
+	old_pointer_style: EV_POINTER_STYLE
 			-- Pointer style of window being used while contextual help is enabled
 
  	old_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE

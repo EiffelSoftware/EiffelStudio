@@ -38,12 +38,12 @@ feature -- Access
 			Result := internal_pebble_positioning_enabled
 		end
 
-	accept_cursor: EV_CURSOR
+	accept_cursor: EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
 			-- `pebble' during pick and drop.
 
-	deny_cursor: EV_CURSOR
+	deny_cursor: EV_POINTER_STYLE
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
@@ -150,14 +150,14 @@ feature -- Status setting
 			mode_is_target_menu: mode_is_target_menu
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: like accept_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: like deny_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do

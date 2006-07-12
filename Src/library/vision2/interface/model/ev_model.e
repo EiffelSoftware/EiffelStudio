@@ -109,7 +109,7 @@ feature -- Access
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 			
-	pointer_style: EV_CURSOR is
+	pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when pointer is over this figure.
 		do
 			if internal_pointer_style /= Void then
@@ -410,14 +410,14 @@ feature -- Element change
 			pointer_style_assigned: pointer_style = a_cursor
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: EV_POINTER_STYLE) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: EV_POINTER_STYLE) is
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -457,12 +457,12 @@ feature -- Status Report
 			world_defines_is_in_world: Result = (world /= Void)
 		end
 
-	accept_cursor: EV_CURSOR
+	accept_cursor: EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
 			-- `pebble' during pick and drop.
 
-	deny_cursor: EV_CURSOR
+	deny_cursor: EV_POINTER_STYLE
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 		
@@ -845,13 +845,13 @@ feature {EV_MODEL_GROUP} -- Figure group
 
 feature {EV_MODEL_WIDGET_PROJECTOR} -- Implementation
 
-	default_accept_cursor: EV_CURSOR is
+	default_accept_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `accept_cursor'.
 		once
 			Result := Default_pixmaps.Standard_cursor
 		end
 
-	default_deny_cursor: EV_CURSOR is
+	default_deny_cursor: EV_POINTER_STYLE is
 			-- Used in lieu of a user defined `deny_cursor'.
 		once
 			Result := Default_pixmaps.No_cursor
@@ -930,7 +930,7 @@ feature {NONE} -- Implementation
 	internal_projection_matrix: like projection_matrix
 			-- Internal projection matrix.
 		
-	internal_pointer_style: EV_CURSOR
+	internal_pointer_style: EV_POINTER_STYLE
 			-- `pointer_style'.
 			
 	internal_is_sensitive: BOOLEAN

@@ -10,9 +10,6 @@ indexing
 class
 	EV_CURSOR
 
-obsolete
-	"Use EV_POINTER_STYLE instead."
-
 inherit
 	EV_PIXMAP
 		redefine
@@ -49,7 +46,7 @@ feature {NONE} -- Initialization
 			default_create
 			l_temp := a_pointer_style
 			if l_temp = Void then
-				create l_temp.make_with_cursor (Void)
+				create l_temp
 			end
 			implementation.init_from_pointer_style (l_temp)
 

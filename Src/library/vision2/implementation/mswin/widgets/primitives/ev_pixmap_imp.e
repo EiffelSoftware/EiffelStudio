@@ -73,7 +73,7 @@ feature -- Basic Operation
 			-- No implementation needed as `Current' is always offscreen
 		end
 
-feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP, EV_CURSOR} -- Loading/Saving
+feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 
 	set_with_resource (a_resource: WEL_GRAPHICAL_RESOURCE) is
 			-- Initialize the pixmap with the content of `a_resource'.

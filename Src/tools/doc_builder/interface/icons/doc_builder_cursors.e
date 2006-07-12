@@ -7,22 +7,22 @@ indexing
 
 class
 	DOC_BUILDER_CURSORS
-	
+
 inherit
 	EDITOR_CURSORS
-	
+
 	SHARED_CONSTANTS
-	
+
 feature -- Cursor
 
-	cur_cut_selection: EV_CURSOR is
+	cur_cut_selection: EV_POINTER_STYLE is
 		once
 			Result := cursor_file_content ("cut_selection")
 			Result.set_x_hotspot (0)
 			Result.set_y_hotspot (0)
 		end
 
-	cur_copy_selection: EV_CURSOR is
+	cur_copy_selection: EV_POINTER_STYLE is
 		once
 			Result := cursor_file_content ("copy_selection")
 			Result.set_x_hotspot (0)
@@ -31,7 +31,7 @@ feature -- Cursor
 
 feature {NONE} -- Implementation
 
-	cursor_file_content (fn: STRING): EV_CURSOR is
+	cursor_file_content (fn: STRING): EV_POINTER_STYLE is
 			-- Load the cursor contained in file `fn'.ico or `fn'.xpm, depending on the platform.
 		local
 			full_path: FILE_NAME

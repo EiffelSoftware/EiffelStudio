@@ -95,8 +95,6 @@ feature -- Default cursors
 			-- Four-pointed arrow pointing north, south, east and west
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor)
-			Result.set_x_hotspot (8)
-			Result.set_y_hotspot (8)
 		end
 
 	Sizens_cursor: EV_POINTER_STYLE is

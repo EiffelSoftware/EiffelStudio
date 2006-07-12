@@ -78,7 +78,7 @@
 <keyword>local</keyword>
 	value: <class_name>INTEGER</class_name>
 <keyword>do</keyword>
-	value := <keyword>feature</keyword> {<class_name>MY_CLASS</class_name>}.<feature_name>value</feature_name>
+	value := {<class_name>MY_CLASS</class_name>}.<feature_name>value</feature_name>
 <keyword>end</keyword>
 </code_block>
 				<line_break/>The previous call is valid, if and only if:

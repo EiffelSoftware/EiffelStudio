@@ -11,7 +11,7 @@ class
 inherit
 	WEL_BAR
 		redefine
-			on_size, make_by_id
+			on_size, make_by_id, valid_maximum
 		end
 
 	WEL_SCROLL_BAR_CONSTANTS
@@ -83,14 +83,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_horizontal: BOOLEAN is
-			-- Is current scrollbar an horizontal one?
-		do
-				-- Bit at position 0 (i.e. value 1) in `style'
-				-- represents the orientation of scrollbar.
-			Result := (style & 1) = Sbs_horz
-		end
-
 	line: INTEGER
 			-- Number of scroll units per line
 
@@ -128,6 +120,22 @@ feature -- Access
 			-- Can be redefined by the user
 		do
 			create Result.make_system (color_scrollbar)
+		end
+
+feature -- Status report
+
+	is_horizontal: BOOLEAN is
+			-- Is current scrollbar an horizontal one?
+		do
+				-- Bit at position 0 (i.e. value 1) in `style'
+				-- represents the orientation of scrollbar.
+			Result := (style & 1) = Sbs_horz
+		end
+
+	valid_maximum (a_position: INTEGER): BOOLEAN is
+			-- Is `a_position' valid as a maximum?
+		do
+			Result := a_position <= (maximum - (page - 1).max (0))
 		end
 
 feature -- Element change

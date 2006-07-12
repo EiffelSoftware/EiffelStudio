@@ -404,12 +404,9 @@ feature{NONE} -- Command substitution
 			cmd_attached: cmd /= Void
 			sub_str_attached: sub_str /= Void
 		local
-			cn: STRING
 			dev: EB_DEVELOPMENT_WINDOW
 			l_editor_tool: EB_EDITOR_TOOL
 			l_text_area: EB_SMART_EDITOR
-			l_text_displayed: SMART_TEXT
-			l_cursor: EIFFEL_EDITOR_CURSOR
 		do
 			dev := Window_manager.last_focused_development_window
 			if dev /= Void then

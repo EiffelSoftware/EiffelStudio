@@ -34,9 +34,6 @@ feature {NONE} -- Implementation
 	conf_system: CONF_SYSTEM
 			-- Configuration system.
 
-	window: EV_WINDOW
-			-- Window to show errors modal.
-
 	add_general_properties is
 			-- Add general properties.
 		require

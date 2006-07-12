@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 		do
 			tool_make (a_manager)
 			create {CONF_COMP_FACTORY}conf_factory
+			window := a_manager.window
 		end
 
 	build_interface is

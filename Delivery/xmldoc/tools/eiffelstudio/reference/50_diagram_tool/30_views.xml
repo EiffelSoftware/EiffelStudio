@@ -66,13 +66,7 @@
 			<item>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/70_iconify.xml</url>
-					<label>Minimizing a cluster</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>/tools/eiffelstudio/how_to_s/60_designing_a_project/40_modifying_the_display/70_iconify.xml</url>
-					<label>Restoring a cluster from minimized state</label>
+					<label>Minimizing a cluster and restoring it to its normal state</label>
 				</link>
 			</item>
 		</list>

@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	Idi_application: POINTER is
+	frozen Idi_application: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_APPLICATION"
 		end
 
-	Idi_hand, Idi_error: POINTER is
+	frozen Idi_hand, frozen Idi_error: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_HAND"
 		end
 
-	Idi_question: POINTER is
+	frozen Idi_question: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_QUESTION"
 		end
 
-	Idi_exclamation, Idi_warning: POINTER is
+	frozen Idi_exclamation, frozen Idi_warning: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_EXCLAMATION"
 		end
 
-	Idi_asterisk, Idi_information: POINTER is
+	frozen Idi_asterisk, frozen Idi_information: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias

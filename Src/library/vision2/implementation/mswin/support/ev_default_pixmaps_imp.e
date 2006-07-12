@@ -55,82 +55,84 @@ feature -- Default pixmaps
 
 feature -- Default cursors
 
-	Busy_cursor: EV_CURSOR is
+	Busy_cursor: EV_POINTER_STYLE is
 			-- Standard arrow and small hourglass
 		do
-			Result := build_default_cursor (Idc_constants.Idc_appstarting)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 		end
 
-	Standard_cursor: EV_CURSOR is
+	Standard_cursor: EV_POINTER_STYLE is
 			-- Standard arrow
 		do
-			Result := build_default_cursor (Idc_constants.Idc_arrow)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor)
 		end
 
-	Crosshair_cursor: EV_CURSOR is
+	Crosshair_cursor: EV_POINTER_STYLE is
 			-- Crosshair
 		do
-			Result := build_default_cursor (Idc_constants.Idc_cross)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor)
 		end
 
-	Help_cursor: EV_CURSOR is
+	Help_cursor: EV_POINTER_STYLE is
 			-- Arrow and question mark
 		do
-			Result := build_default_cursor (Idc_constants.Idc_help)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.help_cursor)
 		end
 
-	Ibeam_cursor: EV_CURSOR is
+	Ibeam_cursor: EV_POINTER_STYLE is
 			-- I-beam
 		do
-			Result := build_default_cursor (Idc_constants.Idc_ibeam)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor)
 		end
 
-	No_cursor: EV_CURSOR is
+	No_cursor: EV_POINTER_STYLE is
 			-- Slashed_circle
 		do
-			Result := build_default_cursor (Idc_constants.Idc_no)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.no_cursor)
 		end
 
-	Sizeall_cursor: EV_CURSOR is
+	Sizeall_cursor: EV_POINTER_STYLE is
 			-- Four-pointed arrow pointing north, south, east and west
 		do
-			Result := build_default_cursor (Idc_constants.Idc_sizeall)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor)
+			Result.set_x_hotspot (8)
+			Result.set_y_hotspot (8)
 		end
 
-	Sizenwse_cursor: EV_CURSOR is
-			-- Double-pointed arrow pointing north-west and south-east
-		do
-			Result := build_default_cursor (Idc_constants.Idc_sizenwse)
-		end
-
-	Sizenesw_cursor: EV_CURSOR is
-			-- Double-pointed arrow pointing north-east and south-west
-		do
-			Result := build_default_cursor (Idc_constants.Idc_sizenesw)
-		end
-
-	Sizens_cursor: EV_CURSOR is
+	Sizens_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north and south
 		do
-			Result := build_default_cursor (Idc_constants.Idc_sizens)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizens_cursor)
 		end
 
-	Sizewe_cursor: EV_CURSOR is
+	Sizenwse_cursor: EV_POINTER_STYLE is
+			-- Double-pointed arrow pointing north-west and south-east
+		do
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor)
+		end
+
+	Sizenesw_cursor: EV_POINTER_STYLE is
+			-- Double-pointed arrow pointing north-east and south-west
+		do
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor)
+		end
+
+	Sizewe_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing west and east
 		do
-			Result := build_default_cursor (Idc_constants.Idc_sizewe)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor)
 		end
 
-	Uparrow_cursor: EV_CURSOR is
+	Uparrow_cursor: EV_POINTER_STYLE is
 			-- Vertical arrow
 		do
-			Result := build_default_cursor (Idc_constants.Idc_uparrow)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor)
 		end
 
-	Wait_cursor: EV_CURSOR is
+	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
 		do
-			Result := build_default_cursor (Idc_constants.Idc_wait)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 		end
 
 feature {NONE} -- Implementation

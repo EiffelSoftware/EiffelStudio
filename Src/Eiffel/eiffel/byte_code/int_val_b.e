@@ -28,12 +28,6 @@ feature -- Visitor
 
 feature -- Comparison
 
-	infix "<" (other: INT_VAL_B): BOOLEAN is
-			-- Is `other' greater than Current?
-		do
-			Result := value < other.value
-		end
-
 	is_allowed_unique_value: BOOLEAN is
 			-- Does `Current' represent an allowed unique value?
 		do

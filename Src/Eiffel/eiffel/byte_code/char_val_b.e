@@ -22,14 +22,6 @@ feature -- Visitor
 			v.process_char_val_b (Current)
 		end
 
-feature -- Comparison
-
-	infix "<" (other: CHAR_VAL_B): BOOLEAN is
-			-- Is `other' greater than Current?
-		do
-			Result := value < other.value
-		end
-
 feature -- Measurement
 
 	distance (other: like Current): DOUBLE is

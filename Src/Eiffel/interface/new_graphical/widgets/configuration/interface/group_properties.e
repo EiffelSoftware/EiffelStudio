@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 			create l_text_prop.make (group_name_name)
 			l_text_prop.set_description (group_name_description)
 			l_text_prop.set_value (a_group.name)
+			l_text_prop.validate_value_actions.extend (agent check_group_name (?, a_group, a_target))
 			l_text_prop.change_value_actions.extend (agent a_group.set_name)
 			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent store_changes))
 			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent refresh))
@@ -432,6 +433,27 @@ feature {NONE} -- Output generation
 				Result.remove_tail (1)
 			else
 				create Result.make_empty
+			end
+		end
+
+feature {NONE} -- Validation and warning generation
+
+	check_group_name (a_name: STRING; a_group: CONF_GROUP; a_target: CONF_TARGET): BOOLEAN is
+			-- Is `a_name' a valid name for `a_group' in `a_target'?
+		require
+			a_target: a_target /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			wd: EV_WARNING_DIALOG
+		do
+			l_groups := a_target.groups
+			l_groups.search (a_name)
+			if l_groups.found and then l_groups.found_item /= a_group then
+				create wd.make_with_text (group_name_duplicate)
+				wd.show_modal_to_window (window)
+			else
+				Result := True
 			end
 		end
 

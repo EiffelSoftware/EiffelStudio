@@ -20,6 +20,9 @@ inherit
 
 feature -- Access
 
+	window: EV_WINDOW
+			-- Window to show errors modal.
+
 	properties: PROPERTY_GRID
 			-- Grid where properties get added.
 

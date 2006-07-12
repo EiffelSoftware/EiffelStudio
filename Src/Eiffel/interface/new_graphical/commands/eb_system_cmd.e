@@ -33,7 +33,7 @@ inherit
 	EV_SHARED_APPLICATION
 		export {NONE} all end
 
-	REFACTORING_HELPER
+	SHARED_CONFIG_WINDOWS
 
 create
 	make
@@ -64,42 +64,50 @@ feature -- Basic operations
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
+			l_config: STRING
 		do
 			if not rescued then
 				if ev_application.ctrl_pressed then
 					gc_window.show
 				else
-					create l_fact
-					create l_load.make (l_fact)
-					l_load.retrieve_configuration (lace.conf_system.file_name)
-					if l_load.is_error then
-						create wd.make_with_text (l_load.last_error.out)
-						wd.show_modal_to_window (window_manager.
-							last_focused_development_window.window)
+					l_config := lace.conf_system.file_name
+					config_windows.search (l_config)
+					if config_windows.found then
+						configuration_window := config_windows.found_item
+						configuration_window.set_focus
 					else
-							-- sort debugs
-						if workbench.system_defined then
-							l_debugs := system.debug_clauses
-						end
-						if l_debugs /= Void then
-							create l_sorted_debugs.make (l_debugs.count)
-							from
-								l_debugs.start
-							until
-								l_debugs.after
-							loop
-								l_sorted_debugs.put_last (l_debugs.item_for_iteration)
-								l_debugs.forth
-							end
-							l_sorted_debugs.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+						create l_fact
+						create l_load.make (l_fact)
+						l_load.retrieve_configuration (l_config)
+						if l_load.is_error then
+							create wd.make_with_text (l_load.last_error.out)
+							wd.show_modal_to_window (window_manager.
+								last_focused_development_window.window)
 						else
-							create l_sorted_debugs.make_default
-						end
+								-- sort debugs
+							if workbench.system_defined then
+								l_debugs := system.debug_clauses
+							end
+							if l_debugs /= Void then
+								create l_sorted_debugs.make (l_debugs.count)
+								from
+									l_debugs.start
+								until
+									l_debugs.after
+								loop
+									l_sorted_debugs.put_last (l_debugs.item_for_iteration)
+									l_debugs.forth
+								end
+								l_sorted_debugs.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+							else
+								create l_sorted_debugs.make_default
+							end
 
-						l_load.last_system.targets.start
-						l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-						create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
-						configuration_window.show
+							l_load.last_system.targets.start
+							l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
+							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+							configuration_window.show
+						end
 					end
 				end
 			end

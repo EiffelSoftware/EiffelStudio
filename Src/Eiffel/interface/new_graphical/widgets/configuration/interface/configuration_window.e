@@ -96,6 +96,12 @@ inherit
 			default_create
 		end
 
+	SHARED_CONFIG_WINDOWS
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -860,12 +866,6 @@ feature {NONE} -- Implementation
 			Result.force (True, section_warning)
 			Result.force (True, section_debug)
 			Result.force (False, section_advanced)
-		end
-
-	config_windows: HASH_TABLE [CONFIGURATION_WINDOW, STRING] is
-			-- Open configuration windows, indexed by the configuration file the represent.
-		once
-			create Result.make (5)
 		end
 
 	is_refreshing: BOOLEAN

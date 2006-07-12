@@ -31,6 +31,11 @@ inherit
 			refresh
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -42,6 +47,7 @@ feature {NONE} -- Initialization
 			a_manager_exists: a_manager /= Void
 		do
 			tool_make (a_manager)
+			create {CONF_COMP_FACTORY}conf_factory
 		end
 
 	build_interface is
@@ -121,7 +127,27 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			l_class_options, l_group_options: CONF_OPTION
 			l_name_prop: STRING_PROPERTY [STRING]
 			l_extends: BOOLEAN
+			l_debugs: SEARCH_TABLE [STRING]
 		do
+				-- sort debugs
+			if workbench.system_defined then
+				l_debugs := system.debug_clauses
+			end
+			if l_debugs /= Void then
+				create debug_clauses.make (l_debugs.count)
+				from
+					l_debugs.start
+				until
+					l_debugs.after
+				loop
+					debug_clauses.put_last (l_debugs.item_for_iteration)
+					l_debugs.forth
+				end
+				debug_clauses.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+			else
+				create debug_clauses.make_default
+			end
+
 			check
 				properties: properties /= Void
 			end
@@ -133,12 +159,14 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				if l_gs /= Void then
 					l_group := l_gs.group
 					current_system := l_group.target.system
+					is_il_generation := l_group.target.setting_msil_generation
 					properties.reset
 					add_group_properties (l_group, l_group.target)
 					properties.set_expanded_section_store (group_section_expanded_status)
 				elseif l_cs /= Void then
 					l_group := l_cs.class_i.group
 					current_system := l_group.target.system
+					is_il_generation := l_group.target.setting_msil_generation
 					l_group_options := l_group.options
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)
 					properties.reset
@@ -181,6 +209,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+				add_advanced_properties
 
 				properties.set_expanded_section_store (target_section_expanded_status)
 			end
@@ -238,6 +267,7 @@ feature {NONE} -- Implementation
 			Result.force (False, section_warning)
 			Result.force (False, section_debug)
 			Result.force (False, section_advanced)
+			Result.force (False, section_dotnet)
 		end
 
 	store_changes is

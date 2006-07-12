@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb1, hb: EV_HORIZONTAL_BOX
 			cl: EV_CELL
-			rb: EV_RADIO_BUTTON
 		do
 			Precursor {EV_DIALOG}
 
@@ -60,16 +59,16 @@ feature {NONE} -- Initialization
 			create element_container
 			vb.extend (element_container)
 
-			create rb.make_with_text_and_action (external_include, agent on_include)
-			element_container.extend (rb)
-			create rb.make_with_text_and_action (external_object, agent on_object)
-			element_container.extend (rb)
-			create rb.make_with_text_and_action (external_library, agent on_library)
-			element_container.extend (rb)
-			create rb.make_with_text_and_action (external_make, agent on_make)
-			element_container.extend (rb)
-			create rb.make_with_text_and_action (external_resource, agent on_resource)
-			element_container.extend (rb)
+			create include.make_with_text (external_include)
+			element_container.extend (include)
+			create object.make_with_text (external_object)
+			element_container.extend (object)
+			create library.make_with_text (external_library)
+			element_container.extend (library)
+			create make.make_with_text (external_make)
+			element_container.extend (make)
+			create resource.make_with_text (external_resource)
+			element_container.extend (resource)
 
 			append_small_margin (vb)
 
@@ -100,21 +99,46 @@ feature -- Access
 	is_ok: BOOLEAN
 			-- Did the dialog close with an ok?
 
-	is_include: BOOLEAN
+	is_include: BOOLEAN is
 			-- Was include as type of the new external choosen?
+		do
+			Result := include.is_selected
+		end
+
 	is_object: BOOLEAN
 			-- Was object as type of the new external choosen?
+		do
+			Result := object.is_selected
+		end
+
 	is_library: BOOLEAN
 			-- Was library as type of the new external choosen?
+		do
+			Result := library.is_selected
+		end
+
 	is_make: BOOLEAN
 			-- Was makefile as type of the new external choosen?
+		do
+			Result := make.is_selected
+		end
+
 	is_resource: BOOLEAN
 			-- Was ressource as type of the new external choosen?
+		do
+			Result := resource.is_selected
+		end
 
 feature {NONE} -- GUI elements
 
 	element_container: EV_VERTICAL_BOX
 			-- Container to add new elements.
+
+	include: EV_RADIO_BUTTON
+	object: EV_RADIO_BUTTON
+	library: EV_RADIO_BUTTON
+	make: EV_RADIO_BUTTON
+	resource: EV_RADIO_BUTTON
 
 	cancel_button: EV_BUTTON
 			-- Cancel button.
@@ -123,56 +147,6 @@ feature {NONE} -- GUI elements
 			-- Ok Button.
 
 feature {NONE} -- Agents
-
-	on_include is
-			-- Include was choosen.
-		do
-			is_include := True
-			is_object := False
-			is_library := False
-			is_make := False
-			is_resource := False
-		end
-
-	on_object is
-			-- Object was choosen.
-		do
-			is_include := False
-			is_object := True
-			is_library := False
-			is_make := False
-			is_resource := False
-		end
-
-	on_library is
-			-- Library was choosen.
-		do
-			is_include := False
-			is_object := False
-			is_library := True
-			is_make := False
-			is_resource := False
-		end
-
-	on_make is
-			-- Make was choosen.
-		do
-			is_include := False
-			is_object := False
-			is_library := False
-			is_make := True
-			is_resource := False
-		end
-
-	on_resource is
-			-- Resource was choosen.
-		do
-			is_include := False
-			is_object := False
-			is_library := False
-			is_make := False
-			is_resource := True
-		end
 
 	on_ok is
 			-- Ok was pressed.

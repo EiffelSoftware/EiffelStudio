@@ -132,6 +132,7 @@ feature {NONE} -- Implementation
 			end
 			l_choice_prop.change_value_actions.put_front (agent set_compilation_mode)
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 			l_choice_prop.use_inherited_actions.extend (agent current_target.update_setting (s_msil_generation, Void))
 			l_choice_prop.use_inherited_actions.extend (agent refresh)
 			l_choice_prop.use_inherited_actions.extend (agent store_changes)

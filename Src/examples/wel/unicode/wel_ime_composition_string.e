@@ -9,11 +9,13 @@ class
 	WEL_IME_COMPOSITION_STRING
 	
 inherit 
-	WEL_INPUT_METHOD_EDITOR_CONSTANTS
+	ANY
+
+	WEL_IME_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
 	
@@ -21,8 +23,6 @@ feature -- Initialization
 
 	make (a_input_context: POINTER) is
 			-- Create object with 'a_input_context' input context
-		require
-			input_context_not_void: a_input_context /= Void
 		do
 			input_context := a_input_context
 		ensure
@@ -32,35 +32,33 @@ feature -- Initialization
 
 feature -- Access
 
-	string: STRING is
+	string: STRING_32 is
 			-- Composition string
 		local
-				buffer: POINTER
-				nb: INTEGER
-				l_string: WEL_STRING
+			buffer: POINTER
+			nb: INTEGER
+			l_string: WEL_STRING
 		do
-				nb := cwel_imm_get_composition_string (input_context, Gcs_compstr, $buffer, 0)
-				create l_string.make_empty (nb)
-				nb := cwel_imm_get_composition_string (input_context, Gcs_compstr, l_string.item, nb + 1)
-				Result := l_string.string
+			nb := cwel_imm_get_composition_string (input_context, {WEL_COMPOSITION_STRING_CONSTANTS}.Gcs_compstr, $buffer, 0)
+			create l_string.make_empty (nb)
+			nb := cwel_imm_get_composition_string (input_context, {WEL_COMPOSITION_STRING_CONSTANTS}.Gcs_compstr, l_string.item, nb + 1)
+			Result := l_string.string
 		end
 		
 	
 		
 feature -- Status Setting
 
-	set_comp_string (a_string: STRING) is
+	set_comp_string (a_string: STRING_GENERAL) is
 			-- Set the composition to 'a_string'
 		require
 			string_not_void: a_string /= Void
 		local
-			a: ANY
 			bool: BOOLEAN
 			l_string: WEL_STRING
 		do
-			a := a_string.to_c
 			create l_string.make (a_string)
-			bool := cwel_imm_set_composition_string (input_context, Scs_setstr, $a, 16, default_pointer, 0)
+			bool := cwel_imm_set_composition_string (input_context, {WEL_COMPOSITION_STRING_CONSTANTS}.Scs_setstr, l_string.item, 16, default_pointer, 0)
 		ensure
 			string_set: string = a_string
 		end
@@ -110,9 +108,6 @@ feature {NONE} -- Externals
 			"ImmGetCandidateListCount"
 		end	
 	
-invariant
-	has_input_context: input_context /= Void
-		
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

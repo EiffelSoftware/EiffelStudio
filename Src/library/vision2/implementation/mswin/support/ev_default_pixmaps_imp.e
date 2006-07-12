@@ -18,25 +18,25 @@ feature -- Default pixmaps
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
 		do
-			Result := build_default_icon (Idi_constants.Idi_information)
+			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_information)
 		end
 
 	Error_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing an error.
 		do
-			Result := build_default_icon (Idi_constants.Idi_error)
+			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_error)
 		end
 
 	Warning_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a warning.
 		do
-			Result := build_default_icon (Idi_constants.Idi_warning)
+			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_warning)
 		end
 
 	Question_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a question.
 		do
-			Result := build_default_icon (Idi_constants.Idi_question)
+			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_question)
 		end
 
 	Default_window_icon: EV_PIXMAP is
@@ -154,43 +154,6 @@ feature {NONE} -- Implementation
 			pixmap_imp.set_with_resource (wel_icon)
 
 			wel_icon.decrement_reference
-		end
-
-	build_default_cursor (Idc_constant: POINTER): EV_CURSOR is
-			-- Create the pixmap corresponding to the
-			-- Windows Cursor constants `Idc_constant'.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
-			wel_cursor: WEL_CURSOR
-		do
-				-- Create a default pixmap
-			create Result
-
-				-- Read the predefined Cursor.
-			create wel_cursor.make_by_predefined_id (Idc_constant)
-			wel_cursor.enable_reference_tracking
-
-				-- Initialize the pixmap with the icon
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_with_resource (wel_cursor)
-
-				-- Set the hotspot of the cursor
-			Result.set_x_hotspot (wel_cursor.x_hotspot)
-			Result.set_y_hotspot (wel_cursor.y_hotspot)
-
-			wel_cursor.decrement_reference
-		end
-
-feature {NONE} -- Constants
-
-	Idi_constants: WEL_IDI_CONSTANTS is
-		once
-			create Result
-		end
-
-	Idc_constants: WEL_IDC_CONSTANTS is
-		once
-			create Result
 		end
 
 indexing

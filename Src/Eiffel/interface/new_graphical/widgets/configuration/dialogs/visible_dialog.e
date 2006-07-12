@@ -158,19 +158,21 @@ feature {NONE} -- Agents
 		local
 			l_features: EQUALITY_HASH_TABLE [STRING, STRING]
 		do
-			if current_feature /= Void then
-				l_features := value.item (current_class).features
-				l_features.remove (current_feature)
-				if l_features.is_empty then
-					value.item (current_class).features := Void
+			if value /= Void then
+				if current_feature /= Void then
+					l_features := value.item (current_class).features
+					l_features.remove (current_feature)
+					if l_features.is_empty then
+						value.item (current_class).features := Void
+					end
+					refresh
+				elseif current_class /= Void then
+					value.remove (current_class)
+					if value.is_empty then
+						value := Void
+					end
+					refresh
 				end
-				refresh
-			elseif current_class /= Void then
-				value.remove (current_class)
-				if value.is_empty then
-					value := Void
-				end
-				refresh
 			end
 		end
 
@@ -239,6 +241,7 @@ feature {NONE} -- Implementation
 			l_class, l_feat_name, l_vis_name: STRING
 			l_cur_class: BOOLEAN
 		do
+			tree.wipe_out
 			if value /= Void then
 					-- sort class names alphabetically
 				from
@@ -253,7 +256,6 @@ feature {NONE} -- Implementation
 				l_sort.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 
 				from
-					tree.wipe_out
 					l_sort.start
 				until
 					l_sort.after

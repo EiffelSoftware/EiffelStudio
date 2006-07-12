@@ -754,7 +754,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: like accept_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -764,7 +764,7 @@ feature -- Pick and Drop
 			drawable.set_accept_cursor (a_cursor)
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: like deny_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
@@ -811,7 +811,7 @@ feature -- Pick and Drop
 		local
 			item_imp: EV_GRID_ITEM_I
 			item_int: EV_GRID_ITEM
-			a_cursor: EV_CURSOR
+			a_cursor: EV_POINTER_STYLE
 		do
 				-- Find item if any at (a_x, a_y) then call user pebble function.
 			if a_x >= 0 and then a_y >= 0 then

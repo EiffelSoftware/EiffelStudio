@@ -194,7 +194,7 @@ feature -- Implementation
 			-- Handle mouse button events.
 		local
 			app_imp: EV_APPLICATION_IMP
-			l_cursor: EV_CURSOR
+			l_cursor: EV_POINTER_STYLE
 		do
 			app_imp := app_implementation
 			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then

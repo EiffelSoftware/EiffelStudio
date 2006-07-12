@@ -116,7 +116,7 @@ feature {NONE} -- Pick and drop support
 		do
 		end
 
-	set_pointer_style (value: EV_CURSOR) is
+	set_pointer_style (value: EV_POINTER_STYLE) is
 			-- Make `value' the new cursor of the widget
 		do
 			check

@@ -102,7 +102,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble_positioning_enabled
 		end
 
-	accept_cursor: EV_CURSOR is
+	accept_cursor: EV_POINTER_STYLE is
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -117,7 +117,7 @@ feature -- Access
 			bridge_ok: Result = implementation.accept_cursor
 		end
 
-	deny_cursor: EV_CURSOR is
+	deny_cursor: EV_POINTER_STYLE is
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		do
@@ -216,7 +216,7 @@ feature -- Status setting
 				pebble_y_position = a_y
 		end
 
-	set_accept_cursor (a_cursor: EV_CURSOR) is
+	set_accept_cursor (a_cursor: like accept_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -226,7 +226,7 @@ feature -- Status setting
 			implementation.set_accept_cursor (a_cursor)
 		end
 
-	set_deny_cursor (a_cursor: EV_CURSOR) is
+	set_deny_cursor (a_cursor: like deny_cursor) is
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -292,7 +292,7 @@ feature -- Status report
 		end
 
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do

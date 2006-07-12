@@ -185,13 +185,13 @@ int foo (void *arg1, char c, FILE *file)
 EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);
 {
 	/* Print the Eiffel object `obj', with the feature `print'
-	* from GENERAL. (do not forget to put `visible' the class
-	* GENERAL in the Ace.ace file.
+	* from ANY. (do not forget to put `visible' the class
+	* ANY in the Ace.ace file.
 	*/
 
 	EIF_PROCEDURE ep;
 	EIF_TYPE_ID tid;
-	tid = eif_type_id ("GENERAL");
+	tid = eif_type_id ("ANY");
 	ep = eif_procedure ("print", tid);
 	(ep) (eif_access(obj),eif_access(obj));
 }
@@ -203,7 +203,7 @@ EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);
 			<italic>(ep)</italic>) and the second argument corresponds to the first argument of ` 
 			<italic>print</italic>'. Any Eiffel object could have been the 1st argument of 
 			<italic>(ep)</italic> since all of them inherit 
-			<italic>GENERAL</italic>. 
+			<italic>ANY</italic>. 
 		</note>
 		<paragraph/>
 		<list ordered="false">
@@ -448,7 +448,7 @@ main (int argc,char **argv,char **envp)
 			<code_block>
 EIF_PROCEDURE p_put_string;     /* 'put_string' from STD_FILES. */
 EIF_TYPE_ID tid;
-EIF_REFERENCE_FUNCTION fn_io;    /* once function `io' from GENERAL (and STD_FILES by inheritance). */
+EIF_REFERENCE_FUNCTION fn_io;    /* once function `io' from ANY (and STD_FILES by inheritance). */
 EIF_REFERENCE o_io;    /* Eiffel object `io'  returned by once function*/
 EIF_REFERENCE o_str;     /* Eiffel string */
 EIF_OBJECT i_io, i_str;    /* safe indirection pointers to ``io' and Eiffel string. */

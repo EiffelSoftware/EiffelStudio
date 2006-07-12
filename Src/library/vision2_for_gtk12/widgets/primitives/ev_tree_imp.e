@@ -444,7 +444,7 @@ feature -- Implementation
 	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
 			-- Returns data to be transported by PND mechanism.
 
-	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
+	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
 
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Set `pebble' using `pebble_function' if present.

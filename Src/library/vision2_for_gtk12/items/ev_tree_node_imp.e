@@ -205,7 +205,7 @@ feature -- PND
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
+	set_pointer_style, internal_set_pointer_style (curs: EV_POINTER_STYLE) is
 			-- Set 'pointer_style' to 'curs' (not needed)
 		do
 			check

@@ -36,8 +36,8 @@ feature {NONE} -- Initlization
 			implementation.init_predefined (a_contants)
 		end
 
-	make_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
-			-- Create pointer style using `a_pixel_buffer'.
+	make_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x, a_y: INTEGER) is
+			-- Create pointer style using `a_pixel_buffer' with hotspot (`a_x', `a_y').
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
 		local
@@ -46,6 +46,8 @@ feature {NONE} -- Initlization
 			default_create
 			l_temp_buffer := a_pixel_buffer
 			implementation.init_from_pixel_buffer (l_temp_buffer)
+			set_x_hotspot (a_x)
+			set_y_hotspot (a_y)
 		end
 
 	make_from_cursor (a_cursor: EV_CURSOR) is
@@ -62,18 +64,10 @@ feature {NONE} -- Initlization
 				l_temp := l_cursors.standard_cursor
 			end
 
-			init_from_cursor (l_temp)
+			implementation.init_from_cursor (l_temp)
 
 			set_x_hotspot (l_temp.x_hotspot)
 			set_y_hotspot (l_temp.y_hotspot)
-		end
-
-	init_from_cursor (a_cursor: EV_CURSOR) is
-			-- Initialize Current from `a_cursor'.
-		require
-			not_void: a_cursor /= Void
-		do
-			implementation.init_from_cursor (a_cursor)
 		end
 
 feature -- Command

@@ -200,8 +200,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_cursor_ptr: POINTER
 			a_window: POINTER
+			a_cursor_imp: EV_POINTER_STYLE_IMP
 		do
-			a_cursor_ptr := app_implementation.gdk_cursor_from_pixmap (a_cursor)
+			a_cursor_imp ?= a_cursor.implementation
+			a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 			if a_window /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)

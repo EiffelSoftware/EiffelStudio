@@ -166,7 +166,7 @@ feature -- Status Setting
 			Precursor {EV_POPUP_WINDOW}
 			choice_list.set_focus
 			select_closest_match
-			resize_column_to_window_width
+			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
 		end
 
 feature -- Query
@@ -877,8 +877,8 @@ feature {NONE} -- Implementation
 			-- Collect all nodes of `a_name', including itself and its children.
 		require
 			a_name_not_void: a_name /= Void
-			full_list_not_void: full_list /= Void
-			a_start_pos_valid: a_start_pos <= full_list.upper and then a_start_pos >= full_list.lower
+			a_list_not_void: a_list /= Void
+			a_start_pos_valid: a_start_pos <= a_list.upper and then a_start_pos >= a_list.lower
 		local
 			l_count: INTEGER
 			i: INTEGER

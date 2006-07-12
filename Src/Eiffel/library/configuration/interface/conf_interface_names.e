@@ -120,7 +120,7 @@ feature {NONE} -- Target names and descriptions
 	target_msil_generation_type_name: STRING is "Generation type"
 	target_msil_generation_type_description: STRING is "Type of binary to generate."
 	target_msil_key_file_name_name: STRING is "Signing key"
-	target_msil_key_file_name_description: STRING is "Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChoose a new, non existing filename to create a new key file."
+	target_msil_key_file_name_description: STRING is "Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file."
 	target_msil_use_optimized_precompile_name: STRING is "Use optimized precompile"
 	target_msil_use_optimized_precompile_description: STRING is "Use an optimized version of a precompile?"
 	target_multithreaded_name: STRING is "Multithreaded"

@@ -9,7 +9,7 @@ class
 	
 feature {NONE} -- Language Identifiers 
 
-	identifiers: HASH_TABLE [STRING, INTEGER] is
+	identifiers: HASH_TABLE [STRING_32, INTEGER] is
 			-- Language identifiers.
 			-- The numeric constants are taken from Microsoft documentation at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_238z.asp

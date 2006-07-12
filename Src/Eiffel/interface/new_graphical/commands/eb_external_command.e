@@ -216,25 +216,27 @@ feature{NONE} -- Command substitution
 	sub_string_list: ARRAYED_LIST [STRING] is
 			-- List of string used for command substitution.
 		once
-			create Result.make (5)
+			create Result.make (7)
 			Result.extend ("$class_name")
 			Result.extend ("$file_name")
 			Result.extend ("$directory_name")
 			Result.extend ("$w_code")
 			Result.extend ("$f_code")
 			Result.extend ("$group_path")
+			Result.extend ("$line")
 		end
 
 	sub_action_list: ARRAYED_LIST [ PROCEDURE [ANY, TUPLE]] is
 			-- List of actions used for command substitution
 		once
-			create Result.make (6)
+			create Result.make (7)
 			Result.extend (agent on_substitute_class_name)
 			Result.extend (agent on_substitute_file_name)
 			Result.extend (agent on_substitute_directory_name)
 			Result.extend (agent on_substitute_w_code)
 			Result.extend (agent on_substitute_f_code)
 			Result.extend (agent on_substitute_group_path)
+			Result.extend (agent on_substitute_line)
 		end
 
 	sub_class_name: INTEGER is 1
@@ -243,6 +245,7 @@ feature{NONE} -- Command substitution
 	sub_w_code: INTEGER is 4
 	sub_f_code: INTEGER is 5
 	sub_group_path: INTEGER is 6
+	sub_line: INTEGER is 7
 
 	show_warning_dialog (msg: STRING) is
 			-- Show a warning dialog to display `msg'.
@@ -258,6 +261,8 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		local
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
@@ -283,6 +288,8 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		local
 			cn: STRING
 			dev: EB_DEVELOPMENT_WINDOW
@@ -306,6 +313,8 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		local
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
@@ -329,6 +338,8 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		local
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
@@ -358,6 +369,8 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		do
 			if workbench.system_defined then
 				cmd.replace_substring_all (sub_string_list.i_th (sub_w_code), project_location.workbench_path)
@@ -372,11 +385,48 @@ feature{NONE} -- Command substitution
 			-- call an agent to substitute it.
 		require
 			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
 		do
 			if workbench.system_defined then
 				cmd.replace_substring_all (sub_string_list.i_th (sub_f_code), project_location.final_path)
 			else
 				show_warning_dialog (Warning_messages.w_no_system_defined)
+				set_is_command_ok (False)
+			end
+		end
+
+	on_substitute_line (cmd: STRING; sub_str: STRING) is
+			-- If `cmd' has substring (case insensitive) `sub_str',
+			-- call an agent to substitute it.
+		require
+			is_command_ok_is_true: is_command_ok = True
+			cmd_attached: cmd /= Void
+			sub_str_attached: sub_str /= Void
+		local
+			cn: STRING
+			dev: EB_DEVELOPMENT_WINDOW
+			l_editor_tool: EB_EDITOR_TOOL
+			l_text_area: EB_SMART_EDITOR
+			l_text_displayed: SMART_TEXT
+			l_cursor: EIFFEL_EDITOR_CURSOR
+		do
+			dev := Window_manager.last_focused_development_window
+			if dev /= Void then
+				l_editor_tool := dev.editor_tool
+				if l_editor_tool /= Void then
+					l_text_area := l_editor_tool.text_area
+					if l_text_area /= Void then
+						l_text_displayed := l_text_area.text_displayed
+						if l_text_displayed /= Void then
+							l_cursor := l_text_displayed.cursor
+							if l_cursor /= Void then
+								cmd.replace_substring_all (sub_string_list.i_th (sub_line), l_cursor.y_in_lines.out)
+							end
+						end
+					end
+				end
+			else
 				set_is_command_ok (False)
 			end
 		end

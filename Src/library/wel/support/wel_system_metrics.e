@@ -275,6 +275,13 @@ feature -- Status report
 			Result := cwin_get_system_metrics (Sm_dbcsenabled) /= 0
 		end
 
+	imm_enabled: BOOLEAN is 
+			-- Is the IMM enabled (works only for Windows 2000 and 
+			-- and Asian locale machines (Chinese, Japanese, Korean)) 
+		do 
+			Result := cwin_get_system_metrics (Sm_immenabled) /= 0 
+		end 
+
 	debug_installed: BOOLEAN is
 			-- Is the debugging version of USER.EXE installed?
 		do

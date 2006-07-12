@@ -846,7 +846,10 @@ feature {NONE} -- Implementation
 			if real_feature /= Void then
 				last_type := real_feature.type
 			else
-				last_type := Void
+					-- Could not find an ancestor version, most likely code where Precursor appears
+					-- has been replicated. We simply use the `current_feature' type as best approximation.
+					-- This should not happen when replication is properly implemented in compiler.
+				last_type := current_feature.type
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.commit
@@ -1090,6 +1093,7 @@ feature {NONE} -- Implementation
 					l_as.expression.process (Current)
 				else
 					if l_as.target /= Void then
+						reset_last_class_and_type
 						l_as.target.process (Current)
 					else
 						if not expr_type_visiting then
@@ -1785,7 +1789,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_double_quote)
 				if not has_error_internal then
-					text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
+					text_formatter_decorator.process_operator_text (l_feat.name, l_feat)
 				else
 					text_formatter_decorator.process_basic_text (l_as.visual_name)
 				end
@@ -1816,7 +1820,7 @@ feature {NONE} -- Implementation
 					l_feat /= Void
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, False)
+					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.feature_name)
 				end
@@ -1859,7 +1863,7 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.put_space
 			text_formatter_decorator.process_symbol_text (ti_double_quote)
 			if not has_error_internal then
-				text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
+				text_formatter_decorator.process_operator_text (l_feat.alias_name, l_feat)
 			else
 				text_formatter_decorator.process_basic_text (l_as.alias_name.value)
 			end

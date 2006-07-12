@@ -344,24 +344,6 @@ feature -- Input
 			count := read (read_descriptor, mp.item, nb_char)
 			if count > 0 then
 				create last_string.make_from_c (mp.item)
---				from
---					create last_string.make (count)
---					if last_string = Void then
---						create last_string.make (count)
---					else
---						last_string.clear_all
---						if last_string.capacity < count then
---							last_string.resize (count)
---						end
---					end
---					i := 0
---				until
---					i = count
---				loop
---					cc := mp.read_natural_8 (i)
---					last_string.append_character (cc.to_character)
---					i := i + 1
---				end
 			else
 				last_string := Void
 				if count = -1 then

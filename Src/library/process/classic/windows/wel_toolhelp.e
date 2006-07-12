@@ -10,7 +10,7 @@ class
 inherit
 	WEL_PROCESS_TOOLHELP_CONSTANTS
 
-feature
+feature -- Access
 
 	process_id_pair_list: LINKED_LIST [ WEL_PROCESS_ID_PAIR ] is
 			-- List of process id pairs taken from a system snapshot.

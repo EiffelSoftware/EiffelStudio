@@ -23,7 +23,7 @@ inherit
 			{NONE}all
 		end
 
-	WEL_TOOLHELP
+	PROCESS_UTILITY
 		export
 			{NONE}all
 		undefine
@@ -433,7 +433,7 @@ feature{NONE} -- Implementation
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER] is
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		local
-			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
+			p_tbl: LINKED_LIST [TUPLE [parent_id: INTEGER; process_id: INTEGER]]
 		do
 			create {LINKED_LIST [INTEGER]}Result.make
 			p_tbl := process_id_pair_list
@@ -444,7 +444,7 @@ feature{NONE} -- Implementation
 					p_tbl.after
 				loop
 					if p_tbl.item.parent_id = parent_id then
-						Result.extend (p_tbl.item.id)
+						Result.extend (p_tbl.item.process_id)
 					end
 					p_tbl.forth
 				end

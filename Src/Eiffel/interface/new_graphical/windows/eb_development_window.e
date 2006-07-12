@@ -112,6 +112,11 @@ inherit
 			{NONE} All
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create {EB_WINDOW_MANAGER}
 	make,
 	make_with_session_data,
@@ -242,10 +247,6 @@ feature {NONE} -- Initialization
 			else
 				on_project_unloaded
 			end
-
-				-- Create feature position table
-			create feature_positions.make (1)
-			feature_positions.compare_objects
 
 			window.move_actions.force_extend (agent window_moved)
 
@@ -2837,9 +2838,6 @@ feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS} -- Feature Clauses
 	feature_clauses: HASH_TABLE [ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]], STRING]
 			-- List of features clauses for Current window hashed by the .NET name of the consumed_type.
 
-	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
-			-- Features indexed by line position in class text (for .NET features).
-
 	feature_locating: BOOLEAN
 			-- Is feature tool locating a feature?
 
@@ -3033,7 +3031,6 @@ feature {NONE} -- Implementation
 							if changed then
 									-- user has already chosen not to save the file
 									-- do not ask again
-								Feature_positions.wipe_out
 								editor_tool.text_area.no_save_before_next_load
 							end
 						end
@@ -3607,17 +3604,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				if not managed_main_formatters.first.selected then
-					managed_main_formatters.first.execute
-				end
-					-- FIXME NC: Doesn't work properly for .NET features
-					-- .NET formatted feature.
-				begin_index := feature_positions.item (feat_as)
-				if platform_constants.is_windows then
-					tmp_text := displayed_class.text.substring (1, begin_index)
-					offset := tmp_text.occurrences('%N')
-				end
-				editor_tool.text_area.scroll_to_when_ready (begin_index // 2) -- - offset)
+					-- Nothing for .NET features for now.
+				fixme ("It should be implemented.")
 			end
 		end
 

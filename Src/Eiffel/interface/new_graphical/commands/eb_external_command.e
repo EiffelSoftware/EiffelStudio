@@ -416,14 +416,8 @@ feature{NONE} -- Command substitution
 				l_editor_tool := dev.editor_tool
 				if l_editor_tool /= Void then
 					l_text_area := l_editor_tool.text_area
-					if l_text_area /= Void then
-						l_text_displayed := l_text_area.text_displayed
-						if l_text_displayed /= Void then
-							l_cursor := l_text_displayed.cursor
-							if l_cursor /= Void then
-								cmd.replace_substring_all (sub_string_list.i_th (sub_line), l_cursor.y_in_lines.out)
-							end
-						end
+					if l_text_area /= Void and then not l_text_area.is_empty then
+						cmd.replace_substring_all (sub_string_list.i_th (sub_line), l_text_area.cursor_y_position.out)
 					end
 				end
 			else

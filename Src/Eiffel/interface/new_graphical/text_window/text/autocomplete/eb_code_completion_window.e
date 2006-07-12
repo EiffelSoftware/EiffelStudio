@@ -443,11 +443,13 @@ feature {NONE} -- Option behaviour
 		local
 			l_name: like name_type
 			l_index: INTEGER
+			l_list: like choice_list
 		do
+			l_list := choice_list
 			lock_update
 				-- Save selected item
-			if not choice_list.selected_rows.is_empty then
-				l_name ?= choice_list.selected_rows.first.data
+			if not l_list.selected_rows.is_empty then
+				l_name ?= l_list.selected_rows.first.data
 				check
 					l_name_not_void: l_name /= Void
 				end
@@ -461,9 +463,9 @@ feature {NONE} -- Option behaviour
 			if l_index = 0 then
 				ensure_item_selection
 			else
-				choice_list.remove_selection
-				choice_list.row (l_index).enable_select
-				choice_list.row (l_index).ensure_visible
+				l_list.remove_selection
+				l_list.row (l_index).enable_select
+				l_list.row (l_index).ensure_visible
 			end
 			resize_column_to_window_width
 			unlock_update
@@ -474,18 +476,20 @@ feature {NONE} -- Option behaviour
 		local
 			l_index: INTEGER
 			l_row: EV_GRID_ROW
+			l_list: like choice_list
 		do
+			l_list := choice_list
 			lock_update
-			if not choice_list.selected_rows.is_empty then
-				l_index := choice_list.selected_rows.first.index
+			if not l_list.selected_rows.is_empty then
+				l_index := l_list.selected_rows.first.index
 			end
 			build_displayed_list (buffered_input)
-			if l_index > 0 and then choice_list.row_count > 0 then
+			if l_index > 0 and then l_list.row_count > 0 then
 				check
-					l_index_valid: l_index <= choice_list.row_count
+					l_index_valid: l_index <= l_list.row_count
 				end
-				choice_list.remove_selection
-				l_row := choice_list.row (l_index)
+				l_list.remove_selection
+				l_row := l_list.row (l_index)
 				if is_displayed then
 					if l_row.parent_row /= Void and then
 						l_row.parent_row.is_expandable and then
@@ -736,15 +740,13 @@ feature {NONE} -- Implementation
 			l_name: STRING
 		do
 			if not choice_list.selected_rows.is_empty then
-				if rebuild_list_during_matching then
-					l_row := choice_list.selected_rows.first
-					l_name_item ?= l_row.data
-					check
-						l_name_item_not_void: l_name_item /= Void
-					end
-					l_name := l_name_item.insert_name
-					code_completable.complete_class_from_window (l_name, '%U', remainder)
+				l_row := choice_list.selected_rows.first
+				l_name_item ?= l_row.data
+				check
+					l_name_item_not_void: l_name_item /= Void
 				end
+				l_name := l_name_item.insert_name
+				code_completable.complete_class_from_window (l_name, '%U', remainder)
 			else
 				if not buffered_input.is_empty then
 					code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)
@@ -762,16 +764,18 @@ feature {NONE} -- Implementation
 			-- Resize window to column width
 		local
 			i: INTEGER
+			l_list: like choice_list
 		do
-			if choice_list.column_count > 0 and then choice_list.row_count > 0 then
-				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
-				choice_list.column (1).set_width (i)
-				if choice_list.vertical_scroll_bar.is_displayed then
-					choice_list.set_minimum_width (i + choice_list.vertical_scroll_bar.width)
+			l_list := choice_list
+			if l_list.column_count > 0 and then l_list.row_count > 0 then
+				i := l_list.column (1).required_width_of_item_span (1, l_list.row_count) + 3
+				l_list.column (1).set_width (i)
+				if l_list.vertical_scroll_bar.is_displayed then
+					l_list.set_minimum_width (i + l_list.vertical_scroll_bar.width)
 				else
-					choice_list.set_minimum_width (i)
+					l_list.set_minimum_width (i)
 				end
-				choice_list.set_minimum_width (0)
+				l_list.set_minimum_width (0)
 			end
 		end
 

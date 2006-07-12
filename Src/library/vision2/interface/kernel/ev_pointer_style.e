@@ -19,11 +19,12 @@ inherit
 create
 	default_create,
 	make_predefined,
-	make_from_pixel_buffer,
-	make_from_cursor
+	make_with_pixel_buffer,
+	make_with_pixmap,
+	make_with_cursor
 
 convert
-	make_from_cursor ({EV_CURSOR})
+	make_with_cursor ({EV_CURSOR})
 
 feature {NONE} -- Initlization
 
@@ -36,7 +37,7 @@ feature {NONE} -- Initlization
 			implementation.init_predefined (a_contants)
 		end
 
-	make_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x, a_y: INTEGER) is
+	make_with_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x, a_y: INTEGER) is
 			-- Create pointer style using `a_pixel_buffer' with hotspot (`a_x', `a_y').
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
@@ -50,7 +51,14 @@ feature {NONE} -- Initlization
 			set_y_hotspot (a_y)
 		end
 
-	make_from_cursor (a_cursor: EV_CURSOR) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x, a_y: INTEGER) is
+			-- Create pointer style using `a_pixmap' with hotspot (`a_x', `a_y').
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+		do
+		end
+
+	make_with_cursor (a_cursor: EV_CURSOR) is
 			-- Initialize from `a_cursor'.
 		local
 			l_temp: EV_CURSOR

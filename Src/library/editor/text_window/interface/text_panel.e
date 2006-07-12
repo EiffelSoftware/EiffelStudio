@@ -341,6 +341,21 @@ feature -- Query
 			Result := text_displayed.number_of_lines
 		end
 
+	number_of_lines_displayed: INTEGER is
+			-- Number of lines currently displayed on the screen.	
+		do
+			Result := viewable_height // line_height
+		end
+
+	number_of_lines_displayed_from_text: INTEGER is
+			-- Number of lines currently displayed on the screen, excluding the white space visible below the actual text.	
+		do
+			Result := number_of_lines_displayed
+			if (first_line_displayed + Result) > text_displayed.number_of_lines then
+				Result := text_displayed.number_of_lines - first_line_displayed + 1
+			end
+		end
+
 	left_margin_width: INTEGER is
 			-- Width of left margin
 		do
@@ -667,21 +682,6 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 			-- Horizontal offset of the display.
 		do
 			Result := editor_viewport.x_offset
-		end
-
-	number_of_lines_displayed: INTEGER is
-			-- Number of lines currently displayed on the screen.	
-		do
-			Result := viewable_height // line_height
-		end
-
-	number_of_lines_displayed_from_text: INTEGER is
-			-- Number of lines currently displayed on the screen, excluding the white space visible below the actual text.	
-		do
-			Result := number_of_lines_displayed
-			if (first_line_displayed + Result) > text_displayed.number_of_lines then
-				Result := text_displayed.number_of_lines - first_line_displayed + 1
-			end
 		end
 
 	number_of_lines_in_block: INTEGER is

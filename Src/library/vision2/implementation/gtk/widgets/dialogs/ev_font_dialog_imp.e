@@ -72,6 +72,7 @@ feature -- Access
 			exit_loop: BOOLEAN
 			split_values: LIST [STRING_32]
 			selected_font_name: STRING_32
+			l_font_item: STRING_32
 		do
 			--| FIXME IEK Refactor this with default font code in EV_APPLICATION_IMP
 			create Result
@@ -87,13 +88,10 @@ feature -- Access
 			until
 				exit_loop or else font_names.after
 			loop
-				if font_desc.substring_index (font_names.item.as_lower, 1) = 1 then
-					if selected_font_name = Void then
-						selected_font_name := font_names.item
-					else
-						if font_names.item.count > selected_font_name.count then
-							selected_font_name := font_names.item
-						end
+				l_font_item := font_names.item
+				if font_desc.substring_index (l_font_item.as_lower, 1) = 1 then
+					if selected_font_name = Void or else font_names.item.count > selected_font_name.count then
+						selected_font_name := l_font_item
 					end
 					exit_loop := selected_font_name.count = font_desc.count
 						-- If the match is perfect then we exit, otherwise we keep looping for the best match.

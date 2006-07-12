@@ -159,12 +159,26 @@ feature {NONE} -- Implementation
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
-			line_nb: INTEGER
+			line_nb, first_line, cursor_line: INTEGER
+
 			development_window: EB_DEVELOPMENT_WINDOW
 		do
 			development_window := target
 			cmd_string := command_shell_name
-			line_nb := development_window.editor_tool.text_area.first_line_displayed
+				-- We ensure that we target the editor line to the cursor position, however if the cursor
+				-- is not visible we take the `first_line_displayed'.
+			cursor_line := development_window.editor_tool.text_area.text_displayed.cursor.y_in_lines
+			first_line := development_window.editor_tool.text_area.first_line_displayed
+			if first_line > cursor_line then
+				line_nb := first_line
+			elseif
+				first_line < cursor_line and
+				cursor_line < first_line + development_window.editor_tool.text_area.number_of_lines_displayed
+			then
+				line_nb := cursor_line
+			else
+				line_nb := first_line
+			end
 			if not cmd_string.is_empty then
 				replace_target (cmd_string, window_file_name)
 				cmd_string.replace_substring_all ("$line", line_nb.out)

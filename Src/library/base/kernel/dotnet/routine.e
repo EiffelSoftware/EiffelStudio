@@ -60,7 +60,7 @@ feature -- Access
 					if l_pos = 0 then
 						l_item := target_object
 					else
-						if is_inline_agent then	
+						if is_inline_agent then
 							l_item := l_internal.item (l_pos)
 						else
 							l_item := l_internal.item (l_pos - 1)
@@ -107,7 +107,7 @@ feature -- Access
 		ensure
 			empty_operands_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	callable: BOOLEAN is
@@ -130,16 +130,35 @@ feature -- Status report
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
 			-- Are `args' valid operands for this routine?
+		local
+			i, arg_type_code: INTEGER
+			arg: ANY
+			int: INTERNAL
 		do
+			create int
 			if args = Void or open_map = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
 				Result := (open_map = Void)
-			else
-					-- True for the moment. If it is not valid then an
-					-- exception will be thrown by the .NET runtime during
-					-- feature call.
-				Result := True
+			elseif open_map /= Void and then int.generic_count (args) >= open_map.count then
+				from
+					Result := True
+					i := 1
+				until
+					i > open_map.count or not Result
+				loop
+					arg_type_code := args.item_code (i)
+					if arg_type_code = {TUPLE}.reference_code then
+						arg := args.item (i)
+						Result := arg = Void or else
+							int.type_conforms_to (int.dynamic_type (arg), open_operand_type (i))
+					else
+							-- We provided a closed argument which is expanded, we have to ensure
+							-- that open type has the exact same type.
+						Result := int.generic_dynamic_type (args, i) = open_operand_type (i)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -266,9 +285,9 @@ feature {ROUTINE} -- Implementation
 	frozen is_inline_agent: BOOLEAN
 			-- Is the target feature an inline agent
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: OPEN_ARGS; 
+	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: OPEN_ARGS;
 						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN) is
-			-- Initialize object. 
+			-- Initialize object.
 		require
 			args_not_void: args /= Void
 		local
@@ -288,7 +307,7 @@ feature {ROUTINE} -- Implementation
 				create l_internal.make (nb - 1)
 				i := 2
 			end
-			
+
 			if nb > 0 then
 				from
 					j := 0
@@ -307,7 +326,7 @@ feature {ROUTINE} -- Implementation
 			else
 				open_map := Void
 			end
-			
+
 			compute_is_cleanup_needed (args)
 		end
 
@@ -370,73 +389,24 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	open_operand_type (i: INTEGER): INTEGER is
 			-- Type of `i'th open operand.
 		require
 			positive: i >= 1
 			within_bounds: i <= open_count
+		local
+			l_internal: INTERNAL
 		do
 			if open_types = Void then
 				create open_types.make (1, open_map.count)
 			end
 			Result := open_types.item (i)
 			if Result = 0 then
-				Result := eif_gen_param_id (
-					- 1,
-					eif_gen_create (Current, 2),
-					i)
+				create l_internal
+				Result := l_internal.generic_dynamic_type_of_type (
+					l_internal.generic_dynamic_type (Current, 2), i)
 				open_types.force (Result, i)
-			end
-		end
-
-feature {NONE} -- Externals
-
-	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
-			-- Does `type1' conform to `type2'?
-		do
-			check
-				False
-			end
-		end
-
-	eif_gen_create (obj: ANY; pos: INTEGER): POINTER is
-			-- Adapt `args' for `idx' and `val'.
-		do
-			check
-				False
-			end
-		end
-
-	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
-			-- Type of generic parameter in `obj' at position `pos'.
-		do
-			check
-				False
-			end
-		end
-
-	eif_gen_typecode (obj: POINTER; pos: INTEGER): INTEGER_8 is
-			-- Code for generic parameter `pos' in `obj'.
-		do
-			check
-				False
-			end
-		end
-
-	eif_gen_typecode_str (obj: POINTER): STRING is
-			-- Code name for generic parameter `pos' in `obj'.
-		do
-			check
-				False
-			end
-		end
-
-	eif_gen_tuple_typecode_str (obj: POINTER): STRING is
-			-- Code name for generic parameter `pos' in `obj'.
-		do
-			check
-				False
 			end
 		end
 

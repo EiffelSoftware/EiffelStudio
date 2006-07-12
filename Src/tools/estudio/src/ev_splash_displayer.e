@@ -137,6 +137,7 @@ feature -- Access
 				cell.set_background_pixmap (pix)
 				cell.set_minimum_size (pix.width , pix.height)
 				pixmap_box.extend (cell)
+				pixmap_box.disable_item_expand (cell)
 				pixmap_box.extend (create {EV_CELL})
 
 				set_size (pix.width, pix.height)
@@ -192,12 +193,16 @@ feature -- Change
 			b: EV_VERTICAL_BOX
 			h: EV_HORIZONTAL_BOX
 			l: EV_LABEL
+			c: EV_COLOR
 		do
 			if verbose_panel = Void then
 				create verbose_panel
 
 				create b
-				b.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0,0,90))
+				create c.make_with_8_bit_rgb (0,0,90)
+
+				main_box.set_background_color (c)
+				b.set_background_color (c)
 				b.set_foreground_color (Stock_colors.white)
 				b.set_border_width (10)
 				b.extend (verbose_panel)
@@ -209,6 +214,7 @@ feature -- Change
 				h.extend (l)
 				h.disable_item_expand (l)
 				b.extend (h)
+				main_box.propagate_background_color
 				b.propagate_background_color
 				b.propagate_foreground_color
 				main_box.extend (b)

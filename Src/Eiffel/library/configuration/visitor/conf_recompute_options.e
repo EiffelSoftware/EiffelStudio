@@ -61,7 +61,7 @@ feature -- Visit nodes
 				a_target.set_description (new_target.description)
 				a_target.set_external_includes (new_target.internal_external_include)
 				a_target.set_external_objects (new_target.internal_external_object)
-				a_target.set_external_libraries (new_target.internal_libraries)
+				a_target.set_external_libraries (new_target.internal_external_library)
 				a_target.set_external_ressources (new_target.internal_external_resource)
 				a_target.set_external_make (new_target.internal_external_make)
 				a_target.set_pre_compile (new_target.internal_pre_compile_action)

@@ -253,6 +253,7 @@ feature {NONE} -- Implementation
 			an_options_not_void: an_options /= Void
 			an_inherited_options_not_void: an_inherited_options /= Void
 			properties_not_void: properties /= Void
+			debug_clauses_not_void: debug_clauses /= Void
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_debug: STRING

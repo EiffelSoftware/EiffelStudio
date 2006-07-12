@@ -1239,19 +1239,6 @@ feature {NONE} -- Implementation
 			-- Initialize `properties' for general target settings.
 		require
 			current_target: current_target /= Void
-		local
-			l_string_prop: STRING_PROPERTY [STRING_32]
-			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
-			l_root_prop: DIALOG_PROPERTY [CONF_ROOT]
-			l_version_prop: DIALOG_PROPERTY [CONF_VERSION]
-			l_file_rule_prop: FILE_RULE_PROPERTY
-			l_targ_ord: ARRAYED_LIST [CONF_TARGET]
-			l_base_targets: ARRAYED_LIST [STRING_32]
-			l_done: BOOLEAN
-			l_root_dial: ROOT_DIALOG
-			l_extends: BOOLEAN
-			l_bool_prop: BOOLEAN_PROPERTY
 		do
 			if properties /= Void then
 				properties.destroy
@@ -1527,19 +1514,6 @@ feature {NONE} -- Implementation
 			-- Initialize `properties' for advanced target settings.
 		require
 			current_target: current_target /= Void
-		local
-			l_string_prop: STRING_PROPERTY [STRING_32]
-			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
-			l_extends: BOOLEAN
-			l_bool_prop: BOOLEAN_PROPERTY
-			l_pf_choices: ARRAYED_LIST [STRING_32]
-			l_dir_prop: DIRECTORY_PROPERTY
-			l_file_prop: FILE_PROPERTY
-			l_key_file_prop: KEY_FILE_PROPERTY
-			l_installed_runtimes: DS_LINEAR [STRING]
-			l_il_env: IL_ENVIRONMENT
-			l_il_choices: ARRAYED_LIST [STRING_32]
-			l_il_version: STRING
 		do
 			if properties /= Void then
 				properties.destroy

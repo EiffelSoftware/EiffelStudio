@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb1, hb: EV_HORIZONTAL_BOX
 			cl: EV_CELL
-			rb: EV_RADIO_BUTTON
 		do
 			Precursor {EV_DIALOG}
 
@@ -59,10 +58,10 @@ feature {NONE} -- Initialization
 			create element_container
 			vb.extend (element_container)
 
-			create rb.make_with_text_and_action (task_pre, agent on_pre)
-			element_container.extend (rb)
-			create rb.make_with_text_and_action (task_post, agent on_post)
-			element_container.extend (rb)
+			create pre.make_with_text (task_pre)
+			element_container.extend (pre)
+			create post.make_with_text (task_post)
+			element_container.extend (post)
 
 			append_small_margin (vb)
 
@@ -93,8 +92,12 @@ feature -- Access
 	is_ok: BOOLEAN
 			-- Did the dialog close with an ok?
 
-	is_pre: BOOLEAN
+	is_pre: BOOLEAN is
 			-- Was pre compilation as type of the new task choosen?
+		do
+			Result := pre.is_selected
+		end
+
 	is_post: BOOLEAN is
 			-- Was post compilation as type of the new external choosen?
 		do
@@ -106,6 +109,9 @@ feature {NONE} -- GUI elements
 	element_container: EV_VERTICAL_BOX
 			-- Container to add new elements.
 
+	pre: EV_RADIO_BUTTON
+	post: EV_RADIO_BUTTON
+
 	cancel_button: EV_BUTTON
 			-- Cancel button.
 
@@ -113,18 +119,6 @@ feature {NONE} -- GUI elements
 			-- Ok Button.
 
 feature {NONE} -- Agents
-
-	on_pre is
-			-- Pre compilation was choosen.
-		do
-			is_pre := True
-		end
-
-	on_post is
-			-- Post compilation was choosen.
-		do
-			is_pre := False
-		end
 
 	on_ok is
 			-- Ok was pressed.

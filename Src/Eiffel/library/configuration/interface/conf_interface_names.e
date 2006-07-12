@@ -162,7 +162,7 @@ feature {NONE} -- Target names and descriptions
 	external_resource_tree: STRING is "Resources"
 
 	task_pre_tree: STRING is "Pre compilation tasks"
-	task_post_tree: STRING is "Post compilatin tasks"
+	task_post_tree: STRING is "Post compilation tasks"
 
 	task_pre: STRING is "pre compilation"
 	task_post: STRING is "post compilation"
@@ -276,7 +276,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Missing class export", w_export_class_missing)
 			Result.force ("Incompatible types equality", w_vweq)
 			Result.force ("Renaming unknown class", w_renaming_unknown_class)
-			Result.force ("Options unknown class.", w_option_unknown_class)
+			Result.force ("Options unknown class", w_option_unknown_class)
 		end
 
 	warning_descriptions: HASH_TABLE [STRING, STRING] is

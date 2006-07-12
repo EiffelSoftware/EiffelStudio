@@ -26,12 +26,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	WEL_INPUT_METHOD_EDITOR_CONSTANTS
+
+	WEL_LANGUAGE_IDENTIFIERS
 		export
 			{NONE} all
 		end
-
+		
 create
 	make
 
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 			-- Notification loop
 		local
-			tmp_str: STRING
+			tmp_str: STRING_32
 			cnt: INTEGER
 		do
 			if control = font_list then
@@ -234,15 +234,11 @@ feature {NONE} -- Implementation
 			-- Standard window background color used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined brush.
-		require
-			background_brush_not_set: background_brush = Void
 		once
 			create Result.make_by_sys_color (Color_btnface + 1)
-		ensure
-			result_not_void: Result /= Void
 		end
 
-	Title: STRING is 
+	Title: STRING_32 is 
 			-- Window's title
 		do
 			create Result.make_from_string ("Unicode Example")
@@ -296,7 +292,7 @@ feature {NONE} -- Implementation
 			-- Add the available input locales to the list
 		local
 			cnt, langid: INTEGER
-			lang_string: STRING
+			lang_string: STRING_32
 		do
 			input_locales := imm.input_locales
 			from
@@ -372,7 +368,7 @@ feature {NONE} -- Implementation
 			tree_view.select_item (tree_view_item1)
 		end
 	
-	change_controls (str: STRING) is
+	change_controls (str: STRING_32) is
 			-- Change the controls text to that of rich edit
 		local
 			tvitem: WEL_TREE_VIEW_ITEM
@@ -470,11 +466,11 @@ feature {NONE} -- Implementation
 				tree_view.set_font (wel_font)
 		end
 		
-	ime_properties: STRING is
+	ime_properties: STRING_32 is
 			-- Parse the properties of the current IME into string format
 		local
 			tmp_prop: INTEGER
-			tmp_string: STRING
+			tmp_string: STRING_32
 		do
 			create tmp_string.make (0)
 			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Igp_property)
@@ -510,10 +506,10 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (tmp_string) 
 		end		
 		
-	ime_conversion_status: STRING is
+	ime_conversion_status: STRING_32 is
 			-- Parse the properties of the current IME conversion mode into string format
 		local
-			tmp_string: STRING
+			tmp_string: STRING_32
 			conv_mode, sent_mode: INTEGER
 		do
 			create tmp_string.make (0)

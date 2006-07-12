@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 			editor.update_editors
 		end
 
-	set_all_pointer_styles (cursor: EV_CURSOR) is
+	set_all_pointer_styles (cursor: EV_POINTER_STYLE) is
 			-- Assign a pointer style to all figures in
 			-- `world' and `drawing_area'.
 		do

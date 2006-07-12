@@ -70,9 +70,9 @@ feature {EV_ANY_HANDLER} -- Initialization
 			default_create_called_set: default_create_called
 			is_in_default_state: is_in_default_state
 		end
-		
+
 feature -- Access
-		
+
 	data: ANY
 		-- Arbitrary user data may be stored here.
 
@@ -87,7 +87,7 @@ feature -- Element change
 		ensure
 			data_assigned: data = some_data
 		end
-		
+
 feature -- Command
 
 	destroy is
@@ -115,7 +115,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics
 			-- toolkit.
 			--| The `Current' object serves only as an interface
-			--| it does not do any actual computation or interaction 
+			--| it does not do any actual computation or interaction
 			--| with the native graphics toolkit. These tasks are
 			--| performed by the `implementation' object. Every
 			--| descendant of EV_ANY must have an `implementation'
@@ -148,7 +148,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY} -- Implementation
 
-	create_implementation is 
+	create_implementation is
 			-- Create `implementation'.
 			-- Must be defined in each descendant to create the
 			-- appropriate `implementation' object.
@@ -175,7 +175,7 @@ feature {EV_ANY} -- Implementation
 
 	is_initialized: BOOLEAN
 			-- Has `Current' been initialized properly?
-			
+
 feature -- Duplication
 
 	copy (other: like Current) is
@@ -190,6 +190,7 @@ feature -- Duplication
 				-- EV_FONT
 				-- EV_COLOR
 				-- EV_CURSOR
+				-- EV_POINTER_STYLE
 				-- EV_PIXMAP
 		end
 
@@ -209,7 +210,7 @@ feature {NONE} -- Contract support
 			end
 			Result := True
 		end
-		
+
 	default_create_called: BOOLEAN
 			-- Has `default_create' been called?
 

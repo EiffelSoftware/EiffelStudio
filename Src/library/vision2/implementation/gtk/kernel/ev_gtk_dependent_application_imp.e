@@ -132,6 +132,7 @@ feature -- Implementation
 			split_values: LIST [STRING_32]
 			i, l_font_names_count: INTEGER
 			l_font_item: STRING_32
+			l_sans: STRING_32
 		do
 			from
 				font_desc := default_font_description.as_lower
@@ -140,15 +141,18 @@ feature -- Implementation
 				i := 1
 				l_font_names_count := font_names.count
 					-- A default is needed should no enumerable fonts be found on the system.
-				default_font_name_internal := once "Sans"
+				l_sans := once "Sans"
+				default_font_name_internal := l_sans
 			until
 				exit_loop or else i > l_font_names_count
 			loop
 				l_font_item := font_names_as_lower [i]
 				if font_desc.substring_index (l_font_item, 1) = 1 then
-						-- Set default font name to font name
-					default_font_name_internal := font_names [i]
-					exit_loop := True
+					if default_font_name_internal = l_sans or else l_font_item.count > default_font_name_internal.count then
+							default_font_name_internal := font_names [i]
+					end
+					exit_loop := default_font_name_internal.count = font_desc.count
+						-- If the match is perfect then we exit, otherwise we keep looping for the best match.
 				end
 				i := i + 1
 			end

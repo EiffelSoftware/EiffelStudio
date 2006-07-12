@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			cmd_string := command_shell_name
 				-- We ensure that we target the editor line to the cursor position, however if the cursor
 				-- is not visible we take the `first_line_displayed'.
-			cursor_line := development_window.editor_tool.text_area.text_displayed.cursor.y_in_lines
+			cursor_line := development_window.editor_tool.text_area.cursor_y_position
 			first_line := development_window.editor_tool.text_area.first_line_displayed
 			if first_line > cursor_line then
 				line_nb := first_line

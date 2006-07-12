@@ -30,19 +30,7 @@
 			<item>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
-					<label>Showing or hiding client/supplier links</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
-					<label>Showing or hiding inheritance links</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
-					<label>Showing or hiding link labels</label>
+					<label>Showing or hiding links and labels</label>
 				</link>
 			</item>
 			<item>

@@ -7,7 +7,7 @@
 				<alt_text>Externals dialog</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>In most cases this is not needed but for some C/C++ externals and in some .NET projects it is necessary to specify additional includes, objects or ressources.</paragraph>
+		<paragraph>In most cases this is not needed but for some C/C++ externals and in some .NET projects it is necessary to specify additional includes, objects or resources.</paragraph>
 		<paragraph>If you use a library, externals of this library are automatically included. E.g. if you use vision2 the externals for vision2 don't need to be added to the project itself.</paragraph>
 		<list ordered="false">
 			<item>Include: This is where you can enter the location of the directories where the C/C++ compiler will look for the header files that are required. The header files which the C/C++ compiler will look for are the ones that appear in an encapsulation of a C/C++ external in an Eiffel class. Click 
@@ -19,7 +19,7 @@
 			<item>Library: like object files, but will be added last, needed for some very strict C compilers</item>
 			<item>Makefile: additional makefiles, if possible use tasks instead</item>
 			<item>
-				<paragraph>Ressource: .NET ressources</paragraph>
+				<paragraph>Resource: .NET resources</paragraph>
 				<list ordered="false">
 					<item>The .resx resource file format is a XML based format to include objects (such as images and other binary formats) and strings.</item>
 					<item>The .txt resource file format can only contains strings.</item>

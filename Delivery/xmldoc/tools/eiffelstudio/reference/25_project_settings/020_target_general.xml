@@ -11,8 +11,7 @@
 		</paragraph>
 		<paragraph>On the top you can easily switch between the different targets of the current system.</paragraph>
 		<paragraph>You can change the name of the target and give it a description. A target can be marked as abstract if it should not appear in the list of targets when opening a configuration.</paragraph>
-		<paragraph>Targets can inherit from each other, which means they take certain settings from a base target if the don't specify it themself. In the projects settings values that are inherited 
-		are displayed with a light grey blackground. Values that are overriden are displayed with a light red background. Overriden values can be reset to their inherited value, 
+		<paragraph>Targets can inherit from each other, which means they take certain settings from a base target if they don't specify it themselves. Inherited values are displayed with a light grey, overridden values with a light red background. Overridden values can be reset to their inherited value, 
 		by right clicking on them and choosing <italic>Use inherited value</italic> from the context menu.</paragraph>
 		<paragraph>An important setting that affects other settings is the compilation type. Here you can specify if you want to generate normal C/byte code (classic application) or if you want to generate .NET code.</paragraph>
 		<paragraph>With the output name option you can change the name of the generated executable if you want this to be different than the name of the system.</paragraph>
@@ -33,9 +32,9 @@
 				<alt_text>Version dialog</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>It allows to set a version number and some copyright informations. On .NET this information will be put into the generated assembly.</paragraph>
+		<paragraph>It allows a version number and some copyright information to be set. On .NET this information will be put into the generated assembly.</paragraph>
 		<anchor>file_pattern</anchor>
-		<paragraph>The File pattern setting allows to set rules to exclude certain files from every cluster. This can be used to exclude CVS or SVN directories globally instead of excluding them on each cluster. The dialog looks like this:</paragraph>
+		<paragraph>The File pattern setting allows rules to be set, to exclude certain files from every cluster. This can be used to exclude CVS or SVN directories globally instead of excluding them on each cluster. The dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
 				<url/>
@@ -43,8 +42,8 @@
 			</image>
 		</paragraph>
 		<paragraph>
-			File patterns are regular expression which are matched against directories and file names. The basic semantic is that everything is included that does either not match an exclude pattern or does match an include pattern.
-			 Matching is done against the path relative to the location of the cluster and / is used as a directory sepearator.
+			File patterns are regular expressions which are matched against directories and file names. The basic semantics are that everything is included that either does not match an exclude pattern or does match an include pattern.
+			 Matching is done against the path relative to the location of the cluster and / is used as a directory separator.
 		</paragraph>
 		<sample>
 			We have a recursive cluster in c:\projects\calculator\cluster and in there we have a file c:\projects\calculator\cluster\interface\ignore_me.e<line_break></line_break>
@@ -52,7 +51,7 @@
 			A rule like <italic>^/interface$</italic> would exclude the whole subdirectory, a rule like <italic>^/interface/ignore_me\.e$</italic> would only exclude the ignore_me.e class.
 		</sample>
 		<anchor>condition</anchor>
-		<paragraph>It is also possible to condition a file rule (set of include and exclude file patterns). Conditioning allows to have a certain file rule only active under certain conditions. The conditioning dialog looks like this:</paragraph>
+		<paragraph>It is also possible to add conditions to a file rule (set of include and exclude file patterns). Adding conditions allows a file rule to be active only under certain conditions.. The condition dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
 				<url/>

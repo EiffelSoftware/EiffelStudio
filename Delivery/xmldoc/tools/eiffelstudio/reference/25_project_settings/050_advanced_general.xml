@@ -75,7 +75,7 @@
 			<item>Classes per module: How many classes per generated module?</item>
 			<item>.NET runtime version: .NET version to use</item>
 			<item>Generation type: generate an exe or a dll (exe is default)</item>
-			<item>Signing key: specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC).  If a non existing filename is choosen, a key will be automatically generated.</item>
+			<item>Signing key: specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC).  If a non existing filename is chosen, a key will be automatically generated.</item>
 			<item>Force 32bit: on a 64bit machine, forces compilation for 32 bit.</item>
 		</list>
 		<anchor>dotnet_naming</anchor>

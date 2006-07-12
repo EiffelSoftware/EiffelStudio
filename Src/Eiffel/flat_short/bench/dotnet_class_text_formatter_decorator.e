@@ -80,7 +80,6 @@ feature -- Element change
 		local
 			ftxt: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR
 			l_feature: E_FEATURE
-			l_dev_win: EB_DEVELOPMENT_WINDOW
 			l_featurei: FEATURE_I
 		do
 			create ftxt.make_from_entity (a_dn_entity, consumed_t, class_i, text_formatter)
@@ -89,20 +88,17 @@ feature -- Element change
 				ftxt.put_normal_feature
 				if ftxt.current_class /= Void and then ftxt.current_class.has_feature_table then
 						-- Is compiled class so we can make feature clickable and scrollable.
-					l_dev_win := Window_manager.last_focused_development_window
-					if l_dev_win /= Void then
-						l_featurei ?= ftxt.current_class.feature_table.item (ftxt.name_of_current_feature)
-						if l_featurei = Void then
-								-- Do a check for an infix feature.
-							l_featurei ?= ftxt.current_class.feature_table.item ("infix %"" + ftxt.name_of_current_feature + "%"")
-						end
-						if l_featurei = Void then
-								-- Do a check for an prefix feature.
-							l_featurei ?= ftxt.current_class.feature_table.item ("prefix %"" + ftxt.name_of_current_feature + "%"")
-						end
-						if l_featurei /= Void then
-							l_feature ?= l_featurei.api_feature (ftxt.current_class.class_id)
-						end
+					l_featurei ?= ftxt.current_class.feature_table.item (ftxt.name_of_current_feature)
+					if l_featurei = Void then
+							-- Do a check for an infix feature.
+						l_featurei ?= ftxt.current_class.feature_table.item ("infix %"" + ftxt.name_of_current_feature + "%"")
+					end
+					if l_featurei = Void then
+							-- Do a check for an prefix feature.
+						l_featurei ?= ftxt.current_class.feature_table.item ("prefix %"" + ftxt.name_of_current_feature + "%"")
+					end
+					if l_featurei /= Void then
+						l_feature ?= l_featurei.api_feature (ftxt.current_class.class_id)
 					end
 				end
 			end

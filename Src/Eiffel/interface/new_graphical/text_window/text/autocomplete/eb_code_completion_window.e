@@ -702,8 +702,11 @@ feature {NONE} -- Implementation
 					character_to_append := '%U'
 				end
 				l_row := choice_list.selected_rows.first
-				if ev_application.ctrl_pressed and then l_row.is_expandable and then l_row.subrow_count > 0 then
-					l_row := l_row.subrow (1)
+				if ev_application.ctrl_pressed and then l_row.is_expandable then
+					l_row.expand
+					if l_row.subrow_count > 0 then
+						l_row := l_row.subrow (1)
+					end
 				end
 				l_name_item ?= l_row.data
 				check

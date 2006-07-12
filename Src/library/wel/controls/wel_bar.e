@@ -41,6 +41,12 @@ feature -- Status report
 			maximum_ok: maximum >= minimum
 		end
 
+	valid_maximum (a_position: INTEGER): BOOLEAN is
+			-- Is `a_position' valid as a maximum?
+		do
+			Result := a_position <= maximum
+		end
+
 feature -- Status setting
 
 	set_position (new_position: INTEGER) is
@@ -48,7 +54,7 @@ feature -- Status setting
 		require
 			exists: exists
 			valid_minimum: new_position >= minimum
-			valid_maximum: new_position <= maximum
+			valid_maximum: valid_maximum (new_position)
 		deferred
 		ensure
 			position_set: position = new_position

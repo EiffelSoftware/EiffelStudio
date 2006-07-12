@@ -259,7 +259,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: position <= maximal_horizontal_position
+			position_small_enough: scroller.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
 		do
 			scroller.set_horizontal_position (position)
@@ -272,7 +272,7 @@ feature -- Status setting
 		require
 			exists: exists
 			scroller_exists: scroller /= Void
-			position_small_enough: position <= maximal_vertical_position
+			position_small_enough: scroller.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
 		do
 			scroller.set_vertical_position (position)
@@ -319,7 +319,8 @@ feature -- Status setting
 			-- `inc' and `position'.
 		require
 			exists: exists
-			position_small_enough: position <= maximal_horizontal_position
+			scroller_not_void: scroller /= Void
+			position_small_enough: scroller.valid_maximal_horizontal_position (position)
 			position_large_enough: position >= minimal_horizontal_position
 		do
 			scroll (inc, 0)
@@ -334,7 +335,8 @@ feature -- Status setting
 			-- `inc' and `position'.
 		require
 			exists: exists
-			position_small_enough: position <= maximal_vertical_position
+			scroller_not_void: scroller /= Void
+			position_small_enough: scroller.valid_maximal_vertical_position (position)
 			position_large_enough: position >= minimal_vertical_position
 		do
 			scroll (0, inc)

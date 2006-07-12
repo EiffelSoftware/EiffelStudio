@@ -11,7 +11,7 @@ class
 
 inherit
 	ANY
-	
+
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all
@@ -202,16 +202,28 @@ feature -- Access
 			Result := scroll_info_struct.maximum
 		end
 
+feature -- Status report
+
+	valid_maximal_horizontal_position (a_position: INTEGER): BOOLEAN is
+			-- Is `a_position' valid for setting the `horizontal_position'.
+		do
+			Result := a_position <= (maximal_horizontal_position - (horizontal_page - 1).max (0))
+		end
+
+	valid_maximal_vertical_position (a_position: INTEGER): BOOLEAN is
+			-- Is `a_position' valid for setting the `vertical_position'.
+		do
+			Result := a_position <= (maximal_vertical_position - (vertical_page - 1).max (0))
+		end
+
 feature -- Element change
 
 	set_horizontal_position (position: INTEGER) is
 			-- Set `horizontal_position' with `position'.
 		require
 			window_exists: window.exists
-			position_small_enough:
-				position <= maximal_horizontal_position
-			position_large_enough:
-				position >= minimal_horizontal_position
+			position_small_enough: valid_maximal_horizontal_position (position)
+			position_large_enough: position >= minimal_horizontal_position
 		do
 			scroll_info_struct.set_mask (Sif_pos)
 			scroll_info_struct.set_position (position)
@@ -224,10 +236,8 @@ feature -- Element change
 			-- Set `vertical_position' with `position'.
 		require
 			window_exists: window.exists
-			position_small_enough:
-				position <= maximal_vertical_position
-			position_large_enough:
-				position >= minimal_vertical_position
+			position_small_enough: valid_maximal_vertical_position (position)
+			position_large_enough: position >= minimal_vertical_position
 		do
 			scroll_info_struct.set_mask (Sif_pos)
 			scroll_info_struct.set_position (position)

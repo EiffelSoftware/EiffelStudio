@@ -5,11 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TYPED_INTERVAL_VAL_B [H]
+deferred class TYPED_INTERVAL_VAL_B [H -> COMPARABLE]
 
 inherit
 	INTERVAL_VAL_B
 		redefine
+			infix "<",
 			is_equal
 		end
 
@@ -35,6 +36,12 @@ feature -- Comparison
 			-- Is `other' next to Current?
 		do
 			Result := other.value = next_value (value)
+		end
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is `other' greater than Current?
+		do
+			Result := value < other.value
 		end
 
 feature {TYPED_INTERVAL_B, TYPED_INTERVAL_VAL_B, BYTE_NODE_VISITOR} -- Data

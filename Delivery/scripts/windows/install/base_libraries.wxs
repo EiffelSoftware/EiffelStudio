@@ -1359,6 +1359,7 @@
 									<File Id="process_file52" LongName="process_output_listener_thread.e" Name="PROCES~4.E"/>
 									<File Id="process_file66" LongName="process_input_listener_thread.e" Name="PR1C6F~1.E"/>
 									<File Id="process_file53" LongName="process_thread_timer.e" Name="PROCES~3.E"/>
+									<File Id="process_file68" LongName="process_utility.e" Name="PR8FA3~1.E"/>
 									<File Id="process_file42" LongName="file_handle.e" Name="FILE_H~1.E"/>
 									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~2.E"/>
 									<File Id="process_file43" LongName="wel_process.e" Name="WEL_PR~4.E"/>
@@ -1368,6 +1369,11 @@
 									<File Id="process_file63" LongName="wel_thread_entry_32.e" Name="WEL_TH~1.E" />
 									<File Id="process_file64" LongName="wel_toolhelp.e" Name="WEL_TO~1.E" />
 								</Component>
+								<Directory Id="include" Name="include">
+									<Component Id="include" Guid="C0797283-5A79-4fcc-95F7-A53AD88AA7B5">
+										<File Id="process_file67" LongName="eif_process.h" Name="EIF_PR~1.H" />
+									</Component>
+								</Directory>
 							</Directory>
 						</Directory>
 						<Directory Id="process_directory11" Name="dotnet">

@@ -1422,6 +1422,7 @@
 									<File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
 									<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
 									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
+									<File Id="ev_pointer_style_constants_e" Name="EV_POI~1.E" LongName="ev_pointer_style_constants.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
@@ -2482,6 +2483,7 @@
 								<File Id="wel_nm_custom_draw_e" Name="WED58B~1.E" LongName="wel_nm_custom_draw.e" />
 								<File Id="wel_xform_e" LongName="wel_xform.e" Name="WEL_XF~1.E" />
 								<File Id="wel_color_matrix_e" Name="WEL_CO~3.E" LongName="wel_color_matrix.e" />
+								<File Id="wel_composition_form_e" Name="WEL_CO~4.E" LongName="wel_composition_form.e" />
 							</Component>
 						</Directory>
 						<Directory Id="messages" Name="messages">
@@ -2773,6 +2775,7 @@
 								<File Id="wel_theme_gbs_constants_e" Name="WEL_TH~1.E" LongName="wel_theme_gbs_constants.e" />
 								<File Id="wel_theme_part_constants_e" Name="WEL_TH~2.E" LongName="wel_theme_part_constants.e" />
 								<File Id="wel_theme_pbs_constants_e" Name="WEL_TH~3.E" LongName="wel_theme_pbs_constants.e" />
+								<File Id="wel_language_identifiers_e" Name="WEL_LA~2.E" LongName="wel_language_identifiers.e" />
 							</Component>
 							<Directory Id="new_consts" Name="NEW_CO~1" LongName="new_consts">
 								<Component Id="wel_window_constants.e" Guid="A2A7F228-DC79-413A-BD44-A077BE16B22F">
@@ -2860,6 +2863,7 @@
 								<File Id="wel_memory_dc.e" Name="WEL_ME~1.E" LongName="wel_memory_dc.e" />
 								<File Id="wel_drawing_routines.e" Name="WEL_DR~4.E" LongName="wel_drawing_routines.e" />
 								<File Id="wel_bitmap.e" Name="WEL_BI~3.E" LongName="wel_bitmap.e" />
+								<File Id="wel_bitmap_helper_e" Name="WEL_BI~2.E" LongName="wel_bitmap_helper.e" />
 								<File Id="wel_dib.e" Name="wel_dib.e" />
 								<File Id="wel_region.e" Name="WEL_RE~A.E" LongName="wel_region.e" />
 								<File Id="wel_log_palette.e" Name="WEL_LO~4.E" LongName="wel_log_palette.e" />

@@ -90,6 +90,6 @@
 				</list>
 			</item>
 		</list>
-		<paragraph>The changes you make are taken into account the next time you recompile your project. Instead of automatically performing the compilation each time you click Ok or Apply we decided to save the modifications and let the user decide when to recompile..</paragraph>
+		<paragraph>The changes you make are taken into account the next time you recompile your project. Instead of automatically performing the compilation each time you click Ok or Apply we decided to save the modifications and let the user decide when to recompile.</paragraph>
 	</paragraph>
 </document>

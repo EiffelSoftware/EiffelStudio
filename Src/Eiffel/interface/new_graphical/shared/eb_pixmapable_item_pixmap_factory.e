@@ -97,6 +97,7 @@ feature {NONE} -- Implementation
 			l_comp: CLASS_C
 			l_pixcode: NATURAL_8
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
+			l_overrides_valid: BOOLEAN
 		do
 			l_conf_class := a_class.config_class
 
@@ -124,22 +125,27 @@ feature {NONE} -- Implementation
 				until
 					l_overrides.after or l_comp /= Void
 				loop
-					if l_overrides.item.is_compiled then
-						l_classi ?= l_overrides.item
-						check
-							classi: l_classi /= Void
+					if l_overrides.item.is_valid then
+						l_overrides_valid := True
+						if l_overrides.item.is_compiled then
+							l_classi ?= l_overrides.item
+							check
+								classi: l_classi /= Void
+							end
+							l_comp := l_classi.compiled_class
 						end
-						l_comp := l_classi.compiled_class
 					end
 					l_overrides.forth
 				end
-				if l_comp = Void then
-						-- No compiled version
-					l_pixcode := l_pixcode & compiled_flag.bit_not
-				else
-					l_pixcode := l_pixcode | compiled_flag
+				if l_overrides_valid then
+					if l_comp = Void then
+							-- No compiled version
+						l_pixcode := l_pixcode & compiled_flag.bit_not
+					else
+						l_pixcode := l_pixcode | compiled_flag
+					end
 				end
-			elseif l_conf_class.is_overriden then
+			elseif l_conf_class.is_overriden and then l_conf_class.overriden_by.is_valid then
 				l_pixcode := l_pixcode | overriden_flag
 			end
 			if l_pixcode = 0 then

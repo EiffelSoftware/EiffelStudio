@@ -300,21 +300,23 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						classes.after
 					loop
-						l_name := classes.item_for_iteration.name.twin
-						if data.renaming.has (l_name) then
-							l_name := data.renaming.item (l_name)
-						end
-						l_name.prepend (data.name_prefix)
-						create a_class.make (classes.item_for_iteration, l_name)
-						if associated_window /= Void then
-							a_class.set_associated_window (associated_window)
-						end
-						if associated_textable /= Void then
-							a_class.set_associated_textable (associated_textable)
-						end
+						if classes.item_for_iteration.is_valid then
+							l_name := classes.item_for_iteration.name.twin
+							if data.renaming.has (l_name) then
+								l_name := data.renaming.item (l_name)
+							end
+							l_name.prepend (data.name_prefix)
+							create a_class.make (classes.item_for_iteration, l_name)
+							if associated_window /= Void then
+								a_class.set_associated_window (associated_window)
+							end
+							if associated_textable /= Void then
+								a_class.set_associated_textable (associated_textable)
+							end
 
-						a_class.load_overriden_children
-						extend (a_class)
+							a_class.load_overriden_children
+							extend (a_class)
+						end
 						classes.forth
 					end
 				end

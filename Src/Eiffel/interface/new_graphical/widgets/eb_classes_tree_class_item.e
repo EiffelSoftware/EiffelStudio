@@ -99,6 +99,35 @@ feature -- Status setting
 					check
 						class_i: class_i /= Void
 					end
+					if class_i.is_valid then
+						create over_item.make (class_i, class_i.name_in_upper)
+
+						if associated_window /= Void then
+							over_item.set_associated_window (associated_window)
+						end
+						if associated_textable /= Void then
+							over_item.set_associated_textable (associated_textable)
+						end
+
+						from
+							pointer_double_press_actions.start
+						until
+							pointer_double_press_actions.after
+						loop
+							over_item.add_double_click_action (pointer_double_press_actions.item)
+							pointer_double_press_actions.forth
+						end
+
+						extend (over_item)
+					end
+					overs.forth
+				end
+			elseif conf_class.is_overriden then
+				class_i ?= conf_class.overriden_by
+				check
+					class_i: class_i /= Void
+				end
+				if class_i.is_valid then
 					create over_item.make (class_i, class_i.name_in_upper)
 
 					if associated_window /= Void then
@@ -116,34 +145,8 @@ feature -- Status setting
 						over_item.add_double_click_action (pointer_double_press_actions.item)
 						pointer_double_press_actions.forth
 					end
-
 					extend (over_item)
-					overs.forth
 				end
-			elseif conf_class.is_overriden then
-				class_i ?= conf_class.overriden_by
-				check
-					class_i: class_i /= Void
-				end
-				create over_item.make (class_i, class_i.name_in_upper)
-
-				if associated_window /= Void then
-					over_item.set_associated_window (associated_window)
-				end
-				if associated_textable /= Void then
-					over_item.set_associated_textable (associated_textable)
-				end
-
-				from
-					pointer_double_press_actions.start
-				until
-					pointer_double_press_actions.after
-				loop
-					over_item.add_double_click_action (pointer_double_press_actions.item)
-					pointer_double_press_actions.forth
-				end
-
-				extend (over_item)
 			end
 		end
 

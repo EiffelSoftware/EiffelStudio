@@ -10,25 +10,14 @@ class
 	ES_OBJECTS_GRID_CELL
 
 inherit
-	EB_CODE_COMPLETABLE_GRID_EDITABLE_ITEM
+	EV_GRID_EDITABLE_ITEM
 		redefine
 			initialize_actions
 		end
 
 create
 	default_create,
---	make_with_text,
-	make_with_text_and_provider
-
-feature -- Initialization
-
-	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
-			-- Set `text' with `a_text'.
-			-- Set `completion_possibilities_provider' with `a_provider'.
-		do
-			make_with_text (a_text)
-			completion_possibilities_provider := a_provider
-		end
+	make_with_text
 
 feature -- Query
 

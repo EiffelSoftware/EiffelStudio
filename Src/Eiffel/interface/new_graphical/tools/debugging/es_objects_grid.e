@@ -471,7 +471,7 @@ feature {NONE} -- Actions implementation
 
 	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
 		local
-			ei: ES_OBJECTS_GRID_CELL
+			ei: EV_GRID_EDITABLE_ITEM
 		do
 			if ab = 1 then
 				ei ?= a_item

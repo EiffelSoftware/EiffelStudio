@@ -66,36 +66,33 @@ feature {NONE} -- Retrieval
 		local
 			l_args: ARRAYED_LIST [STRING]
 			l_user_opts: TARGET_USER_OPTIONS
-			l_last_found: BOOLEAN
+			l_row: EV_GRID_ROW
 		do
-			argument_combo.wipe_out
+			arguments_grid.set_row_count_to (0)
+
 			l_user_opts := lace.user_options.target
-			if l_user_opts.last_argument /= Void then
-				current_argument.set_text (l_user_opts.last_argument)
-			else
-				current_argument.remove_text
-			end
 			l_args := l_user_opts.arguments
-			argument_combo.select_actions.block
-			if l_args /= Void then
+			if l_args /= Void and then l_args.count > 0 then
 				from
 					l_args.start
 				until
 					l_args.after
 				loop
-						-- Add argument to combo.
-					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_args.item))
-					if l_args.item.is_equal (current_argument.text) then
-						argument_combo.last.enable_select
-						l_last_found := True
-					end
+					add_argument_text (l_args.item)
 					l_args.forth
 				end
 			end
-			if not l_last_found and argument_combo.count > 0 then
-				argument_combo.first.disable_select
+			if l_user_opts.last_argument /= Void then
+				l_row := grid_row_with_argument (l_user_opts.last_argument)
+				if l_row /= Void then
+					arguments_grid.select_row (l_row.index)
+					l_row.ensure_visible
+				else
+					current_argument.set_text (l_user_opts.last_argument)
+				end
+			else
+				current_argument.remove_text
 			end
-			argument_combo.select_actions.resume
 
 			if l_user_opts.use_arguments then
 				argument_check.enable_select
@@ -116,6 +113,8 @@ feature -- Storage
 			l_args: ARRAYED_LIST [STRING]
 			l_user_opts: TARGET_USER_OPTIONS
 			l_user_factory: USER_OPTIONS_FACTORY
+			r: INTEGER
+			s: STRING
 		do
 			l_user_opts := lace.user_options.target
 			if argument_check.is_selected then
@@ -123,15 +122,19 @@ feature -- Storage
 			else
 				l_user_opts.disable_arguments
 			end
-			create l_args.make (argument_combo.count)
+			create l_args.make (arguments_grid.row_count)
 			from
-				argument_combo.start
+				r := 1
 			until
-				argument_combo.after
+				r > arguments_grid.row_count
 			loop
-				l_args.extend (argument_combo.item.text)
-				argument_combo.forth
+				s ?= arguments_grid.row (r).data
+				if s /= Void then
+					l_args.extend (s)
+				end
+				r := r + 1
 			end
+
 			l_user_opts.set_arguments (l_args)
 			l_user_opts.set_last_argument (current_argument.text)
 			l_user_opts.set_working_directory (working_directory.path)
@@ -149,52 +152,55 @@ feature {NONE} -- GUI
 			l_frame: EV_FRAME
 			vbox: EV_VERTICAL_BOX
 		do
-				-- Create all widgets.
-			create working_directory.make_with_parent (parent_window)
-			create argument_combo
-			create current_argument
 			create Result
 
+				-- Create all widgets.
+
+				-- Working directory.
+			create l_frame.make_with_text ("Working Directory")
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
-				-- Working directory.
-			create l_frame.make_with_text ("Working Directory")
 			l_frame.extend (vbox)
+			create working_directory.make_with_parent (parent_window)
 			vbox.extend (working_directory)
+
 			Result.extend (l_frame)
 			Result.disable_item_expand (l_frame)
 
-			create arguments_box
-			populate_by_template (arguments_box)
+			build_arguments_box
+			check
+				arguments_box_not_void: arguments_box /= Void
+				current_argument_not_void: current_argument /= Void
+				arguments_grid_not_void: arguments_grid /= Void
+			end
 
+				-- Arguments frame
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
-			create l_frame.make_with_text ("Arguments")
 			create argument_check.make_with_text ("Enable arguments")
-			l_frame.extend (vbox)
 			vbox.extend (argument_check)
 			vbox.disable_item_expand (argument_check)
-			vbox.extend (arguments_box)
-			Result.extend (l_frame)
 
-			argument_combo.disable_edit
+			vbox.extend (arguments_box)
+
+			create l_frame.make_with_text ("Arguments")
+			l_frame.extend (vbox)
+
+			Result.extend (l_frame)
 
 				-- Global actions.
 			pointer_leave_actions.extend (agent synch_with_others)
 
 				-- Check button actions
 			argument_check.select_actions.extend (agent arg_check_selected)
-
-				-- Combo actions.
-			argument_combo.select_actions.extend (agent argument_selected (argument_combo))
 		end
 
-	populate_by_template (a_vbox: EV_VERTICAL_BOX) is
-			-- Populate 'a_vbox' with widgets and associated events.
+	build_arguments_box is
+			-- Populate 'arguments_box' with widgets and associated events.
 		require
-			a_box_not_void: a_vbox /= Void
+			arguments_box_void: arguments_box = Void
 		local
 			l_horizontal_box: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
@@ -202,24 +208,34 @@ feature {NONE} -- GUI
 			add_button,
 			remove_button: EV_BUTTON
 		do
-			a_vbox.set_border_width (Layout_constants.Small_border_size)
-			a_vbox.set_padding (Layout_constants.Small_padding_size)
+			create arguments_box
+			arguments_box.set_padding (Layout_constants.Small_padding_size)
+			arguments_box.set_border_width (Layout_constants.Small_border_size)
 
-				-- Argument combo box.
-			a_vbox.extend (argument_combo)
-			a_vbox.disable_item_expand (argument_combo)
+				-- Arguments grid building
+			create arguments_grid
+			arguments_grid.hide_header
+			arguments_grid.enable_border
+			arguments_grid.set_separator_color (Stock_colors.default_background_color)
+			arguments_grid.enable_single_row_selection
+			arguments_grid.row_select_actions.extend (agent on_row_selected)
+			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
+			arguments_grid.post_draw_overlay_actions.extend (agent draw_border_on_selection)
+			arguments_box.extend (arguments_grid)
 
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
 
 			create l_label.make_with_text ("Current Argument")
 			l_label.align_text_left
-			a_vbox.extend (l_label)
-			a_vbox.disable_item_expand (l_label)
+			arguments_box.extend (l_label)
+			arguments_box.disable_item_expand (l_label)
 
-			a_vbox.extend (current_argument)
-			current_argument.set_minimum_height (50)
+			create current_argument
+			current_argument.set_minimum_height (70)
 			current_argument.key_release_actions.extend (agent arg_text_changed)
+			arguments_box.extend (current_argument)
+			arguments_box.disable_item_expand (current_argument)
 
 			create l_cell
 			l_horizontal_box.extend (l_cell)
@@ -237,8 +253,8 @@ feature {NONE} -- GUI
 			create l_cell
 			l_horizontal_box.extend (l_cell)
 
-			a_vbox.extend (l_horizontal_box)
-			a_vbox.disable_item_expand (l_horizontal_box)
+			arguments_box.extend (l_horizontal_box)
+			arguments_box.disable_item_expand (l_horizontal_box)
 		end
 
 feature -- Status Setting
@@ -297,7 +313,7 @@ feature {NONE} -- GUI Properties
 	current_argument: EV_TEXT
 			-- Current argument.
 
-	argument_combo: EV_COMBO_BOX
+	arguments_grid: ES_GRID
 			-- Current list of arguments.
 
 	arguments_box: EV_VERTICAL_BOX
@@ -308,10 +324,17 @@ feature {NONE} -- Actions
 	arg_check_selected is
 			-- Argument check box has been selected.
 		do
-			if argument_check.is_selected then
+			set_arguments_box_state (argument_check.is_selected)
+		end
+
+	set_arguments_box_state (a_is_sensitive: BOOLEAN) is
+		do
+			if a_is_sensitive then
 				arguments_box.enable_sensitive
+				arguments_grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_write)
 			else
 				arguments_box.disable_sensitive
+				arguments_grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_only)
 			end
 		end
 
@@ -334,60 +357,148 @@ feature {NONE} -- Actions
 					l_argument_dialog.run_and_close_button.set_focus
 				end
 			end
-			if argument_combo.selected_item /= Void then
-				argument_combo.selected_item.disable_select
-			end
+			arguments_grid.remove_selection
 		end
 
 	add_argument is
 			-- Action to take when user chooses to add a new argument.
-		local
-			l_argument: STRING
 		do
-			l_argument := current_argument.text
-			if not l_argument.is_empty then
-				if not argument_combo.there_exists (agent row_duplicate (?)) then
-					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_argument))
-					argument_combo.last.enable_select
+			add_argument_text (current_argument.text)
+		end
+
+	add_argument_text (a_arg_text: STRING) is
+			-- Action to take when user chooses to add a new argument.
+		local
+			s: STRING
+			gi: EV_GRID_LABEL_ITEM
+			l_row: EV_GRID_ROW
+		do
+			if a_arg_text /= Void then -- and then not a_arg_text.is_empty then
+				s := a_arg_text.twin
+				s.replace_substring_all ("%N", "")
+				check
+					no_eol: not a_arg_text.has ('%N')
 				end
-				store_arguments
+				if grid_row_with_argument (s) = Void then
+					create gi.make_with_text (s)
+					arguments_grid.set_item (1, arguments_grid.row_count + 1, gi)
+					l_row := gi.row
+					l_row.set_data (s)
+					store_arguments
+				end
 			end
 		end
 
-	row_duplicate (an_item: EV_LIST_ITEM): BOOLEAN is
-			-- Does text in 'a_row' already exist in row in the list?
+	grid_row_with_argument (s: STRING): EV_GRID_ROW is
+		require
+			s_not_void: s /= Void
+		local
+			r: INTEGER
+			d: STRING
 		do
-			Result := an_item.text.is_equal (current_argument.text)
+			from
+				r := 1
+			until
+				r > arguments_grid.row_count or Result /= Void
+			loop
+				Result := arguments_grid.row (r)
+				d ?= Result.data
+				if d = Void or else not d.is_equal (s) then
+					Result := Void
+				end
+				r := r + 1
+			end
 		end
 
 	remove_argument is
 			-- Action to take when user chooses to remove an existing argument.
+		local
+			lrows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			r: INTEGER
 		do
-			if
-				argument_combo.selected_item /= Void
-			then
-				argument_combo.prune (argument_combo.selected_item)
-				if not argument_combo.is_empty then
-					argument_combo.first.enable_select
-				else
-					argument_combo.wipe_out
-					current_argument.remove_text
+			lrows := arguments_grid.selected_rows
+			if lrows.count > 0 then
+				r := lrows.first.index
+				arguments_grid.remove_row (r)
+				if r <= arguments_grid.row_count then
+					l_row := arguments_grid.row (r)
+				elseif r - 1 >= arguments_grid.row_count then
+					l_row := arguments_grid.row (r - 1)
 				end
+				arguments_grid.select_row (l_row.index)
+				l_row.ensure_visible
 				store_arguments
 			end
 		end
 
-	argument_selected (a_widget: EV_WIDGET) is
-			-- An argument was chosen in 'a_widget'
+	draw_border_on_selection (drawable: EV_DRAWABLE; gitem: EV_GRID_ITEM; c,r: INTEGER) is
+		local
+			lrow: EV_GRID_ROW
+			current_column_width, current_row_height: INTEGER
 		do
-			if not argument_combo.is_empty and argument_combo.selected_item /= Void and argument_combo.selected_item.data = Void then
-				current_argument.set_text (argument_combo.selected_item.text)
+			if arguments_grid.is_sensitive and not arguments_grid.has_focus then
+				lrow := arguments_grid.row (r)
+				if lrow /= Void and then lrow.is_selected then
+					drawable.set_foreground_color (stock_colors.blue)
+					current_column_width := arguments_grid.column (c).width
+					if arguments_grid.is_row_height_fixed then
+						current_row_height := arguments_grid.row_height
+					else
+						current_row_height := lrow.height
+					end
+					if c = 1 then
+						drawable.draw_segment (0, 0, 0, current_row_height - 1)
+					end
+					if c = arguments_grid.column_count then
+						drawable.draw_segment (current_column_width - 1, 0, current_column_width - 1, current_row_height - 1)
+					end
+					drawable.draw_segment (0, 0, current_column_width - 1, 0)
+					drawable.draw_segment (0, current_row_height - 1, current_column_width - 1, current_row_height - 1)
+				end
+			end
+		end
+
+	on_row_selected (a_row: EV_GRID_ROW) is
+		local
+			s: STRING
+			gl: EV_GRID_LABEL_ITEM
+		do
+			if a_row /= Void then
+				if a_row.count > 0 then
+					gl ?= a_row.item (1)
+					if gl /= Void then
+						gl.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
+					end
+				end
+				s ?= a_row.data
+			end
+			if s /= Void then
+				current_argument.set_text (s)
 			else
 				current_argument.remove_text
 			end
 		end
 
+	on_row_unselected (a_row: EV_GRID_ROW) is
+		local
+			gl: EV_GRID_LABEL_ITEM
+		do
+			if a_row /= Void and then a_row.count > 0 then
+				gl ?= a_row.item (1)
+				if gl /= Void then
+					gl.remove_pixmap
+				end
+			end
+			current_argument.remove_text
+		end
+
 feature {NONE} -- Implementation
+
+	stock_colors: EV_STOCK_COLORS is
+		once
+			create Result
+		end
 
 	parent_window: EV_WINDOW
 			-- Parent window.

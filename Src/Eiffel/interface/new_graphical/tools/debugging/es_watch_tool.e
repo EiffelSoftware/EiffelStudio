@@ -699,6 +699,7 @@ feature {NONE} -- Event handling
 	on_element_drop (s: CLASSC_STONE) is
 			-- Something was dropped in `ev_list'.
 		local
+			fst: FEATURE_STONE
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
 			fost: FEATURED_OBJECT_STONE
@@ -713,18 +714,27 @@ feature {NONE} -- Event handling
 					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
 				end
 			else
-				ost ?= s
-				if ost /= Void then
-					oname := ost.name + ": " + ost.object_address
-					if ev_application.ctrl_pressed then
-						add_object (ost, oname)
-					else
-						create dlg.make_with_named_object (ost.object_address, oname)
+				fst ?= s
+				if fst /= Void then
+					oname := fst.feature_name
+					create dlg.make_with_expression_text (fst.feature_name)
+					if fst.e_class /= Void then
+						dlg.set_class_text (fst.e_class)
 					end
 				else
-					cst ?= s
-					if cst /= Void then
-						create dlg.make_with_class (cst.e_class)
+					ost ?= s
+					if ost /= Void then
+						oname := ost.name + ": " + ost.object_address
+						if ev_application.ctrl_pressed then
+							add_object (ost, oname)
+						else
+							create dlg.make_with_named_object (ost.object_address, oname)
+						end
+					else
+						cst ?= s
+						if cst /= Void then
+							create dlg.make_with_class (cst.e_class)
+						end
 					end
 				end
 			end

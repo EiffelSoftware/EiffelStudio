@@ -699,9 +699,6 @@ feature {NONE} -- Implementation
 	textable: EV_TEXT_COMPONENT
 			-- Text component classes should be associated with.
 
-	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
-			-- Agents associated to double-clicks on classes.
-
 	build_group_tree (a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
 			-- Build a tree for `a_grps' under `a_header' and add it to the tree if we have elements.
 		require
@@ -762,6 +759,12 @@ feature {NONE} -- Implementation
 			extend (target)
 			target.associate_with_window (window)
 		end
+
+feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
+	
+	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+			-- Agents associated to double-clicks on classes.
+
 
 invariant
 	classes_double_click_agents_not_void: classes_double_click_agents /= Void

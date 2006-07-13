@@ -1349,7 +1349,7 @@ feature {NONE} -- Impl : Stack objects grid
 			row: EV_GRID_ROW
 			exception_row: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
-			es_glab: ES_OBJECTS_GRID_CELL
+			es_glab: EV_GRID_LABEL_ITEM
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING
 			l_exception_tag, l_exception_message: STRING_32

@@ -486,16 +486,27 @@ feature -- Graphical changes
 
 	set_title (v: STRING_GENERAL) is
 		local
-			cell:EV_GRID_LABEL_ITEM
+			li: EV_GRID_LABEL_ITEM
 		do
 			title := v
 			if row /= Void then
 				set_name (title)
-				cell ?= row.item (Col_name_index)
-				if cell /= Void then
-					apply_cell_title_properties_on (cell)
+				li ?= row.item (Col_name_index)
+				if li /= Void then
+					apply_cell_title_properties_on (li)
 				end
 			end
+		end
+
+	apply_cell_title_properties_on (a_item: EV_GRID_LABEL_ITEM) is
+		require
+			a_item_not_void: a_item /= Void
+		do
+			if a_item.font /= Title_font then
+				a_item.set_font (Title_font)
+			end
+		ensure
+			a_item.font = Title_font
 		end
 
 	set_name (v: STRING_GENERAL) is
@@ -507,8 +518,13 @@ feature -- Graphical changes
 			if title = Void then
 				title := v
 			end
-			glab := cell_text_updated (title, Col_name_index)
-			apply_cell_name_properties_on (glab)
+
+			glab ?= cell (Col_name_index)
+			if glab = Void then
+				glab := new_cell_name
+				set_cell (Col_name_index, glab)
+			end
+			grid_cell_set_text (glab, v)
 		end
 
 	set_type (v: STRING) is
@@ -517,8 +533,12 @@ feature -- Graphical changes
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab := cell_text_updated (v, Col_type_index)
-			apply_cell_type_properties_on (glab)
+			glab ?= cell (Col_type_index)
+			if glab = Void then
+				glab := new_cell_type
+				set_cell (Col_type_index, glab)
+			end
+			grid_cell_set_text (glab, v)
 		end
 
 	set_address (v: STRING) is
@@ -527,8 +547,12 @@ feature -- Graphical changes
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab := cell_text_updated (v, Col_address_index)
-			apply_cell_address_properties_on (glab)
+			glab ?= cell (Col_address_index)
+			if glab = Void then
+				glab := new_cell_address
+				set_cell (Col_address_index, glab)
+			end
+			grid_cell_set_text (glab, v)
 		end
 
 	set_value (v: STRING_GENERAL) is
@@ -537,54 +561,60 @@ feature -- Graphical changes
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab := cell_text_updated (v, Col_value_index)
-			apply_cell_value_properties_on (glab)
-		end
-
-	value_cell: EV_GRID_ITEM is
-		do
-			Result := es_cell (Col_value_index)
+			glab ?= cell (Col_value_index)
+			if glab = Void then
+				glab := new_cell_value
+				set_cell (Col_value_index, glab)
+			end
+			grid_cell_set_text (glab, v)
 		end
 
 	set_context (v: STRING) is
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			glab := cell_text_updated (v, Col_context_index)
-			apply_cell_context_properties_on (glab)
+			glab ?= cell (Col_context_index)
+			if glab = Void then
+				glab := new_cell_context
+				set_cell (Col_context_index, glab)
+			end
+			grid_cell_set_text (glab, v)
 		end
 
-	apply_cell_title_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+	value_cell: EV_GRID_ITEM is
 		do
-			a_item.set_font (Title_font)
+			Result := cell (Col_value_index)
 		end
 
-	apply_cell_name_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+	new_cell_title: ES_OBJECTS_GRID_CELL is
 		do
+			create Result
+			Result.set_font (Title_font)
 		end
-	apply_cell_type_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+
+	new_cell_name: ES_OBJECTS_GRID_CELL is
 		do
+			create Result
 		end
-	apply_cell_value_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+
+	new_cell_type: ES_OBJECTS_GRID_CELL is
 		do
+			create Result
 		end
-	apply_cell_address_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+
+	new_cell_value: ES_OBJECTS_GRID_CELL is
 		do
+			create Result
 		end
-	apply_cell_context_properties_on (a_item: EV_GRID_LABEL_ITEM) is
-		require
-			a_item_not_void: a_item /= Void
+
+	new_cell_address: ES_OBJECTS_GRID_CELL is
 		do
+			create Result
+		end
+
+	new_cell_context: EV_GRID_LABEL_ITEM is
+		do
+			create Result
 		end
 
 	set_pixmap (v: EV_PIXMAP) is
@@ -994,35 +1024,20 @@ feature {NONE} -- Implementation
 			grid_cell_set_text (Result, s)
 		end
 
-	es_cell (c: INTEGER): ES_OBJECTS_GRID_CELL is
-		local
-			l_item: EV_GRID_ITEM
+	cell (c: INTEGER): EV_GRID_ITEM is
+		require
+			row_not_void: row /= Void
 		do
 			if c > 0 and c <= row.count then
-				l_item := row.item (c)
+				Result := row.item (c)
 			end
-			if l_item = Void then
-				create Result
-			else
-				Result ?= l_item
-			end
-			if l_item = Void then
-				row.set_item (c, Result)
-			end
-		ensure
-			Result /= Void
 		end
 
-	cell_text_updated (v: STRING_GENERAL; c: INTEGER): ES_OBJECTS_GRID_CELL is
+	set_cell (c: INTEGER; v: EV_GRID_ITEM) is
+		require
+			row_not_void: row /= Void
 		do
-			Result := es_cell (c)
-			if v /= Void then
-				grid_cell_set_text (Result, v)
-			else
-				grid_cell_set_text (Result, "")
-			end
-		ensure
-			Result /= Void
+			row.set_item (c, v)
 		end
 
 invariant

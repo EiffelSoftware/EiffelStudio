@@ -52,7 +52,7 @@ feature -- Access
 		do
 			Result := cwel_get_fmask (item)
 		ensure
-			valid_mask: valid_sif_constant (Result)
+			valid_mask: valid_sif_mask (Result)
 		end
 
 	position: INTEGER is

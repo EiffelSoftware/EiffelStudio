@@ -31,14 +31,14 @@ feature {NONE} -- Implementation
 		end
 
 	new_class_name: STRING_32 is
-			--
+			-- Redefine
 		do
 			make_id
 			Result := "EV_SHADOW_DIALOG_IMP"
 		end
 
 	default_ex_style: INTEGER_32 is
-			--
+			-- Redefine
 		do
 			Result := Precursor {EV_UNTITLED_DIALOG_IMP}
 			-- Ensure we hide title in task bar

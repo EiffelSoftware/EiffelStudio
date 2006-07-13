@@ -151,6 +151,11 @@ feature -- Access queries
 				l_local.set_namespace (Void)
 			end
 
+				-- if no assertions are defined, set them to false
+			if Result /= Void and then Result.assertions = Void then
+				Result.set_assertions (create {CONF_ASSERTIONS})
+			end
+
 			if Result /= Void then
 				Result.merge (l_local)
 			else

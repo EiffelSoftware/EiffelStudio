@@ -93,6 +93,8 @@ feature {NONE}
 
 	Generate_help: STRING is "generate profile information for latest run"
 
+	gui_help: STRING is "start the graphical environment"
+
 	help_help: STRING is "show this help message"
 
 	homonyms_help: STRING is "shown the homonyms of a feature"

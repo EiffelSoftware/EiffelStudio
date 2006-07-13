@@ -372,6 +372,15 @@ feature -- Status report
 	new_expression: EB_EXPRESSION
 			-- Expression defined  by `Current', if any.
 
+feature -- Change
+
+	set_class_text (cl: CLASS_C) is
+		require
+			class_not_void: cl /= Void
+		do
+			class_field.set_text (cl.name_in_upper)
+		end
+
 feature -- Status setting
 
 	set_callback (cb: PROCEDURE [ANY, TUPLE]) is

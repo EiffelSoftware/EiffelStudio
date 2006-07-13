@@ -193,6 +193,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			l_sub_path: STRING
 			l_fr: CONF_FILE_RULE
 			l_name: STRING
+			l_classes_double_click_agents: like classes_double_click_agents
 		do
 			orig_count := count
 
@@ -293,37 +294,59 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				-- show classes for clusters and assemblies
 			if data.is_cluster or data.is_assembly then
 				classes := data.sub_classes.item (path+"/")
-			end
-			if classes /= Void then
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					l_name := classes.item_for_iteration.name.twin
-					if data.renaming.has (l_name) then
-						l_name := data.renaming.item (l_name)
-					end
-					l_name.prepend (data.name_prefix)
-					create a_class.make (classes.item_for_iteration, l_name)
-					if associated_window /= Void then
-						a_class.set_associated_window (associated_window)
-					end
-					if associated_textable /= Void then
-						a_class.set_associated_textable (associated_textable)
-					end
-
+				if classes /= Void then
 					from
-						classes_double_click_agents.start
+						classes.start
 					until
-						classes_double_click_agents.after
+						classes.after
 					loop
-						a_class.add_double_click_action (classes_double_click_agents.item)
-						classes_double_click_agents.forth
+						l_name := classes.item_for_iteration.name.twin
+						if data.renaming.has (l_name) then
+							l_name := data.renaming.item (l_name)
+						end
+						l_name.prepend (data.name_prefix)
+						create a_class.make (classes.item_for_iteration, l_name)
+						if associated_window /= Void then
+							a_class.set_associated_window (associated_window)
+						end
+						if associated_textable /= Void then
+							a_class.set_associated_textable (associated_textable)
+						end
+
+						a_class.load_overriden_children
+						extend (a_class)
+						classes.forth
 					end
-					a_class.load_overriden_children
-					extend (a_class)
-					classes.forth
+				end
+			end
+
+			l_classes_double_click_agents := classes_double_click_agents
+			if l_classes_double_click_agents.is_empty then
+				l_classes_double_click_agents := parent_tree.classes_double_click_agents
+			end
+			if l_classes_double_click_agents /= Void and then  l_classes_double_click_agents.count > 0 then
+				from
+					start
+				until
+					after
+				loop
+					from
+						l_classes_double_click_agents.start
+					until
+						l_classes_double_click_agents.after
+					loop
+						a_class ?= item
+						if a_class /= Void then
+							a_class.add_double_click_action (l_classes_double_click_agents.item)
+						else
+							l_subfolder ?= item
+							if l_subfolder /= Void then
+								l_subfolder.add_double_click_action_to_classes (l_classes_double_click_agents.item)
+							end
+						end
+						l_classes_double_click_agents.forth
+					end
+					forth
 				end
 			end
 

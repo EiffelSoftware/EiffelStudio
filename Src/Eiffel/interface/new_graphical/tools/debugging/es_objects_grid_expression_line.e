@@ -21,12 +21,10 @@ inherit
 			set_name as set_expression_text,
 			set_address as set_expression_result_address,
 			set_value as set_expression_result,
-			set_type as set_expression_info,
-			apply_cell_name_properties_on as apply_cell_expression_text_properties_on
+			set_type as set_expression_info
 		redefine
 			set_expression_text,
 			expression,
-			apply_cell_expression_text_properties_on,
 			recycle,
 			refresh
 		end
@@ -147,8 +145,9 @@ feature {NONE} -- Refresh implementation
 feature -- change properties
 
 	apply_cell_expression_text_properties_on (a_item: EV_GRID_LABEL_ITEM) is
+		require
+			expression_not_void: expression /= Void
 		do
-			Precursor (a_item)
 			if expression.evaluation_disabled then
 				a_item.set_foreground_color (parent_grid.disabled_row_fg_color)
 			elseif expression.error_occurred then
@@ -235,6 +234,11 @@ fixme ("find a smarter way to get a valid value")
 
 feature -- Graphical changes
 
+	new_cell_expression: ES_OBJECTS_GRID_EXPRESSION_CELL is
+		do
+			create Result
+		end
+
 	set_expression_text (v: STRING_32) is
 		require else
 			is_attached_to_row: row /= Void
@@ -245,32 +249,29 @@ feature -- Graphical changes
 			l_feature_as: FEATURE_AS
 		do
 			title := v
-			if Col_expression_index > 0 and Col_expression_index <= row.count then
-				gedit ?= row.item (Col_expression_index)
-			end
+			gedit ?= cell (Col_expression_index)
 			if gedit = Void then
-				create gedit
-				grid_cell_set_text (gedit, v)
+				gedit := new_cell_expression
 
 				gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
 				gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, True, ?,?,?,?,?,?,?,?))
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
+
 				apply_cell_expression_text_properties_on (gedit)
+				set_cell (Col_expression_index, gedit)
 
-				row.set_item (Col_expression_index, gedit)
-
-				if expression.context_class /= Void then
+				if expression /= Void and then expression.context_class /= Void then
 					l_class_c := expression.context_class
 				else
 					l_class_c := eb_debugger_manager.debugging_class_c
 					l_feature_as := eb_debugger_manager.debugging_feature_as
 				end
 				if l_class_c /= Void then
-					create l_provider.make (l_class_c, l_feature_as, expression.context_class /= Void)
+					create l_provider.make (l_class_c, l_feature_as, expression /= Void and then expression.context_class /= Void)
 					gedit.set_completion_possibilities_provider (l_provider)
 				end
 			end
-			gedit.set_text (v)
+			grid_cell_set_text (gedit, v)
 		end
 
 	update_expression_on_deactivate (a_item: ES_OBJECTS_GRID_EXPRESSION_CELL) is

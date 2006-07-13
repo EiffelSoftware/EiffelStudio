@@ -70,7 +70,13 @@ feature {NONE} -- Initialization
 			create classes_tree.make
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
+
+			classes_tree.associate_textable_with_classes (class_name_entry)
+			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
+
 			classes_tree.refresh
+
+			show_actions.extend (agent class_name_entry.set_focus)
 
 				-- Create the left panel: a Combo Box to type the name of the class
 				-- and a tree to select the class.
@@ -87,9 +93,6 @@ feature {NONE} -- Initialization
 			extend (hb)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
-			classes_tree.associate_textable_with_classes (class_name_entry)
-			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
-			show_actions.extend (agent class_name_entry.set_focus)
 		end
 
 feature -- Access

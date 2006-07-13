@@ -59,6 +59,7 @@ inherit
 	TARGET_PROPERTIES
 		export
 			{NONE} all
+			{ANY} conf_system
 		undefine
 			default_create, copy
 		redefine
@@ -169,7 +170,7 @@ feature {NONE}-- Initialization
 			vb.extend (configuration_space)
 
 				-- property grid
-			show_actions.extend (agent show_properties_system)
+			show_properties_system
 
 			append_margin (vb)
 			append_margin (hb)
@@ -199,6 +200,16 @@ feature {NONE}-- Initialization
 		end
 
 feature -- Command
+
+	set_debugs (a_debugs: like debug_clauses) is
+			-- Set `debug_clauses' to `a_debugs'.
+		require
+			a_debugs_not_void: a_debugs /= Void
+		do
+			debug_clauses := a_debugs
+		ensure
+			debug_clauses_set: debug_clauses = a_debugs
+		end
 
 	destroy is
 			-- Destroy underlying native toolkit object.
@@ -248,14 +259,15 @@ feature {NONE} -- Agents
 	on_cancel is
 			-- Quit without saving.
 		do
-			destroy
+			hide
 		end
 
 	on_ok is
 			-- Quit with saving
 		do
 			conf_system.store
-			destroy
+			conf_system.set_file_date
+			hide
 		end
 
 	edit_configuration (a_configuration: STRING) is
@@ -269,7 +281,7 @@ feature {NONE} -- Agents
 		do
 				-- see if we already have a window for this configuration and reuse it
 			config_windows.search (a_configuration)
-			if config_windows.found then
+			if config_windows.found and then config_windows.found_item.is_displayed then
 				l_lib_conf := config_windows.found_item
 				l_lib_conf.set_focus
 			else

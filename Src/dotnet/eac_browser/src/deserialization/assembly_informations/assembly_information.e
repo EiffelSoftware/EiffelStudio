@@ -34,10 +34,24 @@ feature -- Initialization
 			retried: BOOLEAN
 			l_xml_file: KL_BINARY_INPUT_FILE
 			l_parser: XM_EIFFEL_PARSER
+			l_file: RAW_FILE
+			l_offset: INTEGER
 		do
 			if not retried and then not Member_parser_table.has (an_assembly_name) then
-				create member_parser.make
 				xml_file_path := path_to_assembly_doc (an_assembly_name)
+
+					-- get position of '<' because there could be some numbers for the encoding that are not taken into account by the positions returned by gobo
+				create l_file.make_open_read (xml_file_path)
+				create member_parser.make
+				if l_file.is_open_read then
+					l_file.read_stream (5)
+					l_file.close
+					l_offset := l_file.last_string.index_of ('<', 1)
+					if l_offset > 0 then
+						member_parser.set_offset (l_offset - 1)
+					end
+				end
+
 				create l_xml_file.make (xml_file_path)
 				l_xml_file.open_read
 				if not l_xml_file.is_open_read then
@@ -68,7 +82,7 @@ feature -- Initialization
 		end
 
 feature {NONE} -- Access
-	
+
 	initialized: BOOLEAN
 			-- Did Current initialize correctly?
 
@@ -215,7 +229,7 @@ feature -- Status Setting
 				if is_valid_feature_name (l_feature_name) and then is_valid_parameters (l_parameters) then
 					Result := True
 				end
-			end			
+			end
 		end
 
 feature {NONE} -- Status Setting

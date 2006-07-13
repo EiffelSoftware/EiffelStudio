@@ -8,6 +8,9 @@ indexing
 class
 	SD_CONTENT
 
+inherit
+	HASHABLE
+
 create
 	make_with_widget_title_pixmap,
 	make_with_widget
@@ -147,6 +150,12 @@ feature -- Access
 			end
 		end
 
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := unique_title.hash_code
+		end
+
 feature -- Set
 
 	set_long_title (a_long_title: STRING) is
@@ -229,10 +238,10 @@ feature -- Set
 			visible: is_visible
 		do
 			if docking_manager.property.last_focus_content /= Current then
+				state.set_focus (Current)
 				if internal_focus_in_actions /= Void then
 					internal_focus_in_actions.call ([])
 				end
-				state.set_focus (Current)
 			end
 		end
 

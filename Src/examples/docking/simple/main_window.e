@@ -69,7 +69,7 @@ feature {NONE} -- Implementation functions
 			not_prepared: tool_bar_content = Void
 			not_void: manager /= Void
 		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_BUTTON
 			l_count, l_max_count: INTEGER
 		do

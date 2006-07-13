@@ -380,6 +380,53 @@ feature -- Status setting
 			abort_termination_when_failed_set: abort_termination_when_failed = b
 		end
 
+	set_environment_variable_table (a_table: like environment_variable_table) is
+			-- Set `environment_variable_table' with `a_table'.
+		require
+			process_not_running: not is_running
+		do
+			environment_variable_table := a_table
+		ensure
+			environment_variable_table_set: environment_variable_table /= a_table
+		end
+
+	set_environment_variables (a_table: HASH_TABLE [C_STRING, STRING]) is
+			-- Set `environment_variable_table' with `a_table'.
+			-- `a_table' can be retrieved directly from {EXECUTION_ENVIRONMENT}.`environ'.
+		require
+			process_not_running: not is_running
+			a_table_attached: a_table /= Void
+		local
+			l_tbl: like environment_variable_table
+		do
+			if environment_variable_table /= Void then
+				environment_variable_table.clear_all
+			else
+				create environment_variable_table.make (20)
+			end
+			l_tbl := environment_variable_table
+			from
+				a_table.start
+			until
+				a_table.after
+			loop
+				if a_table.key_for_iteration /= Void and then a_table.item_for_iteration /= Void then
+					l_tbl.force (a_table.item_for_iteration.string, a_table.key_for_iteration)
+				end
+				a_table.forth
+			end
+		end
+
+	set_environment_variable_use_unicode (b: BOOLEAN) is
+			-- Set `is_environment_variable_unicode' with `b'.
+		require
+			process_not_running: not is_running
+		do
+			is_environment_variable_unicode := b
+		ensure
+			is_environment_variable_unicode_set: is_environment_variable_unicode = b
+		end
+
 feature -- Actions setting
 
 	set_on_start_handler (handler: ROUTINE [ANY, TUPLE]) is
@@ -479,29 +526,10 @@ feature {NONE} -- Actions
 			end
 		end
 
-feature -- Status report
+feature -- Access
 
 	id: INTEGER is
 			-- Process identifier of last launched process.
-		require
-			process_launched: launched
-		deferred
-		end
-
-	launched: BOOLEAN
-			-- Has the process been launched?
-
-	is_running: BOOLEAN is
-			-- Is process running?
-		do
-			Result := (launched and then not has_exited)
-		end
-
-	has_exited: BOOLEAN is
-			-- Has launched process exited?
-			-- Important: When default timer which is a thread is used, and you register either terminate or exit agents,
-			-- `has_exited' is True doesn't mean those agents have finished. Use `wait_for_exit' to ensure that all registered
-			-- agents are finished.
 		require
 			process_launched: launched
 		deferred
@@ -514,17 +542,6 @@ feature -- Status report
 		deferred
 		end
 
-	abort_termination_when_failed: BOOLEAN
-			-- Will termination be aborted when there is a child process which can not be terminated
-			-- when `terminate_tree'?
-			-- Have effect only on Windows.
-
-	force_terminated: BOOLEAN
-			-- Has process been terminated by user?
-
-	last_termination_successful: BOOLEAN
-			-- Is last process termination operation successful?
-
 	platform: PLATFORM is
 			-- Facility to tell us which `platform' we are on
 		once
@@ -536,38 +553,12 @@ feature -- Status report
 	buffer_size: INTEGER
 			-- Size of buffer used for interprocess data transmission
 
-	hidden: BOOLEAN
-			-- Will the process be launched silently?
-			-- e.g., no console window will prompt out.
-			-- Has effects on Windows.
-
-	separate_console: BOOLEAN
-			-- Will process be launched with a new console instead of inheriting parent's console?
-			-- Has effects on Windows.
-
-	detached_console: BOOLEAN
-			-- Will process be launched without any console ?
-			-- Has effects on Windows.
-
 	command_line: STRING
 			-- Program name, with its arguments, if any, which will be run
 			-- in launched process
 
 	working_directory: STRING
 			-- Working directory of the program to be launched
-
-	are_agents_valid (handler: PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN is
-			-- Are output redirection agent and error redirection agent valid?
-			-- If you redirect both output and error to one agent,
-			-- they are not valid. You must redirect output and error to
-			-- different agents.
-		do
-			if is_error then
-				Result := handler /= output_handler
-			else
-				Result := handler /= error_handler
-			end
-		end
 
 	input_file_name: STRING
 			-- File name served as the redirected input stream of the new process
@@ -590,10 +581,78 @@ feature -- Status report
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
+	environment_variable_table: HASH_TABLE [STRING, STRING]
+			-- Table of environment variables to be passes to new process.
+			-- Key is variable name and value is the value of the variable.
+			-- If this table is Void or empty, environment variables of the parent process will be passes to the new process.
+
+feature -- Status report
+
+
+	launched: BOOLEAN
+			-- Has the process been launched?
+
+	is_running: BOOLEAN is
+			-- Is process running?
+		do
+			Result := (launched and then not has_exited)
+		end
+
+	has_exited: BOOLEAN is
+			-- Has launched process exited?
+			-- Important: When default timer which is a thread is used, and you register either terminate or exit agents,
+			-- `has_exited' is True doesn't mean those agents have finished. Use `wait_for_exit' to ensure that all registered
+			-- agents are finished.
+		require
+			process_launched: launched
+		deferred
+		end
+
+	abort_termination_when_failed: BOOLEAN
+			-- Will termination be aborted when there is a child process which can not be terminated
+			-- when `terminate_tree'?
+			-- Have effect only on Windows.
+
+	force_terminated: BOOLEAN
+			-- Has process been terminated by user?
+
+	last_termination_successful: BOOLEAN
+			-- Is last process termination operation successful?
+
+	hidden: BOOLEAN
+			-- Will the process be launched silently?
+			-- e.g., no console window will prompt out.
+			-- Has effects on Windows.
+
+	separate_console: BOOLEAN
+			-- Will process be launched with a new console instead of inheriting parent's console?
+			-- Has effects on Windows.
+
+	detached_console: BOOLEAN
+			-- Will process be launched without any console ?
+			-- Has effects on Windows.
+
+	are_agents_valid (handler: PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN is
+			-- Are output redirection agent and error redirection agent valid?
+			-- If you redirect both output and error to one agent,
+			-- they are not valid. You must redirect output and error to
+			-- different agents.
+		do
+			if is_error then
+				Result := handler /= output_handler
+			else
+				Result := handler /= error_handler
+			end
+		end
+
 	is_terminal_control_enabled: BOOLEAN
 			-- Should launched process has terminal control over standard input, output and error?
 			-- If terminal control is not enabled, launched process won't be able to get access to terminals.
 			-- Has effect only on Unix.
+
+	is_environment_variable_unicode: BOOLEAN
+			-- Does `environment_variable_table' use unicode?
+			-- Only has effect on Windows.
 
 feature -- Validation checking
 
@@ -715,6 +774,36 @@ feature{NONE} -- Implementation
 				(not launched) and
 				(not force_terminated) and
 				(last_termination_successful)
+		end
+
+	environment_table_as_pointer: POINTER is
+			-- {POINTER} representation of `environment_variable_table'
+			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
+		local
+			l_str: STRING
+			l_tbl: like environment_variable_table
+		do
+			l_tbl := environment_variable_table
+			if l_tbl /= Void and then not l_tbl.is_empty then
+				create l_str.make (512)
+				from
+					l_tbl.start
+				until
+					l_tbl.after
+				loop
+					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
+						l_str.append (l_tbl.key_for_iteration)
+						l_str.append_character ('=')
+						l_str.append (l_tbl.item_for_iteration)
+						l_str.append_character ('%U')
+					end
+					l_tbl.forth
+				end
+				l_str.append_character ('%U')
+				Result := (create {C_STRING}.make (l_str)).item
+			else
+				Result := default_pointer
+			end
 		end
 
 end

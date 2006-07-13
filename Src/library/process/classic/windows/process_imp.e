@@ -79,7 +79,7 @@ feature -- Control
 			on_start
 			initialize_child_process
 				-- Launch process.
-			child_process.launch (command_line, working_directory, separate_console, detached_console)
+			child_process.launch (command_line, working_directory, separate_console, detached_console, is_environment_variable_unicode, environment_table_as_pointer)
 			launched := child_process.launched
 			if launched then
 				initialize_after_launch

@@ -6,7 +6,7 @@ indexing
 class
 	PROCESS_FACTORY
 
-feature
+feature -- Access
 
 	process_launcher (a_file_name: STRING; args: LIST [STRING]; a_working_directory: STRING): PROCESS is
 			-- Returns a process launcher used to launch program `a_file_name' with arguments `args'
@@ -33,6 +33,14 @@ feature
 			create {PROCESS_IMP} Result.make_with_command_line (a_cmd_line, a_working_directory)
 		ensure
 			process_launched_created: Result /= Void
+		end
+
+	current_process_info: PROCESS_INFO is
+			-- Return an object representation of current process information
+		do
+			create {PROCESS_INFO_IMP} Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 end

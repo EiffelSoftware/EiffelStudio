@@ -5,15 +5,15 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision $"
 
-class 
-	FEATURE_STONE 
+class
+	FEATURE_STONE
 
 inherit
 	CLASSC_STONE
 		rename
 			make as class_stone_make
 		redefine
-			is_valid, synchronized_stone, 
+			is_valid, synchronized_stone,
 			history_name, same_as, origin_text, header, stone_signature,
 			file_name, stone_cursor, x_stone_cursor
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
- 
+
 	e_feature: E_FEATURE
 		-- Feature associated with stone
 
@@ -110,7 +110,7 @@ feature -- Access
 		local
 			f: E_FEATURE
 		do
-			if e_feature /= Void then 
+			if e_feature /= Void then
 				f := e_feature.written_feature
 				if f /= Void then
 					Result := f.name
@@ -131,7 +131,7 @@ feature -- Access
 			Result.append (" from ")
 			Result.append (e_class.class_signature)
 		end
- 
+
 	same_as (other: STONE): BOOLEAN is
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
@@ -160,9 +160,9 @@ feature -- dragging
 			temp := Precursor {CLASSC_STONE}
 
 			if temp /= Void then
-				if 
-					temp.count >= end_position and 
-					start_position < end_position 
+				if
+					temp.count >= end_position and
+					start_position < end_position
 				then
 					temp := temp.substring (start_position + 1, end_position)
 					Result.append (temp)
@@ -181,7 +181,7 @@ feature -- dragging
 				create Result.make_from_string (e_feature.written_class.file_name)
 			end
 		end
- 
+
 	stone_signature: STRING is
 			-- Signature of Current feature
 		do
@@ -216,18 +216,18 @@ feature -- dragging
 		once
 			Result := Cursors.cur_feature
 		end
- 
+
 	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor representing `Current' when dropping is forbidden.
 		once
 			Result := Cursors.cur_X_feature
 		end
- 
+
 	line_number: INTEGER is
 			-- Line number of feature text
 		require
 			valid_start_position: start_position > 0
-			valid_file_name: file_name /= Void 
+			valid_file_name: file_name /= Void
 		local
 			file: RAW_FILE
 			start_line_pos: INTEGER
@@ -259,27 +259,18 @@ feature -- dragging
 			-- Update current feature stone.
 		local
 			body_as: FEATURE_AS
-			retried: BOOLEAN
 		do
-			if not retried then
-				if internal_start_position = -1 and then e_feature /= Void then
-						-- Position has not been initialized
-					body_as := e_feature.ast
-					if body_as /= Void then
-						internal_start_position := body_as.start_position
-						internal_end_position := body_as.end_position
-					else
-						internal_start_position := 0
-						internal_end_position := 0
-					end	
+			if internal_start_position = -1 and then e_feature /= Void then
+					-- Position has not been initialized
+				body_as := e_feature.ast
+				if not e_feature.is_external and then body_as /= Void then
+					internal_start_position := body_as.start_position
+					internal_end_position := body_as.end_position
+				else
+					internal_start_position := 0
+					internal_end_position := 0
 				end
-			else
-				internal_start_position := 0
-				internal_end_position := 0
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	synchronized_stone: CLASSI_STONE is

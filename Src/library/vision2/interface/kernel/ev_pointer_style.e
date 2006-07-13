@@ -62,7 +62,6 @@ feature {NONE} -- Initlization
 			-- Initialize from `a_cursor'.
 		local
 			l_temp: EV_CURSOR
-			l_cursors: EV_STOCK_PIXMAPS
 		do
 			default_create
 				-- We convert from EV_CURSOR, `a_cursor' maybe void.

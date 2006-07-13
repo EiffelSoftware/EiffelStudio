@@ -85,28 +85,28 @@ feature -- Query
 			-- If `a_format' valid?
 		do
 			Result := a_format = Alpha
-			    or Result = Canonical
-				or Result = DontCare
-				or Result = Extended
-				or Result = Format16bppArgb1555
-				or Result = Format16bppGrayScale
-				or Result = Format16bppRgb555
-				or Result = Format16bppRgb565
-				or Result = Format1bppIndexed
-				or Result = Format24bppRgb
-				or Result = Format32bppArgb
-				or Result = Format32bppPArgb
-				or Result = Format32bppRgb
-				or Result = Format48bppRgb
-				or Result = Format4bppIndexed
-				or Result = Format64bppArgb
-				or Result = Format64bppPArgb
-				or Result = Format8bppIndexed
-				or Result = Gdi
-				or Result = Indexed
-				or Result = Max
-				or Result = PAlpha
-				or Result = Undefined
+			    or a_format = Canonical
+				or a_format = DontCare
+				or a_format = Extended
+				or a_format = Format16bppArgb1555
+				or a_format = Format16bppGrayScale
+				or a_format = Format16bppRgb555
+				or a_format = Format16bppRgb565
+				or a_format = Format1bppIndexed
+				or a_format = Format24bppRgb
+				or a_format = Format32bppArgb
+				or a_format = Format32bppPArgb
+				or a_format = Format32bppRgb
+				or a_format = Format48bppRgb
+				or a_format = Format4bppIndexed
+				or a_format = Format64bppArgb
+				or a_format = Format64bppPArgb
+				or a_format = Format8bppIndexed
+				or a_format = Gdi
+				or a_format = Indexed
+				or a_format = Max
+				or a_format = PAlpha
+				or a_format = Undefined
 		end
 
 indexing

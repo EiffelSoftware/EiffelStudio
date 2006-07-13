@@ -427,6 +427,8 @@ feature {NONE} -- Validation warnings
 	target_name_duplicate: STRING is "Cannot rename target because there is already a target with the new name."
 	group_name_duplicate: STRING is "Cannot rename group because there is already a target with the new name."
 	root_no_class: STRING is "Cannot specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
+	root_invalid_class: STRING is "Root class name is invalid."
+	root_invalid_feature: STRING is "Root feature name is invalid."
 	cluster_dependency_group_not_exist: STRING is "Cannot add dependency. There is no group with this name."
 	override_group_not_exist: STRING is "Cannot add override. There is no group with this name."
 	group_already_exists (a_group: STRING): STRING is

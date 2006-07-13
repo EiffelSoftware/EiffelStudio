@@ -69,15 +69,15 @@ feature -- Output
 			-- New string with printable representation.
 		do
 			if is_all_root then
-				Result := "all classes"
+				Result := "All classes"
 			else
 				create Result.make_empty
 				if cluster_name /= Void then
-					Result.append (cluster_name+" ")
+					Result.append (cluster_name+".")
 				end
-				Result.append (class_name+" ")
+				Result.append (class_name+".")
 				if feature_name /= Void then
-					Result.append (feature_name+" ")
+					Result.append (feature_name)
 				end
 			end
 		end

@@ -95,8 +95,8 @@ feature {NONE} -- Implementation
 			if a_group.description /= Void then
 				l_mls_prop.set_value (a_group.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_group.set_description))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 			properties.add_property (l_mls_prop)
 
 				-- readonly
@@ -111,8 +111,8 @@ feature {NONE} -- Implementation
 					-- recursive
 				create l_bool_prop.make_with_value (cluster_recursive_name, l_cluster.is_recursive)
 				l_bool_prop.set_description (cluster_recursive_description)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
 				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
 				properties.add_property (l_bool_prop)
 			end
 
@@ -122,16 +122,16 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_target (a_target)
 				l_dir_prop.set_description (group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (group_location_name)
 				l_file_prop.set_target (a_target)
 				l_file_prop.set_description (group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
-				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
 				properties.add_property (l_file_prop)
 			end
 
@@ -150,8 +150,8 @@ feature {NONE} -- Implementation
 			l_dial.set_description (group_condition_description)
 			l_dial.set_value (a_group.internal_conditions)
 			l_dial.disable_text_editing
-			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent store_changes))
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)
+			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent store_changes))
 			properties.add_property (l_dial)
 
 
@@ -159,8 +159,8 @@ feature {NONE} -- Implementation
 			create l_text_prop.make (group_prefix_name)
 			l_text_prop.set_description (group_prefix_description)
 			l_text_prop.set_value (a_group.name_prefix)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent store_changes))
 			l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
+			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent store_changes))
 			properties.add_property (l_text_prop)
 
 				-- renaming
@@ -170,8 +170,8 @@ feature {NONE} -- Implementation
 			if a_group.renaming /= Void then
 				l_rename_prop.set_value (a_group.renaming)
 			end
-			l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent store_changes))
 			l_rename_prop.change_value_actions.extend (agent a_group.set_renaming)
+			l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent store_changes))
 			properties.add_property (l_rename_prop)
 
 				-- class options
@@ -184,8 +184,8 @@ feature {NONE} -- Implementation
 				if a_group.class_options /= Void then
 					l_class_opt_prop.set_value (a_group.class_options)
 				end
-				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING]}?, agent store_changes))
 				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options)
+				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING]}?, agent store_changes))
 				properties.add_property (l_class_opt_prop)
 			end
 
@@ -208,8 +208,8 @@ feature {NONE} -- Implementation
 				create l_list_prop.make_with_dialog (override_override_name, l_over_dialog)
 				l_list_prop.set_description (override_override_description)
 				l_list_prop.set_value (l_over_list)
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent store_changes))
 				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?, a_target))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent store_changes))
 				properties.add_property (l_list_prop)
 			end
 

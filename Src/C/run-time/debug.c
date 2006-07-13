@@ -1110,8 +1110,9 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	if (db_stack.st_top != db_stack.st_cur->sk_arena) {	/* Stack not empty */
 		context = dtop();
 		context->dc_status = d_data.db_status;
-	} else
+	} else {
 		context = (struct dcall *) 0;
+	}
 
 	/* Resynchronize interpreter registers if necessary. This must be done
 	 * AFTER the debugging status has been updated, since sync_registers() will
@@ -1119,8 +1120,9 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	 * the current calling context. Ouch!--RAM.
 	 */
 
-	if (context != (struct dcall *) 0)
+	if ((context) && (context->dc_cur) && (context->dc_top)) {
 		sync_registers(context->dc_cur, context->dc_top);
+	}
 
 	d_cxt.pg_status = PG_RUN;	/* Program is running */
 }

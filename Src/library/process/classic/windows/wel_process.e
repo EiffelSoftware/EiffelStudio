@@ -50,10 +50,12 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN) is
+	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER) is
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
+			-- `environs' is a pointer to environment variable block.
+			-- `use_unicode' is True indicates that environment `environs' uses unicode instead of ANSI string.			
 		require
 			a_cmd_not_void: a_cmd /= Void
 			a_cmd_not_empty: not a_cmd.is_empty
@@ -64,15 +66,17 @@ feature -- Process operations
 			separate_xor_detached: not (has_separate_console and has_detached_console)
 		local
 			l_success: BOOLEAN
+			l_flag: INTEGER
 		do
 			if has_separate_console then
-				spawn_with_flags (a_cmd, a_working_directory, create_new_console)
+				l_flag := create_new_console
 			elseif has_detached_console then
-				spawn_with_flags (a_cmd, a_working_directory, detached_process)
-			else
-				spawn_with_flags (a_cmd, a_working_directory, 0)
+				l_flag := detached_process
 			end
-
+			if use_unicode then
+				l_flag := l_flag | create_unicode_environment
+			end
+			spawn_process (a_cmd, a_working_directory, l_flag, environs)
 			l_success := file_handle.close (child_input)
 			l_success := file_handle.close (child_output)
 			if not is_error_same_as_output then
@@ -417,6 +421,30 @@ feature{NONE} -- Implementation
 			"C inline use <windows.h>"
 		alias
 			"GetStdHandle (STD_ERROR_HANDLE)"
+		end
+
+	spawn_process (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER) is
+			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
+		require
+			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
+		local
+			a_wel_string1, a_wel_string2: WEL_STRING
+		do
+			create process_info.make
+			create a_wel_string1.make (a_command_line)
+			if a_working_directory /= Void and then not a_working_directory.is_empty then
+				create a_wel_string2.make (a_working_directory)
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, a_flags,
+							a_environs, a_wel_string2.item,
+							startup_info.item, process_info.item)
+			else
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, a_flags,
+							a_environs, default_pointer,
+							startup_info.item, process_info.item)
+			end
 		end
 
 end

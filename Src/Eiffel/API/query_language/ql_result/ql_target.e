@@ -140,7 +140,7 @@ feature -- Status report
 				Result := parent.is_valid_domain_item
 			end
 		ensure then
-			good_result: (parent = Void implies (Result = (target = universe.target))) and
+			good_result: (parent = Void implies (Result = (target = target.application_target))) and
 						 (parent /= Void implies (Result = parent.is_valid_domain_item))
 		end
 

@@ -353,31 +353,17 @@ feature -- Status report
 	is_valid_domain_item: BOOLEAN is
 			-- Is current a valid item that is fully attached in a domain?
 		local
-			l_parent: QL_ITEM
-			l_cur_item: QL_ITEM
-			done: BOOLEAN
-			l_system_target: CONF_TARGET
 			l_target: QL_TARGET
 		do
-			l_system_target := universe.target
-			from
-				l_parent := parent
-				l_cur_item := Current
-			until
-				done
-			loop
-				if l_parent = Void then
-						-- If an item's parent is Void, and then if it's a target item that represents
-						-- the root target of current system, it's valid, otherwise, not valid.
-					if l_cur_item.is_target then
-						l_target ?= l_cur_item
-						Result := l_target.target = l_system_target
-					end
-					done := True
-				else
-					l_cur_item := l_cur_item.parent
-					l_parent := l_cur_item.parent
+			if parent = Void then
+					-- If an item's parent is Void, and then if it's a target item that represents
+					-- the root target of current system, it's valid, otherwise, not valid.
+				if is_target then
+					l_target ?= Current
+					Result := l_target.is_valid_domain_item
 				end
+			else
+				Result := parent.is_valid_domain_item
 			end
 		end
 

@@ -18,10 +18,16 @@ feature -- Access
 	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL) is
 		require
 			cell_not_void: a_cell /= Void
+		local
+			s: STRING_GENERAL
 		do
-			a_cell.set_text (v)
+			s := v
+			if s = Void then
+				s := ""
+			end
+			a_cell.set_text (s)
 			if a_cell.tooltip = Void then
-				grid_cell_set_tooltip (a_cell, v)
+				grid_cell_set_tooltip (a_cell, s)
 			end
 		end
 

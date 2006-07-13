@@ -15,7 +15,7 @@ deferred class
 	SD_ZONE_NAVIGATION_DIALOG_IMP
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_SHADOW_DIALOG
 		redefine
 			initialize, is_in_default_state
 		end
@@ -26,37 +26,52 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local
 			internal_font: EV_FONT
+			l_vertical_box: EV_VERTICAL_BOX
 		do
-			Precursor {EV_UNTITLED_DIALOG}
+			Precursor {EV_SHADOW_DIALOG}
 
 				-- Create all widgets.
+			create internal_vertical_box_top_top
 			create internal_vertical_box_top
 			create internal_label_box
 			create internal_tools_box
 			create internal_tools_label
-			create tools_box.make
+			create tools_column.make
 			create internal_files_box
 			create internal_files_label
-			create files_box.make
+			create files_column.make
 			create internal_info_box
 			create full_title
 			create description
 			create detail
 			create internal_info_box_border
+			create scroll_area_tools
+			create scroll_area_files
 
 				-- Build widget structure.
-			extend (internal_vertical_box_top)
+			extend (internal_vertical_box_top_top)
+			internal_vertical_box_top_top.extend (internal_vertical_box_top)
 			internal_vertical_box_top.extend (internal_label_box)
-			internal_label_box.extend (internal_tools_box)
-			internal_tools_box.extend (internal_tools_label)
-			internal_tools_box.disable_item_expand (internal_tools_label)
-			internal_tools_box.extend (tools_box)
-			internal_tools_box.disable_item_expand (tools_box)
-			internal_label_box.extend (internal_files_box)
-			internal_files_box.extend (internal_files_label)
-			internal_files_box.disable_item_expand (internal_files_label)
-			internal_files_box.extend (files_box)
-			internal_files_box.disable_item_expand (files_box)
+			create l_vertical_box
+			internal_label_box.extend (l_vertical_box)
+			l_vertical_box.extend (internal_tools_label)
+			l_vertical_box.disable_item_expand (internal_tools_label)
+			l_vertical_box.extend (scroll_area_tools)
+			l_vertical_box.disable_item_expand (scroll_area_tools)
+			scroll_area_tools.extend (internal_tools_box)
+
+			internal_tools_box.extend (tools_column)
+			internal_tools_box.disable_item_expand (tools_column)
+			create l_vertical_box
+			internal_label_box.extend (l_vertical_box)
+			l_vertical_box.extend (internal_files_label)
+			l_vertical_box.disable_item_expand (internal_files_label)
+			l_vertical_box.extend (scroll_area_files)
+			l_vertical_box.disable_item_expand (scroll_area_files)
+			scroll_area_files.extend (internal_files_box)
+
+			internal_files_box.extend (files_column)
+			internal_files_box.disable_item_expand (files_column)
 --			internal_vertical_box_top.extend (internal_info_box)
 			internal_vertical_box_top.extend (internal_info_box_border)
 			internal_info_box_border.extend (internal_info_box)
@@ -111,13 +126,18 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	scroll_area_tools, scroll_area_files: EV_SCROLLABLE_AREA
+
 	internal_label_box: EV_HORIZONTAL_BOX
-	tools_box, files_box: SD_ZONE_NAVIGATION_BOX
+	tools_column, files_column: SD_TOOL_BAR
+
 	internal_info_box_border: EV_VERTICAL_BOX
-	internal_vertical_box_top, internal_tools_box, internal_files_box,
-	internal_info_box: EV_VERTICAL_BOX
+	internal_vertical_box_top, internal_info_box: EV_VERTICAL_BOX
+	internal_tools_box, internal_files_box: EV_HORIZONTAL_BOX
 	internal_tools_label, internal_files_label, full_title,
 	description, detail: EV_LABEL
+
+	internal_vertical_box_top_top: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 

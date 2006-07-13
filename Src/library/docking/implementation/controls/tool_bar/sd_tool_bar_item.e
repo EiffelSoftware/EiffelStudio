@@ -174,6 +174,17 @@ feature -- Properties
 			set: name = a_name
 		end
 
+	set_data (a_data: ANY) is
+			-- Set `data'
+		do
+			data := a_data
+		ensure
+			set: data = a_data
+		end
+
+	data: ANY
+			-- User data.
+
 feature {NONE} -- Implementation
 
 	update is

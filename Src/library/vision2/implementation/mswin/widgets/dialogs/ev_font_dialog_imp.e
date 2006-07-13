@@ -106,16 +106,10 @@ feature -- Element change
 			-- Set the initial font to `a_font'
 		local
 			font_imp: EV_FONT_IMP
-			wel_font: WEL_LOG_FONT
-			f_name: STRING_32
 		do
 			font_imp ?= a_font.implementation
-			wel_font := font_imp.wel_log_font
-			f_name := wel_font.face_name
-			if f_name.is_empty and then not font_imp.preferred_families.is_empty  then
-				wel_font.set_face_name (font_imp.preferred_families @ 1)
-			end
-			set_log_font (wel_font)
+			font_imp.update_preferred_faces (Void)
+			set_log_font (font_imp.wel_log_font)
 		end
 
 feature -- Element change

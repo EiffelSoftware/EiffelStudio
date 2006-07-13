@@ -55,12 +55,11 @@ feature {NONE} -- Initialization
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			l_icon: EV_PIXMAP
+			l_stock: EV_STOCK_PIXMAPS
 		do
 			create internal_shared
-			l_icon := internal_shared.icons.default_icon.twin
-			l_icon.set_minimum_size (20, 20)
-			make_with_widget_title_pixmap (a_widget, l_icon, a_unique_title)
+			create l_stock
+			make_with_widget_title_pixmap (a_widget, l_stock.default_window_icon, a_unique_title)
 		end
 
 feature -- Access

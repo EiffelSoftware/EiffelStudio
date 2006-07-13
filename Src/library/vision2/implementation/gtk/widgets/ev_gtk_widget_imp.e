@@ -22,12 +22,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	is_parentable: BOOLEAN is
-			-- May Current be parented?
-		do
-			Result := not {EV_GTK_EXTERNALS}.gtk_is_window (c_object)
-		end
-
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
@@ -50,10 +44,10 @@ feature {NONE} -- Implementation
 			-- Initialize `c_object'
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
-			if is_parentable then
-				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			else
+			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				{EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+			else
+				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			end
 			set_is_initialized (True)
 		end

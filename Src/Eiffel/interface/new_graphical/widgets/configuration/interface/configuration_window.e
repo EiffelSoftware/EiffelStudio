@@ -1722,6 +1722,7 @@ feature {NONE} -- Configuration setting
 			end
 			l_dial.show_modal_to_window (Current)
 			if l_dial.is_ok then
+				current_group := l_dial.last_cluster
 				refresh
 			end
 		end
@@ -1742,6 +1743,7 @@ feature {NONE} -- Configuration setting
 			end
 			l_dial.show_modal_to_window (Current)
 			if l_dial.is_ok then
+				current_group := l_dial.last_cluster
 				refresh
 			end
 		end
@@ -1756,6 +1758,7 @@ feature {NONE} -- Configuration setting
 			create l_dial.make (current_target, conf_factory)
 			l_dial.show_modal_to_window (Current)
 			if l_dial.is_ok then
+				current_group := l_dial.last_library
 				refresh
 			end
 		end
@@ -1770,6 +1773,7 @@ feature {NONE} -- Configuration setting
 			create l_dial.make (current_target, conf_factory)
 			l_dial.show_modal_to_window (Current)
 			if l_dial.is_ok then
+				current_group := l_dial.last_library
 				refresh
 			end
 		end
@@ -1782,6 +1786,7 @@ feature {NONE} -- Configuration setting
 			create l_dial.make (current_target, conf_factory)
 			l_dial.show_modal_to_window (Current)
 			if l_dial.is_ok then
+				current_group := l_dial.last_assembly
 				refresh
 			end
 		end

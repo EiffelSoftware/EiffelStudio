@@ -172,6 +172,11 @@ feature -- Status
 	is_ok: BOOLEAN
 			-- Was the dialog closed with ok?
 
+feature -- Access
+
+	last_library: CONF_LIBRARY
+			-- Last added library.
+
 feature {NONE} -- GUI elements
 
 	default_libraries: EV_LIST
@@ -245,11 +250,14 @@ feature {NONE} -- Actions
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_full_path (location.text, target)
-					target.add_library (factory.new_library (name.text, l_loc, target))
+					last_library := factory.new_library (name.text, l_loc, target)
+					target.add_library (last_library)
 					is_ok := True
 					destroy
 				end
 			end
+		ensure
+			is_ok_last_library: is_ok implies last_library /= Void
 		end
 
 

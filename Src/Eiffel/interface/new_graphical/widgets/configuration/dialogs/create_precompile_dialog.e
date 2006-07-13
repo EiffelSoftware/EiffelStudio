@@ -12,6 +12,7 @@ inherit
 	CREATE_LIBRARY_DIALOG
 		redefine
 			make,
+			last_library,
 			on_ok,
 			fill_library,
 			fill_default_libraries
@@ -28,6 +29,11 @@ feature {NONE} -- Initialization
 			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
 			set_title (dialog_create_precompile_title)
 		end
+
+feature -- Access
+
+	last_library: CONF_PRECOMPILE
+			-- Last added precompile library.
 
 feature {NONE} -- Actions
 
@@ -52,7 +58,8 @@ feature {NONE} -- Actions
 					create wd.make_with_text (group_already_exists (name.text))
 					wd.show_modal_to_window (Current)
 				else
-					target.set_precompile (factory.new_precompile (name.text, location.text, target))
+					last_library := factory.new_precompile (name.text, location.text, target)
+					target.set_precompile (last_library)
 					is_ok := True
 					destroy
 				end

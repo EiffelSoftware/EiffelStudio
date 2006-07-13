@@ -78,7 +78,7 @@ feature {NONE} -- Retrieval
 				until
 					l_args.after
 				loop
-					add_argument_text (l_args.item)
+					l_row := added_argument_text_row (l_args.item)
 					l_args.forth
 				end
 			end
@@ -202,11 +202,11 @@ feature {NONE} -- GUI
 		require
 			arguments_box_void: arguments_box = Void
 		local
+			l_border_box: EV_VERTICAL_BOX
 			l_horizontal_box: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			l_label: EV_LABEL
-			add_button,
-			remove_button: EV_BUTTON
+			add_button: EV_BUTTON
 		do
 			create arguments_box
 			arguments_box.set_padding (Layout_constants.Small_padding_size)
@@ -220,8 +220,12 @@ feature {NONE} -- GUI
 			arguments_grid.enable_single_row_selection
 			arguments_grid.row_select_actions.extend (agent on_row_selected)
 			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
-			arguments_grid.post_draw_overlay_actions.extend (agent draw_border_on_selection)
-			arguments_box.extend (arguments_grid)
+
+			create l_border_box
+			l_border_box.set_border_width (1)
+			l_border_box.set_background_color (stock_colors.black)
+			l_border_box.extend (arguments_grid)
+			arguments_box.extend (l_border_box)
 
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
@@ -319,6 +323,8 @@ feature {NONE} -- GUI Properties
 	arguments_box: EV_VERTICAL_BOX
 			-- Widget containing argument settings.
 
+	remove_button: EV_BUTTON
+
 feature {NONE} -- Actions
 
 	arg_check_selected is
@@ -362,16 +368,21 @@ feature {NONE} -- Actions
 
 	add_argument is
 			-- Action to take when user chooses to add a new argument.
+		local
+			l_row: EV_GRID_ROW
 		do
-			add_argument_text (current_argument.text)
+			l_row := added_argument_text_row (current_argument.text)
+			if l_row /= Void then
+				l_row.enable_select
+				l_row.ensure_visible
+			end
 		end
 
-	add_argument_text (a_arg_text: STRING) is
+	added_argument_text_row (a_arg_text: STRING): EV_GRID_ROW is
 			-- Action to take when user chooses to add a new argument.
 		local
 			s: STRING
 			gi: EV_GRID_LABEL_ITEM
-			l_row: EV_GRID_ROW
 		do
 			if a_arg_text /= Void then -- and then not a_arg_text.is_empty then
 				s := a_arg_text.twin
@@ -379,11 +390,12 @@ feature {NONE} -- Actions
 				check
 					no_eol: not a_arg_text.has ('%N')
 				end
-				if grid_row_with_argument (s) = Void then
+				Result := grid_row_with_argument (s)
+				if Result = Void then
 					create gi.make_with_text (s)
 					arguments_grid.set_item (1, arguments_grid.row_count + 1, gi)
-					l_row := gi.row
-					l_row.set_data (s)
+					Result := gi.row
+					Result.set_data (s)
 					store_arguments
 				end
 			end
@@ -423,39 +435,14 @@ feature {NONE} -- Actions
 				arguments_grid.remove_row (r)
 				if r <= arguments_grid.row_count then
 					l_row := arguments_grid.row (r)
-				elseif r - 1 >= arguments_grid.row_count then
+				elseif r - 1 > 0 then
 					l_row := arguments_grid.row (r - 1)
 				end
-				arguments_grid.select_row (l_row.index)
-				l_row.ensure_visible
-				store_arguments
-			end
-		end
-
-	draw_border_on_selection (drawable: EV_DRAWABLE; gitem: EV_GRID_ITEM; c,r: INTEGER) is
-		local
-			lrow: EV_GRID_ROW
-			current_column_width, current_row_height: INTEGER
-		do
-			if arguments_grid.is_sensitive and not arguments_grid.has_focus then
-				lrow := arguments_grid.row (r)
-				if lrow /= Void and then lrow.is_selected then
-					drawable.set_foreground_color (stock_colors.blue)
-					current_column_width := arguments_grid.column (c).width
-					if arguments_grid.is_row_height_fixed then
-						current_row_height := arguments_grid.row_height
-					else
-						current_row_height := lrow.height
-					end
-					if c = 1 then
-						drawable.draw_segment (0, 0, 0, current_row_height - 1)
-					end
-					if c = arguments_grid.column_count then
-						drawable.draw_segment (current_column_width - 1, 0, current_column_width - 1, current_row_height - 1)
-					end
-					drawable.draw_segment (0, 0, current_column_width - 1, 0)
-					drawable.draw_segment (0, current_row_height - 1, current_column_width - 1, current_row_height - 1)
+				if l_row /= Void then
+					arguments_grid.select_row (l_row.index)
+					l_row.ensure_visible
 				end
+				store_arguments
 			end
 		end
 
@@ -478,19 +465,20 @@ feature {NONE} -- Actions
 			else
 				current_argument.remove_text
 			end
+			remove_button.enable_sensitive
 		end
 
 	on_row_unselected (a_row: EV_GRID_ROW) is
 		local
 			gl: EV_GRID_LABEL_ITEM
 		do
+			remove_button.disable_sensitive
 			if a_row /= Void and then a_row.count > 0 then
 				gl ?= a_row.item (1)
 				if gl /= Void then
 					gl.remove_pixmap
 				end
 			end
-			current_argument.remove_text
 		end
 
 feature {NONE} -- Implementation

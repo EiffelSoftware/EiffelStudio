@@ -26,6 +26,11 @@ inherit
 			default_create, copy
 		end
 
+	ES_TREE_NAVIGATOR
+		undefine
+			default_create, copy
+		end
+
 create
 	default_create
 
@@ -58,6 +63,16 @@ feature {NONE} -- Initialization
 			last_column_use_all_width_enabled := True
 
 			cleaning_delay := 500
+
+			create key_shortcuts.make (5)
+
+			set_selected_rows_function (agent selected_rows)
+			set_expand_selected_rows_agent (agent expand_rows (False))
+			set_expand_selected_rows_recursive_agent (agent expand_rows (True))
+			set_collapse_selected_rows_agent (agent collapse_rows (False))
+			set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
+		ensure then
+			key_shortcuts_attached: key_shortcuts /= Void
 		end
 
 	color_separator: EV_COLOR is
@@ -75,6 +90,23 @@ feature -- Status
 	is_resize_mode: BOOLEAN
 			-- Are we in resize mode?
 
+	is_shortcut_registered (a_shortcut: ES_KEY_SHORTCUT): BOOLEAN is
+			-- Is `a_shortcut' registered?
+		require
+			a_shortcut_attached: a_shortcut /= Void
+		do
+			Result := key_shortcuts.has (a_shortcut)
+		end
+
+	is_key_combination_registered (a_key: EV_KEY; a_control_required, a_alt_required, a_shift_required: BOOLEAN): BOOLEAN is
+			-- Is key combination defined by `a_key', `a_control_required', `a_alt_required' and `a_shift_required'
+			-- already registered as a shortcut in current?
+		require
+			a_key_attached: a_key /= Void
+		do
+			Result := is_shortcut_registered (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, a_control_required, a_alt_required, a_shift_required))
+		end
+
 feature -- properties
 
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
@@ -84,6 +116,9 @@ feature -- properties
 			-- i.e: the pre draw cell's border, alias cell separators
 
 	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
+
+	selected_rows_function: FUNCTION [ANY, TUPLE, LIST [EV_GRID_ROW]]
+			-- Selected rows
 
 feature -- Change
 
@@ -127,12 +162,17 @@ feature -- Change
 		end
 
 	on_key_pressed (k: EV_KEY) is
+			-- Action to be performed when `k' is pressed in Current.
+		local
+			l_ev_application: like ev_application
+			l_agent: PROCEDURE [ANY, TUPLE]
 		do
+			l_ev_application := ev_application
 			if
-				not ev_application.shift_pressed
-				and not ev_application.alt_pressed
+				not l_ev_application.shift_pressed
+				and not l_ev_application.alt_pressed
 			then
-				if ev_application.ctrl_pressed then
+				if l_ev_application.ctrl_pressed then
 					inspect k.code
 					when {EV_KEY_CONSTANTS}.key_a then
 						if is_multiple_row_selection_enabled then
@@ -149,6 +189,10 @@ feature -- Change
 					else
 					end
 				end
+			end
+			l_agent := key_shortcuts.item (create {ES_KEY_SHORTCUT}.make_with_key_combination (k, l_ev_application.ctrl_pressed, l_ev_application.alt_pressed, l_ev_application.shift_pressed))
+			if l_agent /= Void then
+				l_agent.call ([])
 			end
 		end
 
@@ -238,6 +282,37 @@ feature -- Change
 						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + Additional_pixels_for_column_width)
 					end
 				end
+			end
+		end
+
+	set_selected_rows_function (a_function: like selected_rows_function) is
+			-- Set `selected_rows_function' with `a_function'.
+		require
+			a_function_attached: a_function /= Void
+		do
+			selected_rows_function := a_function
+		ensure
+			selected_rows_function_set: selected_rows_function = a_function
+		end
+
+	setup_tree_view_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: LIST [ES_KEY_SHORTCUT]) is
+			-- Setup shortcut keys and their behavior for tree view navigation.
+			-- `a_expand' is a list of shortcuts used to expand selected rows.
+			-- `a_expand_recursive' is a list of shortcuts used to recursively expand selected rows.
+			-- `a_collapse' is a list of shortcuts used to collapse selected rows.
+			-- `a_collapse_recursive' is a list of shortcuts used to recursively collapse selected rows.
+		do
+			if a_expand /= Void and then not a_expand.is_empty then
+				a_expand.do_all (agent register_shortcut (?, agent on_expand_rows (False)))
+			end
+			if a_expand_recursive /= Void and then not a_expand_recursive.is_empty then
+				a_expand_recursive.do_all (agent register_shortcut (?, agent on_expand_rows (True)))
+			end
+			if a_collapse /= Void and then not a_collapse.is_empty then
+				a_collapse.do_all (agent register_shortcut (?, agent on_collapse_rows (False)))
+			end
+			if a_collapse_recursive /= Void and then not a_collapse_recursive.is_empty then
+				a_collapse_recursive.do_all (agent register_shortcut (?, agent on_collapse_rows (True)))
 			end
 		end
 
@@ -630,7 +705,169 @@ feature {NONE} -- Implementation
 
 	cleaning_delay: INTEGER
 
-	delayed_cleaning: ES_DELAYED_ACTION;
+	delayed_cleaning: ES_DELAYED_ACTION
+
+feature {NONE} -- Actions
+
+	on_expand_rows (a_recursive: BOOLEAN) is
+			-- Action to be performed when expanding rows.
+		do
+			if not a_recursive then
+				if expand_selected_rows_agent /= Void then
+					expand_selected_rows_agent.call ([])
+				end
+			else
+				if expand_selected_rows_recursive_agent /= Void then
+					expand_selected_rows_recursive_agent.call ([])
+				end
+			end
+		end
+
+	on_collapse_rows (a_recursive: BOOLEAN) is
+			-- Action to be performed when collapsing rows.
+		do
+			if not a_recursive then
+				if collapse_selected_rows_agent /= Void then
+					collapse_selected_rows_agent.call ([])
+				end
+			else
+				if collapse_selected_rows_recursive_agent /= Void then
+					collapse_selected_rows_recursive_agent.call ([])
+				end
+			end
+		end
+
+feature {NONE} -- Tree view behavior
+
+	expand_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
+			-- Expand `a_row'.
+			-- If `a_recursive' is True, recursively expand all subrows of `a_row'.
+		require
+			tree_enabled: is_tree_enabled
+			a_row_parented: a_row.parent = Current
+		local
+			i, c: INTEGER
+		do
+			if a_row.is_expandable and then not a_row.is_expanded then
+				a_row.expand
+				c := a_row.subrow_count
+				if a_recursive and then c > 0 then
+					from
+						i := 1
+					until
+						i > c
+					loop
+						expand_row (a_row.subrow (i), a_recursive)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	collapse_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
+			-- Collapse `a_row'.
+			-- If `a_recursive' is True, recursively collapse all subrows of `a_row'.
+		require
+			tree_enabled: is_tree_enabled
+			a_row_parented: a_row.parent = Current
+		local
+			i, c: INTEGER
+		do
+			if a_row.is_expandable and then a_row.is_expanded then
+				a_row.collapse
+				c := a_row.subrow_count
+				if a_recursive and then c > 0 then
+					from
+						i := 1
+					until
+						i > c
+					loop
+						collapse_row (a_row.subrow (i), a_recursive)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	expand_rows (a_recursive: BOOLEAN) is
+			-- Expand all rows returned by `selected_rows_function'.
+			-- If `a_recursive' is True, expand those rows recursively.
+		local
+			l_rows: LIST [EV_GRID_ROW]
+		do
+			l_rows := selected_rows_function.item ([])
+			if l_rows /= Void and then not l_rows.is_empty then
+				if a_recursive then
+					remove_unnecessary_rows (l_rows)
+				end
+				l_rows.do_all (agent expand_row (?, a_recursive))
+			end
+		end
+
+	collapse_rows (a_recursive: BOOLEAN) is
+			-- Collapse all rows returned by `selected_rows_function'.
+			-- If `a_recursive' is True, collapse those rows recursively.
+		local
+			l_rows: LIST [EV_GRID_ROW]
+		do
+			l_rows := selected_rows_function.item ([])
+			if l_rows /= Void and then not l_rows.is_empty then
+				if a_recursive then
+					remove_unnecessary_rows (l_rows)
+				end
+				l_rows.do_all (agent collapse_row (?, a_recursive))
+			end
+		end
+
+	remove_unnecessary_rows (a_rows: LIST [EV_GRID_ROW]) is
+			-- Remove unnecessary rows in `a_rows' for recursive expansion or collapsion.
+		require
+			a_rows_attached: a_rows /= Void
+		local
+			l_row_tbl: HASH_TABLE [EV_GRID_ROW, INTEGER]
+			l_parent_row: EV_GRID_ROW
+			l_current_row: EV_GRID_ROW
+			done: BOOLEAN
+		do
+			create l_row_tbl.make (a_rows.count)
+			from
+				a_rows.start
+			until
+				a_rows.after
+			loop
+				l_row_tbl.put (a_rows.item, a_rows.index)
+				a_rows.forth
+			end
+
+			from
+				a_rows.start
+			until
+				a_rows.after
+			loop
+				l_current_row := a_rows.item
+				l_parent_row := a_rows.item.parent_row
+				done := False
+				if l_parent_row /= Void then
+					from until
+						l_parent_row = Void or done
+					loop
+						if l_row_tbl.has (l_parent_row.index) then
+							a_rows.remove
+							l_row_tbl.remove (l_current_row.index)
+							done := True
+						else
+							l_parent_row := l_parent_row.parent_row
+						end
+					end
+				end
+				if not done then
+					a_rows.forth
+				end
+			end
+		end
+
+invariant
+	selected_rows_agent_attached: selected_rows_function /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

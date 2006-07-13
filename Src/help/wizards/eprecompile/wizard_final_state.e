@@ -191,91 +191,46 @@ feature {NONE} -- Implementation
 
 				-- Create the callback file
 			create eifgen_path.make_from_string (proj_path)
-			eifgen_path.extend ("EIFGEN")
+			eifgen_path.extend ("EIFGENs")
 			create progress_file_path.make_from_string (eifgen_path)
 			progress_file_path.set_file_name (Progress_filename)
 
-				-- Remove the EIFGEN dir if it exists.
-			if remove_eifgen (eifgen_path) then
-					-- Launch the precompilation and update the progress bars.
-				from
-					compt := 1 -- Not needed if the file is used....
-					to_end := False
-					time_left := 0
-					progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
-					create command.make (50)
-					command.append (Eiffel_compiler_command)
-					command.append (" -precompile -ace ")
-					command.append (lib_ace)
-					command.append (" -project_path ")
-					command.append (proj_path)
-					command.append (" -output_file ")
-					command.append (progress_file_path)
-					command.append (" -c_compile")
-					launch (command)
-				until
-					to_end = True
-				loop
-					new_time_left := find_time (progress_file_path)
-					if new_time_left /= -1 then
-						if new_time_left >= 100 then
-							to_end := True
-							time_left := 100
-						else
-							time_left := time_left.max(new_time_left)
-						end
+				-- Launch the precompilation and update the progress bars.
+			from
+				compt := 1 -- Not needed if the file is used....
+				to_end := False
+				time_left := 0
+				progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
+				create command.make (50)
+				command.append (Eiffel_compiler_command)
+				command.append (" -precompile -config ")
+				command.append (lib_ace)
+				command.append (" -project_path ")
+				command.append (proj_path)
+				command.append (" -output_file ")
+				command.append (progress_file_path)
+				command.append (" -c_compile -clean")
+				launch (command)
+			until
+				to_end = True
+			loop
+				new_time_left := find_time (progress_file_path)
+				if new_time_left /= -1 then
+					if new_time_left >= 100 then
+						to_end := True
+						time_left := 100
+					else
+						time_left := time_left.max(new_time_left)
 					end
-					progress_2.set_proportion (time_left / 100)
-					progress_text_2.set_text ("Precompiling " + lib_name + " library: " + time_left.out + "%%")
-
-					total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
-					progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
-					progress_text.set_text ("Total progress: " + total_prog.out + "%%")
 				end
+				progress_2.set_proportion (time_left / 100)
+				progress_text_2.set_text ("Precompiling " + lib_name + " library: " + time_left.out + "%%")
+
+				total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
+				progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
+				progress_text.set_text ("Total progress: " + total_prog.out + "%%")
 			end
 			n_lib_done := n_lib_done + 1
-		end
-
-	remove_eifgen (eifgen_path: DIRECTORY_NAME): BOOLEAN is
-			-- Remove the eifgen directory. Return True if Eifgen has been removed.
-		local
-			eifgen_dir: DIRECTORY
-			error_dialog: EV_ERROR_DIALOG
-			cancel_removal: BOOLEAN
-			new_name: STRING
-		do
-			if not cancel_removal then
-					-- Remove the EIFGEN dir if it exists.
-				create eifgen_dir.make (eifgen_path)
-				if eifgen_dir.exists then
-					new_name := Eifgen_path.twin
-					if new_name.item (new_name.count) = ']' then
-							-- VMS specification. We need to append `_old' before the `]'.
-						new_name.insert_string ("_old", new_name.count - 1)
-					else
-						new_name.append ("_old")
-					end
-						-- Rename the old project
-					eifgen_dir.change_name (new_name)
-					eifgen_dir.recursive_delete
-				end
-			end
-			Result := not cancel_removal
-		rescue
-			create error_dialog.make_with_text (
-				"Unable to remove the existing EIFGEN directory%N`"+
-				eifgen_path+
-				"'.%N%
-				%Check your permissions and try again, or cancel the%N%
-				%precompilation")
-			error_dialog.set_buttons (<<"Try again", "Cancel">>)
-			error_dialog.set_default_push_button (error_dialog.button ("Try again"))
-			error_dialog.set_default_cancel_button (error_dialog.button ("Cancel"))
-			error_dialog.show_modal_to_window (first_window)
-			if error_dialog.selected_button.is_equal ("Cancel") then
-				cancel_removal := True
-			end
-			retry
 		end
 
 	find_time (progress_file_path: FILE_NAME): INTEGER is

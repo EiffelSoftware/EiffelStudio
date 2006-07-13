@@ -17,7 +17,7 @@ feature -- Labels names
 	l_Libraries_to_compile: STRING is	"Libraries to precompile:"
 	l_Yes: STRING is 					"Yes"
 	l_No: STRING is 					"No"
-	
+
 feature -- Buttons names
 
 	b_Add_all: STRING is				"Add all ->"
@@ -57,4 +57,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class INTERFACE_NAMES

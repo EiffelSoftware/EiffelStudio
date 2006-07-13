@@ -47,19 +47,19 @@ feature -- Basic Operation
 			precompilable_libraries.set_column_widths (<<96, 40>>)
 
 			create add_all_b.make_with_text (Interface_names.b_Add_all)
-			add_all_b.select_actions.extend (~add_all_items)
+			add_all_b.select_actions.extend (agent add_all_items)
 			add_all_b.set_minimum_size (Default_button_width, Default_button_height)
 
 			create add_b.make_with_text (Interface_names.b_Add)
-			add_b.select_actions.extend (~add_items)
+			add_b.select_actions.extend (agent add_items)
 			add_b.set_minimum_size (Default_button_width, Default_button_height)
 
 			create remove_b.make_with_text (Interface_names.b_Remove)
-			remove_b.select_actions.extend (~remove_items)
+			remove_b.select_actions.extend (agent remove_items)
 			remove_b.set_minimum_size (Default_button_width, Default_button_height)
 
 			create remove_all_b.make_with_text (Interface_names.b_Remove_all)
-			remove_all_b.select_actions.extend (~remove_all_items)
+			remove_all_b.select_actions.extend (agent remove_all_items)
 			remove_all_b.set_minimum_size (Default_button_width, Default_button_height)
 
 			create buttons_box
@@ -103,7 +103,7 @@ feature -- Basic Operation
 			choice_box.extend (h1)
 
 				-- Add your library box.
-			create add_your_own_b.make_with_text_and_action (Interface_names.b_Add_your_own_library, ~browse)
+			create add_your_own_b.make_with_text_and_action (Interface_names.b_Add_your_own_library, agent browse)
 			create h1
 			h1.set_border_width (Small_border_size)
 			create cell
@@ -123,10 +123,10 @@ feature -- Basic Operation
 				-- Update state
 			precompilable_libraries.enable_multiple_selection
 			to_precompile_libraries.enable_multiple_selection
-			precompilable_libraries.select_actions.extend (~enable_add_b)
-			precompilable_libraries.deselect_actions.extend (~enable_add_b)
-			to_precompile_libraries.select_actions.extend (~enable_remove_b)
-			to_precompile_libraries.deselect_actions.extend (~enable_remove_b)
+			precompilable_libraries.select_actions.extend (agent enable_add_b)
+			precompilable_libraries.deselect_actions.extend (agent enable_add_b)
+			to_precompile_libraries.select_actions.extend (agent enable_remove_b)
+			to_precompile_libraries.deselect_actions.extend (agent enable_remove_b)
 
 			add_b.disable_sensitive
 			remove_b.disable_sensitive
@@ -217,11 +217,15 @@ feature {NONE} -- Tools
 				loop
 					current_lib:= list_of_preprecompilable_libraries.item
 					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
-						create current_precomp.make_from_string (eiffel_directory.name)
-						current_precomp.extend (current_lib)
-						it:= fill_ev_list_items (current_precomp, "Ace.ecf")
-						if it /= Void then
-							precompilable_libraries.extend (it)
+						if
+							current_lib.count >= 4 and then
+							current_lib.substring_index (".ecf", 1) = current_lib.count - 3
+						then
+							create current_precomp.make_from_string (eiffel_directory.name)
+							it:= fill_ev_list_items (current_precomp, current_lib)
+							if it /= Void then
+								precompilable_libraries.extend (it)
+							end
 						end
 					end
 					list_of_preprecompilable_libraries.forth
@@ -235,82 +239,47 @@ feature {NONE} -- Tools
 			-- 'dir/lib' is the directory where the ace file should be
 			-- for the ISE precompile libraries
 		local
-			fi: PLAIN_TEXT_FILE
-			s: STRING
-			sys_name: STRING
-			it: EV_MULTI_COLUMN_LIST_ROW
-			ind_1, ind_2: INTEGER
-			int_dir: DIRECTORY
-			list_of_file: ARRAYED_LIST [STRING]
 			info_lib: TUPLE [STRING, BOOLEAN]
 			path_name: FILE_NAME
+			l_conf: CONF_LOAD
+			l_factory: CONF_FACTORY
+			l_file: RAW_FILE
+			l_target_name: STRING
+			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
 			create path_name.make_from_string (path_lib)
 			path_name.set_file_name (ace_name)
-			it := Void
-			create int_dir.make (path_lib)
-			if int_dir.exists then
-				int_dir.open_read
-				list_of_file:= int_dir.linear_representation
-				list_of_file.compare_objects
-				if has__case_insensitive_comparison (list_of_file, ace_name) then
-					create fi.make_open_read (path_name)
-					fi.read_stream (fi.count)
-					s:= fi.last_string.twin
-					fi.close
-					ind_1:= s.substring_index ("system", 1)
-					ind_2:= s.substring_index ("root", 1)
-					sys_name:= s.substring (ind_1 + 6, ind_2-1)
-					sys_name.replace_substring_all (" ", "")
-					sys_name.replace_substring_all ("%R", "")
-					sys_name.replace_substring_all ("%N", "")
-					sys_name.replace_substring_all ("%T", "")
-
-					if not sys_name.is_empty then
-						create it
-						create info_lib
-						info_lib.put (path_name, 1)
-
-						if has__case_insensitive_comparison (list_of_file, "EIFGEN") and
-						   has__case_insensitive_comparison (list_of_file, "precomp.epr")
-						then
-							info_lib.put (True, 2)
-							it.extend (sys_name)
-							it.extend (Interface_names.l_Yes)
-						else
-							info_lib.put (False, 2)
-							it.extend (sys_name)
-							it.extend (Interface_names.l_No)
-						end
-						it.set_data (info_lib)
-					end
-				else
-					error_no_ace:= TRUE
-				end
+			create l_factory
+			create l_conf.make (l_factory)
+			l_conf.retrieve_configuration (path_name)
+			if not l_conf.is_error then
+				l_targets := l_conf.last_system.compilable_targets
 			end
-			Result:= it
-		end
+			if l_targets /= Void and l_targets.count = 1 then
+				create Result
+				create info_lib
+				info_lib.put (path_name, 1)
 
-	has__case_insensitive_comparison (list_of_strings: ARRAYED_LIST [STRING]; a_string: STRING): BOOLEAN is
-			-- Is `a_string' present in `list_of_strings'?
-			-- The comparison is made upon upon object content rather than object references and
-			-- is made using a non case sensitive comparison.
-		require
-			list_of_strings_not_void: list_of_strings /= Void
-			a_string_not_void: a_string /= Void
-		local
-			cur_item: STRING
-			ref_item: STRING
-		do
-			ref_item := a_string.as_lower
-			from
-				list_of_strings.start
-			until
-				Result or list_of_strings.after
-			loop
-				cur_item := list_of_strings.item.as_lower
-				Result := cur_item.is_equal (ref_item)
-				list_of_strings.forth
+				create path_name.make_from_string (path_lib)
+				path_name.extend ("EIFGENs")
+				l_targets.start
+				l_target_name := l_targets.item_for_iteration.name
+				path_name.extend (l_target_name)
+				path_name.extend ("project.epr")
+				create l_file.make (path_name)
+
+				if l_file.exists then
+					info_lib.put (True, 2)
+					Result.extend (l_conf.last_system.name)
+					Result.extend (Interface_names.l_Yes)
+				else
+					info_lib.put (False, 2)
+					Result.extend (l_conf.last_system.name)
+					Result.extend (Interface_names.l_No)
+				end
+				Result.set_data (info_lib)
+			else
+				Result := Void
 			end
 		end
 
@@ -449,7 +418,7 @@ feature {NONE} -- Tools
 			error_dialog: EV_WARNING_DIALOG
 		do
 			create file_open_dialog
-			file_open_dialog.filters.extend (["*.ecf", "Eiffel Configuration Files (ecf)"])
+			file_open_dialog.filters.extend (["*.ecf", "Eiffel Configuration Files (*.ecf)"])
 			file_open_dialog.show_modal_to_window (first_window)
 
 			file_path := file_open_dialog.file_path

@@ -11,6 +11,7 @@ class
 inherit
 	CREATE_CLUSTER_DIALOG
 		redefine
+			last_cluster,
 			make,
 			on_ok
 		end
@@ -33,6 +34,11 @@ feature {NONE} -- Initialization
 		set_title (dialog_create_override_title)
 	end
 
+feature -- Access
+
+	last_cluster: CONF_OVERRIDE
+			-- Last added override cluster.
+
 feature {NONE} -- Actions
 
 	on_ok is
@@ -50,7 +56,8 @@ feature {NONE} -- Actions
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
-					target.add_override (factory.new_override (name.text, l_loc, target))
+					last_cluster := factory.new_override (name.text, l_loc, target)
+					target.add_override (last_cluster)
 					is_ok := True
 					destroy
 				end

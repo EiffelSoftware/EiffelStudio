@@ -148,6 +148,9 @@ feature -- Access
 	parent_cluster: CONF_CLUSTER
 			-- Parent cluster (if any).
 
+	last_cluster: CONF_CLUSTER
+			-- Last created cluster.
+
 feature -- Update
 
 	set_parent_cluster (a_parent: like parent_cluster) is
@@ -209,7 +212,6 @@ feature {NONE} -- Actions
 		local
 			wd: EV_WARNING_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
-			l_cluster: CONF_CLUSTER
 		do
 			if not name.text.is_empty and not location.text.is_empty then
 				if target.groups.has (name.text) then
@@ -220,16 +222,18 @@ feature {NONE} -- Actions
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
-					l_cluster := factory.new_cluster (name.text, l_loc, target)
+					last_cluster := factory.new_cluster (name.text, l_loc, target)
 					if parent_cluster /= Void then
-						l_cluster.set_parent (parent_cluster)
-						parent_cluster.add_child (l_cluster)
+						last_cluster.set_parent (parent_cluster)
+						parent_cluster.add_child (last_cluster)
 					end
-					target.add_cluster (l_cluster)
+					target.add_cluster (last_cluster)
 					is_ok := True
 					destroy
 				end
 			end
+		ensure
+			is_ok_last_cluster: is_ok implies last_cluster /= Void
 		end
 
 feature {NONE} -- Implementation

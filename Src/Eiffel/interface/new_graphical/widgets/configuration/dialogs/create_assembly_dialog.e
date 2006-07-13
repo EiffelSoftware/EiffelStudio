@@ -191,6 +191,11 @@ feature -- Status
 	is_ok: BOOLEAN
 			-- Was the dialog closed with ok?
 
+feature -- Access
+
+	last_assembly: CONF_ASSEMBLY
+			-- Last added assembly.
+
 feature {NONE} -- GUI elements
 
 	assemblies: EV_LIST
@@ -277,7 +282,8 @@ feature {NONE} -- Actions
 				elseif l_local.is_empty then
 					create wd.make_with_text (assembly_no_location)
 				else
-					target.add_assembly (factory.new_assembly (name.text, location.text, target))
+					last_assembly := factory.new_assembly (name.text, location.text, target)
+					target.add_assembly (last_assembly)
 				end
 
 				if wd /= Void then
@@ -287,6 +293,8 @@ feature {NONE} -- Actions
 					destroy
 				end
 			end
+		ensure
+			is_ok_last_assembly: is_ok implies last_assembly /= Void
 		end
 
 feature {NONE} -- Implementation

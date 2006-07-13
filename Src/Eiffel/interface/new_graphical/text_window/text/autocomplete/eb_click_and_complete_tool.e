@@ -42,7 +42,7 @@ feature -- Initialization
 				initialize_context
 				if current_class_c /= Void then
 					generate_ast (current_class_c, after_save)
-					can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
+					can_analyze_current_class := current_class_as /= Void
 				end
 			end
 		end

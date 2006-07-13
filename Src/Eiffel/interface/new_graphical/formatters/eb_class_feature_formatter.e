@@ -24,6 +24,16 @@ feature -- Status report
 	is_class_feature_formatter: BOOLEAN is True
 			-- Is current a class feature formatter?
 
+feature -- Setting
+
+	set_focus is
+			-- Set focus to current formatter.
+		do
+			if browser /= Void then
+				browser.set_focus
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	generate_result is

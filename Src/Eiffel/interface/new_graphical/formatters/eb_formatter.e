@@ -112,6 +112,11 @@ feature -- Setting
 			viewpoints_is_set: viewpoints = a_viewpoints
 		end
 
+	set_focus is
+			-- Set focus to current formatter.
+		deferred
+		end
+
 feature -- Formatting
 
 	format is

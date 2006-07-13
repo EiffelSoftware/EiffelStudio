@@ -32,6 +32,16 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Setting
+
+	set_focus is
+			-- Set focus to current formatter.
+		do
+			if browser /= Void then
+				browser.set_focus
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	generate_result is

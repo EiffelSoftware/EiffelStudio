@@ -105,6 +105,16 @@ feature -- Status setting
 			cmd_created_if_possible: (a_feature = Void) = (feature_cmd = Void)
 		end
 
+feature -- Setting
+
+	set_focus is
+			-- Set focus to current formatter.
+		do
+			if editor /= Void then
+				editor.set_focus
+			end
+		end
+
 feature -- Formatting
 
 	format is

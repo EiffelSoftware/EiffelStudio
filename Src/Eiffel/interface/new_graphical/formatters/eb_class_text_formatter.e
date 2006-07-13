@@ -44,6 +44,16 @@ feature -- Access
 			Result := True
 		end
 
+feature -- Setting
+
+	set_focus is
+			-- Set focus to current formatter.
+		do
+			if editor /= Void then
+				editor.set_focus
+			end
+		end
+
 feature -- Formatting
 
 	format is

@@ -13,7 +13,8 @@ inherit
 			initialize,
 			initialize_actions,
 			deactivate,
-			has_focus
+			has_focus,
+			activate_action
 		end
 
 feature {NONE} -- Initialization
@@ -55,6 +56,21 @@ feature -- Access
 			-- Possible choices.
 
 feature {NONE} -- Agents
+
+	activate_action (a_popup_window: EV_POPUP_WINDOW) is
+			-- Activate action.
+		local
+			l_te: BOOLEAN
+		do
+				-- we don't want the ellipsis action to be called, because we want to be able to switch the value even if we don't allow text editing
+			l_te := is_text_editing
+			is_text_editing := True
+			Precursor {ELLIPSIS_PROPERTY}(a_popup_window)
+			is_text_editing := l_te
+			if not is_text_editing then
+				text_field.disable_edit
+			end
+		end
 
 	switch is
 			-- Switch value.
@@ -100,13 +116,13 @@ feature {NONE} -- Agents
 	show_ellipsis is
 			-- Called when ellipsis is pressed.
 		require
-			is_activated: is_activated
+			popup_window: popup_window /= Void
 		local
 			l_item: GENERIC_GRID_ITEM [G]
 			l_frame: EV_FRAME
 		do
 			create combo_popup
-			combo_popup.set_position (popup_window.x_position, popup_window.y_position + text_field.height)
+			combo_popup.set_position (popup_window.x_position, popup_window.y_position + popup_window.height)
 			combo_popup.set_width (width)
 
 			create l_frame
@@ -126,7 +142,7 @@ feature {NONE} -- Agents
 				l_item.set_value (item_strings.item)
 				combo_grid.set_item (1, item_strings.index, l_item)
 				l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))
-				if l_item.text.is_equal (text_field.text) then
+				if l_item.text.is_equal (displayed_value) then
 					l_item.enable_select
 				end
 				item_strings.forth
@@ -176,8 +192,6 @@ feature {NONE} -- Agents
 
 	combo_click (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Choose a different value.
-		require
-			is_activated: is_activated
 		local
 			l_item: GENERIC_GRID_ITEM [G]
 		do
@@ -206,6 +220,8 @@ feature {NONE} -- Agents
 					end
 					deactivate
 				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+				deactivate
 			end
 		end
 

@@ -51,6 +51,8 @@ feature -- Access
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
+			Result.drop_actions.extend (agent on_drop)
+			Result.drop_actions.set_veto_pebble_function (agent dropable)
 		end
 
 feature -- Basic operations
@@ -72,7 +74,7 @@ feature -- Basic operations
 				else
 					l_config := lace.conf_system.file_name
 					config_windows.search (l_config)
-					if config_windows.found then
+					if config_windows.found and then config_windows.found_item.is_displayed then
 						configuration_window := config_windows.found_item
 						configuration_window.set_focus
 					else
@@ -103,9 +105,16 @@ feature -- Basic operations
 								create l_sorted_debugs.make_default
 							end
 
-							l_load.last_system.targets.start
-							l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+								-- only create a new configuration window if the data changed
+							if configuration_window /= Void and then configuration_window.conf_system.file_date = l_load.last_system.file_date then
+								configuration_window.set_debugs (l_sorted_debugs)
+							else
+								l_load.last_system.targets.start
+								l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
+								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+
+							end
+
 							configuration_window.show
 						end
 					end
@@ -118,6 +127,60 @@ feature -- Basic operations
 				retry
 			end
 		end
+
+feature {NONE} -- Actions
+
+	on_drop (a_stone: CLUSTER_STONE) is
+			-- If we have a group stone for an editable library, edit this library.
+		require
+			a_stone_not_void: a_stone /= Void
+		local
+			l_lib: CONF_LIBRARY
+			wd: EV_WARNING_DIALOG
+			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
+			l_fact: CONF_COMP_FACTORY
+			l_load: CONF_LOAD
+			l_config: STRING
+		do
+			if a_stone.group.is_library then
+				l_lib ?= a_stone.group
+				check
+					library: l_lib /= Void
+				end
+				if not l_lib.is_readonly then
+					l_config := l_lib.library_target.system.file_name
+					config_windows.search (l_config)
+					if config_windows.found then
+						configuration_window := config_windows.found_item
+						configuration_window.set_focus
+					else
+						create l_fact
+						create l_load.make (l_fact)
+						l_load.retrieve_configuration (l_config)
+						if l_load.is_error then
+							create wd.make_with_text (l_load.last_error.out)
+							wd.show_modal_to_window (window_manager.
+								last_focused_development_window.window)
+						else
+							create l_sorted_debugs.make_default
+							l_load.last_system.targets.start
+							l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
+							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+							configuration_window.show
+						end
+					end
+				end
+			end
+		end
+
+	dropable (a_stone: CLUSTER_STONE): BOOLEAN is
+			-- Can `st' be dropped on `Current'?
+		require
+			a_stone_not_void: a_stone /= Void
+		do
+			Result := a_stone.group.is_library and then not a_stone.group.is_readonly
+		end
+
 
 feature {NONE} -- Implementation
 

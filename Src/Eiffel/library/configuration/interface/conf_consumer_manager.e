@@ -343,6 +343,7 @@ feature {NONE} -- Implementation
 								-- add dependencies to the set of new classes if they are not yet there
 							if not new_assemblies.has (l_as) then
 								l_as.revalidate
+								l_as.set_target (an_assembly.target)
 								new_assemblies.force_last (l_as)
 							end
 							l_as_deps.forth

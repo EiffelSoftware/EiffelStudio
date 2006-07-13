@@ -90,23 +90,6 @@ feature -- Status
 	is_resize_mode: BOOLEAN
 			-- Are we in resize mode?
 
-	is_shortcut_registered (a_shortcut: ES_KEY_SHORTCUT): BOOLEAN is
-			-- Is `a_shortcut' registered?
-		require
-			a_shortcut_attached: a_shortcut /= Void
-		do
-			Result := key_shortcuts.has (a_shortcut)
-		end
-
-	is_key_combination_registered (a_key: EV_KEY; a_control_required, a_alt_required, a_shift_required: BOOLEAN): BOOLEAN is
-			-- Is key combination defined by `a_key', `a_control_required', `a_alt_required' and `a_shift_required'
-			-- already registered as a shortcut in current?
-		require
-			a_key_attached: a_key /= Void
-		do
-			Result := is_shortcut_registered (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, a_control_required, a_alt_required, a_shift_required))
-		end
-
 feature -- properties
 
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR

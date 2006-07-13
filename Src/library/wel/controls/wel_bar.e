@@ -29,7 +29,7 @@ feature -- Status report
 			exists: exists
 		deferred
 		ensure
-			minimum_ok: minimum <= maximum
+			minimum_ok: Result <= maximum
 		end
 
 	maximum: INTEGER is
@@ -38,7 +38,7 @@ feature -- Status report
 			exists: exists
 		deferred
 		ensure
-			maximum_ok: maximum >= minimum
+			maximum_ok: Result >= minimum
 		end
 
 	valid_maximum (a_position: INTEGER): BOOLEAN is

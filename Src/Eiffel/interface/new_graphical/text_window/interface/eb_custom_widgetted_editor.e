@@ -263,7 +263,7 @@ feature {NONE} -- Quick search bar.
 			-- Hide quick search bar.
 		do
 			Precursor {EB_EDITOR}
-			if search_bar.is_displayed then
+			if not search_bar.is_destroyed and then search_bar.is_displayed then
 				if not search_bar.has_focus_on_widgets and not focusing_search_bar then
 					hide_search_bar
 				else

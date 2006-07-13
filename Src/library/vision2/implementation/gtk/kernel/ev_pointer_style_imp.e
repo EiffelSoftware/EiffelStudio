@@ -37,13 +37,15 @@ feature {NONE} -- Initlization
 			set_is_initialized (True)
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
 			-- Initialize from `a_pixel_buffer'
 		local
 			l_pix_buf_imp: EV_PIXEL_BUFFER_IMP
 		do
 			l_pix_buf_imp ?= a_pixel_buffer.implementation
 			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
+			set_x_hotspot (a_x_hotspot)
+			set_y_hotspot (a_x_hotspot)
 		end
 
 	init_predefined (a_constant: INTEGER) is
@@ -59,9 +61,34 @@ feature {NONE} -- Initlization
 		do
 			a_pix_imp ?= a_cursor.implementation
 			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
+			set_x_hotspot (a_cursor.x_hotspot)
+			set_y_hotspot (a_cursor.y_hotspot)
+		end
+
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32) is
+			-- Initalize from `a_pixmap'
+		local
+			a_pix_imp: EV_PIXMAP_IMP
+		do
+			a_pix_imp ?= a_pixmap.implementation
+			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
+			set_x_hotspot (a_hotspot_x)
+			set_y_hotspot (a_hotspot_y)
 		end
 
 feature -- Command
+
+	set_x_hotspot (a_x: INTEGER) is
+			-- Set `x_hotspot' to `a_x'.
+		do
+			x_hotspot := a_x
+		end
+
+	set_y_hotspot (a_y: INTEGER) is
+			-- Set `y_hotspot' to `a_y'.
+		do
+			y_hotspot := a_y
+		end
 
 	destroy is
 			-- Destroy
@@ -90,6 +117,12 @@ feature -- Query
 				Result := {EV_GTK_EXTERNALS}.gdk_display_get_default_cursor_size ({EV_GTK_EXTERNALS}.gdk_display_get_default)
 			end
 		end
+
+	x_hotspot: INTEGER
+			-- Specifies the x-coordinate of a cursor's hot spot.
+
+	y_hotspot: INTEGER
+			-- Specifies the y-coordinate of a cursor's hot spot.
 
 feature -- Implementation
 

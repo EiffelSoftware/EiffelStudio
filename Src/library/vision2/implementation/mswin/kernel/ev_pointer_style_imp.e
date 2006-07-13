@@ -33,28 +33,32 @@ feature {NONE} -- Initlization
 			set_is_initialized (True)
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
 			-- Initialize from `a_pixel_buffer'
 		do
 			destroy_gdi_objects
 			build_mask_bitmap (a_pixel_buffer.width, a_pixel_buffer.height)
 			build_bitmap (a_pixel_buffer)
-			build_native_cursor (a_pixel_buffer.width, a_pixel_buffer.height)
+			build_native_cursor (a_pixel_buffer.width, a_pixel_buffer.height, a_x_hotspot, a_y_hotspot)
 			wel_bitmap.delete
 			wel_mask_bitmap.delete
-			width := a_pixel_buffer.width
-			height := a_pixel_buffer.height
 		end
 
 	init_from_cursor (a_cursor: EV_CURSOR) is
 			-- Initialize from `a_cursor'
+		do
+			init_from_pixmap (a_cursor, a_cursor.x_hotspot, a_cursor.y_hotspot)
+		end
+
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER) is
+			-- Initalize from `a_pixmap'
 		local
 			l_simple_imp: EV_PIXMAP_IMP
 			l_imp: EV_PIXMAP_IMP_STATE
 		do
 			destroy_gdi_objects
-			l_simple_imp ?= a_cursor.implementation
-			l_imp ?= a_cursor.implementation
+			l_simple_imp ?= a_pixmap.implementation
+			l_imp ?= a_pixmap.implementation
 			if l_simple_imp /= Void and then l_simple_imp.private_cursor /= Void then
 				-- If already have one, then we don't need to create a new gdi cursor.
 				wel_cursor := l_simple_imp.private_cursor
@@ -62,8 +66,8 @@ feature {NONE} -- Initlization
 				wel_cursor ?= l_imp.build_graphical_resource (False)
 				wel_cursor.enable_reference_tracking
 			end
-			width := a_cursor.width
-			height := a_cursor.height
+			set_x_hotspot (a_hotspot_x)
+			set_y_hotspot (a_hotspot_y)
 		ensure then
 			not_void: wel_cursor /= Void
 		end
@@ -76,11 +80,41 @@ feature {NONE} -- Initlization
 			destroy_gdi_objects
 			build_default_icon (to_windows_constants (a_constants))
 			create l_env
-			width := l_env.default_pointer_style_width
-			height := l_env.default_pointer_style_height
 		end
 
 feature -- Command
+
+	set_x_hotspot (a_x: INTEGER) is
+			-- Set `x_hotspot' to `a_x'.
+		do
+			set_hotspot_imp (a_x, True)
+		end
+
+	set_y_hotspot (a_y: INTEGER) is
+			-- Set `y_hotspot' to `a_y'.
+		do
+			set_hotspot_imp (a_y, False)
+		end
+
+	set_hotspot_imp (a_position: INTEGER; a_is_x: BOOLEAN) is
+			-- Set hotspot implementation
+		local
+			l_icon_info: WEL_ICON_INFO
+		do
+			l_icon_info := wel_cursor.get_icon_info
+			wel_cursor.decrement_reference
+			if a_is_x then
+				l_icon_info.set_x_hotspot (a_position)
+			else
+				l_icon_info.set_y_hotspot (a_position)
+			end
+			create wel_cursor.make_by_icon_info (l_icon_info)
+			wel_cursor.enable_reference_tracking
+			l_icon_info.delete
+		ensure
+			created: wel_cursor /= void and then wel_cursor.exists
+			changed: old wel_cursor /= wel_cursor
+		end
 
 	destroy is
 			-- Destroy
@@ -95,11 +129,44 @@ feature -- Query
 	wel_cursor: WEL_CURSOR
 			-- Windows native cursor
 
-	width: INTEGER
+	width: INTEGER is
 			-- Width
+		local
+			l_icon_info: WEL_ICON_INFO
+		do
+			l_icon_info := wel_cursor.get_icon_info
+			Result := l_icon_info.width
+			l_icon_info.delete
+		end
 
-	height: INTEGER
+	height: INTEGER is
 			-- Height
+		local
+			l_icon_info: WEL_ICON_INFO
+		do
+			l_icon_info := wel_cursor.get_icon_info
+			Result := l_icon_info.height
+			l_icon_info.delete
+		end
+
+	x_hotspot: INTEGER is
+			-- Specifies the x-coordinate of a cursor's hot spot.
+		local
+			l_icon_info: WEL_ICON_INFO
+		do
+			l_icon_info := wel_cursor.get_icon_info
+			Result := l_icon_info.x_hotspot
+			l_icon_info.delete
+		end
+
+	y_hotspot: INTEGER is
+			-- Specifies the y-coordinate of a cursor's hot spot.
+		local
+			l_icon_info: WEL_ICON_INFO
+		do
+			l_icon_info := wel_cursor.get_icon_info
+			Result := l_icon_info.y_hotspot
+		end
 
 	to_windows_constants (a_constants: INTEGER): POINTER is
 			-- Convert from EV_POINTER_STYLE_CONSTANTS to windows native constants
@@ -151,7 +218,7 @@ feature {NONE} -- Implementation
 			created: wel_cursor /= Void and then wel_cursor.exists
 		end
 
-	build_native_cursor (a_width, a_height: INTEGER) is
+	build_native_cursor (a_width, a_height, a_x_hotspot, a_y_hotspot: INTEGER) is
 			-- Build `wel_cursor'
 		require
 			valid: a_width > 0 and a_height > 0
@@ -165,8 +232,8 @@ feature {NONE} -- Implementation
 			l_icon_info.set_unshared
 			l_icon_info.set_is_icon (False)
 
-			l_icon_info.set_x_hotspot (interface.x_hotspot)
-			l_icon_info.set_y_hotspot (interface.y_hotspot)
+			l_icon_info.set_x_hotspot (a_x_hotspot)
+			l_icon_info.set_y_hotspot (a_y_hotspot)
 
 			l_icon_info.set_color_bitmap (wel_bitmap)
 			l_icon_info.set_mask_bitmap (wel_mask_bitmap)

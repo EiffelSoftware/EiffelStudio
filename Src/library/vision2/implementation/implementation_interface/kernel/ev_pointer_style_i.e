@@ -17,8 +17,13 @@ deferred class
 
 feature {EV_POINTER_STYLE} -- Initlization
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
 			-- Initialize from `a_pixel_buffer'
+		deferred
+		end
+
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER) is
+			-- Initalize from `a_pixmap'
 		deferred
 		end
 
@@ -34,6 +39,18 @@ feature {EV_POINTER_STYLE} -- Initlization
 		deferred
 		end
 
+feature -- Command
+
+	set_x_hotspot (a_x: INTEGER) is
+			-- Set `x_hotspot' to `a_x'.
+		deferred
+		end
+
+	set_y_hotspot (a_y: INTEGER) is
+			-- Set `y_hotspot' to `a_y'.
+		deferred
+		end
+
 feature -- Query
 
 	width: INTEGER is
@@ -43,6 +60,16 @@ feature -- Query
 
 	height: INTEGER is
 			-- Height
+		deferred
+		end
+
+	x_hotspot: INTEGER is
+			-- Specifies the x-coordinate of a cursor's hot spot.
+		deferred
+		end
+
+	y_hotspot: INTEGER is
+			-- Specifies the y-coordinate of a cursor's hot spot.
 		deferred
 		end
 

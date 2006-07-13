@@ -26,12 +26,18 @@ feature {NONE} -- Initialization
 			is_shift_pressed := a_is_shift_pressed
 			default_create
 			internal_docking_manager := a_docking_manager
-			tools_box.set_max_size (internal_max_width // 2, internal_max_height)
-			files_box.set_max_size (internal_max_width // 2, internal_max_height)
 
 			add_all_content_label
 			key_release_actions.extend (agent on_key_release)
 			key_press_actions.extend (agent on_key_press)
+
+			disable_user_resize
+			disable_border
+
+			internal_vertical_box_top_top.set_border_width (1)
+			internal_vertical_box_top_top.set_background_color (internal_shared.focused_color)
+
+			focus_out_actions.extend (agent destroy)
 		ensure
 			set: is_shift_pressed = a_is_shift_pressed
 			set: internal_docking_manager = a_docking_manager
@@ -45,6 +51,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_layout: EV_LAYOUT_CONSTANTS
+			l_font: EV_FONT
 		do
 			create l_layout
 			internal_vertical_box_top.set_border_width (l_layout.default_border_size)
@@ -53,7 +60,7 @@ feature {NONE} -- Initialization
 			internal_info_box.set_border_width (l_layout.default_border_size)
 			internal_info_box.set_padding_width (l_layout.default_padding_size)
 
-			internal_info_box_border.set_border_width (l_layout.tiny_padding_size)
+			internal_info_box_border.set_border_width (1)
 			internal_info_box_border.set_background_color (internal_shared.focused_color)
 
 			internal_tools_box.set_border_width (l_layout.default_border_size)
@@ -61,6 +68,13 @@ feature {NONE} -- Initialization
 
 			internal_files_box.set_border_width (l_layout.default_border_size)
 			internal_files_box.set_padding (l_layout.default_padding_size)
+
+			scroll_area_files.hide_vertical_scroll_bar
+			scroll_area_tools.hide_vertical_scroll_bar
+
+			l_font := full_title.font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			full_title.set_font (l_font)
 		end
 
 	init_background (a_color: EV_COLOR) is
@@ -70,10 +84,10 @@ feature {NONE} -- Initialization
 			internal_label_box.set_background_color (a_color)
 			internal_tools_box.set_background_color (a_color)
 			internal_tools_label.set_background_color (a_color)
-			tools_box.set_background_color (a_color)
+			tools_column.set_background_color (a_color)
 			internal_files_box.set_background_color (a_color)
 			internal_files_label.set_background_color (a_color)
-			files_box.set_background_color (a_color)
+			files_column.set_background_color (a_color)
 			internal_info_box.set_background_color (a_color)
 			full_title.set_background_color (a_color)
 			description.set_background_color (a_color)
@@ -84,27 +98,40 @@ feature {NONE} -- Initialization
 			-- Add all content label to Current.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_label: SD_CONTENT_LABEL
+			l_label: SD_TOOL_BAR_RADIO_BUTTON
 			l_pass_first_editor, l_pass_second_editor: BOOLEAN
-			l_first_label: SD_CONTENT_LABEL
-			l_last_label: SD_CONTENT_LABEL
+			l_first_label, l_last_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_tools_count, l_files_count: INTEGER
 		do
 			l_contents := internal_docking_manager.property.contents_by_click_order
 			from
 				l_contents.start
+				l_tools_count := 1
+				l_files_count := 1
 			until
 				l_contents.after
 			loop
-				create l_label.make (False, Current)
+				create l_label.make
+				l_label.set_wrap (True)
 				l_label.set_data (l_contents.item)
-				l_label.enable_color_actions.extend (agent on_label_enable_focus_color (l_label))
-				l_label.pointer_button_press_actions.force_extend (agent select_label_and_destroy)
+
+				l_label.select_actions.extend (agent select_label_and_destroy (l_label))
 				l_label.set_pixmap (l_contents.item.pixmap)
 				l_label.set_text (l_contents.item.short_title)
 				if l_contents.item.type = {SD_ENUMERATION}.tool and l_contents.item.is_visible then
-					tools_box.extend (l_label)
+					if l_tools_count > {SD_SHARED}.zone_navigation_column_count then
+						l_tools_count := 1
+						add_new_column (False)
+					end
+					tools_column.extend (l_label)
+					l_tools_count := l_tools_count + 1
 				elseif l_contents.item.type = {SD_ENUMERATION}.editor and l_contents.item.is_visible then
-					files_box.extend (l_label)
+					if l_files_count > {SD_SHARED}.zone_navigation_column_count then
+						l_files_count := 1
+						add_new_column (True)
+					end
+					l_files_count := l_files_count + 1
+					files_column.extend (l_label)
 					if l_pass_first_editor and then not l_pass_second_editor then
 						focus_label (l_label)
 						l_pass_second_editor := True
@@ -127,30 +154,181 @@ feature {NONE} -- Initialization
 			else
 				on_label_enable_focus_color (l_last_label)
 			end
+
+			set_all_items_wrap
+
+			compute_all_sizes
+		end
+
+	compute_all_sizes is
+			-- Let all tool bars compute them minimun sizes.
+		local
+			l_maximum, l_temp: INTEGER
+		do
+			l_maximum := compute_all_sizes_imp (all_files_column)
+			l_temp := compute_all_sizes_imp (all_tools_column)
+			if l_maximum < l_temp then
+				l_maximum := l_temp
+			end
+			set_columns_minimum_width (all_files_column, l_maximum)
+			set_columns_minimum_width (all_tools_column, l_maximum)
+
+			set_scroll_area_item_size (internal_files_box, scroll_area_files)
+			set_scroll_area_item_size (internal_tools_box, scroll_area_tools)
+		end
+
+	set_scroll_area_item_size (a_box: EV_BOX; a_scroll_area: EV_SCROLLABLE_AREA) is
+			--
+		require
+			not_void: a_box /= Void
+			not_void: a_scroll_area /= Void
+		do
+			if a_box.minimum_height + 15 > internal_max_height then
+
+				a_scroll_area.set_minimum_height (internal_max_height + 15)
+			else
+				a_scroll_area.set_minimum_height (a_box.minimum_height + 15)
+			end
+
+			if a_box.minimum_width > internal_max_width then
+				a_scroll_area.set_minimum_width (internal_max_width)
+			else
+				a_scroll_area.set_minimum_width (a_box.minimum_width)
+			end
+		end
+
+	set_columns_minimum_width (a_columns: ARRAYED_LIST [SD_TOOL_BAR]; a_minimum_width: INTEGER_32) is
+			-- Set minimum width of `a_column' to `a_minimum_width'
+		require
+			not_void: a_columns /= Void
+			valid: a_minimum_width > 0
+		do
+			from
+				a_columns.start
+			until
+				a_columns.after
+			loop
+				a_columns.item.set_minimum_width (a_minimum_width)
+				a_columns.forth
+			end
+		end
+
+	compute_all_sizes_imp (a_columns: ARRAYED_LIST [SD_TOOL_BAR]): INTEGER is
+			-- Compute all column sizes.
+			-- Result is maximum size
+		require
+			not_void: a_columns /= Void
+		do
+			from
+				a_columns.start
+			until
+				a_columns.after
+			loop
+				a_columns.item.compute_minmum_size
+				if Result < a_columns.item.minimum_width then
+					Result := a_columns.item.minimum_width
+				end
+				a_columns.forth
+			end
+		end
+
+	all_tools_column: ARRAYED_LIST [SD_TOOL_BAR] is
+			-- All tools columns.
+		local
+			l_tool_bar: SD_TOOL_BAR
+		do
+			create Result.make (1)
+			from
+				internal_tools_box.start
+			until
+				internal_tools_box.after
+			loop
+				l_tool_bar ?= internal_tools_box.item
+				check not_void: l_tool_bar /= Void end
+				Result.extend (l_tool_bar)
+				internal_tools_box.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	all_files_column: ARRAYED_LIST [SD_TOOL_BAR] is
+			-- All file columns.
+		local
+			l_tool_bar: SD_TOOL_BAR
+		do
+			create Result.make (1)
+			from
+				internal_files_box.start
+			until
+				internal_files_box.after
+			loop
+				l_tool_bar ?= internal_files_box.item
+				check not_void: l_tool_bar /= Void end
+				Result.extend (l_tool_bar)
+				internal_files_box.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	add_new_column (a_is_file: BOOLEAN) is
+			-- Add a new column
+		do
+			if a_is_file then
+				create files_column.make
+				internal_files_box.extend (files_column)
+				internal_files_box.disable_item_expand (files_column)
+			else
+				create tools_column.make
+				internal_tools_box.extend (tools_column)
+				internal_tools_box.disable_item_expand (tools_column)
+			end
+		end
+
+	set_all_items_wrap is
+			-- Set all items wrap.
+			-- And set items width to maximum width of all items.
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_count: INTEGER
+		do
+			-- Tool items
+			l_items := tools_column.items
+			from
+				l_items.start
+				l_count := 1
+			until
+				l_items.after
+			loop
+				if l_count >= {SD_SHARED}.Zone_navigation_column_count then
+					l_items.item.set_wrap (True)
+					l_count := 1
+				end
+				l_count := l_count + 1
+				l_items.forth
+			end
+		end
+
+	maximum_item_width: INTEGER is
+			-- Maximum item width.
+		local
+			l_a_column: SD_TOOL_BAR
+		do
+			internal_files_box.start
+			l_a_column ?= internal_files_box.item
+			check not_void: l_a_column /= Void end
+			Result := l_a_column.width
 		end
 
 feature {NONE} -- Agents
 
-	on_label_enable_focus_color (a_label: SD_CONTENT_LABEL) is
+	on_label_enable_focus_color (a_label: SD_TOOL_BAR_RADIO_BUTTON) is
 			-- Handle a_label focus color enabled.
 		require
 			a_label_not_void: a_label /= Void
-		local
-			l_lables: like labels
 		do
-			l_lables := labels
-			from
-				l_lables.start
-			until
-				l_lables.after
-			loop
-				if l_lables.item /= a_label then
-					l_lables.item.disable_focus_color
-				else
-					focus_label (a_label)
-				end
-				l_lables.forth
-			end
+			a_label.enable_select
 		end
 
 	on_key_release (a_key: EV_KEY) is
@@ -159,7 +337,7 @@ feature {NONE} -- Agents
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_ctrl then
-				select_label_and_destroy
+				select_label_and_destroy (selected_label)
 			when {EV_KEY_CONSTANTS}.key_shift then
 				is_shift_pressed := False
 			else
@@ -170,34 +348,37 @@ feature {NONE} -- Agents
 	on_key_press (a_key: EV_KEY) is
 			-- Handle key press.
 		local
-			l_selected_label: SD_CONTENT_LABEL
+			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_next_label: SD_TOOL_BAR_RADIO_BUTTON
 		do
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_tab then
 				l_selected_label := selected_label
 				if is_shift_pressed then
-					focus_label (find_next_label_same_type (False))
+					focus_label (find_previous_label_same_type)
 				else
-					focus_label (find_next_label_same_type (True))
+					focus_label (find_next_label_same_type)
 				end
-				l_selected_label.disable_focus_color
+				l_selected_label.disable_select
 			when {EV_KEY_CONSTANTS}.key_up then
 				l_selected_label := selected_label
 				focus_label (find_previsou_label)
-				l_selected_label.disable_focus_color
+				l_selected_label.disable_select
 			when {EV_KEY_CONSTANTS}.key_down then
 				l_selected_label := selected_label
 				focus_label (find_next_label)
-				l_selected_label.disable_focus_color
+				l_selected_label.disable_select
 			when {EV_KEY_CONSTANTS}.key_left then
 				l_selected_label := selected_label
-				focus_label (find_label_at_side (False))
-				l_selected_label.disable_focus_color
+				l_next_label := find_label_at_left_side
+				l_selected_label.disable_select
+				focus_label (l_next_label)
 			when {EV_KEY_CONSTANTS}.key_right then
 				l_selected_label := selected_label
-				focus_label (find_label_at_side (True))
-				l_selected_label.disable_focus_color
+				l_next_label := find_label_at_right_side
+				l_selected_label.disable_select
+				focus_label (l_next_label)
 			when {EV_KEY_CONSTANTS}.key_shift then
 				is_shift_pressed := True
 			else
@@ -205,251 +386,380 @@ feature {NONE} -- Agents
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation query
 
-	focus_label (a_label: SD_CONTENT_LABEL) is
-			-- Enable a_label's focus color, and update `full_title''s text.
+	items_count: INTEGER
+			-- How many items it current dialog
+		do
+			Result := tools_column.items.count + files_column.items.count
+		end
+
+feature {NONE} -- Implementation command
+
+	focus_label (a_label: SD_TOOL_BAR_TOGGLE_BUTTON) is
+			-- Enable a_label's focus color.
+		require
+			not_void: a_label /= Void
+		local
+			l_selected_index: INTEGER
+			l_target_x: INTEGER
+			l_scroll_area: EV_SCROLLABLE_AREA
+			l_left_in, l_right_in: BOOLEAN
+			l_is_selected_label_in_files: BOOLEAN
+			l_maximum_scroll_position: REAL
+		do
+			a_label.enable_select
+			set_text_info (a_label)
+
+			l_selected_index := selected_item_index
+			l_is_selected_label_in_files := is_seleted_label_in_files
+
+			l_target_x := (l_selected_index // {SD_SHARED}.zone_navigation_column_count) * maximum_item_width
+			if l_is_selected_label_in_files then
+				l_scroll_area := scroll_area_files
+			else
+				l_scroll_area := scroll_area_tools
+			end
+
+			l_left_in := l_scroll_area.x_offset <= l_target_x
+			l_right_in := l_target_x + maximum_item_width <= l_scroll_area.x_offset + l_scroll_area.width
+			if not (l_left_in and l_right_in) then
+				l_maximum_scroll_position := l_scroll_area.item.width * (1 - (l_scroll_area.width / l_scroll_area.item.width))
+				l_scroll_area.set_x_offset (l_target_x.min (l_maximum_scroll_position.rounded))
+			end
+		end
+
+	set_text_info (a_item: SD_TOOL_BAR_ITEM) is
+			-- Set bottom texts which are informations about a content.
+		require
+			not_void: a_item /= Void
+		local
+			l_content: SD_CONTENT
+		do
+			l_content ?= a_item.data
+			check not_void: l_content /= Void end
+			full_title.set_text (l_content.long_title)
+		end
+
+	selected_item_index: INTEGER is
+			-- Selected item index
+		local
+			l_selected: SD_TOOL_BAR_ITEM
+			l_all_items: like all_items_in_part
+		do
+			l_selected := selected_label
+			l_all_items := all_items_in_part (is_seleted_label_in_files)
+			Result := l_all_items.index_of (l_selected, 1)
+		ensure
+			valid: Result /= 0
+		end
+
+	select_label_and_destroy (a_label: SD_TOOL_BAR_ITEM) is
+			-- Select `a_label' and destroy Current.
+		require
+			not_void: a_label /= Void
 		local
 			l_content: SD_CONTENT
 		do
 			l_content ?= a_label.data
 			check not_void: l_content /= Void end
-			a_label.enable_focus_color
-			full_title.set_text (l_content.long_title)
-		end
-
-	select_label_and_destroy is
-			-- Select a_label and destroy Current.
-		local
-			l_content: SD_CONTENT
-		do
-			l_content ?= selected_label.data
-			check not_void: l_content /= Void end
-			l_content.set_focus
+			-- If we call set_focus immediately, destroy will make Current get focus.
 			destroy
+			l_content.set_focus
 		end
 
-	find_label_at_side (a_right: BOOLEAN): SD_CONTENT_LABEL is
-			-- Find label at right if a_right True or find it at left if a_right False.
+	find_label_at_right_side: SD_TOOL_BAR_RADIO_BUTTON is
+			-- Find label at right.
 		require
-			has_label: labels.count > 0
+			has_label: all_items.count > 0
 		local
-			l_selected_index: INTEGER
-			l_current_list, l_side_list: ARRAYED_LIST [SD_CONTENT_LABEL]
+			l_selected_item: SD_TOOL_BAR_ITEM
+			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_selected_index, l_result_index, l_balance: INTEGER
+			l_selected_item_in_files: BOOLEAN
 		do
-			l_current_list := selected_list
-			l_selected_index := l_current_list.index_of (selected_label, 1)
-			if l_current_list.is_equal (label_editors) then
-				l_side_list := label_tools
+			l_selected_item := selected_label
+			l_selected_item_in_files := is_seleted_label_in_files
+			l_current_list := all_items_in_part (l_selected_item_in_files)
+
+			l_selected_index := l_current_list.index_of (l_selected_item, 1)
+			l_balance := l_current_list.count \\ {SD_SHARED}.zone_navigation_column_count
+
+			if l_selected_index <= l_current_list.count - l_balance then
+				-- Not in the last column
+				l_result_index := l_selected_index + {SD_SHARED}.zone_navigation_column_count
+				if l_result_index > l_current_list.count then
+					l_result_index := l_current_list.count
+				end
+				Result ?= l_current_list.i_th (l_result_index)
 			else
-				l_side_list := label_editors
-			end
-			if l_side_list.count >= l_selected_index then
-				Result := l_side_list.i_th (l_selected_index)
-			else
-				Result := l_side_list.last
+				-- In the last column, we should go to other part
+				l_result_index := l_selected_index \\ {SD_SHARED}.zone_navigation_column_count
+				l_side_list := all_items_in_part (not l_selected_item_in_files)
+				if l_result_index > l_side_list.count then
+					l_result_index := l_side_list.count
+				end
+				Result ?= l_side_list.i_th (l_result_index)
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	selected_list: ARRAYED_LIST [SD_CONTENT_LABEL] is
-			--  List `selected_label' in.
+	find_label_at_left_side: SD_TOOL_BAR_RADIO_BUTTON is
+			-- Find label which is at left side.
 		require
-			not_void: selected_label /= Void
+			has_label: all_items.count > 0
 		local
-			l_list: like label_editors
-			l_selected_label: SD_CONTENT_LABEL
+			l_selected_item: SD_TOOL_BAR_ITEM
+			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_selected_index, l_result_index, l_balance: INTEGER
+			l_selected_item_in_files: BOOLEAN
 		do
-			l_list := label_editors
-			l_selected_label := selected_label
-			if l_list.has (l_selected_label) then
-				Result := l_list
+			l_selected_item := selected_label
+			l_selected_item_in_files := is_seleted_label_in_files
+			l_current_list := all_items_in_part (l_selected_item_in_files)
+
+			l_selected_index := l_current_list.index_of (l_selected_item, 1)
+
+			if l_selected_index > {SD_SHARED}.zone_navigation_column_count then
+				-- Not in the first column
+				l_result_index := l_selected_index - {SD_SHARED}.zone_navigation_column_count
+				if l_result_index > l_current_list.count then
+					l_result_index := l_current_list.count
+				end
+				Result ?= l_current_list.i_th (l_result_index)
 			else
-				l_list := label_tools
-				check must_has: l_list.has (l_selected_label) end
-				Result := l_list
+				-- In the first column, we should go to other part
+				l_side_list := all_items_in_part (not l_selected_item_in_files)
+				-- Go to the right side of the other list
+				l_balance := l_side_list.count \\ {SD_SHARED}.zone_navigation_column_count
+				l_result_index := l_side_list.count - {SD_SHARED}.zone_navigation_column_count + ({SD_SHARED}.zone_navigation_column_count - l_balance) + l_selected_index
+				if l_result_index > l_side_list.count then
+					l_result_index := l_side_list.count
+				end
+
+				Result ?= l_side_list.i_th (l_result_index)
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	find_next_label_same_type (a_forth: BOOLEAN): SD_CONTENT_LABEL is
+	find_next_label_same_type: SD_TOOL_BAR_RADIO_BUTTON is
 			-- Find next label which is same type.
 		require
-			has_label: labels.count > 0
+			has_label: items_count > 0
 		local
-			l_selected: SD_CONTENT_LABEL
-			l_label_editors, l_label_tools: ARRAYED_LIST [SD_CONTENT_LABEL]
+			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			l_selected := selected_label
-			l_label_editors := label_editors
-			if l_label_editors.has (l_selected) then
-				Result := find_next_in_list (l_selected, l_label_editors, a_forth)
-			else
-				l_label_tools := label_tools
-				check must_in_tools: l_label_tools.has (l_selected) end
-				Result := find_next_in_list (l_selected, l_label_tools, a_forth)
+			l_selected_label := selected_label
+			l_items := all_items_in_part (is_seleted_label_in_files)
+
+			from
+				l_items.start
+			until
+				l_items.after
+			loop
+				if l_items.item = l_selected_label then
+					if not l_items.islast then
+						Result ?= l_items.i_th (l_items.index + 1)
+					else
+						Result ?= l_items.first
+					end
+				end
+				l_items.forth
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	find_next_in_list (a_selected: SD_CONTENT_LABEL; a_list: ARRAYED_LIST [SD_CONTENT_LABEL]; a_forth: BOOLEAN): SD_CONTENT_LABEL is
-			-- Find next in a_list.
+	find_previous_label_same_type: SD_TOOL_BAR_RADIO_BUTTON is
+			-- Find previous label which is same type.
 		require
-			has: a_list.has (a_selected)
+			has_label: items_count > 0
+		local
+			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			if a_forth then
-				if a_list.index_of (a_selected, 1) /= a_list.count then
-					a_list.start
-					a_list.search (a_selected)
-					a_list.forth
-					Result := a_list.item
-				else
-					Result := a_list.first
+			l_selected_label := selected_label
+			l_items := all_items_in_part (is_seleted_label_in_files)
+
+			from
+				l_items.finish
+			until
+				l_items.before
+			loop
+				if l_items.item = l_selected_label then
+					if not l_items.isfirst then
+						Result ?= l_items.i_th (l_items.index - 1)
+					else
+						Result ?= l_items.last
+					end
 				end
-			else
-				if a_list.index_of (a_selected, 1) /= 1 then
-					a_list.start
-					a_list.search (a_selected)
-					a_list.back
-					Result := a_list.item
-				else
-					Result := a_list.last
-				end
+				l_items.back
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	find_previsou_label: SD_CONTENT_LABEL is
+	find_previsou_label: SD_TOOL_BAR_RADIO_BUTTON is
 			-- Find previsou lable.
 		require
-			has_label: labels.count > 0
+			has_label: items_count > 0
 		local
-			l_selected_label: SD_CONTENT_LABEL
-			l_labels: like labels
-			l_stop: BOOLEAN
+			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			l_selected_label := selected_label
-			l_labels := labels
-			from
-				l_labels.finish
-			until
-				l_labels.before or l_stop
-			loop
-				if l_labels.item = l_selected_label then
-					l_stop := True
-				end
+			l_items := all_items_in_part (is_seleted_label_in_files)
 
-				l_labels.back
-			end
-			if not l_labels.before then
-				Result := l_labels.item
-			else
-				Result := l_labels.last
+			from
+				l_items.finish
+			until
+				l_items.before
+			loop
+				if l_items.item = l_selected_label then
+					if not l_items.isfirst then
+						Result ?= l_items.i_th (l_items.index - 1)
+					else
+						l_list := all_items_in_part (not is_seleted_label_in_files)
+						Result ?= l_list.last
+					end
+				end
+				l_items.back
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	find_next_label: SD_CONTENT_LABEL is
+	find_next_label: SD_TOOL_BAR_RADIO_BUTTON is
 			-- Find next label.
 		require
-			has_label: labels.count > 0
+			has_label: items_count > 0
 		local
-			l_selected_label: SD_CONTENT_LABEL
-			l_labels: like labels
-			l_stop: BOOLEAN
+			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			l_selected_label := selected_label
-			l_labels := labels
-			from
-				l_labels.start
-			until
-				l_labels.after or l_stop
-			loop
-				if l_labels.item = l_selected_label then
-					l_stop := True
-				end
+			l_items := all_items_in_part (is_seleted_label_in_files)
 
-				l_labels.forth
-			end
-			if not l_labels.after then
-				Result := l_labels.item
-			else
-				Result := l_labels.first
+			from
+				l_items.start
+			until
+				l_items.after
+			loop
+				if l_items.item = l_selected_label then
+					if not l_items.islast then
+						Result ?= l_items.i_th (l_items.index + 1)
+					else
+						l_list := all_items_in_part (not is_seleted_label_in_files)
+						Result ?= l_list.first
+					end
+				end
+				l_items.forth
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	selected_label: SD_CONTENT_LABEL is
+	all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- All items
+			-- Items order is from top -> bottom, left -> right.
+		do
+			create Result.make (30)
+			Result.append (all_items_in_part (False))
+			Result.append (all_items_in_part (True))
+		end
+
+	all_items_in_part (a_is_file: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- All file items if `a_is_file'
+			-- Item order is from top -> bottom, left -> right.
+		local
+			l_columns: ARRAYED_LIST [SD_TOOL_BAR]
+		do
+			if a_is_file then
+				l_columns := all_files_column
+			else
+				l_columns := all_tools_column
+			end
+
+			from
+				l_columns.start
+				create Result.make (30)
+			until
+				l_columns.after
+			loop
+				Result.append (l_columns.item.items)
+				l_columns.forth
+			end
+
+		ensure
+			not_void: Result /= Void
+		end
+
+	selected_label: SD_TOOL_BAR_RADIO_BUTTON is
 			-- Current selected label
 		local
-			l_labels: like labels
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item: SD_TOOL_BAR_RADIO_BUTTON
+			l_all_columns: ARRAYED_LIST [SD_TOOL_BAR]
 		do
-			l_labels := labels
 			from
-				l_labels.start
+				l_all_columns := all_files_column
+				l_all_columns.start
 			until
-				l_labels.after or Result /= Void
+				l_all_columns.after or Result /= Void
 			loop
-				if l_labels.item.is_focus_color_enabled then
-					Result := l_labels.item
+				from
+					l_items := l_all_columns.item.items
+					l_items.start
+				until
+					l_items.after or Result /= Void
+				loop
+					l_item ?= l_items.item
+					check not_void: l_item /= Void end
+					if l_item.is_selected then
+						Result := l_item
+						is_seleted_label_in_files := True
+					end
+					l_items.forth
 				end
+				l_all_columns.forth
+			end
 
-				l_labels.forth
+			if Result = Void then
+				from
+					l_all_columns := all_tools_column
+					l_all_columns.start
+				until
+					l_all_columns.after or Result /= Void
+				loop
+					from
+						l_items := l_all_columns.item.items
+						l_items.start
+					until
+						l_items.after or Result /= Void
+					loop
+						l_item ?= l_items.item
+						check not_void: l_item /= Void end
+						if l_item.is_selected then
+							Result := l_item
+							is_seleted_label_in_files := False
+						end
+						l_items.forth
+					end
+					l_all_columns.forth
+				end
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	label_tools: ARRAYED_LIST [SD_CONTENT_LABEL] is
-			-- All tool labels.
-		local
---			l_label: SD_CONTENT_LABEL
-		do
---			from
---				create Result.make (1)
---				tools_box.start
---			until
---				tools_box.after
---			loop
---				l_label ?= tools_box.item
---				check not_void: l_label /= Void end
---				Result.extend (l_label)
---				tools_box.forth
---			end
-			Result := tools_box.labels
-		end
-
-	label_editors: ARRAYED_LIST [SD_CONTENT_LABEL] is
-			-- All editor labels.
-		local
---			l_label: SD_CONTENT_LABEL
-		do
-			Result := files_box.labels
---			from
---				create Result.make (1)
---				files_box.start
---			until
---				files_box.after
---			loop
---				l_label ?= files_box.item
---				check not_void: l_label /= Void end
---				Result.extend (l_label)
---				files_box.forth
---			end
-		end
-
-	labels: ARRAYED_LIST [SD_CONTENT_LABEL] is
-			-- All labels.
-		do
-			Result := label_editors
-			Result.append (label_tools)
-		end
+	is_seleted_label_in_files: BOOLEAN
+			-- If selected label in files group?
+			-- Oterwise it's in tools group.
 
 	is_shift_pressed: BOOLEAN
 			-- If shift key pressed?
@@ -457,10 +767,10 @@ feature {NONE} -- Implementation
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
-	internal_max_width: INTEGER is 700
+	internal_max_width: INTEGER is 400
 			-- Max width.
 
-	internal_max_height: INTEGER is 450
+	internal_max_height: INTEGER is 300
 			-- Max height
 
 invariant
@@ -477,11 +787,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end -- class SD_ZONE_NAVIGATION_DIALOG
 

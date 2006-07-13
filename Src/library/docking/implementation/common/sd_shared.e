@@ -358,6 +358,9 @@ feature -- Constants
 	Editor_place_holder_content_name: STRING is "docking manager editor place holder"
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
 
+	Zone_navigation_column_count: INTEGER is 8
+			-- How many items per column in zone navigation dialog which is normally activated by Ctrl + Tab.
+
 feature {NONE} -- Implementation
 
 	internal_icons: SD_ICONS_SINGLETON;

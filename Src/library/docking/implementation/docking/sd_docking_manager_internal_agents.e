@@ -143,8 +143,6 @@ feature  -- Agents
 			-- Handle pruned a zone event.
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_floating_zone: SD_FLOATING_ZONE
 		do
 		end
 
@@ -240,13 +238,9 @@ feature  -- Agents
 			-- We notify all auto hide tab stubs when pick and drop shere.
 		local
 			l_widget: EV_WIDGET
-			l_result: BOOLEAN
 			l_screen_x, l_screen_y: INTEGER
 			l_env: EV_ENVIRONMENT
 			l_focused: EV_WIDGET
-
-
-			l_screen: EV_SCREEN
 		do
 			create l_env
 			l_focused := l_env.application.focused_widget

@@ -70,7 +70,7 @@ inherit
 			copy, is_equal
 		end
 
-create 
+create
 	make,
 	make_with_pointer,
 	make_by_font
@@ -152,12 +152,12 @@ feature -- Access
 			-- Specifies the height, in logical units, of the
 			-- font. The font height can be specified in one of
 			-- three ways. If `height' is greater than zero, it
-			-- is transformed into device units and matched 
-			-- against the cell height of the available fonts. If 
+			-- is transformed into device units and matched
+			-- against the cell height of the available fonts. If
 			-- it is zero, a reasonable default size is used. If
-			-- it is less than zero, it is transformed into 
-			-- device units and the absolute value is matched 
-			-- against the character height of the available 
+			-- it is less than zero, it is transformed into
+			-- device units and the absolute value is matched
+			-- against the character height of the available
 			-- fonts.
 		do
 			Result := cwel_log_font_get_height (item)
@@ -184,7 +184,7 @@ feature -- Access
 			-- aspect ratio of the device is matched against the
 			-- digitization aspect ratio of the available fonts to
 			-- find the closest match, determined by the absolute
-			-- value of the difference. 
+			-- value of the difference.
 		do
 			Result := cwel_log_font_get_width (item)
 		end
@@ -193,7 +193,7 @@ feature -- Access
 			-- Escapement of current font.
 			-- The angle, in tenths of degrees, of each line of
 			-- text written in the font (relative to the
-			-- bottom of the page). 
+			-- bottom of the page).
 		do
 			Result := cwel_log_font_get_escapement (item)
 		end
@@ -250,7 +250,7 @@ feature -- Access
 
 	clip_precision: INTEGER is
 			-- Clipping precision.
-			-- Define how to clip characters that are 
+			-- Define how to clip characters that are
 			-- partially outside clipping region.
 		do
 			Result := cwel_log_font_get_clipprecision (item)
@@ -258,9 +258,9 @@ feature -- Access
 
 	quality: INTEGER is
 			-- Quality of current font.
-			-- Specifies the output quality. The output quality 
-			-- defines how carefully the graphics device interface 
-			-- (GDI) must attempt to match the logical-font 
+			-- Specifies the output quality. The output quality
+			-- defines how carefully the graphics device interface
+			-- (GDI) must attempt to match the logical-font
 			-- attributes to those of an actual physical font.
 		do
 			Result := cwel_log_font_get_quality (item)

@@ -32,11 +32,27 @@ feature -- Access
 	xml_members: HASH_TABLE [XML_MEMBER, STRING]
 			-- Hash table of all xml types, classified per name.
 
+	offset: INTEGER
+			-- Offset to use for byte positions, because the values returned by the gobo parser are
+			-- relativ to the start of the xml content and ignore some bytes that specify the encoding.
+
+feature -- Update
+
+	set_offset (an_offset: like offset) is
+			-- Set `offset' to `an_offset'.
+		require
+			an_offset_ok: an_offset >= 0
+		do
+			offset := an_offset
+		ensure
+			offset_set: offset = an_offset
+		end
+
 feature {NONE} -- Access
 
 	current_xml_member: XML_MEMBER
 			-- Representation of a member in xml.
-	
+
 	current_tag: ARRAYED_STACK [STRING]
 			-- List of opened XML tags.
 
@@ -49,17 +65,17 @@ feature -- Tag
 			-- Add tag to list of tags.
 			-- If <member> then set position of tag.
 		local
-			l_position: XM_DEFAULT_POSITION
+			l_position: XM_POSITION
 		do
 			current_tag.extend (a_local_part)
 			if a_local_part.is_equal ("member") then
 				create current_xml_member.make
 				tag_started := True
-				l_position ?= parser.position
+				l_position := parser.position
 				check
 					non_void_position: l_position /= Void
 				end
-				current_xml_member.set_pos_in_file (l_position.byte_index - l_position.column)
+				current_xml_member.set_pos_in_file (offset + l_position.byte_index - l_position.column)
 			end
 			Precursor {XM_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part)
 		end
@@ -86,15 +102,15 @@ feature -- Tag
 			-- Add `current_xml_member' to `xml_members'.
 		local
 			l_number_of_char: INTEGER
-			l_position: XM_DEFAULT_POSITION
+			l_position: XM_POSITION
 		do
 			if a_local_part.is_equal ("member") then
 				if current_xml_member.pos_in_file > 0  then
-					l_position ?= parser.position
+					l_position := parser.position
 					check
 						non_void_position: l_position /= Void
 					end
-					l_number_of_char := l_position.byte_index - current_xml_member.pos_in_file
+					l_number_of_char := offset + l_position.byte_index - current_xml_member.pos_in_file
 					current_xml_member.set_number_of_char (l_number_of_char)
 					xml_members.put (current_xml_member, current_xml_member.name)
 				end

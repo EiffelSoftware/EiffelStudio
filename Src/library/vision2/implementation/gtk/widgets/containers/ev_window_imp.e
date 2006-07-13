@@ -28,7 +28,6 @@ inherit
 			minimum_height,
 			width,
 			height,
-			is_parentable,
 			show
 		redefine
 			interface,

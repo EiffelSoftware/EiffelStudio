@@ -38,12 +38,16 @@ feature {NONE} -- Initialization
 			factory := a_factory
 			extension_name := an_extension
 			create current_overrides.make (1)
+			is_library_conversions := True
 		ensure
 			factory_set: factory = a_factory
 			extension_name_set: extension_name = an_extension
 		end
 
 feature -- Status
+
+	is_library_conversions: BOOLEAN
+			-- Should we do conversion of clusters into libraries and similar things?
 
 	is_error: BOOLEAN
 			-- Was there an error during the retrieval?
@@ -65,6 +69,16 @@ feature -- Status
 
 	has_wel: BOOLEAN
 			-- Did the old configuration have wel?
+
+feature -- Status update
+
+	disable_library_conversions is
+			-- Disable conversions of cluster that correspond to a library into libraries.
+		do
+			is_library_conversions := False
+		ensure
+			not_is_library_conversions: not is_library_conversions
+		end
 
 feature -- Access
 
@@ -116,6 +130,7 @@ feature -- Basic operation
 				current_options := Void
 
 				process_root (l_ast.root)
+				create ignored_clusters.make (5)
 				if l_ast.clusters /= Void then
 					l_ast.clusters.do_all (agent process_cluster)
 				end
@@ -154,16 +169,20 @@ feature {NONE} -- Implementation of data retrieval
 			if an_assembly.version /= Void then
 				l_assembly := factory.new_assembly_from_gac (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
 			else
-					-- correct path of mscorlib, system and system_xml
-				l_name := an_assembly.assembly_name.as_lower
-				if l_name.is_equal ("mscorlib") then
-					l_assembly := factory.new_assembly ("mscorlib", "$ISE_DOTNET_FRAMEWORK\mscorlib.dll", current_target)
-				elseif l_name.is_equal ("system_") then
-					l_assembly := factory.new_assembly ("system_", "$ISE_DOTNET_FRAMEWORK\System.dll", current_target)
-				elseif l_name.is_equal ("system_xml") then
-					l_assembly := factory.new_assembly ("system_xml", "$ISE_DOTNET_FRAMEWORK\System.Xml.dll", current_target)
-				else
-					l_assembly := factory.new_assembly (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, current_target)
+				if is_library_conversions then
+						-- correct path of mscorlib, system and system_xml
+					l_name := an_assembly.assembly_name.as_lower
+					if l_name.is_equal ("mscorlib") then
+						l_assembly := factory.new_assembly ("mscorlib", "$ISE_DOTNET_FRAMEWORK\mscorlib.dll", current_target)
+					elseif l_name.is_equal ("system_") then
+						l_assembly := factory.new_assembly ("system_", "$ISE_DOTNET_FRAMEWORK\System.dll", current_target)
+					elseif l_name.is_equal ("system_xml") then
+						l_assembly := factory.new_assembly ("system_xml", "$ISE_DOTNET_FRAMEWORK\System.Xml.dll", current_target)
+					end
+				end
+
+				if l_assembly = Void then
+					l_assembly := factory.new_assembly (l_name, an_assembly.assembly_name, current_target)
 				end
 			end
 			l_assembly.set_name_prefix (an_assembly.prefix_name)
@@ -173,6 +192,7 @@ feature {NONE} -- Implementation of data retrieval
 	process_cluster (a_cluster: CLUSTER_SD) is
 			-- Process `a_cluster'.
 		require
+			ignored_clusters_not_void: ignored_clusters /= Void
 			current_target_not_void: current_target /= Void
 			current_options_void: current_options = Void
 			a_cluster_not_void: a_cluster /= Void
@@ -182,48 +202,64 @@ feature {NONE} -- Implementation of data retrieval
 			l_location: CONF_DIRECTORY_LOCATION
 			l_file_loc: CONF_FILE_LOCATION
 			l_lib: CONF_LIBRARY
+			l_normal_cluster: BOOLEAN
 		do
 			l_name := a_cluster.cluster_name
-				-- convert base, wel, vision2 and time clusters into library equivalents
-			if l_name.is_case_insensitive_equal ("base") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\base\base.ecf", current_target)
-				l_lib := factory.new_library ("base", l_file_loc, current_target)
-			elseif l_name.is_case_insensitive_equal ("wel") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", current_target)
-				l_lib := factory.new_library ("wel", l_file_loc, current_target)
-				has_wel := True
-			elseif l_name.is_case_insensitive_equal ("vision2") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
-				l_lib := factory.new_library ("vision2", l_file_loc, current_target)
-				has_vision2 := True
-			elseif l_name.is_case_insensitive_equal ("time") then
-				l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
-				l_lib := factory.new_library ("time", l_file_loc, current_target)
-			end
-			l_parent := a_cluster.parent_name
-			if l_parent /= Void then
-				l_parent.to_lower
-			end
-			if l_lib /= Void then
-				current_target.add_library (l_lib)
-					-- create a dummy cluster to get the cluster options and set the ones that make sense on the library
-				current_cluster := factory.new_cluster ("dummy", factory.new_location_from_path (".", current_target), current_target)
-				process_cluster_properties (a_cluster.cluster_properties)
+			if is_library_conversions then
+					-- convert base, wel, vision2 and time clusters into library equivalents
+				if l_name.is_case_insensitive_equal ("base") then
+					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\base\base.ecf", current_target)
+					l_lib := factory.new_library ("base", l_file_loc, current_target)
+					ignored_clusters.force ("base")
+				elseif l_name.is_case_insensitive_equal ("wel") then
+					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\wel\wel.ecf", current_target)
+					l_lib := factory.new_library ("wel", l_file_loc, current_target)
+					ignored_clusters.force ("wel")
+					has_wel := True
+				elseif l_name.is_case_insensitive_equal ("vision2") then
+					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\vision2\vision2.ecf", current_target)
+					l_lib := factory.new_library ("vision2", l_file_loc, current_target)
+					ignored_clusters.force ("vision2")
+					has_vision2 := True
+				elseif l_name.is_case_insensitive_equal ("time") then
+					l_file_loc := factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", current_target)
+					l_lib := factory.new_library ("time", l_file_loc, current_target)
+					ignored_clusters.force ("time")
+				end
 
-					-- take visible clause
-				l_lib.set_visible (current_cluster.visible)
+				l_parent := a_cluster.parent_name
+				if l_parent /= Void then
+					l_parent.to_lower
+				end
 
-					-- take options
-				l_lib.set_options (current_cluster.internal_options)
+				if l_lib /= Void then
+					current_target.add_library (l_lib)
+						-- create a dummy cluster to get the cluster options and set the ones that make sense on the library
+					current_cluster := factory.new_cluster ("dummy", factory.new_location_from_path (".", current_target), current_target)
+					process_cluster_properties (a_cluster.cluster_properties)
 
-				current_cluster := Void
-			elseif
-				a_cluster.directory_name.has_substring ("library.net") or
-				(l_parent /= Void and then (l_parent.is_equal ("base") or l_parent.is_equal ("wel") or
-				l_parent.is_equal ("vision2") or l_parent.is_equal ("time")))
-			then
-				-- ignore it
+						-- take visible clause
+					l_lib.set_visible (current_cluster.visible)
+
+						-- take options
+					l_lib.set_options (current_cluster.internal_options)
+
+					current_cluster := Void
+				elseif
+					a_cluster.directory_name.has_substring ("library.net") or
+					(l_parent /= Void and then ignored_clusters.has (l_parent))
+				then
+						-- ignore it as well
+					ignored_clusters.force (l_name)
+				else
+					l_normal_cluster := True
+				end
 			else
+				l_normal_cluster := True
+			end
+
+				-- convert normal clusters
+			if l_normal_cluster then
 				l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)
 				if current_overrides.has (l_name) then
 					l_over := factory.new_override (l_name, l_location, current_target)
@@ -714,18 +750,20 @@ feature {NONE} -- Implementation of data retrieval
 		do
 			if a_externals /= Void then
 				create l_ignore.make
-				if has_wel and has_vision2 then
-					l_ignore.compile (".*library.(vision2|wel)")
-					l_has_ignores := True
-				elseif has_wel then
-					l_ignore.compile (".*library.wel")
-					l_has_ignores := True
-				elseif has_vision2 then
-					l_ignore.compile (".*library.vision2")
-					l_has_ignores := True
-				end
-				if l_has_ignores then
-					l_ignore.optimize
+				if is_library_conversions then
+					if has_wel and has_vision2 then
+						l_ignore.compile (".*library.(vision2|wel)")
+						l_has_ignores := True
+					elseif has_wel then
+						l_ignore.compile (".*library.wel")
+						l_has_ignores := True
+					elseif has_vision2 then
+						l_ignore.compile (".*library.vision2")
+						l_has_ignores := True
+					end
+					if l_has_ignores then
+						l_ignore.optimize
+					end
 				end
 
 				from
@@ -799,6 +837,9 @@ feature {NONE} -- Implementation of data retrieval
 		end
 
 feature {NONE} -- Implementation
+
+	ignored_clusters: SEARCH_TABLE [STRING]
+			-- Clusters that have been ignored (and of which child clusters can be ignored as well)
 
 	set_error (an_error: CONF_ERROR) is
 			-- Set `an_error'.

@@ -41,16 +41,19 @@ feature -- basic Operations
 	display_state_text is
 		do
 			title.set_text ("Welcome to the%NPrecompilation Wizard")
-			message.set_text (
-				"Using this wizard you can precompile any Eiffel library.%N%
-				%You will be able to precompile the shipped libraries%N%
-				%but also your own libraries by providing the corresponding Ace file.%N%
-				%%N%
-				%If you precompile a library already precompiled, the previous%N%
-				%version will be overwritten%N%
-				%%N%
-				%%N%
-				%To continue, click Next.")
+			message.set_text ("[
+				Using this wizard you can precompile any
+				Eiffel library. You will be able to precompile
+				the shipped libraries but also your own
+				libraries by providing the corresponding
+				configuration file.
+				
+				If you precompile a library already precompiled,
+				the previous version will be overwritten
+				
+				
+				To continue, click Next.
+				]")
 		end
 
 	pixmap_icon_location: FILE_NAME is

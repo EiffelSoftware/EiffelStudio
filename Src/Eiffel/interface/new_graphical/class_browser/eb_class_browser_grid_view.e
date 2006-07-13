@@ -147,6 +147,20 @@ feature -- Setting
 			create trace.make_from_string (a_msg)
 		end
 
+	set_focus is
+			-- Set focus to current grid.
+		do
+			if is_in_error_state then
+				if text.is_displayed and then text.is_sensitive then
+					text.set_focus
+				end
+			else
+				if grid.is_displayed and then grid.is_sensitive then
+					grid.set_focus
+				end
+			end
+		end
+
 feature -- View update
 
 	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
@@ -287,6 +301,12 @@ feature -- Status report
 			-- Is tree node highlight enabled?
 			-- If True, when you select one row in tree view, the whole tree node hierarchy
 			-- starting from the row will be highlighted.
+
+	is_in_error_state: BOOLEAN is
+			-- Is current grid in error state?
+		do
+			Result := data = Void
+		end
 
 feature{NONE} -- Implementation
 

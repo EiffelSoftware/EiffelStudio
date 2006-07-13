@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			prc_imp ?= process_launcher
 			from
-				l_sleep_time := sleep_time.to_integer_64 * 1000000
+				l_sleep_time := sleep_time.to_integer_64 * 1_000_000
 			until
 				should_destroy
 			loop

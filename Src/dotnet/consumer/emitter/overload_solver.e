@@ -10,13 +10,13 @@ class
 
 inherit
 	REFLECTION
-	
+
 	NAME_FORMATTER
 
 	SHARED_ASSEMBLY_MAPPING
 
 	NAME_SOLVER
-	
+
 	METHOD_RETRIEVER
 
 create
@@ -60,7 +60,7 @@ feature {NONE} -- Access
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 
 feature	-- Access
 
@@ -70,8 +70,8 @@ feature	-- Access
 			non_void_args: args /= Void
 		do
 			Result := eiffel_names.item (a_dotnet_name).item (key_args (args, return_type, declaring_type))
-		end		
-		
+		end
+
 feature -- Basic Operations
 
 	solve is
@@ -183,7 +183,7 @@ feature -- Basic Operations
 		ensure
 			solved: solved
 		end
-			
+
 	is_unique_signature (method: METHOD_SOLVER; method_list: LIST [METHOD_SOLVER]; index: INTEGER): BOOLEAN is
 			-- Are parameter types starting from index `index' in `method' unique in `method_list'?
 		require
@@ -263,7 +263,7 @@ feature -- Element Settings
 				end
 			end
 		end
-		
+
 	add_event (event: EVENT_INFO) is
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
@@ -301,13 +301,18 @@ feature {NONE} -- Internal Statur Setting
 			non_void_meth: meth /= Void
 			is_consumed_method: is_consumed_method (meth)
 		local
+			l_len: INTEGER
+			l_dn_name: SYSTEM_STRING
 			name: STRING
 		do
+			l_dn_name := meth.name
 			if get_property then
-				create name.make_from_cil (meth.name.substring (4))
-			else
-				create name.make_from_cil (meth.name)
-			end	
+				l_len := get_prefix.length
+				if l_dn_name.length > l_len and then {SYSTEM_STRING}.compare (get_prefix, l_dn_name.substring (0, l_len), True) = 0 then
+					l_dn_name := l_dn_name.substring (l_len)
+				end
+			end
+			name := l_dn_name
 			method_table.search (name)
 			if not method_table.found then
 				method_table.put (create {SORTED_TWO_WAY_LIST [METHOD_SOLVER]}.make, name)
@@ -319,8 +324,11 @@ feature {NONE} -- Internal Statur Setting
 
 feature {NONE} -- Implementation
 
-	method_table: HASH_TABLE [SORTED_TWO_WAY_LIST [METHOD_SOLVER], STRING];
+	method_table: HASH_TABLE [SORTED_TWO_WAY_LIST [METHOD_SOLVER], STRING]
 			-- Table of methods
+
+	get_prefix: SYSTEM_STRING is "get_";
+			-- Get property prefix
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

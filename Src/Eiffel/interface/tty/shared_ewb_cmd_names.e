@@ -90,6 +90,8 @@ feature {NONE}
 
 	Generate_cmd_name: STRING is "generate"
 
+	gui_cmd_name: STRING is "gui"
+
 	help_cmd_name: STRING is "help"
 
 	homonyms_cmd_name: STRING is "homonyms"

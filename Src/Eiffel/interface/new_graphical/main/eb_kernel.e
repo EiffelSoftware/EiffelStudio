@@ -84,7 +84,11 @@ feature {NONE} -- Initialization
 			pref_strs.Pixmaps_path_cell.put (fn)
 
 			l_is_gui := argument_count > 0 and then
-				(argument (1).is_equal ("-bench") or else argument (1).is_equal ("-from_bench"))
+				(
+					index_of_word_option ("gui") > 0
+					or else argument (1).is_equal ("-from_bench")
+					or else argument (1).is_equal ("-bench")
+				)
 
 			set_gui (l_is_gui)
 			if l_is_gui then

@@ -237,7 +237,7 @@ feature -- Properties
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
 		once
-			create Result.make (30)
+			create Result.make (35)
 			Result.put (ace_help, ace_cmd_name)
 			Result.put (ancestors_help, ancestors_cmd_name)
 			Result.put (aversions_help, aversions_cmd_name)
@@ -266,6 +266,7 @@ feature -- Properties
 			Result.put (version_help, version_cmd_name)
 			Result.put (batch_help, batch_cmd_name)
 			Result.put (clean_help, clean_cmd_name)
+			Result.put (gui_help, gui_cmd_name)
 			add_help_special_cmds
 		end
 

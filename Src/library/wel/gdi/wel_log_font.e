@@ -729,11 +729,7 @@ feature -- Status setting
 	set_family (a_family: INTEGER) is
 			-- Set `family' to `a_family'.
 		do
-			--|------------------------------------------------------------------
-			--| FIXME ARNAUD: If bitOperations are available from the compiler
-			--|               REPLACE the '+' with an OR
-			--|------------------------------------------------------------------
-			cwel_log_font_set_pitchandfamily (item,	cwel_log_font_get_pitch (item) +  a_family)
+			cwel_log_font_set_pitchandfamily (item,	cwel_log_font_get_pitch (item) |  a_family)
 		ensure
 			family_set: family = a_family
 		end

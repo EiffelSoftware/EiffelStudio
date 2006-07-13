@@ -38,7 +38,7 @@ feature {WEL_GRAPHICAL_RESOURCE}-- Initialization
 				create internal_color_bitmap.make_by_pointer(hbmColor_ext (item))
 				internal_color_bitmap.set_unshared
 			end
-			
+
 			is_initialized := True
 		end
 
@@ -47,11 +47,11 @@ feature -- Access
 	mask_bitmap: WEL_BITMAP is
 			-- bitmap representing the mask.
 			--
-			-- Specifies the icon bitmask bitmap. If this structure defines a black 
-			-- and white icon, this bitmask is formatted so that the upper half is 
-			-- the icon AND bitmask and the lower half is the icon XOR bitmask. 
-			-- Under this condition, the height should be an even multiple of two. 
-			-- If this structure defines a color icon, this mask only defines the 
+			-- Specifies the icon bitmask bitmap. If this structure defines a black
+			-- and white icon, this bitmask is formatted so that the upper half is
+			-- the icon AND bitmask and the lower half is the icon XOR bitmask.
+			-- Under this condition, the height should be an even multiple of two.
+			-- If this structure defines a color icon, this mask only defines the
 			-- AND bitmask of the icon.
 		require
 			initialized: is_initialized
@@ -65,11 +65,11 @@ feature -- Access
 	color_bitmap: WEL_BITMAP is
 			-- bitmap representing the image (as opposed to the mask)
 			--
-			-- Handle to the icon color bitmap. This member can be optional if 
-			-- this structure defines a black and white icon. The AND bitmask of 
-			-- hbmMask is applied with the SRCAND flag to the destination; 
-			-- subsequently, the color bitmap is applied (using XOR) to the 
-			-- destination by using the SRCINVERT flag. 
+			-- Handle to the icon color bitmap. This member can be optional if
+			-- this structure defines a black and white icon. The AND bitmask of
+			-- hbmMask is applied with the SRCAND flag to the destination;
+			-- subsequently, the color bitmap is applied (using XOR) to the
+			-- destination by using the SRCINVERT flag.
 		require
 			initialized: is_initialized
 			has_color_bitmap: has_color_bitmap
@@ -95,10 +95,10 @@ feature -- Status Report
 	has_color_bitmap: BOOLEAN is
 			-- Is `color_bitmap' valid?
 			--
-			-- In the case of a black & white icon/cursor, `mask_bitmap' is 
-			-- formatted so that the upper half is the icon AND bitmask and 
+			-- In the case of a black & white icon/cursor, `mask_bitmap' is
+			-- formatted so that the upper half is the icon AND bitmask and
 			-- the lower half is the icon XOR bitmask. In this case,
-			-- `color_bitmap' is not defined. 
+			-- `color_bitmap' is not defined.
 		do
 			Result := (hbmColor_ext (item) /= Default_pointer)
 		end
@@ -110,7 +110,7 @@ feature -- Status Report
 		do
 			Result := xHotspot_ext (item)
 		end
-	
+
 	y_hotspot: INTEGER is
 			-- Specifies the y-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
@@ -118,9 +118,34 @@ feature -- Status Report
 		do
 			Result := yHotspot_ext (item)
 		end
-	
+
+	width: INTEGER is
+			-- Width of icon.
+		do
+			if not has_color_bitmap then
+				Result := mask_bitmap.width
+			else
+				Result := color_bitmap.width
+			end
+		end
+
+	height: INTEGER is
+			-- Width of icon.
+		do
+			if not has_color_bitmap then
+					-- We have here a black & white icon.
+					-- `mask_bitmap' is formatted so that the upper half is the
+					-- icon AND bitmask and the lower half is the icon XOR
+					-- bitmask. Under this condition, the height should be
+					-- an even multiple of two.
+				Result := mask_bitmap.height // 2
+			else
+				Result := color_bitmap.height
+			end
+		end
+
 feature -- Status Setting
-	
+
 	enable_reference_tracking_on_bitmaps is
 			-- Enable the tracking of references on `mask_bitmap' and
 			-- `color_bitmap'.
@@ -155,8 +180,8 @@ feature -- Status Setting
 			-- Assign `a_mask_bitmap' to hbmMask
 		do
 				-- Remove the existing mask bitmap if any.
-			if internal_mask_bitmap /= Void and then 
-				internal_mask_bitmap.reference_tracked 
+			if internal_mask_bitmap /= Void and then
+				internal_mask_bitmap.reference_tracked
 			then
 				internal_mask_bitmap.decrement_reference
 			end
@@ -177,8 +202,8 @@ feature -- Status Setting
 			-- Assign `a_color_bitmap' to hbmColor
 		do
 				-- Remove the existing bitmap if any.
-			if internal_color_bitmap /= Void and then 
-				internal_color_bitmap.reference_tracked 
+			if internal_color_bitmap /= Void and then
+				internal_color_bitmap.reference_tracked
 			then
 				internal_color_bitmap.decrement_reference
 			end
@@ -189,7 +214,7 @@ feature -- Status Setting
 			internal_color_bitmap := a_color_bitmap
 			internal_color_bitmap_object_id := a_color_bitmap.object_id
 			if a_color_bitmap.reference_tracked then
-				a_color_bitmap.increment_reference	
+				a_color_bitmap.increment_reference
 			end
 
 			is_initialized := True
@@ -216,19 +241,19 @@ feature -- Obsolete
 		do
 			Result := is_icon
 		end
-	
+
 	xHotspot: INTEGER is
 		obsolete "use `x_hotspot' instead"
 		do
 			Result := x_hotspot
 		end
-	
+
 	yHotspot: INTEGER is
 		obsolete "use `y_hotspot' instead"
 		do
 			Result := y_hotspot
 		end
-	
+
 	set_xHotspot (xvalue: INTEGER) is
 		obsolete "use `set_x_hotspot' instead"
 		do
@@ -252,7 +277,7 @@ feature -- Removal
 	delete is
 			-- Free allocated C memory and GDI objects.
 		require
-			not_shared: not shared			
+			not_shared: not shared
 		do
 			if exists then
 				destroy_item
@@ -277,7 +302,7 @@ feature {NONE} -- Removal
 			if a_bitmap /= Void and then a_bitmap.reference_tracked then
 				a_bitmap.decrement_reference
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
@@ -301,7 +326,7 @@ feature {NONE} -- Externals
 		alias
 			"sizeof (ICONINFO)"
 		end
-	
+
 	fIcon_ext (p: POINTER): BOOLEAN is
 			-- Access field fIcon of struct pointed to by `p'.
 		external

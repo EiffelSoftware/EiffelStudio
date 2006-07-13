@@ -46,9 +46,7 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			l_temp_buffer := a_pixel_buffer
-			implementation.init_from_pixel_buffer (l_temp_buffer)
-			set_x_hotspot (a_x)
-			set_y_hotspot (a_y)
+			implementation.init_from_pixel_buffer (l_temp_buffer, a_x, a_y)
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x, a_y: INTEGER) is
@@ -56,6 +54,8 @@ feature {NONE} -- Initlization
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
+			default_create
+			implementation.init_from_pixmap (a_pixmap, a_x, a_y)
 		end
 
 	make_with_cursor (a_cursor: EV_CURSOR) is
@@ -64,13 +64,10 @@ feature {NONE} -- Initlization
 			l_temp: EV_CURSOR
 		do
 			default_create
-				-- We convert from EV_CURSOR, `a_cursor' maybe void.
+			-- We convert from EV_CURSOR, `a_cursor' maybe void.
 			l_temp := a_cursor
 			if l_temp /= Void then
 				implementation.init_from_cursor (l_temp)
-
-				set_x_hotspot (l_temp.x_hotspot)
-				set_y_hotspot (l_temp.y_hotspot)
 			end
 		end
 
@@ -82,7 +79,9 @@ feature -- Command
 			not_destroyed: not is_destroyed
 			valid: 0 <= a_x and a_x <= width
 		do
-			x_hotspot := a_x
+			implementation.set_x_hotspot (a_x)
+		ensure
+			set: x_hotspot = a_x
 		end
 
 	set_y_hotspot (a_y: INTEGER) is
@@ -91,16 +90,28 @@ feature -- Command
 			not_destoryed: not is_destroyed
 			valid: 0 <= a_y and a_y <= height
 		do
-			y_hotspot := a_y
+			implementation.set_y_hotspot (a_y)
+		ensure
+			set: y_hotspot = a_y
 		end
 
 feature -- Query
 
-	x_hotspot: INTEGER
+	x_hotspot: INTEGER is
 			-- Specifies the x-coordinate of a cursor's hot spot.
+		do
+			Result := implementation.x_hotspot
+		ensure
+			valid: Result <= width
+		end
 
-	y_hotspot: INTEGER
-			-- Specifies the y-coordinate of a cursor's hot spot.
+	y_hotspot: INTEGER is
+			-- Specifies he y-coordinate of a cursor's hot spot.
+		do
+			Result := implementation.y_hotspot
+		ensure
+			valid: Result <= height
+		end
 
 	width: INTEGER is
 			-- Width

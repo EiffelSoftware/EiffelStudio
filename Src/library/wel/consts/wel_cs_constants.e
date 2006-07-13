@@ -40,8 +40,12 @@ feature -- Access
 			-- Not defined any more for some
 			-- C compilers, returns old defined value
 
-	Cs_ime: INTEGER is 65536;
+	Cs_ime: INTEGER is 65536
 			-- Input Method Editor
+
+	Cs_dropshadow: INTEGER is 0x00020000;
+			-- Drop shadow effect
+			-- This value is not supported until Windows XP.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

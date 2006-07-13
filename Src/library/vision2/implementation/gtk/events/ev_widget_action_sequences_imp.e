@@ -113,7 +113,7 @@ feature -- Event handling
 			-- Create a resize action sequence.
 		do
 			create Result
-			if is_parentable then
+			if not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 					-- Window resize events are connected separately
 				signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent, False)
 			end
@@ -127,11 +127,6 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	is_parentable: BOOLEAN is
-			-- May `Current' be parented?
-		deferred
-		end
 
 	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for size allocation events

@@ -15,6 +15,8 @@ inherit
 
 	EV_POSTSCRIPT_PAGE_CONSTANTS
 
+	EV_ANY_HANDLER
+
 feature -- Figure drawing
 
 	--| FIXME No figure drawing routines have support for the orientation attribute.

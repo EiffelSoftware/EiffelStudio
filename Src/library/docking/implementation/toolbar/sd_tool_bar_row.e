@@ -200,7 +200,6 @@ feature -- Query
 	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
 			-- All tool bar zone in Current. Order is from left to right (top to bottom).
 		local
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_TOOL_BAR_ZONE]
 		do

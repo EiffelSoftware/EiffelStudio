@@ -87,8 +87,6 @@ feature {NONE} -- Agents
 
 	update_text_on_deactivation is
 			-- Update text on deactivation.
-		require
-			text_field: text_field /= Void
 		local
 			l_data: like value
 		do

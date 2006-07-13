@@ -69,7 +69,6 @@ feature -- Update
 			is_text_editing: is_text_editing
 		end
 
-
 feature -- Events
 
 	ellipsis_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -111,37 +110,44 @@ feature {NONE} -- Agents
 			l_hb: EV_HORIZONTAL_BOX
 		do
 			popup_window := a_popup_window
-			create text_field
-			text_field.implementation.hide_border
-			if font /= Void then
-				text_field.set_font (font)
-			end
-
-			if not is_text_editing then
-				text_field.disable_edit
-			end
-			text_field.set_text (displayed_value)
-			text_field.set_background_color (implementation.displayed_background_color)
-			popup_window.set_background_color (implementation.displayed_background_color)
-			text_field.set_foreground_color (implementation.displayed_foreground_color)
-
-			create l_hb
-			l_hb.extend (text_field)
-
-			create button
-			button.set_pixmap (ellipsis)
-			l_hb.extend (button)
-			l_hb.disable_item_expand (button)
-			button.set_minimum_height (popup_window.height-1)
-
-			popup_window.extend (l_hb)
-
-			popup_window.show_actions.extend (agent initialize_actions)
 			popup_window.set_x_position (popup_window.x_position + 1)
 			popup_window.set_size (popup_window.width - 1, popup_window.height -1 )
-			is_activated := True
+
+			if is_text_editing then
+				create text_field
+				text_field.implementation.hide_border
+				if font /= Void then
+					text_field.set_font (font)
+				end
+
+				if not is_text_editing then
+					text_field.disable_edit
+				end
+				text_field.set_text (displayed_value)
+				text_field.set_background_color (implementation.displayed_background_color)
+				popup_window.set_background_color (implementation.displayed_background_color)
+				text_field.set_foreground_color (implementation.displayed_foreground_color)
+
+				create l_hb
+				l_hb.extend (text_field)
+
+				create button
+				button.set_pixmap (ellipsis)
+				l_hb.extend (button)
+				l_hb.disable_item_expand (button)
+				button.set_minimum_height (popup_window.height)
+
+				popup_window.extend (l_hb)
+
+				popup_window.show_actions.extend (agent initialize_actions)
+
+				is_activated := True
+			else
+				ellipsis_actions.call ([])
+			end
 		ensure then
-			is_activated: is_activated
+			popup_window_set: popup_window /= Void
+			text_editing_implies_activation: is_text_editing implies is_activated and text_field /= Void and button /= Void
 		end
 
 	deactivate is

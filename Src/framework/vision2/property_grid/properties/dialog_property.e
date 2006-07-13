@@ -48,8 +48,6 @@ feature {NONE} -- Agents
 			-- Show text editor.
 		require
 			parent_window: parent_window /= Void
-			popup_window: popup_window /= Void
-			activated: is_activated
 		local
 			l_parent: EV_WINDOW
 		do

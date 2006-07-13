@@ -305,6 +305,10 @@ feature {NONE} -- Click ast exploration
 						current_class_as := l_eiffel_class.build_ast (False)
 						System.set_current_class (prev_class)
 					end
+						-- If a syntax error ocurred, we retrieve the old ast.
+					if current_class_as = Void then
+						current_class_as := c.ast
+					end
 				else
 					current_class_as := c.ast
 				end

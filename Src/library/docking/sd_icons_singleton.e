@@ -63,17 +63,10 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
-	default_icon: EV_PIXMAP is
-			-- Default window icon.
-		deferred
-		ensure
-			not_void: Result /= Void
-		end
-
 	tool_bar_separator_icon: EV_PIXMAP is
 			-- Tool bar separator icon.
-		do
-			Result := default_icon
+			-- Which is shown at customize dialog.
+		deferred
 		ensure
 			not_void: Result /= Void
 		end
@@ -232,7 +225,21 @@ feature -- Tool bars icons.
 			not_void: Result /= Void
 		end
 
+	tool_bar_customize_indicator_buffer: EV_PIXEL_BUFFER is
+			-- Indicator at right side of a Tool bar.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 	tool_bar_customize_indicator_with_hidden_items: EV_PIXMAP is
+			-- Indictor at right side of a tool bar when there is hidden tool bars.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_customize_indicator_with_hidden_items_buffer: EV_PIXEL_BUFFER is
 			-- Indictor at right side of a tool bar when there is hidden tool bars.
 		deferred
 		ensure
@@ -246,7 +253,21 @@ feature -- Tool bars icons.
 			not_void: Result /= Void
 		end
 
+	tool_bar_customize_indicator_horizontal_buffer: EV_PIXEL_BUFFER is
+			-- `tool_bar_customize_indicator' horizontal version.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 	tool_bar_customize_indicator_with_hidden_items_horizontal: EV_PIXMAP is
+			-- `tool_bar_customize_indicator_with_hidden_items' horizontal version.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_customize_indicator_with_hidden_items_horizontal_buffer: EV_PIXEL_BUFFER is
 			-- `tool_bar_customize_indicator_with_hidden_items' horizontal version.
 		deferred
 		ensure

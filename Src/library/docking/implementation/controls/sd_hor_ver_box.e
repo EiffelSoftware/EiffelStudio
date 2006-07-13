@@ -85,8 +85,6 @@ feature -- Basic operations
 			-- Change `interal_direction', then change all items layout.
 		require
 			is_empty: is_empty
-		local
-			l_items: ARRAYED_LIST [EV_WIDGET]
 		do
 			internal_vertical_style := not internal_vertical_style
 			if not internal_vertical_style then

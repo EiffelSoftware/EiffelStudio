@@ -6,7 +6,7 @@ indexing
 	revision   : "$Revision$"
 
 class
-	ICONS_8_16
+	ICONS_11_7
 
 create
 	make
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				raw_buffer.set_with_named_file (a_file_name)
 			else
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((2 * 8) + 1,(1 * 16) + 1)
+				create raw_buffer.make_with_size ((2 * 11) + 1,(1 * 7) + 1)
 			end
 		rescue
 			retried := True
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixel_width: INTEGER is 8
+	pixel_width: INTEGER is 11
 			-- Element width
 
-	pixel_height: INTEGER is 16
+	pixel_height: INTEGER is 7
 			-- Element width
 
 	width: INTEGER is 2
@@ -48,26 +48,26 @@ feature -- Access
 	height: INTEGER is 1
 			-- Matrix height
 
-	frozen tool_bar_customize_indicator_icon: EV_PIXMAP is
-			-- Access to 'customize_indicator' pixmap.
+	frozen icon_drop_down_icon: EV_PIXMAP is
+			-- Access to 'drop_down' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 		end
 
-	frozen tool_bar_customize_indicator_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'customize_indicator' pixmap pixel buffer.
+	frozen icon_drop_down_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'drop_down' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
-	frozen tool_bar_customize_indicator_hidden_items_icon: EV_PIXMAP is
-			-- Access to 'customize_indicator_hidden_items' pixmap.
+	frozen icon_close_icon: EV_PIXMAP is
+			-- Access to 'close' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
 		end
 
-	frozen tool_bar_customize_indicator_hidden_items_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'customize_indicator_hidden_items' pixmap pixel buffer.
+	frozen icon_close_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'close' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
 		end
@@ -85,14 +85,14 @@ feature {NONE} -- Query
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
 		do
-			l_x_offset := ((a_x - 1) * (8 + 1)) + 1
-			l_y_offset := ((a_y - 1) * (16 + 1)) + 1
+			l_x_offset := ((a_x - 1) * (11 + 1)) + 1
+			l_y_offset := ((a_y - 1) * (7 + 1)) + 1
 
 			Result := rectangle
 			Result.set_x (l_x_offset)
 			Result.set_y (l_y_offset)
-			Result.set_width (8)
-			Result.set_height (16)
+			Result.set_width (11)
+			Result.set_height (7)
 		ensure
 			result_attached: Result /= Void
 		end

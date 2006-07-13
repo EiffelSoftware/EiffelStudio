@@ -6,7 +6,7 @@ indexing
 	revision   : "$Revision$"
 
 class
-	ICONS_8_16
+	ICONS_8_16_HORIZONTAL
 
 create
 	make
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				raw_buffer.set_with_named_file (a_file_name)
 			else
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((2 * 8) + 1,(1 * 16) + 1)
+				create raw_buffer.make_with_size ((1 * 16) + 1,(2 * 8) + 1)
 			end
 		rescue
 			retried := True
@@ -36,63 +36,63 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixel_width: INTEGER is 8
+	pixel_width: INTEGER is 16
 			-- Element width
 
-	pixel_height: INTEGER is 16
+	pixel_height: INTEGER is 8
 			-- Element width
 
-	width: INTEGER is 2
+	width: INTEGER is 1
 			-- Matrix width
 
-	height: INTEGER is 1
+	height: INTEGER is 2
 			-- Matrix height
 
-	frozen tool_bar_customize_indicator_icon: EV_PIXMAP is
-			-- Access to 'customize_indicator' pixmap.
+	frozen tool_bar_customize_indicator_horizontal_icon: EV_PIXMAP is
+			-- Access to 'customize_indicator_horizontal' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 		end
 
-	frozen tool_bar_customize_indicator_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'customize_indicator' pixmap pixel buffer.
+	frozen tool_bar_customize_indicator_horizontal_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'customize_indicator_horizontal' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
-	frozen tool_bar_customize_indicator_hidden_items_icon: EV_PIXMAP is
-			-- Access to 'customize_indicator_hidden_items' pixmap.
+	frozen tool_bar_customize_indicator_hidden_items_horizontal_icon: EV_PIXMAP is
+			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 2))
 		end
 
-	frozen tool_bar_customize_indicator_hidden_items_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'customize_indicator_hidden_items' pixmap pixel buffer.
+	frozen tool_bar_customize_indicator_hidden_items_horizontal_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 2))
 		end
 
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is
-			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
+			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= 2
+			a_x_small_enough: a_x <= 1
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_y <= 1
+			a_y_small_enough: a_y <= 2
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
 		do
-			l_x_offset := ((a_x - 1) * (8 + 1)) + 1
-			l_y_offset := ((a_y - 1) * (16 + 1)) + 1
+			l_x_offset := ((a_x - 1) * (16 + 1)) + 1
+			l_y_offset := ((a_y - 1) * (8 + 1)) + 1
 
 			Result := rectangle
 			Result.set_x (l_x_offset)
 			Result.set_y (l_y_offset)
-			Result.set_width (8)
-			Result.set_height (16)
+			Result.set_width (16)
+			Result.set_height (8)
 		ensure
 			result_attached: Result /= Void
 		end

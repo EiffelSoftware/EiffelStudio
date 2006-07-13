@@ -25,7 +25,7 @@ feature -- Access
 		alias
 			"CREATE_NEW_CONSOLE"
 		end
- 
+
 	create_new_process_group: INTEGER is
 			-- New process is root process of a new process group.
 		external
@@ -33,7 +33,7 @@ feature -- Access
 		alias
 			"CREATE_NEW_PROCESS_GROUP"
 		end
- 
+
 	create_no_window: INTEGER is 0x08000000
 			-- New process is console application run without console window.
 			-- Valid only when starting console application.
@@ -46,12 +46,20 @@ feature -- Access
 		alias
 			"DETACHED_PROCESS"
 		end
- 
+
+	create_unicode_environment: INTEGER is
+			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
+		external
+			"C [macro <winbase.h>]"
+		alias
+			"CREATE_UNICODE_ENVIRONMENT"
+		end
+
  	is_valid_creation_constant (a_constant: INTEGER): BOOLEAN is
 			-- Is `a_constant' a valid process creation constant?
 		do
 			Result := a_constant = (a_constant & (create_default_error_mode | create_new_console |
-				create_new_process_group | detached_process | create_no_window))
+				create_new_process_group | detached_process | create_no_window | create_unicode_environment))
 			Result := Result and
 				((a_constant & (create_new_console | detached_process)) /= (create_new_console | detached_process))
 		end

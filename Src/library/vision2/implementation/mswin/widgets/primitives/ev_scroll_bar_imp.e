@@ -17,6 +17,7 @@ inherit
 
 	EV_GAUGE_IMP
 		undefine
+			valid_maximum,
 			on_scroll
 		redefine
 			interface,
@@ -108,21 +109,26 @@ feature {EV_ANY_I} -- Implementation
 
 	set_leap (a_leap: INTEGER) is
 			-- Assign `a_leap' to `leap'.
+		local
+			l_previous: INTEGER
 		do
 				--| Adjust the range so that the value_range.upper can actually
 				--| be achieved. When scroll bars are proportional in WEL, only
-				--| the maximum value - leap can be acheived. Julian
-			wel_set_range (value_range.lower, value_range.upper + a_leap - 1)
-			Precursor (a_leap)
+				--| the maximum value - leap  can be achieved.
+			scroll_info_struct.set_mask (sif_range | sif_page)
+			scroll_info_struct.set_minimum (value_range.lower)
+			scroll_info_struct.set_maximum (value_range.upper + a_leap - 1)
+			scroll_info_struct.set_page (a_leap)
+			l_previous := cwin_set_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
 	wel_set_range (a_minimum, a_maximum: INTEGER) is
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
 		local
-			must_adjust: BOOLEAN
-			adjusted_value: INTEGER
+			l_mask: INTEGER
 			l_value: INTEGER
+			l_previous: INTEGER
 		do
 				--| This has been redefined to fic the following bug:
 				--| run the vision2 Gauges sample, without redefining this feature,
@@ -132,25 +138,18 @@ feature {EV_ANY_I} -- Implementation
 				--| `value' remains valid.
 			l_value := value
 			if l_value < a_minimum then
-				must_adjust := True
-				adjusted_value := a_minimum
+				l_mask := Sif_pos
+				l_value := a_minimum
 			elseif l_value > a_maximum then
-				must_adjust := True
-				adjusted_value := a_maximum
+				l_mask := Sif_pos
+				l_value := a_maximum
 			end
 
-			scroll_info_struct.set_mask (Sif_range)
+			scroll_info_struct.set_mask (l_mask | sif_range)
+			scroll_info_struct.set_position (l_value)
 			scroll_info_struct.set_minimum (a_minimum)
 			scroll_info_struct.set_maximum (a_maximum)
-			cwin_set_scroll_info (wel_item, Sb_ctl, scroll_info_struct.item, True)
-
-				-- If previous `value' is now out of range then
-				-- assign `adjusted_value' to `value'.
-			if must_adjust then
-				scroll_info_struct.set_mask (Sif_pos)
-				scroll_info_struct.set_position (adjusted_value)
-				cwin_set_scroll_info (wel_item, Sb_ctl, scroll_info_struct.item, True)
-			end
+			l_previous := cwin_set_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
 	set_range is

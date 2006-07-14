@@ -15,6 +15,8 @@ inherit
 		end
 
 	EV_GAUGE_IMP
+		undefine
+			valid_maximum
 		redefine
 			interface
 		end

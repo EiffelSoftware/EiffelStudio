@@ -236,7 +236,7 @@ feature -- Set
 		require
 			visible: is_visible
 		do
-			if docking_manager.property.last_focus_content /= Current then
+			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				state.set_focus (Current)
 				if internal_focus_in_actions /= Void then
 					internal_focus_in_actions.call ([])
@@ -255,6 +255,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
+   			set_focus
    		end
 
 	set_top (a_direction: INTEGER) is
@@ -264,6 +265,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
+			set_focus
 		end
 
 	set_auto_hide (a_direction: INTEGER) is
@@ -273,6 +275,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.stick (a_direction)
+			set_focus
 		end
 
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
@@ -281,6 +284,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 		do
 			state.float (a_screen_x, a_screen_y)
+			set_focus
 		end
 
 	set_tab_with (a_content: SD_CONTENT; a_left: BOOLEAN) is
@@ -306,6 +310,7 @@ feature -- Set Position
 				check l_docking_zone /= Void end
 				state.move_to_docking_zone (l_docking_zone, a_left)
 			end
+			set_focus
 		end
 
 	set_default_editor_position is
@@ -316,6 +321,7 @@ feature -- Set Position
 		do
 			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)
 			docking_manager.zones.place_holder_content.close
+			set_focus
 		ensure
 			no_place_holder: not manager_has_place_holder
 		end

@@ -65,6 +65,19 @@ feature -- Properties
 			Result.append (l_current_list)
 		end
 
+	is_opening_config: BOOLEAN
+			-- If current is opening layout config?
+			
+feature {SD_CONFIG_MEDIATOR} -- Setting
+
+	set_is_opening_config (a_bool: BOOLEAN) is
+			-- Set `is_opening_config' to `a_bool'
+		do
+			is_opening_config := a_bool
+		ensure
+			set: is_opening_config = a_bool
+		end
+
 feature -- Contract support
 
 	has (a_content: SD_CONTENT): BOOLEAN is

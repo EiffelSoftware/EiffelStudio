@@ -78,7 +78,7 @@ feature {NONE} -- Retrieval
 				until
 					l_args.after
 				loop
-					l_row := added_argument_text_row (l_args.item)
+					l_row := added_argument_text_row (l_args.item, False)
 					l_args.forth
 				end
 			end
@@ -371,15 +371,16 @@ feature {NONE} -- Actions
 		local
 			l_row: EV_GRID_ROW
 		do
-			l_row := added_argument_text_row (current_argument.text)
+			l_row := added_argument_text_row (current_argument.text, True)
 			if l_row /= Void then
 				l_row.enable_select
 				l_row.ensure_visible
 			end
 		end
 
-	added_argument_text_row (a_arg_text: STRING): EV_GRID_ROW is
+	added_argument_text_row (a_arg_text: STRING; store_right_after: BOOLEAN): EV_GRID_ROW is
 			-- Action to take when user chooses to add a new argument.
+			-- if `store_arguments' is true, store_arguments if any change occurred
 		local
 			s: STRING
 			gi: EV_GRID_LABEL_ITEM
@@ -396,7 +397,9 @@ feature {NONE} -- Actions
 					arguments_grid.set_item (1, arguments_grid.row_count + 1, gi)
 					Result := gi.row
 					Result.set_data (s)
-					store_arguments
+					if store_right_after then
+						store_arguments
+					end
 				end
 			end
 		end

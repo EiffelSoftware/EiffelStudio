@@ -336,8 +336,6 @@ feature -- Input
 		local
 			count: INTEGER
 			mp: MANAGED_POINTER
-			i: INTEGER
-			cc: NATURAL_8
 		do
 			last_read_successful := True
 			create mp.make (nb_char)

@@ -16,7 +16,10 @@ inherit
 
 	CONF_FILE_CONSTANTS
 
-
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
 
 feature -- Status
 
@@ -79,6 +82,7 @@ feature {NONE} -- Implementation
 		do
 			is_error := True
 			last_error := an_error
+			raise ("Parse error")
 		end
 
 	set_parse_error_message (a_message: STRING) is
@@ -90,6 +94,7 @@ feature {NONE} -- Implementation
 			l_error.set_message (a_message)
 			is_error := True
 			last_error := l_error
+			raise ("Parse error")
 		end
 
 indexing

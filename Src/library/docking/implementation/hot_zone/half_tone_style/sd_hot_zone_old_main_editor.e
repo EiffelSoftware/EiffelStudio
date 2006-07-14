@@ -55,7 +55,7 @@ feature -- Redefine
 		do
 
 		end
-		
+
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		do
@@ -69,7 +69,7 @@ feature -- Redefine
 		do
 			internal_shared.feedback.clear
 			create l_pixmaps
-			internal_mediator.docking_manager.main_window.set_pointer_style (l_pixmaps.ibeam_cursor)
+			internal_mediator.docking_manager.main_window.set_pointer_style (l_pixmaps.no_cursor)
 		end
 
 feature {NONE} -- Implementation

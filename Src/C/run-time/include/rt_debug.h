@@ -56,6 +56,7 @@ extern void dbstack_reset(struct dbstack *stk);
 
 extern void dbreak_create_table(void);
 extern void dbreak_free_table(void);
+extern void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/
 
 /* Notification event types */
 #define THR_CREATED		1		/* thread created */

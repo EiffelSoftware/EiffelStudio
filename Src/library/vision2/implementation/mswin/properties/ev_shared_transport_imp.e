@@ -117,20 +117,8 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
-	cursor_pixmap: EV_POINTER_STYLE
+	cursor_pixmap: EV_POINTER_STYLE;
 			-- Cursor used on the widget.
-
-feature -- Public constants
-
-	Capture_heavy: INTEGER is 1
-			-- The mouse [has been/should be] captured through
-			-- a call to `set_heavy_capture'
-
-	Capture_normal: INTEGER is 0;
-			-- The mouse [has been/should be] captured through
-			-- a call to `set_capture'
-			--
-			-- Default value.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

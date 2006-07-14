@@ -116,7 +116,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 					-- Return capture type to capture_normal.
 					--| normal capture only works on the current windows thread.
-				set_capture_type (Capture_normal)
+				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
 
 				application_imp.dock_ended
 				complete_dock
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 						-- Block `pointer_motion_actions'.
 				initialize_transport (a_screen_x, a_screen_y, actual_source)
 
-				set_capture_type (Capture_normal)
+				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
 
 								--	if widget_imp_at_cursor_position /= Void then
 				orig_cursor := pointer_style
@@ -229,11 +229,6 @@ feature {NONE} -- Implementation
 
 	pointer_style: EV_POINTER_STYLE is
 			-- Cursor used on `Current'.
-		deferred
-		end
-
-	set_capture_type (a_capture_type: INTEGER) is
-			-- Set capture type to `a_capture_type'.
 		deferred
 		end
 

@@ -3454,7 +3454,12 @@ feature {NONE} -- Implementation
 
 				if l_in_classes.count > 0 then
 					l_format_context.put_new_line
-					l_format_context.process_indexing_tag_text (l_in_classes.count.out + " compiled class(es)")
+					if l_in_classes.count = 1 then
+						l_format_context.process_indexing_tag_text ("1 compiled class")
+					else
+						l_format_context.process_indexing_tag_text (
+							l_in_classes.count.out + " compiled classes")
+					end
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_colon)
 					l_format_context.put_new_line
@@ -3516,7 +3521,12 @@ feature {NONE} -- Implementation
 
 				if l_out_classes.count > 0 then
 					l_format_context.put_new_line
-					l_format_context.process_indexing_tag_text (l_out_classes.count.out + " class(es) not in system")
+					if l_out_classes.count = 1 then
+						l_format_context.process_indexing_tag_text ("1 class not in system")
+					else
+						l_format_context.process_indexing_tag_text (
+							l_out_classes.count.out + " classes not in system")
+					end
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_colon)
 					l_format_context.put_new_line

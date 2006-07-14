@@ -121,6 +121,8 @@ rt_shared char dinterrupt(void)
 	 * 
 	 * 0 stand for FALSE
 	 * 1 stand for TRUE
+	 *
+	 * Note: when dinterrupt is called, the app is already inside DBGMTX_LOCK ...
 	 */
 	char result = 0;
 		
@@ -134,11 +136,11 @@ rt_shared char dinterrupt(void)
 		switch (interrupt_flag)
 			{
 			case 1: /* interrupt requested by the user */
-				dbreak(PG_INTERRUPT);
+				safe_dbreak(PG_INTERRUPT);
 				result = 1;
 				break;
 			case 2: /* new breakpoint added while running */
-				dbreak(PG_NEWBREAKPOINT);
+				safe_dbreak(PG_NEWBREAKPOINT);
 				result = 1;
 				break;
 			default:
@@ -152,11 +154,15 @@ rt_shared char dinterrupt(void)
 	if (interrupt_flag)
 		{
 		interrupt_flag = 0;	/* reset the flag for further use */
-		dbreak(PG_INTERRUPT);
+		safe_dbreak(PG_INTERRUPT);
 		result = 1;
 		}
 #else	/* USE_SIGNAL */
 	send_info(app_sp, APP_INTERRUPT);
+	/* FIXME jfiat [2006/07/14] : check with DBGMTX_LOCKing
+	 * It seems we use USE_SIGNAL, thus this code is not used
+	 * however, this should be checked regarding DBGMTX_LOCKing 
+	 */
 	wide_listen();			/* Listen on the socket, waiting for the answer */
 	result = 1;
 #endif	/* USE_SIGNAL */

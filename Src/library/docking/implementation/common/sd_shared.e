@@ -361,6 +361,9 @@ feature -- Constants
 	Zone_navigation_column_count: INTEGER is 8
 			-- How many items per column in zone navigation dialog which is normally activated by Ctrl + Tab.
 
+	Auto_hide_tab_stub_show_delay: INTEGER is 1000
+			-- Auto hide tab stub delay time in milliseconds.
+
 feature {NONE} -- Implementation
 
 	internal_icons: SD_ICONS_SINGLETON;

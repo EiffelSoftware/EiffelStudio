@@ -52,6 +52,7 @@ feature {NONE} -- Initlization
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
 			end
 			tab_stub.pointer_enter_actions.extend (agent show)
+			tab_stub.pointer_press_actions.extend (agent show)
 			auto_hide_panel.tab_stubs.extend (tab_stub)
 
 			create animation.make (Current, internal_docking_manager)

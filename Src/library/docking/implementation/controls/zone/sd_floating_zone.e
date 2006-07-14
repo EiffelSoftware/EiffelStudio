@@ -487,6 +487,7 @@ feature {NONE} -- Agents
 				l_zone.set_last_floating_height (a_height)
 				l_zone.set_last_floating_width (a_width)
 			end
+			internal_floating_state.record_state
 		end
 
 indexing

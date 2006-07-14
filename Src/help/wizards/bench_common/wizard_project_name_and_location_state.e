@@ -169,21 +169,18 @@ feature {NONE} -- Implementation
 			if a_project_name = Void or else a_project_name.is_empty then
 				Result := False
 			else
-				Result := True
 				from
+					Result := True
 					curr_index := 1
 				until
-					(Result = false) or (curr_index > a_project_name.count)
+					not Result or (curr_index > a_project_name.count)
 				loop
 					curr_character := a_project_name @ curr_index
 					if curr_index = 1 then
-						if not curr_character.is_alpha then
-							Result := False
-						end
+						Result := curr_character.is_alpha
 					else
-						if not (curr_character.is_alpha or curr_character.is_digit or curr_character.is_equal ('_')) then
-							Result := False
-						end
+						Result := curr_character.is_alpha or curr_character.is_digit or
+							curr_character = '_' or curr_character = '.'
 					end
 					curr_index := curr_index + 1
 				end

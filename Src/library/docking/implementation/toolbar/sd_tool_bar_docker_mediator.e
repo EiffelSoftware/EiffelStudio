@@ -1,5 +1,5 @@
 indexing
-	description: "Manager that control SD_tool_bar_ZONE and SD_tool_bar_HOT_ZONE when user drag a SD_tool_bar_ZONE."
+	description: "Manager that control SD_TOOL_BAR_ZONE and SD_TOOL_BAR_HOT_ZONE when user drag a SD_TOOL_BAR_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

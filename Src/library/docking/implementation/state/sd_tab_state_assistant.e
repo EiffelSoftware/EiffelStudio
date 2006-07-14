@@ -279,7 +279,6 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 		require
 			not_void: a_parent /= Void
 		local
-			l_parent: EV_CONTAINER
 			l_docking_state: SD_DOCKING_STATE
 			l_split_position: INTEGER
 			l_split_area: EV_SPLIT_AREA

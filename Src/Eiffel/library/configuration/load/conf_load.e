@@ -63,7 +63,6 @@ feature -- Basic operation
 			if l_callback.is_error then
 				is_error := True
 				is_invalid_xml := l_callback.is_invalid_xml
-				l_callback.last_error.set_file (a_file)
 				last_error := l_callback.last_error
 			elseif not is_error then
 				last_system := l_callback.last_system
@@ -103,7 +102,6 @@ feature -- Basic operation
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
-				l_callback.last_error.set_file (a_file)
 				last_error := l_callback.last_error
 			else
 				last_uuid := l_callback.last_uuid
@@ -128,29 +126,42 @@ feature {NONE} -- Implementation
 			l_test_file: PLAIN_TEXT_FILE
 			l_parser: XM_PARSER
 			l_ns_cb: XM_NAMESPACE_RESOLVER
+			l_pos: XM_POSITION
+			l_retried: BOOLEAN
 		do
-			is_error := False
+			if not l_retried then
+				is_error := False
 
-			if a_file.is_empty then
-				is_error := True
-				last_error := create {CONF_ERROR_FILE}.make (a_file)
-			else
-				create {XM_EIFFEL_PARSER} l_parser.make
-
-				create l_ns_cb.set_next (a_callback)
-				l_parser.set_callbacks (l_ns_cb)
-
-				create l_file.make (a_file)
-				create l_test_file.make (a_file)
-				l_file.open_read
-				if not l_file.is_open_read or else not l_test_file.is_plain then
+				if a_file.is_empty then
 					is_error := True
 					last_error := create {CONF_ERROR_FILE}.make (a_file)
 				else
-					l_parser.parse_from_stream (l_file)
-					l_file.close
+					create {XM_EIFFEL_PARSER} l_parser.make
+
+					create l_ns_cb.set_next (a_callback)
+					l_parser.set_callbacks (l_ns_cb)
+
+					create l_file.make (a_file)
+					create l_test_file.make (a_file)
+					l_file.open_read
+					if not l_file.is_open_read or else not l_test_file.is_plain then
+						is_error := True
+						last_error := create {CONF_ERROR_FILE}.make (a_file)
+					else
+						l_parser.parse_from_stream (l_file)
+						l_file.close
+					end
 				end
+			else
+				check
+					is_error: a_callback.is_error
+				end
+				l_pos := l_parser.position
+				a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 invariant

@@ -31,7 +31,7 @@ feature -- Access
 		do
 			Result := "Parse error"
 			if file /= Void then
-				Result.append (" in "+file)
+				Result.append (" in "+file+" ("+row.out+":"+column.out+")")
 			end
 			if message /= Void then
 				Result.append (": "+message)
@@ -40,12 +40,13 @@ feature -- Access
 
 feature -- Update
 
-	set_file (a_file: STRING) is
-			-- Set config file with error to `a_file'.
+	set_position (a_file: like file; a_row: like row; a_column: like column) is
+			-- Set position of an error.
 		do
 			file := a_file
+			row := a_row
+			column := a_column
 		end
-
 
 	set_message (a_message: STRING) is
 			-- Set the extended error message to `a_message'.
@@ -56,7 +57,9 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	message: STRING
-	file: STRING;
+	file: STRING
+	row: INTEGER
+	column: INTEGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

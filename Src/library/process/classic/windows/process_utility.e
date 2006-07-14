@@ -285,7 +285,7 @@ feature{NONE} -- NT API
 		require
 			a_ntps_handle_attached: a_ntps_handle /= Void
 		external
-			"C inline use <Psapi.h>"
+			"C inline"
 		alias
 			"[
 				{

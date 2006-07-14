@@ -217,7 +217,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Brea
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
 rt_shared void dbreak_create_table(void);
 rt_shared void dbreak_free_table(void);
-rt_private void safe_dbreak (int why);
+rt_shared void dbreak (EIF_CONTEXT int why);
+rt_shared void safe_dbreak (int why);
 rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset);
@@ -660,7 +661,7 @@ rt_shared void dbreak(EIF_CONTEXT int why)
 	DBGMTX_UNLOCK;
 }
 
-rt_private void safe_dbreak (int why)
+rt_shared void safe_dbreak (int why)
 {
 	/* Program execution stopped. The run-time context is saved and the
 	 * application is put in a server mode, where it listens for workbench

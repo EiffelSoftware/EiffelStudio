@@ -105,6 +105,7 @@ extern void dmove(int offset);							/* Move active routine cursor */
 
 /* Breakpoint handling */
 extern rt_shared void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
+extern rt_shared void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/
 
 /* Once result evaluation */
 extern struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/

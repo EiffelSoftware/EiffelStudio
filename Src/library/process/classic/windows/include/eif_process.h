@@ -29,8 +29,8 @@ typedef struct _EIF_PROCESS_BASIC_INFORMATION {
     PVOID Reserved1;
     EIF_PPEB PebBaseAddress;
     PVOID Reserved2[2];
-    ULONG_PTR UniqueProcessId;
-    ULONG_PTR InheritedFromUniqueProcessId;
+    ULONG UniqueProcessId;
+    ULONG InheritedFromUniqueProcessId;
 } EIF_PROCESS_BASIC_INFORMATION;
 
 typedef enum _EIF_PROCESSINFOCLASS {

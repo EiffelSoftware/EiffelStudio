@@ -121,7 +121,7 @@ feature {NONE} -- For redocker.
 			create docker_mediator.make (Current, internal_docking_manager)
 			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
-
+			setter.before_enable_capture
 			enable_capture
 		end
 
@@ -130,6 +130,7 @@ feature {NONE} -- For redocker.
 		do
 			if docker_mediator /= Void then
 				disable_capture
+				setter.after_disable_capture
 				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				docker_mediator := Void
 			end
@@ -147,11 +148,18 @@ feature {NONE} -- For redocker.
 			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
 		do
 			disable_capture
+			setter.after_disable_capture
 			docker_mediator := Void
 		end
 
 	docker_mediator: SD_DOCKER_MEDIATOR;
 			-- Mediator perform dock.	
+
+	setter: SD_SYSTEM_SETTER is
+			-- System setter
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
+		end
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

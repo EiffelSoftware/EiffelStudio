@@ -125,15 +125,25 @@ rt_shared char dinterrupt(void)
 	 * Note: when dinterrupt is called, the app is already inside DBGMTX_LOCK ...
 	 */
 	char result = 0;
+#if defined(EIF_WINDOWS) || defined(USE_SIGNAL)
+	unsigned char l_flag;
+#endif
 		
 	if (!debug_mode)		/* If not in debugging mode */
 		return result;			/* Resume execution immediately */
 	
 #ifdef WORKBENCH
-#ifdef EIF_WINDOWS
-	if (interrupt_flag!=0)
-		{
-		switch (interrupt_flag)
+#if !defined(EIF_WINDOWS) && !defined(USE_SIGNAL)
+	send_info(app_sp, APP_INTERRUPT);
+	wide_listen();			/* Listen on the socket, waiting for the answer */
+	result = 1;
+#else
+
+	if (interrupt_flag!=0) {
+		fprintf(stdout, "interrupt_flag -> %i \n", interrupt_flag);
+		l_flag = interrupt_flag;
+		interrupt_flag = 0;	/* reset the flag for further use */
+		switch (l_flag)
 			{
 			case 1: /* interrupt requested by the user */
 				safe_dbreak(PG_INTERRUPT);
@@ -147,26 +157,8 @@ rt_shared char dinterrupt(void)
 				/* wrong value, do nothing */
 				break;
 			}
-		interrupt_flag = 0;	/* reset the flag for further use */
 		}
-#else	/* EIF_WINDOWS */
-#ifdef USE_SIGNAL
-	if (interrupt_flag)
-		{
-		interrupt_flag = 0;	/* reset the flag for further use */
-		safe_dbreak(PG_INTERRUPT);
-		result = 1;
-		}
-#else	/* USE_SIGNAL */
-	send_info(app_sp, APP_INTERRUPT);
-	/* FIXME jfiat [2006/07/14] : check with DBGMTX_LOCKing
-	 * It seems we use USE_SIGNAL, thus this code is not used
-	 * however, this should be checked regarding DBGMTX_LOCKing 
-	 */
-	wide_listen();			/* Listen on the socket, waiting for the answer */
-	result = 1;
-#endif	/* USE_SIGNAL */
-#endif	/* EIF_WINDOWS */
+#endif
 #endif	/* WORKBENCH */
 	return result;
 }

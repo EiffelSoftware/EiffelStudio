@@ -235,9 +235,9 @@ feature {NONE} -- Implementation
 					if l_widget = {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (l_last_column) then
 							-- Fire item press actions with a Void item.
 						if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
-							item_pointer_button_press_actions_internal.call (Void)
+							item_pointer_button_press_actions_internal.call ([Void, a_x, a_y, a_button])
 						elseif a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
-							item_pointer_double_press_actions_internal.call (Void)
+							item_pointer_double_press_actions_internal.call ([Void, a_x, a_y, a_button])
 						end
 					end
 				end

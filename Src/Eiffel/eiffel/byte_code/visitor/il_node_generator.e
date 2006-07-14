@@ -288,6 +288,7 @@ feature -- Generation
 			target_type_not_void: target_type /= Void
 		local
 			label: IL_LABEL
+			label_done: IL_LABEL
 		do
 			if source_type.is_expanded then
 				if not source_type.is_external then
@@ -315,7 +316,18 @@ feature -- Generation
 				label := il_generator.create_label
 				il_generator.branch_on_false (label)
 				generate_twin_routine ({PREDEFINED_NAMES}.twin_name_id, target_type)
-				il_generator.mark_label (label)
+				if target_type.is_expanded then
+						-- Ensure a value of an expanded type is on the stack instead of a reference.
+					label_done := il_generator.create_label
+					il_generator.branch_to (label_done)
+					il_generator.mark_label (label)
+					il_generator.generate_unmetamorphose (target_type)
+					il_generator.mark_label (label_done)
+				else
+					il_generator.mark_label (label)
+				end
+			elseif target_type.is_expanded then
+				il_generator.generate_unmetamorphose (target_type)
 			end
 		end
 
@@ -2167,6 +2179,8 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_target_type, l_source_type: TYPE_I
+			l_source_class_type: CL_TYPE_I
+			l_target_class_type: CL_TYPE_I
 			success_label, failure_label: IL_LABEL
 		do
 			generate_il_line_info (a_node, True)
@@ -2197,46 +2211,60 @@ feature {NONE} -- Visitors
 			a_node.source.process (Current)
 			is_object_load_required := False
 
-			if l_source_type.is_expanded then
-				if l_target_type.is_expanded then
-					generate_il_metamorphose (a_node.source, l_source_type, Void, True)
+			if l_source_type.is_expanded and then l_target_type.is_expanded then
+					-- NOOP if classes are different or normal assignment otherwise.
+				l_source_class_type ?= l_source_type
+				l_target_class_type ?= l_target_type
+				if
+					l_target_class_type /= Void and then l_source_class_type /= Void and then
+					l_target_class_type.class_id = l_source_class_type.class_id
+				then
+						-- Do normal assignment.
+					generate_reattachment (a_node.source, l_source_type, l_target_type)
+						-- Generate assignment header depending of the type
+						-- of the target (local, attribute or result).
+					generate_il_assignment (a_node.target, l_source_type)
 				else
+						-- Remove expression value because it is not used.
+					il_generator.pop
+						-- Avoid reattachment altogether.
+					generate_il_cancel_assignment (a_node.target)
+				end
+			else
+				if l_source_type.is_expanded then
 					generate_il_metamorphose (a_node.source, l_source_type, l_target_type, False)
 				end
+					-- Generate Test on type
+				il_generator.generate_is_instance_of (l_target_type)
+
+				if l_target_type.is_expanded then
+					il_generator.duplicate_top
+
+					success_label := il_generator.create_label
+					il_generator.branch_on_true (success_label)
+
+						-- Assignment attempt failed.
+						-- Remove duplicate obtained from call to `isinst'.
+					il_generator.pop
+						-- Avoid reattachment altogether.
+					generate_il_cancel_assignment (a_node.target)
+
+					failure_label := il_generator.create_label
+					il_generator.branch_to (failure_label)
+
+					il_generator.mark_label (success_label)
+				end
+
+				generate_reattachment (a_node.source, l_source_type, l_target_type)
+
+					-- Generate assignment header depending of the type
+					-- of the target (local, attribute or result).
+				generate_il_assignment (a_node.target, l_source_type)
+
+				if failure_label /= Void then
+					il_generator.mark_label (failure_label)
+				end
 			end
-
-				-- Generate Test on type
-			il_generator.generate_is_instance_of (l_target_type)
-
-			if l_target_type.is_expanded then
-				il_generator.duplicate_top
-
-				success_label := il_generator.create_label
-				il_generator.branch_on_true (success_label)
-
-					-- Assignment attempt failed.
-					-- Remove duplicate obtained from call to `isinst'.
-				il_generator.pop
-					-- Assignment attempt failed, we simply load previous
-					-- value of `a_node.target'. It is ok to regenerate `a_node.target' as
-					-- it can only be a creatable entity: local, attribute, result.
-				a_node.target.process (Current)
-
-				failure_label := il_generator.create_label
-				il_generator.branch_to (failure_label)
-
-				il_generator.mark_label (success_label)
-
-				il_generator.generate_unmetamorphose (l_target_type)
-
-				il_generator.mark_label (failure_label)
-			end
-
-			generate_reattachment (a_node.source, l_source_type, l_target_type)
-
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
-			generate_il_assignment (a_node.target, l_source_type)
 		end
 
 	process_routine_creation_b (a_node: ROUTINE_CREATION_B) is
@@ -3163,6 +3191,18 @@ feature {NONE} -- Implementation: assignments
 		do
 			if a_node.is_attribute then
 				il_generator.generate_current
+			end
+		end
+
+	generate_il_cancel_assignment (a_node: ACCESS_B) is
+			-- Remove any data from the stack put by `generate_il_start_assignment'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+		do
+			if a_node.is_attribute then
+					-- Remove address of Current object.
+				il_generator.pop
 			end
 		end
 

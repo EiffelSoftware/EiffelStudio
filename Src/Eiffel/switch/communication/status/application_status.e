@@ -200,7 +200,6 @@ feature -- Values
 
 	exception_description: STRING_32 is
 		local
-			e: EXCEPTIONS
 			s32: STRING_32
 		do
 			create Result.make (100)

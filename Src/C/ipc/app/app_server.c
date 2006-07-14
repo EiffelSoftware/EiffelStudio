@@ -47,6 +47,7 @@
 #include <signal.h>
 #include "rqst_const.h"
 #include "server.h"
+#include "rt_debug.h"
 #include "rt_main.h" /* For debug_mode. */
 
 #ifndef EIF_WINDOWS
@@ -140,7 +141,6 @@ rt_shared char dinterrupt(void)
 #else
 
 	if (interrupt_flag!=0) {
-		fprintf(stdout, "interrupt_flag -> %i \n", interrupt_flag);
 		l_flag = interrupt_flag;
 		interrupt_flag = 0;	/* reset the flag for further use */
 		switch (l_flag)

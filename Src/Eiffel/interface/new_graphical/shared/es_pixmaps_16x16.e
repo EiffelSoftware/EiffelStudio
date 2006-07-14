@@ -1361,6 +1361,18 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 5))
 		end
+
+	frozen tool_properties_icon: EV_PIXMAP is
+			-- Access to 'properties' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (28, 5))
+		end
+
+	frozen tool_properties_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'properties' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (28, 5))
+		end
 	frozen project_melt_icon: EV_PIXMAP is
 			-- Access to 'melt' pixmap.
 		once
@@ -4128,6 +4140,66 @@ feature -- Access
 			-- Access to 'edit library' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 17))
+		end
+
+	frozen project_settings_include_file_icon: EV_PIXMAP is
+			-- Access to 'include file' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 17))
+		end
+
+	frozen project_settings_include_file_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'include file' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 17))
+		end
+
+	frozen project_settings_object_file_icon: EV_PIXMAP is
+			-- Access to 'object file' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 17))
+		end
+
+	frozen project_settings_object_file_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'object file' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 17))
+		end
+
+	frozen project_settings_make_file_icon: EV_PIXMAP is
+			-- Access to 'make file' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 17))
+		end
+
+	frozen project_settings_make_file_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'make file' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 17))
+		end
+
+	frozen project_settings_resource_file_icon: EV_PIXMAP is
+			-- Access to 'resource file' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 17))
+		end
+
+	frozen project_settings_resource_file_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'resource file' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 17))
+		end
+
+	frozen project_settings_task_icon: EV_PIXMAP is
+			-- Access to 'task' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 17))
+		end
+
+	frozen project_settings_task_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'task' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 17))
 		end
 		
 feature {NONE} -- Query

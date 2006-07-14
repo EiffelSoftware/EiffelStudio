@@ -11,7 +11,8 @@ class
 inherit
 	SD_HOR_VER_BOX
 		export
-			{ANY} screen_x, screen_y, width, height
+			{NONE} all
+			{ANY} screen_x, screen_y, width, height, pointer_enter_actions
 		end
 
 create
@@ -46,7 +47,7 @@ feature {NONE} -- Initlization
 			internal_box.disable_item_expand (internal_drawing_area)
 
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
-
+			internal_drawing_area.pointer_button_press_actions.extend (agent on_pointer_press)
 			internal_docking_manager := a_content.docking_manager
 
 			set_padding_width (internal_shared.padding_width)
@@ -57,6 +58,9 @@ feature {NONE} -- Initlization
 			create l_cell
 			internal_drawing_area.set_background_color (l_cell.background_color)
 			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+
+			create pointer_press_actions
+			create delay_timer
 		ensure
 			set: content = a_content
 			drawing_area_added: internal_box.has (internal_drawing_area)
@@ -109,6 +113,27 @@ feature -- Query
 
 	content: SD_CONTENT
 			-- Which content current is represent.
+
+	pointer_press_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Pointer press actions.
+
+	is_group_auto_hide_zone_showing: BOOLEAN is
+			-- If auto hide zone belong to our group showing?
+		local
+			l_group: ARRAYED_LIST [SD_TAB_STUB]
+		do
+			l_group := tab_group
+			from
+				l_group.start
+			until
+				l_group.after or Result
+			loop
+				if l_group.item /= Current and then l_group.item.content.state.zone /= Void then
+					Result := True
+				end
+				l_group.forth
+			end
+		end
 
 feature -- Command
 
@@ -215,7 +240,36 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 				l_tab_group.forth
 			end
 			internal_docking_manager.command.unlock_update
-			pointer_enter_actions.call ([])
+			if is_group_auto_hide_zone_showing then
+				-- We must show immediately
+				pointer_enter_actions.call ([])
+			else
+				delay_timer.actions.extend_kamikaze (agent on_delay_timer)
+				delay_timer.set_interval ({SD_SHARED}.auto_hide_tab_stub_show_delay)
+			end
+		end
+
+	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+			-- Handle pointer press actions
+		do
+			pointer_press_actions.call ([])
+		end
+
+	on_delay_timer is
+			-- Handle `delay_timer' actions.
+		local
+			l_screen: EV_SCREEN
+			l_rect: EV_RECTANGLE
+			l_point: EV_COORDINATE
+		do
+			create l_screen
+			l_point := l_screen.pointer_position
+			create l_rect.make (screen_x, screen_y, width, height)
+			if l_rect.has_x_y (l_point.x, l_point.y) then
+				-- If pointer still in current area
+				pointer_enter_actions.call ([])
+			end
+			delay_timer.set_interval (0)
 		end
 
 feature {NONE} -- Implementation
@@ -327,6 +381,9 @@ feature {NONE} -- Implementation
 			Result := auto_hide_panel.tab_group (Current)
 		end
 
+	delay_timer: EV_TIMEOUT
+			-- Delay timer to call `pointer_enter_actions'
+
 	auto_hide_panel: SD_AUTO_HIDE_PANEL
 			-- Panel current is in.
 
@@ -346,6 +403,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 	internal_drawing_area_not_void: internal_drawing_area /= Void
+	pointer_press_actions_not_void: pointer_press_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

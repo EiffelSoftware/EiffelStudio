@@ -532,7 +532,9 @@ feature {NONE} -- Events
 
 	on_resize_events (ax, ay, aw, ah: INTEGER) is
 		do
-			delayed_last_column_auto_resizing.request_call
+			if not is_destroyed then
+				delayed_last_column_auto_resizing.request_call
+			end
 		end
 
 feature -- Grid helpers
@@ -671,6 +673,8 @@ feature -- Commands
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
+			Precursor {EV_GRID}
+
 			if delayed_columns_auto_resizing /= Void then
 				delayed_columns_auto_resizing.cancel_request
 			end
@@ -680,8 +684,6 @@ feature -- Commands
 			if delayed_cleaning /= Void then
 				delayed_cleaning.cancel_request
 			end
-
-			Precursor {EV_GRID}
 		end
 
 feature {NONE} -- Implementation

@@ -165,9 +165,11 @@ feature -- Execution
 			is_executing_set: is_executing = b
 		end
 
-	spawn_nowait (is_control_terminal_enabled: BOOLEAN) is
+	spawn_nowait (is_control_terminal_enabled: BOOLEAN; evnptr: POINTER) is
 			-- Spawn a process and return immediately.
 			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
+			-- Environment variables for new process is stored in `envptr'. If `envptr' is `default_pointer',
+			-- new process will inherit all environment variables from its parent process.
 		local
 			ee: EXECUTION_ENVIRONMENT
 			cur_dir: STRING
@@ -190,7 +192,7 @@ feature -- Execution
 					attach_terminals
 				end
 				setup_child_process_files
-				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files)
+				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files, evnptr)
 			else
 				if process_id /= -1 then
 					setup_parent_process_files

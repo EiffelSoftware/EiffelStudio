@@ -779,31 +779,7 @@ feature{NONE} -- Implementation
 	environment_table_as_pointer: POINTER is
 			-- {POINTER} representation of `environment_variable_table'
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
-		local
-			l_str: STRING
-			l_tbl: like environment_variable_table
-		do
-			l_tbl := environment_variable_table
-			if l_tbl /= Void and then not l_tbl.is_empty then
-				create l_str.make (512)
-				from
-					l_tbl.start
-				until
-					l_tbl.after
-				loop
-					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
-						l_str.append (l_tbl.key_for_iteration)
-						l_str.append_character ('=')
-						l_str.append (l_tbl.item_for_iteration)
-						l_str.append_character ('%U')
-					end
-					l_tbl.forth
-				end
-				l_str.append_character ('%U')
-				Result := (create {C_STRING}.make (l_str)).item
-			else
-				Result := default_pointer
-			end
+		deferred
 		end
-
+		
 end

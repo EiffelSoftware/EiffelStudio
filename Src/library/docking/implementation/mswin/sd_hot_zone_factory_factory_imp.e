@@ -31,7 +31,6 @@ feature -- Hot zone factory
 			end
 		end
 
-
 feature -- Implementation
 
 	is_terminal_service: BOOLEAN is

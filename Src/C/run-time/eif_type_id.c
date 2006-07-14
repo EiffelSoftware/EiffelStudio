@@ -45,6 +45,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "rt_gen_types.h"
 #include "eif_gen_conf.h"
 #include "rt_assert.h"
+#include "rt_threads.h"
 #include <ctype.h>
 #include <string.h>
 
@@ -74,16 +75,17 @@ struct rt_global_data {
 };
 
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_pre_ecma_mapping_status" return_type="int" export="public">
-doc:		<summary>Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...)</summary>
+doc:		<summary>Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). Note that the value is set to `1' by default for backward compatibility of old storables. Don't forget to updated `eif_threads.c' for the setting of the per thread data.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None.</synchronization>
-doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Only used in non-multithreaded case.</synchronization>
 doc:	</attribute>
 */
 rt_public int eif_pre_ecma_mapping_status = 1;
+#endif
 
 	
 /* Prototypes */
@@ -137,16 +139,32 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 }
 
 /*
+doc:	<routine name="eif_pre_ecma_mapping" return_type="int" export="public">
+doc:		<summary>Value for `eif_pre_ecma_mapping_status' to `v'.</summary>
+doc:		<param name="v" type="int">New value for `eif_pre_ecma_mapping_status'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses only per thread data.</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</routine>
+*/
+rt_public int eif_pre_ecma_mapping (void)
+{
+	RT_GET_CONTEXT
+	return eif_pre_ecma_mapping_status;
+}
+
+/*
 doc:	<routine name="eif_set_pre_ecma_mapping" export="public">
 doc:		<summary>Set `eif_pre_ecma_mapping_status' to `v'.</summary>
 doc:		<param name="v" type="int">New value for `eif_pre_ecma_mapping_status'.</param>
-doc:		<thread_safety>Not Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses only per thread data.</synchronization>
 doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
 doc:	</routine>
 */
 rt_public void eif_set_pre_ecma_mapping (int v)
 {
+	RT_GET_CONTEXT
 	eif_pre_ecma_mapping_status = v;
 }
 
@@ -163,6 +181,7 @@ doc:	</routine>
 
 rt_shared char * eif_pre_ecma_mapped_type (char *v)
 {
+	RT_GET_CONTEXT
 	char *Result = v;
 
 	REQUIRE("v_not_null", v);

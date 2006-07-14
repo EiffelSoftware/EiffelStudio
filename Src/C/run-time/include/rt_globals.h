@@ -246,6 +246,9 @@ typedef struct tag_rt_globals
 		/* file.c */
 	char file_type_cx [FILE_TYPE_MAX];
 
+		/* eif_type_id.c */
+	int eif_pre_ecma_mapping_status_cx;
+
 } rt_global_context_t;
 
 	/*
@@ -458,6 +461,9 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 
 		/* file.c */
 #define file_type			(rt_globals->file_type_cx)
+
+		/* eif_type_id.c */
+#define eif_pre_ecma_mapping_status			(rt_globals->eif_pre_ecma_mapping_status_cx)
 
 #ifdef EIF_TLS_WRAP
 RT_LNK RT_TSD_TYPE rt_global_key_get (void);

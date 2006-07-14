@@ -533,6 +533,9 @@ rt_private rt_global_context_t *eif_new_context (void)
 	thread_can_launch_gc = 1;
 #endif
 
+		/* eif_type_id.c */
+	eif_pre_ecma_mapping_status = 1;
+
 	eif_init_gc_stacks(rt_globals);
 
 	return rt_globals;

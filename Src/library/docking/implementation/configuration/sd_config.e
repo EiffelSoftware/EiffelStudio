@@ -73,6 +73,7 @@ feature -- Save/Open inner container data.
 			l_called: BOOLEAN
 			l_retried: BOOLEAN
 		do
+			internal_docking_manager.property.set_is_opening_config (True)
 			if not l_retried then
 				create l_file.make_open_read (a_file)
 				create l_reader.make (l_file)
@@ -109,6 +110,7 @@ feature -- Save/Open inner container data.
 				internal_docking_manager.command.unlock_update
 				Result := True
 			end
+			internal_docking_manager.property.set_is_opening_config (False)
 		rescue
 			if l_called then
 				internal_docking_manager.command.unlock_update
@@ -174,6 +176,7 @@ feature -- Save/Open inner container data.
 			l_split_area: EV_SPLIT_AREA
 			l_temp_split_area: SD_HORIZONTAL_SPLIT_AREA
 		do
+			internal_docking_manager.property.set_is_opening_config (True)
 			l_top_parent := internal_docking_manager.query.inner_container_main.editor_parent
 			if l_top_parent = internal_docking_manager.query.inner_container_main then
 				l_top_parent.wipe_out
@@ -204,6 +207,7 @@ feature -- Save/Open inner container data.
 				end
 			end
 			internal_docking_manager.command.unlock_update
+			internal_docking_manager.property.set_is_opening_config (False)
 		end
 
 	save_tools_config (a_file: STRING) is

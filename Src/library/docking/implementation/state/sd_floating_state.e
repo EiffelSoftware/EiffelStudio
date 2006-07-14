@@ -17,7 +17,8 @@ inherit
 			move_to_docking_zone,
 			move_to_tab_zone,
 			content_void,
-			change_state
+			change_state,
+			record_state
 		end
 
 create
@@ -164,6 +165,13 @@ feature -- Redefine.
 			set: a_state.last_floating_width = last_floating_width
 		end
 
+	record_state is
+			-- Redefine
+		do
+			last_floating_width := internal_zone.width
+			last_floating_height := internal_zone.height
+		end
+
 	content_void: BOOLEAN is
 			-- Redefine.
 		do
@@ -191,6 +199,8 @@ feature -- Command
 			-- Set floating zone size.
 		do
 			internal_zone.set_size (a_width, a_height)
+			last_floating_width := a_width
+			last_floating_height := a_height
 		end
 
 feature -- Query

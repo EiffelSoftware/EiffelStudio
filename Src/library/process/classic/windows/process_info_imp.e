@@ -20,27 +20,6 @@ feature -- Access
 			"GetCurrentProcessId ()"
 		end
 
-
-	process_module: STRING is
-			-- Module (full path) of current process
-			-- Return Void if failed.
-		local
-			l_ptr: POINTER
-			l_count: INTEGER
-			l_wel_str: WEL_STRING
-			l_succ: BOOLEAN
-		do
-			get_process_module ($l_ptr, $l_count, $l_succ)
-			if l_succ then
-				check l_ptr /= default_pointer end
-				create l_wel_str.share_from_pointer_and_count (l_ptr, l_count)
-				Result := l_wel_str.string
-				cwin_free_pointer (l_ptr)
-			else
-				Result := ""
-			end
-		end
-
 	environment_variables: HASH_TABLE [STRING, STRING] is
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
@@ -51,10 +30,9 @@ feature -- Access
 			l_managed_ptr: MANAGED_POINTER
 			l_managed_ptr2: MANAGED_POINTER
 			l_str: STRING
-			l_str_list: LIST [STRING]
 			l_ver_len: POINTER
 			l_ver_len_size: INTEGER
-			i: INTEGER
+			i, j: INTEGER
 			l_list: ARRAYED_LIST [INTEGER_64]
 			i_16: INTEGER_16
 			i_32: INTEGER_32
@@ -63,6 +41,7 @@ feature -- Access
 			l_whole_len: INTEGER
 			l_cnt: INTEGER
 			l_wel_str: WEL_STRING
+			done: BOOLEAN
 		do
 			get_environment_variables ($l_ptr, $l_whole_len, $l_count, $l_ver_len_size, $l_ver_len, $l_succ)
 			if l_succ then
@@ -112,9 +91,22 @@ feature -- Access
 					end
 					create l_wel_str.make_by_pointer_and_count (l_managed_ptr2.item, l_cnt)
 					l_str := l_wel_str.string
-					l_str_list := l_str.split ('=')
-					if l_str_list.count = 2 then
-						Result.put (l_str_list.i_th (2), l_str_list.i_th (1))
+
+					j := l_str.count
+					from
+						i := 1
+						done := False
+					until
+						i > j or done
+					loop
+						if l_str.item (i) = '=' then
+							done := True
+						else
+							i := i + 1
+						end
+					end
+					if i > 1 and then i < j then
+						Result.put (l_str.substring (i + 1, j), l_str.substring (1, i - 1))
 					end
 					l_pos := l_pos + l_list.item.as_integer_32
 					l_list.forth

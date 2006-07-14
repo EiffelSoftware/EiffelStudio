@@ -243,6 +243,7 @@ feature -- Control
 				dir := ee.current_working_directory
 				ee.change_working_directory (working_directory)
 			end
+			external_storage.wipe_out
 			prc.launch
 
 			if ee /= Void then

@@ -38,16 +38,6 @@ feature -- Access
 			Result := internal_capture_status.item
 		end
 
-	capture_type: INTEGER is
-			-- Type of capture to use when capturing the mouse.
-			-- See constants Capture_xxxx at the end of the class.
-		do
-			Result := internal_capture_type.item
-		ensure
-			valid_result: Result = Capture_normal or
-						  Result = Capture_heavy
-		end
-
 	transport_executing: BOOLEAN is
 			-- Is a pick and drop or drag and drop currently
 			-- being executed?
@@ -74,21 +64,6 @@ feature -- Status setting
 			press_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
 			is_transport_enabled := False
-		end
-
-	set_capture_type (a_capture_type: INTEGER) is
-			-- Set the type of capture to use when capturing the
-			-- mouse to `a_capture_type'.
-			-- See constants Capture_xxxx at the end of the class
-		require
-			valid_capture_type: a_capture_type = Capture_normal or
-								a_capture_type = Capture_heavy
-			no_current_capture: not capture_enabled
-		do
-			internal_capture_type.set_item(a_capture_type)
-		ensure
-			valid_capture: capture_type = Capture_normal or
-						   capture_type = Capture_heavy
 		end
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
@@ -333,7 +308,7 @@ feature {EV_ANY_I} -- Implementation
 				motion_action := Ev_pnd_execute
 					-- Store the previous cursor of `Current'.
 				pnd_stored_cursor := cursor_pixmap
-				set_capture_type (Capture_heavy)
+				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_heavy)
 
 					-- Assign correct pointer for transport.
 				update_pointer_style (pointed_target)
@@ -359,7 +334,7 @@ feature {EV_ANY_I} -- Implementation
 			disable_capture
 				-- Return capture type to capture_normal.
 				--| normal capture only works on the current windows thread.
-			set_capture_type (Capture_normal)
+			application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
 
 			release_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
@@ -662,7 +637,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Enable capture.
 			--| Accessible through the interface of widget.
 		do
-			set_capture_type (Capture_heavy)
 			internal_enable_capture
 		end
 
@@ -670,10 +644,10 @@ feature {EV_ANY_I} -- Implementation
 			-- Grab all user events.
 			--| Not accessible through the interface of widget.
 		do
-			inspect capture_type
-			when Capture_heavy then
+			inspect application_imp.capture_type
+			when {EV_APPLICATION_IMP}.Capture_heavy then
 				set_heavy_capture
-			when Capture_normal then
+			when {EV_APPLICATION_IMP}.Capture_normal then
 				set_capture
 			end
 		end
@@ -681,10 +655,10 @@ feature {EV_ANY_I} -- Implementation
 	disable_capture is
 			-- Release all user events.
 		do
-			inspect capture_type
-			when Capture_heavy then
+			inspect application_imp.capture_type
+			when {EV_APPLICATION_IMP}.Capture_heavy then
 				release_heavy_capture
-			when Capture_normal then
+			when {EV_APPLICATION_IMP}.Capture_normal then
 				release_capture
 			end
 		end
@@ -721,13 +695,6 @@ feature {EV_ANY_I} -- Implementation
 			-- System wide once, in order to always get the
 			-- same value.
 			-- True if there is the mouse is currently captured.
-		once
-			Create Result
-		end
-
-	internal_capture_type: INTEGER_REF is
-			-- System wide once, in order to always get the
-			-- same value.
 		once
 			Create Result
 		end

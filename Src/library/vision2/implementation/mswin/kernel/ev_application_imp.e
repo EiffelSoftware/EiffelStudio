@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 
 			create theme_window.make
 			create duplicated_message.make
+			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 		end
 
 	launch  is
@@ -476,6 +477,18 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			override_from_mouse_activate := False
 		end
 
+feature -- Status reports
+
+	capture_type: INTEGER is
+			-- Type of capture to use when capturing the mouse.
+			-- See constants Capture_xxxx at the end of the class.
+		do
+			Result := internal_capture_type.item
+		ensure
+			valid_result: Result = Capture_normal or
+						  Result = Capture_heavy
+		end
+
 feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is
@@ -510,6 +523,20 @@ feature -- Status setting
 					all_tooltips.remove
 				end
 			end
+		end
+
+	set_capture_type (a_capture_type: INTEGER) is
+			-- Set the type of capture to use when capturing the
+			-- mouse to `a_capture_type'.
+			-- See constants Capture_xxxx at the end of the class
+		require
+			valid_capture_type: a_capture_type = Capture_normal or
+								a_capture_type = Capture_heavy
+		do
+			internal_capture_type.set_item(a_capture_type)
+		ensure
+			valid_capture: capture_type = Capture_normal or
+						   capture_type = Capture_heavy
 		end
 
 feature -- Basic operation
@@ -690,6 +717,25 @@ feature {NONE} -- Implementation
 		do
 			stop_processing_requested := True
 		end
+
+	internal_capture_type: INTEGER_REF is
+			-- System wide once, in order to always get the
+			-- same value.
+		once
+			Create Result
+		end
+
+feature -- Public constants
+
+	Capture_heavy: INTEGER is 1
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_heavy_capture'
+
+	Capture_normal: INTEGER is 0
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_capture'
+			--
+			-- Default value.
 
 feature {NONE} -- Externals
 

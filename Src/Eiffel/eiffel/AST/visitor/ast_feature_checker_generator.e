@@ -3650,20 +3650,18 @@ feature -- Implementation
 
 				-- Type checking
 			if l_target_type.is_expanded then
-				if not System.il_generation then
-					create l_vjrv1
-					context.init_error (l_vjrv1)
-					l_vjrv1.set_target_name (l_as.target.access_name)
-					l_vjrv1.set_target_type (l_target_type)
-					l_vjrv1.set_location (l_as.target.end_location)
-					error_handler.insert_warning (l_vjrv1)
-				end
+				create l_vjrv1
+				context.init_error (l_vjrv1)
+				l_vjrv1.set_target_name (l_as.target.access_name)
+				l_vjrv1.set_target_type (l_target_type)
+				l_vjrv1.set_location (l_as.target.end_location)
+				error_handler.insert_warning (l_vjrv1)
 			elseif l_target_type.is_formal then
 				l_formal ?= l_target_type
 				check
 					l_formal_not_void: l_formal /= Void
 				end
-				if not l_formal.is_reference and not system.il_generation then
+				if not l_formal.is_reference then
 					create l_vjrv2
 					context.init_error (l_vjrv2)
 					l_vjrv2.set_target_name (l_as.target.access_name)

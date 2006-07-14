@@ -226,8 +226,8 @@ feature {NONE} -- Implementation: Graphical Access
 	projects_list: ES_GRID
 			-- List containing the last opened projects.
 
-	remove_project_button: EV_BUTTON
-			-- Button for removing a project entry from list.
+	add_project_button, remove_project_button: EV_BUTTON
+			-- Buttons for adding, removing a project entry from list.
 
 	clean_button: EV_CHECK_BUTTON
 			-- Check button to recompile a project from scratch.
@@ -279,7 +279,6 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			l_label: EV_LABEL
-			l_button: EV_BUTTON
 			l_minimum_size: INTEGER
 			l_font: EV_FONT
 		do
@@ -307,12 +306,12 @@ feature {NONE} -- Initialization
 
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
-			create l_button.make_with_text_and_action (Interface_names.l_add_project_config_file, agent open_existing_project_not_listed)
-			l_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
-			l_button.align_text_left
-			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-			hb.extend (l_button)
-			hb.disable_item_expand (l_button)
+			create add_project_button.make_with_text_and_action (Interface_names.l_add_project_config_file, agent open_existing_project_not_listed)
+			add_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			add_project_button.align_text_left
+			add_project_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			hb.extend (add_project_button)
+			hb.disable_item_expand (add_project_button)
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
 			remove_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
 			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -887,6 +886,9 @@ feature {NONE} -- Actions
 				projects_list.row (1).enable_select
 			end
 			save_projects_list
+			if not remove_project_button.is_sensitive then
+				add_project_button.set_focus
+			end
 		end
 
 	file_choice_callback (a_dlg: EB_FILE_OPEN_DIALOG) is
@@ -1154,6 +1156,8 @@ invariant
 	freeze_action_item_not_void: freeze_action_item /= Void
 	finalize_action_item_not_void: finalize_action_item /= Void
 	precompile_action_item_not_void: precompile_action_item /= Void
+	add_project_button_not_void: add_project_button /= Void
+	remove_project_button_not_void: remove_project_button /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

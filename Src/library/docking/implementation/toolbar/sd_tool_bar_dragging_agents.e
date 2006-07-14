@@ -46,6 +46,8 @@ feature -- Agents
 				internal_pointer_pressed := True
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
+
+				setter.before_enable_capture
 				zone.tool_bar.enable_capture
 			end
 		ensure
@@ -61,6 +63,7 @@ feature -- Agents
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
 				zone.tool_bar.disable_capture
+				setter.after_disable_capture
 			end
 		ensure
 			pointer_press_set: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False
@@ -140,6 +143,7 @@ feature {NONE} -- Implementation functions
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			zone.tool_bar.disable_capture
+			setter.after_disable_capture
 			internal_pointer_pressed := False
 			internal_docker_mediator := Void
 			internal_shared.set_tool_bar_docker_mediator (Void)
@@ -175,6 +179,12 @@ feature {NONE} -- Implementation functions
 		end
 
 feature {NONE} -- Implementation attributes
+
+	setter: SD_SYSTEM_SETTER is
+			--
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
+		end
 
 	internal_shared: SD_SHARED
 			-- All singletons.

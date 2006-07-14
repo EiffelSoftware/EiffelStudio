@@ -886,7 +886,9 @@ feature {NONE} -- Actions
 				projects_list.row (1).enable_select
 			end
 			save_projects_list
-			if not remove_project_button.is_sensitive then
+			if remove_project_button.is_sensitive then
+				remove_project_button.set_focus
+			else
 				add_project_button.set_focus
 			end
 		end

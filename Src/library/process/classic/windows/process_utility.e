@@ -236,7 +236,7 @@ feature{NONE} -- NT API
 			-- Store parent process id of process whose id is `a_pid' in `a_parent_id'.
 			-- If succeeded, set `a_a_succ' to True.
 		require
-			a_ntdll_handle_attached: a_ntdll_handle /= Void
+			a_ntdll_handle_attached: a_ntdll_handle /= default_pointer
 		external
 			"C inline use %"eif_process.h%""
 		alias
@@ -283,7 +283,7 @@ feature{NONE} -- NT API
 			-- If succeed, set `a_succ' to True.
 			-- After use, call `cwin_free_pointer' to dispose `a_list'.
 		require
-			a_ntps_handle_attached: a_ntps_handle /= Void
+			a_ntps_handle_attached: a_ntps_handle /= default_pointer
 		external
 			"C inline"
 		alias

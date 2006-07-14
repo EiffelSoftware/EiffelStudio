@@ -119,17 +119,17 @@ feature -- Redefine
 				Result := True
 
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.content.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
+					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 					l_docking_zone ?= internal_zone
 					check must_be_docking_zone: l_docking_zone /= Void end
-					l_caller.content.state.move_to_docking_zone (l_docking_zone, False)
+					l_caller.state.move_to_docking_zone (l_docking_zone, False)
 				end
 			end
 			internal_shared.feedback.reset_feedback_clearing

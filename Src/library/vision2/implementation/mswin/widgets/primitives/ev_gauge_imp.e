@@ -147,19 +147,36 @@ feature -- Deferred
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
+	valid_maximum (a_position: INTEGER): BOOLEAN is
+			-- Is `a_position' valid as a maximum?
+		do
+			Result := True
+		end
+
 	wel_set_value (a_value: INTEGER) is
+		require
+			exists: exists
+			valid_minimum: a_value >= value_range.lower
+			valid_maximum: valid_maximum (a_value)
 		deferred
 		end
 
 	wel_set_step (a_step: INTEGER) is
+		require
+			positive_line: a_step >= 0
 		deferred
 		end
 
 	wel_set_leap (a_leap: INTEGER) is
+		require
+			positive_leap: a_leap >= 0
 		deferred
 		end
 
 	wel_set_range (a_minimum, a_maximum: INTEGER) is
+		require
+			exists: exists
+			valid_range: a_minimum <= a_maximum
 		deferred
 		end
 

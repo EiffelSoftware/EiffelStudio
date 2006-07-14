@@ -142,20 +142,24 @@ feature -- Element change
 
 	set_position (new_position: INTEGER) is
 			-- Set `position' with `new_position'
+		local
+			l_previous: INTEGER
 		do
 			scroll_info_struct.set_mask (Sif_pos)
 			scroll_info_struct.set_position (new_position)
-			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
+			l_previous := cwin_set_scroll_info (item, scroll_info_struct.item, True)
 		end
 
 	set_range (a_minimum, a_maximum: INTEGER) is
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
+		local
+			l_previous: INTEGER
 		do
 			scroll_info_struct.set_mask (Sif_range)
 			scroll_info_struct.set_minimum (a_minimum)
 			scroll_info_struct.set_maximum (a_maximum)
-			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
+			l_previous := cwin_set_scroll_info (item, scroll_info_struct.item, True)
 		end
 
 	set_line (line_magnitude: INTEGER) is
@@ -172,10 +176,12 @@ feature -- Element change
 			-- Set `page' with `page_magnitude'.
 		require
 			positive_page: page_magnitude >= 0
+		local
+			l_previous: INTEGER
 		do
 			scroll_info_struct.set_mask (Sif_page)
 			scroll_info_struct.set_page (page_magnitude)
-			cwin_set_scroll_info (item, Sb_ctl, scroll_info_struct.item, True)
+			l_previous := cwin_set_scroll_info (item, scroll_info_struct.item, True)
 		ensure
 			page_set: page = page_magnitude
 		end
@@ -192,6 +198,7 @@ feature -- Basic operations
 		local
 			old_pos, new_pos: INTEGER
 			min, max, p: INTEGER
+			l_success: INTEGER
 		do
 			if scroll_code /= Sb_endscroll then
 				old_pos := position
@@ -208,11 +215,11 @@ feature -- Basic operations
 					new_pos := old_pos - line
 				elseif scroll_code = Sb_thumbposition then
 					scroll_info_struct.set_mask (sif_trackpos)
-					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+					l_success := cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
 					new_pos := scroll_info_struct.track_position
 				elseif scroll_code = Sb_thumbtrack then
 					scroll_info_struct.set_mask (sif_trackpos)
-					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+					l_success := cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
 					new_pos := scroll_info_struct.track_position
 				elseif scroll_code = Sb_top then
 					new_pos := min
@@ -229,9 +236,11 @@ feature -- Basic operations
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
+		local
+			l_previous: INTEGER
 		do
 			scroll_info_struct.set_mask (Sif_range + Sif_page)
-			cwin_set_scroll_info (item, Sb_Ctl, scroll_info_struct.item, True)
+			l_previous := cwin_set_scroll_info (item, scroll_info_struct.item, True)
 		end
 
 feature {NONE} -- Inapplicable
@@ -267,10 +276,11 @@ feature {NONE} -- Implementation
 			-- Retrieve `mask' into `scroll_info_struct' and then restore original mask.
 		local
 			original_mask: INTEGER
+			l_success: INTEGER
 		do
 			original_mask := scroll_info_struct.mask
 			scroll_info_struct.set_mask (mask)
-			cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
+			l_success := cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
 			scroll_info_struct.set_mask (original_mask)
 		ensure
 			msk_not_changed: old scroll_info_struct.mask = scroll_info_struct.mask
@@ -278,16 +288,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN) is
+	cwin_set_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is
+			-- Although Microsoft documentation states we should not use SBM_SETSCROLLINFO diretly, we are using
+			-- it because in some cases, windows does not update the scrollbar properly.
 		external
-			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO, BOOL)"
+			"C inline use  <windows.h>"
 		alias
-			"SetScrollInfo"
+			"return (EIF_INTEGER) SendMessage ((HWND) $hwnd, SBM_SETSCROLLINFO, (WPARAM) $redraw, (LPARAM) $info);"
 		end
 
-	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER) is
+	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER): INTEGER is
 		external
-			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO)"
+			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO): BOOL"
 		alias
 			"GetScrollInfo"
 		end

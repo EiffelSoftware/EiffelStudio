@@ -152,7 +152,7 @@ feature -- Internal C routines
 		external
 			"C inline use %"eif_cecil.h%""
 		alias
-			"return eif_pre_ecma_mapping_status"
+			"return eif_pre_ecma_mapping();"
 		end
 
 	frozen set_pre_ecma_mapping (v: BOOLEAN) is

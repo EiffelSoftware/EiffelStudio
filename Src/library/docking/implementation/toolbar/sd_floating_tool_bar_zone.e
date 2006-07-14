@@ -284,6 +284,7 @@ feature {NONE} -- Implementation of resize issues.
 			-- Handle pointer press actions.
 		do
 			if a_button = 1 then
+				setter.before_enable_capture
 				internal_border_box.enable_capture
 			end
 		end
@@ -293,7 +294,14 @@ feature {NONE} -- Implementation of resize issues.
 		do
 			if internal_border_box.has_capture then
 				internal_border_box.disable_capture
+				setter.after_disable_capture
 			end
+		end
+
+	setter: SD_SYSTEM_SETTER is
+			--
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
 	internal_pointer_direction: INTEGER

@@ -44,6 +44,7 @@ feature -- Initlization
 			l_env.application.key_release_actions.extend (internal_key_release_function)
 
 			is_dockable := True
+			setter.before_enable_capture
 		ensure
 			set: caller = a_caller
 			set: docking_manager = a_docking_manager
@@ -225,6 +226,8 @@ feature {NONE} -- Implementation functions
 			create l_env
 			l_env.application.key_press_actions.prune_all (internal_key_press_function)
 			l_env.application.key_release_actions.prune_all (internal_key_release_function)
+
+			setter.after_disable_capture
 		end
 
 	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
@@ -410,6 +413,12 @@ feature {NONE} -- Implementation functions
 		end
 
 feature {NONE} -- Implementation attributes
+
+	setter: SD_SYSTEM_SETTER is
+			--
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
+		end
 
 	hot_zones: ACTIVE_LIST [SD_HOT_ZONE]
 			-- Hot zones.

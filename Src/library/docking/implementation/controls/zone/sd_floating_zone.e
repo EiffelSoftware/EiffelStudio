@@ -447,12 +447,12 @@ feature {NONE} -- Agents
 	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Start `docker_mediator'.
 		do
-				pointer_press_offset_x := a_screen_x - screen_x
-				pointer_press_offset_y := a_screen_y - screen_y
-				enable_capture
-				create docker_mediator.make (Current, internal_docking_manager)
-				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
+			pointer_press_offset_x := a_screen_x - screen_x
+			pointer_press_offset_y := a_screen_y - screen_y
+			create docker_mediator.make (Current, internal_docking_manager)
+			enable_capture
+			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+			docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

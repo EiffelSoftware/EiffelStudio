@@ -100,24 +100,25 @@ feature -- Process operations
 		end
 
 	exec_process (prog_file: STRING; args: ARRAY [STRING];
-			close_nonstd_files: BOOLEAN) is
+			close_nonstd_files: BOOLEAN; env_ptr: POINTER) is
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
-			-- arguments `args'.  If `close_nonstd_files'
+			-- arguments `args' and environment variables stored in `env_ptr'.
+			-- If `close_nonstd_files'
 			-- is true, then change all open file
 			-- descriptors greater than 2 so that they are
 			-- closed on a successful exec.  The new
 			-- process has the same environment as the
 			-- current one.  This routine never returns to
 			-- the caller normally, although it may raise
-			-- an exception
+			-- an exception.
 		require
 			program_name_exists: prog_file /= Void
 			arguments_exist: args /= Void
 		local
 			k, count, lower: INTEGER
 			pname, area: ANY
-			arguments, arg_copy, null_ptr, env_ptr: POINTER
+			arguments, arg_copy, null_ptr: POINTER
 		do
 			count := args.count
 			lower := args.lower
@@ -134,7 +135,6 @@ feature -- Process operations
 				k := k + 1
 			end
 			unix_set_arg_value (arguments, count, null_ptr)
-			env_ptr := default_pointer
 			unix_exec_process ($pname, arguments, env_ptr, close_nonstd_files)
 		end
 

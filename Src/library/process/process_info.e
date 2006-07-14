@@ -20,13 +20,6 @@ feature -- Access
 		deferred
 		end
 
-	process_module: STRING is
-			-- Module (full path) of current process
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
 	environment_variables: HASH_TABLE [STRING, STRING] is
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name

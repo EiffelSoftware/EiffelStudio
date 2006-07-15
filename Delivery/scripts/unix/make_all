@@ -12,17 +12,6 @@ rm -rf PorterPackage
 # Let's create all packages
 echo "\n" | /bin/sh make_delivery $1
 
-# Now edit `set_aliases' in PorterPackage as we are now going for compilation mode.
-cd PorterPackage
-rm -f tmp
-sed -e "s/\/PorterPackage//g" set_aliases > tmp
-rm -f set_aliases
-mv -f tmp set_aliases
-sed -e "s/^SVN_VERSION.*$/SVN_VERSION=$SVN_VERSION/g" set_aliases > tmp
-rm -f set_aliases
-mv -f tmp set_aliases
-cd ..
-
 # Let's keep an archive of this package
 if [ ! -f PorterPackage_all.tar ]; then
 	tar cvf PorterPackage_all.tar PorterPackage

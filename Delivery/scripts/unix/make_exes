@@ -115,7 +115,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 			echo Could not finalize a new setup
 		else
 			move setup.tar.gz $EXPORT_DIR
-		end
+		fi
 		clean_project
 	fi
 fi

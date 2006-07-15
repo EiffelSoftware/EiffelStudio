@@ -212,6 +212,17 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_images $EXPORT_DIR
 	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
+		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.
+	cd $EXPORT_DIR
+	rm -f tmp
+	sed -e "s/\/$EXPORT_DIR//g" set_aliases > tmp
+	rm -f set_aliases
+	mv -f tmp set_aliases
+		# Update the revision number as well
+	sed -e "s/^SVN_VERSION.*$/SVN_VERSION=$SVN_VERSION/g" set_aliases > tmp
+	rm -f set_aliases
+	mv -f tmp set_aliases
+	cd $INIT_DIR
 fi
 # Restore environment variables to their original value
 EIFFEL_SRC=$TMP_EIFFEL_SRC

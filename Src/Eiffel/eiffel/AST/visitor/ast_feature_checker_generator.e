@@ -1154,7 +1154,7 @@ feature -- Implementation
 							-- Inherited code is checked in parent class.
 						and then not is_inherited
 							-- Warning not disabled
-						and then context.current_class.lace_class.options.is_warning_enabled (w_obsolete_feature)
+						and then context.current_class.is_warning_enabled (w_obsolete_feature)
 					then
 						create l_obs_warn
 						l_obs_warn.set_class (context.current_class)
@@ -2115,7 +2115,7 @@ feature -- Implementation
 				end
 			end
 
-			if l_as.locals /= Void and then context.current_class.lace_class.options.is_warning_enabled (w_unused_local) then
+			if l_as.locals /= Void and then context.current_class.is_warning_enabled (w_unused_local) then
 				check_unused_locals (context.locals)
 			end
 
@@ -3195,7 +3195,7 @@ feature -- Implementation
 						if l_needs_byte_node then
 							l_left_expr := l_conv_info.byte_node (l_left_expr)
 						end
-					elseif context.current_class.lace_class.options.is_warning_enabled (w_vweq) then
+					elseif context.current_class.is_warning_enabled (w_vweq) then
 						create l_vweq
 						context.init_error (l_vweq)
 						l_vweq.set_left_type (l_left_type)
@@ -3649,7 +3649,7 @@ feature -- Implementation
 			end
 
 				-- Type checking
-			if l_target_type.is_expanded then
+			if l_target_type.is_expanded and context.current_class.is_warning_enabled (w_vjrv) then
 				create l_vjrv1
 				context.init_error (l_vjrv1)
 				l_vjrv1.set_target_name (l_as.target.access_name)
@@ -3661,7 +3661,7 @@ feature -- Implementation
 				check
 					l_formal_not_void: l_formal /= Void
 				end
-				if not l_formal.is_reference then
+				if not l_formal.is_reference and context.current_class.is_warning_enabled (w_vjrv) then
 					create l_vjrv2
 					context.init_error (l_vjrv2)
 					l_vjrv2.set_target_name (l_as.target.access_name)
@@ -4451,7 +4451,7 @@ feature -- Implementation
 					l_list ?= last_byte_node
 				end
 			end
-			if context.current_class.is_generic and then context.current_class.lace_class.options.is_warning_enabled (w_once_in_generic) then
+			if context.current_class.is_generic and then context.current_class.is_warning_enabled (w_once_in_generic) then
 				error_handler.insert_warning (
 					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
 			end

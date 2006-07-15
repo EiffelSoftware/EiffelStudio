@@ -113,10 +113,10 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		tgz_ccode setup setup.tar.gz
 		if [ ! -f setup.tar.gz ]; then
 			echo Could not finalize a new setup
-			CANCEL
-		fi
+		else
+			move setup.tar.gz $EXPORT_DIR
+		end
 		clean_project
-		move setup.tar.gz $EXPORT_DIR
 	fi
 fi
 

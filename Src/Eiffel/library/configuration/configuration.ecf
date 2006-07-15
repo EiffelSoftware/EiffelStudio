@@ -18,7 +18,7 @@
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\eiffel\parser\parser.ecf" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf" readonly="true"/>
 		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.ecf" readonly="true"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true"/>
 

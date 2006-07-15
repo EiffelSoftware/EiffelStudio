@@ -309,6 +309,14 @@ feature -- Access: CLI implementation
 
 feature -- Status report
 
+	is_warning_enabled (a_warning: STRING): BOOLEAN is
+			-- Is `a_warning' set for Current?
+		require
+			a_warning_not_void: a_warning /= Void
+		do
+			Result := lace_class.options.is_warning_enabled (a_warning)
+		end
+
 	has_externals: BOOLEAN
 			-- Does current class have external declarations in its text?
 

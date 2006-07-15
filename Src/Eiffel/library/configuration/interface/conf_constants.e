@@ -49,6 +49,7 @@ feature -- Warnings
 	w_same_uuid: STRING is "same_uuid"
 	w_export_class_missing: STRING is "export_class_missing"
 	w_vweq: STRING is "vweq"
+	w_vjrv: STRING is "vjrv"
 	w_renaming_unknown_class: STRING is "renaming_unknown_class"
 	w_option_unknown_class: STRING is "option_unknown_class"
 

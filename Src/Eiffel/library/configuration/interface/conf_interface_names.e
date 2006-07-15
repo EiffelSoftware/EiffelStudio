@@ -275,6 +275,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Same uuid", w_same_uuid)
 			Result.force ("Missing class export", w_export_class_missing)
 			Result.force ("Incompatible types equality", w_vweq)
+			Result.force ("Assignment attempts on formal or expanded targets", w_vjrv)
 			Result.force ("Renaming unknown class", w_renaming_unknown_class)
 			Result.force ("Options unknown class", w_option_unknown_class)
 		end
@@ -292,6 +293,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Warn about different files with the same UUID?", w_same_uuid)
 			Result.force ("Warn about missing classes in export clauses?", w_export_class_missing)
 			Result.force ("Warn about incompatible types in equality comparisons?", w_vweq)
+			Result.force ("Warn about assignment attempts on formal or expanded targets?", w_vjrv)
 			Result.force ("Warn about renamings of unknown classes?", w_renaming_unknown_class)
 			Result.force ("Warn about class options of unknown classes?", w_option_unknown_class)
 		end

@@ -172,6 +172,7 @@ feature {NONE} -- Implementation
 			Result.force (w_same_uuid)
 			Result.force (w_export_class_missing)
 			Result.force (w_vweq)
+			Result.force (w_vjrv)
 			Result.force (w_renaming_unknown_class)
 			Result.force (w_option_unknown_class)
 		ensure

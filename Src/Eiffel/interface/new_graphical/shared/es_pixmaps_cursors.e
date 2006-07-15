@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 				l_warn.show
 
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((12 * 32) + 1,(3 * 32) + 1)
+				create raw_buffer.make_with_size ((17 * 32) + 1,(3 * 32) + 1)
 			end
 		rescue
 			retried := True
@@ -52,7 +52,7 @@ feature -- Access
 	pixel_height: INTEGER is 32
 			-- Element width
 
-	width: INTEGER is 12
+	width: INTEGER is 17
 			-- Matrix width
 
 	height: INTEGER is 3
@@ -201,6 +201,66 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
 		end
+
+	frozen context_library_cursor: EV_PIXMAP is
+			-- Access to 'library' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 1))
+		end
+
+	frozen context_library_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'library' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 1))
+		end
+
+	frozen context_precompile_cursor: EV_PIXMAP is
+			-- Access to 'precompile' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 1))
+		end
+
+	frozen context_precompile_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'precompile' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 1))
+		end
+
+	frozen context_assembly_cursor: EV_PIXMAP is
+			-- Access to 'assembly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 1))
+		end
+
+	frozen context_assembly_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'assembly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 1))
+		end
+
+	frozen context_namespace_cursor: EV_PIXMAP is
+			-- Access to 'namespace' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 1))
+		end
+
+	frozen context_namespace_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'namespace' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 1))
+		end
+
+	frozen context_target_cursor: EV_PIXMAP is
+			-- Access to 'target' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 1))
+		end
+
+	frozen context_target_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'target' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 1))
+		end
 	frozen context_disabled_cluster_cursor: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
@@ -344,6 +404,66 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 2))
 		end
+
+	frozen context_disabled_library_cursor: EV_PIXMAP is
+			-- Access to 'library' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (13, 2))
+		end
+
+	frozen context_disabled_library_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'library' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 2))
+		end
+
+	frozen context_disabled_precompile_cursor: EV_PIXMAP is
+			-- Access to 'precompile' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 2))
+		end
+
+	frozen context_disabled_precompile_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'precompile' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 2))
+		end
+
+	frozen context_disabled_assembly_cursor: EV_PIXMAP is
+			-- Access to 'assembly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 2))
+		end
+
+	frozen context_disabled_assembly_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'assembly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 2))
+		end
+
+	frozen context_disabled_namespace_cursor: EV_PIXMAP is
+			-- Access to 'namespace' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 2))
+		end
+
+	frozen context_disabled_namespace_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'namespace' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 2))
+		end
+
+	frozen context_disabled_target_cursor: EV_PIXMAP is
+			-- Access to 'target' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 2))
+		end
+
+	frozen context_disabled_target_cursor_cursor_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'target' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 2))
+		end
 	frozen cursor_hand_open_cursor: EV_PIXMAP is
 			-- Access to 'hand open' pixmap.
 		once
@@ -469,7 +589,7 @@ feature {NONE} -- Query
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
-			a_x_small_enough: a_x <= 12
+			a_x_small_enough: a_x <= 17
 			a_y_positive: a_y > 0
 			a_y_small_enough: a_y <= 3
 		local

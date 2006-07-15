@@ -215,7 +215,7 @@ if [ ! "$NO_INSTALL" ]; then
 		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.
 	cd $EXPORT_DIR
 	rm -f tmp
-	sed -e "s/\/$EXPORT_DIR//g" set_aliases > tmp
+	sed -e "s/\/PorterPackage//g" set_aliases > tmp
 	rm -f set_aliases
 	mv -f tmp set_aliases
 		# Update the revision number as well

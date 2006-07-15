@@ -185,7 +185,9 @@ move vision2_tour $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Recompile CD key validator
 	cd $EXPORT_DIR
-	untgz_ccode setup
+	if [ -f setup.tar.gz ]; then
+		untgz_ccode setup
+	fi
 fi
 
 remtrace Recompile EiffelStudio

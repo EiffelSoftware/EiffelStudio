@@ -17,8 +17,8 @@
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true"/>
-		<library name="parser" location="$EIFFEL_SRC\eiffel\parser\parser.ecf" readonly="true"/>
-		<library name="configuration" location="$EIFFEL_SRC\eiffel\library\configuration\configuration.ecf" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf" readonly="true"/>
+		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf" readonly="true"/>
 
 		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true" />
 		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true" />

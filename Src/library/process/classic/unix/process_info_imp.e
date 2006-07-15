@@ -89,16 +89,20 @@ feature{NONE} -- Implementation
     				int cnt = 0;
     				int size = 0;
     				*$a_size = sizeof(p);
-    				*$a_pointer = (void*)__environ;
-    				ep = (char **)*$a_pointer;
-    				while ((p = *ep++)) {
-						cnt++;
-						size+=*$a_size;				
-    				}
-    				size++;
-    				*$a_len=size;
-    				*$a_count=cnt;
-        			*$a_succ=1;
+    				/* *$a_pointer = (void*)__environ; */
+    				if(*$a_pointer) {
+	    				ep = (char **)*$a_pointer;
+	    				while ((p = *ep++)) {
+							cnt++;
+							size+=*$a_size;				
+	    				}
+	    				size++;
+	    				*$a_len=size;
+	    				*$a_count=cnt;
+	        			*$a_succ=1;
+	        		} else {
+	        			*$a_succ=0;
+	        		}
 				}
 			]"
 		end

@@ -1324,6 +1324,7 @@
 						<Component Id="process_component0" Guid="e0912e13-943a-4823-95d0-d7792ae678be">
 							<File Id="process_ecf" Name="process.ecf"/>
 							<File Id="process_file0" Name="process.e"/>
+							<File Id="process_info_e" Name="PROCES~1.E" LongName="process_info.e"/>
 							<File Id="process_file2" LongName="process_factory.e" Name="PROCES~2.E"/>
 							<File Id="process_file3" LongName="process_io_listener_thread.e" Name="PROCES~3.E"/>
 							<File Id="process_file5" LongName="process_redirection_constants.e" Name="PR8CEA~1.E"/>
@@ -1339,6 +1340,7 @@
 									<File Id="process_file13" LongName="process_imp.e" Name="PROCES~2.E"/>
 									<File Id="process_file19" LongName="process_unix_os.e" Name="PR8755~1.E"/>
 									<File Id="process_file21" LongName="process_unix_process_manager.e" Name="PR581B~1.E"/>
+									<File Id="process_info_imp_e" Name="PROCES~1.E" LongName="process_info_imp.e"/>
 								</Component>
 								<Directory Id="process_directory3" Name="Clib">
 									<Component Id="process_component3" Guid="7d36efb2-e428-4cd4-8527-e6345348dda3">
@@ -1360,6 +1362,7 @@
 									<File Id="process_file66" LongName="process_input_listener_thread.e" Name="PR1C6F~1.E"/>
 									<File Id="process_file53" LongName="process_thread_timer.e" Name="PROCES~3.E"/>
 									<File Id="process_file68" LongName="process_utility.e" Name="PR8FA3~1.E"/>
+									<File Id="process_info_imp_e2" Name="PROCES~5.E" LongName="process_info_imp.e"/>
 									<File Id="process_file42" LongName="file_handle.e" Name="FILE_H~1.E"/>
 									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~2.E"/>
 									<File Id="process_file43" LongName="wel_process.e" Name="WEL_PR~4.E"/>
@@ -1381,6 +1384,7 @@
 								<Component Id="process_component12" Guid="e587d143-6873-4bdb-a8ec-a7512c43441c">
 									<File Id="process_file58" LongName="process_imp.e" Name="PROCES~1.E"/>
 									<File Id="process_file_67" Name="PROCES~2.E" LongName="process_error_listener_thread.e" />
+									<File Id="process_info_imp_e3" Name="PROCES~5.E" LongName="process_info_imp.e"/>
 									<File Id="process_file_68" Name="PR1C6F~1.E" LongName="process_input_listener_thread.e" />
 									<File Id="process_file_69" Name="PR5B59~1.E" LongName="process_output_listener_thread.e" />
 									<File Id="process_file_70" Name="PROCES~4.E" LongName="process_thread_timer.e" />

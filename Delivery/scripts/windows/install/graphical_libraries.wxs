@@ -1332,6 +1332,7 @@
 							<Component Id="ev_add_remove_list.e" Guid="9D057B9A-218A-4CEE-9276-F7B9EBB793AD">
 								<File Id="ev_add_remove_list.e" Name="EV_ADD~1.E" LongName="ev_add_remove_list.e" KeyPath="yes" />
 								<File Id="ev_untitled_dialog.e" Name="EV_UNT~1.E" LongName="ev_untitled_dialog.e" />
+								<File Id="ev_shadow_dialog.e" Name="EV_SHA~1.E" LongName="ev_shadow_dialog.e" />
 								<File Id="readme.txt" Name="readme.txt" />
 								<File Id="ev_add_remove_path_list.e" Name="EV_ADD~2.E" LongName="ev_add_remove_path_list.e" />
 								<File Id="ev_editable_list.e" Name="EV_EDI~1.E" LongName="ev_editable_list.e" />
@@ -1353,6 +1354,7 @@
 								<Directory Id="mswin40" Name="mswin">
 									<Component Id="ev_untitled_dialog_imp.e" Guid="CA4E90BD-C8A5-4B5B-918C-BF2B492C9BF0">
 										<File Id="ev_untitled_dialog_imp.e" Name="EV_UNT~2.E" LongName="ev_untitled_dialog_imp.e" KeyPath="yes" />
+										<File Id="ev_shadow_dialog_imp.e" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
 										<File Id="ev_layout_constants_imp.e" Name="EV_LAY~1.E" LongName="ev_layout_constants_imp.e" />
 										<File Id="ev_untitled_dialog_imp_modeless.e" Name="EV_UNT~4.E" LongName="ev_untitled_dialog_imp_modeless.e" />
 										<File Id="ev_untitled_dialog_imp_modal.e" Name="EV_UNT~5.E" LongName="ev_untitled_dialog_imp_modal.e" />
@@ -1362,6 +1364,7 @@
 								<Directory Id="gtk" Name="gtk">
 									<Component Id="ev_untitled_dialog_imp.e109" Guid="753900DD-9464-4EC1-B4FF-D193C26D40A6">
 										<File Id="ev_untitled_dialog_imp.e109" Name="EV_UNT~3.E" LongName="ev_untitled_dialog_imp.e" KeyPath="yes" />
+										<File Id="ev_shadow_dialog_imp_e2" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
 										<File Id="ev_layout_constants_imp.e115" Name="EV_LAY~3.E" LongName="ev_layout_constants_imp.e" />
 									</Component>
 								</Directory>

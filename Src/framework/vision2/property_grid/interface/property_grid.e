@@ -82,6 +82,9 @@ feature -- Update
 			wipe_out
 			set_column_count_to (2)
 			enable_last_column_use_all_width
+			if description_field /= Void and then not description_field.is_destroyed then
+				description_field.set_text ("")
+			end
 
 			sections.wipe_out
 			create expanded_section_store.make (5)

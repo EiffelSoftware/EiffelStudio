@@ -140,6 +140,7 @@ feature {NONE} -- Implementation
 				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)
 			end
 
+			properties.current_section.expand
 			properties.add_section (section_advanced)
 
 				-- condition
@@ -303,6 +304,7 @@ feature {NONE} -- Implementation
 				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]}?, agent store_changes))
 				properties.add_property (l_vis_prop)
 			end
+			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end

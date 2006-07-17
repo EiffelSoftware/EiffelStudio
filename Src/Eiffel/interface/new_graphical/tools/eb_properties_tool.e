@@ -163,6 +163,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					is_il_generation := l_group.target.setting_msil_generation
 					properties.reset
 					add_group_properties (l_group, l_group.target)
+					properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 					properties.set_expanded_section_store (group_section_expanded_status)
 				elseif l_cs /= Void then
 					l_group := l_cs.class_i.group
@@ -200,7 +201,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 						properties.mark_all_readonly
 					end
 				end
-				properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			elseif l_ts /= Void then
 				properties.reset
 				current_target := l_ts.target
@@ -213,7 +213,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				add_advanced_properties
 
 				properties.set_expanded_section_store (target_section_expanded_status)
-				properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			end
 		ensure
 			stone_set: stone = a_stone

@@ -328,6 +328,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (configuration_space)
 			append_small_margin (configuration_space)
 			append_property_description (configuration_space)
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -349,6 +350,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -369,6 +371,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -389,6 +392,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -409,6 +413,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_grid (target_configuration_space)
 			append_small_margin (target_configuration_space)
 			append_property_description (target_configuration_space)
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -463,6 +468,8 @@ feature {NONE} -- Section tree selection agents
 			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent remove_external)
 
+			properties.recompute_column_width
+
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -515,6 +522,8 @@ feature {NONE} -- Section tree selection agents
 			hb.disable_item_expand (l_button)
 			l_button.set_minimum_width (default_button_width+10)
 			l_button.select_actions.extend (agent remove_task)
+
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -826,6 +835,8 @@ feature {NONE} -- Section tree selection agents
 			create l_btn.make_with_text_and_action (target_edit_manually, agent open_text_editor)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
+
+			properties.recompute_column_width
 
 			is_refreshing := False
 		ensure
@@ -1230,7 +1241,6 @@ feature {NONE} -- Implementation
 			properties.add_property (l_osl_prop)
 
 			properties.current_section.expand
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1246,8 +1256,6 @@ feature {NONE} -- Implementation
 			create properties
 
 			add_general_properties
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1269,8 +1277,6 @@ feature {NONE} -- Implementation
 
 			add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1292,8 +1298,6 @@ feature {NONE} -- Implementation
 
 			add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1315,8 +1319,6 @@ feature {NONE} -- Implementation
 
 			add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 			properties.current_section.expand
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -1394,8 +1396,6 @@ feature {NONE} -- Implementation
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_external_set: current_external = an_external
@@ -1473,8 +1473,6 @@ feature {NONE} -- Implementation
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_task_set: current_task = a_task
@@ -1504,7 +1502,6 @@ feature {NONE} -- Implementation
 			add_group_properties (a_group, current_target)
 
 			properties.set_expanded_section_store (group_section_expanded_status)
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 			current_group_set: current_group = a_group
@@ -1521,8 +1518,6 @@ feature {NONE} -- Implementation
 			create properties
 
 			add_advanced_properties
-
-			properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 		ensure
 			properties_not_void: properties /= Void
 		end

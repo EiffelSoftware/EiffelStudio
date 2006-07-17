@@ -200,6 +200,9 @@ feature {NONE} -- Agents
 			add_assertion_option_properties (value.item (a_class), group_options, True)
 			add_warning_option_properties (value.item (a_class), group_options, True)
 			add_debug_option_properties (value.item (a_class), group_options, True)
+
+			properties.column (1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
+			properties.set_expanded_section_store (class_section_expanded_status)
 		ensure
 			current_class_set: current_class = a_class
 		end
@@ -246,6 +249,16 @@ feature {NONE} -- Implementation
 					l_sort.forth
 				end
 			end
+		end
+
+	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+			-- Expanded status of sections of class options.
+		once
+			create Result.make (4)
+			Result.force (True, section_general)
+			Result.force (True, section_assertions)
+			Result.force (False, section_warning)
+			Result.force (False, section_debug)
 		end
 
 invariant

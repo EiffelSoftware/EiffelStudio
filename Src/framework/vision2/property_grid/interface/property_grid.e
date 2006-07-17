@@ -112,7 +112,9 @@ feature -- Update
 				current_section := l_row
 				current_section_name := a_name
 				l_row.collapse_actions.extend (agent update_expanded_status (False, a_name))
+				l_row.collapse_actions.extend (agent recompute_column_width)
 				l_row.expand_actions.extend (agent update_expanded_status (True, a_name))
+				l_row.expand_actions.extend (agent recompute_column_width)
 			else
 				current_section := sections.found_item
 				current_section_name := a_name
@@ -213,6 +215,14 @@ feature -- Update
 					i := i + 1
 				end
 				sections.forth
+			end
+		end
+
+	recompute_column_width is
+			-- Update widths of columns.
+		do
+			if parent /= Void and then not is_destroyed and then row_count > 0 then
+				column (1).set_width (column (1).required_width_of_item_span (1, row_count) + 3)
 			end
 		end
 

@@ -364,14 +364,14 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	attach_terminals is
-			-- Attach terminal control to current process group.
+	attach_terminals (pid: INTEGER) is
+			-- Attach terminal control to process group to which process `pid' belongs.
 		external
 			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
 		alias
 			"[
 				{
-					int pgid = getpgid (getpid());
+					int pgid = getpgid ($pid);
 					tcsetpgrp (0, pgid);
 					tcsetpgrp (1, pgid);
 					tcsetpgrp (2, pgid);

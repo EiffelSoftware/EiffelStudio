@@ -305,7 +305,7 @@ feature -- Input
 				until
 					i = nb_char
 				loop
-					last_string.append_character (mp.read_natural_8 (i).to_character)
+					last_string.append_character (mp.read_natural_8 (i).to_character_8)
 					i := i + 1
 				end
 			end
@@ -326,7 +326,7 @@ feature -- Input
 				until
 					i = nb_char
 				loop
-					last_string.append_character (mp.read_natural_8 (i).to_character)
+					last_string.append_character (mp.read_natural_8 (i).to_character_8)
 					i := i + 1
 				end
 			end

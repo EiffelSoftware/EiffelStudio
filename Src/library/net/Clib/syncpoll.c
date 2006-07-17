@@ -156,7 +156,7 @@ EIF_INTEGER c_is_blocking(EIF_INTEGER fd)
 	/*x attempt to get blocking status of socket */
 	/*x BIG BUG UNDER HP-UX !!! => couldn't get actual blocking status */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS || defined VXWORKS
+#if defined EIF_WINDOWS || defined EIF_VMS || defined VXWORKS
 	return 0;
 #else
 	return (EIF_INTEGER) fcntl((int) fd, (int) F_GETFL, (int) FNDELAY);

@@ -103,9 +103,11 @@ feature{NONE} -- Initialization
 			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
 			w_code_btn.set_tooltip (interface_names.e_go_to_w_code_dir)
+			w_code_btn.pointer_button_press_actions.extend (agent on_open_w_code_in_file_browser)
 			f_code_btn.set_text (interface_names.e_f_code)
 			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
+			f_code_btn.pointer_button_press_actions.extend (agent on_open_f_code_in_file_browser)
 
 			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)
 
@@ -274,6 +276,22 @@ feature -- Action
 			end
 		end
 
+	on_open_w_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- Action to be performed when open W_code in file browser
+		do
+			if button = 3 then
+				open_dir_in_file_browser (project_location.workbench_path)
+			end
+		end
+
+	on_open_f_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- Action to be performed when open F_code in file browser
+		do
+			if button = 3 then
+				open_dir_in_file_browser (project_location.final_path)
+			end
+		end
+
 feature -- Status reporting
 
 	owner_development_window: EB_DEVELOPMENT_WINDOW is
@@ -298,6 +316,22 @@ feature{NONE}	-- Implementation
 			if workbench.system_defined then
 				prc_launcher := external_launcher
 				prc_launcher.open_console_in_dir (a_dir)
+			else
+				show_no_system_defined_dlg
+			end
+		end
+
+	open_dir_in_file_browser (a_dir: STRING) is
+			-- Open `a_dir' in file browser.
+		require
+			a_dir_not_void: a_dir /= Void
+			a_dir_not_empty: not a_dir.is_empty
+		local
+			prc_launcher: EB_PROCESS_LAUNCHER
+		do
+			if workbench.system_defined then
+				prc_launcher := external_launcher
+				prc_launcher.open_dir_in_file_browser (a_dir)
 			else
 				show_no_system_defined_dlg
 			end

@@ -32,6 +32,18 @@ feature -- Access
 	debug_clauses: DS_ARRAYED_LIST [STRING]
 			-- Possible debug clauses.
 
+feature -- Update
+
+	set_debugs (a_debugs: like debug_clauses) is
+			-- Set `debug_clauses' to `a_debugs'.
+		require
+			a_debugs_not_void: a_debugs /= Void
+		do
+			debug_clauses := a_debugs
+		ensure
+			debug_clauses_set: debug_clauses = a_debugs
+		end
+
 feature {NONE} -- Implementation
 
 	store_changes is
@@ -118,7 +130,7 @@ feature {NONE} -- Implementation
 			if l_inh_assertions = Void then
 				create l_inh_assertions
 			end
-			properties.add_section ("Assertions")
+			properties.add_section (section_assertions)
 
 			create l_require.make_with_value (option_require_name, l_inh_assertions.is_precondition)
 			l_require.set_description (option_require_description)
@@ -211,7 +223,7 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_warning: STRING
 		do
-			properties.add_section ("Warning")
+			properties.add_section (section_warning)
 
 			create l_bool_prop.make_with_value (option_warnings_name, an_inherited_options.is_warning)
 			l_bool_prop.set_description (option_warnings_description)
@@ -231,22 +243,23 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			if an_inherited_options.is_warning then
-				from
-					valid_warnings.start
-				until
-					valid_warnings.after
-				loop
-					l_warning := valid_warnings.item_for_iteration
+			from
+				valid_warnings.start
+			until
+				valid_warnings.after
+			loop
+				l_warning := valid_warnings.item_for_iteration
 
-					create l_bool_prop.make_with_value (warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
-					l_bool_prop.set_description (warning_descriptions.item (l_warning))
-					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
-					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
-					properties.add_property (l_bool_prop)
+				create l_bool_prop.make_with_value (warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
+				l_bool_prop.set_description (warning_descriptions.item (l_warning))
+				l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
+				properties.add_property (l_bool_prop)
+				if not an_inherited_options.is_warning then
+					l_bool_prop.enable_readonly
+				end
 
 					valid_warnings.forth
-				end
 			end
 		end
 
@@ -261,7 +274,7 @@ feature {NONE} -- Implementation
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_debug: STRING
 		do
-			properties.add_section ("Debug")
+			properties.add_section (section_debug)
 
 			create l_bool_prop.make_with_value (option_debug_name, an_inherited_options.is_debug)
 			l_bool_prop.set_description (option_debug_description)
@@ -280,25 +293,26 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			if an_inherited_options.is_debug then
-				create l_bool_prop.make_with_value (option_unnamed_debug_name, an_inherited_options.is_debug_enabled (unnamed_debug))
-				l_bool_prop.change_value_actions.extend (agent an_options.add_debug (unnamed_debug, ?))
+			create l_bool_prop.make_with_value (option_unnamed_debug_name, an_inherited_options.is_debug_enabled (unnamed_debug))
+			l_bool_prop.change_value_actions.extend (agent an_options.add_debug (unnamed_debug, ?))
+			properties.add_property (l_bool_prop)
+
+			from
+				debug_clauses.start
+			until
+				debug_clauses.after
+			loop
+				l_debug := debug_clauses.item_for_iteration
+
+				create l_bool_prop.make_with_value (l_debug, an_inherited_options.is_debug_enabled (l_debug))
+				l_bool_prop.change_value_actions.extend (agent an_options.add_debug (l_debug, ?))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
+	 			if an_inherited_options.is_debug then
+ 					l_bool_prop.enable_readonly
+				end
 				properties.add_property (l_bool_prop)
 
-				from
-					debug_clauses.start
-				until
-					debug_clauses.after
-				loop
-					l_debug := debug_clauses.item_for_iteration
-
-					create l_bool_prop.make_with_value (l_debug, an_inherited_options.is_debug_enabled (l_debug))
-					l_bool_prop.change_value_actions.extend (agent an_options.add_debug (l_debug, ?))
-					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent store_changes))
-					properties.add_property (l_bool_prop)
-
-					debug_clauses.forth
-				end
+				debug_clauses.forth
 			end
 		end
 

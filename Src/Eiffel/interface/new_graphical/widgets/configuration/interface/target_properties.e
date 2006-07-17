@@ -10,9 +10,6 @@ class
 
 inherit
 	OPTION_PROPERTIES
-		export
-			{NONE} all
-		end
 
 feature {NONE} -- Actions
 

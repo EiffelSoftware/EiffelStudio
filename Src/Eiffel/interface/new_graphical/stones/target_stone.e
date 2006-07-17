@@ -43,14 +43,14 @@ feature -- Properties
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		once
-			Result := Cursors.cur_metric
+			Result := cursors.cur_target
 		end
 
 	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		once
-			Result := Cursors.cur_x_metric
+			Result := cursors.cur_x_target
 		end
 
 feature -- Access

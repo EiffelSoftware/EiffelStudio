@@ -168,7 +168,7 @@ rt_public EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key)
 	return (char *) 0;		  /* Item was not found */
 }
 
-void ht_force(struct htable *ht, register long unsigned int key, char *val)
+rt_public void ht_force(struct htable *ht, rt_uint_ptr key, EIF_POINTER val)
 {
 	/* Tries to put value held at 'val' tagged with key 'key' in H table
 	 * 'ht'. If the first put fails, the H table 'ht' is extended and
@@ -224,7 +224,7 @@ rt_public EIF_POINTER ht_put(struct htable *ht, rt_uint_ptr key, EIF_POINTER val
 	return (char *) 0;		/* We were unable to insert item */
 }
 
-rt_public void ht_remove(struct htable *ht, register long unsigned int key)
+rt_public void ht_remove(struct htable *ht, rt_uint_ptr key)
 {
 	/* Remove item and key 'key' from H table 'ht'.
 	 * If 'key' does not exist, nothing will be done.

@@ -58,9 +58,9 @@ extern int ht_create(struct htable *ht, size_t n, size_t sval);				/* Create H t
 extern EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key);			/* Get value given some key */
 extern EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key);			/* Get item address */
 extern EIF_POINTER ht_put(struct htable *ht, rt_uint_ptr key, EIF_POINTER val);				/* Insert value in H table */
-extern void ht_force(struct htable *ht, register long unsigned int key, char *val);				/* Insert value in H table (extending
+extern void ht_force(struct htable *ht, rt_uint_ptr key, EIF_POINTER val);				/* Insert value in H table (extending
 									 * hash table if needed) */
-extern void ht_remove(struct htable *ht, register long unsigned int key);			/* Remove value in H table */
+extern void ht_remove(struct htable *ht, rt_uint_ptr key);			/* Remove value in H table */
 extern int ht_xtend(struct htable *ht);				/* Extend size of full H table */
 extern void ht_zero(struct htable *ht);				/* Initialize H table to zero */
 RT_LNK void ht_free(struct htable *ht);				/* Free hash table */

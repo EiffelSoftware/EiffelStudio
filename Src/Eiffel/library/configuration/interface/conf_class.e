@@ -82,6 +82,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := actual_class.group.get_class_options (name)
 		ensure
 			Result_not_void: Result /= Void
+			Result_assertions: Result.assertions /= Void
 		end
 
 	visible: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]

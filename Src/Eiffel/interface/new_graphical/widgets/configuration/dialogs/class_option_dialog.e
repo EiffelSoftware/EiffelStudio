@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			vb2.extend (l_frame)
 			vb2.disable_item_expand (l_frame)
 
-			set_size (600, 600)
+			set_size (700, 700)
 			show_actions.extend (agent on_show)
 		end
 
@@ -225,6 +225,10 @@ feature {NONE} -- Implementation
 			l_sort: DS_ARRAYED_LIST [STRING]
 			l_item: EV_LIST_ITEM
 		do
+			class_list.wipe_out
+			properties.reset
+			new_class.set_text ("")
+
 			if value /= Void then
 					-- sort class names alphabetically
 				from
@@ -239,7 +243,6 @@ feature {NONE} -- Implementation
 				l_sort.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 
 				from
-					class_list.wipe_out
 					l_sort.start
 				until
 					l_sort.after

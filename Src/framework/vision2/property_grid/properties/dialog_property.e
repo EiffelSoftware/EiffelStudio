@@ -60,6 +60,8 @@ feature {NONE} -- Agents
 			dialog.set_title (dialog_title (name))
 			if value /= Void then
 				dialog.set_value (value.twin)
+			else
+				dialog.set_value (Void)
 			end
 			dialog.show_modal_to_window (l_parent)
 			if dialog.is_ok and then is_valid_value (dialog.value) then

@@ -257,12 +257,7 @@ feature{NONE} -- Implementation
 			actions.put (agent open_console, 2)
 			str := "C-compilation produced errors.%N"
 
-
-			if platform_constants.is_windows then
-				str.append ("Run `nmake -s -nologo` from the directory `")
-			else
-				str.append ("Run `make -s -nologo` from the directory `")
-			end
+			str.append ("Run your Makefile utility program from the directory `")
 			str.append (working_directory)
 			str.append ("`%Nto see what went wrong.%N%NClick OK to terminate.")
 			if platform_constants.is_windows then

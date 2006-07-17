@@ -114,61 +114,65 @@ feature -- Element change
 						list.after
 					loop
 						t_feat := list.item;
-						new_feature_as := feature_as.twin
-						create adapter;
-						f_name := names.first.twin
-						if f_name.frozen_keyword /= Void then
-							l_frozen_keyword := f_name.frozen_keyword.twin
-						end
-						if source_feature.is_infix then
-							create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
-							l_op.set_index (f_name.internal_name.index)
-							l_infix_prefix_as ?= f_name
-							if l_infix_prefix_as = Void then
-								create l_infix_prefix_keyword.make_null
-								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
+							-- If target feature has been registered, we do not register it twice.
+						if t_feat /= target_feature then
+							new_feature_as := feature_as.twin
+							create adapter;
+							f_name := names.first.twin
+							if f_name.frozen_keyword /= Void then
+								l_frozen_keyword := f_name.frozen_keyword.twin
+							end
+							if source_feature.is_infix then
+								create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
+								l_op.set_index (f_name.internal_name.index)
+								l_infix_prefix_as ?= f_name
+								if l_infix_prefix_as = Void then
+									create l_infix_prefix_keyword.make_null
+									l_infix_prefix_keyword.set_index (f_name.internal_name.index)
+								else
+									l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+									l_infix_prefix_keyword.set_position (0, 0, 0, 0)
+								end
+								create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
+							elseif source_feature.is_prefix then
+								create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
+								l_op.set_index (f_name.internal_name.index)
+								l_infix_prefix_as ?= f_name
+								if l_infix_prefix_as = Void then
+									create l_infix_prefix_keyword.make_null
+									l_infix_prefix_keyword.set_index (f_name.internal_name.index)
+								else
+									l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+									l_infix_prefix_keyword.set_position (0, 0, 0, 0)
+								end
+								create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
+							elseif source_feature.alias_name /= Void then
+								create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
+								l_op.set_index (f_name.internal_name.index)
+								create l_id.initialize (source_feature.feature_name)
+								l_id.set_index (f_name.internal_name.index)
+								create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
+									l_id, l_op, source_feature.has_convert_mark, Void, Void)
+								if source_feature.is_binary then
+									f_name.set_is_binary
+								elseif source_feature.is_unary then
+									f_name.set_is_unary
+								end
 							else
-								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-								l_infix_prefix_keyword.set_position (0, 0, 0, 0)
+								create l_id.initialize (source_feature.feature_name)
+								l_id.set_index (f_name.internal_name.index)
+								create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 							end
-							create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
-						elseif source_feature.is_prefix then
-							create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
-							l_op.set_index (f_name.internal_name.index)
-							l_infix_prefix_as ?= f_name
-							if l_infix_prefix_as = Void then
-								create l_infix_prefix_keyword.make_null
-								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
-							else
-								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-								l_infix_prefix_keyword.set_position (0, 0, 0, 0)
+							if source_feature.is_frozen then
+								f_name.set_frozen_keyword (l_frozen_keyword)
 							end
-							create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
-						elseif source_feature.alias_name /= Void then
-							create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
-							l_op.set_index (f_name.internal_name.index)
-							create l_id.initialize (source_feature.feature_name)
-							l_id.set_index (f_name.internal_name.index)
-							create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
-								l_id, l_op, source_feature.has_convert_mark, Void, Void)
-							if source_feature.is_binary then
-								f_name.set_is_binary
-							elseif source_feature.is_unary then
-								f_name.set_is_unary
-							end
-						else
-							create l_id.initialize (source_feature.feature_name)
-							l_id.set_index (f_name.internal_name.index)
-							create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
+							create eiffel_list.make (1);
+							eiffel_list.extend (f_name);
+							new_feature_as.set_feature_names (eiffel_list);
+							adapter.replicate_feature (source_feature,
+											t_feat, new_feature_as, format_reg);
+
 						end
-						if source_feature.is_frozen then
-							f_name.set_frozen_keyword (l_frozen_keyword)
-						end
-						create eiffel_list.make (1);
-						eiffel_list.extend (f_name);
-						new_feature_as.set_feature_names (eiffel_list);
-						adapter.replicate_feature (source_feature,
-										t_feat, new_feature_as, format_reg);
 						list.forth
 					end;
 						-- Reset entry just in case we have

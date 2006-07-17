@@ -320,6 +320,20 @@ feature -- Unmanaged process launch
 			execution_environment.change_working_directory (str)
 		end
 
+	open_dir_in_file_browser (dir: STRING) is
+			-- Open directory `dir' in file browser.
+		require
+			dir_attached: dir /= Void
+		local
+			l_cmd: STRING
+		do
+			l_cmd := preferences.misc_data.file_browser_command
+			if l_cmd /= Void then
+				l_cmd.replace_substring_all ("$target", dir)
+				execution_environment.launch (l_cmd)
+			end
+		end
+
 feature -- Status reporting
 
 	exit_code: INTEGER is

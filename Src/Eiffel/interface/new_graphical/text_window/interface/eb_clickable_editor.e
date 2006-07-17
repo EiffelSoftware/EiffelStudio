@@ -538,7 +538,7 @@ feature {NONE} -- Text Loading
 			after_reading_text_actions.wipe_out
 		end
 
-feature {EB_EDITOR_TOOL} -- Update
+feature -- Update
 
 	on_text_saved is
 			-- Update the editor as the text has been saved.

@@ -1051,8 +1051,6 @@ feature -- Warning messages
 			end
 		end
 
-	w_Syntax_error: STRING is "Class has syntax error.%NText will not be clickable.%NSee highlighted area."
-
 	w_Select_object_to_remove: STRING is "Please select a top-level item%N%
 										%different from the current object%N%
 										%(i.e. the first one) in the object tree%N%

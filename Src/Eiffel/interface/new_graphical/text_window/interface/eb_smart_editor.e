@@ -29,7 +29,6 @@ inherit
 			text_displayed,
 			recycle	,
 			file_loading_setup,
-			on_text_saved,
 			on_text_back_to_its_last_saved_state,
 			on_key_down,
 			make
@@ -665,18 +664,6 @@ feature {NONE} -- syntax completion
 			end
 		end
 
-feature {EB_EDITOR_TOOL} -- Implementation
-
-	on_text_saved is
-			--
-		do
-			Precursor {EB_CLICKABLE_EDITOR}
-			if syntax_error_dialog /= Void and then not syntax_error_dialog.is_destroyed then
-				syntax_error_dialog.destroy
-			end
-			syntax_error_dialog := Void
-		end
-
 feature -- Access
 
 	text_displayed: SMART_TEXT
@@ -774,7 +761,6 @@ feature {NONE} -- Implementation
 						fl.close
 						txt := fl.last_string
 						highlight_when_ready (syn_error.line, syn_error.line)
-						show_syntax_error
 					end
 				end
 			else
@@ -784,18 +770,6 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-
-	show_syntax_error is
-			--
-		do
-			if syntax_error_dialog = Void or else syntax_error_dialog.is_destroyed then
-				create syntax_error_dialog.make_with_text (Warning_messages.w_Syntax_error)
-				syntax_error_dialog.default_push_button.select_actions.extend (agent set_focus)
-				syntax_error_dialog.show_relative_to_window (reference_window)
-			end
-		end
-
-	syntax_error_dialog: EV_WARNING_DIALOG
 
 feature -- Text Loading	
 

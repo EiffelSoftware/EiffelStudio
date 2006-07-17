@@ -10,9 +10,6 @@ class
 
 inherit
 	OPTION_PROPERTIES
-		export
-			{NONE} all
-		end
 
 feature {NONE} -- Implementation
 
@@ -178,6 +175,7 @@ feature {NONE} -- Implementation
 			if not a_group.is_assembly then
 				create l_class_opt_dial
 				l_class_opt_dial.set_group_options (a_group.options)
+				l_class_opt_dial.set_debugs (debug_clauses)
 				create l_class_opt_prop.make_with_dialog (group_class_option_name, l_class_opt_dial)
 				l_class_opt_prop.set_description (group_class_option_description)
 				l_class_opt_prop.set_display_agent (agent output_class_options)

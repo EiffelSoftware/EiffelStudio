@@ -48,8 +48,6 @@ inherit
 		end
 
 	GROUP_PROPERTIES
-		export
-			{NONE} all
 		undefine
 			default_create, copy
 		redefine
@@ -58,7 +56,6 @@ inherit
 
 	TARGET_PROPERTIES
 		export
-			{NONE} all
 			{ANY} conf_system
 		undefine
 			default_create, copy
@@ -200,16 +197,6 @@ feature {NONE}-- Initialization
 		end
 
 feature -- Command
-
-	set_debugs (a_debugs: like debug_clauses) is
-			-- Set `debug_clauses' to `a_debugs'.
-		require
-			a_debugs_not_void: a_debugs /= Void
-		do
-			debug_clauses := a_debugs
-		ensure
-			debug_clauses_set: debug_clauses = a_debugs
-		end
 
 	destroy is
 			-- Destroy underlying native toolkit object.
@@ -949,6 +936,7 @@ feature {NONE} -- Implementation
 			l_item := l_subitem
 			create l_subitem.make_with_text (section_general)
 			l_item.extend (l_subitem)
+			l_item.expand
 			l_subitem.select_actions.extend (agent show_properties_target_advanced)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_advanced_icon)
 			create l_subitem.make_with_text (section_warning)
@@ -2158,7 +2146,7 @@ feature {NONE} -- Constants
 
 	initial_window_width: INTEGER is 670
 	initial_window_height: INTEGER is 600
-	section_tree_width: INTEGER is 160
+	section_tree_width: INTEGER is 165
 	description_height: INTEGER is 50
 
 	frame_border_size: INTEGER is 1

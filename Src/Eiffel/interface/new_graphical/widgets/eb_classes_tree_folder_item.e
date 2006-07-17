@@ -111,8 +111,16 @@ feature -- Status setting
 			set_pebble (stone)
 			set_text (name)
 			set_tooltip (tooltip_text)
-			set_accept_cursor (Cursors.cur_Cluster)
-			set_deny_cursor (Cursors.cur_X_Cluster)
+			if a_cluster.is_assembly then
+				set_accept_cursor (cursors.cur_assembly)
+				set_deny_cursor (cursors.cur_x_assembly)
+			elseif a_cluster.is_library then
+				set_accept_cursor (cursors.cur_library)
+				set_deny_cursor (cursors.cur_x_library)
+			else
+				set_accept_cursor (Cursors.cur_Cluster)
+				set_deny_cursor (Cursors.cur_X_Cluster)
+			end
 			set_pixmap (pixmap_from_group_path (l_group, path))
 			if not (l_group.is_readonly) then
 				drop_actions.set_veto_pebble_function (agent droppable)

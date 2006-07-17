@@ -172,12 +172,12 @@ feature -- Access queries
 			-- Get the options for `a_class'.
 		do
 			if class_options /= Void then
-				Result := class_options.item (a_class)
+				Result := class_options.item (a_class).twin
 			end
 			if Result /= Void then
 				Result.merge (options)
 			else
-				Result := options
+				Result := options.twin
 			end
 		ensure
 			Result_not_void: Result /= Void

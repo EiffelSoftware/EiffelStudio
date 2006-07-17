@@ -71,6 +71,21 @@ feature -- Accepting cursor shapes
 			create Result.make_with_pixel_buffer (icon_cursors.context_criteria_cursor_cursor_buffer, 16, 16)
 		end
 
+	frozen cur_target: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_target_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_library: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_library_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_assembly: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_assembly_cursor_cursor_buffer, 16, 16)
+		end
+
 feature -- Non-Accepting cursor shapes
 
 	frozen cur_x_class: EV_POINTER_STYLE is
@@ -131,6 +146,21 @@ feature -- Non-Accepting cursor shapes
 	frozen cur_x_criteria: EV_POINTER_STYLE is
 		once
 			create Result.make_with_pixel_buffer (icon_cursors.context_disabled_criteria_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_target: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_disabled_target_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_library: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_disabled_library_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_assembly: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.context_disabled_assembly_cursor_cursor_buffer, 16, 16)
 		end
 
 feature -- Other cursor

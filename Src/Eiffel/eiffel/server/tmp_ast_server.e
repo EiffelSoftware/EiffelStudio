@@ -348,6 +348,8 @@ feature -- Finalization
 				Inv_ast_server.remove (invariants_to_remove.item);
 				invariants_to_remove.forth;
 			end;
+			invariants_to_remove.wipe_out
+
 				-- Clear cache and merge with server
 			Inv_ast_server.cache.wipe_out
 			Inv_ast_server.merge (invariant_info);

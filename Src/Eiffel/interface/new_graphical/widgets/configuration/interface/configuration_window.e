@@ -317,6 +317,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_system
+			lock_update
 
 			if target_configuration_space /= Void then
 				target_configuration_space.destroy
@@ -330,6 +331,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_description (configuration_space)
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			target_configuration_space_void: target_configuration_space = Void
@@ -344,6 +346,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_general
+			lock_update
 
 			prepare_target_configuration_space
 			initialize_properties_target_general
@@ -352,6 +355,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_description (target_configuration_space)
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -365,6 +369,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_warning
+			lock_update
 
 			prepare_target_configuration_space
 			initialize_properties_target_warning
@@ -373,6 +378,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_description (target_configuration_space)
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -386,6 +392,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_debugs
+			lock_update
 
 			prepare_target_configuration_space
 			initialize_properties_target_debugs
@@ -394,6 +401,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_description (target_configuration_space)
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -407,6 +415,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_assertions
+			lock_update
 
 			prepare_target_configuration_space
 			initialize_properties_target_assertions
@@ -415,6 +424,7 @@ feature {NONE} -- Section tree selection agents
 			append_property_description (target_configuration_space)
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -432,6 +442,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_externals
+			lock_update
 
 			if properties /= Void then
 				properties.destroy
@@ -470,6 +481,7 @@ feature {NONE} -- Section tree selection agents
 
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -487,6 +499,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_tasks
+			lock_update
 
 			if properties /= Void then
 				properties.destroy
@@ -525,6 +538,7 @@ feature {NONE} -- Section tree selection agents
 
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -543,6 +557,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_groups
+			lock_update
 
 			if properties /= Void then
 				properties.destroy
@@ -624,6 +639,7 @@ feature {NONE} -- Section tree selection agents
 			append_small_margin (vb)
 			append_property_description (vb)
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -644,6 +660,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_variables
+			lock_update
 
 			prepare_target_configuration_space
 			create vb_grid
@@ -713,6 +730,7 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -733,6 +751,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_mapping
+			lock_update
 
 			prepare_target_configuration_space
 
@@ -803,6 +822,7 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
+			unlock_update
 			is_refreshing := False
 		end
 
@@ -817,6 +837,7 @@ feature {NONE} -- Section tree selection agents
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_advanced
+			lock_update
 
 			prepare_target_configuration_space
 			initialize_properties_target_advanced
@@ -838,6 +859,7 @@ feature {NONE} -- Section tree selection agents
 
 			properties.recompute_column_width
 
+			unlock_update
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
@@ -873,8 +895,8 @@ feature {NONE} -- Implementation
 			create Result.make (5)
 			Result.force (True, section_general)
 			Result.force (True, section_assertions)
-			Result.force (True, section_warning)
-			Result.force (True, section_debug)
+			Result.force (False, section_warning)
+			Result.force (False, section_debug)
 			Result.force (False, section_advanced)
 		end
 
@@ -885,11 +907,11 @@ feature {NONE} -- Implementation
 			-- Regenerate currently displayed data.
 		do
 			if refresh_current /= Void then
-				Current.lock_update
+				lock_update
 				refresh_current.call ([])
 				set_focus
 				section_tree.set_focus
-				Current.unlock_update
+				unlock_update
 			end
 		end
 

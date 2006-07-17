@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			vb2.extend (l_frame)
 			vb2.disable_item_expand (l_frame)
 
-			set_size (500, 600)
+			set_size (600, 600)
 			show_actions.extend (agent on_show)
 		end
 
@@ -195,6 +195,8 @@ feature {NONE} -- Agents
 		do
 			current_class := a_class
 
+			lock_update
+
 			properties.reset
 			add_misc_option_properties (value.item (a_class), group_options, True)
 			add_assertion_option_properties (value.item (a_class), group_options, True)
@@ -203,6 +205,8 @@ feature {NONE} -- Agents
 
 			properties.column (1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			properties.set_expanded_section_store (class_section_expanded_status)
+
+			unlock_update
 		ensure
 			current_class_set: current_class = a_class
 		end

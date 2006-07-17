@@ -16,7 +16,7 @@ inherit
 			assigner_name_id, transfer_to, access_for_feature, melt, generate,
 			is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
-			new_rout_entry
+			new_rout_entry, extension
 		end
 
 	ENCAPSULATED_I
@@ -24,7 +24,7 @@ inherit
 			assigner_name_id, transfer_to, check_types, access_for_feature, equiv,
 			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
-			new_rout_entry
+			new_rout_entry, extension
 		select
 			check_types, equiv
 		end
@@ -52,7 +52,7 @@ inherit
 create
 	make
 
-feature
+feature -- Access
 
 	type: TYPE_A
 			-- Type of the constant
@@ -62,6 +62,19 @@ feature
 
 	value: VALUE_I
 			-- Constant value
+
+	extension: IL_EXTENSION_I
+			-- External information.
+
+feature -- Status report
+
+	is_constant: BOOLEAN is True
+			-- Is the current feature a constant one ?
+
+	redefinable: BOOLEAN is False
+			-- Is a constant redefinable ?
+
+feature -- Settings
 
 	set_type (t: like type; a: like assigner_name_id) is
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
@@ -78,11 +91,15 @@ feature
 			value := v
 		end
 
-	is_constant: BOOLEAN is True
-			-- Is the current feature a constant one ?
-
-	redefinable: BOOLEAN is False
-			-- Is a constant redefinable ?
+	set_extension (an_extension: like extension) is
+			-- Set `extension' with `an_extension'.
+		require
+			an_extension_not_void: an_extension /= Void
+		do
+			extension := an_extension
+		ensure
+			extension_set: extension = an_extension
+		end
 
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types
@@ -253,15 +270,28 @@ feature -- C code generation
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		local
 			constant_b: CONSTANT_B
+			external_b: EXTERNAL_B
 		do
 			if is_once then
 					-- Cannot hardwire string constants, ever.
 				Result := Precursor {ENCAPSULATED_I} (access_type, static_type)
 			else
-					-- Constants are hardwired in final mode
-				create constant_b.make (value)
-				constant_b.set_access (Precursor {ENCAPSULATED_I} (access_type, static_type))
-				Result := constant_b
+				if extension /= Void then
+					create external_b
+					external_b.init (Current)
+					if static_type /= Void then
+						external_b.set_static_class_type (static_type)
+					end
+					external_b.set_type (access_type)
+					external_b.set_external_name_id (external_name_id)
+					external_b.set_extension (extension)
+					Result := external_b
+				else
+						-- Constants are hardwired in final mode
+					create constant_b.make (value)
+					constant_b.set_access (Precursor {ENCAPSULATED_I} (access_type, static_type))
+					Result := constant_b
+				end
 			end
 		end
 
@@ -399,6 +429,7 @@ feature -- Byte code generation
 			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type, assigner_name_id)
 			other.set_value (value)
+			extension := other.extension
 		end
 
 feature {NONE} -- Implementation

@@ -710,6 +710,7 @@ feature {NONE} -- Initialization
 							l_ext := l_enum_ext
 							if l_return_type.associated_class = Current then
 								create l_constant.make
+								l_constant.set_extension (l_ext)
 								l_feat := l_constant
 							else
 								create {EXTERNAL_FUNC_I} l_external.make (l_ext)
@@ -721,6 +722,7 @@ feature {NONE} -- Initialization
 						end
 					else
 						create l_attribute.make
+						l_attribute.set_extension (l_ext)
 						l_feat := l_attribute
 					end
 				elseif l_member.is_deferred then
@@ -729,6 +731,7 @@ feature {NONE} -- Initialization
 					else
 						create {DEF_PROC_I} l_deferred
 					end
+					l_deferred.set_extension (l_ext)
 					l_feat := l_deferred
 				else
 					if l_member.is_artificially_added then
@@ -771,11 +774,6 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				if l_deferred /= Void then
-					l_deferred.set_extension (l_ext)
-				elseif l_attribute /= Void then
-					l_attribute.set_extension (l_ext)
-				end
 
 				if l_member.is_static then
 					if l_member.is_attribute then

@@ -136,15 +136,14 @@ feature -- Basic operations
 		do
 			classst ?= window.stone
 			if classst /= Void then
-				class_i := classst.class_i
-				real_execute
+				drop_class (classst)
 				if not could_not_delete then
 					window.set_stone (Void)
 				end
 			else
 				clust ?= window.stone
 				if clust /= Void then
-					group := clust.group
+					drop_cluster (clust)
 					real_execute
 					if not could_not_delete then
 						window.set_stone (Void)

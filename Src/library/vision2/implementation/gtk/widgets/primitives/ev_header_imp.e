@@ -111,7 +111,7 @@ feature -- Initialization
 			model_count := a_columns
 		end
 
-feature
+feature -- Element change
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
@@ -135,13 +135,13 @@ feature
 			item_imp: EV_HEADER_ITEM_IMP
 		do
 			child_array.go_i_th (a_position)
-			item_imp ?= item.implementation
+			item_imp ?= child_array.item.implementation
 			item_imp.set_parent_imp (Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
 		end
 
-feature {EV_HEADER_ITEM_IMP} -- Implemnentation
+feature {EV_HEADER_ITEM_IMP} -- Implementation
 
 	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
 		-- Reusable item resize tuple.

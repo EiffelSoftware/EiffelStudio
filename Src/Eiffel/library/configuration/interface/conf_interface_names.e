@@ -205,7 +205,7 @@ feature {NONE} -- Target names and descriptions
 	group_prefix_description: STRING is "Prefix which all classes in this group get."
 	group_renaming_name: STRING is "Renaming"
 	group_renaming_description: STRING is "Renaming of classes in this group."
-	group_class_option_name: STRING is "Class options"
+	group_class_option_name: STRING is "Class Options"
 	group_class_option_description: STRING is "Class specific options."
 
 	library_edit_configuration: STRING is "Edit library configuration"
@@ -275,7 +275,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Same uuid", w_same_uuid)
 			Result.force ("Missing class export", w_export_class_missing)
 			Result.force ("Incompatible types equality", w_vweq)
-			Result.force ("Assignment attempts on formal or expanded targets", w_vjrv)
+			Result.force ("Assignment on formal/expanded", w_vjrv)
 			Result.force ("Renaming unknown class", w_renaming_unknown_class)
 			Result.force ("Options unknown class", w_option_unknown_class)
 		end

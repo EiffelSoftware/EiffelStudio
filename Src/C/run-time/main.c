@@ -131,6 +131,16 @@ doc:	</attribute>
 */
 rt_public struct cnode *esystem;			/* Eiffel system */
 
+/*
+doc:	<attribute name="eif_environ" return_type="char **" export="public">
+doc:		<summary>Pointer to environment variable storage.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>NOT safe</thread_safety>
+doc:		<synchronization>Passed in as the third argument in main function and can be modified by environment variable setting functions.</synchronization>
+doc:	</attribute>
+*/
+rt_public char **eif_environ;	/* Environment variable pointer */
+
 #ifdef WORKBENCH
 /*
 doc:	<attribute name="ccount" return_type="int" export="public">
@@ -768,6 +778,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #if !defined CUSTOM || defined NEED_ARGV_H
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
 #endif
+	eif_environ = envp;				/* Save pointer to environment variable storage */
 	once_init();
 #ifdef EIF_THREADS
 #ifdef WORKBENCH

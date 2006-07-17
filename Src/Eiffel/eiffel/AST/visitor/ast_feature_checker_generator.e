@@ -3850,7 +3850,11 @@ feature -- Implementation
 
 				if not is_inherited then
 						-- Set some type informations
-					l_call.set_routine_ids (last_routine_id_set)
+						-- Note that `last_routine_id_set' could be Void in case it is
+						-- a named tuple access.
+					if last_routine_id_set /= Void then
+						l_call.set_routine_ids (last_routine_id_set)
+					end
 				end
 
 					-- We need to reset `last_type' as it now `VOID_A' after checking the call

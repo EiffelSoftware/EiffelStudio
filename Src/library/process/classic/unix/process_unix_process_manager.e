@@ -35,6 +35,14 @@ inherit
 		export
 			{NONE} all
 		end
+
+	PROCESS_INFO_IMP
+		rename
+			process_id as current_process_id
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -157,6 +165,13 @@ feature -- Execution
 	is_executing: BOOLEAN
 			-- Is launched process executing?
 
+	is_stopped: BOOLEAN is
+			-- Is current process stopped by a signal?
+		do
+			Result := status_available and then signaled_flag_from_status (status)
+		end
+
+
 	set_is_executing (b: BOOLEAN) is
 			-- Set `is_executing' with `b'.
 		do
@@ -174,8 +189,6 @@ feature -- Execution
 			ee: EXECUTION_ENVIRONMENT
 			cur_dir: STRING
 			exceptions: EXCEPTIONS
-			i: INTEGER
-			l_temp: INTEGER
 		do
 			build_argument_list
 			open_files_and_pipes
@@ -189,7 +202,7 @@ feature -- Execution
 				collection_off
 				new_process_group
 				if is_control_terminal_enabled then
-					attach_terminals
+					attach_terminals (process_id)
 				end
 				setup_child_process_files
 				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files, evnptr)
@@ -218,7 +231,14 @@ feature -- Execution
 			-- if so, set `status' with reported process status.
 		do
 			unix_waitpid (pid, is_block, $status_available, $status)
-			set_is_executing (not status_available)
+			if
+				status_available and then
+			  	(terminate_flag_from_status (status) or signaled_flag_from_status (status))
+			 then
+				set_is_executing (False)
+			else
+				set_is_executing (True)
+			end
 		end
 
 	status_available: BOOLEAN
@@ -233,6 +253,38 @@ feature -- Execution
 			"C inline use <sys/wait.h>"
 		alias
 			"WEXITSTATUS($a_status)"
+		end
+
+	terminate_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child terminated normally.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFEXITED($a_status)"
+		end
+
+	signaled_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was terminated by a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSIGNALED($a_status)"
+		end
+
+	stopped_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was stopped by delivery of a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSTOPPED($a_status)"
+		end
+
+	continued_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was stopped by delivery of a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSTOPPED($a_status)"
 		end
 
 	terminate_hard (is_tree: BOOLEAN) is

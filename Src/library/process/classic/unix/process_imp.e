@@ -24,6 +24,14 @@ inherit
 			{NONE}all
 		end
 
+	PROCESS_INFO_IMP
+		rename
+			command_line as environment_command_line,
+			launch as environment_launch
+		export
+			{NONE}all
+		end
+
 create
 	make, make_with_command_line
 
@@ -74,7 +82,7 @@ feature  -- Control
 			initialize_child_process
 				-- Launch process.
 			if is_terminal_control_enabled then
-				attach_terminals
+				attach_terminals (process_id)
 			end
 			child_process.spawn_nowait (is_terminal_control_enabled, environment_table_as_pointer)
 			internal_id := child_process.process_id
@@ -143,11 +151,11 @@ feature {PROCESS_TIMER}  -- Status checking
 			if not has_exited then
 				if not has_process_exited then
 					child_process.wait_for_process (id, False)
-					has_process_exited := child_process.status_available
+					has_process_exited := not child_process.is_executing
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
 						if is_terminal_control_enabled then
-							attach_terminals
+							attach_terminals (process_id)
 						end
 						if in_thread /= Void then
 							in_thread.set_exit_signal
@@ -321,7 +329,7 @@ feature {NONE}  -- Implementation
 		do
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 				create input_buffer.make (initial_buffer_size)
-				create input_mutex.default_create
+				create input_mutex.make
 				create in_thread.make (Current)
 				in_thread.launch
 			end

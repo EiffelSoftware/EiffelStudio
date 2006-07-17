@@ -93,6 +93,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* storable.c from EiffelNet */
 	int socket_fides_cx;
+	int eifnet_errno_cx;
 
 #ifdef WORKBENCH
 		/* debug.c */
@@ -206,6 +207,7 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define prof_stack			(eif_globals->prof_stack_cx)
 
 #define socket_fides		(eif_globals->socket_fides_cx)
+#define eifnet_errno		(eif_globals->eifnet_errno_cx)
 
 #ifdef EIF_TLS_WRAP
 RT_LNK EIF_TSD_TYPE eif_global_key_get (void);

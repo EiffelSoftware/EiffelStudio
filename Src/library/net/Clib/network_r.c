@@ -19,13 +19,6 @@ indexing
 
 #include "eif_config.h"
 
-#ifdef EIF_OS2
-#include <stdlib.h>
-#include <types.h>
-#include <sys/socket.h>
-#include <nerrno.h>
-#endif
-
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
@@ -93,7 +86,7 @@ indexing
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_VMS
 #else
 #include <netinet/tcp.h>
 #endif
@@ -151,11 +144,7 @@ EIF_INTEGER no_buffs()
 EIF_INTEGER c_permission()
 	/*x Not owner */
 {
-#ifdef EIF_OS2
-	return (EIF_INTEGER) SOCEPERM;
-#else
 	return (EIF_INTEGER) EPERM;
-#endif
 }
 
 EIF_INTEGER bad_socket()
@@ -197,11 +186,7 @@ EIF_INTEGER no_access()
 EIF_INTEGER unreadable()
 	/*x Bad address */
 {
-#ifdef EIF_OS2
-	return (EIF_INTEGER) SOCEFAULT;
-#else
 	return (EIF_INTEGER) EFAULT;
-#endif
 }
 
 EIF_INTEGER no_connect()
@@ -496,7 +481,7 @@ EIF_INTEGER ipoptions()
 EIF_INTEGER tcpmax_seg()
 	/*x get TCP maximum segement size */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) TCP_MAXSEG;
@@ -655,7 +640,7 @@ EIF_INTEGER c_fsetown()
 EIF_INTEGER c_fgetfl()
 	/*x command constant for examination of file flag bits */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) F_GETFL;
@@ -665,7 +650,7 @@ EIF_INTEGER c_fgetfl()
 EIF_INTEGER c_fsetfl()
 	/*x command constant for setting file flag bits */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_VMS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) F_SETFL;
@@ -675,7 +660,7 @@ EIF_INTEGER c_fsetfl()
 EIF_INTEGER c_fndelay()
 	/*x constant to designate socket as "nonblocking" */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) FNDELAY;
@@ -685,7 +670,7 @@ EIF_INTEGER c_fndelay()
 EIF_INTEGER c_fasync()
 	/*x constant to allow reception of asynchronous I/O signals */
 {
-#if defined  EIF_WINDOWS || defined EIF_OS2
+#ifdef  EIF_WINDOWS
 	return (EIF_INTEGER) 0;
 #else
 	return (EIF_INTEGER) FASYNC;

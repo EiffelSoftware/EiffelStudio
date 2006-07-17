@@ -39,13 +39,6 @@ indexing
 #include <stdio.h>
 #endif
 
-#ifdef EIF_OS2
-#include <stdlib.h>
-#include <types.h>
-#include <sys/socket.h>
-#include <io.h>
-#endif
-
 #ifdef I_SYS_TIME
 #include <sys/time.h>
 #endif
@@ -93,7 +86,7 @@ indexing
 #include <sys/un.h>
 #endif
 
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS || defined VXWORKS
+#if defined EIF_WINDOWS || defined EIF_VMS || defined VXWORKS
 #else
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -177,17 +170,6 @@ void eif_net_check_recv (int r) {
 #endif
 
 }
-
-
-#ifdef EIF_OS2
-rt_shared void do_init(void)
-{
-	static int done = FALSE;
-
-	if (! done)
-		eif_net_check (sock_init());
-}
-#endif
 
 
 #ifdef EIF_WINDOWS
@@ -364,7 +346,7 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 {
 	struct hostent *hp;
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 #endif
 
@@ -385,7 +367,7 @@ EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 {
 	struct servent *sp;
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 #endif
 
@@ -509,12 +491,12 @@ EIF_INTEGER c_socket(EIF_INTEGER add_f, EIF_INTEGER typ, EIF_INTEGER prot)
 {
 	int result;
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 #endif
 
 	result = socket((int) add_f, (int) typ, (int) prot);
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	if (result == INVALID_SOCKET)
 		eio();
 #else
@@ -529,8 +511,6 @@ void c_close_socket(EIF_INTEGER s)
 {
 #ifdef EIF_WINDOWS
 	closesocket((SOCKET)s);
-#elif defined EIF_OS2
-	soclose((int) s);
 #else
 	close((int) s);
 #endif
@@ -543,9 +523,6 @@ void c_bind(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 #ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (bind((SOCKET) s, (struct sockaddr *) add, (int) length));
-#elif defined EIF_OS2
-	do_init();
-	eif_net_check (bind((int) s, (struct sockaddr *) add, (int) length));
 #else
 	eif_net_check (bind((int) s, (struct sockaddr *) add, (int) length));
 #endif
@@ -561,7 +538,7 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	int a_length = length;
 #endif
 
-#if defined EIF_WINDOWS
+#ifdef EIF_WINDOWS
 
 	SOCKET result;
 
@@ -569,13 +546,6 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	result = accept((SOCKET) s, (struct sockaddr *) add, &a_length);
 	eif_net_check ((result==INVALID_SOCKET) ? EIFNET_ERROR_HAPPENED : 0);
 
-#elif defined EIF_OS2
-
-	int result;
-
-	do_init();
-	result = accept((int) s, (struct sockaddr *) add, &a_length);
-	eif_net_check ((result==-1) ? EIFNET_ERROR_HAPPENED : 0);
 #else
 
 	int result;
@@ -595,9 +565,6 @@ void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
 #ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (listen((SOCKET) s, (int) backlog));
-#elif defined EIF_OS2
-	do_init();
-	eif_net_check (listen((int) s, (int) backlog));
 #else
 	eif_net_check (listen((int) s, (int) backlog));
 #endif
@@ -609,9 +576,6 @@ void c_connect(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 #ifdef EIF_WINDOWS
 	do_init();
 	eif_net_check (connect((SOCKET) s, (struct sockaddr *) add, (int) length));
-#elif defined EIF_OS2
-	do_init();
-	eif_net_check ((connect((int) s, (struct sockaddr *) add, (int) length)==EIFNET_ERROR_HAPPENED) ? ((sock_errno()!=SOCEINPROGRESS) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #else
 	eif_net_check ((connect((int) s, (struct sockaddr *) add, (int) length)==EIFNET_ERROR_HAPPENED) ? ((errno!=EINPROGRESS) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #endif
@@ -623,7 +587,7 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	struct timeval t;
 	int result;
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 	if (!rmask && !wmask && !emask) {
 		if (timeout != -1) 
@@ -633,8 +597,6 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 #endif
 	if (timeout == -1) {
 #ifdef EIF_WINDOWS
-		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
-#elif defined EIF_OS2
 		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
 #else
 		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
@@ -646,8 +608,6 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF
 	t.tv_usec = timeoutm;
 
 #ifdef EIF_WINDOWS
-	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
-#elif defined EIF_OS2
 	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
 #else
 	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
@@ -665,7 +625,7 @@ void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	int a_length, result;
 #endif
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 #endif
 
@@ -686,7 +646,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	int a_length, result;
 #endif
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init();
 #endif
 
@@ -705,9 +665,6 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 #ifdef EIF_WINDOWS
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
 	eif_net_check (sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr));
-#elif defined EIF_OS2
-#define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
-	eif_net_check ((sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr)==EIFNET_ERROR_HAPPENED) ? ((sock_errno()!=SOCEWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #else
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
 	eif_net_check ((sendto ((int) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags, \
@@ -762,9 +719,6 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 #ifdef EIF_WINDOWS
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
 	eif_net_check (send (descriptor, element_pointer, sizeofelement, 0));
-#elif defined EIF_OS2
-#define CPUTX(descriptor,element_pointer,sizeofelement) \
-	eif_net_check ((send (descriptor, element_pointer, sizeofelement, 0)==-1) ? ((sock_errno()!=SOCEWOULDBLOCK) ? -1 : 0) : 0);
 #else
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
 	eif_net_check ((write((int) descriptor, (char *) element_pointer, (int) sizeofelement) < 0) ? ((errno!=EWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
@@ -819,11 +773,6 @@ void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length
 #ifdef EIF_WINDOWS
 #define CREADX(descriptor, element_pointer, sizeofelement) \
 	eif_net_check_recv (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0));
-#elif defined EIF_OS2
-#define CREADX(descriptor, element_pointer, sizeofelement) \
-	if (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0) == SOCEWOULDBLOCK) \
-		if (sock_errno() != SOCEWOULDBLOCK) \
-			eio();
 #else
 #define CREADX(descriptor, element_pointer, sizeofelement) \
 	if (read((int) descriptor, (char *) element_pointer, (int) sizeofelement) < 0) \
@@ -872,10 +821,6 @@ EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
 
 #ifdef EIF_WINDOWS
 	eif_net_check (nr = recv(fd, (char *) buf, (int) len, 0));
-#elif defined EIF_OS2
-	if ((nr = recv(fd, (char *) buf, (int) len, 0)) == -1)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
 #else
 	if ((nr = read ((int) fd, (char *) buf, (int) len)) < 0)
 		if (errno != EWOULDBLOCK)
@@ -894,10 +839,6 @@ EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTE
 	result = recv((int) fd, (char *) buf, (int) len, (int) flags);
 #ifdef EIF_WINDOWS
 	eif_net_check (result);
-#elif defined EIF_OS2
-	if (result == -1)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
 #else
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
@@ -920,10 +861,6 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 
 #ifdef EIF_WINDOWS
 	eif_net_check (result);
-#elif defined EIF_OS2
-	if (result == -1)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
 #else
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
@@ -940,11 +877,6 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER l)
 #ifdef EIF_WINDOWS
 	result = send(fd, (char *) buf, (int) l, 0);
 	eif_net_check (result);
-#elif defined EIF_OS2
-	result = send(fd, (char *) buf, (int) l, 0);
-	if (result == -1)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
 #else
 	result = write((int) fd, (char *) buf, (int) l);
 	if (result < 0)
@@ -977,10 +909,6 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 
 #ifdef EIF_WINDOWS
 	eif_net_check (result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len));
-#elif defined EIF_OS2
-	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
 #else
 	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
 		if (errno != EWOULDBLOCK)
@@ -1008,8 +936,6 @@ EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER op
 	asize = sizeof(arg);
 #ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == SOCKET_ERROR)
-#elif defined EIF_OS2
-	if (getsockopt((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == -1)
 #else
 	if (getsockopt((int) fd, (int) level, (int) opt, (char *) &arg, &asize) < 0)
 #endif
@@ -1030,8 +956,6 @@ EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 
 #ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
-#elif defined EIF_OS2
-	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
 #else
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
 #endif
@@ -1053,8 +977,6 @@ EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 
 #ifdef EIF_WINDOWS
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
-#elif defined EIF_OS2
-	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
 #else
 	if (getsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
 #endif
@@ -1076,7 +998,7 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined VXWORKS
+#if defined EIF_WINDOWS || defined VXWORKS
 	return 0;
 #elif defined EIF_VMS
 #  ifdef DEBUG
@@ -1091,10 +1013,7 @@ EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 void c_set_blocking(EIF_INTEGER fd)
 	/*x set socket fd blocking */
 {
-#ifdef EIF_OS2
-	int arg = 0;
-	ioctl((int) fd, FIONBIO, (char *) &arg, sizeof(arg));
-#elif defined EIF_WINDOWS
+#ifdef EIF_WINDOWS
 	u_long arg = 0;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #elif defined VXWORKS
@@ -1110,10 +1029,7 @@ void c_set_non_blocking(EIF_INTEGER fd)
 	/*x set socket fd non-blocking */
 {
 
-#ifdef EIF_OS2
-	int arg = 1;
-	ioctl ((int) fd, FIONBIO, (char *) &arg, sizeof(arg));
-#elif defined EIF_WINDOWS
+#ifdef EIF_WINDOWS
 	u_long arg = 1;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #elif defined VXWORKS

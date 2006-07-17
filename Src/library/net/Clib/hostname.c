@@ -15,7 +15,7 @@ indexing
 #include "eif_portable.h"
 #include "eif_macros.h"
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	/* unistd.h doesn't exist */
 #else
 #include <unistd.h>
@@ -33,7 +33,7 @@ extern void do_init (void);
 void c_get_hostname(char * buffer, size_t buffer_count)
 	/*x get host name in dotted format */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2
+#ifdef EIF_WINDOWS
 	do_init ();
 #endif
 

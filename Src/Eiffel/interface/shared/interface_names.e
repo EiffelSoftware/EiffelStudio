@@ -1111,8 +1111,8 @@ feature -- Description texts
 
 	e_open_selection_in_editor: STRING is "Open selected file name in specified external editor"
 	e_save_c_compilation_output: STRING is "Save c compilation output to file"
-	e_go_to_w_code_dir: STRING is "Go to W_code directory of this system"
-	e_go_to_f_code_dir: STRING is "Go to F_code directory of this system"
+	e_go_to_w_code_dir: STRING is "Go to W_code directory of this system, or right click to open W_code in specified file browser"
+	e_go_to_f_code_dir: STRING is "Go to F_code directory of this system, or right click to open F_code in specified file browser"
 	e_f_code: STRING is "F_code"
 	e_w_code: STRING is "W_code"
 	e_no_text_is_selected: STRING is "No file name is selected."

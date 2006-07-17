@@ -1863,7 +1863,7 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.put_space
 			text_formatter_decorator.process_symbol_text (ti_double_quote)
 			if not has_error_internal then
-				text_formatter_decorator.process_operator_text (l_feat.alias_name, l_feat)
+				text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
 			else
 				text_formatter_decorator.process_basic_text (l_as.alias_name.value)
 			end

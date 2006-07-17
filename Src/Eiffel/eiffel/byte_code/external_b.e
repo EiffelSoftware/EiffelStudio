@@ -142,8 +142,8 @@ feature -- Routines for externals
 		require
 			good_argument: f /= Void
 			is_valid_feature_for_normal_generation: not System.il_generation implies f.is_external
-			is_valid_feature_for_il_generation:
-				System.il_generation implies (f.is_external or f.is_attribute or f.is_deferred)
+			is_valid_feature_for_il_generation: System.il_generation implies
+				(f.is_external or f.is_attribute or f.is_deferred or f.is_constant)
 		do
 			feature_name_id := f.feature_name_id
 			routine_id := f.rout_id_set.first

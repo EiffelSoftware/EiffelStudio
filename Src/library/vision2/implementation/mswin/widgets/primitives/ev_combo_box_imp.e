@@ -525,23 +525,35 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 		do
 			l_top_level_window := top_level_window_imp
 			if l_top_level_window /= Void then
+				focus_on_widget.put (Current)
+				if application_imp.focus_in_actions_internal /= Void then
+					application_imp.focus_in_actions_internal.call ([interface])
+				end
+
 				if is_editable then
 					l_top_level_window.set_last_focused_widget (text_field.item)
 				else
 					l_top_level_window.set_last_focused_widget (combo.item)
 				end
 				application_imp.set_window_with_focus (l_top_level_window.interface)
-			end
-				--| `Current' is made up of
-				--| multiple widgets which propagate events accordingly.
-				--| We need to check that we do not call the `focus_in_actions'
-				--| multiple times due to this propagation.
-			if focus_on_widget.item /= Current then
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (Void)
+					--| `Current' is made up of
+					--| multiple widgets which propagate events accordingly.
+					--| We need to check that we do not call the `focus_in_actions'
+					--| multiple times due to this propagation.
+				if focus_on_widget.item /= Current then
+					if focus_in_actions_internal /= Void then
+						focus_in_actions_internal.call (Void)
+					end
 				end
 			end
-			focus_on_widget.put (Current)
+
+				-- If we still have the focus after calling the focus_in
+				-- actions then we need to updated the current push button
+				-- otherwise, there is no need to since the widget which
+				-- has now the focus has already done it.
+			if has_focus then
+				update_current_push_button
+			end
 		end
 
 	on_kill_focus is

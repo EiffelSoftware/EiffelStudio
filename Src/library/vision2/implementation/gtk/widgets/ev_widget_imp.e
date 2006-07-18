@@ -152,8 +152,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			-- Gtk_Widget."size-allocate" happened.
 		do
 			if last_width /= a_width or else last_height /= a_height then
-				last_width := a_width
-				last_height := a_height
+				last_width := a_width.to_natural_16
+				last_height := a_height.to_natural_16
 				if resize_actions_internal /= Void then
 					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (a_x, a_y, a_width, a_height))
 				end
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	last_width, last_height: INTEGER
+	last_width, last_height: NATURAL_16
 			-- Dimenions during last "size-allocate".
 
 	in_resize_event: BOOLEAN

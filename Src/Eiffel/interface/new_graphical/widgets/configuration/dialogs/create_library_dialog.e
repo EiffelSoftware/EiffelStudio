@@ -58,6 +58,14 @@ inherit
 			copy
 		end
 
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -202,31 +210,25 @@ feature {NONE} -- Actions
 	browse is
 			-- Browse for a location.
 		local
-			l_brows_dial: EV_FILE_OPEN_DIALOG
 			l_loc: CONF_FILE_LOCATION
 			l_dir: DIRECTORY
 		do
-			create l_brows_dial
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
 				create l_dir.make (l_loc.evaluated_directory)
-			else
-				create l_dir.make (target.system.directory)
 			end
-			if l_dir.exists then
-				l_brows_dial.set_start_directory (l_dir.name)
+			if l_dir /= Void and then l_dir.exists then
+				browse_dialog.set_start_directory (l_dir.name)
 			end
 
-			l_brows_dial.open_actions.extend (agent set_location (l_brows_dial))
-			l_brows_dial.show_modal_to_window (Current)
+			browse_dialog.open_actions.extend (agent set_location)
+			browse_dialog.show_modal_to_window (Current)
 		end
 
-	set_location (a_dial: EV_FILE_DIALOG) is
-			-- Set location from `a_dial'.
-		require
-			a_dial_not_void: a_dial /= Void
+	set_location is
+			-- Set location from `browse_dialog'.
 		do
-			location.set_text (a_dial.file_name)
+			location.set_text (browse_dialog.file_name)
 		end
 
 	fill_library (a_name, a_subdir, a_file: STRING) is
@@ -271,6 +273,22 @@ feature {NONE} -- Actions
 
 
 feature {NONE} -- Implementation
+
+	browse_dialog: EV_FILE_OPEN_DIALOG is
+			-- Dialog to browse to a library
+		local
+			l_dir: DIRECTORY
+		once
+			create Result
+			create l_dir.make (target.system.directory)
+			if l_dir.exists then
+				Result.set_start_directory (l_dir.name)
+			end
+			Result.filters.extend ([config_files_filter, config_files_description])
+			Result.filters.extend ([all_files_filter, all_files_description])
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	target: CONF_TARGET
 			-- Target where we add the library.

@@ -25,6 +25,25 @@ feature {NONE} -- Initialization
 			enable_text_editing
 		end
 
+feature -- Access
+
+	filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]]
+			-- File extension filters for dialog.
+
+feature -- Update
+
+	add_filters (a_extension, a_description: STRING_GENERAL) is
+			-- Add a filter with `a_extension' and `a_description'.
+		require
+			a_extension_ok: a_extension /= Void and then not a_extension.is_empty
+			a_description_ok: a_description /= Void and then not a_description.is_empty
+		do
+			if filters = Void then
+				create filters.make (1)
+			end
+			filters.force ([a_extension, a_description])
+		end
+
 feature -- Status
 
 	is_dialog_open: BOOLEAN
@@ -47,6 +66,9 @@ feature {NONE} -- Agents
 			l_parent := parent_window
 			is_dialog_open := True
 			create l_dial
+			if filters /= Void then
+				l_dial.filters.append (filters)
+			end
 			if value /= Void and then not value.is_empty then
 				create l_dir.make (directory_location_value)
 				if l_dir.exists then

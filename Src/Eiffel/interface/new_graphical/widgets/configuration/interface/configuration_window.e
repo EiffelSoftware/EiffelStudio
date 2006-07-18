@@ -1396,6 +1396,11 @@ feature {NONE} -- Implementation
 				l_file_prop.set_value (an_external.location)
 				l_file_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
 				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
+				if an_external.is_resource then
+					l_file_prop.add_filters (text_files_filter, text_files_description)
+					l_file_prop.add_filters (resx_files_filter, resx_files_description)
+					l_file_prop.add_filters (all_files_filter, all_files_description)
+				end
 				properties.add_property (l_file_prop)
 			end
 

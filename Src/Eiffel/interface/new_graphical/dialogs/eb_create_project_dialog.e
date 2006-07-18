@@ -174,6 +174,7 @@ feature -- Execution
 			cla, clu, f: STRING
 			sc: EIFFEL_SYNTAX_CHECKER
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
+			l_project_initialized: BOOLEAN
 		do
 			success := False
 			if not rescued then
@@ -220,10 +221,20 @@ feature -- Execution
 					-- Create a new project using the previously generated files.
 				create l_project_loader.make (parent_window)
 				l_project_loader.set_is_project_location_requested (False)
+				l_project_initialized := eiffel_project.initialized
+				if l_project_initialized then
+					l_project_loader.enable_project_creation_or_opening_not_requested
+				end
 				l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
-				if not l_project_loader.has_error and then compile_project then
-					l_project_loader.set_is_compilation_requested (compile_project)
-					l_project_loader.compile_project
+				if not l_project_loader.has_error then
+					if compile_project then
+						l_project_loader.set_is_compilation_requested (True)
+						l_project_loader.melt_project (l_project_initialized)
+					elseif l_project_initialized and l_project_loader.is_project_ok then
+							-- Open a new EiffelStudio session for sure since current
+							-- system is already initialized.
+						l_project_loader.open_project (True)
+					end
 				end
 
 					-- Update `success' state.

@@ -89,8 +89,8 @@ feature -- Status_report
 		local
 			l_c_str: C_STRING
 		do
-			create l_c_str.make_empty (256)
-			c_get_hostname (l_c_str.item, 256)
+			create l_c_str.make_empty (1024)
+			c_get_hostname (l_c_str.item, 1024)
 			Result := l_c_str.string
 		end
 

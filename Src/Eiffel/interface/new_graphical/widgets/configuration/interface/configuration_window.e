@@ -1657,6 +1657,9 @@ feature {NONE} -- Implementation
 					l_sort_list.after
 				loop
 					l_group := l_sort_list.item_for_iteration
+					if current_group = Void then
+						current_group := l_group
+					end
 					l_cluster ?= l_group
 					if l_cluster = Void or else l_cluster.parent = Void then
 						create l_item.make_with_text (l_group.name)
@@ -1824,6 +1827,10 @@ feature {NONE} -- Configuration setting
 			l_name: STRING
 			l_cluster: CONF_CLUSTER
 		do
+			if a_group = current_group then
+				current_group := Void
+			end
+
 			l_name := a_group.name
 			if a_group.is_override then
 				l_cluster := current_target.overrides.item (l_name)
@@ -1853,6 +1860,8 @@ feature {NONE} -- Configuration setting
 				check should_not_reach: False end
 			end
 			refresh
+		ensure
+			current_group_different: a_group /= current_group
 		end
 
 	new_external is

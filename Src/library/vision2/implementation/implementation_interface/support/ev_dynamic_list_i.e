@@ -1,12 +1,12 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision dynamic list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_DYNAMIC_LIST_I [reference G -> EV_CONTAINABLE]
 
 inherit
@@ -51,7 +51,7 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	off: BOOLEAN is
 			-- Is there no current item?
 		do
@@ -81,7 +81,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	retrieve_item_by_data (data: ANY; should_compare_objects: BOOLEAN): G is
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
@@ -94,7 +94,7 @@ feature -- Access
 				interface.start
 			until
 				interface.after or Result /= Void
-			loop		
+			loop
 				if
 					(should_compare_objects and then ((data = Void and then item.data = Void) or
 					data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data)))
@@ -106,7 +106,7 @@ feature -- Access
 			end
 			go_to (c)
 		end
-		
+
 	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
@@ -162,11 +162,9 @@ feature -- Status report
 			from
 				i := 1
 			until
-				i > count or else Result
+				Result or else i > count
 			loop
-				if i_th (i) = v then
-					Result := True
-				end
+				Result := i_th (i) = v
 				i := i + 1
 			end
 		end
@@ -369,7 +367,7 @@ feature -- Removal
 			-- cursor was on `v', move to right neighbor.
 		local
 			item_index: INTEGER
-		do			
+		do
 			item_index := index_of (v, 1)
 			if item_index > 0 then
 				remove_i_th (item_index)
@@ -381,7 +379,7 @@ feature -- Removal
 			--| It is not possible to call old item as if off, it will cause
 			--| imp to_int to fail and because all old expressions are evaluated
 			--| on entry to a routine, we cannot check that we were not off
-			--| before evaluating old item. Julian. 
+			--| before evaluating old item. Julian.
 			cursor_not_moved: not old has (v) implies
 				old interface.index = interface.index
 			cursor_not_moved: old has (v) and then old interface.index <

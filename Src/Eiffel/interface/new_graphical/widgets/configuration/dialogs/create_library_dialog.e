@@ -50,6 +50,14 @@ inherit
 			copy
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -138,7 +146,8 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action (ellipsis_text, agent browse)
+			create l_btn.make_with_text_and_action (interface_names.b_browse, agent browse)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
@@ -277,7 +286,7 @@ feature {NONE} -- Implementation
 			l_dir: KL_DIRECTORY
 			l_subdirs: ARRAY [STRING]
 			i, cnt: INTEGER
-			l_name: STRING
+			l_lib_name: STRING
 		do
 				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
 			create l_dir.make (Library_path)
@@ -291,10 +300,10 @@ feature {NONE} -- Implementation
 					until
 						i > cnt
 					loop
-						l_name := library_path.twin
-						l_name.append_character (platform_constants.directory_separator)
-						l_name.append (l_subdirs.item (i))
-						add_configs_in_dir (l_name, library_directory_name+"\"+l_subdirs.item (i))
+						l_lib_name := library_path.twin
+						l_lib_name.append_character (platform_constants.directory_separator)
+						l_lib_name.append (l_subdirs.item (i))
+						add_configs_in_dir (l_lib_name, library_directory_name+"\"+l_subdirs.item (i))
 						i := i +1
 					end
 				end
@@ -310,7 +319,7 @@ feature {NONE} -- Implementation
 			l_dir: KL_DIRECTORY
 			l_files: ARRAY [STRING]
 			i, cnt: INTEGER
-			l_file_name, l_name: STRING
+			l_lib_file_name, l_lib_name: STRING
 			l_item: EV_LIST_ITEM
 		do
 			create l_dir.make (a_path)
@@ -323,11 +332,11 @@ feature {NONE} -- Implementation
 					until
 						i > cnt
 					loop
-						l_file_name := l_files.item (i)
-						if valid_config_extension (l_file_name) then
-							l_name := l_file_name.substring (1, l_file_name.last_index_of ('.', l_file_name.count)-1)
-							create l_item.make_with_text (l_name)
-							l_item.select_actions.extend (agent fill_library (l_name, a_subdir, l_file_name))
+						l_lib_file_name := l_files.item (i)
+						if valid_config_extension (l_lib_file_name) then
+							l_lib_name := l_lib_file_name.substring (1, l_lib_file_name.last_index_of ('.', l_lib_file_name.count)-1)
+							create l_item.make_with_text (l_lib_name)
+							l_item.select_actions.extend (agent fill_library (l_lib_name, a_subdir, l_lib_file_name))
 							default_libraries.extend (l_item)
 						end
 						i := i + 1

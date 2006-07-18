@@ -38,6 +38,12 @@ inherit
 			copy
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -110,7 +116,8 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action (ellipsis_text, agent browse)
+			create l_btn.make_with_text_and_action (interface_names.b_browse, agent browse)
+			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 

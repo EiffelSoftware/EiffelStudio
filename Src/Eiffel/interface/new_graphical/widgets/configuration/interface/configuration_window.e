@@ -1130,11 +1130,11 @@ feature {NONE} -- Implementation
 			create l_tree
 			l_frame.extend (l_tree)
 
-			add_externals (current_target.internal_external_include, l_tree, external_include_tree)
-			add_externals (current_target.internal_external_object, l_tree, external_object_tree)
-			add_externals (current_target.internal_external_library, l_tree, external_library_tree)
-			add_externals (current_target.internal_external_make, l_tree, external_make_tree)
-			add_externals (current_target.internal_external_resource, l_tree, external_resource_tree)
+			add_externals (current_target.internal_external_include, l_tree, external_include_tree, pixmaps.icon_pixmaps.project_settings_include_file_icon)
+			add_externals (current_target.internal_external_object, l_tree, external_object_tree, pixmaps.icon_pixmaps.project_settings_object_file_icon)
+			add_externals (current_target.internal_external_library, l_tree, external_library_tree, pixmaps.icon_pixmaps.project_settings_object_file_icon)
+			add_externals (current_target.internal_external_make, l_tree, external_make_tree, pixmaps.icon_pixmaps.project_settings_make_file_icon)
+			add_externals (current_target.internal_external_resource, l_tree, external_resource_tree, pixmaps.icon_pixmaps.project_settings_resource_file_icon)
 		end
 
 	append_tasks_tree (a_container: EV_BOX) is
@@ -1542,16 +1542,18 @@ feature {NONE} -- Implementation
 			properties_not_void: properties /= Void
 		end
 
-	add_externals (a_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_tree: EV_TREE; a_name: STRING) is
+	add_externals (a_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_tree: EV_TREE; a_name: STRING; a_pixmap: EV_PIXMAP) is
 			-- Add `a_externals' to `a_tree' under a header with `a_name'.
 		require
 			a_tree: a_tree /= Void
+			a_pixmap: a_pixmap /= Void
 		local
 			l_head_item, l_item: EV_TREE_ITEM
 			l_ext_item: CONF_EXTERNAL
 		do
 			if a_externals /= Void and then not a_externals.is_empty then
 				create l_head_item.make_with_text (a_name)
+				l_head_item.set_pixmap (a_pixmap)
 				a_tree.extend (l_head_item)
 				from
 					a_externals.start
@@ -1560,6 +1562,7 @@ feature {NONE} -- Implementation
 				loop
 					l_ext_item := a_externals.item
 					create l_item.make_with_text (l_ext_item.location)
+					l_item.set_pixmap (a_pixmap)
 					l_item.set_data (l_ext_item)
 					l_item.select_actions.extend (agent initialize_properties_target_externals (l_ext_item))
 					l_head_item.extend (l_item)
@@ -1582,6 +1585,7 @@ feature {NONE} -- Implementation
 		do
 			if a_tasks /= Void and then not a_tasks.is_empty then
 				create l_head_item.make_with_text (a_name)
+				l_head_item.set_pixmap (pixmaps.icon_pixmaps.project_settings_task_icon)
 				a_tree.extend (l_head_item)
 				from
 					a_tasks.start
@@ -1590,6 +1594,7 @@ feature {NONE} -- Implementation
 				loop
 					l_task := a_tasks.item
 					create l_item.make_with_text (l_task.command)
+					l_item.set_pixmap (pixmaps.icon_pixmaps.project_settings_task_icon)
 					l_item.set_data (l_task)
 					l_item.select_actions.extend (agent initialize_properties_target_tasks (l_task, a_name))
 					l_head_item.extend (l_item)

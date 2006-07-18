@@ -28,13 +28,6 @@ inherit
 			default_create, copy
 		end
 
-	INTERFACE_NAMES
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -45,7 +38,7 @@ feature {NONE} -- Initialization
 			f_top: EV_FRAME
 		do
 			Precursor
-			set_title (t_refactoring_class_select)
+			set_title (interface_names.t_refactoring_class_select)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb

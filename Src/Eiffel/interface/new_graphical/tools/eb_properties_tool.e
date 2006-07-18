@@ -95,7 +95,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
-			Result := pixmaps.icon_pixmaps.project_settings_system_icon
+			Result := pixmaps.icon_pixmaps.tool_properties_icon
 		end
 
 feature -- Memory management

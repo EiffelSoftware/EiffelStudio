@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			target := a_target
 			set_text (target.name)
 			set_tooltip (target.name)
-			set_pixmap (pixmaps.icon_pixmaps.metric_unit_target_icon)
+			set_pixmap (pixmaps.icon_pixmaps.folder_target_icon)
 			set_pebble_function (agent stone)
 			set_accept_cursor (cursors.cur_target)
 			set_deny_cursor (cursors.cur_x_target)

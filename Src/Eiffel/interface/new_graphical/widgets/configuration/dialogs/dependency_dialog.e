@@ -13,7 +13,8 @@ inherit
 		redefine
 			initialize,
 			new_item_name,
-			on_add
+			on_add,
+			on_select
 		end
 
 	CONF_INTERFACE_NAMES
@@ -61,6 +62,11 @@ feature -- Update
 		end
 
 feature {NONE} -- Agents
+
+	on_select is
+			-- Called if an item is selected.
+		do
+		end
 
 	on_add is
 			-- Called if an item should be added.

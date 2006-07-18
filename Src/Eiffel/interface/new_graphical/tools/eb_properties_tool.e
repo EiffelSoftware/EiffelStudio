@@ -17,6 +17,15 @@ inherit
 			pixmap
 		end
 
+	EB_CLUSTER_MANAGER_OBSERVER
+		rename
+			manager as cluster_manager
+		redefine
+			on_class_removed,
+			on_cluster_removed,
+			refresh
+		end
+
 	GROUP_PROPERTIES
 		redefine
 			store_changes,
@@ -47,6 +56,7 @@ feature {NONE} -- Initialization
 			a_manager_exists: a_manager /= Void
 		do
 			tool_make (a_manager)
+			cluster_manager.extend (Current)
 			create {CONF_COMP_FACTORY}conf_factory
 			window := a_manager.window
 		end
@@ -111,12 +121,26 @@ feature -- Memory management
 			manager := Void
 		end
 
+feature {NONE} -- External changes to classes/clusters
+
+	on_class_removed (a_class: EIFFEL_CLASS_I) is
+			-- Refresh the properties to not display properties for `a_class'.
+		do
+			refresh
+		end
+
+	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING_8) is
+			-- Refresh the properties to not display properties for `a_group'.
+		do
+			refresh
+		end
+
 feature {EB_DEVELOPMENT_WINDOW} -- Actions
 
 	add_stone (a_stone: STONE) is
 			-- Add `a_stone'.
 		require
-			a_stone_not_void: a_stone /= Void
+			a_stone_ok: a_stone /= Void and then a_stone.is_valid
 		local
 			l_gs: CLUSTER_STONE
 			l_cs: CLASSI_STONE
@@ -274,18 +298,25 @@ feature {NONE} -- Implementation
 	store_changes is
 			-- Store changes to disk.
 		do
-			check
-				current_system: current_system /= Void
+				-- only if the stone is still valid
+			if stone.is_valid then
+				check
+					current_system: current_system /= Void
+				end
+				current_system.store
+				manager.cluster_manager.refresh
 			end
-			current_system.store
-			manager.cluster_manager.refresh
 		end
 
 	refresh is
 			-- Refresh the displayed data.
 		do
 			properties.set_focus
-			add_stone (stone)
+			if stone.is_valid then
+				add_stone (stone)
+			else
+				properties.reset
+			end
 		end
 
 indexing

@@ -632,6 +632,20 @@ feature {NONE} -- Implementation
 				system.set_array_optimization_on (False)
 			end
 
+			l_s := l_settings.item (s_automatic_backup)
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_automatic_backup (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name (s_automatic_backup)
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_do_not_check_vape (False)
+			end
+
 			System.server_controler.set_block_size (1024)
 
 			l_s := l_settings.item (s_check_generic_creation_constraint)

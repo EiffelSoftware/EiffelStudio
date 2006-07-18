@@ -949,7 +949,7 @@ end
 			end
 
 				-- removed classes
-			if workbench.automatic_backup then
+			if automatic_backup then
 				create l_file_name.make_from_string (workbench.backup_subdirectory)
 				l_file_name.set_file_name (backup_info)
 				create l_file.make_open_write (l_file_name)
@@ -966,14 +966,14 @@ end
 					class_compiled: l_class_i.is_compiled
 				end
 				l_class_i.compiled_class.recompile_syntactical_clients
-				if workbench.automatic_backup then
+				if automatic_backup then
 					l_file.put_string (l_class_i.name+": "+l_class_i.group.name+": "+l_class_i.file_name+"%N")
 				end
 				remove_class (l_class_i.compiled_class)
 				real_removed_classes.force (l_class_i)
 				l_classes.forth
 			end
-			if workbench.automatic_backup then
+			if automatic_backup then
 				l_file.close
 			end
 
@@ -1446,7 +1446,7 @@ feature -- Recompilation
 			l_il_env: IL_ENVIRONMENT
 		do
 				-- create new backup subdir
-			if workbench.automatic_backup then
+			if automatic_backup then
 				workbench.create_backup_directory
 			end
 

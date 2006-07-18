@@ -128,6 +128,7 @@
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "address_expression"/>
 			  <xs:enumeration value = "array_optimization"/>
+			  <xs:enumeration value = "automatic_backup"/>
 			  <xs:enumeration value = "check_generic_creation_constraint"/>
 			  <xs:enumeration value = "check_vape"/>
 			  <xs:enumeration value = "console_application"/>

@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			-- Refresh the displayed data.
 		do
 			properties.set_focus
-			if stone.is_valid then
+			if stone /= Void and then stone.is_valid then
 				add_stone (stone)
 			else
 				properties.reset

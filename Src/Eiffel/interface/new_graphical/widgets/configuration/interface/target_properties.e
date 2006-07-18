@@ -228,6 +228,11 @@ feature {NONE} -- Implementation
 			add_boolean_setting_actions (l_bool_prop, s_address_expression, False)
 			properties.add_property (l_bool_prop)
 
+			create l_bool_prop.make_with_value (target_automatic_backup_name, current_target.setting_automatic_backup)
+			l_bool_prop.set_description (target_automatic_backup_description)
+			add_boolean_setting_actions (l_bool_prop, s_automatic_backup, False)
+			properties.add_property (l_bool_prop)
+
 			create l_bool_prop.make_with_value (target_check_vape_name, current_target.setting_check_vape)
 			l_bool_prop.set_description (target_check_vape_description)
 			add_boolean_setting_actions (l_bool_prop, s_check_vape, False)

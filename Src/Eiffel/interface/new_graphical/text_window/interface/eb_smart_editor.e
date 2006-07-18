@@ -165,7 +165,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	complete_feature_name is
 			-- Complete feature name.
 		do
-			if text_displayed.completing_context and is_editable then
+			if not is_empty and then text_displayed.completing_context and is_editable then
 				set_completing_feature (True)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
@@ -177,7 +177,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	complete_class_name is
 			-- Complete class name.
 		do
-			if text_displayed.completing_context and is_editable then
+			if not is_empty and then text_displayed.completing_context and is_editable then
 				set_completing_feature (False)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
@@ -190,7 +190,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th character of `keyword'.
 		do
-			if is_editable then
+			if is_editable and then not is_empty then
 				text_displayed.embed_in_block (keyword, pos_in_keyword)
 				refresh_now
 				check_cursor_position

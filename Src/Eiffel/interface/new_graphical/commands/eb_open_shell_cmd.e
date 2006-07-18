@@ -162,28 +162,41 @@ feature {NONE} -- Implementation
 			line_nb, first_line, cursor_line: INTEGER
 
 			development_window: EB_DEVELOPMENT_WINDOW
+			editor: EB_SMART_EDITOR
+			empty: BOOLEAN
 		do
 			development_window := target
-			cmd_string := command_shell_name
-				-- We ensure that we target the editor line to the cursor position, however if the cursor
-				-- is not visible we take the `first_line_displayed'.
-			cursor_line := development_window.editor_tool.text_area.cursor_y_position
-			first_line := development_window.editor_tool.text_area.first_line_displayed
-			if first_line > cursor_line then
-				line_nb := first_line
-			elseif
-				first_line < cursor_line and
-				cursor_line < first_line + development_window.editor_tool.text_area.number_of_lines_displayed
-			then
-				line_nb := cursor_line
-			else
-				line_nb := first_line
-			end
-			if not cmd_string.is_empty then
-				replace_target (cmd_string, window_file_name)
-				cmd_string.replace_substring_all ("$line", line_nb.out)
-				create req
-				req.execute (cmd_string)
+			editor := development_window.editor_tool.text_area
+			if editor /= Void then
+				empty := editor.is_empty
+
+				cmd_string := command_shell_name
+				if not empty then
+						-- We ensure that we target the editor line to the cursor position, however if the cursor
+						-- is not visible we take the `first_line_displayed'.
+					cursor_line := editor.cursor_y_position
+					first_line := editor.first_line_displayed
+					if first_line > cursor_line then
+						line_nb := first_line
+					elseif
+						first_line < cursor_line and
+						cursor_line < first_line + editor.number_of_lines_displayed
+					then
+						line_nb := cursor_line
+					else
+						line_nb := first_line
+					end
+				end
+				if not cmd_string.is_empty then
+					replace_target (cmd_string, window_file_name)
+					if not empty then
+						cmd_string.replace_substring_all ("$line", line_nb.out)
+					else
+						cmd_string.replace_substring_all ("$line", once "")
+					end
+					create req
+					req.execute (cmd_string)
+				end
 			end
 		end
 

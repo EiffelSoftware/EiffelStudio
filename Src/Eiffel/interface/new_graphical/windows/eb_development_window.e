@@ -4214,7 +4214,9 @@ feature {NONE} -- Implementation: Editor commands
 	select_all is
 			-- Select the whole text in the focused editor.
 		do
-			current_editor.select_all
+			if not current_editor.is_empty then
+				current_editor.select_all
+			end
 		end
 
 	search is

@@ -274,26 +274,63 @@ feature {NONE} -- Agents
 			-- `a_key' was pressed.
 		local
 			l_row: EV_GRID_ROW
+			l_selection: ARRAYED_LIST [EV_GRID_ITEM]
 		do
 			Precursor (a_key)
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				if selected_items /= Void and then selected_items.count = 1 then
-					selected_items.first.activate
+
+			l_selection := selected_items
+
+			inspect
+				a_key.code
+			when {EV_KEY_CONSTANTS}.key_enter then
+				if l_selection.count = 1 then
+					l_selection.first.activate
 				end
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_left then
-				if selected_items /= Void and then selected_items.count = 1 then
-					l_row := selected_items.first.row
+			when {EV_KEY_CONSTANTS}.key_left then
+				if l_selection.count = 1 then
+					l_row := l_selection.first.row
 					if l_row.is_expanded then
 						l_row.collapse
 					end
 				end
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
-				if selected_items /= Void and then selected_items.count = 1 then
-					l_row := selected_items.first.row
+			when {EV_KEY_CONSTANTS}.key_right then
+				if l_selection.count = 1 then
+					l_row := l_selection.first.row
 					if l_row.is_expandable and not l_row.is_expanded then
 						l_row.expand
 					end
 				end
+			when {EV_KEY_CONSTANTS}.key_home then
+				if row_count > 0 then
+					l_row := first_visible_row
+					if l_row.count > 0 then
+						from
+							l_selection.start
+						until
+							l_selection.after
+						loop
+							l_selection.item.disable_select
+							l_selection.forth
+						end
+						l_row.item (1).enable_select
+					end
+				end
+			when {EV_KEY_CONSTANTS}.key_end then
+				if row_count > 0 then
+					l_row := last_visible_row
+					if l_row.count > 0 then
+						from
+							l_selection.start
+						until
+							l_selection.after
+						loop
+							l_selection.item.disable_select
+							l_selection.forth
+						end
+						l_row.item (1).enable_select
+					end
+				end
+			else
 			end
 		end
 

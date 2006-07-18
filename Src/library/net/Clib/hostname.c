@@ -37,7 +37,10 @@ void c_get_hostname(char * buffer, size_t buffer_count)
 	do_init ();
 #endif
 
-	if (gethostname (buffer, buffer_count) == -1) {
+	if (gethostname (buffer, (int) buffer_count) == -1) {
 		buffer[0] = '\0';
+	} else {
+			/* Clear error flag. */
+		errno = 0;
 	}
 }

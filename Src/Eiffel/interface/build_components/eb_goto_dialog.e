@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		local
 			l_line: INTEGER
 		do
-			if line_number_text.text.is_integer then
+			if not editor.is_empty and then line_number_text.text.is_integer then
 				l_line := line_number_text.text.to_integer
 				if l_line > editor.number_of_lines then
 					l_line := editor.number_of_lines

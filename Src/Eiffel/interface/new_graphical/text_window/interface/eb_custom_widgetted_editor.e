@@ -124,7 +124,9 @@ feature -- Quick search bar basic operation
 			search_bar.record_current_searched
 			prepare_quick_search
 			search_tool.go_to_next_found
-			check_cursor_position
+			if not is_empty then
+				check_cursor_position
+			end
 			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
@@ -134,7 +136,9 @@ feature -- Quick search bar basic operation
 			search_bar.record_current_searched
 			prepare_quick_search
 			search_tool.go_to_previous_found
-			check_cursor_position
+			if not is_empty then
+				check_cursor_position
+			end
 			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
@@ -145,7 +149,9 @@ feature -- Quick search bar basic operation
 			search_bar.record_current_searched
 			prepare_quick_search
 			search_tool.go_to_next_found
-			check_cursor_position
+			if not is_empty then
+				check_cursor_position
+			end
 			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
@@ -355,7 +361,9 @@ feature -- Search commands
 			if search_tool /= Void then
 				prepare_search_last
 				search_tool.go_to_next_found
-				check_cursor_position
+				if not is_empty then
+					check_cursor_position
+				end
 				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end
@@ -366,7 +374,9 @@ feature -- Search commands
 			if search_tool /= Void then
 				prepare_search_selection
 				search_tool.go_to_next_found
-				check_cursor_position
+				if not text_displayed.is_empty then
+					check_cursor_position
+				end
 				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end
@@ -377,7 +387,9 @@ feature -- Search commands
 			if search_tool /= Void then
 				prepare_search_selection
 				search_tool.go_to_previous_found
-				check_cursor_position
+				if not text_displayed.is_empty then
+					check_cursor_position
+				end
 				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end

@@ -240,23 +240,21 @@ feature {NONE} -- Handle keystokes
 feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Edition Operations on text
 
 	comment_selection is
-			-- Comment selected lines.
-		require
-			text_is_not_empty: number_of_lines /= 0
-			text_is_editable: is_editable
+			-- Comment selected lines if possible.
 		do
-			text_displayed.comment_selection
-			refresh_now
+			if is_editable and then not is_empty then
+				text_displayed.comment_selection
+				refresh_now
+			end
 		end
 
 	uncomment_selection is
-			-- Uncomment selected lines.
-		require
-			text_is_not_empty: number_of_lines /= 0
-			text_is_editable: is_editable
+			-- Uncomment selected lines if possible.
 		do
-			text_displayed.uncomment_selection
-			refresh_now
+			if is_editable and then not is_empty then
+				text_displayed.uncomment_selection
+				refresh_now
+			end
 		end
 
 feature {NONE} -- Retrieving backup

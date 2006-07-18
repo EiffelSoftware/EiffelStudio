@@ -828,6 +828,7 @@ feature {NONE} -- Implementation
 				i := 1
 				nb := projects_list.row_count
 				create l_projects.make (nb)
+				l_projects.compare_objects
 			until
 				i > nb
 			loop

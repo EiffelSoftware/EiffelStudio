@@ -20,6 +20,19 @@ feature -- MACROS
 			]"
 		end
 
+	frozen gdk_x11_screen_get_window_manager_name (a_screen: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_x11_screen_get_window_manager_name ((GdkScreen*) $a_screen);
+				#else
+					return "unknown";
+				#endif
+			]"
+		end
+
 	frozen gtk_settings_set_string_property (a_settings, a_property, a_value, a_origin: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -147,7 +160,7 @@ feature -- MACROS
 		alias
 			"[
 				#if GTK_MAJOR_VERSION == 2
-					return gdk_pixbuf_new_from_xpm_data ((char**) $a_data);
+					return gdk_pixbuf_new_from_xpm_data ((const char**) $a_data);
 				#endif
 			]"
 		end
@@ -961,6 +974,41 @@ feature -- C enums
 			"GDK_DECOR_ALL"
 		end
 
+	frozen gdk_decor_resizeh_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_RESIZEH"
+		end
+
+	frozen gdk_decor_title_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_TITLE"
+		end
+
+	frozen gdk_decor_menu_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_MENU"
+		end
+
+	frozen gdk_decor_minimize_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_MINIMIZE"
+		end
+
+	frozen gdk_decor_maximize_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_MAXIMIZE"
+		end
+
 	frozen gdk_decor_border_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -1015,6 +1063,27 @@ feature -- C enums
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GDK_FUNC_RESIZE"
+		end
+
+	frozen gdk_func_minimize_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_MINIMIZE"
+		end
+
+	frozen gdk_func_maximize_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_MAXIMIZE"
+		end
+
+	frozen gdk_func_all_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_FUNC_ALL"
 		end
 
 	frozen gtk_can_focus_enum: INTEGER is
@@ -9681,7 +9750,7 @@ feature -- External C functions
 			"[
 				#if GTK_MAJOR_VERSION == 2
 					gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);
-				#endif					
+				#endif
 			]"
 		end
 

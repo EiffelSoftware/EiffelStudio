@@ -17,7 +17,9 @@ inherit
 			hide,
 			on_close,
 			preference_name_column,
-			preference_value_column
+			preference_value_column,
+			grid,
+			build_filter_icons
 		end
 
 	EB_SHARED_PIXMAPS
@@ -53,6 +55,7 @@ feature -- Access
 			create scrolling_behavior.make (grid)
 			create resizing_behavior.make (grid)
 			resizing_behavior.enable_column_resizing
+			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 		end
 
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
@@ -149,6 +152,20 @@ feature -- Access
 			preferences.misc_data.preference_window_height_preference.set_value (height)
 			preferences.misc_data.preference_window_width_preference.set_value (width)
 			Precursor
+		end
+
+feature{NONE} -- Implementation
+
+		grid: ES_GRID
+			-- Grid
+
+	build_filter_icons is
+		local
+			w,h: INTEGER
+			bc: EV_COLOR
+		do
+			icon_up := icon_pixmaps.sort_acending_icon
+			icon_down := icon_pixmaps.sort_descending_icon
 		end
 
 indexing

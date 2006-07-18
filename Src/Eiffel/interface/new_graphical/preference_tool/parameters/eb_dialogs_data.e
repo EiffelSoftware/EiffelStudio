@@ -179,6 +179,26 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_settings_position_y_preference.value
 		end
 
+	starting_dialog_width: INTEGER is
+		do
+			Result := starting_dialog_width_preference.value
+		end
+
+	starting_dialog_height: INTEGER is
+		do
+			Result := starting_dialog_height_preference.value
+		end
+
+	open_project_dialog_width: INTEGER is
+		do
+			Result := open_project_dialog_width_preference.value
+		end
+
+	open_project_dialog_height: INTEGER is
+		do
+			Result := open_project_dialog_height_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	confirm_on_terminate_freezing_preference: BOOLEAN_PREFERENCE
@@ -268,6 +288,10 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	project_settings_position_x_preference: INTEGER_PREFERENCE
 	project_settings_position_y_preference: INTEGER_PREFERENCE
 
+	starting_dialog_width_preference: INTEGER_PREFERENCE
+	starting_dialog_height_preference: INTEGER_PREFERENCE
+	open_project_dialog_width_preference: INTEGER_PREFERENCE
+	open_project_dialog_height_preference: INTEGER_PREFERENCE
 
 feature -- Preference strings
 
@@ -321,6 +345,11 @@ feature -- Preference strings
 	project_settings_height_preference_string: STRING is "interface.dialogs.project_settings_height"
 	project_settings_position_x_preference_string: STRING is "interface.dialogs.project_settings_position_x"
 	project_settings_position_y_preference_string: STRING is "interface.dialogs.project_settings_position_y"
+
+	starting_dialog_width_preference_string: STRING is "interface.dialogs.starting_dialog_width"
+	starting_dialog_height_preference_string: STRING is "interface.dialogs.starting_dialog_height"
+	open_project_dialog_width_preference_string: STRING is "interface.dialogs.open_project_dialog_width"
+	open_project_dialog_height_preference_string: STRING is "interface.dialogs.open_project_dialog_height"
 
 feature {NONE} -- Implementation
 
@@ -377,6 +406,11 @@ feature {NONE} -- Implementation
 			project_settings_height_preference := l_manager.new_integer_preference_value (l_manager, project_settings_height_preference_string, 600)
 			project_settings_position_x_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_x_preference_string, 100)
 			project_settings_position_y_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_y_preference_string, 100)
+
+			starting_dialog_width_preference := l_manager.new_integer_preference_value (l_manager, starting_dialog_width_preference_string, 500)
+			starting_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, starting_dialog_height_preference_string, 500)
+			open_project_dialog_width_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_width_preference_string, 500)
+			open_project_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_height_preference_string, 300)
 		end
 
 	preferences: PREFERENCES
@@ -405,6 +439,10 @@ invariant
 	project_settings_height_preference_not_void: project_settings_height_preference /= Void
 	project_settings_position_x_preference_not_void: project_settings_position_x_preference /= Void
 	project_settings_position_y_preference_not_void: project_settings_position_y_preference /= Void
+	starting_dialog_width_preference_not_void: starting_dialog_width_preference /= Void
+	starting_dialog_height_preference_not_void: starting_dialog_height_preference /= Void
+	open_project_dialog_width_preference_not_void: open_project_dialog_width_preference /= Void
+	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

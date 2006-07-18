@@ -341,7 +341,7 @@ feature -- Input
 			create mp.make (nb_char)
 			count := read (read_descriptor, mp.item, nb_char)
 			if count > 0 then
-				create last_string.make_from_c (mp.item)
+				last_string := string_from_raw_string (mp, count)
 			else
 				last_string := Void
 				if count = -1 then
@@ -698,6 +698,25 @@ feature {NONE} -- Implementation
 
 	Initial_buffer_size: INTEGER is 128
 			-- Initial size of buffer used by `shared_mptr'	
+
+	string_from_raw_string (a_ptr: MANAGED_POINTER; a_count: INTEGER): STRING is
+			-- String representation of data whose length is `a_count' in bytes in `a_ptr'
+		require
+			a_ptr_attached: a_ptr /= Void
+			a_count_positive: a_count > 0
+		local
+			i: INTEGER
+		do
+			create Result.make (a_count)
+			from
+				i := 0
+			until
+				i = a_count
+			loop
+				Result.append_character (a_ptr.read_character (i))
+				i := i + 1
+			end
+		end
 
 invariant
 	shared_pointer_not_void: shared_mptr /= Void

@@ -42,36 +42,33 @@ feature{NONE} -- Initialization
 			-- additional setup tasks.
 		do
 			Precursor
-			create key_shortcuts.make (10)
-			set_expand_selected_rows_agent (agent expand_selected_item (False))
-			set_expand_selected_rows_recursive_agent (agent expand_selected_item (True))
-			set_collapse_selected_rows_agent (agent collapse_selected_item (False))
-			set_collapse_selected_rows_recursive_agent (agent collapse_selected_item (True))
 			key_press_actions.extend (agent on_key_pressed)
-		ensure then
-			key_shortcuts_attached: key_shortcuts /= Void
 		end
 
 feature -- Setting
 
-	setup_tree_view_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: LIST [ES_KEY_SHORTCUT]) is
-			-- Setup shortcut keys and their behavior for tree view navigation.
-			-- `a_expand' is a list of shortcuts used to expand selected rows.
-			-- `a_expand_recursive' is a list of shortcuts used to recursively expand selected rows.
-			-- `a_collapse' is a list of shortcuts used to collapse selected rows.
-			-- `a_collapse_recursive' is a list of shortcuts used to recursively collapse selected rows.
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+			-- Enable default tree navigation behavior.
+			-- `a_expand' indicates if expanding a node should be enabled.
+			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
+			-- `a_collapse' indicates if collapsing a node should be enabled.
+			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
 		do
-			if a_expand /= Void and then not a_expand.is_empty then
-				a_expand.do_all (agent register_shortcut (?, agent on_expand_item (False)))
+			if a_expand then
+				set_expand_selected_rows_agent (agent expand_selected_item (False))
+				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
 			end
-			if a_expand_recursive /= Void and then not a_expand_recursive.is_empty then
-				a_expand_recursive.do_all (agent register_shortcut (?, agent on_expand_item (True)))
+			if a_expand_recursive then
+				set_expand_selected_rows_recursive_agent (agent expand_selected_item (True))
+				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
 			end
-			if a_collapse /= Void and then not a_collapse.is_empty then
-				a_collapse.do_all (agent register_shortcut (?, agent on_collapse_item (False)))
+			if a_collapse then
+				set_collapse_selected_rows_agent (agent collapse_selected_item (False))
+				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
 			end
-			if a_collapse_recursive /= Void and then not a_collapse_recursive.is_empty then
-				a_collapse_recursive.do_all (agent register_shortcut (?, agent on_collapse_item (True)))
+			if a_collapse_recursive then
+				set_collapse_selected_rows_recursive_agent (agent collapse_selected_item (True))
+				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
 			end
 		end
 
@@ -84,7 +81,7 @@ feature {NONE} -- Actions
 			l_agent: PROCEDURE [ANY, TUPLE]
 		do
 			l_ev_application := ev_application
-			l_agent := key_shortcuts.item (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, l_ev_application.ctrl_pressed, l_ev_application.alt_pressed, l_ev_application.shift_pressed))
+			l_agent := key_action_with_shortcut (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, l_ev_application.ctrl_pressed, l_ev_application.alt_pressed, l_ev_application.shift_pressed))
 			if l_agent /= Void then
 				l_agent.call ([])
 			end

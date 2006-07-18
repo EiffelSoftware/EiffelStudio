@@ -9,48 +9,38 @@ indexing
 deferred class
 	ES_TREE_NAVIGATOR
 
-feature -- Status report
-
-	is_shortcut_registered (a_shortcut: ES_KEY_SHORTCUT): BOOLEAN is
-			-- Is `a_shortcut' registered?
-		require
-			a_shortcut_attached: a_shortcut /= Void
-		do
-			Result := key_shortcuts.has (a_shortcut)
-		end
-
-	is_key_combination_registered (a_key: EV_KEY; a_control_required, a_alt_required, a_shift_required: BOOLEAN): BOOLEAN is
-			-- Is key combination defined by `a_key', `a_control_required', `a_alt_required' and `a_shift_required'
-			-- already registered as a shortcut in current?
-		require
-			a_key_attached: a_key /= Void
-		do
-			Result := is_shortcut_registered (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, a_control_required, a_alt_required, a_shift_required))
-		end
+inherit
+	ES_KEY_POOL
 
 feature -- Access
 
-	expand_selected_rows_agent: PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent to be performed when expanding rows retrieved from `selected_rows_function'.
-			-- Default is `expand_rows'. Use `set_expand_selected_rows_agent' to attach new behavior to it.
+			-- Use `set_expand_selected_rows_agent' to attach behavior to it.			
+		do
+			Result := key_action (expand_node_action_index)
+		end
 
-	expand_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent to be performed when recursively expanding rows retrieved from `selected_rows_function'.
-			-- Default is `expand_rows'. Use `set_expand_selected_recursive_rows_agent' to attach new behavior to it.
-
+			-- Use `set_expand_selected_recursive_rows_agent' to attach behavior to it.
+		do
+			Result := key_action (expand_node_recursive_action_index)
+		end
 
 	collapse_selected_rows_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when collapsing rows retrieved from `selected_rows_function'.
-			-- Default is `collapse_rows'. Use `set_collapse_selected_rows_agent' to attach new behavior to it.
+			-- Use `set_collapse_selected_rows_agent' to attach behavior to it.
+		do
+			Result := key_action (collapse_node_action_index)
+		end
 
-	collapse_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE]
+	collapse_selected_rows_recursive_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent to be performed when recursively collapsing rows retrieved from `selected_rows_function'.
-			-- Default is `collapse_rows'. Use `set_collapse_selected_recursive_rows_agent' to attach new behavior to it.
-
-	key_shortcuts: HASH_TABLE [PROCEDURE [ANY, TUPLE], ES_KEY_SHORTCUT]
-			-- Registered key shortcuts
-			-- If a key combination occurred in current grid can trigger a shortcut,
-			-- Action of that shortcut will be invoked.
+			-- Use `set_collapse_selected_recursive_rows_agent' to attach behavior to it.
+		do
+			Result := key_action (collapse_node_recursive_action_index)
+		end
 
 feature -- Setting
 
@@ -59,9 +49,7 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
-			expand_selected_rows_agent := a_agent
-		ensure
-			expand_selected_rows_agent_set: expand_selected_rows_agent = a_agent
+			add_key_action (a_agent, expand_node_action_index)
 		end
 
 	set_expand_selected_rows_recursive_agent (a_agent: like expand_selected_rows_recursive_agent) is
@@ -69,9 +57,7 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
-			expand_selected_rows_recursive_agent := a_agent
-		ensure
-			expand_selected_rows_recursive_agent_set: expand_selected_rows_recursive_agent = a_agent
+			add_key_action (a_agent, expand_node_recursive_action_index)
 		end
 
 	set_collapse_selected_rows_agent (a_agent: like collapse_selected_rows_agent) is
@@ -79,9 +65,7 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
-			collapse_selected_rows_agent := a_agent
-		ensure
-			collapse_selected_rows_agent_set: collapse_selected_rows_agent = a_agent
+			add_key_action (a_agent, collapse_node_action_index)
 		end
 
 	set_collapse_selected_rows_recursive_agent (a_agent: like collapse_selected_rows_recursive_agent) is
@@ -89,41 +73,16 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
-			collapse_selected_rows_recursive_agent := a_agent
-		ensure
-			collapse_selected_rows_recursive_agent_set: collapse_selected_rows_recursive_agent = a_agent
+			add_key_action (a_agent, collapse_node_recursive_action_index)
 		end
 
-	setup_tree_view_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: LIST [ES_KEY_SHORTCUT]) is
-			-- Setup shortcut keys and their behavior for tree view navigation.
-			-- `a_expand' is a list of shortcuts used to expand selected rows.
-			-- `a_expand_recursive' is a list of shortcuts used to recursively expand selected rows.
-			-- `a_collapse' is a list of shortcuts used to collapse selected rows.
-			-- `a_collapse_recursive' is a list of shortcuts used to recursively collapse selected rows.
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+			-- Enable default tree navigation behavior.
+			-- `a_expand' indicates if expanding a node should be enabled.
+			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
+			-- `a_collapse' indicates if collapsing a node should be enabled.
+			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
 		deferred
-		end
-
-	register_shortcut (a_shortcut: ES_KEY_SHORTCUT; a_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Register `a_shortcut' with `a_agent' in current.
-		require
-			a_shortcut_attached: a_shortcut /= Void
-			a_agent_attached: a_agent /= Void
-		do
-			key_shortcuts.force (a_agent, a_shortcut)
-		ensure
-			shortcut_registered: key_shortcuts.has (a_shortcut)
-		end
-
-	remove_shortcut (a_shortcut: ES_KEY_SHORTCUT) is
-			-- Remove `a_shortcut' from current.
-		require
-			a_shortcut_attached: a_shortcut /= Void
-		do
-			if key_shortcuts.has (a_shortcut) then
-				key_shortcuts.remove (a_shortcut)
-			end
-		ensure
-			shortcut_removed: not key_shortcuts.has (a_shortcut)
 		end
 
 feature -- Access
@@ -166,9 +125,19 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-invariant
-	key_shortcuts_attached: key_shortcuts /= Void
+feature{NONE} -- Implementation
 
+	expand_node_action_index: INTEGER is 1
+			-- Action index for expand a node
+
+	expand_node_recursive_action_index: INTEGER is 2
+			-- Action index for expand a node recursively
+
+	collapse_node_action_index: INTEGER is 3
+			-- Action index for collapse a node
+
+	collapse_node_recursive_action_index: INTEGER is 4;
+			-- Action index for collapse a node recursively
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

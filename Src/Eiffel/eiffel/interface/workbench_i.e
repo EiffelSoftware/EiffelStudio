@@ -301,16 +301,16 @@ feature -- Commands
 				not degree_6_done and then
 				(retried = 0 or else (retried = 1 and then missing_class_error))
 			then
-				if system.automatic_backup then
-					backup_counter := backup_counter + 1
-					create_backup_directory
-				end
-
 				if not forbid_degree_6 then
 					Lace.recompile
 				end
 
 				if Lace.successful then
+					if system.automatic_backup then
+						backup_counter := backup_counter + 1
+						create_backup_directory
+					end
+
 					if not l_pre_actions_done then
 						process_actions (universe.new_target.all_pre_compile_action)
 						l_pre_actions_done := True

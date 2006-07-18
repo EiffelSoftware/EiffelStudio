@@ -31,7 +31,7 @@ feature -- Access
 		do
 			Result := "Parse error"
 			if file /= Void then
-				Result.append (" in "+file+" ("+row.out+":"+column.out+")")
+				Result.append (" in "+file+" (line "+row.out+", column "+column.out+")")
 			end
 			if message /= Void then
 				Result.append (": "+message)

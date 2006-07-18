@@ -209,9 +209,10 @@ feature {NONE} -- Initialization
 
 				--| Set the initial size of the dialog.
 			if show_open_project_frame then
-				set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(440))
+				set_size (preferences.dialog_data.starting_dialog_width,
+					preferences.dialog_data.starting_dialog_height)
 			else
-				set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(270))
+				set_width (Layout_constants.dialog_unit_to_pixels(440))
 			end
 
 				--| Select the default item
@@ -266,8 +267,8 @@ feature {NONE} -- Execution
 			-- Cancel button has been pressed
 		do
 			ok_selected := False
-			destroy
 			update_preferences
+			destroy
 		end
 
 	on_item_deselected is
@@ -284,6 +285,7 @@ feature {NONE} -- Execution
 	on_ok is
 			-- Ok button has been pressed
 		do
+			update_preferences
 			ok_selected := True
 
 				-- Create a new project using an ISE Wizard
@@ -298,7 +300,6 @@ feature {NONE} -- Execution
 				check no_item_selected: False end
 			end
 
-			update_preferences
 		end
 
 	on_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
@@ -365,6 +366,8 @@ feature {NONE} -- Implementation
 		do
 			if show_open_project_frame then
 				preferences.dialog_data.show_starting_dialog_preference.set_value (not do_not_display_dialog_button.is_selected)
+				preferences.dialog_data.starting_dialog_width_preference.set_value (width)
+				preferences.dialog_data.starting_dialog_height_preference.set_value (height)
 			end
 		end
 

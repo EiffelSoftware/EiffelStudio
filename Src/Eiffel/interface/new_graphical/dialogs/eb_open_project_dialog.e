@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -70,7 +75,8 @@ feature {NONE} -- Initialization
 			dialog.set_default_push_button (ok_button)
 			dialog.set_default_cancel_button (cancel_button)
 
-			dialog.set_size (Layout_constants.dialog_unit_to_pixels(440), Layout_constants.dialog_unit_to_pixels(270))
+			dialog.set_size (preferences.dialog_data.open_project_dialog_width,
+				preferences.dialog_data.open_project_dialog_height)
 				--| Ensure `open_project' has focu when opened.
 			dialog.show_actions.extend (agent open_project.set_focus)
 		ensure
@@ -119,18 +125,30 @@ feature {NONE} -- Actions
 	on_cancel is
 			-- Cancel button has been pressed
 		do
+			update_preferences
 			dialog.destroy
 		end
 
 	on_ok is
 			-- Ok button has been pressed
 		do
+			update_preferences
 				-- Open an existing project
 			if open_project.has_selected_item and not open_project.has_error then
 				open_project.open_project
 			else
 				check no_item_selected: False end
 			end
+		end
+
+	update_preferences is
+			-- Update size preferences.
+		require
+			dialog_not_void: dialog /= Void
+			dialog_not_destroyed: not dialog.is_destroyed
+		do
+			preferences.dialog_data.open_project_dialog_width_preference.set_value (dialog.width)
+			preferences.dialog_data.open_project_dialog_height_preference.set_value (dialog.height)
 		end
 
 invariant

@@ -125,7 +125,7 @@ feature -- Execution
 					l_wb := eiffel_project.workbench
 					if l_wb.is_changed then
 						create l_dial.make_initialized (2, preferences.debug_tool_data.always_compile_before_debug_string, warning_messages.w_Compile_before_debug, interface_names.l_dont_ask_me_again, preferences.preferences)
-						l_dial.set_ok_action (agent quick_melt_project_cmd.execute_and_wait)
+						l_dial.set_ok_action (agent melt_project_cmd.execute_and_wait)
 						l_dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 					end
 

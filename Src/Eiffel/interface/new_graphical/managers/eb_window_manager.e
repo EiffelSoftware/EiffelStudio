@@ -570,7 +570,6 @@ feature -- Actions on all windows
 			end
 			for_all (agent c_compilation_start_action)
 			melt_project_cmd.enable_sensitive
-			Quick_melt_project_cmd.enable_sensitive
 			terminate_c_compilation_cmd.disable_sensitive
 			refactoring_manager.enable_sensitive
 
@@ -952,7 +951,6 @@ feature -- Events
 			-- Update the display accordingly, ie gray out all forbidden commands.
 		do
 			Melt_project_cmd.disable_sensitive
-			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
@@ -965,7 +963,6 @@ feature -- Events
 			-- A refactoring has been started.
 		do
 			Melt_project_cmd.disable_sensitive
-			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
@@ -976,7 +973,6 @@ feature -- Events
 			-- A refactoring has finished.
 		do
 			Melt_project_cmd.enable_sensitive
-			Quick_melt_project_cmd.enable_sensitive
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
@@ -1013,7 +1009,6 @@ feature -- Events
 			-- A new project has been created. Update the state of some commands.
 		do
 			Melt_project_cmd.enable_sensitive
-			Quick_melt_project_cmd.enable_sensitive
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
@@ -1027,7 +1022,6 @@ feature -- Events
 			if Eiffel_project.initialized then
 				if Eiffel_project.compilation_modes.is_precompiling then
 					Melt_project_cmd.disable_sensitive
-					Quick_melt_project_cmd.disable_sensitive
 					Freeze_project_cmd.disable_sensitive
 					Finalize_project_cmd.disable_sensitive
 					Precompilation_cmd.enable_sensitive
@@ -1035,7 +1029,6 @@ feature -- Events
 					Run_finalized_cmd.disable_sensitive
 				else
 					Melt_project_cmd.enable_sensitive
-					Quick_melt_project_cmd.enable_sensitive
 					Freeze_project_cmd.enable_sensitive
 					Finalize_project_cmd.enable_sensitive
 					Precompilation_cmd.disable_sensitive
@@ -1047,7 +1040,6 @@ feature -- Events
 				Document_cmd.enable_sensitive
 			else
 				Melt_project_cmd.disable_sensitive
-				Quick_melt_project_cmd.disable_sensitive
 				Precompilation_cmd.disable_sensitive
 				Freeze_project_cmd.disable_sensitive
 				Finalize_project_cmd.disable_sensitive
@@ -1072,7 +1064,6 @@ feature -- Events
 			--save_session
 			for_all (agent unload_project_action)
 			Melt_project_cmd.disable_sensitive
-			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive

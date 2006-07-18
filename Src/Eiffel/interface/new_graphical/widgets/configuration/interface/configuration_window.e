@@ -907,11 +907,9 @@ feature {NONE} -- Implementation
 			-- Regenerate currently displayed data.
 		do
 			if refresh_current /= Void then
-				lock_update
 				refresh_current.call ([])
 				set_focus
 				section_tree.set_focus
-				unlock_update
 			end
 		end
 

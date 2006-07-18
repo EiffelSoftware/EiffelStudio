@@ -82,13 +82,20 @@ feature -- Update
 			wipe_out
 			set_column_count_to (2)
 			enable_last_column_use_all_width
-			if description_field /= Void and then not description_field.is_destroyed then
-				description_field.set_text ("")
-			end
+			clear_description
 
 			sections.wipe_out
 			create expanded_section_store.make (5)
 		end
+
+	clear_description is
+			-- Clear the description in the `description_field'.
+		do
+			if description_field /= Void and then not description_field.is_destroyed then
+				description_field.set_text ("")
+			end
+		end
+
 
 	add_section (a_name: STRING) is
 			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
@@ -105,6 +112,7 @@ feature -- Update
 				l_row := row (row_count)
 				create l_item.make_with_text (a_name)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
+				l_item.select_actions.extend (agent clear_description)
 				create l_font
 				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				l_item.set_font (l_font)
@@ -149,6 +157,7 @@ feature -- Update
 			l_row.set_item (1, l_name_item)
 			l_row.set_item (2, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
+			l_name_item.deselect_actions.extend (agent clear_description)
 			a_property.set_name_item (l_name_item)
 
 			if expanded_section_store.has (current_section_name) then

@@ -1740,11 +1740,6 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
-				-- Quick melt
-			command_menu_item := Quick_melt_project_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
 				-- Freeze
 			command_menu_item := Freeze_project_cmd.new_menu_item
 			add_recyclable (command_menu_item)

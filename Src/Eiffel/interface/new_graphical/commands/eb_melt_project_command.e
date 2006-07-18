@@ -191,7 +191,7 @@ feature {NONE} -- Compilation implementation
 	perform_compilation is
 			-- The real compilation. (This is melting.)
 		do
-			Eiffel_project.melt
+			Eiffel_project.quick_melt
 		end
 
 feature {NONE} -- Attributes

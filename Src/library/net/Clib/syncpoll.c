@@ -78,6 +78,8 @@ indexing
 #include <sys/un.h>
 #endif
 
+#include <string.h>
+
 EIF_INTEGER c_syncpoll(EIF_INTEGER fd)
 	/*x Synchronously poll a socket without modifying buffer
 	    expecting 1 for something, 0 for eof, -1 for error */

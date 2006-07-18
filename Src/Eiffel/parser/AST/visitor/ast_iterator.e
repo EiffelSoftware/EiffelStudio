@@ -479,6 +479,8 @@ feature {NONE} -- Implementation
 		do
 			l_as.feature_names.process (Current)
 			l_as.body.process (Current)
+				-- Feature indexing clause is processed after feature body because
+				-- information such as arguments are stored in body so they must be processed first.
 			safe_process (l_as.indexes)
 		end
 

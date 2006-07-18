@@ -11,6 +11,11 @@ class
 inherit
 	OPTION_PROPERTIES
 
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Actions
 
 	refresh_target (a_target: STRING_32) is
@@ -309,6 +314,8 @@ feature {NONE} -- Implementation
 			if is_il_generation then
 				l_file_prop.enable_readonly
 			end
+			l_file_prop.add_filters (definition_files_filter, definition_files_description)
+			l_file_prop.add_filters (all_files_filter, all_files_description)
 			properties.add_property (l_file_prop)
 
 			create l_dir_prop.make (target_library_root_name)
@@ -425,6 +432,8 @@ feature {NONE} -- Implementation
 			if not current_target.setting_msil_generation then
 				l_key_file_prop.enable_readonly
 			end
+			l_key_file_prop.add_filters (strong_name_key_files_filter, strong_name_key_files_description)
+			l_key_file_prop.add_filters (all_files_filter, all_files_description)
 			properties.add_property (l_key_file_prop)
 
 			create l_bool_prop.make_with_value (target_force_32bits_name, current_target.setting_force_32bits)

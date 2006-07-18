@@ -178,34 +178,42 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Actions
 
+	browser_dialog: EV_DIRECTORY_DIALOG is
+			-- Dialog to browse to a directory.
+		local
+			l_dir: DIRECTORY
+		once
+			create Result
+			create l_dir.make (target.system.directory)
+			if l_dir.exists then
+				Result.set_start_directory (l_dir.name)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	browse is
 			-- Browse for a location.
 		local
-			l_brows_dial: EV_DIRECTORY_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
 			l_dir: DIRECTORY
 		do
-			create l_brows_dial
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
 				create l_dir.make (l_loc.evaluated_directory)
-			else
-				create l_dir.make (target.system.directory)
 			end
-			if l_dir.exists then
-				l_brows_dial.set_start_directory (l_dir.name)
+			if l_dir /= Void and then l_dir.exists then
+				browser_dialog.set_start_directory (l_dir.name)
 			end
 
-			l_brows_dial.ok_actions.extend (agent set_location (l_brows_dial))
-			l_brows_dial.show_modal_to_window (Current)
+			browser_dialog.ok_actions.extend (agent set_location)
+			browser_dialog.show_modal_to_window (Current)
 		end
 
-	set_location (a_dial: EV_DIRECTORY_DIALOG) is
-			-- Set location from `a_dial'.
-		require
-			a_dial_not_void: a_dial /= Void
+	set_location is
+			-- Set location from `browser_dialog'.
 		do
-			location.set_text (a_dial.directory)
+			location.set_text (browser_dialog.directory)
 		end
 
 	on_cancel is

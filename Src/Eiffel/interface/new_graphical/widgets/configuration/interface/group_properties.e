@@ -11,6 +11,11 @@ class
 inherit
 	OPTION_PROPERTIES
 
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Implementation
 
 	add_group_properties (a_group: CONF_GROUP; a_target: CONF_TARGET) is
@@ -129,6 +134,13 @@ feature {NONE} -- Implementation
 				l_file_prop.set_value (a_group.location.original_path)
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
 				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent store_changes))
+				if a_group.is_assembly then
+					l_file_prop.add_filters (all_assemblies_filter, all_assemblies_description)
+					l_file_prop.add_filters (all_files_filter, all_files_description)
+				elseif a_group.is_library then
+					l_file_prop.add_filters (config_files_filter, config_files_description)
+					l_file_prop.add_filters (all_files_filter, all_files_description)
+				end
 				properties.add_property (l_file_prop)
 			end
 
@@ -151,7 +163,6 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent store_changes))
 			properties.add_property (l_dial)
-
 
 				-- prefix
 			create l_text_prop.make (group_prefix_name)

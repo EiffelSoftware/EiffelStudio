@@ -5,7 +5,6 @@
 		<paragraph>Here is what you will see when opening the project settings window for the first time in a session when using the ecf file of the calculator example located at $ISE_EIFFEL|examples|base|calculator:</paragraph>
 		<paragraph>
 			<image>
-				<url>Image of General system properties</url>
 				<alt_text>General system properties</alt_text>
 			</image>
 		</paragraph>

@@ -311,6 +311,18 @@ feature -- Implementation
 
 	default_gtk_window: POINTER is deferred end
 
+
+	window_manager_name: STRING is
+			-- Name of Window Manager currently running.
+		local
+			l_display, l_screen, l_wm_name: POINTER
+		do
+			l_display := {EV_GTK_EXTERNALS}.gdk_display_get_default
+			l_screen := {EV_GTK_EXTERNALS}.gdk_display_get_default_screen (l_display)
+			l_wm_name := {EV_GTK_EXTERNALS}.gdk_x11_screen_get_window_manager_name (l_screen)
+			create Result.make_from_c (l_wm_name)
+		end
+
 feature {NONE} -- Externals
 
 	initialize_combo_box_style is

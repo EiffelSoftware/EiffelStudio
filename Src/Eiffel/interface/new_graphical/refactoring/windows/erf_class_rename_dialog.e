@@ -28,13 +28,6 @@ inherit
 			default_create, copy
 		end
 
-	INTERFACE_NAMES
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -47,7 +40,7 @@ feature {NONE} -- Initialization
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
 			Precursor
-			set_title (t_refactoring_class_rename)
+			set_title (interface_names.t_refactoring_class_rename)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create vb

@@ -140,6 +140,10 @@
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="Screen y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.starting_dialog_width" DESCRIPTION="Width of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.starting_dialog_height" DESCRIPTION="Height of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.open_project_dialog_width" DESCRIPTION="Width of the open project dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.open_project_dialog_height" DESCRIPTION="Height of the open project dialog." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 
 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -172,7 +176,7 @@
 	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_tab__visible;New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Save_all_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden;</LIST></PREF>
+	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_tab__visible;New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Save_all_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>
 

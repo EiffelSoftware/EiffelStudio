@@ -73,7 +73,7 @@ feature -- Status report
 	socket_ok: BOOLEAN is
 			-- No error
 		do
-			Result :=	(error_number = 0)
+			Result := (error_number = 0)
 		end;
 
 	socket_family_not_supported: BOOLEAN is
@@ -249,7 +249,7 @@ feature {NONE} -- Externals: socket option levels
 		end;
 
 	level_iproto_ip: INTEGER is
-			-- IPPROTO_IP level of options	
+			-- IPPROTO_IP level of options
 		external
 			"C"
 		end;
@@ -641,9 +641,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class SOCKET_RESOURCES
 

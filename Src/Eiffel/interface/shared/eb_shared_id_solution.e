@@ -45,7 +45,7 @@ feature -- Access (Target)
 		do
 			last_target_uuid := Void
 			strings := a_id.split (name_sep)
-			if strings.count > 1 then
+			if strings.count >= 1 then
 				uuid := decode (strings.i_th (1))
 				last_target_uuid := uuid
 				if universe.target.system.uuid.out.is_equal (uuid) then

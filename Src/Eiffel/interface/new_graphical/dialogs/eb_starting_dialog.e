@@ -141,7 +141,9 @@ feature {NONE} -- Initialization
 			create l_frame.make_with_text (interface_names.l_use_wizard)
 			l_frame.extend (new_project_vb)
 			main_container.extend (l_frame)
-			main_container.disable_item_expand (l_frame)
+			if show_open_project_frame then
+				main_container.disable_item_expand (l_frame)
+			end
 
 				-- General layout
 			if show_open_project_frame then
@@ -381,7 +383,9 @@ feature {NONE} -- Implementation
 			load_available_wizards
 			fill_list_with_available_wizards
 
-			wizards_list.set_minimum_height ((wizards_list.row_count.min (10)) * wizards_list.row_height)
+				-- Add +1 to number of rows because on unix it has the side effect to show/hide
+				-- the scrollbards of the grid eventhough it is not necessary.
+			wizards_list.set_minimum_height (((wizards_list.row_count + 1).min (10)) * wizards_list.row_height)
 		ensure
 			wizards_list_created: wizards_list /= Void
 		end

@@ -39,7 +39,6 @@ feature -- Access (Target)
 			a_id_not_void: a_id /= Void
 		local
 			uuid: STRING
-			group_name: STRING
 			l_target: CONF_TARGET
 			l_uuid: UUID
 		do
@@ -83,17 +82,17 @@ feature -- Access (Group)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			uuid: STRING
 			group_name: STRING
 			l_target: CONF_TARGET
-			l_uuid: UUID
 		do
 			last_group_name := Void
 			l_target := target_of_id (a_id)
-			if l_target /= Void and then strings.count >= 2 then
+			if strings.count >= 2 then
 				group_name := decode (strings.i_th (2))
 				last_group_name := group_name
-				Result := l_target.groups.item (group_name)
+				if l_target /= Void then
+					Result := l_target.groups.item (group_name)
+				end
 			end
 		end
 
@@ -126,11 +125,14 @@ feature -- Access (Folder)
 		do
 			last_folder_path := Void
 			l_cluster ?= group_of_id (a_id)
-			if l_cluster /= Void and then strings.count >= 3 then
+			if strings.count >= 3 then
 				l_path := decode (strings.i_th (3))
-				create l_dir.make (l_cluster.location.build_path (l_path, ""))
-				if l_dir.exists then
-					create Result.make (l_cluster, l_path)
+				last_folder_path := l_path
+				if l_cluster /= Void then
+					create l_dir.make (l_cluster.location.build_path (l_path, ""))
+					if l_dir.exists then
+						create Result.make (l_cluster, l_path)
+					end
 				end
 			end
 		end
@@ -163,10 +165,12 @@ feature -- Access (Class)
 		do
 			last_class_name := Void
 			l_group ?= group_of_id (a_id)
-			if l_group /= Void and then l_group.classes /= Void and then strings.count >= 3 then
+			if strings.count >= 3 then
 				class_name := decode (strings.i_th (3))
 				last_class_name := class_name
-				Result := l_group.classes.item (class_name)
+				if l_group /= Void and then l_group.classes /= Void then
+					Result := l_group.classes.item (class_name)
+				end
 			end
 		end
 
@@ -183,12 +187,14 @@ feature -- Access (Feature)
 		do
 			last_feature_name := Void
 			l_class ?= class_of_id (a_id)
-			if l_class /= Void and then strings.count >= 4 then
-				l_class_c := l_class.compiled_representation
-				if l_class_c /= Void then
-					l_feature_name := decode (strings.i_th (4))
-					last_feature_name := l_feature_name
-					Result := l_class_c.feature_with_name (l_feature_name)
+			if strings.count >= 4 then
+				l_feature_name := decode (strings.i_th (4))
+				last_feature_name := l_feature_name
+				if l_class /= Void then
+					l_class_c := l_class.compiled_representation
+					if l_class_c /= Void then
+						Result := l_class_c.feature_with_name (l_feature_name)
+					end
 				end
 			end
 		end

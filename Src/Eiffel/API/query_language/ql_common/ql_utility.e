@@ -40,6 +40,7 @@ feature -- Access
 			create {QL_REAL_FEATURE}Result.make_with_parent (a_feature, l_ql_class)
 		ensure
 			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
 		end
 
 	query_class_item_from_class_c (a_class_c: CLASS_C): QL_CLASS is
@@ -50,6 +51,7 @@ feature -- Access
 			Result := query_class_item_from_class_i (a_class_c.lace_class)
 		ensure
 			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
 		end
 
 	query_class_item_from_class_i (a_class_i: CLASS_I): QL_CLASS is
@@ -60,6 +62,7 @@ feature -- Access
 			Result := query_class_item_from_conf_class (a_class_i.config_class)
 		ensure
 			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
 		end
 
 	query_class_item_from_conf_class (a_conf_class: CONF_CLASS): QL_CLASS is
@@ -78,6 +81,7 @@ feature -- Access
 			create Result.make_with_parent (a_conf_class, l_path.last)
 		ensure
 			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
 		end
 
 	query_group_item_from_conf_group (a_group: CONF_GROUP): QL_GROUP is
@@ -93,7 +97,48 @@ feature -- Access
 			Result ?= l_list.last
 		ensure
 			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
 		end
+
+	query_target_item_from_conf_target (a_target: CONF_TARGET): QL_TARGET is
+			-- Given a CONF_TARGET object, return a QL_TARGET object representing it.
+		require
+			a_target_attached: a_target /= Void
+		local
+			l_path: ARRAYED_LIST [QL_ITEM]
+			l_target: CONF_TARGET
+			l_is_application_target_reached: BOOLEAN
+		do
+			create l_path.make (10)
+			from
+				l_target := a_target
+			until
+				l_is_application_target_reached
+			loop
+				l_path.put_front (create {QL_TARGET}.make (l_target))
+				if l_target.system = l_target.application_target.system then
+					l_target := l_target.application_target
+					l_is_application_target_reached := True
+				else
+					check
+						library_target: l_target.system.library_target /= Void
+					end
+					l_target := l_target.system.library_target
+				end
+				if not l_is_application_target_reached then
+					check l_target.lowest_used_in_library /= Void end
+					l_path.put_front (create {QL_GROUP}.make (l_target.lowest_used_in_library))
+					l_target := l_target.lowest_used_in_library.target
+				end
+			end
+			set_parents (l_path)
+			Result ?= l_path.last
+		ensure
+			result_attached: Result /= Void
+			result_valid: Result.is_valid_domain_item
+		end
+
+feature -- Type
 
 	actual_type_from_type_a (a_class: CLASS_C; a_type: TYPE_A): CLASS_C is
 			-- Actual type from `a_type' in context of `a_class'
@@ -174,7 +219,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	set_parents (a_list: LINKED_LIST [QL_ITEM]) is
+	set_parents (a_list: LIST [QL_ITEM]) is
 			-- Set parent of every item in `a_list'.
 		require
 			a_list_attached: a_list /= Void

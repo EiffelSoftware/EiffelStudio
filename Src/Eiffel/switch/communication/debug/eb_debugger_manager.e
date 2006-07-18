@@ -1342,7 +1342,6 @@ feature {NONE} -- Implementation
 
 			toolbarable_commands.extend (system_cmd)
 			toolbarable_commands.extend (Melt_project_cmd)
-			toolbarable_commands.extend (Quick_melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
 			run_finalized_cmd.enable_sensitive

@@ -107,7 +107,7 @@ feature -- Settings
 			-- Compile newly created project.
 		do
 			ev_application.do_once_on_idle (
-				agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
+				agent (window_manager.last_focused_development_window.melt_project_cmd).execute)
 		end
 
 	open_project (in_new_studio: BOOLEAN) is
@@ -130,7 +130,7 @@ feature -- Settings
 		do
 			if not in_new_studio then
 				ev_application.do_once_on_idle (
-					agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
+					agent (window_manager.last_focused_development_window.melt_project_cmd).execute)
 			else
 				execute (estudio_cmd_line + " -melt")
 			end

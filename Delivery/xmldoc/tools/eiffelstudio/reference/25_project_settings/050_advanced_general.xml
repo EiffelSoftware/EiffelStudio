@@ -50,21 +50,21 @@
 			<item>Use optimized precompile: use an optimized version of a precompile</item>
 			<item>Use cluster name as namespace: See  
 				<link>
-					<url>50_advanced_general.xml</url>
+					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
 			<item>Use recursive cluster name as namespace: See  
 				<link>
-					<url>50_advanced_general.xml</url>
+					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
 			<item>.NET naming convention: See  
 				<link>
-					<url>50_advanced_general.xml</url>
+					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>

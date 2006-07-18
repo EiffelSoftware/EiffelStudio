@@ -1819,6 +1819,10 @@ feature {NONE} -- Implementation
 				check
 					l_feat /= Void
 				end
+				if l_as.is_frozen then
+					text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+					text_formatter_decorator.put_space
+				end
 				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else

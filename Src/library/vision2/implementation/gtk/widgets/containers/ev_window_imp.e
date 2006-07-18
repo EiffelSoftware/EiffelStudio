@@ -242,6 +242,7 @@ feature -- Status setting
 				a_x_pos := x_position
 				a_y_pos := y_position
 				disable_modal
+				disable_capture
 				set_blocking_window (Void)
 				Precursor {EV_CONTAINER_IMP}
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.

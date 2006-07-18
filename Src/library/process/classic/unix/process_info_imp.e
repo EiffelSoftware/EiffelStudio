@@ -28,7 +28,6 @@ feature -- Access
 			l_succ: BOOLEAN
 			l_count: INTEGER
 			l_managed_ptr: MANAGED_POINTER
-			l_managed_ptr2: MANAGED_POINTER
 			l_pos: INTEGER
 			l_whole_len: INTEGER
 			l_ptr_size: INTEGER

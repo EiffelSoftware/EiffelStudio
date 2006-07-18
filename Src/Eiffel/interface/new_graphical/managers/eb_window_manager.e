@@ -576,6 +576,8 @@ feature -- Actions on all windows
 			project_cancel_cmd.disable_sensitive
 			if process_manager.is_c_compilation_running then
 				on_c_compilation_start
+			else
+				for_all (agent for_all (agent c_compilation_stop_action))
 			end
 			for_all (agent synchronize_action)
 		end

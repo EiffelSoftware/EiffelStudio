@@ -3017,9 +3017,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			an_index_valid_when_rows_contained: row_count > 0 implies an_index >= 1 and an_index <= row_count
 			an_index_valid_when_no_rows_contained: row_count = 0 implies an_index = 1
 		local
-			i, j, k: INTEGER
+			current_row_offset, j, k: INTEGER
 			current_item: EV_GRID_ROW_I
-			old_i: INTEGER
 			index: INTEGER
 			visible_count: INTEGER
 			row_index: INTEGER
@@ -3054,7 +3053,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					index := an_index
 				end
 			end
---			index := (index - 1).max (1)
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
 					-- or there is tree functionality enabled. Otherwise, we do not need to
@@ -3063,10 +3061,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					create row_offsets
 					create row_indexes_to_visible_indexes
 					create visible_indexes_to_row_indexes
-					row_offsets.extend (0)
-					rows.start
 				else
-					i := row_offsets @ (index)
+					current_row_offset := row_offsets @ (index)
 					rows.go_i_th (index)
 					if index > 1 then
 						if index < row_count then
@@ -3087,11 +3083,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						visible_count := 0
 					end
 				end
+					-- Ensure we enlarge our data structures to accomodate the totla number of rows.
+					-- We do not reduce the size of these lists to avoid the performance overhead.
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
 					row_indexes_to_visible_indexes.resize (rows.count + 1)
 					visible_indexes_to_row_indexes.resize (rows.count + 1)
 				end
+
 				from
 					row_index := index
 
@@ -3106,46 +3105,49 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					l_row_offsets := row_offsets
 					l_is_row_height_fixed := is_row_height_fixed
 					l_row_height := row_height
+					just_looped := True
+
 				until
 					row_index > l_row_count
 				loop
 					current_item := l_rows.i_th (row_index)
-
-					if not just_looped then
-						old_i := i
-						if current_item /= Void and not l_is_row_height_fixed then
-							i := i + current_item.height
-						else
-								-- Use the default height here.
-							i := i + l_row_height
-						end
-					else
-						just_looped := False
-					end
 					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
-							j := row_index + 1
-							k := j + current_item.subrow_count_recursive
+							j := row_index
+							k := j + current_item.subrow_count_recursive + 1
 						until
 							j = k
 						loop
-							row_offsets.put_i_th (old_i, j)
+							l_row_offsets.put_i_th (current_row_offset, j)
 							j := j + 1
 						end
 						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
-						row_index := (k - 1)
-						just_looped := True
+						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						row_index := k
+
 					else
-						l_row_offsets.put_i_th (i, row_index + 1)
+						l_row_offsets.put_i_th (current_row_offset, row_index)
 						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
 						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						row_index := row_index + 1
-						visible_count := visible_count + 1
+					end
+					visible_count := visible_count + 1
+
+					if current_item /= Void and not l_is_row_height_fixed then
+						current_row_offset := current_row_offset + current_item.height
+					else
+							-- Use the default height here.
+						current_row_offset := current_row_offset + l_row_height
 					end
 				end
+					-- A final position is always stored in `row_offsets' which may be
+					-- queried to determine the total height of all rows.
+				l_row_offsets.put_i_th (current_row_offset, row_index)
 			else
 				row_offsets := Void
 			end
+
+
 				-- Now move the virtual position so that it is restricted to the maximum
 				-- row position. This is used so that when removing rows,  `virtual_x_position' remains valid.
 			restrict_virtual_y_position_to_maximum
@@ -4446,8 +4448,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				-- We set the computation required to the final column and row as this
 				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
 					-- Update horizontal scroll bar size and position.
-				set_horizontal_computation_required (columns.count + 1)
-				set_vertical_computation_required (row_count + 1)
+			set_horizontal_computation_required (columns.count + 1)
+			set_vertical_computation_required (row_count + 1)
 				-- Flag that we have triggered a recompute/redraw as the result of
 				-- the viewport resizing. In this situation, extra procssing is performed
 				-- to ensure that the scroll bars update correctly.

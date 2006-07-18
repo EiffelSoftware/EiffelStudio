@@ -36,6 +36,8 @@ feature -- Access
 			initialized: preferences_initialized
 		once
 			Result := preferences_cell.item
+		ensure
+			preferences_not_void: Result /= Void
 		end
 
 feature -- Query
@@ -52,6 +54,8 @@ feature {NONE} -- Implementation
 			-- Once cell.
 		once
 			create Result
+		ensure
+			preferences_cell_not_void: Result /= Void
 		end
 
 invariant

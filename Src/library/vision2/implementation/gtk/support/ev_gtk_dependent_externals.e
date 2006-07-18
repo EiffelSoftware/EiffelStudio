@@ -1074,6 +1074,13 @@ feature -- Externals
 			"C signature (): GdkDisplay* use <gtk/gtk.h>"
 		end
 
+	frozen gdk_display_get_default_screen (a_display: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"return gdk_display_get_default_screen ((GdkDisplay*) $a_display);"
+		end
+
 	frozen gdk_display_supports_cursor_alpha (a_display: POINTER): BOOLEAN is
 		external
 			"C signature (GdkDisplay*): gboolean use <gtk/gtk.h>"

@@ -311,7 +311,9 @@ feature {NONE} -- Implementation
 	refresh is
 			-- Refresh the displayed data.
 		do
-			properties.set_focus
+			if properties.is_displayed then
+				properties.set_focus
+			end
 			if stone /= Void and then stone.is_valid then
 				add_stone (stone)
 			else

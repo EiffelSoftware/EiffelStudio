@@ -639,6 +639,8 @@ feature {NONE} -- Section tree selection agents
 			append_small_margin (vb)
 			append_property_description (vb)
 
+			properties.recompute_column_width
+
 			unlock_update
 			is_refreshing := False
 		ensure

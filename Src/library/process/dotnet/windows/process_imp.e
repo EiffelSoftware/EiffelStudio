@@ -15,8 +15,6 @@ inherit
 			{NONE}all
 		end
 
-	WEL_TOOLHELP
-
 create
 	make,
 	make_with_command_line
@@ -457,6 +455,10 @@ feature{NONE} -- Implementation
 			-- Process start information
 		require
 			process_not_running: not is_running
+		local
+			l_environ_tbl: like environment_variable_table
+			l_key, l_value: SYSTEM_STRING
+			l_environ_dic: SYSTEM_DLL_STRING_DICTIONARY
 		do
 			create Result.make_from_file_name_and_arguments (executable, argument_line)
 			if working_directory /= Void then
@@ -472,14 +474,33 @@ feature{NONE} -- Implementation
 			else
 				Result.set_create_no_window (True)
 			end
-			if not is_io_redirected then
-					-- No IO redirection
+			l_environ_tbl := environment_variable_table
+			if not is_io_redirected and then (l_environ_tbl = Void or else l_environ_tbl.is_empty) then
+					-- No IO redirection and no environment variable.
 				Result.set_use_shell_execute (True)
 			else
 				Result.set_use_shell_execute (False)
 				Result.set_redirect_standard_input (input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 				Result.set_redirect_standard_output (output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 				Result.set_redirect_standard_error (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
+			end
+			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty then
+				from
+					l_environ_dic := Result.environment_variables
+					l_environ_tbl.start
+				until
+					l_environ_tbl.after
+				loop
+					if l_environ_tbl.key_for_iteration /= Void and then l_environ_tbl.item_for_iteration /= Void then
+						l_key := l_environ_tbl.key_for_iteration
+						l_value := l_environ_tbl.item_for_iteration
+						if l_environ_dic.contains_key (l_key) then
+							l_environ_dic.remove (l_key)
+						end
+						l_environ_dic.add (l_key, l_value)
+					end
+					l_environ_tbl.forth
+				end
 			end
 		end
 
@@ -648,7 +669,7 @@ feature{NONE} -- Implementation
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER] is
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		local
-			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
+			p_tbl: like process_id_pair_list
 		do
 			create {LINKED_LIST [INTEGER]}Result.make
 			p_tbl := process_id_pair_list
@@ -659,13 +680,89 @@ feature{NONE} -- Implementation
 					p_tbl.after
 				loop
 					if p_tbl.item.parent_id = parent_id then
-						Result.extend (p_tbl.item.id)
+						Result.extend (p_tbl.item.pid)
 					end
 					p_tbl.forth
 				end
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	process_id_pair_list: LINKED_LIST [TUPLE [parent_id: INTEGER; pid: INTEGER]] is
+			--
+		local
+			l_cat: SYSTEM_DLL_PERFORMANCE_COUNTER_CATEGORY
+			l_process_list: NATIVE_ARRAY [SYSTEM_STRING]
+			i, l_upper: INTEGER
+			l_prc_name: STRING
+			l_prc_name_id_tbl: HASH_TABLE [INTEGER, STRING]
+			l_performance_counter: SYSTEM_DLL_PERFORMANCE_COUNTER
+		do
+				-- Get process snapshot and store process instance name and its process id in `l_prc_name_id_tbl'.
+			create l_cat.make_from_category_name (once "Process")
+			l_process_list := l_cat.get_instance_names
+			create l_prc_name_id_tbl.make (l_process_list.count)
+			from
+				i := l_process_list.lower
+				l_upper := l_process_list.upper
+			until
+				i > l_upper
+			loop
+				create l_performance_counter.make_with_category_name (once "Process", once "ID Process", l_process_list.item (i), True)
+				l_prc_name_id_tbl.force (l_performance_counter.raw_value.as_integer_32, l_process_list.item (i))
+				i := i + 1
+			end
+				-- Find out parent process id for each process in `l_prc_name_id_tbl'.
+			create Result.make
+			from
+				l_prc_name_id_tbl.start
+			until
+				l_prc_name_id_tbl.after
+			loop
+				Result.extend ([parent_process_id (l_prc_name_id_tbl.key_for_iteration), l_prc_name_id_tbl.item_for_iteration])
+				l_prc_name_id_tbl.forth
+			end
+		end
+
+	parent_process_id (a_process_instance_name: SYSTEM_STRING): INTEGER is
+			-- Parent process id of process named `a_process_instance_name'
+		require
+			a_process_instance_name_attached: a_process_instance_name /= Void
+		local
+			l_performance_counter: SYSTEM_DLL_PERFORMANCE_COUNTER
+		do
+			create l_performance_counter.make_from_category_name_and_counter_name_and_instance_name (once "Process", once "Creating Process ID", a_process_instance_name)
+			Result := l_performance_counter.raw_value.as_integer_32
+		end
+
+	process_instance_name (a_pid: INTEGER; a_process_list: NATIVE_ARRAY [SYSTEM_STRING]): STRING is
+			-- Process instance name of process id `a_pid' in `a_process_list'		
+		require
+			a_process_list_attached: a_process_list /= Void
+		local
+			l_performance_counter: SYSTEM_DLL_PERFORMANCE_COUNTER
+			l_upper: INTEGER
+			i: INTEGER
+			done: BOOLEAN
+		do
+			if a_process_list.count > 0 then
+				from
+					i := a_process_list.lower
+					l_upper := a_process_list.upper
+				until
+					i > l_upper or done
+				loop
+					create l_performance_counter.make_with_category_name (once "Process", once "ID Process", a_process_list.item (i), True)
+					done := a_pid = l_performance_counter.raw_value.as_integer_32
+					if not done then
+						i := i + 1
+					end
+				end
+				if done then
+					Result := a_process_list.item (i)
+				end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -721,5 +818,11 @@ feature{NONE} -- Implementation
 
 	internal_id: INTEGER
 			-- Internal process id
+
+	environment_table_as_pointer: POINTER is
+			-- {POINTER} representation of `environment_variable_table'
+			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
+		do
+		end
 
 end

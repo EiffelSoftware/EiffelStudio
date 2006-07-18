@@ -840,6 +840,12 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
+	setting_automatic_backup: BOOLEAN is
+			-- Value for the automatic_backup setting.
+		do
+			Result := setting_boolean (s_automatic_backup)
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name (a_name: like name) is

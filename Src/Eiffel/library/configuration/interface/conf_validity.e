@@ -195,6 +195,7 @@ feature {NONE} -- Implementation
 			create Result.make (40)
 			Result.force (s_address_expression)
 			Result.force (s_array_optimization)
+			Result.force (s_automatic_backup)
 			Result.force (s_check_generic_creation_constraint)
 			Result.force (s_check_vape)
 			Result.force (s_console_application)

@@ -237,7 +237,7 @@ feature -- Action
 				file.close
 
 					-- Save the source class in a Backup directory
-				if save_copy and Workbench.automatic_backup then
+				if save_copy and system.automatic_backup then
 						-- check if the directory for the system has been created
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
 

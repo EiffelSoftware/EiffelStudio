@@ -14,6 +14,9 @@
 				<bold>s.to_c</bold>' to `a' and passing ` 
 				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace. 
 			</item>
+			<item>
+				Automatic backup: generate a backup of the class and configuration files during recompilation?
+			</item>
 			<item>Check vape: Enforce 
 				<code>
 					<compiler_error>VAPE</compiler_error>

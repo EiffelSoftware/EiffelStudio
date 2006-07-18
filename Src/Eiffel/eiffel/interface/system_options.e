@@ -41,6 +41,9 @@ feature -- Access
 	line_generation: BOOLEAN
 			-- Does the system generate the line number in the C-code?
 
+	automatic_backup: BOOLEAN
+			-- Automatic backup generation?
+
 	has_multithreaded: BOOLEAN is
 			-- Is the system a multithreaded one, only true for classic system?
 		do
@@ -356,6 +359,13 @@ feature -- Update
 			address_expression_allowed := b
 		ensure
 			address_expression_allowed_set: address_expression_allowed = b
+		end
+
+	set_automatic_backup (b: BOOLEAN) is
+		do
+			automatic_backup := b
+		ensure
+			automatic_backup_set: automatic_backup = b
 		end
 
 	set_inlining_size (i: INTEGER) is

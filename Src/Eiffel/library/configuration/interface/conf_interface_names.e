@@ -89,6 +89,8 @@ feature {NONE} -- Target names and descriptions
 
 	target_address_expression_name: STRING is "Address expression"
 	target_address_expression_description: STRING is "Are simplified address expressions enabled?"
+	target_automatic_backup_name: STRING is "Automatic backup"
+	target_automatic_backup_description: STRING is "Automatically generate a backup during recompilation?"
 	target_check_vape_name: STRING is "Check vape"
 	target_check_vape_description: STRING is "Enforce VAPE  validity constraint?"
 	target_console_application_name: STRING is "Console application"

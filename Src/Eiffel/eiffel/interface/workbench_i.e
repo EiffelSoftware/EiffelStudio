@@ -301,7 +301,7 @@ feature -- Commands
 				not degree_6_done and then
 				(retried = 0 or else (retried = 1 and then missing_class_error))
 			then
-				if automatic_backup then
+				if system.automatic_backup then
 					backup_counter := backup_counter + 1
 					create_backup_directory
 				end
@@ -365,7 +365,7 @@ feature -- Commands
 				--| Store the System info even after an error
 				--|	(the next compilation will be stored in a different
 				--| directory)
-			if automatic_backup then
+			if system.automatic_backup then
 				save_backup_info
 			end
 
@@ -512,12 +512,6 @@ feature -- Commands
 		end
 
 feature -- Automatic backup
-
-	automatic_backup: BOOLEAN is
-			-- Is the automatic backup on?
-		once
-			Result := Configure_resources.get_boolean (r_AutomaticBackup, True)
-		end
 
 	create_backup_directory is
 			-- Create the subdirectory for backup `backup_counter'

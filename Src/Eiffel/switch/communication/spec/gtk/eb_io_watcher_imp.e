@@ -137,7 +137,7 @@ feature {NONE} -- Externals
 			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end
 
-	file_binary_dopen (fd, how: INTEGER_32): POINTER is
+	file_binary_dopen (fd, how: INTEGER): POINTER is
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
 		external
@@ -152,7 +152,7 @@ feature {NONE} -- Externals
 			"C (FILE *) | %"eif_file.h%""
 		end
 
-	file_fd (file: POINTER): INTEGER_32 is
+	file_fd (file: POINTER): INTEGER is
 			-- Operating system's file descriptor
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""

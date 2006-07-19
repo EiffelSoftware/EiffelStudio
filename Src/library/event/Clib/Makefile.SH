@@ -24,7 +24,7 @@ MTCFLAGS = $optimize $mtccflags $large -g `../../vision2/implementation/gtk/Clib
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
-MAKE = make
+MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 RM = $rm -f
@@ -46,7 +46,7 @@ ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	$(MAKE) clobber
 
 MTio_watcher.o: io_watcher.c
 	$(CC) -c $(MTCFLAGS) $? -o $@

@@ -1437,7 +1437,7 @@ feature -- Equality
 	is_group_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
-			Result := is_group_equal_check (libraries, other.libraries) and then
+			Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
 						is_group_equal_check (assemblies, other.assemblies) and then
 						is_group_equal_check (clusters, other.clusters) and then
 						is_group_equal_check (overrides, other.overrides) and then

@@ -188,6 +188,11 @@ feature {NONE}-- Initialization
 			show_actions.extend (agent section_tree.set_focus)
 		end
 
+feature -- Status
+
+	is_canceled: BOOLEAN
+			-- Has the dialog been canceled?
+
 feature -- Command
 
 	destroy is
@@ -234,6 +239,7 @@ feature {NONE} -- Agents
 	on_cancel is
 			-- Quit without saving.
 		do
+			is_canceled := True
 			hide
 		end
 

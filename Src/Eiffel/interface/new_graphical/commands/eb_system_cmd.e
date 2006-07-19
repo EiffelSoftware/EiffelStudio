@@ -106,13 +106,12 @@ feature -- Basic operations
 							end
 
 								-- only create a new configuration window if the data changed
-							if configuration_window /= Void and then configuration_window.conf_system.file_date = l_load.last_system.file_date then
+							if configuration_window /= Void and then not configuration_window.is_canceled and configuration_window.conf_system.file_date = l_load.last_system.file_date then
 								configuration_window.set_debugs (l_sorted_debugs)
 							else
 								l_load.last_system.targets.start
 								l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
 								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
-
 							end
 
 							configuration_window.show

@@ -439,6 +439,16 @@ feature {NONE} -- Implementation command
 			l_content ?= a_item.data
 			check not_void: l_content /= Void end
 			full_title.set_text (l_content.long_title)
+			if  l_content.description = Void then
+				description.set_text ("No description available.")
+			else
+				description.set_text (l_content.description)
+			end
+			if l_content.detail = Void then
+				detail.set_text ("No detail available.")
+			else
+				detail.set_text (l_content.detail)
+			end
 		end
 
 	selected_item_index: INTEGER is

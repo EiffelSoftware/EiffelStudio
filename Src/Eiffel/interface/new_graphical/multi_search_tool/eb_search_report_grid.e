@@ -444,12 +444,28 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			-- Put report summary
 		require
 			performer_launched: multi_search_performer.is_search_launched
+		local
+			l_text_found, l_class_found: INTEGER
+			l_found_string: STRING
+			l_class_string: STRING
 		do
+			l_text_found := multi_search_performer.text_found_count
+			l_class_found := multi_search_performer.class_count
+			if l_text_found > 1 or l_text_found = 0 then
+				l_found_string := " founds in "
+			else
+				l_found_string := " found in "
+			end
+			if l_class_found > 1 or l_class_found = 0 then
+				l_class_string := " classes"
+			else
+				l_class_string := " class"
+			end
 			report_summary_string := "   " +
-										multi_search_performer.text_found_count.out +
-										" found(s) in " +
-										multi_search_performer.class_count.out +
-										" class(es)"
+										l_text_found.out +
+										l_found_string +
+										l_class_found.out +
+										l_class_string
 			search_tool.report_tool.set_summary (report_summary_string)
 		end
 

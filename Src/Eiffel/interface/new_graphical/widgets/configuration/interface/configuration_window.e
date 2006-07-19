@@ -144,33 +144,27 @@ feature {NONE}-- Initialization
 			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
 			enable_user_resize
 
-			create hb
-			extend (hb)
-			append_margin (hb)
 			create vb
-			hb.extend (vb)
-			hb.disable_item_expand (vb)
-			append_margin (vb)
+			extend (vb)
+			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
+
+			create hb
+			vb.extend (hb)
+			hb.set_padding (default_padding_size)
+			hb.set_border_width (default_border_size)
 
 					-- section tree
 			initialize_section_tree
-			vb.extend (section_tree)
-			append_margin (vb)
-
-			append_margin (hb)
-			create vb
-			hb.extend (vb)
-			append_margin (vb)
+			hb.extend (section_tree)
+			hb.disable_item_expand (section_tree)
 
 				-- configuration space
 			create configuration_space
-			vb.extend (configuration_space)
+			hb.extend (configuration_space)
 
 				-- property grid
 			show_properties_system
-
-			append_margin (vb)
-			append_margin (hb)
 
 			create hb
 			vb.extend (hb)
@@ -188,8 +182,6 @@ feature {NONE}-- Initialization
 			l_btn.set_minimum_width (default_button_width)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-
-			append_margin (vb)
 
 			key_press_actions.extend (agent on_key)
 			close_request_actions.extend (agent on_cancel)
@@ -224,9 +216,6 @@ feature {NONE} -- Agents
 				if not is_refreshing then
 					refresh_current.call ([])
 				end
-				if target_selection.count = 1 then
-					target_selection.disable_sensitive
-				end
 			end
 		ensure
 			current_target_set: current_target /= Void
@@ -241,7 +230,6 @@ feature {NONE} -- Agents
 				on_cancel
 			end
 		end
-
 
 	on_cancel is
 			-- Quit without saving.

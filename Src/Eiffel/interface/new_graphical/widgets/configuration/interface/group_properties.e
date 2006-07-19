@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 					-- file rules
 				create l_file_rule_prop.make (cluster_file_rule_name)
 				l_file_rule_prop.set_description (cluster_file_rule_description)
-				l_file_rule_prop.set_refresh_action (agent l_cluster.file_rule)
+				l_file_rule_prop.set_refresh_action (agent l_cluster.internal_file_rule)
 				l_file_rule_prop.refresh
 				l_file_rule_prop.change_value_actions.extend (agent l_cluster.set_file_rule)
 				l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule_cluster (?, l_file_rule_prop, a_group))

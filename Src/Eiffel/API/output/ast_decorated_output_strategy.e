@@ -309,6 +309,7 @@ feature {NONE} -- Implementation
 			l_rout_ids: ID_SET
 			l_type: TYPE_A
 			l_static_type: TYPE_A
+			l_actual_argument_typs: like expr_types
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -353,8 +354,21 @@ feature {NONE} -- Implementation
 				if l_feat.is_procedure then
 					reset_last_class_and_type
 				else
-						-- Type of static call can not be a like argument type.
-					l_type := l_feat.type.actual_type
+					l_type := l_feat.type
+							-- If it is an like argument type, we take the actual type from the arguments.
+					if l_type.is_like_argument then
+						check
+							parameters_not_void: l_as.parameters /= Void
+						end
+						l_actual_argument_typs := expr_types (l_as.parameters)
+						if l_actual_argument_typs /= Void then
+							l_type := l_type.actual_argument_type (l_actual_argument_typs)
+						end
+						if l_type = Void then
+							l_type := l_feat.type
+						end
+					end
+					l_type := l_type.actual_type
 					if l_type.is_loose then
 						last_type := l_type.instantiation_in (l_static_type, last_class.class_id)
 					else

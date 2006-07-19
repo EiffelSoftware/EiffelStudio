@@ -93,23 +93,27 @@ feature {NONE}-- Initialization
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
 			create internal_font
-			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
-			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
-			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape ({EV_FONT_CONSTANTS}.Shape_regular)
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_tools_label.set_font (internal_font)
 			internal_tools_label.set_text ("Tools")
 			create internal_font
-			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
-			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
-			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape ({EV_FONT_CONSTANTS}.Shape_regular)
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_files_label.set_font (internal_font)
 			internal_files_label.set_text ("Files")
 			internal_info_box.disable_item_expand (full_title)
+			internal_info_box.disable_item_expand (description)
+			internal_info_box.disable_item_expand (detail)
 			full_title.align_text_left
+			description.align_text_left
+			detail.align_text_left
 			set_title ("Display window")
 
 			set_all_attributes_using_constants

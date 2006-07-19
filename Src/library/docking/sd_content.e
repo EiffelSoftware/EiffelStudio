@@ -94,6 +94,12 @@ feature -- Access
 			result_valid: Result = internal_pixmap
 		end
 
+	description: STRING
+			-- When show zone navigation dialog, we use this description if exist.
+
+	detail: STRING
+			-- When show zone navigation dialog, we use this detail if exist.
+
 	pixel_buffer: like internal_pixel_buffer is
 			-- Client programmer's widget's pixel buffer
 		do
@@ -199,6 +205,26 @@ feature -- Set
 			internal_state.change_pixmap (a_pixmap, Current)
 		ensure
 			a_pixmap_set: a_pixmap = internal_pixmap
+		end
+
+	set_description (a_description: like description) is
+			-- Set `a_description' to `description'
+		require
+			a_description_not_void: a_description /= Void
+		do
+			description := a_description
+		ensure
+			a_description_set: description = a_description
+		end
+
+	set_detail (a_detail: like detail) is
+			-- Set `a_detail' to `detail'
+		require
+			a_detail_not_void: a_detail /= Void
+		do
+			detail := a_detail
+		ensure
+			a_detail_set: detail = a_detail
 		end
 
 	set_pixel_buffer (a_buffer: like internal_pixel_buffer) is

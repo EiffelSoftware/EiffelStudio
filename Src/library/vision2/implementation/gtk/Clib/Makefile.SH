@@ -24,7 +24,7 @@ SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LDFLAGS = $ldflags
 LN = $ln
-MAKE = make
+MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 RM = $rm -f
@@ -49,7 +49,7 @@ ALL_OBJECTS = $(OBJECTS)
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../../../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	$(MAKE) clobber
 
 gtk_eiffel.o: $(VISION_OBJECTS)
 	$(LD) $(LDFLAGS) -r -o $@ $(VISION_OBJECTS)

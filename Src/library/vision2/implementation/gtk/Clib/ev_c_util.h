@@ -17,6 +17,17 @@ indexing
 #ifndef _EV_C_UTIL_H_INCLUDED_
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
+#include <eif_eiffel.h>
+
+void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
+
+void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
+
+gboolean c_io_watcher_marshal (
+	GIOChannel* source, 
+	GIOCondition condition,
+	gpointer io_watcher
+);
 
 typedef struct {
 	gint x_position;

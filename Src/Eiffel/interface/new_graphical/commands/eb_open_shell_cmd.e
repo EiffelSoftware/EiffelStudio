@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 					if not empty then
 						cmd_string.replace_substring_all ("$line", line_nb.out)
 					else
-						cmd_string.replace_substring_all ("$line", once "")
+						cmd_string.replace_substring_all ("$line", "1")
 					end
 					create req
 					req.execute (cmd_string)

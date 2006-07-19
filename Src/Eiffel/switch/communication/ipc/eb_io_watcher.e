@@ -40,13 +40,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_destroyed: BOOLEAN is
+			-- Is `Current' destroyed?
 		do
 			Result := implementation.is_destroyed
 		end
 
 	destroy is
+			-- Destroy `Current' and clean up.
 		do
 			implementation.destroy
+		ensure
+			is_destroyed: is_destroyed
 		end
 
 	action: PROCEDURE [ANY, TUPLE] is
@@ -61,6 +65,7 @@ feature -- Element change
 			-- Set `an_action' as callback feature.
 		require
 			an_agent_not_void: an_action /= Void
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_action (an_action)
 		ensure
@@ -69,6 +74,8 @@ feature -- Element change
 
 	remove_action is
 			-- Remove the current action
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_action
 		ensure

@@ -20,7 +20,7 @@ fi
 gtk_package_string=gtk+-2.0
 
 #Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
-if [ -z $ISE_LIBRARY ]; then
+if [ -z "$ISE_LIBRARY" ]; then
 	ISE_LIBRARY=$ISE_EIFFEL
 fi
 

@@ -898,21 +898,21 @@ feature {NONE} -- Implementation
 				else
 					drawable.set_foreground_color (feature_text_color)
 				end
-				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
+				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, (adjusted_column_width - left_border).max (0))
 			elseif query_grid_row.type = 2 then
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (class_text_color)
 				end
-				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
+				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, (adjusted_column_width - left_border).max (0))
 			elseif query_grid_row.type = 3 then
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (cluster_text_color)
 				end
-				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
+				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, (adjusted_column_width - left_border).max (0))
 			elseif query_grid_row.type = 4 then
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
@@ -920,14 +920,14 @@ feature {NONE} -- Implementation
 					drawable.set_foreground_color (cluster_text_color)
 				end
 				offset := left_border
-				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.cluster_text, adjusted_column_width - offset)
+				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.cluster_text, (adjusted_column_width - offset).max (0))
 				offset := offset + query_grid_row.cluster_text_width
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (class_text_color)
 				end
-				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.class_text, adjusted_column_width - offset)
+				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.class_text, (adjusted_column_width - offset).max (0))
 				offset := offset + query_grid_row.class_text_width
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
@@ -936,14 +936,14 @@ feature {NONE} -- Implementation
 				else
 					drawable.set_foreground_color (feature_text_color)
 				end
-				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.feature_text, adjusted_column_width - offset)
+				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.feature_text, (adjusted_column_width - offset).max (0))
 			elseif query_grid_row.type = 5 then
 				if row_selected and has_focus then
 					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (black)
 				end
-				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
+				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, (adjusted_column_width - left_border).max (0))
 			end
 		end
 
@@ -1659,7 +1659,7 @@ feature {NONE} -- Attributes
 
 	tree_nodes_enabled_button: EV_CHECK_BUTTON
 
-feature {EB_CHANGE_OPERATOR_CMD} -- Attributes
+feature {NONE} -- Attributes
 
 	active_query_window: EV_MULTI_COLUMN_LIST
 			--  Scrollable list of active subqueries
@@ -1667,7 +1667,7 @@ feature {EB_CHANGE_OPERATOR_CMD} -- Attributes
 	inactive_subqueries_window: EV_MULTI_COLUMN_LIST
 			-- Scrollable list if inactive queries
 
-feature {EB_ADD_SUBQUERY_CMD, EB_CHANGE_OPERATOR_CMD} -- Attributes
+feature {NONE} -- Attributes
 
 	subquery_text: EV_TEXT_FIELD
 			-- Text field for eventual subqueries
@@ -1690,7 +1690,7 @@ feature {EB_RUN_QUERY_CMD} -- Attributes
 			-- Set of information about profiled system, generated
 			-- with help of `profiler_query' and `profiler_options'
 
-feature {EB_CLOSE_QUERY_WINDOW_CMD} -- User Interface
+feature {NONE} -- User Interface
 
 	close is
 			-- Close Current and update `parent'
@@ -1703,7 +1703,7 @@ feature {EB_CLOSE_QUERY_WINDOW_CMD} -- User Interface
 			destroy
 		end
 
-feature {EB_ADD_SUBQUERY_CMD} -- Access
+feature {NONE} -- Access
 
 	subquery: STRING is
 			-- Text typed in the subquery window

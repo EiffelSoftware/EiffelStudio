@@ -56,7 +56,7 @@ feature -- Initialization
 				-- Create a client connection to `a_peer_host' on
 				-- `a_peer_port'.
 		require
-			valid_peer_host: a_peer_host /= Void and then 
+			valid_peer_host: a_peer_host /= Void and then
 					not a_peer_host.is_empty
 			valid_port: a_peer_port >= 0
 		local
@@ -71,7 +71,7 @@ feature -- Initialization
 				i > a_peer_host.count or is_hostname
 			loop
 				code := a_peer_host.item_code (i);
-				is_hostname := (code /= 46 and then 
+				is_hostname := (code /= 46 and then
 					(code < 48 or else code > 57));
 				i := i + 1
 			end;
@@ -122,6 +122,17 @@ feature -- Status report
 			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg)
 		end
 
+	has_delay: BOOLEAN is
+			-- Is option TCPNO_DELAY off.
+		require
+			socket_exists: exists
+		local
+			l_value: INTEGER
+		do
+			l_value := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay)
+			Result := l_value = 0
+		end;
+
 	is_linger_on: BOOLEAN is
 			-- Is lingering switched on?
 		require
@@ -152,7 +163,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_delay is
-			-- Switch option TCPNO_DELAY on.
+			-- Switch option TCPNO_DELAY off.
 		require
 			socket_exists: exists
 		do
@@ -160,7 +171,7 @@ feature -- Status setting
 		end;
 
 	set_nodelay is
-			-- Switch option TCPNO_DELAY off.
+			-- Switch option TCPNO_DELAY on.
 		require
 			socket_exists: exists
 		do
@@ -169,7 +180,7 @@ feature -- Status setting
 
 	set_linger (flag: BOOLEAN; time: INTEGER) is
 		obsolete "Use `set_linger_on'/`set_linger_off' instead."
-			-- Switch lingering on/off (depending on `flag') and set linger 
+			-- Switch lingering on/off (depending on `flag') and set linger
 			-- time to `time'.
 		require
 			socket_exists: exists
@@ -231,7 +242,7 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

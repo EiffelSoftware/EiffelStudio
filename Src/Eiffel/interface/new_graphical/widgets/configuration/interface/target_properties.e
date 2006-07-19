@@ -409,6 +409,7 @@ feature {NONE} -- Implementation
 				l_il_choices.put_right (l_installed_runtimes.item_for_iteration)
 				l_installed_runtimes.forth
 			end
+			l_il_choices.force ("")
 			create l_choice_prop.make_with_choices (target_msil_clr_version_name, l_il_choices)
 
 			l_choice_prop.set_description (target_msil_clr_version_description)

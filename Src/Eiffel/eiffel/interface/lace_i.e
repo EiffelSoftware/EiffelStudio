@@ -1119,14 +1119,12 @@ feature {NONE} -- Implementation
 			l_load: CONF_LOAD
 			vd77: VD77
 			vd78: VD78
-			vd21: VD21
 			l_file_name: STRING
 			l_user_options: USER_OPTIONS
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
 			l_factory: CONF_COMP_FACTORY
-			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
 			l_project_location: PROJECT_DIRECTORY
 		do
@@ -1151,25 +1149,10 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd78)
 				Error_handler.raise_error
 			else
-					-- check if user file is ok and get EIFGENS location
-				create l_user_factory
-				l_user_factory.load (l_system.uuid)
-				if not l_user_factory.successful then
-					create vd21
-					vd21.set_file_name (l_user_factory.last_file_name)
-					Error_handler.insert_error (vd21)
-					Error_handler.raise_error
-				else
-					if l_user_factory.last_options /= Void then
-						l_target_options := l_user_factory.last_options.target_of_name (l_system.library_target.name)
-					end
-					if l_target_options = Void or else l_target_options.last_location = Void then
-							-- default
-						create l_user_options.make (l_system.uuid, l_system.library_target.name)
-						l_target_options := l_user_options.target
-						l_target_options.set_last_location (l_pre.location.build_path ("", ""))
-					end
-				end
+					-- Retrieve the EIFGENs location (next to where the config file is).
+				create l_user_options.make (l_system.uuid, l_system.library_target.name)
+				l_target_options := l_user_options.target
+				l_target_options.set_last_location (l_pre.location.build_path ("", ""))
 			end
 
 				-- retrieve precompile project

@@ -23,7 +23,7 @@ MTCFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATF
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
-MAKE = make
+MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 MKDIR = $mkdir -p
@@ -45,7 +45,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 all: $(NET_LIBS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	$(MAKE) clobber
 
 SMODE = local.c network.c network_r.c storable.c
 

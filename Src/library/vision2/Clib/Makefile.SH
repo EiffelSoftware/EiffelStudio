@@ -24,7 +24,7 @@ MTCFLAGS = $optimize $mtccflags $large -g \$(INCLUDE)
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
-MAKE = make
+MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 RM = $rm -f
@@ -46,7 +46,7 @@ ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	$(MAKE) clobber
 
 MTload_pixmap.o: load_pixmap.c
 	$(CC) -c $(MTCFLAGS) $? -o $@

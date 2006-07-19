@@ -19,7 +19,7 @@ LDFLAGS = $ldflags
 DEFINES= 
 LIBS = $libs
 MTLIBS = $mtlibs
-MAKE = make
+MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
 MKDIR = $mkdir -p
 MV = $mv
@@ -36,7 +36,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 all: $(MEL_LIBS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	$(MAKE) clobber
 
 #libMel.a
 

@@ -20,16 +20,24 @@ inherit
 			process_verbatim_string_as
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 feature -- Access
-	
-	value_i (a_node: ATOMIC_AS): VALUE_I is
+
+	value_i (a_node: ATOMIC_AS; a_class: CLASS_C): VALUE_I is
 			-- Associated VALUE_I instance of `a_node'
 		require
 			a_node_not_void: a_node /= Void
+			a_class_not_void: a_class /= Void
 		do
+			current_class := a_class
 			a_node.process (Current)
 			Result := last_value
 			last_value := Void
+			current_class := Void
 		end
 
 feature {NONE} -- Implementation
@@ -37,11 +45,14 @@ feature {NONE} -- Implementation
 	last_value: VALUE_I
 			-- Last computed value
 
+	current_class: CLASS_C
+			-- Class in which current AST node appears.
+
 	process_bit_const_as (l_as: BIT_CONST_AS) is
 		do
 			create {BIT_VALUE_I} last_value.make (l_as.value)
 		end
-		
+
 	process_bool_as (a_bool: BOOL_AS) is
 		do
 			create {BOOL_VALUE_I} last_value.make (a_bool.value)
@@ -58,8 +69,22 @@ feature {NONE} -- Implementation
 		end
 
 	process_real_as (a_real: REAL_AS) is
+		local
+			l_type: TYPE_A
 		do
-			create {REAL_VALUE_I} last_value.make_real_64 (a_real.value.to_double)
+				-- When no type is present it is REAL_64, otherwise it is the type of
+				-- the specified type.
+			if a_real.constant_type = Void then
+				create {REAL_VALUE_I} last_value.make_real_64 (a_real.value.to_double)
+			else
+				l_type := type_a_generator.evaluate_type (a_real.constant_type, current_class)
+				if l_type.is_real_64 then
+					create {REAL_VALUE_I} last_value.make_real_64 (a_real.value.to_double)
+				else
+					check is_real_32: l_type.is_real_32 end
+					create {REAL_VALUE_I} last_value.make_real_32 (a_real.value.to_real)
+				end
+			end
 		end
 
 	process_string_as (a_string: STRING_AS) is
@@ -71,7 +96,7 @@ feature {NONE} -- Implementation
 		do
 			create {STRING_VALUE_I} last_value.make (a_string.value, False)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

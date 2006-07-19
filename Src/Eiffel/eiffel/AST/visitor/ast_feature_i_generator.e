@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 				else
 						-- Constant value is processed here.
 					create l_const.make
-					l_const.set_value (value_i_generator.value_i (l_constant.value))
+					l_const.set_value (value_i_generator.value_i (l_constant.value, current_class))
 				end
 				check
 					constant_exists: l_constant /= Void

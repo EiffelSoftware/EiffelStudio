@@ -22,7 +22,6 @@ feature {NONE} -- Creation
 			-- Make as a parent node with attributes.
 		require
 			a_text_not_void: a_text /= Void
-			profile_data_not_void: profile_data /= Void
 			valid_type: a_type >= 1 and a_type <= 5
 		do
 			child_node_lower_index := lower_index
@@ -36,7 +35,6 @@ feature {NONE} -- Creation
 			-- Make as a node with no subrows.
 		require
 			a_text_not_void: a_text /= Void
-			profile_data_not_void: profile_data /= Void
 			valid_type: a_type >= 1 and a_type <= 5
 		do
 			text := a_text
@@ -159,7 +157,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			end
 			Result := internal_class_text_width
 		ensure
-			result_non_negative: result >= 0
+			result_non_negative: Result >= 0
 		end
 		
 	feature_text_width: INTEGER is
@@ -170,7 +168,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			end
 			Result := internal_feature_text_width
 		ensure
-			result_non_negative: result >= 0
+			result_non_negative: Result >= 0
 		end
 		
 	drawing_font: EV_FONT is

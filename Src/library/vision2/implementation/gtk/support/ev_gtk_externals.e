@@ -9,6 +9,60 @@ inherit
 
 feature -- MACROS
 
+	frozen g_source_remove (a_tag: NATURAL_32): BOOLEAN is
+			-- gboolean g_source_remove (guint tag);
+		external
+			"C (guint): gboolean | <gtk/gtk.h>"
+		end
+
+	frozen G_io_in: INTEGER is
+			-- There is data to be read.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_IN"
+		end
+
+	frozen G_io_out: INTEGER is
+			-- Data can be written.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_OUT"
+		end
+
+	frozen G_io_pri: INTEGER is
+			-- There is urgent data to read.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_PRI"
+		end
+
+	frozen G_io_err: INTEGER is
+			-- Error condition.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_ERR"
+		end
+
+	frozen G_io_hup: INTEGER is
+			-- Hung up (the connection has been broken, usually for pipes and sockets).
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_HUP"
+		end
+
+	frozen G_io_nval: INTEGER is
+			-- Invalid request. The file descriptor is not open.
+		external
+			"C macro use <glib.h>"
+		alias
+			"G_IO_NVAL"
+		end
+
 	frozen gtk_settings_get_default: POINTER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -3417,13 +3471,6 @@ feature -- External C functions
 			-- (from C_GLIB)
 		external
 			"C (GSList*, GCompareFunc): GSList* | <gtk/gtk.h>"
-		end
-
-	frozen g_source_remove (a_tag: INTEGER): BOOLEAN is
-			-- gboolean g_source_remove                     (guint          tag);
-			-- (from C_GLIB)
-		external
-			"C (guint): gboolean | <gtk/gtk.h>"
 		end
 
 	frozen g_source_remove_by_funcs_user_data (a_funcs: POINTER; a_user_data: POINTER): BOOLEAN is

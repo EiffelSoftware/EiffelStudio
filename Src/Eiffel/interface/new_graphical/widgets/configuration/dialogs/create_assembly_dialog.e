@@ -116,26 +116,28 @@ feature {NONE} -- Initialization
 			else
 				create l_il_env.make (target.setting_msil_clr_version)
 			end
-			create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
-			from
-				l_assemblies := l_alb.assemblies
-				l_assemblies.start
-			until
-				l_assemblies.after
-			loop
-				l_path := l_assemblies.item
-				cnt := l_path.count
-				i := l_path.last_index_of (operating_environment.directory_separator, cnt)
-				j := l_path.last_index_of ('.', cnt)
-				if i > 0 and j > 0 then
-					l_name := l_path.substring (i+1, j-1)
-				else
-					l_name := l_path
+			if l_il_env.is_dotnet_installed then
+				create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
+				from
+					l_assemblies := l_alb.assemblies
+					l_assemblies.start
+				until
+					l_assemblies.after
+				loop
+					l_path := l_assemblies.item
+					cnt := l_path.count
+					i := l_path.last_index_of (operating_environment.directory_separator, cnt)
+					j := l_path.last_index_of ('.', cnt)
+					if i > 0 and j > 0 then
+						l_name := l_path.substring (i+1, j-1)
+					else
+						l_name := l_path
+					end
+					create l_item.make_with_text (l_name)
+					l_item.select_actions.extend (agent fill_assembly (l_name, l_path))
+					assemblies.extend (l_item)
+					l_assemblies.forth
 				end
-				create l_item.make_with_text (l_name)
-				l_item.select_actions.extend (agent fill_assembly (l_name, l_path))
-				assemblies.extend (l_item)
-				l_assemblies.forth
 			end
 
 				-- name

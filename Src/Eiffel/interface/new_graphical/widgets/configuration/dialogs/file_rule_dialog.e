@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			enable_user_resize
+			set_minimum_height (600)
 
 			create notebook
 			element_container.extend (notebook)

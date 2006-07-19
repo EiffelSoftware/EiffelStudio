@@ -32,6 +32,11 @@ inherit
 			copy
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
 
 create
 	default_create,
@@ -43,41 +48,41 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			vb: EV_VERTICAL_BOX
-			hb1, hb: EV_HORIZONTAL_BOX
-			cl: EV_CELL
+			hb: EV_HORIZONTAL_BOX
 		do
 			Precursor {EV_DIALOG}
-
 			set_title (dialog_external_add)
 
-			create hb1
-			extend (hb1)
-			append_margin (hb1)
 			create vb
-			hb1.extend (vb)
-			append_margin (vb)
+			vb.set_padding (default_padding_size)
+			vb.set_border_width (default_border_size)
+			extend (vb)
+
 			create element_container
+			element_container.set_padding (default_padding_size)
 			vb.extend (element_container)
 
 			create include.make_with_text (external_include)
+			include.set_pixmap (pixmaps.icon_pixmaps.project_settings_include_file_icon)
 			element_container.extend (include)
 			create object.make_with_text (external_object)
+			include.set_pixmap (pixmaps.icon_pixmaps.project_settings_object_file_icon)
 			element_container.extend (object)
 			create library.make_with_text (external_library)
+			include.set_pixmap (pixmaps.icon_pixmaps.project_settings_object_file_icon)
 			element_container.extend (library)
 			create make.make_with_text (external_make)
+			include.set_pixmap (pixmaps.icon_pixmaps.project_settings_make_file_icon)
 			element_container.extend (make)
 			create resource.make_with_text (external_resource)
+			include.set_pixmap (pixmaps.icon_pixmaps.project_settings_resource_file_icon)
 			element_container.extend (resource)
-
-			append_small_margin (vb)
 
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.set_padding (default_padding_size)
-			create cl
-			hb.extend (cl)
+			hb.extend (create {EV_CELL})
 			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
@@ -86,9 +91,6 @@ feature {NONE} -- Initialization
 			hb.extend (cancel_button)
 			hb.disable_item_expand (cancel_button)
 			cancel_button.set_minimum_width (default_button_width)
-
-			append_margin (vb)
-			append_margin (hb1)
 
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)

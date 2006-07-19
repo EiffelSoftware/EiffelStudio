@@ -42,19 +42,17 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			vb: EV_VERTICAL_BOX
-			hb1, hb: EV_HORIZONTAL_BOX
-			cl: EV_CELL
+			hb: EV_HORIZONTAL_BOX
 		do
 			Precursor {EV_DIALOG}
 
 			set_title (dialog_task_add)
 
-			create hb1
-			extend (hb1)
-			append_margin (hb1)
 			create vb
-			hb1.extend (vb)
-			append_margin (vb)
+			extend (vb)
+			vb.set_border_width (default_border_size)
+			vb.set_padding (default_padding_size)
+
 			create element_container
 			vb.extend (element_container)
 
@@ -63,14 +61,11 @@ feature {NONE} -- Initialization
 			create post.make_with_text (task_post)
 			element_container.extend (post)
 
-			append_small_margin (vb)
-
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.set_padding (default_padding_size)
-			create cl
-			hb.extend (cl)
+			hb.extend (create {EV_CELL})
 			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
@@ -79,9 +74,6 @@ feature {NONE} -- Initialization
 			hb.extend (cancel_button)
 			hb.disable_item_expand (cancel_button)
 			cancel_button.set_minimum_width (default_button_width)
-
-			append_margin (vb)
-			append_margin (hb1)
 
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)

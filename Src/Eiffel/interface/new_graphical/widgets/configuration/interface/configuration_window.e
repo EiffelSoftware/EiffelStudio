@@ -132,6 +132,7 @@ feature {NONE}-- Initialization
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			l_btn: EV_BUTTON
+			l_accel: EV_ACCELERATOR
 		do
 				-- set default layout values
 			set_padding_size (default_padding_size)
@@ -186,6 +187,14 @@ feature {NONE}-- Initialization
 			key_press_actions.extend (agent on_key)
 			close_request_actions.extend (agent on_cancel)
 			show_actions.extend (agent section_tree.set_focus)
+
+				-- add accelerators for switching between sections
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab), True, False, False)
+			l_accel.actions.extend (agent switch_section)
+			accelerators.extend (l_accel)
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab), True, False, True)
+			l_accel.actions.extend (agent reverse_switch_section)
+			accelerators.extend (l_accel)
 		end
 
 feature -- Status
@@ -224,6 +233,48 @@ feature {NONE} -- Agents
 			end
 		ensure
 			current_target_set: current_target /= Void
+		end
+
+	switch_section is
+			-- Switch to the next section.
+		require
+			section_tree: section_tree /= Void
+		local
+			l_next: INTEGER_REF
+			l_items: ARRAYED_LIST [EV_TREE_NODE]
+		do
+			l_next ?= section_tree.selected_item.data
+			if l_next /= Void then
+				l_next := l_next + 1
+				if l_next > section_count then
+					l_next := 1
+				end
+				l_items := section_tree.retrieve_items_recursively_by_data (l_next, True)
+				if not l_items.is_empty then
+					l_items.last.enable_select
+				end
+			end
+		end
+
+	reverse_switch_section is
+			-- Switch to the previous section.
+		require
+			section_tree: section_tree /= Void
+		local
+			l_next: INTEGER_REF
+			l_items: ARRAYED_LIST [EV_TREE_NODE]
+		do
+			l_next ?= section_tree.selected_item.data
+			if l_next /= Void then
+				l_next := l_next - 1
+				if l_next = 0 then
+					l_next := section_count
+				end
+				l_items := section_tree.retrieve_items_recursively_by_data (l_next, True)
+				if not l_items.is_empty then
+					l_items.last.enable_select
+				end
+			end
 		end
 
 	on_key (a_key: EV_KEY) is
@@ -286,6 +337,8 @@ feature {NONE} -- Layout components
 	target_selection: EV_COMBO_BOX
 
 	section_tree: EV_TREE
+
+	group_tree: EV_TREE
 
 	grid: ES_GRID
 
@@ -885,6 +938,9 @@ feature {NONE} -- Implementation
 	current_group: CONF_GROUP
 			-- Current selected group.
 
+	section_count: INTEGER
+			-- Number of sections that can be reached by ctrl+tab
+
 	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
 			-- Expanded status of sections of groups.
 		once
@@ -932,7 +988,9 @@ feature {NONE} -- Implementation
 			l_item, l_subitem: EV_TREE_ITEM
 		do
 			create section_tree
+
 			create l_item.make_with_text (section_system)
+			l_item.set_data (1)
 			section_tree.extend (l_item)
 			l_item.enable_select
 			l_item.select_actions.extend (agent show_properties_system)
@@ -940,58 +998,70 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text (section_target)
 			section_tree.extend (l_item)
-			l_item.select_actions.extend (agent show_properties_target_general)
 			l_item.set_pixmap (pixmaps.icon_pixmaps.folder_config_icon)
 			create l_subitem.make_with_text (section_general)
+			l_subitem.set_data (2)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_general)
+			l_item.select_actions.extend (agent l_subitem.enable_select)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_target_icon)
 			create l_subitem.make_with_text (section_assertions)
+			l_subitem.set_data (3)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_assertions)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_assertions_icon)
 			create l_subitem.make_with_text (section_groups)
+			l_subitem.set_data (4)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_groups)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_groups_icon)
 
 			create l_subitem.make_with_text (section_advanced)
 			l_item.extend (l_subitem)
-			l_subitem.select_actions.extend (agent show_properties_target_advanced)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.folder_config_icon)
 			l_item.expand
 			l_item := l_subitem
 			create l_subitem.make_with_text (section_general)
+			l_subitem.set_data (5)
 			l_item.extend (l_subitem)
 			l_item.expand
 			l_subitem.select_actions.extend (agent show_properties_target_advanced)
+			l_item.select_actions.extend (agent l_subitem.enable_select)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_advanced_icon)
 			create l_subitem.make_with_text (section_warning)
+			l_subitem.set_data (6)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_warning)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_warnings_icon)
 			create l_subitem.make_with_text (section_debug)
+			l_subitem.set_data (7)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_debugs)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_debug_icon)
 			create l_subitem.make_with_text (section_external)
+			l_subitem.set_data (8)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_externals)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_externals_icon)
 			create l_subitem.make_with_text (section_tasks)
+			l_subitem.set_data (9)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_tasks)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_tasks_icon)
 			create l_subitem.make_with_text (section_variables)
+			l_subitem.set_data (10)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_variables)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_variables_icon)
 			create l_subitem.make_with_text (section_mapping)
+			l_subitem.set_data (11)
 			l_item.extend (l_subitem)
 			l_subitem.select_actions.extend (agent show_properties_target_mapping)
 			l_subitem.set_pixmap (pixmaps.icon_pixmaps.project_settings_type_mappings_icon)
 
 			section_tree.set_minimum_width (section_tree_width)
+
+			section_count := 11
 		ensure
 			section_tree_not_void: section_tree /= Void
 		end
@@ -1157,27 +1227,26 @@ feature {NONE} -- Implementation
 		require
 			a_container: a_container /= Void
 		local
-			l_tree: EV_TREE
 			l_frame: EV_FRAME
 			l_ht: HASH_TABLE [CONF_GROUP, STRING]
 		do
 			create l_frame
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 			a_container.extend (l_frame)
-			create l_tree
-			l_frame.extend (l_tree)
+			create group_tree
+			l_frame.extend (group_tree)
 
-			add_groups (current_target.internal_clusters, l_tree, group_cluster_tree, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
-			add_groups (current_target.internal_overrides, l_tree, group_override_tree, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
-			add_groups (current_target.internal_libraries, l_tree, group_library_tree, pixmaps.icon_pixmaps.top_level_folder_library_icon)
-			add_groups (current_target.internal_assemblies, l_tree, group_assembly_tree, pixmaps.icon_pixmaps.top_level_folder_references_icon)
+			add_groups (current_target.internal_clusters, group_cluster_tree, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
+			add_groups (current_target.internal_overrides, group_override_tree, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
+			add_groups (current_target.internal_libraries, group_library_tree, pixmaps.icon_pixmaps.top_level_folder_library_icon)
+			add_groups (current_target.internal_assemblies, group_assembly_tree, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 			if current_target.internal_precompile /= Void then
 				create l_ht.make (1)
 				l_ht.force (current_target.precompile, current_target.precompile.name)
-				add_groups (l_ht, l_tree,group_precompile_tree, pixmaps.icon_pixmaps.top_level_folder_precompiles_icon)
+				add_groups (l_ht, group_precompile_tree, pixmaps.icon_pixmaps.top_level_folder_precompiles_icon)
 			end
 
-			l_tree.key_press_actions.extend (agent on_group_tree_key)
+			group_tree.key_press_actions.extend (agent on_group_tree_key)
 		end
 
 	initialize_properties_system is
@@ -1625,10 +1694,10 @@ feature {NONE} -- Implementation
 	group_expanded_header: SEARCH_TABLE [STRING]
 			-- Names of the group headers that are expanded.
 
-	add_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]; a_tree: EV_TREE; a_name: STRING; a_head_pix: EV_PIXMAP) is
-			-- Add `a_groups' to `a_tree' under a header with `a_name'.
+	add_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]; a_name: STRING; a_head_pix: EV_PIXMAP) is
+			-- Add `a_groups' to `group_tree' under a header with `a_name'.
 		require
-			a_tree: a_tree /= Void
+			group_tree: group_tree /= Void
 			properties: properties /= Void
 			edit_library_button: edit_library_button /= Void
 		local
@@ -1643,7 +1712,7 @@ feature {NONE} -- Implementation
 				l_head_item.select_actions.extend (agent deselect_current_group)
 				l_head_item.expand_actions.extend (agent group_expanded_header.force (a_name))
 				l_head_item.collapse_actions.extend (agent group_expanded_header.remove (a_name))
-				a_tree.extend (l_head_item)
+				group_tree.extend (l_head_item)
 
 					-- sort groups alphabetically
 				create l_sort_list.make (a_groups.count)
@@ -1817,28 +1886,35 @@ feature {NONE} -- Configuration setting
 			-- Remove currently selected group.
 		local
 			cd: EV_CONFIRMATION_DIALOG
+			wd: EV_WARNING_DIALOG
+			l_cluster: CONF_CLUSTER
 		do
 			if current_group /= Void then
-				create cd.make_with_text_and_actions ("Are you sure you want to remove "+current_group.name+"?", <<agent remove_group_conf (current_group)>>)
-				cd.show_modal_to_window (Current)
+				l_cluster ?= current_group
+				if l_cluster /= Void and then l_cluster.children /= Void and then not l_cluster.children.is_empty then
+					create wd.make_with_text (target_remove_group_children (current_group.name))
+					wd.show_modal_to_window (Current)
+				else
+					create cd.make_with_text_and_actions (target_remove_group (current_group.name), <<agent remove_group_conf>>)
+					cd.show_modal_to_window (Current)
+				end
 			end
 		end
 
-	remove_group_conf (a_group: CONF_GROUP) is
-			-- Remove `a_group' from the configuration.
+	remove_group_conf is
+			-- Remove `current_group' from the configuration.
 		require
-			a_group_not_void: a_group /= Void
+			current_group_not_void: current_group /= Void
 			current_target_not_void: current_target /= Void
+			current_group_selected: group_tree /= Void and then current_group = group_tree.selected_item.data
+			properties_not_void: properties /= Void
 		local
 			l_name: STRING
+			l_parent: EV_TREE_NODE_LIST
 			l_cluster: CONF_CLUSTER
 		do
-			if a_group = current_group then
-				current_group := Void
-			end
-
-			l_name := a_group.name
-			if a_group.is_override then
+			l_name := current_group.name
+			if current_group.is_override then
 				l_cluster := current_target.overrides.item (l_name)
 				check
 					cluster: l_cluster /= Void
@@ -1847,7 +1923,7 @@ feature {NONE} -- Configuration setting
 					l_cluster.parent.remove_child (l_cluster)
 				end
 				current_target.remove_override (l_name)
-			elseif a_group.is_cluster then
+			elseif current_group.is_cluster then
 				l_cluster := current_target.clusters.item (l_name)
 				check
 					cluster: l_cluster /= Void
@@ -1856,18 +1932,27 @@ feature {NONE} -- Configuration setting
 					l_cluster.parent.remove_child (l_cluster)
 				end
 				current_target.remove_cluster (l_name)
-			elseif a_group.is_precompile then
+			elseif current_group.is_precompile then
 				current_target.set_precompile (Void)
-			elseif a_group.is_library then
+			elseif current_group.is_library then
 				current_target.remove_library (l_name)
-			elseif a_group.is_assembly then
+			elseif current_group.is_assembly then
 				current_target.remove_assembly (l_name)
 			else
 				check should_not_reach: False end
 			end
-			refresh
+
+				-- remove item from tree
+			l_parent := group_tree.selected_item.parent
+			l_parent.prune (group_tree.selected_item)
+			if not l_parent.is_empty then
+				l_parent.first.enable_select
+			else
+				properties.reset
+				current_group := Void
+			end
 		ensure
-			current_group_different: a_group /= current_group
+			current_group_different: current_group /= old current_group
 		end
 
 	new_external is
@@ -2131,19 +2216,6 @@ feature {NONE} -- Validation and warning generation
 		end
 
 feature {NONE} -- Wrappers
-
-	simple_validate_wrapper (a_string: STRING_GENERAL; a_call: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
-			-- Wrapper to allow to call agents that only accept STRING.
-		require
-			valid_8_string: a_string /= Void implies a_string.is_valid_as_string_8
-			a_call_not_void: a_call /= Void
-		do
-			if a_string /= Void then
-				Result := a_call.item ([a_string.to_string_8])
-			else
-				Result := a_call.item (Void)
-			end
-		end
 
 	list_wrapper (a_list: LIST [STRING_GENERAL]; a_call: PROCEDURE [ANY, TUPLE [LIST [STRING]]]) is
 			-- Wrapper to allow to call agents that only accept LIST [STRING].

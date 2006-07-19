@@ -56,8 +56,6 @@ feature {NONE} -- Implementation
 			l_extends: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
 		do
-			properties.reset
-
 				-- does `current_target' extend something?
 			l_extends := current_target.extends /= Void
 

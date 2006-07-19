@@ -266,26 +266,29 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							new_class := classc_stone.e_class.ast
-							feature_clauses := new_class.features
-									-- Build the tree
-							--| FIXME
-							if tree.selected_item /= Void then
-								tree.selected_item.disable_select
-							end
-							tree.wipe_out
-							current_class := new_class
-							current_compiled_class := classc_stone.e_class
-							if feature_clauses /= Void then
-								tree.build_tree (feature_clauses)
-							else
-								tree.extend (create {EV_TREE_ITEM}.make_with_text
-									(Warning_messages.W_no_feature_to_display))
-							end
-							Eiffel_system.System.set_current_class (Void)
-							widget.extend (tree)
-							if not tree.is_empty and then tree.is_displayed then
-								tree.ensure_item_visible (tree.first)
+							classc_stone.e_class.eiffel_class_c.parse_ast
+							if classc_stone.e_class.last_syntax_error = Void then
+								new_class := classc_stone.e_class.ast
+								feature_clauses := new_class.features
+										-- Build the tree
+								--| FIXME
+								if tree.selected_item /= Void then
+									tree.selected_item.disable_select
+								end
+								tree.wipe_out
+								current_class := new_class
+								current_compiled_class := classc_stone.e_class
+								if feature_clauses /= Void then
+									tree.build_tree (feature_clauses)
+								else
+									tree.extend (create {EV_TREE_ITEM}.make_with_text
+										(Warning_messages.W_no_feature_to_display))
+								end
+								Eiffel_system.System.set_current_class (Void)
+								widget.extend (tree)
+								if not tree.is_empty and then tree.is_displayed then
+									tree.ensure_item_visible (tree.first)
+								end
 							end
 						end
 					elseif classc_stone.class_i.is_external_class then

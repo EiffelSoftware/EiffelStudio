@@ -234,7 +234,10 @@ feature {NONE} -- Target names and descriptions
 
 	override_override_name: STRING is "Overriding"
 	override_override_description: STRING is "Groups this override is overriding."
-	class_option_class_name: STRING is "Class name"
+	class_option_class_name: STRING is "Name"
+	class_option_file_name: STRING is "Location"
+	properties_class_name: STRING is "Class"
+	properties_target_name: STRING is "Target"
 
 feature {NONE} -- Option names and descriptions
 
@@ -308,6 +311,14 @@ feature {NONE} -- Misc
 	variables_value: STRING is "Value"
 	mapping_old_name: STRING is "Old name"
 	mapping_new_name: STRING is "New name"
+	target_remove_group (a_group: STRING): STRING is
+		do
+			Result := "Are you sure you want to remove "+a_group+"?"
+		end
+	target_remove_group_children (a_group: STRING): STRING is
+		do
+			Result := a_group+" can not be removed because it has subclusters."
+		end
 
 feature {NONE} -- Condition dialog
 

@@ -718,38 +718,41 @@ feature {UNDO_CMD} -- Operations on selected text
 			until
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
 			loop
-				record_modified_line (ln)
-
 					-- Retrieve the string representation of the line
 				line_image := ln.image
 
-					-- Add the commentary symbol in front of the line
-				line_image.prepend (symbol)
-				if ln = cursor.line then
-					l_line_modified := true
-				end
+					-- Nothing is added in front of an empty line.
+				if not line_image.is_empty then
+					record_modified_line (ln)
 
-					-- Rebuild line from the lexer.
-				lexer.set_in_verbatim_string (False)
-				if line_image.is_empty then
-					ln.make_empty_line
-				else
-					lexer.execute (line_image)
-					ln.rebuild_from_lexer (lexer, False)
-				end
-
-				if ln = start_selection.line then
-						-- shift the selection cursor
-					if start_pos = 1 then
-						start_selection.set_x_in_characters(1)
-					else
-						start_selection.set_x_in_characters(start_pos + symbol.count)
+						-- Add the commentary symbol in front of the line
+					line_image.prepend (symbol)
+					if ln = cursor.line then
+						l_line_modified := true
 					end
-				end
 
-					-- reset pos_in_file values of tokens if possible
-				restore_tokens_properties_one_line (ln)
-				on_line_modified (y_line)
+						-- Rebuild line from the lexer.
+					lexer.set_in_verbatim_string (False)
+					if line_image.is_empty then
+						ln.make_empty_line
+					else
+						lexer.execute (line_image)
+						ln.rebuild_from_lexer (lexer, False)
+					end
+
+					if ln = start_selection.line then
+							-- shift the selection cursor
+						if start_pos = 1 then
+							start_selection.set_x_in_characters(1)
+						else
+							start_selection.set_x_in_characters(start_pos + symbol.count)
+						end
+					end
+
+						-- reset pos_in_file values of tokens if possible
+					restore_tokens_properties_one_line (ln)
+					on_line_modified (y_line)
+				end
 
 					-- Prepare next iteration
 				y_line := y_line + 1
@@ -765,31 +768,32 @@ feature {UNDO_CMD} -- Operations on selected text
 					or else
 				start_selection.is_equal (end_selection)
 			then
-				record_modified_line (ln)
-
 					-- Retrieve the string representation of the line
 				line_image := ln.image
+					-- Nothing is added in front of an empty line.
+				if not line_image.is_empty then
+					record_modified_line (ln)
 
-					-- Add the commentary symbol in front of the line
-				line_image.prepend(symbol)
-				if ln = cursor.line then
-					l_line_modified := true
+						-- Add the commentary symbol in front of the line
+					line_image.prepend(symbol)
+					if ln = cursor.line then
+						l_line_modified := true
+					end
+
+						-- Rebuild line from the lexer.
+					lexer.set_in_verbatim_string (False)
+					if line_image.is_empty then
+						ln.make_empty_line
+					else
+						lexer.execute (line_image)
+						ln.rebuild_from_lexer (lexer, False)
+					end
+
+						-- reset pos_in_file values of tokens if possible
+					restore_tokens_properties_one_line (ln)
 				end
-
-					-- Rebuild line from the lexer.
-				lexer.set_in_verbatim_string (False)
-				if line_image.is_empty then
-					ln.make_empty_line
-				else
-					lexer.execute (line_image)
-					ln.rebuild_from_lexer (lexer, False)
-				end
-
-					-- reset pos_in_file values of tokens if possible
-				restore_tokens_properties_one_line (ln)
 
 					-- shift the selection cursors
-
 					-- in case there is just one line
 				if ln = start_selection.line then
 						-- shift the selection cursor

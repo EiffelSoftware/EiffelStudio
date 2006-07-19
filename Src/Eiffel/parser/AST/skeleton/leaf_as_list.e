@@ -31,6 +31,8 @@ inherit
 		rename
 			id as class_id,
 			set_id as set_class_id
+		redefine
+			out
 		end
 
 create
@@ -498,6 +500,18 @@ feature -- Text
 			Result := text (a_region).count
 		ensure
 			Result_non_negative: Result >= 0
+		end
+
+	out, all_original_text: STRING is
+			-- String representation of current match list (without modification applied)
+		do
+			Result := original_text (create {ERT_TOKEN_REGION}.make (1, count))
+		end
+
+	all_modified_text: STRING is
+			-- String representation of current match list (with modification applied)
+		do
+			Result := text (create {ERT_TOKEN_REGION}.make (1, count))
 		end
 
 feature -- Text/Separator

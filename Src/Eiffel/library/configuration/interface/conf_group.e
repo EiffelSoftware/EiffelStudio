@@ -182,7 +182,6 @@ feature -- Access queries
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_assertions: Result.assertions /= Void
 		end
 
 	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is

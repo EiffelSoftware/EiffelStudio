@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			append_margin (hb1)
 
 			set_default_cancel_button (cancel_button)
+			set_default_push_button (ok_button)
 		end
 
 feature -- Access

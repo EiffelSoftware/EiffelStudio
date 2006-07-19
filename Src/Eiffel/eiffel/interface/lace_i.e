@@ -359,6 +359,7 @@ feature {NONE} -- Implementation
 			conf_system_set: conf_system /= Void
 		local
 			l_new_target: CONF_TARGET
+			vd68: VD68
 			vd69: VD69
 			vd70: VD70
 		do
@@ -378,6 +379,11 @@ feature {NONE} -- Implementation
 				Error_handler.raise_error
 			end
 			target_name := l_new_target.name
+			if conf_system.targets.item (target_name).is_abstract then
+				create vd68.make (target_name)
+				Error_handler.insert_error (vd68)
+				Error_handler.raise_error
+			end
 
 			project_location.set_target (target_name)
 		ensure

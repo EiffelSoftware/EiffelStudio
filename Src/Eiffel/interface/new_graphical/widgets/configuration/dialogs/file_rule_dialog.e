@@ -107,6 +107,7 @@ feature {NONE} -- Agents
 					notebook.set_item_text (l_tab, dialog_file_rule_file_rule_x (value.index))
 					value.forth
 				end
+				notebook.set_focus
 				value := l_new_value
 				remove_button.enable_sensitive
 			else

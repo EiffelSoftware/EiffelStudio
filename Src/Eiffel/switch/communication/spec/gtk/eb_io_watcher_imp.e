@@ -11,7 +11,7 @@ class
 	EB_IO_WATCHER_IMP
 
 inherit
-	ANY
+	DISPOSABLE
 		redefine
 			default_create
 		end
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		local
 			l_condition: INTEGER
 		do
+				-- Open file descriptor for debugger pipe and set up polling.
 			file_descriptor_pointer := file_binary_dopen (listen_to_pipe_fd, 0)
 			initialize_c_callback ($on_event)
 			check
@@ -46,16 +47,18 @@ feature -- Access
 		local
 			l_res: BOOLEAN
 		do
-			l_res := {EV_GTK_EXTERNALS}.g_source_remove (callback_handle)
-			check
-				removed: l_res
+			if not is_destroyed then
+				l_res := {EV_GTK_EXTERNALS}.g_source_remove (callback_handle)
+				check
+					removed: l_res
+				end
+				callback_handle := 0
+					-- Close original file descriptor
+				file_close (file_descriptor_pointer)
+				file_descriptor_pointer := default_pointer
+				action := Void
+				is_destroyed := True
 			end
-			callback_handle := 0
-				-- Close original file descriptor
-			file_close (file_descriptor_pointer)
-			file_descriptor_pointer := default_pointer
-			action := Void
-			is_destroyed := True
 		end
 
 	is_destroyed: BOOLEAN
@@ -82,6 +85,12 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	dispose is
+			-- Clean up `Current'.
+		do
+			destroy
+		end
 
 	on_event (condition: INTEGER) is
 			-- Call action sequence corresponding to `condition'.

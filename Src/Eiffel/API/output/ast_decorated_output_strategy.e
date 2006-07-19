@@ -353,6 +353,7 @@ feature {NONE} -- Implementation
 				if l_feat.is_procedure then
 					reset_last_class_and_type
 				else
+						-- Type of static call can not be a like argument type.
 					l_type := l_feat.type.actual_type
 					if l_type.is_loose then
 						last_type := l_type.instantiation_in (l_static_type, last_class.class_id)
@@ -643,6 +644,7 @@ feature {NONE} -- Implementation
 			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_type: TYPE_A
 			l_pos: INTEGER
+			l_actual_argument_typs: like expr_types
 		do
 			if l_as.is_argument then
 				if not expr_type_visiting then
@@ -757,7 +759,21 @@ feature {NONE} -- Implementation
 								l_type := last_type
 							end
 						else
-							l_type := l_feat.type.actual_type
+							l_type := l_feat.type
+									-- If it is an like argument type, we take the actual type from the arguments.
+							if l_type.is_like_argument then
+								check
+									parameters_not_void: l_as.parameters /= Void
+								end
+								l_actual_argument_typs := expr_types (l_as.parameters)
+								if l_actual_argument_typs /= Void then
+									l_type := l_type.actual_argument_type (l_actual_argument_typs)
+								end
+								if l_type = Void then
+									l_type := l_feat.type
+								end
+							end
+							l_type := l_type.actual_type
 						end
 						if l_type.is_loose then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
@@ -792,6 +808,8 @@ feature {NONE} -- Implementation
 			l_parent_class: CLASS_C
 			l_parent_class_i: CLASS_I
 			l_current_feature: E_FEATURE
+			l_type: TYPE_A
+			l_actual_argument_typs: like expr_types
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -844,13 +862,33 @@ feature {NONE} -- Implementation
 				end
 			end
 			if real_feature /= Void then
-				last_type := real_feature.type
+				l_type := real_feature.type
 			else
 					-- Could not find an ancestor version, most likely code where Precursor appears
 					-- has been replicated. We simply use the `current_feature' type as best approximation.
 					-- This should not happen when replication is properly implemented in compiler.
-				last_type := current_feature.type
+				l_type := current_feature.type
 			end
+			if l_type /= Void then
+						-- If it is an like argument type, we take the actual type from the arguments.
+				if l_type.is_like_argument then
+					check
+						parameters_not_void: l_as.parameters /= Void
+					end
+					l_actual_argument_typs := expr_types (l_as.parameters)
+					if l_actual_argument_typs /= Void then
+						l_type := l_type.actual_argument_type (l_actual_argument_typs)
+					end
+				end
+				if l_type /= Void then
+					last_type := l_type.actual_type
+				else
+					last_type := Void
+				end
+			else
+				last_type := Void
+			end
+
 			if not expr_type_visiting then
 				text_formatter_decorator.commit
 			end
@@ -2907,7 +2945,9 @@ feature -- Expression visitor
 		local
 			i, l_count: INTEGER
 			l_last_type: like last_type
+			l_expr_visiting: BOOLEAN
 		do
+			l_expr_visiting := expr_type_visiting
 			expr_type_visiting := True
 			l_last_type := last_type
 			last_type := Void
@@ -2923,7 +2963,7 @@ feature -- Expression visitor
 				i := i + 1
 			end
 			last_type := l_last_type
-			expr_type_visiting := False
+			expr_type_visiting := l_expr_visiting
 		end
 
 feature {NONE} -- Expression visitor

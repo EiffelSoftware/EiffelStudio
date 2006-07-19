@@ -140,8 +140,8 @@ feature -- global
 		end
 
 	update is
-			-- remove breakpoint that no more usefull from the hash_table
-			-- see BREAKPOINT/is_not_usefull for further comments
+			-- remove breakpoint that no more useful from the hash_table
+			-- see BREAKPOINT/is_not_useful for further comments
 		local
 			bp: BREAKPOINT
 		do
@@ -152,7 +152,7 @@ feature -- global
 				breakpoints.after
 			loop
 				bp := breakpoints.item_for_iteration
-				if bp.is_not_usefull or bp.is_corrupted then
+				if bp.is_not_useful or not bp.is_valid then
 					breakpoints.remove (bp)
 					breakpoints.start
 				else

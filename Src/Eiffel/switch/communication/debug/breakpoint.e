@@ -65,7 +65,9 @@ feature -- debug output
 			lcl: CLASS_C
 		do
 			Result := "{"
-			lcl := routine.associated_class
+			if routine /= Void then
+				lcl := routine.associated_class
+			end
 			if lcl /= Void then
 				Result.append_string (lcl.name_in_upper)
 			else
@@ -120,6 +122,7 @@ feature -- Query
 		do
 			l_class_type_list := class_type_list
 			if l_class_type_list /= Void then
+				check routine_not_void: routine /= Void end
 				if routine.associated_class /= Void then
 					fi := routine.associated_feature_i
 					if fi /= Void then
@@ -143,7 +146,9 @@ feature -- Query
 
 	class_type_list: LIST [CLASS_TYPE] is
 		do
-			Result := routine.written_class.types
+			if routine /= Void and then routine.written_class /= Void then
+				Result := routine.written_class.types
+			end
 		end
 
 feature -- Access
@@ -159,8 +164,8 @@ feature -- Access
 			end
 		end
 
-	is_not_usefull: BOOLEAN is
-			-- Is the structure still usefull?
+	is_not_useful: BOOLEAN is
+			-- Is the structure still useful?
 			--
 			-- If the bench and the application status are set to
 			-- 'removed breakpoint', we don't need this structure
@@ -332,7 +337,8 @@ feature -- Setting
 			invalid_breakpoint: BOOLEAN
 		do
 			if not invalid_breakpoint then
-				-- update the feature
+					-- update the feature
+				check routine_not_void: routine /= Void end
 				routine := routine.updated_version
 				if routine /= Void and then routine.is_debuggable and then routine.written_class /= Void then
 					if not (breakable_line_number > routine.number_of_breakpoint_slots) then

@@ -42,7 +42,7 @@ feature -- Access
 			l_text: STRING
 		do
 				-- 02/06/2006 Patrickr
-				-- On a read only project we can't write, so we just store the match list in the cash.
+				-- On a read only project we can't write, so we just store the match list in the cache.
 				-- It would be better to have a more intelligent store mechanism, that would do this.
 			if cache.has_id (an_id) then
 				Result := cache.item_id (an_id)
@@ -61,7 +61,7 @@ feature -- Access
 					Result.set_class_id (an_id)
 					Result.set_generated (l_class.lace_class.date)
 						-- 02/06/2006 Patrickr
-						-- On a read only project we can't write, so we just store the match list in the cash.
+						-- On a read only project we can't write, so we just store the match list in the cache.
 						-- It would be better to have a more intelligent store mechanism, that would do this.
 					if not system.eiffel_project.is_read_only then
 						put (Result)

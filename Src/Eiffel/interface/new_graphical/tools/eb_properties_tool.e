@@ -197,8 +197,16 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)
 					properties.reset
 					properties.add_section (section_general)
+					create l_name_prop.make (group_type_name)
+					l_name_prop.set_value (properties_class_name)
+					l_name_prop.enable_readonly
+					properties.add_property (l_name_prop)
 					create l_name_prop.make (class_option_class_name)
 					l_name_prop.set_value (l_cs.class_name)
+					l_name_prop.enable_readonly
+					properties.add_property (l_name_prop)
+					create l_name_prop.make (class_option_file_name)
+					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
 					add_misc_option_properties (l_class_options, l_group_options, True)
@@ -227,6 +235,11 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				end
 			elseif l_ts /= Void then
 				properties.reset
+				properties.add_section (section_general)
+				create l_name_prop.make (group_type_name)
+				l_name_prop.set_value (properties_target_name)
+				l_name_prop.enable_readonly
+				properties.add_property (l_name_prop)
 				current_target := l_ts.target
 				current_system := current_target.system
 				l_extends := current_target.extends /= Void

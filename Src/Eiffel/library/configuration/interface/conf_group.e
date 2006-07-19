@@ -166,7 +166,6 @@ feature -- Access queries
 		deferred
 		ensure
 			Result_not_void: Result /= Void
-			Result_assertions: Result.assertions /= Void
 		end
 
 	get_class_options (a_class: STRING): CONF_OPTION is

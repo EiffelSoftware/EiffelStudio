@@ -80,6 +80,9 @@ feature -- Access, in compiled only, not stored to configuration file
 			-- Options (Debuglevel, assertions, ...)
 		do
 			Result := actual_class.group.get_class_options (name)
+			if Result.assertions = Void then
+				Result.set_assertions (create {CONF_ASSERTIONS})
+			end
 		ensure
 			Result_not_void: Result /= Void
 			Result_assertions: Result.assertions /= Void

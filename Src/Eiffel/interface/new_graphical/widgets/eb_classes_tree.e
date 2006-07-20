@@ -9,7 +9,7 @@ class
 	EB_CLASSES_TREE
 
 inherit
-	EV_TREE
+	ES_TREE
 
 	EB_CLUSTER_MANAGER_OBSERVER
 		undefine
@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			create classes_double_click_agents.make
 			create expanded_clusters.make (20)
 			set_minimum_height (20)
+			enable_default_tree_navigation_behavior (False, False, False, True)
 		end
 
 	prepare is

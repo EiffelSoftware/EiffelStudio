@@ -10,7 +10,7 @@ class
 	EB_FAVORITES_TREE
 
 inherit
-	EV_TREE
+	ES_TREE
 
 	EB_FAVORITES_OBSERVER
 		undefine
@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			end
 
 			set_minimum_height (20)
+			enable_default_tree_navigation_behavior (False, False, False, True)
 		end
 
 feature -- Status report

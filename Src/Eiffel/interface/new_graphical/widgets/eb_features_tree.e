@@ -18,7 +18,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	EV_TREE
+	ES_TREE
 
 	EB_CONSTANTS
 		undefine
@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 
 			set_minimum_height (20)
 			key_press_actions.extend (agent on_key_pushed)
+			enable_default_tree_navigation_behavior (False, False, False, True)
 		end
 
 feature -- Status report

@@ -114,7 +114,7 @@ feature -- Analysis preparation
 					else
 						if not split_string then
 								-- "Normal" text token
-							if not features_position.after and then pos_in_file >= features_position.item then
+							if not features_position.after and then pos_in_file >= features_position.item.start_pos then
 									-- `current_token' is the beginning of a feature
 									-- we replace this text token with a "feature start token"
 								prev := token.previous
@@ -263,7 +263,7 @@ feature -- Retrieve information from ast
 			feature_list: EIFFEL_LIST [FEATURE_AS]
 			index: INTEGER
 			insert: BOOLEAN
-			position: INTEGER
+			position, end_position: INTEGER
 			size: INTEGER
 		do
 			feature_clauses := current_class_as.features
@@ -294,23 +294,24 @@ feature -- Retrieve information from ast
 								feature_list.after
 							loop
 								position := feature_list.item.start_position
+								end_position := feature_list.item.end_position
 								from
 									index := features_position.count
 								until
 									index <= 0 or insert
 								loop
-									if features_position @ index < position then
+									if features_position.i_th (index).start_pos < position then
 										insert := True
 									else
 										index := index - 1
 									end
 								end
 								if index = features_position.count then
-									features_position.extend (position)
+									features_position.extend ([position, end_position])
 									features_ast.extend (feature_list.item)
 								else
 									features_position.go_i_th (index)
-									features_position.put_left (position)
+									features_position.put_left ([position, end_position])
 									features_ast.go_i_th (index)
 									features_ast.put_left (feature_list.item)
 								end
@@ -367,7 +368,7 @@ feature -- Click list update
 				end
 			end
 			if current_class_as.features /= Void and then features_position.count > 0 then
-				features_index := features_position @ 1
+				features_index := features_position.i_th (1).start_pos
 			else
 				features_index := invariant_index
 			end
@@ -429,7 +430,7 @@ feature -- Click list update
 						end
 					else
 							-- "Normal" text token
-						if not features_position.after and then pos_in_file >= features_position.item then
+						if not features_position.after and then pos_in_file >= features_position.item.start_pos then
 							prev := token.previous
 							next := token.next
 							create {EDITOR_TOKEN_FEATURE_START} tfs.make (token.image)
@@ -487,7 +488,7 @@ feature {NONE} -- Retrieve information from text
 				end
 			end
 			if current_class_as.features /= Void and then features_position.count > 0 then
-				features_index := features_position @ 1
+				features_index := features_position.i_th (1).start_pos
 			else
 				features_index := invariant_index
 			end

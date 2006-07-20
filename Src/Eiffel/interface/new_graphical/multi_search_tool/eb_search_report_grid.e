@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			create report_summary_string.make_empty
 			search_tool := a_search_tool
 			default_create
+			enable_default_tree_navigation_behavior (True, True, True, True)
 			build_interface
 		ensure
 			report_summary_string_not_void: report_summary_string /= Void

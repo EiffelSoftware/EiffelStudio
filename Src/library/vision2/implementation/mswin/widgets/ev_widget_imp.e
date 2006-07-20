@@ -1014,6 +1014,8 @@ feature {NONE} -- Implementation, focus event
 
 	on_set_focus is
 			-- Called when a `Wm_setfocus' message is recieved.
+		require
+			exists: exists
 		local
 			l_top_level_window_imp: EV_WINDOW_IMP
 		do

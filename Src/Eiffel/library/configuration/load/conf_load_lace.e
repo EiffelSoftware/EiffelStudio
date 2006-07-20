@@ -201,7 +201,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_name, l_parent: STRING
 			l_location: CONF_DIRECTORY_LOCATION
 			l_file_loc: CONF_FILE_LOCATION
-			l_lib: CONF_LIBRARY
+			l_lib, l_lib_pre: CONF_LIBRARY
 			l_normal_cluster: BOOLEAN
 		do
 			l_name := a_cluster.cluster_name
@@ -233,6 +233,12 @@ feature {NONE} -- Implementation of data retrieval
 				end
 
 				if l_lib /= Void then
+						-- remove the same library if it has already been added because of a precompile
+					l_lib_pre := current_target.libraries.item ("pre_"+l_lib.name)
+					if l_lib_pre /= Void and then l_lib_pre.location.is_equal (l_lib.location) then
+						current_target.remove_library ("pre_"+l_lib.name)
+					end
+
 					current_target.add_library (l_lib)
 						-- create a dummy cluster to get the cluster options and set the ones that make sense on the library
 					current_cluster := factory.new_cluster ("dummy", factory.new_location_from_path (".", current_target), current_target)
@@ -495,6 +501,9 @@ feature {NONE} -- Implementation of data retrieval
 			l_str: STRING
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_rename: LACE_LIST [TWO_NAME_SD]
+			l_loader: CONF_LOAD
+			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_pre_lib: CONF_LIBRARY
 		do
 			if a_defaults /= Void then
 				from
@@ -612,6 +621,25 @@ feature {NONE} -- Implementation of data retrieval
 								end
 							end
 							current_target.set_precompile (l_conf_pre)
+
+								-- open precompile and add libraries of precompile
+							if is_library_conversions then
+								create l_loader.make (factory)
+								l_loader.retrieve_configuration (l_conf_pre.location.evaluated_path)
+								if not l_loader.is_error and then l_loader.last_system.library_target /= Void then
+									from
+										l_libs := l_loader.last_system.library_target.libraries
+										l_libs.start
+									until
+										l_libs.after
+									loop
+										l_pre_lib := l_libs.item_for_iteration
+										l_pre_lib.name.prepend ("pre_")
+										current_target.add_library (l_pre_lib)
+										l_libs.forth
+									end
+								end
+							end
 						end
 					elseif l_option.is_free_option then
 						if l_name.is_equal ("company") then

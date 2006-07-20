@@ -136,7 +136,7 @@
 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_system_generate_key_directory" DESCRIPTION="Directory of last system generate key saved." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="Screen y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>

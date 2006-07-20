@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			create formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
 			id_level := Normal_level
+			is_supplier_recorded := True
 			create counters.make (Initial_counters_capacity)
 			create counters2.make (Initial_counters_capacity)
 			create last_rsqure.make (initial_counters_capacity)
@@ -155,6 +156,7 @@ feature -- Initialization
 			create suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
+			is_supplier_recorded := True
 			has_externals := False
 			once_manifest_string_count := 0
 			counters.wipe_out

@@ -7,61 +7,39 @@ indexing
 	revision: "$Revision$"
 
 class
-	EVS_GRID_SORTING_INFO
+	EVS_GRID_SORTING_INFO [G]
 
 create
 	make
 
 feature{NONE} -- Implementation
 
-	make (a_column: like column; a_sort_order_change_func: like sort_order_change_function; a_sorter: like sorter; a_current_order: INTEGER) is
-			-- Initialize `column' with `a_column', `sort_order_change_function with `a_sort_order_change_funct',
-			-- `sorter' with `a_sorter' and `current_order' with `a_current_order'.
+	make (a_sort_order_change_func: like sort_order_change_function; a_comparator: like comparator; a_current_order: INTEGER) is
+			-- Initialize `sort_order_change_function with `a_sort_order_change_funct',
+			-- `comparator' with `a_comparator' and `current_order' with `a_current_order'.
 		require
-			a_column_attached: a_column /= Void
 			a_sort_order_change_func_attached: a_sort_order_change_func /= Void
-			a_sorter_attached: a_sorter /= Void
+			a_comparator_attached: a_comparator /= Void
 		do
-			column := a_column
 			create indicator.make (1)
 			set_sort_order_change_function (a_sort_order_change_func)
-			set_sorter (a_sorter)
+			set_comparator (a_comparator)
 			set_current_order (a_current_order)
-		ensure
-			column_set: column = a_column
-			current_order_set: current_order = a_current_order
 		end
 
 feature -- Sort
 
-	sort is
-			-- Sort, do not change `current_order'.
-		local
-			l_indicator: EV_PIXMAP
-		do
-			sorter.call ([current_order])
-			if is_auto_indicator_enabled and then indicator.has (current_order) then
-				l_indicator := indicator.item (current_order)
-				if l_indicator /= Void then
-					column.set_pixmap (l_indicator)
-				else
-					column.remove_pixmap
-				end
-			end
-		end
-
-	change_order_and_sort is
-			-- Change `current_order' using `sort_order_change_function' and sort.
+	change_order is
+			-- Change `current_order' using `sort_order_change_function'.
 		do
 			sort_order_change_function.call ([current_order])
 			current_order := sort_order_change_function.last_result
-			sort
 		end
 
 feature -- Access
 
-	column: EV_GRID_COLUMN
-			-- Grid column to which current is attached
+	column_index: INTEGER
+			-- Index of grid column to which current is attached
 
 	current_order: INTEGER
 			-- Current sorting order
@@ -71,16 +49,29 @@ feature -- Access
 			-- Parameter of the function is the original sort order, return value of the function is
 			-- new sort order.
 
-	sorter: PROCEDURE [ANY, TUPLE [INTEGER]]
-			-- Agent to perform sorting, parameter is `current_order'.
-
 	indicator: HASH_TABLE [EV_PIXMAP, INTEGER]
 			-- Pixmap indicators for every sorting order
+
+	comparator: FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]
+			-- Comparator used to sort
+			-- The first two arguments are rows to be compared with each other
+			-- The third integer argument is current sorting order
+			-- Return value of this comparator should be True if the first row is less thant the second one.
 
 feature -- Status reporting
 
 	is_auto_indicator_enabled: BOOLEAN
 			-- Should sort order indicator be set automatically?
+
+feature{EVS_GRID_WRAPPER} -- Setting
+
+	set_column_index (a_index: INTEGER) is
+			-- Set `column_index' with `a_index'.
+		do
+			column_index := a_index
+		ensure
+			column_index_set: column_index = a_index
+		end
 
 feature -- Setting
 
@@ -110,14 +101,14 @@ feature -- Setting
 			sort_order_change_function_set: sort_order_change_function = a_func
 		end
 
-	set_sorter (a_sorter: like sorter) is
-			-- Set `sorter' with `a_sorter'.
+	set_comparator (a_comparator: like comparator) is
+			-- Set `comparator' with `a_comparator'.
 		require
-			a_sorter_attached: a_sorter /= Void
+			a_comparator_attached: a_comparator /= Void
 		do
-			sorter := a_sorter
+			comparator := a_comparator
 		ensure
-			sorter_set: sorter = a_sorter
+			comparator_set: comparator = a_comparator
 		end
 
 	set_current_order (a_order: INTEGER) is
@@ -129,10 +120,9 @@ feature -- Setting
 		end
 
 invariant
-	column_attached: column /= Void
 	indicator_attached: indicator /= Void
-	sorter_attached: sorter /= Void
 	sort_order_change_function_attached: sort_order_change_function /= Void
+	comparator_attached: comparator /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

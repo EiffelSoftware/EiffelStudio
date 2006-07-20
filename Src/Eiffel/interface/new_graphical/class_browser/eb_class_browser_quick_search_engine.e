@@ -15,7 +15,7 @@ inherit
 
 feature -- Search
 
-	search (a_grid_wrapper: EVS_GRID_WRAPPER; a_start_from_current: BOOLEAN) is
+	search (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]; a_start_from_current: BOOLEAN) is
 			-- Search in `a_grid_wrapper' for `a_keyword' and
 			-- make sure result available in `last_result'.
 		local

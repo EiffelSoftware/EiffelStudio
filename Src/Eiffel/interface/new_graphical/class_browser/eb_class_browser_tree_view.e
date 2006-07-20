@@ -11,7 +11,7 @@ class
 
 inherit
 
-	EB_CLASS_BROWSER_GRID_VIEW
+	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_TREE_ROW]
 		redefine
 			data
 		end
@@ -31,7 +31,6 @@ feature -- Access
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		do
 		end
-
 
 feature -- Actions
 
@@ -284,14 +283,15 @@ feature -- Notification
 
 feature -- Sorting
 
-	class_sorter (a_order: INTEGER) is
-			-- Sorter for class name
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_TREE_ROW]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
+		require
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty:
 		local
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EB_CLASS_BROWSER_TREE_ROW]
 			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW]
 		do
-			create l_agent_sorter.make (agent class_name_tester)
-			create l_sorter.make (l_agent_sorter)
+			create l_sorter.make (a_comparator)
 			fill_rows
 			sort_classes (rows, l_sorter)
 			bind_grid
@@ -316,7 +316,7 @@ feature -- Sorting
 			end
 		end
 
-	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_TREE_ROW): BOOLEAN is
+	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN is
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -327,13 +327,13 @@ feature -- Sorting
 		do
 			l_class_a_name := row_a.class_item.name
 			l_class_b_name := row_b.class_item.name
-			if current_class_sort_order = topology_order then
+			if a_order = topology_order then
 				Result := row_a.class_item.class_c.topological_id < row_b.class_item.class_c.topological_id
 			else
 				if l_class_a_name.is_equal (l_class_b_name) then
 					Result := not row_a.is_collapsed and then row_b.is_collapsed
 				else
-					if current_class_sort_order = ascending_order then
+					if a_order = ascending_order then
 						Result := l_class_a_name < l_class_b_name
 					else
 						Result := l_class_a_name > l_class_b_name
@@ -855,14 +855,15 @@ feature{NONE} -- Initialization
 	build_sortable_and_searchable is
 			-- Build facilities to support sort and search
 		local
-			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
+			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]
 		do
 			old_make (grid)
 				-- Prepare sort facilities
 			last_sorted_column := 0
-			create l_class_sort_info.make (grid.column (1), agent class_sorter, ascending_order)
+			create l_class_sort_info.make (agent class_name_tester, ascending_order)
+			set_sort_action (agent sort_agent)
 			l_class_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info)
+			set_sort_info (1, l_class_sort_info)
 
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)

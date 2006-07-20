@@ -228,7 +228,7 @@ feature -- Access
 
 feature -- Access
 
-	grid_wrapper: EVS_GRID_WRAPPER
+	grid_wrapper: EVS_GRID_WRAPPER [ANY]
 			-- Grid rwapper in which iteration is performed
 
 feature{NONE} -- Implementation

@@ -55,7 +55,7 @@ feature{NONE} -- Implementation
 	next_position: EV_COORDINATE is
 			-- Next position relative to current position.
 		local
-			l_grid_wrapper: EVS_GRID_WRAPPER
+			l_grid_wrapper: EVS_GRID_WRAPPER [ANY]
 		do
 			l_grid_wrapper := grid_wrapper
 			if x_internal = l_grid_wrapper.grid_column_count then
@@ -80,7 +80,7 @@ feature{NONE} -- Implementation
 	previous_position: EV_COORDINATE is
 			-- Previous position relative to current position.
 		local
-			l_grid_wrapper: EVS_GRID_WRAPPER
+			l_grid_wrapper: EVS_GRID_WRAPPER [ANY]
 		do
 			l_grid_wrapper := grid_wrapper
 			if x_internal = 1 then

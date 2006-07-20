@@ -10,7 +10,7 @@ class
 	EB_FEATURE_BROWSER_GRID_VIEW
 
 inherit
-	EB_CLASS_BROWSER_GRID_VIEW
+	EB_CLASS_BROWSER_GRID_VIEW [EB_FEATURE_BROWSER_GRID_ROW]
 		redefine
 			data,
 			recycle_agents
@@ -91,14 +91,14 @@ feature -- Setting
 	rebuild_interface is
 			-- Rebuild interface
 		local
-			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
+			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
 		do
 			if is_written_class_used then
 				grid.set_column_count_to (3)
 				grid.header.i_th (3).set_text (interface_names.l_version_from)
-				create l_written_class_sort_info.make (grid.column (3), agent written_class_sorter, ascending_order)
+				create l_written_class_sort_info.make (agent written_class_tester, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
-				set_sort_info (l_written_class_sort_info)
+				set_sort_info (3, l_written_class_sort_info)
 			else
 				grid.set_column_count_to (2)
 			end
@@ -347,33 +347,29 @@ feature{NONE} -- Initialization
 	build_sortable_and_searchable is
 			-- Build facilities to support sort and search
 		local
-			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
-			l_feature_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO
-			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO
+			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
+			l_feature_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
+			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
 		do
 			old_make (grid)
 				-- Prepare sort facilities
 			last_sorted_column := 0
-			create l_class_sort_info.make (grid.column (1), agent class_sorter, topology_order)
-			create l_feature_sort_info.make (grid.column (2), agent feature_sorter, ascending_order)
+			set_sort_action (agent sort_agent)
+			create l_class_sort_info.make (agent class_tester, topology_order)
+			create l_feature_sort_info.make (agent feature_name_tester, ascending_order)
 			if is_written_class_used then
-				create l_written_class_sort_info.make (grid.column (3), agent written_class_sorter, ascending_order)
+				create l_written_class_sort_info.make (agent written_class_tester, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
-				set_sort_info (l_written_class_sort_info)
+				set_sort_info (3, l_written_class_sort_info)
 			end
 			l_class_sort_info.enable_auto_indicator
 			l_feature_sort_info.enable_auto_indicator
-			set_sort_info (l_class_sort_info)
-			set_sort_info (l_feature_sort_info)
+			set_sort_info (1, l_class_sort_info)
+			set_sort_info (2, l_feature_sort_info)
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
-			create column_tester_table.make (3)
-			column_tester_table.put (agent class_tester, 1)
-			column_tester_table.put (agent feature_name_tester, 2)
-			column_tester_table.put (agent written_class_tester, 3)
-			create {LINKED_LIST [INTEGER]}sort_column_list.make
 		end
 
 feature -- Notification
@@ -530,47 +526,7 @@ feature{NONE} -- Sorting
 	written_class_column: INTEGER is 3
 			-- Column index for written class
 
-	class_sorter (a_order: INTEGER) is
-			-- Sorter for class name
-		do
-			if ev_application.ctrl_pressed then
-				extend_sort_column_list (class_column)
-			else
-				sort_column_list.wipe_out
-				sort_column_list.extend (class_column)
-			end
-			sort_rows (rows, sort_column_list)
-			bind_grid
-		end
-
-	written_class_sorter (a_order: INTEGER) is
-			-- Sorter for class name
-		do
-			if ev_application.ctrl_pressed then
-				extend_sort_column_list (written_class_column)
-			else
-				sort_column_list.wipe_out
-				sort_column_list.extend (written_class_column)
-			end
-			sort_rows (rows, sort_column_list)
-
-			bind_grid
-		end
-
-	feature_sorter (a_order: INTEGER) is
-			-- Sorter for feature name
-		do
-			if ev_application.ctrl_pressed then
-				extend_sort_column_list (feature_column)
-			else
-				sort_column_list.wipe_out
-				sort_column_list.extend (feature_column)
-			end
-			sort_rows (rows, sort_column_list)
-			bind_grid
-		end
-
-	feature_name_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW): BOOLEAN is
+	feature_name_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW; a_order: INTEGER): BOOLEAN is
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -579,7 +535,7 @@ feature{NONE} -- Sorting
 			if row_a.branch_id /= row_b.branch_id then
 				Result := row_a.branch_id < row_b.branch_id
 			else
-				if current_feature_sort_order = ascending_order then
+				if a_order = ascending_order then
 					Result := row_a.feature_item.name < row_b.feature_item.name
 				else
 					Result := row_a.feature_item.name > row_b.feature_item.name
@@ -587,7 +543,7 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	class_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW): BOOLEAN is
+	class_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW; a_order: INTEGER): BOOLEAN is
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -601,10 +557,10 @@ feature{NONE} -- Sorting
 			else
 				l_class_a_name := row_a.feature_item.class_c.name
 				l_class_b_name := row_b.feature_item.class_c.name
-				if current_class_sort_order = topology_order then
+				if a_order = topology_order then
 					Result := row_a.feature_item.class_c.topological_id < row_b.feature_item.class_c.topological_id
 				else
-					if current_class_sort_order = ascending_order then
+					if a_order = ascending_order then
 						Result := l_class_a_name < l_class_b_name
 					else
 						Result := l_class_a_name > l_class_b_name
@@ -613,7 +569,7 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	written_class_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW): BOOLEAN is
+	written_class_tester (row_a, row_b: EB_FEATURE_BROWSER_GRID_ROW; a_order: INTEGER): BOOLEAN is
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -627,10 +583,10 @@ feature{NONE} -- Sorting
 			else
 				l_class_a_name := row_a.feature_item.written_class.name
 				l_class_b_name := row_b.feature_item.written_class.name
-				if current_written_class_sort_order = topology_order then
+				if a_order = topology_order then
 					Result := row_a.feature_item.written_class.topological_id < row_b.feature_item.written_class.topological_id
 				else
-					if current_written_class_sort_order = ascending_order then
+					if a_order = ascending_order then
 						Result := l_class_a_name < l_class_b_name
 					else
 						Result := l_class_a_name > l_class_b_name
@@ -639,66 +595,17 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	current_class_sort_order: INTEGER is
-			-- Current sort order on class column
-		do
-			Result := column_sort_info.item (class_column).current_order
-		end
-
-	current_feature_sort_order: INTEGER is
-			-- Current sort order on feature column
-		do
-			Result := column_sort_info.item (feature_column).current_order
-		end
-
-	current_written_class_sort_order: INTEGER is
-			-- Current sort order on written_class column
-		do
-			Result := column_sort_info.item (written_class_column).current_order
-		end
-
-	column_tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [u, v: EB_FEATURE_BROWSER_GRID_ROW], BOOLEAN], INTEGER]
-			-- Table of column testers
-			-- Key is column index, value is the tester.
-
-	sort_rows (a_rows: like rows; a_column_list: LIST [INTEGER]) is
-			-- Sort `a_rows' column by column for every column whose indexes are in `a_column_list'.
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_FEATURE_BROWSER_GRID_ROW]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
-			a_rows_attached: a_rows /= Void
 			a_column_list_attached: a_column_list /= Void
-			not_a_column_list_is_empty: not a_column_list.is_empty
+			not_a_column_list_is_empty:
 		local
-			l_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [u, v: EB_FEATURE_BROWSER_GRID_ROW], BOOLEAN]]
-			l_cursor: CURSOR
-			l_tester: AGENT_LIST_COMPARATOR [EB_FEATURE_BROWSER_GRID_ROW]
 			l_sorter: DS_QUICK_SORTER [EB_FEATURE_BROWSER_GRID_ROW]
 		do
-			create l_list.make (a_column_list.count)
-			l_cursor := a_column_list.cursor
-			from
-				a_column_list.start
-			until
-				a_column_list.after
-			loop
-				l_list.extend (column_tester_table.item (a_column_list.item))
-				a_column_list.forth
-			end
-			a_column_list.go_to (l_cursor)
-			create l_tester.make (l_list)
-			create l_sorter.make (l_tester)
-			l_sorter.sort (a_rows)
-		end
-
-	sort_column_list: LIST [INTEGER]
-			-- List of columns to sort
-
-	extend_sort_column_list (a_column: INTEGER) is
-			-- Extend `a_column' in `sort_column_list'.
-		require
-			a_column_positive: a_column > 0
-		do
-			sort_column_list.prune_all (a_column)
-			sort_column_list.extend (a_column)
+			create l_sorter.make (a_comparator)
+			l_sorter.sort (rows)
+			bind_grid
 		end
 
 feature -- Recyclable
@@ -735,9 +642,6 @@ feature{NONE} -- Implementation
 
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
-
---	show_tooltip_checkbox_internal: like show_tooltip_checkbox
---			-- Implementation of `show_tooltip_checkbox'
 
 	branch_item (a_branch_id: INTEGER): EB_GRID_EDITOR_TOKEN_ITEM is
 			-- A grid item to display branch id

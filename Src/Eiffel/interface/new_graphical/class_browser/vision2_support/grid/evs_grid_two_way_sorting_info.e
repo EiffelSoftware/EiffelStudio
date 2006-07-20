@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EVS_GRID_TWO_WAY_SORTING_INFO
+	EVS_GRID_TWO_WAY_SORTING_INFO [G]
 
 inherit
-	EVS_GRID_SORTING_INFO
+	EVS_GRID_SORTING_INFO [G]
 		rename
 			make as old_make
 		end
@@ -22,13 +22,12 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_column: like column; a_sorter: like sorter; a_current_order: INTEGER) is
-			-- Initialize `column' with `a_column', `sorter' with `a_sorter' and `current_order' with `a_current_order'.
+	make (a_comparator: like comparator; a_current_order: INTEGER) is
+			-- Initialize `comparator' with `a_comparator' and `current_order' with `a_current_order'.
 		require
-			a_column_attached: a_column /= Void
-			a_sorter_attached: a_sorter /= Void
+			a_comparator_attached: a_comparator /= Void
 		do
-			old_make (a_column, agent next_sort_order, a_sorter, a_current_order)
+			old_make (agent next_sort_order, a_comparator, a_current_order)
 			indicator.put (ascending_indicator_pixmap, ascending_order)
 			indicator.put (descending_indicator_pixmap, descending_order)
 		end

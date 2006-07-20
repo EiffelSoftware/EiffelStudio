@@ -354,7 +354,7 @@ feature{NONE} -- Implementation/Search
 			search_enabled: searchable_component.is_search_enabled
 		do
 			search_with_direction (False, a_start_from_current)
-			if is_tool_attached then
+			if is_tool_attached and then not keyword_field.has_focus then
 				searchable_component.grid.set_focus
 			end
 		end

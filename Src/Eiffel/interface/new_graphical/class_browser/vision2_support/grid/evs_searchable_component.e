@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EVS_SEARCHABLE_COMPONENT
+	EVS_SEARCHABLE_COMPONENT [G]
 
 inherit
-	EVS_GRID_WRAPPER
+	EVS_GRID_WRAPPER [G]
 			export
 				{EVS_GRID_SEARCH_TOOL}grid
 			end

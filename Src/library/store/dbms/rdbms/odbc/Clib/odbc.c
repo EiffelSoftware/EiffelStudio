@@ -996,7 +996,10 @@ int odbc_insensitive_lower() {
 }
 
 int odbc_sensitive_mixed() {
-	return odbc_case == SQL_IC_SENSITIVE;
+		/* Values for odbc_case should be either SQL_IC_UPPER, SQL_IC_LOWER, SQL_IC_MIXED
+		 * or SQL_IC_SENSITIVE. If it is SQL_IC_UNKNOWN (that is to say none of the above), then we consider 
+		 * it is case sensitive. */
+	return (odbc_case == SQL_IC_SENSITIVE) || (odbc_case == SQL_IC_UNKNOWN);
 }
 
 int odbc_insensitive_mixed() {

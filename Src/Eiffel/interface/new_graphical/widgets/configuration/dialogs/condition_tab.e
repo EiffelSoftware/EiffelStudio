@@ -305,7 +305,7 @@ feature {NONE} -- Initialization
 			build_enabled.select_actions.extend (agent on_build_enabled)
 			builds.select_actions.extend (agent on_build)
 			dotnet_enabled.select_actions.extend (agent on_dotnet_enabled)
-			dotnet.change_actions.extend (agent on_dotnet)
+			dotnet.select_actions.extend (agent on_dotnet)
 			multithreaded_enabled.select_actions.extend (agent on_multithreaded_enabled)
 			multithreaded.select_actions.extend (agent on_multithreaded)
 			dynamic_runtime_enabled.select_actions.extend (agent on_dynamic_runtime_enabled)

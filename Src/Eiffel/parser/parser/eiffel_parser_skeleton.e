@@ -526,6 +526,9 @@ feature {NONE} -- ID factory
 
 feature {NONE} -- Type factory
 
+	is_supplier_recorded: BOOLEAN
+			-- Are suppliers recorded in `suppliers'?
+
 	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
@@ -567,8 +570,10 @@ feature {NONE} -- Type factory
 					if Result = Void then
 							-- It is a common class type.
 						class_type := ast_factory.new_class_type_as (class_name, generics)
-							-- Put the supplier in `suppliers'.
-						suppliers.insert_supplier_id (class_name)
+						if is_supplier_recorded then
+								-- Put the supplier in `suppliers'.
+							suppliers.insert_supplier_id (class_name)
+						end
 						Result := class_type
 					end
 				end

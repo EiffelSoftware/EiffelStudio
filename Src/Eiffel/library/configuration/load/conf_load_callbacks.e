@@ -37,8 +37,8 @@ feature -- Callbacks
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		do
-			set_parse_error_message (a_message)
 			is_invalid_xml := True
+			set_parse_error_message (a_message)
 		end
 
 feature {NONE} -- Implementation

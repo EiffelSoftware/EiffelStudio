@@ -589,17 +589,24 @@ feature {NONE} -- Implementation
 		do
 			from
 				internal_token := internal_token.previous
-			until
-				internal_token = Void or else not (is_skippable (internal_token) or else internal_token = internal_line.real_first_token)
-			loop
-				if is_skippable (internal_token) then
-					internal_token := internal_token.previous
-				else
-					internal_line := internal_line.previous
+				if internal_token = Void then
 					if internal_line /= Void then
-						internal_token := internal_line.eol_token.previous
-					else
-						internal_token := Void
+						internal_line := internal_line.previous
+						if internal_line /= Void then
+							internal_token := internal_line.eol_token.previous
+						end
+					end
+				end
+			until
+				internal_token = Void or else not is_skippable (internal_token)
+			loop
+				internal_token := internal_token.previous
+				if internal_token = Void then
+					if internal_line /= Void then
+						internal_line := internal_line.previous
+						if internal_line /= Void then
+							internal_token := internal_line.eol_token.previous
+						end
 					end
 				end
 			end
@@ -608,7 +615,11 @@ feature {NONE} -- Implementation
 	is_skippable (a_token: EDITOR_TOKEN): BOOLEAN is
 			-- Can we skip this token?
 		do
-			Result := is_blank (a_token) or else is_comment (a_token)
+			if a_token = Void then
+				Result := True
+			else
+				Result := not a_token.is_text or else is_comment (a_token)
+			end
 		end
 
 invariant

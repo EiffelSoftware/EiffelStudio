@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	features_position: ARRAYED_LIST [INTEGER]
+	features_position: ARRAYED_LIST [TUPLE [start_pos: INTEGER; end_pos:INTEGER]]
 			-- array of features position in class text
 
 	features_ast: ARRAYED_LIST [FEATURE_AS]

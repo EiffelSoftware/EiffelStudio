@@ -249,6 +249,12 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	confirm_replace_all_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before replacing all?
 
+	confirm_remove_metric_preference: BOOLEAN_PREFERENCE
+			-- Should we remove requested metric?
+
+	confirm_save_metric_preference: BOOLEAN_PREFERENCE
+			-- Should we save requested metric?
+
 	acknowledge_not_loaded_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
@@ -309,6 +315,8 @@ feature -- Preference strings
 	confirm_ignore_all_breakpoints_string: STRING is "interface.dialogs.confirm_ignore_all_breakpoints"
 	confirm_convert_project_string: STRING is "interface.dialogs.confirm_convert_project"
 	confirm_replace_all_string: STRING is "interface.dialogs.confirm_replace_all"
+	confirm_remove_metric_string: STRING is "interface.dialogs.confirm_remove_metric"
+	confirm_save_metric_string: STRING is "interface.dialogs.confirm_save_metric"
 	acknowledge_not_loaded_string: STRING is "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING is "interface.dialogs.confirm_finalize_precompile"
 	show_starting_dialog_string: STRING is "interface.dialogs.show_starting_dialog"
@@ -371,6 +379,8 @@ feature {NONE} -- Implementation
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
 			confirm_ignore_all_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_all_breakpoints_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
+			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
+			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
 			confirm_finalize_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_precompile_string, True)
 			show_starting_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_starting_dialog_string, True)

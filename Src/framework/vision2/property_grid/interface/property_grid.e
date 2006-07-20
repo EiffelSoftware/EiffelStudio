@@ -78,14 +78,28 @@ feature -- Update
 
 	reset is
 			-- Reset to empty property grid.
+		local
+			l_column_width1, l_column_width2: INTEGER
 		do
-			wipe_out
-			set_column_count_to (2)
+			if not is_destroyed and then column_count = 2 then
+				l_column_width1 := column (1).width
+				l_column_width2 := column (2).width
+				wipe_out
+				set_column_count_to (2)
+				column (1).set_width (l_column_width1)
+				column (2).set_width (l_column_width2)
+			else
+				wipe_out
+				set_column_count_to (2)
+			end
 			enable_last_column_use_all_width
 			clear_description
 
 			sections.wipe_out
 			create expanded_section_store.make (5)
+			if not is_destroyed then
+				hide_horizontal_scroll_bar
+			end
 		end
 
 	clear_description is

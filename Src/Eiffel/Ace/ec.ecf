@@ -25,17 +25,17 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(EIFFEL_SRC)\C\bench">
+		<external_include location="\$(EIFFEL_SRC)\C\bench">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(EIFFEL_SRC)\C\platform">
+		<external_include location="\$(EIFFEL_SRC)\C\platform">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+		<external_include location="\$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<condition>
 				<platform value="windows"/>
 			</condition>

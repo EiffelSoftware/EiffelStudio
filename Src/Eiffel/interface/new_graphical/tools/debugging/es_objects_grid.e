@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			id := a_id
 			enable_multiple_row_selection
 			enable_border
+			enable_default_tree_navigation_behavior (True, False, True, True)
 		end
 
 	initialize is

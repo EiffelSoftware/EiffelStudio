@@ -220,10 +220,20 @@ feature {NONE} -- Implementation
 
 	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Handle mouse actions.
+		local
+			l_item: EV_GRID_ITEM
 		do
 			if a_button = 1 then
-				has_user_selected_item := True
-				deactivate
+				l_item := choice_list.item_at_virtual_position (choice_list.virtual_x_position + a_x,
+					choice_list.virtual_y_position + a_y)
+				if l_item /= Void then
+					if choice_list.selected_items /= Void and then choice_list.selected_items.first /= l_item then
+						choice_list.remove_selection
+						l_item.enable_select
+					end
+					has_user_selected_item := True
+					deactivate
+				end
 			end
 		end
 

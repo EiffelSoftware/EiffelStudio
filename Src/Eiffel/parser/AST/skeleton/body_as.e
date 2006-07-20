@@ -101,18 +101,26 @@ feature -- Roundtrip/Token
 					Result := arguments.first_token (a_list)
 				elseif type /= Void then
 					Result := type.first_token (a_list)
+				elseif assigner /= Void then
+					Result := assigner.first_token (a_list)
 				elseif content /= Void then
 					Result := content.first_token (a_list)
-				else
-					Result := Void
 				end
 			else
 				if internal_arguments /= Void then
 					Result := internal_arguments.first_token (a_list)
 				elseif colon_symbol /= Void then
 					Result := colon_symbol.first_token (a_list)
+				elseif assign_keyword /= Void then
+					Result := assign_keyword.first_token (a_list)
 				elseif is_keyword /= Void then
 					Result := is_keyword.first_token (a_list)
+				elseif indexing_clause /= Void then
+					Result := indexing_clause.first_token (a_list)
+				elseif content /= VOid then
+					Result := content.first_token (a_list)
+				else
+					check False end
 				end
 			end
 		end

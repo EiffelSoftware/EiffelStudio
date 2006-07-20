@@ -445,12 +445,27 @@ Index_value: Identifier_as_lower
 			{ $$ := $1 }
 	|	Manifest_constant
 			{ $$ := $1 }
-	|	Creation_expression TE_END
-			{ $$ := ast_factory.new_custom_attribute_as ($1, Void, $2) }
-	|	Creation_expression Manifest_tuple TE_END
-			{ $$ := ast_factory.new_custom_attribute_as ($1, $2, $3) }
+	|	Disable_supplier_recording Creation_expression TE_END Enable_supplier_recording
+			{ $$ := ast_factory.new_custom_attribute_as ($2, Void, $3) }
+	|	Disable_supplier_recording Creation_expression Manifest_tuple TE_END Enable_supplier_recording
+			{ $$ := ast_factory.new_custom_attribute_as ($2, $3, $4) }
 	;
 
+Disable_supplier_recording:
+		{
+			if not il_parser then
+				is_supplier_recorded := False
+			end
+		}	
+	  ;
+
+Enable_supplier_recording:
+		{
+			if not il_parser then
+				is_supplier_recorded := True
+			end
+		}	
+	  ;
 
 Header_mark: Frozen_mark External_mark
 			{

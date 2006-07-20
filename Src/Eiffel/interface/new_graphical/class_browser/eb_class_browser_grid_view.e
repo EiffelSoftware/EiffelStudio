@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EB_CLASS_BROWSER_GRID_VIEW
+	EB_CLASS_BROWSER_GRID_VIEW [G]
 
 inherit
 	QL_OBSERVER
@@ -18,7 +18,7 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	EVS_SEARCHABLE_COMPONENT
+	EVS_SEARCHABLE_COMPONENT [G]
 		rename
 			make as old_make
 		undefine

@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EVS_GRID_THREE_WAY_SORTING_INFO
+	EVS_GRID_THREE_WAY_SORTING_INFO [G]
 
 inherit
-	EVS_GRID_TWO_WAY_SORTING_INFO
+	EVS_GRID_TWO_WAY_SORTING_INFO [G]
 		redefine
 			make,
 			next_sort_order
@@ -21,10 +21,10 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_column: like column; a_sorter: like sorter; a_current_order: INTEGER) is
-			-- Initialize `column' with `a_column', `sorter' with `a_sorter' and `current_order' with `a_current_order'.
+	make (a_comparator: like comparator; a_current_order: INTEGER) is
+			-- Initialize `comparator' with `a_comparator' and `current_order' with `a_current_order'.
 		do
-			Precursor (a_column, a_sorter, a_current_order)
+			Precursor (a_comparator, a_current_order)
 			indicator.put (topology_indicator_pixmap, topology_order)
 		end
 

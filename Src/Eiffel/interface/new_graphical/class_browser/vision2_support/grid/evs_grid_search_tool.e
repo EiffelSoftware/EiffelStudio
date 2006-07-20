@@ -62,7 +62,7 @@ feature -- Display
 
 feature -- Access
 
-	searchable_component: EVS_SEARCHABLE_COMPONENT
+	searchable_component: EVS_SEARCHABLE_COMPONENT [ANY]
 			-- Searchable component object to which current is attached
 
 feature -- Status report

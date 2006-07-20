@@ -91,7 +91,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	grid_iterator (a_grid_wrapper: EVS_GRID_WRAPPER): EVS_GRID_ORDERED_ITERATOR is
+	grid_iterator (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]): EVS_GRID_ORDERED_ITERATOR is
 			-- Grid iterator for `a_grid_wrapper' according to current search order.
 			-- See `ensure_search_by_row' and `ensure_search_by_column' for search order information.
 		do

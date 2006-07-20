@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EVS_GRID_WRAPPER
+	EVS_GRID_WRAPPER [G]
 
 inherit
 	EVS_UTILITY
@@ -24,34 +24,35 @@ feature{NONE} -- Initialization
 		do
 			grid := a_grid
 			last_sorted_column := 0
+			create sorted_columns.make
 		ensure
 			grid_set: grid = a_grid
+			sorted_columns_attached: sorted_columns /= Void
 			last_sorted_column_set: last_sorted_column = 0
 		end
 
 feature -- Setting
 
-	set_sort_info (a_sort_info: EVS_GRID_SORTING_INFO) is
-			-- Set `a_sort_info' in `grid'.
+	set_sort_info (a_column_index: INTEGER; a_sort_info: EVS_GRID_SORTING_INFO [G]) is
+			-- Set `a_sort_info' in `grid' to column indexed by `a_column_index'.
 		require
+			a_column_index_valid: is_column_index_valid (a_column_index)
 			a_sort_info_attached: a_sort_info /= Void
-			a_column_index_valid: is_column_index_valid (a_sort_info.column.index)
 		local
 			l_sort_agent: PROCEDURE [ANY, TUPLE]
-			l_column_index: INTEGER
 		do
-			l_column_index := a_sort_info.column.index
-			if l_column_index > column_sort_info.upper then
-				column_sort_info.conservative_resize (1, l_column_index)
+			a_sort_info.set_column_index (a_column_index)
+			if a_column_index > column_sort_info.upper then
+				column_sort_info.conservative_resize (1, a_column_index)
 			end
-			column_sort_info.put (a_sort_info, l_column_index)
-			if not sort_agent_table.has (l_column_index) then
-				sort_agent_table.force (agent sort (?, ?, ?, ?, ?, ?, ?, ?, l_column_index), l_column_index)
+			column_sort_info.put (a_sort_info, a_column_index)
+			if not sort_agent_table.has (a_column_index) then
+				sort_agent_table.force (agent sort (?, ?, ?, ?, ?, ?, ?, ?, a_column_index), a_column_index)
 			end
-			l_sort_agent := sort_agent_table.item (l_column_index)
-			safe_register_agent (l_sort_agent, grid.column (l_column_index).header_item.pointer_button_press_actions)
+			l_sort_agent := sort_agent_table.item (a_column_index)
+			safe_register_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
 		ensure
-			sort_info_set: column_sort_info.item (a_sort_info.column.index) = a_sort_info
+			sort_info_set: column_sort_info.item (a_sort_info.column_index) = a_sort_info
 		end
 
 	remove_sort_info (a_column_index: INTEGER) is
@@ -97,6 +98,14 @@ feature -- Setting
 		do
 		end
 
+	set_sort_action (a_action: like sort_action) is
+			-- Set `sort_action' with `a_action'.
+		do
+			sort_action := a_action
+		ensure
+			sort_action_set: sort_action = a_action
+		end
+
 feature -- Sort
 
 	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER) is
@@ -104,32 +113,45 @@ feature -- Sort
 		require
 			a_column_index_valid: a_column_index >= 1 and a_column_index <= grid_column_count
 		local
-			l_sort_info: EVS_GRID_SORTING_INFO
+			l_sort_info: EVS_GRID_SORTING_INFO [G]
+			l_current_order: INTEGER
+			l_indicator: EV_PIXMAP
 		do
 				-- We only sort on column where sorting information is set.									
 			if button = 1 and then is_column_sortable (a_column_index) then
+				update_sorted_columns (ev_application.ctrl_pressed, a_column_index)
 				l_sort_info := column_sort_info.item (a_column_index)
 				if is_auto_sort_order_change_enabled then
-					l_sort_info.change_order_and_sort
-				else
-					l_sort_info.sort
+					l_sort_info.change_order
 				end
-					-- Change sort indicator.
-				if
-					is_column_index_valid (last_sorted_column) and then
-					last_sorted_column /= a_column_index and then
-					is_column_sortable (a_column_index)
-				then
-					l_sort_info := column_sort_info.item (last_sorted_column)
-					if l_sort_info.is_auto_indicator_enabled then
-						grid.column (last_sorted_column).header_item.remove_pixmap
+				if sort_action /= Void then
+					sort_action.call ([sorted_columns, current_comparator])
+						-- Change sort indicator.
+					l_current_order := l_sort_info.current_order
+					if l_sort_info.is_auto_indicator_enabled and then l_sort_info.indicator.has (l_current_order) then
+						l_indicator := l_sort_info.indicator.item (l_current_order)
+						if l_indicator /= Void then
+							grid.column (l_sort_info.column_index).set_pixmap (l_indicator)
+						else
+							grid.column (l_sort_info.column_index).remove_pixmap
+						end
 					end
+					if
+						is_column_index_valid (last_sorted_column) and then
+						last_sorted_column /= a_column_index and then
+						is_column_sortable (a_column_index)
+					then
+						l_sort_info := column_sort_info.item (last_sorted_column)
+						if l_sort_info.is_auto_indicator_enabled then
+							grid.column (last_sorted_column).header_item.remove_pixmap
+						end
+					end
+					last_sorted_column := a_column_index
 				end
-				last_sorted_column := a_column_index
 			end
 		ensure
 			column_sorted:
-				(button = 1 and then a_column_index <= column_sort_info.upper and then
+				(button = 1 and then a_column_index <= column_sort_info.upper and then sort_action /= Void and then
 				 column_sort_info.item (a_column_index) /= Void) implies last_sorted_column = a_column_index
 		end
 
@@ -150,9 +172,9 @@ feature -- Status report
 	is_auto_sort_order_change_enabled: BOOLEAN
 			-- Is auto sort order change enabled?
 			-- This means whether or not sort order of a column will change automatically to the next
-			-- order after every `sort'.
+			-- order after every `change_sorting_order_indicator'.
 
-	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO] is
+	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO [G]] is
 			-- Sort information of every column in `grid'.
 			-- If `column_sort_info'.`item' (i) is Void, then i-th column in `grid' is not sortable.
 		local
@@ -183,7 +205,6 @@ feature -- Status report
 		ensure
 			result_attached: Result /= Void
 		end
-
 
 feature -- Virtual grid
 
@@ -277,9 +298,20 @@ feature -- Virtual grid
 feature -- Access
 
 	grid: EV_GRID
-			-- Grid for display
+			-- Grid for display			
+
+	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
+			-- Action used to sort
 
 feature{NONE} -- Implementation
+
+	sorted_columns: LINKED_LIST [INTEGER]
+			-- Columns to be sorted
+			-- This is used to support multi-column sort. When you sorted the first column, and thne
+			-- sort the second column with control key pressed, the result would be first sort the first column,
+			-- and then sort the second column.
+			-- In this list, a list of column index are maintained, the first item is the oldest sorted column, the last item is
+			-- the most recent sorted column.
 
 	column_sort_info_internal: like column_sort_info
 			-- Internal `column_sort_info'
@@ -287,7 +319,79 @@ feature{NONE} -- Implementation
 	sort_agent_table_internal: like sort_agent_table
 			-- Internal `sort_agent_table'
 
+	update_sorted_columns (a_ctrl_pressed: BOOLEAN; a_next_column_to_sort: INTEGER) is
+			-- Prepare `sorted_columns' for next column (whose index is in `a_next_column_to_sort') to be sorted.
+			-- `a_ctrl_pressed' indicates if Ctrl key is pressed.		
+		local
+			l_columns: like sorted_columns
+		do
+			l_columns := sorted_columns
+			if not l_columns.is_empty then
+				if l_columns.last = a_next_column_to_sort then
+					if not a_ctrl_pressed then
+						l_columns.wipe_out
+						l_columns.extend (a_next_column_to_sort)
+					end
+				else
+					if a_ctrl_pressed then
+						l_columns.start
+						l_columns.search (a_next_column_to_sort)
+						if not l_columns.exhausted then
+							from
+							until
+								l_columns.index = 1
+							loop
+								l_columns.remove_left
+							end
+							l_columns.remove
+						end
+						l_columns.extend (a_next_column_to_sort)
+					else
+						l_columns.wipe_out
+						l_columns.extend (a_next_column_to_sort)
+					end
+				end
+			else
+				l_columns.extend (a_next_column_to_sort)
+			end
+		end
+
+	current_comparator: AGENT_LIST_COMPARATOR [G] is
+			-- Comparator used to sort
+			-- 	The first two arguments are rows to be compared with each other
+			-- 	The third integer argument is current sorting order
+			-- 	Return value of this comparator should be True if the first row is less thant the second one.			
+		local
+			l_columns: like sorted_columns
+			l_list_comparator: AGENT_LIST_COMPARATOR [G]
+			l_sort_info: like column_sort_info
+			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
+			l_order_list: ARRAYED_LIST [INTEGER]
+			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
+		do
+			l_columns := sorted_columns
+			l_sort_info := column_sort_info
+			create l_action_list.make (l_columns.count)
+			create l_order_list.make (l_columns.count)
+
+			from
+				l_columns.start
+			until
+				l_columns.after
+			loop
+				l_sort_info_item := l_sort_info.item (l_columns.item)
+				l_action_list.extend (l_sort_info_item.comparator)
+				l_order_list.extend (l_sort_info_item.current_order)
+				l_columns.forth
+			end
+			create Result.make (l_action_list, l_order_list)
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 invariant
+	sorted_columns_attached: sorted_columns /= Void
 	grid_attached: grid /= Void
 
 indexing

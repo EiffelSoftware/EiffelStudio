@@ -17,65 +17,86 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action_list: like action_list) is
+	make (a_action_list: like action_list; a_sorting_order_list: like sorting_order_list) is
 			-- Use `a_action_list' to compare two elements of type G.
 			-- The agent at lower index has higher priority.
+			-- `a_sorting_order_list' stores sorting orders for every agent in `a_action_list'.
 		require
 			a_action_list_not_void: a_action_list /= Void
 			not_a_action_list_is_empty: not a_action_list.is_empty
+			a_sorting_order_list_attached: a_sorting_order_list /= Void
+			not_a_sorting_order_list_is_empty: not a_sorting_order_list.is_empty
+			columns_match: a_sorting_order_list.count = a_action_list.count
 		do
 			action_list := a_action_list
+			sorting_order_list := a_sorting_order_list
 		ensure
 			action_list_set: action_list = a_action_list
+			sorting_order_list_set: sorting_order_list = a_sorting_order_list
 		end
 
 feature -- Access
 
-	action_list: LIST [FUNCTION [ANY, TUPLE [G, G], BOOLEAN]]
+	action_list: LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
 			-- Action performed to compare two non-void items.
+
+	sorting_order_list: LIST [INTEGER]
+			-- List of sorting order
 
 feature -- Status report
 
 	less_than (u, v: G): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
-			l_cursor: CURSOR
-			l_tuple: TUPLE [G, G]
-			l_tuple2: TUPLE [G, G]
+			l_tuple: TUPLE [G, G, INTEGER]
+			l_tuple2: TUPLE [G, G, INTEGER]
+			l_action_list: like action_list
+			l_sorting_order_list: like sorting_order_list
+			l_item: FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]
+			l_column_order: INTEGER
 			done: BOOLEAN
-			l_item: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
 		do
+			l_action_list := action_list
+			l_sorting_order_list := sorting_order_list
+
 			create l_tuple
 			l_tuple.put (u, 1)
 			l_tuple.put (v, 2)
 			if action_list.count = 1 then
-				Result := action_list.first.item (l_tuple)
+				l_tuple.put (l_sorting_order_list.first, 3)
+				Result := l_action_list.first.item (l_tuple)
 			else
 				create l_tuple2
 				l_tuple2.put (v, 1)
 				l_tuple2.put (u, 2)
-				l_cursor := action_list.cursor
 				from
 					Result := False
-					action_list.start
+					l_action_list.start
+					l_sorting_order_list.start
 				until
-					action_list.after or Result or done
+					l_action_list.after or Result or done
 				loop
-					check action_list.item /= Void end
-					l_item := action_list.item
+					check l_action_list.item /= Void end
+					l_item := l_action_list.item
+					l_column_order := l_sorting_order_list.item
+					l_tuple.put (l_column_order, 3)
 					Result := l_item.item (l_tuple)
 					if not Result then
+						l_tuple2.put (l_column_order, 3)
 						done := l_item.item (l_tuple2)
 					end
-					action_list.forth
+					l_action_list.forth
+					l_sorting_order_list.forth
 				end
-				action_list.go_to (l_cursor)
 			end
 		end
 
 invariant
-	action_list_not_void: action_list /= Void
+	action_list_attached: action_list /= Void
 	not_action_list_is_empty: not action_list.is_empty
+	sorting_order_list_attached: sorting_order_list /= Void
+	not_sorting_order_list_is_empty: not sorting_order_list.is_empty
+	columns_match: sorting_order_list.count = action_list.count
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

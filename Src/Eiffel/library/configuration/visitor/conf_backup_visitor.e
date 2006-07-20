@@ -48,9 +48,12 @@ feature -- Visit nodes
 			-- Visit `a_cluster'.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
+			l_dir: KL_DIRECTORY
 		do
 			create l_loc.make (a_cluster.name, a_cluster.target)
 			a_cluster.set_location (l_loc)
+			create l_dir.make (l_loc.evaluated_path)
+			l_dir.recursive_create_directory
 		end
 
 	process_override (an_override: CONF_OVERRIDE) is

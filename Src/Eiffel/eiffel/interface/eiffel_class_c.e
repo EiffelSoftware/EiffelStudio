@@ -1926,6 +1926,7 @@ feature {NONE} -- Backup implementation
 			l_fact: CONF_COMP_FACTORY
 			l_system: CONF_SYSTEM
 			l_vis: CONF_BACKUP_VISITOR
+			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 		do
 				-- copy original configuration file
 			create l_file_name.make_from_string (a_location)

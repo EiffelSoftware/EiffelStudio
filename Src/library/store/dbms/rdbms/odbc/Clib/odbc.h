@@ -32,76 +32,8 @@ extern "C" {
 
 #define ODBC_C_FREE free
 
-/* Missing declaration in the Borland compiler */
-#ifdef EIF_BORLAND
-#ifndef SQL_HANDLE_ENV
-#define SQL_HANDLE_ENV      1
-#endif
-
-#ifndef SQL_HANDLE_DBC
-#define SQL_HANDLE_DBC      2
-#endif
-
-#ifndef SQL_HANDLE_SMTM
-#define SQL_HANDLE_SMTM		3
-#endif
-
-#ifndef SQL_HANDLE_STMT
-#define SQL_HANDLE_STMT		3
-#endif
-
-#ifndef SQL_TYPE_DATE
-#define SQL_TYPE_DATE		91
-#endif
-
-#ifndef SQL_TYPE_TIME
-#define SQL_TYPE_TIME		92
-#endif
-
-#ifndef SQL_TYPE_TIMESTAMP
-#define SQL_TYPE_TIMESTAMP	93
-#endif
-
-#ifndef SQL_QUALIFIER_NAME_SEPARATOR
-#define SQL_QUALIFIER_NAME_SEPARATOR	41
-#endif
-
-#ifndef SQL_C_TYPE_DATE
-#define SQL_C_TYPE_DATE		SQL_TYPE_DATE
-#endif
-
-#ifndef SQL_C_TYPE_TIME
-#define SQL_C_TYPE_TIME		SQL_TYPE_TIME
-#endif
-
-#ifndef SQL_C_TYPE_TIMESTAMP
-#define SQL_C_TYPE_TIMESTAMP	SQL_TYPE_TIMESTAMP
-#endif
-
-#ifndef SQL_CATALOG_NAME_SEPARATOR
-#define SQL_CATALOG_NAME_SEPARATOR	SQL_QUALIFIER_NAME_SEPARATOR
-#endif
-
-#ifndef SQL_NULL_HANDLE
-#define SQL_NULL_HANDLE     0L
-#endif
-
-#ifndef SQL_OV_ODBC2
-#define SQL_OV_ODBC2		2UL
-#endif
-
-#ifndef SQL_OV_ODBC3
-#define SQL_OV_ODBC3		3UL
-#endif
-
-#ifndef SQL_ATTR_ODBC_VERSION
-#define SQL_ATTR_ODBC_VERSION				200
-#endif
-
-#ifndef SQLPOINTER
-typedef void *          SQLPOINTER;
-#endif
-
+#ifndef SQL_IC_UNKNOWN
+#define SQL_IC_UNKNOWN	0
 #endif
 
 /* the following are EIFFEL DATATYPEs supported by EiffelStore on ODBC */

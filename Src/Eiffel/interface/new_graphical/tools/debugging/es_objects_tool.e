@@ -108,16 +108,16 @@ feature {NONE} -- Internal properties
 			end
 			objects_grids_positions[Position_current] 	:= second_grid_id
 			objects_grids_positions[Position_stack] 	:= first_grid_id
-			objects_grids_positions[Position_locals] 	:= first_grid_id
 			objects_grids_positions[Position_arguments] := first_grid_id
+			objects_grids_positions[Position_locals] 	:= first_grid_id
 			objects_grids_positions[Position_result] 	:= first_grid_id
 			objects_grids_positions[Position_objects] 	:= second_grid_id
 		end
 
 	Position_current: INTEGER is 1
 	Position_stack: INTEGER is 2
-	Position_locals: INTEGER is 3
-	Position_arguments: INTEGER is 4
+	Position_arguments: INTEGER is 3
+	Position_locals: INTEGER is 4
 	Position_result: INTEGER is 5
 	Position_objects: INTEGER is 6
 
@@ -344,18 +344,12 @@ feature {NONE} -- Interface
 				create m
 				from
 					create pos_titles.make (objects_grids_positions.lower, objects_grids_positions.upper)
-					i := objects_grids_positions.lower
-					pos_titles[i] := Interface_names.l_current_object
-					i := i + 1
-					pos_titles[i] := Interface_names.l_stack_information
-					i := i + 1
-					pos_titles[i] := Interface_names.l_arguments
-					i := i + 1
-					pos_titles[i] := Interface_names.l_locals
-					i := i + 1
-					pos_titles[i] := Interface_names.l_result
-					i := i + 1
-					pos_titles[i] := Interface_names.l_dropped_references
+					pos_titles[position_current] := Interface_names.l_current_object
+					pos_titles[position_stack] := Interface_names.l_stack_information
+					pos_titles[position_arguments] := Interface_names.l_arguments
+					pos_titles[position_locals] := Interface_names.l_locals
+					pos_titles[position_result] := Interface_names.l_result
+					pos_titles[position_objects] := Interface_names.l_dropped_references
 
 					objects_grids.start
 				until

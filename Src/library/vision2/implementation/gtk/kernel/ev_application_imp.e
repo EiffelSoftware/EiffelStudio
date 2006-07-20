@@ -76,7 +76,10 @@ feature {NONE} -- Initialization
 					-- Initialize the dependent routines object
 				create gtk_dependent_routines
 					-- Uncomment for Gtk 2.x only
-				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)		
+				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)
+
+					-- We do not want X Errors to exit the system so we ignore them indefinitely.
+				{EV_GTK_EXTERNALS}.gdk_error_trap_push
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
@@ -117,9 +120,7 @@ feature {EV_ANY_IMP} -- Implementation
 				process_gdk_events
 				if {EV_GTK_EXTERNALS}.events_pending then
 						-- This handles remaining idle handling such as timeouts, internal gtk/gdk idles and expose events.
-					if locked_window = Void then
 						{EV_GTK_EXTERNALS}.dispatch_events
-					end
 				else
 					if a_relinquish_cpu then
 							-- Idle actions only need to be called just before CPU relinquishment.

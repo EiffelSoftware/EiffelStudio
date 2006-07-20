@@ -355,8 +355,6 @@ feature {NONE} -- Feature signature items
 
 feature {NONE} -- Standard classes
 
-	ti_Unevaluable_type: STRING is "Unevaluable type"
-
 	ti_None_class: STRING is "NONE"
 			-- `NONE' class.
 

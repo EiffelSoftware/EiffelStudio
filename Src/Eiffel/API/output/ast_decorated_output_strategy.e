@@ -2440,9 +2440,7 @@ feature {NONE} -- Implementation
 					initialize_type_output_strategy
 					last_type.process (type_output_strategy)
 				else
-					text_formatter_decorator.process_symbol_text (ti_l_bracket)
-					text_formatter_decorator.process_string_text (ti_unevaluable_type, Void)
-					text_formatter_decorator.process_symbol_text (ti_r_bracket)
+					text_formatter_decorator.process_string_text (l_as.dump, Void)
 				end
 			end
 		end
@@ -3510,7 +3508,7 @@ feature {NONE} -- Implementation: helpers
 			l_type: TYPE_A
 		do
 				-- Convert TYPE_AS into TYPE_A in the context of `source_class'.
-			l_type := type_a_generator.evaluate_type (a_type, source_class)
+			l_type := type_a_generator.evaluate_type_if_possible (a_type, source_class)
 
 				-- An error occurs when a class was renamed.
 			if not has_error_internal and l_type = Void then

@@ -156,10 +156,10 @@ feature -- Launching
 				check not is_ecdbgd_alive end
 				--| it is not that critical to be sure ecdbgd is closed
 				--| but it should be very quick .. so let's check
-
-				clean_connection
-				ec_dbg_launched := False
 			end
+				--| It is better to do that even if it is not alive.
+			clean_connection
+			ec_dbg_launched := False
 		ensure
 			ecdbgd_dead: not is_ecdbgd_alive
 		end

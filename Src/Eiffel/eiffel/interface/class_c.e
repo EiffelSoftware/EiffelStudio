@@ -2356,9 +2356,18 @@ feature -- Properties
 
 	original_class: CLASS_I
 			-- Original lace class
+			--
+			-- See `lace_class' for example.
 
 	lace_class: like original_class is
 			-- Lace class (takes overriding into account)
+			--
+			-- e.g. Class in cluster c1 and in override o1
+			--
+			-- c1.compiled_class = Current
+			-- o1.compiled_class = Void
+			-- Current.lace_class = o1
+			-- Current.original_class = c1
 		do
 			Result := original_class.actual_class
 		end

@@ -176,6 +176,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			check
 				properties: properties /= Void
 			end
+			properties.lock_update
+
 			stone := a_stone
 			l_gs ?= a_stone
 			l_cs ?= a_stone
@@ -251,6 +253,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 
 				properties.set_expanded_section_store (target_section_expanded_status)
 			end
+
+			properties.unlock_update
 		ensure
 			stone_set: stone = a_stone
 		end
@@ -271,6 +275,9 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 		end
 
 feature {NONE} -- Implementation
+
+	is_storing: BOOLEAN
+			-- Are we at the moment storing the information to disk.
 
 	stone: STONE
 			-- Stone we display properties for.
@@ -316,21 +323,25 @@ feature {NONE} -- Implementation
 				check
 					current_system: current_system /= Void
 				end
+				is_storing := True
 				current_system.store
 				manager.cluster_manager.refresh
+				is_storing := False
 			end
 		end
 
 	refresh is
 			-- Refresh the displayed data.
 		do
-			if properties.is_displayed then
-				properties.set_focus
-			end
-			if stone /= Void and then stone.is_valid then
-				add_stone (stone)
-			else
-				properties.reset
+			if not is_storing then
+				if properties.is_displayed then
+					properties.set_focus
+				end
+				if stone /= Void and then stone.is_valid then
+					add_stone (stone)
+				else
+					properties.reset
+				end
 			end
 		end
 

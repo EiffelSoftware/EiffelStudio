@@ -160,7 +160,7 @@ feature {NONE} -- Agents
 				button := Void
 			end
 			is_activated := False
-			if not parent.is_destroyed and parent.is_displayed then
+			if parent /= Void and then not parent.is_destroyed and then parent.is_displayed then
 				parent.set_focus
 			end
 		ensure then

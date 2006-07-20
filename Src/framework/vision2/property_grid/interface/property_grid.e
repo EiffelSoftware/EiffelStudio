@@ -104,20 +104,25 @@ feature -- Update
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		local
 			l_row: EV_GRID_ROW
-			l_item: EV_GRID_LABEL_ITEM
-			l_font: EV_FONT
+			l_item: EV_GRID_DRAWABLE_ITEM
 		do
 			if not sections.has (a_name) then
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
-				create l_item.make_with_text (a_name)
+				create l_item
+				l_item.expose_actions.extend (agent redraw_text (?, l_item))
+				l_item.set_data (a_name)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				l_item.select_actions.extend (agent clear_description)
-				create l_font
-				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-				l_item.set_font (l_font)
-
 				l_row.set_item (1, l_item)
+
+				create l_item
+				l_item.expose_actions.extend (agent redraw_text (?, l_item))
+				l_item.set_data (a_name)
+				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
+				l_item.select_actions.extend (agent clear_description)
+				l_row.set_item (2, l_item)
+
 				l_row.set_background_color (separator_color)
 				sections.force (l_row, a_name)
 				current_section := l_row
@@ -239,6 +244,28 @@ feature -- Update
 		end
 
 feature {NONE} -- Agents
+
+	redraw_text (a_drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
+			--
+		local
+			l_text: STRING
+			l_font: EV_FONT
+		do
+			a_drawable.set_foreground_color (separator_color)
+			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
+			a_drawable.set_foreground_color (foreground_color)
+			create l_font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			a_drawable.set_font (l_font)
+
+			if an_item.column.index = 1 then
+				l_text ?= an_item.data
+				a_drawable.draw_text_top_left (3, 3, l_text)
+			else
+				l_text ?= an_item.data
+				a_drawable.draw_text_top_left (3 - (column (1).width - an_item.row.item (1).horizontal_indent), 3, l_text)
+			end
+		end
 
 	switch_expand_section (a_section: EV_GRID_ROW; a_dummy: EV_POPUP_WINDOW) is
 			-- Expand/collapse `a_section'.

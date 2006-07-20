@@ -43,7 +43,6 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			on_key_up,
-			on_set_focus,
 			on_desactivate,
 			on_kill_focus,
 			on_set_cursor
@@ -522,9 +521,11 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
 			l_top_level_window: EV_WINDOW_IMP
+			l_last_focus_on_widget: EV_WIDGET_IMP
 		do
 			l_top_level_window := top_level_window_imp
 			if l_top_level_window /= Void then
+				l_last_focus_on_widget := focus_on_widget.item
 				focus_on_widget.put (Current)
 				if application_imp.focus_in_actions_internal /= Void then
 					application_imp.focus_in_actions_internal.call ([interface])
@@ -540,7 +541,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 					--| multiple widgets which propagate events accordingly.
 					--| We need to check that we do not call the `focus_in_actions'
 					--| multiple times due to this propagation.
-				if focus_on_widget.item /= Current then
+				if l_last_focus_on_widget /= Current then
 					if focus_in_actions_internal /= Void then
 						focus_in_actions_internal.call (Void)
 					end

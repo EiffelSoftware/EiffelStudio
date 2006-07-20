@@ -1287,6 +1287,11 @@ feature {NONE} -- Implementation
 			l_string_prop.set_value (conf_system.name)
 			l_string_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING}?))
 			l_string_prop.change_value_actions.extend (agent conf_system.set_name)
+			l_string_prop.change_value_actions.extend (agent (a_name: STRING)
+					do
+						set_title (configuration_title (a_name))
+					end
+				)
 			properties.add_property (l_string_prop)
 
 				-- description

@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			last_saved_profile_result_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_profile_result_directory_preference_string, "")
 			last_saved_system_generate_key_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_system_generate_key_directory_preference_string, "")
 
-			project_settings_width_preference := l_manager.new_integer_preference_value (l_manager, project_settings_width_preference_string, 600)
+			project_settings_width_preference := l_manager.new_integer_preference_value (l_manager, project_settings_width_preference_string, 700)
 			project_settings_height_preference := l_manager.new_integer_preference_value (l_manager, project_settings_height_preference_string, 600)
 			project_settings_position_x_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_x_preference_string, 100)
 			project_settings_position_y_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_y_preference_string, 100)

@@ -516,14 +516,14 @@ feature {NONE} -- Section tree selection agents
 			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width+10)
+			l_button.set_minimum_width (default_button_width+25)
 			l_button.select_actions.extend (agent new_external)
 
 			create l_button.make_with_text (general_remove)
 			l_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width+10)
+			l_button.set_minimum_width (default_button_width+25)
 			l_button.select_actions.extend (agent remove_external)
 
 			properties.recompute_column_width
@@ -573,14 +573,14 @@ feature {NONE} -- Section tree selection agents
 			l_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width+10)
+			l_button.set_minimum_width (default_button_width+25)
 			l_button.select_actions.extend (agent new_task)
 
 			create l_button.make_with_text (general_remove)
 			l_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_button)
 			hb.disable_item_expand (l_button)
-			l_button.set_minimum_width (default_button_width+10)
+			l_button.set_minimum_width (default_button_width+25)
 			l_button.select_actions.extend (agent remove_task)
 
 			properties.recompute_column_width
@@ -770,12 +770,12 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (general_add, agent add_variable)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-			l_btn.set_minimum_width (default_button_width+10)
+			l_btn.set_minimum_width (default_button_width+25)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			create l_btn.make_with_text_and_action (general_remove, agent remove_variable)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-			l_btn.set_minimum_width (default_button_width+10)
+			l_btn.set_minimum_width (default_button_width+25)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
@@ -862,12 +862,12 @@ feature {NONE} -- Section tree selection agents
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (general_add, agent add_mapping)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-			l_btn.set_minimum_width (default_button_width+10)
+			l_btn.set_minimum_width (default_button_width+25)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			create l_btn.make_with_text_and_action (general_remove, agent remove_mapping)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-			l_btn.set_minimum_width (default_button_width+10)
+			l_btn.set_minimum_width (default_button_width+25)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 

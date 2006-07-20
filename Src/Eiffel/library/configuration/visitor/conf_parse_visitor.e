@@ -43,6 +43,21 @@ feature {NONE} -- Initialization
 			application_target := an_application_target
 		end
 
+feature -- Status
+
+	is_ignore_bad_libraries: BOOLEAN
+			-- Should bad libraries be ignored?
+
+feature -- Update
+
+	enable_ignore_bad_libraries is
+			-- Ignore bad libraries.
+		do
+			is_ignore_bad_libraries := True
+		ensure
+			is_ignore_bad_libraries: is_ignore_bad_libraries
+		end
+
 feature -- Visit nodes
 
 	process_target (a_target: CONF_TARGET) is
@@ -82,12 +97,20 @@ feature -- Visit nodes
 			l_uuid: UUID
 			l_path: STRING
 			l_comparer: FILE_COMPARER
+			l_cond: CONF_CONDITION
 		do
 			l_path := a_library.location.evaluated_path
 			create l_load.make (factory)
 			l_load.retrieve_uuid (l_path)
 			if l_load.is_error then
-				add_and_raise_error (l_load.last_error)
+				if is_ignore_bad_libraries then
+					create l_cond.make
+					l_cond.add_custom ("backup_ignore_bad_library", "false")
+					a_library.set_conditions (Void)
+					a_library.add_condition (l_cond)
+				else
+					add_and_raise_error (l_load.last_error)
+				end
 			else
 				l_uuid := l_load.last_uuid
 				l_target := libraries.item (l_uuid)

@@ -64,7 +64,7 @@ feature -- Access queries
 		end
 
 	evaluated_path: STRING is
-			-- The fully resolved path without file name.
+			-- The fully resolved path with file name.
 		do
 			Result := file_system.pathname_from_file_system (internal_evaluated_path, windows_file_system)
 		ensure

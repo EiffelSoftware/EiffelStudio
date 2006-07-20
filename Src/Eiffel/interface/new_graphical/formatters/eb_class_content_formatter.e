@@ -40,7 +40,7 @@ feature -- Formatting
 
 feature -- Access
 
-	browser: EB_CLASS_BROWSER_GRID_VIEW
+	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Browser where information gets displayed
 
 	widget: EV_WIDGET is

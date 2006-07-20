@@ -273,10 +273,10 @@ feature -- Merging
 					l_tmp.merge (warnings)
 					warnings := l_tmp
 				end
-				if namespace = Void then
-					namespace := other.namespace
+				if namespace = Void and other.namespace /= Void then
+					namespace := other.namespace.twin
 				elseif other.namespace /= Void then
-					namespace := other.namespace + "." + namespace
+					namespace := other.namespace.twin + "." + namespace
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured

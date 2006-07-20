@@ -345,15 +345,6 @@ feature -- Status report
 					end
 				end
 
-				if System.system_namespace /= Void then
-					if Result /= Void then
-						Result.prepend_character ('.')
-						Result.prepend (System.system_namespace)
-					else
-						Result := System.system_namespace.twin
-					end
-				end
-
 				if Result = Void then
 					Result := ""
 				end

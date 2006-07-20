@@ -2988,7 +2988,7 @@ feature {NONE} -- Implementation
 				f.close
 				editor_tool.text_area.set_stone (a_stone)
 				editor_tool.text_area.load_text (f.last_string)
-			elseif target_stone /= Void then
+			elseif target_stone /= Void and then target_stone.is_valid then
 				properties_tool.add_stone (target_stone)
 			else
 					-- Remember previous stone.
@@ -3024,7 +3024,9 @@ feature {NONE} -- Implementation
 						-- Text is now editable.
 					editor_tool.text_area.set_read_only (False)
 
-					properties_tool.add_stone (new_class_stone)
+					if new_class_stone.is_valid then
+						properties_tool.add_stone (new_class_stone)
+					end
 
 						-- class stone was dropped
 					create class_file.make (new_class_stone.class_i.file_name)
@@ -3206,7 +3208,9 @@ feature {NONE} -- Implementation
 						managed_main_formatters.forth
 					end
 					if cluster_st /= Void then
-						properties_tool.add_stone (cluster_st)
+						if cluster_st.is_valid then
+							properties_tool.add_stone (cluster_st)
+						end
 						if cluster_st.is_cluster then
 	--| FIXME XR: Really manage cluster display in the main editor
 							if not during_synchronization then

@@ -144,9 +144,6 @@ feature -- Access: IL code generation
 			-- without using .NET naming convention.
 			--| Used for IL generation.
 
-	system_namespace: STRING
-			-- Top namespace of all generated Eiffel classes.
-
 	il_quick_finalization: BOOLEAN
 			-- Should finalization skip generation of single class modules?
 
@@ -154,15 +151,6 @@ feature -- Access: IL code generation
 			-- Should compiler take optimized precompile assembly?
 
 feature -- Update
-
-	set_system_namespace (n: STRING) is
-			-- Set `system_namespace' to `n'.
-			--| `n' can be Void as we need to reset him before analyzing Ace file.
-		do
-			system_namespace := n
-		ensure
-			system_namespace_set: system_namespace = n
-		end
 
 	set_use_cluster_as_namespace (v: BOOLEAN) is
 			-- Set `use_cluster_as_namespace' to `v'.

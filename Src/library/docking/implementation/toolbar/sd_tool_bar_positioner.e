@@ -446,9 +446,7 @@ feature {NONE}  -- Implementation
 	is_possible_set_position (a_hot_pointer_position: INTEGER; a_hot_index: INTEGER): BOOLEAN is
 			-- After `try_set_position' is it possible to set postion to `positions_and_sizes_try'?
 		local
-			l_left_side_right, l_right_side_right: BOOLEAN
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_size: INTEGER
 		do
 			l_zones := internal_tool_bar_row.zones
 			l_zones.delete (internal_mediator.caller)

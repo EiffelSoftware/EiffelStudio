@@ -488,7 +488,7 @@ feature -- Implementation
 		require
 			an_exception_not_void: an_exception /= Void
 		do
-			-- Clean up any locked windows of captures.
+				-- Clean up any locked windows of captures.
 			if locked_window /= Void then
 				locked_window.unlock_update
 			end

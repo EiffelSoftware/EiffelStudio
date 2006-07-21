@@ -1654,7 +1654,7 @@ feature {NONE} -- open new class
 				str.to_lower
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
-									not enable_complete or
+									not enable_cluster_complete or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and cluster_had_selection then
 					str.keep_head (nb - 1)
@@ -1762,7 +1762,7 @@ feature {NONE} -- open new class
 				str.to_lower
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
-									not enable_complete or
+									not enable_feature_complete or
 									last_caret_position /= str.count + 1
 				if nb > 0 and not do_not_complete and last_key_was_backspace and feature_had_selection then
 					str.keep_head (nb - 1)

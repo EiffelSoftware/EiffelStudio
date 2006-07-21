@@ -132,8 +132,8 @@ feature {NONE} -- Processing
 			else
 				eif_class := a_class.eiffel_class_c
 				if eif_class.parsing_needed then
-						-- Parse class and save a backup if requested.
-					ast := eif_class.build_ast (True)
+						-- Parse class and save a backup if requested and generates warning.
+					ast := eif_class.build_ast (True, True)
 									debug ("PARSE")
 										io.error.put_string ("parsed%N")
 									end

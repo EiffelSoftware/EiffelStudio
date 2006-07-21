@@ -2914,21 +2914,6 @@ feature -- Server Access
 			Result := f.is_readable
 		end
 
-	has_syntax_error: BOOLEAN is
-			-- Does class have a syntax error (after calling `parse_ast')?
-		do
-			Result := last_syntax_error /= Void
-		ensure
-			ok_result: Result = (last_syntax_error /= Void)
-		end
-
-	last_syntax_error: SYNTAX_ERROR is
-			-- Last syntax error generated after calling
-			-- routine `parse_ast'
-		do
-			Result := last_syntax_cell.item
-		end
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -3105,16 +3090,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features := f
 		ensure
 			generic_features_set: generic_features = f
-		end
-
-feature -- Removal
-
-	clear_syntax_error is
-			-- Clear the syntax error information.
-		do
-			last_syntax_cell.put (Void)
-		ensure
-			not_has_syntax: not has_syntax_error
 		end
 
 feature -- Genericity
@@ -3500,15 +3475,6 @@ feature {NONE} -- Implementation
 
 	private_base_file_name: STRING
 			-- Base file name used in code generation.
-
-	last_syntax_cell: CELL [SYNTAX_ERROR] is
-			-- Stored value of last generated syntax error generated calling
-			-- routine `parse_ast'
-		once
-			create Result.put (Void)
-		ensure
-			last_syntax_cell_not_void: Result /= Void
-		end
 
 feature {DEGREE_5} -- Degree 5
 

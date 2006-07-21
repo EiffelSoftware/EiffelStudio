@@ -183,7 +183,7 @@ feature -- Action
 			end
 		end
 
-	build_ast (save_copy: BOOLEAN): CLASS_AS is
+	build_ast (save_copy, is_warning_generated: BOOLEAN): CLASS_AS is
 			-- Parse file and generate AST.
 			-- If `save_copy' a copy will be made in BACKUP
 			-- directory of EIFGEN.
@@ -224,12 +224,22 @@ feature -- Action
 					-- Call Eiffel parser
 				parser := Eiffel_parser
 				l_options := lace_class.options
-				parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
-				parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
-				parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))
+				if is_warning_generated then
+					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
+					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
+					parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))
+				else
+					parser.set_has_syntax_warning (False)
+					parser.set_has_old_verbatim_strings (False)
+					parser.set_has_old_verbatim_strings_warning (False)
+				end
 				Inst_context.set_group (cluster)
 				parser.parse (file)
 				Result := parser.root_node
+				if Result /= Void then
+						-- Update `date' attribute.
+					Result.set_date (lace_class.file_date)
+				end
 
 					-- we need to readd the type informations to the ast
 				set_need_type_check (True)
@@ -364,49 +374,43 @@ end
 
 feature -- Element change
 
-	parse_ast is
-			-- Parse the AST structure of current class if it has changed.
-			-- Set `last_syntax_error' if a syntax error ocurred.
-			--| Save the AST in the temporary server and add it to the
-			--| pass one controller (need to still do the end of pass1 process).
+	parsed_ast (after_save: BOOLEAN): CLASS_AS is
+			-- Parse the AST structure of current class.
+			--| Save the AST in the temporary server for later retrieval.
+			--| if it happens after a save operation.
+			--| If there is a syntax error, set `last_syntax_error'.
 		require
 			not_precompiled: not is_precompiled
 			file_is_readable: file_is_readable
 		local
-			class_ast: CLASS_AS
 			error: BOOLEAN
 			syntax_error: SYNTAX_ERROR
-			compiled_info: CLASS_C
 			prev_class: CLASS_C
+			l_date: INTEGER
 		do
 			if not error then
 				prev_class := System.current_class
-				compiled_info ?= Current
-				System.set_current_class (compiled_info)
-				last_syntax_cell.put (Void)
-				class_ast := build_ast (False)
-				class_ast.set_class_id (class_id)
-					-- Mark the class if it has syntactically changed
-					--| Improvement: We can retrieve the previous version of
-					--| the AST and compare the new one with the old one.
-					--| If they are different, we should put the new one in the
-					--| server and make the old one obsolete (so that it can be
-					--| removed from the server and avoided a growing EIFGEN).
-				set_changed (True)
-				Tmp_ast_server.put (class_ast)
-				Degree_5.insert_parsed_class (compiled_info)
-				Degree_4.insert_new_class (compiled_info)
-				Degree_3.insert_new_class (compiled_info)
-				Degree_2.insert_new_class (compiled_info)
-				lace_class.set_date
-			else
-				syntax_error ?= Error_handler.error_list.first
-				check
-					syntax_error_not_void: syntax_error /= Void
+				System.set_current_class (Current)
+					-- If we are saving, there will be a parse anyway because
+					-- the date on file will have changed. We are saving us a
+					-- few costly instructions in case the AST is not in memory.
+				if not after_save then
+					Result := ast
+					l_date := lace_class.file_date
 				end
-				Error_handler.error_list.wipe_out
-				last_syntax_cell.put (syntax_error)
-				error := False
+				if Result = Void or else Result.date /= l_date then
+						-- If there is no stored AST, or if the date stored in the AST
+						-- is different from the one on disk, we rebuild the AST.
+					Result := build_ast (False, False)
+					Result.set_class_id (class_id)
+						-- Although it is not very nice to store in the server, it will save
+						-- a lot of parsing when switching back and forth between classes.
+					tmp_ast_server.put (Result)
+				end
+			else
+					-- Wipe out any errors thrown during parser.
+				Error_handler.wipe_out
+				Result := Void
 			end
 			System.set_current_class (prev_class)
 		rescue
@@ -414,6 +418,9 @@ feature -- Element change
 				Rescue_status.set_is_error_exception (False)
 				error := True
 				retry
+			else
+					-- Restore context.
+				System.set_current_class (prev_class)
 			end
 		end
 

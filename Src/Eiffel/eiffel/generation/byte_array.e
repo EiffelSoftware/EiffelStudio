@@ -167,6 +167,12 @@ feature -- Element change
 			end
 		end
 
+	append_character_32 (c: CHARACTER_32) is
+			-- Append character `c' in the array.
+		do
+			append_natural_32 (c.natural_32_code)
+		end
+
 	append_natural_8 (n: NATURAL_8) is
 			-- Append natural `n' in the array
 		local

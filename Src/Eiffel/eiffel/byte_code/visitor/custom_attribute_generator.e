@@ -228,7 +228,11 @@ feature {BYTE_NODE} -- Visitors
 			if is_target_object then
 				ca_blob.put_integer_8 (a_node.type.element_type)
 			end
-			ca_blob.put_character (a_node.value)
+			if a_node.is_character_32 then
+				ca_blob.put_natural_32 (a_node.value.natural_32_code)
+			else
+				ca_blob.put_character (a_node.value.to_character_8)
+			end
 		end
 
 	process_constant_b (a_node: CONSTANT_B) is
@@ -236,6 +240,7 @@ feature {BYTE_NODE} -- Visitors
 		local
 			l_value: VALUE_I
 			l_type: TYPE_I
+			l_char_type: CHAR_I
 			l_int: INTEGER_CONSTANT
 			l_bool: BOOL_VALUE_I
 			l_char: CHAR_VALUE_I
@@ -264,8 +269,16 @@ feature {BYTE_NODE} -- Visitors
 				ca_blob.put_boolean (l_bool.boolean_value)
 			elseif l_value.is_character then
 				l_char ?= l_value
-				check l_char_not_void: l_char /= Void end
-				ca_blob.put_character (l_char.character_value)
+				l_char_type ?= target_type
+				check
+					l_char_attached: l_char /= Void
+					l_char_type_attached: l_char_type /= Void
+				end
+				if l_char_type.is_wide then
+					ca_blob.put_natural_32 (l_char.character_value.natural_32_code)
+				else
+					ca_blob.put_character (l_char.character_value.to_character_8)
+				end
 			elseif l_value.is_real then
 				l_real ?= l_value
 				check l_real_not_void: l_real /= Void end

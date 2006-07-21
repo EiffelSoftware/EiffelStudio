@@ -60,7 +60,11 @@ feature {NONE} -- Implementation
 
 	process_char_as (a_char: CHAR_AS) is
 		do
-			create {CHAR_VALUE_I} last_value.make (a_char.value)
+			if {CHARACTER_8}.min_value <= a_char.value.code and then a_char.value.code <= {CHARACTER_8}.max_value then
+				create {CHAR_VALUE_I} last_value.make_character_8 (a_char.value.to_character_8)
+			else
+				create {CHAR_VALUE_I} last_value.make_character_32 (a_char.value)
+			end
 		end
 
 	process_integer_as (a_int: INTEGER_CONSTANT) is

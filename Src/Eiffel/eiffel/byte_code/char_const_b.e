@@ -20,12 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: CHARACTER) is
-			-- Assign `v' to `value'.
+	make (v: like value; t: TYPE_A) is
+			-- Assign `v' of type `t' to `value'.
 		do
 			value := v
+			is_character_32 := t.is_character_32
 		ensure
 			value_set: value = v
+			type_set: is_character_32 = t.is_character_32
 		end
 
 feature -- Visitor
@@ -38,15 +40,22 @@ feature -- Visitor
 
 feature -- Access
 
-	value: CHARACTER
+	value: CHARACTER_32
 			-- Character value
+
+	is_character_32: BOOLEAN
+			-- Is value of type CHARACTER_32?
 
 feature -- Evaluation
 
 	evaluate: VALUE_I is
 			-- Evaluation of Current.
 		do
-			create {CHAR_VALUE_I} Result.make (value)
+			if is_character_32 then
+				create {CHAR_VALUE_I} Result.make_character_32 (value)
+			else
+				create {CHAR_VALUE_I} Result.make_character_8 (value.to_character_8)
+			end
 		end
 
 feature -- Status report
@@ -62,8 +71,12 @@ feature -- Status report
 
 	type: TYPE_I is
 			-- Expression type
-		once
-			Result := Char_c_type
+		do
+			if is_character_32 then
+				Result := wide_char_c_type
+			else
+				Result := Char_c_type
+			end
 		end
 
 feature -- C code generation
@@ -74,9 +87,15 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.put_string ("(EIF_CHARACTER) %'")
-			buf.escape_char (value)
-			buf.put_character ('%'')
+			if is_character_32 then
+				buf.put_string ("(EIF_WIDE_CHAR) ")
+				buf.put_string (value.natural_32_code.out)
+				buf.put_character ('U')
+			else
+				buf.put_string ("(EIF_CHARACTER) %'")
+				buf.escape_char (value.to_character_8)
+				buf.put_character ('%'')
+			end
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is

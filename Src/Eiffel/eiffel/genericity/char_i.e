@@ -173,7 +173,11 @@ feature -- Code generation
 	maximum_interval_value: CHAR_VAL_B is
 			-- Maximum value in inspect interval for current type
 		do
-			create Result.make ({EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character_8)
+			if is_wide then
+				create Result.make ({CHARACTER_32}.max_value.to_character_32)
+			else
+				create Result.make ({EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character_8)
+			end
 		end
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

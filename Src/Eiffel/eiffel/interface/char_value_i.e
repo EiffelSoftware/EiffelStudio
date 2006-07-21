@@ -13,16 +13,29 @@ inherit
 	CHARACTER_ROUTINES
 
 create
-	make
+	make_character_8,
+	make_character_32
 
 feature {NONE} -- Initialization
 
-	make (v: CHARACTER) is
+	make_character_8 (v: CHARACTER_8) is
 			-- Create current with value `v'.
 		do
 			character_value := v
+			is_character_32 := False
 		ensure
 			character_value_set: character_value = v
+			is_character_8: is_character_8
+		end
+
+	make_character_32 (v: CHARACTER_32) is
+			-- Create current with value `v'.
+		do
+			character_value := v
+			is_character_32 := True
+		ensure
+			character_value_set: character_value = v
+			is_character_32: is_character_32
 		end
 
 feature -- Comparison
@@ -30,59 +43,92 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := character_value = other.character_value
+			Result := character_value = other.character_value and then
+				is_character_8 = other.is_character_8
 		end
 
 feature
 
-	character_value: CHARACTER;
-			-- Integer constant value
+	character_value: CHARACTER_32
+			-- Character constant value
 
 	is_character: BOOLEAN is True
-			-- Is the current constant a character one ?
+			-- Is the current constant a character one?
+
+	is_character_8: BOOLEAN is
+			-- Is it CHARACTER_8 constant?
+		do
+			Result := not is_character_32
+		end
+
+	is_character_32: BOOLEAN
+			-- Is it CHARACTER_32 constant?
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?
+		local
+			c: CHARACTER_A
 		do
-			Result := t.is_character;
-		end;
+			if t.is_character then
+				c ?= t
+				check
+					attached_c: c /= Void
+				end
+				Result := is_character_8 or else c.is_character_32
+			end
+		end
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		do
-			buffer.put_string ("(EIF_CHARACTER) '");
-			buffer.escape_char (character_value);
-			buffer.put_character ('%'');
-		end;
+			if is_character_8 then
+				buffer.put_string ("(EIF_CHARACTER) '")
+				buffer.escape_char (character_value.to_character_8)
+				buffer.put_character ('%'')
+			else
+				buffer.put_string ("(EIF_WIDE_CHAR) ")
+				buffer.put_string (character_value.natural_32_code.out)
+				buffer.put_character ('U')
+			end
+		end
 
 	generate_il is
 			-- Generate IL code for character constant value.
 		do
-			il_generator.put_character_constant (character_value)
+			if is_character_8 then
+				il_generator.put_character_constant (character_value.to_character_8)
+			else
+				il_generator.put_natural_32_constant (character_value.natural_32_code)
+			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a character constant value.
 		do
-			ba.append (Bc_char);
-			ba.append (character_value);
-		end;
+			if is_character_8 then
+				ba.append (Bc_char)
+				ba.append (character_value.to_character_8)
+			else
+				ba.append (Bc_wchar)
+				ba.append_character_32 (character_value)
+			end
+		end
 
 	dump: STRING is
 		do
-			Result := character_value.out;
-		end;
+			Result := character_value.out
+		end
 
 	append_signature (a_text_formatter: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add_char ('%'');
-			a_text_formatter.add_string (char_text (character_value));
-			a_text_formatter.add_char ('%'');
-		end;
+			a_text_formatter.add_char ('%'')
+			a_text_formatter.add_string (wchar_text (character_value))
+			a_text_formatter.add_char ('%'')
+		end
 
 	string_value: STRING is
 		do
-			Result := char_text (character_value)
+			Result := wchar_text (character_value)
 		end
 
 feature -- Multi-branch instruction processing
@@ -92,6 +138,9 @@ feature -- Multi-branch instruction processing
 		do
 			create Result.make (character_value)
 		end
+
+invariant
+	consistent_type: is_character_8 xor is_character_32
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

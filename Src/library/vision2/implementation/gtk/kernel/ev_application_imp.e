@@ -730,12 +730,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP is
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
 		local
-			gtkwid: POINTER
+			gtkwid, l_null: POINTER
 		do
 			from
 				gtkwid := a_gtk_object
 			until
-				Result /= Void or else gtkwid = default_pointer
+				Result /= Void or else gtkwid = l_null
 			loop
 				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
 				gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
@@ -746,12 +746,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
-			gdkwin, gtkwid: POINTER
+			gdkwin, gtkwid, l_null: POINTER
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-			if gdkwin /= default_pointer then
+			if gdkwin /= l_null then
 				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
-				if gtkwid /= default_pointer then
+				if gtkwid /= l_null then
 					Result ?= eif_object_from_gtk_object (gtkwid)
 					if Result /= Void and then Result.interface.is_destroyed then
 						Result := Void

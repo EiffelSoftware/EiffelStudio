@@ -488,6 +488,13 @@ feature -- Implementation
 		require
 			an_exception_not_void: an_exception /= Void
 		do
+			-- Clean up any locked windows of captures.
+			if locked_window /= Void then
+				locked_window.unlock_update
+			end
+			if captured_widget /= Void then
+				captured_widget.disable_capture
+			end
 			if uncaught_exception_actions_internal /= Void and then not uncaught_exception_actions_called then
 				uncaught_exception_actions_called := True
 				uncaught_exception_actions_internal.call ([an_exception])

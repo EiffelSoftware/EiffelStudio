@@ -86,6 +86,14 @@ feature{NONE} -- Agents
 			data_storage.extend_block (sblock)
 		end
 
+feature -- Status report
+
+	is_last_c_compilation_successful: BOOLEAN is
+			-- Is last c compilation successful?
+		do
+			Result := c_compilation_successful_cell.item
+		end
+
 feature{NONE}  -- Actions
 
 	state_message_timer: EV_TIMEOUT is
@@ -150,10 +158,12 @@ feature{NONE}  -- Actions
 			synchronize_on_c_compilation_exit
 			if launched then
 				if exit_code /= 0 then
+					c_compilation_successful_cell.put (False)
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
 					show_compilation_error_dialog
 				else
+					c_compilation_successful_cell.put (True)
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
 					display_message_on_main_output (c_compilation_succeeded_msg, True)
 				end
@@ -169,6 +179,7 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler launch failed
 		do
 			synchronize_on_c_compilation_exit
+			c_compilation_successful_cell.put (False)
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
@@ -177,6 +188,7 @@ feature{NONE}  -- Actions
 	on_terminate is
 			-- Handler called when c compiler has been terminated
 		do
+			c_compilation_successful_cell.put (True)
 			data_storage.wipe_out
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make (c_compilation_terminated_msg+".%N", False, False))
 			synchronize_on_c_compilation_exit
@@ -297,6 +309,12 @@ feature{NONE} -- Implementation
 			dlg.set_icon_pixmap (maps.warning_pixmap)
 			dlg.set_pixmap (maps.warning_pixmap)
 			dlg.show_modal_to_window (win)
+		end
+
+	c_compilation_successful_cell: CELL [BOOLEAN] is
+			-- Cell to hold c compilation successful flag
+		once
+			create Result.put (False)
 		end
 
 indexing

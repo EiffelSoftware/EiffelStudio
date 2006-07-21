@@ -21,6 +21,8 @@ feature -- Access
 			else
 				Result := -1
 			end
+		ensure
+			file_modified_date_valid: Result >= -1
 		end
 
 indexing

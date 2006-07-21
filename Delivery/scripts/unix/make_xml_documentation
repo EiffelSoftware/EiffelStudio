@@ -14,7 +14,10 @@ ec -local -batch -finalize -config doc_builder.ecf -c_compile &> $INSTALL_LOG
 if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then
 	remtrace Couldnt generate doc_builder
 	CANCEL
+else
+	mv EIFGENs/doc_builder/F_code/doc_builder .
 fi
+rm -rf EIFGENs
 
 remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
@@ -59,9 +62,11 @@ mv web $DOCUMENT_DIR/xmldoc/libraries/web/reference
 mv store $DOCUMENT_DIR/xmldoc/libraries/store/reference
 mv preferences $DOCUMENT_DIR/xmldoc/libraries/preferences/reference
 
+remtrace Deleting EIFGENs
+rm -rf $EIFFEL_SRC/tools/doc_builder/resources/xml/EIFGENs
 
 remtrace Run the documentation tool to generate the documentation for EiffelStudio as web based help
-cd $EIFFEL_SRC/tools/doc_builder/EIFGENs/doc_builder/F_code
+cd $EIFFEL_SRC/tools/doc_builder
 
 export DOCUMENT_DIR
 export EIFFEL_SRC

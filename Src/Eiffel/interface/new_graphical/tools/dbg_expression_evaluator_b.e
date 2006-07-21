@@ -287,7 +287,8 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			l_string_b ?= a_expr_b
 			if l_string_b /= Void then
-				tmp_result_value := string_to_dump_value (l_string_b.value)
+				create tmp_result_value.make_manifest_string (l_string_b.value,
+					system.string_class.compiled_class)
 			else
 					--| NotYetReady |--
 				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
@@ -302,28 +303,39 @@ feature {NONE} -- EXPR_B evaluation
 			l_string: STRING_VALUE_I
 			-- ...
 		do
-			if     a_value_i.is_integer		then
+			if a_value_i.is_integer then
 				l_integer ?= a_value_i
 				if l_integer.has_integer (32) then
-					tmp_result_value := integer_32_to_dump_value (l_integer.integer_32_value)
+					create tmp_result_value.make_integer_32 (l_integer.integer_32_value,
+						system.integer_32_class.compiled_class)
 				else
-					tmp_result_value := integer_64_to_dump_value (l_integer.integer_64_value)
+					create tmp_result_value.make_integer_64 (l_integer.integer_64_value,
+						system.integer_64_class.compiled_class)
 				end
-			elseif a_value_i.is_string		then
+			elseif a_value_i.is_string then
 				l_string ?= a_value_i
-				tmp_result_value := string_to_dump_value (l_string.string_value)
-			elseif a_value_i.is_boolean		then
-				tmp_result_value := boolean_to_dump_value (a_value_i.boolean_value)
-			elseif a_value_i.is_character	then
+				create tmp_result_value.make_manifest_string (l_string.string_value,
+					system.string_class.compiled_class)
+			elseif a_value_i.is_boolean then
+				create tmp_result_value.make_boolean (a_value_i.boolean_value,
+					system.boolean_class.compiled_class)
+			elseif a_value_i.is_character then
 				l_char ?= a_value_i
-				tmp_result_value := character_to_dump_value (l_char.character_value)
-			elseif a_value_i.is_real_32		then
+				if l_char.is_character_8 then
+					create tmp_result_value.make_character (l_char.character_value.to_character_8,
+						system.character_class.compiled_class)
+				else
+					create tmp_result_value.make_wide_character (l_char.character_value,
+						system.wide_char_class.compiled_class)
+				end
+			elseif a_value_i.is_real then
 				l_real ?= a_value_i
-				tmp_result_value := real_to_dump_value (l_real.real_32_value)
-			elseif a_value_i.is_real_64		then
-				l_real ?= a_value_i
-				tmp_result_value := double_to_dump_value (l_real.real_64_value)
---			elseif a_value_i.is_bit			then
+				if l_real.is_real_32 then
+					create tmp_result_value.make_real (l_real.real_32_value, system.real_32_class.compiled_class)
+				else
+					create tmp_result_value.make_double (l_real.real_64_value, system.real_64_class.compiled_class)
+				end
+--			elseif a_value_i.is_bit then
 			else
 				notify_error_not_implemented (a_value_i.generator + Cst_error_not_yet_ready)
 			end
@@ -1251,7 +1263,7 @@ feature {NONE} -- Implementation
 							l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
 							if l_ct_locals /= Void then
 									--| if it failed .. let's continue anyway for now
-									
+
 									--| Last local return a new object
 									--| so there is no need to "twin" it
 								Ast_context.set_locals (l_ct_locals)
@@ -1369,50 +1381,6 @@ feature {NONE} -- Compiler helpers
 				rids := fi.rout_id_set
 				Result := a_class.feature_table.feature_of_rout_id_set (fi.rout_id_set)
 			end
-		end
-
-feature {NONE} -- Dump value helpers
-
-	string_to_dump_value (v: STRING): DUMP_VALUE is
-			-- Convert a string value `v' to the corresponding DUMP_VALUE
-		do
-			create Result.make_manifest_string (v, system.string_class.compiled_class)
-		end
-
-	integer_32_to_dump_value (v: INTEGER): DUMP_VALUE is
-			-- Convert a INTEGER value `v' to the corresponding DUMP_VALUE	
-		do
-			create Result.make_integer_32 (v, system.integer_32_class.compiled_class)
-		end
-
-	integer_64_to_dump_value (v: INTEGER_64): DUMP_VALUE is
-			-- Convert a INTEGER_64 value `v' to the corresponding DUMP_VALUE		
-		do
-			create Result.make_integer_64 (v, system.integer_64_class.compiled_class)
-		end
-
-	boolean_to_dump_value (v: BOOLEAN): DUMP_VALUE is
-			-- Convert a BOOLEAN value `v' to the corresponding DUMP_VALUE	
-		do
-			create Result.make_boolean (v, system.boolean_class.compiled_class)
-		end
-
-	character_to_dump_value (v: CHARACTER): DUMP_VALUE is
-			-- Convert a CHARACTER value `v' to the corresponding DUMP_VALUE	
-		do
-			create Result.make_character (v, system.character_class.compiled_class)
-		end
-
-	real_to_dump_value (v: REAL): DUMP_VALUE is
-			-- Convert a REAL value `v' to the corresponding DUMP_VALUE	
-		do
-			create Result.make_real (v, system.real_32_class.compiled_class)
-		end
-
-	double_to_dump_value (v: DOUBLE): DUMP_VALUE is
-			-- Convert a DOUBLE value `v' to the corresponding DUMP_VALUE	
-		do
-			create Result.make_double (v, system.real_64_class.compiled_class)
 		end
 
 indexing

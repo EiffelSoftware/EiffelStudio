@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		undefine
-			hash_code, generics, has_like, parent_type,
+			hash_code, generics, has_like, has_like_argument, parent_type,
 			deep_actual_type, ext_append_to, conform_to,
 			has_formal_generic, is_loose, valid_generic, actual_argument_type,
 			instantiated_in, good_generics, error_generics, check_constraints,

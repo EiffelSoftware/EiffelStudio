@@ -365,8 +365,8 @@ feature {NONE} -- Implementation
 					reset_last_class_and_type
 				else
 					l_type := l_feat.type
-							-- If it is an like argument type, we take the actual type from the arguments.
-					if l_type.is_like_argument then
+							-- If it has an like argument type, we solve the type from the arguments.
+					if l_type.has_like_argument then
 						check
 							parameters_not_void: l_as.parameters /= Void
 						end
@@ -808,8 +808,8 @@ feature {NONE} -- Implementation
 							end
 						else
 							l_type := l_feat.type
-									-- If it is an like argument type, we take the actual type from the arguments.
-							if l_type.is_like_argument then
+									-- If it has an like argument type, we solve the type from the arguments.
+							if l_type.has_like_argument then
 								check
 									parameters_not_void: l_as.parameters /= Void
 								end
@@ -918,8 +918,8 @@ feature {NONE} -- Implementation
 				l_type := current_feature.type
 			end
 			if l_type /= Void then
-						-- If it is an like argument type, we take the actual type from the arguments.
-				if l_type.is_like_argument then
+						-- If it has an like argument type, we solve the type from the arguments.
+				if l_type.has_like_argument then
 					check
 						parameters_not_void: l_as.parameters /= Void
 					end
@@ -2427,6 +2427,18 @@ feature {NONE} -- Implementation
 		end
 
 	process_class_as (l_as: CLASS_AS) is
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			text_formatter_decorator.process_filter_item (f_class_declaration, True)
+			share_class_processing (l_as)
+			text_formatter_decorator.process_filter_item (f_class_declaration, False)
+			text_formatter_decorator.put_new_line
+		end
+
+	share_class_processing (l_as: CLASS_AS) is
+			-- Shared part of `'processing_class_as' for both normal flat views and doc.
 		local
 			l_creators: EIFFEL_LIST [CREATE_AS]
 			l_create: CREATE_AS
@@ -2437,7 +2449,6 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			processing_none_feature_part := True
-			text_formatter_decorator.process_filter_item (f_class_declaration, True)
 			text_formatter_decorator.process_before_class (current_class)
 			safe_process (l_as.top_indexes)
 			format_header (l_as)
@@ -2498,8 +2509,6 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 			text_formatter_decorator.process_after_class (current_class)
 			text_formatter_decorator.process_filter_item (f_class_end, False)
-			text_formatter_decorator.process_filter_item (f_class_declaration, False)
-			text_formatter_decorator.put_new_line
 		end
 
 	process_parent_as (l_as: PARENT_AS) is
@@ -3055,15 +3064,18 @@ feature -- Expression visitor
 			-- `last_type' is not modified.
 		local
 			l_last_type: like last_type
+			l_last_class: like last_class
 			l_ex_visiting: BOOLEAN
 		do
 			l_ex_visiting := expr_type_visiting
 			expr_type_visiting := True
 			l_last_type := last_type
+			l_last_class := last_class
 			last_type := Void
 			a_expr.process (Current)
 			Result := last_type
 			last_type := l_last_type
+			last_class := l_last_class
 			expr_type_visiting := l_ex_visiting
 			if not has_error_internal and Result = Void then
 				has_error_internal := True
@@ -3077,11 +3089,13 @@ feature -- Expression visitor
 		local
 			i, l_count: INTEGER
 			l_last_type: like last_type
+			l_last_class: like last_class
 			l_expr_visiting: BOOLEAN
 		do
 			l_expr_visiting := expr_type_visiting
 			expr_type_visiting := True
 			l_last_type := last_type
+			l_last_class := last_class
 			last_type := Void
 			create Result.make (1, a_exprs.count)
 			from
@@ -3095,6 +3109,7 @@ feature -- Expression visitor
 				i := i + 1
 			end
 			last_type := l_last_type
+			last_class := l_last_class
 			expr_type_visiting := l_expr_visiting
 		end
 

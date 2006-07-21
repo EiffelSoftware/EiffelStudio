@@ -235,9 +235,15 @@ feature -- Properties
 		end
 
 	has_like: BOOLEAN is
-			-- Is the type an anchored type ?
+			-- Has the type anchored type in its definition ?
 		do
 			-- Do nothing
+		end
+
+	has_like_argument: BOOLEAN is
+			-- Has the type like argument in its definition?
+		do
+			-- Do nothing	
 		end
 
 	has_formal_generic: BOOLEAN is

@@ -105,9 +105,10 @@ feature -- Process operations
 			-- If `close_nonstd_files'
 			-- is true, then change all open file
 			-- descriptors greater than 2 so that they are
-			-- closed on a successful exec.  The new
+			-- closed on a successful exec. If env_ptr is a `default_pointer', the new
 			-- process has the same environment as the
-			-- current one.  This routine never returns to
+			-- current one, otherwise, it will use the environment specified in `env_ptr'.
+			-- This routine never returns to
 			-- the caller normally, although it may raise
 			-- an exception.
 		require

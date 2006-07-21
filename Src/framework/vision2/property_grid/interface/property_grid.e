@@ -12,7 +12,8 @@ inherit
 			initialize,
 			is_in_default_state,
 			row_type,
-			on_key_pressed
+			on_key_pressed,
+			on_draw_borders
 		end
 
 create
@@ -41,8 +42,6 @@ feature {NONE} -- Initialization
 
 			disable_selection_on_click
 
-			enable_row_separators
-			enable_column_separators
 			enable_tree
 			hide_header
 			hide_tree_node_connectors
@@ -100,6 +99,8 @@ feature -- Update
 			if not is_destroyed then
 				hide_horizontal_scroll_bar
 			end
+
+			enable_border
 		end
 
 	clear_description is
@@ -115,6 +116,7 @@ feature -- Update
 			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
 			-- Else use the existing section.
 		require
+			not_destroyed: not is_destroyed
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		local
 			l_row: EV_GRID_ROW
@@ -156,6 +158,7 @@ feature -- Update
 	add_property (a_property: PROPERTY) is
 			-- Add `a_property'.
 		require
+			not_destroyed: not is_destroyed
 			valid_current_section
 		local
 			l_row: like row_type
@@ -257,10 +260,18 @@ feature -- Update
 			end
 		end
 
-feature {NONE} -- Agents
+feature {NONE} -- Actions
+
+	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+			-- Draw borders.
+		do
+			if not sections.has_item (grid_item.row) then
+				Precursor {ES_GRID}(drawable, grid_item, a_column_index, a_row_index)
+			end
+		end
 
 	redraw_text (a_drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
-			--
+			-- Draw column spanned text.
 		local
 			l_text: STRING
 			l_font: EV_FONT

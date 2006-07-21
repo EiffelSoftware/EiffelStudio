@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Setup environment
+INIT_DIR=`pwd`
+
 # These directories should already have been created by make_delivery. Whatever...
 safe_md $INSTALL_DIR/studio/spec
 safe_md $INSTALL_DIR/studio/spec/unix
@@ -15,8 +18,8 @@ cd $EIFFEL_SRC
 exprt $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_tour
 cd $EIFFEL_SRC/vision2_tour
 safe_md $EXPORT_DIR/vision2_tour
-source retrieve_build_files $DEFAULT_ORIGO_SVN &> $INSTALL_LOG >> $INSTALL_LOG
-source retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
+. retrieve_build_files $DEFAULT_ORIGO_SVN >> $INSTALL_LOG 2>&1
+. retrieve_flat_short >> $INSTALL_LOG 2>&1
 cd $EIFFEL_SRC/vision2_tour
 clean_project
 finalize vision2_tour.ecf vision2_tour

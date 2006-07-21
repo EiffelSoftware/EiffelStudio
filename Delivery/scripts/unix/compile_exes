@@ -51,7 +51,7 @@ cd $EXPORT_DIR
 fullrd C
 gunzip -c c.tar.gz | tar -xf -
 cd C
-. quick_configure >> $COMPILE_LOG
+. quick_configure >> $COMPILE_LOG 2>&1
 safe_md $EXPORT_DIR/runtimes
 cp run-time/*.so $EXPORT_DIR/runtimes
 cp run-time/*.a $EXPORT_DIR/runtimes

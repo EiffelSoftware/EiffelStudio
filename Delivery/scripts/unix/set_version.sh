@@ -6,7 +6,7 @@
 # $3 = file to process if any, otherwise display version on output
 
 computed_svn_revision=`svn info $1 | grep "Last Changed Rev" | sed -e "s/Last Changed Rev: //"`
-if [[ -z "$2" || -z "$3" ]]; then
+if [ "$2" = "" -o "$3" = "" ]; then
 	echo $computed_svn_revision
 else
 	sed -e "s/$2/$computed_svn_revision/" $3 > tmp

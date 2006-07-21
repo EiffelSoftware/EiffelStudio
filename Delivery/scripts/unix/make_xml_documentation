@@ -10,7 +10,7 @@ safe_md tools
 cd $EIFFEL_SRC/tools
 co $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
-ec -local -batch -finalize -config doc_builder.ecf -c_compile &> $INSTALL_LOG
+ec -local -batch -finalize -config doc_builder.ecf -c_compile >> $INSTALL_LOG 2>&1
 if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then
 	remtrace Couldnt generate doc_builder
 	CANCEL
@@ -21,7 +21,7 @@ rm -rf EIFGENs
 
 remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
-ec -local -flatshort -filter xml -all -config all_libs.ecf &> $INSTALL_LOG
+ec -local -flatshort -filter xml -all -config all_libs.ecf >> $INSTALL_LOG 2>&1
 
 remtrace Copy XML docs into appropriate written docs location
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation

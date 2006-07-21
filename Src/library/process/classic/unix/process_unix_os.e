@@ -83,8 +83,6 @@ feature -- Process operations
 			-- process to the parent process and 0 to the child
 		do
 			Result := unix_fork_process;
-		ensure
-			process_id_nonnegative: Result >= 0
 		end
 
 	new_process_group is
@@ -371,7 +369,7 @@ feature {NONE} -- Externals
 		alias
 			"[
 				{
-					int pgid = getpgid ($pid);
+					pid_t pgid = getpgid ($pid);
 					tcsetpgrp (0, pgid);
 					tcsetpgrp (1, pgid);
 					tcsetpgrp (2, pgid);

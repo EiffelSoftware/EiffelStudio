@@ -171,6 +171,12 @@ feature -- Execution
 			Result := status_available and then signaled_flag_from_status (status)
 		end
 
+	is_last_process_spawn_successful: BOOLEAN is
+			-- Is last process spawn successful?
+			-- Check it after invoking `spawn_nowait'.
+		do
+			Result := process_id /= -1
+		end
 
 	set_is_executing (b: BOOLEAN) is
 			-- Set `is_executing' with `b'.
@@ -185,6 +191,7 @@ feature -- Execution
 			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
 			-- Environment variables for new process is stored in `envptr'. If `envptr' is `default_pointer',
 			-- new process will inherit all environment variables from its parent process.
+			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
 		local
 			ee: EXECUTION_ENVIRONMENT
 			cur_dir: STRING

@@ -213,7 +213,7 @@ feature -- Element change
 		do
 			if tree /= Void then
 				l_selected_node := tree.selected_item
-				l_node := tree.retrieve_item_recursively_by_data (a_feature, true)
+				l_node := tree.retrieve_item_recursively_by_data (a_feature, True)
 				if l_node /= Void then
 					l_node.enable_select
 					if tree.is_displayed then
@@ -246,7 +246,6 @@ feature -- Element change
 			classc_stone: CLASSC_STONE
 			external_classc: EXTERNAL_CLASS_C
 			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			new_class: like current_class
 			conv_cst: CLASSI_STONE
 		do
 			conv_cst ?= c
@@ -266,17 +265,14 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							classc_stone.e_class.eiffel_class_c.parse_ast
-							if classc_stone.e_class.last_syntax_error = Void then
-								new_class := classc_stone.e_class.ast
-								feature_clauses := new_class.features
-										-- Build the tree
-								--| FIXME
+							current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
+							if current_class /= Void then
+								feature_clauses := current_class.features
+									-- Build the tree
 								if tree.selected_item /= Void then
 									tree.selected_item.disable_select
 								end
 								tree.wipe_out
-								current_class := new_class
 								current_compiled_class := classc_stone.e_class
 								if feature_clauses /= Void then
 									tree.build_tree (feature_clauses)

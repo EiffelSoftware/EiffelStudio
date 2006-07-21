@@ -81,6 +81,7 @@ feature {NONE} -- Initialization
 			obsolete_message := o
 
 			end_keyword := ed
+			date := -1
 		ensure
 			class_name_set: class_name = n
 			external_class_name_set: external_class_name = ext_name
@@ -104,6 +105,7 @@ feature {NONE} -- Initialization
 			has_externals_set: has_externals = he
 			end_keyword_not_void: end_keyword = ed
 			internal_invariant_set: internal_invariant = inv
+			date_set: date = -1
 		end
 
 feature -- Visitor
@@ -341,6 +343,9 @@ feature -- Attributes
 
 	has_externals: BOOLEAN
 			-- Does current class have an external declaration?
+
+	date: INTEGER
+			-- Date of file when last parsed.
 
 feature -- Status report
 
@@ -589,8 +594,19 @@ feature {COMPILER_EXPORTER} -- Setting
 			internal_top_indexes := i
 		end
 
+	set_date (a_date: like date) is
+			-- Set `date' with `a_date'.
+		require
+			a_date_valid: a_date >= -1
+		do
+			date := a_date
+		ensure
+			date_set: date = a_date
+		end
+
 invariant
 	convertors_valid: convertors /= Void implies not convertors.is_empty
+	date_valid: date >= -1
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -255,8 +255,19 @@ feature -- Access
 		end
 
 	date_has_changed: BOOLEAN is
+		local
+			l_date: INTEGER
 		do
-			Result := file_modified_date (file_name) /= date
+			l_date := file_modified_date (file_name)
+			Result := (l_date = -1) or (l_date /= date)
+		end
+
+	file_date: INTEGER is
+			-- Date of last modification date of Current.
+		do
+			Result := file_modified_date (file_name)
+		ensure
+			file_date_valid: Result >= -1
 		end
 
 	compiled_representation: CLASS_C is

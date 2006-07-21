@@ -278,47 +278,20 @@ feature {NONE} -- Click ast exploration
 		require
 			c_not_void: c /= Void
 		local
-			retried: BOOLEAN
-			prev_class: CLASS_C
 			l_eiffel_class: EIFFEL_CLASS_C
 		do
-			current_class_as := Void
-			if retried then
-				System.set_current_class (prev_class)
-				last_syntax_error ?= Error_handler.error_list.first
-				Error_handler.error_list.wipe_out
-			else
-				if not c.is_precompiled then
-					l_eiffel_class ?= c
-					check l_eiffel_class_not_void: l_eiffel_class /= Void end
-					if after_save then
-						l_eiffel_class.parse_ast
-						last_syntax_error := c.last_syntax_error
-						if last_syntax_error = Void then
-							current_class_as := Tmp_ast_server.item (c.class_id)
-						end
-					else
-						last_syntax_error := Void
-						prev_class := System.current_class
-						System.set_current_class (c)
-							-- Build AST without doing a backup
-						current_class_as := l_eiffel_class.build_ast (False)
-						System.set_current_class (prev_class)
-					end
+			if not c.is_precompiled then
+				l_eiffel_class ?= c
+				check l_eiffel_class_not_void: l_eiffel_class /= Void end
+				current_class_as := l_eiffel_class.parsed_ast (after_save)
+				if current_class_as = Void then
 						-- If a syntax error ocurred, we retrieve the old ast.
-					if current_class_as = Void then
-						current_class_as := c.ast
-					end
-				else
 					current_class_as := c.ast
 				end
-			end
-
-		rescue
-			if Rescue_status.is_error_exception then
-				Rescue_status.set_is_error_exception (False)
-				retried := True
-				retry
+			else
+					-- Class is precompiled, we should not reparse it since its definition
+					-- is frozen for the compiler.
+				current_class_as := c.ast
 			end
 		end
 

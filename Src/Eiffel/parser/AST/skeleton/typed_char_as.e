@@ -14,7 +14,7 @@ inherit
 		rename
 			initialize as char_initialize
 		redefine
-			process, first_token
+			first_token, process, type
 		end
 
 create
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
 		do
-			value := c
+			value := c.to_character_32
 			set_position (l, co, p, n)
 			type := t_as
 		ensure

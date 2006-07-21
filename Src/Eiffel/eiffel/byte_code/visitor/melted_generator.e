@@ -465,15 +465,20 @@ feature {NONE} -- Visitors
 	process_char_const_b (a_node: CHAR_CONST_B) is
 			-- Process `a_node'.
 		do
-			ba.append (Bc_char)
-			ba.append (a_node.value)
+			if a_node.is_character_32 then
+				ba.append (Bc_wchar)
+				ba.append_character_32 (a_node.value)
+			else
+				ba.append (Bc_char)
+				ba.append (a_node.value.to_character_8)
+			end
 		end
 
 	process_char_val_b (a_node: CHAR_VAL_B) is
 			-- Process `a_node'.
 		do
-			ba.append (Bc_char)
-			ba.append (a_node.value)
+			ba.append (Bc_wchar)
+			ba.append_character_32 (a_node.value)
 		end
 
 	process_check_b (a_node: CHECK_B) is

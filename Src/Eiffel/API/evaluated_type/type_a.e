@@ -111,6 +111,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_character_32: BOOLEAN is
+			-- Is the current actual type a character 32 bits type ?
+		do
+			-- Do nothing
+		end
+
 	is_boolean: BOOLEAN is
 			-- Is the current actual type a boolean type ?
 		do

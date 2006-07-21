@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
 		do
-			value := c
+			value := c.to_character_32
 			set_position (l, co, p, n)
 		ensure
 			value_set: value = c
@@ -46,8 +46,14 @@ feature -- Visitor
 
 feature -- Properties
 
-	value: CHARACTER
+	value: CHARACTER_32
 			-- Character value
+
+	type: TYPE_AS is
+			-- Associated type (if any)
+		do
+				-- Void here
+		end
 
 feature -- Comparison
 
@@ -61,7 +67,7 @@ feature -- Output
 
 	string_value: STRING is
 		do
-			Result := char_text (value)
+			Result := wchar_text (value)
 			Result.precede ('%'')
 			Result.extend ('%'')
 		end

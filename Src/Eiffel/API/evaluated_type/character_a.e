@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_character, type_i, associated_class, same_as, process
+			is_character, is_character_32, type_i, associated_class, same_as, process
 		end
 
 create
@@ -24,10 +24,10 @@ feature -- Initialization
 			-- Create instance of CHARACTER_A. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
-			is_wide := w
+			is_character_32 := w
 			cl_make (associated_class.class_id)
 		ensure
-			is_wide_set: is_wide = w
+			is_character_32_set: is_character_32 = w
 		end
 
 feature -- Visitor
@@ -43,8 +43,8 @@ feature -- Property
 	is_character: BOOLEAN is True
 			-- Is the current type a character type ?
 
-	is_wide: BOOLEAN
-			-- Is current character a wide one?
+	is_character_32: BOOLEAN
+			-- Is the type a character 32 bits type?
 
 feature -- Access
 
@@ -56,14 +56,14 @@ feature -- Access
 			Result := other.is_character
 			if Result then
 				char ?= other
-				Result := is_wide = char.is_wide
+				Result := is_character_32 = char.is_character_32
 			end
 		end
 
 	associated_class: CLASS_C is
 			-- Class CHARACTER
 		do
-			if is_wide then
+			if is_character_32 then
 				Result := System.wide_char_class.compiled_class
 			else
 				Result := System.character_class.compiled_class
@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER}
 	type_i: CHAR_I is
 			-- C type
 		do
-			if is_wide then
+			if is_character_32 then
 				Result := Wide_char_c_type
 			else
 				Result := Char_c_type

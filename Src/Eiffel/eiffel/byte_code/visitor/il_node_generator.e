@@ -1154,7 +1154,11 @@ feature {NONE} -- Visitors
 	process_char_const_b (a_node: CHAR_CONST_B) is
 			-- Process `a_node'.
 		do
-			il_generator.put_character_constant (a_node.value)
+			if a_node.is_character_32 then
+				il_generator.put_natural_32_constant (a_node.value.natural_32_code)
+			else
+				il_generator.put_character_constant (a_node.value.to_character_8)
+			end
 		end
 
 	process_char_val_b (a_node: CHAR_VAL_B) is

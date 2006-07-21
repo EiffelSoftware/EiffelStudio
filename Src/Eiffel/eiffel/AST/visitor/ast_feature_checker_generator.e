@@ -765,6 +765,8 @@ feature -- Implementation
 			l_arg_nodes: BYTE_LIST [EXPR_B]
 			l_arg_types: like last_expressions_type
 			l_formal_arg_type, l_like_arg_type: TYPE_A
+			l_like_argument: LIKE_ARGUMENT
+			l_cl_type_a: CL_TYPE_A
 			l_feature: FEATURE_I
 			i, l_actual_count, l_formal_count: INTEGER
 				-- Id of the class type on the stack
@@ -1076,6 +1078,21 @@ feature -- Implementation
 					if l_arg_types /= Void then
 						l_pure_result_type := l_result_type
 						l_result_type := l_result_type.actual_argument_type (l_arg_types)
+							-- Ensure the expandedness status of the result type matches
+							-- the expandedness status of the argument it is anchored to (if any).
+						if l_pure_result_type.is_like_argument then
+							l_like_argument ?= l_pure_result_type
+							check
+								l_like_argument_attached: l_like_argument /= Void
+							end
+							i := l_like_argument.position
+							if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
+								l_cl_type_a ?= l_result_type
+								if l_cl_type_a /= Void then
+									l_result_type := l_cl_type_a.reference_type
+								end
+							end
+						end
 						l_open_type ?= l_result_type
 						if l_open_type /= Void then
 								-- It means that the result type is a like argument. In that case,
@@ -1482,9 +1499,13 @@ feature -- Implementation
 
 	process_char_as (l_as: CHAR_AS) is
 		do
-			last_type := character_type
+			if l_as.type = Void then
+				last_type := character_type
+			else
+				check_type (l_as.type)
+			end
 			if is_byte_node_enabled then
-				create {CHAR_CONST_B} last_byte_node.make (l_as.value)
+				create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
 			end
 		end
 

@@ -9,7 +9,7 @@ class
 	CHAR_VAL_B
 
 inherit
-	TYPED_INTERVAL_VAL_B [CHARACTER]
+	TYPED_INTERVAL_VAL_B [CHARACTER_32]
 
 create
 	make
@@ -27,16 +27,25 @@ feature -- Measurement
 	distance (other: like Current): DOUBLE is
 			-- Distance between `other' and Current
 		do
-			Result := other.value |-| value
+			Result := other.value.natural_32_code - value.natural_32_code
 		end
 
 feature -- Error reporting
 
 	display (a_text_formatter: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add_char ('%'')
-			a_text_formatter.add_char (value)
-			a_text_formatter.add_char ('%'')
+			if value.natural_32_code <= {CHARACTER_8}.max_value.as_natural_32 then
+				a_text_formatter.add_char ('%'')
+				a_text_formatter.add_char (value.to_character_8)
+				a_text_formatter.add_char ('%'')
+			else
+				a_text_formatter.add_char ('%'')
+				a_text_formatter.add_char ('%%')
+				a_text_formatter.add_char ('/')
+				a_text_formatter.add_string (value.natural_32_code.out)
+				a_text_formatter.add_char ('/')
+				a_text_formatter.add_char ('%'')
+			end
 		end
 
 feature -- Iteration
@@ -45,10 +54,10 @@ feature -- Iteration
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		local
-			i: INTEGER
+			i: NATURAL_32
 		do
 			from
-				i := other.value |-| value + 1
+				i := other.value.natural_32_code - value.natural_32_code + 1
 				if not is_included then
 					i := i - 1
 				end
@@ -74,10 +83,10 @@ feature -- IL code generation
 		do
 			i := value
 			if not is_included then
-				i := i + 1
+				i := next_value (i)
 			end
 			if i /= '%U' then
-				il_generator.put_character_constant (i)
+				il_generator.put_natural_32_constant (i.natural_32_code)
 				il_generator.generate_binary_operator ({IL_CONST}.il_minus, True)
 			end
 		end
@@ -87,13 +96,13 @@ feature {TYPED_INTERVAL_B} -- IL code generation
 	il_load_value is
 			-- Load value to IL stack.
 		do
-			il_generator.put_character_constant (value)
+			il_generator.put_natural_32_constant (value.natural_32_code)
 		end
 
 	il_load_difference (other: like Current) is
 			-- Load a difference between current and `other' to IL stack.
 		do
-			il_generator.put_integer_32_constant (value |-| other.value)
+			il_generator.put_natural_32_constant (value.natural_32_code - other.value.natural_32_code)
 		end
 
 feature {NONE} -- Implementation: C generation
@@ -104,15 +113,21 @@ feature {NONE} -- Implementation: C generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.put_string ("(EIF_CHARACTER) '")
-			buf.escape_char (v)
-			buf.put_character ('%'')
+			if v.natural_32_code <= {CHARACTER_8}.max_value.as_natural_32 then
+				buf.put_string ("(EIF_CHARACTER) '")
+				buf.escape_char (v.to_character_8)
+				buf.put_character ('%'')
+			else
+				buf.put_string ("(EIF_WIDE_CHAR) ")
+				buf.put_string (v.natural_32_code.out)
+				buf.put_character ('U')
+			end
 		end
 
 	next_value (v: like value): like value is
 			-- Value after given value `v'
 		do
-			Result := v + 1
+			Result := (v.natural_32_code + 1).to_character_32
 		end
 
 indexing

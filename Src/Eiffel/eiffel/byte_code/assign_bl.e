@@ -353,6 +353,9 @@ feature
 	Metamorphose_assignment: INTEGER is unique
 			-- Metamorphose of source is necessary
 
+	Unmetamorphose_assignment: INTEGER is unique
+			-- Metamorphose of source is necessary
+
 	Clone_assignment: INTEGER is unique
 			-- Clone of source is needed
 
@@ -383,19 +386,26 @@ feature
 					-- Assigning Void to expanded.
 				buf.put_string ("RTEC(EN_VEXP);")
 				buf.put_new_line
-			elseif target_type.is_true_expanded then
+			elseif target_type.is_true_expanded and then source_type.is_expanded then
 					-- Reattachment of expanded types.
+				check
+					source_type_is_true_expanded: source_type.is_true_expanded
+				end
 				generate_regular_assignment (Copy_assignment)
-			elseif target_type.is_basic or else source_type.is_reference then
+			elseif target_type.is_basic and then source_type.is_basic or else
+				target_type.is_reference and then source_type.is_reference
+			then
 					-- Reattachment of basic type to basic type or
 					-- of reference type to reference type.
 				generate_regular_assignment (Simple_assignment)
 			elseif source_type.is_basic then
 					-- Reattachment of basic type to reference.
 				generate_regular_assignment (Metamorphose_assignment)
-			else
+			elseif target_type.is_reference then
 					-- Reattachment of expanded type to reference.
 				generate_regular_assignment (Clone_assignment)
+			else
+				generate_regular_assignment (Unmetamorphose_assignment)
 			end
 		end
 
@@ -505,6 +515,25 @@ feature
 					buf.put_new_line
 				end
 				generate_expanded_assignment
+			elseif how = Unmetamorphose_assignment then
+				if context.real_type (target.type).is_basic then
+						-- Reattachment of reference type to basic.
+					target.print_register
+					buf.put_string (" = *")
+					target.c_type.generate_access_cast (buf)
+					buf.put_character ('(')
+					source.print_register
+					buf.put_string (gc_rparan_semi_c)
+					buf.put_new_line
+				else
+						-- Reattachment of reference type to expanded.
+					buf.put_string ("RTXA(")
+					source.print_register
+					buf.put_string (gc_comma)
+					target.print_register
+					buf.put_string (gc_rparan_semi_c)
+					buf.put_new_line
+				end
 			else
 				if how = Simple_assignment or need_aging_tests then
 					if is_bit_assignment then

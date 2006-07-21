@@ -187,10 +187,11 @@ feature -- Concrete evaluation
 					create last_result_value.make_boolean (val.boolean_value, last_result_static_type);
 				elseif val.is_character then
 					char_val ?= val
-					create last_result_value.make_character (char_val.character_value, last_result_static_type);
---				elseif val.is_wide_character then
---					wchar_val ?= val
---					create last_result_value.make_wide_character (char_val.wide_character_value, last_result_static_type);
+					if char_val.is_character_8 then
+						create last_result_value.make_character (char_val.character_value.to_character_8, last_result_static_type);
+					else
+						create last_result_value.make_wide_character (char_val.character_value, last_result_static_type);
+					end
 				elseif val.is_string then
 					create last_result_value.make_manifest_string (val.string_value, last_result_static_type);
 				elseif val.is_bit then

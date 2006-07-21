@@ -16,20 +16,16 @@ inherit
 
 feature -- Assembler
 
-	normal_to_deferred_feature_as (a_feature_as: FEATURE_AS; source_feature: FEATURE_I): FEATURE_AS is
+	normal_to_deferred_feature_as (a_feature_as: FEATURE_AS): FEATURE_AS is
 			-- Make a normal feature as to a deferred feature as,
 			-- replacing body, removing locals and resecue.
 		require
 			a_feature_as_is_routine: a_feature_as.body.is_routine
-			source_feature_not_void: source_feature /= Void
 		local
 			new_feature_as: FEATURE_AS
-			f_name: FEATURE_NAME
 			l_routine_body: ROUTINE_AS
 		do
 			new_feature_as := a_feature_as
-			f_name := a_feature_as.feature_names.first.twin
-			new_feature_as := replace_name_from_feature (new_feature_as, f_name, source_feature)
 			l_routine_body ?= new_feature_as.body.content
 			check
 				l_routine_body_not_void: l_routine_body /= Void
@@ -42,12 +38,12 @@ feature -- Assembler
 			result_not_void: Result /= Void
 		end
 
-	replace_name_from_feature (a_ast: FEATURE_AS; a_name: FEATURE_NAME; source_feature: FEATURE_I): FEATURE_AS is
-			-- Replace name in `a_ast' with `a_name' using attributes in `a_feature'.
+	replace_name_from_feature (a_ast: FEATURE_AS; a_name: FEATURE_NAME; target_feature: FEATURE_I): FEATURE_AS is
+			-- Replace name in `a_ast' with `a_name' using attributes in `target_feature'.
 		require
 			a_ast_not_void: a_ast /= Void
 			a_name_not_void: a_name /= Void
-			a_feature_not_void: source_feature /= Void
+			target_feature_not_void: target_feature /= Void
 		local
 			new_feature_as: FEATURE_AS
 			f_name: FEATURE_NAME
@@ -63,8 +59,8 @@ feature -- Assembler
 			if f_name.frozen_keyword /= Void then
 				l_frozen_keyword := f_name.frozen_keyword.twin
 			end
-			if source_feature.is_infix then
-				create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
+			if target_feature.is_infix then
+				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				l_infix_prefix_as ?= f_name
 				if l_infix_prefix_as = Void then
@@ -75,8 +71,8 @@ feature -- Assembler
 					l_infix_prefix_keyword.set_position (0, 0, 0, 0)
 				end
 				create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
-			elseif source_feature.is_prefix then
-				create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
+			elseif target_feature.is_prefix then
+				create l_op.initialize (extract_symbol_from_prefix (target_feature.feature_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				l_infix_prefix_as ?= f_name
 				if l_infix_prefix_as = Void then
@@ -87,24 +83,24 @@ feature -- Assembler
 					l_infix_prefix_keyword.set_position (0, 0, 0, 0)
 				end
 				create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
-			elseif source_feature.alias_name /= Void then
-				create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
+			elseif target_feature.alias_name /= Void then
+				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
-				create l_id.initialize (source_feature.feature_name)
+				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
 				create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
-					l_id, l_op, source_feature.has_convert_mark, Void, Void)
-				if source_feature.is_binary then
+					l_id, l_op, target_feature.has_convert_mark, Void, Void)
+				if target_feature.is_binary then
 					f_name.set_is_binary
-				elseif source_feature.is_unary then
+				elseif target_feature.is_unary then
 					f_name.set_is_unary
 				end
 			else
-				create l_id.initialize (source_feature.feature_name)
+				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
 				create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 			end
-			if source_feature.is_frozen then
+			if target_feature.is_frozen then
 				f_name.set_frozen_keyword (l_frozen_keyword)
 			end
 			create eiffel_list.make (1);

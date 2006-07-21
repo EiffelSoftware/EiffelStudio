@@ -17,7 +17,7 @@ inherit
 			has_formal_generic, is_loose, valid_generic, actual_argument_type,
 			instantiated_in, good_generics, error_generics, check_constraints,
 			expanded_deferred, valid_expanded_creation, update_dependance,
-			has_expanded, format, dump, duplicate,
+			has_expanded, format, dump, duplicate, reference_type,
 			is_equivalent, instantiation_of, same_as, instantiation_in,
 			is_full_named_type
 		redefine
@@ -28,7 +28,7 @@ inherit
 		undefine
 			meta_type, is_basic, feature_type, is_valid
 		redefine
-			is_typed_pointer, type_i, associated_class, process
+			is_typed_pointer, type_i, associated_class, process, reference_type
 		end
 
 create
@@ -74,6 +74,16 @@ feature -- Property
 		end
 
 feature {COMPILER_EXPORTER}
+
+	reference_type: GEN_TYPE_A is
+			-- Reference counterpart of an expanded type
+		do
+			create Result.make (class_id, duplicate.generics)
+			if class_declaration_mark = expanded_mark then
+				Result.set_expanded_class_mark
+			end
+			Result.set_reference_mark
+		end
 
 	type_i: TYPED_POINTER_I is
 			-- Pointer C type

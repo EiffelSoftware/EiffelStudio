@@ -311,7 +311,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			if other_class_type /= Void then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
-					Result := is_expanded and then class_id = other_class_type.class_id
+					Result := class_id = other_class_type.class_id
 						and then other_class_type.valid_generic (Current)
 				else
 					Result :=
@@ -500,6 +500,13 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- Duplication
 		do
 			Result := twin
+		end
+
+	reference_type: CL_TYPE_A is
+			-- Reference counterpart of an expanded type
+		do
+			Result := duplicate
+			Result.set_reference_mark
 		end
 
 	create_info: CREATE_TYPE is

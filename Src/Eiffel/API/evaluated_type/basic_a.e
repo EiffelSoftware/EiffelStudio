@@ -14,7 +14,7 @@ inherit
 			type_i
 		redefine
 			feature_type, instantiation_in, instantiation_of,
-			meta_type, is_basic,
+			meta_type, is_basic, reference_type,
 			good_generics, is_valid, error_generics
 		end
 
@@ -47,6 +47,16 @@ feature {COMPILER_EXPORTER}
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type
+		end
+
+	reference_type: CL_TYPE_A is
+			-- Reference counterpart of an expanded type
+		do
+			create Result.make (class_id)
+			if class_declaration_mark = expanded_mark then
+				Result.set_expanded_class_mark
+			end
+			Result.set_reference_mark
 		end
 
 	meta_type: BASIC_I is

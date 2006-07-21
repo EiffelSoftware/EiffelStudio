@@ -65,6 +65,13 @@ feature -- Access
 			Result.set_expression_parser
 		end
 
+	entity_feature_parser: EIFFEL_PARSER is
+			-- Entity declaration parser.
+		once
+			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
+			Result.set_feature_parser
+		end
+
 feature -- Setting
 
 	set_il_parsing (v: BOOLEAN) is

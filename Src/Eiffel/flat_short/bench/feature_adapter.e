@@ -9,13 +9,14 @@ indexing
 class FEATURE_ADAPTER
 
 inherit
-	COMPILER_EXPORTER
 
 	PART_COMPARABLE
 
 	SHARED_FORMAT_INFO
 
 	PREFIX_INFIX_NAMES
+
+	FAKE_AST_ASSEMBLER
 
 feature -- Properties
 
@@ -64,14 +65,7 @@ feature -- Element change
 			list: ARRAYED_LIST [FEATURE_I]
 			t_feat: FEATURE_I
 			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
-			f_name: FEATURE_NAME
 			is_precompiled: BOOLEAN
-
-			l_op: STRING_AS
-			l_id: ID_AS
-			l_frozen_keyword: KEYWORD_AS
-			l_infix_prefix_as: INFIX_PREFIX_AS
-			l_infix_prefix_keyword: KEYWORD_AS
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
@@ -116,59 +110,9 @@ feature -- Element change
 						t_feat := list.item;
 							-- If target feature has been registered, we do not register it twice.
 						if t_feat /= target_feature then
-							new_feature_as := feature_as.twin
 							create adapter;
-							f_name := names.first.twin
-							if f_name.frozen_keyword /= Void then
-								l_frozen_keyword := f_name.frozen_keyword.twin
-							end
-							if source_feature.is_infix then
-								create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
-								l_op.set_index (f_name.internal_name.index)
-								l_infix_prefix_as ?= f_name
-								if l_infix_prefix_as = Void then
-									create l_infix_prefix_keyword.make_null
-									l_infix_prefix_keyword.set_index (f_name.internal_name.index)
-								else
-									l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-									l_infix_prefix_keyword.set_position (0, 0, 0, 0)
-								end
-								create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
-							elseif source_feature.is_prefix then
-								create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
-								l_op.set_index (f_name.internal_name.index)
-								l_infix_prefix_as ?= f_name
-								if l_infix_prefix_as = Void then
-									create l_infix_prefix_keyword.make_null
-									l_infix_prefix_keyword.set_index (f_name.internal_name.index)
-								else
-									l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-									l_infix_prefix_keyword.set_position (0, 0, 0, 0)
-								end
-								create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
-							elseif source_feature.alias_name /= Void then
-								create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
-								l_op.set_index (f_name.internal_name.index)
-								create l_id.initialize (source_feature.feature_name)
-								l_id.set_index (f_name.internal_name.index)
-								create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
-									l_id, l_op, source_feature.has_convert_mark, Void, Void)
-								if source_feature.is_binary then
-									f_name.set_is_binary
-								elseif source_feature.is_unary then
-									f_name.set_is_unary
-								end
-							else
-								create l_id.initialize (source_feature.feature_name)
-								l_id.set_index (f_name.internal_name.index)
-								create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
-							end
-							if source_feature.is_frozen then
-								f_name.set_frozen_keyword (l_frozen_keyword)
-							end
-							create eiffel_list.make (1);
-							eiffel_list.extend (f_name);
-							new_feature_as.set_feature_names (eiffel_list);
+							new_feature_as := feature_as.twin
+							new_feature_as := replace_name_from_feature (new_feature_as, names.first.twin, source_feature)
 							adapter.replicate_feature (source_feature,
 											t_feat, new_feature_as, format_reg);
 
@@ -275,7 +219,9 @@ feature {NONE} -- Implementation
 		local
 			t_feat, s_feat: FEATURE_I;
 			rout_id: INTEGER;
+			feature_as, new_feature_as: FEATURE_AS
 			select_table: SELECT_TABLE;
+			adapter: like Current
 		do
 			select_table := format_reg.target_feature_table.origin_table;
 			s_feat := format_reg.current_feature_table.item
@@ -287,14 +233,24 @@ feature {NONE} -- Implementation
 					body_index := s_feat.body_index;
 					source_feature := s_feat;
 					target_feature := t_feat;
-					format_reg.assert_server.register_adapter (Current);
-					if t_feat.written_in = s_feat.written_in and then
-						t_feat.body_index = s_feat.body_index
-					then
+
 						-- Only register if the target and source
 						-- feature are written in the same class
 						-- and are refering to the same body
-						register_feature (t_feat, False, format_reg);
+					if t_feat.written_in = s_feat.written_in and then
+						t_feat.body_index = s_feat.body_index
+					then
+						if t_feat.is_deferred and then not s_feat.is_deferred then
+								-- If target feature is undefined, we give it a deferred body.
+							create adapter;
+							feature_as := t_feat.body
+							new_feature_as := normal_to_deferred_feature_as (feature_as.deep_twin, source_feature)
+							adapter.replicate_feature (source_feature,
+											t_feat, new_feature_as, format_reg);
+						else
+							register_feature (t_feat, False, format_reg);
+							format_reg.assert_server.register_adapter (Current);
+						end
 					end
 				end
 			else

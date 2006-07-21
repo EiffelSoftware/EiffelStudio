@@ -244,7 +244,8 @@ feature {NONE} -- Implementation
 								-- If target feature is undefined, we give it a deferred body.
 							create adapter;
 							feature_as := t_feat.body
-							new_feature_as := normal_to_deferred_feature_as (feature_as.deep_twin, source_feature)
+							new_feature_as := replace_name_from_feature (feature_as.deep_twin, feature_as.feature_names.first, target_feature)
+							new_feature_as := normal_to_deferred_feature_as (new_feature_as)
 							adapter.replicate_feature (source_feature,
 											t_feat, new_feature_as, format_reg);
 						else

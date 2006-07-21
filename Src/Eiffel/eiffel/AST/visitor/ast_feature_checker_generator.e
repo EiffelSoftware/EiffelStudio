@@ -782,7 +782,6 @@ feature -- Implementation
 			l_vkcn3: VKCN3
 			l_obs_warn: OBS_FEAT_WARN
 			l_vape: VAPE
-			l_formal_type: FORMAL_A
 			l_open_type: OPEN_TYPE_A
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS

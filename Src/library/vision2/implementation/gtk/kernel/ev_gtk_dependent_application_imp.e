@@ -231,7 +231,7 @@ feature -- Implementation
 			a_settings: STRING_32
 		do
 			a_settings := default_font_description
-			Result := previous_font_description = Void or else previous_font_description.is_equal (a_settings)
+			Result := previous_font_description = Void or else not previous_font_description.is_equal (a_settings)
 			previous_font_description := a_settings
 		end
 

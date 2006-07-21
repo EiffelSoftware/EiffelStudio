@@ -1113,8 +1113,7 @@ feature -- Parent checking
 							-- Use reference class type as a parent.
 						l_parent_type := l_parent_c.parent_type
 						if l_parent_type.is_expanded then
-							l_parent_type := l_parent_type.duplicate
-							l_parent_type.set_reference_mark
+							l_parent_type := l_parent_type.reference_type
 						end
 						parents.extend (l_parent_type)
 
@@ -1877,8 +1876,7 @@ end
 					-- status, we remove it in case parent class is by default
 					-- expanded.
 				if parent_type.is_expanded then
-					parent_type := parent_type.duplicate
-					parent_type.set_reference_mark
+					parent_type := parent_type.reference_type
 				end
 				Instantiator.dispatch (parent_type, Current)
 				i := i + 1
@@ -2133,8 +2131,7 @@ feature -- Meta-type
 											(actual_class_type, class_id)
 				if written_actual_type.is_expanded then
 						-- Ancestors are always reference types.
-					written_actual_type := written_actual_type.duplicate
-					written_actual_type.set_reference_mark
+					written_actual_type := written_actual_type.reference_type
 				end
 					-- Ask for the meta-type
 				Result := written_actual_type.type_i.instantiation_in (class_type).associated_class_type

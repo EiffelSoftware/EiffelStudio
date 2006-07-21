@@ -17,6 +17,8 @@ feature -- Access
 		do
 			create l_cstr.make (a_path)
 			eif_date (l_cstr.item, $Result)
+		ensure
+			file_modified_date_valid: Result >= -1
 		end
 
 

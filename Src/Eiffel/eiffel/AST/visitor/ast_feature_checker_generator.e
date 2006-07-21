@@ -999,6 +999,7 @@ feature -- Implementation
 										l_like_arg_type)
 								end
 							end
+
 								-- Actual type of feature argument
 							l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
 
@@ -1071,53 +1072,8 @@ feature -- Implementation
 
 						-- Get the type of Current feature.
 					l_result_type := l_feature.type
-
-						-- If the declared target type is formal
-						-- and if the corresponding generic parameter is
-						-- constrained to a class which is also generic
-						-- Result id a FORMAL_A object with no more information
-						-- than the position of the formal in the generic parameter
-						-- list of the class in which the feature "l_feature_name" is
-						-- declared.
-						-- Example:
-						--
-						-- 	class TEST [G -> ARRAY [STRING]]
-						--	...
-						--	x: G
-						-- 		x.item (1)
-						--
-						-- For the evaluation of `item', l_last_type is "G#1" (of TEST)
-						-- `l_last_constrained_type' is ARRAY [STRING], `l_feature.type'
-						-- is "G#1" (of ARRAY)
-						-- We need to convert the type to the constrained type for proper
-						-- type evaluation of remote calls.
-						-- "G#1" (of ARRAY) is thus replaced by the corresponding actual
-						-- type in the declaration of the constraint class type (in this case
-						-- class STRING).
-						-- Note: the following conditional instruction will not be executed
-						-- if the class type of the constraint id not generic since in that
-						-- case `Result' would not be formal.
-
-					if l_last_type.is_formal then
-						if l_result_type.is_formal then
-							l_formal_type ?= l_result_type
-						else
-							l_formal_type ?= l_result_type.actual_type
-						end
-
-						if l_formal_type /= Void then
-							l_result_type := l_last_constrained.generics.item (l_formal_type.position)
-						end
-					elseif l_last_type.is_like then
-						if l_result_type.is_formal then
-							l_formal_type ?= l_result_type
-						else
-							l_formal_type ?= l_result_type.actual_type
-						end
-						if l_formal_type /= Void then
-							l_result_type := l_last_type.actual_type.generics.item (l_formal_type.position)
-						end
-					end
+						-- Adapted type in case it is a formal generic parameter or a like.
+					l_result_type := adapted_type (l_result_type, l_last_type, l_last_constrained)
 					if l_arg_types /= Void then
 						l_pure_result_type := l_result_type
 						l_result_type := l_result_type.actual_argument_type (l_arg_types)
@@ -6250,6 +6206,65 @@ feature {NONE} -- Implementation: type validation
 			type_a_checker.check_type_validity (l_type, a_type)
 				-- Update `last_type' with found type.
 			last_type := l_type
+		end
+
+	adapted_type (a_type, a_last_type, a_last_constrained: TYPE_A): TYPE_A is
+			-- If `a_type' is formal or like, it adapts it to the context given by `a_last_type'
+			-- and `a_constrainted_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_last_type_not_void: a_last_type /= Void
+			a_last_constrained_not_void: a_last_constrained /= Void
+		local
+			l_formal_type: FORMAL_A
+		do
+			Result := a_type
+				-- If the declared target type is formal
+				-- and if the corresponding generic parameter is
+				-- constrained to a class which is also generic
+				-- Result id a FORMAL_A object with no more information
+				-- than the position of the formal in the generic parameter
+				-- list of the class in which the feature "l_feature_name" is
+				-- declared.
+				-- Example:
+				--
+				-- 	class TEST [G -> ARRAY [STRING]]
+				--	...
+				--	x: G
+				-- 		x.item (1)
+				--
+				-- For the evaluation of `item', l_last_type is "G#1" (of TEST)
+				-- `l_last_constrained_type' is ARRAY [STRING], `l_feature.type'
+				-- is "G#1" (of ARRAY)
+				-- We need to convert the type to the constrained type for proper
+				-- type evaluation of remote calls.
+				-- "G#1" (of ARRAY) is thus replaced by the corresponding actual
+				-- type in the declaration of the constraint class type (in this case
+				-- class STRING).
+				-- Note: the following conditional instruction will not be executed
+				-- if the class type of the constraint id not generic since in that
+				-- case `Result' would not be formal.
+			if a_last_type.is_formal then
+				if Result.is_formal then
+					l_formal_type ?= Result
+				else
+					l_formal_type ?= Result.actual_type
+				end
+				if l_formal_type /= Void then
+					Result := a_last_constrained.generics.item (l_formal_type.position)
+				end
+			elseif a_last_type.is_like then
+				if Result.is_formal then
+					l_formal_type ?= Result
+				else
+					l_formal_type ?= Result.actual_type
+				end
+				if l_formal_type /= Void then
+					Result := a_last_type.actual_type.generics.item (l_formal_type.position)
+				end
+			end
+		ensure
+			adapated_type_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: checking locals

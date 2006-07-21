@@ -13,7 +13,7 @@ inherit
 			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
-			has_like, is_loose, duplicate, type_i, good_generics,
+			has_like, has_like_argument, is_loose, duplicate, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, format, is_equivalent,
@@ -539,6 +539,22 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count or else Result
 			loop
 				Result := generics.item (i).has_like
+				i := i + 1
+			end
+		end
+
+	has_like_argument: BOOLEAN is
+			-- Has the type like argument in its definition?
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+			until
+				i > count or else Result
+			loop
+				Result := generics.item (i).has_like_argument
 				i := i + 1
 			end
 		end

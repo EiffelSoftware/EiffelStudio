@@ -12,7 +12,7 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_argument_type, is_like_argument
+			actual_argument_type, is_like_argument, has_like_argument
 		end
 
 feature -- Visitor
@@ -27,6 +27,9 @@ feature -- Properties
 
 	is_like_argument: BOOLEAN is True
 			-- Is Current a like argument? (True)
+
+	has_like_argument: BOOLEAN is True
+			-- Has the type like argument in its definition? (True)
 
 feature -- Comparison
 

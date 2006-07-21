@@ -384,7 +384,6 @@ feature -- Element change
 			file_is_readable: file_is_readable
 		local
 			error: BOOLEAN
-			syntax_error: SYNTAX_ERROR
 			prev_class: CLASS_C
 			l_date: INTEGER
 		do
@@ -1933,7 +1932,6 @@ feature {NONE} -- Backup implementation
 			l_fact: CONF_COMP_FACTORY
 			l_system: CONF_SYSTEM
 			l_vis: CONF_BACKUP_VISITOR
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 		do
 				-- copy original configuration file
 			create l_file_name.make_from_string (a_location)

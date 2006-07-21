@@ -676,6 +676,7 @@ feature -- Implementation
 			l_creation_type: CL_TYPE_A
 			l_ca_b: CUSTOM_ATTRIBUTE_B
 		do
+			check dotnet_generation: system.il_generation end
 			is_checking_cas := True
 			l_as.creation_expr.process (Current)
 			l_creation_type ?= last_type
@@ -1001,6 +1002,8 @@ feature -- Implementation
 								end
 							end
 
+								-- Adapted type in case it is a formal generic parameter or a like.
+							l_formal_arg_type := adapted_type (l_formal_arg_type, l_last_type, l_last_constrained)
 								-- Actual type of feature argument
 							l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
 
@@ -3303,7 +3306,9 @@ feature -- Implementation
 				l_byte_code.set_has_loop (has_loop)
 			end
 			l_custom_attributes := l_as.custom_attributes
-			if l_custom_attributes /= Void then
+				-- For the moment, there is no point in checking custom attributes in non-dotnet mode.
+				-- This fixes eweasel test#incr207.
+			if l_custom_attributes /= Void and system.il_generation then
 				l_custom_attributes.process (Current)
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
@@ -3317,7 +3322,8 @@ feature -- Implementation
 					l_byte_code.set_property_name_id (names_heap.found_item)
 				end
 				l_custom_attributes := l_as.property_custom_attributes
-				if l_custom_attributes /= Void then
+					-- See above comments for why it is only done in .NET mode.
+				if l_custom_attributes /= Void and system.il_generation then
 					l_custom_attributes.process (Current)
 					if is_byte_node_enabled then
 						l_list ?= last_byte_node

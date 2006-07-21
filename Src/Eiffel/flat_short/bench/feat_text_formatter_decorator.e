@@ -15,6 +15,8 @@ inherit
 			put_origin_comment, chained_assertion
 		end
 
+	FAKE_AST_ASSEMBLER
+
 create
 	make
 
@@ -71,6 +73,10 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
+					-- If the target feature is an undefined one, we create a fake ast.
+				if target_feat.is_deferred and then not source_feat.is_deferred then
+					f_ast := normal_to_deferred_feature_as (f_ast, source_feat)
+				end
 				l_match_list := match_list_server.item (written_in_class.class_id)
 				if l_match_list /= Void then
 					feature_comments := f_ast.comment (l_match_list)

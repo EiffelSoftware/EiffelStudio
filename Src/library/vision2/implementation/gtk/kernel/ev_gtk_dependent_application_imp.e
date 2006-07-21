@@ -222,17 +222,41 @@ feature -- Implementation
 
 	default_font_weight_internal: INTEGER
 
-	previous_font_description: STRING_32
-		-- Stored value of the default gtk font settings string
-
 	font_settings_changed: BOOLEAN is
 			-- Have the default font settings been changed by the user
 		local
-			a_settings: STRING_32
+			font_name_ptr: POINTER
+			l_string: EV_GTK_C_STRING
 		do
-			a_settings := default_font_description
-			Result := previous_font_description = Void or else not previous_font_description.is_equal (a_settings)
-			previous_font_description := a_settings
+			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			if font_name_ptr /= default_pointer then
+				if previous_font_settings /= default_pointer then
+					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
+					if Result then
+							-- Font settings have changed
+						{EV_GTK_EXTERNALS}.g_free (previous_font_settings)
+						previous_font_settings := font_name_ptr
+					else
+							-- Font settings have not changed so we free font_name_ptr.
+						{EV_GTK_EXTERNALS}.g_free (font_name_ptr)
+					end
+				else
+					Result := True
+					previous_font_settings := font_name_ptr
+				end
+			else
+				Result := True
+			end
+		end
+
+	previous_font_settings: POINTER
+		-- Pointer to the previous gtk-settings font value.
+
+	c_strcmp (ptr1, ptr2: POINTER): INTEGER is
+		external
+			"C inline use <string.h>"
+		alias
+			"return strcmp ((const char*) $ptr1, (const char*) $ptr2);"
 		end
 
 	default_gtk_settings: POINTER is

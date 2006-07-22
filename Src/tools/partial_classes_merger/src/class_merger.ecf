@@ -16,7 +16,7 @@
 		</option>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
 		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf" readonly="true"/>
 		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf" readonly="true"/>
 

@@ -37,7 +37,7 @@
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf" readonly="true">
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
 			<option namespace="EiffelSoftware.CodeDom.Support" />
 		</library>
 		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.ecf" readonly="true">

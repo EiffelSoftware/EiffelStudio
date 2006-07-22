@@ -124,6 +124,8 @@ feature -- Location
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		local
+			l_leaf: LEAF_AS
 		do
 			if a_list = Void then
 				if obsolete_message /= Void then
@@ -132,14 +134,19 @@ feature -- Roundtrip/Token
 					Result := precondition.first_token (a_list)
 				elseif internal_locals /= Void then
 					Result := internal_locals.first_token (a_list)
-				elseif not routine_body.first_token (a_list).is_null then
-					Result := routine_body.first_token (a_list)
-				elseif postcondition /= Void then
-					Result := postcondition.first_token (a_list)
-				elseif rescue_clause /= Void then
-					Result := rescue_clause.first_token (a_list)
 				else
-					Result := end_keyword.first_token (a_list)
+					l_leaf := routine_body.first_token (a_list)
+					if l_leaf /= Void and then not l_leaf.is_null then
+						Result := l_leaf
+					else
+						if postcondition /= Void then
+							Result := postcondition.first_token (a_list)
+						elseif rescue_clause /= Void then
+							Result := rescue_clause.first_token (a_list)
+						elseif end_keyword /= Void then
+							Result := end_keyword.first_token (a_list)
+						end
+					end
 				end
 			else
 				if obsolete_keyword /= Void then
@@ -307,26 +314,6 @@ feature -- test for empty body
 			Result := (routine_body = Void) or else (routine_body.is_empty)
 		end
 
-feature {COMPILER_EXPORTER} -- Element change
-
-	set_routine_body (a_routine_body: like routine_body) is
-			-- Set `routine_body' with `a_routine_body'.
-		do
-			routine_body := a_routine_body
-		end
-
-	set_locals (a_locals: like internal_locals) is
-			-- Set `locals' with `a_locals'.
-		do
-			internal_locals := a_locals
-		end
-
-	set_rescue_clause (a_rescue_clause: like rescue_clause) is
-			-- Set `rescue_clause' with `a_rescue_clause'.
-		do
-			rescue_clause := a_rescue_clause
-		end
-
 feature -- default rescue
 
 	create_default_rescue (def_resc_name : STRING) is
@@ -349,7 +336,7 @@ feature -- default rescue
 
 invariant
 	routine_body_not_void: routine_body /= Void
-	end_keyword_not_void: end_keyword /= Void
+--	end_keyword_not_void: end_keyword /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

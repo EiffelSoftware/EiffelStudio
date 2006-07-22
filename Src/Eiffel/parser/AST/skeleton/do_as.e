@@ -47,8 +47,6 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				if compound /= Void then
 					Result := compound.first_token (a_list)
-				else
-					Result := Void
 				end
 			else
 				Result := do_keyword.first_token (a_list)

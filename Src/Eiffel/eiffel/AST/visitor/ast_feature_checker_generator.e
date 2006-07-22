@@ -232,6 +232,21 @@ feature -- Type checking
 			end
 		end
 
+feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
+
+	check_inline_agent (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled: BOOLEAN) is
+			-- Type check `a_feature' which represents an inline agent `a_body'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
+			a_feature.record_suppliers (context.supplier_ids)
+			current_feature := a_feature
+			reset
+			is_byte_node_enabled := a_is_byte_node_enabled
+			a_body.process (Current)
+		end
+
 feature -- Status report
 
 	byte_code: BYTE_CODE is
@@ -239,6 +254,9 @@ feature -- Status report
 		do
 			Result ?= last_byte_node
 		end
+
+	inline_agent_byte_codes: LINKED_LIST [BYTE_CODE]
+			-- List of computed inline agent byte nodes if any.
 
 	invariant_byte_code: INVARIANT_B is
 			-- Last computed invariant byte node if any.
@@ -417,6 +435,7 @@ feature -- Settings
 			is_type_compatible := False
 			last_assigner_command := Void
 			is_inherited := False
+			inline_agent_byte_codes := Void
 		end
 
 	reset_types is
@@ -557,13 +576,13 @@ feature -- Roundtrip
 			l_context: like context
 			l_feature_as: FEATURE_AS
 			l_feature_generator: AST_FEATURE_I_GENERATOR
-			l_feature, l_old_feature, l_enclosing_feature: FEATURE_I
+			l_feature, l_enclosing_feature: FEATURE_I
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
-			l_new_rout_id_set: ROUT_ID_SET
 			l_cur_class: EIFFEL_CLASS_C
 			l_body_code: BYTE_CODE
-			l_new_feature_dep: FEATURE_DEPENDANCE
 			l_ak: LOCATION_AS
+			l_new_feature_dep: FEATURE_DEPENDANCE
+			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
 		do
 			l_cur_class ?= context.current_class
 
@@ -571,55 +590,32 @@ feature -- Roundtrip
 				-- They are ignored by degree 2. So a new FEATURE_I has to be created
 			create l_feature_names.make (0)
 			create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
-			l_old_feature := current_feature
+
 			create l_feature_generator
 			l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
-			l_feature.set_body_index (system.body_index_counter.next_id)
 
-			create l_new_rout_id_set.make
-			l_new_rout_id_set.put (l_feature.new_rout_id)
-			l_feature.set_rout_id_set (l_new_rout_id_set)
+			l_enclosing_feature := init_inline_agent_feature (l_feature)
 
-			l_feature.set_feature_id (l_cur_class.feature_id_counter.next)
-			l_feature.set_origin_feature_id (l_feature.feature_id)
-			l_feature.set_feature_name ("inline_agent_" + l_feature.body_index.out)
-			l_feature.set_written_in (l_cur_class.class_id)
-			l_feature.set_origin_class_id (l_feature.written_in)
-			l_feature.set_export_status (create {EXPORT_NONE_I})
-
-			if is_byte_node_enabled then
-					-- calculate the enclosing feature
-				from
-					l_enclosing_feature := current_feature
-				until
-					not l_enclosing_feature.is_inline_agent
-				loop
-					l_enclosing_feature :=
-						l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
-				end
-				l_feature.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
-				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
-				l_cur_class.put_inline_agent (l_feature)
-				create l_feature_name.initialize (
+			create l_feature_name.initialize (
 					"inline_agent_" +
 					l_enclosing_feature.feature_name + "_" +
 					l_feature.inline_agent_nr.out)
-				l_ak := l_as.agent_keyword
-				l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
-				l_as.set_feature_name (l_feature_name)
 
+			l_ak := l_as.agent_keyword
+			l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
+			l_as.set_feature_name (l_feature_name)
 
-				degree_2.insert_class (l_cur_class)
-			end
 				-- The context is modified, for the processing of the body of the inline agent.
 			l_context := context.save
-			current_feature := l_feature
+
 			context.set_current_feature (l_feature)
 
-			l_as.body.process (Current)
-			l_body_code ?= last_byte_node
+			create l_feature_checker
+			l_feature_checker.init (context)
+			l_feature_checker.check_inline_agent (l_feature, l_as.body, is_byte_node_enabled)
 
-			current_feature := l_old_feature
+			l_body_code ?= l_feature_checker.last_byte_node
+
 			l_new_feature_dep := context.supplier_ids
 			context.restore (l_context)
 
@@ -627,17 +623,14 @@ feature -- Roundtrip
 				l_body_code.set_start_line_number (l_as.body.start_location.line)
 					-- When an inline agent X of an enclosing feature f is a client of
 					-- feature g, we make the enclosing feature f a client of g.
-				byte_server.put (l_body_code)
-				from
-					l_new_feature_dep.start
-				until
-					l_new_feature_dep.after
-				loop
-					context.supplier_ids.extend (l_new_feature_dep.item)
-					l_new_feature_dep.forth
+				if inline_agent_byte_codes = Void then
+					create inline_agent_byte_codes.make
 				end
-				l_feature.process_pattern
-				l_cur_class.insert_changed_assertion (l_feature)
+				inline_agent_byte_codes.extend (l_body_code)
+				if l_feature_checker.inline_agent_byte_codes /= Void then
+					inline_agent_byte_codes.append (l_feature_checker.inline_agent_byte_codes)
+				end
+				init_inline_agent_dep (l_feature, l_new_feature_dep)
 			end
 				-- Now as the features is generated the inline agent creation is
 				-- threaten like a normal routine creation
@@ -6082,6 +6075,66 @@ feature {NONE} -- Agents
 			create  int_a.make (32)
 			generics.put (int_a, 1)
 			create Result.make (System.array_id, generics)
+		end
+
+	init_inline_agent_feature (a_feat: FEATURE_I): FEATURE_I is
+		local
+			l_new_rout_id_set: ROUT_ID_SET
+			l_cur_class: EIFFEL_CLASS_C
+			l_enclosing_feature: FEATURE_I
+		do
+			l_cur_class ?= context.current_class
+
+			a_feat.set_body_index (system.body_index_counter.next_id)
+
+			create l_new_rout_id_set.make
+			l_new_rout_id_set.put (a_feat.new_rout_id)
+			a_feat.set_rout_id_set (l_new_rout_id_set)
+
+			a_feat.set_feature_id (l_cur_class.feature_id_counter.next)
+			a_feat.set_origin_feature_id (a_feat.feature_id)
+			a_feat.set_feature_name ("inline_agent_" + a_feat.body_index.out)
+			a_feat.set_written_in (l_cur_class.class_id)
+			a_feat.set_origin_class_id (a_feat.written_in)
+			a_feat.set_export_status (create {EXPORT_ALL_I})
+
+			if is_byte_node_enabled then
+					-- calculate the enclosing feature
+				from
+					l_enclosing_feature := current_feature
+				until
+					not l_enclosing_feature.is_inline_agent
+				loop
+					l_enclosing_feature :=
+						l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
+				end
+				a_feat.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
+				l_cur_class.put_inline_agent (a_feat)
+
+				degree_2.insert_class (l_cur_class)
+			end
+			Result := l_enclosing_feature
+		end
+
+	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE) is
+		local
+			l_cur_class: EIFFEL_CLASS_C
+
+		do
+			l_cur_class ?= context.current_class
+				-- When an inline agent X of an enclosing feature f is a client of
+				-- feature g, we make the enclosing feature f a client of g.
+			from
+				a_new_feat_dep.start
+			until
+				a_new_feat_dep.after
+			loop
+				context.supplier_ids.extend (a_new_feat_dep.item)
+				a_new_feat_dep.forth
+			end
+			a_feat.process_pattern
+			l_cur_class.insert_changed_assertion (a_feat)
 		end
 
 feature {NONE} -- Precursor handling

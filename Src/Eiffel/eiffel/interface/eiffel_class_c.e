@@ -448,6 +448,7 @@ feature -- Third pass: byte code production and type check
 			type_check_error: BOOLEAN
 			check_local_names_needed: BOOLEAN
 			byte_code_generated: BOOLEAN
+			inline_agent_byte_code: LINKED_LIST [BYTE_CODE]
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
@@ -608,6 +609,17 @@ feature -- Third pass: byte code production and type check
 
 									-- Byte code processing
 								tmp_byte_server.put (feature_checker.byte_code)
+								inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+								if inline_agent_byte_code /= Void then
+									from
+										inline_agent_byte_code.start
+									until
+										inline_agent_byte_code.after
+									loop
+										tmp_byte_server.put (inline_agent_byte_code.item)
+										inline_agent_byte_code.forth
+									end
+								end
 								byte_code_generated := True
 							end
 						else
@@ -671,6 +683,17 @@ feature -- Third pass: byte code production and type check
 							then
 									-- Save byte code
 								tmp_byte_server.put (feature_checker.byte_code)
+								inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+								if inline_agent_byte_code /= Void then
+									from
+										inline_agent_byte_code.start
+									until
+										inline_agent_byte_code.after
+									loop
+										tmp_byte_server.put (inline_agent_byte_code.item)
+										inline_agent_byte_code.forth
+									end
+								end
 								byte_code_generated := True
 							end
 						else

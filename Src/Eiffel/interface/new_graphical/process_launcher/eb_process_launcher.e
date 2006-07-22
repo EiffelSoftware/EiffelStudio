@@ -225,7 +225,7 @@ feature -- Control
 			else
 				pt := create {PROCESS_THREAD_TIMER}.make (time_interval)
 			end
-			prc.enable_terminal_control
+			prc.enable_launch_in_new_process_group
 			prc.set_timer (pt)
 			prc.set_abort_termination_when_failed (False)
 			prc.set_on_start_handler (on_start_handler)

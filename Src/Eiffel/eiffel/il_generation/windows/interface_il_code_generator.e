@@ -86,6 +86,11 @@ feature -- IL Generation
 			generate_il_type_features (class_c, class_type, class_c.generic_features, type_feature_processor)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features, type_feature_processor)
 
+				-- Generate features for inline agents.
+			if class_c.is_eiffel_class_c and then generate_inline_agents then
+				generate_il_inline_agents (class_c.eiffel_class_c, class_type)
+			end
+
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			class_interface := class_type.class_interface
@@ -93,11 +98,6 @@ feature -- IL Generation
 				local_feature_processor, inherited_feature_processor)
 			generate_il_implementation_parents (class_interface, implemented_feature_processor,
 				local_feature_processor, inherited_feature_processor)
-
-				-- Generate features for inline agents.
-			if class_c.is_eiffel_class_c and then generate_inline_agents then
-				generate_il_inline_agents (class_c.eiffel_class_c, class_type)
-			end
 
 			from
 				postponed_property_setters.start

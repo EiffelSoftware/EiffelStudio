@@ -1388,12 +1388,6 @@
 									<File Id="process_file_68" Name="PR1C6F~1.E" LongName="process_input_listener_thread.e" />
 									<File Id="process_file_69" Name="PR5B59~1.E" LongName="process_output_listener_thread.e" />
 									<File Id="process_file_70" Name="PROCES~4.E" LongName="process_thread_timer.e" />
-									<File Id="process_file_71" Name="PROCES~3.E" LongName="process_toolhelp.e" />
-									<File Id="process_file_72" Name="WEL_PR~3.E" LongName="wel_process_entry_32.e" />
-									<File Id="process_file_73" Name="WEL_PR~1.E" LongName="wel_process_id_pair.e" />
-									<File Id="process_file_74" Name="WEL_PR~2.E" LongName="wel_process_toolhelp_constants.e" />
-									<File Id="process_file_75" Name="WEL_TH~1.E" LongName="wel_thread_entry_32.e" />
-									<File Id="process_file_76" Name="WEL_TO~1.E" LongName="wel_toolhelp.e" />
 								</Component>
 							</Directory>
 						</Directory>

@@ -8,7 +8,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="ellipse_graph" location="$|ellipse_graph\"/>
 			<cluster name="stones" location="$|stones\"/>

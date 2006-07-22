@@ -25,7 +25,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf">
 			<renaming old_name="CONSTANTS" new_name="EDITOR_CONSTANTS"/>
 			<renaming old_name="CONSTANTS_IMP" new_name="EDITOR_CONSTANTS_IMP"/>

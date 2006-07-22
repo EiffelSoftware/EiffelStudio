@@ -5,6 +5,18 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="Application" Name=".">
 				<Directory Id="library" Name="library">
+					<Directory Id="gobo_ext" Name="GOBO_E_1" LongName="gobo_extension">
+						<Component Id="gobo_ext" Guid="34CB6942-FC3B-4190-ADD0-2E99862A3A80">
+							<File Id="gobo_ext_ecf" Name="GOBO_E_2.ECF" LongName="gobo_extension.ecf" />
+						</Component>
+						<Directory Id="kernel2" Name="kernel">
+							<Directory Id="support3" Name="support">
+								<Component Id="support3" Guid="1ECF114F-34B6-4a77-A947-CBCE54262AD2">
+									<File Id="agent_e" Name="AGENT__1.E" LongName="agent_based_equality_tester.e" />
+								</Component>
+							</Directory>
+						</Directory>
+					</Directory>
 					<Directory Id="gobo" Name="gobo">
 						<Component Id="component0" Guid="830e89a8-079c-4bcf-a5dc-0522762d53e2" >
 							<File Id="file0" LongName="build.eant" Name="BUILD~1.EAN" />
@@ -13,6 +25,7 @@
 							<File Id="file3" Name="License.txt" />
 							<File Id="file4" Name="Readme.txt" />
 							<File Id="file5" LongName="Release_notes.txt" Name="RELEAS~1.TXT" />
+							<File Id="gobo_ecf" Name="gobo.ecf"/>
 						</Component>
 						<Directory Id="directory0" Name="bin">
 							<Component Id="component1" Guid="24f7ac43-a5e7-48c6-96f1-aed220c76f72" >

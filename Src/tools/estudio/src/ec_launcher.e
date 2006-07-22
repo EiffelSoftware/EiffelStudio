@@ -138,7 +138,7 @@ feature -- Launching
 				process.set_detached_console (True)
 			else
 					--| Unix specific
-				process.enable_terminal_control
+				process.disable_launch_in_new_process_group
 			end
 
 			if keep_estudio_terminal then

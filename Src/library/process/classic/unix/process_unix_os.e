@@ -371,7 +371,6 @@ feature {NONE} -- Externals
 			"[
 				{
 					pid_t pgid = getpgid ($pid);
-					tcsetpgrp (0, pgid);
 					tcsetpgrp (1, pgid);
 					tcsetpgrp (2, pgid);
 				}

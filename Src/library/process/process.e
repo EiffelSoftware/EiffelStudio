@@ -223,7 +223,7 @@ feature -- IO redirection
 
 	enable_terminal_control is
 			-- Make sure that launched process has terminal control over standard input, output and error.
-			-- Has effect only on Unix.
+			-- Has effect only on Unix and only when `is_launched_in_new_process_group' is True.
 		require
 			process_not_running: not is_running
 		do
@@ -271,6 +271,8 @@ feature -- Control
 			-- Check `last_termination_successful' after to see if `terminate_tree' succeeded.
 			-- `terminate_tree' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
 			-- to wait for process to exit.
+			-- Note: on Unix, this feature can terminate whole process tree only when `is_launched_in_new_process_group' is set to True
+			-- before new process is launched.
 		require
 			process_launched: launched
 			process_not_terminated: not force_terminated
@@ -484,6 +486,30 @@ feature -- Actions setting
 			handler_set: on_successful_launch_handler = handler
 		end
 
+	enable_launch_in_new_process_group is
+			-- Ensure new process is launched in a new process group.
+			-- Only has effect on Windows.
+			-- Note: If process is launched in new process group, then `terminate_tree' can terminate
+			-- whole process tree (including all children processes),
+			-- otherwise, it can only terminate the new process itself.			
+		require
+			process_not_running: not is_running
+		do
+			is_launched_in_new_process_group := True
+		ensure
+			launched_in_new_process_group_enabled: is_launched_in_new_process_group
+		end
+
+	disable_launch_in_new_process_group is
+			-- Ensure new process is launched in current process group.
+		require
+			process_not_running: not is_running
+		do
+			is_launched_in_new_process_group := False
+		ensure
+			launched_in_new_process_group_enabled: not is_launched_in_new_process_group
+		end
+
 feature {NONE} -- Actions
 
 	on_start is
@@ -654,6 +680,10 @@ feature -- Status report
 			-- Does `environment_variable_table' use unicode?
 			-- Only has effect on Windows.
 
+	is_launched_in_new_process_group: BOOLEAN
+			-- Will process be launched in a new process group?
+			-- Only has effect on Windows.
+
 feature -- Validation checking
 
 	is_input_redirection_valid (a_input_direction: INTEGER): BOOLEAN is
@@ -781,5 +811,5 @@ feature{NONE} -- Implementation
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
 		deferred
 		end
-		
+
 end

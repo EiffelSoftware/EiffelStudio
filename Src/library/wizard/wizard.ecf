@@ -8,8 +8,8 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf" readonly="true"/>
 
 
 		<external_include location="$(ISE_LIBRARY)\library\wizard\help\Clib">

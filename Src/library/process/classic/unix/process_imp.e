@@ -81,10 +81,10 @@ feature  -- Control
 			on_start
 			initialize_child_process
 				-- Launch process.
-			if is_terminal_control_enabled then
+			if is_launched_in_new_process_group and then is_terminal_control_enabled then
 				attach_terminals (process_id)
 			end
-			child_process.spawn_nowait (is_terminal_control_enabled, environment_table_as_pointer)
+			child_process.spawn_nowait (is_terminal_control_enabled, environment_table_as_pointer, is_launched_in_new_process_group)
 			internal_id := child_process.process_id
 			launched := (internal_id /= -1)
 			if launched then
@@ -102,7 +102,11 @@ feature  -- Control
 
 	terminate_tree is
 		do
-			internal_terminate (True)
+			if is_launched_in_new_process_group then
+				internal_terminate (True)
+			else
+				internal_terminate (False)
+			end
 		end
 
 	wait_for_exit is
@@ -154,7 +158,7 @@ feature {PROCESS_TIMER}  -- Status checking
 					has_process_exited := not child_process.is_executing
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
-						if is_terminal_control_enabled then
+						if is_launched_in_new_process_group and then is_terminal_control_enabled then
 							attach_terminals (process_id)
 						end
 						if in_thread /= Void then

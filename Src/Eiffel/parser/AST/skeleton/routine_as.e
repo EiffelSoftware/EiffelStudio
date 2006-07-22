@@ -314,6 +314,26 @@ feature -- test for empty body
 			Result := (routine_body = Void) or else (routine_body.is_empty)
 		end
 
+feature {COMPILER_EXPORTER} -- Element Change
+
+	set_locals (a_locals: like internal_locals) is
+			-- Set locals with `a_locals'.
+		do
+			internal_locals := a_locals
+		end
+
+	set_rescue_clause (a_rescue_clause: like rescue_clause) is
+			-- Set rescue_clause with `a_rescue_clause'.
+		do
+			rescue_clause := a_rescue_clause
+		end
+
+	set_routine_body (a_routine_body: like routine_body) is
+			-- Set routine_body with `a_routine_body'.
+		do
+			routine_body := a_routine_body
+		end
+
 feature -- default rescue
 
 	create_default_rescue (def_resc_name : STRING) is

@@ -8,6 +8,10 @@ remtrace com
 exprt %DEFAULT_ORIGO_SVN/Src/library/com com
 remtrace Eiffel2Java
 exprt %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
+remtrace gobo
+exprt %DEFAULT_ORIGO_SVN/Src/library/gobo gobo
+remtrace gobo_extension
+exprt %DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension
 remtrace graph
 exprt %DEFAULT_ORIGO_SVN/Src/library/graph graph
 remtrace lex

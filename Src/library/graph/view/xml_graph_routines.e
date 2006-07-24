@@ -20,8 +20,8 @@ inherit
     	end
 
 	XM_CALLBACKS_FILTER_FACTORY
-		export 
-			{NONE} all 
+		export
+			{NONE} all
 		redefine
 			default_create
 		end
@@ -47,14 +47,14 @@ feature {NONE} -- Initialization
 		ensure
 			relative_window_set : relative_window = a_relative_window
 		end
-		
+
 feature {NONE} -- Access
 
 	relative_window: EV_WINDOW
 			-- relative window
 
 feature {EG_XML_STORABLE} -- Access
-			
+
 	number_of_tags (node: XM_ELEMENT): INTEGER is
 			-- Number of tags in node and all childrens of node.
 		require
@@ -87,11 +87,11 @@ feature {EG_XML_STORABLE} -- Status report
 
 	valid_tags: INTEGER
 			-- Number of valid tags read.
-	
+
 	valid_tag_read_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 feature {EG_XML_STORABLE} -- Status setting
-	
+
 	reset_valid_tags is
 			-- Reset `valid_tags'.
 		do
@@ -128,7 +128,7 @@ feature {EG_XML_STORABLE} -- Processing
 				end
 			else
 				display_warning_message ("Element " + a_name + " expected but not found.")
-			end		
+			end
 			elem.forth
 		end
 
@@ -216,7 +216,7 @@ feature {EG_XML_STORABLE} -- Processing
 					valid_tags_read
 				else
 					display_warning_message ("Value of element " + a_name + " is not valid.")
-					create Result.make_with_8_bit_rgb (255, 255, 0)				
+					create Result.make_with_8_bit_rgb (255, 255, 0)
 				end
 			else
 				display_warning_message ("Retrieve default color.")
@@ -321,7 +321,7 @@ feature -- Deserialization
 			end
 		end
 
-feature {SHARED_XML_ROUTINES} -- Error management
+feature {NONE} -- Error management
 
 	display_warning_message (a_warning_msg: STRING) is
 			-- Display `a_warning_msg' in a warning popup window.
@@ -332,7 +332,6 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		do
 			create l_warning_window.make_with_text (a_warning_msg)
 			l_warning_window.show
-			--l_warning_window.show_modal_to_window (relative_window)
 		end
 
 	display_error_message (an_error_msg: STRING) is
@@ -344,7 +343,6 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		do
 			create l_error_window.make_with_text (an_error_msg)
 			l_error_window.show
-			--l_warning_window.show_modal_to_window (relative_window)
 		end
 
 	display_warning_message_relative (a_warning_msg: STRING; a_parent_window: EV_WINDOW) is

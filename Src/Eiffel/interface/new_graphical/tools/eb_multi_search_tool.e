@@ -904,16 +904,16 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 	notebook_veto_pebble (a_stone: STONE) : BOOLEAN is
 			-- Notebook veto pebble
 		local
-			l_classc_stone: CLASSC_STONE
+			l_classi_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 		do
 			inspect notebook.pointed_tab_index
 			when 1 then
 				Result := true
 			when 2 then
-				l_classc_stone ?= a_stone
+				l_classi_stone ?= a_stone
 				l_cluster_stone ?= a_stone
-				if l_classc_stone /= Void or else l_cluster_stone /= Void then
+				if l_classi_stone /= Void or else l_cluster_stone /= Void then
 					Result := true
 				end
 			else

@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		local
 			box: EV_VERTICAL_BOX
 		do
-			create nota_on_threads.make (3)
+			create notes_on_threads.make (3)
 
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
 			set_row_highlight_bg_color_agent := agent set_row_highlight_bg_color
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			grid.column (1).set_title ("Id")
 			grid.column (2).set_title ("Name")
 			grid.column (3).set_title ("Priority")
-			grid.column (4).set_title ("Nota")
+			grid.column (4).set_title ("Note")
 
 			grid.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
 			grid.set_auto_resizing_column (1, True)
@@ -227,7 +227,7 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
-			nota_on_threads.wipe_out
+			notes_on_threads.wipe_out
 		end
 
 feature {NONE} -- Implementation
@@ -278,17 +278,17 @@ feature {NONE} -- Implementation
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then
 					from
-						nota_on_threads.start
+						notes_on_threads.start
 					until
-						nota_on_threads.after
+						notes_on_threads.after
 					loop
-						tid := nota_on_threads.key_for_iteration
+						tid := notes_on_threads.key_for_iteration
 						if not arr.has (tid) then
-							if nota_on_threads.valid_key (tid) then
-								nota_on_threads.remove (tid)
+							if notes_on_threads.valid_key (tid) then
+								notes_on_threads.remove (tid)
 							end
 						end
-						nota_on_threads.forth
+						notes_on_threads.forth
 					end
 					from
 						grid.insert_new_rows (arr.count, 1)
@@ -321,12 +321,12 @@ feature {NONE} -- Implementation
 						end
 						row.set_item (3, lab)
 
-						if nota_on_threads.has (tid) then
-							create gedit.make_with_text (nota_on_threads.item (tid))
+						if notes_on_threads.has (tid) then
+							create gedit.make_with_text (notes_on_threads.item (tid))
 						else
 							create gedit
 						end
-						gedit.deactivate_actions.extend (agent update_nota_from_item (gedit))
+						gedit.deactivate_actions.extend (agent update_notes_from_item (gedit))
 						row.set_item (4, gedit)
 
 						row.set_data (tid)
@@ -346,21 +346,21 @@ feature {NONE} -- Implementation
 			grid.request_columns_auto_resizing
 		end
 
-feature {NONE} -- Implementation nota
+feature {NONE} -- Implementation note
 
-	update_nota_from_item (gi: EV_GRID_EDITABLE_ITEM) is
+	update_notes_from_item (gi: EV_GRID_EDITABLE_ITEM) is
 		local
 			tid: INTEGER_REF
 		do
 			if gi /= Void and then gi.parent /= Void and then gi.row /= Void then
 				tid ?= gi.row.data
 				if tid /= Void then
-					nota_on_threads.force (gi.text, tid.item)
+					notes_on_threads.force (gi.text, tid.item)
 				end
 			end
 		end
 
-	nota_on_threads: HASH_TABLE [STRING, INTEGER]
+	notes_on_threads: HASH_TABLE [STRING, INTEGER]
 
 feature {NONE} -- Implementation, cosmetic
 

@@ -39,6 +39,8 @@ feature {NONE} -- Initialization
 feature -- Launching
 
 	launch_ec_dbg is
+		require
+			ecdbgd_launched_only_if_not_closed: ec_dbg_launched implies not close_ecdbgd_on_end_of_debugging
 		local
 			cmd: STRING
 			cs_pname, cs_cmd: C_STRING

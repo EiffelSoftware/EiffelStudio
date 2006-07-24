@@ -168,6 +168,9 @@ feature -- Execution
 			until
 				quit_request.recv_dead
 			loop
+				debug ("ipc")
+					print (generator + ".kill -> quit_request.recv_dead ? %N")
+				end
 			end
 			ipc_engine.end_of_debugging
 		ensure then

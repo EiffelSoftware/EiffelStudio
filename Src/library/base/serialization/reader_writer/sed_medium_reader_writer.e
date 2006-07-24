@@ -132,16 +132,31 @@ feature {NONE} -- Buffer update
 		do
 				-- Read the amount of data we are suppose to read
 			medium.read_to_managed_pointer (buffer, 0, integer_32_bytes)
-			buffer_size := buffer.read_integer_32_be (0)
-				-- Resize `buffer' if necessary.
-			if buffer.count < buffer_size then
-				buffer.resize (buffer_size)
-			end
-				-- Read the data.
-			medium.read_to_managed_pointer (buffer, integer_32_bytes, buffer_size - integer_32_bytes)
+			if medium.bytes_read = integer_32_bytes then
+				buffer_size := buffer.read_integer_32_be (0)
+					-- Resize `buffer' if necessary.
+				if buffer.count < buffer_size then
+					buffer.resize (buffer_size)
+				end
+					-- Read the data.
+				if buffer_size > integer_32_bytes then
+					medium.read_to_managed_pointer (buffer, integer_32_bytes, buffer_size - integer_32_bytes)
+					if medium.bytes_read /= buffer_size - integer_32_bytes then
+							-- What should we do when we cannot read the expected number of bytes?
+							-- Raise an exception or flag it?
+					end
+				else
+						-- Invalid data is being read here?
+						-- What should we do?
+				end
 
-				-- Put the position at the right place.
-			buffer_position := integer_32_bytes
+					-- Put the position at the right place.
+				buffer_position := integer_32_bytes
+			else
+					-- What should we do when we cannot read the expected number of bytes?
+					-- Raise an exception or flag it?
+				buffer_position := 0
+			end
 		end
 
 	flush_buffer_to_medium is

@@ -430,6 +430,9 @@ feature -- Element change
 						add_strings (<<"">>)
 						but.set_string_index (last_string_index)
 					end
+					--| If there is no text, we should set button style not to show text.
+					--| Otherwise there is gap after icons if no texts setted.
+					but.set_style (but.style & {WEL_TB_STYLE_CONSTANTS}.btns_showtext.bit_not)
 				end
 			end
 

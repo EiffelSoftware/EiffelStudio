@@ -1808,15 +1808,19 @@ feature {NONE} -- Implementation
 	on_class_drop (stone: CLASSI_STONE) is
 			-- `stone' was dropped on an empty world.
 		do
-			is_rebuild_world_needed := True
-			tool.launch_stone (stone)
+			if stone.is_valid then
+				is_rebuild_world_needed := True
+				tool.launch_stone (stone)
+			end
 		end
 
 	on_cluster_drop (stone: CLUSTER_STONE) is
 			-- `stone' was dropped on an empty world
 		do
-			is_rebuild_world_needed := True
-			tool.launch_stone (stone)
+			if stone.is_valid then
+				is_rebuild_world_needed := True
+				tool.launch_stone (stone)
+			end
 		end
 
 	reset_tool_bar_for_uml_class_view is

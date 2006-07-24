@@ -7,7 +7,14 @@ if [ -z "$ISE_LIBRARY" ]; then
 	export ISE_LIBRARY
 fi
 
-if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
+#Use $MAKE as make utility instead of `make'.
+if [ -z "$MAKE" ]; then
+	make=make
+else
+	make=$MAKE
+fi
+
+if $make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
 	case `uname` in
 		Darwin) ncpus=`sysctl -n hw.activecpu` ;;
 		Linux)
@@ -52,7 +59,7 @@ sh Makefile.SH
 
 if [ "$arg"  = cecil -o "$arg" = "-cecil" ] ; then
 	echo Generating CECIL library ...
-	make $make_args cecil && echo "C compilation completed"
+	$make $make_args cecil && echo "C compilation completed"
 else
-	make $make_args && echo "C compilation completed"
+	$make $make_args && echo "C compilation completed"
 fi

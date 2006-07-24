@@ -203,7 +203,9 @@ feature -- Basic commands
 	cleanup is
 			-- Cleanup socket.
 		do
-			close
+			if exists then 
+				close
+			end
 		end;
 
 	close is
@@ -323,6 +325,7 @@ feature -- Output
 		require else
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
+			nb_bytes_non_negative: nb_bytes >= 0
 			socket_exists: exists
 			opened_for_write: is_open_write
 		do
@@ -549,8 +552,11 @@ feature -- Input
 		require else
 			socket_exists: exists;
 			opened_for_read: is_open_read
+		local
+			l_read: INTEGER
 		do
-			last_real := c_read_float (descriptor)
+			last_real := c_read_float (descriptor, $l_read)
+			bytes_read := l_read
 		end;
 
 	read_double, readdouble is
@@ -559,8 +565,11 @@ feature -- Input
 		require else
 			socket_exists: exists;
 			opened_for_read: is_open_read
+		local
+			l_read: INTEGER
 		do
-			last_double := c_read_double (descriptor)
+			last_double := c_read_double (descriptor, $l_read)
+			bytes_read := l_read
 		end;
 
 	read_character, readchar is
@@ -569,8 +578,11 @@ feature -- Input
 		require else
 			socket_exists: exists;
 			opened_for_read: is_open_read
+		local
+			l_read: INTEGER
 		do
-			last_character := c_read_char (descriptor)
+			last_character := c_read_char (descriptor, $l_read)
+			bytes_read := l_read
 		end;
 
 	read_boolean, readbool is
@@ -597,8 +609,11 @@ feature -- Input
 		require else
 			socket_exists: exists;
 			opened_for_read: is_open_read
+		local
+			l_read: INTEGER
 		do
-			last_integer := c_read_int (descriptor)
+			last_integer := c_read_int (descriptor, $l_read)
+			bytes_read := l_read
 		end;
 
 	read_integer_8 is
@@ -706,17 +721,21 @@ feature -- Input
 		require else
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
+			nb_bytes_non_negative: nb_bytes >= 0
 			socket_exists: exists
 			opened_for_read: is_open_read
 		local
 			l_read: INTEGER
+			l_last_read: INTEGER
 		do
 			from
+				l_last_read := -1
 			until
-				l_read = nb_bytes
+				l_read = nb_bytes or l_last_read = 0
 			loop
-				l_read := l_read + c_read_stream (descriptor, nb_bytes - l_read,
+				l_last_read := c_read_stream (descriptor, nb_bytes - l_read,
 					p.item + start_pos + l_read);
+				l_read := l_read + l_last_read
 			end
 			bytes_read := l_read
 		end
@@ -1086,25 +1105,25 @@ feature {NONE} -- Externals
 			"C blocking"
 		end;
 
-	c_read_char (fd: INTEGER): CHARACTER is
+	c_read_char (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): CHARACTER is
 			-- External routine to read a character from socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_read_int (fd: INTEGER): INTEGER is
+	c_read_int (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): INTEGER is
 			-- External routine to read an integer from socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_read_float (fd: INTEGER): REAL is
+	c_read_float (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): REAL is
 			-- external routine to read a real from socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_read_double (fd: INTEGER): DOUBLE is
+	c_read_double (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): DOUBLE is
 			-- External routine to read a double from socket `fd'
 		external
 			"C blocking"

@@ -111,13 +111,14 @@ feature -- Constants
 	Key_alt: INTEGER is 96
 	Key_left_meta: INTEGER is 97
 	Key_right_meta: INTEGER is 98
+	Key_menu: INTEGER is 99
 
 feature -- Access
 
 	Key_strings: ARRAY [STRING_32] is
 			-- String representations of all key codes.
 		once
-			create Result.make (Key_0, Key_right_meta)
+			create Result.make (Key_0, Key_menu)
 			Result.put ("0", Key_0)
 			Result.put ("1", Key_1)
 			Result.put ("2", Key_2)
@@ -216,6 +217,7 @@ feature -- Access
 			Result.put ("Alt", Key_alt)
 			Result.put ("Left Meta", Key_left_meta)
 			Result.put ("Right Meta", Key_right_meta)
+			Result.put ("Menu", Key_menu)
 		end
 
 	key_code_from_key_string (key_string: STRING_GENERAL): INTEGER is
@@ -250,7 +252,7 @@ feature -- Contract support
 	valid_key_code (a_code: INTEGER): BOOLEAN is
 			-- Is ``a_code'' a valid key code?
 		do
-			Result := a_code >= Key_0 and then a_code <= Key_right_meta
+			Result := a_code >= Key_0 and then a_code <= Key_menu
 		end
 
 indexing

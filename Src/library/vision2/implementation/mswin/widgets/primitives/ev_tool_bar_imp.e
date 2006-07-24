@@ -427,11 +427,7 @@ feature -- Element change
 						--| Adding the empty text causes the toolbar to re-size, so
 						--| we only add the empty text when there are children already with text.
 					if a_child_has_text then
-
---						add_strings (<<" ">>)
-						-- Larry changed
 						add_strings (<<"">>)
---						but.set_string_index (last_string_index, False)
 						but.set_string_index (last_string_index)
 					end
 				end

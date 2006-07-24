@@ -453,9 +453,9 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_text_found := multi_search_performer.text_found_count
 			l_class_found := multi_search_performer.class_count
 			if l_text_found > 1 or l_text_found = 0 then
-				l_found_string := " founds in "
+				l_found_string := " matches in "
 			else
-				l_found_string := " found in "
+				l_found_string := " match in "
 			end
 			if l_class_found > 1 or l_class_found = 0 then
 				l_class_string := " classes"

@@ -333,6 +333,7 @@ feature -- Output
 		require
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
+			nb_bytes_non_negative: nb_bytes >= 0
 			extendible: extendible
 		deferred
 		end
@@ -455,6 +456,7 @@ feature -- Input
 		require
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
+			nb_bytes_non_negative: nb_bytes >= 0
 			is_readable: readable
 		deferred
 		ensure

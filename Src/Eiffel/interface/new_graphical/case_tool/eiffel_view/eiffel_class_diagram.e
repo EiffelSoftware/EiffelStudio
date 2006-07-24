@@ -169,50 +169,52 @@ feature {NONE} -- Implementation
 			cm: ES_CLASS
 			remove_links: LIST [ES_ITEM]
 		do
-			if not model.is_empty then
-				cm := class_from_interface (a_stone.class_i)
-				if cm = Void or else not cm.is_needed_on_diagram  then
-					-- add it
-					if cm = Void then
-						create cm.make (a_stone.class_i)
-						model.add_node (cm)
-					else
-						cm.enable_needed_on_diagram
-						enable_all_links (cm)
+			if a_stone.is_valid then
+				if not model.is_empty then
+					cm := class_from_interface (a_stone.class_i)
+					if cm = Void or else not cm.is_needed_on_diagram  then
+						-- add it
+						if cm = Void then
+							create cm.make (a_stone.class_i)
+							model.add_node (cm)
+						else
+							cm.enable_needed_on_diagram
+							enable_all_links (cm)
 
+						end
+						model.add_node_relations (cm)
+						cf ?= figure_from_model (cm)
+						check
+							class_was_inserted: cf /= Void
+						end
+						drop_x := context_editor.pointer_position.x
+						drop_y := context_editor.pointer_position.y
+						cf.set_port_position (drop_x, drop_y)
+						remove_links := cm.needed_links
+						update_cluster_legend
+						context_editor.history.register_named_undoable (
+							Interface_names.t_Diagram_include_class_cmd (cm.name),
+							[<<agent reinclude_class (cf, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
+							[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
+					else
+						-- move it
+						cf ?= figure_from_model (cm)
+						check
+							class_was_inserted: cf /= Void
+						end
+						drop_x := context_editor.pointer_position.x
+						drop_y := context_editor.pointer_position.y
+						old_x := cf.port_x
+						old_y := cf.port_y
+						cf.set_port_position (drop_x, drop_y)
+						context_editor.history.register_named_undoable (
+							interface_names.t_diagram_move_class_cmd (cm.name),
+							agent cf.set_port_position (drop_x, drop_y),
+							agent cf.set_port_position (old_x, old_y))
 					end
-					model.add_node_relations (cm)
-					cf ?= figure_from_model (cm)
-					check
-						class_was_inserted: cf /= Void
+					if is_right_angles then
+						apply_right_angles
 					end
-					drop_x := context_editor.pointer_position.x
-					drop_y := context_editor.pointer_position.y
-					cf.set_port_position (drop_x, drop_y)
-					remove_links := cm.needed_links
-					update_cluster_legend
-					context_editor.history.register_named_undoable (
-						Interface_names.t_Diagram_include_class_cmd (cm.name),
-						[<<agent reinclude_class (cf, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
-						[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
-				else
-					-- move it
-					cf ?= figure_from_model (cm)
-					check
-						class_was_inserted: cf /= Void
-					end
-					drop_x := context_editor.pointer_position.x
-					drop_y := context_editor.pointer_position.y
-					old_x := cf.port_x
-					old_y := cf.port_y
-					cf.set_port_position (drop_x, drop_y)
-					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_move_class_cmd (cm.name),
-						agent cf.set_port_position (drop_x, drop_y),
-						agent cf.set_port_position (old_x, old_y))
-				end
-				if is_right_angles then
-					apply_right_angles
 				end
 			end
 		end

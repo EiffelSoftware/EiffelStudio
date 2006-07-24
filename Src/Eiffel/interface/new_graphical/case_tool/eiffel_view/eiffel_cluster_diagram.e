@@ -153,17 +153,18 @@ feature {NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
 		do
-			if a_stone.group.is_cluster then
-				l_cluster ?= a_stone.group
-				on_cluster_drop (l_cluster)
-			elseif a_stone.group.is_library then
-				l_lib ?= a_stone.group
-				on_library_drop (l_lib)
+			if a_stone.is_valid then
+				if a_stone.group.is_cluster then
+					l_cluster ?= a_stone.group
+					on_cluster_drop (l_cluster)
+				elseif a_stone.group.is_library then
+					l_lib ?= a_stone.group
+					on_library_drop (l_lib)
+				end
 			end
 		end
 
 	on_cluster_drop (a_cluster: CONF_CLUSTER) is
-			--
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
@@ -264,7 +265,6 @@ feature {NONE} -- Implementation
 		end
 
 	on_library_drop (a_lib: CONF_LIBRARY) is
-			--
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
@@ -354,14 +354,16 @@ feature {NONE} -- Implementation
 		local
 			l_class_fig_stone: CLASSI_FIGURE_STONE
 		do
-			l_class_fig_stone ?= a_stone
-			is_dropped_on_diagram := True
-			if l_class_fig_stone /= Void then
-				move_class (l_class_fig_stone.source, context_editor.pointer_position.x, context_editor.pointer_position.y)
-			else
-				add_to_diagram (a_stone.class_i)
+			if a_stone.is_valid then
+				l_class_fig_stone ?= a_stone
+				is_dropped_on_diagram := True
+				if l_class_fig_stone /= Void then
+					move_class (l_class_fig_stone.source, context_editor.pointer_position.x, context_editor.pointer_position.y)
+				else
+					add_to_diagram (a_stone.class_i)
+				end
+				is_dropped_on_diagram := False
 			end
-			is_dropped_on_diagram := False
 		end
 
 	on_class_added (a_class: CLASS_I) is

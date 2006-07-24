@@ -57,17 +57,21 @@ feature -- Basic operations
 	execute_with_class_stone (a_stone: CLASSI_STONE) is
 			-- Create a development window and process `a_stone'.
 		do
-			was_dropped := True
-			tool.set_is_rebuild_world_needed (True)
-			tool.tool.launch_stone (a_stone)
+			if a_stone.is_valid then
+				was_dropped := True
+				tool.set_is_rebuild_world_needed (True)
+				tool.tool.launch_stone (a_stone)
+			end
 		end
 
 	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
 			-- Create a development window and process `a_stone'.
 		do
-			was_dropped := True
-			tool.set_is_rebuild_world_needed (True)
-			tool.tool.launch_stone (a_stone)
+			if a_stone.is_valid then
+				was_dropped := True
+				tool.set_is_rebuild_world_needed (True)
+				tool.tool.launch_stone (a_stone)
+			end
 		end
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

@@ -513,7 +513,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
 					True, False, True)
-			accel.actions.extend (agent form.execute)
+			accel.actions.extend (agent save_and_switch_formatter (form))
 			form.set_accelerator (accel)
 			form.set_viewpoints (view_points_combo)
 			form.post_execution_action.extend (agent update_viewpoints)
@@ -523,7 +523,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_c),
 					True, False, True)
-			accel.actions.extend (agent form.execute)
+			accel.actions.extend (agent save_and_switch_formatter (form))
 			form.set_accelerator (accel)
 			form.set_viewpoints (view_points_combo)
 			form.post_execution_action.extend (agent update_viewpoints)
@@ -533,7 +533,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f),
 					True, False, True)
-			accel.actions.extend (agent form.execute)
+			accel.actions.extend (agent save_and_switch_formatter (form))
 			form.set_accelerator (accel)
 			form.set_viewpoints (view_points_combo)
 			form.post_execution_action.extend (agent update_viewpoints)
@@ -543,7 +543,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_o),
 					True, False, True)
-			accel.actions.extend (agent form.execute)
+			accel.actions.extend (agent save_and_switch_formatter (form))
 			form.set_accelerator (accel)
 			form.set_viewpoints (view_points_combo)
 			form.post_execution_action.extend (agent update_viewpoints)
@@ -553,7 +553,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_i),
 					True, False, True)
-			accel.actions.extend (agent form.execute)
+			accel.actions.extend (agent save_and_switch_formatter (form))
 			form.set_accelerator (accel)
 			form.set_viewpoints (view_points_combo)
 			form.post_execution_action.extend (agent update_viewpoints)
@@ -4654,6 +4654,18 @@ feature {NONE} -- Execution
 			c_finalized_compilation_cmd.disable_sensitive
 			refactoring_manager.disable_sensitive
 			refactoring_manager.forget_undo_redo
+		end
+
+	save_and_switch_formatter (a_formatter: EB_FORMATTER) is
+			-- Save the file before switching bewteen main formatters when the file is not saved.
+		require
+			a_formatter_not_void: a_formatter /= Void
+		do
+			if changed then
+				save_and (agent a_formatter.execute)
+			else
+				a_formatter.execute
+			end
 		end
 
 feature {NONE} -- Access

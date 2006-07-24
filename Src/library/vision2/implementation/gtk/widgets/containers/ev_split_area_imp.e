@@ -121,7 +121,14 @@ feature {NONE} -- Implementation
 	container_widget: POINTER
 		-- Pointer to the GtkPaned widget.
 
-	splitter_width: INTEGER is 8
+	splitter_width: INTEGER is
+			-- Width of splitter.
+		local
+			a_cs: EV_GTK_C_STRING
+		do
+			a_cs := "handle-size"
+			{EV_GTK_EXTERNALS}.gtk_widget_style_get_integer (container_widget, a_cs.item, $Result)
+		end
 
 	set_item_resize (an_item: like item; a_resizable: BOOLEAN) is
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.

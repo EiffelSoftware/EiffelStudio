@@ -117,6 +117,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ EWB_SET_ASSERTION_CHECK, idr_Opaque },
 	{ CLOSE_DBG, idr_void },
 	{ SET_IPC_PARAM, idr_Opaque },
+	{ CLEAR_BREAKPOINTS, idr_void },
 };
 
 /*

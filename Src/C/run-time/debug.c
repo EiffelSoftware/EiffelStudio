@@ -953,12 +953,32 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	}
 
 /**************************************************************************/
+/* NAME: dbreak_clear_table                                          */
+/*------------------------------------------------------------------------*/
+/* clear all breakpoints from the table.                                  */
+/**************************************************************************/
+rt_public void dbreak_clear_table(void) 
+{
+	struct db_bpinfo 	*curr_bpinfo;
+	int hash_code;
+
+	for (hash_code = 1; hash_code < BP_TABLE_SIZE; hash_code = hash_code + 1) {
+
+		curr_bpinfo = d_globaldata.db_bpinfo[hash_code];
+		if (curr_bpinfo != NULL) {
+			eif_rt_xfree (d_globaldata.db_bpinfo[hash_code]);
+		}
+	}
+	memset((char *)d_globaldata.db_bpinfo, 0, BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
+}
+
+/**************************************************************************/
 /* NAME: dbreak_create_table                                              */
 /*------------------------------------------------------------------------*/
 /* create the breakpoints table used to handle breakpoints                */
 /**************************************************************************/
 rt_shared void dbreak_create_table(void)
-	{
+{
 
 		/* create the mutex used to access the table safely between threads */
 	DBGMTX_CREATE;
@@ -970,7 +990,7 @@ rt_shared void dbreak_create_table(void)
 	
 	/* wipe out the allocated structure */
 	memset((char *)d_globaldata.db_bpinfo, 0, BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
-	}
+}
 
 rt_shared void dbreak_free_table (void)
 {

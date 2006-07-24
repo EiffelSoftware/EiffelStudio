@@ -829,12 +829,14 @@ rt_public int ewb_active_check(STREAM *sp, int pid)
 #endif
 #endif
 
-	if (pid == 0)				/* No application recorded */
+	if (pid == 0) {				/* No application recorded */
 		return 0;				/* Nothing to check */
+	}
 
 #ifdef EIF_WINDOWS
-	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0)
+	if (WaitForSingleObject (pid, 0) == WAIT_OBJECT_0) {
   		return 1;
+	}
 #elif defined EIF_VMS
 	/* VMS does has PIDCHECK, but only on V7.0 or later, and	*/
 	/* only when the _POSIX_EXIT feature test macro is set.		*/

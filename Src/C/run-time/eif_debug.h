@@ -94,6 +94,7 @@ RT_LNK void dstop(struct ex_vect *exvect, uint32 offset);	/* Breakable point rea
 RT_LNK void dstop_nested(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached (nested call) */
 extern void dsync(void);									/* (Re)synchronize d_data cached information */
 extern void dsetbreak(BODY_INDEX body_id, int offset, int what);/* Set/remove breakpoint in feature */
+extern void dbreak_clear_table(void);							/* Clear all known bps */
 extern void dstatus(int dx);								/* Update execution status (RESUME request) */
 
 /* Debugging stack handling */

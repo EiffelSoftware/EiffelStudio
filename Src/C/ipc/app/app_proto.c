@@ -254,6 +254,9 @@ static int curr_modify = NO_CURRMODIF;
 	case MOVE:						/* Change active routine */
 		dmove(arg_1);
 		break;
+	case CLEAR_BREAKPOINTS:				/* Clear breakpoints table */
+		dbreak_clear_table();
+		break;
 	case BREAK:						/* Add/delete breakpoints */
 		dsetbreak(arg_1, arg_3, arg_2);
 		break;

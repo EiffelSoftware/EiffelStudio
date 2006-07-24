@@ -563,6 +563,7 @@ feature -- Access
 
 	exit_code: INTEGER is
 			-- Exit code of child process
+			-- Should be called after process has exited.
 		require
 			process_launched: launched
 		deferred

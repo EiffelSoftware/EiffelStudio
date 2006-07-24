@@ -248,39 +248,31 @@ feature {NONE} -- Externals
 
 		end
 
-	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER; a_status: POINTER) is
+	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: TYPED_POINTER [BOOLEAN]; a_status: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]) is
 			-- Wait for process specified by `pid'.  Block if
 			-- no process has status available if `block' is
 			-- true.  Set boolean at `status_avail_addr' to
 			-- indicate whether status was available.
 			-- Set reported process status in `a_status' if `status_avail_addr' is set with True.
+			-- If succeeded, set `a_succ' to True, otherwise False.
 		external
-			"C inline use <sys/types.h>, <sys/wait.h>"
+			"C blocking inline use <sys/types.h>, <sys/wait.h>"
 		alias
 			"[
 				{
 				  pid_t rc;
-				  int status, options;
-				  EIF_BOOLEAN *ptr;
-				  EIF_INTEGER *stat;
-
-				  options = ($block ? 0 : WNOHANG) | WUNTRACED;
-				  ptr = (EIF_BOOLEAN *) $status_avail_addr;
-				  stat = (EIF_INTEGER *)$a_status;
-				  rc = waitpid((pid_t) $pid, &status, options);
-
-				  if (rc == -1) {
-				    eraise(Strerror(errno), EN_SYS);
+				  int status;
+				  
+				  rc = waitpid((pid_t) $pid, &status, ($block ? 0 : WNOHANG) | WUNTRACED);
+				  *(EIF_BOOLEAN *) $a_succ = (rc != -1);
+				  if (rc != -1) {				    
+					  if (rc == 0) { /* No process has status to report yet */
+					    *(EIF_BOOLEAN *) $status_avail_addr = EIF_FALSE;
+					  } else { /* Process reported status */
+					    *(EIF_BOOLEAN *) $status_avail_addr = EIF_TRUE;
+					  }
+					  *(EIF_INTEGER *) $a_status = (EIF_INTEGER) status;
 				  }
-				  else if (rc == 0)  /* No process has status to report yet */
-				  {
-				    *ptr = EIF_FALSE;
-				  }
-				  else /* Process reported status */
-				  {
-				    *ptr = EIF_TRUE;
-				  }
-				  *stat = (EIF_INTEGER) status;
 				}
 			]"
 		end

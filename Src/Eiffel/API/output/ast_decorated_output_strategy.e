@@ -3631,7 +3631,7 @@ feature {NONE} -- Implementation: helpers
 	string_type: CL_TYPE_A is
 			-- Actual string type
 		once
-			Result := system.string_class.compiled_class.actual_type
+			Result := system.string_8_class.compiled_class.actual_type
 		end
 
 	check_type (a_type: TYPE_AS) is

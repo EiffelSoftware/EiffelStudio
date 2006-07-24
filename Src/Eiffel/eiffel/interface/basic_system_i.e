@@ -25,11 +25,8 @@ feature -- Access
 	boolean_class: CLASS_I
 			-- Class BOOLEAN
 
-	character_class: CLASS_I
-			-- Class CHARACTER
-
-	wide_char_class: CLASS_I
-			-- Class UNICODE_CHARACTER
+	character_8_class, character_32_class: CLASS_I
+			-- Class CHARACTER 8 and 32.
 
 	integer_8_class, integer_16_class,
 	integer_32_class, integer_64_class: CLASS_I
@@ -48,7 +45,7 @@ feature -- Access
 	pointer_class: CLASS_I
 			-- Class POINTER
 
-	string_32_class, string_class, system_string_class: CLASS_I
+	string_32_class, string_8_class, system_string_class: CLASS_I
 			-- Class STRING ...
 
 	array_class: CLASS_I
@@ -89,11 +86,8 @@ feature -- Access
 
 feature -- Access: XX_REF classes
 
-	character_ref_class: CLASS_I
-			-- Class CHARACTER_REF
-
-	wide_char_ref_class: CLASS_I
-			-- Class UNICODE_CHARACTER_REF
+	character_8_ref_class, character_32_ref_class: CLASS_I
+			-- Class CHARACTER_REF 8 and 32 bits.
 
 	boolean_ref_class: CLASS_I
 			-- Class BOOLEAN_REF
@@ -183,13 +177,13 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	string_id: INTEGER is
+	string_8_id: INTEGER is
 			-- Id of class STRING
 		require
-			string_class_exists: string_class /= Void
-			compiled: string_class.is_compiled
+			string_8_class_exists: string_8_class /= Void
+			compiled: string_8_class.is_compiled
 		do
-			Result := string_class.compiled_class.class_id
+			Result := string_8_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -383,24 +377,24 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	character_ref_type_id: INTEGER is
+	character_8_ref_type_id: INTEGER is
 			-- Dynamic type_id of class CHARACTER_REF
 		require
-			char_ref_class_exists: character_ref_class /= Void
-			compiled: character_ref_class.is_compiled
+			character_8_ref_class_exists: character_8_ref_class /= Void
+			compiled: character_8_ref_class.is_compiled
 		do
-			Result := character_ref_class.compiled_class.types.first.type_id
+			Result := character_8_ref_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
 
-	wide_char_ref_type_id: INTEGER is
+	character_32_ref_type_id: INTEGER is
 			-- Dynamic type_id of class UNICODE_CHARACTER_REF
 		require
-			unicode_char_ref_class_exists: wide_char_ref_class /= Void
-			compiled: wide_char_ref_class.is_compiled
+			character_32_ref_class_exists: character_32_ref_class /= Void
+			compiled: character_32_ref_class.is_compiled
 		do
-			Result := wide_char_ref_class.compiled_class.types.first.type_id
+			Result := character_32_ref_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -457,25 +451,27 @@ feature -- Settings
 			boolean_class_set: boolean_class = c
 		end
 
-	set_character_class (c: CLASS_I; is_wide: BOOLEAN) is
-			-- Assign `c' to `character_class'.
+	set_character_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `character_n_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 8 or n = 32
 		do
-			if is_wide then
-				wide_char_class := c
+			if n = 32 then
+				character_32_class := c
 			else
-				character_class := c
+				character_8_class := c
 			end
 		ensure
-			wide_char_set: is_wide implies wide_char_class = c
-			char_set: not is_wide implies character_class = c
+			character_32_class_set: n = 32 implies character_32_class = c
+			character_8_class_set: n = 8 implies character_8_class = c
 		end
 
 	set_integer_class (c: CLASS_I; n: INTEGER) is
 			-- Assign `c' to `integer_n_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			inspect n
 			when 8 then integer_8_class := c
@@ -494,6 +490,7 @@ feature -- Settings
 			-- Assign `c' to `natural_n_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			inspect n
 			when 8 then natural_8_class := c
@@ -508,24 +505,20 @@ feature -- Settings
 			natural_64_class_set: n = 64 implies natural_64_class = c
 		end
 
-	set_real_32_class (c: CLASS_I) is
-			-- Assign `c' to `real_32_class'.
+	set_real_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `real_n_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 32 or n = 64
 		do
-			real_32_class := c
+			if n = 32 then
+				real_32_class := c
+			else
+				real_64_class := c
+			end
 		ensure
-			real_32_class_set: real_32_class = c
-		end
-
-	set_real_64_class (c: CLASS_I) is
-			-- Assign `c' to `real_64_class'.
-		require
-			c_not_void: c /= Void
-		do
-			real_64_class := c
-		ensure
-			real_64_class_set: real_64_class = c
+			real_32_class_set: n = 32 implies real_32_class = c
+			real_64_class_set: n = 64 implies real_64_class = c
 		end
 
 	set_pointer_class (c: CLASS_I) is
@@ -538,24 +531,20 @@ feature -- Settings
 			pointer_class_set: pointer_class = c
 		end
 
-	set_string_32_class (c: CLASS_I) is
-			-- Assign `c' to `string_32_class'.
+	set_string_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `string_n_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 8 or n = 32
 		do
-			string_32_class := c
+			if n = 32 then
+				string_32_class := c
+			else
+				string_8_class := c
+			end
 		ensure
-			string_32_class_set: string_32_class = c
-		end
-
-	set_string_class (c: CLASS_I) is
-			-- Assign `c' to `string_class'.
-		require
-			c_not_void: c /= Void
-		do
-			string_class := c
-		ensure
-			string_class_set: string_class = c
+			string_32_class_set: n = 32 implies string_32_class = c
+			string_8_class_set: n = 8 implies string_8_class = c
 		end
 
 	set_system_string_class (c: CLASS_I) is
@@ -710,19 +699,20 @@ feature -- Settings
 
 feature -- Settings: XX_REF classes
 
-	set_character_ref_class (c: CLASS_I; is_wide: BOOLEAN) is
-			-- Assign `c' to `character_ref_class'.
+	set_character_ref_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `character_n_ref_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 8 or n = 32
 		do
-			if is_wide then
-				wide_char_ref_class := c
+			if n = 32 then
+				character_32_ref_class := c
 			else
-				character_ref_class := c
+				character_8_ref_class := c
 			end
 		ensure
-			wide_char_ref_set: is_wide implies wide_char_ref_class = c
-			char_ref_set: not is_wide implies character_ref_class = c
+			character_32_ref_class_set: n = 32 implies character_32_ref_class = c
+			character_8_ref_class_set: n = 8 implies character_8_ref_class = c
 		end
 
 	set_boolean_ref_class (c: CLASS_I) is
@@ -771,24 +761,20 @@ feature -- Settings: XX_REF classes
 			natural_64_ref_class_set: n = 64 implies natural_64_ref_class = c
 		end
 
-	set_real_32_ref_class (c: CLASS_I) is
-			-- Assign `c' to `real_32_ref_class'.
+	set_real_ref_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `real_n_ref_class'.
 		require
 			c_not_void: c /= Void
+			n_valid: n = 32 or n = 64
 		do
-			real_32_ref_class := c
+			if n = 32 then
+				real_32_ref_class := c
+			else
+				real_64_ref_class := c
+			end
 		ensure
-			real_32_ref_class_set: real_32_ref_class = c
-		end
-
-	set_real_64_ref_class (c: CLASS_I) is
-			-- Assign `c' to `real_64_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			real_64_ref_class := c
-		ensure
-			real_64_ref_class_set: real_64_ref_class = c
+			real_32_ref_class_set: n = 32 implies real_32_ref_class = c
+			real_64_ref_class_set: n = 64 implies real_64_ref_class = c
 		end
 
 	set_pointer_ref_class (c: CLASS_I) is

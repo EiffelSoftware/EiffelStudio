@@ -433,7 +433,7 @@ feature -- Plug and Makefile file
 			buffer.start_c_specific_code
 
 				-- Extern declarations
-			string_cl := system.class_of_id (system.string_id)
+			string_cl := system.class_of_id (system.string_8_id)
 			cl_type := string_cl.types.first
 			id := cl_type.static_type_id
 			str_type_id := cl_type.type_id
@@ -794,9 +794,9 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N%Tegc_real32_ref_dtype = ")
 			buffer.put_type_id (system.real_32_ref_type_id)
 			buffer.put_string (";%N%Tegc_char_ref_dtype = ")
-			buffer.put_type_id (system.character_ref_type_id)
+			buffer.put_type_id (system.character_8_ref_type_id)
 			buffer.put_string (";%N%Tegc_wchar_ref_dtype = ")
-			buffer.put_type_id (system.wide_char_ref_type_id)
+			buffer.put_type_id (system.character_32_ref_type_id)
 			buffer.put_string (";%N%Tegc_real64_ref_dtype = ")
 			buffer.put_type_id (system.real_64_ref_type_id)
 			buffer.put_string (";%N%Tegc_point_ref_dtype = ")

@@ -288,7 +288,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_string_b ?= a_expr_b
 			if l_string_b /= Void then
 				create tmp_result_value.make_manifest_string (l_string_b.value,
-					system.string_class.compiled_class)
+					system.string_8_class.compiled_class)
 			else
 					--| NotYetReady |--
 				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
@@ -315,7 +315,7 @@ feature {NONE} -- EXPR_B evaluation
 			elseif a_value_i.is_string then
 				l_string ?= a_value_i
 				create tmp_result_value.make_manifest_string (l_string.string_value,
-					system.string_class.compiled_class)
+					system.string_8_class.compiled_class)
 			elseif a_value_i.is_boolean then
 				create tmp_result_value.make_boolean (a_value_i.boolean_value,
 					system.boolean_class.compiled_class)
@@ -323,10 +323,10 @@ feature {NONE} -- EXPR_B evaluation
 				l_char ?= a_value_i
 				if l_char.is_character_8 then
 					create tmp_result_value.make_character (l_char.character_value.to_character_8,
-						system.character_class.compiled_class)
+						system.character_8_class.compiled_class)
 				else
 					create tmp_result_value.make_wide_character (l_char.character_value,
-						system.wide_char_class.compiled_class)
+						system.character_32_class.compiled_class)
 				end
 			elseif a_value_i.is_real then
 				l_real ?= a_value_i

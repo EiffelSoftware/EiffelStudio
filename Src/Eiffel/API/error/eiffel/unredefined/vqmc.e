@@ -88,7 +88,7 @@ feature {COMPILER_EXPORTER} -- Setting
 				end
 				constant_type := l_int.manifest_type
 			elseif a_const.is_string then
-				create {CL_TYPE_A} constant_type.make (System.string_id)
+				create {CL_TYPE_A} constant_type.make (System.string_8_id)
 			else
 				check
 					not_reached: False

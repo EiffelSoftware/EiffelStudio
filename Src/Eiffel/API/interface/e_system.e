@@ -104,7 +104,7 @@ feature -- Access
 	Character_class: CLASS_I is
 			-- Class CHARACTER
 		once
-			Result := System.character_class
+			Result := System.character_8_class
 		end;
 
 	Integer_class: CLASS_I is
@@ -134,7 +134,7 @@ feature -- Access
 	String_class: CLASS_I is
 			-- Class STRING
 		once
-			Result := System.string_class
+			Result := System.string_8_class
 		end;
 
 	Array_class: CLASS_I is

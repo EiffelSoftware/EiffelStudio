@@ -6747,7 +6747,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 	string_type: TYPE_I is
 			-- Type of string object
 		once
-			Result := System.string_class.compiled_class.types.first.type
+			Result := System.string_8_class.compiled_class.types.first.type
 		end
 
 	string_implementation_id: INTEGER is
@@ -6765,7 +6765,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 	string_prepend_feat_id: INTEGER is
 			-- Feature ID of `make_from_cil' of STRING.
 		once
-			Result := System.string_class.compiled_class.
+			Result := System.string_8_class.compiled_class.
 				feature_table.item ("prepend").feature_id
 		ensure
 			string_prepend_feat_id_positive: Result > 0
@@ -6774,7 +6774,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 	string_make_feat_id: INTEGER is
 			-- Feature ID of `make_from_cil' of STRING.
 		once
-			Result := System.string_class.compiled_class.
+			Result := System.string_8_class.compiled_class.
 				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		ensure
 			string_make_feat_id_positive: Result > 0
@@ -6876,7 +6876,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 		local
 			l_class: CLASS_C
 		once
-			l_class := system.string_class.compiled_class.feature_table.
+			l_class := system.string_8_class.compiled_class.feature_table.
 				item_id ({PREDEFINED_NAMES}.to_cil_name_id).written_class
 
 			Result := [l_class.types.first.static_type_id,

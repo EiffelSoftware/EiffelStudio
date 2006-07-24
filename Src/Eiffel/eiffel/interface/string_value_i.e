@@ -82,7 +82,7 @@ feature -- Status Report
 				class_type /= Void
 			end
 			Result := class_type /= Void and then
-				(class_type.class_id = System.string_id or
+				(class_type.class_id = System.string_8_id or
 				class_type.class_id = system_string_id)
 		end
 

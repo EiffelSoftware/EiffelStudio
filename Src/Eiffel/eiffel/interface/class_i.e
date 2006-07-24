@@ -446,10 +446,10 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			if Current = local_system.boolean_class then
 				create {BOOLEAN_B} Result.make (Current)
 
-			elseif Current = local_system.character_class then
+			elseif Current = local_system.character_8_class then
 				create {CHARACTER_B} Result.make (Current, False)
 
-			elseif Current = local_system.wide_char_class then
+			elseif Current = local_system.character_32_class then
 				create {CHARACTER_B} Result.make (Current, True)
 
 			elseif Current = local_system.natural_8_class then
@@ -494,7 +494,7 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			elseif Current = local_system.array_class then
 				create {ARRAY_CLASS_B} Result.make (Current)
 
-			elseif Current = local_system.string_class then
+			elseif Current = local_system.string_8_class then
 				create {STRING_CLASS_B} Result.make (Current)
 
 			elseif Current = local_system.tuple_class then

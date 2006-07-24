@@ -1193,6 +1193,8 @@ feature -- Conveniences
 			good_written_in: written_in /= 0
 		do
 			Result := System.class_of_id (written_in)
+		ensure
+			written_class_not_void: Result /= Void
 		end
 
 feature -- Export checking

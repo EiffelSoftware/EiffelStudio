@@ -193,6 +193,9 @@ feature -- Execution
 								need_to_stop := evaluator.error_occurred or else evaluator.final_result_is_true_boolean_value
 								need_to_resend_bp := need_to_stop
 							end
+						else
+							need_to_stop := False
+							need_to_resend_bp := True
 						end
 					else
 					end

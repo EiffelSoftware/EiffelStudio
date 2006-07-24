@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	BREAK_LIST 
+	BREAK_LIST
 
 inherit
 	HASH_TABLE [BREAKPOINT, BREAKPOINT]
@@ -29,7 +29,7 @@ feature -- Initialization
 		do
 			ht_make (50)
 		end
-			
+
 feature -- Element change
 
 	add_breakpoint (bp: BREAKPOINT) is
@@ -58,6 +58,21 @@ feature -- Element change
 			loop
 				add_breakpoint (other.item_for_iteration)
 				other.forth
+			end
+		end
+
+feature -- Query
+
+	has_enabled_breakpoints: BOOLEAN is
+			-- Does this breakpoints list contains at least one enabled bp ?
+		do
+			from
+				start
+			until
+				after or Result
+			loop
+				Result := item_for_iteration.is_enabled
+				forth
 			end
 		end
 
@@ -94,4 +109,4 @@ indexing
 		]"
 
 end -- class BREAK_LIST
-	
+

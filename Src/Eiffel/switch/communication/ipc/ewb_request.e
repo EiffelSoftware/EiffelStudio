@@ -26,6 +26,7 @@ feature -- Initialization
 			-- create a new request of type `code'
 		do
 			request_code := code
+			breakpoints_table_cleared := True
 		end
 
 feature -- Update
@@ -51,18 +52,11 @@ feature -- Update
 			when No_stop_points then
 					-- remove all breakpoints set by the application.
 					-- without changing their status under bench
-				from
-					bpts.start
-				until
-					bpts.after
-				loop
-					bp := bpts.item_for_iteration
-
-					if bp.is_set_for_application then
-						send_breakpoint(bp, bp.breakpoint_to_remove)
-					end
-					bpts.forth
+				debug("debugger_trace_breakpoint")
+					io.put_string("Clear breakpoint table")
+					io.put_new_line
 				end
+				clear_application_breakpoints_table
 
 			when User_stop_points then
 					-- Execution with no stop points set.
@@ -134,6 +128,29 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
+	breakpoints_table_cleared: BOOLEAN
+
+	clear_application_breakpoints_table is
+			-- Clear debuggee application's breakpoints table
+		local
+			bpts: BREAK_LIST
+		do
+			if not breakpoints_table_cleared then
+				breakpoints_table_cleared := True
+				send_rqst_0 (rqst_clear_breakpoints)
+
+				bpts := debug_info.breakpoints
+				from
+					bpts.start
+				until
+					bpts.after
+				loop
+					bpts.item_for_iteration.set_application_not_set
+					bpts.forth
+				end
+			end
+		end
+
 	send_breakpoint (bp: BREAKPOINT; bp_mode: INTEGER) is
 			-- send a breakpoint to the application, and update the
 			-- status of the sent breakpoint
@@ -198,15 +215,20 @@ feature {NONE} -- Implementation
 			bp: BREAKPOINT
 			to_do: INTEGER
 		do
-			from
-				bpts.start
-			until
-				bpts.after
-			loop
-				bp := bpts.item_for_iteration
-				to_do := bp.update_status
-				send_breakpoint(bp, to_do)
-				bpts.forth
+			if not bpts.has_enabled_breakpoints then
+				clear_application_breakpoints_table
+			else
+				breakpoints_table_cleared := False
+				from
+					bpts.start
+				until
+					bpts.after
+				loop
+					bp := bpts.item_for_iteration
+					to_do := bp.update_status
+					send_breakpoint(bp, to_do)
+					bpts.forth
+				end
 			end
 		end
 

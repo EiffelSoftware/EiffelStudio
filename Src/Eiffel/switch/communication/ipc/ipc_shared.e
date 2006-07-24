@@ -106,7 +106,10 @@ feature {IPC_ENGINE} -- Request constants
 
 	Rqst_set_ipc_param: INTEGER is 45
 			-- Set IPC parameters.
-			
+
+	Rqst_clear_breakpoints: INTEGER is 46
+			-- Clear breakpoints table from debuggee.
+
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0

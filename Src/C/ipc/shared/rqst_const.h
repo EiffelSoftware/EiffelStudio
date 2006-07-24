@@ -84,9 +84,10 @@
 
 #define EWB_SET_ASSERTION_CHECK 43		/* Change assertion checking on the application being debugged */
 #define CLOSE_DBG 44			/* Close ecdbgd */
-#define SET_IPC_PARAM 45			/* set IPC parameters value (pid, timeout in seconds, ...) */
+#define SET_IPC_PARAM 45		/* set IPC parameters value (pid, timeout in seconds, ...) */
+#define CLEAR_BREAKPOINTS 46	/* Clear breakpoints table */
 
-#define MAX_REQUEST_TYPE 45		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 46		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

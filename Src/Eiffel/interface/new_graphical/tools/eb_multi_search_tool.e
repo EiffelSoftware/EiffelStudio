@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 			build_actions
 			prepare_interface
 			switch_mode
-			create last_keyword_queue.make
 			incremental_search_start_pos := 1
 			add_observer (Current)
 		end
@@ -1552,19 +1551,17 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
 		local
-			l_list: LIST [CLASS_I]
 			l_class_i: CLASS_I
 			l_pos: INTEGER
 			l_text: EDITABLE_TEXT
 			l_text_item: MSR_TEXT_ITEM
 			l_selected: BOOLEAN
+			l_class_stone: CLASSI_STONE
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.item_matched.is_empty then
-				if manager.class_name /= Void then
-					l_list := manager.eiffel_universe.classes_with_name (manager.class_name)
-					if not l_list.is_empty then
-						l_class_i := l_list.first
-					end
+				l_class_stone ?= manager.stone
+				if l_class_stone /= Void then
+					l_class_i := l_class_stone.class_i
 				end
 				l_text := editor.text_displayed
 				if editor.text_displayed.has_selection then
@@ -1616,20 +1613,18 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			-- After check run `a_pro'.
 		local
 			l_item: MSR_ITEM
-			l_list: LIST [CLASS_I]
-			class_name: STRING
-			l_stone: STONE
+			l_stone, l_new_stone: STONE
+			l_class_i: CLASS_I
 		do
 			check_class_succeed := true
 			if not multi_search_performer.off then
 				l_stone := manager.stone
 				l_item := multi_search_performer.item
-				create class_name.make_from_string (l_item.class_name)
-				class_name.to_upper
-				l_list := manager.eiffel_universe.classes_with_name (class_name)
+				l_class_i ?= l_item.data
+				l_new_stone := stone_from_class_i (l_class_i)
 				if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
-					if not l_list.is_empty then
-						manager.set_stone (stone_from_class_i (l_list.first))
+					if l_class_i /= Void then
+						manager.set_stone (l_new_stone)
 						if l_stone /= manager.stone then
 							is_text_changed_in_editor := false
 						else
@@ -1638,7 +1633,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 						end
 					end
 				elseif not is_current_editor_searched then
-					manager.set_stone (stone_from_class_i (l_list.first))
+					manager.set_stone (l_new_stone)
 					if l_stone = manager.stone then
 						loaded_actions.wipe_out
 						check_class_succeed := false
@@ -1892,30 +1887,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 			if box.text.is_empty or else not word.is_equal (box.text) then
 				box.set_text (word)
-			end
-			put_in_last_keyword_queue (word)
-		end
-
-	last_keyword: STRING is
-			-- Last searched keyword.
-		do
-			if not last_keyword_queue.is_empty then
-				Result := last_keyword_queue.first
-			end
-		end
-
-	last_keyword_queue: LINKED_LIST [like last_keyword]
-			-- Last searched keyword queue.
-
-	put_in_last_keyword_queue (a_str: like last_keyword) is
-			--
-		do
-			if last_keyword_queue.is_empty or (not last_keyword_queue.is_empty and then not last_keyword_queue.last.is_equal (a_str)) then
-				last_keyword_queue.extend (a_str)
-			end
-			if last_keyword_queue.count > 2 then
-				last_keyword_queue.start
-				last_keyword_queue.remove
 			end
 		end
 

@@ -525,8 +525,9 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.expand_all_levels" DESCRIPTION="Trigger expansion of all tree nodes."><SHORTCUT Shift="True">NumPad *</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.expand_tree_node" DESCRIPTION="Trigger expansion of current tree node."><SHORTCUT Ctrl="True">Right</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward" DESCRIPTION="Trigger backward search."><SHORTCUT Shift="True">F3</SHORTCUT></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last" DESCRIPTION="Trigger search on last searched item."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection" DESCRIPTION="Trigger search on current selection."><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_forward" DESCRIPTION="Trigger forward search."><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection_forward" DESCRIPTION="Trigger search on current selection and goes to previous result."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection_backward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True" Shift="True">F3</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar" DESCRIPTION="Trigger quick search bar."><SHORTCUT Ctrl="True">F</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel" DESCRIPTION="Trigger display of search panel."><SHORTCUT Alt="True" Ctrl="True">F</SHORTCUT></PREF>

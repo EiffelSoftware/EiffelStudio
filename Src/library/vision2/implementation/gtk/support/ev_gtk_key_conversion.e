@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	v2_to_gtk_table: ARRAY [NATURAL_32] is
 			-- GTK keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_right_meta)
+			create Result.make (Key_0, Key_menu)
 			Result.put (Key_0_keysym, Key_0)
 			Result.put (Key_1_keysym, Key_1)
 			Result.put (Key_2_keysym, Key_2)
@@ -143,6 +143,7 @@ feature {NONE} -- Implementation
 			Result.put (key_right_alt_keysym, key_alt)
 			Result.put (Key_left_meta_keysym, Key_left_meta)
 			Result.put (Key_right_meta_keysym, Key_right_meta)
+			Result.put (Key_menu_keysym, Key_menu)
 		end
 
 	gtk_to_v2_table: HASH_TABLE [INTEGER, NATURAL_32] is
@@ -309,6 +310,7 @@ feature {NONE} -- Implementation
 			Result.put (Key_open_bracket, Key_braceleft_keysym)
 			Result.put (Key_close_bracket, Key_braceright_keysym)
 			Result.put (Key_backslash, Key_bar_keysym)
+			Result.put (Key_menu, Key_menu_keysym)
 		end
 
 feature {EV_ANY_I} -- Externals
@@ -1433,6 +1435,12 @@ feature {EV_ANY_I} -- Externals
 			"GDK_Alt_R"
 		end
 
+	Key_menu_keysym: NATURAL_32 is
+		external
+			"C macro use <gdk/gdkkeysyms.h>"
+		alias
+			"GDK_Menu"
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

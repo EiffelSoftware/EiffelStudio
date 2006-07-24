@@ -14,6 +14,7 @@ inherit
 feature -- Access names
 
 	last_target_uuid: STRING
+	last_target_name: STRING
 	last_group_name: STRING
 	last_folder_path: STRING
 	last_class_name: STRING
@@ -46,7 +47,10 @@ feature -- Access (Target)
 		require
 			a_target_not_void: a_target /= Void
 		do
-			Result := a_target.system.uuid.out
+			create Result.make (40)
+			Result.append (encode (a_target.system.uuid.out))
+			Result.extend (name_sep)
+			Result.append (encode (a_target.name))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -61,10 +65,12 @@ feature -- Access (Target)
 			l_uuid: UUID
 		do
 			last_target_uuid := Void
+			last_target_name := Void
 			strings := a_id.split (name_sep)
-			if strings.count >= 1 then
-				uuid := decode (strings.i_th (1))
+			if strings.count >= target_id_sections then
+				uuid := decode (strings.i_th (target_id_sections - 1))
 				last_target_uuid := uuid
+				last_target_name := decode (strings.i_th (target_id_sections))
 				if universe.target.system.uuid.out.is_equal (uuid) then
 					l_target := universe.target
 				else
@@ -75,6 +81,9 @@ feature -- Access (Target)
 				end
 			end
 			Result := l_target
+			if Result /= Void then
+				last_target_name := Result.name
+			end
 		ensure
 			strings_not_void: strings /= Void
 		end
@@ -105,8 +114,8 @@ feature -- Access (Group)
 		do
 			last_group_name := Void
 			l_target := target_of_id (a_id)
-			if strings.count >= 2 then
-				group_name := decode (strings.i_th (2))
+			if strings.count >= group_id_sections then
+				group_name := decode (strings.i_th (group_id_sections))
 				last_group_name := group_name
 				if l_target /= Void then
 					Result := l_target.groups.item (group_name)
@@ -143,8 +152,8 @@ feature -- Access (Folder)
 		do
 			last_folder_path := Void
 			l_cluster ?= group_of_id (a_id)
-			if strings.count >= 3 then
-				l_path := decode (strings.i_th (3))
+			if strings.count >= folder_id_sections then
+				l_path := decode (strings.i_th (folder_id_sections))
 				last_folder_path := l_path
 				if l_cluster /= Void then
 					create l_dir.make (l_cluster.location.build_path (l_path, ""))
@@ -183,8 +192,8 @@ feature -- Access (Class)
 		do
 			last_class_name := Void
 			l_group ?= group_of_id (a_id)
-			if strings.count >= 3 then
-				class_name := decode (strings.i_th (3))
+			if strings.count >= class_id_sections then
+				class_name := decode (strings.i_th (class_id_sections))
 				last_class_name := class_name
 				if l_group /= Void and then l_group.classes /= Void then
 					Result := l_group.classes.item (class_name)
@@ -205,8 +214,8 @@ feature -- Access (Feature)
 		do
 			last_feature_name := Void
 			l_class ?= class_of_id (a_id)
-			if strings.count >= 4 then
-				l_feature_name := decode (strings.i_th (4))
+			if strings.count >= feature_id_sections then
+				l_feature_name := decode (strings.i_th (feature_id_sections))
 				last_feature_name := l_feature_name
 				if l_class /= Void then
 					l_class_c := l_class.compiled_representation
@@ -241,6 +250,30 @@ feature -- UUID generation
 			Result := uuid_gen.generate_uuid.out
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Access
+
+	target_id_sections: INTEGER is 2
+
+	group_id_sections: INTEGER is
+		once
+			Result := target_id_sections + 1
+		end
+
+	folder_id_sections: INTEGER is
+		once
+			Result := group_id_sections + 1
+		end
+
+	class_id_sections: INTEGER is
+		once
+			Result := group_id_sections + 1
+		end
+
+	feature_id_sections: INTEGER is
+		once
+			Result := class_id_sections + 1
 		end
 
 feature {NONE} -- Implementation. Encoding/Decoding

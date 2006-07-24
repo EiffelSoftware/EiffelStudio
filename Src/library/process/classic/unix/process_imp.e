@@ -158,6 +158,9 @@ feature {PROCESS_TIMER}  -- Status checking
 					has_process_exited := not child_process.is_executing
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
+						if child_process.signaled_flag_from_status (child_process.status) then
+							force_terminated := True
+						end
 						if is_launched_in_new_process_group and then is_terminal_control_enabled then
 							attach_terminals (process_id)
 						end

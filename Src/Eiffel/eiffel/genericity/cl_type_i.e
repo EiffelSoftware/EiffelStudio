@@ -120,6 +120,17 @@ feature -- Access
 			Result := twin
 		end
 
+	reference_type: CL_TYPE_I is
+			-- Corresponding reference type
+		require
+			is_expanded: is_expanded
+		do
+			Result := duplicate
+			Result.set_reference_mark
+		ensure
+			result_is_reference: Result.is_reference
+		end
+
 	instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
 			-- Instantation of Current in `other'
 		do

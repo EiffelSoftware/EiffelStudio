@@ -423,8 +423,7 @@ feature -- IL Generation
 						if inh_feat = Void then
 								-- Generate implementation for reference counterpart of this class.
 							impl_feat := feat
-							impl_type := current_class_type.type.duplicate
-							impl_type.set_reference_mark
+							impl_type := current_class_type.type.reference_type
 							impl_class_type := impl_type.associated_class_type
 						else
 								-- Generate implementation for parent class type.

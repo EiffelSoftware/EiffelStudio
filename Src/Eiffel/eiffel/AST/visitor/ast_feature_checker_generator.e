@@ -786,6 +786,7 @@ feature -- Implementation
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
 			l_result_type, l_pure_result_type: TYPE_A
+			l_generated_result_type: TYPE_A
 			l_veen: VEEN
 			l_vsta2: VSTA2
 			l_vica2: VICA2
@@ -1074,21 +1075,6 @@ feature -- Implementation
 					if l_arg_types /= Void then
 						l_pure_result_type := l_result_type
 						l_result_type := l_result_type.actual_argument_type (l_arg_types)
-							-- Ensure the expandedness status of the result type matches
-							-- the expandedness status of the argument it is anchored to (if any).
-						if l_pure_result_type.is_like_argument then
-							l_like_argument ?= l_pure_result_type
-							check
-								l_like_argument_attached: l_like_argument /= Void
-							end
-							i := l_like_argument.position
-							if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
-								l_cl_type_a ?= l_result_type
-								if l_cl_type_a /= Void then
-									l_result_type := l_cl_type_a.reference_type
-								end
-							end
-						end
 						l_open_type ?= l_result_type
 						if l_open_type /= Void then
 								-- It means that the result type is a like argument. In that case,
@@ -1098,6 +1084,21 @@ feature -- Implementation
 						end
 					end
 					l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
+					if l_arg_types /= Void and then l_pure_result_type.is_like_argument and then is_byte_node_enabled then
+							-- Ensure the expandedness status of the result type matches
+							-- the expandedness status of the argument it is anchored to (if any).
+						l_like_argument ?= l_pure_result_type
+						check
+							l_like_argument_attached: l_like_argument /= Void
+						end
+						i := l_like_argument.position
+						if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
+							l_cl_type_a ?= l_result_type
+							if l_cl_type_a /= Void then
+								l_generated_result_type := l_cl_type_a.reference_type
+							end
+						end
+					end
 						-- Export validity
 					if
 						not context.is_ignoring_export and is_qualified and
@@ -1164,10 +1165,13 @@ feature -- Implementation
 					end
 
 					if l_needs_byte_node then
+						if l_generated_result_type = Void then
+							l_generated_result_type := l_result_type
+						end
 						if not is_static then
 							if is_precursor then
 								l_cl_type_i ?= a_precursor_type.type_i
-								l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+								l_access := l_feature.access_for_feature (l_generated_result_type.type_i, l_cl_type_i)
 									-- Strange situation where Precursor is an external, then we do as if
 									-- it was a static call.
 								l_ext ?= l_access
@@ -1175,10 +1179,10 @@ feature -- Implementation
 									l_ext.enable_static_call
 								end
 							else
-								l_access := l_feature.access (l_result_type.type_i)
+								l_access := l_feature.access (l_generated_result_type.type_i)
 							end
 						else
-							l_access := l_feature.access_for_feature (l_result_type.type_i, a_type.type_i)
+							l_access := l_feature.access_for_feature (l_generated_result_type.type_i, a_type.type_i)
 							l_ext ?= l_access
 							if l_ext /= Void then
 								l_ext.enable_static_call

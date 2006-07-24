@@ -365,7 +365,7 @@ feature -- Commands
 				--| Store the System info even after an error
 				--|	(the next compilation will be stored in a different
 				--| directory)
-			if system.automatic_backup then
+			if system /= Void and then system.automatic_backup then
 				save_backup_info
 			end
 

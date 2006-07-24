@@ -30,11 +30,11 @@ feature
 			count: INTEGER
 		do
 			if argv.count /= 2 then
-                                io.error.putstring ("Usage: ")
-                                io.error.putstring (argv.item (0))
-                                io.error.putstring (" portnumber%N")
-                        else
-                                create soc1.make_server_by_port (argv.item (1).to_integer)
+				io.error.putstring ("Usage: ")
+				io.error.putstring (argv.item (0))
+				io.error.putstring (" portnumber%N")
+			else
+				create soc1.make_server_by_port (argv.item (1).to_integer)
 				from
 					soc1.listen (5)
 					count := 0
@@ -61,19 +61,24 @@ feature
 			create l_medium.make (soc2)
 			l_medium.set_for_reading
 			our_new_list ?= retrieved (l_medium, True)
-			from
-				our_new_list.start
-			until
-				our_new_list.after
-			loop
-				io.putstring (our_new_list.item)
-				our_new_list.forth
+			if our_new_list = Void then
+				io.put_string ("Failed retrieving list.")
 				io.new_line
-			end
+			else
+				from
+					our_new_list.start
+				until
+					our_new_list.after
+				loop
+					io.putstring (our_new_list.item)
+					our_new_list.forth
+					io.new_line
+				end
 
-			our_new_list.extend ("%N I'm back.%N")
-			l_medium.set_for_writing
-			independent_store (our_new_list, l_medium, True)
+				our_new_list.extend ("%N I'm back.%N")
+				l_medium.set_for_writing
+				independent_store (our_new_list, l_medium, True)
+			end
 			soc2.close
 		end
 

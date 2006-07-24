@@ -4,6 +4,6 @@ if [ $# -ne 3 ]; then
     echo "Command requires three arguments"
     echo "Application id, Image file name and source directory"
     exit
-endif
+fi
 
 mkisofs -R -v -l -d -D -L -p "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" -P "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" -A $1 -o $2 $3

@@ -1896,8 +1896,7 @@ end
 			instantiator.dispatch (data.type_a, Current)
 			if data.is_true_expanded and then not data.is_external then
 					-- Process reference counterpart.
-				data := data.duplicate
-				data.set_reference_mark
+				data := data.reference_type
 				register_type (data).do_nothing
 				instantiator.dispatch (data.type_a, Current)
 			end
@@ -1911,7 +1910,6 @@ end
 			good_context: data.base_class.lace_class /= system.native_array_class implies not data.has_formal
 		local
 			new_class_type: CLASS_TYPE
-			c: CL_TYPE_I
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
@@ -1926,9 +1924,7 @@ end
 
 				if data.is_true_expanded and then not data.is_external then
 						-- Process reference counterpart.
-					c := data.duplicate
-					c.set_reference_mark
-					update_types (c)
+					update_types (data.reference_type)
 				end
 
 					-- Propagation along the filters since we have a new type

@@ -10,12 +10,14 @@ deferred class BASIC_I
 inherit
 	CL_TYPE_I
 		rename
-			instantiated_description as description
+			instantiated_description as description,
+			reference_type as true_reference_type
 		undefine
 			description, type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
-			generate_cecil_value, generic_il_type_name
+			generate_cecil_value, generic_il_type_name,
+			true_reference_type
 		end
 
 	TYPE_C
@@ -43,6 +45,16 @@ feature -- Access
 		deferred
 		ensure
 			reference_type_not_void: Result /= Void
+		end
+
+	true_reference_type: CL_TYPE_I is
+			-- Corresponding reference type
+		do
+			create Result.make (class_id)
+			if cr_info /= Void then
+				Result.set_cr_info (cr_info)
+			end
+			Result.set_reference_mark
 		end
 
 	associated_reference_class_type: CLASS_TYPE is

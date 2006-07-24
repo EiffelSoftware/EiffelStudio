@@ -22,17 +22,18 @@ inherit
 		redefine
 			is_feature_pointer, name,
 			description, sk_value,
-			element_type, reference_type, tuple_code
+			element_type, reference_type, true_reference_type, tuple_code
 		end
 
 	ONE_GEN_TYPE_I
 		rename
-			instantiated_description as description
+			instantiated_description as description,
+			reference_type as true_reference_type
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, generate_cecil_value, dump
 		redefine
 			is_feature_pointer, description, sk_value,
-			element_type, tuple_code,
+			element_type, tuple_code, true_reference_type,
 			name
 		end
 
@@ -61,6 +62,17 @@ feature -- Access
 			-- we do this as a temporary solution.
 		do
 			create Result.make (system.pointer_ref_class.compiled_class.class_id)
+		end
+
+	true_reference_type: GEN_TYPE_I is
+			-- Corresponding reference type
+		do
+			Result := duplicate
+			create Result.make (class_id, Result.meta_generic, Result.true_generics)
+			if cr_info /= Void then
+				Result.set_cr_info (cr_info)
+			end
+			Result.set_reference_mark
 		end
 
 	element_type: INTEGER_8 is

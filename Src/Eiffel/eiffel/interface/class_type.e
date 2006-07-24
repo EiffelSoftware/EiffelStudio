@@ -1209,8 +1209,7 @@ feature {NONE} -- Implementation
 					-- Use a reference counterpart as a parent to ensure
 					-- that reattachment of expanded to reference works
 					-- as expectde
-				parent_type := type.duplicate
-				parent_type.set_reference_mark
+				parent_type := type.reference_type
 				if parent_type.has_associated_class_type then
 					par_table.append_type (parent_type)
 				else

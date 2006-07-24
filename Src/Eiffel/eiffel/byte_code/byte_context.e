@@ -1812,8 +1812,7 @@ feature -- Descendants information
 				c := class_types.item (i)
 				if c /= Void and then c.is_expanded then
 					expanded_descendants.include (c.conformance_table)
-					t := c.type.duplicate
-					t.set_reference_mark
+					t := c.type.reference_type
 					if t.has_associated_class_type then
 						expanded_descendants.put (True, t.associated_class_type.type_id)
 					end

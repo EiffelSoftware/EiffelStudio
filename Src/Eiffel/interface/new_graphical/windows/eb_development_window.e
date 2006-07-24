@@ -730,9 +730,6 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(search_tool)
 			editor_tool.text_area.add_cursor_observer (Current)
 			create show_cmd.make(Current, editor_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 
@@ -1537,7 +1534,7 @@ feature {NONE} -- Menu Building
 
 				-- Find next
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_find_next + "%T" + preferences.editor_data.shortcuts.item ("search_last").display_string)
+			cmd.set_menu_name (Interface_names.m_find_next + "%T" + preferences.editor_data.shortcuts.item ("search_forward").display_string)
 			cmd.add_agent (agent find_next)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1553,10 +1550,19 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
 
-				-- Find selection
+				-- Find selection forward
 			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.m_find_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection").display_string)
-			os_cmd.add_agent (agent find_selection)
+			os_cmd.set_menu_name (Interface_names.m_find_next_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection_forward").display_string)
+			os_cmd.add_agent (agent find_next_selection)
+			command_menu_item := os_cmd.new_menu_item
+			command_controller.add_selection_command (os_cmd)
+			add_recyclable (command_menu_item)
+			sub_menu.extend (command_menu_item)
+
+				-- Find selection backward
+			create os_cmd.make (Current)
+			os_cmd.set_menu_name (Interface_names.m_find_previous_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection_backward").display_string)
+			os_cmd.add_agent (agent find_next_selection)
 			command_menu_item := os_cmd.new_menu_item
 			command_controller.add_selection_command (os_cmd)
 			add_recyclable (command_menu_item)
@@ -4303,14 +4309,25 @@ feature {NONE} -- Implementation: Editor commands
 			end
 		end
 
-	find_selection is
+	find_next_selection is
 			-- Find the next occurrence of the selection.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			cv_ced ?= current_editor
 			if cv_ced /= Void then
-				cv_ced.find_selection
+				cv_ced.find_next_selection
+			end
+		end
+
+	find_previous_selection is
+			-- Find the next occurrence of the selection.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			cv_ced ?= current_editor
+			if cv_ced /= Void then
+				cv_ced.find_previous_selection
 			end
 		end
 

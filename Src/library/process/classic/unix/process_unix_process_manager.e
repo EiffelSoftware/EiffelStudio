@@ -76,13 +76,60 @@ feature {PROCESS_UNIX_OS} -- Creation
 			is_executing_set: not is_executing
 		end
 
-feature -- Execution properties
+feature -- Access
 
-	process_id: INTEGER;
+	process_id: INTEGER
 			-- Process id of last child process spawned or
 			-- 0 if no processes have been spawned.
 
-feature -- Modification
+	status: INTEGER
+			-- last reported process status if `is_status_available' is True
+
+	exit_code: INTEGER is
+			-- Exit code
+		do
+			if not is_executing and then is_last_wait_successful and then is_status_available then
+				Result := exit_code_from_status (status)
+			end
+		end
+
+	working_directory: STRING
+			-- Working directory of process
+
+	arguments_for_exec: ARRAY [STRING]
+			-- Arguments to be passed to `exec_process'
+
+feature -- Status report
+
+	is_last_wait_successful: BOOLEAN
+			-- Is last `wait_for_process' succeeded?
+
+	is_executing: BOOLEAN
+			-- Is launched process executing?
+
+	is_stopped: BOOLEAN is
+			-- Is current process stopped by a signal?
+		do
+			Result := is_status_available and then signaled_flag_from_status (status)
+		end
+
+	is_last_process_spawn_successful: BOOLEAN is
+			-- Is last process spawn successful?
+			-- Check it after invoking `spawn_nowait'.
+		do
+			Result := process_id /= -1
+		end
+
+	is_status_available: BOOLEAN
+			-- Is process status available when `wait_for_process' is called last time?	
+
+	is_terminated_by_signal: BOOLEAN is
+			-- Is process terminated by a signal?
+		do
+			Result := is_status_available and then signaled_flag_from_status (status)
+		end
+
+feature -- Setting
 
 	set_arguments (arg_list: LIST [STRING]) is
 			-- Set `arguments' to `args'.
@@ -160,30 +207,48 @@ feature -- Modification
 			error_not_file: error_file_name = Void
 		end
 
-feature -- Execution
+feature{PROCESS_IMP} -- Process management
 
-	is_executing: BOOLEAN
-			-- Is launched process executing?
-
-	is_stopped: BOOLEAN is
-			-- Is current process stopped by a signal?
+	wait_for_process (pid: INTEGER; is_block: BOOLEAN) is
+			-- Wait for any process specified by process
+			-- id `pid' to return status.
+			-- Block if `is_block' is True.
+			-- Set `is_status_available' to True if process status is available and
+			-- if so, set `status' with reported process status.
+		local
+			l_status: INTEGER
+			l_status_available: BOOLEAN
 		do
-			Result := status_available and then signaled_flag_from_status (status)
+			unix_waitpid (pid, is_block, $l_status_available, $l_status, $is_last_wait_successful)
+			if is_last_wait_successful then
+				is_status_available := l_status_available
+				status := l_status
+				if
+					is_status_available and then
+				  	(terminate_flag_from_status (status) or signaled_flag_from_status (status))
+				 then
+					set_is_executing (False)
+				else
+					set_is_executing (True)
+				end
+			else
+				is_status_available := False
+				set_is_executing (False)
+			end
 		end
 
-	is_last_process_spawn_successful: BOOLEAN is
-			-- Is last process spawn successful?
-			-- Check it after invoking `spawn_nowait'.
+	close_pipes is
+			-- Close opened pipes.
 		do
-			Result := process_id /= -1
-		end
-
-	set_is_executing (b: BOOLEAN) is
-			-- Set `is_executing' with `b'.
-		do
-			is_executing := b
-		ensure
-			is_executing_set: is_executing = b
+			if input_piped then
+				shared_input_unnamed_pipe.close_write_descriptor
+			end
+			if output_piped then
+				shared_output_unnamed_pipe.close_read_descriptor
+			end
+			if error_piped then
+				shared_error_unnamed_pipe.close_read_descriptor
+			end
 		end
 
 	spawn_nowait (is_control_terminal_enabled: BOOLEAN; evnptr: POINTER; a_new_process_group: BOOLEAN) is
@@ -231,70 +296,6 @@ feature -- Execution
 				create exceptions
 				exceptions.die (1)
 			end
-		end
-
-	wait_for_process (pid: INTEGER; is_block: BOOLEAN) is
-			-- Wait for any process specified by process
-			-- id `pid' to return status.
-			-- Block if `is_block' is True.
-			-- Set `status_available' to True if process status is available and
-			-- if so, set `status' with reported process status.
-		do
-			unix_waitpid (pid, is_block, $status_available, $status)
-			if
-				status_available and then
-			  	(terminate_flag_from_status (status) or signaled_flag_from_status (status))
-			 then
-				set_is_executing (False)
-			else
-				set_is_executing (True)
-			end
-		end
-
-	status_available: BOOLEAN
-			-- Is process status available when `wait_for_process' is called last time?
-
-	status: INTEGER
-			-- last reported process status if `status_available' is True
-
-	exit_code_from_status (a_status: INTEGER): INTEGER is
-			-- Exit code evaluated from status returned by process
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WEXITSTATUS($a_status)"
-		end
-
-	terminate_flag_from_status (a_status: INTEGER): BOOLEAN is
-			-- Returns true if the child terminated normally.
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WIFEXITED($a_status)"
-		end
-
-	signaled_flag_from_status (a_status: INTEGER): BOOLEAN is
-			-- Returns true if the child process was terminated by a signal.
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WIFSIGNALED($a_status)"
-		end
-
-	stopped_flag_from_status (a_status: INTEGER): BOOLEAN is
-			-- Returns true if the child process was stopped by delivery of a signal.
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WIFSTOPPED($a_status)"
-		end
-
-	continued_flag_from_status (a_status: INTEGER): BOOLEAN is
-			-- Returns true if the child process was stopped by delivery of a signal.
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WIFSTOPPED($a_status)"
 		end
 
 	terminate_hard (is_tree: BOOLEAN) is
@@ -346,20 +347,6 @@ feature -- Execution
 		do
 			if is_executing and then input_piped then
 				shared_input_unnamed_pipe.put_string (s)
-			end
-		end
-
-	close_pipes is
-			-- Close opened pipes.
-		do
-			if input_piped then
-				shared_input_unnamed_pipe.close_write_descriptor
-			end
-			if output_piped then
-				shared_output_unnamed_pipe.close_read_descriptor
-			end
-			if error_piped then
-				shared_error_unnamed_pipe.close_read_descriptor
 			end
 		end
 
@@ -588,14 +575,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature
-
-	working_directory: STRING
-			-- Working directory of process
-
-	arguments_for_exec: ARRAY [STRING]
-			-- Arguments to be passed to `exec_process'
-
 feature{NONE} -- Implementation
 
 	in_file: RAW_FILE
@@ -619,7 +598,7 @@ feature{NONE} -- Implementation
 	Stderr_descriptor: INTEGER is 2
 			-- File descriptor for standard error
 
-feature
+feature{NONE} -- Implementation
 
 	shared_input_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect input of process
@@ -629,6 +608,54 @@ feature
 
 	shared_error_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect error of process
+
+	exit_code_from_status (a_status: INTEGER): INTEGER is
+			-- Exit code evaluated from status returned by process
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WEXITSTATUS($a_status)"
+		end
+
+	terminate_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child terminated normally.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFEXITED($a_status)"
+		end
+
+	signaled_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was terminated by a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSIGNALED($a_status)"
+		end
+
+	stopped_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was stopped by delivery of a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSTOPPED($a_status)"
+		end
+
+	continued_flag_from_status (a_status: INTEGER): BOOLEAN is
+			-- Returns true if the child process was stopped by delivery of a signal.
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WIFSTOPPED($a_status)"
+		end
+
+	set_is_executing (b: BOOLEAN) is
+			-- Set `is_executing' with `b'.
+		do
+			is_executing := b
+		ensure
+			is_executing_set: is_executing = b
+		end
 
 invariant
 	input_piped_no_file: input_piped implies input_file_name = Void

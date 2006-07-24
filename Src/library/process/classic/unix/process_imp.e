@@ -142,7 +142,7 @@ feature -- Status reporting
 
 	exit_code: INTEGER is
 		do
-			Result := child_process.exit_code_from_status (child_process.status)
+			Result := child_process.exit_code
 		end
 
 feature {PROCESS_TIMER}  -- Status checking
@@ -158,7 +158,7 @@ feature {PROCESS_TIMER}  -- Status checking
 					has_process_exited := not child_process.is_executing
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
-						if child_process.signaled_flag_from_status (child_process.status) then
+						if child_process.is_terminated_by_signal then
 							force_terminated := True
 						end
 						if is_launched_in_new_process_group and then is_terminal_control_enabled then

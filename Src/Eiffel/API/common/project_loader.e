@@ -111,13 +111,32 @@ feature -- Loading
 						convert_epr (a_file_name)
 					elseif l_ext.is_equal (ace_file_extension) then
 						convert_ace (a_file_name)
-					else
-							-- Case where it is a `ecf' extension or another one.
+					elseif l_ext.is_equal (config_extension) then
+							-- Case where it is a `ecf' extension. or another one.
 						config_file_name := a_file_name.twin
+					else
+							-- Unknown extension, let's try as an ecf and if not successful as ace.
+						config_file_name := a_file_name.twin
+						create l_load_config.make (l_factory)
+						l_load_config.retrieve_configuration (config_file_name)
+						if l_load_config.is_error and l_load_config.is_invalid_xml then
+								-- Could not load the file, but it was not XML. Try to convert it
+								-- from lace.
+							convert_ace (config_file_name)
+							l_load_config := Void
+						end
 					end
 				else
 						-- Case where it is no extension.
 					config_file_name := a_file_name.twin
+					create l_load_config.make (l_factory)
+					l_load_config.retrieve_configuration (config_file_name)
+					if l_load_config.is_error and l_load_config.is_invalid_xml then
+							-- Could not load the file, but it was not XML. Try to convert it
+							-- from lace.
+						convert_ace (config_file_name)
+						l_load_config := Void
+					end
 				end
 			else
 				report_non_readable_configuration_file (a_file_name)
@@ -126,9 +145,14 @@ feature -- Loading
 					-- Initializes the `workbench' since we are creating/opening a project.
 				workbench.make
 
-					-- We try to load it as a normal config file.
-				create l_load_config.make (l_factory)
-				l_load_config.retrieve_configuration (config_file_name)
+					-- If `l_load_config' is not Void, it is possible that it was the result
+					-- of one of the above calls when trying to guess type of config file,
+					-- thus no need to read the config file a second time.
+				if l_load_config = Void then
+						-- We try to load it as a normal config file.
+					create l_load_config.make (l_factory)
+					l_load_config.retrieve_configuration (config_file_name)
+				end
 				if l_load_config.is_error then
 					report_cannot_read_config_file (config_file_name, l_load_config.last_error)
 				else

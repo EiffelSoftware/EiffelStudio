@@ -4,6 +4,7 @@ arg=none
 #Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
 if [ -z "$ISE_LIBRARY" ]; then
 	ISE_LIBRARY=$ISE_EIFFEL
+	export ISE_LIBRARY
 fi
 
 if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then

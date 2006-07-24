@@ -37,7 +37,6 @@ feature -- Update
 			bpts: BREAK_LIST
 			status: APPLICATION_STATUS
 			curr_callstack_depth: INTEGER
-			bp: BREAKPOINT
 		do
 			debug("debugger_trace_breakpoint")
 				io.put_string("sending new breakpoint to the application%N")

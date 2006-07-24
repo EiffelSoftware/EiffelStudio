@@ -21,6 +21,24 @@ feature -- Access names
 			-- Last names extracted from ids when retrieving XXX_of_id
 			-- It is possible not valid in the system if XXX_of_id returns void.
 
+	last_folder_name: STRING is
+			-- The outer most folder name in `last_folder_path' if possible
+			-- Void if no folder name can be retrieved from `last_folder_path'.
+		local
+			l_last_folder_path: STRING
+			l_cnt: INTEGER
+			l_index: INTEGER
+		do
+			l_last_folder_path := last_folder_path
+			if l_last_folder_path /= Void then
+				l_cnt := l_last_folder_path.count
+				l_index := l_last_folder_path.last_index_of ('/', l_cnt)
+				if l_index > 0 and then l_index < l_cnt then
+					Result := l_last_folder_path.substring (l_index + 1, l_cnt)
+				end
+			end
+		end
+
 feature -- Access (Target)
 
 	id_of_target (a_target: CONF_TARGET): STRING is

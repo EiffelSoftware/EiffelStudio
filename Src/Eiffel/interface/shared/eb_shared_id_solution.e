@@ -97,7 +97,7 @@ feature -- Access (Group)
 			a_group_not_void: a_group /= Void
 		do
 			create Result.make (50)
-			Result.append (encode (a_group.target.system.uuid.out))
+			Result.append (id_of_target (a_group.target))
 			Result.extend (name_sep)
 			Result.append (encode (a_group.name))
 		ensure

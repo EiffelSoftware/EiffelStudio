@@ -56,7 +56,7 @@ feature -- Creation
 				create l_cstr.make (class_type)
 					-- Take into consideration possible pre-ECMA mapping.
 				l_pre_ecma_status := {ISE_RUNTIME}.pre_ecma_mapping_status
-				{ISE_RUNTIME}.set_pre_ecma_mapping (is_pre_ecma_mapping_enabled)
+				{ISE_RUNTIME}.set_pre_ecma_mapping (not is_pre_ecma_mapping_disabled)
 				Result := {ISE_RUNTIME}.type_id_from_name (l_cstr.item)
 				{ISE_RUNTIME}.set_pre_ecma_mapping (l_pre_ecma_status)
 				l_table.put (Result, class_type)

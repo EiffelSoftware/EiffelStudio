@@ -10,9 +10,9 @@ class
 
 feature -- Status report
 
-	is_pre_ecma_mapping_enabled: BOOLEAN
+	is_pre_ecma_mapping_disabled: BOOLEAN
 			-- Are we mapping old names to new ECMA names?
-			-- I.e. mapping STRING to STRING_8, INTEGER to INTEGER_32,...
+			-- False means. mapping STRING to STRING_8, INTEGER to INTEGER_32,...
 
 	is_valid_type_string (s: STRING): BOOLEAN is
 			-- Is `s' a valid string representation for a TYPE.
@@ -69,12 +69,12 @@ feature -- Status report
 		end
 
 	mapped_type (a_type: STRING): STRING is
-			-- If not `is_pre_ecma_mapping_enabled' `a_type', otherwise
+			-- If `is_pre_ecma_mapping_disabled' `a_type', otherwise
 			-- the mapped typed.
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if is_pre_ecma_mapping_enabled then
+			if not is_pre_ecma_mapping_disabled then
 				Result := pre_ecma_type_mapping.item (a_type)
 			else
 				Result := a_type
@@ -86,19 +86,19 @@ feature -- Status report
 feature -- Status setting
 
 	enable_pre_ecma_mapping is
-			-- Set `is_pre_ecma_mapping_enabled' to True.
+			-- Set `is_pre_ecma_mapping_disabled' to False.
 		do
-			is_pre_ecma_mapping_enabled := True
+			is_pre_ecma_mapping_disabled := False
 		ensure
-			is_pre_ecma_mapping_enabled_set: is_pre_ecma_mapping_enabled
+			is_pre_ecma_mapping_disabled_set: not is_pre_ecma_mapping_disabled
 		end
 
 	disable_pre_ecma_mapping is
-			-- Set `is_pre_ecma_mapping_enabled' to False.
+			-- Set `is_pre_ecma_mapping_disabled' to True.
 		do
-			is_pre_ecma_mapping_enabled := False
+			is_pre_ecma_mapping_disabled := True
 		ensure
-			is_pre_ecma_mapping_enabled_set: not is_pre_ecma_mapping_enabled
+			is_pre_ecma_mapping_disabled_set: is_pre_ecma_mapping_disabled
 		end
 
 feature {NONE} -- Implementation: status report

@@ -1,8 +1,7 @@
-#/bin/bash
+#!/bin/sh
 
 # Check out the appropriate tag depending on arguments
-if [ $# -eq 0 ]  
-then
+if [ $# -eq 0 ]; then
 	svntag="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk"
 else
 	svntag=$1

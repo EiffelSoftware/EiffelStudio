@@ -206,8 +206,8 @@ feature {NONE} -- Setting
 			when sk_int32   then dynamic_class := system.Integer_32_class.compiled_class
 			when sk_int64   then dynamic_class := system.Integer_64_class.compiled_class
 			when sk_bool    then dynamic_class := system.Boolean_class.compiled_class
-			when sk_char    then dynamic_class := system.Character_class.compiled_class
-			when sk_wchar   then dynamic_class := system.Wide_char_class.compiled_class
+			when sk_char    then dynamic_class := system.character_8_class.compiled_class
+			when sk_wchar   then dynamic_class := system.character_32_class.compiled_class
 			when sk_real32  then dynamic_class := system.real_32_class.compiled_class
 			when sk_real64  then dynamic_class := system.real_64_class.compiled_class
 			when sk_pointer then dynamic_class := system.Pointer_class.compiled_class

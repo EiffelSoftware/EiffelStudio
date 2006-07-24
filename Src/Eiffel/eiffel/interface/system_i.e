@@ -410,7 +410,7 @@ feature -- Properties
 				local_workbench.change_class (arguments_class)
 			end
 
-			local_workbench.change_class (string_class)
+			local_workbench.change_class (string_8_class)
 
 			local_workbench.change_class (real_64_class)
 			local_workbench.change_class (real_32_class)
@@ -422,8 +422,8 @@ feature -- Properties
 			local_workbench.change_class (integer_16_class)
 			local_workbench.change_class (integer_32_class)
 			local_workbench.change_class (integer_64_class)
-			local_workbench.change_class (character_class)
-			local_workbench.change_class (wide_char_class)
+			local_workbench.change_class (character_8_class)
+			local_workbench.change_class (character_32_class)
 			local_workbench.change_class (boolean_class)
 
 			protected_classes_level := boolean_class.compiled_class.class_id
@@ -456,9 +456,9 @@ feature -- Properties
 			integer_32_class.compiled_class.record_precompiled_class_in_system
 			integer_64_class.compiled_class.record_precompiled_class_in_system
 			boolean_class.compiled_class.record_precompiled_class_in_system
-			character_class.compiled_class.record_precompiled_class_in_system
-			wide_char_class.compiled_class.record_precompiled_class_in_system
-			string_class.compiled_class.record_precompiled_class_in_system
+			character_8_class.compiled_class.record_precompiled_class_in_system
+			character_32_class.compiled_class.record_precompiled_class_in_system
+			string_8_class.compiled_class.record_precompiled_class_in_system
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
@@ -1899,9 +1899,9 @@ end
 			integer_32_class.compiled_class.mark_class (marked_classes)
 			integer_64_class.compiled_class.mark_class (marked_classes)
 			boolean_class.compiled_class.mark_class (marked_classes)
-			character_class.compiled_class.mark_class (marked_classes)
-			wide_char_class.compiled_class.mark_class (marked_classes)
-			string_class.compiled_class.mark_class (marked_classes)
+			character_8_class.compiled_class.mark_class (marked_classes)
+			character_32_class.compiled_class.mark_class (marked_classes)
+			string_8_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
@@ -3305,7 +3305,7 @@ feature -- Dead code removal
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
 				-- Protection of feature `make' of class STRING.
-			l_class := string_class.compiled_class
+			l_class := string_8_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
 				-- Protection of feature `make' of class TUPLE
@@ -3333,11 +3333,11 @@ feature -- Dead code removal
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference CHARACTER'
-			l_class := character_class.compiled_class
+			l_class := character_8_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference WIDE_CHARACTER'
-			l_class := wide_char_class.compiled_class
+			l_class := character_32_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference POINTER'

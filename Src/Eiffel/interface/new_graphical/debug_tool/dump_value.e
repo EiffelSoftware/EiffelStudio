@@ -466,7 +466,7 @@ feature -- Status report
 				Result := not is_void
 			elseif is_type_object and not is_void then
 				if dynamic_class /= Void then
-					string_c := Eiffel_system.system.string_class
+					string_c := Eiffel_system.system.string_8_class
 					string_32_c := Eiffel_system.system.string_32_class
 					system_string_c := eiffel_system.system.system_string_class
 					if
@@ -651,7 +651,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_slice_max: INTEGER
 		do
 			if dynamic_class /= Void then
-				sc8 := Eiffel_system.system.string_class.compiled_class
+				sc8 := Eiffel_system.system.string_8_class.compiled_class
 				sc32 := Eiffel_system.system.string_32_class.compiled_class
 				if dynamic_class = sc8 or dynamic_class = sc32 then
 					sc := dynamic_class
@@ -754,7 +754,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
 
 			if dynamic_class /= Void then
-				sc8 := Eiffel_system.system.string_class.compiled_class
+				sc8 := Eiffel_system.system.string_8_class.compiled_class
 				sc32 := Eiffel_system.system.string_32_class.compiled_class
 				if dynamic_class = sc8 or dynamic_class = sc32 then
 					sc := dynamic_class

@@ -1976,7 +1976,7 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 							--| the result should be a STRING instance
-						Result := string_value_from_string_class_value (Eiffel_system.system.string_class.compiled_class, l_icd, l_icdov, 0, -1)
+						Result := string_value_from_string_class_value (Eiffel_system.system.string_8_class.compiled_class, l_icd, l_icdov, 0, -1)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose
@@ -2064,7 +2064,7 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 							--| This is a STRING instance
-						Result := string_value_from_string_class_value (Eiffel_system.system.string_class.compiled_class, l_icd, l_icdov, min, max)
+						Result := string_value_from_string_class_value (Eiffel_system.system.string_8_class.compiled_class, l_icd, l_icdov, min, max)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose

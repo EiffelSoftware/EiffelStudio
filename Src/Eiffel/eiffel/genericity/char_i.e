@@ -25,17 +25,17 @@ feature -- Initialization
 			-- Otherwise a wide character.
 		require
 			has_compiled_character_class:
-				not w implies (System.character_class /= Void and then
-					System.character_class.is_compiled)
+				not w implies (System.character_8_class /= Void and then
+					System.character_8_class.is_compiled)
 			has_compiled_wide_character_class:
-				w implies (System.wide_char_class /= Void and then
-					System.wide_char_class.is_compiled)
+				w implies (System.character_32_class /= Void and then
+					System.character_32_class.is_compiled)
 		do
 			is_wide := w
 			if w then
-				base_make (System.wide_char_class.compiled_class.class_id)
+				base_make (System.character_32_class.compiled_class.class_id)
 			else
-				base_make (System.character_class.compiled_class.class_id)
+				base_make (System.character_8_class.compiled_class.class_id)
 			end
 		ensure
 			is_wide_set: is_wide = w
@@ -73,9 +73,9 @@ feature -- Property
 			-- Assocated reference type of Current.
 		do
 			if is_wide then
-				create Result.make (system.wide_char_ref_class.compiled_class.class_id)
+				create Result.make (system.character_32_ref_class.compiled_class.class_id)
 			else
-				create Result.make (system.character_ref_class.compiled_class.class_id)
+				create Result.make (system.character_8_ref_class.compiled_class.class_id)
 			end
 		end
 

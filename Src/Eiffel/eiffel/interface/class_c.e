@@ -1422,7 +1422,7 @@ feature -- Supplier checking
 			array_generics: ARRAY [TYPE_A]
 			string_type: CL_TYPE_A
 		once
-			create string_type.make (System.string_id)
+			create string_type.make (System.string_8_id)
 			create array_generics.make (1, 1)
 			array_generics.put (string_type, 1)
 			create Result.make (System.array_id, array_generics)

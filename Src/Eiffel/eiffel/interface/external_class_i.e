@@ -105,7 +105,7 @@ feature {EXTERNAL_CLASS_C} -- Mapping
 		once
 			create Result.make (20)
 			Result.put (System.boolean_class, "System.Boolean")
-			Result.put (System.character_class, "System.Char")
+			Result.put (System.character_8_class, "System.Char")
 			Result.put (System.integer_8_class, "System.SByte")
 			Result.put (System.integer_16_class, "System.Int16")
 			Result.put (System.integer_32_class, "System.Int32")

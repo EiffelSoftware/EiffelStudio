@@ -370,7 +370,7 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 				else
 					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
-						actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
+						actual_class_type_token (system.string_8_class.compiled_class.types.first.type.static_type_id))
 				end
 					-- Define field token.
 				Result := md_emit.define_member_ref (once_string_field_name, once_string_class_token, l_field_sig)
@@ -494,7 +494,7 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 			l_field_sig.reset
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_8_class.compiled_class.types.first.type.static_type_id))
 			once_string_field_eiffel_token := md_emit.define_field (
 				once_string_field_eiffel_name,
 				helper_class_token,

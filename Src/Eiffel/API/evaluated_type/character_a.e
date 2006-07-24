@@ -64,9 +64,9 @@ feature -- Access
 			-- Class CHARACTER
 		do
 			if is_character_32 then
-				Result := System.wide_char_class.compiled_class
+				Result := System.character_32_class.compiled_class
 			else
-				Result := System.character_class.compiled_class
+				Result := System.character_8_class.compiled_class
 			end
 		end
 

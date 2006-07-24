@@ -91,7 +91,7 @@ feature {NONE} -- Implementation: types
 	string_type: CL_TYPE_I is
 			-- Type of STRING.
 		once
-			create Result.make (System.string_id)
+			create Result.make (System.string_8_id)
 		ensure
 			string_type_not_void: Result /= Void
 		end

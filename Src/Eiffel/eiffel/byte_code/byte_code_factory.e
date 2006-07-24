@@ -233,7 +233,7 @@ feature {NONE} -- Implementation: Access
 	string_type: CL_TYPE_A is
 			-- Type of STRING class.
 		once
-			Result := System.string_class.compiled_class.actual_type
+			Result := System.string_8_class.compiled_class.actual_type
 		ensure
 			string_type_not_void: Result /= Void
 		end

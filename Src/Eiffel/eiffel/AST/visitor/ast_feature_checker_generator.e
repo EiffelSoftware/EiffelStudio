@@ -4834,7 +4834,7 @@ feature {NONE} -- Predefined types
 	string_type: CL_TYPE_A is
 			-- Actual string type
 		once
-			Result := system.string_class.compiled_class.actual_type
+			Result := system.string_8_class.compiled_class.actual_type
 		end
 
 	strip_type: GEN_TYPE_A is

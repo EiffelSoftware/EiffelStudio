@@ -482,14 +482,12 @@ feature {NONE} -- Implementation
 			l_search_tool := search_tool
 			l_search_tool.set_check_class_succeed (True)
 			if text_displayed.has_selection then
-				if l_search_tool.currently_searched = Void then
-					l_search_tool.force_new_search
-					l_incremental_search := l_search_tool.is_incremental_search
-					l_search_tool.disable_incremental_search
-					l_search_tool.set_current_searched (text_displayed.selected_string)
-					if l_incremental_search then
-						l_search_tool.enable_incremental_search
-					end
+				l_search_tool.force_new_search
+				l_incremental_search := l_search_tool.is_incremental_search
+				l_search_tool.disable_incremental_search
+				l_search_tool.set_current_searched (text_displayed.selected_string)
+				if l_incremental_search then
+					l_search_tool.enable_incremental_search
 				end
 				if l_search_tool.currently_searched /= Void and then not l_search_tool.currently_searched.is_equal (search_bar.keyword_field.text) then
 					search_bar.keyword_field.change_actions.block

@@ -672,7 +672,13 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 	key_pressed (k: EV_KEY; search_only: BOOLEAN) is
 			-- Key `k' was pressed in the interface.
 			-- If k is Enter then launch the search, if it is Esc then hide the search interface.
+		local
+			l_alt, l_ctrl, l_shift: BOOLEAN
+			l_incremental_search: BOOLEAN
 		do
+			l_alt := ev_application.alt_pressed
+			l_ctrl := ev_application.ctrl_pressed
+			l_shift := ev_application.shift_pressed
 			if k /= Void then
 				if k.code = Key_enter then
 					if not keyword_field.text.is_empty and then search_is_possible then
@@ -686,17 +692,47 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 					close
 					ev_application.do_once_on_idle (agent editor.set_focus)
 				else
-					if search_selection_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
+					if search_forward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
 						if not keyword_field.text.is_empty and then search_only then
 							new_search_or_go_next
 							ev_application.do_once_on_idle (agent editor.set_focus)
 						end
-					elseif search_backward_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) or search_last_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
+					elseif search_backward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
 						if not keyword_field.text.is_empty and then search_only then
 							temp_reverse := true
 							new_search_or_go_next
 							ev_application.do_once_on_idle (agent editor.set_focus)
 							temp_reverse := false
+						end
+					elseif search_previous_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+						if editor.has_selection then
+							force_new_search
+							l_incremental_search := is_incremental_search
+							disable_incremental_search
+							set_current_searched (editor.text_displayed.selected_string)
+							if l_incremental_search then
+								enable_incremental_search
+							end
+						end
+						if not keyword_field.text.is_empty and then search_only then
+							temp_reverse := true
+							new_search_or_go_next
+							ev_application.do_once_on_idle (agent editor.set_focus)
+							temp_reverse := false
+						end
+					elseif search_next_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+						if editor.has_selection then
+							force_new_search
+							l_incremental_search := is_incremental_search
+							disable_incremental_search
+							set_current_searched (editor.text_displayed.selected_string)
+							if l_incremental_search then
+								enable_incremental_search
+							end
+						end
+						if not keyword_field.text.is_empty and then search_only then
+							new_search_or_go_next
+							ev_application.do_once_on_idle (agent editor.set_focus)
 						end
 					end
 				end
@@ -1364,36 +1400,46 @@ feature {NONE} -- Replacement Implementation
 			-- Put replace report.
 		require
 			valid_replace_report: not a_did_nothing implies multi_search_performer.replace_report /= Void
+		local
+			l_classes: INTEGER
+			l_class_str: STRING
 		do
 			if not a_did_nothing then
+				l_classes := multi_search_performer.replace_report.class_replaced
+				if l_classes = 0 or else l_classes > 1 then
+					l_class_str := l_classes.out + " classes"
+				else
+					l_class_str := l_classes.out + " class"
+				end
 				report_tool.set_summary ("   " +
 										multi_search_performer.replace_report.text_replaced.out +
 										" replaced in " +
-										multi_search_performer.replace_report.class_replaced.out +
-										" class(es)")
+										l_class_str)
 			else
-				report_tool.set_summary ("0 replaced in 0 class(es)")
+				report_tool.set_summary ("0 replaced in 0 classes")
 			end
 		end
 
-feature {NONE} -- Shortcut
+feature {NONE} -- Shortcuts
 
-	search_selection_shortcut: SHORTCUT_PREFERENCE is
-			--
+	search_next_selection_shortcut: SHORTCUT_PREFERENCE is
 		once
-			Result := preferences.editor_data.shortcuts.item ("search_selection")
+			Result := preferences.editor_data.shortcuts.item ("search_selection_forward")
 		end
 
-	search_last_shortcut: SHORTCUT_PREFERENCE is
-			--
+	search_previous_selection_shortcut: SHORTCUT_PREFERENCE is
 		once
-			Result := preferences.editor_data.shortcuts.item ("search_last")
+			Result := preferences.editor_data.shortcuts.item ("search_selection_backward")
+		end
+
+	search_forward_shortcut: SHORTCUT_PREFERENCE is
+		once
+			Result := preferences.editor_data.shortcuts.item ("search_forward")
 		end
 
 	search_backward_shortcut: SHORTCUT_PREFERENCE is
-			--
 		once
-			Result := 	preferences.editor_data.shortcuts.item ("search_backward")
+			Result := preferences.editor_data.shortcuts.item ("search_backward")
 		end
 
 feature -- Custom search scope

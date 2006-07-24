@@ -28,10 +28,10 @@ feature
 			-- Establish communication with server, and exchange messages.
 		do
 			if argv.count /= 3 then
-                                io.error.putstring ("Usage: ")
-                                io.error.putstring (argv.item (0))
-                                io.error.putstring (" hostname portnumber%N")
-                        else
+				io.error.putstring ("Usage: ")
+				io.error.putstring (argv.item (0))
+				io.error.putstring (" hostname portnumber%N")
+			else
 				create soc1.make_client_by_port (argv.item (2).to_integer, argv.item (1))
 				soc1.connect
 				process -- See below
@@ -59,13 +59,17 @@ feature
 			independent_store (our_list, l_medium, True)
 			l_medium.set_for_reading
 			our_new_list ?= retrieved (l_medium, True)
-			from
-				our_new_list.start
-			until
-				our_new_list.after
-			loop
-				io.putstring (our_new_list.item)
-				our_new_list.forth
+			if our_new_list = Void then
+				io.put_string ("Failed retrieving list.")
+			else
+				from
+					our_new_list.start
+				until
+					our_new_list.after
+				loop
+					io.putstring (our_new_list.item)
+					our_new_list.forth
+				end
 			end
 			io.new_line
 		end

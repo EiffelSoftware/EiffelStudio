@@ -312,6 +312,11 @@ feature -- Assignments
 		do
 		end
 
+	generate_argument_assignment (n: INTEGER) is 
+			-- Generate assignment to `n'-th argument of current feature. 
+		do
+		end 
+
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
 		do

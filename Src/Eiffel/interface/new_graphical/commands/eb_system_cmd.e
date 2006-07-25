@@ -74,9 +74,9 @@ feature -- Basic operations
 				else
 					l_config := lace.conf_system.file_name
 					config_windows.search (l_config)
-					if config_windows.found and then config_windows.found_item.is_displayed then
+					if config_windows.found and then config_windows.found_item.is_show_requested then
 						configuration_window := config_windows.found_item
-						configuration_window.set_focus
+						configuration_window.bring_to_front
 					else
 						create l_fact
 						create l_load.make (l_fact)
@@ -149,9 +149,9 @@ feature {NONE} -- Actions
 				if not l_lib.is_readonly then
 					l_config := l_lib.library_target.system.file_name
 					config_windows.search (l_config)
-					if config_windows.found then
+					if config_windows.found and then config_windows.found_item.is_show_requested then
 						configuration_window := config_windows.found_item
-						configuration_window.set_focus
+						configuration_window.bring_to_front
 					else
 						create l_fact
 						create l_load.make (l_fact)

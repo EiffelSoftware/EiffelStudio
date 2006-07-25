@@ -216,6 +216,21 @@ feature -- Command
 			config_windows.remove (conf_system.file_name)
 		end
 
+	bring_to_front is
+			-- Put `Current' to the front. Restore its state if necessary.
+		require
+			not_destroyed: not is_destroyed
+		do
+			if not is_show_requested then
+				show
+			end
+			if is_minimized then
+				restore
+			end
+			raise
+		end
+
+
 feature {NONE} -- Agents
 
 	refresh_current: PROCEDURE [ANY, TUPLE[]]
@@ -313,9 +328,9 @@ feature {NONE} -- Agents
 		do
 				-- see if we already have a window for this configuration and reuse it
 			config_windows.search (a_configuration)
-			if config_windows.found and then config_windows.found_item.is_displayed then
+			if config_windows.found and then config_windows.found_item.is_show_requested then
 				l_lib_conf := config_windows.found_item
-				l_lib_conf.set_focus
+				l_lib_conf.bring_to_front
 			else
 				create l_load.make (conf_factory)
 				l_load.retrieve_configuration (a_configuration)

@@ -3171,7 +3171,7 @@ feature -- Implementation
 						if l_needs_byte_node then
 							l_left_expr := l_conv_info.byte_node (l_left_expr)
 						end
-					elseif context.current_class.is_warning_enabled (w_vweq) then
+					elseif not is_inherited and context.current_class.is_warning_enabled (w_vweq) then
 						create l_vweq
 						context.init_error (l_vweq)
 						l_vweq.set_left_type (l_left_type)
@@ -6102,16 +6102,17 @@ feature {NONE} -- Agents
 			a_feat.set_origin_class_id (a_feat.written_in)
 			a_feat.set_export_status (create {EXPORT_ALL_I})
 
+				-- calculate the enclosing feature
+			from
+				l_enclosing_feature := current_feature
+			until
+				not l_enclosing_feature.is_inline_agent
+			loop
+				l_enclosing_feature :=
+					l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
+			end
+
 			if is_byte_node_enabled then
-					-- calculate the enclosing feature
-				from
-					l_enclosing_feature := current_feature
-				until
-					not l_enclosing_feature.is_inline_agent
-				loop
-					l_enclosing_feature :=
-						l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
-				end
 				a_feat.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
 				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
 				l_cur_class.put_inline_agent (a_feat)

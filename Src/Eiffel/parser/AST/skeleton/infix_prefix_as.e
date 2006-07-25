@@ -119,12 +119,10 @@ feature -- Roundtrip/Token
 				Result := frozen_keyword.first_token (a_list)
 			end
 			if Result = Void or else Result.is_null then
-				if a_list = Void then
-						-- Non-roundtrip mode
-					Result := alias_name.first_token (a_list)
-				else
-						-- Roundtrip mode
+				if infix_prefix_keyword /= Void then
 					Result := infix_prefix_keyword.first_token (a_list)
+				else
+					Result := alias_name.first_token (a_list)
 				end
 			end
 		end

@@ -91,7 +91,9 @@ feature -- Feature click tool
 			if feature_click_tool= Void then
 				create feature_click_tool
 			end
-			feature_click_tool.initialize (feat)
+			if feat /= Void then
+				feature_click_tool.initialize (feat)
+			end
 		end
 
 	feature_click_enabled: BOOLEAN is

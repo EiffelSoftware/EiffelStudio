@@ -266,7 +266,7 @@ feature -- Basic Operation
 							cp_field := consumed_field (l_field)
 							l_fields.extend (cp_field)
 							if is_public_field (l_field) and not is_init_only_field (l_field) then
-								cp_field.setter := attribute_setter_feature (l_field, l_fields.last.eiffel_name)
+								cp_field.set_setter (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
 								l_procedures.extend (cp_field.setter)
 							end
 						end

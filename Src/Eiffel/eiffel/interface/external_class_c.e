@@ -133,7 +133,6 @@ feature -- Initialization
 		local
 			nb: INTEGER
 			l_feat_tbl: like feature_table
-			l_orig_tbl: SELECT_TABLE
 			l_fields, l_constructors, l_procedures, l_functions: ARRAYED_LIST [CONSUMED_ENTITY]
 		do
 				-- Create data structures to hold features information.
@@ -157,14 +156,10 @@ feature -- Initialization
 
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
-			create l_orig_tbl.make (nb)
-			l_feat_tbl.set_origin_table (l_orig_tbl)
+			l_feat_tbl.set_origin_table (create {SELECT_TABLE}.make (nb))
 
 				-- To store overloaded features.
 			create overloaded_names.make (10)
-
-				-- Add features from ANY
-			add_features_of_any (l_feat_tbl)
 
 				-- Initializes feature table.
 			if l_fields /= Void then
@@ -180,6 +175,9 @@ feature -- Initialization
 				process_features (l_feat_tbl, l_functions)
 				process_property_assigners (l_feat_tbl)
 			end
+				-- Add features from ANY
+			add_features_of_any (l_feat_tbl)
+
 				-- Clean `overloaded_names' to remove non-overloaded routines.
 			clean_overloaded_names (l_feat_tbl)
 			l_feat_tbl.set_overloaded_names (overloaded_names)
@@ -553,7 +551,6 @@ feature {NONE} -- Initialization
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 		local
 			l_any_tbl: like feature_table
-			l_orig_tbl: SELECT_TABLE
 			l_feat: FEATURE_I
 			any_parent_type: LIKE_CURRENT
 		do
@@ -564,7 +561,6 @@ feature {NONE} -- Initialization
 				l_any_tbl_not_void: l_any_tbl /= Void
 			end
 			from
-				l_orig_tbl := a_feat_tbl.origin_table
 				l_any_tbl.start
 			until
 				l_any_tbl.after
@@ -578,8 +574,7 @@ feature {NONE} -- Initialization
 				l_feat.set_rout_id_set (l_feat.rout_id_set.twin)
 
 					-- Insert modified `l_feat' in current feature table.
-				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
-				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
+				insert_feature (l_feat, a_feat_tbl)
 				l_any_tbl.forth
 			end
 		end
@@ -592,47 +587,37 @@ feature {NONE} -- Initialization
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 			has_select_table: a_feat_tbl.origin_table /= Void
 		local
-			l_orig_tbl: SELECT_TABLE
-			l_feat: FEATURE_I
 			i: INTEGER
-			l_base_name: STRING
-			l_new_name: STRING
+			l_base_name, l_new_name, l_feat_name: STRING
 		do
-			l_orig_tbl := a_feat_tbl.origin_table
 
-				-- In case we have a conflict (mostly due to a routine of ANY)
-				-- we will rename the feature coming from ANY into `any_xxx'
-				-- and preserve the .NET name, if it is not coming from ANY,
-				-- it will be `unknown_xxx'
+				-- In case we have a coneflict (mostly due to a routine of ANY)
+				-- we will rename the new feature `xxx' into `written_class_xxx'
+				-- where `written_class' is the name of the class where `a_feat'
+				-- is written.
 			if a_feat_tbl.has_id (a_feat.feature_name_id) then
-				l_feat := a_feat_tbl.found_item
-				a_feat_tbl.remove (l_feat.feature_name_id)
-				l_base_name := l_feat.feature_name.twin
-				if l_feat.written_in = system.any_id then
-					l_base_name.prepend ("any_")
-				else
-					l_base_name.prepend ("unknown_")
-				end
-				l_feat.set_feature_name (l_base_name)
+				l_new_name := a_feat.written_class.name.as_lower
+				l_feat_name  := a_feat.feature_name
+				create l_base_name.make (l_new_name.count + 1 + l_feat_name.count)
+				l_base_name.append (l_new_name)
+				l_base_name.append_character ('_')
+				l_base_name.append (l_feat_name)
+				a_feat.set_feature_name (l_base_name)
 				from
 					i := 1
 				until
-					not a_feat_tbl.has_id (l_feat.feature_name_id)
+					not a_feat_tbl.has_id (a_feat.feature_name_id)
 				loop
 					l_new_name := l_base_name.twin
 					l_new_name.append_character ('_')
 					l_new_name.append_integer (i)
-					l_feat.set_feature_name (l_new_name)
+					a_feat.set_feature_name (l_new_name)
 					i := i + 1
 				end
-					-- Insert back routine we just removed above.
-					-- No need to update `l_orig_tbl' since this table
-					-- does not depend on the name of `l_feat'.
-				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
 			end
 
 			a_feat_tbl.put (a_feat, a_feat.feature_name_id)
-			l_orig_tbl.put (a_feat, a_feat.rout_id_set.first)
+			a_feat_tbl.origin_table.put (a_feat, a_feat.rout_id_set.first)
 		end
 
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is

@@ -534,24 +534,14 @@ feature {NONE} -- WEL Implementation
 
 	enable is
 			-- Enable mouse and keyboard input.
-		local
-			default_colors: EV_STOCK_COLORS
 		do
-			create default_colors
 			cwin_enable_window (wel_item, True)
-			if is_editable then
-				set_background_color (default_colors.Color_read_write)
-			end
 		end
 
 	disable is
 			-- Disable mouse and keyboard input
-		local
-			default_colors: EV_STOCK_COLORS
 		do
-			create default_colors
 			cwin_enable_window (wel_item, False)
-			set_background_color (default_colors.Color_read_only)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is

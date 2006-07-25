@@ -797,14 +797,12 @@ feature -- Output
 			-- Indeed, if an external has to be encapsulated (macro, signature)
 			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
 		do
-			Result := ( (not is_external)
-						and then (not is_attribute)
-						and then (not is_constant)
-						and then (not is_deferred)
-						and then (not is_unique)
-						and then written_class.has_types)
-				or else
-					(is_constant and is_once);
+			Result := associated_class.has_types
+			if Result then
+				Result := (is_constant and is_once) or
+					(not is_external and then not is_attribute and then
+					not is_constant and then not is_deferred and then not is_unique)
+			end
 		end;
 
 feature -- Implementation

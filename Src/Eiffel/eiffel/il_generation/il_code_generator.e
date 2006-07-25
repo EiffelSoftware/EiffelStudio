@@ -400,6 +400,13 @@ feature -- Assignments
 		deferred
 		end
 
+	generate_argument_assignment (n: INTEGER) is
+			-- Generate assignment to `n'-th argument of current feature.
+		require
+			valid_n: n >= 0
+		deferred
+		end
+
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
 		require

@@ -4706,6 +4706,18 @@ feature -- Assignments
 			end
 		end
 
+	generate_argument_assignment (n: INTEGER) is
+			-- Generate assignment to `n'-th argument of current feature.
+		do
+			if n <= 255 then
+				method_body.put_opcode_integer_8 ({MD_OPCODES}.Starg_s,
+					n.to_integer_8)
+			else
+				method_body.put_opcode_integer_16 ({MD_OPCODES}.Starg,
+					n.to_integer_16)
+			end
+		end
+
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
 		local

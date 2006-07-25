@@ -705,6 +705,7 @@ feature -- Input
 		do
 			create ext.make_empty (nb_char + 1)
 			return_val := c_read_stream (descriptor, nb_char, ext.item);
+			bytes_read := return_val
 			ext.set_count (return_val)
 			if return_val >= 0 then
 				last_string := ext.substring (1, return_val)
@@ -792,6 +793,7 @@ feature -- Input
 			if l_data /= Void then
 				create Result.make_from_managed_pointer (l_data)
 			end
+			bytes_read := amount_read
 		end;
 
 	receive (size, flags: INTEGER): PACKET is

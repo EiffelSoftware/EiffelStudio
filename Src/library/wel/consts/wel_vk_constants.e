@@ -244,6 +244,9 @@ feature -- Access
 	Vk_rmenu: INTEGER is 165
 			-- Declared in Windows as VK_RMENU
 
+	Vk_apps: INTEGER is 0x5D
+			-- Declared in Windows as VK_APPS
+
 	-- Vk_0 thru Vk_9 are the same as their ASCII equivalents: '0' thru '9'.
 	Vk_0: INTEGER is 48
 	Vk_1: INTEGER is 49

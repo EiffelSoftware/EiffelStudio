@@ -410,18 +410,20 @@ feature -- Access
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			bid := body_index;
-			if bid /= 0 then
+			if bid > 0 then
 					-- Server in the temporary server first to get the latest version of the AST.
-				if Tmp_ast_server.has (written_in) then
-					class_ast := Tmp_ast_server.item (written_in)
-					Result := class_ast.feature_with_name (name)
-				elseif Body_server.has (bid) then
-					Result := Body_server.item (bid)
+				if tmp_ast_server.body_has (bid) then
+					Result := tmp_ast_server.body_item (bid)
+				elseif body_server.server_has (bid) then
+					Result := body_server.server_item (bid)
 				end
-			elseif Tmp_ast_server.has (written_in) then
+			end
+			if Result = Void and Tmp_ast_server.has (written_in) then
 				class_ast := Tmp_ast_server.item (written_in)
 				Result := class_ast.feature_with_name (name)
-			else
+			end
+
+			if Result = Void then
 					-- In this case we must certainly be handling a dotnet feature and we need
 					-- to create an empty AST otherwise we cannot pick and drop it.
 				create l_feature_names.make (1)

@@ -310,7 +310,11 @@ feature {NONE} -- Deferred features
 			if background_color_imp /= Void then
 				Result ?= background_color_imp.interface
 			else
-				Result := (create {EV_STOCK_COLORS}).Color_read_write
+				if is_sensitive then
+					Result := (create {EV_STOCK_COLORS}).Color_read_write
+				else
+					Result := (create {EV_STOCK_COLORS}).color_read_only
+				end
 			end
 		end
 

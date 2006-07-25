@@ -146,14 +146,22 @@ if [ -n "$CC" ]; then
 else
 	cc='gcc'
 fi
-ccflags='-pipe -fPIC'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-pipe -fPIC'
+fi
 ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
 	cpp='g++'
 fi
-cppflags='$ccflags'
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags='$ccflags'
+fi
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -184,7 +192,11 @@ ldflags=""
 ldsharedflags="$ldflags -shared -o"
 libs='-lm -lcompat'
 ln='/bin/ln'
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='/bin/mkdir'
 mtldflags="$ldflags"

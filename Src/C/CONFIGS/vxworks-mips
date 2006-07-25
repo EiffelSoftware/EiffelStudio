@@ -25,16 +25,24 @@ fi
 ar='armips'
 ld='ldmips -EL -X -N -warn-common'
 
-ccflags='-ansi -nostdinc -fno-builtin -Wall -Wno-comment \
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-ansi -nostdinc -fno-builtin -Wall -Wno-comment \
 		-Wno-unused -Wno-trigraphs \
 		-EL -mcpu=r4000 -mips3 -mgp32 -mfp32 -mmul-errata \
 		-non_shared -G 0 \
 		-DVXWORKS_TARGET -DLITTLE_ENDIAN -DCPU=R4000 \
 		-DVXWORKS -DEIF_THREADS -I$(VXWORKS)/target/h'
+fi
 
 mtccflags=$ccflags
 
-cppflags=''
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags=''
+fi
 ldflags='-EL -X -N -warn-common'
 mtldsharedflags='-EL -X -N -warn-common -shared -o'
 ldsharedflags='-EL -X -N -warn-common -shared -o'
@@ -100,7 +108,11 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdir='/bin/mkdir'
 more=''
 nroff='/usr/bin/nroff'

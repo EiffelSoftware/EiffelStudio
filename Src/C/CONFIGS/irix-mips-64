@@ -145,14 +145,22 @@ if [ -n "$CC" ]; then
 else
 	cc='c99'
 fi
-ccflags='-DLANGUAGE_C -G0 -xansi -64 -mips4'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-DLANGUAGE_C -G0 -xansi -64 -mips4'
+fi
 ccldflags='-64'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
 	cpp='CC'
 fi
-cppflags='$ccflags'
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags='$ccflags'
+fi
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -183,7 +191,11 @@ ldflags="-multigot -64 -mips4"
 ldsharedflags="$ldflags -shared -o"
 libs='-lm'
 ln='/bin/ln'
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"

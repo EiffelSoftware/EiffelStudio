@@ -145,14 +145,22 @@ if [ -n "$CC" ]; then
 else
 	cc='ccppc'
 fi
-ccflags='-ansi -fno-builtin -mlongcall -mstrict-align -DVXWORKS -I$(VXWORKS)/target/h'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-ansi -fno-builtin -mlongcall -mstrict-align -DVXWORKS -I$(VXWORKS)/target/h'
+fi
 ccldflags='-r -nostdlib -Wl,--whole-archive -Wl,-X -T $(VXWORKS)/target/h/tool/gnu/ldscripts/link.OUT'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
 	cpp='c++ppc'
 fi
-cppflags='$ccflags'
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags='$ccflags'
+fi
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -183,7 +191,11 @@ ldflags=""
 ldsharedflags="$ldflags -shared -o"
 libs=''
 ln='/bin/ln'
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"

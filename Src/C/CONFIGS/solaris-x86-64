@@ -146,14 +146,22 @@ if [ -n "$CC" ]; then
 else
 	cc='cc'
 fi
-ccflags='-D__BUILTIN_VA_ARG_INCR -xarch=generic64'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-D__BUILTIN_VA_ARG_INCR -xarch=generic64'
+fi
 ccldflags='-xarch=generic64'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
 	cpp='CC'
 fi
-cppflags='$ccflags'
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags='$ccflags'
+fi
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -184,7 +192,11 @@ ldflags=" -64"
 ldsharedflags="$ldflags -G -o"
 libs='-lsocket -lnsl -lm'
 ln='/bin/ln'
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"

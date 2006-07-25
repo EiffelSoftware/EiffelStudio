@@ -18,8 +18,16 @@ wkeiflib='wkbench'
 boehmgclib='gc'
 command_makefile='make -f'
 
-ccflags='-D_HPUX_SOURCE'
-cppflags='-D_HPUX_SOURCE'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-D_HPUX_SOURCE'
+fi
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags='-D_HPUX_SOURCE'
+fi
 mtccflags='-DEIF_THREADS -D_HPUX_SOURCE -DEIF_POSIX_THREADS'
 sharedccflags='-fPIC'
 libs='-lnsl -lm'
@@ -95,7 +103,11 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdir='/usr/bin/mkdir'
 more=''
 mv='/usr/bin/mv'

@@ -1087,7 +1087,7 @@ feature {NONE} -- Implementation
 				-- only `rout_id_set' of `a_feat' has not yet been set.
 				--
 				-- Note: Manu 08/13/2002
-				-- In most cases the below alogorithm is going to find an inherited
+				-- In most cases the algorithm below is going to find an inherited
 				-- routine id, however in the case where a MethodImpl has been done in current
 				-- class, we do not get a routine because it is private, or if it is public
 				-- we cannot yet trace back to which inherited feature/class MethodImpl has been

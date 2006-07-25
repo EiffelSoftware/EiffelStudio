@@ -6632,10 +6632,26 @@ spitshell='$spitshell'
 #Compiler/Preprocessor
 add_log='$add_log'
 binary_format='$binary_format'
-cc='$cc'
-ccflags='$ccflags'
-cpp='$cpp'
-cppflags='$cppflags'
+if [ -n "\$CC" ]; then
+	cc='\$CC'
+else
+	cc='$cc'
+fi
+if [ -n "\$CFLAGS" ]; then
+	ccflags='\$CFLAGS'
+else
+	ccflags='$ccflags'
+fi
+if [ -n "\$CPP" ]; then
+	cpp='\$CPP'
+else
+	cpp='$cpp'
+fi
+if [ -n "\$CPPFLAGS" ]; then
+	cppflags='\$CPPFLAGS'
+else
+	cppflags='$cppflags'
+fi
 cpp_stuff='$cpp_stuff'
 defvoidused='$defvoidused'
 #Check value for next 4
@@ -6667,7 +6683,11 @@ ldflags="$ldflags \$binary_format \$platform_arch"
 ldsharedflags="\$ldflags -shared -o"
 libs='$libs'
 ln='$ln'
-make='$make'
+if [ -n "\$MAKE" ]; then
+	make='\$MAKE'
+else
+	make='$make'
+end
 mkdep='$mkdep'
 mkdir='$mkdir'
 mtldflags="\$ldflags"

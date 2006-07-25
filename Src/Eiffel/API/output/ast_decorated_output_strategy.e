@@ -758,7 +758,8 @@ feature {NONE} -- Implementation
 				last_type := l_last_type
 				last_class := l_last_class
 			end
-			if not expr_type_visiting and then l_right_parenthesis_needed then
+			if l_right_parenthesis_needed then
+				check not_expr_type_visiting: not expr_type_visiting end
 				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.is_argument then

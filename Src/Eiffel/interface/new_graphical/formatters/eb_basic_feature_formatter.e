@@ -60,7 +60,7 @@ feature -- Formatting
 				associated_feature /= Void and then
 				displayed
 			then
-				editor.set_feature_for_click (associated_feature)
+				editor.set_feature_for_click (associated_feature.written_feature)
 				editor.enable_feature_click
 				display_temp_header
 				generate_text

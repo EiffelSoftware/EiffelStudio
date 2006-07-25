@@ -326,6 +326,7 @@ feature -- Basic operation
 	recycle is
 			-- To be called before destroying this objects
 		do
+			recycle_widgets
 			external_output_manager.prune (Current)
 			toolbar.recycle
 			toolbar := Void
@@ -334,7 +335,6 @@ feature -- Basic operation
 			text_area := Void
 			owner := Void
 			stone_manager := Void
-			recycle_widgets
 		end
 
 	recycle_widgets is

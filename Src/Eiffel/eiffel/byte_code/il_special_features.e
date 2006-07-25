@@ -567,23 +567,33 @@ feature {NONE} -- IL code generation
 		local
 			l_parent: NESTED_B
 			l_access: ACCESS_B
+			l_arg: ARGUMENT_B
 		do
 			l_parent := feat.parent
-			if l_parent /= Void and then l_parent.target.is_assignable then
+			if l_parent /= Void then
 				l_access := l_parent.target
-				if l_access.is_local or l_access.is_result then
-					il_generator.pop
-					parameters.process (a_generator)
-					a_generator.generate_il_assignment (l_access, type)
-				elseif l_access.is_attribute then
+				if l_access.is_attribute then
 						-- This is an expression of type `my_attribute.copy (a)'.
 						-- Top of the stack is properly initialized in ATTRIBYUTE_B.generate_il_call
 						-- so that object where `l_access' attribute belongs to is on
 						-- top of the evaluation stack.
 					parameters.process (a_generator)
 					a_generator.generate_il_assignment (l_access, type)
+				else
+						-- Remove target as it will be attached directly
+					il_generator.pop
+					if l_access.is_local or l_access.is_result then
+						parameters.process (a_generator)
+						a_generator.generate_il_assignment (l_access, type)
+					elseif l_access.is_argument then
+						parameters.process (a_generator)
+						l_arg ?= l_access
+						il_generator.generate_argument_assignment (l_arg.position)
+					end
 				end
-
+			else
+					-- Modification of Current results in NOP
+				il_generator.pop
 			end
 		end
 

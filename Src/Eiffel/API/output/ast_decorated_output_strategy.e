@@ -197,11 +197,6 @@ feature {NONE} -- Access
 			-- If `has_error', we give up type evaluating and send
 			-- simple text to output.
 
-	right_parenthesis_needed: BOOLEAN
-			-- This is needed in process_access_feat_as where normal feature might be
-			-- renamed as infix or prefix. In these cases we add parethesis in case later
-			-- qualified calls.
-
 feature {NONE} -- Error handling
 
 	set_error_message (a_str: STRING) is
@@ -669,6 +664,7 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
+			l_right_parenthesis_needed: BOOLEAN
 		do
 			if l_as.is_argument then
 				if not expr_type_visiting then
@@ -717,13 +713,13 @@ feature {NONE} -- Implementation
 					if l_feat /= Void then
 						if l_feat.is_infix then
 							text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-							right_parenthesis_needed := True
+							l_right_parenthesis_needed := True
 							text_formatter_decorator.process_keyword_text (ti_current, Void)
 							text_formatter_decorator.put_space
 							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
 						elseif l_feat.is_prefix then
 							text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-							right_parenthesis_needed := True
+							l_right_parenthesis_needed := True
 							text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
 							text_formatter_decorator.put_space
 							if l_feat.is_function then
@@ -731,10 +727,6 @@ feature {NONE} -- Implementation
 							end
 						else
 							if l_as.is_qualified or text_formatter_decorator.dot_needed then
-								if right_parenthesis_needed then
-									text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-									right_parenthesis_needed := False
-								end
 								text_formatter_decorator.process_symbol_text (ti_dot)
 							end
 							if not has_error_internal then
@@ -745,10 +737,6 @@ feature {NONE} -- Implementation
 						end
 					else
 						if l_as.is_qualified or text_formatter_decorator.dot_needed then
-							if right_parenthesis_needed then
-								text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-								right_parenthesis_needed := False
-							end
 							text_formatter_decorator.process_symbol_text (ti_dot)
 						end
 						text_formatter_decorator.process_local_text (l_as.access_name)
@@ -769,6 +757,9 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.commit
 				last_type := l_last_type
 				last_class := l_last_class
+			end
+			if l_right_parenthesis_needed then
+				text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.is_argument then
 				last_type := current_feature.arguments.i_th (l_as.argument_position)

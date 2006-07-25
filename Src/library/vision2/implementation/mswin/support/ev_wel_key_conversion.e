@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	v2_to_wel_table: ARRAY [INTEGER] is
 			-- WEL keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_right_meta)
+			create Result.make (Key_0, Key_menu)
 			Result.put (48, Key_0)
 			Result.put (49, Key_1)
 			Result.put (50, Key_2)
@@ -144,6 +144,7 @@ feature {NONE} -- Implementation
 			Result.put (Vk_menu, Key_alt)
 			Result.put (91, Key_left_meta)
 			Result.put (92, Key_right_meta)
+			Result.put (Vk_apps, Key_menu)
 		end
 
 	wel_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
@@ -286,6 +287,7 @@ feature {NONE} -- Implementation
 			Result.put (Key_left_meta, 91)
 			Result.put (Key_right_meta, 92)
 			Result.put (Key_alt, vk_menu)
+			Result.put (Key_menu, Vk_apps)
 		end
 
 indexing

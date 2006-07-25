@@ -27,10 +27,18 @@ fi
 ar='arhppa'
 ld='ld'
 
-ccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/target/h -DVXSIM -DBIG_ENDIAN -DCPU=SIMHPPA -DVXWORKS -DEIF_THREADS -nostdinc -fno-builtin'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/target/h -DVXSIM -DBIG_ENDIAN -DCPU=SIMHPPA -DVXWORKS -DEIF_THREADS -nostdinc -fno-builtin'
+fi
 mtccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/target/h -DVXSIM -DBIG_ENDIAN -DCPU=SIMHPPA -DVXWORKS -DEIF_THREADS -nostdinc -fno-builtin'
 
-cppflags=''
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags=''
+fi
 ldflags=''
 mtldsharedflags='-shared -o'
 ldsharedflags='-shared -o'
@@ -95,7 +103,11 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdir='/bin/mkdir'
 more=''
 nroff='/usr/bin/nroff'

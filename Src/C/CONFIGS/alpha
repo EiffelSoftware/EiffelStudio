@@ -24,11 +24,19 @@ warning_level=''
 optimize='-O2'
 wkoptimize=''
 
-ccflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
+fi
 sharedccflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
 mtccflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
 mtsharedccflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
-cppflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
+fi
 mtcppflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
 sharedcppflags=' -std -DEIF_ALPHA -D__LANGUAGE_C__'
 mtsharedcppflags=' -std -DEIF_ALPHA -DEIF_THREADS -DEIF_POSIX_THREADS -pthread -D__LANGUAGE_C__'
@@ -94,7 +102,11 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdir='/usr/bin/mkdir'
 more=''
 mv='/usr/bin/mv'

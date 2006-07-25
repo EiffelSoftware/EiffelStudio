@@ -7,7 +7,11 @@ ar='ar'
 ld='ar'
 lngpad_2='16'
 d_bsdsig='undef'
-ccflags='-h stdc'
+if [ -n "$CFLAGS" ]; then
+	ccflags=$CFLAGS
+else
+	ccflags='-h stdc'
+fi
 mtccflags='-h stdc -DEIF_THREADS -DEIF_POSIX_THREADS'
 
 libs='-lnsl -lm'
@@ -19,7 +23,11 @@ if [ -n "$CC" ]; then
 else
 	cc='cc'
 fi
-cppflags=''
+if [ -n "$CPPFLAGS" ]; then
+	cppflags=$CPPFLAGS
+else
+	cppflags=''
+fi
 ldflags=''
 ldsharedflags=''
 mtldsharedflags=''
@@ -78,7 +86,11 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='make'
+if [ -n "$MAKE" ]; then
+	make=$MAKE
+else
+	make='make'
+fi
 mkdir='/bin/mkdir'
 more=''
 mv='/bin/mv'

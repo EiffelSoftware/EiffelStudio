@@ -151,7 +151,7 @@ feature -- Status setting
 		do
 			implementation.set_caret_position (a_caret_position)
 		ensure
-			caret_position_assigned: caret_position = a_caret_position
+			caret_position_assigned: change_actions.is_empty implies caret_position = a_caret_position
 		end
 
 feature -- Element change

@@ -1375,15 +1375,25 @@ feature -- Deferred features
 		require
 			start_widget_not_void: start_widget /= Void
 		local
-			l_parent_index: INTEGER
+			l_parent_index, l_search_index: INTEGER
 		do
 			l_parent_index := parent_imp.index_of_child (Current)
 			if forwards then
-				l_parent_index := l_parent_index + 1
+				l_search_index := l_parent_index + 1
 			else
-				l_parent_index := l_parent_index - 1
+				if l_parent_index = 1 then
+						-- If we are at the first item and looking backwards we need to go to the last item.
+					l_search_index := parent_imp.interface.count
+				else
+					l_search_index := l_parent_index - 1
+				end
 			end
-			Result := parent_imp.next_tabstop_widget (start_widget, l_parent_index, forwards)
+			if l_parent_index = l_search_index then
+					-- We are searching at the same index within the parent therefore return `Current'.
+				Result := Current
+			else
+				Result := parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
+			end
 		ensure
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.
@@ -1393,7 +1403,7 @@ feature -- Deferred features
 			-- Does `Current' exhibit all attributes to permit it to receive the
 			-- focus while tabbing?
 		do
-			Result :=  flag_set (style, {WEL_WINDOW_CONSTANTS}.ws_tabstop) and is_sensitive and is_displayed
+			Result :=  flag_set (style, {WEL_WINDOW_CONSTANTS}.ws_tabstop) and then is_sensitive and then is_displayed
 		end
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

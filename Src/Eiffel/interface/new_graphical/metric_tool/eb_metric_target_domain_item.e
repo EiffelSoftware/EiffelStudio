@@ -33,7 +33,7 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
-			Result := target_of_id (id) /= Void
+			Result := id.is_empty or else target_of_id (id) /= Void
 		end
 
 feature -- Access
@@ -41,7 +41,11 @@ feature -- Access
 	domain (a_scope: QL_SCOPE): QL_DOMAIN is
 			-- New query lanaguage domain representing current item
 		do
-			Result := query_target_item_from_conf_target (target_of_id (id)).wrapped_domain
+			if id.is_empty then
+				Result := query_target_item_from_conf_target (universe.target).wrapped_domain
+			else
+				Result := query_target_item_from_conf_target (target_of_id (id)).wrapped_domain
+			end
 		end
 
 	string_representation: STRING is
@@ -50,15 +54,19 @@ feature -- Access
 			l_target: CONF_TARGET
 			l_target_name: STRING
 		do
-			l_target := target_of_id (id)
-			if l_target /= Void then
-				Result := l_target.name
+			if id.is_empty then
+				Result := "Application target"
 			else
-				l_target_name := last_target_name
-				if l_target_name /= Void and then not l_target_name.is_empty then
-					Result := l_target_name
+				l_target := target_of_id (id)
+				if l_target /= Void then
+					Result := l_target.name
 				else
-					Result := Precursor
+					l_target_name := last_target_name
+					if l_target_name /= Void and then not l_target_name.is_empty then
+						Result := l_target_name
+					else
+						Result := Precursor
+					end
 				end
 			end
 		end

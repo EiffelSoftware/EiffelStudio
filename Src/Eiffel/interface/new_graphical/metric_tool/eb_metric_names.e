@@ -112,7 +112,8 @@ feature -- Tooltip
 	f_save: STRING is "Save"
 	f_new: STRING is "New metric"
 	f_remove: STRING is "Remove current selected metric"
-	f_domain_item_invalid: STRING is "Item invalid in current system";
+	f_domain_item_invalid: STRING is "Item invalid in current system"
+	f_application_scope: STRING is "Add current application target scope";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -88,6 +88,9 @@ feature {NONE} -- Initialization
 			add_delayed_scope_btn.set_tooltip (metric_names.f_delayed_scope)
 			add_delayed_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
 			add_delayed_scope_btn.select_actions.extend (agent on_delayed_scope_added)
+			add_application_target_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
+			add_application_target_btn.select_actions.extend (agent on_application_scope_added)
+			add_application_target_btn.set_tooltip (metric_names.f_application_scope)
 
 				-- Build tool bar buttons for scope grid.
 			add_item_btn.remove_text
@@ -318,6 +321,18 @@ feature{NONE} -- Actions
 			-- Action to be performed when a delayed scope is added
 		local
 			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
+		do
+			create l_delayed_item.make ("")
+			if not domain_has (l_delayed_item) then
+				insert_domain_item (l_delayed_item)
+				on_domain_change
+			end
+		end
+
+	on_application_scope_added is
+			-- Action to be performed when current application target is added
+		local
+			l_delayed_item: EB_METRIC_TARGET_DOMAIN_ITEM
 		do
 			create l_delayed_item.make ("")
 			if not domain_has (l_delayed_item) then

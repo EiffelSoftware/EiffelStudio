@@ -145,10 +145,22 @@ feature{NONE} -- Implementation
 
 	evaluated_criteria: QL_CRITERION is
 			-- Evaluated query language criterion from `criteria'
+		local
+			l_scope: QL_SCOPE
+			l_cri: QL_CRITERION
 		do
 			if evaluated_criteria_internal = Void then
 				if criteria /= Void then
 					evaluated_criteria_internal := criteria.new_criterion (unit.scope)
+					if evaluated_criteria_internal /= Void then
+						l_scope := evaluated_criteria_internal.scope
+						if l_scope.is_code_structure_scope then
+							l_cri := criterion_factory_table.item (l_scope).criterion_with_name ("is_visible", [])
+							if l_cri /= Void then
+								evaluated_criteria_internal := evaluated_criteria_internal and l_cri
+							end
+						end
+					end
 				end
 			end
 			Result := evaluated_criteria_internal

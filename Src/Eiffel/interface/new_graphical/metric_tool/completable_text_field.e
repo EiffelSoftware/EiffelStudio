@@ -36,6 +36,13 @@ inherit
 			copy
 		end
 
+	SHARED_WORKBENCH
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make_with_text
@@ -76,11 +83,37 @@ feature -- Status report
 
 	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
 			-- `a_key' can activate text completion?
+		local
+			l_shortcut_pref: SHORTCUT_PREFERENCE
 		do
-			if can_complete_agent /= Void then
-				Result := can_complete_agent.item ([a_key, a_ctrl, a_alt, a_shift])
+			if a_key /= Void then
+				if can_complete_agent /= Void then
+					Result := can_complete_agent.item ([a_key, a_ctrl, a_alt, a_shift])
+				end
+				if Result then
+					l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
+					check l_shortcut_pref /= Void end
+					if
+						a_key.code = l_shortcut_pref.key.code and
+						a_ctrl = l_shortcut_pref.is_ctrl and
+						a_alt = l_shortcut_pref.is_alt and
+						a_shift = l_shortcut_pref.is_shift
+					then
+						Result := true
+					else
+						Result := False
+					end
+					if Result then
+							-- We remove the 'key' character on windows platform.
+							-- On linux the key has not been inserted.
+							-- Fix needed.
+						precompletion_actions.wipe_out
+						precompletion_actions.extend_kamikaze (agent remove_keyed_character (a_key))
+					end
+				end
 			end
 		end
+
 
 	is_focus_back_needed: BOOLEAN is
 			-- Should focus be set back after code completion?
@@ -182,6 +215,47 @@ feature{NONE} -- Implementation
 				delete_char
 			end
  		end
+
+	remove_keyed_character (a_key: EV_KEY) is
+			-- We remove the 'key' character on windows platform.
+			-- On linux the key has not been inserted.
+			-- Fix needed.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if not universe.platform_constants.is_unix then
+				if caret_position > 1 then
+					if is_same_key (a_key, text.item_code (caret_position - 1)) then
+						back_delete_char
+					end
+				end
+			end
+		end
+
+	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN is
+			-- Is `a_key' a `a_char_code' character?
+		require
+			a_key_not_void: a_key /= Void
+		local
+			l_string: STRING_32
+			l_keys: EV_KEY_CONSTANTS
+		do
+			create l_keys
+			l_string := l_keys.key_strings.item (a_key.code)
+			if l_string /= Void then
+				if l_string.count = 1 then
+					if l_string.item_code (1) = a_char_code and then a_char_code /= ('.').code then
+						Result := True
+					end
+				elseif l_string.is_equal ("Space") then
+					Result := True
+				elseif a_key.is_numpad then
+					if l_string.item_code (l_string.count) = a_char_code then
+						Result := True
+					end
+				end
+			end
+		end
 
 feature{NONE} -- Position calculation
 

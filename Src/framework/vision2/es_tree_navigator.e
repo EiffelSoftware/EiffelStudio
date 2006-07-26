@@ -127,16 +127,16 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	expand_node_action_index: INTEGER is 1
+	expand_node_action_index: INTEGER is 65532
 			-- Action index for expand a node
 
-	expand_node_recursive_action_index: INTEGER is 2
+	expand_node_recursive_action_index: INTEGER is 65533
 			-- Action index for expand a node recursively
 
-	collapse_node_action_index: INTEGER is 3
+	collapse_node_action_index: INTEGER is 65534
 			-- Action index for collapse a node
 
-	collapse_node_recursive_action_index: INTEGER is 4;
+	collapse_node_recursive_action_index: INTEGER is 65535;
 			-- Action index for collapse a node recursively
 
 indexing

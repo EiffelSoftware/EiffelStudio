@@ -437,22 +437,12 @@ feature -- Element change
 			-- been made (i.e. `old_key' was present).
 		require
 			valid_keys: valid_key (new_key) and valid_key (old_key)
-		local
-			old_index: INTEGER
-			dead_item: G
-			dkey: H
 		do
 			internal_search (old_key)
 			if control = Found_constant then
-				old_index := position
-				put (content.item (old_index), new_key)
+				put (content.item (position), new_key)
 				if control /= Conflict_constant then
-					count := count - 1
-					if position /= old_index then
-						keys.put (dkey, old_index)
-						content.put (dead_item, old_index)
-						deleted_marks.put (True, old_index)
-					end
+					remove (old_key)
 					control := Changed_constant
 				end
 			end

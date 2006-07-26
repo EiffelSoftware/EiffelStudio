@@ -238,6 +238,17 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
+	compile_start_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed when Eiffel compilation starts
+		do
+			if compile_start_actions_internal = Void then
+				create compile_start_actions_internal
+			end
+			Result := compile_start_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	last_created_window: EB_DEVELOPMENT_WINDOW
@@ -959,6 +970,7 @@ feature -- Events
 			Project_cancel_cmd.enable_sensitive
 			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
+			compile_start_actions.call ([])
 		end
 
 	on_refactoring_start is
@@ -1497,6 +1509,9 @@ feature{NONE} -- Implementation
 
 	max_waiting_count: INTEGER is 30;
 			-- Max value of `state_message_waiting_count'
+
+	compile_start_actions_internal: like compile_start_actions;
+			-- Implementation of `compile_start_actions'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -194,6 +194,13 @@ feature -- Operation
 		deferred
 		end
 
+	add_sectioned_feature_name (e_feature: E_FEATURE) is
+			-- Put feature name of `e_feature', taking reserved words into consideration.
+		require
+			e_feature_attached: e_feature /= Void
+		deferred
+		end
+
 	add_quoted_text (s: STRING) is
 			-- Put `s' at current position.
 		require

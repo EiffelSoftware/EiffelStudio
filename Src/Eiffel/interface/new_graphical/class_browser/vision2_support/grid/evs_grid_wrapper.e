@@ -106,6 +106,52 @@ feature -- Setting
 			sort_action_set: sort_action = a_action
 		end
 
+	set_sorting_status (a_status:  LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+			-- Set sorting status to `a_status'.
+		require
+			a_status_attached: a_status /= Void
+		local
+			l_columns: like sorted_columns
+			l_tuple: TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]
+			l_column: INTEGER
+			l_sort_info: like column_sort_info
+			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
+		do
+			l_sort_info := column_sort_info
+			l_columns := sorted_columns
+			l_columns.wipe_out
+			from
+				a_status.start
+			until
+				a_status.after
+			loop
+				l_tuple := a_status.item
+				l_column := l_tuple.a_column_index
+				l_columns.extend (l_column)
+				l_sort_info_item := l_sort_info.item (l_column)
+				if l_sort_info_item /= Void then
+					l_sort_info_item.set_current_order (l_tuple.a_sorting_order)
+				end
+				a_status.forth
+			end
+		end
+
+	enable_force_multi_column_sorting is
+			-- Enable force multi column sorting.
+		do
+			is_multi_column_sorting_forced := True
+		ensure
+			multi_column_sorting_forced: is_multi_column_sorting_forced
+		end
+
+	disable_force_multi_column_sorting is
+			-- Disable force multi column sorting.
+		do
+			is_multi_column_sorting_forced := False
+		ensure
+			multi_column_sorting_not_forced: not is_multi_column_sorting_forced
+		end
+
 feature -- Sort
 
 	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER) is
@@ -119,7 +165,7 @@ feature -- Sort
 		do
 				-- We only sort on column where sorting information is set.									
 			if button = 1 and then is_column_sortable (a_column_index) then
-				update_sorted_columns (ev_application.ctrl_pressed, a_column_index)
+				update_sorted_columns (is_ctrl_key_pressed, a_column_index)
 				l_sort_info := column_sort_info.item (a_column_index)
 				if is_auto_sort_order_change_enabled then
 					l_sort_info.change_order
@@ -147,6 +193,7 @@ feature -- Sort
 						end
 					end
 					last_sorted_column := a_column_index
+					post_sort_actions.call ([sorting_order_snapshort])
 				end
 			end
 		ensure
@@ -173,6 +220,12 @@ feature -- Status report
 			-- Is auto sort order change enabled?
 			-- This means whether or not sort order of a column will change automatically to the next
 			-- order after every `change_sorting_order_indicator'.
+
+	is_multi_column_sorting_forced: BOOLEAN
+			-- Is multi-column soring forced?
+			-- This means we conduct a multi-column sorting even though Ctrl key is not pressed
+
+feature -- Access
 
 	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO [G]] is
 			-- Sort information of every column in `grid'.
@@ -303,6 +356,39 @@ feature -- Access
 	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
 			-- Action used to sort
 
+	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]] is
+			-- Actions got called after sorting is finished
+			-- Argument of those actions is a list of columns to be sorted.
+		do
+			if post_sort_actions_internal = Void then
+				create post_sort_actions_internal
+			end
+			Result := post_sort_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	sorting_order_snapshort: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
+			-- Snapshot of current sorting status
+			-- The first item in list is the first column (whose index is `a_column_index') to be sorted usring `a_sorting_order'.			
+		local
+			l_columns: like sorted_columns
+		do
+			l_columns := sorted_columns
+			create Result.make
+			from
+				l_columns.start
+			until
+				l_columns.after
+			loop
+				check column_sort_info.item (l_columns.item) /= Void end
+				Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
+				l_columns.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	sorted_columns: LINKED_LIST [INTEGER]
@@ -312,6 +398,9 @@ feature{NONE} -- Implementation
 			-- and then sort the second column.
 			-- In this list, a list of column index are maintained, the first item is the oldest sorted column, the last item is
 			-- the most recent sorted column.
+
+	post_sort_actions_internal: like post_sort_actions
+			-- Implementation of `post_sort_actions'
 
 	column_sort_info_internal: like column_sort_info
 			-- Internal `column_sort_info'
@@ -389,6 +478,12 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	is_ctrl_key_pressed: BOOLEAN is
+			-- Is Ctrl key pressed?
+			-- Take `is_multi_column_sorting_forced' into consideration.
+		do
+			Result := is_multi_column_sorting_forced or else ev_application.ctrl_pressed
+		end
 
 invariant
 	sorted_columns_attached: sorted_columns /= Void

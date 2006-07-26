@@ -30,6 +30,7 @@ feature{NONE} -- Initialization
 			old_make (agent next_sort_order, a_comparator, a_current_order)
 			indicator.put (ascending_indicator_pixmap, ascending_order)
 			indicator.put (descending_indicator_pixmap, descending_order)
+			enable_auto_indicator
 		end
 
 feature -- Access

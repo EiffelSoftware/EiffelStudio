@@ -242,6 +242,12 @@ feature -- Actions
 			cancel_delayed_update_matches
 		end
 
+	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+			-- Action to be performed after a sorting
+		do
+			preferences.class_browser_data.class_flat_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
+		end
+
 feature{NONE} -- Sorting
 
 	class_column: INTEGER is 1
@@ -447,7 +453,13 @@ feature{NONE} -- Update
 						last_sorted_column := class_column
 					end
 					disable_auto_sort_order_change
-					sort (0, 0, 1, 0, 0, 0, 0, 0, feature_column)
+					enable_force_multi_column_sorting
+					if not sorted_columns.is_empty then
+						sort (0, 0, 1, 0, 0, 0, 0, 0, sorted_columns.last)
+					else
+						sort (0, 0, 1, 0, 0, 0, 0, 0, feature_column)
+					end
+					disable_force_multi_column_sorting
 					bind_grid
 					enable_auto_sort_order_change
 				else

@@ -249,6 +249,12 @@ feature -- Actions
 		do
 		end
 
+	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+			-- Action to be performed after a sorting
+		do
+			preferences.class_browser_data.class_tree_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
+		end
+
 feature -- Notification
 
 	update_view is
@@ -265,7 +271,9 @@ feature -- Notification
 						last_sorted_column := 1
 					end
 					disable_auto_sort_order_change
+					enable_force_multi_column_sorting
 					sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
+					disable_force_multi_column_sorting
 					enable_auto_sort_order_change
 				else
 					component_widget.hide

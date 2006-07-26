@@ -2475,7 +2475,7 @@ feature {NONE} -- Implementation
 			end
 			text_formatter_decorator.put_new_line
 			l_creators := l_as.creators
-			if l_creators = Void and then current_class.has_feature_table then
+			if l_creators = Void and then not l_as.is_deferred and then current_class.has_feature_table then
 				l_feat := current_class.default_create_feature
 				if l_feat /= Void then
 					create l_creators.make (1)
@@ -2486,6 +2486,9 @@ feature {NONE} -- Implementation
 				end
 			end
 			if l_creators /= Void then
+				check
+					class_not_deferred: not l_as.is_deferred
+				end
 				text_formatter_decorator.process_filter_item (f_creators, True)
 				text_formatter_decorator.set_separator (ti_empty)
 				text_formatter_decorator.set_new_line_between_tokens

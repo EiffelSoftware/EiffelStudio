@@ -87,6 +87,13 @@ feature -- Access
 			result_is_empty: Result.is_empty
 		end
 
+feature -- Status report
+
+	is_code_structure_scope: BOOLEAN is
+			-- Is current scope a code structure scope?
+		do
+		end
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

@@ -16,7 +16,8 @@ inherit
 			path_domain_generator,
 			basic_scope,
 			empty_domain,
-			delayed_domain
+			delayed_domain,
+			is_code_structure_scope
 		end
 
 create
@@ -69,6 +70,11 @@ feature -- Access
 		do
 			create Result
 		end
+
+feature -- Status report
+
+	is_code_structure_scope: BOOLEAN is True
+			-- Is current scope a code structure scope?
 
 feature -- Metric support
 

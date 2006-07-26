@@ -6,15 +6,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FACK_FOCUS_DIALOG_IMP_MODELESS
+	EV_FAKE_FOCUS_DIALOG_IMP_MODELESS
 
 inherit
 	EV_UNTITLED_DIALOG_IMP_MODELESS
 
-	EV_FACK_FOCUS_GROUPABLE
-		rename
-			item as wel_item
-		end
+	EV_FAKE_FOCUS_GROUPABLE
 
 create
 	make_with_dialog_window

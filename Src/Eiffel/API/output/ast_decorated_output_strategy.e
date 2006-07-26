@@ -3191,6 +3191,10 @@ feature {NONE} -- Implementation: helpers
 			l_as_not_void: l_as /= Void
 		do
 			text_formatter_decorator.process_filter_item (f_class_header, True)
+			if l_as.is_frozen then
+				text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+				text_formatter_decorator.put_space
+			end
 			if l_as.is_expanded then
 				text_formatter_decorator.process_keyword_text (ti_expanded_keyword, Void)
 				text_formatter_decorator.put_space

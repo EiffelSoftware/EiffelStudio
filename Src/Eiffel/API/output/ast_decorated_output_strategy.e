@@ -686,7 +686,11 @@ feature {NONE} -- Implementation
 						if last_type.is_formal then
 							last_type := constrained_type (last_type)
 						end
-						last_class := last_type.associated_class
+						if not last_type.is_none then
+							last_class := last_type.associated_class
+						else
+							last_class := Void
+						end
 					end
 					l_rout_id_set := l_as.routine_ids
 					if l_rout_id_set /= Void then
@@ -699,7 +703,12 @@ feature {NONE} -- Implementation
 							end
 						else
 							if last_type /= Void then
-								l_feat := feature_in_class (last_class, l_rout_id_set)
+								if last_type.is_none then
+									last_class := system.class_of_id (l_as.class_id)
+								end
+								if last_class /= Void then
+									l_feat := feature_in_class (last_class, l_rout_id_set)
+								end
 							else
 								l_feat := feature_in_class (current_class, l_rout_id_set)
 								last_type := current_class.actual_type

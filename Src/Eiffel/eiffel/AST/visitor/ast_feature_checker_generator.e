@@ -3315,8 +3315,7 @@ feature -- Implementation
 			l_property_name := l_as.property_name
 			if l_property_name /= Void then
 				if is_byte_node_enabled then
-					names_heap.put (l_property_name)
-					l_byte_code.set_property_name_id (names_heap.found_item)
+					l_byte_code.set_property_name (l_property_name)
 				end
 				l_custom_attributes := l_as.property_custom_attributes
 					-- See above comments for why it is only done in .NET mode.

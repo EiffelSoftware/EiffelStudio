@@ -117,10 +117,13 @@ feature -- Access
 		do
 			if property_name_id > 0 then
 				Result := Names_heap.item (property_name_id)
+			elseif property_name_id /= 0 then
+				Result := once ""
 			end
 		ensure
-			Result_not_void: property_name_id > 0 implies Result /= Void
+			Result_not_void: property_name_id /= 0 implies Result /= Void
 			Result_not_empty: property_name_id > 0 implies not Result.is_empty
+			Result_empty: property_name_id < 0 implies Result.is_empty
 		end
 
 	clear_old_expressions is
@@ -177,14 +180,19 @@ feature -- Settings
 			feature_name_id_set: feature_name_id = id
 		end
 
-	set_property_name_id (id: INTEGER) is
-			-- Set `property_name_id' to `id'.
+	set_property_name (n: STRING) is
+			-- Set `property_name' to `n'.
 		require
-			valid_id: id > 0
+			n_attached: n /= Void
 		do
-			property_name_id := id
+			if n.is_empty then
+				property_name_id := -1
+			else
+				names_heap.put (n)
+				property_name_id := names_heap.found_item
+			end
 		ensure
-			property_name_id_set: property_name_id = id
+			property_name_set: equal (property_name, n)
 		end
 
 	set_real_body_id (i: INTEGER) is

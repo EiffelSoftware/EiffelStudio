@@ -260,11 +260,11 @@ feature {NONE} -- Implementation
 		local
 			l_bold_font: EV_FONT
 		once
-			create Result.make (3)
-			Result.put ((create {EV_LABEL}).font, 1)
+			Result := preferences.editor_data.fonts.twin
+			Result.put ((create {EV_LABEL}).font, preferences.editor_data.editor_font_id)
 			l_bold_font := (create {EV_LABEL}).font
 			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			Result.put (l_bold_font, 2)
+			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
 		end
 
 indexing

@@ -11,6 +11,8 @@ class
 
 inherit
 	EDITOR_DATA
+		export
+			{ANY} fonts
 		undefine
 			max_color_id
 		redefine

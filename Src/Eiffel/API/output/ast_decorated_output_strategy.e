@@ -1052,15 +1052,17 @@ feature {NONE} -- Implementation
 			if not text_formatter_decorator.is_feature_short then
 				if l_as.locals /= Void then
 					text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
-					text_formatter_decorator.set_separator (Void)
-					text_formatter_decorator.indent
-					text_formatter_decorator.set_new_line_between_tokens
 					text_formatter_decorator.put_new_line
-					processing_locals := True
-					l_as.locals.process (Current)
-					processing_locals := False
-					text_formatter_decorator.put_new_line
-					text_formatter_decorator.exdent
+					if l_as.locals.count > 0 then
+						text_formatter_decorator.indent
+						text_formatter_decorator.set_separator (Void)
+						text_formatter_decorator.set_new_line_between_tokens
+						processing_locals := True
+						l_as.locals.process (Current)
+						processing_locals := False
+						text_formatter_decorator.put_new_line
+						text_formatter_decorator.exdent
+					end
 				end
 				safe_process (l_as.routine_body)
 			end

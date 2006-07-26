@@ -1037,6 +1037,56 @@ feature {EV_ANY_I} -- Implementation
 			override_movement := False
 		end
 
+	on_wm_ncactivate (hwnd: POINTER; wparam, lparam: POINTER): POINTER is
+			-- Handle wm_ncactive message
+			-- With this handling, we can have mulitple title bar focused windows which are first used by Photoshop.
+			-- This implementation is learn from www.codeproject.com "Docking Toolbars in Plain C"
+		local
+			l_windows: LINEAR [EV_WINDOW]
+			l_tool_window: EV_FACK_FOCUS_GROUPABLE
+			l_keep_alive: INTEGER
+			l_syn_others: BOOLEAN
+		do
+			l_keep_alive := wparam.to_integer_32
+			l_syn_others := True
+
+			l_windows := application_imp.windows
+			from
+				l_windows.start
+			until
+				l_windows.after
+			loop
+				l_tool_window ?= l_windows.item.implementation
+		      -- UNDOCUMENTED FEATURE:
+		      -- If the other window being activated/deactivated (i.e. not the one that
+		      -- called here) is one of our tool windows, then go (or stay) active.			
+				if l_tool_window /= Void and then lparam = l_tool_window.item then
+					l_keep_alive := 1
+					l_syn_others := False
+				end
+				l_windows.forth
+			end
+
+			if l_syn_others then
+				from
+					l_windows.start
+				until
+					l_windows.after
+				loop
+					l_tool_window ?= l_windows.item.implementation
+
+					-- We don't send message to ourself
+					if l_tool_window /= Void and then l_tool_window.item /= wel_item and wel_item /= lparam then
+						cwin_send_message (l_tool_window.item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
+					end
+					l_windows.forth
+				end
+			end
+
+			Result := call_default_window_procedure (hwnd, wm_ncactivate, to_wparam (l_keep_alive), lparam)
+			disable_default_processing
+		end
+
 	window_process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
@@ -1048,26 +1098,35 @@ feature {EV_ANY_I} -- Implementation
 				-- non client area of Current needs to be changed to indicate an
 				-- active or non active state (Blue or Grey as default).
 			if msg = Wm_ncactivate then
-					-- `wparam' is equal to 1 then the non client area of
-					-- `Current' is being changed to indicate active.
-					-- We could use class INTERNAL to find this out, but I do not
-					-- want to add inheritance from another class. If you think it is a better
-					-- solution, then I see no reason why we should not do it. Julian 08/14/02
-				modeless_dialog_imp ?= Current
-				if modeless_dialog_imp /= Void then
-					if wparam.to_integer_32 = 1 then
-						if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
-							application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
-							disable_default_processing
-							override_movement := False
-							application_imp.clear_transport_just_ended
-						end
-					else
-						if application_imp.override_from_mouse_activate then
-							disable_default_processing
-							application_imp.clear_override_from_mouse_activate
+				if lparam.to_integer_32 = -1 then
+					-- This is a message send by ourself.
+					-- Windows will never sent wm_ncactive with lparam -1
+					Result := call_default_window_procedure (hwnd, msg, wparam, to_lparam (0))
+					disable_default_processing
+				else
+						-- `wparam' is equal to 1 then the non client area of
+						-- `Current' is being changed to indicate active.
+						-- We could use class INTERNAL to find this out, but I do not
+						-- want to add inheritance from another class. If you think it is a better
+						-- solution, then I see no reason why we should not do it. Julian 08/14/02
+					modeless_dialog_imp ?= Current
+					if modeless_dialog_imp /= Void then
+						if wparam.to_integer_32 = 1 then
+							if application_imp.pick_and_drop_source /= Void or application_imp.awaiting_movement or
+								application_imp.transport_just_ended or application_imp.override_from_mouse_activate then
+								disable_default_processing
+								override_movement := False
+								application_imp.clear_transport_just_ended
+							end
+						else
+							if application_imp.override_from_mouse_activate then
+								disable_default_processing
+								application_imp.clear_override_from_mouse_activate
+							end
 						end
 					end
+
+					Result := on_wm_ncactivate (hwnd, wparam, lparam)
 				end
 			elseif msg = Wm_activate then
 				window_on_wm_activate (wparam, lparam)

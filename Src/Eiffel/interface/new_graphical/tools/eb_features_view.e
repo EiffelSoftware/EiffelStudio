@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)
 			create l_browser.make (a_tool, l_drop_actions)
+			l_browser.set_sorting_status (l_browser.sorted_columns_from_string (preferences.class_browser_data.feature_view_sorting_order))
 			from
 				formatters.start
 			until

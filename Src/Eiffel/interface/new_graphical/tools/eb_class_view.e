@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 			create l_drop_actions
 			l_drop_actions.extend (agent drop_stone)
 			create l_flat_browser.make (a_tool, l_drop_actions)
+			l_flat_browser.set_sorting_status (l_flat_browser.sorted_columns_from_string (preferences.class_browser_data.class_flat_view_sorting_order))
 			create l_tree_browser.make (a_tool, l_drop_actions)
+			l_tree_browser.set_sorting_status (l_tree_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
 			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)
 			from

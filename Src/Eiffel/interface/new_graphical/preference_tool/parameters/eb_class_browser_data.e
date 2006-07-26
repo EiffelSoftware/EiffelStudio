@@ -54,12 +54,33 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := show_tooltip_preference.value
 		end
 
+	class_flat_view_sorting_order: STRING is
+			-- String representation of class flat view sorting order
+		do
+			Result := class_flat_view_sorting_order_preference.value
+		end
+
+	class_tree_view_sorting_order: STRING is
+			-- String representation of class tree view sorting order
+		do
+			Result := class_tree_view_sorting_order_preference.value
+		end
+
+	feature_view_sorting_order: STRING is
+			-- String representation of feature view sorting order
+		do
+			Result := feature_view_sorting_order_preference.value
+		end		
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	odd_row_background_color_preference: COLOR_PREFERENCE
 	even_row_background_color_preference: COLOR_PREFERENCE
 	show_feature_from_any_preference: BOOLEAN_PREFERENCE
 	show_tooltip_preference: BOOLEAN_PREFERENCE
+	class_flat_view_sorting_order_preference: STRING_PREFERENCE
+	class_tree_view_sorting_order_preference: STRING_PREFERENCE
+	feature_view_sorting_order_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -67,6 +88,9 @@ feature {NONE} -- Preference Strings
 	even_row_background_color_string: STRING is "tools.class_browser.even_row_background_color"
 	show_feature_from_any_string: STRING is "tools.class_browser.show_unchanged_feature_from_any"
 	show_tooltip_string: STRING is "tools.class_browser.show_tooltip"
+	class_flat_view_sorting_order_string: STRING is "tools.class_browser.class_flat_view_sorting_order"
+	class_tree_view_sorting_order_string: STRING is "tools.class_browser.class_flat_tree_sorting_order"
+	feature_view_sorting_order_string: STRING is "tools.class_browser.feature_view_sorting_order"
 
 feature {NONE} -- Implementation
 
@@ -80,6 +104,12 @@ feature {NONE} -- Implementation
 			even_row_background_color_preference := l_manager.new_color_preference_value (l_manager, even_row_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			show_feature_from_any_preference := l_manager.new_boolean_preference_value (l_manager, show_feature_from_any_string, False)
 			show_tooltip_preference := l_manager.new_boolean_preference_value (l_manager, show_tooltip_string, False)
+			class_flat_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, class_flat_view_sorting_order_string, "2:1")
+			class_flat_view_sorting_order_preference.set_hidden (True)
+			class_tree_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, class_tree_view_sorting_order_string, "1:1")
+			class_tree_view_sorting_order_preference.set_hidden (True)
+			feature_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, feature_view_sorting_order_string, "2:1")
+			feature_view_sorting_order_preference.set_hidden (True)
 		end
 
 	preferences: PREFERENCES

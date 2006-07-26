@@ -107,10 +107,10 @@ feature -- Status report
 feature -- Setting
 
 	add_key_action (a_agent: PROCEDURE [ANY, TUPLE]; a_index: INTEGER) is
-			-- Add key action `a_agent' with index `a_index' in to `key_actions'.
-			-- If `a_index' already exists in `key_actions', its originally assoicated action will be overwritten by `a_agent'.
+			-- Add key action `a_agent' with index `a_index' in to `key_actions'.			
 		require
 			a_agent_attached: a_agent /= Void
+			a_index_not_exist: not has_key_action (a_index)
 		do
 			key_actions.force (a_agent, a_index)
 		ensure

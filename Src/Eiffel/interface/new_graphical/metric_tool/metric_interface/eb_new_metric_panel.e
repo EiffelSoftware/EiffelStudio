@@ -365,6 +365,13 @@ feature -- Notification
 		do
 			metric_selector.load_metrics (True)
 			metric_selector.try_to_selected_last_metric
+			if metric_selector.selected_metric = Void then
+				metric_definition_area.wipe_out
+				metric_definition_area.extend (no_metric_frame)
+				save_metric_btn.disable_sensitive
+				remove_metric_btn.disable_sensitive
+				current_metric_editor := Void
+			end
 			if a_data /= Void then
 				l_data ?= a_data
 				if l_data /= Void then

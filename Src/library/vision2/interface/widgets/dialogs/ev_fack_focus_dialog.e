@@ -10,20 +10,15 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FACK_FOCUS_DIALOG
+	EV_FAKE_FOCUS_DIALOG
 
 inherit
 	EV_UNTITLED_DIALOG
-		redefine
-			create_implementation
-		end
 
-feature {EV_ANY_I} -- Implementation
-
-	create_implementation is
-			-- Redefine
-		do
-			create {EV_FACK_FOCUS_DIALOG_IMP} implementation.make (Current)
+	EV_FAKE_FOCUS_GROUPABLE
+		undefine
+			default_create,
+			copy
 		end
 
 indexing

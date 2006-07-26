@@ -14,14 +14,7 @@ indexing
 
 
 deferred class
-	EV_FACK_FOCUS_GROUPABLE
-
-feature -- Query
-
-	item: POINTER is
-			-- Pointer to native windows handle.
-		deferred
-		end
+	EV_FAKE_FOCUS_GROUPABLE
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

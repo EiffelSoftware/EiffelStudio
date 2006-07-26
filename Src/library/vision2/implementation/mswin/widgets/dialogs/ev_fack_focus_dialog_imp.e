@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FACK_FOCUS_DIALOG_IMP
+	EV_FAKE_FOCUS_DIALOG_IMP
 
 inherit
 	EV_UNTITLED_DIALOG_IMP
@@ -16,10 +16,7 @@ inherit
 			promote_to_modeless_dialog
 		end
 
-	EV_FACK_FOCUS_GROUPABLE
-		rename
-			item as wel_item
-		end
+	EV_FAKE_FOCUS_GROUPABLE
 
 create
 	make,
@@ -39,13 +36,13 @@ feature {NONE} -- Implementation
 	promote_to_modeless_dialog is
 			-- Redefine
 		local
-			modeless_dialog_imp: EV_FACK_FOCUS_DIALOG_IMP_MODELESS
+			modeless_dialog_imp: EV_FAKE_FOCUS_DIALOG_IMP_MODELESS
 		do
 			create modeless_dialog_imp.make_with_dialog_window (Current)
 			interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	interface: EV_FACK_FOCUS_DIALOG;
+	interface: EV_FAKE_FOCUS_DIALOG;
 			-- Redefine
 
 indexing

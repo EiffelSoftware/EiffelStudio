@@ -1043,7 +1043,8 @@ feature {EV_ANY_I} -- Implementation
 			-- This implementation is learn from www.codeproject.com "Docking Toolbars in Plain C"
 		local
 			l_windows: LINEAR [EV_WINDOW]
-			l_tool_window: EV_FACK_FOCUS_GROUPABLE
+			l_tool_window: EV_FAKE_FOCUS_GROUPABLE
+			l_imp: EV_WINDOW_IMP
 			l_keep_alive: INTEGER
 			l_syn_others: BOOLEAN
 		do
@@ -1056,11 +1057,13 @@ feature {EV_ANY_I} -- Implementation
 			until
 				l_windows.after
 			loop
-				l_tool_window ?= l_windows.item.implementation
+				l_imp ?= l_windows.item.implementation
+				check not_void: l_imp /= Void end
+				l_tool_window ?= l_windows.item
 		      -- UNDOCUMENTED FEATURE:
 		      -- If the other window being activated/deactivated (i.e. not the one that
 		      -- called here) is one of our tool windows, then go (or stay) active.			
-				if l_tool_window /= Void and then lparam = l_tool_window.item then
+				if l_tool_window /= Void and then lparam = l_imp.wel_item then
 					l_keep_alive := 1
 					l_syn_others := False
 				end
@@ -1073,11 +1076,13 @@ feature {EV_ANY_I} -- Implementation
 				until
 					l_windows.after
 				loop
-					l_tool_window ?= l_windows.item.implementation
+					l_imp ?= l_windows.item.implementation
+					check not_void: l_imp /= Void end
+					l_tool_window ?= l_windows.item
 
 					-- We don't send message to ourself
-					if l_tool_window /= Void and then l_tool_window.item /= wel_item and wel_item /= lparam then
-						cwin_send_message (l_tool_window.item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
+					if l_tool_window /= Void and then l_imp.wel_item /= wel_item and wel_item /= lparam then
+						cwin_send_message (l_imp.wel_item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
 					end
 					l_windows.forth
 				end

@@ -38,13 +38,16 @@ feature -- Status
 
 feature -- Element change
 
-	insert_interrupt_error is
+	insert_interrupt_error (a_msg: STRING) is
 			-- Insert an `interrup_error' so that current query language process
 			-- can be stopped.
+			-- `a_msg' contains a message.
+		require
+			a_msg_attached: a_msg /= Void
 		local
 			interrupt_error: QL_INTERRUPT_ERROR
 		do
-			create interrupt_error
+			create interrupt_error.make (a_msg)
 			insert_error (interrupt_error)
 			raise_error
 		end

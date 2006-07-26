@@ -16,7 +16,8 @@ inherit
 			domain_generator,
 			path_domain_generator,
 			empty_domain,
-			delayed_domain
+			delayed_domain,
+			is_code_structure_scope
 		end
 
 create
@@ -96,6 +97,11 @@ feature -- Access
 		do
 			create Result
 		end
+
+feature -- Status report
+
+	is_code_structure_scope: BOOLEAN is True;
+			-- Is current scope a code structure scope?
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -12,6 +12,22 @@ class
 inherit
 	QL_ERROR
 
+create
+	make
+
+feature{NONE} -- Initialization
+
+	make (a_msg: STRING) is
+			-- Initialize `text' with `a_msg'.
+		require
+			a_msg_attached: a_msg /= Void
+		do
+			text := a_msg.twin
+		ensure
+			text_set: text.is_equal (a_msg.twin)
+		end
+
+
 feature -- Access
 
 	code: STRING is
@@ -20,12 +36,12 @@ feature -- Access
 			Result := "INTERRUPT"
 		end
 
-	text: STRING is
+	text: STRING
 			-- The error message.
-		do
-			Result := "Interrupted by user."
-		end
 
+invariant
+	text_attached: text /= Void
+	
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -459,6 +459,35 @@ feature -- Text operator
 			process_feature_name_text (f_name, e_class)
 		end
 
+	add_sectioned_feature_name (e_feature: E_FEATURE) is
+			-- Put feature name of `e_feature', taking reserved words into consideration.
+		local
+			l_is_prefix_infix: BOOLEAN
+			l_keyword: STRING
+			l_prefix_infix: STRING
+		do
+				-- Prepare prefix/infix text.
+			if e_feature.is_prefix then
+				l_keyword := ti_prefix_keyword
+				l_prefix_infix := e_feature.extract_symbol_from_prefix (e_feature.name)
+				l_is_prefix_infix := True
+			elseif e_feature.is_infix then
+				l_keyword := ti_infix_keyword
+				l_prefix_infix := e_feature.extract_symbol_from_infix (e_feature.name)
+				l_is_prefix_infix := True
+			end
+
+			if l_is_prefix_infix then
+				process_keyword_text (ti_prefix_keyword, Void)
+				add_space
+				l_prefix_infix.prepend (ti_quote)
+				l_prefix_infix.append (ti_quote)
+				process_operator_text (l_prefix_infix, e_feature)
+			else
+				add_feature_name (e_feature.name, e_feature.written_class)
+			end
+		end
+
 	add_quoted_text (s: STRING) is
 			-- Put `s' at current position.
 		do

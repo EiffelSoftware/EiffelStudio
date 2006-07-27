@@ -21,7 +21,7 @@
 		<list ordered="false">
 			<item>Name: name of the group</item>
 			<item>Description: an optional description of the group</item>
-			<item>Readonly: in a read only group, classes can not be modified</item>
+			<item>Readonly: in a read only group, classes cannot be modified</item>
 			<item>Location: directory for clusters, assembly file for assemblies and ecf file for libraries and precompiles</item>
 			<item>Profiling: turn on the Eiffel profiler during the application execution (C code generation mode only). The results can be seen at the end of the execution in the profiler window.</item>
 			<item>Trace: display on the console all the features that are called during the system execution (C generation mode only).</item>
@@ -35,14 +35,14 @@
 		</heading>
 		<list ordered="false">
 			<item>Condition: group nodes can be <link><url>020_target_general.xml</url><anchor_name>condition</anchor_name><label>conditioned</label></link> to only be used under certain conditions.</item>
-			<item>Prefix: name prefix for classes in this group (see 
+			<item>Prefix: name prefix for classes in this group (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>renaming</anchor_name>
 					<label>Renaming</label>
 				</link>)
 			</item>
-			<item>Renaming: renamings for classes in this group (see 
+			<item>Renaming: renamings for classes in this group (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>renaming</anchor_name>
@@ -59,7 +59,7 @@
 			<item>File pattern: <link><url>020_target_general.xml</url><anchor_name>file_pattern</anchor_name><label>file pattern</label></link> for this group</item>
 			<item>Dependencies: specify which groups are checked for classes if the class can not be found in the group itself</item>
 			<item>Type Mapping: <link><url>110_advanced_mapping.xml</url><label>mapping</label></link> of types, e.g. STRING is mapped to STRING_32</item>
-			<item>Visible classes: visible classes (see 
+			<item>Visible classes: visible classes (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>visible</anchor_name>
@@ -77,7 +77,7 @@
 			<size>2</size>Library/Precompile Options
 		</heading>If a library is not read only, the configuration can be directly edited by clicking on the edit library button.
 		<list ordered="false">
-			<item>Visible classes: visible classes (see 
+			<item>Visible classes: visible classes (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>visible</anchor_name>
@@ -109,7 +109,7 @@
 				<alt_text>Visible dialog</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>To make a class visible, just enter the class name and press 
+		<paragraph>To make a class visible, just enter the class name and press
 			<italic>Add class</italic>. Optionally it is possible to specify a different name under which it is accessible. After a class has been added, it is possible to restrict the access to certain features only, to do this, enter the name of the feature (and optional a renamed name), select the class they belong to and click on <italic>Add feature</italic>.
 		</paragraph>
 	</paragraph>

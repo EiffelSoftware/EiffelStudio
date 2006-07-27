@@ -151,6 +151,27 @@ feature -- Access queries
 			Result := system.application_target
 		end
 
+	child_targets: LIST [CONF_TARGET] is
+			-- Targets that extend this target.
+		local
+			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_target: CONF_TARGET
+		do
+			create {ARRAYED_LIST [CONF_TARGET]}Result.make (5)
+			from
+				l_targets := system.targets
+				l_targets.start
+			until
+				l_targets.after
+			loop
+				l_target := l_targets.item_for_iteration
+				if l_target.extends = Current then
+					Result.force (l_target)
+				end
+				l_targets.forth
+			end
+		end
+
 	version: CONF_VERSION is
 			-- Version number of the target.
 		do
@@ -852,14 +873,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lowoer: a_name.is_equal (a_name.as_lower)
 		do
 			if system /= Void then
-				system.targets.replace_key (a_name, name)
+				system.targets.replace_key (a_name.as_lower, name)
 			end
-			name := a_name
+			name := a_name.as_lower
 		ensure
-			name_set: name = a_name
+			name_set: name.is_case_insensitive_equal (a_name) and name.is_equal (name.as_lower)
 		end
 
 	set_description (a_description: like description) is
@@ -1282,32 +1302,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_post_compile_action.extend (an_action)
 		end
 
-	remove_pre_action (an_action: CONF_ACTION) is
+	remove_action (an_action: CONF_ACTION) is
 			-- Remove `an_action'.
 		require
 			an_action_not_void: an_action /= Void
 		do
 			internal_pre_compile_action.start
-			internal_pre_compile_action.search (an_action)
-			if not internal_pre_compile_action.exhausted then
-				internal_pre_compile_action.remove
-			end
-		ensure
-			removed: not internal_pre_compile_action.has (an_action)
-		end
-
-	remove_post_action (an_action: CONF_ACTION) is
-			-- Remove `an_action'.
-		require
-			an_action_not_void: an_action /= Void
-		do
+			internal_pre_compile_action.prune (an_action)
 			internal_post_compile_action.start
-			internal_post_compile_action.search (an_action)
-			if not internal_post_compile_action.exhausted then
-				internal_post_compile_action.remove
-			end
+			internal_post_compile_action.prune (an_action)
 		ensure
-			removed: not internal_post_compile_action.has (an_action)
+			removed: not internal_pre_compile_action.has (an_action) and
+					not internal_post_compile_action.has (an_action)
 		end
 
 	add_variable (a_name, a_value: STRING) is

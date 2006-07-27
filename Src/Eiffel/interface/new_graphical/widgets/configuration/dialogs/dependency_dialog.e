@@ -17,9 +17,10 @@ inherit
 			on_select
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
-			default_create, copy
+			default_create,
+			copy
 		end
 
 feature {NONE} -- Initialization
@@ -77,7 +78,7 @@ feature {NONE} -- Agents
 				conf_target_set: conf_target /= Void
 			end
 			if not conf_target.groups.has (new_item_name.text.to_string_8) then
-				create wd.make_with_text (cluster_dependency_group_not_exist)
+				create wd.make_with_text (conf_interface_names.cluster_dependency_group_not_exist)
 				wd.show_modal_to_window (Current)
 			else
 				Precursor {LIST_DIALOG}

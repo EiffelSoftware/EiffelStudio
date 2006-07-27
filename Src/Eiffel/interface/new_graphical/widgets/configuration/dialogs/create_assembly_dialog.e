@@ -9,9 +9,10 @@ class
 	CREATE_ASSEMBLY_DIALOG
 
 inherit
-	EV_DIALOG
+	CREATE_GROUP_DIALOG
 		redefine
-			initialize
+			initialize,
+			last_group
 		end
 
 	CONF_ACCESS
@@ -32,7 +33,7 @@ inherit
 			default_create
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -59,21 +60,6 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
-			-- Create.
-		require
-			a_target_not_void: a_target /= Void
-			a_factory_not_void: a_factory /= Void
-		do
-			target := a_target
-			factory := a_factory
-			default_create
-			set_title (dialog_create_assembly_title)
-		ensure
-			target_set: target = a_target
-			factory_set: factory = a_factory
-		end
-
 	initialize is
 			-- Initialize.
 		local
@@ -88,7 +74,10 @@ feature {NONE} -- Initialization
 			l_path, l_name: STRING
 			i, j, cnt: INTEGER
 		do
-			Precursor {EV_DIALOG}
+			Precursor
+
+			set_title (conf_interface_names.dialog_create_assembly_title)
+
 
 			create vb
 			extend (vb)
@@ -101,7 +90,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_assembly_found)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_found)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -146,7 +135,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_assembly_name)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_name)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -161,7 +150,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_assembly_location)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_location)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -205,16 +194,6 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent name.set_focus)
 		end
 
-feature -- Status
-
-	is_ok: BOOLEAN
-			-- Was the dialog closed with ok?
-
-feature -- Access
-
-	last_assembly: CONF_ASSEMBLY
-			-- Last added assembly.
-
 feature {NONE} -- GUI elements
 
 	assemblies: EV_LIST
@@ -225,6 +204,11 @@ feature {NONE} -- GUI elements
 
 	location: EV_TEXT_FIELD
 			-- Location of the assembly (for local assemblies).
+
+feature -- Access
+
+	last_group: CONF_ASSEMBLY
+			-- Last created assembly.
 
 feature {NONE} -- Actions
 
@@ -307,12 +291,12 @@ feature {NONE} -- Actions
 				l_local := location.text
 
 				if target.groups.has (name.text) then
-					create wd.make_with_text (group_already_exists (name.text))
+					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 				elseif l_local.is_empty then
-					create wd.make_with_text (assembly_no_location)
+					create wd.make_with_text (conf_interface_names.assembly_no_location)
 				else
-					last_assembly := factory.new_assembly (name.text, location.text, target)
-					target.add_assembly (last_assembly)
+					last_group := factory.new_assembly (name.text, location.text, target)
+					target.add_assembly (last_group)
 				end
 
 				if wd /= Void then
@@ -323,20 +307,8 @@ feature {NONE} -- Actions
 				end
 			end
 		ensure
-			is_ok_last_assembly: is_ok implies last_assembly /= Void
+			is_ok_last_assembly: is_ok implies last_group /= Void
 		end
-
-feature {NONE} -- Implementation
-
-	target: CONF_TARGET
-			-- Target where we add the group.
-
-	factory: CONF_FACTORY
-			-- Factory to create a group.
-
-invariant
-	target_not_void: target /= Void
-	factory_not_void: factory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

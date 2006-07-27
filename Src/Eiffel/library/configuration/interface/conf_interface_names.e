@@ -11,21 +11,20 @@ class
 inherit
 	CONF_CONSTANTS
 
-feature {NONE}
-
-	ellipsis_text: STRING is "..."
-
-feature {NONE} -- Configuration
+feature -- Configuration
 
 	configuration_title (a_system_name: STRING): STRING is
 		do
 			Result := "Project Settings ("+a_system_name+")"
 		end
 
-feature {NONE} -- Section names
+feature -- Section names
 
 	section_system: STRING is "System"
-	section_target: STRING is "Target"
+	section_target (a_target: STRING): STRING is
+		do
+			Result := "Target: "+a_target
+		end
 	section_assertions: STRING is "Assertions"
 	section_groups: STRING is "Groups"
 	section_warning: STRING is "Warnings"
@@ -39,7 +38,15 @@ feature {NONE} -- Section names
 	section_advanced: STRING is "Advanced"
 	section_file_pattern: STRING is "File Pattern"
 
-feature {NONE} -- System names and descriptions
+	selection_tree_select_node: STRING is "Please select a subnode."
+
+feature -- Section actions
+
+	menu_properties: STRING is "Properties"
+	menu_edit_config: STRING is "Edit configuration"
+	add_target: STRING is "Add target"
+
+feature -- System names and descriptions
 
 	system_name_name: STRING is "Name"
 	system_name_description: STRING is "Name of the system."
@@ -49,17 +56,13 @@ feature {NONE} -- System names and descriptions
 	system_library_target_description: STRING is "Target used if system is used as a library."
 	system_uuid_name: STRING is "UUID"
 	system_uuid_description: STRING is "Universal unique identifier for the system."
-	system_targets_name: STRING is "Targets"
-	system_targets_description: STRING is "Targets of the system."
 
-feature {NONE} -- Target names and descriptions
+feature -- Target names and descriptions
 
 	target_name_name: STRING is "Name"
 	target_name_description: STRING is "Name of the target."
 	target_description_name: STRING is "Description"
 	target_description_description: STRING is "Description of the target."
-	target_base_name: STRING is "Base target"
-	target_base_description: STRING is "Base target of this target."
 	target_abstract_name: STRING is "Abstract"
 	target_abstract_description: STRING is "Is this an abstract target that cannot be used to compile?"
 	target_compilation_type_name: STRING is "Compilation type"
@@ -112,7 +115,7 @@ feature {NONE} -- Target names and descriptions
 	target_inlining_size_name: STRING is "Inlining size"
 	target_inlining_size_description: STRING is "Maximal number of instructions in a feature for the feature to be inlined."
 	target_line_generation_name: STRING is "Line generation"
-	target_line_generation_description: STRING is "Generated extra information for external debuggers?"
+	target_line_generation_description: STRING is "Generate extra information for external debuggers?"
 	target_metadata_cache_path_name: STRING is "Metadata cache path"
 	target_metadata_cache_path_description: STRING is "Location where information about external assemblies is stored."
 	target_msil_classes_per_module_name: STRING is "MSIL classes per module"
@@ -163,11 +166,19 @@ feature {NONE} -- Target names and descriptions
 	external_make_tree: STRING is "Makefiles"
 	external_resource_tree: STRING is "Resources"
 
+	external_add_include: STRING is "Add include"
+	external_add_object: STRING is "Add object"
+	external_add_library: STRING is "Add library"
+	external_add_make: STRING is "Add make"
+	external_add_resource: STRING is "Add resource"
+
 	task_pre_tree: STRING is "Pre compilation tasks"
 	task_post_tree: STRING is "Post compilation tasks"
 
 	task_pre: STRING is "pre compilation"
 	task_post: STRING is "post compilation"
+	task_type_name: STRING is "Type"
+	task_type_description: STRING is "Type of the task."
 	task_command_name: STRING is "Command"
 	task_command_description: STRING is "Command to execute."
 	task_description_name: STRING is "Description"
@@ -178,6 +189,8 @@ feature {NONE} -- Target names and descriptions
 	task_succeed_description: STRING is "Does this task have to finish successful for the compilation to continue?"
 	task_condition_name: STRING is "Condition"
 	task_condition_description: STRING is "Conditions for this task to be executed."
+	task_add_pre: STRING is "Add pre compilation task"
+	task_add_post: STRING is "Add post compilation task"
 
 	group_cluster_tree: STRING is "Clusters"
 	group_assembly_tree: STRING is "Assemblies"
@@ -209,6 +222,12 @@ feature {NONE} -- Target names and descriptions
 	group_renaming_description: STRING is "Renaming of classes in this group."
 	group_class_option_name: STRING is "Class Options"
 	group_class_option_description: STRING is "Class specific options."
+	group_add_cluster: STRING is "Add cluster"
+	group_add_subcluster: STRING is "Add subcluster"
+	group_add_override: STRING is "Add override"
+	group_add_assembly: STRING is "Add assembly"
+	group_add_library: STRING is "Add library"
+	group_add_precompile: STRING is "Add precompile"
 
 	library_edit_configuration: STRING is "Edit library configuration"
 
@@ -239,7 +258,7 @@ feature {NONE} -- Target names and descriptions
 	properties_class_name: STRING is "Class"
 	properties_target_name: STRING is "Target"
 
-feature {NONE} -- Option names and descriptions
+feature -- Option names and descriptions
 
 	option_require_name: STRING is "Require"
 	option_require_description: STRING is "Evaluate precondition assertions?"
@@ -303,7 +322,7 @@ feature {NONE} -- Option names and descriptions
 			Result.force ("Warn about class options of unknown classes?", w_option_unknown_class)
 		end
 
-feature {NONE} -- Misc
+feature -- Misc
 
 	general_add: STRING is "Add"
 	general_remove: STRING is "Remove"
@@ -311,6 +330,11 @@ feature {NONE} -- Misc
 	variables_value: STRING is "Value"
 	mapping_old_name: STRING is "Old name"
 	mapping_new_name: STRING is "New name"
+	remove_target (a_target: STRING): STRING is
+		do
+			Result := "Are you sure you want to remove "+a_target+"?"
+		end
+
 	target_remove_group (a_group: STRING): STRING is
 		do
 			Result := "Are you sure you want to remove "+a_group+"?"
@@ -319,8 +343,16 @@ feature {NONE} -- Misc
 		do
 			Result := a_group+" can not be removed because it has subclusters."
 		end
+	target_remove_external (a_external: STRING): STRING is
+		do
+			Result := "Are you sure you want to remove "+a_external+"?"
+		end
+	target_remove_task (a_task: STRING): STRING is
+		do
+			Result := "Are you sure you want to remove "+a_task+"?"
+		end
 
-feature {NONE} -- Condition dialog
+feature -- Condition dialog
 
 	dial_cond_platforms: STRING is "Platforms"
 	dial_cond_platforms_exclude: STRING is "Exclude platform(s)"
@@ -345,7 +377,7 @@ feature {NONE} -- Condition dialog
 			Result := "or And-term "+a_number.out
 		end
 
-feature {NONE} -- File rule dialog
+feature -- File rule dialog
 
 	dialog_file_rule_excludes: STRING is "Excludes:"
 	dialog_file_rule_includes: STRING is "Includes:"
@@ -359,7 +391,7 @@ feature {NONE} -- File rule dialog
 			Result := "File rule "+a_number.out
 		end
 
-feature {NONE} -- Visible dialog
+feature -- Visible dialog
 
 	dialog_visible_name: STRING is "Name: "
 	dialog_visible_renamed_name: STRING is "Renamed name: "
@@ -367,36 +399,36 @@ feature {NONE} -- Visible dialog
 	dialog_visible_add_feature: STRING is "Add feature"
 	dialog_visible_remove: STRING is "Remove"
 
-feature {NONE} -- Renaming dialog
+feature -- Renaming dialog
 
 	dialog_renaming_old_name: STRING is "Old name"
 	dialog_renaming_new_name: STRING is "New name"
 	dialog_renaming_create_old: STRING is "OLD_NAME"
 	dialog_renaming_create_new: STRING is "NEW_NAME"
 
-feature {NONE} -- Create task dialog
+feature -- Create task dialog
 
 	dialog_task_add: STRING is "Add new task"
 
-feature {NONE} -- Create external dialog
+feature -- Create external dialog
 
 	dialog_external_add: STRING is "Add new external"
 
-feature {NONE} -- Create library dialog
+feature -- Create library dialog
 
 	dialog_create_library_title: STRING is "Add library"
 	dialog_create_library_defaults: STRING is "Default libraries"
 	dialog_create_library_name: STRING is "Name"
 	dialog_create_library_location: STRING is "Location"
 
-feature {NONE} -- Create precompile dialog
+feature -- Create precompile dialog
 
 	dialog_create_precompile_title: STRING is "Add precompile"
 	dialog_create_precompile_defaults: STRING is "Default precompiles"
 	dialog_create_precompile_name: STRING is "Name"
 	dialog_create_precompile_location: STRING is "Location"
 
-feature {NONE} -- Create assembly dialog
+feature -- Create assembly dialog
 
 	dialog_create_assembly_found: STRING is "Assemblies"
 	dialog_create_assembly_title: STRING is "Add assembly"
@@ -407,30 +439,28 @@ feature {NONE} -- Create assembly dialog
 	dialog_create_assembly_a_culture: STRING is "Assembly Culture"
 	dialog_create_assembly_a_key: STRING is "Assembly Key"
 
-feature {NONE} -- Create cluster dialog
+feature -- Create cluster dialog
 
 	dialog_create_cluster_title: STRING is "Add cluster"
 	dialog_create_cluster_name: STRING is "Name"
 	dialog_create_cluster_location: STRING is "Location"
 
-feature {NONE} -- Create override dialog
+feature -- Create override dialog
 
 	dialog_create_override_title: STRING is "Add override cluster"
 
-feature {NONE} -- Class option dialog
+feature -- Class option dialog
 
 	dialog_class_option_class_name: STRING is "Class name"
 
 
 	remove_group_text: STRING is "Remove group"
 
-feature {NONE} -- Validation warnings
+feature -- Validation warnings
 
 	version_valid_format: STRING is "Version is not valid. It has to be in the form XXX.XXX.XXX.XXX"
 	version_min_max: STRING is "Minimum version cannot be greater than maximum version."
 	library_target_override: STRING is "Library target cannot be used because it contains overrides which is forbidden."
-	target_move_up_extends: STRING is "Target cannot be moved up because it extends the target that is above it."
-	target_move_down_extends: STRING is "Target cannot be moved down because the target below it extends this target."
 	target_add_duplicate: STRING is "Cannot add target because there is already a target with the same name."
 	target_remove_library_target: STRING is "Target cannot be removed because it is the library target."
 	target_remove_last: STRING is "Target cannot be removed because it is the last target."
@@ -455,7 +485,7 @@ feature {NONE} -- Validation warnings
 
 	assembly_no_location: STRING is "No location specified."
 
-feature {NONE} -- Parse errors
+feature -- Parse errors
 
 	e_parse_invalid_tag (a_tag: STRING): STRING is
 		do
@@ -478,6 +508,11 @@ feature {NONE} -- Parse errors
 	e_parse_incorrect_system_invalid_uuid (a_name: STRING): STRING is
 		do
 			Result := "Incorrect system tag "+a_name+" invalid uuid specified."
+		end
+
+	e_parse_multiple_target_with_name (a_target: STRING): STRING is
+		do
+			Result := "Multiple targets with name "+a_target+"."
 		end
 
 	e_parse_incorrect_target_parent (a_parent, a_target: STRING): STRING is

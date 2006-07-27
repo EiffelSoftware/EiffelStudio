@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 
-			create l_lbl.make_with_text (dialog_visible_name)
+			create l_lbl.make_with_text (conf_interface_names.dialog_visible_name)
 			hb.extend (l_lbl)
 			hb.disable_item_expand (l_lbl)
 
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 
-			create l_lbl.make_with_text (dialog_visible_renamed_name)
+			create l_lbl.make_with_text (conf_interface_names.dialog_visible_renamed_name)
 			hb.extend (l_lbl)
 			hb.disable_item_expand (l_lbl)
 
@@ -85,19 +85,19 @@ feature {NONE} -- Initialization
 
 			hb.extend (create {EV_CELL})
 
-			create l_btn.make_with_text_and_action (dialog_visible_add_class, agent add_class)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_class, agent add_class)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
-			create l_btn.make_with_text_and_action (dialog_visible_add_feature, agent add_feature)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_feature, agent add_feature)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
-			create l_btn.make_with_text_and_action (dialog_visible_remove, agent remove)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_remove, agent remove)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)

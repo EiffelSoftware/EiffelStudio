@@ -214,7 +214,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_target_not_void: a_target /= Void
 		do
-			targets.force (a_target, a_target.name)
+			targets.force (a_target, a_target.name.twin)
 			target_order.force (a_target)
 		end
 
@@ -224,6 +224,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
 			if targets.has (a_name) then
+				target_order.start
 				target_order.search (targets.found_item)
 				target_order.remove
 				targets.remove (a_name)
@@ -251,36 +252,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				set_library_target (targets.item (a_target))
 			else
 				set_library_target (Void)
-			end
-		end
-
-	update_targets (a_target_list: LIST [STRING]; a_factory: CONF_FACTORY) is
-			-- add/remove/reorder targets so that we get the targets in `a_target_list'
-			-- use `a_factory' to create new targets.
-		require
-			a_factory_not_void: a_factory /= Void
-		local
-			l_old_targets: like targets
-		do
-			target_order.wipe_out
-			if a_target_list = Void then
-				targets.clear_all
-			else
-				l_old_targets := targets
-				create targets.make (l_old_targets.count)
-				from
-					a_target_list.start
-				until
-					a_target_list.after
-				loop
-					l_old_targets.search (a_target_list.item)
-					if l_old_targets.found then
-						add_target (l_old_targets.found_item)
-					else
-						add_target (a_factory.new_target (a_target_list.item, Current))
-					end
-					a_target_list.forth
-				end
 			end
 		end
 

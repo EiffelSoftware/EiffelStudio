@@ -9,9 +9,10 @@ class
 	CREATE_CLUSTER_DIALOG
 
 inherit
-	EV_DIALOG
+	CREATE_GROUP_DIALOG
 		redefine
-			initialize
+			initialize,
+			last_group
 		end
 
 	CONF_ACCESS
@@ -49,22 +50,6 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
-			-- Create.
-		require
-			a_target_not_void: a_target /= Void
-			a_factory_not_void: a_factory /= Void
-		do
-			target := a_target
-			factory := a_factory
-			default_create
-			set_title (dialog_create_cluster_title)
-			show_actions.extend (agent name.set_focus)
-		ensure
-			target_set: target = a_target
-			factory_set: factory = a_factory
-		end
-
 	initialize is
 			-- Initialize.
 		local
@@ -73,7 +58,7 @@ feature {NONE} -- Initialization
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
 		do
-			Precursor {EV_DIALOG}
+			Precursor
 
 			create vb
 			extend (vb)
@@ -142,20 +127,18 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			l_btn.set_minimum_width (default_button_width)
 
+			set_title (dialog_create_cluster_title)
+			show_actions.extend (agent name.set_focus)
+
 			set_minimum_width (300)
 		end
-
-feature -- Status
-
-	is_ok: BOOLEAN
-			-- Was the dialog closed with ok?
 
 feature -- Access
 
 	parent_cluster: CONF_CLUSTER
 			-- Parent cluster (if any).
 
-	last_cluster: CONF_CLUSTER
+	last_group: CONF_CLUSTER
 			-- Last created cluster.
 
 feature -- Update
@@ -237,31 +220,19 @@ feature {NONE} -- Actions
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
-					last_cluster := factory.new_cluster (name.text, l_loc, target)
+					last_group := factory.new_cluster (name.text, l_loc, target)
 					if parent_cluster /= Void then
-						last_cluster.set_parent (parent_cluster)
-						parent_cluster.add_child (last_cluster)
+						last_group.set_parent (parent_cluster)
+						parent_cluster.add_child (last_group)
 					end
-					target.add_cluster (last_cluster)
+					target.add_cluster (last_group)
 					is_ok := True
 					destroy
 				end
 			end
 		ensure
-			is_ok_last_cluster: is_ok implies last_cluster /= Void
+			is_ok_last_group: is_ok implies last_group /= Void
 		end
-
-feature {NONE} -- Implementation
-
-	target: CONF_TARGET
-			-- Target where we add the group.
-
-	factory: CONF_FACTORY
-			-- Factory to create a group.
-
-invariant
-	target_not_void: target /= Void
-	factory_not_void: factory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

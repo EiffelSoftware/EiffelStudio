@@ -15,7 +15,7 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create, copy
 		end
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			build.value_range.adapt (create {INTEGER_INTERVAL}.make (0, {NATURAL_16}.max_value))
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_product_name)
+			create l_label.make_with_text (conf_interface_names.target_product_name)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (product)
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_company_name)
+			create l_label.make_with_text (conf_interface_names.target_company_name)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (company)
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_copyright_name)
+			create l_label.make_with_text (conf_interface_names.target_copyright_name)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (copyright)
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_trademark_name)
+			create l_label.make_with_text (conf_interface_names.target_trademark_name)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left

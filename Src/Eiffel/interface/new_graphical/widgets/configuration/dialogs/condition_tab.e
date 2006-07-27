@@ -37,7 +37,7 @@ inherit
 			is_equal
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy,
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			hb_top.set_padding (default_padding_size)
 
 				-- platforms
-			create l_frame.make_with_text (dial_cond_platforms)
+			create l_frame.make_with_text (conf_interface_names.dial_cond_platforms)
 			hb_top.extend (l_frame)
 			hb_top.disable_item_expand (l_frame)
 			create vb
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			end
 			vb.extend (platforms)
 			platforms.set_minimum_size (105, 75)
-			create exclude_platforms.make_with_text (dial_cond_platforms_exclude)
+			create exclude_platforms.make_with_text (conf_interface_names.dial_cond_platforms_exclude)
 			vb.extend (exclude_platforms)
 			vb.disable_item_expand (exclude_platforms)
 			if data.platform /= Void and then data.platform.invert then
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- other
-			create l_frame.make_with_text (dial_cond_other)
+			create l_frame.make_with_text (conf_interface_names.dial_cond_other)
 			hb_top.extend (l_frame)
 			l_frame.set_minimum_width (220)
 			hb_top.disable_item_expand (l_frame)
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			vb.set_minimum_width (100)
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
-			create build_enabled.make_with_text (dial_cond_build)
+			create build_enabled.make_with_text (conf_interface_names.dial_cond_build)
 			vb.extend (build_enabled)
 			vb.disable_item_expand (build_enabled)
 			create builds.make_with_strings (<<build_workbench_name, build_finalize_name>>)
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 				-- dynamic runtime
 			append_small_margin (vb)
-			create dynamic_runtime_enabled.make_with_text (dial_cond_dynamic_runtime)
+			create dynamic_runtime_enabled.make_with_text (conf_interface_names.dial_cond_dynamic_runtime)
 			vb.extend (dynamic_runtime_enabled)
 			vb.disable_item_expand (dynamic_runtime_enabled)
 			create dynamic_runtime.make_with_strings (<<"True", "False">>)
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 			vb.set_minimum_width (100)
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
-			create dotnet_enabled.make_with_text (dial_cond_dotnet)
+			create dotnet_enabled.make_with_text (conf_interface_names.dial_cond_dotnet)
 			vb.extend (dotnet_enabled)
 			vb.disable_item_expand (dotnet_enabled)
 			create dotnet.make_with_strings (<<"True", "False">>)
@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 
 				-- multithreaded
 			append_small_margin (vb)
-			create multithreaded_enabled.make_with_text (dial_cond_multithreaded)
+			create multithreaded_enabled.make_with_text (conf_interface_names.dial_cond_multithreaded)
 			vb.extend (multithreaded_enabled)
 			vb.disable_item_expand (multithreaded_enabled)
 			create multithreaded.make_with_strings (<<"True", "False">>)
@@ -225,7 +225,7 @@ feature {NONE} -- Initialization
 			append_small_margin (Current)
 
 				-- version part
-			create l_frame.make_with_text (dial_cond_version)
+			create l_frame.make_with_text (conf_interface_names.dial_cond_version)
 			extend (l_frame)
 			disable_item_expand (l_frame)
 			create vb
@@ -240,7 +240,7 @@ feature {NONE} -- Initialization
 			hb_version.disable_item_expand (version_min_compiler)
 			version_min_compiler.set_minimum_width (version_field_width)
 			hb_version.extend (create {EV_CELL})
-			create l_label.make_with_text (dial_cond_version_compiler)
+			create l_label.make_with_text (conf_interface_names.dial_cond_version_compiler)
 			hb_version.extend (l_label)
 			hb_version.disable_item_expand (l_label)
 			hb_version.extend (create {EV_CELL})
@@ -260,7 +260,7 @@ feature {NONE} -- Initialization
 			hb_version.disable_item_expand (version_min_msil_clr)
 			version_min_msil_clr.set_minimum_width (version_field_width)
 			hb_version.extend (create {EV_CELL})
-			create l_label.make_with_text (dial_cond_version_clr)
+			create l_label.make_with_text (conf_interface_names.dial_cond_version_clr)
 			hb_version.extend (l_label)
 			hb_version.disable_item_expand (l_label)
 			hb_version.extend (create {EV_CELL})
@@ -271,7 +271,7 @@ feature {NONE} -- Initialization
 			fill_msil_clr_version
 
 				-- custom
-			create l_frame.make_with_text (dial_cond_custom)
+			create l_frame.make_with_text (conf_interface_names.dial_cond_custom)
 			extend (l_frame)
 			create vb
 			l_frame.extend (vb)
@@ -485,11 +485,11 @@ feature {NONE} -- Actions
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
 				fill_compiler_version
-				create wd.make_with_text (version_valid_format)
+				create wd.make_with_text (conf_interface_names.version_valid_format)
 				wd.show_modal_to_window (parent_window)
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
 				fill_compiler_version
-				create wd.make_with_text (version_min_max)
+				create wd.make_with_text (conf_interface_names.version_min_max)
 				wd.show_modal_to_window (parent_window)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_compiler)
@@ -516,11 +516,11 @@ feature {NONE} -- Actions
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
 				fill_msil_clr_version
-				create wd.make_with_text (version_valid_format)
+				create wd.make_with_text (conf_interface_names.version_valid_format)
 				wd.show_modal_to_window (parent_window)
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
 				fill_msil_clr_version
-				create wd.make_with_text (version_min_max)
+				create wd.make_with_text (conf_interface_names.version_min_max)
 				wd.show_modal_to_window (parent_window)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_msil_clr)
@@ -570,8 +570,8 @@ feature {NONE} -- Actions
 	add_custom is
 			-- Add a new custom condition.
 		do
-			if not data.custom.has (dial_cond_new_custom) then
-				data.custom.force ([dial_cond_new_custom_value, False], dial_cond_new_custom)
+			if not data.custom.has (conf_interface_names.dial_cond_new_custom) then
+				data.custom.force ([conf_interface_names.dial_cond_new_custom_value, False], conf_interface_names.dial_cond_new_custom)
 			end
 			fill_custom
 		end
@@ -665,8 +665,8 @@ feature {NONE} -- Implementation
 			custom.enable_selection_on_single_button_click
 			custom.enable_single_row_selection
 			custom.set_column_count_to (3)
-			custom.column (1).set_title (dial_cond_custom_variable)
-			custom.column (3).set_title (dial_cond_custom_value)
+			custom.column (1).set_title (conf_interface_names.dial_cond_custom_variable)
+			custom.column (3).set_title (conf_interface_names.dial_cond_custom_value)
 			l_cust := data.custom
 			if l_cust /= Void then
 				from

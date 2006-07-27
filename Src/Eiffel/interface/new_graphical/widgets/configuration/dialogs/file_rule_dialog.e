@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 			hb.set_padding (default_padding_size)
 
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (dialog_file_rule_add_rule, agent on_add)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_add_rule, agent on_add)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			l_btn.set_minimum_width (default_button_width+25)
-			create remove_button.make_with_text_and_action (dialog_file_rule_remove_rule, agent on_remove)
+			create remove_button.make_with_text_and_action (conf_interface_names.dialog_file_rule_remove_rule, agent on_remove)
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
@@ -104,7 +104,7 @@ feature {NONE} -- Agents
 					l_new_value.force (l_fr)
 					create l_tab.make (l_fr)
 					notebook.extend (l_tab)
-					notebook.set_item_text (l_tab, dialog_file_rule_file_rule_x (value.index))
+					notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (value.index))
 					value.forth
 				end
 				notebook.set_focus
@@ -150,7 +150,7 @@ feature {NONE} -- Agents
 			value.force (l_fr)
 			create l_tab.make (l_fr)
 			notebook.extend (l_tab)
-			notebook.set_item_text (l_tab, dialog_file_rule_file_rule_x (value.count))
+			notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (value.count))
 			notebook.select_item (l_tab)
 			remove_button.enable_sensitive
 		end

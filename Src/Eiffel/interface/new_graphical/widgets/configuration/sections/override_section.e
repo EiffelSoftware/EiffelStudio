@@ -14,7 +14,8 @@ inherit
 			group,
 			remove_group,
 			add_dialog_type,
-			update_toolbar_sensitivity
+			update_toolbar_sensitivity,
+			context_menu
 		end
 
 create
@@ -24,6 +25,26 @@ feature -- Access
 
 	group: CONF_OVERRIDE
 		-- Group for which information are displayed.
+
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_subcluster, agent add_subcluster)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+		end
 
 feature -- Element update
 

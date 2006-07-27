@@ -237,13 +237,30 @@ feature -- Element update
 
 	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_include, agent add_include))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_object, agent add_object))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_library, agent add_library))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_make, agent add_make))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_resource))
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_include, agent add_include)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_include_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_object, agent add_object)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_library, agent add_library)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_make, agent add_make)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_makefile_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_resource)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
 		end
 
 feature -- Simple operations

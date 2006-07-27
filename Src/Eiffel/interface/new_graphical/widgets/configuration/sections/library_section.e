@@ -97,14 +97,21 @@ feature {NONE} -- Implementation
 			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group))
+
+			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+
 			create l_item.make_with_text_and_action (conf_interface_names.menu_edit_config, agent edit_configuration)
 			Result.extend (l_item)
 			if group.is_readonly then
 				l_item.disable_sensitive
 			end
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select))
-			update_edit_action
+			l_item.set_pixmap (pixmaps.icon_pixmaps.project_settings_edit_library_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
 		end
 
 	update_toolbar_sensitivity is

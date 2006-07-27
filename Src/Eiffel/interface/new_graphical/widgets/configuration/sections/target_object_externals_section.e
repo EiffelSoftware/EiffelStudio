@@ -49,6 +49,18 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_object, agent add_external)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+		end
+
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do

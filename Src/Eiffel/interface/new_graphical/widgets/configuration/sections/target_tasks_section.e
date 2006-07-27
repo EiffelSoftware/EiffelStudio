@@ -53,10 +53,18 @@ feature -- Access
 
 	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_pre_compilation))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_post, agent add_post_compilation))
+
+			create l_item.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_pre_compilation)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.task_add_post, agent add_post_compilation)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_post_compilation_task_icon)
 		end
 
 feature -- Simple operations

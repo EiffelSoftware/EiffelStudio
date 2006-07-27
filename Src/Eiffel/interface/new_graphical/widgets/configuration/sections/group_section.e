@@ -119,10 +119,18 @@ feature {NONE} -- Implementation
 
 	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select))
+
+			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

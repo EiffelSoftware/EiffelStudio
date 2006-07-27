@@ -13,9 +13,9 @@ inherit
 		undefine
 			name,
 			icon,
-			update_toolbar_sensitivity
+			update_toolbar_sensitivity,
+			context_menu
 		redefine
-			context_menu,
 			create_select_actions
 		end
 
@@ -34,13 +34,6 @@ feature -- Element update
 		end
 
 feature {NONE} -- Implementation
-
-	context_menu: EV_MENU is
-			-- Context menu with available actions for `Current'.
-		do
-			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_add, agent add_external))
-		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to execute when the item is selected

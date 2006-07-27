@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			extend (edit_manually_button)
 
 			create add_target_button
-			add_target_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_target_button.set_pixmap (pixmaps.icon_pixmaps.new_target_icon)
 			add_target_button.set_tooltip (conf_interface_names.add_target)
 			extend (add_target_button)
 
@@ -72,42 +72,42 @@ feature {NONE} -- Initialization
 			extend (add_precompile_button)
 
 			create add_include_button
-			add_include_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_include_button.set_pixmap (pixmaps.icon_pixmaps.new_include_icon)
 			add_include_button.set_tooltip (conf_interface_names.external_add_include)
 			extend (add_include_button)
 
 			create add_object_button
-			add_object_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_object_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
 			add_object_button.set_tooltip (conf_interface_names.external_add_object)
 			extend (add_object_button)
 
 			create add_external_library_button
-			add_external_library_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_external_library_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
 			add_external_library_button.set_tooltip (conf_interface_names.external_add_library)
 			extend (add_external_library_button)
 
 			create add_make_button
-			add_make_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_make_button.set_pixmap (pixmaps.icon_pixmaps.new_makefile_icon)
 			add_make_button.set_tooltip (conf_interface_names.external_add_make)
 			extend (add_make_button)
 
 			create add_resource_button
-			add_resource_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_resource_button.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
 			add_resource_button.set_tooltip (conf_interface_names.external_add_resource)
 			extend (add_resource_button)
 
 			create add_pre_task_button
-			add_pre_task_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_pre_task_button.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
 			add_pre_task_button.set_tooltip (conf_interface_names.task_add_pre)
 			extend (add_pre_task_button)
 
 			create add_post_task_button
-			add_post_task_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			add_post_task_button.set_pixmap (pixmaps.icon_pixmaps.new_post_compilation_task_icon)
 			add_post_task_button.set_tooltip (conf_interface_names.task_add_post)
 			extend (add_post_task_button)
 
 			create remove_button
-			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			remove_button.set_tooltip (conf_interface_names.general_remove)
 			extend (remove_button)
 

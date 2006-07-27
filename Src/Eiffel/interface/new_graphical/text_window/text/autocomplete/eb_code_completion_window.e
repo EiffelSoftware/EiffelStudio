@@ -19,7 +19,6 @@ inherit
 			close_and_complete,
 			rebuild_list_during_matching,
 			automatically_complete_words,
-			save_window_position,
 			complete_feature,
 			scrolling_common_line_count,
 			mouse_wheel_scroll_full_page,
@@ -646,14 +645,6 @@ feature {NONE} -- Implementation
 		end
 
 	temp_switching_show_disambiguated_name: BOOLEAN
-
-	save_window_position is
-			-- Save current window position
-		do
-			if preferences.development_window_data.remember_completion_list_size and then is_displayed then
-				preferences.development_window_data.save_completion_list_size (width, height)
-			end
-		end
 
 	rebuild_list_during_matching: BOOLEAN is
 			-- Should the list be rebuilt according to current match?

@@ -1,2 +1,2 @@
-Configuration error: file can not be written.
+Configuration error: file cannot be written.
 What to do: check for write rights of the file and for locks that could prevent a write operation.

@@ -52,8 +52,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
-
 			toolbar.add_make_button.select_actions.wipe_out
 			toolbar.add_make_button.select_actions.extend (agent add_external)
 			toolbar.add_make_button.enable_sensitive

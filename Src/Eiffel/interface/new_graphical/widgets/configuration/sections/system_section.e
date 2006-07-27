@@ -89,7 +89,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result
@@ -107,7 +107,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
 			toolbar.add_target_button.select_actions.wipe_out
 			toolbar.add_target_button.select_actions.extend (agent add_target)
 			toolbar.add_target_button.enable_sensitive

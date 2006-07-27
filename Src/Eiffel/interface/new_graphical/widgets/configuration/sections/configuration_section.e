@@ -49,10 +49,13 @@ feature {NONE} -- Initialization
 		do
 			set_text (name)
 			set_pixmap (icon)
-			context_menu := create_context_menu
 			pointer_button_press_actions.extend (agent show_menu_on_right_click)
 			select_actions.append (create_select_actions)
-			select_actions.extend (agent update_toolbar_sensitivity)
+			select_actions.extend (agent
+				do
+					toolbar.reset_sensitive
+					update_toolbar_sensitivity
+				end)
 
 			Precursor {EV_TREE_ITEM}
 		end
@@ -76,20 +79,31 @@ feature	-- Access
 			Result_not_void: Result /= Void
 		end
 
-	context_menu: EV_MENU
-			-- Context menu with available actions for `Current'.
-
 	toolbar: CONFIGURATION_TOOLBAR
 			-- Toolbar with actions.
 
-feature {NONE} -- Implementation
-
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+feature -- Simple operations
+
+	show_context_menu is
+			-- Show the context menu.
+		do
+			context_menu.show
+		end
+
+
+	update_toolbar_sensitivity is
+			-- Enable buttons in `toolbar' and assign actions.
+		deferred
+		end
+
+feature {NONE} -- Implementation
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to execute when the item is selected
@@ -98,18 +112,13 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	update_toolbar_sensitivity is
-			-- Enable/disable buttons in `toobar'.
-		deferred
-		end
-
 feature {NONE} -- Implementation helper
 
 	show_menu_on_right_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Check if we clicked the right mouse button and show menu.
 		do
 			if a_button = 3 then
-				context_menu.show
+				show_context_menu
 			end
 		end
 
@@ -118,7 +127,6 @@ feature {NONE} -- Contract helper
 	is_in_default_state: BOOLEAN is True
 
 invariant
-	context_menu_not_void: context_menu /= Void
 	toolbar_not_void: toolbar /= Void
 	configuration_window_ok: configuration_window /= Void and then not configuration_window.is_destroyed
 

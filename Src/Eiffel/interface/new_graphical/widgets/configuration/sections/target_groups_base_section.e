@@ -15,7 +15,7 @@ inherit
 			icon,
 			update_toolbar_sensitivity
 		redefine
-			create_context_menu,
+			context_menu,
 			create_select_actions
 		end
 
@@ -83,7 +83,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result

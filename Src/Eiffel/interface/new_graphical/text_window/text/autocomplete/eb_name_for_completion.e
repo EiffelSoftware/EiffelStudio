@@ -255,18 +255,6 @@ feature {NONE} -- Implementation
 	internal_completion_type: STRING;
 			-- cache `completion_type'
 
-	label_font_table: SPECIAL [EV_FONT] is
-			-- Font of a label
-		local
-			l_bold_font: EV_FONT
-		once
-			Result := preferences.editor_data.fonts.twin
-			Result.put ((create {EV_LABEL}).font, preferences.editor_data.editor_font_id)
-			l_bold_font := (create {EV_LABEL}).font
-			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

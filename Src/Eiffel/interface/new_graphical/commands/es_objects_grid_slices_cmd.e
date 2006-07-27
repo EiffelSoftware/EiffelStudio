@@ -16,6 +16,8 @@ inherit
 			new_mini_toolbar_item
 		end
 
+	EB_SHARED_PREFERENCES
+
 	SHARED_DEBUG
 
 	EB_SHARED_WINDOW_MANAGER
@@ -207,6 +209,7 @@ feature {NONE} -- Implementation
 		local
 			dial: EV_DIALOG
 			label: EV_LABEL
+			cb_disp_str_limit: EV_CHECK_BUTTON
 			tf_disp_str_size: EV_TEXT_FIELD
 			tf_minf: EV_TEXT_FIELD
 			tf_maxf: EV_TEXT_FIELD
@@ -246,18 +249,37 @@ feature {NONE} -- Implementation
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 					--| String display size
-				create tf_disp_str_size.make_with_text (application.displayed_string_size.out)
+				create cb_disp_str_limit.make_with_text ("no limit")
+				create tf_disp_str_size
+
 				tf_disp_str_size.set_minimum_width (Cst_field_label_width)
 
 				create hbox
 				create label.make_with_text (Interface_names.l_Max_displayed_string_size)
 				label.align_text_left
 				hbox.extend (label)
-				extend_no_expand (hbox, tf_disp_str_size)
+
+				create vbox
+				vbox.extend (cb_disp_str_limit)
+				vbox.extend (tf_disp_str_size)
+				extend_no_expand (hbox, vbox)
+
 				extend_no_expand (maincont, hbox)
 
 					--| Separator
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
+
+					--| Set Value
+				if application.displayed_string_size = -1 then
+					tf_disp_str_size.set_text (preferences.misc_data.default_displayed_string_size.out)
+					tf_disp_str_size.disable_sensitive
+					cb_disp_str_limit.enable_select
+				else
+					tf_disp_str_size.set_text (application.displayed_string_size.out)
+					tf_disp_str_size.enable_sensitive
+					cb_disp_str_limit.disable_select
+				end
+				cb_disp_str_limit.select_actions.extend (agent on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size))
 
 				slice_min := min_slice_ref.item
 				slice_max := max_slice_ref.item
@@ -283,7 +305,7 @@ feature {NONE} -- Implementation
 
 			tf_minf.return_actions.extend (agent tf_maxf.set_focus)
 			tf_minf.return_actions.extend (agent tf_maxf.select_all)
-			tf_maxf.return_actions.extend (agent check_and_get_limits_from_fields (tf_disp_str_size, tf_minf, tf_maxf, dial))
+			tf_maxf.return_actions.extend (agent check_and_get_limits_from_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, dial))
 
 			if tf_disp_str_size /= Void then
 				tf_disp_str_size.return_actions.extend (agent tf_minf.set_focus)
@@ -291,7 +313,7 @@ feature {NONE} -- Implementation
 
 				--| Buttons.
 			create okb.make_with_text (Interface_names.b_Ok)
-			okb.select_actions.extend (agent check_and_get_limits_from_fields (tf_disp_str_size, tf_minf, tf_maxf, dial))
+			okb.select_actions.extend (agent check_and_get_limits_from_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, dial))
 
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			cancelb.select_actions.extend (agent dial.destroy)
@@ -346,6 +368,18 @@ feature {NONE} -- Implementation
 				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
 				dial.show_modal_to_window (pretty_dlg.dialog)
+			end
+		end
+
+	on_cb_disp_str_limit_cb (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD) is
+		require
+			cb_disp_str_limit /= Void
+			tf_disp_str_size /= Void
+		do
+			if cb_disp_str_limit.is_selected then
+				tf_disp_str_size.disable_sensitive
+			else
+				tf_disp_str_size.enable_sensitive
 			end
 		end
 
@@ -416,7 +450,7 @@ feature {NONE} -- Implementation
 			get_effective := True
 		end
 
-	check_and_get_limits_from_fields (tf_disp_str_size: EV_TEXT_FIELD; tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
+	check_and_get_limits_from_fields (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD; tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
 			-- Set `slice_min' and `slice_max' according to the values entered
 			-- in `tf_minf' and `tf_maxf'.
 		require
@@ -424,17 +458,31 @@ feature {NONE} -- Implementation
 			tf_maxf_not_void: tf_maxf /= Void
 		local
 			str1, str2, str3: STRING
+			i: INTEGER
+			disp_size: INTEGER
 			errd: EV_WARNING_DIALOG
 			ok: BOOLEAN
 		do
 			ok := True
-			if tf_disp_str_size /= Void then
+			if cb_disp_str_limit /= Void and then cb_disp_str_limit.is_selected then
+				disp_size := - 1
+			elseif tf_disp_str_size /= Void then
 				str1 := tf_disp_str_size.text
 				if not str1.is_integer then
 					create errd.make_with_text (Warning_messages.w_Not_an_integer)
 					tf_disp_str_size.select_all
 					errd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					ok := False
+				else
+					i := str1.to_integer
+					if i <= 0 then
+						create errd.make_with_text (Warning_messages.w_Not_a_positive_integer)
+						tf_disp_str_size.select_all
+						errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						ok := False
+					else
+						disp_size := i
+					end
 				end
 			end
 			str2 := tf_minf.text
@@ -452,8 +500,8 @@ feature {NONE} -- Implementation
 				ok := False
 			end
 			if ok then
-				if str1 /= Void then
-					application.set_displayed_string_size (str1.to_integer)
+				if disp_size = -1 or disp_size > 0 then
+					application.set_displayed_string_size (disp_size) --str1.to_integer)
 				end
 				internal_set_limits (str2.to_integer, str3.to_integer)
 				dial.destroy

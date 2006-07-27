@@ -443,7 +443,9 @@ feature -- Dereferenced to Value
 			l_result := prepared_icor_debug_value (a_data)
 			if l_result /= Void then
 				Result := l_result.out
-				Result.keep_head (a_size)
+				if a_size /= - 1 then
+					Result.keep_head (a_size)
+				end
 			else
 				Result := "Void"
 			end

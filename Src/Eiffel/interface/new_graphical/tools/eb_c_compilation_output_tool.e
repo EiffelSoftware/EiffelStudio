@@ -233,7 +233,7 @@ feature -- Action
 						selected_file_exists: selected_file_path /= Void
 					end
 					cmd_string.replace_substring_all ("$target", selected_file_path)
-					cmd_string.replace_substring_all ("$line", "")
+					cmd_string.replace_substring_all ("$line", "1")
 					create req
 					req.execute (cmd_string)
 				else

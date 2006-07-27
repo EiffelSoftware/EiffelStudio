@@ -9,6 +9,12 @@ indexing
 class
 	EB_SHARED_WRITER
 
+inherit
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	token_writer: EB_EDITOR_TOKEN_GENERATOR is
@@ -17,6 +23,20 @@ feature -- Access
 			create Result.make
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Font tables
+
+	label_font_table: SPECIAL [EV_FONT] is
+			-- Fonts of a label
+		local
+			l_bold_font: EV_FONT
+		once
+			Result := preferences.editor_data.fonts.twin
+			Result.put ((create {EV_LABEL}).font, preferences.editor_data.editor_font_id)
+			l_bold_font := (create {EV_LABEL}).font
+			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
 		end
 
 indexing

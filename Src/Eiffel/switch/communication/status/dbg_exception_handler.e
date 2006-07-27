@@ -252,25 +252,18 @@ feature -- Change by code
 			handled_exceptions_by_code.force (role_stop, c)
 		end
 
---	disable_exception_by_code (c: INTEGER) is
---		require
---			valid_code: valid_code (c) or c = 0
---		do
---			handled_exceptions_by_code.force (role_disabled, c)
---		end
-
 feature -- Data by exception name
 
-	handled_exceptions_by_name: ARRAYED_LIST [TUPLE [INTEGER,STRING] ]
+	handled_exceptions_by_name: ARRAYED_LIST [TUPLE [INTEGER,STRING]]
 
-	exception_name_value_from (elt: TUPLE [INTEGER, STRING]): STRING is
+	exception_name_value_from (elt: TUPLE [role:INTEGER; name:STRING]): STRING is
 		do
-			Result ?= elt.item (2)
+			Result := elt.name
 		end
 
-	exception_name_role_from (elt: TUPLE [INTEGER, STRING]): INTEGER is
+	exception_name_role_from (elt: TUPLE [role:INTEGER; name:STRING]): INTEGER is
 		do
-			Result := elt.integer_item (1)
+			Result := elt.role
 		end
 
 feature -- Data by exception code

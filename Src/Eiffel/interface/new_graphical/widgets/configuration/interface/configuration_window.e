@@ -1303,7 +1303,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 			an_old_key_valid: current_target.mapping.has (an_old_key)
 		do
-			if a_new_key /= Void and then not a_new_key.is_empty then
+			if (create {IDENTIFIER_CHECKER}).is_valid (a_new_key) then
 				current_target.mapping.replace_key (a_new_key.as_upper, an_old_key)
 			end
 			show_properties_target_mapping (current_target)
@@ -1316,7 +1316,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 			a_key_valid: current_target.mapping.has (a_key)
 		do
-			if a_value /= Void and then not a_value.is_empty then
+			if (create {IDENTIFIER_CHECKER}).is_valid (a_value) then
 				current_target.add_mapping (a_key, a_value.as_upper)
 			end
 			show_properties_target_mapping (current_target)

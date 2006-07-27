@@ -51,7 +51,7 @@ feature -- Access
 			end
 			l_class := system.class_of_id (an_id)
 				-- lazy computation, create match list if needed
-			if Result = Void or else Result.generated /= l_class.lace_class.date then
+			if Result = Void or else Result.generated /= l_class.lace_class.file_date then
 				l_text := l_class.text
 					-- If the file associated with `l_class' has been removed we might get no text
 					-- thus the protection.

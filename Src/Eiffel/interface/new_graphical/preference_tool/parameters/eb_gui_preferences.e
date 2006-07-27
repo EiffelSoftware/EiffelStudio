@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create search_tool_data.make (a_preferences)
 			create class_browser_data.make (a_preferences)
 			create external_command_data.make (a_preferences)
+			create metric_tool_data.make (a_preferences)
 		end
 
 feature -- Access
@@ -66,6 +67,9 @@ feature -- Access
 	search_tool_data: EB_SEARCH_TOOL_DATA
 			-- Preference data for EiffelStudio search tool
 
+	metric_tool_data: EB_METRIC_TOOL_DATA
+			-- Preference data for metric tool
+
 invariant
 	dialog_data_not_void: dialog_data /= Void
 	context_tool_data_not_void: context_tool_data /= Void
@@ -75,6 +79,8 @@ invariant
 	recent_projects_data_not_void: recent_projects_data /= Void
 	editor_data_not_void: editor_data /= Void
 	search_tool_data_not_void: search_tool_data /= Void
+	metric_tool_data_attached: metric_tool_data /= Void
+	class_browser_data_attached: class_browser_data /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

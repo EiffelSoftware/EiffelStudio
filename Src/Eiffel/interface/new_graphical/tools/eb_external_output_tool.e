@@ -340,11 +340,11 @@ feature -- Basic operation
 	recycle_widgets is
 			--
 		do
+			cmd_lst.destroy
 			terminate_btn.destroy
 			run_btn.destroy
 			state_label.destroy
 			main_frame.destroy
-			cmd_lst.destroy
 			edit_cmd_detail_btn.destroy
 			hidden_btn.destroy
 			input_field.destroy

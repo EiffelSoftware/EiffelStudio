@@ -16,8 +16,7 @@ inherit
 			path_domain_generator,
 			basic_scope,
 			empty_domain,
-			delayed_domain,
-			is_code_structure_scope
+			delayed_domain
 		end
 
 create
@@ -76,11 +75,6 @@ feature -- Metric support
 		do
 			create Result.make (a_calculate_function)
 		end
-
-feature -- Status report
-
-	is_code_structure_scope: BOOLEAN is True;
-			-- Is current scope a code structure scope?
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

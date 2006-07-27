@@ -74,7 +74,7 @@ feature -- Units
 			-- Generic unit
 		once
 			create Result.make (query_language_names.ql_generic_unit)
-			Result.set_scope (argument_scope)
+			Result.set_scope (generic_scope)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -63,6 +63,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_query_criterion, c_is_query)
 			agent_table.put (agent new_is_command_criterion, c_is_command)
 			agent_table.put (agent new_is_visible_criterion, c_is_visible)
+			agent_table.put (agent new_is_from_any_criterion, c_is_from_any)
 
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
@@ -113,6 +114,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_query, query_language_names.ql_cri_is_query)
 			name_table.put (c_is_command, query_language_names.ql_cri_is_command)
 			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
+			name_table.put (c_is_from_any, query_language_names.ql_cri_is_from_any)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -401,6 +403,14 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_is_from_any_criterion: QL_SIMPLE_FEATURE_CRITERION is
+			-- New criterion to test if a feature is from class {ANY}
+		do
+			create Result.make (agent is_from_any_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_true_criterion: QL_SIMPLE_FEATURE_CRITERION is
 			-- New criterion that always returns True (tautology criterion)
 		do
@@ -575,6 +585,7 @@ feature -- Criterion index
 	c_is_query,
 	c_is_command,
 	c_is_visible,
+	c_is_from_any,
 	c_true,
 	c_name_is,
 	c_text_contain,
@@ -995,6 +1006,18 @@ feature{NONE} -- Implementation
 			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_visible
+		end
+
+	is_from_any_agent (a_item: QL_FEATURE): BOOLEAN is
+			-- Agent to test if `a_item' is from class {ANY}
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			if workbench.system_defined then
+				Result := a_item.written_class.class_id = workbench.system.any_id
+			end
 		end
 
 	true_agent (a_item: QL_FEATURE): BOOLEAN is

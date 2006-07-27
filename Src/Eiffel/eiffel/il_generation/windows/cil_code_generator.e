@@ -2671,7 +2671,7 @@ feature -- Features info
 			if a_type.is_none then
 				Result := System.any_class.compiled_class.types.first.type
 			else
-				Result := byte_context.real_type (a_type)
+				Result := byte_context.real_type_in (a_type, current_class_type)
 			end
 		ensure
 			valid_result: Result /= Void

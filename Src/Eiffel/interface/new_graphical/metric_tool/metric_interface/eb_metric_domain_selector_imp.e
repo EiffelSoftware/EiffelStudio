@@ -34,10 +34,12 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_1
 			create domain_grid_area
 			create toolbar_area
+			create address_manager_toolbar
+			create open_address_manager_btn
 			create l_ev_cell_1
 			create domain_type_toolbar
+			create add_application_scope_btn
 			create add_delayed_scope_btn
-			create add_application_target_btn
 			create separator_toolbar
 			create l_ev_tool_bar_separator_1
 			create add_item_toolbar
@@ -57,10 +59,12 @@ feature {NONE}-- Initialization
 			domain_selector_area.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (domain_grid_area)
 			l_ev_vertical_box_1.extend (toolbar_area)
+			toolbar_area.extend (address_manager_toolbar)
+			address_manager_toolbar.extend (open_address_manager_btn)
 			toolbar_area.extend (l_ev_cell_1)
 			toolbar_area.extend (domain_type_toolbar)
+			domain_type_toolbar.extend (add_application_scope_btn)
 			domain_type_toolbar.extend (add_delayed_scope_btn)
-			domain_type_toolbar.extend (add_application_target_btn)
 			toolbar_area.extend (separator_toolbar)
 			separator_toolbar.extend (l_ev_tool_bar_separator_1)
 			toolbar_area.extend (add_item_toolbar)
@@ -89,6 +93,7 @@ feature {NONE}-- Initialization
 			domain_type_area.set_padding_width (5)
 			domain_manage_area.disable_item_expand (address_manager_area)
 			l_ev_vertical_box_1.disable_item_expand (toolbar_area)
+			toolbar_area.disable_item_expand (address_manager_toolbar)
 			toolbar_area.disable_item_expand (domain_type_toolbar)
 			toolbar_area.disable_item_expand (separator_toolbar)
 			toolbar_area.disable_item_expand (add_item_toolbar)
@@ -109,14 +114,14 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	domain_grid_area, address_manager_area: EV_CELL
-	domain_type_toolbar, separator_toolbar, add_item_toolbar,
-	remove_item_toolbar, remove_all_toolbar: EV_TOOL_BAR
-	add_application_target_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	add_delayed_scope_btn,
-	add_item_btn, remove_item_btn, remove_all_btn: EV_TOOL_BAR_BUTTON
-	main_area, domain_type_area, domain_selector_area,
-	toolbar_area: EV_HORIZONTAL_BOX
-	domain_area, domain_manage_area: EV_VERTICAL_BOX
+	address_manager_toolbar, domain_type_toolbar,
+	separator_toolbar, add_item_toolbar, remove_item_toolbar, remove_all_toolbar: EV_TOOL_BAR
+	open_address_manager_btn,
+	add_application_scope_btn, add_delayed_scope_btn, add_item_btn, remove_item_btn,
+	remove_all_btn: EV_TOOL_BAR_BUTTON
+	main_area, domain_type_area, domain_selector_area, toolbar_area: EV_HORIZONTAL_BOX
+	domain_area,
+	domain_manage_area: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

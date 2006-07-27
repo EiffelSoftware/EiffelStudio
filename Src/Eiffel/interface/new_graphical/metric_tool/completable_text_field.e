@@ -312,33 +312,24 @@ feature{NONE} -- Position calculation
 			upper_space := Result - completion_border_size
 			lower_space := screen.virtual_bottom - Result - completion_border_size
 
-			if preferences.development_window_data.remember_completion_list_size then
-				preferred_height := preferences.development_window_data.completion_list_height
+			preferred_height := preferences.metric_tool_data.criterion_completion_list_height
 
-				if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then preferred_height <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then preferred_height > lower_space then
-						-- Not enough room to show below so we must resize
-					preferred_height := lower_space
-				elseif not show_below and then preferred_height >= upper_space then
-						-- Not enough room to show above so we must resize
-					preferred_height := upper_space
-				end
-			else
-				if show_below then
-					preferred_height := lower_space
-				else
-					preferred_height := upper_space
-				end
+			if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
+					-- Not enough room to show below, but is enough room to show above, so we will show above
+				show_below := False
+			elseif not show_below and then preferred_height <= lower_space then
+					-- Even though we are in the bottom 3rd of the screen we can actually show below because
+					-- the saved size fits
+				show_below := True
 			end
 
+			if show_below and then preferred_height > lower_space then
+					-- Not enough room to show below so we must resize
+				preferred_height := lower_space
+			elseif not show_below and then preferred_height >= upper_space then
+					-- Not enough room to show above so we must resize
+				preferred_height := upper_space
+			end
 			if show_below then
 				Result := Result + height
 			else
@@ -371,43 +362,30 @@ feature{NONE} -- Position calculation
 			upper_space := y_pos - completion_border_size
 			lower_space := screen.virtual_bottom - y_pos - completion_border_size
 
-			if preferences.development_window_data.remember_completion_list_size then
-				Result := preferences.development_window_data.completion_list_height
+			Result := preferences.metric_tool_data.criterion_completion_list_height
 
-				if show_below and then Result > lower_space and then Result <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then Result <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
+			if show_below and then Result > lower_space and then Result <= upper_space then
+					-- Not enough room to show below, but is enough room to show above, so we will show above
+				show_below := False
+			elseif not show_below and then Result <= lower_space then
+					-- Even though we are in the bottom 3rd of the screen we can actually show below because
+					-- the saved size fits
+				show_below := True
+			end
 
-				if show_below and then Result > lower_space then
-						-- Not enough room to show below so we must resize
-					Result := lower_space
-				elseif not show_below and then Result >= upper_space then
-						-- Not enough room to show above so we must resize
-					Result := upper_space
-				end
-			else
-				if show_below then
-					Result := lower_space
-				else
-					Result := upper_space
-				end
+			if show_below and then Result > lower_space then
+					-- Not enough room to show below so we must resize
+				Result := lower_space
+			elseif not show_below and then Result >= upper_space then
+					-- Not enough room to show above so we must resize
+				Result := upper_space
 			end
 		end
 
 	calculate_completion_list_width: INTEGER is
 			-- Determine the width the completion list should have			
 		do
-			if preferences.development_window_data.remember_completion_list_size then
-				Result := preferences.development_window_data.completion_list_width
-			else
-					-- Calculate correct size to fit
-				Result := Precursor
-			end
+			Result := preferences.metric_tool_data.criterion_completion_list_width
 		end
 
 indexing

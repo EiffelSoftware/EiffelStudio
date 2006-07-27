@@ -17,10 +17,9 @@ inherit
 		end
 
 create
-	make,
 	make_with_dialog
 
-feature{NONE}
+feature{NONE} -- Implementation
 
 	update_text_on_deactivation is
 			-- Update text on deactivation.
@@ -41,6 +40,7 @@ feature{NONE}
 			l_value: like value
 			l_case: BOOLEAN_REF
 			l_regx: BOOLEAN_REF
+			l_text: like text
 		do
 			check value /= Void end
 			l_value := value
@@ -50,8 +50,13 @@ feature{NONE}
 				l_case /= Void
 				l_regx /= Void
 			end
-			dialog.set_value ([text, l_case.item, l_regx.item])
-			set_value ([text, l_case.item, l_regx.item])
+			if text_field /= Void then
+				l_text := text_field.text
+			else
+				l_text := text
+			end
+			dialog.set_value ([l_text, l_case.item, l_regx.item])
+			set_value ([l_text, l_case.item, l_regx.item])
 		end
 
 

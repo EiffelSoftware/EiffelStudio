@@ -91,6 +91,7 @@ feature {NONE} -- Initialization
 				-- Setup metric selector.
 			create metric_selector.make (True)
 			metric_selector.set_minimum_width (160)
+			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
 
 				-- Setup toolbar.
 			run_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
@@ -445,6 +446,16 @@ feature -- Actions
 				else
 					display_message (metric_names.t_no_archive_selected)
 				end
+			end
+		end
+
+	on_pointer_double_click_on_metric_item (a_name: STRING) is
+			-- Action to be performed when pointer double clicks on a metric named `a_name' in `metric_selector'.
+		require
+			a_name_attached: a_name /= Void
+		do
+			if metric_manager.has_metric (a_name) then
+				metric_tool.go_to_definition (metric_manager.metric_with_name (a_name), False)
 			end
 		end
 

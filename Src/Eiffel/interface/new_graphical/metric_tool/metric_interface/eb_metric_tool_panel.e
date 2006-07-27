@@ -114,6 +114,14 @@ feature -- Access
 	metric_archive_panel: EB_METRIC_ARCHIVE_PANEL
 			-- Metric archive panel
 
+feature -- Access
+
+	metric_evaluation_tab_index: INTEGER is 1
+	metric_definition_tab_index: INTEGER is 2
+	metric_archive_tab_index: INTEGER is 3
+	metric_result_tab_index: INTEGER is 4
+			-- Tab index for tabs in metric tool
+			
 feature -- Actions
 
 	on_tab_change is

@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 			create metric_selected_actions
 			create group_selected_actions
-
+			create double_click_actions
 				-- Initialize `metric_table'.
 			create metric_table.make (13)
 
@@ -118,6 +118,7 @@ feature {NONE} -- Initialization
 			metric_selected_actions_attached: metric_selected_actions /= Void
 			group_selected_actions_attached: group_selected_actions /= Void
 			metric_table_attached: metric_table /= Void
+			double_click_actions_attached: double_click_actions /= Void
 		end
 
 feature -- Access
@@ -127,6 +128,10 @@ feature -- Access
 
 	group_selected_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when a group item is selected
+
+	double_click_actions: ACTION_SEQUENCE [TUPLE [STRING]]
+			-- Actions to be performed when double click on a metric item.
+			-- Argument is name of the double-clicked metric.
 
 	next_to_last_selected_metric: STRING
 			-- Name of next to last selected metric
@@ -265,6 +270,19 @@ feature{NONE} -- Actions
 			selectable: is_selectable
 		do
 			select_metrics (False, select_userdefined_btn.is_selected)
+		end
+
+	on_pointer_double_pressed_on_metric_item (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_item: EV_GRID_ITEM) is
+			-- Action to be performed when double click on a metric item
+		local
+			l_metric: EB_METRIC
+		do
+			if a_button = 1 and then a_item /= Void then
+				l_metric ?= a_item.data
+				if l_metric /= Void then
+					double_click_actions.call ([l_metric.name])
+				end
+			end
 		end
 
 feature -- setting
@@ -505,6 +523,7 @@ feature -- Metric management
 			end
 			l_grid_item.set_pixmap (pixmap_from_metric (a_metric))
 			l_grid_item.set_data (a_metric)
+			l_grid_item.pointer_double_press_actions.extend (agent on_pointer_double_pressed_on_metric_item (?, ?, ?, ?, ?, ?, ?, ?, l_grid_item))
 			if metric_grid.is_tree_enabled then
 				a_row.insert_subrow (a_row.subrow_count + 1)
 				l_grid_row := a_row.subrow (a_row.subrow_count)
@@ -678,6 +697,7 @@ invariant
 	group_selected_actions_attached: group_selected_actions /= Void
 	metric_table_attached: metric_Table /= Void
 	selection_status_attached: selection_status /= Void
+	double_click_actions_attached: double_click_actions /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

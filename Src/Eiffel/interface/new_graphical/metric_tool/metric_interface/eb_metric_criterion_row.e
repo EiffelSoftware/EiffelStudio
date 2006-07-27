@@ -86,7 +86,7 @@ feature -- Loading
 			l_domain_criterion, l_domain_criterion2: EB_METRIC_DOMAIN_CRITERION
 			l_caller_criterion, l_caller_criterion2: EB_METRIC_CALLER_CALLEE_CRITERION
 			l_text_criterion, l_text_criterion2: EB_METRIC_TEXT_CRITERION
-			l_path_criterion, l_path_criterion2: EB_METRIC_PATH_CRITERION
+			l_path_criterion: EB_METRIC_PATH_CRITERION
 		do
 				-- Load current row.
 			initialize_row (a_row)
@@ -256,9 +256,6 @@ feature -- Basic operation
 
 	bind (a_row: EV_GRID_ROW) is
 			-- Bind current criterion in `a_row'.
-		local
-			l_pixmap: like pixmap
-			l_criterion: EB_METRIC_CRITERION
 		do
 			refresh_criterion_item
 			a_row.set_item (1, Void)
@@ -519,8 +516,6 @@ feature{NONE} -- Implementation
 		require
 			a_row_attached: a_row /= Void
 			a_row_parented: a_row.parent /= Void
-		local
-			l_row: EB_METRIC_CRITERION_ROW
 		do
 			subrows.wipe_out
 			from

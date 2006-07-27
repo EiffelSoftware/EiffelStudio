@@ -34,11 +34,6 @@ feature -- Basic operation
 
 	generate_expression is
 			-- Generate expression in `text_list' and `format_list'.
-		local
-			l_metrics: LIST [STRING]
-			l_coefficients: LIST [DOUBLE]
-			l_is_first: BOOLEAN
-			l_coefficient: DOUBLE
 		do
 			reset
 			if metric /= Void then

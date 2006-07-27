@@ -189,7 +189,6 @@ feature -- Actions
 	on_new_metric_button_pressed is
 			-- Action to be performed when new metric button is pressed
 		local
-			l_unit: QL_METRIC_UNIT
 			l_menu: EV_MENU
 		do
 			l_menu := new_metric_menu
@@ -321,9 +320,6 @@ feature -- Basic operations
 			a_new_valid: not a_new implies a_metric /= Void
 			a_unit_attached: a_unit /= Void
 		local
-			l_basic_metric: EB_METRIC_BASIC
-			l_linear_metric: EB_METRIC_LINEAR
-			l_ratio_metric: EB_METRIC_RATIO
 			l_mode: INTEGER
 		do
 				-- Decide editor mode: read-only, edit or new.

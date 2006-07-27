@@ -806,7 +806,6 @@ feature{NONE} -- Implementation
 			l_name: STRING
 			l_scope: STRING
 			l_negation: STRING
-			l_relation: STRING
 			l_ql_scope: QL_SCOPE
 			l_negation_used: BOOLEAN
 		do

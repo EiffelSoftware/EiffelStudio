@@ -352,7 +352,6 @@ feature -- Access
 			l_starter_cnt: INTEGER
 			l_item: EB_METRIC
 			l_name: STRING
-			l_str: STRING
 			l_largest_index: INTEGER
 			l_index_str: STRING
 			l_index: INTEGER

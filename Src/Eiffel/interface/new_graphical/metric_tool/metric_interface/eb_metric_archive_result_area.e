@@ -149,7 +149,6 @@ feature -- Load archive
 			l_rows: like archive_comparison
 			l_row: EV_GRID_ROW
 			l_grid: like result_grid
-			i, j: INTEGER
 		do
 			l_grid := result_grid
 			if l_grid.row_count > 0 then

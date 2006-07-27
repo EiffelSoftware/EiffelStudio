@@ -228,8 +228,6 @@ feature -- Basic operation
 			a_row_parented: a_row.parent = Current
 		local
 			l_data: EB_METRIC_CRITERION_ROW
-			l_criterion: EB_METRIC_CRITERION
-			l_new_row: EB_METRIC_CRITERION_ROW
 			l_parent_row: EB_METRIC_CRITERION_ROW
 			l_move_available: BOOLEAN
 			l_new_subrow_index: INTEGER
@@ -265,12 +263,10 @@ feature -- Basic operation
 			a_row_parented: a_row.parent = Current
 		local
 			l_data: EB_METRIC_CRITERION_ROW
-			l_rows: LIST [EV_GRID_ROW]
-			l_old_subrow_index: INTEGER
-			l_criterion: EB_METRIC_CRITERION
-			l_new_row: EB_METRIC_CRITERION_ROW
 			l_parent_row: EB_METRIC_CRITERION_ROW
 			l_nary_cri: EB_METRIC_NARY_CRITERION
+			l_criterion: EB_METRIC_CRITERION
+			l_new_row: EB_METRIC_CRITERION_ROW
 		do
 			change_actions.block
 			l_data ?= a_row.data

@@ -139,7 +139,7 @@ feature -- Status report
 		end
 
 	is_expanded: BOOLEAN
-			-- Is expanded?
+			-- Is expanded node?
 
 feature -- Element change
 
@@ -251,6 +251,15 @@ feature -- Comparison
 				create name_matcher_internal
 			end
 			Result := name_matcher.prefix_string (s, full_name)
+		end
+
+	is_binary_searchable: BOOLEAN is
+			-- Is current binary searchable?
+		do
+			if name_matcher = Void then
+				create name_matcher_internal
+			end
+			Result := name_matcher.binary_searchable (full_name)
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Children

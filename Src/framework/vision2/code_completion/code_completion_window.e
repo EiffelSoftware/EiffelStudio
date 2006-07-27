@@ -727,7 +727,9 @@ feature {NONE} -- Implementation
 					if parent_item.has_child then
 						if not l_tree_view then
 							l_tree_view := True
-							l_list.enable_tree
+							if not l_list.is_tree_enabled then
+								l_list.enable_tree
+							end
 						end
 						l_row.ensure_expandable
 						l_row.expand_actions.extend (agent parent_item.set_is_expanded (True))
@@ -743,8 +745,12 @@ feature {NONE} -- Implementation
 				end
 				l_count := l_count + 1
 			end
+
+				-- Enable/Disable tree view.
 			if not l_tree_view then
-				l_list.disable_tree
+				if l_list.is_tree_enabled then
+					l_list.disable_tree
+				end
 			end
 		end
 
@@ -1224,6 +1230,7 @@ feature {NONE} -- String matching
 			l_list: like choice_list
 			l_full_list: like full_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_name_for_search: like name_type
 		do
 			l_list := choice_list
 			if rebuild_list_during_matching then
@@ -1245,14 +1252,19 @@ feature {NONE} -- String matching
 			else
 				if not buffered_input.is_empty then
 					l_full_list := full_list
-					current_index := pos_of_first (l_full_list)
-						-- If we don't find the first match, we do binary search to find the closest one.
-						-- Wild card is discarded in this case.
-					if current_index = 0 then
-						create l_name_for_comparison.make (buffered_input)
-						current_index := pos_of_first_greater (l_full_list, l_name_for_comparison) - 1
+					create l_name_for_comparison.make (buffered_input)
+					if l_name_for_comparison.is_binary_searchable then
+							-- Faster way getting to the position if binary search is appliable.
+						current_index := pos_of_first_greater (l_full_list, l_name_for_comparison)
+					else
+						current_index := pos_of_first (l_full_list)
+							-- If we don't find the first match, we do binary search to find the closest one.
+							-- Wild card is discarded in this case.
+						if current_index = 0 then
+							current_index := pos_of_first_greater (l_full_list, l_name_for_comparison)
+						end
 					end
-					if current_index > l_full_list.lower and current_index < l_full_list.upper then
+					if current_index >= l_full_list.lower and current_index <= l_full_list.upper then
 						l_name := l_full_list.item (current_index)
 						if l_name.has_parent then
 							l_index := grid_row_by_data (l_name.parent)
@@ -1293,33 +1305,52 @@ feature {NONE} -- String matching
 			i: INTEGER
 			l_full_list: like full_list
 			l_item: NAME_FOR_COMPLETION
+			for_search: like name_type
+			l_index_offset: INTEGER
 		do
-			create Result.make (1, 20)
+			create for_search.make (a_name)
 			l_full_list := full_list
 			if a_name /= Void and then not a_name.is_empty then
-				from
-					i := l_full_list.lower
-					l_upper := l_full_list.upper
-				until
-					i > l_upper
-				loop
-					l_item := l_full_list[i]
-					if l_item.begins_with (a_name) then
-						cnt := cnt + 1
-						if cnt = 1 then
-							index_offset := i
-						end
-						if cnt > Result.upper then
-							Result.conservative_resize (1, Result.upper * 2)
-						end
-						Result.put (l_item, cnt)
-					end
-					i := i + 1
-				end
-				if cnt = 0 then
+				if for_search.is_binary_searchable then
 					create Result.make (2, 1)
+					from
+						create for_search.make (a_name)
+						l_index_offset := pos_of_first_greater (l_full_list, for_search) - 1
+					until
+						l_full_list.upper < (l_index_offset + cnt + 1) or else not l_full_list.item (l_index_offset + cnt + 1).begins_with (a_name)
+					loop
+						cnt := cnt + 1
+					end
+					if cnt > 0 then
+						Result := l_full_list.subarray (l_index_offset + 1, l_index_offset + cnt)
+					end
+					index_offset := l_index_offset
 				else
-					Result := Result.subarray (1, cnt)
+					create Result.make (1, 20)
+					from
+						i := l_full_list.lower
+						l_upper := l_full_list.upper
+					until
+						i > l_upper
+					loop
+						l_item := l_full_list[i]
+						if l_item.begins_with (a_name) then
+							cnt := cnt + 1
+							if cnt = 1 then
+								index_offset := i
+							end
+							if cnt > Result.upper then
+								Result.conservative_resize (1, Result.upper * 2)
+							end
+							Result.put (l_item, cnt)
+						end
+						i := i + 1
+					end
+					if cnt = 0 then
+						create Result.make (2, 1)
+					else
+						Result := Result.subarray (1, cnt)
+					end
 				end
 			else
 					-- Matches are just all matches

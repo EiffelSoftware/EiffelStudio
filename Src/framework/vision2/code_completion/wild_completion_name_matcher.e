@@ -12,7 +12,8 @@ class
 inherit
 	COMPLETION_NAME_MATCHER
 		redefine
-			prefix_string
+			prefix_string,
+			binary_searchable
 		end
 
 feature -- Match
@@ -37,6 +38,14 @@ feature -- Match
 			if wild_matcher.pattern_matches then
 				Result := True
 			end
+		end
+
+feature -- Status report
+
+	binary_searchable (a_str: STRING): BOOLEAN is
+		do
+			wild_matcher.set_pattern (a_str)
+			Result := not wild_matcher.has_wild_cards
 		end
 
 feature {NONE} -- Implementation

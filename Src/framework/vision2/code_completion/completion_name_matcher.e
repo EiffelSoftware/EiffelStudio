@@ -25,6 +25,14 @@ feature -- Match
 			end
 		end
 
+feature -- Status report
+
+	binary_searchable (a_str: STRING): BOOLEAN is
+			-- With current matcher, is binary search appliable to `a_str'?
+		do
+			Result := True
+		end
+
 feature {NONE} -- Implementation
 
 invariant

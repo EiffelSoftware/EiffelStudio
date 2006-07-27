@@ -29,8 +29,8 @@ feature
 			extension_type_not_void: extension_type /= Void
 		local
 			l_files: ARRAYED_LIST [STRING]
-			l_fname, tag: STRING
-			l_file: X_FILE
+			l_shortname, l_fname, tag: STRING
+			l_file: RAW_FILE
 			l_directory: EIFFEL_F_CODE_DIRECTORY
 			l_start, l_count: INTEGER
 			finished_file: PLAIN_TEXT_FILE
@@ -95,9 +95,10 @@ feature
 				then
 					l_fname := path (l_files.item)
 			   		create l_file.make (l_fname)
-			   		if	 
-			   			l_file.is_directory and then 
-			   			(l_fname.count < 2 or else not l_fname.substring (l_fname.count -1, l_fname.count).is_equal (once "E1")) 
+			   		if
+			   			l_file.is_directory and then
+			   			(l_fname.count < 2 or else
+							not l_fname.substring (l_fname.count -1, l_fname.count).is_equal (once "E1"))
 			   		then
 						create l_directory.make (l_fname, extension_type, False)
 						directories.extend (l_directory)
@@ -105,28 +106,28 @@ feature
 					elseif (l_files.item.is_equal ("Makefile.SH")) then
 						create makefile_sh.make (l_fname)
 					else
-						l_fname := l_files.item
-						l_count := l_fname.count
+						l_shortname := l_files.item
+						l_count := l_shortname.count
 							-- If the name is not greater than 3 and does not contain ".",
 							-- it means that we are not handling with Eiffel generated files
 							-- which have always the following format: "eaxxxx.c".
 						if
-							not l_fname.is_equal ("edynlib.c") and then
-							not l_fname.is_equal ("egc_dynlib.c") and then
-							not l_fname.is_equal ("emain.c") and then
-							l_count > 3 and then l_fname.substring_index (".", 1) /= 0
+							not l_shortname.is_equal ("edynlib.c") and then
+							not l_shortname.is_equal ("egc_dynlib.c") and then
+							not l_shortname.is_equal ("emain.c") and then
+							l_count > 3 and then l_shortname.substring_index (".", 1) /= 0
 						then
-							if l_fname.substring_index (".c",1) = l_count - 1 then
-								c_files.extend (l_file)
+							if l_shortname.substring_index (".c",1) = l_count - 1 then
+								c_files.extend (l_shortname)
 								c_files.forth
-							elseif l_fname.substring_index (".cpp",1) = l_count - 3 then
-								cpp_files.extend (l_file)
+							elseif l_shortname.substring_index (".cpp",1) = l_count - 3 then
+								cpp_files.extend (l_shortname)
 								cpp_files.forth
-							elseif l_fname.substring_index (".x",1) = l_count - 1 then
-								x_files.extend (l_file)
+							elseif l_shortname.substring_index (".x",1) = l_count - 1 then
+								x_files.extend (l_fname)
 								x_files.forth
-							elseif l_fname.substring_index (".xpp",1) = l_count - 3 then
-								xpp_files.extend (l_file)
+							elseif l_shortname.substring_index (".xpp",1) = l_count - 3 then
+								xpp_files.extend (l_fname)
 								xpp_files.forth
 							end
 						end
@@ -160,13 +161,13 @@ feature
 				if not c_files.is_empty then
 					l_has_c_file := True
 					if not has_finished_file then
-						concat_files (c_files, big_file_name (False, True, False))
+						fake_concat_files (c_files, big_file_name (False, True, False))
 					end
 				end
 				if not cpp_files.is_empty then
 					l_has_cpp_file := True
 					if not has_finished_file then
-						concat_files (cpp_files, big_file_name (False, True, True))
+						fake_concat_files (cpp_files, big_file_name (False, True, True))
 					end
 				end
 				if not x_files.is_empty then
@@ -181,7 +182,7 @@ feature
 						concat_files (xpp_files, big_file_name (False, False, True))
 					end
 				end
-				
+
 				makefile_sh.open_read
 				makefile_sh.read_stream (makefile_sh.count)
 				makefile_sh.close
@@ -191,18 +192,18 @@ feature
 					if l_has_c_file then
 						l_new_objects.append (big_file_name (True, True, False))
 						l_new_objects.append (" ")
-					end 
+					end
 					if l_has_cpp_file then
 						l_new_objects.append (big_file_name (True, True, True))
 						l_new_objects.append (" ")
-					end 
+					end
 					if l_has_x_file then
 						l_new_objects.append (big_file_name (True, False, False))
 						l_new_objects.append (" ")
-					end 
+					end
 					if l_has_xpp_file then
 						l_new_objects.append (big_file_name (True, False, True))
-					end 
+					end
 					l_new_objects.append ("%N%N" + "OLDOBJECTS = ")
 					makefile_sh.last_string.replace_substring_all ("OBJECTS =", l_new_objects)
 					makefile_sh.open_write
@@ -233,16 +234,16 @@ feature -- Access
 	object_extension: STRING
 			-- Extension name of the object files, depends on the platform.
 
-	x_files: ARRAYED_LIST [X_FILE]
+	x_files: ARRAYED_LIST [STRING]
 			-- List of .x files in F_code.
 
-	c_files: ARRAYED_LIST [C_FILE]
+	c_files: ARRAYED_LIST [STRING]
 			-- List of .c files in W_code.
 
-	xpp_files: ARRAYED_LIST [X_FILE]
+	xpp_files: ARRAYED_LIST [STRING]
 			-- List of .xpp files in F_code.
 
-	cpp_files: ARRAYED_LIST [C_FILE]
+	cpp_files: ARRAYED_LIST [STRING]
 			-- List of .cpp files in W_code.
 
 	makefile_sh: PLAIN_TEXT_FILE
@@ -271,7 +272,7 @@ feature {NONE} -- Constants
 feature {NONE} -- Implementation
 
 	big_file_name (is_obj_file, is_c_file, is_cpp_file: BOOLEAN): STRING is
-			-- Build big file name associated to current directory with `is_obj_file', 
+			-- Build big file name associated to current directory with `is_obj_file',
 			-- `is_c_file' and `is_cpp_file' specification.
 		do
 			create Result.make (big_file_name_prefix.count + 8)
@@ -310,20 +311,17 @@ feature {NONE} -- Implementation
 			big_file_name_not_empty: not Result.is_empty
 		end
 
-	concat_files (l_files: ARRAYED_LIST [C_FILE]; l_output_name: STRING) is
-			-- Concat all files into one file whose name is specified by `is_c_file' and 
+	fake_concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING) is
+			-- Put all files as includes in one file whose name is specified by `is_c_file' and
 			-- `is_cpp_file'.	
 		require
 			l_files_not_void: l_files /= Void
 			l_output_name_not_void: l_output_name /= Void
 		local
 			l_big_file_name: STRING
-			l_file: C_FILE
-			input_string: STRING
 			l_big_file: RAW_FILE
 		do
-			if not l_files.is_empty then 
-				input_string := buffered_input_string
+			if not l_files.is_empty then
 				l_big_file_name := name.twin
 				l_big_file_name.append_character (Directory_separator)
 				l_big_file_name.append (l_output_name)
@@ -333,10 +331,44 @@ feature {NONE} -- Implementation
 				until
 					l_files.off
 				loop
-					l_file := l_files.item
+					l_big_file.put_string ("#include %"")
+					l_big_file.put_string (l_files.item)
+					l_big_file.put_string ("%"%N")
+					l_files.forth
+				end
+				l_big_file.close
+			end
+		end
+
+	concat_files (l_files: ARRAYED_LIST [STRING]; l_output_name: STRING) is
+			-- Concat all files into one file whose name is specified by `is_c_file' and
+			-- `is_cpp_file'.	
+		require
+			l_files_not_void: l_files /= Void
+			l_output_name_not_void: l_output_name /= Void
+		local
+			l_big_file_name: STRING
+			input_string: STRING
+			l_big_file: RAW_FILE
+			l_file: C_FILE
+		do
+			if not l_files.is_empty then
+				input_string := buffered_input_string
+				l_big_file_name := name.twin
+				l_big_file_name.append_character (Directory_separator)
+				l_big_file_name.append (l_output_name)
+				create l_big_file.make_open_write (l_big_file_name)
+				create l_file.make ("test")
+				from
+					l_files.start
+				until
+					l_files.off
+				loop
+					l_file.make (l_files.item)
+					print (l_files.item)
+					print ("%N")
 					l_file.open_read
 					l_file.read_all (input_string)
-						-- Generate the `line' statement for the C debugger.
 					l_big_file.put_string (input_string)
 					l_file.close
 					l_files.forth
@@ -344,6 +376,7 @@ feature {NONE} -- Implementation
 				l_big_file.close
 			end
 		end
+
 
 invariant
 	big_file_name_prefix_not_void: big_file_name_prefix /= Void

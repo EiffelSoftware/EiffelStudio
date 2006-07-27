@@ -11,7 +11,7 @@ class
 inherit
 	GROUP_SECTION
 		redefine
-			create_context_menu,
+			context_menu,
 			group,
 			ask_remove_group,
 			remove_group,
@@ -104,7 +104,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result

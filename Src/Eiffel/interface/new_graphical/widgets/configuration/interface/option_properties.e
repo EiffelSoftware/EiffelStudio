@@ -303,6 +303,9 @@ feature {NONE} -- Implementation
 
 			create l_bool_prop.make_with_value (conf_interface_names.option_unnamed_debug_name, an_inherited_options.is_debug_enabled (unnamed_debug))
 			l_bool_prop.change_value_actions.extend (agent an_options.add_debug (unnamed_debug, ?))
+			if not an_inherited_options.is_debug then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 			from
@@ -315,7 +318,7 @@ feature {NONE} -- Implementation
 				create l_bool_prop.make_with_value (l_debug, an_inherited_options.is_debug_enabled (l_debug))
 				l_bool_prop.change_value_actions.extend (agent an_options.add_debug (l_debug, ?))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
-	 			if an_inherited_options.is_debug then
+	 			if not an_inherited_options.is_debug then
  					l_bool_prop.enable_readonly
 				end
 				properties.add_property (l_bool_prop)

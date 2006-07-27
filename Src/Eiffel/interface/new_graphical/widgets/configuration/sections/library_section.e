@@ -13,7 +13,7 @@ inherit
 		redefine
 			group,
 			remove_group,
-			create_context_menu,
+			context_menu,
 			update_toolbar_sensitivity
 		end
 
@@ -78,28 +78,31 @@ feature -- Basic operations
 
 	update_edit_action is
 			-- Disable/enable sensitivity of the edit action depending on whether the library is read only or not.
+		local
+			l_button: EV_TOOL_BAR_BUTTON
 		do
-			if group.is_readonly and edit_menu_item.is_sensitive then
-				edit_menu_item.disable_sensitive
-				toolbar.edit_library.disable_sensitive
-			elseif not group.is_readonly and not edit_menu_item.is_sensitive then
-				edit_menu_item.enable_sensitive
-				toolbar.edit_library.enable_sensitive
+			l_button := toolbar.edit_library
+			if group.is_readonly and l_button.is_sensitive then
+				l_button.disable_sensitive
+			elseif not group.is_readonly and not l_button.is_sensitive then
+				l_button.enable_sensitive
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	edit_menu_item: EV_MENU_ITEM
-			-- Menu item for the edit configuration action.
-
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
 			create Result
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group))
-			create edit_menu_item.make_with_text_and_action (conf_interface_names.menu_edit_config, agent edit_configuration)
-			Result.extend (edit_menu_item)
+			create l_item.make_with_text_and_action (conf_interface_names.menu_edit_config, agent edit_configuration)
+			Result.extend (l_item)
+			if group.is_readonly then
+				l_item.disable_sensitive
+			end
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select))
 			update_edit_action
 		end
@@ -107,8 +110,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
-
 			toolbar.remove_button.select_actions.wipe_out
 			toolbar.remove_button.select_actions.extend (agent ask_remove_group)
 			toolbar.remove_button.enable_sensitive

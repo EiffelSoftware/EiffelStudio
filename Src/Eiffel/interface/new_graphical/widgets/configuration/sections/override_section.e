@@ -40,8 +40,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
-
 			toolbar.add_override_button.select_actions.wipe_out
 			toolbar.add_override_button.select_actions.extend (agent add_subcluster)
 			toolbar.add_override_button.enable_sensitive

@@ -13,7 +13,7 @@ inherit
 		redefine
 			name,
 			icon,
-			create_context_menu,
+			context_menu,
 			create_select_actions,
 			update_toolbar_sensitivity
 		end
@@ -73,6 +73,34 @@ feature -- Access
 			-- Icon of the section.
 		once
 			Result := pixmaps.icon_pixmaps.project_settings_groups_icon
+		end
+
+feature -- Simple operation
+
+	update_toolbar_sensitivity is
+			-- Enable/disable buttons in `toobar'.
+		do
+			toolbar.add_cluster_button.select_actions.wipe_out
+			toolbar.add_cluster_button.select_actions.extend (agent add_cluster)
+			toolbar.add_cluster_button.enable_sensitive
+
+			toolbar.add_override_button.select_actions.wipe_out
+			toolbar.add_override_button.select_actions.extend (agent add_override)
+			toolbar.add_override_button.enable_sensitive
+
+			toolbar.add_assembly_button.select_actions.wipe_out
+			toolbar.add_assembly_button.select_actions.extend (agent add_assembly)
+			toolbar.add_assembly_button.enable_sensitive
+
+			toolbar.add_library_button.select_actions.wipe_out
+			toolbar.add_library_button.select_actions.extend (agent add_library)
+			toolbar.add_library_button.enable_sensitive
+
+			if target.internal_precompile = Void then
+				toolbar.add_precompile_button.select_actions.wipe_out
+				toolbar.add_precompile_button.select_actions.extend (agent add_precompile)
+				toolbar.add_precompile_button.enable_sensitive
+			end
 		end
 
 feature -- Element update
@@ -202,22 +230,24 @@ feature -- Element update
 			end
 		end
 
-	update_add_precompile_action is
-			-- Disable/enable sensitivity of the add precompile action depending on whether we already have a precompile.
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
-			if target.internal_precompile /= Void and add_precompile_menu_item.is_sensitive then
-				add_precompile_menu_item.disable_sensitive
-				toolbar.add_precompile_button.disable_sensitive
-			elseif target.internal_precompile = Void and not add_precompile_menu_item.is_sensitive then
-				add_precompile_menu_item.enable_sensitive
-				toolbar.add_precompile_button.enable_sensitive
+			create Result
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_cluster, agent add_cluster))
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_override, agent add_override))
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_assembly, agent add_assembly))
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_library, agent add_library))
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_precompile, agent add_precompile)
+			Result.extend (l_item)
+			if target.internal_precompile /= Void then
+				l_item.disable_sensitive
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	add_precompile_menu_item: EV_MENU_ITEM
-			-- Menu item for the add precompile action.
 
 	internal_clusters: TARGET_CLUSTERS_SECTION
 			-- Clusters (Could still be present even if it removed from Current)
@@ -234,52 +264,11 @@ feature {NONE} -- Implementation
 	internal_precompile: TARGET_PRECOMPILES_SECTION
 			-- Precompile (Could still be present even if it removed from Current)
 
-	create_context_menu: EV_MENU is
-			-- Context menu with available actions for `Current'.
-		do
-			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_cluster, agent add_cluster))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_override, agent add_override))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_assembly, agent add_assembly))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_library, agent add_library))
-			create add_precompile_menu_item.make_with_text_and_action (conf_interface_names.group_add_precompile, agent add_precompile)
-			Result.extend (add_precompile_menu_item)
-			update_add_precompile_action
-		end
-
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
-		end
-
-	update_toolbar_sensitivity is
-			-- Enable/disable buttons in `toobar'.
-		do
-			toolbar.reset_sensitive
-
-			toolbar.add_cluster_button.select_actions.wipe_out
-			toolbar.add_cluster_button.select_actions.extend (agent add_cluster)
-			toolbar.add_cluster_button.enable_sensitive
-
-			toolbar.add_override_button.select_actions.wipe_out
-			toolbar.add_override_button.select_actions.extend (agent add_override)
-			toolbar.add_override_button.enable_sensitive
-
-			toolbar.add_assembly_button.select_actions.wipe_out
-			toolbar.add_assembly_button.select_actions.extend (agent add_assembly)
-			toolbar.add_assembly_button.enable_sensitive
-
-			toolbar.add_library_button.select_actions.wipe_out
-			toolbar.add_library_button.select_actions.extend (agent add_library)
-			toolbar.add_library_button.enable_sensitive
-
-			toolbar.add_precompile_button.select_actions.wipe_out
-			toolbar.add_precompile_button.select_actions.extend (agent add_precompile)
-			toolbar.add_precompile_button.enable_sensitive
-
-			update_add_precompile_action
 		end
 
 	order_headers is

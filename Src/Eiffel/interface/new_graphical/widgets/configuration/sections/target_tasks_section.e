@@ -13,7 +13,7 @@ inherit
 		redefine
 			name,
 			icon,
-			create_context_menu,
+			context_menu,
 			create_select_actions,
 			update_toolbar_sensitivity
 		end
@@ -49,6 +49,28 @@ feature -- Access
 			if internal_post_tasks /= Void and then has (internal_post_tasks) then
 				Result := internal_post_tasks
 			end
+		end
+
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		do
+			create Result
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_pre_compilation))
+			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_post, agent add_post_compilation))
+		end
+
+feature -- Simple operations
+
+	update_toolbar_sensitivity is
+			-- Enable/disable buttons in `toobar'.
+		do
+			toolbar.add_pre_task_button.select_actions.wipe_out
+			toolbar.add_pre_task_button.select_actions.extend (agent add_pre_compilation)
+			toolbar.add_pre_task_button.enable_sensitive
+
+			toolbar.add_post_task_button.select_actions.wipe_out
+			toolbar.add_post_task_button.select_actions.extend (agent add_post_compilation)
+			toolbar.add_post_task_button.enable_sensitive
 		end
 
 feature -- Element update
@@ -122,33 +144,11 @@ feature {NONE} -- Implementation
 	internal_post_tasks: TARGET_POST_TASKS_SECTION
 			-- Header for post compilation tasks. (Could still be present even if it removed from Current)
 
-	create_context_menu: EV_MENU is
-			-- Context menu with available actions for `Current'.
-		do
-			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_pre_compilation))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.task_add_post, agent add_post_compilation))
-		end
-
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
-		end
-
-	update_toolbar_sensitivity is
-			-- Enable/disable buttons in `toobar'.
-		do
-			toolbar.reset_sensitive
-
-			toolbar.add_pre_task_button.select_actions.wipe_out
-			toolbar.add_pre_task_button.select_actions.extend (agent add_pre_compilation)
-			toolbar.add_pre_task_button.enable_sensitive
-
-			toolbar.add_post_task_button.select_actions.wipe_out
-			toolbar.add_post_task_button.select_actions.extend (agent add_post_compilation)
-			toolbar.add_post_task_button.enable_sensitive
 		end
 
 indexing

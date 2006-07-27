@@ -118,6 +118,90 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
+	groups_section: TARGET_GROUPS_SECTION is
+			-- Groups sub section.
+		do
+			from
+				start
+			until
+				Result /= Void
+			loop
+				check
+					not_after: not after
+				end
+				Result ?= item
+				forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	advanced_section: TARGET_ADVANCED_SECTION is
+			-- Advanced sub section.
+		do
+			from
+				start
+			until
+				Result /= Void
+			loop
+				check
+					not_after: not after
+				end
+				Result ?= item
+				forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	externals_section: TARGET_EXTERNALS_SECTION is
+			-- Externals sub section.
+		local
+			l_advanced: TARGET_ADVANCED_SECTION
+		do
+			l_advanced := advanced_section
+			check
+				found_advanced: l_advanced /= Void
+			end
+			from
+				l_advanced.start
+			until
+				Result /= Void
+			loop
+				check
+					not_after: not l_advanced.after
+				end
+				Result ?= l_advanced.item
+				l_advanced.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	tasks_section: TARGET_TASKS_SECTION is
+			-- Tasks sub section.
+		local
+			l_advanced: TARGET_ADVANCED_SECTION
+		do
+			l_advanced := advanced_section
+			check
+				found_advanced: l_advanced /= Void
+			end
+			from
+				l_advanced.start
+			until
+				Result /= Void
+			loop
+				check
+					not_after: not l_advanced.after
+				end
+				Result ?= l_advanced.item
+				l_advanced.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	remove_target is
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 		local
@@ -139,11 +223,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_groups: TARGET_GROUPS_SECTION
+			l_externals: TARGET_EXTERNALS_SECTION
+			l_tasks: TARGET_TASKS_SECTION
 		do
 			create Result
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.add_target, agent add_target))
+
+			l_groups := groups_section
+			Result.append (l_groups.context_menu)
+			l_externals := externals_section
+			Result.append (l_groups.context_menu)
+			l_tasks := tasks_section
+			Result.append (l_tasks.context_menu)
+
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_target))
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select))
 		end
@@ -156,9 +252,18 @@ feature {NONE} -- Implementation
 		end
 
 	update_toolbar_sensitivity is
-			-- Enable/disable buttons in `toobar'.
+			-- Enable/disable buttons in `toolbar'.
+		local
+			l_groups: TARGET_GROUPS_SECTION
+			l_externals: TARGET_EXTERNALS_SECTION
+			l_tasks: TARGET_TASKS_SECTION
 		do
-			toolbar.reset_sensitive
+			l_groups := groups_section
+			l_groups.update_toolbar_sensitivity
+			l_externals := externals_section
+			l_externals.update_toolbar_sensitivity
+			l_tasks := tasks_section
+			l_tasks.update_toolbar_sensitivity
 
 			toolbar.add_target_button.select_actions.wipe_out
 			toolbar.add_target_button.select_actions.extend (agent add_target)

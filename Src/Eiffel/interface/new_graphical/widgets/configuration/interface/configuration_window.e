@@ -209,7 +209,7 @@ feature {NONE}-- Initialization
 					check
 						configuration_section: l_section /= Void
 					end
-					l_section.context_menu.show
+					l_section.show_context_menu
 				end)
 			accelerators.extend (l_accel)
 		end

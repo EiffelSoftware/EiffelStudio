@@ -15,7 +15,7 @@ inherit
 		redefine
 			name,
 			icon,
-			create_context_menu,
+			context_menu,
 			create_select_actions,
 			update_toolbar_sensitivity
 		end
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result
@@ -135,8 +135,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
-
 			toolbar.remove_button.select_actions.wipe_out
 			toolbar.remove_button.select_actions.extend (agent ask_remove_group)
 			toolbar.remove_button.enable_sensitive

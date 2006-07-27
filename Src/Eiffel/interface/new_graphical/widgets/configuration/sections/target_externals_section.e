@@ -13,7 +13,7 @@ inherit
 		redefine
 			name,
 			icon,
-			create_context_menu,
+			context_menu,
 			create_select_actions,
 			update_toolbar_sensitivity
 		end
@@ -235,24 +235,7 @@ feature -- Element update
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	internal_includes: TARGET_INCLUDE_EXTERNALS_SECTION
-			-- Include externals (Could still be present even if it removed from Current)
-
-	internal_objects: TARGET_OBJECT_EXTERNALS_SECTION
-			-- Object externals (Could still be present even if it removed from Current)
-
-	internal_libraries: TARGET_LIBRARY_EXTERNALS_SECTION
-			-- Library externals (Could still be present even if it removed from Current)
-
-	internal_makefiles: TARGET_MAKE_EXTERNALS_SECTION
-			-- Make externals (Could still be present even if it removed from Current)
-
-	internal_resources: TARGET_RESOURCE_EXTERNALS_SECTION
-			-- Resource externals (Could still be present even if it removed from Current)
-
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result
@@ -263,18 +246,11 @@ feature {NONE} -- Implementation
 			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_resource))
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to execute when the item is selected
-		do
-			create Result
-			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
-		end
+feature -- Simple operations
 
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toobar'.
 		do
-			toolbar.reset_sensitive
-
 			toolbar.add_include_button.select_actions.wipe_out
 			toolbar.add_include_button.select_actions.extend (agent add_include)
 			toolbar.add_include_button.enable_sensitive
@@ -294,6 +270,30 @@ feature {NONE} -- Implementation
 			toolbar.add_resource_button.select_actions.wipe_out
 			toolbar.add_resource_button.select_actions.extend (agent add_resource)
 			toolbar.add_resource_button.enable_sensitive
+		end
+
+feature {NONE} -- Implementation
+
+	internal_includes: TARGET_INCLUDE_EXTERNALS_SECTION
+			-- Include externals (Could still be present even if it removed from Current)
+
+	internal_objects: TARGET_OBJECT_EXTERNALS_SECTION
+			-- Object externals (Could still be present even if it removed from Current)
+
+	internal_libraries: TARGET_LIBRARY_EXTERNALS_SECTION
+			-- Library externals (Could still be present even if it removed from Current)
+
+	internal_makefiles: TARGET_MAKE_EXTERNALS_SECTION
+			-- Make externals (Could still be present even if it removed from Current)
+
+	internal_resources: TARGET_RESOURCE_EXTERNALS_SECTION
+			-- Resource externals (Could still be present even if it removed from Current)
+
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to execute when the item is selected
+		do
+			create Result
+			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
 	order_headers is

@@ -193,16 +193,25 @@ feature {NONE} -- Agents
 		require
 			properties_set: properties /= Void
 			a_class_ok: value /= Void and then a_class /= Void and then value.has (a_class)
+		local
+			l_opts, l_inh_opts: CONF_OPTION
 		do
 			current_class := a_class
+			l_opts := value.item (a_class)
+			check
+				class_in_value: l_opts /= Void
+			end
+			create l_inh_opts
+			l_inh_opts.merge (l_opts)
+			l_inh_opts.merge (group_options)
 
 			lock_update
 
 			properties.reset
-			add_misc_option_properties (value.item (a_class), group_options, True)
-			add_assertion_option_properties (value.item (a_class), group_options, True)
-			add_warning_option_properties (value.item (a_class), group_options, True)
-			add_debug_option_properties (value.item (a_class), group_options, True)
+			add_misc_option_properties (l_opts, l_inh_opts, True)
+			add_assertion_option_properties (l_opts, l_inh_opts, True)
+			add_warning_option_properties (l_opts, l_inh_opts, True)
+			add_debug_option_properties (l_opts, l_inh_opts, True)
 
 			properties.column (1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			properties.set_expanded_section_store (class_section_expanded_status)

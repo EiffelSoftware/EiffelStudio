@@ -17,7 +17,7 @@ inherit
 			section_item_type,
 			add_dialog_type,
 			update_toolbar_sensitivity,
-			create_context_menu
+			context_menu
 		end
 
 create
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	create_context_menu: EV_MENU is
+	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
 		do
 			create Result
@@ -49,8 +49,6 @@ feature {NONE} -- Implementation
 	update_toolbar_sensitivity is
 			-- Enable/disable buttons in `toolbar'.
 		do
-			toolbar.reset_sensitive
-
 				-- we can only have one precompile, so as soon as this folder appears we can't add any more.
 		end
 

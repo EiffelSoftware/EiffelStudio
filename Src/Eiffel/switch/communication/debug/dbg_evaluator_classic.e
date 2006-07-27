@@ -104,6 +104,7 @@ feature {DBG_EVALUATOR} -- Interface
 					-- Receive the Result.
 				recv_value (Current)
 				if is_exception_trace then
+					get_exception_trace
 					notify_error (Cst_error_exception_during_evaluation,
 							"Exception occurred during evaluation"
 							+ " of {" + fi.written_class.name_in_upper + "}." + fi.feature_name + ": %N"

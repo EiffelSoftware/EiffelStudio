@@ -19,6 +19,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	IPC_SHARED
+
 	SK_CONST
 
 feature	{} -- Initialization of the C/Eiffel interface
@@ -33,10 +35,10 @@ feature	{} -- Initialization of the C/Eiffel interface
 				$set_bits, $set_error, $set_exception_trace, $set_void)
 		end
 
-	set_exception_trace (str: STRING) is
-			-- Receive a reference STRING value.
+	set_exception_trace (a_id: INTEGER) is
+			-- Receive a exception trace id
 		do
-			exception_trace := str
+			exception_trace_id := a_id
 			item := Void
 		end
 
@@ -180,7 +182,9 @@ feature {RECV_VALUE} -- Reset
 		do
 			clear_item
 			error := False
+
 			exception_trace := Void
+			exception_trace_id := 0
 		end
 
 feature -- Status report
@@ -191,10 +195,42 @@ feature -- Status report
 	is_exception_trace: BOOLEAN is
 			-- Is current `item' an Exception trace ?
 		do
-			Result := exception_trace /= Void
+			Result := exception_trace_id > 0
 		end
 
-	exception_trace: STRING
+	exception_trace: STRING_8
+
+	exception_trace_id: INTEGER
+
+	get_exception_trace is
+		require
+			is_exception_trace: is_exception_trace
+		local
+			s: STRING_8
+			n: INTEGER
+		do
+			if exception_trace = Void then
+				exception_trace_request.send_integer (exception_trace_id)
+				s := exception_trace_request.c_tread
+				if s.is_integer then
+					from
+						create exception_trace.make_empty
+						n := s.to_integer
+					until
+						n = 0
+					loop
+						s := exception_trace_request.c_tread
+						exception_trace.append (s)
+						n := n - 1
+					end
+				end
+			end
+		end
+
+	exception_trace_request: EWB_REQUEST is
+		once
+			create Result.make (Rqst_dbg_Exception_trace)
+		end
 
 feature {NONE} -- internal
 

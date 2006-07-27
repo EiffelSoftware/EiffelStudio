@@ -236,15 +236,29 @@ feature -- Element update
 			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_cluster, agent add_cluster))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_override, agent add_override))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_assembly, agent add_assembly))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.group_add_library, agent add_library))
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_cluster, agent add_cluster)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_override, agent add_override)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_assembly, agent add_assembly)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_library, agent add_library)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
+
 			create l_item.make_with_text_and_action (conf_interface_names.group_add_precompile, agent add_precompile)
 			Result.extend (l_item)
 			if target.internal_precompile /= Void then
 				l_item.disable_sensitive
 			end
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_precompiled_library_icon)
 		end
 
 feature {NONE} -- Implementation

@@ -31,6 +31,18 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.top_level_folder_clusters_icon
 		end
 
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_cluster, agent add_group)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+		end
+
 feature -- Element update
 
 	set_groups (a_groups: HASH_TABLE [like conf_item_type, STRING]) is

@@ -229,19 +229,28 @@ feature {NONE} -- Implementation
 			l_groups: TARGET_GROUPS_SECTION
 			l_externals: TARGET_EXTERNALS_SECTION
 			l_tasks: TARGET_TASKS_SECTION
+			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.add_target, agent add_target))
+
+			create l_item.make_with_text_and_action (conf_interface_names.add_target, agent add_target)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_target_icon)
 
 			l_groups := groups_section
 			Result.append (l_groups.context_menu)
 			l_externals := externals_section
-			Result.append (l_groups.context_menu)
+			Result.append (l_externals.context_menu)
 			l_tasks := tasks_section
 			Result.append (l_tasks.context_menu)
 
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_target))
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select))
+			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_target)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

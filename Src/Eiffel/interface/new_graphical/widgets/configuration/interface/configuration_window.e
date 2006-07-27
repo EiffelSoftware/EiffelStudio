@@ -1034,6 +1034,13 @@ feature {NONE} -- Implementation
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
 			properties.add_property (l_choice_prop)
 
+				-- file name
+			create l_string_prop.make (conf_interface_names.system_file_name)
+			l_string_prop.set_description (conf_interface_names.system_file_description)
+			l_string_prop.enable_readonly
+			l_string_prop.set_value (conf_system.file_name)
+			properties.add_property (l_string_prop)
+
 				-- uuid
 			create l_string_prop.make (conf_interface_names.system_uuid_name)
 			l_string_prop.set_description (conf_interface_names.system_uuid_description)

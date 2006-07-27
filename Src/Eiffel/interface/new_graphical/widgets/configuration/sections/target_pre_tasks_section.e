@@ -65,9 +65,14 @@ feature {NONE} -- Implementation
 
 	context_menu: EV_MENU is
 			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
 		do
 			create Result
-			Result.extend (create {EV_MENU_ITEM}.make_with_text_and_action (conf_interface_names.general_add, agent add_task))
+
+			create l_item.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_task)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

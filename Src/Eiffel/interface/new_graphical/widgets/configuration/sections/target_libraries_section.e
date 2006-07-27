@@ -28,6 +28,18 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.top_level_folder_library_icon
 		end
 
+	context_menu: EV_MENU is
+			-- Context menu with available actions for `Current'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text_and_action (conf_interface_names.group_add_library, agent add_group)
+			Result.extend (l_item)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
+		end
+
 feature {NONE} -- Implementation
 
 	create_group_section (a_group: like conf_item_type): like section_item_type is

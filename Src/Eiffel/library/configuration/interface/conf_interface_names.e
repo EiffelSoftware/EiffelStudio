@@ -54,6 +54,8 @@ feature -- System names and descriptions
 	system_description_description: STRING is "Description of the system."
 	system_library_target_name: STRING is "Library target"
 	system_library_target_description: STRING is "Target used if system is used as a library."
+	system_file_name: STRING is "File name"
+	system_file_description: STRING is "Location of the configuration file."
 	system_uuid_name: STRING is "UUID"
 	system_uuid_description: STRING is "Universal unique identifier for the system."
 

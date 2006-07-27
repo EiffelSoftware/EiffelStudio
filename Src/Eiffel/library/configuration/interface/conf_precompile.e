@@ -13,8 +13,7 @@ inherit
 		redefine
 			is_precompile,
 			process,
-			make,
-			is_readonly
+			make
 		end
 
 create
@@ -27,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			is_valid := True
+			internal_read_only := True
 			set_name (a_name.as_lower)
 			set_location (a_location)
 		end
@@ -38,9 +38,6 @@ feature -- Status
 		once
 			Result := True
 		end
-
-	is_readonly: BOOLEAN is True
-			-- Precompiles are always readonly.
 
 feature -- Visit
 

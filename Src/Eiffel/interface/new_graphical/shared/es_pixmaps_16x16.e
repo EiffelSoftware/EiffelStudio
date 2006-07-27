@@ -2738,6 +2738,90 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 10))
 		end
+
+	frozen new_include_icon: EV_PIXMAP is
+			-- Access to 'include' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 10))
+		end
+
+	frozen new_include_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'include' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 10))
+		end
+
+	frozen new_object_icon: EV_PIXMAP is
+			-- Access to 'object' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 10))
+		end
+
+	frozen new_object_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'object' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 10))
+		end
+
+	frozen new_makefile_icon: EV_PIXMAP is
+			-- Access to 'makefile' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 10))
+		end
+
+	frozen new_makefile_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'makefile' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 10))
+		end
+
+	frozen new_resource_icon: EV_PIXMAP is
+			-- Access to 'resource' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 10))
+		end
+
+	frozen new_resource_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'resource' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 10))
+		end
+
+	frozen new_pre_compilation_task_icon: EV_PIXMAP is
+			-- Access to 'pre compilation task' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (22, 10))
+		end
+
+	frozen new_pre_compilation_task_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'pre compilation task' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 10))
+		end
+
+	frozen new_post_compilation_task_icon: EV_PIXMAP is
+			-- Access to 'post compilation task' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (23, 10))
+		end
+
+	frozen new_post_compilation_task_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'post compilation task' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 10))
+		end
+
+	frozen new_target_icon: EV_PIXMAP is
+			-- Access to 'target' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (24, 10))
+		end
+
+	frozen new_target_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'target' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 10))
+		end
 	frozen feature_callers_icon: EV_PIXMAP is
 			-- Access to 'callers' pixmap.
 		once

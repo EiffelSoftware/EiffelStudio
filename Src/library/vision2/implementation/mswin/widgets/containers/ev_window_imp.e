@@ -488,12 +488,14 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		local
 			acc_imp: EV_ACCELERATOR_IMP
 		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
+			if an_accel /= Void then
+				acc_imp ?= an_accel.implementation
+				check
+					acc_imp_not_void: acc_imp /= Void
+				end
+				accel_list.put (an_accel, acc_imp.id)
+				create_accelerators
 			end
-			accel_list.put (an_accel, acc_imp.id)
-			create_accelerators
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -501,12 +503,14 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		local
 			acc_imp: EV_ACCELERATOR_IMP
 		do
-			acc_imp ?= an_accel.implementation
-			check
-				acc_imp_not_void: acc_imp /= Void
+			if an_accel /= Void then
+				acc_imp ?= an_accel.implementation
+				check
+					acc_imp_not_void: acc_imp /= Void
+				end
+				accel_list.remove (acc_imp.id)
+				create_accelerators
 			end
-			accel_list.remove (acc_imp.id)
-			create_accelerators
 		end
 
 feature {NONE} -- Implementation

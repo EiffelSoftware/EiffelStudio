@@ -180,6 +180,7 @@ feature -- Implementation
 					end
 					recv_value (Current)
 					if is_exception_trace then
+						get_exception_trace
 						create exc_v.make_with_name (once_routine.feature_name)
 						exc_v.set_tag ("Exception occurred")
 						exc_v.set_message (exception_trace)

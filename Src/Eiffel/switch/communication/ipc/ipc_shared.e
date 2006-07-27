@@ -110,6 +110,9 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_clear_breakpoints: INTEGER is 46
 			-- Clear breakpoints table from debuggee.
 
+	Rqst_dbg_Exception_trace: INTEGER is 47
+			-- Get dbg exception trace
+
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0

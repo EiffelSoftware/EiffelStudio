@@ -1381,19 +1381,9 @@ feature -- Deferred features
 			if forwards then
 				l_search_index := l_parent_index + 1
 			else
-				if l_parent_index = 1 then
-						-- If we are at the first item and looking backwards we need to go to the last item.
-					l_search_index := parent_imp.interface.count
-				else
-					l_search_index := l_parent_index - 1
-				end
+				l_search_index := l_parent_index - 1
 			end
-			if l_parent_index = l_search_index then
-					-- We are searching at the same index within the parent therefore return `Current'.
-				Result := Current
-			else
-				Result := parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
-			end
+			Result := parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
 		ensure
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.

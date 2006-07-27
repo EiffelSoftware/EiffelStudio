@@ -12,7 +12,7 @@ inherit
 	CREATE_LIBRARY_DIALOG
 		redefine
 			make,
-			last_library,
+			last_group,
 			on_ok,
 			fill_library,
 			fill_default_libraries
@@ -27,12 +27,12 @@ feature {NONE} -- Initialization
 			-- Create.
 		do
 			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
-			set_title (dialog_create_precompile_title)
+			set_title (conf_interface_names.dialog_create_precompile_title)
 		end
 
 feature -- Access
 
-	last_library: CONF_PRECOMPILE
+	last_group: CONF_PRECOMPILE
 			-- Last added precompile library.
 
 feature {NONE} -- Actions
@@ -43,7 +43,7 @@ feature {NONE} -- Actions
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
-			name.set_text (a_name)
+			name.set_text (a_name+"_pre")
 			location.set_text ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\"+a_file)
 		end
 
@@ -55,11 +55,11 @@ feature {NONE} -- Actions
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
 				if target.groups.has (name.text) then
-					create wd.make_with_text (group_already_exists (name.text))
+					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 					wd.show_modal_to_window (Current)
 				else
-					last_library := factory.new_precompile (name.text, location.text, target)
-					target.set_precompile (last_library)
+					last_group := factory.new_precompile (name.text, location.text, target)
+					target.set_precompile (last_group)
 					is_ok := True
 					destroy
 				end

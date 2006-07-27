@@ -28,7 +28,7 @@ inherit
 			copy
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			hb, hb2: EV_HORIZONTAL_BOX
 			vb, vb2: EV_VERTICAL_BOX
 			l_btn: EV_BUTTON
-			l_label: EV_LABEL
+			l_label: ES_LABEL
 			l_frame: EV_FRAME
 		do
 			Precursor {PROPERTY_DIALOG}
@@ -66,7 +66,8 @@ feature {NONE} -- Initialization
 			create class_list
 			vb.extend (class_list)
 
-			create l_label.make_with_text (dialog_class_option_class_name)
+			create l_label
+			l_label.set_and_wrap_text (conf_interface_names.dialog_class_option_class_name)
 			l_label.align_text_left
 			vb.extend (l_label)
 			vb.disable_item_expand (l_label)
@@ -81,13 +82,13 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb2)
 
 			hb2.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (general_add, agent add_class)
+			create l_btn.make_with_text_and_action (conf_interface_names.general_add, agent add_class)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			l_btn.set_minimum_width (default_button_width+25)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
-			create l_btn.make_with_text_and_action (general_remove, agent remove_class)
+			create l_btn.make_with_text_and_action (conf_interface_names.general_remove, agent remove_class)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			l_btn.set_minimum_width (default_button_width+25)
 			hb2.extend (l_btn)
@@ -262,10 +263,10 @@ feature {NONE} -- Implementation
 			-- Expanded status of sections of class options.
 		once
 			create Result.make (4)
-			Result.force (True, section_general)
-			Result.force (True, section_assertions)
-			Result.force (False, section_warning)
-			Result.force (False, section_debug)
+			Result.force (True, conf_interface_names.section_general)
+			Result.force (True, conf_interface_names.section_assertions)
+			Result.force (False, conf_interface_names.section_warning)
+			Result.force (False, conf_interface_names.section_debug)
 		end
 
 invariant

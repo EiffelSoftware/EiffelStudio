@@ -28,7 +28,7 @@ inherit
 
 	GROUP_PROPERTIES
 		redefine
-			store_changes,
+			handle_value_changes,
 			refresh
 		end
 
@@ -36,7 +36,7 @@ inherit
 		rename
 			conf_system as current_system
 		redefine
-			store_changes,
+			handle_value_changes,
 			refresh
 		end
 
@@ -198,16 +198,16 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_group_options := l_group.options
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)
 					properties.reset
-					properties.add_section (section_general)
-					create l_name_prop.make (group_type_name)
-					l_name_prop.set_value (properties_class_name)
+					properties.add_section (conf_interface_names.section_general)
+					create l_name_prop.make (conf_interface_names.group_type_name)
+					l_name_prop.set_value (conf_interface_names.properties_class_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					create l_name_prop.make (class_option_class_name)
+					create l_name_prop.make (conf_interface_names.class_option_class_name)
 					l_name_prop.set_value (l_cs.class_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					create l_name_prop.make (class_option_file_name)
+					create l_name_prop.make (conf_interface_names.class_option_file_name)
 					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
@@ -237,9 +237,9 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				end
 			elseif l_ts /= Void then
 				properties.reset
-				properties.add_section (section_general)
-				create l_name_prop.make (group_type_name)
-				l_name_prop.set_value (properties_target_name)
+				properties.add_section (conf_interface_names.section_general)
+				create l_name_prop.make (conf_interface_names.group_type_name)
+				l_name_prop.set_value (conf_interface_names.properties_target_name)
 				l_name_prop.enable_readonly
 				properties.add_property (l_name_prop)
 				current_target := l_ts.target
@@ -286,36 +286,36 @@ feature {NONE} -- Implementation
 			-- Expanded status of sections of groups.
 		once
 			create Result.make (5)
-			Result.force (True, section_general)
-			Result.force (True, section_assertions)
-			Result.force (False, section_warning)
-			Result.force (False, section_debug)
-			Result.force (False, section_advanced)
+			Result.force (True, conf_interface_names.section_general)
+			Result.force (True, conf_interface_names.section_assertions)
+			Result.force (False, conf_interface_names.section_warning)
+			Result.force (False, conf_interface_names.section_debug)
+			Result.force (False, conf_interface_names.section_advanced)
 		end
 
 	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
 			-- Expanded status of sections of class options.
 		once
 			create Result.make (4)
-			Result.force (True, section_general)
-			Result.force (True, section_assertions)
-			Result.force (False, section_warning)
-			Result.force (False, section_debug)
+			Result.force (True, conf_interface_names.section_general)
+			Result.force (True, conf_interface_names.section_assertions)
+			Result.force (False, conf_interface_names.section_warning)
+			Result.force (False, conf_interface_names.section_debug)
 		end
 
 	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
 			-- Expanded status of sections of targets.
 		once
 			create Result.make (5)
-			Result.force (True, section_general)
-			Result.force (True, section_assertions)
-			Result.force (False, section_warning)
-			Result.force (False, section_debug)
-			Result.force (False, section_advanced)
-			Result.force (False, section_dotnet)
+			Result.force (True, conf_interface_names.section_general)
+			Result.force (True, conf_interface_names.section_assertions)
+			Result.force (False, conf_interface_names.section_warning)
+			Result.force (False, conf_interface_names.section_debug)
+			Result.force (False, conf_interface_names.section_advanced)
+			Result.force (False, conf_interface_names.section_dotnet)
 		end
 
-	store_changes is
+	handle_value_changes is
 			-- Store changes to disk.
 		do
 				-- only if the stone is still valid

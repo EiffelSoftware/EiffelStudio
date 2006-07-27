@@ -16,7 +16,7 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create, copy
 		end
@@ -59,12 +59,12 @@ feature {NONE} -- Initialization
 			hb.set_padding (default_padding_size)
 
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (dial_cond_add_and_term, agent on_add)
+			create l_btn.make_with_text_and_action (conf_interface_names.dial_cond_add_and_term, agent on_add)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			l_btn.set_minimum_width (default_button_width+25)
-			create remove_button.make_with_text_and_action (dial_cond_remove_and_term, agent on_remove)
+			create remove_button.make_with_text_and_action (conf_interface_names.dial_cond_remove_and_term, agent on_remove)
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
@@ -110,9 +110,9 @@ feature {NONE} -- Agents
 					create l_tab.make (l_cond)
 					notebook.extend (l_tab)
 					if value.item = value.first then
-						notebook.set_item_text (l_tab, dial_cond_and_term_1)
+						notebook.set_item_text (l_tab, conf_interface_names.dial_cond_and_term_1)
 					else
-						notebook.set_item_text (l_tab, dial_cond_and_term_x (value.index))
+						notebook.set_item_text (l_tab, conf_interface_names.dial_cond_and_term_x (value.index))
 					end
 					value.forth
 				end
@@ -162,9 +162,9 @@ feature {NONE} -- Agents
 			create l_tab.make (l_cond)
 			notebook.extend (l_tab)
 			if value.count = 1 then
-				notebook.set_item_text (l_tab, dial_cond_and_term_1)
+				notebook.set_item_text (l_tab, conf_interface_names.dial_cond_and_term_1)
 			else
-				notebook.set_item_text (l_tab, dial_cond_and_term_x (value.count))
+				notebook.set_item_text (l_tab, conf_interface_names.dial_cond_and_term_x (value.count))
 			end
 			notebook.select_item (l_tab)
 			remove_button.enable_sensitive

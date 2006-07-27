@@ -15,7 +15,7 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 			create grid
 			vb_grid.extend (grid)
 			grid.set_column_count_to (2)
-			grid.column (1).set_title (dialog_renaming_old_name)
-			grid.column (2).set_title (dialog_renaming_new_name)
+			grid.column (1).set_title (conf_interface_names.dialog_renaming_old_name)
+			grid.column (2).set_title (conf_interface_names.dialog_renaming_new_name)
 			grid.enable_last_column_use_all_width
 			grid.enable_single_row_selection
 
@@ -62,12 +62,12 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (general_add, agent on_add)
+			create l_btn.make_with_text_and_action (conf_interface_names.general_add, agent on_add)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			l_btn.set_minimum_width (default_button_width+25)
-			create l_btn.make_with_text_and_action (general_remove, agent on_remove)
+			create l_btn.make_with_text_and_action (conf_interface_names.general_remove, agent on_remove)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
@@ -100,8 +100,8 @@ feature {NONE} -- Agents
 			if value = Void then
 				create value.make (1)
 			end
-			if not (value.has (dialog_renaming_create_old) or value.has_item (dialog_renaming_create_new)) then
-				value.force (dialog_renaming_create_new, dialog_renaming_create_old)
+			if not (value.has (conf_interface_names.dialog_renaming_create_old) or value.has_item (conf_interface_names.dialog_renaming_create_new)) then
+				value.force (conf_interface_names.dialog_renaming_create_new, conf_interface_names.dialog_renaming_create_old)
 				refresh
 			end
 		end

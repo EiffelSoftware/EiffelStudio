@@ -179,6 +179,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_settings_position_y_preference.value
 		end
 
+	project_settings_split_position: INTEGER is
+		do
+			Result := project_settings_split_position_preference.value
+		end
+
 	starting_dialog_width: INTEGER is
 		do
 			Result := starting_dialog_width_preference.value
@@ -293,6 +298,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	project_settings_height_preference: INTEGER_PREFERENCE
 	project_settings_position_x_preference: INTEGER_PREFERENCE
 	project_settings_position_y_preference: INTEGER_PREFERENCE
+	project_settings_split_position_preference: INTEGER_PREFERENCE
 
 	starting_dialog_width_preference: INTEGER_PREFERENCE
 	starting_dialog_height_preference: INTEGER_PREFERENCE
@@ -353,6 +359,7 @@ feature -- Preference strings
 	project_settings_height_preference_string: STRING is "interface.dialogs.project_settings_height"
 	project_settings_position_x_preference_string: STRING is "interface.dialogs.project_settings_position_x"
 	project_settings_position_y_preference_string: STRING is "interface.dialogs.project_settings_position_y"
+	project_settings_split_position_preference_string: STRING is "interface.dialogs.project_settings_split_position"
 
 	starting_dialog_width_preference_string: STRING is "interface.dialogs.starting_dialog_width"
 	starting_dialog_height_preference_string: STRING is "interface.dialogs.starting_dialog_height"
@@ -416,6 +423,7 @@ feature {NONE} -- Implementation
 			project_settings_height_preference := l_manager.new_integer_preference_value (l_manager, project_settings_height_preference_string, 600)
 			project_settings_position_x_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_x_preference_string, 100)
 			project_settings_position_y_preference := l_manager.new_integer_preference_value (l_manager, project_settings_position_y_preference_string, 100)
+			project_settings_split_position_preference := l_manager.new_integer_preference_value (l_manager, project_settings_split_position_preference_string, 300)
 
 			starting_dialog_width_preference := l_manager.new_integer_preference_value (l_manager, starting_dialog_width_preference_string, 500)
 			starting_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, starting_dialog_height_preference_string, 500)
@@ -449,6 +457,7 @@ invariant
 	project_settings_height_preference_not_void: project_settings_height_preference /= Void
 	project_settings_position_x_preference_not_void: project_settings_position_x_preference /= Void
 	project_settings_position_y_preference_not_void: project_settings_position_y_preference /= Void
+	project_settings_split_position_preference_not_void: project_settings_split_position_preference /= Void
 	starting_dialog_width_preference_not_void: starting_dialog_width_preference /= Void
 	starting_dialog_height_preference_not_void: starting_dialog_height_preference /= Void
 	open_project_dialog_width_preference_not_void: open_project_dialog_width_preference /= Void

@@ -15,7 +15,7 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create, copy
 		end
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {PROPERTY_DIALOG}
 
-			create l_label.make_with_text (target_dialog_root_cluster)
+			create l_label.make_with_text (conf_interface_names.target_dialog_root_cluster)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (cluster_name)
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_dialog_root_class)
+			create l_label.make_with_text (conf_interface_names.target_dialog_root_class)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (class_name)
 			append_small_margin (element_container)
 
-			create l_label.make_with_text (target_dialog_root_feature)
+			create l_label.make_with_text (conf_interface_names.target_dialog_root_feature)
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			element_container.disable_item_expand (feature_name)
 			append_small_margin (element_container)
 
-			create all_classes.make_with_text (target_dialog_root_all)
+			create all_classes.make_with_text (conf_interface_names.target_dialog_root_all)
 			element_container.extend (all_classes)
 			element_container.disable_item_expand (all_classes)
 			append_small_margin (element_container)
@@ -144,14 +144,14 @@ feature {NONE} -- Agents
 				end
 				if not l_class.is_empty then
 					if l_feature /= Void and then not (create {IDENTIFIER_CHECKER}).is_valid (l_feature) then
-						create wd.make_with_text (root_invalid_feature)
+						create wd.make_with_text (conf_interface_names.root_invalid_feature)
 					elseif not (create {IDENTIFIER_CHECKER}).is_valid (l_class) then
-						create wd.make_with_text (root_invalid_class)
+						create wd.make_with_text (conf_interface_names.root_invalid_class)
 					else
 						create l_root.make (l_cluster, l_class, l_feature, False)
 					end
 				elseif l_cluster /= Void or l_feature /= Void then
-					create wd.make_with_text (root_no_class)
+					create wd.make_with_text (conf_interface_names.root_no_class)
 				end
 			end
 

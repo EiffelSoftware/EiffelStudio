@@ -11,7 +11,7 @@ class
 inherit
 	CREATE_CLUSTER_DIALOG
 		redefine
-			last_cluster,
+			last_group,
 			make,
 			on_ok
 		end
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_cluster: CONF_OVERRIDE
+	last_group: CONF_OVERRIDE
 			-- Last added override cluster.
 
 feature {NONE} -- Actions
@@ -56,8 +56,12 @@ feature {NONE} -- Actions
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
-					last_cluster := factory.new_override (name.text, l_loc, target)
-					target.add_override (last_cluster)
+					last_group := factory.new_override (name.text, l_loc, target)
+					if parent_cluster /= Void then
+						last_group.set_parent (parent_cluster)
+						parent_cluster.add_child (last_group)
+					end
+					target.add_override (last_group)
 					is_ok := True
 					destroy
 				end

@@ -35,7 +35,7 @@ inherit
 			is_equal
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy,
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 			append_small_margin (hb_main)
 
-			create l_frame.make_with_text (dialog_file_rule_excludes)
+			create l_frame.make_with_text (conf_interface_names.dialog_file_rule_excludes)
 			hb_main.extend (l_frame)
 			hb_main.disable_item_expand (l_frame)
 			create vb
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			append_small_margin (hb_main)
 
 
-			create l_frame.make_with_text (dialog_file_rule_includes)
+			create l_frame.make_with_text (conf_interface_names.dialog_file_rule_includes)
 			hb_main.extend (l_frame)
 			hb_main.disable_item_expand (l_frame)
 			create vb
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			set_border_width (default_border_size)
 
 			append_small_margin (Current)
-			create l_label.make_with_text (dialog_file_rule_description)
+			create l_label.make_with_text (conf_interface_names.dialog_file_rule_description)
 			extend (l_label)
 			disable_item_expand (l_label)
 			l_label.align_text_left
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 			disable_item_expand (description)
 
 			append_small_margin (Current)
-			create l_label.make_with_text (dialog_file_rule_condition)
+			create l_label.make_with_text (conf_interface_names.dialog_file_rule_condition)
 			extend (l_label)
 			disable_item_expand (l_label)
 			l_label.align_text_left
@@ -163,7 +163,7 @@ feature {NONE} -- Initialization
 				condition.set_text (data.internal_conditions.out)
 			end
 
-			create l_btn.make_with_text_and_action (dialog_file_rule_edit_condition, agent edit_condition)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_edit_condition, agent edit_condition)
 			l_btn.set_minimum_width (default_button_width)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)

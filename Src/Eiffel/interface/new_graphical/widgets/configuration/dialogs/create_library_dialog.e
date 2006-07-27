@@ -9,9 +9,10 @@ class
 	CREATE_LIBRARY_DIALOG
 
 inherit
-	EV_DIALOG
+	CREATE_GROUP_DIALOG
 		redefine
-			initialize
+			initialize,
+			last_group
 		end
 
 	CONF_ACCESS
@@ -44,7 +45,7 @@ inherit
 			default_create
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -71,21 +72,6 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
-			-- Create.
-		require
-			a_target_not_void: a_target /= Void
-			a_factory_not_void: a_factory /= Void
-		do
-			target := a_target
-			factory := a_factory
-			default_create
-			set_title (dialog_create_library_title)
-		ensure
-			target_set: target = a_target
-			factory_set: factory = a_factory
-		end
-
 	initialize is
 			-- Initialize.
 		local
@@ -94,7 +80,9 @@ feature {NONE} -- Initialization
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
 		do
-			Precursor {EV_DIALOG}
+			Precursor
+
+			set_title (conf_interface_names.dialog_create_library_title)
 
 			create vb
 			extend (vb)
@@ -107,7 +95,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_library_defaults)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_defaults)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -125,7 +113,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_library_name)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_name)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -141,7 +129,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
-			create l_lbl.make_with_text (dialog_create_library_location)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_location)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -184,16 +172,6 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent default_libraries.set_focus)
 		end
 
-feature -- Status
-
-	is_ok: BOOLEAN
-			-- Was the dialog closed with ok?
-
-feature -- Access
-
-	last_library: CONF_LIBRARY
-			-- Last added library.
-
 feature {NONE} -- GUI elements
 
 	default_libraries: EV_LIST
@@ -204,6 +182,11 @@ feature {NONE} -- GUI elements
 
 	name: EV_TEXT_FIELD
 			-- Name of the library.
+
+feature -- Access
+
+	last_group: CONF_LIBRARY
+			-- Last created group.
 
 feature {NONE} -- Actions
 
@@ -257,18 +240,18 @@ feature {NONE} -- Actions
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
 				if target.groups.has (name.text) then
-					create wd.make_with_text (group_already_exists (name.text))
+					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 					wd.show_modal_to_window (Current)
 				else
 					l_loc := factory.new_location_from_full_path (location.text, target)
-					last_library := factory.new_library (name.text, l_loc, target)
-					target.add_library (last_library)
+					last_group := factory.new_library (name.text, l_loc, target)
+					target.add_library (last_group)
 					is_ok := True
 					destroy
 				end
 			end
 		ensure
-			is_ok_last_library: is_ok implies last_library /= Void
+			is_ok_last_library: is_ok implies last_group /= Void
 		end
 
 
@@ -289,12 +272,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
-	target: CONF_TARGET
-			-- Target where we add the library.
-
-	factory: CONF_FACTORY
-			-- Factory to create a library.
 
 	fill_default_libraries is
 			-- Fill in the default libraries.
@@ -363,9 +340,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-invariant
-	target_not_void: target /= Void
-	factory_not_void: factory /= Void
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

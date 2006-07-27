@@ -938,6 +938,9 @@ feature -- Thread Handling.
 		do
 			if {PLATFORM}.is_thread_capable then
 				Result := {EV_GTK_EXTERNALS}.g_static_rec_mutex_trylock (static_mutex)
+			else
+					-- If we are not thread capable then always return true.
+				Result := True
 			end
 		end
 

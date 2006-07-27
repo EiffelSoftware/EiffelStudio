@@ -210,9 +210,9 @@ feature {NONE} -- Error message values
 
 	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
 
-	Cst_error_during_context_preparation: STRING is "Error occurred while retrieving the expression's context"
+	Cst_error_during_context_preparation: STRING is "An error occurred while retrieving the expression's context"
 
-	Cst_error_during_expression_analyse: STRING is "Error during expression analyse"
+	Cst_error_during_expression_analyse: STRING is "An error occurred during the analysis of the expression."
 
 	Cst_error_type_checking_failed : STRING is "Type checking failed"
 
@@ -226,9 +226,9 @@ feature {NONE} -- Error message values
 
 	Cst_error_other_than_func_cst_once_not_available: STRING is " => ERROR : other than function, constant and once : not available"
 
-	Cst_error_during_evaluation_of_external_call: STRING is " => ERROR during evaluation of external call : "
+	Cst_error_during_evaluation_of_external_call: STRING is " => An error occurred during the evaluation of external call : "
 
-	Cst_error_evaluating_parameter: STRING is " => Error evaluating parameter"
+	Cst_error_evaluating_parameter: STRING is " => An error occurred during the evaluation of parameter(s)"
 
 	Cst_feature_name_left_limit: STRING is "`"
 	Cst_feature_name_right_limit: STRING is "'"

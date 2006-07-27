@@ -1731,8 +1731,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>...</Text>
-	</EV_TEXTABLE>
+<EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
@@ -3270,8 +3269,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text>...</Text>
-	</EV_TEXTABLE>
+<EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>

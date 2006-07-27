@@ -16,6 +16,13 @@ inherit
 			activate_action
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 feature -- Access
 
 	text_field: COMPLETABLE_TEXT_FIELD
@@ -38,12 +45,20 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	on_save_auto_complete_window_position (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Action to be performed to save position of auto-complete window
+		do
+			preferences.metric_tool_data.criterion_completion_list_width_preference.set_value (a_width)
+			preferences.metric_tool_data.criterion_completion_list_height_preference.set_value (a_height)
+		end
+
 	activate_action (popup_window: EV_POPUP_WINDOW) is
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create text_field
 				-- Hide the border of the text field.
 			text_field.set_completion_possibilities_provider (completion_possibilities_provider)
+			text_field.set_save_list_position_action (agent on_save_auto_complete_window_position)
 			if completion_possibilities_provider /= Void then
 				completion_possibilities_provider.set_code_completable (text_field)
 			end

@@ -54,6 +54,20 @@ inherit
 			copy
 		end
 
+	EB_HISTORY_OWNER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	EV_UTILITIES
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make
@@ -83,14 +97,21 @@ feature {NONE} -- Initialization
 		do
 			create l_colors
 			create domain_change_actions
+			create history_manager.make (Current)
+			create address_manager.make (Current, True)
+			address_manager.enable_accept_general_group
 
 				-- Setup scope type
 			add_delayed_scope_btn.set_tooltip (metric_names.f_delayed_scope)
 			add_delayed_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
 			add_delayed_scope_btn.select_actions.extend (agent on_delayed_scope_added)
-			add_application_target_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
-			add_application_target_btn.select_actions.extend (agent on_application_scope_added)
-			add_application_target_btn.set_tooltip (metric_names.f_application_scope)
+			add_application_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
+			add_application_scope_btn.select_actions.extend (agent on_application_scope_added)
+			add_application_scope_btn.set_tooltip (metric_names.f_application_scope)
+
+			open_address_manager_btn.set_pixmap (pixmaps.icon_pixmaps.tool_search_icon)
+			open_address_manager_btn.select_actions.extend (agent on_show_address_manager)
+			open_address_manager_btn.set_tooltip (metric_names.f_search_for_class)
 
 				-- Build tool bar buttons for scope grid.
 			add_item_btn.remove_text
@@ -175,7 +196,31 @@ feature -- Access
 	domain_change_actions: ACTION_SEQUENCE [TUPLE [EB_METRIC_DOMAIN]]
 			-- Actions to be performed when domain changes
 
-feature -- Setting
+	window: EV_WINDOW is
+			-- A window that can receive warnings and other dialogs.
+		do
+			Result := parent_window (Current)
+		end
+
+	stone: STONE is
+			-- Stone representing Current
+		do
+		end
+
+	address_manager: EB_ADDRESS_MANAGER
+			-- Address manager
+
+feature -- Element change
+
+	set_stone (new_stone: STONE) is
+			-- Make `s' the new value of stone.
+			-- Changes display as a consequence, to preserve the fact
+			-- that the tool displays the content of the stone
+			-- (when there is a stone).
+		do
+			set_focus
+			on_drop (new_stone)
+		end
 
 	set_relative_window (a_window: like relative_window) is
 			-- Set `relative_window' with `a_window'.
@@ -385,6 +430,12 @@ feature{NONE} -- Actions
 			if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
 				on_remove_selected_scopes
 			end
+		end
+
+	on_show_address_manager is
+			-- Action to be performed to display `address_manager'
+		do
+			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y)
 		end
 
 feature{NONE} -- Implementation/Data

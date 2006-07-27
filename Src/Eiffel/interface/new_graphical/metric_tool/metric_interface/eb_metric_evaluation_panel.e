@@ -112,6 +112,7 @@ feature {NONE} -- Initialization
 			domain_selector.domain_change_actions.extend (agent on_domain_change)
 			metric_selector.metric_selected_actions.extend (agent on_metric_selected)
 			metric_selector.group_selected_actions.extend (agent on_metric_selected (Void))
+			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
 
 				-- Setup sensitivity and background color for text fields
 			metric_value_text.disable_edit
@@ -254,6 +255,7 @@ feature -- Basic operations
 			metric_definer.disable_sensitive
 			reload_btn.disable_sensitive
 			metric_selector.disable_sensitive
+			metric_tool.disable_tab ({EB_METRIC_TOOL_PANEL}.metric_definition_tab_index)
 		end
 
 	synchronize_when_metric_evaluation_stop is
@@ -273,6 +275,7 @@ feature -- Basic operations
 			metric_definer.enable_sensitive
 			reload_btn.enable_sensitive
 			metric_selector.enable_sensitive
+			metric_tool.enable_tab ({EB_METRIC_TOOL_PANEL}.metric_definition_tab_index)
 		end
 
 feature -- Actions
@@ -294,6 +297,7 @@ feature -- Actions
 			l_retried: BOOLEAN
 			l_value: DOUBLE
 			l_metric_basic: EB_METRIC_BASIC
+			l_metric: like current_metric
 		do
 			if not l_retried then
 				synchronize_when_metric_evaluation_start
@@ -303,26 +307,29 @@ feature -- Actions
 				is_metric_running := True
 				is_stopped_by_eiffel_compilation := False
 
+				l_metric := current_metric.twin
 					-- Setup metric evaluator.
 				if a_detailed then
-					current_metric.enable_fill_domain
+					l_metric.enable_fill_domain
 						-- Special setting for metric of line unit.
-					if current_metric.is_basic and then current_metric.unit = line_unit then
-						l_metric_basic ?= current_metric
-						l_metric_basic.set_criteria (criterion_factory.metric_criterion (line_scope, query_language_names.ql_cri_true))
+					if l_metric.is_basic and then l_metric.unit = line_unit then
+						l_metric_basic ?= l_metric
+						if l_metric_basic.criteria = Void then
+							l_metric_basic.set_criteria (criterion_factory.metric_criterion (line_scope, query_language_names.ql_cri_true))
+						end
 					end
 				else
-					current_metric.disable_fill_domain
+					l_metric.disable_fill_domain
 				end
 
-				l_value := current_metric.value (domain_selector.domain).first.value
+				l_value := l_metric.value (domain_selector.domain).first.value
 				display_status_message ("")
 				is_metric_running := False
 				metric_value_text.set_text (l_value.out)
-				if current_metric.is_fill_domain_enabled then
-					metric_tool.register_metric_result_for_display (current_metric, domain_selector.domain, l_value, current_metric.last_result_domain)
+				if l_metric.is_fill_domain_enabled then
+					metric_tool.register_metric_result_for_display (l_metric, domain_selector.domain, l_value, l_metric.last_result_domain)
 				else
-					metric_tool.register_metric_result_for_display (current_metric, domain_selector.domain, l_value, Void)
+					metric_tool.register_metric_result_for_display (l_metric, domain_selector.domain, l_value, Void)
 				end
 				if a_detailed then
 					metric_tool.go_to_result
@@ -380,6 +387,16 @@ feature -- Actions
 				then
 					metric_tool.go_to_definition (metric_manager.metric_with_name (metric_selector.last_selected_metric), False)
 				end
+			end
+		end
+
+	on_pointer_double_click_on_metric_item (a_name: STRING) is
+			-- Action to be performed when pointer double clicks on a metric named `a_name' in `metric_selector'.
+		require
+			a_name_attached: a_name /= Void
+		do
+			if metric_manager.has_metric (a_name) then
+				metric_tool.go_to_definition (metric_manager.metric_with_name (a_name), False)
 			end
 		end
 

@@ -521,12 +521,14 @@ feature -- Status report
 				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
 			else
 				l_max := Application.displayed_string_size
+					--| if l_max = -1, then do no truncate upper string
+					
 				l_str := truncated_string_representation (0, l_max)
 				if l_str /= Void then
 					if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
 						l_str.append ("...")
 					end
-					create Result.make (Application.displayed_string_size + 2)
+					create Result.make (l_str.count + 2)
 					Result.append_character ('%"')
 					Result.append (Character_routines.eiffel_string_32 (l_str))
 					Result.append_character ('%"')
@@ -598,6 +600,8 @@ feature -- Status report
 		end
 
 	truncated_string_representation (min, max: INTEGER): STRING_32 is
+			-- truncated string value representation.
+			--| if max < 0 then do not truncate the upper part of the string
 		do
 			Result := raw_string_representation (min, max)
 			if Result = Void then

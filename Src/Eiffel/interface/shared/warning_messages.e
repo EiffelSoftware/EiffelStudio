@@ -1016,6 +1016,8 @@ feature -- Warning messages
 
 	w_Not_an_integer: STRING is "Please enter an integer value."
 
+	w_Not_a_positive_integer: STRING is "Please enter a positive integer value."
+
 	w_Select_class_cluster_to_remove: STRING is "Please select a class or a cluster %N%
 										%before calling this command.%N%
 										%It will then be removed."

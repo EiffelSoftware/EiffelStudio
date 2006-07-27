@@ -505,26 +505,29 @@ feature -- Removal
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			offset: INTEGER
 			res: BOOLEAN
 			obj_cmp: BOOLEAN
 			default_val: like item
+			l_area: like area
 		do
 			obj_cmp := object_comparison
 			from
-				i := 1
+				l_area := area
+				i := 0
+				nb := count
 			until
-				i > count
+				i = count
 			loop
-				if i <= count - offset then
+				if i < nb - offset then
 					if offset > 0 then
-						put_i_th (i_th (i + offset), i)
+						l_area.put (l_area.item (i + offset), i)
 					end
 					if obj_cmp then
-						res := equal (v, i_th (i))
+						res := equal (v, l_area.item (i))
 					else
-						res := (v = i_th (i))
+						res := (v = l_area.item (i))
 					end
 					if res then
 						offset := offset + 1
@@ -532,7 +535,7 @@ feature -- Removal
 						i := i + 1
 					end
 				else
-					put_i_th (default_val, i)
+					l_area.put (default_val, i)
 					i := i + 1
 				end
 			end

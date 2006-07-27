@@ -28,7 +28,7 @@ feature -- Access
 feature -- Font tables
 
 	label_font_table: SPECIAL [EV_FONT] is
-			-- Fonts of a label
+			-- Label font substitute for editor fonts.
 		local
 			l_bold_font: EV_FONT
 		once

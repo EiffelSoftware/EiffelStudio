@@ -86,8 +86,9 @@
 #define CLOSE_DBG 44			/* Close ecdbgd */
 #define SET_IPC_PARAM 45		/* set IPC parameters value (pid, timeout in seconds, ...) */
 #define CLEAR_BREAKPOINTS 46	/* Clear breakpoints table */
+#define DBG_EXCEPTION_TRACE 47	/* Get exception trace by id */
 
-#define MAX_REQUEST_TYPE 46		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 47		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

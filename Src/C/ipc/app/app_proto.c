@@ -124,6 +124,7 @@ rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type);
+rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
@@ -227,6 +228,9 @@ static int curr_modify = NO_CURRMODIF;
 		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 		dthread_restore();
 		break;
+	case DBG_EXCEPTION_TRACE:
+		dbg_exception_trace(sp, (int) arg_1);
+		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
 		modify_local_variable(arg_1,arg_2,arg_3,NULL);	             /* of a feature in the call stack */
 		curr_modify = LOCAL_ITEM;
@@ -261,6 +265,7 @@ static int curr_modify = NO_CURRMODIF;
 		dsetbreak(arg_1, arg_3, arg_2);
 		break;
 	case RESUME:					/* Resume execution */
+		dbg_clear_exception_traces(); /* clear recorded exception traces */
 		if (!gc_stopped) gc_run();
 		set_breakpoint_count (arg_2);
 		critical_stack_depth = (uint32) arg_3;
@@ -1583,5 +1588,37 @@ rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_pr
 	/* reset info concerning otop */
 	previous_otop = NULL;
 	otop_recorded = 0;
+}
+
+rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid)
+{
+	/* Sending the debug exception trace related to `eid' 
+	 * when accessed once, it is removed from dbg exception traces storage */
+	char buf[IDRF_SIZE];
+	char* etrace;
+	int i, l, n;
+
+	CHECK("EXCEPTION TRACE ID must be positive", eid > 0);	
+	etrace = dbg_fetch_exception_trace (eid);
+	/* etrace had been removed from exception traces storage, 
+	 * so we'll have to free it at the end */
+	if (etrace != NULL) {
+		l = (int) strlen(etrace);
+		n = l / IDRF_SIZE;
+		sprintf(buf, "%u", n + 1);
+		app_twrite(buf, strlen(buf));
+		for (i = 0; i <= n; i++) {
+			strncpy (buf, etrace + i * IDRF_SIZE, IDRF_SIZE);
+			if (i == n) {
+				app_twrite(buf, l - i * IDRF_SIZE);
+			} else {
+				app_twrite(buf, IDRF_SIZE);
+			}
+		}
+		free(etrace);
+	} else {
+		sprintf(buf, "%u", 0);
+		app_twrite(buf, strlen(buf));
+	}
 }
 

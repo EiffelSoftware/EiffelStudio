@@ -52,9 +52,12 @@ extern void dnotify_create_thread(EIF_THR_TYPE);
 extern void dnotify_exit_thread(EIF_THR_TYPE); 
 extern void dbstack_reset(struct dbstack *stk);
 #endif
+extern void  dbg_clear_exception_traces (void);
+extern int   dbg_store_exception_trace (char* trace);
+extern char* dbg_fetch_exception_trace (int eid);
 #endif
 
-extern void dbreak_create_table(void);
+extern void debug_initialize(void);
 extern void dbreak_free_table(void);
 extern void safe_dbreak(int why);	/* Program execution stopped. Before calling this method, you should get the DBGMTX_LOCK*/
 

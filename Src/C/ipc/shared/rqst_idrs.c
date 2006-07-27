@@ -118,6 +118,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ CLOSE_DBG, idr_void },
 	{ SET_IPC_PARAM, idr_Opaque },
 	{ CLEAR_BREAKPOINTS, idr_void },
+	{ DBG_EXCEPTION_TRACE, idr_Opaque },
 };
 
 /*

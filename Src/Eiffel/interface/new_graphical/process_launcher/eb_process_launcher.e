@@ -327,7 +327,7 @@ feature -- Unmanaged process launch
 		local
 			l_cmd: STRING
 		do
-			l_cmd := preferences.misc_data.file_browser_command
+			l_cmd := preferences.misc_data.file_browser_command.twin
 			if l_cmd /= Void then
 				l_cmd.replace_substring_all ("$target", dir)
 				execution_environment.launch (l_cmd)

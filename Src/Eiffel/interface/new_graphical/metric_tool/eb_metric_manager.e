@@ -142,10 +142,15 @@ feature -- Access
 
 	predefined_metrics_file: STRING is
 			-- File to store predefined metrics
+		require
+			system_defined: workbench.system_defined and then workbench.is_already_compiled
+		local
+			l_file_name: FILE_NAME
 		do
-			Result :=
-				eiffel_installation_dir_name +  operating_environment.directory_separator.out +
-				"Metrics" + operating_environment.directory_separator.out + "predefined_metrics.xml"
+			create l_file_name.make_from_string (eiffel_installation_dir_name)
+			l_file_name.extend ("metrics")
+			l_file_name.set_file_name ("predefined_metrics.xml")
+			Result := l_file_name.out
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
@@ -154,16 +159,26 @@ feature -- Access
 			-- File to store user-defined metrics
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
+		local
+			l_file_name: FILE_NAME
 		do
-			Result := userdefined_metrics_path + operating_environment.directory_separator.out + "userdefined_metrics.xml"
+			create l_file_name.make_from_string (userdefined_metrics_path)
+			l_file_name.set_file_name ("userdefined_metrics.xml")
+			Result := l_file_name.out
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
 	userdefined_metrics_path: STRING is
 			-- File path where `userdefined_metric_file' is located, not including the trailing directory separator
+		require
+			system_defined: workbench.system_defined and then workbench.is_already_compiled
+		local
+			l_file_name: FILE_NAME
 		do
-			Result := project_location.path + operating_environment.directory_separator.out + "Metrics"
+			create l_file_name.make_from_string (project_location.path)
+			l_file_name.extend ("metrics")
+			Result :=  l_file_name.out
 		ensure
 			result_attached: Result /= Void
 		end

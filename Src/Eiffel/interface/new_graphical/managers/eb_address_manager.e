@@ -209,6 +209,11 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+feature -- Status report
+
+	is_general_group_acceptable: BOOLEAN
+			-- Is general group acceptable in address bar?
+
 feature -- Element change
 
 	set_format_name (a_name: STRING) is
@@ -352,6 +357,22 @@ feature -- Element change
 			feature_address.change_actions.block
 			feature_address.set_text (s)
 			feature_address.change_actions.resume
+		end
+
+	enable_accept_general_group is
+			-- Enable that general group is acceptable.
+		do
+			is_general_group_acceptable := True
+		ensure
+			general_group_acceptable: is_general_group_acceptable
+		end
+
+	disable_accept_general_group is
+			-- Disable the acceptability of general group.
+		do
+			is_general_group_acceptable := False
+		ensure
+			general_group_not_acceptable: not is_general_group_acceptable
 		end
 
 feature -- Observer management
@@ -561,6 +582,34 @@ feature -- Updating
 			end
 			class_address.disable_sensitive
 			feature_address.disable_sensitive
+		end
+
+	pop_up_address_bar_at_position (a_x, a_y: INTEGER) is
+			-- Display current address manager at position (`a_x', `a_y').
+		require
+	   		for_context_tool: mode
+  		local
+		   window: EV_WINDOW
+		   l_x: INTEGER
+		   l_screen: EV_SCREEN
+		do
+			window := parent_window (header_info)
+			if address_dialog.is_show_requested then
+				address_dialog.hide
+			end
+			l_x := a_x
+			create l_screen
+			if l_x + address_dialog.width > l_screen.width then
+				l_x := l_screen.width - address_dialog.width
+		   	end
+		   	address_dialog.set_position (l_x, a_y)
+			address_dialog.set_width (header_info.width)
+			address_dialog.set_height (header_info.height)
+			address_dialog.show
+			if output_line /= Void then
+				output_line.set_foreground_color (preferences.editor_data.error_text_color)
+				output_line.remove_text
+			end
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Execution
@@ -1050,7 +1099,11 @@ feature {NONE} -- open new class
 				create matcher.make_empty
 				matcher.set_pattern (fname)
 				if not matcher.has_wild_cards then
-					current_group := Universe.cluster_of_name (fname)
+					if is_general_group_acceptable then
+						current_group := universe.group_of_name (fname)
+					else
+						current_group := Universe.cluster_of_name (fname)
+					end
 					process_cluster
 				else
 					from
@@ -2117,22 +2170,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	pop_up_address_bar is
 			-- Display a window containing an address bar to change the stone.
 		require
-			for_context_tool: mode
-		local
-			window: EV_WINDOW
+	   		for_context_tool: mode
 		do
-			window := parent_window (header_info)
-			if address_dialog.is_show_requested then
-				address_dialog.hide
-			end
-			address_dialog.set_position (header_info.screen_x, header_info.screen_y)
-			address_dialog.set_width (header_info.width)
-			address_dialog.set_height (header_info.height)
-			address_dialog.show
-			if output_line /= Void then
-				output_line.set_foreground_color (preferences.editor_data.error_text_color)
-				output_line.remove_text
-			end
+			pop_up_address_bar_at_position (header_info.screen_x, header_info.screen_y)
 		end
 
 	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is

@@ -38,7 +38,7 @@ feature -- Section names
 	section_advanced: STRING is "Advanced"
 	section_file_pattern: STRING is "File Pattern"
 
-	selection_tree_select_node: STRING is "Please select a subnode."
+	selection_tree_select_node: STRING is "Please select a sub node."
 
 feature -- Section actions
 
@@ -90,13 +90,13 @@ feature -- Target names and descriptions
 	target_dialog_root_feature: STRING is "Root feature"
 	target_dialog_root_all: STRING is "Compile all classes?"
 	target_file_rule_name: STRING is "File pattern"
-	target_file_rule_description: STRING is "Regular expressions which exclude/include subfolders and/or files."
+	target_file_rule_description: STRING is "Regular expressions which exclude/include sub folders and/or files."
 
 	target_address_expression_name: STRING is "Address expression"
 	target_address_expression_description: STRING is "Are simplified address expressions enabled?"
 	target_automatic_backup_name: STRING is "Automatic backup"
 	target_automatic_backup_description: STRING is "Automatically generate a backup during recompilation?"
-	target_check_vape_name: STRING is "Check vape"
+	target_check_vape_name: STRING is "Check VAPE"
 	target_check_vape_description: STRING is "Enforce VAPE validity constraint?"
 	target_console_application_name: STRING is "Console application"
 	target_console_application_description: STRING is "Is the project a console application?"
@@ -112,7 +112,7 @@ feature -- Target names and descriptions
 	target_exception_trace_description: STRING is "Should a complete exception trace be generated in the finalized version?"
 	target_il_verifiable_name: STRING is "IL verifiable"
 	target_il_verifiable_description: STRING is "Should the generated binary be IL verifiable?"
-	target_inlining_name: STRING is "Inlinining"
+	target_inlining_name: STRING is "Inlining"
 	target_inlining_description: STRING is "Should inlining be enabled?"
 	target_inlining_size_name: STRING is "Inlining size"
 	target_inlining_size_description: STRING is "Maximal number of instructions in a feature for the feature to be inlined."
@@ -214,8 +214,8 @@ feature -- Target names and descriptions
 	group_description_description: STRING is "Description of the group."
 	group_condition_name: STRING is "Condition"
 	group_condition_description: STRING is "Conditions for this group to be used."
-	group_readonly_name: STRING is "Readonly"
-	group_readonly_description: STRING is "Is this group readonly?"
+	group_readonly_name: STRING is "Read only"
+	group_readonly_description: STRING is "Is this group read only?"
 	group_location_name: STRING is "Location"
 	group_location_description: STRING is "Location of this group."
 	group_prefix_name: STRING is "Prefix"
@@ -225,7 +225,7 @@ feature -- Target names and descriptions
 	group_class_option_name: STRING is "Class Options"
 	group_class_option_description: STRING is "Class specific options."
 	group_add_cluster: STRING is "Add cluster"
-	group_add_subcluster: STRING is "Add subcluster"
+	group_add_subcluster: STRING is "Add sub cluster"
 	group_add_override: STRING is "Add override"
 	group_add_assembly: STRING is "Add assembly"
 	group_add_library: STRING is "Add library"
@@ -236,7 +236,7 @@ feature -- Target names and descriptions
 	cluster_file_rule_name: STRING is "File pattern"
 	cluster_file_rule_description: STRING is "Exclude/include file pattern."
 	cluster_recursive_name: STRING is "Recursive"
-	cluster_recursive_description: STRING is "Are subfolders recursively included?"
+	cluster_recursive_description: STRING is "Are sub folders recursively included?"
 	cluster_dependencies_name: STRING is "Dependencies"
 	cluster_dependencies_description: STRING is "Groups this cluster depends on."
 	cluster_visible_name: STRING is "Visible classes"
@@ -343,7 +343,7 @@ feature -- Misc
 		end
 	target_remove_group_children (a_group: STRING): STRING is
 		do
-			Result := a_group+" can not be removed because it has subclusters."
+			Result := a_group+" can not be removed because it has sub clusters."
 		end
 	target_remove_external (a_external: STRING): STRING is
 		do
@@ -509,7 +509,7 @@ feature -- Parse errors
 	e_parse_incorrect_system_no_name: STRING is "Incorrect system tag, no name specified."
 	e_parse_incorrect_system_invalid_uuid (a_name: STRING): STRING is
 		do
-			Result := "Incorrect system tag "+a_name+" invalid uuid specified."
+			Result := "Incorrect system tag "+a_name+" invalid UUID specified."
 		end
 
 	e_parse_multiple_target_with_name (a_target: STRING): STRING is
@@ -667,7 +667,7 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_multithreaded: STRING is "No valid value specified in multithreaded condition."
-	e_parse_incorrect_dotnet: STRING is "No valid value specified in dotnet condition."
+	e_parse_incorrect_dotnet: STRING is "No valid value specified in .NET condition."
 	e_parse_incorrect_dynamic_runtime: STRING is "No valid value specified in dynamic runtime condition."
 
 	e_parse_incorrect_version_min (a_version: STRING): STRING is

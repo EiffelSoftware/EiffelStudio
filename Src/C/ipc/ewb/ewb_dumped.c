@@ -186,9 +186,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 			switch (pack.rq_dump.dmp_type) {
 				case DMP_EXCEPTION_TRACE:
 					item = *pack.rq_dump.dmp_item;
-					type_flag = item.type;
-					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_exception_trace)
-							(eif_access (target), RTMS(item.it_ref));
+					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_exception_trace) (eif_access (target), item.it_int32);
 					return;
 				case DMP_ITEM:
 					item = *pack.rq_dump.dmp_item;

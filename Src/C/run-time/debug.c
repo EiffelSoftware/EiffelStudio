@@ -210,12 +210,17 @@ rt_public void drun(BODY_INDEX body_id);			/* Starting execution of debugged fea
 rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */ 
 rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
-/* Step by step execution control */
+/* exception trace occurred during debugging evaluation */
+#define DBG_EXCEPTION_TRACE_MAX 10
+rt_private char** dbg_exception_traces;
+rt_private void dbg_create_exception_traces(void);
+
+rt_shared void debug_initialize(voidt);	/* Initialize debug information */
 rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Breakable point in the middle of a nested call reached */
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
-rt_shared void dbreak_create_table(void);
+rt_private void dbreak_create_table(void);
 rt_shared void dbreak_free_table(void);
 rt_shared void dbreak (EIF_CONTEXT int why);
 rt_shared void safe_dbreak (int why);
@@ -300,6 +305,13 @@ doc:		<synchronization>db_mutex</synchronization>
 doc:	</attribute>
 */
 rt_public int already_warned;
+
+/* debug initialization */
+rt_shared void debug_initialize() /* Initialize debug information (breakpoints ...) */
+{
+	dbreak_create_table();			/* create the structure used to store breakpoints information */
+	dbg_create_exception_traces(); 	/* create dbg exception traces information */
+}
 
 /*
  * Context set up and handling.
@@ -477,6 +489,51 @@ rt_public void dstatus(int dx)
 /*************************************************************************************************************************
 * Debugging hooks.
 *************************************************************************************************************************/
+
+rt_private void dbg_create_exception_traces(void)
+{
+	/* allocate memory for BP_TABLE_SIZE pointers */
+	dbg_exception_traces = (char* *)cmalloc(DBG_EXCEPTION_TRACE_MAX*sizeof(char*));
+	if (dbg_exception_traces == NULL) {
+		enomem();
+	}
+	
+	/* wipe out the allocated structure */
+	memset((char*)dbg_exception_traces, 0, DBG_EXCEPTION_TRACE_MAX*sizeof(char*));
+}
+
+rt_shared void dbg_clear_exception_traces(void)
+{
+	char* s;
+	int i;
+
+	for (i = 0; i < DBG_EXCEPTION_TRACE_MAX; i = i + 1) {
+		if (dbg_exception_traces[i] == NULL) {
+			s = dbg_exception_traces[i];
+			free(s);
+			dbg_exception_traces[i] = NULL;
+		}
+	}
+}
+
+rt_shared int dbg_store_exception_trace (char* trace) 
+{
+	int i;
+	for (i = 0; i < DBG_EXCEPTION_TRACE_MAX; i = i + 1) {
+		if (dbg_exception_traces[i] == NULL) {
+			dbg_exception_traces[i] = strdup (trace);
+			return i + 1;
+		}
+	}
+	return -1;
+}
+rt_public char* dbg_fetch_exception_trace (int eid)
+{
+	char* res;
+	res = dbg_exception_traces[eid - 1];
+	dbg_exception_traces[eid - 1] = NULL;
+	return res;
+}
 
 rt_public void set_breakpoint_count (int num)
 	{
@@ -977,7 +1034,7 @@ rt_public void dbreak_clear_table(void)
 /*------------------------------------------------------------------------*/
 /* create the breakpoints table used to handle breakpoints                */
 /**************************************************************************/
-rt_shared void dbreak_create_table(void)
+rt_private void dbreak_create_table(void)
 {
 
 		/* create the mutex used to access the table safely between threads */

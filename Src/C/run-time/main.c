@@ -719,7 +719,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	eorg_table = egc_forg_table;
 	pattern = egc_fpattern;
 
-	dbreak_create_table();		/* create the structure used to store breakpoints information */
+	debug_initialize(); /* Initialize debug information (breakpoints ...) */
 
 	/* In workbench mode, we have a slight problem: when we link ewb in
 	 * workbench mode, since ewb is a child from ised, the run-time will

@@ -2321,8 +2321,9 @@ rt_public char* stack_trace_str (void)
 	RT_GET_CONTEXT
 
     /* Clean the area from a previous call. */
-    if (ex_string.area)
+    if (ex_string.area) {
         eif_free(ex_string.area);
+	}
 
     /* Prepare the structure for a new trace */
     ex_string.area = NULL;
@@ -2334,7 +2335,7 @@ rt_public char* stack_trace_str (void)
      */
     dump_stack(ds_string);
 
-    return (char*) ex_string.area;
+	return ex_string.area;
 }
 
 rt_public EIF_REFERENCE stack_trace_string (void)

@@ -239,9 +239,12 @@ rt_public void xinterp(unsigned char *icval);	/* Sets IC before calling interpre
 rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
+/* Dbg evaluation */
+rt_shared int dbg_store_exception_trace (char* trace);
+rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
+
 /* Feature call and/or access  */
 rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type);
-rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -4234,8 +4237,8 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 		*exception_occured = 1;
 		result = (struct item*) malloc (sizeof (struct item));
 		memset (result, 0, sizeof(struct item));	
-		result->type = SK_STRING;
-		result->it_ref = (char*) stack_trace_str();
+		result->type = SK_INT32;
+		result->it_int32 = dbg_store_exception_trace (stack_trace_str());
 		result->it_addr = NULL;
 		
 		RESTORE(op_stack,scur,stop);
@@ -4276,6 +4279,8 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
+						/* Does dynamic_eval catch the exception or pass it to caller ? 
+						 * when called by debugger, pass it to the debugger                */
 	{
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT

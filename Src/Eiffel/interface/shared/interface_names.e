@@ -123,7 +123,7 @@ feature -- Button texts
 	b_Run_finalized: STRING is					"Run Finalized"
 	b_Toggle_stone_management: STRING is 		"Link Context"
 	b_Raise_all: STRING is						"Raise Windows"
-	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
+	b_Remove_class_cluster: STRING is			"Remove Class/Cluster"
 	b_Minimize_all: STRING is					"Minimize All"
 	b_Terminate_c_compilation: STRING is 		"Terminate C compilation"
 	b_Expand_all: STRING is 					"Expand All"
@@ -238,7 +238,7 @@ feature -- Accelerator, focus label and menu name
 	l_diagram_supplier_visibility: STRING is "Toggle visibility of supplier links"
 
 	l_diagram_add_ancestors: STRING is "Add class ancestors to diagram"
-	l_diagram_add_descendents: STRING is "Add class descendents to diagram"
+	l_diagram_add_descendents: STRING is "Add class descendants to diagram"
 	l_diagram_add_suppliers: STRING is "Add class suppliers to diagram"
 	l_diagram_add_clients: STRING is "Add class clients to diagram"
 
@@ -539,11 +539,11 @@ feature -- Label texts
 	l_Diagram_reset_view_cmd: STRING is		"Do you really want to reset current view?"
 	l_Discard_convert_project_dialog: STRING is	"Do not ask again, and always convert old projects"
 	l_Discard_finalize_assertions: STRING is "Do not ask again, and always discard assertions when finalizing"
-	l_Discard_finalize_precompile_dialog: STRING is "Dont ask me again and always finalize."
+	l_Discard_finalize_precompile_dialog: STRING is "Don't ask me again and always finalize."
 	l_Discard_freeze_dialog: STRING is	"Do not ask again, and always compile C code"
 	l_Discard_save_before_compile_dialog: STRING is	"Do not ask again, and always save files before compiling"
 	l_Discard_starting_dialog: STRING is "Don't show this dialog at startup"
-	l_Discard_replace_all_warning_dialog: STRING is "Dont ask me again and always replace all"
+	l_Discard_replace_all_warning_dialog: STRING is "Don't ask me again and always replace all"
 	l_Discard_terminate_freezing: STRING is "Do not ask again, and always terminate freezing when needed."
 	l_Discard_terminate_external_command: STRING is "Do not ask again, and always terminate running external command."
 	l_Discard_terminate_finalizing: STRING is "Do not ask again, and always terminate finalizing when needed."
@@ -1243,7 +1243,7 @@ feature -- Metric constants (tooltips)
 	metric_imm_locals: STRING is					"Imm. locals"
 
 --	metric_ancestors: STRING is						"Ancestors"
---	metric_descendants: STRING is					"Descendents"
+--	metric_descendants: STRING is					"Descendants"
 --	metric_comment_lines: STRING is					"Comment lines"
 
 	metric_class_unit: STRING is			"Class"

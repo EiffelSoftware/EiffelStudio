@@ -107,7 +107,7 @@ feature -- Update
 			-- Clear the description in the `description_field'.
 		do
 			if description_field /= Void and then not description_field.is_destroyed then
-				description_field.set_text ("")
+				description_field.set_and_wrap_text ("")
 			end
 		end
 
@@ -409,11 +409,11 @@ feature {NONE} -- Actions
 		do
 			if description_field /= Void then
 				if a_property.name.is_empty then
-					description_field.set_text (a_property.description)
+					description_field.set_and_wrap_text (a_property.description)
 				elseif a_property.description.is_empty then
-					description_field.set_text (a_property.name)
+					description_field.set_and_wrap_text (a_property.name)
 				else
-					description_field.set_text (a_property.name + ": " + a_property.description)
+					description_field.set_and_wrap_text (a_property.name + ": " + a_property.description)
 				end
 			end
 		end
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 	sections: HASH_TABLE [EV_GRID_ROW, STRING]
 			-- Property sections.
 
-	description_field: EV_TEXTABLE
+	description_field: ES_LABEL
 			-- Place to put descriptions.
 
 	expanded_section_store: HASH_TABLE [BOOLEAN, STRING]

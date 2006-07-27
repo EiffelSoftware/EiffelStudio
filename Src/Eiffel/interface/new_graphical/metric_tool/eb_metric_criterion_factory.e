@@ -403,7 +403,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_false), query_language_names.ql_cri_false)
 			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_is_compiled), query_language_names.ql_cri_is_compiled)
 			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_is_visible), query_language_names.ql_cri_is_visible)
-			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_is_in_immediate_feature), query_language_names.ql_cri_is_in_immediate_feature)
+			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_is_immediate), query_language_names.ql_cri_is_immediate)
 			l_hash_table.put (agent new_normal_criterion (argument_scope, query_language_names.ql_cri_true), query_language_names.ql_cri_true)
 
 			l_hash_table.put (agent new_name_criterion (argument_scope, query_language_names.ql_cri_name_is), query_language_names.ql_cri_name_is)
@@ -424,7 +424,7 @@ feature{NONE} -- Initialization
 
 			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_false), query_language_names.ql_cri_false)
 			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_is_compiled), query_language_names.ql_cri_is_compiled)
-			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_is_in_immediate_feature), query_language_names.ql_cri_is_in_immediate_feature)
+			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_is_immediate), query_language_names.ql_cri_is_immediate)
 			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_is_used), query_language_names.ql_cri_is_used)
 			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_is_visible), query_language_names.ql_cri_is_visible)
 			l_hash_table.put (agent new_normal_criterion (local_scope, query_language_names.ql_cri_true), query_language_names.ql_cri_true)

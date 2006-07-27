@@ -57,9 +57,21 @@ feature -- Access
 				when Signal_exception then
 					-- Exception code for operating system signal
 					Result.append_string (once "Signal exception (from operation system)")
+				when Eiffel_runtime_panic then
+					-- Exception code for Eiffel run-time panic
+					Result.append_string (once "Eiffel run-time panic")
 				when Rescue_exception then
 					-- Exception code for exception in rescue clause
 					Result.append_string (once "Rescue exception")
+				when Out_of_memory then
+					-- Exception code for Out of memory (cannot be ignored)
+					Result.append_string (once "Out of memory")
+				when Resumption_failed then
+					-- Exception code for Resumption failed (retry did not succeed)
+					Result.append_string (once "Resumption failed")
+				when Create_on_deferred then
+					-- Exception code for Create on deferred
+					Result.append_string (once "Create on deferred")
 				when External_exception then
 					-- Exception code for operating system error
 					-- which does not set the `errno' variable
@@ -69,6 +81,9 @@ feature -- Access
 					-- Exception code for assignment of void value
 					-- to expanded entity
 					Result.append_string (once "Void assigned to expanded")
+				when Exception_in_signal_handler then
+					-- Exception code for Exception in signal handler
+					Result.append_string (once "Exception in signal handler")
 				when Io_exception then
 					-- Exception code for I/O error
 					Result.append_string (once "I/O exception")
@@ -84,6 +99,12 @@ feature -- Access
 				when Developer_exception then
 					-- Exception code for developer exception
 					Result.append_string (once "Developer exception")
+				when Eiffel_runtime_fatal_error then
+					-- Exception code for Eiffel run-time fatal error
+					Result.append_string (once "Eiffel run-time fatal error")
+				when Dollar_applied_to_melted_feature then
+					-- Exception code for $ applied to melted feature
+					Result.append_string (once "$ applied to melted feature")
 				when Runtime_io_exception then
 					-- Exception code for I/O error raised by runtime functions
 					-- such as store/retrieve, file access...

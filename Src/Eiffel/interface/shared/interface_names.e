@@ -203,7 +203,7 @@ feature -- Accelerator, focus label and menu name
 
 	m_Dbg_assertion_checking_disable: STRING is	"Disable Assertion Checking"
 	m_Dbg_assertion_checking_restore: STRING is	"Restore Assertion Checking"
-	m_Dbg_exception_handler: STRING is	"Exceptions Handling"
+	m_Dbg_exception_handler: STRING is	"Exception Handling"
 	m_Debug_interrupt_new: STRING is		"I&nterrupt Application"
 	f_Debug_edit_object: STRING is		"Edit Object content"
 	m_Debug_edit_object: STRING is		"Edit Object Content"
@@ -1063,7 +1063,7 @@ feature -- Description texts
 	e_Unify_stone: STRING is			"Link the context tool to the other components"
 	e_Terminate_c_compilation: STRING is "Terminate current C compilation in progress"
 
-	e_Dbg_exception_handler: STRING is "Exceptions handling"
+	e_Dbg_exception_handler: STRING is "Exception handling"
 	e_Dbg_assertion_checking: STRING is "Disable or restore Assertion checking handling during debugging"
 
 	e_open_selection_in_editor: STRING is "Open selected file name in specified external editor"

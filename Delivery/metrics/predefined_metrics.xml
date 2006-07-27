@@ -1,0 +1,278 @@
+<metric>
+	<basic_metric name="Classes" unit="class">
+		<description>Number of classes</description>
+	</basic_metric>
+	<basic_metric name="Deferred classes" unit="class">
+		<description>Number of deferred classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_deferred" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Effective classes" unit="class">
+		<description>Number of effective classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_effective" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Uncompiled classes" unit="class">
+		<description>Number of uncompiled classes</description>
+		<criterion>
+			<normal_criterion negation="True" name="is_compiled" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Generic classes" unit="class">
+		<description>Number of generic classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_generic" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Expanded classes" unit="class">
+		<description>Number of expanded classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_expanded" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Frozen classes" unit="class">
+		<description>Number of frozen classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_frozen" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Obsolete classes" unit="class">
+		<description>Number of obsolete classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_obsolete" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Invariant Equipped classes" unit="class">
+		<description>Number of classes which have invariant</description>
+		<criterion>
+			<normal_criterion negation="False" name="has_invariant" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Groups" unit="group">
+		<description>Number of groups</description>
+	</basic_metric>
+	<basic_metric name="Libraries" unit="group">
+		<description>Number of libraries</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_library" scope="group"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Clusters" unit="group">
+		<description>Number of clusters</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_cluster" scope="group"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Assemblies" unit="group">
+		<description>Number of assemblies</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_assembly" scope="group"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Features" unit="feature">
+		<description>Number of features</description>
+		<criterion>
+			<normal_criterion negation="True" name="is_invariant_feature" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Attributes" unit="feature">
+		<description>Number of attributes</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_attribute" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Commands" unit="feature">
+		<description>Number of commands</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_command" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Deferred features" unit="feature">
+		<description>Number of deferred features</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_deferred" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Effective features" unit="feature">
+		<description>Number of effective features</description>
+		<criterion>
+			<normal_criterion negation="True" name="is_deferred" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Functions" unit="feature">
+		<description>Number of functions</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Queries" unit="feature">
+		<description>Number of queries</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_unique" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Routines" unit="feature">
+		<description>Number of routines</description>
+		<criterion>
+			<or_criterion negation="False" name="or" scope="feature">				
+				<normal_criterion negation="False" name="is_procedure" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
+			</or_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Exported features" unit="feature">
+		<description>Number of exported features</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_exported" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Uncommented features" unit="feature">
+		<description>Number of features which don't have comments</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="True" name="is_invariant_feature" scope="feature"></normal_criterion>
+				<normal_criterion negation="True" name="has_comment" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="External features" unit="feature">
+		<description>Number of external features</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_external" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Postcondition equipped features" unit="feature">
+		<description>Number of features which have postconditions</description>
+		<criterion>
+			<normal_criterion negation="False" name="has_postcondition" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Precondition equipped features" unit="feature">
+		<description>Number of features which have precondtions</description>
+		<criterion>
+			<normal_criterion negation="False" name="has_precondition" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Assertion equipped features" unit="feature">
+		<description>Number of features which have preconditions or postconditions</description>
+		<criterion>
+			<or_criterion negation="False" name="or" scope="feature">				
+				<normal_criterion negation="False" name="has_precondition" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="has_postcondition" scope="feature"></normal_criterion>
+			</or_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. assertion equipped features" unit="feature">
+		<description>Number of immediate feature which have assertions</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<or_criterion negation="False" name="or" scope="feature">					
+					<normal_criterion negation="False" name="has_precondition" scope="feature"></normal_criterion>
+					<normal_criterion negation="False" name="has_postcondition" scope="feature"></normal_criterion>
+				</or_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. attributes" unit="feature">
+		<description>Number of immediate attributes</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_attribute" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. commands" unit="feature">
+		<description>Number of immediate commands</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_command" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. deferred features" unit="feature">
+		<description>Number of immediate deferred features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_deferred" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. effective features" unit="feature">
+		<description>Number of immediate effective features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="True" name="is_deferred" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. exported features" unit="feature">
+		<description>Number of immediate exported features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_exported" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. external features" unit="feature">
+		<description>Number of immediate external features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_external" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. features" unit="feature">
+		<description>Number of immediate features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="True" name="is_invariant_feature" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. functions" unit="feature">
+		<description>Number of immediate functions</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. queries" unit="feature">
+		<description>Number of immediate queries</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_unique" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. routines" unit="feature">
+		<description>Number of immediate routines</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<or_criterion negation="False" name="or" scope="feature">					
+					<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
+					<normal_criterion negation="False" name="is_procedure" scope="feature"></normal_criterion>
+				</or_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Generics" unit="generic">
+		<description>Number of class generics</description>
+	</basic_metric>
+</metric>

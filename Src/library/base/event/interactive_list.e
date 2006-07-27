@@ -29,7 +29,8 @@ inherit
 			remove,
 			put_i_th,
 			append,
-			make_from_array
+			make_from_array,
+			prune_all
 		end
 
 feature {NONE} -- Initialization
@@ -39,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			make (4)
 		end
-		
+
 	make_from_array (a: ARRAY [like item]) is
 			-- Create list from array `a'.
 		local
@@ -54,22 +55,20 @@ feature {NONE} -- Initialization
 				extend (a.item (l_index))
 				l_index := l_index + 1
 			end
-		end 
+		end
 
 feature -- Miscellaneous
-		
+
 	on_item_added_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' has just been added at index `item_index'.
 		require
-			an_item_not_void: an_item /= Void
 			item_index_valid: (1 <= item_index) and (item_index <= count)
 		do
 		end
-		
+
 	on_item_removed_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' has just been removed from index `item_index'.
 		require
-			an_item_not_void: an_item /= Void
 			item_index_valid: (1 <= item_index) and (item_index <= count + 1)
 		do
 		end
@@ -92,7 +91,7 @@ feature -- Element Change
 		local
 			i: INTEGER
 		do
-			i := count + 1	
+			i := count + 1
 			conservative_resize (lower, lower + count + s.count)
 			from
 				s.start
@@ -127,7 +126,7 @@ feature -- Element Change
 
 			added_item (v, index + 1)
 		end
-		
+
 	put_i_th (v: like i_th; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		local
@@ -137,6 +136,10 @@ feature -- Element Change
 			in_operation := True
 			Precursor {ARRAYED_LIST} (v, i)
 			in_operation := False
+				-- We currently have to test for `Void' because in `put_i_th'
+				-- we don't know if we are replacing:
+				-- 1 - an inserted item whose value was Void
+				-- 2 - an unset item that has the default value of Void.
 			if original_item /= Void then
 				removed_item (original_item, i)
 			end
@@ -217,11 +220,58 @@ feature -- Element Change
 			in_operation := True
 			Precursor {ARRAYED_LIST} (other)
 			in_operation := False
-			
+
 			update_for_added (original_index + 1)
 			go_i_th (original_index)
 		end
-		
+
+	prune_all (v: like item) is
+			-- Remove all occurrences of `v'.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		local
+			i, nb: INTEGER
+			offset: INTEGER
+			res: BOOLEAN
+			obj_cmp: BOOLEAN
+			l_item, default_val: like item
+			l_area: like area
+		do
+			obj_cmp := object_comparison
+			from
+				l_area := area
+				i := 0
+				nb := count
+			until
+				i = count
+			loop
+				if i < nb - offset then
+					if offset > 0 then
+						l_area.put (l_area.item (i + offset), i)
+					end
+					l_item := l_area.item (i)
+					if obj_cmp then
+						res := equal (v, l_item)
+					else
+						res := (v = l_item)
+					end
+					if res then
+						removed_item (l_item, i + lower)
+						offset := offset + 1
+					else
+						i := i + 1
+					end
+				else
+					l_area.put (default_val, i)
+					i := i + 1
+				end
+			end
+			set_count (count - offset)
+			index := count + 1
+		ensure then
+			is_after: after
+		end
+
 	update_for_added (start_index: INTEGER) is
 			-- Call `added_item' for all items from index `start_index' to `count'
 		local

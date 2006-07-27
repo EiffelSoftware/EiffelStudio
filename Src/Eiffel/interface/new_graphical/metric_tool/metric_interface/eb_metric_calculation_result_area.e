@@ -61,6 +61,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_WRITER
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -368,6 +375,7 @@ feature{NONE} -- Implementation
 			l_writer.new_line
 			add_item (l_ql_item, l_writer, True)
 			create l_item
+			l_item.set_overriden_fonts (label_font_table)
 			l_item.set_text_with_tokens (l_writer.last_line.content)
 			l_item.set_pixmap (pixmap_for_item (l_ql_item))
 			l_item.set_spacing (3)
@@ -402,6 +410,7 @@ feature{NONE} -- Implementation
 				end
 			end
 			create l_item
+			l_item.set_overriden_fonts (label_font_table)
 			l_item.set_text_with_tokens (l_writer.last_line.content)
 			content.i_th (2).force (l_item, a_y)
 		end
@@ -430,7 +439,7 @@ feature{NONE} -- Implementation
 				end
 			elseif a_item.is_real_feature then
 				l_real_feature ?= a_item
-				a_writer.add_feature_name (l_real_feature.name, l_real_feature.class_c)
+				a_writer.add_sectioned_feature_name (l_real_feature.e_feature)
 			else
 				a_writer.add_string (a_item.name)
 			end
@@ -554,7 +563,6 @@ feature{NONE} -- Implementation/Pick and drop
 		ensure
 			result_attached: Result /= Void
 		end
-
 
 invariant
 	content_attached: content /= Void

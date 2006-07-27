@@ -43,7 +43,7 @@ feature{NONE} -- Initialization
 				criterion_name := a_criterion.name.twin
 				is_negation_used := a_criterion.is_negation_used
 				if is_valid_row then
-					load_valid_criterion_row (a_criterion, a_row)
+					load_valid_criterion_row (a_criterion, a_row, Void)
 				else
 					load_invalid_criterion_row (a_row)
 				end
@@ -70,8 +70,11 @@ feature -- Loading
 			bind (a_row)
 		end
 
-	load_valid_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW) is
+	load_valid_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW; a_original_criterion: like criterion) is
 			-- Load `a_criterion' in `a_row'.
+			-- `a_original_criterion' is the original criterion defined in the same row. This is introduced to maintain some context
+			-- information when we change between same type of criteria.
+			-- For example, we change from `text_contain' to `name_is', in this case, we want to maintain the text in `property_item'.
 		require
 			a_criterion_attached: a_criterion /= Void
 			a_row_attached: a_row /= Void
@@ -80,19 +83,68 @@ feature -- Loading
 			l_nary_cri: EB_METRIC_NARY_CRITERION
 			l_row: EB_METRIC_CRITERION_ROW
 			l_cursor: CURSOR
+			l_domain_criterion, l_domain_criterion2: EB_METRIC_DOMAIN_CRITERION
+			l_caller_criterion, l_caller_criterion2: EB_METRIC_CALLER_CALLEE_CRITERION
+			l_text_criterion, l_text_criterion2: EB_METRIC_TEXT_CRITERION
+			l_path_criterion, l_path_criterion2: EB_METRIC_PATH_CRITERION
 		do
 				-- Load current row.
 			initialize_row (a_row)
 			if a_criterion.is_normal_criterion then
 				create {EB_METRIC_NORMAL_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
 			elseif a_criterion.is_caller_criterion then
+				l_caller_criterion ?= a_criterion
 				create {EB_METRIC_CALLER_CRITERION_MANAGER} property_manager.make (grid)
+				if a_original_criterion /= Void then
+					if a_original_criterion.is_domain_criterion then
+						l_domain_criterion ?= a_original_criterion
+						l_caller_criterion.set_domain (l_domain_criterion.domain)
+					elseif a_original_criterion.is_caller_criterion then
+						l_caller_criterion2 ?= a_original_criterion
+						l_caller_criterion.set_domain (l_caller_criterion2.domain)
+						if l_caller_criterion2.only_current_version then
+							l_caller_criterion.enable_only_current_version
+						else
+							l_caller_criterion.disable_only_current_version
+						end
+					end
+				end
 			elseif a_criterion.is_domain_criterion then
 				create {EB_METRIC_DOMAIN_PROPERTY_MANAGER} property_manager.make (grid)
+				l_domain_criterion ?= a_criterion
+				if a_original_criterion /= Void and then a_original_criterion.is_domain_criterion then
+					l_domain_criterion2 ?= a_original_criterion
+					l_domain_criterion.set_domain (l_domain_criterion2.domain)
+				end
 			elseif a_criterion.is_path_criterion then
 				create {EB_METRIC_PATH_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
+				l_path_criterion ?= a_criterion
+				if a_original_criterion /= Void and then (a_original_criterion.is_text_criterion or a_original_criterion.is_path_criterion) then
+					l_text_criterion2 ?= a_original_criterion
+					l_path_criterion.set_path (l_text_criterion2.text)
+				end
 			elseif a_criterion.is_text_criterion then
 				create {EB_METRIC_TEXT_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
+				l_text_criterion ?= a_criterion
+				if a_original_criterion /= Void and then (a_original_criterion.is_text_criterion or a_original_criterion.is_path_criterion) then
+					l_text_criterion2 ?= a_original_criterion
+					l_text_criterion.set_text (l_text_criterion2.text)
+					if l_text_criterion2.is_text_criterion then
+						if l_text_criterion2.is_case_sensitive then
+							l_text_criterion.enable_case_sensitive
+						else
+							l_text_criterion.disable_case_sensitive
+						end
+						if l_text_criterion2.is_identical_comparison_used then
+							l_text_criterion.enable_identical_comparison
+						else
+							l_text_criterion.disable_identical_comparison
+						end
+					else
+						l_text_criterion.disable_case_sensitive
+						l_text_criterion.disable_identical_comparison
+					end
+				end
 			end
 			property_manager.change_actions.extend (agent (grid.change_actions).call ([]))
 			property_manager.load_properties (a_criterion)
@@ -178,6 +230,22 @@ feature -- Status report
 		do
 			Result := a_name.is_case_insensitive_equal (query_language_names.ql_cri_and) or
 					  a_name.is_case_insensitive_equal (query_language_names.ql_cri_or)
+		end
+
+	is_domain_criterion (a_name: STRING; a_scope: QL_SCOPE): BOOLEAN is
+			-- Does `a_name' of scope `a_scope' represent a domain criteiron?
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
+		local
+			l_cri_factory: like criterion_factory
+			l_criterion: EB_METRIC_CRITERION
+		do
+			l_cri_factory := criterion_factory
+			if l_cri_factory.has_criterion (a_name, a_scope) then
+				l_criterion := l_cri_factory.metric_criterion (a_scope, a_name)
+				Result := l_criterion.is_domain_criterion
+			end
 		end
 
 	is_in_default_state: BOOLEAN
@@ -356,6 +424,7 @@ feature{NONE} -- Actions
 			l_text: STRING
 			l_name: TUPLE [name: STRING; negation: BOOLEAN]
 			l_is_empty: BOOLEAN
+			l_criterion: like criterion
 		do
 			l_text := criterion_item.text.twin
 			l_text.left_adjust
@@ -389,12 +458,13 @@ feature{NONE} -- Actions
 						refresh_criterion_item
 					else
 							-- If current row contains a different criterion after editing
+						l_criterion := criterion
 						criterion_name := l_name.name
 						is_negation_used := l_name.negation
 						if parent /= Void then
 							parent.remove_subrow (Current)
 						end
-						load_valid_criterion_row (criterion_factory.metric_criterion (scope, l_name.name), grid_row)
+						load_valid_criterion_row (criterion_factory.metric_criterion (scope, l_name.name), grid_row, l_criterion)
 					end
 					if l_is_empty then
 						insert_empty_row_in_parent

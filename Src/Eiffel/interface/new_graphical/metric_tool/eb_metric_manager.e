@@ -129,6 +129,15 @@ feature -- Status report
 	is_metric_loaded: BOOLEAN
 			-- Have metrics in files been loaded?
 
+	is_userdefined_metric_file_exist: BOOLEAN is
+			-- Does user defined metric file exist?
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (userdefined_metrics_file)
+			Result := l_file.exists
+		end
+
 feature -- Access
 
 	predefined_metrics_file: STRING is

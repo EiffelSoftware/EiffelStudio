@@ -54,6 +54,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -149,6 +156,7 @@ feature {NONE} -- Initialization
 			reload_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			reload_btn.set_tooltip (metric_names.f_reload_metrics)
 			reload_btn.select_actions.extend (agent on_reload_metrics)
+			reload_btn.pointer_button_press_actions.extend (agent on_open_user_defined_metric_file)
 			choose_input_domain_lbl.set_text (metric_names.t_select_source_domain)
 			choose_metric_lbl.set_text (metric_names.t_select_metric)
 		end
@@ -245,6 +253,7 @@ feature -- Basic operations
 			unit_combo.disable_sensitive
 			metric_definer.disable_sensitive
 			reload_btn.disable_sensitive
+			metric_selector.disable_sensitive
 		end
 
 	synchronize_when_metric_evaluation_stop is
@@ -263,6 +272,7 @@ feature -- Basic operations
 			unit_combo.enable_sensitive
 			metric_definer.enable_sensitive
 			reload_btn.enable_sensitive
+			metric_selector.enable_sensitive
 		end
 
 feature -- Actions
@@ -426,6 +436,23 @@ feature -- Actions
 			-- Action to be performed when reload metrics
 		do
 			metric_tool.load_metrics (True)
+		end
+
+	on_open_user_defined_metric_file (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed to open user defined metric file in specified external editor
+		local
+			l_cmd_exec: COMMAND_EXECUTOR
+			l_cmd_string: STRING
+		do
+			if a_button = 3 and then metric_manager.is_userdefined_metric_file_exist then
+				l_cmd_string := preferences.misc_data.external_editor_command.twin
+				if not l_cmd_string.is_empty then
+					l_cmd_string.replace_substring_all ("$target", metric_manager.userdefined_metrics_file)
+					l_cmd_string.replace_substring_all ("$line", "0")
+					create l_cmd_exec
+					l_cmd_exec.execute (l_cmd_string)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

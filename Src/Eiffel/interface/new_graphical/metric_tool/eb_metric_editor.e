@@ -306,8 +306,6 @@ feature{NONE} -- Implementation
 	load_metric_name_and_description (a_metric: like metric; a_read_only: BOOLEAN) is
 			-- Load name and description of `a_metric' in `name_area'.
 			-- If `a_read_only' is True, disable edit in these two fields.
-		local
-			l_text: EV_TEXT_FIELD
 		do
 			if a_read_only then
 				name_area.enable_read_only_mode

@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_text: EV_TEXT_FIELD
-			l_combo: EV_COMBO_BOX
 		do
 			numerator_text.drop_actions.extend (agent on_drop (?, numerator_text))
 			numerator_text.set_accept_cursor (cursors.cur_metric)

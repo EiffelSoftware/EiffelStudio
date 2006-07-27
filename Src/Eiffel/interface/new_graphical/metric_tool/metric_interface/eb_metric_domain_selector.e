@@ -250,7 +250,6 @@ feature -- Element change
 			a_domain_attached: a_domain /= Void
 		local
 			done: BOOLEAN
-			l_id_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)

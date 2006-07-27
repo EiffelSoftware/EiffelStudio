@@ -107,8 +107,6 @@ feature{NONE} -- Implementation
 			a_metric_attached: a_metric /= Void
 			a_scope_attached: a_scope /= Void
 			manager_attached: manager /= Void
-		local
-			l_fill_domain: BOOLEAN
 		do
 			a_metric.disable_fill_domain
 			Result := a_metric.value (a_scope).first.value * a_coefficient

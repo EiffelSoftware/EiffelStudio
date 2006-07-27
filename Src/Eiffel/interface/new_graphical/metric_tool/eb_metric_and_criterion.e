@@ -28,7 +28,6 @@ feature -- Access
 			-- QL_CRITERION representing current criterion			
 		local
 			l_cursor: CURSOR
-			l_criterion: QL_CRITERION
 		do
 			if operands.is_empty then
 				Result := criterion_factory_table.item (a_scope).criterion_with_name ("true", [])

@@ -21,8 +21,6 @@ feature{NONE} -- Initialization
 
 	make is
 			-- Initialize.
-		local
-			l_scope_list: LIST [QL_SCOPE]
 		do
 			create criterion_table.make (10)
 			initialize_target_criteria

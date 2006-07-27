@@ -191,7 +191,6 @@ feature -- Access
 			-- Void if no metric is selected.
 		local
 			l_item: EV_GRID_ITEM
-			l_metric: EB_METRIC
 		do
 			if metric_grid.selected_items.count > 0 then
 				l_item := metric_grid.selected_items.first
@@ -379,7 +378,6 @@ feature -- Basic operations
 	select_first_metric is
 			-- Select the first available metric.
 		local
-			l_row: EV_GRID_ROW
 			l_item: EV_GRID_ITEM
 			l_row_index: INTEGER
 			l_row_count: INTEGER

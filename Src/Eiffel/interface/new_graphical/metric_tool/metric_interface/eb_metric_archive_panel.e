@@ -266,11 +266,9 @@ feature -- Actions
 			-- Action to be performed to start metric calcuation for generating archive information
 		local
 			l_selected_metrics: LIST [STRING]
-			ok: BOOLEAN
 			l_msg: STRING
 			l_error_dialog: EV_ERROR_DIALOG
 			l_retried: BOOLEAN
-			l_file: PLAIN_TEXT_FILE
 			l_file_name: STRING
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_source_domain: EB_METRIC_DOMAIN
@@ -711,8 +709,6 @@ feature {NONE} -- Implementation
 		local
 			url_address, http, ftp, file: STRING
 			l_is_file: BOOLEAN
-			l_url: STRING
-			f: RAW_FILE
 		do
 			url_address := a_text_field.text.twin
 			a_text_field.set_data (Void)

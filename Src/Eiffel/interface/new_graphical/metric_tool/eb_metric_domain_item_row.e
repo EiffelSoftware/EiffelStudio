@@ -33,7 +33,6 @@ feature{NONE} -- Initialization
 			l_group: CONF_GROUP
 			l_folder: EB_FOLDER
 			l_classi: CLASS_I
-			l_target: CONF_TARGET
 		do
 			domain_item := a_domain_item
 			if is_valid then
@@ -69,7 +68,12 @@ feature{NONE} -- Initialization
 					index := 2
 				elseif domain_item.is_target_item then
 					index := 1
-					create target_stone.make (target_of_id (a_domain_item.id))
+					if a_domain_item.id.is_empty then
+						create target_stone.make (universe.target)
+					else
+						create target_stone.make (target_of_id (a_domain_item.id))
+					end
+
 				end
 			end
 		ensure

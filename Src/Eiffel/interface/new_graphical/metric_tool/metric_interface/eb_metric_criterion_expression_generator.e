@@ -136,8 +136,6 @@ feature{NONE} -- Process
 
 	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
 			-- Process `a_criterion'.
-		local
-			l_format: EV_CHARACTER_FORMAT
 		do
 			if a_criterion.is_name_valid then
 				append_negation_start (a_criterion)
@@ -156,7 +154,6 @@ feature{NONE} -- Process
 			l_para_needed: BOOLEAN
 			l_count: INTEGER
 			l_operands: LIST [EB_METRIC_CRITERION]
-			l_nary_criterion: EB_METRIC_NARY_CRITERION
 		do
 			check a_criterion.is_name_valid end
 			l_para_needed := a_criterion.operands.count > 1

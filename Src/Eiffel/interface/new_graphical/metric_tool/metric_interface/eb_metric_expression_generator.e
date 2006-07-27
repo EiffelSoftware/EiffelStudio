@@ -36,7 +36,6 @@ feature -- Access
 	string_representation: STRING_GENERAL is
 			-- String representation of current expression
 		local
-			l_text: STRING
 			l_list: LIST [STRING_GENERAL]
 		do
 			create {STRING} Result.make (100)

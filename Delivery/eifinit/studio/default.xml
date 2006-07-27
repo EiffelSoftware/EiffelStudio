@@ -140,6 +140,7 @@
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="Screen y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.project_settings_split_position" DESCRIPTION="Position of the split area." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.starting_dialog_width" DESCRIPTION="Width of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.starting_dialog_height" DESCRIPTION="Height of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_width" DESCRIPTION="Width of the open project dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>

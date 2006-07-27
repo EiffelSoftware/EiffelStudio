@@ -28,7 +28,7 @@ feature -- Access
 	name: STRING is
 			-- Name of the section.
 		once
-			Result := conf_interface_names.group_library_tree
+			Result := conf_interface_names.group_precompile_tree
 		end
 
 	icon: EV_PIXMAP is

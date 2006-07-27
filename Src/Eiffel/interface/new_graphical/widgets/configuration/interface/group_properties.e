@@ -67,6 +67,10 @@ feature {NONE} -- Implementation
 				l_text_prop.set_value (conf_interface_names.group_cluster)
 				l_cluster ?= a_group
 				l_visible := l_cluster
+			elseif a_group.is_precompile then
+				l_text_prop.set_value (conf_interface_names.group_precompile)
+				l_library ?= a_group
+				l_visible := l_library
 			elseif a_group.is_library then
 				l_text_prop.set_value (conf_interface_names.group_library)
 				l_library ?= a_group

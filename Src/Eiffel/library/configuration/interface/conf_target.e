@@ -199,7 +199,7 @@ feature -- Access queries
 				Result := extends.libraries.twin
 				Result.merge (internal_libraries)
 			else
-				Result := internal_libraries
+				Result := internal_libraries.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -212,7 +212,7 @@ feature -- Access queries
 				Result := extends.assemblies.twin
 				Result.merge (internal_assemblies)
 			else
-				Result := internal_assemblies
+				Result := internal_assemblies.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -225,7 +225,7 @@ feature -- Access queries
 				Result := extends.clusters.twin
 				Result.merge (internal_clusters)
 			else
-				Result := internal_clusters
+				Result := internal_clusters.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -238,7 +238,7 @@ feature -- Access queries
 				Result := extends.overrides.twin
 				Result.merge (internal_overrides)
 			else
-				Result := internal_overrides
+				Result := internal_overrides.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -939,6 +939,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add `a_library'.
 		require
 			a_library_not_void: a_library /= Void
+			not_precompile: not a_library.is_precompile
 		do
 			internal_libraries.force (a_library, a_library.name)
 		ensure
@@ -959,6 +960,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
+			not_override: not a_cluster.is_override
 		do
 			internal_clusters.force (a_cluster, a_cluster.name)
 		ensure

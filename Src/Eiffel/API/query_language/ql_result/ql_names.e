@@ -104,6 +104,7 @@ feature -- Criterion names
 	ql_cri_is_overriden: STRING is "is_overriden"
 	ql_cri_is_overrider: STRING is "is_overrider"
 	ql_cri_is_visible: STRING is "is_visible"
+	ql_cri_is_from_any: STRING is "is_from_any"
 
 	ql_cri_has_argument: STRING is "has_argument"
 	ql_cri_has_assertion: STRING is "has_assertion"
@@ -139,7 +140,6 @@ feature -- Criterion names
 	ql_cri_createe_is: STRING is "createe_is"
 	ql_cri_creator_is: STRING is "creator_is"
 	ql_cri_is_invariant_feature: STRING is "is_invariant_feature"
-	ql_cri_is_in_immediate_feature: STRING is "is_in_immediate_feature"
 	ql_cri_is_query: STRING is "is_query"
 	ql_cri_is_command: STRING is "is_command"
 	ql_cri_return_type_is: STRING is "return_type_is"

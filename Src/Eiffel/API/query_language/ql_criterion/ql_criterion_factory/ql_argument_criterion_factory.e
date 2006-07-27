@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_is_visible_criterion, c_is_visible)
-			agent_table.put (agent new_is_in_immediate_feature_criterion, c_is_in_immediate_feature)
+			agent_table.put (agent new_is_in_immediate_feature_criterion, c_is_immediate)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
 
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
-			name_table.put (c_is_in_immediate_feature, query_language_names.ql_cri_is_in_immediate_feature)
+			name_table.put (c_is_immediate, query_language_names.ql_cri_is_immediate)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -116,7 +116,7 @@ feature -- Criterion index
 	c_name_is,
 	c_text_contain,
 	c_is_compiled,
-	c_is_in_immediate_feature: INTEGER is unique;
+	c_is_immediate: INTEGER is unique;
 
 feature{NONE} -- Implementation
 

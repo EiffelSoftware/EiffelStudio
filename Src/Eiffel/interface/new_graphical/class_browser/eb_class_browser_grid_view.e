@@ -371,6 +371,7 @@ feature{NONE} -- Implementation
 		do
 			if internal_text = Void then
 				create internal_text
+				internal_text.key_press_actions.extend (agent on_key_pressed_in_text)
 			end
 			Result := internal_text
 		ensure
@@ -535,6 +536,24 @@ feature{NONE} -- Actions
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
 		deferred
+		end
+
+	on_key_pressed_in_text (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed in `text'
+		require
+			a_key_attached: a_key /= Void
+		do
+			if ev_application.ctrl_pressed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_a then
+					if not text.text.is_empty then
+						text.select_all
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_c then
+					if text.has_selection then
+						ev_application.clipboard.set_text (text.selected_text)
+					end
+				end
+			end
 		end
 
 feature -- Recycle

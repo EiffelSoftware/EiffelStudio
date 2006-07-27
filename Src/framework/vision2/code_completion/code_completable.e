@@ -48,6 +48,10 @@ feature -- Access
 			key_press_actions_not_void: Result /= Void
 		end
 
+	save_list_position_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]]
+			-- Action to save completion list position.
+			-- [x_position, y_position, width, height]
+
 feature -- Status change
 
 	set_can_complete (a_fun: like key_completable) is
@@ -64,6 +68,14 @@ feature -- Status change
 			-- Set `completion_possibilities_provider'.
 		do
 			possibilities_provider := a_provider
+		end
+
+	set_save_list_position_action (a_action: like save_list_position_action) is
+			-- Set `save_list_position_action' with `a_action'.
+		do
+			save_list_position_action := a_action
+		ensure
+			save_list_position_action_set: save_list_position_action = a_action
 		end
 
 	refresh is

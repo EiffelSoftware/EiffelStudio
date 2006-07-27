@@ -29,14 +29,6 @@ inherit
 			make_with_text
 		end
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		undefine
-			default_create,
-			copy
-		end
-
 	SHARED_WORKBENCH
 		export
 			{NONE} all

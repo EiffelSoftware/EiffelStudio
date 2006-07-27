@@ -977,6 +977,9 @@ feature {NONE} -- Implementation
 	save_window_position is
 			-- Save current window position.
 		do
+			if code_completable.save_list_position_action /= Void and is_displayed then
+				code_completable.save_list_position_action.call ([x_position, y_position, width, height])
+			end
 		end
 
 	is_closing: BOOLEAN
@@ -1230,7 +1233,6 @@ feature {NONE} -- String matching
 			l_list: like choice_list
 			l_full_list: like full_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-			l_name_for_search: like name_type
 		do
 			l_list := choice_list
 			if rebuild_list_during_matching then
@@ -1296,7 +1298,8 @@ feature {NONE} -- String matching
 		end
 
 	matches_based_on_name (a_name: STRING): SORTABLE_ARRAY [like name_type] is
-			-- Array of matches based on `a_name'.  Always use this function before building lists to get correct matches.
+			-- Array of matches based on `a_name'.
+			-- Always use this function before building lists to get correct matches.
 		require
 			full_list_not_void: full_list /= Void
 		local

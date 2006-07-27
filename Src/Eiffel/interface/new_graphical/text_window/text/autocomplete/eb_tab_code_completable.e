@@ -21,6 +21,11 @@ inherit
 			initialize_code_complete
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Initialize
 
 	initialize_code_complete is
@@ -28,6 +33,7 @@ feature -- Initialize
 		do
 			Precursor {CODE_COMPLETABLE}
 			set_completing_feature (true)
+			set_save_list_position_action (agent save_window_position)
 		end
 
 feature -- Access
@@ -208,8 +214,6 @@ feature -- Selection
 		deferred
 		end
 
-feature -- Selection
-
 	show_possible_selection is
 			-- Show possible selection
 		deferred
@@ -382,28 +386,6 @@ feature -- Tab actions
  			end
  		end
 
-feature {EB_CODE_COMPLETION_WINDOW} -- Basic operation
-
-	block_focus_in_actions is
-			-- Block focus in actions
-		deferred
-		end
-
-	resume_focus_in_actions is
-			-- Resume focus in actions
-		deferred
-		end
-
-	block_focus_out_actions is
-			-- Block focus out actions.
-		deferred
-		end
-
-	resume_focus_out_actions is
-			-- Resume focus out actions.
-		deferred
-		end
-
 feature -- Trigger completion
 
 	on_key_pressed (a_key: EV_KEY) is
@@ -549,6 +531,14 @@ feature {NONE} -- Implementation
 				position_completion_choice_window
 				is_completing := True
 				choices.show
+			end
+		end
+
+	save_window_position (x, y, w, h: INTEGER) is
+			-- Save current window position
+		do
+			if preferences.development_window_data.remember_completion_list_size then
+				preferences.development_window_data.save_completion_list_size (w, h)
 			end
 		end
 

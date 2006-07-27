@@ -172,9 +172,10 @@ feature -- Basic operation
 			end
 		end
 
-	remove_criterion_row (a_row: EV_GRID_ROW; a_empty_row_removable: BOOLEAN) is
+	remove_criterion_row (a_row: EV_GRID_ROW; a_empty_row_removable: BOOLEAN; a_select_row: BOOLEAN) is
 			-- Remove `a_row' from Current.
 			-- If `a_empty_row_removable' is True, remove `a_row' even if it's an empty row.
+			-- If `a_select_row' is True, try to selected the nearest row related to `a_row'
 		require
 			criterion_loaded: is_criterion_loaded
 			a_row_attached: a_row /= Void
@@ -183,6 +184,7 @@ feature -- Basic operation
 			l_data: EB_METRIC_CRITERION_ROW
 			l_parent: EB_METRIC_CRITERION_ROW
 			l_should_remove: BOOLEAN
+			l_old_row_index: INTEGER
 		do
 			l_data ?= a_row.data
 			check l_data /= Void end
@@ -200,9 +202,19 @@ feature -- Basic operation
 				end
 			end
 			if l_should_remove then
+				l_old_row_index := a_row.index
 				remove_row (a_row.index)
 				if row_count = 0 then
 					load_criterion (Void, scope, is_read_only)
+				end
+				if a_select_row then
+					if row_count > 0 then
+						if l_old_row_index <= row_count then
+							select_row (l_old_row_index)
+						else
+							select_row (row_count)
+						end
+					end
 				end
 				change_actions.call ([])
 			end
@@ -238,7 +250,7 @@ feature -- Basic operation
 				if l_move_available then
 					change_actions.block
 					add_criterion_row (l_data.criterion, l_parent_row.grid_row.subrow (l_new_subrow_index), a_up, True)
-					remove_criterion_row (a_row, True)
+					remove_criterion_row (a_row, True, False)
 					change_actions.resume
 					change_actions.call ([])
 				end
@@ -390,7 +402,7 @@ feature{NONE} -- Implementation/Actions
 								-- Item is dropped on an empty row, it will replace the empty row.
 							l_criterion := l_source_data.criterion
 							check l_criterion /= Void end
-							remove_criterion_row (l_source_data.grid_row, True)
+							remove_criterion_row (l_source_data.grid_row, True, False)
 							l_dest_parent := l_dest_data.parent
 							check l_dest_parent /= Void end
 							l_insert_index := subrow_index (l_dest_parent.grid_row, l_dest_data.grid_row)
@@ -403,7 +415,7 @@ feature{NONE} -- Implementation/Actions
 							l_criterion := l_source_data.criterion
 							check l_criterion /= Void end
 							l_source_parent := l_source_data.parent
-							remove_criterion_row (l_source_data.grid_row, True)
+							remove_criterion_row (l_source_data.grid_row, True, False)
 							l_insert_index := l_dest_data.grid_row.subrow_count
 							if l_insert_index = 0 then
 								l_insert_index := 1
@@ -428,7 +440,7 @@ feature{NONE} -- Implementation/Actions
 							l_criterion := l_source_data.criterion
 							check l_criterion /= Void end
 							l_source_parent := l_source_data.parent
-							remove_criterion_row (l_source_data.grid_row, True)
+							remove_criterion_row (l_source_data.grid_row, True, False)
 							check l_dest_data.parent /= Void end
 							l_dest_parent := l_dest_data.parent
 							l_old_index := subrow_index (l_dest_data.parent.grid_row, l_dest_data.grid_row)

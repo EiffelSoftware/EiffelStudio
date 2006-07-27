@@ -129,24 +129,24 @@ feature {NONE} -- Initialization
 			combination_grid.add_key_action (agent on_indent (True), and_criterion_key_index)
 			combination_grid.add_key_action (agent on_indent (False), or_criterion_key_index)
 			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
-			create ctrl_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_up), True, False, False)
-			create ctrl_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_down), True, False, False)
+			create move_row_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
+			create move_row_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
 			create ctrl_right_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_right), True, False, False)
 			create alt_right_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_right), False, True, False)
 			combination_grid.add_key_shortcut (del_key_index, del_key_shortcut)
-			combination_grid.add_key_shortcut (move_up_key_index, ctrl_up_shortcut)
-			combination_grid.add_key_shortcut (move_down_key_index, ctrl_down_shortcut)
+			combination_grid.add_key_shortcut (move_up_key_index, move_row_up_shortcut)
+			combination_grid.add_key_shortcut (move_down_key_index, move_row_down_shortcut)
 			combination_grid.add_key_shortcut (and_criterion_key_index, ctrl_right_shortcut)
 			combination_grid.add_key_shortcut (or_criterion_key_index, alt_right_shortcut)
-			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + ctrl_up_shortcut.out + ")")
-			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + ctrl_down_shortcut.out + ")")
+			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_row_up_shortcut.out + ")")
+			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_row_down_shortcut.out + ")")
 			remove_criterion_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
 			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion + " (" + ctrl_right_shortcut.out + ")")
 			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion + " (" + alt_right_shortcut.out + ")")
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
-			ctrl_up_shortcut_attached: ctrl_up_shortcut /= Void
-			ctrl_down_shortcut_attached: ctrl_down_shortcut /= Void
+			ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
+			ctrl_down_shortcut_attached: move_row_down_shortcut /= Void
 			ctrl_right_shortcut_attached: ctrl_right_shortcut /= Void
 			alt_right_shortcut_attached: alt_right_shortcut /= Void
 		end
@@ -267,7 +267,7 @@ feature{NONE} -- Actions
 		do
 			l_rows := combination_grid.selected_rows
 			if not l_rows.is_empty then
-				combination_grid.remove_criterion_row (l_rows.first, False)
+				combination_grid.remove_criterion_row (l_rows.first, False, True)
 			end
 			is_definition_changed := True
 		ensure
@@ -278,7 +278,7 @@ feature{NONE} -- Actions
 			-- Action to be performed when remove all criteria
 		do
 			if combination_grid.row_count > 0 then
-				combination_grid.remove_criterion_row (combination_grid.row (1), True)
+				combination_grid.remove_criterion_row (combination_grid.row (1), True, False)
 			end
 			is_definition_changed := True
 		ensure
@@ -359,10 +359,10 @@ feature -- Key shortcuts
 	del_key_shortcut: ES_KEY_SHORTCUT
 			-- Del key
 
-	ctrl_up_shortcut: ES_KEY_SHORTCUT
+	move_row_up_shortcut: ES_KEY_SHORTCUT
 			-- Ctrl + Up key combination
 
-	ctrl_down_shortcut: ES_KEY_SHORTCUT
+	move_row_down_shortcut: ES_KEY_SHORTCUT
 			-- Ctrl + Down key combination
 
 	ctrl_right_shortcut: ES_KEY_SHORTCUT
@@ -376,8 +376,8 @@ invariant
 	metric_tool_attached: metric_tool /= Void
 	change_actions_attached: change_actions_internal /= Void
 	del_key_shortcut_attached: del_key_shortcut /= Void
-	ctrl_up_shortcut_attached: ctrl_up_shortcut /= Void
-	ctrl_down_shortcut_attached: ctrl_down_shortcut /= Void
+	ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
+	ctrl_down_shortcut_attached: move_row_down_shortcut /= Void
 	ctrl_right_shortcut_attached: ctrl_right_shortcut /= Void
 	alt_right_shortcut_attached: alt_right_shortcut /= Void
 

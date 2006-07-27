@@ -115,6 +115,7 @@ feature {NONE} -- Initialization
 
 				-- Setup actions
 			new_metric_btn.select_actions.extend (agent on_new_metric_button_pressed)
+			new_metric_btn.pointer_button_press_actions.extend (agent on_new_metric_button_is_right_clicked)
 			metric_selector.metric_selected_actions.extend (agent on_metric_selected)
 			save_metric_btn.select_actions.extend (agent on_save_metric)
 			remove_metric_btn.select_actions.extend (agent on_remove_metric)
@@ -165,6 +166,25 @@ feature -- Basic operations
 		end
 
 feature -- Actions
+
+	on_new_metric_button_is_right_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed when new metric button is right clicked
+		local
+			l_editor: like current_metric_editor
+			l_metric: EB_METRIC
+		do
+			if a_button = 3 then
+				l_editor := current_metric_editor
+				if l_editor /= Void then
+					l_metric := l_editor.metric
+					l_metric.set_name (metric_manager.next_metric_name ("Unnamed metric"))
+					metric_selector.remove_selection
+					metric_selector.remove_selection
+					load_metric_definition (l_metric, metric_type_id (l_metric), l_metric.unit, True)
+				end
+			end
+		end
+
 
 	on_new_metric_button_pressed is
 			-- Action to be performed when new metric button is pressed

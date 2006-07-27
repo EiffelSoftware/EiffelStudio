@@ -286,6 +286,7 @@ feature{NONE} -- Implementation
 			else
 				create l_font
 			end
+			a_drawable.set_font (l_font)
 			if l_font.height + top_border + bottom_border > height then
 				l_y := (height - l_font.height) // 2
 				if l_y < 0 then

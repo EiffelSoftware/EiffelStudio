@@ -365,10 +365,10 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_origin), query_language_names.ql_cri_is_origin)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_prefix), query_language_names.ql_cri_is_prefix)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_procedure), query_language_names.ql_cri_is_procedure)
-			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_query), query_language_names.ql_cri_is_unique)
+			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_query), query_language_names.ql_cri_is_query)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_command), query_language_names.ql_cri_is_command)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_visible), query_language_names.ql_cri_is_visible)
-			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_unique), query_language_names.ql_cri_is_query)
+			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_unique), query_language_names.ql_cri_is_unique)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_true), query_language_names.ql_cri_true)
 
 			l_hash_table.put (agent new_name_criterion (feature_scope, query_language_names.ql_cri_name_is), query_language_names.ql_cri_name_is)

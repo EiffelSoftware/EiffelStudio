@@ -136,7 +136,7 @@ feature -- Status setting
 				tmps.wipe_out;
 				tmps.append("Type conformity error, First field `");
 				tmps.append(ecd_fields.item(ecd_min_index).field_name);
-				tmps.append("' can not be indexed with ");
+				tmps.append("' cannot be indexed with ");
 				tmps.append(ecd_min_index.out);
 				tmps.append(".%N");
 				set_ecd_error(tmps)
@@ -145,7 +145,7 @@ feature -- Status setting
 				tmps.wipe_out;
 				tmps.append("Type conformity error, Last field `");
 				tmps.append(ecd_fields.item(ecd_max_index).field_name);
-				tmps.append("' can not be indexed with ");
+				tmps.append("' cannot be indexed with ");
 				tmps.append(ecd_max_index.out);
 				tmps.append(".%N");
 				set_ecd_error(tmps)

@@ -131,10 +131,10 @@ feature -- Handler dialog by code
 			create fr
 			create vb
 			fr.extend (vb)
-			create cb_ignore_external.make_with_text ("Ignore external exception")
+			create cb_ignore_external.make_with_text ("Ignore external exceptions")
 			cb_ignore_external.select_actions.extend (agent handle_ignore_external_changed)
 			vb.extend (cb_ignore_external)
-			create cb_handle_exception.make_with_text ("Exceptions handling enabled ?")
+			create cb_handle_exception.make_with_text ("Enable exception handling")
 			cb_handle_exception.select_actions.extend (agent handle_exception_changed)
 			vb.extend (cb_handle_exception)
 

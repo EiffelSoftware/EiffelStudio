@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			grid.row_select_actions.extend (agent row_selected)
 			grid.row_deselect_actions.extend (agent row_deselected)
 
-			handling_checkbox.set_text ("Exceptions handling enabled ?")
+			handling_checkbox.set_text ("Exception handling enabled ?")
 			handling_checkbox.select_actions.extend (agent on_handling_changed)
 
 			handling_external_checking.select_actions.extend (agent on_external_handling_changed)

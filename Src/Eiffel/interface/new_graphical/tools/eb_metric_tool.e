@@ -56,12 +56,7 @@ feature -- Actions
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				is_shown := True
-				if not is_metrics_loaded then
-					load_metrics (False)
-					metric_tool_interface.on_tab_change
-					display_error_message
-					is_metrics_loaded := True
-				elseif not is_up_to_date then
+				if not is_compiling then
 					synchronize_after_compilation
 				end
 			end
@@ -196,6 +191,12 @@ feature -- Basic operations
 	synchronize_after_compilation is
 			-- System recompiled, synchronize all related parts in metric tool.
 		do
+			if not is_metrics_loaded then
+				load_metrics (False)
+				metric_tool_interface.on_tab_change
+				display_error_message
+				is_metrics_loaded := True
+			end
 			metric_manager.check_validation (True)
 			set_changed
 			notify (False)
@@ -211,6 +212,18 @@ feature -- Basic operations
 	set_focus is
 			-- Give the focus to the metrics.
 		do
+		end
+
+	enable_tab (a_tab_index: INTEGER) is
+			-- Enable tab whose index is `a_tab_index'.
+		do
+			metric_tool_interface.metric_notebook.i_th (a_tab_index).enable_sensitive
+		end
+
+	disable_tab (a_tab_index: INTEGER) is
+			-- Disable tab whose index is `a_tab_index'.
+		do
+			metric_tool_interface.metric_notebook.i_th (a_tab_index).disable_sensitive
 		end
 
 feature -- Access
@@ -289,7 +302,6 @@ feature{NONE} -- Implementation
 				l_notebook.forth
 			end
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

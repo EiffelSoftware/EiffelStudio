@@ -204,17 +204,17 @@ feature -- Status report
 
 	get_exception_trace is
 		require
-			is_exception_trace: is_exception_trace
+			is_exception_trace: is_exception_trace --| exception_trace_id > 0
 		local
 			s: STRING_8
 			n: INTEGER
 		do
 			if exception_trace = Void then
+				create exception_trace.make_empty
 				exception_trace_request.send_integer (exception_trace_id)
 				s := exception_trace_request.c_tread
 				if s.is_integer then
 					from
-						create exception_trace.make_empty
 						n := s.to_integer
 					until
 						n = 0
@@ -224,7 +224,12 @@ feature -- Status report
 						n := n - 1
 					end
 				end
-			end
+		end
+		ensure
+			exception_trace_not_void: exception_trace /= Void
+		rescue
+			create exception_trace.make_empty
+			retry
 		end
 
 	exception_trace_request: EWB_REQUEST is

@@ -1,0 +1,2 @@
+Configuration error: .NET compilation on a non .NET system
+What to do: change the compilation type to classic (non .NET compilation) or if the system does support a .NET environment that is supported by the Eiffel compiler, install the necessary components.

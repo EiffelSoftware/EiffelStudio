@@ -127,9 +127,6 @@ feature{NONE} -- Implementation
 			candidate_cached: is_intrinsic_domain_cached_in_domain_generator
 		end
 
-invariant
-	criterion_domain_attached: criterion_domain /= Void
-
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

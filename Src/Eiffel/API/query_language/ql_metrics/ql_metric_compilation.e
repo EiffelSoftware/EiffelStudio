@@ -43,6 +43,12 @@ feature -- Access
 			Result := l_quantity.wrapped_domain
 		end
 
+	criteria: LIST [QL_CRITERION] is
+			-- List of criteria set to current metric
+		do
+			create {LINKED_LIST [QL_CRITERION]} Result.make
+		end
+
 feature -- Setting
 
 	set_criterion (a_criterion: QL_CRITERION) is
@@ -51,6 +57,12 @@ feature -- Setting
 			-- that scope which has the same scope as `a_criterion'.
 		do
 			-- Nothing for a complilation metric
+		end
+
+	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
+			-- Replace all delayed domains in `criterion' by `a_domain'.
+		do
+			-- Nothing for a complilation metric		
 		end
 
 	remove_criteria is

@@ -70,6 +70,9 @@ feature{NONE} -- Initialization
 	initialize_agent_internal: like initialize_agent;
 			-- Implementation of `initialize_agent'
 
+invariant
+	criterion_domain_attached: criterion_domain /= Void
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

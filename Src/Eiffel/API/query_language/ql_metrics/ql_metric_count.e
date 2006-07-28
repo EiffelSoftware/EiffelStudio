@@ -26,12 +26,24 @@ feature -- Value
 			Result := l_quantity.wrapped_domain
 		end
 
+	criteria: LIST [QL_CRITERION] is
+			-- List of criteria set to current metric
+		do
+			create {LINKED_LIST [QL_CRITERION]} Result.make
+		end
+
 feature -- Setting
 
 	set_criterion (a_criterion: QL_CRITERION) is
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
+		do
+			-- Current metric doesn't need a criterion.
+		end
+
+	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
+			-- Replace all delayed domains in `criterion' by `a_domain'.
 		do
 			-- Current metric doesn't need a criterion.
 		end

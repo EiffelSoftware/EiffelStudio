@@ -3568,7 +3568,8 @@
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
-<EV_TOOL_BAR></EV_TOOL_BAR>
+<EV_TOOL_BAR><Has_vertical_button_style>False</Has_vertical_button_style>
+	</EV_TOOL_BAR>
 <item type="EV_TOOL_BAR_BUTTON"><Internal_properties>
 	<id>243</id>
 	<name>compare_btn</name>

@@ -64,13 +64,8 @@ feature -- Actions
 
 	on_deselect is
 			-- Metric tool has been deselected.
-		require
-			tool_built: development_window.metric_menu /= Void
 		do
 			is_shown := False
-			if development_window.metric_menu /= Void then
-				development_window.metric_menu.disable_sensitive
-			end
 		end
 
 	on_compile_start is

@@ -894,9 +894,6 @@ feature -- Window Properties
 
 feature -- Pulldown Menus
 
-	metric_menu: EV_MENU
-			-- Menu for entries of metric tool.
-
 	format_menu: EV_MENU
 			-- ID Menu for formats.
 			-- Only used during debugging
@@ -1980,28 +1977,6 @@ feature {NONE} -- Menu Building
 
 				-- Separator --------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
-
-			if has_metrics then
-					-- Metric tool
-				create metric_menu.make_with_text (interface_names.metric_metrics)
-					create menu_item.make_with_text (interface_names.metric_calculate)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_add)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_delete)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_details)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_new_metrics)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_management)
-					metric_menu.extend (menu_item)
-					create menu_item.make_with_text (interface_names.metric_archive)
-					metric_menu.extend (menu_item)
-				metric_menu.disable_sensitive
-				tools_menu.extend (metric_menu)
-			end
 
 			if has_profiler then
 					-- Profiler Window
@@ -4152,7 +4127,6 @@ feature -- Recycle
 		do
 			tools_menu.destroy
 			window_menu.destroy
-			metric_menu.destroy
 --			compile_menu.destroy
 			debug_menu.destroy
 			debugging_tools_menu.destroy
@@ -4161,7 +4135,6 @@ feature -- Recycle
 
 			tools_menu := Void
 			window_menu := Void
-			metric_menu := Void
 			format_menu := Void
 			compile_menu := Void
 			debug_menu := Void

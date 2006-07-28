@@ -25,14 +25,15 @@ feature -- Element change
 
 	set_and_wrap_text (a_text: STRING_GENERAL) is
 			-- Set `text' to `a_text' and enable word wrapping.
+		local
+			l_no_width: BOOLEAN
 		do
-			if minimum_width_set_by_user then
-				set_minimum_width (minimum_width)
-			else
+			if not minimum_width_set_by_user then
 				set_minimum_width (0)
+				l_no_width := True
 			end
 			set_text (a_text)
-			if width > 0 then
+			if not l_no_width then
 				refresh_wrapped_text
 			end
 			resize_actions.force_extend (agent refresh_wrapped_text)

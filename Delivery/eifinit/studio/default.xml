@@ -147,6 +147,10 @@
 	<PREF NAME="interface.dialogs.open_project_dialog_height" DESCRIPTION="Height of the open project dialog." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 
 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
+
+	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>50</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_all_applicable_docking_indicators" DESCRIPTION="Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"><BOOLEAN>True</BOOLEAN></PREF>
+	
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
 	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>

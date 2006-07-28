@@ -1053,30 +1053,14 @@ feature {EV_ANY_I} -- Implementation
 			l_imp: EV_WINDOW_IMP
 			l_keep_alive: INTEGER
 			l_syn_others: BOOLEAN
+			l_test: EV_FAKE_FOCUS_GROUPABLE
 		do
 			l_keep_alive := wparam.to_integer_32
-			l_syn_others := True
+			l_test ?= interface
+			if l_test /= Void then
+				l_syn_others := True
 
-			l_windows := application_imp.windows
-			from
-				l_windows.start
-			until
-				l_windows.after
-			loop
-				l_imp ?= l_windows.item.implementation
-				check not_void: l_imp /= Void end
-				l_tool_window ?= l_windows.item
-		      -- UNDOCUMENTED FEATURE:
-		      -- If the other window being activated/deactivated (i.e. not the one that
-		      -- called here) is one of our tool windows, then go (or stay) active.			
-				if l_tool_window /= Void and then lparam = l_imp.wel_item then
-					l_keep_alive := 1
-					l_syn_others := False
-				end
-				l_windows.forth
-			end
-
-			if l_syn_others then
+				l_windows := application_imp.windows
 				from
 					l_windows.start
 				until
@@ -1085,12 +1069,32 @@ feature {EV_ANY_I} -- Implementation
 					l_imp ?= l_windows.item.implementation
 					check not_void: l_imp /= Void end
 					l_tool_window ?= l_windows.item
-
-					-- We don't send message to ourself
-					if l_tool_window /= Void and then l_imp.wel_item /= wel_item and wel_item /= lparam then
-						cwin_send_message (l_imp.wel_item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
+			      -- UNDOCUMENTED FEATURE:
+			      -- If the other window being activated/deactivated (i.e. not the one that
+			      -- called here) is one of our tool windows, then go (or stay) active.			
+					if l_tool_window /= Void and then lparam = l_imp.wel_item then
+						l_keep_alive := 1
+						l_syn_others := False
 					end
 					l_windows.forth
+				end
+
+				if l_syn_others then
+					from
+						l_windows.start
+					until
+						l_windows.after
+					loop
+						l_imp ?= l_windows.item.implementation
+						check not_void: l_imp /= Void end
+						l_tool_window ?= l_windows.item
+
+						-- We don't send message to ourself
+						if l_tool_window /= Void and then l_imp.wel_item /= wel_item and wel_item /= lparam then
+							cwin_send_message (l_imp.wel_item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
+						end
+						l_windows.forth
+					end
 				end
 			end
 
@@ -1400,6 +1404,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			l_result := cwin_destroy_window (wel_item)
 			-- Possibe bugs: a thread cannot use DestroyWindow to destroy a window created by a different thread.		
 			check success: l_result = 1 end
+			application_imp.remove_root_window (Current)
 
 			if a_parent /= Void then
 				l_window ?= a_parent.implementation
@@ -1412,6 +1417,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			else
 				make_top ("")
 			end
+			application_imp.add_root_window (Current)
 
 			set_size (l_width, l_height)
 			set_position (l_x, l_y)

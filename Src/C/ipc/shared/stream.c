@@ -114,12 +114,20 @@ rt_public void close_stream(STREAM *sp)
 	writeev(sp) = NULL;
 
 #else
+	int r;
 
 #ifdef USE_ADD_LOG
-	add_log(20, "close stream (read_fd: %d, write_fd: %d)", readfd(sp), writefd(sp));
+	add_log(20, "<%i> close stream (read_fd: %d, write_fd: %d)", getpid(), readfd(sp), writefd(sp));
 #endif
-	close(readfd(sp));
-	close(writefd(sp));
+	r = close(readfd(sp));
+	if (r != 0) {
+		r = close(readfd(sp));
+	}
+	r = close(writefd(sp));
+	if (r != 0) {
+		r = close(writefd(sp));
+	}
+
 	stream_by_fd[readfd(sp)] = (STREAM *) 0;
 	stream_by_fd[writefd(sp)] = (STREAM *) 0;
 #endif

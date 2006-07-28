@@ -135,6 +135,7 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 	char *startpath = NULL, *dotplace, *cmdline, *exe_path;	/* Paths for directory to start in */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
+	int r;
 	int pp2c[2];				/* The opened downwards file descriptors : parent to child */
 	int pc2p[2];				/* The opened upwards file descriptors : child to parent */
 	int new;					/* Duped file descriptor */
@@ -376,7 +377,6 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 #else	/* EIF_VMS */
 
 	    /* The fork and exec stuff: a classic */
-
 	pid = (Pid_t) fork();		/* That's where we fork */
 
 #endif /* EIF_VMS */
@@ -419,10 +419,10 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 
 #else /* (not) EIF_VMS */
 		/* FIXME why is it necessary to close each twice??? -- David_sS */
-		close(pp2c[PIPE_WRITE]);
-		close(pc2p[PIPE_READ]);
-		close(pp2c[PIPE_WRITE]);
-		close(pc2p[PIPE_READ]);
+		r = close(pp2c[PIPE_WRITE]);
+		r = close(pc2p[PIPE_READ]);
+		r = close(pp2c[PIPE_WRITE]);
+		r = close(pc2p[PIPE_READ]);
 #endif /* EIF_VMS */
 
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
@@ -434,11 +434,11 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		if (pp2c[PIPE_READ] != EWBOUT) {
 			if (pc2p[PIPE_WRITE] != EWBOUT) {
 				dup2(pc2p[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
 			}
 			if (pp2c[PIPE_READ] != EWBIN) {
 				dup2(pp2c[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
 			}
 		} else {
 			/* Bad case: pp2c[PIPE_READ] == EWBOUT. We cannot use the code above since
@@ -447,11 +447,11 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 			 */
 			if (pp2c[PIPE_READ] != EWBIN) {
 				dup2(pp2c[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
 			}
 			if (pc2p[PIPE_WRITE] != EWBOUT) {
 				dup2(pc2p[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
 			}
 		}
 		/* Now exec command. A successful launch should not return */
@@ -497,8 +497,9 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		if (new != -1 && new < pc2p[PIPE_READ]) {
 			close(pc2p[PIPE_READ]);
 			pc2p[PIPE_READ] = new;
-		} else if (new != -1)
+		} else if (new != -1) {
 			close(new);
+		}
 		/* Same thing with writing file descriptor. Note that we only keep the
 		 * new duped descriptor when it is lower than the current original.
 		 */
@@ -506,8 +507,9 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		if (new != -1 && new < pp2c[PIPE_WRITE]) {
 			close(pp2c[PIPE_WRITE]);
 			pp2c[PIPE_WRITE] = new;
-		} else if (new != -1)
+		} else if (new != -1) {
 			close(new);
+		}
 		/* No need to dup2() file descriptors, we do not exec() anybody yet.
 		 * However, do make sure those remaining descriptors will be closed
 		 * by any further exec.

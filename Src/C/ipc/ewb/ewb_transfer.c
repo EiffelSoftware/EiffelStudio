@@ -53,7 +53,10 @@ rt_public void ewb_tpipe(STREAM *stream)
 	 * with the remote process has to be made.
 	 */
 
-	if (ewb_sp != NULL) { unregister_packet_functions (ewb_sp); }
+	if (ewb_sp != NULL) { 
+		unregister_packet_functions (ewb_sp); 
+		close_stream (ewb_sp);
+	}
 	if (stream != NULL) {
 		ewb_sp = stream;
 		register_packet_functions (ewb_sp, &ewb_send_packet, &ewb_recv_packet);

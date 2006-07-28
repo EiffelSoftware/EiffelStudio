@@ -227,6 +227,14 @@ feature -- Status setting
 			end
 		end
 
+	show_relative_to_window (a_parent: EV_WINDOW) is
+			-- Show `Current' with respect to `a_parent'.
+		do
+			check
+				to_implement: False
+			end
+		end
+
 	is_positioned: BOOLEAN
 		-- Has the Window been previously positioned on screen?
 

@@ -160,9 +160,6 @@ feature{NONE} -- Implementation
 			-- Grid
 
 	build_filter_icons is
-		local
-			w,h: INTEGER
-			bc: EV_COLOR
 		do
 			icon_up := icon_pixmaps.sort_acending_icon
 			icon_down := icon_pixmaps.sort_descending_icon

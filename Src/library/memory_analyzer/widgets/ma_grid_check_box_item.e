@@ -105,6 +105,8 @@ feature {NONE} -- Implementation
 
 	draw_selected (a_drawable: EV_DRAWABLE) is
 			-- Draw the pixmap which is represent current is seleted.
+		local
+			l_data: like section_data
 		do
 			if is_selected and then parent.has_focus then
 				a_drawable.set_foreground_color (white_color)
@@ -113,8 +115,43 @@ feature {NONE} -- Implementation
 			end
 			draw_unselected (a_drawable)
 			a_drawable.set_line_width (check_figure_line_width)
-			a_drawable.draw_segment (figure_start_x + 1, figure_start_y + 2, figure_start_x + check_figure_size // 2, figure_start_y + check_figure_size)
-			a_drawable.draw_segment (figure_start_x + check_figure_size // 2, figure_start_y + check_figure_size, figure_start_x + check_figure_size, figure_start_y - 1 )
+			from
+				l_data := section_data
+				l_data.start
+			until
+				l_data.after
+			loop
+				draw_line_section (l_data.item, a_drawable)
+				l_data.forth
+			end
+		end
+
+	section_data: ARRAYED_LIST [EV_COORDINATE] is
+			-- Coordinate used to draw a check
+		once
+			create Result.make (7)
+			Result.extend (create{EV_COORDINATE}.make (2, 4))
+			Result.extend (create{EV_COORDINATE}.make (3, 5))
+			Result.extend (create{EV_COORDINATE}.make (4, 6))
+			Result.extend (create{EV_COORDINATE}.make (5, 5))
+			Result.extend (create{EV_COORDINATE}.make (6, 4))
+			Result.extend (create{EV_COORDINATE}.make (7, 3))
+			Result.extend (create{EV_COORDINATE}.make (8, 2))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	draw_line_section (a_coordinate: EV_COORDINATE; a_drawable: EV_DRAWABLE) is
+			-- Draw line sections to form a check starting from position specified by `a_coordinate'.
+		require
+			a_coordinate_attached: a_coordinate /= Void
+			a_drawable_attached: a_drawable /= Void
+		local
+			l_start_x, l_start_y: INTEGER
+		do
+			l_start_x := figure_start_x
+			l_start_y := figure_start_y
+			a_drawable.draw_segment (l_start_x + a_coordinate.x, l_start_y +a_coordinate.y, l_start_x + a_coordinate.x, l_start_y + a_coordinate.y + 2)
 		end
 
 	draw_unselected (a_drawable: EV_DRAWABLE) is
@@ -125,7 +162,7 @@ feature {NONE} -- Implementation
 			else
 				a_drawable.set_foreground_color (black_color)
 			end
-			a_drawable.set_line_width (1)
+			a_drawable.set_line_width (2)
 			a_drawable.draw_rectangle (figure_start_x, figure_start_y, check_figure_size, check_figure_size)
 		end
 
@@ -141,10 +178,10 @@ feature {NONE} -- Implementation
 			Result := (height - check_figure_size) // 2
 		end
 
-	check_figure_size: INTEGER is 10
+	check_figure_size: INTEGER is 12
 			-- The width/height of the check box.
 
-	check_figure_line_width: INTEGER is 2
+	check_figure_line_width: INTEGER is 1
 			-- The line width on the sign figure.
 
 	internal_selected: BOOLEAN

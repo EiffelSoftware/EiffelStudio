@@ -93,6 +93,14 @@ feature -- Command
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
+	replace_user_widget (a_content: SD_CONTENT) is
+			-- Replace `user_widget' which is related to `a_content'.
+		require
+			has: has (a_content)
+		do
+			internal_notebook.replace (a_content)
+		end
+
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN) is
 			-- Prune `a_content' from `Current'.
 		require

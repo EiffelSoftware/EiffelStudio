@@ -403,17 +403,17 @@ feature -- Drawing operations
 			l_pango_renderer: POINTER
 		do
 			if drawable /= default_pointer then
+				l_app_imp := App_implementation
 				a_x := x
 				if draw_from_baseline then
 					if internal_font_imp /= Void then
 						a_y := y - internal_font_imp.ascent
 					else
-						a_y := y - app_implementation.default_font_ascent
+						a_y := y - l_app_imp.default_font_ascent
 					end
 				else
 					a_y := y
 				end
-				l_app_imp := App_implementation
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 					-- Replace when we have UTF16 support
 				a_pango_layout := l_app_imp.pango_layout
@@ -430,9 +430,10 @@ feature -- Drawing operations
 						{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
 						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
 					else
-						-- Previous code for gtk 2.4 that set a clip area for text rendering.
+							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
 						a_clip_area := gc_clip_area
 						set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
+						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
 					end
 
 				end
@@ -746,22 +747,25 @@ feature {NONE} -- Implemention
 		require
 			pts_exists: pts /= Void
 		local
-			i, array_count: INTEGER
-			a_pts: ARRAY [EV_COORDINATE]
+			i, j, array_count: INTEGER
 			a_coord: EV_COORDINATE
+			l_area: SPECIAL [INTEGER]
+			l_coord_area: SPECIAL [EV_COORDINATE]
 		do
 			from
-				a_pts := pts
-				array_count := a_pts.count * 2
-				create Result.make (1, array_count)
-				i := 2
+				array_count := pts.count
+				create Result.make (1, array_count * 2)
+				l_coord_area := pts.area
+				l_area := Result.area
+				i := 0
 			until
-				i > array_count + 1
+				i = array_count
 			loop
-				a_coord := a_pts.item (i // 2)
-				Result.force (a_coord.x, i - 1)
-				Result.force (a_coord.y, i)
-				i := i + 2
+				a_coord := l_coord_area @ i
+				j := i * 2
+				l_area.put (a_coord.x, j)
+				l_area.put (a_coord.y, j + 1)
+				i := i + 1
 			end
 		ensure
 			Result_exists: Result /= Void

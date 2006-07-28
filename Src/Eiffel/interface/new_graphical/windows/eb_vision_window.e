@@ -15,6 +15,12 @@ inherit
 			{EV_ANY, EV_ANY_I, EB_DEBUGGER_MANAGER_IMP} implementation
 		end
 
+	EV_FAKE_FOCUS_GROUPABLE
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	default_create,
 	make_with_title

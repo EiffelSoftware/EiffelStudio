@@ -187,6 +187,12 @@ feature -- Redefine.
 			Result := internal_zone
 		end
 
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- Redefine
+		do
+			-- Do nothing.
+		end
+
 feature -- Command
 
 	update_title_bar is

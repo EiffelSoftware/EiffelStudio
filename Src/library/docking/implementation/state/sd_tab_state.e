@@ -243,12 +243,12 @@ feature -- Redefine
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			if not zone.is_drag_title_bar then
+				l_parent := tab_zone.parent
 				tab_zone.prune (internal_content, False)
 				create l_docking_state.make (internal_content, a_direction, tab_zone.width)
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (zone, False)
-				l_parent := tab_zone.parent
 				assistant.update_last_content_state (l_parent)
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
@@ -347,6 +347,12 @@ feature -- Redefine
 			create l_state.make (internal_content)
 			l_state.set_relative (zone.contents.last)
 			change_state (l_state)
+		end
+
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- Redefine
+		do
+			zone.replace_user_widget (content)
 		end
 
 feature {SD_CONTENT} -- Redefine

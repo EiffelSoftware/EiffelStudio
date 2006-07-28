@@ -270,6 +270,15 @@ feature -- Set
 			end
 		end
 
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- Set `user_widget' with `a_widget'.
+		require
+			not_void: a_widget /= Void
+		do
+			internal_user_widget := a_widget
+			state.set_user_widget (a_widget)
+		end
+
 feature -- Set Position
 
 	set_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is

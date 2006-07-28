@@ -234,6 +234,9 @@ feature {NONE} -- Implementation
 					source_feature := s_feat;
 					target_feature := t_feat;
 
+						-- Register into assert server.
+					format_reg.assert_server.register_adapter (Current);
+
 						-- Only register if the target and source
 						-- feature are written in the same class
 						-- and are refering to the same body
@@ -250,7 +253,6 @@ feature {NONE} -- Implementation
 											t_feat, new_feature_as, format_reg);
 						else
 							register_feature (t_feat, False, format_reg);
-							format_reg.assert_server.register_adapter (Current);
 						end
 					end
 				end

@@ -2494,6 +2494,16 @@ feature -- Externals
 			"C signature (): GSList* use <gtk/gtk.h>"
 		end
 
+	frozen gdk_pixbuf_get_has_alpha (a_pixbuf: POINTER): BOOLEAN is
+		external
+			"C signature (GdkPixbuf*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_get_pixels (a_pixbuf: POINTER): POINTER is
+		external
+			"C signature (GdkPixbuf*): guchar* use <gtk/gtk.h>"
+		end
+
 	frozen gdk_pixbuf_format_is_writable (a_pixbuf_format: POINTER): BOOLEAN is
 		external
 			"C signature (GdkPixbufFormat*): gboolean use <gtk/gtk.h>"

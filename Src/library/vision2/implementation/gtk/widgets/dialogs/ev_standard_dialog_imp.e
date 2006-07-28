@@ -19,7 +19,9 @@ inherit
 			interface,
 			default_wm_decorations,
 			on_key_event,
-			initialize
+			initialize,
+			blocking_condition,
+			show_modal_to_window
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
@@ -70,35 +72,7 @@ feature -- Status setting
 			user_clicked_ok := False
 			selected_button := Void
 
-				-- Remove the modality of the parent if it is modal
-			if a_window /= Void then
-				a_window_imp ?= a_window.implementation
-
-				if a_window_imp.is_modal then
-					parent_was_modal := True
-					a_window_imp.disable_modal
-				end
-			end
-
-			if is_modal then
-				was_modal := True
-			else
-				enable_modal
-			end
-				-- Hack - Blocking window needs to be set before and after show otherwise it is not modal.
-			set_blocking_window (a_window)
-			show
-			set_blocking_window (a_window)
-			block
-			set_blocking_window (Void)
-
-			if not is_destroyed and then not was_modal then
-				disable_modal
-			end
-				-- Put parent's original modality back.
-			if a_window /= Void and then parent_was_modal then
-				a_window_imp.enable_modal
-			end
+			Precursor (a_window)
 
 			if selected_button /= Void then
 				if selected_button.is_equal (internal_accept) then
@@ -134,18 +108,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	block is
-			-- Wait until window is closed by the user.
-		local
-			l_app_imp: like app_implementation
+	blocking_condition: BOOLEAN is
+			-- Condition which causes blocking to cease if enabled.
 		do
-			from
-				l_app_imp := app_implementation
-			until
-				is_destroyed or else selected_button /= Void
-			loop
-				l_app_imp.event_loop_iteration (True)
-			end
+			Result := is_destroyed or else selected_button /= Void
 		end
 
 	enable_closeable is

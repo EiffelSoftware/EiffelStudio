@@ -131,7 +131,7 @@ feature -- Project file/directory warnings
 	w_no_compilable_target: STRING is "Cannot compile project: no valid target found."
 			-- Error when no compilable target was found.
 
-	w_None_system: STRING is "A system whose root class is NONE is not runnable."
+	w_None_system: STRING is "A system with an all classes root is not runnable."
 
 feature -- File warnings
 
@@ -1136,7 +1136,7 @@ feature -- Warning messages
 
 	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%
 									%an optimized version as well as a workbench version.%N%
-									%Would you like to create a finalized verion?"
+									%Would you like to create a finalized version?"
 
 	w_Replace_all: STRING is "This operation cannot be undone %N%
 									%to files not loaded to the editor.%N%
@@ -1148,7 +1148,7 @@ feature -- Warning messages
 								    %may terminate current finalizing.%NContinue?"
 
 	w_Freezing_running: STRING is "Freezing is in progress, start Eiffel compilation%N%
-								  %may terminate currernt freezing.%NContinue?"
+								  %may terminate current freezing.%NContinue?"
 
 	w_cannot_clear_when_c_compilation_running: STRING is "Please clear this window after c compilation has exited."
 	w_cannot_save_when_c_compilation_running: STRING is "Please save output after c compilation has exited."

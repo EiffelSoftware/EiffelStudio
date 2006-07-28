@@ -286,10 +286,6 @@ rt_private void write_application_interruption_flag(unsigned char value)
 
 	bResult = WriteProcessMemory(hProcess, addr_flag, &interrupt_flag, sizeof(unsigned char), &written); 
 
-/* it is better to close handle than returning so quickly ...:  
- * if (!bResult) { return; } 
- */
-
 	CloseHandle(hProcess);
 	hProcess = NULL;
 #else

@@ -75,6 +75,8 @@ rt_public char *progname;	/* Otherwise defined in logfile.c */
 rt_public void ewb_exit(int code);			/* Daemon's exit */
 rt_public void clean_connection(void);	/* Clean connection with ecdbgd */
 rt_private Signal_t handler(int sig);	/* Signal handler */
+rt_private void init_signals (void);
+rt_private char init_signals_done = (char) 0;	/* is init_signals already called ? */
 
 rt_private void set_signal(void)
 {
@@ -170,16 +172,7 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 #endif /* USE_ADD_LOG */
 
 
-	set_signal();						/* Set up signal handler */
-	signal (SIGABRT ,exit);
-#ifdef EIF_WINDOWS
-#ifdef SIGQUIT
-	signal (SIGQUIT, exit);
-#endif
-#else
-	signal (SIGQUIT, exit);
-#endif
-
+	init_signals();						/* Set up signal handler */
 
 #ifdef EIF_WINDOWS
 		/* First argument is 1 because we are launching the Eiffel compiler here. */
@@ -200,6 +193,23 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 #endif
 	
 	return 1;
+}
+
+rt_private void init_signals (void)
+{
+	/* Initialize signals handlers once */
+	if (init_signals_done != (char) 1) {
+		set_signal();						/* Set up signal handler */
+		signal (SIGABRT ,exit);
+#ifdef EIF_WINDOWS
+#ifdef SIGQUIT
+		signal (SIGQUIT, exit);
+#endif
+#else
+		signal (SIGQUIT, exit);
+#endif
+		init_signals_done = (char) 1;
+	}
 }
 
 rt_public void init_connection(int* err)
@@ -227,7 +237,6 @@ rt_public void init_connection(int* err)
 
 	ewb_prt_init();				/* Initialize IDR filters */
 	ewb_tpipe(sp);				/* Initialize transfers with application */
-
 
 #ifdef USE_ADD_LOG
 	progpid = getpid();					/* Program's PID */

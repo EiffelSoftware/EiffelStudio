@@ -52,7 +52,10 @@ rt_public void app_tpipe(STREAM *stream)
 	 * with the remote process has to be made.
 	 */
 
-	if (app_sp != NULL) { unregister_packet_functions (app_sp); }
+	if (app_sp != NULL) { 
+		unregister_packet_functions (app_sp); 
+		close_stream (app_sp);
+	}
 	if (stream != NULL) {
 		app_sp = stream;
 		register_packet_functions (app_sp, &app_send_packet, &app_recv_packet);

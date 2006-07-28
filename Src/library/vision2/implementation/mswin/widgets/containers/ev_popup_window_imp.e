@@ -13,6 +13,7 @@ inherit
 		redefine
 			interface,
 			default_style,
+			default_ex_style,
 			make,
 			initialize
 		end
@@ -57,6 +58,13 @@ feature {NONE} -- Implementation
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings
+		end
+
+	default_ex_style: INTEGER is
+			-- Redefine
+			-- Set with `ws_ex_toolwindow' to avoid addition title in taskbar.
+		do
+			Result := Ws_ex_toolwindow
 		end
 
 feature  -- Implementation

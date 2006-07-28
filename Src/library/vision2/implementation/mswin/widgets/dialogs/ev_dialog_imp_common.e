@@ -17,13 +17,16 @@ inherit
 			unlock_update
 		redefine
 			interface
+		select
+			show
 		end
 
 	EV_TITLED_WINDOW_IMP
 		undefine
 			class_name,
 			on_wm_control_id_command,
-			on_wm_nc_destroy
+			on_wm_nc_destroy,
+			show_relative_to_window
 		redefine
 			interface, process_message,
 			wel_move_and_resize,

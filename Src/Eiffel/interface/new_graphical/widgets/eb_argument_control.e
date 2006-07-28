@@ -220,6 +220,11 @@ feature {NONE} -- GUI
 			arguments_grid.enable_single_row_selection
 			arguments_grid.row_select_actions.extend (agent on_row_selected)
 			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
+			arguments_grid.resize_actions.extend (
+				agent (x, y, width, height: INTEGER)
+					do
+						arguments_grid.column (1).set_width (width)
+					end)
 
 			create l_border_box
 			l_border_box.set_border_width (1)
@@ -394,6 +399,7 @@ feature {NONE} -- Actions
 				Result := grid_row_with_argument (s)
 				if Result = Void then
 					create gi.make_with_text (s)
+					gi.set_tooltip (s)
 					arguments_grid.set_item (1, arguments_grid.row_count + 1, gi)
 					Result := gi.row
 					Result.set_data (s)
@@ -452,13 +458,13 @@ feature {NONE} -- Actions
 	on_row_selected (a_row: EV_GRID_ROW) is
 		local
 			s: STRING
-			gl: EV_GRID_LABEL_ITEM
+			gi: EV_GRID_LABEL_ITEM
 		do
 			if a_row /= Void then
 				if a_row.count > 0 then
-					gl ?= a_row.item (1)
-					if gl /= Void then
-						gl.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
+					gi ?= a_row.item (1)
+					if gi /= Void then
+						gi.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
 					end
 				end
 				s ?= a_row.data
@@ -473,13 +479,13 @@ feature {NONE} -- Actions
 
 	on_row_unselected (a_row: EV_GRID_ROW) is
 		local
-			gl: EV_GRID_LABEL_ITEM
+			gi: EV_GRID_LABEL_ITEM
 		do
 			remove_button.disable_sensitive
 			if a_row /= Void and then a_row.count > 0 then
-				gl ?= a_row.item (1)
-				if gl /= Void then
-					gl.remove_pixmap
+				gi ?= a_row.item (1)
+				if gi /= Void then
+					gi.remove_pixmap
 				end
 			end
 		end

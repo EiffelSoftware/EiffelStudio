@@ -170,6 +170,8 @@ feature -- Access queries
 				end
 				l_targets.forth
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	version: CONF_VERSION is

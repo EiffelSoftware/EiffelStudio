@@ -40,7 +40,7 @@ feature -- Basic operations
 				-- Create the dialog.
 		do
 			if exists then
-				show
+				show_internal
 			else
 				parent_window := a_parent_window
 				parent_window_imp ?= a_parent_window.implementation

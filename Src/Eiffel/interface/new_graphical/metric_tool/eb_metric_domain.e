@@ -49,6 +49,18 @@ feature -- Status report
 			end
 		end
 
+	has_delayed_domain_item: BOOLEAN is
+			-- Does current domain has delayed domain item?
+		local
+			l_cursor: CURSOR
+		do
+			Result := there_exists (
+						agent (a_domain_item: EB_METRIC_DOMAIN_ITEM): BOOLEAN
+							do Result := a_domain_item /= Void and then a_domain_item.is_delayed_item
+						end
+                      )
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

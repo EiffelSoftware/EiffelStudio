@@ -289,16 +289,14 @@ feature -- Element change
 
 feature -- Status report
 
-	domain_has (a_item: EB_METRIC_DOMAIN_ITEM): BOOLEAN is
-			-- Does `domain' have `a_item'?
+	domain_has (a_domain: like domain; a_item: EB_METRIC_DOMAIN_ITEM): BOOLEAN is
+			-- Does `a_domain' have `a_item'?		
 		require
+			a_domain_attached: a_domain /= Void
 			a_item_attached: a_item /= Void
-		local
-			l_domain: like domain
 		do
-			l_domain := domain
-			l_domain.compare_objects
-			result := l_domain.has (a_item)
+			a_domain.compare_objects
+			result := a_domain.has (a_item)
 		end
 
 feature{NONE} -- Actions
@@ -347,9 +345,15 @@ feature{NONE} -- Actions
 			l_feature_stone: FEATURE_STONE
 			l_target_stone: TARGET_STONE
 			l_stone: STONE
+			l_domain: like domain
 		do
 			l_stone ?= a_any
-			if l_stone /= Void and then not domain_has (domain_item_from_stone (l_stone))  then
+			l_domain := domain
+			if
+				l_stone /= Void and then
+				not l_domain.has_delayed_domain_item and then
+				not domain_has (l_domain, domain_item_from_stone (l_stone))
+			then
 				l_classi_stone ?= a_any
 				l_cluster_stone ?= a_any
 				l_feature_stone ?= a_any
@@ -365,9 +369,14 @@ feature{NONE} -- Actions
 			-- Action to be performed when a delayed scope is added
 		local
 			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
+			l_domain: like domain
 		do
+			l_domain := domain
 			create l_delayed_item.make ("")
-			if not domain_has (l_delayed_item) then
+			if not domain_has (l_domain, l_delayed_item) then
+				domain_change_actions.block
+				on_remove_all_scopes
+				domain_change_actions.resume
 				insert_domain_item (l_delayed_item)
 				on_domain_change
 			end
@@ -377,9 +386,11 @@ feature{NONE} -- Actions
 			-- Action to be performed when current application target is added
 		local
 			l_delayed_item: EB_METRIC_TARGET_DOMAIN_ITEM
+			l_domain: like domain
 		do
+			l_domain := domain
 			create l_delayed_item.make ("")
-			if not domain_has (l_delayed_item) then
+			if not domain_has (l_domain, l_delayed_item) then
 				insert_domain_item (l_delayed_item)
 				on_domain_change
 			end
@@ -424,7 +435,7 @@ feature{NONE} -- Actions
 		end
 
 	on_key_pressed (a_key: EV_KEY) is
-			-- Action to be performed when a key is pressed in `grid'.
+			-- Action to be performed whenv a key is pressed in `grid'.
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
 				on_remove_selected_scopes
@@ -434,7 +445,7 @@ feature{NONE} -- Actions
 	on_show_address_manager is
 			-- Action to be performed to display `address_manager'
 		do
-			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y)
+			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y, 2)
 		end
 
 feature{NONE} -- Implementation/Data
@@ -550,6 +561,31 @@ feature{NONE} -- Implementation
 			grid.header.i_th (1).remove_pixmap
 			grid.row (grid.row_count).ensure_visible
 		end
+
+--	veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+--			-- Action to test if `a_pebble' is allowed to be dropped on `a_item'.
+--		local
+--			l_stone: STONE
+--			l_classi_stone: CLASSI_STONE
+--			l_cluster_stone: CLUSTER_STONE
+--			l_feature_stone: FEATURE_STONE
+--			l_target_stone: TARGET_STONE
+--			l_domain: like domain
+--		do
+--			if a_item /= Void then
+--				if a_item.data /= Void then
+--					l_target_stone ?= a_pebble
+--					l_classi_stone ?= a_pebble
+--					l_cluster_stone ?= a_pebble
+--					l_feature_stone ?= a_pebble
+--					if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
+--						l_domain := domain
+--						l_stone ?= a_pebble
+--						Result := not l_domain.has_delayed_domain_item and then not l_domain.has (domain_item_from_stone (l_stone))
+--					end
+--				end
+--			end
+--		end
 
 feature{NONE} -- Implementation/Sorting
 

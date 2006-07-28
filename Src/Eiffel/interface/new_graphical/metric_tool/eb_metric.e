@@ -63,6 +63,9 @@ feature -- Status report
 		do
 		end
 
+	should_result_be_filtered: BOOLEAN
+			-- Should result be filtered and only result items that are visible in the input domain are remained?
+
 feature -- Access
 
 	name: STRING
@@ -80,6 +83,24 @@ feature -- Access
 
 	manager: EB_METRIC_MANAGER
 			-- Metric manager
+
+feature -- Setting
+
+	enable_filter_result is
+			-- Enable that result is filtered.
+		do
+			should_result_be_filtered := True
+		ensure
+			result_filter_enabled: should_result_be_filtered
+		end
+
+	disable_filter_result is
+			-- Disable that result is filtered.
+		do
+			should_result_be_filtered := False
+		ensure
+			result_filter_disabled: not should_result_be_filtered
+		end
 
 feature -- Metric calculation
 

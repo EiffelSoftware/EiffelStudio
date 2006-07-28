@@ -160,6 +160,9 @@ feature {NONE} -- Initialization
 			reload_btn.pointer_button_press_actions.extend (agent on_open_user_defined_metric_file)
 			choose_input_domain_lbl.set_text (metric_names.t_select_source_domain)
 			choose_metric_lbl.set_text (metric_names.t_select_metric)
+
+			filter_result_btn.set_tooltip (metric_names.f_filter_result)
+			filter_result_btn.set_pixmap (pixmaps.icon_pixmaps.class_deferred_icon)
 		end
 
 feature -- Access
@@ -221,6 +224,7 @@ feature -- Basic operations
 			unit_combo.disable_sensitive
 			quick_metric_btn.disable_sensitive
 			reload_btn.disable_sensitive
+			filter_result_btn.disable_sensitive
 		end
 
 	synchronize_when_compile_stop is
@@ -229,6 +233,7 @@ feature -- Basic operations
 			quick_metric_btn.enable_sensitive
 			domain_selector.enable_sensitive
 			metric_selector.enable_sensitive
+			filter_result_btn.enable_sensitive
 			if current_metric /= Void then
 				go_to_definition_btn.disable_sensitive
 			else
@@ -255,6 +260,7 @@ feature -- Basic operations
 			metric_definer.disable_sensitive
 			reload_btn.disable_sensitive
 			metric_selector.disable_sensitive
+			filter_result_btn.disable_sensitive
 			metric_tool.disable_tab ({EB_METRIC_TOOL_PANEL}.metric_definition_tab_index)
 		end
 
@@ -275,6 +281,7 @@ feature -- Basic operations
 			metric_definer.enable_sensitive
 			reload_btn.enable_sensitive
 			metric_selector.enable_sensitive
+			filter_result_btn.enable_sensitive
 			metric_tool.enable_tab ({EB_METRIC_TOOL_PANEL}.metric_definition_tab_index)
 		end
 
@@ -308,6 +315,11 @@ feature -- Actions
 				is_stopped_by_eiffel_compilation := False
 
 				l_metric := current_metric.twin
+				if filter_result_btn.is_selected then
+					l_metric.enable_filter_result
+				else
+					l_metric.disable_filter_result
+				end
 					-- Setup metric evaluator.
 				if a_detailed then
 					l_metric.enable_fill_domain
@@ -519,6 +531,15 @@ feature {NONE} -- Implementation
 				l_generator.tick_actions.wipe_out
 				l_generator.set_interval (2000)
 			end
+		end
+
+	current_application_target_domain: EB_METRIC_DOMAIN is
+			-- Current application target domain
+		do
+			create Result.make
+			Result.extend (create{EB_METRIC_TARGET_DOMAIN_ITEM}.make (""))
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Metric management

@@ -34,6 +34,7 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_1
 			create l_ev_tool_bar_separator_1
 			create control_toolbar
+			create filter_result_btn
 			create run_metric_btn
 			create run_with_detail_metric_btn
 			create stop_metric_btn
@@ -78,6 +79,7 @@ feature {NONE}-- Initialization
 			toolbar_area.extend (l_ev_tool_bar_1)
 			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
 			toolbar_area.extend (control_toolbar)
+			control_toolbar.extend (filter_result_btn)
 			control_toolbar.extend (run_metric_btn)
 			control_toolbar.extend (run_with_detail_metric_btn)
 			control_toolbar.extend (stop_metric_btn)
@@ -145,7 +147,7 @@ feature {NONE}-- Initialization
 			metric_value_lbl.set_minimum_width (30)
 			metric_value_lbl.align_text_left
 			l_ev_frame_1.set_style (1)
-			metric_value_text.set_minimum_width (120)
+			metric_value_text.set_minimum_width (100)
 			metric_value_text.set_minimum_height (18)
 			metric_source_domain_area.set_minimum_width (250)
 			metric_source_domain_area.set_minimum_height (0)
@@ -203,7 +205,7 @@ feature -- Access
 
 	unit_combo: EV_COMBO_BOX
 	quick_metric_toolbar, control_toolbar: EV_TOOL_BAR
-	quick_metric_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	quick_metric_btn, filter_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 	run_metric_btn,
 	run_with_detail_metric_btn, stop_metric_btn, go_to_definition_btn, reload_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,

@@ -118,6 +118,7 @@ feature {NONE} -- Initialization
 			new_archive_browse_btn.set_tooltip (metric_names.f_select_exist_archive_file)
 			clean_btn.set_tooltip (metric_names.f_clean_archive)
 			compare_btn.set_tooltip (metric_names.f_compare_archive)
+			compare_btn.set_text (metric_names.t_compare)
 			browse_current_archive_btn.set_tooltip (metric_names.f_select_current_archive)
 			browse_reference_archive_btn.set_tooltip (metric_names.f_select_reference_archive)
 			run_btn.disable_sensitive

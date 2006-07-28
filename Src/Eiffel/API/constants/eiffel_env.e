@@ -262,6 +262,17 @@ feature -- Access: file name
 			Result.extend_from_array(<<short_studio_name, "profiler">>)
 		end
 
+	predefined_metrics_file: FILE_NAME is
+			-- File to store predefined metrics
+		once
+			create Result.make_from_string (eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "metrics">>)
+			Result.set_file_name ("predefined_metrics.xml")
+		ensure
+			predefined_metrics_file_not_void: Result /= Void
+			predefined_metrics_file_not_empty: not Result.is_empty
+		end
+
 	New_project_wizards_path: DIRECTORY_NAME is
 			-- Location of new project wizards.
 		once

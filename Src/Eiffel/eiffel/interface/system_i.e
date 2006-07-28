@@ -18,6 +18,9 @@ inherit
 	SYSTEM_OPTIONS
 
 	SYSTEM_DESCRIPTION
+		redefine
+			set_name
+		end
 
 	SYSTEM_DOCUMENTATION
 
@@ -331,6 +334,15 @@ feature -- Properties
 
 	makefile_generator: MAKEFILE_GENERATOR
 			-- Makefile generator.
+
+	set_name (s: STRING) is
+			-- Assign `s' to `system_name'.
+		do
+			if not equal (name, s) then
+				set_freeze
+			end
+			Precursor {SYSTEM_DESCRIPTION} (s)
+		end
 
 	array_make_name: STRING
 			-- Name of the C routine corresponding to the

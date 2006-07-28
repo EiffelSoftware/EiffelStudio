@@ -11,13 +11,6 @@ class
 inherit
 	EB_CLASSES_TREE_ITEM
 
-	TARGET_STONE
-		undefine
-			default_create, copy, is_equal
-		redefine
-			make
-		end
-
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -30,13 +23,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: CONF_TARGET) is
 			-- Create.
 		do
 			default_create
-			target := a_target
-			set_text (target.name)
-			set_tooltip (target.name)
+			create stone.make (a_target)
+			set_text (a_target.name)
+			set_tooltip (a_target.name)
 			set_pixmap (pixmaps.icon_pixmaps.folder_target_icon)
 			set_pebble_function (agent stone)
 			set_accept_cursor (cursors.cur_target)
@@ -45,11 +38,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	stone: TARGET_STONE is
+	stone: TARGET_STONE
 			-- Stone representing `Current'.
-		do
-			Result := Current
-		end
 
 feature {NONE} -- Actions
 
@@ -94,6 +84,9 @@ feature {NONE} -- Implementation
 
 	associated_window: EB_DEVELOPMENT_WINDOW;
 			-- Where should clicked classes set a stone?
+
+invariant
+	stone_set: stone /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

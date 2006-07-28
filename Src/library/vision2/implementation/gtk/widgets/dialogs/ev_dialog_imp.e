@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_DIALOG_IMP
-	
+
 inherit
 	EV_DIALOG_I
 		undefine
@@ -26,30 +26,31 @@ inherit
 			interface,
 			call_close_request_actions,
 			initialize,
-			client_area
+			client_area,
+			show_relative_to_window
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
-		
+
 create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
 			set_c_object (create_gtk_dialog)
 		end
-		
+
 	initialize is
 			-- Initialize 'Current'
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
 			enable_closeable
 		end
-		
+
 feature -- Status Report
 
 	is_closeable: BOOLEAN is
@@ -64,9 +65,9 @@ feature -- Status Report
 			Result := not is_modal and {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
 				and is_show_requested
 		end
-		
+
 feature -- Status Setting
-	
+
 	enable_closeable is
 			-- Set the window to be closeable by the user
 		do
@@ -103,11 +104,11 @@ feature -- Basic operations
 			else
 				enable_modal
 			end
-				
+
 			show_relative_to_window (a_window)
 			block
 			set_blocking_window (Void)
-			
+
 			if not is_destroyed and then not was_modal then
 				disable_modal
 			end
@@ -129,7 +130,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	client_area: POINTER is
-			-- Pointer to the widget that is treated as the main holder of the client area within the window. 
+			-- Pointer to the widget that is treated as the main holder of the client area within the window.
 		do
 			Result := client_area_from_c_object (c_object)
 		end
@@ -150,7 +151,7 @@ feature {NONE} -- Implementation
 							-- sensitive so simulate a press.
 						default_cancel_button.select_actions.call (Void)
 					end
-	
+
 				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
 					current_push_button /= Void then
 					if current_push_button.is_sensitive and not current_push_button.has_focus then
@@ -183,10 +184,10 @@ feature {NONE} -- Implementation
 			-- Call the cancel actions if dialog is closeable.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
-			if is_dialog_closeable and then not App_implementation.is_in_transport then 
+			if is_dialog_closeable and then not App_implementation.is_in_transport then
 				if internal_default_cancel_button /= Void and then
 					internal_default_cancel_button.is_sensitive-- and then
-					--internal_default_cancel_button.is_displayed 
+					--internal_default_cancel_button.is_displayed
 					then
 						if internal_default_cancel_button.select_actions /= Void then
 							internal_default_cancel_button.select_actions.call (Void)

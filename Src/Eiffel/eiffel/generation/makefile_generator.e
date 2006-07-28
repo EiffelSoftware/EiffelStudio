@@ -425,13 +425,20 @@ feature -- Sub makefile generation
 					generate_macro ("OBJECTS", basket)
 						-- Generate partial object.
 					make_file.put_string ("all: ")
-					make_file.put_character (sub_dir)
-					make_file.put_string ("obj")
-					make_file.put_integer (i)
-					make_file.put_string (".o")
-					make_file.put_new_line
-					make_file.put_new_line
-					generate_partial_objects_linking (sub_dir, i)
+					if sub_dir = system_object_prefix and i = 1 then
+							-- For E1 directory, we do not use the large .o file, just the small ones.
+						make_file.put_string ("$(OBJECTS)")
+						make_file.put_new_line
+						make_file.put_new_line
+					else
+						make_file.put_character (sub_dir)
+						make_file.put_string ("obj")
+						make_file.put_integer (i)
+						make_file.put_string (".o")
+						make_file.put_new_line
+						make_file.put_new_line
+						generate_partial_objects_linking (sub_dir, i)
+					end
 						-- Generate cleaning rules
 					generate_sub_cleaning
 						-- End production.
@@ -1014,6 +1021,7 @@ feature -- Generation (Linking rules)
 			make_file.put_integer (index)
 			make_file.put_string (".o $(OBJECTS)")
 
+			make_file.put_string ("%N%T$(RM) $(OBJECTS)")
 			make_file.put_string ("%N%T$(CREATE_TEST)")
 
 			make_file.put_new_line

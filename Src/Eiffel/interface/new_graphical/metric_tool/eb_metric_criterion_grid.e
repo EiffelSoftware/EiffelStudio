@@ -518,6 +518,7 @@ feature{NONE} -- Implementation
 			l_feature_stone: FEATURE_STONE
 			l_target_stone: TARGET_STONE
 			l_domain_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_domain: EB_METRIC_DOMAIN
 		do
 			if a_item /= Void then
 				if a_item.column.index = 1 then
@@ -543,7 +544,8 @@ feature{NONE} -- Implementation
 						l_feature_stone ?= a_pebble
 						if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
 							l_stone ?= a_pebble
-							Result := not l_domain_item.domain.has (domain_item_from_stone (l_stone))
+							l_domain := l_domain_item.domain
+							Result := not l_domain.has (domain_item_from_stone (l_stone)) and then not l_domain.has_delayed_domain_item
 						end
 					end
 				end

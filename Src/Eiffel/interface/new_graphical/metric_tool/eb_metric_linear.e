@@ -109,6 +109,11 @@ feature{NONE} -- Implementation
 			manager_attached: manager /= Void
 		do
 			a_metric.disable_fill_domain
+			if should_result_be_filtered then
+				a_metric.enable_filter_result
+			else
+				a_metric.disable_filter_result
+			end
 			Result := a_metric.value (a_scope).first.value * a_coefficient
 		end
 

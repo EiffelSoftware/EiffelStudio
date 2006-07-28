@@ -18,6 +18,11 @@ inherit
 			string_representation
 		end
 
+	EB_METRIC_INTERFACE_PROVIDER
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -52,7 +57,7 @@ feature -- Access
 			if not is_valid then
 				Result := Precursor
 			else
-				Result := "Delayed"
+				Result := metric_names.t_input_domain
 			end
 		end
 

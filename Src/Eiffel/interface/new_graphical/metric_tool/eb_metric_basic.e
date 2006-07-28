@@ -21,6 +21,14 @@ inherit
 			metric as ql_metric
 		end
 
+	QL_CRITERION_ITERATOR
+		export
+			{NONE} all
+		redefine
+			process_intrinsic_domain_criterion,
+			process_domain_criterion
+		end
+
 create
 	make
 
@@ -124,21 +132,29 @@ feature{NONE} -- Implementation
 			-- If `is_fill_domain_enabled' store generated domain into `last_result_domain'.
 		require
 			a_domain_attached: a_domain /= Void
+		local
+			l_metric: like metric
 		do
+			l_metric := metric
 			if is_fill_domain_enabled then
-				metric.enable_fill_domain
+				l_metric.enable_fill_domain
 			else
-				metric.disable_fill_domain
+				l_metric.disable_fill_domain
 			end
-			internal_value := internal_value + metric.value (a_domain).first.value
+			if l_metric.has_delayed_domain then
+				l_metric.replace_delayed_domain_by (a_domain)
+				internal_value := internal_value + l_metric.value (current_application_target_domain).first.value
+			else
+				internal_value := internal_value + l_metric.value (a_domain).first.value
+			end
 			if is_fill_domain_enabled then
 				check
-					metric.last_domain /= Void
+					l_metric.last_domain /= Void
 				end
 				if last_result_domain = Void then
-					last_result_domain := metric.last_domain.twin
+					last_result_domain := l_metric.last_domain.twin
 				else
-					last_result_domain := last_result_domain.union (metric.last_domain)
+					last_result_domain := last_result_domain.union (l_metric.last_domain)
 				end
 			end
 		end
@@ -154,7 +170,7 @@ feature{NONE} -- Implementation
 					evaluated_criteria_internal := criteria.new_criterion (unit.scope)
 					if evaluated_criteria_internal /= Void then
 						l_scope := evaluated_criteria_internal.scope
-						if l_scope.is_code_structure_scope then
+						if should_result_be_filtered and then l_scope.is_code_structure_scope then
 							l_cri := criterion_factory_table.item (l_scope).criterion_with_name ("is_visible", [])
 							if l_cri /= Void then
 								evaluated_criteria_internal := evaluated_criteria_internal and l_cri
@@ -168,6 +184,34 @@ feature{NONE} -- Implementation
 
 	evaluated_criteria_internal: like evaluated_criteria
 			-- Implementation of `evaluate_criteria'
+
+feature{NONE} -- Visitor
+
+	real_domain: QL_DOMAIN
+			-- Real domain which will replace those delayed domain in given criterion
+
+	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+			-- Process `a_cri'.
+		do
+			process_domain_criterion (a_cri)
+		end
+
+	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION) is
+			-- Process `a_cri'.
+		do
+			if a_cri.criterion_domain /= Void and then real_domain /= Void then
+				a_cri.set_criterion_domain (real_domain)
+			end
+		end
+
+	current_application_target_domain: QL_TARGET_DOMAIN is
+			-- Current application target domain
+		do
+			create Result.make
+			Result.extend (create{QL_TARGET}.make (universe.target))
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	metric_attached: metric /= Void

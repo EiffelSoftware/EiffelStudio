@@ -70,6 +70,8 @@ feature -- Titles
 	t_select_current_archive: STRING is "Select current archive:"
 	t_archive_comparison_result: STRING is "Archive comparison result:"
 	t_clean: STRING is "Clean"
+	t_compare: STRING is "Compare"
+	t_input_domain: STRING is "Input domain"
 
 feature -- Labels
 
@@ -114,7 +116,8 @@ feature -- Tooltip
 	f_remove: STRING is "Remove current selected metric"
 	f_domain_item_invalid: STRING is "Item invalid in current system"
 	f_application_scope: STRING is "Add current application target scope"
-	f_search_for_class: STRING is "Search for class";
+	f_search_for_class: STRING is "Search for group/class/feature"
+	f_filter_result: STRING is "Filter result which is not visible from input domain";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

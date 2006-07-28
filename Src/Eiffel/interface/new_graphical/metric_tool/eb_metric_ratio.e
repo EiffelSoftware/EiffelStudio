@@ -111,6 +111,13 @@ feature -- Metric calculation
 		do
 			l_num_metric := manager.metric_with_name (numerator_metric_name)
 			l_den_metric := manager.metric_with_name (denominator_metric_name)
+			if should_result_be_filtered then
+				l_num_metric.enable_filter_result
+				l_den_metric.enable_filter_result
+			else
+				l_num_metric.disable_filter_result
+				l_den_metric.disable_filter_result
+			end
 			l_den_value := l_den_metric.value (a_scope)
 			if l_den_value.first.value = 0.0 then
 				raise ("Devided by 0")

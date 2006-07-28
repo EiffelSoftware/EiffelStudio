@@ -54,7 +54,6 @@ feature {NONE}-- Initialization
 			create comparison_toolbar_area
 			create compare_toolbar
 			create compare_btn
-			create l_ev_tool_bar_separator_2
 			create display_mode_toolbar
 			create ratio_btn
 			create difference
@@ -99,7 +98,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_4.extend (comparison_toolbar_area)
 			comparison_toolbar_area.extend (compare_toolbar)
 			compare_toolbar.extend (compare_btn)
-			compare_toolbar.extend (l_ev_tool_bar_separator_2)
 			comparison_toolbar_area.extend (display_mode_toolbar)
 			display_mode_toolbar.extend (ratio_btn)
 			display_mode_toolbar.extend (difference)
@@ -164,6 +162,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_4.disable_item_expand (reference_archve_area)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_4.disable_item_expand (current_archive_area)
+			compare_toolbar.disable_vertical_button_style
 			reference_archve_area.set_padding_width (3)
 			reference_archve_area.disable_item_expand (reference_archive_lbl)
 			reference_archive_lbl.set_text ("Select reference archive:")
@@ -211,13 +210,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
+	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1: EV_CELL
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
-	l_ev_horizontal_box_6, l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1, l_ev_vertical_box_2,
-	l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6,
+	l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

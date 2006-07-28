@@ -413,10 +413,10 @@ end;
 				current_feature_table.init_origin_table
 			end;
 
-			if Tmp_ast_server.has (class_id) then
-				Result := Tmp_ast_server.item (class_id)
+			if ast_server.has (class_id) then
+				Result := ast_server.item (class_id)
 			else
-				Result := Ast_server.item (class_id)
+				Result := tmp_ast_server.item (class_id)
 			end
 		end;
 

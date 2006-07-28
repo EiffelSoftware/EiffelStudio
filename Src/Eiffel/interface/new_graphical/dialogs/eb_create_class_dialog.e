@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 			class_entry.change_actions.extend (agent update_file_entry)
 			create file_entry
 			create creation_entry
-			create cluster_list.make
+			create cluster_list.make_without_targets
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
 			cluster_list.refresh
 			create deferred_check.make_with_text (Interface_names.L_deferred)
@@ -318,6 +318,10 @@ feature {NONE} -- Access
 					cluster := clu.actual_cluster
 					path := l_folder.path
 				end
+			else
+				aok := False
+				create wd.make_with_text (warning_messages.w_no_cluster_selected_for_class_creation)
+				wd.show_modal_to_window (Current)
 			end
 		end
 
@@ -492,7 +496,11 @@ feature {NONE} -- Implementation
 					end
 					cr := creation_entry.text
 					if not deferred_check.is_selected and then not cr.is_empty then
-						in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + "%N%N")
+						if expanded_check.is_selected and not cr.is_equal ("default_create") then
+							in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + ", default_create%N%N")
+						else
+							in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + "%N%N")
+						end
 					else
 						in_buf.replace_substring_all ("$creation_clause", "")
 					end

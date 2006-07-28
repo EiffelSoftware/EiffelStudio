@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			buttons_box.extend (create {EV_CELL})
 
 				-- Create the controls.
-			create classes_tree.make
+			create classes_tree.make_without_targets
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
 			classes_tree.refresh

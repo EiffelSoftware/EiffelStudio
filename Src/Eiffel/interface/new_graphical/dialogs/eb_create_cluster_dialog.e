@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 				-- Build the widgets
 			create cluster_entry
 			create folder_entry
-			create cluster_list.make
+			create cluster_list.make_without_targets
 			create recursive_box.make_with_text (Interface_names.l_All)
 			create name_label.make_with_text (Interface_names.L_cluster_name)
 			create path_label.make_with_text (Interface_names.l_Path)

@@ -38,7 +38,7 @@ inherit
 
 	ERF_SHARED_LOGGER
 
-	CONF_REFACTORING
+	COMPILER_EXPORTER
 
 create
 	make
@@ -414,18 +414,27 @@ feature {NONE} -- Implementation
 		require
 			text_managed: text_managed
 		local
+			l_retried: BOOLEAN
 			l_parser: EIFFEL_PARSER
 		do
-			l_parser := heavy_eiffel_parser
-			l_parser.parse_from_string (text)
-			if l_parser.error_count = 0 then
-				ast := l_parser.root_node
-				match_list := l_parser.match_list
+			if not l_retried then
+				l_parser := heavy_eiffel_parser
+				l_parser.parse_from_string (text)
+				if l_parser.error_count = 0 then
+					ast := l_parser.root_node
+					match_list := l_parser.match_list
+				else
+					is_parse_error := True
+				end
 			else
 				is_parse_error := True
+				system.error_handler.wipe_out
 			end
 		ensure
 			no_error_implies_set: not is_parse_error implies is_parsed
+		rescue
+			l_retried := True
+			retry
 		end
 
 	rebuild_text is

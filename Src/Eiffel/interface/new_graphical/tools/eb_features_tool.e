@@ -265,7 +265,11 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
+							if classc_stone.e_class.is_precompiled then
+								current_class := classc_stone.e_class.ast
+							else
+								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
+							end
 							if current_class /= Void then
 								feature_clauses := current_class.features
 									-- Build the tree

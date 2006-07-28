@@ -193,20 +193,6 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
 		end
 
-	block is
-			-- Wait until window is closed by the user.
-		local
-			l_app_imp: like app_implementation
-		do
-			from
-				l_app_imp := app_implementation
-			until
-				is_destroyed or else not is_show_requested
-			loop
-				l_app_imp.event_loop_iteration (True)
-			end
-		end
-
 	allow_resize is
 			-- Allow the resize of the window.
 		do
@@ -227,14 +213,6 @@ feature -- Status setting
 			end
 		end
 
-	show_relative_to_window (a_parent: EV_WINDOW) is
-			-- Show `Current' with respect to `a_parent'.
-		do
-			check
-				to_implement: False
-			end
-		end
-
 	is_positioned: BOOLEAN
 		-- Has the Window been previously positioned on screen?
 
@@ -249,7 +227,6 @@ feature -- Status setting
 			if is_show_requested then
 				a_x_pos := x_position
 				a_y_pos := y_position
-				disable_modal
 				disable_capture
 				set_blocking_window (Void)
 				Precursor {EV_CONTAINER_IMP}

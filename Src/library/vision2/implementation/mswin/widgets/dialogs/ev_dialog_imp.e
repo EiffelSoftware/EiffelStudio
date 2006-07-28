@@ -28,7 +28,8 @@ inherit
 			set_x_position,
 			set_y_position,
 			set_position,
-			on_destroy
+			on_destroy,
+			show_relative_to_window
 		end
 
 create
@@ -404,6 +405,8 @@ feature {NONE} -- Implementation
 			copy_box_attributes (other_imp.lower_bar, lower_bar)
 			create upper_bar
 			copy_box_attributes (other_imp.upper_bar, upper_bar)
+
+			set_ex_style (other_imp.ex_style)
 		end
 
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is

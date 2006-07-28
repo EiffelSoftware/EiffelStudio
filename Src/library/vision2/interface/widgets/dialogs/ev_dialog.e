@@ -19,7 +19,8 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			initialize
+			initialize,
+			show_relative_to_window
 		end
 
 create
@@ -169,13 +170,9 @@ feature -- Basic operations
 
 	show_relative_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' with respect to `a_window'.
-		require
-			not_destroyed: not is_destroyed
-			a_window_not_void: a_window /= Void
-			a_window_not_current: a_window /= Current
 		do
 			implementation.show_relative_to_window (a_window)
-		ensure
+		ensure then
 			is_relative_to_window: is_relative
 			blocking_window_set: blocking_window = a_window
 		end

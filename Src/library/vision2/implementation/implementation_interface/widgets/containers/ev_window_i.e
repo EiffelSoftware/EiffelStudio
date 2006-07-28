@@ -232,6 +232,11 @@ feature -- Status setting
 			border_disabled: not user_can_resize implies not is_border_enabled
 		end
 
+	show_relative_to_window (a_parent: EV_WINDOW) is
+			-- Show `Current' with respect to `a_parent'.
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	internal_disable_border is

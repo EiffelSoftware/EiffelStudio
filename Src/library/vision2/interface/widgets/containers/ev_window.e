@@ -342,6 +342,17 @@ feature -- Status setting
 				((create {EV_ENVIRONMENT}).application.locked_window = Void)
 		end
 
+	show_relative_to_window (a_parent: EV_WINDOW) is
+			-- Show `Current' with respect to `a_parent'.
+		require
+			not_void: a_parent /= Void
+			not_destroyed: not is_destroyed
+			not_destoryed: not a_parent.is_destroyed
+			a_window_not_current: a_parent /= Current
+		do
+			implementation.show_relative_to_window (a_parent)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WINDOW_I

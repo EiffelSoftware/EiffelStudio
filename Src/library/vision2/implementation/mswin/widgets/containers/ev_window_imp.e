@@ -65,7 +65,8 @@ inherit
 			move as wel_move,
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
-			has_capture as wel_has_capture
+			has_capture as wel_has_capture,
+			show as wel_show
 		export {EV_WIDGET_IMP}
 			menu_bar_height
 		undefine
@@ -112,9 +113,9 @@ inherit
 			on_wm_close,
 			on_wm_window_pos_changing,
 			on_wm_setting_change,
-			show,
 			hide,
-			class_requires_icon
+			class_requires_icon,
+			wel_show
 		end
 
 	WEL_CONSTANTS
@@ -725,23 +726,24 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	show_relative_to_window (a_parent: EV_WINDOW) is
+			-- Show `Current' with respect to `a_window'.
+		do
+			if not is_parented_window then
+				is_parented_window := True
+				switch_between_parented_window (a_parent)
+			end
+			wel_show
+		end
+
 	show is
 			-- Show `Current'.
 		do
-			if not is_displayed then
-				call_show_actions := True
-				Precursor {WEL_FRAME_WINDOW}
-				if item_imp /= Void then
-					notify_change (nc_minsize, item_imp)
-				end
-					-- We call show actions
-				if call_show_actions then
-					if show_actions_internal /= Void then
-						show_actions_internal.call (Void)
-					end
-					call_show_actions := False
-				end
+			if is_parented_window then
+				is_parented_window := False
+				switch_between_parented_window (Void)
 			end
+			wel_show
 		end
 
 	hide is
@@ -1341,6 +1343,118 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- no icon is assigned.
 		do
 			Result := False
+		end
+
+feature {NONE} -- Implementation for switch non-parented and parented windows
+
+	wel_show is
+			-- Show `Current'.
+		do
+			if not is_displayed then
+				call_show_actions := True
+				Precursor {WEL_FRAME_WINDOW}
+				if item_imp /= Void then
+					notify_change (nc_minsize, item_imp)
+				end
+					-- We call show actions
+				if call_show_actions then
+					if show_actions_internal /= Void then
+						show_actions_internal.call (Void)
+					end
+					call_show_actions := False
+				end
+			end
+		end
+
+	is_parented_window: BOOLEAN
+			-- If current is parented window?
+
+	switch_between_parented_window (a_parent: EV_WINDOW) is
+			-- Change window native item to parent window if `a_parent' not void.
+			-- If `a_parent' void then change to not parented window.
+		local
+			l_window: WEL_WINDOW
+			l_width, l_height, l_x, l_y: INTEGER
+			l_old_child: EV_WIDGET
+			l_old_child_upper, l_old_child_lower: EV_WIDGET
+			l_result: INTEGER
+			l_old_child_window: EV_WIDGET_IMP
+			l_menu_bar: EV_MENU_BAR
+		do
+			l_width := width
+			l_height := height
+			l_x := screen_x
+			l_y := screen_y
+
+			l_old_child := item
+			clear_parent (l_old_child)
+			l_old_child_lower := lower_bar
+			clear_parent (l_old_child_lower)
+			l_old_child_upper := upper_bar
+			clear_parent (l_old_child_upper)
+
+			l_menu_bar := menu_bar
+			if l_menu_bar /= Void then
+				remove_menu_bar
+			end
+
+			l_result := cwin_destroy_window (wel_item)
+			-- Possibe bugs: a thread cannot use DestroyWindow to destroy a window created by a different thread.		
+			check success: l_result = 1 end
+
+			if a_parent /= Void then
+				l_window ?= a_parent.implementation
+				check not_void: l_window /= Void end
+
+				make_child (l_window, "")
+
+				-- If we don't clear wel_parent here, features like position calculation, extend... will have problem.
+				wel_parent := Void
+			else
+				make_top ("")
+			end
+
+			set_size (l_width, l_height)
+			set_position (l_x, l_y)
+
+			set_widget_parent (l_old_child, interface)
+			set_widget_parent (l_old_child_lower, interface)
+			set_widget_parent (l_old_child_upper, interface)
+
+			if l_menu_bar /= Void then
+				set_menu_bar (l_menu_bar)
+			end
+		ensure
+			switched: wel_item /= old wel_item
+		end
+
+	clear_parent (a_widget: EV_WIDGET) is
+			-- Clear the parent of `a_widget'.
+		local
+			l_imp: EV_WIDGET_IMP
+		do
+			if a_widget /= Void then
+				l_imp ?= a_widget.implementation
+				check not_void: l_imp /= Void end
+				l_imp.wel_set_parent (application_imp.silly_main_window)
+			end
+		end
+
+	set_widget_parent (a_widget: EV_WIDGET; a_parent: EV_CONTAINER) is
+			-- Set `a_widget' parent to `a_parent' if possible.
+		require
+			not_void: a_parent /= Void
+		local
+			l_parent_imp: WEL_WINDOW
+			l_child_imp: EV_WIDGET_IMP
+		do
+ 			if a_widget /= Void then
+ 				l_parent_imp ?= a_parent.implementation
+ 				check not_void: l_parent_imp /= Void end
+				l_child_imp ?= a_widget.implementation
+				check l_child_imp /= Void end
+				l_child_imp.wel_set_parent (l_parent_imp)
+			end
 		end
 
 feature {NONE} -- Features that should be directly implemented by externals

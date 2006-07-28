@@ -65,6 +65,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_invariant_callee: like callee_list_for_invariant
 			l_feature_callee: like callee_list_for_feature
 			l_data_feature: QL_FEATURE
+			l_e_feature: E_FEATURE
 		do
 			if not is_criterion_domain_evaluated then
 				initialize_domain
@@ -80,11 +81,13 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			until
 				l_feature_list.after
 			loop
-				l_feature := query_feature_item (l_feature_list.item)
-				l_data_feature := query_feature_item (l_feature_callee.i_th (l_feature_list.index))
-				l_feature.set_data (l_data_feature)
-				Result.extend (l_feature)
-
+				l_e_feature := l_feature_list.item
+				if l_e_feature /= Void then
+					l_feature := query_feature_item (l_e_feature)
+					l_data_feature := query_feature_item (l_feature_callee.i_th (l_feature_list.index))
+					l_feature.set_data (l_data_feature)
+					Result.extend (l_feature)
+				end
 				l_feature_list.forth
 			end
 				-- For invariant callers
@@ -102,7 +105,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 					l_data_feature := query_feature_item (l_invariant_callee.item)
 					l_feature.set_data (l_data_feature)
 					Result.extend (l_feature)
-					l_invariant_list.forth
+				l_invariant_list.forth
 					l_invariant_callee.forth
 				end
 			end

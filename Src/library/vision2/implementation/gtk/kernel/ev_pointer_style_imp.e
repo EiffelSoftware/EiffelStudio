@@ -129,7 +129,7 @@ feature -- Implementation
 	gdk_cursor_from_pointer_style: POINTER is
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
-			a_pixbuf: POINTER
+			a_image: POINTER
 		do
 			inspect
 				predefined_cursor_code
@@ -151,32 +151,40 @@ feature -- Implementation
 
 
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
-				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
-				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
-				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
-				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
-				a_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
 			else
-				a_pixbuf := gdk_pixbuf
-				{EV_GTK_EXTERNALS}.object_ref (a_pixbuf)
+				a_image := gdk_pixbuf
+				{EV_GTK_EXTERNALS}.object_ref (a_image)
 			end
 
 			if Result = default_pointer then
 				check
-					a_pixbuf_not_null: a_pixbuf /= default_pointer
+					a_image_not_null: a_image /= default_pointer
 				end
 				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (
 					{EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default,
-					gdk_pixbuf,
+					a_image,
 					interface.x_hotspot,
 					interface.y_hotspot
 				)
-				{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+				{EV_GTK_EXTERNALS}.object_unref (a_image)
 			end
+		end
+
+	image_from_xpm_data (a_xpm_data: POINTER): POINTER is
+			-- Return image data from `a_xpm_data'.
+		require
+			a_xpm_not_null: a_xpm_data /= default_pointer
+		do
+			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
 		end
 
 	set_gdkpixbuf (a_pixbuf: POINTER) is

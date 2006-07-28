@@ -10,12 +10,11 @@ class
 	EVS_GENERAL_TOOLTIP_WINDOW
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_FAKE_FOCUS_POPUP_WINDOW
 		redefine
 			initialize,
 			is_in_default_state
 		end
-
 
 	EVS_GENERAL_TOOLTIP_UTILITY
 		undefine
@@ -47,6 +46,7 @@ feature -- Show
 			l_pos := tooltip_left_top_position (pointer_x, pointer_y)
 			set_position (l_pos.x, l_pos.y)
 			safe_register_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
+
 			if related_window /= Void then
 					-- With `related_window' set, we can ensure that displayed tooltip is always visiable.
 				show_relative_to_window (related_window)
@@ -54,6 +54,7 @@ feature -- Show
 					-- Without `related_window' set, displayed tooltip maybe invisiable after current application loses focus.
 				show
 			end
+			set_focus
 		end
 
 	hide_tooltip is

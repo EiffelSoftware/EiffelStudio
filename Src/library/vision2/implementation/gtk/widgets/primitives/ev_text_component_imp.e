@@ -74,9 +74,7 @@ feature {EV_WINDOW_IMP}
 			--
 		do
 			-- We don't want to lose focus on up or down keys.
-			if a_key.code = {EV_KEY_CONSTANTS}.key_down or else a_key.code = {EV_KEY_CONSTANTS}.key_up then
-				Result := True
-			end
+			Result := a_key.code = {EV_KEY_CONSTANTS}.key_down or else a_key.code = {EV_KEY_CONSTANTS}.key_up
 		end
 
 feature {NONE} -- Implementation

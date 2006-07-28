@@ -357,7 +357,7 @@ feature{NONE} -- Implementation
 invariant
 	mode_valid: is_mode_valid (mode)
 	unit_attached: unit /= Void
-	metric_type_attached: metric_type /= Void
+	metric_type_attached: metric_type /= 0
 	expression_generator_attached: expression_generator /= Void
 	change_actions_attached: change_actions /= Void
 

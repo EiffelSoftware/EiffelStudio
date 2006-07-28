@@ -819,7 +819,6 @@ feature {NONE} -- Implementation of data retrieval
 						l_files.after
 					loop
 						l_loc := l_files.item
-						l_loc.replace_substring_all ("%"", "&quot;")
 						if l_has_ignores then
 								-- ignore externals of vision2 and wel
 							l_ignore.match (l_loc)

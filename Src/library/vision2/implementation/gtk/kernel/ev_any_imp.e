@@ -245,9 +245,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 		once
 			create env
 			Result ?= env.application.implementation
-			check
-				Result_not_void: Result /= Void
-			end
 		end
 
 feature -- Measurement

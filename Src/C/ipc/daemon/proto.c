@@ -198,16 +198,23 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 	case APP_INTERRUPT_FLAG:	/* Get the address of the interrupt flag within application space */
 		daemon_data.d_interrupt_flag = get_interrupt_flag(sp, rqst);
 		break;
-
-	case EWB_NEWBREAKPOINT:		/* Estudio signals the user has added new breakpoints */
-		write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
-		break;
 #endif	/* EIF_WINDOWS */
-
-	case EWB_INTERRUPT:		/* Debugger asking to interrupt application */
+	case EWB_INTERRUPT:
+			/* Debugger asking to interrupt application */
 		interrupted = TRUE;
+	case EWB_NEWBREAKPOINT:
+			/* Estudio signals the user has added new breakpoints */
 #ifdef EIF_WINDOWS
-		write_application_interruption_flag(INTERRUPT_APPLICATION);
+		switch(rqst->rq_type) {
+			case EWB_NEWBREAKPOINT:
+				write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
+				break;
+			case EWB_INTERRUPT:
+				write_application_interruption_flag(INTERRUPT_APPLICATION);
+				break;
+			default:
+				break;
+		}
 #else	/* EIF_WINDOWS */
 #ifdef USE_SIGNAL
 #ifdef USE_ADD_LOG
@@ -217,7 +224,17 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 			/* If we send the signal too early, d_app is not initialized, 
 			 * and in this case kill sends the signal to estudio, which kills it */
 		{
-			write_application_interruption_flag(INTERRUPT_APPLICATION);
+			switch(rqst->rq_type) {
+				case EWB_NEWBREAKPOINT:
+					write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
+					break;
+				case EWB_INTERRUPT:
+					write_application_interruption_flag(INTERRUPT_APPLICATION);
+					break;
+				default:
+					interrupted = FALSE;
+					break;
+			}
 			kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
 		}
 #endif 	/* USE_SIGNAL */
@@ -268,8 +285,10 @@ rt_private void write_application_interruption_flag(unsigned char value)
 		return;
 
 	bResult = WriteProcessMemory(hProcess, addr_flag, &interrupt_flag, sizeof(unsigned char), &written); 
-	if (!bResult)
-		return;
+
+/* it is better to close handle than returning so quickly ...:  
+ * if (!bResult) { return; } 
+ */
 
 	CloseHandle(hProcess);
 	hProcess = NULL;

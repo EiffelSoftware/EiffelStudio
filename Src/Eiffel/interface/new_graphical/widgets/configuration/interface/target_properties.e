@@ -105,6 +105,7 @@ feature {NONE} -- Implementation
 
 				-- root
 			create l_root_dial
+			l_root_dial.set_target (current_target)
 			create l_root_prop.make_with_dialog (conf_interface_names.target_root_name, l_root_dial)
 			l_root_prop.set_description (conf_interface_names.target_root_description)
 			l_root_prop.set_refresh_action (agent current_target.root)
@@ -579,6 +580,9 @@ feature {NONE} -- Validation and warning generation
 			l_targets.search (a_name.as_lower)
 			if l_targets.found and then l_targets.found_item /= current_target then
 				create wd.make_with_text (conf_interface_names.target_name_duplicate)
+				wd.show_modal_to_window (window)
+			elseif a_name.is_empty then
+				create wd.make_with_text (conf_interface_names.target_name_empty)
 				wd.show_modal_to_window (window)
 			else
 				Result := True

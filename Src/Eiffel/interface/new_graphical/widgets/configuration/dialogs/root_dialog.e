@@ -72,6 +72,21 @@ feature {NONE} -- Initialization
 			all_classes.select_actions.extend (agent on_all_classes)
 		end
 
+feature -- Access
+
+	target: CONF_TARGET
+			-- Target that has the root.
+
+feature -- Update
+
+	set_target (a_target: like target) is
+			-- Set `target' to `a_target'.
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
 feature {NONE} -- Gui elements
 
 	cluster_name: EV_TEXT_FIELD
@@ -129,6 +144,7 @@ feature {NONE} -- Agents
 			l_root: CONF_ROOT
 			l_cluster, l_class, l_feature: STRING
 			wd: EV_WARNING_DIALOG
+
 		do
 			if all_classes.is_selected then
 				create l_root.make (Void, Void, Void, True)
@@ -152,6 +168,9 @@ feature {NONE} -- Agents
 					end
 				elseif l_cluster /= Void or l_feature /= Void then
 					create wd.make_with_text (conf_interface_names.root_no_class)
+				elseif target.child_targets.is_empty then
+						-- we don't have any child targets, so we need a root class.
+					create wd.make_with_text (conf_interface_names.root_none)
 				end
 			end
 

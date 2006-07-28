@@ -73,7 +73,6 @@ feature -- Element update
 			-- Add a new target.
 		local
 			l_target: CONF_TARGET
-			l_target_sec: TARGET_SECTION
 		do
 			if not system.targets.has ("new") then
 					-- add it to the configuration
@@ -81,9 +80,9 @@ feature -- Element update
 				system.add_target (l_target)
 
 					-- add and display the section
-				create l_target_sec.make (l_target, configuration_window)
-				parent.extend (l_target_sec)
-				l_target_sec.enable_select
+				configuration_window.add_target_sections (l_target, Current)
+				expand
+				last.enable_select
 			end
 		end
 

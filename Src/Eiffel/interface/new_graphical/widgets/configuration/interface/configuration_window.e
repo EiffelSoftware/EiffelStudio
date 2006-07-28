@@ -437,6 +437,8 @@ feature {NONE} -- Element initialization
 			section_tree_not_void: section_tree /= Void
 		end
 
+feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
+
 	add_target_sections (a_target: CONF_TARGET; a_root: EV_TREE_NODE_LIST) is
 			-- Add sections for `a_target' under `a_root'.
 		require

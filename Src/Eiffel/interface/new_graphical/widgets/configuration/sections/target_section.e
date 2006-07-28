@@ -61,7 +61,6 @@ feature -- Element update
 			-- Add a new target that inherits from this one.
 		local
 			l_target: CONF_TARGET
-			l_target_sec: TARGET_SECTION
 			l_system: CONF_SYSTEM
 		do
 			l_system := configuration_window.conf_system
@@ -72,10 +71,9 @@ feature -- Element update
 				l_system.add_target (l_target)
 
 					-- add and display the section
-				create l_target_sec.make (l_target, configuration_window)
-				extend (l_target_sec)
+				configuration_window.add_target_sections (l_target, Current)
 				expand
-				l_target_sec.enable_select
+				last.enable_select
 			end
 		end
 

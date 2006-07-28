@@ -11,6 +11,8 @@ class
 inherit
 	OPTION_PROPERTIES
 
+	DEFAULT_VALIDATOR
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -127,6 +129,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_target (a_target)
 				l_dir_prop.set_description (conf_interface_names.group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
+				l_dir_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
 				properties.add_property (l_dir_prop)
@@ -135,6 +138,7 @@ feature {NONE} -- Implementation
 				l_file_prop.set_target (a_target)
 				l_file_prop.set_description (conf_interface_names.group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
+				l_file_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
 				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
 				if a_group.is_assembly then
@@ -465,6 +469,9 @@ feature {NONE} -- Validation and warning generation
 			l_groups.search (a_name.as_lower)
 			if l_groups.found and then l_groups.found_item /= a_group then
 				create wd.make_with_text (conf_interface_names.group_name_duplicate)
+				wd.show_modal_to_window (window)
+			elseif a_name.is_empty then
+				create wd.make_with_text (conf_interface_names.group_name_empty)
 				wd.show_modal_to_window (window)
 			else
 				Result := True

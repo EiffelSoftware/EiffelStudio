@@ -203,7 +203,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					end
 					tree_item := build_tree_folder (name, features, l_class)
 					l_export_status := export_status_generator.
-					feature_clause_export_status (l_class, fcl.item)
+						feature_clause_export_status (l_class, fcl.item)
 					if l_export_status.is_none then
 						tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 					elseif l_export_status.is_set then

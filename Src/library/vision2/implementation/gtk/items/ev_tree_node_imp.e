@@ -279,9 +279,12 @@ feature {EV_ANY_I} -- Implementation
 	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
 
 	parent_tree_imp: EV_TREE_IMP is
+		local
+			l_par_tree: like parent_tree
 		do
-			if parent_tree /= Void then
-				Result ?= parent_tree.implementation
+			l_par_tree := parent_tree
+			if l_par_tree /= Void then
+				Result ?= l_par_tree.implementation
 			end
 		end
 

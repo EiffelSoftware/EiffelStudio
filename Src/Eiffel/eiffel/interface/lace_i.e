@@ -602,6 +602,7 @@ feature {NONE} -- Implementation
 			l_b: BOOLEAN
 			vd15: VD15
 			vd83: VD83
+			vd86: VD86
 			l_settings: HASH_TABLE [STRING, STRING]
 			l_factory: CONF_COMP_FACTORY
 		do
@@ -968,6 +969,9 @@ feature {NONE} -- Implementation
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						create vd83.make (s_msil_generation, system.il_generation.out, l_s)
 						Error_handler.insert_warning (vd83)
+					elseif l_b and then not (create {IL_ENVIRONMENT}).is_dotnet_installed then
+						create vd86
+						Error_handler.insert_error (vd86)
 					else
 						system.set_il_generation (l_b)
 						il_parsing_cell.set_item (l_b)

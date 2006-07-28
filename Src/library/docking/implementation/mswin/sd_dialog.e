@@ -39,7 +39,6 @@ feature {NONE} -- Implementation
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			tmp_result: POINTER
-			err: WEL_ERROR
 		do
 				-- Initialise the common controls
 			create common_controls_dll.make

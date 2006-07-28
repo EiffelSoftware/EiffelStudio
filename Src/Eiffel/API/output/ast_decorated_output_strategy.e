@@ -328,6 +328,7 @@ feature {NONE} -- Implementation
 			l_rout_ids := l_as.routine_ids
 			check
 				l_rout_ids_not_void: l_rout_ids /= Void
+				l_class_id_not_zero: l_as.class_id /= 0
 			end
 			if not has_error_internal then
 				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_rout_ids)
@@ -1365,7 +1366,11 @@ feature {NONE} -- Implementation
 					l_as.target.process (Current)
 					text_formatter_decorator.process_symbol_text (ti_dot)
 				end
-				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
+				if l_as.class_id /= 0 and l_as.routine_ids /= Void then
+					l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
+				else
+					has_error_internal := True
+				end
 				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else

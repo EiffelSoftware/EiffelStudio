@@ -26,8 +26,7 @@ inherit
 			interface,
 			call_close_request_actions,
 			initialize,
-			client_area,
-			show_relative_to_window
+			client_area
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -62,8 +61,8 @@ feature -- Status Report
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		do
-			Result := not is_modal and {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
-				and is_show_requested
+			Result := {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
+				and then is_show_requested
 		end
 
 feature -- Status Setting
@@ -78,53 +77,6 @@ feature -- Status Setting
 			-- Set the window not to be closeable by the user
 		do
 			set_closeable (False)
-		end
-
-feature -- Basic operations
-
-	show_modal_to_window (a_window: EV_WINDOW) is
-			-- Show `Current' modal with respect to `a_window'.
-		local
-			was_modal: BOOLEAN
-			parent_was_modal: BOOLEAN
-			a_window_imp: EV_WINDOW_IMP
-		do
-				-- Remove the modality of the parent if it is modal
-			if a_window /= Void then
-				a_window_imp ?= a_window.implementation
-
-				if a_window_imp.is_modal then
-					parent_was_modal := True
-					a_window_imp.disable_modal
-				end
-			end
-
-			if is_modal then
-				was_modal := True
-			else
-				enable_modal
-			end
-
-			show_relative_to_window (a_window)
-			block
-			set_blocking_window (Void)
-
-			if not is_destroyed and then not was_modal then
-				disable_modal
-			end
-				-- Put parent's original modality back.
-			if a_window /= Void and then parent_was_modal then
-				a_window_imp.enable_modal
-			end
-		end
-
-	show_relative_to_window (a_window: EV_WINDOW) is
-			-- Show `Current' with respect to `a_window'.
-		do
-			set_blocking_window (a_window)
-			show
-				-- This extra call is needed otherwise the Window will not be transient.
-			set_blocking_window (a_window)
 		end
 
 feature {NONE} -- Implementation

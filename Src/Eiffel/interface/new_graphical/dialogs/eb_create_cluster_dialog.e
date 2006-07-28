@@ -103,6 +103,7 @@ feature {NONE} -- Initialization
 			target := a_target
 
 			make_with_title (Interface_names.t_New_cluster)
+			set_icon_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
 			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
 
 				-- Build the widgets

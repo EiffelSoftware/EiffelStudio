@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			Precursor
 
 			set_title (conf_interface_names.dialog_create_assembly_title)
-
+			set_icon_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
 
 			create vb
 			extend (vb)

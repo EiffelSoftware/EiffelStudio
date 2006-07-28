@@ -67,7 +67,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_without_targets
 
 feature {NONE} -- Initialization
 
@@ -83,6 +84,14 @@ feature {NONE} -- Initialization
 			create expanded_clusters.make (20)
 			set_minimum_height (20)
 			enable_default_tree_navigation_behavior (False, False, False, True)
+			has_targets := True
+		end
+
+	make_without_targets is
+			-- Create a tree where targets of system are not shown.
+		do
+			make
+			has_targets := False
 		end
 
 	prepare is
@@ -128,7 +137,9 @@ feature {NONE} -- Initialization
 				build_group_tree (manager.assemblies, assembly_header)
 
 					-- targets
-				build_target_tree
+				if has_targets then
+					build_target_tree
+				end
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
@@ -761,8 +772,11 @@ feature {NONE} -- Implementation
 			target.associate_with_window (window)
 		end
 
+	has_targets: BOOLEAN
+			-- Is tree showing targets?
+
 feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
-	
+
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.
 

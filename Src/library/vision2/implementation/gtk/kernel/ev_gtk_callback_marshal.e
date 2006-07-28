@@ -229,7 +229,7 @@ feature {EV_ANY_IMP}
 		end
 
 	configure_translate (n: INTEGER; p: POINTER): TUPLE is
-			-- Convert GtkAllocation to tuple.
+			-- Convert GtkEventConfigure to tuple.
 		local
 			gdk_configure: POINTER
 		do
@@ -262,6 +262,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 		end
 
 	is_destroyed: BOOLEAN
+		-- Has `destroy' been called?
 
 feature {EV_APPLICATION_IMP} -- Destruction
 

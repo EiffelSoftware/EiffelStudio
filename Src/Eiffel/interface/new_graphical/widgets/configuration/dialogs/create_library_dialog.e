@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			Precursor
 
 			set_title (conf_interface_names.dialog_create_library_title)
+			set_icon_pixmap (pixmaps.icon_pixmaps.new_library_icon)
 
 			create vb
 			extend (vb)

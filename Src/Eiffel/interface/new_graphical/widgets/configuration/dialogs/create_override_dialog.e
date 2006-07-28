@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 	do
 		Precursor {CREATE_CLUSTER_DIALOG} (a_target, a_factory)
 		set_title (dialog_create_override_title)
+		set_icon_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
 	end
 
 feature -- Access

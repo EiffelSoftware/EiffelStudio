@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			l_lbl: EV_LABEL
 		do
 			Precursor
+			set_icon_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
 
 			create vb
 			extend (vb)

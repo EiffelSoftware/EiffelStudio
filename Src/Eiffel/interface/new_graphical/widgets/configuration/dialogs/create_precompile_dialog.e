@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
 			set_title (conf_interface_names.dialog_create_precompile_title)
+			set_icon_pixmap (pixmaps.icon_pixmaps.new_precompiled_library_icon)
 		end
 
 feature -- Access

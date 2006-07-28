@@ -902,6 +902,7 @@ end
 					Error_handler.insert_error (vd71)
 					l_errors.forth
 				end
+				is_force_rebuild := True
 				Error_handler.raise_error
 			end
 			l_warnings := l_vis_build.last_warnings

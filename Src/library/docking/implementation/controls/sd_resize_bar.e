@@ -72,7 +72,7 @@ feature {NONE} -- Agents
 					else
 						last_screen_pointer_position := screen_y
 					end
-
+					setter.before_enable_capture
 					enable_capture
 					old_screen_x := screen_x;
 					old_screen_y := a_screen_y;
@@ -136,6 +136,7 @@ feature {NONE} -- Agents
 
 				resizing := False
 				disable_capture
+				setter.after_disable_capture
 
 				if direction = {SD_ENUMERATION}.left then
 					resize_source.end_resize_operation (Current, last_screen_pointer_position  - old_screen_x)
@@ -164,6 +165,12 @@ feature {NONE}  -- Implemenetation
 			else
 				internal_shared.feedback.draw_line_area (screen_x, last_screen_pointer_position, width, height)
 			end
+		end
+
+	setter: SD_SYSTEM_SETTER is
+			-- System setter
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
 	internal_shared: SD_SHARED

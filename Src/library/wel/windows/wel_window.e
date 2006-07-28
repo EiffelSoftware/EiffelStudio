@@ -2020,6 +2020,9 @@ feature {NONE} -- Windows bug workaround
 			-- Windows not sending a WM_SIZE message when setting the size of a deeply nested window.
 			-- Experiment shows it is happening when the window is at a 32 level deep on 32 bits,
 			-- and 16 level deep on 64 bits.
+			-- This is a limitation that the windows kernel imposes on the messaging system
+			-- so that the callstack is not too deep. To circumvent this we simply call
+			-- `PostMessage' when it fails to resize the window.
 		require
 			exists: exists
 		local
@@ -2041,7 +2044,7 @@ feature {NONE} -- Windows bug workaround
 					-- the WM message ourself to `item'.
 					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
 					-- was not sent because it did not need to.
-				cwin_send_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
+				cwin_post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
 			end
 		end
 

@@ -10,17 +10,6 @@ class
 
 inherit
 	EV_DIALOG_IMP_COMMON
-		rename
-			show as show_internal
-		redefine
-			setup_dialog,
-			is_relative,
-			is_show_requested,
-			hide,
-			destroy
-		end
-
-	EV_DIALOG_IMP_COMMON
 		redefine
 			setup_dialog,
 			show,
@@ -28,8 +17,6 @@ inherit
 			is_show_requested,
 			hide,
 			destroy
-		select
-			show
 		end
 
 create

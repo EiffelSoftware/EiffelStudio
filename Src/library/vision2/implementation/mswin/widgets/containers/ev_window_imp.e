@@ -66,7 +66,7 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			has_capture as wel_has_capture,
-			show as wel_show
+			show as show_internal
 		export {EV_WIDGET_IMP}
 			menu_bar_height
 		undefine
@@ -115,7 +115,7 @@ inherit
 			on_wm_setting_change,
 			hide,
 			class_requires_icon,
-			wel_show
+			show_internal
 		end
 
 	WEL_CONSTANTS
@@ -733,7 +733,7 @@ feature {EV_ANY_I} -- Implementation
 				is_parented_window := True
 				switch_between_parented_window (a_parent)
 			end
-			wel_show
+			show_internal
 		end
 
 	show is
@@ -743,7 +743,7 @@ feature {EV_ANY_I} -- Implementation
 				is_parented_window := False
 				switch_between_parented_window (Void)
 			end
-			wel_show
+			show_internal
 		end
 
 	hide is
@@ -1351,7 +1351,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation for switch non-parented and parented windows
 
-	wel_show is
+	show_internal is
 			-- Show `Current'.
 		do
 			if not is_displayed then

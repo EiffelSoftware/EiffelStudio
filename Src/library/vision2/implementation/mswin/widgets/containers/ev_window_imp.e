@@ -1378,7 +1378,6 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			l_old_child: EV_WIDGET
 			l_old_child_upper, l_old_child_lower: EV_WIDGET
 			l_result: INTEGER
-			l_old_child_window: EV_WIDGET_IMP
 			l_menu_bar: EV_MENU_BAR
 		do
 			l_width := width

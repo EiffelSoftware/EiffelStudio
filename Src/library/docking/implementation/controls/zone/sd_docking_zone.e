@@ -61,6 +61,11 @@ feature -- Command
 			internal_docking_manager.command.unlock_update
 		end
 
+	update_user_widget is
+			-- If `content''s user_widget changed, we update containers.
+		do
+		end
+
 feature -- Query
 
 	title: STRING is

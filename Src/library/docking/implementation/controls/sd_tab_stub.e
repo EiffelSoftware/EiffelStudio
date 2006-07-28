@@ -26,8 +26,6 @@ feature {NONE} -- Initlization
 			a_content_not_void: a_content /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
-		local
-			l_cell: EV_CELL
 		do
 			create internal_shared
 
@@ -55,8 +53,7 @@ feature {NONE} -- Initlization
 			is_show_text := True
 			init_separator (a_direction)
 			set_text (a_content.short_title)
-			create l_cell
-			internal_drawing_area.set_background_color (l_cell.background_color)
+
 			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 
 			create pointer_press_actions
@@ -94,6 +91,15 @@ feature {NONE} -- Initlization
 			end
 		end
 
+	on_theme_changed is
+			-- Handle theme changed actions
+		local
+			l_colors: SD_SYSTEM_COLOR
+		do
+			create {SD_SYSTEM_COLOR_IMP} l_colors.make
+			internal_drawing_area.set_background_color (l_colors.default_background_color)
+		end
+
 feature -- Query
 
 	text: STRING is
@@ -128,7 +134,7 @@ feature -- Query
 			until
 				l_group.after or Result
 			loop
-				if l_group.item /= Current and then l_group.item.content.state.zone /= Void then
+				if l_group.item /= Current and then l_group.item.content.state.zone /= Void and then not l_group.item.content.state.zone.is_destroyed then
 					Result := True
 				end
 				l_group.forth
@@ -272,13 +278,14 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			delay_timer.set_interval (0)
 		end
 
-feature {NONE} -- Implementation
+feature {SD_AUTO_HIDE_STATE} -- Expose handling
 
 	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle redraw.
 		local
 			l_imp: EV_DRAWING_AREA_IMP
 		do
+			internal_drawing_area.set_background_color (internal_shared.default_background_color)
 			internal_drawing_area.clear
 
 			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_pixmap_internal, content.pixmap)
@@ -307,6 +314,8 @@ feature {NONE} -- Implementation
 				internal_drawing_area.draw_segment (internal_drawing_area.width - 1, 0, internal_drawing_area.width - 1, internal_drawing_area.height - 1)
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	update_size_internal is
 			-- Update minmum size base on direction and `is_show_text'.

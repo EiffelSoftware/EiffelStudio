@@ -584,8 +584,13 @@ feature -- Updating
 			feature_address.disable_sensitive
 		end
 
-	pop_up_address_bar_at_position (a_x, a_y: INTEGER) is
+	pop_up_address_bar_at_position (a_x, a_y: INTEGER; a_focus: INTEGER) is
 			-- Display current address manager at position (`a_x', `a_y').
+			-- `a_focus' indicates which combo box will have focus by default:
+			-- 	 	1 cluster combo box
+			--		2 class combo box
+			--		3 feature combo box
+			--		other: Focus is unset
 		require
 	   		for_context_tool: mode
   		local
@@ -609,6 +614,16 @@ feature -- Updating
 			if output_line /= Void then
 				output_line.set_foreground_color (preferences.editor_data.error_text_color)
 				output_line.remove_text
+			end
+			inspect
+				a_focus
+			when 1 then
+				cluster_address.set_focus
+			when 2 then
+				class_address.set_focus
+			when 3 then
+				feature_address.set_focus
+			else
 			end
 		end
 
@@ -2172,7 +2187,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		require
 	   		for_context_tool: mode
 		do
-			pop_up_address_bar_at_position (header_info.screen_x, header_info.screen_y)
+			pop_up_address_bar_at_position (header_info.screen_x, header_info.screen_y, 0)
 		end
 
 	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is

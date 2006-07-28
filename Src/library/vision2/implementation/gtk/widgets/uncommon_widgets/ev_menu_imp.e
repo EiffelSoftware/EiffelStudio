@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_IMP
-	
+
 inherit
 	EV_MENU_I
 		redefine
@@ -60,7 +60,7 @@ feature -- Basic operations
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
-				c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
+				c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
 			end
 		end
 
@@ -71,13 +71,13 @@ feature -- Basic operations
 			if not interface.is_empty then
 				c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
-					a_widget.screen_y + a_y)
+					a_widget.screen_y + a_y, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
 			end
 		end
 
 feature {NONE} -- Externals
 
-	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y: INTEGER) is
+	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32) is
 		external
 			"C inline use %"ev_c_util.h%""
 		alias
@@ -86,7 +86,7 @@ feature {NONE} -- Externals
 				c_position pos;
 				pos.x_position = $a_x;
 				pos.y_position = $a_y;
-				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, 0, gtk_get_current_event_time());
+				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, (guint) $a_button, (guint32) $a_event_time);
 				}
 			]"
 		end
@@ -113,7 +113,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_MENU
 
 feature {NONE} -- Implementation
-	
+
 	destroy is
 			-- Destroy the menu
 		do

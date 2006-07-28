@@ -108,6 +108,34 @@ feature -- Value
 			result_correct: Result.first.value = internal_value
 		end
 
+	criteria: LIST [QL_CRITERION] is
+			-- List of criteria set to current metric
+		local
+			l_basic_scope_table: like basic_scope_table
+			l_generator: QL_DOMAIN_GENERATOR
+			l_processed_generators: ARRAYED_LIST [QL_DOMAIN_GENERATOR]
+		do
+			create {LINKED_LIST [QL_CRITERION]} Result.make
+			l_basic_scope_table := basic_scope_table
+			from
+				create l_processed_generators.make (l_basic_scope_table.count)
+				l_basic_scope_table.start
+			until
+				l_basic_scope_table.after
+			loop
+				l_generator := l_basic_scope_table.item_for_iteration.domain_generator
+				if
+					not l_processed_generators.has (l_generator)
+				then
+					if l_generator.criterion /= Void then
+						Result.extend (l_generator.criterion)
+					end
+					l_processed_generators.extend (l_generator)
+				end
+				l_basic_scope_table.forth
+			end
+		end
+
 feature{QL_METRIC_BASIC_SCOPE_INFO} -- Metric calculation
 
 	internal_value: DOUBLE
@@ -145,6 +173,31 @@ feature -- Setting
 					l_generator.scope = a_criterion.scope
 				then
 					l_generator.set_criterion (a_criterion)
+					l_processed_generators.extend (l_generator)
+				end
+				l_basic_scope_table.forth
+			end
+		end
+
+	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
+			-- Replace all delayed domains in `criterion' by `a_domain'.
+		local
+			l_basic_scope_table: like basic_scope_table
+			l_generator: QL_DOMAIN_GENERATOR
+			l_processed_generators: ARRAYED_LIST [QL_DOMAIN_GENERATOR]
+		do
+			l_basic_scope_table := basic_scope_table
+			from
+				create l_processed_generators.make (l_basic_scope_table.count)
+				l_basic_scope_table.start
+			until
+				l_basic_scope_table.after
+			loop
+				l_generator := l_basic_scope_table.item_for_iteration.domain_generator
+				if
+					not l_processed_generators.has (l_generator)
+				then
+					l_generator.replace_delayed_domain_by (a_domain)
 					l_processed_generators.extend (l_generator)
 				end
 				l_basic_scope_table.forth

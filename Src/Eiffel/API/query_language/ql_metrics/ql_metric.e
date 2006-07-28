@@ -48,6 +48,13 @@ feature -- Access
 			-- Last generated domain		
 			-- Can be Void.
 
+	criteria: LIST [QL_CRITERION] is
+			-- List of criteria set to current metric
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Setting
 
 	set_name (a_name: STRING) is
@@ -98,12 +105,38 @@ feature -- Setting
 			fill_domain_disabled: not is_fill_domain_enabled
 		end
 
+	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
+			-- Replace all delayed domains in `criterion' by `a_domain'.
+		deferred
+		end
+
 feature -- Status report
 
 	is_fill_domain_enabled: BOOLEAN
 			-- During domain generation, if some item is satisfied by `criterion',
 			-- will it be inserted into `domain'?
-			-- Default: False		
+			-- Default: False
+
+	has_delayed_domain: BOOLEAN is
+			-- Does current metric use delayed domains?
+		local
+			l_checker: QL_CRITERION_CHECKER
+			l_criteria: like criteria
+		do
+			l_criteria := criteria
+			if not l_criteria.is_empty then
+				create l_checker
+				from
+					l_criteria.start
+				until
+					l_criteria.after or Result
+				loop
+					l_checker.check_criterion (l_criteria.item)
+					Result := l_checker.has_delayed_domain
+					l_criteria.forth
+				end
+			end
+		end
 
 feature{NONE} -- Implementation
 

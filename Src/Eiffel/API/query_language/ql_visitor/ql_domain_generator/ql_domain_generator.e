@@ -204,6 +204,20 @@ feature -- Setting
 			distinct_item_disabled: not is_distinct_required
 		end
 
+	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
+			-- Replace all delayed domains in `criterion' by `a_domain'.
+		local
+			l_criterion: like criterion
+			l_replacer: like delayed_domain_replacer
+		do
+			l_criterion := criterion
+			if l_criterion /= Void then
+				l_replacer := delayed_domain_replacer
+				l_replacer.set_new_domain (a_domain)
+				l_replacer.replace (l_criterion)
+			end
+		end
+
 feature -- Status report
 
 	is_fill_domain_enabled: BOOLEAN
@@ -620,6 +634,12 @@ feature{NONE} -- Implementation
 			l_domain := temp_domain.distinct.minus (domain)
 				-- Evaluate those items.
 			l_domain.content.do_all (agent evaluate_item)
+		end
+
+	delayed_domain_replacer: QL_DELAYED_DOMAIN_REPLACER is
+			-- Delayed domain replacer
+		once
+			create Result
 		end
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action

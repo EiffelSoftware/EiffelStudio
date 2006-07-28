@@ -15,6 +15,7 @@ inherit
 			close,
 			stick,
 			change_title,
+			change_pixmap,
 			hide,
 			set_focus,
 			record_state,
@@ -132,6 +133,12 @@ feature -- Redefine.
 			set: tab_stub.text = a_title
 		end
 
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+			-- Redefine
+		do
+			tab_stub.on_redraw (0, 0, tab_stub.width, tab_stub.height)
+		end
+
 	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			-- Redefine.
 		do
@@ -216,6 +223,14 @@ feature -- Redefine.
 					l_state.set_relative (auto_hide_panel.content_by_tab (l_tab_group.last))
 					change_state (l_state)
 				end
+			end
+		end
+
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- Redefine
+		do
+			if zone /= Void then
+				zone.window.set_user_widget (a_widget)
 			end
 		end
 

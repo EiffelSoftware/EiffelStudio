@@ -339,6 +339,12 @@ stick (a_direction: INTEGER) is
 			docking_manager.command.resize (False)
 		end
 
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- Redefine
+		do
+			zone.update_user_widget
+		end
+
 	zone: SD_DOCKING_ZONE
 			-- Redefine.
 

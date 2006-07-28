@@ -66,6 +66,11 @@ feature -- Properties
 		deferred
 		end
 
+	set_user_widget (a_widget: EV_WIDGET) is
+			-- After SD_CONTENT changed `user_widget', we update related container's widget.
+		deferred
+		end
+
 feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is

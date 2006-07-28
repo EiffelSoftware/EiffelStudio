@@ -140,21 +140,6 @@ feature -- Status report
 
 feature -- Access
 
-	predefined_metrics_file: STRING is
-			-- File to store predefined metrics
-		require
-			system_defined: workbench.system_defined and then workbench.is_already_compiled
-		local
-			l_file_name: FILE_NAME
-		do
-			create l_file_name.make_from_string (eiffel_installation_dir_name)
-			l_file_name.extend ("metrics")
-			l_file_name.set_file_name ("predefined_metrics.xml")
-			Result := l_file_name.out
-		ensure
-			good_result: Result /= Void and then not Result.is_empty
-		end
-
 	userdefined_metrics_file: STRING is
 			-- File to store user-defined metrics
 		require

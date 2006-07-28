@@ -471,7 +471,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 
-feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Window implementation that `Current' is contained within (if any)

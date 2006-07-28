@@ -117,9 +117,6 @@ feature {NONE} -- Implementation
 	resize_bar: SD_RESIZE_BAR
 			-- Resize bar at side.
 
-	window: SD_WINDOW
-			-- Window.
-
 	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE) is
 			-- Redefine.
 		do
@@ -182,6 +179,9 @@ feature {NONE} -- For user docking
 		end
 
 feature -- Query
+
+	window: SD_WINDOW
+			-- Window.
 
 	has_focus: BOOLEAN is
 			-- If `Current' has focus?

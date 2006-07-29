@@ -345,8 +345,12 @@ feature -- Element change
 	set_output_line (t: EV_LABEL) is
 			-- Set the textable in which messages will be displayed.
 			-- `t' may be Void, this means that there will be no output.
+		require
+			t_not_void: t /= Void
 		do
 			output_line := t
+		ensure
+			output_line_not_void: output_line /= Void
 		end
 
 	set_feature_text_simply (s: STRING) is
@@ -611,10 +615,7 @@ feature -- Updating
 			address_dialog.set_width (header_info.width)
 			address_dialog.set_height (header_info.height)
 			address_dialog.show
-			if output_line /= Void then
-				output_line.set_foreground_color (preferences.editor_data.error_text_color)
-				output_line.remove_text
-			end
+			remove_error_message
 			inspect
 				a_focus
 			when 1 then
@@ -702,11 +703,7 @@ feature {NONE} -- Execution
 			-- Finish processing the cluster after the user chose it.
 		do
 			if current_group = Void then
-				if output_line /= Void then
-					output_line.set_text (Warning_messages.w_No_cluster_matches)
-				else
-					--| FIXME XR: How do we warn the user?
-				end
+				display_error_message (Warning_messages.w_No_cluster_matches)
 				if cluster_address.is_displayed then
 					cluster_address.set_focus
 					if not cluster_address.text.is_empty then
@@ -714,9 +711,7 @@ feature {NONE} -- Execution
 					end
 				end
 			else
-				if output_line /= Void then
-					output_line.remove_text
-				end
+				remove_error_message
 				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_group))
 			end
 		end
@@ -728,7 +723,7 @@ feature {NONE} -- Execution
 			wd: EV_WARNING_DIALOG
 			l_classc: CLASS_C
 		do
-			output_line.remove_text
+			remove_error_message
 			if class_i = Void then
 				ctxt := class_address.text
 				if
@@ -736,9 +731,6 @@ feature {NONE} -- Execution
 					not ctxt.has ('*') and then
 					not ctxt.has ('?')
 				then
-					if output_line /= Void then
-						output_line.remove_text
-					end
 					if (create {IDENTIFIER_CHECKER}).is_valid (ctxt) then
 						create new_class_win.make_default (parent)
 						new_class_win.set_stone_when_finished
@@ -748,11 +740,7 @@ feature {NONE} -- Execution
 						wd.show_modal_to_window (parent.window)
 					end
 				else
-					if output_line /= Void then
-						output_line.set_text (Warning_messages.w_No_class_matches)
-					else
-						--| FIXME XR: How do we warn the user?
-					end
+					display_error_message (Warning_messages.w_No_class_matches)
 					if class_address.is_displayed then
 						class_address.set_focus
 						if not class_address.text.is_empty then
@@ -773,15 +761,10 @@ feature {NONE} -- Execution
 	process_feature_class is
 			-- Analyze the class the user chose, but we are choosing a feature.
 		do
-			output_line.remove_text
+			remove_error_message
 			if current_class = Void then
 				if class_i = Void then
-					if output_line /= Void then
-						output_line.show
-						output_line.set_text (Warning_messages.w_Specify_a_class)
-					else
-						--| FIXME XR: How do we warn the user?
-					end
+					display_error_message (Warning_messages.w_Specify_a_class)
 					if class_address.is_displayed then
 						class_address.set_focus
 						if not class_address.text.is_empty then
@@ -789,8 +772,9 @@ feature {NONE} -- Execution
 						end
 					end
 				else
-					if output_line /= Void and not feature_address.text.is_empty then
-						output_line.set_text (Warning_messages.w_not_a_compiled_class_line (class_i.name_in_upper))
+					if not feature_address.text.is_empty then
+						display_error_message (
+							Warning_messages.w_not_a_compiled_class_line (class_i.name_in_upper))
 					end
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end
@@ -809,11 +793,7 @@ feature {NONE} -- Execution
 			f: E_FEATURE
 		do
 			if current_feature = Void then
-				if output_line /= Void then
-					output_line.set_text (Warning_messages.w_No_feature_matches)
-				else
-					--| FIXME XR: How do we warn the user?
-				end
+				display_error_message (Warning_messages.w_No_feature_matches)
 				if feature_address.is_displayed then
 						-- The selected feature is not in the selected class.
 					feature_address.set_focus
@@ -822,21 +802,18 @@ feature {NONE} -- Execution
 					end
 				end
 				--| FIXME XR: Propose to create a new feature in current_class instead?
-			elseif mode then
-				if output_line /= Void then
-					output_line.remove_text
-				end
-				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
 			else
-				if output_line /= Void then
-					output_line.remove_text
-				end
-				f := current_feature.written_feature
-				if f /= Void then
-					parent.advanced_set_stone (create {FEATURE_STONE}.make (f))
-				else
-						-- Gasp, we are in the editor address and we can't find the origin feature...
+				remove_error_message
+				if mode then
 					parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+				else
+					f := current_feature.written_feature
+					if f /= Void then
+						parent.advanced_set_stone (create {FEATURE_STONE}.make (f))
+					else
+							-- Gasp, we are in the editor address and we can't find the origin feature...
+						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+					end
 				end
 			end
 		end
@@ -948,9 +925,7 @@ feature {NONE} -- Implementation
 				group_list.forth
 			end
 			if not cluster_names.is_empty then
-				if output_line /= Void then
-					output_line.remove_text
-				end
+				remove_error_message
 				if cluster_names.count = 1 then
 					process_cluster_callback (1)
 				else
@@ -962,11 +937,7 @@ feature {NONE} -- Implementation
 					must_show_choice := True
 				end
 			else
-				if output_line /= Void then
-					output_line.set_text (Warning_messages.w_No_cluster_matches)
-				else
-					--| FIXME XR: Add a way to cleanly say that.
-				end
+				display_error_message (Warning_messages.w_No_cluster_matches)
 				process_cluster
 			end
 		end
@@ -1022,9 +993,7 @@ feature {NONE} -- Implementation
 				class_list.forth
 			end
 			if not class_names.is_empty then
-				if output_line /= Void then
-					output_line.remove_text
-				end
+				remove_error_message
 				if class_names.count = 1 then
 					process_class_callback (1)
 				else
@@ -1036,11 +1005,7 @@ feature {NONE} -- Implementation
 					must_show_choice := True
 				end
 			else
-				if output_line /= Void then
-					output_line.set_text (Warning_messages.w_No_class_matches)
-				else
-					--| FIXME XR: Add a way to cleanly say that.
-				end
+				display_error_message (Warning_messages.w_No_class_matches)
 				if choosing_class then
 					process_class
 				else
@@ -1087,9 +1052,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	give_parent_widget_focus: BOOLEAN
-			-- Should editor get focus after selection chahnce in choice?
 
 feature {NONE} -- open new class
 
@@ -1371,9 +1333,6 @@ feature {NONE} -- open new class
 				conv_int ?= item.data
 				parent.history_manager.go_i_th (conv_int.item)
 			end
-			if not mode and then give_parent_widget_focus then
-				parent_widget.editor_tool.text_area.set_focus
-			end
 		end
 
 	change_hist_to_cluster is
@@ -1437,10 +1396,6 @@ feature {NONE} -- open new class
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					else
-						if not mode then
-							parent_widget.editor_tool.text_area.set_focus
-						end
 					end
 				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
 					if mode then
@@ -1512,7 +1467,6 @@ feature {NONE} -- open new class
 					if feature_address.text_length > 0 then
 						feature_address.select_all
 					end
-					give_parent_widget_focus := True
 				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
@@ -1522,8 +1476,6 @@ feature {NONE} -- open new class
 					else
 						feature_had_selection := False
 					end
-				elseif k.code = {EV_KEY_CONSTANTS}.key_up or k.code = {EV_KEY_CONSTANTS}.key_down then
-					give_parent_widget_focus := False
 				end
 			end
 		end
@@ -2259,6 +2211,27 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			-- Display `lab' with a bold font.
 		do
 			lab.set_font (Default_font)
+		end
+
+	display_error_message (a_message: STRING) is
+			-- Display error message `a_message'.
+		require
+			a_message_not_void: a_message /= Void
+		do
+			if output_line /= Void then
+				output_line.set_foreground_color (preferences.editor_data.error_text_color)
+				output_line.set_text (a_message)
+			else
+				-- FIXME: how do we warn the user?
+			end
+		end
+
+	remove_error_message is
+			-- Remove any message from `output_line'.
+		do
+			if output_line /= Void then
+				output_line.remove_text
+			end
 		end
 
 	enable_complete: BOOLEAN is

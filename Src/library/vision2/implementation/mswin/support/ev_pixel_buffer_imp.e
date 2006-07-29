@@ -12,6 +12,9 @@ class
 inherit
 	EV_PIXEL_BUFFER_I
 
+create
+	make
+
 feature {NONE} -- Initlization
 
 	make_with_size (a_width, a_height: INTEGER) is
@@ -144,6 +147,27 @@ feature -- Command
 
 			end
 		end
+
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+			--
+		do
+			if is_gdi_plus_installed then
+				Result := gdip_bitmap.get_pixel (a_x, a_y)
+			else
+				--| FIXME IEK Implement me
+			end
+		end
+
+	set_pixel (a_x, a_y, argb: NATURAL_32) is
+			--
+		do
+			if is_gdi_plus_installed then
+				gdip_bitmap.set_pixel (a_x, a_y, argb)
+			else
+				--| FIXME IEK Implement me
+			end
+		end
+
 
 feature -- Query
 

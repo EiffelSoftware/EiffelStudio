@@ -98,8 +98,6 @@ feature -- Redefine
 			l_shared_font: WEL_SHARED_FONTS
 			l_wel_bitmap: WEL_BITMAP
 			l_color_imp: EV_COLOR_IMP
-			l_background_pixmap: EV_PIXMAP
-			l_background_pixmap_state: EV_PIXMAP_IMP_STATE
 			l_brush: WEL_BRUSH
 		do
 			internal_rectangle := a_rectangle

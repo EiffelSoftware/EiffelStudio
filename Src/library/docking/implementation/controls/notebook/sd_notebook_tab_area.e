@@ -228,8 +228,6 @@ feature -- Query
 
 	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
 			-- All tabs in Current.
-		local
-			l_temp_tab: SD_NOTEBOOK_TAB
 		do
 			Result := tab_box.tabs
 		ensure

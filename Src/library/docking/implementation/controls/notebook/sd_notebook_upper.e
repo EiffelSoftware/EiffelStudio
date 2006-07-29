@@ -169,8 +169,6 @@ feature -- Command
 
 	extend (a_content: SD_CONTENT) is
 			-- Redefine.
-		local
-			l_tab: SD_NOTEBOOK_TAB
 		do
 			Precursor {SD_NOTEBOOK} (a_content)
 		end

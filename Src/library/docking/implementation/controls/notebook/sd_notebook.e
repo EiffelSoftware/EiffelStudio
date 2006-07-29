@@ -456,7 +456,6 @@ feature {NONE}  -- Implementation
 			-- Handle pointer motion.
 		local
 			l_in_tabs: BOOLEAN
-			l_target_tab: SD_NOTEBOOK_TAB
 			l_tabs_snapshot: like internal_tabs
 		do
 			-- FIXIT: This function should not be called on GTK.

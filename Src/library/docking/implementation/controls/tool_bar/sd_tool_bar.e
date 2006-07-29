@@ -35,8 +35,6 @@ feature {NONE} -- Initlization
 
 	make is
 			-- Creation method
-		local
-			l_colors: EV_STOCK_COLORS
 		do
 			default_create
 			internal_row_height := standard_height
@@ -48,13 +46,12 @@ feature {NONE} -- Initlization
 			pointer_double_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
-			create drawer.make (Current)
-
-			create l_colors
-			set_background_color (l_colors.default_background_color)
+			pointer_enter_actions.extend (agent on_pointer_enter)
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_veto_pebble_function)
+
+			create internal_shared
 		end
 
 feature -- Properties
@@ -344,7 +341,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 feature {SD_TOOL_BAR_ZONE, SD_TOOL_BAR} -- Tool bar zone issues
 
 	set_start_x (a_x: INTEGER) is
-			--
+			-- Set start x position with `a_x'.
 		do
 			internal_start_x := a_x
 		ensure
@@ -352,7 +349,7 @@ feature {SD_TOOL_BAR_ZONE, SD_TOOL_BAR} -- Tool bar zone issues
 		end
 
 	set_start_y (a_y: INTEGER) is
-			--
+			-- Set start y position with `a_y'.
 		do
 			internal_start_y := a_y
 		ensure
@@ -377,7 +374,12 @@ feature {NONE} -- Agents
 			-- Handle expose actions.
 		local
 			l_items: like internal_items
+
+			l_colors: EV_STOCK_COLORS
 		do
+			create l_colors
+			set_background_color (l_colors.default_background_color)
+
 			drawer.start_draw (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height))
 			from
 				l_items := items
@@ -398,20 +400,22 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 		do
-			from
-				l_items := items
-				l_items.start
-			until
-				l_items.after
-			loop
-				l_items.item.on_pointer_motion (a_x, a_y)
-				l_items.item.on_pointer_motion_for_tooltip (a_x, a_y)
-				if l_items.item.is_need_redraw then
-					drawer.start_draw (l_items.item.rectangle)
-					redraw_item (l_items.item)
-					drawer.end_draw
+			if pointer_entered then
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_items.item.on_pointer_motion (a_x, a_y)
+					l_items.item.on_pointer_motion_for_tooltip (a_x, a_y)
+					if l_items.item.is_need_redraw then
+						drawer.start_draw (l_items.item.rectangle)
+						redraw_item (l_items.item)
+						drawer.end_draw
+					end
+					l_items.forth
 				end
-				l_items.forth
 			end
 		end
 
@@ -484,6 +488,17 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_pointer_enter is
+			-- Handle poiner enter actions.
+			-- Pointer enter actions and pointer leave actions always called in pairs.
+			-- That means: `on_pointer_motion' actions can be called without `on_pointer_enter' be called.
+			-- That will let tool bar item draw hot state (which is done by `pointer_motion_actions'), but no pointer leave actions to erase the hot state.
+		do
+			pointer_entered := True
+		ensure
+			set: pointer_entered = True
+		end
+
 	on_pointer_leave is
 			-- Handle pointer leave actions.
 		local
@@ -503,6 +518,9 @@ feature {NONE} -- Agents
 				end
 				l_items.forth
 			end
+			pointer_entered := False
+		ensure
+			set: pointer_entered = False
 		end
 
 	on_drop_action (a_any: ANY) is
@@ -577,8 +595,12 @@ feature {SD_TOOL_BAR} -- Implementation
 			update
 		end
 
-	drawer: SD_TOOL_BAR_DRAWER
+	drawer: SD_TOOL_BAR_DRAWER is
 			-- Drawer with responsibility for draw OS native looks.
+		do
+			Result := internal_shared.tool_bar_drawer
+			Result.set_tool_bar (Current)
+		end
 
 	internal_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All tool bar items in Current.
@@ -607,6 +629,12 @@ feature {SD_TOOL_BAR} -- Implementation
 				internal_items.forth
 			end
 		end
+
+	pointer_entered: BOOLEAN
+			-- Has pointer enter actions been called?
+
+	internal_shared: SD_SHARED
+			-- All singletons.
 
 	internal_row_height: INTEGER
 			-- Row height of Current.

@@ -280,6 +280,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	error_background_color_preference: COLOR_PREFERENCE
 	object_text_color_preference: COLOR_PREFERENCE
 	object_background_color_preference: COLOR_PREFERENCE
+	target_text_color_preference: COLOR_PREFERENCE
+	target_background_color_preference: COLOR_PREFERENCE
+
 
 	once_and_constant_in_upper_preference: BOOLEAN_PREFERENCE
 			-- Is first letter of once or constant in upper case?
@@ -350,6 +353,8 @@ feature {NONE} -- Preference Strings
 	object_text_color_string: STRING is "editor.eiffel.colors.object_text_color"
 	object_background_color_string: STRING is "editor.eiffel.colors.object_background_color"
 	breakpoint_background_color_string: STRING is "editor.eiffel.colors.breakpoint_background_color"
+	target_text_color_string: STRING is "editor.eiffel.colors.target_text_color"
+	target_background_color_string: STRING is "editor.eiffel.colors.target_text_background_color"
 
 	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper"
 			-- Is first letter of once or constant in upper case?
@@ -424,6 +429,8 @@ feature {NONE} -- Init colors and fonts.
 			colors.put (error_background_color_preference.value, error_background_color_id)
 			colors.put (object_text_color_preference.value, object_text_color_id)
 			colors.put (object_background_color_preference.value, object_background_color_id)
+			colors.put (target_text_color_preference.value, target_text_color_id)
+			colors.put (target_background_color_preference.value, target_background_color_id)
 		end
 
 	init_fonts is
@@ -474,6 +481,8 @@ feature {NONE} -- Initialization
 			error_background_color_preference := l_manager.new_color_preference_value (l_manager, error_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			object_text_color_preference := l_manager.new_color_preference_value (l_manager, object_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			object_background_color_preference := l_manager.new_color_preference_value (l_manager, object_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			target_text_color_preference := l_manager.new_color_preference_value (l_manager, target_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			target_background_color_preference := l_manager.new_color_preference_value (l_manager, target_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 
 				-- Booleans			
 			underscore_is_separator_preference := l_manager.new_boolean_preference_value (l_manager, underscore_is_separator_string, False)

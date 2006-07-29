@@ -742,6 +742,7 @@ feature -- Label texts
 	l_created: STRING is "creators"
 	l_filter: STRING is "Filter: "
 	l_viewpoints: STRING is "Viewpoints: "
+	l_Tab_metrics: STRING is "Metric"
 
 feature -- Stone names
 

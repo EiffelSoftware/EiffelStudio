@@ -8,15 +8,6 @@ indexing
 class
 	SD_NOTEBOOK_TAB
 
-inherit
-	SD_DRAWING_AREA
-		export
-			{SD_NOTEBOOK_TAB_DRAWER_I} implementation
-		redefine
-			destroy,
-			create_implementation
-		end
-
 create
 	make
 
@@ -31,24 +22,21 @@ feature {NONE}  -- Initlization
 			default_create
 			create internal_shared
 
+			text := ""
+			create pixmap
+
 			create info
 
-			set_minimum_height (internal_shared.title_bar_height)
-
-			expose_actions.force_extend (agent on_expose)
-			pointer_enter_actions.extend (agent on_pointer_enter)
-			pointer_leave_actions.extend (agent on_pointer_leave)
-
 			create select_actions
+			create close_actions
 			create drag_actions
-			init_actions (a_notebook)
+
 			internal_draw_pixmap := True
 			internal_docking_manager := a_docking_manager
 			internal_notebook := a_notebook
 
 			init_drawing_style (a_top)
 			set_enough_space
-
 		ensure
 			set: internal_notebook = a_notebook
 			set: internal_docking_manager = a_docking_manager
@@ -57,42 +45,20 @@ feature {NONE}  -- Initlization
 	init_drawing_style (a_top: BOOLEAN) is
 			-- Init `internal_tab_style'
 		do
-			create {SD_NOTEBOOK_TAB_DRAWER_IMP}internal_tab_style.make (Current, a_top)
-			internal_tab_style.set_padding_width (internal_shared.padding_width)
-		end
-
-	init_actions (a_notebook: SD_NOTEBOOK) is
-			-- Initialize actions
-		do
-			pointer_button_press_actions.extend (agent on_pointer_press)
-
-			pointer_button_release_actions.extend (agent on_pointer_release)
-			pointer_motion_actions.extend (agent on_pointer_motion)
-		end
-
-	create_implementation is
-			-- Redefine
-		do
-			create {SD_DRAWING_AREA_IMP} implementation.make (Current)
+			is_draw_top_tab := a_top
+			internal_tab_drawer.set_padding_width (internal_shared.padding_width)
 		end
 
 feature -- Command
-
-	destroy is
-			-- Redefine.
-		do
-			Precursor {SD_DRAWING_AREA}
-		end
 
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Set drop actions to Current.
 		require
 			a_actions_not_void: a_actions /= Void
 		do
-			drop_actions.wipe_out
-			drop_actions.append (a_actions)
+			-- FIXIT: To be implemented.
 		ensure
-			set: drop_actions.is_equal (a_actions)
+
 		end
 
 	set_width_not_enough_space (a_width: INTEGER) is
@@ -101,32 +67,50 @@ feature -- Command
 			a_width_valid: a_width >= 0
 		do
 			on_expose_with_width (a_width)
-
-			set_minimum_width (a_width)
-			internal_tab_style.set_enough_space (False)
+			is_enough_space := False
 		ensure
-			set: enough_space = False
+			set: is_enough_space = False
 		end
 
 	set_enough_space is
 			-- Set current is enought space to show.
 		do
-			internal_tab_style.set_enough_space (True)
+			is_enough_space := True
 			update_minmum_size
 		ensure
-			set: enough_space = True
+			set: is_enough_space = True
 		end
 
-	enough_space: BOOLEAN is
+	is_enough_space: BOOLEAN
 			-- If Current have enough space?
-		do
-			Result := internal_tab_style.is_enough_space
-		end
 
 	set_draw_pixmap is
 			-- Set `internal_draw_pixmap'.
 		do
 			internal_draw_pixmap := True
+		end
+
+	hide is
+			-- Hide
+		do
+			is_displayed := False
+		end
+
+	show is
+			-- Show
+		do
+			is_displayed := True
+		end
+
+	destroy is
+			-- Destory
+		do
+			if parent /= Void then
+				parent.prune (Current)
+				parent := Void
+			end
+		ensure
+			cleared: parent = Void
 		end
 
 feature -- Query
@@ -137,66 +121,128 @@ feature -- Query
 	prefered_size: INTEGER is
 			-- If current is displayed, size should take.
 		do
-			Result := minimum_width
+			Result := internal_width
 		end
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions.
 
+	close_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Close actions.
+
 	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag tab actions.
 
+	is_hot: BOOLEAN
+			-- If Current hot?
+
+	is_pointer_in_close_area: BOOLEAN
+			-- If pointer in close button area?
+
+	is_pointer_pressed: BOOLEAN
+			-- If pointer button pressed?
+
+	x: INTEGER is
+			-- X position relative to parent box.
+		require
+			not_void: parent /= Void
+		do
+			Result := parent.item_x (Current)
+		end
+
+	width: INTEGER is
+			-- Width
+		do
+			if is_displayed then
+				Result := internal_width
+			end
+		end
+
+	height: INTEGER is
+			-- Height
+		do
+			Result := parent.height
+		end
+
+	screen_x: INTEGER is
+			-- Screen x position
+		require
+			parented: parent /= Void
+		do
+			Result := x + parent.screen_x
+		end
+
+	screen_y: INTEGER is
+			-- Screen y position
+		require
+			parented: parent /= Void
+		do
+			Result := parent.screen_y
+		end
+
+	rectangle: EV_RECTANGLE is
+			-- Current tab rectangle relative to `parent'.
+		require
+			parented: parent /= Void
+		do
+			create Result.make (x, 0, internal_width, height)
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_displayed: BOOLEAN
+			-- If current displayed?
+
+	parent: SD_NOTEBOOK_TAB_BOX
+			-- Parent tab box
+
 feature -- Properties
 
-	text: STRING is
+	text: STRING
 			-- Text shown on Current.
-		do
-			Result := internal_tab_style.text
-		end
 
 	set_text (a_text: STRING) is
 			-- Set `text'.
 		require
 			a_text_not_void: a_text /= Void
 		do
-			internal_tab_style.set_text (a_text)
+			text := a_text
 			update_minmum_size
 			on_expose
 		ensure
 			set: a_text = text
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap shown on Current.
-		do
-			Result := internal_tab_style.pixmap
-		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			internal_tab_style.set_pixmap (a_pixmap)
-			set_minimum_width (a_pixmap.width)
+			pixmap := a_pixmap
 			update_minmum_size
 			on_expose
 		ensure
 			set: pixmap = a_pixmap
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- If Current tab selected?
-		do
-			Result := internal_tab_style.is_selected
-		end
+
+	is_focused: BOOLEAN
+			-- If Current focused?
 
 	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
 			-- Set `selected'.
 		do
-			internal_tab_style.set_selected (a_selected, a_focused)
-
+			is_selected := a_selected
+			is_focused := a_focused
 			update_minmum_size
+			if a_selected then
+				show
+			end
 			on_expose
 		ensure
 			set: is_selected = a_selected
@@ -207,21 +253,74 @@ feature -- Properties
 		require
 			selected: is_selected
 		do
-			if a_focused then
-				set_background_color (internal_shared.focused_color)
-			else
-				set_background_color (internal_shared.non_focused_title_color)
-			end
 			on_expose
-		ensure
-			set: a_focused implies background_color.is_equal (internal_shared.focused_color)
-			set: not a_focused implies background_color.is_equal (internal_shared.non_focused_title_color)
 		end
 
 	info: SD_NOTEBOOK_TAB_INFO
 			-- Information used for draw tabs.
 
-feature {NONE}  -- Implmentation for drag action
+	font: EV_FONT
+			-- Font
+
+	set_font (a_font: like font) is
+			-- Set `font' with `a_font'
+		require
+			not_void: a_font /= Void
+		do
+			font := a_font
+		ensure
+			set: font = a_font
+		end
+
+feature {SD_NOTEBOOK_TAB_BOX} -- Command
+
+	set_parent (a_parent: like parent) is
+			-- Set `parent' with `a_parent'
+		do
+			parent := a_parent
+		ensure
+			set: parent = a_parent
+		end
+
+	on_expose is
+			-- Handle expose actions.
+		do
+			on_expose_with_width (internal_width)
+		end
+
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Hanlde pointer motion.
+		do
+			if is_pointer_pressed then
+				is_pointer_pressed := False
+				parent.disable_capture (Current)
+				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			else
+				-- If user close other tab, Current tab will moved without pointer enter actiosn called.
+				-- So we set is_hot here. Otherwise tab drawing state for close button will not correct.
+				is_hot := True
+				if internal_tab_drawer.is_top_side_tab and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
+					if not is_pointer_in_close_area and internal_width > 0 then
+						is_pointer_in_close_area := True
+						if is_selected then
+							internal_tab_drawer.expose_selected (internal_width, info)
+						else
+							internal_tab_drawer.expose_hot (internal_width, info)
+						end
+
+					end
+				else
+					if is_pointer_in_close_area and internal_width > 0 then
+						is_pointer_in_close_area := False
+						if is_selected then
+							internal_tab_drawer.expose_selected (internal_width, info)
+						else
+							internal_tab_drawer.expose_hot (internal_width, info)
+						end
+					end
+				end
+			end
+		end
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer press.
@@ -234,13 +333,24 @@ feature {NONE}  -- Implmentation for drag action
 			inspect
 				a_button
 			when 1 then
-				internal_pointer_pressed := True
-				enable_capture
-				select_actions.call ([])
+				is_pointer_pressed := True
+				parent.enable_capture (Current)
+
+				if internal_tab_drawer.is_top_side_tab and internal_width > 0 and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
+					-- For select actions, we don't call select actions.
+					if is_selected then
+						internal_tab_drawer.expose_selected (internal_width, info)
+					else
+						internal_tab_drawer.expose_hot (internal_width, info)
+					end
+				else
+					select_actions.call ([])
+				end
+
 			when 3 then
 				select_actions.call ([])
 				create l_menu.make (internal_notebook)
-				l_menu.show_at (Current, a_x, a_y)
+				l_menu.show_at (parent, a_x + x, a_y)
 			else
 
 			end
@@ -249,36 +359,24 @@ feature {NONE}  -- Implmentation for drag action
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
-			internal_pointer_pressed := False
-			disable_capture
-		end
+			is_pointer_pressed := False
+			parent.disable_capture (Current)
+			if internal_tab_drawer.is_top_side_tab and internal_width > 0 and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
 
-	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Hanlde pointer motion.
-		do
-			if internal_pointer_pressed then
-				internal_pointer_pressed := False
-				disable_capture
-				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				if is_selected then
+					internal_tab_drawer.expose_selected (internal_width, info)
+				else
+					internal_tab_drawer.expose_hot (internal_width, info)
+				end
+				close_actions.call ([])
 			end
-		end
-
-	internal_pointer_pressed: BOOLEAN
-			-- If pointer button pressed?
-
-feature {NONE}  -- Implementation agents
-
-	on_expose is
-			-- Handle expose actions.
-		do
-			on_expose_with_width (width)
 		end
 
 	on_pointer_enter is
 			-- Handle pointer enter actions.
 		do
 			is_hot := True
-			on_expose_with_width (width)
+			on_expose_with_width (internal_width)
 		ensure
 			set: is_hot = True
 		end
@@ -287,26 +385,27 @@ feature {NONE}  -- Implementation agents
 			-- Handle pointer leave actions.
 		do
 			is_hot := False
-			on_expose_with_width (width)
+			on_expose_with_width (internal_width)
 		ensure
 			set: is_hot = False
 		end
+
+feature {NONE}  -- Implementation agents
 
 	on_expose_with_width (a_width: INTEGER) is
 			-- Handle expose with a_width. a_width is total width current should be.
 		require
 			a_width_valid: a_width >= 0
 		do
---			clear
 			if pixmap /= Void then
-				if width > 0 and height >0 then
+				if width > 0 and height > 0 then
 					if is_selected then
-						internal_tab_style.expose_selected (a_width, info)
+						internal_tab_drawer.expose_selected (a_width, info)
 					else
 						if is_hot then
-							internal_tab_style.expose_hot (a_width, info)
+							internal_tab_drawer.expose_hot (a_width, info)
 						else
-							internal_tab_style.expose_unselected (a_width, info)
+							internal_tab_drawer.expose_unselected (a_width, info)
 						end
 					end
 				end
@@ -319,24 +418,28 @@ feature {NONE}  -- Implementation functions.
 			-- Update minmum size of Current.
 		local
 			l_size: INTEGER
-			l_orignal_font, l_font: EV_FONT
+			l_drawer: SD_NOTEBOOK_TAB_DRAWER_I
 		do
-			if enough_space then
-				l_font := font
-				l_orignal_font := l_font.twin
-				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-				set_font (l_font)
+			if parent /= Void and is_enough_space then
 
-				l_size := internal_tab_style.start_x_tail_internal
-				set_font (l_orignal_font)
-				if l_size /= minimum_width or l_size /= minimum_width then
-					set_minimum_width (l_size)
-					set_minimum_width (l_size)
+				l_drawer := internal_tab_drawer
+				-- We want to calculate a maximum space
+				l_drawer.set_selected (True, True)
+				l_size := l_drawer.start_x_tail_internal
+
+				if l_size /= internal_width then
+					internal_width := l_size
 				end
 			end
 		end
 
 feature {NONE}  -- Implementation attributes
+
+	internal_width: INTEGER
+			-- Width
+
+	is_draw_top_tab: BOOLEAN
+			-- If current draw tab at top?
 
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook Current belong to.
@@ -347,20 +450,27 @@ feature {NONE}  -- Implementation attributes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
-	internal_tab_style: SD_NOTEBOOK_TAB_DRAWER_I
+	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
 			-- Drawer of Current
-
-	is_hot: BOOLEAN
-			-- If Current hot?
+		do
+			Result := internal_shared.notebook_tab_drawer
+			Result.set_drawing_area (Current)
+			Result.set_is_draw_at_top (is_draw_top_tab)
+			Result.set_selected (is_selected, is_focused)
+			Result.set_text (text)
+			Result.set_pixmap (pixmap)
+			Result.set_enough_space (is_enough_space)
+		end
 
 invariant
 
-	internal_docking_manager_not_void: internal_docking_manager /= Void
-	internal_shared_not_void: internal_shared /= Void
-	select_actions_not_void: select_actions /= Void
-	drag_actions_not_void: drag_actions /= Void
-	not_void: internal_tab_style /= Void
+	not_void: internal_docking_manager /= Void
+	not_void: internal_shared /= Void
+	not_void: select_actions /= Void
+	not_void: drag_actions /= Void
+	not_void: internal_tab_drawer /= Void
 	not_void: info /= Void
+	not_void: close_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

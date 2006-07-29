@@ -15,7 +15,8 @@ inherit
 			prune_all as prune_all_vertical_box,
 			prune as prune_vertical_box,
 			index_of as index_of_vertical_box,
-			has as has_vertical_box
+			has as has_vertical_box,
+			replace as replace_box
 		redefine
 			destroy
 		end
@@ -102,13 +103,13 @@ feature -- Command
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
 			-- The text let tab size changed, so it need resize.
-			on_resize (0, 0, internal_tab_box.width, internal_tab_box.height)
+			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
 			set:
 		end
 
 	set_item_pixmap (a_content: SD_CONTENT; a_pixmap: EV_PIXMAP) is
-			--
+			-- Set tab which represent `a_content''s pixmap to `a_pixmap'.
 		require
 			has: has (a_content)
 			a_pixmap_not_void: a_pixmap /= Void
@@ -135,7 +136,7 @@ feature -- Command
 				internal_docking_manager.command.unlock_update
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
-			internal_tab_box.resize_tabs (internal_tab_box.width)
+			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 
 		ensure
 			selectd: selected_item = a_content
@@ -154,8 +155,10 @@ feature -- Command
 			internal_tabs.extend (l_tab)
 			l_tab.set_drop_actions (a_content.drop_actions)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
+			l_tab.close_actions.extend (agent (a_content.close_request_actions).call ([]))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)
+
 			select_item (a_content, True)
 		end
 
@@ -163,7 +166,12 @@ feature -- Command
 			-- Prune `a_widget'.
 		require
 			has: has (a_content)
+		local
+			l_orignal_selected: SD_CONTENT
+			l_orignal_index: INTEGER
 		do
+			l_orignal_selected := selected_item
+			l_orignal_index := selected_item_index
 			internal_contents.start
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
@@ -173,16 +181,34 @@ feature -- Command
 			internal_contents.start
 			internal_contents.prune (a_content)
 
-			if internal_contents.after then
-				internal_contents.back
-			end
+			if l_orignal_selected = a_content then
+				-- We are closing a selected content, we should select the one at orignal index
+				if not internal_contents.valid_index (l_orignal_index) then
+					internal_contents.back
+				else
+					internal_contents.go_i_th (l_orignal_index)
+				end
 
-			select_item (internal_contents.item, a_focus)
-			if a_focus then
-				selection_actions.call ([])
+				select_item (internal_contents.item, a_focus)
+				if a_focus then
+					selection_actions.call ([])
+				end
 			end
+			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
 			pruned: not has (a_content)
+		end
+
+	replace (a_content: SD_CONTENT) is
+			-- Replace `a_content''s old `user_widget' with new one.
+		require
+			has: has (a_content)
+		do
+			-- Because user changed `user_widget' so we can't find select_item
+			-- This means if `selected_item_index' equal 0 then we should replace `internal_cell'.
+			if selected_item_index = 0 then
+				internal_cell.replace (a_content.user_widget)
+			end
 		end
 
 	set_tab_position (a_position: INTEGER) is
@@ -445,17 +471,15 @@ feature {NONE}  -- Implementation
 					if l_tabs_snapshot.item /= dragging_tab then
 						if tab_has_x_y (l_tabs_snapshot.item, a_screen_x, a_screen_y)  then
 							l_in_tabs := True
-							internal_tab_box.start
-							internal_tab_box.search (l_tabs_snapshot.item)
-							l_target_tab := l_tabs_snapshot.item
 							internal_docking_manager.command.lock_update (Current, False)
 
 							swap_tabs_and_contents (dragging_tab, l_tabs_snapshot.item)
 
 							internal_tab_box.swap (dragging_tab, l_tabs_snapshot.item)
 
-							internal_tab_box.resize_tabs (internal_tab_box.width)
-							on_resize (0, 0, width, height)
+							-- Is already done by on_resize
+
+							internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 							internal_docking_manager.command.unlock_update
 						end
 					elseif tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then

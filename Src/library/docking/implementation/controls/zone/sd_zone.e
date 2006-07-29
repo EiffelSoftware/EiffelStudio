@@ -77,6 +77,9 @@ feature -- Command
 				internal_docking_manager.command.lock_update (Current, False)
 				if internal_parent /= main_area then
 					main_area.wipe_out
+					if parent /= Void then
+						parent.prune (Current)
+					end
 					internal_parent.extend (Current)
 					main_area.extend (main_area_widget)
 				end

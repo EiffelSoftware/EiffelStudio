@@ -63,6 +63,11 @@
 					</Directory>
 				</Directory>
 				<Directory Id="studio1" Name="studio">
+					<Directory Id="metrics" Name="metrics">
+						<Component Id="metrics" Guid="BACFC21E-A641-45cd-97F1-F2511B121B33">
+							<File Id="predefined_metrics_xml" Name="PREDEF~1.XML" LongName="predefined_metrics.xml" />
+						</Component>
+					</Directory>
 					<Directory Id="profiler" Name="profiler">
 						<Component Id="profiler" Guid="C96FB383-E44A-45E8-A224-C260837E978D">
 							<File Id="profiler.info" Name="PROFIL~1.INF" LongName="profiler.info" KeyPath="yes" />
@@ -494,6 +499,7 @@
 									<File Id="VD83" Name="VD83" />
 									<File Id="VD84" Name="VD84" />
 									<File Id="VD85" Name="VD85" />
+									<File Id="VD86" Name="VD86" />
 									<File Id="VDJR71" Name="VDJR" />
 									<File Id="VDOC65" Name="VDOC" />
 									<File Id="VDRD1" Name="VDRD1" />

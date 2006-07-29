@@ -17,6 +17,7 @@ inherit
 			on_focus_in,
 			on_focus_out,
 			on_normal_max_window,
+			update_user_widget,
 			set_non_focus_selection_color
 		end
 create
@@ -160,6 +161,12 @@ feature {NONE} -- Implementation
 				Precursor {SD_DOCKING_ZONE}
 			end
 
+		end
+
+	update_user_widget is
+			-- Redefine
+		do
+			window.set_user_widget (content.user_widget)
 		end
 
 invariant

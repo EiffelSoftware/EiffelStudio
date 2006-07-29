@@ -11,6 +11,9 @@ class
 
 inherit
 	SD_MAIN_CONTAINER_IMP
+		rename
+			set_background_color as set_background_color_vision2
+		end
 
 
 feature {NONE} -- Initialization
@@ -26,18 +29,27 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			create l_helper
-			left_top.set_background_color (internal_shared.non_focused_color_lightness)
-			right_top.set_background_color (internal_shared.non_focused_color_lightness)
-			left_bottom.set_background_color (internal_shared.non_focused_color_lightness)
-			right_bottom.set_background_color (internal_shared.non_focused_color_lightness)
 
-			gap_area_top.set_background_color (internal_shared.non_focused_color_lightness)
-			gap_area_bottom.set_background_color (internal_shared.non_focused_color_lightness)
-			gap_area_left.set_background_color (internal_shared.non_focused_color_lightness)
-			gap_area_right.set_background_color (internal_shared.non_focused_color_lightness)
+			set_background_color (internal_shared.non_focused_color_lightness)
 		end
 
 feature -- Command
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Set background color of gap areas.
+		require
+			not_void: a_color /= Void
+		do
+			left_top.set_background_color (a_color)
+			right_top.set_background_color (a_color)
+			left_bottom.set_background_color (a_color)
+			right_bottom.set_background_color (a_color)
+
+			gap_area_top.set_background_color (a_color)
+			gap_area_bottom.set_background_color (a_color)
+			gap_area_left.set_background_color (a_color)
+			gap_area_right.set_background_color (a_color)
+		end
 
 	set_gap (a_direction: INTEGER; a_show: BOOLEAN) is
 			-- Show gap at `a_direction'?

@@ -14,7 +14,8 @@ class
 inherit
 	SD_HOR_VER_BOX
 		redefine
-			has
+			has,
+			set_background_color
 		end
 
 create
@@ -282,6 +283,25 @@ feature -- Command
 				tab_groups.forth
 			end
 			update_tab_group_max_size
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Redefine
+		local
+			l_spacer: SD_AUTO_HIDE_SEPERATOR
+		do
+			from
+				start
+			until
+				after
+			loop
+				l_spacer ?= item
+				if l_spacer /= Void then
+					l_spacer.set_background_color (a_color)
+				end
+				forth
+			end
+			Precursor {SD_HOR_VER_BOX}(a_color)
 		end
 
 feature -- States report

@@ -121,35 +121,7 @@ feature -- Query
 		do
 			create Result.make (1)
 			if readable	then
-				zones_recursive (item, Result)
-			end
-		end
-
-	zones_recursive (a_widget: EV_WIDGET; a_list: like zones) is
-			-- Add all zones in `a_widget' to `a_list'.
-		require
-			a_widget_not_void: a_widget /= Void
-			a_list_not_void: a_list /= Void
-		local
-			l_zone: SD_ZONE
-			l_container: EV_CONTAINER
-			l_list: LINEAR [EV_WIDGET]
-		do
-			l_zone ?= a_widget
-			l_container ?= a_widget
-			-- Must first judge if is a SD_ZONE, becaue a SD_ZONE is a EV_CONTAINER too.
-			if l_zone /= Void then
-				a_list.extend (l_zone)
-			elseif l_container /= Void then
-				l_list := l_container.linear_representation
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					zones_recursive (l_list.item, a_list)
-					l_list.forth
-				end
+				Result := internal_docking_manager.query.all_zones_in_widget (item)
 			end
 		end
 
@@ -195,8 +167,7 @@ feature -- Query
 					if l_parent = Current then
 						Result := Current
 					else
-						create l_list.make (5)
-						zones_recursive (l_parent, l_list)
+						l_list := internal_docking_manager.query.all_zones_in_widget (l_parent)
 						if not is_all_editors (l_list) then
 							-- Now we find the top container of all editors
 							Result := l_last_parent

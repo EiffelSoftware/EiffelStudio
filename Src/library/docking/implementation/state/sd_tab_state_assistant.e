@@ -186,6 +186,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 		do
 			l_orignal_direction := a_target_zone.state.direction
 			l_parent := state.tab_zone.parent
+			check not_void: l_parent /= Void end
 			state.tab_zone.prune (state.internal_content, False)
 			if state.internal_content.user_widget.parent /= Void then
 				state.internal_content.user_widget.parent.prune (state.internal_content.user_widget)

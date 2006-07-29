@@ -26,10 +26,12 @@ feature {NONE}  -- Initlization
 			pnd_motion_actions_handler := agent on_pnd_motions
 			pick_actions_handler := agent on_pick_actions
 			drop_actions_handler := agent on_drop_actions
+			theme_changed_handler := agent on_theme_changed
 			create l_env
 			l_env.application.pnd_motion_actions.extend (pnd_motion_actions_handler)
 			l_env.application.pick_actions.extend (pick_actions_handler)
 			l_env.application.drop_actions.extend (drop_actions_handler)
+			l_env.application.theme_changed_actions.extend (theme_changed_handler)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -46,10 +48,14 @@ feature -- Command
 			internal_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			internal_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
 			create l_app
-			l_app.application.pointer_button_press_actions.extend (agent on_widget_pointer_press)
-			l_app.application.pointer_button_press_actions.extend (agent on_widget_pointer_press_for_upper_zone)
+			widget_pointer_press_handler := agent on_widget_pointer_press
+			widget_pointer_press_for_upper_zone_handler := agent on_widget_pointer_press_for_upper_zone
+			l_app.application.pointer_button_press_actions.extend (widget_pointer_press_handler)
+			l_app.application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
 			internal_docking_manager.main_window.focus_out_actions.extend (agent on_top_level_window_focus_out)
 			internal_docking_manager.main_window.focus_in_actions.extend (agent on_top_level_window_focus_in)
+
+			create internal_shared
 		end
 
 feature  -- Agents
@@ -66,7 +72,7 @@ feature  -- Agents
 			until
 				l_zones.after
 			loop
-				if l_zones.item.has_recursive (a_widget) and not ignore_additional_click then
+				if not l_zones.item.is_destroyed and then (l_zones.item.has_recursive (a_widget) and not ignore_additional_click) then
 					if internal_docking_manager.property.last_focus_content /= l_zones.item.content then
 						internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
 						l_zones.item.on_focus_in (Void)
@@ -233,6 +239,16 @@ feature  -- Agents
 			ignore_additional_click := True
 		end
 
+	on_theme_changed is
+			-- Handle theme changed actions.
+		do
+			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).set_background_color (internal_shared.non_focused_color_lightness)
+			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_background_color (internal_shared.non_focused_color_lightness)
+			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.left).set_background_color (internal_shared.non_focused_color_lightness)
+			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.right).set_background_color (internal_shared.non_focused_color_lightness)
+			internal_docking_manager.main_container.set_background_color (internal_shared.non_focused_color_lightness)
+		end
+
 	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Handle pick and drop motion actions.
 			-- We notify all auto hide tab stubs when pick and drop shere.
@@ -327,9 +343,10 @@ feature -- Destory
 			l_env.application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
 			l_env.application.pick_actions.prune_all (pick_actions_handler)
 			l_env.application.drop_actions.prune_all (drop_actions_handler)
+			l_env.application.theme_changed_actions.prune_all (theme_changed_handler)
+			l_env.application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
+			l_env.application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
-			-- FIXIT: We should also destory agents of `on_widget_pointer_press' and `on_widget_pointer_press_for_upper_zone'
-
 		end
 
 feature -- Contract support
@@ -423,6 +440,15 @@ feature {SD_DEBUG_ACCESS} -- For debug.
 
 feature {NONE}  -- Implementation
 
+	internal_shared: SD_SHARED
+			-- All singletons.
+
+	widget_pointer_press_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+			-- Pointer press actions.
+
+	widget_pointer_press_for_upper_zone_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+			-- Pointer press actions for SD_UPPER_ZONEs.
+
 	pnd_motion_actions_handler: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, EV_ABSTRACT_PICK_AND_DROPABLE]]
 			-- Pick and Drop pointer motion action handler.
 
@@ -432,6 +458,9 @@ feature {NONE}  -- Implementation
 	drop_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]
 			-- Drop actions handler
 
+	theme_changed_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE[]]
+			-- Theme changed actions handler.
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current associate with.
 
@@ -440,6 +469,8 @@ feature {NONE}  -- Implementation
 
 invariant
 	not_void: pnd_motion_actions_handler /= Void
+	not_void: theme_changed_handler /= Void
+	not_void: internal_shared /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

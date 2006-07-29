@@ -863,17 +863,12 @@ feature -- Keybord shortcuts Customization
 	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
-			create Result.make (25)
+			create Result.make (17)
 			Result.put ([False,  True, False, key_strings.item (Key_space).twin.as_string_8], "autocomplete")
 			Result.put ([False,  True,  True, key_strings.item (Key_space).twin.as_string_8], "class_autocomplete")
-			Result.put ([False, False,  True, key_strings.item (key_numpad_subtract).twin.as_string_8], "collapse_all_levels")
-			Result.put ([False,  True, False, key_strings.item (key_left).twin.as_string_8], "collapse_tree_node")
 			Result.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_1")
 			Result.put ([False,  True, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_2")
 			Result.put ([False, False,  True, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_3")
-			Result.put ([False, False,  True, key_strings.item (key_numpad_multiply).twin.as_string_8], "expand_all_levels")
-			Result.put ([False,  True, False, key_strings.item (key_right).twin.as_string_8], "expand_tree_node")
-
 			Result.put ([False, False,  True, key_strings.item (key_F3).twin.as_string_8], "search_backward")
 			Result.put ([False, False,  False, key_strings.item (key_F3).twin.as_string_8], "search_forward")
 			Result.put ([False, True, False, key_strings.item (Key_F3).twin.as_string_8], "search_selection_forward")

@@ -136,9 +136,15 @@ feature -- Command
 			-- Redefine
 		local
 			l_selected: SD_CONTENT
+			l_index: INTEGER
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content, a_focus)
-			l_selected := contents.i_th (selected_item_index)
+			l_index := selected_item_index
+			if l_index = 0 then
+				l_index := 1
+			end
+			l_selected := contents.i_th (l_index)
+
 			internal_title_bar.set_title (l_selected.long_title)
 			update_mini_tool_bar (l_selected)
 		end
@@ -335,7 +341,6 @@ feature {NONE} -- Agents for docker
 					io.put_string ("%N SD_TAB_ZONE Handle pointer release.")
 				end
 				disable_capture
-
 				internal_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				internal_docker_mediator := Void
 				is_drag_title_bar := False
@@ -366,7 +371,6 @@ feature {NONE} -- Agents for docker
 	on_notebook_drop (a_any: ANY) is
 			-- Handle pointer drop.
 		do
-
 		end
 
 	on_cancel_dragging is

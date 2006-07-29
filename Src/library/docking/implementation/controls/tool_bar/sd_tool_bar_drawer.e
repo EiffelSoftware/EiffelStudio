@@ -13,13 +13,21 @@ create
 
 feature{NONE} -- Initlization
 
-	make (a_tool_bar: SD_TOOL_BAR) is
+	make is
 			-- Creation method
 		do
-			create {SD_TOOL_BAR_DRAWER_IMP} implementation.make (a_tool_bar)
+			create {SD_TOOL_BAR_DRAWER_IMP} implementation.make
 		end
 
 feature -- Command
+
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+			-- Set `a_tool_bar' where is Current to draw on.
+		require
+			not_void: a_tool_bar /= Void
+		do
+			implementation.set_tool_bar (a_tool_bar)
+		end
 
 	start_draw (a_rectangle: EV_RECTANGLE) is
 			-- Called when start drawing, after draw should call `end_draw'.
@@ -46,7 +54,7 @@ feature -- Command
 			implementation.draw_item (a_arguments)
 		end
 
-feature {NONE} -- Implementation
+feature {SD_NOTEBOOK_TAB_DRAWER_IMP} -- Implementation
 
 	implementation: SD_TOOL_BAR_DRAWER_I;
 			-- Implementation

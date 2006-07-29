@@ -72,8 +72,11 @@ feature -- Element Change
 
 	close_clipboard is
 			-- Close clipboard.
+		require
+			clipboard_open: clipboard_open
 		local
 			b_result: BOOLEAN
+			l_errlr: WEL_ERROR
 		do
 			b_result := cwel_close_clipboard
 			check
@@ -83,6 +86,8 @@ feature -- Element Change
 
 	empty_clipboard is
 			-- Empty clipboard.
+		require
+			clipboard_open: clipboard_open
 		local
 			b_result: BOOLEAN
 		do
@@ -91,7 +96,6 @@ feature -- Element Change
 				clipboard_emptied: b_result
 			end
 		end
-
 
 feature {NONE} -- Externals
 

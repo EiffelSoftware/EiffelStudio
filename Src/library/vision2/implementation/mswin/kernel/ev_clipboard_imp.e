@@ -46,12 +46,14 @@ feature -- Access
 			-- Text content of clipboard.
 		do
 			open_clipboard (Void)
-			if clipboard_open and then is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext) then
-				retrieve_clipboard_text
-				Result := last_string
-				Result.prune_all ('%R')
+			if clipboard_open then
+				if is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext) then
+					retrieve_clipboard_text
+					Result := last_string
+					Result.prune_all ('%R')
+				end
+				close_clipboard
 			end
-			close_clipboard
 			if Result = Void then
 				Result := ""
 			end
@@ -61,8 +63,10 @@ feature -- Access
 			-- Does the clipboard currently contain text?
 		do
 			open_clipboard (Void)
-			Result := clipboard_open and is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
-			close_clipboard
+			if clipboard_open then
+				Result := is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
+				close_clipboard
+			end
 		end
 
 feature -- Status Setting

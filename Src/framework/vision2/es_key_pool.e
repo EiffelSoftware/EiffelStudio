@@ -117,7 +117,7 @@ feature -- Setting
 			action_added: key_actions.item (a_index) = a_agent
 		end
 
-	remove_key_action (a_index: INTEGER): BOOLEAN is
+	remove_key_action (a_index: INTEGER) is
 			-- Remove key action with index `a_index'.
 			-- If the action is binded with some shortcut key, this binding is also removed.
 		local

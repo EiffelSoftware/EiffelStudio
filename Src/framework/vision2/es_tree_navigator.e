@@ -49,6 +49,9 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
+			if has_key_action (expand_node_action_index) then
+				remove_key_action (expand_node_action_index)
+			end
 			add_key_action (a_agent, expand_node_action_index)
 		end
 
@@ -57,6 +60,9 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
+			if has_key_action (expand_node_recursive_action_index) then
+				remove_key_action (expand_node_recursive_action_index)
+			end
 			add_key_action (a_agent, expand_node_recursive_action_index)
 		end
 
@@ -65,6 +71,9 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
+			if has_key_action (collapse_node_action_index) then
+				remove_key_action (collapse_node_action_index)
+			end
 			add_key_action (a_agent, collapse_node_action_index)
 		end
 
@@ -73,6 +82,9 @@ feature -- Setting
 		require
 			a_agent_attached: a_agent /= Void
 		do
+			if has_key_action (collapse_node_recursive_action_index) then
+				remove_key_action (collapse_node_recursive_action_index)
+			end
 			add_key_action (a_agent, collapse_node_recursive_action_index)
 		end
 

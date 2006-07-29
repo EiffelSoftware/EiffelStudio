@@ -288,19 +288,27 @@ feature -- Change
 			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
 		do
 			if a_expand then
-				set_expand_selected_rows_agent (agent expand_rows (False))
+				if expand_selected_rows_agent = Void then
+					set_expand_selected_rows_agent (agent expand_rows (False))
+				end
 				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
 			end
 			if a_expand_recursive then
-				set_expand_selected_rows_recursive_agent (agent expand_rows (True))
+				if expand_selected_rows_recursive_agent = Void then
+					set_expand_selected_rows_recursive_agent (agent expand_rows (True))
+				end
 				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
 			end
 			if a_collapse then
-				set_collapse_selected_rows_agent (agent collapse_rows (False))
+				if collapse_selected_rows_agent = Void then
+					set_collapse_selected_rows_agent (agent collapse_rows (False))
+				end
 				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
 			end
 			if a_collapse_recursive then
-				set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
+				if collapse_selected_rows_recursive_agent = Void then
+					set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
+				end
 				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
 			end
 		end

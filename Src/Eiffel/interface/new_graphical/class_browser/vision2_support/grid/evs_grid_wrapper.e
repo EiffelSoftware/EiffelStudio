@@ -452,7 +452,6 @@ feature{NONE} -- Implementation
 			-- 	Return value of this comparator should be True if the first row is less thant the second one.			
 		local
 			l_columns: like sorted_columns
-			l_list_comparator: AGENT_LIST_COMPARATOR [G]
 			l_sort_info: like column_sort_info
 			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
 			l_order_list: ARRAYED_LIST [INTEGER]

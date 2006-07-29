@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			l_checker: SD_DEPENDENCY_CHECKER
 		do
 			create internal_shared
-			internal_shared.set_show_all_feedback_indicator (True)
 			create tab_drop_actions
 
 			top_container := a_container
@@ -181,7 +180,6 @@ feature -- Command
 			a_file_exist: file_exist (a_file)
 		local
 			l_config: SD_CONFIG_MEDIATOR
-			l_result: BOOLEAN
 		do
 			create l_config.make (Current)
 			Result := l_config.open_config (a_file)
@@ -267,7 +265,7 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
 	  	SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES, SD_AUTO_HIDE_ANIMATION,
 	  	SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK, SD_ZONE_NAVIGATION_DIALOG,
 	  	SD_TAB_STATE_ASSISTANT, SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
-		SD_DEBUG_ACCESS} -- Library internals querys.
+		SD_DEBUG_ACCESS, SD_UPPER_ZONE} -- Library internals querys.
 
 	query: SD_DOCKING_MANAGER_QUERY
 			-- Manager helper Current for querys.

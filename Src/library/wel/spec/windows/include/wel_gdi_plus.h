@@ -26,6 +26,7 @@ typedef void GpGraphics;
 typedef void GpPen;
 typedef void GpImageAttributes;
 
+typedef UINT Color;
 typedef INT PixelFormat;
 
 #define  WINGDIPAPI __stdcall

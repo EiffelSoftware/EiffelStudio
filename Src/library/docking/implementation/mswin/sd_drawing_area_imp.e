@@ -28,11 +28,16 @@ feature {NONE} -- Implementation
 		local
 			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
+			l_src: EV_PICK_AND_DROPABLE_IMP
 		do
 			create l_env
 			l_app_imp ?= l_env.application.implementation
 			check not_void: l_app_imp /= Void end
-			interface.update_for_pick_and_drop (a_starting, l_app_imp.pick_and_drop_source.pebble)
+			l_src := l_app_imp.pick_and_drop_source
+			-- Sometime l_src maybe void ?
+			if l_src /= Void then
+				interface.update_for_pick_and_drop (a_starting, l_src.pebble)
+			end
 		end
 
 	interface: SD_DRAWING_AREA;

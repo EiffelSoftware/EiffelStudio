@@ -19,14 +19,14 @@ inherit
 			is_maximized,
 			set_max,
 			title_area
+		select
+			implementation,
+			count,
+			put,
+			set_extend
 		end
 
 	SD_UPPER_ZONE
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
 
 create
 	make
@@ -38,10 +38,11 @@ feature {NONE} -- Initlization
 		do
 			Precursor {SD_TAB_ZONE} (a_content, a_target_zone)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
-			internal_notebook.close_request_actions.extend (agent on_close_request)
+			internal_notebook.minimize_all_actions.extend (agent on_minimize_all)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 			internal_notebook.minimize_actions.extend (agent on_minimize)
 			internal_notebook.tab_double_click_actions.extend (agent on_normal_max_window)
+			internal_notebook.drag_tab_area_actions.extend (agent on_drag_title_bar)
 		end
 
 feature -- Query
@@ -114,7 +115,7 @@ feature {NONE} -- Implementation
 			Precursor {SD_TAB_ZONE}
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	internal_notebook: SD_NOTEBOOK_UPPER;
 			-- Notebook which tabs at top.

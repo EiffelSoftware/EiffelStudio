@@ -153,11 +153,13 @@ feature {NONE}-- Initialization
 			vb.set_padding (default_padding_size)
 			vb.set_border_width (default_border_size)
 
+				-- toolbar
 			create toolbar
 			vb.extend (toolbar)
 			vb.disable_item_expand (toolbar)
 			toolbar.edit_manually_button.select_actions.extend (agent open_text_editor)
 			toolbar.edit_manually_button.enable_sensitive
+			accelerators.append (toolbar.accelerators)
 
 			create split_area
 			vb.extend (split_area)

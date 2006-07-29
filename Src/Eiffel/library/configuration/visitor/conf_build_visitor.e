@@ -157,8 +157,9 @@ feature -- Visit nodes
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
 			l_old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			l_retried: BOOLEAN
 		do
-			if not is_error then
+			if not l_retried then
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
 					l_libraries := old_target.libraries
@@ -242,10 +243,15 @@ feature -- Visit nodes
 					-- assemblies are already handled
 				process_removed (l_clusters)
 				process_removed (l_overrides)
+			else
+				check
+					is_error: is_error
+				end
 			end
 		ensure then
 			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
 		rescue
+			l_retried := True
 			retry
 		end
 

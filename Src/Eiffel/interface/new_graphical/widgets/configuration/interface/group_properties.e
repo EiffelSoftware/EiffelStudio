@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
 			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
 			properties.add_property (l_bool_prop)
 
 			if l_cluster /= Void then

@@ -89,6 +89,24 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	set_pixel (a_x, a_y, argb_value: NATURAL_32) is
+			-- Set ARGB pixel value at `a_x', `a_y' to `argb_value'.
+		local
+			l_result: INTEGER
+		do
+			c_gdip_bitmap_set_pixel (gdi_plus_handle, item, a_x, a_y, argb_value, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+			-- Return ARGB pixel value at `a_x', `a_y'.
+		local
+			l_result: INTEGER
+		do
+			c_gdip_bitmap_get_pixel (gdi_plus_handle, item, a_x, a_y, $Result, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 	new_bitmap: WEL_BITMAP is
 			-- Create a 32bits DIB prmulitplied ARGB bitmap from current data.
 		local
@@ -155,6 +173,63 @@ feature -- C externals
 			}
 			]"
 		end
+
+	c_gdip_bitmap_get_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: TYPED_POINTER [NATURAL_32]; a_result_status: TYPED_POINTER [INTEGER]) is
+				-- Get pixel of `a_bitmap' at `a_x', `a_y'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_bitmap_not_null: a_bitmap /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipGetPixel = NULL;
+					
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipGetPixel)	{
+					GdipGetPixel = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapGetPixel");
+				}					
+				if (GdipGetPixel) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, Color*)) GdipGetPixel)
+								((GpBitmap *) $a_bitmap,
+								(INT) $a_x,
+								(INT) $a_y,
+								(Color*) $a_color);
+				}
+			}
+			]"
+		end
+
+	c_gdip_bitmap_set_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: NATURAL_32; a_result_status: TYPED_POINTER [INTEGER]) is
+				-- Set pixel of `a_bitmap' at `a_x', `a_y'
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_bitmap_not_null: a_bitmap /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetPixel = NULL;
+					
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipSetPixel)	{
+					GdipSetPixel = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapSetPixel");
+				}					
+				if (GdipSetPixel) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, Color*)) GdipSetPixel)
+								((GpBitmap *) $a_bitmap,
+								(INT) $a_x,
+								(INT) $a_y,
+								(GDIPCONST Color*) $a_color);
+				}
+			}
+			]"
+		end
+
 
 	c_gdip_bitmap_lock_bits (a_gdiplus_handle, a_bitmap: POINTER; a_gp_rect: POINTER; a_image_lock_flag: NATURAL_32; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]; a_bitmap_data: POINTER) is
 			-- Lock data bits of `a_bitmap', Result is pointer to BitmapData.

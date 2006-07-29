@@ -89,6 +89,7 @@ feature -- Redefine
 					update_feedback (a_screen_x, a_screen_y, internal_rectangle_title_area)
 					Result := True
 				end
+
 			end
 		end
 
@@ -101,6 +102,7 @@ feature -- Redefine
 				if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
 					draw_drag_window_indicator (a_screen_x, a_screen_y)
 					Result := True
+					show_indicator
 				end
 			end
 		end
@@ -113,6 +115,14 @@ feature -- Redefine
 			elseif internal_rectangle.has_x_y (a_screen_x, a_screen_y)  then
 				need_clear := True
 			end
+		end
+
+	show_indicator is
+			-- Show indicators if possible.
+		do
+				if not internal_indicator.exists then
+					build_indicator
+				end
 		end
 
 	clear_indicator is

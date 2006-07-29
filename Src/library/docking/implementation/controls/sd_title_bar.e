@@ -29,8 +29,7 @@ feature {NONE} -- Initlization
 			create internal_shared
 			default_create
 
-			hightlight_color := internal_shared.focused_color
-			hightlight_gray_color := internal_shared.non_focused_color
+			is_focused_color := True
 
 			create container
 			create internal_border.make
@@ -97,8 +96,6 @@ feature {NONE} -- Initlization
 
 			-- default setting
 		 	disable_focus_color
-		 	internal_highlight_area_before.set_background_color (hightlight_gray_color)
-		 	internal_highlight_area_after.set_background_color (hightlight_gray_color)
 		end
 
 	init_actions is
@@ -204,18 +201,11 @@ feature -- Command
 
 	enable_focus_color is
 			-- Enable focus color.
-		local
-			l_text_color: EV_COLOR
-			l_color_helper: SD_COLOR_HELPER
 		do
-			create l_color_helper
 			is_focus_color_enable := True
-			hightlight_color := internal_shared.focused_color
+			is_focused_color := True
 
-			internal_drawing_area.set_background_color (hightlight_color)
-			l_text_color := internal_shared.focused_title_text_color
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (hightlight_color)
+			set_focus_background_color
 
 			on_expose
 
@@ -225,34 +215,20 @@ feature -- Command
 
 	enable_non_focus_active_color is
 			-- Enable non-focused active color.
-		local
-			l_text_color: EV_COLOR
-			l_color_helper: SD_COLOR_HELPER
 		do
-			create l_color_helper
 			is_focus_color_enable := True
-			hightlight_color := internal_shared.non_focused_title_color
+			is_focused_color := False
 
-			internal_drawing_area.set_background_color (internal_shared.non_focused_title_color)
-			l_text_color := internal_shared.non_focused_title_text_color
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (hightlight_color)
+			set_non_focus_active_background_color
 			on_expose
 		end
 
 	disable_focus_color is
 			-- Disable focus color.
-		local
-			l_text_color: EV_COLOR
-			l_color_helper: SD_COLOR_HELPER
-		do
-			create l_color_helper
-			is_focus_color_enable := False
-			internal_drawing_area.set_background_color (hightlight_gray_color)
 
-			l_text_color := l_color_helper.text_color_by (hightlight_gray_color)
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (internal_shared.border_color)
+		do
+			is_focus_color_enable := False
+			set_disable_focus_background_color
 			on_expose
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable
@@ -490,13 +466,35 @@ feature {NONE} -- Agents
 			l_helper: SD_COLOR_HELPER
 		do
 			create l_helper
+			internal_highlight_area_after.set_background_color (hightlight_gray_color)
 			if is_focus_color_enable then
-				l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_color)
-				internal_highlight_area_before.set_foreground_color (hightlight_color)
+				-- We set background color here, it's for theme changed actions the background color will not update except
+				-- After called enable_focus_color
+
+				if is_focused_color then
+					internal_drawing_area.set_background_color (hightlight_color)
+				 	internal_highlight_area_before.set_background_color (hightlight_color)
+					set_focus_background_color
+					internal_highlight_area_before.set_foreground_color (hightlight_color)
+					l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_color)
+				else
+					internal_drawing_area.set_background_color (hightlight_non_focus_color)
+				 	internal_highlight_area_before.set_background_color (hightlight_non_focus_color)
+
+					set_non_focus_active_background_color
+					internal_highlight_area_before.set_foreground_color (hightlight_non_focus_color)
+					l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_non_focus_color)
+				end
+
 				internal_highlight_area_before.fill_rectangle (0, 0, internal_highlight_area_before.width, internal_highlight_area_before.height)
 				internal_drawing_area.clear
 				internal_drawing_area.draw_ellipsed_text_top_left (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, internal_title, internal_drawing_area.width)
 			else
+				-- We set background color here, it's for theme changed actions the background color will not update except
+				-- After called disable_focus_color
+				internal_drawing_area.set_background_color (hightlight_gray_color)
+				set_disable_focus_background_color
+			 	internal_highlight_area_before.set_background_color (hightlight_gray_color)
 				internal_highlight_area_before.clear
 				internal_highlight_area_after.clear
 				internal_drawing_area.clear
@@ -553,13 +551,65 @@ feature {NONE} -- Implementation
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag actions.
 
+	set_non_focus_active_background_color is
+			-- Set non focus active background colors
+		local
+			l_text_color: EV_COLOR
+		do
+			internal_drawing_area.set_background_color (hightlight_non_focus_color)
+			l_text_color := internal_shared.non_focused_title_text_color
+			internal_drawing_area.set_foreground_color (l_text_color)
+			internal_border.set_border_color (hightlight_non_focus_color)
+		end
+
+	set_focus_background_color is
+			-- Set focus background colors
+		local
+			l_text_color: EV_COLOR
+		do
+			internal_drawing_area.set_background_color (hightlight_color)
+			l_text_color := internal_shared.focused_title_text_color
+			internal_drawing_area.set_foreground_color (l_text_color)
+			internal_border.set_border_color (hightlight_color)
+		end
+
+	set_disable_focus_background_color is
+			-- Set background color for disable status.
+		local
+			l_text_color: EV_COLOR
+			l_color_helper: SD_COLOR_HELPER
+		do
+			create l_color_helper
+			internal_drawing_area.set_background_color (hightlight_gray_color)
+
+			l_text_color := l_color_helper.text_color_by (hightlight_gray_color)
+			internal_drawing_area.set_foreground_color (l_text_color)
+			internal_border.set_border_color (internal_shared.border_color)
+		end
+
 feature {NONE} -- Implementation (Colors)
 
-	hightlight_color: EV_COLOR
-			-- Highlight color.
+	is_focused_color: BOOLEAN
+			-- If Current use focused color?
+			-- Otherwise we use non-focused color.
 
-	hightlight_gray_color: EV_COLOR
+	hightlight_color: EV_COLOR is
+			-- Highlight color.
+		do
+			Result := internal_shared.focused_color
+		end
+
+	hightlight_non_focus_color: EV_COLOR is
+			-- Highligh nonfocus color.
+		do
+			Result := internal_shared.non_focused_title_color
+		end
+
+	hightlight_gray_color: EV_COLOR is
 			-- Highlight gray color.
+		do
+			Result := internal_shared.non_focused_color
+		end
 
 invariant
 

@@ -155,13 +155,6 @@ feature -- Actions
 			l_processed: BOOLEAN
 		do
 			l_processed := on_predefined_key_pressed (a_key)
-			if not l_processed then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
-					do_all_in_items (grid.selected_items, agent go_to_parent)
-				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
-					do_all_in_items (grid.selected_items, agent go_to_first_child)
-				end
-			end
 		end
 
 	go_to_parent (a_item: EV_GRID_ITEM) is
@@ -227,14 +220,46 @@ feature -- Actions
 
 	on_expand_one_level is
 			-- Action to be performed to expand all selected rows.
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_item: EV_GRID_ITEM
+			l_done: BOOLEAN
 		do
-			do_all_in_items (grid.selected_items, agent expand_item)
+			l_selected_items := grid.selected_items
+			if l_selected_items.count = 1 then
+				l_item := l_selected_items.first
+				if l_item.column.index = 1 then
+					if not l_item.row.is_expandable or else l_item.row.is_expanded then
+						go_to_first_child (l_item)
+						l_done := True
+					end
+				end
+			end
+			if not l_done then
+				do_all_in_items (grid.selected_items, agent expand_item)
+			end
 		end
 
 	on_collapse_one_level is
 			-- Action to be performed to collapse all selected rows.
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_item: EV_GRID_ITEM
+			l_done: BOOLEAN
 		do
-			do_all_in_items (grid.selected_items, agent collapse_item)
+			l_selected_items := grid.selected_items
+			if l_selected_items.count = 1 then
+				l_item := l_selected_items.first
+				if l_item.column.index = 1 then
+					if not l_item.row.is_expandable or else not l_item.row.is_expanded then
+						go_to_parent (l_item)
+						l_done := True
+					end
+				end
+			end
+			if not l_done then
+				do_all_in_items (grid.selected_items, agent collapse_item)
+			end
 		end
 
 	on_notify is

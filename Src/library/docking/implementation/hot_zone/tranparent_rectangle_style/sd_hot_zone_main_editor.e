@@ -38,6 +38,9 @@ feature {NONE} -- Implementation
 	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		do
+			-- There is no operation available in this case,
+			-- so we should clear the feedback
+			internal_shared.feedback.clear
 		end
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

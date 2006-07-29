@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EV_ANY_I
+		redefine
+			interface
+		end
 
 feature -- Initlization
 
@@ -39,7 +42,41 @@ feature -- Command
 		deferred
 		end
 
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+			--
+		deferred
+		end
+
+	set_pixel (a_x, a_y, argb: NATURAL_32) is
+			--
+		deferred
+		end
+
+	lock is
+			-- Lock buffer for pixel iteration.
+		do
+			is_locked := True
+		end
+
+	unlock is
+			-- Unlock buffer from pixel iteration.
+		do
+			is_locked := False
+		end
+
 feature -- Query
+
+	is_locked: BOOLEAN
+		-- Is buffer locked for pixel iteration?
+
+	pixel_iterator: EV_PIXEL_BUFFER_ITERATOR
+			-- Return a pixel buffer iterator.
+		do
+			if pixel_iterator_internal = Void then
+				create pixel_iterator_internal.make_for_pixel_buffer (interface)
+			end
+			Result := pixel_iterator_internal
+		end
 
 	width: INTEGER is
 			-- Width
@@ -50,6 +87,14 @@ feature -- Query
 			-- Height
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	pixel_iterator_internal: EV_PIXEL_BUFFER_ITERATOR;
+		-- Iteration object for pixels of `Current'.
+
+	interface: EV_PIXEL_BUFFER;
+		-- Interface object for `Current'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

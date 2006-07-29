@@ -264,7 +264,66 @@ feature -- Querys
 			end
 		end
 
+	has_auto_hide_zone: BOOLEAN is
+			-- If Current we have SD_AUTO_HIDE_ZONE showing?
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
+		do
+			l_zones := internal_docking_manager.zones.zones
+			from
+				l_zones.start
+			until
+				l_zones.after or Result
+			loop
+				l_auto_hide_zone ?= l_zones.item
+				if l_auto_hide_zone /= Void then
+					Result := True
+				end
+				l_zones.forth
+			end
+		end
+
+	all_zones_in_widget (a_widget: EV_WIDGET): ARRAYED_LIST [SD_ZONE] is
+			-- All zones in `a_widget' if exist.
+		require
+			not_void: a_widget /= Void
+		do
+			create Result.make (5)
+			zones_recursive (a_widget, Result)
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE} -- Implemnetation
+
+	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE]) is
+			-- Add all zones in `a_widget' to `a_list'.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_list_not_void: a_list /= Void
+		local
+			l_zone: SD_ZONE
+			l_container: EV_CONTAINER
+			l_list: LINEAR [EV_WIDGET]
+		do
+			l_zone ?= a_widget
+			l_container ?= a_widget
+			-- Must first judge if is a SD_ZONE, becaue a SD_ZONE is a EV_CONTAINER too.
+			if l_zone /= Void then
+				a_list.extend (l_zone)
+			elseif l_container /= Void then
+				l_list := l_container.linear_representation
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					zones_recursive (l_list.item, a_list)
+					l_list.forth
+				end
+			end
+		end
 
 	internal_docking_manager: SD_DOCKING_MANAGER;
 			-- Docking manager which Current belong to.

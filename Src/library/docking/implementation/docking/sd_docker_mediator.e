@@ -85,8 +85,8 @@ feature -- Hanlde pointer events
 	cancel_tracing_pointer is
 			-- Cancel tracing pointer.
 		do
-			clear_up
 			cancel_actions.call ([])
+			clear_up
 		ensure
 			not_tracing: is_tracing = False
 		end

@@ -64,10 +64,6 @@ feature -- Status setting
 
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' modal with respect to `a_window'.
-		local
-			was_modal: BOOLEAN
-			parent_was_modal: BOOLEAN
-			a_window_imp: EV_WINDOW_IMP
 		do
 			user_clicked_ok := False
 			selected_button := Void

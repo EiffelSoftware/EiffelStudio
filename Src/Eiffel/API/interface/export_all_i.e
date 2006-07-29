@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXPORT_ALL_I 
+	EXPORT_ALL_I
 
 inherit
 	EXPORT_I
@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Properties
 
 	is_all: BOOLEAN is True
@@ -38,14 +38,6 @@ feature -- Comparison
 			-- is Current less restrictive than other
 		do
 			Result := not other.is_all
-		end
-
-feature -- Output
-
-	append_to (st: TEXT_FORMATTER) is
-			-- Append a representation of `Current' to `st'.
-		do
-			
 		end
 
 feature {COMPILER_EXPORTER}

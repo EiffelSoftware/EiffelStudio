@@ -33,14 +33,6 @@ feature -- Comparison
 			-- never true
 		end;
 
-feature -- Output
-
-	append_to (st: TEXT_FORMATTER) is
-			-- Append a representation of `Current' to `st'.
-		do
-			st.add ("{NONE}")
-		end
-
 feature {COMPILER_EXPORTER}
 
 	is_subset (other: EXPORT_I): BOOLEAN is

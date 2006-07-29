@@ -17,13 +17,17 @@ inherit
 			set_max,
 			set_focus_color,
 			set_non_focus_selection_color,
-			set_pixmap
+			set_pixmap,
+			update_user_widget
+		select
+			implementation
 		end
 
 	SD_UPPER_ZONE
-		undefine
-			default_create,
-			copy
+		rename
+			extend_widget as extend_cell,
+			has_widget as has_cell,
+			prune_widget as prune
 		end
 
 create
@@ -42,10 +46,11 @@ feature -- Initlization
 			internal_docking_manager := a_content.docking_manager
 			create internal_notebook.make (a_content.docking_manager)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
-			internal_notebook.close_request_actions.extend (agent on_close_request)
+			internal_notebook.minimize_all_actions.extend (agent on_minimize_all)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 			internal_notebook.minimize_actions.extend (agent on_minimize)
 			internal_notebook.tab_drag_actions.extend (agent on_tab_drag)
+			internal_notebook.drag_tab_area_actions.extend (agent on_drag_started)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
@@ -104,6 +109,12 @@ feature -- Redefine
 			internal_notebook.set_item_pixmap (content, a_pixmap)
 		end
 
+	update_user_widget is
+			-- Redefine
+		do
+			internal_notebook.replace (content)
+		end
+
 	is_maximized: BOOLEAN is
 			-- Redefine
 		do
@@ -136,6 +147,14 @@ feature -- Redefine
 			-- Set title bar non-focuse color.
 		do
 			internal_notebook.set_focus_color (False)
+		end
+
+feature -- Command
+
+	set_minimize_all_pixmap (a_is_minimize: BOOLEAN) is
+			-- Set minimize all pixmap icon
+		do
+			internal_notebook.set_minimize_all_pixmap (a_is_minimize)
 		end
 
 feature {NONE} -- Implementation

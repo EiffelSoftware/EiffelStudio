@@ -365,8 +365,6 @@ feature {NONE} -- Implementation
 					l_files.off
 				loop
 					l_file.make (l_files.item)
-					print (l_files.item)
-					print ("%N")
 					l_file.open_read
 					l_file.read_all (input_string)
 					l_big_file.put_string (input_string)

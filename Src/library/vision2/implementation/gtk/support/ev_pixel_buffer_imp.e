@@ -14,6 +14,9 @@ inherit
 
 	DISPOSABLE
 
+creation
+	make
+
 feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
@@ -103,6 +106,18 @@ feature -- Command
 			end
 		end
 
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+			--
+		do
+			--| FIXME IEK Implement me
+		end
+
+	set_pixel (a_x, a_y, argb: NATURAL_32) is
+			--
+		do
+			--| FIXME IEK Implement me
+		end
+
 feature -- Query
 
 	width: INTEGER is
@@ -135,6 +150,9 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
 		do
 			if gdk_pixbuf /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+			end
+			if {EV_GTK_EXTERNALS}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
+
 			end
 			gdk_pixbuf := a_pixbuf
 		end

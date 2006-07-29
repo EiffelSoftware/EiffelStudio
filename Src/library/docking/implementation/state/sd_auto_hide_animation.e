@@ -21,6 +21,8 @@ feature {NONE} -- Initlization
 		do
 			state := a_auto_hide_state
 			internal_docking_manager := a_docking_manager
+
+			create internal_shared
 		ensure
 			set: state = a_auto_hide_state
 			set: internal_docking_manager = a_docking_manager
@@ -35,26 +37,31 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		do
 			remove_moving_timer (True)
 			remove_close_timer
-			if internal_docking_manager.zones.has_zone_by_content (state.content) then
-				l_rect := internal_docking_manager.query.fixed_area_rectangle
-				if state.direction = {SD_ENUMERATION}.left then
-					internal_final_position := l_rect.left - state.zone.width
-				elseif state.direction = {SD_ENUMERATION}.right then
-					internal_final_position := l_rect.right
-				elseif state.direction = {SD_ENUMERATION}.top then
-					internal_final_position := l_rect.top - state.zone.height
-				elseif state.direction = {SD_ENUMERATION}.bottom then
-					internal_final_position := l_rect.bottom
+			if internal_shared.auto_hide_tab_slide_timer_interval /= 0 then
+				if internal_docking_manager.zones.has_zone_by_content (state.content) then
+					l_rect := internal_docking_manager.query.fixed_area_rectangle
+					if state.direction = {SD_ENUMERATION}.left then
+						internal_final_position := l_rect.left - state.zone.width
+					elseif state.direction = {SD_ENUMERATION}.right then
+						internal_final_position := l_rect.right
+					elseif state.direction = {SD_ENUMERATION}.top then
+						internal_final_position := l_rect.top - state.zone.height
+					elseif state.direction = {SD_ENUMERATION}.bottom then
+						internal_final_position := l_rect.bottom
+					end
 				end
-			end
-			if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.right then
-				state.set_width_height (state.zone.width)
+				if state.direction = {SD_ENUMERATION}.left or state.direction = {SD_ENUMERATION}.right then
+					state.set_width_height (state.zone.width)
+				else
+					state.set_width_height (state.zone.height)
+				end
+				create internal_moving_timer
+				internal_moving_timer.actions.extend (agent on_timer_for_moving (False))
+				internal_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
 			else
-				state.set_width_height (state.zone.height)
+				-- No animation
+				internal_docking_manager.command.remove_auto_hide_zones (False)
 			end
-			create internal_moving_timer
-			internal_moving_timer.actions.extend (agent on_timer_for_moving (False))
-			internal_moving_timer.set_interval (10)
 		end
 
 	show (a_animation: BOOLEAN) is
@@ -72,26 +79,36 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 				internal_docking_manager.command.remove_auto_hide_zones (False)
 
 				internal_docking_manager.zones.add_zone (state.zone)
-				create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
-				internal_close_timer.actions.extend (agent on_timer_for_close)
-				create l_env
-				l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
-				internal_motion_procudure := l_env.application.pointer_motion_actions.last
-				-- First, put the zone in a fixed, make a animation here.
-				internal_docking_manager.fixed_area.extend (state.zone)
-
-				create internal_moving_timer
-				internal_moving_timer.actions.extend (agent on_timer_for_moving (True))
-				internal_moving_timer.set_interval (10)
-
 				create l_rect.make (internal_docking_manager.fixed_area.x_position, internal_docking_manager.fixed_area.y_position,
 				internal_docking_manager.fixed_area.width, internal_docking_manager.fixed_area.height)
 
+				-- Set current position and caculate final position.
+				internal_docking_manager.fixed_area.extend (state.zone)
 				-- Set size.
 				internal_set_size (l_rect)
-
-				-- Set current position and caculate final position.
 				internal_set_position_and_final_position (l_rect)
+
+				if internal_shared.auto_hide_tab_slide_timer_interval /= 0 then
+					create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
+					internal_close_timer.actions.extend (agent on_timer_for_close)
+					create l_env
+					l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
+					internal_motion_procudure := l_env.application.pointer_motion_actions.last
+					-- First, put the zone in a fixed, make a animation here.
+
+					create internal_moving_timer
+					internal_moving_timer.actions.extend (agent on_timer_for_moving (True))
+					internal_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
+				else
+					inspect
+						state.direction
+					when {SD_ENUMERATION}.top, {SD_ENUMERATION}.bottom then
+						internal_docking_manager.fixed_area.set_item_y_position (state.zone, internal_final_position)
+					else
+						internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
+					end
+				end
+
 			end
 		end
 
@@ -304,6 +321,9 @@ feature {NONE} -- Implementation functions
 		end
 
 feature {NONE} -- Implementation
+
+	internal_shared: SD_SHARED
+			-- All singletons.
 
 	pointer_outside: BOOLEAN
 			-- If pointer outside tab stub and zone?

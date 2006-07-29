@@ -14,7 +14,25 @@ deferred class
 inherit
 	EV_DRAWING_AREA
 		redefine
-			create_implementation
+			create_implementation,
+			enable_capture,
+			disable_capture
+		end
+
+feature -- Command
+
+	enable_capture is
+			-- Redefiine
+		do
+			setter.before_enable_capture
+			Precursor {EV_DRAWING_AREA}
+		end
+
+	disable_capture is
+			-- Redefine
+		do
+			Precursor {EV_DRAWING_AREA}
+			setter.after_disable_capture
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -30,6 +48,14 @@ feature {EV_ANY_I} -- Implementation
 		require
 			not_void: a_starting implies a_pebble /= Void
 		do
+		end
+
+feature {NONE} -- Implementation
+
+	setter: SD_SYSTEM_SETTER is
+			-- System setter
+		once
+			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
 indexing

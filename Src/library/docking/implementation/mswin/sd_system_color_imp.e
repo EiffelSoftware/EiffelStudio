@@ -32,6 +32,15 @@ feature {NONE} -- Implementation
 
 feature -- Querys
 
+	default_background_color: EV_COLOR is
+			--
+		local
+			l_colors: EV_STOCK_COLORS
+		do
+			create l_colors
+			Result := l_colors.default_background_color
+		end
+
 	active_border_color: EV_COLOR is
 			-- Redefine.
 		local

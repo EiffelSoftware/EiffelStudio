@@ -18,7 +18,7 @@ create
 	default_create,
 	make_with_size
 
-feature -- Initlize
+feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create pixel buffer with width `a_width' and height `a_height'.
@@ -31,6 +31,8 @@ feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
 			-- Load pixel data from file `a_file_name'
+		require
+			not_locked: not is_locked
 		do
 			implementation.set_with_named_file (a_file_name)
 		end
@@ -39,6 +41,7 @@ feature -- Command
 			-- Return a pixmap region of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
+			not_locked: not is_locked
 		do
 			Result := implementation.sub_pixmap (a_rect)
 		ensure
@@ -49,11 +52,40 @@ feature -- Command
 			-- Return a sub pixel buffer of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
+			not_locked: not is_locked
 		do
 			Result := implementation.sub_pixel_buffer (a_rect)
 		ensure
 			result_not_void: Result /= Void
 			result_not_current: Result /= Current
+		end
+
+	lock is
+			-- Lock pixel buffer for data access.
+		require
+			not_locked: not is_locked
+		do
+			implementation.lock
+		ensure
+			is_locked: is_locked
+		end
+
+	pixel_iterator: EV_PIXEL_BUFFER_ITERATOR is
+			-- Return a pixel buffer iterator covering.
+		require
+			is_locked: is_locked
+		do
+			Result := implementation.pixel_iterator
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	unlock is
+			-- Unlock from data access with `pixel_iterator'.
+		do
+			implementation.unlock
+		ensure
+			not_locked: not is_locked
 		end
 
 feature -- Query
@@ -74,12 +106,18 @@ feature -- Query
 			valid_height: Result >= 0
 		end
 
+	is_locked: BOOLEAN
+			-- Is buffer locked for data access.
+		do
+			Result := implementation.is_locked
+		end
+
 feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation
 		do
-			create {EV_PIXEL_BUFFER_IMP} implementation
+			create {EV_PIXEL_BUFFER_IMP} implementation.make (Current)
 		end
 
 feature -- Implementation

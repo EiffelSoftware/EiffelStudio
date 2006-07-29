@@ -171,6 +171,12 @@ feature {NONE} -- Visit
 			build_token_text (a_tok)
 		end
 
+	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET) is
+		do
+			init_tables_with_token (a_tok)
+			build_token_text (a_tok)
+		end
+
 feature {NONE} -- Implementation
 
 	print_color_table: ARRAYED_LIST [EV_COLOR]

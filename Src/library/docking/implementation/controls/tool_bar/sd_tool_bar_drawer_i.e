@@ -10,6 +10,13 @@ deferred class
 
 feature -- Commands
 
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+			-- Set `a_tool_bar'
+		require
+			not_void: a_tool_bar /= Void
+		deferred
+		end
+
 	start_draw (a_rectangle: EV_RECTANGLE) is
 			-- Called when start drawing, after draw should call `end_draw'.
 			-- This function is used for double buffer

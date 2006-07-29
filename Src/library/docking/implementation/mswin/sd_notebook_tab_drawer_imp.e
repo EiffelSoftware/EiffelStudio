@@ -34,12 +34,12 @@ create
 
 feature{NONE} -- Initlization
 
-	make (a_drawing_area: SD_NOTEBOOK_TAB; a_draw_at_top: BOOLEAN) is
+	make is
 			-- Creation method
 		local
 			l_env: EV_ENVIRONMENT
 		do
-			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_drawing_area, a_draw_at_top)
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
 			init_theme
 			create l_env
 			l_env.application.theme_changed_actions.extend (agent init_theme)
@@ -116,9 +116,6 @@ feature -- Commands
 			expose_unselected_or_hot (a_width, a_tab_info, True)
 		end
 
-feature -- FIXIT: maybe move to a helper class?
-
-
 feature{NONE} -- Implementation
 
 	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH) is
@@ -140,11 +137,11 @@ feature{NONE} -- Implementation
 					theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, {WEL_THEME_PART_CONSTANTS}.tabp_tabitemleftedge, {WEL_THEME_TTI_CONSTANTS}.ttiles_selected, a_wel_rect, Void, a_brush)
 				else
 					-- There is no tab before and after
-					theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, {WEL_THEME_PART_CONSTANTS}.tabp_tabitembothedge, {WEL_THEME_TTI_CONSTANTS}.ttibes_selected, a_wel_rect, Void, a_brush)
+					theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, {WEL_THEME_PART_CONSTANTS}.tabp_tabitemrightedge, {WEL_THEME_TTI_CONSTANTS}.ttibes_selected, a_wel_rect, Void, a_brush)
 				end
 			end
 
-			if not internal_draw_border_at_top then
+			if not is_top_side_tab then
 				a_bitmap_dc.unselect_bitmap
 				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
 				create l_helper
@@ -247,18 +244,18 @@ feature{NONE} -- Implementation
 			if a_info.is_tab_before then
 				if a_info.is_tab_after then
 					-- There is tab after and tab before
-					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
+					draw_classic_tab (a_bitmap_dc, a_rect, is_top_side_tab)
 				else
 					-- There is tab before but no tab after
-					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
+					draw_classic_tab (a_bitmap_dc, a_rect, is_top_side_tab)
 				end
 			else
 				if a_info.is_tab_after then
 					-- There is no tab before, but a tab after
-					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
+					draw_classic_tab (a_bitmap_dc, a_rect, is_top_side_tab)
 				else
 					-- There is no tab before and no tab after
-					draw_classic_tab (a_bitmap_dc, a_rect, internal_draw_border_at_top)
+					draw_classic_tab (a_bitmap_dc, a_rect, is_top_side_tab)
 				end
 			end
 		end
@@ -269,7 +266,7 @@ feature{NONE} -- Implementation
 			l_temp_rect: WEL_RECT
 		do
 			theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, 0, 0, a_rect, Void, a_brush)
-			if internal_draw_border_at_top then
+			if is_top_side_tab then
 				create l_temp_rect.make (a_rect.left, a_rect.top + 2, a_rect.right, a_rect.bottom)
 			else
 				create l_temp_rect.make (a_rect.left, a_rect.top, a_rect.right, a_rect.bottom - 2)
@@ -280,7 +277,7 @@ feature{NONE} -- Implementation
 					-- There is tab before and tab after
 					if a_info.is_tab_before_selected then
 						l_temp_rect.set_left (l_temp_rect.left - 2)
-						draw_classic_tab (a_bitmap_dc, l_temp_rect, internal_draw_border_at_top)
+						draw_classic_tab (a_bitmap_dc, l_temp_rect, is_top_side_tab)
 					elseif a_info.is_tab_after_selected then
 						l_temp_rect.set_right (l_temp_rect.right + 2)
 					else
@@ -303,7 +300,7 @@ feature{NONE} -- Implementation
 					-- There is no tab before and after
 				end
 			end
-			draw_classic_tab (a_bitmap_dc, l_temp_rect, internal_draw_border_at_top)
+			draw_classic_tab (a_bitmap_dc, l_temp_rect, is_top_side_tab)
 		end
 
 	expose_unselected_or_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO; a_hot: BOOLEAN) is
@@ -339,7 +336,7 @@ feature{NONE} -- Implementation
 				draw_classic_unselected_tab (l_buffer_dc, l_buffer_pixmap, a_tab_info, l_wel_rect, l_brush)
 			end
 
-			if theme_data /= default_pointer and then not internal_draw_border_at_top then
+			if theme_data /= default_pointer and then not is_top_side_tab then
 				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
 				l_buffer_pixmap := l_buffer_dc.bitmap
 				l_buffer_dc.unselect_bitmap
@@ -427,10 +424,52 @@ feature{NONE} -- Implementation
 
 		end
 
+	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
+			-- Redefine
+		local
+			l_imp: EV_PIXMAP_IMP_DRAWABLE
+			l_brush: WEL_BRUSH
+			l_rect: WEL_RECT
+			l_vision_rect: EV_RECTANGLE
+		do
+			if (internal_tab.is_hot or internal_tab.is_selected)and is_top_side_tab then
+
+				l_imp ?= a_drawable.implementation
+
+				check not_void: l_imp /= Void end
+				create l_brush.make_solid (l_imp.dc.background_color)
+				l_vision_rect := close_rectangle
+
+				create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
+
+				-- Draw hot state background
+				if internal_tab.is_pointer_in_close_area then
+					if internal_tab.is_pointer_pressed then
+						tool_bar_drawer.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed, {WEL_THEME_PART_CONSTANTS}.tp_button)
+					else
+						tool_bar_drawer.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.hot, {WEL_THEME_PART_CONSTANTS}.tp_button)
+					end
+				end
+
+				-- We draw close button
+				if internal_tab.is_pointer_pressed and internal_tab.is_pointer_in_close_area then
+					a_drawable.draw_pixmap (start_x_close + 1, start_y_close, a_close_pixmap)
+				else
+					a_drawable.draw_pixmap (start_x_close, start_y_close, a_close_pixmap)
+				end
+			end
+		end
+
 feature {NONE} -- Attributes
 
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
+
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP is
+			-- Tool bar drawer
+		do
+			Result ?= internal_shared.tool_bar_drawer.implementation
+		end
 
 	theme_data: POINTER;
 			-- Theme data

@@ -1,5 +1,5 @@
 indexing
-	description: "System color used by docking library."
+	description: "Responsible for query native system colors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -9,6 +9,12 @@ deferred class
 	SD_SYSTEM_COLOR
 
 feature -- Query
+
+	default_background_color: EV_COLOR is
+			-- Default background color
+			-- Different from EV_STOCK_COLORS default_background_color, this one will change with theme.
+		deferred
+		end
 
 	non_focused_selection_color: EV_COLOR is
 			-- Non focused selection color for title bar.

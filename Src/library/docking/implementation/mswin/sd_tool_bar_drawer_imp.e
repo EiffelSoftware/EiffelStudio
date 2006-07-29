@@ -14,6 +14,8 @@ inherit
 			to_sepcial_state as to_mswin_state
 		end
 
+	WEL_CONSTANTS
+
 	EV_BUTTON_IMP
 		rename
 			make as make_not_use
@@ -28,19 +30,14 @@ create
 
 feature{NONE} -- Initlization
 
-	make (a_tool_bar: SD_TOOL_BAR) is
+	make is
 			-- Creation method
-		require
-			not_void: a_tool_bar /= Void
 		local
 			l_env: EV_ENVIRONMENT
 		do
-			tool_bar := a_tool_bar
 			init_theme
 			create l_env
 			l_env.application.theme_changed_actions.extend (agent init_theme)
-		ensure
-			set: tool_bar = a_tool_bar
 		end
 
 	init_theme is
@@ -88,6 +85,12 @@ feature -- Redefine
 			end
 		end
 
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+			-- Redefine
+		do
+			tool_bar := a_tool_bar
+		end
+
 	start_draw (a_rectangle: EV_RECTANGLE) is
 			-- Redefine
 		local
@@ -97,6 +100,7 @@ feature -- Redefine
 			l_color_imp: EV_COLOR_IMP
 			l_background_pixmap: EV_PIXMAP
 			l_background_pixmap_state: EV_PIXMAP_IMP_STATE
+			l_brush: WEL_BRUSH
 		do
 			internal_rectangle := a_rectangle
 			l_imp ?= tool_bar.implementation
@@ -119,12 +123,20 @@ feature -- Redefine
 			l_color_imp ?= tool_bar.background_color.implementation
 			check not_void: l_color_imp /= Void end
 			internal_buffered_dc.set_background_color (l_color_imp)
-			create l_background_pixmap.make_with_size (tool_bar.width, tool_bar.height)
-			l_background_pixmap.set_background_color (tool_bar.background_color)
-			l_background_pixmap.clear
-			l_background_pixmap_state ?= l_background_pixmap.implementation
-			check not_void: l_background_pixmap_state /= Void end
-			internal_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
+
+
+			-- If we draw background like this, when non-32bits color depth, color will broken.
+--			create l_background_pixmap.make_with_size (tool_bar.width, tool_bar.height)
+--			l_background_pixmap.set_background_color (tool_bar.background_color)
+--			l_background_pixmap.clear
+--			l_background_pixmap_state ?= l_background_pixmap.implementation
+--			check not_void: l_background_pixmap_state /= Void end
+--			internal_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
+
+			-- So we draw background color like this.
+			create l_brush.make_solid (l_color_imp)
+			internal_buffered_dc.fill_rect (create {WEL_RECT}.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.right, internal_rectangle.bottom), l_brush)
+			l_brush.delete
 
 		ensure then
 			set: internal_rectangle = a_rectangle
@@ -154,21 +166,42 @@ feature -- Redefine
 		local
 			l_rect: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
-			l_brush: WEL_BRUSH
 		do
 			l_vision_rect := a_arguments.item.rectangle
 
 			create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-			if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
-				theme_drawer.draw_button_edge (internal_buffered_dc, to_mswin_state (a_arguments.item.state), l_rect)
-			end
-			create l_brush.make_solid (internal_buffered_dc.background_color)
-			theme_drawer.draw_theme_background (theme_data, internal_buffered_dc, part_constants_by_type (a_arguments.item), to_mswin_state (a_arguments.item.state), l_rect, Void, l_brush)
-
+			draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
 			draw_pixmap (internal_buffered_dc, a_arguments)
 			draw_text (internal_buffered_dc, a_arguments)
 
+		end
+
+	draw_button_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_state: INTEGER; a_part_constant: INTEGER) is
+			-- Draw button background on `a_dc'
+		require
+			not_void: a_dc /= Void and then a_dc.exists
+			not_void: a_rect /= Void and then a_rect.exists
+			valid: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
+		local
+			l_brush: WEL_BRUSH
+		do
+			if a_state /= {SD_TOOL_BAR_ITEM_STATE}.normal and theme_data = default_pointer then
+				if a_state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
+					-- We reuse the code here, button check adge is looks same as pressed toggle button.
+					theme_drawer.draw_button_edge (a_dc, {WEL_THEME_TS_CONSTANTS}.ts_checked, a_rect)
+				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
+					a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_checked)
+				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
+					a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_pushed)
+				else
+					theme_drawer.draw_button_edge (a_dc, to_mswin_state (a_state), a_rect)
+				end
+			end
+			create l_brush.make_solid (a_dc.background_color)
+			if theme_data /= default_pointer then
+				theme_drawer.draw_theme_background (theme_data, a_dc, a_part_constant, a_state, a_rect, Void, l_brush)
+			end
 		end
 
 	on_wm_theme_changed is

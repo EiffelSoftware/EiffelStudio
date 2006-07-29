@@ -121,6 +121,21 @@ feature -- Access
 			set: show_all_feedback_indicator = a_bool
 		end
 
+	auto_hide_tab_slide_timer_interval: INTEGER is
+			-- Auto hide tab slide timer interval
+			-- 0 means no animation.
+		do
+			Result := Auto_hide_tab_slide_timer_interval_cell.item
+		end
+
+	set_auto_hide_tab_slide_timer_interval (a_int: INTEGER) is
+			-- Set `auto_hide_tab_slide_timer_interval' with `a_int'.
+		do
+			auto_hide_tab_slide_timer_interval_cell.put (a_int)
+		ensure
+			set: auto_hide_tab_slide_timer_interval = a_int
+		end
+
 	tool_bar_font: EV_FONT is
 			-- Tool bar font
 		local
@@ -130,115 +145,111 @@ feature -- Access
 			Result := l_drawing_area.font
 		end
 
+	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
+			-- Drawer for notebook tabs.
+		once
+			create {SD_NOTEBOOK_TAB_DRAWER_IMP} Result.make
+		end
+
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER is
+			-- Drawer for tool bars.
+		once
+			create {SD_TOOL_BAR_DRAWER} Result.make
+		end
+
 feature  -- Colors
 
 	non_focused_color: EV_COLOR is
 			-- Non focuse color. Used by SD_TITLE_BAR...
-		local
-			l_system_color: SD_SYSTEM_COLOR
-		once
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
-			Result := l_system_color.non_focused_selection_color
+		do
+			Result := color.non_focused_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	non_focused_title_color: EV_COLOR is
 			-- Non focused color of window title bar.
-		local
-			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
-			Result := l_system_color.non_focused_selection_title_color
+			Result := color.non_focused_title_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	non_focused_title_text_color: EV_COLOR is
-			--
-		local
-			l_system_color: SD_SYSTEM_COLOR
+			-- Non focused title text color
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
-			Result := l_system_color.non_focused_title_text_color
+			Result := color.non_focused_title_text_color
+		ensure
+			not_void: Result /= Void
 		end
 
 	non_focused_color_lightness: EV_COLOR is
 			-- Lighter `non_focused_color'.
-		local
-			l_helper: SD_COLOR_HELPER
-			l_cell: EV_CELL
-		once
-			create l_helper
-			create l_cell
-			Result := l_helper.build_color_with_lightness (l_cell.background_color, Auto_hide_panel_lightness)
+		do
+			Result := color.non_focused_color_lightness
 		end
 
 	focused_color: EV_COLOR is
 			-- Focused color. Used by SD_TITLE_BAR...
-		local
-			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
-			Result := l_system_color.focused_selection_color
+			Result := color.focused_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	focused_title_text_color: EV_COLOR is
 			-- Focused title bar text color. Used bt SD_TITLE_BAR.
-		local
-			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
-			Result := l_system_color.focused_title_text_color
+			Result := color.focused_title_text_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	border_color: EV_COLOR is
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
-		local
-			l_sys_color: SD_SYSTEM_COLOR
-		once
-			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
-			Result := l_sys_color.active_border_color
+		do
+			Result := color.border_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	tab_text_color: EV_COLOR is
 			-- Text color
-		local
-			l_sys_color: SD_SYSTEM_COLOR
-		once
-			to_implement ("if theme changed .... We should change color. theme_change actions in EV_APPLICATION")
-			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
-			Result := l_sys_color.button_text_color
+		do
+			Result := color.tab_text_color
+		ensure
+			not_void: Result /= Void
 		end
 
 	tool_tip_color: EV_COLOR is
 			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
-		local
-			l_text_box: EV_TEXT_FIELD
-		once
-			create l_text_box
-			Result :=  l_text_box.background_color
+		do
+			Result := color.tool_tip_color
+		ensure
+			not_void: Result /= Void
 		end
 
 	tool_bar_title_bar_color: EV_COLOR is
 			-- Tool bar tilte bar color when tool bar floating.
-		once
-			create Result
-			Result.set_rgb (132 / 255, 130 / 255, 132 / 255)
+		do
+			Result := color.tool_bar_title_bar_color
 		ensure
 			not_void: Result /= Void
 		end
 
 	feedback_indicator_region_window_discard_color: EV_COLOR is
 			-- Feedback indicator window region discard color.
-		once
-			create Result.make_with_rgb (1, 1, 1)
+		do
+			Result := color.feedback_indicator_region_window_discard_color
+		ensure
+			not_void: Result /= Void
+		end
+
+	default_background_color: EV_COLOR is
+			-- Default background color.
+			-- Changed when theme changed
+		do
+			Result := color.default_background_color
 		end
 
 feature {SD_DOCKING_MANAGER}
@@ -364,13 +375,33 @@ feature -- Constants
 	Auto_hide_tab_stub_show_delay: INTEGER is 1000
 			-- Auto hide tab stub delay time in milliseconds.
 
+	Zone_navigation_left_column_name: STRING is "Tools"
+			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
+
+	Zone_navigation_right_column_name: STRING is "Targets"
+			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
+
 feature {NONE} -- Implementation
+
+	color: SD_COLORS is
+			-- Colors query class.
+		once
+			create Result.make
+		end
 
 	internal_icons: SD_ICONS_SINGLETON;
 			-- Icons.
 
-	show_all_feedback_indicator_cell: CELL [BOOLEAN] is
+	Show_all_feedback_indicator_cell: CELL [BOOLEAN] is
 			-- Singleton cell for show_all_feedback_indicator.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	Auto_hide_tab_slide_timer_interval_cell: CELL [INTEGER] is
+			-- Singleton cell for `Auto_hide_tab_slide_timer_interval'.
 		once
 			create Result
 		ensure

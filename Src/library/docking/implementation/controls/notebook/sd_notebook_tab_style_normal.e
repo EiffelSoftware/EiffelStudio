@@ -10,20 +10,13 @@ deferred class
 
 feature {NONE} -- Initlization
 
-	make (a_drawing_area: SD_NOTEBOOK_TAB; a_draw_at_top: BOOLEAN) is
+	make is
 			-- Creation method
-		require
-			not_void: a_drawing_area /= Void
 		do
 			create internal_shared
-			internal_drawing_area := a_drawing_area
-			internal_draw_border_at_top := a_draw_at_top
 			is_draw_pixmap := True
 			text := ""
 			create pixmap
-		ensure
-			set: internal_drawing_area = a_drawing_area
-			set: internal_draw_border_at_top = a_draw_at_top
 		end
 
 feature -- Command
@@ -32,6 +25,7 @@ feature -- Command
 			-- Draw unselected tab.
 		require
 			setted: pixmap /= Void
+			vaild: a_width > 0
 			not_void: a_tab_info /= Void
 		deferred
 		end
@@ -40,6 +34,7 @@ feature -- Command
 			-- Draw selected tab.
 		require
 			setted: pixmap /= Void
+			vaild: a_width > 0
 			not_void: a_tab_info /= Void
 		deferred
 		end
@@ -48,8 +43,29 @@ feature -- Command
 			-- Draw hot tab.
 		require
 			setted: pixmap /= Void
+			vaild: a_width > 0
 			not_void: a_tab_info /= Void
 		deferred
+		end
+
+feature -- Key setting
+
+	set_drawing_area (a_tab: SD_NOTEBOOK_TAB) is
+			-- Set `internal_tab' with `a_tab'
+		require
+			not_void: a_tab /= Void
+		do
+			internal_tab := a_tab
+		ensure
+			set: internal_tab = a_tab
+		end
+
+	set_is_draw_at_top (a_draw_at_top: BOOLEAN) is
+			-- Set `is_top_side_tab' with `a_draw_at_top'
+		do
+			is_top_side_tab := a_draw_at_top
+		ensure
+			set: is_top_side_tab = a_draw_at_top
 		end
 
 feature -- Properties
@@ -99,13 +115,13 @@ feature -- Properties
 	width: INTEGER is
 			-- Width of Current will draw.
 		do
-			Result := internal_drawing_area.width
+			Result := internal_tab.width
 		end
 
 	height: INTEGER is
 			-- Height of Current will draw.
 		do
-			Result := internal_drawing_area.height
+			Result := internal_tab.height
 		end
 
 	is_draw_pixmap: BOOLEAN
@@ -140,22 +156,26 @@ feature -- Properties
 		do
 			is_selected := a_selected
 			if a_selected then
-				if a_focused then
-					internal_drawing_area.set_background_color (internal_shared.focused_color)
-				else
-					internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
+				l_font := internal_tab.font
+				if l_font /= Void then
+					l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 				end
-				l_font := internal_drawing_area.font
-				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 			else
-				internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
-				l_font := internal_drawing_area.font
-				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
+				l_font := internal_tab.font
+				if l_font /= Void then
+					l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
+				end
 			end
-			internal_drawing_area.set_font (l_font)
+			if l_font /= Void then
+				internal_tab.set_font (l_font)
+			end
 		ensure
 			set: is_selected = a_selected
 		end
+
+	is_top_side_tab: BOOLEAN
+			-- If Current the tabs which at top side.
+			-- Otherwise it's bottom side tabs.
 
 feature -- Size issues
 
@@ -180,14 +200,39 @@ feature -- Size issues
 			end
 		end
 
+	start_x_close: INTEGER is
+			-- Start x position where should draw close
+		require
+			avialable: is_top_side_tab
+		local
+			l_width: INTEGER
+			l_font: EV_FONT
+		do
+			l_font := internal_tab.font
+			if l_font /= Void then
+				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+				l_width := l_font.string_width (text)
+
+				if is_top_side_tab then
+					if is_enough_space then
+						Result := start_x_text_internal + l_width + padding_width
+					end
+				end
+			end
+		end
+
 	start_x_tail_internal: INTEGER is
 			-- Start x position where should draw tail area.
 		local
 			l_width: INTEGER
 		do
 			if is_enough_space then
-				l_width := internal_drawing_area.font.string_width (text)
-				Result := start_x_text_internal + l_width + padding_width
+				if is_top_side_tab then
+					Result := start_x_close + internal_shared.icons.close.width + padding_width
+				else
+					l_width := internal_tab.font.string_width (text)
+					Result := start_x_text_internal + l_width + padding_width
+				end
 			else
 				Result := width - 1 - internal_shared.highlight_tail_width
 				if Result < 0 then
@@ -208,12 +253,37 @@ feature -- Size issues
 					Result := width - 1
 				end
 			else
-				Result := start_x_text_internal + internal_drawing_area.font.string_width (text) + padding_width - 1
+				Result := start_x_text_internal + internal_tab.font.string_width (text) + padding_width - 1
 			end
 		end
 
 	start_y_position: INTEGER is 0
 			-- Start y position of drawing a pixmap.
+
+	start_y_close: INTEGER is
+			-- Start y position of drawing a close button
+		do
+			Result := height  - internal_shared.icons.close.height - close_background_expand * 2
+		end
+
+	close_rectangle: EV_RECTANGLE is
+			-- Close button rectangle
+		require
+			has_close_button: is_top_side_tab
+		do
+			create Result.make (start_x_close - close_background_expand, start_y_close - close_background_expand, internal_shared.icons.close.width + 2 * close_background_expand, internal_shared.icons.close.height + 2 * close_background_expand)
+		ensure
+			not_void: Result /= Void
+		end
+
+	close_rectangle_parent_box: EV_RECTANGLE is
+			-- Close button rectangle relative to parent box
+		do
+			Result := close_rectangle
+			if internal_tab.parent /= Void then
+				Result.move (Result.x + internal_tab.x, Result.y)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -222,11 +292,13 @@ feature {NONE} -- Implementation
 			-- Should call `end_draw' after every thing is done.
 		require
 			not_called: buffer_pixmap = Void
-			size_valid: internal_drawing_area.width > 0 and internal_drawing_area.height > 0
+			size_valid: internal_tab.width > 0 and internal_tab.height > 0
+
 		do
-			create buffer_pixmap.make_with_size (internal_drawing_area.width, internal_drawing_area.height)
-			buffer_pixmap.set_font (internal_drawing_area.font)
-			buffer_pixmap.set_background_color (internal_drawing_area.background_color)
+			create buffer_pixmap.make_with_size (internal_tab.width, internal_tab.height)
+			buffer_pixmap.set_font (internal_tab.font)
+
+			buffer_pixmap.set_background_color (internal_shared.default_background_color)
 			buffer_pixmap.clear
 		ensure
 			created: buffer_pixmap /= Void
@@ -238,7 +310,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: buffer_pixmap /= Void
 		do
-			internal_drawing_area.draw_pixmap (0, 0, buffer_pixmap)
+			internal_tab.parent.draw_pixmap (internal_tab.x, 0, buffer_pixmap)
 			buffer_pixmap := Void
 		ensure
 			cleared: buffer_pixmap = Void
@@ -250,7 +322,7 @@ feature {NONE} -- Implementation
 			not_void: a_pixmap /= Void
 		do
 			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
-			if internal_draw_border_at_top then
+			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
 				a_pixmap.draw_text_top_left (start_x_text_internal, gap_height, text)
@@ -260,6 +332,8 @@ feature {NONE} -- Implementation
 				-- Draw text
 				a_pixmap.draw_text_top_left (start_x_text_internal, 0, text)
 			end
+
+			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
 	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_width: INTEGER) is
@@ -271,7 +345,7 @@ feature {NONE} -- Implementation
 				-- Draw text
 				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
-					if internal_draw_border_at_top then
+					if is_top_side_tab then
 						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					else
 						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
@@ -279,19 +353,29 @@ feature {NONE} -- Implementation
 				end
 				-- Draw pixmap
 				if is_draw_pixmap then
-					if internal_draw_border_at_top then
+					if is_top_side_tab then
 						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
 					else
 						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
 					end
 				end
+
+				draw_close_button (a_pixmap, internal_shared.icons.close)
 			end
 		end
 
-	internal_draw_border_at_top: BOOLEAN
-			-- If Current draw border at top?
+	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
+			-- Draw close button if possible
+		require
+			not_void: a_drawable /= Void
+			not_void: a_close_pixmap /= Void
+		deferred
+		end
 
-	internal_drawing_area: SD_NOTEBOOK_TAB
+	close_background_expand: INTEGER is 3
+			-- close button background expand size.
+
+	internal_tab: SD_NOTEBOOK_TAB
 			-- Drawing area to draw tab.
 
 	internal_shared: SD_SHARED
@@ -302,7 +386,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not_void: internal_drawing_area /= Void
+	not_void: internal_tab /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

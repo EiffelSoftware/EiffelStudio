@@ -1,78 +1,56 @@
 indexing
-	description: "Object that contains ids within Eiffel Studio."
+	description	: "Token that describe an Eiffel target"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	date		: ""
+	revision	: ""
 
 class
-	EB_EDITOR_TOKEN_IDS
+	EDITOR_TOKEN_TARGET
 
 inherit
-	EDITOR_TOKEN_IDS
-		redefine
+	EDITOR_TOKEN_TEXT
+		undefine
 			max_color_id
+		redefine
+			text_color_id,
+			background_color_id,
+			editor_preferences,
+			process
 		end
 
-feature -- Color ids
+	EB_EDITOR_TOKEN_IDS
 
-	breakpoint_background_color_id: INTEGER is 30
-			-- Background color used to display breakpoints		
+create
+	make
 
-	assertion_tag_text_color_id: INTEGER is 31
+feature -- Visitor
 
-	assertion_tag_background_color_id: INTEGER is 32
-
-	indexing_tag_text_color_id: INTEGER is 33
-
-	indexing_tag_background_color_id: INTEGER is 34
-
-	reserved_text_color_id: INTEGER is 35
-
-	reserved_background_color_id: INTEGER is 36
-
-	generic_text_color_id: INTEGER is 37
-
-	generic_background_color_id: INTEGER is 38
-
-	local_text_color_id: INTEGER is 39
-
-	local_background_color_id: INTEGER is 40
-
-	class_text_color_id: INTEGER is 41
-
-	class_background_color_id: INTEGER is 42
-
-	feature_text_color_id: INTEGER is 43
-
-	feature_background_color_id: INTEGER is 44
-
-	cluster_text_color_id: INTEGER is 45
-
-	cluster_background_color_id: INTEGER is 46
-
-	error_text_color_id: INTEGER is 47
-
-	error_background_color_id: INTEGER is 48
-
-	object_text_color_id: INTEGER is 49
-
-	object_background_color_id: INTEGER is 50
-
-	target_text_color_id: INTEGER is 51
-
-	target_background_color_id: INTEGER is 52
-
-	max_color_id: INTEGER is
+	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+			-- Visitor
 		do
-			Result := target_background_color_id
+			a_visitor.process_editor_token_target (Current)
+		end
+
+feature -- Color
+
+	text_color_id: INTEGER is
+		do
+			Result := target_text_color_id
+		end
+
+	background_color_id: INTEGER is
+		do
+			Result := cluster_background_color_id
 		end
 
 feature {NONE} -- Implementation
 
-invariant
-	invariant_clause: True -- Your invariant here
+	editor_preferences: EB_EDITOR_DATA is
+			--
+		once
+			Result ?= editor_preferences_cell.item
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -105,4 +83,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end
+
+end -- class EDITOR_TOKEN_CLUSTER

@@ -79,6 +79,12 @@ feature -- Visit
 		deferred
 		end
 
+	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

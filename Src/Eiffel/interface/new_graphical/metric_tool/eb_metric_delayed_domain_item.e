@@ -61,6 +61,11 @@ feature -- Access
 			end
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

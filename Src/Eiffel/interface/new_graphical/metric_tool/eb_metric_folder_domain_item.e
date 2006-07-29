@@ -80,6 +80,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+			Result := query_group_item_from_conf_group (folder.cluster)
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

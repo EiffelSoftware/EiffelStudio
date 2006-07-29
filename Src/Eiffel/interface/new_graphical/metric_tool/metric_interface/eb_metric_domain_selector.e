@@ -158,6 +158,9 @@ feature {NONE} -- Initialization
 			remove_all_btn.drop_actions.extend (agent on_item_dropped_on_remove_button)
 			add_item_btn.drop_actions.extend (agent on_drop)
 			grid.key_press_actions.extend (agent on_key_pressed)
+			grid.pick_ended_actions.force_extend (agent on_pick_ended)
+			grid.set_item_pebble_function (agent on_pick)
+			grid.enable_selection_on_single_button_click
 		end
 
 feature -- Access
@@ -448,6 +451,57 @@ feature{NONE} -- Actions
 			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y, 2)
 		end
 
+feature{NONE} -- Implementation/Pick and drop
+
+	last_picked_item: EV_GRID_ITEM
+			-- Last picked item	
+
+	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
+			-- Action performed when pick ends
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_item ?= last_picked_item
+			if l_item /= Void then
+				l_item.set_last_picked_token (0)
+				if l_item.is_parented and then l_item.is_selectable then
+					l_item.enable_select
+				end
+				if l_item.is_parented then
+					l_item.redraw
+				end
+			end
+			last_picked_item := Void
+		ensure
+			last_picked_item_not_attached: last_picked_item = Void
+		end
+
+	on_pick (a_item: EV_GRID_ITEM): ANY is
+			-- Action performed when pick on `a_item'.
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_stone: STONE
+			l_index: INTEGER
+		do
+			last_picked_item := Void
+			l_item ?= a_item
+			if l_item /= Void then
+				l_index := l_item.token_index_at_current_position
+				if l_index > 0 then
+					Result := l_item.editor_token_pebble (l_index)
+					l_stone ?= Result
+					if l_stone /= Void then
+						grid.remove_selection
+						grid.set_accept_cursor (l_stone.stone_cursor)
+						grid.set_deny_cursor (l_stone.x_stone_cursor)
+						l_item.set_last_picked_token (l_index)
+						l_item.redraw
+						last_picked_item := l_item
+					end
+				end
+			end
+		end
+
 feature{NONE} -- Implementation/Data
 
 	last_picked_row_index: INTEGER
@@ -561,31 +615,6 @@ feature{NONE} -- Implementation
 			grid.header.i_th (1).remove_pixmap
 			grid.row (grid.row_count).ensure_visible
 		end
-
---	veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
---			-- Action to test if `a_pebble' is allowed to be dropped on `a_item'.
---		local
---			l_stone: STONE
---			l_classi_stone: CLASSI_STONE
---			l_cluster_stone: CLUSTER_STONE
---			l_feature_stone: FEATURE_STONE
---			l_target_stone: TARGET_STONE
---			l_domain: like domain
---		do
---			if a_item /= Void then
---				if a_item.data /= Void then
---					l_target_stone ?= a_pebble
---					l_classi_stone ?= a_pebble
---					l_cluster_stone ?= a_pebble
---					l_feature_stone ?= a_pebble
---					if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
---						l_domain := domain
---						l_stone ?= a_pebble
---						Result := not l_domain.has_delayed_domain_item and then not l_domain.has (domain_item_from_stone (l_stone))
---					end
---				end
---			end
---		end
 
 feature{NONE} -- Implementation/Sorting
 

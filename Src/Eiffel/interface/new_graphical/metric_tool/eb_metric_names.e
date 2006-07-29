@@ -64,7 +64,7 @@ feature -- Titles
 	t_archive_management: STRING is "Archive management"
 	t_archive_comparison: STRING is "Archive comparison"
 	t_location: STRING is "Location:"
-	t_select_source_domain: STRING is "Select source domain:"
+	t_select_source_domain: STRING is "Select input domain:"
 	t_select_metric: STRING is "Select metric:"
 	t_select_reference_archive: STRING is "Select reference archive:"
 	t_select_current_archive: STRING is "Select current archive:"

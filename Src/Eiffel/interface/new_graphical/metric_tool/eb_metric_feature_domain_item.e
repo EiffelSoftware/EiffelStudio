@@ -85,6 +85,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+			Result := ql_feature
+		end		
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

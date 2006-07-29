@@ -422,27 +422,8 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 			a_writer_attached: a_writer /= Void
-		local
-			l_group: QL_GROUP
-			l_class: QL_CLASS
-			l_real_feature: QL_REAL_FEATURE
 		do
-			if a_item.is_group then
-				l_group ?= a_item
-				a_writer.add_group (l_group.group, l_group.name)
-			elseif a_item.is_class then
-				l_class ?= a_item
-				if a_full_signature and then l_class.is_compiled then
-					l_class.class_c.append_signature (a_writer, False)
-				else
-					a_writer.add_class (l_class.class_i)
-				end
-			elseif a_item.is_real_feature then
-				l_real_feature ?= a_item
-				a_writer.add_sectioned_feature_name (l_real_feature.e_feature)
-			else
-				a_writer.add_string (a_item.name)
-			end
+			add_editor_token_representation (a_item, a_full_signature, True, a_writer)
 		end
 
 	cache_row_count: INTEGER is 50

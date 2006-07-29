@@ -152,6 +152,14 @@ feature -- Process
 		deferred
 		end
 
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		require
+			text_not_void: text /= Void
+			a_target_not_void: a_target /= Void
+		deferred
+		end
+
 	process_feature_name_text (text: STRING; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		require

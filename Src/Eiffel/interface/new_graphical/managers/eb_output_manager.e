@@ -54,6 +54,11 @@ feature {NONE} -- Text formatter
 		do
 		end
 
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		do
+		end
+
 	process_feature_name_text (text: STRING; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		do

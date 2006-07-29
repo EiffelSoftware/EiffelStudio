@@ -16,7 +16,8 @@ inherit
 			process_assertion_tag_text, process_indexing_tag_text,
 			process_generic_text, process_character_text, process_local_text,
 			process_number_text, process_reserved_word_text,
-			process_feature_error, process_feature_dec_item, add_new_line, add_string, add
+			process_feature_error, process_feature_dec_item, add_new_line, add_string, add,
+			process_target_name_text
 		end
 
 	EV_SHARED_APPLICATION
@@ -175,6 +176,20 @@ feature -- Text processing
 				end
 				tok.set_pebble (stone)
 			end
+			last_line.append_token (tok)
+		end
+
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		local
+			l_text: STRING
+			tok: EDITOR_TOKEN_TARGET
+			l_stone: TARGET_STONE
+		do
+			l_text := text
+			create tok.make (l_text)
+			create l_stone.make (a_target)
+			tok.set_pebble (l_stone)
 			last_line.append_token (tok)
 		end
 

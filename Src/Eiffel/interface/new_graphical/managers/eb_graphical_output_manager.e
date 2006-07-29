@@ -17,6 +17,7 @@ inherit
 			process_comment_text,
 			process_class_name_text,
 			process_cluster_name_text,
+			process_target_name_text,
 			process_feature_name_text,
 			process_feature_text,
 			process_breakpoint_index,
@@ -397,6 +398,21 @@ feature {NONE} -- Text formatter
 			loop
 				if managed_output_tools.item.is_general then
 					managed_output_tools.item.text_area.text_displayed.process_cluster_name_text (text, a_cluster, a_quote)
+				end
+				managed_output_tools.forth
+			end
+		end
+
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		do
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				if managed_output_tools.item.is_general then
+					managed_output_tools.item.text_area.text_displayed.process_target_name_text (text, a_target)
 				end
 				managed_output_tools.forth
 			end

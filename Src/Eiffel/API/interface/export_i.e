@@ -90,23 +90,11 @@ feature -- Incrementality
 		deferred
 		end;
 
-feature -- Output
-
-	append_to (st: TEXT_FORMATTER) is
-			-- Append a representation of `Current' to `st'.
-		deferred
-		end
-
 feature {FEATURE_CLAUSE_EXPORT, FEAT_TEXT_FORMATTER_DECORATOR} -- formatter
 
 	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		deferred
 		end;
-
-feature {NONE} -- Implementation
-
-	S_l_curly: STRING is "{"
-	S_r_curly: STRING is "}";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

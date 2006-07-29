@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 			-- Save current window position.
 		do
 			if code_completable.save_list_position_action /= Void and is_displayed then
-				code_completable.save_list_position_action.call ([x_position, y_position, width, height])
+				code_completable.save_list_position_action.call ([screen_x, screen_y, width, height])
 			end
 		end
 

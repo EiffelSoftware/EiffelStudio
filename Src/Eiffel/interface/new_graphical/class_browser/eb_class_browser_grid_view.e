@@ -53,6 +53,11 @@ feature{NONE} -- Initialization
 			drop_actions := a_drop_actions
 			post_sort_actions.extend (agent on_post_sort)
 			build_interface
+			grid.set_expand_selected_rows_agent (agent on_expand_one_level)
+			grid.set_expand_selected_rows_recursive_agent (agent on_expand_all_level)
+			grid.set_collapse_selected_rows_agent (agent on_collapse_one_level)
+			grid.set_collapse_selected_rows_recursive_agent (agent on_collapse_all_level)
+			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 		ensure
 			drop_actions_set: drop_actions = a_drop_actions
 		end
@@ -472,15 +477,7 @@ feature{NONE} -- Actions
 			a_key_attached: a_key /= Void
 		do
 			Result := True
-			if is_accelerator_matched (a_key, accelerator_from_preference ("collapse_tree_node")) then
-				on_collapse_one_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_tree_node")) then
-				on_expand_one_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("collapse_all_levels")) then
-				on_collapse_all_level
-			elseif is_accelerator_matched (a_key, accelerator_from_preference ("expand_all_levels")) then
-				on_expand_all_level
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+			 if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				on_enter_pressed
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
 				on_ctrl_c_pressed

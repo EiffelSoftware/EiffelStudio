@@ -189,13 +189,13 @@ feature -- Actions
 			l_processed: BOOLEAN
 		do
 			l_processed := on_predefined_key_pressed (a_key)
-			if not l_processed then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
-					do_all_in_rows (grid.selected_rows, agent go_to_parent)
-				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
-					do_all_in_rows (grid.selected_rows, agent go_to_first_child)
-				end
-			end
+--			if not l_processed then
+--				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+--					do_all_in_rows (grid.selected_rows, agent go_to_parent)
+--				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+--					do_all_in_rows (grid.selected_rows, agent go_to_first_child)
+--				end
+--			end
 		end
 
 	on_enter_pressed is
@@ -232,13 +232,48 @@ feature -- Actions
 
 	on_expand_one_level is
 			-- Action to be performed to expand all selected rows.
+		local
+			l_selected_rows: like selected_rows
+			l_row: EV_GRID_ROW
+			l_done: BOOLEAN
 		do
-			processed_rows.wipe_out
-			do_all_in_rows (selected_rows, agent expand_row)
+			l_selected_rows := selected_rows
+			if l_selected_rows.count = 1 then
+				l_row := l_selected_rows.first
+				if not l_row.is_expandable or else l_row.is_expanded then
+					go_to_first_child (l_row)
+					l_done := True
+				end
+			end
+			if not l_done then
+				processed_rows.wipe_out
+				do_all_in_rows (selected_rows, agent expand_row)
+			end
 		end
 
 	on_collapse_one_level is
 			-- Action to be performed to collapse all selected rows.
+		local
+			l_selected_rows: like selected_rows
+			l_row: EV_GRID_ROW
+			l_done: BOOLEAN
+		do
+			l_selected_rows := selected_rows
+			if l_selected_rows.count = 1 then
+				l_row := l_selected_rows.first
+				if not l_row.is_expandable or else not l_row.is_expanded then
+					go_to_parent (l_row)
+					l_done := True
+				end
+			end
+			if not l_done then
+				processed_rows.wipe_out
+				do_all_in_rows (l_selected_rows, agent collapse_row_normal)
+			end
+		end
+
+	on_collapse_one_level_partly is
+			-- Action to be performed to collapse on level but leave the first level of child rows open.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent collapse_row)
@@ -807,6 +842,16 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	collapse_row_normal (a_row: EV_GRID_ROW) is
+			-- Collapse `a_row' normally.
+		require
+			a_row_attached: a_row /= Void
+		do
+			if a_row /= Void and then a_row.is_expandable and then a_row.is_expanded then
+				a_row.collapse
+			end
+		end
+
 	selected_rows: LIST [EV_GRID_ROW] is
 			-- Selected rows in `grid'.
 			-- If empty, put the first row in `grid' in result.
@@ -877,7 +922,12 @@ feature{NONE} -- Initialization
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
+			grid.add_key_action (agent on_collapse_one_level_partly, collapse_one_level_partly_index)
+			grid.add_key_shortcut (collapse_one_level_partly_index, create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False))
 		end
+
+	collapse_one_level_partly_index: INTEGER is 65530;
+			-- Key shortcut index for collapse one level partly
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

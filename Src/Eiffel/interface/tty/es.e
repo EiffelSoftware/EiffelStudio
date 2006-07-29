@@ -119,9 +119,9 @@ feature -- Initialization
 						l_loader.set_should_stop_on_prompt (stop_on_error)
 						l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
 						if old_project_file /= Void then
-							l_loader.open_project_file (old_project_file, Void, Void, is_clean_requested)
+							l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
 						elseif old_ace_file /= Void then
-							l_loader.open_project_file (old_ace_file, Void, Void, is_clean_requested)
+							l_loader.open_project_file (old_ace_file, Void, project_path, is_clean_requested)
 						else
 							l_loader.open_project_file (config_file_name, target_name, project_path, is_clean_requested)
 						end

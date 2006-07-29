@@ -2906,14 +2906,17 @@ feature -- Implementation
 
 				-- Conformance: take care of constrained genericity and
 				-- of the balancing rule for the simple numeric types
-
-			if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name) then
+			if is_inherited then
+				last_infix_feature := system.class_of_id (l_as.class_id).feature_of_rout_id (l_as.routine_ids.first)
 			else
-				l_error := last_infix_error
-				if l_left_type.convert_to (context.current_class, l_right_type) then
-					l_target_conv_info := context.last_conversion_info
-					if not is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
-						l_target_conv_info := Void
+				if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name) then
+				else
+					l_error := last_infix_error
+					if l_left_type.convert_to (context.current_class, l_right_type) then
+						l_target_conv_info := context.last_conversion_info
+						if not is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
+							l_target_conv_info := Void
+						end
 					end
 				end
 			end

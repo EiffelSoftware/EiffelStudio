@@ -73,7 +73,6 @@ feature{NONE} -- Initialization
 					else
 						create target_stone.make (target_of_id (a_domain_item.id))
 					end
-
 				end
 			end
 		ensure
@@ -163,6 +162,46 @@ feature -- Access
 			-- Name of current row
 		do
 			Result := domain_item.string_representation
+		ensure
+			result_attached: Result /= Void
+		end
+
+	editor_token_name: LIST [EDITOR_TOKEN] is
+			-- Editor token representation of current item
+		local
+			l_writer: like token_writer
+		do
+			l_writer := token_writer
+			l_writer.new_line
+		ensure
+			result_attached: Result /= Void
+		end
+
+	token_name: LIST [EDITOR_TOKEN] is
+			-- Editor token representation of current domain item
+		local
+			l_domain_item: like domain_item
+			l_writer: like token_writer
+			l_item: QL_ITEM
+		do
+			l_writer := token_writer
+			l_writer.new_line
+			l_domain_item := domain_item
+			if l_domain_item.is_valid then
+				if l_domain_item.is_delayed_item then
+					l_writer.add_string (l_domain_item.string_representation)
+				else
+					l_item := l_domain_item.query_language_item
+					if l_item /= Void then
+						add_editor_token_representation (l_item, False, True, l_writer)
+					else
+						l_writer.add_string (l_domain_item.string_representation)
+					end
+				end
+			else
+				l_writer.add_error (create{SYNTAX_ERROR}.init, l_domain_item.string_representation)
+			end
+			Result := l_writer.last_line.content
 		ensure
 			result_attached: Result /= Void
 		end
@@ -293,20 +332,22 @@ feature -- Grid binding
 			a_grid_attached: a_grid /= Void
 		local
 			l_grid_row: EV_GRID_ROW
-			l_grid_item: EV_GRID_LABEL_ITEM
 			l_tooltip: STRING
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
+			create l_editor_token_item
+			l_editor_token_item.set_pixmap (pixmap)
+			l_editor_token_item.set_spacing (3)
+			l_editor_token_item.set_text_with_tokens (token_name)
+			l_editor_token_item.set_data (Current)
+
 			a_grid.insert_new_row (a_grid.row_count + 1)
 			l_grid_row := a_grid.row (a_grid.row_count)
-			create l_grid_item.make_with_text (name)
-			l_grid_item.set_pixmap (pixmap)
-			l_grid_item.set_foreground_color (text_color)
 			l_tooltip := tooltip
 			if tooltip /= Void then
-				l_grid_item.set_tooltip (l_tooltip)
+				l_editor_token_item.set_tooltip (l_tooltip)
 			end
-			l_grid_item.set_data (Current)
-			l_grid_row.set_item (1, l_grid_item)
+			l_grid_row.set_item (1, l_editor_token_item)
 			set_grid_row (l_grid_row)
 		end
 

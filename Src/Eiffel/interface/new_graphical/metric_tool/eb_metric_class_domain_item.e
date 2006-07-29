@@ -67,6 +67,12 @@ feature -- Access
 			Result := query_class_item_from_conf_class (l_conf_class)
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+			Result := ql_class
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

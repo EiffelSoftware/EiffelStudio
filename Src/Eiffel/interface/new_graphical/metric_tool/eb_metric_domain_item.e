@@ -95,6 +95,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		require
+			valid: is_valid
+		deferred
+		end
+
 	text_of_id: STRING is
 			-- Text of id if it is a id item, otherwise, an empty string
 		do

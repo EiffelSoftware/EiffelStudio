@@ -71,6 +71,14 @@ feature -- Access
 			end
 		end
 
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+			if not id.is_empty then
+				Result := query_target_item_from_conf_target (target_of_id (id))
+			end
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

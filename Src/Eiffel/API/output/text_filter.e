@@ -563,6 +563,12 @@ feature -- Text processing
 			end
 		end
 
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		do
+			process_basic_text (text)
+		end
+
 	process_new_line is
 		local
 			format: CELL2 [STRING, STRING]

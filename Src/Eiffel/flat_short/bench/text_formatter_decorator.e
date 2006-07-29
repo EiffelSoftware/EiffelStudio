@@ -864,6 +864,16 @@ feature -- Text formatter decorator
 			text_formatter.process_cluster_name_text (text, a_cluster, a_quote)
 		end
 
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		do
+			if not without_tabs and then not tabs_emitted then
+				emit_tabs
+			end
+			without_tabs := false
+			text_formatter.process_target_name_text (text, a_target)
+		end
+
 	process_feature_name_text (text: STRING; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		do

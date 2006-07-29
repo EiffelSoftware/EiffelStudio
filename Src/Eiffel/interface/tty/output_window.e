@@ -50,6 +50,12 @@ feature -- Text processing
 			end
 		end
 
+	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+			-- Process target name text `text'.
+		do
+			put_string (text)
+		end
+
 	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
 			-- Process class name text `t'.
 		local

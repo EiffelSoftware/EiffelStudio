@@ -1941,7 +1941,6 @@ feature {NONE} -- Menu Building
 			-- Create and build `tools_menu'
 		local
 			command_menu_item: EB_COMMAND_MENU_ITEM
-			menu_item: EV_MENU_ITEM
 		do
 			create tools_menu.make_with_text (Interface_names.m_tools)
 

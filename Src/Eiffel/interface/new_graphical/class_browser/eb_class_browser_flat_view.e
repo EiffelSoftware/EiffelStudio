@@ -262,9 +262,6 @@ feature{NONE} -- Sorting
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [u, v: EB_CLASS_BROWSER_FLAT_ROW], BOOLEAN]]
-			l_cursor: CURSOR
-			l_tester: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_FLAT_ROW]
 			l_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
 		do
 			create l_sorter.make (a_comparator)

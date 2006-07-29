@@ -160,6 +160,9 @@ feature  -- Redefine
 			-- Redefine.
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) or internal_shared.show_all_feedback_indicator then
+
+				show_indicator
+
 				if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
 					top_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_up_lightening)
 				else
@@ -192,6 +195,14 @@ feature  -- Redefine
 				clear_indicator
 			elseif internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y)  then
 				need_clear := True
+			end
+		end
+
+	show_indicator is
+			-- Show indicators if possible.
+		do
+			if not top_indicator.exists then
+				build_indicator
 			end
 		end
 

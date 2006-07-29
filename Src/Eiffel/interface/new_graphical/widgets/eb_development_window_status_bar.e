@@ -104,6 +104,8 @@ feature {NONE} -- Initialization
 				-- Create all widgets.
 			create widget
 			create label
+			black_color := label.foreground_color
+			red_color := preferences.editor_data.error_text_color
 			create progress_bar
 			create project_label
 			create coordinate_label
@@ -197,6 +199,15 @@ feature -- Status setting
 	display_message (mess: STRING_GENERAL) is
 			-- Display `mess'.
 		do
+			label.set_foreground_color (black_color)
+			label.set_text (mess)
+			label.refresh_now
+		end
+
+	display_error_message (mess: STRING_GENERAL) is
+			-- Display error message `mess'.
+		do
+			label.set_foreground_color (red_color)
 			label.set_text (mess)
 			label.refresh_now
 		end
@@ -294,6 +305,9 @@ feature {EIFFEL_WORLD, EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Access
 			-- Progress bar where completion status is displayed
 
 feature {NONE} -- Implementation: widgets
+
+	red_color, black_color: EV_COLOR
+			-- Color for text of `label'.
 
 	project_label: EV_LABEL
 			-- Label that gives the name of the current project.

@@ -27,7 +27,10 @@ feature {NONE}-- Initialization
 		local
 			internal_font: EV_FONT
 			l_vertical_box: EV_VERTICAL_BOX
+			l_shared: SD_SHARED
 		do
+			create l_shared
+
 			Precursor {EV_SHADOW_DIALOG}
 
 				-- Create all widgets.
@@ -72,7 +75,6 @@ feature {NONE}-- Initialization
 
 			internal_files_box.extend (files_column)
 			internal_files_box.disable_item_expand (files_column)
---			internal_vertical_box_top.extend (internal_info_box)
 			internal_vertical_box_top.extend (internal_info_box_border)
 			internal_info_box_border.extend (internal_info_box)
 			internal_info_box.extend (full_title)
@@ -99,7 +101,7 @@ feature {NONE}-- Initialization
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_tools_label.set_font (internal_font)
-			internal_tools_label.set_text ("Tools")
+			internal_tools_label.set_text (l_shared.Zone_navigation_left_column_name)
 			create internal_font
 			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
 			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
@@ -107,14 +109,14 @@ feature {NONE}-- Initialization
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_files_label.set_font (internal_font)
-			internal_files_label.set_text ("Files")
+			internal_files_label.set_text (l_shared.Zone_navigation_right_column_name)
 			internal_info_box.disable_item_expand (full_title)
 			internal_info_box.disable_item_expand (description)
 			internal_info_box.disable_item_expand (detail)
 			full_title.align_text_left
 			description.align_text_left
 			detail.align_text_left
-			set_title ("Display window")
+			set_title ("SD_ZONE_NAVIGATION_DIALOG_IMP")
 
 			set_all_attributes_using_constants
 

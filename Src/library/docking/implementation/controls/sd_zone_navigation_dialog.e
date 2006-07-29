@@ -356,33 +356,33 @@ feature {NONE} -- Agents
 			when {EV_KEY_CONSTANTS}.key_tab then
 				l_selected_label := selected_label
 				if is_shift_pressed then
-					focus_label (find_previous_label_same_type)
+					l_next_label := find_previous_label_same_type
 				else
-					focus_label (find_next_label_same_type)
+					l_next_label := find_next_label_same_type
 				end
-				l_selected_label.disable_select
 			when {EV_KEY_CONSTANTS}.key_up then
 				l_selected_label := selected_label
-				focus_label (find_previsou_label)
-				l_selected_label.disable_select
+				l_next_label := find_previsou_label
 			when {EV_KEY_CONSTANTS}.key_down then
 				l_selected_label := selected_label
-				focus_label (find_next_label)
-				l_selected_label.disable_select
+				l_next_label := find_next_label
 			when {EV_KEY_CONSTANTS}.key_left then
 				l_selected_label := selected_label
 				l_next_label := find_label_at_left_side
-				l_selected_label.disable_select
-				focus_label (l_next_label)
 			when {EV_KEY_CONSTANTS}.key_right then
 				l_selected_label := selected_label
 				l_next_label := find_label_at_right_side
-				l_selected_label.disable_select
-				focus_label (l_next_label)
 			when {EV_KEY_CONSTANTS}.key_shift then
 				is_shift_pressed := True
 			else
 
+			end
+
+			if l_next_label /= Void then
+				focus_label (l_next_label)
+				if l_selected_label /= l_next_label then
+					l_selected_label.disable_select
+				end
 			end
 		end
 

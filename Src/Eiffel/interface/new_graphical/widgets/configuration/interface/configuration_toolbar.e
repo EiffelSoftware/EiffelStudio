@@ -33,88 +33,152 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize.
+		local
+			l_ac: EV_ACCELERATOR
 		do
 			Precursor
 
-			create edit_manually_button
-			edit_manually_button.set_pixmap (pixmaps.icon_pixmaps.general_edit_icon)
-			edit_manually_button.set_tooltip (conf_interface_names.target_edit_manually)
-			extend (edit_manually_button)
+			create accelerators
 
 			create add_target_button
 			add_target_button.set_pixmap (pixmaps.icon_pixmaps.new_target_icon)
-			add_target_button.set_tooltip (conf_interface_names.add_target)
 			extend (add_target_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_t), True, False, False)
+			l_ac.actions.extend (agent press_button (add_target_button))
+			accelerators.extend (l_ac)
+			add_target_button.set_tooltip (name_with_key (conf_interface_names.add_target, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_cluster_button
 			add_cluster_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
-			add_cluster_button.set_tooltip (conf_interface_names.group_add_cluster)
 			extend (add_cluster_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_u), True, False, False)
+			l_ac.actions.extend (agent press_button (add_cluster_button))
+			accelerators.extend (l_ac)
+			add_cluster_button.set_tooltip (name_with_key (conf_interface_names.group_add_cluster, l_ac))
 
 			create add_override_button
 			add_override_button.set_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
-			add_override_button.set_tooltip (conf_interface_names.group_add_override)
 			extend (add_override_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_o), True, False, False)
+			l_ac.actions.extend (agent press_button (add_override_button))
+			accelerators.extend (l_ac)
+			add_override_button.set_tooltip (name_with_key (conf_interface_names.group_add_override, l_ac))
 
 			create add_assembly_button
 			add_assembly_button.set_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
-			add_assembly_button.set_tooltip (conf_interface_names.group_add_assembly)
 			extend (add_assembly_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, False, False)
+			l_ac.actions.extend (agent press_button (add_assembly_button))
+			accelerators.extend (l_ac)
+			add_assembly_button.set_tooltip (name_with_key (conf_interface_names.group_add_assembly, l_ac))
 
 			create add_library_button
 			add_library_button.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
-			add_library_button.set_tooltip (conf_interface_names.group_add_library)
 			extend (add_library_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, False, False)
+			l_ac.actions.extend (agent press_button (add_library_button))
+			accelerators.extend (l_ac)
+			add_library_button.set_tooltip (name_with_key (conf_interface_names.group_add_library, l_ac))
 
 			create add_precompile_button
 			add_precompile_button.set_pixmap (pixmaps.icon_pixmaps.new_precompiled_library_icon)
-			add_precompile_button.set_tooltip (conf_interface_names.group_add_precompile)
 			extend (add_precompile_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_p), True, False, False)
+			l_ac.actions.extend (agent press_button (add_precompile_button))
+			accelerators.extend (l_ac)
+			add_precompile_button.set_tooltip (name_with_key (conf_interface_names.group_add_precompile, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_include_button
 			add_include_button.set_pixmap (pixmaps.icon_pixmaps.new_include_icon)
-			add_include_button.set_tooltip (conf_interface_names.external_add_include)
 			extend (add_include_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_i), True, False, False)
+			l_ac.actions.extend (agent press_button (add_include_button))
+			accelerators.extend (l_ac)
+			add_include_button.set_tooltip (name_with_key (conf_interface_names.external_add_include, l_ac))
 
 			create add_object_button
 			add_object_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
-			add_object_button.set_tooltip (conf_interface_names.external_add_object)
 			extend (add_object_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_b), True, False, False)
+			l_ac.actions.extend (agent press_button (add_object_button))
+			accelerators.extend (l_ac)
+			add_object_button.set_tooltip (name_with_key (conf_interface_names.external_add_object, l_ac))
 
 			create add_external_library_button
 			add_external_library_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
-			add_external_library_button.set_tooltip (conf_interface_names.external_add_library)
 			extend (add_external_library_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_e), True, False, False)
+			l_ac.actions.extend (agent press_button (add_external_library_button))
+			accelerators.extend (l_ac)
+			add_external_library_button.set_tooltip (name_with_key (conf_interface_names.external_add_library, l_ac))
 
 			create add_make_button
 			add_make_button.set_pixmap (pixmaps.icon_pixmaps.new_makefile_icon)
-			add_make_button.set_tooltip (conf_interface_names.external_add_make)
 			extend (add_make_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_k), True, False, False)
+			l_ac.actions.extend (agent press_button (add_make_button))
+			accelerators.extend (l_ac)
+			add_make_button.set_tooltip (name_with_key (conf_interface_names.external_add_make, l_ac))
 
 			create add_resource_button
 			add_resource_button.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
-			add_resource_button.set_tooltip (conf_interface_names.external_add_resource)
 			extend (add_resource_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_r), True, False, False)
+			l_ac.actions.extend (agent press_button (add_resource_button))
+			accelerators.extend (l_ac)
+			add_resource_button.set_tooltip (name_with_key (conf_interface_names.external_add_resource, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_pre_task_button
 			add_pre_task_button.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
-			add_pre_task_button.set_tooltip (conf_interface_names.task_add_pre)
 			extend (add_pre_task_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s), True, False, False)
+			l_ac.actions.extend (agent press_button (add_pre_task_button))
+			accelerators.extend (l_ac)
+			add_pre_task_button.set_tooltip (name_with_key (conf_interface_names.task_add_pre, l_ac))
 
 			create add_post_task_button
 			add_post_task_button.set_pixmap (pixmaps.icon_pixmaps.new_post_compilation_task_icon)
-			add_post_task_button.set_tooltip (conf_interface_names.task_add_post)
 			extend (add_post_task_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_h), True, False, False)
+			l_ac.actions.extend (agent press_button (add_post_task_button))
+			accelerators.extend (l_ac)
+			add_post_task_button.set_tooltip (name_with_key (conf_interface_names.task_add_post, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create remove_button
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
-			remove_button.set_tooltip (conf_interface_names.general_remove)
 			extend (remove_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
+			l_ac.actions.extend (agent press_button (remove_button))
+			accelerators.extend (l_ac)
+			remove_button.set_tooltip (name_with_key (conf_interface_names.general_remove, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create edit_library
 			edit_library.set_pixmap (pixmaps.icon_pixmaps.project_settings_edit_library_icon)
-			edit_library.set_tooltip (conf_interface_names.library_edit_configuration)
 			extend (edit_library)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), True, False, False)
+			l_ac.actions.extend (agent press_button (edit_library))
+			accelerators.extend (l_ac)
+			edit_library.set_tooltip (name_with_key (conf_interface_names.library_edit_configuration, l_ac))
+
+			extend (create {EV_TOOL_BAR_SEPARATOR})
+
+			create edit_manually_button
+			edit_manually_button.set_pixmap (pixmaps.icon_pixmaps.general_edit_icon)
+			extend (edit_manually_button)
+			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_m), True, False, False)
+			l_ac.actions.extend (agent press_button (edit_manually_button))
+			accelerators.extend (l_ac)
+			edit_manually_button.set_tooltip (name_with_key (conf_interface_names.target_edit_manually, l_ac))
 
 				-- disable all buttons
 			reset_sensitive
@@ -170,6 +234,9 @@ feature -- Buttons
 	edit_library: EV_TOOL_BAR_BUTTON;
 			-- Button to edit a library.
 
+	accelerators: EV_ACCELERATOR_LIST
+			-- Accelerators for this toolbar.
+
 feature -- Update
 
 	reset_sensitive is
@@ -187,9 +254,54 @@ feature -- Update
 			edit_manually_button.enable_sensitive
 		end
 
+feature {NONE} -- Implementation
+
+	press_button (a_button: EV_TOOL_BAR_BUTTON) is
+			-- Press `a_button'.
+		do
+			if a_button.is_sensitive then
+				a_button.select_actions.call (Void)
+			end
+		end
+
+	name_with_key (a_name: STRING; a_key: EV_ACCELERATOR): STRING is
+			-- Format text with `a_name' and `a_key'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := a_name.twin
+			if a_key /= Void then
+				Result.append (" (")
+				Result.append (a_key.out)
+				Result.append_character (')')
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is True;
+
+invariant
+	accelerators_not_void: accelerators /= Void
+	edit_manually_button: edit_manually_button /= Void
+	add_target_button: add_target_button /= Void
+	add_cluster_button: add_cluster_button /= Void
+	add_override_button: add_override_button /= Void
+	add_assembly_button: add_assembly_button /= Void
+	add_library_button: add_library_button /= Void
+	add_precompile_button: add_precompile_button /= Void
+	add_include_button: add_include_button /= Void
+	add_object_button: add_object_button /= Void
+	add_external_library_button: add_external_library_button /= Void
+	add_make_button: add_make_button /= Void
+	add_resource_button: add_resource_button /= Void
+	add_pre_task_button: add_pre_task_button /= Void
+	add_post_task_button: add_post_task_button /= Void
+	remove_button: remove_button /= Void
+	edit_library: edit_library /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -83,6 +83,7 @@ feature -- Element update
 			if includes = Void then
 				create internal_includes.make (target, configuration_window)
 				order_headers
+				extend (internal_includes)
 			end
 			internal_includes.add_external
 		end

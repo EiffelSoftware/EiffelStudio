@@ -15,6 +15,8 @@ inherit
 			swap as swap_horizontal_box,
 			has as has_horizontal_box,
 			index_of as index_of_horizontal_box
+		export
+			{NONE} set_minimum_width
 		end
 
 create
@@ -41,9 +43,9 @@ feature {NONE}  -- Initlization
 			create internal_tool_bar.make
 			create internal_auto_hide_indicator.make
 
-			create internal_tab_box
-			extend_horizontal_box (internal_tab_box)
-			disable_item_expand (internal_tab_box)
+			create tab_box.make
+			extend_horizontal_box (tab_box)
+			disable_item_expand (tab_box)
 
 			extend_horizontal_box (internal_tool_bar)
 			disable_item_expand (internal_tool_bar)
@@ -62,16 +64,15 @@ feature {NONE}  -- Initlization
 
 feature -- Redefine
 
-	extend (a_widget: EV_WIDGET) is
+	extend (a_widget: SD_NOTEBOOK_TAB) is
 			-- Extend a_widget.
 		require
 			a_widget_not_void: a_widget /= Void
 		do
-			internal_tab_box.extend (a_widget)
-			internal_tab_box.disable_item_expand (a_widget)
-			resize_tabs (width)
+			tab_box.extend (a_widget)
+			resize_tabs (tab_box_predered_width)
 		ensure
-			extended: internal_tab_box.has (a_widget)
+			extended: tab_box.has (a_widget)
 		end
 
 feature -- Command
@@ -92,7 +93,7 @@ feature -- Command
 		do
 			if a_width >= 0 then
 				ignore_resize := True
-				l_all_tabs := all_tabs.twin
+				l_all_tabs := all_tabs
 
 				updates_tabs_not_shown (a_width)
 				l_tabs := internal_tabs_not_shown.twin
@@ -137,14 +138,39 @@ feature -- Command
 					end
 					l_all_tabs.forth
 				end
+
+				update_minimum_size
 				ignore_resize := False
 			end
 		ensure
 			enable_resize: a_width >= 0 implies ignore_resize = False
 		end
 
+	update_minimum_size is
+			-- Update minimum size of Current.
+		local
+			l_all_tabs: like all_tabs
+			l_tabs_not_shown: like internal_tabs_not_shown
+		do
+			l_all_tabs := all_tabs
+			l_tabs_not_shown := internal_tabs_not_shown.twin
+			from
+				l_tabs_not_shown.start
+			until
+				l_tabs_not_shown.after
+			loop
+				l_all_tabs.start
+				l_all_tabs.prune (l_tabs_not_shown.item)
+				l_tabs_not_shown.forth
+			end
+			if l_all_tabs.count > 0 then
+				tab_box.set_minimum_width (l_all_tabs.last.x + l_all_tabs.last.width)
+			end
+		end
+
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
+			-- `a_width' is tab areas' width, not include other EV_TOOL_BAR.
 		do
 			if is_displayed then
 				if not ignore_resize then
@@ -163,11 +189,8 @@ feature -- Command
 		require
 			has: has (a_tab) and has (a_tab_2)
 		do
-			internal_tab_box.go_i_th (internal_tab_box.index_of (a_tab, 1))
-			internal_tab_box.swap (internal_tab_box.index_of (a_tab_2, 1))
-			internal_tab_box.disable_item_expand (a_tab)
-			internal_tab_box.disable_item_expand (a_tab_2)
-			resize_tabs (width)
+			tab_box.swap (a_tab, a_tab_2)
+			resize_tabs (tab_box_predered_width)
 		end
 
 	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER) is
@@ -179,13 +202,11 @@ feature -- Command
 			debug ("docking")
 				print ("%NSD_NOTEBOOK_TAB_AREA set_tab_position index is: " + a_index.out)
 			end
-			internal_tab_box.prune (a_tab)
-			internal_tab_box.go_i_th (a_index)
-			internal_tab_box.put_left (a_tab)
-			resize_tabs (width)
+			tab_box.set_tab_position (a_tab, a_index)
+			resize_tabs (tab_box_predered_width)
 		ensure
-			set: internal_tab_box.i_th (a_index) = a_tab
-			not_changed: old internal_tab_box.count =  internal_tab_box.count
+			set: tab_box.i_th (a_index) = a_tab
+			not_changed: old tab_box.count =  tab_box.count
 		end
 
 feature -- Query
@@ -193,7 +214,7 @@ feature -- Query
 	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN is
 			-- Has a_tab ?
 		do
-			Result := internal_tab_box.has (a_tab)
+			Result := tab_box.has (a_tab)
 		end
 
 	is_gap_at_top: BOOLEAN
@@ -202,7 +223,7 @@ feature -- Query
 	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER is
 			-- Index of a_tab in all tabs.
 		do
-			Result := internal_tab_box.index_of (a_tab, 1)
+			Result := tab_box.index_of (a_tab)
 		end
 
 	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
@@ -210,19 +231,23 @@ feature -- Query
 		local
 			l_temp_tab: SD_NOTEBOOK_TAB
 		do
-			create Result.make (1)
-			from
-				internal_tab_box.start
-			until
-				internal_tab_box.after
-			loop
-				l_temp_tab ?= internal_tab_box.item
-				check only_has_tab: l_temp_tab /= Void end
-				Result.extend (l_temp_tab)
-				internal_tab_box.forth
-			end
+			Result := tab_box.tabs
 		ensure
 			not_void: Result /= Void
+		end
+
+	tab_box: SD_NOTEBOOK_TAB_BOX
+			-- Box which contain all tabs.
+
+	tab_box_predered_width: INTEGER is
+			-- tool bar prefered width
+		do
+			Result := width - internal_tool_bar.width
+			if Result < 0 then
+				Result := 0
+			end
+		ensure
+			non_negative: Result >= 0
 		end
 
 feature {NONE}  -- Implementation functions
@@ -424,15 +449,12 @@ feature {NONE}  -- Implementation attributes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
-	internal_tab_box: EV_HORIZONTAL_BOX
-			-- Box which contain all tabs.
-
 	internal_shared: SD_SHARED
 			-- All singletons.
 
 invariant
 
-	internal_tab_box_not_void: internal_tab_box /= Void
+	internal_tab_box_not_void: tab_box /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 	internal_tool_bar_not_void: internal_tool_bar /= Void

@@ -215,7 +215,7 @@ rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 rt_private char** dbg_exception_traces;
 rt_private void dbg_create_exception_traces(void);
 
-rt_shared void debug_initialize(voidt);	/* Initialize debug information */
+rt_shared void debug_initialize(void);	/* Initialize debug information */
 rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Breakable point in the middle of a nested call reached */

@@ -1331,7 +1331,6 @@
 						<Directory Id="contrib" Name="contrib">
 							<Component Id="ev_add_remove_list.e" Guid="9D057B9A-218A-4CEE-9276-F7B9EBB793AD">
 								<File Id="ev_add_remove_list.e" Name="EV_ADD~1.E" LongName="ev_add_remove_list.e" KeyPath="yes" />
-								<File Id="ev_untitled_dialog.e" Name="EV_UNT~1.E" LongName="ev_untitled_dialog.e" />
 								<File Id="ev_shadow_dialog.e" Name="EV_SHA~1.E" LongName="ev_shadow_dialog.e" />
 								<File Id="readme.txt" Name="readme.txt" />
 								<File Id="ev_add_remove_path_list.e" Name="EV_ADD~2.E" LongName="ev_add_remove_path_list.e" />
@@ -1353,17 +1352,12 @@
 							<Directory Id="implementation" Name="IMPLEM~2" LongName="implementation">
 								<Directory Id="mswin40" Name="mswin">
 									<Component Id="ev_untitled_dialog_imp.e" Guid="CA4E90BD-C8A5-4B5B-918C-BF2B492C9BF0">
-										<File Id="ev_untitled_dialog_imp.e" Name="EV_UNT~2.E" LongName="ev_untitled_dialog_imp.e" KeyPath="yes" />
 										<File Id="ev_shadow_dialog_imp.e" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
 										<File Id="ev_layout_constants_imp.e" Name="EV_LAY~1.E" LongName="ev_layout_constants_imp.e" />
-										<File Id="ev_untitled_dialog_imp_modeless.e" Name="EV_UNT~4.E" LongName="ev_untitled_dialog_imp_modeless.e" />
-										<File Id="ev_untitled_dialog_imp_modal.e" Name="EV_UNT~5.E" LongName="ev_untitled_dialog_imp_modal.e" />
-										<File Id="ev_untitled_dialog_imp_common.e" Name="EV_UNT~6.E" LongName="ev_untitled_dialog_imp_common.e" />
 									</Component>
 								</Directory>
 								<Directory Id="gtk" Name="gtk">
 									<Component Id="ev_untitled_dialog_imp.e109" Guid="753900DD-9464-4EC1-B4FF-D193C26D40A6">
-										<File Id="ev_untitled_dialog_imp.e109" Name="EV_UNT~3.E" LongName="ev_untitled_dialog_imp.e" KeyPath="yes" />
 										<File Id="ev_shadow_dialog_imp_e2" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
 										<File Id="ev_layout_constants_imp.e115" Name="EV_LAY~3.E" LongName="ev_layout_constants_imp.e" />
 									</Component>
@@ -1424,8 +1418,10 @@
 									<File Id="ev_character_format_constants.e" Name="EV_CHA~6.E" LongName="ev_character_format_constants.e" />
 									<File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
 									<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
-									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
 									<File Id="ev_pointer_style_constants_e" Name="EV_POI~1.E" LongName="ev_pointer_style_constants.e" />
+									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
+									<File Id="ev_pixel_buffer_pixel.e" Name="EV_PIX~2.E" LongName="ev_pixel_buffer_pixel.e" />
+									<File Id="ev_pixel_iterator.e" Name="EV_PIX~3.E" LongName="ev_pixel_iterator.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
@@ -1655,6 +1651,7 @@
 									<File Id="ev_positioned.e" Name="EV_POS~4.E" LongName="ev_positioned.e" />
 									<File Id="ev_containable.e" Name="EV_CON~3.E" LongName="ev_containable.e" />
 									<File Id="ev_fontable.e" Name="EV_FON~6.E" LongName="ev_fontable.e" />
+									<File Id="ev_fake_focus_groupable.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_groupable.e" />
 									<File Id="ev_dockable_source.e" Name="EV_DOC~A.E" LongName="ev_dockable_source.e" />
 									<File Id="ev_dockable_target.e" Name="EV_DOC~B.E" LongName="ev_dockable_target.e" />
 									<File Id="ev_deselectable.e" Name="EV_DES~2.E" LongName="ev_deselectable.e" />
@@ -1681,6 +1678,8 @@
 										<File Id="ev_print_dialog.e" Name="EV_PRI~B.E" LongName="ev_print_dialog.e" />
 										<File Id="ev_directory_dialog.e" Name="EV_DIR~3.E" LongName="ev_directory_dialog.e" />
 										<File Id="ev_dialog.e" Name="EV_DIA~6.E" LongName="ev_dialog.e" />
+										<File Id="ev_untitled_dialog.e" Name="EV_UNT~1.E" LongName="ev_untitled_dialog.e" />
+										<File Id="ev_fake_focus_dialog.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_dialog.e" />
 										<File Id="ev_information_dialog.e" Name="EV_INF~1.E" LongName="ev_information_dialog.e" />
 										<File Id="ev_error_dialog.e" Name="EV_ERR~1.E" LongName="ev_error_dialog.e" />
 										<File Id="ev_dockable_dialog.e" Name="EV_DOC~9.E" LongName="ev_dockable_dialog.e" />
@@ -1714,6 +1713,7 @@
 										<File Id="ev_widget_list.e" Name="EV_WID~9.E" LongName="ev_widget_list.e" />
 										<File Id="ev_status_bar.e" Name="EV_STA~6.E" LongName="ev_status_bar.e" />
 										<File Id="ev_cell.e" Name="ev_cell.e" />
+										<File Id="ev_fake_focus_popup_window.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_popup_window.e" />
 									</Component>
 								</Directory>
 								<Directory Id="primitives31" Name="PRIMIT~3" LongName="primitives">
@@ -2013,6 +2013,10 @@
 											<File Id="ev_directory_dialog_imp.e" Name="EV_DIR~2.E" LongName="ev_directory_dialog_imp.e" />
 											<File Id="ev_dialog_imp_common.e" Name="EV_DIA~5.E" LongName="ev_dialog_imp_common.e" />
 											<File Id="ev_color_dialog_imp.e" Name="EV_COL~6.E" LongName="ev_color_dialog_imp.e" />
+											<File Id="ev_untitled_dialog_imp.e" Name="EV_UNT~2.E" LongName="ev_untitled_dialog_imp.e" />
+											<File Id="ev_untitled_dialog_imp_modeless.e" Name="EV_UNT~4.E" LongName="ev_untitled_dialog_imp_modeless.e" />
+											<File Id="ev_untitled_dialog_imp_modal.e" Name="EV_UNT~5.E" LongName="ev_untitled_dialog_imp_modal.e" />
+											<File Id="ev_untitled_dialog_imp_common.e" Name="EV_UNT~6.E" LongName="ev_untitled_dialog_imp_common.e" />
 										</Component>
 									</Directory>
 								</Directory>

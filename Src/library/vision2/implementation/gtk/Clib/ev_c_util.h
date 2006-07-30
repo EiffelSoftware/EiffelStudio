@@ -19,49 +19,41 @@ indexing
 #include <gtk/gtk.h>
 #include <eif_eiffel.h>
 
-void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
-
-void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
-
-gboolean c_io_watcher_marshal (
-	GIOChannel* source, 
-	GIOCondition condition,
-	gpointer io_watcher
-);
+extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
+extern void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
+extern gboolean c_io_watcher_marshal (GIOChannel* source, GIOCondition condition, gpointer io_watcher);
 
 typedef struct {
 	gint x_position;
 	gint y_position;
 } c_position;
 
-void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
-
-void c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data);
-
-void enable_ev_gtk_log (int a_mode);
+extern void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
+extern void c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data);
+extern void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
-char **default_pixmap_xpm (void);
-char **information_pixmap_xpm (void);
-char **error_pixmap_xpm (void);
-char **question_pixmap_xpm (void);
-char **warning_pixmap_xpm (void);
-char **no_collate_pixmap_xpm (void);
-char **collate_pixmap_xpm (void);
-char **landscape_pixmap_xpm (void);
-char **portrait_pixmap_xpm (void);
-char **busy_cursor_xpm (void);
-char **crosshair_cursor_xpm (void);
-char **help_cursor_xpm (void);
-char **ibeam_cursor_xpm (void);
-char **no_cursor_xpm (void);
-char **sizeall_cursor_xpm (void);
-char **sizenesw_cursor_xpm (void);
-char **sizens_cursor_xpm (void);
-char **sizenwse_cursor_xpm (void);
-char **sizewe_cursor_xpm (void);
-char **standard_cursor_xpm (void);
-char **uparrow_cursor_xpm (void);
-char **wait_cursor_xpm (void);
+extern char **default_pixmap_xpm (void);
+extern char **information_pixmap_xpm (void);
+extern char **error_pixmap_xpm (void);
+extern char **question_pixmap_xpm (void);
+extern char **warning_pixmap_xpm (void);
+extern char **no_collate_pixmap_xpm (void);
+extern char **collate_pixmap_xpm (void);
+extern char **landscape_pixmap_xpm (void);
+extern char **portrait_pixmap_xpm (void);
+extern char **busy_cursor_xpm (void);
+extern char **crosshair_cursor_xpm (void);
+extern char **help_cursor_xpm (void);
+extern char **ibeam_cursor_xpm (void);
+extern char **no_cursor_xpm (void);
+extern char **sizeall_cursor_xpm (void);
+extern char **sizenesw_cursor_xpm (void);
+extern char **sizens_cursor_xpm (void);
+extern char **sizenwse_cursor_xpm (void);
+extern char **sizewe_cursor_xpm (void);
+extern char **standard_cursor_xpm (void);
+extern char **uparrow_cursor_xpm (void);
+extern char **wait_cursor_xpm (void);
 
 #endif

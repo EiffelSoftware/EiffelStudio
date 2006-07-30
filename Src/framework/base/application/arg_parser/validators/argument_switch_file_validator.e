@@ -20,10 +20,12 @@ feature -- Validation
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		local
+			l_file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				is_option_valid := (create {RAW_FILE}.make (a_value)).exists
+				create l_file.make (l_file)
+				is_option_valid := l_file.exists and then not l_file.is_directory and not l_file.is_device
 				if not is_option_valid then
 					reason := "The specified file does not exist."
 				end

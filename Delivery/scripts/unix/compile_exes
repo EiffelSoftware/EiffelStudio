@@ -5,7 +5,7 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
-export ISE_PLATFORM=$1
+ISE_PLATFORM=$1; export ISE_PLATFORM
 
 # Set up the environment
 . set_aliases

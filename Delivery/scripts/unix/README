@@ -1,5 +1,12 @@
 Instructions to build a delivery:
 
+0 - Setting up the environment:
+
+Make sure that "." must be in your PATH or else add it in any
+script that calls `set_aliases'. Otherwise, it won't work because
+`set_aliases' won't be found or some scripts used by `set_aliases'
+won't be found too.
+
 1 - Preparing a delivery:
 
 Make sure that ISE_EIFFEL and ISE_PLATFORM are correctly defined, ie
@@ -10,10 +17,9 @@ Edit `set_aliases' to reflect your environment.
 Launch `make_delivery' from the Delivery/scripts/unix directory as otherwise
 it won't work.
 
-
 2 - Producing a library for a given platform:
 
-Launch `compile_exes $ISE_PALTFORM' where $ISE_PLATFORM is the value for
+Launch `compile_exes $ISE_PLATFORM' where $ISE_PLATFORM is the value for
 your platform.
 
 Then `make_images $ISE_PLATFORM'.

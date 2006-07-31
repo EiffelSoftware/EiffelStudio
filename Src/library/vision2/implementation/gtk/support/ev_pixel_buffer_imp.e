@@ -151,9 +151,6 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
 			if gdk_pixbuf /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
-			if {EV_GTK_EXTERNALS}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
-
-			end
 			gdk_pixbuf := a_pixbuf
 		end
 

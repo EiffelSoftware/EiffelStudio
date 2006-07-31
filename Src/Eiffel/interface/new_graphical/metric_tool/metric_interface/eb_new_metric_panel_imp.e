@@ -29,9 +29,14 @@ feature {NONE}-- Initialization
 			create toolbar_area
 			create new_metric_toolbar
 			create new_metric_btn
+			create send_current_to_new_btn
+			create l_ev_tool_bar_separator_1
 			create metric_definition_toolbar
 			create remove_metric_btn
 			create save_metric_btn
+			create l_ev_tool_bar_separator_2
+			create open_metric_file_btn
+			create reload_btn
 			create main_area
 			create metric_selector_area
 			create metric_definition_area
@@ -43,9 +48,14 @@ feature {NONE}-- Initialization
 			extend (toolbar_area)
 			toolbar_area.extend (new_metric_toolbar)
 			new_metric_toolbar.extend (new_metric_btn)
+			new_metric_toolbar.extend (send_current_to_new_btn)
+			new_metric_toolbar.extend (l_ev_tool_bar_separator_1)
 			toolbar_area.extend (metric_definition_toolbar)
 			metric_definition_toolbar.extend (remove_metric_btn)
 			metric_definition_toolbar.extend (save_metric_btn)
+			metric_definition_toolbar.extend (l_ev_tool_bar_separator_2)
+			metric_definition_toolbar.extend (open_metric_file_btn)
+			metric_definition_toolbar.extend (reload_btn)
 			extend (main_area)
 			main_area.extend (metric_selector_area)
 			main_area.extend (metric_definition_area)
@@ -96,15 +106,17 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	new_metric_toolbar, metric_definition_toolbar: EV_TOOL_BAR
-	new_metric_btn, remove_metric_btn,
-	save_metric_btn: EV_TOOL_BAR_BUTTON
-	toolbar_area, main_area: EV_HORIZONTAL_BOX
+	new_metric_btn, send_current_to_new_btn,
+	remove_metric_btn, save_metric_btn, open_metric_file_btn, reload_btn: EV_TOOL_BAR_BUTTON
+	toolbar_area,
+	main_area: EV_HORIZONTAL_BOX
 	metric_selector_area, metric_definition_area: EV_VERTICAL_BOX
 	no_metric_lbl: EV_LABEL
 	no_metric_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
+	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation

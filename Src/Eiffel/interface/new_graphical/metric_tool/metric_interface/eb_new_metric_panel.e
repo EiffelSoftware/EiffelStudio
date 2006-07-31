@@ -115,7 +115,6 @@ feature {NONE} -- Initialization
 
 				-- Setup actions
 			new_metric_btn.select_actions.extend (agent on_new_metric_button_pressed)
-			new_metric_btn.pointer_button_press_actions.extend (agent on_new_metric_button_is_right_clicked)
 			metric_selector.metric_selected_actions.extend (agent on_metric_selected)
 			save_metric_btn.select_actions.extend (agent on_save_metric)
 			remove_metric_btn.select_actions.extend (agent on_remove_metric)
@@ -125,6 +124,18 @@ feature {NONE} -- Initialization
 			remove_metric_btn.disable_sensitive
 
 			no_metric_lbl.set_text (metric_names.e_no_metric_is_selected)
+
+			reload_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			reload_btn.set_tooltip (metric_names.f_reload_metrics)
+			reload_btn.select_actions.extend (agent on_reload_metrics)
+
+			open_metric_file_btn.set_pixmap (pixmaps.icon_pixmaps.command_send_to_external_editor_icon)
+			open_metric_file_btn.select_actions.extend (agent on_open_user_defined_metric_file)
+			open_metric_file_btn.set_tooltip (metric_names.f_open_metric_file_in_external_editor)
+
+			send_current_to_new_btn.set_pixmap (pixmaps.icon_pixmaps.new_document_icon)
+			send_current_to_new_btn.select_actions.extend (agent on_new_metric_button_is_right_clicked)
+			send_current_to_new_btn.set_tooltip (metric_names.f_create_new_metric_using_current_data)
 		end
 
 feature -- Status report
@@ -167,24 +178,21 @@ feature -- Basic operations
 
 feature -- Actions
 
-	on_new_metric_button_is_right_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_new_metric_button_is_right_clicked is
 			-- Action to be performed when new metric button is right clicked
 		local
 			l_editor: like current_metric_editor
 			l_metric: EB_METRIC
 		do
-			if a_button = 3 then
-				l_editor := current_metric_editor
-				if l_editor /= Void then
-					l_metric := l_editor.metric
-					l_metric.set_name (metric_manager.next_metric_name ("Unnamed metric"))
-					metric_selector.remove_selection
-					metric_selector.remove_selection
-					load_metric_definition (l_metric, metric_type_id (l_metric), l_metric.unit, True)
-				end
+			l_editor := current_metric_editor
+			if l_editor /= Void then
+				l_metric := l_editor.metric
+				l_metric.set_name (metric_manager.next_metric_name ("Unnamed metric"))
+				metric_selector.remove_selection
+				metric_selector.remove_selection
+				load_metric_definition (l_metric, metric_type_id (l_metric), l_metric.unit, True)
 			end
 		end
-
 
 	on_new_metric_button_pressed is
 			-- Action to be performed when new metric button is pressed
@@ -308,6 +316,29 @@ feature -- Actions
 			save_metric_btn.enable_sensitive
 		ensure
 			definition_changed: is_metric_changed
+		end
+
+	on_reload_metrics is
+			-- Action to be performed when reload metrics
+		do
+			metric_tool.load_metrics (True)
+		end
+
+	on_open_user_defined_metric_file is
+			-- Action to be performed to open user defined metric file in specified external editor
+		local
+			l_cmd_exec: COMMAND_EXECUTOR
+			l_cmd_string: STRING
+		do
+			if metric_manager.is_userdefined_metric_file_exist then
+				l_cmd_string := preferences.misc_data.external_editor_command.twin
+				if not l_cmd_string.is_empty then
+					l_cmd_string.replace_substring_all ("$target", metric_manager.userdefined_metrics_file)
+					l_cmd_string.replace_substring_all ("$line", "0")
+					create l_cmd_exec
+					l_cmd_exec.execute (l_cmd_string)
+				end
+			end
 		end
 
 feature -- Basic operations

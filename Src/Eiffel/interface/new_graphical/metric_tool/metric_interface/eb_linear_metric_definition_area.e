@@ -97,19 +97,19 @@ feature {NONE} -- Initialization
 			metric_grid.add_key_action (agent on_down, move_down_key_index)
 			metric_grid.add_key_action (agent on_remove_metric, del_key_index)
 			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
-			create ctrl_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_up), True, False, False)
-			create ctrl_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_down), True, False, False)
+			create move_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
+			create move_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
 			metric_grid.add_key_shortcut (del_key_index, del_key_shortcut)
-			metric_grid.add_key_shortcut (move_up_key_index, ctrl_up_shortcut)
-			metric_grid.add_key_shortcut (move_down_key_index, ctrl_down_shortcut)
-			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + ctrl_up_shortcut.out + ")")
-			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + ctrl_down_shortcut.out + ")")
+			metric_grid.add_key_shortcut (move_up_key_index, move_up_shortcut)
+			metric_grid.add_key_shortcut (move_down_key_index, move_down_shortcut)
+			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_up_shortcut.out + ")")
+			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_down_shortcut.out + ")")
 			remove_metric_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
 			remove_all_metric_btn.set_tooltip (metric_names.f_clear_rows)
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
-			ctrl_up_shortcut_attached: ctrl_up_shortcut /= Void
-			ctrl_down_shortcut_attached: ctrl_down_shortcut /= Void
+			ctrl_up_shortcut_attached: move_up_shortcut /= Void
+			ctrl_down_shortcut_attached: move_down_shortcut /= Void
 			metric_grid_attached: metric_grid /= Void
 		end
 
@@ -451,10 +451,10 @@ feature -- Key shortcuts
 	del_key_shortcut: ES_KEY_SHORTCUT
 			-- Del key
 
-	ctrl_up_shortcut: ES_KEY_SHORTCUT
+	move_up_shortcut: ES_KEY_SHORTCUT
 			-- Ctrl + Up key combination
 
-	ctrl_down_shortcut: ES_KEY_SHORTCUT
+	move_down_shortcut: ES_KEY_SHORTCUT
 			-- Ctrl + Down key combination
 
 invariant

@@ -192,6 +192,24 @@ feature -- Basic operations
 			archive_comparison_area.enable_sensitive
 		end
 
+	synchronize_when_archive_evaluation_start is
+			-- Synchronize when archive evaluation starts.
+		do
+			domain_selector.disable_sensitive
+			metric_selector.disable_sensitive
+			new_archive_file_area.disable_sensitive
+			archive_comparison_area.disable_sensitive
+		end
+
+	synchronize_when_archive_evaluation_stop is
+			-- Synchronize when archive evaluation stops.
+		do
+			domain_selector.enable_sensitive
+			metric_selector.enable_sensitive
+			new_archive_file_area.enable_sensitive
+			archive_comparison_area.enable_sensitive
+		end
+
 feature -- Actions
 
 	on_select is
@@ -292,6 +310,7 @@ feature -- Actions
 					create {ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]} l_archive.make (l_selected_metrics.count)
 					l_source_domain := domain_selector.domain
 					setup_metric_evaluation_callback (l_domain_generator)
+					synchronize_when_archive_evaluation_start
 					is_archive_running := True
 					from
 						l_selected_metrics.start
@@ -306,6 +325,7 @@ feature -- Actions
 						l_selected_metrics.forth
 					end
 					is_archive_running := False
+					synchronize_when_archive_evaluation_stop
 					synchronize_after_metric_evaluation (l_domain_generator)
 					if not clean_btn.is_selected then
 						l_archive_tbl := metric_archive_from_file (l_file_name)
@@ -320,6 +340,7 @@ feature -- Actions
 		rescue
 			l_retried := True
 			synchronize_after_metric_evaluation (l_domain_generator)
+			synchronize_when_archive_evaluation_stop
 			if not is_cancel_evaluation_requested then
 				display_error_message
 			else

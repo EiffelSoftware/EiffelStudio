@@ -129,6 +129,8 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_sort_info (2, l_path_sort_info)
 			grid_wrapper.enable_auto_sort_order_change
 			result_grid_area.extend (grid_wrapper.component_widget)
+			result_lable.set_text (metric_names.t_result)
+			input_lbl.set_text (metric_names.t_input_domain)
 		ensure then
 			input_grid_attached: input_grid /= Void
 		end
@@ -170,6 +172,7 @@ feature -- Result loading
 			create l_item.make (a_input)
 			l_item.set_spacing (2)
 			l_item.set_padding (5)
+			l_item.set_left_border (3)
 			input_grid.set_item (1, 1, l_item)
 			input_grid.column (1).resize_to_content
 		end
@@ -202,14 +205,6 @@ feature{NONE} -- Implementation/Access
 
 	domain: DS_ARRAYED_LIST [EB_METRIC_RESULT_ROW]
 			-- Domain to be displayed in Current
-
-feature -- Actions
-
---	on_select is
---			-- Action to be performed when current is selected
---		do
---			load_result (metric_tool.last_result_domain)
---		end
 
 feature{NONE} -- Implementation/Basic operation
 

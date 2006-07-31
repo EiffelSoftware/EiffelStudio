@@ -40,7 +40,6 @@ feature {NONE}-- Initialization
 			create stop_metric_btn
 			create l_ev_tool_bar_separator_2
 			create go_to_definition_btn
-			create reload_btn
 			create l_ev_tool_bar_4
 			create l_ev_tool_bar_separator_3
 			create value_area
@@ -85,7 +84,6 @@ feature {NONE}-- Initialization
 			control_toolbar.extend (stop_metric_btn)
 			control_toolbar.extend (l_ev_tool_bar_separator_2)
 			control_toolbar.extend (go_to_definition_btn)
-			control_toolbar.extend (reload_btn)
 			toolbar_area.extend (l_ev_tool_bar_4)
 			l_ev_tool_bar_4.extend (l_ev_tool_bar_separator_3)
 			toolbar_area.extend (value_area)
@@ -207,7 +205,7 @@ feature -- Access
 	quick_metric_toolbar, control_toolbar: EV_TOOL_BAR
 	quick_metric_btn, filter_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 	run_metric_btn,
-	run_with_detail_metric_btn, stop_metric_btn, go_to_definition_btn, reload_btn: EV_TOOL_BAR_BUTTON
+	run_with_detail_metric_btn, stop_metric_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,
 	value_area, main_area, metric_area, grid_wrapper, unit_area, label_area: EV_HORIZONTAL_BOX
 	metric_source_domain_area,

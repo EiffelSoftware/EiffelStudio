@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			combination_grid.change_actions.extend (agent on_change)
 
 				-- Setup combination toolbar
-			add_criterion_btn.remove_text
+--			add_criterion_btn.remove_text
 
 			remove_criterion_btn.remove_text
 			remove_criterion_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -163,11 +163,11 @@ feature -- Setting
 		do
 			mode := a_mode
 			if mode = readonly_mode then
-				add_criterion_btn.disable_sensitive
+--				add_criterion_btn.disable_sensitive
 				remove_criterion_btn.disable_sensitive
 				remove_all_criterion_btn.disable_sensitive
 			else
-				add_criterion_btn.enable_sensitive
+--				add_criterion_btn.enable_sensitive
 				remove_criterion_btn.enable_sensitive
 				remove_all_criterion_btn.enable_sensitive
 			end

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Dialog allowing user to setup criterion domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -18,6 +18,13 @@ inherit
 			hide
 		end
 
+	EB_METRIC_INTERFACE_PROVIDER
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 feature{NONE} -- Initialization
 
 	initialize is
@@ -32,6 +39,7 @@ feature{NONE} -- Initialization
 			create ok_actions
 			create cancel_actions
 			create hide_actions
+			set_title (metric_names.f_setup_criterion_domain)
 		ensure then
 			property_area_attached: property_area /= Void
 			ok_actions_attached: ok_actions /= Void

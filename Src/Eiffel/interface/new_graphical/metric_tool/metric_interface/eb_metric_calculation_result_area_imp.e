@@ -47,6 +47,8 @@ feature {NONE}-- Initialization
 			create input_area
 			create input_lbl
 			create input_grid_area
+			create result_grid_holder
+			create result_lable
 			create result_grid_area
 			
 				-- Build_widget_structure.
@@ -71,7 +73,9 @@ feature {NONE}-- Initialization
 			extend (input_area)
 			input_area.extend (input_lbl)
 			input_area.extend (input_grid_area)
-			extend (result_grid_area)
+			extend (result_grid_holder)
+			result_grid_holder.extend (result_lable)
+			result_grid_holder.extend (result_grid_area)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -127,14 +131,19 @@ feature {NONE}-- Initialization
 			value_lbl.set_text ("Value:")
 			value_lbl.align_text_left
 			value_text.align_text_left
+			input_area.set_padding_width (3)
 			input_lbl.set_text ("Source domain:")
 			input_lbl.align_text_left
 			input_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			input_grid_area.set_border_width (1)
+			result_grid_holder.set_padding_width (3)
+			result_grid_holder.disable_item_expand (result_lable)
+			result_lable.set_text ("Result:")
+			result_lable.align_text_left
 			result_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			result_grid_area.set_border_width (1)
 			set_padding_width (5)
-			set_border_width (8)
+			set_border_width (5)
 			disable_item_expand (l_ev_cell_1)
 			disable_item_expand (metric_area)
 			disable_item_expand (input_area)
@@ -154,10 +163,10 @@ feature -- Access
 
 	type_pixmap, unit_pixmap: EV_PIXMAP
 	metric_area: EV_HORIZONTAL_BOX
-	input_area, input_grid_area, result_grid_area: EV_VERTICAL_BOX
-	metric_lbl,
-	metric_name_text, type_lbl, type_name_text, unit_lbl, unit_name_text, value_lbl,
-	value_text, input_lbl: EV_LABEL
+	input_area, input_grid_area, result_grid_holder,
+	result_grid_area: EV_VERTICAL_BOX
+	metric_lbl, metric_name_text, type_lbl, type_name_text, unit_lbl,
+	unit_name_text, value_lbl, value_text, input_lbl, result_lable: EV_LABEL
 
 feature {NONE} -- Implementation
 

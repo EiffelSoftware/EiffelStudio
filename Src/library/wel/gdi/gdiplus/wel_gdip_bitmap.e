@@ -192,11 +192,11 @@ feature -- C externals
 					GdipGetPixel = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapGetPixel");
 				}					
 				if (GdipGetPixel) {
-					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, Color*)) GdipGetPixel)
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, ARGB*)) GdipGetPixel)
 								((GpBitmap *) $a_bitmap,
 								(INT) $a_x,
 								(INT) $a_y,
-								(Color*) $a_color);
+								(ARGB*) $a_color);
 				}
 			}
 			]"
@@ -220,11 +220,11 @@ feature -- C externals
 					GdipSetPixel = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipBitmapSetPixel");
 				}					
 				if (GdipSetPixel) {
-					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, Color*)) GdipSetPixel)
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap *, INT, INT, ARGB)) GdipSetPixel)
 								((GpBitmap *) $a_bitmap,
 								(INT) $a_x,
 								(INT) $a_y,
-								(GDIPCONST Color*) $a_color);
+								(ARGB) $a_color);
 				}
 			}
 			]"

@@ -20,6 +20,8 @@ inherit
 
 	EB_METRIC_SHARED
 
+	EB_METRIC_INTERFACE_PROVIDER
+
 create
 	make
 
@@ -302,6 +304,8 @@ feature -- Access
 			-- Item used to display and edit criterion name
 		local
 			l_provider: EB_METRIC_CRITERION_PROVIDER
+			l_shortcut_pref: SHORTCUT_PREFERENCE
+			l_tooltip: STRING
 		do
 			if criterion_item_internal = Void then
 				create criterion_item_internal
@@ -310,6 +314,18 @@ feature -- Access
 				criterion_item_internal.pointer_double_press_actions.force_extend (agent activate_criterion_item)
 				criterion_item_internal.activate_actions.extend (agent on_criterion_item_activated)
 				criterion_item_internal.deactivate_actions.extend (agent on_criterion_item_deactivated)
+					-- Setup tooltip.
+				create l_tooltip.make (50)
+				l_tooltip.append (metric_names.f_get_criterion_list)
+				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
+				if l_shortcut_pref /= Void then
+					l_tooltip.append_character ('(')
+					l_tooltip.append (l_shortcut_pref.display_string)
+					l_tooltip.append_character (')')
+				end
+				l_tooltip.append_character ('%N')
+				l_tooltip.append (metric_names.f_get_negation)
+				criterion_item_internal.set_tooltip (l_tooltip)
 			end
 			Result := criterion_item_internal
 		ensure

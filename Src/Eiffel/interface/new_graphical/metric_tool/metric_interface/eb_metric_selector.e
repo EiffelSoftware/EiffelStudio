@@ -55,9 +55,15 @@ feature {NONE} -- Initialization
 			else
 				create selection_status.make (0)
 			end
+			create metric_name_list.make
+			create metric_name_row_table.make (30)
+			create input_cache.make (20)
 			default_create
 		ensure
 			is_selectable_set: is_selectable = a_selectable
+			metric_name_list_attached: metric_name_list /= Void
+			metric_name_row_table_attached: metric_name_row_table /= Void
+			input_cache_attached: input_cache /= Void
 		end
 
 	user_initialization is
@@ -100,6 +106,7 @@ feature {NONE} -- Initialization
 			l_sort_info.enable_auto_indicator
 			metric_grid_wrapper.set_sort_info (metric_column_index, l_sort_info)
 			metric_grid_wrapper.set_sort_action (agent sort_agent)
+			metric_grid.key_press_actions.extend (agent on_key_pressed)
 
 			tree_view_checkbox.remove_text
 			tree_view_checkbox.set_text (metric_names.t_group)
@@ -110,6 +117,7 @@ feature {NONE} -- Initialization
 			metric_grid.set_item_pebble_function (agent item_pebble_function)
 			metric_grid.enable_single_row_selection
 			metric_grid.row_select_actions.extend (agent on_row_selected)
+			metric_grid.key_press_string_actions.extend (agent on_string_key_pressed)
 
 			select_predefined_btn.set_tooltip (metric_names.f_select_predefined_metrics)
 			select_userdefined_btn.set_tooltip (metric_names.f_select_userdefined_metrics)
@@ -198,6 +206,16 @@ feature -- Access
 			end
 		end
 
+	metric_name_list: LINKED_LIST [STRING]
+			-- List of metric names in current
+
+	metric_name_row_table: HASH_TABLE [INTEGER, STRING]
+			-- Table of metric rows.
+			-- Key is name of metric, value is the grid row index.
+
+	input_cache: STRING
+			-- Input cache
+
 feature -- Status report
 
 	is_selectable: BOOLEAN
@@ -281,6 +299,100 @@ feature{NONE} -- Actions
 				if l_metric /= Void then
 					double_click_actions.call ([l_metric.name])
 				end
+			end
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed in `metric_grid'
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_checkbox_item: MA_GRID_CHECK_BOX_ITEM
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				if is_selectable then
+					l_selected_rows := metric_grid.selected_rows
+					if l_selected_rows /= Void then
+						l_checkbox_item ?= l_selected_rows.first.item (1)
+						if l_checkbox_item /= Void then
+							l_checkbox_item.set_selected (not l_checkbox_item.selected)
+						end
+					end
+				end
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+				input_cache.wipe_out
+			end
+		end
+
+	on_string_key_pressed (a_key: STRING_32) is
+			-- Action to be performed when a displayable key `a_key' is pressed in `metric_grid'.
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_index, l_old_index: INTEGER
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_metric: EB_METRIC
+			l_row_cnt: INTEGER
+			done: BOOLEAN
+			l_grid: like metric_grid
+			l_name: STRING
+			l_cache: STRING
+			l_twice: BOOLEAN
+		do
+			l_grid := metric_grid
+			l_selected_rows := l_grid.selected_rows
+			if not l_selected_rows.is_empty then
+				l_row := l_selected_rows.first
+				if l_row.data = Void then
+					l_row := Void
+				end
+			else
+				if not metric_name_list.is_empty then
+					l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
+				end
+			end
+			if l_row = Void then
+				if not metric_name_list.is_empty then
+					l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
+				end
+			end
+			if l_row /= Void then
+				input_cache.append (a_key)
+				l_metric ?= l_row.data
+				check l_metric /= Void end
+				from
+					l_index := l_row.index
+					l_old_index := l_index
+					l_row_cnt := l_grid.row_count
+					l_cache := input_cache
+				until
+					(l_twice and then l_index = l_old_index) or done
+				loop
+					l_row := l_grid.row (l_index)
+					if l_row.data /= Void then
+						l_metric ?= l_row.data
+						check l_metric /= Void end
+						l_name := l_metric.name
+						if l_name.count >= l_cache.count and then l_name.substring (1, l_cache.count).is_case_insensitive_equal (l_cache) then
+							l_grid.remove_selection
+							l_row.enable_select
+							l_row.ensure_visible
+							done := True
+						end
+					end
+					l_index := l_index + 1
+					if l_index > l_row_cnt then
+						l_index := 1
+						l_twice := True
+					end
+				end
+				if not done then
+					input_cache.wipe_out
+				end
+			else
+				input_cache.wipe_out
 			end
 		end
 
@@ -421,6 +533,8 @@ feature -- Metric management
 			-- Load metrics in `metric_manager' into `metric_grid'.
 			-- If `a_preserve_last_selected_metric' is True, try to preserve last selected metric.
 		do
+			metric_name_list.wipe_out
+			metric_name_row_table.wipe_out
 			metric_selected_actions.block
 			group_selected_actions.block
 			metric_grid_wrapper.disable_auto_sort_order_change
@@ -459,7 +573,6 @@ feature -- Metric management
 						l_row := metric_grid.row (metric_grid.row_count)
 						create l_item.make_with_text (displayed_name (l_unit_list.item.unit.name))
 						l_item.set_pixmap (l_unit_list.item.pixmap)
---						l_item.select_actions.extend (agent on_group_selected)
 						l_row.set_item (1, l_item)
 						l_metric_list.do_all (agent load_metric (?, l_row))
 						if l_row.is_expandable then
@@ -502,6 +615,7 @@ feature -- Metric management
 			l_red: EV_COLOR
 			l_check_item: MA_GRID_CHECK_BOX_ITEM
 		do
+			metric_name_list.extend (a_metric.name)
 			create l_grid_item.make_with_text (a_metric.name)
 			create l_font
 			l_red := (create {EV_STOCK_COLORS}).red
@@ -525,6 +639,7 @@ feature -- Metric management
 			if metric_grid.is_tree_enabled then
 				a_row.insert_subrow (a_row.subrow_count + 1)
 				l_grid_row := a_row.subrow (a_row.subrow_count)
+				metric_name_row_table.force (l_grid_row.index, a_metric.name)
 				l_grid_row.set_data (a_metric)
 				l_grid_row.set_item (metric_column_index, l_grid_item)
 				if is_selectable then
@@ -536,6 +651,7 @@ feature -- Metric management
 			else
 				a_row.set_item (metric_column_index, l_grid_item)
 				a_row.set_data (a_metric)
+				metric_name_row_table.force (a_row.index, a_metric.name)
 				if is_selectable then
 					create l_check_item.make_with_boolean (selection_status.item (a_metric.name.as_lower))
 					l_check_item.selected_changed_actions.extend (agent on_selection_change)
@@ -696,6 +812,9 @@ invariant
 	metric_table_attached: metric_Table /= Void
 	selection_status_attached: selection_status /= Void
 	double_click_actions_attached: double_click_actions /= Void
+	metric_name_list_attached: metric_name_list /= Void
+	metric_name_row_table_attached: metric_name_row_table /= Void
+	input_cache_attached: input_cache /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

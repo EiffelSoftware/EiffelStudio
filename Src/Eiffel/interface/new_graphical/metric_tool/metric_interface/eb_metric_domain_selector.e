@@ -308,16 +308,31 @@ feature{NONE} -- Actions
 			-- Actions to be performed to remove selected scopes
 		local
 			l_select_rows: LIST [EV_GRID_ROW]
+			l_smallest_row_index: INTEGER
+			l_row_cnt: INTEGER
+			l_row: EV_GRID_ROW
 		do
 			l_select_rows := grid.selected_rows
 			if not l_select_rows.is_empty then
+				l_smallest_row_index := grid.row_count
 				from
 					l_select_rows.start
 				until
 					l_select_rows.after
 				loop
+					l_row := l_select_rows.item
+					if l_row.index < l_smallest_row_index then
+						l_smallest_row_index := l_row.index
+					end
 					grid.remove_row (l_select_rows.item.index)
 					l_select_rows.forth
+				end
+				l_row_cnt := grid.row_count
+				if l_row_cnt > 0 then
+					if l_smallest_row_index > l_row_cnt then
+						l_smallest_row_index := l_row_cnt
+					end
+					grid.row (l_smallest_row_index).enable_select
 				end
 				on_domain_change
 			end
@@ -614,6 +629,7 @@ feature{NONE} -- Implementation
 			l_row.bind_grid (grid)
 			grid.header.i_th (1).remove_pixmap
 			grid.row (grid.row_count).ensure_visible
+			grid.column (1).resize_to_content
 		end
 
 feature{NONE} -- Implementation/Sorting

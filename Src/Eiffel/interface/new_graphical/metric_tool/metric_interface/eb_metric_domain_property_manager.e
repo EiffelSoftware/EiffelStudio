@@ -33,6 +33,7 @@ feature -- Access
 				property_item_internal.pointer_button_press_actions.force_extend (agent property_item_internal.activate)
 				property_item_internal.dialog_ok_actions.extend (agent grid.resize_column (2, 0))
 				property_item_internal.dialog_ok_actions.extend (agent change_actions.call ([]))
+				property_item_internal.set_tooltip (metric_names.f_pick_and_drop_items)
 			end
 			Result := property_item_internal
 		end

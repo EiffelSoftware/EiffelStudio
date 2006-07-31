@@ -31,10 +31,11 @@ feature {NONE}-- Initialization
 			create toolbar_area
 			create l_ev_cell_1
 			create tool_bar
-			create remove_metric_btn
-			create remove_all_metric_btn
 			create up_btn
 			create down_btn
+			create l_ev_tool_bar_separator_1
+			create remove_metric_btn
+			create remove_all_metric_btn
 			create l_ev_horizontal_box_1
 			create expression_lbl
 			create l_ev_cell_2
@@ -47,10 +48,11 @@ feature {NONE}-- Initialization
 			definition_area.extend (toolbar_area)
 			toolbar_area.extend (l_ev_cell_1)
 			toolbar_area.extend (tool_bar)
-			tool_bar.extend (remove_metric_btn)
-			tool_bar.extend (remove_all_metric_btn)
 			tool_bar.extend (up_btn)
 			tool_bar.extend (down_btn)
+			tool_bar.extend (l_ev_tool_bar_separator_1)
+			tool_bar.extend (remove_metric_btn)
+			tool_bar.extend (remove_all_metric_btn)
 			definition_area.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (expression_lbl)
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
@@ -78,10 +80,10 @@ feature {NONE}-- Initialization
 			grid_area.set_border_width (1)
 			toolbar_area.disable_item_expand (tool_bar)
 			tool_bar.disable_vertical_button_style
-			remove_metric_btn.set_text ("Remove")
-			remove_all_metric_btn.set_text ("Remove All")
 			up_btn.set_text ("Up")
 			down_btn.set_text ("Down")
+			remove_metric_btn.set_text ("Remove")
+			remove_all_metric_btn.set_text ("Remove All")
 			l_ev_horizontal_box_1.disable_item_expand (expression_lbl)
 			expression_lbl.set_text ("Expression:")
 			expression_text.set_minimum_height (35)
@@ -103,7 +105,7 @@ feature -- Access
 
 	expression_text: EV_RICH_TEXT
 	tool_bar: EV_TOOL_BAR
-	remove_metric_btn, remove_all_metric_btn, up_btn, down_btn: EV_TOOL_BAR_BUTTON
+	up_btn, down_btn, remove_metric_btn, remove_all_metric_btn: EV_TOOL_BAR_BUTTON
 	grid_area,
 	toolbar_area: EV_HORIZONTAL_BOX
 	definition_area: EV_VERTICAL_BOX
@@ -111,6 +113,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 

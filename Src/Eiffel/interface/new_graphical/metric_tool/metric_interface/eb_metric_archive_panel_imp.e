@@ -54,9 +54,6 @@ feature {NONE}-- Initialization
 			create comparison_toolbar_area
 			create compare_toolbar
 			create compare_btn
-			create display_mode_toolbar
-			create ratio_btn
-			create difference
 			create reference_archve_area
 			create reference_archive_lbl
 			create l_ev_horizontal_box_6
@@ -98,9 +95,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_4.extend (comparison_toolbar_area)
 			comparison_toolbar_area.extend (compare_toolbar)
 			compare_toolbar.extend (compare_btn)
-			comparison_toolbar_area.extend (display_mode_toolbar)
-			display_mode_toolbar.extend (ratio_btn)
-			display_mode_toolbar.extend (difference)
 			l_ev_vertical_box_4.extend (reference_archve_area)
 			reference_archve_area.extend (reference_archive_lbl)
 			reference_archve_area.extend (l_ev_horizontal_box_6)
@@ -193,20 +187,18 @@ feature -- Access
 
 	new_archive_browse_btn, browse_reference_archive_btn, browse_current_archive_btn: EV_BUTTON
 	definition_toolbar,
-	compare_toolbar, display_mode_toolbar: EV_TOOL_BAR
-	ratio_btn, difference: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_btn, stop_btn,
-	compare_btn: EV_TOOL_BAR_BUTTON
-	definition_toolbar_area, new_archive_file_area, comparison_toolbar_area: EV_HORIZONTAL_BOX
-	domain_selection_area,
-	metric_selection_area, reference_archve_area, current_archive_area: EV_VERTICAL_BOX
+	compare_toolbar: EV_TOOL_BAR
+	run_btn, stop_btn, compare_btn: EV_TOOL_BAR_BUTTON
+	definition_toolbar_area, new_archive_file_area,
+	comparison_toolbar_area: EV_HORIZONTAL_BOX
+	domain_selection_area, metric_selection_area, reference_archve_area,
+	current_archive_area: EV_VERTICAL_BOX
 	clean_btn: EV_CHECK_BUTTON
-	new_archive_file_lbl,
-	source_domain_lbl, metric_lbl, reference_archive_lbl, current_archive_lbl: EV_LABEL
-	new_archive_file_name_text,
-	reference_metric_archive_text, current_metric_archive_text: EV_TEXT_FIELD
-	archive_definition_frame,
-	archive_comparison_area: EV_FRAME
+	new_archive_file_lbl, source_domain_lbl, metric_lbl,
+	reference_archive_lbl, current_archive_lbl: EV_LABEL
+	new_archive_file_name_text, reference_metric_archive_text,
+	current_metric_archive_text: EV_TEXT_FIELD
+	archive_definition_frame, archive_comparison_area: EV_FRAME
 
 feature {NONE} -- Implementation
 

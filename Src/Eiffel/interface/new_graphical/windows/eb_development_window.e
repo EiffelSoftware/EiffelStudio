@@ -4165,7 +4165,10 @@ feature {NONE} -- Implementation: Editor commands
 			l_feature: FEATURE_AS
 			l_classc_stone: CLASSC_STONE
 		do
-			context_refreshing_timer.set_interval (0)
+				-- we may have been called from a timer and have to deactivate the timer
+			if context_refreshing_timer /= Void then
+				context_refreshing_timer.set_interval (0)
+			end
 			l_classc_stone ?= stone
 			if l_classc_stone /= Void then
 				l_feature := editor_tool.text_area.text_displayed.current_feature_containing

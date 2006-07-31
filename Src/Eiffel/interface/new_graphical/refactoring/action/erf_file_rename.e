@@ -11,6 +11,8 @@ class
 inherit
 	ERF_ACTION
 
+	EB_CONSTANTS
+
 create
 	make
 
@@ -26,33 +28,55 @@ feature {NONE} -- Initialization
 			new_name := a_new_name
 		end
 
+feature -- Status
+
+	is_error: BOOLEAN
+			-- Was there an error during the file rename.
+
+	error_message: STRING
+			-- Error message for the last error.
+
 feature -- Basic operations
 
 	undo is
 			-- Undo the actions.
 		local
-			file: RAW_FILE
+			l_file, l_dst_file: RAW_FILE
 		do
-			create file.make (new_name)
-			if file.exists then
-					-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
-				if not original_name.is_equal (new_name) then
-					file.change_name (original_name)
+				-- don't rename if destination file exists
+			create l_dst_file.make (original_name)
+			if not l_dst_file.exists then
+				create l_file.make (new_name)
+				if l_file.exists then
+						-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
+					if not original_name.is_equal (new_name) then
+						l_file.change_name (original_name)
+					end
 				end
+			else
+				is_error := True
+				error_message := warning_messages.w_not_rename (new_name, original_name)
 			end
 		end
 
 	redo is
 			-- Redo the actions.
 		local
-			file: RAW_FILE
+			l_file, l_dst_file: RAW_FILE
 		do
-			create file.make (original_name)
-			if file.exists then
-					-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
-				if not original_name.is_equal (new_name) then
-					file.change_name (new_name)
+				-- don't rename if destination file exists
+			create l_dst_file.make (new_name)
+			if not l_dst_file.exists then
+				create l_file.make (original_name)
+				if l_file.exists then
+						-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
+					if not original_name.is_equal (new_name) then
+						l_file.change_name (new_name)
+					end
 				end
+			else
+				is_error := True
+				error_message := warning_messages.w_not_rename (original_name, new_name)
 			end
 		end
 
@@ -67,6 +91,7 @@ feature {NONE} -- Implementation
 invariant
 	original_name_set: original_name /= void and not original_name.is_empty
 	new_name_set: new_name /= void and not new_name.is_empty
+	error_implies_message: is_error implies error_message /= Void and then not error_message.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

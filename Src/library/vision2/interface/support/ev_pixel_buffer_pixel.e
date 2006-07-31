@@ -71,7 +71,10 @@ feature -- Access
 		assign
 			set_rgba_value
 		do
-
+			Result := red.to_natural_32 |<< 24
+			Result := Result | (green.to_natural_32 |<< 16)
+			Result := Result | (blue.to_natural_32 |<< 8)
+			Result := Result | alpha
 		end
 
 feature -- Element Change
@@ -117,13 +120,15 @@ feature -- Element Change
 			set_alpha (a_alpha)
 		end
 
-	set_rgba_value (a_rgb_value: NATURAL_32)
-			-- Set RGBA value to `a_rgb_value'.
+	set_rgba_value (a_rgba_value: NATURAL_32)
+			-- Set RGBA value to `a_rgba_value'.
 		do
-			set_red (((a_rgb_value & 0xFF000000) |>> 24).to_natural_8)
-			set_green (((a_rgb_value & 0x00FF0000) |>> 16).to_natural_8)
-			set_blue (((a_rgb_value & 0x0000FF00) |>> 8).to_natural_8)
-			set_alpha ((a_rgb_value & 0x000000FF).to_natural_8)
+			set_red (((a_rgba_value & 0xFF000000) |>> 24).to_natural_8)
+			set_green (((a_rgba_value & 0x00FF0000) |>> 16).to_natural_8)
+			set_blue (((a_rgba_value & 0x0000FF00) |>> 8).to_natural_8)
+			set_alpha ((a_rgba_value & 0x000000FF).to_natural_8)
+		ensure
+			rgba_value_set: rgba_value = a_rgba_value
 		end
 
 feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation

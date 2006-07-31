@@ -43,12 +43,12 @@ feature -- Command
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
-			--
+			-- Get the RGBA pixel value at `a_x', `a_y'.
 		deferred
 		end
 
-	set_pixel (a_x, a_y, argb: NATURAL_32) is
-			--
+	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
 		deferred
 		end
 

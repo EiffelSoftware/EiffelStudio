@@ -39,7 +39,7 @@ feature -- Access
 		assign
 			set_red
 		do
-			Result := ((internal_color_value |>> red_shift) & 0xFF).to_natural_8
+			Result := ((internal_color_value |>> red_shift)).to_natural_8
 		end
 
 	green: NATURAL_8
@@ -47,7 +47,7 @@ feature -- Access
 		assign
 			set_green
 		do
-			Result := ((internal_color_value |>> green_shift) & 0xFF).to_natural_8
+			Result := ((internal_color_value |>> green_shift)).to_natural_8
 		end
 
 	blue: NATURAL_8
@@ -55,7 +55,7 @@ feature -- Access
 		assign
 			set_blue
 		do
-			Result := ((internal_color_value |>> blue_shift) & 0xFF).to_natural_8
+			Result := ((internal_color_value |>> blue_shift)).to_natural_8
 		end
 
 	alpha: NATURAL_8
@@ -63,7 +63,7 @@ feature -- Access
 		assign
 			set_alpha
 		do
-			Result := ((internal_color_value |>> alpha_shift) & 0xFF).to_natural_8
+			Result := ((internal_color_value |>> alpha_shift)).to_natural_8
 		end
 
 	rgba_value: NATURAL_32
@@ -123,10 +123,10 @@ feature -- Element Change
 	set_rgba_value (a_rgba_value: NATURAL_32)
 			-- Set RGBA value to `a_rgba_value'.
 		do
-			set_red (((a_rgba_value & 0xFF000000) |>> 24).to_natural_8)
-			set_green (((a_rgba_value & 0x00FF0000) |>> 16).to_natural_8)
-			set_blue (((a_rgba_value & 0x0000FF00) |>> 8).to_natural_8)
-			set_alpha ((a_rgba_value & 0x000000FF).to_natural_8)
+			set_red ((a_rgba_value |>> 24).to_natural_8)
+			set_green ((a_rgba_value |>> 16).to_natural_8)
+			set_blue ((a_rgba_value |>> 8).to_natural_8)
+			set_alpha (a_rgba_value.to_natural_8)
 		ensure
 			rgba_value_set: rgba_value = a_rgba_value
 		end

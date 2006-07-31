@@ -152,7 +152,7 @@ feature -- Command
 			--
 		do
 			if is_gdi_plus_installed then
-				Result := gdip_bitmap.get_pixel (a_x, a_y)
+				Result := gdip_bitmap.get_pixel (a_x - 1, a_y - 1)
 			else
 				--| FIXME IEK Implement me
 			end
@@ -162,7 +162,7 @@ feature -- Command
 			--
 		do
 			if is_gdi_plus_installed then
-				gdip_bitmap.set_pixel (a_x, a_y, argb)
+				gdip_bitmap.set_pixel (a_x - 1, a_y - 1, argb)
 			else
 				--| FIXME IEK Implement me
 			end

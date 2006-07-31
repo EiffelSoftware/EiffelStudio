@@ -1,5 +1,7 @@
 #!/bin/sh
 
+INIT_DIR=`pwd`
+
 if [ $# -eq 0 ]; then 
 	echo Usage: compile_exes platform
 	exit 1
@@ -8,9 +10,8 @@ fi
 ISE_PLATFORM=$1; export ISE_PLATFORM
 
 # Set up the environment
-. set_aliases
+. $INIT_DIR/set_aliases
 OLD_PATH=$PATH
-INIT_DIR=`pwd`
 EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC
 ISE_LIBRARY=$EXPORT_DIR; export ISE_LIBRARY
 ISE_EIFFEL=$FINAL_INSTALL_DIR; export ISE_EIFFEL

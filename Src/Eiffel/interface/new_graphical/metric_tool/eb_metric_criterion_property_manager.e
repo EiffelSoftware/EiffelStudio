@@ -9,6 +9,9 @@ indexing
 deferred class
 	EB_METRIC_CRITERION_PROPERTY_MANAGER
 
+inherit
+	EB_METRIC_INTERFACE_PROVIDER
+
 feature{NONE} -- Initialization
 
 	make (a_grid: like grid) is

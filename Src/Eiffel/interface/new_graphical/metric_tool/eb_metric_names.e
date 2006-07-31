@@ -72,6 +72,7 @@ feature -- Titles
 	t_clean: STRING is "Clean"
 	t_compare: STRING is "Compare"
 	t_input_domain: STRING is "Input domain"
+	t_result: STRING is "Results:"
 
 feature -- Labels
 
@@ -109,7 +110,7 @@ feature -- Tooltip
 	f_add_scope: STRING is "Add scope"
 	f_remove_scope: STRING is "Remove selected scope(s)"
 	f_remove_all_scopes: STRING is "Remove all scopes"
-	f_delayed_scope: STRING is "Delayed"
+	f_delayed_scope: STRING is "Use input domain as criterion domain."
 
 	f_save: STRING is "Save"
 	f_new: STRING is "New metric"
@@ -117,7 +118,15 @@ feature -- Tooltip
 	f_domain_item_invalid: STRING is "Item invalid in current system"
 	f_application_scope: STRING is "Add current application target scope"
 	f_search_for_class: STRING is "Search for group/class/feature"
-	f_filter_result: STRING is "Filter result which is not visible from input domain";
+	f_filter_result: STRING is "Filter result which is not visible from input domain"
+	f_pick_and_drop_items: STRING is "Pick and drop items like group/class/feature here"
+	f_insert_text_here: STRING is "Insert text here"
+	f_get_criterion_list: STRING is "Available criterion list";
+	f_get_negation: STRING is "You can put %"not%" before a criterion name to negate it"
+	f_open_metric_file_in_external_editor: STRING is "Open user defined metric file in external editor"
+	f_create_new_metric_using_current_data: STRING is "Clone selected metric to a new metric"
+	f_setup_criterion_domain: STRING is "Setup criterion domain properties"
+	f_setup_criterion_text: STRING is "Setup criterion text properties";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

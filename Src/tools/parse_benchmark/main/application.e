@@ -33,6 +33,9 @@ feature -- Initialization
 			l_error: NATURAL_8
 			l_writer: IO_MEDIUM
 		do
+			l_writer := io.default_output
+			l_writer.put_string ("Caching parsers...%N%N")
+
 			create l_parsers.make (4)
 			if a_parser.process_null_factory then
 				create l_parser.make ("null", create {AST_NULL_FACTORY}, create {FROZEN_AST_NULL_FACTORY})
@@ -51,8 +54,6 @@ feature -- Initialization
 				l_parsers.extend (l_parser)
 			end
 
-			l_writer := io.default_output
-
 				-- Retrieve file(s) to parse
 			if not a_parser.use_file_location then
 				l_writer.put_string ("Generating file list...")
@@ -70,8 +71,20 @@ feature -- Initialization
 					l_writer.put_string ("Results are formatted in the form of:%N")
 					l_writer.put_string ("  Test: <file_name>%N")
 					l_writer.put_string ("  <parser>: <speed in ms> : <frozen speed in ms> (<parse successful>)%N%N")
+
+					l_writer.put_string ("Tesing parameters: using ")
+					if not a_parser.test_frozen then
+						l_writer.put_string ("non-")
+					end
+					l_writer.put_string ("frozen parser, ")
+					l_writer.put_string ("parsing ")
+					if a_parser.test_disk_access then
+						l_writer.put_string ("disk access and")
+					end
+					l_writer.put_string ("content.%N%N")
+
 					l_writer.put_string ("Beginning speed bench marks...%N%N")
-					test_parsers (l_parsers, l_files, l_error, a_parser.test_frozen, l_writer)
+					test_parsers (l_parsers, l_files, l_error, a_parser.test_disk_access, a_parser.test_frozen, l_writer)
 				else
 					l_writer.put_string ("No files selected!")
 					l_writer.new_line
@@ -84,7 +97,7 @@ feature -- Initialization
 
 feature {NONE} -- Testing
 
-	test_parsers (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fns: LIST [STRING]; a_error: NATURAL_8; a_frozen: BOOLEAN; a_writer: IO_MEDIUM)
+	test_parsers (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fns: LIST [STRING]; a_error: NATURAL_8; a_disk: BOOLEAN; a_frozen: BOOLEAN; a_writer: IO_MEDIUM)
 			-- Tests all parsers in `a_parsers' with file `a_fn'
 		require
 			a_parsers_attached: a_parsers /= Void
@@ -114,9 +127,9 @@ feature {NONE} -- Testing
 					-- Run pretest. This is for .NET systems to ensure that the information is cached.
 					-- This pretest has to be run for every test to ensure all code executed prior to the
 					-- actual test has been jitted.
-				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_frozen)
+				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_disk, a_frozen)
 
-				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_frozen)
+				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_disk, a_frozen)
 				write_test_results (a_writer, l_results, a_frozen)
 				if not a_fns.islast then
 					a_writer.new_line
@@ -159,7 +172,7 @@ feature {NONE} -- Testing
 			end
 		end
 
-	test_parsers_with_file (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fn: STRING; a_error: NATURAL_8; a_frozen: BOOLEAN): ARRAYED_LIST [PARSE_TEST_RESULT]
+	test_parsers_with_file (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fn: STRING; a_error: NATURAL_8; a_disk: BOOLEAN; a_frozen: BOOLEAN): ARRAYED_LIST [PARSE_TEST_RESULT]
 			-- Tests all parsers in `a_parsers' with file `a_fn'. `a_error' dictates the number of parses to perform for error-accurace
 			-- and `a_frozen' indicates if the frozen parser should be tested.
 		require
@@ -177,7 +190,11 @@ feature {NONE} -- Testing
 			l_tester := tester
 			l_cursor := a_parsers.cursor
 			from a_parsers.start until a_parsers.after loop
-				l_results.extend (l_tester.run_test (a_parsers.item, file_content (a_fn), a_fn, a_error, a_frozen))
+				if a_disk then
+					l_results.extend (l_tester.run_test_with_file (a_parsers.item, a_fn, a_error, a_frozen))
+				else
+					l_results.extend (l_tester.run_test (a_parsers.item, file_content (a_fn), a_fn, a_error, a_frozen))
+				end
 				a_parsers.forth
 			end
 			a_parsers.go_to (l_cursor)

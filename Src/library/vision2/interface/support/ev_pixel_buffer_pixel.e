@@ -80,24 +80,32 @@ feature -- Element Change
 			-- Set red component of pixel to `a_red'.
 		do
 			set_component_value (a_red, red_shift)
+		ensure
+			red_set: red = a_red
 		end
 
 	set_green (a_green: NATURAL_8)
 			-- Set green component of pixel to `a_green'.
 		do
 			set_component_value (a_green, green_shift)
+		ensure
+			green_set: green = a_green
 		end
 
 	set_blue (a_blue: NATURAL_8)
 			-- Set blue component of pixel to `a_blue'.
 		do
 			set_component_value (a_blue, blue_shift)
+		ensure
+			blue_set: blue = a_blue
 		end
 
 	set_alpha (a_alpha: NATURAL_8)
 			-- Set alpha component of pixel to `a_alpha'.
 		do
 			set_component_value (a_alpha, alpha_shift)
+		ensure
+			alpha_set: alpha = a_alpha
 		end
 
 	set_values (a_red, a_green, a_blue, a_alpha: NATURAL_8)
@@ -115,12 +123,12 @@ feature -- Element Change
 			set_red (((a_rgb_value & 0xFF000000) |>> 24).to_natural_8)
 			set_green (((a_rgb_value & 0x00FF0000) |>> 16).to_natural_8)
 			set_blue (((a_rgb_value & 0x0000FF00) |>> 8).to_natural_8)
-			set_alpha ((a_rgb_value & 0x0000FF).to_natural_8)
+			set_alpha ((a_rgb_value & 0x000000FF).to_natural_8)
 		end
 
 feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation
 
-	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER_I) is
 			-- Make `Current' for pixel buffer `a_pixel_buffer'.
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
@@ -133,7 +141,7 @@ feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation
 		do
 			current_column_value := a_column
 			current_row_value := a_row
-			internal_color_value := internal_pixel_buffer.implementation.get_pixel (a_column, a_row)
+			internal_color_value := internal_pixel_buffer.get_pixel (a_column, a_row)
 		end
 
 feature {NONE} -- Implementation
@@ -163,12 +171,15 @@ feature {NONE} -- Implementation
 			end
 				-- Mask out existing component value
 			internal_color_value := internal_color_value & l_mask
-			l_value := a_color |<< a_shift
+			l_value := a_color
+			l_value := l_value |<< a_shift
 			internal_color_value := internal_color_value | l_value
 
 			if internal_pixel_buffer /= Void and then internal_pixel_buffer.is_locked then
-				internal_pixel_buffer.implementation.set_pixel (current_column_value, current_row_value, internal_color_value)
+				internal_pixel_buffer.set_pixel (current_column_value, current_row_value, internal_color_value)
 			end
+		ensure
+			pixel_set: internal_pixel_buffer /= Void and then internal_pixel_buffer.is_locked implies internal_color_value = internal_pixel_buffer.get_pixel (current_column_value, current_row_value)
 		end
 
 	current_column_value, current_row_value: NATURAL_32
@@ -177,7 +188,7 @@ feature {NONE} -- Implementation
 	internal_color_value: NATURAL_32
 		-- Packed color value which is updated by `update'.
 
-	internal_pixel_buffer: EV_PIXEL_BUFFER
+	internal_pixel_buffer: EV_PIXEL_BUFFER_I
 		-- Pixel buffer for which `Current' change values of.
 
 end

@@ -15,13 +15,13 @@ inherit
 			interface
 		end
 
-feature -- Initlization
+feature -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Make Current with size.
 		require
-			valid: a_width >= 0
-			valid: a_height >= 0
+			width_valid: a_width > 0
+			height_valid: a_height > 0
 		deferred
 		end
 

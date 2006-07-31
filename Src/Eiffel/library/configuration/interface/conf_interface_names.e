@@ -44,7 +44,7 @@ feature -- Section actions
 
 	menu_properties: STRING is "Properties"
 	menu_edit_config: STRING is "Edit configuration"
-	add_target: STRING is "Add target"
+	add_target: STRING is "Add Target"
 
 feature -- System names and descriptions
 
@@ -147,7 +147,7 @@ feature -- Target names and descriptions
 	target_force_32bits_name: STRING is "Force 32bits"
 	target_force_32bits_description: STRING is "Force compilation for 32bits?"
 
-	target_edit_manually: STRING is "Manually edit configuration"
+	target_edit_manually: STRING is "Manually Edit Configuration"
 
 	external_location_name: STRING is "Location"
 	external_location_description: STRING is "Location of the external."
@@ -168,11 +168,11 @@ feature -- Target names and descriptions
 	external_make_tree: STRING is "Makefiles"
 	external_resource_tree: STRING is "Resources"
 
-	external_add_include: STRING is "Add include"
-	external_add_object: STRING is "Add object"
-	external_add_library: STRING is "Add library"
-	external_add_make: STRING is "Add make"
-	external_add_resource: STRING is "Add resource"
+	external_add_include: STRING is "Add Include"
+	external_add_object: STRING is "Add Object"
+	external_add_library: STRING is "Add Library"
+	external_add_make: STRING is "Add Make"
+	external_add_resource: STRING is "Add Resource"
 
 	task_pre_tree: STRING is "Pre compilation tasks"
 	task_post_tree: STRING is "Post compilation tasks"
@@ -224,14 +224,14 @@ feature -- Target names and descriptions
 	group_renaming_description: STRING is "Renaming of classes in this group."
 	group_class_option_name: STRING is "Class Options"
 	group_class_option_description: STRING is "Class specific options."
-	group_add_cluster: STRING is "Add cluster"
-	group_add_subcluster: STRING is "Add sub cluster"
-	group_add_override: STRING is "Add override"
-	group_add_assembly: STRING is "Add assembly"
-	group_add_library: STRING is "Add library"
-	group_add_precompile: STRING is "Add precompile"
+	group_add_cluster: STRING is "Add Cluster"
+	group_add_subcluster: STRING is "Add Sub cluster"
+	group_add_override: STRING is "Add Override"
+	group_add_assembly: STRING is "Add Assembly"
+	group_add_library: STRING is "Add Library"
+	group_add_precompile: STRING is "Add Precompile"
 
-	library_edit_configuration: STRING is "Edit library configuration"
+	library_edit_configuration: STRING is "Edit Library Configuration"
 
 	cluster_file_rule_name: STRING is "File pattern"
 	cluster_file_rule_description: STRING is "Exclude/include file pattern."
@@ -343,7 +343,7 @@ feature -- Misc
 		end
 	target_remove_group_children (a_group: STRING): STRING is
 		do
-			Result := a_group+" can not be removed because it has sub clusters."
+			Result := a_group+" cannot be removed because it has sub clusters."
 		end
 	target_remove_external (a_external: STRING): STRING is
 		do

@@ -35,6 +35,7 @@ feature -- Access
 				property_item_internal.deactivate_actions.extend (agent on_deactivated)
 				property_item_internal.deactivate_actions.extend (agent change_actions.call ([]))
 				l_dialog.ok_actions.extend (agent change_actions.call ([]))
+				property_item_internal.set_tooltip (metric_names.f_insert_text_here)
 			end
 			Result := property_item_internal
 		ensure then

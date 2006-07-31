@@ -18,6 +18,8 @@ inherit
 
 	EB_METRIC_INTERFACE_PROVIDER
 
+	EB_SHARED_WRITER
+
 create
 	make
 
@@ -162,17 +164,6 @@ feature -- Access
 			-- Name of current row
 		do
 			Result := domain_item.string_representation
-		ensure
-			result_attached: Result /= Void
-		end
-
-	editor_token_name: LIST [EDITOR_TOKEN] is
-			-- Editor token representation of current item
-		local
-			l_writer: like token_writer
-		do
-			l_writer := token_writer
-			l_writer.new_line
 		ensure
 			result_attached: Result /= Void
 		end
@@ -340,7 +331,7 @@ feature -- Grid binding
 			l_editor_token_item.set_spacing (3)
 			l_editor_token_item.set_text_with_tokens (token_name)
 			l_editor_token_item.set_data (Current)
-
+			l_editor_token_item.set_overriden_fonts (label_font_table)
 			a_grid.insert_new_row (a_grid.row_count + 1)
 			l_grid_row := a_grid.row (a_grid.row_count)
 			l_tooltip := tooltip

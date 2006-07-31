@@ -51,9 +51,11 @@ feature -- Status setting
 		local
 			ch: CHARACTER
 		do
-			ch := {PATH}.directory_separator_char
-			if item (count) /= ch then
-				append_character (ch)
+			if not is_empty then
+				ch := {PATH}.directory_separator_char
+				if item (count) /= ch then
+					append_character (ch)
+				end
 			end
 			append (file_name)
 		ensure

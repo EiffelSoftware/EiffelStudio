@@ -22,6 +22,9 @@ feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create pixel buffer with width `a_width' and height `a_height'.
+		require
+			a_width_valid: a_width > 0
+			a_height_valid: a_height > 0
 		do
 			default_create
 			implementation.make_with_size (a_width, a_height)

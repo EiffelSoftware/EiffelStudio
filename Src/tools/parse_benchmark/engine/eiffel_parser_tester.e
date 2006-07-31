@@ -21,30 +21,29 @@ feature -- Basic Operations
 			not_a_source_id_is_empty: not a_source_id.is_empty
 			a_error_positive: a_error > 0
 		local
-			l_now: DATE_TIME
-			l_then: DATE_TIME
+			l_then: NATURAL_64
+			l_now: NATURAL_64
 			l_mseconds: NATURAL_64
 			i: INTEGER
 		do
-			create l_then.make_now_utc
+			l_then := c_milliseconds
 			from until i = a_error loop
 				a_parser.parse (a_source, False)
 				i := i + 1
 			end
-			create l_now.make_now_utc
-			l_mseconds := (((l_now.time.milli_second + (l_now.seconds * 1000)) -
-				(l_then.time.milli_second + (l_then.seconds * 1000))) / 5).truncated_to_integer.to_natural_64
+			l_now := c_milliseconds
+			l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
 			create Result.make (a_source_id, l_mseconds, a_parser.successful, a_parser.identity)
 
 			if a_frozen then
-				create l_then.make_now_utc
+				l_then := c_milliseconds
 				from i := 0 until i = a_error loop
 					a_parser.parse (a_source, True)
 					i := i + 1
 				end
-				create l_now.make_now_utc
-				Result.set_frozen_completion_time ((((l_now.time.milli_second + (l_now.seconds * 1000)) -
-					(l_then.time.milli_second + (l_then.seconds * 1000))) / 5).truncated_to_integer.to_natural_64)
+				l_now := c_milliseconds
+				l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
+				Result.set_frozen_completion_time (l_mseconds)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -60,33 +59,44 @@ feature -- Basic Operations
 			a_fn_exists: (create {RAW_FILE}.make (a_fn)).exists
 			a_error_positive: a_error > 0
 		local
-			l_now: DATE_TIME
-			l_then: DATE_TIME
+			l_then: NATURAL_64
+			l_now: NATURAL_64
 			l_mseconds: NATURAL_64
 			i: INTEGER
 		do
-			create l_then.make_now_utc
+			l_then := c_milliseconds
 			from until i = a_error loop
 				a_parser.parse_file (a_fn, False)
 				i := i + 1
 			end
-			create l_now.make_now_utc
-			l_mseconds := ((l_now.time.milli_second + (l_now.seconds * 60)) -
-				(l_then.time.milli_second + (l_then.seconds * 60)) / 5).truncated_to_integer.to_natural_64
+			l_now := c_milliseconds
+			l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
 			create Result.make (a_fn, l_mseconds, a_parser.successful, a_parser.identity)
 
 			if a_frozen then
-				create l_then.make_now_utc
+				l_then := c_milliseconds
 				from i := 0 until i = a_error loop
-					a_parser.parse (a_fn, True)
+					a_parser.parse_file (a_fn, True)
 					i := i + 1
 				end
-				create l_now.make_now_utc
-				Result.set_frozen_completion_time ((((l_now.time.milli_second + (l_now.seconds * 1000)) -
-					(l_then.time.milli_second + (l_then.seconds * 1000))) / 5).truncated_to_integer.to_natural_64)
+				l_now := c_milliseconds
+				l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
+				Result.set_frozen_completion_time (l_mseconds)
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Externals
+
+	c_milliseconds: NATURAL_64
+		external
+			"C inline use %"time.h%""
+		alias
+			"[
+				clock_t t = clock();
+				return (ULONG) ((((LONG)t) / (CLK_TCK / 1000)));
+			]"
 		end
 
 indexing

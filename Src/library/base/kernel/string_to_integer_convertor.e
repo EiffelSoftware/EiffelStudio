@@ -18,7 +18,7 @@ create
 feature{NONE} -- Initialization
 
 	make is
-			--
+			-- Initialize.
 		do
 			reset (type_no_limitation)
 			set_leading_separators (" ")
@@ -35,6 +35,7 @@ feature{NONE} -- Initialization
 feature	-- State machine setting
 
 	reset (type: INTEGER) is
+			-- Reset current convertor to parse integer of type `type'.
 		do
 			last_state := 0
 			part1 := 0
@@ -51,6 +52,7 @@ feature	-- State machine setting
 feature -- Status reporting
 
 	separators_valid (separators: STRING): BOOLEAN is
+			-- Are separators contained in `separators' valid?
 		local
 			i: INTEGER
 			l_c: INTEGER
@@ -75,11 +77,13 @@ feature -- Status reporting
 		end
 
 	overflowed: BOOLEAN is
+			-- Is integer parsed so fa overflowed?
 		do
 			Result := (internal_overflowed and then sign = 0)
 		end
 
 	underflowed: BOOLEAN is
+			-- Is integer parsed so fa underflowed?
 		do
 			Result := (internal_overflowed and then sign = 1)
 		end
@@ -96,6 +100,7 @@ feature -- Status reporting
 feature -- String parsing
 
 	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+			-- Parse string `s' as integer of type `type'.
 		local
 			i: INTEGER
 			l_c: INTEGER
@@ -113,6 +118,7 @@ feature -- String parsing
 		end
 
 	parse_character (c: CHARACTER) is
+			-- Parse next character `c'.
 		local
 			temp_p1: like max_natural_type
 			temp_p2: like max_natural_type
@@ -202,6 +208,7 @@ feature -- String parsing
 feature -- Status reporting
 
 	conversion_type_valid (type: INTEGER): BOOLEAN is
+			-- If conversion `type' valid?
 		do
 			Result := integer_natural_type_valid (type)
 		end
@@ -330,6 +337,7 @@ feature{NONE} -- Implementation
 			-- Naturals used for conversion	
 
 	internal_overflowed: BOOLEAN;
+			-- Internal overflow flag
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

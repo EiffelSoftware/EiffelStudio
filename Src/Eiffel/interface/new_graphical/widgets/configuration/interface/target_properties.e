@@ -134,8 +134,8 @@ feature {NONE} -- Implementation
 			properties.add_property (l_version_prop)
 
 				-- file rules
-			create l_file_rule_prop.make (conf_interface_names.target_file_rule_name)
-			l_file_rule_prop.set_description (conf_interface_names.target_file_rule_description)
+			create l_file_rule_prop.make (conf_interface_names.file_rule_name)
+			l_file_rule_prop.set_description (conf_interface_names.file_rule_description)
 			l_file_rule_prop.set_refresh_action (agent current_target.file_rule)
 			l_file_rule_prop.refresh
 			l_file_rule_prop.change_value_actions.extend (agent current_target.set_file_rules)

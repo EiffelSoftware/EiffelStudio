@@ -231,8 +231,8 @@ feature {NONE} -- Implementation
 
 			if l_cluster /= Void then
 					-- file rules
-				create l_file_rule_prop.make (conf_interface_names.cluster_file_rule_name)
-				l_file_rule_prop.set_description (conf_interface_names.cluster_file_rule_description)
+				create l_file_rule_prop.make (conf_interface_names.file_rule_name)
+				l_file_rule_prop.set_description (conf_interface_names.file_rule_description)
 				l_file_rule_prop.set_refresh_action (agent l_cluster.internal_file_rule)
 				l_file_rule_prop.refresh
 				l_file_rule_prop.change_value_actions.extend (agent l_cluster.set_file_rule)

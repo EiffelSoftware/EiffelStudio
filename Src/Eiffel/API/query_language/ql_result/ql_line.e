@@ -47,7 +47,7 @@ feature{NONE} -- Initialization
 			a_line_number_positive: a_line_number > 0
 			a_text_attached: a_text /= Void
 			a_parent_attached: a_parent /= Void
-			a_parent_valid: (a_parent.is_code_structure) and then a_parent.is_valid_domain_item and then a_parent.is_compiled
+			a_parent_valid: (a_parent.is_code_structure) and then a_parent.is_valid_domain_item
 		do
 			line_number := a_line_number
 			create internal_text.make_from_string (a_text)

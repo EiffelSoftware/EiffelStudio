@@ -1,6 +1,5 @@
 Instructions to build a delivery:
 
-
 1 - Preparing a delivery:
 
 Make sure that ISE_EIFFEL and ISE_PLATFORM are correctly defined, ie
@@ -8,19 +7,16 @@ they point to an existing Eiffel installation.
 
 Edit `set_aliases' to reflect your environment.
 
-Launch `make_delivery'.
-
+Launch `make_delivery' from the Delivery/scripts/unix directory as otherwise
+it won't work.
 
 
 2 - Producing a library for a given platform:
 
-Define ISE_EIFFEL to the location where the Eiffel delivery will be
-copied and ISE_PLATFORM to your current platform.
+Launch `compile_exes $ISE_PALTFORM' where $ISE_PLATFORM is the value for
+your platform.
 
-Edit `set_aliases' to reflect your environment.
+Then `make_images $ISE_PLATFORM'.
 
-Launch `compile_exes'.
-
-At the end, in ISE_EIFFEL you have a complete delivery.
-
-
+At the end you have an ISO.gz and a tgz package of your delivery in the directory
+where the 2 above scripts where launched.

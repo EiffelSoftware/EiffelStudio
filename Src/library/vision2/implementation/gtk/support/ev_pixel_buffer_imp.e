@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Creation method.
 		do
 			base_make (an_interface)
-			make_with_size (0, 0)
+			make_with_size (1, 1)
 		end
 
 	initialize is

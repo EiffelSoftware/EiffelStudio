@@ -319,6 +319,14 @@ feature -- File warnings
 			Result := "Could not rename "+a_file_name+" into "+a_new_name+"."
 		end
 
+	w_Not_rename (a_file_name, a_new_name: STRING): STRING is
+			-- Cannot rename `a_file_name' into the `a_new_name'.
+		require
+			a_file_name_not_void: a_file_name /= Void
+			a_new_name_not_void: a_new_name /= Void
+		do
+			Result := "Could not rename "+a_file_name+" into "+a_new_name+"."
+		end
 
 feature -- Project settings warnings
 

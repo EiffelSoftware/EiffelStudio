@@ -127,8 +127,8 @@ feature {NONE} -- Testing
 					from l_results.start until l_results.after loop
 						l_result := l_results.item
 						l_id := l_result.parser_id
-						l_times[l_id] := l_times[l_id] + l_result.completion_time
-						l_ftimes[l_id] := l_ftimes[l_id] + l_result.frozen_completion_time
+						l_times.force (l_times[l_id] + l_result.completion_time, l_id)
+						l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_time, l_id)
 						l_results.forth
 					end
 				end
@@ -149,8 +149,8 @@ feature {NONE} -- Testing
 
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
-					l_results.put (create {PARSE_TEST_RESULT}.make (l_result.file_name, (l_result.completion_time / a_fns.count.to_natural_64).truncated_to_integer.to_natural_64, l_result.successful, l_result.parser_id))
-					l_results.item.set_frozen_completion_time ((l_result.frozen_completion_time / a_fns.count.to_natural_64).truncated_to_integer.to_natural_64)
+					l_results.put (create {PARSE_TEST_RESULT}.make (l_result.file_name, ((l_result.completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64, l_result.successful, l_result.parser_id))
+					l_results.item.set_frozen_completion_time (((l_result.frozen_completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64)
 					l_results.forth
 				end
 				a_writer.new_line

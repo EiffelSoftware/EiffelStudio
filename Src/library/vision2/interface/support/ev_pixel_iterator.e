@@ -19,10 +19,10 @@ feature {NONE} -- Creation
 	make_for_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Make iterator for pixel buffer `a_pixel_buffer'.
 		do
-			pixel_buffer := a_pixel_buffer
+			pixel_buffer := a_pixel_buffer.implementation
 
 			create internal_item
-			internal_item.set_pixel_buffer (a_pixel_buffer)
+			internal_item.set_pixel_buffer (pixel_buffer)
 			max_row_value := a_pixel_buffer.height.to_natural_32
 			max_column_value := a_pixel_buffer.width.to_natural_32
 		end
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 
 	internal_item: EV_PIXEL_BUFFER_PIXEL
 
-	pixel_buffer: EV_PIXEL_BUFFER
+	pixel_buffer: EV_PIXEL_BUFFER_I
 		-- Pixel buffer for which `Current' is iterating.
 
 	column_value: NATURAL_32

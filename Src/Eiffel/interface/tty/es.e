@@ -153,6 +153,9 @@ feature -- Initialization
 		rescue
 			if error_handler.is_developer_exception then
 				Error_handler.trace
+				if stop_on_error then
+					die (-1)
+				end
 				if command_line_io.termination_requested then
 					retried := True
 					retry

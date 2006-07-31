@@ -149,7 +149,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			l_lib_use: ARRAYED_LIST [CONF_LIBRARY]
 			l_writable: BOOLEAN
 			l_app_sys: CONF_SYSTEM
-			l_class_options, l_group_options: CONF_OPTION
+			l_class_options, l_inh_options: CONF_OPTION
 			l_name_prop: STRING_PROPERTY [STRING]
 			l_extends: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
@@ -195,8 +195,10 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_group := l_cs.class_i.group
 					current_system := l_group.target.system
 					is_il_generation := l_group.target.setting_msil_generation
-					l_group_options := l_group.options
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)
+					create l_inh_options
+					l_inh_options.merge (l_class_options)
+					l_inh_options.merge (l_group.options)
 					properties.reset
 					properties.add_section (conf_interface_names.section_general)
 					create l_name_prop.make (conf_interface_names.group_type_name)
@@ -211,10 +213,10 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					add_misc_option_properties (l_class_options, l_group_options, True)
-					add_assertion_option_properties (l_class_options, l_group_options, True)
-					add_warning_option_properties (l_class_options, l_group_options, True)
-					add_debug_option_properties (l_class_options, l_group_options, True)
+					add_misc_option_properties (l_class_options, l_inh_options, True)
+					add_assertion_option_properties (l_class_options, l_inh_options, True)
+					add_warning_option_properties (l_class_options, l_inh_options, True)
+					add_debug_option_properties (l_class_options, l_inh_options, True)
 					properties.set_expanded_section_store (class_section_expanded_status)
 				else
 					check should_not_reach: False end

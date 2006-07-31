@@ -820,10 +820,12 @@ feature {NONE} -- Implementation
 			end
 
 			l_s := l_settings.item (s_executable_name)
-			if l_s /= Void and then not l_s.is_equal (a_target.system.name) then
+			if l_s = Void then
+				l_s := a_target.system.name
+			end
+			if system.name = Void or else not system.name.is_equal (l_s) then
 				system.set_name (l_s)
-			elseif system.name = Void or else not system.name.is_equal (a_target.system.name) then
-				system.set_name (a_target.system.name)
+				system.set_freeze
 			end
 
 			l_s := l_settings.item (s_full_type_checking)
@@ -1178,6 +1180,13 @@ feature {NONE} -- Implementation
 				-- Force a rebuild for the first compilation of a system using
 				-- a precompiled library.
 			system.set_rebuild (True)
+
+				-- Update the system name
+			if not a_target.setting_executable_name.is_empty then
+				system.set_name (a_target.setting_executable_name)
+			else
+				system.set_name (a_target.system.name)
+			end
 		ensure
 			valid_system: workbench.system /= Void
 		end

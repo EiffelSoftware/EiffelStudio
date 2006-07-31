@@ -114,7 +114,7 @@ feature -- Context output
 				export_status.format (ctxt);
 				ctxt.put_space;
 			end;
-			if comments = Void then
+			if comments = Void or else comments.is_empty then
 				ctxt.put_new_line
 			else
 				ctxt.put_comments (comments);

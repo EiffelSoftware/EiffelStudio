@@ -25,7 +25,7 @@ feature {NONE} -- Access
 	name: STRING = "Eiffel Parser SpeedMark"
 			-- Application name
 
-	version: STRING = "1.0.0.0"
+	version: STRING = "5.6.62115.0"
 			-- Application version
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

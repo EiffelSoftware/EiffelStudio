@@ -37,7 +37,7 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Target with name "+target_name+" is abstract and can not be used as a compilation target.");
+			st.add_string ("Target with name "+target_name+" is abstract and cannot be used as a compilation target.");
 			st.add_new_line
 		end;
 

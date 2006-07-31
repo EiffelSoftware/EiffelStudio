@@ -26,24 +26,24 @@ feature -- Basic Operations
 			l_mseconds: NATURAL_64
 			i: INTEGER
 		do
-			l_then := c_milliseconds
-			from until i = a_error loop
+			l_then := c_ticks
+			from i := 0 until i = a_error loop
 				a_parser.parse (a_source, False)
 				i := i + 1
 			end
-			l_now := c_milliseconds
-			l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
-			create Result.make (a_source_id, l_mseconds, a_parser.successful, a_parser.identity)
+			l_now := c_ticks
+			l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
+			create Result.make (a_source_id, l_mseconds.max (1), a_parser.successful, a_parser.identity)
 
 			if a_frozen then
-				l_then := c_milliseconds
+				l_then := c_ticks
 				from i := 0 until i = a_error loop
 					a_parser.parse (a_source, True)
 					i := i + 1
 				end
-				l_now := c_milliseconds
-				l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
-				Result.set_frozen_completion_time (l_mseconds)
+				l_now := c_ticks
+				l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
+				Result.set_frozen_completion_time (l_mseconds.max (1))
 			end
 		ensure
 			result_attached: Result /= Void
@@ -64,24 +64,24 @@ feature -- Basic Operations
 			l_mseconds: NATURAL_64
 			i: INTEGER
 		do
-			l_then := c_milliseconds
-			from until i = a_error loop
+			l_then := c_ticks
+			from i := 0 until i = a_error loop
 				a_parser.parse_file (a_fn, False)
 				i := i + 1
 			end
-			l_now := c_milliseconds
-			l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
-			create Result.make (a_fn, l_mseconds, a_parser.successful, a_parser.identity)
+			l_now := c_ticks
+			l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
+			create Result.make (a_fn, l_mseconds.max (1), a_parser.successful, a_parser.identity)
 
 			if a_frozen then
-				l_then := c_milliseconds
+				l_then := c_ticks
 				from i := 0 until i = a_error loop
 					a_parser.parse_file (a_fn, True)
 					i := i + 1
 				end
-				l_now := c_milliseconds
-				l_mseconds := ((l_now - l_then) / a_error).truncated_to_integer.to_natural_64
-				Result.set_frozen_completion_time (l_mseconds)
+				l_now := c_ticks
+				l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
+				Result.set_frozen_completion_time (l_mseconds.max (1))
 			end
 		ensure
 			result_attached: Result /= Void
@@ -89,13 +89,26 @@ feature -- Basic Operations
 
 feature {NONE} -- Externals
 
-	c_milliseconds: NATURAL_64
+	c_ticks: NATURAL_64
 		external
 			"C inline use %"time.h%""
 		alias
 			"[
+			{
 				clock_t t = clock();
-				return (ULONG) ((((LONG)t) / (CLK_TCK / 1000)));
+				return (ULONG) (LONG)t;
+			}
+			]"
+		end
+
+	c_ticks_per_millisecond: NATURAL_64
+		external
+			"C inline use %"time.h%""
+		alias
+			"[
+			{
+				return (ULONG) ((LONG)CLK_TCK / 1000L);
+			}
 			]"
 		end
 

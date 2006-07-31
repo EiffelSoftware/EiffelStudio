@@ -113,6 +113,8 @@ feature {NONE} -- Testing
 			l_result: PARSE_TEST_RESULT
 			l_times: HASH_TABLE [NATURAL_64, STRING]
 			l_ftimes: HASH_TABLE [NATURAL_64, STRING]
+			l_successes: HASH_TABLE [NATURAL_64, STRING]
+			l_failures: HASH_TABLE [NATURAL_64, STRING]
 			l_id: STRING
 			l_summarize: BOOLEAN
 		do
@@ -120,6 +122,8 @@ feature {NONE} -- Testing
 			if l_summarize then
 				create l_times.make (a_fns.count)
 				create l_ftimes.make (a_fns.count)
+				create l_successes.make (a_fns.count)
+				create l_failures.make (a_fns.count)
 			end
 
 			l_cursor := a_fns.cursor
@@ -141,7 +145,14 @@ feature {NONE} -- Testing
 						l_result := l_results.item
 						l_id := l_result.parser_id
 						l_times.force (l_times[l_id] + l_result.completion_time, l_id)
-						l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_time, l_id)
+						if a_frozen then
+							l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_time, l_id)
+						end
+						if l_result.successful then
+							l_successes.force (l_successes[l_id] + 1, l_id)
+						else
+							l_failures.force (l_failures[l_id] + 1, l_id)
+						end
 						l_results.forth
 					end
 				end
@@ -149,26 +160,50 @@ feature {NONE} -- Testing
 			a_fns.go_to (l_cursor)
 
 			if l_summarize then
+				a_writer.new_line
+				a_writer.new_line
+				a_writer.put_string ("Summary Information:")
+				a_writer.new_line
+				a_writer.new_line
+
+					-- Total result time
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
 					l_id := l_result.parser_id
-					l_results.put (create {PARSE_TEST_RESULT}.make (l_result.file_name, l_times[l_id], l_result.successful, l_result.parser_id))
-					l_results.item.set_frozen_completion_time (l_ftimes[l_id])
+					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_1", l_times[l_id], l_result.successful, l_result.parser_id))
+					if a_frozen then
+						l_results.item.set_frozen_completion_time (l_ftimes[l_id])
+					end
 					l_results.forth
 				end
 				a_writer.new_line
-				a_writer.put_string ("Summary: Total time taken")
+				a_writer.put_string ("Total time taken")
 				write_results (a_writer, l_results, a_frozen, False)
 
+					-- Mean result times
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
-					l_results.put (create {PARSE_TEST_RESULT}.make (l_result.file_name, ((l_result.completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64, l_result.successful, l_result.parser_id))
-					l_results.item.set_frozen_completion_time (((l_result.frozen_completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64)
+					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_2", ((l_result.completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64, l_result.successful, l_result.parser_id))
+					if a_frozen then
+						l_results.item.set_frozen_completion_time (((l_result.frozen_completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64)
+					end
 					l_results.forth
 				end
 				a_writer.new_line
-				a_writer.put_string ("Summary: Mean time")
+				a_writer.put_string ("Mean time")
 				write_results (a_writer, l_results, a_frozen, False)
+
+					-- Successes/Failures
+				from l_results.start until l_results.after loop
+					l_result := l_results.item
+					l_id := l_result.parser_id
+					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_3", l_successes[l_id], l_result.successful, l_result.parser_id))
+					l_results.item.set_frozen_completion_time (l_failures[l_id])
+					l_results.forth
+				end
+				a_writer.new_line
+				a_writer.put_string ("Successes/Failures")
+				write_results (a_writer, l_results, True, False)
 			end
 		end
 

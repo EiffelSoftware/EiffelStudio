@@ -149,7 +149,7 @@ feature -- Command
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
-			--
+			-- Get the RGBA pixel value at `a_x', `a_y'.
 		do
 			if is_gdi_plus_installed then
 				Result := gdip_bitmap.get_pixel (a_x - 1, a_y - 1)
@@ -158,11 +158,11 @@ feature -- Command
 			end
 		end
 
-	set_pixel (a_x, a_y, argb: NATURAL_32) is
-			--
+	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
 		do
 			if is_gdi_plus_installed then
-				gdip_bitmap.set_pixel (a_x - 1, a_y - 1, argb)
+				gdip_bitmap.set_pixel (a_x - 1, a_y - 1, rgba)
 			else
 				--| FIXME IEK Implement me
 			end

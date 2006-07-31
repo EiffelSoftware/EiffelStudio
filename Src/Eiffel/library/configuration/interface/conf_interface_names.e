@@ -32,19 +32,23 @@ feature -- Section names
 	section_external: STRING is "Externals"
 	section_tasks: STRING is "Tasks"
 	section_variables: STRING is "Variables"
-	section_mapping: STRING is "Type mapping"
+	section_mapping: STRING is "Type Mapping"
 	section_general: STRING is "General"
 	section_dotnet: STRING is ".NET"
 	section_advanced: STRING is "Advanced"
-	section_file_pattern: STRING is "File Pattern"
 
 	selection_tree_select_node: STRING is "Please select a sub node."
 
 feature -- Section actions
 
 	menu_properties: STRING is "Properties"
-	menu_edit_config: STRING is "Edit configuration"
+	menu_edit_config: STRING is "Edit Configuration"
 	add_target: STRING is "Add Target"
+
+feature -- General names and descriptions
+
+	file_rule_name: STRING is "Exclude Rules"
+	file_rule_description: STRING is "Regular expressions which exclude/include sub folders and/or files."
 
 feature -- System names and descriptions
 
@@ -52,9 +56,9 @@ feature -- System names and descriptions
 	system_name_description: STRING is "Name of the system."
 	system_description_name: STRING is "Description"
 	system_description_description: STRING is "Description of the system."
-	system_library_target_name: STRING is "Library target"
+	system_library_target_name: STRING is "Library Target"
 	system_library_target_description: STRING is "Target used if system is used as a library."
-	system_file_name: STRING is "File name"
+	system_file_name: STRING is "File Name"
 	system_file_description: STRING is "Location of the configuration file."
 	system_uuid_name: STRING is "UUID"
 	system_uuid_description: STRING is "Universal unique identifier for the system."
@@ -67,82 +71,76 @@ feature -- Target names and descriptions
 	target_description_description: STRING is "Description of the target."
 	target_abstract_name: STRING is "Abstract"
 	target_abstract_description: STRING is "Is this an abstract target that cannot be used to compile?"
-	target_compilation_type_name: STRING is "Compilation type"
+	target_compilation_type_name: STRING is "Compilation Type"
 	target_compilation_type_description: STRING is "Type of compilation."
 	target_compilation_type_standard: STRING is "Standard (C/byte code)"
 	target_compilation_type_dotnet: STRING is ".NET (msil)"
-	target_executable_name: STRING is "Output name"
+	target_executable_name: STRING is "Output Name"
 	target_executable_description: STRING is "Name of the generated binary."
 	target_root_name: STRING is "Root"
 	target_root_description: STRING is "Root cluster, class, feature of the system."
 	target_version_name: STRING is "Version"
 	target_version_description: STRING is "Version information."
 	target_product_name: STRING is "Product"
-	target_product_description: STRING is "Name of the product."
 	target_company_name: STRING is "Company"
-	target_company_description: STRING is "Name of the company."
 	target_copyright_name: STRING is "Copyright"
-	target_copyright_description: STRING is "Copyright of this product."
 	target_trademark_name: STRING is "Trademark"
-	target_trademark_description: STRING is "Trademark of this product."
-	target_dialog_root_cluster: STRING is "Root cluster"
-	target_dialog_root_class: STRING is "Root class"
-	target_dialog_root_feature: STRING is "Root feature"
-	target_dialog_root_all: STRING is "Compile all classes?"
-	target_file_rule_name: STRING is "File pattern"
-	target_file_rule_description: STRING is "Regular expressions which exclude/include sub folders and/or files."
+	target_dialog_root_cluster: STRING is "Root Cluster"
+	target_dialog_root_class: STRING is "Root Class"
+	target_dialog_root_feature: STRING is "Root Feature"
+	target_dialog_root_all: STRING is "Compile All Classes?"
 
-	target_address_expression_name: STRING is "Address expression"
+	target_address_expression_name: STRING is "Address Expression"
 	target_address_expression_description: STRING is "Are simplified address expressions enabled?"
-	target_automatic_backup_name: STRING is "Automatic backup"
+	target_automatic_backup_name: STRING is "Automatic Backup"
 	target_automatic_backup_description: STRING is "Automatically generate a backup during recompilation?"
 	target_check_vape_name: STRING is "Check VAPE"
 	target_check_vape_description: STRING is "Enforce VAPE validity constraint?"
-	target_console_application_name: STRING is "Console application"
+	target_console_application_name: STRING is "Console Application"
 	target_console_application_description: STRING is "Is the project a console application?"
-	target_cls_compliant_name: STRING is "CLS compliant"
+	target_cls_compliant_name: STRING is "CLS Compliant"
 	target_cls_compliant_description: STRING is "Should generated assemblies be marked as CLS compliant?"
-	target_dead_code_removal_name: STRING is "Dead code removal"
+	target_dead_code_removal_name: STRING is "Dead Code Removal"
 	target_dead_code_removal_description: STRING is "Should unused code be removed?"
-	target_dotnet_naming_convention_name: STRING is ".NET naming convention"
+	target_dotnet_naming_convention_name: STRING is ".NET Naming Convention"
 	target_dotnet_naming_convention_description: STRING is "Should names follow the .NET naming convention?"
-	target_dynamic_runtime_name: STRING is "Dynamic runtime"
+	target_dynamic_runtime_name: STRING is "Dynamic Runtime"
 	target_dynamic_runtime_description: STRING is "Should the generated executable use a shared library of the runtime?"
-	target_exception_trace_name: STRING is "Exception trace"
+	target_exception_trace_name: STRING is "Exception Trace"
 	target_exception_trace_description: STRING is "Should a complete exception trace be generated in the finalized version?"
-	target_il_verifiable_name: STRING is "IL verifiable"
+	target_il_verifiable_name: STRING is "IL Verifiable"
 	target_il_verifiable_description: STRING is "Should the generated binary be IL verifiable?"
 	target_inlining_name: STRING is "Inlining"
 	target_inlining_description: STRING is "Should inlining be enabled?"
-	target_inlining_size_name: STRING is "Inlining size"
+	target_inlining_size_name: STRING is "Inlining Size"
 	target_inlining_size_description: STRING is "Maximal number of instructions in a feature for the feature to be inlined."
-	target_line_generation_name: STRING is "Line generation"
+	target_line_generation_name: STRING is "Line Generation"
 	target_line_generation_description: STRING is "Generate extra information for external debuggers?"
-	target_metadata_cache_path_name: STRING is "Metadata cache path"
+	target_metadata_cache_path_name: STRING is "Metadata Cache Path"
 	target_metadata_cache_path_description: STRING is "Location where information about external assemblies is stored."
-	target_msil_classes_per_module_name: STRING is "MSIL classes per module"
+	target_msil_classes_per_module_name: STRING is "MSIL Classes per Module"
 	target_msil_classes_per_module_description: STRING is "Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode."
-	target_msil_clr_version_name: STRING is "MSIL CLR version"
+	target_msil_clr_version_name: STRING is "MSIL CLR Version"
 	target_msil_clr_version_description: STRING is "Version of the .NET runtime to use."
-	target_msil_generation_type_name: STRING is "Generation type"
+	target_msil_generation_type_name: STRING is "Generation Type"
 	target_msil_generation_type_description: STRING is "Type of binary to generate."
-	target_msil_key_file_name_name: STRING is "Signing key"
+	target_msil_key_file_name_name: STRING is "Signing Key"
 	target_msil_key_file_name_description: STRING is "Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file."
 	target_msil_use_optimized_precompile_name: STRING is "Use optimized precompile"
 	target_msil_use_optimized_precompile_description: STRING is "Use an optimized version of a precompile?"
 	target_multithreaded_name: STRING is "Multithreaded"
 	target_multithreaded_description: STRING is "Generate a multithreaded application?"
-	target_old_verbatim_strings_name: STRING is "Old verbatim strings"
+	target_old_verbatim_strings_name: STRING is "Old Verbatim Strings"
 	target_old_verbatim_strings_description: STRING is "Use the old format for verbatim strings?"
 	target_platform_name: STRING is "Platform"
 	target_platform_description: STRING is "Override the detected platform to use in conditions."
-	target_shared_library_definition_name: STRING is "Shared library definition"
+	target_shared_library_definition_name: STRING is "Shared Library Definition"
 	target_shared_library_definition_description: STRING is "Specify the file the compiler uses to generate the exported functions."
-	target_library_root_name: STRING is "Library root"
+	target_library_root_name: STRING is "Library Root"
 	target_library_root_description: STRING is "Absolute path to use as base for relative paths."
-	target_use_cluster_name_as_namespace_name: STRING is "Use cluster name as namespace"
+	target_use_cluster_name_as_namespace_name: STRING is "Use Cluster Name as Namespace"
 	target_use_cluster_name_as_namespace_description: STRING is "Should cluster names be used as namespaces?"
-	target_use_all_cluster_name_as_namespace_name: STRING is "Use recursive cluster name as namespace"
+	target_use_all_cluster_name_as_namespace_name: STRING is "Use Recursive Cluster Name as Namespace"
 	target_use_all_cluster_name_as_namespace_description: STRING is "Should names of folders in recursive clusters be used as namespaces?"
 	target_force_32bits_name: STRING is "Force 32bits"
 	target_force_32bits_description: STRING is "Force compilation for 32bits?"
@@ -174,25 +172,25 @@ feature -- Target names and descriptions
 	external_add_make: STRING is "Add Make"
 	external_add_resource: STRING is "Add Resource"
 
-	task_pre_tree: STRING is "Pre compilation tasks"
-	task_post_tree: STRING is "Post compilation tasks"
+	task_pre_tree: STRING is "Pre Compilation Tasks"
+	task_post_tree: STRING is "Post Compilation Tasks"
 
-	task_pre: STRING is "pre compilation"
-	task_post: STRING is "post compilation"
+	task_pre: STRING is "Pre Compilation"
+	task_post: STRING is "Post Compilation"
 	task_type_name: STRING is "Type"
 	task_type_description: STRING is "Type of the task."
 	task_command_name: STRING is "Command"
 	task_command_description: STRING is "Command to execute."
 	task_description_name: STRING is "Description"
 	task_description_description: STRING is "Description of the task."
-	task_working_directory_name: STRING is "Working directory"
+	task_working_directory_name: STRING is "Working Directory"
 	task_working_directory_description: STRING is "Directory where the command will be executed."
 	task_succeed_name: STRING is "Must succeed"
 	task_succeed_description: STRING is "Does this task have to finish successful for the compilation to continue?"
 	task_condition_name: STRING is "Condition"
 	task_condition_description: STRING is "Conditions for this task to be executed."
-	task_add_pre: STRING is "Add pre compilation task"
-	task_add_post: STRING is "Add post compilation task"
+	task_add_pre: STRING is "Add Pre Compilation Task"
+	task_add_post: STRING is "Add Post Compilation Task"
 
 	group_cluster_tree: STRING is "Clusters"
 	group_assembly_tree: STRING is "Assemblies"
@@ -233,13 +231,11 @@ feature -- Target names and descriptions
 
 	library_edit_configuration: STRING is "Edit Library Configuration"
 
-	cluster_file_rule_name: STRING is "File pattern"
-	cluster_file_rule_description: STRING is "Exclude/include file pattern."
 	cluster_recursive_name: STRING is "Recursive"
 	cluster_recursive_description: STRING is "Are sub folders recursively included?"
 	cluster_dependencies_name: STRING is "Dependencies"
 	cluster_dependencies_description: STRING is "Groups this cluster depends on."
-	cluster_visible_name: STRING is "Visible classes"
+	cluster_visible_name: STRING is "Visible Classes"
 	cluster_visible_description: STRING is "Classes visible for external code."
 	cluster_mapping_name: STRING is "Type Mapping"
 	cluster_mapping_description: STRING is "Special type mappings."
@@ -292,18 +288,18 @@ feature -- Option names and descriptions
 			-- Warning names.
 		once
 			create Result.make (10)
-			Result.force ("Unused locals", w_unused_local)
-			Result.force ("Obsolete classes", w_obsolete_class)
-			Result.force ("Obsolete features", w_obsolete_feature)
-			Result.force ("Onces in generics", w_once_in_generic)
-			Result.force ("Old syntax", w_syntax)
-			Result.force ("Old verbatim strings", w_old_verbatim_strings)
-			Result.force ("Same uuid", w_same_uuid)
-			Result.force ("Missing class export", w_export_class_missing)
-			Result.force ("Incompatible types equality", w_vweq)
-			Result.force ("Assignment on formal/expanded", w_vjrv)
-			Result.force ("Renaming unknown class", w_renaming_unknown_class)
-			Result.force ("Options unknown class", w_option_unknown_class)
+			Result.force ("Unused Locals", w_unused_local)
+			Result.force ("Obsolete Classes", w_obsolete_class)
+			Result.force ("Obsolete Features", w_obsolete_feature)
+			Result.force ("Onces in Generics", w_once_in_generic)
+			Result.force ("Old Syntax", w_syntax)
+			Result.force ("Old Verbatim Strings", w_old_verbatim_strings)
+			Result.force ("Same UUID", w_same_uuid)
+			Result.force ("Missing Class Export", w_export_class_missing)
+			Result.force ("Incompatible Types Equality", w_vweq)
+			Result.force ("Assignment on Formal/Expanded", w_vjrv)
+			Result.force ("Renaming Unknown Class", w_renaming_unknown_class)
+			Result.force ("Options Unknown Class", w_option_unknown_class)
 		end
 
 	warning_descriptions: HASH_TABLE [STRING, STRING] is
@@ -330,8 +326,8 @@ feature -- Misc
 	general_remove: STRING is "Remove"
 	variables_name: STRING is "Name"
 	variables_value: STRING is "Value"
-	mapping_old_name: STRING is "Old name"
-	mapping_new_name: STRING is "New name"
+	mapping_old_name: STRING is "Old Name"
+	mapping_new_name: STRING is "New Name"
 	remove_target (a_target: STRING): STRING is
 		do
 			Result := "Are you sure you want to remove "+a_target+"?"

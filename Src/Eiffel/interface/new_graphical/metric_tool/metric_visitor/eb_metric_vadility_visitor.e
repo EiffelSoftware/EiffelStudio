@@ -259,7 +259,7 @@ feature -- Process
 			end
 			if not has_error then
 				if a_criterion.text.is_empty then
-					create_last_error ("Text can not be emtpy in criterion %"" + a_criterion.name + "%" in metric %"" + last_metric.name + "%"")
+					create_last_error ("Text cannot be emtpy in criterion %"" + a_criterion.name + "%" in metric %"" + last_metric.name + "%"")
 				end
 			end
 		end

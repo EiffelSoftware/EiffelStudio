@@ -111,6 +111,11 @@ feature {NONE} -- Testing
 
 			l_cursor := a_fns.cursor
 			from a_fns.start until a_fns.after loop
+					-- Run pretest. This is for .NET systems to ensure that the information is cached.
+					-- This pretest has to be run for every test to ensure all code executed prior to the
+					-- actual test has been jitted.
+				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_frozen)
+
 				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_frozen)
 				write_test_results (a_writer, l_results, a_frozen)
 				if not a_fns.islast then

@@ -19,6 +19,8 @@ inherit
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address, append_to, sorted_children
+		redefine
+			extra_output_details
 		end
 
 	COMPILER_EXPORTER
@@ -110,11 +112,17 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_object (address, dynamic_class)
-			fixme ("jfiat: we should not create DUMP_VALUE as classic one, but dotnet")
+			create Result.make_native_array_object_for_dotnet (Current)
 		end
 
 feature -- Output
+
+	extra_output_details: STRING_32 is
+		do
+			get_array_value
+			Result := " count=" + array_value.get_count.out + " rank=" + array_value.get_rank.out
+			release_array_value
+		end
 
 	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
 		do

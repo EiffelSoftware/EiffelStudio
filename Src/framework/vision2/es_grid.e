@@ -834,7 +834,7 @@ feature {NONE} -- Tree view behavior
 			until
 				a_rows.after
 			loop
-				l_row_tbl.put (a_rows.item, a_rows.index)
+				l_row_tbl.put (a_rows.item, a_rows.item.index)
 				a_rows.forth
 			end
 

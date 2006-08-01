@@ -939,24 +939,26 @@ feature {NONE} -- Implementation
 			l_lib_sec: LIBRARY_SECTION
 		do
 				-- check if the name of the current selected section has changed and update
-			l_section ?= section_tree.selected_item
-			check
-				section: l_section /= Void
-			end
-			if not l_section.name.is_equal (l_section.text) then
-				l_section.set_text (l_section.name)
-			end
+			if section_tree.selected_item /= Void then
+				l_section ?= section_tree.selected_item
+				check
+					section: l_section /= Void
+				end
+				if not l_section.name.is_equal (l_section.text) then
+					l_section.set_text (l_section.name)
+				end
 
-				-- for groups, update the pixmap
-			l_lib_grp ?= l_section
-			if l_lib_grp /= Void then
-				l_lib_grp.update_pixmap
-			end
+					-- for groups, update the pixmap
+				l_lib_grp ?= l_section
+				if l_lib_grp /= Void then
+					l_lib_grp.update_pixmap
+				end
 
-				-- check for readonly change and update edit configuration action of libraries
-			l_lib_sec ?= l_section
-			if l_lib_sec /= Void then
-				l_lib_sec.update_edit_action
+					-- check for readonly change and update edit configuration action of libraries
+				l_lib_sec ?= l_section
+				if l_lib_sec /= Void then
+					l_lib_sec.update_edit_action
+				end
 			end
 		end
 

@@ -12,6 +12,11 @@ class
 inherit
 	ABSTRACT_SPECIAL_VALUE
 
+	EIFNET_ABSTRACT_DEBUG_VALUE
+		undefine
+			address, append_to, sorted_children
+		end
+
 feature -- Access
 
 	dynamic_class: CLASS_C is
@@ -26,17 +31,17 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is 
-		do 
+	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
+		do
 		end;
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
-		
-	append_value (a_text_formatter: TEXT_FORMATTER) is 
+
+	append_value (a_text_formatter: TEXT_FORMATTER) is
 			-- Append only the value of Current to `st'.
-		do 
+		do
 		end;
-		
+
 feature -- Output	
 
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is

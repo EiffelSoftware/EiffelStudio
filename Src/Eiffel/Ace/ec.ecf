@@ -436,4 +436,10 @@
 		<root class="ES" feature="make"/>
 		<setting name="platform" value="unix"/>
 	</target>
+	<target name="bench_docking" extends="bench">
+		<description>Docking EStuduio. </description>
+		<root class="EB_KERNEL" feature="make"/>
+		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false"/>
+		<override name="docking_eiffel" location="$ISE_LIBRARY\docking_eiffel\" recursive="true"/>
+	</target>
 </system>

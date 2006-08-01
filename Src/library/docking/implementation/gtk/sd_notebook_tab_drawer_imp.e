@@ -19,19 +19,19 @@ feature -- Command
 	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw unselected notebook tab.
 		do
-			internal_expose (a_width, False)
+			internal_expose (a_width, internal_tab.x, False)
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw selected notebook tab.
 		do
-			internal_expose (a_width, True)
+			internal_expose (a_width, internal_tab.x, True)
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw hot notebook tab.
 		do
-			internal_expose (a_width, False)
+			internal_expose (a_width, internal_tab.x, False)
 		end
 
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP) is
@@ -42,7 +42,7 @@ feature -- Command
 
 feature {NONE}  -- Implementation	
 
-	internal_expose (a_width: INTEGER; a_is_selected: BOOLEAN) is
+	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN) is
 			-- Expose implementation
 		local
 			l_imp: SD_DRAWING_AREA_IMP
@@ -55,7 +55,7 @@ feature {NONE}  -- Implementation
 			l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_temp_widget)
 
 			c_gtk_paint_extension (l_imp.c_object, l_style, a_is_selected,
-									 0, 0 ,a_width, internal_tab.height, is_top_side_tab)
+									 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
 			if a_is_selected then
 				draw_pixmap_text_selected (internal_tab.parent, a_width)
 			else

@@ -200,10 +200,11 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_group_add_window (l_window_group, l_window_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_window_group_add_window (l_window_group, c_object)
 			show_relative_to_window (a_window)
-			{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, l_window_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			is_modal := True
+			l_window_imp.set_has_modal_window (True)
 			block
+			l_window_imp.set_has_modal_window (False)
 			is_modal := False
 			set_blocking_window (Void)
 			{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)

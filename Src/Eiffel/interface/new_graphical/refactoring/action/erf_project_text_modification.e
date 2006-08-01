@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			l_print: CONF_PRINT_VISITOR
 		do
 			create l_print.make
-			lace.conf_system.process (l_print)
+			universe.conf_system.process (l_print)
 			check
 				no_error: not l_print.is_error
 			end

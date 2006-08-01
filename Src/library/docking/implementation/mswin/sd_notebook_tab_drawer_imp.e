@@ -105,7 +105,7 @@ feature -- Commands
 			l_brush.delete
 			l_wel_rect.dispose
 
-			draw_pixmap_text_selected (buffer_pixmap, a_width)
+			draw_pixmap_text_selected (buffer_pixmap, 0, a_width)
 
 			end_draw
 		end
@@ -348,7 +348,7 @@ feature{NONE} -- Implementation
 			l_brush.delete
 			l_wel_rect.dispose
 
-			draw_pixmap_text_unselected (buffer_pixmap ,a_width)
+			draw_pixmap_text_unselected (buffer_pixmap , 0, a_width)
 
 			end_draw
 		end

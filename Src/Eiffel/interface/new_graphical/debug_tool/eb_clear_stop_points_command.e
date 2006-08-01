@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 		do
 			fst ?= st
 			if fst /= Void then
-				Result := fst.e_feature.is_debuggable
+				Result := fst.e_feature /= Void and then fst.e_feature.is_debuggable
 			else
 				cst ?= st
 				if cst /= Void then

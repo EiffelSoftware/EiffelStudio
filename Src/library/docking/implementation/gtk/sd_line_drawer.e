@@ -40,7 +40,7 @@ feature -- Command
 			internal_last_feedback_top := top
 			internal_last_feedback_width := width
 			internal_last_feedback_height := height
-			
+
 			screen.set_invert_mode
 			screen.draw_rectangle (left, top, width, height)
 		end
@@ -58,24 +58,24 @@ feature -- Command
 			end
 		end
 
-feature {NONE} -- Implementation
-	
+feature {SD_FEEDBACK_DRAWER} -- Implementation
+
 	clear_last_feedback is
 			-- Clear last drawn rectangle.
 		do
 				screen.set_invert_mode
-				screen.draw_rectangle (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height)	
+				screen.draw_rectangle (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height)
 		end
-		
+
 	internal_last_feedback_top, internal_last_feedback_left, internal_last_feedback_width, internal_last_feedback_height: INTEGER
 			-- Last drawing postion which are used by `reset_feedback_clearing'.
-	
+
 	internal_shared: SD_SHARED
 			-- All sigletons.
-		
+
 	screen: EV_SCREEN
 			-- Screen to draw.
-			
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

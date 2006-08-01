@@ -26,14 +26,9 @@ create
 
 feature{NONE} -- Initlization
 
-	make (a_tool_bar: SD_TOOL_BAR) is
+	make is
 			-- Creation method
-		require
-			not_void: a_tool_bar /= Void
 		do
-			tool_bar := a_tool_bar
-		ensure
-			set: tool_bar = a_tool_bar
 		end
 
 feature -- Redefine
@@ -96,6 +91,18 @@ feature -- Redefine
 		local
 		do
 			-- FIXIT: how to receive theme change actions?
+		end
+
+	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+			-- Redefine
+		do
+
+		end
+
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+			-- Redefine
+		do
+
 		end
 
 feature {NONE} -- Implementation
@@ -204,6 +211,13 @@ feature {NONE} -- Implementation
 
 	tool_bar: SD_TOOL_BAR
 			-- Tool bar which to draw.
+
+	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+			--
+		do
+
+		end
+
 feature {NONE} -- Externals
 
 	c_gtk_paint_line (a_gtk_widget: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN) is

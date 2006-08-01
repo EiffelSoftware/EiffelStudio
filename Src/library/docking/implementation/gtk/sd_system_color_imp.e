@@ -8,6 +8,11 @@ indexing
 class
 	SD_SYSTEM_COLOR_IMP
 
+inherit
+	SD_SYSTEM_COLOR
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -18,6 +23,15 @@ feature {NONE} -- Initlization
 		end
 
 feature -- Access
+
+	default_background_color: EV_COLOR is
+			-- Default background color
+		local
+			l_stock_colors: EV_STOCK_COLORS
+		do
+			create l_stock_colors
+			Result := l_stock_colors.default_background_color
+		end
 
 	mdi_back_ground_color: EV_COLOR is
 			-- Background color of Multiple Document Interface (MDI) Applications.
@@ -35,6 +49,55 @@ feature -- Access
 			-- Non focused selection color for title bar.
 		do
 			Result := normal_color
+		end
+
+	non_focused_title_text_color: EV_COLOR is
+			-- Non focuesd title text color
+		local
+			l_grid: EV_GRID
+		do
+			create l_grid
+			Result := l_grid.non_focused_selection_text_color
+		end
+
+	non_focused_selection_title_color: EV_COLOR is
+			-- Non focused selection title color
+		do
+			Result := insesitive_color
+		end
+
+	active_border_color: EV_COLOR is
+			-- Active border color
+		do
+			Result := prelight_color
+		end
+
+	focused_title_text_color: EV_COLOR is
+			-- Focused title text color
+		local
+			l_grid: EV_GRID
+		do
+			create l_grid
+			Result := l_grid.non_focused_selection_text_color
+		end
+
+	button_text_color: EV_COLOR is
+			-- Button text color
+		local
+--			l_grid: EV_GRID
+		do
+--			create l_grid
+--			Result := l_grid.non_focused_selection_text_color
+			-- FIXIT: non_focused_selection_text_color and focused_selection_text_color are the same?
+			Result := (create {EV_STOCK_COLORS}).black
+		end
+
+feature -- HoT zone factory
+
+	hot_zone_factory: SD_HOT_ZONE_OLD_FACTORY is
+			-- Hot zone factory which will be used on GTK.
+		do
+			create Result
 		end
 
 feature {NONE} -- GTK text_aa colors.

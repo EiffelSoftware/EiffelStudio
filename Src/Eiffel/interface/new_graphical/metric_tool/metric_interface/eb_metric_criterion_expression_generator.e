@@ -107,7 +107,7 @@ feature{NONE} -- Process
 			end
 			text_list.extend (")")
 			format_list.extend (l_format)
-			append_negation_start (a_criterion)
+			append_negation_end (a_criterion)
 		end
 
 	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is

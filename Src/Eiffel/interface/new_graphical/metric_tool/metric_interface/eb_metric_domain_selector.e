@@ -152,6 +152,7 @@ feature {NONE} -- Initialization
 			grid.set_pebble_function (agent pebble_function)
 			add_item_btn.select_actions.extend (agent on_add_scope_from_dialog)
 			remove_item_btn.select_actions.extend (agent on_remove_selected_scopes)
+			remove_item_btn.drop_actions.extend (agent on_item_drop_on_remove_button)
 			remove_all_btn.select_actions.extend (agent on_remove_all_scopes)
 			grid.set_item_pebble_function (agent grid_item_pebble)
 			remove_item_btn.drop_actions.extend (agent on_item_dropped_on_remove_button)
@@ -161,6 +162,7 @@ feature {NONE} -- Initialization
 			grid.pick_ended_actions.force_extend (agent on_pick_ended)
 			grid.set_item_pebble_function (agent on_pick)
 			grid.enable_selection_on_single_button_click
+			remove_all_btn.drop_actions.extend (agent on_item_drop_on_remove_button)
 		end
 
 feature -- Access
@@ -464,6 +466,15 @@ feature{NONE} -- Actions
 			-- Action to be performed to display `address_manager'
 		do
 			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y, 2)
+		end
+
+	on_item_drop_on_remove_button (a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped on `remove_item_btn'
+		do
+			if last_picked_item /= Void then
+				grid.remove_row (last_picked_item.row.index)
+				on_domain_change
+			end
 		end
 
 feature{NONE} -- Implementation/Pick and drop

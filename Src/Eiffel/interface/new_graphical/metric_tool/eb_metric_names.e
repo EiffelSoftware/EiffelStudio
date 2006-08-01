@@ -126,7 +126,8 @@ feature -- Tooltip
 	f_open_metric_file_in_external_editor: STRING is "Open user defined metric file in external editor"
 	f_create_new_metric_using_current_data: STRING is "Clone selected metric to a new metric"
 	f_setup_criterion_domain: STRING is "Setup criterion domain properties"
-	f_setup_criterion_text: STRING is "Setup criterion text properties";
+	f_setup_criterion_text: STRING is "Setup criterion text properties"
+	f_double_click_to_go_to_definition: STRING is "(Double click to go to definition)";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

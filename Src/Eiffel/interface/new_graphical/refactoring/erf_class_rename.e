@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
         do
         		-- if the renamed class was the root class
-        	if system.root_cluster.classes.has (preferences.new_class_name.as_upper) then
+        	if system.root_cluster.classes.has (preferences.old_class_name.as_upper) then
 	        	create project_modifier
 				project_modifier.prepare
 				project_modifier.change_root_class (preferences.new_class_name.as_upper)

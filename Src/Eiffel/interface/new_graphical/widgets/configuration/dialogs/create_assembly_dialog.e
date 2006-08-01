@@ -127,6 +127,8 @@ feature {NONE} -- Initialization
 					assemblies.extend (l_item)
 					l_assemblies.forth
 				end
+
+				sort_assemblies
 			end
 
 				-- name
@@ -308,6 +310,34 @@ feature {NONE} -- Actions
 			end
 		ensure
 			is_ok_last_assembly: is_ok implies last_group /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	sort_assemblies is
+			-- Sort `assemblies'.
+		require
+			assemblies_set: assemblies /= Void
+		local
+			l_sorted_assemblies: DS_ARRAYED_LIST [EV_LIST_ITEM]
+		do
+			create l_sorted_assemblies.make (assemblies.count)
+			assemblies.do_all (agent l_sorted_assemblies.force_last (?))
+			assemblies.wipe_out
+			l_sorted_assemblies.sort (create {DS_QUICK_SORTER [EV_LIST_ITEM]}.make (create {AGENT_BASED_EQUALITY_TESTER [EV_LIST_ITEM]}.make (agent (a, b: EV_LIST_ITEM): BOOLEAN
+				do
+					Result := a.text < b.text
+				end)))
+			from
+				l_sorted_assemblies.start
+			until
+				l_sorted_assemblies.after
+			loop
+				assemblies.force (l_sorted_assemblies.item_for_iteration)
+				l_sorted_assemblies.forth
+			end
+		ensure
+			assemblies_same: assemblies.count = old assemblies.count
 		end
 
 indexing

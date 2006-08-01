@@ -41,10 +41,10 @@ feature {NONE} -- Implementation
 			l_list_prop: LIST_PROPERTY
 			l_deps: DS_HASH_SET [CONF_GROUP]
 			l_deps_list: ARRAYED_LIST [STRING_32]
-			l_dep_dialog: DEPENDENCY_DIALOG
+			l_dep_dialog: GROUPS_LIST_DIALOG
 			l_over: ARRAYED_LIST [CONF_GROUP]
 			l_over_list: ARRAYED_LIST [STRING_32]
-			l_over_dialog: OVERRIDE_DIALOG
+			l_over_dialog: GROUPS_LIST_DIALOG
 			l_rename_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_mapping_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_class_opt_prop: DIALOG_PROPERTY [HASH_TABLE [CONF_OPTION, STRING]]

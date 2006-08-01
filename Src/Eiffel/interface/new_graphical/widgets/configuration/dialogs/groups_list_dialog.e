@@ -1,19 +1,18 @@
 indexing
-	description: "Dialog to add or remove dependencies."
+	description: "Dialog that allows to choose a list of groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DEPENDENCY_DIALOG
+	GROUPS_LIST_DIALOG
 
 inherit
 	LIST_DIALOG
 		redefine
 			initialize,
 			new_item_name,
-			on_add,
 			on_select
 		end
 
@@ -69,41 +68,25 @@ feature {NONE} -- Agents
 		do
 		end
 
-	on_add is
-			-- Called if an item should be added.
-		local
-			wd: EV_WARNING_DIALOG
-		do
-			check
-				conf_target_set: conf_target /= Void
-			end
-			if not conf_target.groups.has (new_item_name.text.to_string_8) then
-				create wd.make_with_text (conf_interface_names.cluster_dependency_group_not_exist)
-				wd.show_modal_to_window (Current)
-			else
-				Precursor {LIST_DIALOG}
-			end
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

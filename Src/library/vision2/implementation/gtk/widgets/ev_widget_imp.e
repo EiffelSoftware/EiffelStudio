@@ -471,30 +471,6 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 
-feature {EV_ANY_I} -- Implementation
-
-	top_level_window_imp: EV_WINDOW_IMP is
-			-- Window implementation that `Current' is contained within (if any)
-		local
-			wind_ptr: POINTER
-		do
-			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
-			if wind_ptr /= NULL then
-				Result ?= eif_object_from_c (wind_ptr)
-			end
-		end
-
-	top_level_window: EV_WINDOW is
-			-- Window the current is contained within (if any)
-		local
-			a_window_imp: EV_WINDOW_IMP
-		do
-			a_window_imp := top_level_window_imp
-			if a_window_imp /= Void then
-				Result := a_window_imp.interface
-			end
-		end
-
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_widget_mapped is

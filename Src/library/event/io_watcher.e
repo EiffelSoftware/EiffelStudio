@@ -178,13 +178,13 @@ feature {NONE} -- Implementation
 			-- on medium referenced by `handle'.
 		external
 			--| FIXME Make this inline when built in object protection for inline code is added to compiler.
-			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"io_watcher.h%""
+			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"ev_c_util.h%""
 		end
 
 	initialize_c_callback (on_event_address: POINTER) is
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
-			"C inline use %"io_watcher.h%""
+			"C inline use %"ev_c_util.h%""
 		alias
 			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end

@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 			choose_metric_lbl.set_text (metric_names.t_select_metric)
 
 			filter_result_btn.set_tooltip (metric_names.f_filter_result)
-			filter_result_btn.set_pixmap (pixmaps.icon_pixmaps.class_deferred_icon)
+			filter_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_filter_icon)
 		end
 
 feature -- Access

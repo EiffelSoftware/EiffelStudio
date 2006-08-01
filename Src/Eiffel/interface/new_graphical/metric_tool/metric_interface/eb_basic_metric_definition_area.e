@@ -94,61 +94,55 @@ feature {NONE} -- Initialization
 			combination_grid.change_actions.extend (agent on_change)
 
 				-- Setup combination toolbar
---			add_criterion_btn.remove_text
-
 			remove_criterion_btn.remove_text
 			remove_criterion_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-
 			remove_all_criterion_btn.remove_text
 			remove_all_criterion_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
-
 			up_btn.remove_text
 			up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
 			down_btn.remove_text
 			down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
-
 			indent_and_btn.set_text ("")
 			indent_and_btn.set_pixmap (pixmaps.icon_pixmaps.new_and_icon)
-
 			indent_or_btn.set_text ("")
 			indent_or_btn.set_pixmap (pixmaps.icon_pixmaps.new_or_icon)
 
 				-- Setup actions
 			remove_criterion_btn.select_actions.extend (agent on_remove_criterion)
 			remove_all_criterion_btn.select_actions.extend (agent on_remove_all_criteria)
-			up_btn.select_actions.extend (agent on_up)
-			down_btn.select_actions.extend (agent on_down)
+			up_btn.select_actions.extend (agent on_move (True))
+			down_btn.select_actions.extend (agent on_move (False))
 			indent_and_btn.select_actions.extend (agent on_indent (True))
 			indent_or_btn.select_actions.extend (agent on_indent (False))
 			expression_lbl.set_text (metric_names.t_expression)
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
-			combination_grid.add_key_action (agent on_up, move_up_key_index)
-			combination_grid.add_key_action (agent on_down, move_down_key_index)
+			combination_grid.add_key_action (agent on_move (True), move_up_key_index)
+			combination_grid.add_key_action (agent on_move (False), move_down_key_index)
 			combination_grid.add_key_action (agent on_remove_criterion, del_key_index)
 			combination_grid.add_key_action (agent on_indent (True), and_criterion_key_index)
 			combination_grid.add_key_action (agent on_indent (False), or_criterion_key_index)
 			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
 			create move_row_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
 			create move_row_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
-			create ctrl_right_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_right), True, False, False)
-			create alt_right_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_right), False, True, False)
+			create and_indent_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_6), False, False, False)
+			create or_indent_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_6), True, False, False)
 			combination_grid.add_key_shortcut (del_key_index, del_key_shortcut)
 			combination_grid.add_key_shortcut (move_up_key_index, move_row_up_shortcut)
 			combination_grid.add_key_shortcut (move_down_key_index, move_row_down_shortcut)
-			combination_grid.add_key_shortcut (and_criterion_key_index, ctrl_right_shortcut)
-			combination_grid.add_key_shortcut (or_criterion_key_index, alt_right_shortcut)
+			combination_grid.add_key_shortcut (and_criterion_key_index, and_indent_shortcut)
+			combination_grid.add_key_shortcut (or_criterion_key_index, or_indent_shortcut)
 			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_row_up_shortcut.out + ")")
 			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_row_down_shortcut.out + ")")
 			remove_criterion_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
-			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion + " (" + ctrl_right_shortcut.out + ")")
-			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion + " (" + alt_right_shortcut.out + ")")
+			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion + " (" + and_indent_shortcut.out + ")")
+			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion + " (" + or_indent_shortcut.out + ")")
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
 			ctrl_down_shortcut_attached: move_row_down_shortcut /= Void
-			ctrl_right_shortcut_attached: ctrl_right_shortcut /= Void
-			alt_right_shortcut_attached: alt_right_shortcut /= Void
+			ctrl_right_shortcut_attached: and_indent_shortcut /= Void
+			alt_right_shortcut_attached: or_indent_shortcut /= Void
 		end
 
 feature -- Status report
@@ -264,10 +258,16 @@ feature{NONE} -- Actions
 			-- Action to be performed when remove a criterion
 		local
 			l_rows: LIST [EV_GRID_ROW]
+			l_items: LIST [EV_GRID_ITEM]
 		do
 			l_rows := combination_grid.selected_rows
 			if not l_rows.is_empty then
 				combination_grid.remove_criterion_row (l_rows.first, False, True)
+			else
+				l_items := combination_grid.selected_items
+				if not l_items.is_empty then
+					combination_grid.remove_criterion_row (l_items.first.row, False, True)
+				end
 			end
 			is_definition_changed := True
 		ensure
@@ -285,20 +285,18 @@ feature{NONE} -- Actions
 			definition_changed: is_definition_changed
 		end
 
-	on_up is
-			-- Action to be performed when user wants to move a criterion upward.
+	on_move (a_up: BOOLEAN) is
+			-- Action to be performed when move selected row up if `a_up' is True, otherwise down
+		local
+			l_rows: LIST [EV_GRID_ROW]
+			l_items: LIST [EV_GRID_ITEM]
 		do
-			if not combination_grid.selected_rows.is_empty then
-				combination_grid.move_criterion_row (combination_grid.selected_rows.first, True)
-			end
-			is_definition_changed := True
-		end
-
-	on_down is
-			-- Action to be performed when user wants to move a criterion downward.
-		do
-			if not combination_grid.selected_rows.is_empty then
-				combination_grid.move_criterion_row (combination_grid.selected_rows.first, False)
+			l_rows := combination_grid.selected_rows
+			l_items := combination_grid.selected_items
+			if not l_rows.is_empty then
+				combination_grid.move_criterion_row (l_rows.first, a_up)
+			elseif not l_items.is_empty then
+				combination_grid.move_criterion_row (l_items.first.row, a_up)
 			end
 			is_definition_changed := True
 		end
@@ -308,10 +306,14 @@ feature{NONE} -- Actions
 			-- If `is_and' is Ture, indent using "AND" operator, otherwise using "OR" operator.
 		local
 			l_rows: LIST [EV_GRID_ROW]
+			l_items: LIST [EV_GRID_ITEM]
 		do
 			l_rows := combination_grid.selected_rows
+			l_items := combination_grid.selected_items
 			if not l_rows.is_empty then
 				combination_grid.indent_criterion_row (l_rows.first, is_and)
+			elseif not l_items.is_empty then
+				combination_grid.indent_criterion_row (l_items.first.row, is_and)
 			end
 			is_definition_changed := True
 			combination_grid.resize_column (1, 0)
@@ -360,16 +362,16 @@ feature -- Key shortcuts
 			-- Del key
 
 	move_row_up_shortcut: ES_KEY_SHORTCUT
-			-- Ctrl + Up key combination
+			-- Key combination to move a row up
 
 	move_row_down_shortcut: ES_KEY_SHORTCUT
-			-- Ctrl + Down key combination
+			-- Key combination to move a row down
 
-	ctrl_right_shortcut: ES_KEY_SHORTCUT
-			-- Ctrl + Right key combination
+	and_indent_shortcut: ES_KEY_SHORTCUT
+			-- Key combination to "AND" indent a row
 
-	alt_right_shortcut: ES_KEY_SHORTCUT
-			-- Alt + Right key combination
+	or_indent_shortcut: ES_KEY_SHORTCUT
+			-- Key combination to "OR" indent a row
 
 invariant
 	criterion_factory_attached: criterion_factory /= Void
@@ -378,8 +380,8 @@ invariant
 	del_key_shortcut_attached: del_key_shortcut /= Void
 	ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
 	ctrl_down_shortcut_attached: move_row_down_shortcut /= Void
-	ctrl_right_shortcut_attached: ctrl_right_shortcut /= Void
-	alt_right_shortcut_attached: alt_right_shortcut /= Void
+	ctrl_right_shortcut_attached: and_indent_shortcut /= Void
+	alt_right_shortcut_attached: or_indent_shortcut /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

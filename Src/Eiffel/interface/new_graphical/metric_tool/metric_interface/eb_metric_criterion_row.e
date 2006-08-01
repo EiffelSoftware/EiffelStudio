@@ -438,6 +438,7 @@ feature{NONE} -- Actions
 			l_name: TUPLE [name: STRING; negation: BOOLEAN]
 			l_is_empty: BOOLEAN
 			l_criterion: like criterion
+			l_row_index: INTEGER
 		do
 			l_text := criterion_item.text.twin
 			l_text.left_adjust
@@ -445,6 +446,7 @@ feature{NONE} -- Actions
 			l_text.to_lower
 
 			if not (is_empty_row and then (l_text.is_equal (ellipse))) then
+				l_row_index := criterion_item.row.index
 				l_name := name_from_text_field (l_text)
 				l_is_empty := is_empty_row
 				is_in_default_state := False
@@ -482,6 +484,14 @@ feature{NONE} -- Actions
 					if l_is_empty then
 						insert_empty_row_in_parent
 					end
+				end
+				if grid.row_count >= l_row_index then
+					if grid.is_single_row_selection_enabled then
+						grid.row (l_row_index).enable_select
+					else
+						grid.row (l_row_index).item (2).enable_select
+					end
+
 				end
 				grid.change_actions.call ([])
 			end

@@ -174,19 +174,29 @@ feature -- Access
 			l_domain_item: like domain_item
 			l_writer: like token_writer
 			l_item: QL_ITEM
+			l_group: QL_GROUP
 		do
 			l_writer := token_writer
 			l_writer.new_line
 			l_domain_item := domain_item
 			if l_domain_item.is_valid then
 				if l_domain_item.is_delayed_item then
-					l_writer.add_string (l_domain_item.string_representation)
 				else
-					l_item := l_domain_item.query_language_item
-					if l_item /= Void then
-						add_editor_token_representation (l_item, False, True, l_writer)
+					if l_domain_item.is_folder_item then
+						l_group ?= l_domain_item.query_language_item
+						l_writer.new_line
+						if l_group /= Void then
+							l_writer.add_group (l_group.group, l_domain_item.string_representation)
+						else
+							l_writer.add_string (l_item.string_representation)
+						end
 					else
-						l_writer.add_string (l_domain_item.string_representation)
+						l_item := l_domain_item.query_language_item
+						if l_item /= Void then
+							add_editor_token_representation (l_item, False, True, l_writer)
+						else
+							l_writer.add_string (l_domain_item.string_representation)
+						end
 					end
 				end
 			else

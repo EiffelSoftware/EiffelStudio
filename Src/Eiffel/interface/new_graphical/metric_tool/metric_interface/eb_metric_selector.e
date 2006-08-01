@@ -627,12 +627,16 @@ feature -- Metric management
 					if a_metric.description /= Void then
 						l_tooltip.append (a_metric.description)
 					end
-					l_grid_item.set_tooltip (l_tooltip)
 				end
 			else
-				l_grid_item.set_tooltip (l_vadility.out)
+				l_tooltip := l_vadility.out
 				l_grid_item.set_foreground_color (l_red)
 			end
+			if not l_tooltip.is_empty then
+				l_tooltip.append_character ('%N')
+			end
+			l_tooltip.append (metric_names.f_double_click_to_go_to_definition)
+			l_grid_item.set_tooltip (l_tooltip)
 			l_grid_item.set_pixmap (pixmap_from_metric (a_metric))
 			l_grid_item.set_data (a_metric)
 			l_grid_item.pointer_double_press_actions.extend (agent on_pointer_double_pressed_on_metric_item (?, ?, ?, ?, ?, ?, ?, ?, l_grid_item))

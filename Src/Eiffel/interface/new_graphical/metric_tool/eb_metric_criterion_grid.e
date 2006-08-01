@@ -11,6 +11,9 @@ class
 
 inherit
 	ES_GRID
+		redefine
+			on_key_pressed
+		end
 
 	QL_SHARED_NAMES
 		undefine
@@ -59,12 +62,14 @@ feature{NONE} -- Initialization
 			create change_actions
 
 			set_column_count_to (2)
-			enable_single_row_selection
+			column (2).set_width (100)
+			enable_single_item_selection
 			column (1).set_title (metric_names.t_criterion)
 			column (2).set_title (metric_names.t_properties)
 			set_item_pebble_function (agent criterion_pebble)
 			set_item_veto_pebble_function (agent veto_pebble_function)
 			item_drop_actions.extend (agent on_item_drop)
+			set_selected_rows_function (agent selected_rows_internal)
 			enable_default_tree_navigation_behavior (True, True, True, True)
 		ensure then
 			tree_enabled: is_tree_enabled
@@ -456,6 +461,20 @@ feature{NONE} -- Implementation/Actions
 			end
 		end
 
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed on Current
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+		do
+			Precursor (a_key)
+			if a_key.code = {EV_KEY_CONSTANTS}.key_f2 or a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				l_selected_items := selected_items
+				if not l_selected_items.is_empty then
+					l_selected_items.first.activate
+				end
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	subrow_index (a_parent_row, a_subrow: EV_GRID_ROW): INTEGER is
@@ -618,6 +637,39 @@ feature{NONE} -- Implementation
 				Result := l_parent_row = a_dest_row
 				l_parent_row := l_parent_row.parent_row
 			end
+		end
+
+	selected_rows_internal: LIST [EV_GRID_ROW] is
+			-- Selected rows from `select_items'
+		local
+			l_items: LIST [EV_GRID_ITEM]
+			l_row_table: HASH_TABLE [EV_GRID_ROW, INTEGER]
+		do
+			if is_single_row_selection_enabled then
+				Result := selected_rows
+			else
+				l_items := selected_items
+				create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (l_items.count)
+				create l_row_table.make (l_items.count)
+				from
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_row_table.force (l_items.item.row, l_items.item.row.index)
+					l_items.forth
+				end
+				from
+					l_row_table.start
+				until
+					l_row_table.after
+				loop
+					Result.extend (l_row_table.item_for_iteration)
+					l_row_table.forth
+				end
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 invariant

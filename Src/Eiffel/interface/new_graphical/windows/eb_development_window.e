@@ -3191,16 +3191,12 @@ feature {NONE} -- Implementation
 						if cluster_st.is_valid then
 							properties_tool.add_stone (cluster_st)
 						end
-						if cluster_st.is_cluster then
-	--| FIXME XR: Really manage cluster display in the main editor
-							if not during_synchronization then
-								view_points_combo.set_conf_group (cluster_st.group)
-							end
-							formatted_context_for_cluster (cluster_st.cluster_i, cluster_st.path)
-							if cluster_st.position > 0 then
-								editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
-							end
-	--| END FIXME
+						if not during_synchronization then
+							view_points_combo.set_conf_group (cluster_st.group)
+						end
+						formatted_context_for_group (cluster_st.group, cluster_st.path)
+						if cluster_st.position > 0 then
+							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
 						end
 					end
 				end
@@ -3279,21 +3275,22 @@ feature {NONE} -- Implementation
 			update_viewpoints
 		end
 
-	formatted_context_for_cluster (a_cluster: CLUSTER_I; a_path: STRING) is
-			-- Formatted context representing the list of classes inside `a_cluster'.
+	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING) is
+			-- Formatted context representing the list of classes inside `a_group'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
-			l_assembly: ASSEMBLY_I
+			l_assembly: CONF_ASSEMBLY
+			l_cluster: CONF_CLUSTER
 			l_sorted_cluster: EB_SORTED_CLUSTER
+			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_in_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_out_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_over_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
 			l_cl_i, l_overridden_class: CLASS_I
-			l_cluster: CLUSTER_I
+			l_cl_c: CLASS_C
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
 			l_description: STRING
@@ -3303,36 +3300,58 @@ feature {NONE} -- Implementation
 			l_format_context.process_keyword_text (ti_indexing_keyword, Void)
 			l_format_context.put_new_line
 			l_format_context.indent
-			if a_cluster.is_assembly then
-				l_assembly ?= a_cluster
-				check l_assembly /= Void end
+
+				-- additional informations for assemblies
+			if a_group.is_assembly then
+				l_assembly ?= a_group
+				check
+					assembly: l_assembly /= Void
+				end
+
 				l_format_context.process_indexing_tag_text ("assembly_name")
 				l_format_context.set_without_tabs
 				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_space
 				l_format_context.put_quoted_string_item (l_assembly.assembly_name)
 				l_format_context.put_new_line
-				l_format_context.process_indexing_tag_text ("assembly_path")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_space
-				l_format_context.put_quoted_string_item (l_assembly.location.evaluated_path)
-				l_format_context.put_new_line
 
+				l_format_context.process_indexing_tag_text ("assembly")
+			elseif a_group.is_override then
+				l_format_context.process_indexing_tag_text ("override")
+				l_cluster ?= a_group
+				check
+					cluster: l_cluster /= Void
+				end
+			elseif a_group.is_cluster then
+				l_format_context.process_indexing_tag_text ("cluster")
+				l_cluster ?= a_group
+				check
+					cluster: l_cluster /= Void
+				end
+			elseif a_group.is_precompile then
+				l_format_context.process_indexing_tag_text ("precompile")
+			elseif a_group.is_library then
+				l_format_context.process_indexing_tag_text ("library")
+			else
+				check
+					should_not_reach: False
+				end
 			end
-			l_format_context.process_indexing_tag_text ("cluster")
+				-- name
 			l_format_context.set_without_tabs
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
-			l_format_context.add_group (a_cluster, a_cluster.cluster_name)
-
+			l_format_context.add_group (a_group, a_group.name)
 			l_format_context.put_new_line
-			l_format_context.process_indexing_tag_text ("cluster_path")
+
+				-- location
+			l_format_context.process_indexing_tag_text ("path")
 			l_format_context.set_without_tabs
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
-			l_format_context.put_quoted_string_item (a_cluster.path)
+			l_format_context.put_quoted_string_item (a_group.location.evaluated_path)
 
+				-- path/namespace
 			if a_path /= Void and then not a_path.is_empty then
 				l_format_context.put_space
 				l_format_context.set_without_tabs
@@ -3345,10 +3364,9 @@ feature {NONE} -- Implementation
 
 				-- Now try to get the description of the cluster, and if not
 				-- we take the one from its target.
-			if a_cluster.description /= Void then
-				l_description := a_cluster.description
-			elseif a_cluster.target.description /= Void then
-				l_description := a_cluster.target.description
+			l_description := a_group.description
+			if l_description = Void then
+				l_description := a_group.target.description
 			end
 			if l_description /= Void then
 				l_format_context.process_indexing_tag_text ("description")
@@ -3381,7 +3399,8 @@ feature {NONE} -- Implementation
 				l_format_context.put_new_line
 			end
 
-			if a_cluster.parent_cluster /= Void then
+				-- parent
+			if l_cluster /= Void and then l_cluster.parent /= Void then
 				l_format_context.process_indexing_tag_text ("parent cluster")
 				l_format_context.set_without_tabs
 				l_format_context.process_symbol_text (ti_colon)
@@ -3389,15 +3408,16 @@ feature {NONE} -- Implementation
 				l_format_context.indent
 				l_format_context.put_manifest_string (" - ")
 
-				l_format_context.add_group (a_cluster.parent_cluster, a_cluster.parent_cluster.cluster_name)
+				l_format_context.add_group (l_cluster.parent, l_cluster.parent.name)
 				l_format_context.put_new_line
 				l_format_context.exdent
 			end
 
-			create l_sorted_cluster.make (a_cluster)
+			create l_sorted_cluster.make (a_group)
 			l_sorted_cluster.initialize
 
-			if not l_sorted_cluster.clusters.is_empty then
+				-- sub clusters
+			if not a_group.is_library and then not l_sorted_cluster.clusters.is_empty then
 				l_format_context.process_indexing_tag_text ("sub cluster(s)")
 				l_format_context.set_without_tabs
 				l_format_context.process_symbol_text (ti_colon)
@@ -3411,7 +3431,7 @@ feature {NONE} -- Implementation
 				loop
 					l_cluster := l_subclu.item_for_iteration.actual_cluster
 					l_format_context.put_manifest_string (" - ")
-					l_format_context.add_group (l_cluster, l_cluster.cluster_name)
+					l_format_context.add_group (l_cluster, l_cluster.name)
 					l_format_context.put_space
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_L_parenthesis)
@@ -3424,6 +3444,7 @@ feature {NONE} -- Implementation
 				l_format_context.exdent
 			end
 
+				-- classes
 			if not l_sorted_cluster.classes.is_empty then
 				l_classes := l_sorted_cluster.classes
 				from
@@ -3439,11 +3460,10 @@ feature {NONE} -- Implementation
 						a_path.is_empty
 						or else is_string_started_by (l_cl_i.path, a_path)
 					then
-						if l_cl_i.compiled then
+						if l_cl_i.compiled_representation /= Void then
 							l_in_classes.put_last (l_cl_i)
-							if l_cl_i.config_class.is_overriden then
-								l_over_classes.put_last (l_cl_i)
-							end
+						elseif l_cl_i.config_class.is_overriden then
+							l_over_classes.put_last (l_cl_i)
 						else
 							l_out_classes.put_last (l_cl_i)
 						end
@@ -3471,11 +3491,12 @@ feature {NONE} -- Implementation
 						l_in_classes.after
 					loop
 						l_cl_i := l_in_classes.item_for_iteration
-						check compiled: l_cl_i.compiled end
+						l_cl_c := l_cl_i.compiled_representation
+						check compiled: l_cl_c /= Void end
 
 						l_assert_level := l_cl_i.assertion_level
 						l_format_context.put_manifest_string (" - ")
-						l_format_context.put_classi (l_cl_i)
+						l_format_context.put_classi (l_cl_c.original_class)
 						l_format_context.set_without_tabs
 						l_format_context.process_symbol_text (ti_colon)
 						if l_assert_level.check_all then
@@ -3549,7 +3570,7 @@ feature {NONE} -- Implementation
 
 				if
 					l_over_classes.count > 0 and then
-					a_cluster.overriders /= Void and then not a_cluster.overriders.is_empty
+					l_cluster.overriders /= Void and then not l_cluster.overriders.is_empty
 				then
 					l_format_context.put_new_line
 					l_format_context.process_indexing_tag_text ("Overriden")
@@ -3566,14 +3587,15 @@ feature {NONE} -- Implementation
 						check is_overriden_class: l_cl_i.config_class.is_overriden end
 
 						l_format_context.put_manifest_string (" - ")
-						l_format_context.put_classi (l_cl_i)
-						l_format_context.process_comment_text (" overriden by", Void)
-						l_format_context.process_symbol_text (ti_colon)
-						l_format_context.put_space
 
 						l_overridden_class ?= l_cl_i.config_class.overriden_by
 						if l_overridden_class /= Void then
-							l_format_context.put_classi (l_overridden_class)
+							l_cl_c := l_overridden_class.compiled_representation
+							if l_cl_c /= Void then
+								l_format_context.put_classi (l_cl_c.original_class)
+							else
+								l_format_context.put_classi (l_overridden_class)
+							end
 							l_format_context.put_manifest_string (" in ")
 							l_format_context.add_group (l_cl_i.config_class.overriden_by.group, l_cl_i.config_class.overriden_by.group.name)
 							l_format_context.put_new_line

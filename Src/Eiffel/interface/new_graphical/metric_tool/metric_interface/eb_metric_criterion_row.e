@@ -486,6 +486,7 @@ feature{NONE} -- Actions
 					end
 				end
 				if grid.row_count >= l_row_index then
+					grid.remove_selection
 					if grid.is_single_row_selection_enabled then
 						grid.row (l_row_index).enable_select
 					else
@@ -691,16 +692,19 @@ feature{NONE} -- Implementation
 			l_name_array: ARRAY [NAME_FOR_COMPLETION]
 			l_name: NAME_FOR_COMPLETION
 			l_pixmap: EV_PIXMAP
+			l_matcher: like criterion_name_matcher
 		do
 			if criterion_list_internal = Void then
 				l_name_list := criterion_factory_table.item (scope).available_names
 				create l_name_array.make (1, l_name_list.count)
+				l_matcher := criterion_name_matcher
 				from
 					l_name_list.start
 				until
 					l_name_list.after
 				loop
 					create l_name.make (l_name_list.item)
+					l_name.set_name_matcher (l_matcher)
 					l_pixmap := criterion_pixmap_from_name (l_name_list.item)
 					if l_pixmap /= Void then
 						l_name.set_icon (l_pixmap)
@@ -712,6 +716,14 @@ feature{NONE} -- Implementation
 				criterion_list_internal.sort
 			end
 			Result := criterion_list_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	criterion_name_matcher: WILD_COMPLETION_NAME_MATCHER is
+			-- Wild card name matcher
+		once
+			create Result
 		ensure
 			result_attached: Result /= Void
 		end

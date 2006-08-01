@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			cleared: buffer_pixmap = Void
 		end
 
-	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_width: INTEGER) is
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
 			-- Draw pixmap and text when unselected.
 		require
 			not_void: a_pixmap /= Void
@@ -324,19 +324,19 @@ feature {NONE} -- Implementation
 			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 			if is_top_side_tab then
 				-- Draw pixmap
-				a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_text_top_left (start_x_text_internal, gap_height, text)
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height, text)
 			else
 				-- Draw pixmap
-				a_pixmap.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, 0, pixmap)
 				-- Draw text
-				a_pixmap.draw_text_top_left (start_x_text_internal, 0, text)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, 0, text)
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
-	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_width: INTEGER) is
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
 			-- Draw pixmap and text when selected.
 		require
 			not_void: a_pixmap /= Void
@@ -346,17 +346,17 @@ feature {NONE} -- Implementation
 				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
 					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					else
-						a_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					end
 				end
 				-- Draw pixmap
 				if is_draw_pixmap then
 					if is_top_side_tab then
-						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height, pixmap)
 					else
-						a_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
 					end
 				end
 

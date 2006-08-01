@@ -8,20 +8,5 @@
 		<cluster name="event" location=".">
 			<condition><platform excluded_value="windows"/></condition>
 		</cluster>
-		<external_include location="$(ISE_LIBRARY)/library/event/Clib">
-			<condition><platform excluded_value="windows"/></condition>
-		</external_include>
-		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o">
-			<condition>
-				<platform excluded_value="windows"/>
-				<multithreaded value="false"/>
-			</condition>
-		</external_object>
-		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/MTio_watcher.o">
-			<condition>
-				<platform excluded_value="windows"/>
-				<multithreaded value="True"/>
-			</condition>
-		</external_object>
 	</target>
 </system>

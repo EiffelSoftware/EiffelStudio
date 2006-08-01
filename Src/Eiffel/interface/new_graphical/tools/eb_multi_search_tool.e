@@ -778,8 +778,11 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				choose_dialog.set_class_add_action (agent add_class_item)
 				choose_dialog.set_cluster_add_action (agent add_cluster_item)
 				choose_dialog.set_folder_add_action (agent add_folder_item)
-				choose_dialog.show_relative_to_window (manager.window)
+				choose_dialog.show
 				choose_dialog.default_push_button.select_actions.extend (agent force_new_search)
+			end
+			if not choose_dialog.is_displayed then
+				choose_dialog.show
 			end
 			choose_dialog.set_focus
 		end

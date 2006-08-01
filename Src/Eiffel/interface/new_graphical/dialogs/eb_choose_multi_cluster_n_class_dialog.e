@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (Interface_names.t_Add_search_scope)
+
 			prepare
 		end
 
@@ -53,18 +54,20 @@ feature {NONE} -- Initialization
 			controls_box: EV_VERTICAL_BOX
 			vb: EV_VERTICAL_BOX
 		do
+			set_width (260)
+
 				-- Create the button box.
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
 
+			buttons_box.extend (create {EV_CELL})
+
 			create add_button.make_with_text_and_action (Interface_names.b_add, agent on_add)
 			extend_button (buttons_box, add_button)
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
+			create ok_button.make_with_text_and_action (Interface_names.b_close, agent on_ok)
 			extend_button (buttons_box, ok_button)
-
-			buttons_box.extend (create {EV_CELL})
 
 				-- Create the controls.
 			create classes_tree.make_without_targets
@@ -86,7 +89,6 @@ feature {NONE} -- Initialization
 			extend (vb)
 			set_default_push_button (add_button)
 			set_default_cancel_button (ok_button)
---			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
 		end
 
 feature -- Access
@@ -180,7 +182,7 @@ feature {NONE} -- Vision2 events
 			-- Terminate the dialog and clear the selection.
 		do
 			selected := False
-			destroy
+			hide
 		end
 
 	on_class_double_click (	x_rel: INTEGER;

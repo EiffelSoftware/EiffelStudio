@@ -13,14 +13,14 @@ inherit
 		redefine
 			initialize
 		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Default creation
 		do
-			set_icon_pixmap ((create {EB_SHARED_PIXMAPS}).icon_pixmaps.general_dialog_icon)
 			Precursor {EV_DIALOG}
+			set_icon_pixmap ((create {EB_SHARED_PIXMAPS}).icon_pixmaps.general_dialog_icon)
 		end
 
 indexing

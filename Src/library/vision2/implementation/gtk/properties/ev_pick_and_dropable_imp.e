@@ -29,6 +29,30 @@ inherit
 			create_drop_actions
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window implementation that `Current' is contained within (if any)
+		local
+			wind_ptr: POINTER
+		do
+			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if wind_ptr /= NULL then
+				Result ?= eif_object_from_c (wind_ptr)
+			end
+		end
+
+	top_level_window: EV_WINDOW is
+			-- Window the current is contained within (if any)
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp := top_level_window_imp
+			if a_window_imp /= Void then
+				Result := a_window_imp.interface
+			end
+		end
+
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
@@ -195,6 +219,7 @@ feature -- Implementation
 		local
 			app_imp: EV_APPLICATION_IMP
 			l_cursor: EV_POINTER_STYLE
+			l_top_level_window_imp: EV_WINDOW_IMP
 		do
 			app_imp := app_implementation
 			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
@@ -226,14 +251,21 @@ feature -- Implementation
 						app_imp.target_menu (pebble).show
 					end
 				else
-						-- Call the normal button events if Pick and Drop is not initiated.
-					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					l_top_level_window_imp := top_level_window_imp
+					if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
+							-- Call the normal button events if Pick and Drop is not initiated.
+						call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					end
 				end
 			else
 				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport then
 					end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				else
-					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					l_top_level_window_imp := top_level_window_imp
+					if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
+							-- Call the normal button events if Pick and Drop is not initiated.
+						call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					end
 				end
 			end
 		end

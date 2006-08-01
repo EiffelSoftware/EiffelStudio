@@ -26,6 +26,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -210,6 +217,11 @@ feature -- Load archive
 			l_double_formatter: FORMAT_DOUBLE
 		do
 			create l_double_formatter.make (16, 2)
+			if a_row.index \\ 2 = 0 then
+				a_row.set_background_color (even_line_color)
+			else
+				a_row.set_background_color (odd_line_color)
+			end
 			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_archive_row.metric_name))
 			a_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (displayed_name (a_archive_row.type)))
 			if a_archive_row.is_reference_value_set then
@@ -427,6 +439,22 @@ feature {NONE} -- Implementation
 
 	grid_wrapper: EVS_SEARCHABLE_COMPONENT [EB_METRIC_ARCHIVE_RESULT_ROW]
 			-- Sortable grid wrapper for `result_grid'
+
+	even_line_color: EV_COLOR is
+			-- Background color for even lines
+		do
+			Result := preferences.class_browser_data.even_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	odd_line_color: EV_COLOR is
+			-- Background color for odd lines
+		do
+			Result := preferences.class_browser_data.odd_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	result_grid_attached: result_grid /= Void

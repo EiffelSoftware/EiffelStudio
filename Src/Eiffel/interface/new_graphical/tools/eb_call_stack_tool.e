@@ -441,7 +441,6 @@ feature {NONE} -- Grid Implementation
 						if level > 0 then
 							select_element_by_level (level)
 						end
-						l_row.set_background_color (row_highlight_bg_color)
 					end
 				end
 			end
@@ -465,7 +464,9 @@ feature {NONE} -- Grid Implementation
 							elem.dynamic_class /= Void and then
 							elem.dynamic_class.has_feature_table
 						then
-							create Result.make (level)
+							if elem.routine /= Void then
+								create Result.make (level)
+							end
 						end
 					end
 				end

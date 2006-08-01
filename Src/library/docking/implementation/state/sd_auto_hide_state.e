@@ -160,10 +160,12 @@ feature -- Redefine.
 			animation.remove_close_timer
 
 		ensure then
-			width_height_set: direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
-				implies width_height = zone.width
-			width_height_set: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
-				implies width_height = zone.height
+			-- This contract cannot write on GTK.
+			-- Because the width/height is changed immediately
+--			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
+--				implies width_height = zone.width
+--			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
+--				implies width_height = zone.height
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is

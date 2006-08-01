@@ -55,7 +55,7 @@ feature {NONE} -- Actions
 		do
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
-				if target.groups.has (name.text) then
+				if group_exists (name.text, target) then
 					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 					wd.show_modal_to_window (Current)
 				else

@@ -49,7 +49,7 @@ feature {NONE} -- Actions
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if not name.text.is_empty and not location.text.is_empty then
-				if target.groups.has (name.text) then
+				if group_exists (name.text, target) then
 					create wd.make_with_text (group_already_exists (name.text))
 				end
 

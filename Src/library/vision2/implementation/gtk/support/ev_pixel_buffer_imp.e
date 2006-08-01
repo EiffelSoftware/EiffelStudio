@@ -37,8 +37,10 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- Initialize
+			-- Initialize `Current'.
 		do
+				-- Creating managed pointer used for inspecting RGBA data.
+			create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
 			set_is_initialized (True)
 		end
 
@@ -107,15 +109,27 @@ feature -- Command
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
-			--
+			-- Get RGBA value at `a_y', `a_y'.
+		local
+			byte_pos: INTEGER_32
+			l_managed_pointer: MANAGED_POINTER
 		do
-			--| FIXME IEK Implement me
+			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
+			l_managed_pointer := reusable_managed_pointer
+			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
+			Result := l_managed_pointer.read_natural_32 (byte_pos)
 		end
 
-	set_pixel (a_x, a_y, argb: NATURAL_32) is
-			--
+	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+			-- Set RGBA value at `a_x', `a_y' to `rgba'.
+		local
+			byte_pos: INTEGER_32
+			l_managed_pointer: MANAGED_POINTER
 		do
-			--| FIXME IEK Implement me
+			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
+			l_managed_pointer := reusable_managed_pointer
+			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
+			l_managed_pointer.put_natural_32 (rgba, byte_pos)
 		end
 
 feature -- Query
@@ -141,6 +155,9 @@ feature -- Query
 		end
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
+
+	reusable_managed_pointer: MANAGED_POINTER
+		-- Managed pointer used for inspecting current.
 
 	internal_pixmap: EV_PIXMAP
 		-- Pixmap used for fallback implementation on gtk 1.2

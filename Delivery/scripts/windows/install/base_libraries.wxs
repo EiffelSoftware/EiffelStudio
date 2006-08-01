@@ -1138,7 +1138,6 @@
 								<Directory Id="lib15" Name="lib" />
 							</Directory>
 						</Directory>
-						<Directory Id="Clib" Name="Clib" />
 					</Directory>
 					<Directory Id="lex" Name="lex">
 						<Component Id="lex" Guid="0FB26E97-8DEF-4E67-93EE-2AB49546C6D9">
@@ -1452,7 +1451,6 @@
 								<File Id="handle_use.e" Name="HANDLE~2.E" LongName="handle_use.e" />
 								<File Id="db_constant.e" Name="DB_CON~2.E" LongName="db_constant.e" />
 							</Component>
-							<Directory Id="Clib21" Name="Clib" />
 						</Directory>
 						<Directory Id="save" Name="save">
 							<Component Id="save" Guid="CCA52022-D3BD-463D-A462-2B89A85AA8E2">

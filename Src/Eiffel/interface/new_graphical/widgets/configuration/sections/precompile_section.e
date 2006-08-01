@@ -29,7 +29,7 @@ feature -- Element update
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		do
-			target.set_pre_compile (Void)
+			target.set_precompile (Void)
 			Precursor
 		end
 

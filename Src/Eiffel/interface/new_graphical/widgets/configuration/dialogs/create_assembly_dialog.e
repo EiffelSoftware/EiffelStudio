@@ -290,7 +290,7 @@ feature {NONE} -- Actions
 			if not name.text.is_empty then
 				l_local := location.text
 
-				if target.groups.has (name.text) then
+				if group_exists (name.text, target) then
 					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 				elseif l_local.is_empty then
 					create wd.make_with_text (conf_interface_names.assembly_no_location)

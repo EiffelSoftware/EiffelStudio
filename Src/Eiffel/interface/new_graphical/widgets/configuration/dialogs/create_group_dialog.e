@@ -45,6 +45,17 @@ feature {NONE} -- Implementation
 	factory: CONF_FACTORY
 			-- Factory to create a group.
 
+	group_exists (a_group: STRING; a_target: CONF_TARGET): BOOLEAN is
+			-- Check if `a_target' or any child of `a_target' already has `a_group'.
+		require
+			a_group_ok: a_group /= Void and then not a_group.is_empty
+		do
+			Result := a_target.groups.has (a_group)
+			if not Result then
+				Result := a_target.child_targets.there_exists (agent group_exists(a_group, ?))
+			end
+		end
+
 invariant
 	target_not_void: target /= Void
 	factory_not_void: factory /= Void

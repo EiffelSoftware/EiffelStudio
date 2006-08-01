@@ -76,7 +76,8 @@ create
 	make_natural_32, make_natural_64,
 	make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
-	make_string_for_dotnet, make_object_for_dotnet, make_bits,
+	make_string_for_dotnet, make_object_for_dotnet, make_native_array_object_for_dotnet,
+	make_bits,
 	make_expanded_object,
 	make_exception
 
@@ -331,6 +332,34 @@ feature -- Dotnet creation
 			type /= Type_unknown
 		end
 
+	make_native_array_object_for_dotnet (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE) is
+			-- make a object ICorDebugObjectValue item initialized to `value'
+		require
+			arg_not_void: a_eifnet_dnav /= Void
+		do
+			init
+			is_dotnet_value := True
+			eifnet_debug_value := a_eifnet_dnav
+			value_dotnet := eifnet_debug_value.icd_referenced_value
+			icd_value_info := a_eifnet_dnav.icd_value_info
+
+			if a_eifnet_dnav.is_null then
+				value_address := Void
+			else
+				value_address := a_eifnet_dnav.address
+			end
+			type := Type_object
+
+			dynamic_class_type := Void
+			dynamic_class := eiffel_system.system.native_array_class.compiled_class
+			if dynamic_class = Void then
+				dynamic_class := a_eifnet_dnav.static_class
+			end
+			is_external_type := a_eifnet_dnav.is_external_type
+		ensure
+			type /= Type_unknown
+		end
+
 feature -- Dotnet access
 
 	is_dotnet_system: BOOLEAN
@@ -392,12 +421,14 @@ feature {NONE} -- Implementation dotnet
 		local
 			l_edvi: EIFNET_DEBUG_VALUE_INFO
 		do
-			if not is_external_type and then dynamic_class/= Void then
+			if not is_external_type and then dynamic_class /= Void then
 				Result := dynamic_class.name_in_upper
 			elseif is_dotnet_value and is_external_type then
 				l_edvi := eifnet_debug_value.icd_value_info
 				if l_edvi /= Void and then l_edvi.has_object_interface then
 					Result := l_edvi.value_class_name
+				elseif dynamic_class /= Void then
+					Result := dynamic_class.name_in_upper
 				else
 					Result := "{Token=0x" + value_class_token.to_hex_string + "}"
 				end
@@ -522,7 +553,7 @@ feature -- Status report
 			else
 				l_max := Application.displayed_string_size
 					--| if l_max = -1, then do no truncate upper string
-					
+
 				l_str := truncated_string_representation (0, l_max)
 				if l_str /= Void then
 					if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
@@ -1033,6 +1064,8 @@ feature -- Access
 			--| "value _string"
 			--| <0x12345678>
 			--| Void
+		local
+			s: STRING_32
 		do
 			inspect type
 			when Type_boolean then
@@ -1076,6 +1109,12 @@ feature -- Access
 					Result.append_character ('<')
 					Result.append (value_address)
 					Result.append_character ('>')
+					if eifnet_debug_value /= Void then
+						s := eifnet_debug_value.extra_output_details
+						if s /= Void then
+							Result.append (s)
+						end
+					end
 				else
 					if type = type_expanded_object then
 						Result := ""
@@ -1191,7 +1230,7 @@ feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER, DBG_EXPRESSION_EVALU
 --	is_type_unknown       : BOOLEAN is do Result := type = Type_unknown end
 	is_type_boolean       : BOOLEAN is do Result := type = Type_boolean end
 --	is_type_character     : BOOLEAN is do Result := type = Type_character end
---	is_type_integer_32       : BOOLEAN is do Result := type = Type_integer_32 end
+	is_type_integer_32    : BOOLEAN is do Result := type = Type_integer_32 end
 --	is_type_real          : BOOLEAN is do Result := type = type_real_32 end
 --	is_type_double        : BOOLEAN is do Result := type = type_real_64 end
 --	is_type_bits          : BOOLEAN is do Result := type = Type_bits end

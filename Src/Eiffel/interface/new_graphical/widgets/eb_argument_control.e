@@ -223,7 +223,9 @@ feature {NONE} -- GUI
 			arguments_grid.resize_actions.extend (
 				agent (x, y, width, height: INTEGER)
 					do
-						arguments_grid.column (1).set_width (width)
+						if arguments_grid.column_count > 0 then
+							arguments_grid.column (1).set_width (width)
+						end
 					end)
 
 			create l_border_box

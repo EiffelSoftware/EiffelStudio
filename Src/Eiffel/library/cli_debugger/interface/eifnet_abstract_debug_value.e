@@ -102,6 +102,12 @@ feature -- Special Dotnet status
 			is_static := v
 		end
 
+feature -- Output for debugger
+
+	extra_output_details: STRING_32 is
+		do
+		end
+
 feature {NONE} -- Special childrens
 
 	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
@@ -116,8 +122,8 @@ feature {NONE} -- Special childrens
 			l_md_import: MD_IMPORT
 			l_tokens: DS_ARRAYED_LIST [INTEGER]
 			l_tokens_array: ARRAY [INTEGER]
-			l_class_tokens_array: ARRAY [INTEGER]
-			l_ct_index: INTEGER
+--#			l_class_tokens_array: ARRAY [INTEGER]
+--#			l_ct_index: INTEGER
 			l_t_index: INTEGER
 			l_t_upper: INTEGER
 
@@ -149,34 +155,40 @@ feature {NONE} -- Special childrens
 					l_md_import := l_icd_module.interface_md_import
 
 						--| Get inherited "direct" Fields
-					l_enum_hdl := default_pointer
-					l_class_tokens_array := l_md_import.enum_interface_impls ($l_enum_hdl, l_class_token, 20)
-					l_md_import.close_enum (l_enum_hdl)
-					if l_class_tokens_array = Void then
-							--| Get "direct" Fields
-						l_class_tokens_array := << l_class_token >>
-					else
-						l_class_tokens_array.grow (l_class_tokens_array.count + 1)
-						l_class_tokens_array.enter (l_class_token, l_class_tokens_array.upper)
-					end
-					from
-						l_ct_index := l_class_tokens_array.upper
-					until
-						l_ct_index < l_class_tokens_array.lower
-					loop
-						l_class_token := l_class_tokens_array[l_ct_index]
+					create l_tokens.make (5)
+
+--| 2006-08-01: Commented temporary previous improvement to get more attributes
+--| but this need more checking to be sure the attributes are related to `l_class_token'
+--#					l_enum_hdl := default_pointer
+--#					l_class_tokens_array := l_md_import.enum_interface_impls ($l_enum_hdl, l_class_token, 20)
+--#					l_md_import.close_enum (l_enum_hdl)
+--#					if l_class_tokens_array = Void then
+--#							--| Get "direct" Fields
+--#						l_class_tokens_array := << l_class_token >>
+--#					else
+--#						l_class_tokens_array.grow (l_class_tokens_array.count + 1)
+--#						l_class_tokens_array.enter (l_class_token, l_class_tokens_array.upper)
+--#					end
+--#					from
+--#						l_ct_index := l_class_tokens_array.upper
+--#					until
+--#						l_ct_index < l_class_tokens_array.lower
+--#					loop
+--#						l_class_token := l_class_tokens_array [l_ct_index]
 						l_enum_hdl := default_pointer
 						l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
 						l_tokens_count := l_md_import.count_enum (l_enum_hdl)
 						if l_tokens_count > 0 then
-							create l_tokens.make (l_tokens_count)
+							if l_tokens_count > l_tokens.count then
+								l_tokens.resize (l_tokens.count + l_tokens_count)
+							end
 							from
 								l_t_upper := l_tokens_array.upper
 								l_t_index := l_tokens_array.lower
 							until
 								l_t_index > l_t_upper
 							loop
-								l_tokens.put_last (l_tokens_array.item (l_t_index))
+								l_tokens.force_last (l_tokens_array.item (l_t_index))
 								l_t_index := l_t_index + 1
 							end
 							if l_tokens_count > l_tokens_array.count then
@@ -189,19 +201,20 @@ feature {NONE} -- Special childrens
 								until
 									l_t_index > l_t_upper
 								loop
-									l_tokens.put_last (l_tokens_array.item (l_t_index))
+									l_tokens.force_last (l_tokens_array.item (l_t_index))
 									l_t_index := l_t_index + 1
 								end
 							end
 						end
 						l_md_import.close_enum (l_enum_hdl)
-						l_ct_index := l_ct_index - 1
-					end
+--#						l_ct_index := l_ct_index - 1
+--#					end
 
 -- FIXME JFIAT: 2004-01-14 : Check with User's preference limit.
 -- FIXME JFIAT: 2004-01-14 : do we get all inherited fields too ?
 
-					if l_tokens /=  Void then
+					check l_tokens /= Void end
+					if not l_tokens.is_empty then
 						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
 						from
 							l_tokens_cursor := l_tokens.new_cursor
@@ -236,14 +249,14 @@ feature {NONE} -- Special childrens
 									if l_att_debug_value /= Void then
 										l_att_debug_value.set_static (l_is_static)
 										l_att_debug_value.set_name (l_att_name)
-										Result.put_last (l_att_debug_value)
+										Result.force_last (l_att_debug_value)
 									end
 								else
 									create l_error_debug_value.make_with_name (l_att_name)
 									if l_error_message /= Void then
 										l_error_debug_value.set_message (l_error_message)
 									end
-									Result.put_last (l_error_debug_value)
+									Result.force_last (l_error_debug_value)
 								end
 							end
 							debug ("DBG_EXTRA_DISPLAY")
@@ -255,7 +268,7 @@ feature {NONE} -- Special childrens
 									end
 									create l_error_debug_value.make_with_name (l_att_name)
 									l_error_debug_value.set_message ("Const value are not displayed")
-									Result.put_last (l_error_debug_value)
+									Result.force_last (l_error_debug_value)
 								end
 							end
 							l_tokens_cursor.forth

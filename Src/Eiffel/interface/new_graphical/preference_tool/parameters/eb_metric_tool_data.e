@@ -56,8 +56,8 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER
 		do
 			create l_manager.make (preferences, "tools.metric_tool")
-			criterion_completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_height_string, 250)
-			criterion_completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_width_string, 200)
+			criterion_completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_height_string, 350)
+			criterion_completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_width_string, 240)
 		end
 
 	preferences: PREFERENCES

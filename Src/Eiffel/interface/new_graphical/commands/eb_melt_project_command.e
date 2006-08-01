@@ -176,7 +176,7 @@ feature {NONE} -- Compilation implementation
 	launch_c_compilation is
 			-- Launch the C compilation.
 		do
-			if start_c_compilation and then Eiffel_project.freezing_occurred then
+			if start_c_compilation and then Eiffel_project.freezing_occurred and then not lace.compile_all_classes then
 				if Eiffel_project.freezing_occurred then
 					output_manager.add_string ("System had to be frozen to include new or modified externals.")
 					output_manager.add_new_line

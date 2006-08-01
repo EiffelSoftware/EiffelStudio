@@ -115,12 +115,6 @@
 			<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Queries" unit="feature">
-		<description>Number of queries</description>
-		<criterion>
-			<normal_criterion negation="False" name="is_unique" scope="feature"></normal_criterion>
-		</criterion>
-	</basic_metric>
 	<basic_metric name="Routines" unit="feature">
 		<description>Number of routines</description>
 		<criterion>
@@ -257,15 +251,6 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. queries" unit="feature">
-		<description>Number of immediate queries</description>
-		<criterion>
-			<and_criterion negation="False" name="and" scope="feature">				
-				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
-				<normal_criterion negation="False" name="is_unique" scope="feature"></normal_criterion>
-			</and_criterion>
-		</criterion>
-	</basic_metric>
 	<basic_metric name="Imm. routines" unit="feature">
 		<description>Number of immediate routines</description>
 		<criterion>
@@ -281,4 +266,240 @@
 	<basic_metric name="Generics" unit="generic">
 		<description>Number of class generics</description>
 	</basic_metric>
+	<basic_metric name="Line of code" unit="line">
+		<description>Number of lines</description>
+	</basic_metric>
+	<basic_metric name="Inherited features" unit="feature">
+		<description>Number of inherited features</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="True" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="True" name="is_invariant_feature" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Compilation" unit="compilation">
+		<description>Number of Compilations</description>
+	</basic_metric>
+	<basic_metric name="Postcondition clauses" unit="assertion">
+		<description>Number of postcondition clauses</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_postcondition" scope="assertion"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Precondition clauses" unit="assertion">
+		<description>Number of precondition clauses</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_precondition" scope="assertion"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Feature assertions" unit="assertion">
+		<description>Number of feature assertions (precondtions and postconditions)</description>
+		<criterion>
+			<or_criterion negation="False" name="or" scope="assertion">				
+				<normal_criterion negation="False" name="is_precondition" scope="assertion"></normal_criterion>
+				<normal_criterion negation="False" name="is_postcondition" scope="assertion"></normal_criterion>
+			</or_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. feature assertions" unit="assertion">
+		<description>Number of immediate feature assertions (precondtions and postconditions)</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="assertion">				
+				<normal_criterion negation="False" name="is_immediate" scope="assertion"></normal_criterion>
+				<or_criterion negation="False" name="or" scope="assertion">					
+					<normal_criterion negation="False" name="is_precondition" scope="assertion"></normal_criterion>
+					<normal_criterion negation="False" name="is_postcondition" scope="assertion"></normal_criterion>
+				</or_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. precondition clauses" unit="assertion">
+		<description>Number of immediate precondition clauses</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="assertion">				
+				<normal_criterion negation="False" name="is_precondition" scope="assertion"></normal_criterion>
+				<normal_criterion negation="False" name="is_immediate" scope="assertion"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. postcondition clauses" unit="assertion">
+		<description>Number of immediate postcondition clauses</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="assertion">				
+				<normal_criterion negation="False" name="is_postcondition" scope="assertion"></normal_criterion>
+				<normal_criterion negation="False" name="is_immediate" scope="assertion"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Formals" unit="argument">
+		<description>Number of formals</description>
+	</basic_metric>
+	<basic_metric name="Invariants" unit="assertion">
+		<description>Number of invariant clauses</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_invariant" scope="assertion"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. invariants" unit="assertion">
+		<description>Number of immediate invariant clauses</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="assertion">				
+				<normal_criterion negation="False" name="is_invariant" scope="assertion"></normal_criterion>
+				<normal_criterion negation="False" name="is_immediate" scope="assertion"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Locals" unit="local">
+		<description>Number of locals</description>
+	</basic_metric>
+	<basic_metric name="Imm. formals" unit="argument">
+		<description>Number of immediate formals</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_immediate" scope="argument"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. locals" unit="local">
+		<description>Number of immediate locals</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_immediate" scope="local"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Unused locals" unit="local">
+		<description>Number of unused locals</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="local">				
+				<normal_criterion negation="False" name="is_immediate" scope="local"></normal_criterion>
+				<normal_criterion negation="True" name="is_used" scope="local"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Imm. queries" unit="feature">
+		<description>Number of immediate queries</description>
+		<criterion>
+			<and_criterion negation="False" name="and" scope="feature">				
+				<normal_criterion negation="False" name="is_immediate" scope="feature"></normal_criterion>
+				<normal_criterion negation="False" name="is_query" scope="feature"></normal_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Queries" unit="feature">
+		<description>Number of queries</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_query" scope="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Constrained generics" unit="generic">
+		<description>Number of constraint generics</description>
+		<criterion>
+			<normal_criterion negation="False" name="has_constraint" scope="generic"></normal_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Clients" unit="class">
+		<description>Number of clients</description>
+		<criterion>
+			<domain_criterion negation="False" name="supplier_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Indirect clients" unit="class">
+		<description>Number of indirect clients</description>
+		<criterion>
+			<domain_criterion negation="False" name="indirect_client_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Suppliers" unit="class">
+		<description>Number of suppliers</description>
+		<criterion>
+			<domain_criterion negation="False" name="client_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Indirect suppliers" unit="class">
+		<description>Number of indirect suppliers</description>
+		<criterion>
+			<domain_criterion negation="False" name="indirect_client_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Parents" unit="class">
+		<description>Number of parents</description>
+		<criterion>
+			<domain_criterion negation="False" name="heir_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Indirect parents" unit="class">
+		<description>Number of indirect parents</description>
+		<criterion>
+			<domain_criterion negation="False" name="indirect_heir_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Heirs" unit="class">
+		<description>Number of heirs</description>
+		<criterion>
+			<domain_criterion negation="False" name="parent_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Indirect heris" unit="class">
+		<description>Number of indirect heirs</description>
+		<criterion>
+			<domain_criterion negation="False" name="indirect_parent_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Descendants" unit="class">
+		<description>Number of descendants</description>
+		<criterion>
+			<domain_criterion negation="False" name="ancestor_is" scope="class">
+				<domain>
+					<domain_item type="delayed" id=""></domain_item>
+				</domain>
+			</domain_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Dependents" unit="class">
+		<description>Number of dependants</description>
+		<criterion>
+			<or_criterion negation="False" name="or" scope="class">				
+				<domain_criterion negation="False" name="client_is" scope="class">
+					<domain>
+						<domain_item type="delayed" id=""></domain_item>
+					</domain>
+				</domain_criterion>
+				<domain_criterion negation="False" name="descendant_is" scope="class">
+					<domain>
+						<domain_item type="delayed" id=""></domain_item>
+					</domain>
+				</domain_criterion>
+			</or_criterion>
+		</criterion>
+	</basic_metric>	
 </metric>

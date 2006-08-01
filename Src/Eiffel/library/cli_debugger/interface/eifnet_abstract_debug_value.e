@@ -102,12 +102,6 @@ feature -- Special Dotnet status
 			is_static := v
 		end
 
-feature -- Output for debugger
-
-	extra_output_details: STRING_32 is
-		do
-		end
-
 feature {NONE} -- Special childrens
 
 	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is

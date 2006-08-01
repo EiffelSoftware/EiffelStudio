@@ -13,7 +13,8 @@ inherit
 
 	ABSTRACT_SPECIAL_VALUE
 		redefine
-			kind
+			kind,
+			extra_output_details
 		end
 
 	EIFNET_ABSTRACT_DEBUG_VALUE

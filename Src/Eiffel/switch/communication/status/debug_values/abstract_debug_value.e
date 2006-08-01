@@ -100,6 +100,12 @@ feature -- Comparison
 			Result := name < other.name
 		end;
 
+feature -- Output for debugger
+
+	extra_output_details: STRING_32 is
+		do
+		end
+
 feature -- Output
 
 	append_to (st: TEXT_FORMATTER; indent: INTEGER) is

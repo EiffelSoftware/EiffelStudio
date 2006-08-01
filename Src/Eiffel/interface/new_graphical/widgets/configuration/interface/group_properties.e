@@ -197,8 +197,8 @@ feature {NONE} -- Implementation
 				create l_class_opt_prop.make_with_dialog (conf_interface_names.group_class_option_name, l_class_opt_dial)
 				l_class_opt_prop.set_description (conf_interface_names.group_class_option_description)
 				l_class_opt_prop.set_display_agent (agent output_class_options)
-				if a_group.class_options /= Void then
-					l_class_opt_prop.set_value (a_group.class_options)
+				if a_group.internal_class_options /= Void then
+					l_class_opt_prop.set_value (a_group.internal_class_options)
 				end
 				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options)
 				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING]}?, agent handle_value_changes))

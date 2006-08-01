@@ -75,7 +75,7 @@ feature -- Visit nodes
 						l_old_pre_not_void: l_old_pre /= Void
 					end
 					l_pre.set_options (l_old_pre.internal_options)
-					l_pre.set_class_options (l_old_pre.class_options)
+					l_pre.set_class_options (l_old_pre.internal_class_options)
 				end
 				process_with_new (a_target.internal_libraries, new_target.internal_libraries)
 				process_with_new (a_target.internal_assemblies, new_target.internal_assemblies)
@@ -92,7 +92,7 @@ feature -- Visit nodes
 			if not is_error then
 				a_group.set_description (new_group.description)
 				a_group.set_options (new_group.internal_options)
-				a_group.set_class_options (new_group.class_options)
+				a_group.set_class_options (new_group.internal_class_options)
 				a_group.set_readonly (new_group.internal_read_only)
 				if a_group.is_cluster then
 					l_cluster ?= a_group

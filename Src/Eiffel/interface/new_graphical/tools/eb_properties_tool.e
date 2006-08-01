@@ -193,6 +193,9 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					properties.set_expanded_section_store (group_section_expanded_status)
 				elseif l_cs /= Void then
 					l_group := l_cs.class_i.group
+					if l_group.is_used_library then
+						l_group := l_group.target.lowest_used_in_library
+					end
 					current_system := l_group.target.system
 					is_il_generation := l_group.target.setting_msil_generation
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)

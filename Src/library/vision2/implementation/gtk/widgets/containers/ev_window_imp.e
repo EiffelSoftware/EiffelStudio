@@ -247,9 +247,6 @@ feature -- Element change
 			if i /= Void then
 				w ?= i.implementation
 				on_removed_item (w)
-				check
-					item_has_implementation: w /= Void
-				end
 				{EV_GTK_EXTERNALS}.gtk_container_remove (hbox, w.c_object)
 			end
 			if v /= Void then
@@ -512,6 +509,19 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				set_focused_widget (a_widget)
 				a_widget.on_focus_changed (True)
 			end
+		end
+
+feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
+
+	has_modal_window: BOOLEAN
+			-- Does `Current' have a transient window that is modal to `Current'.
+
+	set_has_modal_window (a_bool: BOOLEAN) is
+			-- Set `has_modal_window' to `a_bool'.
+		require
+			not_set: a_bool = not has_modal_window
+		do
+			has_modal_window := a_bool
 		end
 
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation

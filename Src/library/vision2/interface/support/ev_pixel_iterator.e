@@ -10,7 +10,7 @@ class
 inherit
 	BILINEAR [EV_PIXEL_BUFFER_PIXEL]
 
-creation
+create
 	{EV_PIXEL_BUFFER_I}
 		make_for_pixel_buffer
 

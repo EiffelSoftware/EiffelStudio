@@ -102,7 +102,7 @@ feature -- Redefine
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
 			-- Redefine
 		do
-
+			tool_bar := a_tool_bar
 		end
 
 feature {NONE} -- Implementation

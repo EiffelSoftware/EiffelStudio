@@ -20,6 +20,12 @@
 			<normal_criterion negation="True" name="is_compiled" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
+	<basic_metric name="Compiled classes" unit="class">
+		<description>Number of compiled classes</description>
+		<criterion>
+			<normal_criterion negation="False" name="is_compiled" scope="class"></normal_criterion>
+		</criterion>
+	</basic_metric>
 	<basic_metric name="Generic classes" unit="class">
 		<description>Number of generic classes</description>
 		<criterion>

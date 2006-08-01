@@ -12,6 +12,7 @@ class
 inherit
 	QL_ARGUMENT_CRITERION
 		undefine
+			set_used_in_domain_generator,
 			is_atomic,
 			set_source_domain,
 			has_inclusive_intrinsic_domain,

@@ -356,6 +356,9 @@ feature{NONE} -- Implementation
 						internal_actual_criterion := criterion
 					end
 				end
+				if internal_actual_criterion.used_in_domain_generator = Void then
+					internal_actual_criterion.set_used_in_domain_generator (Current)
+				end
 			end
 			Result := internal_actual_criterion
 		ensure

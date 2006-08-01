@@ -14,8 +14,7 @@ inherit
 		undefine
 			process,
 			has_inclusive_intrinsic_domain,
-			has_exclusive_intrinsic_domain,
-			set_used_in_domain_generator
+			has_exclusive_intrinsic_domain
 		end
 
 feature -- Process

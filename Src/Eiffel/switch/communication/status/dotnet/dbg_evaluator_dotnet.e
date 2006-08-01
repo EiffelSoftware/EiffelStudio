@@ -54,6 +54,8 @@ feature {DBG_EVALUATOR} -- Interface
 			l_icd_function: ICOR_DEBUG_FUNCTION
 			l_ctype: CLASS_TYPE
 			exc_dv: EXCEPTION_DEBUG_VALUE
+			nat_ct: NATIVE_ARRAY_CLASS_TYPE
+			nat_edv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function : ")
@@ -79,40 +81,106 @@ feature {DBG_EVALUATOR} -- Interface
 			if l_icdv_obj = Void then
 				notify_error (Cst_error_unable_to_get_target_object, Void)
 			else
-					--| Get the ICorDebugFunction to call.
-				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, realf)
-
-					--| And then let's process the following ...
-				if l_icd_function = Void then
-					notify_error (Cst_error_unable_to_get_icd_function, Void)
+				nat_ct ?= l_ctype
+				if nat_ct /= Void then
+					if a_target /= Void then
+						nat_edv ?= a_target.eifnet_debug_value
+					end
+					if nat_edv /= Void then
+						internal_evaluate_function_on_native_array (nat_edv, realf, l_params)
+					else
+						notify_error (Cst_error_occurred, " NATIVE_ARRAY is not yet fully supported")
+					end
 				else
-					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params)
-					if error_occurred then
-						l_error_message := "%"" + realf.feature_name + "%" : "
-						if evaluation_aborted then
-							l_error_message.append_string ("Evaluation aborted")
-						elseif exception_occurred then
-							exc_dv := last_result_value.value_exception
-							if exc_dv /= Void then
-								exc_dv.set_name (f.feature_name)
-								exc_dv.set_tag ("Feature [" + f.feature_name + "]: an exception occurred")
-								l_error_message.append_string ("Exception occurred during evaluation"
-										+ " of {" + f.written_class.name_in_upper + "}." + f.feature_name + ": %N"
-										+ exc_dv.display_message
---										+ last_exception_trace
-									)
-							else
+						--| Get the ICorDebugFunction to call.
+					l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, realf)
+
+						--| And then let's process the following ...
+					if l_icd_function = Void then
+						notify_error (Cst_error_unable_to_get_icd_function, Void)
+					else
+						last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params)
+						if error_occurred then
+							l_error_message := "%"" + realf.feature_name + "%" : "
+							if evaluation_aborted then
+								l_error_message.append_string ("Evaluation aborted")
+							elseif exception_occurred then
+								exc_dv := last_result_value.value_exception
+								if exc_dv /= Void then
+									exc_dv.set_name (f.feature_name)
+									exc_dv.set_tag ("Feature [" + f.feature_name + "]: an exception occurred")
+									l_error_message.append_string ("Exception occurred during evaluation"
+											+ " of {" + f.written_class.name_in_upper + "}." + f.feature_name + ": %N"
+											+ exc_dv.display_message
+	--										+ last_exception_trace
+										)
+								else
+									l_error_message.append_string (error_message)
+								end
+							elseif error_occurred then
 								l_error_message.append_string (error_message)
+							else
+								l_error_message.append_string (" error occurred")
 							end
-						elseif error_occurred then
-							l_error_message.append_string (error_message)
-						else
-							l_error_message.append_string (" error occurred")
+							notify_error (Cst_error_occurred, l_error_message)
 						end
-						notify_error (Cst_error_occurred, l_error_message)
 					end
 				end
 			end
+		end
+
+	internal_evaluate_function_on_native_array (nat_edv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE; f: FEATURE_I; a_params: ARRAY [DUMP_VALUE]) is
+			-- Internal evaluation on NATIVE_ARRAY dotnet pseudo objects
+			-- The debugger does not fully support any evaluation on it
+			-- but we try to support as much as possible
+			-- FIXME: improve support of NATIVE_ARRAY under dotnet
+		require
+			nat_edv_not_void: nat_edv /= Void
+			f_not_void: f /= Void
+		local
+			fn: STRING
+			dv: DUMP_VALUE
+			idv: ICOR_DEBUG_VALUE
+			l_adv: EIFNET_ABSTRACT_DEBUG_VALUE
+			i: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				nat_edv.get_array_value
+				fn := f.feature_name
+				if fn /= Void then
+					if fn.is_equal ("count") then
+						create last_result_value.make_integer_32 (nat_edv.array_value.get_count, system.integer_32_class.compiled_class)
+					elseif fn.is_equal ("upper") then
+						create last_result_value.make_integer_32 (nat_edv.array_value.get_count - 1, system.integer_32_class.compiled_class)
+					elseif fn.is_equal ("lower") then
+						create last_result_value.make_integer_32 (0, system.integer_32_class.compiled_class)
+					elseif fn.is_equal ("item") or else fn.is_equal ("infix %"@%"") then
+						if a_params /= Void and then a_params.count > 0 then
+							dv := a_params [a_params.lower]
+							if dv.is_type_integer_32 then
+								i := dv.value_integer_32
+								idv := nat_edv.array_value.get_element_at_position (i)
+								if idv /= Void then
+									l_adv := debug_value_from_icdv (idv, Void)
+									last_result_value := l_adv.dump_value
+								end
+							end
+						end
+					else
+						notify_error (Cst_error_occurred, " NATIVE_ARRAY is not yet fully supported, unable to evaluate %"" + fn + "%"")
+					end
+				end
+				nat_edv.release_array_value
+			else
+				notify_error (Cst_error_occurred, " an internal error occurred during evaluation of  %"{NATIVE_ARRAY}." + f.feature_name + "%"")
+				if nat_edv.array_value /= Void then
+					nat_edv.release_array_value
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;

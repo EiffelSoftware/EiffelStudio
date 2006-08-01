@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone representating a breakable point."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	CALL_STACK_STONE 
+	CALL_STACK_STONE
 
 inherit
 	FEATURE_STONE
@@ -46,7 +46,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (level_num: INTEGER) is
@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 		local
 			elem: EIFFEL_CALL_STACK_ELEMENT
 			curr_cs: EIFFEL_CALL_STACK
+			f: E_FEATURE
 		do
 			level_number := level_num
 			curr_cs := Application.status.current_call_stack
@@ -63,11 +64,14 @@ feature {NONE} -- Initialization
 				elem ?= curr_cs.i_th (level_num)
 				if elem /= Void then
 					obj_make (elem.object_address, " ", elem.dynamic_class)
-					feature_make (elem.routine)
+					f := elem.routine
+					if f /= Void then
+						feature_make (f)
+					end
 				end
 			end
 		end
- 
+
 feature -- Access
 
 	same_as (other: STONE): BOOLEAN is

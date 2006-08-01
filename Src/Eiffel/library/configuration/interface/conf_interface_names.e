@@ -126,7 +126,7 @@ feature -- Target names and descriptions
 	target_msil_generation_type_description: STRING is "Type of binary to generate."
 	target_msil_key_file_name_name: STRING is "Signing Key"
 	target_msil_key_file_name_description: STRING is "Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file."
-	target_msil_use_optimized_precompile_name: STRING is "Use optimized precompile"
+	target_msil_use_optimized_precompile_name: STRING is "Use Optimized Precompile"
 	target_msil_use_optimized_precompile_description: STRING is "Use an optimized version of a precompile?"
 	target_multithreaded_name: STRING is "Multithreaded"
 	target_multithreaded_description: STRING is "Generate a multithreaded application?"
@@ -212,7 +212,7 @@ feature -- Target names and descriptions
 	group_description_description: STRING is "Description of the group."
 	group_condition_name: STRING is "Condition"
 	group_condition_description: STRING is "Conditions for this group to be used."
-	group_readonly_name: STRING is "Read only"
+	group_readonly_name: STRING is "Read Only"
 	group_readonly_description: STRING is "Is this group read only?"
 	group_location_name: STRING is "Location"
 	group_location_description: STRING is "Location of this group."
@@ -279,7 +279,7 @@ feature -- Option names and descriptions
 
 	option_debug_name: STRING is "Enabled"
 	option_debug_description: STRING is "Are debug clauses globally enabled?"
-	option_unnamed_debug_name: STRING is "Unnamed debugs"
+	option_unnamed_debug_name: STRING is "Unnamed Debugs"
 
 	option_warnings_name: STRING is "Enabled"
 	option_warnings_description: STRING is "Are warnings enabled?"

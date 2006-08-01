@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 			l_assemblies: LIST  [STRING]
 			l_item: EV_LIST_ITEM
 			l_path, l_name: STRING
-			i, j, cnt: INTEGER
 		do
 			Precursor
 
@@ -114,14 +113,7 @@ feature {NONE} -- Initialization
 					l_assemblies.after
 				loop
 					l_path := l_assemblies.item
-					cnt := l_path.count
-					i := l_path.last_index_of (operating_environment.directory_separator, cnt)
-					j := l_path.last_index_of ('.', cnt)
-					if i > 0 and j > 0 then
-						l_name := l_path.substring (i+1, j-1)
-					else
-						l_name := l_path
-					end
+					l_name := name_from_location (l_path)
 					create l_item.make_with_text (l_name)
 					l_item.select_actions.extend (agent fill_assembly (l_name, l_path))
 					assemblies.extend (l_item)
@@ -267,14 +259,17 @@ feature {NONE} -- Actions
 				browse_dialog.set_start_directory (l_dir.name)
 			end
 
-			browse_dialog.open_actions.extend (agent set_location)
+			browse_dialog.open_actions.extend (agent fill_fields)
 			browse_dialog.show_modal_to_window (Current)
 		end
 
-	set_location is
+	fill_fields is
 			-- Set location from `browse_dialog'.
 		do
 			location.set_text (browse_dialog.file_name)
+			if name.text.is_empty then
+				name.set_text (name_from_location (browse_dialog.file_name))
+			end
 		end
 
 	on_cancel is
@@ -313,6 +308,25 @@ feature {NONE} -- Actions
 		end
 
 feature {NONE} -- Implementation
+
+	name_from_location (a_location: STRING): STRING is
+			-- Get a name out of `a_directory'.
+		require
+			a_location_not_void: a_location /= Void
+		local
+			l_cnt, i, j: INTEGER
+		do
+			l_cnt := a_location.count
+			i := a_location.last_index_of (operating_environment.directory_separator, l_cnt)
+			j := a_location.last_index_of ('.', l_cnt)
+			if i > 0 and j > 0 then
+				Result := a_location.substring (i+1, j-1)
+			else
+				Result := a_location
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	sort_assemblies is
 			-- Sort `assemblies'.

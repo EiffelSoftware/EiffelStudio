@@ -190,14 +190,25 @@ feature {NONE} -- Actions
 				browser_dialog.set_start_directory (l_dir.name)
 			end
 
-			browser_dialog.ok_actions.extend (agent set_location)
+			browser_dialog.ok_actions.extend (agent fill_fields)
 			browser_dialog.show_modal_to_window (Current)
 		end
 
-	set_location is
+	fill_fields is
 			-- Set location from `browser_dialog'.
+		local
+			l_name: STRING
+			i: INTEGER
 		do
 			location.set_text (browser_dialog.directory)
+			if name.text.is_empty then
+				l_name := browser_dialog.directory.twin
+				i := l_name.last_index_of (operating_environment.directory_separator, l_name.count)
+				if i > 0 then
+					l_name := l_name.substring (i+1, l_name.count)
+					name.set_text (l_name)
+				end
+			end
 		end
 
 	on_cancel is

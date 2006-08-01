@@ -205,14 +205,17 @@ feature {NONE} -- Actions
 				browse_dialog.set_start_directory (l_dir.name)
 			end
 
-			browse_dialog.open_actions.extend (agent set_location)
+			browse_dialog.open_actions.extend (agent fill_fields)
 			browse_dialog.show_modal_to_window (Current)
 		end
 
-	set_location is
+	fill_fields is
 			-- Set location from `browse_dialog'.
 		do
 			location.set_text (browse_dialog.file_name)
+			if name.text.is_empty then
+				name.set_text (name_from_location (browse_dialog.file_name))
+			end
 		end
 
 	fill_library (a_name, a_subdir, a_file: STRING) is
@@ -257,6 +260,25 @@ feature {NONE} -- Actions
 
 
 feature {NONE} -- Implementation
+
+	name_from_location (a_location: STRING_8): STRING_8 is
+			-- Get a name out of a_directory.
+		require
+			a_location_not_void: a_location /= Void
+		local
+			l_cnt, i, j: INTEGER_32
+		do
+			l_cnt := a_location.count
+			i := a_location.last_index_of (operating_environment.directory_separator, l_cnt)
+			j := a_location.last_index_of ('.', l_cnt)
+			if i > 0 and j > 0 then
+				Result := a_location.substring (i + 1, j - 1)
+			else
+				Result := a_location
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	browse_dialog: EV_FILE_OPEN_DIALOG is
 			-- Dialog to browse to a library

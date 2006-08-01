@@ -58,12 +58,10 @@ feature {NONE} -- Implementation
 	launch_c_compilation is
 			-- Launch the C compilation.
 		do
-			if start_c_compilation then
+			if start_c_compilation and then not lace.compile_all_classes then
 					-- Display message.
 				output_manager.add_string ("Eiffel system recompiled")
 				output_manager.add_new_line
-
-				Eiffel_project.call_finish_freezing (True)
 			end
 		end
 

@@ -57,9 +57,9 @@ feature {NONE}  -- Implementation
 			c_gtk_paint_extension (l_imp.c_object, l_style, a_is_selected,
 									 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
 			if a_is_selected then
-				draw_pixmap_text_selected (internal_tab.parent, a_width)
+				draw_pixmap_text_selected (internal_tab.parent, internal_tab.x, a_width)
 			else
-				draw_pixmap_text_unselected (internal_tab.parent, a_width)
+				draw_pixmap_text_unselected (internal_tab.parent, internal_tab.x, a_width)
 			end
 		end
 

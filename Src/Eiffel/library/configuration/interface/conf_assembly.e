@@ -273,6 +273,12 @@ feature -- Access queries
 			create Result
 		end
 
+	class_options: HASH_TABLE [CONF_OPTION, STRING]
+		once
+				-- classes in assemblies have no options
+			create Result.make (0)
+		end
+
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return assembly dependency with `a_name' if there is any.
 		do

@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 					l_renaming.forth
 				end
 			end
-			l_c_opt := a_group.class_options
+			l_c_opt := a_group.internal_class_options
 			if l_c_opt /= Void then
 				from
 					l_c_opt.start

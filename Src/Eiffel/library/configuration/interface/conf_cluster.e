@@ -163,6 +163,33 @@ feature -- Access queries
 			end
 		end
 
+	class_options: like internal_class_options is
+			-- Options for classes.
+		local
+			l_lib: CONF_LIBRARY
+		do
+				-- if used as library, get options from application level
+				-- either if the library is defined there or otherwise directly from the application target
+			if is_used_library then
+				l_lib := find_parent_library_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.class_options.twin
+				else
+					create Result.make (0)
+				end
+			else
+					-- get local options
+				if parent /= Void then
+					Result := parent.class_options.twin
+				else
+					create Result.make (0)
+				end
+				if internal_class_options /= Void then
+					Result.merge (internal_class_options)
+				end
+			end
+		end
+
 	mapping: like internal_mapping is
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		do

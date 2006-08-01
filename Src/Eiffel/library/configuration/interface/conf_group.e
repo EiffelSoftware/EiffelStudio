@@ -168,12 +168,17 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	class_options: HASH_TABLE [CONF_OPTION, STRING] is
+			-- Options for classes.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	get_class_options (a_class: STRING): CONF_OPTION is
 			-- Get the options for `a_class'.
 		do
-			if class_options /= Void then
-				Result := class_options.item (a_class)
-			end
+			Result := class_options.item (a_class)
 			if Result /= Void then
 				Result := Result.twin
 				Result.merge (options)
@@ -379,9 +384,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	set_class_options (a_options: like class_options) is
 			-- Set `a_options'.
 		do
-			class_options := a_options
+			internal_class_options := a_options
 		ensure
-			class_options_set: class_options = a_options
+			class_options_set: internal_class_options = a_options
 		end
 
 	add_class_options (a_option: CONF_OPTION; a_class: STRING) is
@@ -391,12 +396,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 		do
-			if class_options = Void then
-				create class_options.make (1)
+			if internal_class_options = Void then
+				create internal_class_options.make (1)
 			end
-			class_options.force (a_option, a_class)
+			internal_class_options.force (a_option, a_class)
 		ensure
-			added: class_options.has (a_class) and then class_options.item (a_class) = a_option
+			added: internal_class_options.has (a_class) and then internal_class_options.item (a_class) = a_option
 		end
 
 
@@ -528,6 +533,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.
 
+	internal_class_options: HASH_TABLE [CONF_OPTION, STRING]
+			-- Classes with specific options of this group itself.
+
 	changeable_internal_options: like internal_options is
 			-- A possibility to change settings without knowing if we have some options already set.
 		do
@@ -542,17 +550,14 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	changeable_class_options (a_class: STRING): like internal_options is
 			-- A possibility to change settings of `a_class' without knowing if we have some options already set.
 		do
-			if class_options /= Void then
-				Result := class_options.item (a_class)
+			if internal_class_options /= Void then
+				Result := internal_class_options.item (a_class)
 			end
 			if Result = Void then
 				create Result
 				add_class_options (Result, a_class)
 			end
 		end
-
-	class_options: HASH_TABLE [CONF_OPTION, STRING]
-			-- Classes with specific options.
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configuration fi
 

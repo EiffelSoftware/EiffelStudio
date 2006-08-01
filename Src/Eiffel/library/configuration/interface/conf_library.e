@@ -130,6 +130,27 @@ feature -- Access queries
 			end
 		end
 
+	class_options: HASH_TABLE [CONF_OPTION, STRING] is
+			-- Options for classes.
+		local
+			l_lib: like Current
+		do
+				-- if used as library, get options from application level
+				-- either if the library is defined there or otherwise directly from the application target
+			if is_used_library then
+				l_lib := find_current_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.class_options
+				end
+			else
+				if internal_class_options /= Void then
+					Result := internal_class_options.twin
+				else
+					create Result.make (0)
+				end
+			end
+		end
+
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
 	set_uuid (an_uuid: UUID) is

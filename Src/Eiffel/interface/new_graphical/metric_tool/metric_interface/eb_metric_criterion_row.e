@@ -491,7 +491,7 @@ feature{NONE} -- Actions
 					else
 						grid.row (l_row_index).item (2).enable_select
 					end
-
+					grid.resize_column (1, 0)
 				end
 				grid.change_actions.call ([])
 			end

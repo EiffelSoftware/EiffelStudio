@@ -266,6 +266,7 @@ feature -- Properties
 			Result.put (stop_help, stop_cmd_name)
 			Result.put (suppliers_help, suppliers_cmd_name)
 			Result.put (target_help, target_cmd_name)
+			Result.put (use_settings_help, use_settings_cmd_name)
 			Result.put (version_help, version_cmd_name)
 			Result.put (batch_help, batch_cmd_name)
 			Result.put (clean_help, clean_cmd_name)
@@ -328,7 +329,7 @@ feature -- Output
 		do
 			io.put_string ("Usage:%N%T")
 			io.put_string (argument (0))
-			io.put_string (" [-help | -version | -batch | -clean | -use_settings ")
+			io.put_string (" [-help | -version | -batch | -clean | -use_settings | ")
 			add_usage_special_cmds
 			io.put_string ("-loop | -quick_melt | -melt | ")
 			if Has_documentation_generation then
@@ -349,7 +350,7 @@ feature -- Output
 			end
 			io.put_string ("%
 				%%T-config config.ecf | -target target |%N%
-				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name|%N%
+				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name |%N%
 				%%T-stop |%N%
 				%%T-project_path Project_directory_path | -file File]%N")
 		end

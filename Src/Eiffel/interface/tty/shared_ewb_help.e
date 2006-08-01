@@ -183,6 +183,8 @@ feature {NONE}
 
 	target_help: STRING is "specify the target"
 
+	use_settings_help: STRING is "use settings for project location"
+
 	Total_sec_help: STRING is " output of time spent in both the function and its descendants"
 
 	yank_help: STRING is "yank (save) output of last command to a file"

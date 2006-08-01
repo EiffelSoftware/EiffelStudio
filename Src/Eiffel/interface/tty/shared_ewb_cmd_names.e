@@ -172,6 +172,8 @@ feature {NONE}
 
 	target_cmd_name: STRING is "target"
 
+	use_settings_cmd_name: STRING is "use_settings"
+
 	text_cmd_name: STRING is "text"
 
 	Total_sec_cmd_name: STRING is "total"

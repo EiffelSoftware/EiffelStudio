@@ -845,13 +845,9 @@ feature -- Profiler messages
 
 feature -- Project creation, retrieval, ...
 
-	w_Unable_to_retrieve_project: STRING is "Unable to retrieve the project, it may be corrupted."
-
 	w_Fill_in_location_field: STRING is "Please fill in the 'Location' field."
 
-	w_Fill_in_project_name_field: STRING is "Please fill in the 'Project Name' field."
-
-	w_Fill_in_ace_field: STRING is "Please fill in the 'Ace file' field."
+	w_Fill_in_project_name_field: STRING is "Please fill in the 'System Name' field."
 
 	w_Unable_to_load_ace_file (an_ace_name: STRING): STRING is
 		do

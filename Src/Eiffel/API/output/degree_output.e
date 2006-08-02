@@ -545,13 +545,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Melting_changes_message: STRING is "Melting changes";
-	Freezing_system_message: STRING is "Freezing system";
-	Removing_dead_code_message: STRING is "Removing dead code";
-	Case_class_message: STRING is "Analyzing class ";
-	Case_cluster_message: STRING is "Analyzing cluster ";
-	Document_class_message: STRING is "Generating class ";
-	Consume_assemblies_message: STRING is "Consuming assemblies";
+	Melting_changes_message: STRING is "Melting Changes";
+	Freezing_system_message: STRING is "Freezing System";
+	Removing_dead_code_message: STRING is "Removing Dead Code";
+	Case_class_message: STRING is "Analyzing Class ";
+	Case_cluster_message: STRING is "Analyzing Cluster ";
+	Document_class_message: STRING is "Generating Class ";
+	Consume_assemblies_message: STRING is "Consuming Assemblies";
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " group ";
 	Class_output_string: STRING is " class ";

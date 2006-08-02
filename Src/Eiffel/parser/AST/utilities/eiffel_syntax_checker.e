@@ -27,7 +27,7 @@ feature -- Status report
 		require
 			name_not_void: cn /= Void
 		do
-			Result := True
+			Result := not cn.is_empty
 		end
 
 	is_valid_feature_name (fn: STRING): BOOLEAN is
@@ -53,7 +53,7 @@ feature -- Status report
 		require
 			name_not_void: cn /= Void
 		do
-			Result := True
+			Result := not cn.is_empty
 		end
 
 	is_valid_identifier (s: STRING): BOOLEAN is

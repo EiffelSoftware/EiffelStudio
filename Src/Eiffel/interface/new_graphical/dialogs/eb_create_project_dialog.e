@@ -442,36 +442,6 @@ feature {NONE} -- Implementation
 			directory_field.set_focus
 		end
 
-	check_ace_file (ace_name: STRING) is
-			-- Check the existence of the ace file `ace_name', raise exception
-			-- if the ace file does not exists or is not readable.
-		local
-			f: PLAIN_TEXT_FILE
-			rescued: BOOLEAN
-		do
-			if not rescued then
-					-- Check the validity of the ace file.
-				if ace_name.is_empty then
-					add_error_message (Warning_messages.w_Not_a_file (ace_name))
-					raise_exception (Invalid_ace_exception)
-				end
-				create f.make (ace_name)
-				if not f.exists or else not f.is_readable then
-					add_error_message (Warning_messages.w_Cannot_read_file (ace_name))
-					raise_exception (Invalid_ace_exception)
-				end
-				if not f.is_plain then
-					add_error_message (Warning_messages.w_Not_a_file (ace_name))
-					raise_exception (Invalid_ace_exception)
-				end
-			end
-		rescue
-			if error_messages.is_empty then
-					-- Add default error message
-				add_error_message (Warning_messages.w_Unable_to_load_ace_file (ace_name))
-			end
-		end
-
 	browse_directory is
 			-- Popup a "select directory" dialog.
 		local

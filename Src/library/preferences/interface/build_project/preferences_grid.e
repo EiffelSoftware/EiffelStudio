@@ -321,8 +321,10 @@ feature {NONE} -- Events
 					l_bool_preference ?= a_item.row.data
 					if l_bool_preference /= Void then
 						l_combo_widget ?= a_item.row.item (4)
-						l_combo_widget.set_text ((not l_bool_preference.value).out)
-						l_combo_widget.deactivate_actions.call ([])
+						if l_combo_widget /= Void then
+							l_combo_widget.set_text ((not l_bool_preference.value).out)
+							l_combo_widget.deactivate_actions.call ([])
+						end
 					end
 				end
 			end

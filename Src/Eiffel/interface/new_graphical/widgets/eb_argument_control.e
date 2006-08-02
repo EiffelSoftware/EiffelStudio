@@ -99,8 +99,10 @@ feature {NONE} -- Retrieval
 			else
 				argument_check.disable_select
 			end
-			if l_user_opts.working_directory /= Void then
+			if l_user_opts.working_directory /= Void and then not l_user_opts.working_directory.is_empty then
 				working_directory.set_path (l_user_opts.working_directory)
+			else
+				working_directory.set_default_start_directory (application_working_directory)
 			end
 		end
 

@@ -94,7 +94,7 @@ feature -- Access
 
 	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
 		do
-			Result := precursor (a_feature_id)
+			Result := Precursor (a_feature_id)
 			if Result = Void then
 				Result := inline_agent_of_id (a_feature_id)
 			end
@@ -1896,6 +1896,25 @@ feature -- Inline agents
 					inline_agent_table.forth
 				end
 			end
+		end
+
+	api_inline_agent_of_name (n: STRING): E_FEATURE is
+			-- API feature for the inline agent named by `n'
+		require
+			n_not_void: n /= Void
+		local
+			fi: FEATURE_I
+			fid: INTEGER_32
+		do
+			fid := names_heap.id_of (n)
+			if fid > 0 then
+				fi := inline_agent_of_name_id (fid)
+				if fi /= Void then
+					Result := fi.api_feature (class_id)
+				end
+			end
+		ensure
+			Result_has_same_name: Result /= Void implies Result.name.is_equal (n)
 		end
 
 feature -- Conformance table generation

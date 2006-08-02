@@ -3570,7 +3570,7 @@ feature {NONE} -- Implementation
 
 				if
 					l_over_classes.count > 0 and then
-					l_cluster.overriders /= Void and then not l_cluster.overriders.is_empty
+					a_group.overriders /= Void and then not a_group.overriders.is_empty
 				then
 					l_format_context.put_new_line
 					l_format_context.process_indexing_tag_text ("Overriden")

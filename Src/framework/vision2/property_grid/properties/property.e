@@ -52,7 +52,6 @@ feature {NONE} -- Initialization
 			pointer_button_press_actions.force_extend (agent activate)
 		end
 
-
 feature  -- Access
 
 	name: STRING
@@ -139,6 +138,11 @@ feature  -- Update
 			end
 		ensure
 			is_readonly: is_readonly
+		end
+
+	refresh is
+			-- Refresh current data.
+		do
 		end
 
 feature {PROPERTY_GRID, TYPED_PROPERTY} -- Agents

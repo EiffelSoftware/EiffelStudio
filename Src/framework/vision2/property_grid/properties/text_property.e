@@ -67,11 +67,19 @@ feature -- Update
 
 	set_value (a_value: like value) is
 			-- Set `value' to `a_value'.
+		local
+			l_val: like displayed_value
 		do
 			Precursor {TYPED_PROPERTY} (a_value)
-			set_text (displayed_value)
+			l_val := displayed_value
+			set_text (l_val)
 			if text_field /= Void then
-				text_field.set_text (displayed_value)
+				text_field.set_text (l_val)
+			end
+			if l_val.is_empty then
+				set_tooltip (description)
+			else
+				set_tooltip (l_val)
 			end
 		end
 

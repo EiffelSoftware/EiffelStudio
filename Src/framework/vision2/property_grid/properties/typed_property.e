@@ -9,6 +9,7 @@ deferred class
 inherit
 	PROPERTY
 		redefine
+			refresh,
 			make,
 			on_use_inherited,
 			on_force_inheritance

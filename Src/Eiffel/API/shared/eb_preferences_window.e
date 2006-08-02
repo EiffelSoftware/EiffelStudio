@@ -52,9 +52,6 @@ feature -- Access
 			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			close_request_actions.extend (agent on_close)
 
-			create scrolling_behavior.make (grid)
-			create resizing_behavior.make (grid)
-			resizing_behavior.enable_column_resizing
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 		end
 
@@ -156,7 +153,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-		grid: ES_GRID
+	grid: ES_GRID
 			-- Grid
 
 	build_filter_icons is

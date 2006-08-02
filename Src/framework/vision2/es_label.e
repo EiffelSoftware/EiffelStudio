@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 		require
 			width_big_enough: width > 0
 		local
-			l_counter: INTEGER
+			l_counter, l_last_counter: INTEGER
 			l_current_width: INTEGER
 			l_last_string: STRING_32
 			l_temp_string: STRING_32
@@ -68,6 +68,9 @@ feature {NONE} -- Implementation
 			l_modified_text.replace_substring_all ("%N", " ")
 			l_modified_text.append_character (' ')
 			l_maximum_string_width := width - 10
+			if l_maximum_string_width < 0 then
+				 l_maximum_string_width := 0
+			end
 
 				-- Set up all space indexes which stores the index of each space in the
 				-- text, as these are the wrapping criterion.
@@ -85,9 +88,11 @@ feature {NONE} -- Implementation
 				-- Perform calculations to determine where wrapping must occur.
 			from
 				l_start_pos := 1
+				l_last_counter := 0
 				l_counter := 1
 			until
 				l_counter > l_all_space_indexes.count
+				or l_counter <= l_last_counter
 			loop
 				from
 					l_current_width := 0
@@ -104,51 +109,62 @@ feature {NONE} -- Implementation
 						l_counter := l_counter - 1
 					end
 				end
-				if l_all_space_indexes.valid_index (l_counter) then
+
+				if l_counter < l_all_space_indexes.count then
 					l_start_pos := l_all_space_indexes.i_th (l_counter) + 1
 				end
+				if l_counter > l_last_counter then
+					l_last_counter := l_counter
+					l_counter := l_counter + 1
+				end
+
 				l_lines.extend (l_last_string)
 			end
 
-				-- Now determine if the contents of the line have actually changed.
-				-- If they have not, then there is no need to set the text again, as it
-				-- causes flicker.
-			if previous_lines = Void or else l_lines.count /= previous_lines.count then
-				l_lines_changed := True
+				-- to small? => increase width
+			if l_counter <= l_all_space_indexes.count then
+				set_minimum_width (width + 10)
 			else
-				from
-					l_lines.start
-					previous_lines.start
-				until
-					l_lines_changed or l_lines.after
-				loop
-					check
-						not_previous_after: not previous_lines.after
+					-- Now determine if the contents of the line have actually changed.
+					-- If they have not, then there is no need to set the text again, as it
+					-- causes flicker.
+				if previous_lines = Void or else l_lines.count /= previous_lines.count then
+					l_lines_changed := True
+				else
+					from
+						l_lines.start
+						previous_lines.start
+					until
+						l_lines_changed or l_lines.after
+					loop
+						check
+							not_previous_after: not previous_lines.after
+						end
+						l_lines_changed := l_lines.item.count /= previous_lines.item.count
+						previous_lines.forth
+						l_lines.forth
 					end
-					l_lines_changed := l_lines.item.count /= previous_lines.item.count
-					previous_lines.forth
-					l_lines.forth
 				end
-			end
 
-				-- Now create and set the text on the label if
-				-- it needs to be changed.
-			if l_lines_changed then
-				create l_output.make_empty
-				from
-					l_lines.start
-				until
-					l_lines.after
-				loop
-					l_output.append (l_lines.item)
-					if l_lines.index < l_lines.count then
-						l_output.append_character ('%N')
+					-- Now create and set the text on the label if
+					-- it needs to be changed.
+				if l_lines_changed then
+					create l_output.make_empty
+					from
+						l_lines.start
+					until
+						l_lines.after
+					loop
+						l_output.append (l_lines.item)
+						if l_lines.index < l_lines.count then
+							l_output.append_character ('%N')
+						end
+						l_lines.forth
 					end
-					l_lines.forth
-				end
-				previous_lines := l_lines
+					previous_lines := l_lines
 
-				set_text (l_output)
+					set_text (l_output)
+				end
 			end
 		end
 

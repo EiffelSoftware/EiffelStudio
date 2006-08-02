@@ -1756,7 +1756,14 @@ end
 					unref_classes.remove
 				else
 					if class_i.compiled_class = Void then
-						Workbench.change_class (class_i)
+						if class_i.config_class.does_override then
+							class_i ?= class_i.config_class.overrides.first
+							if not class_i.is_compiled then
+								Workbench.change_class (class_i)
+							end
+						else
+							Workbench.change_class (class_i)
+						end
 					end
 					unref_classes.forth
 				end

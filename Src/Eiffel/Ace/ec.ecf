@@ -84,7 +84,11 @@
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
 		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="false"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="false">
+			<option>
+				<warning name="syntax" enabled="false"/>
+			</option>
+		</library>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
@@ -437,7 +441,7 @@
 		<setting name="platform" value="unix"/>
 	</target>
 	<target name="bench_docking" extends="bench">
-		<description>Docking EStuduio. </description>
+		<description>Docking EStuduio.</description>
 		<root class="EB_KERNEL" feature="make"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false"/>
 		<override name="docking_eiffel" location="$ISE_LIBRARY\docking_eiffel\" recursive="true"/>

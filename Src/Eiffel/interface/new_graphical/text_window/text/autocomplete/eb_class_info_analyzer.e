@@ -280,7 +280,7 @@ feature {NONE} -- Click ast exploration
 		local
 			l_eiffel_class: EIFFEL_CLASS_C
 		do
-			if not c.is_precompiled then
+			if not c.is_precompiled and c.file_is_readable then
 				l_eiffel_class ?= c
 				check l_eiffel_class_not_void: l_eiffel_class /= Void end
 				current_class_as := l_eiffel_class.parsed_ast (after_save)

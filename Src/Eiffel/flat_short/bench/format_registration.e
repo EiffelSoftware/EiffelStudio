@@ -565,6 +565,9 @@ feature {NONE} -- Implementation
 				l_id := target_class.class_id
 			end
 			Result := match_list_server.item (l_id)
+			if Result = Void then
+				create Result.make (1)
+			end
 		end
 
 	update_feature_clause_order (array: ARRAY [STRING]) is

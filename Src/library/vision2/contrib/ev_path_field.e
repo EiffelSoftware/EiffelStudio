@@ -45,6 +45,9 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Window to which browsing dialog will be modal.
 
+	default_start_directory: STRING_32
+			-- Default start directory for browsing dialog.
+
 feature -- Status
 
 	text, path: STRING_32 is
@@ -86,6 +89,12 @@ feature -- Settings
 			browse_button.select_actions.extend (agent browse_for_directory)
 		end
 
+	set_default_start_directory (t: STRING_32) is
+			-- Set Default start directory for browsing dialog
+		do
+			default_start_directory := t
+		end
+
 feature -- Removal
 
 	remove_text, remove_path is
@@ -111,7 +120,6 @@ feature {NONE} -- GUI building
 				disable_item_expand (l_label)
 			end
 
-
 			create l_hbox
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)
 
@@ -128,24 +136,23 @@ feature {NONE} -- GUI building
 	browse_button: EV_BUTTON
 			-- Browse for a file or a directory.
 
-feature {NONE} -- Actions
-
 	browse_for_directory is
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
-			start_directory: STRING_32
+			l_start_directory: STRING_32
 		do
 			create dd
 			dd.set_title ("Select a directory")
-			start_directory := field.text
+			l_start_directory := start_directory
 			if
-				start_directory /= Void and then
-				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory.as_string_8)).exists
+				l_start_directory /= Void and then
+				not l_start_directory.is_empty and then
+				(create {DIRECTORY}.make (l_start_directory.as_string_8)).exists
 			then
-				dd.set_start_directory(start_directory)
+				dd.set_start_directory (l_start_directory)
 			end
+
 			dd.show_modal_to_window (parent_window)
 			if dd.directory /= Void and then not dd.directory.is_empty then
 				field.set_text (dd.directory)
@@ -156,7 +163,7 @@ feature {NONE} -- Actions
 			-- Popup a "select directory" dialog.
 		local
 			fd: EV_FILE_OPEN_DIALOG
-			start_directory: STRING_32
+			l_start_directory: STRING_32
 		do
 			create fd
 			if filter /= Void then
@@ -164,17 +171,26 @@ feature {NONE} -- Actions
 				fd.filters.extend ([("*.*").as_string_32, ("All Files (*.*)").as_string_32])
 			end
 			fd.set_title ("Select a file")
-			start_directory := field.text
+			l_start_directory := start_directory
 			if
-				start_directory /= Void and then
-				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory.as_string_8)).exists
+				l_start_directory /= Void and then
+				not l_start_directory.is_empty and then
+				(create {DIRECTORY}.make (l_start_directory.as_string_8)).exists
 			then
-				fd.set_start_directory (start_directory)
+				fd.set_start_directory (l_start_directory)
 			end
 			fd.show_modal_to_window (parent_window)
 			if fd.file_name /= Void and then not fd.file_name.is_empty then
 				field.set_text (fd.file_name)
+			end
+		end
+
+	start_directory: STRING_32 is
+			-- Start directory for browsing dialog.
+		do
+			Result := field.text
+			if Result = Void or else Result.empty then
+				Result := default_start_directory
 			end
 		end
 
@@ -193,9 +209,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_PATH_FIELD
 

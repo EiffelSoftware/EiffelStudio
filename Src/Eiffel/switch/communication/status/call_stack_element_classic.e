@@ -127,10 +127,17 @@ feature -- Properties
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 		local
 			l_routine: like private_routine
+			eclc: EIFFEL_CLASS_C
 		do
 			if private_routine = Void then
 					-- Get routine in `written_class'.
 				private_routine := written_class.feature_with_name (routine_name)
+				if private_routine = Void then
+					eclc ?= written_class
+					if eclc /= Void then
+						private_routine := eclc.api_inline_agent_of_name (routine_name)
+					end
+				end
 					-- Adapt `private_routine' to `dynamic_class' and handles precursor case.
 					--
 					-- Note that `dynamic_class' does not always conform to `written_class' in the

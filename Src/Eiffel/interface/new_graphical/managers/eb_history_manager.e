@@ -310,7 +310,7 @@ feature -- Element change
 					-- Add the new stone at the end of the history.
 				fst := Void
 				fst2 ?= a_stone
-				if fst2 /= Void  then
+				if fst2 /= Void and then fst2.e_feature /= Void then
 					create fst.make (fst2.e_feature)
 					history.extend (fst)
 				else

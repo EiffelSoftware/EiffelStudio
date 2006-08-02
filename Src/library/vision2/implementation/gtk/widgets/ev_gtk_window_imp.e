@@ -204,11 +204,21 @@ feature {NONE} -- Implementation
 			is_modal := True
 			l_window_imp.set_has_modal_window (True)
 			block
-			l_window_imp.set_has_modal_window (False)
 			is_modal := False
 			set_blocking_window (Void)
+			if not l_window_imp.is_destroyed then
+				l_window_imp.set_has_modal_window (False)
+				{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (l_window_group, l_window_imp.c_object)
+				if l_window_imp.is_show_requested then
+						-- Get window manager to always show parent window.
+						-- This is a hack in case parent window was minimized and restored
+						-- by the modal dialog, when closed the window managed would restore the
+						-- focus to the previously focused window which may or may not be `l_window_imp',
+						-- this leads to odd behavior when closing the modal dialog so we always present the window.
+					{EV_GTK_EXTERNALS}.gtk_window_present (l_window_imp.c_object)
+				end
+			end
 			{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
-			{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (l_window_group, l_window_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (l_window_group, c_object)
 			{EV_GTK_EXTERNALS}.object_unref (l_window_group)
 		end

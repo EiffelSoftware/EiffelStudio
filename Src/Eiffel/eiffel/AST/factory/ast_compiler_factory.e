@@ -241,10 +241,9 @@ feature -- Access
 				end
 				create Result.initialize (f, b, i, system.feature_as_counter.next_id, next_pos)
 				if b.is_unique then
-					check
-						system_initialized: system.current_class /= Void
+					if system.current_class /= Void then
+						system.current_class.set_has_unique
 					end
-					system.current_class.set_has_unique
 				end
 			end
 		end

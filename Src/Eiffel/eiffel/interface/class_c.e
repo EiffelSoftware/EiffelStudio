@@ -2904,7 +2904,7 @@ feature -- Server Access
 			f: PLAIN_TEXT_FILE
 		do
 			create f.make (file_name)
-			Result := f.is_readable
+			Result := f.exists and f.is_readable
 		end
 
 feature -- Comparison

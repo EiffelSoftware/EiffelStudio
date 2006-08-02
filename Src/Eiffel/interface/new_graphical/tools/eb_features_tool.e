@@ -265,7 +265,7 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							if classc_stone.e_class.is_precompiled then
+							if classc_stone.e_class.is_precompiled or not classc_stone.e_class.file_is_readable then
 								current_class := classc_stone.e_class.ast
 							else
 								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)

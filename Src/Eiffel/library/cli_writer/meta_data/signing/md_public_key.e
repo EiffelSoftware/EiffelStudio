@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 					-- Read key pair data from `a_file_name'.
 				create l_file.make_open_read (a_file_name)
 				create Result.make (l_file.count)
-				l_file.read_data (Result.item, Result.count)
+				l_file.read_to_managed_pointer (Result, 0, Result.count)
 				l_file.close
 			else
 					-- We could not read key pair.

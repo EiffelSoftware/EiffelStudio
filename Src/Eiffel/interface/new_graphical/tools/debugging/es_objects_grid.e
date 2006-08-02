@@ -365,9 +365,10 @@ feature -- Menu
 			s: STRING
 			col: EV_GRID_COLUMN
 		do
-			if layout_manager /= Void then
-				create Result.make_with_text ("Grid %"" + name + "%"")
+			Result := Precursor
+			Result.set_text ("Grid %"" + name + "%"")
 
+			if layout_manager /= Void then
 				create mci.make_with_text ("Keep grid layout")
 				if is_layout_managed then
 					mci.enable_select
@@ -375,39 +376,8 @@ feature -- Menu
 				else
 					mci.select_actions.extend (agent enable_layout_management)
 				end
-				Result.extend (mci)
-				Result.extend (create {EV_MENU_SEPARATOR})
-				from
-					c := 1
-				until
-					c > column_count
-				loop
-					col := column (c)
-					if not col.title.is_empty then
-						s := "Column %"" + col.title + "%""
-					else
-						s := "Column #" + c.out
-					end
-					create sm.make_with_text (s)
-					Result.extend (sm)
-
-					create mci.make_with_text ("Auto resize")
-					if column_has_auto_resizing (c) then
-						mci.enable_select
-					end
-					mci.select_actions.extend (agent set_auto_resizing_column (c, not column_has_auto_resizing (c)))
-					sm.extend (mci)
-
-					create mci.make_with_text ("Displayed")
-					if col.is_displayed then
-						mci.enable_select
-						mci.select_actions.extend (agent col.hide)
-					else
-						mci.select_actions.extend (agent col.show)
-					end
-					sm.extend (mci)
-					c := c + 1
-				end
+				Result.put_front (create {EV_MENU_SEPARATOR})
+				Result.put_front (mci)
 			end
 		end
 

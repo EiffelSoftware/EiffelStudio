@@ -251,7 +251,45 @@ feature -- Change
 
 	grid_menu: EV_MENU is
 			-- Menu related to current grid.
+		local
+			sm: EV_MENU
+			mci: EV_CHECK_MENU_ITEM
+			c: INTEGER
+			s: STRING
+			col: EV_GRID_COLUMN
 		do
+			create Result.make_with_text ("Grid settings")
+			from
+				c := 1
+			until
+				c > column_count
+			loop
+				col := column (c)
+				if not col.title.is_empty then
+					s := "Column %"" + col.title + "%""
+				else
+					s := "Column #" + c.out
+				end
+				create sm.make_with_text (s)
+				Result.extend (sm)
+
+				create mci.make_with_text ("Auto resize")
+				if column_has_auto_resizing (c) then
+					mci.enable_select
+				end
+				mci.select_actions.extend (agent set_auto_resizing_column (c, not column_has_auto_resizing (c)))
+				sm.extend (mci)
+
+				create mci.make_with_text ("Displayed")
+				if col.is_displayed then
+					mci.enable_select
+					mci.select_actions.extend (agent col.hide)
+				else
+					mci.select_actions.extend (agent col.show)
+				end
+				sm.extend (mci)
+				c := c + 1
+			end
 		end
 
 	on_header_auto_width_resize is

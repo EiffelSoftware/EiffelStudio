@@ -1894,7 +1894,7 @@ end
 			data := actual_type.type_i
 			register_type (data).do_nothing
 			instantiator.dispatch (data.type_a, Current)
-			if data.is_true_expanded and then not data.is_external then
+			if data.is_expanded and then not data.is_external then
 					-- Process reference counterpart.
 				data := data.reference_type
 				register_type (data).do_nothing
@@ -1922,7 +1922,7 @@ debug ("GENERICITY")
 end
 				new_class_type := register_type (data)
 
-				if data.is_true_expanded and then not data.is_external then
+				if data.is_expanded and then not data.is_external then
 						-- Process reference counterpart.
 					update_types (data.reference_type)
 				end
@@ -2183,6 +2183,17 @@ feature -- Validity class
 				then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))
+				end
+				l_feature := feature_table.item_id (names_heap.equal_name_id)
+				if
+					l_feature = Void or else
+					l_feature.argument_count /= 2 or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.type.is_boolean
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ANY must have a boolean query `equal' with 2 reference arguments", Current))
 				end
 				l_feature := feature_table.item_id (names_heap.twin_name_id)
 				if

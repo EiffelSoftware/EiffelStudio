@@ -3332,6 +3332,10 @@ feature -- Dead code removal
 			l_class := any_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
 
+				-- Protection of feature `equal' of ANY
+			l_class := any_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.equal_name_id), l_class)
+
 				-- Protection of feature `twin' of ANY
 			l_class := any_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.twin_name_id), l_class)

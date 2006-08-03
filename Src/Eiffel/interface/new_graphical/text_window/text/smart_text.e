@@ -389,7 +389,7 @@ feature -- Completion-clickable initialization / update
 					if click_tool.last_syntax_error = Void then
 						if
 							current_class_is_clickable and then
-							not classi_stone.class_name.is_equal (click_tool.current_class_as.class_name)
+							not classi_stone.class_i.config_class.name.is_equal (click_tool.current_class_as.class_name)
 						then
 							current_class_is_clickable := False
 							click_tool_status := class_name_changed

@@ -8,7 +8,7 @@ indexing
 class
 	ARGUMENT_OPTION
 
-create
+create {ARGUMENT_SWITCH}
 	make,
 	make_with_value
 
@@ -57,13 +57,12 @@ feature {ARGUMENT_LITE_PARSER} -- Element Change
 			value_set: value = a_value
 		end
 
-
 feature -- Status Report
 
 	has_value: BOOLEAN is
 			-- Indicicate if option has an associated value.
 		do
-			Result := value /= Void
+			Result := value /= Void or else not value.is_empty
 		end
 
 invariant

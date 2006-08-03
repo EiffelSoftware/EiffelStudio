@@ -54,7 +54,7 @@ feature -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			version_label: EV_LABEL
 			copyright_label: EV_LABEL
-			registration_label: EV_LABEL
+			registration_label: EV_TEXT
 			info_label: EV_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
@@ -80,8 +80,9 @@ feature -- Initialization
 			copyright_label.align_text_left
 			copyright_label.set_background_color (White)
 			create registration_label.make_with_text (registration_info)
-			registration_label.align_text_left
 			registration_label.set_background_color (White)
+			registration_label.disable_edit
+			registration_label.set_minimum_height (100)
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent destroy)
 			Layout_constants.set_default_size_for_button (ok_button)
 
@@ -163,7 +164,8 @@ feature {NONE} -- Implementation
 			-- Clause in the about dialog concerning the license.
 		do
 			create Result.make (50)
-			Result.append ("%NInstallation information:%N")
+			Result.append ("Installation information:%N")
+			Result.append ("Version = " + t_version_info + "%N")
 			Result.append ("$ISE_EIFFEL = " + eiffel_installation_dir_name + "%N")
 			Result.append ("$ISE_LIBRARY = " + eiffel_library + "%N")
 			Result.append ("$ISE_PLATFORM = " + eiffel_platform)

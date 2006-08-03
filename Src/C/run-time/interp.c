@@ -2439,6 +2439,23 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Conditional equality test depending on an expandedness of an object type
+	 */
+	case BC_CEQUAL:
+#ifdef DEBUG
+	dprintf(2)("BC_CEQUAL\n");
+#endif
+		{	EIF_REFERENCE ref;
+
+			ref = opop()->it_ref;
+			last = otop();
+			last->it_char = (char) RTCEQ(ref, last->it_ref);
+			last->type = SK_BOOL;
+		}
+		break;
+
+
+	/*
 	 * Bit comparison
  	 */
 

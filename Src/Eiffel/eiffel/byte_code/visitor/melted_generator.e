@@ -1725,13 +1725,13 @@ feature {NONE} -- Implementation
 				l_flag := True
 			end
 
-			if (l_lt.is_true_expanded or else l_rt.is_true_expanded) or else l_flag then
+			if l_lt.is_true_expanded or else l_rt.is_true_expanded or else l_flag then
 					-- Standard equality
 				ba.append (bc_standard_equal)
 				if a_node_opcode = bc_ne then
 					ba.append (bc_not)
 				end
-			elseif (l_lt.is_bit and then l_rt.is_bit) then
+			elseif l_lt.is_bit and then l_rt.is_bit then
 					-- Bit equality
 				ba.append (bc_bit_standard_equal)
 				if a_node_opcode = bc_ne then
@@ -1740,7 +1740,22 @@ feature {NONE} -- Implementation
 			elseif (l_lt.is_basic and then l_rt.is_none) or else (l_lt.is_none and then l_rt.is_basic) then
 					-- A basic type is neither Void
 				ba.append (a_node_obvious_opcode)
+			elseif
+				l_lt.is_reference and then
+				l_rt.is_reference and then
+				a_node.left.is_dynamic_clone_required (l_lt) and then
+				a_node.right.is_dynamic_clone_required (l_rt)
+			then
+					-- Reference type equality.
+					-- Check if one of the operands is of expanded type
+					-- and use object comparison. Use reference comparison
+					-- otherwise.
+				ba.append (Bc_cequal)
+				if a_node_opcode = bc_ne then
+					ba.append (bc_not)
+				end
 			else
+					-- Pure reference or basic type equality.
 				ba.append (a_node_opcode)
 			end
 		end

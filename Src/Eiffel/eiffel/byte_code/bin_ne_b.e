@@ -7,6 +7,7 @@ inherit
 	BIN_EQUAL_B
 		redefine
 			generate_equal,
+			generate_negation,
 			generate_operator, enlarged,
 			generate_bit_equal
 		end;
@@ -32,6 +33,12 @@ feature
 		do
 			buffer.put_string ("EIF_TRUE");
 		end;
+
+	generate_negation is
+			-- Generate negation of an equality test (if required).
+		do
+			buffer.put_character ('!')
+		end
 
 	generate_equal is
 			-- Generate non-equality.

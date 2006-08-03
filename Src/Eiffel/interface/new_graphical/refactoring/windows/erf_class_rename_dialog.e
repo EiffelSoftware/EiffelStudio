@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			vb_label.set_padding (Layout_constants.small_padding_size)
 			vb_label.set_border_width (Layout_constants.default_border_size)
 			create hb_name
-			create l.make_with_text ("New name:")
+			create l.make_with_text (interface_names.l_new_name)
 			vb_label.extend (l)
 			vb_label.disable_item_expand (l)
 			vb_label.extend (create {EV_CELL})
@@ -87,12 +87,12 @@ feature {NONE} -- Initialization
 			fvb.set_padding (Layout_constants.small_padding_size)
 			fvb.set_border_width (Layout_constants.default_border_size)
 			f_middle.extend (fvb)
-			create compiled_classes_button.make_with_text ("compiled classes")
-			compiled_classes_button.set_tooltip ("Renames only occurances of the class name in compiled classes.")
+			create compiled_classes_button.make_with_text (interface_names.l_compiled_classes)
+			compiled_classes_button.set_tooltip (interface_names.h_refactoring_compiled)
 			compiled_classes_button.enable_select
 			fvb.extend (compiled_classes_button)
-			create all_classes_button.make_with_text ("all classes")
-			all_classes_button.set_tooltip ("Renames occurances of the class name in any class. (Slower)")
+			create all_classes_button.make_with_text (interface_names.l_all_classes)
+			all_classes_button.set_tooltip (interface_names.h_refactoring_all_classes)
 			fvb.extend (all_classes_button)
 			vb.extend (f_middle)
 
@@ -101,11 +101,11 @@ feature {NONE} -- Initialization
 			fvb.set_padding (Layout_constants.small_padding_size)
 			fvb.set_border_width (Layout_constants.default_border_size)
 			f_bottom.extend (fvb)
-			create rename_file_button.make_with_text ("Rename file")
+			create rename_file_button.make_with_text (interface_names.l_rename_file)
 			fvb.extend (rename_file_button)
-			create comments_button.make_with_text ("Replace name in comments")
+			create comments_button.make_with_text (interface_names.l_replace_comments)
 			fvb.extend (comments_button)
-			create strings_button.make_with_text ("Replace name in strings")
+			create strings_button.make_with_text (interface_names.l_replace_strings)
 			fvb.extend (strings_button)
 			vb.extend (f_bottom)
 
@@ -188,7 +188,7 @@ feature -- Element change
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			current_name.set_text ("   Class name:           " + a_name)
+			current_name.set_text (interface_names.l_class_name + a_name)
 			if a_name.is_empty then
 				name_field.remove_text
 			else
@@ -299,4 +299,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ERF_RENAME_CLASS_DIALOG
+end

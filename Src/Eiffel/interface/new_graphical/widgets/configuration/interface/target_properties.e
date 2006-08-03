@@ -578,7 +578,7 @@ feature {NONE} -- Validation and warning generation
 		do
 			l_targets := conf_system.targets
 			l_targets.search (a_name.as_lower)
-			if not (create {EIFFEL_SYNTAX_CHECKER}.is_valid_target_name (a_name)) then
+			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_target_name (a_name) then
 				create wd.make_with_text (conf_interface_names.target_name_invalid)
 				wd.show_modal_to_window (window)
 			elseif l_targets.found and then l_targets.found_item /= current_target then

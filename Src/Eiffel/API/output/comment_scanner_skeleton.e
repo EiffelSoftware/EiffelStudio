@@ -335,7 +335,7 @@ feature {NONE} -- Helpers
 			-- Return class with `name'. `Void' if not in system.
 		require
 			name_not_void: name /= Void
-			is_class_name: (create {IDENTIFIER_CHECKER}).is_valid_upper (name)
+			is_class_name: (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (name) and name.as_upper.is_equal (name)
 		local
 			cl: LIST [CLASS_I]
 		do

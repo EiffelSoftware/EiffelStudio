@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 		local
 			cl: LIST [CLASS_I]
 		do
-			if (create {IDENTIFIER_CHECKER}).is_valid_upper (a_type) then
+			if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_type) and a_type.as_upper.is_equal (a_type) then
 				cl := Eiffel_system.Universe.compiled_classes_with_name (a_type)
 				if cl /= Void and then not cl.is_empty then
 					Result := cl.i_th (1).compiled_class.is_expanded

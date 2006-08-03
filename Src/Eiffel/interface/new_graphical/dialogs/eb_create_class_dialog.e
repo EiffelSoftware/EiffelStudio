@@ -593,7 +593,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 		do
 			cn := class_name
-			aok := (create {IDENTIFIER_CHECKER}).is_valid (cn)
+			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (cn)
 			if not aok then
 				create wd.make_with_text (Warning_messages.w_invalid_class_name (cn))
 				wd.show_modal_to_window (Current)
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 		do
 			fn := creation_entry.text
-			aok := (create {IDENTIFIER_CHECKER}).is_valid (fn)
+			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (fn)
 			if not aok then
 				create wd.make_with_text (Warning_messages.w_invalid_feature_name (fn))
 				wd.show_modal_to_window (Current)

@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			l_text_prop.set_value (a_group.name)
 			l_text_prop.validate_value_actions.extend (agent check_group_name (?, a_group, a_target))
 			l_text_prop.change_value_actions.extend (agent a_group.set_name)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)
 
 				-- description
@@ -103,14 +103,14 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (a_group.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_group.set_description))
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- readonly
 			create l_bool_prop.make_with_value (conf_interface_names.group_readonly_name, a_group.internal_read_only)
 			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
 			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
 
 			if l_cluster /= Void then
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 				create l_bool_prop.make_with_value (conf_interface_names.cluster_recursive_name, l_cluster.is_recursive)
 				l_bool_prop.set_description (conf_interface_names.cluster_recursive_description)
 				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
 				properties.add_property (l_bool_prop)
 			end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_value (a_group.location.original_path)
 				l_dir_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (conf_interface_names.group_location_name)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 				l_file_prop.set_value (a_group.location.original_path)
 				l_file_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
-				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
 				if a_group.is_assembly then
 					l_file_prop.add_filters (all_assemblies_filter, all_assemblies_description)
 					l_file_prop.add_filters (all_files_filter, all_files_description)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			l_dial.set_value (a_group.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)
-			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes))
+			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
 			properties.add_property (l_dial)
 
 				-- prefix
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			l_text_prop.set_description (conf_interface_names.group_prefix_description)
 			l_text_prop.set_value (a_group.name_prefix)
 			l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)
 
 				-- renaming
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 				l_rename_prop.set_value (a_group.renaming)
 			end
 			l_rename_prop.change_value_actions.extend (agent a_group.set_renaming)
-			l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes))
+			l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes (True)))
 			properties.add_property (l_rename_prop)
 
 				-- class options
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 					l_class_opt_prop.set_value (a_group.internal_class_options)
 				end
 				l_class_opt_prop.change_value_actions.extend (agent a_group.set_class_options)
-				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING]}?, agent handle_value_changes))
+				l_class_opt_prop.change_value_actions.extend (agent change_no_argument_wrapper ({HASH_TABLE [CONF_OPTION, STRING]}?, agent handle_value_changes (False)))
 				properties.add_property (l_class_opt_prop)
 			end
 
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 				l_list_prop.set_description (conf_interface_names.override_override_description)
 				l_list_prop.set_value (l_over_list)
 				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (False)))
 				properties.add_property (l_list_prop)
 			end
 
@@ -237,10 +237,10 @@ feature {NONE} -- Implementation
 				l_file_rule_prop.refresh
 				l_file_rule_prop.change_value_actions.extend (agent l_cluster.set_file_rule)
 				l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule_cluster (?, l_file_rule_prop, a_group))
-				l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes))
+				l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes (True)))
 				l_file_rule_prop.use_inherited_actions.extend (agent l_cluster.set_file_rule (create {ARRAYED_LIST [CONF_FILE_RULE]}.make (0)))
 				l_file_rule_prop.use_inherited_actions.extend (agent update_inheritance_file_rule_cluster (Void, l_file_rule_prop, a_group))
-				l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes)
+				l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 				update_inheritance_file_rule_cluster (Void, l_file_rule_prop, a_group)
 				properties.add_property (l_file_rule_prop)
 
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
 				l_list_prop.set_value (l_deps_list)
 				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_list_prop)
 
 					-- mapping
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 					l_mapping_prop.set_value (l_cluster.mapping)
 				end
 				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
-				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes))
+				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes (True)))
 				properties.add_property (l_mapping_prop)
 			elseif l_assembly /= Void then
 					-- assembly culture
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 				l_text_prop.set_description (conf_interface_names.assembly_name_description)
 				l_text_prop.set_value (l_assembly.assembly_name)
 				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
 					-- assembly culture
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 				l_text_prop.set_description (conf_interface_names.assembly_culture_description)
 				l_text_prop.set_value (l_assembly.assembly_culture)
 				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
 					-- assembly version
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 				l_text_prop.set_description (conf_interface_names.assembly_version_description)
 				l_text_prop.set_value (l_assembly.assembly_version)
 				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 
 					-- assembly public key token
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 				l_text_prop.set_description (conf_interface_names.assembly_public_key_token_description)
 				l_text_prop.set_value (l_assembly.assembly_public_key_token)
 				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 			end
 
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 				l_vis_prop.set_display_agent (agent output_visible)
 				l_vis_prop.set_value (l_visible.visible)
 				l_vis_prop.change_value_actions.extend (agent l_visible.set_visible)
-				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]}?, agent handle_value_changes))
+				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]}?, agent handle_value_changes (False)))
 				properties.add_property (l_vis_prop)
 			end
 			properties.current_section.expand
@@ -466,7 +466,10 @@ feature {NONE} -- Validation and warning generation
 		do
 			l_groups := a_target.groups
 			l_groups.search (a_name.as_lower)
-			if l_groups.found and then l_groups.found_item /= a_group then
+			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (a_name) then
+				create wd.make_with_text (conf_interface_names.group_name_invalid)
+				wd.show_modal_to_window (window)
+			elseif l_groups.found and then l_groups.found_item /= a_group then
 				create wd.make_with_text (conf_interface_names.group_name_duplicate)
 				wd.show_modal_to_window (window)
 			elseif a_name.is_empty then

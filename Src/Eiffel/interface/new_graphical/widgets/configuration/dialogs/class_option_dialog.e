@@ -247,7 +247,9 @@ feature {NONE} -- Implementation
 				until
 					value.after
 				loop
-					l_sort.put_last (value.key_for_iteration)
+					if not value.item_for_iteration.is_empty then
+						l_sort.put_last (value.key_for_iteration)
+					end
 					value.forth
 				end
 				l_sort.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))

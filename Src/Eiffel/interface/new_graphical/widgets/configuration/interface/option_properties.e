@@ -46,10 +46,12 @@ feature -- Update
 			debug_clauses_set: debug_clauses = a_debugs
 		end
 
+
 feature {NONE} -- Implementation
 
-	handle_value_changes is
+	handle_value_changes (a_has_group_changed: BOOLEAN) is
 			-- Handle changed values (e.g. store changes to disk).
+			-- `a_has_group_changed' indicates that a value that makes the node not group_equivalent has changed.
 		do
 			-- default is to do nothing
 		end
@@ -73,9 +75,9 @@ feature {NONE} -- Implementation
 				l_bool_prop.set_refresh_action (agent an_inherited_options.is_profile)
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_profile)
 				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 
 				if an_options.is_profile_configured then
 					l_bool_prop.enable_overriden
@@ -92,9 +94,9 @@ feature {NONE} -- Implementation
 				l_bool_prop.set_refresh_action (agent an_inherited_options.is_trace)
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_trace)
 				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 
 				if an_options.is_trace_configured then
 					l_bool_prop.enable_overriden
@@ -110,7 +112,7 @@ feature {NONE} -- Implementation
 				l_string_prop.set_value (an_options.namespace)
 			end
 			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			if not is_il_generation then
 				l_string_prop.enable_readonly
 			end
@@ -140,61 +142,61 @@ feature {NONE} -- Implementation
 			l_require.set_description (conf_interface_names.option_require_description)
 			l_require.set_refresh_action (agent l_inh_assertions.is_precondition)
 			l_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_require_name, ?))
-			l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_require)
 
 			create l_ensure.make_with_value (conf_interface_names.option_ensure_name, l_inh_assertions.is_postcondition)
 			l_ensure.set_description (conf_interface_names.option_ensure_description)
 			l_ensure.set_refresh_action (agent l_inh_assertions.is_postcondition)
 			l_ensure.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_ensure_name, ?))
-			l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_ensure)
 
 			create l_check.make_with_value (conf_interface_names.option_check_name, l_inh_assertions.is_check)
 			l_check.set_description (conf_interface_names.option_check_description)
 			l_check.set_refresh_action (agent l_inh_assertions.is_check)
 			l_check.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_check_name, ?))
-			l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_check)
 
 			create l_invariant.make_with_value (conf_interface_names.option_invariant_name, l_inh_assertions.is_invariant)
 			l_invariant.set_description (conf_interface_names.option_invariant_description)
 			l_invariant.set_refresh_action (agent l_inh_assertions.is_invariant)
 			l_invariant.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_invariant_name, ?))
-			l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_invariant)
 
 			create l_loop.make_with_value (conf_interface_names.option_loop_name, l_inh_assertions.is_loop)
 			l_loop.set_description (conf_interface_names.option_loop_description)
 			l_loop.set_refresh_action (agent l_inh_assertions.is_loop)
 			l_loop.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_loop_name, ?))
-			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_loop)
 
 				-- assertion inheritance handling
 			if a_inherits then
 				l_require.use_inherited_actions.extend (agent an_options.set_assertions (Void))
-				l_require.use_inherited_actions.extend (agent handle_value_changes)
+				l_require.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_require.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
 				l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
 
 				l_ensure.use_inherited_actions.extend (agent an_options.set_assertions (Void))
-				l_ensure.use_inherited_actions.extend (agent handle_value_changes)
+				l_ensure.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_ensure.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
 				l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
 
 				l_check.use_inherited_actions.extend (agent an_options.set_assertions (Void))
-				l_check.use_inherited_actions.extend (agent handle_value_changes)
+				l_check.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_check.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
 				l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
 
 				l_invariant.use_inherited_actions.extend (agent an_options.set_assertions (Void))
-				l_invariant.use_inherited_actions.extend (agent handle_value_changes)
+				l_invariant.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
 				l_invariant.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
 
 				l_loop.use_inherited_actions.extend (agent an_options.set_assertions (Void))
-				l_loop.use_inherited_actions.extend (agent handle_value_changes)
+				l_loop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_loop.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
 				l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
 
@@ -220,11 +222,11 @@ feature {NONE} -- Implementation
 			l_bool_prop.set_description (conf_interface_names.option_warnings_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_warning)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			if a_inherits then
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_warning)
 				l_bool_prop.use_inherited_actions.extend (agent refresh)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 
 				if an_options.is_warning_configured then
 					l_bool_prop.enable_overriden
@@ -244,7 +246,7 @@ feature {NONE} -- Implementation
 				create l_bool_prop.make_with_value (conf_interface_names.warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
 				l_bool_prop.set_description (conf_interface_names.warning_descriptions.item (l_warning))
 				l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 				properties.add_property (l_bool_prop)
 				if not an_inherited_options.is_warning then
 					l_bool_prop.enable_readonly
@@ -276,7 +278,7 @@ feature {NONE} -- Implementation
 			if a_inherits then
 				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_debug)
 				l_bool_prop.use_inherited_actions.extend (agent refresh)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 
 				if an_options.is_debug_configured then
 					l_bool_prop.enable_overriden
@@ -302,7 +304,7 @@ feature {NONE} -- Implementation
 
 				create l_bool_prop.make_with_value (l_debug, an_inherited_options.is_debug_enabled (l_debug))
 				l_bool_prop.change_value_actions.extend (agent an_options.add_debug (l_debug, ?))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 	 			if not an_inherited_options.is_debug then
  					l_bool_prop.enable_readonly
 				end

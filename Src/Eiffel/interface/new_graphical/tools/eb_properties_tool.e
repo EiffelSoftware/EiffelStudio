@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_dotnet)
 		end
 
-	handle_value_changes is
+	handle_value_changes (a_has_group_changed: BOOLEAN) is
 			-- Store changes to disk.
 		do
 				-- only if the stone is still valid
@@ -331,6 +331,9 @@ feature {NONE} -- Implementation
 				is_storing := True
 				current_system.store
 				manager.cluster_manager.refresh
+				if a_has_group_changed then
+					system.force_rebuild
+				end
 				is_storing := False
 			end
 		end

@@ -16,26 +16,20 @@ feature -- Status report
 
 	is_valid_class_name (cn: STRING): BOOLEAN is
 			-- Is `cn' a valid class name?
-		require
-			name_not_void: cn /= Void
 		do
-			Result := is_valid_identifier (cn)
+			Result := is_valid_identifier (cn) and then not keywords.has (cn.as_lower)
 		end
 
-	is_valid_cluster_name (cn: STRING): BOOLEAN is
-			-- Is `cn' a valid cluster name?
-		require
-			name_not_void: cn /= Void
+	is_valid_group_name (cn: STRING): BOOLEAN is
+			-- Is `cn' a valid group name?
 		do
-			Result := not cn.is_empty
+			Result := is_valid_config_identifier (cn)
 		end
 
 	is_valid_feature_name (fn: STRING): BOOLEAN is
 			-- Is `fn' a valid feature name?
-		require
-			name_not_void: fn /= Void
 		do
-			Result := is_valid_identifier (fn) or
+			Result := fn /= Void and then not keywords.has (fn) and (is_valid_identifier (fn) or
 					-- Is `fn' a prefix operator?
 				((fn.count > Prefix_str.count + 1) and then
 				 ((fn.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1) and
@@ -45,26 +39,28 @@ feature -- Status report
 				((fn.count > Infix_str.count + 1) and then
 				 ((fn.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1) and
 				  (fn.item (fn.count) = '%"') and
-				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count)))))
+				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count))))))
+		end
+
+	is_valid_target_name (tn: STRING): BOOLEAN is
+			-- Is `cn' a valid target name?
+		do
+			Result := is_valid_config_identifier (cn)
 		end
 
 	is_valid_system_name (cn: STRING): BOOLEAN is
 			-- Is `cn' a valid system name?
-		require
-			name_not_void: cn /= Void
 		do
-			Result := not cn.is_empty
+			Result := is_valid_config_identifier (cn)
 		end
 
 	is_valid_identifier (s: STRING): BOOLEAN is
 			-- Is `s' a valid Eiffel identifier?
-		require
-			name_not_void: s /= Void
 		local
 			i: INTEGER
 			cc: CHARACTER
 		do
-			Result := not s.is_empty and then s.item (1).is_alpha
+			Result := s /= Void and then not s.is_empty and then s.item (1).is_alpha
 			from
 				i := 2
 			until
@@ -76,39 +72,49 @@ feature -- Status report
 			end
 		end
 
+	is_valid_config_identifier (s: STRING): BOOLEAN is
+			-- Is `s' a valid config identifier which is similar to `is_valid_identifier' but also allows the '.' and '-'?
+		local
+			i: INTEGER
+			cc: CHARACTER
+		do
+			Result := s /= Void and then not s.is_empty and then s.item (1).is_alpha
+			from
+				i := 2
+			until
+				i > s.count or not Result
+			loop
+				cc := s.item (i)
+				Result := cc.is_alpha or cc.is_digit or cc = '_' or cc = '.' or cc = '-'
+				i := i + 1
+			end
+		end
+
 	is_valid_operator (op: STRING): BOOLEAN is
 			-- Is `op' a valid operator name?
-		require
-			not_void_name: op /= Void
 		do
 			Result := is_valid_free_operator (op) or else basic_operators.has (op.as_lower)
 		end
 
 	is_valid_binary_operator (op: STRING): BOOLEAN is
 			-- Is `op' a valid binary operator?
-		require
-			not_void_name: op /= Void
 		do
-			Result := binary_operators.has (op.as_lower) or else is_valid_free_operator (op)
+			Result := op /= Void and then binary_operators.has (op.as_lower) or else is_valid_free_operator (op)
 		end
 
 	is_valid_unary_operator (op: STRING): BOOLEAN is
 			-- Is `op' a valid unary operator?
-		require
-			not_void_name: op /= Void
 		do
-			Result := unary_operators.has (op.as_lower) or else is_valid_free_operator (op)
+			Result := op /= Void and then unary_operators.has (op.as_lower) or else is_valid_free_operator (op)
 		end
 
 	is_valid_free_operator (op: STRING): BOOLEAN is
 			-- Is `op' a valid free operator name?
-		require
-			not_void_name: op /= Void
 		local
 			i: INTEGER
 			cc: CHARACTER
 		do
-			Result := not op.is_empty and then free_operators_start.has (op.item (1))
+			Result := op /= Void and then not op.is_empty and then free_operators_start.has (op.item (1))
 			from
 				i := 2
 			until
@@ -124,10 +130,8 @@ feature -- Status report
 
 	is_bracket_alias_name (s: STRING): BOOLEAN is
 			-- Is `s' a bracket alias name?
-		require
-			s_not_void: s /= Void
 		do
-			Result := s.is_equal (bracket_str)
+			Result := s /= Void and then s.is_equal (bracket_str)
 		end
 
 	is_constant (s: STRING): BOOLEAN is
@@ -163,110 +167,166 @@ feature -- Status report
 			Result := s.is_boolean
 		end
 
-	basic_operators: LIST [STRING] is
+	keywords: SEARCH_TABLE [STRING] is
+			-- List of Eiffel keywords in lowercase.
+		once
+			create Result.make (55)
+			Result.force ("agent")
+			Result.force ("alias")
+			Result.force ("all")
+			Result.force ("and")
+			Result.force ("as")
+			Result.force ("assign")
+			Result.force ("attribute")
+			Result.force ("check")
+			Result.force ("class")
+			Result.force ("convert")
+			Result.force ("create")
+			Result.force ("current")
+			Result.force ("debug")
+			Result.force ("deferred")
+			Result.force ("do")
+			Result.force ("else")
+			Result.force ("elseif")
+			Result.force ("end")
+			Result.force ("ensure")
+			Result.force ("expanded")
+			Result.force ("export")
+			Result.force ("external")
+			Result.force ("false")
+			Result.force ("feature")
+			Result.force ("from")
+			Result.force ("frozen")
+			Result.force ("if")
+			Result.force ("implies")
+			Result.force ("inherit")
+			Result.force ("inspect")
+			Result.force ("invariant")
+			Result.force ("like")
+			Result.force ("local")
+			Result.force ("loop")
+			Result.force ("not")
+			Result.force ("redefine")
+			Result.force ("rename")
+			Result.force ("require")
+			Result.force ("rescue")
+			Result.force ("result")
+			Result.force ("retry")
+			Result.force ("select")
+			Result.force ("separate")
+			Result.force ("then")
+			Result.force ("true")
+			Result.force ("undefine")
+			Result.force ("until")
+			Result.force ("variant")
+			Result.force ("void")
+			Result.force ("when")
+			Result.force ("xor")
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	basic_operators: SEARCH_TABLE [STRING] is
 			-- List of basic Eiffel operators (lower-case).
 		once
-			create {ARRAYED_LIST [STRING]} Result.make (20)
-			Result.extend ("not")
-			Result.extend ("+")
-			Result.extend ("-")
-			Result.extend ("*")
-			Result.extend ("/")
-			Result.extend ("<")
-			Result.extend (">")
-			Result.extend ("<=")
-			Result.extend (">=")
-			Result.extend ("//")
-			Result.extend ("\\")
-			Result.extend ("^")
-			Result.extend ("and")
-			Result.extend ("or")
-			Result.extend ("xor")
-			Result.extend ("and then")
-			Result.extend ("or else")
-			Result.extend ("implies")
-			Result.compare_objects
+			create Result.make (20)
+			Result.force ("not")
+			Result.force ("+")
+			Result.force ("-")
+			Result.force ("*")
+			Result.force ("/")
+			Result.force ("<")
+			Result.force (">")
+			Result.force ("<=")
+			Result.force (">=")
+			Result.force ("//")
+			Result.force ("\\")
+			Result.force ("^")
+			Result.force ("and")
+			Result.force ("or")
+			Result.force ("xor")
+			Result.force ("and then")
+			Result.force ("or else")
+			Result.force ("implies")
 		end
 
-	binary_operators: LIST [STRING] is
+	binary_operators: SEARCH_TABLE [STRING] is
 			-- List of basic binary Eiffel operators (lower-case).
 		once
-			create {ARRAYED_LIST [STRING]} Result.make (18)
-			Result.extend ("+")
-			Result.extend ("-")
-			Result.extend ("*")
-			Result.extend ("/")
-			Result.extend ("//")
-			Result.extend ("\\")
-			Result.extend ("^")
-			Result.extend ("..")
-			Result.extend ("<")
-			Result.extend (">")
-			Result.extend ("<=")
-			Result.extend (">=")
-			Result.extend ("and")
-			Result.extend ("or")
-			Result.extend ("xor")
-			Result.extend ("and then")
-			Result.extend ("or else")
-			Result.extend ("implies")
-			Result.compare_objects
+			create Result.make (18)
+			Result.force ("+")
+			Result.force ("-")
+			Result.force ("*")
+			Result.force ("/")
+			Result.force ("//")
+			Result.force ("\\")
+			Result.force ("^")
+			Result.force ("..")
+			Result.force ("<")
+			Result.force (">")
+			Result.force ("<=")
+			Result.force (">=")
+			Result.force ("and")
+			Result.force ("or")
+			Result.force ("xor")
+			Result.force ("and then")
+			Result.force ("or else")
+			Result.force ("implies")
 		end
 
-	unary_operators: LIST [STRING] is
+	unary_operators: SEARCH_TABLE [STRING] is
 			-- List of basic unary Eiffel operators (lower-case)
 		once
-			create {ARRAYED_LIST [STRING]} Result.make (3)
-			Result.extend ("not")
-			Result.extend ("+")
-			Result.extend ("-")
-			Result.compare_objects
+			create Result.make (3)
+			Result.force ("not")
+			Result.force ("+")
+			Result.force ("-")
 		end
 
-	free_operators_start: LIST [CHARACTER] is
+	free_operators_start: SEARCH_TABLE [CHARACTER] is
 			-- List of characters that can start a free operator name.
 		once
-			create {ARRAYED_LIST [CHARACTER]} Result.make (4)
-			Result.extend ('@')
-			Result.extend ('#')
-			Result.extend ('|')
-			Result.extend ('&')
+			create Result.make (4)
+			Result.force ('@')
+			Result.force ('#')
+			Result.force ('|')
+			Result.force ('&')
 		end
 
-	free_operators_characters: LIST [CHARACTER] is
+	free_operators_characters: SEARCH_TABLE [CHARACTER] is
 			-- List of characters that can start a free operator name.
 		once
-			create {ARRAYED_LIST [CHARACTER]} Result.make (10)
-			Result.extend ('@')
-			Result.extend ('#')
-			Result.extend ('|')
-			Result.extend ('&')
-			Result.extend ('*')
-			Result.extend ('/')
-			Result.extend ('-')
-			Result.extend ('\')
-			Result.extend ('$')
-			Result.extend ('_')
-			Result.extend ('!')
-			Result.extend ('%'')
-			Result.extend ('(')
-			Result.extend (')')
-			Result.extend ('+')
-			Result.extend (',')
-			Result.extend ('.')
-			Result.extend (':')
-			Result.extend (';')
-			Result.extend ('<')
-			Result.extend ('>')
-			Result.extend ('=')
-			Result.extend ('?')
-			Result.extend ('[')
-			Result.extend (']')
-			Result.extend ('^')
-			Result.extend ('`')
-			Result.extend ('{')
-			Result.extend ('}')
-			Result.extend ('~')
+			create Result.make (20)
+			Result.force ('@')
+			Result.force ('#')
+			Result.force ('|')
+			Result.force ('&')
+			Result.force ('*')
+			Result.force ('/')
+			Result.force ('-')
+			Result.force ('\')
+			Result.force ('$')
+			Result.force ('_')
+			Result.force ('!')
+			Result.force ('%'')
+			Result.force ('(')
+			Result.force (')')
+			Result.force ('+')
+			Result.force (',')
+			Result.force ('.')
+			Result.force (':')
+			Result.force (';')
+			Result.force ('<')
+			Result.force ('>')
+			Result.force ('=')
+			Result.force ('?')
+			Result.force ('[')
+			Result.force (']')
+			Result.force ('^')
+			Result.force ('`')
+			Result.force ('{')
+			Result.force ('}')
+			Result.force ('~')
 		end
 
 indexing

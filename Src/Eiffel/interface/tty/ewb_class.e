@@ -67,7 +67,7 @@ feature {NONE} -- Execution
 				class_list := Eiffel_universe.classes_with_name (class_name);
 				if class_list.is_empty then
 					io.error.put_string (class_name);
-					if (create {IDENTIFIER_CHECKER}).is_valid (class_name) then
+					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name) then
 						io.error.put_string (" is not in the universe%N")
 					else
 						io.error.put_string (" is not a valid class name%N")
@@ -107,7 +107,7 @@ feature {NONE} -- Execution
 					class_i := cluster.classes.item (class_name);
 					if class_i = Void then
 						io.error.put_string (class_name);
-						if (create {IDENTIFIER_CHECKER}).is_valid (class_name) then
+						if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name) then
 							io.error.put_string (" is not in cluster ");
 							io.error.put_string (cluster_name);
 							io.error.put_new_line

@@ -200,7 +200,7 @@ feature -- Execution
 				end
 				clu := root_cluster_field.text
 				clu.to_lower
-				if not sc.is_valid_cluster_name (clu) then
+				if not sc.is_valid_group_name (clu) then
 					add_error_message (Warning_messages.w_invalid_cluster_name (clu))
 					raise_exception (Invalid_project_name_exception)
 				end

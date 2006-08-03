@@ -159,9 +159,9 @@ feature {NONE} -- Agents
 					l_feature := Void
 				end
 				if not l_class.is_empty then
-					if l_feature /= Void and then not (create {IDENTIFIER_CHECKER}).is_valid (l_feature) then
+					if l_feature /= Void and then not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (l_feature) then
 						create wd.make_with_text (conf_interface_names.root_invalid_feature)
-					elseif not (create {IDENTIFIER_CHECKER}).is_valid (l_class) then
+					elseif not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (l_class) then
 						create wd.make_with_text (conf_interface_names.root_invalid_class)
 					else
 						create l_root.make (l_cluster, l_class, l_feature, False)

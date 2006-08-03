@@ -86,6 +86,19 @@ feature -- Status Report
 	is_value_optional: BOOLEAN
 			-- Indicates if a option value is optional
 
+feature {ARGUMENT_LITE_PARSER} -- Factory Functions
+
+	create_value_option (a_value: STRING): ARGUMENT_OPTION is
+			-- Creates a new argument option given a value `a_value', for current switch
+		require
+			a_value_attached: a_value /= Void
+			not_a_value_is_empty: not a_value.is_empty
+		do
+			create Result.make_with_value (name, a_value)
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	arg_name_attached: arg_name /= Void
 	not_arg_name_is_empty: not arg_name.is_empty

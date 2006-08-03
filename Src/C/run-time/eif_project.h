@@ -151,6 +151,7 @@ extern "C" {
 	RT_LNK long *egc_fsize;
 #endif
 
+	RT_LNK EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
 	RT_LNK EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 
 	RT_LNK int32 egc_rcdt;				/* E1/einit.c */

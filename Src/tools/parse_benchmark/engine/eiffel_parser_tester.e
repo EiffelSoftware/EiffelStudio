@@ -23,7 +23,7 @@ feature -- Basic Operations
 		local
 			l_then: NATURAL_64
 			l_now: NATURAL_64
-			l_mseconds: NATURAL_64
+			l_ticks: REAL_64
 			i: INTEGER
 		do
 			l_then := c_ticks
@@ -32,8 +32,8 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			l_now := c_ticks
-			l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
-			create Result.make (a_source_id, l_mseconds.max (1), a_parser.successful, a_parser.identity)
+			l_ticks := ((l_now - l_then) / a_error)
+			create Result.make (a_source_id, l_ticks.max (1), a_parser.successful, a_parser.identity)
 
 			if a_frozen then
 				l_then := c_ticks
@@ -42,8 +42,8 @@ feature -- Basic Operations
 					i := i + 1
 				end
 				l_now := c_ticks
-				l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
-				Result.set_frozen_completion_time (l_mseconds.max (1))
+				l_ticks := ((l_now - l_then) / a_error)
+				Result.set_frozen_completion_ticks (l_ticks.max (1))
 			end
 		ensure
 			result_attached: Result /= Void
@@ -61,7 +61,7 @@ feature -- Basic Operations
 		local
 			l_then: NATURAL_64
 			l_now: NATURAL_64
-			l_mseconds: NATURAL_64
+			l_ticks: REAL_64
 			i: INTEGER
 		do
 			l_then := c_ticks
@@ -70,8 +70,8 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			l_now := c_ticks
-			l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
-			create Result.make (a_fn, l_mseconds.max (1), a_parser.successful, a_parser.identity)
+			l_ticks := ((l_now - l_then) / a_error)
+			create Result.make (a_fn, l_ticks.max (1), a_parser.successful, a_parser.identity)
 
 			if a_frozen then
 				l_then := c_ticks
@@ -80,8 +80,8 @@ feature -- Basic Operations
 					i := i + 1
 				end
 				l_now := c_ticks
-				l_mseconds := (((l_now - l_then) / a_error) / c_ticks_per_millisecond).truncated_to_integer.to_natural_64
-				Result.set_frozen_completion_time (l_mseconds.max (1))
+				l_ticks := ((l_now - l_then) / a_error)
+				Result.set_frozen_completion_ticks (l_ticks.max (1))
 			end
 		ensure
 			result_attached: Result /= Void

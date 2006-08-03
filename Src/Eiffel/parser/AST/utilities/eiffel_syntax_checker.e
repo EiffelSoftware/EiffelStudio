@@ -43,9 +43,9 @@ feature -- Status report
 		end
 
 	is_valid_target_name (tn: STRING): BOOLEAN is
-			-- Is `cn' a valid target name?
+			-- Is `tn' a valid target name?
 		do
-			Result := is_valid_config_identifier (cn)
+			Result := is_valid_config_identifier (tn)
 		end
 
 	is_valid_system_name (cn: STRING): BOOLEAN is

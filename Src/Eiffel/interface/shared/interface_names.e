@@ -154,6 +154,8 @@ feature -- Graphical degree output
 feature -- Help text
 
 	h_No_help_available: STRING is				"No help available for this element"
+	h_refactoring_compiled: STRING is			"Renames only occurances of the class name in compiled classes."
+	h_refactoring_all_classes: STRING is		"Renames occurances of the class name in any class. (Slow)"
 
 feature -- File names
 
@@ -169,6 +171,7 @@ feature -- Accelerator, focus label and menu name
 	m_Add_to_favorites: STRING is		"&Add to Favorites"
 	m_Address_toolbar: STRING is			"&Address Bar"
 	m_Apply: STRING is					"&Apply"
+	l_all_classes: STRING is			"All Classes"
 	m_Breakpoints_tool: STRING is		"Breakpoints"
 
 	l_class_tree_assemblies: STRING is	"Assemblies"
@@ -189,6 +192,7 @@ feature -- Accelerator, focus label and menu name
 	f_Cut: STRING is					"Cut (Ctrl+X)"
 	m_Call_stack_tool: STRING is			"Call stack"
 	m_Cluster_tool: STRING is			"&Clusters"
+	l_compiled_classes: STRING is		"Compiled Classes"
 	m_Complete_word: STRING is			"Complete &Word"
 	m_Complete_class_name: STRING is		"Complete Class &Name"
 	m_Context_tool: STRING is			"Conte&xt"
@@ -327,6 +331,7 @@ feature -- Accelerator, focus label and menu name
 	f_Melt: STRING is					"Compile current project"
 	m_Melt_new: STRING is				"&Compile"
 	m_New: STRING is					"&New"
+	l_new_name: STRING is				"New Name:"
 	f_New_window: STRING is				"Create a new window"
 	m_New_window: STRING is				"New &Window"
 	m_New_dynamic_lib: STRING is		"&Dynamic Library Builder..."
@@ -348,15 +353,18 @@ feature -- Accelerator, focus label and menu name
 	m_Profile_tool: STRING is			"Pro&filer..."
 	m_Project_toolbar: STRING is		"&Project Bar"
 	m_Refactoring_toolbar: STRING is	"Re&factoring Bar"
-	f_refactoring_pull: STRING is		"Pull up feature"
-	f_refactoring_rename: STRING is		"Rename feature/class"
-	f_refactoring_undo: STRING is		"Undo last refactoring (only works as long as no file that was refactored has been changed by hand)"
-	f_refactoring_redo: STRING is		"Redo last refactoring (only works as long as no file that was refactored has been changed by hand)"
+	f_refactoring_pull: STRING is		"Pull up Feature"
+	f_refactoring_rename: STRING is		"Rename Feature/Class"
+	f_refactoring_undo: STRING is		"Undo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
+	f_refactoring_redo: STRING is		"Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
 	b_refactoring_pull: STRING is		"Pull up"
 	b_refactoring_push: STRING is		"Push down"
 	b_refactoring_rename: STRING is		"Rename"
 	b_refactoring_undo: STRING is		"Undo refactoring"
 	b_refactoring_redo: STRING is		"Redo refactoring"
+	l_rename_file: STRING is			"Rename File"
+	l_replace_comments: STRING is		"Replace Name in Comments"
+	l_replace_strings: STRING is		"Replace Name in Strings"
 	m_Recent_project: STRING is			"&Recent Projects"
 	m_Redo: STRING is					"Re&do%TCtrl+Y"
 	f_Redo: STRING is					"Redo (Ctrl+Y)"
@@ -514,7 +522,7 @@ feature -- Label texts
 	l_Calling_convention: STRING is		"Calling convention:"
 	l_Choose_folder: STRING is			"Select the destination folder "
 	l_Class: STRING is					"Class:"
-	l_Class_name: STRING is				"Class name:"
+	l_class_name: STRING is				"Class name:"
 	l_clean: STRING is					"Clean"
 	l_clean_user_file: STRING is		"Reset user settings"
 	l_Clients: STRING is				"clients"
@@ -968,9 +976,9 @@ feature -- Title part
 
 	t_first_match_reached: STRING is	"Initial match reached."
 	t_bottom_reached: STRING is 	"Bottom reached."
-	t_refactoring_feature_rename: STRING is	"Refactoring: Feature rename (compiled classes)"
-	t_refactoring_class_select: STRING is "Select class"
-	t_refactoring_class_rename: STRING is "Refactoring: Class rename"
+	t_refactoring_feature_rename: STRING is	"Refactoring: Feature Rename (Compiled Classes)"
+	t_refactoring_class_select: STRING is "Select Class"
+	t_refactoring_class_rename: STRING is "Refactoring: Class Rename"
 
 feature -- Description texts
 

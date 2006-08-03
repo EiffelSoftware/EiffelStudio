@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			vb_label.set_padding (Layout_constants.small_padding_size)
 			vb_label.set_border_width (Layout_constants.default_border_size)
 			create hb_name
-			create l.make_with_text ("New name:")
+			create l.make_with_text (interface_names.l_new_name)
 			vb_label.extend (l)
 			vb_label.disable_item_expand (l)
 			vb_label.extend (create {EV_CELL})
@@ -87,9 +87,9 @@ feature {NONE} -- Initialization
 			fvb.set_border_width (Layout_constants.default_border_size)
 			f_bottom.extend (fvb)
 
-			create comments_button.make_with_text ("Replace name in comments")
+			create comments_button.make_with_text (interface_names.l_replace_comments)
 			fvb.extend (comments_button)
-			create strings_button.make_with_text ("Replace name in strings")
+			create strings_button.make_with_text (interface_names.l_replace_strings)
 			fvb.extend (strings_button)
 			vb.extend (f_bottom)
 

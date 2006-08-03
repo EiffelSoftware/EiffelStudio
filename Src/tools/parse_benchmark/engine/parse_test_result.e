@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_fn: like file_name; a_time: like completion_time; a_succ: like successful; a_id: like parser_id)
+	make (a_fn: like file_name; a_ticks: like completion_ticks; a_succ: like successful; a_id: like parser_id)
 			-- Initialize test result with tested related information.
 		require
 			a_fn_attached: a_fn /= Void
@@ -22,12 +22,12 @@ feature {NONE} -- Initialization
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			file_name := a_fn
-			completion_time := a_time
+			completion_ticks := a_ticks
 			successful := a_succ
 			parser_id := a_id
 		ensure
 			file_name_set: file_name = a_fn
-			completion_time_set: completion_time = a_time
+			completion_ticks_set: completion_ticks = a_ticks
 			successful_set: successful = a_succ
 			parser_id_set: parser_id = a_id
 		end
@@ -37,11 +37,11 @@ feature -- Access
 	file_name: STRING
 			-- Full path to file test was performed on
 
-	completion_time: NATURAL_64
-			-- Time, in milliseconds test was completed in
+	completion_ticks: REAL_64
+			-- Time, in ticks test was completed in
 
-	frozen_completion_time: NATURAL_64
-			-- Time, in milliseconds test on a frozen parser was completed in
+	frozen_completion_ticks: REAL_64
+			-- Time, in ticks test on a frozen parser was completed in
 
 	successful: BOOLEAN
 			-- Indicates if parsing was successful
@@ -51,12 +51,12 @@ feature -- Access
 
 feature -- Element changed
 
-	set_frozen_completion_time (a_time: like frozen_completion_time)
-			-- Set `frozen_completion_time' with `a_time'
+	set_frozen_completion_ticks (a_ticks: like frozen_completion_ticks)
+			-- Set `frozen_completion_ticks' with `a_ticks'
 		do
-			frozen_completion_time := a_time
+			frozen_completion_ticks := a_ticks
 		ensure
-			frozen_completion_time_set: frozen_completion_time = a_time
+			frozen_completion_ticks_set: frozen_completion_ticks = a_ticks
 		end
 
 invariant

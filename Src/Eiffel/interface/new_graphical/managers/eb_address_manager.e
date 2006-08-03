@@ -731,7 +731,7 @@ feature {NONE} -- Execution
 					not ctxt.has ('*') and then
 					not ctxt.has ('?')
 				then
-					if (create {IDENTIFIER_CHECKER}).is_valid (ctxt) then
+					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (ctxt) then
 						create new_class_win.make_default (parent)
 						new_class_win.set_stone_when_finished
 						new_class_win.call (class_address.text)

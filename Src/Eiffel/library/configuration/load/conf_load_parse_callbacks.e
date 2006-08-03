@@ -25,6 +25,11 @@ inherit
 
 	CONF_INTERFACE_CONSTANTS
 
+	EIFFEL_SYNTAX_CHECKER
+		export
+			{NONE} all
+		end
+
 create
 	make_with_factory
 
@@ -350,11 +355,13 @@ feature {NONE} -- Implementation attribute processing
 			if current_library_target /= Void then
 				current_library_target.to_lower
 			end
-			if l_name /= Void and then l_uuid /= Void and then check_uuid (l_uuid) then
+			if is_valid_system_name (l_name) and then l_uuid /= Void and then check_uuid (l_uuid) then
 				create l_uu.make_from_string (l_uuid)
 				last_system := factory.new_system (l_name.as_lower, l_uu)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_system_no_name)
+			elseif not is_valid_system_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_system_name (l_name))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_system_invalid_uuid (l_name))
 			end
@@ -423,14 +430,23 @@ feature {NONE} -- Implementation attribute processing
 			l_cluster := current_attributes.item (at_cluster)
 			if l_cluster /= Void then
 				l_cluster.to_lower
+				if not is_valid_group_name (l_cluster) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_cluster)
+				end
 			end
 			l_class := current_attributes.item (at_class)
 			if l_class /= Void then
 				l_class.to_upper
+				if not is_valid_class_name (l_class) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_class)
+				end
 			end
 			l_feature := current_attributes.item (at_feature)
 			if l_feature /= Void then
 				l_feature.to_lower
+				if not is_valid_feature_name (l_feature) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_feature)
+				end
 			end
 			if (l_all_b and l_cluster = Void and l_class = Void and l_feature = Void) or else l_class /= Void then
 				current_target.set_root (factory.new_root (l_cluster, l_class, l_feature, l_all_b))
@@ -523,7 +539,6 @@ feature {NONE} -- Implementation attribute processing
 		ensure
 			current_file_rule_not_void: current_file_rule /= Void
 		end
-
 
 	process_external_attributes is
 			-- Process attributes of external_(include|object|resource) tags.
@@ -643,7 +658,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void then
 				l_name.to_lower
 			end
-			if l_name /= Void and l_location /= Void and not group_list.has (l_name) then
+			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
 				current_library := factory.new_library (l_name, factory.new_location_from_full_path (l_location, current_target), current_target)
 				current_group := current_library
 				if l_readonly /= Void and then l_readonly.is_boolean then
@@ -658,6 +673,8 @@ feature {NONE} -- Implementation attribute processing
 				current_target.add_library (current_library)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_library_no_name)
+			elseif not is_valid_group_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_library_name (l_name))
 			elseif group_list.has (l_name) then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_library_conflict (l_name))
 			else
@@ -683,7 +700,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void then
 				l_name.to_lower
 			end
-			if l_name /= Void and l_location /= Void and not group_list.has (l_name) and current_target.precompile = Void then
+			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) and current_target.precompile = Void then
 				l_pre := factory.new_precompile (l_name, l_location, current_target)
 				current_library := l_pre
 				current_group := current_library
@@ -699,6 +716,8 @@ feature {NONE} -- Implementation attribute processing
 				current_target.set_precompile (l_pre)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_no_name)
+			elseif not is_valid_group_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_name (l_name))
 			elseif group_list.has (l_name) then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_conflict (l_name))
 			elseif current_target.precompile /= Void then
@@ -729,7 +748,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void then
 				l_name.to_lower
 			end
-			if l_name /= Void and l_location /= Void and not group_list.has (l_name) then
+			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
 				if l_location.is_equal ("none") then
 					if l_assembly_name /= Void and l_assembly_version /= Void and l_assembly_culture /= Void and l_assembly_key /= Void then
 						current_assembly := factory.new_assembly_from_gac (l_name,l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_key, current_target )
@@ -750,6 +769,8 @@ feature {NONE} -- Implementation attribute processing
 				current_target.add_assembly (current_assembly)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_no_name)
+			elseif not is_valid_group_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_name (l_name))
 			elseif l_location = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly (l_name))
 			elseif group_list.has (l_name) then
@@ -778,7 +799,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void then
 				l_name.to_lower
 			end
-			if l_name /= Void and l_location /= Void and not group_list.has (l_name) then
+			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
 				l_parent := current_cluster
 				l_loc := factory.new_location_from_path (l_location, current_target)
 				current_cluster := factory.new_cluster (l_name.as_lower, l_loc, current_target)
@@ -804,11 +825,13 @@ feature {NONE} -- Implementation attribute processing
 
 				group_list.force (current_group, l_name)
 				current_target.add_cluster (current_cluster)
-			elseif l_name /= Void and l_location /= Void then
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_conflict (l_name))
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_no_name)
-			elseif l_location = Void then
+			elseif not is_valid_group_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_name (l_name))
+			elseif l_location /= Void then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_conflict (l_name))
+			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster (l_name))
 			end
 		ensure
@@ -831,7 +854,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void then
 				l_name.to_lower
 			end
-			if l_name /= Void and l_location /= Void and not group_list.has (l_name) then
+			if is_valid_group_name (l_name) and l_location /= Void and not group_list.has (l_name) then
 				l_parent := current_cluster
 				current_override := factory.new_override (l_name, factory.new_location_from_path (l_location, current_target), current_target)
 				current_cluster := current_override
@@ -856,6 +879,8 @@ feature {NONE} -- Implementation attribute processing
 				current_target.add_override (current_override)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_override_no_name)
+			elseif not is_valid_group_name (l_name) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_override_name (l_name))
 			elseif group_list.has (l_name) then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_override_conflict (l_name))
 			else
@@ -994,7 +1019,7 @@ feature {NONE} -- Implementation attribute processing
 			end
 
 			if a_class_option then
-				if l_class /= Void then
+				if is_valid_class_name (l_class) then
 					current_group.add_class_options (current_option, l_class.as_upper)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_class_opt)
@@ -1021,16 +1046,25 @@ feature {NONE} -- Implementation attribute processing
 			l_feature := current_attributes.item (at_feature)
 			l_class_rename := current_attributes.item (at_class_rename)
 			l_feature_rename := current_attributes.item (at_feature_rename)
-			if l_class /= Void then
+			if is_valid_class_name (l_class) then
 				l_class.to_upper
 				if l_feature /= Void then
 					l_feature.to_lower
+					if not is_valid_feature_name (l_feature) then
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_feature (l_feature))
+					end
 				end
 				if l_class_rename /= Void then
 					l_class_rename.to_upper
+					if not is_valid_class_name (l_class_rename) then
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_class (l_class_rename))
+					end
 				end
 				if l_feature_rename /= Void then
 					l_feature_rename.to_lower
+					if not is_valid_feature_name (l_feature_rename) then
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_visible_feature (l_feature_rename))
+					end
 				end
 				if current_cluster /= Void then
 					current_cluster.add_visible (l_class, l_feature, l_class_rename, l_feature_rename)
@@ -1055,7 +1089,7 @@ feature {NONE} -- Implementation attribute processing
 			ll: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			l_group := current_attributes.item (at_group)
-			if l_group /= Void then
+			if is_valid_group_name (l_group) then
 				if l_group.is_equal ("none") then
 					current_cluster.set_dependencies (create {DS_HASH_SET [CONF_GROUP]}.make (0))
 				else
@@ -1080,7 +1114,7 @@ feature {NONE} -- Implementation attribute processing
 			ll: ARRAYED_LIST [CONF_OVERRIDE]
 		do
 			l_group := current_attributes.item (at_group)
-			if l_group /= Void then
+			if is_valid_group_name (l_group) then
 				if l_group.is_equal ("none") then
 					current_override.set_override (create {ARRAYED_LIST [CONF_GROUP]}.make (0))
 				else
@@ -1331,7 +1365,7 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_old := current_attributes.item (at_old_name)
 			l_new := current_attributes.item (at_new_name)
-			if l_old = Void or l_new = Void then
+			if not is_valid_class_name (l_old) or not is_valid_class_name (l_new) then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_mapping)
 			else
 				if current_cluster /= Void then

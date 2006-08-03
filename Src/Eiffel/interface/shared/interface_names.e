@@ -269,7 +269,7 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_redo: STRING is			"Redo last action"
 	f_diagram_fill_cluster: STRING is	"Include all classes of cluster"
 	f_diagram_history: STRING is		"History tool"
-	f_diagram_remove: STRING is			"Remove figure"
+	f_diagram_remove: STRING is			"Hide figure"
 	l_diagram_remove: STRING is			"Delete graphical items"
 	f_diagram_create_supplier_links: STRING is	"Create new client-supplier links"
 	f_diagram_create_aggregate_supplier_links: STRING is "Create new aggregate client-supplier links"

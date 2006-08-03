@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_value (current_target.name)
 			l_string_prop.validate_value_actions.extend (agent check_target_name)
 			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_name))
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 
 				-- description
@@ -69,14 +69,14 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (current_target.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_description))
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- abstract target
 			create l_bool_prop.make_with_value (conf_interface_names.target_abstract_name, current_target.is_abstract)
 			l_bool_prop.set_description (conf_interface_names.target_abstract_description)
 			l_bool_prop.change_value_actions.extend (agent current_target.set_abstract)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
 
 				-- compilation type
@@ -90,11 +90,11 @@ feature {NONE} -- Implementation
 				l_choice_prop.set_value (conf_interface_names.target_compilation_type_standard)
 			end
 			l_choice_prop.change_value_actions.put_front (agent set_compilation_mode)
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
 			l_choice_prop.use_inherited_actions.extend (agent current_target.update_setting (s_msil_generation, Void))
 			l_choice_prop.use_inherited_actions.extend (agent refresh)
-			l_choice_prop.use_inherited_actions.extend (agent handle_value_changes)
+			l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 			properties.add_property (l_choice_prop)
 
 				-- output name
@@ -112,10 +112,10 @@ feature {NONE} -- Implementation
 			l_root_prop.refresh
 			l_root_prop.change_value_actions.extend (agent current_target.set_root)
 			l_root_prop.change_value_actions.extend (agent update_inheritance_root (?, l_root_prop))
-			l_root_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_ROOT}?, agent handle_value_changes))
+			l_root_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_ROOT}?, agent handle_value_changes (True)))
 			l_root_prop.use_inherited_actions.extend (agent current_target.set_root (Void))
 			l_root_prop.use_inherited_actions.extend (agent update_inheritance_root (Void, l_root_prop))
-			l_root_prop.use_inherited_actions.extend (agent handle_value_changes)
+			l_root_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 			update_inheritance_root (Void, l_root_prop)
 			properties.add_property (l_root_prop)
 
@@ -126,10 +126,10 @@ feature {NONE} -- Implementation
 			l_version_prop.refresh
 			l_version_prop.change_value_actions.extend (agent current_target.set_version)
 			l_version_prop.change_value_actions.extend (agent update_inheritance_version (?, l_version_prop))
-			l_version_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_VERSION}?, agent handle_value_changes))
+			l_version_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_VERSION}?, agent handle_value_changes (False)))
 			l_version_prop.use_inherited_actions.extend (agent current_target.set_version (Void))
 			l_version_prop.use_inherited_actions.extend (agent update_inheritance_version (Void, l_version_prop))
-			l_version_prop.use_inherited_actions.extend (agent handle_value_changes)
+			l_version_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 			update_inheritance_version (Void, l_version_prop)
 			properties.add_property (l_version_prop)
 
@@ -140,10 +140,10 @@ feature {NONE} -- Implementation
 			l_file_rule_prop.refresh
 			l_file_rule_prop.change_value_actions.extend (agent current_target.set_file_rules)
 			l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule (?, l_file_rule_prop))
-			l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes))
+			l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes (True)))
 			l_file_rule_prop.use_inherited_actions.extend (agent current_target.set_file_rules (create {ARRAYED_LIST [CONF_FILE_RULE]}.make (0)))
 			l_file_rule_prop.use_inherited_actions.extend (agent update_inheritance_file_rule (Void, l_file_rule_prop))
-			l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes)
+			l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 			update_inheritance_file_rule (Void, l_file_rule_prop)
 			properties.add_property (l_file_rule_prop)
 
@@ -429,10 +429,10 @@ feature {NONE} -- Implementation helper
 			a_property.refresh
 			a_property.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent set_string_setting (a_name, a_default, ?)))
 			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (a_name, a_property)))
-			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))
 			a_property.use_inherited_actions.extend (agent update_inheritance_setting (a_name, a_property))
-			a_property.use_inherited_actions.extend (agent handle_value_changes)
+			a_property.use_inherited_actions.extend (agent handle_value_changes (False))
 			update_inheritance_setting (a_name, a_property)
 		end
 
@@ -447,10 +447,10 @@ feature {NONE} -- Implementation helper
 			a_property.refresh
 			a_property.change_value_actions.extend (agent set_boolean_setting (a_name, a_default, ?))
 			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_setting (a_name, a_property)))
-			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))
 			a_property.use_inherited_actions.extend (agent update_inheritance_setting (a_name, a_property))
-			a_property.use_inherited_actions.extend (agent handle_value_changes)
+			a_property.use_inherited_actions.extend (agent handle_value_changes (False))
 			update_inheritance_setting (a_name, a_property)
 		end
 
@@ -578,7 +578,10 @@ feature {NONE} -- Validation and warning generation
 		do
 			l_targets := conf_system.targets
 			l_targets.search (a_name.as_lower)
-			if l_targets.found and then l_targets.found_item /= current_target then
+			if not (create {EIFFEL_SYNTAX_CHECKER}.is_valid_target_name (a_name)) then
+				create wd.make_with_text (conf_interface_names.target_name_invalid)
+				wd.show_modal_to_window (window)
+			elseif l_targets.found and then l_targets.found_item /= current_target then
 				create wd.make_with_text (conf_interface_names.target_name_duplicate)
 				wd.show_modal_to_window (window)
 			elseif a_name.is_empty then

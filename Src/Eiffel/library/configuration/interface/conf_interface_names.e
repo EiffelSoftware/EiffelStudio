@@ -467,8 +467,10 @@ feature -- Validation warnings
 			Result := "Target cannot be removed because "+other_target+" extends it."
 		end
 
+	target_name_invalid: STRING is "Cannot rename target because the name is invalid."
 	target_name_duplicate: STRING is "Cannot rename target because there is already a target with the new name."
 	target_name_empty: STRING is "Cannot rename target because the name is empty."
+	group_name_invalid: STRING is "Cannot rename group because the name is not valid."
 	group_name_duplicate: STRING is "Cannot rename group because there is already a target with the new name."
 	group_name_empty: STRING is "Cannot rename group because the name is empty."
 	root_no_class: STRING is "Cannot specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
@@ -506,6 +508,11 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_system_no_name: STRING is "Incorrect system tag, no name specified."
+	e_parse_incorrect_system_name (a_system: STRING): STRING is
+		do
+			Result := "Invalid system name "+a_system+"."
+		end
+
 	e_parse_incorrect_system_invalid_uuid (a_name: STRING): STRING is
 		do
 			Result := "Incorrect system tag "+a_name+" invalid UUID specified."
@@ -524,6 +531,9 @@ feature -- Parse errors
 
 	e_parse_incorrect_root_all: STRING is "Invalid value for all_classes attribute in root tag."
 	e_parse_incorrect_root: STRING is "Invalid root tag."
+	e_parse_incorrect_root_cluster: STRING is "Invalid root cluster."
+	e_parse_incorrect_root_class: STRING is "Invalid root class."
+	e_parse_incorrect_root_feature: STRING is "Invalid root feature."
 
 	e_parse_incorrect_setting_no_name: STRING is "Invalid setting tag, no name specified."
 	e_parse_incorrect_setting (a_setting: STRING): STRING is
@@ -555,6 +565,10 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_library_no_name: STRING is "Invalid library tag."
+	e_parse_incorrect_library_name (a_group: STRING): STRING is
+		do
+			Result := "Invalid library name "+a_group+"."
+		end
 	e_parse_incorrect_library (a_library: STRING): STRING is
 		do
 			Result := "Invalid library tag "+a_library+"."
@@ -565,6 +579,10 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_precompile_no_name: STRING is "Invalid precompile tag."
+	e_parse_incorrect_precompile_name (a_group: STRING): STRING is
+		do
+			Result := "Invalid precompile name "+a_group+"."
+		end
 	e_parse_incorrect_precompile (a_precompile: STRING): STRING is
 		do
 			Result := "Invalid precompile tag "+a_precompile+"."
@@ -579,6 +597,10 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_assembly_no_name: STRING is "Invalid assembly tag no name specified."
+	e_parse_incorrect_assembly_name (a_group: STRING): STRING is
+		do
+			Result := "Invalid assembly name "+a_group+"."
+		end
 	e_parse_incorrect_assembly (an_assembly: STRING): STRING is
 		do
 			Result := "Invalid assembly tag "+an_assembly+" no location specified."
@@ -589,6 +611,10 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_cluster_no_name: STRING is "Invalid cluster tag no name specified."
+	e_parse_incorrect_cluster_name (a_group: STRING): STRING is
+		do
+			Result := "Invalid cluster name "+a_group+"."
+		end
 	e_parse_incorrect_cluster (a_cluster: STRING): STRING is
 		do
 			Result := "Invalid cluster tag "+a_cluster+" no location specified."
@@ -599,6 +625,10 @@ feature -- Parse errors
 		end
 
 	e_parse_incorrect_override_no_name: STRING is "Invalid override tag no name specified."
+	e_parse_incorrect_override_name (a_group: STRING): STRING is
+		do
+			Result := "Invalid override name "+a_group+"."
+		end
 	e_parse_incorrect_override (an_override: STRING): STRING is
 		do
 			Result := "Invalid override tag "+an_override+" no location specified."
@@ -636,10 +666,18 @@ feature -- Parse errors
 		do
 			Result := "Invalid visible tag on "+a_parent+"."
 		end
+	e_parse_incorrect_visible_feature (a_feature: STRING): STRING is
+		do
+			Result := "Incorrect feature name "+a_feature+" in visible clause ."
+		end
+	e_parse_incorrect_visible_class (a_class: STRING): STRING is
+		do
+			Result := "Incorrect class name "+a_class+" in visible clause ."
+		end
 
 	e_parse_incorrect_uses (a_group: STRING): STRING is
 		do
-			Result := "Invalid overrides tag in group "+a_group+"."
+			Result := "Invalid uses tag in group "+a_group+"."
 		end
 
 	e_parse_incorrect_overrides (a_group: STRING): STRING is

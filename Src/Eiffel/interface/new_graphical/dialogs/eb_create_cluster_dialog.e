@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 		do
 			cn := cluster_name
-			aok := not cn.is_empty and then (create {IDENTIFIER_CHECKER}).is_valid (cn)
+			aok := not cn.is_empty and then (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (cn)
 			if not aok then
 				create wd.make_with_text (Warning_messages.w_invalid_cluster_name (cn))
 				wd.show_modal_to_window (Current)

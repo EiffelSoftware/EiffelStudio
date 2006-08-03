@@ -35,7 +35,7 @@ feature -- Basic operation
 	execute is
             -- Execute a check.
         do
-			success := (create {IDENTIFIER_CHECKER}).is_valid (new_name)
+			success := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (new_name)
         end
 
 feature {NONE} -- Implementation

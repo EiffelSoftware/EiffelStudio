@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 		do
 			l_feature := feature_by_name (text)
 			if l_feature = Void then
-				if (create {IDENTIFIER_CHECKER}).is_valid_upper (text) then
+				if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (text) and text.as_upper.is_equal (text) then
 					l_class_i := class_by_name (text)
 				end
 				if l_class_i = Void then

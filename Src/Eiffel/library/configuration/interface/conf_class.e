@@ -338,16 +338,14 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_path_not_void: a_path /= Void
 		local
 			l_cluster: CONF_CLUSTER
-			l_old_ren, l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_old_name: STRING
 		do
 			is_rebuilding := True
 
-			l_old_ren := group.renaming
-			l_ren := a_group.renaming
+			l_old_name := renamed_name.twin
+			set_renamed_name
 			if
-				not equal (group.name_prefix, a_group.name_prefix) or else
-				not (l_old_ren = Void and l_ren = Void or else (l_old_ren /= Void and l_ren /= Void and then
-				equal (l_ren.item (name), l_old_ren.item (name))))
+				not equal (l_old_name, renamed_name)
 			then
 				date := 0
 			end
@@ -395,7 +393,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			l_file: KL_BINARY_INPUT_FILE
 			l_name: like name
 			l_renamings: HASH_TABLE [STRING, STRING]
-			l_old_name: like renamed_name
 		do
 			create l_file.make (full_file_name)
 			if l_file.exists then
@@ -410,16 +407,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					if name = Void or else not name.is_equal (l_name) then
 						is_renamed := True
 						if not is_rebuilding then
-							l_old_name := renamed_name
-							name := l_name.as_upper
-							renamed_name := name.twin
-							l_renamings := group.renaming
-							if l_renamings /= Void and then l_renamings.has (name) then
-								renamed_name := l_renamings.item (name)
-							end
-							if group.name_prefix /= Void then
-								renamed_name.prepend (group.name_prefix)
-							end
+							name := l_name
+							set_renamed_name
 						end
 					end
 				end
@@ -473,6 +462,26 @@ feature {NONE} -- Implementation
 		do
 			is_error := True
 			last_error := an_error
+		end
+
+	set_renamed_name is
+			-- Set `renamed_name' from `name'.
+		require
+			name_set: name /= Void and then not name.is_empty
+			group_set: group /= Void
+		local
+			l_renamings: HASH_TABLE [STRING, STRING]
+		do
+			renamed_name := name.twin
+			l_renamings := group.renaming
+			if l_renamings /= Void and then l_renamings.has (renamed_name) then
+				renamed_name := l_renamings.item (renamed_name).twin
+			end
+			if group.name_prefix /= Void then
+				renamed_name.prepend (group.name_prefix)
+			end
+		ensure
+			renamed_name_set: renamed_name /= Void and then not renamed_name.is_empty
 		end
 
 feature {NONE} -- Type anchor

@@ -63,7 +63,7 @@ feature -- Visit nodes
 					until
 						l_c_opt.after
 					loop
-						if not l_classes.has (l_c_opt.key_for_iteration) then
+						if not l_c_opt.item_for_iteration.is_empty and then not l_classes.has (l_c_opt.key_for_iteration) then
 							add_error (create {CONF_ERROR_CLOPT}.make (l_c_opt.key_for_iteration))
 						end
 						l_c_opt.forth

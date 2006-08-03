@@ -1750,7 +1750,7 @@ feature {NONE} -- Implementation: checks
 	valid_alias (al: STRING): BOOLEAN is
 			-- Is `al' a valid alias?
 		do
-			Result := (create {IDENTIFIER_CHECKER}).is_valid (al)
+			Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_identifier (al)
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is

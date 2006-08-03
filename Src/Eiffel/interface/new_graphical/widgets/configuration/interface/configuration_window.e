@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_value_changes is
+	handle_value_changes (a_has_group_changed: BOOLEAN) is
 			-- Store changes to disk.
 		local
 			l_section: CONFIGURATION_SECTION
@@ -1008,14 +1008,14 @@ feature {NONE} -- Implementation
 			create l_string_prop.make (conf_interface_names.system_name_name)
 			l_string_prop.set_description (conf_interface_names.system_name_description)
 			l_string_prop.set_value (conf_system.name)
-			l_string_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING}?))
+			l_string_prop.validate_value_actions.extend (agent (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name)
 			l_string_prop.change_value_actions.extend (agent conf_system.set_name)
 			l_string_prop.change_value_actions.extend (agent (a_name: STRING)
 					do
 						set_title (conf_interface_names.configuration_title (a_name))
 					end
 				)
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 
 				-- description
@@ -1026,7 +1026,7 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (conf_system.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent conf_system.set_description))
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- library target
@@ -1037,7 +1037,7 @@ feature {NONE} -- Implementation
 			end
 			l_choice_prop.validate_value_actions.extend (agent check_library_target)
 			l_choice_prop.change_value_actions.extend (agent simple_wrapper({STRING_32}?, agent conf_system.set_library_target_by_name))
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_choice_prop)
 
 				-- file name
@@ -1096,7 +1096,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.enable_text_editing
 				l_dir_prop.set_value (an_external.location)
 				l_dir_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (conf_interface_names.external_location_name)
@@ -1104,7 +1104,7 @@ feature {NONE} -- Implementation
 				l_file_prop.enable_text_editing
 				l_file_prop.set_value (an_external.location)
 				l_file_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
-				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				if an_external.is_resource then
 					l_file_prop.add_filters (text_files_filter, text_files_description)
 					l_file_prop.add_filters (resx_files_filter, resx_files_description)
@@ -1121,7 +1121,7 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (an_external.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_external.set_description))
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- condition
@@ -1130,7 +1130,7 @@ feature {NONE} -- Implementation
 			l_dial.set_value (an_external.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent an_external.set_conditions)
-			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes))
+			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (False)))
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
@@ -1163,7 +1163,7 @@ feature {NONE} -- Implementation
 			l_prop.set_description (conf_interface_names.task_command_description)
 			l_prop.set_value (a_task.command)
 			l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_command))
-			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_prop)
 
 				-- description
@@ -1174,7 +1174,7 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (a_task.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_description))
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- working directory
@@ -1194,14 +1194,14 @@ feature {NONE} -- Implementation
 					end
 				end (?, a_task)
 			)
-			l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes))
+			l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_dir_prop)
 
 				-- must succeed
 			create l_bool_prop.make_with_value (conf_interface_names.task_succeed_name, a_task.must_succeed)
 			l_bool_prop.set_description (conf_interface_names.task_succeed_description)
 			l_bool_prop.change_value_actions.extend (agent a_task.set_must_succeed)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes))
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
 
 				-- condition
@@ -1210,7 +1210,7 @@ feature {NONE} -- Implementation
 			l_dial.set_value (a_task.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent a_task.set_conditions)
-			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes))
+			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (False)))
 			properties.add_property (l_dial)
 
 			properties.current_section.expand
@@ -1309,7 +1309,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 			an_old_key_valid: current_target.mapping.has (an_old_key)
 		do
-			if (create {IDENTIFIER_CHECKER}).is_valid (a_new_key) then
+			if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_new_key) then
 				current_target.mapping.replace_key (a_new_key.as_upper, an_old_key)
 			end
 			show_properties_target_mapping (current_target)
@@ -1322,7 +1322,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 			a_key_valid: current_target.mapping.has (a_key)
 		do
-			if (create {IDENTIFIER_CHECKER}).is_valid (a_value) then
+			if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_value) then
 				current_target.add_mapping (a_key, a_value.as_upper)
 			end
 			show_properties_target_mapping (current_target)

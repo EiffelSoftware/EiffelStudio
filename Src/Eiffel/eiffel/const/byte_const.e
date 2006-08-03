@@ -186,8 +186,9 @@ feature -- Access
 	Bc_once_string:		CHARACTER is '%/144/'
 	Bc_allocate_once_strings:	CHARACTER is '%/145/'
 
-		-- Cloning
+		-- Conditional cloning and equality
 	Bc_cclone:		CHARACTER is '%/146/';
+	Bc_cequal:		CHARACTER is '%/147/';
 
 		-- NATURAL constants
 	Bc_uint8:			CHARACTER is '%/150/';

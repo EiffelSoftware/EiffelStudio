@@ -75,6 +75,16 @@ feature -- Status Report
 	allow_multiple: BOOLEAN
 			-- Indicated if mutiple occurances permitted
 
+feature {ARGUMENT_LITE_PARSER} -- Factory Functions
+
+	create_option: ARGUMENT_OPTION is
+			-- Creates a new argument option for switch
+		do
+			create Result.make (name)
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	name_attached: name /= Void
 	not_name_is_empty: not name.is_empty

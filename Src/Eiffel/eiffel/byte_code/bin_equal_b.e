@@ -43,6 +43,22 @@ feature
 		deferred
 		end;
 
+	generate_negation is
+			-- Generate negation of an equality test (if required).
+		do
+				-- Nothing by default
+		end
+
+	generate_equal_macro (name: STRING) is
+			-- Generate a macro that performs an equality test.
+		require
+			name_attached: name /= Void
+		do
+			buffer.put_string (name)
+			buffer.put_character ('(')
+			generate_equal_end
+		end
+
 	generate_equal is
 			-- Generate equality if one side at least is an expanded
 		do
@@ -197,6 +213,14 @@ feature
 				generate_equal;
 			elseif left_type.is_bit or right_type.is_bit then
 				generate_bit_equal
+			elseif
+				left_type.is_reference and then
+				right_type.is_reference and then
+				left.is_dynamic_clone_required (left_type) and then
+				right.is_dynamic_clone_required (right_type)
+			then
+				generate_negation
+				generate_equal_macro ("RTCEQ")
 			else
 				buf := buffer
 				buf.put_string ("(EIF_BOOLEAN)(")

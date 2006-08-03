@@ -2795,6 +2795,7 @@ feature {NONE} -- Implementation: binary operators
 			l_comparison_type: TYPE_I
 			l_continue_label: IL_LABEL
 			l_end_label: IL_LABEL
+			l_right_value: INTEGER
 		do
 			l_left_type := context.real_type (a_node.left.type)
 			l_right_type := context.real_type (a_node.right.type)
@@ -2880,9 +2881,44 @@ feature {NONE} -- Implementation: binary operators
 					if l_end_label /= Void then
 						il_generator.mark_label (l_end_label)
 					end
-				else
-						-- Reference or basic type equality.
+				elseif
+					l_left_type.is_basic or else
+					l_right_type.is_basic or else
+					not a_node.left.is_dynamic_clone_required (l_left_type) or else
+					not a_node.right.is_dynamic_clone_required (l_right_type)
+				then
+						-- Basic type equality or pure reference type equality.
 					generate_converted_binary_b (a_node, an_opcode)
+				else
+						-- Reference type equality.
+						-- Check if one of the operands is of expanded type
+						-- and use object comparison. Use reference comparison
+						-- otherwise.
+
+						-- Store result of a right expression in a local.
+					a_node.right.process (Current)
+					context.add_local (l_right_type)
+					l_right_value := context.local_list.count
+					il_generator.put_dummy_local_info (l_right_type, l_right_value)
+					il_generator.generate_local_assignment (l_right_value)
+
+						-- Check expandedness of a left expression object.
+					a_node.left.process (Current)
+					il_generator.duplicate_top
+					il_generator.generate_is_true_instance_of (system.system_value_type_class.compiled_class.types.first.type)
+					l_end_label := il_generator.create_label
+					l_continue_label := il_generator.create_label
+					il_generator.branch_on_true (l_continue_label)
+						-- Compare references.
+					il_generator.generate_local (l_right_value)
+					il_generator.generate_binary_operator (an_opcode, False)
+					il_generator.branch_to (l_end_label)
+					il_generator.mark_label (l_continue_label)
+						-- Compare objects.
+					il_generator.duplicate_top
+					il_generator.generate_local (l_right_value)
+					generate_equal_routine ({PREDEFINED_NAMES}.equal_name_id)
+					il_generator.mark_label (l_end_label)
 				end
 			end
 		end

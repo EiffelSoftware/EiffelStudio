@@ -307,6 +307,7 @@ feature {NONE} -- Parsing
 			l_option: STRING
 			l_value: STRING
 			l_switch: ARGUMENT_SWITCH
+			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_prefixes: like switch_prefixes
 			l_args: ARRAY [STRING]
 			l_upper: INTEGER
@@ -370,6 +371,7 @@ feature {NONE} -- Parsing
 								end
 
 									-- Attempt to find a matching switch
+								l_value_switch := Void
 								l_match := False
 								l_cursor := l_switches.cursor
 								from l_switches.start until l_switches.after or l_match loop
@@ -379,16 +381,20 @@ feature {NONE} -- Parsing
 									else
 										l_match := l_switch.lower_case_name.is_equal (l_option)
 									end
+									if l_match then
+										l_value_switch ?= l_switch
+									end
 									l_switches.forth
 								end
 								l_switches.go_to (l_cursor)
+								check l_switch_attached: l_switch /= Void end
 
 								if l_match then
-									if l_value /= Void and then not l_value.is_empty then
-										internal_option_values.extend (create {ARGUMENT_OPTION}.make_with_value (l_option, l_value))
+									if l_value /= Void and then not l_value.is_empty and then l_value_switch /= Void then
+										internal_option_values.extend (l_value_switch.create_value_option (l_value))
 									else
 											-- Create user option
-										internal_option_values.extend (create {ARGUMENT_OPTION}.make (l_option))
+										internal_option_values.extend (l_switch.create_option)
 									end
 									if l_use_separated then
 										l_last_switch := l_switch
@@ -772,7 +778,7 @@ feature {NONE} -- Output
 					l_value_switches.forth
 				end
 
-				create l_tabbed_nl.make_filled (' ', l_nl.count + 5 + l_max_len)
+				create l_tabbed_nl.make_filled (' ', l_nl.count + 6 + l_max_len)
 				l_tabbed_nl.insert_string (l_nl, 1)
 
 				from l_value_switches.start until l_value_switches.after loop

@@ -70,7 +70,7 @@ feature -- Initialization
 					l_error := a_parser.error_count
 					l_writer.put_string ("Results are formatted in the form of:%N")
 					l_writer.put_string ("  Test: <file_name>%N")
-					l_writer.put_string ("  <parser>: <speed in ms> : <frozen speed in ms> (<parse successful>)%N%N")
+					l_writer.put_string ("  <parser>: <speed in ticks> : <frozen speed in ticks> (<parse successful>)%N%N")
 
 					l_writer.put_string ("Tesing parameters: using ")
 					if not a_parser.test_frozen then
@@ -111,8 +111,8 @@ feature {NONE} -- Testing
 			l_cursor: CURSOR
 			l_results: like test_parsers_with_file
 			l_result: PARSE_TEST_RESULT
-			l_times: HASH_TABLE [NATURAL_64, STRING]
-			l_ftimes: HASH_TABLE [NATURAL_64, STRING]
+			l_times: HASH_TABLE [REAL_64, STRING]
+			l_ftimes: HASH_TABLE [REAL_64, STRING]
 			l_successes: HASH_TABLE [NATURAL_64, STRING]
 			l_failures: HASH_TABLE [NATURAL_64, STRING]
 			l_id: STRING
@@ -144,9 +144,9 @@ feature {NONE} -- Testing
 					from l_results.start until l_results.after loop
 						l_result := l_results.item
 						l_id := l_result.parser_id
-						l_times.force (l_times[l_id] + l_result.completion_time, l_id)
+						l_times.force (l_times[l_id] + l_result.completion_ticks, l_id)
 						if a_frozen then
-							l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_time, l_id)
+							l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_ticks, l_id)
 						end
 						if l_result.successful then
 							l_successes.force (l_successes[l_id] + 1, l_id)
@@ -172,7 +172,7 @@ feature {NONE} -- Testing
 					l_id := l_result.parser_id
 					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_1", l_times[l_id], l_result.successful, l_result.parser_id))
 					if a_frozen then
-						l_results.item.set_frozen_completion_time (l_ftimes[l_id])
+						l_results.item.set_frozen_completion_ticks (l_ftimes[l_id])
 					end
 					l_results.forth
 				end
@@ -183,9 +183,9 @@ feature {NONE} -- Testing
 					-- Mean result times
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
-					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_2", ((l_result.completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64, l_result.successful, l_result.parser_id))
+					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_2", (l_result.completion_ticks / a_fns.count), l_result.successful, l_result.parser_id))
 					if a_frozen then
-						l_results.item.set_frozen_completion_time (((l_result.frozen_completion_time / a_fns.count.to_natural_64) + {REAL}0.4).truncated_to_integer.to_natural_64)
+						l_results.item.set_frozen_completion_ticks ((l_result.frozen_completion_ticks / a_fns.count.to_natural_64))
 					end
 					l_results.forth
 				end
@@ -198,7 +198,7 @@ feature {NONE} -- Testing
 					l_result := l_results.item
 					l_id := l_result.parser_id
 					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_3", l_successes[l_id], l_result.successful, l_result.parser_id))
-					l_results.item.set_frozen_completion_time (l_failures[l_id])
+					l_results.item.set_frozen_completion_ticks (l_failures[l_id])
 					l_results.forth
 				end
 				a_writer.new_line
@@ -281,10 +281,10 @@ feature {NONE} -- Reporting
 					a_writer.put_string (create {STRING}.make_filled (' ', l_pad))
 				end
 				a_writer.put_string (once ": ")
-				a_writer.put_natural_64 (l_result.completion_time)
+				a_writer.put_real (l_result.completion_ticks)
 				if a_frozen then
 					a_writer.put_string (" : ")
-					a_writer.put_natural_64 (l_result.frozen_completion_time)
+					a_writer.put_real (l_result.frozen_completion_ticks)
 				end
 				if a_show_success then
 					a_writer.put_string (once " (")

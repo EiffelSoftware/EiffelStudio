@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_DIALOG}
 			set_title (dialog_title)
+			set_icon_pixmap (default_pixmaps.question_pixmap)
 			disable_user_resize
 
 			create check_button.make_with_text (Check_button_label)
@@ -66,7 +67,7 @@ feature {NONE} -- Initialization
 			vb2.extend (pixmap_box)
 			vb2.disable_item_expand (pixmap_box)
 			vb2.extend (create {EV_CELL})
-	
+
 			create hb
 			hb.extend (vb2)
 			hb.disable_item_expand (vb2)
@@ -96,7 +97,7 @@ feature {NONE} -- Initialization
 				set_default_cancel_button (ok_button)
 			end
 		end
-		
+
 	build_buttons_box: EV_HORIZONTAL_BOX is
 			-- Build the button box.
 		do
@@ -144,9 +145,9 @@ feature -- Access
 	preferences: PREFERENCES
 
 	buttons_count: INTEGER is
-			-- Number of buttons. 
+			-- Number of buttons.
 			--
-			-- Typically: 
+			-- Typically:
 			--   1 for OK
 			--   2 for OK, Cancel
 			--   3 for Yes, No, Cancel
@@ -178,7 +179,7 @@ feature -- Status setting
 			no_action := an_agent
 			no_button.select_actions.extend (an_agent)
 		end
-	
+
 	set_cancel_action (an_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Set the action performed when the Cancel button is selected.
 		require
@@ -201,7 +202,7 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
@@ -234,19 +235,19 @@ feature {NONE} -- Implementation
 
 	no_action: PROCEDURE [ANY, TUPLE]
 			-- Action performed when ok is selected.
-	
+
 	Layout_constants: EV_LAYOUT_CONSTANTS is
 			-- Constants that help design nice GUIs.
 		once
 			create Result
 		end
-	
+
 	Interface_names: PREFERENCE_CONSTANTS is
 			-- Constants that help design nice GUIs.
 		once
 			create Result
 		end
-	
+
 	save_check_state is
 			-- Save the state of the check button to the preferences.
 		do

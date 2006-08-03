@@ -192,7 +192,7 @@ static  char    *names [] = {
 "BC_ONCE_STRING" ,
 "BC_ALLOCATE_ONCE_STRINGS" ,
 "BC_CCLONE" ,
-"BC_NOTUSED_147" ,
+"BC_CEQUAL" ,
 "BC_NOTUSED_148" ,
 "BC_NOTUSED_149" ,
 "BC_UINT8" ,
@@ -1171,6 +1171,8 @@ static  void    print_instructions ()
 			case  BC_BIT_STD_EQUAL  :
 				break;
 			case  BC_STANDARD_EQUAL :
+				break;
+			case  BC_CEQUAL :
 				break;
 			case  BC_TRUE_COMPAR :
 				break;

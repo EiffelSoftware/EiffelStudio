@@ -236,8 +236,9 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_ONCE_STRING		(unsigned char) 144
 #define BC_ALLOCATE_ONCE_STRINGS	(unsigned char) 145
 
-/* Cloning */
+/* Conditional cloning and equality */
 #define BC_CCLONE		(unsigned char) 146
+#define BC_CEQUAL		(unsigned char) 147
 
 #define BC_UINT8			(unsigned char) 150
 #define BC_UINT16			(unsigned char) 151

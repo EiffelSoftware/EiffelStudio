@@ -28,7 +28,7 @@
 				<dotnet value="true"/>
 			</condition>
 		</library>
-		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf"/>
+		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf" readonly="false"/>
 		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

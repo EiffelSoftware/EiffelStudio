@@ -2474,7 +2474,7 @@ feature {NONE} -- Externals
 	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER; new_value: POINTER) is
 			-- SDK SetClassLong
 		external
-			"C [macro %"wel.h%"] (HWND, int, ULONG_PTR)"
+			"C [macro %"wel.h%"] (HWND, int, LONG_PTR)"
 		alias
 			"SetClassLongPtr"
 		end

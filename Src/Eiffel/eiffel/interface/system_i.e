@@ -1146,6 +1146,7 @@ end
 								Error_handler.insert_error (vd71)
 								l_errors.forth
 							end
+							Error_handler.checksum
 						end
 					end
 

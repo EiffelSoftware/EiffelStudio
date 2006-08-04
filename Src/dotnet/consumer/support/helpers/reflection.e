@@ -18,18 +18,12 @@ feature -- Status Report
 
 	is_consumed_type (t: SYSTEM_TYPE): BOOLEAN is
 			-- Is `t' a public CLS compliant type?
-		local
-			parent_name: SYSTEM_STRING
-			parent_type: SYSTEM_TYPE
 		do
 			if is_eiffel_compliant_type (t) then
 				Result := t.is_public
 				if not Result then
 					if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
-						parent_name := t.full_name
-						parent_name := parent_name.substring (0, parent_name.index_of_character ('+'))
-						parent_type := t.assembly.get_type_string (parent_name)
-						Result := parent_type /= Void and then parent_type.is_public
+						Result := is_consumed_type (t.declaring_type)
 					end
 				end
 			end

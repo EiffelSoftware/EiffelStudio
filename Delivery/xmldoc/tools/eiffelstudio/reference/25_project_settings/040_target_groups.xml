@@ -21,7 +21,7 @@
 		<list ordered="false">
 			<item>Name: name of the group</item>
 			<item>Description: an optional description of the group</item>
-			<item>Readonly: in a read only group, classes cannot be modified</item>
+			<item>Read Only: in a read only group, classes cannot be modified</item>
 			<item>Location: directory for clusters, assembly file for assemblies and ecf file for libraries and precompiles</item>
 			<item>Profiling: turn on the Eiffel profiler during the application execution (C code generation mode only). The results can be seen at the end of the execution in the profiler window.</item>
 			<item>Trace: display on the console all the features that are called during the system execution (C generation mode only).</item>
@@ -39,31 +39,31 @@
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>renaming</anchor_name>
-					<label>Renaming</label>
+					<label> Renaming</label>
 				</link>)
 			</item>
 			<item>Renaming: renamings for classes in this group (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>renaming</anchor_name>
-					<label>Renaming</label>
+					<label> Renaming</label>
 				</link>)
 			</item>
-			<item>Class options: options specific for certain classes</item>
+			<item>Class Options: options specific for certain classes</item>
 		</list>
 		<heading>
 			<size>2</size>(Override) Cluster Options
 		</heading>Clusters can be added as a sub clusters of other clusters, just select the parent cluster before adding the cluster.
 		<list ordered="false">
 			<item>Recursive: should subdirectories automatically be included?.</item>
-			<item>File pattern: <link><url>020_target_general.xml</url><anchor_name>file_pattern</anchor_name><label>file pattern</label></link> for this group</item>
+			<item>Exclude Rules: <link><url>020_target_general.xml</url><anchor_name>file_pattern</anchor_name><label>exclude rules</label></link> for this group</item>
 			<item>Dependencies: specify which groups are checked for classes if the class cannot be found in the group itself</item>
 			<item>Type Mapping: <link><url>110_advanced_mapping.xml</url><label>mapping</label></link> of types, e.g. STRING is mapped to STRING_32</item>
-			<item>Visible classes: visible classes (see
+			<item>Visible Classes: visible classes (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>visible</anchor_name>
-					<label>Visible Classes</label>
+					<label> Visible Classes</label>
 				</link>)
 			</item>
 		</list>
@@ -77,11 +77,11 @@
 			<size>2</size>Library/Precompile Options
 		</heading>If a library is not read only, the configuration can be directly edited by clicking on the edit library button.
 		<list ordered="false">
-			<item>Visible classes: visible classes (see
+			<item>Visible Classes: visible classes (see
 				<link>
 					<url>040_target_groups.xml</url>
 					<anchor_name>visible</anchor_name>
-					<label>Visible Classes</label>
+					<label> Visible Classes</label>
 				</link>)
 			</item>
 		</list>

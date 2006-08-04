@@ -8,16 +8,16 @@
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item>Address expression: lets you pass ` 
+			<item>Address Expression: lets you pass ` 
 				<bold>$(s.to_c)</bold>' to a feature instead of declaring `a' of type 
 				<bold>ANY</bold>, and then assigning ` 
 				<bold>s.to_c</bold>' to `a' and passing ` 
 				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace. 
 			</item>
 			<item>
-				Automatic backup: generate a backup of the class and configuration files during recompilation?
+				Automatic Backup: generate a backup of the class and configuration files during recompilation?
 			</item>
-			<item>Check vape: Enforce 
+			<item>Check VAPE: Enforce 
 				<code>
 					<compiler_error>VAPE</compiler_error>
 				</code> validity constraint: lets you disable type checking for 
@@ -25,60 +25,60 @@
 					<compiler_error>VAPE</compiler_error>
 				</code> errors in preconditions, which correspond to insufficiently exported features used in preconditions (ETL 2nd edition page 122).
 			</item>
-			<item>Console application: has no effect on Unix systems. It lets Windows users choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).</item>
-			<item>Dead code removal: should unused code be removed? (C code generation mode only)</item>
-			<item>Dynamic runtime: makes the generated executable use a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.(C code generation mode only)</item>
+			<item>Console Application: has no effect on Unix systems. It lets Windows users choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).</item>
+			<item>Dead Code Removal: should unused code be removed? (C code generation mode only)</item>
+			<item>Dynamic Runtime: makes the generated executable use a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.(C code generation mode only)</item>
 		</list>
 		<note>
 			<bold>Note</bold>: On Windows, the dynamic run-time is available only if you compile with the Microsoft Visual compiler.
 		</note>
 		<list ordered="false">
-			<item>Exception trace: makes it possible to see a complete exception trace in a finalized application. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform. (C code generation mode only)</item>
-			<item>Inlining, Inlining size: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as seen by the Eiffel compiler (for example a := b.f corresponds to 2 instructions). The inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as found in C or C++ compilers. (C code generation mode only)</item>
-			<item>Multithreaded runtime: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system. (C code generation mode only)</item>
-			<item>Old verbatim strings: Use the old format for verbatim strings</item>
+			<item>Exception Trace: makes it possible to see a complete exception trace in a finalized application. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform. (C code generation mode only)</item>
+			<item>Inlining, Inlining Size: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as seen by the Eiffel compiler (for example a := b.f corresponds to 2 instructions). The inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as found in C or C++ compilers. (C code generation mode only)</item>
+			<item>Multithreaded: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system. (C code generation mode only)</item>
+			<item>Old Verbatim Strings: Use the old format for verbatim strings</item>
 			<item>Platform: override platform value used for checking conditions, useful for cross compilation</item>
-			<item>Shared library definition: lets you specify a `file_name.def' as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you are developing (C code generation mode only). To have more information concerning definition files, see the 
+			<item>Shared Library Definition: lets you specify a `file_name.def' as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you are developing (C code generation mode only). To have more information concerning definition files, see the 
 				<link>
 					<url>../30_compiler/40_dynamic_library_generation/00_introduction.xml</url>
 					<label>Dynamic library builder reference</label>
 				</link>.
 			</item>
-			<item>Library root: Absolute path to use as base for relative paths. If this is not defined, the path to the configuration file will be used.</item>
+			<item>Library Root: Absolute path to use as base for relative paths. If this is not defined, the path to the configuration file will be used.</item>
 		</list>
 		<heading>
 			<size>2</size>.NET Options
 		</heading>
 		<list ordered="false">
-			<item>Use optimized precompile: use an optimized version of a precompile</item>
-			<item>Use cluster name as namespace: See 
+			<item>Use Optimized Precompile: use an optimized version of a precompile</item>
+			<item>Use Cluster Name as Namespace: See 
 				<link>
 					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
-			<item>Use recursive cluster name as namespace: See 
+			<item>Use Recursive Cluster Name as Namespace: See 
 				<link>
 					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
-			<item>.NET naming convention: See 
+			<item>.NET Naming Convention: See 
 				<link>
 					<url>050_advanced_general.xml</url>
 					<anchor_name>dotnet_naming</anchor_name>
 					<label>Class and feature naming</label>
 				</link>
 			</item>
-			<item>IL verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
-			<item>CLS compliant: mark generated assemblies as CLS compliant</item>
-			<item>Metadata cache path: Location where information about external assemblies is stored.</item>
-			<item>Classes per module: Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.</item>
-			<item>.NET runtime version: .NET version to use</item>
-			<item>Generation type: generate an exe or a dll (exe is default)</item>
-			<item>Signing key: specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC). If a non existing filename is chosen, a key will be automatically generated.</item>
+			<item>IL Verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
+			<item>CLS Compliant: mark generated assemblies as CLS compliant</item>
+			<item>Metadata Cache Path: Location where information about external assemblies is stored.</item>
+			<item>Classes per Module: Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.</item>
+			<item>.NET Runtime Version: .NET version to use</item>
+			<item>Generation Type: generate an exe or a dll (exe is default)</item>
+			<item>Signing Key: specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC). If a non existing filename is chosen, a key will be automatically generated.</item>
 			<item>Force 32bit: on a 64bit machine, forces compilation for 32 bit.</item>
 		</list>
 		<anchor>dotnet_naming</anchor>

@@ -21,14 +21,12 @@
 					<label>System Options</label>
 				</link>
 			</item>
-			<item>Target Options
+			<item>
+				<link>
+					<url>020_target_general.xml</url>
+					<label>Target Options</label>
+				</link>
 				<list ordered="false">
-					<item>
-						<link>
-							<url>020_target_general.xml</url>
-							<label>General</label>
-						</link>
-					</item>
 					<item>
 						<link>
 							<url>030_target_assertions.xml</url>
@@ -41,18 +39,16 @@
 							<label>Groups</label>
 						</link>
 					</item>
-					<item>Advanced
+					<item>
+						<link>
+							<url>050_advanced_general.xml</url>
+							<label>Advanced Options</label>
+						</link>
 						<list ordered="false">
 							<item>
 								<link>
-									<url>050_advanced_general.xml</url>
-									<label>General</label>
-								</link>
-							</item>
-							<item>
-								<link>
 									<url>060_advanced_warning.xml</url>
-									<label>Warning</label>
+									<label>Warnings</label>
 								</link>
 							</item>
 							<item>

@@ -343,14 +343,15 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			is_rebuilding := True
 
 			l_old_name := renamed_name.twin
+			group := a_group
 			set_renamed_name
 			if
 				not equal (l_old_name, renamed_name)
 			then
+				is_renamed := True
 				date := 0
 			end
 			file_name := a_file_name
-			group := a_group
 			path := a_path
 			check_changed
 

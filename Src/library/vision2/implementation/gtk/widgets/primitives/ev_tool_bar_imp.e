@@ -149,6 +149,7 @@ feature -- Implementation
 			tbb_imp: EV_TOOL_BAR_BUTTON_IMP
 			has_text, has_pixmap: BOOLEAN
 			i, a_style: INTEGER
+			pix_height: INTEGER
 		do
 			if parent_imp /= Void then
 				from
@@ -160,8 +161,9 @@ feature -- Implementation
 					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
 						has_text := True
 					end
-					if tbb_imp /= Void and then tbb_imp.pixmap /= Void then
+					if tbb_imp /= Void and then tbb_imp.internal_pixmap /= Void then
 						has_pixmap := True
+						pix_height := pix_height.max (tbb_imp.internal_pixmap.height)
 					end
 					i := i + 1
 				end
@@ -178,8 +180,8 @@ feature -- Implementation
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
 				else -- has_pixmap
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, 18)
-						-- 18 pixels gives enough height to display a 16x16 pixmap with a square button.
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, pix_height + (pix_height // 2))
+						-- Set height to be large enough to display pixmap in button.
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end

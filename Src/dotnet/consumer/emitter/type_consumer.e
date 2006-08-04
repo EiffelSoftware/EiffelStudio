@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			-- Initialize type consumer for type `t' with eiffel name `en'.
 		require
 			non_void_type: t /= Void
+			consumable_type: is_consumed_type (t)
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
 		local
@@ -45,7 +46,6 @@ feature {NONE} -- Initialization
 			parent: CONSUMED_REFERENCED_TYPE
 			i, nb, count: INTEGER
 			parent_type: SYSTEM_TYPE
-			l_is_nested: BOOLEAN
 			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
 			l_force_sealed: BOOLEAN
 		do
@@ -70,17 +70,6 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
-			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
-					-- Let's initialize `l_is_nested' correctly and if it is set to
-					-- true, update `parent_type' so that it contains the nested type
-					-- enclosing type.
-				parent_name := t.full_name
-				parent_name := parent_name.substring (0,
-					parent_name.index_of_character ('+'))
-				parent_type := t.assembly.get_type_string (parent_name)
-				l_is_nested := parent_type /= Void and then parent_type.is_public
-			end
-
 			l_force_sealed := t.is_sealed
 			if not l_force_sealed and then (t.is_interface or t.is_abstract) then
 					-- For non-Eiffel compliant interfaces we need to force them to be frozen
@@ -92,12 +81,15 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			if l_is_nested then
-					-- `parent_type' contains enclosing type of current nested type.
+			if t.is_nested then
+					-- `t.declaring_type' contains enclosing type of current nested type.
+				check
+					is_declaring_type_consumed: is_consumed_type (t.declaring_type)
+				end
 				create {CONSUMED_NESTED_TYPE} consumed_type.make (
 					dotnet_name, en, t.is_interface, t.is_abstract,
 					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces,
-					referenced_type_from_type (parent_type))
+					referenced_type_from_type (t.declaring_type))
 			else
 				create consumed_type.make (dotnet_name, en, t.is_interface, t.is_abstract,
 					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces)

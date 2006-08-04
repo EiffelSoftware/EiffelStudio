@@ -89,18 +89,14 @@ feature -- Element change
 			-- Assign `a_style' to `style'.
 		local
 			gtk_style: INTEGER
-			a_name: EV_GTK_C_STRING
 		do
-			a_name := ""
 			inspect a_style
 				when Ev_frame_lowered then
 					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
-					a_name := "v2framenopadding"
 				when Ev_frame_raised then
 					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_out_enum
 				when Ev_frame_etched_in then
 					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum
-					a_name := "v2framesomepadding"
 				when Ev_frame_etched_out then
 					gtk_style := {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum
 			else
@@ -108,8 +104,6 @@ feature -- Element change
 					valid_value: False
 				end
 			end
-				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
-			{EV_GTK_EXTERNALS}.gtk_widget_set_name (container_widget, a_name.item)
 			{EV_GTK_EXTERNALS}.gtk_frame_set_shadow_type (container_widget, gtk_style)
 		end
 

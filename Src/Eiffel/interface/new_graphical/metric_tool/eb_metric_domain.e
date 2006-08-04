@@ -51,8 +51,6 @@ feature -- Status report
 
 	has_delayed_domain_item: BOOLEAN is
 			-- Does current domain has delayed domain item?
-		local
-			l_cursor: CURSOR
 		do
 			Result := there_exists (
 						agent (a_domain_item: EB_METRIC_DOMAIN_ITEM): BOOLEAN

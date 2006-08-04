@@ -359,11 +359,7 @@ feature -- Menu
 
 	grid_menu: EV_MENU is
 		local
-			sm: EV_MENU
 			mci: EV_CHECK_MENU_ITEM
-			c: INTEGER
-			s: STRING
-			col: EV_GRID_COLUMN
 		do
 			Result := Precursor
 			Result.set_text ("Grid %"" + name + "%"")

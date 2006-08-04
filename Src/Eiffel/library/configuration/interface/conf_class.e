@@ -392,7 +392,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_name: like name
-			l_renamings: HASH_TABLE [STRING, STRING]
 		do
 			create l_file.make (full_file_name)
 			if l_file.exists then

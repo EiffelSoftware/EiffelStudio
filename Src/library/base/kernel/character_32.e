@@ -18,8 +18,7 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({WIDE_CHARACTER_REF}),
-	to_reference: {WIDE_CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
+	make_from_reference ({WIDE_CHARACTER_REF})
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

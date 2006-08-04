@@ -17,7 +17,6 @@ create
 
 convert
 	make_from_reference ({INTEGER_REF}),
-	to_reference: {INTEGER_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real: {REAL},
 	to_double: {DOUBLE},
 	to_integer_64: {INTEGER_64}

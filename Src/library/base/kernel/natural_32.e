@@ -17,7 +17,6 @@ create
 
 convert
 	make_from_reference ({NATURAL_32_REF}),
-	to_reference: {NATURAL_32_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real_32: {REAL},
 	to_real_64: {DOUBLE},
 	to_integer_64: {INTEGER_64},
@@ -34,11 +33,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end

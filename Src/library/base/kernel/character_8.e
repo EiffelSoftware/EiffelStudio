@@ -19,7 +19,6 @@ create
 
 convert
 	make_from_reference ({CHARACTER_REF}),
-	to_reference: {CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY},
 	to_character_32: {WIDE_CHARACTER}
 
 indexing

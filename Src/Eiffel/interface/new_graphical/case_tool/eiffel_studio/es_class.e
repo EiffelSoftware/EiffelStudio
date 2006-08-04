@@ -413,7 +413,7 @@ feature -- Element change
 				set_is_root_class (class_i.name.is_equal (class_i.System.root_class_name))
 				c := class_c
 				if c /= Void then
-					if c.ast /= Void then
+					if c.has_ast then
 						if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
 							set_generics (Void)
 						else
@@ -458,7 +458,7 @@ feature -- Element change
 					if st /= Void then
 						b := c.conform_to (storable_class)
 					end
-					if not b then
+					if not b and then c.has_ast then
 						i := c.ast.top_indexes
 						if i /= Void then
 							from
@@ -491,7 +491,7 @@ feature -- Element change
 					-- is_effective
 					if not c.is_deferred then
 						b := False
-						if c.ast /= Void then
+						if c.has_ast then
 							l := c.ast.parents
 							if l /= Void then
 								from
@@ -512,7 +512,9 @@ feature -- Element change
 						is_properties_changed := True
 					end
 					-- features
-					l_feature_clause_list := class_c.ast.features
+					if class_c.has_ast then
+						l_feature_clause_list := class_c.ast.features
+					end
 					if l_feature_clause_list = Void then
 						create l_feature_clause_list.make (0)
 					end

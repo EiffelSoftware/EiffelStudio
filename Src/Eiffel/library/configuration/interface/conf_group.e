@@ -490,6 +490,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 								else
 									a_modified_classes.force (l_overridee)
 								end
+								l_overrider.set_up_to_date
 							else
 								a_added_classes.remove (l_overridee)
 								a_modified_classes.remove (l_overridee)

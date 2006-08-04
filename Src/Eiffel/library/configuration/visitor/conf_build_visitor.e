@@ -29,6 +29,10 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_SCAN_DIRECTORY
+		redefine
+			on_process_directory
+		end
 
 create
 	make_build,
@@ -140,9 +144,6 @@ feature -- Events
 
 	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING) is
 			-- (Sub)directory `a_path' of `a_cluster' is processed.
-		require
-			a_cluster_not_void: a_cluster /= Void
-			a_path_not_void: a_path /= Void
 		do
 			process_directory.call ([a_cluster, a_path])
 		end
@@ -354,13 +355,12 @@ feature -- Visit nodes
 			on_process_group (a_cluster)
 			a_cluster.wipe_class_cache
 			current_cluster := a_cluster
-			current_file_rule := a_cluster.active_file_rule (state)
 			create current_classes.make (Classes_per_cluster)
 			create current_classes_by_filename.make (Classes_per_cluster)
 			a_cluster.set_classes (current_classes)
 			a_cluster.set_classes_by_filename (current_classes_by_filename)
 
-			process_cluster_recursive ("")
+			process_cluster_recursive ("", a_cluster, a_cluster.active_file_rule (state))
 
 			if partial_classes /= Void then
 				process_partial_classes
@@ -506,9 +506,6 @@ feature {NONE} -- Implementation
 	current_cluster: CONF_CLUSTER
 			-- The cluster we are currently processing.
 
-	current_file_rule: CONF_FILE_RULE
-			-- File rule of `current_cluster'.
-
 	current_system: CONF_SYSTEM
 			-- The system we are currently processing.
 
@@ -524,71 +521,8 @@ feature {NONE} -- Implementation
 	partial_location: CONF_DIRECTORY_LOCATION
 			-- Location where the merged partial classes will be stored (normally somewhere inside eifgen)
 
-	process_cluster_recursive (a_path: STRING) is
-			-- Recursively process `a_path'.
-		require
-			current_file_rule_not_void: current_file_rule /= Void
-			current_cluster_not_void: current_cluster /= Void
-			a_path_not_void: a_path /= Void
-		local
-			l_dir: KL_DIRECTORY
-			l_files: ARRAY [STRING]
-			l_subdirs: ARRAY [STRING]
-			i, cnt: INTEGER
-			l_name: STRING
-			l_path: STRING
-		do
-			on_process_directory (current_cluster, a_path)
-			l_path := current_cluster.location.build_path (a_path, "")
-			create l_dir.make (l_path)
-
-			if not l_dir.is_readable then
-				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
-			else
-					-- look for classes in directory itself.
-				l_files := l_dir.filenames
-				if l_files = Void then
-					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, current_cluster.target.system.file_name))
-				else
-					from
-						i := l_files.lower
-						cnt := l_files.upper
-					until
-						i > cnt
-					loop
-						l_name := l_files.item (i)
-						if current_file_rule.is_included (a_path+"/"+l_name) then
-							put_class (l_name, a_path)
-						end
-						i := i + 1
-					end
-
-						-- if we check recursive
-					if current_cluster.is_recursive then
-						l_subdirs := l_dir.directory_names
-						from
-							i := 1
-							cnt := l_subdirs.count
-						until
-							i > cnt
-						loop
-							l_name := l_subdirs.item (i)
-							if current_file_rule.is_included (a_path+"/"+l_name) then
-								process_cluster_recursive (a_path+"/"+l_name)
-							end
-							i := i +1
-						end
-					end
-				end
-			end
-		end
-
-	put_class (a_file, a_path: STRING) is
+	handle_class (a_file, a_path: STRING; a_cluster: CONF_CLUSTER) is
 			-- Put the class in `a_path' `a_file' into `current_classes'.
-		require
-			current_cluster_not_void: current_cluster /= Void
-			current_classes_not_void: current_classes /= Void
-			old_group_classes_set: old_group /= Void implies old_group.classes_set
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_class: CONF_CLASS
@@ -599,16 +533,19 @@ feature {NONE} -- Implementation
 			l_file_name: STRING
 			l_done: BOOLEAN
 		do
+			check
+				current_classes_not_void: current_classes /= Void
+				old_group_classes_set: old_group /= Void implies old_group.classes_set
+			end
 			if valid_eiffel_extension (a_file) then
 				l_file_name := a_path+"/"+a_file
-					-- try to get it directly from old_group by filename, also check that renamings/prefix didn't change
+					-- try to get it directly from old_group by filename
 				if
-					old_group /= Void and then old_group.classes_by_filename.has (l_file_name) and then
-					(equal (old_group.name_prefix, current_cluster.name_prefix) and equal (old_group.renaming, current_cluster.renaming))
+					old_group /= Void and then old_group.classes_by_filename.has (l_file_name)
 				then
 					l_class := old_group.classes_by_filename.found_item
 						-- update class
-					l_class.rebuild (a_file, current_cluster, a_path)
+					l_class.rebuild (a_file, a_cluster, a_path)
 					if l_class.is_error then
 						add_and_raise_error (l_class.last_error)
 						-- don't update renamed classes, instead handle them on the class name basis
@@ -629,7 +566,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not l_done then
-					l_full_file := current_cluster.location.evaluated_directory
+					l_full_file := a_cluster.location.evaluated_directory
 					l_full_file.append (l_file_name)
 					create l_file.make (l_full_file)
 					l_file.open_read
@@ -646,14 +583,14 @@ feature {NONE} -- Implementation
 							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
 						else
 							l_tmp.to_upper
-							l_renamings := current_cluster.renaming
+							l_renamings := a_cluster.renaming
 							if l_renamings /= Void and then l_renamings.has (l_tmp) then
 								l_name := l_renamings.found_item
 							else
 								l_name := l_tmp.twin
 							end
-							if current_cluster.name_prefix /= Void then
-								l_name.prepend (current_cluster.name_prefix)
+							if a_cluster.name_prefix /= Void then
+								l_name.prepend (a_cluster.name_prefix)
 							end
 
 								-- partial classes					
@@ -670,7 +607,7 @@ feature {NONE} -- Implementation
 								-- normal classes
 							else
 									-- not found => new class
-								l_class := factory.new_class (a_file, current_cluster, a_path)
+								l_class := factory.new_class (a_file, a_cluster, a_path)
 								if l_class.is_error then
 									add_and_raise_error (l_class.last_error)
 								end
@@ -689,7 +626,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		ensure
+		ensure then
 				--FIXME, at the moment this doesn't cover clusters with partial classes completely
 			added: not is_error implies (valid_eiffel_extension (a_file)
 				implies (current_classes.count = old current_classes.count + 1) or partial_classes /= Void)

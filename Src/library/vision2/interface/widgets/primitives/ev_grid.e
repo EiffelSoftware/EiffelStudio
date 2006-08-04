@@ -466,6 +466,14 @@ feature -- Access
 			Result := implementation.item (a_column, a_row)
 		end
 
+	activated_item: EV_GRID_ITEM is
+			-- Item that has currently been activated, if any.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.currently_active_item
+		end
+
 	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
 			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
 			-- `Void' if none.
@@ -475,14 +483,6 @@ feature -- Access
 			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
 		do
 			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
-		end
-
-	activated_item: EV_GRID_ITEM is
-			-- Item that has currently been activated, if any.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.currently_active_item
 		end
 
 	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW is

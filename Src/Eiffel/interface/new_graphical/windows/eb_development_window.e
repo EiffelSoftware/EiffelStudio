@@ -222,7 +222,7 @@ feature {NONE} -- Initialization
 			initialized := False -- Reset the flag since initialization is not yet complete.
 			set_up_accelerators
 
-			window.focus_in_actions.extend(agent on_focus)
+			window.focus_in_actions.extend (agent on_focus)
 
 				-- Create the toolbars.
 			build_toolbars_area
@@ -2538,10 +2538,26 @@ feature -- Resource Update
 	on_focus is
 			-- Focus gained
 		local
-			editor: TEXT_PANEL
+			editor: EB_SMART_EDITOR
+			l_class_i_stone: CLASSI_STONE
 		do
-			editor ?= editor_tool.text_area
+			editor := editor_tool.text_area
 			if editor /= Void then
+					-- If the class currently being edited had its read-only status changed
+					-- we made sure that the editor is updated accordingly.
+				l_class_i_stone ?= stone
+				if l_class_i_stone /= Void then
+					if editor.is_read_only then
+							-- Only possible action is to go from a read-only class to a
+							-- non-readonly class.
+						editor.set_read_only (l_class_i_stone.class_i.is_read_only)
+					else
+							-- Here if the class is read-only and that there were
+							-- already some modification being done, we don't do anything.
+							-- The error will be reported only when trying to save our changes.
+							-- Therefore we don't change the `is_read_only' status of the `editor'.
+					end
+				end
 				editor.on_focus
 			end
 		end
@@ -3169,9 +3185,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not managed_main_formatters.first.selected then
-						editor_tool.text_area.set_read_only (true)
+						editor_tool.text_area.set_read_only (True)
 					elseif new_class_stone /= Void and then new_class_stone.class_i.is_read_only then
-						editor_tool.text_area.set_read_only (true)
+						editor_tool.text_area.set_read_only (True)
 					end
 				else
 						-- not a class text : cannot be edited
@@ -3227,7 +3243,7 @@ feature {NONE} -- Implementation
 									new_class_stone_not_void: new_class_stone /= Void
 								end
 								if new_class_stone.class_i.is_read_only then
-									editor_tool.text_area.set_read_only (true)
+									editor_tool.text_area.set_read_only (True)
 								end
 							end
 							editor_tool.text_area.display_line_when_ready (error_line, True)
@@ -4006,7 +4022,7 @@ feature {NONE} -- Implementation
 				l_formatter.after or l_end
 			loop
 				if l_formatter.item.selected then
-					l_end := true
+					l_end := True
 					Result := l_formatter.item
 				end
 				l_formatter.forth

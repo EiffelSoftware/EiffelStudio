@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelV ision horizontal progress bar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,8 +30,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
 			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_left_to_right_enum)
+			set_minimum_height (16)
 		end
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_left_to_right_enum: INTEGER is

@@ -338,8 +338,8 @@ feature {NONE} -- Implementation
 			Result.force (pixmaps.icon_pixmaps.class_override_deferred_icon,				compiled_flag | deferred_flag | overrides_flag)
 			Result.force (pixmaps.icon_pixmaps.class_override_deferred_readonly_icon,		compiled_flag | readonly_flag | deferred_flag | overrides_flag)
 
-			Result.force (pixmaps.icon_pixmaps.expanded_normal_icon,						compiled_flag | expanded_flag | readonly_flag)
-			Result.force (pixmaps.icon_pixmaps.expanded_readonly_icon,						compiled_flag | expanded_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_normal_icon,						compiled_flag | expanded_flag)
+			Result.force (pixmaps.icon_pixmaps.expanded_readonly_icon,						compiled_flag | expanded_flag | readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_icon,					expanded_flag)
 			Result.force (pixmaps.icon_pixmaps.expanded_uncompiled_readonly_icon,			expanded_flag | readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.expanded_overriden_normal_icon,				compiled_flag | expanded_flag | overriden_flag)

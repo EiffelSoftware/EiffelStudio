@@ -24,7 +24,7 @@ feature -- Platform
 	is_dotnet: BOOLEAN is False
 			-- Are we targetting .NET?
 
-	is_windows: BOOLEAN is
+	frozen is_windows: BOOLEAN is
 			-- Are we running on Windows platform?
 		external
 			"C macro use %"eif_eiffel.h%""

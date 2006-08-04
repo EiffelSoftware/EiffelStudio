@@ -44,7 +44,7 @@ feature -- Access
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := gtk_paned_struct_child1_size (container_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_paned_struct_child1_size (container_widget)
 		end
 
 	set_first (an_item: like item) is
@@ -79,7 +79,6 @@ feature -- Access
 			if has (an_item) and then an_item /= Void then
 				item_imp ?= an_item.implementation
 				item_imp.set_parent_imp (Void)
-				check item_imp_not_void: item_imp /= Void end
 				{EV_GTK_EXTERNALS}.gtk_container_remove ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
 					first_expandable := False
@@ -138,31 +137,8 @@ feature {NONE} -- Implementation
 			else
 				second_expandable := a_resizable
 			end
-			set_gtk_paned_struct_child1_resize (container_widget, first_expandable)
-			set_gtk_paned_struct_child2_resize (container_widget, second_expandable)
-		end
-
-feature {NONE} -- Externals.
-
-	gtk_paned_struct_child1_size (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned): EIF_INTEGER"
-		alias
-			"child1_size"
-		end
-
-	set_gtk_paned_struct_child1_resize (a_c_struct: POINTER; a_resize: BOOLEAN) is
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned, EIF_BOOLEAN)"
-		alias
-			"child1_resize"
-		end
-
-	set_gtk_paned_struct_child2_resize (a_c_struct: POINTER; a_resize: BOOLEAN) is
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned, EIF_BOOLEAN)"
-		alias
-			"child2_resize"
+			{EV_GTK_EXTERNALS}.set_gtk_paned_struct_child1_resize (container_widget, first_expandable.to_integer)
+			{EV_GTK_EXTERNALS}.set_gtk_paned_struct_child2_resize (container_widget, second_expandable.to_integer)
 		end
 
 feature {EV_ANY_I} -- Implementation

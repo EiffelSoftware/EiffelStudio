@@ -148,10 +148,6 @@ feature -- Update
 		end
 
 	exception_description: STRING_32 is
-		local
-			e: EXCEPTIONS
-			s8: STRING
-			s32: STRING_32
 		do
 			Result := Precursor {APPLICATION_STATUS}
 		end

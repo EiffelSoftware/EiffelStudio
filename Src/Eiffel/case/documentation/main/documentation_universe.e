@@ -197,8 +197,8 @@ feature -- Status report
 	is_class_in_group (a_class: CLASS_I): BOOLEAN is
 			-- Does `a_class' belongs to one of the group in `groups'.
 		local
-			l_group: CONF_GROUP
-			l_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
+--			l_group: CONF_GROUP
+--			l_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
 			l_index: INTEGER
 		do
 --			from

@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 
 			{EV_GTK_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
 			has_vertical_button_style := True
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)
+			disable_vertical
 		end
 
 	list_widget: POINTER is
@@ -172,10 +172,13 @@ feature -- Implementation
 					else
 						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
 					end
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
 				elseif has_text then
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
-				else
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
+				else -- has_pixmap
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, 19)
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end

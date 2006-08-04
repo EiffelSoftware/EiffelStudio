@@ -298,11 +298,7 @@ feature {EV_ANY_I} -- Implementation
 		require
 			exists: exists
 		do
-			if user_can_resize then
-				Result := 2 * window_frame_width
-			else
-				Result := 2 * dialog_window_frame_width
-			end
+			Result := 2 * frame_width
 			Result := Result.max (interface.upper_bar.minimum_width).max
 				(interface.lower_bar.minimum_width)
 		end
@@ -314,16 +310,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			menu_bar_imp: EV_MENU_BAR_IMP
 		do
-			Result := title_bar_height + window_border_height
-
-				-- Do not count the frame border if the window is not
-				-- resizeable
-			if user_can_resize then
-				Result := Result + 2 * window_frame_height
-			else
-				Result := Result + 2 * dialog_window_frame_height
-			end
-
+			Result := title_bar_height + 2 * frame_height
 			if menu_bar /= Void then
 				menu_bar_imp ?= menu_bar.implementation
 				check
@@ -334,10 +321,10 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 			if not interface.upper_bar.is_empty then
-				Result := Result + interface.upper_bar.minimum_height + 1
+				Result := Result + interface.upper_bar.minimum_height
 			end
 			if not interface.lower_bar.is_empty then
-				Result := Result + interface.lower_bar.minimum_height + 1
+				Result := Result + interface.lower_bar.minimum_height
 			end
 		end
 

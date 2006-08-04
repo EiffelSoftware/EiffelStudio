@@ -21,8 +21,7 @@ inherit
 		end
 
 convert
-	to_pointer: {POINTER},
-	to_reference: {POINTER_REF, HASHABLE, ANY}
+	to_pointer: {POINTER}
 
 feature -- Conversion
 
@@ -43,11 +42,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end

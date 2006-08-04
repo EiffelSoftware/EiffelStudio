@@ -17,7 +17,6 @@ create
 
 convert
 	make_from_reference ({INTEGER_8_REF}),
-	to_reference: {INTEGER_8_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real: {REAL},
 	to_double: {DOUBLE},
 	to_integer_16: {INTEGER_16},
@@ -36,13 +35,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class INTEGER_8
-
-
-

@@ -17,8 +17,7 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({POINTER_REF}),
-	to_reference: {POINTER_REF, HASHABLE, ANY}
+	make_from_reference ({POINTER_REF})
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -32,13 +31,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class POINTER
-
-
-

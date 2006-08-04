@@ -17,7 +17,6 @@ create
 
 convert
 	make_from_reference ({DOUBLE_REF}),
-	to_reference: {DOUBLE_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	truncated_to_real: {REAL}
 
 indexing

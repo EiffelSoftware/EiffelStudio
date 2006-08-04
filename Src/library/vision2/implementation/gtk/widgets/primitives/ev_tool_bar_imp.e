@@ -178,7 +178,8 @@ feature -- Implementation
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
 				else -- has_pixmap
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, 19)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, 18)
+						-- 18 pixels gives enough height to display a 16x16 pixmap with a square button.
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end

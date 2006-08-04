@@ -59,7 +59,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 		end
 
-feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
 			--

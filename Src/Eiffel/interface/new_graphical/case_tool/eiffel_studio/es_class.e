@@ -403,8 +403,10 @@ feature -- Element change
 		do
 			l_persistent_str := "persistent"
 			if not class_i.is_valid or else (cluster /= Void and then class_i.group /= cluster.group) then
-				graph.remove_links (links)
-				graph.remove_node (Current)
+				if graph /= Void then
+					graph.remove_links (links)
+					graph.remove_node (Current)
+				end
 			else
 				if not class_i.name_in_upper.is_equal (name) then
 					-- should never happen (see above)

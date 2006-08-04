@@ -209,10 +209,8 @@ feature -- Input
 		require
 			p_not_null: p /= default_pointer
 			is_readable: file_readable
-		local
-			new_count: INTEGER
 		do
-			new_count := file_fread (p, 1, nb_bytes, file_pointer)
+			bytes_read := file_fread (p, 1, nb_bytes, file_pointer)
 		end
 
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is

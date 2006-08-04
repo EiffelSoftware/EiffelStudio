@@ -1493,7 +1493,7 @@ feature -- Input
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
 		local
-			i, nb, l_byte: INTEGER
+			i, nb, l_byte, l_read: INTEGER
 			l_stream: like internal_stream
 		do
 			from
@@ -1508,10 +1508,12 @@ feature -- Input
 					internal_end_of_file := True
 					i := nb - 1 -- Jump out of loop
 				else
+					l_read := l_read + 1
 					p.put_natural_8 (l_byte.as_natural_8, i)
 				end
 				i := i + 1
 			end
+			bytes_read := l_read
 		end
 
 	read_word, readword is

@@ -57,7 +57,7 @@ feature -- Basic operations
 			a_file_name_not_void: a_file_name /= Void
 		local
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
-			aok, create_backup, new_created: BOOLEAN
+			create_backup, new_created: BOOLEAN
 			tmp_name: STRING
 			wd: EV_WARNING_DIALOG
 		do
@@ -65,10 +65,9 @@ feature -- Basic operations
 			last_saving_success := True
 			create new_file.make (a_file_name)
 
-			aok := True
 			if not new_file.exists then
 				if not new_file.is_creatable then
-					aok := False
+					last_saving_success := False
 					create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				else
@@ -76,25 +75,26 @@ feature -- Basic operations
 				end
 			else
 				if not new_file.is_plain then
-					aok := False
+					last_saving_success := False
 					create wd.make_with_text (warning_messages.w_not_a_plain_file (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				elseif not new_file.is_writable then
-					aok := False
+					last_saving_success := False
 					create wd.make_with_text (warning_messages.w_not_writable (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 			end
 
-			-- Create a backup of the file in case there will be a problem during the savings.
-			tmp_name := a_file_name.twin
-			tmp_name.append (".swp")
-			create tmp_file.make (tmp_name)
-			create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
-			if not create_backup then
-				tmp_file := new_file
-			end
-			if aok then
+			if last_saving_success then
+					-- Create a backup of the file in case there will be a problem during the savings.
+				tmp_name := a_file_name.twin
+				tmp_name.append (".swp")
+				create tmp_file.make (tmp_name)
+				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
+				if not create_backup then
+					tmp_file := new_file
+				end
+
 				tmp_file.open_write
 				if not a_text.is_empty then
 					a_text.prune_all ('%R')
@@ -110,7 +110,7 @@ feature -- Basic operations
 				tmp_file.close
 				if create_backup then
 					robust_rename (tmp_file, a_file_name)
-				elseif last_saving_success then
+				else
 					create new_file.make (tmp_name)
 					if new_file.exists then
 						robust_delete (new_file)

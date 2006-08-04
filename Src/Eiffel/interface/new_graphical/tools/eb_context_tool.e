@@ -359,6 +359,7 @@ feature -- Status setting
 			-- Disable all control contained in the context tool
 			-- (output window excepted).
 		do
+			address_manager.on_project_unloaded
 		end
 
 	set_focus is

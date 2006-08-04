@@ -1668,7 +1668,7 @@ feature {NONE} -- open new class
 			cluster_address.change_actions.block
 			last_caret_position := cluster_address.caret_position
 			str := cluster_address.text
-			if not str.is_empty and then (str @ (str.count) /= ' ') then
+			if universe /= Void and then not str.is_empty and then (str @ (str.count) /= ' ') then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower

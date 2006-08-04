@@ -477,6 +477,14 @@ feature -- Access
 			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
 		end
 
+	activated_item: EV_GRID_ITEM is
+			-- Item that has currently been activated, if any.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.currently_active_item
+		end
+
 	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW is
 			-- Row at virtual y position `a_virtual_y'.
 		require
@@ -875,7 +883,7 @@ feature -- Access
 		do
 			Result := implementation.item_veto_pebble_function
 		end
-		
+
 	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE] is
 			-- Function used to retrieve the PND accept cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.

@@ -308,8 +308,7 @@ feature -- Input
 		obsolete
 			"Use read_to_managed_pointer instead."
 		local
-			i: INTEGER
-			l_i: INTEGER
+			i, l_i, l_read: INTEGER
 		do
 			from
 				i := 0
@@ -319,10 +318,12 @@ feature -- Input
 			loop
 				l_i := internal_stream.read_byte
 				if l_i /= -1 then
+					l_read := l_read + 1
 					{MARSHAL}.write_byte (p + i, l_i.to_natural_8)	
 					i := i + 1									
 				end
 			end
+			bytes_read := l_read
 		end
 
 feature {NONE} -- Implementation

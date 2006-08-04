@@ -9,7 +9,6 @@
 				<alt_text>General target properties</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>On the top you can easily switch between the different targets of the current system.</paragraph>
 		<paragraph>You can change the name of the target and give it a description. A target can be marked as abstract if it should not appear in the list of targets when opening a configuration.</paragraph>
 		<paragraph>Targets can inherit from each other, which means they take certain settings from a base target if they don't specify it themselves. Inherited values are displayed with a light grey, overridden values with a light red background. Overridden values can be reset to their inherited value, 
 		by right clicking on them and choosing <italic>Use inherited value</italic> from the context menu.</paragraph>
@@ -34,15 +33,15 @@
 		</paragraph>
 		<paragraph>It allows a version number and some copyright information to be set. On .NET this information will be put into the generated assembly.</paragraph>
 		<anchor>file_pattern</anchor>
-		<paragraph>The File pattern setting allows rules to be set, to exclude certain files from every cluster. This can be used to exclude CVS or SVN directories globally instead of excluding them on each cluster. The dialog looks like this:</paragraph>
+		<paragraph>The Exclude Rules setting allows to define rules to exclude certain files from every cluster. This can be used to exclude CVS or SVN directories globally instead of excluding them on each cluster. The dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
 				<url/>
-				<alt_text>File pattern dialog</alt_text>
+				<alt_text>Exclude Rules dialog</alt_text>
 			</image>
 		</paragraph>
 		<paragraph>
-			File patterns are regular expressions which are matched against directories and file names. The basic semantics are that everything is included that either does not match an exclude pattern or does match an include pattern.
+			Exclude rules are regular expressions which are matched against directories and file names. The basic semantics are that everything is included that either does not match an exclude pattern or does match an include pattern.
 			 Matching is done against the path relative to the location of the cluster and / is used as a directory separator.
 		</paragraph>
 		<sample>
@@ -51,7 +50,7 @@
 			A rule like <italic>^/interface$</italic> would exclude the whole subdirectory, a rule like <italic>^/interface/ignore_me\.e$</italic> would only exclude the ignore_me.e class.
 		</sample>
 		<anchor>condition</anchor>
-		<paragraph>It is also possible to add conditions to a file rule (set of include and exclude file patterns). Adding conditions allows a file rule to be active only under certain conditions.. The condition dialog looks like this:</paragraph>
+		<paragraph>It is also possible to add conditions to a file rule (set of include and exclude file patterns). Adding conditions allows a file rule to be active only under certain conditions. The condition dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
 				<url/>

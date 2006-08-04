@@ -13,9 +13,10 @@
 			<item>Description: an optional description of the system</item>
 			<item>Library target: the target that should be used if this system is used as a library</item>
 			<item>UUID: unique identifier for this system</item>
-			<item>Targets: targets are the main blocks that specify an application or library.  Targets have the ability to extend another target that has been defined before and therefore the 
-				order of the targets has some importance. For example in the calculator application we have three targets: common, classic and dotnet. The common target specifies the part of 
-				the application that is common to classic and .NET compilation. The dotnet and classic targets extend the common target and add their specific settings.</item>
 		</list>
+		<paragraph>
+			A system also has one or multiple targets which are the main blocks that specify an application or library. A target can extend another target. For example in the calculator application we have three targets: common, classic and dotnet. The common target specifies the part of 
+				the application that is common to classic and .NET compilation. The dotnet and classic targets extend the common target and add their specific settings.
+		</paragraph>
 	</paragraph>
 </document>

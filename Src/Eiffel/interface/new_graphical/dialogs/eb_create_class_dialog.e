@@ -313,6 +313,10 @@ feature {NONE} -- Access
 					aok := False
 					create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
 					wd.show_modal_to_window (Current)
+				elseif not clu.is_writable then
+					aok := False
+					create wd.make_with_text (Warning_messages.w_read_only_cluster)
+					wd.show_modal_to_window (Current)
 				else
 					aok := True
 					cluster := clu.actual_cluster

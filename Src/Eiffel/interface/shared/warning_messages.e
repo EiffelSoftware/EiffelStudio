@@ -966,6 +966,7 @@ feature -- Warning messages
 
 	w_Unknown_cluster_name: STRING is "No cluster in the system has this name.";
 	w_no_cluster_selected_for_class_creation: STRING is "No cluster was selected. Please select a cluster to create a class.";
+	w_read_only_cluster: STRING is "Selected cluster is read only. Please select a writable cluster for class creation."
 
 	w_Invalid_folder_name: STRING is "Invalid folder name"
 

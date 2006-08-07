@@ -82,7 +82,7 @@ feature	-- Access
 	toolbar: CONFIGURATION_TOOLBAR
 			-- Toolbar with actions.
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		deferred
 		ensure
@@ -93,8 +93,12 @@ feature -- Simple operations
 
 	show_context_menu is
 			-- Show the context menu.
+		local
+			l_menu: EV_MENU
 		do
-			context_menu.show
+			create l_menu
+			l_menu.append (context_menu)
+			l_menu.show
 		end
 
 

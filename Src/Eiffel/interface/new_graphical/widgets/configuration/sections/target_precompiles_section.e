@@ -39,10 +39,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		do
-			create Result
+			create Result.make (0)
 				-- we can only have one precompile, so as soon as this folder appears we can't add any more.
 		end
 

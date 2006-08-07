@@ -104,12 +104,12 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create Result
+			create Result.make (3)
 
 			create l_item.make_with_text_and_action (conf_interface_names.group_add_subcluster, agent add_subcluster)
 			Result.extend (l_item)

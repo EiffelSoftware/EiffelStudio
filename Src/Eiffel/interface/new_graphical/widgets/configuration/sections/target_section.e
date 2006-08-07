@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		local
 			l_groups: TARGET_GROUPS_SECTION
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			l_tasks: TARGET_TASKS_SECTION
 			l_item: EV_MENU_ITEM
 		do
-			create Result
+			create Result.make (10)
 
 			create l_item.make_with_text_and_action (conf_interface_names.add_target, agent add_target)
 			Result.extend (l_item)

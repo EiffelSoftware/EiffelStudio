@@ -108,8 +108,8 @@ feature {NONE} -- Initialization
 
 			make_with_title (Interface_names.t_new_class)
 			set_icon_pixmap (pixmaps.icon_pixmaps.new_class_icon)
-			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
-			set_width (Layout_constants.dialog_unit_to_pixels (300).min ((create {EV_SCREEN}).width))
+			set_height (Layout_constants.dialog_unit_to_pixels (400))
+			set_width (Layout_constants.dialog_unit_to_pixels (300))
 
 				-- Build the widgets
 			create class_entry

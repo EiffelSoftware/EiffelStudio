@@ -197,9 +197,9 @@ feature {EV_DIALOG} -- Implementation
 		local
 			a_key_code: INTEGER
 		do
-			-- EV_KEY's may be void.
-			--| If this behaviour is modified, then make sure to update
-			--| the description in EV_DIALOG.
+				-- EV_KEY's may be void.
+				--| If this behaviour is modified, then make sure to update
+				--| the description in EV_DIALOG.
 			if a_key /= Void then
 				a_key_code := a_key.code
 
@@ -215,9 +215,10 @@ feature {EV_DIALOG} -- Implementation
 
 				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
 					current_push_button /= Void then
-					if current_push_button.is_sensitive then
+					if current_push_button.is_sensitive and not current_push_button.has_focus then
 							-- Enter key pressed and `current_push_button' is
-							-- sensitive so simulate a press.
+							-- sensitive so simulate a press, make sure it does not have focus as otherwise
+							-- `select_actions' would be called twice.
 						current_push_button.select_actions.call (Void)
 					end
 				end

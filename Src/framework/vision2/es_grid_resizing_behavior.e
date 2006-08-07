@@ -129,7 +129,7 @@ feature {NONE} -- Actions
 			l_draw: EV_DRAWING_AREA
 			l_visible_height: INTEGER
 		do
-			if resizing_column_enabled then
+			if resizing_column_enabled and then grid.activated_item = Void then
 				l_x_pos := x_pos + grid.virtual_x_position
 				l_draw ?= Screen.widget_at_mouse_pointer
 				over_grid_content := l_draw /= Void
@@ -161,7 +161,6 @@ feature {NONE} -- Actions
 								) then
 							is_near_border := True
 							grid.set_pointer_style (Stock_cursors.sizewe_cursor)
-							grid.set_focus
 							resize_index := column_index
 						elseif is_near_border and not l_near_border then
 							is_near_border := False

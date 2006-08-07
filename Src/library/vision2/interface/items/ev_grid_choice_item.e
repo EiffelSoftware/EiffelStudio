@@ -146,7 +146,10 @@ feature {NONE} -- Implementation
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_maximum_height, l_maximum_width: INTEGER
+			l_screen: EV_SCREEN_IMP
 		do
+			l_screen ?= (create {EV_SCREEN}).implementation
+			check l_screen_not_void: l_screen /= Void end
 			create choice_list
 			choice_list.hide_header
 			choice_list.enable_single_row_selection
@@ -164,8 +167,8 @@ feature {NONE} -- Implementation
 
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
-			l_maximum_height := ((create {EV_SCREEN}).height - popup_window.y_position).max (0)
-			l_maximum_width := ((create {EV_SCREEN}).width - popup_window.x_position).max (0)
+			l_maximum_height := (l_screen.virtual_height - popup_window.y_position).max (0)
+			l_maximum_width := (l_screen.virtual_width - popup_window.x_position).max (0)
 			choice_list.column (1).set_width (left_border + l_maximum_width.min (
 				width.max (choice_list.column (1).required_width_of_item_span (1, choice_list.row_count))))
 				-- +2 to take into account 2 pixels border of the vertical box.
@@ -207,11 +210,13 @@ feature {NONE} -- Implementation
 			-- Handle mouse moving actions.
 		local
 			l_item: EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
 		do
 			l_item := choice_list.item_at_virtual_position (choice_list.virtual_x_position + a_x,
 				choice_list.virtual_y_position + a_y)
 			if l_item /= Void then
-				if choice_list.selected_items /= Void and then choice_list.selected_items.first /= l_item then
+				l_list := choice_list.selected_items
+				if l_list /= Void and then not l_list.is_empty and then l_list.first /= l_item then
 					choice_list.remove_selection
 					l_item.enable_select
 				end
@@ -222,12 +227,14 @@ feature {NONE} -- Implementation
 			-- Handle mouse actions.
 		local
 			l_item: EV_GRID_ITEM
+			l_list: LIST [EV_GRID_ITEM]
 		do
 			if a_button = 1 then
 				l_item := choice_list.item_at_virtual_position (choice_list.virtual_x_position + a_x,
 					choice_list.virtual_y_position + a_y)
 				if l_item /= Void then
-					if choice_list.selected_items /= Void and then choice_list.selected_items.first /= l_item then
+					l_list := choice_list.selected_items
+					if l_list /= Void and then not l_list.is_empty and then l_list.first /= l_item then
 						choice_list.remove_selection
 						l_item.enable_select
 					end

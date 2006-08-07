@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_mode := debug_mode
-				enable_ev_gtk_log (0)
+				--enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 
@@ -241,8 +241,8 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window, l_gtk_widget: POINTER
 		do
-			if pebble_transporter /= Void then
-				l_pnd_item := pebble_transporter
+			if pick_and_drop_source /= Void then
+				l_pnd_item := pick_and_drop_source
 			elseif captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
 			else
@@ -316,7 +316,7 @@ feature -- Basic operation
 								-- This will force another motion notify as we have the motion hint flag set for all widgets.
 							l_pnd_imp ?= gtk_widget_imp_at_pointer_position
 							if is_in_transport then
-								l_pnd_imp := pebble_transporter
+								l_pnd_imp := pick_and_drop_source
 							elseif
 								captured_widget /= Void
 							then
@@ -676,14 +676,14 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 	on_pick (a_source: EV_PICK_AND_DROPABLE_IMP; a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		do
-			pebble_transporter := a_source
+			pick_and_drop_source := a_source
 			interface.pick_actions.call ([a_pebble])
 		end
 
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
-			pebble_transporter := Void
+			pick_and_drop_source := Void
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -696,11 +696,11 @@ feature -- Implementation
 	is_in_transport: BOOLEAN is
 			-- Is application currently in transport (either PND or docking)?
 		do
-			Result := pebble_transporter /= Void
+			Result := pick_and_drop_source /= Void
 		end
 
-	pebble_transporter: EV_PICK_AND_DROPABLE_IMP
-		-- Transporter object if any.
+	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
+		-- Source of pick and drop if any.
 
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.

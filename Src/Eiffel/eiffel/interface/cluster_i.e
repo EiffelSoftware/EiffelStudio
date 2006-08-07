@@ -91,8 +91,6 @@ feature -- Type anchors
 
 invariant
 	path_not_void: path /= Void
-	classes_not_void: classes /= Void
-	sub_clusters_not_void: sub_clusters /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

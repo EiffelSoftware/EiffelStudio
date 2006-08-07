@@ -236,12 +236,12 @@ feature -- Element update
 			end
 		end
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create Result
+			create Result.make (5)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_include, agent add_include)
 			Result.extend (l_item)

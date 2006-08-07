@@ -57,12 +57,12 @@ feature {NONE} -- Implementation
 			toolbar.add_resource_button.enable_sensitive
 		end
 
-	context_menu: EV_MENU is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create Result
+			create Result.make (1)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_external)
 			Result.extend (l_item)

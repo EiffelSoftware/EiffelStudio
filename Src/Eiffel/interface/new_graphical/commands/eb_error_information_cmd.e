@@ -112,7 +112,6 @@ feature {NONE} -- Implementation
 			but: EV_BUTTON
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			scr: EV_SCREEN
 			fs: INTEGER
 			ft: EV_FONT
 			f: EV_FRAME
@@ -149,15 +148,14 @@ feature {NONE} -- Implementation
 			current_dialog.set_default_cancel_button (but)
 			but.select_actions.extend (agent current_dialog.destroy)
 			current_editor.drop_actions.extend (agent set_stone (current_editor, ?))
-			create scr
 				--| + 1 to make sure there is enough room.
 			ft := (create {SHARED_EDITOR_FONT}).font
 			fs := (ft.maximum_width + ft.width) // 2
 				--| 60 is the number of characters in the error texts,
 				--| 56 is the overhead brought by the editor (margins),
 				--| 20 is an approximation of the overhead due to the window border.
-			current_dialog.set_size (Layout_constants.dialog_unit_to_pixels (60 * fs + 56 + 20).min (scr.width),
-									 Layout_constants.dialog_unit_to_pixels (300).min (scr.height))
+			current_dialog.set_size (Layout_constants.dialog_unit_to_pixels (60 * fs + 56 + 20),
+									 Layout_constants.dialog_unit_to_pixels (300))
 		ensure
 			valid_dialog: current_dialog /= Void and then not current_dialog.is_destroyed
 			valid_editor: current_editor /= Void

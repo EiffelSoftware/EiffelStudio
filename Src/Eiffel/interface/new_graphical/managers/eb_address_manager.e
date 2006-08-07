@@ -600,20 +600,23 @@ feature -- Updating
   		local
 		   window: EV_WINDOW
 		   l_x: INTEGER
-		   l_screen: EV_SCREEN
+		   l_screen: EB_STUDIO_SCREEN
 		do
 			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
-			l_x := a_x
-			create l_screen
-			if l_x + address_dialog.width > l_screen.width then
-				l_x := l_screen.width - address_dialog.width
-		   	end
-		   	address_dialog.set_position (l_x, a_y)
 			address_dialog.set_width (header_info.width)
 			address_dialog.set_height (header_info.height)
+			create l_screen
+			if a_x + address_dialog.width > l_screen.virtual_width then
+				l_x := l_screen.virtual_width - address_dialog.width
+			elseif a_x < l_screen.virtual_x then
+				l_x := l_screen.virtual_x
+			else
+				l_x := a_x
+		   	end
+		   	address_dialog.set_position (l_x, a_y)
 			address_dialog.show
 			remove_error_message
 			inspect

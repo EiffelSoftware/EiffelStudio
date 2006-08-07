@@ -273,7 +273,7 @@ feature {CODE_COMPLETION_WINDOW} -- Basic operation
 
 feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 
-	Completion_border_size: INTEGER is 75
+	Completion_border_size: INTEGER is 5
 			-- Size in pixels that the completion list can go to (virtual border)
 
 	unwanted_characters: SPECIAL [BOOLEAN] is
@@ -330,6 +330,7 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			else
 				Result := default_window_width
 			end
+				-- FIXME: Querying the width of the main display is not good enough.
 			Result := l_screen.width.min (Result)
 		end
 

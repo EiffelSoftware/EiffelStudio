@@ -75,6 +75,11 @@ feature -- Access
 	captured_widget: EV_WIDGET
 			-- Widget currently captured. Void if none.
 
+	pick_and_drop_source: EV_PICK_AND_DROPABLE_I is
+			-- The current pick and drop source.
+		deferred
+		end
+
 	help_accelerator: EV_ACCELERATOR
 			-- Accelerator that displays contextual help
 

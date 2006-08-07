@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"Multiple Eiffel Vision object containers accessible as list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "widget list, item list, container, dynamic, set, any"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_DYNAMIC_LIST [reference G -> EV_CONTAINABLE]
 
 inherit
@@ -110,7 +110,7 @@ feature -- Access
 		ensure then
 			bridge_ok: Result = implementation.index_of (v, i)
 		end
-		
+
 	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): G is
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
@@ -121,7 +121,7 @@ feature -- Access
 			not_found_in_empty: Result /= Void implies not is_empty
 			index_not_changed: old index = index
 		end
-		
+
 	retrieve_items_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
@@ -208,6 +208,7 @@ feature -- Element change
 			extendible: extendible
 			sequence_not_void: s /= Void
 			sequence_not_current: s /= Current
+			not_parented: not s.there_exists (agent (v: G): BOOLEAN do Result := v.parent /= Void end)
 		do
 			implementation.append (s)
 		ensure

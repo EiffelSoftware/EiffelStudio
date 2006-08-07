@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		do
 			if is_folder_hierarchy_displayed then
 				l_class_table := class_table (a_group.classes)
-				display_folder ("", a_group.location.evaluated_path, l_class_table, a_tab_count, a_is_class_displayed)
+				display_folder ("", a_group.location.evaluated_path + operating_environment.directory_separator.out, l_class_table, a_tab_count, a_is_class_displayed)
 			else
 				if a_is_class_displayed then
 					if a_group.classes_set then

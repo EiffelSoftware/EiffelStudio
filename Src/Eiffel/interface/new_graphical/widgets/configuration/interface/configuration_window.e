@@ -457,12 +457,13 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			l_target_externals: TARGET_EXTERNALS_SECTION
 			l_target_advanced: TARGET_ADVANCED_SECTION
 			l_target_groups: TARGET_GROUPS_SECTION
+			l_children: LIST [CONF_TARGET]
 		do
 				-- target
 			create l_target.make (a_target, Current)
 			a_root.extend (l_target)
 
-				-- expand if it is a child target
+				-- expand parent if it is a child target
 			l_root ?= a_root
 			if l_root /= Void then
 				l_root.expand
@@ -511,8 +512,14 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 				-- advanced mapping section
 			l_target_advanced.extend (create {TARGET_MAPPING_SECTION}.make (a_target, Current))
 
-				-- add child targets
-			a_target.child_targets.do_all (agent add_target_sections (?, l_target))
+				-- expand if we don't have any children
+			l_children := a_target.child_targets
+			if l_children.is_empty then
+				l_target.expand
+			else
+					-- add child targets
+				l_children.do_all (agent add_target_sections (?, l_target))
+			end
 		end
 
 

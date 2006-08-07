@@ -453,8 +453,8 @@ feature {NONE} -- Implementation
 					end
 					{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 				end
-				if l_app_imp.pebble_transporter /= Void and then a_key_press and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_escape then
-					l_app_imp.pebble_transporter.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+				if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
+					l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
 				else
 					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 				end

@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_mode := debug_mode
-				--enable_ev_gtk_log (0)
+				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 

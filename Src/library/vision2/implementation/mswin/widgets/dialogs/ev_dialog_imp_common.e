@@ -451,13 +451,15 @@ feature {NONE} -- Implementation
 				-- Now check that indeed the dialog is visible.
 			if x_pos + width > l_screen_imp.virtual_width then
 				x_pos := l_screen_imp.virtual_width - width
-			elseif x_pos < l_screen_imp.virtual_x then
+			end
+			if x_pos < l_screen_imp.virtual_x then
 				x_pos := l_screen_imp.virtual_x
 			end
 
 			if y_pos + height > l_screen_imp.virtual_height then
 				y_pos := l_screen_imp.virtual_height - height
-			elseif y_pos < l_screen_imp.virtual_y then
+			end
+			if y_pos < l_screen_imp.virtual_y then
 				y_pos := l_screen_imp.virtual_y
 			end
 			set_position (x_pos, y_pos)

@@ -246,12 +246,6 @@ feature -- Status report
 	last_replaced_class: INTEGER
 			-- Numbers of classes replaced last time.
 
-	options_shown: BOOLEAN is
-			-- Are the options shown ?
-			-- We do not use this for the moment, callers should be removed.
-		do
-		end
-
 	reverse : BOOLEAN is
 			-- Search upwards?
 		do
@@ -1670,22 +1664,24 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				l_stone := manager.stone
 				l_item := multi_search_performer.item
 				l_class_i ?= l_item.data
-				l_new_stone := stone_from_class_i (l_class_i)
-				if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
-					if l_class_i /= Void then
+				if l_class_i /= Void then
+					l_new_stone := stone_from_class_i (l_class_i)
+					if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
+						if l_class_i /= Void then
+							manager.set_stone (l_new_stone)
+							if l_stone /= manager.stone then
+								is_text_changed_in_editor := false
+							else
+								loaded_actions.wipe_out
+								check_class_succeed := false
+							end
+						end
+					elseif not is_current_editor_searched then
 						manager.set_stone (l_new_stone)
-						if l_stone /= manager.stone then
-							is_text_changed_in_editor := false
-						else
+						if l_stone = manager.stone then
 							loaded_actions.wipe_out
 							check_class_succeed := false
 						end
-					end
-				elseif not is_current_editor_searched then
-					manager.set_stone (l_new_stone)
-					if l_stone = manager.stone then
-						loaded_actions.wipe_out
-						check_class_succeed := false
 					end
 				end
 				if not is_current_editor_searched and l_stone /= manager.stone then

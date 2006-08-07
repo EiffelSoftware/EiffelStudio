@@ -102,7 +102,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.disable_item_expand (restore_button)
 			l_ev_horizontal_box_3.disable_item_expand (close_button)
 			restore_button.set_text ("Restore Defaults")
-			restore_button.set_minimum_width (90)
 			close_button.set_text ("Close")
 			close_button.set_minimum_width (80)
 			set_minimum_width (640)

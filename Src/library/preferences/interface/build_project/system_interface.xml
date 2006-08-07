@@ -322,7 +322,6 @@
      <EV_TOOLTIPABLE>
      </EV_TOOLTIPABLE>
      <EV_WIDGET>
-      <Minimum_width>90</Minimum_width>
      </EV_WIDGET>
      <EV_TEXT_ALIGNABLE>
      </EV_TEXT_ALIGNABLE>

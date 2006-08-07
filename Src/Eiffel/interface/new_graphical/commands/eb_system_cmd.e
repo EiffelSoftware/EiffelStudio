@@ -114,7 +114,7 @@ feature -- Basic operations
 								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
 							end
 
-							configuration_window.show
+							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
 						end
 					end
 				end
@@ -165,7 +165,7 @@ feature {NONE} -- Actions
 							l_load.last_system.targets.start
 							l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
 							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
-							configuration_window.show
+							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
 						end
 					end
 				end

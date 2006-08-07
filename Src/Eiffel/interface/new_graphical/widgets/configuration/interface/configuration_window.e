@@ -9,7 +9,7 @@ class
 	CONFIGURATION_WINDOW
 
 inherit
-	EV_TITLED_WINDOW
+	EV_DIALOG
 		redefine
 			initialize, is_in_default_state,
 			destroy
@@ -141,7 +141,7 @@ feature {NONE}-- Initialization
 			set_padding_size (default_padding_size)
 
 				-- window
-			Precursor {EV_TITLED_WINDOW}
+			Precursor
 			set_title (conf_interface_names.configuration_title (conf_system.name))
 			set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
 			set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
@@ -183,23 +183,20 @@ feature {NONE}-- Initialization
 			hb.extend (create {EV_CELL})
 			hb.set_padding (default_padding_size)
 
-			create l_btn.make_with_text_and_action (ev_ok, agent on_ok)
-			l_btn.set_minimum_width (default_button_width)
-			hb.extend (l_btn)
-			hb.disable_item_expand (l_btn)
+			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
+			ok_button.set_minimum_width (default_button_width)
+			hb.extend (ok_button)
+			hb.disable_item_expand (ok_button)
+			set_default_push_button (ok_button)
 
 			create l_btn.make_with_text_and_action (ev_cancel, agent on_cancel)
 			l_btn.set_minimum_width (default_button_width)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
+			set_default_cancel_button (l_btn)
 
 			close_request_actions.extend (agent on_cancel)
 			show_actions.extend (agent section_tree.set_focus)
-
-				-- add accelerator for canceling the dialog
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
-			l_accel.actions.extend (agent on_cancel)
-			accelerators.extend (l_accel)
 
 				-- add accelerator for opening the context menu
 			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_menu), False, False, False)
@@ -280,6 +277,9 @@ feature {CONFIGURATION_SECTION} -- Layout components
 
 feature {NONE} -- Layout components
 
+	ok_button: EV_BUTTON
+			-- Ok button
+
 	split_area: EV_HORIZONTAL_SPLIT_AREA
 			-- Split area between `section_tree' and `configuration_space'
 
@@ -321,6 +321,8 @@ feature {NONE} -- Element initialization
 
 				create properties
 				l_frame.extend (properties)
+				properties.focus_in_actions.extend (agent remove_default_push_button)
+				properties.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 					-- property grid description field
 				create l_frame
@@ -377,6 +379,8 @@ feature {NONE} -- Element initialization
 				grid.set_column_count_to (2)
 				grid.column (1).set_width (200)
 				grid.column (2).set_width (200)
+				grid.focus_in_actions.extend (agent remove_default_push_button)
+				grid.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 					-- add add and remove buttons
 				create hb
@@ -1393,6 +1397,7 @@ invariant
 	debug_clauses: debug_clauses /= Void
 	group_section_expanded_status: group_section_expanded_status /= Void
 	conf_system: conf_system /= Void
+	ok_button: is_initialized implies ok_button /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

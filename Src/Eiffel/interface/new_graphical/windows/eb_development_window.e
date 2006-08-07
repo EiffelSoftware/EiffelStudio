@@ -261,6 +261,7 @@ feature {NONE} -- Initialization
 			l_x, l_y: INTEGER
 		do
 			create screen
+				-- FIXME: Querying the width/height of the main display is not good enough.
 			window.set_size (
 				development_window_data.width.min (screen.width),
 				development_window_data.height.min (screen.height))

@@ -160,10 +160,6 @@ feature {NONE} -- Implementation
 			create {EV_SCREEN_IMP} implementation.make (Current)
 		end
 
-invariant
-	pointer_position_not_negative:
-		pointer_position.x >= 0 and pointer_position.y >= 0
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

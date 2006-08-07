@@ -124,6 +124,7 @@ feature -- Basic operations
 			l_string : STRING
 			l_index: INTEGER
 			l_refresh: BOOLEAN
+			l_class: CLASS_I
 		do
 			l_refresh := false
 			l_index := replace_items.index
@@ -139,27 +140,34 @@ feature -- Basic operations
 					check last_class_item_not_void: last_class_item /= Void end
 				end
 				if l_item /= Void then
-					if is_current_replaced_as_cluster (l_item) then
-						l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
-						if l_last_item = Void or (l_last_item /= Void and then
-												l_last_item.pcre_regex /= l_item.pcre_regex)
-						then
-							l_item.pcre_regex.first_match
-							l_string :=	l_item.pcre_regex.replace_all (replace_string)
-							l_item.set_source_text_real_string (l_string)
-								-- Let a way to deal with items in the same cluster. (i.e Save to files)
-							one_cluster_item_replaced (l_item)
-							l_last_item := l_item
-						end
-						remove_item (l_item)
-						replace_report.set_text_replaced (replace_report.text_replaced + 1)
-						if last_class_item /= Void then
-							replace_report.set_class_replaced (replace_report.class_replaced + 1)
-							last_class_item := Void
-						end
-					else
-						replace
+					l_class ?= l_item.data
+					check
+						class_i: l_class /= Void
 					end
+					if not l_class.is_read_only then
+						if is_current_replaced_as_cluster (l_item) then
+							l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
+							if l_last_item = Void or (l_last_item /= Void and then
+													l_last_item.pcre_regex /= l_item.pcre_regex)
+							then
+								l_item.pcre_regex.first_match
+								l_string :=	l_item.pcre_regex.replace_all (replace_string)
+								l_item.set_source_text_real_string (l_string)
+									-- Let a way to deal with items in the same cluster. (i.e Save to files)
+								one_cluster_item_replaced (l_item)
+								l_last_item := l_item
+							end
+							remove_item (l_item)
+							replace_report.set_text_replaced (replace_report.text_replaced + 1)
+							if last_class_item /= Void then
+								replace_report.set_class_replaced (replace_report.class_replaced + 1)
+								last_class_item := Void
+							end
+						else
+							replace
+						end
+					end
+
 					l_refresh := true
 				end
 				if l_item = Void or else (not replace_items.off and then l_saved_item = replace_items.item) then

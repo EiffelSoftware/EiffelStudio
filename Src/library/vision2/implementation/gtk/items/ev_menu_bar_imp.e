@@ -19,8 +19,7 @@ inherit
 			{EV_WINDOW_IMP}
 				list_widget
 		redefine
-			interface,
-			insert_menu_item
+			interface
 		end
 
 create
@@ -66,17 +65,6 @@ feature {EV_WINDOW_IMP} -- Implementation
 		end
 
 	parent_imp: EV_WINDOW_IMP
-
-feature {NONE} -- Implementation
-
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
-			-- Generic menu item insertion.
-		do
-			an_item_imp.set_item_parent_imp (Current)
-			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
-			child_array.go_i_th (pos)
-			child_array.put_left (an_item_imp.interface)
-		end
 
 feature {EV_ANY_I} -- Implementation
 

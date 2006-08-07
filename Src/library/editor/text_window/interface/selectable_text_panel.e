@@ -4,7 +4,7 @@ indexing
 		Scroll bars: yes
 		Cursor: yes
 		Keyboard: yes
-		Mouse: yes		
+		Mouse: yes
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			editor_drawing_area.pointer_double_press_actions.extend (agent on_double_click)
 			editor_drawing_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
 			editor_drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
-			
+
 			clipboard := ev_application.clipboard
 
 			create click_delay.make_with_interval (0)
@@ -53,26 +53,25 @@ feature {NONE} -- Process Vision2 events
 			-- Process single click on mouse buttons.
 		do
 			if not text_displayed.is_empty then
-				if abs_x_pos >= 0 and then abs_y_pos > 0 and then abs_y_pos <= editor_drawing_area.height then
-					if abs_x_pos <= editor_drawing_area.width then
-						on_click_in_text (abs_x_pos - left_margin_width, abs_y_pos, button, a_screen_x, a_screen_y)
-					end
+				if abs_x_pos >= 0 and then abs_x_pos <= editor_drawing_area.width and then abs_y_pos > 0 and then abs_y_pos <= editor_drawing_area.height then
+					on_click_in_text (abs_x_pos - left_margin_width, abs_y_pos, button, a_screen_x, a_screen_y)
+					editor_drawing_area.set_focus
 				end
 			end
 		end
 
 	on_double_click (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Process double clicks on mouse buttons 
+			-- Process double clicks on mouse buttons
 		do
 			if not text_displayed.is_empty then
 				if
-					button = 1 
+					button = 1
 						and then
 					not shifted_key
 						and then
 					(click_count \\ 2) = 1
 						and then
-					abs_x_pos + offset >= left_margin_width 
+					abs_x_pos + offset >= left_margin_width
 						and then
 					y_pos >= 0
 						and then
@@ -82,11 +81,11 @@ feature {NONE} -- Process Vision2 events
 				end
 			end
 		end
-	
+
 	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
 			-- Process events related to mouse pointer moves.
 		do
-			if (not text_displayed.is_empty) and then click_count < 4 and then mouse_left_button_down then				
+			if (not text_displayed.is_empty) and then click_count < 4 and then mouse_left_button_down then
 				scroll_and_select (abs_x_pos - left_margin_width, abs_y_pos, a_screen_x, a_screen_y)
 			end
 		end
@@ -147,7 +146,7 @@ feature {NONE} -- Handle mouse clicks
 		local
 			l_number: INTEGER
 			old_l_number: INTEGER
-		do			
+		do
 			if button = 1 then
 				mouse_right_button_down := False
 				l_number := (y_pos // line_height) + 1
@@ -161,9 +160,9 @@ feature {NONE} -- Handle mouse clicks
 						else
 							if l_number < first_line_displayed then
 									-- We are going up
-								if text_displayed.selection_start > text_displayed.selection_end then								
+								if text_displayed.selection_start > text_displayed.selection_end then
 									old_l_number := text_displayed.selection_start.y_in_lines
-								else								
+								else
 									old_l_number :=	text_displayed.selection_end.y_in_lines
 								end
 							else
@@ -182,7 +181,7 @@ feature {NONE} -- Handle mouse clicks
 						end
 					end
 				end
-			end			
+			end
 		end
 
 	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER) is
@@ -207,7 +206,7 @@ feature {NONE} -- Handle mouse clicks
 
 			if not editor_drawing_area.has_capture then
 				editor_drawing_area.enable_capture
-			end			
+			end
 			position_cursor (l_cursor, x_pos + font.width // 3, y_pos)
 			former_pointed_line := l_cursor.y_in_lines
 			former_pointed_char := l_cursor.x_in_characters
@@ -218,7 +217,7 @@ feature {NONE} -- Handle mouse clicks
 			invalidate_line (l_cursor.y_in_lines, False)
 			if not shifted_key then
 				store_mouse_up := True
-				click_delay.set_interval (0)				 
+				click_delay.set_interval (0)
 				click_delay.set_interval (300)
 				click_count := click_count + 1
 				mouse_up_delayed := False
@@ -241,8 +240,8 @@ feature {NONE} -- Handle mouse clicks
 						end
 						invalidate_line (l_cursor.y_in_lines, False)
 					elseif editor_preferences.quadruple_click_enabled and then click_count > 3 then
-						select_all						
-					else						
+						select_all
+					else
 						l_cursor.go_start_line
 						text_displayed.set_selection_cursor (l_cursor)
 						l_cursor.go_end_line
@@ -265,12 +264,12 @@ feature {NONE} -- Handle mouse clicks
 				mouse_up_action (1)
 			end
 		end
-		
+
 	queue_mouse_up (button: INTEGER) is
 			-- Delay or launch mouse left button up event processing
 			-- according to `store_mouse_up'.
 		do
-			if store_mouse_up and button = 1 then 
+			if store_mouse_up and button = 1 then
 				mouse_up_delayed := true
 			else
 				mouse_up_action (button)
@@ -283,7 +282,7 @@ feature {NONE} -- Handle mouse clicks
 			l_num,
 			l_click_count: INTEGER
 			l_cursor: like cursor_type
-		do			
+		do
 			if button = 1 then
 				l_click_count := click_count
 				click_count := 0
@@ -291,11 +290,11 @@ feature {NONE} -- Handle mouse clicks
 					l_cursor := text_displayed.cursor
 					if l_cursor.token /= Void then
 						l_num := l_cursor.y_in_lines
-						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)						
+						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
 						invalidate_line (l_cursor.y_in_lines, True)
-						if l_click_count < 4 then			
+						if l_click_count < 4 then
 								-- If the click count is greater than 3 don't move the cursor to the bottom of the screen
-							check_cursor_position	
+							check_cursor_position
 						end
 					end
 				end
@@ -323,7 +322,7 @@ feature {NONE} -- Handle mouse clicks
 			scroll_horizontal := false
 			scroll_vertical := false
 			stop_scrolling := true
-			current_mouse_coordinates := <<abs_x_pos, abs_y_pos, a_screen_x, a_screen_y>>			
+			current_mouse_coordinates := <<abs_x_pos, abs_y_pos, a_screen_x, a_screen_y>>
 
 				-- Let's check if the pointer is still in the editor area
 				-- if not launch automatic scroll and correct `x_pos' and `y_pos' values.
@@ -331,7 +330,7 @@ feature {NONE} -- Handle mouse clicks
 			if a_screen_x <= editor_x + left_margin_width then
 					-- cursor on the left of the text
 					-- launch horizontal scroll if necessary				
-				if editor_viewport.width < editor_width then	
+				if editor_viewport.width < editor_width then
 					stop_scrolling := False
 					scroll_horizontal := true
 					scroll_right := false
@@ -345,7 +344,7 @@ feature {NONE} -- Handle mouse clicks
 			elseif a_screen_x >= editor_x + editor_viewport.width then
 					-- cursor on the right of the text
 					-- launch horizontal scroll if necessary				
-				if editor_viewport.width < editor_width then	
+				if editor_viewport.width < editor_width then
 					stop_scrolling := False
 					scroll_horizontal := true
 					scroll_right := true
@@ -418,22 +417,22 @@ feature {NONE} -- Handle mouse clicks
 		do
 			l_cursor := text_displayed.cursor
 			selection_cursor := text_displayed.selection_cursor
-			
+
 				-- Save cursor position.	
-			if not text_displayed.has_selection then	
+			if not text_displayed.has_selection then
 					-- There is no selection, so we start a selection.
 				text_displayed.set_selection_cursor (text_displayed.cursor.twin)
 				text_displayed.enable_selection
 			end
-	
+
 				-- Compute the line number pointed by the mouse cursor
 			l_number := ((y_pos // line_height) + first_line_displayed)
 
 			if click_count = 1 and then not mouse_left_button_down then
-			
+
 				text_displayed.disable_selection
 			elseif click_count = 2 then
-			
+
 					-- movement after double click : word by word selection
 				create cur.make_from_integer (1, text_displayed)
 				position_cursor (cur, x_pos, y_pos)
@@ -462,7 +461,7 @@ feature {NONE} -- Handle mouse clicks
 						if l_cursor.is_equal (selection_cursor) then
 							l_cursor.go_right_char_no_down_line
 						end
-						l_cursor.go_end_word 
+						l_cursor.go_end_word
 					elseif selection_cursor > cur then
 						selection_cursor.go_right_char_no_down_line
 						selection_cursor.go_end_word
@@ -502,7 +501,7 @@ feature {NONE} -- Handle mouse clicks
 				end
 				l_number := l_cursor.y_in_lines
 			elseif click_count = 3 then
-			
+
 					-- movement after double click : line by line selection
 				i := l_cursor.y_in_lines
 				if selection_cursor <= l_cursor then
@@ -538,7 +537,7 @@ feature {NONE} -- Handle mouse clicks
 
 			if text_displayed.selection_is_empty then
 					-- Forget selection if nothing is selected.
-				text_displayed.disable_selection				
+				text_displayed.disable_selection
 			end
 
 			if l_number /= former_pointed_line then
@@ -556,7 +555,7 @@ feature {NONE} -- Handle mouse clicks
 				invalidate_line (l_number,true)
 				former_pointed_char := l_cursor.x_in_characters
 			end
-				
+
 		end
 
 feature {NONE} -- Private Characteristics of the window
@@ -572,7 +571,7 @@ feature {NONE} -- Private Characteristics of the window
 
 	store_mouse_up: BOOLEAN
 			-- Delay mouse up event processing?
-	
+
 	mouse_up_delayed: BOOLEAN
 			-- Is there delayed mouse up event to be processed?
 
@@ -617,7 +616,7 @@ feature {NONE} -- Private Characteristics of the window
 
 	empty_word_selection: BOOLEAN
 			-- Did word by word selection begin with empty selection (end of line)?
-	
+
 	scroll_only: BOOLEAN is
 			-- Block selection modification?
 		do
@@ -639,8 +638,8 @@ feature {NONE} -- Memory Management
 				autoscroll.destroy
 			end
 			autoscroll := Void
-		end	
-				
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

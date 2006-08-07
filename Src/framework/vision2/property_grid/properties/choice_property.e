@@ -79,28 +79,25 @@ feature {NONE} -- Agents
 			l_done: BOOLEAN
 			l_item: like value
 		do
-			l_parent ?= parent
-			if l_parent /= Void and then not l_parent.is_resize_mode then
-				from
-					item_strings.start
-				until
-					l_done or item_strings.after
-				loop
-					if text_field.text.is_equal (item_strings.item.out) then
-						if item_strings.islast then
-							l_item := item_strings.first
-						else
-							item_strings.forth
-							l_item := item_strings.item
-						end
-						text_field.set_text (l_item.out)
-						if is_valid_value (l_item) then
-							set_value (l_item)
-						end
-						l_done := True
+			from
+				item_strings.start
+			until
+				l_done or item_strings.after
+			loop
+				if text_field.text.is_equal (item_strings.item.out) then
+					if item_strings.islast then
+						l_item := item_strings.first
+					else
+						item_strings.forth
+						l_item := item_strings.item
 					end
-					item_strings.forth
+					text_field.set_text (l_item.out)
+					if is_valid_value (l_item) then
+						set_value (l_item)
+					end
+					l_done := True
 				end
+				item_strings.forth
 			end
 		end
 

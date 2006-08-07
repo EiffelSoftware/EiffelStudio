@@ -76,11 +76,6 @@ feature {NONE} -- Initialization
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
 
-feature -- Status
-
-	is_resize_mode: BOOLEAN
-			-- Are we in resize mode?
-
 feature -- properties
 
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR

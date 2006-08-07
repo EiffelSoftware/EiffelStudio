@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 						in_buf.replace_substring_all ("$inheritance_clause", "")
 					end
 					cr := creation_entry.text
-					if not deferred_check.is_selected and then not cr.is_empty then
+					if not deferred_check.is_selected and then creation_check.is_selected and not cr.is_empty then
 						if expanded_check.is_selected and not cr.is_equal ("default_create") then
 							in_buf.replace_substring_all ("$creation_clause", "create%N%T" + cr + ", default_create%N%N")
 						else

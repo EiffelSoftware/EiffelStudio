@@ -178,10 +178,7 @@ feature -- Actions
 			l_parent: ES_GRID
 		do
 			if not is_readonly then
-				l_parent ?= parent
-				if l_parent /= Void and then not l_parent.is_resize_mode then
-					Precursor
-				end
+				Precursor
 			end
 		end
 

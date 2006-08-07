@@ -157,13 +157,16 @@ feature -- Status Setting
 			-- to the default push button.
 		do
 			is_default_push_button := False
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
 		end
 
 	enable_can_default is
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_can_default_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -192,7 +195,7 @@ feature {NONE} -- implementation
 						-- We do not want radio buttons to affect current push button behavior
 						top_level_dialog_imp.set_current_push_button (interface)
 					end
-				elseif top_level_dialog_imp.internal_current_push_button = interface  then
+				elseif top_level_dialog_imp.internal_current_push_button = interface then
 					top_level_dialog_imp.set_current_push_button (Void)
 				end
 			end

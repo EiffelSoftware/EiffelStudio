@@ -91,8 +91,6 @@ feature -- Access
 
 	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN is
 			-- Is `a_widget' maximized in `Current'?
-		require
-			widget_contained: linear_representation.has (a_widget)
 		do
 			if maximized_tool /= Void then
 				Result := maximized_tool.tool = a_widget

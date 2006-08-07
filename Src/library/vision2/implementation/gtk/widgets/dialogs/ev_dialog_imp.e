@@ -13,7 +13,6 @@ inherit
 		undefine
 			propagate_foreground_color,
 			propagate_background_color,
-			dialog_key_press_action,
 			lock_update,
 			unlock_update
 		redefine
@@ -85,34 +84,6 @@ feature {NONE} -- Implementation
 			-- Pointer to the widget that is treated as the main holder of the client area within the window.
 		do
 			Result := client_area_from_c_object (c_object)
-		end
-
-	dialog_key_press_action (a_key: EV_KEY) is
-		local
-			a_key_code: INTEGER
-		do
-			if a_key /= Void and then not (App_implementation.is_in_transport and then app_implementation.captured_widget /= Void) then
-				a_key_code := a_key.code
-
-				if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then
-					default_cancel_button /= Void then
-						-- We now check if `default_cancel_button' is sensitive
-						-- as we only call its select_actions if it is sensitive.
-					if default_cancel_button.is_sensitive then
-							-- Escape key pressed and `default_cancel_button' is
-							-- sensitive so simulate a press.
-						default_cancel_button.select_actions.call (Void)
-					end
-
-				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
-					current_push_button /= Void then
-					if current_push_button.is_sensitive and not current_push_button.has_focus then
-							-- Enter key pressed and `current_push_button' is
-							-- sensitive so simulate a press.
-						current_push_button.select_actions.call (Void)
-					end
-				end
-			end
 		end
 
 	set_closeable (new_status: BOOLEAN) is

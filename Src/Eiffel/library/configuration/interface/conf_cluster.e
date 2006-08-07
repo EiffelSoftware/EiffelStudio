@@ -611,7 +611,6 @@ feature {NONE} -- Cached informations
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
 	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
-	classes_by_filename_ok: classes_set implies classes_by_filename /= Void and then classes.count = classes_by_filename.count
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -2343,6 +2343,8 @@ feature -- Initialization
 			good_argument: l /= Void
 		do
 			original_class := l
+			l.set_compiled_class (Current)
+
 				-- Set `is_class_any' and `is_class_none'
 			is_class_any := name.is_equal ("ANY")
 			is_class_none := name.is_equal ("NONE")

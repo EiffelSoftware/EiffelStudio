@@ -420,11 +420,13 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 	set_classes_by_filename (a_classes: like classes_by_filename) is
 			-- Set `classes_by_filename' to `a_classes'
 		require
+			classes_up_to_date: classes /= Void and classes.count = a_classes.count
 			a_classes_not_void: a_classes /= Void
 		do
 			classes_by_filename := a_classes
 		ensure
 			classes_set: classes_by_filename = a_classes
+			same_as_classes: classes.count = classes_by_filename.count
 		end
 
 	clean_classes is

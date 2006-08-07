@@ -225,7 +225,6 @@ feature -- Implementation
 			-- Have the default font settings been changed by the user
 		local
 			font_name_ptr: POINTER
-			l_string: EV_GTK_C_STRING
 		do
 			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then

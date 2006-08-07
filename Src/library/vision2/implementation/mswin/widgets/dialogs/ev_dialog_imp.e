@@ -274,14 +274,30 @@ feature {NONE} -- Implementation
 		local
 			x_pos, y_pos: INTEGER
 			l_screen: EV_SCREEN
+			l_screen_imp: EV_SCREEN_IMP
 		do
+			create l_screen
+			l_screen_imp ?= l_screen.implementation
+			check l_screen_imp_not_void: l_screen_imp /= Void end
 			if parent_window /= Void and then parent_window.is_displayed then
 				x_pos := parent_window.x_position + (parent_window.width - width) // 2
 				y_pos := parent_window.y_position + (parent_window.height - height) // 2
 			else
-				create l_screen
-				x_pos := (l_screen.width - width) // 2
-				y_pos := (l_screen.height - height) // 2
+				x_pos := (l_screen_imp.width - width) // 2
+				y_pos := (l_screen_imp.height - height) // 2
+			end
+
+				-- Now check that indeed the dialog is visible.
+			if x_pos + width > l_screen_imp.virtual_width then
+				x_pos := l_screen_imp.virtual_width - width
+			elseif x_pos < l_screen_imp.virtual_x then
+				x_pos := l_screen_imp.virtual_x
+			end
+
+			if y_pos + height > l_screen_imp.virtual_height then
+				y_pos := l_screen_imp.virtual_height - height
+			elseif y_pos < l_screen_imp.virtual_y then
+				y_pos := l_screen_imp.virtual_y
 			end
 			set_position (x_pos, y_pos)
 		end

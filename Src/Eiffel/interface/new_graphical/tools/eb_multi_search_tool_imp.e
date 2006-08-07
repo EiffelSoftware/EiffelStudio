@@ -358,10 +358,10 @@ feature -- EB_TOOL
 			if explorer_bar_item.is_minimized then
 				explorer_bar_item.restore
 			end
-			if currently_searched /= Void and then currently_searched.is_empty then
+			if currently_searched /= Void and then not currently_searched.is_empty then
 				keyword_field.set_text (currently_searched)
 			end
-			if currently_replacing /= Void and then currently_replacing.is_empty then
+			if currently_replacing /= Void and then not currently_replacing.is_empty then
 				replace_field.set_text (currently_replacing)
 			end
 			keyword_field.set_focus

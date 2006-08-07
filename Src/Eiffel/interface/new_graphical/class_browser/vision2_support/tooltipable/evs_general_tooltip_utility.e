@@ -22,7 +22,7 @@ feature{NONE} -- Implementation
 			good_result: Result >= 0
 		end
 
-	screen: EV_SCREEN is
+	screen: EB_STUDIO_SCREEN is
 			-- Screen used to get pointer position
 		once
 			create Result

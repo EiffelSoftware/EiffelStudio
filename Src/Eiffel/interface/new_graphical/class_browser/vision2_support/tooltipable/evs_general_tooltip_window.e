@@ -195,12 +195,12 @@ feature{NONE} -- Measure
 			l_start_y := pointer_y + owner.pointer_offset
 			l_end_x := l_start_x + l_width - 1
 			l_end_y := l_start_y + l_height - 1
-			if l_end_y > screen.height then
+			if l_end_y > screen.virtual_height then
 				l_end_y := pointer_y - owner.pointer_offset
 				l_start_y := l_end_y - l_height + 1
 			end
-			if l_end_x > screen.width then
-				l_end_x := screen.width - 2
+			if l_end_x > screen.virtual_width then
+				l_end_x := screen.virtual_width - 2
 				l_start_x := l_end_x - l_width + 1
 			end
 			create Result.make (l_start_x, l_start_y)

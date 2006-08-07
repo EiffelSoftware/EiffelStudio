@@ -84,6 +84,9 @@ feature{NONE} -- Implementation
 			a_tooltip.set_tooltip_remain_delay_time (200)
 			a_tooltip.enable_text_wrap
 			a_tooltip.enable_repeat_tooltip_display
+				-- FIXME: Querying the width of the main display is not good at creation time,
+				-- because the parent window could be on a different display, and moreover it
+				-- could be moved later to a different display.
 			a_tooltip.set_tooltip_maximum_width (screen.width - 30)
 			a_tooltip.set_tooltip_maximum_height (screen.height - 30)
 			if a_tooltip.tooltip_window_related_window /= window_manager.last_focused_development_window.window then

@@ -498,8 +498,6 @@ feature -- Commands
 					-- Creation of a new instance of a class to recompile:
 				   -- a class neither compiled must be compiled.
 				class_to_recompile := cl.class_to_recompile
-					-- Update universe
-				cl.set_compiled_class (class_to_recompile)
 					-- Update system
 				system.insert_new_class (class_to_recompile)
 			end

@@ -93,14 +93,11 @@ feature -- Simple operations
 
 	show_context_menu is
 			-- Show the context menu.
-		local
-			l_menu: EV_MENU
 		do
-			create l_menu
-			l_menu.append (context_menu)
-			l_menu.show
+			create open_menu
+			open_menu.append (context_menu)
+			open_menu.show
 		end
-
 
 	update_toolbar_sensitivity is
 			-- Enable buttons in `toolbar' and assign actions.
@@ -115,6 +112,9 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	open_menu: EV_MENU
+			-- Context menu as class attribut that it doesn't get collected.
 
 feature {NONE} -- Implementation helper
 

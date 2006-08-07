@@ -14,6 +14,11 @@ inherit
 			interface
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature -- Status Report
 
 	is_closeable: BOOLEAN is
@@ -196,11 +201,14 @@ feature {EV_DIALOG} -- Implementation
 	dialog_key_press_action (a_key: EV_KEY) is
 		local
 			a_key_code: INTEGER
+			l_app_i: EV_APPLICATION_I
 		do
 				-- EV_KEY's may be void.
 				--| If this behaviour is modified, then make sure to update
 				--| the description in EV_DIALOG.
-			if a_key /= Void then
+			l_app_i := ev_application.implementation
+			check l_app_i_not_void: l_app_i /= Void end
+			if a_key /= Void and l_app_i.captured_widget = Void and l_app_i.pick_and_drop_source = Void then
 				a_key_code := a_key.code
 
 				if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then

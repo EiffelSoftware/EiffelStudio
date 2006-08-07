@@ -110,11 +110,10 @@ feature {NONE} -- Implementation
 	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
 		do
-			an_item_imp.set_item_parent_imp (Current)
-			{EV_GTK_EXTERNALS}.gtk_menu_shell_append (list_widget, an_item_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)
+			an_item_imp.set_item_parent_imp (Current)
 		end
 
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is

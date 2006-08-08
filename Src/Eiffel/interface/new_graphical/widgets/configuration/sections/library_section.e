@@ -70,8 +70,8 @@ feature -- Basic operations
 					l_load.last_system.targets.start
 					l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
 					create l_lib_conf.make (l_load.last_system, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0))
-					l_lib_conf.show_modal_to_window (configuration_window)
-					config_windows.remove (l_config)
+--					l_lib_conf.show_modal_to_window (configuration_window)
+					l_lib_conf.show
 				end
 			end
 		end

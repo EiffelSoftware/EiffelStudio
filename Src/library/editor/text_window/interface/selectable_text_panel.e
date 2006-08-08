@@ -55,7 +55,6 @@ feature {NONE} -- Process Vision2 events
 			if not text_displayed.is_empty then
 				if abs_x_pos >= 0 and then abs_x_pos <= editor_drawing_area.width and then abs_y_pos > 0 and then abs_y_pos <= editor_drawing_area.height then
 					on_click_in_text (abs_x_pos - left_margin_width, abs_y_pos, button, a_screen_x, a_screen_y)
-					editor_drawing_area.set_focus
 				end
 			end
 		end

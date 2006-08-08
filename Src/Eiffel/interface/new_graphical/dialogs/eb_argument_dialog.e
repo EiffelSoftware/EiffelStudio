@@ -167,7 +167,9 @@ feature {NONE} -- Implementation
 	on_window_focused is
 			-- Acion to be taken when window gains focused.
 		do
-			arguments_control.set_focus
+			if arguments_control.is_displayed then
+				arguments_control.set_focus
+			end
 		end
 
 	on_run_button_key_press (key: EV_KEY) is

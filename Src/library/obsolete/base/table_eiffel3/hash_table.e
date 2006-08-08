@@ -26,7 +26,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate hash table for at least `n' items.

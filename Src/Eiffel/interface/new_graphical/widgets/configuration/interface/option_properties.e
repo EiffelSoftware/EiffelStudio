@@ -326,13 +326,16 @@ feature {NONE} -- Implementation
 		local
 			l_assertion: CONF_ASSERTIONS
 		do
-			l_assertion := a_inherited_option.assertions
+			l_assertion := an_option.assertions
 			if l_assertion = Void then
-				create l_assertion
-			else
-				l_assertion := l_assertion.twin
+				l_assertion := a_inherited_option.assertions
+				if l_assertion = Void then
+					create l_assertion
+				else
+					l_assertion := l_assertion.twin
+				end
+				an_option.set_assertions (l_assertion)
 			end
-			an_option.set_assertions (l_assertion)
 			if a_name.is_equal (conf_interface_names.option_require_name) then
 				if a_value then
 					l_assertion.enable_precondition

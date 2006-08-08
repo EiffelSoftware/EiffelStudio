@@ -31,14 +31,22 @@ feature -- Comparison
 
 feature -- Conversion
 
-	adapted alias "[]" (g: G): G is
+	adapt alias "[]" (g: G): G is
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
 		ensure
 			adapted: equal (Result, g)
 		end
-		
+
+	attempt alias "#?" (obj: ANY): G is
+			-- Result of assignment attempt of `obj' to entity of type G
+		do
+			Result ?= obj
+		ensure
+			assigned_or_void: Result = obj or Result = Void
+		end
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,10 +58,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -355,16 +355,20 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			path := a_path
 			check_changed
 
-			if not is_error then
-				l_cluster ?= a_group
-				visible := Void
-			end
+				-- do not loose information if we where renamed as we build a new class if we were renamed and we want the old information
+				-- to deal with removed overrides
+			if not is_renamed then
+				if not is_error then
+					l_cluster ?= a_group
+					visible := Void
+				end
 
-				-- forget override informations except the one necessary for the
-				-- check if a new override was added on a before not overriden class
-			overrides := Void
-			old_overriden_by := overriden_by
-			overriden_by := Void
+					-- forget override informations except the one necessary for the
+					-- check if a new override was added on a before not overriden class
+				overrides := Void
+				old_overriden_by := overriden_by
+				overriden_by := Void
+			end
 
 			is_rebuilding := False
 		end

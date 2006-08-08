@@ -1206,12 +1206,12 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_value (a_task.working_directory.original_path)
 			end
 			l_dir_prop.enable_text_editing
-			l_dir_prop.change_value_actions.extend (agent (a_dir: STRING_32; a_task: CONF_ACTION)
+			l_dir_prop.change_value_actions.extend (agent (a_dir: STRING_32; ia_task: CONF_ACTION)
 				do
 					if a_dir = Void or else a_dir.is_empty then
-						a_task.set_working_directory (Void)
+						ia_task.set_working_directory (Void)
 					else
-						a_task.set_working_directory (conf_factory.new_location_from_path (a_dir, current_target))
+						ia_task.set_working_directory (conf_factory.new_location_from_path (a_dir, current_target))
 					end
 				end (?, a_task)
 			)

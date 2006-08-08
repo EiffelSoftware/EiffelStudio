@@ -23,12 +23,13 @@ inherit
 			on_bn_clicked,
 			has_pushed_appearence,
 			initialize,
-			internal_background_brush
+			internal_background_brush,
+			fire_select_actions_on_enter
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -37,8 +38,8 @@ feature {NONE} -- Initialization
 			Precursor {EV_BUTTON_IMP}
 			is_selected := False
 		end
-		
-	
+
+
 feature -- Access
 
 	is_selected: BOOLEAN
@@ -91,7 +92,7 @@ feature {NONE} -- Implementation, focus event
 		ensure then
 			state_changed: old is_selected = not is_selected
 		end
-		
+
 	on_bn_double_clicked is
 			-- Bn_clicked message received from Windows,
 			-- so toggle `is_selected', redraw `Current' and
@@ -103,7 +104,7 @@ feature {NONE} -- Implementation, focus event
 		ensure
 			state_changed: old is_selected = not is_selected
 		end
-		
+
 	process_notification (notification_code: INTEGER) is
 			-- Process any windows notification messages.
 			-- In this case, it is redefined to handle
@@ -142,6 +143,12 @@ feature {NONE} -- Implementation, focus event
 	 		Result_not_void: Result /= Void
  		end
 
+	fire_select_actions_on_enter is
+			-- Call select_actions to respond to Enter key press if
+			-- Current supports it.
+		do
+		end
+
  	splitter_brush: WEL_BRUSH is
 			-- Create the brush used to draw the invert splitter.
 		local
@@ -163,7 +170,7 @@ feature {NONE} -- Implementation, focus event
 				i := 1
 			until
 				i > 16
-			loop	
+			loop
 				string_bitmap.put ((0x000000AA).to_character_8, i)
 				string_bitmap.put ((0x00000055).to_character_8, i + 2)
 				i := i + 4
@@ -172,10 +179,10 @@ feature {NONE} -- Implementation, focus event
 				-- Then, we create the brush
 			create a_bitmap.make_direct (8, 8, 1, 1, string_bitmap)
 			create Result.make_by_pattern (a_bitmap)
-			
+
 			a_bitmap.delete
 		end
- 		
+
 
 feature {EV_ANY_I} -- Implementation
 

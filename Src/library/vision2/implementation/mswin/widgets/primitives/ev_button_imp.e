@@ -25,7 +25,8 @@ inherit
 			interface,
 			update_current_push_button,
 			on_mouse_enter,
-			on_mouse_leave
+			on_mouse_leave,
+			fire_select_actions_on_enter
 		end
 
 	EV_TEXT_ALIGNABLE_IMP
@@ -365,6 +366,17 @@ feature {NONE} -- Implementation, focus event
 					-- Current is not in a dialog so Current should not
 					-- have the `is_default_push_button' flag.
 				disable_default_push_button
+			end
+		end
+
+	fire_select_actions_on_enter is
+			-- Call select_actions to respond to Enter key press if
+			-- Current supports it.
+		do
+			if is_sensitive then
+				if select_actions_internal /= Void and then not select_actions_internal.is_empty then
+					select_actions_internal.call (Void)
+				end
 			end
 		end
 

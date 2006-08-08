@@ -86,6 +86,16 @@
 			</item>
 		</list>
 		<heading>
+			<size>2</size>Assembly Options
+		</heading>
+		It is possible (but not recommended) to specify an assembly only with GAC information. To do this set the location to <italic>none</italic> and specify:
+		<list ordered="false">
+			<item>Assembly Name: Full name of the assembly as found in the GAC.</item>
+			<item>Assembly Culture: Culture of the assembly.</item>
+			<item>Assembly Version: Version of the assembly.</item>
+			<item>Assembly Public Key Token: Public key token that identifies the asssembly.</item>
+		</list>
+		<heading>
 			<size>2</size>Resolving Conflicts
 		</heading>There are multiple ways to resolve conflicts between different classes with the same name.
 		<anchor>renaming</anchor>

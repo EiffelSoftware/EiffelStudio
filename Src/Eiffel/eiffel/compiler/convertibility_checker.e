@@ -150,6 +150,15 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
+													elseif l_named_type.conform_to (a_class.constraint_actual_type) then
+														if a_class.is_generic then
+															Error_handler.insert_error (create {VYCP}.make
+																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
+														else
+															Error_handler.insert_error (create {VYCP}.make
+																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 2))
+														end
+														has_error := True
 													else
 														l_convert_from.force (l_name_id, l_named_type)
 													end
@@ -160,6 +169,15 @@ feature -- Initialization/Checking
 														l_vncp.set_class (a_class)
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
+														has_error := True
+													elseif a_class.constraint_actual_type.conform_to (l_named_type) then
+														if a_class.is_generic then
+															Error_handler.insert_error (create {VYCQ}.make
+																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
+														else
+															Error_handler.insert_error (create {VYCQ}.make
+																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 2))
+														end
 														has_error := True
 													else
 														l_convert_to.force (l_name_id, l_named_type)

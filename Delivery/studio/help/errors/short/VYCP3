@@ -1,0 +1,5 @@
+Error: source of conversion procedure conforms to the type obtained from
+  the current class by replacing every formal generic parameter by its
+  constraint.
+What to do: make sure the source of conversion procedure does not conform
+  to type obtained from the current class or remove it from the type list.

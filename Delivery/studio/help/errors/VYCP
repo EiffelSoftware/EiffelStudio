@@ -1,0 +1,29 @@
+VYCP, section 8.15.7 (ECMA-367, 2nd edition)
+
+     Conversion Procedure rule
+
+     A Conversion_procedure listing a Feature_name fn and appearing in a
+     class C with current typeCT is valid if and only if it satisfies the
+     following conditions, applicable to every type SOURCE listed in its
+     Type_list:
+
+        1 fn is the name of a creation procedure cp of C.
+
+        2 If C is not generic, SOURCE does not conform to CT.
+
+        3 If C is generic, SOURCE does not conform to the type obtained
+          from CT by replacing every formal generic parameter by its
+          constraint.
+
+        4 SOURCE's base class is different from the base class of any other
+          conversion type listed for a Conversion_procedure in the
+          Converters clause of C.
+
+        5 The specification of the base class of SOURCE does not list a
+          conversion queryspecifying a type of base class C.
+
+        6 cp has exactly one formal argument, of a type ARG.
+
+        7 SOURCE conforms to ARG.
+
+        8 SOURCE involves no anchored type.

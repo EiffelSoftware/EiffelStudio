@@ -321,7 +321,12 @@ feature {NONE} -- Element initialization
 
 				create properties
 				l_frame.extend (properties)
-				properties.focus_in_actions.extend (agent remove_default_push_button)
+				properties.focus_in_actions.extend (agent
+					do
+						if default_push_button /= Void then
+							remove_default_push_button
+						end
+					end)
 				properties.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 					-- property grid description field
@@ -379,7 +384,12 @@ feature {NONE} -- Element initialization
 				grid.set_column_count_to (2)
 				grid.column (1).set_width (200)
 				grid.column (2).set_width (200)
-				grid.focus_in_actions.extend (agent remove_default_push_button)
+				grid.focus_in_actions.extend (agent
+					do
+						if default_push_button /= Void then
+							remove_default_push_button
+						end
+					end)
 				grid.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 					-- add add and remove buttons

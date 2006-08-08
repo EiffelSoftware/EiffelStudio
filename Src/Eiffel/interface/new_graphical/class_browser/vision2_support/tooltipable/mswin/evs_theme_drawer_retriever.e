@@ -10,18 +10,11 @@ class
 	EVS_THEME_DRAWER_RETRIEVER
 
 inherit
-	EV_BUTTON_IMP
-		export
-			{NONE}all
-		end
-
+	EV_ANY_HANDLER
+	
 	EV_SHARED_APPLICATION
 		export
 			{NONE}all
-		undefine
-			copy,
-			is_equal,
-			default_create
 		end
 
 create

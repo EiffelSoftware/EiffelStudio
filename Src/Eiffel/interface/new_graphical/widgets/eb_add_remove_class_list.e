@@ -73,7 +73,7 @@ feature {NONE} -- GUI
 			add_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
-			create apply_button.make_with_text ("Apply")
+			create apply_button.make_with_text ("Rename")
 			apply_button.select_actions.extend (agent modify_item_in)
 			apply_button.set_minimum_width (80)
 			hbox.extend (apply_button)

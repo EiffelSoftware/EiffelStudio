@@ -19,9 +19,6 @@ class BIT_REF inherit
 			conforms_to
 		end
 	
-convert
-	to_reference: {BIT_REF, ANY}
-	
 feature -- Access
 
 	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is

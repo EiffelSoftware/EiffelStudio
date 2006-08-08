@@ -46,12 +46,6 @@
 			</item>
 			<item>
 				<link>
-					<url>80_renaming_a_class.xml</url>
-					<label>Renaming a class</label>
-				</link>
-			</item>
-			<item>
-				<link>
 					<url>90_changing_project_parameters.xml</url>
 					<label>Changing project parameters</label>
 				</link>

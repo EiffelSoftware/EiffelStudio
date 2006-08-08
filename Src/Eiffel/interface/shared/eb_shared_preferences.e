@@ -58,10 +58,6 @@ feature {NONE} -- Implementation
 			preferences_cell_not_void: Result /= Void
 		end
 
-invariant
-	preferences_not_void: preferences /= Void
-	initialized: preferences_initialized
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

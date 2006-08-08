@@ -114,7 +114,11 @@ feature {EV_BUILDER} -- Status setting
 	set_pixmap_path (path: STRING_GENERAL) is
 			-- Assign `path' to `pixmap_path'.
 		do
-			pixmap_path := path
+			if path = Void then
+				pixmap_path := Void
+			else
+				pixmap_path := path
+			end
 		ensure
 			pixmap_path_set: path /= Void implies pixmap_path.is_equal (path)
 		end

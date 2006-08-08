@@ -338,11 +338,10 @@ feature {NONE} -- Implementation
 			list_exists: list /= Void
 		local
 			i: INTEGER
-			tmp_lst: ARRAYED_LIST [EV_LIST_ITEM]
 			litem: EV_LIST_ITEM
 		do
 			from
-				create tmp_lst.make (10)
+				list.wipe_out
 			until
 				i > 9
 			loop
@@ -350,12 +349,10 @@ feature {NONE} -- Implementation
 					create litem
 					litem.set_text ((commands @ i).name)
 					litem.set_data (commands @ i)
-					tmp_lst.extend (litem)
+					list.extend (litem)
 				end
 				i := i + 1
 			end
-			list.wipe_out
-			list.append (tmp_lst)
 		end
 
 	update_edit_buttons is

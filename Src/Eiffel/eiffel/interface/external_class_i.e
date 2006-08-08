@@ -48,8 +48,10 @@ feature -- Access
 			l_reader: like consumed_type_deserializer
 		do
 			l_reader := consumed_type_deserializer
-			l_reader.deserialize (type_file, type_position)
-			Result ?= l_reader.deserialized_object
+			if type_file /= Void and then (create {RAW_FILE}.make (path)).exists then
+				l_reader.deserialize (type_file, type_position)
+				Result ?= l_reader.deserialized_object
+			end
 		end
 
 	config_class: CONF_CLASS_ASSEMBLY is

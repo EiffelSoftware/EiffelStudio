@@ -502,6 +502,7 @@ feature {NONE} -- Internal data
 		do
 			if
 				src.is_separator and then
+				src.custom_parent /= Void and then
 				src.custom_parent.is_a_pool_list and then
 				not dst.custom_parent.is_a_pool_list
 			then

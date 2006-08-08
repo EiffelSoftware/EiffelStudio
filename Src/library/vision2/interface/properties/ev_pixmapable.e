@@ -67,7 +67,11 @@ feature {EV_BUILDER} -- Element change
 	set_internal_pixmap_path (a_path: STRING_GENERAL) is
 			-- Assign `a_path' to `internal_pixmap_path'.
 		do
-			internal_pixmap_path := a_path
+			if a_path = Void then
+				internal_pixmap_path := Void
+			else
+				internal_pixmap_path := a_path
+			end
 		ensure
 			path_set: a_path /= Void implies internal_pixmap_path.is_equal (a_path)
 		end

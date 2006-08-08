@@ -28,12 +28,26 @@ feature -- Conversion
 				{ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type)
 		end
 
-	adapted alias "[]" (g: G): G is
+	adapt alias "[]" (g: G): G is
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
 		ensure
 			adapted: equal (Result, g)
+		end
+
+	attempt alias "#?" (obj: ANY): G is
+			-- Result of assignment attempt of `obj' to an entity of type G
+		local
+			l_obj: SYSTEM_OBJECT
+		do
+			l_obj ?= obj
+			check
+				dotnet: l_obj /= Void
+			end
+			Result ?= l_obj
+		ensure
+			assigned_or_void: Result = obj or Result = Void
 		end
 
 feature -- Comparison

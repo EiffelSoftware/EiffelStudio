@@ -1,0 +1,29 @@
+VYCQ, section 8.15.8 (ECMA-367, 2nd edition)
+
+     Conversion Query rule
+
+     A Conversion_query listing a Feature_name fn and appearing in a class
+     C with current type CT is valid if and only if it satisfies the
+     following conditions, applicable to every type TARGET listed in its
+     Type_list:
+
+        1 fn is the name of a query f of C.
+
+        2 If C is not generic, CT does not conform to TARGET.
+        
+        3 If C is generic, the type obtained from CT by replacing every
+          formal generic parameter by its constraint does not conform to
+          TARGET.
+        
+        4 TARGET's base class is different from the base class of any other
+          conversion type listed for a Conversion_query in the Converters
+          clause of C.
+        
+        5 The specification of the base class of TARGET does not list a
+          conversion procedurespecifying a type of base class C.
+        
+        6 f has no formal argument.
+        
+        7 The result type of f conforms to TARGET.
+        
+        8 TARGET involves no anchored type.

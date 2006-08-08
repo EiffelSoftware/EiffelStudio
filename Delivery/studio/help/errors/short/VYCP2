@@ -1,0 +1,3 @@
+Error: source of conversion procedure conforms to current class.
+What to do: make sure the source of conversion procedure does not conform
+  to current class or remove it from the type list.

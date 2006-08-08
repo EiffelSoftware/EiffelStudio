@@ -1,0 +1,6 @@
+Error: the type obtained from the current class by replacing every formal
+  generic parameter by its constraint conforms to target of conversion
+  query.
+What to do: make sure the type obtained from the current class does not
+  conform to target of conversion query or remove the target from the type
+  list.

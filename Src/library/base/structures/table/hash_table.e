@@ -120,24 +120,25 @@ feature -- Initialization
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES
-			l_content: ARRAY [G]
-			l_keys: ARRAY [H]
-			l_deleted_marks: ARRAY [BOOLEAN]
+			l_void_item: G
 		do
 			create clever
 			capacity := n.Max (Minimum_capacity)
 			capacity := capacity + capacity // 2 + 1
 			capacity := clever.higher_prime (capacity)
-			create l_content.make (0, capacity)
-			content := l_content.area
-			create l_keys.make (0, capacity)
-			keys := l_keys.area
+			create content.make (capacity + 1)
+			create keys.make (capacity + 1)
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
-
-			create l_deleted_marks.make (0, capacity)
-			deleted_marks := l_deleted_marks.area
+			create deleted_marks.make (capacity + 1)
 			iteration_position := capacity + 1
+			count := 0
+			deleted_position := 0
+			control := 0
+			found_item := l_void_item
+			has_default := False
+			position := 0
+			used_slot_count := 0
 		ensure
 			breathing_space: n < capacity * Initial_occupation
 			minimum_space: Minimum_capacity < capacity * Initial_occupation
@@ -191,7 +192,6 @@ feature -- Initialization
 			slot_count_same_as_count: used_slot_count = count
 			breathing_space: count < capacity * Initial_occupation
 		end
-
 
 feature -- Access
 

@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_BUTTON_IMP
 		undefine
 			default_style,
@@ -31,7 +31,8 @@ inherit
 			set_default_minimum_size,
 			next_dlggroupitem,
 			on_key_down,
-			set_background_color
+			set_background_color,
+			fire_select_actions_on_enter
 		select
 			wel_make
 		end
@@ -108,7 +109,7 @@ inherit
 			default_style,
 			on_erase_background
 		end
-		
+
 create
 	make
 
@@ -120,7 +121,7 @@ feature {NONE} -- Initalization
 			Precursor
 			set_checked
 			text_alignment := default_alignment
-		end			
+		end
 
 feature -- Status setting
 
@@ -161,7 +162,7 @@ feature -- Status setting
 			end
 			set_checked
 			if select_actions_internal /= Void then
-				select_actions_internal.call (Void)	
+				select_actions_internal.call (Void)
 			end
 		end
 
@@ -173,13 +174,13 @@ feature {NONE} -- Implementation
 			process_tab_and_arrows_keys (virtual_key)
 			Precursor {EV_BUTTON_IMP} (virtual_key, key_data)
 		end
-		
+
 	on_bn_clicked is
 			-- Called when `Current' is pressed.
 		do
 			enable_select
 		end
-		
+
 	default_style: INTEGER is
 			-- Default style used to create the control.
 		once
@@ -247,7 +248,13 @@ feature {NONE} -- Implementation, focus event
 				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
 			end
 		end
-		
+
+	fire_select_actions_on_enter is
+			-- Call select_actions to respond to Enter key press if
+			-- Current supports it.
+		do
+		end
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
@@ -257,7 +264,7 @@ feature {NONE} -- Implementation, focus event
 				invalidate
 			end
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on

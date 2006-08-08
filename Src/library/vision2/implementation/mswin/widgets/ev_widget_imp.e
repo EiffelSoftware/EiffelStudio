@@ -868,15 +868,17 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			key: EV_KEY
 			l_top_level_window_imp: EV_WINDOW_I
 			l_current: EV_WIDGET_I
+			l_pnd_finished: BOOLEAN
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
 
 				--| to switch between applications while in PND.
 			if virtual_key = vk_menu or virtual_key = vk_escape then
+				l_pnd_finished := transport_executing
 				escape_pnd
 			end
-			if valid_wel_code (virtual_key) then
+			if not l_pnd_finished and valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
 				if propagate_key_event_to_toplevel_window (True) then
@@ -892,6 +894,11 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 				end
 				if key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([key])
+				end
+				if virtual_key = vk_return then
+						-- Fire `select_actions' on Current widget if it is the expected
+						-- behavior. For now, only EV_BUTTON_IMP instances do that.
+					fire_select_actions_on_enter
 				end
 			end
 		end
@@ -927,6 +934,12 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do
 			Result := True
+		end
+
+	fire_select_actions_on_enter is
+			-- Call `select_actions' to respond to `Enter' key press if
+			-- Current supports it.
+		do
 		end
 
 feature {NONE} -- Implementation

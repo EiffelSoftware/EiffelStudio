@@ -57,6 +57,7 @@ feature -- Initialization
 				io_watcher.destroy
 				io_watcher := Void
 			end
+			reset_adresses
 			c_clean_connect
 		end
 

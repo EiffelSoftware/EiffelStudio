@@ -121,12 +121,12 @@ feature {NONE} -- Initialization
 				Void,
 				False
 			)
-			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
+			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (l_c_object, accel_group)
 
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CONTAINER_IMP}
 				-- Need to set decorations after window is realized.
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_wm_decorations)
+			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_c_object), default_wm_decorations)
 			internal_is_border_enabled := True
 			user_can_resize := True
 			set_is_initialized (True)
@@ -437,27 +437,37 @@ feature {NONE} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_app_imp: like app_implementation
 			a_focus_widget: EV_WIDGET_IMP
+			l_block_events: BOOLEAN
 		do
-			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
 			l_app_imp := app_implementation
-				-- Fire the widget events.
-			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+			if not has_modal_window then
+				Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
+					-- Fire the widget events.
+				a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 
-			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
-				if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
-						-- Block event from losing focus should the widget want to keep it.
-					if a_key_press then
-						a_cs := l_app_imp.key_press_event_string
-					else
-						a_cs := l_app_imp.key_release_event_string
+				if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
+					if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
+							-- Block event from losing focus should the widget want to keep it.
+						l_block_events := True
+
 					end
-					{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
+					if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
+						l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+					else
+						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+					end
 				end
-				if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
-					l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+			else
+				l_block_events := True
+			end
+
+			if l_block_events then
+				if a_key_press then
+					a_cs := l_app_imp.key_press_event_string
 				else
-					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+					a_cs := l_app_imp.key_release_event_string
 				end
+				{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 			end
 		end
 

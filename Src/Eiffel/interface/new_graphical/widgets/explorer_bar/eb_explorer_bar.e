@@ -557,6 +557,10 @@ feature -- Recyclable
 			-- Recycle
 		do
 			wipe_out
+			docked_in_actions.wipe_out
+			docked_out_actions.wipe_out
+			maximize_actions.wipe_out
+			restore_actions.wipe_out
 			explorer_bar_manager := Void
 		end
 

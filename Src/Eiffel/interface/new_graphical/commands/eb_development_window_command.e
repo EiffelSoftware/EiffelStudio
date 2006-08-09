@@ -27,6 +27,7 @@ feature -- Recyclable
 			-- Recycle
 		do
 			target := Void
+			accelerator := Void
 		end
 
 indexing

@@ -11,6 +11,8 @@ deferred class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 
+	EB_RECYCLABLE
+
 	EB_TARGET_COMMAND
 		rename
 			target as tool
@@ -36,7 +38,7 @@ feature -- Access
 
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
-	
+
 	menu_name: STRING is
 			-- Name on corresponding menu items
 		do
@@ -48,7 +50,7 @@ feature -- Access
 		do
 			Result := tooltip
 		end
-	
+
 	shortcut_string: STRING is
 			-- String discribing shortcut combination for `Current'.
 		do
@@ -60,7 +62,24 @@ feature -- Access
 		ensure
 			Result_exists: Result /= Void
 		end
-		
+
+feature -- Removal
+
+	recycle is
+			-- Recycle code.
+		do
+			if accelerator /= Void then
+				accelerator.actions.wipe_out
+				accelerator := Void
+			end
+			history := Void
+			tool := Void
+
+				-- No need to wipe out the content, because it should
+				-- have been done by the users of menu and toolbar items.
+			internal_managed_menu_items := Void
+			internal_managed_toolbar_items := Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

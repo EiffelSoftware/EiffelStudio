@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			-- Request that `Current' be displayed when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-			{EV_GTK_EXTERNALS}.gtk_window_present (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_present (c_object)
 		end
 
 	show_modal_to_window (a_window: EV_WINDOW) is
@@ -201,10 +201,12 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_group_add_window (l_window_group, c_object)
 			show_relative_to_window (a_window)
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
+			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (l_window_imp.c_object, False)
 			is_modal := True
 			l_window_imp.set_has_modal_window (True)
 			block
 			is_modal := False
+			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (l_window_imp.c_object, True)
 			set_blocking_window (Void)
 			if not l_window_imp.is_destroyed then
 				l_window_imp.set_has_modal_window (False)

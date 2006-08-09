@@ -10,6 +10,11 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN) is
+		external
+			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_display_get_default_cursor_size (a_display: POINTER): INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

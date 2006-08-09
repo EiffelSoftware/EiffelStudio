@@ -105,7 +105,7 @@
 		</heading>
 		<paragraph>To run the example you must have installed EiffelStudio and set up the environment. Check in particular the following:</paragraph>
 		<list ordered="false">
-			<item>On Windows, you must have run the installation procedure; it will have put EiffelStudio in the Programs section of the start menu, subsection "EiffelStudio version", where version is the version number, e.g. 5.5.</item>
+			<item>On Windows, you must have run the installation procedure; it will have put EiffelStudio in the Programs section of the start menu, subsection "EiffelStudio version", where version is the version number, e.g. 5.7.</item>
 			<item>The environment variable 
 				<code>
 					<keyword>ISE_EIFFEL</keyword>

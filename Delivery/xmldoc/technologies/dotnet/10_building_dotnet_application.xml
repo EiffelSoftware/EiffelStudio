@@ -6,11 +6,7 @@
 			<link>
 				<url>../../tools/eiffelstudio/reference/25_project_settings/index.xml</url>
 				<label>project settings</label>
-			</link> for Eiffel for .NET introduces new options 
-			<link>
-				<url>../../tools/eiffelstudio/reference/25_project_settings/40_dotnet.xml</url>
-				<label>in the .NET tab of the project settings</label>
-			</link>. These options include:
+			</link> for Eiffel for .NET introduces new options. These options include:
 		</paragraph>
 		<list ordered="false">
 			<item>Specifying whether the generated assembly should be an EXE or a DLL. </item>
@@ -18,7 +14,7 @@
 		</list>
 		<paragraph>The Eiffel for .NET compiler generates a single assembly whose name is the name of the system as given in the 
 			<link>
-				<url>../../tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
+				<url>../../tools/eiffelstudio/reference/25_project_settings/010_system.xml</url>
 				<label>project settings</label>
 			</link>. 
 		</paragraph>

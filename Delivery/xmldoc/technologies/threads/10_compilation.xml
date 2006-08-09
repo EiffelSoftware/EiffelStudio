@@ -12,17 +12,17 @@
 			<size>2</size>Settings
 		</heading>
 		<list ordered="false">
-			<item>Add the option multi-threaded by clicking on 
+			<item>Add the option multi-threaded by setting the value in  
 				<link>
-					<url>../../tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
-					<label>the advanced tab of the project setting window</label>
-				</link>.
+					<url>../../tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
+					<label>the advanced section of the project setting window </label>
+				</link>to true.
 			</item>
 			<item>Do not use a non-multi-threaded precompiled library. The corresponding multi-threaded libraries of base and WEL should be located in $ISE_EIFFEL/precomp/spec/$PLATFORM/ with the mt prefix. </item>
-			<item>You must include the thread cluster (located at "$ISE_EIFFEL/library/thread") in the clusters your project is including. This setting can be done in 
+			<item>You may want to include the thread library (located at "$ISE_EIFFEL/library/thread") to your project. This setting can be done in 
 				<link>
-					<url>../../tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
-					<label> the clusters tab of the project settings window</label>
+					<url>../../tools/eiffelstudio/reference/25_project_settings/040_target_groups.xml</url>
+					<label> the groups section of the project settings window</label>
 				</link>.
 			</item>
 			<item>When using external C libraries, be sure that they are MT-safe: on the platforms where the Eiffel Threads are available. For example 
@@ -39,7 +39,7 @@
 		<heading>
 			<size>2</size>Compilation
 		</heading>
-		<paragraph>Just launch the compilation: the Eiffel compiler will generate and link the multi-threaded executable. </paragraph>
+		<paragraph>Just launch the compilation: the Eiffel compiler will generate and link the multi-threaded executable. If the project was already compiled, clean the project and recompile it from scratch.</paragraph>
 		<heading>
 			<size>2</size>External C files
 		</heading>

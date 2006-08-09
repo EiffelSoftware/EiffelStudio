@@ -9,6 +9,7 @@
 			<item>Precompile: a precompile is similar to a library, but the contents of the library have already been compiled and therefore compilation is a lot faster, there can only be one precompile group</item>
 			<item>Assembly: classes in an assembly (.NET code generation mode only)</item>
 		</list>
+		<paragraph>To add a new group, choose the corresponding add group button or context menu entry and enter a name and location or choose from a list (for assemblies and libraries).</paragraph>
 		<paragraph>
 			<image>
 				<url/>

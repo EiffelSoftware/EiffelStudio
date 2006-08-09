@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_TOOL_BAR_BUTTON 
+	EB_COMMAND_TOOL_BAR_BUTTON
 
 inherit
 	EV_TOOL_BAR_BUTTON
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			command := a_command
-			command.managed_toolbar_items.extend (Current)
+			command.add_toolbar_item (Current)
 		end
 
 feature -- Cleaning
@@ -33,12 +33,13 @@ feature -- Cleaning
 	recycle is
 			-- To be called when the button has became useless.
 		do
-			command.managed_toolbar_items.prune_all (Current)
+			command.remove_toolbar_item (Current)
+			command := Void
 			drop_actions.wipe_out
 			select_actions.wipe_out
 			pick_actions.wipe_out
 		end
-	
+
 feature {NONE} -- Implementation
 
 	command: EB_TOOLBARABLE_COMMAND;

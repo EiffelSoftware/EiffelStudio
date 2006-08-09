@@ -82,28 +82,28 @@ feature -- Basic operations
 			if not flag then
 				flag := True
 				window.toggle_unified_stone
-				if managed_menu_items /= Void then
+				if internal_managed_menu_items /= Void then
 					from
-						managed_menu_items.start
+						internal_managed_menu_items.start
 					until
-						managed_menu_items.after
+						internal_managed_menu_items.after
 					loop
-						managed_menu_items.item.remove_text
-						managed_menu_items.item.set_text (menu_name)
-						managed_menu_items.item.set_pixmap (pixmap)
-						managed_menu_items.forth
+						internal_managed_menu_items.item.remove_text
+						internal_managed_menu_items.item.set_text (menu_name)
+						internal_managed_menu_items.item.set_pixmap (pixmap)
+						internal_managed_menu_items.forth
 					end
 				end
-				if managed_toolbar_items /= Void then
+				if internal_managed_toolbar_items /= Void then
 					from
-						managed_toolbar_items.start
+						internal_managed_toolbar_items.start
 					until
-						managed_toolbar_items.after
+						internal_managed_toolbar_items.after
 					loop
-						managed_toolbar_items.item.select_actions.block
-						managed_toolbar_items.item.toggle
-						managed_toolbar_items.item.select_actions.resume
-						managed_toolbar_items.forth
+						internal_managed_toolbar_items.item.select_actions.block
+						internal_managed_toolbar_items.item.toggle
+						internal_managed_toolbar_items.item.select_actions.resume
+						internal_managed_toolbar_items.forth
 					end
 				end
 				update_tooltip
@@ -114,15 +114,14 @@ feature -- Basic operations
 	update_tooltip is
 			-- Display the good tooltip on buttons.
 		do
-			if managed_toolbar_items /= Void then
+			if internal_managed_toolbar_items /= Void then
 				from
-					managed_toolbar_items.start
+					internal_managed_toolbar_items.start
 				until
-					managed_toolbar_items.after
+					internal_managed_toolbar_items.after
 				loop
---					managed_toolbar_items.item.remove_tooltip
-					managed_toolbar_items.item.set_tooltip (tooltip)
-					managed_toolbar_items.forth
+					internal_managed_toolbar_items.item.set_tooltip (tooltip)
+					internal_managed_toolbar_items.forth
 				end
 			end
 		end
@@ -130,16 +129,16 @@ feature -- Basic operations
 	toggle_buttons is
 			-- Display the good tooltip on buttons.
 		do
-			if managed_toolbar_items /= Void then
+			if internal_managed_toolbar_items /= Void then
 				from
-					managed_toolbar_items.start
+					internal_managed_toolbar_items.start
 				until
-					managed_toolbar_items.after
+					internal_managed_toolbar_items.after
 				loop
-					managed_toolbar_items.item.select_actions.block
-					managed_toolbar_items.item.toggle
-					managed_toolbar_items.item.select_actions.resume
-					managed_toolbar_items.forth
+					internal_managed_toolbar_items.item.select_actions.block
+					internal_managed_toolbar_items.item.toggle
+					internal_managed_toolbar_items.item.select_actions.resume
+					internal_managed_toolbar_items.forth
 				end
 			end
 		end

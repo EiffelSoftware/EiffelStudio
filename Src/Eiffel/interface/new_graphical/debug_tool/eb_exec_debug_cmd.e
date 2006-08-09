@@ -40,9 +40,9 @@ feature -- Access
 
 	set_launched (a_launched: BOOLEAN) is
 		local
-			toolbar_items: like managed_toolbar_items
+			toolbar_items: like internal_managed_toolbar_items
 		do
-			toolbar_items := managed_toolbar_items
+			toolbar_items := internal_managed_toolbar_items
 			if toolbar_items /= Void then
 				from
 					toolbar_items.start

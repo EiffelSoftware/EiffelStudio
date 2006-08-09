@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			command := a_command
-			command.managed_menu_items.extend (Current)
+			command.add_menu_item (Current)
 		end
 
 feature -- Cleaning
@@ -38,7 +38,9 @@ feature -- Cleaning
 	recycle is
 			-- To be called when the button has became useless.
 		do
-			command.managed_menu_items.prune_all (Current)
+			command.remove_menu_item (Current)
+			command := Void
+			select_actions.wipe_out
 		end
 
 feature {NONE} -- Implementation

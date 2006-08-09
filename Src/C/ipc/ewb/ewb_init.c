@@ -250,19 +250,17 @@ rt_public void init_connection(int* err)
 
 rt_public void clean_connection(void)
 {
+    ewb_tpipe(NULL);    /* Clear PIPE between ewb and ecdgbd */
+    if (ewb_data.d_cs) {
+        close_stream (ewb_data.d_cs);
+        free (ewb_data.d_cs);
+        ewb_data.d_cs = NULL;
+    }
 #ifdef EIF_WINDOWS
-	if (ewb_data.d_cs) {
-		close_stream (ewb_data.d_cs);
-		free (ewb_data.d_cs);
-		ewb_data.d_cs = NULL;
-	}
-
-	if (ewb_data.d_ecdbgd != 0) {
-		CloseHandle (ewb_data.d_ecdbgd);
-	}
-
+    if (ewb_data.d_ecdbgd != 0) {
+        CloseHandle (ewb_data.d_ecdbgd);
+    }
 #endif
-	ewb_tpipe(NULL);	/* Clear PIPE between ewb and ecdgbd */
 }
 
 extern STREAM *ewb_sp;

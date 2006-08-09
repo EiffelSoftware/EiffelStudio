@@ -46,30 +46,28 @@
 
 rt_shared STREAM *ewb_sp;				/* Stream used for communications */
 
-rt_public void ewb_tpipe(STREAM *stream)
-{
-	/* Initialize the file descriptor to be used in data exchanges with the
-	 * remote process. This enables us to omit this parameter whenever an I/O
-	 * with the remote process has to be made.
-	 */
+rt_public void ewb_tpipe(STREAM *stream) {
+    /* Initialize the file descriptor to be used in data exchanges with the
+     * remote process. This enables us to omit this parameter whenever an I/O
+     * with the remote process has to be made.
+     */
 
-	if (ewb_sp != NULL) { 
-		unregister_packet_functions (ewb_sp); 
-		close_stream (ewb_sp);
-	}
-	if (stream != NULL) {
-		ewb_sp = stream;
-		register_packet_functions (ewb_sp, &ewb_send_packet, &ewb_recv_packet);
-	} else {
-		ewb_sp = (STREAM *) 0;
-	};
+    if (ewb_sp != NULL) {
+        unregister_packet_functions (ewb_sp);
+    }
+    if (stream != NULL) {
+        ewb_sp = stream;
+        register_packet_functions (ewb_sp, &ewb_send_packet, &ewb_recv_packet);
+    } else {
+        ewb_sp = (STREAM *) 0;
+    };
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
-	if (ewb_sp != NULL) {
-		add_log(20, "stream set up as (rd = #%d, wr = #%d)",
-			readfd(ewb_sp), writefd(ewb_sp));
-	}
+    if (ewb_sp != NULL) {
+        add_log(20, "stream set up as (rd = #%d, wr = #%d)",
+            readfd(ewb_sp), writefd(ewb_sp));
+    }
 #endif
 #endif
 }

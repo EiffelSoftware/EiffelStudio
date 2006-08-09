@@ -1586,6 +1586,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			bottom_reached_actions.wipe_out
 			first_result_reached_actions.wipe_out
 			loaded_actions.wipe_out
+			remove_observer (Current)
 			Precursor {EB_MULTI_SEARCH_TOOL_IMP}
 		end
 

@@ -177,11 +177,8 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of characters in Current.
 
-	character_size: INTEGER is
+	character_size: INTEGER is 1
 			-- Size of a character
-		do
-			Result := 1
-		end
 
 feature -- Element change
 

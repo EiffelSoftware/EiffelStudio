@@ -68,6 +68,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
 				if (failure_handler != NULL) {
 					eif_wean(failure_handler);
+					failure_handler = NULL;
 				}
 				failure_hdlr_set = NULL;
 			} else {
@@ -79,6 +80,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
 				if (dead_handler != NULL) {
 					eif_wean(dead_handler);
+					dead_handler = NULL;
 				}
 				dead_hdlr_set = NULL;
 			} else {
@@ -90,6 +92,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
 				if (notify_handler != NULL) {
 					eif_wean(notify_handler);
+					notify_handler = NULL;
 				}
 				notify_hdlr_set = NULL;
 			} else {
@@ -101,6 +104,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
 				if (stopped_handler != NULL) {
 					eif_wean(stopped_handler);
+					stopped_handler = NULL;
 				}
 				stopped_hdlr_set = NULL;
 			} else {

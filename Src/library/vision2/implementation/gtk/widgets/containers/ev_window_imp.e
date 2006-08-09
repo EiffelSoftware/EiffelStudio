@@ -449,7 +449,6 @@ feature {NONE} -- Implementation
 					if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
 							-- Block event from losing focus should the widget want to keep it.
 						l_block_events := True
-
 					end
 					if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
 						l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
@@ -467,6 +466,7 @@ feature {NONE} -- Implementation
 				else
 					a_cs := l_app_imp.key_release_event_string
 				end
+					-- Block gtk from doing anything else with the key press, such as keyboard navigation.
 				{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 			end
 		end

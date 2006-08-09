@@ -1355,16 +1355,15 @@ feature {NONE} -- Compiler helpers
 			a_call_access_b_not_void: a_call_access_b /= Void
 		local
 			wcl: CLASS_C
-			featn: STRING
 		do
-			featn := a_call_access_b.feature_name
-			Result := cl.feature_named (featn)
-			if Result = Void then
+			if cl.class_id = a_call_access_b.written_in then
+				Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
+			else
 				wcl := system.class_of_id (a_call_access_b.written_in)
-				Result := wcl.feature_named (featn)
-				if Result /= Void and then wcl /= cl then
-					Result := fi_version_of_class (Result, cl)
-				end
+				Result := wcl.feature_named (a_call_access_b.feature_name)
+			end
+			if Result /= Void and then wcl /= cl then
+				Result := fi_version_of_class (Result, cl)
 			end
 		end
 

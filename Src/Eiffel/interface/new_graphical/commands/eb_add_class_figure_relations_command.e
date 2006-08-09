@@ -349,7 +349,6 @@ feature -- Basic operations
 			-- it will never be garbage collected.
 		do
 			create Result.make (Current)
-			current_button := Result
 			initialize_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_class_stone)
@@ -417,11 +416,8 @@ feature {EB_CONTEXT_EDITOR} -- Implementation
 	selected_implementation: INTEGER
 		-- Implementation used for `Current', set in creation procedure.
 
-	adds_clients, adds_suppliers, adds_descendents, adds_ancestors: INTEGER is unique
+	adds_clients, adds_suppliers, adds_descendents, adds_ancestors: INTEGER is unique;
 		-- Constants used to define the behavior of `Current'.
-
-	current_button: EB_COMMAND_TOOL_BAR_BUTTON;
-			-- Current toggle button.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

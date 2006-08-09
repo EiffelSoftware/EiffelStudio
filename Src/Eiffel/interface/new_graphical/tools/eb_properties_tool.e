@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			tool_make (a_manager)
 			cluster_manager.extend (Current)
-			create {CONF_COMP_FACTORY}conf_factory
+			create {CONF_COMP_FACTORY} conf_factory
 			window := a_manager.window
 		end
 
@@ -118,6 +118,7 @@ feature -- Memory management
 				explorer_bar_item.recycle
 				explorer_bar_item := Void
 			end
+			cluster_manager.remove_observer (Current)
 			manager := Void
 		end
 

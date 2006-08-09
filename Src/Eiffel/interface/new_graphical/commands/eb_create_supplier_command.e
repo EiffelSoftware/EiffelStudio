@@ -48,7 +48,6 @@ feature -- Basic operations
 			else
 				Result.disable_sensitive
 			end
-			current_button := Result
 			tt := clone (tooltip)
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
@@ -83,11 +82,6 @@ feature {NONE} -- Implementation
 	name: STRING is "New client-supplier links"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-
-feature {EB_CONTEXT_EDITOR} -- Implementation
-
-	current_button: EB_COMMAND_RADIO_TOOL_BAR_BUTTON;
-			-- Current toggle button.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -51,7 +51,6 @@ feature -- Basic operations
 			-- it will never be garbage collected.
 		do
 			create Result.make (Current)
-			current_button := Result
 			initialize_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 		end
@@ -78,14 +77,9 @@ feature {NONE} -- Implementation
 			Result := Interface_names.f_diagram_force_settings
 		end
 
-	name: STRING is "Force_settings"
+	name: STRING is "Force_settings";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-
-feature {EB_CONTEXT_EDITOR} -- Implementation
-
-	current_button: EB_COMMAND_TOOL_BAR_BUTTON;
-			-- Current toggle button.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

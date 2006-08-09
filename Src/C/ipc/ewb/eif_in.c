@@ -40,6 +40,7 @@
 #include "ewb.h"
 #include <string.h>
 #include "stream.h"
+#include "rt_assert.h"
 
 extern STREAM *ewb_sp;
 
@@ -63,9 +64,11 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 	 * handling the requests from ised.
 	 */
 
+	REQUIRE("handler_not_null", eif_rqst_hdlr);
+
 	switch (rqst_type) {
 		case REP_FAILURE:
-			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+			if (eif_access(eif_rqst_hdlr) == NULL && eif_set == NULL) {
 				if (failure_handler != NULL) {
 					eif_wean(failure_handler);
 					failure_handler = NULL;
@@ -77,7 +80,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			}
 			break;
 		case REP_DEAD:
-			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+			if (eif_access(eif_rqst_hdlr) == NULL && eif_set == NULL) {
 				if (dead_handler != NULL) {
 					eif_wean(dead_handler);
 					dead_handler = NULL;
@@ -89,7 +92,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			}
 			break;
 		case REP_NOTIFIED:
-			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+			if (eif_access(eif_rqst_hdlr) == NULL && eif_set == NULL) {
 				if (notify_handler != NULL) {
 					eif_wean(notify_handler);
 					notify_handler = NULL;
@@ -101,7 +104,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 			}
 			break;
 		case REP_STOPPED:
-			if (eif_rqst_hdlr == NULL && eif_set == NULL) {
+			if (eif_access(eif_rqst_hdlr) == NULL && eif_set == NULL) {
 				if (stopped_handler != NULL) {
 					eif_wean(stopped_handler);
 					stopped_handler = NULL;

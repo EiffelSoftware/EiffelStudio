@@ -41,13 +41,13 @@ feature -- Status setting
 	enable_visible is
 			-- Set `is_visible' to True.
 		local
-			menu_items: like managed_menu_items
+			menu_items: like internal_managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
 			if not is_visible then
 				is_visible := True
 				target.show
-				menu_items := managed_menu_items
+				menu_items := internal_managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start
@@ -69,11 +69,11 @@ feature -- Status setting
 	disable_visible is
 			-- Set `is_visible' to True.
 		local
-			menu_items: like managed_menu_items
+			menu_items: like internal_managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
 			if is_visible then
-				menu_items := managed_menu_items
+				menu_items := internal_managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start

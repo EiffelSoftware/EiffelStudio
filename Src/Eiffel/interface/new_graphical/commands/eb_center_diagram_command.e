@@ -96,7 +96,11 @@ feature {NONE} -- Implementation
 		do
 			if not was_dropped then
 				Result := tool.tool.stone
-				tbi := managed_toolbar_items.first
+				check
+					internal_managed_toolbar_items /= Void
+					not internal_managed_toolbar_items.is_empty
+				end
+				tbi := internal_managed_toolbar_items.first
 				class_stone ?= Result
 				cluster_stone ?= Result
 				if class_stone /= Void then

@@ -18,11 +18,11 @@ feature -- Change
 
 	set_select (b: BOOLEAN) is
 		local
-			lst: like managed_toolbar_items
+			lst: like internal_managed_toolbar_items
 			but: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON
 		do
-			lst := managed_toolbar_items
-			if not lst.is_empty then
+			lst := internal_managed_toolbar_items
+			if lst /= Void and then not lst.is_empty then
 				from
 					lst.start
 				until

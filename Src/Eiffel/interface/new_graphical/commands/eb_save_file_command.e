@@ -150,34 +150,6 @@ feature {NONE} -- Implementation
 			disable_sensitive
 		end
 
-feature {NONE} -- implementation
-
-	enable_toolbar_items is
-			-- make toolbar items sensitive
-		do
-			from
-				managed_toolbar_items.start
-			until
-				managed_toolbar_items.exhausted
-			loop
-				managed_toolbar_items.item.enable_sensitive
-				managed_toolbar_items.forth
-			end
-		end
-
-	disable_toolbar_items is
-			-- make toolbar items insensitive
-		do
-			from
-				managed_toolbar_items.start
-			until
-				managed_toolbar_items.exhausted
-			loop
-				managed_toolbar_items.item.disable_sensitive
-				managed_toolbar_items.forth
-			end
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

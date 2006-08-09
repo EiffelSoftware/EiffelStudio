@@ -77,11 +77,11 @@ feature -- Status setting
 	enable_sensitive is
 			-- Set `is_sensitive' to True.
 		local
-			toolbar_items: like managed_toolbar_items
+			toolbar_items: like internal_managed_toolbar_items
 		do
 			if not is_sensitive then
 				is_sensitive := True
-				toolbar_items := managed_toolbar_items
+				toolbar_items := internal_managed_toolbar_items
 				if toolbar_items /= Void then
 					from
 						toolbar_items.start
@@ -98,10 +98,10 @@ feature -- Status setting
 	disable_sensitive is
 			-- Set `is_sensitive' to True.
 		local
-			toolbar_items: like managed_toolbar_items
+			toolbar_items: like internal_managed_toolbar_items
 		do
 			if is_sensitive then
-				toolbar_items := managed_toolbar_items
+				toolbar_items := internal_managed_toolbar_items
 				if toolbar_items /= Void then
 					from
 						toolbar_items.start
@@ -172,7 +172,24 @@ feature {NONE} -- Implementation
 
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 
-	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
+	add_toolbar_item (a_toolbar_item: like new_toolbar_item) is
+			-- Add `a_toolbar_item' to `managed_toolbar_items'.
+		do
+			managed_toolbar_items.extend (a_toolbar_item)
+		ensure
+			managed_toolbar_items_has_item: managed_toolbar_items.has (a_toolbar_item)
+		end
+
+	remove_toolbar_item (a_toolbar_item: like new_toolbar_item) is
+			-- Remove `a_toolbar_item' from `managed_toolbar_items'.
+		require
+			managed_toolbar_items_not_empty: not managed_toolbar_items.is_empty
+			managed_toolbar_items_has_item: managed_toolbar_items.has (a_toolbar_item)
+		do
+			managed_toolbar_items.prune_all (a_toolbar_item)
+		ensure
+			managed_toolbar_items_not_has_item: not managed_toolbar_items.has (a_toolbar_item)
+		end
 
 	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item] is
 			-- Toolbar items associated with this command.
@@ -181,10 +198,17 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 				create internal_managed_toolbar_items.make (1)
 			end
 			Result := internal_managed_toolbar_items
+		ensure
+			managed_toolbar_items_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementaiton
+
+	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 
 	Opening_parenthesis: STRING is " ("
 	Closing_parenthesis: STRING is ")";
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

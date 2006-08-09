@@ -84,20 +84,22 @@ feature -- Status setting
 				tt.append (accelerator.out)
 				tt.append (Closing_parenthesis)
 			end
-			from
-				managed_toolbar_items.start
-			until
-				managed_toolbar_items.after
-			loop
-				tbb := managed_toolbar_items.item
-				tbb.set_pixmap (pixmap)
-				tbb.set_tooltip (tt)
-				if is_sensitive then
-					tbb.enable_sensitive
-				else
-					tbb.disable_sensitive
+			if internal_managed_toolbar_items /= Void then
+				from
+					internal_managed_toolbar_items.start
+				until
+					internal_managed_toolbar_items.after
+				loop
+					tbb := internal_managed_toolbar_items.item
+					tbb.set_pixmap (pixmap)
+					tbb.set_tooltip (tt)
+					if is_sensitive then
+						tbb.enable_sensitive
+					else
+						tbb.disable_sensitive
+					end
+					internal_managed_toolbar_items.forth
 				end
-				managed_toolbar_items.forth
 			end
 		end
 feature {NONE} -- Implementation

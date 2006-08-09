@@ -171,13 +171,13 @@ feature {NONE} -- Implementation
 	set_selected (a_selected: BOOLEAN)is
 			-- Set `is_selected' to `a_selected'.
 		local
-			toolbar_items: like managed_toolbar_items
-			menu_items: like managed_menu_items
+			toolbar_items: like internal_managed_toolbar_items
+			menu_items: like internal_managed_menu_items
 		do
 			if not safety_flag then
 				safety_flag := True
 				is_selected := a_selected
-				toolbar_items := managed_toolbar_items
+				toolbar_items := internal_managed_toolbar_items
 				if toolbar_items /= Void then
 					from
 						toolbar_items.start
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				menu_items := managed_menu_items
+				menu_items := internal_managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start

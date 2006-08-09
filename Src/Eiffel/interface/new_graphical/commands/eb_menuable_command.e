@@ -6,11 +6,11 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_MENUABLE_COMMAND 
+	EB_MENUABLE_COMMAND
 
 inherit
 	EB_GRAPHICAL_COMMAND
-	
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
@@ -30,11 +30,11 @@ feature -- Status setting
 	enable_sensitive is
 			-- Set `is_sensitive' to True.
 		local
-			menu_items: like managed_menu_items
+			menu_items: like internal_managed_menu_items
 		do
 			if not is_sensitive then
 				is_sensitive := True
-				menu_items := managed_menu_items
+				menu_items := internal_managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start
@@ -51,10 +51,10 @@ feature -- Status setting
 	disable_sensitive is
 			-- Set `is_sensitive' to False.
 		local
-			menu_items: like managed_menu_items
+			menu_items: like internal_managed_menu_items
 		do
 			if is_sensitive then
-				menu_items := managed_menu_items
+				menu_items := internal_managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start
@@ -72,7 +72,7 @@ feature -- Status setting
 feature -- Basic operations
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
-			-- 
+			--
 		do
 			create Result.make (Current)
 			initialize_menu_item (Result)
@@ -97,7 +97,26 @@ feature -- Basic operations
 			end
 		end
 
-feature --{EB_COMMAND_MENU_ITEM} -- Implementation
+feature {EB_COMMAND_MENU_ITEM} -- Implementation
+
+	add_menu_item (a_menu_item: like new_menu_item) is
+			-- Add `a_menu_item' to `managed_menu_items'.
+		do
+			managed_menu_items.extend (a_menu_item)
+		ensure
+			managed_menu_items_has_item: managed_menu_items.has (a_menu_item)
+		end
+
+	remove_menu_item (a_menu_item: like new_menu_item) is
+			-- Remove `a_menu_item' from `managed_menu_items'.
+		require
+			managed_menu_items_not_empty: not managed_menu_items.is_empty
+			managed_menu_items_has_item: managed_menu_items.has (a_menu_item)
+		do
+			managed_menu_items.prune_all (a_menu_item)
+		ensure
+			managed_menu_items_not_has_item: not managed_menu_items.has (a_menu_item)
+		end
 
 	managed_menu_items: ARRAYED_LIST [like new_menu_item] is
 			-- Menu items associated with this command.
@@ -106,11 +125,15 @@ feature --{EB_COMMAND_MENU_ITEM} -- Implementation
 				create internal_managed_menu_items.make (1)
 			end
 			Result := internal_managed_menu_items
+		ensure
+			managed_menu_items_not_void: Result /= Void
 		end
-	
+
+feature {NONE} -- Implementation
+
 	internal_managed_menu_items: ARRAYED_LIST [like new_menu_item]
 		-- Menu items associated with this command.
-	
+
 	Tabulation: STRING is "%T";
 
 indexing

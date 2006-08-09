@@ -197,32 +197,6 @@ feature {NONE} -- implementation
 			end
 		end
 
-	enable_toolbar_items is
-			-- make toolbar items sensitive
-		do
-			from
-				managed_toolbar_items.start
-			until
-				managed_toolbar_items.exhausted
-			loop
-				managed_toolbar_items.item.enable_sensitive
-				managed_toolbar_items.forth
-			end
-		end
-
-	disable_toolbar_items is
-			-- make toolbar items insensitive
-		do
-			from
-				managed_toolbar_items.start
-			until
-				managed_toolbar_items.exhausted
-			loop
-				managed_toolbar_items.item.disable_sensitive
-				managed_toolbar_items.forth
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	use_external_editor: BOOLEAN is

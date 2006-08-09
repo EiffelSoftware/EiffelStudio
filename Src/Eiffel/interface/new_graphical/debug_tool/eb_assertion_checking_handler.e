@@ -72,15 +72,15 @@ feature -- Change text
 
 	update_graphical is
 		local
-			menu_items: like managed_menu_items
-			toolbar_items: like managed_toolbar_items
+			menu_items: like internal_managed_menu_items
+			toolbar_items: like internal_managed_toolbar_items
 			t: STRING
 			p: like pixmap
 		do
 			p := pixmap
 			t := menu_name
 
-			menu_items := managed_menu_items
+			menu_items := internal_managed_menu_items
 			if menu_items /= Void then
 				from
 					menu_items.start
@@ -94,7 +94,7 @@ feature -- Change text
 			end
 
 			t := tooltext
-			toolbar_items := managed_toolbar_items
+			toolbar_items := internal_managed_toolbar_items
 			if toolbar_items /= Void then
 				from
 					toolbar_items.start

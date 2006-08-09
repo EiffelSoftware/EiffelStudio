@@ -16,12 +16,13 @@ feature -- Basic operations
 			if managed_recyclable_items /= Void then
 				from
 					managed_recyclable_items.start
-				until		
+				until
 					managed_recyclable_items.after
 				loop
 					managed_recyclable_items.item.recycle
 					managed_recyclable_items.remove
 				end
+				managed_recyclable_items := Void
 			end
 		end
 
@@ -35,21 +36,10 @@ feature -- Basic operations
 			managed_recyclable_items.extend (a_recyclable_item)
 		end
 
-	remove_recyclable (a_recyclable_item: EB_RECYCLABLE) is
-			-- Remove `a_recyclable_items' from the list.
-		do
-			if managed_recyclable_items /= Void then
-				managed_recyclable_items.prune_all (a_recyclable_item)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	managed_recyclable_items: ARRAYED_LIST [EB_RECYCLABLE];
 			-- Registered recyclable items.
-	
-
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

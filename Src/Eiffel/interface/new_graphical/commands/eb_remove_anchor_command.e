@@ -118,14 +118,9 @@ feature {NONE} -- Implementation
 			Result := Interface_names.l_diagram_remove_anchor
 		end
 
-	name: STRING is "Anchor_remove"
+	name: STRING is "Anchor_remove";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-
-feature {EB_CONTEXT_EDITOR} -- Implementation
-
-	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
-			-- Current toggle button.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

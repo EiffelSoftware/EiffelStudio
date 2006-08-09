@@ -385,8 +385,11 @@ feature -- Memory management
 --			cluster_manager.recycle
 --			favorites_menu.recycle
 			general_customizable_toolbar.recycle
+			general_customizable_toolbar := Void
 			project_customizable_toolbar.recycle
+			project_customizable_toolbar := Void
 			refactoring_customizable_toolbar.recycle
+			refactoring_customizable_toolbar := Void
 				-- Recycle the history manager.
 				-- This is called polymorphically by EV_WINDOW.
 --			recycle
@@ -711,6 +714,7 @@ feature {NONE} -- Initialization flags
 	recycle is
 			-- Destroy `Current'.
 		do
+			window.accelerators.wipe_out
 			Precursor {EB_HISTORY_OWNER}
 			Precursor {EB_WINDOW}
 		end

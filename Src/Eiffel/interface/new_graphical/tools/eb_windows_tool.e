@@ -72,6 +72,7 @@ feature -- Memory management
 		do
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
+				explorer_bar_item := Void
 			end
 			widget.recycle
 			widget := Void

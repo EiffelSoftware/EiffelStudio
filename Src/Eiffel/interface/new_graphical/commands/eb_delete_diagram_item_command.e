@@ -17,7 +17,8 @@ inherit
 			menu_name
 		redefine
 			new_toolbar_item,
-			description
+			description,
+			recycle
 		select
 			name
 		end
@@ -42,7 +43,8 @@ inherit
 			drop_class,
 			delete_class,
 			delete_cluster,
-			execute
+			execute,
+			recycle
 		end
 
 create
@@ -97,6 +99,15 @@ feature -- Access
 	name: STRING is "Delete_item"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
+
+feature -- Removal
+
+	recycle is
+			-- Recycle code.
+		do
+			Precursor {EB_CONTEXT_DIAGRAM_COMMAND}
+			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
+		end
 
 feature {NONE} -- Implementation
 

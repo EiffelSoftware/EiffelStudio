@@ -27,6 +27,8 @@ inherit
 
 	EB_RECYCLABLE
 
+	EB_RECYCLER
+
 	EB_SHARED_WINDOW_MANAGER
 
 	EB_CONSTANTS
@@ -113,79 +115,140 @@ feature {NONE} -- Initialization
 			create toggle_selected_classes_ancestors_cmd.make_for_ancestors (Current)
 			toggle_selected_classes_ancestors_cmd.enable_displayed
 			toggle_selected_classes_ancestors_cmd.enable_sensitive
+			add_recyclable (toggle_selected_classes_ancestors_cmd)
+
 			create toggle_selected_classes_descendents_cmd.make_for_descendents (Current)
 			toggle_selected_classes_descendents_cmd.enable_displayed
 			toggle_selected_classes_descendents_cmd.enable_sensitive
+			add_recyclable (toggle_selected_classes_descendents_cmd)
+
 			create toggle_selected_classes_clients_cmd.make_for_clients (Current)
 			toggle_selected_classes_clients_cmd.enable_displayed
 			toggle_selected_classes_clients_cmd.enable_sensitive
+			add_recyclable (toggle_selected_classes_clients_cmd)
+
 			create toggle_selected_classes_suppliers_cmd.make_for_suppliers (Current)
 			toggle_selected_classes_suppliers_cmd.enable_displayed
 			toggle_selected_classes_suppliers_cmd.enable_sensitive
+			add_recyclable (toggle_selected_classes_suppliers_cmd)
 
 			create center_diagram_cmd.make (Current)
 			center_diagram_cmd.enable_displayed
 			center_diagram_cmd.enable_sensitive
+			add_recyclable (center_diagram_cmd)
 
 			create create_class_cmd.make (Current)
 			create_class_cmd.enable_displayed
+			add_recyclable (create_class_cmd)
+
 			create delete_cmd.make (Current, development_window)
 			delete_cmd.enable_displayed
+			add_recyclable (delete_cmd)
+
 			create create_new_links_cmd.make (Current)
 			create_new_links_cmd.enable_displayed
 			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
+			add_recyclable (create_new_links_cmd)
+
 			create change_color_cmd.make (Current)
 			change_color_cmd.enable_displayed
+			add_recyclable (change_color_cmd)
+
 			create trash_cmd.make (Current)
 			trash_cmd.enable_displayed
+			add_recyclable (trash_cmd)
+
 			create toggle_inherit_cmd.make (Current)
 			toggle_inherit_cmd.enable_displayed
+			add_recyclable (toggle_inherit_cmd)
+
 			create toggle_supplier_cmd.make (Current)
 			toggle_supplier_cmd.enable_displayed
+			add_recyclable (toggle_supplier_cmd)
+
 			create toggle_labels_cmd.make (Current)
 			toggle_labels_cmd.enable_displayed
+			add_recyclable (toggle_labels_cmd)
+
 			create toggle_quality_cmd.make (Current)
 			toggle_quality_cmd.enable_displayed
+			add_recyclable (toggle_quality_cmd)
+
 			create link_tool_cmd.make (Current)
 			link_tool_cmd.enable_displayed
+			add_recyclable (link_tool_cmd)
+
 			create fill_cluster_cmd.make (Current)
 			fill_cluster_cmd.enable_displayed
+			add_recyclable (fill_cluster_cmd)
+
 			create select_depth_cmd.make (Current)
 			select_depth_cmd.enable_displayed
+			add_recyclable (select_depth_cmd)
+
 			create history_cmd.make (Current)
 			history_cmd.enable_displayed
+			add_recyclable (history_cmd)
+
 			create undo_cmd.make (Current)
 			undo_cmd.enable_displayed
+			add_recyclable (undo_cmd)
+
 			create redo_cmd.make (Current)
 			redo_cmd.enable_displayed
+			add_recyclable (redo_cmd)
+
 			create zoom_in_cmd.make (Current)
 			zoom_in_cmd.enable_displayed
+			add_recyclable (zoom_in_cmd)
+
 			create zoom_out_cmd.make (Current)
 			zoom_out_cmd.enable_displayed
+			add_recyclable (zoom_out_cmd)
+
 			create delete_view_cmd.make (Current)
 			delete_view_cmd.enable_displayed
+			add_recyclable (delete_view_cmd)
+
 			create diagram_to_ps_cmd.make (Current)
 			diagram_to_ps_cmd.enable_displayed
+			add_recyclable (diagram_to_ps_cmd)
+
 			create toggle_force_cmd.make (Current)
 			toggle_force_cmd.enable_displayed
+			add_recyclable (toggle_force_cmd)
+
 			create toggle_cluster_cmd.make (Current)
 			toggle_cluster_cmd.enable_displayed
+			add_recyclable (toggle_cluster_cmd)
+
 			create remove_anchor_cmd.make (Current)
 			remove_anchor_cmd.enable_displayed
+			add_recyclable (remove_anchor_cmd)
+
 			create toggle_cluster_legend_cmd.make (Current)
 			toggle_cluster_legend_cmd.enable_displayed
+			add_recyclable (toggle_cluster_legend_cmd)
+
 			create toggle_uml_cmd.make (Current)
 			toggle_uml_cmd.enable_sensitive
 			toggle_uml_cmd.enable_displayed
+			add_recyclable (toggle_uml_cmd)
+
 			create fit_to_screen_cmd.make (Current)
 			fit_to_screen_cmd.enable_displayed
 			fit_to_screen_cmd.enable_sensitive
+			add_recyclable (fit_to_screen_cmd)
+
 			create reset_view_cmd.make (Current)
 			reset_view_cmd.enable_sensitive
 			reset_view_cmd.enable_displayed
+			add_recyclable (reset_view_cmd)
+
 			create force_settings_cmd.make (Current)
 			force_settings_cmd.enable_sensitive
 			force_settings_cmd.enable_displayed
+			add_recyclable (force_settings_cmd)
 		end
 
 	initialize_accelerators (a_command_list: LINKED_LIST [EB_TOOLBARABLE_COMMAND]) is
@@ -215,7 +278,6 @@ feature {NONE} -- Initialization
 		local
 			v_box: EV_VERTICAL_BOX
 			view_bar: EV_HORIZONTAL_BOX
-			view_toolbar: EB_TOOLBAR
 			drawing_bar: EV_HORIZONTAL_BOX
 			view_menu: EV_HORIZONTAL_BOX
 			customize_area: EV_CELL
@@ -1151,6 +1213,10 @@ feature -- Memory management
 			if development_window.editor_tool.text_area /= Void then
 				development_window.editor_tool.text_area.remove_observer (Current)
 			end
+			custom_toolbar.recycle
+			custom_toolbar := Void
+			view_toolbar.recycle
+			view_toolbar := Void
 			recycle_commands
 			world_cell.recycle
 			world_cell := Void
@@ -1160,7 +1226,37 @@ feature -- Memory management
 	recycle_commands is
 			-- Recycle commands
 		do
-			delete_cmd.recycle
+			destroy
+			history_cmd := Void
+			create_class_cmd := Void
+			delete_cmd := Void
+			create_new_links_cmd := Void
+			center_diagram_cmd := Void
+			change_color_cmd := Void
+			trash_cmd := Void
+			toggle_inherit_cmd := Void
+			toggle_supplier_cmd := Void
+			toggle_labels_cmd := Void
+			toggle_cluster_cmd := Void
+			select_depth_cmd := Void
+			link_tool_cmd := Void
+			fill_cluster_cmd := Void
+			zoom_in_cmd := Void
+			zoom_out_cmd := Void
+			toggle_quality_cmd := Void
+			diagram_to_ps_cmd := Void
+			toggle_force_cmd := Void
+			remove_anchor_cmd := Void
+			toggle_cluster_legend_cmd := Void
+			delete_view_cmd := Void
+			reset_view_cmd := Void
+			toggle_uml_cmd := Void
+			fit_to_screen_cmd := Void
+			force_settings_cmd := Void
+			toggle_selected_classes_ancestors_cmd := Void
+			toggle_selected_classes_descendents_cmd := Void
+			toggle_selected_classes_clients_cmd := Void
+			toggle_selected_classes_suppliers_cmd := Void
 		end
 
 feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions
@@ -1791,6 +1887,7 @@ feature {NONE} -- Implementation
 			reset_tool_bar_toggles
 		end
 
+	view_toolbar: EB_TOOLBAR
 	custom_toolbar: EB_TOOLBAR
 			-- Part of toolbar that can be customized.
 

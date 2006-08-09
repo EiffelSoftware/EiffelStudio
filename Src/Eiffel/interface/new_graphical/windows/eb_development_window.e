@@ -2885,15 +2885,15 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				estudio_debug_cmd.unattach_window (window)
 				toolbars_area.wipe_out
 				address_manager.recycle
-				project_customizable_toolbar.recycle
-				refactoring_customizable_toolbar.recycle
 				Precursor {EB_TOOL_MANAGER}
 				left_panel.recycle
 				right_panel.recycle
 				managed_class_formatters.wipe_out
+				managed_class_formatters := Void
 				managed_feature_formatters.wipe_out
+				managed_feature_formatters := Void
 				managed_main_formatters.wipe_out
-				toolbarable_commands.wipe_out
+				managed_main_formatters := Void
 				editors.wipe_out
 				editors := Void
 				stone := Void
@@ -4050,6 +4050,7 @@ feature -- Recycle
 			if refactoring_manager /= Void then
 				refactoring_manager.destroy
 			end
+			windows_tool := Void
 			editor_tool := Void
 			favorites_tool := Void
 			properties_tool := Void
@@ -4065,7 +4066,7 @@ feature -- Recycle
 	recycle_command is
 			-- Recycle command
 		local
-			os_cmd: EB_ON_SELECTION_COMMAND
+			os_cmd: EB_RECYCLABLE
 		do
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle
@@ -4106,11 +4107,16 @@ feature -- Recycle
 				end
 				toolbarable_commands.forth
 			end
+			toolbarable_commands.wipe_out
+			toolbarable_commands := Void
 
 			c_finalized_compilation_cmd := Void
-			c_finalized_compilation_cmd := Void
+			c_workbench_compilation_cmd := Void
+			editor_paste_cmd := Void
 			new_class_cmd := Void
 			new_cluster_cmd := Void
+			new_library_cmd := Void
+			new_assembly_cmd := Void
 			new_feature_cmd := Void
 			shell_cmd := Void
 			toggle_feature_alias_cmd := Void

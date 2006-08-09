@@ -156,6 +156,8 @@ feature -- Recycle
 			-- To be called when the object is no more used.
 		do
 			window_manager.remove_observer (Current)
+			wipe_out
+			destroy
 		end
 
 feature {NONE} -- Implementation

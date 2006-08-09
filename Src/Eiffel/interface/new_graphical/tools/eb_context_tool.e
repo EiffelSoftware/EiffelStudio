@@ -404,30 +404,40 @@ feature -- Memory management
 			Precursor {EB_HISTORY_OWNER}
 				-- Recycle the views
 			output_view.recycle
+			output_view := Void
 			external_output_view.recycle
+			external_output_view := Void
 			c_compilation_output_view.recycle
+			c_compilation_output_view := Void
 			class_view.recycle
+			class_view := Void
 			feature_view.recycle
+			feature_view := Void
 			error_output_view.recycle
+			error_output_view := Void
 			warning_output_view.recycle
+			warning_output_view := Void
 			address_manager.recycle
+			address_manager := Void
 			if has_case then
 					-- Save the diagram
 				editor.store
 				editor.recycle
+				editor := Void
 			end
 			if has_metrics then
 				metrics.recycle
+				metrics := Void
 			end
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
+				explorer_bar_item := Void
 			end
 			notebook.selection_actions.block
 			notebook.selection_actions.wipe_out
 			notebook.drop_actions.wipe_out
 			notebook.drop_actions.set_veto_pebble_function (Void)
 			notebook.destroy
-			address_manager := Void
 			notebook := Void
 			manager := Void
 		end

@@ -54,12 +54,24 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			parent_window := a_parent
+			parent_window.show_actions.extend (agent show_selected_row)
 			set_padding (Layout_constants.Default_padding_size)
 			extend (execution_frame)
 			update
 		end
 
-feature {NONE} -- Retrieval		
+feature {NONE} -- Retrieval
+
+	show_selected_row is
+			-- Ensure that the currently selected argument is visible on the screen.
+		local
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_selected_rows := arguments_grid.selected_rows
+			if not l_selected_rows.is_empty then
+				l_selected_rows.first.ensure_visible
+			end
+		end
 
 	retrieve_arguments is
 			-- Retrieve and initialize the arguments from user options.
@@ -86,7 +98,6 @@ feature {NONE} -- Retrieval
 				l_row := grid_row_with_argument (l_user_opts.last_argument)
 				if l_row /= Void then
 					arguments_grid.select_row (l_row.index)
-					l_row.ensure_visible
 				else
 					current_argument.set_text (l_user_opts.last_argument)
 				end

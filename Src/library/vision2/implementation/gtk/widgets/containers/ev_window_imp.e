@@ -529,9 +529,21 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 	set_has_modal_window (a_bool: BOOLEAN) is
 			-- Set `has_modal_window' to `a_bool'.
 		require
-			not_set: a_bool = not has_modal_window
+		--	not_set: a_bool = not has_modal_window
 		do
 			has_modal_window := a_bool
+		end
+
+	allow_window_manager_focus is
+			-- Allow the window manager to give the focus to `Current'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, True)
+		end
+
+	disallow_window_manager_focus is
+			-- Disallow the window manager to give the focus to `Current'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
 		end
 
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation

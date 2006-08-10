@@ -181,11 +181,18 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_focus is
 			-- Grab keyboard focus.
 		local
-			l_window: POINTER
+			l_window, l_widget: POINTER
 		do
 			if not has_focus then
-				l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
-				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, visual_widget)
+				if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+					l_window := c_object
+--					l_widget := default_pointer -- This will unset any previous focused widget.
+				else
+					l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+					l_widget := visual_widget
+				end
+				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
+				{EV_GTK_EXTERNALS}.gtk_window_present (l_window)
 			end
 		end
 

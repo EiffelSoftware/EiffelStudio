@@ -221,6 +221,7 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 			cond: EB_EXPRESSION
 			app_exec: APPLICATION_EXECUTION
+			bp_exists: BOOLEAN
 		do
 			if Eiffel_project.successful then
 				f := bs.routine
@@ -229,6 +230,7 @@ feature -- Execution
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
 					app_exec := eb_debugger_manager.application
+					bp_exists := app_exec.is_breakpoint_set (f, index)
 					old_bp_status := app_exec.breakpoint_status (f, index)
 					if old_bp_status /= 0 then
 						cond := app_exec.condition (f, index)
@@ -241,12 +243,20 @@ feature -- Execution
 						-- Put back the status of the modified breakpoint This will prevent
 						-- the display of the temporary breakpoint (if not already present
 						-- at `index' in `f'.)
-					app_exec.set_breakpoint_status (f, index, old_bp_status)
-					if old_bp_status /= 0 and cond /= Void then
-							-- Restore condition after we stopped, otherwise if the evaluation
-							-- does not evaluate to True then it will not stopped.
-						Eb_debugger_manager.set_on_stopped_action (
-							agent app_exec.set_condition (f, index, cond))
+					if bp_exists then
+						Eb_debugger_manager.add_on_stopped_kamikaze_action (
+							agent app_exec.set_breakpoint_status (f, index, old_bp_status)
+						)
+						if old_bp_status /= 0 and cond /= Void then
+								-- Restore condition after we stopped, otherwise if the evaluation
+								-- does not evaluate to True then it will not stopped.
+							Eb_debugger_manager.add_on_stopped_kamikaze_action (
+								agent app_exec.set_condition (f, index, cond))
+						end
+					else
+						Eb_debugger_manager.add_on_stopped_kamikaze_action (
+							agent app_exec.remove_breakpoint (f, index)
+						)
 					end
 				end
 			else

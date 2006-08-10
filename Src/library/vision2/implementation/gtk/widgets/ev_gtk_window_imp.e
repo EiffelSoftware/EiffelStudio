@@ -194,23 +194,40 @@ feature {NONE} -- Implementation
 		local
 			l_window_imp: EV_WINDOW_IMP
 			l_window_group: POINTER
+			l_window_already_modal: BOOLEAN
+			l_window_has_modal_window: BOOLEAN
 		do
 			l_window_imp ?= a_window.implementation
-			l_window_group := {EV_GTK_EXTERNALS}.gtk_window_group_new
-			{EV_GTK_EXTERNALS}.gtk_window_group_add_window (l_window_group, l_window_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_window_group_add_window (l_window_group, c_object)
+			l_window_already_modal := l_window_imp.is_modal
+			l_window_has_modal_window := l_window_imp.has_modal_window
+			if l_window_already_modal or l_window_has_modal_window then
+				l_window_group := l_window_imp.modal_window_group
+			else
+				l_window_group := {EV_GTK_EXTERNALS}.gtk_window_group_new
+				l_window_imp.set_modal_window_group (l_window_group)
+			end
+			set_modal_window_group (l_window_group)
+
+			l_window_imp.set_has_modal_window (True)
+			if not l_window_has_modal_window then
+				l_window_imp.disallow_window_manager_focus
+			end
 			show_relative_to_window (a_window)
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
-			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (l_window_imp.c_object, False)
-			is_modal := True
-			l_window_imp.set_has_modal_window (True)
+
 			block
-			is_modal := False
-			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (l_window_imp.c_object, True)
-			set_blocking_window (Void)
-			if not l_window_imp.is_destroyed then
+
+			if not l_window_has_modal_window then
+				l_window_imp.allow_window_manager_focus
 				l_window_imp.set_has_modal_window (False)
-				{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (l_window_group, l_window_imp.c_object)
+			end
+
+			set_blocking_window (Void)
+
+			if not l_window_imp.is_destroyed then
+				if not (l_window_already_modal or l_window_has_modal_window) then
+					l_window_imp.set_modal_window_group (default_pointer)
+				end
 				if l_window_imp.is_show_requested then
 						-- Get window manager to always show parent window.
 						-- This is a hack in case parent window was minimized and restored
@@ -221,12 +238,43 @@ feature {NONE} -- Implementation
 				end
 			end
 			{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
-			{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (l_window_group, c_object)
-			{EV_GTK_EXTERNALS}.object_unref (l_window_group)
+			set_modal_window_group (default_pointer)
+			
+			if l_window_already_modal then
+				{EV_GTK_EXTERNALS}.gtk_grab_add (l_window_imp.c_object)
+			end
+
+			if not (l_window_already_modal or l_window_has_modal_window) then
+					-- We only unref from the first nested call.
+				{EV_GTK_EXTERNALS}.object_unref (l_window_group)
+			end
 		end
 
-	is_modal: BOOLEAN
-		-- Is `Current' shown modal to another window?
+
+feature {EV_GTK_WINDOW_IMP} -- Implementation
+
+	is_modal: BOOLEAN is
+			-- Is `Current' shown modal to another window?
+		do
+			Result := modal_window_group /= default_pointer
+		end
+
+	set_modal_window_group (a_window_group: POINTER) is
+			-- Set `modal_window_group' to `a_window_group'.
+		do
+				-- Remove from previous group if any.
+			if modal_window_group /= default_pointer then
+				{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (modal_window_group, c_object)
+			end
+				-- Add to new window group if any.
+			if a_window_group /= default_pointer then
+				{EV_GTK_EXTERNALS}.gtk_window_group_add_window (a_window_group, c_object)
+			end
+			modal_window_group := a_window_group
+		end
+
+	modal_window_group: POINTER
+		-- Window group used for modal behavior.
 
 feature -- Basic operations
 

@@ -299,9 +299,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				aok := False
-				create wd.make_with_text (Warning_messages.w_Select_parent_cluster)
-				wd.show_modal_to_window (Current)
+				aok := True
+				is_top_level := True
 			end
 		ensure
 			ok_implies_set: aok implies is_top_level or (group /= Void and then (group.is_cluster or group.is_library))
@@ -508,7 +507,7 @@ feature {NONE} -- Graphic interface
 			then
 				bd.set_start_directory (lastdir)
 			end
-			bd.show_modal_to_window (target.window)
+			bd.show_modal_to_window (Current)
 		end
 
 	set_path (bd: EV_DIRECTORY_DIALOG) is

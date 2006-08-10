@@ -222,47 +222,44 @@ feature -- Implementation
 			l_top_level_window_imp: EV_WINDOW_IMP
 		do
 			app_imp := app_implementation
-			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
-					-- Retrieve/calculate pebble
-				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-				if pebble /= Void then
-					if
-						able_to_transport (a_button)
-					then
-						pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
-						if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
-								-- Set correct accept cursor
-							if accept_cursor /= Void then
-								l_cursor := accept_cursor
+			l_top_level_window_imp := top_level_window_imp
+			if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
+				if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
+						-- Retrieve/calculate pebble
+					call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
+					if pebble /= Void then
+						if
+							able_to_transport (a_button)
+						then
+							pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
+							if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
+									-- Set correct accept cursor
+								if accept_cursor /= Void then
+									l_cursor := accept_cursor
+								else
+									l_cursor := default_accept_cursor
+								end
 							else
-								l_cursor := default_accept_cursor
+									-- Set correct deny cursor
+								if deny_cursor /= Void then
+									l_cursor := deny_cursor
+								else
+									l_cursor := default_deny_cursor
+								end
 							end
-						else
-								-- Set correct deny cursor
-							if deny_cursor /= Void then
-								l_cursor := deny_cursor
-							else
-								l_cursor := default_deny_cursor
-							end
+							internal_set_pointer_style (l_cursor)
+							enable_capture
+						elseif ready_for_pnd_menu (a_button) then
+							app_imp.target_menu (pebble).show
 						end
-						internal_set_pointer_style (l_cursor)
-						enable_capture
-					elseif ready_for_pnd_menu (a_button) then
-						app_imp.target_menu (pebble).show
-					end
-				else
-					l_top_level_window_imp := top_level_window_imp
-					if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
-							-- Call the normal button events if Pick and Drop is not initiated.
+					else
+								-- Call the normal button events if Pick and Drop is not initiated.
 						call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
-				end
-			else
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport then
-					end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				else
-					l_top_level_window_imp := top_level_window_imp
-					if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
+					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport then
+						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					else
 							-- Call the normal button events if Pick and Drop is not initiated.
 						call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end

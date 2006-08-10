@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			if t.is_nested then
+			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
 					-- `t.declaring_type' contains enclosing type of current nested type.
 				check
 					is_declaring_type_consumed: is_consumed_type (t.declaring_type)

@@ -2580,14 +2580,27 @@ feature {NONE} -- Implementation
 					initialize_type_output_strategy
 					last_type.process (type_output_strategy)
 				else
-					text_formatter_decorator.process_string_text (l_as.dump, Void)
+					text_formatter_decorator.process_local_text (l_as.dump)
 				end
 			end
 		end
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
-			process_type_as (l_as)
+			check_type (l_as)
+			if processing_locals then
+				last_actual_local_type := last_type
+			end
+			if not expr_type_visiting then
+				if last_type /= Void then
+					initialize_type_output_strategy
+					last_type.process (type_output_strategy)
+				else
+					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
+					text_formatter_decorator.add_space
+					text_formatter_decorator.process_local_text (l_as.anchor)
+				end
+			end
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS) is

@@ -7,10 +7,10 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_PRIMITIVE_IMP
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
@@ -63,7 +63,7 @@ feature -- Element change
 				wel_set_parent (default_parent)
 			end
 		end
-	
+
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
@@ -120,7 +120,7 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
 		do
-			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then 
+			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then
 				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
 			then
 				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.Vk_shift))
@@ -165,7 +165,6 @@ feature {EV_ANY_I} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_WIDGET_IMP}
 		end
 
@@ -175,7 +174,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			--| Redefine this for each primitive that changes its appearence
 		end
-		
+
 	interface: EV_PRIMITIVE
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is

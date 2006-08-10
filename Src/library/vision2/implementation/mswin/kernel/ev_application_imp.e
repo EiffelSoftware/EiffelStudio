@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			set_application (Current)
 			create_dispatcher
 			create blocking_windows_stack.make (5)
-			create all_tooltips.make (2)
 			init_instance
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
@@ -99,9 +98,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	all_tooltips: ARRAYED_LIST [POINTER]
-		-- Result is all tooltips that have been set in the application.
 
 	key_pressed (virtual_key: INTEGER): BOOLEAN is
 			-- Is `virtual_key' currently pressed?
@@ -493,36 +489,9 @@ feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is
 			-- Assign `a_delay' to `tooltip_delay'.
-		local
-			l_wel_tooltip: WEL_TOOLTIP
-			l_hwnd: POINTER
 		do
 			tooltip_delay := a_delay
-				-- Iterate through all tooltips within application and
-				-- call set_initial_delay_time with `a_delay'.
-			from
-				all_tooltips.start
-			until
-				all_tooltips.off
-			loop
-				l_hwnd := all_tooltips.item
-				if l_hwnd /= default_pointer and then is_window (l_hwnd) then
-					l_wel_tooltip ?= window_of_item (l_hwnd)
-					if l_wel_tooltip /= Void then
-						cwin_send_message (l_wel_tooltip.item, Ttm_setdelaytime,
-							cwel_integer_to_pointer (Ttdt_initial), cwin_make_long (a_delay, 0))
-						all_tooltips.forth
-					else
-							-- Object has been collected, we remove it
-							-- from `all_tooltips'.
-						all_tooltips.remove
-					end
-				else
-						-- Object has been collected, we remove it
-						-- from `all_tooltips'.
-					all_tooltips.remove
-				end
-			end
+			internal_tooltip.set_initial_delay_time (a_delay)
 		end
 
 	set_capture_type (a_capture_type: INTEGER) is
@@ -549,6 +518,20 @@ feature -- Basic operation
 			set_is_destroyed (True)
 			window_with_focus := Void
 			interface.destroy_actions.call ([])
+		end
+
+feature -- Tooltips
+
+	internal_tooltip: WEL_TOOLTIP is
+			-- WEL_TOOLTIP used internally by current.
+		once
+			create Result.make (silly_main_window, -1)
+			Result.set_max_tip_width (32000)
+			Result.activate
+				-- Set the inital time delay for the tooltip.
+			Result.set_initial_delay_time (tooltip_delay)
+		ensure
+			internal_tooltip_not_void: Result /= Void
 		end
 
 feature {NONE} -- WEL Implemenation

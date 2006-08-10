@@ -342,7 +342,6 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_ITEM_IMP}
 		end
 

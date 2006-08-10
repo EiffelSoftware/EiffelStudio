@@ -656,11 +656,6 @@ feature -- Cluster tree warnings
 						%Please wait until then before calling this command."
 		end
 
-	w_Select_parent_cluster: STRING is
-			-- User needs to select a cluster in the new cluster dialog.
-		"Please select a cluster from the list.%N%
-		%A parent cluster is needed."
-
 feature -- Backup warnings
 
 	w_Crashed: STRING is

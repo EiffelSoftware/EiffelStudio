@@ -558,7 +558,7 @@ feature -- Element change
 				l_clu ?= a_parent
 				last_added_cluster.set_parent (l_clu)
 			end
-			l_target.clusters.force (last_added_cluster, a_name)
+			l_target.add_cluster (last_added_cluster)
 			l_sys := l_target.system
 			l_sys.store
 			error_in_config := not l_sys.store_successful
@@ -813,13 +813,13 @@ feature {NONE} -- Implementation
 					-- update config
 				if a_path.is_empty then
 					if a_group.is_cluster then
-						a_group.target.clusters.remove (a_group.name)
+						a_group.target.remove_cluster (a_group.name)
 					elseif a_group.is_library then
-						a_group.target.libraries.remove (a_group.name)
+						a_group.target.remove_library (a_group.name)
 					elseif a_group.is_assembly then
-						a_group.target.assemblies.remove (a_group.name)
+						a_group.target.remove_assembly (a_group.name)
 					elseif a_group.is_override then
-						a_group.target.overrides.remove (a_group.name)
+						a_group.target.remove_override (a_group.name)
 					else
 						check should_not_reach: False end
 					end

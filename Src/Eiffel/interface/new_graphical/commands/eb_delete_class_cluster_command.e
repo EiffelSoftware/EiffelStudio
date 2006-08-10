@@ -203,7 +203,6 @@ feature {NONE} -- Implementation
 				if
 					not group.is_readonly
 				then
-
 					if group.is_cluster and not path.is_empty then
 							-- create an EB_SORTED_CLUSTER because this allows as to easily access information about subfolders
 						create l_sort_cl.make (group)

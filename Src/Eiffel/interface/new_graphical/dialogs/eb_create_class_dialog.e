@@ -357,8 +357,10 @@ feature {NONE} -- Implementation
 					str @ (str.count) /= 'e' or else
 					str @ (str.count - 1) /= '.'
 				then
-					dotpos := str.index_of ('.', 1) - 1
-					str.keep_head (dotpos.max (0))
+					dotpos := str.last_index_of ('.', str.count) - 1
+					if dotpos > 0 then
+						str.keep_head (dotpos)
+					end
 					create Result.make_from_string (str)
 					Result.add_extension ("e")
 				else

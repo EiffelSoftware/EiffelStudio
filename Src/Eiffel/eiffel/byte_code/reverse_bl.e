@@ -174,7 +174,7 @@ feature
 					buf.put_new_line
 				end
 				buf.put_string ("return ")
-			elseif not target_type.is_expanded then
+			elseif not target_type.is_expanded and then not source_type.is_expanded then
 				target.print_register
 				buf.put_string (" = ")
 			end
@@ -224,6 +224,9 @@ feature
 					target.print_register
 					buf.put_character (')')
 				end
+			elseif source_type.is_expanded then
+					-- Expanded object is already attached to reference target.
+				is_code_empty := True
 			else
 				buf.put_string ("RTRV(")
 				info.generate_type_id (buf, context.final_mode)

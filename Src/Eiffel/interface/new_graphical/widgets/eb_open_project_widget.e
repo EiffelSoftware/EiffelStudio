@@ -760,6 +760,7 @@ feature {NONE} -- Implementation
 			l_target_options: TARGET_USER_OPTIONS
 		do
 			location_combo.change_actions.block
+			location_combo.set_foreground_color (default_color)
 			location_combo.wipe_out
 			if last_state.options /= Void then
 					-- Let's get the target options if any.

@@ -1210,6 +1210,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					glines.after
 				loop
 					line := glines.item
+
 					check
 						line /= Void
 						line.row /= Void
@@ -1217,6 +1218,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					if
 						is_removable_debugged_object_row (line.row)
 						and then is_removable_debugged_object_address (line.object_address)
+						and then line /= current_object
 					then
 						remove_debugged_object_line (line)
 					end

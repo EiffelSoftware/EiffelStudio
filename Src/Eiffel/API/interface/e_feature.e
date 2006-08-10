@@ -462,22 +462,24 @@ feature -- Access
 		do
 			create Result.make
 			l_system := eiffel_system
-			dep := Depend_server.item (written_class.class_id)
-			from
-				fdep := dep.item (body_index)
-				fdep.start
-			until
-				fdep.after
-			loop
-				l_depend_unit := fdep.item
-				if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-					l_class_c := l_system.class_of_id (l_depend_unit.class_id)
-					Result.extend ([l_class_c, l_class_c.feature_with_rout_id (l_depend_unit.rout_id).name])
+			if Depend_server.has (written_class.class_id) then
+				dep := Depend_server.item (written_class.class_id)
+				from
+					fdep := dep.item (body_index)
+					fdep.start
+				until
+					fdep.after
+				loop
+					l_depend_unit := fdep.item
+					if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
+						l_class_c := l_system.class_of_id (l_depend_unit.class_id)
+						Result.extend ([l_class_c, l_class_c.feature_with_rout_id (l_depend_unit.rout_id).name])
+					end
+					fdep.forth
 				end
-				fdep.forth
-			end
-			if Result.is_empty then
-				Result := Void
+				if Result.is_empty then
+					Result := Void
+				end
 			end
 		ensure
 			valid_result: Result /= Void implies not Result.is_empty

@@ -136,7 +136,7 @@ feature -- Status report
 		ensure
 			result_not_void: result /= Void
 		end
-		
+
 	max_tip_width: INTEGER is
 			-- Maximum width that tooltip window will be displayed.
 			-- -1 if `set_max_tip_width' has not been called.
@@ -147,7 +147,7 @@ feature -- Status report
 		ensure
 			result_valid: Result >= -1
 		end
-		
+
 
 feature -- Status setting
 
@@ -191,7 +191,7 @@ feature -- Status setting
 			cwin_send_message (item, Ttm_setdelaytime,
 				to_wparam (Ttdt_autopop), cwin_make_long (delay, 0))
 		end
-		
+
 	set_max_tip_width (a_width: INTEGER) is
 			-- Set the maximum width for the tooltip window. If this
 			-- is set, then the text will be word wrapped to this width,
@@ -202,7 +202,7 @@ feature -- Status setting
 		do
 			cwin_send_message (item, ttm_setmaxtipwidth, to_wparam (0), to_lparam (a_width))
 		end
-		
+
 
 	set_initial_delay_time (delay: INTEGER) is
 			-- Set the length of time (in milliseconds) that the
@@ -279,6 +279,26 @@ feature -- Basic operations
 			cwin_send_message (item, Ttm_deltool, to_wparam (0), i_th_tool_info (index).item)
 		ensure
 			count_decreased: count = old count - 1
+		end
+
+	remove_tool (tool_info: WEL_TOOL_INFO) is
+			-- Delete the `tool_info'.
+		require
+			exists: exists
+			tool_info_not_void: tool_info /= Void
+		do
+			cwin_send_message (item, Ttm_deltool, to_wparam (0), tool_info.item)
+		ensure
+			count_decreased: count = old count - 1
+		end
+
+	update_text (tool_info: WEL_TOOL_INFO) is
+			-- Update text of Current using `tool_info'.
+		require
+			exists: exists
+			tool_info_not_void: tool_info /= Void
+		do
+			cwin_send_message (item, ttm_updatetiptext, to_wparam (0), tool_info.item)
 		end
 
 feature {NONE} -- Implementation

@@ -406,6 +406,8 @@ feature -- Memory management
 
 			exception.remove_text
 			exception.remove_tooltip
+
+			clean_stack_grid
 		end
 
 feature {NONE} -- Grid Implementation

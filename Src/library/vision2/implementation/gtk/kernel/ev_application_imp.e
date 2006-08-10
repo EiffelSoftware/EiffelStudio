@@ -313,14 +313,20 @@ feature -- Basic operation
 							end
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
-								-- This will force another motion notify as we have the motion hint flag set for all widgets.
-							l_pnd_imp ?= gtk_widget_imp_at_pointer_position
-							if is_in_transport then
+
+							if not is_in_transport then
+								l_pnd_imp ?= gtk_widget_imp_at_pointer_position
+									-- This will force another motion notify as we have the motion hint flag set for all widgets.
+								if
+									captured_widget /= Void
+								then
+									l_pnd_imp ?= captured_widget.implementation
+								end
+							else
 								l_pnd_imp := pick_and_drop_source
-							elseif
-								captured_widget /= Void
-							then
-								l_pnd_imp ?= captured_widget.implementation
+									-- The PND call to 'real_pointed_target' will force another motion notify if motion hinting is set.
+									-- Repetitive calling of gtk_widget_imp_at_pointer_position causes X server round trips that causes significant
+									-- lag over remote connections.
 							end
 
 							if l_pnd_imp /= Void then

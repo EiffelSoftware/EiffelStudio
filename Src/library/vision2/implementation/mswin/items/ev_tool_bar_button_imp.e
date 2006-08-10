@@ -475,7 +475,6 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_TOOL_BAR_ITEM_IMP}
 			if private_pixmap /= Void then
 				private_pixmap.destroy

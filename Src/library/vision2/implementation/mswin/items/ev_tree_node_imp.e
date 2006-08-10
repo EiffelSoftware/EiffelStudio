@@ -225,7 +225,6 @@ feature {EV_ANY_I} -- Status setting
 	destroy is
 			-- Destroy `Current'.
 		do
-			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_ITEM_IMP}
 			internal_children := Void
 		end

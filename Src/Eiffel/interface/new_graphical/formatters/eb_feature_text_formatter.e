@@ -145,7 +145,8 @@ feature -- Formatting
 						l_msg.append ("%N")
 						l_msg.append (trace)
 					end
-					editor.display_message (l_msg)
+					editor.put_string (l_msg)
+--					editor.display_message (l_msg)
 				end
 				display_header
 			end

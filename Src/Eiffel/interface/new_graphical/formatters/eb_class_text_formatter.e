@@ -75,7 +75,7 @@ feature -- Formatting
 						editor.set_read_only (not editable)
 					else
 						editor.clear_window
-						editor.display_message (Warning_messages.w_Formatter_failed)
+						editor.put_string (Warning_messages.w_Formatter_failed)
 					end
 					display_header
 				end

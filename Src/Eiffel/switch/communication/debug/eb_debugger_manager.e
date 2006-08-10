@@ -977,9 +977,10 @@ feature -- Debugging events
 			output_manager.add_string ("Application stopped")
 			output_manager.add_new_line
 
-			if stopped_actions /= Void then
-				stopped_actions.call (Void)
-				stopped_actions := Void
+			if stopped_kamikaze_action /= Void and then not stopped_kamikaze_action.is_empty then
+				stopped_kamikaze_action.call (Void)
+				stopped_kamikaze_action.wipe_out
+				notify_breakpoints_changes
 			end
 
 			debugging_window.window.raise
@@ -1184,32 +1185,33 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 feature -- One time action
 
-	has_stopped_action: BOOLEAN is
-			-- Has `stopped_actions' some actions to be executed?
+	has_stopped_kamikaze_action: BOOLEAN is
+			-- Has `stopped_kamikaze_action' some actions to be executed?
 		do
-			Result := stopped_actions /= Void and then not stopped_actions.is_empty
+			Result := stopped_kamikaze_action /= Void and then not stopped_kamikaze_action.is_empty
 		ensure
-			has_stopped_action_definition:
-				Result = (stopped_actions /= Void and then not stopped_actions.is_empty)
+			has_stopped_kamikaze_action_definition:
+				Result = (stopped_kamikaze_action /= Void and then not stopped_kamikaze_action.is_empty)
 		end
 
-	set_on_stopped_action (p: PROCEDURE [ANY, TUPLE]) is
-			-- Add `p' to `stopped_actions' with `p'.
+	add_on_stopped_kamikaze_action (p: PROCEDURE [ANY, TUPLE]) is
+			-- Add `p' to `stopped_kamikaze_action' with `p'.
 		require
 			p_not_void: p /= Void
 		do
-			if stopped_actions = Void then
-				create stopped_actions
+			if stopped_kamikaze_action = Void then
+				create stopped_kamikaze_action
 			end
-			stopped_actions.extend (p)
+			stopped_kamikaze_action.extend (p)
 		ensure
-			has_stopped_action: has_stopped_action
-			stopped_action_set: stopped_actions.has (p)
+			stopped_kamikaze_action_not_void: stopped_kamikaze_action /= Void
+			has_stopped_kamikaze_action: has_stopped_kamikaze_action
+			stopped_kamikaze_action_set: stopped_kamikaze_action.has (p)
 		end
 
 feature {NONE} -- Implementation
 
-	stopped_actions: ACTION_SEQUENCE [TUPLE]
+	stopped_kamikaze_action: ACTION_SEQUENCE [TUPLE]
 			-- Actions called only once when application has stopped.
 
 	saved_minimized: BOOLEAN

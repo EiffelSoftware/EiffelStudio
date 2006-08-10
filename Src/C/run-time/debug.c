@@ -605,7 +605,6 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 		if (!d_globaldata.db_discard_breakpoints) {
 			int stopped = 0;
 			BODY_INDEX bodyid = exvect->ex_bodyid;
-			
  
 			if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
 					/* update previous value for next call */
@@ -613,10 +612,9 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 				previous_break_index = break_index;
 				stopped = 1;
 			}
-	
 			else if
 				(d_data.db_stepinto_mode /* test stepinto flag */
-				|| d_data.db_callstack_depth<d_data.db_callstack_depth_stop) /* test the stack depth */
+				|| d_data.db_callstack_depth < d_data.db_callstack_depth_stop) /* test the stack depth */
 			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
 				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
@@ -628,8 +626,9 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 				stopped = 1;
 			} 
 			if (already_warned) {
-				if (d_data.db_callstack_depth < critical_stack_depth)
+				if (d_data.db_callstack_depth < critical_stack_depth) {
 					already_warned = 0;
+				}
 			}
 			else if (d_data.db_callstack_depth >= critical_stack_depth && !stopped)
 				/* On entering a routine, check we're not overflowing */
@@ -645,7 +644,11 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 			if (is_dbreak_set(bodyid, break_index) && !stopped) /* test the presence of a breakpoint */
 			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
-				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
+/* The debuggee does not always stop on breakpoint (conditional bp)
+ * then we should not reset `db_callstack_depth_stop' value !!
+ *
+ * 				d_data.db_callstack_depth_stop = 0;	
+ */
 				safe_dbreak(PG_BREAK);
 					/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
@@ -689,7 +692,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 			
 		if 
 			(d_data.db_stepinto_mode /* test stepinto flag */
-			|| d_data.db_callstack_depth<d_data.db_callstack_depth_stop) /* test the stack depth */
+			|| d_data.db_callstack_depth < d_data.db_callstack_depth_stop) /* test the stack depth */
 		{
 			d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
 												   already cleared */

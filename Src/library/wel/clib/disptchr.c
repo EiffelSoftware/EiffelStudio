@@ -63,7 +63,18 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			(EIF_POINTER) wparam,
 			(EIF_POINTER) lparam));
 	} else {
-		return DefWindowProc (hwnd, msg, wparam, lparam);
+			/* When `dispatcher' is NULL, it means we are called from the `dispose' routine.
+			 * We are therefore called within the call to `DestroyWindow'.
+			 * If the window is a Windows control we need to call its original window
+			 * procedure as `DefWindowProc' will do nothing. This prevents memory leak
+			 * because only the original default window procedure knows how to clean itself.
+			 */
+		WNDPROC l_proc = (WNDPROC) GetClassLongPtr (hwnd, GCLP_WNDPROC);
+		if (l_proc && l_proc != cwel_window_procedure) {
+			return CallWindowProc (l_proc, hwnd, msg, wparam, lparam);
+		} else {
+			return DefWindowProc (hwnd, msg, wparam, lparam);
+		}
 	}
 }
 

@@ -43,7 +43,11 @@ inherit
 
 create
 	default_create,
-	make_with_size
+	make_with_size,
+	make_with_pointer_style
+
+convert
+	make_with_pointer_style ({EV_POINTER_STYLE})
 
 feature {NONE} -- Initialization
 
@@ -58,6 +62,19 @@ feature {NONE} -- Initialization
 		ensure then
 			width_assigned: width = a_width
 			height_assigned: height = a_height
+		end
+
+	make_with_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Create from `a_pointer_style'
+		local
+			l_temp: EV_POINTER_STYLE
+		do
+			default_create
+			l_temp := a_pointer_style
+			if l_temp = Void then
+				create l_temp
+			end
+			implementation.init_from_pointer_style (l_temp)
 		end
 
 feature -- Basic Operations

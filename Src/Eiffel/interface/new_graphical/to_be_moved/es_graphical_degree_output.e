@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			Precursor (deg_nbr, to_go, a_name)
-			window_manager.display_message_and_percentage (degree_description (current_degree) + once " " + a_name, percentage_calculation (to_go))
+			window_manager.display_message_and_percentage (degree_short_description (current_degree)  + " (" + (total_number - to_go + 1).out + "/" + total_number.out + "): " + a_name, percentage_calculation (to_go))
 			flush_output
 		end
 
@@ -115,6 +115,7 @@ feature {NONE} -- Implementation
 		do
 			output_manager.add_new_line
 		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

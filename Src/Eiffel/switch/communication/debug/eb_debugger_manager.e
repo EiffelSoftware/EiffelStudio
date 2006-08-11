@@ -1507,8 +1507,8 @@ feature {NONE} -- Implementation
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.disable_user_resize
 			rb2.enable_select
-			Layout_constants.set_default_size_for_button (okb)
-			Layout_constants.set_default_size_for_button (cancelb)
+			Layout_constants.set_default_width_for_button (okb)
+			Layout_constants.set_default_width_for_button (cancelb)
 			if preferences.debugger_data.critical_stack_depth > 30000 then
 				element_nb.set_value (30000)
 			elseif preferences.debugger_data.critical_stack_depth = -1 then

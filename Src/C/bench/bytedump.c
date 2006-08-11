@@ -696,25 +696,25 @@ static  void    print_instructions ()
 				/* Static type of target */
 				get_creation_type ();
 				break;
-
 /* Creation */
 			case  BC_RCREATE:
 				{
-				int is_lazy;
+				int open_count;
 				fprintf (ofp, " Args:%d ", get_bool(&ip));
-				fprintf (ofp, " Open map:%d ", get_bool(&ip));
-				is_lazy = get_bool(&ip);
-				fprintf (ofp, " Is lazy:%d ", is_lazy);
 				print_ctype (get_int16(&ip));
 				print_cid ();
-				if (is_lazy) {
-					fprintf (ofp, " Class_id:%d ", get_int32(&ip));
-					fprintf (ofp, " Feature_id:%d ", get_int32(&ip));
-					fprintf (ofp, " Is_precompiled:%d ", get_bool(&ip));
-					fprintf (ofp, " Is_basic:%d ", get_bool(&ip));
-				}
+				fprintf (ofp, " Class_id:%d ", get_int32(&ip));
+				fprintf (ofp, " Feature_id:%d ", get_int32(&ip));
+				fprintf (ofp, " Is_precompiled:%d ", get_bool(&ip));
+				fprintf (ofp, " Is_basic:%d ", get_bool(&ip));
+				fprintf (ofp, " Is_target_closed:%d ", get_bool(&ip));
+				fprintf (ofp, " Is_inline_agent:%d ", get_bool(&ip));
+				open_count = get_int32(&ip);
+				fprintf (ofp, " Open_count: %d ", open_count);
+			
 				break;
 				}
+
 			case  BC_CREATE :
 				/* Kind of creation */
 
@@ -1022,11 +1022,8 @@ static  void    print_instructions ()
 				break;
 			case  BC_ADDR :
 				/* Address of routine */
-				/* Feature id */
+				/* id */
 				fprintf (ofp,"%d ", get_int32(&ip));
-				/* Static type */
-				print_ctype (get_int16(&ip));
-				fprintf (ofp," %d ", (int) get_bool(&ip));
 				break;
 			case  BC_OBJECT_ADDR :
 				/* Address of object */

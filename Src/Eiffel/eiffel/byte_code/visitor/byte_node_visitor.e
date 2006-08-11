@@ -426,6 +426,14 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_agent_call_b (a_node: AGENT_CALL_B) is
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		require

@@ -10,6 +10,7 @@ class
 
 feature -- Constants
 
+		-- Predefined name IDs constants
 	put_name_id: INTEGER is 1
 	item_name_id: INTEGER is 2
 	invariant_name_id: INTEGER is 3
@@ -156,8 +157,22 @@ feature -- Constants
 	to_character_8_name_id: INTEGER is 144
 	to_character_32_name_id: INTEGER is 145
 	natural_32_code_name_id: INTEGER is 146
-	set_lazy_rout_disp_name_id: INTEGER is 147
-			-- Predefined name IDs constants
+	rout_disp_name_id: INTEGER is 147
+	calc_rout_addr_name_id: INTEGER is 148
+	closed_operands_name_id: INTEGER is 149
+	last_result_name_id: INTEGER is 150
+	class_id_name_id: INTEGER is 151
+	feature_id_name_id: INTEGER is 152
+	is_precompiled_name_id: INTEGER is 153
+	is_basic_name_id: INTEGER is 154
+	open_map_name_id: INTEGER is 155
+	open_count_name_id: INTEGER is 156
+	closed_count_name_id: INTEGER is 157
+	encaps_rout_disp_name_id: INTEGER is 158
+	fake_inline_agent_target_name_id: INTEGER is 159
+	fake_inline_agent_name_name_id: INTEGER is 160
+	callable_name_id: INTEGER is 161
+	valid_operands_name_id: INTEGER is 162
 
 feature -- Classification
 

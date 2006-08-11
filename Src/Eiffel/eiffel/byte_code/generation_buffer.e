@@ -188,6 +188,29 @@ feature -- Basic element change
 			append (s)
 		end
 
+	put_array (a: ARRAY [ANY]) is
+			-- Write elements of array `a'
+		require
+			a_not_void: a /= Void
+		local
+			i, nb: INTEGER
+			sep: STRING
+		do
+			from
+				i := 1
+				nb := a.count
+				sep := ", "
+			until
+				i > nb
+			loop
+				if i /= 1 then
+					put_string (sep)
+				end
+				put_string ((a @ i).out)
+				i := i + 1
+			end
+		end
+
 	indent is
 			-- Indent next output line by one tab.
 		do

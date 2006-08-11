@@ -247,15 +247,34 @@ feature -- Access
 
 	is_inline_agent: BOOLEAN is
 			-- is the feature an inline angent
-	do
-		Result := inline_agent_nr > 0
-	end
+		do
+			Result := inline_agent_nr /= 0
+		end
 
 	enclosing_body_id: INTEGER
 			-- The feature id of the enclosing feature of an inline agent
 
+	enclosing_feature: FEATURE_I is
+			-- Gives the (real) feature in which this features is defined.
+			-- If the feature has no enclosing feature, a reference to itself is returned.
+		local
+			l_written_class: CLASS_C
+		do
+			if is_inline_agent then
+				l_written_class := written_class;
+				Result := l_written_class.feature_i_with_body_index (enclosing_body_id)
+				if Result = Void then
+					Result := l_written_class.invariant_feature
+				end
+			else
+				Result := Current
+			end
+		ensure
+			Result /= Void and not Result.is_inline_agent
+		end
+
+		-- the number of this inline agent in the enclosing feature
 	inline_agent_nr: INTEGER
-			-- the number of this inline agent in the enclosing feature
 
 feature -- Comparison
 
@@ -660,6 +679,15 @@ feature -- Setting
 			is_ensure_then_set: is_ensure_then = b
 		end
 
+	frozen set_is_fake_inline_agent (b: BOOLEAN) is
+			-- Assign `b' to `is_fake_inline_agent'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_fake_inline_agent_mask)
+		ensure
+			is_fake_inline_agent_set: is_fake_inline_agent = b
+		end
+
+
 	set_is_selected (b: BOOLEAN) is
 			-- Assign `b' to `is_selected'.
 		do
@@ -727,12 +755,14 @@ feature -- Setting
 		end
 
 	set_inline_agent (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER) is
+			-- Define this feature as an inline agent
 		require
 			enclosing_body_id_valid: a_enclosing_body_id > 0
-			inline_agent_nr_valid: a_inline_agent_nr > 0
+			inline_agent_nr_valid: (is_fake_inline_agent implies a_inline_agent_nr = -1) and
+									not is_fake_inline_agent implies a_inline_agent_nr > 0
 		do
-			enclosing_body_id := a_enclosing_body_id
 			inline_agent_nr := a_inline_agent_nr
+			enclosing_body_id := a_enclosing_body_id
 		end
 
 feature -- Incrementality
@@ -1103,6 +1133,18 @@ feature -- Conveniences
 			Result := feature_flags & is_ensure_then_mask = is_ensure_then_mask
 		end
 
+	frozen is_fake_inline_agent: BOOLEAN is
+			-- Is postcondition block of feature a redefined one ?
+		do
+			Result := feature_flags & is_fake_inline_agent_mask = is_fake_inline_agent_mask
+		end
+
+	is_invariant: BOOLEAN is
+			-- Is this feature the invariant feature of its eiffel class ?
+		do
+			Result := False
+		end
+
 	can_be_encapsulated: BOOLEAN is
 			-- Is current feature a feature that can be encapsulated?
 			-- Eg: attribute or constant.
@@ -1273,11 +1315,20 @@ feature -- Check
 		local
 			feat_as: FEATURE_AS
 			inline_agent_lookup: AST_INLINE_AGENT_LOOKUP
+			l_enclosing_feature: FEATURE_I
 		do
 			if is_inline_agent then
-				create inline_agent_lookup
-				Result :=
-					inline_agent_lookup.lookup_inline_agent (body_server.item (enclosing_body_id), inline_agent_nr)
+				if not is_fake_inline_agent then
+					create inline_agent_lookup
+					l_enclosing_feature := enclosing_feature
+					if l_enclosing_feature.is_invariant then
+						Result := inline_agent_lookup.lookup_inline_agent_of_invariant (
+							inv_ast_server.item (written_in), inline_agent_nr)
+					else
+						Result := inline_agent_lookup.lookup_inline_agent_of_feature (
+							l_enclosing_feature.body, inline_agent_nr)
+					end
+				end
 			else
 				feat_as := body
 				if feat_as /= Void then
@@ -1325,7 +1376,7 @@ feature -- Check
 --		do
 --		end
 
-	check_local_names is
+	check_local_names (a_body: BODY_AS) is
 			-- Check conflicts between local names and feature names
 			-- for an unchanged feature
 		do
@@ -1492,6 +1543,31 @@ feature -- Signature instantiation
 			end
 		end
 
+	instantiation_in (descendant_type: TYPE_A) is
+			-- Instantiated signature in context of `descendant_type'.
+		require
+			good_argument: descendant_type /= Void
+			is_solved: type.is_solved
+		local
+			i, nb: INTEGER
+			old_type: TYPE_A
+		do
+				-- Instantiation of the type
+			old_type ?= type
+			set_type (old_type.instantiation_in (descendant_type, written_in), assigner_name_id)
+				-- Instantiation of the arguments
+			from
+				i := 1
+				nb := argument_count
+			until
+				i > nb
+			loop
+				old_type ?= arguments.i_th (i)
+				arguments.put_i_th (old_type.instantiation_in (descendant_type, written_in), i)
+				i := i + 1
+			end
+		end
+
 feature -- Signature checking
 
 	check_argument_names (feat_table: FEATURE_TABLE) is
@@ -1506,6 +1582,7 @@ feature -- Signature checking
 			arg_id: INTEGER
 			vreg: VREG
 			vrfa: VRFA
+			vpir: VPIR_1
 			i, nb: INTEGER
 		do
 			from
@@ -1537,6 +1614,15 @@ feature -- Signature checking
 					vrfa.set_other_feature (feat_table.found_item)
 					Error_handler.insert_error (vrfa)
 				end
+				if context.is_name_used (arg_id) then
+						-- An argument name is an argument name of an enclosing feature
+					create vpir
+					vpir.set_entity_name (arg_id)
+					vpir.set_class (written_class)
+					vpir.set_feature (Current)
+					Error_handler.insert_error (vpir)
+				end
+
 				i := i + 1
 			end
 		end
@@ -2293,12 +2379,16 @@ feature -- Dead code removal
 	used: BOOLEAN is
 			-- Is feature used ?
 		do
+			if is_inline_agent then
+				Result := enclosing_feature.used
+			else
 					-- In final mode dead code removal process is on.
 					-- In workbench mode all features are considered
 					-- used.
-			Result := 	byte_context.workbench_mode
-						or else
-						System.is_used (Current)
+				Result := 	byte_context.workbench_mode
+							or else
+							System.is_used (Current)
+			end
 		end
 
 feature -- Byte code access
@@ -2318,12 +2408,28 @@ feature -- Byte code access
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		require
 			access_type_not_void: access_type /= Void
+		local
+			is_in_op: BOOLEAN
 		do
-			if written_in = System.any_id then
-					-- Feature written in ANY.
-				create {ANY_FEATURE_B} Result.make (Current, access_type, static_type)
-			else
-				create {FEATURE_B} Result.make (Current, access_type, static_type)
+			is_in_op := written_in = System.function_class_id or else
+						written_in = System.predicate_class_id or else
+						written_in = System.procedure_class_id
+
+			if is_in_op then
+				if equal (feature_name, "call") then
+					create {AGENT_CALL_B} Result.make (Current, access_type, static_type, False)
+				elseif equal (feature_name, "item") then
+					create {AGENT_CALL_B} Result.make (Current, access_type, static_type, True)
+				end
+			end
+
+			if Result = Void then
+				if written_in = System.any_id then
+						-- Feature written in ANY.
+					create {ANY_FEATURE_B} Result.make (Current, access_type, static_type)
+				else
+					create {FEATURE_B} Result.make (Current, access_type, static_type)
+				end
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -2512,26 +2618,27 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	feature_flags: INTEGER_16
+	feature_flags: INTEGER_32
 			-- Property of Current feature, i.e. frozen,
 			-- infix, origin, prefix, selected...
 
-	is_frozen_mask: INTEGER_16 is 0x0001
-	is_origin_mask: INTEGER_16 is 0x0002
-	is_empty_mask: INTEGER_16 is 0x0004
-	is_infix_mask: INTEGER_16 is 0x0008
-	is_prefix_mask: INTEGER_16 is 0x0010
-	is_require_else_mask: INTEGER_16 is 0x0020
-	is_ensure_then_mask: INTEGER_16 is 0x0040
-	has_precondition_mask: INTEGER_16 is 0x0080
-	has_postcondition_mask: INTEGER_16 is 0x0100
-	is_bracket_mask: INTEGER_16 is 0x0200
-	is_binary_mask: INTEGER_16 is 0x0400
-	is_unary_mask: INTEGER_16 is 0x0800
-	has_convert_mark_mask: INTEGER_16 is 0x1000
-	has_property_mask: INTEGER_16 is 0x2000
-	has_property_getter_mask: INTEGER_16 is 0x4000
-	has_property_setter_mask: INTEGER_16 is 0x8000
+	is_frozen_mask: INTEGER_32 is 0x0001
+	is_origin_mask: INTEGER_32 is 0x0002
+	is_empty_mask: INTEGER_32 is 0x0004
+	is_infix_mask: INTEGER_32 is 0x0008
+	is_prefix_mask: INTEGER_32 is 0x0010
+	is_require_else_mask: INTEGER_32 is 0x0020
+	is_ensure_then_mask: INTEGER_32 is 0x0040
+	has_precondition_mask: INTEGER_32 is 0x0080
+	has_postcondition_mask: INTEGER_32 is 0x0100
+	is_bracket_mask: INTEGER_32 is 0x0200
+	is_binary_mask: INTEGER_32 is 0x0400
+	is_unary_mask: INTEGER_32 is 0x0800
+	has_convert_mark_mask: INTEGER_32 is 0x1000
+	has_property_mask: INTEGER_32 is 0x2000
+	has_property_getter_mask: INTEGER_32 is 0x4000
+	has_property_setter_mask: INTEGER_32 is 0x8000
+	is_fake_inline_agent_mask: INTEGER_32 is 0x10000
 			-- Mask used for each feature property.
 
 feature {INHERIT_TABLE} -- Access

@@ -2639,6 +2639,8 @@ feature -- Freeezing
 			else
 				create {WBENCH_MAKER} makefile_generator.make
 			end
+
+			address_table.update_ids
 				-- Re-process dynamic types
 			-- FIXME
 			--process_dynamic_types
@@ -2838,6 +2840,8 @@ feature -- Final mode generation
 						print_memory_statistics
 						create d1.make_now
 					end
+
+					address_table.update_ids
 
 						-- Dead code removal
 					if not remover_off then
@@ -3327,9 +3331,22 @@ feature -- Dead code removal
 			l_class := routine_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
 
-				-- Protection of feature `set_rout_disp_lazy' of ROUTINE classes
+				-- Protection of ROUTINE class features
 			l_class := routine_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_lazy_rout_disp_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.rout_disp_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.calc_rout_addr_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.closed_operands_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.class_id_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.feature_id_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.is_precompiled_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.is_basic_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.open_map_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.open_count_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.closed_count_name_id), l_class)
+
+				-- Protection of FUNCTION class features
+			l_class := function_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.last_result_name_id), l_class)
 
 				-- Protection of feature `internal_correct_mismatch' of ANY
 			l_class := any_class.compiled_class

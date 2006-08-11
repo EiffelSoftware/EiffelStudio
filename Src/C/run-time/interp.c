@@ -67,6 +67,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_struct.h"
 #include "rt_main.h" /* For debug_mode: we need to move dynamic_eval */
 #include "eif_helpers.h"
+#include "eif_rout_obj.h"
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
@@ -244,12 +245,12 @@ rt_shared int dbg_store_exception_trace (char* trace);
 rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
 
 /* Feature call and/or access  */
-rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type);
+rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_inline_agent);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
-rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address of a routine */
+rt_private void address(int32 aid);													/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
 rt_private void reverse_local(struct item * it, uint32 type);						/* Reverse assignment to local or result*/
@@ -566,7 +567,6 @@ rt_private void interpret(int flag, int where)
 	}
 
 	for (;;) {
-
 #ifdef DEBUG
 	dprintf(2)("0x%lX: ", IC);
 #endif
@@ -1527,10 +1527,10 @@ rt_private void interpret(int flag, int where)
 
 	case BC_VOID:
 		{
+			struct item * last;
 #ifdef DEBUG
 			dprintf(2)("BC_VOID\n");
 #endif
-			struct item * last;
 			last = iget ();
 			last->it_ref = NULL;
 			last->type = SK_REF;
@@ -1752,42 +1752,37 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
-			EIF_BOOLEAN has_args, has_open, is_lazy, is_precompiled, is_basic;
-			struct item *addr, *true_addr, *aargs, *aopen;
-			int32 class_id, feature_id;
-			EIF_REFERENCE args, open, closed;
+			EIF_BOOLEAN has_closed, is_precompiled, is_basic, is_target_closed, is_inline_agent;
+			struct item *aclosed_operands, *aopen_map;
+			int32 class_id, feature_id, open_count;
+			EIF_REFERENCE open_map, closed_operands;
 
-			args = open = closed = (EIF_REFERENCE) 0;
-			has_args = get_bool(&IC); /* Do we have an argument tuple? */
-			has_open = get_bool(&IC); /* Do we have an open map array? */
-			is_lazy = get_bool(&IC); /* Is the address table entry not yet generated (in ececil.c)? */
+			open_map = closed_operands = (EIF_REFERENCE) 0;
+			has_closed = get_bool(&IC); /* Do we have an closed operands tuple? */
 			type = get_int16(&IC);
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			if (is_lazy) {
-				class_id = get_int32(&IC);
-				feature_id = get_int32(&IC);
-				is_precompiled = get_bool(&IC);
-				is_basic = get_bool(&IC);
-			} else {
-				true_addr = opop();  /* True address of routine */
-				addr = opop();  /* Address of routine */
-			}
-			if (has_open) {
-				aopen = opop();
-				open = (EIF_REFERENCE) (aopen->it_ref);
+			
+			class_id = get_int32(&IC);	
+			feature_id = get_int32(&IC);
+			is_precompiled = get_bool(&IC);
+			is_basic = get_bool(&IC);
+			is_target_closed = get_bool(&IC);
+			is_inline_agent = get_bool(&IC);
+			open_count = get_int32(&IC);
+
+			if (open_count > 0) {
+				aopen_map = opop();
+				open_map = (EIF_REFERENCE) (aopen_map->it_ref);
 			} 
-			if (has_args) {
-				aargs = opop();
-				args = (EIF_REFERENCE) (aargs->it_ref);
+			if (has_closed) {
+				aclosed_operands = opop();
+				closed_operands = (EIF_REFERENCE) (aclosed_operands->it_ref);
 			}
 			stagval = tagval;
 				/* Create new object */
-			if (is_lazy) {
-				new_obj = RTLNR3((int16)type, class_id, feature_id, is_precompiled, is_basic, args, open);
-			} else {
-				new_obj = RTLNR2((int16)type, addr->it_ptr, true_addr->it_ptr, args, open);
-			}
-
+			new_obj = RTLNR2((int16)type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
+							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
+			
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -2505,9 +2500,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ADDR\n");
 #endif
-		offset = get_int32(&IC);			/* Get the feature id */
-		code = get_int16(&IC);				/* Get the static type */
-		address((int32)offset, code, (int) get_bool(&IC));
+		address(get_int32(&IC));
 		break;
 
 	/*
@@ -4270,7 +4263,7 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 		return result;
 	}
 
-	dynamic_eval (fid, stype, is_precompiled, is_basic_type);
+	dynamic_eval (fid, stype, is_precompiled, is_basic_type, 0);
 
 	if (otop()!=previous_otop) {/* a result has been pushed on the stack */
 		result = opop(); 
@@ -4290,7 +4283,7 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 /*
  * Function calling routines
  */
-rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type)
+rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_inline_agent)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
@@ -4325,11 +4318,20 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 			/* We need to create a reference to the basic type on the fly */
 		metamorphose_top(scur, stop);
 	}
+	
 	if (! is_precompiled) {
 		rout_id = Routids(stype)[fid];
-		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+		if (is_inline_agent) {
+			CBodyId(body_id,rout_id,RTUD(stype));
+		} else {
+			CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
+		}
 	} else {
-		body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
+		if (is_inline_agent) {
+			body_id = desc_tab[stype][RTUD(stype)][fid].info;
+		} else {
+			body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
+		}
 	}
 	excatch(&exenv);
 	if (setjmp(exenv)) {
@@ -4732,10 +4734,8 @@ rt_shared void call_disp(uint32 dtype, EIF_REFERENCE object)
 	IC = OLD_IC;
 }
 
-rt_private void address(int32 fid, int stype, int for_rout_obj)
-						/* Feature ID */
-						/* Static type (entity where feature is applied) */
-						/* Do we need it for a routine object? */
+rt_private void address(int32 aid)
+						/* Id of the routine in the dispath table */
 {
 	/* Get the address of a routine identified by 'fid', in the static type
 	 * context 'stype', with Current being place on top of the operational
@@ -4747,10 +4747,7 @@ rt_private void address(int32 fid, int stype, int for_rout_obj)
 	last = iget();
 	last->type = SK_POINTER;
 
-	if (for_rout_obj)
-		last->it_ptr = (EIF_POINTER) RTWPPR(stype, fid);
-	else
-		last->it_ptr = (EIF_POINTER) RTWPP(stype, fid);
+	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
 rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)

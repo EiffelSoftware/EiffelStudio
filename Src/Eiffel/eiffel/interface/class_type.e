@@ -222,6 +222,25 @@ feature -- Access
 	conformance_table: PACKED_BOOLEANS
 			-- Conformance table for current type.
 
+	type_number: INTEGER is
+			-- Gives the position on which this CLASS_TYPE occors in its associated class's TYPE_LIST
+		local
+			types: TYPE_LIST
+		do
+			if type_number_int = 0 then
+				types := associated_class.types
+				from
+					types.start
+				until
+					types.after
+				loop
+					type_number_int := type_number_int + 1
+					types.forth
+				end
+			end
+			Result := type_number_int
+		end
+
 feature -- Status report
 
 	conform_to (other: CLASS_TYPE): BOOLEAN is
@@ -641,7 +660,6 @@ feature -- Generation
 						feature_i := current_eiffel_class.inline_agent_table.item_for_iteration
 							-- Generate the C code of `feature_i'
 						generate_feature (feature_i, buffer)
-
 						current_eiffel_class.inline_agent_table.forth
 					end
 				end
@@ -1898,6 +1916,9 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	type_number_int: INTEGER
+		-- used to chache the type number
 
 invariant
 	type_not_void: type /= Void

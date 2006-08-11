@@ -62,8 +62,8 @@ extern "C" {
 	RT_LNK uint32 egc_str_hash_offset;
 #endif
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
-	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);		/* ROUTINE `set_rout_disp' feature */
-	RT_LNK void (*egc_lazy_routdisp)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN, EIF_BOOLEAN,EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);		/* ROUTINE `set_lazy_rout_disp' feature */
+	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
+							    EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */

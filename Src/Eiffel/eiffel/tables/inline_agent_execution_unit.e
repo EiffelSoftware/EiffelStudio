@@ -53,19 +53,21 @@ feature -- Access
 						-- Feature may have disappeared from system and
 						-- we need to detect it.
 					Result := Body_server.server_has (enclosing_feature.body_index)
-					if
-						Result and then
-						System.execution_table.has_dead_function (enclosing_feature.body_index)
-					then
-						f := Body_server.server_item (enclosing_feature.body_index)
+					if Result then
+						if System.execution_table.has_dead_function (enclosing_feature.body_index) then
 
-							-- This is an attribute that was a function before, so
-							-- it is not a valid `execution_unit' anymore if after
-							-- all recompilation it is still an attribute.
-							--
-							-- Or if it is a deferred feature that was not
-							-- deferred before
-						Result := not f.is_attribute and then not f.is_deferred
+							f := Body_server.server_item (enclosing_feature.body_index)
+
+								-- This is an attribute that was a function before, so
+								-- it is not a valid `execution_unit' anymore if after
+								-- all recompilation it is still an attribute.
+								--
+								-- Or if it is a deferred feature that was not
+								-- deferred before
+							Result := not f.is_attribute and then not f.is_deferred
+						end
+					else
+						Result := class_type.associated_class.invariant_feature = enclosing_feature
 					end
 				end
 			end

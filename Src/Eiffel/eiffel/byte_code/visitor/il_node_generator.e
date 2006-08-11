@@ -489,41 +489,49 @@ feature {NONE} -- Implementation
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			debug_generation: BOOLEAN
 			i: INTEGER
+			l_body: BODY_AS
 		do
 				-- Do we generate debug information for local variables.
 			debug_generation := System.line_generation or context.workbench_mode
 
 			if debug_generation then
-
-				routine_as ?= context.current_feature.real_body.content
-				if routine_as /= Void and then routine_as.locals /= Void then
-						-- `local_list' is in the same order as `routine_as.locals'
-						-- so this is easy to find for each element of `local_list'
-						-- its name in `routine_as.locals'.
-					from
-						rout_locals := routine_as.locals
-						rout_locals.start
-						local_list.start
-					until
-						local_list.after
-					loop
-						if not rout_locals.after then
-							from
-								id_list := rout_locals.item.id_list
-								id_list.start
-							until
-								id_list.after
-							loop
-								il_generator.put_local_info (local_list.item, id_list.item)
+				l_body := context.current_feature.real_body
+				if l_body /= Void then
+					routine_as ?= l_body.content
+					if routine_as /= Void and then routine_as.locals /= Void then
+							-- `local_list' is in the same order as `routine_as.locals'
+							-- so this is easy to find for each element of `local_list'
+							-- its name in `routine_as.locals'.
+						from
+							rout_locals := routine_as.locals
+							rout_locals.start
+							local_list.start
+						until
+							local_list.after
+						loop
+							if not rout_locals.after then
+								from
+									id_list := rout_locals.item.id_list
+									id_list.start
+								until
+									id_list.after
+								loop
+									il_generator.put_local_info (local_list.item, id_list.item)
+									local_list.forth
+									id_list.forth
+								end
+								rout_locals.forth
+							else
+								il_generator.put_dummy_local_info (local_list.item, i)
+								i := i + 1
 								local_list.forth
-								id_list.forth
 							end
-							rout_locals.forth
-						else
-							il_generator.put_dummy_local_info (local_list.item, i)
-							i := i + 1
-							local_list.forth
 						end
+					else
+							-- No local variables were found in routine text, therefore
+							-- we have only temporary local variables that are generated
+							-- using no debug information.
+						debug_generation := False
 					end
 				else
 						-- No local variables were found in routine text, therefore
@@ -560,36 +568,40 @@ feature {NONE} -- Implementation
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			local_type: CL_TYPE_I
 			i: INTEGER
+			l_body: BODY_AS
 		do
-			routine_as ?= context.current_feature.real_body.content
-			if routine_as /= Void and then routine_as.locals /= Void then
-					-- `local_list' is in the same order as `routine_as.locals'
-					-- so this is easy to find for each element of `local_list'
-					-- its name in `routine_as.locals'.
-				rout_locals := routine_as.locals
-				from
-					rout_locals.start
-					local_list.start
-					i := 1
-				until
-					rout_locals.after
-				loop
+			l_body := context.current_feature.real_body
+			if l_body /= Void then
+				routine_as ?= l_body.content
+				if routine_as /= Void and then routine_as.locals /= Void then
+						-- `local_list' is in the same order as `routine_as.locals'
+						-- so this is easy to find for each element of `local_list'
+						-- its name in `routine_as.locals'.
+					rout_locals := routine_as.locals
 					from
-						id_list := rout_locals.item.id_list
-						id_list.start
+						rout_locals.start
+						local_list.start
+						i := 1
 					until
-						id_list.after
+						rout_locals.after
 					loop
-						local_type ?= context.real_type (local_list.item)
-						if local_type /= Void and then local_type.is_true_expanded and then not local_type.is_external then
-							il_generator.generate_local_address (i)
-							il_generator.initialize_expanded_variable (local_type.associated_class_type)
+						from
+							id_list := rout_locals.item.id_list
+							id_list.start
+						until
+							id_list.after
+						loop
+							local_type ?= context.real_type (local_list.item)
+							if local_type /= Void and then local_type.is_true_expanded and then not local_type.is_external then
+								il_generator.generate_local_address (i)
+								il_generator.initialize_expanded_variable (local_type.associated_class_type)
+							end
+							i := i + 1
+							local_list.forth
+							id_list.forth
 						end
-						i := i + 1
-						local_list.forth
-						id_list.forth
+						rout_locals.forth
 					end
-					rout_locals.forth
 				end
 			end
 		end
@@ -1656,6 +1668,11 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_agent_call_b (a_node: AGENT_CALL_B) is
+		do
+			process_feature_b (a_node)
+		end
+
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		local
@@ -2289,10 +2306,10 @@ feature {NONE} -- Visitors
 
 			l_cl_type ?= context.real_type (a_node.class_type)
 			if a_node.is_inline_agent then
-				il_generator.put_impl_method_token (il_generator.implemented_type (a_node.class_id, l_cl_type),
+				il_generator.put_impl_method_token (il_generator.implemented_type (a_node.origin_class_id, l_cl_type),
 					a_node.feature_id)
 			else
-				il_generator.put_method_token (il_generator.implemented_type (a_node.class_id, l_cl_type),
+				il_generator.put_method_token (il_generator.implemented_type (a_node.origin_class_id, l_cl_type),
 					a_node.feature_id)
 			end
 				-- Arguments

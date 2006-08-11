@@ -43,6 +43,8 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+
 feature -- Initialize
 
 	generate (a_ba: BYTE_ARRAY; a_node: BYTE_NODE) is
@@ -89,10 +91,8 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			ba.append (Bc_addr)
-			ba.append_integer (a_node.feature_id)
-			ba.append_short_integer (context.class_type.static_type_id - 1)
-				-- Use RTWPP
-			ba.append_boolean (False)
+			ba.append_integer (
+				system.address_table.id_of_dollar_feature (a_node.feature_class_id, a_node.feature_id, context.class_type))
 		end
 
 	process_argument_b (a_node: ARGUMENT_B) is
@@ -835,6 +835,12 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_agent_call_b (a_node: AGENT_CALL_B) is
+			-- Process `a_node'.
+		do
+			process_feature_b (a_node)
+		end
+
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		local
@@ -1344,7 +1350,7 @@ feature {NONE} -- Visitors
 			l_cl_type_i: CL_TYPE_I
 			l_gen_type : GEN_TYPE_I
 		do
-				-- Arguments
+				-- Closed operands
 			if a_node.arguments /= Void then
 				a_node.arguments.process (Current)
 			end
@@ -1357,12 +1363,8 @@ feature {NONE} -- Visitors
 				-- Now create routine object
 			ba.append (Bc_rcreate)
 
-					-- Do we have arguments (a TUPLE) on the stack?
+				-- Do we have arguments (a TUPLE) on the stack?
 			ba.append_boolean (a_node.arguments /= Void)
-					-- Do we have an open map?
-			ba.append_boolean (a_node.open_positions /= Void)
-					-- This is a lazy call
-			ba.append_boolean (True)
 
 			l_cl_type_i ?= context.real_type (a_node.type)
 			l_gen_type  ?= l_cl_type_i
@@ -1376,10 +1378,30 @@ feature {NONE} -- Visitors
 			ba.append_short_integer (-1)
 
 			l_cl_type_i ?= context.real_type (a_node.class_type)
-			ba.append_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
-			ba.append_integer (a_node.feature_id)
-			ba.append_boolean (l_cl_type_i.base_class.is_precompiled)
-			ba.append_boolean (l_cl_type_i.is_basic)
+
+			if a_node.is_precompiled then
+				ba.append_integer (a_node.rout_origin)
+				ba.append_integer (a_node.rout_offset)
+			else
+					-- class_id
+				ba.append_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
+					-- feature_id
+				ba.append_integer (a_node.feature_id)
+			end
+				-- is_precompiled
+			ba.append_boolean (a_node.is_precompiled)
+				-- is_basic
+			ba.append_boolean (a_node.is_basic)
+				-- is_target_closed
+			ba.append_boolean (a_node.is_target_closed)
+				-- is_inline_agent
+			ba.append_boolean (a_node.is_inline_agent)
+				-- open_count
+			if a_node.omap /= Void then
+				ba.append_integer (a_node.omap.count)
+			else
+				ba.append_integer (0)
+			end
 		end
 
 	process_string_b (a_node: STRING_B) is

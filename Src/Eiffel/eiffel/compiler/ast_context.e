@@ -64,8 +64,39 @@ feature -- Access
 			-- Supplier units
 
 	inline_agent_counter: COUNTER
-		-- counter for managing the inline agents that are enclosed in the current feature
+			-- counter for managing the inline agents that are enclosed in the current feature
 
+	current_inline_agent_body: BODY_AS
+			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
+
+	used_argument_names: SEARCH_TABLE [INTEGER]
+			-- Argument names that are already used by enclosing features
+
+	used_local_names: SEARCH_TABLE [INTEGER]
+			-- Local names that are already used by enclosing features
+
+	set_used_argument_names (table: like used_argument_names) is
+			-- Set the used argument names
+		do
+			used_argument_names := table
+		end
+
+	set_used_local_names (table: like used_local_names) is
+			-- Set the used local names
+		do
+			used_local_names := table
+		end
+
+	is_name_used (id: INTEGER): BOOLEAN is
+			-- Is the name with id `id' already used in an enclosing feature?
+		do
+			if used_argument_names /= Void then
+				Result := used_argument_names.has (id)
+			end
+			if not Result and then used_local_names /= Void then
+				Result := used_local_names.has (id)
+			end
+		end
 
 feature -- Status report
 
@@ -204,6 +235,13 @@ feature -- Setting
 			end
 		end
 
+	set_current_inline_agent_body (body: like current_inline_agent_body) is
+			-- Sets the current inline agent body 
+		do
+			current_inline_agent_body := body
+		end
+
+
 feature -- Managing the type stack
 
 	clear_all is
@@ -236,6 +274,8 @@ feature	-- Saving contexts
 
 			create locals.make (10)
 			create supplier_ids.make
+			used_argument_names := Void
+			used_local_names := Void
 		end
 
 	restore (context: AST_CONTEXT) is

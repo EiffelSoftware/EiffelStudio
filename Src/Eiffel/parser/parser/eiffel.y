@@ -1196,7 +1196,7 @@ Strip_identifier_list: -- Empty
 
 Routine:
 		Obsolete
-			{	fbody_pos := position }
+			{	set_fbody_pos (position) }
 		Precondition
 		Local_declarations
 		Routine_body
@@ -1344,17 +1344,17 @@ Instruction_impl: Creation
 Precondition: -- Empty
 			-- { $$ := Void }
 	|	TE_REQUIRE
-			{ id_level := Assert_level }
+			{ set_id_level (Assert_level) }
 		Assertion
 			{
-				id_level := Normal_level
+				set_id_level (Normal_level)
 				$$ := ast_factory.new_require_as ($3, $1)
 			}
 	|	TE_REQUIRE TE_ELSE
-			{ id_level := Assert_level }
+			{ set_id_level (Assert_level) }
 		Assertion
 			{
-				id_level := Normal_level
+				set_id_level (Normal_level)
 				$$ := ast_factory.new_require_else_as ($4, $1, $2)
 			}
 	;
@@ -1362,17 +1362,17 @@ Precondition: -- Empty
 Postcondition: -- Empty
 			-- { $$ := Void }
 	|	TE_ENSURE
-			{ id_level := Assert_level }
+			{ set_id_level (Assert_level) }
 		Assertion
 			{
-				id_level := Normal_level
+				set_id_level (Normal_level)
 				$$ := ast_factory.new_ensure_as ($3, $1)
 			}
 	|	TE_ENSURE TE_THEN
-			{ id_level := Assert_level }
+			{ set_id_level (Assert_level) }
 		Assertion
 			{
-				id_level := Normal_level
+				set_id_level (Normal_level)
 				$$ := ast_factory.new_ensure_then_as ($4, $1, $2)
 			}
 	;
@@ -1947,10 +1947,10 @@ Invariant: -- Empty
 Class_invariant: -- Empty
 			-- { $$ := Void }
 	|	TE_INVARIANT
-			{ id_level := Invariant_level }
+			{ set_id_level (Invariant_level) }
 		Assertion
 			{
-				id_level := Normal_level
+				set_id_level (Normal_level)
 				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1)
 				once_manifest_string_count := 0
 			}
@@ -2097,7 +2097,7 @@ Creation_clause:
 	;
 
 Agent_call: 
-		TE_AGENT Optional_formal_arguments Type_mark Optional_attribute_or_routine Delayed_actuals
+		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Optional_attribute_or_routine {remove_feature_frame} Delayed_actuals
 		{
 			if $3 /= Void then
 				last_type := $3.second
@@ -2108,7 +2108,7 @@ Agent_call:
 			end
 			
 			$$ := ast_factory.new_inline_agent_creation_as (
-				ast_factory.new_body_as ($2, last_type, Void, $4, last_symbol, Void, Void, Void), $5, $1)
+				ast_factory.new_body_as ($2, last_type, Void, $5, last_symbol, Void, Void, Void), $7, $1)
 		}
 	|	
 		TE_AGENT Feature_name_for_call Delayed_actuals

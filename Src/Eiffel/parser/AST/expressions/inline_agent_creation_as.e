@@ -16,7 +16,8 @@ inherit
 		redefine
 			process,
 			is_equivalent,
-			last_token
+			last_token,
+			first_token
 		end
 
 create
@@ -51,7 +52,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := Precursor (other) and then equivalent (body, other.body)
+			Result := equivalent (operands, other.operands) and then
+					  equivalent (target, other.target) and then
+					  has_target = other.has_target and then
+					  equivalent (body, other.body)
 		end
 
 feature -- Access
@@ -68,7 +72,30 @@ feature -- Access
 	body: BODY_AS
 			-- Inline agent body
 
+	inl_class_id: INTEGER
+			-- Class in which the inline agent is defined. (Set by semantic check)
+
+	inl_rout_id: INTEGER
+			-- Routine id of the FEATURE_I. (Set by semantic check)
+
+	set_inl_class_id (a_class_id: INTEGER) is
+			-- Set the inl_class_id to `a_class_id'
+		do
+			inl_class_id := a_class_id
+		end
+
+	set_inl_rout_id (a_rout_id: INTEGER) is
+			-- Set the inl_rout_id to `a_rout_id'
+		do
+			inl_rout_id := a_rout_id
+		end
+
 feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := agent_keyword.first_token (a_list)
+		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do

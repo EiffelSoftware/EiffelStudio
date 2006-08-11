@@ -1,82 +1,65 @@
 indexing
-	description: "Representation of the invariant of a class which is internally stored%
-		%as a procedure"
+	description: "Address table entry indexed by feature reordering"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INVARIANT_FEAT_I
+class
+	ADDRESS_TABLE_ENTRY
 
 inherit
-	DYN_PROC_I
-		redefine
-			melt, generate_il, is_invariant
-		end
-
-	SHARED_BN_STATELESS_VISITOR
-		export
-			{NONE} all
-		end
-
-	SHARED_IL_CODE_GENERATOR
-		export
-			{NONE} all
+	SEARCH_TABLE [FEATURE_REORDERING]
+		rename
+			make as make_search_table
 		end
 
 create
 	make
 
-feature
+feature -- Initialize
 
-	make (a_class: CLASS_C) is
+	make is
 		do
-			set_feature_name_id (Names_heap.internal_invariant_name_id, 0)
-			create rout_id_set.make
-			rout_id_set.put (System.routine_id_counter.invariant_rout_id)
-			written_in := a_class.class_id
+			make_search_table (2)
 		end
 
-feature -- IL code generation
 
-	generate_il is
-			-- Generate IL code for current feature.
+feature -- Access
+
+	force_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_is_lazy: BOOLEAN) is
 		local
-			byte_code: INVARIANT_B
+			reordering: FEATURE_REORDERING
 		do
-			byte_code := Inv_byte_server.item (written_in)
-			byte_context.set_byte_code (create {STD_BYTE_CODE})
-			byte_context.set_current_feature (Current)
-			cil_node_generator.generate_il_node (il_generator, byte_code)
-			byte_context.clear_feature_data
-		end
+			create reordering.make (a_is_target_closed, a_open_map, a_is_lazy)
 
-feature -- Byte Code generation
-
-	melt (exec: EXECUTION_UNIT) is
-			-- Generate byte code for the current feature
-		local
-			byte_code: INVARIANT_B
-			melted_feature: MELT_FEATURE
-		do
-			byte_code := Inv_byte_server.item (written_in)
-
-			Byte_array.clear
-			melted_generator.generate (byte_array, byte_code)
-
-			melted_feature := Byte_array.melted_feature
-			melted_feature.set_real_body_id (exec.real_body_id)
-			if not System.freeze then
-				Tmp_m_feature_server.put (melted_feature)
+			if has (reordering) and then a_is_lazy then
+				item (reordering).set_is_lazy (True)
+			else
+				put (reordering)
 			end
-
-			Execution_table.mark_melted (exec)
 		end
 
-feature
+	has_dollar_op: BOOLEAN
 
-	is_invariant: BOOLEAN is True ;
-			-- This is the invariant feature of its class
+	set_has_dollar_op is
+		do
+			has_dollar_op := True
+		end
+
+feature {ADDRESS_TABLE}
+
+		-- Id of dollar operator
+	dollar_id: INTEGER
+
+	set_dollar_id (a_dollar_id: like dollar_id) is
+		require
+			has_dollar_op
+		do
+			dollar_id := a_dollar_id
+		ensure
+			dollar_id = a_dollar_id
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

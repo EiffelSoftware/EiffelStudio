@@ -285,49 +285,81 @@ feature {ROUTINE} -- Implementation
 	frozen is_inline_agent: BOOLEAN
 			-- Is the target feature an inline agent
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: OPEN_ARGS;
+	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
 						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN) is
 			-- Initialize object.
 		require
-			args_not_void: args /= Void
+			closed_args_not_void: closed_args /= Void
 		local
-			i, j, nb: INTEGER
+			closed_idx, operand_idx, l_closed_count, l_open_count, l_next_open, l_omap_pos: INTEGER
 			l_internal: like internal_operands
+			l_target_closed: BOOLEAN
 		do
 			is_inline_agent := a_is_inline_agent
 			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
-			nb := args.count
-			if is_inline_agent then
-				target_object := Void
-				create l_internal.make (nb)
-				i := 1
+			l_closed_count := closed_args.count
+			
+			if omap /= Void then
+				open_map := omap.to_cil
+				l_open_count := omap.count
 			else
-				target_object := args.fast_item (1)
-				create l_internal.make (nb - 1)
-				i := 2
+				open_map := Void
+				l_open_count := 0
 			end
 
-			if nb > 0 then
+			if is_inline_agent then
+				l_target_closed := True
+				target_object := Void
+				create l_internal.make (l_open_count + l_closed_count)
+				closed_idx := 1
+				operand_idx := 1
+			else
+				l_target_closed := not (l_open_count > 0 and then omap.item (1) = 1)
+				if l_target_closed then
+					target_object := closed_args.fast_item (1)
+					closed_idx := 2
+				else
+					l_omap_pos := 1
+					closed_idx := 1
+				end
+				operand_idx := 2
+				create l_internal.make (open_count + l_closed_count - 1)
+			end
+
+			if l_open_count > l_omap_pos then
+				l_next_open := omap.item (l_omap_pos + 1)
+				l_omap_pos := l_omap_pos + 1
+			else
+				l_next_open := {INTEGER}.max_value
+			end
+			
+			if l_closed_count > 0 then
 				from
-					j := 0
 				until
-					i > nb
+					closed_idx > l_closed_count
 				loop
-					l_internal.put (j, args.fast_item (i))
-					i := i + 1
-					j := j + 1
+					if operand_idx = l_next_open then
+						if l_open_count > l_omap_pos then
+							l_next_open := omap.item (l_omap_pos + 1)
+							l_omap_pos := l_omap_pos + 1
+						else
+							l_next_open := {INTEGER}.max_value
+						end
+					else
+						if is_inline_agent then
+							l_internal.put (operand_idx - 1, closed_args.fast_item (closed_idx))
+						else
+							l_internal.put (operand_idx - 2, closed_args.fast_item (closed_idx))
+						end
+						closed_idx := closed_idx + 1
+					end
+					operand_idx := operand_idx + 1
 				end
 			end
 			internal_operands := l_internal
-
-			if omap /= Void then
-				open_map := omap.to_cil
-			else
-				open_map := Void
-			end
-
-			compute_is_cleanup_needed (args)
+		
+--			compute_is_cleanup_needed (closed_args)
 		end
 
 feature {NONE} -- Implementation

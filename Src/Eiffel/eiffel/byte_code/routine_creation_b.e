@@ -27,37 +27,51 @@ feature  -- Initialization
 
 	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-		  omap: ARRAY_CONST_B
-		  a_is_attribute, a_is_inline_agent: BOOLEAN) is
+		  omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
+		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
 			valid_id: cl_id /= 0
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
+		local
+			l_rout_info: ROUT_INFO
 		do
 			class_type := cl_type
+			class_id := cl_id
 			if System.il_generation then
-				class_id := f.origin_class_id
+				origin_class_id := f.origin_class_id
 				feature_id := f.origin_feature_id
 			else
-				class_id := f.written_in
+				origin_class_id := f.written_in
 				feature_id := f.feature_id
 			end
 
 			rout_id := f.rout_id_set.first
 			type := r_type
 			arguments := args
-			open_positions := omap
-			record_feature (cl_id, feature_id, a_is_attribute)
-			is_attribute := a_is_attribute
+			open_positions := omap_bc
+			omap := a_omap
+
+			System.address_table.record_agent (cl_id, feature_id, a_is_target_closed, a_omap)
+
 			is_inline_agent := a_is_inline_agent
+			is_target_closed := a_is_target_closed
+			is_precompiled := a_is_precompiled
+			is_basic := a_is_basic
+
+			l_rout_info := system.rout_info_table.item (f.rout_id_set.first)
+			if l_rout_info /= Void then
+				rout_origin := l_rout_info.origin
+				rout_offset := l_rout_info.offset
+			end
 		end
 
-	set_ids (cl_type : like class_type; r_id: INTEGER; f_id: INTEGER;
+	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
-			 omap: ARRAY_CONST_B
-			 a_is_attribute, a_is_inline_agent: BOOLEAN) is
+			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
+			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN;) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -65,13 +79,20 @@ feature  -- Initialization
 			valid_type: r_type /= Void
 		do
 			class_type := cl_type
+			class_id := cl_id
+			origin_class_id := o_cl_id
 			rout_id := r_id
 			feature_id := f_id
+			rout_origin := r_origin
+			rout_offset := r_offset
 			type := r_type
 			arguments := args
-			open_positions := omap
-			is_attribute := a_is_attribute
+			open_positions := omap_bc
+			omap := a_omap
 			is_inline_agent := a_is_inline_agent
+			is_target_closed := a_is_target_closed
+			is_precompiled := a_is_precompile
+			is_basic := a_is_basic
 		end
 
 feature -- Attributes
@@ -80,10 +101,18 @@ feature -- Attributes
 			-- Type of the class where feature comes from
 			-- (It conforms either to CL_TYPE_I or to LIKE_CURRENT_I.)
 
+	class_id: INTEGER
+			-- Class Id of the addressed feature
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
 
-	class_id: INTEGER
+	rout_offset: INTEGER
+			-- Routine offset of the addressed feature
+
+	rout_origin: INTEGER
+			-- Routine origin of the addressed feature
+
+	origin_class_id: INTEGER
 			-- Class ID which defines current feature.
 
 	rout_id: INTEGER
@@ -98,32 +127,20 @@ feature -- Attributes
 	open_positions: ARRAY_CONST_B
 			-- Index mapping for open arguments
 
-	is_attribute: BOOLEAN
-			-- Is this byte code representing an attribute creation
+	omap: ARRAYED_LIST [INTEGER]
+			-- Open map of the routine creation
 
 	is_inline_agent: BOOLEAN
 			-- Is this byte code representing an inline agent creation
 
+	is_target_closed: BOOLEAN
+			-- Is the target of the called closed.
 
-feature -- Address table
+	is_basic: BOOLEAN
+			-- Is the target type of basic
 
-	record_feature (cl_id: INTEGER; f_id: INTEGER; a_is_attribute: BOOLEAN) is
-			-- Record the feature in the address table if it is not there.
-			-- If it is an attribute, a freezing will occur
-		local
-			address_table: ADDRESS_TABLE
-		do
-			address_table := System.address_table
-
-			if not address_table.has (cl_id, f_id) then
-					-- Record the feature
-				if a_is_attribute then
-					address_table.record (cl_id, f_id)
-				else
-					address_table.record_lazy (cl_id, f_id)
-				end
-			end
-		end
+	is_precompiled: BOOLEAN
+			-- Is the target type precompiled
 
 feature -- Status report
 
@@ -168,7 +185,8 @@ feature -- Status report
 	enlarged: ROUTINE_CREATION_BL is
 			-- Enlarge node
 		local
-			omap_enl : ARRAY_CONST_B
+			omap_enl: ARRAY_CONST_B
+			arguments_enl: TUPLE_CONST_B
 		do
 			create Result
 
@@ -177,13 +195,11 @@ feature -- Status report
 			end
 
 			if arguments /= Void then
-				Result.set_ids (class_type, rout_id, feature_id, type,
-								arguments.enlarged, omap_enl, is_attribute,
-								is_inline_agent)
-			else
-				Result.set_ids (class_type, rout_id, feature_id, type,
-								Void, omap_enl, is_attribute, is_inline_agent)
+				arguments_enl := arguments.enlarged
 			end
+
+			Result.set_ids (class_type, class_id, origin_class_id, rout_id, feature_id, rout_origin, rout_offset,
+							type, arguments_enl, omap_enl, omap, is_inline_agent, is_target_closed, is_precompiled, is_basic)
 		end
 
 feature -- Inlining

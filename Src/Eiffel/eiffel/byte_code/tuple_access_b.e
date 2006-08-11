@@ -14,7 +14,7 @@ inherit
 			is_fast_as_local, is_predefined,
 			calls_special_features, is_unsafe, optimized_byte_node,
 			size, pre_inlined_code, inlined_byte_code,
-			analyze, generate_on, enlarged,
+			analyze, generate_on, generate_access, enlarged,
 			line_number, set_line_number
 		end
 
@@ -211,18 +211,34 @@ feature -- C Code generation
 				buf.put_integer (position)
 				buf.put_character (',')
 				source.print_register
+				buf.put_character (')')
 			else
-				buf.put_string (once "eif_")
-				buf.put_string (tuple_element_name)
-				buf.put_string ("_item(")
-				a_register.print_register
-				buf.put_character (',')
-				buf.put_integer (position)
+				generate_internal (a_register)
 			end
-			buf.put_character (')')
 			buf.put_character (';')
 			buf.put_new_line
 		end
+
+	generate_access is
+		local
+		do
+			generate_internal (current_register)
+		end
+
+	generate_internal (a_register: REGISTRABLE) is
+		local
+			buf: like buffer
+		do
+			buf := buffer
+			buf.put_string (once "eif_")
+			buf.put_string (tuple_element_name)
+			buf.put_string ("_item(")
+			a_register.print_register
+			buf.put_character (',')
+			buf.put_integer (position)
+			buf.put_character (')')
+		end
+
 
 	tuple_element_name: STRING is
 			-- String representation of TUPLE element type.

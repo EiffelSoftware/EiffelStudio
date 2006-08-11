@@ -228,6 +228,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_agent_call_b (a_node: AGENT_CALL_B) is
+			-- Process `a_node'.
+		do
+		end
+
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		do

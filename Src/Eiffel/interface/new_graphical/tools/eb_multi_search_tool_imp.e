@@ -166,9 +166,9 @@ feature {NONE} -- Initialize
 			option_and_replace_all_box.extend (vbox)
 			option_and_replace_all_box.disable_item_expand (vbox)
 
-			replace_button.set_minimum_width (layout_constants.default_button_width)
-			replace_all_click_button.set_minimum_width (layout_constants.default_button_width)
-			search_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (replace_button)
+			layout_constants.set_default_width_for_button (replace_all_click_button)
+			layout_constants.set_default_width_for_button (search_button)
 
 			replace_button.disable_sensitive
 			replace_all_click_button.disable_sensitive
@@ -235,15 +235,15 @@ feature {NONE} -- Initialize
 
 				-- Add button
 			create add_button.make_with_text (interface_names.b_Add)
-			add_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (add_button)
 
 				-- Remove button
 			create remove_button.make_with_text (interface_names.b_Remove)
-			remove_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (remove_button)
 
 				-- Remove all button
 			create remove_all_button.make_with_text (interface_names.b_Remove_all)
-			remove_all_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (remove_all_button)
 
 			create Result
 
@@ -272,7 +272,7 @@ feature {NONE} -- Initialize
 
 			create vbox
 			vbox.extend (scope_list)
-			scope_list.set_minimum_width (142 + layout_constants.default_button_width)
+			scope_list.set_minimum_width (250)
 
 			scope.extend (vbox)
 			scope.disable_item_expand (vbox)

@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			current_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create but.make_with_text (Interface_names.b_Close)
-			Layout_constants.set_default_size_for_button (but)
+			Layout_constants.set_default_width_for_button (but)
 			create current_editor
 			current_editor.set_cursors (create {EB_EDITOR_CURSORS})
 			current_editor.set_reference_window (current_dialog)

@@ -266,12 +266,12 @@ feature {NONE} -- GUI
 			create add_button.make_with_text_and_action ("Add", agent add_argument)
 			l_horizontal_box.extend (add_button)
 			l_horizontal_box.disable_item_expand (add_button)
-			add_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			Layout_constants.set_default_width_for_button (add_button)
 
 			create remove_button.make_with_text_and_action ("Remove", agent remove_argument)
 			l_horizontal_box.extend (remove_button)
 			l_horizontal_box.disable_item_expand (remove_button)
-			remove_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			Layout_constants.set_default_width_for_button (remove_button)
 
 			create l_cell
 			l_horizontal_box.extend (l_cell)

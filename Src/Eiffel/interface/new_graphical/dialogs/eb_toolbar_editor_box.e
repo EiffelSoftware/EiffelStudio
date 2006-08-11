@@ -97,27 +97,27 @@ feature -- Initialization
 
 			create add_button.make_with_text (Interface_names.b_Add_text)
 			add_button.select_actions.extend (agent add_to_displayed)
-			Layout_constants.set_default_size_for_button (add_button)
+			Layout_constants.set_default_width_for_button (add_button)
 			add_button.disable_sensitive
 			create remove_button.make_with_text (Interface_names.b_Remove_text)
-			Layout_constants.set_default_size_for_button (remove_button)
+			Layout_constants.set_default_width_for_button (remove_button)
 			remove_button.select_actions.extend (agent remove_from_displayed)
 			remove_button.disable_sensitive
 			create up_button.make_with_text (Interface_names.b_Up_text)
-			Layout_constants.set_default_size_for_button (up_button)
+			Layout_constants.set_default_width_for_button (up_button)
 			up_button.select_actions.extend (agent move_up)
 			up_button.disable_sensitive
 			create down_button.make_with_text (Interface_names.b_Down_text)
-			Layout_constants.set_default_size_for_button (down_button)
+			Layout_constants.set_default_width_for_button (down_button)
 			down_button.select_actions.extend (agent move_down)
 			down_button.disable_sensitive
 			create ok_button.make_with_text (Interface_names.b_ok)
-			Layout_constants.set_default_size_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (ok_button)
 			ok_button.select_actions.extend (agent generate_toolbar)
 			ok_button.select_actions.extend (agent exit)
 			create cancel_button.make_with_text (Interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent exit)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 
 			list_container1.set_padding (Layout_constants.Small_border_size)
 			list_container1.extend (pool_label)

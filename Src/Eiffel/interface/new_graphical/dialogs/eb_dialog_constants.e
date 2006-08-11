@@ -30,12 +30,12 @@ feature -- Access
 	small_padding: INTEGER is 4
 			-- `Result' is INTEGER constant named small_padding.
 
-	default_button_width: INTEGER is 80
+	default_button_width: INTEGER is 75
 			-- `Result' is INTEGER constant named default_button_width.
 
 	tiny_padding: INTEGER is 2;
 			-- `Result' is INTEGER constant named tiny_padding.
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

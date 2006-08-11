@@ -22,7 +22,7 @@ inherit
 			refresh
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -84,13 +84,13 @@ feature {NONE} -- Initialization
 			hb2.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (conf_interface_names.general_add, agent add_class)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-			l_btn.set_minimum_width (default_button_width+25)
+			set_default_width_for_button (l_btn)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.general_remove, agent remove_class)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-			l_btn.set_minimum_width (default_button_width+25)
+			set_default_width_for_button (l_btn)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 

@@ -20,7 +20,7 @@ inherit
 			copy
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create,
 			copy

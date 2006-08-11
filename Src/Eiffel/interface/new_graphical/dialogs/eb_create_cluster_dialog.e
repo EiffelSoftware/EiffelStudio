@@ -118,9 +118,9 @@ feature {NONE} -- Initialization
 			create browse_button.make_with_text (Interface_names.B_browse)
 			browse_button.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			create create_button.make_with_text_and_action (Interface_names.b_Create, agent create_new_cluster)
-			Layout_constants.set_default_size_for_button (create_button)
+			Layout_constants.set_default_width_for_button (create_button)
 			create cancel_b.make_with_text_and_action (Interface_names.b_Cancel, agent destroy)
-			Layout_constants.set_default_size_for_button (cancel_b)
+			Layout_constants.set_default_width_for_button (cancel_b)
 
 				-- Build the frames
 			create name_frame.make_with_text (Interface_names.l_Cluster_options)

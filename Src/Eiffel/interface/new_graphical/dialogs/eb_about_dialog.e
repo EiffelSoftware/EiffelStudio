@@ -84,7 +84,7 @@ feature -- Initialization
 			registration_label.disable_edit
 			registration_label.set_minimum_height (100)
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent destroy)
-			Layout_constants.set_default_size_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (ok_button)
 
 				-- Box with text.
 			create eiffel_text_box

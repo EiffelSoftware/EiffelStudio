@@ -784,8 +784,8 @@ feature {NONE} -- Implementation
 			nl.align_text_left
 			il.align_text_left
 			cl.align_text_left
-			Layout_constants.set_default_size_for_button (okb)
-			Layout_constants.set_default_size_for_button (cb)
+			Layout_constants.set_default_width_for_button (okb)
+			Layout_constants.set_default_width_for_button (cb)
 			dialog.set_title (Interface_names.t_External_command)
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.tool_external_commands_icon)
 			dialog.set_maximum_height (dialog.minimum_height)

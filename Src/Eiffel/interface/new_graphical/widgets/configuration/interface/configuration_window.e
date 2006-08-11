@@ -72,7 +72,7 @@ inherit
 			default_create, copy
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -184,13 +184,13 @@ feature {NONE}-- Initialization
 			hb.set_padding (default_padding_size)
 
 			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
-			ok_button.set_minimum_width (default_button_width)
+			set_default_width_for_button (ok_button)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
 			set_default_push_button (ok_button)
 
 			create l_btn.make_with_text_and_action (ev_cancel, agent on_cancel)
-			l_btn.set_minimum_width (default_button_width)
+			set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
@@ -400,12 +400,12 @@ feature {NONE} -- Element initialization
 				hb.extend (create {EV_CELL})
 				create add_button.make_with_text (conf_interface_names.general_add)
 				add_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-				add_button.set_minimum_width (default_button_width+25)
+				set_default_width_for_button (add_button)
 				hb.extend (add_button)
 				hb.disable_item_expand (add_button)
 				create remove_button.make_with_text (conf_interface_names.general_remove)
 				remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-				remove_button.set_minimum_width (default_button_width+25)
+				set_default_width_for_button (remove_button)
 				hb.extend (remove_button)
 				hb.disable_item_expand (remove_button)
 

@@ -35,7 +35,7 @@ feature -- Basic operations
 			-- Add `widget' to `container' and make `widget' not expandable
 			-- Set the minimum size of `widget' to the default size for buttons
 		do
-			Layout_constants.set_default_size_for_button (button)
+			Layout_constants.set_default_width_for_button (button)
 			container.extend (button)
 			container.disable_item_expand (button)
 		end

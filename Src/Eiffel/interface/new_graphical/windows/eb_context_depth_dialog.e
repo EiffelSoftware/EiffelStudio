@@ -46,9 +46,9 @@ feature {NONE} -- Initialization
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
-			Layout_constants.set_default_size_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 			create frm.make_with_text ("Include")
 			create frm2.make_with_text ("Up to depth of")
 			create frm3.make_with_text ("View")
@@ -170,9 +170,9 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Diagram_context_depth)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
-			Layout_constants.set_default_size_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 			create frm.make_with_text ("Include")
 			create frm2.make_with_text ("Up to depth of")
 			create frm3.make_with_text ("View")

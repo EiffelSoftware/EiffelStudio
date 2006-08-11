@@ -69,10 +69,10 @@ feature {NONE} -- Initialization
 			create quit_button.make_with_text_and_action ("Quit now!", agent execute_die)
 			create restart_button.make_with_text_and_action ("Restart now!", agent restart)
 			create save_button.make_with_text_and_action ("Save", agent save_exeption_trace)
-			Layout_constants.set_default_size_for_button (ignore_button)
-			Layout_constants.set_default_size_for_button (quit_button)
-			Layout_constants.set_default_size_for_button (restart_button)
-			Layout_constants.set_default_size_for_button (save_button)
+			Layout_constants.set_default_width_for_button (ignore_button)
+			Layout_constants.set_default_width_for_button (quit_button)
+			Layout_constants.set_default_width_for_button (restart_button)
+			Layout_constants.set_default_width_for_button (save_button)
 
 			create exception_text
 			exception_text.set_cursors (create {EB_EDITOR_CURSORS})

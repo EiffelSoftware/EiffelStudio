@@ -277,10 +277,10 @@ feature {NONE} -- Implementation
 			dialog.set_default_cancel_button (close_button)
 			list.disable_multiple_selection
 			list.set_minimum_width (100)
-			Layout_constants.set_default_size_for_button (close_button)
-			Layout_constants.set_default_size_for_button (add_button)
-			Layout_constants.set_default_size_for_button (edit_button)
-			Layout_constants.set_default_size_for_button (delete_button)
+			Layout_constants.set_default_width_for_button (close_button)
+			Layout_constants.set_default_width_for_button (add_button)
+			Layout_constants.set_default_width_for_button (edit_button)
+			Layout_constants.set_default_width_for_button (delete_button)
 			dialog.set_size (300, 200)
 
 				-- Set up events.

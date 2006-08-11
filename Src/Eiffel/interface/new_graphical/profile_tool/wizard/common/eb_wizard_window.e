@@ -64,21 +64,18 @@ feature {NONE} -- Initialization
 			h1.disable_item_expand (h2)
 
 			h2.extend (previous_b)
-			previous_b.set_minimum_width (Default_button_width)
-			previous_b.set_minimum_height (Default_button_height)
+			set_default_width_for_button (previous_b)
 			previous_b.align_text_center
 			h2.disable_item_expand(previous_b)
 
 			h2.extend (next_b)
-			next_b.set_minimum_width (Default_button_width)
-			next_b.set_minimum_height (Default_button_height)
+			set_default_width_for_button (next_b)
 			next_b.align_text_center
 			h2.disable_item_expand (next_b)
 
 			h1.extend (cancel_b)
 			h1.disable_item_expand (cancel_b)
-			cancel_b.set_minimum_width (Default_button_width)
-			cancel_b.set_minimum_height (Default_button_height)
+			set_default_width_for_button (cancel_b)
 			cancel_b.align_text_center
 
 			h1.set_padding (dialog_unit_to_pixels(11))

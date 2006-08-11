@@ -1273,7 +1273,7 @@ feature {NONE} -- Implementation: Properties dialog
 			mainvb.extend (fr)
 
 			create okb.make_with_text (Interface_names.b_Ok)
-			Layout_constants.set_default_size_for_button (okb)
+			Layout_constants.set_default_width_for_button (okb)
 			if for_modification then
 				okb.select_actions.extend (agent on_modification_ok)
 				properties_dialog.show_actions.extend (agent alias_field.set_focus)
@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation: Properties dialog
 				properties_dialog.show_actions.extend (agent class_field.set_focus)
 			end
 			create cancelb.make_with_text (Interface_names.b_Cancel)
-			Layout_constants.set_default_size_for_button (cancelb)
+			Layout_constants.set_default_width_for_button (cancelb)
 			cancelb.select_actions.extend (agent properties_dialog.destroy)
 
 			create hb

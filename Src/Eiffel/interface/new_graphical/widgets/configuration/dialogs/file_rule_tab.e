@@ -28,7 +28,7 @@ inherit
 			is_equal
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create,
 			copy,
@@ -87,11 +87,11 @@ feature {NONE} -- Initialization
 			create new_exclude
 			hb.extend (new_exclude)
 			create l_btn.make_with_text_and_action (plus_button_text, agent add_exclude)
-			l_btn.set_minimum_width (small_button_width)
+			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			create l_btn.make_with_text_and_action (minus_button_text, agent remove_exclude)
-			l_btn.set_minimum_width (small_button_width)
+			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
@@ -119,11 +119,11 @@ feature {NONE} -- Initialization
 			create new_include
 			hb.extend (new_include)
 			create l_btn.make_with_text_and_action (plus_button_text, agent add_include)
-			l_btn.set_minimum_width (small_button_width)
+			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			create l_btn.make_with_text_and_action (minus_button_text, agent remove_include)
-			l_btn.set_minimum_width (small_button_width)
+			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 			end
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_edit_condition, agent edit_condition)
-			l_btn.set_minimum_width (default_button_width)
+			set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 

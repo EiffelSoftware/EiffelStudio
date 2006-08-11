@@ -77,7 +77,6 @@ feature -- Initialization
 				label.set_text (label_string)
 			end
 			textfield.set_capacity (textfield_capacity)
-			textfield.set_minimum_height (Default_button_height)
 
 			create internal_widget
 			internal_widget.set_padding (dialog_unit_to_pixels(2))

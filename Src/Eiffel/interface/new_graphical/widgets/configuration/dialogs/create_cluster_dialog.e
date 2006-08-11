@@ -21,7 +21,7 @@ inherit
 			default_create
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			copy,
 			default_create
@@ -119,14 +119,14 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
-			l_btn.set_minimum_width (default_button_width)
+			set_default_width_for_button (l_btn)
 
 			create l_btn.make_with_text (ev_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
 			l_btn.select_actions.extend (agent on_cancel)
-			l_btn.set_minimum_width (default_button_width)
+			set_default_width_for_button (l_btn)
 
 			set_title (dialog_create_cluster_title)
 			show_actions.extend (agent name.set_focus)

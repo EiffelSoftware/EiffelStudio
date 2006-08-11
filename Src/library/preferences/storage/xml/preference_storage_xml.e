@@ -107,7 +107,8 @@ feature {PREFERENCES} -- Resource Management
 			pref_string1 := "%N%T<PREFERENCE NAME=%""
 			pref_string2 := "%" VALUE=%""
 			pref_string3 := "%"/>"
-			create l_file.make_open_write (location)
+			create l_file.make (location)
+			safe_open_write (l_file)
 			if l_file.is_open_write then
 				l_file.put_string ("<EIFFEL_DOCUMENT>")
 				from
@@ -236,6 +237,22 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (1)
 			Result.append_character (quot_char)
+		end
+
+	safe_open_write (a_file: FILE) is
+			-- Safely open `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_closed: a_file.is_closed
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_file.open_write
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 invariant

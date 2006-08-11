@@ -16,12 +16,12 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_file: STRING) is
+	make (a_file, a_config: STRING) is
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Class with illegal name NONE in "+a_file+"."
+			text := "Class with illegal name NONE in "+a_file+" in configuration "+a_config+"."
 		end
 
 feature -- Access

@@ -405,7 +405,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				l_file.close
 				l_name := classname_finder.classname
 				if l_name = Void then
-					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name))
+					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name, group.target.system.file_name))
 				else
 					l_name.to_upper
 					if name = Void or else not name.is_equal (l_name) then

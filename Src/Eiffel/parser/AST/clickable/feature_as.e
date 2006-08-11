@@ -132,18 +132,26 @@ feature -- Roundtrip/Comment
 		local
 			l_routine: ROUTINE_AS
 			l_end_index: INTEGER
+			l_retried: BOOLEAN
 		do
-			if is_constant or is_attribute then
-				Result := a_list.extract_comment (token_region (a_list))
+			if not l_retried then
+				if is_constant or is_attribute then
+					Result := a_list.extract_comment (token_region (a_list))
+				else
+					l_routine ?= body.content
+					check l_routine /= Void end
+					l_end_index := l_routine.first_token (a_list).index - 1
+					check first_token (a_list).index <= l_end_index end
+					Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index))
+				end
 			else
-				l_routine ?= body.content
-				check l_routine /= Void end
-				l_end_index := l_routine.first_token (a_list).index - 1
-				check first_token (a_list).index <= l_end_index end
-				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index))
+				create Result.make
 			end
 		ensure
 			result_attached: Result /= Void
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature -- Roundtrip/Trailing break

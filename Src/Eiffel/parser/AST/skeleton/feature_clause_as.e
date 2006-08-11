@@ -92,16 +92,24 @@ feature -- Roundtrip/Comments
 		local
 			l_end_index: INTEGER
 			l_leaf: LEAF_AS
+			l_retried: BOOLEAN
 		do
-			if features = Void or else features.is_empty then
-				l_leaf := a_list.item_by_end_position (feature_clause_end_position)
-				check l_leaf /= Void end
-				l_end_index := l_leaf.index
+			if not l_retried then
+				if features = Void or else features.is_empty then
+					l_leaf := a_list.item_by_end_position (feature_clause_end_position)
+					check l_leaf /= Void end
+					l_end_index := l_leaf.index
+				else
+					l_end_index := features.first_token (a_list).index - 1
+				end
+				check first_token (a_list).index + 1 <= l_end_index end
+				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
 			else
-				l_end_index := features.first_token (a_list).index - 1
+				create Result.make
 			end
-			check first_token (a_list).index + 1 <= l_end_index end
-			Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature -- Comparison

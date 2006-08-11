@@ -50,6 +50,10 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
 feature -- Properties
 
+	is_erroneous: BOOLEAN
+			-- Is current erroneous ?
+			--| For now only used for classic debugger (when dealing with bad object address)
+
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Attributes of object being inspected (sorted by name)
 		 deferred

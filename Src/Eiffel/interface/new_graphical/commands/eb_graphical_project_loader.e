@@ -49,7 +49,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -518,13 +518,12 @@ feature {NONE} -- User interaction
 
 				l_hbox.extend (create {EV_CELL})
 				create l_select_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
-				l_select_button.set_minimum_height (default_button_height)
+				set_default_width_for_button (l_select_button)
 				l_hbox.extend (l_select_button)
 				l_hbox.disable_item_expand (l_select_button)
 
 				create l_button.make_with_text_and_action (ev_cancel, agent on_cancelled (l_dialog))
-				l_button.set_minimum_height (default_button_height)
-				l_button.set_minimum_width (default_button_width)
+				set_default_width_for_button (l_button)
 				l_hbox.extend (l_button)
 				l_hbox.disable_item_expand (l_button)
 				l_hbox.extend (create {EV_CELL})
@@ -594,7 +593,7 @@ feature {NONE} -- Actions
 				)
 
 			create cancel_button.make_with_text (Interface_names.b_cancel)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 			cancel_button.select_actions.extend (agent on_cancel_button_pushed)
 
 			create hb

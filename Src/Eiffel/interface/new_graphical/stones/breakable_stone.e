@@ -199,8 +199,8 @@ feature -- Basic operations
 			hb.set_padding (Layout_constants.Small_padding_size)
 			create okb.make_with_text (Interface_names.B_ok)
 			create cancelb.make_with_text (Interface_names.B_cancel)
-			Layout_constants.set_default_size_for_button (okb)
-			Layout_constants.set_default_size_for_button (cancelb)
+			Layout_constants.set_default_width_for_button (okb)
+			Layout_constants.set_default_width_for_button (cancelb)
 			create tf.make
 			create lab
 
@@ -256,9 +256,9 @@ feature -- Basic operations
 			create okb.make_with_text (Interface_names.B_ok)
 			create removeb.make_with_text (Interface_names.B_remove)
 			create cancelb.make_with_text (Interface_names.B_cancel)
-			Layout_constants.set_default_size_for_button (okb)
-			Layout_constants.set_default_size_for_button (removeb)
-			Layout_constants.set_default_size_for_button (cancelb)
+			Layout_constants.set_default_width_for_button (okb)
+			Layout_constants.set_default_width_for_button (removeb)
+			Layout_constants.set_default_width_for_button (cancelb)
 			create tf
 			create lab
 

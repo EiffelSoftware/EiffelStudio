@@ -307,13 +307,13 @@ feature {NONE} -- Initialization
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			create add_project_button.make_with_text_and_action (Interface_names.l_add_project_config_file, agent open_existing_project_not_listed)
-			add_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			add_project_button.set_minimum_width (l_minimum_size)
 			add_project_button.align_text_left
 			add_project_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (add_project_button)
 			hb.disable_item_expand (add_project_button)
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
-			remove_project_button.set_minimum_width (l_minimum_size.max (layout_constants.default_button_width))
+			remove_project_button.set_minimum_width (l_minimum_size)
 			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			remove_project_button.align_text_left
 			projects_list.row_deselect_actions.force_extend (agent remove_project_button.disable_sensitive)

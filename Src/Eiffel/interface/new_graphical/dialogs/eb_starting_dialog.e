@@ -179,9 +179,9 @@ feature {NONE} -- Initialization
 				--| Action buttons box
 			ok_button.select_actions.extend (agent on_ok)
 			ok_button.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
-			Layout_constants.set_default_size_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (ok_button)
 			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.enable_homogeneous

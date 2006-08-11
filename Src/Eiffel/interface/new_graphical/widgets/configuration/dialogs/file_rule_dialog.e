@@ -20,12 +20,10 @@ inherit
 			copy
 		end
 
-	EB_LAYOUT_CONSTANTS
+	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create,
 			copy
-		redefine
-			default_button_width
 		end
 
 	EB_CONSTANTS
@@ -59,21 +57,19 @@ feature {NONE} -- Initialization
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			l_btn.set_minimum_width (default_button_width+25)
+			set_default_width_for_button (l_btn)
 			create remove_button.make_with_text_and_action (conf_interface_names.dialog_file_rule_remove_rule, agent on_remove)
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			remove_button.set_minimum_width (default_button_width+25)
-			cancel_button.set_minimum_width (default_button_width)
-			ok_button.set_minimum_width (default_button_width)
+			set_default_width_for_button (remove_button)
+			set_default_width_for_button (cancel_button)
+			set_default_width_for_button (ok_button)
 
 			show_actions.extend (agent on_show)
 		end
 
 feature {NONE} -- GUI Elements
-
-	default_button_width: INTEGER is 80
 
 	notebook: EV_NOTEBOOK
 			-- Notebook for the file rule tabs.

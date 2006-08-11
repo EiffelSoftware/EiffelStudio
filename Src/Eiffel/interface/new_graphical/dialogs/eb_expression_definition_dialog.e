@@ -237,8 +237,8 @@ feature {NONE} -- Graphical initialization and changes
 			ok_button.select_actions.extend (agent on_ok_pressed)
 			create cb.make_with_text (Interface_names.b_Cancel)
 			cb.select_actions.extend (agent destroy)
-			Layout_constants.set_default_size_for_button (ok_button)
-			Layout_constants.set_default_size_for_button (cb)
+			Layout_constants.set_default_width_for_button (ok_button)
+			Layout_constants.set_default_width_for_button (cb)
 
 				--| Compute the size of the labels.
 			sz := cn_l.minimum_width.max (oa_l.minimum_width)

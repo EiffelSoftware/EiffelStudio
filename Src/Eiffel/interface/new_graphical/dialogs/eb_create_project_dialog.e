@@ -392,9 +392,9 @@ feature {NONE} -- Implementation
 
 				--| Action buttons box
 			create ok_b.make_with_text_and_action (Interface_names.b_OK, agent on_ok)
-			Layout_constants.set_default_size_for_button (ok_b)
+			Layout_constants.set_default_width_for_button (ok_b)
 			create cancel_b.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
-			Layout_constants.set_default_size_for_button (cancel_b)
+			Layout_constants.set_default_width_for_button (cancel_b)
 			create buttons_box
 			buttons_box.enable_homogeneous
 			buttons_box.set_padding (Layout_constants.Small_padding_size)

@@ -186,9 +186,9 @@ feature {NONE} -- Initialization
 
 				-- Build the buttons
 			create create_button.make_with_text_and_action (Interface_names.b_create, agent create_new_class)
-			Layout_constants.set_default_size_for_button (create_button)
+			Layout_constants.set_default_width_for_button (create_button)
 			create cancel_b.make_with_text_and_action (Interface_names.b_cancel, agent cancel)
-			Layout_constants.set_default_size_for_button (cancel_b)
+			Layout_constants.set_default_width_for_button (cancel_b)
 
 				-- Build the button box
 			create buttons_box

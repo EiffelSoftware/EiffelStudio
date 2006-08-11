@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 				)
 
 			create cancel_button.make_with_text (Interface_names.b_Cancel)
-			Layout_constants.set_default_size_for_button (cancel_button)
+			Layout_constants.set_default_width_for_button (cancel_button)
 			cancel_button.select_actions.extend (agent on_cancel_button_pushed)
 
 			create hb

@@ -91,26 +91,26 @@ feature {NONE} -- Initialization
 
 			create b.make_with_text (interface_names.b_ok)
 			vbox.extend (b)
-			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			Layout_constants.set_default_width_for_button (b)
 			vbox.disable_item_expand (b)
 			b.select_actions.extend (agent on_ok)
 
 			create b.make_with_text (interface_names.b_cancel)
 			vbox.extend (b)
-			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+			Layout_constants.set_default_width_for_button (b)
 			vbox.disable_item_expand (b)
 			b.select_actions.extend (agent on_cancel)
 
 			if run /= Void then
 				create run_button.make_with_text ("Run")
 				vbox.extend (run_button)
-				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+				Layout_constants.set_default_width_for_button (run_button)
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute)
 
 				create run_and_close_button.make_with_text ("Run & Close")
 				vbox.extend (run_and_close_button)
-				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
+				Layout_constants.set_default_width_for_button (run_and_close_button)
 				vbox.disable_item_expand (run_and_close_button)
 				run_and_close_button.select_actions.extend (agent execute_and_close)
 				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)

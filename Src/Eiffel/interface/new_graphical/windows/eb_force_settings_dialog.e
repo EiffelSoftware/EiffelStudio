@@ -196,7 +196,7 @@ feature {NONE} -- Initialization
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_6)
 			l_ev_horizontal_box_6.disable_item_expand (exit_button)
 			exit_button.set_text ("Close")
-			exit_button.set_minimum_width (default_button_width)
+			set_default_width_for_button (exit_button)
 			set_title ("Physics settings")
 
 			user_initialization

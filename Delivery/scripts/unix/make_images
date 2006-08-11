@@ -42,7 +42,8 @@ fi
 
 if [ ! -f Eiffel57_deliv.tgz ]; then
 	remtrace Saving empty delivery in Eiffel57_deliv.tgz
-	tar czf Eiffel57_deliv.tgz Eiffel57 
+	tar -cf Eiffel57_deliv.tar Eiffel57 
+	gzip Eiffel57_deliv.tar
 fi
 
 if [ ! -d Eiffel57 ]; then
@@ -73,7 +74,8 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	gzip Eiffel57_enterprise.iso
 	mv Eiffel57_enterprise.iso.gz Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.iso.gz
 	mv cdrom/Eiffel57 Eiffel57
-	tar czf Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tgz Eiffel57 
+	tar -cf Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel57 
+	gzip Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar
 fi
 
 remtrace Preparing GPL version
@@ -87,4 +89,5 @@ make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
 gzip Eiffel57_gpl.iso
 mv Eiffel57_gpl.iso.gz Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.iso.gz
 mv cdrom/Eiffel57 Eiffel57
-tar czf Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tgz Eiffel57
+tar -cf Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel57
+gzip Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tar

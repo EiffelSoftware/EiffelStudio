@@ -58,6 +58,8 @@ feature {NONE} -- Implementation
 			create l_manager.make (preferences, "tools.metric_tool")
 			criterion_completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_height_string, 350)
 			criterion_completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_width_string, 240)
+			criterion_completion_list_width_preference.set_hidden (True)
+			criterion_completion_list_height_preference.set_hidden (True)
 		end
 
 	preferences: PREFERENCES

@@ -1087,7 +1087,11 @@ feature {NONE} -- open new class
 					process_cluster
 				else
 					from
-						cl := Universe.groups
+						if is_general_group_acceptable then
+							cl := Universe.groups
+						else
+							cl := Universe.target.clusters.linear_representation
+						end
 						cl.start
 						create matching.make
 					until

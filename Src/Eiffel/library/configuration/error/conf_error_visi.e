@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			text := "Visibility for a non existing class: "+a_class
+			text := "Visibility for a non existing class "+a_class+"."
 		end
 
 

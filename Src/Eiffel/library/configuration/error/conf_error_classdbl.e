@@ -16,10 +16,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: STRING; a_file1, a_file2: STRING) is
+	make (a_class, a_file1, a_file2, a_config: STRING) is
 			-- Create.
 		do
-			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+"."
+			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+" in configuration "+a_config+"."
 		end
 
 feature -- Access

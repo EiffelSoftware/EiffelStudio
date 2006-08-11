@@ -16,12 +16,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: STRING) is
+	make (a_class, a_config: STRING) is
 			-- Create.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			text := "Renaming for a non existing class: "+a_class
+			text := "Renaming for a non existing class "+a_class+" in configuration "+a_config+"."
 		end
 
 

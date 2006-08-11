@@ -260,7 +260,7 @@ feature -- Visit nodes
 			-- Visit `an_assembly'.
 		do
 			if not state.is_dotnet then
-				add_and_raise_error (create {CONF_ERROR_DOTNET})
+				add_and_raise_error (create {CONF_ERROR_DOTNET}.make (an_assembly.target.system.file_name))
 			end
 			new_assemblies.force (an_assembly)
 		end
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
 						if current_classes.has (l_name) then
-							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
+							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 						else
 							current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
@@ -578,9 +578,9 @@ feature {NONE} -- Implementation
 						l_file.close
 						l_tmp := classname_finder.classname
 						if l_tmp = Void then
-							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file))
+							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
 						elseif l_tmp.is_case_insensitive_equal ("NONE") then
-							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
+							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
 						else
 							l_tmp.to_upper
 							l_renamings := a_cluster.renaming
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 									name_same: l_name.is_equal (l_class.renamed_name)
 								end
 								if current_classes.has (l_name) then
-									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name))
+									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 								else
 									current_classes.force (l_class, l_name)
 									current_classes_by_filename.force (l_class, l_file_name)
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 				l_file.open_read
 				classname_finder.parse (l_file)
 				if classname_finder.classname = Void then
-					add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file))
+					add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_group.target.system.file_name))
 				end
 				l_name := classname_finder.classname.as_upper
 				l_renamings := a_group.renaming

@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 						if not l_new_classes.has (l_name) then
 							l_new_classes.force (l_class, l_name)
 						else
-							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name))
+							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name, a_group.target.system.file_name))
 						end
 					end
 					l_classes.forth

@@ -11,9 +11,21 @@ class
 inherit
 	CONF_ERROR
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (a_config: STRING) is
+			-- Create.
+		do
+			text := "Assemblies on another platform than dotnet in configuration "+a_config+"."
+		end
+
+
 feature -- Access
 
-	text: STRING is "Assemblies on another platform than dotnet.";
+	text: STRING;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

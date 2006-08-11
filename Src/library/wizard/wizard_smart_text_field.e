@@ -63,7 +63,6 @@ feature -- Initialization
 				label.set_text (" "+label_string)
 			end
 			textfield.set_capacity (textfield_capacity)
-			textfield.set_minimum_height (Default_button_height)
 			textfield.return_actions.extend (agent caller.next)
 			textfield.change_actions.extend (agent caller.change_entries)
 

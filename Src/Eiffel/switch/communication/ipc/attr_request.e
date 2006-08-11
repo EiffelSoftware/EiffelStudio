@@ -88,63 +88,76 @@ feature -- Update
 			send_rqst_3 (request_code, In_h_addr, 0, hex_to_pointer (object_address))
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
-			debug ("DEBUG_RECV")
-				io.error.put_string ("Grepping object at address ")
-				io.error.put_string (object_address)
-				io.error.put_string (".%N")
-				io.error.put_string ("Object is a special? ")
-				io.error.put_boolean (is_special)
-				io.error.put_new_line
-				io.error.put_string ("Object is a tuple? ")
-				io.error.put_boolean (is_tuple)
-				io.error.put_new_line
-			end
 			object_type_id := to_integer (c_tread) + 1
-			if is_special then
+			if object_type_id <= 0 then
+					--| Error occurred
 				debug ("DEBUG_RECV")
-					if is_tuple then
-						io.error.put_string ("Oh oooh. This is a TUPLE object...%N")
-					else
-						io.error.put_string ("Oh oooh. This is a special object...%N")
-					end
-				end;
-				create attributes.make (capacity)
-				debug("DEBUG_RECV")
-					io.error.put_string ("Getting the attributes from object...%N")
-					io.error.put_string ("Capacity is ")
-					io.error.put_integer (capacity)
+					io.error.put_string ("Grepping object at address ")
+					io.error.put_string (object_address)
 					io.error.put_string (".%N")
-					io.error.put_string ("Calling `recv_attributes'.%N")
+					io.error.put_string ("Error occurred !")
+					io.error.put_string (" object_type_id=" + object_type_id.out)
+					io.error.put_new_line
 				end
-					-- Even though they are not required in this particular case
-					-- where we want to see the special object, we have to retrieve
-					-- the address and the count of the special to be consistent
-					-- with the way we retrieve a special object in recv_attributes.
-				address := to_pointer (c_tread)
-				capacity := to_integer (c_tread)
-				recv_attributes (attributes, Void)
-				debug ("DEBUG_RECV")
-					io.error.put_string ("And being back again in `send'.%N")
-				end
+				create attributes.make (0)
 			else
-				create attributes.make (capacity)
-				if Eiffel_system.valid_dynamic_id (object_type_id) then
-					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id))
-				else
+				debug ("DEBUG_RECV")
+					io.error.put_string ("Grepping object at address ")
+					io.error.put_string (object_address)
+					io.error.put_string (".%N")
+					io.error.put_string ("Object is a special? ")
+					io.error.put_boolean (is_special)
+					io.error.put_new_line
+					io.error.put_string ("Object is a tuple? ")
+					io.error.put_boolean (is_tuple)
+					io.error.put_new_line
+				end
+				if is_special then
+					debug ("DEBUG_RECV")
+						if is_tuple then
+							io.error.put_string ("Oh oooh. This is a TUPLE object...%N")
+						else
+							io.error.put_string ("Oh oooh. This is a special object...%N")
+						end
+					end;
+					create attributes.make (capacity)
+					debug("DEBUG_RECV")
+						io.error.put_string ("Getting the attributes from object...%N")
+						io.error.put_string ("Capacity is ")
+						io.error.put_integer (capacity)
+						io.error.put_string (".%N")
+						io.error.put_string ("Calling `recv_attributes'.%N")
+					end
+						-- Even though they are not required in this particular case
+						-- where we want to see the special object, we have to retrieve
+						-- the address and the count of the special to be consistent
+						-- with the way we retrieve a special object in recv_attributes.
+					address := to_pointer (c_tread)
+					capacity := to_integer (c_tread)
 					recv_attributes (attributes, Void)
-				end;
-				sort_debug_values (attributes)
-			end
-				-- Convert the physical addresses received from
-				-- the application to hector addresses.
-			from
-				l_cursor := attributes.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_cursor.item.set_hector_addr
-				l_cursor.forth
+					debug ("DEBUG_RECV")
+						io.error.put_string ("And being back again in `send'.%N")
+					end
+				else
+					create attributes.make (capacity)
+					if Eiffel_system.valid_dynamic_id (object_type_id) then
+						recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id))
+					else
+						recv_attributes (attributes, Void)
+					end
+					sort_debug_values (attributes)
+				end
+					-- Convert the physical addresses received from
+					-- the application to hector addresses.
+				from
+					l_cursor := attributes.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_cursor.item.set_hector_addr
+					l_cursor.forth
+				end
 			end
 		end
 

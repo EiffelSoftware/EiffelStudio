@@ -95,6 +95,37 @@ feature -- Start output features
 			end
 		end;
 
+	degree_short_description (a_degree: INTEGER): STRING is
+			-- Short description for `a_degree'.
+		require
+			a_degree_valid: a_degree >= -3 and then a_degree <= 6
+		do
+			inspect
+				a_degree
+			when 6 then
+				Result := once "Examining System"
+			when 5 then
+				Result := once "Parsing Classes"
+			when 4 then
+				Result := once "Analyzing Inheritance"
+			when 3 then
+				Result := once "Checking Types"
+			when 2 then
+				Result := once "Generating Byte Code"
+			when 1 then
+				Result := once "Generating Metadata"
+			when 0 then
+					-- Used when generating documentation
+				Result := once "Processing"
+			when -1 then
+				Result := once "Generating Code"
+			when -2 then
+				Result := once "Constructing Polymorphic Table"
+			when -3 then
+				Result := once "Optimizing Generated Code"
+			end
+		end
+
 	degree_description (a_degree: INTEGER): STRING is
 			-- Description for the currently processed degree.
 		require
@@ -103,30 +134,7 @@ feature -- Start output features
 			l_degree_str: STRING
 		do
 			create Result.make (35)
-			inspect
-				a_degree
-			when 6 then
-				l_degree_str := once "Examining Universe"
-			when 5 then
-				l_degree_str := once "Parsing Classes"
-			when 4 then
-				l_degree_str := once "Inheritance Analysis"
-			when 3 then
-				l_degree_str := once "Type Checking"
-			when 2 then
-				l_degree_str := once "Melting code (code)"
-			when 1 then
-				l_degree_str := once "Melting code (metadata)"
-			when 0 then
-					-- Used when generating documentation
-				l_degree_str := once "Processing"
-			when -1 then
-				l_degree_str := once "Code Generation"
-			when -2 then
-				l_degree_str := once "Building Polymorphic table"
-			when -3 then
-				l_degree_str := once "Optimized Code Generation"
-			end
+			l_degree_str := degree_short_description (a_degree)
 			if a_degree /= 0 then
 				Result.append (Degree_output_string + a_degree.out + ": ")
 			end

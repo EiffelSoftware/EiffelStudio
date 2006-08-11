@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	XM_MARKUP_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 
 create
@@ -113,9 +118,9 @@ feature {PREFERENCES} -- Resource Management
 					l_preference := a_preferences.item
 					if not a_save_modified_values_only or else not l_preference.is_default_value then
 						l_file.put_string (pref_string1)
-						l_file.put_string (l_preference.name)
+						l_file.put_string (escape_xml (l_preference.name))
 						l_file.put_string (pref_string2)
-						l_file.put_string (l_preference.string_value)
+						l_file.put_string (escape_xml (l_preference.string_value))
 						l_file.put_string (pref_string3)
 					else
 						-- nothing to do to remove them from file.
@@ -193,6 +198,44 @@ feature {NONE} -- Implementation
 			else
 				fixme ("Add code to let callers that we could not open preference file")
 			end
+		end
+
+	escape_xml (a_string: STRING): STRING is
+			-- Escape xml entities in `a_string'.
+		do
+			if a_string /= Void then
+				Result := a_string.twin
+				Result.replace_substring_all (Lt_string, Lt_entity)
+				Result.replace_substring_all (Gt_string, Gt_entity)
+				Result.replace_substring_all (Amp_string, amp_entity)
+				Result.replace_substring_all (Quot_string, quot_entity)
+			end
+		ensure
+			result_void_iff_a_string_void: (Result = Void) = (a_string = Void)
+		end
+
+	Lt_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (lt_char)
+		end
+
+	Gt_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (gt_char)
+		end
+
+	Amp_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (amp_char)
+		end
+
+	Quot_string: STRING is
+		once
+			create Result.make (1)
+			Result.append_character (quot_char)
 		end
 
 invariant

@@ -21,13 +21,20 @@ feature -- Status
 		local
 			temp: STRING
 			p: PRODUCT_NAMES
+			l_file: RAW_FILE
+			l_dir: DIRECTORY
 		do
 			temp := Eiffel_installation_dir_name
 			create p
 			if (temp = Void) or else temp.is_empty then
 				io.error.put_string (p.Workbench_name)
-				io.error.put_string (": the environment variable $ISE_EIFFEL is not set%N")
+				io.error.put_string (": the environment variable $ISE_EIFFEL is not set.%N")
 				(create {EXCEPTIONS}).die (-1)
+			else
+				create l_file.make (temp)
+				if not l_file.exists or not l_file.is_directory then
+					io.error.put_string ("WARNING: the environment variable $ISE_EIFFEL points to a non-existing directory.%N")
+				end
 			end
 
 			temp := Eiffel_platform
@@ -35,6 +42,11 @@ feature -- Status
 				io.error.put_string (p.Workbench_name)
 				io.error.put_string (": the environment variable $ISE_PLATFORM is not set%N")
 				(create {EXCEPTIONS}).die (-1)
+			else
+				create l_file.make (bin_path)
+				if not l_file.exists or not l_file.is_directory then
+					io.error.put_string ("WARNING: the path $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin points to a non-existing directory.%N")
+				end
 			end
 
 			if Platform_constants.is_windows then
@@ -46,8 +58,16 @@ feature -- Status
 				end
 			end
 
+				-- Make sure to define ISE_LIBRARY if not defined.
 			if Execution_environment.get (ise_library_env) = Void then
 				Execution_environment.put (eiffel_installation_dir_name, ise_library_env)
+			end
+
+				-- Check that `eiffel_home' exists.
+			create l_file.make (eiffel_home)
+			if not l_file.exists or else not l_file.is_directory then
+				create l_dir.make (eiffel_home)
+				l_dir.create_dir
 			end
 		end
 

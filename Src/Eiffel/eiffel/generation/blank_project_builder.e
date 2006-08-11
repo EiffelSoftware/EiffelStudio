@@ -147,8 +147,8 @@ feature {NONE} -- Implementation
 				new_class.put_string (
 					"indexing%N%
 					%%Tdescription%T: %"System's root class%"%N%
-					%%Tdate: %"$Date$%"%N%
-					%%Trevision: %"$Revision$%"%N%
+					%%Tdate: %"$Da"+"te$%"%N%
+					%%Trevision: %"$Rev"+"ision$%"%N%
 					%%N%
 					%class%N%
 					%%T" + root_class_name + "%N%

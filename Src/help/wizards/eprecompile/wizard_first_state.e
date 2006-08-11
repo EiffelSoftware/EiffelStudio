@@ -48,19 +48,19 @@ feature -- Basic Operation
 
 			create add_all_b.make_with_text (Interface_names.b_Add_all)
 			add_all_b.select_actions.extend (agent add_all_items)
-			add_all_b.set_minimum_size (Default_button_width, Default_button_height)
+			set_default_width_for_button (add_all_b)
 
 			create add_b.make_with_text (Interface_names.b_Add)
 			add_b.select_actions.extend (agent add_items)
-			add_b.set_minimum_size (Default_button_width, Default_button_height)
+			set_default_width_for_button (add_b)
 
 			create remove_b.make_with_text (Interface_names.b_Remove)
 			remove_b.select_actions.extend (agent remove_items)
-			remove_b.set_minimum_size (Default_button_width, Default_button_height)
+			set_default_width_for_button (remove_b)
 
 			create remove_all_b.make_with_text (Interface_names.b_Remove_all)
 			remove_all_b.select_actions.extend (agent remove_all_items)
-			remove_all_b.set_minimum_size (Default_button_width, Default_button_height)
+			set_default_width_for_button (remove_all_b)
 
 			create buttons_box
 			create lab.make_with_text (" ")

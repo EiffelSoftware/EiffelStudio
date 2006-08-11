@@ -8,9 +8,10 @@ indexing
 class ROUTINE_ASSERTIONS
 
 create
-	make, 
-	make_for_feature
-	
+	make,
+	make_for_feature,
+	make_for_inline_agent
+
 feature {NONE} -- Initialization
 
 	make (feat_adapter: FEATURE_ADAPTER) is
@@ -19,7 +20,7 @@ feature {NONE} -- Initialization
 		require
 			valid_feat_adapter: feat_adapter /= Void
 		local
-			routine_as: ROUTINE_AS	
+			routine_as: ROUTINE_AS
 		do
 			routine_as ?= feat_adapter.ast.body.content
 			if routine_as /= Void then
@@ -46,6 +47,15 @@ feature {NONE} -- Initialization
 			origin := feat
 		end
 
+	make_for_inline_agent (feat: FEATURE_I; rout_as: ROUTINE_AS) is
+			-- Initialize Current with feature `feat'
+			-- and ast structure `ast'.
+		do
+			precondition := rout_as.precondition
+			postcondition := rout_as.postcondition
+			origin := feat
+		end
+
 feature -- Properties
 
 	precondition: REQUIRE_AS
@@ -55,7 +65,7 @@ feature -- Properties
 	postcondition: ENSURE_AS
 			-- Postcondition ast for origin
 			-- Void if none
-		
+
 	origin: FEATURE_I
 			-- Feature where assertions are defined
 

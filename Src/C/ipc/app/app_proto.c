@@ -875,7 +875,16 @@ rt_private void obj_inspect(EIF_OBJ object)
 	EIF_BOOLEAN is_special, is_tuple;
 	int32 dtype;
 	EIF_REFERENCE ref = eif_access(object);
-
+	if (ref == NULL) {
+		is_special = EIF_FALSE;
+		is_tuple = EIF_FALSE;
+		app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+		app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+			/* Send -1 as dynamic id to notify an issue */
+		dtype = -1;
+		app_twrite (&dtype, sizeof(int32));
+		return;
+	}
 	flags = HEADER(ref)->ov_flags;
 	is_special = EIF_TEST(flags & EO_SPEC);	
 	is_tuple = EIF_TEST(flags & EO_TUPLE);	

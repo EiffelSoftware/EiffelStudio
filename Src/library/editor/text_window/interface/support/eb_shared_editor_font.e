@@ -16,12 +16,12 @@ feature -- Access
 		do
 			Result := line_height_cell.item
 		end
-		
+
 	font_offset: INTEGER is
-			-- 
+			--
 		do
 			Result := font_offset_cell.item
-		end	
+		end
 
 	font: EV_FONT is
 			-- Font used in the editor
@@ -54,7 +54,7 @@ feature -- Access
 		do
 			Result := is_fixed_width_cell.item
 		end
-	
+
 feature {EDITOR_DATA} -- Implementation
 
 	font_cell: CELL [FONT_PREFERENCE] is
@@ -68,13 +68,13 @@ feature {EDITOR_DATA} -- Implementation
 		once
 			create Result
 		end
-		
+
 	header_font_cell: CELL [FONT_PREFERENCE] is
 			-- Cached version of `font' for header panel.
 		once
 			create Result
-		end	
-		
+		end
+
 	font_width_cell: CELL [INTEGER] is
 			-- Cached version of `font_width'
 		local
@@ -104,7 +104,7 @@ feature {EDITOR_DATA} -- Implementation
 
 	line_height_cell: CELL [INTEGER] is
 			-- Cached version of `line_height'.
-		once			
+		once
 			create Result.put (calculate_line_height)
 		end
 
@@ -126,8 +126,9 @@ feature {EDITOR_DATA} -- Implementation
 			loc_font: EV_FONT
 		do
 			loc_font := line_height_font
-			Result := loc_font.height + loc_font.height // 6 + 1
-		end		
+				-- Windows text editors seem to use an extra pixel spacing.
+			Result := loc_font.ascent + loc_font.descent + {PLATFORM}.is_windows.to_integer
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

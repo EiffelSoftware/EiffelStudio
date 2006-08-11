@@ -103,12 +103,13 @@ feature -- Evaluation
 					or (on_class and context_class = Void)
 				then
 					notify_error_expression (Cst_error_during_context_preparation)
+					l_error_occurred := True
 				else
 						--| Compute and get `expression_byte_node'
 					get_expression_byte_node
+					l_error_occurred := error_occurred or else expression_byte_node = Void
 				end
 
-				l_error_occurred := error_occurred or expression_byte_node = Void
 					--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 					-- and if this is handle later or not
 				if on_context then
@@ -1106,11 +1107,15 @@ feature -- Change Context
 
 feature -- Access
 
+	expression_byte_node_computed: BOOLEAN
+
 	expression_byte_node: EXPR_B is
 		do
 			Result := internal_expression_byte_node
-			if Result = Void then
+			if not expression_byte_node_computed then
+				check internal_expression_byte_node = Void end
 				get_expression_byte_node
+				check expression_byte_node_computed end
 				Result := internal_expression_byte_node
 			end
 		end
@@ -1139,7 +1144,7 @@ feature -- Access
 
 				--| Get expression_byte_node
 			get_expression_byte_node
-			if expression_byte_node /= Void then
+			if not error_occurred and then expression_byte_node /= Void then
 --| Since the Byte_context is used only by debugger and code generation
 --| there is no need to restore previous context
 --| (see below the commented line for restoring class_type_context)
@@ -1212,6 +1217,7 @@ feature {NONE} -- Implementation
 			bak_byte_code: BYTE_CODE
 			bak_cc: CLASS_C
 		do
+			expression_byte_node_computed := True
 			if not retried then
 				if internal_expression_byte_node = Void then
 					error_handler.wipe_out
@@ -1288,6 +1294,8 @@ feature {NONE} -- Implementation
 				notify_error_expression (Cst_error_during_expression_analyse)
 				error_handler.wipe_out
 			end
+		ensure
+			expression_byte_node_computed: expression_byte_node_computed
 		rescue
 			retried := True
 			retry

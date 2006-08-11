@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.align_text_center
 			Result.set_text (a_text)
-			Layout_constants.set_default_size_for_button (Result)
+			Layout_constants.set_default_width_for_button (Result)
 			Result.select_actions.extend (agent destroy)
 		end
 

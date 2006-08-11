@@ -45,6 +45,7 @@ feature {NONE} -- Creation
 					-- We then default to class ANY.
 				dtype := eiffel_system.Any_class.compiled_class
 				class_type := dtype.types.first
+				is_erroneous := True
 			end
 			object_address := addr;
 			max_capacity := rqst.max_capacity

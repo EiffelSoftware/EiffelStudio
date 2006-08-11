@@ -71,6 +71,7 @@ feature -- Evaluation
 			-- Compute the value of the last message of `Current'.
 		local
 			l_error_occurred: BOOLEAN
+			dobj: DEBUGGED_OBJECT
 		do
 			reset_error
 
@@ -88,12 +89,13 @@ feature -- Evaluation
 						--| .. Init current context using current call_stack
 					init_context_with_current_callstack
 				elseif on_object then
-					set_context_data (
-							Void,
-							Debugged_object_manager.class_c_at_address (context_address),
-							Debugged_object_manager.class_type_at_address (context_address)
-						)
-
+					dobj := Debugged_object_manager.debugged_object (context_address, 0, 0)
+					if dobj.is_erroneous then
+						notify_error_expression (Cst_error_during_context_preparation + "%NUnable to get valid target object for " + context_address)
+					else
+						set_context_data (Void, dobj.dtype, dobj.class_type)
+					end
+					dobj := Void
 				elseif on_class then
 					set_context_data (Void, context_class, Void)
 				end

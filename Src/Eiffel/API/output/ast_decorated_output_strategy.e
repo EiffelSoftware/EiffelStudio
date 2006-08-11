@@ -62,7 +62,7 @@ inherit
 		end
 
 create
-	make
+	make, make_for_inline_agent
 
 feature {NONE} -- Initialization
 
@@ -74,6 +74,17 @@ feature {NONE} -- Initialization
 			create locals_for_current_feature.make (10)
 			create error_message.make (5)
 		end
+
+	make_for_inline_agent (parent_strategy: AST_DECORATED_OUTPUT_STRATEGY; a_as: INLINE_AGENT_CREATION_AS) is
+		do
+			make (parent_strategy.text_formatter_decorator)
+			source_class := parent_strategy.source_class
+			current_class := parent_strategy.current_class
+
+			source_feature := source_class.eiffel_class_c.inline_agent_of_rout_id (a_as.inl_rout_id)
+			current_feature := source_feature
+		end
+
 
 feature -- Formatting
 
@@ -173,7 +184,7 @@ feature -- Access
 			Result := not error_message.is_empty
 		end
 
-feature {NONE} -- Access
+feature {AST_DECORATED_OUTPUT_STRATEGY} -- Access
 
 	text_formatter_decorator: TEXT_FORMATTER_DECORATOR
 
@@ -197,7 +208,7 @@ feature {NONE} -- Access
 			-- If `has_error', we give up type evaluating and send
 			-- simple text to output.
 
-feature {NONE} -- Error handling
+feature {AST_DECORATED_OUTPUT_STRATEGY} -- Error handling
 
 	set_error_message (a_str: STRING) is
 			-- Setup `error_message'.
@@ -232,8 +243,53 @@ feature -- Roundtrip
 		end
 
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+		local
+			l_strategy: like Current
+			l_old_feature_comments: EIFFEL_COMMENTS
+			l_old_arguments: AST_EIFFEL
+			l_old_target_feature: FEATURE_I
+			l_old_source_feature: FEATURE_I
+
 		do
-			process_agent_routine_creation_as (l_as)
+			if not expr_type_visiting then
+				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
+				text_formatter_decorator.put_space
+
+				create l_strategy.make_for_inline_agent (Current, l_as)
+
+				l_old_feature_comments := text_formatter_decorator.feature_comments
+				l_old_arguments := text_formatter_decorator.arguments
+				l_old_target_feature := text_formatter_decorator.target_feature
+				l_old_source_feature := text_formatter_decorator.source_feature
+
+				text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_strategy.current_feature,
+															  l_strategy.source_feature, l_strategy)
+
+				l_as.body.process (l_strategy)
+
+				text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
+															  l_old_target_feature, l_old_source_feature, Current)
+
+
+				if l_as.operands /= Void then
+					reset_last_class_and_type
+					text_formatter_decorator.process_symbol_text (ti_space)
+					text_formatter_decorator.begin
+					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+					text_formatter_decorator.set_separator (ti_comma)
+					text_formatter_decorator.set_space_between_tokens
+					l_as.operands.process (Current)
+					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+					text_formatter_decorator.commit
+				end
+				if not has_error_internal then
+					last_type := expr_type (l_as)
+				end
+			else
+				if not has_error_internal then
+					last_type := agent_type (l_as)
+				end
+			end
 		end
 
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
@@ -1021,6 +1077,8 @@ feature {NONE} -- Implementation
 		local
 			comments: EIFFEL_COMMENTS
 			chained_assert: CHAINED_ASSERTIONS
+			is_inline_agent: BOOLEAN
+			inline_agent_assertion: ROUTINE_ASSERTIONS
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1029,9 +1087,6 @@ feature {NONE} -- Implementation
 			if text_formatter_decorator.is_feature_short then
 				text_formatter_decorator.put_new_line
 			else
-				text_formatter_decorator.put_space
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_keyword_text (ti_is_keyword, Void)
 				text_formatter_decorator.put_new_line
 				if l_as.obsolete_message /= Void then
 					text_formatter_decorator.indent
@@ -1051,13 +1106,24 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.put_origin_comment
 			text_formatter_decorator.exdent
 			text_formatter_decorator.set_first_assertion (True)
-			chained_assert := text_formatter_decorator.chained_assertion
-			if chained_assert /= Void then
-				chained_assert.format_precondition (text_formatter_decorator)
-			elseif l_as.precondition /= Void then
-				text_formatter_decorator.set_in_assertion
-				l_as.precondition.process (Current)
-				text_formatter_decorator.set_not_in_assertion
+
+			is_inline_agent := current_feature.is_inline_agent
+
+			if is_inline_agent then
+				create inline_agent_assertion.make_for_inline_agent (current_feature, l_as)
+				if l_as.precondition /= Void then
+					inline_agent_assertion.format_precondition (text_formatter_decorator, True)
+				end
+			else
+				chained_assert := text_formatter_decorator.chained_assertion
+
+				if chained_assert /= Void then
+					chained_assert.format_precondition (text_formatter_decorator)
+				elseif l_as.precondition /= Void then
+					text_formatter_decorator.set_in_assertion
+					l_as.precondition.process (Current)
+					text_formatter_decorator.set_not_in_assertion
+				end
 			end
 			if not text_formatter_decorator.is_feature_short then
 				if l_as.locals /= Void then
@@ -1077,12 +1143,18 @@ feature {NONE} -- Implementation
 				safe_process (l_as.routine_body)
 			end
 			text_formatter_decorator.set_first_assertion (True)
-			if chained_assert /= Void then
-				chained_assert.format_postcondition (text_formatter_decorator)
-			elseif l_as.postcondition /= Void then
-				text_formatter_decorator.set_in_assertion
-				l_as.postcondition.process (Current)
-				text_formatter_decorator.set_not_in_assertion
+			if is_inline_agent then
+				if l_as.postcondition /= Void then
+					inline_agent_assertion.format_postcondition (text_formatter_decorator, True)
+				end
+			else
+				if chained_assert /= Void then
+					chained_assert.format_postcondition (text_formatter_decorator)
+				elseif l_as.postcondition /= Void then
+					text_formatter_decorator.set_in_assertion
+					l_as.postcondition.process (Current)
+					text_formatter_decorator.set_not_in_assertion
+				end
 			end
 			if not text_formatter_decorator.is_feature_short then
 				if l_as.rescue_clause /= Void then

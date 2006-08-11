@@ -5,7 +5,7 @@ deferred class TYPE_C
 
 inherit
 	HASHABLE
-	
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -114,9 +114,6 @@ feature
 		require
 			good_arguments: buffer /= Void and arg_types /= Void
 			good_array: arg_types.lower = 1
-		local
-			i, nb: INTEGER
-			sep: STRING
 		do
 			if call_type /= Void then
 				buffer.put_string ("FUNCTION_CAST_TYPE(")
@@ -128,19 +125,7 @@ feature
 				buffer.put_string (c_string)
 			end
 			buffer.put_string (", (")
-			from
-				i := 1
-				nb := arg_types.count
-				sep := ", "
-			until
-				i > nb
-			loop
-				if i /= 1 then
-					buffer.put_string (sep)
-				end
-				buffer.put_string (arg_types @ i)
-				i := i + 1
-			end
+			buffer.put_array (arg_types)
 			buffer.put_string (")) ")
 		end
 
@@ -165,7 +150,7 @@ feature
 				not_called: False
 			end
 		end
-		
+
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
@@ -185,7 +170,7 @@ feature
 			-- String generated for the type.
 		deferred
 		end
-		
+
 	union_tag: STRING is
 			-- Union tag name for type in EIF_ARG_UNIONs.
 		deferred

@@ -23,38 +23,49 @@ feature -- Calls
 	apply is
 			-- Call procedure with `args' as last set.
 		do
-			if class_id /= -1 then
-				rout_obj_call_procedure_lazy (class_id, feature_id, is_precompiled,
-											  is_basic, $internal_operands, internal_operands.count)
-			else
-				rout_obj_call_procedure (rout_disp, $internal_operands)
-			end
+			fast_call (encaps_rout_disp, calc_rout_addr, closed_operands, operands, class_id, feature_id, 
+					   is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, open_map)
+		end
+
+	call (args: OPEN_ARGS) is
+		do
+			fast_call (encaps_rout_disp, calc_rout_addr, closed_operands, args, class_id, feature_id, 
+				       is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, open_map)
 		end
 
 feature {NONE} -- Implementation
-
-	rout_obj_call_procedure (rout: POINTER; args: POINTER) is
-			-- Perform call to `rout' with `args'.
-		external
-			"C inline use %"eif_rout_obj.h%""
-		alias
-			"rout_obj_call_agent($rout, $args, $$_result_type);"
-		end
-
-
-	rout_obj_call_procedure_lazy (a_class_id, a_feature_id: INTEGER;
-								 a_is_precompiled, a_is_basic: BOOLEAN
-								 args: POINTER
-								 arg_count: INTEGER) is
-			-- Perform call to `rout' with `args' as operands.
+	
+	fast_call (a_rout_disp, a_calc_rout_addr: POINTER
+		       a_closed_operands: like closed_operands; a_operands: like operands
+			   a_class_id, a_feature_id: INTEGER; a_is_precompiled, a_is_basic, a_is_inline_agent: BOOLEAN
+			   a_closed_count, a_open_count: INTEGER; a_open_map: like open_map) 
+		is
+			-- Internall_assert
 		external
 			"C inline use %"eif_rout_obj.h%""
 		alias
 			"[
-				#ifdef WORKBENCH
-				 	rout_obj_call_procedure_dynamic (
-				 		$a_class_id, $a_feature_id, $a_is_precompiled, $a_is_basic, $args, $arg_count);
-				#endif
+			#ifdef WORKBENCH
+				if ($a_rout_disp != 0) {
+					(FUNCTION_CAST(void, (EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE)) $a_rout_disp)(
+						$a_calc_rout_addr, $a_closed_operands, $a_operands);
+				} else {
+					rout_obj_call_procedure_dynamic (
+						$a_class_id,
+						$a_feature_id,
+						$a_is_precompiled,
+						$a_is_basic,
+						$a_is_inline_agent,
+						$a_closed_operands,
+						$a_closed_count,
+						$a_operands,
+						$a_open_count,
+						$a_open_map);
+				}
+			#else
+				(FUNCTION_CAST(void, (EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE)) $a_rout_disp)(
+					$a_calc_rout_addr, $a_closed_operands, $a_operands);
+			#endif
 			]"
 		end
 

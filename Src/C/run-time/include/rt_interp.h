@@ -263,7 +263,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_TUPLE	(unsigned char) 168
 #define BC_PTUPLE	(unsigned char) 169
 
-#define MAX_CODE                169     /* Maximum legal byte code */
+#define MAX_CODE                169    /* Maximum legal byte code */
 
 extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
@@ -277,7 +277,7 @@ extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);	
 extern void idump(FILE *fd, char *start);
 extern void opstack_reset(struct opstack *stk);
 
-extern void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type);	/* Dynamic evaluation of a feature */
+extern void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_inline_agent);	/* Dynamic evaluation of a feature */
 extern struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
 
 

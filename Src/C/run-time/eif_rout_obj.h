@@ -75,9 +75,21 @@ typedef struct {
 /* New object of type `dftype' with routine dispatcher `rout_disp',
    argument tuple `args', open map `omap' and closed map `cmap'
 */
-RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
-RT_LNK EIF_REFERENCE rout_obj_create2 (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap);
-RT_LNK EIF_REFERENCE rout_obj_create_lazy (int16 dftype, EIF_INTEGER class_id, EIF_INTEGER feature_id, EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_REFERENCE args, EIF_REFERENCE omap);
+//RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
+RT_LNK EIF_REFERENCE rout_obj_create2 (
+								int16 dftype, 
+								EIF_POINTER rout_disp, 
+								EIF_POINTER encaps_rout_disp, 
+								EIF_POINTER calc_rout_addr, 
+								EIF_INTEGER class_id,
+								EIF_INTEGER feature_id,
+								EIF_REFERENCE open_map,
+								EIF_BOOLEAN is_precompiled,
+								EIF_BOOLEAN is_basic, 
+								EIF_BOOLEAN is_target_closed,
+								EIF_BOOLEAN is_inline_agent,
+								EIF_REFERENCE closed_operands,
+								EIF_INTEGER open_count);
 
 /* Argument structure (alloc/free) */
 
@@ -90,15 +102,19 @@ RT_LNK void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POI
 
 
 #ifdef WORKBENCH
-RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count);
-RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, EIF_TYPED_ELEMENT* args, int arg_count, void* result);
+RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+											 EIF_TYPED_ELEMENT* closed_args, int closed_count, EIF_TYPED_ELEMENT* open_args, 
+											 int open_count, EIF_REFERENCE open_map);
+RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+											EIF_TYPED_ELEMENT* closed_args, int closed_count, EIF_TYPED_ELEMENT* open_args, 
+											int open_count, EIF_REFERENCE open_map, void* res);
 #endif
 
 /* Macros */
 
 #define rout_obj_call_procedure(r,a) ((void(*)(char *, char *, EIF_ARG_UNION *))(r))(((EIF_ARG_UNION*)(a))[0].rarg, (char *)(((EIF_ARG_UNION*)(a))+1), (EIF_ARG_UNION *)0)
 
-#define rout_obj_call_agent(r,a, val) ((val(*)(EIF_TYPED_ELEMENT *))(r))((EIF_TYPED_ELEMENT *)(a))
+#define rout_obj_call_agent(r,a, val) ((val(*)(EIF_TYPED_ELEMENT *))(r))(0, (EIF_TYPED_ELEMENT *)(a))
 
 #define RBVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? EIF_FALSE : *((EIF_BOOLEAN *)v))
 #define RCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER) 0 : *((EIF_CHARACTER *)v))

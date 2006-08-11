@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			is_encapsulated_call := f.can_be_encapsulated
 			feature_name_id := f.feature_name_id
 			is_inline_agent := f.is_inline_agent
-			enclosing_feature := associated_class.feature_i_with_body_index (f.enclosing_body_id)
+			enclosing_feature := f.enclosing_feature
 		end
 
 feature {NONE} -- Implementation

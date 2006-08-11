@@ -313,7 +313,22 @@ feature {NONE} -- Implementation: access
 			put ("to_character_8") check found_item = to_character_8_name_id end
 			put ("to_character_32") check found_item = to_character_32_name_id end
 			put ("natural_32_code") check found_item = natural_32_code_name_id end
-			put ("set_lazy_rout_disp") check found_item = set_lazy_rout_disp_name_id end
+			put ("rout_disp") check found_item = rout_disp_name_id end
+			put ("calc_rout_addr") check found_item = calc_rout_addr_name_id end
+			put ("closed_operands") check found_item = closed_operands_name_id end
+			put ("last_result") check found_item = last_result_name_id end
+			put ("class_id") check found_item = class_id_name_id end
+			put ("feature_id") check found_item = feature_id_name_id end
+			put ("is_precompiled") check found_item = is_precompiled_name_id end
+			put ("is_basic") check found_item = is_basic_name_id end
+			put ("open_map") check found_item = open_map_name_id end
+			put ("open_count") check found_item = open_count_name_id end
+			put ("closed_count") check found_item = closed_count_name_id end
+			put ("encaps_rout_disp") check found_item = encaps_rout_disp_name_id end
+			put ("$$fake_attribute_target") check found_item = fake_inline_agent_target_name_id end
+			put ("$$fake_inline_agent_name") check found_item = fake_inline_agent_name_name_id end
+			put ("callable") check found_item = callable_name_id end
+			put ("valid_operands") check found_item = valid_operands_name_id end
 		end
 
 invariant

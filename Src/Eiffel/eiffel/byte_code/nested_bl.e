@@ -346,6 +346,7 @@ end
 			else
 					-- This is part of a dot call. Generate a call on the
 					-- entity stored in the parent's register.
+					-- Our target is already generated.
 				generate_call (parent.register, with_inv)
 			end
 			if message.target /= message then
@@ -361,15 +362,20 @@ end
 		local
 			message_target: ACCESS_B
 			buf: GENERATION_BUFFER
+			agent_call: AGENT_CALL_B
+			complex_message_target: BOOLEAN
 		do
 			buf := buffer
+				-- Message_target is the target of the message (if message is a nested_bl) and message otherwise.
 			message_target := message.target
 				-- Put parameters, if any, in temporary registers
 			message_target.generate_parameters (reg)
 				-- Now if there is a result for the call and the result
 				-- has to be stored in a real register, do generate the
 				-- assignment.
-			if register /= Void and register /= No_register then
+			agent_call ?= message_target
+			complex_message_target := agent_call /= Void
+			if register /= Void and then register /= No_register and then not complex_message_target then
 				register.print_register
 				buf.put_string (" = ")
 			end
@@ -380,6 +386,14 @@ end
 				message_target.generate_on (reg)
 				buf.put_character (';')
 				buf.put_new_line
+
+				if register /= Void and then complex_message_target then
+					register.print_register
+					buf.put_string (" = ")
+					message_target.register.print_register
+					buf.put_character (';')
+					buf.put_new_line
+				end
 			end
 		end
 

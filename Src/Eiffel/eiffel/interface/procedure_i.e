@@ -167,12 +167,12 @@ feature -- Initialization
 			other.set_assert_id_set (assert_id_set)
 		end
 
-	check_local_names is
+	check_local_names (a_body: BODY_AS) is
 			-- Check the conflicts between local names and feature names
 			-- for an unchanged feature
 		do
 			if not is_replicated then
-				feature_checker.check_local_names (Current, body)
+				feature_checker.check_local_names (Current, a_body)
 			end
 		end
 

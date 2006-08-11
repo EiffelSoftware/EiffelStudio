@@ -21,7 +21,8 @@ inherit
 			melt_all, check_generics, check_generic_parameters,
 			check_creation_constraint_genericity,
 			check_constraint_genericity,
-			feature_of_feature_id
+			feature_of_feature_id,
+			feature_with_rout_id
 		end
 
 	CONF_CONSTANTS
@@ -47,7 +48,6 @@ feature -- Initialization
 			create inline_agent_table.make (0)
 			init_class_c (l)
 		end
-
 
 feature -- Access
 
@@ -91,8 +91,10 @@ feature -- Access
 			end
 		end
 
-
 	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
+			-- Feature whose feature_id is a_feature_id.
+			-- Look into feature_table, generic_features,
+			-- anchored_features and inline agent table
 		do
 			Result := Precursor (a_feature_id)
 			if Result = Void then
@@ -100,6 +102,20 @@ feature -- Access
 			end
 		end
 
+	feature_with_rout_id (rout_id: INTEGER_32): E_FEATURE
+			-- Feature whose routine id rout_id. Also finds inline agent features
+		local
+			feat: FEATURE_I
+		do
+			Result := Precursor (rout_id)
+			if Result = Void then
+					--Might be an inline agent
+				feat := inline_agent_of_rout_id (rout_id)
+				if feat /= Void then
+					Result := feat.api_feature (class_id)
+				end
+			end
+		end
 
 feature -- Action
 
@@ -323,7 +339,7 @@ feature -- Action
 			parent_list := ast_b.parents
 			if parent_list /= Void then
 
--- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
+					-- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
 				check_parent_classes (parent_list)
 			end
 
@@ -338,29 +354,29 @@ feature -- Action
 
 				-- The class has not been removed (modification of the
 				-- number of generics)
-if System.class_of_id (class_id) /= Void then
-				-- Update syntactical supplier/client relations and take
-				-- care of removed classes
-			update_syntactical_relations (old_syntactical_suppliers)
+			if System.class_of_id (class_id) /= Void then
+					-- Update syntactical supplier/client relations and take
+					-- care of removed classes
+				update_syntactical_relations (old_syntactical_suppliers)
 
-				-- Save the abstract syntax tree: the AST of a class
-				-- (instance of CLASS_C) is retrieved through the feature
-				-- `class_id' of CLASS_C and file ".TMP_AST".
-			ast_b.set_class_id (class_id)
-			Tmp_ast_server.put (ast_b)
+					-- Save the abstract syntax tree: the AST of a class
+					-- (instance of CLASS_C) is retrieved through the feature
+					-- `class_id' of CLASS_C and file ".TMP_AST".
+				ast_b.set_class_id (class_id)
+				Tmp_ast_server.put (ast_b)
 
-			if has_unique then
-				create unique_counter
-				create unique_values.make (7)
+				if has_unique then
+					create unique_counter
+					create unique_values.make (7)
 
-					-- Compute the values of the unique constants
-				ast_b.assign_unique_values (unique_counter, unique_values)
-				Tmp_ast_server.unique_values_put (unique_values, class_id)
+						-- Compute the values of the unique constants
+					ast_b.assign_unique_values (unique_counter, unique_values)
+					Tmp_ast_server.unique_values_put (unique_values, class_id)
+				end
+
+					-- Clean the filters, i.e. remove all the obsolete types
+				filters.clean
 			end
-
-				-- Clean the filters, i.e. remove all the obsolete types
-			filters.clean
-end
 		ensure
 			No_error: not Error_handler.has_error
 		rescue
@@ -435,7 +451,7 @@ feature -- Third pass: byte code production and type check
 			--	on all the features of the class.
 		local
 			feat_table: FEATURE_TABLE
-				-- Feature table of the class
+				-- Feature invariant_type_checktable of the class
 			feature_i, def_resc: FEATURE_I
 				-- A feature of the class
 			feature_changed: BOOLEAN
@@ -520,7 +536,6 @@ feature -- Third pass: byte code production and type check
 							-- debug info is inconsistent.
 						feature_changed := System.line_generation or System.il_generation
 					end
-
 					feature_changed := feature_changed and not feature_i.is_attribute
 
 					f_suppliers := dependances.item (feature_i.body_index)
@@ -535,7 +550,6 @@ feature -- Third pass: byte code production and type check
 								feature_changed := True
 							end
 						end
-
 						if feature_changed then
 								-- Automatic melting of the feature
 							if new_suppliers = Void then
@@ -595,7 +609,6 @@ feature -- Third pass: byte code production and type check
 									create def_resc_depend.make (class_id, def_resc)
 									f_suppliers.extend (def_resc_depend)
 								end
-
 									-- We need to duplicate `f_suppliers' now, otherwise
 									-- we will be wiped out in `ast_context.clear_feature_context'.
 								f_suppliers := f_suppliers.twin
@@ -609,6 +622,7 @@ feature -- Third pass: byte code production and type check
 
 									-- Byte code processing
 								tmp_byte_server.put (feature_checker.byte_code)
+
 								inline_agent_byte_code := feature_checker.inline_agent_byte_codes
 								if inline_agent_byte_code /= Void then
 									from
@@ -658,7 +672,7 @@ feature -- Third pass: byte code production and type check
 						ast_context.clear_feature_context
 					elseif check_local_names_needed then
 						ast_context.set_current_feature (feature_i)
-						feature_i.check_local_names
+						feature_i.check_local_names (feature_i.real_body)
 						ast_context.clear_feature_context
 					end
 
@@ -673,6 +687,7 @@ feature -- Third pass: byte code production and type check
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 							error_handler.mark
+							remove_inline_agents_of_feature (feature_i)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := error_handler.new_error
@@ -728,6 +743,9 @@ feature -- Third pass: byte code production and type check
 				if new_suppliers = Void then
 					new_suppliers := suppliers.same_suppliers
 				end
+				if invariant_feature /= Void then
+					remove_inline_agents_of_feature (invariant_feature)
+				end
 				if f_suppliers /= Void then
 					new_suppliers.remove_occurrence (f_suppliers)
 				end
@@ -765,7 +783,9 @@ feature -- Third pass: byte code production and type check
 					invar_clause := Inv_ast_server.item (class_id)
 					Error_handler.mark
 
-					feature_checker.invariant_type_check_and_code (invariant_feature, invar_clause)
+					remove_inline_agents_of_feature (invariant_feature)
+
+					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
 					if not Error_handler.new_error then
 						if f_suppliers /= Void then
@@ -791,6 +811,18 @@ feature -- Third pass: byte code production and type check
 
 						Tmp_inv_byte_server.put (feature_checker.invariant_byte_code)
 
+						inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+						if inline_agent_byte_code /= Void then
+							from
+								inline_agent_byte_code.start
+							until
+								inline_agent_byte_code.after
+							loop
+								tmp_byte_server.put (inline_agent_byte_code.item)
+								inline_agent_byte_code.forth
+							end
+						end
+
 						add_feature_to_melted_set (invariant_feature)
 					end
 						-- Clean context
@@ -798,7 +830,7 @@ feature -- Third pass: byte code production and type check
 				elseif invariant_feature /= Void and degree_3_needed then
 						-- we have to type check again to get the types into the ast
 					invar_clause := Inv_ast_server.item (class_id)
-					feature_checker.invariant_type_check_and_code (invariant_feature, invar_clause)
+					feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
 				end
 			end
 
@@ -819,6 +851,9 @@ feature -- Third pass: byte code production and type check
 					removed_features.after
 				loop
 					feature_i := removed_features.item_for_iteration
+
+					remove_inline_agents_of_feature (feature_i)
+
 					body_index := feature_i.body_index
 					f_suppliers := dependances.item (body_index)
 					if f_suppliers /= Void then
@@ -1843,21 +1878,30 @@ feature -- Supplier checking
 
 feature -- Inline agents
 
-	put_inline_agent (new: FEATURE_I) is
+	put_inline_agent (a_feature: FEATURE_I) is
+			-- adds a new inline agent to this eiffel class.
+		require
+			valid_feature: a_feature /= Void
 		do
-			inline_agent_table.put (new, new.feature_name_id)
+			inline_agent_table.put (a_feature, a_feature.feature_name_id)
+		ensure
+			agent_added: inline_agent_table.has (a_feature.feature_name_id)
 		end
 
-	inline_agent_of_name_id (feature_name_id: INTEGER): FEATURE_I is
+	inline_agent_of_name_id (a_feature_name_id: INTEGER): FEATURE_I is
+			-- Returns the inline agent with the given `a_feature_name_id'.
 		require
-			valid_feature_name_id: feature_name_id > 0
+			valid_feature_name_id: a_feature_name_id > 0
 		do
-			Result := inline_agent_table.item (feature_name_id)
+			Result := inline_agent_table.item (a_feature_name_id)
+		ensure
+			Result.feature_name_id = a_feature_name_id
 		end
 
-	inline_agent_of_id (feature_id: INTEGER): FEATURE_I is
+	inline_agent_of_id (a_feature_id: INTEGER): FEATURE_I is
+			-- Returns the inline agent with the feature_id `a_feature_id'.
 		require
-			valid_feature_id: feature_id > 0
+			valid_feature_id: a_feature_id > 0
 		local
 			feat: FEATURE_I
 			old_cursor: CURSOR
@@ -1869,14 +1913,50 @@ feature -- Inline agents
 				Result /= Void or else inline_agent_table.after
 			loop
 				feat := inline_agent_table.item_for_iteration
-				if feat.feature_id = feature_id  then
+				if feat.feature_id = a_feature_id  then
 					Result := feat
 				else
 					inline_agent_table.forth
 				end
 			end
-			inline_agent_table.go_to (old_cursor)
+			if inline_agent_table.valid_cursor (old_cursor) then
+				inline_agent_table.go_to (old_cursor)
+			end
+		ensure
+			Result.feature_id = a_feature_id
 		end
+
+	inline_agent_of_rout_id (a_rout_id: INTEGER): FEATURE_I is
+			-- Returns the inline agent with the routine id `a_rout_id'.
+		require
+			valid_rout_id: a_rout_id > 0
+		local
+			feat: FEATURE_I
+			old_cursor: CURSOR
+		do
+			from
+				old_cursor := inline_agent_table.cursor
+				inline_agent_table.start
+			until
+				Result /= Void or else inline_agent_table.after
+			loop
+				feat := inline_agent_table.item_for_iteration
+				check
+					feat.rout_id_set.count = 1
+				end
+				if feat.rout_id_set.first = a_rout_id then
+					Result := feat
+				else
+					inline_agent_table.forth
+				end
+			end
+			if inline_agent_table.valid_cursor (old_cursor) then
+				inline_agent_table.go_to (old_cursor)
+			end
+		ensure
+			Result.rout_id_set.first = a_rout_id
+		end
+
 
 	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN is
 		require
@@ -1896,6 +1976,34 @@ feature -- Inline agents
 					inline_agent_table.forth
 				end
 			end
+		end
+
+	inline_agent_with_nr (a_enclosing_feature: FEATURE_I; a_inline_agent_nr: INTEGER): FEATURE_I is
+			-- Searches for the inline agent with number `a_inline_agent_nr'.
+		local
+			l_feat: FEATURE_I
+			l_enc_bid: INTEGER
+			l_old_cursor: CURSOR
+		do
+			from
+				l_old_cursor := inline_agent_table.cursor
+				inline_agent_table.start
+				l_enc_bid := a_enclosing_feature.body_index
+			until
+				Result /= Void or else inline_agent_table.after
+			loop
+				l_feat := inline_agent_table.item_for_iteration
+				if l_feat.enclosing_body_id = l_enc_bid and then l_feat.inline_agent_nr = a_inline_agent_nr then
+					Result := l_feat
+				else
+					inline_agent_table.forth
+				end
+			end
+			if inline_agent_table.valid_cursor (l_old_cursor) then
+				inline_agent_table.go_to (l_old_cursor)
+			end
+		ensure
+			Result.enclosing_body_id = a_enclosing_feature.body_index and Result.inline_agent_nr = a_inline_agent_nr
 		end
 
 	api_inline_agent_of_name (n: STRING): E_FEATURE is

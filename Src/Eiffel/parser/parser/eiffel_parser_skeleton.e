@@ -49,11 +49,12 @@ feature {NONE} -- Initialization
 			create suppliers.make
 			create formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
-			id_level := Normal_level
 			is_supplier_recorded := True
 			create counters.make (Initial_counters_capacity)
 			create counters2.make (Initial_counters_capacity)
 			create last_rsqure.make (initial_counters_capacity)
+			create feature_stack.make (1)
+			add_feature_frame
 		end
 
 feature -- Parser type setting
@@ -155,7 +156,8 @@ feature -- Initialization
 			Precursor
 			create suppliers.make
 			formal_parameters.wipe_out
-			id_level := Normal_level
+			feature_stack.wipe_out
+			add_feature_frame
 			is_supplier_recorded := True
 			has_externals := False
 			once_manifest_string_count := 0
@@ -321,9 +323,56 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	id_level: INTEGER
+	id_level: INTEGER is
 			-- Boolean for controlling the semantic
 			-- action of rule `A_feature'
+		require
+			not feature_stack.is_empty
+		do
+			Result := feature_stack.item.id_level
+		end
+
+	set_id_level (a_id_level: INTEGER) is
+			-- Sets the current id_level to `a_id_level'
+		require
+			not feature_stack.is_empty
+		do
+			feature_stack.item.id_level := a_id_level
+		end
+
+
+	fbody_pos: INTEGER is
+			-- To memorize the beginning of a feature body
+		require
+			not feature_stack.is_empty
+		do
+			Result := feature_stack.item.fbody_pos
+		end
+
+	set_fbody_pos (a_fbody_pos: INTEGER) is
+		require
+			not feature_stack.is_empty
+		do
+			feature_stack.item.fbody_pos := a_fbody_pos
+		end
+
+
+	feature_stack: DS_ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER]]
+			-- id_level and fbody_pos are needed per feature body. Since there are inline agents
+			-- we need a stack of them. It may be, that there is no feature at all when its used
+			-- for an invariant. We never remove the first element of the stack.
+
+	add_feature_frame is
+		do
+			feature_stack.force ([Normal_level, 0])
+		end
+
+	remove_feature_frame
+		require
+			feature_stack.count > 1
+		do
+			feature_stack.remove
+		end
 
 	is_deferred: BOOLEAN
 			-- Boolean mark for deferred class
@@ -358,9 +407,6 @@ feature {NONE} -- Implementation
 
 	fclause_pos: KEYWORD_AS
 			-- To memorize the beginning of a feature clause
-
-	fbody_pos: INTEGER
-			-- To memorize the beginning of a feature body
 
 	feature_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for an Eiffel feature.

@@ -137,6 +137,7 @@ feature -- Type checking
 			a_feature.body.process (Current)
 		end
 
+
 	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
 			-- Type check `an_exp' in the context of `a_feature'.
 		require
@@ -150,7 +151,7 @@ feature -- Type checking
 			an_exp.process (Current)
 		end
 
-	invariant_type_check_and_code (a_feature: FEATURE_I; a_clause: INVARIANT_AS) is
+	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -160,16 +161,18 @@ feature -- Type checking
 			l_invariant: INVARIANT_B
 		do
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
-			is_byte_node_enabled := True
+			is_byte_node_enabled := a_generate_code
 			current_feature := a_feature
 			reset
 			a_clause.process (Current)
-			l_list ?= last_byte_node
-			create l_invariant
-			l_invariant.set_class_id (context.current_class.class_id)
-			l_invariant.set_byte_list (l_list)
-			l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
-			last_byte_node := l_invariant
+			if a_generate_code then
+				l_list ?= last_byte_node
+				create l_invariant
+				l_invariant.set_class_id (context.current_class.class_id)
+				l_invariant.set_byte_list (l_list)
+				l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
+				last_byte_node := l_invariant
+			end
 		end
 
 	custom_attributes_type_check_and_code (a_feature: FEATURE_I; a_cas: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]) is
@@ -185,7 +188,7 @@ feature -- Type checking
 			a_cas.process (Current)
 		end
 
-	check_local_names (a_procedure: PROCEDURE_I; a_node: FEATURE_AS) is
+	check_local_names (a_procedure: PROCEDURE_I; a_node: BODY_AS) is
 			-- Check validity of the names of the locals of `a_procedure'.
 			-- Useful when a feature has been added, we need to make sure that
 			-- locals of existing features have a different name.
@@ -197,9 +200,10 @@ feature -- Type checking
 			l_id_list: ARRAYED_LIST [INTEGER]
 			l_feat_tbl: FEATURE_TABLE
 			l_vrle1: VRLE1
+			l_vpir: VPIR_1
 			l_local_name_id: INTEGER
 		do
-			l_routine ?= a_node.body.content
+			l_routine ?= a_node.content
 			if l_routine /= Void then
 				if l_routine.locals /= Void and not l_routine.locals.is_empty then
 					from
@@ -223,6 +227,13 @@ feature -- Type checking
 								l_vrle1.set_local_name (l_local_name_id)
 								l_vrle1.set_location (l_routine.locals.item.start_location)
 								error_handler.insert_error (l_vrle1)
+							elseif context.is_name_used (l_local_name_id) then
+								create l_vpir
+								context.init_error (l_vpir)
+								l_vpir.set_entity_name (l_local_name_id)
+								l_vpir.set_class (context.current_class)
+								l_vpir.set_feature (context.current_feature)
+								error_handler.insert_error (l_vpir)
 							end
 							l_id_list.forth
 						end
@@ -234,17 +245,52 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
-	check_inline_agent (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled: BOOLEAN) is
+	check_inline_agent (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited: BOOLEAN) is
 			-- Type check `a_feature' which represents an inline agent `a_body'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_routine_as: ROUTINE_AS
+			l_vpir: VPIR_3
 		do
+			l_routine_as ?= a_body.content
+			if not is_inherited then
+				if l_routine_as /= Void then
+					if l_routine_as.is_deferred or l_routine_as.is_external then
+						create l_vpir
+						l_vpir.set_class (context.current_class)
+						l_vpir.set_feature (context.current_feature)
+						l_vpir.set_location (a_body.start_location)
+						error_handler.insert_error (l_vpir)
+					end
+				else
+					create l_vpir
+					l_vpir.set_class (context.current_class)
+					l_vpir.set_feature (context.current_feature)
+					l_vpir.set_location (a_body.start_location)
+					error_handler.insert_error (l_vpir)
+				end
+				error_handler.checksum
+			end
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := a_is_byte_node_enabled
+			is_inherited := a_is_inherited
+			a_feature.check_types (context.current_feature_table)
+			error_handler.checksum
+			if not is_inherited then
+				if a_feature.has_arguments then
+					a_feature.check_argument_names (context.current_feature_table)
+				end
+			end
+			error_handler.checksum
 			a_body.process (Current)
+			if not is_inherited then
+				a_feature.check_local_names (a_body)
+			end
+			error_handler.checksum
 		end
 
 feature -- Status report
@@ -280,11 +326,13 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation: Context
 
-	context: AST_CONTEXT
-			-- Context in which current checking is done
-
 	current_feature: FEATURE_I
 			-- Feature which is checked
+
+feature {AST_FEATURE_CHECKER_GENERATOR}
+
+	is_inherited: BOOLEAN
+			-- Is code being processed inherited?
 
 feature {NONE} -- Implementation: State
 
@@ -316,6 +364,9 @@ feature {NONE} -- Implementation: State
 
 	depend_unit_level: INTEGER_8
 			-- Current level used to create new instances of DEPEND_UNIT.
+
+	context: AST_CONTEXT
+			-- Context in which current checking is done
 
 	is_checking_postcondition: BOOLEAN is
 			-- Are we currently checking a postcondition.
@@ -357,9 +408,6 @@ feature {NONE} -- Implementation: State
 			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_assignment_flag) =
 				{DEPEND_UNIT}.is_in_assignment_flag
 		end
-
-	is_inherited: BOOLEAN
-			-- Is code being processed inherited?
 
 	last_expressions_type: ARRAY [TYPE_A]
 			-- Last computed types of a list of expressions
@@ -518,6 +566,14 @@ feature -- Settings
 			is_in_assignment_set: is_in_assignment = b
 		end
 
+	set_current_feature (a_feature: FEATURE_I) is
+			-- Assign `a_feature' to `current_feature'.
+		do
+			current_feature := a_feature
+		ensure
+			is_current_feature_set: current_feature = a_feature
+		end
+
 feature -- Roundtrip
 
 	process_keyword_as (l_as: KEYWORD_AS) is
@@ -576,65 +632,164 @@ feature -- Roundtrip
 			l_context: like context
 			l_feature_as: FEATURE_AS
 			l_feature_generator: AST_FEATURE_I_GENERATOR
-			l_feature, l_enclosing_feature: FEATURE_I
+			l_feature, l_cur_feature, l_enclosing_feature: FEATURE_I
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			l_cur_class: EIFFEL_CLASS_C
 			l_body_code: BYTE_CODE
 			l_ak: LOCATION_AS
 			l_new_feature_dep: FEATURE_DEPENDANCE
 			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
+			l_used_argument_names: SEARCH_TABLE [INTEGER]
+			l_used_local_names: SEARCH_TABLE [INTEGER]
+			l_arg_names: SPECIAL [INTEGER]
+			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			i: INTEGER
+			l_routine: ROUTINE_AS
+			l_id_list: IDENTIFIER_LIST
 		do
 			l_cur_class ?= context.current_class
 
-				-- This is the first place, where inline agents are looked at as features.
-				-- They are ignored by degree 2. So a new FEATURE_I has to be created
-			create l_feature_names.make (0)
-			create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
+			if is_inherited then
+				l_feature :=
+					system.class_of_id (l_as.class_id).eiffel_class_c.inline_agent_of_rout_id (l_as.inl_rout_id).duplicate
+				l_feature.instantiation_in (context.current_class_type.conformance_type)
+			else
+				if is_byte_node_enabled then
 
-			create l_feature_generator
-			l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
+						-- This is the first place, where inline agents are looked at as features.
+						-- They are ignored by degree 2. So a new FEATURE_I has to be created
+					create l_feature_names.make (0)
+					create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
-			l_enclosing_feature := init_inline_agent_feature (l_feature)
+					create l_feature_generator
+					l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
+					l_enclosing_feature := init_inline_agent_feature (l_feature)
+					l_cur_feature := context.current_feature
 
-			create l_feature_name.initialize (
-					"inline_agent_" +
-					l_enclosing_feature.feature_name + "_" +
-					l_feature.inline_agent_nr.out)
+					if is_byte_node_enabled then
 
-			l_ak := l_as.agent_keyword
-			l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
-			l_as.set_feature_name (l_feature_name)
+						create l_feature_name.initialize (l_feature.feature_name)
+						l_ak := l_as.agent_keyword
+						l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
+						l_as.set_feature_name (l_feature_name)
+					end
+				else
+					l_cur_feature := context.current_feature
+					if l_cur_feature = Void then
+						l_enclosing_feature := l_cur_class.invariant_feature
+					else
+						l_enclosing_feature := l_cur_feature.enclosing_feature
+					end
+					l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature, context.inline_agent_counter.next)
+				end
+			end
 
 				-- The context is modified, for the processing of the body of the inline agent.
 			l_context := context.save
+
+			if not is_inherited then
+				create l_used_argument_names.make (1)
+				if l_cur_feature /= Void and then l_cur_feature.argument_count > 0  then
+					from
+						l_arg_names := context.current_feature.arguments.argument_names
+						i := l_arg_names.lower
+					until
+						i > l_arg_names.upper
+					loop
+						l_used_argument_names.force (l_arg_names.item (i))
+						i := i + 1
+					end
+				end
+
+				if l_context.used_argument_names /= Void then
+					l_used_argument_names.merge (l_context.used_argument_names)
+				end
+				context.set_used_argument_names (l_used_argument_names)
+
+				create l_used_local_names.make (1)
+				if l_cur_feature /= Void then
+					if l_cur_feature.is_inline_agent then
+						l_routine ?= context.current_inline_agent_body.content
+					else
+						l_routine ?= l_cur_feature.real_body.content
+					end
+					if l_routine /= Void then
+						l_locals := l_routine.locals
+						if l_locals /= Void and not l_locals.is_empty then
+							from
+								l_locals.start
+							until
+								l_locals.after
+							loop
+								l_id_list := l_locals.item.id_list
+								from
+									l_id_list.start
+								until
+									l_id_list.after
+								loop
+									l_used_local_names.force (l_id_list.item.item)
+									l_id_list.forth
+								end
+								l_locals.forth
+							end
+						end
+					end
+				end
+
+				if l_context.used_local_names /= Void then
+					l_used_local_names.merge (l_context.used_local_names)
+				end
+				context.set_used_local_names (l_used_local_names)
+			end
 
 			context.set_current_feature (l_feature)
 
 			create l_feature_checker
 			l_feature_checker.init (context)
-			l_feature_checker.check_inline_agent (l_feature, l_as.body, is_byte_node_enabled)
+			context.set_current_inline_agent_body (l_as.body)
+			l_feature_checker.check_inline_agent (l_feature, l_as.body, is_byte_node_enabled, is_inherited)
 
 			l_body_code ?= l_feature_checker.last_byte_node
 
 			l_new_feature_dep := context.supplier_ids
 			context.restore (l_context)
+			l_context := Void
 
-			if is_byte_node_enabled then
-				l_body_code.set_start_line_number (l_as.body.start_location.line)
-					-- When an inline agent X of an enclosing feature f is a client of
-					-- feature g, we make the enclosing feature f a client of g.
-				if inline_agent_byte_codes = Void then
-					create inline_agent_byte_codes.make
+			if not is_inherited then
+
+				if is_byte_node_enabled then
+
+					l_body_code.set_start_line_number (l_as.body.start_location.line)
+						-- When an inline agent X of an enclosing feature f is a client of
+						-- feature g, we make the enclosing feature f a client of g.
+					if inline_agent_byte_codes = Void then
+						create inline_agent_byte_codes.make
+					end
+					inline_agent_byte_codes.extend (l_body_code)
+					if l_feature_checker.inline_agent_byte_codes /= Void then
+						inline_agent_byte_codes.append (l_feature_checker.inline_agent_byte_codes)
+					end
+					init_inline_agent_dep (l_feature, l_new_feature_dep)
 				end
-				inline_agent_byte_codes.extend (l_body_code)
-				if l_feature_checker.inline_agent_byte_codes /= Void then
-					inline_agent_byte_codes.append (l_feature_checker.inline_agent_byte_codes)
-				end
-				init_inline_agent_dep (l_feature, l_new_feature_dep)
+				l_as.set_inl_class_id (l_feature.written_in)
+				l_as.set_inl_rout_id (l_feature.rout_id_set.first)
 			end
 				-- Now as the features is generated the inline agent creation is
 				-- threaten like a normal routine creation
 			process_routine_creation_as_ext (l_as, l_feature)
+		rescue
+			if l_context /= Void then
+				context.restore (l_context)
+			end
+			if
+				l_cur_class /= Void and then l_feature /= Void and
+			then
+				not is_inherited and then is_byte_node_enabled
+			then
+				if l_cur_class.inline_agent_table.has (l_feature.feature_name_id) then
+					l_cur_class.inline_agent_table.remove (l_feature.feature_name_id)
+				end
+			end
 		end
 
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
@@ -1147,18 +1302,20 @@ feature -- Implementation
 					end
 
 						-- Supplier dependances update
-						if l_is_target_of_creation_instruction then
-							create l_depend_unit.make_with_level (l_last_id, l_feature,
-								{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
-						else
-							if is_precursor then
-								create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
-									depend_unit_level)
-								context.supplier_ids.extend (l_depend_unit)
+						if not l_feature.is_inline_agent then
+							if l_is_target_of_creation_instruction then
+								create l_depend_unit.make_with_level (l_last_id, l_feature,
+									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+							else
+								if is_precursor then
+									create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+										depend_unit_level)
+									context.supplier_ids.extend (l_depend_unit)
+								end
+								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 							end
-							create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+							context.supplier_ids.extend (l_depend_unit)
 						end
-						context.supplier_ids.extend (l_depend_unit)
 
 					if l_is_assigner_call then
 						process_assigner_command (l_last_id, l_feature)
@@ -2542,6 +2699,9 @@ feature -- Implementation
 			l_feature_name: ID_AS
 			l_access: ACCESS_B
 			l_open: OPEN_TYPE_A
+			l_named_tuple: NAMED_TUPLE_TYPE_A
+			l_label_pos: INTEGER
+			l_is_named_tuple: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -2596,7 +2756,18 @@ feature -- Implementation
 			else
 				l_feature := a_feature
 			end
+
 			if l_feature = Void then
+				l_named_tuple ?= l_target_type
+				if l_named_tuple /= Void then
+					l_label_pos := l_named_tuple.label_position (l_feature_name)
+					if l_label_pos > 0 then
+						l_is_named_tuple := True
+					end
+				end
+			end
+
+			if l_feature = Void and then not l_is_named_tuple then
 				create l_unsupported
 				context.init_error (l_unsupported)
 				l_unsupported.set_message ("Agent creation on `" + l_feature_name + "' is%
@@ -2607,11 +2778,31 @@ feature -- Implementation
 			else
 				if not is_inherited then
 					l_as.set_class_id (l_class.class_id)
-					l_as.set_routine_ids (l_feature.rout_id_set)
+					if l_feature /= Void then
+						l_as.set_routine_ids (l_feature.rout_id_set)
+					end
 				end
 				l_access ?= last_byte_node
-				compute_routine (l_table, l_feature, l_class.class_id, l_target_type, last_type,
-					l_as, l_access, l_target_node)
+				if l_is_named_tuple or else l_feature.is_attribute then
+					is_byte_node_enabled := False
+
+					compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, last_type,
+							l_as, l_access, l_target_node)
+
+					if l_needs_byte_node then
+						is_byte_node_enabled := True
+						if l_is_named_tuple then
+							compute_named_tuple_fake_inline_agent (
+								l_as, l_named_tuple, l_label_pos, l_target_node, l_target_type, last_type)
+						else
+							compute_attribute_fake_inline_agent (
+								l_as,l_feature, l_target_node, l_target_type, last_type)
+						end
+					end
+				else
+					compute_routine (l_table, l_feature, not l_feature.type.is_void,l_feature.has_arguments,
+									 l_class.class_id, l_target_type, last_type, l_as, l_access, l_target_node)
+				end
 				System.instantiator.dispatch (last_type, context.current_class)
 			end
 			error_handler.checksum
@@ -4529,6 +4720,7 @@ feature -- Implementation
 
 	process_invariant_as (l_as: INVARIANT_AS) is
 		do
+			context.inline_agent_counter.reset
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)
@@ -4874,6 +5066,7 @@ feature {NONE} -- Implementation
 			routine_body: ROUTINE_AS
 			i: INTEGER
 			l_old_written_class: CLASS_C
+			l_written_class: CLASS_C
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
@@ -4899,7 +5092,8 @@ feature {NONE} -- Implementation
 						end
 						routine_body ?= precursor_feature.body.content
 						l_old_written_class := context.written_class
-						context.set_written_class (system.class_of_id (assertion_info.written_in))
+						l_written_class := system.class_of_id (assertion_info.written_in)
+						context.set_written_class (l_written_class)
 						if assertion_info.has_precondition then
 							set_is_checking_precondition (True)
 							routine_body.precondition.process (Current)
@@ -5810,22 +6004,23 @@ feature {NONE} -- Implementation: overloading
 feature {NONE} -- Agents
 
 	compute_routine (
-			a_table: FEATURE_TABLE; a_feature: FEATURE_I; cid : INTEGER; a_target_type: TYPE_A;
+			a_table: FEATURE_TABLE; a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
 			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: BYTE_NODE)
 		is
 			-- Type of routine object.
 		require
 			valid_table: a_table /= Void
-			valid_feature: a_feature /= Void;
+			valid_feature: is_byte_node_enabled or a_has_args implies a_feature /= Void;
+			no_byte_code_for_attribute: is_byte_node_enabled implies not a_feature.is_attribute
 		local
 			l_arg_type:TYPE_A
 			l_generics: ARRAY [TYPE_A]
 			l_feat_args: FEAT_ARG
-			l_oargtypes, l_argtypes: ARRAY [TYPE_A]
+			l_oargtypes, l_cargtypes: ARRAY [TYPE_A]
 			l_tuple: TUPLE_TYPE_A
-			l_count, l_idx, l_oidx: INTEGER
+			l_arg_count, l_open_count, l_closed_count, l_idx, l_cidx, l_oidx: INTEGER
 			l_operand: OPERAND_AS
-			l_is_open: BOOLEAN
+			l_is_open, l_target_closed: BOOLEAN
 			l_result_type: GEN_TYPE_A
 			l_last_open_positions: ARRAYED_LIST [INTEGER]
 			l_routine_creation: ROUTINE_CREATION_B
@@ -5834,13 +6029,11 @@ feature {NONE} -- Agents
 			l_parameters_node: BYTE_LIST [PARAMETER_B]
 			l_expr: EXPR_B
 			l_array_of_opens: ARRAY_CONST_B
-			l_void: VOID_B
 			l_operand_node: OPERAND_B
 			l_actual_target_type: TYPE_A
 		do
-
-			if a_feature.is_function or else a_feature.is_attribute then
-				if a_feature.type.is_boolean then
+			if a_is_query then
+				if a_feat_type.is_boolean then
 						-- generics are: base_type, open_types
 					create l_generics.make (1, 2)
 					create l_result_type.make (System.predicate_class_id, l_generics)
@@ -5859,32 +6052,30 @@ feature {NONE} -- Agents
 			l_actual_target_type := a_target_type.actual_type
 			l_generics.put (a_target_type, 1)
 
-			l_feat_args := a_feature.arguments
+			if a_has_args then
+				l_feat_args := a_feature.arguments
+				l_arg_count := l_feat_args.count + 1
+			else
+				l_arg_count := 1
+			end
 
 				-- Compute `operands_tuple' and type of TUPLE needed to determine current
 				-- ROUTINE type.
 
-				-- Create `l_argtypes', array used to initialize type of `operands_tuple'.
-				-- This array can hold all arguments of the routine plus Current.
-			if l_feat_args /= Void then
-				l_count := l_feat_args.count + 1
-			else
-				l_count := 1
-			end
-			create l_argtypes.make (1, l_count)
-
 
 				-- Create `l_oargtypes'. But first we need to find the `l_count', number
 				-- of open operands.
+
 			if an_agent.target /= Void and then an_agent.target.is_open then
 					-- No target is specified, or just a class type is specified.
 					-- Therefore there is at least one argument
-				l_count := 1
+				l_open_count := 1
 				l_oidx := 2
 			else
 					-- Target was specified
-				l_count := 0
+				l_open_count := 0
 				l_oidx  := 1
+				l_target_closed := True
 			end
 
 				-- Compute number of open positions.
@@ -5895,22 +6086,22 @@ feature {NONE} -- Agents
 					an_agent.operands.after
 				loop
 					if an_agent.operands.item.is_open then
-						l_count := l_count + 1
+						l_open_count := l_open_count + 1
 					end
 					an_agent.operands.forth
 				end
 			else
-				if l_feat_args /= Void then
-					l_count := l_count + l_feat_args.count
+				if a_has_args then
+					l_open_count := l_open_count + l_feat_args.count
 				end
 			end
 
 				-- Create `oargytpes' with `l_count' parameters. This array
 				-- is used to create current ROUTINE type.
-			create l_oargtypes.make (1, l_count)
+			create l_oargtypes.make (1, l_open_count)
 
-			if l_count > 0 then
-				create l_last_open_positions.make (l_count)
+			if l_open_count > 0 then
+				create l_last_open_positions.make (l_open_count)
 				if l_oidx > 1 then
 						-- Target is open, so insert it.
 					l_last_open_positions.extend (1)
@@ -5918,8 +6109,18 @@ feature {NONE} -- Agents
 				end
 			end
 
-				-- Always insert target's type in `l_argtypes' as first argument.
-			l_argtypes.put (a_target_type, 1)
+				-- Create `l_cargtypes', array used to initialize type of `operands_tuple'.
+				-- This array can hold the types for all closed arguments
+			l_closed_count := l_arg_count - l_open_count
+			create l_cargtypes.make (1, l_closed_count)
+
+				-- Always insert target's type in `l_cargtypes' as first argument.
+			if l_target_closed then
+				l_cargtypes.put (a_target_type, 1)
+				l_cidx := 2
+			else
+				l_cidx := 1
+			end
 
 				-- Create argument types
 			if l_feat_args /= Void then
@@ -5969,10 +6170,11 @@ feature {NONE} -- Agents
 						l_oargtypes.put (l_arg_type, l_oidx)
 						l_last_open_positions.extend (l_idx)
 						l_oidx := l_oidx + 1
-					end
-
+					else
 						-- Add type to `l_argtypes'.
-					l_argtypes.put (l_arg_type, l_idx)
+						l_cargtypes.put (l_arg_type, l_cidx)
+						l_cidx := l_cidx + 1
+					end
 
 					l_idx := l_idx + 1
 					l_feat_args.forth
@@ -5993,28 +6195,20 @@ feature {NONE} -- Agents
 
 				l_parameters_node := an_access.parameters
 
-					-- Setup closed arguments in `l_argtypes'.
-				create l_expressions.make_filled (l_argtypes.count)
+					-- Setup closed arguments in `l_cargtypes'.
+				create l_expressions.make_filled (l_closed_count)
 				l_expressions.start
-
-					-- Generate `VOID_B' instance that corresponds to
-					-- a non-initialized value of `l_argtypes'.
-				create l_void
 
 				if a_target_node /= Void then
 						-- A target was specified, we need to check if it is an open argument or not
 						-- by simply checking that its byte node is not an instance of OPERAND_B.
 					l_expr ?= a_target_node
 					l_operand_node ?= l_expr
-					if l_operand_node /= Void then
-						l_expressions.put (l_void)
-					else
+					if l_operand_node = Void then
 						l_expressions.put (l_expr)
+						l_expressions.forth
 					end
-				else
-					l_expressions.put (l_void)
 				end
-				l_expressions.forth
 
 				if l_parameters_node /= Void then
 						-- Insert values in `l_expressions'.
@@ -6025,14 +6219,11 @@ feature {NONE} -- Agents
 					loop
 						l_expr := l_parameters_node.item.expression
 						l_operand_node ?= l_expr
-						if l_operand_node /= Void then
-								-- Open operands, we insert Void.
-							l_expressions.put (l_void)
-						else
+						if l_operand_node = Void then
 								-- Closed operands, we insert its expression.
 							l_expressions.put (l_expr)
+							l_expressions.forth
 						end
-						l_expressions.forth
 						l_parameters_node.forth
 					end
 				end
@@ -6040,9 +6231,10 @@ feature {NONE} -- Agents
 					-- Create TUPLE_CONST_B instance which holds all closed arguments.
 				l_expressions.start
 				create l_tuple_node.make (l_expressions,
-					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_argtypes)).type_i)
+					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_cargtypes)).type_i)
 
 					-- Setup l_last_open_positions
+
 				if l_last_open_positions /= Void then
 					create l_expressions.make_filled (l_last_open_positions.count)
 					from
@@ -6065,9 +6257,12 @@ feature {NONE} -- Agents
 				end
 
 					-- Initialize ROUTINE_CREATION_B instance
-				l_routine_creation.init (a_target_type.type_i, a_target_type.associated_class.class_id,
-					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens, a_feature.is_attribute,
-					a_feature.is_inline_agent)
+					-- We need to use the conformence_type since it could be a like_current type which would
+					-- be a problem with inherited assertions. See eweasel test execX10
+				l_routine_creation.init (a_target_type.conformance_type.type_i, a_target_type.associated_class.class_id,
+					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens, l_last_open_positions,
+					a_feature.is_inline_agent, l_target_closed, a_target_type.associated_class.is_precompiled,
+					a_target_type.associated_class.is_basic)
 
 				last_byte_node := l_routine_creation
 			end
@@ -6088,11 +6283,192 @@ feature {NONE} -- Agents
 			create Result.make (System.array_id, generics)
 		end
 
+	compute_attribute_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
+								   		a_target_type: TYPE_A; a_agent_type: TYPE_A)
+		is
+		local
+			l_attribute: ATTRIBUTE_B
+		do
+			create l_attribute
+			l_attribute.init (a_feature)
+			l_attribute.set_type (a_feature.type.type_i)
+			compute_fake_inline_agent (a_rc, l_attribute, a_feature.type, a_target, a_target_type, a_agent_type)
+		end
+
+	compute_named_tuple_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_named_tuple: NAMED_TUPLE_TYPE_A; a_label_pos: INTEGER;
+										   a_target: BYTE_NODE; a_target_type: TYPE_A; a_agent_type: TYPE_A)
+		is
+		local
+			l_tuple_access: TUPLE_ACCESS_B
+		do
+			create l_tuple_access.make (a_named_tuple.type_i, a_label_pos)
+			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type.type_a, a_target, a_target_type, a_agent_type)
+		end
+
+	compute_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: CALL_B; a_feature_type: TYPE_A; a_target: BYTE_NODE; a_target_type: TYPE_A; a_agent_type: TYPE_A) is
+			-- Creates an inline agent bytenode that is semanticaly equivalent to the agent on the target byte node
+			-- It further creates the proper routine creation
+			-- agent T.a becomes:
+			-- agent(t: TYPE_T): TYPE_a do Result := t.a end (T)
+		local
+			l_func: DYN_FUNC_I
+			l_args: FEAT_ARG
+			l_code: STD_BYTE_CODE
+			l_byte_list: BYTE_LIST [BYTE_NODE]
+			l_nested: NESTED_B
+			l_argument: ARGUMENT_B
+			l_assign: ASSIGN_B
+			l_tuple_node: TUPLE_CONST_B
+			l_closed_args: BYTE_LIST [BYTE_NODE]
+			l_agent_type: GEN_TYPE_I
+			l_operand: OPERAND_B
+			l_target: BYTE_NODE
+			l_cur_class: EIFFEL_CLASS_C
+			l_enclosing_feature: FEATURE_I
+			l_tuple_type: TUPLE_TYPE_A
+			l_target_closed: BOOLEAN
+			l_rout_creation: ROUTINE_CREATION_B
+		do
+
+			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
+			l_cur_class := context.current_class.eiffel_class_c
+			create l_func
+			if l_target_closed then
+				create l_args.make (1)
+				l_args.start
+				l_args.put (a_target_type)
+				l_args.put_name (
+					{PREDEFINED_NAMES}.fake_inline_agent_target_name_id, 1)
+				l_func.set_arguments (l_args)
+			end
+			l_func.set_type (a_feature_type, 0)
+
+			l_func.set_is_fake_inline_agent (True)
+			l_enclosing_feature := init_inline_agent_feature (l_func)
+
+			create l_byte_list.make (1)
+			l_byte_list.start
+
+			create l_assign
+			l_assign.set_target (create {RESULT_B})
+
+			if l_target_closed then
+				create l_argument
+				l_argument.set_position (1)
+
+				create l_nested
+				l_nested.set_target (l_argument)
+				l_nested.set_message (a_feature)
+				a_feature.set_parent (l_nested)
+
+				l_assign.set_source (l_nested)
+			else
+				l_assign.set_source (a_feature)
+			end
+
+			l_byte_list.extend (l_assign)
+			create l_code
+			l_code.set_compound (l_byte_list)
+
+			if l_target_closed then
+				l_code.set_arguments (<<a_target_type.type_i>>)
+			end
+			l_code.set_rout_id (l_func.rout_id_set.first)
+			l_code.set_body_index (l_func.body_index)
+			l_code.set_start_line_number (a_rc.start_location.line)
+			l_code.set_end_location (a_rc.end_location)
+			l_code.set_result_type (a_feature_type.type_i)
+			l_code.set_feature_name_id (l_func.feature_name_id)
+			if inline_agent_byte_codes = Void then
+				create inline_agent_byte_codes.make
+			end
+			inline_agent_byte_codes.extend (l_code)
+
+			l_func.process_pattern
+			l_cur_class.insert_changed_assertion (l_func)
+
+			if l_target_closed then
+				create l_closed_args.make (2)
+				l_operand ?= a_target
+				if a_target = Void or l_operand /= Void then
+					create {CURRENT_B}l_target
+				else
+					l_target := a_target
+				end
+				l_closed_args.extend (create {CURRENT_B})
+				l_closed_args.extend (l_target)
+
+				create l_tuple_type.make (system.tuple_id, <<context.current_class_type, a_target_type>>)
+
+			else
+				create l_closed_args.make (0)
+				create l_tuple_type.make (system.tuple_id, create {ARRAY [TYPE_A]}.make (1, 0))
+			end
+
+			create l_tuple_node.make (l_closed_args, l_tuple_type.type_i)
+
+				-- We need to use the conformence type since it could be a like_current type which would
+				-- be a problem with inherited assertions. See eweasel test execX10
+			l_agent_type ?= a_agent_type.conformance_type.type_i
+
+			create l_rout_creation
+			if l_target_closed  then
+				l_rout_creation.init (context.current_class_type.type_i,
+					l_cur_class.class_id,
+					l_func,
+					l_agent_type,
+					l_tuple_node,
+					Void,
+					Void,
+					True,
+					True,
+					False,
+					False)
+			else
+				l_rout_creation.init (context.current_class_type.type_i,
+					l_cur_class.class_id,
+					l_func,
+					l_agent_type,
+					l_tuple_node,
+					open_target_omap_bc,
+					open_target_omap,
+					True,
+					False,
+					False,
+					False)
+			end
+			last_byte_node := l_rout_creation
+		end
+
+	open_target_omap: ARRAYED_LIST [INTEGER_32] is
+		do
+			create Result.make (1)
+			Result.extend (1)
+		end
+
+	open_target_omap_bc: ARRAY_CONST_B is
+		local
+			l_byte_list: BYTE_LIST [BYTE_NODE]
+		do
+			create l_byte_list.make (1)
+			l_byte_list.extend (create {INTEGER_CONSTANT}.make_with_value (1))
+			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
+		end
+
+	empty_omap_bc: ARRAY_CONST_B is
+		local
+			l_byte_list: BYTE_LIST [BYTE_NODE]
+		do
+			create l_byte_list.make (0)
+			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
+		end
+
 	init_inline_agent_feature (a_feat: FEATURE_I): FEATURE_I is
 		local
 			l_new_rout_id_set: ROUT_ID_SET
 			l_cur_class: EIFFEL_CLASS_C
-			l_enclosing_feature: FEATURE_I
+			l_enclosing_feature, l_new_enclosing_feature: FEATURE_I
+			l_name: STRING
 		do
 			l_cur_class ?= context.current_class
 
@@ -6104,7 +6480,6 @@ feature {NONE} -- Agents
 
 			a_feat.set_feature_id (l_cur_class.feature_id_counter.next)
 			a_feat.set_origin_feature_id (a_feat.feature_id)
-			a_feat.set_feature_name ("inline_agent_" + a_feat.body_index.out)
 			a_feat.set_written_in (l_cur_class.class_id)
 			a_feat.set_origin_class_id (a_feat.written_in)
 			a_feat.set_export_status (create {EXPORT_ALL_I})
@@ -6115,12 +6490,35 @@ feature {NONE} -- Agents
 			until
 				not l_enclosing_feature.is_inline_agent
 			loop
-				l_enclosing_feature :=
+				l_new_enclosing_feature :=
 					l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
+				if l_new_enclosing_feature = Void then
+						-- then it has to be the class invariant feature
+					check
+						l_enclosing_feature.enclosing_body_id = l_cur_class.invariant_feature.body_index
+					end
+					l_enclosing_feature := l_cur_class.invariant_feature
+				else
+					l_enclosing_feature := l_new_enclosing_feature
+				end
 			end
 
-			if is_byte_node_enabled then
+			if a_feat.is_fake_inline_agent then
+				a_feat.set_inline_agent (l_enclosing_feature.body_index, -1)
+				l_name := "fake inline-agent of "
+				l_name.append (l_enclosing_feature.feature_name)
+				l_name.append_character ('#')
+				l_name.append_integer (a_feat.body_index)
+			else
 				a_feat.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+				l_name := "inline-agent of "
+				l_name.append (l_enclosing_feature.feature_name)
+				l_name.append_character ('#')
+				l_name.append_integer (a_feat.inline_agent_nr)
+			end
+			a_feat.set_feature_name (l_name)
+
+			if is_byte_node_enabled then
 				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
 				l_cur_class.put_inline_agent (a_feat)
 

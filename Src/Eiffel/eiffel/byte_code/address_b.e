@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 				internal_data := f.rout_id_set.first
 			end
 			feature_type := f.type.type_i.c_type
+			feature_class_id := cl_id
 			record_feature (cl_id, feature_id)
 		end
 
@@ -67,6 +68,9 @@ feature -- Access
 
 	feature_id: INTEGER
 			-- Feature id of feature.
+
+	feature_class_id: INTEGER
+			-- Class id of feature.
 
 	routine_id: INTEGER is
 			-- Routine ID of feature.
@@ -120,21 +124,21 @@ feature -- C code generation
 			l_rout_id: INTEGER
 		do
 			buf := buffer
+			class_type := context.class_type
 			if context.workbench_mode then
 				buf.put_string ("(EIF_POINTER) RTWPP(")
-				buf.put_static_type_id (context.class_type.static_type_id)
-				buf.put_string (gc_comma)
-				buf.put_integer (feature_id)
+				buf.put_integer (
+					system.address_table.id_of_dollar_feature (feature_class_id, feature_id, class_type))
 				buf.put_character (')')
 			else
 				l_rout_id := routine_id
-				class_type := context.class_type
 				class_type_id := class_type.type_id
 				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type_id, True)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 					buf.put_string ("NULL")
+
 				elseif array_index >= 0 then
 					table_name := "f"
 					table_name.append (Encoder.address_table_name (feature_id,
@@ -182,10 +186,8 @@ feature {NONE} -- Address table
 		do
 			address_table := System.address_table
 
-			if not address_table.has (cl_id, f_id) then
-					-- Record the feature
-				address_table.record (cl_id, f_id)
-			end
+				-- Record the feature
+			address_table.record_dollar_op (cl_id, f_id)
 		end
 
 indexing

@@ -413,7 +413,7 @@ end
 							-- Check whether it was in the address table if it is an attribute
 						if
 							old_feature_i.is_attribute and then
-							System.address_table.has (old_feature_i.written_in,
+							System.address_table.has_dollar_operator (old_feature_i.written_in,
 								old_feature_i.feature_id)
 						then
 							-- Force a re-freeze in order

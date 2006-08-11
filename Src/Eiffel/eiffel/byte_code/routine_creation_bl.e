@@ -71,14 +71,16 @@ feature
 	generate is
 			-- Generate expression
 		local
-			cl_type_i: CL_TYPE_I
+			agent_type, feat_cl_type: CL_TYPE_I
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
+			sep: STRING
 		do
 			check
-				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id)
+				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id, is_target_closed, omap)
 			end
 
+			sep := once ", "
 			if arguments /= Void then
 				arguments.generate
 			end
@@ -88,83 +90,213 @@ feature
 			end
 
 			buf := buffer
-			cl_type_i ?= context.real_type (type)
-			gen_type  ?= cl_type_i
+			agent_type ?= context.real_type (type)
+			gen_type  ?= agent_type
 			generate_block_open
 			generate_gen_type_conversion (gen_type)
 			print_register
 			buf.put_string (" = ")
 			buf.put_string ("RTLNR2(typres, ")
-			generate_routine_address
-			buf.put_string (", ")
-			if is_attribute then
-				buf.put_string ("NULL ")
-			else
-				generate_true_routine_address
-			end
-			buf.put_string (", ")
+				-- now the parameters for set_rout_disp:
+				-- rout_disp
+			generate_routine_address (True, False)
+			buf.put_string (sep)
 
+				-- encaps_rout_disp
+			generate_routine_address (True, True)
+			buf.put_string (sep)
+
+				-- calc_rout_addr
+			if is_target_closed then
+				generate_precalc_routine_address
+			else
+				buf.put_string ("0, ")
+			end
+			if is_precompiled then
+				buf.put_integer (rout_origin)
+				buf.put_string (sep)
+				buf.put_integer (rout_offset)
+				buf.put_string (sep)
+			else
+					-- class_id
+				feat_cl_type ?= context.real_type (class_type)
+				buf.put_integer (feat_cl_type.associated_class_type.static_type_id - 1)
+				buf.put_string (sep)
+					-- feature_id
+				buf.put_integer (feature_id)
+				buf.put_string (sep)
+			end
+				-- open_map
+			if open_positions /= Void and then not system.in_final_mode then
+				open_positions.print_register
+			else
+				buf.put_string ("0")
+			end
+			buf.put_string (sep)
+				-- is_precompiled
+			if is_precompiled then
+				buf.put_character ('1')
+			else
+				buf.put_character ('0')
+			end
+			buf.put_string (sep)
+				-- is_basic
+			if is_basic then
+				buf.put_character ('1')
+			else
+				buf.put_character ('0')
+			end
+			buf.put_string (sep)
+				-- is_target_closed
+			if is_target_closed then
+				buf.put_character ('1')
+			else
+				buf.put_character ('0')
+			end
+			buf.put_string (sep)
+				-- is_inline_agent
+			if is_inline_agent then
+				buf.put_character ('1')
+			else
+				buf.put_character ('0')
+			end
+			buf.put_string (sep)
+				-- closed_operands
 			if arguments /= Void then
 				arguments.print_register
 				buf.put_string (", ")
 			else
-				buf.put_string ("NULL, ")
+				buf.put_string ("0, ")
 			end
-
+				-- open_count
 			if open_positions /= Void then
-				open_positions.print_register
+				buf.put_integer (open_positions.expressions.count)
 			else
-				buf.put_string ("NULL")
+				buf.put_character ('0')
 			end
-
 			buf.put_string (");")
 			buf.put_new_line
 			generate_block_close
 		end
 
-	generate_routine_address is
+	generate_routine_address (optimized, oargs_encapsulated: BOOLEAN) is
 			-- Generate routine address
 		local
 			cl_type		: CL_TYPE_I
 			table_name	: STRING
 			buf			: GENERATION_BUFFER
 			array_index: INTEGER
+			l_omap: like omap
 		do
 			buf := buffer
-			if context.workbench_mode then
-				buf.put_string ("(EIF_POINTER) RTWPPR(")
-				cl_type ?= context.real_type (class_type)
-				buf.put_static_type_id (cl_type.associated_class_type.static_type_id)
-				buf.put_string (gc_comma)
-				buf.put_integer (feature_id)
-				buf.put_character (')')
+			if optimized then
+				l_omap := omap
+			end
+			cl_type ?= context.real_type (class_type)
+
+			if not context.workbench_mode and then not is_inline_agent then
+				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+			end
+
+			if array_index = -2 then
+					-- Function pointer associated to a deferred feature without
+					-- any implementation
+				buf.put_string ("NULL")
 			else
 				cl_type ?= context.real_type (class_type)
-
-				if not is_inline_agent then
-					array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+				check
+					system.address_table.has_agent (
+						cl_type.associated_class_type.associated_class.class_id, feature_id, is_target_closed, omap)
 				end
+				table_name := system.address_table.calc_function_name (
+					True, feature_id, cl_type.associated_class_type.static_type_id, l_omap, oargs_encapsulated)
 
-				if array_index = -2 then
-						-- Function pointer associated to a deferred feature without
-						-- any implementation
-					buf.put_string ("NULL")
+				buf.put_string ("(EIF_POINTER) ")
+				buf.put_string (table_name)
+
+					-- Remember extern declarations
+				Extern_declarations.add_routine (type.c_type, table_name)
+
+				if not context.workbench_mode and then
+				   not is_inline_agent and then
+				   array_index >= 0
+				then
+						-- Mark table used
+					Eiffel_table.mark_used (rout_id)
+				end
+			end
+		end
+
+	generate_current is
+		do
+			buffer.put_string ("((EIF_TYPED_ELEMENT *)")
+			arguments.print_register
+			buffer.put_string (")[1].element.rarg")
+		end
+
+	generate_precalc_routine_address is
+		local
+			l_cl_type: CL_TYPE_I
+			l_class_type: CLASS_TYPE
+			l_entry: POLY_TABLE [ENTRY]
+			l_table_name, l_function_name: STRING
+			l_type_id: INTEGER
+			l_rout_table: ROUT_TABLE
+			l_feat: FEATURE_I
+			l_c_return_type: TYPE_C
+			l_args: ARRAY [STRING_8]
+		do
+			buffer.put_character ('(')
+			if is_inline_agent or context.workbench_mode then
+				buffer.put_string ("0),")
+			else
+				l_cl_type ?= context.real_type (class_type)
+				l_class_type := l_cl_type.associated_class_type
+				l_entry :=  Eiffel_table.poly_table (rout_id)
+
+				if l_entry = Void then
+						-- Function pointer associated to a deferred feature
+						-- without any implementation
+					buffer.put_string ("0),")
 				else
-					table_name := "_f"
-					cl_type ?= context.real_type (class_type)
-
-					table_name.append (Encoder.address_table_name (feature_id,
-							cl_type.associated_class_type.static_type_id))
-
-					buf.put_string ("(EIF_POINTER) ")
-					buf.put_string (table_name)
-
-						-- Remember extern declarations
-					Extern_declarations.add_routine (type.c_type, table_name)
-
-					if not is_inline_agent and then array_index >= 0 then
-							-- Mark table used
+					l_type_id := l_class_type.type_id
+					if l_entry.is_polymorphic (l_type_id) then
+						l_table_name := Encoder.table_name (rout_id)
+						buffer.put_string (l_table_name)
+						buffer.put_string ("[Dtype((")
+						generate_current
+						buffer.put_string (")) - ")
+						buffer.put_type_id (l_entry.min_used)
+						buffer.put_string ("]),")
+							-- Remember extern declarations
+						Extern_declarations.add_routine_table (l_table_name)
+							-- Mark table used.
 						Eiffel_table.mark_used (rout_id)
+					else
+						l_rout_table ?= l_entry
+						l_rout_table.goto_implemented (l_type_id)
+
+						l_feat := l_class_type.associated_class.feature_of_feature_id (feature_id)
+						l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
+						if l_rout_table.is_implemented then
+							l_function_name := l_rout_table.feature_name
+							buffer.put_string (l_function_name)
+							buffer.put_string ("),")
+							if l_feat.has_arguments then
+								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments)
+							else
+								l_args := <<"EIF_REFERENCE">>
+							end
+							extern_declarations.add_routine_with_signature (
+								l_c_return_type, l_function_name, l_args)
+						else
+								-- Function pointer associated to a deferred feature
+								-- without any implementation. We mark `l_is_implemented'
+								-- to False to not generate the argument list since
+								-- RTNR takes only one argument.
+							l_c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+							buffer.put_string ("RTNR),")
+						end
 					end
 				end
 			end
@@ -183,49 +315,42 @@ feature
 			class_type_id: INTEGER
 		do
 			buf := buffer
-			if context.workbench_mode then
-				buf.put_string ("(EIF_POINTER) RTWPP(")
-				cl_type ?= context.real_type (class_type)
-				buf.put_static_type_id (cl_type.associated_class_type.static_type_id)
-				buf.put_string (gc_comma)
-				buf.put_integer (feature_id)
-				buf.put_character (')')
-			else
-				cl_type ?= context.real_type (class_type)
-				class_type_id := cl_type.type_id
+			cl_type ?= context.real_type (class_type)
+			class_type_id := cl_type.type_id
+
+			if not context.workbench_mode and not is_inline_agent then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type_id, True)
-				if array_index = -2 then
-						-- Function pointer associated to a deferred feature
-						-- without any implementation
-					buf.put_string ("NULL")
-				elseif array_index >= 0 then
-						-- Mark table used
-					Eiffel_table.mark_used (rout_id)
+			end
+			if array_index = -2 then
+					-- Function pointer associated to a deferred feature
+					-- without any implementation
+				buf.put_string ("NULL")
+			elseif array_index >= 0 then
+					-- Mark table used
+				Eiffel_table.mark_used (rout_id)
 
-					table_name := "f"
-					table_name.append (Encoder.address_table_name (feature_id,
-								cl_type.associated_class_type.static_type_id))
+				table_name := Encoder.address_table_name (feature_id,
+					cl_type.associated_class_type.static_type_id)
 
+				buf.put_string ("(EIF_POINTER) ")
+				buf.put_string (table_name)
+
+					-- Remember extern declarations
+				Extern_declarations.add_routine (type.c_type, table_name)
+			else
+				rout_table ?= Eiffel_table.poly_table (rout_id)
+				rout_table.goto_implemented (class_type_id)
+				if rout_table.is_implemented then
+					internal_name := rout_table.feature_name
 					buf.put_string ("(EIF_POINTER) ")
-					buf.put_string (table_name)
+					buf.put_string (internal_name)
 
-						-- Remember extern declarations
-					Extern_declarations.add_routine (type.c_type, table_name)
+					shared_include_queue.put (
+						System.class_type_of_id (
+							rout_table.item.written_type_id).header_filename)
 				else
-					rout_table ?= Eiffel_table.poly_table (rout_id)
-					rout_table.goto_implemented (class_type_id)
-					if rout_table.is_implemented then
-						internal_name := rout_table.feature_name
-						buf.put_string ("(EIF_POINTER) ")
-						buf.put_string (internal_name)
-
-						shared_include_queue.put (
-							System.class_type_of_id (
-								rout_table.item.written_type_id).header_filename)
-					else
-							-- Call to a deferred feature without implementation
-						buf.put_string ("NULL")
-					end
+						-- Call to a deferred feature without implementation
+					buf.put_string ("NULL")
 				end
 			end
 		end

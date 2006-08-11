@@ -233,10 +233,10 @@ feature {NONE} -- GUI
 			arguments_grid.row_select_actions.extend (agent on_row_selected)
 			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
 			arguments_grid.resize_actions.extend (
-				agent (x, y, width, height: INTEGER)
+				agent (a_x, a_y, a_width, a_height: INTEGER)
 					do
 						if arguments_grid.column_count > 0 then
-							arguments_grid.column (1).set_width (width)
+							arguments_grid.column (1).set_width (a_width)
 						end
 					end)
 

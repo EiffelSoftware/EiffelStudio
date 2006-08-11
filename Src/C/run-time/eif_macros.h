@@ -183,9 +183,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNT(x)			tuple_malloc(x)
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
 #define RTLNSMART(x)		smart_emalloc(x)
-#define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
-#define RTLNR2(x,y,z,a,o)	rout_obj_create2((x),(y),(z),(a),(o))
-#define RTLNR3(t,c,f,p,b,a,o)	rout_obj_create_lazy((t),(c),(f),(p),(b),(a),(o))
+//#define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
+#define RTLNR2(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create2((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNC(x)			eclone(x)
 #define RTLNSP(t,n,e,b)		special_malloc(t,n,e,b)
 #define RTLB(x)				bmalloc(x)
@@ -1218,7 +1217,7 @@ RT_LNK int fcount;
  *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
  *  RTWCT(x,y,z) fetches the creation type of a generic features
  *  RTWPCT(st,x,y,z) fetches the creation type of a precompiled generic feature
- *  RTWPP(x,y) returns the feature address ($ operator)
+ *  RTWPP(x) returns the feature address ($ or agent operator) of id x. The ids are assigned int ADDRESS_TABLE.
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
 #define RTWF(x,y,z)			wfeat(x,y,z)
@@ -1233,8 +1232,7 @@ RT_LNK int fcount;
 #define RTWPT(x,y,z)		wptype(x,y,z)
 #define RTWCT(x,y,z)		wtype_gen(x,y,z)
 #define RTWPCT(st,x,y,z)	wptype_gen(st,x,y,z)
-#define RTWPP(x,y)			((egc_address_table[x])[2*(y)])
-#define RTWPPR(x,y)			((egc_address_table[x])[2*(y)+1])
+#define RTWPP(x)			(egc_address_table[x])
 #define RTWO(x)
 
 #define WDBG(x,y)			is_debug(x,y)				/* Debug option */

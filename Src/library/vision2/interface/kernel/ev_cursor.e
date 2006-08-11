@@ -13,6 +13,7 @@ class
 inherit
 	EV_PIXMAP
 		redefine
+			make_with_pointer_style,
 			copy
 		end
 

@@ -29,7 +29,8 @@ inherit
 			register,
 			set_parent
 		redefine
-			generate_on
+			generate_on,
+			enlarged
 		end
 
 	FEATURE_BL
@@ -39,7 +40,6 @@ inherit
 			process,
 			set_parameters,
 			is_polymorphic,
-			enlarged,
 			make_feature,
 			set_type,
 			inlined_byte_code
@@ -47,7 +47,8 @@ inherit
 			check_dt_current,
 			analyze_on,
 			fill_from,
-			generate_on
+			generate_on,
+			enlarged
 		select
 			parent
 		end
@@ -119,7 +120,36 @@ feature -- Code generation
 		do
 		end
 
+	init (a: AGENT_CALL_B) is
+		do
+			fill_from (a)
+
+			if system.in_final_mode and
+			then
+				not (system.keep_assertions and then rout_class.lace_class.options.assertions.is_precondition)
+			then
+				create_optimized_parameters
+				if is_manifest_optimizable then
+					parameters := optimized_parameters
+				end
+			end
+		end
+
+	enlarged: CALL_ACCESS_B is
+			-- Enlarge the tree to get more attributes and return the
+			-- new enlarged tree node.
+		local
+			l_assert: ASSERTION_I
+			l_agent_call: AGENT_CALL_BL
+		do
+			create l_agent_call
+			l_agent_call.fill_from (Current)
+			Result := l_agent_call
+		end
+
 	fill_from (a: AGENT_CALL_B) is
+		local
+			a_bl: AGENT_CALL_BL
 		do
 			is_item := a.is_item
 			Precursor (a)
@@ -131,14 +161,10 @@ feature -- Code generation
 
 			is_predicate := rout_class.class_id = system.predicate_class_id
 
-			if system.in_final_mode and
-			then
-				not (system.keep_assertions and then rout_class.lace_class.options.assertions.is_precondition)
-			then
-				create_optimized_parameters
-				if is_manifest_optimizable then
-					parameters := optimized_parameters
-				end
+			a_bl ?= a
+			if a_bl /= Void then
+				optimized_parameters := a_bl.optimized_parameters
+				is_manifest_optimizable := a_bl.is_manifest_optimizable
 			end
 		end
 
@@ -165,11 +191,13 @@ feature {NONE}--Access
 	is_predicate: BOOLEAN
 		-- Is this a call to an agent of type PREDICATE?
 
-	is_manifest_optimizable: BOOLEAN
-		-- Is this a call with a manifest tuple, an can it be optimized?
-
 	cl_type: CL_TYPE_I
 		-- Exact type of the agent reference used for the call.
+
+feature {AGENT_CALL_BL}--Optimized parameters
+
+	is_manifest_optimizable: BOOLEAN
+		-- Is this a call with a manifest tuple, an can it be optimized?
 
 	optimized_parameters: like parameters
 		-- Optimized verion of the parameters
@@ -292,7 +320,7 @@ feature {NONE} --Implementation
 
 			l_ret_type.generate_function_cast (buffer, l_arg_types)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

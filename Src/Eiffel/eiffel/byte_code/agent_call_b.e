@@ -59,7 +59,7 @@ feature -- Access
 				Result := Precursor
 			else
 				create l_agent_call
-				l_agent_call.fill_from (Current)
+				l_agent_call.init (Current)
 				Result := l_agent_call
 			end
 		end

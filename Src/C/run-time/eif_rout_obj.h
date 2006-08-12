@@ -75,7 +75,6 @@ typedef struct {
 /* New object of type `dftype' with routine dispatcher `rout_disp',
    argument tuple `args', open map `omap' and closed map `cmap'
 */
-//RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
 RT_LNK EIF_REFERENCE rout_obj_create2 (
 								int16 dftype, 
 								EIF_POINTER rout_disp, 

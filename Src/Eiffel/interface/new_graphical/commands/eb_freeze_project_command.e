@@ -60,8 +60,9 @@ feature {NONE} -- Implementation
 		do
 			if start_c_compilation and then not lace.compile_all_classes then
 					-- Display message.
-				output_manager.add_string ("Eiffel system recompiled")
+				output_manager.add_string ("Eiffel System recompiled")
 				output_manager.add_new_line
+				eiffel_project.call_finish_freezing (True)
 			end
 		end
 

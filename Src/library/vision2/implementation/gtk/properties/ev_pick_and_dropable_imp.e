@@ -29,30 +29,6 @@ inherit
 			create_drop_actions
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	top_level_window_imp: EV_WINDOW_IMP is
-			-- Window implementation that `Current' is contained within (if any)
-		local
-			wind_ptr: POINTER
-		do
-			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
-			if wind_ptr /= NULL then
-				Result ?= eif_object_from_c (wind_ptr)
-			end
-		end
-
-	top_level_window: EV_WINDOW is
-			-- Window the current is contained within (if any)
-		local
-			a_window_imp: EV_WINDOW_IMP
-		do
-			a_window_imp := top_level_window_imp
-			if a_window_imp /= Void then
-				Result := a_window_imp.interface
-			end
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
@@ -109,11 +85,12 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not has_focus then
-					set_focus
+					internal_set_focus
 				end
 				l_interface ?= interface
 				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
+--				top_level_window_imp.grab_keyboard_and_mouse
 				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
 					1,
@@ -136,10 +113,7 @@ feature {NONE} -- Implementation
 		do
 			if has_capture then
 				{EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-				{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
-					0 -- guint32 time
-				)
-				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+				top_level_window_imp.release_keyboard_and_mouse
 				App_implementation.enable_debugger
 				App_implementation.set_captured_widget (Void)
 			end

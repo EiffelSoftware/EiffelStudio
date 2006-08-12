@@ -1,16 +1,16 @@
 indexing
-	description: "Error when a a local variable or argument name from an enclosing feature is reused."
+	description: "Error when an inline agent is declared as external or deferred."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VPIR_1
+class VPIR3
 
 inherit
 	FEATURE_ERROR
 		redefine
-			build_explain, subcode
+			subcode
 		end
 
 	SHARED_NAMES_HEAP
@@ -20,35 +20,19 @@ inherit
 
 feature -- Properties
 
-	entity_name: STRING
-			--Variable name in conflict
-
 	code: STRING is "VPIR"
 			-- Error code
 
 	subcode: INTEGER is
 		do
-			Result := 1
+			Result := 3
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
-		do
-			a_text_formatter.add ("Entity name: ")
-			a_text_formatter.add (entity_name)
-			a_text_formatter.add_new_line
-		end
 
 feature {COMPILER_EXPORTER}
 
-	set_entity_name (s_id: INTEGER) is
-			-- Assign name extracted from name ID `s_id' to `local_name'.
-		require
-			valid_s_id: s_id >= 1
-		do
-			entity_name := Names_heap.item (s_id)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

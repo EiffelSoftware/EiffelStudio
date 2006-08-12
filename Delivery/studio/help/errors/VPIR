@@ -1,0 +1,19 @@
+VPIR, chapter 8.27.11
+
+    Validity: Inline Agent Requirements
+
+	An Inline_agent a must satisfy the following conditions:
+
+		1 No formal argument or local variable of a has the same name as a feature
+		  enclosing class, or a formal argument or local variable other than Result of an
+		  feature or Inline_agent.
+
+		2 Every entity appearing in the Attribute_or_routine part of a is the name of
+		  formal argument of a; a local variable of a; a feature of the enclosing class;
+
+		3 The Feature_body of a’s Attribute_or_routine is not of the Deferred form.
+
+		1 No formal argument or local variable of a has the same name as a feature of the
+		  enclosing class.
+
+

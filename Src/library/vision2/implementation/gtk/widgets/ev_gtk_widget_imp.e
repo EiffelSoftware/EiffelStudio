@@ -178,24 +178,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	set_focus is
-			-- Grab keyboard focus.
-		local
-			l_window, l_widget: POINTER
-		do
-			if not has_focus then
-				if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-					l_window := c_object
---					l_widget := default_pointer -- This will unset any previous focused widget.
-				else
-					l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
-					l_widget := visual_widget
-				end
-				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
-				{EV_GTK_EXTERNALS}.gtk_window_present (l_window)
-			end
-		end
-
 	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
@@ -214,6 +196,32 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
+
+	set_focus is
+			-- Grab keyboard focus.
+		local
+			l_window, l_widget: POINTER
+		do
+			if not has_focus then
+				internal_set_focus
+			end
+		end
+
+	internal_set_focus is
+			-- Grab keyboard focus.
+		local
+			l_window, l_widget: POINTER
+		do
+			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+				l_window := c_object
+--					l_widget := default_pointer -- This will unset any previous focused widget.
+			else
+				l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+				l_widget := visual_widget
+			end
+			{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
+			{EV_GTK_EXTERNALS}.gtk_window_present (l_window)
+		end
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
@@ -288,8 +296,37 @@ feature -- Status report
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
+		local
+			l_win: EV_WINDOW_IMP
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+			l_win := top_level_window_imp
+			if l_win /= Void then
+				Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_win.c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window implementation that `Current' is contained within (if any)
+		local
+			wind_ptr: POINTER
+		do
+			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if wind_ptr /= NULL then
+				Result ?= eif_object_from_c (wind_ptr)
+			end
+		end
+
+	top_level_window: EV_WINDOW is
+			-- Window the current is contained within (if any)
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp := top_level_window_imp
+			if a_window_imp /= Void then
+				Result := a_window_imp.interface
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -585,7 +585,6 @@ feature {NONE} -- Implementation
 
 			item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
 			update_row_pixmap (item_imp)
-			item_imp.remove_internal_text
 
 			if item_imp.is_transport_enabled_iterator then
 				update_pnd_connection (True)
@@ -599,7 +598,6 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= (child_array @ (a_position)).implementation
 				-- Remove from tree if present
-			item_imp.set_internal_text (get_text_from_position (item_imp))
 			{EV_GTK_EXTERNALS}.gtk_tree_store_remove (tree_store, item_imp.list_iter.item)
 			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)

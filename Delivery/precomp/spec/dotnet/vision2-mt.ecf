@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2" uuid="79D06C9D-B4A2-451d-9EAA-D02D9166936D">
-	<target name="vision2">
-		<description>Vision2 library</description>
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2-mt" uuid="B49AE40E-561D-45BB-A2F0-73E430F4F9A9">
+	<target name="vision2-mt">
+		<description>Vision2 library in MT mode</description>
 		<root class="ANY"/>
+		<setting name="multithreaded" value="true"/>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="il_verifiable" value="true"/>
 		<setting name="msil_generation" value="true"/>

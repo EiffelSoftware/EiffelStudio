@@ -13,7 +13,8 @@ inherit
 	EB_CLASS_BROWSER_GRID_VIEW [EB_FEATURE_BROWSER_GRID_ROW]
 		redefine
 			data,
-			recycle_agents
+			recycle_agents,
+			default_ensure_visible_action
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -384,7 +385,7 @@ feature{NONE} -- Initialization
 		do
 			old_make (grid)
 				-- Prepare sort facilities
-			last_sorted_column := 0
+			last_sorted_column_internal := 0
 			set_sort_action (agent sort_agent)
 			create l_class_sort_info.make (agent class_tester, topology_order)
 			create l_feature_sort_info.make (agent feature_name_tester, ascending_order)
@@ -415,8 +416,8 @@ feature -- Notification
 					text.hide
 					component_widget.show
 					fill_rows
-					if last_sorted_column = 0 then
-						last_sorted_column := class_column
+					if last_sorted_column_internal = 0 then
+						last_sorted_column_internal := class_column
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
@@ -531,13 +532,12 @@ feature -- Notification
 
 feature -- Visiability
 
-	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
-			-- Ensure `a_item' is visible in viewable area of `grid'.
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
 			l_grid_row: EV_GRID_ROW
 			l_row: EB_FEATURE_BROWSER_GRID_ROW
-
 		do
 			l_grid_row := a_item.grid_item.row
 			l_row ?= l_grid_row.data

@@ -21,8 +21,6 @@ inherit
 	EVS_SEARCHABLE_COMPONENT [G]
 		rename
 			make as old_make
-		undefine
-			ensure_visible
 		redefine
 			grid
 		end
@@ -640,6 +638,7 @@ feature{NONE} -- Sorting
 feature{NONE} -- Implementation
 
 	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
+			-- Search bar used in browser
 
 	last_picked_item: EV_GRID_ITEM
 			-- Last picked item	

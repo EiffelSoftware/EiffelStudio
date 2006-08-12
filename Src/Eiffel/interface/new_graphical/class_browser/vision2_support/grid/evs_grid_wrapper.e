@@ -23,12 +23,16 @@ feature{NONE} -- Initialization
 			a_grid_attached: a_grid /= Void
 		do
 			grid := a_grid
-			last_sorted_column := 0
+			last_sorted_column_internal := 0
 			create sorted_columns.make
+			set_grid_item_function (agent grid.item)
+			set_ensure_visible_action (agent default_ensure_visible_action)
 		ensure
 			grid_set: grid = a_grid
 			sorted_columns_attached: sorted_columns /= Void
-			last_sorted_column_set: last_sorted_column = 0
+			last_sorted_column_set: last_sorted_column_internal = 0
+			grid_item_function_attached: grid_item_function /= Void
+			ensure_visible_action_attached: ensure_visible_action /= Void
 		end
 
 feature -- Setting
@@ -96,6 +100,7 @@ feature -- Setting
 		require
 			a_item_attached: a_item /= Void
 		do
+			ensure_visible_action.call ([a_item, a_selected])
 		end
 
 	set_sort_action (a_action: like sort_action) is
@@ -152,6 +157,34 @@ feature -- Setting
 			multi_column_sorting_not_forced: not is_multi_column_sorting_forced
 		end
 
+	wipe_out_sorted_columns is
+			-- Wipe out `sorted_columns'.
+		do
+			sorted_columns.wipe_out
+		ensure
+			sorted_columns_is_empty: sorted_columns.is_empty
+		end
+
+	set_grid_item_function (a_function: like grid_item_function) is
+			-- Set `grid_item_function' with `a_function'.
+		require
+			a_function_attached: a_function /= Void
+		do
+			grid_item_function := a_function
+		ensure
+			grid_item_function_set: grid_item_function = a_function
+		end
+
+	set_ensure_visible_action (a_action: like ensure_visible_action) is
+			-- Set `ensure_visible_action' with `a_action'.
+		require
+			a_action_attached: a_action /= Void
+		do
+			ensure_visible_action := a_action
+		ensure
+			ensure_visible_action_set: ensure_visible_action = a_action
+		end
+
 feature -- Sort
 
 	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER) is
@@ -183,23 +216,23 @@ feature -- Sort
 						end
 					end
 					if
-						is_column_index_valid (last_sorted_column) and then
-						last_sorted_column /= a_column_index and then
+						is_column_index_valid (last_sorted_column_internal) and then
+						last_sorted_column_internal /= a_column_index and then
 						is_column_sortable (a_column_index)
 					then
-						l_sort_info := column_sort_info.item (last_sorted_column)
+						l_sort_info := column_sort_info.item (last_sorted_column_internal)
 						if l_sort_info.is_auto_indicator_enabled then
-							grid.column (last_sorted_column).header_item.remove_pixmap
+							grid.column (last_sorted_column_internal).header_item.remove_pixmap
 						end
 					end
-					last_sorted_column := a_column_index
+					last_sorted_column_internal := a_column_index
 					post_sort_actions.call ([sorting_order_snapshort])
 				end
 			end
 		ensure
 			column_sorted:
 				(button = 1 and then a_column_index <= column_sort_info.upper and then sort_action /= Void and then
-				 column_sort_info.item (a_column_index) /= Void) implies last_sorted_column = a_column_index
+				 column_sort_info.item (a_column_index) /= Void) implies last_sorted_column_internal = a_column_index
 		end
 
 feature -- Status report
@@ -245,19 +278,52 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	last_sorted_column: INTEGER
-			-- Index of last sorted column
+	sorted_columns: LINKED_LIST [INTEGER]
+			-- Columns to be sorted
+			-- This is used to support multi-column sort. When you sorted the first column, and thne
+			-- sort the second column with control key pressed, the result would be first sort the first column,
+			-- and then sort the second column.
+			-- In this list, a list of column index are maintained, the first item is the oldest sorted column, the last item is
+			-- the most recent sorted column.
 
-	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER] is
-			-- Table to store sort agents, key is column index, value is sort agent for that column
+	last_sorted_column: INTEGER is
+			-- Index of last sorted column
+			-- 0 if no sorting has been applied
+		local
+			l_sorted_columns: like sorted_columns
 		do
-			if sort_agent_table_internal = Void then
-				create sort_agent_table_internal.make (grid.column_count)
+			l_sorted_columns := sorted_columns
+			if not l_sorted_columns.is_empty then
+				Result := l_sorted_columns.last
 			end
-			Result := sort_agent_table_internal
+		ensure
+			good_result: Result >= 0
+		end
+
+	grid: EV_GRID
+			-- Grid for display			
+
+	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
+			-- Action used to sort
+
+	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]] is
+			-- Actions got called after sorting is finished
+			-- Argument of those actions is a list of columns to be sorted.
+		do
+			if post_sort_actions_internal = Void then
+				create post_sort_actions_internal
+			end
+			Result := post_sort_actions_internal
 		ensure
 			result_attached: Result /= Void
 		end
+
+	grid_item_function: FUNCTION [ANY, TUPLE [a_column: INTEGER; a_row: INTEGER], EV_GRID_ITEM]
+			-- Function that returns grid item at position (`a_column', `a_row')
+
+	ensure_visible_action: PROCEDURE [ANY, TUPLE [a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN]]
+			-- Action to be performed to ensure that `a_item' is visible.
+			-- `a_selected' is True indicates that `a_item' should be selected by default.
 
 feature -- Virtual grid
 
@@ -345,59 +411,10 @@ feature -- Virtual grid
 		require
 			position_valid: is_position_valid (a_column, a_row)
 		do
-			Result ?= grid.item (a_column, a_row)
-		end
-
-feature -- Access
-
-	grid: EV_GRID
-			-- Grid for display			
-
-	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
-			-- Action used to sort
-
-	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]] is
-			-- Actions got called after sorting is finished
-			-- Argument of those actions is a list of columns to be sorted.
-		do
-			if post_sort_actions_internal = Void then
-				create post_sort_actions_internal
-			end
-			Result := post_sort_actions_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	sorting_order_snapshort: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
-			-- Snapshot of current sorting status
-			-- The first item in list is the first column (whose index is `a_column_index') to be sorted usring `a_sorting_order'.			
-		local
-			l_columns: like sorted_columns
-		do
-			l_columns := sorted_columns
-			create Result.make
-			from
-				l_columns.start
-			until
-				l_columns.after
-			loop
-				check column_sort_info.item (l_columns.item) /= Void end
-				Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
-				l_columns.forth
-			end
-		ensure
-			result_attached: Result /= Void
+			Result ?= grid_item_function.item ([a_column, a_row])
 		end
 
 feature{NONE} -- Implementation
-
-	sorted_columns: LINKED_LIST [INTEGER]
-			-- Columns to be sorted
-			-- This is used to support multi-column sort. When you sorted the first column, and thne
-			-- sort the second column with control key pressed, the result would be first sort the first column,
-			-- and then sort the second column.
-			-- In this list, a list of column index are maintained, the first item is the oldest sorted column, the last item is
-			-- the most recent sorted column.
 
 	post_sort_actions_internal: like post_sort_actions
 			-- Implementation of `post_sort_actions'
@@ -484,9 +501,71 @@ feature{NONE} -- Implementation
 			Result := is_multi_column_sorting_forced or else ev_application.ctrl_pressed
 		end
 
+	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER] is
+			-- Table to store sort agents, key is column index, value is sort agent for that column
+		do
+			if sort_agent_table_internal = Void then
+				create sort_agent_table_internal.make (grid.column_count)
+			end
+			Result := sort_agent_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	last_sorted_column_internal: INTEGER
+			-- Index of last sorted column
+			-- 0 if no sort has been applied.
+
+	sorting_order_snapshort: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
+			-- Snapshot of current sorting status
+			-- The first item in list is the first column (whose index is `a_column_index') to be sorted usring `a_sorting_order'.			
+		local
+			l_columns: like sorted_columns
+		do
+			l_columns := sorted_columns
+			create Result.make
+			from
+				l_columns.start
+			until
+				l_columns.after
+			loop
+				check column_sort_info.item (l_columns.item) /= Void end
+				Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
+				l_columns.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
+			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_grid_item: EV_GRID_ITEM
+			l_grid: like grid
+		do
+			l_grid_item := a_item.grid_item
+			if not l_grid_item.is_destroyed and then l_grid_item.is_parented then
+				l_grid := grid
+				l_grid.remove_selection
+				if l_grid.is_single_item_selection_enabled then
+					l_grid_item.enable_select
+				elseif l_grid.is_single_row_selection_enabled then
+					l_grid_item.row.enable_select
+				end
+				if a_selected then
+					l_grid_item.enable_select
+				end
+			end
+		end
+
 invariant
 	sorted_columns_attached: sorted_columns /= Void
 	grid_attached: grid /= Void
+	grid_item_function_attached: grid_item_function /= Void
+	ensure_visible_action_attached: ensure_visible_action /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

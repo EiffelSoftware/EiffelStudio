@@ -14,7 +14,8 @@ inherit
 		redefine
 			grid_selected_items,
 			data,
-			recycle_agents
+			recycle_agents,
+			default_ensure_visible_action
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -445,9 +446,9 @@ feature{NONE} -- Update
 					text.hide
 					component_widget.show
 					fill_rows
-					if last_sorted_column = 0 then
+					if last_sorted_column_internal = 0 then
 						expand_all_rows
-						last_sorted_column := class_column
+						last_sorted_column_internal := class_column
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
@@ -535,9 +536,9 @@ feature{NONE} -- Update
 			end
 		end
 
-	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
-			-- Ensure `a_item' is visible in viewable area of `grid'.
-			-- If `a_selected' is True, make sure that `a_item' is in its selected status.			
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
+			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
 			l_compiler_item: EB_GRID_COMPILER_ITEM
 			l_item: EV_GRID_ITEM
@@ -609,7 +610,7 @@ feature{NONE} -- Initialization
 		do
 			old_make (grid)
 				-- Prepare sort facilities
-			last_sorted_column := 0
+			last_sorted_column_internal := 0
 			create l_class_sort_info.make (agent class_name_tester, ascending_order)
 			create l_feature_sort_info.make (agent feature_name_tester, ascending_order)
 			set_sort_action (agent sort_agent)
@@ -855,25 +856,28 @@ feature{NONE} -- Implementation
 			-- Start `update_matches_timeout' and if no text change in `feature_name_list' in certain
 			-- amount of time, update view.
 		do
-			cancel_delayed_update_matches
-			if update_matches_timeout = Void then
-				create update_matches_timeout
-				update_matches_timeout.actions.extend_kamikaze (agent delayed_update_matches)
-			end
-			update_matches_timeout.set_interval (wait_to_update_view_time)
+			delayed_timeout.start_timer
 		end
 
-	update_matches_requested: BOOLEAN is
+	delayed_timeout: DELAYED_TIMEOUT
+			-- Delayed timeout
 		do
-			Result := update_matches_timeout /= Void
+			if delayed_timeout_internal = Void then
+				create delayed_timeout_internal.make (wait_to_update_view_time, 1)
+				delayed_timeout_internal.actions.extend (agent delayed_update_matches)
+				delayed_timeout_internal.enable_kamikazed
+			end
+			Result := delayed_timeout_internal
+		ensure
+			result_attached: Result /= Void
 		end
+
+	delayed_timeout_internal: like delayed_timeout
+			-- Implementation of `delayed_timeout'
 
 	cancel_delayed_update_matches is
 		do
-			if update_matches_timeout /= Void then
-				update_matches_timeout.destroy
-				update_matches_timeout := Void
-			end
+			delayed_timeout.stop_timer
 		end
 
 	delayed_update_matches is

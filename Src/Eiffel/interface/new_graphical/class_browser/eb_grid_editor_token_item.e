@@ -38,6 +38,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_WRITER
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	default_create,
 	make_with_text
@@ -319,14 +326,6 @@ feature{NONE} -- Implementation
 			if is_parented then
 				redraw
 			end
-		end
-
-	token_writer: EDITOR_TOKEN_WRITER is
-			-- Editor token writer used to generate `tokens'
-		once
-			create {EB_EDITOR_TOKEN_GENERATOR}Result.make
-		ensure
-			result_attached: Result /= Void
 		end
 
 	editor_token_text: EB_EDITOR_TOKEN_TEXT is

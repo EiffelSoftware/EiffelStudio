@@ -57,6 +57,11 @@ feature{NONE} -- Initialization
 			a_dev_window_attached: a_dev_window /= Void
 		do
 			make_search_bar (a_dev_window.search_tool)
+			create delayed_timer.make (500, 1)
+			delayed_timer.enable_kamikazed
+			delayed_timer.actions.extend (agent search_internal)
+		ensure
+			delayed_timer_attached: delayed_timer /= Void
 		end
 
 	user_initialization is
@@ -299,9 +304,7 @@ feature{NONE} -- Actions
 	on_keyword_field_text_change is
 			-- Action to be performed when text in keyword field changes
 		do
-			if keyword_field.text.count > 0 then
-				search_next (True)
-			end
+			delayed_timer.start_timer
 		end
 
 	enter_accelerator: EV_ACCELERATOR is
@@ -519,9 +522,21 @@ feature{NONE} -- Implementation
 			Result := l_comb.background_color
 		end
 
+	delayed_timer: DELAYED_TIMEOUT
+			-- Delayed timer
+
+	search_internal is
+			-- Search for keyword.
+		do
+			if keyword_field.text.count > 0 then
+				search_next (True)
+			end
+		end
+
 invariant
 	search_bar_position_correct:
 		(is_tool_on_top implies not is_tool_on_bottom) and (not is_tool_on_top implies is_tool_on_bottom)
+	delayed_timer_attached: delayed_timer /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

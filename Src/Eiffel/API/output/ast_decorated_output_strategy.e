@@ -253,7 +253,6 @@ feature -- Roundtrip
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
-				text_formatter_decorator.put_space
 
 				create l_strategy.make_for_inline_agent (Current, l_as)
 

@@ -37,7 +37,7 @@ inherit
 			tooltip,
 			on_pointer_enter_leave,
 			on_key_event,
-			set_focus
+			internal_set_focus
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -322,7 +322,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			update_tooltip (False)
 		end
 
-	set_focus is
+	internal_set_focus is
 			-- Grab keyboard focus.
 		local
 			l_can_focus: BOOLEAN

@@ -1582,7 +1582,7 @@ feature -- Signature checking
 			arg_id: INTEGER
 			vreg: VREG
 			vrfa: VRFA
-			vpir: VPIR_1
+			vpir: VPIR1
 			i, nb: INTEGER
 		do
 			from

@@ -200,7 +200,7 @@ feature -- Type checking
 			l_id_list: ARRAYED_LIST [INTEGER]
 			l_feat_tbl: FEATURE_TABLE
 			l_vrle1: VRLE1
-			l_vpir: VPIR_1
+			l_vpir: VPIR1
 			l_local_name_id: INTEGER
 		do
 			l_routine ?= a_node.content
@@ -251,7 +251,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 			a_feature_not_void: a_feature /= Void
 		local
 			l_routine_as: ROUTINE_AS
-			l_vpir: VPIR_3
+			l_vpir: VPIR3
 		do
 			l_routine_as ?= a_body.content
 			if not is_inherited then

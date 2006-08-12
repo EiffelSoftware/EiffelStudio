@@ -343,15 +343,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	text: STRING_32 is
 			-- Text displayed.
-		local
-			par_t_imp: EV_TREE_IMP
 		do
-			if internal_text = Void then
-				par_t_imp := parent_tree_imp
-				Result := par_t_imp.get_text_from_position (Current)
-			else
-				Result := internal_text.twin
-			end
+			Result := internal_text.twin
 		ensure then
 			text_not_void: Result /= Void
 		end
@@ -462,7 +455,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_t_imp := parent_tree_imp
 			if par_t_imp /= Void then
 				item_imp.add_item_and_children_to_parent_tree (par_t_imp, Current, i)
-				item_imp.remove_internal_text
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
 				end
@@ -497,7 +489,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
-				item_imp.set_internal_text (par_tree_imp.get_text_from_position (item_imp))
 				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)

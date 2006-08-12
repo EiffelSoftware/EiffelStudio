@@ -1895,7 +1895,7 @@ feature -- Inline agents
 		do
 			Result := inline_agent_table.item (a_feature_name_id)
 		ensure
-			Result.feature_name_id = a_feature_name_id
+			valid_agent_found: Result /= Void implies Result.feature_name_id = a_feature_name_id
 		end
 
 	inline_agent_of_id (a_feature_id: INTEGER): FEATURE_I is
@@ -1923,7 +1923,7 @@ feature -- Inline agents
 				inline_agent_table.go_to (old_cursor)
 			end
 		ensure
-			Result.feature_id = a_feature_id
+			valid_agent_found: Result /= Void implies Result.feature_id = a_feature_id
 		end
 
 	inline_agent_of_rout_id (a_rout_id: INTEGER): FEATURE_I is
@@ -1954,9 +1954,8 @@ feature -- Inline agents
 				inline_agent_table.go_to (old_cursor)
 			end
 		ensure
-			Result.rout_id_set.first = a_rout_id
+			valid_agent_found: Result /= Void implies Result.rout_id_set.first = a_rout_id
 		end
-
 
 	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN is
 		require
@@ -2003,7 +2002,9 @@ feature -- Inline agents
 				inline_agent_table.go_to (l_old_cursor)
 			end
 		ensure
-			Result.enclosing_body_id = a_enclosing_feature.body_index and Result.inline_agent_nr = a_inline_agent_nr
+			valid_agent_found: Result /= Void implies
+				Result.enclosing_body_id = a_enclosing_feature.body_index and
+				Result.inline_agent_nr = a_inline_agent_nr
 		end
 
 	api_inline_agent_of_name (n: STRING): E_FEATURE is

@@ -13,7 +13,8 @@ inherit
 
 	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_TREE_ROW]
 		redefine
-			data
+			data,
+			default_ensure_visible_action
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -302,8 +303,8 @@ feature -- Notification
 					text.hide
 					component_widget.show
 					fill_rows
-					if last_sorted_column = 0 then
-						last_sorted_column := 1
+					if last_sorted_column_internal = 0 then
+						last_sorted_column_internal := 1
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
@@ -430,8 +431,8 @@ feature{NONE} -- Implementation
 	rows_internal: like rows
 			-- Implementation of `rows'
 
-	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
-			-- Ensure `a_item' is visible in viewable area of `grid'.
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
 			l_grid_item: EV_GRID_ITEM
@@ -912,7 +913,7 @@ feature{NONE} -- Initialization
 		do
 			old_make (grid)
 				-- Prepare sort facilities
-			last_sorted_column := 0
+			last_sorted_column_internal := 0
 			create l_class_sort_info.make (agent class_name_tester, ascending_order)
 			set_sort_action (agent sort_agent)
 			l_class_sort_info.enable_auto_indicator

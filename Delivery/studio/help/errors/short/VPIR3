@@ -1,0 +1,2 @@
+Error: Tried to declare an inline agent of either external or deferred form
+If you really need an external feature, you cannot use an inline agent.

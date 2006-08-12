@@ -3897,8 +3897,8 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MAX(first->it_int64, second->it_int64); break;
-				case SK_REAL32: first->it_real32 = (EIF_REAL_32) EIF_MAX(first->it_real32, second->it_real32); break;
-				case SK_REAL64: first->it_real64 = (EIF_REAL_64) EIF_MAX(first->it_real64, second->it_real64); break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) eif_max_real32(first->it_real32, second->it_real32); break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) eif_max_real64(first->it_real64, second->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -3914,8 +3914,8 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MIN(first->it_int64, second->it_int64); break;
-				case SK_REAL32: first->it_real32 = (EIF_REAL_32) EIF_MIN(first->it_real32, second->it_real32); break;
-				case SK_REAL64: first->it_real64 = (EIF_REAL_64) EIF_MIN(first->it_real64, second->it_real64); break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) eif_min_real32(first->it_real32, second->it_real32); break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) eif_min_real64(first->it_real64, second->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;

@@ -54,14 +54,14 @@ inherit
 			default_create
 		end
 
-	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+	EB_SHARED_WRITER
 		undefine
 			is_equal,
 			copy,
 			default_create
 		end
 
-	EB_SHARED_WRITER
+	EB_SHARED_PREFERENCES
 		undefine
 			is_equal,
 			copy,
@@ -119,6 +119,7 @@ feature {NONE} -- Initialization
 			result_grid.enable_partial_dynamic_content
 			result_grid.set_dynamic_content_function (agent item_function)
 
+
 			create grid_wrapper.make (result_grid)
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
 			create l_path_sort_info.make (agent path_order_tester, ascending_order)
@@ -128,9 +129,16 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_sort_info (1, l_item_sort_info)
 			grid_wrapper.set_sort_info (2, l_path_sort_info)
 			grid_wrapper.enable_auto_sort_order_change
+			grid_wrapper.set_grid_item_function (agent grid_item_function)
+			grid_wrapper.set_ensure_visible_action (agent ensure_visible_action)
 			result_grid_area.extend (grid_wrapper.component_widget)
 			result_lable.set_text (metric_names.t_result)
 			input_lbl.set_text (metric_names.t_input_domain)
+
+				-- Prepare search facilities
+			create quick_search_bar.make (metric_tool.development_window)
+			quick_search_bar.attach_tool (grid_wrapper)
+			grid_wrapper.enable_search
 		ensure then
 			input_grid_attached: input_grid /= Void
 		end
@@ -215,6 +223,7 @@ feature{NONE} -- Implementation/Basic operation
 			l_content: LIST [QL_ITEM]
 			l_domain: like domain
 		do
+			grid_wrapper.wipe_out_sorted_columns
 			grid_wrapper.column_sort_info.item (1).set_current_order (descending_order)
 			grid_wrapper.column_sort_info.item (2).set_current_order (descending_order)
 			result_grid.column (1).remove_pixmap
@@ -238,6 +247,9 @@ feature{NONE} -- Implementation/Basic operation
 			end
 			result_grid.column (1).set_width (300)
 			refresh_grid
+			if result_grid.item (2, 16) = Void then
+				io.put_string ("Void%N")
+			end
 		end
 
 feature{NONE} -- Implementation/Sorting
@@ -316,6 +328,66 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	row_background_color (y: INTEGER): EV_COLOR is
+			-- Background color for items in row indexed by `y'
+		local
+			l_last_item: EB_METRIC_GRID_RESULT_ITEM
+			l_current_item: EB_METRIC_GRID_RESULT_ITEM
+			l_last_sorted_column: INTEGER
+			l_last_row_background_color: EV_COLOR
+		do
+			l_last_sorted_column := grid_wrapper.last_sorted_column
+			if l_last_sorted_column = 0 then
+					-- If no sort has been applied
+				Result := result_grid.background_color
+			else
+					-- If sort has been applied.
+				if y = 1 then
+					Result := odd_row_background_color
+				else
+					check y > 1 end
+					l_last_item ?= content.i_th (l_last_sorted_column).item (y - 1)
+					l_current_item ?= content.i_th (l_last_sorted_column).item (y)
+					if l_last_item = Void then
+						Result := odd_row_background_color
+					elseif l_current_item = Void then
+						Result := l_last_item.background_color
+						if Result = Void then
+							Result := odd_row_background_color
+						end
+					else
+						if l_last_item.image.is_equal (l_current_item.image) then
+							Result := l_last_item.background_color
+						else
+								-- Alternate row background here.
+							Result := next_row_background_color (l_last_item.background_color)
+						end
+					end
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	next_row_background_color (a_color: EV_COLOR): EV_COLOR is
+			-- Alternative row background color according to `a_color'
+		local
+			l_odd_color: like odd_row_background_color
+		do
+			l_odd_color := odd_row_background_color
+			if a_color = Void then
+				Result := l_odd_color
+			else
+				if a_color.is_equal (l_odd_color) then
+					Result := even_row_background_color
+				else
+					Result := l_odd_color
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 	content: ARRAYED_LIST [HASH_TABLE [EV_GRID_ITEM, INTEGER]]
 			-- Content of `domain'
 			-- Key of the inner hash table is row index, value is the grid item.
@@ -355,70 +427,21 @@ feature{NONE} -- Implementation
 			a_y_valid: a_y > 0 and a_y <= domain.count
 			a_item_attached: a_item /= Void
 		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_writer: like token_writer
-			l_list: LINKED_LIST [QL_ITEM]
-			l_parent: QL_ITEM
+			l_item: EB_METRIC_GRID_RESULT_ITEM
+			l_path_item: EB_METRIC_GRID_RESULT_ITEM
 			l_ql_item: QL_ITEM
+			l_row_background_color: EV_COLOR
 		do
-			l_writer := token_writer
-			l_writer.set_context_group (Void)
-
 			l_ql_item := a_item.item
+			create l_item.make (l_ql_item, 1, a_y, False)
+			create l_path_item.make (l_ql_item, 2, a_y, True)
 
-				-- Generate item for the first column: item column.
-			l_writer.new_line
-			add_item (l_ql_item, l_writer, True)
-			create l_item
-			l_item.set_overriden_fonts (label_font_table)
-			l_item.set_text_with_tokens (l_writer.last_line.content)
-			l_item.set_pixmap (pixmap_for_item (l_ql_item))
-			l_item.set_spacing (3)
 			content.i_th (1).force (l_item, a_y)
+			content.i_th (2).force (l_path_item, a_y)
 
-				-- Generate item for the second column: path column.			
-			l_writer.new_line
-			create l_list.make
-			from
-				l_parent := l_ql_item.parent
-			until
-				l_parent = Void
-			loop
-				l_list.put_front (l_parent)
-				l_parent := l_parent.parent
-			end
-			if l_list.is_empty then
-				l_list.extend (l_ql_item)
-			end
-			from
-				l_list.start
-				if l_list.count > 1 then
-					l_list.forth
-				end
-			until
-				l_list.after
-			loop
-				add_item (l_list.item, l_writer, False)
-				l_list.forth
-				if not l_list.after then
-					l_writer.add_string (".")
-				end
-			end
-			create l_item
-			l_item.set_overriden_fonts (label_font_table)
-			l_item.set_text_with_tokens (l_writer.last_line.content)
-			content.i_th (2).force (l_item, a_y)
-		end
-
-	add_item (a_item: QL_ITEM; a_writer: like token_writer; a_full_signature: BOOLEAN) is
-			-- Add string representation of `a_item' it current position of `a_writer'.
-			-- If `a_full_signature' is True, add full signature of `a_item', otherwise, just name.
-		require
-			a_item_attached: a_item /= Void
-			a_item_valid: a_item.is_valid_domain_item
-			a_writer_attached: a_writer /= Void
-		do
-			add_editor_token_representation (a_item, a_full_signature, True, a_writer)
+			l_row_background_color := row_background_color (a_y)
+			l_item.set_background_color (l_row_background_color)
+			l_path_item.set_background_color (l_row_background_color)
 		end
 
 	cache_row_count: INTEGER is 50
@@ -452,6 +475,63 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
+		end
+
+	odd_row_background_color: EV_COLOR is
+			-- Background color for odd rows
+		do
+			Result := preferences.class_browser_data.odd_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	even_row_background_color: EV_COLOR is
+			-- Background color for even rows
+		do
+			Result := preferences.class_browser_data.even_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
+			-- Search bar used in browser
+
+	grid_item_function (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			-- Grid item at position (`a_column', `a_row')
+		do
+			Result := result_grid.item (a_column, a_row)
+			if Result = Void then
+				Result := item_function (a_column, a_row)
+			end
+		end
+
+	ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
+			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
+		local
+			l_grid_item: EB_METRIC_GRID_RESULT_ITEM
+			l_grid: like result_grid
+			l_row: EV_GRID_ROW
+		do
+			l_grid_item ?= a_item.grid_item
+			l_grid := result_grid
+
+			if l_grid_item /= Void and then not l_grid_item.is_destroyed and then l_grid_item.is_parented then
+			else
+				l_grid_item ?= item_function (a_item.column_index, a_item.row_index)
+				l_grid.set_item (a_item.column_index, a_item.row_index, l_grid_item)
+			end
+			if l_grid_item /= Void then
+				l_grid.remove_selection
+				l_grid_item.ensure_visible
+				if a_selected then
+					if l_grid.is_single_item_selection_enabled then
+						l_grid_item.enable_select
+					elseif l_grid.is_single_row_selection_enabled then
+						l_grid_item.row.enable_select
+					end
+				end
+			end
 		end
 
 feature{NONE} -- Implementation/Pick and drop
@@ -503,41 +583,6 @@ feature{NONE} -- Implementation/Pick and drop
 					end
 				end
 			end
-		end
-
-	pixmap_for_item (a_item: QL_ITEM): EV_PIXMAP is
-			-- Pixmap for `a_item'
-		require
-			a_item_attached: a_item /= Void
-		local
-			l_group: QL_GROUP
-			l_class: QL_CLASS
-			l_feature: QL_REAL_FEATURE
-		do
-			if a_item.is_target then
-				Result := pixmaps.icon_pixmaps.metric_unit_target_icon
-			elseif a_item.is_group then
-				l_group ?= a_item
-				Result := pixmap_from_group (l_group.group)
-			elseif a_item.is_class then
-				l_class ?= a_item
-				Result := pixmap_from_class_i (l_class.class_i)
-			elseif a_item.is_generic then
-				Result := pixmaps.icon_pixmaps.metric_unit_generic_icon
-			elseif a_item.is_real_feature then
-				l_feature ?= a_item
-				Result := pixmap_from_e_feature (l_feature.e_feature)
-			elseif a_item.is_invariant_feature then
-				Result := pixmaps.icon_pixmaps.class_features_invariant_icon
-			elseif a_item.is_argument or a_item.is_local then
-				Result := pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon
-			elseif a_item.is_assertion then
-				Result := pixmaps.icon_pixmaps.metric_unit_assertion_icon
-			elseif a_item.is_line then
-				Result := pixmaps.icon_pixmaps.metric_unit_line_icon
-			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 invariant

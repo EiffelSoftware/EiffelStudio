@@ -117,10 +117,10 @@ rt_private EIF_WIDE_CHAR eif_max_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i > j ? i : j);
 }
 rt_private EIF_REAL_32 eif_max_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
-	return (i > j ? i : j);
+	return ((i != i) || (i > j) ? i : j);
 }
 rt_private EIF_REAL_64 eif_max_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
-	return (i > j ? i : j);
+	return ((i != i) || (i > j) ? i : j);
 }
 
 /* Min computation */
@@ -155,10 +155,10 @@ rt_private EIF_WIDE_CHAR eif_min_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? i : j);
 }
 rt_private EIF_REAL_32 eif_min_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
-	return (i < j ? i : j);
+	return ((i != i) || (i < j) ? i : j);
 }
 rt_private EIF_REAL_64 eif_min_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
-	return (i < j ? i : j);
+	return ((i != i) || (i < j) ? i : j);
 }
 
 /* Three way comparison computation */

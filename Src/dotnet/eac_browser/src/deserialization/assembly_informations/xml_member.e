@@ -4,7 +4,7 @@ indexing
 class
 	XML_MEMBER
 
-creation
+create
 	make
 
 feature -- Initialization

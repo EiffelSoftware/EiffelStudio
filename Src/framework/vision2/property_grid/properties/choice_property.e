@@ -75,7 +75,6 @@ feature {NONE} -- Agents
 	switch is
 			-- Switch value.
 		local
-			l_parent: PROPERTY_GRID
 			l_done: BOOLEAN
 			l_item: like value
 		do

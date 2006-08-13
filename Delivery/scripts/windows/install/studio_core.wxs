@@ -822,7 +822,7 @@
 							<Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
 								<File Id="ace_ecf144" Name="base-mt.ecf"/>
 								<File Id="ace_ecf143" Name="base.ecf"/>
-								<File Id="vision2-mt_ecf" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
+								<File Id="vision2_mt_ecf" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
 								<File Id="ace.ace140" Name="vision2.ecf"/>
 								<File Id="ace.ace141" Name="wel-mt.ecf"/>
 								<File Id="ace.ace142" Name="wel.ecf"/>
@@ -832,7 +832,7 @@
 							<Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
 								<File Id="ace_ecf146" Name="base.ecf"/>
 								<File Id="ace_ecf145" Name="base-mt.ecf"/>
-								<File Id="vision2-mt_ecf2" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
+								<File Id="vision2_mt_ecf2" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
 								<File Id="ace_ace147" Name="vision2.ecf"/>
 								<File Id="ace_ace148" Name="wel-mt.ecf"/>
 								<File Id="ace_ace149" Name="wel.ecf"/>

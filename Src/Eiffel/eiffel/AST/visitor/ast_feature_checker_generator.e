@@ -6691,6 +6691,10 @@ feature {NONE} -- Implementation: type validation
 			l_type := type_a_generator.evaluate_type (a_type, context.current_class)
 				-- Perform simple check that TYPE_A is valid.
 			l_type := type_a_checker.check_and_solved (l_type, a_type)
+			if is_inherited then
+					-- We need to update `l_type' to the context of `context.current_class'.
+				l_type := l_type.instantiation_in (context.current_class.actual_type, context.written_class.class_id)
+			end
 				-- Check validity of type declaration
 			type_a_checker.check_type_validity (l_type, a_type)
 				-- Update `last_type' with found type.

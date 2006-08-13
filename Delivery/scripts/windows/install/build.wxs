@@ -158,7 +158,6 @@
 								<File Id="ev_header_png" Name="EV_HEA~1.PNG" LongName="ev_header.png" />
 							</Component>
 						</Directory>
-						<Directory Id="ico" Name="ico" />
 					</Directory>
 					<Directory Id="spec" Name="spec">
 						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">

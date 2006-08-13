@@ -1093,6 +1093,8 @@ feature -- Description texts
 	e_external_editor_not_defined: STRING is "External editor not defined"
 	e_external_command_is_running: STRING is "An external command is running now. %NPlease wait until it exits."
 	e_external_command_list_full: STRING is "Your external command list is full.%NUse Tools->External Command... to delete one."
+	e_working_directory_invalid: STRING is "Cannot change to directory "
+	e_external_command_not_launched: STRING is "External command not launched."
 feature -- Wizard texts
 
 	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"

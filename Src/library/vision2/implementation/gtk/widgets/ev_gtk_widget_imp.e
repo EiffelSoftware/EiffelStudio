@@ -297,9 +297,13 @@ feature -- Status report
 		local
 			l_win: EV_WINDOW_IMP
 		do
-			l_win := top_level_window_imp
-			if l_win /= Void then
-				Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_win.c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+				-- If Current is shown, let's check that it's top parent window is shown too.
+			if Result then
+				l_win := top_level_window_imp
+				if l_win /= Void then
+					Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_win.c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
+				end
 			end
 		end
 

@@ -322,6 +322,9 @@
 								<File Id="icon_matrix_32.png" Name="ICON_M~3.PNG" LongName="icon_matrix_32.png" />
 								<File Id="logo.png" Name="logo.png" />
 								<File Id="splash.png" Name="splash.png" />
+								<File Id="floating_tool_bar_icon_png" Name="FLOATI~1.PNG" LongName="floating_tool_bar_icon.png" />
+								<File Id="docking_icon_matrix_8_16_png" Name="SMART_~1.PNG" LongName="smart_docking_icon_matrix_8_16.png" />
+								<File Id="docking_icon_matrix_8_16_h_png" Name="SMART_~2.PNG" LongName="smart_docking_icon_matrix_8_16_horizontal.png" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -384,6 +387,7 @@
 								<File Id="VNCP" Name="VNCP" />
 								<File Id="VNCS" Name="VNCS" />
 								<File Id="VOMB" Name="VOMB" />
+								<File Id="VPIR" Name="VPIR" />
 								<File Id="VQMC" Name="VQMC" />
 								<File Id="VQUI" Name="VQUI" />
 								<File Id="VREG" Name="VREG" />
@@ -415,6 +419,8 @@
 								<File Id="VWST" Name="VWST" />
 								<File Id="VXRC" Name="VXRC" />
 								<File Id="VXRT" Name="VXRT" />
+								<File Id="VYCP" Name="VYCP" />
+								<File Id="VYCQ" Name="VYCQ" />
 								<File Id="VZAA" Name="VZAA" />
 							</Component>
 							<Directory Id="short" Name="short">
@@ -617,6 +623,8 @@
 									<File Id="VOMB4" Name="VOMB4" />
 									<File Id="VOMB5" Name="VOMB5" />
 									<File Id="VOMB6" Name="VOMB6" />
+									<File Id="VPIR1" Name="VPIR1" />
+									<File Id="VPIR3" Name="VPIR3" />
 									<File Id="VQUI54" Name="VQUI" />
 									<File Id="VQMC57" Name="VQMC" />
 									<File Id="VREG2" Name="VREG" />
@@ -668,6 +676,10 @@
 									<File Id="VWST2" Name="VWST2" />
 									<File Id="VXRC63" Name="VXRC" />
 									<File Id="VXRT62" Name="VXRT" />
+									<File Id="VYCP2" Name="VYCP2" />
+									<File Id="VYCP3" Name="VYCP3" />
+									<File Id="VYCQ2" Name="VYCQ2" />
+									<File Id="VYCQ3" Name="VYCQ3" />
 									<File Id="VZAA61" Name="VZAA" />
 								</Component>
 							</Directory>
@@ -810,6 +822,7 @@
 							<Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
 								<File Id="ace_ecf144" Name="base-mt.ecf"/>
 								<File Id="ace_ecf143" Name="base.ecf"/>
+								<File Id="vision2-mt_ecf" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
 								<File Id="ace.ace140" Name="vision2.ecf"/>
 								<File Id="ace.ace141" Name="wel-mt.ecf"/>
 								<File Id="ace.ace142" Name="wel.ecf"/>
@@ -817,8 +830,9 @@
 						</Directory>
 						<Directory Id="dotnet1" Name="dotnet">
 							<Component Id="vision23" Guid="6111AE70-9E78-40D7-B4A2-FD8CD7DFB517">
-								<File Id="ace_ecf145" Name="base-mt.ecf"/>
 								<File Id="ace_ecf146" Name="base.ecf"/>
+								<File Id="ace_ecf145" Name="base-mt.ecf"/>
+								<File Id="vision2-mt_ecf2" Name="VISION~1.ECF" LongName="vision2-mt.ecf" />
 								<File Id="ace_ace147" Name="vision2.ecf"/>
 								<File Id="ace_ace148" Name="wel-mt.ecf"/>
 								<File Id="ace_ace149" Name="wel.ecf"/>

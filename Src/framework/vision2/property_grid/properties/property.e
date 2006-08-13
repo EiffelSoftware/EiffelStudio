@@ -174,8 +174,6 @@ feature -- Actions
 
 	activate is
 			-- Activate.
-		local
-			l_parent: ES_GRID
 		do
 			if not is_readonly then
 				Precursor

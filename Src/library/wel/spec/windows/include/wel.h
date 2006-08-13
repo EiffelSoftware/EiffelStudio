@@ -56,6 +56,7 @@ extern "C" {
 #define GetWindowLongPtr GetWindowLong
 #define SetWindowLongPtr SetWindowLong
 #define SetClassLongPtr SetClassLong
+#define GetClassLongPtr GetClassLong
 
 	/* 2 - We define the constant values for windows. */
 #ifndef GWLP_WNDPROC
@@ -73,6 +74,9 @@ extern "C" {
 #ifndef GWLP_ID
 #define GWLP_ID             (-12)
 #endif
+#ifndef GCLP_WNDPROC
+#define GCLP_WNDPROC        (-24)
+#endif
 
 	/* 3 - We define the constant values for dialogs. */
 #ifndef DWLP_MSGRESULT
@@ -84,6 +88,7 @@ extern "C" {
 #ifndef DWLP_USER
 #define DWLP_USER       DWLP_DLGPROC + sizeof(DLGPROC)
 #endif
+
 
 #endif
 

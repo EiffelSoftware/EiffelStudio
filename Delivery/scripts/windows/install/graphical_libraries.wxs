@@ -1353,13 +1353,11 @@
 								<Directory Id="mswin40" Name="mswin">
 									<Component Id="ev_untitled_dialog_imp.e" Guid="CA4E90BD-C8A5-4B5B-918C-BF2B492C9BF0">
 										<File Id="ev_shadow_dialog_imp.e" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
-										<File Id="ev_layout_constants_imp.e" Name="EV_LAY~1.E" LongName="ev_layout_constants_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="gtk" Name="gtk">
 									<Component Id="ev_untitled_dialog_imp.e109" Guid="753900DD-9464-4EC1-B4FF-D193C26D40A6">
 										<File Id="ev_shadow_dialog_imp_e2" Name="EV_SHA~1.E" LongName="ev_shadow_dialog_imp.e" />
-										<File Id="ev_layout_constants_imp.e115" Name="EV_LAY~3.E" LongName="ev_layout_constants_imp.e" />
 									</Component>
 								</Directory>
 							</Directory>

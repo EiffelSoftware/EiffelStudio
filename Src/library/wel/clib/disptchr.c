@@ -22,6 +22,7 @@ indexing
  */
 
 #include "wel_globals.h"
+#include "wel.h"
 
 /* Temporary external used to get around genericity problem in Vision2. */
 EIF_REFERENCE generize (EIF_OBJECT g_item)

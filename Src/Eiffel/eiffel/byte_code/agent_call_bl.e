@@ -139,7 +139,6 @@ feature -- Code generation
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		local
-			l_assert: ASSERTION_I
 			l_agent_call: AGENT_CALL_BL
 		do
 			create l_agent_call

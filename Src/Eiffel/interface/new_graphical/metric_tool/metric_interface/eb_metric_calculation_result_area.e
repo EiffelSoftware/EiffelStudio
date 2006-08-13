@@ -334,7 +334,6 @@ feature{NONE} -- Implementation
 			l_last_item: EB_METRIC_GRID_RESULT_ITEM
 			l_current_item: EB_METRIC_GRID_RESULT_ITEM
 			l_last_sorted_column: INTEGER
-			l_last_row_background_color: EV_COLOR
 		do
 			l_last_sorted_column := grid_wrapper.last_sorted_column
 			if l_last_sorted_column = 0 then
@@ -511,7 +510,6 @@ feature{NONE} -- Implementation
 		local
 			l_grid_item: EB_METRIC_GRID_RESULT_ITEM
 			l_grid: like result_grid
-			l_row: EV_GRID_ROW
 		do
 			l_grid_item ?= a_item.grid_item
 			l_grid := result_grid

@@ -14,7 +14,7 @@ inherit
 
 	DISPOSABLE
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

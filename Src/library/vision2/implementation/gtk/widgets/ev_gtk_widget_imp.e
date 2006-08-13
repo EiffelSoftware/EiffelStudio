@@ -199,8 +199,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	set_focus is
 			-- Grab keyboard focus.
-		local
-			l_window, l_widget: POINTER
 		do
 			if not has_focus then
 				internal_set_focus

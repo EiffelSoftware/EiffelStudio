@@ -61,7 +61,6 @@ convert
 	make_from_decimal ({ECOM_DECIMAL}),
 	make_from_currency ({ECOM_CURRENCY}),
 	make_from_string ({STRING}),
-	make_from_variant ({ECOM_VARIANT}),
 	make_from_iunknown ({ECOM_INTERFACE}),
 	make_from_integer_array ({ECOM_ARRAY [INTEGER]}),
 	make_from_real_array ({ECOM_ARRAY [REAL]}),

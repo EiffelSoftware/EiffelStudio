@@ -144,7 +144,7 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='cc'
+	cc='gcc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS

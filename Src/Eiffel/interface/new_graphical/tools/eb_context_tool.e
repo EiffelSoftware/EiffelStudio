@@ -457,17 +457,19 @@ feature -- Stone management
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= manager
-			if conv_dev /= Void then
-				if conv_dev.unified_stone then
-					sending_stone := True
-					conv_dev.set_stone (st)
-					sending_stone := False
-				else
-					set_stone (st)
+			if st.is_valid then
+				conv_dev ?= manager
+				if conv_dev /= Void then
+					if conv_dev.unified_stone then
+						sending_stone := True
+						conv_dev.set_stone (st)
+						sending_stone := False
+					else
+						set_stone (st)
+					end
 				end
+				set_focus
 			end
-			set_focus
 		end
 
 	stone: STONE

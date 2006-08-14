@@ -899,12 +899,7 @@ feature -- Generation (Linking rules)
 			make_file.put_character (Continuation)
 			make_file.put_new_line
 			generate_other_objects
-			make_file.put_string ("%T%T")
-			if not universe.target.all_external_object.is_empty and not universe.target.all_external_object.is_empty then
-				make_file.put_string ("$(EXTERNALS) ")
-			end
-			make_file.put_string ("$(EIFLIB)")
-			make_file.put_string (" $(LIBS)%N")
+			make_file.put_string ("%T%T$(EXTERNALS) $(EIFLIB) $(LIBS)%N")
 
 			generate_additional_rules
 			make_file.put_new_line

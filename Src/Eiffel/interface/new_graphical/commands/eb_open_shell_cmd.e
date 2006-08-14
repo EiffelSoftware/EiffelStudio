@@ -261,7 +261,7 @@ feature {NONE} -- Implementation properties
 			l_ex_c: CLASSC_STONE
 		do
 			conv_st ?= st
-			Result := conv_st /= Void and then conv_st.is_storable
+			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
 			if Result then
 					-- If it is an external class, then we cannot drop.
 				l_ex ?= st

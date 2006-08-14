@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			conv_st: STONE
 		do
 			conv_st ?= st
-			Result := conv_st /= Void and then conv_st.is_storable
+			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
 		end
 
 	description: STRING is

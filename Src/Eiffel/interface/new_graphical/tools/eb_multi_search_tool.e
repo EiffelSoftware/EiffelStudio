@@ -307,6 +307,15 @@ feature -- Status setting
 			replace_combo_box.set_focus
 		end
 
+	search_current_editor_only is
+			-- Ensure that only current editor is searched.
+		do
+			current_editor_button.select_actions.block
+			current_editor_button.enable_select
+			toggle_scope_detail (current_editor_button)
+			current_editor_button.select_actions.resume
+		end
+
 feature -- Action
 
 	go_to_next_found is
@@ -576,13 +585,10 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 			l_scope := l_pre.init_scope
 			if l_scope.is_equal ("Current Editor") then
 				current_editor_button.enable_select
-				toggle_scope_detail (current_editor_button)
 			elseif l_scope.is_equal ("Whole Project") then
 				whole_project_button.enable_select
-				toggle_scope_detail (whole_project_button)
 			elseif l_scope.is_equal ("Custom") then
 				custom_button.enable_select
-				toggle_scope_detail (custom_button)
 			else
 				check
 					default_xml_not_correctly_done: false

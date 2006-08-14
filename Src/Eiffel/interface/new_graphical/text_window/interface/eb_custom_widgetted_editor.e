@@ -196,6 +196,7 @@ feature {NONE} -- Quick search bar.
 				end
 			end
 			l_keyword := search_bar.keyword_field.text
+			search_tool.search_current_editor_only
 			if not l_keyword.is_empty then
 				search_tool.set_check_class_succeed (True)
 				l_incremental_search := search_tool.is_incremental_search

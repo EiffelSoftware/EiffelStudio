@@ -108,7 +108,7 @@ feature -- Last output
 			last_output_set: last_output = new_output
 		end;
 
-feature {QUERY_EXECUTER} -- Implementation
+feature {NONE} -- Implementation
 
 	read_specified_file is
 			-- Retrieves an object from storage.
@@ -181,7 +181,7 @@ end;
 	expand_columnnames is
 			-- Expands `all' to all posible columnnames
 		do
-			if prof_options.output_names.item (1).is_equal ("all") then
+			if prof_options.output_names.is_empty then
 				prof_options.output_names.force (profiler_percentage, 1);
 				prof_options.output_names.force (profiler_self, 2);
 				prof_options.output_names.force (profiler_descendants, 3);

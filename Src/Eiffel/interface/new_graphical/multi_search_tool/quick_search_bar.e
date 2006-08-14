@@ -112,8 +112,6 @@ feature -- Access
 	key_press_action: PROCEDURE [ANY, TUPLE [EV_KEY]]
 			-- Key is pressed on any widget.
 
-
-
 feature -- Status report
 
 	has_focus_on_widgets : BOOLEAN is

@@ -72,6 +72,7 @@ feature -- Access
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.drop_actions.extend (agent drop_class (?))
 			Result.drop_actions.extend (agent drop_feature (?))
+			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 		end
 
 	menu_name: STRING is
@@ -127,6 +128,14 @@ feature -- Events
 			end
 		end
 
+	can_drop (a_stone: ANY): BOOLEAN is
+			-- Can `a_stone' be dropped onto current?
+		local
+			l_stone: STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void and then l_stone.is_valid and then l_stone.is_storable
+		end
 
 feature -- Execution
 

@@ -47,7 +47,9 @@ feature -- Properties
 
 	class_i: CLASS_I is
 		do
-			Result := e_class.lace_class
+			if e_class /= Void then
+				Result := e_class.lace_class
+			end
 		end
 
 feature -- Access

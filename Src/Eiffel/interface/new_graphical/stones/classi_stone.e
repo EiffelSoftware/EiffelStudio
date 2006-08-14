@@ -39,12 +39,16 @@ feature -- Properties
 
 	class_name: STRING is
 			-- Name of `class_i'.
+		require
+			is_valid: is_valid
 		do
 			Result := class_i.name
 		end
 
 	group: CONF_GROUP is
 			-- Group associated with current.
+		require
+			is_valid: is_valid
 		do
 			Result := class_i.group
 		ensure

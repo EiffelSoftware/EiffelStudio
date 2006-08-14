@@ -444,7 +444,7 @@ feature -- Memory management
 				explorer_bar_item := Void
 			end
 				-- Destruction of notebook has to occur at the end as it needs to be
-				-- accessed in during the recycling of previous items.
+				-- accessed during the recycling of previous items of `Current'.
 			notebook.destroy
 			notebook := Void
 			manager := Void

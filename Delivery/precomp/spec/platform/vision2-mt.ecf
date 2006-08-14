@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2" uuid="7039682D-D23E-4B31-BB0E-58969C896BCF" library_target="vision2-mt">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2-mt" uuid="7039682D-D23E-4B31-BB0E-58969C896BCF" library_target="vision2-mt">
 	<target name="vision2-mt">
-		<description>Vision2 library in MT mode</description>
 		<root class="ANY"/>
-		<setting name="multithreaded" value="true"/>
-		<option trace="false" profile="false" debug="false" warning="false">
+		<option>
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
+		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>
-		</library>		
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		</library>
 	</target>
 </system>

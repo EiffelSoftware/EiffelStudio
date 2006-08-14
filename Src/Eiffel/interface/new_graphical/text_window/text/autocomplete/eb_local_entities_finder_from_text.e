@@ -365,7 +365,11 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					internal_token := internal_token.previous
+						-- Test here is needed as reported in bug#10974 `internal_token'
+						-- can be Void.
+					if internal_token /= Void then
+						internal_token := internal_token.previous
+					end
 				end
 			end
 		end

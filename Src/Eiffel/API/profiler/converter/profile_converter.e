@@ -302,8 +302,12 @@ end
 							Eiffel_system.valid_dynamic_id (dtype)
 						then
 							eclass := Eiffel_system.class_of_dynamic_id (dtype)
-							class_n := eclass.name_in_upper
-							a_group := eclass.group
+							if eclass /= Void then
+								class_n := eclass.name_in_upper
+								a_group := eclass.group
+							else
+								class_n := dtype.out
+							end
 						else
 							class_n := dtype.out
 						end

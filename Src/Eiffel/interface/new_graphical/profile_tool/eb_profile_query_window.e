@@ -286,12 +286,13 @@ feature -- Status Setting
 			last_cluster_string: STRING
 			last_class_id: INTEGER
 			class_lower, class_upper, cluster_lower, cluster_upper: INTEGER
-			current_cluster_string: STRING
+			current_cluster_string, current_class_string: STRING
 			current_class_id: INTEGER
 			query_grid_item: EB_PROFILE_QUERY_GRID_ROW
 			last_cluster, last_class: EB_PROFILE_QUERY_GRID_ROW
 			row: EB_PROFILE_QUERY_GRID_ROW
 			sorted_tuple: TUPLE [BOOLEAN, BOOLEAN]
+			l_class: CLASS_C
 		do
 			profiler_query := pq
 			profiler_options := po
@@ -369,7 +370,12 @@ feature -- Status Setting
 				if current_eiffel_profile_data /= Void then
 						-- Now we perform special handling for the row as we must have access to each of the three
 						-- feature, class and cluster texts individually.
-					query_grid_item.set_cluster_class_feature_text (current_eiffel_profile_data.function.class_c.group.name + full_stop, eiffel_system.class_of_id (current_eiffel_profile_data.function.class_id).name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
+					l_class := current_eiffel_profile_data.function.class_c
+					if l_class /= Void then
+						query_grid_item.set_cluster_class_feature_text (l_class.group.name + full_stop, l_class.name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
+					else
+						query_grid_item.set_cluster_class_feature_text ("Unknown cluster.", current_eiffel_profile_data.function.int_class_name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
+					end
 				end
 				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)
 				profile_array.put (query_grid_item, i)
@@ -404,7 +410,13 @@ feature -- Status Setting
 				current_eiffel_profile_data ?= (profile_array.item (i)).profile_data
 				if current_eiffel_profile_data /= Void then
 					function := current_eiffel_profile_data.function
-					current_cluster_string := function.class_c.group.name
+					if function.class_c /= Void then
+						current_cluster_string := function.class_c.group.name
+						current_class_string := function.class_c.name
+					else
+						current_cluster_string := "Unknown cluster"
+						current_class_string := function.int_class_name
+					end
 					current_class_id := function.class_id
 					if not last_cluster_string.is_equal (current_cluster_string) then
 						if last_cluster /= Void then
@@ -418,7 +430,7 @@ feature -- Status Setting
 						if last_class /= Void then
 							last_class.set_upper (class_lower - 1)
 						end
-						create query_grid_item.make_parent (class_lower, class_lower, eiffel_system.class_of_id (function.class_id).name, current_eiffel_profile_data, 2)
+						create query_grid_item.make_parent (class_lower, class_lower, current_class_string, current_eiffel_profile_data, 2)
 						class_array.force (query_grid_item, class_array.upper + 1)
 						cluster_lower := cluster_lower + 1
 						last_class := query_grid_item
@@ -1242,7 +1254,9 @@ feature {NONE} -- Implementation
 							check
 								only_eiffel_data_pickable: eiffel_profile_data /= Void
 							end
-							create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+							if eiffel_profile_data.function.class_c /= Void then
+								create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+							end
 						end
 					elseif query_grid_row.type = 3 then
 						if last_x > left_border and last_x < query_grid_row.text_width + left_border then
@@ -1250,7 +1264,9 @@ feature {NONE} -- Implementation
 							check
 								only_eiffel_data_pickable: eiffel_profile_data /= Void
 							end
-							create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+							if eiffel_profile_data.function.class_c /= Void then
+								create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+							end
 						end
 					elseif query_grid_row.type = 4 then
 						if last_x > left_border then
@@ -1263,7 +1279,9 @@ feature {NONE} -- Implementation
 								check
 									only_eiffel_data_pickable: eiffel_profile_data /= Void
 								end
-								create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+								if eiffel_profile_data.function.class_c /= Void then
+									create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+								end
 							else
 								total_offset := total_offset + query_grid_row.class_text_width
 								if last_x < total_offset then
@@ -1271,7 +1289,9 @@ feature {NONE} -- Implementation
 									check
 										only_eiffel_data_pickable: eiffel_profile_data /= Void
 									end
-									create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+									if eiffel_profile_data.function.class_c /= Void then
+										create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+									end
 								else
 									total_offset := total_offset + query_grid_row.feature_text_width
 									if last_x < total_offset then
@@ -1410,6 +1430,7 @@ feature {NONE} -- Implementation
 		local
 			eiffel_profile_data: EIFFEL_PROFILE_DATA
 			function: EIFFEL_FUNCTION
+			l_class: CLASS_C
 		do
 			Result := ""
 			if query_grid_row.type = 4 then
@@ -1420,18 +1441,31 @@ feature {NONE} -- Implementation
 				eiffel_profile_data ?= query_grid_row.profile_data
 				if eiffel_profile_data /= Void then
 					function := eiffel_profile_data.function
+					l_class := function.class_c
 					if query_grid_row.type = 1 then
-						Result.append (function.class_c.group.name)
-						Result.append (full_stop)
-						Result.append (function.class_c.name)
+						if l_class /= Void then
+							Result.append (l_class.group.name)
+							Result.append (full_stop)
+							Result.append (l_class.name)
+						else
+							Result.append (function.int_class_name)
+						end
 						Result.append (full_stop)
 						Result.append (function.feature_name)
 					elseif query_grid_row.type = 2 then
-						Result.append (function.class_c.group.name)
-						Result.append (full_stop)
-						Result.append (function.class_c.name)
+						if l_class /= Void then
+							Result.append (l_class.group.name)
+							Result.append (full_stop)
+							Result.append (l_class.name)
+						else
+							Result.append (function.int_class_name)
+						end
 					elseif query_grid_row.type = 3 then
-						Result.append (function.class_c.group.name)
+						if l_class /= Void then
+							Result.append (l_class.group.name)
+						else
+							Result.append (function.int_class_name)
+						end
 					end
 				else
 					Result.append (query_grid_row.text)

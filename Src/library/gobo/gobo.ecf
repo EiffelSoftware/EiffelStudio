@@ -48,6 +48,7 @@
 				<exclude>/time_zone$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="gobo_tools" location="$ISE_LIBRARY\library\gobo\library\tools\" recursive="true" />
 		<cluster name="gobo_utility" location="$ISE_LIBRARY\library\gobo\library\utility\" recursive="true">
 			<file_rule>
 				<exclude>/command$</exclude>

@@ -328,9 +328,9 @@ feature {NONE} -- Implementation
 		do
 			if a_string /= Void then
 				Result := a_string.twin
+				Result.replace_substring_all (Amp_string, amp_entity)
 				Result.replace_substring_all (Lt_string, Lt_entity)
 				Result.replace_substring_all (Gt_string, Gt_entity)
-				Result.replace_substring_all (Amp_string, amp_entity)
 				Result.replace_substring_all (Quot_string, quot_entity)
 			end
 		ensure

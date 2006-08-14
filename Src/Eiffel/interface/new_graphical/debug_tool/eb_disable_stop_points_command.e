@@ -16,6 +16,8 @@ inherit
 			tooltext
 		end
 
+	EB_VETO_FACTORY
+
 	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PROJECT
@@ -51,10 +53,7 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_breakable (?))
 			Result.drop_actions.extend (agent drop_feature (?))
 			Result.drop_actions.extend (agent drop_class (?))
-			Result.drop_actions.set_veto_pebble_function (agent can_drop)
---			Result.drop_actions.extend (~quick_refresh_on_class_drop)
---			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
---			Result.select_actions.extend (window_manager~quick_refresh_all_margins)
+			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -64,7 +63,7 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_breakable (?))
 			Result.drop_actions.extend (agent drop_feature (?))
 			Result.drop_actions.extend (agent drop_class (?))
-			Result.drop_actions.set_veto_pebble_function (agent can_drop)
+			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
 	menu_name: STRING is
@@ -183,23 +182,6 @@ feature -- Update
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 				Eb_debugger_manager.notify_breakpoints_changes
-			end
-		end
-
-	can_drop (st: ANY): BOOLEAN is
-			-- Can `st' be dropped onto `Current's toolbar buttons?
-		local
-			fst: FEATURE_STONE
-			cst: CLASSC_STONE
-		do
-			fst ?= st
-			if fst /= Void then
-				Result := fst.e_feature /= Void and then fst.e_feature.is_debuggable
-			else
-				cst ?= st
-				if cst /= Void then
-					Result := cst.e_class.is_debuggable
-				end
 			end
 		end
 

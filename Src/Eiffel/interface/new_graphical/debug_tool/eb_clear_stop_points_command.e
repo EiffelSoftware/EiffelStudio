@@ -13,6 +13,8 @@ inherit
 			new_toolbar_item, new_mini_toolbar_item, mini_pixmap,
 			tooltext
 		end
+	
+	EB_VETO_FACTORY
 
 	EB_SHARED_DEBUG_TOOLS
 
@@ -51,7 +53,7 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_breakable (?))
 			Result.drop_actions.extend (agent drop_feature (?))
 			Result.drop_actions.extend (agent drop_class (?))
-			Result.drop_actions.set_veto_pebble_function (agent can_drop)
+			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -61,7 +63,7 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_breakable (?))
 			Result.drop_actions.extend (agent drop_feature (?))
 			Result.drop_actions.extend (agent drop_class (?))
-			Result.drop_actions.set_veto_pebble_function (agent can_drop)
+			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
 	menu_name: STRING is
@@ -188,23 +190,6 @@ feature {NONE} -- Implementation
 			-- Quick refresh all windows.
 		do
 			Window_manager.synchronize_all_about_breakpoints
-		end
-
-	can_drop (st: ANY): BOOLEAN is
-			-- Can `st' be dropped onto `Current's toolbar buttons?
-		local
-			fst: FEATURE_STONE
-			cst: CLASSC_STONE
-		do
-			fst ?= st
-			if fst /= Void then
-				Result := fst.e_feature /= Void and then fst.e_feature.is_debuggable
-			else
-				cst ?= st
-				if cst /= Void then
-					Result := cst.e_class.is_debuggable
-				end
-			end
 		end
 
 	clear_breakpoints is

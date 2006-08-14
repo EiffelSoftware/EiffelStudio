@@ -160,7 +160,7 @@ fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
 else
-	cppflags='$ccflags'
+	cppflags="$ccflags"
 fi
 cpp_stuff='42'
 defvoidused='15'

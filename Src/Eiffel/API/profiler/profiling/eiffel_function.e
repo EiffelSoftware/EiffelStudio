@@ -45,6 +45,8 @@ feature -- Output
 			-- CLASS_C associated with `Current'.
 		do
 			Result := Eiffel_system.class_of_id (class_id);
+		ensure
+			class_c_not_void: Eiffel_system.valid_class_id (class_id) implies Result /= Void
 		end
 
 	e_feature: E_FEATURE is
@@ -53,15 +55,19 @@ feature -- Output
 			-- information is out of synch with the compiled project.
 		local
 			feature_i: FEATURE_I
+			l_class: CLASS_C
 		do
-			feature_i := class_c.feature_table.item (feature_name)
-			if feature_i /= Void then
-				Result := feature_i.api_feature (class_id)
-			else
+			l_class := class_c
+			if l_class /= Void and then l_class.has_feature_table then
+				feature_i := l_class.feature_table.item (feature_name)
+				if feature_i /= Void then
+					Result := feature_i.api_feature (class_id)
+				else
 					--| FIXME: It means that this feature has been renamed and
 					--| its definition is not in `feature_table' from `class_c'.
 					--| The only solution is to explicitely declare this feature
 					--| as a renamed one in the profile tool
+				end
 			end
 		end
 
@@ -103,7 +109,7 @@ feature -- Output
 				if Eiffel_system.valid_class_id (class_id) then
 					l_class_c := class_c
 					st.add ("<");
---					st.add_cluster (l_class_c.cluster, l_class_c.cluster.cluster_name);
+					st.add_group (l_class_c.group, l_class_c.group.name)
 					st.add (">");
 					st.add_classi (l_class_c.lace_class, int_class_name);
 					st.add (".");
@@ -121,6 +127,8 @@ feature -- Output
 						st.add ("'")
 					end
 				else
+					st.add (int_class_name)
+					st.add (".")
 					st.add (feature_name);
 				end
 			end;
@@ -128,12 +136,19 @@ feature -- Output
 
 	name: STRING is
 			-- The name of the feature.
+		local
+			l_class: CLASS_C
 		do
 			create Result.make (0);
 			if class_id = 0 then
 				Result.append ("<cluster_tag>")
 			else
-				Result.append (Eiffel_system.class_of_id (class_id).group.name)
+				l_class := class_c
+				if l_class /= Void then
+					Result.append (l_class.group.name)
+				else
+					Result.append ("<class_tag>")
+				end
 			end
 			Result.extend ('.');
 			Result.append_string (int_class_name);

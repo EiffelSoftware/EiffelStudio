@@ -174,8 +174,8 @@ feature -- Visit nodes
 				l_variables.forth
 			end
 
-			if a_target.precompile /= Void then
-				a_target.precompile.process (Current)
+			if a_target.internal_precompile /= Void then
+				a_target.internal_precompile.process (Current)
 			end
 
 			process_in_alphabetic_order (a_target.internal_libraries)

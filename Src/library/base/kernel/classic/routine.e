@@ -191,7 +191,7 @@ feature -- Duplication
 			same_call_status: other.callable implies callable
 		end
 
-feature -- Basic operationsgc_comma
+feature -- Basic operations
 
 	call (args: OPEN_ARGS) is
 		require
@@ -308,8 +308,8 @@ feature {ROUTINE} -- Implementation
 			class_id_set: class_id = a_class_id
 			feature_id_set: feature_id = a_feature_id
 			open_map_set: open_map = a_open_map
-			is_precompiled_set: is_precompiled = a_is_precompiled 
-			is_basic_set: is_basic = a_is_basic 
+			is_precompiled_set: is_precompiled = a_is_precompiled
+			is_basic_set: is_basic = a_is_basic
 			is_inline_agent_set: is_inline_agent = a_is_inline_agent
 			closed_operands_set: closed_operands = a_closed_operands
 			open_count_set: open_count = a_open_count

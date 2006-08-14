@@ -574,8 +574,11 @@ feature -- Drawing operations
 			-- with size `a_width' and `a_height'.
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
-				update_if_needed
+				if a_width > 0 and then a_height > 0 then
+						-- If width or height are zero then nothing will be rendered.
+					{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
+					update_if_needed
+				end
 			end
 		end
 

@@ -10,7 +10,7 @@ class
 	SHARED_DEBUG_VALUE_KEEPER
 
 
-feature {EB_OBJECT_TOOL, EB_PRETTY_PRINT_DIALOG} -- Initialization
+feature {EB_PRETTY_PRINT_DIALOG} -- Initialization
 
 	Debug_value_keeper: DEBUG_VALUE_KEEPER is
 		once

@@ -2,14 +2,10 @@
 	<target name="base">
 		<description>Base library</description>
 		<root class="ANY" all_classes="false"/>
-		<setting name="cls_compliant" value="true"/>
-		<setting name="il_verifiable" value="true"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
-		<setting name="use_all_cluster_name_as_namespace" value="true"/>
-		<setting name="use_cluster_name_as_namespace" value="true"/>
-		<option trace="false" profile="false" debug="false" warning="false">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>

@@ -53,7 +53,7 @@
 
 /* Data declaration */
 
-rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
+extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
 rt_public struct ewb_flags ewb_data = {	/* Internal ewb's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */

@@ -1690,7 +1690,11 @@ feature {NONE} -- open new class
 				end
 
 				if not do_not_complete and nb > 0 then
-					list := universe.groups
+					if is_general_group_acceptable then
+						list := universe.groups
+					else
+						list := universe.target.clusters.linear_representation
+					end
 					from
 						str_area := str.area
 						list.start

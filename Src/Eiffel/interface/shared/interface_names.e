@@ -301,7 +301,7 @@ feature -- Accelerator, focus label and menu name
 	m_Export_to: STRING is				"Save Cop&y As..."
 	m_Export_XMI: STRING is 			"E&xport XMI..."
 	m_Expression_evaluation: STRING is	"Expression Evaluation"
-	m_External_editor: STRING is		"&External Editor"
+	m_External_editor: STRING is		"External E&ditor"
 	m_Favorites_tool: STRING is			"F&avorites"
 	m_Features_tool: STRING is			"&Features"
 	f_Finalize: STRING is				"Finalize..."

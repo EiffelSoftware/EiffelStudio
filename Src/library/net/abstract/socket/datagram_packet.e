@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DATAGRAM_PACKET 
+	DATAGRAM_PACKET
 
 inherit
 	PACKET
@@ -63,7 +63,7 @@ feature -- Status_report
 	element alias "[]"(pos: INTEGER): CHARACTER assign put_element is
 			-- Element located at data position `pos'
 		do
-			Result := data.read_integer_8 (pos + c_packet_number_size).to_character
+			Result := data.read_integer_8 (pos + c_packet_number_size).to_character_8
 		end
 
 feature -- Status_setting

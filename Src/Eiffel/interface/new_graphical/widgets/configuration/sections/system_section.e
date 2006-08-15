@@ -80,9 +80,8 @@ feature -- Element update
 				system.add_target (l_target)
 
 					-- add and display the section
-				configuration_window.add_target_sections (l_target, Current)
-				expand
-				last.enable_select
+				configuration_window.add_target_sections (l_target, parent)
+				parent.last.enable_select
 			end
 		end
 

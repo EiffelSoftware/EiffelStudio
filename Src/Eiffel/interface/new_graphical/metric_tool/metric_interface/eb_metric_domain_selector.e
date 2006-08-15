@@ -638,6 +638,9 @@ feature{NONE} -- Implementation
 		do
 			create l_row.make (a_domain_item)
 			l_row.bind_grid (grid)
+			if not grid.column (1).is_displayed then
+				grid.column (1).show
+			end
 			grid.header.i_th (1).remove_pixmap
 			grid.row (grid.row_count).ensure_visible
 			grid.column (1).resize_to_content

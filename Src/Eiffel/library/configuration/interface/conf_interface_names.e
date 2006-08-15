@@ -528,6 +528,10 @@ feature -- Parse errors
 			Result := "Missing parent target: "+a_parent+" in target "+a_target
 		end
 	e_parse_incorrect_target_no_name: STRING is "Target without a name specified."
+	e_parse_incorrect_target_invalid_name (a_target: STRING): STRING is
+		do
+			Result := "Invalid target name "+a_target+"."
+		end
 
 	e_parse_incorrect_root_all: STRING is "Invalid value for all_classes attribute in root tag."
 	e_parse_incorrect_root: STRING is "Invalid root tag."

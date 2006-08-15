@@ -383,6 +383,9 @@ feature {NONE} -- Implementation attribute processing
 			l_abstract := current_attributes.item (at_abstract)
 			if l_name /= Void then
 				l_name.to_lower
+				if not is_valid_target_name (l_name) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_invalid_name (l_name))
+				end
 				if last_system.targets.has (l_name) then
 					set_parse_error_message (conf_interface_names.e_parse_multiple_target_with_name (l_name))
 				end

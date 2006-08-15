@@ -38,7 +38,7 @@ feature
 		require
 			s_exists: s /= Void
 		do
-			client_name := clone (s)
+			client_name := s.twin
 		end
 
 indexing

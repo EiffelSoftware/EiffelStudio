@@ -40,7 +40,7 @@ feature
 			io.putstring ("Database user authentication:%N")
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
@@ -122,7 +122,7 @@ feature {NONE}
 					io.putstring (data_file.laststring)
 					io.new_line
 					-- Insert objects in the table "DB_BOOK"
-					base_update.modify (clone (data_file.laststring))
+					base_update.modify (data_file.laststring.twin)
 				end
 			end
 			data_file.close
@@ -148,7 +148,7 @@ feature {NONE}
 				-- Terminate?
 				io.laststring.is_equal ("exit")
 			loop
-				author := clone (io.laststring)
+				author := io.laststring.twin
 				io.putstring ("Seeking for books whose author's name match: ")
 				io.putstring (author)
 				io.new_line

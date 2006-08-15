@@ -1,31 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" 
-		name="edraw"
-		uuid="9CA0D48C-5389-4205-9818-8FE2B4B76B02">
-
-	<target name="edraw">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="edraw" uuid="9CA0D48C-5389-4205-9818-8FE2B4B76B02">
+	<target name="common" abstract="true">
+		<root class="APPLICATION" feature="make_and_launch"/>
 		<setting name="console_application" value="False"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<cluster name="root_cluster" location="."/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
-	
-	<target name="edraw_debug" extends="edraw">
-		<root feature="make_and_launch" class="APPLICATION"/>
-		<option>
-			<assertions precondition="True" postcondition="True" check="True" invariant="False" loop="False"/>
-		</option>
-		<setting name="line_generation" value="True"/>
+	<target name="classic" extends="common">
+		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
 	</target>
-
-	<target name="edraw_release" extends="edraw">
-		<root feature="make_and_launch" class="APPLICATION"/>
-		<option>
-			<assertions precondition="False" postcondition="False" check="False" invariant="False" loop="False"/>
-		</option>
-		<setting name="line_generation" value="False"/>
+	<target name="dotnet" extends="common">
+		<setting name="msil_generation" value="true"/>
+		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\vision2.ecf"/>
 	</target>
-
 </system>

@@ -1,34 +1,18 @@
 race: simple example using EiffelThreads (ISE Eiffel 4.2)
 
 DESCRIPTION:
-This example consists in launching several racers, performing n interations 
+This example consists in launching several racers, performing n iterations 
 (number of racers and iterations are defined by the user). For instance,
 you can try to launch 10 racers, running during 10 iterations.
 
 Each racer is an EiffelThread: the number of racers and iterations can be 
-as big as you want provided your system ressource can manage it. 
+as big as you want provided your system resource can manage it. 
 
 race use threads and mutex but the Eiffelthreads library also provides
 condition variables, semaphore, policy scheduling, thread control mechanisms.
 
 Compilation:
 In most case, you just need to melt the code and run the example.
-
-Compilation without precompilation:
-By default, you will use a mt-precompilation (base-mt), but if you do not have
-this precompile mt-library (or another one containing it), you should first 
-precompile the base library in multihreaded mode and once it is done, 
-compile the  race example with it. This way, you will be able to reuse the
-base-mt library for other multithreaded applications. Note that the base-mt
-library is located in the $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt directory
-but this name could be mt-base or mtbase depending on the deliveries. In this 
-case, just replace the name in the Ace.ace file at the line calling the 
-precompiled library `precompiled(...)'.
-
-You can also remove the line calling the precompiled library and run the
-Eiffel compilation but this is likely to be very long since you will compile
-all the base and thread libraries.
-
 
 Compatibility with Eiffel 4.1:
 To compile this example with ISE Eiffel 4.1, you need to modify the Eiffel
@@ -41,14 +25,4 @@ synchronisation, but in general you do not have to put any MUTEX, SEMAPHORE
 or CONDITION_VARIABLE into it. All other shared object needs to be put into
 a proxy. In the future releases, the proxies are bound to be obsolete and
 Eiffel will manage internally every shared object.
-
---|---------------------------------------------------------------
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
 

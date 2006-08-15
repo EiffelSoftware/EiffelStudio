@@ -43,7 +43,7 @@ feature
 				io.error.putstring ("Usage: ")
 				io.error.putstring (argv.item (0))
 				io.error.putstring (" port_number%N")
-			else	
+			else
 				make (argv.item (1).to_integer)
 				max_to_poll := 1
 				create poll.make_read_only
@@ -99,7 +99,7 @@ feature
 						message_out.extend (" has just gone%N")
 						stop := True
 					else
-						message_out := deep_clone (message_in)
+						message_out := message_in.deep_twin
 						message_out.put_front (" has just sent that :%N")
 						message_out.put_front (message_out.client_name)
 						message_out.put_front ("-> ")
@@ -120,7 +120,7 @@ feature
 		local
 			client_name: STRING
 		do
-			client_name := clone (message_out.client_name)
+			client_name := message_out.client_name.twin
 			from
 				connections.start
 			until
@@ -165,7 +165,7 @@ feature
 			if max_to_poll <= outflow.descriptor then
 				max_to_poll := outflow.descriptor + 1
 			end
-			create new_connection.make (clone (outflow))
+			create new_connection.make (outflow.twin)
 			connections.extend (new_connection)
 			poll.put_read_command (new_connection)
 		end

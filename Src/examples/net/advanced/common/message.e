@@ -42,7 +42,7 @@ feature
 		require
 			s_not_void: s /= Void
 		do
-			client_name := clone (s)
+			client_name := s.twin
 		end
 
 	set_over (flag: BOOLEAN) is
@@ -54,11 +54,11 @@ feature
 		do
 			new := flag
 		end
-	
+
 	print_message is
 		-- Prints the contents of the message to standard output
 		do
-			
+
 			from
 				start
 			until
@@ -68,7 +68,7 @@ feature
 				forth
 			end
 		end
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

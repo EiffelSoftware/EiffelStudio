@@ -1,9 +1,7 @@
-
-
 Set of small examples showing how to
 use different EiffelStore capabilities
 
-The following examples have been succesfully tested with ODBC, Oracle 8.04 and Oracle 8i.
+The following examples have been successfully tested with ODBC, Oracle 8.04 and Oracle 8i.
 
 The suggested order of examples use is
 the following:
@@ -22,10 +20,10 @@ the following:
 	An Example of Nested queries.
 
 4) rm2oom
-	From a Relationnal Model to an Object Oriented Model.
+	From a Relational Model to an Object Oriented Model.
 
 5) oom2rm
-	From an Object Oriented Model to a Relationnal Model.
+	From an Object Oriented Model to a Relational Model.
 
 6) convert 
 	to exercise the flat file conversion utilities.

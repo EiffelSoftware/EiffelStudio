@@ -12,7 +12,7 @@ An Eiffel object, say ``a book'', described by class BOOK, is inserted
 into a repository (instance of class REPOSITORY) defined 
 with `db_book' access key for instance. The repository name
 should match an external RDB table named `db_book'.
-In example, session terminates on unexisting RDB table.
+In example, session terminates on inexisting RDB table.
 
 Class DB_CHANGE encapsulates features supporting
 insertion statements.

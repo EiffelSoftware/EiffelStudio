@@ -44,7 +44,7 @@ feature -- Initialization
 			a_menu.extend (a_menu_item)
 			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
-			
+
 				-- Allow `first_window' to be closed.
 			first_window.close_request_actions.extend (agent on_exit)
 
@@ -64,7 +64,7 @@ feature -- Initialization
 			a_button.set_text (" Apply ")
 			a_button.select_actions.extend (agent on_apply)
 			a_hb2.extend (a_button)
-			
+
 			a_hb.extend (a_hb2)
 			a_hb.disable_item_expand (a_hb2)
 
@@ -177,14 +177,14 @@ feature {NONE} -- Graphical interface
 	my_label: EV_LABEL
 
 	my_menu: EV_MENU
- 
+
 	my_container: EV_HORIZONTAL_BOX
 			-- Container that groups the da.
 
 	my_instructions: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
-	
+
 	on_exit is
 			-- Quit the program
 		do
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 				elseif cursor_text.is_equal (Warning_pixmap_string) then
 					create ev_cursor.make_with_pixmap (Default_pixmaps.Warning_pixmap, 0, 0)
 					my_instructions.set_pointer_style (ev_cursor)
-				end	
+				end
 			end
 		end
 

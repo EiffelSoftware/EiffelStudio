@@ -23,7 +23,9 @@ SHELL = /bin/sh
 FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
 CFLAGS = $ccflags $large
 EC = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/ec
-EIFLIB = EIFGEN/W_code/libcecil.a 
+TARGET = classic
+ECF = cecil.ecf
+EIFLIB = EIFGENs/\$(TARGET)/W_code/libcecil.a 
 LIBS = $libs
 OBJECT = main.o
 
@@ -34,9 +36,9 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 all: cecil 
 
 $(EIFLIB):
-	$(EC) -freeze -c_compile
-	cd EIFGEN/W_code; $(MAKE) cecil
-	$(LN) EIFGEN/W_code/cecil.melted .
+	$(EC) -config $(ECF) -freeze -c_compile
+	cd EIFGENs/$(TARGET)/W_code; $(MAKE) cecil
+	$(LN) EIFGENs/$(TARGET)/W_code/cecil.melted .
 
 cecil: $(OBJECT) $(EIFLIB)
 	$(CC) -o cecil $(OBJECT) $(EIFLIB) $(LIBS)
@@ -52,5 +54,5 @@ clean:
 	$(RM) cecil.melted
 	$(RM) cecil.epr
 	$(RM) Makefile
-	$(DELDIR) EIFGEN
+	$(DELDIR) EIFGENs
 	

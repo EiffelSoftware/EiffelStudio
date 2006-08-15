@@ -23,7 +23,7 @@ feature
 			io.putstring("Database user authentication:%N");
 			io.putstring ("Name: ")
 			io.readline;
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring("Password: ");
 			io.readline;
 
@@ -52,17 +52,17 @@ feature
 				
 				io.putstring ("%NEnter path of directory where files will be generated: ")
 				io.readline
-				path_name := clone (io.laststring)
+				path_name := io.laststring.twin
 				from 
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline;
-					create repository.make (clone (io.laststring));
+					create repository.make (io.laststring.twin);
 				until
 					io.laststring.is_equal("exit")
 				loop
 						-- Objects from the DB will be accessed through a 
 						-- DB_REPOSITORY whose name is read from standard input
-					repository.change_name(clone (io.laststring));
+					repository.change_name(io.laststring.twin);
 						-- Try to load some book objects from the DB
 					repository.load;
 					if not repository.exists then

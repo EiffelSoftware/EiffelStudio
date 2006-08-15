@@ -53,10 +53,10 @@ feature
 				io.new_line
 				io.putstring ("Author? ")
 				io.readline
-				book.set_author (clone (io.laststring))
+				book.set_author (io.laststring.twin)
 				io.putstring ("Title? ")
 				io.readline
-				book.set_title(clone (io.laststring))
+				book.set_title(io.laststring.twin)
 				io.putstring ("Quantity? ")
 				io.readint
 				book.set_quantity(io.lastint)
@@ -97,7 +97,7 @@ feature {NONE}
 			io.putstring ("Database user authentication:%N")
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 

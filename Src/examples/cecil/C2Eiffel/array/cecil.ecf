@@ -5,6 +5,7 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<visible class="MY_ARRAY"/>

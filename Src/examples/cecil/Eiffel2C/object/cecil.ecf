@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="cecil" uuid="DAACB8CE-DA51-4D25-9277-1194904B3A08">
+	<target name="classic">
+		<root cluster="root_cluster" class="ROOT_CLASS" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<external_include location="../../../..">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="..\..\..\..">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="../../../fext.o">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="..\..\..\fext.obj">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+</system>

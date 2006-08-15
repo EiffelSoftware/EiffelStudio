@@ -103,8 +103,8 @@ feature -- Tooltip
 	f_compare_archive: STRING is "Compare metric archive"
 	f_select_current_archive: STRING is "Select current metric archive file"
 	f_select_reference_archive: STRING is "Select reference metric archive file"
-	f_select_userdefined_metrics: STRING is "Select user-defined metrics"
-	f_select_predefined_metrics: STRING is "Select predefined metrics"
+	f_select_userdefined_metrics: STRING is "Select/deselect user-defined metrics"
+	f_select_predefined_metrics: STRING is "Select/deselect predefined metrics"
 	f_group_metric_by_unit: STRING is "Group metrics by unit"
 
 	f_add_scope: STRING is "Add scope"

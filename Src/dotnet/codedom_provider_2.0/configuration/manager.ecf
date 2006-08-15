@@ -23,7 +23,7 @@
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="console_application" value="False"/>
-		<setting name="executable_name" value="ecdpman"/>
+		<setting name="executable_name" value="ecdpman2_0"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>

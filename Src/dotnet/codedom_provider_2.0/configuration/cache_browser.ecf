@@ -13,7 +13,7 @@
 		<root class="ANY"/>
 		<version major="5" minor="7" release="426" build="0"/>
 		
-		<setting name="line_generation" value="True"/>
+		<setting name="line_generation" value="False"/>
 		<setting name="cls_compliant" value="True"/>
 		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="il_verifiable" value="True"/>
@@ -24,7 +24,7 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser2_0"/>
 		
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\base.ecf"/>
 

@@ -23,7 +23,7 @@
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="console_application" value="no"/>
-		<setting name="executable_name" value="nmap"/>
+		<setting name="executable_name" value="nmap2_0"/>
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
 

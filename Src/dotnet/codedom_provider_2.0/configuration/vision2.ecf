@@ -23,7 +23,7 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom.Vision2"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom.Vision2_0"/>
 		
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 	</target>

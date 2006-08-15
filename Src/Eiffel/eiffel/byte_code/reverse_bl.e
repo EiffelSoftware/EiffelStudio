@@ -225,8 +225,24 @@ feature
 					buf.put_character (')')
 				end
 			elseif source_type.is_expanded then
-					-- Expanded object is already attached to reference target.
-				is_code_empty := True
+				if register = target then
+						-- Expanded object is already attached to reference target.
+					is_code_empty := True
+				else
+					target.print_register
+					buf.put_string (" = ")
+					print_register
+						-- Perform aging tests when necessary
+					if not target.is_predefined then
+						buf.put_character (';')
+						buf.put_new_line
+						buf.put_string ("RTAR(")
+						context.Current_register.print_register
+						buf.put_string (gc_comma)
+						print_register
+						buf.put_character (')')
+					end
+				end
 			else
 				buf.put_string ("RTRV(")
 				info.generate_type_id (buf, context.final_mode)
@@ -244,7 +260,7 @@ feature
 					source_print_register
 					buf.put_character (')')
 				end
-			end;
+			end
 			if not is_code_empty then
 				buf.put_character (';')
 				buf.put_new_line

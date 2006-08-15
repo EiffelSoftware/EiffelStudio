@@ -32,7 +32,7 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom2_0"/>
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf"/>
 

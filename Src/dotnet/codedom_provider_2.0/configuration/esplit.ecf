@@ -36,7 +36,7 @@
 	
 	<target name="console_debug" extends="common">
 		<setting name="line_generation" value="True"/>
-		<setting name="executable_name" value="esplit"/>
+		<setting name="executable_name" value="esplit2_0"/>
 		<setting name="console_application" value="yes"/>
 		
 		<option debug="true">
@@ -65,7 +65,7 @@
 
 	<target name="graphical_debug" extends="common">
 		<setting name="line_generation" value="True"/>
-		<setting name="executable_name" value="esplitter"/>
+		<setting name="executable_name" value="esplitter2_0"/>
 		<setting name="console_application" value="no"/>
 
 		<option debug="true">

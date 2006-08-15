@@ -57,9 +57,7 @@ feature{NONE} -- Initialization
 			a_dev_window_attached: a_dev_window /= Void
 		do
 			make_search_bar (a_dev_window.search_tool)
-			create delayed_timer.make (500, 1)
-			delayed_timer.enable_kamikazed
-			delayed_timer.actions.extend (agent search_internal)
+			create delayed_timer.make (agent search_internal, wait_to_search_time)
 		ensure
 			delayed_timer_attached: delayed_timer /= Void
 		end
@@ -304,7 +302,7 @@ feature{NONE} -- Actions
 	on_keyword_field_text_change is
 			-- Action to be performed when text in keyword field changes
 		do
-			delayed_timer.start_timer
+			delayed_timer.request_call
 		end
 
 	enter_accelerator: EV_ACCELERATOR is
@@ -522,7 +520,7 @@ feature{NONE} -- Implementation
 			Result := l_comb.background_color
 		end
 
-	delayed_timer: DELAYED_TIMEOUT
+	delayed_timer: ES_DELAYED_ACTION
 			-- Delayed timer
 
 	search_internal is
@@ -532,6 +530,9 @@ feature{NONE} -- Implementation
 				search_next (True)
 			end
 		end
+
+	wait_to_search_time: INTEGER is 500
+			-- Time (in milliseconds) delayed to start search when user inputs keyword
 
 invariant
 	search_bar_position_correct:

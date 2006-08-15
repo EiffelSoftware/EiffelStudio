@@ -856,16 +856,14 @@ feature{NONE} -- Implementation
 			-- Start `update_matches_timeout' and if no text change in `feature_name_list' in certain
 			-- amount of time, update view.
 		do
-			delayed_timeout.start_timer
+			delayed_timeout.request_call
 		end
 
-	delayed_timeout: DELAYED_TIMEOUT
+	delayed_timeout: ES_DELAYED_ACTION
 			-- Delayed timeout
 		do
 			if delayed_timeout_internal = Void then
-				create delayed_timeout_internal.make (wait_to_update_view_time, 1)
-				delayed_timeout_internal.actions.extend (agent delayed_update_matches)
-				delayed_timeout_internal.enable_kamikazed
+				create delayed_timeout_internal.make (agent delayed_update_matches, wait_to_update_view_time)
 			end
 			Result := delayed_timeout_internal
 		ensure
@@ -877,7 +875,7 @@ feature{NONE} -- Implementation
 
 	cancel_delayed_update_matches is
 		do
-			delayed_timeout.stop_timer
+			delayed_timeout.cancel_request
 		end
 
 	delayed_update_matches is

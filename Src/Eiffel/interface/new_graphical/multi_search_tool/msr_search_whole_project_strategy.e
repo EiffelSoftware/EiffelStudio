@@ -27,7 +27,9 @@ feature -- Basic Operation
 			classes: DS_HASH_SET [CLASS_I]
 		do
 			create item_matched_internal.make (1000)
-			classes := universe.all_classes
+			if workbench.universe_defined then
+				classes := universe.all_classes
+			end
 			if classes /= Void and then not classes.is_empty then
 				from
 					classes.start

@@ -19,18 +19,25 @@ feature -- Basic commands
 			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_class: CONF_CLASS
 			l_error: BOOLEAN
+			l_map: HASH_TABLE [STRING, STRING]
+			l_name: STRING
 		do
 			if classes /= Void and visible /= Void then
 				create last_warnings.make
 				from
+					l_map := mapping
 					visible.start
 				until
 					l_error or else visible.after
 				loop
+					l_name := visible.key_for_iteration
+					if l_map.has (l_name) then
+						l_name := l_map.found_item
+					end
 					l_vis := visible.item_for_iteration
-					l_class := classes.item (visible.key_for_iteration)
+					l_class := classes.item (l_name)
 					if l_class = Void then
-						last_warnings.force (create {CONF_ERROR_VISI}.make (visible.key_for_iteration))
+						last_warnings.force (create {CONF_ERROR_VISI}.make (l_name))
 					else
 						l_class.add_visible (l_vis)
 						if l_class.is_error then
@@ -116,6 +123,13 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 		end
 
 feature {NONE} -- Implementation
+
+	mapping: EQUALITY_HASH_TABLE [STRING_8, STRING_8]
+			-- Special classes name mapping (eg. STRING => STRING_32).
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	classes: HASH_TABLE [CONF_CLASS, STRING] is
 			-- List of classes.

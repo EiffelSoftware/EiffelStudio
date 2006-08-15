@@ -336,9 +336,15 @@ feature {NONE} -- Implementation
 			non_void_type: a_type /= Void
 		local
 			l_path: STRING
+			l_stale, l_in_cache: BOOLEAN
 		do
 			l_path := a_type.assembly.location
-			if not cache_reflection.is_assembly_in_cache (l_path, True) then
+			l_in_cache := cache_reflection.is_assembly_in_cache (l_path, True)
+			if l_in_cache then
+				l_stale := cache_reflection.is_assembly_stale (l_path)
+			end
+			if not l_in_cache or l_stale then
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Consuming_assembly, [l_path, l_in_cache, l_stale])				
 				cache_writer.add_assembly (l_path)
 			end
 		ensure

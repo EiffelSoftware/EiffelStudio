@@ -64,6 +64,14 @@ feature -- Attributes
 	backup_counter: INTEGER
 			-- Number of recompilations using backups
 
+	universe_defined: BOOLEAN is
+			-- Has the universe been defined?
+		do
+			Result := universe /= Void
+		ensure
+			defined: Result implies universe /= Void
+		end
+
 	system_defined: BOOLEAN is
 			-- Has the system been defined?
 			-- (Yes, if the Ace file has been

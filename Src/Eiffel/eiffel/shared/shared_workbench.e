@@ -27,6 +27,8 @@ feature -- Access
 
 	Universe: UNIVERSE_I is
 			-- Shared access to the current universe
+		require
+			universe_defined: workbench.universe_defined
 		once
 			Result := Workbench.universe
 		end

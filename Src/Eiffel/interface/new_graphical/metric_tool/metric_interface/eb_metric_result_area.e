@@ -134,17 +134,17 @@ feature -- Status report
 	should_metric_result_be_displayed: BOOLEAN
 			-- Should metric result be displayed instead of archive result?
 
-	is_last_requrest_displayed: BOOLEAN
+	is_last_request_displayed: BOOLEAN
 			-- Is last display request fullfilled?
 
 feature -- Setting
 
 	set_is_last_request_displayed (b: BOOLEAN) is
-			-- Set `is_last_requrest_displayed' with `b'.
+			-- Set `is_last_request_displayed' with `b'.
 		do
-			is_last_requrest_displayed := b
+			is_last_request_displayed := b
 		ensure
-			is_last_requrest_displayed_set: is_last_requrest_displayed = b
+			is_last_request_displayed_set: is_last_request_displayed = b
 		end
 
 	enable_metric_result_display is
@@ -224,7 +224,7 @@ feature -- Actions
 	on_select is
 			-- Action to be performed when current is selected
 		do
-			if not is_last_requrest_displayed then
+			if not is_last_request_displayed then
 				if should_metric_result_be_displayed then
 					metric_result_area.show
 					dummy_area.hide
@@ -236,7 +236,10 @@ feature -- Actions
 					archive_result_area.show
 					archive_result.load_archives (last_reference_archive, last_current_archive)
 				end
+				set_is_last_request_displayed (True)
 			end
+		ensure
+			last_request_displayed: is_last_request_displayed
 		end
 
 invariant

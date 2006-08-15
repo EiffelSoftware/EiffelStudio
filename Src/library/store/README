@@ -24,24 +24,27 @@ The library interface consists of two sets:
 
 1) A set of general purpose classes designed regardless of any data 
  management system used, to be found in directory 
- $ISE_EIFFEL/library/store/interface, and that you always need in your universe
+ $ISE_LIBRARY/library/store/interface, and that you always need in your universe
 
 2) Specific classes, referred to by the interface classes, bridging
   the application to selected data management systems called ``handles''. 
   The set of handles may be found:
 
-   * in directory $ISE_EIFFEL/library/store/dbms
+   * in directory $ISE_LIBRARY/library/store/dbms
 
-   * in the directory $ISE_EIFFEL/library/store/dbms/rdbms/{server_name}   
+   * in the directory $ISE_LIBRARY/library/store/dbms/rdbms/{server_name}   
    with {server_name} corresponding to a selected relational database 
    management system.
+
+   The best way to use them is to include the corresponding configuration file
+   $ISE_LIBRARY/library/store/dbms/rdbms/{server_name}/{server_name.ecf}
 
    Additional support classes are also needed in your universe
    regardless of the selected handle. They are located in:
    
-   * directory $ISE_EIFFEL/library/store/support and 
-      $ISE_EIFFEL/library/store/dbms/support
-   
+   * directory $ISE_LIBRARY/library/store/support and 
+      $ISE_LIBRARY/library/store/dbms/support
+
 Example classes are located in $ISE_EIFFEL/examples/store
 
 EiffelStore 4.5 has currently only been tested with:
@@ -71,4 +74,4 @@ Note
 ----
 If you are using EiffelStore with a specific RDBMS, read carefully
 the following file:
-   $ISE_EIFFEL/library/store/install/{basename}.txt
+   $ISE_LIBRARY/library/store/install/{basename}.txt

@@ -324,7 +324,7 @@ feature -- External
 			until
 				i > Result
 			loop
-				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
 				i := i + 1
 			end
 		end
@@ -349,7 +349,7 @@ feature -- External
 			until
 				i > Result
 			loop
-				ar.put (l_area.read_integer_8 (i - 1).to_character, i)
+				ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
 				i := i + 1
 			end
 		end

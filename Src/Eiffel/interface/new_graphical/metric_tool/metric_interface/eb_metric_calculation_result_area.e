@@ -247,9 +247,6 @@ feature{NONE} -- Implementation/Basic operation
 			end
 			result_grid.column (1).set_width (300)
 			refresh_grid
-			if result_grid.item (2, 16) = Void then
-				io.put_string ("Void%N")
-			end
 		end
 
 feature{NONE} -- Implementation/Sorting

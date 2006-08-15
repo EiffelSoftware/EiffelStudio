@@ -13,5 +13,6 @@
 	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
+		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\dotnet\base.ecf"/>
 	</target>
 </system>

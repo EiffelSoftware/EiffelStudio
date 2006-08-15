@@ -1,0 +1,5 @@
+To compile this example, first compile the C++ code.
+
+On UNIX this can be done by doing something like
+
+make mystring.o

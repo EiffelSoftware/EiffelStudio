@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="egraph" uuid="1C97309F-2EFC-48A2-A333-FB69BE1A40FB">
-	<target name="classic">
+	<target name="common" abstract="true">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf">
+			<option warning="false">
+				<warning name="syntax" enabled="false"/>
+			</option>
+		</library>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<cluster name="root_cluster" location=".\">
-			<cluster name="ellipse_graph" location="$|ellipse_graph\"/>
-			<cluster name="stones" location="$|stones\"/>
-		</cluster>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<cluster name="root_cluster" location=".\" recursive="true"/>
+	</target>
+	<target name="classic" extends="common">
+		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
+	</target>
+	<target name="dotnet" extends="common">
+		<setting name="msil_generation" value="true"/>
+		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\vision2.ecf"/>
 	</target>
 </system>

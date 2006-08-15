@@ -19,12 +19,13 @@ DELDIR = $rm -rf
 LN = $ln
 RM = $rm -f
 CP = $cp
-MV = $mv
 SHELL = /bin/sh
 FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
 CFLAGS = $ccflags $large
 EC = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/ec
-EIFLIB = EIFGEN/W_code/libcecil.a 
+ECF = cecil.ecf
+TARGET = classic
+EIFLIB = EIFGENs/\$(TARGET)/W_code/libcecil.a 
 LIBS = $libs
 OBJECT = fext.o
 
@@ -32,17 +33,12 @@ OBJECT = fext.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 
-all: prepare $(OBJECT) compile_eiffel
+all: $(OBJECT) compile_eiffel
 
-prepare: 
-	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
-	$(RM) Ace.ace
-	$(MV) tmp Ace.ace
-
-compile_eiffel: prepare $(OBJECT)
-	$(EC) -freeze -c_compile
-	$(LN) EIFGEN/W_code/cecil.melted .
-	$(LN) EIFGEN/W_code/cecil .
+compile_eiffel: $(OBJECT)
+	$(EC) -config $(ECF) -freeze -c_compile
+	$(LN) EIFGENs/$(TARGET)/W_code/cecil.melted .
+	$(LN) EIFGENs/$(TARGET)/W_code/cecil .
 
 .c.o:
 	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -c $<
@@ -55,8 +51,5 @@ clean:
 	$(RM) cecil.melted
 	$(RM) cecil.epr
 	$(RM) Makefile
-	$(DELDIR) EIFGEN
-	sed -e s/"fext.o"/"fext.obj"/ Ace.ace > tmp
-	$(RM) Ace.ace
-	$(MV) tmp Ace.ace
+	$(DELDIR) EIFGENs
 

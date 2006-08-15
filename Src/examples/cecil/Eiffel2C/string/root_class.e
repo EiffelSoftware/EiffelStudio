@@ -15,7 +15,7 @@ feature -- Initialization
 		do
 			io.put_string ("Enter a string to convert into a C string: %N")
 			io.read_line
-			eiffel_str := clone (io.last_string)
+			eiffel_str := io.last_string.twin
 			c_str := eiffel_str.to_c
 			c_printf ($c_str)
 		end

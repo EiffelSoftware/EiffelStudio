@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="bank_account" uuid="280BDB83-D656-4377-AD9F-3C9D70284C1A">
+	<target name="classic">
+		<root cluster="root_cluster" class="BANK_ACCOUNT" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="multithreaded" value="true"/>
+		<external_include location="../../../..">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="..\..\..\..">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="../../../fext.o">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="..\..\..\fext.obj">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base-mt.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<visible class="BOOLEAN_REF"/>
+		</library>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
+			<visible class="MUTEX"/>
+		</library>
+		<cluster name="root_cluster" location=".\">
+			<visible class="DEPOSITOR"/>
+			<visible class="WITHDRAWER"/>
+			<visible class="POST_OFFICE"/>
+		</cluster>
+	</target>
+</system>

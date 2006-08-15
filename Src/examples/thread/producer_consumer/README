@@ -1,7 +1,7 @@
 Producer-consumer example using the EiffelThread library.
 ---------------------------------------------------------
 
-An proposition of Eiffel code for implementing
+A proposition of Eiffel code for implementing
 the famous Producer-Consumer example.
 
 Works with Eiffel 4.2 and higher.
@@ -11,7 +11,7 @@ Implementation notes
 
 Condition variables are used to synchronize consumers and
 producers access to the shared buffer.
-A mutex synchronized the ouput.
+A mutex synchronized the output.
 
 Implementation notes specific to Eiffel
 ---------------------------------------
@@ -28,10 +28,4 @@ Compilation
 -----------
 Assertions should not be turned on with any version of the eiffel compiler
 anterior to 4.3. Assertions are only MT-safe since the 4.3 release.
-
-Check first if you have the precompiled base-mt library in your
-$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt directory. If not, you
-will need to comment the relevant line in the Ace file and
-freeze your entire system.
- 
 

@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
+class
 	RACE
 inherit
 	THREAD_CONTROL
@@ -18,7 +18,7 @@ feature
 			n, thread_count, nb_loop: INTEGER
 			r: RUNNER
 		do
-			create io_mutex
+			create io_mutex.make
 			io_mutex.lock
 			io.putstring ("** Thread race%N** -----------%N")
 			io.putstring ("** # of racers: ")

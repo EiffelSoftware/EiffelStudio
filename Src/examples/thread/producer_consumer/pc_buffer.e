@@ -25,19 +25,19 @@ feature
 	num_full: INTEGER
 			-- index of last inserted element.
 
-	start_idx: INTEGER 
+	start_idx: INTEGER
 			-- First index of buffer.
 
 	n_op, it : INTEGER
 			-- Parameters for periodically displaying buffer.
 
-	buffer_size: INTEGER 
+	buffer_size: INTEGER
 			-- Customizable size of buffer.
 
 	data: ARRAY [INTEGER]
 			-- Physical buffer of elements.
 
-	make (size, i: INTEGER; finish: BOOLEAN_REF) is 
+	make (size, i: INTEGER; finish: BOOLEAN_REF) is
 			-- Initialize customizable parameters
 			-- and internal structures.
 		do
@@ -45,21 +45,21 @@ feature
 			finished := finish
 			it := i
 			buffer_size := size - 1
-			create monitor
+			create monitor.make
 			create notfull.make
 			create notempty.make
 			create data.make (0,buffer_size)
 		end
-	
+
 	get (id: INTEGER) is
 			-- Get an element from the buffer.	
 			-- Note that we have to `wait' in a loop
 			-- because the condition may have changed when
 			-- the cond. var. is unblocked.
-		local 
+		local
 			d: INTEGER
 		do
-	
+
 				monitor.lock
 				if num_full = 0 then
 					from
@@ -69,7 +69,7 @@ feature
 						notempty.wait (monitor)
 					end
 				end
-				if not finished.item then 
+				if not finished.item then
 				d := data.item (num_full - 1)
 				data.put (0, num_full  - 1)
 				num_full := num_full - 1
@@ -83,7 +83,7 @@ feature
 				end
 				monitor.unlock
 		end
-			
+
 	put (d: INTEGER; id: INTEGER) is
 			-- Put an element in the buffer.
 			-- `wait' is nested in a loop for the same reason as
@@ -91,31 +91,31 @@ feature
 		do
 				monitor.lock
 				if num_full = buffer_size then
-					from 
+					from
 				until
 						num_full /= buffer_size or else finished.item
 					loop
 						notfull.wait (monitor)
 					end
 				end
-				if not finished.item then 
+				if not finished.item then
 				data.put (d, (num_full + start_idx)  \\ buffer_size)
 				num_full := num_full + 1
-				
+
 				io.put_string ("		")
 				io.put_integer (id)
 				io.put_string ("> Put ")
 				io.put_integer (d)
 				io.new_line
-				n_op := n_op + 1	
+				n_op := n_op + 1
 				check_display
 				notempty.signal
 				end
 				monitor.unlock
 			end
-	
+
 	check_display is
-			-- Check whether we display the buffer for the 
+			-- Check whether we display the buffer for the
 			-- current operation and in the latter case ask
 			-- for exiting.
 		do
@@ -135,10 +135,10 @@ feature
 				end
 			end
 		end
-	
+
 	display is
 			-- Display buffer.
-		local 
+		local
 			i: INTEGER
 		do
 			io.put_string ("*****Display of buffer:%N")
@@ -167,5 +167,5 @@ indexing
 		]"
 
 
-end 
+end
 

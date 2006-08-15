@@ -24,7 +24,9 @@ SHELL = /bin/sh
 FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
 CFLAGS = $mtccflags $large
 EC = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/ec
-EIFLIB = EIFGEN/W_code/libbank_account.a 
+ECF = bank_account.ecf
+TARGET = classic
+EIFLIB = EIFGENs/\$(TARGET)/W_code/libbank_account.a 
 LIBS = $mtlibs
 OBJECT = main.o fext.o
 
@@ -36,12 +38,9 @@ all: bank_account
 $(EIFLIB): compile_eiffel
 
 compile_eiffel:
-	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
-	$(RM) Ace.ace
-	$(MV) tmp Ace.ace
-	$(EC) -freeze -c_compile 
-	cd EIFGEN/W_code; $(MAKE) cecil
-	$(LN) EIFGEN/W_code/bank_account.melted .
+	$(EC) -config $(ECF) -freeze -c_compile 
+	cd EIFGENs/$(TARGET)/W_code; $(MAKE) cecil
+	$(LN) EIFGENs/$(TARGET)/W_code/bank_account.melted .
 
 bank_account: $(OBJECT) $(EIFLIB)
 	$(CC) -o bank_account $(OBJECT) $(EIFLIB) $(LIBS)
@@ -57,9 +56,6 @@ clean:
 	$(RM) bank_account.melted
 	$(RM) bank_account.epr
 	$(RM) Makefile
-	$(DELDIR) EIFGEN
-	sed -e s/"fext.o"/"fext.obj"/ Ace.ace > tmp
-	$(RM) Ace.ace
-	$(MV) tmp Ace.ace
+	$(DELDIR) EIFGENs
 	
 

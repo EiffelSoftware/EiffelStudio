@@ -31,7 +31,7 @@ feature
 
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 			login (tmp_string, io.laststring)

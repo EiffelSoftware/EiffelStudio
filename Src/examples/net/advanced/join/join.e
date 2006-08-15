@@ -31,18 +31,18 @@ feature
 				io.error.putstring (" hostname port%N")
 			else
 				check_name
-	
+
 				make (argv.item (2).to_integer, argv.item (1))
 				max_to_poll := in_out.descriptor + 1
 
 				create connection.make (in_out)
 				create poll.make_read_only
 				poll.put_read_command (connection)
-	
+
 				create std_input.make (io.input)
 				create input_poll.make_read_only
 				input_poll.put_read_command (std_input)
-	
+
 				send_name_to_server
 				processing
 			end
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			input_poll.execute (1, 15000)
 			if std_input.is_waiting then
 				io.readline
-				temp := clone (io.laststring)
+				temp := io.laststring.twin
 				if temp.is_equal ("bye") then
 					over := True
 				end
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 		do
 			io.putstring ("Enter your name : ")
 			io.readline
-			client_name := clone (io.laststring)
+			client_name := io.laststring.twin
 		end
 
 	scan_from_server is

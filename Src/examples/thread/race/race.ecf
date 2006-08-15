@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="race" uuid="3C1B683B-BEBF-4F2C-9864-2E0165F42B59">
-	<target name="classic">
+	<target name="common" abstract="true">
 		<root class="RACE" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
@@ -9,7 +9,11 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
-	<target name="dotnet" extends="classic">
+	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
+		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\base-mt.ecf"/>
+	</target>
+	<target name="classic" extends="common">
+		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base-mt.ecf"/>
 	</target>
 </system>

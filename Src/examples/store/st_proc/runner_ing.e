@@ -37,7 +37,7 @@ feature
 			set_data_source (io.laststring)
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 			login (tmp_string, io.laststring)
@@ -99,7 +99,7 @@ feature {NONE}
 			until
 				io.laststring.is_equal ("exit")
 			loop
-				author := clone (io.laststring)
+				author := io.laststring.twin
 				io.putstring ("Seeking for books whose author's name match: ")
 				io.putstring (author)
 				io.new_line

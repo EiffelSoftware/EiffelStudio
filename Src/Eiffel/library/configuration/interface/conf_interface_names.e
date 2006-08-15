@@ -525,7 +525,7 @@ feature -- Parse errors
 
 	e_parse_incorrect_target_parent (a_parent, a_target: STRING): STRING is
 		do
-			Result := "Missing parent target: "+a_parent+" in target"+a_target
+			Result := "Missing parent target: "+a_parent+" in target "+a_target
 		end
 	e_parse_incorrect_target_no_name: STRING is "Target without a name specified."
 

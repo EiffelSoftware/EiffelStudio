@@ -2,7 +2,7 @@
 	<target name="base-mt">
 		<description>Base library</description>
 		<root class="ANY" all_classes="false"/>
-		<setting name="multithreaded" value="True"/>
+		<setting name="multithreaded" value="true"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
 		<option>

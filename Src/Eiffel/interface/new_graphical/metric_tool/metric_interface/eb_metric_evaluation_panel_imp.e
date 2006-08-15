@@ -69,7 +69,7 @@ feature {NONE}-- Initialization
 			create criterion_area
 			create l_ev_horizontal_box_4
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (toolbar_area)
@@ -126,10 +126,9 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_horizontal_box_1.set_padding_width (15)
+			l_ev_horizontal_box_1.set_padding (15)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.set_padding_width (3)
+			l_ev_vertical_box_1.set_padding (3)
 			l_ev_vertical_box_1.disable_item_expand (toolbar_area)
 			toolbar_area.disable_item_expand (quick_metric_toolbar)
 			toolbar_area.disable_item_expand (l_ev_tool_bar_1)
@@ -138,7 +137,7 @@ feature {NONE}-- Initialization
 			quick_metric_btn.enable_select
 			l_ev_tool_bar_1.disable_vertical_button_style
 			control_toolbar.disable_vertical_button_style
-			value_area.set_padding_width (3)
+			value_area.set_padding (3)
 			value_area.disable_item_expand (metric_value_lbl)
 			value_area.disable_item_expand (l_ev_frame_1)
 			metric_value_lbl.set_text ("Value:")
@@ -149,30 +148,30 @@ feature {NONE}-- Initialization
 			metric_value_text.set_minimum_height (18)
 			metric_source_domain_area.set_minimum_width (250)
 			metric_source_domain_area.set_minimum_height (0)
-			metric_source_domain_area.set_padding_width (3)
+			metric_source_domain_area.set_padding (3)
 			metric_source_domain_area.disable_item_expand (choose_input_domain_lbl)
 			choose_input_domain_lbl.set_text ("Source domain:")
 			choose_input_domain_lbl.align_text_left
 			metric_domain_selector_area.set_minimum_height (0)
 			main_area.set_minimum_width (0)
 			main_area.set_minimum_height (0)
-			main_area.set_padding_width (20)
-			l_ev_vertical_box_2.set_padding_width (4)
-			metric_area.set_padding_width (3)
+			main_area.set_padding (20)
+			l_ev_vertical_box_2.set_padding (4)
+			metric_area.set_padding (3)
 			metric_area.disable_item_expand (metric_selection_area)
 			metric_selection_area.set_minimum_width (250)
-			metric_selection_area.set_padding_width (3)
+			metric_selection_area.set_padding (3)
 			metric_selection_area.disable_item_expand (l_ev_horizontal_box_2)
 			metric_selection_area.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_2.set_minimum_height (22)
 			l_ev_horizontal_box_3.disable_item_expand (choose_metric_lbl)
 			choose_metric_lbl.set_text ("Choose metric:")
 			grid_wrapper.set_minimum_width (0)
-			metric_definition_area.set_padding_width (3)
+			metric_definition_area.set_padding (3)
 			metric_definition_area.disable_item_expand (unit_area)
 			metric_definition_area.disable_item_expand (label_area)
 			metric_definition_area.disable_item_expand (l_ev_horizontal_box_4)
-			unit_area.set_padding_width (3)
+			unit_area.set_padding (3)
 			unit_area.disable_item_expand (unit_lbl)
 			unit_area.disable_item_expand (unit_combo)
 			unit_lbl.set_text ("Unit:")
@@ -183,14 +182,14 @@ feature {NONE}-- Initialization
 			label_area.disable_item_expand (definition_lbl)
 			definition_lbl.set_text ("Definition:")
 			definition_lbl.align_text_left
-			criterion_area.set_padding_width (5)
+			criterion_area.set_padding (5)
 			l_ev_horizontal_box_4.set_minimum_height (21)
-			set_padding_width (5)
+			set_padding (5)
 			set_border_width (5)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -240,7 +239,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

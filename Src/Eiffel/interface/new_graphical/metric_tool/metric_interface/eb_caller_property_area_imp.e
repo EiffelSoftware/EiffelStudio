@@ -30,7 +30,7 @@ feature {NONE}-- Initialization
 			create criterion_domain_lbl
 			create domain_selector
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (only_current_version_checkbox)
 			extend (criterion_domain_lbl)
 			extend (domain_selector)
@@ -48,18 +48,17 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			only_current_version_checkbox.set_text ("Only current version")
 			criterion_domain_lbl.set_text ("Criterion domain:")
 			criterion_domain_lbl.align_text_left
 			set_minimum_width (0)
-			set_padding_width (3)
+			set_padding (3)
 			disable_item_expand (only_current_version_checkbox)
 			disable_item_expand (criterion_domain_lbl)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -88,7 +87,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

@@ -51,7 +51,7 @@ feature {NONE}-- Initialization
 			create result_lable
 			create result_grid_area
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_cell_1)
 			extend (metric_area)
 			metric_area.extend (metric_lbl)
@@ -90,9 +90,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			l_ev_cell_1.set_minimum_height (0)
-			metric_area.set_padding_width (3)
+			metric_area.set_padding (3)
 			metric_area.disable_item_expand (metric_lbl)
 			metric_area.disable_item_expand (metric_name_text)
 			metric_area.disable_item_expand (l_ev_cell_2)
@@ -131,18 +130,18 @@ feature {NONE}-- Initialization
 			value_lbl.set_text ("Value:")
 			value_lbl.align_text_left
 			value_text.align_text_left
-			input_area.set_padding_width (3)
+			input_area.set_padding (3)
 			input_lbl.set_text ("Source domain:")
 			input_lbl.align_text_left
 			input_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			input_grid_area.set_border_width (1)
-			result_grid_holder.set_padding_width (3)
+			result_grid_holder.set_padding (3)
 			result_grid_holder.disable_item_expand (result_lable)
 			result_lable.set_text ("Result:")
 			result_lable.align_text_left
 			result_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			result_grid_area.set_border_width (1)
-			set_padding_width (5)
+			set_padding (5)
 			set_border_width (5)
 			disable_item_expand (l_ev_cell_1)
 			disable_item_expand (metric_area)
@@ -150,7 +149,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -186,7 +185,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

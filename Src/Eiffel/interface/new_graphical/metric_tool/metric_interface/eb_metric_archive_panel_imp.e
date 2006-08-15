@@ -66,7 +66,7 @@ feature {NONE}-- Initialization
 			create current_metric_archive_text
 			create browse_current_archive_btn
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (archive_definition_frame)
 			archive_definition_frame.extend (l_ev_vertical_box_1)
@@ -120,16 +120,15 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_horizontal_box_1.set_padding_width (15)
+			l_ev_horizontal_box_1.set_padding (15)
 			l_ev_horizontal_box_1.set_border_width (2)
 			archive_definition_frame.set_text ("Archive Managament")
-			l_ev_vertical_box_1.set_padding_width (6)
+			l_ev_vertical_box_1.set_padding (6)
 			l_ev_vertical_box_1.set_border_width (10)
 			l_ev_vertical_box_1.disable_item_expand (definition_toolbar_area)
-			l_ev_horizontal_box_2.set_padding_width (3)
+			l_ev_horizontal_box_2.set_padding (3)
 			l_ev_horizontal_box_2.disable_item_expand (definition_toolbar)
-			new_archive_file_area.set_padding_width (3)
+			new_archive_file_area.set_padding (3)
 			new_archive_file_area.disable_item_expand (new_archive_file_lbl)
 			new_archive_file_area.disable_item_expand (new_archive_browse_btn)
 			new_archive_file_area.disable_item_expand (clean_btn)
@@ -137,44 +136,44 @@ feature {NONE}-- Initialization
 			new_archive_file_lbl.align_text_left
 			new_archive_browse_btn.set_text ("...")
 			clean_btn.set_text ("Clean")
-			l_ev_horizontal_box_3.set_padding_width (5)
-			l_ev_vertical_box_2.set_padding_width (3)
+			l_ev_horizontal_box_3.set_padding (5)
+			l_ev_vertical_box_2.set_padding (3)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_4.set_padding_width (3)
+			l_ev_horizontal_box_4.set_padding (3)
 			l_ev_horizontal_box_4.disable_item_expand (source_domain_lbl)
 			source_domain_lbl.set_text ("Select source domain:")
 			source_domain_lbl.align_text_left
-			l_ev_vertical_box_3.set_padding_width (3)
+			l_ev_vertical_box_3.set_padding (3)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_5)
-			l_ev_horizontal_box_5.set_padding_width (3)
+			l_ev_horizontal_box_5.set_padding (3)
 			l_ev_horizontal_box_5.disable_item_expand (metric_lbl)
 			metric_lbl.set_text ("Select Metrics:")
 			archive_comparison_area.set_text ("Archive Comparison")
-			l_ev_vertical_box_4.set_padding_width (6)
+			l_ev_vertical_box_4.set_padding (6)
 			l_ev_vertical_box_4.set_border_width (10)
 			l_ev_vertical_box_4.disable_item_expand (comparison_toolbar_area)
 			l_ev_vertical_box_4.disable_item_expand (reference_archve_area)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_4.disable_item_expand (current_archive_area)
 			compare_toolbar.disable_vertical_button_style
-			reference_archve_area.set_padding_width (3)
+			reference_archve_area.set_padding (3)
 			reference_archve_area.disable_item_expand (reference_archive_lbl)
 			reference_archive_lbl.set_text ("Select reference archive:")
 			reference_archive_lbl.align_text_left
-			l_ev_horizontal_box_6.set_padding_width (3)
+			l_ev_horizontal_box_6.set_padding (3)
 			l_ev_horizontal_box_6.disable_item_expand (browse_reference_archive_btn)
 			browse_reference_archive_btn.set_text ("...")
 			l_ev_cell_1.set_minimum_height (15)
-			current_archive_area.set_padding_width (3)
+			current_archive_area.set_padding (3)
 			current_archive_lbl.set_text ("Select current archive:")
 			current_archive_lbl.align_text_left
-			l_ev_horizontal_box_7.set_padding_width (3)
+			l_ev_horizontal_box_7.set_padding (3)
 			l_ev_horizontal_box_7.disable_item_expand (browse_current_archive_btn)
 			browse_current_archive_btn.set_text ("...")
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -224,7 +223,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

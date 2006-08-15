@@ -36,7 +36,7 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_2
 			create tree_view_checkbox
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (metric_grid_area)
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
@@ -60,7 +60,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			metric_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			metric_grid_area.set_border_width (1)
 			l_ev_horizontal_box_1.disable_item_expand (metric_selection_toolbar)
@@ -70,7 +69,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -106,7 +105,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

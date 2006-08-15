@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 		do
 			name_text_frame.hide
 			description_frame.hide
-			name_text_read_only.implementation.hide_border
-			description_text_read_only.implementation.hide_border
 			create l_text
 			name_text_read_only.set_background_color (l_text.background_color)
 			description_text_read_only.set_background_color (l_text.background_color)

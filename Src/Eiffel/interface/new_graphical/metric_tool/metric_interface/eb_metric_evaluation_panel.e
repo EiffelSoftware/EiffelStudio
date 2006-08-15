@@ -118,7 +118,6 @@ feature {NONE} -- Initialization
 			metric_value_text.disable_edit
 			create l_text
 			metric_value_text.set_background_color (l_text.background_color)
-			metric_value_text.implementation.hide_border
 
 				-- Setup run tool bar
 			run_metric_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)

@@ -10,24 +10,47 @@ class
 	ES_DELAYED_ACTION
 
 create
-	make
+	make,
+	make_in_non_kamikazed_mode
 
 feature {NONE} -- Initialization
 
 	make (	a_delayed_action: like delayed_action;
 			a_delay: like delay
 			) is
-			-- Initialize Current with `a_delayed_action' and `a_delay'
+			-- Initialize Current with `a_delayed_action' and `a_delay'.
+			-- Current is in kamikazed mode by default (See `enable_kamikazed' for more information).
 		require
-			a_delayed_action /= Void
-			a_delay >= 0
+			a_delayed_action_attached: a_delayed_action /= Void
+			a_delay_non_negative: a_delay >= 0
 		do
 			delayed_action := a_delayed_action
 			delay := a_delay
 			reset_timer_on_request := True
+			enable_kamikazed
 		ensure
-			delayed_action = a_delayed_action
-			delay = a_delay
+			delayed_action_set: delayed_action = a_delayed_action
+			delay_set: delay = a_delay
+			kamikazed_enabled: is_kamikazed
+		end
+
+	make_in_non_kamikazed_mode ( a_delayed_action: like delayed_action;
+							 a_delay: like delay;
+							 a_interval: like interval) is
+			-- Initialze Current in non-kamikazed mode.
+		require
+			a_delayed_action /= Void
+			a_delay_non_negative: a_delay >= 0
+			a_interval_positive: a_interval > 0
+		do
+			make (a_delayed_action, a_delay)
+			set_interval (a_interval)
+			disable_kamikazed
+		ensure
+			delayed_action_set: delayed_action = a_delayed_action
+			delay_set: delay = a_delay
+			interval_set: interval = a_interval
+			kamikazed_disabled: not is_kamikazed
 		end
 
 feature -- Changes
@@ -56,6 +79,16 @@ feature -- Changes
 			on_request_end_action := v
 		end
 
+	set_interval (a_interval: INTEGER) is
+			-- Set `interval' with `a_interval'.
+		require
+			a_interval_positive: a_interval > 0
+		do
+			interval := a_interval
+		ensure
+			interval_set: interval = a_interval
+		end
+
 	enable_reset_timer_on_request is
 			-- Enable reset_timer_on_request
 		do
@@ -68,6 +101,24 @@ feature -- Changes
 			reset_timer_on_request := False
 		end
 
+	enable_kamikazed is
+			-- Ensure `delayed_action' will be invoked in kamikazed mode.
+			-- Has effects the next time when `requrest_call' is called.
+		do
+			is_kamikazed := True
+		ensure
+			is_kamikazed_set: is_kamikazed
+		end
+
+	disable_kamikazed is
+			-- Ensure `delayed_action' will be invoked in non-kamikazed mode.
+			-- Has effects the next time when `request_call' is called.
+		do
+			is_kamikazed := False
+		ensure
+			is_kamikazed_set: not is_kamikazed
+		end
+
 feature -- Properties
 
 	delay: INTEGER
@@ -76,6 +127,16 @@ feature -- Properties
 	reset_timer_on_request: BOOLEAN
 			-- Reset the timer interval if a request occurs while a request is running ?
 			-- default: True
+
+	is_kamikazed: BOOLEAN
+			-- Is `delayed_action' kamikazed?
+			-- e.g., should `delayed_action' only be called once?
+			-- default: True
+
+	interval: INTEGER
+			-- Time between calls to `delayed_action' in milliseconds.
+			-- If 0, then `actions' are disabled.
+			-- Have effect only when `is_kamikazed' is True
 
 feature -- Delayed action access
 
@@ -91,7 +152,23 @@ feature -- Delayed action access
 			delayed_action_exists: delayed_action_exists
 		do
 			cancel_request
-			delayed_action.call (Void)
+			if is_kamikazed then
+				delayed_action.call (Void)
+			else
+				repeat_call
+			end
+		end
+
+	repeat_call is
+			-- Call `delayed_action' continuously every `internal' milliseconds.
+		do
+			if action_timer = Void then
+				create action_timer.make_with_interval (interval)
+			else
+				action_timer.actions.wipe_out
+				action_timer.set_interval (interval)
+			end
+			action_timer.actions.extend (delayed_action)
 		end
 
 	request_call is
@@ -99,6 +176,7 @@ feature -- Delayed action access
 		require
 			delayed_action_exists: delayed_action_exists
 		do
+			dispose_action_timer
 			if delay = 0 then
 				call
 			else
@@ -125,6 +203,7 @@ feature -- Delayed action access
 				delayed_action_timer.actions.wipe_out
 				delayed_action_timer.destroy
 				delayed_action_timer := Void
+				dispose_action_timer
 				if on_request_end_action /= Void then
 					on_request_end_action.call (Void)
 				end
@@ -145,8 +224,21 @@ feature {NONE} -- Delayed cleaning implementation
 	delayed_action: PROCEDURE [ANY, TUPLE]
 			-- Action to be called
 
-	delayed_action_timer: EV_TIMEOUT;
+	delayed_action_timer: EV_TIMEOUT
 			-- Timer used to process the delay
+
+	action_timer: EV_TIMEOUT;
+			-- Timer used to call `delayed_action' continuously
+
+	dispose_action_timer is
+			-- Dispose `action_timer'.
+		do
+			if action_timer /= Void then
+				action_timer.actions.wipe_out
+				action_timer.destroy
+				action_timer := Void
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

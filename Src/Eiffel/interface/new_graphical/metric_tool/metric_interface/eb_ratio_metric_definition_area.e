@@ -68,13 +68,11 @@ feature {NONE} -- Initialization
 			numerator_text.drop_actions.extend (agent on_drop (?, numerator_text))
 			numerator_text.set_accept_cursor (cursors.cur_metric)
 			numerator_text.set_deny_cursor (cursors.cur_x_metric)
-			numerator_text.implementation.hide_border
 			numerator_text.set_tooltip (metric_names.f_drop_metric_here)
 
 			denominator_text.drop_actions.extend (agent on_drop (?, denominator_text))
 			denominator_text.set_accept_cursor (cursors.cur_metric)
 			denominator_text.set_deny_cursor (cursors.cur_x_metric)
-			denominator_text.implementation.hide_border
 			denominator_text.set_tooltip (metric_names.f_drop_metric_here)
 
 			create l_text

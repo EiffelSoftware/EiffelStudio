@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 			create l_ev_frame_1
 			create status_text
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (status_pixmap)
 			l_ev_horizontal_box_1.extend (status_lbl)
@@ -52,8 +52,7 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_padding (5)
 			l_ev_horizontal_box_1.disable_item_expand (status_pixmap)
 			l_ev_horizontal_box_1.disable_item_expand (status_lbl)
 			status_pixmap.set_minimum_width (16)
@@ -62,11 +61,11 @@ feature {NONE}-- Initialization
 			status_lbl.align_text_left
 			l_ev_frame_1.set_style (1)
 			status_text.disable_edit
-			set_padding_width (3)
+			set_padding (3)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -100,7 +99,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

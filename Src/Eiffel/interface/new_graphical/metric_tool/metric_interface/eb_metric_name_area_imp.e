@@ -50,7 +50,7 @@ feature {NONE}-- Initialization
 			create description_frame
 			create description_text_read_only
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (name_area)
 			name_area.extend (name_lbl)
 			name_area.extend (name_text)
@@ -88,9 +88,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			name_area.set_minimum_height (22)
-			name_area.set_padding_width (3)
+			name_area.set_minimum_height (25)
+			name_area.set_padding (3)
 			name_area.disable_item_expand (name_lbl)
 			name_area.disable_item_expand (name_text)
 			name_area.disable_item_expand (name_text_frame)
@@ -102,13 +101,13 @@ feature {NONE}-- Initialization
 			name_text_frame.set_style (1)
 			name_text_read_only.set_minimum_width (150)
 			name_text_read_only.disable_edit
-			type_area.set_padding_width (3)
+			type_area.set_padding (3)
 			type_area.disable_item_expand (l_ev_cell_1)
 			type_area.disable_item_expand (l_ev_horizontal_box_1)
 			type_area.disable_item_expand (l_ev_cell_3)
 			type_area.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_cell_1.set_minimum_width (5)
-			l_ev_horizontal_box_1.set_padding_width (2)
+			l_ev_horizontal_box_1.set_padding (2)
 			l_ev_horizontal_box_1.disable_item_expand (type_lbl)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_horizontal_box_1.disable_item_expand (type_pixmap)
@@ -121,7 +120,7 @@ feature {NONE}-- Initialization
 			type_text.set_minimum_width (60)
 			type_text.align_text_left
 			l_ev_cell_3.set_minimum_width (5)
-			l_ev_horizontal_box_2.set_padding_width (2)
+			l_ev_horizontal_box_2.set_padding (2)
 			l_ev_horizontal_box_2.disable_item_expand (unit_lbl)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_4)
 			l_ev_horizontal_box_2.disable_item_expand (unit_pixmap)
@@ -132,8 +131,8 @@ feature {NONE}-- Initialization
 			unit_pixmap.set_minimum_width (16)
 			unit_pixmap.set_minimum_height (16)
 			unit_text.align_text_left
-			description_area.set_minimum_height (22)
-			description_area.set_padding_width (3)
+			description_area.set_minimum_height (25)
+			description_area.set_padding (3)
 			description_area.disable_item_expand (description_lbl)
 			description_lbl.set_text ("Description:")
 			description_lbl.set_minimum_width (65)
@@ -141,13 +140,13 @@ feature {NONE}-- Initialization
 			description_frame.set_minimum_height (22)
 			description_frame.set_style (1)
 			description_text_read_only.disable_edit
-			set_padding_width (5)
+			set_padding (5)
 			disable_item_expand (name_area)
 			disable_item_expand (description_area)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -185,7 +184,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 			create metric_archive_tab
 			create result_tab
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (metric_notebook)
 			metric_notebook.extend (metric_evaluation_tab)
 			metric_notebook.extend (new_metric_tab)
@@ -52,7 +52,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			metric_notebook.set_item_text (metric_evaluation_tab, "Metric Evaluation")
 			metric_notebook.set_item_text (new_metric_tab, "Metric Definition")
 			metric_notebook.set_item_text (metric_archive_tab, "Metric Archive")
@@ -60,7 +59,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -88,7 +87,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

@@ -50,7 +50,7 @@ feature {NONE}-- Initialization
 			create remove_all_btn
 			create address_manager_area
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (main_area)
 			main_area.extend (domain_area)
 			domain_area.extend (domain_type_area)
@@ -88,9 +88,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			domain_area.disable_item_expand (domain_type_area)
-			domain_type_area.set_padding_width (5)
+			domain_type_area.set_padding (5)
 			domain_manage_area.disable_item_expand (address_manager_area)
 			l_ev_vertical_box_1.disable_item_expand (toolbar_area)
 			toolbar_area.disable_item_expand (address_manager_toolbar)
@@ -102,7 +101,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -143,7 +142,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

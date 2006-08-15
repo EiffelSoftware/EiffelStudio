@@ -44,7 +44,7 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_1
 			create no_metric_lbl
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (toolbar_area)
 			toolbar_area.extend (new_metric_toolbar)
 			new_metric_toolbar.extend (new_metric_btn)
@@ -76,25 +76,24 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			toolbar_area.set_padding_width (3)
+			toolbar_area.set_padding (3)
 			toolbar_area.disable_item_expand (new_metric_toolbar)
 			toolbar_area.disable_item_expand (metric_definition_toolbar)
 			metric_definition_toolbar.disable_vertical_button_style
-			main_area.set_padding_width (10)
+			main_area.set_padding (10)
 			main_area.disable_item_expand (metric_selector_area)
 			metric_selector_area.set_minimum_width (250)
 			l_ev_vertical_box_1.set_border_width (10)
 			l_ev_vertical_box_1.disable_item_expand (no_metric_lbl)
 			no_metric_lbl.set_text ("No metric is selected.")
 			no_metric_lbl.align_text_left
-			set_padding_width (5)
+			set_padding (5)
 			set_border_width (5)
 			disable_item_expand (toolbar_area)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -133,7 +132,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

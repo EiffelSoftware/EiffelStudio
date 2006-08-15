@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 		do
 			create l_text
 			status_text.disable_edit
-			status_text.implementation.hide_border
 			status_text.set_background_color (l_text.background_color)
 			status_lbl.set_text (metric_names.t_status)
 		end

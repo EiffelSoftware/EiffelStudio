@@ -54,7 +54,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_2
 			create expression_text
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (main_area)
 			main_area.extend (definition_area)
 			definition_area.extend (combination_area)
@@ -96,9 +96,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			main_area.set_padding_width (10)
-			definition_area.set_padding_width (3)
+			main_area.set_padding (10)
+			definition_area.set_padding (3)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
 			combination_area.disable_item_expand (combination_toolbar_area)
@@ -125,7 +124,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -168,7 +167,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

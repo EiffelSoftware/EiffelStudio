@@ -37,7 +37,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_2
 			create regular_expr_checkbox
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (name_lbl)
 			extend (name_text)
 			extend (option_frame)
@@ -62,12 +62,11 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			name_lbl.set_text ("Name:")
 			name_lbl.align_text_left
 			name_text.set_minimum_width (100)
 			option_frame.set_text ("Options")
-			l_ev_vertical_box_1.set_padding_width (3)
+			l_ev_vertical_box_1.set_padding (3)
 			l_ev_vertical_box_1.set_border_width (5)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
@@ -79,14 +78,14 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (regular_expr_checkbox)
 			l_ev_cell_2.set_minimum_width (5)
 			regular_expr_checkbox.set_text ("Use regular expression")
-			set_padding_width (3)
+			set_padding (3)
 			disable_item_expand (name_lbl)
 			disable_item_expand (name_text)
 			disable_item_expand (option_frame)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -122,7 +121,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

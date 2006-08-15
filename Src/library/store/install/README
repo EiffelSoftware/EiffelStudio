@@ -11,7 +11,7 @@ Installation
 3. Install the C-libraries:
 
    Start your databases kernels if needed (most of the C-libraries are based
-   on DBMS libraries, but some of them use a precompiler which needs to acces
+   on DBMS libraries, but some of them use a precompiler which needs to access
    the database kernel).
 
 	type "finish_freezing" in the following directories:

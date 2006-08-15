@@ -473,6 +473,9 @@ feature -- Execution
 			wd: STRING
 			args: LIST [STRING]
 			use_argument: BOOLEAN
+			dir: DIRECTORY
+			msg: STRING
+			ok: BOOLEAN
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
 				show_warning_dialog (interface_names.e_external_command_is_running)
@@ -488,33 +491,47 @@ feature -- Execution
 				external_launcher.set_original_command_name (cl)
 
 				prepare_command (cl, wd)
-
-				if is_command_ok then
+				ok := is_command_ok
+				if ok then
 					create exec
-					od := exec.current_working_directory
-
-					if platform_constants.is_windows then
-						cmdexe := Execution_environment.get ("COMSPEC")
-						if cmdexe /= Void then
-								-- This allows the use of `dir' etc.
-							create {ARRAYED_LIST [STRING]}args.make (1)
-							args.extend ("/c%""+cl+"%"")
-							external_launcher.prepare_command_line (cmdexe, args, wd)
-							use_argument := True
-						else
-							external_launcher.prepare_command_line (cl, Void, wd)
-							use_argument := False
+					if working_directory /= Void and then not working_directory.is_empty then
+						od := exec.current_working_directory
+						exec.change_working_directory (working_directory)
+						if exec.return_code /= 0 then
+							create msg.make (100)
+							msg.append (interface_names.e_working_directory_invalid)
+							msg.append_character ('%"')
+							msg.append (working_directory)
+							msg.append ("%".%N")
+							msg.append (interface_names.e_external_command_not_launched)
+							show_warning_dialog (msg)
+							ok := False
 						end
-					else
-						create {ARRAYED_LIST [STRING]}args.make (2)
-						args.extend ("-c")
-						args.extend ("%'%'"+cl+"%'%'")
-						external_launcher.prepare_command_line ("/bin/sh", args, wd)
-						use_argument := True
+						exec.change_working_directory (od)
 					end
-					external_launcher.set_hidden (True)
-					external_launcher.launch (True, use_argument)
-					exec.change_working_directory (od)
+					if ok then
+						if platform_constants.is_windows then
+							cmdexe := Execution_environment.get ("COMSPEC")
+							if cmdexe /= Void then
+									-- This allows the use of `dir' etc.
+								create {ARRAYED_LIST [STRING]}args.make (1)
+								args.extend ("/c%""+cl+"%"")
+								external_launcher.prepare_command_line (cmdexe, args, wd)
+								use_argument := True
+							else
+								external_launcher.prepare_command_line (cl, Void, wd)
+								use_argument := False
+							end
+						else
+							create {ARRAYED_LIST [STRING]}args.make (2)
+							args.extend ("-c")
+							args.extend ("%'%'"+cl+"%'%'")
+							external_launcher.prepare_command_line ("/bin/sh", args, wd)
+							use_argument := True
+						end
+						external_launcher.set_hidden (True)
+						external_launcher.launch (True, use_argument)
+					end
 				end
 			end
 		end

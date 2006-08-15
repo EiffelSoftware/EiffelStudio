@@ -21,7 +21,7 @@ feature -- Initialization
 			cv_waiters_count := 0
 			cv_was_broadcast := False
 			create cv_sema.make (0)
-			create cv_waiters_lock
+			create cv_waiters_lock.make
 			create cv_waiters_done.make (False)
 			is_set := True
 		end

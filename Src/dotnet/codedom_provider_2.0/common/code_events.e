@@ -165,6 +165,8 @@ feature {NONE} -- Implementation
 						Log)
 			Result.extend (["File Deletion", "general", "File `{1}' was deleted", Information],
 						File_deletion)
+			Result.extend (["Consuming Assembly", "general", "Assembly located at `{1}' is being consumed (in cache: {2}, stale: {3})", Information],
+						Consuming_assembly)
 
 			-- Consumer Errors
 			Result.extend (["Missing Current Type", "consumer", "Construct is missing current type information: {1}", Error],

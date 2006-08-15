@@ -83,6 +83,9 @@ feature -- General Information
 	File_deletion: INTEGER is 2005
 			-- File is being deleted
 
+	Consuming_assembly: INTEGER is 2006
+			-- Assembly is being consumed
+
 feature -- Consumer Errors
 
 	Missing_current_type: INTEGER is 3001

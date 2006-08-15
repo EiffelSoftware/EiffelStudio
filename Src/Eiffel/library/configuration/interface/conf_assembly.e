@@ -188,6 +188,13 @@ feature -- Access queries
 			end
 		end
 
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+			-- Special classes name mapping (eg. STRING => STRING_32).
+		once
+				-- there are no mappings for assemblies
+			create Result.make (0)
+		end
+
 	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type] is
 			-- Get class by name.
 		local

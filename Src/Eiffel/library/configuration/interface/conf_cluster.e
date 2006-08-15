@@ -207,8 +207,7 @@ feature -- Access queries
 				end
 			end
 			Result := cached_mapping
-		ensure
-			Result_not_void: Result /= Void
+		ensure then
 			Result_cached: Result = cached_mapping
 		end
 

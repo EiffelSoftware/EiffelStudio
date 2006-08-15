@@ -160,6 +160,12 @@ feature -- Access queries
 			Result := overriders /= Void and then not overriders.is_empty
 		end
 
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+			-- Special classes name mapping (eg. STRING => STRING_32).
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
@@ -177,8 +183,17 @@ feature -- Access queries
 
 	get_class_options (a_class: STRING): CONF_OPTION is
 			-- Get the options for `a_class'.
+		local
+			l_name: STRING
+			l_map: like mapping
 		do
-			Result := class_options.item (a_class)
+			l_map := mapping
+			if l_map.has (a_class) then
+				l_name := l_map.found_item
+			else
+				l_name := a_class
+			end
+			Result := class_options.item (l_name)
 			if Result /= Void then
 				Result := Result.twin
 				Result.merge (options)

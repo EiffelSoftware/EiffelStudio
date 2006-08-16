@@ -54,13 +54,14 @@ feature -- Access
 			-- Type of parent in a precursor call if any.
 
 	enlarged: CALL_ACCESS_B is
-			-- Redefined only for type check
+			-- Redefined only for changing the return type.
 		do
 			Result := Current
 		end
 
 	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `type_i'.
+			-- Redefined because we want to change the return type.
 		do
 				-- Fallback to default implementation.
 			Result := enlarged

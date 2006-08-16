@@ -26,9 +26,6 @@ inherit
 		end
 
 	SHARED_EDITOR_FONT
-		redefine
-			line_height
-		end
 
 	SHARED_EDITOR_DATA
 
@@ -642,13 +639,6 @@ feature{NONE} -- Implementation
 
 	last_picked_item: EV_GRID_ITEM
 			-- Last picked item	
-
-	line_height: INTEGER is
-			-- Line height
-		do
-			Result := Precursor
-			Result := Result + Result // 5
-		end
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions performed when drop occurs on current view	

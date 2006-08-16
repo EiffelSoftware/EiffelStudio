@@ -252,6 +252,54 @@ feature -- Status Report
 			end
 		end
 
+	is_assembly_stale (a_path: STRING): BOOLEAN is
+			-- Is assembly `a_path' out of date
+			-- Returns false if assembly has not already been consumed.
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		local
+			l_ca: CONSUMED_ASSEMBLY
+			l_consume_path: STRING
+			l_file_info: FILE_INFO
+			l_dir_info: DIRECTORY_INFO
+			l_so: SYSTEM_OBJECT
+			l_new_ca: CONSUMED_ASSEMBLY
+			l_reason: STRING
+		do
+			l_ca := consumed_assembly_from_path (a_path)
+			if l_ca /= Void and then l_ca.is_consumed then
+				l_consume_path := absolute_assembly_path_from_consumed_assembly (l_ca)
+
+				create l_dir_info.make (l_consume_path)
+				create l_file_info.make (l_ca.location)
+				Result := not l_dir_info.exists or {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+				if not Result then
+						-- now check in consumer is newer
+					l_so := Current
+					create l_file_info.make (l_so.get_type.assembly.location)
+					Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+					if Result then
+						l_reason := "The consumer is newer than the generate contents."
+					end
+				else
+					l_reason := "The contents of the assembly manifest has changed."
+				end
+			end
+
+			debug ("assemblies_are_never_stale")
+				Result := False
+			end
+
+			if Result then
+				check
+					l_reason_not_void: l_reason /= Void
+				end
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is considered stale.", a_path))
+				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("%TReason: {0}.", l_reason))
+			end
+		end
+
 feature {CACHE_WRITER} -- Implementation
 
 	info: CACHE_INFO is

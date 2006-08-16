@@ -228,18 +228,36 @@ feature -- Basic operations
 									first_row_index := row_counter
 									first_row_index_set := True
 								end
-								if first_row_index_set then
+--								if first_row_index_set then
+--									Result.extend (row_counter)
+--								end
+
+--								if not last_row_index_set and then (invalid_y_end) < i + current_height then
+--									last_row_index := row_counter
+--									last_row_index_set := True
+--								end
+--								if current_row /= Void then
+--										-- If the mode is partially dynamic and a tree is enabled, it
+--										-- is possible that the current row may not exist.
+--									if current_row.subrow_count > 0 and not current_row.is_expanded then
+--										if not first_row_index_set then
+--											skipped_rows := skipped_rows + current_row.subrow_count_recursive
+--										end
+--										row_counter := row_counter + current_row.subrow_count_recursive
+--									end
+--								end
+								if first_row_index_set and current_row.is_show_requested then
 									Result.extend (row_counter)
 								end
 
-								if not last_row_index_set and then (invalid_y_end) < i + current_height then
+								if current_row.is_show_requested and then (not last_row_index_set and then (invalid_y_end) < i + current_height) then
 									last_row_index := row_counter
 									last_row_index_set := True
 								end
 								if current_row /= Void then
 										-- If the mode is partially dynamic and a tree is enabled, it
 										-- is possible that the current row may not exist.
-									if current_row.subrow_count > 0 and not current_row.is_expanded then
+									if current_row.subrow_count > 0 and not current_row.is_expanded or not current_row.is_show_requested then
 										if not first_row_index_set then
 											skipped_rows := skipped_rows + current_row.subrow_count_recursive
 										end
@@ -527,7 +545,6 @@ feature -- Basic operations
 			redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height, grid.drawable, grid.viewport, Void)
 		end
 
-
 	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: EV_GRID_LOCKED_I) is
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the `drawable' widget of `grid'.
@@ -584,6 +601,7 @@ feature -- Basic operations
 			l_x_start, l_x_end: INTEGER
 			current_horizontal_pos: INTEGER
 			loop_current_row, loop_parent_row: EV_GRID_ROW_I
+			loop_parent_row_last_displayed_subrow: EV_GRID_ROW
 			are_tree_node_connectors_shown: BOOLEAN
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
@@ -597,6 +615,8 @@ feature -- Basic operations
 			v_y: INTEGER
 			locked_column: EV_GRID_LOCKED_COLUMN_I
 			locked_row: EV_GRID_LOCKED_ROW_I
+			l_visible_index, l_next_visible_index, l_subrow_index: INTEGER
+			l_parent_row: EV_GRID_ROW
 		do
 			if not grid.is_locked then
 				-- Perform no re-drawing if the update of the grid is locked.
@@ -702,7 +722,7 @@ feature -- Basic operations
 								current_row := grid.row_internal (current_row_index)
 								current_row_list := grid_rows_data_list @ (current_row_index)
 
-								if grid.is_row_height_fixed and not is_tree_enabled then
+								if not grid.uses_row_offsets then
 									current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
 									current_row_height := row_height
 								else
@@ -1003,7 +1023,19 @@ feature -- Basic operations
 															if current_horizontal_pos < column_offsets @ (node_index + 1) then
 																	-- Draw the vertical line at the node, connecting the top and bottom
 																	-- of the tree row.
-																if parent_row_i.subrow_count_recursive > ((current_row.index + current_row.subrow_count_recursive) - parent_row_i.index) then
+
+																l_visible_index := grid.row_indexes_to_visible_indexes.i_th (current_row.index) + 1
+
+																if l_visible_index < grid.visible_row_count then
+																	l_next_visible_index := grid.visible_indexes_to_row_indexes.i_th (l_visible_index + 1)
+																else
+																	-- In this case `l_visible_index' was the final row currently visible.
+																	-- We cannot retrieve `l_next_visible_index' from `grid.visible_indexes_to_row_indexes' in this case
+																	-- as it is possible that the index there is corrupt as we do not clear the unused slots for speed.
+																	l_next_visible_index := 0
+																end
+
+																if (l_next_visible_index > 0) and then (parent_row_i = grid.row_internal (l_next_visible_index).parent_row_i) then
 																		-- In this case we are not the final row in the parents structure, so we must draw from the top of
 																		-- the row to the bottom.
 																	if current_row.is_expandable then
@@ -1041,10 +1073,23 @@ feature -- Basic operations
 																		-- It is possible that the current vertical line segment that we must draw is outside the right hand
 																		-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
 																		-- drawing.
+																	l_parent_row := loop_parent_row.interface
+																	l_subrow_index := l_parent_row.subrow_count
+																	loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
 
-																	if loop_parent_row.subrow_count_recursive > ((loop_current_row.index + loop_current_row.subrow_count_recursive) - loop_parent_row.index) then
-																			-- If the current item is the last one contained within the parent then a line must be drawn. As this is
-																			-- computed in a nested fashion, the subnode count is used recursively.
+																	if not loop_parent_row_last_displayed_subrow.is_show_requested then
+																			-- The final subrow of the parent row is not displayed, so we must iterate until we find the last that is.
+																		from
+																		until
+																			loop_parent_row_last_displayed_subrow.is_show_requested
+																		loop
+																			l_subrow_index := l_subrow_index - 1
+																			loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
+																		end
+																	end
+
+																	if loop_parent_row_last_displayed_subrow.index > loop_current_row.index then
+																			-- If the current item is not the last visible item contained within the parent then a line must be drawn.
 
 																		item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
 																			-- Draw the vertical line from the bottom of the item to the top.
@@ -1195,8 +1240,8 @@ feature -- Basic operations
 							drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, 0, item_buffer_pixmap, temp_rectangle)
 						end
 					end
-					if current_row = Void or else current_row.index >= row_count - grid.hidden_node_count then
-						if grid.is_row_height_fixed and not is_tree_enabled then
+					if current_row = Void or else current_row.index >= grid.visible_row_count then
+						if not grid.uses_row_offsets then
 								-- Special handling for fixed row heights as `row_offsets' does not exist.
 							v_y := (row_height * (row_count))
 							rectangle_height := internal_client_height - (v_y - internal_client_y)

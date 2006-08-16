@@ -22,7 +22,7 @@ inherit
 			is_in_default_state,
 			parent
 		end
-	
+
 	EV_MENU_ITEM_LIST
 		undefine
 			initialize
@@ -76,7 +76,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_MENU_ITEM_LIST}
 		end
-		
+
 	one_selected_radio_item_per_separator: BOOLEAN is
 			-- Is there at most one selected radio item between
 			-- consecutive separators?
@@ -86,20 +86,19 @@ feature {NONE} -- Contract support
 			index_not_changed: index = old index
 		end
 
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	implementation: EV_MENU_I	
+	implementation: EV_MENU_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
-	
+
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_IMP} implementation.make (Current)
 		end
-		
+
 invariant
 	one_selected_radio_item_per_separator: one_selected_radio_item_per_separator
 

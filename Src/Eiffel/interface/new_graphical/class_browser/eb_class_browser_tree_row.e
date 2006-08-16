@@ -132,13 +132,13 @@ feature -- Access
 				else
 					create {EB_GRID_FULL_CLASS_STYLE}l_style
 				end
-				l_style.enable_starred_class_name
 				create class_item_internal.make (class_item.class_c, l_style)
 				if is_collapsed then
 					class_item_internal.set_tooltip (interface_names.f_go_to_first_occurrence)
 				else
 					class_item_internal.set_tooltip ("")
 				end
+				class_item_internal.enable_pixmap
 			end
 			Result := class_item_internal
 		ensure

@@ -3,17 +3,15 @@
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="obsolete_feature" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
 		</option>
 		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 	</target>
 	<target name="xml" extends="common">
-		<option>
-			<warning name="export_class_missing" enabled="false"/>
-			<warning name="obsolete_feature" enabled="false"/>
-			<warning name="syntax" enabled="false"/>
-		</option>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

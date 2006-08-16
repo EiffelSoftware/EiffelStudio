@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 
 	main_menu: WEL_MENU is
 			-- Window's menu
-		once 
+		once
 				-- create the menu from the resource file.
 			create Result.make_by_id (Id_menu_application)
 		ensure
@@ -91,16 +91,16 @@ feature {NONE} -- Implementation
 
 	Title: STRING is "WEL Bitmap Viewer"
 			-- Window's title
-	
+
 	All_children: LINKED_LIST [WEL_MDI_CHILD_WINDOW] is
 			-- A list of all the child windows to avoid the strong
 			-- possibility that they will be garbage collected.
 		once
 			create Result.make
 		end
-		
+
 feature {CHILD_WINDOW} -- Implementation
-		
+
 	remove_child_reference (a_child: WEL_MDI_CHILD_WINDOW) is
 			-- Remove `a_child' from `All_children'.
 		local

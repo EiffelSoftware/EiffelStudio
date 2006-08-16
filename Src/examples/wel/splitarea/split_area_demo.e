@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 			create char_format.make
 			char_format.set_face_name ("Arial")
-			char_format.set_height (25)
+			char_format.set_height_in_points (25)
 
 			create split_area.make (Current, "", 0, 0, 440, 390, 220)
 

@@ -51,6 +51,7 @@ feature -- Basic Operations
 			buffer, displayed_text: STRING
 			a: ANY
 			p: POINTER_REF
+			l_null: CHARACTER
 		do
 			create buffer.make (Buffer_size)
 			create rich_edit.make (Current, "", 0, 0, width, height, Rich_edit_id)
@@ -62,7 +63,7 @@ feature -- Basic Operations
 			until
 				stream.end_of_stream
 			loop
-				(p + Buffer_size).memory_copy ($Null_character, 1) -- Add ending numm character before conversion
+				(p + Buffer_size).memory_copy ($l_null, 1) -- Add ending numm character before conversion
 				create displayed_text.make_from_c (p.item)
 				rich_edit.insert_text (displayed_text)
 				stream.read (p.item, Buffer_size - 1)
@@ -84,7 +85,7 @@ feature {NONE} -- Message Processing
 			rich_edit.set_width (a_width)
 			rich_edit.set_height (a_height)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	rich_edit: WEL_RICH_EDIT
@@ -95,12 +96,6 @@ feature {NONE} -- Implementation
 
 	Buffer_size: INTEGER is 10
 			-- Size of buffer used to read stream
-
-	Null_character: CHARACTER is
-			-- Null character
-		do
-			Result := '%U'
-		end
 
 invariant
 	non_void_stream: stream /= Void

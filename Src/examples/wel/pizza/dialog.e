@@ -121,7 +121,7 @@ feature
 	on_ok is
 		local
 			i: INTEGER
-			sel_string: ARRAY [STRING]
+			sel_string: ARRAY [STRING_32]
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out

@@ -76,7 +76,7 @@ feature -- Status Setting
 		do
 			text := a_text
 			implementation.string_size_changed
-			if parent /= Void then
+			if parent /= Void and then not parent.is_destroyed then
 				parent.implementation.redraw_item (implementation)
 			end
 		ensure

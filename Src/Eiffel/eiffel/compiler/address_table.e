@@ -467,10 +467,10 @@ feature {NONE} -- Generation
 			l_feature_id, l_static_type_id: INTEGER
 			l_fptr_type, l_sep: STRING
 		do
-			buffer.put_string ("%N%Nstatic fnptr *feif_address_table[] = {%N")
+			buffer.put_string ("%N%Nstatic fnptr feif_address_table[] = {%N")
 			from
 				start
-				l_fptr_type := "(char *(*)())"
+				l_fptr_type := "(fnptr)"
 				l_sep := ",%N"
 			until
 				after
@@ -503,7 +503,7 @@ feature {NONE} -- Generation
 				end
 				forth
 			end
-			buffer.put_string ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
+			buffer.put_string ("};%N%Nfnptr *egc_address_table_init = feif_address_table;%N%N")
 		end
 
 	arg_names (nb: INTEGER): ARRAY [STRING] is

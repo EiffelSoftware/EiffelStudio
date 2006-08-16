@@ -6,7 +6,7 @@ indexing
 	date        : "$Date$"
 	revision    : "$Revision$"
 
-deferred 
+deferred
 class
 	EB_EXPLORER_BAR_ATTACHABLE
 
@@ -26,7 +26,7 @@ feature -- Attachement
 		ensure
 			explorer_bar_item_exists: explorer_bar_item /= Void
 		end
-		
+
 	unattach_from_explorer_bar is
 		require
 			attached: explorer_bar_item /= Void
@@ -39,13 +39,16 @@ feature -- Attachement
 		ensure
 			explorer_bar_item = Void
 		end
-		
+
 	change_attach_explorer (a_bar: EB_EXPLORER_BAR) is
 		require
 			a_bar_exists: a_bar /= Void
 			attached: explorer_bar_item /= Void
 		do
-			if a_bar /= explorer_bar_item.parent then
+			if
+				a_bar /= explorer_bar_item.parent
+				or else not a_bar.has_item (explorer_bar_item)
+			then
 				unattach_from_explorer_bar
 				attach_to_explorer_bar (a_bar)
 			end

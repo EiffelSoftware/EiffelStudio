@@ -725,8 +725,8 @@ feature -- Status setting
 			debugging_window.left_panel.block
 			debugging_window.right_panel.block
 
-				-- Free and recycle tools
-			recycle_tools
+				-- Free and reset tools
+			reset_tools
 
 			debugging_window.right_panel.unblock
 			debugging_window.left_panel.unblock
@@ -768,6 +768,16 @@ feature -- Status setting
 			call_stack_tool.recycle
 			objects_tool.recycle
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)
+			application.recycle
+		end
+
+	reset_tools is
+			-- Reset tools to free unused data
+		do
+			threads_tool.reset_tool
+			call_stack_tool.reset_tool
+			objects_tool.reset_tool
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.reset_tool)
 			application.recycle
 		end
 

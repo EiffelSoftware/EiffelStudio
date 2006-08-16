@@ -43,6 +43,8 @@ inherit
 
 	SHARED_WORKBENCH
 
+	EB_CONSTANTS
+
 create
 	make,
 	make_from_string,
@@ -544,7 +546,7 @@ feature -- Properties
 			Result.append_character ('&')
 			Result.append (index.out)
 			Result.append_character (' ')
-			Result.append (name)
+			Result.append (interface_names.escaped_string_for_menu_item (name))
 			Result.append (Tabulation)
 			Result.append ((create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index).out)
 		end

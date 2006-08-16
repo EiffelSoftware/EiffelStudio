@@ -229,7 +229,7 @@ rt_public int egc_type_of_gc;
 rt_public fnptr *egc_frozen;			
 rt_public int *egc_fpatidtab;		
 rt_public struct eif_opt *egc_foption;	
-rt_public fnptr **egc_address_table;	
+rt_public fnptr *egc_address_table;	
 rt_public struct p_interface *egc_fpattern;
 rt_public void (*egc_einit)(void);	
 rt_public void (*egc_tabinit)(void);	

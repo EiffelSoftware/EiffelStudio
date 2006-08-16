@@ -327,7 +327,11 @@ feature {EV_ANY_I} -- Implementation
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
 			abstract_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE
 			text_component: EV_TEXT_COMPONENT_IMP
+			l_pebble: like pebble
 		do
+			check
+				original_top_level_window_imp_not_void: original_top_level_window_imp /= Void
+			end
 			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
 				-- debug when the capture is enabled)
@@ -364,6 +368,7 @@ feature {EV_ANY_I} -- Implementation
 			application_imp.set_transport_just_ended
 
 			create env
+			l_pebble := pebble
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -376,23 +381,23 @@ feature {EV_ANY_I} -- Implementation
 				target := pointed_target
 					-- Retrieve `target'.
 				if target /= Void then
-					if target.drop_actions.accepts_pebble (pebble) then
+					if target.drop_actions.accepts_pebble (l_pebble) then
 						application_imp.enable_drop_actions_executing
-						target.drop_actions.call ([pebble])
+						target.drop_actions.call ([l_pebble])
 							-- If there is a target then execute the drop
 							-- actions for `target'.
 
-						env.application.drop_actions.call ([pebble])
+						env.application.drop_actions.call ([l_pebble])
 							-- Execute drop_actions for the application.
 						application_imp.disable_drop_actions_executing
 					else
-						call_cancel_actions (pebble)
+						call_cancel_actions (l_pebble)
 					end
 				else
-					call_cancel_actions (pebble)
+					call_cancel_actions (l_pebble)
 				end
 			else
-				call_cancel_actions (pebble)
+				call_cancel_actions (l_pebble)
 			end
 
 			abstract_pick_and_dropable ?= target

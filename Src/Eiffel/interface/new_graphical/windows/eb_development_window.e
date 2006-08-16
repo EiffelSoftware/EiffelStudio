@@ -1765,6 +1765,11 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
+				-- Override scan
+			command_menu_item := override_scan_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			project_menu.extend (command_menu_item)
+
 				-- Freeze
 			command_menu_item := Freeze_project_cmd.new_menu_item
 			add_recyclable (command_menu_item)

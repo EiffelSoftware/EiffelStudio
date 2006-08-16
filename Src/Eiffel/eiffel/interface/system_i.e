@@ -1125,6 +1125,9 @@ end
 				else
 						-- Let the configuration system check for compiled classes that have been modified.
 					create l_vis_modified.make (universe.conf_state)
+					if compilation_modes.is_override_scan then
+						l_vis_modified.enable_override_only
+					end
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 

@@ -62,6 +62,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Override_scan_cmd: EB_OVERRIDE_SCAN_COMMAND is
+			-- Command to check override clusters for changes and recompile.
+		once
+			create Result.make
+			Result.disable_sensitive
+		end
+
 	Melt_project_cmd: EB_MELT_PROJECT_COMMAND is
 			-- Command to melt a system.
 		once

@@ -1089,20 +1089,6 @@ feature {NONE} -- open new class
 					from
 						if is_general_group_acceptable then
 							cl := Universe.groups
-								-- Filter out precompiled items.
-							if not cl.is_empty then
-								from
-									cl.start
-								until
-									cl.after
-								loop
-									if cl.item.is_precompile then
-										cl.remove
-									else
-										cl.forth
-									end
-								end
-							end
 						else
 							cl := Universe.target.clusters.linear_representation
 						end

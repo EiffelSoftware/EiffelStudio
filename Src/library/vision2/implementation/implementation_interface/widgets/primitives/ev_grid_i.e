@@ -2050,12 +2050,10 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	viewable_row_indexes_in_tree_structure: ARRAYED_LIST [INTEGER] is
+	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
 			-- Row indexes that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
-		require
-			is_tree_enabled: is_tree_enabled
 		do
 			perform_vertical_computation
 			if visible_indexes_to_row_indexes /= Void then
@@ -2712,11 +2710,13 @@ feature -- Removal
 			internal_row_data.wipe_out
 			rows.wipe_out
 			columns.wipe_out
-			set_vertical_computation_required (1)
-			set_horizontal_computation_required (1)
-			recompute_vertical_scroll_bar
-			recompute_horizontal_scroll_bar
-			redraw_client_area
+			if is_displayed then
+				set_vertical_computation_required (1)
+				set_horizontal_computation_required (1)
+				recompute_vertical_scroll_bar
+				recompute_horizontal_scroll_bar
+				redraw_client_area
+			end
 			create physical_column_indexes_internal.make (0)
 			last_vertical_scroll_bar_value := 0
 			last_horizontal_scroll_bar_value := 0
@@ -3362,8 +3362,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	redraw_client_area is
 			-- Redraw complete visible client area of `Current'.
 		do
-			drawable.redraw
-			redraw_locked
+			if is_displayed then
+				drawable.redraw
+				redraw_locked
+			end
 		end
 
 	redraw_column (a_column: EV_GRID_COLUMN_I) is
@@ -4011,6 +4013,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_box.extend (header_viewport)
 			vertical_box.disable_item_expand (header_viewport)
 			create viewport
+			viewport.resize_actions.extend (agent viewport_resized)
 			create static_fixed
 
 			static_fixed.set_minimum_size (32000, 32000)
@@ -4043,7 +4046,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			viewport.extend (fixed)
 			fixed.extend (drawable)
 			extend (horizontal_box)
-			viewport.resize_actions.extend (agent viewport_resized)
 
 				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.
 			drawable.pointer_motion_actions.extend (agent pointer_motion_received (?, ?, ?, ?, ?, ?, ?))
@@ -4111,7 +4113,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- Resize `viewport' within `static_fixed' as the viewable
 			-- area of `Current' has changed.
 		do
-			static_fixed.set_item_size (viewport, a_width, a_height)
+			static_fixed.implementation.set_item_size (viewport, a_width, a_height)
 		end
 
 	static_fixed_viewport: EV_VIEWPORT
@@ -5120,15 +5122,17 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			a_sel_row: EV_GRID_ROW
 			items_spanning: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
+			l_previously_expanded, l_ignore_column_navigation: BOOLEAN
 		do
-			if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
-				key_press_actions_internal.call ([a_key])
-			end
-
 			if is_selection_keyboard_handling_enabled then
 					-- Handle the selection events
 				if is_row_selection_enabled then
 					if last_selected_row /= Void then
+						if last_selected_row.subrow_count > 0 then
+								-- Record last selected rows expansion status before the key events
+								-- are fired.
+							l_previously_expanded := last_selected_row.is_expanded
+						end
 						l_index_of_first_item := last_selected_row.index_of_first_item
 						if l_index_of_first_item /= 0 then
 							prev_sel_item := last_selected_row.item (l_index_of_first_item)
@@ -5136,6 +5140,20 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					end
 				elseif last_selected_item /= Void then
 					prev_sel_item := last_selected_item.interface
+				end
+
+						-- Call key actions.
+				if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
+					key_press_actions_internal.call ([a_key])
+				end
+
+					-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
+				if last_selected_row /= Void and then last_selected_row.subrow_count > 0 then
+					if l_previously_expanded then
+						l_ignore_column_navigation := not last_selected_row.is_expanded
+					else
+						l_ignore_column_navigation := last_selected_row.is_expanded
+					end
 				end
 						-- We always want to find an item above or below for row selection
 				if prev_sel_item /= Void then
@@ -5154,7 +5172,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
 							end
-						else
+						elseif not l_ignore_column_navigation then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 							if not items_spanning.is_empty then
 								(columns @ (items_spanning @ 1)).ensure_visible
@@ -5168,8 +5186,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
 							end
-
-						else
+						elseif not l_ignore_column_navigation then
+								-- If the row has children then
 							if virtual_x_position > 0 then
 								items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
 								if not items_spanning.is_empty then
@@ -5199,6 +5217,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						last_selected_row := a_sel_item.row.implementation
 					end
 					last_selected_item := a_sel_item.implementation
+				end
+			else
+				if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
+					key_press_actions_internal.call ([a_key])
 				end
 			end
 		end
@@ -5957,6 +5979,32 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			if col_index < row_data.count then
 				Result := row_data @ (col_index)
 			end
+		end
+
+	uses_row_offsets: BOOLEAN is
+			-- Does `Current' rely on `row_offsets' to calculate the current position of a row?
+			-- If not, then it is possible to calculate a rows' position based on the row heights
+			-- and it's index. `row_offsets' are only required when variable row heights, tree functionality or
+			-- hidden nodes are enabeld in the grid.
+		do
+			Result := not is_row_height_fixed or is_tree_enabled or non_displayed_row_count > 0
+		end
+
+	non_displayed_row_count: INTEGER
+		-- Number of rows hidden in `Current'. Note that this is simply those that are flagged
+		-- as not `is_displayed'. The actual visibility which is also based on expanded tree
+		-- information has no effect on this value. Use `computed_visible_row_count' to determine
+		-- the true number of rows that are actually displayed.
+
+	adjust_non_displayed_row_count (an_adjustment: INTEGER) is
+			-- Adjust `non_displayed_row_count' by `an_adjustment'.
+		require
+			valid_adjustment: non_displayed_row_count + an_adjustment >= 0
+		do
+			non_displayed_row_count := non_displayed_row_count + an_adjustment
+		ensure
+			non_displayed_row_count_adjusted: non_displayed_row_count = old non_displayed_row_count + an_adjustment
+			non_displayed_row_count_not_negative: non_displayed_row_count >= 0
 		end
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation

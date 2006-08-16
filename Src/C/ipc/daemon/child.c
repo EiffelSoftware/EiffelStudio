@@ -689,7 +689,7 @@ rt_private int comfort_child(STREAM *sp)
 
 	tm.tv_sec = TIMEOUT;				/* Do not hang on the select */
 	tm.tv_usec = 0;
-	if (-1 == select(32, (Select_fd_set_t) 0, &mask, (Select_fd_set_t) 0, &tm)) {
+	if (-1 == select(writefd(sp) + 1, (Select_fd_set_t) 0, &mask, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");
 #endif
@@ -741,7 +741,7 @@ rt_private int comfort_child(STREAM *sp)
 	FD_SET(readfd(sp), &mask);			/* We want to read from child */
 	tm.tv_sec = TIMEOUT;				/* Child should answer quickly */
 	tm.tv_usec = 0;
-	if (-1 == select(32, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
+	if (-1 == select(readfd(sp) + 1, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
 #endif /* NOT EIF_WINDOWS */
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");

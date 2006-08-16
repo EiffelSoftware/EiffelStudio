@@ -23,24 +23,21 @@ feature -- Calls
 	apply is
 			-- Call procedure with `args' as last set.
 		do
-			fast_call (encaps_rout_disp, calc_rout_addr, closed_operands, operands, class_id, feature_id, 
-					   is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, open_map)
+			call (operands)
 		end
 
 	call (args: OPEN_ARGS) is
 		do
-			fast_call (encaps_rout_disp, calc_rout_addr, closed_operands, args, class_id, feature_id, 
-				       is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, open_map)
+			fast_call (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
+				       is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
 		end
 
 feature {NONE} -- Implementation
-	
-	fast_call (a_rout_disp, a_calc_rout_addr: POINTER
-		       a_closed_operands: like closed_operands; a_operands: like operands
-			   a_class_id, a_feature_id: INTEGER; a_is_precompiled, a_is_basic, a_is_inline_agent: BOOLEAN
-			   a_closed_count, a_open_count: INTEGER; a_open_map: like open_map) 
-		is
-			-- Internall_assert
+
+	fast_call (a_rout_disp, a_calc_rout_addr: POINTER;
+		       a_closed_operands: POINTER; a_operands: POINTER;
+			   a_class_id, a_feature_id: INTEGER; a_is_precompiled, a_is_basic, a_is_inline_agent: BOOLEAN;
+			   a_closed_count, a_open_count: INTEGER; a_open_map: POINTER)
 		external
 			"C inline use %"eif_rout_obj.h%""
 		alias
@@ -80,12 +77,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class PROCEDURE
 

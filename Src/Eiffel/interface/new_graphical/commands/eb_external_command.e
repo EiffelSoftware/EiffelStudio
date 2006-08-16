@@ -473,7 +473,6 @@ feature -- Execution
 			wd: STRING
 			args: LIST [STRING]
 			use_argument: BOOLEAN
-			dir: DIRECTORY
 			msg: STRING
 			ok: BOOLEAN
 		do

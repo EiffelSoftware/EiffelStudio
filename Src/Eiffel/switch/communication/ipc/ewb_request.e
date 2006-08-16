@@ -213,21 +213,25 @@ feature {NONE} -- Implementation
 		local
 			bp: BREAKPOINT
 			to_do: INTEGER
+			has_to_do: BOOLEAN
 		do
-			if not bpts.has_enabled_breakpoints then
+			from
+				bpts.start
+			until
+				bpts.after
+			loop
+				bp := bpts.item_for_iteration
+				to_do := bp.update_status
+				if to_do /= bp.breakpoint_do_nothing then
+					has_to_do := True
+				end
+				send_breakpoint (bp, to_do)
+				bpts.forth
+			end
+			if not has_to_do then
 				clear_application_breakpoints_table
 			else
 				breakpoints_table_cleared := False
-				from
-					bpts.start
-				until
-					bpts.after
-				loop
-					bp := bpts.item_for_iteration
-					to_do := bp.update_status
-					send_breakpoint(bp, to_do)
-					bpts.forth
-				end
 			end
 		end
 

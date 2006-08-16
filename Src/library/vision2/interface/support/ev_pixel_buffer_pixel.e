@@ -31,7 +31,6 @@ feature -- Initialization
 			end
 		end
 
-
 feature -- Access
 
 	red: NATURAL_8

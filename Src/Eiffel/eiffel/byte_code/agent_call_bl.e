@@ -84,6 +84,16 @@ feature -- Code generation
 				register.print_register
 				buffer.put_character (';')
 				buffer.put_new_line
+					-- If function return type is a reference we need an aging test.
+				if register.c_type.is_pointer then
+					buffer.put_string ("RTAR(")
+					reg.print_register
+					buffer.put_string (gc_comma)
+					register.print_register
+					buffer.put_character (')')
+					buffer.put_character (';')
+					buffer.put_new_line
+				end
 			end
 		end
 

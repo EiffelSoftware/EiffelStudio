@@ -48,7 +48,7 @@ feature -- C code generation
 			Result.set_info (info)
 			Result.set_type (type)
 			if call /= Void then
-				Result.set_call (call.enlarged)
+				Result.set_call (call.enlarged_on (type))
 			end
 			Result.set_creation_instruction (is_creation_instruction)
 		end

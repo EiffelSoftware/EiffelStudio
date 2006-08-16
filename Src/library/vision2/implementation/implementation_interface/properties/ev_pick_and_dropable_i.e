@@ -270,14 +270,12 @@ feature {EV_ANY_I} -- Implementation
 					target.drop_actions.accepts_pebble (pebble)
 				)
 			then
---				last_pointed_target := target
 				if accept_cursor /= Void then
 					internal_set_pointer_style (accept_cursor)
 				else
 					internal_set_pointer_style (default_accept_cursor)
 				end
 			else
---				last_pointed_target := Void
 				if deny_cursor /= Void then
 					internal_set_pointer_style (deny_cursor)
 				else
@@ -311,9 +309,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Default target at mouse position.
 		deferred
 		end
-
---	last_pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE
---			-- Last target at mouse position
 
 	draw_rubber_band  is
 			-- Erase previously drawn rubber band.

@@ -139,6 +139,7 @@ feature -- Access
 					end
 				end
 				create feature_item_internal.make (feature_item, l_style)
+				feature_item_internal.enable_pixmap
 				feature_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
 			end
 			Result := feature_item_internal

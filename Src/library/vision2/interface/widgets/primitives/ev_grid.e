@@ -1975,15 +1975,14 @@ feature -- Status report
 			tree_not_enabled_implies_visible_rows_contiguous: row_count > 0 and then not is_tree_enabled implies Result.last - Result.first = Result.count - 1
 		end
 
-	viewable_row_indexes_in_tree_structure: ARRAYED_LIST [INTEGER] is
+	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
 			-- Indexes of all rows that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
 		require
 			not_destroyed: not is_destroyed
-			is_tree_enabled: is_tree_enabled
 		do
-			Result := implementation.viewable_row_indexes_in_tree_structure
+			Result := implementation.viewable_row_indexes
 		ensure
 			result_not_void: Result /= Void
 		end

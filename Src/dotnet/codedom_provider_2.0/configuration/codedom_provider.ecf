@@ -4,7 +4,7 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 	 name="eiffelsoftware.codedom" uuid="CB76EC4F-25F4-4A53-9D2A-54135BB271B5">
-	<target name="common">
+	<target name="codedom_provider_common">
 		<description>
 			Codedom provider
 		</description>
@@ -36,68 +36,10 @@
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf"/>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.ecf" readonly="true">
-			<option namespace="EiffelSoftware.Library.Merger" />
-		</library>
-		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="compiler_parser" location="$EIFFEL_SRC\eiffel\parser\parser.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<library name="helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="true">
-			<option namespace="EiffelSoftware.CodeDom.Support" />
-		</library>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
-
-		<cluster name="interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom" />
-		</cluster>
-		<cluster name="code_generator" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.CodeGenerator" />
-			<file_rule>
-				<exclude>/interface$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="code_generator_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
-		</cluster>
-		<cluster name="compiler" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Compiler" />
-			<file_rule>
-				<exclude>/interface$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="compiler_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
-		</cluster>
-		<cluster name="parser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser" recursive="true">
-			<option namespace="EiffelSoftware.CodeDom.Parser">
-			</option>
-			<file_rule>
-				<exclude>/interface$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="parser_interface" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface">
-			<option namespace="EiffelSoftware.CodeDom" />
-		</cluster>
-		
+		<library name="codedom_provider" location="codedom_provider_library.ecf" readonly="true"/>
 	</target>
 
-	<target name="debug" extends="common">
+	<target name="codedom_provider_debug" extends="codedom_provider_common">
 		<option debug="true">
 			<debug name="log_exceptions" enabled="true"/>
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
@@ -105,7 +47,7 @@
 		<setting name="line_generation" value="True"/>
 	</target>
 
-	<target name="release" extends="common">
+	<target name="codedom_provider_release" extends="codedom_provider_common">
 		<option debug="false">
 			<debug name="log_exceptions" enabled="false"/>
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>

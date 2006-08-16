@@ -4,7 +4,7 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 	 name="manager" uuid="56B27D8D-8B31-42f6-BEAC-94CB4BE01F24">
-	<target name="common">
+	<target name="manager_common" abstract="true">
 		<description>
 			Eiffel Codedom Manager utility
 		</description>
@@ -27,7 +27,7 @@
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<library name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf" readonly="true"/>
+		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
 
@@ -48,20 +48,20 @@
 			<option namespace="EiffelSoftware.Codedom.Tools" />
 		</cluster>
 
-		<cluster name="eclop" location="$ECLOP\eclop" recursive="true">
+		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop" recursive="true">
 			<option namespace="Eclop" />
 		</cluster>
 	</target>
 	
-	<target name="debug" extends="common">
-		<setting name="line_generation" value="True"/>		
+	<target name="manager_debug" extends="manager_common">
+		<setting name="line_generation" value="true"/>		
 		<option debug="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>		
 	</target>
 
-	<target name="release" extends="common">
-		<setting name="line_generation" value="False"/>
+	<target name="manager_release" extends="manager_common">
+		<setting name="line_generation" value="false"/>
 		<option debug="false">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>		

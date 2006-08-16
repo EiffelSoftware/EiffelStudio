@@ -31,7 +31,7 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf" readonly="true"/>
-		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.ecf" readonly="true"/>
+		<library name="classes_merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\class_merger.ecf" readonly="true"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="true"/>
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

@@ -131,7 +131,7 @@ feature -- Scrolling
 						else
 								-- We are scrolling up
 							if g.is_tree_enabled then
-								l_viewable_row_indexes := g.viewable_row_indexes_in_tree_structure
+								l_viewable_row_indexes := g.viewable_row_indexes
 							else
 								l_viewable_row_indexes := g.visible_row_indexes
 							end
@@ -171,7 +171,7 @@ feature -- Scrolling
 						else
 								-- We are scrolling up
 							if g.is_tree_enabled then
-								l_viewable_row_indexes := g.viewable_row_indexes_in_tree_structure
+								l_viewable_row_indexes := g.viewable_row_indexes
 							else
 								l_viewable_row_indexes := g.visible_row_indexes
 							end

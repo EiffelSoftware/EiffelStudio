@@ -2,7 +2,7 @@ indexing
 	description:
 		"EiffelVision tree node. Implementation interface."
 	legal: "See notice at end of class.";
-	status: "See notice at end of class."		
+	status: "See notice at end of class."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -49,11 +49,8 @@ feature -- Access
 		do
 			if parent_imp /= Void then
 				Result ?= parent_imp.interface
-				check
-					result_not_void: Result /= Void
-				end
 			end
-		end	
+		end
 
 	parent_tree: EV_TREE is
 			-- Root tree that holds `Current'.
@@ -93,7 +90,7 @@ feature -- Status setting
 		ensure
 			state_set: is_expanded = flag
 		end
-		
+
 feature -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
@@ -109,7 +106,7 @@ feature -- Contract support
 			end
 			Result := scaled_pixmap.is_equal (pixmap)
 		end
-		
+
 feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 
 	ensure_expandable is
@@ -120,7 +117,7 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 		ensure
 			is_empty: interface.is_empty
 		end
-		
+
 	remove_expandable is
 			-- Ensure `Current' is no longer displayed as expandable.
 		deferred

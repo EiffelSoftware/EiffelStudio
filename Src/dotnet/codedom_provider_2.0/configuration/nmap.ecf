@@ -4,7 +4,7 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 	 name="nmap" uuid="EC39178D-D3D5-4444-BBBF-480A8C58D7DC">
-	<target name="common">
+	<target name="nmap_common" abstract="true">
 		<description>
 			Eiffel Codedom Name Mapper utility
 		</description>
@@ -22,12 +22,24 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="console_application" value="no"/>
+		<setting name="console_application" value="false"/>
 		<setting name="executable_name" value="nmap2_0"/>
 
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
 
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="codedom_provider" location="codedom_provider_library.ecf" readonly="true"/>
+		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
+
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -42,14 +54,14 @@
 		</cluster>
 	</target>
 	
-	<target name="debug" extends="common">
+	<target name="nmap_debug" extends="nmap_common">
 		<setting name="line_generation" value="True"/>		
 		<option debug="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>		
 	</target>
 
-	<target name="release" extends="common">
+	<target name="nmap_release" extends="nmap_common">
 		<setting name="line_generation" value="False"/>
 		<option debug="false">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>

@@ -43,7 +43,7 @@
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="True"/>
-		<setting name="line_generation" value="False"/>
+		<setting name="line_generation" value="false"/>
 	</target>
 
 </system>

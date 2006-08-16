@@ -226,6 +226,19 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
+	is_show_requested: BOOLEAN is
+			-- May `Current' be displayed?
+			-- Will return `False' if `hide' has been called on `Current'.
+			-- A row that `is_show_requested' does not necessarily have to be visible on screen at that particular time.
+			-- For example, its `parent_row' (if any) may not be expanded or visible, or the position of `Current' may not
+			-- be within the visible area of `parent'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.is_show_requested
+		end
+
 feature -- Status report
 
 	subrow_count: INTEGER is
@@ -429,6 +442,28 @@ feature -- Status setting
 			parented: parent /= Void
 		do
 			implementation.redraw
+		end
+
+	hide is
+			-- Prevent `Current' from being shown in `parent'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.hide
+		ensure
+			not_is_show_requested: not is_show_requested
+		end
+
+	show is
+			-- Ensure `Current' is shown in `parent'.
+		require
+			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		do
+			implementation.show
+		ensure
+			is_show_requested: is_show_requested
 		end
 
 feature -- Element change

@@ -70,7 +70,6 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd) {
 	
 		/* Disable debugger otherwise everything is blocked */
 	saved_debug_mode = debug_mode;
-	debug_mode = 0;
 	
 	load_library();
 
@@ -82,6 +81,8 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd) {
 	if (hook_mouse_func == NULL)
 		return FALSE;		// Unable to locate the function inside the DLL
 	
+	debug_mode = 0;
+
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
 	return (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));

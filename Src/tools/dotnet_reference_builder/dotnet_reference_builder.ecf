@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="refbuild" uuid="BF0BE787-18FA-419C-9A5B-FB6C46FD42D1">
+	<target name="refbuild">
+		<root cluster="refbuild" class="APPLICATION" feature="make"/>
+		<version major="1" minor="0" release="0" build="0" company="Eiffel Software" product="refbuild" copyright="Eiffel Software"/>
+		<file_rule>
+			<exclude>.svn</exclude>
+			<exclude>EIFGENs</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="dotnet_helper" location="C:\development57_eth\dotnet\helpers\support\dotnet_helper.ecf"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system.xml" location="$ISE_DOTNET_FRAMEWORK\System.XML.dll"/>
+		<cluster name="refbuild" location="$EIFFEL_SRC\tools\dotnet_reference_builder\"/>
+	</target>
+</system>

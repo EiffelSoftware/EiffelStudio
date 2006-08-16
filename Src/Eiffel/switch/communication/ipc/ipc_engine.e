@@ -22,6 +22,11 @@ inherit
 
 	THREAD_CONTROL
 
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -50,6 +55,10 @@ feature -- Launching
 				clean_connection
 				ec_dbg_launched := False
 			end
+
+			prepare_ec_dbg_launching
+
+				--| Launch Eiffel Debugger
 			if not ec_dbg_launched then
 				get_environment
 				if ise_eiffel = Void or else ise_platform = Void then
@@ -89,6 +98,15 @@ feature -- Launching
 					end
 				end
 			end
+		end
+
+	prepare_ec_dbg_launching is
+			-- Prepare ec before starting Eiffel debugger daemon
+			--| Mainly optimization
+		do
+				--| Optimisation to reduce the file descriptor number of pipes
+				--| used by the IPC protocol on unices
+			Eiffel_system.System.server_controler.wipe_out
 		end
 
 	get_environment is

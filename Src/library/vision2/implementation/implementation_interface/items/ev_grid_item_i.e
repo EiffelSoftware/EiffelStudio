@@ -356,7 +356,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected?
 		do
-			if parent_i.is_row_selection_enabled then
+			if parent_i /= Void and then parent_i.is_row_selection_enabled then
 				Result := row_i.is_selected
 			else
 				Result := internal_is_selected

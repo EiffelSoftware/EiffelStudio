@@ -50,6 +50,7 @@ feature {EV_ANY} -- Initialization
 			expanded_subrow_count_recursive := 0
 			is_expanded := False
 			hash_code := -1
+			is_show_requested := True
 			set_is_initialized (True)
 		end
 
@@ -747,6 +748,43 @@ feature -- Status setting
 			parent_i.redraw_row (Current)
 		end
 
+	hide is
+			-- Prevent `Current' from being shown in `parent'.
+		require
+			parented: parent /= Void
+		do
+			if is_show_requested then
+				is_show_requested := False
+				if parent_i /= Void then
+					parent_i.adjust_non_displayed_row_count (1)
+					parent_i.set_vertical_computation_required (index)
+					parent_i.redraw
+				end
+			end
+		end
+
+	show is
+			-- Ensure `Current' is shown in `parent'.
+		require
+			parented: parent /= Void
+		do
+			if not is_show_requested then
+				is_show_requested := True
+				if parent_i /= Void then
+					parent_i.adjust_non_displayed_row_count (-1)
+					parent_i.set_vertical_computation_required (index)
+					parent_i.redraw
+				end
+			end
+		end
+
+	is_show_requested: BOOLEAN
+			-- May `Current' be displayed?
+			-- Will return `False' if `hide' has been called on `Current'.
+			-- A row that `is_show_requested' does not necessarily have to be visible on screen at that particular time.
+			-- For example, its `parent_row' (if any) may not be expanded or visible, or the position of `Current' may not
+			-- be within the visible area of `parent'.
+
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
@@ -1340,18 +1378,12 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER is
 			-- Default height of a row, based on the height of the default font.
 		once
-			Result := (create {EV_LABEL}).minimum_height
-			if (create {PLATFORM}).is_windows then
-				Result := Result + 3
-			else
-					-- This matches the gtk default row height used for all GtkTreeView variants.
-				Result := Result + 6
-			end
+			Result := (create {EV_LABEL}).minimum_height + 3
 		ensure
 			result_positive: result > 0
 		end
 
-feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
+feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_DRAWER_I} -- Implementation
 
 	interface: EV_GRID_ROW
 			-- Provides a common user interface to possibly dependent

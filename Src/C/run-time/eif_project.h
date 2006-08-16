@@ -132,7 +132,7 @@ extern "C" {
 	RT_LNK fnptr *egc_frozen;			/* C routine array (frozen routines) */
 	RT_LNK int *egc_fpatidtab;			/* Table of pattern id's indexed by body id's */
 	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
-	RT_LNK fnptr **egc_address_table;		/* Table of $ operator encapsulation functions */
+	RT_LNK fnptr *egc_address_table;		/* Table of $ operator encapsulation functions */
 	RT_LNK struct p_interface *egc_fpattern;
 
 	RT_LNK void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */

@@ -59,7 +59,7 @@ extern int egc_partab_size_init;
 extern fnptr egc_frozen_init [];
 extern int egc_fpatidtab_init [];
 extern struct eif_opt egc_foption_init [];
-extern fnptr **egc_address_table_init;
+extern fnptr *egc_address_table_init;
 extern struct p_interface egc_fpattern_init [];
 
 extern void egc_einit_init (void);

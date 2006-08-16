@@ -5,13 +5,13 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<setting name="dead_code_removal" value="true"/>
+		<precompile name="wel_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf">
 			<visible class="ECOM_CURRENCY"/>
 			<visible class="ECOM_DECIMAL"/>
 		</library>
-		<cluster name="root_cluster" location="."/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

@@ -162,7 +162,10 @@ feature {NONE} -- Implementation
 			create Result.make_by_id (Id_cur_invisible)
 		end
 
-	class_name: STRING_32 is "GDI Artist";
+	class_name: STRING_32 is
+		once
+			Result := "GDI Artist"
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

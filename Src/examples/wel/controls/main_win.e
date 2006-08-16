@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	list_box: WEL_SINGLE_SELECTION_LIST_BOX
 
 	list_box_mul: WEL_MULTIPLE_SELECTION_LIST_BOX
@@ -431,14 +431,14 @@ feature {NONE} -- Implementation
 			selected_items := list_box_mul.selected_items
 			from
 				i := selected_items.lower
-			until	
+			until
 				i > selected_items.upper
 			loop
 				text_info.append ((selected_items @ i).out)
 				if i /= selected_items.upper then
 					text_info.append (", ")
 				end
-					-- Goto line if 
+					-- Goto line if
 				if (i \\ 15) = 14 then
 					text_info.append ("%N")
 				end
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 	menu_mul_current_item is
 		local
 			i: INTEGER
-			array_items: ARRAY [STRING]
+			array_items: ARRAY [STRING_32]
 			msg_box: WEL_MSG_BOX
 		do
 			if list_box_mul.count_selected_items > 0 then

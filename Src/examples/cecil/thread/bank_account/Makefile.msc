@@ -5,23 +5,26 @@ RM = del
 CP = copy
 CFLAGS = -MT -DEIF_THREADS -I$(INCLUDE_PATH)
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
-EIFLIB = EIFGEN\W_code\libbank_account.lib 
+ECF = bank_account.ecf
+TARGET = classic
+WCODE = EIFGENs\$(TARGET)\W_code
+EIFLIB = $(WCODE)\libbank_account.lib 
 LIBS = 
 OBJECTS = main.obj fext.obj
 
 all: $(OBJECTS) compile_eiffel make_cecil bank_account.exe
 
 compile_eiffel:
-	$(EC) -freeze -c_compile
+	$(EC) -config $(ECF) -freeze -c_compile
 
 make_cecil:
-	cd EIFGEN\W_code
+	cd $(WCODE) 
 	$(MAKE) cecil
-	cd ..\..
+	cd ..\..\..
 
-bank_account.exe: $(OBJECTS) EIFGEN\W_code\libbank_account.lib
-	$(LN) EIFGEN\W_code\bank_account.melted bank_account.melted
-	link -SUBSYSTEM:CONSOLE -out:$@ main.obj EIFGEN\W_code\libbank_account.lib \
+bank_account.exe: $(OBJECTS) $(EIFLIB)
+	$(LN) $(WCODE)\bank_account.melted bank_account.melted
+	link -SUBSYSTEM:CONSOLE -out:$@ main.obj $(EIFLIB) \
 		USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib\
 		COMDLG32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib MPR.LIB
 
@@ -33,5 +36,5 @@ clean:
 	$(RM) bank_account.rc
 	$(RM) bank_account.melted
 	$(RM) bank_account.exe
-	$(DELDIR) EIFGEN
+	$(DELDIR) EIFGENs
 	

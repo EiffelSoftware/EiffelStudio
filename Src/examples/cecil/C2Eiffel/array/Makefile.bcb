@@ -7,17 +7,19 @@ RM = del
 CP = copy
 FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
-EIFLIB = EIFGEN\W_code\libcecil.lib 
+TARGET = classic
+ECF = cecil.ecf
+EIFLIB = EIFGENs\$(TARGET)\W_code\libcecil.lib 
 LIBS = 
 OBJECT = main.obj
 
 all: main.obj compile_eiffel compile_c cecil.exe
 
 compile_eiffel:
-	$(EC) -freeze
+	$(EC) -config $(ECF) -freeze
 
 compile_c:
-	cd EIFGEN\W_code
+	cd EIFGENs\$(TARGET)\W_code
 	$(FINISH_FREEZING)
 	$(MAKE) cecil
 	cd ..\..
@@ -26,9 +28,9 @@ main.obj: main.c
 	$(CC) -I$(INCLUDE_PATH) -c main.c 
 
 cecil.exe: main.obj EIFGEN\W_code\libcecil.lib
-	$(LN) EIFGEN\W_code\cecil.melted cecil.melted
+	$(LN) EIFGENs\$(TARGET)\W_code\cecil.melted cecil.melted
 	ilink32 -ap -c -Tpe main.obj c0w32.obj, $@,,\
-		EIFGEN\W_code\libcecil.lib CW32 IMPORT32 OLE2w32,,
+		EIFGENs\$(TARGET)\W_code\libcecil.lib CW32 IMPORT32 OLE2w32,,
 
 clean:
 	$(RM) main.obj 
@@ -42,5 +44,5 @@ clean:
 	$(RM) cecil.melted
 	$(RM) cecil.rc
 	$(RM) cecil.tds
-	$(DELDIR) EIFGEN
+	$(DELDIR) EIFGENs
 	

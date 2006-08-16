@@ -4,29 +4,32 @@ LN = copy
 RM = del
 CP = copy
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
-EIFLIB = EIFGEN\W_code\libcecil.lib 
-CFLAGS = -DEIF_WIN32
+ECF = cecil.ecf
+TARGET = classic
+WCODE = EIFGENs\$(TARGET)\W_code
+EIFLIB = $(WCODE)\libcecil.lib 
+CFLAGS = -DEIF_WIN32 -MT
 LIBS = 
 OBJECT = fext.obj
 
-all: fext.obj compile_eiffel mklink
+all: $(OBJECT) compile_eiffel mklink
 
 compile_eiffel:
-	$(EC) -freeze -c_compile
+	$(EC) -config $(ECF) -freeze -c_compile
 
 mklink:
-	$(LN) EIFGEN\W_code\cecil.exe .
-	$(LN) EIFGEN\W_code\cecil.melted .
+	$(LN) $(WCODE)\cecil.exe .
+	$(LN) $(WCODE)\cecil.melted .
 
-fext.obj: fext.c
+$(OBJECT): fext.c
 	$(CC) -I$(INCLUDE_PATH) -c fext.c 
 
 clean:
-	$(RM) fext.obj 
+	$(RM) $(OBJECT) 
 	$(RM) core 
 	$(RM) cecil.epr
 	$(RM) cecil.rc
 	$(RM) cecil.melted
 	$(RM) cecil.exe
-	$(DELDIR) EIFGEN
+	$(DELDIR) EIFGENs
 	

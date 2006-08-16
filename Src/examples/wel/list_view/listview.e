@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			-- Create the tree and some items in it.
 		local
  			column: WEL_LIST_VIEW_COLUMN
- 			litem, litem2: WEL_LIST_VIEW_ITEM
+ 			litem: WEL_LIST_VIEW_ITEM
 			image_list					: WEL_IMAGE_LIST
 			small_image_list			: WEL_IMAGE_LIST
 			an_icon						: WEL_ICON

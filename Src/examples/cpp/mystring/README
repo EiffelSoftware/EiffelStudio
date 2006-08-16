@@ -3,3 +3,7 @@ To compile this example, first compile the C++ code.
 On UNIX this can be done by doing something like
 
 make mystring.o
+
+ON Windows with Microsoft C compiler with something like
+
+nmake mystring.obj

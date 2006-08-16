@@ -230,7 +230,7 @@ feature -- Access
 			valid_column_less: column_number <= Number_of_columns
 			valid_column_greater: column_number > 0
 		do
-			Result := deep_clone (columns @ column_number)
+			Result := (columns @ column_number).deep_twin
 		ensure
 			Result_not_void: Result /= Void
 		end

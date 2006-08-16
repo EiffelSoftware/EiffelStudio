@@ -530,6 +530,24 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
+	override_scan is
+			-- Same as `quick_melt' but only scans override clusters for changes.
+		require
+			able_to_compile: able_to_compile
+		do
+			if not Compilation_modes.is_precompiling then
+				Compilation_modes.set_is_override_scan
+				melt
+			else
+				Compilation_modes.reset_modes
+				precompile (False)
+			end
+		ensure
+			was_saved: successful and then not
+				error_occurred implies was_saved
+			error_implies: error_occurred implies save_error
+		end
+
 	freeze is
 			-- Melt eiffel project and then freeze it (i.e generate
 			-- C code for workbench mode).

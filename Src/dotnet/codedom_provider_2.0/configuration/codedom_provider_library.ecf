@@ -25,7 +25,7 @@
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
 			<option namespace="EiffelSoftware.CodeDom.Support" />
 		</library>
-		<library name="classes_merger" location="$ISE_LIBRARY\tools\partial_classes_merger\src\class_merger.ecf" readonly="true">
+		<library name="classes_merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\class_merger.ecf" readonly="true">
 			<option namespace="EiffelSoftware.Library.Merger" />
 		</library>
 		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf" readonly="true">

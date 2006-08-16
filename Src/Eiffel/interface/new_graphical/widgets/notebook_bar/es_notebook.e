@@ -11,9 +11,6 @@ deferred class
 
 inherit
 	EB_EXPLORER_BAR_ATTACHABLE
-		redefine
-			change_attach_explorer
-		end
 
 feature {NONE} -- Initialization
 
@@ -255,17 +252,6 @@ feature -- Change
 				end
 				explorer_bar_item.update_mini_toolbar (mtb)
 			end
-		end
-
-	change_attach_explorer (an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		do
-			if explorer_bar_item.is_visible then
-				explorer_bar_item.close
-			end
-			explorer_bar_item.recycle
-				-- Link with the manager and the explorer.
-			set_explorer_bar (an_explorer_bar)
 		end
 
 feature {NONE} -- tab selection

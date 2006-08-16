@@ -381,13 +381,10 @@ feature -- Status setting
 			a_manager_exists: a_manager /= Void
 			an_explorer_bar_exists: an_explorer_bar /= Void
 		do
-			if explorer_bar_item.is_visible then
-				explorer_bar_item.close
-			end
-			explorer_bar_item.recycle
-				-- Link with the manager and the explorer.
-			manager := a_manager
-			set_explorer_bar (an_explorer_bar)
+			set_manager (a_manager)
+			change_attach_explorer (an_explorer_bar)
+		ensure
+			explorer_changed: explorer_bar_item.parent = an_explorer_bar
 		end
 
 feature -- Memory management
@@ -396,10 +393,15 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			reset_update_on_idle
 			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
+				unattach_from_explorer_bar
 			end
+			reset_tool
+		end
+
+	reset_tool is
+		do
+			reset_update_on_idle
 
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)

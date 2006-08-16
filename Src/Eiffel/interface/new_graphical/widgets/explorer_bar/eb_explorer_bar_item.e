@@ -403,6 +403,8 @@ feature -- Status Setting
 					parent.remove (widget)
 				end
 				associated_command := Void
+				show_actions.wipe_out
+				show_actions := Void
 				parent.prune_item (Current)
 				parent := Void
 			end

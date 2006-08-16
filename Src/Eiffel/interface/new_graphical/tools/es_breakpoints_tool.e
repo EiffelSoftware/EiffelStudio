@@ -243,13 +243,9 @@ feature -- Events
 			a_manager_exists: a_manager /= Void
 			an_explorer_bar_exists: an_explorer_bar /= Void
 		do
-			if explorer_bar_item.is_visible then
-				explorer_bar_item.close
-			end
-			explorer_bar_item.recycle
 				-- Link with the manager and the explorer.
-			manager := a_manager
-			set_explorer_bar (an_explorer_bar)
+			set_manager (a_manager)
+			change_attach_explorer (an_explorer_bar)
 		end
 
 feature -- Memory management
@@ -265,8 +261,13 @@ feature -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
+				unattach_from_explorer_bar
 			end
+			reset_tool
+		end
+
+	reset_tool is
+		do
 			enable_bkpt_button.recycle
 			disable_bkpt_button.recycle
 			clear_bkpt_button.recycle

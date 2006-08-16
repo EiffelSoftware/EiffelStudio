@@ -102,6 +102,13 @@ feature -- Access
 			position_not_changed: linear_representation.index = old linear_representation.index
 		end
 
+	has_item (an_item: EB_EXPLORER_BAR_ITEM): BOOLEAN is
+		require
+			an_item_not_void: an_item /= Void
+		do
+			Result := item_list.has (an_item)
+		end
+
 	add (an_item: like explorer_item) is
 			-- Add `item' at the first available slot.
 		require

@@ -479,6 +479,7 @@ feature -- Validation warnings
 	root_invalid_feature: STRING is "Root feature name is invalid."
 	cluster_dependency_group_not_exist: STRING is "Cannot add dependency. There is no group with this name."
 	override_group_not_exist: STRING is "Cannot add override. There is no group with this name."
+	invalid_group_name: STRING is "The name of the group is invalid."
 	group_already_exists (a_group: STRING): STRING is
 		require
 			a_group_not_void: a_group /= Void

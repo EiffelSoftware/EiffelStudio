@@ -174,6 +174,7 @@ feature {NONE} -- Implementation
 			create l_text_prop.make (conf_interface_names.group_prefix_name)
 			l_text_prop.set_description (conf_interface_names.group_prefix_description)
 			l_text_prop.set_value (a_group.name_prefix)
+			l_text_prop.validate_value_actions.extend (agent (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name)
 			l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
 			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)

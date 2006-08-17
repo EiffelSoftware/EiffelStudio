@@ -32,6 +32,12 @@ inherit
 			copy
 		end
 
+	EIFFEL_SYNTAX_CHECKER
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -182,16 +188,18 @@ feature {NONE} -- Agents
 			l_name, l_vis_name: STRING
 		do
 			l_name := original_name.text.as_upper
-			if not l_name.is_empty and then (value = Void or else not value.has (l_name)) then
+			l_vis_name := renamed_name.text.as_upper
+			if l_vis_name.is_empty then
+				l_vis_name := l_name
+			end
+			if is_valid_class_name (l_name) and then is_valid_class_name (l_vis_name) and then (value = Void or else not value.has (l_name)) then
 				if value = Void then
 					create value.make (1)
 				end
-				l_vis_name := renamed_name.text.as_upper
-				if l_vis_name.is_empty then
-					value.force ([l_name, Void], l_name)
-				else
-					value.force ([l_vis_name, Void], l_name)
-				end
+
+				value.force ([l_vis_name, Void], l_name)
+				original_name.set_text ("")
+				renamed_name.set_text ("")
 				current_class := l_name
 				refresh
 			end
@@ -205,18 +213,20 @@ feature {NONE} -- Agents
 		do
 			if current_class /= Void and then value /= Void and then value.has (current_class) then
 				l_name := original_name.text.as_lower
+				l_vis_name := renamed_name.text.as_lower
+				if l_vis_name.is_empty then
+					l_vis_name := l_name
+				end
 				l_feats := value.item (current_class).features
-				if not l_name.is_empty and then (l_feats = Void or else not l_feats.has (l_name)) then
+				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
 					if l_feats = Void then
 						create l_feats.make (1)
 						value.item (current_class).features := l_feats
 					end
-					l_vis_name := renamed_name.text.as_lower
-					if l_vis_name.is_empty then
-						l_feats.force (l_name, l_name)
-					else
-						l_feats.force (l_vis_name, l_name)
-					end
+
+					l_feats.force (l_vis_name, l_name)
+					original_name.set_text ("")
+					renamed_name.set_text ("")
 					current_feature := l_name
 					refresh
 				end

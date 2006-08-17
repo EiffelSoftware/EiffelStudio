@@ -16,12 +16,6 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_NAMES
-		undefine
-			default_create,
-			copy
-		end
-
 create
 	make
 
@@ -31,7 +25,7 @@ feature {NONE} -- Initialization
 		-- Create.
 	do
 		Precursor {CREATE_CLUSTER_DIALOG} (a_target, a_factory)
-		set_title (dialog_create_override_title)
+		set_title (conf_interface_names.dialog_create_override_title)
 		set_icon_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
 	end
 
@@ -49,8 +43,10 @@ feature {NONE} -- Actions
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if not name.text.is_empty and not location.text.is_empty then
-				if group_exists (name.text, target) then
-					create wd.make_with_text (group_already_exists (name.text))
+				if not is_valid_group_name (name.text) then
+					create wd.make_with_text (conf_interface_names.invalid_group_name)
+				elseif group_exists (name.text, target) then
+					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 				end
 
 				if wd /= Void then

@@ -37,7 +37,7 @@ inherit
 			class_type
 		end
 
-create
+create {CONF_FACTORY}
 	make_from_partial
 
 feature -- Access

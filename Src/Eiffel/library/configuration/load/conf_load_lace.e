@@ -106,7 +106,7 @@ feature -- Basic operation
 					set_error (create {CONF_ERROR_PARSE})
 				end
 			else
-				last_system := factory.new_system (l_ast.system_name.as_lower, uuid_generator.generate_uuid)
+				last_system := factory.new_system_generate_uuid (l_ast.system_name.as_lower)
 				current_target := factory.new_target (l_ast.system_name.as_lower, last_system)
 				last_system.add_target (current_target)
 
@@ -886,12 +886,6 @@ feature {NONE} -- Implementation
 		do
 			is_error := True
 			last_error := an_error
-		end
-
-	uuid_generator: UUID_GENERATOR is
-			-- Shared instance of `UUID_GENERATOR'.
-		once
-			create Result
 		end
 
 invariant

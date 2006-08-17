@@ -16,7 +16,7 @@ inherit
 			make
 		end
 
-create
+create {CONF_FACTORY}
 	make
 
 feature {NONE} -- Initialization

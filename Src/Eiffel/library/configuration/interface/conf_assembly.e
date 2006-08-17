@@ -33,7 +33,7 @@ inherit
 		end
 
 
-create
+create {CONF_FACTORY}
 	make,
 	make_from_gac
 

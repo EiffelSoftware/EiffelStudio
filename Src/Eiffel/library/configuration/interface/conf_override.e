@@ -15,7 +15,7 @@ inherit
 			is_override
 		end
 
-create
+create {CONF_FACTORY}
 	make
 
 feature -- Status

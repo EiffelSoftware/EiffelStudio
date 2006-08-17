@@ -18,13 +18,13 @@ create
 
 feature --Initialization
 
-	make (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_is_lazy: BOOLEAN) is
+	make (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER) is
 		require
 			open_map_not_void: a_open_map /= Void
 		do
 			is_target_closed := a_is_target_closed
 			open_map := a_open_map
-			is_lazy := a_is_lazy
+			frozen_age := a_frozen_age
 		end
 
 feature --Access
@@ -41,11 +41,11 @@ feature --Access
 			open_map := a_open_map
 		end
 
-	is_lazy: BOOLEAN
+	frozen_age: INTEGER
 
-	set_is_lazy (a_is_lazy: BOOLEAN) is
+	set_frozen_age (a_frozen_age: INTEGER) is
 		do
-			is_lazy := a_is_lazy
+			frozen_age := a_frozen_age
 		end
 
 feature --Compare

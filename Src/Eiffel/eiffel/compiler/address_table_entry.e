@@ -24,17 +24,16 @@ feature -- Initialize
 			make_search_table (2)
 		end
 
-
 feature -- Access
 
-	force_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_is_lazy: BOOLEAN) is
+	force_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER) is
 		local
 			reordering: FEATURE_REORDERING
 		do
-			create reordering.make (a_is_target_closed, a_open_map, a_is_lazy)
+			create reordering.make (a_is_target_closed, a_open_map, a_frozen_age)
 
-			if has (reordering) and then a_is_lazy then
-				item (reordering).set_is_lazy (True)
+			if has (reordering) then
+				item (reordering).set_frozen_age (a_frozen_age)
 			else
 				put (reordering)
 			end
@@ -45,21 +44,11 @@ feature -- Access
 	set_has_dollar_op is
 		do
 			has_dollar_op := True
+			create dollar_ids.make (0)
 		end
 
-feature {ADDRESS_TABLE}
-
-		-- Id of dollar operator
-	dollar_id: INTEGER
-
-	set_dollar_id (a_dollar_id: like dollar_id) is
-		require
-			has_dollar_op
-		do
-			dollar_id := a_dollar_id
-		ensure
-			dollar_id = a_dollar_id
-		end
+	dollar_ids: HASH_TABLE [INTEGER, INTEGER];
+		-- Id of dollar operator for a given static type-id
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

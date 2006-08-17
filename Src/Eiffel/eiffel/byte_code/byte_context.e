@@ -908,7 +908,7 @@ feature -- Access
 			result_not_formal: not Result.is_formal
 		end
 
-	creation_type, real_type (type: TYPE_I): TYPE_I is
+	real_type (type: TYPE_I): TYPE_I is
 			-- Type `type' written in `class_type' as seen in `context_class_type'
 		require
 			type_not_void: type /= Void
@@ -937,6 +937,15 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal
+		end
+
+	creation_type (type: TYPE_I): TYPE_I is
+			-- Convenience
+		require
+			type_not_void: type /= Void
+			class_type_not_void: class_type /= Void
+		do
+			Result := type.complete_instantiation_in (class_type)
 		end
 
 	set_byte_code (bc: BYTE_CODE) is

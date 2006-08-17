@@ -75,6 +75,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -511,6 +518,13 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- To be called when the button has became useless.
+		do
 		end
 
 invariant

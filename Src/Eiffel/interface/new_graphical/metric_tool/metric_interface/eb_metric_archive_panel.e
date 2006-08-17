@@ -54,6 +54,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	make
 
@@ -866,6 +873,13 @@ feature -- Overwritting
 			if not is_last_load_successful then
 				display_error_message
 			end
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- To be called when the button has became useless.
+		do
 		end
 
 invariant

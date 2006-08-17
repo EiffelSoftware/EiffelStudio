@@ -61,6 +61,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -238,6 +245,14 @@ feature -- Actions
 			end
 		ensure
 			last_request_displayed: is_last_request_displayed
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- To be called when the button has became useless.
+		do
+			metric_result.recycle
 		end
 
 invariant

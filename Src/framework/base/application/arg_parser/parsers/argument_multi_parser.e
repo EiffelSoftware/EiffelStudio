@@ -9,7 +9,7 @@ deferred class
 	ARGUMENT_MULTI_PARSER
 
 inherit
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_BASE_PARSER
 		rename
 			make as make_lite
 		redefine
@@ -74,7 +74,7 @@ feature {NONE} -- Usage
 		once
 			l_arg := loose_argument_name_arg
 			l_args := l_arg + "[" + l_arg + ", ...]"
-			l_suffix := Precursor {ARGUMENT_LITE_PARSER}
+			l_suffix := Precursor {ARGUMENT_BASE_PARSER}
 			if l_suffix /= Void then
 				create Result.make (l_arg.count + l_suffix.count + 1)
 				Result.append (l_args)
@@ -107,17 +107,15 @@ feature {NONE} -- Validation
 	validate_arguments is
 			-- Validates arguments to ensure they are configured correctly
 		do
-			Precursor {ARGUMENT_LITE_PARSER}
-			if successful then
-				if not has_loose_argument or else values.first.is_empty then
-					add_template_error (no_loose_argument_error, [loose_argument_type.as_lower])
-				end
+			if not has_loose_argument or else values.first.is_empty then
+				add_template_error (no_loose_argument_error, [loose_argument_type.as_lower])
 			end
+			Precursor {ARGUMENT_BASE_PARSER}
 		end
 
 feature {NONE} -- Error Constants
 
-	no_loose_argument_error: STRING_8 is "No {1} was specified.";
+	no_loose_argument_error: STRING_8 is "{1} is require and was not specified.";
 		-- Errors
 
 invariant

@@ -6,6 +6,6 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
-		<cluster name="root_cluster" location="."/>
+		<cluster name="root_cluster" location="$ISE_EIFFEL\examples\com\wizard\e2idl\eproject"/>
 	</target>
 </system>

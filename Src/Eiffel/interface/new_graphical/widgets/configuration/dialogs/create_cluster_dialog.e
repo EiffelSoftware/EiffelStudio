@@ -33,7 +33,7 @@ inherit
 			default_create
 		end
 
-	CONF_INTERFACE_NAMES
+	CONF_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			vb2.set_border_width (default_border_size)
 			vb2.set_padding (default_padding_size)
 
-			create l_lbl.make_with_text (dialog_create_cluster_name)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_cluster_name)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			vb2.set_border_width (default_border_size)
 			vb2.set_padding (default_padding_size)
 
-			create l_lbl.make_with_text (dialog_create_cluster_location)
+			create l_lbl.make_with_text (conf_interface_names.dialog_create_cluster_location)
 			vb2.extend (l_lbl)
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			set_default_width_for_button (l_btn)
 
-			set_title (dialog_create_cluster_title)
+			set_title (conf_interface_names.dialog_create_cluster_title)
 			show_actions.extend (agent name.set_focus)
 
 			set_minimum_width (300)
@@ -224,8 +224,10 @@ feature {NONE} -- Actions
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if not name.text.is_empty and not location.text.is_empty then
-				if group_exists (name.text, target) then
-					create wd.make_with_text (group_already_exists (name.text))
+				if not is_valid_group_name (name.text) then
+					create wd.make_with_text (conf_interface_names.invalid_group_name)
+				elseif group_exists (name.text, target) then
+					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
 				end
 
 				if wd /= Void then

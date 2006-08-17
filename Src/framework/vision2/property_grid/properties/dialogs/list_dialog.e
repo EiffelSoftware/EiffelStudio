@@ -173,8 +173,20 @@ feature {NONE} -- Agents
 
 	on_add is
 			-- Add button was pressed.
+		local
+			l_found: BOOLEAN
 		do
-			list.extend (create {EV_LIST_ITEM}.make_with_text (new_item_name.text))
+			from
+				list.start
+			until
+				l_found or list.after
+			loop
+				l_found := list.item.text.is_equal (new_item_name.text)
+				list.forth
+			end
+			if not l_found then
+				list.extend (create {EV_LIST_ITEM}.make_with_text (new_item_name.text))
+			end
 		end
 
 	on_remove is

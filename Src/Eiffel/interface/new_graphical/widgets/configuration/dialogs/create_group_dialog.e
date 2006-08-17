@@ -11,6 +11,12 @@ deferred class
 inherit
 	EV_DIALOG
 
+	EIFFEL_SYNTAX_CHECKER
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is

@@ -56,6 +56,7 @@ feature {NONE} -- Implementation
 			l_fn: FILE_NAME
 			l_dest_dir: DIRECTORY_NAME
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_as: CONF_ASSERTIONS
 		do
 			if environment.is_client then
 				l_name := client
@@ -90,6 +91,9 @@ feature {NONE} -- Implementation
 				l_root := conf_factory.new_root (Void, Void, Void, True)
 			end
 			l_target.set_root (l_root)
+			l_as := conf_factory.new_assertions
+			l_as.enable_precondition
+			l_target.changeable_internal_options.set_assertions (l_as)
 
 				-- needed libraries
 			l_libs := l_target.libraries

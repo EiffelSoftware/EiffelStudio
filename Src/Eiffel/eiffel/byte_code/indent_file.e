@@ -20,7 +20,7 @@ inherit
 
 	PLAIN_TEXT_FILE
 		redefine
-			putdouble, putreal, putstring, putint, new_line, putchar	
+			putdouble, putreal, putstring, putint, new_line, putchar
 		select
 			putdouble, putreal, putstring, putint, new_line, putchar
 		end
@@ -38,17 +38,8 @@ feature {NONE} -- Initialization
 		require
 			string_exists: fn /= Void;
 			string_not_empty: not fn.is_empty
-		local
-			tmp: GENERATION_BUFFER
 		do
 			make_open_write (fn)
-			put_string ("#line 2 ")
-				-- In worst case all letters are escaped as \nnn.
-				-- The string is then surrounded by double quotes.
-			create tmp.make (fn.count * 4 + 2)
-			tmp.put_indivisible_string_literal (fn)
-			tmp.put_in_file (Current)
-			put_string ("%N")
 		end
 
 feature
@@ -62,14 +53,30 @@ feature
 	emitted: BOOLEAN;
 			-- Have leading tabs already been emitted ?
 
-feature 
+feature
+
+	insert_line_pragma is
+			-- Useful when files are concatenated.
+		local
+			tmp: GENERATION_BUFFER
+		do
+			put_string ("#line 2 ")
+				-- In worst case all letters are escaped as \nnn.
+				-- The string is then surrounded by double quotes.
+			create tmp.make (name.count * 4 + 2)
+			tmp.put_indivisible_string_literal (name)
+			tmp.put_in_file (Current)
+			put_string ("%N")
+		end
+
+feature
 
 	indent is
 			-- Indent next output line by one tab.
 		do
 			tabs := tabs + 1;
 		end;
-	
+
 	exdent is
 			-- Remove one leading tab for next line.
 		require
@@ -84,7 +91,7 @@ feature
 			old_tabs := tabs;
 			tabs := 0;
 		end;
-	
+
 	restore_margin is
 			-- Restore margin value as of the one which was in
 			-- use when a `left_margin' call was issued.
@@ -133,7 +140,7 @@ feature
 				flush
 			end
 		end;
-	
+
 	putint (i: INTEGER) is
 			-- Write int `i'.
 		do
@@ -143,7 +150,7 @@ feature
 				flush
 			end
 		end;
-	
+
 	putreal (r: REAL) is
 			-- Writes real `r'.
 		do
@@ -153,7 +160,7 @@ feature
 				flush
 			end
 		end;
-	
+
 	putdouble (d: DOUBLE) is
 			-- Write double `d'.
 		do
@@ -163,7 +170,7 @@ feature
 				flush
 			end
 		end;
-	
+
 	putstring (s: STRING) is
 			-- Write string `s'.
 		do
@@ -190,7 +197,7 @@ feature
 				if i < 64 then
 					file_putstring ("0")
 				end
-				
+
 				create s.make (3);
 				from
 					val := i;

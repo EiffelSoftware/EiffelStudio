@@ -788,6 +788,9 @@ feature -- Generation
 				end
 			end
 			create Result.make_c_code_file (l_file_name)
+			if byte_context.final_mode then
+				Result.insert_line_pragma
+			end
 		end
 
 	open_descriptor_file: INDENT_FILE is

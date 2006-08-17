@@ -46,7 +46,11 @@ feature -- Basic operations
 			create l_cmd.make (100)
 			l_cmd.append ("ec -short -filter com ")
 			l_cmd.append (environment.eiffel_class_name)
-			l_cmd.append (" -project ")
+			l_cmd.append (" -config ")
+			l_cmd.append (environment.source_ecf_file_name)
+			l_cmd.append (" -target ")
+			l_cmd.append (environment.eiffel_target)
+			l_cmd.append (" -project_path ")
 			l_cmd.append (environment.eiffel_project_name)
 			create l_file.make (Output_file_name)
 			if l_file.exists then
@@ -62,12 +66,12 @@ feature -- Basic operations
 				if l_data.class_not_found then
 					environment.set_abort (Class_not_in_project)
 				else
-					if not environment.abort then						
+					if not environment.abort then
 						create l_midl_lib.make (environment.eiffel_class_name)
 						create l_midl_coclass_creator.make
 						l_midl_coclass_creator.create_from_eiffel_class (l_data.eiffel_class)
 						l_midl_lib.set_coclass (l_midl_coclass_creator.midl_coclass)
-	
+
 						create l_idl_file.make_open_write (environment.idl_file_name)
 						l_idl_file.put_string (l_midl_lib.code)
 						l_idl_file.flush

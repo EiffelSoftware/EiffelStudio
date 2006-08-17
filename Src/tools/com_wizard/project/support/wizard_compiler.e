@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
@@ -52,54 +52,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	eiffel_compilation_successful (a_folder: STRING): BOOLEAN is
-			-- Was Eiffel precompilation in `a_folder' successful?
-		require
-			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.is_empty
-		local
-			a_local_folder: STRING
-		do
-			a_local_folder := environment.destination_folder.twin
-			a_local_folder.append (a_folder)
-			-- The ".epr" file is in the Eifgen folder for a precompiled system
-			Result := has_directory_epr (a_local_folder)
-			if not Result then
-				if 
-					a_folder.is_equal (Client) or
-					component_empty (a_folder)
-				then
-					a_local_folder.append_character (Directory_separator)
-					a_local_folder.append (Eifgen)
-					Result := has_directory_epr (a_local_folder)
-				end
-			end
-		end
-
-	has_directory_epr (a_directory_name: STRING): BOOLEAN is
-			-- Does directory have epr file?
-		local
-			a_directory: DIRECTORY
-			a_file_list: LIST [STRING]
-			list_item: STRING
-		do
-			create a_directory.make (a_directory_name)
-			if a_directory.exists then
-				from
-					a_file_list := a_directory.linear_representation
-					a_file_list.start
-				until
-					a_file_list.after or Result
-				loop
-					list_item := a_file_list.item
-					Result := (list_item.substring 
-							(list_item.count - Eiffel_project_extension.count + 1, 
-							list_item.count)).is_equal (Eiffel_project_extension)
-					a_file_list.forth
-				end
-			end
-		end
-		
 	set_makefile_generated (a_boolean: BOOLEAN) is
 			-- Set `makefile_generated'.
 		do
@@ -158,7 +110,7 @@ feature -- Basic Operations
 				compile_file (Generated_iid_file_name)
 			end
 		end
-	
+
 	compile_ps is
 			-- Compile proxy/stub C file.
 		do
@@ -174,7 +126,7 @@ feature -- Basic Operations
 				compile_file (Generated_dlldata_file_name)
 			end
 		end
-	
+
 	link is
 			-- Create proxy/stub dll.
 		local
@@ -219,28 +171,19 @@ feature -- Basic Operations
 				Result := a_directory.is_empty
 			end
 		end
-		
+
 	compile_eiffel (a_folder: STRING) is
 			-- Compile Eiffel code in `a_folder'.
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
 			ace_file_generated: ace_file_generated
-			resource_file_generated: resource_file_generated			
+			resource_file_generated: resource_file_generated
 		local
 			l_directory: DIRECTORY
 			l_local_folder, l_cmd: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
-			-- Delete EIFGEN directory if exists.
-			l_local_folder := a_folder.twin
-			l_local_folder.append_character (Directory_separator)
-			l_local_folder.append (Eifgen)
-			create l_directory.make (l_local_folder)
-			if l_directory.exists then
-				l_directory.recursive_delete
-			end
-
 			if a_folder.is_equal (Client) or component_empty (a_folder) then
 				l_cmd := precompile_command
 			else
@@ -255,7 +198,7 @@ feature -- Basic Operations
 		end
 
 	check_finish_freezing_status (a_folder: STRING) is
-			-- Check whether finish_freezing was successful in `a_folder\EIFGEN\W_code'.
+			-- Check whether finish_freezing was successful.
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: not a_folder.is_empty
@@ -269,6 +212,8 @@ feature -- Basic Operations
 			l_local_folder := a_folder.twin
 			l_local_folder.append_character (Directory_separator)
 			l_local_folder.append (Eifgen)
+			l_local_folder.append_character (Directory_separator)
+			l_local_folder.append ("default")
 			l_local_folder.append_character (Directory_separator)
 			l_local_folder.append (W_code)
 			if a_folder.is_equal (Client) or component_empty (a_folder) then
@@ -306,7 +251,7 @@ feature -- Basic Operations
 			l_process_launcher.run_hidden
 			l_process_launcher.launch (l_string, environment.destination_folder, agent message_output.add_text)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	proxy_stub_file_name: STRING is
@@ -408,8 +353,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (100)
 			Result.append (eiffel_compiler)
-			Result.append (" -precompile -c_compile -batch -ace ")
-			Result.append (environment.workbench_ace_file_name)
+			Result.append (" -precompile -c_compile -batch -config ")
+			Result.append (environment.ecf_file_name)
 		end
 
 	eiffel_compile_command: STRING is
@@ -417,17 +362,17 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (100)
 			Result.append (eiffel_compiler)
-			Result.append (" -batch -c_compile -ace ")
-			Result.append (environment.workbench_ace_file_name)
+			Result.append (" -batch -clean -c_compile -config ")
+			Result.append (environment.ecf_file_name)
 		end
-			
+
 	user_def_file_name: STRING is
 			-- ".def" file name used for DLL compilation
 		do
 			Result := environment.project_name.twin
 			Result.append (Def_file_extension)
 		end
-	
+
 	Def_file_extension: STRING is ".def"
 			-- DLL definition file extension
 
@@ -440,14 +385,14 @@ feature {NONE} -- Implementation
 	Precompile_name: STRING is "precomp.epr"
 			-- Precompilation project name
 
-	Finish_freezing_command: STRING is 
+	Finish_freezing_command: STRING is
 			-- Finish freezing command line
 		do
 			create Result.make (100)
 			Result.append (Eiffel_installation_dir_name + "\studio\spec\windows\bin\finish_freezing -silent")
 		end
 
-	Eifgen: STRING is "EIFGEN"
+	Eifgen: STRING is "EIFGENs"
 			-- Eifgen folder name
 
 	W_code: STRING is "W_code"
@@ -455,7 +400,7 @@ feature {NONE} -- Implementation
 
 	Driver_executable: STRING is "driver.exe"
 			-- Precompilation driver executable
-	
+
 	Shared_library_option: STRING is
 			-- Dll definition file for Ace file
 		do

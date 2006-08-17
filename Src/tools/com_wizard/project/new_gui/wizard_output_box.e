@@ -48,7 +48,7 @@ inherit
 			copy,
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -83,19 +83,19 @@ feature -- Element Settings
 		do
 			open_eiffelstudio_button.disable_sensitive
 		end
-	
+
 	enable_generate_button is
 			-- Enable sensitivity on `generate' button.
 		do
 			generate_button.enable_sensitive
 		end
-		
+
 	disable_generate_button is
 			-- Disable sensitivity on `generate' button.
 		do
 			generate_button.disable_sensitive
 		end
-		
+
 feature -- Basic Operations
 
 	clear is
@@ -104,7 +104,7 @@ feature -- Basic Operations
 			output_text.set_text ("")
 			internal_text.wipe_out
 		end
-	
+
 	process_event (a_event: EV_THREAD_EVENT) is
 			-- Process event `a_event'.
 		require
@@ -188,7 +188,7 @@ feature -- Basic Operations
 					else
 						check
 							should_not_be_here: False
-						end					
+						end
 					end
 				end
 			end
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			append_text ("%R%N")
 			update_output
 		end
-				
+
 	add_text (a_text: STRING) is
 			-- Append text `a_text' to content of `output_text'.
 		require
@@ -351,15 +351,15 @@ feature {NONE} -- Implementation
 			append_text (a_text)
 			update_output
 		end
-	
+
 	append_text (a_text: STRING) is
 			-- Append `a_text' to `text', wrap lines of more than 1024 characters.
-		require	
+		require
 			non_void_text: a_text /= Void
-		do	
+		do
 			if a_text.count < 1023 then
 				internal_text.append (a_text)
-			else	
+			else
 				internal_text.append (a_text.substring (1, 1022))
 				internal_text.append ("%R%N")
 				append_text (a_text.substring (1023, a_text.count))
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 				output_text.scroll_to_line (l_scroll)
 			end
 		end
-		
+
 	eiffelstudio_command (a_folder: STRING): STRING is
 			-- Launch EiffelBench with first project in `a_folder'
 		require
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 					l_file_list.after or l_found
 				loop
 					l_file := l_file_list.item
-					l_found := l_file.substring (l_file.count - 3, l_file.count).is_equal (".epr")
+					l_found := l_file.substring (l_file.count - 3, l_file.count).is_equal (".ecf")
 					if l_found then
 						Result.append_character ('"')
 						Result.append (a_folder)

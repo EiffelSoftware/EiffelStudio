@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value_validator: ARGUMENT_SWITCH_INTEGER_RANGE_VALIDATOR
+	value_validator: ARGUMENT_INTEGER_RANGE_VALIDATOR
 			-- Retrieves an validator used to check current switch value
 		do
 			create Result.make (min, max)

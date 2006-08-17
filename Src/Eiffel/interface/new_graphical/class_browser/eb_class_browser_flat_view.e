@@ -580,8 +580,6 @@ feature{NONE} -- Initialization
 			grid.header.i_th (2).set_text (interface_names.l_class_browser_features)
 			grid.enable_tree
 			grid.disable_row_height_fixed
-			grid.pick_ended_actions.force_extend (agent on_pick_ended)
-			grid.set_item_pebble_function (agent on_pick)
 			grid.enable_multiple_item_selection
 			grid.row_expand_actions.force_extend (agent on_row_expanded)
 			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
@@ -600,6 +598,7 @@ feature{NONE} -- Initialization
 			on_show_feature_from_any_changed_from_outside_agent := agent on_show_feature_from_any_changed_from_outside
 			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
 			preferences.class_browser_data.show_feature_from_any_preference.change_actions.extend (on_show_feature_from_any_changed_from_outside_agent)
+			enable_editor_token_pnd
 		end
 
 	build_sortable_and_searchable is

@@ -891,8 +891,6 @@ feature{NONE} -- Initialization
 			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (line_height)
-			grid.pick_ended_actions.force_extend (agent on_pick_ended)
-			grid.set_item_pebble_function (agent on_pick)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
@@ -904,6 +902,7 @@ feature{NONE} -- Initialization
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_multiple_row_selection
 			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
+			enable_editor_token_pnd
 		end
 
 	build_sortable_and_searchable is

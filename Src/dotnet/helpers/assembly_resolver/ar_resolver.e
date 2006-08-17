@@ -86,14 +86,32 @@ feature {NONE} -- Resolution
 			l_parts := split_assembly_name (a_args.name)
 
 				-- Attempt to resolve assembly dependency
-			Result := resolve_by_name (l_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
+			Result := resolve_assembly_by_name (l_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
 		end
 
 feature -- Resolution
 
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY is
+	resolve_by_assembly_name (a_domain: APP_DOMAIN; a_name: ASSEMBLY_NAME): STRING is
+			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of `a_name'
+		require
+			a_domain_not_void: a_domain /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_parts: LIST [STRING]
+		do
+				-- Split assembly name to be resolved into relivent chunks
+			l_parts := split_assembly_name (a_name.to_string)
+
+				-- Attempt to resolve assembly dependency
+			Result := resolve_by_name (a_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
+		ensure
+			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING is
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
-			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
+			-- and optionally version `a_version', culture `a_culture' and public key token `a_key', and return file name
 		require
 			a_domain_not_void: a_domain /= Void
 			a_name_not_void: a_name /= Void
@@ -105,11 +123,13 @@ feature -- Resolution
 			l_file_name: FILE_NAME
 			l_name: ASSEMBLY_NAME
 		do
-			{SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
-			if friendly_name /= Void then
-				{SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
+			debug ("trace")
+				{SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
+				if friendly_name /= Void then
+					{SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
+				end
+				{SYSTEM_DLL_TRACE}.write_line_string (".")
 			end
-			{SYSTEM_DLL_TRACE}.write_line_string (".")
 
 			l_paths := resolve_paths
 			l_cursor := l_paths.cursor
@@ -119,7 +139,9 @@ feature -- Resolution
 			until
 				l_paths.after or Result /= Void
 			loop
-				{SYSTEM_DLL_TRACE}.write_line_string ("Looking in '" + l_paths.item + "'.")
+				debug ("trace")
+					{SYSTEM_DLL_TRACE}.write_line_string ("Looking in '" + l_paths.item + "'.")
+				end
 
 				from
 					assembly_extensions.start
@@ -128,24 +150,51 @@ feature -- Resolution
 				loop
 					create l_file_name.make_from_string (l_paths.item)
 					l_file_name.set_file_name (a_name + assembly_extensions.item)
-					{SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
+					debug ("trace")
+						{SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
+					end
 					if (create {RAW_FILE}.make (l_file_name)).exists then
-						{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
+						debug ("trace")
+							{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
+						end
 						l_name := get_assembly_name (l_file_name)
 						if l_name /= Void then
 							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
-								{SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
-								Result := load_assembly (l_file_name)
+								debug ("trace")
+									{SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
+								end
+
+								Result := l_file_name
 							end
 						end
 					end
 					assembly_extensions.forth
 				end
-
 				l_paths.forth
 			end
-
 			l_paths.go_to (l_cursor)
+		ensure
+			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
+	resolve_assembly_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY is
+			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
+			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
+			--
+			-- Note: This routine can only be used for assemblies not requiring special execution permissions.
+		require
+			a_domain_not_void: a_domain /= Void
+			a_name_not_void: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
+		local
+			l_file_name: STRING
+		do
+			l_file_name := resolve_by_name (a_domain, a_name, a_version, a_culture, a_key)
+			if l_file_name /= Void then
+				Result := load_assembly (l_file_name)
+			end
 		ensure
 			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
 		end
@@ -455,6 +504,10 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
+					-- This will fail on assemblies requiring execution permission.
+					-- This is the behavior because most application require execution.
+					-- For reflection tools, they should call `resolve_by_*' functions and load
+					-- an assembly using {ASSEMBLY}.relfection_load_from (2.0+).
 				Result := {ASSEMBLY}.load_from (a_path)
 			end
 		rescue

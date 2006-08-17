@@ -17,7 +17,7 @@ inherit
 			validate_arguments
 		end
 
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_BASE_PARSER
 		rename
 			make as make_lite
 		export
@@ -69,12 +69,10 @@ feature {NONE} -- Validation
 	validate_arguments is
 			-- Validates arguments to ensure they are configured correctly
 		do
-			Precursor {ARGUMENT_MULTI_PARSER}
-			if successful then
-				if values.count > 1 then
-					add_template_error (multi_loose_argument_error, [loose_argument_type.as_lower])
-				end
+			if values.count > 1 then
+				add_template_error (multi_loose_argument_error, [loose_argument_type.as_lower])
 			end
+			Precursor {ARGUMENT_MULTI_PARSER}
 		end
 
 feature {NONE} -- Error Constants

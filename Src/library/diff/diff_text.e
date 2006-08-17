@@ -243,7 +243,7 @@ feature -- Basic operations
 						end
 						from
 						until
-							lines.index >= tmp.to_integer
+							lines.after or lines.index >= tmp.to_integer
 						loop
 							Result.append (lines.item)
 
@@ -258,19 +258,25 @@ feature -- Basic operations
 							Result.append (commands.item.substring (2, commands.item.count))
 							Result.append_character (line_delimiter)
 						elseif commands.item.item (1) = del_char then
-							lines.forth
-						elseif commands.item.item (1) = match_char then
-							Result.append (lines.item)
-							lines.forth
 							if not lines.after then
-								Result.append_character (line_delimiter)
+								lines.forth
+							end
+						elseif commands.item.item (1) = match_char then
+							if not lines.after then
+								Result.append (lines.item)
+								lines.forth
+								if not lines.after then
+									Result.append_character (line_delimiter)
+								end
 							end
 						end
 					end
 					commands.forth
 				else
 					Result.append (lines.item)
-					lines.forth
+					if not lines.after then
+						lines.forth
+					end
 					if not lines.after then
 						Result.append_character (line_delimiter)
 					end

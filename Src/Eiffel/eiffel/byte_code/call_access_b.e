@@ -12,7 +12,8 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged,
-			enlarged_on
+			enlarged_on,
+			generate_parameters
 		end
 
 	SHARED_NAMES_HEAP
@@ -154,6 +155,40 @@ feature -- Byte code generation
 		do
 		end
 
+	generate_parameters (reg: REGISTRABLE) is
+			-- Generate code for parameters computation.
+			-- `reg' ("Current") is not used except for
+			-- inlining
+		local
+			type_i: TYPE_I
+			class_type: CL_TYPE_I
+			basic_type: BASIC_I
+			buf: GENERATION_BUFFER
+		do
+			Precursor (reg)
+			type_i := context_type
+				-- Special provision is made for calls on basic types
+				-- (they have to be themselves known by the compiler).
+				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only means
+				-- that we are currently performing a static access call on a feature
+				-- from a basic class. Assuming otherwise is not correct as you
+				-- cannot seriously inherit from a basic class.
+			if type_i.is_basic and then precursor_type = Void then
+				basic_type ?= type_i
+				if basic_type.is_bit or else not is_feature_special (True, basic_type) then
+					buf := buffer
+					class_type := basic_type.reference_type
+						-- If an invariant is to be checked however, the
+						-- metamorphosis was already made by the invariant
+						-- checking routine.
+					basic_type.metamorphose (basic_register, reg,
+									buf, context.workbench_mode)
+					buf.put_character (';')
+					buf.put_new_line
+				end
+			end
+		end
+
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate access on `reg' in a `typ' context\
 		require
@@ -209,12 +244,6 @@ feature -- Byte code generation
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					buf.put_character ('(')
-					basic_type.metamorphose (basic_register, reg,
-									buf, context.workbench_mode)
-					buf.put_character (',')
-					buf.put_new_line
-					buf.put_character ('%T')
 					generate_metamorphose_end (basic_register, reg,
 									class_type, basic_type, buf)
 				end
@@ -261,8 +290,6 @@ feature -- Byte code generation
 			generate_end (gen_reg, class_type)
 
 				-- Now generate the parameters of the call, if needed.
-			buf.put_string (");")
-			buf.put_new_line
 			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
 		end
 

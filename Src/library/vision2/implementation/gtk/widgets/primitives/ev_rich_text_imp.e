@@ -684,10 +684,10 @@ feature -- Status setting
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
-			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
+			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press, call_application_events)
 			if current_format /= Void and a_key_press and then a_key /= Void then
 				if (a_key.code = {EV_KEY_CONSTANTS}.key_delete or a_key.is_arrow or a_key.code = {EV_KEY_CONSTANTS}.key_back_space) then
 					current_format := Void

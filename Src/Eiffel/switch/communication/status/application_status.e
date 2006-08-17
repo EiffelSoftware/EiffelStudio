@@ -75,6 +75,7 @@ feature -- Objects kept from session to session
 					print (generator + ".kept_objets : " + objects_keeper.count.out + " items%N")
 				end
 				create {ARRAYED_LIST [STRING]} Result.make (objects_keeper.count)
+				Result.compare_objects
 				from
 					objects_keeper.start
 				until
@@ -88,6 +89,8 @@ feature -- Objects kept from session to session
 					objects_keeper.forth
 				end
 			end
+		ensure
+			Result_compare_objects: Result /= Void implies Result.object_comparison
 		end
 
 	clear_kept_objects is

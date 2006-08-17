@@ -72,6 +72,8 @@ feature -- Updating
 	keep_only_objects (kept_addrs: LIST [STRING]) is
 			-- Keep references to `kept_addrs' and ask user application
 			-- to wean the other adopted objects not used anymore.
+		require
+			kept_addrs_compare_object: kept_addrs /= Void implies kept_addrs.object_comparison
 		local
 			addresses: SPECIAL [STRING];
 			i, addr_table_count: INTEGER;
@@ -84,7 +86,10 @@ feature -- Updating
 				i >= addr_table_count
 			loop
 				h_addr := addr_table.item (addresses.item (i));
-				if kept_addrs = Void or else not kept_addrs.has (h_addr) then
+				if
+					kept_addrs = Void
+					or else not kept_addrs.has (h_addr)
+				then
 					forget_obj (h_addr);
 					addr_table.remove (addresses.item (i))
 				end

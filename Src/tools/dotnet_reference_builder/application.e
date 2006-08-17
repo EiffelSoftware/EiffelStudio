@@ -139,6 +139,8 @@ feature {NONE} -- Basic Operations
 					end
 				else
 					io.put_string ("No modification has taken place because of unresolved assembly reference.%N")
+						-- Failure
+					{ENVIRONMENT}.exit (-1)
 				end
 			end
 		end
@@ -195,7 +197,7 @@ feature {NONE} -- Reflection
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := {ASSEMBLY}.load_from (a_path)
+				Result := {ASSEMBLY}.reflection_only_load_from (a_path)
 			end
 		rescue
 			retried := True
@@ -207,12 +209,23 @@ feature {NONE} -- Reflection
 		require
 			a_name_attached: a_name /= Void
 		local
+			l_fn: STRING
 			retried: BOOLEAN
+			retried_again: BOOLEAN
 		do
-			if not retried then
-				Result := {ASSEMBLY}.load (a_name)
+			if not retried_again then
+				if not retried then
+					Result := {ASSEMBLY}.reflection_only_load (a_name.to_string)
+				else
+						-- Default app domain resolution does not work when loading in a reflection only context.
+					l_fn := resolver.resolve_by_assembly_name ({APP_DOMAIN}.current_domain, a_name)
+					if l_fn /= Void then
+						Result := load_assembly (l_fn)
+					end
+				end
 			end
 		rescue
+			retried_again := retried
 			retried := True
 			retry
 		end

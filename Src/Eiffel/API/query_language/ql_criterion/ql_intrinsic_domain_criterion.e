@@ -62,30 +62,6 @@ feature -- Status report
 			-- them by going through `source_domain'. So we store those items in `used_in_domain_generator', and after the going through,
 			-- we processed those items separately.
 
-feature -- Setting
-
-	set_criterion_domain (a_domain: QL_DOMAIN) is
-			-- Set `criterion_domain' with `a_domain'
-		local
-			l_delayed_domain: QL_DELAYED_DOMAIN
-		do
-			if criterion_domain /= Void and then criterion_domain.is_delayed then
-				l_delayed_domain ?= criterion_domain
-				if l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.prune_all (initialize_agent)
-				end
-			end
-			criterion_domain := a_domain
-			is_criterion_domain_evaluated := False
-			if criterion_domain.is_delayed then
-				l_delayed_domain ?= a_domain
-				check l_delayed_domain /= Void end
-				if not l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.extend (initialize_agent)
-				end
-			end
-		end
-
 feature -- Process
 
 	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
@@ -115,6 +91,7 @@ feature{NONE} -- Implementation
 		do
 			reset
 			find_result
+			is_criterion_domain_evaluated := True
 		end
 
 	cache_intrinsic_domain is

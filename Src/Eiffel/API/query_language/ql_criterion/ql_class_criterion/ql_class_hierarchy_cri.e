@@ -98,7 +98,6 @@ feature{NONE} -- Implementation
 				l_finder.call ([l_class_tbl.item_for_iteration.class_c])
 				l_class_tbl.forth
 			end
-			is_criterion_domain_evaluated := True
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 

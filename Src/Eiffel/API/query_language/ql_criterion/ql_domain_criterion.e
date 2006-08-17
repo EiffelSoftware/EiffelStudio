@@ -36,7 +36,24 @@ feature -- Setting
 			-- Set `criterion_domain' with `a_domain'
 		require
 			a_domain_attached: a_domain /= Void
-		deferred
+		local
+			l_delayed_domain: QL_DELAYED_DOMAIN
+		do
+			if criterion_domain /= Void and then criterion_domain.is_delayed then
+				l_delayed_domain ?= criterion_domain
+				if l_delayed_domain.actions.has (initialize_agent) then
+					l_delayed_domain.actions.prune_all (initialize_agent)
+				end
+			end
+			criterion_domain := a_domain
+			is_criterion_domain_evaluated := False
+			if criterion_domain.is_delayed then
+				l_delayed_domain ?= a_domain
+				check l_delayed_domain /= Void end
+				if not l_delayed_domain.actions.has (initialize_agent) then
+					l_delayed_domain.actions.extend (initialize_agent)
+				end
+			end
 		ensure
 			criterion_domain_set: criterion_domain = a_domain
 		end
@@ -54,6 +71,8 @@ feature{NONE} -- Initialization
 	initialize_domain is
 			-- Initialize for `criterion_domain'.
 		deferred
+		ensure
+			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
 	initialize_agent: PROCEDURE [ANY, TUPLE] is

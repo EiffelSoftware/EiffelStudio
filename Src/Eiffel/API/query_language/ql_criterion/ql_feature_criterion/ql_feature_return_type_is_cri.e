@@ -23,13 +23,19 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: like item_type): BOOLEAN is
 			-- Evaluate `a_item'.
+		local
+			l_return_type: CLASS_C
 		do
 			if a_item.is_real_feature then
 				if a_item.e_feature.type /= Void then
 					if not is_criterion_domain_evaluated then
 						initialize_domain
 					end
-					Result := return_types.has (return_type (a_item.e_feature).class_id)
+					l_return_type := return_type (a_item.e_feature)
+					Result := return_types.has (l_return_type.class_id) or else has_conformed_return_type (l_return_type)
+					if not Result then
+
+					end
 				end
 			end
 		end
@@ -69,20 +75,37 @@ feature{NONE} -- Implementation
 			loop
 				l_class_c := l_class_domain.item.class_c
 				check l_class_c /= Void end
-				l_types.force (l_class_c.class_id)
+				l_types.force (l_class_c, l_class_c.class_id)
 				l_class_domain.forth
 			end
 			return_types := l_types
 			is_criterion_domain_evaluated := True
 		ensure then
 			return_type_table_classes_attached: return_types /= Void
-			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
-	return_types: DS_HASH_SET [INTEGER];
+	return_types: HASH_TABLE [CLASS_C, INTEGER]
 			-- Set of return types found in `criterion_domain'
-			-- Key is class id
+			-- Key is class id, value is CLASS_C of that class id.
 
+	has_conformed_return_type (a_return_type: CLASS_C): BOOLEAN is
+			-- Does `a_return_type' conform to any class in `return_types'?
+		require
+			a_return_type_attached: a_return_type /= Void
+		local
+			l_return_types: like return_types
+		do
+			l_return_types := return_types
+			from
+				l_return_types.start
+			until
+				l_return_types.after or Result
+			loop
+				Result := a_return_type.conform_to (l_return_types.item_for_iteration)
+				l_return_types.forth
+			end
+		end
+			
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

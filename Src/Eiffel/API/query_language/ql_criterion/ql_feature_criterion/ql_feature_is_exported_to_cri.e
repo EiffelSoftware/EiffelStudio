@@ -55,7 +55,6 @@ feature{NONE} -- Implementation
 			is_criterion_domain_evaluated := True
 		ensure then
 			client_classes_attached: clients /= Void
-			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
 	clients: QL_CLASS_DOMAIN;

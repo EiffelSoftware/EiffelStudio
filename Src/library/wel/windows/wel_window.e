@@ -1571,6 +1571,7 @@ feature {WEL_WINDOW} -- Implementation
 			-- Create the window
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
+			l_error: WEL_ERROR
 		do
 			parent := a_parent
 			create a_wel_string1.make (class_name)
@@ -1589,6 +1590,9 @@ feature {WEL_WINDOW} -- Implementation
 			if item /= default_pointer then
 				register_current_window
 				set_default_window_procedure
+			else
+				create l_error
+				l_error.display_last_error
 			end
 		ensure
 			exists: exists

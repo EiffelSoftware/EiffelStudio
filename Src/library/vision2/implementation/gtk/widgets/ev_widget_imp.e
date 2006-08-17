@@ -91,25 +91,36 @@ feature {NONE} -- Initialization
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
 			temp_key_string: STRING_32
+			l_char: CHARACTER_32
 			app_imp: like app_implementation
 		do
 			app_imp := app_implementation
-			if has_focus or else has_capture then
-					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
+			if has_focus then
+					-- We make sure that only the widget with focus receives key events
 				if a_key_press then
 						-- The event is a key press event.
-					if app_imp.key_press_actions_internal /= Void then
+					if app_imp.key_press_actions_internal /= Void and then call_application_events then
 						app_imp.key_press_actions_internal.call ([interface, a_key])
 					end
 					if a_key /= Void and then key_press_actions_internal /= Void then
 						key_press_actions_internal.call ([a_key])
 					end
 					if key_press_string_actions_internal /= Void then
-						temp_key_string := a_key_string
+							-- Check to see if the character is a printable character.
+						if a_key_string /= Void and then a_key_string.valid_index (1) then
+							l_char := a_key_string.item (1)
+							if l_char.is_character_8 then
+								if l_char.to_character_8.is_printable then
+									temp_key_string := a_key_string
+								end
+							else
+								temp_key_string := a_key_string
+							end
+						end
 						if a_key /= Void then
 							if a_key.out.count /= 1 and not a_key.is_numpad then
 									-- The key pressed is an action key, we only want
@@ -128,7 +139,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 							end
 						end
 						if temp_key_string /= Void then
-							if app_imp.key_press_string_actions_internal /= Void then
+							if app_imp.key_press_string_actions_internal /= Void and then call_application_events then
 								app_imp.key_press_string_actions_internal.call ([interface, temp_key_string])
 							end
 							key_press_string_actions_internal.call ([temp_key_string])
@@ -137,7 +148,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				else
 						-- The event is a key release event.
 					if a_key /= Void then
-						if app_imp.key_release_actions_internal /= Void then
+						if app_imp.key_release_actions_internal /= Void and then call_application_events then
 							app_imp.key_release_actions.call ([interface, a_key])
 						end
 						if key_release_actions_internal /= Void then
@@ -426,13 +437,6 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
-
-	store_minimum_size is
-			-- Called when size is explicitly set, ie: from fixed or viewport
-		do
-			internal_minimum_width := minimum_width
-			internal_minimum_height := minimum_height
-		end
 
 	internal_minimum_width: INTEGER
 			-- Minimum width for the widget.

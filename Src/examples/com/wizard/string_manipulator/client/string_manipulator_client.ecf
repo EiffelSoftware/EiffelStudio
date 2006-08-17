@@ -8,7 +8,7 @@
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\client\Client\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\client\Common\Include"/>
 		<external_object location="$(ISE_LIBRARY)\examples\com\wizard\string_manipulator\generated\client\Client\Clib\$(ISE_C_COMPILER)\ecom.lib"/>
-		<precompile name="string_manipulator" location="..\generated_ecf\client\Client\string_manipulator_client.ecf" readonly="false"/>
+		<precompile name="string_manipulator" location="..\generated\client\Client\string_manipulator_client.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\client\"/>

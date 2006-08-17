@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 	previous_x_position, previous_y_position: INTEGER
 		-- Positions of previously set x and y coordinates of `Current'.
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 		do
 			l_app_imp := app_implementation
 			if not has_modal_window then
-				Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
+				Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press, True)
 					-- Fire the widget events.
 				a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 					if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
 						l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
 					else
-						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press, False)
 					end
 				end
 			else
@@ -551,6 +551,10 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		local
 			i: INTEGER
 		do
+			if not has_focus then
+				internal_set_focus
+			end
+			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				1,
@@ -569,10 +573,11 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 	release_keyboard_and_mouse is
 			-- Release mouse and keyboard grab.
 		do
+			{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
 			{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
-			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time			
+			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 		end
 
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation

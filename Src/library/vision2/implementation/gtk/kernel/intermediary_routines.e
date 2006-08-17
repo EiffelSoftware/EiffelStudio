@@ -85,7 +85,7 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 		do
 			a_widget ?= eif_id_object (a_object_id)
 			if a_widget /= Void and then not a_widget.is_destroyed then
-				a_widget.on_key_event (a_key, a_key_string, a_key_press)
+				a_widget.on_key_event (a_key, a_key_string, a_key_press, True)
 			end
 		end
 

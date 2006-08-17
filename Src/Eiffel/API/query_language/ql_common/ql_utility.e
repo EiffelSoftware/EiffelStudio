@@ -150,7 +150,6 @@ feature -- Type
 		do
 			l_type := a_type
 			if l_type.is_loose then
-				l_type := l_type.instantiation_in (l_type, l_type.associated_class.class_id)
 				l_type := l_type.actual_type
 				l_type := constrained_type (a_class, l_type)
 			end

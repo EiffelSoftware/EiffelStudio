@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ARGUMENT_SWITCH_VALUE_VALIDATOR
+	ARGUMENT_VALUE_VALIDATOR
 
 feature -- Access
 
@@ -64,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_SWITCH_VALUE_VALIDATOR}
+end -- class {ARGUMENT_VALUE_VALIDATOR}

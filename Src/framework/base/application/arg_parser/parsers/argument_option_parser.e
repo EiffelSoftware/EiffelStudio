@@ -9,7 +9,7 @@ deferred class
 	ARGUMENT_OPTION_PARSER
 
 inherit
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_BASE_PARSER
 		rename
 			make as make_lite
 		export
@@ -17,7 +17,7 @@ inherit
 		redefine
 			execute_noop
 		end
-		
+
 feature {NONE} -- Initialization
 
 	make (a_cs: like case_sensitive; a_usage_on_error: like display_usage_on_error) is

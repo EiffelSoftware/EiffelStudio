@@ -97,22 +97,35 @@ feature -- Byte code generation
 			valid_reg: reg /= Void
 			valid_value: value /= Void
 			valid_file: buffer /= Void
+		local
+			c: CREATE_TYPE
+			buf: like buffer
+			g: GEN_TYPE_I
 		do
-			reg.print_register
-			buffer.put_string (" = ")
-				-- Create associated reference type of Current.
-			if true_generics = Void then
-				(create {CREATE_TYPE}.make (Current)).generate
-			else
-				debug ("refactor_fixme")
-					(create {REFACTORING_HELPER}).fixme ("Provide correct code generation for TYPED_POINTER [...] so that it uses an expanded type rather than a POINTER_REF type.")
-				end
-				(create {CREATE_TYPE}.make (reference_type)).generate
+			buf := buffer
+			create c.make (Current)
+			if true_generics /= Void then
+				buf.put_character ('{')
+				buf.put_new_line
+				buf.indent
+				g ?= Current
+				system.byte_context.generate_gen_type_conversion (g)
 			end
-			buffer.put_string (", *")
+			reg.print_register
+			buf.put_string (" = ")
+			c.generate
+			buf.put_character (';')
+			buf.put_new_line
+			if true_generics /= Void then
+				buf.put_new_line
+				buf.exdent
+				buf.put_character ('}')
+				buf.put_new_line
+			end
+			buf.put_character ('*')
 			generate_access_cast (buffer)
 			reg.print_register
-			buffer.put_string (" = ")
+			buf.put_string (" = ")
 			value.print_register
 		end
 

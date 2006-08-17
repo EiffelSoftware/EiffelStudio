@@ -170,55 +170,33 @@ feature {NONE} -- Visitors
 			generate_melted_debugger_hook
 
 				-- Generate expression byte code
-			a_node.source.process (Current)
-
-			if a_node.source.is_hector then
-				l_hector_b ?= a_node.source
-				check l_hector_b_not_void: l_hector_b /= Void end
-				make_protected_byte_code (l_hector_b, 0)
-			end
-
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
 			l_source_type := context.real_type (a_node.source.type)
 			l_target_node := a_node.target
 			l_target_type := Context.real_type (l_target_node.type)
-			if l_target_type.is_expanded and l_source_type.is_none then
-				ba.append (Bc_exp_excep)
-			else
-				if l_target_type.is_bit then
-					ba.append (l_target_node.bit_assign_code)
-				elseif l_target_type.is_basic then
-						-- Target is basic: simple attachment if source type
-						-- is not none
-					ba.append (l_target_node.assign_code)
-				elseif l_target_type.is_expanded then
-					if not a_node.is_creation_instruction then
-						ba.append (bc_clone)
-					end
-						-- Target is expanded: copy with possible exception
-					ba.append (l_target_node.expanded_assign_code)
-				else
-					if not a_node.is_creation_instruction then
-							-- Target is a reference
-						if l_source_type.is_basic then
-								-- Source is basic and target is a reference:
-								-- metamorphose and simple attachment
-							ba.append (Bc_metamorphose)
-						elseif l_source_type.is_true_expanded then
-								-- Source is expanded and target is a reference: clone
-								-- and simple attachment
-							ba.append (Bc_clone)
-						else
-								-- Source can be a boxed expanded object.
-							generate_dynamic_clone (a_node.source, l_source_type)
-						end
-					end
-					ba.append (l_target_node.assign_code)
+			if a_node.is_creation_instruction then
+					-- Avoid object cloning.
+				a_node.source.process (Current)
+				if a_node.source.is_hector then
+					l_hector_b ?= a_node.source
+					check l_hector_b_not_void: l_hector_b /= Void end
+					make_protected_byte_code (l_hector_b, 0)
 				end
-
-				melted_assignment_generator.generate_assignment (ba, l_target_node)
+			else
+					-- Clone source object depending on its type and type of target.
+				make_expression_byte_code_for_type (a_node.source, l_target_type)
 			end
+				-- Generate assignment header depending of the type
+				-- of the target (local, attribute or result).
+			if l_target_type.is_bit then
+				ba.append (l_target_node.bit_assign_code)
+			elseif l_target_type.is_true_expanded then
+					-- Target is expanded: copy with possible exception
+				ba.append (l_target_node.expanded_assign_code)
+			else
+					-- Target is basic or reference: simple attachment
+				ba.append (l_target_node.assign_code)
+			end
+			melted_assignment_generator.generate_assignment (ba, l_target_node)
 		end
 
 	process_attribute_b (a_node: ATTRIBUTE_B) is
@@ -1293,10 +1271,10 @@ feature {NONE} -- Visitors
 			generate_melted_debugger_hook
 
 				-- Generate expression byte code
-			a_node.source.process (Current)
-
 			l_source_type := context.real_type (a_node.source.type)
 			l_target_type := context.creation_type (a_node.target.type)
+
+			make_expression_byte_code_for_type (a_node.source, l_target_type)
 
 			if l_target_type.is_none then
 				ba.append (Bc_none_assign)
@@ -1314,31 +1292,18 @@ feature {NONE} -- Visitors
 					elseif l_target_type.is_basic then
 						ba.append (a_node.target.assign_code)
 					else
-						ba.append (bc_clone)
 						ba.append (a_node.target.expanded_assign_code)
 					end
 					melted_assignment_generator.generate_assignment (ba, a_node.target)
 				else
 						-- Remove expression value because it is not used.
 					ba.append (bc_pop)
+					ba.append_uint32_integer (1)
 				end
 			else
 					-- Target is a reference
-				if l_source_type.is_basic then
-						-- Source is basic and target is a reference:
-						-- metamorphose and simple attachment
-					ba.append (Bc_metamorphose)
-				elseif l_source_type.is_true_expanded then
-						-- Source is expanded and target is a reference: clone
-						-- and simple attachment
-					ba.append (Bc_clone)
-				else
-						-- Source can be a boxed expanded object.
-					generate_dynamic_clone (a_node.source, l_source_type)
-				end
 				ba.append (a_node.target.reverse_code)
 				melted_assignment_generator.generate_assignment (ba, a_node.target)
-
 					-- Generate type of target
 				a_node.info.make_byte_code (ba)
 			end
@@ -1571,14 +1536,30 @@ feature {NONE} -- Implementation
 			target_type_not_void: a_target_type /= Void
 		local
 			l_expression_type: TYPE_I
+			l_hector_b: HECTOR_B
+			l_typed_pointer_type: TYPED_POINTER_I
 		do
 			an_expr.process (Current)
 			l_expression_type := context.real_type (an_expr.type)
+
+			if an_expr.is_hector then
+				l_hector_b ?= an_expr
+				check l_hector_b_not_void: l_hector_b /= Void end
+				make_protected_byte_code (l_hector_b, 0)
+			end
+
 			if a_target_type.is_reference then
 				if l_expression_type.is_basic then
 						-- Source is basic and target is a reference:
 						-- metamorphose
 					ba.append (Bc_metamorphose)
+					l_typed_pointer_type ?= l_expression_type
+					if l_typed_pointer_type /= Void then
+						debug ("refactor_to_implement")
+							(create {REFACTORING_HELPER}).to_implement ("Avoid freezing for TYPED_POINTER.")
+						end
+						system.set_freeze
+					end
 				elseif l_expression_type.is_expanded then
 						-- Source is expanded and target is a reference:
 						-- clone
@@ -1587,6 +1568,9 @@ feature {NONE} -- Implementation
 						-- Source can be a boxed expanded object.
 					generate_dynamic_clone (an_expr, l_expression_type)
 				end
+			elseif l_expression_type.is_none then
+					-- Reattachment of void to expanded.
+				ba.append (Bc_exp_excep)
 			elseif not a_target_type.is_basic and then l_expression_type.is_expanded then
 					-- Source and target are expanded:
 					-- clone

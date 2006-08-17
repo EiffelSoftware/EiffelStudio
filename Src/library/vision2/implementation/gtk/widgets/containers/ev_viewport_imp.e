@@ -198,9 +198,7 @@ feature {NONE} -- Implementation
 			else
 				item_height := -1
 			end
-
 			w_imp ?= item.implementation
-			w_imp.store_minimum_size
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (w_imp.c_object, item_width, item_height)
 		end
 
@@ -208,12 +206,12 @@ feature {NONE} -- Implementation
 			-- Reset minimum size.
 		do
 			Precursor (a_widget_imp)
-			a_widget_imp.reset_minimum_size
 			set_x_offset (0)
 			set_y_offset (0)
 		end
 
 	internal_x_offset, internal_y_offset: INTEGER
+		-- X and Y offset values for viewport.
 
 	horizontal_adjustment: POINTER is
 		do

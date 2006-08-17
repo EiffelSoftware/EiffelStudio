@@ -13,19 +13,10 @@ inherit
 
 	CONF_FILE_DATE
 
-create
-	make,
+create {CONF_FACTORY}
 	make_with_uuid
 
 feature {NONE} -- Initialization
-
-	make (a_name: STRING) is
-			-- Creation with a automatically generated UUID.
-		require
-			a_name_ok: a_name /= Void and not a_name.is_empty
-		do
-			make_with_uuid (a_name, (create {UUID_GENERATOR}).generate_uuid)
-		end
 
 	make_with_uuid (a_name: STRING; an_uuid: UUID) is
 			-- Creation with `a_name' and `an_uuid'.
@@ -188,7 +179,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		do
 			name := a_name.as_lower
 		ensure
-			name_set: name.is_equal (a_name)
+			name_set: name.is_case_insensitive_equal (a_name)
 		end
 
 	set_description (a_description: like description) is
@@ -199,7 +190,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_uuid (an_uuid: like uuid): BOOLEAN is
+	set_uuid (an_uuid: like uuid) is
 			-- Set `uuid' to `a_uuid'.
 		require
 			an_uuid_valid: an_uuid /= Void

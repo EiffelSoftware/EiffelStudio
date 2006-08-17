@@ -18,7 +18,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create
+create {CONF_FACTORY}
 	make_from_partial
 
 feature {NONE} -- Initialization

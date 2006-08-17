@@ -19,7 +19,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create
+create {CONF_FACTORY}
 	make
 
 feature {NONE} -- Initialization
@@ -99,13 +99,15 @@ feature -- Access, in compiled only, not stored to configuration file
 	library_root: STRING
 			-- Root location to use for relative paths, defaults to `location' if the setting is not set.
 		local
+			l_fac: CONF_FACTORY
 			l_target: CONF_TARGET
 			l_dir: CONF_DIRECTORY_LOCATION
 		do
 			Result := settings.item (s_library_root)
 			if Result /= Void then
 					-- create a new target instead of using Current because we could end in an infinite recursion otherwise.
-				create l_target.make ("dummy", system)
+				create l_fac
+				l_target := l_fac.new_target ("dummy", system)
 				create l_dir.make (Result, l_target)
 				Result := l_dir.evaluated_path
 			else

@@ -17,7 +17,7 @@ inherit
 			is_class_assembly
 		end
 
-create
+create {CONF_FACTORY}
 	make_assembly_class
 
 feature {NONE} -- Implementation

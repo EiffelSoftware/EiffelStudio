@@ -40,6 +40,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -121,7 +128,7 @@ feature -- Access
 	metric_archive_tab_index: INTEGER is 3
 	metric_result_tab_index: INTEGER is 4
 			-- Tab index for tabs in metric tool
-			
+
 feature -- Actions
 
 	on_tab_change is
@@ -134,6 +141,23 @@ feature -- Actions
 			elseif metric_notebook.selected_item = result_tab then
 				detail_result_panel.on_select
 			end
+		end
+
+feature -- Basic operations
+
+	recycle is
+			-- To be called when the button has became useless.
+		do
+			metric_evaluation_panel.recycle
+			new_metric_panel.recycle
+			metric_archive_panel.recycle
+			detail_result_panel.recycle
+
+			metric_evaluation_panel := Void
+			new_metric_panel := Void
+			metric_archive_panel := Void
+			detail_result_panel := Void
+			development_window := Void
 		end
 
 invariant

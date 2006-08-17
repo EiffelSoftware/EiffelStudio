@@ -68,6 +68,20 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+	SHARED_EDITOR_DATA
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -113,12 +127,16 @@ feature {NONE} -- Initialization
 			result_grid.enable_selection_on_single_button_click
 			result_grid.set_column_count_to (2)
 			result_grid.column (2).set_title (displayed_name (metric_names.t_path))
-			result_grid.pick_ended_actions.force_extend (agent on_pick_ended)
-			result_grid.set_item_pebble_function (agent on_pick)
 			result_grid.set_row_count_to (100)
 			result_grid.enable_partial_dynamic_content
 			result_grid.set_dynamic_content_function (agent item_function)
 
+				-- Setup `editor_token_grid_support'.
+			create editor_token_grid_support.make_with_grid (result_grid)
+			editor_token_grid_support.enable_editor_token_pnd
+			editor_token_grid_support.color_or_font_change_actions.extend (agent on_color_or_font_changed)
+			editor_token_grid_support.synchronize_color_or_font_change_with_editor
+			editor_token_grid_support.synchronize_scroll_behavior_with_editor
 
 			create grid_wrapper.make (result_grid)
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
@@ -139,8 +157,10 @@ feature {NONE} -- Initialization
 			create quick_search_bar.make (metric_tool.development_window)
 			quick_search_bar.attach_tool (grid_wrapper)
 			grid_wrapper.enable_search
+
 		ensure then
 			input_grid_attached: input_grid /= Void
+			editor_token_grid_support_attached: editor_token_grid_support /= Void
 		end
 
 feature -- Result loading
@@ -529,55 +549,30 @@ feature{NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation/Pick and drop
+	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			-- Supports editor token grid
 
-	last_picked_item: EV_GRID_ITEM
-			-- Last picked item	
+feature{NONE} -- Implementation
 
-	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
-			-- Action performed when pick ends
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+	on_color_or_font_changed is
+			-- Action to be performed when color or font used to display editor tokens changes
 		do
-			l_item ?= last_picked_item
-			if l_item /= Void then
-				l_item.set_last_picked_token (0)
-				if l_item.is_parented and then l_item.is_selectable then
-					l_item.enable_select
-				end
-				if l_item.is_parented then
-					l_item.redraw
-				end
+			if result_grid.is_displayed then
+				refresh_grid
 			end
-			last_picked_item := Void
-		ensure
-			last_picked_item_not_attached: last_picked_item = Void
 		end
 
-	on_pick (a_item: EV_GRID_ITEM): ANY is
-			-- Action performed when pick on `a_item'.
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_stone: STONE
-			l_index: INTEGER
+feature -- Recycle
+
+	recycle is
+			-- To be called when the button has became useless.
 		do
-			last_picked_item := Void
-			l_item ?= a_item
-			if l_item /= Void then
-				l_index := l_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_item.editor_token_pebble (l_index)
-					l_stone ?= Result
-					if l_stone /= Void then
-						result_grid.remove_selection
-						result_grid.set_accept_cursor (l_stone.stone_cursor)
-						result_grid.set_deny_cursor (l_stone.x_stone_cursor)
-						l_item.set_last_picked_token (l_index)
-						l_item.redraw
-						last_picked_item := l_item
-					end
-				end
+			if quick_search_bar /= Void then
+				quick_search_bar.recycle
 			end
+			quick_search_bar := Void
+			editor_token_grid_support.desynchronize_color_or_font_change_with_editor
+			editor_token_grid_support.desynchronize_scroll_behavior_with_editor
 		end
 
 invariant
@@ -586,6 +581,7 @@ invariant
 	input_grid_attached: input_grid /= Void
 	result_grid_attached: result_grid /= Void
 	grid_wrapper_attached: grid_wrapper /= Void
+	editor_token_grid_support_attached: editor_token_grid_support /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

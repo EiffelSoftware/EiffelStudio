@@ -61,6 +61,13 @@ inherit
 			default_create
 		end
 
+	EB_RECYCLABLE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -640,6 +647,13 @@ feature{NONE} -- Notification
 					synchronize_when_compile_stop
 				end
 			end
+		end
+
+feature -- Recycle
+
+	recycle is
+			-- To be called when the button has became useless.
+		do
 		end
 
 invariant

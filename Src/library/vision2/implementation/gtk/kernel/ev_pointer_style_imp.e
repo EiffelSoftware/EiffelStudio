@@ -20,6 +20,8 @@ inherit
 
 	EV_ANY_HANDLER
 
+	DISPOSABLE
+
 create
 	make
 
@@ -91,9 +93,11 @@ feature -- Command
 		end
 
 	destroy is
-			-- Destroy
+			-- Destroy `Current'.
 		do
+			set_is_in_destroy (True)
 			set_gdkpixbuf (default_pointer)
+			set_is_destroyed (True)
 		end
 
 feature -- Query
@@ -203,6 +207,14 @@ feature {EV_ANY_HANDLER} -- Implementation
 
 	predefined_cursor_code: INTEGER;
 		-- Predefined cursor code used for selecting platform cursors.
+
+feature {NONE} -- Implementation
+
+	dispose is
+			-- Clean up `Current'.
+		do
+			set_gdkpixbuf (default_pointer)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -205,7 +205,7 @@ feature -- Implementation
 			-- `a' modulo `b'.
 			--| Should be in DOUBLE_REF.
 		require
-			divisible: b /= 0.0
+			divisible: b > 0.0
 		do
 			if a >= 0.0 and a < b then
 				Result := a
@@ -222,16 +222,16 @@ feature -- Implementation
 			-- Is `n' a value between `a' and `b'?
 		do
 			Result := n >= a.min (b) and then n <= a.max (b)
-		end		
-		
+		end
+
 	pi_half: DOUBLE is 1.57079633
-	
+
 	pi_quater: DOUBLE is 0.785398163
-	
+
 	pi_times_two: DOUBLE is 6.28318531
-	
+
 	pi_times_three: DOUBLE is 9.42477796
-	
+
 	pi_half_times_three: DOUBLE is 4.71238898;
 
 indexing

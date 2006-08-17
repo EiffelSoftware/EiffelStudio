@@ -208,7 +208,7 @@ feature -- Generic conformance
 			gen_type ?= context.creation_type (type)
 
 			if gen_type /= Void then
-				node.generate_gen_type_conversion (gen_type)
+				context.generate_gen_type_conversion (gen_type)
 			end
 		end
 

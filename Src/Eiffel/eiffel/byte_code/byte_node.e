@@ -322,66 +322,6 @@ feature -- Generic conformance
 			l_buffer.put_new_line
 		end
 
-	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
-			-- Generate code for converting type id arrays
-			-- into single id's.
-		require
-			valid_type : gtype /= Void
-		local
-			use_init : BOOLEAN
-			idx_cnt : COUNTER
-			l_buffer: like buffer
-		do
-			l_buffer := buffer
-			use_init := not gtype.is_explicit
-
-				-- Optimize: Use static array only when `typarr' is
-				-- not modified by generated code in multithreaded mode only.
-				-- It is safe in monothreaded code as we are guaranteed that
-				-- only one thread of execution will use the modified `typarr'.
-			if not System.has_multithreaded or else not use_init then
-				l_buffer.put_string ("static ")
-			end
-			l_buffer.put_string ("int16 typarr [] = {")
-
-			l_buffer.put_integer (context.current_type.generated_id (context.final_mode))
-			l_buffer.put_character (',')
-
-			if use_init then
-				create idx_cnt
-				idx_cnt.set_value (1)
-				gtype.generate_cid_array (l_buffer, context.final_mode, True, idx_cnt)
-			else
-				gtype.generate_cid (l_buffer, context.final_mode, True)
-			end
-			l_buffer.put_string ("-1};")
-			l_buffer.put_new_line
-			l_buffer.put_string ("int16 typres;")
-			l_buffer.put_new_line
-			if not use_init then
-				l_buffer.put_string ("static int16 typcache = -1;")
-				l_buffer.put_new_line
-			end
-			l_buffer.put_new_line
-
-			if use_init then
-				-- Reset counter
-				idx_cnt.set_value (1)
-				gtype.generate_cid_init (l_buffer, context.final_mode, True, idx_cnt)
-			end
-
-			if not use_init then
-				l_buffer.put_string ("typres = RTCID2(&typcache, ")
-			else
-				l_buffer.put_string ("typres = RTCID2(NULL, ")
-			end
-			context.generate_current_dftype
-			l_buffer.put_string (", ")
-			l_buffer.put_integer (gtype.generated_id (context.final_mode))
-			l_buffer.put_string (", typarr);")
-			l_buffer.put_new_line
-			l_buffer.put_new_line
-		end
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

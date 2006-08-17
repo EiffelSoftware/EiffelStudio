@@ -93,7 +93,7 @@ feature
 			agent_type ?= context.real_type (type)
 			gen_type  ?= agent_type
 			generate_block_open
-			generate_gen_type_conversion (gen_type)
+			context.generate_gen_type_conversion (gen_type)
 			print_register
 			buf.put_string (" = ")
 			buf.put_string ("RTLNR2(typres, ")

@@ -364,8 +364,6 @@ feature{NONE} -- Initialization
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
 			grid.header.i_th (2).set_text (interface_names.l_class_browser_features)
 			grid.enable_tree
-			grid.pick_ended_actions.force_extend (agent on_pick_ended)
-			grid.set_item_pebble_function (agent on_pick)
 			grid.enable_multiple_item_selection
 			grid.key_press_actions.extend (agent on_key_pressed)
 			if drop_actions /= Void then
@@ -374,6 +372,7 @@ feature{NONE} -- Initialization
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
 			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
 			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
+			enable_editor_token_pnd
 		end
 
 	build_sortable_and_searchable is

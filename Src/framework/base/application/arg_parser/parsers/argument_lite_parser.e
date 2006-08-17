@@ -1,12 +1,12 @@
 indexing
-	description: "A light weight argument parser for simple application command line argument configurations."
+	description: "A base argument parser for simple application command line argument configurations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ARGUMENT_LITE_PARSER
+	ARGUMENT_BASE_PARSER
 
 feature {NONE} -- Initialization
 
@@ -77,6 +77,22 @@ feature -- Access
 			no_trailing_separator: Result.item (Result.count) /= op_env.directory_separator
 		end
 
+	loose_argument_validator: ARGUMENT_VALUE_VALIDATOR assign set_loose_argument_validator
+			-- Validator used to validate any loose arguments
+
+feature -- Element change
+
+	set_loose_argument_validator (a_validator: like loose_argument_validator) is
+			-- Sets `loose_argument_validator' with `a_validator'
+		require
+			a_validator_attached: a_validator /= Void
+			accepts_loose_arguments: accepts_loose_arguments
+		do
+			loose_argument_validator := a_validator
+		ensure
+			loose_argument_validator_set: loose_argument_validator = a_validator
+		end
+
 feature -- Query
 
 	options_of_name (a_name: STRING): LIST [ARGUMENT_OPTION] is
@@ -116,6 +132,87 @@ feature -- Query
 				create l_result.make (0)
 			end
 			check l_result_attached: l_result /= Void end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	options_values_of_name (a_name: STRING): LIST [STRING] is
+			-- Retrieves a list of option values, passed by user, by name
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			parsed: parsed
+		local
+			l_options: like options_of_name
+			l_result: ARRAYED_LIST [STRING]
+		do
+			l_options := options_of_name (a_name)
+			create l_result.make (l_options.count)
+			if not l_options.is_empty then
+				l_options.do_all (agent (a_list: ARRAYED_LIST [STRING]; a_option: ARGUMENT_OPTION)
+					require
+						a_list_attached: a_list /= Void
+						a_option_attached: a_option /= Void
+					do
+						if a_option.has_value then
+							a_list.extend (a_option.value)
+						end
+					ensure
+						a_list_has_a_path: a_list.has (a_option.value)
+					end (l_result, ?))
+			end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	unique_options_values_of_name (a_name: STRING; a_ignore_case: BOOLEAN): LIST [STRING] is
+			-- Retrieves a list of option unique values, passed by user, by name.
+			-- If `a_ignore_case' then case is ignored when comparing values
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			parsed: parsed
+		local
+			l_options: like options_of_name
+			l_result: ARRAYED_LIST [STRING]
+			l_comp_list: ARRAYED_LIST [STRING]
+		do
+			l_options := options_of_name (a_name)
+			create l_result.make (l_options.count)
+			create l_comp_list.make (l_options.count)
+			l_result.compare_objects
+			l_comp_list.compare_objects
+			if not l_options.is_empty then
+				l_options.do_all (agent (a_list: ARRAYED_LIST [STRING]; a_ic: BOOLEAN; a_option: ARGUMENT_OPTION; a_nlist: ARRAYED_LIST [STRING])
+					require
+						a_list_attached: a_list /= Void
+						a_list_compares_objects: a_list.object_comparison
+						a_option_attached: a_option /= Void
+						a_nlist_attached: a_nlist /= Void
+						a_nlist_compares_objects: a_nlist.object_comparison
+					local
+						l_value: STRING
+						l_lvalue: STRING
+					do
+						if a_option.has_value then
+							l_value := a_option.value
+							if a_ic then
+								l_lvalue := l_value.as_lower
+							end
+							if (not a_ic and not a_list.has (l_value)) or else (a_ic and not a_nlist.has (l_lvalue)) then
+								a_list.extend (l_value)
+								if a_ic then
+									check l_lvalue_attached: l_lvalue /= Void end
+									a_nlist.extend (l_lvalue)
+								end
+							end
+						end
+					ensure
+						a_list_has_a_path: a_list.has (a_option.value)
+					end (l_result, a_ignore_case, ?, l_comp_list))
+			end
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
@@ -462,7 +559,6 @@ feature {NONE} -- Validation
 	validate_arguments is
 			-- Validates arguments to ensure they are configured correctly
 		require
-			successful: successful
 			parsed: parsed
 		local
 			l_switches: like available_switches
@@ -473,21 +569,36 @@ feature {NONE} -- Validation
 			l_switch: ARGUMENT_SWITCH
 			l_val_switch: ARGUMENT_VALUE_SWITCH
 			l_value: STRING
-			l_validator: ARGUMENT_SWITCH_VALUE_VALIDATOR
+			l_validator: ARGUMENT_VALUE_VALIDATOR
+			l_succ: BOOLEAN
 		do
 			l_values := values
 			if not l_values.is_empty then
-
 				if not accepts_loose_argument then
 					add_error (loose_argument_specified_error)
 				elseif not accepts_multiple_loose_arguments and l_values.count > 1 then
 					add_error (multiple_loose_argument_specified_error)
+				end
+				if accepts_loose_arguments then
+					l_validator := loose_argument_validator
+					if loose_argument_validator /= Void then
+						l_cursor := l_values.cursor
+						from l_values.start until l_values.after loop
+							l_validator.validate_value (l_values.item)
+							if not l_validator.is_option_valid then
+								add_template_error (invalid_loose_value_with_reason, [l_values.item, l_validator.reason])
+							end
+							l_values.forth
+						end
+						l_values.go_to (l_cursor)
+					end
 				end
 			end
 
 			l_switches := available_switches
 			l_cursor := l_switches.cursor
 			from l_switches.start until l_switches.after loop
+				l_succ := True
 				l_switch := l_switches.item
 				l_options := options_of_name (l_switch.name)
 
@@ -512,11 +623,12 @@ feature {NONE} -- Validation
 								l_value := l_options.item.value
 								if l_value = Void or else l_value.is_empty then
 									add_template_error (require_switch_value, [l_switch.name])
+									l_succ := False
 								end
 								l_options.forth
 							end
 						end
-						if successful then
+						if l_succ then
 
 								-- Check argument is valid
 							l_validator := l_val_switch.value_validator
@@ -532,6 +644,7 @@ feature {NONE} -- Validation
 							end
 						end
 					else
+
 							-- Check regular switches do not have values
 						from l_options.start until l_options.after loop
 							l_value := l_options.item.value
@@ -1061,6 +1174,7 @@ feature {NONE} -- Error Constants
 	loose_argument_specified_error: STRING is "Arguments without a switch prefix are not valid arguments."
 	multiple_loose_argument_specified_error: STRING is "Only one argument without a switch prefix can be passed."
 	invalid_switch_value_with_reason: STRING is "'{1}' is an invalid option for switch '{2}'.%N{3}"
+	invalid_loose_value_with_reason: STRING is "'{1}' is an invalid option.%N{2}"
 
 feature {NONE} -- Internal Implementation Cache
 
@@ -1107,4 +1221,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_LITE_PARSER}
+end -- class {ARGUMENT_BASE_PARSER}

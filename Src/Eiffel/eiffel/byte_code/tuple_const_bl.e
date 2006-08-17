@@ -10,8 +10,8 @@ class TUPLE_CONST_BL
 inherit
 	TUPLE_CONST_B
 		redefine
-			analyze, generate, 
-			register, set_register, 
+			analyze, generate,
+			register, set_register,
 			free_register, unanalyze
 		end;
 	SHARED_TABLE
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Register for TUPLE
@@ -29,7 +29,7 @@ feature
 			-- Register for metamorphosis
 
 	set_register (r: REGISTRABLE) is
-			-- Set `register' to `r' 
+			-- Set `register' to `r'
 		do
 			register := r
 		end
@@ -53,12 +53,12 @@ feature
 				i := 0
 				expressions.start
 			until
-				expressions.after 
+				expressions.after
 			loop
 				expr ?= expressions.item
 				expr_type := context.real_type (expr.type)
 
-				if expr_type.is_true_expanded then 
+				if expr_type.is_true_expanded then
 					require_meta := True
 				end
 				expr.analyze
@@ -77,7 +77,7 @@ feature
 			expr: EXPR_B
 		do
 			metamorphose_reg := Void
-			set_register (Void)	
+			set_register (Void)
 			from
 				expressions.start
 			until
@@ -113,14 +113,14 @@ feature
 feature {NONE} -- C code generation
 
 	generate_tuple_creation (real_ty: TUPLE_TYPE_I; workbench_mode: BOOLEAN) is
-			-- Generate the object creation of 
+			-- Generate the object creation of
 			-- manifest tuple.
 		local
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
 			generate_block_open
-			generate_gen_type_conversion (real_ty)
+			context.generate_gen_type_conversion (real_ty)
 			print_register
 			buf.put_string (" = ")
 			buf.put_string ("RTLNTS(typres, ");

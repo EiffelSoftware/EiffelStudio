@@ -241,6 +241,69 @@ feature -- Setting
 			assertion_type := a
 		end
 
+feature -- Code generation
+
+	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
+			-- Generate code for converting type id arrays
+			-- into single id's.
+		require
+			valid_type : gtype /= Void
+		local
+			use_init : BOOLEAN
+			idx_cnt : COUNTER
+			l_buffer: like buffer
+		do
+			l_buffer := buffer
+			use_init := not gtype.is_explicit
+
+				-- Optimize: Use static array only when `typarr' is
+				-- not modified by generated code in multithreaded mode only.
+				-- It is safe in monothreaded code as we are guaranteed that
+				-- only one thread of execution will use the modified `typarr'.
+			if not System.has_multithreaded or else not use_init then
+				l_buffer.put_string ("static ")
+			end
+			l_buffer.put_string ("int16 typarr [] = {")
+
+			l_buffer.put_integer (current_type.generated_id (final_mode))
+			l_buffer.put_character (',')
+
+			if use_init then
+				create idx_cnt
+				idx_cnt.set_value (1)
+				gtype.generate_cid_array (l_buffer, final_mode, True, idx_cnt)
+			else
+				gtype.generate_cid (l_buffer, final_mode, True)
+			end
+			l_buffer.put_string ("-1};")
+			l_buffer.put_new_line
+			l_buffer.put_string ("int16 typres;")
+			l_buffer.put_new_line
+			if not use_init then
+				l_buffer.put_string ("static int16 typcache = -1;")
+				l_buffer.put_new_line
+			end
+			l_buffer.put_new_line
+
+			if use_init then
+				-- Reset counter
+				idx_cnt.set_value (1)
+				gtype.generate_cid_init (l_buffer, final_mode, True, idx_cnt)
+			end
+
+			if not use_init then
+				l_buffer.put_string ("typres = RTCID2(&typcache, ")
+			else
+				l_buffer.put_string ("typres = RTCID2(NULL, ")
+			end
+			generate_current_dftype
+			l_buffer.put_string (", ")
+			l_buffer.put_integer (gtype.generated_id (final_mode))
+			l_buffer.put_string (", typarr);")
+			l_buffer.put_new_line
+			l_buffer.put_new_line
+		end
+
 feature {NONE} -- Once features: implementation
 
 	onces: HASH_TABLE [PAIR [TYPE_C, like thread_relative_once_index], INTEGER]

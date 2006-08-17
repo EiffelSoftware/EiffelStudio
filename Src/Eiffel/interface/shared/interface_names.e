@@ -1095,6 +1095,8 @@ feature -- Description texts
 	e_external_command_list_full: STRING is "Your external command list is full.%NUse Tools->External Command... to delete one."
 	e_working_directory_invalid: STRING is "Cannot change to directory "
 	e_external_command_not_launched: STRING is "External command not launched."
+	e_refactoring_undo_sure: STRING is "Are you sure you want to undo the refactoring?%N If classes have been modified since the refactoring this can lead to corrupt classes and lost information!"
+	e_refactoring_redo_sure: STRING is "Are you sure you want to redo the refactoring?%N If classes have been modified since the unod of the refactoring this can lead to corrupt classes and lost information!"
 feature -- Wizard texts
 
 	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"

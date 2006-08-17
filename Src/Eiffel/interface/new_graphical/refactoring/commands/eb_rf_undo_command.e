@@ -92,8 +92,11 @@ feature -- Execution
 
 	execute is
 			-- Execute.
+		local
+			l_cd: EV_CONFIRMATION_DIALOG
 		do
-			manager.undo_last
+			create l_cd.make_with_text_and_actions (interface_names.e_refactoring_undo_sure, <<agent manager.undo_last>>)
+			l_cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
 feature {NONE} -- Implementation

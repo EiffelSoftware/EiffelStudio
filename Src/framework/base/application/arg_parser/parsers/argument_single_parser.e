@@ -51,7 +51,7 @@ feature {NONE} -- Usage
 			l_arg: STRING
 		once
 			l_arg := loose_argument_name_arg
-			l_suffix := Precursor {ARGUMENT_LITE_PARSER}
+			l_suffix := Precursor {ARGUMENT_BASE_PARSER}
 			if l_suffix /= Void then
 				create Result.make (l_arg.count + l_suffix.count + 1)
 				Result.append (l_arg)

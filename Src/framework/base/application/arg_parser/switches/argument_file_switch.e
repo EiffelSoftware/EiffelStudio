@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	value_validator: ARGUMENT_SWITCH_FILE_VALIDATOR is
+	value_validator: ARGUMENT_FILE_VALIDATOR is
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result

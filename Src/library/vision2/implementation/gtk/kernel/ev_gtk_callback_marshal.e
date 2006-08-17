@@ -208,7 +208,8 @@ feature {EV_ANY_IMP}
 				a_key_string := a_cs.string
 			end
 			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdkeventkey)
-			if valid_gtk_code (keyval) then
+				-- Value may be zero for special extend keys (Play/Pause etc..)
+			if keyval > 0 and then valid_gtk_code (keyval) then
 				create key.make_with_code (key_code_from_gtk (keyval))
 			end
 			Result := key_tuple (key, a_key_string, a_key_press)

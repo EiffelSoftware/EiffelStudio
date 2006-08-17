@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Initialize argument parser
 		do
 			make_parser (False, False)
+			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
 		end
 
 feature -- Access
@@ -72,13 +73,13 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "1.2"
+			Result := "1.2.1"
 		end
 
 	loose_argument_name: STRING_8 is
 			-- Name of lose argument, used in usage information
 		do
-			Result := "cfg_file2"
+			Result := "cfg_file"
 		end
 
 	loose_argument_description: STRING_8 is

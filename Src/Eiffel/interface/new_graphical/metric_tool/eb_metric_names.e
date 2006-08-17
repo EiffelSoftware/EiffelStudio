@@ -71,8 +71,9 @@ feature -- Titles
 	t_archive_comparison_result: STRING is "Archive comparison result:"
 	t_clean: STRING is "Clean"
 	t_compare: STRING is "Compare"
-	t_input_domain: STRING is "Input domain:"
+	t_input_domain: STRING is "Input domain"
 	t_result: STRING is "Results:"
+	t_input_domain_title: STRING is "Input domain:"
 
 feature -- Labels
 

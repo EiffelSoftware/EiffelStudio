@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_ensure_visible_action (agent ensure_visible_action)
 			result_grid_area.extend (grid_wrapper.component_widget)
 			result_lable.set_text (metric_names.t_result)
-			input_lbl.set_text (metric_names.t_input_domain)
+			input_lbl.set_text (metric_names.t_input_domain_title)
 
 				-- Prepare search facilities
 			create quick_search_bar.make (metric_tool.development_window)

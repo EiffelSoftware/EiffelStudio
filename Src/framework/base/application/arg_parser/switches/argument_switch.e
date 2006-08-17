@@ -75,7 +75,7 @@ feature -- Status Report
 	allow_multiple: BOOLEAN
 			-- Indicated if mutiple occurances permitted
 
-feature {ARGUMENT_LITE_PARSER} -- Factory Functions
+feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
 	create_option: ARGUMENT_OPTION is
 			-- Creates a new argument option for switch

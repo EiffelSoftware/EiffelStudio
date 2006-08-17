@@ -47,7 +47,7 @@ feature -- Access
 	value: STRING assign set_value
 			-- Option value, if any
 
-feature {ARGUMENT_LITE_PARSER} -- Element Change
+feature {ARGUMENT_BASE_PARSER} -- Element Change
 
 	set_value (a_value: like value) is
 			-- Sets `value' with `a_value'.

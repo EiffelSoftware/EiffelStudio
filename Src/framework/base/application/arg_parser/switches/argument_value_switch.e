@@ -73,7 +73,7 @@ feature -- Access
 	arg_description: STRING
 			-- Value argument description
 
-	value_validator: ARGUMENT_SWITCH_VALUE_VALIDATOR is
+	value_validator: ARGUMENT_VALUE_VALIDATOR is
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result
@@ -86,7 +86,7 @@ feature -- Status Report
 	is_value_optional: BOOLEAN
 			-- Indicates if a option value is optional
 
-feature {ARGUMENT_LITE_PARSER} -- Factory Functions
+feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
 	create_value_option (a_value: STRING): ARGUMENT_OPTION is
 			-- Creates a new argument option given a value `a_value', for current switch

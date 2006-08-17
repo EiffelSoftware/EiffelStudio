@@ -8,24 +8,20 @@ class
 
 inherit
 	STRING_MANIPULATOR_PROXY
-		redefine
-			replace_substring_user_precondition
-		end
 
 create
 	make,
 	make_from_other,
 	make_from_pointer
 
-feature -- Status Report
+feature
 
-	replace_substring_user_precondition (s: STRING; start_pos: INTEGER; end_pos: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `replace_substring'.
-			-- Uncomment the last line to test precondition violations in the server.
+	my_replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER) is
+			-- Replace substring with preconditions.
+		require
+			start_pos <= end_pos and start_pos > 0
 		do
-			Result := start_pos <= end_pos and
-					start_pos > 0
-			-- Result := True
+			replace_substring (s, start_pos, end_pos)
 		end
 
 indexing

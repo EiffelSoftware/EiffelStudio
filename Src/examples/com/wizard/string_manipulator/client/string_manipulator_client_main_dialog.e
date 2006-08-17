@@ -1,10 +1,10 @@
-indexing 
+indexing
 	description:	"String Manipulator component client, for simpliciy business and GUI codes are in the same class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	note:			"STRING_MANIPULATOR_CLIENT_MAIN_DIALOG class created by Resource Bench."
 
-class 
+class
 	STRING_MANIPULATOR_CLIENT_MAIN_DIALOG
 
 inherit
@@ -51,7 +51,7 @@ feature -- Access
 
 	string_manipulator_proxy: MY_STRING_MANIPULATOR
 			-- String manipulator component proxy
-			
+
 feature -- Behavior
 
 	setup_dialog is
@@ -83,11 +83,11 @@ feature -- Behavior
 					if set_string_edit.text /= Void and then not set_string_edit.text.is_empty then
 						string_manipulator_proxy.set_string (set_string_edit.text)
 					end
-			
+
 				-- Prune all
 				elseif control = prune_button then
 					if prune_all_edit.text /= Void and then not prune_all_edit.text.is_empty then
-						string_manipulator_proxy.prune_all (prune_all_edit.text.item (1))
+						string_manipulator_proxy.prune_all (prune_all_edit.text.item (1).to_character_8)
 					end
 
 				-- Replace substring
@@ -95,7 +95,7 @@ feature -- Behavior
 					if replace_substring_edit.text /= Void and then not replace_substring_edit.text.is_empty and
 						replace_substring_index_1_edit.text /= Void and then not replace_substring_index_1_edit.text.is_empty and
 						replace_substring_index_2_edit.text /= Void and then not replace_substring_index_2_edit.text.is_empty then
-						string_manipulator_proxy.replace_substring (replace_substring_edit.text, replace_substring_index_1_edit.text.to_integer, replace_substring_index_2_edit.text.to_integer)
+						string_manipulator_proxy.my_replace_substring (replace_substring_edit.text, replace_substring_index_1_edit.text.to_integer, replace_substring_index_2_edit.text.to_integer)
 					end
 				end
 
@@ -116,10 +116,10 @@ feature -- GUI elements
 
 	prune_all_edit: WEL_SINGLE_LINE_EDIT
 			-- Character used for `prune_all' edit
-			
+
 	replace_substring_index_1_edit: WEL_SINGLE_LINE_EDIT
 			-- `replace_substring' first index edit
-			
+
 	replace_substring_index_2_edit: WEL_SINGLE_LINE_EDIT
 			-- `replace_substring' second index edit
 
@@ -128,7 +128,7 @@ feature -- GUI elements
 
 	current_string_display: WEL_STATIC
 			-- Current manipulated string
-			
+
 	id_cancel: WEL_PUSH_BUTTON
 			-- Quit button
 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			Result.append (": ")
 			Result.append (original_tag_name)
 		end
-	
+
 	Error_message_title: STRING is "Component Call Failure";
 			-- Error message box title
 

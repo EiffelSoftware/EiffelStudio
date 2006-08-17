@@ -9,14 +9,9 @@ class
 
 inherit
 	STRING_MANIPULATOR_COCLASS
-		redefine
-			string_user_precondition,
-			replace_substring_user_precondition,
-			prune_all_user_precondition
-		end
 
 	ECOM_EXCEPTION
-	
+
 create
 	make,
 	make_from_pointer
@@ -28,7 +23,7 @@ feature {NONE}  -- Initialization
 		do
 			create local_string.make (0)
 		end
-	
+
 	make_from_pointer (cpp_obj: POINTER) is
 			-- Creation.
 		do
@@ -41,32 +36,14 @@ feature -- Access
 	string: STRING is
 			-- Manipulated string
 		do
-			Result := local_string
-		end
-
-	string_user_precondition: BOOLEAN is
-			-- Precondition of `string'.
-		do
-			Result := local_string /= Void
-		end
-
-	replace_substring_user_precondition (s: STRING; start_pos: INTEGER; end_pos: INTEGER): BOOLEAN is
-			-- Precondition of `replace_substring'.
-		do
-			Result := local_string /= Void
-		end
-
-	prune_all_user_precondition (c: CHARACTER): BOOLEAN is
-			-- Precondition of `prune_all'.
-		do
-			Result := local_string /= Void
+			Result := string_imp
 		end
 
 feature -- Basic Operations
 
 	set_string (a_string: STRING) is
 			-- Set manipulated string with `a_string'.
-			-- `a_string' [in].  
+			-- `a_string' [in].
 		do
 			local_string := a_string
 		ensure then
@@ -75,18 +52,18 @@ feature -- Basic Operations
 
 	replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER) is
 			-- Copy the characters of `s' to positions `start_pos' .. `end_pos'.
-			-- `s' [in].  
-			-- `start_pos' [in].  
-			-- `end_pos' [in].  
+			-- `s' [in].
+			-- `start_pos' [in].
+			-- `end_pos' [in].
 		do
-			local_string.replace_substring (s, start_pos, end_pos)
+			replace_substring_imp (s, start_pos, end_pos)
 		end
 
 	prune_all (c: CHARACTER) is
 			-- Remove all occurrences of `c'.
-			-- `c' [in].  
+			-- `c' [in].
 		do
-			local_string.prune_all (c)
+			prune_all_imp (c)
 		ensure then
 			pruned: not local_string.has (c)
 		end
@@ -97,11 +74,42 @@ feature -- Basic Operations
 			item := ccom_create_item (Current)
 		end
 
+feature {NONE} -- Implementation for assertion checking
+
+	string_imp: STRING is
+			-- Manipulated string.
+		require
+			local_string /= Void
+		do
+			Result := local_string
+		end
+
+	replace_substring_imp (s: STRING; start_pos: INTEGER; end_pos: INTEGER) is
+			-- Copy the characters of `s' to positions `start_pos' .. `end_pos'.
+			-- `s' [in].
+			-- `start_pos' [in].
+			-- `end_pos' [in].
+		require
+			local_string /= Void
+		do
+			local_string.replace_substring (s, start_pos, end_pos)
+		end
+
+	prune_all_imp (c: CHARACTER) is
+			-- Remove all occurrences of `c'.
+			-- `c' [in].
+		require
+			local_string /= Void
+		do
+			local_string.prune_all (c)
+		ensure then
+			pruned: not local_string.has (c)
+		end
 
 feature {NONE} -- Implementation
 
 	local_string: STRING
-	
+
 feature {NONE}  -- Externals
 
 	ccom_create_item (eif_object: STRING_MANIPULATOR_COCLASS): POINTER is

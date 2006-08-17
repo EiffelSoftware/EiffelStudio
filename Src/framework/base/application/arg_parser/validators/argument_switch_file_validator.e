@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ARGUMENT_SWITCH_FILE_VALIDATOR
+	ARGUMENT_FILE_VALIDATOR
 
 inherit
-	ARGUMENT_SWITCH_VALUE_VALIDATOR
+	ARGUMENT_VALUE_VALIDATOR
 		redefine
 			validate_value
 		end
@@ -24,7 +24,7 @@ feature -- Validation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make (l_file)
+				create l_file.make (a_value)
 				is_option_valid := l_file.exists and then not l_file.is_directory and not l_file.is_device
 				if not is_option_valid then
 					reason := "The specified file does not exist."
@@ -70,4 +70,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_SWITCH_FILE_VALIDATOR}
+end -- class {ARGUMENT_FILE_VALIDATOR}

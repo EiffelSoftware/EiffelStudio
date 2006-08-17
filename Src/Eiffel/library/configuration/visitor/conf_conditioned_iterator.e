@@ -54,10 +54,6 @@ feature -- Visit nodes
 				a_target.clusters.linear_representation.do_if (agent {CONF_CLUSTER}.process (Current), agent {CONF_CLUSTER}.is_enabled (state))
 					-- overrides must be processed at the end
 				a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (state))
-			else
-				check
-					is_error: is_error
-				end
 			end
 		rescue
 			l_retried := True

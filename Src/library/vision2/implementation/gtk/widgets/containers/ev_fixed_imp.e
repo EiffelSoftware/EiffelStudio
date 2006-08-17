@@ -21,7 +21,6 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			on_removed_item,
 			initialize
 		end
 
@@ -63,29 +62,21 @@ feature -- Status setting
 			w_imp: EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			w_imp.store_minimum_size
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
-			-- Reset minimum size.
-		do
-			Precursor (a_widget_imp)
-			a_widget_imp.reset_minimum_size
-		end
-
 	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
 			-- X position of `a_widget_imp' within `Current'.
 		do
-			Result := gtk_fixed_child_struct_x (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+			Result := {EV_GTK_EXTERNALS}.gtk_fixed_child_struct_x (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
 		end
 
 	y_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
 			-- Y position of `a_widget_imp' within `Current'.
 		do
-			Result := gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+			Result := {EV_GTK_EXTERNALS}.gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
 		end
 
 	i_th_fixed_child (i: INTEGER): POINTER is
@@ -95,20 +86,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			glist := {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (c_object)
 			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (glist, i - 1)
-		end
-
-	frozen gtk_fixed_child_struct_x (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkFixedChild): EIF_INTEGER"
-		alias
-			"x"
-		end
-
-	frozen gtk_fixed_child_struct_y (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkFixedChild): EIF_INTEGER"
-		alias
-			"y"
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

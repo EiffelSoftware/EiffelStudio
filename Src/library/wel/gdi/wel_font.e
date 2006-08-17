@@ -160,9 +160,6 @@ feature -- Access
 		local
 			screen_dc: WEL_SCREEN_DC
 		do
-			check
-				height_negative: log_font.height < 0
-			end
 			create screen_dc
 			screen_dc.get
 			Result := logical_to_pixel (screen_dc, -log_font.height)
@@ -176,9 +173,6 @@ feature -- Access
 		local
 			screen_dc: WEL_SCREEN_DC
 		do
-			check
-				height_negative: log_font.height < 0
-			end
 			create screen_dc
 			screen_dc.get
 			Result := pixel_to_point (screen_dc, -log_font.height)

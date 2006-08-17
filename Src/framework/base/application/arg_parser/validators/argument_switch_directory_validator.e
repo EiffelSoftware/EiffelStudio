@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	ARGUMENT_SWITCH_DIRECTORY_VALIDATOR
+	ARGUMENT_DIRECTORY_VALIDATOR
 
 inherit
-	ARGUMENT_SWITCH_VALUE_VALIDATOR
+	ARGUMENT_VALUE_VALIDATOR
 		redefine
 			validate_value
 		end
@@ -68,4 +68,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_SWITCH_DIRECTORY_VALIDATOR}
+end -- class {ARGUMENT_DIRECTORY_VALIDATOR}

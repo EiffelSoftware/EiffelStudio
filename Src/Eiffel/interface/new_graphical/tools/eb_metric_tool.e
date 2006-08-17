@@ -27,6 +27,8 @@ inherit
 			on_project_unloaded
 		end
 
+	EB_RECYCLER
+
 create
 	make
 
@@ -245,6 +247,7 @@ feature -- Memory management
 			if on_compile_start_agent /= Void then
 				development_window.window_manager.compile_start_actions.prune_all (on_compile_start_agent)
 			end
+			metric_tool_interface.recycle
 			development_window := Void
 			context_tool := Void
 		end

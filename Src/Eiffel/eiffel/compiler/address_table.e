@@ -17,7 +17,7 @@ inherit
 			cursor as ht_cursor
 		export
 			{ADDRESS_TABLE} all
-			{ANY} valid_key, merge, has_table_of_class, table_of_class
+			{ANY} valid_key, merge, has_table_of_class, table_of_class, found_item
 		end
 
 	SHARED_CODE_FILES
@@ -53,6 +53,7 @@ feature -- Initialize
 	make is
 		do
 			make_hash_table (100)
+			create dollar_id_counter
 		end
 
 feature -- Access
@@ -63,8 +64,10 @@ feature -- Access
 			class_id_valid: class_id > 0
 			feature_id_valid: feature_id > 0
 		do
-			if class_has_dollar_operator (class_id) then
-				Result := found_item.has (feature_id)
+			if has_table_of_class (class_id) then
+				if found_item.has (feature_id) then
+					Result := found_item.found_item.has_dollar_op
+				end
 			end
 		end
 
@@ -96,42 +99,42 @@ feature -- Access
 			if Result then
 				Result := found_item.has (a_feature_id)
 				if Result then
-					Result := found_item.found_item.has (make_reordering (a_is_target_closed, o_map, True))
+					Result := found_item.found_item.has (make_reordering (a_is_target_closed, o_map))
 				end
 			end
 		end
-
 
 	is_lazy (a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; a_omap: like empty_omap): BOOLEAN is
 			-- Is the agent with the given parameters lazy? Meaning that there is no ececil entry generated for it.
 		require
 			class_id_valid: a_class_id > 0 and then has_table_of_class (a_class_id)
 			feature_id_valid: a_feature_id > 0 and then table_of_class (a_class_id).has (a_feature_id)
-			has_reordering: table_of_class (a_class_id).item (a_feature_id).has (make_reordering (a_is_target_closed, a_omap, True))
+			has_reordering: table_of_class (a_class_id).item (a_feature_id).has (make_reordering (a_is_target_closed, a_omap))
 		local
 			l_table_of_class:  like table_of_class
 			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
 			l_table_of_class := table_of_class (a_class_id)
 			l_table_entry := l_table_of_class.item (a_feature_id)
-			Result := l_table_entry.item (make_reordering (a_is_target_closed, a_omap, False)).is_lazy
+			Result :=
+				l_table_entry.item (make_reordering (a_is_target_closed, a_omap)).frozen_age = new_frozen_age
 		end
 
 	id_of_dollar_feature (a_class_id, a_feature_id: INTEGER; a_class_type: CLASS_TYPE): INTEGER is
 			-- The dispatch_table id for the given feature
 		require
-			ids_up_to_date: table_ids_up_to_date
-			dollar_feature_valid: has_table_of_class (a_class_id) and then
-								  table_of_class (a_class_id).has (a_feature_id) and then
-								  table_of_class (a_class_id).item (a_feature_id).has_dollar_op
 			a_class_type_not_void: a_class_type /= Void
+			dollar_feature_valid: has_table_of_class (a_class_id) and then
+								  found_item.has (a_feature_id) and then
+								  found_item.found_item.has_dollar_op and then
+								  found_item.found_item.dollar_ids.has (a_class_type.static_type_id)
 		local
 			l_table_of_class: like table_of_class
 			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
 			l_table_of_class := table_of_class (a_class_id)
 			l_table_entry := l_table_of_class.item (a_feature_id)
-			Result := l_table_entry.dollar_id + a_class_type.type_number - 2
+			Result := l_table_entry.dollar_ids.item (a_class_type.static_type_id)
 		end
 
 	update_ids is
@@ -139,14 +142,15 @@ feature -- Access
 		local
 			l_table_of_class:  like table_of_class
 			l_class: CLASS_C
-			l_type_count: INTEGER
-			l_current_id, l_feature_id: INTEGER
+			l_types: TYPE_LIST
+			l_type: CLASS_TYPE
+			l_feature_id: INTEGER
 			l_table_entry: ADDRESS_TABLE_ENTRY
 			l_reordering: FEATURE_REORDERING
 			l_feature: FEATURE_I
+			l_type_id: INTEGER
 		do
 			from
-				l_current_id := 1
 				start
 			until
 				after
@@ -154,7 +158,6 @@ feature -- Access
 				l_class := System.class_of_id (key_for_iteration)
 				if l_class /= Void then
 					from
-						l_type_count := l_class.types.count
 						l_table_of_class := item_for_iteration
 						l_table_of_class.start
 					until
@@ -172,17 +175,27 @@ feature -- Access
 							item_for_iteration.remove (l_feature_id)
 						else
 							if l_table_entry.has_dollar_op then
-								l_table_entry.set_dollar_id (l_current_id)
-								l_current_id := l_current_id + l_type_count
-							end
-							from
-								l_table_entry.start
-							until
-								l_table_entry.after
-							loop
-								l_reordering := l_table_entry.item_for_iteration
-								l_reordering.set_is_lazy (False)
-								l_table_entry.forth
+								from
+									l_types := l_class.types
+									l_types.start
+								until
+									l_types.after
+								loop
+									l_type := l_types.item
+									l_type_id := l_type.static_type_id
+									if not l_table_entry.dollar_ids.has (l_type_id) then
+										l_table_entry.dollar_ids.put (dollar_id_counter.next, l_type_id)
+									end
+									l_types.forth
+								end
+								from
+									l_table_entry.start
+								until
+									l_table_entry.after
+								loop
+									l_table_entry.item_for_iteration.set_frozen_age (new_frozen_age)
+									l_table_entry.forth
+								end
 							end
 						end
 						l_table_of_class.forth
@@ -190,7 +203,11 @@ feature -- Access
 				end
 				forth
 			end
-			table_ids_up_to_date := True
+			if new_frozen_age = 0 then
+				new_frozen_age := 1
+			else
+				new_frozen_age := 0
+			end
 		end
 
 feature -- Register
@@ -206,7 +223,6 @@ feature -- Register
 				l_table_entry := force_new_table_entry (a_class_id, a_feature_id)
 				l_table_entry.set_has_dollar_op
 				System.set_freeze
-				table_ids_up_to_date := False
 			end
 		ensure
 			has_dollar_operator (a_class_id, a_feature_id)
@@ -227,7 +243,7 @@ feature -- Register
 			else
 				l_omap := a_open_map
 			end
-			l_table_entry.force_reordering (a_is_target_closed, l_omap, True)
+			l_table_entry.force_reordering (a_is_target_closed, l_omap, new_frozen_age)
 		ensure
 			has_agent (a_class_id, a_feature_id, a_is_target_closed, a_open_map)
 		end
@@ -332,6 +348,7 @@ end
 									table_entry.after
 								loop
 									l_reordering := table_entry.item_for_iteration
+									l_reordering.set_frozen_age (new_frozen_age)
 									generate_feature (a_class, a_feature, final_mode, buffer, True,
 													  l_reordering.is_target_closed, l_reordering.open_map, False)
 									generate_feature (a_class, a_feature, final_mode, buffer, True,
@@ -418,10 +435,6 @@ end
 			end
 		end
 
-feature -- Attribues
-
-	table_ids_up_to_date: BOOLEAN
-
 feature -- Generation helpers
 
 	solved_type (context_type: CLASS_TYPE; type_a: TYPE_A): TYPE_C is
@@ -453,7 +466,6 @@ feature -- Generation helpers
 			end
 		end
 
-
 feature {NONE} -- Generation
 
 	generate_dispatch_table (buffer: GENERATION_BUFFER) is
@@ -466,12 +478,13 @@ feature {NONE} -- Generation
 			l_type_list: TYPE_LIST
 			l_feature_id, l_static_type_id: INTEGER
 			l_fptr_type, l_sep: STRING
+			i: INTEGER
+			l_dollar_ids: HASH_TABLE [INTEGER, INTEGER]
+			l_disp_tab: ARRAYED_LIST [TUPLE [static_type_id, feature_id: INTEGER]]
 		do
-			buffer.put_string ("%N%Nstatic fnptr feif_address_table[] = {%N")
+			create l_disp_tab.make_filled (dollar_id_counter.value)
 			from
 				start
-				l_fptr_type := "(fnptr)"
-				l_sep := ",%N"
 			until
 				after
 			loop
@@ -487,22 +500,32 @@ feature {NONE} -- Generation
 
 					if l_table_entry.has_dollar_op then
 						from
-							l_type_list.start
+							l_dollar_ids := l_table_entry.dollar_ids
+							l_dollar_ids.start
 						until
-							l_type_list.after
+							l_dollar_ids.after
 						loop
-							l_static_type_id := l_type_list.item.static_type_id
-							buffer.put_string (l_fptr_type)
-							buffer.put_string (calc_function_name (False, l_feature_id, l_static_type_id, Void, False))
-							buffer.put_string (l_sep)
-							l_type_list.forth
+							l_disp_tab.put_i_th ([l_dollar_ids.key_for_iteration, l_feature_id], l_dollar_ids.item_for_iteration)
+							l_dollar_ids.forth
 						end
 					end
-
 					l_table_of_class.forth
 				end
 				forth
 			end
+			buffer.put_string ("%N%Nstatic fnptr feif_address_table[] = {%N(fnptr)0,%N")
+
+			l_disp_tab.do_all (agent (l_buf: GENERATION_BUFFER; l_entry: TUPLE [static_type_id, feature_id: INTEGER])
+				do
+					l_buf.put_string (once "(fnptr)")
+					if l_entry /= Void then
+						l_buf.put_string (calc_function_name (False, l_entry.feature_id, l_entry.static_type_id, Void, False))
+					else
+						l_buf.put_string (once "0")
+					end
+					l_buf.put_string (once ",%N")
+				end (buffer, ?))
+
 			buffer.put_string ("};%N%Nfnptr *egc_address_table_init = feif_address_table;%N%N")
 		end
 
@@ -730,7 +753,8 @@ feature {NONE} -- Generation
 					-- Function pointer associated to a deferred feature
 					-- without any implementation
 				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-				buffer.put_string ("RTNR) (");
+				buffer.put_string ("RTNR) (")
+				buffer.put_string (a_current_name)
 				Result := False
 			else
 				l_type_id := a_type.type_id
@@ -915,7 +939,7 @@ feature {NONE} -- Generation
 
 feature
 
-	make_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_is_lazy: BOOLEAN): FEATURE_REORDERING is
+	make_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]): FEATURE_REORDERING is
 			-- Creates a reordering with the given parameters
 		local
 			l_open_map: like empty_omap
@@ -926,10 +950,10 @@ feature
 				l_open_map := a_open_map
 			end
 			if reordering = Void then
-				create reordering.make (a_is_target_closed, l_open_map, a_is_lazy)
+				create reordering.make (a_is_target_closed, l_open_map, new_frozen_age)
 			else
 				reordering.set_attributes (a_is_target_closed, l_open_map)
-				reordering.set_is_lazy (a_is_lazy)
+				reordering.set_frozen_age (new_frozen_age)
 			end
 			Result := reordering
 		end
@@ -942,6 +966,10 @@ feature {NONE}	--implementation
 		once
 			create Result.make (0)
 		end
+
+	dollar_id_counter: COUNTER
+
+	new_frozen_age: INTEGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

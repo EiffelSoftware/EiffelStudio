@@ -29,7 +29,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			l_clp.parse ((create {ARGUMENTS}).argument_array)
 			exe_name := l_clp.executable_without_suffix
 			l_valid_options := l_clp.valid_options
-			if l_clp.invalid_options_found then				
+			if l_clp.invalid_options_found then
 				print (l_clp.error_message)
 				print (l_cls.program_usage (exe_name) + "%N")
 				print ("Use -h/--help for more help." + "%N")
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 							else
 								l_valid_options.search ("-a")
 								if l_valid_options.found then
-									environment.set_ace_file_name (l_valid_options.found_item.first.twin)
+									environment.set_source_ecf_file_name (l_valid_options.found_item.first.twin)
 								end
 								environment.set_backup (l_valid_options.has ("-b"))
 								l_valid_options.search ("-u")
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 									environment.set_eiffel_class_name (l_valid_options.found_item.first.twin)
 								end
 								l_valid_options.search ("-e")
-								if l_valid_options.found then	
+								if l_valid_options.found then
 									l_text := l_valid_options.found_item.first.twin
 									environment.set_is_eiffel_interface
 									environment.set_eiffel_project (l_text)
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-		
+
 	make_and_launch is
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			main_window.show
 			launch
 		end
-		
+
 feature {NONE} -- Implementation
 
 	generate is
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_version_info is 
+	print_version_info is
 			-- Print version information.
 		local
 			s: STRING
@@ -177,13 +177,13 @@ feature {NONE} -- Implementation
 			s.append ("Copyright (c) 2006, Eiffel Software. All rights reserved." + "%N")
 			print (s)
 		end
-	
+
 	dummy_process (a_event: EV_THREAD_EVENT) is
 			-- Do nothing.
 		do
-			
+
 		end
-	
+
 	display_output (a_event: EV_THREAD_EVENT) is
 			-- Display output according to `a_event'.
 		require
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 feature {NONE} -- Private Access
 
 	main_window: WIZARD_MAIN_WINDOW
@@ -250,7 +250,7 @@ feature {NONE} -- Private Access
 				    "(-c|-s|-e)",
 				    "(-p|-b)">>
 		end
-	
+
 	exe_name: STRING
 			-- Name of this executable
 

@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	WIZARD_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -31,25 +31,28 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create epr_box
-			create ace_file_box
+			create ecf_file_box
+			create target_box
 			create facade_box
 			create facade_cluster_box
-			
+
 				-- Build_widget_structure.
 			extend (epr_box)
-			extend (ace_file_box)
+			extend (ecf_file_box)
+			extend (target_box)
 			extend (facade_box)
 			extend (facade_cluster_box)
-			
+
 			set_padding_width (7)
 			disable_item_expand (epr_box)
-			disable_item_expand (ace_file_box)
+			disable_item_expand (ecf_file_box)
+			disable_item_expand (target_box)
 			disable_item_expand (facade_box)
 			disable_item_expand (facade_cluster_box)
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -60,8 +63,8 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	facade_box, facade_cluster_box: WIZARD_FIELD_BOX
-	epr_box, ace_file_box: WIZARD_FILE_PATH_BOX
+	facade_box, facade_cluster_box, epr_box, target_box: WIZARD_FIELD_BOX
+	ecf_file_box: WIZARD_FILE_PATH_BOX
 
 feature {NONE} -- Implementation
 
@@ -72,12 +75,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

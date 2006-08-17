@@ -28,8 +28,9 @@ feature {NONE} -- Initialization
 			-- called by `initialize'.
 		do
 			initialize_checker
-			epr_box.setup ("Path to Eiffel project file (*.epr):", "epr_key", agent eiffel_project_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.epr", "Eiffel Project File (*.epr)"]>>), "Browse for Eiffel Project File")
-			ace_file_box.setup ("Path to system's ace file (*.ace):", "ace_key", agent ace_file_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.ace", "LACE File (*.ace)"], ["*.*", "All Files (*.*)"]>>), "Browse for system's ace file")
+			epr_box.setup ("Path to Eiffel project location", "epr_key", agent eiffel_project_validity (?), Void, Void)
+			ecf_file_box.setup ("Path to system's configuration file (*.ecf):", "ecf_key", agent ecf_file_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.ecf", "ECF File (*.ecf)"], ["*.*", "All Files (*.*)"]>>), "Browse for system's configuration file")
+			target_box.setup ("Target to use", "target_key", agent eiffel_target_validity (?), Void, Void)
 			facade_box.setup ("Name of Eiffel facade class:", "facade_key", agent eiffel_class_validity (?), Void, Void)
 			facade_cluster_box.setup ("Name of Eiffel facade class cluster:", "cluster_key", agent cluster_validity (?), Void, Void)
 		end
@@ -53,9 +54,13 @@ feature -- Basic Operations
 				environment.set_eiffel_project (l_text)
 				environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
 			end
-			l_text := ace_file_box.value
+			l_text := ecf_file_box.value
 			if is_valid_file (l_text) then
-				environment.set_ace_file_name (l_text)
+				environment.set_source_ecf_file_name (l_text)
+			end
+			l_text := target_box.value
+			if not l_text.is_empty then
+				environment.set_eiffel_target (l_text)
 			end
 			l_text := facade_box.value
 			if is_valid_eiffel_identifier (l_text) then
@@ -73,14 +78,27 @@ feature -- Basic Operations
 			Precursor {WIZARD_EIFFEL_PROJECT_BOX_IMP}
 			update_environment
 		end
-		
+
 feature {NONE} -- Implementation
+
+	eiffel_target_validity (a_target: STRING): WIZARD_VALIDITY_STATUS is
+			-- Is `a_target' valid?
+			-- Setup environment accordingly.
+		do
+			if not a_target.is_empty then
+				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
+				environment.set_eiffel_target (a_target)
+			else
+				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
+			end
+			set_status (Result)
+		end
 
 	eiffel_project_validity (a_project_file: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_project_file' a valid eiffel project file?
 			-- Setup environment accordingly.
 		do
-			if is_valid_file (a_project_file) then
+			if is_valid_folder (a_project_file) then
 				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
 				environment.set_eiffel_project (a_project_file)
 				environment.set_project_name (a_project_file.substring (a_project_file.last_index_of ('\', a_project_file.count) + 1, a_project_file.count))
@@ -89,20 +107,20 @@ feature {NONE} -- Implementation
 			end
 			set_status (Result)
 		end
-		
-	ace_file_validity (a_ace_file: STRING): WIZARD_VALIDITY_STATUS is
-			-- Is `a_ace_file' a valid eiffel ace file?
+
+	ecf_file_validity (a_file: STRING): WIZARD_VALIDITY_STATUS is
+			-- Is `a_file' a valid eiffel ecf file?
 			-- Setup environment accordingly.
 		do
-			if is_valid_file (a_ace_file) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Ace_file)
-				environment.set_ace_file_name (a_ace_file)
+			if is_valid_file (a_file) then
+				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
+				environment.set_source_ecf_file_name (a_file)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Ace_file)
+				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
 			end
 			set_status (Result)
 		end
-		
+
 	eiffel_class_validity (a_eiffel_class: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_eiffel_class' a valid eiffel class?
 			-- Setup environment accordingly.
@@ -115,7 +133,7 @@ feature {NONE} -- Implementation
 			end
 			set_status (Result)
 		end
-		
+
 	cluster_validity (a_cluster: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_cluster' a valid eiffel cluster?
 			-- Setup environment accordingly.
@@ -128,7 +146,7 @@ feature {NONE} -- Implementation
 			end
 			set_status (Result)
 		end
-		
+
 	is_valid_eiffel_identifier (a_string: STRING): BOOLEAN is
 			-- Is `a_string' a valid eiffel identifier?
 		local

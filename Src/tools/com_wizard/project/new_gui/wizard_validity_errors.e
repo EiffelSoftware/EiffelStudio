@@ -11,16 +11,17 @@ class
 
 feature -- Access
 
-	Eiffel_project, Ace_file, Eiffel_class, Eiffel_cluster,
+	Eiffel_project, ecf_file, Eiffel_class, Eiffel_cluster, Eiffel_target,
 	Component_definition_file, Destination_folder, Project_name, End_id: INTEGER is unique
 			-- ids
-	
+
 	errors: ARRAY [STRING] is
 			-- Error messages
 		once
 			create Result.make (1, 10)
-			Result.put ("Path to Eiffel project file is invalid", Eiffel_project)
-			Result.put ("Path to Eiffel project ACE file is invalid", Ace_file)
+			Result.put ("Path to Eiffel project invalid", Eiffel_project)
+			Result.put ("Path to Eiffel project ECF file is invalid", ecf_file)
+			Result.put ("Target is invalid", eiffel_target)
 			Result.put ("Not a valid Eiffel class name", Eiffel_class)
 			Result.put ("Not a valid Eiffel cluster name", Eiffel_cluster)
 			Result.put ("Path to component definition file is invalid", Component_definition_file)
@@ -35,7 +36,7 @@ feature -- Status Report
 		do
 			Result := a_id > 0 and a_id < End_id
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

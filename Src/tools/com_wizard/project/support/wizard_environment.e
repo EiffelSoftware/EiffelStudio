@@ -60,8 +60,8 @@ feature -- Access
 	eiffel_project_name: STRING
 			-- Eiffel project name
 
-	ace_file_name: STRING
-			-- Eiffel Ace file
+	eiffel_target: STRING
+			-- Eiffel target name
 
 	idl_file_name: STRING
 			-- Path to definition file
@@ -168,6 +168,21 @@ feature -- Access
 			non_void_expanded_path: Result /= Void
 		end
 
+	Source_ecf_file_name: STRING
+			-- Name of the configuration file of an existing project where we add a new component.
+
+	Ecf_file_name: STRING is
+			-- Name of the configuration file.
+		require
+			non_void_project_name: project_name /= Void
+		do
+			Result := project_name.twin
+			if is_client then
+				Result.append ("_client")
+			end
+			Result.append (".ecf")
+		end
+
 	Workbench_ace_file_name: STRING is
 			-- Ace file name
 		require
@@ -239,17 +254,6 @@ feature -- Element Change
 			marshaller_generated_set: marshaller_generated = a_value
 		end
 
-	set_ace_file_name (ace_file: STRING) is
-			-- Set 'ace_file_name' to 'ace_file'.
-		require
-			non_void_file: ace_file /= Void
-			valid_ace_file: not ace_file.is_empty
-		do
-			ace_file_name := ace_file
-		ensure
-			ace_file_name_set: ace_file_name = ace_file
-		end
-
 	set_is_in_process is
 			-- Set `is_in_process' with `True'.
 			-- Set `is_out_of_process' with `False'.
@@ -295,6 +299,16 @@ feature -- Element Change
 			name_set: class_cluster_name /= Void and then not class_cluster_name.is_empty
 		end
 
+	set_source_ecf_file_name (a_file: like source_ecf_file_name) is
+			-- Set `source_ecf_file_name' to `a_file'.
+		require
+			a_file_ok: a_file /= Void and then not a_file.is_empty
+		do
+			source_ecf_file_name := a_file
+		ensure
+			source_ecf_file_name_set: source_ecf_file_name = a_file
+		end
+
 	set_eiffel_project (p_name: like eiffel_project_name) is
 			-- Set 'eiffel_project_name' to 'p_name'.
 		require
@@ -305,6 +319,18 @@ feature -- Element Change
 		ensure
 			name_set: eiffel_project_name.is_equal (expanded_path (p_name))
 		end
+
+	set_eiffel_target (p_name: like eiffel_target) is
+			-- Set 'eiffel_target' to 'p_name'.
+		require
+			non_void_name: p_name /= Void
+			valid_name: not p_name.is_empty
+		do
+			eiffel_target := expanded_path (p_name)
+		ensure
+			name_set: eiffel_target.is_equal (p_name)
+		end
+
 
 	set_destination_folder (a_folder: like destination_folder) is
 			-- Set `destination_folder' with `a_folder'.

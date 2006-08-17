@@ -72,16 +72,16 @@ feature -- Access
 
 	makefile_generated: BOOLEAN
 			-- Were Makefiles generated?
-			
+
 feature -- Basic operations
 
 	generate is
 			-- Code generation
-		do			
+		do
 			message_output.add_title (Generation_title)
-			create_alias_c_writer 
+			create_alias_c_writer
 			if not environment.abort then
-				process_type_descriptors 
+				process_type_descriptors
 			end
 			if not environment.abort then
 				generate_implemented_interfaces
@@ -93,10 +93,10 @@ feature -- Basic operations
 				generate_mappers_and_c_alias
 			end
 			if not environment.abort then
-				generate_ace_and_resource 
+				generate_ace_and_resource
 			end
 			if not environment.abort then
-				generate_makefiles 
+				generate_makefiles
 			end
 		end
 
@@ -144,7 +144,7 @@ feature -- Basic operations
 						end
 						i := i + 1
 						progress_report.step
-					end	
+					end
 				end
 				system_descriptor.forth
 			end
@@ -230,7 +230,7 @@ feature -- Basic operations
 			end
 
 			progress_report.step
-			
+
 			from
 				Generated_ec_mappers.start
 			until
@@ -249,18 +249,18 @@ feature -- Basic operations
 			progress_report.step
 			Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			progress_report.step
-			create l_globals.generate 
+			create l_globals.generate
 			progress_report.step
 			Generated_ce_mappers.wipe_out
 			Generated_ec_mappers.wipe_out
 			set_alias_c_writer (Void)
 		end
-	
+
 	generate_ace_and_resource is
 			-- Generating Ace and Resource files.
 		local
 			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
-			ace_generator: WIZARD_ACE_FILE_GENERATOR
+			ace_generator: WIZARD_ECF_FILE_GENERATOR
 			resource_generator: WIZARD_RESOURCE_FILE_GENERATOR
 		do
 			create ace_generator
@@ -280,7 +280,7 @@ feature -- Basic operations
 			ace_file_generated := True
 			resource_file_generated := True
 		end
-	
+
 	generate_makefiles is
 			-- Generate Makefiles.
 		local
@@ -312,7 +312,7 @@ feature -- Basic operations
 
 			makefile_generated := True
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

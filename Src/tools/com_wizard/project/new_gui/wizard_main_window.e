@@ -47,7 +47,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
-	
+
 	user_initialization is
 			-- called by `initialize'.
 			-- Any custom user initialization that
@@ -73,14 +73,14 @@ feature {NONE} -- Initialization
 			com_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			update_environment
 			project_box.focus_lost_actions.extend (agent on_project_focus_lost)
-			
+
 			-- Setup project box last so that profile change actions are registered
 			project_box.set_max_count (10000)
 			project_box.exclude_from_profile
 			project_box.set_default_text (Profile_manager.Default_profile)
 			project_box.set_save_on_return (False)
 			project_box.setup ("Current project:", Profile_manager.Profiles_key, agent on_project_change, agent on_project_enter, agent on_project_select)
-			project_box.initialize_focus
+--			project_box.initialize_focus
 			Profile_manager.active_profile_save_actions.extend (agent project_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent component_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent compile_target_profile_item)
@@ -90,14 +90,14 @@ feature {NONE} -- Initialization
 			Profile_manager.active_profile_change_actions.extend (agent update_buttons)
 			update_buttons
 			initialize_generate_button
-			
+
 			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, False)
 			l_accel.actions.extend (agent on_next)
 			accelerators.extend (l_accel)
 			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, True)
 			l_accel.actions.extend (agent on_previous)
 			accelerators.extend (l_accel)
-			
+
 			set_icon_pixmap (Wizard_ico)
 		end
 
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			in_delete_mode := True
 			project_selected := True
 		end
-		
+
 	on_project_enter is
 			-- Save project if name is valid and different.
 			-- Start generation if name is valid and same as selected.
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 			project_selected := False
 		end
-	
+
 	on_project_focus_lost is
 			-- 	Project text box focus is lost, create project if `new' wasn't clicked.
 		local
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 --				focus_lost := not project_button.select_actions
 			end
 		end
-		
+
 	on_project_button_select is
 			-- Called by `select_actions' of `project_button'.
 			-- Remove selected profile, load or create profile depending on mode.
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 				focus_lost := False
 			end
 		end
-	
+
 	on_select_eiffel_project is
 			-- Called by `select_actions' of `eiffel_project_radio_button'.
 			-- Show Eiffel project settings.
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			end
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_select_out_of_process is
 			-- Called by `select_actions' of `out_of_process_radio_button'.
 			-- Set environment accordingly.
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			end
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_select_compile_eiffel is
 			-- Called by `select_actions' of `compile_eiffel_check_button'.
 			-- Set environment accordingly.
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			environment.set_compile_eiffel (compile_eiffel_check_button.is_selected)
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_select_compile_c is
 			-- Called by `select_actions' of `compile_c_code_check_button'.
 			-- Disable no Eiffel compilation check box if selected.
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			environment.set_cleanup (False)
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_select_cleanup is
 			-- Called by `select_actions' of `cleanup_radio_button'.
 			-- Update environment
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			environment.set_cleanup (True)
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_select_overwrite is
 			-- Called by `select_actions' of `overwrite_radio_button'.
 			-- Update environment
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 			environment.set_cleanup (False)
 			Profile_manager.save_active_profile
 		end
-	
+
 	on_exit is
 			-- Called by `select_actions' of `exit_button'.
 		do
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			end
 			notebook.select_item (notebook.i_th (l_index))
 		end
-		
+
 	on_next is
 			-- Select second notebook page
 		local
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			end
 			notebook.select_item (notebook.i_th (l_index))
 		end
-		
+
 feature {NONE} -- Implementation
 
 	start_generation is
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			is_running := False
 			initialize_generate_button
 		end
-	
+
 	run (a_event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]) is
 			-- Run wizard and handle events with `a_event_handler'.
 		local
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			l_manager.run
 			l_manager := Void
 		end
-		
+
 	project_name_validity (a_project_name: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_project_name' a valid project name?
 		require
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 				output_box.disable_generate_button
 			end
 		end
-	
+
 	project_type_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for project type
 		local
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Project_type_key, l_encoded_project)
 		end
-	
+
 	component_type_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for component type
 		local
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Component_type_key, l_encoded_component)
 		end
-	
+
 	compile_target_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for compilation target
 		local
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Compile_target_key, l_target)
 		end
-		
+
 	backup_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for compilation target
 		local
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Backup_key, l_backup)
 		end
-		
+
 	overwrite_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for compilation target
 		local
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 			end
 			create Result.make (Overwrite_key, l_overwrite)
 		end
-	
+
 	marshaller_profile_item: WIZARD_PROFILE_ITEM is
 			-- Profile item for compilation target
 		local
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 			l_value: STRING
 		do
 			Profile_manager.set_save_blocked (True)
-			Profile_manager.search_active_profile (Project_type_key)				
+			Profile_manager.search_active_profile (Project_type_key)
 			if Profile_manager.found then
 				l_value := Profile_manager.found_item.value
 				if l_value.is_equal (Eiffel_project_code) then
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 			end
 			Profile_manager.set_save_blocked (False)
 		end
-		
+
 feature {NONE} -- Private Access
 
 	project_selected: BOOLEAN
@@ -692,7 +692,7 @@ feature {NONE} -- Private Access
 		once
 			Result := (create {EV_ENVIRONMENT}).application
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

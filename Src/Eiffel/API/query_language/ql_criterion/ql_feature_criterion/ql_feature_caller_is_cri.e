@@ -112,7 +112,6 @@ feature{NONE} -- Implementation
 			-- Find callers to `criterion_domain'.
 		do
 			find_all_callees (caller_type.type)
-			is_criterion_domain_evaluated := True
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 

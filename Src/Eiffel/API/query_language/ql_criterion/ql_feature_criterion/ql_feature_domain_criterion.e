@@ -31,30 +31,6 @@ feature{NONE} -- Initialization
 			criterion_domain_set: criterion_domain = a_domain
 		end
 
-feature -- Setting
-
-	set_criterion_domain (a_domain: QL_DOMAIN) is
-			-- Set `criterion_domain' with `a_domain'
-		local
-			l_delayed_domain: QL_DELAYED_DOMAIN
-		do
-			if criterion_domain /= Void and then criterion_domain.is_delayed then
-				l_delayed_domain ?= criterion_domain
-				if l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.prune_all (initialize_agent)
-				end
-			end
-			criterion_domain := a_domain
-			is_criterion_domain_evaluated := False
-			if criterion_domain.is_delayed then
-				l_delayed_domain ?= a_domain
-				check l_delayed_domain /= Void end
-				if not l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.extend (initialize_agent)
-				end
-			end
-		end
-
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -94,7 +94,6 @@ feature{NONE} -- Implementation
 					l_feature_domain.forth
 				end
 			end
-			is_criterion_domain_evaluated := True
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 

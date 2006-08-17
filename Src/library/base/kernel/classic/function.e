@@ -44,7 +44,8 @@ feature -- Access
 	apply is
 			-- Call function with `operands' as last set.
 		do
-			call (operands)
+			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $operands, class_id, feature_id,
+				is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
 		end
 
 feature -- Comparison

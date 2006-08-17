@@ -177,8 +177,6 @@ feature -- Setting
 
 	set_last_value (a_value: like last_value) is
 			-- Set `last_value' with `a_value'.
-		require
-			a_value_attached: a_value /= 0
 		do
 			last_value := a_value
 		ensure

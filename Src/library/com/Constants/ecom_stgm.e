@@ -2,7 +2,7 @@ indexing
 
 	description: "SToraGe Mode flags"
 	legal: "See notice at end of class."
-	note: 	"Priority mode not supported"
+	info: 	"Priority mode not supported"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

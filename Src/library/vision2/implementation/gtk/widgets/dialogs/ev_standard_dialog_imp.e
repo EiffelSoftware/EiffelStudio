@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
 			-- `a_key' has either been pressed or released
 		do
 			if a_key /= Void then

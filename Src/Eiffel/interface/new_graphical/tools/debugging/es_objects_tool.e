@@ -1424,7 +1424,7 @@ feature {NONE} -- Impl : Stack objects grid
 --				l_exception_message := dotnet_status.exception_to_string
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item ("Nota")
+					glab := a_target_grid.name_label_item ("Note")
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
 					row.set_item (1, glab)
 					create es_glab

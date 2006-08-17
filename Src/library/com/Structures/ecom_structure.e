@@ -1,7 +1,7 @@
 indexing
 	description: "Abstract notions of a COM data structure."
 	legal: "See notice at end of class."
-	note: "If allocated by Client, may be deallocated by Server, and the opposite."
+	info: "If allocated by Client, may be deallocated by Server, and the opposite."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

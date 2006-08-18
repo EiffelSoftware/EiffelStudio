@@ -165,13 +165,13 @@ feature {NONE} -- Initialization
 				main_container.extend (l_frame)
 
 					--| Option buttons
-				create vb
+				create hb
 				create do_not_display_dialog_button.make_with_text (Interface_names.l_Discard_starting_dialog)
-				vb.extend (do_not_display_dialog_button)
-				vb.disable_item_expand (do_not_display_dialog_button)
-				vb.extend (create {EV_CELL})
-				main_container.extend (vb)
-				main_container.disable_item_expand (vb)
+				hb.extend (do_not_display_dialog_button)
+				hb.disable_item_expand (do_not_display_dialog_button)
+				hb.extend (create {EV_CELL})
+				main_container.extend (hb)
+				main_container.disable_item_expand (hb)
 
 				set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			end

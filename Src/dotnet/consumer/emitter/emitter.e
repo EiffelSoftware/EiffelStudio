@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	SAFE_ASSEMBLY_LOADER
+	SHARED_ASSEMBLY_LOADER
 		export
 			{NONE} all
 		end
@@ -182,9 +182,9 @@ feature {NONE} -- Implementation
 
 				if target_path /= Void then
 					if path_is_full_name then
-						l_assembly := load_assembly_from_full_name (target_path)
+						l_assembly := assembly_loader.load_from_full_name (target_path)
 					else
-						l_assembly := load_assembly_from_path (target_path)
+						l_assembly := assembly_loader.load_from (target_path)
 					end
 
 					if l_assembly = Void then

@@ -577,7 +577,7 @@ feature{NONE} -- Implementation
 				grid.remove_rows (1, grid.row_count)
 			end
 			grid.hide_tree_node_connectors
-			grid.set_row_height (line_height)
+			grid.set_row_height (default_row_height)
 			from
 				l_rows := rows
 				l_rows.start
@@ -890,7 +890,7 @@ feature{NONE} -- Initialization
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
 			grid.enable_single_row_selection
 			grid.enable_tree
-			grid.set_row_height (line_height)
+			grid.set_row_height (default_row_height)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end

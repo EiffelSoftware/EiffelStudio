@@ -570,6 +570,13 @@ feature{NONE} -- Sorting
 
 feature{NONE} -- Implementation
 
+	default_row_height: INTEGER is
+			-- Default height to set grid rows.
+		do
+			Result := line_height.max (pixmap_height)
+				-- We make sure we give enough space to display the pixmap.
+		end
+
 	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
 			-- Search bar used in browser
 

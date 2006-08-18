@@ -39,14 +39,10 @@ feature -- Cleanup
 				end
 				if internal_gac_loader /= Void then
 					l_dom := internal_gac_loader.my_domain
-					{MONITOR}.enter (l_dom)
 					if not l_dom.is_finalizing_for_unload then
 						{APP_DOMAIN}.unload (l_dom)
 					end
 				end
-			end
-			if l_dom /= Void then
-				{MONITOR}.exit (l_dom)
 			end
 			internal_gac_loader := Void
 		ensure

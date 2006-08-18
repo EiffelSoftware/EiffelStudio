@@ -16,13 +16,13 @@ SET INIT_PATH=%PATH%;
 SET CODEDOM_DELIVERY=%CD%
 
 REM Change these between releases:
-SET RELEASE=branches/Eiffel_56
+SET RELEASE=trunk
 ECHO RELEASE=%RELEASE%
 SET COMPILER_RELEASE=%2
 ECHO COMPILER_RELEASE=%COMPILER_RELEASE%
 SET CODEDOM_RELEASE=%1
 ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
-SET GOBO_SRC=\Sources\library\gobo
+SET GOBO_SRC=\57dev\library\gobo
 ECHO GOBO_SRC=%GOBO_SRC%
 IF NOT EXIST %GOBO_SRC% ECHO GOBO_SRC points to an invalid folder, exiting.
 IF NOT EXIST %GOBO_SRC% GOTO END
@@ -32,8 +32,10 @@ SET GOBO=%CD%\checkout\library\gobo
 ECHO GOBO=%GOBO%
 SET ECLOP=%CD%\checkout\eclop
 ECHO ECLOP=%ECLOP%
-SET SVNURL=svn://raphaels@svn.ise:3690/ise_svn
-ECHO SVNURL=%SVNURL%
+SET SVN_URL=svn://raphaels@svn.ise:3690/ise_svn
+SET SVN_ORIGO_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/
+ECHO SVN_URL=%SVN_URL%
+ECHO SVN_ORIGO_URL=%SVN_ORIGO_URL%
 ECHO ***********************************
 
 ECHO Setting up folders
@@ -58,13 +60,13 @@ IF "%CODEDOM_BUILT%"=="" GOTO END
 
 ECHO Building installer
 CD checkout\tools\silent_launcher
-IF EXIST EIFGEN rd /q /s EIFGEN
+IF EXIST EIFGENs rd /q /s EIFGENs
 IF EXIST installer.epr del installer.epr
 SET ISE_CFLAGS=-D WINVER=0x500
-"%3\studio\spec\windows\bin\ec" -finalize -c_compile -ace ace.codedom.ace
-IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
-IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
-COPY EIFGEN\F_Code\installer.exe ..\..\..\files
+"%3\studio\spec\windows\bin\ec" -finalize -c_compile -config launcher.ecf -target codedom
+IF NOT EXIST EIFGENs\codedom\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
+IF NOT EXIST EIFGENs\codedom\F_Code\installer.exe GOTO END
+COPY EIFGENs\codedom\F_Code\installer.exe ..\..\..\files
 SET ISE_CFLAGS=
 
 CD "%ECPOriginalPath%"

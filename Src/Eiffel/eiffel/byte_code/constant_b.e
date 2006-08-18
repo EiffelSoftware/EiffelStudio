@@ -12,7 +12,8 @@ inherit
 			set_parent, canonical,
 			has_gcable_variable, is_single, enlarged, is_constant,
 			propagate, print_register, free_register,
-			unanalyze, analyze, analyze_on, generate, generate_on,
+			unanalyze, analyze, analyze_on,
+			generate, generate_on, generate_parameters,
 			allocates_memory, need_target,
 			evaluate, is_constant_expression
 		end
@@ -193,6 +194,18 @@ feature -- Comparison
 				print_register
 			end;
 		end;
+
+	generate_parameters (reg: REGISTRABLE) is
+			-- Generate code for parameters computation.
+			-- `reg' ("Current") is not used except for
+			-- inlining
+		do
+			if context.workbench_mode then
+				access.generate_parameters (reg)
+			else
+				Precursor (reg)
+			end
+		end
 
 	enlarged: like Current is
 			-- Enlarge access

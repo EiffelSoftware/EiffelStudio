@@ -249,10 +249,10 @@ feature
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_directory_not_void: a_directory /= Void
+			a_file_not_void: a_file /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, new_location_from_full_path (a_directory, a_target), a_target)
+			create Result.make (a_name, new_location_from_full_path (a_file, a_target), a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end

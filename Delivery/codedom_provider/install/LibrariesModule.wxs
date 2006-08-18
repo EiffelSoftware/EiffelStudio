@@ -6,462 +6,427 @@
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='MergeRedirectFolder'>
 				<Directory Id='library' Name='library'>
-					<Directory Id='base' Name='base'>
-						<Component Id='base' Guid='7417F67F-4937-4A3D-A969-FB60478E6FE7'>
-							<File Id='indexing.txt' Name='indexing.txt'/>
+					<Directory Id="base" Name="base">
+						<Component Id="base" Guid="7417F67F-4937-4A3D-A969-FB60478E6FE7">
+							<File Id="base_ecf" Name="base.ecf"/>
 						</Component>
-						<Directory Id='refactoring' Name='REFACT1' LongName='refactoring'>
-							<Component Id='refactoring' Guid='21FD325C-93F0-458f-8918-D3E3D9B59FF0'>
-								<File Id='refactoring_helper.e' Name='REFACT1.E' LongName='refactoring_helper.e'/>
+						<Directory Id="refactoring" Name="REFACT~1" LongName="refactoring">
+							<Component Id="refactoring" Guid="21FD325C-93F0-458f-8918-D3E3D9B59FF0">
+								<File Id="refactoring_helper.e" Name="REFACT~1.E" LongName="refactoring_helper.e" KeyPath="yes" />
 							</Component>
 						</Directory>
-						<Directory Id='serialization' Name='SERIAL1' LongName='serialization'>
-							<Component Id='serialization' Guid='6616CDA1-CFD1-4f57-BE26-8BE0ABB443D1'>
-								<File Id='sed_storable_facilities_e' Name='SED_ST1.E' LongName='sed_storable_facilities.e'/>
+						<Directory Id="serialization" Name="SERIAL~1" LongName="serialization">
+							<Component Id="serialization" Guid="6616CDA1-CFD1-4f57-BE26-8BE0ABB443D1">
+								<File Id="sed_storable_facilities_e" Name="SED_ST~1.E" LongName="sed_storable_facilities.e" />
 							</Component>
-							<Directory Id='model' Name='model'>
-								<Component Id='model' Guid='5FC416B5-F817-4d0f-BB9E-01CF4D5A3D8B'>
-									<File Id='sed_meta_model_e' Name='SED_ME1.E' LongName='sed_meta_model.e'/>
+							<Directory Id="model" Name="model">
+								<Component Id="model" Guid="5FC416B5-F817-4d0f-BB9E-01CF4D5A3D8B">
+									<File Id="sed_meta_model_e" Name="SED_ME~1.E" LongName="sed_meta_model.e" />
 								</Component>
 							</Directory>
-							<Directory Id='reader_writer' Name='READER1' LongName='reader_writer'>
-								<Component Id='reader_writer' Guid='5098EFF0-B7AE-4bd8-B14B-14CD03893539'>
-									<File Id='sed_binary_reader_writer_e' Name='SED_BI1.E' LongName='sed_binary_reader_writer.e'/>
-									<File Id='sed_medium_reader_writer_e' Name='SED_ME1.E' LongName='sed_medium_reader_writer.e'/>
-									<File Id='sed_memory_reader_writer_e' Name='SED_ME2.E' LongName='sed_memory_reader_writer.e'/>
-									<File Id='sed_reader_writer_e' Name='SED_RE1.E' LongName='sed_reader_writer.e'/>
+							<Directory Id="reader_writer" Name="READER~1" LongName="reader_writer">
+								<Component Id="reader_writer" Guid="5098EFF0-B7AE-4bd8-B14B-14CD03893539">
+									<File Id="sed_binary_reader_writer_e" Name="SED_BI~1.E" LongName="sed_binary_reader_writer.e" />
+									<File Id="sed_medium_reader_writer_e" Name="SED_ME~1.E" LongName="sed_medium_reader_writer.e" />
+									<File Id="sed_medium_reader_writer_1_e" Name="SED_ME~2.E" LongName="sed_medium_reader_writer_1.e" />
+									<File Id="sed_memory_reader_writer_e" Name="SED_ME~3.E" LongName="sed_memory_reader_writer.e" />
+									<File Id="sed_reader_writer_e" Name="SED_RE~1.E" LongName="sed_reader_writer.e" />
 								</Component>
 							</Directory>
-							<Directory Id='serializers' Name='SERIAL1' LongName='serializers'>
-								<Component Id='serializers' Guid='467EC2D4-FBDD-4375-9581-9A70585A017D'>
-									<File Id='sed_basic_deserializer_e' Name='SED_BA1.E' LongName='sed_basic_deserializer.e'/>
-									<File Id='sed_basic_serializer_e' Name='SED_BA2.E' LongName='sed_basic_serializer.e'/>
-									<File Id='sed_independent_deserializer_e' Name='SED_IN1.E' LongName='sed_independent_deserializer.e'/>
-									<File Id='sed_independent_serializer_e' Name='SED_IN2.E' LongName='sed_independent_serializer.e'/>
-									<File Id='sed_session_deserializer_e' Name='SED_SE1.E' LongName='sed_session_deserializer.e'/>
-									<File Id='sed_session_serializer_e' Name='SED_SE2.E' LongName='sed_session_serializer.e'/>
-									<File Id='sed_utilities_e' Name='SED_UT1.E' LongName='sed_utilities.e'/>
+							<Directory Id="serializers" Name="SERIAL~1" LongName="serializers">
+								<Component Id="serializers" Guid="467EC2D4-FBDD-4375-9581-9A70585A017D">
+									<File Id="sed_basic_deserializer_e" Name="SED_BA~1.E" LongName="sed_basic_deserializer.e" />
+									<File Id="sed_basic_serializer_e" Name="SED_BA~2.E" LongName="sed_basic_serializer.e" />
+									<File Id="sed_independent_deserializer_e" Name="SED_IN~1.E" LongName="sed_independent_deserializer.e" />
+									<File Id="sed_independent_serializer_e" Name="SED_IN~2.E" LongName="sed_independent_serializer.e" />
+									<File Id="sed_session_deserializer_e" Name="SED_SE~1.E" LongName="sed_session_deserializer.e" />
+									<File Id="sed_session_serializer_e" Name="SED_SE~2.E" LongName="sed_session_serializer.e" />
+									<File Id="sed_utilities_e" Name="SED_UT~1.E" LongName="sed_utilities.e" />
 								</Component>
 							</Directory>
-							<Directory Id='traversing1' Name='TRAVER1' LongName='traversing'>
-								<Component Id='traversing1' Guid='77DD4BFA-F9DB-45ee-982D-9E83382A3943'>
-									<File Id='sed_abstract_objects_table_e' Name='SED_AB1.E' LongName='sed_abstract_objects_table.e'/>
-									<File Id='sed_object_graph_breadth_first_traversable_e' Name='SED_OB1.E' LongName='sed_object_graph_breadth_first_traversable.e'/>
-									<File Id='sed_object_graph_depth_first_traversable_e' Name='SED_OB2.E' LongName='sed_object_graph_depth_first_traversable.e'/>
-									<File Id='sed_object_graph_traversable_e' Name='SED_OB3.E' LongName='sed_object_graph_traversable.e'/>
+							<Directory Id="traversing1" Name="TRAVER~1" LongName="traversing">
+								<Component Id="traversing1" Guid="77DD4BFA-F9DB-45ee-982D-9E83382A3943">
+									<File Id="sed_abstract_objects_table_e" Name="SED_AB~1.E" LongName="sed_abstract_objects_table.e" />
+									<File Id="sed_object_graph_breadth_first" Name="SED_OB~1.E" LongName="sed_object_graph_breadth_first_traversable.e" />
+									<File Id="sed_object_graph_depth_first" Name="SED_OB~2.E" LongName="sed_object_graph_depth_first_traversable.e" />
+									<File Id="sed_object_graph_traversable_e" Name="SED_OB~3.E" LongName="sed_object_graph_traversable.e" />
 								</Component>
-								<Directory Id='classic3' Name='classic'>
-									<Component Id='classic3' Guid='78ADA375-4643-47c0-963D-21DB1D66D498'>
-										<File Id='sed_objects_table_e' Name='SED_OB1.E' LongName='sed_objects_table.e'/>
+								<Directory Id="dotnet5" Name="dotnet">
+									<Component Id="dotnet5" Guid="803FEF0F-9C0E-4cfb-BA06-1E85E14CA7B6">
+										<File Id="sed_objects_table_e2" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
+									</Component>
+								</Directory>
+								<Directory Id="classic3" Name="classic">
+									<Component Id="classic3" Guid="78ADA375-4643-47c0-963D-21DB1D66D498">
+										<File Id="sed_objects_table_e" Name="SED_OB~1.E" LongName="sed_objects_table.e" />
 									</Component>
 								</Directory>
 							</Directory>
 						</Directory>
-						<Directory Id='support' Name='support'>
-							<Component Id='support' Guid='D553A2F4-74F7-402B-B6A4-EED3A99779C0'>
-								<File Id='ascii.e' Name='ascii.e'/>
-								<File Id='c_string.e' Name='c_string.e'/>
-								<File Id='countable_sequence.e' Name='COUNTA2.E' LongName='countable_sequence.e'/>
-								<File Id='debug_output.e' Name='DEBUG_1.E' LongName='debug_output.e'/>
-								<File Id='fibonacci.e' Name='FIBONA1.E' LongName='fibonacci.e'/>
-								<File Id='format_double.e' Name='FORMAT1.E' LongName='format_double.e'/>
-								<File Id='format_integer.e' Name='FORMAT2.E' LongName='format_integer.e'/>
-								<File Id='internal_helper_e' Name='INTERN1.E' LongName='internal_helper.e'/>
-								<File Id='math_const.e' Name='MATH_C1.E' LongName='math_const.e'/>
-								<File Id='memory_stream.e' Name='MEMORY1.E' LongName='memory_stream.e'/>
-								<File Id='memory_structure.e' Name='MEMORY3.E' LongName='memory_structure.e'/>
-								<File Id='mismatch_corrector.e' Name='MISMAT2.E' LongName='mismatch_corrector.e'/>
-								<File Id='primes.e' Name='primes.e'/>
-								<File Id='random.e' Name='random.e'/>
+						<Directory Id="support" Name="support">
+							<Component Id="support" Guid="D553A2F4-74F7-402B-B6A4-EED3A99779C0">
+								<File Id="ascii.e" Name="ascii.e" />
+								<File Id="c_string.e" Name="c_string.e" />
+								<File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
+								<File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
+								<File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
+								<File Id="file_comparer_e" Name="FILE_C~1.E" LongName="file_comparer.e" />
+								<File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />
+								<File Id="format_integer.e" Name="FORMAT~2.E" LongName="format_integer.e" />
+								<File Id="internal_helper_e" Name="INTERN~1.E" LongName="internal_helper.e" />
+								<File Id="math_const.e" Name="MATH_C~1.E" LongName="math_const.e" />
+								<File Id="memory_stream.e" Name="MEMORY~1.E" LongName="memory_stream.e" />
+								<File Id="memory_structure.e" Name="MEMORY~3.E" LongName="memory_structure.e" />
+								<File Id="mismatch_corrector.e" Name="MISMAT~2.E" LongName="mismatch_corrector.e" />
+								<File Id="primes.e" Name="primes.e" />
+								<File Id="random.e" Name="random.e" />
 							</Component>
-							<Directory Id='classic' Name='classic'>
-								<Component Id='classic' Guid='F1698B0E-6DE9-4F73-B1B1-9A025B540686'>
-									<File Id='bool_string.e' Name='BOOL_S1.E' LongName='bool_string.e'/>
-									<File Id='identified.e' Name='IDENTI1.E' LongName='identified.e'/>
-									<File Id='operating_environment.e' Name='OPERAT1.E' LongName='operating_environment.e'/>
-									<File Id='profiling_setting.e' Name='PROFIL1.E' LongName='profiling_setting.e'/>
-									<File Id='execution_environment.e' Name='EXECUT1.E' LongName='execution_environment.e'/>
-									<File Id='internal.e' Name='internal.e'/>
-									<File Id='identified_controller.e' Name='IDENTI2.E' LongName='identified_controller.e'/>
-									<File Id='double_math.e' Name='DOUBLE2.E' LongName='double_math.e'/>
-									<File Id='single_math.e' Name='SINGLE1.E' LongName='single_math.e'/>
-									<File Id='mismatch_information.e' Name='MISMAT1.E' LongName='mismatch_information.e'/>
-									<File Id='class_name_translations.e' Name='CLASS_1.E' LongName='class_name_translations.e'/>
-									<File Id='managed_pointer.e1' Name='MANAGE1.E' LongName='managed_pointer.e'/>
+							<Directory Id="dotnet3" Name="dotnet">
+								<Component Id="operating_environment.e" Guid="1DFDDD79-210D-4DFB-9837-3328F1C2279E">
+									<File Id="bool_string_e" Name="BOOL_S~1.E" LongName="bool_string.e" />
+									<File Id="identified_e" Name="IDENTI~1.E" LongName="identified.e" />
+									<File Id="operating_environment_e" Name="OPERAT~1.E" LongName="operating_environment.e"/>
+									<File Id="profiling_setting_e" Name="PROFIL~1.E" LongName="profiling_setting.e" />
+									<File Id="execution_environment_e" Name="EXECUT~1.E" LongName="execution_environment.e" />
+									<File Id="internal_e" Name="internal.e" />
+									<File Id="identified_controller_e" Name="IDENTI~2.E" LongName="identified_controller.e" />
+									<File Id="double_math_e" Name="DOUBLE~1.E" LongName="double_math.e" />
+									<File Id="single_math_e" Name="SINGLE~1.E" LongName="single_math.e" />
+									<File Id="mismatch_information_e" Name="MISMAT~1.E" LongName="mismatch_information.e" />
+									<File Id="class_name_translations_e" Name="CLASS_~1.E" LongName="class_name_translations.e" />
+									<File Id="managed_pointer_e" Name="MANAGE~1.E" LongName="managed_pointer.e" />
+								</Component>
+							</Directory>
+							<Directory Id="classic" Name="classic">
+								<Component Id="classic" Guid="F1698B0E-6DE9-4F73-B1B1-9A025B540686">
+									<File Id="bool_string.e" Name="BOOL_S~1.E" LongName="bool_string.e" KeyPath="yes" />
+									<File Id="identified.e" Name="IDENTI~1.E" LongName="identified.e" />
+									<File Id="operating_environment.e" Name="OPERAT~1.E" LongName="operating_environment.e" />
+									<File Id="profiling_setting.e" Name="PROFIL~1.E" LongName="profiling_setting.e" />
+									<File Id="execution_environment.e" Name="EXECUT~1.E" LongName="execution_environment.e" />
+									<File Id="internal.e" Name="internal.e" />
+									<File Id="identified_controller.e" Name="IDENTI~2.E" LongName="identified_controller.e" />
+									<File Id="double_math.e" Name="DOUBLE~2.E" LongName="double_math.e" />
+									<File Id="single_math.e" Name="SINGLE~1.E" LongName="single_math.e" />
+									<File Id="mismatch_information.e" Name="MISMAT~1.E" LongName="mismatch_information.e" />
+									<File Id="class_name_translations.e" Name="CLASS_~1.E" LongName="class_name_translations.e" />
+									<File Id="managed_pointer.e1" Name="MANAGE~1.E" LongName="managed_pointer.e" />
 								</Component>
 							</Directory>
 						</Directory>
-						<Directory Id='kernel' Name='kernel'>
-							<Component Id='kernel' Guid='2FEF5439-326D-499C-9E2C-44EA40A4F414'>
-								<File Id='abstract_special_e' Name='ABSTRA1.E' LongName='abstract_special.e'/>
-								<File Id='array.e' Name='array.e'/>
-								<File Id='boolean_ref_e' Name='BOOLEA1.E' LongName='boolean_ref.e'/>
-								<File Id='character_ref_e' Name='CHARAC2.E' LongName='character_ref.e'/>
-								<File Id='comparable.e' Name='COMPAR1.E' LongName='comparable.e'/>
-								<File Id='declarator.e' Name='DECLAR1.E' LongName='declarator.e'/>
-								<File Id='excep_const.e' Name='EXCEP_1.E' LongName='excep_const.e'/>
-								<File Id='hashable.e' Name='hashable.e'/>
-								<File Id='integer_8.e' Name='INTEGE1.E' LongName='integer_8.e'/>
-								<File Id='integer_16.e' Name='INTEGE2.E' LongName='integer_16.e'/>
-								<File Id='integer.e' Name='integer.e'/>
-								<File Id='integer_64.e' Name='INTEGE4.E' LongName='integer_64.e'/>
-								<File Id='integer_8_ref.e' Name='INTEGE5.E' LongName='integer_8_ref.e'/>
-								<File Id='integer_16_ref.e' Name='INTEGE6.E' LongName='integer_16_ref.e'/>
-								<File Id='integer_ref.e' Name='INTEGE7.E' LongName='integer_ref.e'/>
-								<File Id='integer_64_ref.e' Name='INTEGE8.E' LongName='integer_64_ref.e'/>
-								<File Id='integer_interval.e' Name='INTEGE9.E' LongName='integer_interval.e'/>
-								<File Id='io_medium.e' Name='IO_MED1.E' LongName='io_medium.e'/>
-								<File Id='mem_const.e' Name='MEM_CO1.E' LongName='mem_const.e'/>
-								<File Id='natural_8.e' Name='NATURA1.E' LongName='natural_8.e'/>
-								<File Id='natural_16.e' Name='NATURA2.E' LongName='natural_16.e'/>
-								<File Id='natural_32.e' Name='NATURA3.E' LongName='natural_32.e'/>
-								<File Id='natural_64.e' Name='NATURA4.E' LongName='natural_64.e'/>
-								<File Id='natural_8_ref.e' Name='NATURA5.E' LongName='natural_8_ref.e'/>
-								<File Id='natural_16_ref.e' Name='NATURA6.E' LongName='natural_16_ref.e'/>
-								<File Id='natural_32_ref.e' Name='NATURA7.E' LongName='natural_32_ref.e'/>
-								<File Id='natural_64_ref.e' Name='NATURA8.E' LongName='natural_64_ref.e'/>
-								<File Id='numeric.e' Name='numeric.e'/>
-								<File Id='part_comparable.e' Name='PART_C1.E' LongName='part_comparable.e'/>
-								<File Id='seq_string.e' Name='SEQ_ST1.E' LongName='seq_string.e'/>
-								<File Id='std_files.e' Name='STD_FI1.E' LongName='std_files.e'/>
-								<File Id='string.e' Name='string.e'/>
-								<File Id='string_handler.e' Name='STRING1.E' LongName='string_handler.e'/>
-								<File Id='string_searcher_e' Name='STRING2.E' LongName='string_searcher.e'/>
-								<File Id='to_special.e' Name='TO_SPE1.E' LongName='to_special.e'/>
-								<File Id='typed_pointer_e' Name='TYPED_1.E' LongName='typed_pointer.e'/>
+						<Directory Id="kernel" Name="kernel">
+							<Component Id="kernel" Guid="2FEF5439-326D-499C-9E2C-44EA40A4F414">
+								<File Id="abstract_special_e" Name="ABSTRA~1.E" LongName="abstract_special.e" />
+								<File Id="array.e" Name="array.e" />
+								<File Id="boolean.e" Name="boolean.e" />
+								<File Id="boolean_ref_e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
+								<File Id="character_8.e" Name="CHARAC~1.E" LongName="character_8.e" />
+								<File Id="character_8_ref_e" Name="CHARAC~2.E" LongName="character_8_ref.e" />
+								<File Id="character_32.e" Name="CHARAC~3.E" LongName="character_32.e" />
+								<File Id="character_32_ref.e" Name="CHARAC~4.E" LongName="character_32_ref.e" />
+								<File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
+								<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
+								<File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
+								<File Id="hashable.e" Name="hashable.e" />
+								<File Id="integer_8.e" Name="INTEGE~1.E" LongName="integer_8.e" />
+								<File Id="integer_16.e" Name="INTEGE~2.E" LongName="integer_16.e" />
+								<File Id="integer_32.e" Name="INTEGE~3.E" LongName="integer_32.e" />
+								<File Id="integer_64.e" Name="INTEGE~4.E" LongName="integer_64.e" />
+								<File Id="integer_8_ref.e" Name="INTEGE~5.E" LongName="integer_8_ref.e" />
+								<File Id="integer_16_ref.e" Name="INTEGE~6.E" LongName="integer_16_ref.e" />
+								<File Id="integer_32_ref.e" Name="INTEGE~7.E" LongName="integer_32_ref.e" />
+								<File Id="integer_64_ref.e" Name="INTEGE~8.E" LongName="integer_64_ref.e" />
+								<File Id="integer_interval.e" Name="INTEGE~9.E" LongName="integer_interval.e" />
+								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
+								<File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
+								<File Id="natural_8.e" Name="NATURA~1.E" LongName="natural_8.e" />
+								<File Id="natural_16.e" Name="NATURA~2.E" LongName="natural_16.e" />
+								<File Id="natural_32.e" Name="NATURA~3.E" LongName="natural_32.e" />
+								<File Id="natural_64.e" Name="NATURA~4.E" LongName="natural_64.e" />
+								<File Id="natural_8_ref.e" Name="NATURA~5.E" LongName="natural_8_ref.e" />
+								<File Id="natural_16_ref.e" Name="NATURA~6.E" LongName="natural_16_ref.e" />
+								<File Id="natural_32_ref.e" Name="NATURA~7.E" LongName="natural_32_ref.e" />
+								<File Id="natural_64_ref.e" Name="NATURA~8.E" LongName="natural_64_ref.e" />
+								<File Id="numeric.e" Name="numeric.e" />
+								<File Id="numeric_information" Name="NUMERI~1.E" LongName="numeric_information.e" />
+								<File Id="integer_overflow_checker_e" Name="IN375A~1.E" LongName="integer_overflow_checker.e" />
+								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
+								<File Id="predicate.e" Name="PREDIC~1.E" LongName="predicate.e" />
+								<File Id="real_32.e" Name="real_32.e" />
+								<File Id="real_64.e" Name="real_64.e" />
+								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
+								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
+								<File Id="string_8.e" Name="string_8.e" />
+								<File Id="string_32.e" Name="STRING~6.E" LongName="string_32.e" />
+								<File Id="string_general.e" Name="STRING~7.E" LongName="string_general.e" />
+								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
+								<File Id="string_searcher_e" Name="STRING~2.E" LongName="string_searcher.e" />
+								<File Id="string_to_integer_convertor_e" Name="STRING~3.E" LongName="string_to_integer_convertor.e" />
+								<File Id="string_to_numeric_convertor_e" Name="STRING~4.E" LongName="string_to_numeric_convertor.e" />
+								<File Id="string_to_real_convertor_e" Name="STRING~5.E" LongName="string_to_real_convertor.e" />
+								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
+								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>
-							<Directory Id='exceptions' Name='EXCEPT1' LongName='exceptions'>
-								<Component Id='exceptions' Guid='1EBF9024-74C3-4ab2-8454-3C82E4DADCBC'>
-									<File Id='exception_e' Name='EXCEPT1.E' LongName='exception.e'/>
+							<Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions">
+								<Component Id="exceptions" Guid="1EBF9024-74C3-4ab2-8454-3C82E4DADCBC">
+									<File Id="exception_e" Name="EXCEPT~1.E" LongName="exception.e" />
 								</Component>
 							</Directory>
-							<Directory Id='classic1' Name='classic'>
-								<Component Id='classic1' Guid='5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB'>
-									<File Id='unix_signals.e' Name='UNIX_S1.E' LongName='unix_signals.e'/>
-									<File Id='gc_info.e' Name='gc_info.e'/>
-									<File Id='plain_text_file.e' Name='PLAIN_1.E' LongName='plain_text_file.e'/>
-									<File Id='pointer.e' Name='pointer.e'/>
-									<File Id='function.e' Name='function.e'/>
-									<File Id='arguments.e' Name='ARGUME1.E' LongName='arguments.e'/>
-									<File Id='tuple.e' Name='tuple.e'/>
-									<File Id='memory.e' Name='memory.e'/>
-									<File Id='ise_runtime.e' Name='ISE_RU1.E' LongName='ise_runtime.e'/>
-									<File Id='raw_file.e' Name='raw_file.e'/>
-									<File Id='console.e' Name='console.e'/>
-									<File Id='stream.e' Name='stream.e'/>
-									<File Id='double.e' Name='double.e'/>
-									<File Id='bit_ref.e' Name='bit_ref.e'/>
-									<File Id='wide_character_ref.e' Name='WIDE_C2.E' LongName='wide_character_ref.e'/>
-									<File Id='directory_name.e' Name='DIRECT2.E' LongName='directory_name.e'/>
-									<File Id='storable.e' Name='storable.e'/>
-									<File Id='mem_info.e' Name='mem_info.e'/>
-									<File Id='file.e' Name='file.e'/>
-									<File Id='character.e' Name='CHARAC1.E' LongName='character.e'/>
-									<File Id='boolean.e' Name='boolean.e'/>
-									<File Id='basic_routines.e' Name='BASIC_1.E' LongName='basic_routines.e'/>
-									<File Id='real_ref.e' Name='real_ref.e'/>
-									<File Id='wide_character.e' Name='WIDE_C1.E' LongName='wide_character.e'/>
-									<File Id='unix_file_info.e' Name='UNIX_F1.E' LongName='unix_file_info.e'/>
-									<File Id='special.e' Name='special.e'/>
-									<File Id='real.e' Name='real.e'/>
-									<File Id='procedure.e' Name='PROCED1.E' LongName='procedure.e'/>
-									<File Id='path_name.e' Name='PATH_N1.E' LongName='path_name.e'/>
-									<File Id='exceptions.e' Name='EXCEPT1.E' LongName='exceptions.e'/>
-									<File Id='double_ref.e' Name='DOUBLE1.E' LongName='double_ref.e'/>
-									<File Id='directory.e' Name='DIRECT1.E' LongName='directory.e'/>
-									<File Id='file_name.e' Name='FILE_N1.E' LongName='file_name.e'/>
-									<File Id='any.e' Name='any.e'/>
-									<File Id='pointer_ref.e' Name='POINTE1.E' LongName='pointer_ref.e'/>
-									<File Id='platform.e' Name='platform.e'/>
-									<File Id='routine.e' Name='routine.e'/>
-									<File Id='disposable.e' Name='DISPOS1.E' LongName='disposable.e'/>
-									<File Id='type_e' Name='type.e'/>
-									<File Id='native_array_e' Name='NATIVE1.E' LongName='native_array.e'/>
-									<File Id='system_string_e' Name='SYSTEM1.E' LongName='system_string.e'/>
+							<Directory Id="dotnet4" Name="dotnet">
+								<Component Id="dotnet4" Guid="23DA1C36-A57B-4A5D-9B1A-CA6B2D4AF39A">
+									<File Id="raw_file_e" Name="raw_file.e" KeyPath="yes" />
+									<File Id="procedure_e" Name="PROCED~1.E" LongName="procedure.e" />
+									<File Id="routine_e" Name="routine.e" />
+									<File Id="path_name_e" Name="PATH_N~1.E" LongName="path_name.e" />
+									<File Id="gc_info_e" Name="gc_info.e" />
+									<File Id="directory_e" Name="DIRECT~2.E" LongName="directory.e" />
+									<File Id="mem_info_e" Name="mem_info.e" />
+									<File Id="file_name_e" Name="FILE_N~1.E" LongName="file_name.e" />
+									<File Id="storable_e" Name="storable.e" />
+									<File Id="native_array_e2" Name="NATIVE~1.E" LongName="native_array.e" />
+									<File Id="pointer_e" Name="pointer.e" />
+									<File Id="console_e" Name="console.e" />
+									<File Id="unix_signals_e" Name="UNIX_S~1.E" LongName="unix_signals.e" />
+									<File Id="plain_text_file_e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
+									<File Id="arguments_e" Name="ARGUME~1.E" LongName="arguments.e" />
+									<File Id="file_e" Name="file.e" />
+									<File Id="bit_ref_e" Name="bit_ref.e" />
+									<File Id="exceptions_e" Name="EXCEPT~2.E" LongName="exceptions.e" />
+									<File Id="real_32_ref_e" Name="REAL_3~1.E" LongName="real_32_ref.e" />
+									<File Id="real_64_ref_e" Name="REAL_6~1.E" LongName="real_64_ref.e" />
+									<File Id="platform_e" Name="platform.e" />
+									<File Id="memory_e" Name="memory.e" />
+									<File Id="directory_name_e" Name="DIRECT~3.E" LongName="directory_name.e" />
+									<File Id="pointer_ref_e" Name="POINTE~1.E" LongName="pointer_ref.e" />
+									<File Id="cli_cell_e" Name="cli_cell.e" />
+									<File Id="special_e" Name="special.e" />
+									<File Id="basic_routines_e" Name="BASIC_~1.E" LongName="basic_routines.e" />
+									<File Id="unix_file_info_e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
+									<File Id="stream_e" Name="stream.e" />
+									<File Id="function_e" Name="function.e" />
+									<File Id="tuple_e" Name="tuple.e" />
+									<File Id="any_e" Name="any.e" />
+									<File Id="disposable_e" Name="DISPOS~1.E" LongName="disposable.e" />
+									<File Id="dotnet_pointer_e" Name="DO5684~1.E" LongName="dotnet_pointer.e" />
+									<File Id="dotnet_integer_8_e" Name="DO0D19~1.E" LongName="dotnet_integer_8.e" />
+									<File Id="dotnet_integer_16_e" Name="DOAC1F~1.E" LongName="dotnet_integer_16.e" />
+									<File Id="dotnet_integer_e" Name="DOTNET~4.E" LongName="dotnet_integer.e" />
+									<File Id="dotnet_integer_64_e" Name="DOCC0B~1.E" LongName="dotnet_integer_64.e" />
+									<File Id="dotnet_natural_8_e" Name="DO00A8~1.E" LongName="dotnet_natural_8.e" />
+									<File Id="dotnet_natural_16_e" Name="DO2EDE~1.E" LongName="dotnet_natural_16.e" />
+									<File Id="dotnet_natural_32_e" Name="DO3EB6~1.E" LongName="dotnet_natural_32.e" />
+									<File Id="dotnet_natural_64_e" Name="DO4ECA~1.E" LongName="dotnet_natural_64.e" />
+									<File Id="dotnet_character_e" Name="DOTNET~2.E" LongName="dotnet_character.e" />
+									<File Id="dotnet_double_e" Name="DOTNET~3.E" LongName="dotnet_double.e" />
+									<File Id="dotnet_boolean_e" Name="DOTNET~1.E" LongName="dotnet_boolean.e" />
+									<File Id="dotnet_real_e" Name="DO9EFE~1.E" LongName="dotnet_real.e" />
+									<File Id="system_string_factory_e2" Name="SYSTEM~1.E" LongName="system_string_factory.e" />
+									<File Id="type_e2" Name="type.e" />
+								</Component>
+							</Directory>
+							<Directory Id="classic1" Name="classic">
+								<Component Id="classic1" Guid="5428EF01-4C20-4B89-91D3-AC8BFC9A9EFB">
+									<File Id="unix_signals.e" Name="UNIX_S~1.E" LongName="unix_signals.e" KeyPath="yes" />
+									<File Id="gc_info.e" Name="gc_info.e" />
+									<File Id="plain_text_file.e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
+									<File Id="pointer.e" Name="pointer.e" />
+									<File Id="function.e" Name="function.e" />
+									<File Id="arguments.e" Name="ARGUME~1.E" LongName="arguments.e" />
+									<File Id="tuple.e" Name="tuple.e" />
+									<File Id="memory.e" Name="memory.e" />
+									<File Id="ise_runtime.e" Name="ISE_RU~1.E" LongName="ise_runtime.e" />
+									<File Id="raw_file.e" Name="raw_file.e" />
+									<File Id="console.e" Name="console.e" />
+									<File Id="stream.e" Name="stream.e" />
+									<File Id="bit_ref.e" Name="bit_ref.e" />
+									<File Id="directory_name.e" Name="DIRECT~2.E" LongName="directory_name.e" />
+									<File Id="storable.e" Name="storable.e" />
+									<File Id="mem_info.e" Name="mem_info.e" />
+									<File Id="file.e" Name="file.e" />
+									<File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
+									<File Id="real_32_ref_e2" Name="REAL_3~1.E" LongName="real_32_ref.e" />
+									<File Id="real_64_ref_e2" Name="REAL_6~1.E" LongName="real_64_ref.e" />
+									<File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
+									<File Id="special.e" Name="special.e" />
+									<File Id="procedure.e" Name="PROCED~1.E" LongName="procedure.e" />
+									<File Id="path_name.e" Name="PATH_N~1.E" LongName="path_name.e" />
+									<File Id="exceptions.e" Name="EXCEPT~1.E" LongName="exceptions.e" />
+									<File Id="directory.e" Name="DIRECT~1.E" LongName="directory.e" />
+									<File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
+									<File Id="any.e" Name="any.e" />
+									<File Id="pointer_ref.e" Name="POINTE~1.E" LongName="pointer_ref.e" />
+									<File Id="platform.e" Name="platform.e" />
+									<File Id="routine.e" Name="routine.e" />
+									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
+									<File Id="type_e" Name="type.e" />
+									<File Id="native_array_e" Name="NATIVE~1.E" LongName="native_array.e" />
+									<File Id="system_string_e" Name="SYSTEM~1.E" LongName="system_string.e" />
+									<File Id="system_string_factory_e" Name="SYSTEM~2.E" LongName="system_string_factory.e" />
 								</Component>
 							</Directory>
 						</Directory>
-						<Directory Id='event' Name='event'>
-							<Component Id='event' Guid='D379D8C8-A3F8-4E5B-9DE2-02D240CAF6E2'>
-								<File Id='interactive_list.e' Name='INTERA1.E' LongName='interactive_list.e'/>
-								<File Id='active_integer_interval.e' Name='ACTIVE1.E' LongName='active_integer_interval.e'/>
-								<File Id='action_sequence.e' Name='ACTION1.E' LongName='action_sequence.e'/>
-								<File Id='active_list.e' Name='ACTIVE2.E' LongName='active_list.e'/>
+						<Directory Id="event" Name="event">
+							<Component Id="event" Guid="D379D8C8-A3F8-4E5B-9DE2-02D240CAF6E2">
+								<File Id="interactive_list.e" Name="INTERA~1.E" LongName="interactive_list.e" KeyPath="yes" />
+								<File Id="active_integer_interval.e" Name="ACTIVE~1.E" LongName="active_integer_interval.e" />
+								<File Id="action_sequence.e" Name="ACTION~1.E" LongName="action_sequence.e" />
+								<File Id="active_list.e" Name="ACTIVE~2.E" LongName="active_list.e" />
 							</Component>
 						</Directory>
-						<Directory Id='structures' Name='STRUCT1' LongName='structures'>
-							<Directory Id='table_eiffel3' Name='TABLE_1' LongName='table_eiffel3'>
-								<Component Id='table_eiffel3' Guid='3B4999AB-4FAF-4282-B7CC-DD38E346F405'>
-									<File Id='array2.e' Name='array2.e'/>
-									<File Id='hash_table.e2' Name='HASH_T3.E' LongName='hash_table.e'/>
+						<Directory Id="structures" Name="STRUCT~1" LongName="structures">
+							<Directory Id="list" Name="list">
+								<Component Id="list" Guid="7A5601D3-7D7A-4BC3-8017-00F811B8016F">
+									<File Id="arrayed_list.e" Name="ARRAYE~2.E" LongName="arrayed_list.e" KeyPath="yes" />
+									<File Id="two_way_list.e" Name="TWO_WA~2.E" LongName="two_way_list.e" />
+									<File Id="two_way_circular.e" Name="TWO_WA~1.E" LongName="two_way_circular.e" />
+									<File Id="sorted_two_way_list.e" Name="SORTED~2.E" LongName="sorted_two_way_list.e" />
+									<File Id="fixed_list.e" Name="FIXED_~2.E" LongName="fixed_list.e" />
+									<File Id="dynamic_circular.e" Name="DYNAMI~2.E" LongName="dynamic_circular.e" />
+									<File Id="bi_linkable.e" Name="BI_LIN~1.E" LongName="bi_linkable.e" />
+									<File Id="linked_list.e" Name="LINKED~6.E" LongName="linked_list.e" />
+									<File Id="dynamic_chain.e" Name="DYNAMI~3.E" LongName="dynamic_chain.e" />
+									<File Id="arrayed_circular.e" Name="ARRAYE~5.E" LongName="arrayed_circular.e" />
+									<File Id="chain.e" Name="chain.e" />
+									<File Id="part_sorted_list.e" Name="PART_S~2.E" LongName="part_sorted_list.e" />
+									<File Id="linkable.e" Name="linkable.e" />
+									<File Id="multi_array_list.e" Name="MULTI_~1.E" LongName="multi_array_list.e" />
+									<File Id="list.e" Name="list.e" />
+									<File Id="dynamic_list.e" Name="DYNAMI~4.E" LongName="dynamic_list.e" />
+									<File Id="linked_circular.e" Name="LINKED~8.E" LongName="linked_circular.e" />
+									<File Id="sorted_list.e" Name="SORTED~3.E" LongName="sorted_list.e" />
+									<File Id="part_sorted_two_way_list.e" Name="PART_S~3.E" LongName="part_sorted_two_way_list.e" />
+									<File Id="circular.e" Name="circular.e" />
+									<File Id="cell.e" Name="cell.e" />
+									<File Id="sequence.e" Name="sequence.e" />
 								</Component>
 							</Directory>
-							<Directory Id='list' Name='list'>
-								<Component Id='list' Guid='7A5601D3-7D7A-4BC3-8017-00F811B8016F'>
-									<File Id='arrayed_list.e' Name='ARRAYE2.E' LongName='arrayed_list.e'/>
-									<File Id='two_way_list.e' Name='TWO_WA2.E' LongName='two_way_list.e'/>
-									<File Id='two_way_circular.e' Name='TWO_WA1.E' LongName='two_way_circular.e'/>
-									<File Id='sorted_two_way_list.e' Name='SORTED2.E' LongName='sorted_two_way_list.e'/>
-									<File Id='fixed_list.e' Name='FIXED_2.E' LongName='fixed_list.e'/>
-									<File Id='dynamic_circular.e' Name='DYNAMI2.E' LongName='dynamic_circular.e'/>
-									<File Id='bi_linkable.e' Name='BI_LIN1.E' LongName='bi_linkable.e'/>
-									<File Id='linked_list.e' Name='LINKED6.E' LongName='linked_list.e'/>
-									<File Id='dynamic_chain.e' Name='DYNAMI3.E' LongName='dynamic_chain.e'/>
-									<File Id='arrayed_circular.e' Name='ARRAYE5.E' LongName='arrayed_circular.e'/>
-									<File Id='chain.e' Name='chain.e'/>
-									<File Id='part_sorted_list.e' Name='PART_S2.E' LongName='part_sorted_list.e'/>
-									<File Id='linkable.e' Name='linkable.e'/>
-									<File Id='multi_array_list.e' Name='MULTI_1.E' LongName='multi_array_list.e'/>
-									<File Id='list.e' Name='list.e'/>
-									<File Id='dynamic_list.e' Name='DYNAMI4.E' LongName='dynamic_list.e'/>
-									<File Id='linked_circular.e' Name='LINKED8.E' LongName='linked_circular.e'/>
-									<File Id='sorted_list.e' Name='SORTED3.E' LongName='sorted_list.e'/>
-									<File Id='part_sorted_two_way_list.e' Name='PART_S3.E' LongName='part_sorted_two_way_list.e'/>
-									<File Id='circular.e' Name='circular.e'/>
-									<File Id='cell.e' Name='cell.e'/>
-									<File Id='sequence.e' Name='sequence.e'/>
+							<Directory Id="cursors" Name="cursors">
+								<Component Id="cursors" Guid="250EC1EC-EE29-4A67-89EF-C664B2F83C7A">
+									<File Id="arrayed_list_cursor.e" Name="ARRAYE~1.E" LongName="arrayed_list_cursor.e" KeyPath="yes" />
+									<File Id="circular_cursor.e" Name="CIRCUL~1.E" LongName="circular_cursor.e" />
+									<File Id="compact_tree_cursor.e" Name="COMPAC~1.E" LongName="compact_tree_cursor.e" />
+									<File Id="cursor.e" Name="cursor.e" />
+									<File Id="hash_table_cursor.e" Name="HASH_T~2.E" LongName="hash_table_cursor.e" />
+									<File Id="linked_cursor_tree_cursor.e" Name="LINKED~3.E" LongName="linked_cursor_tree_cursor.e" />
+									<File Id="linked_list_cursor.e" Name="LINKED~1.E" LongName="linked_list_cursor.e" />
+									<File Id="linked_tree_cursor.e" Name="LINKED~2.E" LongName="linked_tree_cursor.e" />
+									<File Id="multar_list_cursor.e" Name="MULTAR~1.E" LongName="multar_list_cursor.e" />
+									<File Id="recursive_tree_cursor.e" Name="RECURS~1.E" LongName="recursive_tree_cursor.e" />
+					<File Id="two_way_cursor_tree_cursor.e" Name="TWO_WA~3.E" LongName="two_way_cursor_tree_cursor.e" />
+									<File Id="two_way_list_cursor.e" Name="TWO_WA~2.E" LongName="two_way_list_cursor.e" />
+									<File Id="two_way_tree_cursor.e" Name="TWO_WA~1.E" LongName="two_way_tree_cursor.e" />
 								</Component>
 							</Directory>
-							<Directory Id='cursors' Name='cursors'>
-								<Component Id='cursors' Guid='250EC1EC-EE29-4A67-89EF-C664B2F83C7A'>
-									<File Id='arrayed_list_cursor.e' Name='ARRAYE1.E' LongName='arrayed_list_cursor.e'/>
-									<File Id='circular_cursor.e' Name='CIRCUL1.E' LongName='circular_cursor.e'/>
-									<File Id='compact_tree_cursor.e' Name='COMPAC1.E' LongName='compact_tree_cursor.e'/>
-									<File Id='cursor.e' Name='cursor.e'/>
-									<File Id='hash_table_cursor.e' Name='HASH_T2.E' LongName='hash_table_cursor.e'/>
-									<File Id='linked_cursor_tree_cursor.e' Name='LINKED3.E' LongName='linked_cursor_tree_cursor.e'/>
-									<File Id='linked_list_cursor.e' Name='LINKED1.E' LongName='linked_list_cursor.e'/>
-									<File Id='linked_tree_cursor.e' Name='LINKED2.E' LongName='linked_tree_cursor.e'/>
-									<File Id='multar_list_cursor.e' Name='MULTAR1.E' LongName='multar_list_cursor.e'/>
-									<File Id='recursive_tree_cursor.e' Name='RECURS1.E' LongName='recursive_tree_cursor.e'/>
-									<File Id='two_way_cursor_tree_cursor.e' Name='TWO_WA3.E' LongName='two_way_cursor_tree_cursor.e'/>
-									<File Id='two_way_list_cursor.e' Name='TWO_WA2.E' LongName='two_way_list_cursor.e'/>
-									<File Id='two_way_tree_cursor.e' Name='TWO_WA1.E' LongName='two_way_tree_cursor.e'/>
+							<Directory Id="tree" Name="tree">
+								<Component Id="tree" Guid="7AA26A75-5EDF-4B79-B9DE-98790B62629B">
+									<File Id="dynamic_tree.e" Name="DYNAMI~1.E" LongName="dynamic_tree.e" KeyPath="yes" />
+									<File Id="fixed_tree.e" Name="FIXED_~1.E" LongName="fixed_tree.e" />
+									<File Id="tree.e" Name="tree.e" />
+									<File Id="linked_tree.e" Name="LINKED~4.E" LongName="linked_tree.e" />
+									<File Id="arrayed_tree.e" Name="ARRAYE~3.E" LongName="arrayed_tree.e" />
+									<File Id="two_way_tree.e" Name="TWO_WA~4.E" LongName="two_way_tree.e" />
+									<File Id="binary_tree.e" Name="BINARY~2.E" LongName="binary_tree.e" />
+									<File Id="binary_search_tree.e" Name="BINARY~3.E" LongName="binary_search_tree.e" />
 								</Component>
 							</Directory>
-							<Directory Id='tree' Name='tree'>
-								<Component Id='tree' Guid='7AA26A75-5EDF-4B79-B9DE-98790B62629B'>
-									<File Id='dynamic_tree.e' Name='DYNAMI1.E' LongName='dynamic_tree.e'/>
-									<File Id='fixed_tree.e' Name='FIXED_1.E' LongName='fixed_tree.e'/>
-									<File Id='tree.e' Name='tree.e'/>
-									<File Id='linked_tree.e' Name='LINKED4.E' LongName='linked_tree.e'/>
-									<File Id='arrayed_tree.e' Name='ARRAYE3.E' LongName='arrayed_tree.e'/>
-									<File Id='two_way_tree.e' Name='TWO_WA4.E' LongName='two_way_tree.e'/>
-									<File Id='binary_tree.e' Name='BINARY2.E' LongName='binary_tree.e'/>
-									<File Id='binary_search_tree.e' Name='BINARY3.E' LongName='binary_search_tree.e'/>
+							<Directory Id="table" Name="table">
+								<Component Id="table" Guid="56050468-5224-42C0-83BC-F85CB8122D59">
+									<File Id="array2.e" Name="array2.e" KeyPath="yes" />
+									<File Id="hash_table.e" Name="HASH_T~1.E" LongName="hash_table.e" />
 								</Component>
 							</Directory>
-							<Directory Id='table' Name='table'>
-								<Component Id='table' Guid='56050468-5224-42C0-83BC-F85CB8122D59'>
-									<File Id='array2.e1' Name='array2.e'/>
-									<File Id='hash_table.e' Name='HASH_T1.E' LongName='hash_table.e'/>
+							<Directory Id="storage" Name="storage">
+								<Component Id="storage" Guid="A175CE4B-B8B9-47B4-80A5-706D04A2E9A6">
+									<File Id="countable.e" Name="COUNTA~1.E" LongName="countable.e" KeyPath="yes" />
+									<File Id="resizable.e" Name="RESIZA~1.E" LongName="resizable.e" />
+									<File Id="infinite.e" Name="infinite.e" />
+									<File Id="bounded.e" Name="bounded.e" />
+									<File Id="box.e" Name="box.e" />
+									<File Id="unbounded.e" Name="UNBOUN~1.E" LongName="unbounded.e" />
+									<File Id="fixed.e" Name="fixed.e" />
+									<File Id="finite.e" Name="finite.e" />
 								</Component>
 							</Directory>
-							<Directory Id='storage' Name='storage'>
-								<Component Id='storage' Guid='A175CE4B-B8B9-47B4-80A5-706D04A2E9A6'>
-									<File Id='countable.e' Name='COUNTA1.E' LongName='countable.e'/>
-									<File Id='resizable.e' Name='RESIZA1.E' LongName='resizable.e'/>
-									<File Id='infinite.e' Name='infinite.e'/>
-									<File Id='bounded.e' Name='bounded.e'/>
-									<File Id='box.e' Name='box.e'/>
-									<File Id='unbounded.e' Name='UNBOUN1.E' LongName='unbounded.e'/>
-									<File Id='fixed.e' Name='fixed.e'/>
-									<File Id='finite.e' Name='finite.e'/>
+							<Directory Id="traversing" Name="TRAVER~1" LongName="traversing">
+								<Component Id="traversing" Guid="7C59F3E5-0E9A-4E3C-BBC4-A833D644741A">
+									<File Id="bilinear.e" Name="bilinear.e" KeyPath="yes" />
+									<File Id="traversable.e" Name="TRAVER~1.E" LongName="traversable.e" />
+									<File Id="linear.e" Name="linear.e" />
+									<File Id="hierarchical.e" Name="HIERAR~1.E" LongName="hierarchical.e" />
 								</Component>
 							</Directory>
-							<Directory Id='traversing' Name='TRAVER1' LongName='traversing'>
-								<Component Id='traversing' Guid='7C59F3E5-0E9A-4E3C-BBC4-A833D644741A'>
-									<File Id='bilinear.e' Name='bilinear.e'/>
-									<File Id='traversable.e' Name='TRAVER1.E' LongName='traversable.e'/>
-									<File Id='linear.e' Name='linear.e'/>
-									<File Id='hierarchical.e' Name='HIERAR1.E' LongName='hierarchical.e'/>
+							<Directory Id="set" Name="set">
+								<Component Id="set" Guid="7BC1BA80-A9F6-400D-97F2-2375614A3B94">
+									<File Id="linked_set.e" Name="LINKED~1.E" LongName="linked_set.e" KeyPath="yes" />
+									<File Id="part_sorted_set.e" Name="PART_S~1.E" LongName="part_sorted_set.e" />
+									<File Id="binary_search_tree_set.e" Name="BINARY~1.E" LongName="binary_search_tree_set.e" />
+									<File Id="arrayed_set.e" Name="ARRAYE~4.E" LongName="arrayed_set.e" />
+									<File Id="traversable_subset.e" Name="TRAVER~2.E" LongName="traversable_subset.e" />
+									<File Id="comparable_set.e" Name="COMPAR~2.E" LongName="comparable_set.e" />
+									<File Id="linear_subset.e" Name="LINEAR~1.E" LongName="linear_subset.e" />
+									<File Id="two_way_sorted_set.e" Name="TWO_WA~6.E" LongName="two_way_sorted_set.e" />
+									<File Id="set.e" Name="set.e" />
+									<File Id="subset.e" Name="subset.e" />
 								</Component>
-							</Directory>
-							<Directory Id='set' Name='set'>
-								<Component Id='set' Guid='7BC1BA80-A9F6-400D-97F2-2375614A3B94'>
-									<File Id='linked_set.e' Name='LINKED1.E' LongName='linked_set.e'/>
-									<File Id='part_sorted_set.e' Name='PART_S1.E' LongName='part_sorted_set.e'/>
-									<File Id='binary_search_tree_set.e' Name='BINARY1.E' LongName='binary_search_tree_set.e'/>
-									<File Id='arrayed_set.e' Name='ARRAYE4.E' LongName='arrayed_set.e'/>
-									<File Id='traversable_subset.e' Name='TRAVER2.E' LongName='traversable_subset.e'/>
-									<File Id='comparable_set.e' Name='COMPAR2.E' LongName='comparable_set.e'/>
-									<File Id='linear_subset.e' Name='LINEAR1.E' LongName='linear_subset.e'/>
-									<File Id='two_way_sorted_set.e' Name='TWO_WA6.E' LongName='two_way_sorted_set.e'/>
-									<File Id='set.e' Name='set.e'/>
-									<File Id='subset.e' Name='subset.e'/>
-								</Component>
-								<Directory Id='strategies' Name='STRATE1' LongName='strategies'>
-									<Component Id='strategies' Guid='25286753-BCA0-430C-AD11-6927319F6A44'>
-										<File Id='subset_strategy_tree.e' Name='SUBSET4.E' LongName='subset_strategy_tree.e'/>
-										<File Id='subset_strategy_generic.e' Name='SUBSET2.E' LongName='subset_strategy_generic.e'/>
-										<File Id='subset_strategy_hashable.e' Name='SUBSET3.E' LongName='subset_strategy_hashable.e'/>
-										<File Id='subset_strategy.e' Name='SUBSET1.E' LongName='subset_strategy.e'/>
+								<Directory Id="strategies" Name="STRATE~1" LongName="strategies">
+									<Component Id="strategies" Guid="25286753-BCA0-430C-AD11-6927319F6A44">
+										<File Id="subset_strategy_tree.e" Name="SUBSET~4.E" LongName="subset_strategy_tree.e" KeyPath="yes" />
+										<File Id="subset_strategy_generic.e" Name="SUBSET~2.E" LongName="subset_strategy_generic.e" />
+										<File Id="subset_strategy_hashable.e" Name="SUBSET~3.E" LongName="subset_strategy_hashable.e" />
+										<File Id="subset_strategy.e" Name="SUBSET~1.E" LongName="subset_strategy.e" />
 									</Component>
 								</Directory>
 							</Directory>
-							<Directory Id='cursor_tree' Name='CURSOR1' LongName='cursor_tree'>
-								<Component Id='cursor_tree' Guid='1BB273B9-6175-4972-8260-770C268DAFCD'>
-									<File Id='two_way_cursor_tree.e' Name='TWO_WA3.E' LongName='two_way_cursor_tree.e'/>
-									<File Id='cursor_tree.e' Name='CURSOR1.E' LongName='cursor_tree.e'/>
-									<File Id='recursive_cursor_tree.e' Name='RECURS2.E' LongName='recursive_cursor_tree.e'/>
-									<File Id='linked_cursor_tree.e' Name='LINKED7.E' LongName='linked_cursor_tree.e'/>
-									<File Id='compact_cursor_tree.e' Name='COMPAC2.E' LongName='compact_cursor_tree.e'/>
+							<Directory Id="cursor_tree" Name="CURSOR~1" LongName="cursor_tree">
+								<Component Id="cursor_tree" Guid="1BB273B9-6175-4972-8260-770C268DAFCD">
+									<File Id="two_way_cursor_tree.e" Name="TWO_WA~3.E" LongName="two_way_cursor_tree.e" KeyPath="yes" />
+									<File Id="cursor_tree.e" Name="CURSOR~1.E" LongName="cursor_tree.e" />
+									<File Id="recursive_cursor_tree.e" Name="RECURS~2.E" LongName="recursive_cursor_tree.e" />
+									<File Id="linked_cursor_tree.e" Name="LINKED~7.E" LongName="linked_cursor_tree.e" />
+									<File Id="compact_cursor_tree.e" Name="COMPAC~2.E" LongName="compact_cursor_tree.e" />
 								</Component>
 							</Directory>
-							<Directory Id='dispenser' Name='DISPEN1' LongName='dispenser'>
-								<Component Id='dispenser' Guid='ED689178-F4DD-402E-B906-6C94D8717791'>
-									<File Id='linked_stack.e' Name='LINKED3.E' LongName='linked_stack.e'/>
-									<File Id='linked_priority_queue.e' Name='LINKED5.E' LongName='linked_priority_queue.e'/>
-									<File Id='heap_priority_queue.e' Name='HEAP_P1.E' LongName='heap_priority_queue.e'/>
-									<File Id='bounded_queue.e' Name='BOUNDE1.E' LongName='bounded_queue.e'/>
-									<File Id='priority_queue.e' Name='PRIORI1.E' LongName='priority_queue.e'/>
-									<File Id='arrayed_queue.e' Name='ARRAYE6.E' LongName='arrayed_queue.e'/>
-									<File Id='queue.e' Name='queue.e'/>
-									<File Id='bounded_stack.e' Name='BOUNDE2.E' LongName='bounded_stack.e'/>
-									<File Id='dispenser.e' Name='DISPEN1.E' LongName='dispenser.e'/>
-									<File Id='arrayed_stack.e' Name='ARRAYE7.E' LongName='arrayed_stack.e'/>
-									<File Id='linked_queue.e' Name='LINKEDA.E' LongName='linked_queue.e'/>
-									<File Id='stack.e' Name='stack.e'/>
+							<Directory Id="dispenser" Name="DISPEN~1" LongName="dispenser">
+								<Component Id="dispenser" Guid="ED689178-F4DD-402E-B906-6C94D8717791">
+									<File Id="linked_stack.e" Name="LINKED~3.E" LongName="linked_stack.e" KeyPath="yes" />
+									<File Id="linked_priority_queue.e" Name="LINKED~5.E" LongName="linked_priority_queue.e" />
+									<File Id="heap_priority_queue.e" Name="HEAP_P~1.E" LongName="heap_priority_queue.e" />
+									<File Id="bounded_queue.e" Name="BOUNDE~1.E" LongName="bounded_queue.e" />
+									<File Id="priority_queue.e" Name="PRIORI~1.E" LongName="priority_queue.e" />
+									<File Id="arrayed_queue.e" Name="ARRAYE~6.E" LongName="arrayed_queue.e" />
+									<File Id="queue.e" Name="queue.e" />
+									<File Id="bounded_stack.e" Name="BOUNDE~2.E" LongName="bounded_stack.e" />
+									<File Id="dispenser.e" Name="DISPEN~1.E" LongName="dispenser.e" />
+									<File Id="arrayed_stack.e" Name="ARRAYE~7.E" LongName="arrayed_stack.e" />
+									<File Id="linked_queue.e" Name="LINKED~A.E" LongName="linked_queue.e" />
+									<File Id="stack.e" Name="stack.e" />
 								</Component>
 							</Directory>
-							<Directory Id='access' Name='access'>
-								<Component Id='access' Guid='E5E6F441-153E-4F60-88A3-4EB605B85182'>
-									<File Id='active.e' Name='active.e'/>
-									<File Id='bag.e' Name='bag.e'/>
-									<File Id='cursor_structure.e' Name='CURSOR2.E' LongName='cursor_structure.e'/>
-									<File Id='collection.e' Name='COLLEC1.E' LongName='collection.e'/>
-									<File Id='indexable.e' Name='INDEXA1.E' LongName='indexable.e'/>
-									<File Id='table.e' Name='table.e'/>
-									<File Id='container.e' Name='CONTAI1.E' LongName='container.e'/>
+							<Directory Id="access" Name="access">
+								<Component Id="access" Guid="E5E6F441-153E-4F60-88A3-4EB605B85182">
+									<File Id="active.e" Name="active.e" KeyPath="yes" />
+									<File Id="bag.e" Name="bag.e" />
+									<File Id="cursor_structure.e" Name="CURSOR~2.E" LongName="cursor_structure.e" />
+									<File Id="collection.e" Name="COLLEC~1.E" LongName="collection.e" />
+									<File Id="indexable.e" Name="INDEXA~1.E" LongName="indexable.e" />
+									<File Id="table.e" Name="table.e" />
+									<File Id="container.e" Name="CONTAI~1.E" LongName="container.e" />
 								</Component>
 							</Directory>
-							<Directory Id='sort' Name='sort'>
-								<Component Id='sort' Guid='1E603E7B-4519-4A5A-BCED-894B00B54924'>
-									<File Id='sorted_struct.e' Name='SORTED1.E' LongName='sorted_struct.e'/>
-									<File Id='comparable_struct.e' Name='COMPAR3.E' LongName='comparable_struct.e'/>
+							<Directory Id="sort" Name="sort">
+								<Component Id="sort" Guid="1E603E7B-4519-4A5A-BCED-894B00B54924">
+									<File Id="sorted_struct.e" Name="SORTED~1.E" LongName="sorted_struct.e" KeyPath="yes" />
+									<File Id="comparable_struct.e" Name="COMPAR~3.E" LongName="comparable_struct.e" />
 								</Component>
 							</Directory>
-							<Directory Id='iteration' Name='ITERAT1' LongName='iteration'>
-								<Component Id='iteration' Guid='61E0DEE2-67B1-434B-BF7E-A743FED1D0CC'>
-									<File Id='cursor_tree_iterator.e' Name='CURSOR3.E' LongName='cursor_tree_iterator.e'/>
-									<File Id='iterator.e' Name='iterator.e'/>
-									<File Id='two_way_chain_iterator.e' Name='TWO_WA7.E' LongName='two_way_chain_iterator.e'/>
-									<File Id='linear_iterator.e' Name='LINEAR2.E' LongName='linear_iterator.e'/>
+							<Directory Id="iteration" Name="ITERAT~1" LongName="iteration">
+								<Component Id="iteration" Guid="61E0DEE2-67B1-434B-BF7E-A743FED1D0CC">
+									<File Id="cursor_tree_iterator.e" Name="CURSOR~3.E" LongName="cursor_tree_iterator.e" KeyPath="yes" />
+									<File Id="iterator.e" Name="iterator.e" />
+									<File Id="two_way_chain_iterator.e" Name="TWO_WA~7.E" LongName="two_way_chain_iterator.e" />
+									<File Id="linear_iterator.e" Name="LINEAR~2.E" LongName="linear_iterator.e" />
 								</Component>
 							</Directory>
-						</Directory>
-						<Directory Id='desc' Name='desc'>
-							<Directory Id='general' Name='general'>
-								<Component Id='general' Guid='A8CF4BEC-CF0F-4C77-B212-DB6743A3D1A5'>
-									<File Id='shared_library_routine.e' Name='SHARED3.E' LongName='shared_library_routine.e'/>
-									<File Id='shared_library_constants.e' Name='SHARED2.E' LongName='shared_library_constants.e'/>
-									<File Id='shared_library.e' Name='SHARED1.E' LongName='shared_library.e'/>
-								</Component>
-							</Directory>
-							<Directory Id='spec' Name='spec'>
-								<Directory Id='win32' Name='win32'>
-									<Component Id='win32' Guid='2116631F-99BA-4C7B-879A-1B0D004D7714'>
-										<File Id='dll_32_routine.e' Name='DLL_321.E' LongName='dll_32_routine.e'/>
-										<File Id='dll_32.e' Name='dll_32.e'/>
-									</Component>
-								</Directory>
-							</Directory>
-						</Directory>
-					</Directory>
-				</Directory>
-				<Directory Id='library.net' Name='LIBRAR1' LongName='library.net'>
-					<Directory Id='netcodedom' Name='codedom'>
-						<Directory Id='netcsupport' Name='support'>
-							<Component Id='manifest_array_converter.e' Guid='CE7F6C4C-4F98-4ee5-8C2C-6EAA21136D52'>
-								<File Id='manifest_array_converter_e' Name='MANIF.E' LongName='manifest_array_converter.e'/>
-							</Component>
-						</Directory>
-					</Directory>
-					<Directory Id='netbase' Name='base'>
-						<Directory Id='netserialization' Name='SERIAL1' LongName='serialization'>
-							<Directory Id='nettraversing' Name='TRAVER1' LongName='traversing'>
-								<Directory Id='dotnet5' Name='dotnet'>
-									<Component Id='dotnet5' Guid='803FEF0F-9C0E-4cfb-BA06-1E85E14CA7B6'>
-										<File Id='netsed_objects_table_e' Name='SED_OB1.E' LongName='sed_objects_table.e'/>
-									</Component>
-								</Directory>
-							</Directory>
-						</Directory>
-						<Directory Id='netsupport' Name='support'>
-							<Directory Id='dotnet3' Name='dotnet'>
-								<Component Id='operating_environment.e' Guid='1DFDDD79-210D-4DFB-9837-3328F1C2279E'>
-									<File Id='netoperating_environment.e' Name='OPERAT1.E' LongName='operating_environment.e'/>
-									<File Id='netexecution_environment.e' Name='EXECUT1.E' LongName='execution_environment.e'/>
-									<File Id='netclass_name_translations.e' Name='CLASS_1.E' LongName='class_name_translations.e'/>
-									<File Id='netmismatch_information.e' Name='MISMAT1.E' LongName='mismatch_information.e'/>
-									<File Id='netmanaged_pointer.e' Name='MANAGE1.E' LongName='managed_pointer.e'/>
-									<File Id='netdouble_math.e' Name='DOUBLE1.E' LongName='double_math.e'/>
-									<File Id='netsingle_math.e' Name='SINGLE1.E' LongName='single_math.e'/>
-									<File Id='netprofiling_setting.e' Name='PROFIL1.E' LongName='profiling_setting.e'/>
-									<File Id='netbool_string.e' Name='BOOL_S1.E' LongName='bool_string.e'/>
-									<File Id='netidentified_controller.e' Name='IDENTI2.E' LongName='identified_controller.e'/>
-									<File Id='netinternal.e' Name='internal.e'/>
-									<File Id='netidentified.e' Name='IDENTI1.E' LongName='identified.e'/>
-								</Component>
-							</Directory>
-						</Directory>
-						<Directory Id='netkernel' Name='kernel'>
-							<Directory Id='dotnet4' Name='dotnet'>
-								<Component Id='raw_file.e' Guid='23DA1C36-A57B-4A5D-9B1A-CA6B2D4AF39A'>
-									<File Id='netraw_file.e' Name='raw_file.e'/>
-									<File Id='netprocedure.e' Name='PROCED1.E' LongName='procedure.e'/>
-									<File Id='netroutine.e' Name='routine.e'/>
-									<File Id='netpath_name.e' Name='PATH_N1.E' LongName='path_name.e'/>
-									<File Id='netgc_info.e' Name='gc_info.e'/>
-									<File Id='netdirectory.e' Name='DIRECT2.E' LongName='directory.e'/>
-									<File Id='netmem_info.e' Name='mem_info.e'/>
-									<File Id='netfile_name.e' Name='FILE_N1.E' LongName='file_name.e'/>
-									<File Id='netstorable.e' Name='storable.e'/>
-									<File Id='netnative_array.e' Name='NATIVE1.E' LongName='native_array.e'/>
-									<File Id='netreal_ref.e' Name='real_ref.e'/>
-									<File Id='netpointer.e' Name='pointer.e'/>
-									<File Id='netconsole.e' Name='console.e'/>
-									<File Id='netunix_signals.e' Name='UNIX_S1.E' LongName='unix_signals.e'/>
-									<File Id='netplain_text_file.e' Name='PLAIN_1.E' LongName='plain_text_file.e'/>
-									<File Id='netarguments.e' Name='ARGUME1.E' LongName='arguments.e'/>
-									<File Id='netfile.e' Name='file.e'/>
-									<File Id='netbit_ref.e' Name='bit_ref.e'/>
-									<File Id='netexceptions.e' Name='EXCEPT2.E' LongName='exceptions.e'/>
-									<File Id='netboolean.e' Name='boolean.e'/>
-									<File Id='netreal.e' Name='real.e'/>
-									<File Id='netplatform.e' Name='platform.e'/>
-									<File Id='netmemory.e' Name='memory.e'/>
-									<File Id='netdouble_ref.e' Name='DOUBLE2.E' LongName='double_ref.e'/>
-									<File Id='netdirectory_name.e' Name='DIRECT3.E' LongName='directory_name.e'/>
-									<File Id='netpointer_ref.e' Name='POINTE1.E' LongName='pointer_ref.e'/>
-									<File Id='netcli_cell.e' Name='cli_cell.e'/>
-									<File Id='netspecial.e' Name='special.e'/>
-									<File Id='netbasic_routines.e' Name='BASIC_1.E' LongName='basic_routines.e'/>
-									<File Id='netunix_file_info.e' Name='UNIX_F1.E' LongName='unix_file_info.e'/>
-									<File Id='netstream.e' Name='stream.e'/>
-									<File Id='netdouble.e' Name='double.e'/>
-									<File Id='netfunction.e' Name='function.e'/>
-									<File Id='netcharacter.e' Name='CHARAC1.E' LongName='character.e'/>
-									<File Id='nettuple.e' Name='tuple.e'/>
-									<File Id='netany.e' Name='any.e'/>
-									<File Id='netdisposable.e' Name='DISPOS1.E' LongName='disposable.e'/>
-									<File Id='netdotnet_pointer.e' Name='DO56841.E' LongName='dotnet_pointer.e'/>
-									<File Id='netdotnet_integer_8.e' Name='DO0D191.E' LongName='dotnet_integer_8.e'/>
-									<File Id='netdotnet_integer_16.e' Name='DOAC1F1.E' LongName='dotnet_integer_16.e'/>
-									<File Id='netdotnet_integer.e' Name='DOTNET4.E' LongName='dotnet_integer.e'/>
-									<File Id='netdotnet_integer_64.e' Name='DOCC0B1.E' LongName='dotnet_integer_64.e'/>
-									<File Id='netdotnet_natural_8.e' Name='DO00A81.E' LongName='dotnet_natural_8.e'/>
-									<File Id='netdotnet_natural_16.e' Name='DO2EDE1.E' LongName='dotnet_natural_16.e'/>
-									<File Id='netdotnet_natural_32.e' Name='DO3EB61.E' LongName='dotnet_natural_32.e'/>
-									<File Id='netdotnet_natural_64.e' Name='DO4ECA1.E' LongName='dotnet_natural_64.e'/>
-									<File Id='netdotnet_character.e' Name='DOTNET2.E' LongName='dotnet_character.e'/>
-									<File Id='netdotnet_double.e' Name='DOTNET3.E' LongName='dotnet_double.e'/>
-									<File Id='netdotnet_boolean.e' Name='DOTNET1.E' LongName='dotnet_boolean.e'/>
-									<File Id='netdotnet_real.e' Name='DO9EFE1.E' LongName='dotnet_real.e'/>
-									<File Id='nettype_e' Name='type.e'/>
-								</Component>
-							</Directory>
-							<Directory Id='netexceptions' Name='EXCEPT1' LongName='exceptions'/>
 						</Directory>
 					</Directory>
 				</Directory>

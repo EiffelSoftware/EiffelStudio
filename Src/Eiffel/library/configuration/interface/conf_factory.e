@@ -245,7 +245,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_precompile (a_name: STRING; a_directory: STRING; a_target: CONF_TARGET): CONF_PRECOMPILE is
+	new_precompile (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_PRECOMPILE is
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

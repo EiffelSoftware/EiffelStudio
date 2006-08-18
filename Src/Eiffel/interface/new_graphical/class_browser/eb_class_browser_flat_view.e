@@ -40,7 +40,7 @@ feature -- Actions
 			check l_row /= Void end
 			l_row.set_is_expanded (True)
 			l_row.refresh
-			l_height := line_height
+			l_height := default_row_height
 			from
 				l_row_index := a_row.index + 2
 			until
@@ -495,7 +495,7 @@ feature{NONE} -- Update
 			grid.row_expand_actions.wipe_out
 			grid.row_collapse_actions.wipe_out
 			l_color := l_odd_line_color
-			l_height := line_height
+			l_height := default_row_height
 			from
 				l_rows := rows
 				l_rows.start

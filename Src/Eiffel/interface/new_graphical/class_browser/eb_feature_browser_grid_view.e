@@ -317,7 +317,7 @@ feature{NONE} -- Initialization
 			if l_grid.row_count > 0 then
 				l_grid.remove_rows (1, l_grid.row_count)
 			end
-			l_grid.set_row_height (line_height)
+			l_grid.set_row_height (default_row_height)
 			l_grid.enable_tree
 			l_grid.show_tree_node_connectors
 			if not l_rows.is_empty then

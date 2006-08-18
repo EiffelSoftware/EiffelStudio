@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 				l_system := l_factory.new_system (l_system_name, (create {UUID_GENERATOR}).generate_uuid)
 				l_target := l_factory.new_target (Target_name, l_system)
 				l_system.add_target (l_target)
-				create l_cluster.make ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
+				l_cluster := l_factory.new_cluster ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
 				if Compilation_context.namespace /= Void then
 					l_cluster.changeable_internal_options.set_namespace (Compilation_context.namespace)
 				end
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
-						l_target.set_precompile (create {CONF_PRECOMPILE}.make ("default", create {CONF_FILE_LOCATION}.make (l_precompiler.configuration_path, l_target), l_target))
+						l_target.set_precompile (l_factory.new_precompile ("default", l_precompiler.configuration_path, l_target))
 					else
 						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
 					end
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 				end
 
 				-- Add base library
-				create l_library.make ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.ecf", l_target), l_target)
+				l_library := l_factory.new_library ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.ecf", l_target), l_target)
 				create l_option
 				l_option.set_namespace ("EiffelSoftware.Library.Base")
 				l_library.set_options (l_option)
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 					Referenced_assemblies.after
 				loop
 					l_assembly := Referenced_assemblies.item
-					create l_conf_asm.make (l_assembly.cluster_name, create {CONF_FILE_LOCATION}.make (l_assembly.assembly.location, l_target), l_target)
+					l_conf_asm := l_factory.new_assembly (l_assembly.cluster_name, l_assembly.assembly.location, l_target)
 					l_conf_asm.set_name_prefix (l_assembly.assembly_prefix)
 					l_target.add_assembly (l_conf_asm)
 					Referenced_assemblies.forth

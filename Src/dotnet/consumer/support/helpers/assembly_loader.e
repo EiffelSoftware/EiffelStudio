@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			internal_loaded_assemblies_set: internal_loaded_assemblies = Result
 		end
 
-	internal_loaded_assemblies: like loaded_assemblies
+	internal_loaded_assemblies: like loaded_assemblies;
 			-- Cached version of `loaded_assemblies'
 			-- Note: Do not use directly!
 

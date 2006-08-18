@@ -463,6 +463,7 @@ feature -- Access
 			k, nb: INTEGER
 			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 			l_field: FIELD_INFO
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 		do
 			l_native_array := id_to_fields_name.item (type_id)
 			if l_native_array = Void then
@@ -475,7 +476,8 @@ feature -- Access
 					k = nb
 				loop
 					l_field := l_members.item (k)
-					l_attributes := l_field.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+					l_provider := l_field
+					l_attributes := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
 					if l_attributes.count > 0 then
 						check
 							valid_number_of_custom_attributes: l_attributes.count = 1
@@ -581,6 +583,7 @@ feature -- Access
 			l_field: FIELD_INFO
 			l_meth: METHOD_INFO
 			l_type_attr: RT_INTERFACE_TYPE_ATTRIBUTE
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 		do
 			l_dtypes := id_to_fields_static_type.item (type_id)
 			if l_dtypes = Void then
@@ -593,7 +596,8 @@ feature -- Access
 					k = nb
 				loop
 					l_field := l_members.item (k)
-					l_attributes := l_field.get_custom_attributes_type ({TYPE_FEATURE_ATTRIBUTE}, False)
+					l_provider := l_field
+					l_attributes := l_provider.get_custom_attributes_type ({TYPE_FEATURE_ATTRIBUTE}, False)
 					if l_attributes.count > 0 then
 						check
 							valid_number_of_custom_attributes: l_attributes.count = 1
@@ -1506,19 +1510,23 @@ feature {NONE} -- Implementation
 			l_formal_type: RT_FORMAL_TYPE
 			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 			l_assembly_name: ASSEMBLY_NAME
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 		do
 			if not retried then
 				l_assembly_name := an_assembly.get_name
 				if not assembly_names.contains (l_assembly_name) then
-					assembly_names.add (l_assembly_name, l_assembly_name)
 					l_types := an_assembly.get_types
+						-- Add only when types have been extracted. On some assemblies
+						-- types cannot be extracted.
+					assembly_names.add (l_assembly_name, l_assembly_name)
 					from
 						nb := l_types.count
 					until
 						i = nb
 					loop
 						l_type := l_types.item (i)
-						l_cas := l_type.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+						l_provider := l_type
+						l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
 						if l_cas /= Void and then l_cas.count > 0 then
 							l_name ?= l_cas.item (0)
 							check

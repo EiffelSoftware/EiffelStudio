@@ -21,6 +21,11 @@ inherit
 
 	ARGUMENT_SOLVER
 
+	FIELD_CONSUMER_HELPER
+		export
+			{NONE} all
+		end
+
 	EC_CHECKED_ENTITY_FACTORY
 		export
 			{NONE} all
@@ -410,33 +415,32 @@ feature {NONE} -- Implementation
 			create dotnet_name.make_from_cil (info.name)
 			l_type := info.declaring_type
 			if info.is_literal then
+				l_value := field_value (info)
 				if info.field_type.is_enum then
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.
-					l_code := {SYSTEM_CONVERT}.get_type_code (info.get_value (Void))
+					l_code := {SYSTEM_CONVERT}.get_type_code (l_value)
 					inspect l_code
 					when {TYPE_CODE}.int_16 then
-						l_value := {SYSTEM_CONVERT}.to_int_16 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_int_16 (l_value)
 					when {TYPE_CODE}.int_32 then
-						l_value := {SYSTEM_CONVERT}.to_int_32 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
 					when {TYPE_CODE}.int_64 then
-						l_value := {SYSTEM_CONVERT}.to_int_64 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_int_64 (l_value)
 					when {TYPE_CODE}.u_int_16 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_16 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_u_int_16 (l_value)
 					when {TYPE_CODE}.u_int_32 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_32 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_u_int_32 (l_value)
 					when {TYPE_CODE}.u_int_64 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_64 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_u_int_64 (l_value)
 					when {TYPE_CODE}.double then
-						l_value := {SYSTEM_CONVERT}.to_double (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_double (l_value)
 					when {TYPE_CODE}.single then
-						l_value := {SYSTEM_CONVERT}.to_single (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_single (l_value)
 					else
-						l_value := {SYSTEM_CONVERT}.to_int_16 (info.get_value (Void))
+						l_value := {SYSTEM_CONVERT}.to_int_16 (l_value)
 					end
-				else
-					l_value := info.get_value (Void)
 				end
 				create {CONSUMED_LITERAL_FIELD} Result.make (
 					unique_feature_name (dotnet_name),

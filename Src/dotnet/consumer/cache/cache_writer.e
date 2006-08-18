@@ -23,10 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	SAFE_ASSEMBLY_LOADER
-		export
-			{ANY} all
-		end
+	SHARED_ASSEMBLY_LOADER
 
 	KEY_ENCODER
 		export
@@ -98,6 +95,7 @@ feature -- Basic Operations
 			l_lower_path: like a_path
 			l_reader: like cache_reader
 			l_reason: SYSTEM_STRING
+			l_result: SYSTEM_OBJECT
 			retried: BOOLEAN
 			i: INTEGER
 		do
@@ -118,8 +116,7 @@ feature -- Basic Operations
 					l_lower_path := l_ca.location
 				end
 
-				l_assembly := load_from_gac_or_path (l_lower_path)
-
+				l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path)
 				create l_consumer.make (Current)
 				if l_assembly /= Void then
 					l_assembly_path := l_assembly.location.to_lower
@@ -240,8 +237,8 @@ feature -- Basic Operations
 						i = l_names.count
 					loop
 						l_name := l_names.item (i)
-						l_assembly := load_assembly_by_name (l_name)
-						if l_assembly /= Void and then not l_reader.is_assembly_in_cache (l_assembly.location, True) or else cache_reader.is_assembly_stale (l_assembly.location) then
+						l_assembly := assembly_loader.load (l_name)
+						if l_assembly /= Void and then not (l_reader.is_assembly_in_cache (l_assembly.location, True) or else cache_reader.is_assembly_stale (l_assembly.location)) then
 							add_assembly (l_assembly.location)
 							l_assembly_info_updated := True
 						end
@@ -475,7 +472,7 @@ feature -- Basic Operations
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			valid_assembly_path: load_assembly_from_path (a_path) /= Void
+			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path) /= Void
 		local
 			l_id: STRING
 			l_info: CACHE_INFO
@@ -588,7 +585,7 @@ feature {NONE} -- Implementation
 			valid_id: not a_id.is_empty
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-			valid_assembly_path: load_assembly_from_path (a_path) /= Void
+			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path) /= Void
 		local
 			l_assembly: ASSEMBLY
 			l_name: ASSEMBLY_NAME
@@ -597,7 +594,7 @@ feature {NONE} -- Implementation
 			l_is_in_gac: BOOLEAN
 			folder_name: STRING
 		do
-			l_assembly := load_from_gac_or_path (a_path)
+			l_assembly := assembly_loader.load_from_gac_or_path (a_path)
 			if l_assembly /= Void then
 				l_name := l_assembly.get_name
 				l_key := public_key_token_from_array (l_name.get_public_key_token)

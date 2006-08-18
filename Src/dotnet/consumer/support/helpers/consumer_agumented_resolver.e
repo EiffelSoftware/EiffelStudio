@@ -26,7 +26,7 @@ inherit
 create
 	make,
 	make_with_name
-	
+
 feature {NONE} -- Initialization
 
 	make (a_file_names: like look_up_file_names) is
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			resolver_make
 			common_initialization (a_file_names)
 		ensure
-			look_up_file_names_set: look_up_file_names = a_file_names 
+			look_up_file_names_set: look_up_file_names = a_file_names
 		end
 
 	make_with_name (a_file_names: LIST [STRING]; a_name: like friendly_name) is
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			friendly_name_set: friendly_name = a_name
 			look_up_file_names_set: look_up_file_names = a_file_names
 		end
-	
+
 	common_initialization (a_file_names: like look_up_file_names) is
 			-- Additional initialization.
 		require
@@ -67,10 +67,10 @@ feature {NONE} -- Initialization
 		ensure
 			look_up_file_names_set: look_up_file_names = a_file_names
 		end
-	
+
 feature -- Resolution
-		
-	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY is
+
+	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): STRING is
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
 		local
@@ -86,7 +86,7 @@ feature -- Resolution
 				l_name := get_assembly_name (look_up_file_names.item)
 				if l_name /= Void then
 					if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
-						Result := load_assembly (look_up_file_names.item)
+						Result := look_up_file_names.item
 					end
 				end
 				look_up_file_names.forth
@@ -98,7 +98,7 @@ feature -- Resolution
 		ensure then
 			look_up_file_names_cursor_unmoved: look_up_file_names.cursor.is_equal (old look_up_file_names.cursor)
 		end
-		
+
 feature -- Implementation
 
 	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
@@ -115,7 +115,7 @@ feature -- Implementation
 
 	look_up_file_names: LIST [STRING]
 			-- Lookup files names
-			
+
 	names_table: HASH_TABLE [ASSEMBLY_NAME, STRING]
 			-- Table of path/assembly names
 			-- Key: assembly file name path
@@ -125,7 +125,7 @@ invariant
 	look_up_file_names_not_void: look_up_file_names /= Void
 	names_table_not_void: names_table /= Void
 	names_table_compares_objects: names_table.object_comparison
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

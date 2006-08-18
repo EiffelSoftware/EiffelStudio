@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_SYNTAX_CHECKER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -106,8 +111,8 @@ feature -- Basic operation
 					set_error (create {CONF_ERROR_PARSE})
 				end
 			else
-				last_system := factory.new_system_generate_uuid (l_ast.system_name.as_lower)
-				current_target := factory.new_target (l_ast.system_name.as_lower, last_system)
+				last_system := factory.new_system_generate_uuid (mask_special_characters_config (l_ast.system_name.as_lower))
+				current_target := factory.new_target (mask_special_characters_config (l_ast.system_name.as_lower), last_system)
 				last_system.add_target (current_target)
 
 				process_defaults (l_ast.defaults)
@@ -178,7 +183,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_assembly: CONF_ASSEMBLY
 		do
 			if an_assembly.version /= Void then
-				l_assembly := factory.new_assembly_from_gac (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
+				l_assembly := factory.new_assembly_from_gac (mask_special_characters_config (an_assembly.cluster_name.as_lower), an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
 			else
 				if is_library_conversions then
 						-- correct path of mscorlib, system and system_xml
@@ -193,10 +198,10 @@ feature {NONE} -- Implementation of data retrieval
 				end
 
 				if l_assembly = Void then
-					l_assembly := factory.new_assembly (l_name, an_assembly.assembly_name, current_target)
+					l_assembly := factory.new_assembly (mask_special_characters_config (l_name), an_assembly.assembly_name, current_target)
 				end
 			end
-			l_assembly.set_name_prefix (an_assembly.prefix_name)
+			l_assembly.set_name_prefix (mask_special_characters_config (an_assembly.prefix_name))
 			current_target.add_assembly (l_assembly)
 		end
 
@@ -215,7 +220,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_lib, l_lib_pre: CONF_LIBRARY
 			l_normal_cluster: BOOLEAN
 		do
-			l_name := a_cluster.cluster_name
+			l_name := mask_special_characters_config (a_cluster.cluster_name)
 			if is_library_conversions then
 					-- convert base, wel, vision2 and time clusters into library equivalents
 				if l_name.is_case_insensitive_equal ("base") then
@@ -241,6 +246,7 @@ feature {NONE} -- Implementation of data retrieval
 				l_parent := a_cluster.parent_name
 				if l_parent /= Void then
 					l_parent.to_lower
+					l_parent := mask_special_characters_config (l_parent)
 				end
 
 				if l_lib /= Void then
@@ -756,6 +762,7 @@ feature {NONE} -- Implementation of data retrieval
 					l_cluster := a_root.cluster_mark
 					if l_cluster /= Void then
 						l_cluster.to_lower
+						l_cluster := mask_special_characters_config (l_cluster)
 					end
 					l_feature := a_root.creation_procedure_name
 					if l_feature /= Void and then l_feature.is_empty then
@@ -886,6 +893,30 @@ feature {NONE} -- Implementation
 		do
 			is_error := True
 			last_error := an_error
+		end
+
+	mask_special_characters_config (a_string: STRING): STRING is
+			-- Return a string with the special characters in `a_string' masked,
+			-- so that it is a valid configuration identifier.
+		require
+			a_string_not_void: a_string /= Void and then not a_string.is_empty
+		do
+			create Result.make_from_string (a_string)
+			invalid_config_regexp.match (Result)
+			Result := invalid_config_regexp.replace_all ("_")
+			if not Result.item (1).is_alpha then
+				Result.precede ('a')
+			end
+		ensure
+			result_valid: is_valid_config_identifier (Result)
+		end
+
+	invalid_config_regexp: RX_PCRE_REGULAR_EXPRESSION is
+			-- Regular expression that matches all invalid characters in a configuration identifier.
+		once
+			create Result.make
+			Result.compile ("[^\w._-]")
+			Result.optimize
 		end
 
 invariant

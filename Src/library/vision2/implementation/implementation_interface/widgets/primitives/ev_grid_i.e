@@ -2899,7 +2899,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				vertical_computation_required := False
 				recompute_row_offsets (invalid_row_index.min (row_count).max (1))
 					-- Restore to an arbitarily large index.
-				invalid_row_index := invalid_row_index.max_value
+				invalid_row_index := {like invalid_row_index}.max_value
 				if vertical_redraw_triggered_by_viewport_resize then
 					recompute_vertical_scroll_bar
 				end
@@ -2924,7 +2924,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					recompute_column_offsets (invalid_column_index.min (column_count).max (1))
 				end
 					-- Restore to an arbitarily large index.
-				invalid_column_index := invalid_column_index.max_value
+				invalid_column_index := {like invalid_row_index}.max_value
 				if horizontal_redraw_triggered_by_viewport_resize then
 					recompute_horizontal_scroll_bar
 				end
@@ -3976,7 +3976,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			is_vertical_scroll_bar_show_requested := True
 			is_horizontal_scroll_bar_show_requested := True
 			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
-			invalid_row_index := invalid_row_index.max_value
+			invalid_row_index := {like invalid_row_index}.max_value
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True

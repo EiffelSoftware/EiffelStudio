@@ -30,7 +30,7 @@ IF "%MMSUCCESS%"=="" GOTO END
 CALL %ECPOriginalPath2%\make_module.bat CodedomModule ..\delivery\codedom\
 IF "%MMSUCCESS%"=="" GOTO END
 
-CALL %ECPOriginalPath2%\make_module.bat DocumentationModule ..\documentation\
+CALL %ECPOriginalPath2%\make_module.bat DocumentationModule ..\delivery\documentation\
 IF "%MMSUCCESS%"=="" GOTO END
 
 CALL %ECPOriginalPath2%\make_module.bat SamplesModule ..\samples\

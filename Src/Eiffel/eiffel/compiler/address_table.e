@@ -146,7 +146,6 @@ feature -- Access
 			l_type: CLASS_TYPE
 			l_feature_id: INTEGER
 			l_table_entry: ADDRESS_TABLE_ENTRY
-			l_reordering: FEATURE_REORDERING
 			l_feature: FEATURE_I
 			l_type_id: INTEGER
 		do
@@ -476,9 +475,7 @@ feature {NONE} -- Generation
 			l_table_of_class: like table_of_class
 			l_table_entry: ADDRESS_TABLE_ENTRY
 			l_type_list: TYPE_LIST
-			l_feature_id, l_static_type_id: INTEGER
-			l_fptr_type, l_sep: STRING
-			i: INTEGER
+			l_feature_id: INTEGER
 			l_dollar_ids: HASH_TABLE [INTEGER, INTEGER]
 			l_disp_tab: ARRAYED_LIST [TUPLE [static_type_id, feature_id: INTEGER]]
 		do

@@ -7,13 +7,13 @@ indexing
 
 class
 	COM_ASSEMBLY_INFORMATION
-	
+
 inherit
-	SAFE_ASSEMBLY_LOADER
-		export 
+	SHARED_ASSEMBLY_LOADER
+		export
 			{NONE} all
 		end
-	
+
 	I_COM_ASSEMBLY_INFORMATION
 		redefine
 			name,
@@ -24,10 +24,10 @@ inherit
 			is_consumed,
 			consumed_folder_name
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (ass: CONSUMED_ASSEMBLY) is
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		ensure
 			impl_set: impl.is_equal (ass)
 		end
-		
+
 feature -- Access
 
 	name: SYSTEM_STRING is
@@ -49,19 +49,19 @@ feature -- Access
 		do
 			Result := impl.name.to_cil
 		end
-		
+
 	version: SYSTEM_STRING is
 			-- assembly version
 		do
 			Result := impl.version.to_cil
 		end
-		
+
 	culture: SYSTEM_STRING is
 			-- assembly culture
 		do
 			Result := impl.culture.to_cil
 		end
-		
+
 	public_key_token: SYSTEM_STRING is
 			-- assembly public key token
 		do
@@ -71,13 +71,13 @@ feature -- Access
 				Result := ("").to_cil
 			end
 		end
-		
+
 	is_in_gac: BOOLEAN is
 			-- Is assembly currently is GAC
 		local
 			l_assembly: ASSEMBLY
 		do
-			l_assembly := load_from_gac_or_path (impl.location)
+			l_assembly := assembly_loader.load_from_gac_or_path (impl.location)
 			if l_assembly /= Void then
 				if is_mscorlib (l_assembly) then
 					Result := True
@@ -86,25 +86,25 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	is_consumed: BOOLEAN is
 			-- has assembly been consumed?
 		do
 			Result := impl.is_consumed
 		end
-		
+
 	consumed_folder_name: SYSTEM_STRING is
 			-- name of folder where assembly was consumed to
 		do
 			Result := impl.folder_name
-		end	
-		
+		end
+
 	code_base: SYSTEM_STRING is
 			-- Assembly code base location
 		do
 			Result := impl.location
 		end
-		
+
 feature {NONE} -- Implementation
 
 	impl: CONSUMED_ASSEMBLY
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
-		
+
 invariant
 	non_void_impl: impl /= Void
 

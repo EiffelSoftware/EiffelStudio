@@ -55,7 +55,7 @@ REM in delivery\codedom\bin
 MKDIR icons
 CD icons
 REM in delivery\codedom\bin\icons
-XCOPY ..\..\..\..\checkout\dotnet\codedom_provider\tools\manager\icons /E
+XCOPY ..\..\..\..\checkout\dotnet\codedom_provider_2.0\tools\manager\icons /E
 SET CODEDOM_BUILT=1
 
 CD ..\..\..\..

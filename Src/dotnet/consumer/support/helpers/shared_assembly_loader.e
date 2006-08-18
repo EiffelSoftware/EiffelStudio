@@ -1,5 +1,5 @@
 indexing
-	description: Shared access to an assembly loader."
+	description: "Shared access to an assembly loader."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

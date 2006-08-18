@@ -44,8 +44,8 @@ COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\base\F_cod
 COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\base\F_code\libEiffelSoftware.CodeDom.Base2_0.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\vision2\F_code\EiffelSoftware.CodeDom.Vision2_0.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\vision2\F_code\libEiffelSoftware.CodeDom.Vision2_0.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\manager_release\EIFGEN\F_code\ecdpman2_0.exe bin\
-COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\esplit_graphical_release\F_code\esplitter.exe2_0 bin\
+COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\manager_release\F_code\ecdpman2_0.exe bin\
+COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\esplit_graphical_release\F_code\esplitter2_0.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\esplit_console_release\F_code\esplit2_0.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider_2.0\configuration\EIFGENs\nmap_release\F_code\nmap2_0.exe bin\
 COPY ..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll bin\

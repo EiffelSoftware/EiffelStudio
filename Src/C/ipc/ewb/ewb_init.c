@@ -127,6 +127,9 @@ rt_public void ewb_exit(int code)
 
 rt_public int is_ecdbgd_alive (void) 
 {
+	if (ewb_data.d_ecdbgd == 0 || ewb_data.d_cs == (STREAM *) 0) {
+		return 0;
+	};
 	return (ewb_active_check(ewb_data.d_cs, ewb_data.d_ecdbgd) == 0);
 }
 

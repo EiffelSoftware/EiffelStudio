@@ -23,7 +23,7 @@ regasm %ISE_EIFFEL%\studio\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll
 IF EXIST %SystemRoot%\system32\libEiffelSoftware.MetadataConsumer.dll.bak COPY /Y %SystemRoot%\system32\libEiffelSoftware.MetadataConsumer.dll.bak %SystemRoot%\system32\libEiffelSoftware.MetadataConsumer.dll
 IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL *.epr
-ec -finalize -batch -c_compile -config docbuilder.ecf -target doc_builder
+ec -finalize -batch -c_compile -config doc_builder.ecf -target doc_builder
 IF NOT EXIST EIFGENs\doc_builder\F_code\doc_builder.exe ECHO ERROR: Documentation builder could not be built!
 IF NOT EXIST EIFGENs\doc_builder\F_code\doc_builder.exe GOTO END
 COPY EIFGENs\doc_builder\F_Code\doc_builder.exe ..\..\docs\

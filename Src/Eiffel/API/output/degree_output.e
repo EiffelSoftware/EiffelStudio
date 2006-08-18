@@ -122,7 +122,7 @@ feature -- Start output features
 			when -2 then
 				Result := once "Constructing Polymorphic Table"
 			when -3 then
-				Result := once "Optimizing Generated Code"
+				Result := once "Generating Optimized Code"
 			end
 		end
 

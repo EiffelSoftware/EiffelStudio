@@ -107,8 +107,8 @@ ECHO Copying delivery files
 TITLE Copying delivery files
 XCOPY /S ..\..\..\checkout\compiler_delivery\help\errors "help\errors"
 COPY ..\..\..\checkout\Eiffel\ace\EIFGENs\ecdpc\F_Code\ecdpc.exe spec\windows\bin\
-COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGENs\consumer_20\F_Code\EiffelSoftware.MetadataConsumer.dll spec\windows\bin\
-COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGENs\consumer_20\F_Code\libEiffelSoftware.MetadataConsumer.dll spec\windows\bin\
+COPY ..\..\..\checkout\dotnet\consumer\EIFGENs\consumer_20\F_Code\EiffelSoftware.MetadataConsumer.dll spec\windows\bin\
+COPY ..\..\..\checkout\dotnet\consumer\EIFGENs\consumer_20\F_Code\libEiffelSoftware.MetadataConsumer.dll spec\windows\bin\
 COPY ..\..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll spec\windows\bin\
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\msc config\windows\msc
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\templates config\windows\templates

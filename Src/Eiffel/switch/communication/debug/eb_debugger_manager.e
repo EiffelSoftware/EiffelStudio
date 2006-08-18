@@ -600,6 +600,7 @@ feature -- Status setting
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
+
 				--| Threads Tool
 			if threads_tool = Void then
 				create threads_tool.make (debugging_window)
@@ -620,6 +621,9 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
+
+				-- Update the debugging tool
+			debugging_tools.update
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
@@ -753,6 +757,7 @@ feature -- Status setting
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
+			assertion_checking_handler_cmd.reset
 			enable_debugging_commands
 
 			update_all_debugging_tools_menu
@@ -1134,6 +1139,7 @@ feature -- Debugging events
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
 				set_critical_stack_depth_cmd.enable_sensitive
+				assertion_checking_handler_cmd.reset
 			end
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit : done%N")

@@ -986,8 +986,8 @@ feature {NONE} -- Events on notification
 
 			if need_to_continue then
 				debug ("debugger_trace_callstack")
-					print ("Nota: Continue on stopped status (need_to_continue = True)%N")
-					print ("Nota: last managed callback = " + Eifnet_debugger.managed_callback_name (cb_id) + "%N")
+					print ("Note: Continue on stopped status (need_to_continue = True)%N")
+					print ("Note: last managed callback = " + Eifnet_debugger.managed_callback_name (cb_id) + "%N")
 				end
 				Application.release_all_but_kept_object
 				l_status.set_is_stopped (False)

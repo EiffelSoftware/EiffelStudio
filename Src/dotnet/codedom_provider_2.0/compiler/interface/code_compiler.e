@@ -291,6 +291,7 @@ feature {NONE} -- Implementation
 			l_option: CONF_OPTION
 			l_library: CONF_LIBRARY
 			l_conf_asm: CONF_ASSEMBLY
+			l_factory: CONF_FACTORY
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -330,8 +331,9 @@ feature {NONE} -- Implementation
 				if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
 					l_system_name.keep_head (l_system_name.count - 4)
 				end
-				l_system := (create {CONF_FACTORY}).new_system (l_system_name, (create {UUID_GENERATOR}).generate_uuid)
-				create l_target.make (Target_name, l_system)
+				create l_factory
+				l_system := l_factory.new_system (l_system_name, (create {UUID_GENERATOR}).generate_uuid)
+				l_target := l_factory.new_target (Target_name, l_system)
 				l_system.add_target (l_target)
 				create l_cluster.make ("root_cluster", create {CONF_DIRECTORY_LOCATION}.make (compilation_directory, l_target), l_target)
 				if Compilation_context.namespace /= Void then

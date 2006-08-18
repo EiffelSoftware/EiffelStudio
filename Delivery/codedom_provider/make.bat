@@ -36,6 +36,9 @@ SET SVN_URL=svn://raphaels@svn.ise:3690/ise_svn
 SET SVN_ORIGO_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/
 ECHO SVN_URL=%SVN_URL%
 ECHO SVN_ORIGO_URL=%SVN_ORIGO_URL%
+ECHO
+ECHO C Compiler must be setup
+ECHO hhc.exe must be in your path
 ECHO ***********************************
 
 ECHO Setting up folders

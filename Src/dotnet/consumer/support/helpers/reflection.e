@@ -9,6 +9,8 @@ class
 	REFLECTION
 
 inherit
+	FIELD_CONSUMER_HELPER
+
 	EC_CHECKED_ENTITY_FACTORY
 		export
 			{NONE} all
@@ -61,7 +63,7 @@ feature -- Status Report
 			f_not_void: f /= Void
 			f_is_literal: f.is_literal
 		do
-			Result := f.get_value (Void) /= Void
+			Result := field_value (f) /= Void
 		end
 
 	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN is

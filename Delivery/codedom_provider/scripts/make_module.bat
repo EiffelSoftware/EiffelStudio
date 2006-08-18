@@ -17,8 +17,8 @@ IF NOT EXIST %1.wixobj ECHO Could not compile %1.wxs, exiting.
 IF NOT EXIST %1.wixobj GOTO END
 
 
-IF "%3"=="" light -nologo -b %2  -out Modules\%1.msm %1.wixobj d:\dev\wix\ca\sca.wixlib
-IF NOT "%3"=="" light -nologo -b %2  -out Modules\%1.msm %1.wixobj %3.wixobj d:\dev\wix\ca\sca.wixlib
+IF "%3"=="" light -nologo -b %2  -out Modules\%1.msm %1.wixobj c:\dev\wix\ca\sca.wixlib
+IF NOT "%3"=="" light -nologo -b %2  -out Modules\%1.msm %1.wixobj %3.wixobj c:\dev\wix\ca\sca.wixlib
 IF NOT EXIST Modules\%1.msm ECHO Could not compile %1.wixobj, exiting.
 IF NOT EXIST Modules\%1.msm GOTO END
 DEL *.wixobj

@@ -87,6 +87,7 @@
 		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
 		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
 		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
+		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
 	</target>
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="true"/>

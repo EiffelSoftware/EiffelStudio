@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
         do
         		-- if the renamed class was the root class
-        	if system.root_class.name.is_equal (preferences.old_class_name) then
+        	if system.root_class.name.is_equal (preferences.new_class_name) then
 	        	create project_modifier
 				project_modifier.prepare
 				project_modifier.change_root_class (preferences.new_class_name.as_upper)

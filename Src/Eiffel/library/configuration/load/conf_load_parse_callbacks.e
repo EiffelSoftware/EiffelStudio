@@ -400,7 +400,7 @@ feature {NONE} -- Implementation attribute processing
 				last_system.add_target (current_target)
 				if l_extends /= Void then
 					l_target := last_system.targets.item (l_extends)
-					if l_target /= Void then
+					if l_target /= Void and then l_target /= current_target then
 						current_target.set_parent (l_target)
 						group_list := l_target.groups
 					else

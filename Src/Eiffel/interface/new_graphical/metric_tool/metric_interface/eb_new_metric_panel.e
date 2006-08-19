@@ -106,6 +106,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			create metric_selector.make (False)
+			metric_selector.disable_tooltip_contain_go_to_definition_message
 			metric_selector_area.extend (metric_selector)
 				-- Initialize toolbar
 			new_metric_btn.remove_text

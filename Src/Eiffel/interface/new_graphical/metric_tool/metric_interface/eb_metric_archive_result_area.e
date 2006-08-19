@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 			result_grid.column (4).set_title (displayed_name (metric_names.t_value_of_current))
 			result_grid.column (5).set_title (displayed_name (metric_names.t_difference))
 			result_grid.column (6).set_title (displayed_name (metric_names.t_ratio))
+			result_grid.enable_multiple_row_selection
 
 				-- Setup sortable wrapper.
 			create grid_wrapper.make (result_grid)
@@ -89,9 +90,10 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_sort_info (6, l_ratio_sort_info)
 			grid_wrapper.set_sort_action (agent sort_agent)
 			grid_wrapper.enable_auto_sort_order_change
+			grid_wrapper.set_item_text_function (agent text_of_grid_item)
+			grid_wrapper.enable_copy
 			grid_area.extend (grid_wrapper.component_widget)
 			title_lbl.set_text (metric_names.t_archive_comparison_result)
-			result_grid.enable_single_row_selection
 		end
 
 feature -- Load archive
@@ -454,6 +456,17 @@ feature {NONE} -- Implementation
 			Result := preferences.class_browser_data.odd_row_background_color
 		ensure
 			result_attached: Result /= Void
+		end
+
+	text_of_grid_item (a_item: EV_GRID_ITEM): STRING is
+			-- Text of `a_item'		
+		local
+			l_label_item: EV_GRID_LABEL_ITEM
+		do
+			l_label_item ?= a_item
+			if l_label_item /= Void then
+				Result := l_label_item.text
+			end
 		end
 
 invariant

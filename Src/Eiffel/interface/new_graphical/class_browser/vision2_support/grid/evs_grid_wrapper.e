@@ -185,6 +185,44 @@ feature -- Setting
 			ensure_visible_action_set: ensure_visible_action = a_action
 		end
 
+	set_selection_function (a_function: like selection_function) is
+			-- Set `selection_function' with `a_function'.
+		do
+			selection_function := a_function
+		ensure
+			selection_function_set: selection_function = a_function
+		end
+
+	set_item_text_function (a_function: like item_text_function) is
+			-- Set `item_text_unction' with `a_function'.		
+		do
+			item_text_function := a_function
+		ensure
+			item_text_function_set: item_text_function = a_function
+		end
+
+	enable_copy is
+			-- Enable using Ctrl+A, Ctrl+C to select items and copy them to clipboard.
+		do
+			if not grid.key_press_actions.has (on_copy_using_key_agent) then
+				grid.key_press_actions.extend (on_copy_using_key_agent)
+			end
+		end
+
+	disable_copy is
+			-- Disable using Ctrl+A, Ctrl+C to select items and copy them to clipboard.
+		do
+			grid.key_press_actions.prune_all (on_copy_using_key_agent)
+		end
+
+	set_select_all_action (a_action: like select_all_action) is
+			-- Set `select_all_action" with `a_action'.
+		do
+			select_all_action := a_action
+		ensure
+			select_all_action_set: select_all_action = a_action
+		end
+
 feature -- Sort
 
 	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER) is
@@ -325,6 +363,30 @@ feature -- Access
 			-- Action to be performed to ensure that `a_item' is visible.
 			-- `a_selected' is True indicates that `a_item' should be selected by default.
 
+	selection_function: FUNCTION [ANY, TUPLE, STRING]
+			-- Function to return selected text in grid' (all selected rows or items should be taken into consideration).
+			-- If Void, `selection' will return an empty string.
+
+	selection: STRING is
+			-- String representation of all selected rows or items in `grid'.
+			-- If `selection_function' is Void, `default_selection_function' will be used to get selected text.
+			-- In this case, make sure `item_text_function' is set.
+		do
+			if selection_function /= Void then
+				Result := selection_function.item ([])
+			else
+				Result := default_selection_function
+			end
+			if Result = Void then
+				create Result.make (0)
+			end
+		end
+
+	select_all_action: PROCEDURE [ANY, TUPLE]
+			-- Action to be performed to select all items in `grid'
+			-- Used in Ctrl+A.
+			-- If Void, `default_select_all_action' will be used.
+
 feature -- Virtual grid
 
 	is_grid_empty: BOOLEAN is
@@ -413,6 +475,9 @@ feature -- Virtual grid
 		do
 			Result ?= grid_item_function.item ([a_column, a_row])
 		end
+
+	item_text_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], STRING]
+			-- Function to return text of `a_item'
 
 feature{NONE} -- Implementation
 
@@ -557,6 +622,299 @@ feature{NONE} -- Implementation
 				end
 				if a_selected then
 					l_grid_item.enable_select
+				end
+			end
+		end
+
+	default_selection_function: STRING is
+			-- Default implementation for `selection_function'
+			-- This feature only take EV_GRID_LABEL_ITEM and its descendants into consideration.
+			-- If you have other type of grid item, use `selection_function' to define your own selection function.
+		local
+			l_sorted_items: DS_LIST [EV_GRID_ITEM]
+			l_last_column_index: INTEGER
+			l_last_row_index: INTEGER
+			l_is_grid_tree_enabled: BOOLEAN
+			l_item: EV_GRID_ITEM
+			l_text: STRING
+			l_item_text_functon: like item_text_function
+
+			l_sorted_rows: DS_LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_column_index: INTEGER
+			l_column_count: INTEGER
+		do
+			l_item_text_functon := item_text_function
+			if l_item_text_functon /= Void then
+				create Result.make (512)
+				l_is_grid_tree_enabled := grid.is_tree_enabled
+				if not grid.is_single_item_selection_enabled then
+					l_sorted_items := topologically_sorted_items (grid.selected_items)
+					from
+						l_last_column_index := 1
+						l_sorted_items.start
+					until
+						l_sorted_items.after
+					loop
+						l_item := l_sorted_items.item_for_iteration
+						l_row := l_item.row
+						if l_row.height > 0 and then is_row_recursively_expanded (l_row) then
+							if l_item.row.index /= l_last_row_index then
+								if l_last_row_index /= 0 then
+									Result.append_character ('%N')
+								end
+								if l_is_grid_tree_enabled then
+									Result.append (tabs (row_indentation (l_item.row)))
+								end
+								l_last_row_index := l_item.row.index
+								l_last_column_index := 1
+							end
+							Result.append (tabs (l_item.column.index - l_last_column_index))
+							l_last_column_index := l_item.column.index
+							l_text := l_item_text_functon.item ([l_item])
+							if l_text /= Void then
+								Result.append (l_text)
+							end
+						end
+						l_sorted_items.forth
+					end
+				else
+					l_sorted_rows := topologically_sorted_rows (grid.selected_rows)
+					from
+						l_sorted_rows.start
+					until
+						l_sorted_rows.after
+					loop
+						l_row := l_sorted_rows.item_for_iteration
+						if l_row.height > 0 and then is_row_recursively_expanded (l_row) then
+							if l_is_grid_tree_enabled then
+								Result.append (tabs (row_indentation (l_row)))
+							end
+							from
+								l_column_index := 1
+								l_column_count := grid.column_count
+							until
+								l_column_index > l_column_count
+							loop
+								l_text := l_item_text_functon.item ([l_row.item (l_column_index)])
+								if l_text /= Void then
+									Result.append (l_text)
+									Result.append_character ('%T')
+								else
+									Result.append (once "%T%T")
+								end
+								l_column_index := l_column_index + 1
+							end
+							Result.append_character ('%N')
+						end
+						l_sorted_rows.forth
+					end
+				end
+			end
+			if Result = Void then
+				create Result.make (0)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	is_row_recursively_expanded (a_row: EV_GRID_ROW): BOOLEAN is
+			-- Is `a_row' recursively expanded?
+		require
+			a_row_attached: a_row /= Void
+			a_row.parent /= Void
+		local
+			l_row: EV_GRID_ROW
+		do
+			Result := True
+			from
+				l_row := a_row.parent_row
+			until
+				l_row = Void or else not Result
+			loop
+				Result := l_row.is_expandable and then l_row.is_expanded
+				l_row := l_row.parent_row
+			end
+		end
+
+	topologically_sorted_items (a_item_list: LIST [EV_GRID_ITEM]): DS_LIST [EV_GRID_ITEM] is
+			-- Sorted representation of `a_item_list'.
+			-- Item order is decided by `grid_item_order_tester'.
+		require
+			a_item_list_attached: a_item_list /= Void
+		local
+			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ITEM]
+			l_sorter: DS_QUICK_SORTER [EV_GRID_ITEM]
+		do
+			create {DS_ARRAYED_LIST [EV_GRID_ITEM]}Result.make (a_item_list.count)
+			from
+				a_item_list.start
+			until
+				a_item_list.after
+			loop
+				Result.force_last (a_item_list.item)
+				a_item_list.forth
+			end
+			create l_tester.make (agent grid_item_order_tester)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (Result)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	topologically_sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW] is
+			-- Sorted representation of `a_item_list'.
+			-- Item order is decided by `grid_item_order_tester'.
+		require
+			a_row_list_attached: a_row_list /= Void
+		local
+			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ROW]
+			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
+		do
+			create {DS_ARRAYED_LIST [EV_GRID_ROW]}Result.make (a_row_list.count)
+			from
+				a_row_list.start
+			until
+				a_row_list.after
+			loop
+				Result.force_last (a_row_list.item)
+				a_row_list.forth
+			end
+			create l_tester.make (agent grid_row_order_tester)
+			create l_sorter.make (l_tester)
+			l_sorter.sort (Result)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	grid_item_order_tester (a_item: EV_GRID_ITEM; b_item: EV_GRID_ITEM): BOOLEAN is
+			-- Grid item order tester.
+			-- If `a_item' is smaller than `b_item', return True, otherwise, False.
+		require
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.is_parented
+			b_item_attached: b_item /= Void
+			b_item_parented: b_item.is_parented
+		local
+			l_a_item_row_index: INTEGER
+			l_b_item_row_index: INTEGER
+		do
+			l_a_item_row_index := a_item.row.index
+			l_b_item_row_index := b_item.row.index
+			if l_a_item_row_index = l_b_item_row_index then
+				Result := a_item.column.index < b_item.column.index
+			else
+				Result := l_a_item_row_index < l_b_item_row_index
+			end
+		end
+
+	grid_row_order_tester (a_row, b_row: EV_GRID_ROW): BOOLEAN is
+			-- Grid row order tester.
+			-- If `a_row' is smaller than `b_row', return True, otherwise, False.
+		require
+			a_row_attached: a_row /= Void
+			b_row_attached: b_row /= Void
+		do
+			Result := a_row.index < b_row.index
+		end
+
+	tabs (n: INTEGER): STRING is
+			-- String representation of `n' tabs
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled ('%T', n)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	row_indentation (a_row: EV_GRID_ROW): INTEGER is
+			-- Row indentation of `a_row'.
+			-- Root row has indentation 0.
+		require
+			a_row_attached: a_row /= Void
+			a_row_parented: a_row.parent /= Void
+		local
+			l_row: EV_GRID_ROW
+		do
+			from
+				l_row := a_row.parent_row
+			until
+				l_row = Void
+			loop
+				Result := Result + 1
+				l_row := l_row.parent_row
+			end
+		ensure
+			good_result: Result >= 0
+		end
+
+	on_ctrl_c_pressed is
+			-- Action to be performed when Ctrl+C is pressed
+		local
+			l_text: STRING
+		do
+			l_text := selection
+			if l_text /= Void and then not l_text.is_empty then
+				ev_application.clipboard.set_text (l_text.twin)
+			end
+		end
+
+	on_ctrl_a_pressed is
+			-- Action to be performed when Ctrl+A is pressed
+		do
+			if grid.is_multiple_row_selection_enabled or grid.is_multiple_item_selection_enabled then
+				if select_all_action /= Void then
+					select_all_action.call ([])
+				else
+					default_select_all_action
+				end
+			end
+		end
+
+	on_copy_using_key (a_key: EV_KEY) is
+			-- Action to be performed to deal with Ctr+A or Ctrl+C key press
+		require
+			a_key_attached: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
+				on_ctrl_c_pressed
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
+				on_ctrl_a_pressed
+			end
+		end
+
+	on_copy_using_key_agent: PROCEDURE [ANY, TUPLE [EV_KEY]] is
+			-- Agent of `on_copy_using_key'
+		do
+			if on_copy_using_key_agent_internal = Void then
+				on_copy_using_key_agent_internal := agent on_copy_using_key
+			end
+			Result := on_copy_using_key_agent_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	on_copy_using_key_agent_internal: like on_copy_using_key_agent
+			-- Implementation of `on_copy_using_key_agent'
+
+	default_select_all_action is
+			-- Default action to select all items in `grid'
+		local
+			l_grid: like grid
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+		do
+			l_grid := grid
+			l_row_count := l_grid.row_count
+			if l_row_count > 0 then
+				from
+					l_row_index := 1
+				until
+					l_row_index > l_row_count
+				loop
+					l_grid.select_row (l_row_index)
+					l_row_index := l_row_index + 1
 				end
 			end
 		end

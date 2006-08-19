@@ -202,7 +202,6 @@ feature -- Actions
 						check l_grid_item /= Void end
 						ensure_visible (l_grid_item, True)
 					end
-
 				end
 			end
 		end
@@ -710,57 +709,6 @@ feature{NONE} -- Implementation
 				if a_item.row.is_expandable then
 					a_item.row.collapse
 				end
-			end
-		end
-
-	selected_text: STRING is
-			-- String representation of selected rows/items
-			-- If no row/item is selected, return an empty string.
-		local
-			l_sorted_items: DS_LIST [EV_GRID_ITEM]
-			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_last_row_index: INTEGER
-			l_last_column_index: INTEGER
-			l_item: EV_GRID_ITEM
-			l_list: LIST [EV_GRID_ITEM]
-		do
-			l_list := grid.selected_items
-			if not l_list.is_empty then
-				create Result.make (512)
-				if l_list.count = 1 then
-						-- For single selected item
-					l_grid_item ?= l_list.first
-					if l_grid_item /= Void then
-						Result.append (l_grid_item.text)
-					end
-				else
-						-- For multi selected items
-					l_sorted_items := sorted_items (l_list)
-					from
-						l_last_column_index := 1
-						l_sorted_items.start
-					until
-						l_sorted_items.after
-					loop
-						l_item := l_sorted_items.item_for_iteration
-						if l_item.row.index /= l_last_row_index then
-							if l_last_row_index /= 0 then
-								Result.append_character ('%N')
-							end
-							l_last_row_index := l_item.row.index
-							l_last_column_index := 1
-						end
-						Result.append (tabs (l_item.column.index - l_last_column_index))
-						l_last_column_index := l_item.column.index
-						l_grid_item ?= l_item
-						if l_grid_item /= Void then
-							Result.append (l_grid_item.text)
-						end
-						l_sorted_items.forth
-					end
-				end
-			else
-				create Result.make (0)
 			end
 		end
 

@@ -119,7 +119,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	veto_replace_function: FUNCTION [ANY, TUPLE [STRING, STRING], BOOLEAN]
+	veto_replace_function: FUNCTION [ANY, TUPLE [original: STRING; new: STRING], BOOLEAN]
 			-- Parameter [TUPLE [original, new: STRING]]
 			-- (ETL3 TUPLE with named parameters)	
 			-- Function used to determine whether or not replacement of every occurrence of `original'

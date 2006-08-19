@@ -118,7 +118,8 @@ feature -- Basic operations
 		do
 			if not retried then
 					-- Loads assembly in reflection only mode.
-				create l_name.make (a_name)
+				create l_name.make
+				l_name.set_name (a_name)
 				Result := load (l_name)
 			end
 		rescue

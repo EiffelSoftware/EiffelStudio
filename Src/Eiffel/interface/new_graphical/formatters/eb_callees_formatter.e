@@ -65,7 +65,6 @@ feature -- Access
 			when {DEPEND_UNIT}.is_in_assignment_flag then
 				Result := interface_names.l_assignees
 			when {DEPEND_UNIT}.is_in_creation_flag then
-				-- Fixme: Use the proper name (Jasonw)
 				Result := interface_names.l_created
 			else
 				Result := Interface_names.l_callees

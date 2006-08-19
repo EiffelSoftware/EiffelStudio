@@ -190,13 +190,6 @@ feature -- Actions
 			l_processed: BOOLEAN
 		do
 			l_processed := on_predefined_key_pressed (a_key)
---			if not l_processed then
---				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
---					do_all_in_rows (grid.selected_rows, agent go_to_parent)
---				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
---					do_all_in_rows (grid.selected_rows, agent go_to_first_child)
---				end
---			end
 		end
 
 	on_enter_pressed is
@@ -637,78 +630,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	selected_text: STRING is
-			-- String representation of selected rows/items
-			-- If no row/item is selected, return an empty string.
-		local
-			l_sorted_rows: DS_LIST [EV_GRID_ROW]
-			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_list: LIST [EV_GRID_ROW]
-		do
-			l_list := grid.selected_rows
-			if not l_list.is_empty then
-				create Result.make (256)
-				if l_list.count = 1 then
-						-- For single selected item
-					l_grid_item ?= l_list.first.item (1)
-					if l_grid_item /= Void then
-						Result.append (l_grid_item.text)
-					end
-				else
-						-- For multi selected items
-					l_sorted_rows := sorted_rows (l_list)
-					from
-						l_sorted_rows.start
-					until
-						l_sorted_rows.after
-					loop
-						l_grid_item ?= l_sorted_rows.item_for_iteration.item (1)
-						if l_grid_item /= Void then
-							Result.append (tabs (row_depth (l_sorted_rows.item_for_iteration)))
-							Result.append (l_grid_item.text)
-							Result.append_character ('%N')
-						end
-						l_sorted_rows.forth
-					end
-				end
-			else
-				create Result.make (0)
-			end
-		end
-
-	row_tester (a_row, b_row: EV_GRID_ROW): BOOLEAN is
-			-- Tester to test if index of `a_row' is less than `b_row'
-		require
-			a_row_attached: a_row /= Void
-			a_row_is_parented: a_row.parent /= Void
-			b_row_attached: b_row /= Void
-			b_row_is_parented: b_row.parent /= Void
-		do
-			Result := a_row.index < b_row.index
-		end
-
-	sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW] is
-			-- Sorted rows of `a_row_list'
-		require
-			a_row_list_attached: a_row_list /= Void
-		local
-			l_tester: AGENT_BASED_EQUALITY_TESTER [EV_GRID_ROW]
-			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
-		do
-			create {DS_ARRAYED_LIST [EV_GRID_ROW]}Result.make (a_row_list.count)
-			from
-				a_row_list.start
-			until
-				a_row_list.after
-			loop
-				Result.force_last (a_row_list.item)
-				a_row_list.forth
-			end
-			create l_tester.make (agent row_tester)
-			create l_sorter.make (l_tester)
-			l_sorter.sort (Result)
-		end
-
 	go_to_parent (a_row: EV_GRID_ROW) is
 			-- Select parent row of `a_row'.
 		require
@@ -903,6 +824,7 @@ feature{NONE} -- Initialization
 			grid.enable_multiple_row_selection
 			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
 			enable_editor_token_pnd
+			set_select_all_action (agent do  end)
 		end
 
 	build_sortable_and_searchable is

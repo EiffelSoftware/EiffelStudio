@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			create open_file_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_browse_archive_directory_preference)
 			open_file_dialog.set_title (metric_names.t_select_archive)
 			open_file_dialog.filters.extend (["*.xml", "XML files"])
+			open_file_dialog.filters.extend (["*.*", "All files"])
 
 				-- Setup timers.
 			create internal_timer.make_with_interval (0)

@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 
 				-- Setup sortable `result_grid'.
 			create result_grid
-			result_grid.enable_single_row_selection
+			result_grid.enable_multiple_item_selection
 			result_grid.enable_selection_on_single_button_click
 			result_grid.set_column_count_to (2)
 			result_grid.column (2).set_title (displayed_name (metric_names.t_path))
@@ -158,6 +158,10 @@ feature {NONE} -- Initialization
 			quick_search_bar.attach_tool (grid_wrapper)
 			grid_wrapper.enable_search
 
+				-- Setup copy & paste function.
+			grid_wrapper.set_item_text_function (agent text_of_grid_item)
+			grid_wrapper.set_select_all_action (agent select_all_action)
+			grid_wrapper.enable_copy
 		ensure then
 			input_grid_attached: input_grid /= Void
 			editor_token_grid_support_attached: editor_token_grid_support /= Void
@@ -551,6 +555,44 @@ feature{NONE} -- Implementation
 
 	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			-- Supports editor token grid
+
+	text_of_grid_item (a_item: EV_GRID_ITEM): STRING is
+			-- Text of `a_item'		
+		local
+			l_item: EB_METRIC_GRID_RESULT_ITEM
+		do
+			l_item ?= a_item
+			if l_item /= Void then
+				Result := l_item.image
+			end
+		end
+
+	select_all_action is
+			-- Action to be performed to select all items in `result_grid'					
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+			l_grid: like result_grid
+			l_row: EV_GRID_ROW
+		do
+			l_grid := result_grid
+			from
+				l_row_index := 1
+				l_row_count := l_grid.row_count
+			until
+				l_row_index > l_row_count
+			loop
+				l_row := l_grid.row (l_row_index)
+				if l_row.item (1) = Void then
+					l_row.set_item (1, item_function (1, l_row_index))
+				end
+				if l_row.item (2) = Void then
+					l_row.set_item (2, item_function (2, l_row_index))
+				end
+				l_grid.select_row (l_row_index)
+				l_row_index := l_row_index + 1
+			end
+		end
 
 feature{NONE} -- Implementation
 

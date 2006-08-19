@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			create metric_name_row_table.make (30)
 			create input_cache.make (20)
 			default_create
+			enable_tooltip_contain_go_to_definition_message
 		ensure
 			is_selectable_set: is_selectable = a_selectable
 			metric_name_list_attached: metric_name_list /= Void
@@ -223,6 +224,10 @@ feature -- Status report
 
 	should_invalid_metric_be_selected: BOOLEAN
 			-- Should invalid metric be selected?
+
+	should_tooltip_contain_go_to_definition_message: BOOLEAN
+			-- Should tooltip of metric contain "go to definition" message?
+			-- Default: True
 
 feature{NONE} -- Actions
 
@@ -527,6 +532,22 @@ feature -- Basic operations
 			end
 		end
 
+	enable_tooltip_contain_go_to_definition_message is
+			-- Make sure that tooltip of metrics contain "Go to definition" message.
+		do
+			should_tooltip_contain_go_to_definition_message := True
+		ensure
+			should_tooltip_contain_go_to_definition_message_set: should_tooltip_contain_go_to_definition_message
+		end
+
+	disable_tooltip_contain_go_to_definition_message is
+			-- Make sure that tooltip of metrics do not contain "Go to definition" message.
+		do
+			should_tooltip_contain_go_to_definition_message := False
+		ensure
+			should_tooltip_contain_go_to_definition_message_set: not should_tooltip_contain_go_to_definition_message
+		end
+
 feature -- Metric management
 
 	load_metrics (a_preserve_last_selected_metric: BOOLEAN) is
@@ -632,10 +653,12 @@ feature -- Metric management
 				l_tooltip := l_vadility.out
 				l_grid_item.set_foreground_color (l_red)
 			end
-			if not l_tooltip.is_empty then
-				l_tooltip.append_character ('%N')
+			if should_tooltip_contain_go_to_definition_message then
+				if not l_tooltip.is_empty then
+					l_tooltip.append_character ('%N')
+				end
+				l_tooltip.append (metric_names.f_double_click_to_go_to_definition)
 			end
-			l_tooltip.append (metric_names.f_double_click_to_go_to_definition)
 			l_grid_item.set_tooltip (l_tooltip)
 			l_grid_item.set_pixmap (pixmap_from_metric (a_metric))
 			l_grid_item.set_data (a_metric)

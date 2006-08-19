@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			e_feature := a_feature
 			internal_start_position := -1
 			internal_end_position := -1
+			internal_start_line_number := -1
 		end
 
 feature -- Properties
@@ -49,48 +50,16 @@ feature -- Properties
 	start_position: INTEGER is
 			-- Start position of the feature in
 			-- the origin file
-		local
-			fast: FEATURE_AS
 		do
-			if internal_start_position < 0 then
-				if e_feature /= Void then
-					fast := e_feature.ast
-					if fast /= Void then
-						internal_start_position := fast.start_position
-						internal_end_position := fast.end_position
-					else
-						internal_start_position := 0
-						internal_end_position := 0
-					end
-				else
-					internal_start_position := 0
-					internal_end_position := 0
-				end
-			end
+			update
 			Result := internal_start_position
 		end
 
 	end_position: INTEGER is
 			-- End position of the feature in
 			-- the origin file
-		local
-			fast: FEATURE_AS
 		do
-			if internal_end_position < 0 then
-				if e_feature /= Void then
-					fast := e_feature.ast
-					if fast /= Void then
-						internal_start_position := fast.start_position
-						internal_end_position := fast.end_position
-					else
-						internal_start_position := 0
-						internal_end_position := 0
-					end
-				else
-					internal_start_position := 0
-					internal_end_position := 0
-				end
-			end
+			update
 			Result := internal_end_position
 		end
 
@@ -226,32 +195,15 @@ feature -- dragging
 	line_number: INTEGER is
 			-- Line number of feature text
 		require
-			valid_start_position: start_position > 0
-			valid_file_name: file_name /= Void
-		local
-			file: RAW_FILE
-			start_line_pos: INTEGER
+			is_valid: is_valid
 		do
-			create file.make (file_name)
-			if file.exists and then file.is_readable then
-				file.open_read
-				from
-				until
-					file.position > start_position + 1 or else file.end_of_file
-				loop
-					start_line_pos := file.position
-					Result := Result + 1
-					file.read_line
-				end
-				file.close
-			end
+			update
+			Result := internal_start_line_number
 		end
 
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-				-- Don't like side effects but it is useful here.
-			update
 			Result := e_feature /= Void and then Precursor {CLASSC_STONE}
 		end
 
@@ -263,12 +215,14 @@ feature -- dragging
 			if internal_start_position = -1 and then e_feature /= Void then
 					-- Position has not been initialized
 				body_as := e_feature.ast
-				if not e_feature.is_external and then body_as /= Void then
+				if body_as /= Void then
 					internal_start_position := body_as.start_position
 					internal_end_position := body_as.end_position
+					internal_start_line_number := body_as.start_location.line
 				else
-					internal_start_position := 0
-					internal_end_position := 0
+					internal_start_position := 1
+					internal_end_position := 1
+					internal_start_line_number := 1
 				end
 			end
 		end
@@ -310,8 +264,11 @@ feature {NONE} -- Implementation
 	internal_start_position: INTEGER
 			-- Start position for feature
 
-	internal_end_position: INTEGER;
+	internal_end_position: INTEGER
 			-- End position for feature
+
+	internal_start_line_number: INTEGER;
+			-- Line number of `internal_start_position'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

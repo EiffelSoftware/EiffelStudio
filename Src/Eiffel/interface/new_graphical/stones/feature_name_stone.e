@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone based on feature name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			end
 			internal_start_position := -1
 			internal_end_position := -1
+			internal_start_line_number := -1
 		ensure
 			feature_name_set: feature_name = f_name
 			feature_class_set: feature_class = ec

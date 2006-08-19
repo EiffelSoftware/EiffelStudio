@@ -398,6 +398,7 @@ feature {NONE} -- Implementation
 			comm.edit_properties (dialog)
 			refresh_list
 			update_edit_buttons
+			dialog.set_focus
 		end
 
 	delete_command is

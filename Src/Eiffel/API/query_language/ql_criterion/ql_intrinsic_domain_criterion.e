@@ -76,7 +76,6 @@ feature{NONE} -- Implementation
 			-- Find possible result (maybe classes or features) of current criterion.
 		deferred
 		ensure
-			intrinsic_result_found: is_criterion_domain_evaluated
 			candidate_not_cached_in_domain_generator:
 				not is_intrinsic_domain_cached_in_domain_generator
 		end

@@ -249,7 +249,7 @@ feature {NONE} -- GUI
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
 
-			create l_label.make_with_text ("Current Argument")
+			create l_label.make_with_text ("Current Arguments")
 			l_label.align_text_left
 			arguments_box.extend (l_label)
 			arguments_box.disable_item_expand (l_label)

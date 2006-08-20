@@ -7,8 +7,8 @@ indexing
 
 class
 	WEL_IME_COMPOSITION_STRING
-	
-inherit 
+
+inherit
 	ANY
 
 	WEL_IME_CONSTANTS
@@ -18,7 +18,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make (a_input_context: POINTER) is
@@ -44,9 +44,9 @@ feature -- Access
 			nb := cwel_imm_get_composition_string (input_context, {WEL_COMPOSITION_STRING_CONSTANTS}.Gcs_compstr, l_string.item, nb + 1)
 			Result := l_string.string
 		end
-		
-	
-		
+
+
+
 feature -- Status Setting
 
 	set_comp_string (a_string: STRING_GENERAL) is
@@ -62,7 +62,7 @@ feature -- Status Setting
 		ensure
 			string_set: string = a_string
 		end
-		
+
 feature -- Status Report
 
 	candidate_list_count: INTEGER is
@@ -75,39 +75,39 @@ feature -- Status Report
 		ensure
 			result_valid: Result >= 0
 		end
-		
-		
+
+
 feature -- Implementation
 
 	input_context: POINTER
-		
+
 
 feature {NONE} -- Externals
 
 	cwel_imm_get_composition_string (a_input_locale: POINTER; type: INTEGER; buffer: POINTER; bytes: INTEGER): INTEGER is
 			-- Get Composition string information into 'buffer' according to 'type'
 		external
-			"C macro signature (HIMC, DWORD, LPVOID, DWORD): EIF_INTEGER use <imm.h>"
+			"dllwin imm32.dll signature (HIMC, DWORD, LPVOID, DWORD): LONG use <windows.h>"
 		alias
-			"ImmGetCompositionString"
-		end	
-		
+			"ImmGetCompositionStringW"
+		end
+
 	cwel_imm_set_composition_string (a_input_context: POINTER; type: INTEGER; compbuffer: POINTER; cb: INTEGER; readbuffer: POINTER; rb: INTEGER): BOOLEAN is
 			-- Set Composition string information into '****buffer' according to 'type'
 		external
-			"C macro signature (HIMC, DWORD, LPVOID, DWORD, LPVOID, DWORD): EIF_BOOLEAN use <imm.h>"
+			"dllwin imm32.dll signature (HIMC, DWORD, LPVOID, DWORD, LPVOID, DWORD): BOOL use <windows.h>"
 		alias
-			"ImmSetCompositionString"
-		end	
-		
+			"ImmSetCompositionStringW"
+		end
+
 	cwel_imm_get_candidate_list_count (a_input_context: POINTER; count: INTEGER): INTEGER is
 			-- Get the size of the candidate for 'string'
 		external
-			"C macro signature (HIMC, LPDWORD): EIF_INTEGER use <imm.h>"
+			"dllwin imm32.dll signature (HIMC, LPDWORD): DWORD use <windows.h>"
 		alias
-			"ImmGetCandidateListCount"
-		end	
-	
+			"ImmGetCandidateListCountW"
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

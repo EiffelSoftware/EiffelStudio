@@ -13,6 +13,5 @@
 		<precompile name="wel_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\wel.ecf"/>
 	</target>
 	<target name="classic" extends="common">
-		<precompile name="wel_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel.ecf"/>
 	</target>
 </system>

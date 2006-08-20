@@ -5156,7 +5156,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					end
 				end
 						-- We always want to find an item above or below for row selection
-				if prev_sel_item /= Void then
+				if prev_sel_item /= Void and then prev_sel_item.is_parented then
 					a_sel_row := prev_sel_item.row
 					inspect
 						a_key.code

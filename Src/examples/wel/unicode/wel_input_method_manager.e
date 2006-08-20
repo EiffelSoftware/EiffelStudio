@@ -407,7 +407,7 @@ feature {NONE} -- Externals
 	cwel_imm_create_context: POINTER is
 			-- Create new input context
 		external
-			"C macro signature (): EIF_POINTER use <imm.h>"
+			"dllwin imm32.dll signature (): HIMC use <windows.h>"
 		alias
 			"ImmCreateContext"
 		end
@@ -415,7 +415,7 @@ feature {NONE} -- Externals
 	cwel_imm_associate_context (a_window, a_input_context: POINTER): POINTER is
 			-- Associate new 'a_input_context' with 'a_window'
 		external
-			"C macro signature (HWND, HIMC): EIF_POINTER use <imm.h>"
+			"dllwin imm32.dll signature (HWND, HIMC): HIMC use <windows.h>"
 		alias
 			"ImmAssociateContext"
 		end
@@ -423,7 +423,7 @@ feature {NONE} -- Externals
 	cwel_get_imm_context (a_window: POINTER): POINTER is
 			-- Retrieve the input context associated with 'a_window'
 		external
-			"C macro signature (HWND): EIF_POINTER use <windows.h>"
+			"dllwin imm32.dll signature (HWND): HIMC use <windows.h>"
 		alias
 			"ImmGetContext"
 		end
@@ -431,7 +431,7 @@ feature {NONE} -- Externals
 	cwel_imm_destroy_context (a_input_cont: POINTER): BOOLEAN is
 			-- Destroy input context 'a_input_context'
 		external
-			"C macro signature (HIMC): EIF_BOOLEAN use <imm.h>"
+			"dllwin imm32.dll signature (HIMC): BOOL use <windows.h>"
 		alias
 			"ImmDestroyContext"
 		end
@@ -439,7 +439,7 @@ feature {NONE} -- Externals
 	cwel_get_imm_is_ime(a_input_locale: POINTER): BOOLEAN is
 			-- Determine whether the input locale has an IME
 		external
-			"C macro signature (HKL): EIF_BOOLEAN use <windows.h>"
+			"dllwin imm32.dll signature (HKL): BOOL use <windows.h>"
 		alias
 			"ImmIsIME"
 		end
@@ -447,7 +447,7 @@ feature {NONE} -- Externals
 	cwel_set_imm_release_context(a_window, a_input_locale:POINTER): BOOLEAN is
 			-- Close the input context
 		external
-			"C macro signature (HWND, HIMC): EIF_BOOLEAN use <windows.h>"
+			"dllwin imm32.dll signature (HWND, HIMC): BOOL use <windows.h>"
 		alias
 			"ImmReleaseContext"
 		end
@@ -455,7 +455,7 @@ feature {NONE} -- Externals
 	cwel_imm_simulate_hotkey (a_window: POINTER; a_hot_key: INTEGER): BOOLEAN is
 			-- Simulate the specified IME hotkey
 		external
-			"C macro signature (HWND, DWORD): EIF_BOOLEAN use <windows.h>"
+			"dllwin imm32.dll signature (HWND, DWORD): BOOL use <windows.h>"
 		alias
 			"ImmSimulateHotKey"
 		end
@@ -495,7 +495,7 @@ feature {NONE} -- Externals
 	cwel_imm_get_conversion_status (a_input_context, a_conv_mode, a_sent_mode: POINTER): BOOLEAN is
 			-- Retrieve the current conversion status
 		external
-			"C macro signature (HIMC, LPDWORD, LPDWORD): EIF_BOOLEAN use <windows.h>"
+			"dllwin imm32.dll signature (HIMC, LPDWORD, LPDWORD): BOOL use <windows.h>"
 		alias
 			"ImmGetConversionStatus"
 		end
@@ -503,7 +503,7 @@ feature {NONE} -- Externals
 	cwel_imm_set_conversion_status (a_input_context: POINTER; a_conv_mode, a_sent_mode: INTEGER): BOOLEAN is
 			-- Retrieve the current conversion status
 		external
-			"C macro signature (HIMC, DWORD, DWORD): EIF_BOOLEAN use <windows.h>"
+			"dllwin imm32.dll signature (HIMC, DWORD, DWORD): BOOL use <windows.h>"
 		alias
 			"ImmSetConversionStatus"
 		end

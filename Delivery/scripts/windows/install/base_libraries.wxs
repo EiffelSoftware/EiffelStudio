@@ -9,8 +9,9 @@
 						<Component Id="Eiffel2Java7" Guid="F773D936-6807-412B-BF82-B50280516FC4">
 							<File Id="test.java" Name="TEST~1.JAV" LongName="test.java" />
 							<File Id="root_class.e90" Name="ROOT_C~6.E" LongName="root_class.e" />
-							<File Id="sample_ecf" Name="sample.ecf" />
+							<File Id="eiffel2java.ecf" Name="EIFFEL~1.ECF" LongName="eiffel2java.ecf" />
 							<File Id="test.class" Name="TEST~1.CLA" LongName="test.class" />
+							<File Id="Readme91" Name="README" />
 						</Component>
 					</Directory>
 					<Directory Id="lex8" Name="lex">
@@ -224,166 +225,94 @@
 						</Directory>
 						<Directory Id="rm2oom" Name="rm2oom">
 							<Component Id="rm2oom" Guid="3C640042-EFA9-45D9-8818-533496D8C9F0">
-								<File Id="mapper.e" Name="mapper.e" KeyPath="yes" />
-								<File Id="Ace.sybase.windows.ace139" Name="ACESYB~8.ACE" LongName="Ace.sybase.windows.ace" />
-								<File Id="Ace.odbc.windows.ace140" Name="ACEODB~2.ACE" LongName="Ace.odbc.windows.ace" />
-								<File Id="Ace.oracle.windows.ace144" Name="ACEORA~9.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace7" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
-								<File Id="Ace.ingres.unix.ace148" Name="ACEING~7.ACE" LongName="Ace.ingres.unix.ace" />
+								<File Id="rm2oom.ecf" Name="rm2oom.ecf" />
+								<File Id="mapper.e" Name="mapper.e" />
 								<File Id="mapODBC.e" Name="mapODBC.e" />
-								<File Id="Ace.sybase.unix.ace176" Name="ACESYB~D.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.ingres.windows.ace177" Name="ACEING~G.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.oracle.unix.ace196" Name="ACEORA~H.ACE" LongName="Ace.oracle.unix.ace" />
-								<File Id="Ace.odbc.dotnet.ace7" Name="ACEODB~F.ACE" LongName="Ace.odbc.dotnet.ace" />
 								<File Id="Readme218" Name="Readme" />
 							</Component>
 						</Directory>
 						<Directory Id="oom2rm" Name="oom2rm">
 							<Component Id="oom2rm" Guid="E93BB3FB-0ACF-4D37-BC36-93110BBA12A5">
-								<File Id="sql_column.e" Name="SQL_CO~1.E" LongName="sql_column.e" KeyPath="yes" />
-								<File Id="Ace.ingres.unix.ace" Name="ACEING~1.ACE" LongName="Ace.ingres.unix.ace" />
-								<File Id="Ace.sybase.windows.ace133" Name="ACESYB~6.ACE" LongName="Ace.sybase.windows.ace" />
-								<File Id="Ace.oracle.windows.ace134" Name="ACEORA~6.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace6" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
-								<File Id="Ace.odbc.windows.ace141" Name="ACEODB~3.ACE" LongName="Ace.odbc.windows.ace" />
+								<File Id="oom2rm.ecf" Name="oom2rm.ecf" />
+								<File Id="sql_column.e" Name="SQL_CO~1.E" LongName="sql_column.e" />
 								<File Id="sample.e" Name="sample.e" />
-								<File Id="Ace.sybase.unix.ace150" Name="ACESYB~9.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.ingres.windows.ace164" Name="ACEING~D.ACE" LongName="Ace.ingres.windows.ace" />
 								<File Id="sql_table.e" Name="SQL_TA~1.E" LongName="sql_table.e" />
 								<File Id="keys.e" Name="keys.e" />
-								<File Id="Ace.oracle.unix.ace178" Name="ACEORA~B.ACE" LongName="Ace.oracle.unix.ace" />
 								<File Id="support_class.e" Name="SUPPOR~1.E" LongName="support_class.e" />
 								<File Id="model_traversal.e" Name="MODEL_~1.E" LongName="model_traversal.e" />
 								<File Id="Readme197" Name="Readme" />
 								<File Id="print_request.e" Name="PRINT_~1.E" LongName="print_request.e" />
 								<File Id="translate.e" Name="TRANSL~1.E" LongName="translate.e" />
 								<File Id="model.e" Name="model.e" />
-								<File Id="Ace.odbc.dotnet.ace4" Name="ACEODB~C.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="nesting2" Name="nesting2">
 							<Component Id="nesting2" Guid="676322C6-B170-4098-89B2-53DF5A070DA8">
-								<File Id="Ace.sybase.windows.ace" Name="ACESYB~2.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
-								<File Id="Ace.oracle.windows.ace" Name="ACEORA~2.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace5" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
+								<File Id="nesting2.ecf" Name="nesting2.ecf" />
 								<File Id="test.e128" Name="test.e" />
-								<File Id="Ace.ingres.unix.ace129" Name="ACEING~3.ACE" LongName="Ace.ingres.unix.ace" />
 								<File Id="testODBC.e" Name="testODBC.e" />
-								<File Id="Ace.ingres.windows.ace149" Name="ACEING~8.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.sybase.unix.ace151" Name="ACESYB~A.ACE" LongName="Ace.sybase.unix.ace" />
 								<File Id="action_1_i.e157" Name="ACTION~4.E" LongName="action_1_i.e" />
 								<File Id="Readme165" Name="Readme" />
 								<File Id="action_2_i.e166" Name="ACTION~6.E" LongName="action_2_i.e" />
-								<File Id="Ace.odbc.windows.ace172" Name="ACEODB~6.ACE" LongName="Ace.odbc.windows.ace" />
-								<File Id="Ace.oracle.unix.ace179" Name="ACEORA~C.ACE" LongName="Ace.oracle.unix.ace" />
 								<File Id="action_1.e" Name="action_1.e" />
 								<File Id="action_2.e" Name="action_2.e" />
-								<File Id="Ace.odbc.dotnet.ace3" Name="ACEODB~B.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="st_proc" Name="st_proc">
 							<Component Id="st_proc" Guid="2BD89CA2-E082-4C02-8AC4-131F41C705DE">
+								<File Id="stored.ecf" Name="stored.ecf" />
 								<File Id="runner_ora.e" Name="RUNNER~2.E" LongName="runner_ora.e" KeyPath="yes" />
-								<File Id="Ace.oracle.unix.ace" Name="ACEORA~1.ACE" LongName="Ace.oracle.unix.ace" />
-				<File Id="Ace.oracle.dotnet.ace8" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
 								<File Id="runODBC.e" Name="runODBC.e" />
 								<File Id="runner_ing.e" Name="RUNNER~1.E" LongName="runner_ing.e" />
-								<File Id="Ace.ingres.windows.ace143" Name="ACEING~5.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.ingres.unix.ace175" Name="ACEING~F.ACE" LongName="Ace.ingres.unix.ace" />
 								<File Id="runner.e" Name="runner.e" />
-								<File Id="Ace.sybase.windows.ace194" Name="ACESYB~G.ACE" LongName="Ace.sybase.windows.ace" />
-								<File Id="Ace.oracle.windows.ace195" Name="ACEORA~G.ACE" LongName="Ace.oracle.windows.ace" />
 								<File Id="Readme201" Name="Readme" />
-								<File Id="Ace.sybase.unix.ace202" Name="ACESYB~H.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.odbc.windows.ace203" Name="ACEODB~8.ACE" LongName="Ace.odbc.windows.ace" />
-								<File Id="Ace.odbc.dotnet.ace8" Name="ACEODB~G.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="nesting" Name="nesting">
 							<Component Id="nesting" Guid="00FA9F46-8900-4444-A051-D5F9537BF1AE">
+								<File Id="nesting.ecf" Name="nesting.ecf" />
 								<File Id="Readme123" Name="Readme" KeyPath="yes" />
-								<File Id="Ace.ingres.windows.ace" Name="ACEING~2.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.oracle.unix.ace135" Name="ACEORA~7.ACE" LongName="Ace.oracle.unix.ace" />
-				<File Id="Ace.oracle.dotnet.ace4" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
 								<File Id="testODBC.e145" Name="testODBC.e" />
-								<File Id="Ace.odbc.windows.ace146" Name="ACEODB~4.ACE" LongName="Ace.odbc.windows.ace" />
 								<File Id="test.e180" Name="test.e" />
-								<File Id="Ace.sybase.windows.ace181" Name="ACESYB~E.ACE" LongName="Ace.sybase.windows.ace" />
-								<File Id="Ace.oracle.windows.ace182" Name="ACEORA~D.ACE" LongName="Ace.oracle.windows.ace" />
-								<File Id="Ace.ingres.unix.ace184" Name="ACEING~H.ACE" LongName="Ace.ingres.unix.ace" />
 								<File Id="action_1.e192" Name="action_1.e" />
 								<File Id="action_2.e198" Name="action_2.e" />
-								<File Id="Ace.sybase.unix.ace205" Name="ACESYB~I.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.odbc.dotnet.ace1" Name="ACEODB~B.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="insert" Name="insert">
 							<Component Id="insert" Guid="22A6BB77-09C2-43CB-8F4D-0C2997ED06A2">
-								<File Id="Ace.sybase.windows.ace124" Name="ACESYB~3.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
-								<File Id="Ace.oracle.windows.ace125" Name="ACEORA~3.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace3" Name="ACEORA~2.ACE" LongName="Ace.oracle.dotnet.ace" />
-								<File Id="Ace.odbc.windows.ace" Name="ACEODB~1.ACE" LongName="Ace.odbc.windows.ace" />
+								<File Id="inserter.ecf" Name="inserter.ecf" />
 								<File Id="Readme130" Name="Readme" />
 								<File Id="inserter.e" Name="inserter.e" />
-								<File Id="Ace.sybase.unix.ace" Name="ACESYB~1.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.ingres.windows.ace152" Name="ACEING~9.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.oracle.unix.ace158" Name="ACEORA~A.ACE" LongName="Ace.oracle.unix.ace" />
 								<File Id="insODBC.e" Name="insODBC.e" />
-								<File Id="Ace.ingres.unix.ace206" Name="ACEING~I.ACE" LongName="Ace.ingres.unix.ace" />
-								<File Id="Ace.odbc.dotnet.ace2" Name="ACEODB~A.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="esql" Name="esql">
 							<Component Id="esql" Guid="FC477E93-B8B9-4AA2-A31E-122CA2133146">
-								<File Id="Ace.sybase.windows.ace126" Name="ACESYB~4.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
-								<File Id="Ace.oracle.windows.ace127" Name="ACEORA~4.ACE" LongName="Ace.oracle.windows.ace" />
-								<File Id="Ace.ingres.unix.ace136" Name="ACEING~4.ACE" LongName="Ace.ingres.unix.ace" />
+								<File Id="esql.ecf" Name="esql.ecf" />
 								<File Id="esql.e" Name="esql.e" />
 								<File Id="Readme153" Name="Readme" />
-								<File Id="Ace.sybase.unix.ace154" Name="ACESYB~B.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.ingres.windows.ace155" Name="ACEING~A.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.oracle.unix.ace183" Name="ACEORA~E.ACE" LongName="Ace.oracle.unix.ace" />
-				<File Id="Ace.oracle.dotnet.ace2" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
 								<File Id="esqlODBC.e" Name="esqlODBC.e" />
-								<File Id="Ace.odbc.windows.ace207" Name="ACEODB~9.ACE" LongName="Ace.odbc.windows.ace" />
-								<File Id="Ace.odbc.dotnet.ace5" Name="ACEODB~D.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="select" Name="select">
 							<Component Id="select" Guid="80EE9D15-99B4-4EFC-BDA5-1531462C6788">
+								<File Id="select.ecf" Name="select.ecf" />
 								<File Id="data.sql.sybase" Name="DATASQ~1.SYB" LongName="data.sql.sybase" KeyPath="yes" />
-								<File Id="Ace.sybase.windows.ace131" Name="ACESYB~5.ACE" LongName="Ace.sybase.windows.ace" />
-								<File Id="Ace.oracle.windows.ace132" Name="ACEORA~5.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace9" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
 								<File Id="Readme138" Name="Readme" />
 								<File Id="data.sql.odbc" Name="DATASQ~1.ODB" LongName="data.sql.odbc" />
-								<File Id="Ace.ingres.unix.ace147" Name="ACEING~6.ACE" LongName="Ace.ingres.unix.ace" />
 								<File Id="selODBC.e" Name="selODBC.e" />
 								<File Id="data.sql.ingres" Name="DATASQ~1.ING" LongName="data.sql.ingres" />
-								<File Id="Ace.ingres.windows.ace163" Name="ACEING~C.ACE" LongName="Ace.ingres.windows.ace" />
 								<File Id="data.sql.oracle" Name="DATASQ~1.ORA" LongName="data.sql.oracle" />
-								<File Id="Ace.sybase.unix.ace171" Name="ACESYB~C.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.oracle.unix.ace190" Name="ACEORA~F.ACE" LongName="Ace.oracle.unix.ace" />
-								<File Id="Ace.odbc.windows.ace191" Name="ACEODB~7.ACE" LongName="Ace.odbc.windows.ace" />
 								<File Id="selector.e" Name="selector.e" />
-								<File Id="Ace.odbc.dotnet.ace" Name="ACEODB~A.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="convert" Name="convert">
 							<Component Id="convert" Guid="4A0FFB00-9163-48F3-A446-47B961948805">
-								<File Id="example1.dat" Name="example1.dat" KeyPath="yes" />
-								<File Id="Ace.sybase.windows.ace137" Name="ACESYB~7.ACE" LongName="Ace.sybase.windows.ace" />
+								<File Id="convert.ecf" Name="convert.ecf" />
+								<File Id="example1.dat" Name="example1.dat" />
 								<File Id="parser.e" Name="parser.e" />
 								<File Id="example2.dat" Name="example2.dat" />
-								<File Id="Ace.oracle.windows.ace142" Name="ACEORA~8.ACE" LongName="Ace.oracle.windows.ace" />
-				<File Id="Ace.oracle.dotnet.ace1" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
 								<File Id="Readme159" Name="Readme" />
-								<File Id="Ace.odbc.windows.ace160" Name="ACEODB~5.ACE" LongName="Ace.odbc.windows.ace" />
-								<File Id="Ace.ingres.unix.ace161" Name="ACEING~B.ACE" LongName="Ace.ingres.unix.ace" />
-								<File Id="Ace.ingres.windows.ace173" Name="ACEING~E.ACE" LongName="Ace.ingres.windows.ace" />
-								<File Id="Ace.sybase.unix.ace185" Name="ACESYB~F.ACE" LongName="Ace.sybase.unix.ace" />
-								<File Id="Ace.oracle.unix.ace208" Name="ACEORA~I.ACE" LongName="Ace.oracle.unix.ace" />
-								<File Id="Ace.odbc.dotnet.ace6" Name="ACEODB~E.ACE" LongName="Ace.odbc.dotnet.ace" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -482,7 +411,7 @@
 									<File Id="Makefile.SH52" Name="Makefile.SH" />
 									<File Id="Makefile.win60" Name="Makefile.win" />
 									<File Id="fext.c66" Name="fext.c" />
-									<File Id="Ace.ace67" Name="Ace.ace" />
+									<File Id="cecil_ecf3" Name="cecil.ecf" />
 									<File Id="fext.h77" Name="fext.h" />
 								</Component>
 							</Directory>
@@ -492,7 +421,7 @@
 									<File Id="object.e" Name="object.e" />
 									<File Id="fext.c58" Name="fext.c" />
 									<File Id="Makefile.SH61" Name="Makefile.SH" />
-									<File Id="Ace.ace62" Name="Ace.ace" />
+									<File Id="cecil_ecf4" Name="cecil.ecf" />
 									<File Id="fext.h71" Name="fext.h" />
 									<File Id="root_class.e80" Name="ROOT_C~3.E" LongName="root_class.e" />
 								</Component>
@@ -502,7 +431,7 @@
 									<File Id="Makefile.win54" Name="Makefile.win" KeyPath="yes" />
 									<File Id="Makefile.SH55" Name="Makefile.SH" />
 									<File Id="fext.c70" Name="fext.c" />
-									<File Id="Ace.ace72" Name="Ace.ace" />
+									<File Id="cecil_ecf5" Name="cecil.ecf" />
 									<File Id="fext.h81" Name="fext.h" />
 									<File Id="root_class.e82" Name="ROOT_C~4.E" LongName="root_class.e" />
 								</Component>
@@ -520,7 +449,7 @@
 									<File Id="bank_account.e" Name="BANK_A~1.E" LongName="bank_account.e" />
 									<File Id="Makefile.msc64" Name="Makefile.msc" />
 									<File Id="cecil.lnk" Name="cecil.lnk" />
-									<File Id="Ace.ace65" Name="Ace.ace" />
+									<File Id="bank_account.ecf" Name="BANK_A~1.ECF" LongName="bank_account.ecf" />
 									<File Id="saver.e" Name="saver.e" />
 									<File Id="fext.h" Name="fext.h" />
 									<File Id="Makefile.bcb74" Name="Makefile.bcb" />
@@ -550,6 +479,7 @@
 								<File Id="mystring.e" Name="mystring.e" />
 								<File Id="mystring.h" Name="mystring.h" />
 								<File Id="test_cpp.e" Name="test_cpp.e" />
+								<File Id="readme90" Name="README" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -620,14 +550,12 @@
 					<Directory Id="time32" Name="time">
 						<Directory Id="calculator33" Name="CALCUL~2" LongName="calculator">
 							<Component Id="calculator33" Guid="778E8B87-BB21-4061-BD56-2A8BD88F737F">
-								<File Id="Ace.mswin.ace221" Name="ACEMSW~F.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
-								<File Id="Ace.dotnet.ace12" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="eiffel_time_calendar.ecf" Name="EIFFEL~1.ECF" LongName="eiffel_time_calendar.ecf" />
 								<File Id="readme2" Name="readme" />
 								<File Id="set_date.e" Name="set_date.e" />
 								<File Id="command_date.e" Name="COMMAN~1.E" LongName="command_date.e" />
 								<File Id="add_year.e" Name="add_year.e" />
 								<File Id="calculator.e222" Name="CALCUL~2.E" LongName="calculator.e" />
-								<File Id="Ace.unix.ace223" Name="ACEUNI~J.ACE" LongName="Ace.unix.ace" />
 								<File Id="add_month.e" Name="ADD_MO~1.E" LongName="add_month.e" />
 								<File Id="add_day.e" Name="add_day.e" />
 								<File Id="add_week.e" Name="add_week.e" />
@@ -1121,6 +1049,7 @@
 							<File Id="shared_jni_environment.e" Name="SHARED~4.E" LongName="shared_jni_environment.e" />
 							<File Id="java_float_array.e" Name="JAVA_F~1.E" LongName="java_float_array.e" />
 							<File Id="java_entity.e" Name="JAVA_E~1.E" LongName="java_entity.e" />
+							<File Id="Readme89" Name="README" />
 						</Component>
 						<Directory Id="structures4" Name="STRUCT~3" LongName="structures">
 							<Component Id="structures4" Guid="E85311E4-C404-43F3-BE4E-6F284D36E40A">
@@ -1573,6 +1502,7 @@
 								<Directory Id="oracle" Name="oracle">
 									<Component Id="oracle" Guid="B3D99514-1B8A-4A2A-9C7A-026963BCB872">
 										<File Id="oracle.e" Name="oracle.e" KeyPath="yes" />
+										<File Id="oracle_ecf" Name="oracle.ecf" />
 										<File Id="Readme13" Name="Readme" />
 									</Component>
 									<Directory Id="Clib18" Name="Clib">
@@ -1592,6 +1522,7 @@
 								<Directory Id="odbc" Name="odbc">
 									<Component Id="odbc" Guid="1E1142FB-9F73-40A6-94C3-5DBA96193C47">
 										<File Id="odbc.e" Name="odbc.e" KeyPath="yes" />
+										<File Id="odbc_ecf" Name="odbc.ecf" />
 										<File Id="Readme14" Name="Readme" />
 										<File Id="db_para_odbc.e" Name="DB_PAR~1.E" LongName="db_para_odbc.e" />
 									</Component>
@@ -1612,6 +1543,7 @@
 									<Component Id="sybase" Guid="428F6AE1-D518-4BCF-9100-D2502011F4E2">
 										<File Id="Readme11" Name="Readme" KeyPath="yes" />
 										<File Id="sybase.e" Name="sybase.e" />
+										<File Id="sybase_ecf" Name="sybase.ecf" />
 									</Component>
 									<Directory Id="Clib15" Name="Clib">
 										<Component Id="Clib15" Guid="58A3310C-F239-4BF2-9646-78D8DC3DAA31">
@@ -1629,6 +1561,7 @@
 									<Component Id="ingres" Guid="FA45708C-C239-4B03-8F95-1FC80ED9E963">
 										<File Id="Readme42" Name="Readme" KeyPath="yes" />
 										<File Id="ingres.e" Name="ingres.e" />
+										<File Id="ingres_ecf" Name="ingres.ecf" />
 									</Component>
 									<Directory Id="Clib20" Name="Clib">
 										<Component Id="Clib20" Guid="481874ED-6CB3-4D92-A843-FD11307995E3">

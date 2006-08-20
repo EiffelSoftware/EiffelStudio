@@ -1435,24 +1435,6 @@
 								</Directory>
 							</Directory>
 						</Directory>
-						<Directory Id="precomp" Name="precomp">
-							<Directory Id="spec10" Name="spec">
-								<Directory Id="solaris" Name="solaris">
-									<Directory Id="store25" Name="store">
-										<Component Id="store25" Guid="8EE92B04-7D52-487B-A2A8-BC50D513B627">
-											<File Id="Ace.ace25" Name="Ace.ace" KeyPath="yes" />
-										</Component>
-									</Directory>
-								</Directory>
-								<Directory Id="windows" Name="windows">
-									<Directory Id="store22" Name="store">
-										<Component Id="store22" Guid="2FA12007-7271-4DB7-A3C9-C35409952861">
-											<File Id="Ace.ace" Name="Ace.ace" KeyPath="yes" />
-										</Component>
-									</Directory>
-								</Directory>
-							</Directory>
-						</Directory>
 						<Directory Id="mapping" Name="mapping">
 							<Directory Id="keys" Name="keys">
 								<Component Id="keys" Guid="2A1A6C70-E9B7-4255-AC5B-EC3679DF7262">

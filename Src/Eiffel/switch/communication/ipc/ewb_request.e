@@ -26,7 +26,6 @@ feature -- Initialization
 			-- create a new request of type `code'
 		do
 			request_code := code
-			breakpoints_table_cleared := True
 		end
 
 feature -- Update
@@ -127,26 +126,21 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	breakpoints_table_cleared: BOOLEAN
-
 	clear_application_breakpoints_table is
 			-- Clear debuggee application's breakpoints table
 		local
 			bpts: BREAK_LIST
 		do
-			if not breakpoints_table_cleared then
-				breakpoints_table_cleared := True
-				send_rqst_0 (rqst_clear_breakpoints)
+			send_rqst_0 (rqst_clear_breakpoints)
 
-				bpts := debug_info.breakpoints
-				from
-					bpts.start
-				until
-					bpts.after
-				loop
-					bpts.item_for_iteration.set_application_not_set
-					bpts.forth
-				end
+			bpts := debug_info.breakpoints
+			from
+				bpts.start
+			until
+				bpts.after
+			loop
+				bpts.item_for_iteration.set_application_not_set
+				bpts.forth
 			end
 		end
 
@@ -212,8 +206,6 @@ feature {NONE} -- Implementation
 			-- Synchronize breakpoints status between application and $EiffelGraphicalCompiler$.
 		local
 			bp: BREAKPOINT
-			to_do: INTEGER
-			has_to_do: BOOLEAN
 		do
 			from
 				bpts.start
@@ -221,17 +213,8 @@ feature {NONE} -- Implementation
 				bpts.after
 			loop
 				bp := bpts.item_for_iteration
-				to_do := bp.update_status
-				if to_do /= bp.breakpoint_do_nothing then
-					has_to_do := True
-				end
-				send_breakpoint (bp, to_do)
+				send_breakpoint (bp, bp.update_status)
 				bpts.forth
-			end
-			if not has_to_do then
-				clear_application_breakpoints_table
-			else
-				breakpoints_table_cleared := False
 			end
 		end
 

@@ -58,7 +58,7 @@
 								<File Id="clubs1.bmp" Name="clubs1.bmp" />
 								<File Id="diamon10.bmp" Name="diamon10.bmp" />
 								<File Id="clubs2.bmp" Name="clubs2.bmp" />
-								<File Id="xcell_demo.rc" Name="XCELL_~1.RC" LongName="xcell_demo.rc" />
+								<File Id="xcell.rc" Name="xcell.rc" />
 								<File Id="h_clubs.bmp" Name="h_clubs.bmp" />
 								<File Id="game_man.e" Name="game_man.e" />
 								<File Id="diamon11.bmp" Name="diamon11.bmp" />
@@ -84,8 +84,8 @@
 							</Component>
 						</Directory>
 						<Directory Id="tree_view" Name="TREE_V~1" LongName="tree_view">
-							<Component Id="treeview_demo.rc" Guid="E60B1490-4A75-4A6D-9FC7-F1E2353A2A80">
-								<File Id="treeview_demo.rc" Name="TREEVI~1.RC" LongName="treeview_demo.rc" KeyPath="yes" />
+							<Component Id="treeview" Guid="E60B1490-4A75-4A6D-9FC7-F1E2353A2A80">
+								<File Id="treeview.rc" Name="treeview.rc" />
 								<File Id="treeview_ecf" Name="treeview.ecf" />
 								<File Id="main_win.e173" Name="main_win.e" />
 								<File Id="treeview_demo.ico" Name="TREEVI~1.ICO" LongName="treeview_demo.ico" />
@@ -101,7 +101,7 @@
 						<Directory Id="timer" Name="timer">
 							<Component Id="timer_demo.e" Guid="693D65BC-F0BA-47C0-8F0D-F5BE8BE1A1F8">
 								<File Id="timer_demo.e" Name="TIMER_~3.E" LongName="timer_demo.e" KeyPath="yes" />
-								<File Id="timer_demo.rc" Name="TIMER_~1.RC" LongName="timer_demo.rc" />
+								<File Id="timer.rc" Name="timer.rc" />
 								<File Id="app_ids.e191" Name="app_ids.e" />
 								<File Id="main_win.e201" Name="main_win.e" />
 								<File Id="timer_ecf" Name="timer.ecf" />
@@ -118,7 +118,7 @@
 								<File Id="toolbar.bmp244" Name="toolbar.bmp" />
 								<File Id="richedit_demo.e" Name="RICHED~1.E" LongName="richedit_demo.e" />
 								<File Id="file.txt" Name="file.txt" />
-								<File Id="richedit_demo.rc" Name="RICHED~1.RC" LongName="richedit_demo.rc" />
+								<File Id="richedit.rc" Name="richedit.rc" />
 							</Component>
 						</Directory>
 						<Directory Id="pizza" Name="pizza">
@@ -132,14 +132,14 @@
 								<File Id="pizza_demo.ico" Name="PIZZA_~1.ICO" LongName="pizza_demo.ico" />
 								<File Id="forhere.ico" Name="forhere.ico" />
 								<File Id="pizza_ecf" Name="pizza.ecf" />
-								<File Id="pizza_demo.rc" Name="PIZZA_~1.RC" LongName="pizza_demo.rc" />
+								<File Id="pizza.rc" Name="pizza.rc" />
 								<File Id="thin.ico" Name="thin.ico" />
 								<File Id="pizza.ico" Name="pizza.ico" />
 							</Component>
 						</Directory>
 						<Directory Id="magnify" Name="magnify">
-							<Component Id="magnify_demo.rc" Guid="9AAD5418-AE4D-4BDB-9EBB-AE6CA420A1D2">
-								<File Id="magnify_demo.rc" Name="MAGNIF~1.RC" LongName="magnify_demo.rc" KeyPath="yes" />
+							<Component Id="magnify" Guid="9AAD5418-AE4D-4BDB-9EBB-AE6CA420A1D2">
+								<File Id="magnify.rc" Name="magnify.rc" />
 								<File Id="magnify_demo.ico" Name="MAGNIF~1.ICO" LongName="magnify_demo.ico" />
 								<File Id="magnify_demo.e" Name="MAGNIF~1.E" LongName="magnify_demo.e" />
 								<File Id="app_ids.e225" Name="app_ids.e" />
@@ -153,7 +153,7 @@
 								<File Id="app_ids.e168" Name="app_ids.e" />
 								<File Id="green.ico" Name="green.ico" />
 								<File Id="listview_ecf" Name="listview.ecf" />
-								<File Id="listview_demo.rc" Name="LISTVI~1.RC" LongName="listview_demo.rc" />
+								<File Id="listview.rc" Name="listview.rc" />
 								<File Id="listview.e" Name="listview.e" />
 								<File Id="listview_demo.ico" Name="LISTVI~1.ICO" LongName="listview_demo.ico" />
 								<File Id="red.ico" Name="red.ico" />
@@ -164,7 +164,7 @@
 						</Directory>
 						<Directory Id="header_ctrl" Name="HEADER~1" LongName="header_ctrl">
 							<Component Id="header_ctrl" Guid="6ECF76FC-7E41-4C73-BA68-F63A32628268">
-								<File Id="header_ctrl_demo.rc" Name="HEADER~1.RC" LongName="header_ctrl_demo.rc" />
+								<File Id="header_ctrl.rc" Name="HEADER~1.RC" LongName="header_ctrl.rc" />
 								<File Id="main_win.e195" Name="main_win.e" />
 								<File Id="header_ctrl_demo.e" Name="HEADER~2.E" LongName="header_ctrl_demo.e" />
 								<File Id="app_ids.e206" Name="app_ids.e" />
@@ -184,7 +184,7 @@
 								<File Id="maze.e" Name="maze.e" />
 								<File Id="invisibl.cur" Name="invisibl.cur" />
 								<File Id="fun_demo.e" Name="fun_demo.e" />
-								<File Id="fun_demo.rc" Name="fun_demo.rc" />
+								<File Id="fun.rc" Name="fun.rc" />
 								<File Id="app_ids.e283" Name="app_ids.e" />
 								<File Id="artist.e" Name="artist.e" />
 							</Component>
@@ -193,14 +193,14 @@
 							<Component Id="diskspace" Guid="8590001A-7DB1-441B-8179-63E58D4A5446">
 								<File Id="diskspace_ecf" Name="DISKSP~2.ECF" LongName="diskspace.ecf" />
 								<File Id="diskspace_demo.e" Name="DISKSP~1.E" LongName="diskspace_demo.e" />
-								<File Id="diskspace_demo.rc" Name="DISKSP~1.RC" LongName="diskspace_demo.rc" />
+								<File Id="diskspace.rc" Name="DISKSP~1.RC" LongName="diskspace.rc" />
 								<File Id="diskspace_demo.ico" Name="DISKSP~1.ICO" LongName="diskspace_demo.ico" />
 							</Component>
 						</Directory>
 						<Directory Id="ctlcolor" Name="ctlcolor">
 							<Component Id="ctlcolor_demo.ico" Guid="2C58C47C-8C53-4EE3-B4C6-FD2DD1E89153">
 								<File Id="ctlcolor_demo.ico" Name="CTLCOL~1.ICO" LongName="ctlcolor_demo.ico" KeyPath="yes" />
-								<File Id="ctlcolor_demo.rc" Name="CTLCOL~1.RC" LongName="ctlcolor_demo.rc" />
+								<File Id="ctlcolor.rc" Name="ctlcolor.rc" />
 								<File Id="ctlcolor_ecf" Name="ctlcolor.ecf" />
 								<File Id="main_win.e209" Name="main_win.e" />
 								<File Id="ctlcolor_demo.e" Name="CTLCOL~1.E" LongName="ctlcolor_demo.e" />
@@ -213,7 +213,7 @@
 								<File Id="controls_ecf" Name="controls.ecf" />
 								<File Id="app_ids.e240" Name="app_ids.e" />
 								<File Id="main_win.e247" Name="main_win.e" />
-								<File Id="controls_demo.rc" Name="CONTRO~1.RC" LongName="controls_demo.rc" />
+								<File Id="controls.rc" Name="controls.rc" />
 								<File Id="controls_demo.ico" Name="CONTRO~1.ICO" LongName="controls_demo.ico" />
 							</Component>
 						</Directory>
@@ -225,7 +225,7 @@
 								<File Id="app_ids.e170" Name="app_ids.e" />
 								<File Id="comctrls_ecf" Name="comctrls.ecf" />
 								<File Id="comctrls_demo.ico" Name="COMCTR~1.ICO" LongName="comctrls_demo.ico" />
-								<File Id="comctrls_demo.rc" Name="COMCTR~1.RC" LongName="comctrls_demo.rc" />
+								<File Id="comctrls.rc" Name="comctrls.rc" />
 							</Component>
 						</Directory>
 						<Directory Id="brushes" Name="brushes">
@@ -238,7 +238,7 @@
 								<File Id="project.e" Name="project.e" />
 								<File Id="brushes_ecg" Name="brushes.ecf" />
 								<File Id="app_ids.e228" Name="app_ids.e" />
-								<File Id="brushes_demo.rc" Name="BRUSHE~1.RC" LongName="brushes_demo.rc" />
+								<File Id="brushes.rc" Name="brushes.rc" />
 								<File Id="main_win.e268" Name="main_win.e" />
 								<File Id="brushes_demo.ico" Name="BRUSHE~1.ICO" LongName="brushes_demo.ico" />
 								<File Id="demo_3d.eld" Name="demo_3d.eld" />
@@ -248,7 +248,7 @@
 							<Component Id="wel16c.bmp" Guid="16436652-A85C-442D-968E-DF2EF7AFE2F1">
 								<File Id="wel16c.bmp" Name="wel-16c.bmp" KeyPath="yes" />
 								<File Id="app_ids.e159" Name="app_ids.e" />
-								<File Id="bmpview_demo.rc" Name="BMPVIE~1.RC" LongName="bmpview_demo.rc" />
+								<File Id="bmpview.rc" Name="bmpview.rc" />
 								<File Id="wel24bits.bmp" Name="WEL-24~1.BMP" LongName="wel-24bits.bmp" />
 								<File Id="childwin.e" Name="childwin.e" />
 								<File Id="bmpview_ecf" Name="bmpview.ecf" />
@@ -265,7 +265,7 @@
 								<File Id="mdi_ecf" Name="mdi.ecf" />
 								<File Id="main_win.e194" Name="main_win.e" />
 								<File Id="mdi_demo.ico" Name="mdi_demo.ico" />
-								<File Id="mdi_demo.rc" Name="mdi_demo.rc" />
+								<File Id="mdi.rc" Name="mdi.rc" />
 								<File Id="mdi_demo.e" Name="mdi_demo.e" />
 							</Component>
 						</Directory>
@@ -274,7 +274,7 @@
 								<File Id="windows_demo.ico" Name="WINDOW~1.ICO" LongName="windows_demo.ico" KeyPath="yes" />
 								<File Id="windows_demo.e" Name="WINDOW~2.E" LongName="windows_demo.e" />
 								<File Id="modal.e" Name="modal.e" />
-								<File Id="windows_demo.rc" Name="WINDOW~1.RC" LongName="windows_demo.rc" />
+								<File Id="windows.rc" Name="windows.rc" />
 								<File Id="off.bmp" Name="off.bmp" />
 								<File Id="onoff.e" Name="onoff.e" />
 								<File Id="on.bmp" Name="on.bmp" />
@@ -290,7 +290,7 @@
 								<File Id="app_ids.e174" Name="app_ids.e" />
 								<File Id="printer_ecf" Name="printer.ecf" />
 								<File Id="main_win.e213" Name="main_win.e" />
-								<File Id="printer_demo.rc" Name="PRINTE~1.RC" LongName="printer_demo.rc" />
+								<File Id="printer.rc" Name="printer.rc" />
 								<File Id="output.ps" Name="output.ps" />
 								<File Id="printer_demo.ico" Name="PRINTE~1.ICO" LongName="printer_demo.ico" />
 							</Component>
@@ -303,7 +303,7 @@
 								<File Id="move.e" Name="move.e" />
 								<File Id="main_dlg.e" Name="main_dlg.e" />
 								<File Id="app_ids.e227" Name="app_ids.e" />
-								<File Id="commands_demo.rc" Name="COMMAN~1.RC" LongName="commands_demo.rc" />
+								<File Id="commands" Name="commands.rc" />
 								<File Id="commands_demo.ico" Name="COMMAN~1.ICO" LongName="commands_demo.ico" />
 								<File Id="command.e276" Name="command.e" />
 							</Component>
@@ -312,7 +312,7 @@
 							<Component Id="splitarea" Guid="7DDF42F4-DD52-4BE6-ABA8-5F8494E362A0">
 								<File Id="split_area_ecf" Name="SPLIT_~2.ECF" LongName="split_area.ecf" />
 								<File Id="split_area_demo.e" Name="SPLIT_~9.E" LongName="split_area_demo.e" />
-								<File Id="split_area_demo.rc" Name="SPLIT_~1.RC" LongName="split_area_demo.rc" />
+								<File Id="split_area.rc" Name="SPLIT_~1.RC" LongName="split_area.rc" />
 								<File Id="wel_split_area.e" Name="WEL_SP~2.E" LongName="wel_split_area.e" />
 								<File Id="split_area_demo.ico" Name="SPLIT_~1.ICO" LongName="split_area_demo.ico" />
 								<File Id="application.e" Name="APPLIC~2.E" LongName="application.e" />
@@ -322,7 +322,7 @@
 							<Component Id="menus_demo.ico" Guid="0B3E2386-07B4-4541-929E-4950FA3CC1E6">
 								<File Id="menus_demo.ico" Name="MENUS_~1.ICO" LongName="menus_demo.ico" KeyPath="yes" />
 								<File Id="menus_ecf" Name="menus.ecf" />
-								<File Id="menus_demo.rc" Name="MENUS_~1.RC" LongName="menus_demo.rc" />
+								<File Id="menus.rc" Name="menus.rc" />
 								<File Id="main_win.e214" Name="main_win.e" />
 								<File Id="menus_demo.e" Name="MENUS_~1.E" LongName="menus_demo.e" />
 							</Component>
@@ -331,7 +331,7 @@
 							<Component Id="app_ids.e192" Guid="EAD54432-B2F7-4CE0-9915-7B347C4927EB">
 								<File Id="app_ids.e192" Name="app_ids.e" KeyPath="yes" />
 								<File Id="stddlgs_ecf" Name="stddlgs.ecf" />
-								<File Id="stddlg_demo.rc" Name="STDDLG~1.RC" LongName="stddlg_demo.rc" />
+								<File Id="stddlg.rc" Name="stddlg.rc" />
 								<File Id="stddlg_demo.e" Name="STDDLG~1.E" LongName="stddlg_demo.e" />
 								<File Id="main_win.e258" Name="main_win.e" />
 								<File Id="stddlg_demo.ico" Name="STDDLG~1.ICO" LongName="stddlg_demo.ico" />
@@ -340,14 +340,14 @@
 						<Directory Id="minimal" Name="minimal">
 							<Component Id="minimal_demo.e" Guid="2477DFC2-A222-448E-9035-BA7B90FF3D08">
 								<File Id="minimal_demo.e" Name="MINIMA~1.E" LongName="minimal_demo.e" KeyPath="yes" />
-								<File Id="minimal_demo.rc" Name="MINIMA~1.RC" LongName="minimal_demo.rc" />
+								<File Id="minimal.rc" Name="minimal.rc" />
 								<File Id="minimal_demo.ico" Name="MINIMA~1.ICO" LongName="minimal_demo.ico" />
 								<File Id="minimal_ecf" Name="minimal.ecf" />
 							</Component>
 						</Directory>
 						<Directory Id="fontenum" Name="fontenum">
-							<Component Id="fontenum_demo.rc" Guid="19EEA2C8-3348-4866-913C-F8DB8A9263DD">
-								<File Id="fontenum_demo.rc" Name="FONTEN~1.RC" LongName="fontenum_demo.rc" KeyPath="yes" />
+							<Component Id="fontenum" Guid="19EEA2C8-3348-4866-913C-F8DB8A9263DD">
+								<File Id="fontenum.rc" Name="fontenum.rc" />
 								<File Id="fontenum_demo.e" Name="FONTEN~1.E" LongName="fontenum_demo.e" />
 								<File Id="fontenum_demo.ico" Name="FONTEN~1.ICO" LongName="fontenum_demo.ico" />
 								<File Id="fontenum_ecf" Name="fontenum.ecf" />
@@ -360,7 +360,7 @@
 								<File Id="xy_demo.e" Name="xy_demo.e" KeyPath="yes" />
 								<File Id="main_win.e229" Name="main_win.e" />
 								<File Id="xy_ecf" Name="xy.ecf" />
-								<File Id="xy_demo.rc" Name="xy_demo.rc" />
+								<File Id="xy.rc" Name="xy.rc" />
 							</Component>
 						</Directory>
 						<Directory Id="cursors" Name="cursors">
@@ -370,7 +370,7 @@
 								<File Id="custom.cur" Name="custom.cur" />
 								<File Id="cursors_demo.e" Name="CURSOR~4.E" LongName="cursors_demo.e" />
 								<File Id="cursors_demo.ico" Name="CURSOR~1.ICO" LongName="cursors_demo.ico" />
-								<File Id="cursors_demo.rc" Name="CURSOR~1.RC" LongName="cursors_demo.rc" />
+								<File Id="cursors.rc" Name="cursors.rc" />
 								<File Id="main_win.e288" Name="main_win.e" />
 							</Component>
 						</Directory>
@@ -467,7 +467,7 @@
 						<Directory Id="hello1" Name="hello">
 							<Component Id="hello1" Guid="85FFCB94-F53E-4315-A503-184C9231CB60">
 								<File Id="hello_ecf" Name="hello.ecf" />
-								<File Id="hello_demo.rc" Name="HELLO_~1.RC" LongName="hello_demo.rc" />
+								<File Id="hello.rc" Name="hello.rc" />
 								<File Id="hello_demo.e" Name="HELLO_~1.E" LongName="hello_demo.e" />
 								<File Id="main_win.e287" Name="main_win.e" />
 							</Component>

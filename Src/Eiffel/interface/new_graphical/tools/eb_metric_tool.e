@@ -45,6 +45,7 @@ feature -- Initialization
 			add_observer (metric_tool_interface.metric_evaluation_panel)
 			add_observer (metric_tool_interface.new_metric_panel)
 			add_observer (metric_tool_interface.metric_archive_panel)
+			add_observer (metric_tool_interface.detail_result_panel)
 			on_compile_start_agent := agent on_compile_start
 			development_window.window_manager.compile_start_actions.extend (on_compile_start_agent)
 			set_tool_sensitive (False)

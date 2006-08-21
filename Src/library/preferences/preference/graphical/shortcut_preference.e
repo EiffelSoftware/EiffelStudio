@@ -83,7 +83,7 @@ feature -- Access
 						Result.append (Shift_text + shortcut_delimiter)
 					end
 				when 3 then
-					Result.append (values.i_th (l_cnt).twin)
+					Result.append (values.i_th (l_cnt).as_upper)
 				else
 				end
 				l_cnt := l_cnt + 1

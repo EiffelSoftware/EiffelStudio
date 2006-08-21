@@ -62,7 +62,6 @@ feature -- Roundtrip
 	alias_name_literal: STRING_AS
 			-- String literal of alias name in this structure
 
-
 feature -- Attributes
 
 	language_name: EXTERNAL_LANG_AS
@@ -112,6 +111,8 @@ feature -- Comparison
 
 invariant
 	language_name_not_void: language_name /= Void
+	alias_name_literal_valid: alias_name_id > 0 implies alias_name_literal /= Void
+	alias_name_id_valid: alias_name_literal /= Void implies alias_name_id > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

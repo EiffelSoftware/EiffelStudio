@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 			vb_text_field.set_padding (Layout_constants.small_padding_size)
 			vb_text_field.set_border_width (Layout_constants.default_border_size)
 			create name_field
-			name_field.set_minimum_height (22)
 			vb_text_field.extend (name_field)
 			vb_text_field.disable_item_expand (name_field)
 			hb_name.extend (vb_text_field)

@@ -107,6 +107,9 @@ feature -- Access queries
 			l_dir: STRING
 		do
 			Result := evaluated_directory
+			if Result.is_empty then
+				Result.append_character (operating_environment.directory_separator)
+			end
 			if not a_directory.is_empty then
 				l_dir := windows_file_system.pathname_from_file_system (a_directory, unix_file_system)
 				if l_dir.item (1) /= '\' then
@@ -191,7 +194,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
 
 	internal_evaluated_path: STRING is
 			-- The fully resolved path with file name in internal format.

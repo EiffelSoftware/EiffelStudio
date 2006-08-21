@@ -19,6 +19,8 @@ inherit
 
 	EV_APPLICATION_ACTION_SEQUENCES_I
 
+	EXCEPTIONS
+
 feature {EV_APPLICATION} -- Initialization
 
 	initialize is
@@ -492,6 +494,17 @@ feature -- Implementation
 			-- Call exception actions.
 		require
 			an_exception_not_void: an_exception /= Void
+		local
+			l_exception_string: STRING_8
+			l_label: EV_TEXT
+			l_label_box: EV_HORIZONTAL_BOX
+			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+			l_font: EV_FONT
+			l_ignore, l_quit: EV_BUTTON
+			l_frame: EV_FRAME
+			l_error_box: EV_HORIZONTAL_BOX
+			l_error_label: EV_LABEL
 		do
 				-- Clean up any locked windows of captures.
 			if locked_window /= Void then
@@ -500,12 +513,83 @@ feature -- Implementation
 			if captured_widget /= Void then
 				captured_widget.disable_capture
 			end
-			if uncaught_exception_actions_internal /= Void and then not uncaught_exception_actions_called then
+			if
+				not uncaught_exception_actions_called and then
+				uncaught_exception_actions_internal /= Void and then
+				not uncaught_exception_actions_internal.is_empty
+			then
 				uncaught_exception_actions_called := True
 				uncaught_exception_actions_internal.call ([an_exception])
 				uncaught_exception_actions_called := False
+			else
+				if show_exception_dialog then
+						-- Show a basic exception dialog so that exception doesn't get lost if undealt with.
+					l_exception_string := an_exception.trace_as_string
+					create exception_dialog
+					create l_label
+					l_label.disable_word_wrapping
+					l_label.disable_edit
+					create l_font
+					l_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
+					l_label.set_font (l_font)
+					l_label.set_text (l_exception_string)
+					create l_vbox
+					create l_error_box
+					l_error_box.set_border_width (5)
+					l_error_box.set_padding (5)
+					l_error_box.extend ((create {EV_STOCK_PIXMAPS}).error_pixmap.twin)
+					l_error_box.disable_item_expand (l_error_box.first)
+					l_error_box.first.set_minimum_size (32, 32)
+					create l_error_label
+					l_error_label.align_text_left
+					l_error_label.set_text ("The following uncaught exception has occurred:%N%NClick Ignore to continue or Quit to exit the application")
+					l_error_box.extend (l_error_label)
+					l_vbox.extend (l_error_box)
+					l_vbox.disable_item_expand (l_error_box)
+
+
+					create l_frame
+					create l_label_box
+					l_frame.extend (l_label_box)
+					l_label_box.set_padding (5)
+					l_label_box.set_border_width (5)
+					l_label_box.extend (l_label)
+					l_frame.set_text ("Exception Trace")
+					l_vbox.extend (l_frame)
+					exception_dialog.extend (l_vbox)
+					create l_hbox
+					l_vbox.extend (l_hbox)
+					l_vbox.disable_item_expand (l_hbox)
+					create l_ignore.make_with_text ("Ignore")
+					l_ignore.select_actions.extend (agent exception_dialog.destroy)
+					l_hbox.extend (create {EV_CELL})
+					l_hbox.extend (l_ignore)
+					l_hbox.disable_item_expand (l_ignore)
+					create l_quit.make_with_text ("Quit")
+					l_quit.set_minimum_width (l_ignore.minimum_width)
+					l_quit.select_actions.extend (agent die (0))
+					l_hbox.extend (l_quit)
+					l_hbox.disable_item_expand (l_quit)
+					l_hbox.set_border_width (5)
+					l_hbox.set_padding (5)
+					exception_dialog.set_title ("Uncaught Exception: " + an_exception.tag)
+					exception_dialog.set_minimum_height (350)
+					exception_dialog.set_size (500, 300)
+					exception_dialog.show
+					exception_dialog.raise
+						--| FIXME Behavior would be better if dialog has full application modality.
+
+						-- Set "Ignore" as the default
+					l_ignore.set_focus
+				end
 			end
 		end
+
+	exception_dialog: EV_DIALOG
+		-- Dialog used for showing uncaught exceptions.
+
+	show_exception_dialog: BOOLEAN is True
+		-- Should the exception dialog be shown by default?
 
 	uncaught_exception_actions_called: BOOLEAN
 			-- Are the `uncaught_exceptions_actions' currently being called?

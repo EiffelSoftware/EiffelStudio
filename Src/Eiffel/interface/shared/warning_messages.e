@@ -522,9 +522,10 @@ feature -- Cluster tree warnings
 				Result.append (class_name)
 				Result.append ("' is not a valid class name.%N")
 			end
-			Result.append ("Class names should only include%N%
-						%alphanumeric characters or underscores,%N%
-						%and start with an alphabetic character.%N%
+			Result.append ("Class names may only include%N%
+						%alphanumeric characters and underscores,%N%
+						%have to start with an alphabetic character%N%
+						%and cannot be a reserved word.%N%
 						%Please select a different class name.")
 		end
 
@@ -540,9 +541,10 @@ feature -- Cluster tree warnings
 				Result.append (cluster_name)
 				Result.append ("' is not a valid cluster name.%N")
 			end
-			Result.append ("Cluster names should only include %N%
-						%alphanumeric characters or underscores,%N%
-						%and start with an alphabetic character.%N%
+			Result.append ("Cluster names may only include %N%
+						%alphanumeric characters and underscores,%N%
+						%have to start with an alphabetic character%N%
+						%and cannot be a reserved word.%N%
 						%Please select a different cluster name.")
 		end
 
@@ -558,9 +560,10 @@ feature -- Cluster tree warnings
 				Result.append (feature_name)
 				Result.append ("' is not a valid feature name.%N")
 			end
-			Result.append ("Feature names should only include %N%
-						%alphanumeric characters or underscores,%N%
-						%and start with an alphabetic character.%N%
+			Result.append ("Feature names may only include %N%
+						%alphanumeric characters and underscores,%N%
+						%have to start with an alphabetic character%N%
+						%and cannot be a reserved word.%N%
 						%Please select a different feature name.")
 		end
 

@@ -90,7 +90,7 @@ feature -- Properties
 	name: STRING is "Debugging_options"
 			-- Name of the command.
 
-	menu_name: STRING is "De&bugging options"
+	menu_name: STRING is "De&bugging Options"
 
 	tooltext: STRING is
 			-- Default text displayed in toolbar button

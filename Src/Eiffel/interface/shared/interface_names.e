@@ -807,7 +807,7 @@ feature -- Title part
 	t_Find: STRING is							"Find"
 	t_Index: STRING is							"Index"
 	t_New_class: STRING is						"New Class"
-	t_New_cluster: STRING is					"New Cluster"
+	t_New_cluster: STRING is					"Add Cluster"
 	t_New_expression: STRING is					"New Expression"
 	t_New_project: STRING is					"New Project"
 	t_Object_tool: STRING is					"Objects"

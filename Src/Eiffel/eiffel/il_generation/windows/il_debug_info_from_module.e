@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		require
 			mod_name_valid: a_module_filename /= Void and then not a_module_filename.is_empty
 		do
-			module_filename := a_module_filename			
+			module_filename := a_module_filename
 			system_name := a_syst_name
 			create list_class_type_id.make (10)
 			create list_feature_info.make (100)
@@ -52,7 +52,7 @@ feature -- reset
 			list_class_type_id.wipe_out
 			list_feature_info.wipe_out
 		end
-	
+
 	set_module_name (a_mod_name: like module_name) is
 			-- Set module name (should not change anymore)
 		require
@@ -76,13 +76,13 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 		do
 			module_filename := a_mod_filename
 		end
-		
+
 	merge (other: like Current) is
 			-- Merge information from other into Current.
 		do
 			list_class_type_id.merge (other.list_class_type_id)
 			list_feature_info.merge (other.list_feature_info)
-		end		
+		end
 
 	set_system_name (s: STRING) is
 			-- Set system name related to Current module
@@ -94,14 +94,14 @@ feature -- Properties
 
 	module_filename: STRING
 			-- formatted Module filename
-			
+
 	module_name: STRING
 			-- Final module file name without the directory path
 --| Uncomment next 2 lines, when Eiffel will allow assertion on attribute ...
 --		ensure
 --			module_name_is_lower_case: module_name /= Void and then module_name.as_lower.is_equal (module_name)
-		
-			
+
+
 	system_name: STRING
 			-- In case this module is a precompiled lib
 
@@ -175,6 +175,9 @@ feature -- Queries Feature
 				l_name_id  := l_infos.integer_item (2)
 				l_class_c := Il_debug_info.class_of_id (l_class_id)
 				Result := l_class_c.feature_table.item_id (l_name_id)
+				if Result = Void and then l_class_c.is_eiffel_class_c then
+					Result := l_class_c.eiffel_class_c.inline_agent_of_name_id (l_name_id)
+				end
 --| NOTA JFIAT: 2004/05/28 : fix invariant cursor in call stack
 --| When we'll decide to fix the cursor in call stack on invariant
 --| this may be a start ..
@@ -265,16 +268,16 @@ feature -- Cleaning operation
 
 feature {IL_DEBUG_INFO_FROM_MODULE} -- Storage Implementation
 
-	list_class_type_id: HASH_TABLE [INTEGER, INTEGER] 
+	list_class_type_id: HASH_TABLE [INTEGER, INTEGER]
 			-- {static_type_id} <= {ClassToken}
 
 	list_feature_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			-- {class_id, name_id} <= {feature_token}
 
-feature 
+feature
 
 	debug_display is
-			-- 
+			--
 		do
 			io.put_string ("************************************************************%N")
 			io.put_string ("* Module=" + module_filename + "%N")
@@ -285,16 +288,16 @@ feature
 				list_class_type_id.start
 			until
 				list_class_type_id.after
-			loop		
+			loop
 				io.put_string (" - 0x" + list_class_type_id.key_for_iteration.to_hex_string)
 				io.put_string (" => " +	list_class_type_id.item_for_iteration.out)
 				io.put_string (" :: " + (Il_debug_info.class_types @ list_class_type_id.item_for_iteration).associated_class.name_in_upper)
 				io.put_new_line
-				
+
 				list_class_type_id.forth
 			end
 		end
-		
+
 invariant
 
 	module_filename_not_void: module_filename /= Void

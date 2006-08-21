@@ -242,7 +242,7 @@ feature -- Status report
 			until
 				other.after or not Result
 			loop
-				Result := other.item.value = 0.0
+				Result := other.item.value /= 0.0
 				other.forth
 			end
 		end

@@ -172,12 +172,18 @@ feature -- Basic operations
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: a_path.length > 0
 			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+		local
+			l_result: ASSEMBLY
 		do
 			Result := load_from (a_path)
 			if Result /= Void then
 					-- Attempt to locate in GAC (without a resolver! - do not set active resolver because
 					-- the CLR should only resolve in GAC)
-				Result := gac_loader.load (Result.get_name)
+				l_result := gac_loader.load (Result.get_name)
+				if l_result /= Void then
+					Result := l_result
+				end
+				check result_attached: Result /= Void end
 			end
 		end
 

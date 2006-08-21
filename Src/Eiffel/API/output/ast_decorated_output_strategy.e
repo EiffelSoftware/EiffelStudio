@@ -2419,11 +2419,11 @@ feature {NONE} -- Implementation
 			l_as.language_name.process (Current)
 			text_formatter_decorator.exdent
 			text_formatter_decorator.put_new_line
-			if l_as.alias_name_id > 0 then
+			if l_as.alias_name_literal /= Void then
 				text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
 				text_formatter_decorator.indent
 				text_formatter_decorator.put_new_line
-				text_formatter_decorator.put_quoted_string_item (names_heap.item (l_as.alias_name_id))
+				l_as.alias_name_literal.process (Current)
 				text_formatter_decorator.put_new_line
 				text_formatter_decorator.exdent
 			end

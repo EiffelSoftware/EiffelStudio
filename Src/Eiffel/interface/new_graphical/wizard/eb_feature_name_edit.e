@@ -38,8 +38,6 @@ feature -- Status report
 
 	is_valid: BOOLEAN is
 			-- Are contents of `Current' valid?
-		local
-			t: STRING
 		do
 			Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (text)
 		end

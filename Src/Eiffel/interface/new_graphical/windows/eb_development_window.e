@@ -902,6 +902,9 @@ feature -- Pulldown Menus
 	compile_menu: EV_MENU
 			-- Compile ID menu.
 
+	refactoring_menu: EV_MENU
+			-- Refactoring menu.
+
 	debug_menu: EV_MENU
 			-- Debug ID menu.
 
@@ -999,6 +1002,7 @@ feature -- Update
 			build_project_menu
 			build_debug_menu
 			build_tools_menu
+			build_refactoring_menu
 			build_window_menu
 			build_help_menu
 				-- Build the menu bar.
@@ -1060,6 +1064,7 @@ feature -- Update
 				mb.extend (favorites_menu)
 				mb.extend (project_menu)
 				mb.extend (debug_menu)
+				mb.extend (refactoring_menu)
 			else
 				mb.extend (view_menu)
 			end
@@ -2017,6 +2022,40 @@ feature {NONE} -- Menu Building
 
 			rebuild_tools_menu
 		end
+
+	build_refactoring_menu is
+			-- Create and build `refactoring_menu'.
+		local
+			command_menu_item: EB_COMMAND_MENU_ITEM
+		do
+			create refactoring_menu.make_with_text (Interface_names.m_refactoring)
+
+				-- Pull up command.
+			command_menu_item := refactoring_manager.pull_command.new_menu_item
+			add_recyclable (command_menu_item)
+			refactoring_menu.extend (command_menu_item)
+
+				-- Rename command.
+			command_menu_item := refactoring_manager.rename_command.new_menu_item
+			add_recyclable (command_menu_item)
+			refactoring_menu.extend (command_menu_item)
+
+				-- Separator -------------------------------------------------
+			refactoring_menu.extend (create {EV_MENU_SEPARATOR})
+
+				-- Undo command.
+			command_menu_item := refactoring_manager.undo_command.new_menu_item
+			add_recyclable (command_menu_item)
+			refactoring_menu.extend (command_menu_item)
+
+				-- Redo command.
+			command_menu_item := refactoring_manager.redo_command.new_menu_item
+			add_recyclable (command_menu_item)
+			refactoring_menu.extend (command_menu_item)
+		ensure
+			refactoring_menu_created: refactoring_menu /= Void
+		end
+
 
 feature -- Stone process
 
@@ -4181,6 +4220,7 @@ feature -- Recycle
 			debugging_tools_menu.destroy
 			favorites_menu.destroy
 			view_menu.destroy
+			refactoring_menu.destroy
 
 			tools_menu := Void
 			window_menu := Void
@@ -4190,6 +4230,7 @@ feature -- Recycle
 			debugging_tools_menu := Void
 			favorites_menu := Void
 			view_menu := Void
+			refactoring_menu := Void
 		end
 
 

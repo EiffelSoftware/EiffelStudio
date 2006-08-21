@@ -83,6 +83,10 @@ feature -- Access
 	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
 
+	partly_removed_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]
+			-- The list of classes that have been removed from a certain system only.
+			-- (if a library that is still used somewhere else has been removed)
+
 	new_assemblies: DS_HASH_SET [CONF_ASSEMBLY]
 			-- List of assemblies in the current configuration.
 
@@ -119,6 +123,7 @@ feature -- Update
 			create added_classes.make (added_classes_per_system)
 			create removed_classes.make (removed_classes_per_system)
 			create new_assemblies.make (15)
+			create partly_removed_classes.make (removed_classes_per_system)
 		end
 
 feature -- Observers
@@ -161,6 +166,8 @@ feature -- Visit nodes
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
+				current_system := a_target.system
+
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
 					l_libraries := old_target.libraries
@@ -698,12 +705,22 @@ feature {NONE} -- Implementation
 
 							-- check if it's a library that still is used and therefore is alredy done
 							-- (needed if the same library is used multiple times)
-						if l_group.is_library then
+						if not l_done and then l_group.is_library then
 							l_library ?= l_group
 							check
 								library: l_library /= Void
 							end
-							l_done := l_library.uuid /= Void and then all_libraries.has (l_library.uuid)
+								-- although the classes are still there, we have to recheck all clients
+								-- of this class in `current_system' because they no longer
+								-- have access to those classes.
+							if l_library.uuid /= Void and then all_libraries.has (l_library.uuid) then
+								l_done := True
+								l_library.classes.linear_representation.do_if (agent (a_class: CONF_CLASS)
+									do
+										partly_removed_classes.force ([a_class, current_system])
+									end
+								, agent {CONF_CLASS}.is_compiled)
+							end
 						end
 
 						if not l_done and then l_group.classes_set then

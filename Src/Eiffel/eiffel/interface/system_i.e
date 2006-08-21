@@ -676,6 +676,7 @@ end
 								-- But since it is an invalid class, then we need to force
 								-- a compilation again to check for the VTCT error again.
 							workbench.add_class_to_recompile (l_class.original_class)
+							l_class.set_changed (True)
 							l_has_error := True
 						end
 						l_table.forth
@@ -978,6 +979,9 @@ end
 				l_file.close
 			end
 
+				-- partly removed classes
+			recheck_partly_removed (l_vis_build.partly_removed_classes)
+
 			debug ("Timing")
 				create d2.make_now
 				print ("Degree 6 rebuild duration: ")
@@ -1002,6 +1006,44 @@ end
 			update_root_class
 
 			is_force_rebuild := False
+		end
+
+	recheck_partly_removed (a_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]] ) is
+			-- Recheck clients of classes that have been removed from one place but still exists in another.
+		require
+			a_classes_not_void: a_classes /= Void
+		local
+			l_class_i: CLASS_I
+			l_system: CONF_SYSTEM
+			l_clients: ARRAYED_LIST [CLASS_C]
+			l_client: CLASS_C
+		do
+			from
+				a_classes.start
+			until
+				a_classes.after
+			loop
+				l_system := a_classes.item.system
+				l_class_i ?= a_classes.item.conf_class
+				check
+					correct_class: l_class_i /= Void and then l_class_i.is_compiled
+				end
+				from
+					l_clients := l_class_i.compiled_class.syntactical_clients
+					l_clients.start
+				until
+					l_clients.after
+				loop
+					l_client := l_clients.item
+					if l_client.lace_class.config_class.group.target.system = l_system then
+						workbench.add_class_to_recompile (l_client.original_class)
+						l_client.set_changed (True)
+					end
+					l_clients.forth
+				end
+				a_classes.forth
+			end
+
 		end
 
 	update_root_class is
@@ -1432,6 +1474,7 @@ feature -- Recompilation
 						l_cl := l_classes.item_for_iteration
 						if removed_classes = Void or else not removed_classes.has (l_cl) then
 							workbench.add_class_to_recompile (l_cl.original_class)
+							l_cl.set_changed (True)
 						end
 						l_classes.forth
 					end

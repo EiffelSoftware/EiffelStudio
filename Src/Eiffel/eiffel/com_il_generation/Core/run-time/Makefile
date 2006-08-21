@@ -8,11 +8,13 @@ CP = -copy
 
 all:: EiffelSoftware.Runtime.dll
 
+dotnet_20: $(RUNTIME_SRC) Makefile
+	csc $(CSFLAGS) -target:library -d:CS_20 -out:$@ -recurse:"*.cs" /keyfile:$(EIFFEL_SRC)\dotnet\helpers\isekey.snk
+
 EiffelSoftware.Runtime.dll: $(RUNTIME_SRC) Makefile
 	$(CP) $(EIFFEL_SRC)\dotnet\helpers\isekey.snk ise_runtime.key
 	csc $(CSFLAGS) -target:library -out:$@ -recurse:"*.cs"
 	del ise_runtime.key
-
 
 install: all
 	gacutil $(GACFLAGS) -if EiffelSoftware.Runtime.dll

@@ -124,7 +124,7 @@ namespace EiffelSoftware.Runtime
 			}
 			return list.ToArray();
 #else
-			return a_provider.GetCustomAttributes(a_type, False);
+			return a_provider.GetCustomAttributes(a_type, false);
 #endif
 		}
 

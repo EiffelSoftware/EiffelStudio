@@ -155,6 +155,7 @@ feature {NONE} -- Implementation
 			l_class: CONF_CLASS
 			l_new_classes, l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_name: STRING
+			l_err: CONF_ERROR
 		do
 			l_classes := a_group.classes
 			if l_classes /= Void then
@@ -173,7 +174,9 @@ feature {NONE} -- Implementation
 						if l_class.is_compiled then
 								-- Invariant of CONF_CLASS tell us that it cannot be an override class.
 							if l_class.is_error then
-								add_and_raise_error (l_class.last_error)
+								l_err := l_class.last_error
+								l_class.reset_error
+								add_and_raise_error (l_err)
 							end
 							if l_class.is_overriden then
 								l_class.actual_class.check_changed

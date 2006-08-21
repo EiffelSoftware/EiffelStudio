@@ -707,11 +707,8 @@ feature {NONE} -- Implementation
 					until
 						l_sort_lst.after
 					loop
-							-- only append enabled debugs
-						if l_debugs.item (l_sort_lst.item_for_iteration) then
-							append_text_indent ("<debug name=%""+escape_xml (l_sort_lst.item_for_iteration)+"%"")
-							append_text (" enabled=%""+l_debugs.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
-						end
+						append_text_indent ("<debug name=%""+escape_xml (l_sort_lst.item_for_iteration)+"%"")
+						append_text (" enabled=%""+l_debugs.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
 						l_sort_lst.forth
 					end
 				end

@@ -1771,6 +1771,7 @@ feature -- Supplier checking
 					if a_class = Void or else not a_class.is_precompiled then
 						recompile := True
 						Workbench.add_class_to_recompile (original_class)
+						a_class.set_changed (True)
 					end
 				end
 				l_syntactical_suppliers.forth

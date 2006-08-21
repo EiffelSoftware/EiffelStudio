@@ -219,6 +219,15 @@ feature -- Status update
 			is_modified := True
 		end
 
+	reset_error is
+			-- Reset the error.
+		do
+			is_error := False
+			last_error := Void
+		ensure
+			not_error: not is_error
+			last_error_empty: last_error = Void
+		end
 
 	set_up_to_date is
 			-- The class has been recompiled and is now up to date.
@@ -398,6 +407,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			l_file: KL_BINARY_INPUT_FILE
 			l_name: like name
 		do
+			reset_error
 			create l_file.make (full_file_name)
 			if l_file.exists then
 				l_file.open_read

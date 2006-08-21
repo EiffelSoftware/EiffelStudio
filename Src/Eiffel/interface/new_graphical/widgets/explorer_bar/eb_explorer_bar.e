@@ -47,11 +47,12 @@ feature {NONE} -- Initialization
 			-- and maximizing its tools fully in `a_parent' if `full_max'.
 		require
 			a_parent_not_void: a_parent /= Void
+			valid_type: ({EB_DEVELOPMENT_WINDOW} #? a_parent) /= Void
 		do
 			default_create
 			explorer_style := use_explorer_style
 			full_maximize := full_max
-			explorer_bar_manager := a_parent
+			explorer_bar_manager ?= a_parent
 			hide_disabled_minimize_button
 
 				-- Connect events required as call backs to EiffelStudio routines.
@@ -59,11 +60,13 @@ feature {NONE} -- Initialization
 			docked_out_actions.extend (agent docked_external)
 			Maximize_actions.extend (agent item_maximized)
 			restore_actions.extend (agent item_restored)
+		ensure
+			explorer_bar_manager_set: explorer_bar_manager = a_parent
 		end
 
 feature -- Access
 
-	explorer_bar_manager: EB_TOOL_MANAGER
+	explorer_bar_manager: EB_DEVELOPMENT_WINDOW
 			-- Parent of the bar.
 
 	explorer_style: BOOLEAN
@@ -170,17 +173,14 @@ feature -- Access
 			-- `an_item' has been hidden in `Current'.
 		require
 			an_item_not_void: an_item /= Void
-		local
-			development_window: EB_DEVELOPMENT_WINDOW
 		do
-			development_window ?= explorer_bar_manager
-			if development_window /= Void then
-				development_window.remove_tool_window (an_item.widget)
-			end
-			if count = 0 then
-					-- If `an_item' is hidden, and was the last tool,
-					-- `Current' must be closed, as it is now empty.
-				explorer_bar_manager.close_bar (Current)
+			if explorer_bar_manager /= Void then
+				explorer_bar_manager.remove_tool_window (an_item.widget)
+				if count = 0 then
+						-- If `an_item' is hidden, and was the last tool,
+						-- `Current' must be closed, as it is now empty.
+					explorer_bar_manager.close_bar (Current)
+				end
 			end
 		end
 
@@ -587,19 +587,16 @@ feature {EB_EXPLORER_BAR_ITEM} -- Implementation
 			a_widget_not_void: a_widget /= Void
 		local
 			tool_window: EB_TOOL_WINDOW
-			development_window: EB_DEVELOPMENT_WINDOW
 		do
 			if count = 0 then
 					-- If final tool contained was docked externally, then hide `Current'.
 				explorer_bar_manager.close_bar (Current)
 			end
 
-			development_window ?= explorer_bar_manager
-
 				-- Build a tool window representation, permitting external tool to be tracked by top level window.
-			create tool_window.make_with_info (parent_window (a_widget), a_widget, development_window,
-				parent_window (a_widget).x_position - development_window.window.screen_x,
-				parent_window (a_widget).y_position - development_window.window.screen_y)
+			create tool_window.make_with_info (parent_window (a_widget), a_widget, explorer_bar_manager,
+				parent_window (a_widget).x_position - explorer_bar_manager.window.screen_x,
+				parent_window (a_widget).y_position - explorer_bar_manager.window.screen_y)
 
 				-- Update `tool_window' based on movement of `window'.
 			tool_window.window.move_actions.force_extend (agent tool_window_moved (?, ?, tool_window))
@@ -616,12 +613,10 @@ feature {NONE} -- Implementation
 			clone_item_list: ARRAYED_LIST [EB_EXPLORER_BAR_ITEM]
 			new_order: ARRAYED_LIST [INTEGER]
 			inserted_explorer_bar_item: EB_EXPLORER_BAR_ITEM
-			development_window: EB_DEVELOPMENT_WINDOW
 		do
 				-- Stop tracking of widget by parent, if it was external.
 				-- If `a_widget' was not, then `remove_tool_window' does nothing.
-			development_window ?= explorer_bar_manager
-			development_window.remove_tool_window (a_widget)
+			explorer_bar_manager.remove_tool_window (a_widget)
 
 			clone_item_list := item_list.twin
 			create new_order.make (item_list.count)

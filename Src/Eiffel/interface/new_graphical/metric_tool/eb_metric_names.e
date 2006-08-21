@@ -128,7 +128,8 @@ feature -- Tooltip
 	f_create_new_metric_using_current_data: STRING is "Clone selected metric to a new metric"
 	f_setup_criterion_domain: STRING is "Setup criterion domain properties"
 	f_setup_criterion_text: STRING is "Setup criterion text properties"
-	f_double_click_to_go_to_definition: STRING is "(Double click to go to definition)";
+	f_double_click_to_go_to_definition: STRING is "(Double click to go to definition)"
+	f_display_in_percentage: STRING is "Display result in percentage?";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

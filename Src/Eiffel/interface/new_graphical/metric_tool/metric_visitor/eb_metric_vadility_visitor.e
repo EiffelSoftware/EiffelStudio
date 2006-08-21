@@ -173,7 +173,7 @@ feature -- Process
 					-- Check the existance of numerator metric.
 				if not has_error then
 					if not metric_manager.has_metric (a_ratio_metric.numerator_metric_name) then
-						create_last_error ("No numerator metric definition: " + a_ratio_metric.numerator_metric_name + "in metric(" + a_ratio_metric.name + ")")
+						create_last_error ("No numerator metric definition: " + a_ratio_metric.numerator_metric_name + " in metric(" + a_ratio_metric.name + ")")
 					else
 						l_num_metric := metric_manager.metric_with_name (a_ratio_metric.numerator_metric_name)
 					end
@@ -181,7 +181,7 @@ feature -- Process
 					-- Check the existance of denominator metric.
 				if not has_error then
 					if not metric_manager.has_metric (a_ratio_metric.denominator_metric_name) then
-						create_last_error ("No denominator metric definition: " + a_ratio_metric.denominator_metric_name + "in metric(" + a_ratio_metric.name + ")")
+						create_last_error ("No denominator metric definition: " + a_ratio_metric.denominator_metric_name + " in metric(" + a_ratio_metric.name + ")")
 					else
 						l_den_metric := metric_manager.metric_with_name (a_ratio_metric.denominator_metric_name)
 					end

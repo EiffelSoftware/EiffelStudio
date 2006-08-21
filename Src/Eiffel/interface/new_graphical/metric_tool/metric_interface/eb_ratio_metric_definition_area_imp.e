@@ -102,7 +102,7 @@ feature {NONE}-- Initialization
 			numerator_area.disable_item_expand (numerator_target_pixmap)
 			numerator_lbl.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			numerator_lbl.set_text ("Numerator Metric:")
-			numerator_lbl.set_minimum_width (100)
+			numerator_lbl.set_minimum_width (125)
 			numerator_lbl.align_text_left
 			l_ev_frame_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			l_ev_frame_1.set_style (1)
@@ -124,7 +124,7 @@ feature {NONE}-- Initialization
 			denominator_area.disable_item_expand (denominator_target_pixmap)
 			denominator_lbl.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			denominator_lbl.set_text ("Denominator Metric:")
-			denominator_lbl.set_minimum_width (100)
+			denominator_lbl.set_minimum_width (125)
 			denominator_lbl.align_text_left
 			l_ev_frame_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			l_ev_frame_2.set_style (1)

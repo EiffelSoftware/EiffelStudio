@@ -217,7 +217,7 @@ feature -- Actions
 		do
 			l_menu := new_metric_menu
 			l_menu.show_at (new_metric_toolbar, 0, new_metric_toolbar.height - 3)
-			l_menu.destroy
+--			l_menu.destroy
 		end
 
 	on_metric_selected (a_metric: EB_METRIC) is
@@ -473,42 +473,47 @@ feature{NONE} -- Implementation
 			l_menu_item: EV_MENU_ITEM
 			l_unit_list: LIST [TUPLE [l_unit: QL_METRIC_UNIT; l_pixmap: EV_PIXMAP]]
 			l_type: INTEGER_REF
+			l_new_menu: like new_metric_menu
 		do
-			l_unit_list := unit_list (False)
+			if new_metric_menu_internal = Void then
+				l_unit_list := unit_list (False)
 
-			create Result
-			create l_submenu.make_with_text (displayed_name (metric_names.t_basic) + " metric")
-			l_submenu.set_data (basic_metric_type)
-			l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_basic_icon)
-			Result.extend (l_submenu)
+				create l_new_menu
+				create l_submenu.make_with_text (displayed_name (metric_names.t_basic) + " metric")
+				l_submenu.set_data (basic_metric_type)
+				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_basic_icon)
+				l_new_menu.extend (l_submenu)
 
-			create l_submenu.make_with_text (displayed_name (metric_names.t_linear) + " metric")
-			l_submenu.set_data (linear_metric_type)
-			l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_linear_icon)
-			Result.extend (l_submenu)
+				create l_submenu.make_with_text (displayed_name (metric_names.t_linear) + " metric")
+				l_submenu.set_data (linear_metric_type)
+				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_linear_icon)
+				l_new_menu.extend (l_submenu)
 
-			from
-				Result.start
-			until
-				Result.index > 2
-			loop
-				l_type ?= Result.item.data
 				from
-					l_unit_list.start
+					l_new_menu.start
 				until
-					l_unit_list.after
+					l_new_menu.index > 2
 				loop
-					l_submenu ?= Result.item
-					create l_menu_item.make_with_text_and_action (displayed_name (l_unit_list.item.l_unit.name), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
-					l_menu_item.set_pixmap (l_unit_list.item.l_pixmap)
-					l_submenu.extend (l_menu_item)
-					l_unit_list.forth
+					l_type ?= l_new_menu.item.data
+					from
+						l_unit_list.start
+					until
+						l_unit_list.after
+					loop
+						l_submenu ?= l_new_menu.item
+						create l_menu_item.make_with_text_and_action (displayed_name (l_unit_list.item.l_unit.name), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
+						l_menu_item.set_pixmap (l_unit_list.item.l_pixmap)
+						l_submenu.extend (l_menu_item)
+						l_unit_list.forth
+					end
+					l_new_menu.forth
 				end
-				Result.forth
+				create l_menu_item.make_with_text_and_action (displayed_name (ratio_unit.name + " metric"), agent on_create_new_metric (ratio_metric_type, ratio_unit))
+				l_menu_item.set_pixmap (pixmaps.icon_pixmaps.metric_ratio_icon)
+				l_new_menu.extend (l_menu_item)
+				new_metric_menu_internal := l_new_menu
 			end
-			create l_menu_item.make_with_text_and_action (displayed_name (ratio_unit.name + " metric"), agent on_create_new_metric (ratio_metric_type, ratio_unit))
-			l_menu_item.set_pixmap (pixmaps.icon_pixmaps.metric_ratio_icon)
-			Result.extend (l_menu_item)
+			Result := new_metric_menu_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -528,6 +533,9 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+	new_metric_menu_internal: like new_metric_menu
+			-- Implementation of `new_metric_menu_internal'
 
 feature -- Recycle
 

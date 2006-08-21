@@ -642,24 +642,13 @@ feature -- Metric management
 			l_red := (create {EV_STOCK_COLORS}).red
 			l_grid_item.set_font (l_font)
 			l_vadility := metric_manager.metric_vadility (a_metric.name)
-			if l_vadility = Void then
-				if a_metric.is_predefined or else a_metric.description /= Void then
-					create l_tooltip.make (128)
-					if a_metric.description /= Void then
-						l_tooltip.append (a_metric.description)
-					end
-				end
-			else
-				l_tooltip := l_vadility.out
+			if l_vadility /= Void then
 				l_grid_item.set_foreground_color (l_red)
 			end
-			if should_tooltip_contain_go_to_definition_message then
-				if not l_tooltip.is_empty then
-					l_tooltip.append_character ('%N')
-				end
-				l_tooltip.append (metric_names.f_double_click_to_go_to_definition)
+			l_tooltip := metric_tooltip (a_metric, should_tooltip_contain_go_to_definition_message)
+			if not l_tooltip.is_empty then
+				l_grid_item.set_tooltip (l_tooltip)
 			end
-			l_grid_item.set_tooltip (l_tooltip)
 			l_grid_item.set_pixmap (pixmap_from_metric (a_metric))
 			l_grid_item.set_data (a_metric)
 			l_grid_item.pointer_double_press_actions.extend (agent on_pointer_double_pressed_on_metric_item (?, ?, ?, ?, ?, ?, ?, ?, l_grid_item))

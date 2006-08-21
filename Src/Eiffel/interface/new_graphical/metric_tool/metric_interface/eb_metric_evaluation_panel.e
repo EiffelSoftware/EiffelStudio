@@ -176,6 +176,10 @@ feature {NONE} -- Initialization
 			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
 			metric_definition_empty_area.drop_actions.extend (agent drop_class)
 			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
+
+			show_percent_btn.set_text ("%%")
+			show_percent_btn.set_tooltip (metric_names.f_display_in_percentage)
+			show_percent_btn.select_actions.extend (agent on_show_percentage_btn_change)
 		end
 
 feature -- Access
@@ -267,6 +271,7 @@ feature -- Basic operations
 			go_to_definition_btn.disable_sensitive
 			quick_metric_btn.disable_sensitive
 			metric_value_text.set_text (metric_names.e_evaluating_value)
+			metric_value_text.set_data (Void)
 			unit_combo.disable_sensitive
 			metric_definer.disable_sensitive
 			metric_selector.disable_sensitive
@@ -301,6 +306,12 @@ feature -- Actions
 		do
 			current_metric := a_metric
 			display_metric
+			if a_metric /= Void and then a_metric.is_ratio then
+				show_percent_btn.enable_sensitive
+			else
+				show_percent_btn.disable_sensitive
+				show_percent_btn.disable_select
+			end
 		end
 
 	on_run_metric (a_detailed: BOOLEAN) is
@@ -312,6 +323,7 @@ feature -- Actions
 		local
 			l_retried: BOOLEAN
 			l_value: DOUBLE
+			l_value_text: STRING
 			l_metric_basic: EB_METRIC_BASIC
 			l_metric: like current_metric
 		do
@@ -346,7 +358,9 @@ feature -- Actions
 				l_value := l_metric.value (domain_selector.domain).first.value
 				display_status_message ("")
 				is_metric_running := False
-				metric_value_text.set_text (l_value.out)
+				metric_value_text.set_data (l_value)
+				l_value_text := metric_value (l_value, show_percent_btn.is_selected)
+				metric_value_text.set_text (l_value_text)
 				if l_metric.is_fill_domain_enabled then
 					metric_tool.register_metric_result_for_display (l_metric, domain_selector.domain, l_value, l_metric.last_result_domain)
 				else
@@ -468,6 +482,28 @@ feature -- Actions
 			-- Action to be performed when domain in `domain_selector' changes
 		do
 			display_metric
+		end
+
+	on_show_percentage_btn_change is
+			-- Action to be performed when selection status of `show_percentage_btn' changes
+		do
+			refresh_metric_text (show_percent_btn.is_selected)
+		end
+
+	refresh_metric_text (a_percentage: BOOLEAN) is
+			-- Refresh text displayed in metric value text field.
+			-- If `a_percentage' is True, display text in percentage.
+		local
+			l_text: STRING
+			l_cnt: INTEGER
+			l_value: DOUBLE
+			l_already_in_percentage: BOOLEAN
+			l_double: DOUBLE_REF
+		do
+			l_double ?= metric_value_text.data
+			if l_double /= Void then
+				metric_value_text.set_text (metric_value (l_double, a_percentage))
+			end
 		end
 
 feature {NONE} -- Implementation

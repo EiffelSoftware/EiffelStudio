@@ -192,13 +192,20 @@ feature -- Result loading
 			-- Load basic information of `a_metric'.
 		require
 			a_metric_attached: a_metric /= Void
+		local
+			l_tooltip: STRING
 		do
 			metric_name_text.set_text (a_metric.name)
+			l_tooltip := metric_tooltip (a_metric, True)
+			if not l_tooltip.is_empty then
+				metric_name_text.set_tooltip (l_tooltip)
+			end
+			metric_name_text.pointer_double_press_actions.extend (agent on_pointer_double_click_on_metric_name_text)
 			type_name_text.set_text (displayed_name (name_of_metric_type (metric_type_id (a_metric))))
 			type_pixmap.copy (pixmap_from_metric_type (metric_type_id (a_metric)))
 			unit_name_text.set_text (displayed_name (a_metric.unit.name))
 			unit_pixmap.copy (pixmap_from_unit (a_metric.unit))
-			value_text.set_text (a_value.out)
+			value_text.set_text (metric_value (a_value, False))
 		end
 
 	load_input_information (a_input: EB_METRIC_DOMAIN) is
@@ -612,6 +619,21 @@ feature{NONE} -- Implementation
 		do
 			if result_grid.is_displayed then
 				refresh_grid
+			end
+		end
+
+	on_pointer_double_click_on_metric_name_text (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed when pointer double clicks on `metric_name_text'
+		local
+			l_metric: EB_METRIC
+			l_metric_name: STRING
+		do
+			if a_button = 1 then
+				l_metric_name := metric_name_text.text
+				if metric_manager.has_metric (l_metric_name) then
+					l_metric := metric_manager.metric_with_name (l_metric_name)
+					metric_tool.go_to_definition (l_metric, False)
+				end
 			end
 		end
 

@@ -46,10 +46,12 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			title_lbl.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			title_lbl.set_text ("Archive comparison result:")
 			title_lbl.align_text_left
 			grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			grid_area.set_border_width (1)
+			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			set_padding (3)
 			set_border_width (8)
 			disable_item_expand (title_lbl)

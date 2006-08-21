@@ -50,8 +50,12 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			metric_result_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			archive_result_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			dummy_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			dummy_text.set_text ("No result available.")
 			dummy_text.disable_edit
+			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			
 			set_all_attributes_using_constants
 			

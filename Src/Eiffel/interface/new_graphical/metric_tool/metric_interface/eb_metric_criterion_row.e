@@ -424,8 +424,12 @@ feature{NONE} -- Actions
 	on_criterion_item_activated (a_window: EV_POPUP_WINDOW) is
 			-- Action to be performed when `criterion_item' is activated
 		do
-			if not criterion_item.text.is_empty then
-				criterion_item.text_field.select_all
+			if is_empty_row then
+				criterion_item.text_field.set_text ("")
+			else
+				if not criterion_item.text.is_empty then
+					criterion_item.text_field.select_all
+				end
 			end
 		end
 

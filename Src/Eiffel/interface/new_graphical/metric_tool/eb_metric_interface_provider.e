@@ -312,6 +312,89 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
+	metric_value (a_value: DOUBLE; a_percent: BOOLEAN): STRING is
+			-- String representation of `a_value'.
+			-- If `a_percent' is True, Result is in percentage form.
+		local
+			l_formatter: FORMAT_DOUBLE
+			l_value: DOUBLE
+			l_cnt: INTEGER
+			l_char: CHARACTER
+			done: BOOLEAN
+			l_int_formatter: FORMAT_INTEGER
+
+		do
+			if a_percent then
+				l_value := a_value * 100
+				create l_formatter.make (24, 3)
+			else
+				l_value := a_value
+				create l_formatter.make (24, 5)
+			end
+			Result := l_formatter.formatted (l_value)
+			Result.left_adjust
+			Result.right_justify
+			if l_value = 0.0 then
+
+				Result.wipe_out
+				Result.append_character ('0')
+			elseif l_value >= 1.0 then
+				from
+					l_cnt := Result.count
+				until
+					done
+				loop
+					l_char := Result.item (l_cnt)
+					if l_char = '0' then
+						l_cnt := l_cnt - 1
+					elseif l_char ='.' then
+						l_cnt := l_cnt - 1
+						done := True
+					else
+						done := True
+					end
+				end
+				check l_cnt > 0 end
+				Result.keep_head (l_cnt)
+			end
+			if a_percent then
+				Result.append ("%%")
+			end
+		end
+
+	metric_tooltip (a_metric: EB_METRIC; a_go_to_definition: BOOLEAN): STRING is
+			-- Tooltip for `a_metric'.
+			-- If `a_go_to_definition' is True, Add "Go to definition" message.
+		require
+			a_metric_attached: a_metric /= Void
+			a_metric_exists: metric_manager.has_metric (a_metric.name)
+		local
+			l_vadility: EB_METRIC_ERROR
+		do
+			create Result.make (128)
+			l_vadility := metric_manager.metric_vadility (a_metric.name)
+			if l_vadility = Void then
+				if a_metric.is_predefined or else a_metric.description /= Void then
+					if a_metric.description /= Void then
+						Result.append (a_metric.description)
+					end
+				end
+			else
+				Result.append(l_vadility.out)
+			end
+			if a_go_to_definition then
+				if not Result.is_empty then
+					Result.append_character ('%N')
+				end
+				Result.append (metric_names.f_double_click_to_go_to_definition)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+
+
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

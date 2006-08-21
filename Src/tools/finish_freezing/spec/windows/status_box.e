@@ -4,22 +4,22 @@ indexing
 	status: "See notice at end of class."
 
 class
-	STATUS_BOX 
-	
+	STATUS_BOX
+
 inherit
 	WEL_MB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	WEL_ID_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make, make_fatal
-	
+
 feature -- Initialization
 
 	make_fatal (msg: STRING) is
@@ -32,7 +32,7 @@ feature -- Initialization
 		do
 			create l_msg.make (msg)
 			create l_title.make ("Finish Freezing Status")
-			
+
 			l_result := cwin_message_box (default_pointer, l_msg.item, l_title.item,
 				Mb_iconerror | Mb_ok | Mb_topmost)
 		end
@@ -51,7 +51,7 @@ feature -- Initialization
 			comspec: STRING
 		do
 			create title.make ("Finish Freezing Status")
-			
+
 			if error then
 				box_style := Mb_iconexclamation
 				msg_string := ("Makefile translation completed with errors.%N")
@@ -75,12 +75,12 @@ feature -- Initialization
 					msg_string.append (Click_cancel_message)
 				end
 			end
-			
+
 			box_style := box_style | Mb_topmost
-			
+
 			create message.make (msg_string)
 			message_box_result := cwin_message_box(default_pointer, message.item, title.item, box_style)
-			
+
 				-- Display Command Line Console if asked
 			if c_error and then message_box_result = Idcancel then
 				comspec := env.get ("COMSPEC")
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			msg.append(env.current_working_directory)
 			msg.append("'%Nto see what went wrong.%N")
 		end
-		
+
 	env: EXECUTION_ENVIRONMENT is
 		once
 			create Result
@@ -117,7 +117,7 @@ feature {NONE} -- Externals
 	cwin_message_box (hwnd, msg, title: POINTER; icon: INTEGER): INTEGER is
 			-- SDK MessageBox
 		external
-			"C [macro <windows.h>] (HWND, LPCSTR, LPCSTR, UINT): int"
+			"C [macro <windows.h>] (HWND, LPCTSTR, LPCTSTR, UINT): int"
 		alias
 			"MessageBox"
 		end

@@ -224,28 +224,6 @@ feature {NONE} -- GUI
 			arguments_box.set_padding (Layout_constants.Small_padding_size)
 			arguments_box.set_border_width (Layout_constants.Small_border_size)
 
-				-- Arguments grid building
-			create arguments_grid
-			arguments_grid.hide_header
-			arguments_grid.enable_border
-			arguments_grid.set_separator_color (Stock_colors.default_background_color)
-			arguments_grid.enable_single_row_selection
-			arguments_grid.row_select_actions.extend (agent on_row_selected)
-			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
-			arguments_grid.resize_actions.extend (
-				agent (a_x, a_y, a_width, a_height: INTEGER)
-					do
-						if arguments_grid.column_count > 0 then
-							arguments_grid.column (1).set_width (a_width)
-						end
-					end)
-
-			create l_border_box
-			l_border_box.set_border_width (1)
-			l_border_box.set_background_color (stock_colors.black)
-			l_border_box.extend (arguments_grid)
-			arguments_box.extend (l_border_box)
-
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
 
@@ -277,6 +255,29 @@ feature {NONE} -- GUI
 			l_horizontal_box.extend (l_cell)
 
 			arguments_box.extend (l_horizontal_box)
+
+				-- Arguments grid building
+			create arguments_grid
+			arguments_grid.hide_header
+			arguments_grid.enable_border
+			arguments_grid.set_separator_color (Stock_colors.default_background_color)
+			arguments_grid.enable_single_row_selection
+			arguments_grid.row_select_actions.extend (agent on_row_selected)
+			arguments_grid.row_deselect_actions.extend (agent on_row_unselected)
+			arguments_grid.resize_actions.extend (
+				agent (a_x, a_y, a_width, a_height: INTEGER)
+					do
+						if arguments_grid.column_count > 0 then
+							arguments_grid.column (1).set_width (a_width)
+						end
+					end)
+
+			create l_border_box
+			l_border_box.set_border_width (1)
+			l_border_box.set_background_color (stock_colors.black)
+			l_border_box.extend (arguments_grid)
+			arguments_box.extend (l_border_box)
+
 			arguments_box.disable_item_expand (l_horizontal_box)
 		end
 

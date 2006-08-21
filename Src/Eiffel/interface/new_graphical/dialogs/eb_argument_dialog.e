@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
 		do
-			make_with_title ("Execution Control")
+			make_with_title ("Debugging Options")
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			Eb_debugger_manager.observers.extend (Current)
 			set_size (600, 400)

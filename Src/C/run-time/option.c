@@ -646,25 +646,22 @@ void exitprf(void)
 
 #ifdef WORKBENCH
 		char *meltpath = (char *) 0;			/* directory of .UPDT */
-
 		meltpath = (char*) eif_getenv ("MELT_PATH");
-		
-		if (meltpath != NULL)
-		{
+		if (meltpath != NULL) {
 			chdir (meltpath);
+		} else {
+			chdir (starting_working_directory);
 		}
-		else
+#else
+			/* change the current directory to EIFGEN/F_code
+			 * before creating the profile_output_file */
+		int error = chdir (egc_system_location);
+		if (error == -1) {
+				/* If we could not change to EIFGEN/F_code, we
+				 * set it to the starting working directory */
+			chdir (starting_working_directory);	
+		}
 #endif
-		{
-				/* change the current directory to EIFGEN/F_code
-				 * before creating the profile_output_file */
-			int error = chdir (egc_system_location);
-			if (error == -1) {
-					/* If we could not change to EIFGEN/F_code, we
-					 * set it to the starting working directory */
-				chdir (starting_working_directory);	
-			}
-		}
 
 #ifdef HAS_GETRUSAGE
 		execution_time = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));

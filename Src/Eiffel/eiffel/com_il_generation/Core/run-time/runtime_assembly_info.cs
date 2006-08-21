@@ -87,7 +87,9 @@ using System.Runtime.CompilerServices;
 //
 [assembly: AssemblyDelaySign(false)]
 #if !VS_DEVEL
+#if !CS_20
 [assembly: AssemblyKeyFile("ise_runtime.key")]
+#endif
 #endif
 [assembly: AssemblyKeyName("")]
 [assembly: CLSCompliantAttribute (true)]

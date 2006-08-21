@@ -16,7 +16,7 @@
 		<external_object location="htmlhelp.lib"/>
 		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf">
 			<visible class="ARRAY"/>
-			<visible class="STRING"/>
+			<visible class="STRING_8"/>
 		</library>
 		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf">
 			<visible class="ECOM_CURRENCY"/>

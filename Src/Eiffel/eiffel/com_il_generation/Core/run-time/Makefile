@@ -5,15 +5,16 @@ GACFLAGS = -nologo
 MKDIR = -mkdir
 RMDIR = -rd /q /s
 CP = -copy
+OUTPUT_NAME = EiffelSoftware.Runtime.dll
 
-all:: EiffelSoftware.Runtime.dll
+all:: dotnet_10
 
 dotnet_20: $(RUNTIME_SRC) Makefile
-	csc $(CSFLAGS) -target:library -d:CS_20 -out:$@ -recurse:"*.cs" /keyfile:$(EIFFEL_SRC)\dotnet\helpers\isekey.snk
+	csc $(CSFLAGS) -target:library -d:CS_20 -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(EIFFEL_SRC)\dotnet\helpers\isekey.snk
 
-EiffelSoftware.Runtime.dll: $(RUNTIME_SRC) Makefile
+dotnet_10: $(RUNTIME_SRC) Makefile
 	$(CP) $(EIFFEL_SRC)\dotnet\helpers\isekey.snk ise_runtime.key
-	csc $(CSFLAGS) -target:library -out:$@ -recurse:"*.cs"
+	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs"
 	del ise_runtime.key
 
 install: all

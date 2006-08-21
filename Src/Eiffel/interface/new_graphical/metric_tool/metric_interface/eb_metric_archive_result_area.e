@@ -38,15 +38,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel) is
 			-- Initialize `metric_tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
+			a_panel_attached: a_panel /= Void
 		do
 			metric_tool := a_tool
+			metric_panel := a_panel
 			default_create
 		ensure
 			metric_tool_attached: metric_tool = a_tool
+			metric_panel_set: metric_panel = a_panel
 		end
 
 	user_initialization is
@@ -94,6 +97,14 @@ feature {NONE} -- Initialization
 			grid_wrapper.enable_copy
 			grid_area.extend (grid_wrapper.component_widget)
 			title_lbl.set_text (metric_names.t_archive_comparison_result)
+
+			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
+			result_grid.drop_actions.extend (agent metric_panel.drop_class)
+			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
+
+			drop_actions.extend (agent metric_panel.drop_cluster)
+			drop_actions.extend (agent metric_panel.drop_class)
+			drop_actions.extend (agent metric_panel.drop_feature)
 		end
 
 feature -- Load archive
@@ -301,6 +312,9 @@ feature -- Access
 	metric_tool: EB_METRIC_TOOL
 			-- Metric tool
 
+	metric_panel: EB_METRIC_PANEL
+			-- Metric panel to which current is attached			
+
 feature {NONE} -- Implementation/Sorting
 
 	metric_name_tester (a_item, b_item: EB_METRIC_ARCHIVE_RESULT_ROW; a_order: INTEGER): BOOLEAN is
@@ -472,6 +486,7 @@ feature {NONE} -- Implementation
 invariant
 	result_grid_attached: result_grid /= Void
 	grid_wrapper_attached: grid_wrapper /= Void
+	metric_panel_attached: metric_panel /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

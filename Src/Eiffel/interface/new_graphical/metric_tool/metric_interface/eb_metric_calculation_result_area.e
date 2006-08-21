@@ -87,12 +87,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel) is
 			-- Initialize `metric_tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
+			a_panel_attached: a_panel /= Void
 		do
 			metric_tool := a_tool
+			metric_panel := a_panel
 			default_create
 
 			create content.make (2)
@@ -100,6 +102,7 @@ feature {NONE} -- Initialization
 			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
 		ensure
 			metric_tool_attached: metric_tool = a_tool
+			metric_panel_attached: metric_panel /= Void
 			content_attached: content /= Void
 		end
 
@@ -162,6 +165,10 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_item_text_function (agent text_of_grid_item)
 			grid_wrapper.set_select_all_action (agent select_all_action)
 			grid_wrapper.enable_copy
+
+			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
+			result_grid.drop_actions.extend (agent metric_panel.drop_class)
+			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
 		ensure then
 			input_grid_attached: input_grid /= Void
 			editor_token_grid_support_attached: editor_token_grid_support /= Void
@@ -221,6 +228,21 @@ feature -- Result loading
 			end
 		end
 
+	refresh_grid is
+			-- Refresh grid.
+		do
+			content.i_th (1).wipe_out
+			content.i_th (2).wipe_out
+			if result_grid.row_count > 0 then
+				result_grid.remove_rows (1, result_grid.row_count)
+			end
+			if domain /= Void then
+				result_grid.set_row_count_to (domain.count)
+			end
+			result_grid.refresh_now
+		end
+
+
 feature{NONE} -- Implementation/Access
 
 	input_grid: ES_GRID
@@ -237,6 +259,9 @@ feature{NONE} -- Implementation/Access
 
 	domain: DS_ARRAYED_LIST [EB_METRIC_RESULT_ROW]
 			-- Domain to be displayed in Current
+
+	metric_panel: EB_METRIC_PANEL
+			-- Metric panel to which current is attached
 
 feature{NONE} -- Implementation/Basic operation
 
@@ -274,20 +299,6 @@ feature{NONE} -- Implementation/Basic operation
 		end
 
 feature{NONE} -- Implementation/Sorting
-
-	refresh_grid is
-			-- Refresh grid.
-		do
-			content.i_th (1).wipe_out
-			content.i_th (2).wipe_out
-			if result_grid.row_count > 0 then
-				result_grid.remove_rows (1, result_grid.row_count)
-			end
-			if domain /= Void then
-				result_grid.set_row_count_to (domain.count)
-			end
-			result_grid.refresh_now
-		end
 
 	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
@@ -624,6 +635,7 @@ invariant
 	result_grid_attached: result_grid /= Void
 	grid_wrapper_attached: grid_wrapper /= Void
 	editor_token_grid_support_attached: editor_token_grid_support /= Void
+	metric_panel_attached: metric_panel /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

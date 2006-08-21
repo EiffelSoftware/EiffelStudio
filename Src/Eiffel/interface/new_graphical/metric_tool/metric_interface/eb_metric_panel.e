@@ -56,6 +56,40 @@ feature -- Actions
 			end
 		end
 
+	drop_class (st: CLASSI_STONE) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+		local
+			conv_fst: FEATURE_STONE
+		do
+			conv_fst ?= st
+			if conv_fst = Void then
+				metric_tool.context_tool.launch_stone (st)
+				metric_tool.context_tool.class_view.pop_default_formatter
+			else
+				-- The stone is already dropped through `drop_feature'.
+			end
+		end
+
+	drop_feature (st: FEATURE_STONE) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+		do
+			metric_tool.context_tool.launch_stone (st)
+			metric_tool.context_tool.feature_view.pop_default_formatter
+		end
+
+	drop_cluster (st: CLUSTER_STONE) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+		do
+			metric_tool.context_tool.launch_stone (st)
+		end
+
+
 feature{NONE} -- Implementation
 
 	display_status_message (a_msg: STRING) is

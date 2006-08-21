@@ -68,6 +68,13 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_PANEL
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -94,8 +101,8 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT
 		do
-			create metric_result.make (metric_tool)
-			create archive_result.make (metric_tool)
+			create metric_result.make (metric_tool, Current)
+			create archive_result.make (metric_tool, Current)
 			metric_result_area.extend (metric_result)
 			archive_result_area.extend (archive_result)
 			metric_result_area.hide
@@ -103,12 +110,12 @@ feature {NONE} -- Initialization
 			create l_text
 			dummy_text.set_background_color (l_text.background_color)
 			dummy_area.show
+			dummy_text.drop_actions.extend (agent drop_cluster)
+			dummy_text.drop_actions.extend (agent drop_class)
+			dummy_text.drop_actions.extend (agent drop_feature)
 		end
 
 feature -- Access
-
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
 
 	metric_result: EB_METRIC_CALCULATION_RESULT_AREA
 			-- Area to display metric result
@@ -224,6 +231,21 @@ feature -- Setting
 			last_current_archive_set: last_current_archive = a_current_archive
 		end
 
+feature -- Synchronization
+
+	synchronize_when_compile_start is
+			-- Synchronize when Eiffel compilation starts.
+		do
+		end
+
+	synchronize_when_compile_stop is
+			-- Synchronize when Eiffel compilation stops.
+		do
+			if metric_result.is_displayed then
+				metric_result.refresh_grid
+			end
+		end
+
 feature -- Actions
 
 	on_select is
@@ -243,7 +265,7 @@ feature -- Actions
 				end
 				set_is_last_request_displayed (True)
 			end
-		ensure
+		ensure then
 			last_request_displayed: is_last_request_displayed
 		end
 
@@ -253,6 +275,23 @@ feature -- Recycle
 			-- To be called when the button has became useless.
 		do
 			metric_result.recycle
+		end
+
+feature -- Update
+
+	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
+			-- Notification from `a_observable' indicating that `a_data' changed.
+		local
+			l_start: BOOLEAN_REF
+		do
+			l_start ?= a_data
+			if l_start /= Void then
+				if l_start.item then
+					synchronize_when_compile_start
+				else
+					synchronize_when_compile_stop
+				end
+			end
 		end
 
 invariant

@@ -41,7 +41,7 @@ feature {NONE}-- Initialization
 			create metric_selector_area
 			create metric_definition_area
 			create no_metric_frame
-			create l_ev_vertical_box_1
+			create no_metric_area
 			create no_metric_lbl
 			
 				-- Build widget structure.
@@ -60,8 +60,8 @@ feature {NONE}-- Initialization
 			main_area.extend (metric_selector_area)
 			main_area.extend (metric_definition_area)
 			metric_definition_area.extend (no_metric_frame)
-			no_metric_frame.extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (no_metric_lbl)
+			no_metric_frame.extend (no_metric_area)
+			no_metric_area.extend (no_metric_lbl)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -76,17 +76,27 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			toolbar_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			toolbar_area.set_padding (3)
 			toolbar_area.disable_item_expand (new_metric_toolbar)
 			toolbar_area.disable_item_expand (metric_definition_toolbar)
+			new_metric_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			metric_definition_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			metric_definition_toolbar.disable_vertical_button_style
+			main_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			main_area.set_padding (10)
 			main_area.disable_item_expand (metric_selector_area)
+			metric_selector_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			metric_selector_area.set_minimum_width (250)
-			l_ev_vertical_box_1.set_border_width (10)
-			l_ev_vertical_box_1.disable_item_expand (no_metric_lbl)
+			metric_definition_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			no_metric_frame.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			no_metric_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
+			no_metric_area.set_border_width (10)
+			no_metric_area.disable_item_expand (no_metric_lbl)
+			no_metric_lbl.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			no_metric_lbl.set_text ("No metric is selected.")
 			no_metric_lbl.align_text_left
+			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			set_padding (5)
 			set_border_width (5)
 			disable_item_expand (toolbar_area)
@@ -109,14 +119,13 @@ feature -- Access
 	remove_metric_btn, save_metric_btn, open_metric_file_btn, reload_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,
 	main_area: EV_HORIZONTAL_BOX
-	metric_selector_area, metric_definition_area: EV_VERTICAL_BOX
+	metric_selector_area, metric_definition_area, no_metric_area: EV_VERTICAL_BOX
 	no_metric_lbl: EV_LABEL
 	no_metric_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

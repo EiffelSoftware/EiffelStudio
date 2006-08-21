@@ -139,6 +139,18 @@ feature {NONE} -- Initialization
 			metric_lbl.set_text (metric_names.t_select_metric)
 			reference_archive_lbl.set_text (metric_names.t_select_reference_archive)
 			current_archive_lbl.set_text (metric_names.t_select_current_archive)
+
+			comparison_toolbar_area.drop_actions.extend (agent drop_cluster)
+			comparison_toolbar_area.drop_actions.extend (agent drop_class)
+			comparison_toolbar_area.drop_actions.extend (agent drop_feature)
+
+			comparison_area.drop_actions.extend (agent drop_cluster)
+			comparison_area.drop_actions.extend (agent drop_class)
+			comparison_area.drop_actions.extend (agent drop_feature)
+
+			comparison_empty_cell.drop_actions.extend (agent drop_cluster)
+			comparison_empty_cell.drop_actions.extend (agent drop_class)
+			comparison_empty_cell.drop_actions.extend (agent drop_feature)
 		end
 
 feature -- Access

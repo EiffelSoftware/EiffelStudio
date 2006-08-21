@@ -143,7 +143,10 @@ feature -- Properties
 					-- Note that `dynamic_class' does not always conform to `written_class' in the
 					-- case where we do a static call to an external routine (e.g. when stepping into
 					-- `sp_count' from ISE_RUNTIME from `count' of SPECIAL.
-				if dynamic_class /= written_class and then dynamic_class.simple_conform_to (written_class) then
+				if dynamic_class /= written_class and then
+					not private_routine.is_inline_agent and then
+					dynamic_class.simple_conform_to (written_class)
+				then
 					l_routine := dynamic_class.feature_with_rout_id (private_routine.rout_id_set.first)
 					if l_routine.written_in = written_class.class_id then
 							-- Not the precursor case.

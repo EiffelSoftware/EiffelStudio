@@ -75,17 +75,19 @@ feature
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
 			sep: STRING
+			wb_mode: BOOLEAN
 		do
 			check
 				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id, is_target_closed, omap)
 			end
 
 			sep := once ", "
+			wb_mode := not context.final_mode
 			if arguments /= Void then
 				arguments.generate
 			end
 
-			if open_positions /= Void then
+			if wb_mode and open_positions /= Void then
 				open_positions.generate
 			end
 
@@ -95,8 +97,12 @@ feature
 			generate_block_open
 			context.generate_gen_type_conversion (gen_type)
 			print_register
-			buf.put_string (" = ")
-			buf.put_string ("RTLNR2(typres, ")
+			buf.put_string (once " = ")
+			if wb_mode then
+				buf.put_string (once "RTLNRW(typres, ")
+			else
+				buf.put_string (once "RTLNRF(typres, ")
+			end
 				-- now the parameters for set_rout_disp:
 				-- rout_disp
 			generate_routine_address (True, False)
@@ -110,63 +116,76 @@ feature
 			if is_target_closed then
 				generate_precalc_routine_address
 			else
-				buf.put_string ("0, ")
-			end
-			if is_precompiled then
-				buf.put_integer (rout_origin)
-				buf.put_string (sep)
-				buf.put_integer (rout_offset)
-				buf.put_string (sep)
-			else
-					-- class_id
-				feat_cl_type ?= context.real_type (class_type)
-				buf.put_integer (feat_cl_type.associated_class_type.static_type_id - 1)
-				buf.put_string (sep)
-					-- feature_id
-				buf.put_integer (feature_id)
+				buf.put_character ('0')
 				buf.put_string (sep)
 			end
-				-- open_map
-			if open_positions /= Void and then not system.in_final_mode then
-				open_positions.print_register
-			else
-				buf.put_string ("0")
+
+			if wb_mode then
+				if is_precompiled then
+					buf.put_integer (rout_origin)
+					buf.put_string (sep)
+					buf.put_integer (rout_offset)
+					buf.put_string (sep)
+				else
+						-- class_id
+					feat_cl_type ?= context.real_type (class_type)
+					buf.put_integer (feat_cl_type.associated_class_type.static_type_id - 1)
+					buf.put_string (sep)
+						-- feature_id
+					buf.put_integer (feature_id)
+					buf.put_string (sep)
+				end
+					-- open_map
+				if open_positions /= Void and then not system.in_final_mode then
+					open_positions.print_register
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
+					-- is_precompiled
+				if is_precompiled then
+					buf.put_character ('1')
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
+					-- is_basic
+				if is_basic then
+					buf.put_character ('1')
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
+					-- is_target_closed
+				if is_target_closed then
+					buf.put_character ('1')
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
+					-- is_inline_agent
+				if is_inline_agent then
+					buf.put_character ('1')
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
 			end
-			buf.put_string (sep)
-				-- is_precompiled
-			if is_precompiled then
-				buf.put_character ('1')
-			else
-				buf.put_character ('0')
-			end
-			buf.put_string (sep)
-				-- is_basic
-			if is_basic then
-				buf.put_character ('1')
-			else
-				buf.put_character ('0')
-			end
-			buf.put_string (sep)
-				-- is_target_closed
-			if is_target_closed then
-				buf.put_character ('1')
-			else
-				buf.put_character ('0')
-			end
-			buf.put_string (sep)
-				-- is_inline_agent
-			if is_inline_agent then
-				buf.put_character ('1')
-			else
-				buf.put_character ('0')
-			end
-			buf.put_string (sep)
 				-- closed_operands
 			if arguments /= Void then
 				arguments.print_register
-				buf.put_string (", ")
 			else
-				buf.put_string ("0, ")
+				buf.put_character ('0')
+			end
+			buf.put_string (sep)
+			if not wb_mode then
+					-- is_target_closed
+				if is_target_closed then
+					buf.put_character ('1')
+				else
+					buf.put_character ('0')
+				end
+				buf.put_string (sep)
 			end
 				-- open_count
 			if open_positions /= Void then

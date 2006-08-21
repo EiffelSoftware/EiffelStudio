@@ -296,6 +296,12 @@ feature -- Access
 			Result := current_class.generics.i_th (pos).name.as_upper
 		end
 
+	e_feature: E_FEATURE
+		-- Current feature.
+
+	breakpoint_index: INTEGER;
+		-- Breakpoint index in feature
+
 feature -- Setting
 
 	set_indent_depth (d: INTEGER) is
@@ -400,13 +406,16 @@ feature -- Setting
 
 	restore_attributes (a_feature_comments: EIFFEL_COMMENTS; a_arguments: AST_EIFFEL;
 						a_target_feature: FEATURE_I; a_source_feature: FEATURE_I;
-						a_ast_output_strategy: like ast_output_strategy) is
+						a_ast_output_strategy: like ast_output_strategy;
+						a_breakpoint_index: INTEGER; a_e_feature: E_FEATURE) is
 		do
 			feature_comments := a_feature_comments
 			arguments := a_arguments
 			target_feature := a_target_feature
 			source_feature := a_source_feature
 			ast_output_strategy := a_ast_output_strategy
+			breakpoint_index := a_breakpoint_index
+			e_feature := a_e_feature
 		end
 
 feature -- Setting local format details

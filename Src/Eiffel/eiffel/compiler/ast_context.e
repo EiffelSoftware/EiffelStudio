@@ -69,6 +69,18 @@ feature -- Access
 	current_inline_agent_body: BODY_AS
 			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
 
+	old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
+			-- It the processed feature was allready presend, this table gives a mapping from
+			-- original inline_agent_nr to its features.
+
+	set_old_inline_agents (a_table: like old_inline_agents)
+			-- set `old_inline_agents' to `a_table'
+		do
+			old_inline_agents := a_table
+		ensure
+			old_inline_agents_set: old_inline_agents = a_table
+		end
+
 	used_argument_names: SEARCH_TABLE [INTEGER]
 			-- Argument names that are already used by enclosing features
 
@@ -236,7 +248,7 @@ feature -- Setting
 		end
 
 	set_current_inline_agent_body (body: like current_inline_agent_body) is
-			-- Sets the current inline agent body 
+			-- Sets the current inline agent body
 		do
 			current_inline_agent_body := body
 		end

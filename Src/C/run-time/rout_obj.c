@@ -96,6 +96,85 @@ rt_public EIF_REFERENCE rout_obj_create2 ( int16 dftype, EIF_POINTER rout_disp, 
 	return result;
 }
 
+#ifdef WORKBENCH
+/*------------------------------------------------------------------*/
+/* Create a ROUTINE object of type `dftype'. Use the arguements for */
+/* the call to `set_rout_disp'.									    */
+/*------------------------------------------------------------------*/
+rt_public EIF_REFERENCE rout_obj_create_wb ( int16 dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
+										     EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id, 
+										     EIF_REFERENCE open_map,
+										     EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
+										     EIF_BOOLEAN is_inline_agent, EIF_REFERENCE closed_operands, EIF_INTEGER open_count)
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	RTLD;
+
+		/* Protect address in case it moves */
+ 	RTLI(3);
+	RTLR (0, result);
+	RTLR (1, closed_operands);
+	RTLR (2, open_map);
+
+		/* Create ROUTINE object */
+	result = emalloc(dftype);
+	nstcall = 0;
+		/* Call 'set_rout_disp' from ROUTINE */
+	(FUNCTION_CAST (void, ( EIF_REFERENCE,
+							EIF_POINTER, 
+							EIF_POINTER, 
+							EIF_POINTER, 
+							EIF_INTEGER,
+							EIF_INTEGER,
+							EIF_REFERENCE,
+							EIF_BOOLEAN,
+							EIF_BOOLEAN, 
+							EIF_BOOLEAN,
+							EIF_BOOLEAN,
+							EIF_REFERENCE,
+							EIF_INTEGER)) egc_routdisp_wb)( result, rout_disp, encaps_rout_disp, calc_rout_addr, 
+														    class_id, feature_id, open_map, is_precompiled, is_basic, 
+														    is_target_closed, is_inline_agent, closed_operands, open_count);
+
+	RTLE;
+	return result;
+}
+#else
+/*------------------------------------------------------------------*/
+/* Create a ROUTINE object of type `dftype' in finalized mode.		*/
+/* Use the arguements for the call to `set_rout_disp'.				*/
+/*------------------------------------------------------------------*/
+rt_public EIF_REFERENCE rout_obj_create_fl (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, EIF_POINTER calc_rout_addr, 
+											EIF_REFERENCE closed_operands, EIF_BOOLEAN is_target_closed, EIF_INTEGER open_count)
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	RTLD;
+
+		/* Protect address in case it moves */
+ 	RTLI(2);
+	RTLR (0, result);
+	RTLR (1, closed_operands);
+
+		/* Create ROUTINE object */
+	result = emalloc(dftype);
+	nstcall = 0;
+		/* Call 'set_rout_disp' from ROUTINE */
+	(FUNCTION_CAST (void, ( EIF_REFERENCE,
+							EIF_POINTER, 
+							EIF_POINTER, 
+							EIF_POINTER, 
+							EIF_REFERENCE,
+							EIF_BOOLEAN,
+							EIF_INTEGER)) egc_routdisp_fl)( result, rout_disp, encaps_rout_disp, calc_rout_addr, 
+														    closed_operands, is_target_closed, open_count);
+
+	RTLE;
+	return result;
+}
+#endif
+
 /*------------------------------------------------------------------*/
 /* Allocate argument structure for `count' arguments.               */
 /*------------------------------------------------------------------*/

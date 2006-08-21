@@ -11,9 +11,6 @@ class
 
 inherit
 	EXPR_AS
-		redefine
-			number_of_breakpoint_slots
-		end
 
 create
 	initialize
@@ -51,12 +48,6 @@ feature -- Roundtrip
 		do
 			Result := (expr /= Void)
 		end
-
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is 1
-			-- Number of stop points for AST
 
 feature -- Attributes
 

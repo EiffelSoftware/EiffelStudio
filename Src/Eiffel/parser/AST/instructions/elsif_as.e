@@ -12,7 +12,6 @@ class ELSIF_AS
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_breakpoint_slots,
 			is_equivalent
 		end
 
@@ -94,17 +93,6 @@ feature -- Comparison
 		do
 			Result := equivalent (expr, other.expr) and
 				equivalent (compound, other.compound)
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			Result := 1 -- condition test
-			if compound /= Void then
-				Result := Result + compound.number_of_breakpoint_slots
-			end
 		end
 
 feature {ELSIF_AS} -- Replication

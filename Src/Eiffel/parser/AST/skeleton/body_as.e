@@ -10,7 +10,7 @@ class BODY_AS
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_breakpoint_slots, is_equivalent
+			is_equivalent
 		end
 
 create
@@ -170,32 +170,6 @@ feature -- Comparison
 		end
 
 feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			if content /= Void then
-				Result := content.number_of_breakpoint_slots
-			end
-		end
-
-	number_of_precondition_slots: INTEGER is
-			-- Number of preconditions
-			-- (inherited assertions are not taken into account)
-		do
-			if content /= Void then
-				Result := content.number_of_precondition_slots
-			end
-		end
-
-	number_of_postcondition_slots: INTEGER is
-			-- Number of postconditions
-			-- (inherited assertions are not taken into account)
-		do
-			if content /= Void then
-				Result := content.number_of_postcondition_slots
-			end
-		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this body has instruction `i'?

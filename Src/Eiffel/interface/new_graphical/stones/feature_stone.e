@@ -34,9 +34,16 @@ feature {NONE} -- Initialization
 			-- Initialize feature stone.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_feature: E_FEATURE
 		do
-			class_stone_make (a_feature.written_class)
-			e_feature := a_feature
+			if a_feature.is_inline_agent then
+				l_feature := a_feature.associated_feature_i.enclosing_feature.api_feature (a_feature.written_in)
+			else
+				l_feature := a_feature
+			end
+			class_stone_make (l_feature.written_class)
+			e_feature := l_feature
 			internal_start_position := -1
 			internal_end_position := -1
 			internal_start_line_number := -1

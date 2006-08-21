@@ -9,9 +9,6 @@ class FEATURE_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			number_of_breakpoint_slots
-		end
 
 	COMPARABLE
 		undefine
@@ -243,30 +240,6 @@ feature -- Comparison
 		end
 
 feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST (inherited pre/postconditions
-			-- are not taken into account)
-		do
-				-- Traverse tree to get the number of slots
-			Result := body.number_of_breakpoint_slots
-		end
-
-	number_of_precondition_slots: INTEGER is
-			-- Number of preconditions
-			-- (inherited assertions are not taken into account)
-		do
-				-- Traverse tree
-			Result := body.number_of_precondition_slots
-		end
-
-	number_of_postcondition_slots: INTEGER is
-			-- Number of postconditions
-			-- (inherited assertions are not taken into account)
-		do
-				-- Traverse tree
-			Result := body.number_of_postcondition_slots
-		end
 
 	feature_name: ID_AS is
 			-- Feature name representing AST

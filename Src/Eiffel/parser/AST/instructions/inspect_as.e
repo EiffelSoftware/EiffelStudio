@@ -10,9 +10,6 @@ class INSPECT_AS
 
 inherit
 	INSTRUCTION_AS
-		redefine
-			number_of_breakpoint_slots
-		end
 
 create
 	initialize
@@ -81,20 +78,6 @@ feature -- Roundtrip/Token
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := end_keyword.last_token (a_list)
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			Result := 1 -- "inspect cond" line
-			if case_list /= Void then
-				Result := Result + case_list.number_of_breakpoint_slots
-			end
-			if else_part /= Void then
-				Result := Result + else_part.number_of_breakpoint_slots
-			end
 		end
 
 feature -- Comparison

@@ -1,44 +1,18 @@
 indexing
-
-	description:
-			"Abstract description of an Eiffel retry instruction. %
-			%Version for Bench."
+	description: "Helper for AST_INLINE_AGENT_LOOKUP"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class RETRY_AS
+class
+	SHARED_INLINE_AGENT_LOOKUP
 
-inherit
-	INSTRUCTION_AS
-		undefine
-			text
-		end
+feature
 
-	KEYWORD_AS
-		undefine
-			is_equivalent,
-			process
-		end
-
-create
-	make_with_location
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_retry_as (Current)
-		end
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
-		do
-			Result := True
+	inline_agent_lookup: AST_INLINE_AGENT_LOOKUP
+		once
+			create Result
 		end
 
 indexing
@@ -73,4 +47,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class RETRY_AS
+end -- end class SHARED_CODE_FILES

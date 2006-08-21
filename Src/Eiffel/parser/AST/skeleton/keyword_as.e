@@ -435,10 +435,6 @@ feature -- Status report
 
 feature -- Access
 
-	number_of_breakpoint_slots: INTEGER is
-		do
-		end
-
 	set_code (a_code: INTEGER) is
 			-- Set `code' with `a_code'.
 		require

@@ -42,12 +42,6 @@ feature -- Execution
 
 feature {NONE}
 
-	e_feature: E_FEATURE
-			-- current e_feature of the context.
-
-	breakpoint_index: INTEGER
-			-- Breakpoint index in feature
-
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
 

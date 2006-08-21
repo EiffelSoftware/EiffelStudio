@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_empty,
 			has_instruction, index_of_instruction,
-			number_of_breakpoint_slots, is_equivalent
+			is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -30,6 +30,9 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
+	first_breakpoint_slot_index: INTEGER
+			-- Index of the first breakpoint slot. Set during semantic check (AST_FEATURE_CHECKER_GENERATOR)
+
 feature -- test for empty body
 
 	is_empty : BOOLEAN is
@@ -46,14 +49,6 @@ feature -- Comparison
 		end
 
 feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			if compound /= Void then
-				Result := compound.number_of_breakpoint_slots
-			end
-		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does the current routine body has instruction `i'?
@@ -84,6 +79,14 @@ feature -- Access
 			else
 				Result := 0
 			end
+		end
+
+	set_first_breakpoint_slot_index (index: INTEGER) is
+			-- Set `first_first_breakpoint_slot_index' to `index'
+		do
+			first_breakpoint_slot_index := index
+		ensure
+			first_breakpoint_slot_index_set: first_breakpoint_slot_index = index
 		end
 
 feature {INTERNAL_AS, INTERNAL_MERGER} -- Replication

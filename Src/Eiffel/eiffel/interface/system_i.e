@@ -3373,12 +3373,10 @@ feature -- Dead code removal
 			l_class := tuple_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
-				-- Protection of feature `set_rout_disp' of ROUTINE classes
-			l_class := routine_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
-
 				-- Protection of ROUTINE class features
 			l_class := routine_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id), l_class)
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.rout_disp_name_id), l_class)
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.calc_rout_addr_name_id), l_class)
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.closed_operands_name_id), l_class)

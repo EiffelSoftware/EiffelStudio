@@ -150,6 +150,29 @@ doc:	</attribute>
 rt_public void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
 							   EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,	EIF_INTEGER); 
 
+#ifdef WORKBENCH
+/*
+doc:	<attribute name="egc_routdisp_wb" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ROUTINE.set_rout_disp used to initialize new ROUTINE objects of type PROCEDURE, FUNCTION or PREDICATE.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
+							      EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,	EIF_INTEGER); 
+
+#else
+/*
+doc:	<attribute name="egc_routdisp_fl" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ROUTINE.set_rout_disp_final used to initialize new ROUTINE objects of type PROCEDURE, FUNCTION or PREDICATE.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_routdisp_fl)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER); 
+
 /*
 doc:	<attribute name="egc_correct_mismatch" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine ANY.internal_correct_mismatch which is used to fix a mismatch while retrieving objects from a storable.</summary>
@@ -158,6 +181,7 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ANY</eiffel_classes>
 doc:	</attribute>
 */
+#endif
 rt_public void (*egc_correct_mismatch)(EIF_REFERENCE); 
 
 rt_public int egc_str_dtype;

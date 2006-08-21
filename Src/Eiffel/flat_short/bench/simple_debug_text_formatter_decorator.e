@@ -57,9 +57,6 @@ feature -- Access
 	e_class: CLASS_C
 			-- Class where feature is defined.
 
-	e_feature: E_FEATURE
-			-- Current feature.
-
 feature -- Element change
 
 	formal_name (pos: INTEGER): ID_AS is
@@ -69,9 +66,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	breakpoint_index: INTEGER;
-			-- Breakpoint index in feature
 
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?

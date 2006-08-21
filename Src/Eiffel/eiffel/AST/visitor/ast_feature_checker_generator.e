@@ -253,6 +253,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 			l_routine_as: ROUTINE_AS
 			l_vpir: VPIR3
 		do
+			break_point_slot_count := 0
 			l_routine_as ?= a_body.content
 			if not is_inherited then
 				if l_routine_as /= Void then
@@ -680,7 +681,7 @@ feature -- Roundtrip
 					else
 						l_enclosing_feature := l_cur_feature.enclosing_feature
 					end
-					l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature, context.inline_agent_counter.next)
+					l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
 				end
 			end
 
@@ -747,7 +748,8 @@ feature -- Roundtrip
 			create l_feature_checker
 			l_feature_checker.init (context)
 			context.set_current_inline_agent_body (l_as.body)
-			l_feature_checker.check_inline_agent (l_feature, l_as.body, is_byte_node_enabled, is_inherited)
+			l_feature_checker.check_inline_agent (
+				l_feature, l_as.body, is_byte_node_enabled, is_inherited)
 
 			l_body_code ?= l_feature_checker.last_byte_node
 
@@ -2260,6 +2262,8 @@ feature -- Implementation
 				l_byte_code.set_once_manifest_string_count (l_as.once_manifest_string_count)
 				last_byte_node := l_byte_code
 			end
+
+			l_as.set_number_of_breakpoint_slots (break_point_slot_count)
 		end
 
 	process_constant_as (l_as: CONSTANT_AS) is
@@ -2333,6 +2337,8 @@ feature -- Implementation
 			l_assert: ASSERT_B
 			l_expr: EXPR_B
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			reset_for_unqualified_call_checking
 
 			l_as.expr.process (Current)
@@ -3483,6 +3489,7 @@ feature -- Implementation
 			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			context.inline_agent_counter.reset
+			break_point_slot_count := 0
 			last_byte_node := Void
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)
@@ -3561,6 +3568,8 @@ feature -- Implementation
 			l_vjar: VJAR
 			l_vncb: VNCB
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 				-- Init type stack
 			reset_for_unqualified_call_checking
 
@@ -3646,6 +3655,8 @@ feature -- Implementation
 			l_tuple_access: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 				-- Set assigner call flag for target expression
 			is_assigner_call := True
 			l_as.target.process (Current)
@@ -3784,6 +3795,8 @@ feature -- Implementation
 			l_attribute: ATTRIBUTE_B
 			l_create_info: CREATE_INFO
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 				-- Init type stack
 			reset_for_unqualified_call_checking
 
@@ -3903,6 +3916,8 @@ feature -- Implementation
 			l_check: CHECK_B
 			l_list: BYTE_LIST [BYTE_NODE]
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
 				l_as.check_list.process (Current)
@@ -4128,6 +4143,8 @@ feature -- Implementation
 			l_vgcc7: VGCC7
 			l_needs_byte_node: BOOLEAN
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			l_needs_byte_node := is_byte_node_enabled
 			reset_for_unqualified_call_checking
 
@@ -4336,6 +4353,7 @@ feature -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 		do
 			l_needs_byte_node := is_byte_node_enabled
+			break_point_slot_count := break_point_slot_count + 1
 
 				-- Type check the test
 			l_as.condition.process (Current)
@@ -4399,6 +4417,8 @@ feature -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_constrained_type: TYPE_A
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			l_needs_byte_node := is_byte_node_enabled
 
 			l_as.switch.process (Current)
@@ -4461,6 +4481,8 @@ feature -- Implementation
 			l_call: CALL_B
 			l_call_b: INSTR_CALL_B
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
 			if not last_type.conform_to (void_type) then
@@ -4558,6 +4580,8 @@ feature -- Implementation
 			l_vxrt: VXRT
 			l_retry_b: RETRY_B
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			if not is_in_rescue then
 					-- Retry instruction outside a recue clause
 				create l_vxrt
@@ -4605,6 +4629,8 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
+			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
+
 			if l_as.compound /= Void then
 				l_as.compound.process (Current)
 				if l_needs_byte_node then
@@ -4616,6 +4642,7 @@ feature -- Implementation
 				l_std_byte_code.set_compound (l_list)
 				last_byte_node := l_std_byte_code
 			end
+			break_point_slot_count := break_point_slot_count + 1
 		end
 
 	process_once_as (l_as: ONCE_AS) is
@@ -4626,6 +4653,8 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
+			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
+
 			if l_as.compound /= Void then
 				l_as.compound.process (Current)
 				if l_needs_byte_node then
@@ -4650,6 +4679,7 @@ feature -- Implementation
 
 				last_byte_node := l_once_byte_code
 			end
+			break_point_slot_count := break_point_slot_count + 1
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS) is
@@ -4720,6 +4750,7 @@ feature -- Implementation
 
 	process_invariant_as (l_as: INVARIANT_AS) is
 		do
+			break_point_slot_count := 0
 			context.inline_agent_counter.reset
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
@@ -4758,6 +4789,8 @@ feature -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_elsif: ELSIF_B
 		do
+			break_point_slot_count := break_point_slot_count + 1
+
 			l_needs_byte_node := is_byte_node_enabled
 
 				-- Type check test first
@@ -6469,17 +6502,37 @@ feature {NONE} -- Agents
 			l_cur_class: EIFFEL_CLASS_C
 			l_enclosing_feature, l_new_enclosing_feature: FEATURE_I
 			l_name: STRING
+			l_number: INTEGER
+			l_is_fake: BOOLEAN
+			l_old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
+			l_old_feat: FEATURE_I
 		do
 			l_cur_class ?= context.current_class
 
-			a_feat.set_body_index (system.body_index_counter.next_id)
+			l_is_fake := a_feat.is_fake_inline_agent
 
 			create l_new_rout_id_set.make
-			l_new_rout_id_set.put (a_feat.new_rout_id)
+			if l_is_fake then
+				l_number := -1
+			else
+				l_number := context.inline_agent_counter.next
+				l_old_inline_agents := context.old_inline_agents
+				if l_old_inline_agents /= Void and then l_old_inline_agents.has (l_number) then
+					l_old_feat := l_old_inline_agents.found_item
+				end
+			end
+			if l_old_feat /= Void then
+				a_feat.set_body_index (l_old_feat.body_index)
+				l_new_rout_id_set.put (l_old_feat.rout_id_set.first)
+				a_feat.set_feature_id (l_old_feat.feature_id)
+				a_feat.set_origin_feature_id (l_old_feat.origin_feature_id)
+			else
+				a_feat.set_body_index (system.body_index_counter.next_id)
+				l_new_rout_id_set.put (a_feat.new_rout_id)
+				a_feat.set_feature_id (l_cur_class.feature_id_counter.next)
+				a_feat.set_origin_feature_id (a_feat.feature_id)
+			end
 			a_feat.set_rout_id_set (l_new_rout_id_set)
-
-			a_feat.set_feature_id (l_cur_class.feature_id_counter.next)
-			a_feat.set_origin_feature_id (a_feat.feature_id)
 			a_feat.set_written_in (l_cur_class.class_id)
 			a_feat.set_origin_class_id (a_feat.written_in)
 			a_feat.set_export_status (create {EXPORT_ALL_I})
@@ -6503,14 +6556,13 @@ feature {NONE} -- Agents
 				end
 			end
 
-			if a_feat.is_fake_inline_agent then
-				a_feat.set_inline_agent (l_enclosing_feature.body_index, -1)
+			a_feat.set_inline_agent (l_enclosing_feature.body_index, l_number)
+			if l_is_fake then
 				l_name := "fake inline-agent of "
 				l_name.append (l_enclosing_feature.feature_name)
 				l_name.append_character ('#')
 				l_name.append_integer (a_feat.body_index)
 			else
-				a_feat.set_inline_agent (l_enclosing_feature.body_index, context.inline_agent_counter.next)
 				l_name := "inline-agent of "
 				l_name.append (l_enclosing_feature.feature_name)
 				l_name.append_character ('#')
@@ -6546,6 +6598,11 @@ feature {NONE} -- Agents
 			a_feat.process_pattern
 			l_cur_class.insert_changed_assertion (a_feat)
 		end
+
+feature {AST_FEATURE_CHECKER_GENERATOR}
+
+	break_point_slot_count: INTEGER
+			-- Counts the breakpoint slots that occured during processing the feature.
 
 feature {NONE} -- Precursor handling
 
@@ -6890,7 +6947,7 @@ feature {NONE} -- Implementation: checking locals
 				l_local := a_locals.item_for_iteration
 				if not l_local.is_used then
 					if l_warning = Void then
-						create l_warning.make (context.current_class, current_feature)
+						create l_warning.make (context.current_class, current_feature.enclosing_feature)
 					end
 					l_warning.add_unused_local (a_locals.key_for_iteration, l_local.type)
 				end

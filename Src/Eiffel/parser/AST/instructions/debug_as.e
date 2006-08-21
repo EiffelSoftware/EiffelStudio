@@ -9,9 +9,6 @@ class DEBUG_AS
 
 inherit
 	INSTRUCTION_AS
-		redefine
-			number_of_breakpoint_slots
-		end
 
 create
 	initialize
@@ -94,16 +91,6 @@ feature -- Roundtrip/Token
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := end_keyword.last_token (a_list)
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			if compound /= Void then
-				Result := Result + compound.number_of_breakpoint_slots
-			end
 		end
 
 feature -- Comparison

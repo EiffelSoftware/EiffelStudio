@@ -1780,7 +1780,7 @@ rt_private void interpret(int flag, int where)
 			}
 			stagval = tagval;
 				/* Create new object */
-			new_obj = RTLNR2((int16)type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
+			new_obj = RTLNRW((int16)type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
 							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
 			
 			last = iget();				/* Push a new value onto the stack */

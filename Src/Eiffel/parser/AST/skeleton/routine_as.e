@@ -13,10 +13,7 @@ inherit
 		redefine
 			is_require_else, is_ensure_then,
 			has_rescue, has_precondition, has_postcondition,
-			create_default_rescue, is_empty,
-			number_of_precondition_slots,
-			number_of_postcondition_slots,
-			number_of_breakpoint_slots
+			create_default_rescue, is_empty
 		end
 
 create
@@ -229,45 +226,9 @@ feature -- Properties
 
 feature -- Access
 
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST (pre/post condition
-			-- included but the ones inherited)
-		do
-				-- At least one stoppoint, the one corresponding
-				-- to the feature end.
-			Result := 1
-
-				-- Add the body stop points
-			if routine_body /= Void then
-				Result := Result + routine_body.number_of_breakpoint_slots
-			end
-
-				-- Add the rescue stop points
-			if has_rescue then
-				Result := Result + rescue_clause.number_of_breakpoint_slots
-			end
-
-				-- Add the pre/postconditions slots
-			Result := Result + number_of_precondition_slots + number_of_postcondition_slots
-		end
-
-	number_of_precondition_slots: INTEGER is
-			-- Number of preconditions
-			-- (inherited assertions are not taken into account)
-		do
-			if has_precondition then
-				Result := precondition.number_of_breakpoint_slots
-			end
-		end
-
-	number_of_postcondition_slots: INTEGER is
-			-- Number of postconditions
-			-- (inherited assertions are not taken into account)
-		do
-			if has_postcondition then
-				Result := postcondition.number_of_breakpoint_slots
-			end
-		end
+	number_of_breakpoint_slots: INTEGER
+			-- Number of stop points for AST (inherited pre/postconditions
+			-- are taken into account)
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this routine has instruction `i'?
@@ -334,6 +295,16 @@ feature {COMPILER_EXPORTER} -- Element Change
 			routine_body := a_routine_body
 		end
 
+feature {AST_FEATURE_CHECKER_GENERATOR} -- Setting
+
+	set_number_of_breakpoint_slots (nr: INTEGER) is
+			-- Set `number_of_breakpoint_slots' to `nr'
+		do
+			number_of_breakpoint_slots := nr
+		ensure
+			number_of_breakpoint_slots_set: number_of_breakpoint_slots = nr
+		end
+		
 feature -- default rescue
 
 	create_default_rescue (def_resc_name : STRING) is

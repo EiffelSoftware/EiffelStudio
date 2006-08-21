@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 			current_feature := source_feature
 		end
 
-
 feature -- Formatting
 
 	format (a_node: AST_EIFFEL) is
@@ -249,7 +248,9 @@ feature -- Roundtrip
 			l_old_arguments: AST_EIFFEL
 			l_old_target_feature: FEATURE_I
 			l_old_source_feature: FEATURE_I
-
+			l_old_e_feature: E_FEATURE
+			l_old_breakpoint_index: INTEGER
+			l_feat: FEATURE_I
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
@@ -260,15 +261,20 @@ feature -- Roundtrip
 				l_old_arguments := text_formatter_decorator.arguments
 				l_old_target_feature := text_formatter_decorator.target_feature
 				l_old_source_feature := text_formatter_decorator.source_feature
+				l_old_e_feature := text_formatter_decorator.e_feature
+				l_old_breakpoint_index := text_formatter_decorator.breakpoint_index
 
-				text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_strategy.current_feature,
-															  l_strategy.source_feature, l_strategy)
+				l_feat := l_strategy.current_feature
+
+				text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
+															  l_strategy.source_feature, l_strategy, 0,
+															  l_feat.api_feature (l_feat.written_in))
 
 				l_as.body.process (l_strategy)
 
 				text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
-															  l_old_target_feature, l_old_source_feature, Current)
-
+															  l_old_target_feature, l_old_source_feature, Current,
+															  l_old_breakpoint_index, l_old_e_feature)
 
 				if l_as.operands /= Void then
 					reset_last_class_and_type
@@ -1111,7 +1117,8 @@ feature {NONE} -- Implementation
 			if is_inline_agent then
 				create inline_agent_assertion.make_for_inline_agent (current_feature, l_as)
 				if l_as.precondition /= Void then
-					inline_agent_assertion.format_precondition (text_formatter_decorator, True)
+					inline_agent_assertion.format_precondition (text_formatter_decorator,
+						not text_formatter_decorator.is_with_breakable)
 				end
 			else
 				chained_assert := text_formatter_decorator.chained_assertion
@@ -1144,7 +1151,8 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.set_first_assertion (True)
 			if is_inline_agent then
 				if l_as.postcondition /= Void then
-					inline_agent_assertion.format_postcondition (text_formatter_decorator, True)
+					inline_agent_assertion.format_postcondition (text_formatter_decorator,
+						not text_formatter_decorator.is_with_breakable)
 				end
 			else
 				if chained_assert /= Void then
@@ -1169,7 +1177,7 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.exdent
 				end
 				if not l_as.is_deferred and not l_as.is_external then
-					text_formatter_decorator.put_breakable
+					put_breakable
 				end
 				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 			end
@@ -2149,7 +2157,7 @@ feature {NONE} -- Implementation
 			end
 			reset_last_class_and_type
 			if not expr_type_visiting then
-				text_formatter_decorator.put_breakable
+				put_breakable
 				text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
@@ -2168,7 +2176,7 @@ feature {NONE} -- Implementation
 		do
 			if not expr_type_visiting then
 				reset_last_class_and_type
-				text_formatter_decorator.put_breakable
+				put_breakable
 				text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
@@ -2185,7 +2193,7 @@ feature {NONE} -- Implementation
 	process_reverse_as (l_as: REVERSE_AS) is
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.put_breakable
+				put_breakable
 				text_formatter_decorator.new_expression
 			end
 			l_as.target.process (Current)
@@ -2219,7 +2227,7 @@ feature {NONE} -- Implementation
 	process_creation_as (l_as: CREATION_AS) is
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.put_breakable
+				put_breakable
 				text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 				text_formatter_decorator.put_space
 			end
@@ -2273,7 +2281,7 @@ feature {NONE} -- Implementation
 
 	process_if_as (l_as: IF_AS) is
 		do
-			text_formatter_decorator.put_breakable
+			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_if_keyword, Void)
 			text_formatter_decorator.put_space
 			text_formatter_decorator.new_expression
@@ -2311,7 +2319,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.put_breakable
+			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_inspect_keyword, Void)
 			text_formatter_decorator.put_space
 			text_formatter_decorator.indent
@@ -2342,7 +2350,7 @@ feature {NONE} -- Implementation
 		do
 			reset_last_class_and_type
 			if not expr_type_visiting then
-				text_formatter_decorator.put_breakable
+				put_breakable
 			end
 			l_as.call.process (Current)
 		end
@@ -2384,7 +2392,7 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.indent
 			text_formatter_decorator.put_new_line
 			text_formatter_decorator.new_expression
-			text_formatter_decorator.put_breakable
+			put_breakable
 			l_as.stop.process (Current)
 			text_formatter_decorator.exdent
 			text_formatter_decorator.put_new_line
@@ -2404,7 +2412,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.put_breakable
+			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_retry_keyword, Void)
 		end
 
@@ -2864,7 +2872,7 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			text_formatter_decorator.put_breakable
+			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_elseif_keyword, Void)
 			text_formatter_decorator.put_space
 			text_formatter_decorator.new_expression
@@ -3412,7 +3420,7 @@ feature {NONE} -- Implementation: helpers
 			text_formatter_decorator.new_expression
 			text_formatter_decorator.begin
 			if not hide_breakable_marks then
-				text_formatter_decorator.put_breakable
+				put_breakable
 			end
 			if l_as.tag /= Void then
 				text_formatter_decorator.process_assertion_tag_text (l_as.tag.twin)
@@ -3950,6 +3958,14 @@ feature {NONE} -- Implementation: helpers
 			end
 		ensure
 			agent_type_not_void_if_no_error: not has_error_internal implies Result /= Void
+		end
+
+	put_breakable
+			-- Puts a breakable if needed.
+		do
+			if text_formatter_decorator.is_with_breakable then
+				text_formatter_decorator.put_breakable
+			end
 		end
 
 invariant

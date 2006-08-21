@@ -14,7 +14,13 @@ inherit
 			has_postcondition, has_precondition,
 			argument_names, arguments, is_once,
 			is_deferred, locals, obsolete_message,
-			is_external
+			is_external, associated_feature_i,
+			is_inline_agent, updated_version,
+			body_id_for_ast
+		end
+	SHARED_INLINE_AGENT_LOOKUP
+		undefine
+				is_equal
 		end
 
 feature -- Properties
@@ -24,7 +30,7 @@ feature -- Properties
 
 	has_precondition: BOOLEAN;
 			-- Is the routine declaring some precondition ?
-	
+
 	has_postcondition: BOOLEAN;
 			-- Is the routine declaring some postcondition ?
 
@@ -41,6 +47,17 @@ feature -- Properties
 	is_external: BOOLEAN;
 			-- Is the routine declared as a once?
 
+	is_inline_agent: BOOLEAN
+			-- is the routine an inline angent
+		do
+			Result := inline_agent_nr /= 0
+		end
+
+	inline_agent_nr: INTEGER
+
+	enclosing_body_id: INTEGER
+			-- The Body id of the enclosing feature of an inline agent
+
 feature -- Access
 
 	argument_names: LIST [STRING] is
@@ -53,11 +70,35 @@ feature -- Access
 		local
 			routine_as: ROUTINE_AS
 		do
-			routine_as ?= Body_server.item (body_index).body.content;
+			if is_inline_agent then
+				routine_as ?=
+					inline_agent_lookup.lookup_inline_agent_of_feature (
+						Body_server.item (enclosing_body_id), inline_agent_nr).content
+			else
+				routine_as ?= Body_server.item (body_index).body.content;
+			end
 			if routine_as /= Void then
 				Result := routine_as.locals
 			end;
 		end;
+
+	updated_version: E_FEATURE
+		local
+			l_class: EIFFEL_CLASS_C
+			l_feat: FEATURE_I
+		do
+			if is_inline_agent then
+				l_class ?= associated_class
+				if l_class /= Void and then l_class.is_valid then
+					l_feat := l_class.inline_agent_with_nr (enclosing_body_id, inline_agent_nr)
+					if l_feat /= Void then
+						Result := l_feat.api_feature (l_class.class_id)
+					end
+				end
+			else
+				Result := Precursor
+			end
+		end
 
 feature {FEATURE_I} -- Setting
 
@@ -101,6 +142,39 @@ feature {FEATURE_I} -- Setting
 			-- Assign `s' to `obsolete_message'
 		do
 			obsolete_message := s;
+		end;
+
+	set_inline_agent_nr (nr: INTEGER) is
+			-- Assign `nr' to `inline_agent_nr'
+		do
+			inline_agent_nr := nr
+		end
+
+	set_enclosing_body_id (id: INTEGER) is
+			-- Assign `id' to `enclosing_body_id'
+		do
+			enclosing_body_id := id
+		end
+
+feature {COMPILER_EXPORTER} -- Implementation
+
+	body_id_for_ast: INTEGER
+		do
+			if is_inline_agent then
+				Result := enclosing_body_id
+			else
+				Result := Precursor
+			end
+		end
+
+	associated_feature_i: FEATURE_I is
+			-- Assocated feature_i
+		do
+			if is_inline_agent then
+				Result := associated_class.eiffel_class_c.inline_agent_of_id (feature_id)
+			else
+				Result := Precursor
+			end
 		end;
 
 indexing

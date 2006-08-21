@@ -11,7 +11,7 @@ class CASE_AS
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_breakpoint_slots, is_equivalent
+			is_equivalent
 		end
 
 create
@@ -87,16 +87,6 @@ feature -- Comparison
 		do
 			Result := equivalent (compound, other.compound) and
 				equivalent (interval, other.interval)
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points
-		do
-			if compound /= Void then
-				Result := compound.number_of_breakpoint_slots
-			end
 		end
 
 feature {CASE_AS} -- Replication

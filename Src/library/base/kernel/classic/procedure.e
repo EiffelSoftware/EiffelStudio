@@ -27,9 +27,12 @@ feature -- Calls
 		end
 
 	call (args: OPEN_ARGS) is
+		local
+			l_closed_count: INTEGER
 		do
+			l_closed_count :=  closed_operands.count
 			fast_call (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				       is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
+				       is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 feature {NONE} -- Implementation

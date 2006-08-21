@@ -19,7 +19,6 @@ inherit
 
 	KEYWORD_AS
 		undefine
-			number_of_breakpoint_slots,
 			is_equivalent,
 			process
 		end

@@ -15,7 +15,7 @@ inherit
 			anchor_instantiation_in,
 			is_equal, generate_cid, il_type_name, generic_il_type_name, generate_cid_array,
 			generate_cid_init, is_anchored, is_explicit, is_standalone, is_valid,
-			has_true_formal, is_identical, generate_gen_type_il,
+			has_true_formal, is_identical, generate_gen_type_il, make_full_type_byte_code_parameters,
 			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
 			debug_output, complete_instantiation_in, generic_derivation
@@ -158,7 +158,7 @@ feature
 
 	type_a: TYPED_POINTER_A is
 		do
-			create {TYPED_POINTER_A} Result.make_typed (true_generics.item (1).type_a)
+			create {TYPED_POINTER_A} Result.make_typed (meta_generic.item (1).type_a)
 		end
 
 feature

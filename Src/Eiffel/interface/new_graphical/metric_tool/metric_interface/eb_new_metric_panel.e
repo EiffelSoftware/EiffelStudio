@@ -144,6 +144,14 @@ feature {NONE} -- Initialization
 			send_current_to_new_btn.set_pixmap (pixmaps.icon_pixmaps.new_document_icon)
 			send_current_to_new_btn.select_actions.extend (agent on_new_metric_button_is_right_clicked)
 			send_current_to_new_btn.set_tooltip (metric_names.f_create_new_metric_using_current_data)
+
+			no_metric_area.drop_actions.extend (agent drop_cluster)
+			no_metric_area.drop_actions.extend (agent drop_class)
+			no_metric_area.drop_actions.extend (agent drop_feature)
+
+			toolbar_area.drop_actions.extend (agent drop_cluster)
+			toolbar_area.drop_actions.extend (agent drop_class)
+			toolbar_area.drop_actions.extend (agent drop_feature)
 		end
 
 feature -- Status report

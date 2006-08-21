@@ -8,6 +8,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -26,6 +27,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -47,6 +49,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -71,6 +74,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -92,6 +96,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -110,6 +115,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -130,6 +136,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -185,6 +192,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -205,6 +213,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -249,6 +258,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>246244241</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -273,6 +283,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>246244241</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -298,9 +309,10 @@
      <item type="EV_HORIZONTAL_BOX">
       <Internal_properties>
        <id>214</id>
-       <Expanded>0</Expanded>
+       <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -320,6 +332,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -339,6 +352,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -359,6 +373,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -383,6 +398,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -402,6 +418,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -421,6 +438,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -441,6 +459,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -464,6 +483,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -487,6 +507,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -508,9 +529,11 @@
     <item type="EV_VERTICAL_BOX">
      <Internal_properties>
       <id>238</id>
+      <name>comparison_area</name>
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -529,16 +552,17 @@
       <Internal_properties>
        <id>239</id>
        <name>comparison_toolbar_area</name>
-       <Expanded>1</Expanded>
+       <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
       <EV_WIDGET>
       </EV_WIDGET>
       <EV_BOX>
-       <Is_item_expanded>1</Is_item_expanded>
+       <Is_item_expanded>0</Is_item_expanded>
       </EV_BOX>
       <EV_PIXMAPABLE>
       </EV_PIXMAPABLE>
@@ -551,6 +575,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -582,9 +607,10 @@
       <Internal_properties>
        <id>262</id>
        <name>reference_archve_area</name>
-       <Expanded>1</Expanded>
+       <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -605,6 +631,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_FONTABLE>
        </EV_FONTABLE>
@@ -627,6 +654,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -668,6 +696,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>246244241</Background_color>
         </EV_COLORIZABLE>
         <EV_FONTABLE>
         </EV_FONTABLE>
@@ -690,9 +719,11 @@
      <item type="EV_CELL">
       <Internal_properties>
        <id>264</id>
+       <name>comparison_empty_cell</name>
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -708,9 +739,10 @@
       <Internal_properties>
        <id>263</id>
        <name>current_archive_area</name>
-       <Expanded>1</Expanded>
+       <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -731,6 +763,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_FONTABLE>
        </EV_FONTABLE>
@@ -753,6 +786,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -794,6 +828,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>246244241</Background_color>
         </EV_COLORIZABLE>
         <EV_FONTABLE>
         </EV_FONTABLE>
@@ -956,6 +991,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -975,6 +1011,7 @@
     <Expanded>0</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -994,6 +1031,7 @@
     <Expanded>0</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -1013,6 +1051,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -1573,6 +1612,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -1593,6 +1633,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_FONTABLE>
    </EV_FONTABLE>
@@ -1616,6 +1657,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -1637,6 +1679,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -1657,6 +1700,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -1677,9 +1721,10 @@
      <item type="EV_FRAME">
       <Internal_properties>
        <id>139</id>
-       <Expanded>0</Expanded>
+       <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -1704,6 +1749,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -1746,6 +1792,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>246244241</Background_color>
         </EV_COLORIZABLE>
         <EV_FONTABLE>
         </EV_FONTABLE>
@@ -1770,6 +1817,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -1810,6 +1858,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -1830,6 +1879,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -1853,6 +1903,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -1877,6 +1928,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -1919,6 +1971,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>246244241</Background_color>
         </EV_COLORIZABLE>
         <EV_FONTABLE>
         </EV_FONTABLE>
@@ -1943,6 +1996,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -1985,6 +2039,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -2004,6 +2059,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -2023,6 +2079,7 @@
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_FONTABLE>
      </EV_FONTABLE>
@@ -2045,6 +2102,7 @@
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -2184,6 +2242,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -2643,6 +2702,7 @@
            <Expanded>0</Expanded>
           </Internal_properties>
           <EV_COLORIZABLE>
+           <Background_color>237233227</Background_color>
           </EV_COLORIZABLE>
           <EV_SENSITIVE>
           </EV_SENSITIVE>
@@ -2687,6 +2747,7 @@
            <Expanded>1</Expanded>
           </Internal_properties>
           <EV_COLORIZABLE>
+           <Background_color>237233227</Background_color>
           </EV_COLORIZABLE>
           <EV_SENSITIVE>
           </EV_SENSITIVE>
@@ -2974,6 +3035,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -2995,6 +3057,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -3015,6 +3078,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -3070,6 +3134,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -3157,6 +3222,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -3177,6 +3243,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -3197,6 +3264,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -3216,6 +3284,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_FONTABLE>
      </EV_FONTABLE>
@@ -3236,9 +3305,11 @@
      <item type="EV_VERTICAL_BOX">
       <Internal_properties>
        <id>284</id>
+       <name>no_metric_area</name>
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -3259,6 +3330,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_FONTABLE>
        </EV_FONTABLE>
@@ -3412,6 +3484,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -3431,6 +3504,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -3451,6 +3525,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -3471,6 +3546,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -3511,6 +3587,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -3529,6 +3606,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3546,6 +3624,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3579,6 +3658,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3611,6 +3691,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3636,6 +3717,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3669,6 +3751,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3701,6 +3784,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3726,6 +3810,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3758,6 +3843,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -3792,6 +3878,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -3811,6 +3898,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -3833,6 +3921,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -3850,6 +3939,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -3970,6 +4060,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -4028,6 +4119,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -4065,6 +4157,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -4085,6 +4178,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -4104,6 +4198,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -4124,6 +4219,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -4143,6 +4239,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4177,6 +4274,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4203,6 +4301,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4305,6 +4404,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4330,6 +4430,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4350,6 +4451,7 @@
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_FONTABLE>
        </EV_FONTABLE>
@@ -4373,6 +4475,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_FONTABLE>
        </EV_FONTABLE>
@@ -4424,6 +4527,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -4446,6 +4550,7 @@
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_FONTABLE>
       </EV_FONTABLE>
@@ -4469,6 +4574,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4491,6 +4597,7 @@
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -4512,6 +4619,7 @@
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
+      <Background_color>237233227</Background_color>
      </EV_COLORIZABLE>
      <EV_SENSITIVE>
      </EV_SENSITIVE>
@@ -4532,6 +4640,7 @@
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
+       <Background_color>237233227</Background_color>
       </EV_COLORIZABLE>
       <EV_SENSITIVE>
       </EV_SENSITIVE>
@@ -4552,6 +4661,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -4569,9 +4679,11 @@
        <item type="EV_HORIZONTAL_BOX">
         <Internal_properties>
          <id>178</id>
+         <name>metric_selection_empty_area</name>
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4591,6 +4703,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4610,6 +4723,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -4631,6 +4745,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -4649,6 +4764,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4670,6 +4786,7 @@
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
+        <Background_color>237233227</Background_color>
        </EV_COLORIZABLE>
        <EV_SENSITIVE>
        </EV_SENSITIVE>
@@ -4690,6 +4807,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4710,6 +4828,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -4752,9 +4871,11 @@
         <item type="EV_CELL">
          <Internal_properties>
           <id>160</id>
+          <name>metric_definition_empty_area</name>
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -4771,9 +4892,10 @@
         <Internal_properties>
          <id>163</id>
          <name>label_area</name>
-         <Expanded>0</Expanded>
+         <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4793,6 +4915,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_FONTABLE>
          </EV_FONTABLE>
@@ -4815,6 +4938,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -4833,6 +4957,7 @@
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -4852,6 +4977,7 @@
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
+         <Background_color>237233227</Background_color>
         </EV_COLORIZABLE>
         <EV_SENSITIVE>
         </EV_SENSITIVE>
@@ -5047,6 +5173,7 @@
           <Expanded>1</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5095,6 +5222,7 @@
           <Expanded>1</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5142,6 +5270,7 @@
           <Expanded>1</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5167,6 +5296,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5199,6 +5329,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5231,6 +5362,7 @@
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
+          <Background_color>237233227</Background_color>
          </EV_COLORIZABLE>
          <EV_SENSITIVE>
          </EV_SENSITIVE>
@@ -5287,6 +5419,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -5308,6 +5441,7 @@
     <Expanded>0</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_FONTABLE>
    </EV_FONTABLE>
@@ -5353,6 +5487,7 @@
    <Expanded>1</Expanded>
   </Internal_properties>
   <EV_COLORIZABLE>
+   <Background_color>237233227</Background_color>
   </EV_COLORIZABLE>
   <EV_SENSITIVE>
   </EV_SENSITIVE>
@@ -5373,6 +5508,7 @@
     <Expanded>0</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -5391,6 +5527,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -5411,6 +5548,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5434,6 +5572,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5456,6 +5595,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5474,6 +5614,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5495,6 +5636,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5534,6 +5676,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5556,6 +5699,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5574,6 +5718,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5596,6 +5741,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5635,6 +5781,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5657,6 +5804,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5675,6 +5823,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5698,6 +5847,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5719,6 +5869,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
@@ -5737,6 +5888,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -5757,6 +5909,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>
@@ -5802,6 +5955,7 @@
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
+    <Background_color>237233227</Background_color>
    </EV_COLORIZABLE>
    <EV_SENSITIVE>
    </EV_SENSITIVE>
@@ -5822,6 +5976,7 @@
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
+     <Background_color>237233227</Background_color>
     </EV_COLORIZABLE>
     <EV_FONTABLE>
     </EV_FONTABLE>

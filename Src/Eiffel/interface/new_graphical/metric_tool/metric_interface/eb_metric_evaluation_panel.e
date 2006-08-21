@@ -164,6 +164,18 @@ feature {NONE} -- Initialization
 
 			filter_result_btn.set_tooltip (metric_names.f_filter_result)
 			filter_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_filter_icon)
+
+			metric_area.drop_actions.extend (agent drop_cluster)
+			metric_area.drop_actions.extend (agent drop_class)
+			metric_area.drop_actions.extend (agent drop_feature)
+
+			metric_selection_empty_area.drop_actions.extend (agent drop_cluster)
+			metric_selection_empty_area.drop_actions.extend (agent drop_class)
+			metric_selection_empty_area.drop_actions.extend (agent drop_feature)
+
+			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
+			metric_definition_empty_area.drop_actions.extend (agent drop_class)
+			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
 		end
 
 feature -- Access

@@ -454,7 +454,37 @@ feature -- Numeric types
 			Result := Current
 		end
 
+feature {NONE} -- Generic conformance
+
+	full_type_byte_code_type_id: INTEGER is
+			-- Associated type ID used in type information byte code.
+		do
+				-- 0 by default
+		end
+
+	make_full_type_byte_code_parameters (ba: BYTE_ARRAY) is
+			-- Generate type information for generic parameters (if any).
+		require
+			ba_attached: ba /= Void
+		do
+			ba.append_short_integer (system.byte_context.current_type.generated_id (False))
+			make_gen_type_byte_code (ba, True)
+		end
+
 feature -- Generic conformance
+
+	make_full_type_byte_code (ba: BYTE_ARRAY) is
+			-- Append full type info for the current type to `ba'
+			-- following the format for locals, creation expressions, etc.
+		require
+			ba_attached: ba /= Void
+		local
+			c: CL_TYPE_I
+		do
+			ba.append_short_integer (full_type_byte_code_type_id)
+			make_full_type_byte_code_parameters (ba)
+			ba.append_short_integer (-1)
+		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 			-- Put type id's in byte array.

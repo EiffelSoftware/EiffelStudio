@@ -33,6 +33,7 @@ inherit
 			is_identical,
 			is_standalone,
 			is_valid,
+			make_full_type_byte_code_parameters,
 			make_gen_type_byte_code,
 			meta_generic,
 			name,
@@ -462,6 +463,15 @@ feature -- Status Report
 			Result.set_mark (declaration_mark)
 		end
 
+feature {NONE} -- Generic conformance
+
+	make_full_type_byte_code_parameters (ba: BYTE_ARRAY) is
+			-- Generate type information for generic parameters.
+		do
+			ba.append_short_integer (system.byte_context.current_type.generated_id (False))
+			make_gen_type_byte_code (ba, True)
+		end
+
 feature -- Generic conformance
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
@@ -489,7 +499,6 @@ feature -- Generic conformance
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
-
 		local
 			i, up : INTEGER
 		do

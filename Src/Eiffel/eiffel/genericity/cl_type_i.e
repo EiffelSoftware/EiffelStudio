@@ -14,6 +14,7 @@ inherit
 			c_type,
 			conforms_to_array,
 			created_in,
+			full_type_byte_code_type_id,
 			generate_cid,
 			generate_cid_array,
 			generate_cid_init,
@@ -484,6 +485,16 @@ feature {NONE} -- Array optimization
 	array_class_c: CLASS_C is
 		once
 			Result := System.array_class.compiled_class
+		end
+
+feature {NONE} -- Generic conformance
+
+	full_type_byte_code_type_id: INTEGER is
+			-- Associated type ID used in type information byte code.
+		do
+			Result := type_id - 1
+		ensure then
+			definition: Result = type_id - 1
 		end
 
 feature -- Generic conformance

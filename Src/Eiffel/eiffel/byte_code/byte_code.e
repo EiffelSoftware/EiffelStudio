@@ -651,26 +651,11 @@ feature -- Byte code generation
 				local_list.after
 			loop
 				Temp_byte_code_array.append_integer (local_list.item.sk_value)
-
 				formal_type := context.real_type (local_list.item)
 				if formal_type.is_true_expanded and then not formal_type.is_bit then
-					-- Generate full type info.
-					expanded_type ?= formal_type
-
-					Temp_byte_code_array.append_short_integer (expanded_type.type_id - 1)
-					gen_type ?= expanded_type
-
-					if gen_type /= Void then
-						Temp_byte_code_array.append_short_integer (
-									context.current_type.generated_id (False)
-																  )
-						gen_type.make_gen_type_byte_code (
-												Temp_byte_code_array, True
-														 )
-					end
-					Temp_byte_code_array.append_short_integer(-1)
+						-- Generate full type info.
+					formal_type.make_full_type_byte_code (Temp_byte_code_array)
 				end
-
 				local_list.forth
 			end
 
@@ -691,17 +676,7 @@ feature -- Byte code generation
 							bit_i ?= formal_type
 							Temp_byte_code_array.append_integer(bit_i.size)
 						else
-							expanded_type ?= formal_type
-							Temp_byte_code_array.append_short_integer
-										(expanded_type.type_id - 1)
-							gen_type ?= expanded_type
-
-							if gen_type /= Void then
-								Temp_byte_code_array.append_short_integer (context.current_type.generated_id (False))
-								gen_type.make_gen_type_byte_code
-										(Temp_byte_code_array, True)
-							end
-							Temp_byte_code_array.append_short_integer(-1)
+							formal_type.make_full_type_byte_code (Temp_byte_code_array)
 						end
 					end
 					i := i + 1
@@ -710,17 +685,8 @@ feature -- Byte code generation
 			Temp_byte_code_array.append (Bc_no_clone_arg)
 
 			if r_type.is_true_expanded and then not r_type.is_bit then
-				-- Generate full type info.
-				expanded_type ?= r_type
-
-				Temp_byte_code_array.append_short_integer (expanded_type.type_id - 1)
-				gen_type ?= expanded_type
-
-				if gen_type /= Void then
-					Temp_byte_code_array.append_short_integer (context.current_type.generated_id (False))
-					gen_type.make_gen_type_byte_code (Temp_byte_code_array, True)
-				end
-				Temp_byte_code_array.append_short_integer(-1)
+					-- Generate full type info.
+				r_type.make_full_type_byte_code (Temp_byte_code_array)
 			end
 
 			context.byte_prepend (ba, Temp_byte_code_array)

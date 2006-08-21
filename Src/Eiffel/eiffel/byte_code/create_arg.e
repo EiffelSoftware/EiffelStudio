@@ -167,26 +167,14 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an argument anchored type.
-		local
-			cl_type_i : CL_TYPE_I
-			gen_type  : GEN_TYPE_I
 		do
 			ba.append (Bc_carg)
-			cl_type_i := type_to_create
-			gen_type  ?= cl_type_i
-
 			if is_formal then
 				create_formal_type.make_byte_code (ba)
 			else
 				ba.append ('%U')
 					-- Default creation type
-				ba.append_short_integer (cl_type_i.type_id - 1)
-					-- Generics (if any)
-				if gen_type /= Void then
-					ba.append_short_integer (context.current_type.generated_id (False))
-					gen_type.make_gen_type_byte_code (ba, True)
-				end
-				ba.append_short_integer (-1)
+				type_to_create.make_full_type_byte_code (ba)
 			end
 				-- Argument position
 			ba.append_short_integer (position)

@@ -117,7 +117,8 @@ feature -- Eiffel source line information
 			if not context.final_mode or else System.exception_stack_managed then
 				l_buffer := buffer
 				l_buffer.put_string("RTHOOK(")
-				l_buffer.put_integer(context.current_feature.number_of_breakpoint_slots)
+				l_buffer.put_integer(
+					context.current_feature.number_of_breakpoint_slots)
 				l_buffer.put_string(");")
 				l_buffer.put_new_line
 			end

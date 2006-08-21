@@ -10,9 +10,6 @@ deferred class ASSERT_LIST_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			number_of_breakpoint_slots
-		end
 
 	ASSERTION_FILTER
 
@@ -25,16 +22,6 @@ feature {NONE} -- Initialization
 			assertions := filter_tagged_list (full_assertion_list)
 		ensure
 			full_assertion_list_set: full_assertion_list = a
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			if assertions /= Void then
-				Result := assertions.number_of_breakpoint_slots
-			end
 		end
 
 feature -- Attributes

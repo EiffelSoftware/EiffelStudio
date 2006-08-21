@@ -111,7 +111,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			valid_f: f /= Void
 			non_void_class_c: class_c /= Void
 		do
-			e_feature := f.api_feature (class_c.class_id)
+			e_feature := f.enclosing_feature.api_feature (class_c.class_id)
 		end
 
 	set_written_class (c: CLASS_C) is

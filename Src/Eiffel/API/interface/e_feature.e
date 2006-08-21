@@ -224,6 +224,11 @@ feature -- Properties
 		do
 		end;
 
+	is_inline_agent: BOOLEAN
+			-- is the featuer an inline angent
+		do
+		end
+
 feature -- Access
 
 	written_feature: E_FEATURE is
@@ -409,7 +414,7 @@ feature -- Access
 			bid: INTEGER
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 		do
-			bid := body_index;
+			bid := body_id_for_ast;
 			if bid > 0 then
 					-- Server in the temporary server first to get the latest version of the AST.
 				if tmp_ast_server.body_has (bid) then
@@ -576,9 +581,8 @@ feature -- Access
 			Result := f.number_of_breakpoint_slots
 		end
 
-	number_of_all_precondition_slots: INTEGER is
-			-- Number of preconditions
-			-- (including inherited assertions)
+	first_breakpoint_slot_index: INTEGER is
+			-- Index of the first breakpoin-slot. Includes inherited and inner assertions
 		local
 			f: FEATURE_I
 		do
@@ -586,7 +590,7 @@ feature -- Access
 			check
 				feature_upto_date: f /= Void
 			end
-			Result := f.number_of_all_precondition_slots
+			Result := f.number_of_breakpoint_slots
 		end
 
 feature -- Comparison
@@ -829,7 +833,7 @@ feature {E_FEATURE} -- Implementation
 	associated_class_id: INTEGER
             -- Class id where the feature was evaluated in
 
-feature {COMPILER_EXPORTER} -- Implementation
+feature -- Implementation
 
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
@@ -838,6 +842,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end;
 
 feature {FEATURE_I} -- Setting
+
+	body_id_for_ast: INTEGER
+			-- Body id that should be used for retrieving the ast (by feature ast)
+		do
+			Result := body_index
+		end
 
 	set_written_in (i: INTEGER) is
 			-- Set `written_in' to `i'.

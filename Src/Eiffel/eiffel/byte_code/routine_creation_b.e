@@ -54,7 +54,7 @@ feature  -- Initialization
 			open_positions := omap_bc
 			omap := a_omap
 
-			System.address_table.record_agent (cl_id, feature_id, a_is_target_closed, a_omap)
+			System.address_table.record_agent (cl_id, feature_id, a_is_target_closed, a_is_inline_agent, a_omap)
 
 			is_inline_agent := a_is_inline_agent
 			is_target_closed := a_is_target_closed
@@ -71,7 +71,7 @@ feature  -- Initialization
 	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
-			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN;) is
+			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -103,6 +103,7 @@ feature -- Attributes
 
 	class_id: INTEGER
 			-- Class Id of the addressed feature
+
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
 
@@ -199,7 +200,8 @@ feature -- Status report
 			end
 
 			Result.set_ids (class_type, class_id, origin_class_id, rout_id, feature_id, rout_origin, rout_offset,
-							type, arguments_enl, omap_enl, omap, is_inline_agent, is_target_closed, is_precompiled, is_basic)
+							type, arguments_enl, omap_enl, omap, is_inline_agent, is_target_closed, is_precompiled,
+							is_basic)
 		end
 
 feature -- Inlining

@@ -36,7 +36,10 @@ feature -- Initialization
 			operands := other.operands
 			class_id := other.class_id
 			feature_id := other.feature_id
-			flags := other.flags
+			is_precompiled := other.is_precompiled
+			is_basic := other.is_basic
+			is_target_closed := other.is_target_closed
+			is_inline_agent := other.is_inline_agent
 			open_count := other.open_count
 		end
 
@@ -103,7 +106,6 @@ feature -- Status report
 				and then (class_id = other.class_id)
 				and then (feature_id = other.feature_id)
 				and then (encaps_rout_disp = other.encaps_rout_disp)
-				and then (flags = other.flags)
 				and then (calc_rout_addr = other.calc_rout_addr)
 		end
 
@@ -184,7 +186,10 @@ feature -- Duplication
 			encaps_rout_disp := other.encaps_rout_disp
 			class_id := other.class_id
 			feature_id := other.feature_id
-			flags := other.flags
+			is_precompiled := other.is_precompiled
+			is_basic := other.is_basic
+			is_target_closed := other.is_target_closed
+			is_inline_agent := other.is_inline_agent
 			closed_operands := other.closed_operands
 			open_count := other.open_count
 		ensure then
@@ -248,27 +253,13 @@ feature {ROUTINE} -- Implementation
 
 	frozen feature_id: INTEGER
 
-	frozen is_precompiled: BOOLEAN is
-		do
-			Result := flags & 0x0001 /= 0
-		end
+	frozen is_precompiled: BOOLEAN 
 
-	frozen is_basic: BOOLEAN is
-		do
-			Result := flags & 0x0002 /= 0
-		end
+	frozen is_basic: BOOLEAN 
 
-	frozen is_target_closed: BOOLEAN is
-		do
-			Result := flags & 0x0004 /= 0
-		end
+	frozen is_target_closed: BOOLEAN
 
-	frozen is_inline_agent: BOOLEAN is
-		do
-			Result := flags & 0x0008 /= 0
-		end
-
-	frozen flags: INTEGER
+	frozen is_inline_agent: BOOLEAN 
 
 	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
@@ -276,9 +267,33 @@ feature {ROUTINE} -- Implementation
 						  a_closed_operands: TUPLE; a_open_count: INTEGER) is
 			-- Initialize object.
 		require
+			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
+		do
+			set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr, a_class_id, a_feature_id,
+							   a_open_map, a_is_precompiled, a_is_basic, a_is_target_closed, 
+							   a_is_inline_agent, a_closed_operands, a_open_count)
+		end
+
+	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
+						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER) is
+			-- Initialize object.
+		do
+			rout_disp := a_rout_disp
+			encaps_rout_disp := a_encaps_rout_disp
+			calc_rout_addr := a_calc_rout_addr
+			closed_operands := a_closed_operands
+			is_target_closed := a_is_target_closed
+			open_count := a_open_count
+		end
+		
+	frozen set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
+						  	  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
+	 						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN
+							  a_closed_operands: TUPLE; a_open_count: INTEGER) is
+			-- Initialize object.
+		require
 			a_class_id_valid: a_class_id > -1
 			a_feature_id_valid: a_feature_id > -1
-			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
 			rout_disp := a_rout_disp
 			encaps_rout_disp := a_encaps_rout_disp
@@ -286,19 +301,10 @@ feature {ROUTINE} -- Implementation
 			class_id := a_class_id
 			feature_id := a_feature_id
 			open_map := a_open_map
-			flags := 0
-			if a_is_precompiled then
-				flags := 0x0001
-			end
-			if a_is_basic then
-				flags := flags.bit_or (0x0002)
-			end
-			if a_is_target_closed then
-				flags := flags.bit_or (0x0004)
-			end
-			if a_is_inline_agent then
-				flags := flags.bit_or (0x0008)
-			end
+			is_precompiled := a_is_precompiled
+			is_basic := a_is_basic
+			is_target_closed := a_is_target_closed
+			is_inline_agent := a_is_inline_agent
 			closed_operands := a_closed_operands
 			open_count := a_open_count
 		ensure
@@ -308,6 +314,7 @@ feature {ROUTINE} -- Implementation
 			class_id_set: class_id = a_class_id
 			feature_id_set: feature_id = a_feature_id
 			open_map_set: open_map = a_open_map
+			is_target_closed_set: is_target_closed = a_is_target_closed
 			is_precompiled_set: is_precompiled = a_is_precompiled
 			is_basic_set: is_basic = a_is_basic
 			is_inline_agent_set: is_inline_agent = a_is_inline_agent

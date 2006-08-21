@@ -396,7 +396,7 @@ feature -- Plug and Makefile file
 			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
-			set_rout_disp_feat: FEATURE_I
+			feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, exp_init_name,
 			set_count_name: STRING
@@ -515,9 +515,13 @@ feature -- Plug and Makefile file
 			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
 				cl_type := rout_cl.types.first
 				id := cl_type.static_type_id
-				set_rout_disp_feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
-				set_rout_disp_name := Encoder.feature_name (id, set_rout_disp_feat.body_index).twin
-
+				if final_mode then
+					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_final_name_id)
+					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).twin
+				else
+					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
+					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).twin
+				end
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string ("();%N")
@@ -609,9 +613,13 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				--Pointer on `set_rout_disp' of class ROUTINE
+				--Pointer on `set_rout_disp' or 'set_rout_disp_final' of class ROUTINE
 			if set_rout_disp_name /= Void then
-				buffer.put_string ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER)) ")
+				if final_mode then
+					buffer.put_string ("%Tegc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) ")
+				else
+					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER)) ")
+				end
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string (";%N")
 			end

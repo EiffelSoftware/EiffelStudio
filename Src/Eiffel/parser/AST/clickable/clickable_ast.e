@@ -7,12 +7,9 @@ indexing
 
 deferred class
 	CLICKABLE_AST
-	
+
 inherit
 	AST_EIFFEL
-		undefine
-			number_of_breakpoint_slots
-		end
 
 feature -- Properties
 

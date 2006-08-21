@@ -64,6 +64,12 @@ extern "C" {
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
 	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
 							    EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
+#ifdef WORKBENCH
+	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
+		EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
+#else
+	RT_LNK void (*egc_routdisp_fl)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER); /* ROUTINE `set_rout_disp_final' feature */
+#endif
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */

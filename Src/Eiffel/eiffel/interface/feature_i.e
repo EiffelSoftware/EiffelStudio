@@ -81,6 +81,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_INLINE_AGENT_LOOKUP
+
 feature -- Access
 
 	feature_name: STRING is
@@ -252,7 +254,7 @@ feature -- Access
 		end
 
 	enclosing_body_id: INTEGER
-			-- The feature id of the enclosing feature of an inline agent
+			-- The body id of the enclosing feature of an inline agent
 
 	enclosing_feature: FEATURE_I is
 			-- Gives the (real) feature in which this features is defined.
@@ -273,8 +275,8 @@ feature -- Access
 			Result /= Void and not Result.is_inline_agent
 		end
 
-		-- the number of this inline agent in the enclosing feature
 	inline_agent_nr: INTEGER
+		-- the number of this inline agent in the enclosing feature
 
 feature -- Comparison
 
@@ -360,108 +362,33 @@ feature -- Debugger access
 			--| clause.                                                |
 			--|---------------------------------------------------------
 		local
-			loc_assert_id_set		: ASSERT_ID_SET
-			inh_assert_info			: INH_ASSERT_INFO
-			i						: INTEGER
-			l_body: like body
+			l_body: like real_body
+			l_routine: ROUTINE_AS
 		do
-				-- Get the number of breakpoint slots in the body + rescue +
-				-- inner preconditions and inner postconditions
-			l_body := body
-			if l_body /= Void then
-					-- May be Void in case of Invariant_feature_i
-				Result := l_body.number_of_breakpoint_slots
-			end
+			l_body := real_body
 
-				-- Add the number of breakpoint slots for inherited
-				-- pre & postconditions.
-			loc_assert_id_set := assert_id_set
-			if loc_assert_id_set /= Void then
-				from
-					i := 1
-				until
-					i > loc_assert_id_set.count
-				loop
-					inh_assert_info := loc_assert_id_set @ i
-					if loc_assert_id_set.has_precondition then
-						Result := Result + inh_assert_info.precondition_count
+			if l_body /= Void then
+				l_routine ?= l_body.content
+				Result := l_routine.number_of_breakpoint_slots
+			end
+		end
+
+	first_breakpoint_slot_index: INTEGER is
+			-- Index of the first breakpoin-slot. Includes inherited and inner assertions
+		local
+			l_body: like real_body
+			l_routine: ROUTINE_AS
+			l_internal: INTERNAL_AS
+		do
+			l_body := real_body
+			if l_body /= Void then
+				l_routine ?= l_body.content
+				if l_routine /= Void then
+					l_internal ?= l_routine.routine_body
+					if l_internal /= Void then
+						Result := l_internal.first_breakpoint_slot_index
 					end
-					Result := Result + inh_assert_info.postcondition_count
-					i := i + 1
 				end
-
-					-- If the inherited assertions does not define a precondition,
-					-- the precondition will be true and thus no precondition
-					-- clause will be generated at all, so we have to remove the
-					-- inner preconditions that we have already counted
-					--
-					-- Note: the inner preconditions have been added by the
-					-- operation "Result := body.number_of_breakpoint_slots".
-				if not loc_assert_id_set.has_precondition then
-					Result := Result - number_of_precondition_slots
-				end
-			end
-		end
-
-	number_of_all_precondition_slots: INTEGER is
-			-- Number of precondition slots in feature (:::)
-			-- It includes precondition (inner & herited).
-		local
-			loc_assert_id_set		: ASSERT_ID_SET
-			inh_assert_info			: INH_ASSERT_INFO
-			i						: INTEGER
-		do
-			Result := number_of_precondition_slots
-
-				-- Add the number of breakpoint slots for inherited
-				-- preconditions.
-			loc_assert_id_set := assert_id_set
-			if loc_assert_id_set /= Void then
-				from
-					i := 1
-				until
-					i > loc_assert_id_set.count
-				loop
-					inh_assert_info := loc_assert_id_set @ i
-					if loc_assert_id_set.has_precondition then
-						Result := Result + inh_assert_info.precondition_count
-					end
-					i := i + 1
-				end
-					-- If the inherited assertions does not define a precondition,
-					-- the precondition will be true and thus no precondition
-					-- clause will be generated at all, so we have to remove the
-					-- inner preconditions that we have already counted
-					--
-					-- Note: the inner preconditions have been added by the
-					-- operation "Result := number_of_precondition_slots".
-				if not loc_assert_id_set.has_precondition then
-					Result := Result - number_of_precondition_slots
-				end
-			end
-		end
-
-	number_of_precondition_slots: INTEGER is
-			-- Number of preconditions
-			-- (inherited assertions are not taken into account)
-		local
-			l_body: like body
-		do
-			l_body := body
-			if l_body /= Void then
-				Result := l_body.number_of_precondition_slots
-			end
-		end
-
-	number_of_postcondition_slots: INTEGER is
-			-- Number of postconditions
-			-- (inherited assertions are not taken into account)
-		local
-			l_body: like body
-		do
-			l_body := body
-			if l_body /= Void then
-				Result := l_body.number_of_postcondition_slots
 			end
 		end
 
@@ -754,7 +681,7 @@ feature -- Setting
 			-- Do nothing
 		end
 
-	set_inline_agent (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER) is
+	set_inline_agent (a_enclosing_body_id, a_inline_agent_nr: INTEGER) is
 			-- Define this feature as an inline agent
 		require
 			enclosing_body_id_valid: a_enclosing_body_id > 0
@@ -1314,12 +1241,10 @@ feature -- Check
 			-- Body of feature
 		local
 			feat_as: FEATURE_AS
-			inline_agent_lookup: AST_INLINE_AGENT_LOOKUP
 			l_enclosing_feature: FEATURE_I
 		do
 			if is_inline_agent then
 				if not is_fake_inline_agent then
-					create inline_agent_lookup
 					l_enclosing_feature := enclosing_feature
 					if l_enclosing_feature.is_invariant then
 						Result := inline_agent_lookup.lookup_inline_agent_of_invariant (
@@ -2594,6 +2519,8 @@ feature -- Api creation
 			-- API representation of Current
 		require
 			a_class_id_positive: a_class_id > 0
+		local
+			e_routine: E_ROUTINE
 		do
 			Result := new_api_feature
 			Result.set_written_feature_id (written_feature_id)
@@ -2607,6 +2534,11 @@ feature -- Api creation
 			Result.set_is_prefix (is_prefix)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_is_il_external (is_il_external)
+			if is_inline_agent then
+				e_routine ?= Result
+				e_routine.set_enclosing_body_id (enclosing_body_id)
+				e_routine.set_inline_agent_nr (inline_agent_nr)
+			end
 		end
 
 feature {NONE} -- Implementation

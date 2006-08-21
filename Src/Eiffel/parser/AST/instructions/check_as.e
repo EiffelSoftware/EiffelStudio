@@ -10,9 +10,6 @@ class CHECK_AS
 
 inherit
 	INSTRUCTION_AS
-		redefine
-			number_of_breakpoint_slots
-		end
 
 	ASSERTION_FILTER
 
@@ -84,16 +81,6 @@ feature -- Roundtrip/Token
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := end_keyword.last_token (a_list)
-		end
-
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			if check_list /= Void then
-				Result := check_list.number_of_breakpoint_slots
-			end
 		end
 
 feature -- Comparison

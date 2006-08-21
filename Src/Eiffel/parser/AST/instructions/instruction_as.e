@@ -9,17 +9,8 @@ deferred class INSTRUCTION_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			number_of_breakpoint_slots
-		end
 
 feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		do
-			Result := 1
-		end
 
 	line_pragma: BREAK_AS
 			-- Associated line if any

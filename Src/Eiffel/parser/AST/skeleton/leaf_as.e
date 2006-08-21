@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	AST_EIFFEL
-		undefine
-			number_of_breakpoint_slots
-		end
 
 	LOCATION_AS
 		rename

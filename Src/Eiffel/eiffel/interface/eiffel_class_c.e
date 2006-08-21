@@ -72,7 +72,7 @@ feature -- Access
 	inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
 			-- Table of inline agents indexed by their alias names
 
-	remove_inline_agents_of_feature (a_feature_i: FEATURE_I) is
+	remove_inline_agents_of_feature (a_feature_i: FEATURE_I; a_removed: HASH_TABLE [FEATURE_I, INTEGER]) is
 			-- Removes all the inline agents of a given feature
 		local
 			l_feat: FEATURE_I
@@ -84,6 +84,11 @@ feature -- Access
 			loop
 				l_feat := inline_agent_table.item_for_iteration
 				if l_feat.enclosing_body_id = a_feature_i.body_index then
+					if a_removed /= Void then
+							-- for each removed inline-agent feature we safe its
+							-- routine id along with its inline_agent_nr
+						a_removed.force (l_feat, l_feat.inline_agent_nr)
+					end
 					inline_agent_table.remove (inline_agent_table.key_for_iteration)
 					system.execution_table.add_dead_function (l_feat.body_index)
 				end
@@ -465,6 +470,7 @@ feature -- Third pass: byte code production and type check
 			check_local_names_needed: BOOLEAN
 			byte_code_generated: BOOLEAN
 			inline_agent_byte_code: LINKED_LIST [BYTE_CODE]
+			old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
@@ -578,7 +584,9 @@ feature -- Third pass: byte code production and type check
 						then
 								-- Type check
 							Error_handler.mark
-							remove_inline_agents_of_feature (feature_i)
+							create old_inline_agents.make (1)
+							remove_inline_agents_of_feature (feature_i, old_inline_agents)
+							ast_context.set_old_inline_agents (old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := Error_handler.new_error
@@ -687,7 +695,9 @@ feature -- Third pass: byte code production and type check
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 							error_handler.mark
-							remove_inline_agents_of_feature (feature_i)
+							create old_inline_agents.make (1)
+							remove_inline_agents_of_feature (feature_i, old_inline_agents)
+							ast_context.set_old_inline_agents (old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := error_handler.new_error
@@ -744,7 +754,8 @@ feature -- Third pass: byte code production and type check
 					new_suppliers := suppliers.same_suppliers
 				end
 				if invariant_feature /= Void then
-					remove_inline_agents_of_feature (invariant_feature)
+					ast_context.set_old_inline_agents (Void)
+					remove_inline_agents_of_feature (invariant_feature, Void)
 				end
 				if f_suppliers /= Void then
 					new_suppliers.remove_occurrence (f_suppliers)
@@ -783,8 +794,9 @@ feature -- Third pass: byte code production and type check
 					invar_clause := Inv_ast_server.item (class_id)
 					Error_handler.mark
 
-					remove_inline_agents_of_feature (invariant_feature)
-
+					create old_inline_agents.make (1)
+					remove_inline_agents_of_feature (invariant_feature, old_inline_agents)
+					ast_context.set_old_inline_agents (old_inline_agents)
 					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
 					if not Error_handler.new_error then
@@ -852,7 +864,8 @@ feature -- Third pass: byte code production and type check
 				loop
 					feature_i := removed_features.item_for_iteration
 
-					remove_inline_agents_of_feature (feature_i)
+					remove_inline_agents_of_feature (feature_i, Void)
+					ast_context.set_old_inline_agents (Void)
 
 					body_index := feature_i.body_index
 					f_suppliers := dependances.item (body_index)
@@ -1978,22 +1991,20 @@ feature -- Inline agents
 			end
 		end
 
-	inline_agent_with_nr (a_enclosing_feature: FEATURE_I; a_inline_agent_nr: INTEGER): FEATURE_I is
+	inline_agent_with_nr (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER): FEATURE_I is
 			-- Searches for the inline agent with number `a_inline_agent_nr'.
 		local
 			l_feat: FEATURE_I
-			l_enc_bid: INTEGER
 			l_old_cursor: CURSOR
 		do
 			from
 				l_old_cursor := inline_agent_table.cursor
 				inline_agent_table.start
-				l_enc_bid := a_enclosing_feature.body_index
 			until
 				Result /= Void or else inline_agent_table.after
 			loop
 				l_feat := inline_agent_table.item_for_iteration
-				if l_feat.enclosing_body_id = l_enc_bid and then l_feat.inline_agent_nr = a_inline_agent_nr then
+				if l_feat.enclosing_body_id = a_enclosing_body_id and then l_feat.inline_agent_nr = a_inline_agent_nr then
 					Result := l_feat
 				else
 					inline_agent_table.forth
@@ -2004,7 +2015,7 @@ feature -- Inline agents
 			end
 		ensure
 			valid_agent_found: Result /= Void implies
-				Result.enclosing_body_id = a_enclosing_feature.body_index and
+				Result.enclosing_body_id = a_enclosing_body_id and
 				Result.inline_agent_nr = a_inline_agent_nr
 		end
 

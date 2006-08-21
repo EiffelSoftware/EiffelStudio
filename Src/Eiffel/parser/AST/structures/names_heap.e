@@ -329,6 +329,7 @@ feature {NONE} -- Implementation: access
 			put ("$$fake_inline_agent_name") check found_item = fake_inline_agent_name_name_id end
 			put ("callable") check found_item = callable_name_id end
 			put ("valid_operands") check found_item = valid_operands_name_id end
+			put ("set_rout_disp_final") check found_item = set_rout_disp_final_name_id end
 		end
 
 invariant

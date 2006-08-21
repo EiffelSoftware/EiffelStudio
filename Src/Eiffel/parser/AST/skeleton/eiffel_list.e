@@ -12,7 +12,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			number_of_breakpoint_slots, is_equivalent
+			is_equivalent
 		end
 
 	CONSTRUCT_LIST [T]
@@ -66,23 +66,6 @@ feature -- Visitor
 		end
 
 feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST
-		local
-			i, nb: INTEGER
-			l_area: SPECIAL [T]
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				Result := Result + l_area.item (i).number_of_breakpoint_slots
-				i := i + 1
-			end
-		end
 
 	reversed_first: T is
 		require

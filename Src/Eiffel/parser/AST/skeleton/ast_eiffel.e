@@ -48,14 +48,6 @@ feature -- Comparison
 			end
 		end
 
-feature -- Access
-
-	number_of_breakpoint_slots: INTEGER is
-			-- Number of stop points for AST (body only)
-		do
-			-- Return 0 by default
-		end
-
 feature -- Location
 
 	frozen start_location: LOCATION_AS is

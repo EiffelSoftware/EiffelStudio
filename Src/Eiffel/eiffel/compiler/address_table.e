@@ -228,7 +228,7 @@ feature -- Register
 		end
 
 	record_agent (
-		a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]) is
+		a_class_id, a_feature_id: INTEGER; a_is_target_closed, a_is_inline_agent: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]) is
 			-- Records an agent with the reordering (defined by a_open_map) to the specified feature in the address_table
 		require
 			class_id_valid: a_class_id > 0
@@ -237,6 +237,12 @@ feature -- Register
 			l_omap: like empty_omap
 		do
 			l_table_entry := force_new_table_entry (a_class_id, a_feature_id)
+
+			if a_is_inline_agent then
+					-- An inline agent has only one reordering. We delete all the existing ones.
+				l_table_entry.wipe_out
+			end
+
 			if a_open_map = Void then
 				l_omap := empty_omap
 			else

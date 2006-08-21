@@ -27,25 +27,34 @@ feature -- Access
 			-- Result of last call, if any.
 
 	call (args: OPEN_ARGS) is
+		local
+			l_closed_count: INTEGER
 		do
+			l_closed_count :=  closed_operands.count
 			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
+				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 	item (args: OPEN_ARGS): RESULT_TYPE is
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
+		local
+			l_closed_count: INTEGER
 		do
+			l_closed_count :=  closed_operands.count
 			Result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
+				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 	apply is
 			-- Call function with `operands' as last set.
+		local
+			l_closed_count: INTEGER
 		do
+			l_closed_count :=  closed_operands.count
 			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $operands, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, closed_operands.count, open_count, $open_map)
+				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 feature -- Comparison

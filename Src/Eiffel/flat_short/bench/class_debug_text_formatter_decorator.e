@@ -31,7 +31,7 @@ feature
 			-- the user.
 		do
 			Precursor {TEXT_FORMATTER_DECORATOR} (a_source_class, feature_as)
-			current_e_feature := Void
+			e_feature := Void
 			breakpoint_index := 1
 		end
 
@@ -42,17 +42,11 @@ feature
 			-- Use `feature_as' to set up locals.
 		do
 			Precursor {TEXT_FORMATTER_DECORATOR} (source, target, feature_as)
-			current_e_feature := source.api_feature (source.written_in)
+			e_feature := source.api_feature (source.written_in)
 			breakpoint_index := 1
 		end
 
 feature {NONE}
-
-	current_e_feature: E_FEATURE
-			-- current e_feature of the context.
-
-	breakpoint_index: INTEGER
-			-- Breakpoint index in feature
 
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
@@ -61,11 +55,11 @@ feature {NONE}
 			-- Create a breakable mark.
 		do
 			if
-				current_e_feature /= Void and then
-				current_e_feature.is_debuggable
+				e_feature /= Void and then
+				e_feature.is_debuggable
 			then
 				added_breakpoint := True
-				text_formatter.process_breakpoint (current_e_feature, breakpoint_index)
+				text_formatter.process_breakpoint (e_feature, breakpoint_index)
 			end
 			breakpoint_index := breakpoint_index + 1
 		end

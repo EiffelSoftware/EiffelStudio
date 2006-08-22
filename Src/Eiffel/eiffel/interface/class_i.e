@@ -25,8 +25,6 @@ inherit
 
 	SHARED_OPTIMIZE_LEVEL
 
-	SHARED_DEBUG_LEVEL
-
 	SHARED_VISIBLE_LEVEL
 
 	REFACTORING_HELPER
@@ -34,6 +32,11 @@ inherit
 	CONF_FILE_DATE
 
 	HASHABLE
+
+	CONF_CONSTANTS
+		export
+			{NONE}
+		end
 
 feature -- Access
 
@@ -153,29 +156,23 @@ feature -- Access
 			-- Debug level
 		local
 			l_d: HASH_TABLE [BOOLEAN, STRING]
-			l_dp: DEBUG_TAG_I
 		do
-			if options.is_debug then
-				l_d := options.debugs
-				if l_d /= Void and then not l_d.is_empty then
-					create l_dp.make
-					from
-						l_d.start
-					until
-						l_d.after
-					loop
-						if l_d.item_for_iteration then
-							l_dp.tags.extend (l_d.key_for_iteration)
+			l_d := options.debugs
+			if options.is_debug and then l_d /= Void and then not l_d.is_empty then
+				create Result
+				from
+					l_d.start
+				until
+					l_d.after
+				loop
+					if l_d.item_for_iteration then
+						if l_d.key_for_iteration.is_equal (unnamed_debug) then
+							Result.enable_unnamed
+						else
+							Result.enable_tag (l_d.key_for_iteration)
 						end
-						l_d.forth
 					end
-					if l_dp.tags.is_empty then
-						Result := no_debug
-					else
-						Result := l_dp
-					end
-				else
-					Result := yes_debug
+					l_d.forth
 				end
 			else
 				Result := no_debug
@@ -555,6 +552,14 @@ feature {COMPILER_EXPORTER} -- Setting
 				cl.set_original_class (Current)
 				set_compiled_class (cl)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	no_debug: DEBUG_I is
+			-- All debugs disabled debug level.
+		once
+			create Result
 		end
 
 invariant

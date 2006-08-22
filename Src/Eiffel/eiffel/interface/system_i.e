@@ -4739,7 +4739,6 @@ feature --Workbench option file generation
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			partial_debug: DEBUG_TAG_I
 			class_type: CLASS_TYPE
 			option_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
@@ -4759,10 +4758,7 @@ feature --Workbench option file generation
 			from i := 1 until i > nb loop
 				a_class := class_array.item (i)
 				if a_class /= Void then
-					partial_debug ?= a_class.debug_level
-					if partial_debug /= Void then
-						partial_debug.generate_keys (buffer, a_class.class_id)
-					end
+					a_class.debug_level.generate_keys (buffer, a_class.class_id)
 				end
 				i := i + 1
 			end

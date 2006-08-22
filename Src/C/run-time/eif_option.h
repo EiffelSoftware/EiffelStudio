@@ -71,6 +71,7 @@ struct eif_opt {
 /* Option level values for debugging, tracing and profiling */
 #define OPT_NO				0		 /* No option */
 #define OPT_ALL				1		 /* Yes/all option */
+#define OPT_UNNAMED			2		 /* Unnamed debugs */
 
 RT_LNK struct eif_opt *eoption;		/* Melted option table */
 

@@ -1134,10 +1134,14 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd78)
 				Error_handler.raise_error
 			else
-					-- Retrieve the EIFGENs location (next to where the config file is).
+					-- Retrieve the EIFGENs location (if specified or next to where the config file is).
 				create l_user_options.make (l_system.uuid, l_system.library_target.name)
 				l_target_options := l_user_options.target
-				l_target_options.set_last_location (l_pre.location.build_path ("", ""))
+				if l_pre.eifgens_location /= Void then
+					l_target_options.set_last_location (l_pre.eifgens_location.evaluated_path)
+				else
+					l_target_options.set_last_location (l_pre.location.build_path ("", ""))
+				end
 			end
 
 				-- retrieve precompile project

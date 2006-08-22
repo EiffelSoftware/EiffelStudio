@@ -842,7 +842,13 @@ rt_public void option_updt(void)
 		case BCDB_YES:	debug_level = OPT_ALL;
 						debug_opt->nb_keys = 0;
 						break;
-		case BCDB_TAG:	debug_level = OPT_ALL;
+		case BCDB_UNNAMED:
+		case BCDB_TAG:	
+						if (c == BCDB_UNNAMED) {
+							debug_level = OPT_ALL | OPT_UNNAMED;
+						} else {
+							debug_level = OPT_ALL;
+						}
 						debug_count = wshort();
 						SAFE_ALLOC(keys, char *, debug_count);
 						debug_opt->keys = keys;

@@ -9,10 +9,10 @@
 			following the option with a space or a <code>=</code> sign in between the option name and the argument as in:
 		</paragraph>
 		<code_block>
---ace=<string>"ace.ace"</string></code_block>
+--ace=<string>"mysystem.ecf"</string></code_block>
 		this option is equivalent to:
 		<code_block>
--a "ace.ace"</code_block>
+-a "mysystem.ecf"</code_block>
 		<paragraph>
 			The list of options is the following:
 		</paragraph>
@@ -27,7 +27,7 @@
 				<bold>--eiffel, -e</bold> &lt;PROJECT_FILE&gt;: Add COM interface to Eiffel project with project file (*.epr) &lt;PROJECT_FILE&gt;.
 			</item>
 			<item>
-				<bold>--ace, -a</bold> &lt;ACE_FILE&gt;: Path to ace file of Eiffel project to be added a COM interface. Use together with <code>'--eiffel'</code>.
+				<bold>--ace, -a</bold> &lt;ECF_FILE&gt;: Path to ecf file of Eiffel project to be added a COM interface. Use together with <code>'--eiffel'</code>.
 			</item>
 			<item>
 				<bold>--facade, -f</bold> &gt;FACADE_CLASS&gt;: Name of facade class to generate IDL from. Use together with <code>'--eiffel'</code>.

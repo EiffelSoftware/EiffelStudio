@@ -203,7 +203,7 @@ feature -- Basic commands
 	cleanup is
 			-- Cleanup socket.
 		do
-			if exists then 
+			if exists then
 				close
 			end
 		end;
@@ -772,8 +772,9 @@ feature -- Input
 			ext_data := ext_data.memory_alloc (size)
 			from
 				amount_read := 0
+				return_val := -1
 			until
-				amount_read = size
+				amount_read = size or return_val = 0
 			loop
 				return_val := c_read_stream (descriptor, size - amount_read, ext_data);
 				if return_val > 0 then
@@ -784,10 +785,6 @@ feature -- Input
 						l_data.append (recv_packet)
 					end
 					amount_read := amount_read + return_val
-				else
-					if amount_read = 0 then
-						l_data := Void
-					end
 				end
 			end
 			if l_data /= Void then

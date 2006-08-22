@@ -41,6 +41,7 @@ using System.Reflection;
 using System.Collections;
 #if CS_20
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 #endif
 
 namespace EiffelSoftware.Runtime
@@ -48,6 +49,23 @@ namespace EiffelSoftware.Runtime
 
 	public class RT_CUSTOM_ATTRIBUTE_DATA
 	{
+#if CS_20
+		private static Type[] CollectionToArray(ReadOnlyCollection<CustomAttributeTypedArgument> a_collect)
+		{
+			if (a_collect == null)
+			{
+				throw new ArgumentNullException("a_collect");
+			}
+			int i = 0;
+			Type[] rgResult = new Type[a_collect.Count];
+			foreach (CustomAttributeTypedArgument cat in a_collect)
+			{
+				rgResult[i++] = cat.Value as Type;
+			}
+			return rgResult;
+		}
+#endif
+
 		public static object[] get_eiffel_custom_attributes(Type a_type, ICustomAttributeProvider a_provider)
 		{
 			if (a_type == null)
@@ -114,7 +132,16 @@ namespace EiffelSoftware.Runtime
 						object[] args = new object[cad.ConstructorArguments.Count];
 						foreach (CustomAttributeTypedArgument cata in cad.ConstructorArguments)
 						{
-							args[i++] = cata.Value;
+							ReadOnlyCollection<CustomAttributeTypedArgument> collection = cata.Value as ReadOnlyCollection<CustomAttributeTypedArgument>;
+							if (collection != null)
+							{
+								args[i++] = CollectionToArray(collection);
+							}
+							else
+							{
+								args[i++] = cata.Value;
+							}
+							
 						}
 						// Create attribute object instance and add.
 						object o = ci.Invoke(args);

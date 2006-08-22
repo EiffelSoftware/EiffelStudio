@@ -52,6 +52,7 @@ feature {NONE} -- Implementation
 			l_vis_prop: DIALOG_PROPERTY [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
+			l_precompile: CONF_PRECOMPILE
 		do
 			properties.reset
 
@@ -71,7 +72,8 @@ feature {NONE} -- Implementation
 				l_visible := l_cluster
 			elseif a_group.is_precompile then
 				l_text_prop.set_value (conf_interface_names.group_precompile)
-				l_library ?= a_group
+				l_precompile ?= a_group
+				l_library := l_precompile
 				l_visible := l_library
 			elseif a_group.is_library then
 				l_text_prop.set_value (conf_interface_names.group_library)
@@ -322,6 +324,19 @@ feature {NONE} -- Implementation
 				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]}?, agent handle_value_changes (False)))
 				properties.add_property (l_vis_prop)
 			end
+
+			if l_precompile /= Void then
+					-- eifgens_location for precompiles
+				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name)
+				l_dir_prop.set_target (a_target)
+				l_dir_prop.set_description (conf_interface_names.group_eifgens_location_description)
+				if l_precompile.eifgens_location /= Void then
+					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
+				end
+				l_dir_prop.change_value_actions.extend (agent update_eifgens_location (l_precompile, ?, a_target))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
+				properties.add_property (l_dir_prop)
+			end
 			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
@@ -346,6 +361,22 @@ feature {NONE} -- Configuration settings
 					create {CONF_FILE_LOCATION}l_location.make (a_location, a_target)
 				end
 				a_group.set_location (l_location)
+			end
+		end
+
+	update_eifgens_location (a_precompile: CONF_PRECOMPILE; a_location: STRING_32; a_target: CONF_TARGET) is
+			-- Update eifgens location of `a_precompile' to be `a_location'.
+		require
+			a_precompile: a_precompile /= Void
+			a_target: a_target /= Void
+		local
+			l_location: CONF_DIRECTORY_LOCATION
+		do
+			if a_location /= Void and then not a_location.is_empty then
+				create l_location.make (a_location, a_target)
+				a_precompile.set_eifgens_location (l_location)
+			else
+				a_precompile.set_eifgens_location (Void)
 			end
 		end
 

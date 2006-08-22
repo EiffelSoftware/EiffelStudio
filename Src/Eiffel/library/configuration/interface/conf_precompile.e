@@ -39,6 +39,21 @@ feature -- Status
 			Result := True
 		end
 
+feature -- Access
+
+	eifgens_location: CONF_DIRECTORY_LOCATION
+			-- Location of the eifgens to use.
+
+feature {CONF_ACCESS} -- Update
+
+	set_eifgens_location (a_location: like eifgens_location) is
+			-- Set `eifgens_location' to `a_location'.
+		do
+			eifgens_location := a_location
+		ensure
+			eifgens_location_set: eifgens_location = a_location
+		end
+
 feature -- Visit
 
 	process (a_visitor: CONF_VISITOR) is

@@ -345,6 +345,7 @@
 	<xs:complexType name="precompile">
 		<xs:complexContent>
 			<xs:extension base="library">
+				<xs:attribute name="eifgens_location" type="xs:string" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

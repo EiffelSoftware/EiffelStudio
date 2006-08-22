@@ -86,7 +86,7 @@ feature -- Basic Oprtations
 			valid_name: not a_name.is_empty
 		local
 			l_assembly: ASSEMBLY
-			l_resolver: AR_RESOLVER
+			l_resolver: CONSUMER_AGUMENTED_RESOLVER
 		do
 			is_successful := True
 			last_error_message := ""
@@ -94,7 +94,8 @@ feature -- Basic Oprtations
 			add_to_eac := True
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void then
-				create l_resolver.make
+				create l_resolver.make (create {ARRAYED_LIST [STRING]}.make (0))
+				l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 				l_resolver.add_resolve_path_from_file_name (l_assembly.location)
 				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
@@ -122,6 +123,7 @@ feature -- Basic Oprtations
 
 			l_paths := a_path.split (';')
 			create l_resolver.make (l_paths)
+			l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 
 			from

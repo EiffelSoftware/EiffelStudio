@@ -235,7 +235,7 @@ feature {NONE} -- Private Access
 				    "-c,--client=DEFINITION_FILE!#Build client to access COM component described by DEFINITION_FILE.",
 				    "-s,--server=DEFINITION_FILE!#Build new COM component as described by DEFINITION_FILE.",
 				    "-e,--eiffel=PROJECT_FILE!#Add COM interface to Eiffel project with project file (*.epr) PROJECT_FILE.",
-				    "-a,--ace=ACE_FILE!#Path to ace file of Eiffel project PROJECT_FILE. Use with '-e'.",
+				    "-a,--ace=ECF_FILE!#Path to ecf file of Eiffel project PROJECT_FILE. Use with '-e'.",
 				    "-f,--facade=FACADE_CLASS!#Expose features from FACADE_CLASS to COM. Use with '-e'.",
 				    "-u,--cluster=CLUSTER!#Cluster containing FACADE_CLASS given with option '-f'.",
 				    "-m,--marshaller#Build marshaller DLL, can only be used with '--server' and if definition file is an IDL file.",

@@ -204,7 +204,7 @@ feature -- Visit nodes
 				a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
 
 					-- do libraries after clusters so that the clusters have already been processed
-				process_with_old (a_target.libraries, Void)
+				process_with_old (a_target.libraries, l_libraries)
 
 					-- must be done one time per system after everything is processed
 				if a_target = application_target then
@@ -305,7 +305,6 @@ feature -- Visit nodes
 				end
 			end
 
-			handled_groups.force (a_library)
 			create current_classes.make (Classes_per_cluster)
 			l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
 				-- do renaming prefixing if necessary

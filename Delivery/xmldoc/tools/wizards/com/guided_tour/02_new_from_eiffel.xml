@@ -35,7 +35,7 @@
 				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject</italic> where $ISE_EIFFEL represents the path to the 
 				EiffelStudio installation directory.
 			</item>
-			<item>Select the ACE file located in the same directory and compile.</item>
+			<item>Select the ECF file located in the same directory and compile.</item>
 			<item>Start the EiffelCOM Wizard</item>
 			<item>
 				In <bold>Project</bold>, in the <bold>Current project</bold> input field, type in <italic>string</italic>
@@ -46,12 +46,15 @@
 				<italic>Add a COM interface to an existing Eiffel project</italic>.
 			</item>
 			<item>
-				Click the browse button under <bold>Path to Eiffel project file (*.epr)</bold> and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</italic>.
+				In the field under  <bold>Path to Eiffel project location</bold> enter 
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject</italic>.
 			</item>
 			<item>
-				Click the browse button under <bold>Path to system's ace file (*.ace)</bold> and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\Ace.ace</italic>.
+				Click the browse button under <bold>Path to system's configuration file (*.ecf)</bold> and open the file 
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.ecf</italic>.
+			</item>
+			<item>In the text field under <bold>Target to use</bold>, enter: 
+				<italic>string</italic>.
 			</item>
 			<item>In the text field under <bold>Name of Eiffel facade class</bold>, enter: 
 				<class_name>string_manipulator</class_name>.

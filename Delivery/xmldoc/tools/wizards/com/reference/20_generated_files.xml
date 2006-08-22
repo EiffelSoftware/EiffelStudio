@@ -12,8 +12,9 @@
 				<bold>Include</bold> contain respectively the C++ source files and header files. The subfolder <bold>Component</bold> contains 
 				the Eiffel classes corresponding to the component's coclasses. Finally the subfolder <bold>Interface_proxy</bold> contains classes 
 				wrapping interfaces that may be returned by functions of the component. These classes may be of interest for systems 
-				implementing a new COM component as well. The <bold>Client</bold> folder also contains a ACE file that can be used to 
+				implementing a new COM component as well. The <bold>Client</bold> folder also contains a ECF file that can be used to 
 				precompile the generated Eiffel classes if the project consists of accessing an existing component.
+				It is also possible to directly use the ECF file as a library in an existing project.
 			</item>
 			<item>
 				The <bold>Common</bold> folder includes classes that are useful both when accessing and implementing a COM component. It 
@@ -31,7 +32,7 @@
 				a <bold>Component</bold> folder which contains Eiffel classes 
 				corresponding to the component's coclasses and a <bold>Interface_stub</bold> folder which contains Eiffel classes wrapping 
 				interfaces that may be given as argument to the component. This last folder may also be useful when accessing a COM component. 
-				The <bold>Server</bold> folder also includes a ACE file which can be used to compile the generated system if the project consists of creating a new component.
+				The <bold>Server</bold> folder also includes a ECF file which can be used to compile the generated system if the project consists of creating a new component.
 			</item>
 		</list>
 		<seealso>

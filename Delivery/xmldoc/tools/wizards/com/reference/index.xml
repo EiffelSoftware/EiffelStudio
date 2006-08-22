@@ -1,8 +1,6 @@
 <document title="EiffelCOM Wizard Reference" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Version: 5.0</paragraph>
-		<paragraph>Availability: Full Package.</paragraph>
 		<paragraph>
 			The EiffelCOM Wizard allows the creation of Eiffel projects implementing or reusing COM components.
 		</paragraph>

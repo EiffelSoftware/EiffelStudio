@@ -698,12 +698,15 @@
 							<Directory Id="bin8" Name="bin">
 								<Component Id="estudio.exe" Guid="80B6C77B-41F5-4346-B02F-E00153176E46">
 									<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes">
-										<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0"	Show="normal" />
+										<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0"	Show="normal">
+											<Icon Id="ecf_icon" src="$(env.INSTALL_DIR)\studio\spec\$(env.ISE_PLATFORM)\bin\ecdbgd.exe" />
+										</Shortcut>
 										<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
 									</File>
-									<ProgId Id="estudio.project" Description="EiffelStudio project">
-										<Extension Id="epr">
-											<Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+									<ProgId Id="estudio.project" Description="EiffelStudio project" Icon="ecf_icon" IconIndex="1" >
+										<Extension Id="ecf">
+											<Verb Id="ecf1" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+											<Verb Id="ecf2" Argument="-config &quot;%1&quot; -melt" Command="compile" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
 										</Extension>
 									</ProgId>
 								</Component>

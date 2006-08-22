@@ -113,7 +113,6 @@ feature -- Basic operations
 			is_replace_launched_internal := true
 		ensure
 			is_replace_launched: is_replace_launched
-			replace_items_current_in_the_same_place: old replace_items.index = replace_items.index
 		end
 
 	replace_all is
@@ -124,7 +123,6 @@ feature -- Basic operations
 			l_string : STRING
 			l_index: INTEGER
 			l_refresh: BOOLEAN
-			l_class: CLASS_I
 		do
 			l_refresh := false
 			l_index := replace_items.index
@@ -140,11 +138,7 @@ feature -- Basic operations
 					check last_class_item_not_void: last_class_item /= Void end
 				end
 				if l_item /= Void then
-					l_class ?= l_item.data
-					check
-						class_i: l_class /= Void
-					end
-					if not l_class.is_read_only then
+					if item_writable (l_item) then
 						if is_current_replaced_as_cluster (l_item) then
 							l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
 							if l_last_item = Void or (l_last_item /= Void and then
@@ -518,6 +512,12 @@ feature {NONE} -- Implementation
 				re := replace_string
 			end
 			Result := re
+		end
+
+	item_writable (a_item: MSR_ITEM): BOOLEAN is
+			-- Is text representation of `a_item' writable?
+		do
+			Result := True
 		end
 
 	on_new_position_yielded (a_start, a_end : INTEGER; a_item : MSR_TEXT_ITEM) is

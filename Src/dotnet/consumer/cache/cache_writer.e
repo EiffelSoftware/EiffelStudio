@@ -223,7 +223,7 @@ feature -- Basic Operations
 					if l_assembly = Void then
 						l_assembly := l_old_assembly
 					end
-					l_consumer.consume (l_assembly)
+					l_consumer.consume (l_assembly, assembly_loader)
 					notifier.clear_notification
 
 					if not l_consumer.successful then

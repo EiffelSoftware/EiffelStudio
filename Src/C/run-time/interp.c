@@ -1990,6 +1990,32 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Object reattachment.
+	 */
+	case BC_BOX:
+#ifdef DEBUG
+		dprintf(2)("BC_BOX\n");
+#endif 	
+		type = get_int16(&IC);
+			/* GENERIC CONFORMANCE */
+		type = get_compound_id(MTC icurrent->it_ref,(short)type);
+		/* Creation of a new object. */
+		{
+			EIF_REFERENCE new_obj;		/* New object */
+			unsigned long stagval;
+
+			last = opop();
+			stagval = tagval;
+			new_obj = RTLNSMART(type);	/* Create new object */
+			last = iget();			/* Push a new value onto the stack */
+			last->type = SK_REF | SK_EXP;
+			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			if (tagval != stagval)		/* If GC calls melted dispose */
+				sync_registers(scur, stop);
+		}
+		break;
+
+	/*
 	 * Calling an external function.
 	 * Calling an Eiffel feature.
 	 */

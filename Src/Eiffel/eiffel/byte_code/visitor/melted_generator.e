@@ -1552,13 +1552,12 @@ feature {NONE} -- Implementation
 				if l_expression_type.is_basic then
 						-- Source is basic and target is a reference:
 						-- metamorphose
-					ba.append (Bc_metamorphose)
 					l_typed_pointer_type ?= l_expression_type
-					if l_typed_pointer_type /= Void then
-						debug ("refactor_to_implement")
-							(create {REFACTORING_HELPER}).to_implement ("Avoid freezing for TYPED_POINTER.")
-						end
-						system.set_freeze
+					if l_typed_pointer_type = Void then
+						ba.append (Bc_metamorphose)
+					else
+						ba.append (Bc_box)
+						l_typed_pointer_type.make_full_type_byte_code (ba)
 					end
 				elseif l_expression_type.is_expanded then
 						-- Source is expanded and target is a reference:

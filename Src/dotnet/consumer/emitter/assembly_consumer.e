@@ -51,12 +51,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	consume (ass: ASSEMBLY) is
-			-- Generate XML from `ass' metadata into `dest_path'.
+	consume (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER) is
+			-- Consumes assembly `ass' into EAC.
 		require
 			non_void_assembly: ass /= Void
 			non_void_destination_path: destination_path /= Void
 			valid_destination_path: (create {DIRECTORY}.make (destination_path)).exists
+			a_loader_attached: a_loader /= Void
 		local
 			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
 			count: INTEGER
@@ -74,7 +75,7 @@ feature -- Basic Operations
 			assembly_ids.extend (ca)
 			assembly_mapping.put (last_index, ass.full_name)
 			assembly_mapping.compare_objects
-			build_referenced_assemblies (ass)
+			build_referenced_assemblies (ass, a_loader)
 			prepare_consumed_types (ass)
 			serialize_consumed_types
 		end
@@ -112,15 +113,34 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 
+	fetch_module_types (a_mod: MODULE): NATIVE_ARRAY [SYSTEM_TYPE] is
+			-- Retrieves a module's types, respecting that a security exception
+			-- may prevent retrieval.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := a_mod.get_types
+			else
+				Result := create {NATIVE_ARRAY [SYSTEM_TYPE]}.make (0)
+			end
+		ensure
+			result_attached: Result /= Void
+		rescue
+			retried := True
+			retry
+		end
+
 	last_index: INTEGER
 			-- Last index where has been added a referened assembly.
 
-	build_referenced_assemblies (ass: ASSEMBLY) is
+	build_referenced_assemblies (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER) is
 			-- build referenced assemblies.
 		require
 			non_void_assembly: ass /= Void
 			positive_last_index: last_index > 0
 			assembly_mapping_object_comparison: assembly_mapping.object_comparison
+			a_loader_attached: a_loader /= Void
 		local
 			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
 			i, count: INTEGER
@@ -134,7 +154,7 @@ feature {NONE} -- Implementation
 			until
 				i > count
 			loop
-				l_ref_ass := {ASSEMBLY}.load_assembly_name (referenced_assemblies.item (i - 1))
+				l_ref_ass := a_loader.load (referenced_assemblies.item (i - 1))
 				check
 					non_void_referenced_assembly: l_ref_ass /= Void
 				end
@@ -144,7 +164,7 @@ feature {NONE} -- Implementation
 					assembly_ids.extend (ca)
 					assembly_mapping.put (last_index, l_ref_ass.full_name)
 						-- add also referenced assemblies of assembly referenced.
-					build_referenced_assemblies (l_ref_ass)
+					build_referenced_assemblies (l_ref_ass, a_loader)
 				end
 				i := i + 1
 			end
@@ -180,7 +200,7 @@ feature {NONE} -- Implementation
 				i >= module_count or done
 			loop
 				from
-					module_types := modules.item (i).get_types
+					module_types := fetch_module_types (modules.item (i))
 					type_count := module_types.count
 					j := 0
 				until

@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
 			l_bool_prop.set_description (conf_interface_names.target_check_vape_description)
-			add_boolean_setting_actions (l_bool_prop, s_check_vape, False)
+			add_boolean_setting_actions (l_bool_prop, s_check_vape, True)
 			properties.add_property (l_bool_prop)
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_console_application_name, current_target.setting_console_application)
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (conf_interface_names.target_dead_code_removal_description)
-			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, False)
+			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, True)
 			if is_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
-			add_boolean_setting_actions (l_bool_prop, s_inlining, False)
+			add_boolean_setting_actions (l_bool_prop, s_inlining, True)
 			if is_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_cls_compliant_name, current_target.setting_cls_compliant)
 			l_bool_prop.set_description (conf_interface_names.target_cls_compliant_description)
-			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, False)
+			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, True)
 			if not current_target.setting_msil_generation then
 				l_bool_prop.enable_readonly
 			end

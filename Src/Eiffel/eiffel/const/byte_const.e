@@ -190,6 +190,9 @@ feature -- Access
 	Bc_cclone:		CHARACTER is '%/146/';
 	Bc_cequal:		CHARACTER is '%/147/';
 
+		-- Object reattachment
+	Bc_box:			CHARACTER is '%/149/';
+
 		-- NATURAL constants
 	Bc_uint8:			CHARACTER is '%/150/';
 	Bc_uint16:			CHARACTER is '%/151/';

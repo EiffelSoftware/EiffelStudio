@@ -194,7 +194,7 @@ static  char    *names [] = {
 "BC_CCLONE" ,
 "BC_CEQUAL" ,
 "BC_NOTUSED_148" ,
-"BC_NOTUSED_149" ,
+"BC_BOX" ,
 "BC_UINT8" ,
 "BC_UINT16" ,
 "BC_UINT32" ,
@@ -960,6 +960,13 @@ static  void    print_instructions ()
 				break;
 			case  BC_METAMORPHOSE :
 				break;
+			case  BC_BOX :
+					/* Object reattachment */
+				print_ctype (get_int16(&ip));
+					/* GENERIC CONFORMANCE */
+				print_cid ();
+				break;
+
 			case  BC_REF_TO_PTR :
 				break;
 

@@ -78,42 +78,42 @@ feature -- Initialization
 					translator.run_make
 					c_error := c_compilation_error
 				end
-			end
 
-				-- Destroy network path mapping if any
-			if unc_mapper /= Void then
-				unc_mapper.destroy
-				unc_mapper := Void
-			end
+					-- Destroy network path mapping if any
+				if unc_mapper /= Void then
+					unc_mapper.destroy
+					unc_mapper := Void
+				end
 
-			if not gen_only then
-				if translator = Void then
-					l_msg := "Internal error during Makefile translation preparation.%N%N%
-							%Please report this problem to Eiffel Software at:%N%
-							%http://support.eiffel.com"
-					if not a_parser.silent then
-						create status_box.make_fatal (l_msg)
-					else
-						io.put_string (l_msg)
-						io.default_output.flush
-					end
-				else
-					if translator.has_makefile_sh then
+				if not gen_only then
+					if translator = Void then
+						l_msg := "Internal error during Makefile translation preparation.%N%N%
+								%Please report this problem to Eiffel Software at:%N%
+								%http://support.eiffel.com"
 						if not a_parser.silent then
-							make_util := translator.options.get_string ("make", "make utility")
-							create status_box.make (make_util, retried, c_error, False, False)
+							create status_box.make_fatal (l_msg)
 						else
-							if not c_error then
-									-- For eweasel processing
-								io.put_string ("C compilation completed%N")
-							end
+							io.put_string (l_msg)
 							io.default_output.flush
 						end
 					else
-						if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
-								-- For eweasel processing
-							io.put_string ("C compilation completed%N")
-							io.default_output.flush
+						if translator.has_makefile_sh then
+							if not a_parser.silent then
+								make_util := translator.options.get_string ("make", "make utility")
+								create status_box.make (make_util, retried, c_error, False, False)
+							else
+								if not c_error then
+										-- For eweasel processing
+									io.put_string ("C compilation completed%N")
+								end
+								io.default_output.flush
+							end
+						else
+							if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
+									-- For eweasel processing
+								io.put_string ("C compilation completed%N")
+								io.default_output.flush
+							end
 						end
 					end
 				end

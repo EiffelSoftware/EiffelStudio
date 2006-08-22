@@ -531,6 +531,7 @@ feature {NONE} -- Implementation
 			if folder_icon /= Void then
 				l_grid_label.set_pixmap (folder_icon)
 			end
+			l_row.select_actions.extend (agent description_text.set_text (""))
 			l_row.set_item (1, l_grid_label)
 			l_row.expand_actions.extend (agent node_expanded (l_row))
 			a_grid_structure.put (l_row, a_pref_parent_full_name)
@@ -586,7 +587,7 @@ feature {NONE} -- Implementation
 		local
 			l_prefs_to_sort: LIST [PREFERENCE]
 			l_known_pref_ht: HASH_TABLE [PREFERENCE, STRING]
-			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
+			l_sorted_preferences: DS_ARRAYED_LIST [STRING]
 			l_pref_index, l_pref_name: STRING
 			l_pref: PREFERENCE
 			l_sorting_up: BOOLEAN
@@ -599,8 +600,7 @@ feature {NONE} -- Implementation
 
 					-- Alphabetically sort the known preferences
 				from
-					create l_sorted_preferences.make
-					l_sorted_preferences.compare_objects
+					create l_sorted_preferences.make (l_prefs_to_sort.count)
 					l_prefs_to_sort.start
 				until
 					l_prefs_to_sort.after
@@ -626,10 +626,10 @@ feature {NONE} -- Implementation
 					else
 						check False end
 					end
-					l_sorted_preferences.extend (l_pref_index)
+					l_sorted_preferences.force_last (l_pref_index)
 					l_prefs_to_sort.forth
 				end
-				l_sorted_preferences.sort
+				l_sorted_preferences.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 				l_prefs_to_sort := Void
 
 				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
@@ -647,9 +647,9 @@ feature {NONE} -- Implementation
 				loop
 					inspect l_sorting_criteria
 					when Name_sorting_mode then --| Pref name
-						l_pref_name := l_sorted_preferences.item
+						l_pref_name := l_sorted_preferences.item_for_iteration
 					when Type_sorting_mode, Status_sorting_mode then --| type name
-						l_pref_index := l_sorted_preferences.item
+						l_pref_index := l_sorted_preferences.item_for_iteration
 						l_pref_name := l_pref_index.substring (l_pref_index.index_of ('@', 1) + 1, l_pref_index.count)
 					else
 						check False end

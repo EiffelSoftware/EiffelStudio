@@ -559,6 +559,9 @@ feature {NONE} -- WEL Implementation
 					-- We only perform the disable if `Current' is actually parented in a dialog.
 				disable_default_processing
 			else
+				if read_only then
+					process_tab_key (virtual_key)
+				end
 				Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			end
 		end

@@ -480,19 +480,24 @@ rt_public int is_debug(int st_type, char *key)
 
 	struct dbg_opt *debug_opt = &(eoption[st_type].debug_level);
 	int i;
+	int16 dbg_lvl;
 	int16 nb_keys;
 	char **keys;
 
-	if (debug_opt->debug_level == OPT_NO)
+	dbg_lvl = debug_opt->debug_level;
+
+	/* no debugging at all? */
+	if (dbg_lvl == OPT_NO)
 		return 0;
 
-	if (debug_opt->nb_keys == 0)
-		return 1;
-
+	/* unnamed or named */
 	if ((char *) 0 == key)
-		return 0;
+		return (dbg_lvl & OPT_UNNAMED) == OPT_UNNAMED;
 	else {
 		nb_keys = debug_opt->nb_keys;
+		if (nb_keys == 0) {
+			return 0;
+		}
 		keys = debug_opt->keys;
 		for (i=0; i<nb_keys; i++)
 			if (strcmp(key,keys[i]) == 0)

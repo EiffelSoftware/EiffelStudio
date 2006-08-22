@@ -50,6 +50,7 @@ extern "C" {
 #define BCDB_NO			'n'
 #define BCDB_YES		'y'
 #define BCDB_TAG		't'
+#define BCDB_UNNAMED	'u'
 #define BC_NO			'n'
 #define BC_YES			'y'
 

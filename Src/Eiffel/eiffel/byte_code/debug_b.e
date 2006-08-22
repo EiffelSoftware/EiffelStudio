@@ -88,7 +88,7 @@ feature -- C Code generation
 			if not Result then
 				debug_level := context.current_type.base_class.debug_level
 				if keys = Void then
-					Result := debug_level.is_yes
+					Result := debug_level.has_unnamed
 				else
 					from
 						keys.start

@@ -10,12 +10,13 @@ indexing
 
 class
 	DB_CONST
-	
+
 feature -- Access
 
 	Db_no:		CHARACTER is 'n';
 	Db_yes:		CHARACTER is 'y';
 	Db_tag:		CHARACTER is 't';
+	Db_unnamed:	CHARACTER is 'u';
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1,49 +1,125 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-deferred class DEBUG_I 
+class
+	DEBUG_I
 
-feature 
+feature -- Access
 
-	is_yes: BOOLEAN is
-			-- Is the debug option value `yes' ?
-		do
-			-- Do nothing
-		end;
-
-	is_no: BOOLEAN is
-			-- Is the  debug option value `no' ?
-		do
-			-- Do nothing
-		end;
-
-	is_partial: BOOLEAN is
-			-- Is the debug option a list of tag ?
-		do
-			-- Do nothing
-		end;
+	has_unnamed: BOOLEAN
+			-- Are unnamed debug clauses enabled?
 
 	is_debug (tag: STRING): BOOLEAN is
 			-- Is the debug compatible with tag `tag' ?
-		deferred
-		end;
+		do
+			Result := tags /= Void and then tags.has (tag)
+		end
 
-	trace is
-			-- Debug purpose
-		deferred
+	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER) is
+			-- Generate keys C array
+		require
+			good_argument: buffer /= Void;
+		local
+			l: SORTED_TWO_WAY_LIST [STRING];
+		do
+			if tags /= Void then
+				buffer.put_string ("static char *keys");
+				buffer.put_integer (id);
+				buffer.put_string ("[] = {");
+				from
+					l := tags;
+					l.start
+				until
+					l.after
+				loop
+					buffer.put_character ('"');
+					buffer.put_string (l.item);
+					buffer.put_string ("%", ");
+					l.forth;
+				end;
+				buffer.put_string ("};%N%N");
+			end
 		end;
 
 	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		require
 			good_argument: buffer /= Void;
-		deferred
-		end;
+		do
+			if has_unnamed then
+				buffer.put_string ("{OPT_ALL | OPT_UNNAMED, (int16) ");
+			else
+				buffer.put_string ("{OPT_ALL, (int16) ");
+			end
+			if tags /= Void then
+				buffer.put_integer (tags.count);
+				buffer.put_string (", keys");
+				buffer.put_integer (id);
+				buffer.put_string ("}");
+			else
+				buffer.put_string ("0, (char **) 0}")
+			end
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for current debug level
-		deferred
-		end;
+		local
+			l: SORTED_TWO_WAY_LIST [STRING];
+		do
+			if not has_unnamed and tags = Void then
+				ba.append ({DB_CONST}.Db_no)
+			else
+				if has_unnamed then
+					ba.append ({DB_CONST}.Db_unnamed);
+				else
+					ba.append ({DB_CONST}.Db_tag);
+				end
+				if tags /= Void then
+					from
+						ba.append_short_integer (tags.count);
+						l := tags;
+						l.start
+					until
+						l.after
+					loop
+						ba.append_string (l.item);
+						l.forth;
+					end;
+				else
+					ba.append_short_integer (0)
+				end
+			end
+		end
+
+feature {CLASS_I} -- Update
+
+	enable_unnamed is
+			-- Enable unnamed debug clauses.
+		do
+			has_unnamed := True
+		ensure
+			has_unnamed: has_unnamed
+		end
+
+	enable_tag (a_tag: STRING) is
+			-- Enable debug clauses with `a_tag'.
+		require
+			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
+		do
+			if tags = Void then
+				create tags.make
+				tags.compare_objects
+			end
+			tags.extend (a_tag)
+		end
+
+feature {NONE} -- Implementation
+
+	tags: TWO_WAY_SORTED_SET [STRING];
+			-- Debug tags
+
+invariant
+	tags_not_empty: tags /= Void implies not tags.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -15,8 +15,19 @@ feature {NONE}
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: a_name.length > 0
+		local
+			retried: BOOLEAN
 		do
-			Result := {ASSEMBLY}.reflection_only_load (a_name)
+			if not retried then
+				Result := {ASSEMBLY}.load (a_name)
+			else
+				Result := {ASSEMBLY}.reflection_only_load (a_name)
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	dotnet_load_from (a_path: SYSTEM_STRING): ASSEMBLY is
@@ -24,8 +35,19 @@ feature {NONE}
 		require
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: a_path.length > 0
+		local
+			retried: BOOLEAN
 		do
-			Result := {ASSEMBLY}.reflection_only_load_from (a_path)
+			if not retried then
+				Result := {ASSEMBLY}.load_from (a_path)
+			else
+				Result := {ASSEMBLY}.reflection_only_load_from (a_path)
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 indexing

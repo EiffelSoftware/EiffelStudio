@@ -17,7 +17,8 @@ inherit
 			one_cluster_item_replaced,
 			is_current_replaced_as_cluster,
 			item_replaced,
-			all_item_replaced
+			all_item_replaced,
+			item_writable
 		end
 
 	EB_SHARED_MANAGERS
@@ -229,6 +230,20 @@ feature {NONE} -- Implementation
 				end
 			else
 				Result := false
+			end
+		end
+
+	item_writable (a_item: MSR_ITEM): BOOLEAN is
+			-- Is text representation of `a_item' writable?
+		local
+			l_class: CLASS_I
+		do
+			if a_item /= Void then
+				l_class ?= a_item.data
+				check
+					l_class_not_void: l_class /= Void
+				end
+				Result := not l_class.is_read_only
 			end
 		end
 

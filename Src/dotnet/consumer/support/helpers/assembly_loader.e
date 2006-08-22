@@ -65,7 +65,7 @@ feature {ASSEMBLY_LOADER} -- Access
 
 feature {NONE} -- Access
 
-	resolver: AR_RESOLVER
+	resolver: CONSUMER_AGUMENTED_RESOLVER
 			-- Resolver used for load resolution
 
 feature -- Element change
@@ -202,7 +202,7 @@ feature -- Domain
 			if Result = Void then
 				l_type := (({SYSTEM_OBJECT})[Current]).get_type
 				l_new_dom := {APP_DOMAIN}.create_domain (gac_domain_name)
-				l_hnd := l_new_dom.create_instance (l_type.assembly.get_name.full_name, l_type.full_name)
+				l_hnd := l_new_dom.create_instance_from (l_type.assembly.location, l_type.full_name)
 
 					-- Extend life time of created object
 				l_lease ?= l_hnd.get_lifetime_service

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"[
 		Binary search trees; left child item is less than current item,
 		right child item is greater
@@ -30,10 +30,10 @@ class BINARY_SEARCH_TREE [G -> COMPARABLE] inherit
 
 create
 	make
-	
+
 create {BINARY_SEARCH_TREE}
 	bt_make
-	
+
 feature {NONE} -- Initialization
 
 	make (v: like item) is
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			is_root: is_root
 			is_leaf: is_leaf
 		end
-		
+
 
 feature -- Access
 
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			-- (depending on `object_comparison')
 		do
 			if object_comparison then
-				Result := src /= Void and then src.is_equal (dest)
+				Result := equal (src, dest)
 			else
 				Result := (src = dest)
 			end

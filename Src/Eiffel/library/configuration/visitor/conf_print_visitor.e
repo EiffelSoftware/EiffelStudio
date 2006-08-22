@@ -239,6 +239,9 @@ feature -- Visit nodes
 			-- Visit `a_precompile'.
 		do
 			append_pre_group ("precompile", a_precompile)
+			if a_precompile.eifgens_location /= Void then
+				append_text (" eifgens_location=%""+a_precompile.eifgens_location.original_directory+"%"")
+			end
 			append_val_group (a_precompile)
 			append_post_group ("precompile")
 		ensure then

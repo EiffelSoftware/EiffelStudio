@@ -72,7 +72,11 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				Application.continue_ignoring_kept_objects
 			end
 		ensure
-			valid_break_index: (break_index = 0 implies (reason = Pg_new_breakpoint or reason = Pg_raise)) or (break_index > 0)
+			valid_break_index: (break_index = 0 implies (
+					reason = Pg_new_breakpoint
+					or reason = Pg_raise
+					or (e_feature /= Void and then e_feature.is_external))
+					) or (break_index > 0)
 			valid_efeature: e_feature = Void implies (reason = Pg_new_breakpoint)
 		end
 

@@ -72,6 +72,7 @@ feature {NONE} -- Events
 			new_val: INTEGER
 		do
 			l_text := text.twin
+			l_text.prune_all ('%%')
 
 			if l_text.is_integer then
 				new_val := l_text.to_integer

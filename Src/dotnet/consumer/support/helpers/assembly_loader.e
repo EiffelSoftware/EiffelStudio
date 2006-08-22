@@ -152,11 +152,11 @@ feature -- Basic operations
 							Result := load_from (l_fn)
 						end
 					end
-					if Result = Void then
+					if Result = Void and (retried or l_fn = Void) then
 							-- Fail safe.
 						Result := dotnet_load (a_name.to_string)
-						l_asms.add (a_name, Result)
 					end
+					l_asms.add (a_name, Result)
 				end
 			end
 		rescue
@@ -180,7 +180,7 @@ feature -- Basic operations
 					-- Attempt to locate in GAC (without a resolver! - do not set active resolver because
 					-- the CLR should only resolve in GAC)
 				l_result := gac_loader.load (Result.get_name)
-				if l_result /= Void then
+				if l_result /= Void and then l_result.global_assembly_cache then
 					Result := l_result
 				end
 				check result_attached: Result /= Void end

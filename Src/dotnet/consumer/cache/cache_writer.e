@@ -85,6 +85,7 @@ feature -- Basic Operations
 			l_assembly_folder: STRING
 			l_ca: CONSUMED_ASSEMBLY
 			l_assembly: ASSEMBLY
+			l_old_assembly: ASSEMBLY
 			l_name: ASSEMBLY_NAME
 			l_consumer: ASSEMBLY_CONSUMER
 			l_dir: DIRECTORY
@@ -213,6 +214,15 @@ feature -- Basic Operations
 					l_consumer.set_destination_path (l_dir.name)
 
 					notifier.notify_consume (create {NOTIFY_MESSAGE}.make (l_ca, a_path, l_reason, cache_reader.eiffel_assembly_cache_path))
+
+						-- Load assembly from path, so path assembly is consumed.
+						-- MS resort to a load performance trick where they provide assemblies with no implementation
+						-- in a local path and the implementation in the GAC.
+					l_old_assembly := l_assembly
+					l_assembly := assembly_loader.load_from (l_lower_path)
+					if l_assembly = Void then
+						l_assembly := l_old_assembly
+					end
 					l_consumer.consume (l_assembly)
 					notifier.clear_notification
 

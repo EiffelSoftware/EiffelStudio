@@ -727,7 +727,11 @@ feature -- Syntax completion
 					i := to_be_inserted.substring_index ("%%B", 1)
 				end
 				char_offset := to_be_inserted.substring_index("$cursor$", 1)
-				to_be_inserted.replace_substring_all ("$cursor$", "")
+				if char_offset = 0 then
+					char_offset := to_be_inserted.count + 1
+				else
+					to_be_inserted.replace_substring_all ("$cursor$", "")
+				end
 				line_nb := cursor.y_in_lines
 				char_nb := cursor.x_in_characters
 				insert_string (to_be_inserted)

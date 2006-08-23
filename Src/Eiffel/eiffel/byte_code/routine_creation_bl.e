@@ -105,7 +105,11 @@ feature
 			end
 				-- now the parameters for set_rout_disp:
 				-- rout_disp
-			generate_routine_address (True, False)
+			if wb_mode then
+				buf.put_character ('0')
+			else
+				generate_routine_address (True, False)
+			end
 			buf.put_string (sep)
 
 				-- encaps_rout_disp
@@ -317,59 +321,6 @@ feature
 							buffer.put_string ("RTNR),")
 						end
 					end
-				end
-			end
-		end
-
-	generate_true_routine_address is
-			-- Generate true routine address, ie address of Eiffel routine
-			-- and not an indirection to it.
-			--| Based on code located in ADDRESS_B
-		local
-			cl_type: CL_TYPE_I
-			internal_name, table_name: STRING
-			rout_table: ROUT_TABLE
-			buf: GENERATION_BUFFER
-			array_index: INTEGER
-			class_type_id: INTEGER
-		do
-			buf := buffer
-			cl_type ?= context.real_type (class_type)
-			class_type_id := cl_type.type_id
-
-			if not context.workbench_mode and not is_inline_agent then
-				array_index := Eiffel_table.is_polymorphic (rout_id, class_type_id, True)
-			end
-			if array_index = -2 then
-					-- Function pointer associated to a deferred feature
-					-- without any implementation
-				buf.put_string ("NULL")
-			elseif array_index >= 0 then
-					-- Mark table used
-				Eiffel_table.mark_used (rout_id)
-
-				table_name := Encoder.address_table_name (feature_id,
-					cl_type.associated_class_type.static_type_id)
-
-				buf.put_string ("(EIF_POINTER) ")
-				buf.put_string (table_name)
-
-					-- Remember extern declarations
-				Extern_declarations.add_routine (type.c_type, table_name)
-			else
-				rout_table ?= Eiffel_table.poly_table (rout_id)
-				rout_table.goto_implemented (class_type_id)
-				if rout_table.is_implemented then
-					internal_name := rout_table.feature_name
-					buf.put_string ("(EIF_POINTER) ")
-					buf.put_string (internal_name)
-
-					shared_include_queue.put (
-						System.class_type_of_id (
-							rout_table.item.written_type_id).header_filename)
-				else
-						-- Call to a deferred feature without implementation
-					buf.put_string ("NULL")
 				end
 			end
 		end

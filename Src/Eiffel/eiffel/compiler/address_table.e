@@ -187,14 +187,14 @@ feature -- Access
 									end
 									l_types.forth
 								end
-								from
-									l_table_entry.start
-								until
-									l_table_entry.after
-								loop
-									l_table_entry.item_for_iteration.set_frozen_age (new_frozen_age)
-									l_table_entry.forth
-								end
+							end
+							from
+								l_table_entry.start
+							until
+								l_table_entry.after
+							loop
+								l_table_entry.item_for_iteration.set_frozen_age (new_frozen_age)
+								l_table_entry.forth
 							end
 						end
 						l_table_of_class.forth
@@ -355,9 +355,11 @@ end
 									l_reordering := table_entry.item_for_iteration
 									l_reordering.set_frozen_age (new_frozen_age)
 									generate_feature (a_class, a_feature, final_mode, buffer, True,
-													  l_reordering.is_target_closed, l_reordering.open_map, False)
-									generate_feature (a_class, a_feature, final_mode, buffer, True,
 													  l_reordering.is_target_closed, l_reordering.open_map, True)
+									if final_mode then
+										generate_feature (a_class, a_feature, final_mode, buffer, True,
+														  l_reordering.is_target_closed, l_reordering.open_map, False)
+									end
 									table_entry.forth
 								end
 							end
@@ -651,11 +653,11 @@ feature {NONE} -- Generation
 					generate_signature_for_agent (buffer, a_types, return_type_string,
 												  function_name, omap, a_oargs_encapsulated)
 				else
-					buffer.generate_function_signature
+					buffer.generate_pure_function_signature
 						(return_type_string, function_name, True, buffer,
 						arg_names (args_count), a_types)
 				end
-				buffer.put_string ("%N%T")
+				buffer.put_string ("{%N%T")
 
 				if is_function then
 					buffer.put_string ("return ")
@@ -931,7 +933,7 @@ feature {NONE} -- Generation
 					a_omap.forth
 				end
 			end
-			a_buf.generate_function_signature (a_return_type, a_name, True, a_buf, l_arg_names, l_arg_types)
+			a_buf.generate_pure_function_signature (a_return_type, a_name, True, a_buf, l_arg_names, l_arg_types)
 		end
 
 	tmp_buffer: GENERATION_BUFFER is

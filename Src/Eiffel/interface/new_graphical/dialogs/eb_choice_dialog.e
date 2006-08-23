@@ -39,7 +39,7 @@ feature -- Initialization
 
 			create list
 			list.hide_title_row
-			list.pointer_button_release_actions.extend (agent on_select)
+			list.pointer_double_press_actions.extend (agent on_select)
 			list.key_press_actions.extend (agent key_actions)
 
 			create vb
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 	on_select (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- The user clicked on a list item.
 		do
-			if list.selected_item /= Void then
+			if a_button = 1 and then list.selected_item /= Void then
 				execute (list.selected_item)
 			end
 		end

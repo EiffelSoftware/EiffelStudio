@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			a_first_location_not_void: a_first_location /= Void
 			a_second_location_not_void: a_second_location /= Void
 		do
-			text := "Two different configuration files have the same uuid: "+a_first_location+" and "+a_second_location
+			text := "Two different configuration files have the same uuid:%N"+a_first_location+"%N"+a_second_location
 		end
 
 

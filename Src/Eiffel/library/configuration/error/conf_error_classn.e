@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Classfile without a class in "+a_file+" in configuration "+a_config+"."
+			text := "Classfile without a class in "+a_file+"%NConfiguration: "+a_config
 		end
 
 feature -- Access

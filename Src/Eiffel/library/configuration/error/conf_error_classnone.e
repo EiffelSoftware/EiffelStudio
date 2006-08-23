@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Class with illegal name NONE in "+a_file+" in configuration "+a_config+"."
+			text := "Class with illegal name NONE in "+a_file+"%NConfiguration "+a_config
 		end
 
 feature -- Access

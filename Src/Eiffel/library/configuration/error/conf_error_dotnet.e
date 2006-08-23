@@ -19,7 +19,7 @@ feature {NONE} -- Creation
 	make (a_config: STRING) is
 			-- Create.
 		do
-			text := "Assemblies on another platform than dotnet in configuration "+a_config+"."
+			text := "Assemblies on another platform than dotnet.%NConfiguration: "+a_config
 		end
 
 

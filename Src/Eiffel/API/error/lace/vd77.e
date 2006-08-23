@@ -20,6 +20,7 @@ feature -- Output
 	build_explain (st: TEXT_FORMATTER) is
 		do
 			st.add_string ("Error in precompile configuration: ")
+			st.add_new_line
 			st.add_multiline_string (error.out, 0)
 			st.add_new_line
 		end

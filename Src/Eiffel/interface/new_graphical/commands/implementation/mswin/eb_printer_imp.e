@@ -68,9 +68,6 @@ feature {EB_PRINTER} -- Basic operations
 			create rich.make (wnd, Interface_names.t_Dummy, 10, 10, 300, 500, -1)
 			create pdc.make_by_pointer (interface.context.printer_context)
 			txt := interface.text
-				-- Rich edits don't like lonely '%N' characters.
-			txt.prune_all ('%R')
-			txt.replace_substring_all ("%N", "%R%N")
 			create l_loader.make (txt)
 			rich.rtf_stream_in (l_loader)
 			if interface.job_name /= Void then

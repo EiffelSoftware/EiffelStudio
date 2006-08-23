@@ -98,12 +98,6 @@ feature {NONE}-- Initialization
 			toolbar_area.disable_item_expand (add_item_toolbar)
 			toolbar_area.disable_item_expand (remove_item_toolbar)
 			toolbar_area.disable_item_expand (remove_all_toolbar)
-			address_manager_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			domain_type_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			separator_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			add_item_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			remove_item_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			remove_all_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			
 			set_all_attributes_using_constants
 			

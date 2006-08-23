@@ -78,7 +78,6 @@ feature {NONE}-- Initialization
 			grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			grid_area.set_border_width (1)
 			toolbar_area.disable_item_expand (tool_bar)
-			tool_bar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			tool_bar.disable_vertical_button_style
 			up_btn.set_text ("Up")
 			down_btn.set_text ("Down")

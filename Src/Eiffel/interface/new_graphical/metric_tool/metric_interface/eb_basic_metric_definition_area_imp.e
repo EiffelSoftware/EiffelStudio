@@ -96,17 +96,13 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			main_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			main_area.set_padding (10)
-			definition_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			definition_area.set_padding (3)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
-			combination_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			combination_area.disable_item_expand (combination_toolbar_area)
 			combination_grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			combination_grid_container.set_border_width (1)
-			combination_toolbar_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			combination_toolbar_area.disable_item_expand (indent_and_toolbar)
 			combination_toolbar_area.disable_item_expand (indent_or_toolbar)
 			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_1)
@@ -115,30 +111,16 @@ feature {NONE}-- Initialization
 			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_3)
 			combination_toolbar_area.disable_item_expand (remove_criterion_toolbar)
 			combination_toolbar_area.disable_item_expand (remove_all_criterion_toolbar)
-			l_ev_cell_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			indent_and_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			indent_and_toolbar.disable_vertical_button_style
-			indent_or_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			indent_or_toolbar.disable_vertical_button_style
-			l_ev_tool_bar_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			up_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			up_toolbar.disable_vertical_button_style
-			down_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			down_toolbar.disable_vertical_button_style
-			l_ev_tool_bar_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			remove_criterion_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			remove_all_criterion_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			remove_all_criterion_toolbar.disable_vertical_button_style
-			l_ev_horizontal_box_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			l_ev_horizontal_box_1.disable_item_expand (expression_lbl)
-			expression_lbl.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			expression_lbl.set_text ("Expression:")
 			expression_lbl.align_text_left
-			l_ev_cell_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			l_ev_horizontal_box_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			expression_text.set_minimum_height (35)
 			expression_text.disable_edit
-			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			
 			set_all_attributes_using_constants
 			

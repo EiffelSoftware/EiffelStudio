@@ -900,6 +900,9 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						-- behavior. For now, only EV_BUTTON_IMP instances do that.
 					fire_select_actions_on_enter
 				end
+				if default_key_processing_handler /= Void and then not default_key_processing_handler.item ([key]) then
+					disable_default_processing
+				end
 			end
 		end
 
@@ -925,6 +928,9 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 				end
 				if key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([key])
+				end
+				if default_key_processing_handler /= Void and then not default_key_processing_handler.item ([key]) then
+					disable_default_processing
 				end
 			end
 		end
@@ -973,6 +979,7 @@ feature {NONE} -- Implementation
 			--| depended on process_standard_key returning a valid EV_KEY.
 		local
 			character_string: STRING_32
+			l_key: EV_KEY
 		do
 			inspect character_code
 			when 8, 27, 127 then
@@ -996,6 +1003,12 @@ feature {NONE} -- Implementation
 				end
 				if key_press_string_actions_internal /= Void then
 					key_press_string_actions_internal.call ([character_string])
+				end
+			end
+			if default_key_processing_handler /= Void then
+				create l_key.make_with_code (wel_to_v2_table.item (character_code))
+				if not default_key_processing_handler.item ([l_key]) then
+					disable_default_processing
 				end
 			end
 		end

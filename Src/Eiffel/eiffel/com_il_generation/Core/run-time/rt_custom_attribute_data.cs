@@ -82,8 +82,8 @@ namespace EiffelSoftware.Runtime
 			Type t = null;
 			ParameterInfo pi = null;
 			IList<CustomAttributeData> data = null;
+			Assembly providerAssembly = null;
 
-			// Attempt to get implementation object from a provider
 			pi = a_provider as ParameterInfo;
 			if (pi == null)
 			{
@@ -94,62 +94,107 @@ namespace EiffelSoftware.Runtime
 					if (a == null)
 					{
 						mi = a_provider as MemberInfo;
-						if (mi == null)
 						{
-							throw new ArgumentException("The provider is not valid.", "a_provider");
-						}
-						else
-						{
-							data = CustomAttributeData.GetCustomAttributes(mi);
+							providerAssembly = mi.Module.Assembly;
 						}
 					}
 					else
 					{
-						data = CustomAttributeData.GetCustomAttributes(a);
+						providerAssembly = a;
 					}
 				}
 				else
 				{
-					data = CustomAttributeData.GetCustomAttributes(t);
+					providerAssembly = t.Assembly;
 				}
 			}
 			else
 			{
-				data = CustomAttributeData.GetCustomAttributes(pi);
+				providerAssembly = pi.Member.Module.Assembly;
 			}
 
-			ArrayList list = new ArrayList(1);
-			if (data != null)
+			if (providerAssembly == null || providerAssembly.ReflectionOnly)
 			{
-				// Attribute retrieved
-				foreach (CustomAttributeData cad in data)
+				// Have to use reflection-only API.
+				ArrayList list = new ArrayList(1);
+				try
 				{
-					ConstructorInfo ci = cad.Constructor;
-					if (ci.DeclaringType == a_type)
+					// Attempt to get implementation object from a provider
+					pi = a_provider as ParameterInfo;
+					if (pi == null)
 					{
-						// Create ctor arguments
-						int i = 0;
-						object[] args = new object[cad.ConstructorArguments.Count];
-						foreach (CustomAttributeTypedArgument cata in cad.ConstructorArguments)
+						t = a_provider as Type;
+						if (t == null)
 						{
-							ReadOnlyCollection<CustomAttributeTypedArgument> collection = cata.Value as ReadOnlyCollection<CustomAttributeTypedArgument>;
-							if (collection != null)
+							a = a_provider as Assembly;
+							if (a == null)
 							{
-								args[i++] = CollectionToArray(collection);
+								mi = a_provider as MemberInfo;
+								if (mi == null)
+								{
+									throw new ArgumentException("The provider is not valid.", "a_provider");
+								}
+								else
+								{
+									data = CustomAttributeData.GetCustomAttributes(mi);
+								}
 							}
 							else
 							{
-								args[i++] = cata.Value;
+								data = CustomAttributeData.GetCustomAttributes(a);
 							}
-							
 						}
-						// Create attribute object instance and add.
-						object o = ci.Invoke(args);
-						list.Add(o);
+						else
+						{
+							data = CustomAttributeData.GetCustomAttributes(t);
+						}
+					}
+					else
+					{
+						data = CustomAttributeData.GetCustomAttributes(pi);
+					}
+
+					if (data != null)
+					{
+						// Attribute retrieved
+						foreach (CustomAttributeData cad in data)
+						{
+							ConstructorInfo ci = cad.Constructor;
+							if (ci.DeclaringType == a_type)
+							{
+								// Create ctor arguments
+								int i = 0;
+								object[] args = new object[cad.ConstructorArguments.Count];
+								foreach (CustomAttributeTypedArgument cata in cad.ConstructorArguments)
+								{
+									ReadOnlyCollection<CustomAttributeTypedArgument> collection = cata.Value as ReadOnlyCollection<CustomAttributeTypedArgument>;
+									if (collection != null)
+									{
+										args[i++] = CollectionToArray(collection);
+									}
+									else
+									{
+										args[i++] = cata.Value;
+									}
+
+								}
+								// Create attribute object instance and add.
+								object o = ci.Invoke(args);
+								list.Add(o);
+							}
+						}
 					}
 				}
+				catch
+				{
+				}
+				return list.ToArray();
 			}
-			return list.ToArray();
+			else
+			{
+				// Use non-reflection-only routine.
+				return a_provider.GetCustomAttributes(a_type, false);
+			}
 #else
 			return a_provider.GetCustomAttributes(a_type, false);
 #endif

@@ -64,8 +64,6 @@ feature {NONE}-- Initialization
 			metric_grid_area.set_border_width (1)
 			l_ev_horizontal_box_1.disable_item_expand (metric_selection_toolbar)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_2)
-			metric_selection_toolbar.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
-			l_ev_tool_bar_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (237, 233, 227))
 			l_ev_tool_bar_2.disable_vertical_button_style
 			disable_item_expand (l_ev_horizontal_box_1)
 			

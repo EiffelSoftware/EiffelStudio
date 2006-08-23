@@ -63,6 +63,8 @@ feature -- Access
 	pointer_position: EV_COORDINATE is
             -- Position of the screen pointer relative to `Current'.
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	pointer_style: EV_POINTER_STYLE is
@@ -88,7 +90,6 @@ feature -- Access
 			end
 		end
 
-
 	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', will use the default drop target.
@@ -97,6 +98,11 @@ feature -- Access
 	real_target: EV_DOCKABLE_TARGET
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
+
+	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]]
+			-- Agent used to determine whether the default key processing should occur for `Current'.
+			-- If agent returns `True' then default key processing continues as normal, False prevents
+			-- default key processing from occuring.
 
 feature -- Status Report
 
@@ -180,6 +186,22 @@ feature -- Status setting
 			real_target := Void
 		ensure
 			real_target_void: real_target = Void
+		end
+
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+			-- Assign `default_key_processing_handler' to `a_handler'.
+		require
+			a_handler_not_void: a_handler /= Void
+		do
+			default_key_processing_handler := a_handler
+		end
+
+	remove_default_key_processing_handler is
+			-- Ensure `default_key_processing_handler' is Void.
+		do
+			default_key_processing_handler := Void
+		ensure
+			default_key_processing_handler_removed: default_key_processing_handler = Void
 		end
 
 feature -- Element change
@@ -278,11 +300,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	pointer_position_not_void: is_usable implies pointer_position /= Void
-
-	--| FIXME IEK The minimum dimension size should be greater than 0
-	--| This does not hold for containers though
-
 	is_displayed_implies_show_requested:
 		is_usable and is_displayed implies is_show_requested
 

@@ -827,7 +827,7 @@ feature {NONE} -- Event handling
 							pretty_print_cmd.set_stone (ost)
 						end
 					end
-				when {EV_KEY_CONSTANTS}.key_page_up then
+				when {EV_KEY_CONSTANTS}.key_numpad_subtract then
 					if
 						ev_application.ctrl_pressed
 						and not ev_application.alt_pressed
@@ -835,7 +835,7 @@ feature {NONE} -- Event handling
 					then
 						move_selected (watches_grid, -1)
 					end
-				when {EV_KEY_CONSTANTS}.key_page_down then
+				when {EV_KEY_CONSTANTS}.key_numpad_add then
 					if
 						ev_application.ctrl_pressed
 						and not ev_application.alt_pressed

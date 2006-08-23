@@ -11,7 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_DRAWING_AREA
 
 inherit
@@ -107,7 +107,7 @@ feature {EV_ANY} -- Contract support
 				not is_tabable_from
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_DRAWING_AREA_I
 		-- Responsible for interaction with native graphics toolkit.

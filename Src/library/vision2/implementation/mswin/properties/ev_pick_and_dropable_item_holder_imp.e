@@ -152,21 +152,23 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			if not (item_is_pnd_source and not is_pnd_in_transport and not
+			if
+				not (item_is_pnd_source and not is_pnd_in_transport and not
 				is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport) then
-					if application_imp.pointer_button_press_actions_internal /= Void then
-						application_imp.pointer_button_press_actions_internal.call ([interface, 1, pt.x, pt.y])
-					end
-					if pointer_button_press_actions_internal /= Void then
-							-- The above `if' statement was added as an extra at a later date
-							-- and is not incorporated into the main if to avoid the
-							-- possibility of breaking something. Julian.
-						pointer_button_press_actions_internal.call
-							([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
-					end
-					press_actions_called := True
+				pnd_item_source.is_dnd_in_transport)
+			then
+				if application_imp.pointer_button_press_actions_internal /= Void then
+					application_imp.pointer_button_press_actions_internal.call ([interface, 1, pt.x, pt.y])
+				end
+				if pointer_button_press_actions_internal /= Void then
+						-- The above `if' statement was added as an extra at a later date
+						-- and is not incorporated into the main if to avoid the
+						-- possibility of breaking something. Julian.
+					pointer_button_press_actions_internal.call
+						([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+				end
+				press_actions_called := True
 			end
 			if interface.is_dockable then
 				pt := client_to_screen (x_pos, y_pos)

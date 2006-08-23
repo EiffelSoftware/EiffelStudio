@@ -1262,7 +1262,6 @@ feature {NONE} -- Implementation: Properties dialog
 					call_combo.extend (create {EV_LIST_ITEM}.make_with_text (valid_calling_conventions.item))
 					valid_calling_conventions.forth
 				end
-				initial_calling_convention := call_combo.selected_item.text
 				hb.disable_item_expand (call_combo)
 				vb.extend (hb)
 				vb.disable_item_expand (hb)
@@ -1368,7 +1367,6 @@ feature {NONE} -- Implementation: Properties dialog
 						call_combo.forth
 					end
 				end
-				initial_calling_convention := call_combo.selected_item.text
 			end
 		end
 
@@ -1430,7 +1428,7 @@ feature {NONE} -- Implementation: Properties dialog
 					else
 						modified_exported_feature.remove_index
 					end
-					if not initial_calling_convention.is_equal (cc) then
+					if not default_calling_convention.is_equal (cc) then
 						modified_exported_feature.set_call_type (cc)
 					else
 						modified_exported_feature.remove_call_type
@@ -1528,7 +1526,7 @@ feature {NONE} -- Implementation: Properties dialog
 					if ind /= 0 then
 						exp.set_index (ind)
 					end
-					if not initial_calling_convention.is_equal (cc) then
+					if not default_calling_convention.is_equal (cc) then
 						exp.set_call_type (cc)
 					end
 				else
@@ -1620,9 +1618,6 @@ feature {NONE} -- Implementation: Properties dialog
 
 	okb: EV_BUTTON
 			-- `OK' button for the properties dialog.
-
-	initial_calling_convention: STRING
-			-- Calling convention with which we initialized the combo box, to know if it was user-modified.
 
 	available_creation_routines: LIST [E_FEATURE]
 			-- List of valid creation routines displayed in the properties dialog.
@@ -1772,10 +1767,13 @@ feature {NONE} -- Implementation: checks
 		once
 			create {ARRAYED_LIST [STRING]} Result.make (3)
 			Result.compare_objects
-			Result.extend ("__cdecl")
+			Result.extend (default_calling_convention)
 			Result.extend ("__fastcall")
 			Result.extend ("__stdcall")
 		end
+
+	default_calling_convention: STRING is "__cdecl"
+			-- Default calling convention when none is specified.
 
 invariant
 	exports_exist: exports /= Void

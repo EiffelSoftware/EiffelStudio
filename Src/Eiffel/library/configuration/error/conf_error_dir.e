@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			a_dir_not_void: a_dir /= Void
 			a_config_not_void: a_config /= Void
 		do
-			text := "Directory open error: "+a_dir+" in configuration "+a_config
+			text := "Directory open error: "+a_dir+"%NConfiguration: "+a_config
 		end
 
 

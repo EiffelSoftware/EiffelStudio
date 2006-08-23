@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			text := "Class options for a non existing class "+a_class+" in configuration "+a_config+"."
+			text := "Class options for a non existing class "+a_class+"%NConfiguration "+a_config
 		end
 
 

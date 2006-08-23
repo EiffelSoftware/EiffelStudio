@@ -12,7 +12,8 @@ inherit
 	CONF_ERROR
 
 create
-	make
+	make,
+	make_with_config
 
 feature {NONE} -- Initialization
 
@@ -22,6 +23,15 @@ feature {NONE} -- Initialization
 			a_file_not_void: a_file /= Void
 		do
 			text := "Could not open file: "+a_file
+		end
+
+	make_with_config (a_file, a_config: STRING) is
+			-- Create.
+		require
+			a_file_not_void: a_file /= Void
+			a_config_not_void: a_config /= Void
+		do
+			text := "Could not open file: "+a_file+"%NConfiguration: "+a_config
 		end
 
 

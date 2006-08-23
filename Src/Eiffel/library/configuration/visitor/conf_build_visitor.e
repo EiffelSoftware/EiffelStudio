@@ -265,9 +265,18 @@ feature -- Visit nodes
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
+		local
+			l_file: RAW_FILE
 		do
 			if not state.is_dotnet then
 				add_and_raise_error (create {CONF_ERROR_DOTNET}.make (an_assembly.target.system.file_name))
+			end
+				-- if it is a local assembly, check that the file exists
+			if not an_assembly.is_non_local_assembly then
+				create l_file.make (an_assembly.location.evaluated_path)
+				if not l_file.exists or else not l_file.is_readable then
+					add_and_raise_error (create {CONF_ERROR_FILE}.make_with_config (an_assembly.location.evaluated_path, current_system.file_name))
+				end
 			end
 			new_assemblies.force (an_assembly)
 		end

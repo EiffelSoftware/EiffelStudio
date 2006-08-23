@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_class, a_file1, a_file2, a_config: STRING) is
 			-- Create.
 		do
-			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+" in configuration "+a_config+"."
+			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+"%NConfiguration: "+a_config
 		end
 
 feature -- Access

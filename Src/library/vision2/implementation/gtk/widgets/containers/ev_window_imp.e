@@ -446,9 +446,14 @@ feature {NONE} -- Implementation
 				a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 
 				if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
-					if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
+					if a_key /= Void then
+						if a_focus_widget.default_key_processing_handler /= Void then
+							l_block_events := not a_focus_widget.default_key_processing_handler.item ([a_key])
+						end
+						if a_focus_widget.default_key_processing_blocked (a_key) then
 							-- Block event from losing focus should the widget want to keep it.
-						l_block_events := True
+							l_block_events := True
+						end
 					end
 					if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
 						l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)

@@ -710,7 +710,9 @@ feature -- Element change
 			r: WEL_RECT
 		do
 			from
-				tl := text_length
+					-- Looks like we need to remove the %R that seems to be included in `text_length'.
+					-- To do that we simply need to remove the `line_count - 1'.
+				tl := text_length - (line_count - 1)
 				create fr.make
 				fr.set_dc (dc)
 				fr.set_dc_target (dc)

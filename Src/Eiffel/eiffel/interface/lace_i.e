@@ -969,7 +969,13 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_clr_version)
 			if system.il_generation then
-				set_clr_runtime_version (l_s)
+					-- value can't change from a precompile or in a compiled system
+				if not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+					create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
+					Error_handler.insert_warning (vd83)
+				else
+					set_clr_runtime_version (l_s)
+				end
 			end
 
 			l_s := l_settings.item (s_msil_generation_type)

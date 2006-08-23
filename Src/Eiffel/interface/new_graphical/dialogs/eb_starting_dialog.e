@@ -401,6 +401,7 @@ feature {NONE} -- Implementation
 				-- Add the "blank project" item
 			create basic_application_item.make_with_text (Interface_names.l_basic_application)
 			basic_application_item.set_pixmap (pixmaps.icon_pixmaps.new_eiffel_project_icon)
+			basic_application_item.pointer_double_press_actions.extend (agent on_double_click)
 			wizards_list.set_item (1, 1, basic_application_item)
 
 

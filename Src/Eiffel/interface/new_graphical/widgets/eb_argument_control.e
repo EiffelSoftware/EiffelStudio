@@ -218,7 +218,6 @@ feature {NONE} -- GUI
 			l_horizontal_box: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			l_label: EV_LABEL
-			add_button: EV_BUTTON
 		do
 			create arguments_box
 			arguments_box.set_padding (Layout_constants.Small_padding_size)
@@ -235,6 +234,18 @@ feature {NONE} -- GUI
 			create current_argument
 			current_argument.set_minimum_height (70)
 			current_argument.key_release_actions.extend (agent arg_text_changed)
+			current_argument.set_default_key_processing_handler (
+				agent (v: EV_KEY): BOOLEAN
+					do
+						Result := v.code /= {EV_KEY_CONSTANTS}.key_tab
+					end)
+			current_argument.key_press_actions.extend (
+				agent (v: EV_KEY)
+					do
+						if v.code = {EV_KEY_CONSTANTS}.key_tab then
+							add_button.set_focus
+						end
+					end)
 			arguments_box.extend (current_argument)
 			arguments_box.disable_item_expand (current_argument)
 
@@ -343,7 +354,7 @@ feature {NONE} -- GUI Properties
 	arguments_box: EV_VERTICAL_BOX
 			-- Widget containing argument settings.
 
-	remove_button: EV_BUTTON
+	add_button, remove_button: EV_BUTTON
 
 feature {NONE} -- Actions
 

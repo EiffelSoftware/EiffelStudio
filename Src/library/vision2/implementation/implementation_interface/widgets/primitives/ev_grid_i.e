@@ -5149,7 +5149,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				end
 
 					-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
-				if prev_sel_item /= Void then
+					if prev_sel_item /= Void and then prev_sel_item.is_parented then
 					if l_previously_expanded then
 						l_ignore_column_navigation := not prev_sel_item.row.is_expanded
 					else
@@ -5157,7 +5157,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					end
 				end
 						-- We always want to find an item above or below for row selection
-				if prev_sel_item /= Void then
+				if prev_sel_item /= Void and then prev_sel_item.is_parented then
 					a_sel_row := prev_sel_item.row
 					inspect
 						a_key.code

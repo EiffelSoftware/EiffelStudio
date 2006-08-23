@@ -97,6 +97,15 @@ inherit
 			on_text_fully_loaded, on_cursor_moved
 		end
 
+	EB_CLUSTER_MANAGER_OBSERVER
+		rename
+			on_project_loaded as on_project_loaded_cluster,
+			on_project_unloaded as on_project_unloaded_cluster,
+			refresh as refresh_cluster
+		redefine
+			on_class_moved
+		end
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} All
@@ -249,6 +258,9 @@ feature {NONE} -- Initialization
 			end
 
 			window.move_actions.force_extend (agent window_moved)
+
+				-- Register us in the cluster observer
+			manager.extend (Current)
 
 			initialized := True
 			is_destroying := False
@@ -4105,6 +4117,8 @@ feature -- Recycle
 			cluster_manager := Void
 			search_tool := Void
 			editors.wipe_out
+
+			manager.remove_observer (Current)
 		end
 
 	recycle_command is
@@ -4765,6 +4779,19 @@ feature {NONE} -- Access
 
 	internal_development_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA;
 		-- Internal custom meta data for `Current'.
+
+feature {NONE} -- Events
+
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
+			-- A class was moved, check if we have to update `file_name'.
+		local
+			l_cs: CLASSI_STONE
+		do
+			l_cs ?= stone
+			if l_cs /= Void and then l_cs.class_i = a_class then
+				set_file_name_from_stone (l_cs)
+			end
+		end
 
 feature {NONE} -- Implementation
 

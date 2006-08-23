@@ -696,6 +696,7 @@ doc:	</routine>
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type)
 {
 	int i = 0;
+	char gc_stopped;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;
 	uint32 flags;
@@ -754,6 +755,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Now `l_found' is properly populated so let's create
 		 * SPECIAL objects of type `result_type' that we will return.
 		 * We turn off GC since we do not want objects to be moved. */
+	gc_stopped = !gc_ison();
 	gc_stop();
 	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
@@ -783,7 +785,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	free (l_marked.area);
 
 		/* Let's turn back the GC on */
-	gc_run ();
+	if (!gc_stopped) gc_run();
 
 	return Result;
 } 

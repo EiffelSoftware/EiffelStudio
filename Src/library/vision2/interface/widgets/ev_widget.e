@@ -122,6 +122,18 @@ feature -- Access
 			bridge_ok: Result = implementation.real_target
 		end
 
+	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]] is
+			-- Agent used to determine whether the default key processing should occur for Current.
+			-- If agent returns True then default key processing continues as normal, False prevents
+			-- default key processing from occurring.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.default_key_processing_handler
+		ensure
+			bridge_ok: Result = implementation.default_key_processing_handler
+		end
+
 feature {EV_BUILDER} -- Access
 
 	minimum_width_set_by_user: BOOLEAN
@@ -267,6 +279,25 @@ feature -- Status setting
 			implementation.remove_real_target
 		ensure
 			real_target_void: real_target = Void
+		end
+
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+			-- Assign `default_key_processing_handler' to `a_handler'.
+		require
+			not_destroyed: not is_destroyed
+			a_handler_not_void: a_handler /= Void
+		do
+			implementation.set_default_key_processing_handler (a_handler)
+		end
+
+	remove_default_key_processing_handler is
+			-- Ensure `default_key_processing_handler' is Void.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.remove_default_key_processing_handler
+		ensure
+			default_key_processing_handler_removed: default_key_processing_handler = Void
 		end
 
 feature -- Element change

@@ -144,6 +144,18 @@ feature {NONE} -- Initialization
 			end
 			description.set_minimum_height (50)
 			description.change_actions.extend (agent update_description)
+			description.set_default_key_processing_handler (
+				agent (v: EV_KEY): BOOLEAN
+					do
+						Result := v.code /= {EV_KEY_CONSTANTS}.key_tab
+					end)
+			description.key_press_actions.extend (
+				agent (v: EV_KEY)
+					do
+						if v.code = {EV_KEY_CONSTANTS}.key_tab then
+							condition.set_focus
+						end
+					end)
 			extend (description)
 			disable_item_expand (description)
 

@@ -19,7 +19,7 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			parent
+			parent, clone_node
 		select
 			has
 		end
@@ -102,7 +102,7 @@ class TWO_WAY_TREE [G] inherit
 
 create
 	make
-	
+
 create {TWO_WAY_TREE}
 	twl_make, make_sublist
 
@@ -124,7 +124,7 @@ feature -- Access
 			-- Leftmost child
 
 	last_child: like parent
-	
+
 	child_cursor: TWO_WAY_TREE_CURSOR [G] is
 			-- Current cursor position
 		do
@@ -138,7 +138,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and Precursor {TWO_WAY_LIST}
 		end
-		
+
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 	set_child (n: like parent) is
@@ -247,7 +247,7 @@ feature -- Element change
 			loop
 				l_child := l_child.right_sibling
 			end
-			
+
 			if l_child /= Void then
 				if l_child = first_child then
 					first_child := first_child.right_sibling
@@ -288,6 +288,9 @@ feature {TWO_WAY_TREE} -- Implementation
 			-- New cell containing `v'
 		do
 			create Result.make (v)
+			if object_comparison then
+				Result.compare_objects
+			end
 			Result.attach_to_parent (Current)
 		end
 
@@ -300,14 +303,29 @@ feature {TWO_WAY_TREE} -- Implementation
 			create Result.make (item)
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
-			make (item)
-			wipe_out
-			simple_forget_left
-			simple_forget_right
+			create Result.make (n.item)
+			Result.copy_node (n)
+		end
+
+feature {TREE} -- Implementation
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		do
+			standard_copy (n)
+			arity := 0
+			child := Void
+			child_after := False
+			child_before := True
+			first_child := Void
+			last_child := Void
+			left_sibling := Void
 			parent := Void
+			right_sibling := Void
+			sublist := Void
 		end
 
 feature {NONE} -- Implementation

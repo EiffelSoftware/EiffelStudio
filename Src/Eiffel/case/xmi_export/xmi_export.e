@@ -268,20 +268,27 @@ feature {NONE} -- Implementation
 	xmi_diagram_by_group (a_group: CONF_GROUP): XMI_DIAGRAM is
 			-- Search Rose diagram linked to `a_group'.
 		require
-				cluster_not_void: a_group /= Void
+			cluster_not_void: a_group /= Void
+		local
+			l_item: XMI_DIAGRAM
 		do
 			from
 				xmi_diagrams.start
 			until
 				Result /= Void or else xmi_diagrams.after
 			loop
-				if xmi_diagrams.item.associated_cluster.group = a_group then
+				l_item := xmi_diagrams.item
+				if not l_item.is_root and then l_item.associated_cluster.group = a_group then
 					Result := xmi_diagrams.item
 				end
 				xmi_diagrams.forth
 			end
+				-- we don't have the cluster but we should have the enclosing library
+			if Result = Void then
+				Result := xmi_diagram_by_group (a_group.target.lowest_used_in_library)
+			end
 		ensure
-				result_not_void: Result /= Void
+			result_not_void: Result /= Void
 		end
 
 	is_in_selection (c: CLASS_C): BOOLEAN is

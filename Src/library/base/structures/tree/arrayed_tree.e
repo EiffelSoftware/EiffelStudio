@@ -67,7 +67,7 @@ feature -- Access
 	right_sibling: like parent is
 			-- Right neighbor if any
 		do
-			if position_in_parent < parent.arity then
+			if parent /= Void and then position_in_parent < parent.arity then
 				Result := parent.array_item (position_in_parent + 1)
 			end
 		end
@@ -385,6 +385,7 @@ feature {ARRAYED_TREE} -- Implementation
 			-- Cut off all links from current node.
 		do
 			make (arity, item)
+			parent := Void
 		end
 
 feature {NONE} -- Implementation

@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent remove_folder)
 			drop_actions.extend (agent add_stone)
 			drop_actions.extend (agent add_folder)
+			drop_Actions.set_veto_pebble_function (agent valid_stone)
 
 			key_press_actions.extend (agent handle_key)
 
@@ -401,6 +402,21 @@ feature {NONE} -- Implementation
 				Result := get_tree_item_from_path (sub_tree, new_path)
 			end
 		end
+
+	valid_stone (a_stone: ANY): BOOLEAN is
+			--
+		local
+			l_class: CLASSI_STONE
+			l_feat: FEATURE_STONE
+		do
+			l_class ?= a_stone
+			Result := l_class /= Void
+			if not Result then
+				l_feat ?= a_stone
+				Result := l_feat /= Void
+			end
+		end
+
 
 feature {NONE} -- Implementation
 

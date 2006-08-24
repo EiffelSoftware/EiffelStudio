@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision tree. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ inherit
 			interface,
 			initialize
 		end
-		
+
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		redefine
 			interface
@@ -59,7 +59,7 @@ inherit
 			destroy as wel_destroy, font as wel_font,
 			set_font as wel_set_font, selected_item as wel_selected_item,
 			insert_item as wel_insert_item, count as total_count,
-			item as wel_item, move as wel_move, enabled as is_sensitive, 
+			item as wel_item, move as wel_move, enabled as is_sensitive,
 			width as wel_width, height as wel_height, x as x_position,
 			y as y_position, resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
@@ -97,7 +97,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EV_SHARED_IMAGE_LIST_IMP
 		export
 			{NONE} all
@@ -150,7 +150,7 @@ feature -- Access
 				Result := Void
 			end
 		end
-		
+
 	selected_item_imp: EV_TREE_NODE_IMP is
 			-- Currently selected_item_imp.
 			-- Added for speed, if we did not have this,
@@ -170,7 +170,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	general_insert_item (item_imp: EV_TREE_NODE_IMP; par, after: POINTER; 
+	general_insert_item (item_imp: EV_TREE_NODE_IMP; par, after: POINTER;
 		an_index: INTEGER) is
 			-- Add `item_imp' to the tree with `par' as parent.
 			-- if `par' is the default_pointer, the parent is the tree.
@@ -210,13 +210,13 @@ feature -- Basic operations
 				-- Then, we redraw the tree
 			invalidate
 		end
-		
+
 	general_remove_item (item_imp: EV_TREE_NODE_IMP) is
 			-- Remove `item_imp' from `Current'.
 		do
 			internal_general_remove_item (item_imp, 0)
 		end
-		
+
 
 	internal_general_remove_item (item_imp: EV_TREE_NODE_IMP; depth: INTEGER;) is
 			-- Remove `item_imp' from `Current'.
@@ -247,7 +247,7 @@ feature -- Basic operations
 			end
 			all_ev_children.remove (item_imp.h_item)
 			delete_item (item_imp)
-	
+
 				-- Then, we redraw the tree
 			invalidate
 				-- Only signify that we have ended the
@@ -258,7 +258,7 @@ feature -- Basic operations
 			end
 		end
 
-	get_children (item_imp: EV_TREE_NODE_IMP): 
+	get_children (item_imp: EV_TREE_NODE_IMP):
 		ARRAYED_LIST [EV_TREE_NODE_IMP] is
 			-- List of the direct children of `item_imp'.
 			-- If the `item_imp' is Void, it returns the children of the tree.
@@ -283,7 +283,7 @@ feature -- Basic operations
 					Tvm_getnextitem, to_wparam (Tvgn_next), hwnd)
 			end
 		end
-		
+
 	ensure_item_visible (tree_node: EV_TREE_NODE) is
 			-- Ensure `tree_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
@@ -324,7 +324,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 			-- The item must have all the necessary flags and
 			-- informations to notify.
 		do
-			cwin_send_message (wel_item, Tvm_setitem, to_wparam (0), item_imp.wel_item) 
+			cwin_send_message (wel_item, Tvm_setitem, to_wparam (0), item_imp.wel_item)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -341,7 +341,7 @@ feature {EV_ANY_I} -- Implementation
 	general_reset_pixmap is
 			-- Reset the pixmap (if the size of displayed has
 			-- changes for example)
-		local	
+		local
 			c: like ev_children
 		do
 			remove_image_list
@@ -395,7 +395,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 				-- Create image list with all images 16 by 16 pixels
 			image_list := get_imagelist_with_size (
-				pixmaps_width, 
+				pixmaps_width,
 				pixmaps_height
 				)
 
@@ -455,7 +455,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
 				not parent_is_pnd_source and pre_drop_it.parent /= Void then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then 
+			elseif pnd_item_source /= Void then
 				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
@@ -472,7 +472,7 @@ feature {EV_ANY_I} -- WEL Implementation
 
 				-- If there is an item where the button press was recieved,
 				-- and it has not changed from the start of this procedure
-				-- then call `pointer_button_press_actions'. 
+				-- then call `pointer_button_press_actions'.
 				--| Internal_propagate_pointer_press in EV_MULTI_COLUMN_LIST_IMP
 				--| has a fuller explanation.
 			if not item_press_actions_called then
@@ -524,11 +524,14 @@ feature {EV_ANY_I} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'
 		do
-			Result := Ws_child + Ws_visible + Ws_group
-				+ Ws_tabstop + Ws_border + Tvs_haslines
-				+ Tvs_hasbuttons + Tvs_linesatroot
-				+ Tvs_showselalways + Tvs_infotip
-				+ Ws_clipchildren + Ws_clipsiblings
+				-- Note that we use TVS_DISABLEDRAGDROP because otherwise
+				-- we would not get the WM_LBUTTONUP message.
+			Result := Ws_child | Ws_visible | Ws_group
+				| Ws_tabstop | Ws_border | Tvs_haslines
+				| Tvs_hasbuttons | Tvs_linesatroot
+				| tvs_disabledragdrop
+				| Tvs_showselalways | Tvs_infotip
+				| Ws_clipchildren | Ws_clipsiblings
 		end
 
 	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
@@ -560,7 +563,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 			end
 
-			if info.new_item /= Void then	
+			if info.new_item /= Void then
 				p := info.new_item.h_item
 				if p /= default_pointer then
 					elem := clist.item (p)
@@ -685,7 +688,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			disable_default_processing
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
@@ -697,7 +700,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
 		end
-		
+
 	set_background_color (color: EV_COLOR) is
 			--
 		do
@@ -708,7 +711,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				invalidate
 			end
 		end
-		
+
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
@@ -719,7 +722,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				invalidate
 			end
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do

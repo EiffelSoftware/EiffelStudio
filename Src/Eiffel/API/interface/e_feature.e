@@ -590,7 +590,7 @@ feature -- Access
 			check
 				feature_upto_date: f /= Void
 			end
-			Result := f.number_of_breakpoint_slots
+			Result := f.first_breakpoint_slot_index
 		end
 
 feature -- Comparison

@@ -386,7 +386,11 @@ feature -- Debugger access
 				if l_routine /= Void then
 					l_internal ?= l_routine.routine_body
 					if l_internal /= Void then
-						Result := l_internal.first_breakpoint_slot_index
+						if l_internal.is_empty then
+							Result := number_of_breakpoint_slots
+						else
+							Result := l_internal.first_breakpoint_slot_index
+						end
 					end
 				end
 			end

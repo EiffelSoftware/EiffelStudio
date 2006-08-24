@@ -259,6 +259,8 @@ feature {NONE} -- Implementation properties
 			conv_st: STONE
 			l_ex: CLASSI_STONE
 			l_ex_c: CLASSC_STONE
+			l_fs: FEATURE_STONE
+			l_syntax: CL_SYNTAX_STONE
 		do
 			conv_st ?= st
 			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
@@ -271,6 +273,13 @@ feature {NONE} -- Implementation properties
 					l_ex_c ?= st
 					if l_ex_c /= Void then
 						Result := not l_ex_c.e_class.is_true_external
+					else
+						l_fs ?= st
+						Result := l_fs /= Void
+						if not Result then
+							l_syntax ?= st
+							Result := l_syntax /= Void
+						end
 					end
 				end
 			end

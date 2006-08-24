@@ -1523,16 +1523,15 @@ feature {NONE} -- open new class
 				ccname := class_address.text
 				ccname.to_upper
 				from
-					i := 1
+					i := clist.lower
 				until
-					i > clist.count or current_typed_class /= Void
+					i > clist.upper or current_typed_class /= Void
 				loop
 					l_class := clist.item (i)
-					if l_class /= Void and then (l_class).name.is_equal (ccname) then
+					if l_class /= Void and then l_class.name.is_equal (ccname) then
 						current_typed_class := l_class
-					else
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 		end

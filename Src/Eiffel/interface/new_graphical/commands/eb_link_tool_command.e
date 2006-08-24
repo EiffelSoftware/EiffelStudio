@@ -86,8 +86,6 @@ feature -- Basic operations
 				y_pos := screen.pointer_position.y - link_tool_dialog.height // 2
 				link_tool_dialog.set_position (x_pos, y_pos)
 
-				link_tool_dialog.preset (tool.world.is_labels_shown)
-
 				client_stone ?= a_stone
 				if client_stone /= Void then
 					link_tool_dialog.set_strings (client_stone.source.feature_names)
@@ -174,11 +172,9 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 						end
 					end
 				else
-					if link_tool_dialog.applied then
-						lf.reset
-						lf.retrieve_edges (saved_edges)
-						project
-					end
+					lf.reset
+					lf.retrieve_edges (saved_edges)
+					project
 				end
 			end
 			link_tool_dialog.destroy

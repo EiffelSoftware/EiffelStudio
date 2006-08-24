@@ -267,7 +267,7 @@ feature -- Roundtrip
 				l_feat := l_strategy.current_feature
 
 				text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
-															  l_strategy.source_feature, l_strategy, 0,
+															  l_strategy.source_feature, l_strategy, 1,
 															  l_feat.api_feature (l_feat.written_in))
 
 				l_as.body.process (l_strategy)

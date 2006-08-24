@@ -110,7 +110,8 @@ feature -- Type checking
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
-			process_inherited_assertions (a_feature)
+			break_point_slot_count := 0
+			process_inherited_assertions (a_feature, True)
 			if a_code_inherited then
 				if not a_feature.is_deferred then
 					is_inherited := True
@@ -120,6 +121,8 @@ feature -- Type checking
 			else
 				a_feature.body.process (Current)
 			end
+			is_byte_node_enabled := False
+			process_inherited_assertions (a_feature, False)
 		end
 
 	type_check_and_code (a_feature: FEATURE_I) is
@@ -132,9 +135,12 @@ feature -- Type checking
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
-			process_inherited_assertions (a_feature)
+			break_point_slot_count := 0
+			process_inherited_assertions (a_feature, True)
 			is_byte_node_enabled := True
 			a_feature.body.process (Current)
+			is_byte_node_enabled := False
+			process_inherited_assertions (a_feature, False)
 		end
 
 
@@ -3489,7 +3495,6 @@ feature -- Implementation
 			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			context.inline_agent_counter.reset
-			break_point_slot_count := 0
 			last_byte_node := Void
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)
@@ -5087,7 +5092,7 @@ feature {NONE} -- Predefined types
 
 feature {NONE} -- Implementation
 
-	process_inherited_assertions (a_feature: FEATURE_I) is
+	process_inherited_assertions (a_feature: FEATURE_I; process_preconditions: BOOLEAN) is
 			-- Process assertions inherited by `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -5127,15 +5132,18 @@ feature {NONE} -- Implementation
 						l_old_written_class := context.written_class
 						l_written_class := system.class_of_id (assertion_info.written_in)
 						context.set_written_class (l_written_class)
-						if assertion_info.has_precondition then
-							set_is_checking_precondition (True)
-							routine_body.precondition.process (Current)
-							set_is_checking_precondition (False)
-						end
-						if assertion_info.has_postcondition then
-							set_is_checking_postcondition (True)
-							routine_body.postcondition.process (Current)
-							set_is_checking_postcondition (False)
+						if process_preconditions then
+							if assertion_info.has_precondition then
+								set_is_checking_precondition (True)
+								routine_body.precondition.process (Current)
+								set_is_checking_precondition (False)
+							end
+						else
+							if assertion_info.has_postcondition then
+								set_is_checking_postcondition (True)
+								routine_body.postcondition.process (Current)
+								set_is_checking_postcondition (False)
+							end
 						end
 						context.set_written_class (l_old_written_class)
 					end

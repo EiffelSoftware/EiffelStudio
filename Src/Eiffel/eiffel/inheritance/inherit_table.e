@@ -992,15 +992,20 @@ end;
 						-- Found a feature of same name and written in the
 						-- same class.
 					old_description := Body_server.server_item (body_index)
-					if Tmp_ast_server.body_has (body_index) then
-						old_tmp_description := Tmp_ast_server.body_item (body_index)
-					end
+					if old_description = Void then
+							-- This should not happen, but if it does.
+						is_the_same := False
+					else
+						if Tmp_ast_server.body_has (body_index) then
+							old_tmp_description := Tmp_ast_server.body_item (body_index)
+						end
 
-						-- Incrementality of the workbench is here: we
-						-- compare the content of a new feature and the
-						-- one of an old feature.
-					is_the_same := old_description.is_assertion_equiv (yacc_feature) and
-						(old_tmp_description /= Void implies old_tmp_description.is_assertion_equiv (yacc_feature))
+							-- Incrementality of the workbench is here: we
+							-- compare the content of a new feature and the
+							-- one of an old feature.
+						is_the_same := old_description.is_assertion_equiv (yacc_feature) and
+							(old_tmp_description /= Void implies old_tmp_description.is_assertion_equiv (yacc_feature))
+					end
 
 					if not is_the_same then
 							-- assertions have changed

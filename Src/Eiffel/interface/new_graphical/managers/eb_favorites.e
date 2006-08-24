@@ -227,7 +227,6 @@ feature {NONE} -- Implementation
 			conv_l: EB_FAVORITES_ITEM_LIST
 			conv_c: EB_FAVORITES_CLASS
 			conv_f: EB_FAVORITES_FEATURE
-			file: RAW_FILE
 			cli: CLASS_I
 			clc: CLASS_C
 			clu: CONF_GROUP
@@ -244,23 +243,9 @@ feature {NONE} -- Implementation
 					cli := conv_c.associated_class_i
 					if cli /= Void then
 						clu := cli.group
-						if Eiffel_universe.groups.has (clu) then
-							if not clu.is_precompile then
-								if conv_c.associated_file_name /= Void then
-									create file.make (conv_c.associated_file_name)
-									if not file.exists then
-										f.remove
-									else
-										refresh_folder (conv_c)
-										f.forth
-									end
-								else
-									f.remove
-								end
-							else
-								refresh_folder (conv_c)
-								f.forth
-							end
+						if cli.is_valid and clu.is_valid then
+							refresh_folder (conv_c)
+							f.forth
 						else
 							f.remove
 						end

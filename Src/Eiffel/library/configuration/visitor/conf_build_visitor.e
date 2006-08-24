@@ -723,11 +723,13 @@ feature {NONE} -- Implementation
 								-- have access to those classes.
 							if l_library.uuid /= Void and then all_libraries.has (l_library.uuid) then
 								l_done := True
-								l_library.classes.linear_representation.do_if (agent (a_class: CONF_CLASS)
-									do
-										partly_removed_classes.force ([a_class, current_system])
-									end
-								, agent {CONF_CLASS}.is_compiled)
+								if l_library.classes_set then
+									l_library.classes.linear_representation.do_if (agent (a_class: CONF_CLASS)
+										do
+											partly_removed_classes.force ([a_class, current_system])
+										end
+									, agent {CONF_CLASS}.is_compiled)
+								end
 							end
 						end
 

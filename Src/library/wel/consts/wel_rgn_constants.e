@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	Rgn_and: INTEGER is
+	frozen Rgn_and: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_AND"
 		end
 
-	Rgn_or: INTEGER is
+	frozen Rgn_or: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_OR"
 		end
 
-	Rgn_xor: INTEGER is
+	frozen Rgn_xor: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -38,7 +38,7 @@ feature -- Access
 			"RGN_DIFF"
 		end
 
-	Rgn_copy: INTEGER is
+	frozen Rgn_copy: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias

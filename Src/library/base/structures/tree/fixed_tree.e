@@ -346,6 +346,7 @@ feature {FIXED_TREE} -- Implementation
 			-- Cut off all links from current node.
 		do
 			fixed_list.array_make (1, capacity)
+			parent := Void
 		end
 
 feature {NONE} -- Implementation

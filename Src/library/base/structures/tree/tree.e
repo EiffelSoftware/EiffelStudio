@@ -367,14 +367,14 @@ feature -- Removal
 
 	forget_left is
 			-- Forget all left siblings.
-		deferred 
+		deferred
 		end
-		
+
 	forget_right is
 			-- Forget all right siblings.
-		deferred 
+		deferred
 		end
-		
+
 feature -- Conversion
 
 	linear_representation: LINEAR [G] is
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 					p1.child_start
 					p2.child_start
 				invariant
-					same_count: t1_stack.count = t2_stack.count 
+					same_count: t1_stack.count = t2_stack.count
 				until
 					not Result or else
 						p1.child_after and t1_stack.is_empty
@@ -751,8 +751,8 @@ feature {NONE} -- Implementation
 					end
 					node := clone_node (p1.child)
 						check
-							equal_but_not_the_same: standard_equal (node, p1.child) and node /= p1.child
 								-- Because `node' has been cloned.
+							not_the_same: node /= p1.child
 						end
 					l_fixed_tree ?= p1
 					if l_fixed_tree /= Void then
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 						p1.child_go_i_th (orgidx_stack.item)
 						p2.child_go_i_th (orgidx_stack.item)
 							check
-								child_indices_equal: 
+								child_indices_equal:
 									p1.child_index = p2.child_index
 										-- Because we have set them equal before.
 							end
@@ -838,7 +838,6 @@ feature {NONE} -- Implementation
 		do
 			Result := n.standard_twin
 			Result.cut_off_node
-			Result.attach_to_parent (Void)
 		ensure
 			result_is_root: Result.is_root
 			result_is_leaf: Result.is_leaf

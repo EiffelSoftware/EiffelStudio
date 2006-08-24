@@ -45,9 +45,8 @@ feature {NONE} -- Initialization
 			l_cond: CONF_CONDITION
 		do
 			if internal_conditions = Void then
-				create l_cond.make
-				l_cond.set_dotnet (True)
-				add_condition (l_cond)
+				create internal_conditions.make (1)
+				internal_conditions.force (default_condition)
 			else
 				from
 					internal_conditions.start
@@ -348,6 +347,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	add_condition (a_condition: CONF_CONDITION) is
 			-- Add `a_condition'.
 		do
+				-- remove the default condition
+			if internal_conditions /= Void then
+				internal_conditions.start
+				internal_conditions.prune (default_condition)
+			end
 			Precursor (a_condition)
 			initialize_conditions
 		end
@@ -438,6 +442,17 @@ feature -- Visit
 		do
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	default_condition: CONF_CONDITION is
+			-- Default condition that restricts assemblies to .NET
+		once
+			create Result.make
+			Result.set_dotnet (True)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Caches

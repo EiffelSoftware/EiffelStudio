@@ -29,7 +29,7 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree
+			duplicate_all, fill_subtree, clone_node
 		end
 
 create
@@ -67,7 +67,7 @@ feature -- Access
 	right_sibling: like parent is
 			-- Right neighbor if any
 		do
-			if parent /= Void and then position_in_parent < parent.arity then
+			if position_in_parent < parent.arity then
 				Result := parent.array_item (position_in_parent + 1)
 			end
 		end
@@ -381,10 +381,24 @@ feature {ARRAYED_TREE} -- Implementation
 			parent := n
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
-			make (arity, item)
+			create Result.make (n.arity, n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		local
+			l_arrayed_list: like arrayed_list
+		do
+				-- Store values that may be overriden by `standard_copy'.
+			l_arrayed_list := arrayed_list
+				-- Perform copy.
+			standard_copy (n)
+				-- Restore values that we wanted to preserve.			
+			arrayed_list := l_arrayed_list
 			parent := Void
 		end
 
@@ -554,7 +568,7 @@ feature -- Access
 		do
 			arrayed_list.prune (n)
 		end
-	
+
 	wipe_out is
 		do
 			arrayed_list.wipe_out

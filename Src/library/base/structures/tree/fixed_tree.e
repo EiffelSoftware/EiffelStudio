@@ -57,9 +57,21 @@ feature -- Initialization
 			-- Create node with `n' void children and item `v'.
 		require
 			valid_number_of_children: n >= 0
+		local
+			l_default: G
 		do
 			arity := n
 			create fixed_list.make_filled (n)
+				-- In order to ensure that no child is Void, we manually fill
+				-- the tree with default values.
+			from
+				fixed_list.start
+			until
+				fixed_list.after
+			loop
+				replace_child (create {like Current}.make (0, l_default))
+				fixed_list.forth
+			end
 			replace (v)
 		ensure
 			node_item: item = v
@@ -159,7 +171,7 @@ feature -- Element change
 		ensure then
 			child_replaced: n.parent = Current
 		end
-		
+
 	replace_child (n: like parent) is
 			-- Make `n' the node's child.
 		do
@@ -228,7 +240,7 @@ feature -- Removal
 				parent.child_go_i_th (old_idx)
 			end
 		end
-		
+
 	forget_right is
 			-- Forget all right siblings.
 		local
@@ -342,13 +354,6 @@ feature {FIXED_TREE} -- Implementation
 			end
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
-		do
-			fixed_list.array_make (1, capacity)
-			parent := Void
-		end
-
 feature {NONE} -- Implementation
 
 	position_in_parent: INTEGER
@@ -370,7 +375,7 @@ feature {FIXED_TREE} -- Implementation
 		ensure
 			fixed_list_set: fixed_list = a_list
 		end
-		
+
 feature -- Redefinition
 
 	child_capacity: INTEGER is
@@ -379,15 +384,31 @@ feature -- Redefinition
 			Result := fixed_list.count
 		end
 
+feature {NONE} -- Implementation
+
 	clone_node (n: like Current): like Current is
 			-- Clone node `n'.
-		local
-			a_list: like fixed_list
 		do
-			Result := n.standard_twin
-			create a_list.make_filled (n.capacity)
-			Result.set_fixed_list (a_list)
-			Result.attach_to_parent (Void)
+			create Result.make (n.arity, n.item)
+			Result.copy_node (n)
+		end
+
+feature {TREE} -- Implementation
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		local
+			l_list: like fixed_list
+		do
+				-- Store values that may be overriden by `standard_copy'.
+			l_list := fixed_list
+				-- Perform copy.
+			standard_copy (n)
+				-- Restore values that we wanted to preserve.
+			arity := 0
+			fixed_list := l_list
+			position_in_parent := 0
+			parent := Void
 		end
 
 feature -- Access
@@ -482,7 +503,7 @@ feature -- Access
 	prune (n: like parent) is
 		do
 		end
-	
+
 	wipe_out is
 		do
 			create fixed_list.make (fixed_list.count)
@@ -502,7 +523,7 @@ feature -- Access
 		do
 			Result := fixed_list.capacity
 		end
-		
+
 feature {NONE} -- private access fixed_list
 
 	fl_make (n: INTEGER)is
@@ -514,7 +535,7 @@ feature {NONE} -- private access fixed_list
 		do
 			fixed_list.make_filled (n)
 		end
-		
+
 	fl_extend (v: FIXED_TREE [like item]) is
 		do
 			fixed_list.extend (v)

@@ -23,7 +23,7 @@ class LINKED_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off
 		redefine
-			parent
+			parent, clone_node
 		select
 			has
 		end
@@ -138,7 +138,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	child_cursor: LINKED_TREE_CURSOR [G] is
 			-- Current cursor position
 		do
@@ -284,11 +284,14 @@ feature {NONE} -- Inapplicable
 
 feature {LINKED_TREE} -- Implementation
 
-		
+
 	new_cell (v: like item): like first_child is
 			-- New cell containing `v'
 		do
 			create Result.make (v)
+			if object_comparison then
+				Result.compare_objects
+			end
 			Result.attach_to_parent (Current)
 		end
 
@@ -300,13 +303,24 @@ feature {LINKED_TREE} -- Implementation
 			create Result.make (item)
 		end
 
-	cut_off_node is
-			-- Cut off all links from current node.
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
 		do
-			make (item)
-			wipe_out
-			forget_right
+			create Result.make (n.item)
+			Result.copy_node (n)
+		end
+
+	copy_node (n: like Current) is
+			-- Copy content of `n' except tree data into Current.
+		do
+			standard_copy (n)
+			arity := 0
+			child := Void
+			child_after := False
+			child_before := True
+			first_child := Void
 			parent := Void
+			right_sibling := Void
 		end
 
 feature {NONE} -- Implementation

@@ -478,8 +478,6 @@ feature -- Generic conformance
 			-- following the format for locals, creation expressions, etc.
 		require
 			ba_attached: ba /= Void
-		local
-			c: CL_TYPE_I
 		do
 			ba.append_short_integer (full_type_byte_code_type_id)
 			make_full_type_byte_code_parameters (ba)

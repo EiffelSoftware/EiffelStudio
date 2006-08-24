@@ -970,10 +970,10 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_msil_clr_version)
 			if system.il_generation then
 					-- value can't change from a precompile or in a compiled system
-				if not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+				if l_s /= Void and then not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 					create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
 					Error_handler.insert_warning (vd83)
-				else
+				elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 					set_clr_runtime_version (l_s)
 				end
 			end

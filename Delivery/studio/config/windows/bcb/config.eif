@@ -79,7 +79,6 @@ dpflags: ""
 continuation: "\"
 
 appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS)%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif exist $@ $(RM) $@%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
@@ -102,7 +101,6 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
 %,,driver.res%N|%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe .\$(ISE_C_COMPILER)\driver.exe%N%
 %%T$(MV) precomp.lib .\$(ISE_C_COMPILER)\precomp.lib%N%

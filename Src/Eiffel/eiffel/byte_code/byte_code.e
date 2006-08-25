@@ -573,8 +573,6 @@ feature -- Byte code generation
 			r_type, formal_type: TYPE_I;
 			local_list: LINKED_LIST [TYPE_I]
 			bit_i: BIT_I
-			expanded_type: CL_TYPE_I
-			gen_type: GEN_TYPE_I
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 		do

@@ -65,6 +65,10 @@ class TWO_WAY_CHAIN_ITERATOR [G] inherit
 		redefine
 			back, finish, target
 		end
+
+create
+	set
+
 feature -- Access
 
 	target: CHAIN [G]
@@ -94,12 +98,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TWO_WAY_CHAIN_ITERATOR [G]
 

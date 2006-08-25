@@ -494,10 +494,6 @@ feature -- Actions
 			-- Refresh text displayed in metric value text field.
 			-- If `a_percentage' is True, display text in percentage.
 		local
-			l_text: STRING
-			l_cnt: INTEGER
-			l_value: DOUBLE
-			l_already_in_percentage: BOOLEAN
 			l_double: DOUBLE_REF
 		do
 			l_double ?= metric_value_text.data

@@ -145,6 +145,9 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.accelerator_list
+		ensure
+			bridge_ok: Result = implementation.accelerator_list
+			not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -347,7 +350,7 @@ feature -- Status setting
 		require
 			not_void: a_parent /= Void
 			not_destroyed: not is_destroyed
-			not_destoryed: not a_parent.is_destroyed
+			parent_not_destroyed: not a_parent.is_destroyed
 			a_window_not_current: a_parent /= Current
 		do
 			implementation.show_relative_to_window (a_parent)

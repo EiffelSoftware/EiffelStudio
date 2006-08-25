@@ -274,15 +274,38 @@ feature -- Element change
 			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
 			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
 			{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
 			rectangle_struct.memory_free
 		end
 
-	remove_clip_area is
+	set_clip_region (a_region: EV_REGION) is
+			-- Set a region to clip to.
+		local
+			a_region_imp: EV_REGION_IMP
+			rectangle_struct: POINTER
+		do
+			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+			a_region_imp ?= a_region.implementation
+			{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
+				-- Set the gc clip area.
+			create gc_clip_area.make (
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (rectangle_struct),
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (rectangle_struct),
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (rectangle_struct),
+				{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (rectangle_struct)
+			)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, a_region_imp.gdk_region)
+			rectangle_struct.memory_free
+		end
+
+	remove_clipping is
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
 			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -474,7 +497,7 @@ feature -- Drawing operations
 						if a_clip_area /= Void then
 							set_clip_area (a_clip_area)
 						else
-							remove_clip_area
+							remove_clipping
 						end
 					end
 				end

@@ -119,7 +119,6 @@ feature -- Comparison
 			-- Does `other' have the same appearance as `Current'.
 		do
 			if other /= Void then
-					-- Images are proportional.
 				if other.is_destroyed and then is_destroyed then
 					Result := True
 				else

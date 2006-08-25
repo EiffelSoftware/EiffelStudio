@@ -476,8 +476,9 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
+			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_dialog: EV_DIALOG
 			l_list: EV_LIST
@@ -485,11 +486,17 @@ feature {NONE} -- User interaction
 			l_hbox: EV_HORIZONTAL_BOX
 			l_select_button, l_button: EV_BUTTON
 			l_item: EV_LIST_ITEM
+			l_need_choice: BOOLEAN
 		do
+			l_need_choice := True
 			if a_targets.count = 1 then
 				a_targets.start
-				target_name := a_targets.item_for_iteration
-			else
+				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
+					target_name := a_targets.item_for_iteration.twin
+					l_need_choice := False
+				end
+			end
+			if l_need_choice then
 				create l_dialog.make_with_title ("Select a target")
 				create l_list
 				from

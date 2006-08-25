@@ -228,16 +228,27 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
+			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_answered: BOOLEAN
+			l_need_choice: BOOLEAN
 		do
+			l_need_choice := True
 			if a_targets.count = 1 then
 				a_targets.start
-				target_name := a_targets.item_for_iteration.twin
-			else
-				io.put_string ("This project has more than one target: ")
+				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
+					target_name := a_targets.item_for_iteration.twin
+					l_need_choice := False
+				end
+			end
+			if l_need_choice then
+				if a_target = Void then
+					io.put_string ("This project has more than one target or : ")
+				else
+					io.put_string ("Target `" + a_target + "' does not exist or is not a compilable target.%NChoose among the following target(s): ")
+				end
 				io.put_new_line
 				from
 					a_targets.start

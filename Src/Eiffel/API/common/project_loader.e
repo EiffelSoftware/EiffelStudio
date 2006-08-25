@@ -588,7 +588,7 @@ feature {NONE} -- Settings
 					a_targets.forth
 				end
 				l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
-				ask_for_target_name (l_list)
+				ask_for_target_name (a_proposed_target, l_list)
 			end
 		ensure
 			target_name_set: not has_error implies target_name /= Void and then not target_name.is_empty
@@ -735,8 +735,9 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_for_target_name (a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
 			-- Ask user to choose one target among `a_targets'.
+			-- If not Void, `a_target' is the one selected by user.
 		require
 			a_targets_not_void: a_targets /= Void
 		deferred

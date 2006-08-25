@@ -740,11 +740,11 @@ feature {EV_ANY_I} -- Delegated features
 			Result := 1
 		end
 
-	remove_clip_area is
+	remove_clipping is
 			-- Do not apply any clipping.
 		do
 			promote_to_drawable
-			interface.implementation.remove_clip_area
+			interface.implementation.remove_clipping
 		end
 
 	remove_tile is
@@ -759,6 +759,13 @@ feature {EV_ANY_I} -- Delegated features
 		do
 			promote_to_drawable
 			interface.implementation.set_clip_area (an_area)
+		end
+
+	set_clip_region (a_region: EV_REGION) is
+			-- Assign `a_region' to the area which will be refreshed.
+		do
+			promote_to_drawable
+			interface.implementation.set_clip_region (a_region)
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is

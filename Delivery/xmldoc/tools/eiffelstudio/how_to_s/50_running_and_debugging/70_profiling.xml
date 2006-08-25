@@ -12,7 +12,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The profiler is a tool that gives dynamic execution time information. It is very useful to detect which parts of a programmed to be optimized most.</paragraph>
+		<paragraph>The profiler is a tool that gives dynamic execution time information. It is very useful to detect which parts of a program need to be optimized most.</paragraph>
 		<paragraph>To use the profiler, the first thing to do is to enable it.</paragraph>
 		<paragraph>To enable the profiler:</paragraph>
 		<list ordered="false">
@@ -93,7 +93,7 @@
 		ps: <class_name>PROFILING_SETTING</class_name>
 			<comment>-- Other local variables if necessary.</comment>
 	<keyword>do</keyword>
-		<keyword>create</keyword> psps.<feature_name>make</feature_name>
+		<keyword>create</keyword> ps.<feature_name>make</feature_name>
 		ps.<feature_name>stop_profiling</feature_name>
 			<comment>-- Real program execution.</comment>
 		ps.<feature_name>start_profiling</feature_name>
@@ -107,7 +107,7 @@
 		ps: <class_name>PROFILING_SETTING</class_name>
 			<comment>-- Other local variables if necessary.</comment>
 	<keyword>do</keyword>
-		<keyword>create</keyword> psps.<feature_name>make</feature_name>
+		<keyword>create</keyword> ps.<feature_name>make</feature_name>
 		ps.<feature_name>start_profiling</feature_name>
 			<comment>-- What needs to be profiled.</comment>
 		ps.<feature_name>stop_profiling</feature_name>

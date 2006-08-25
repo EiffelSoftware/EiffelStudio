@@ -51,11 +51,10 @@ feature -- Status report
 	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer.
 		local
-			a_x, a_y: INTEGER
-			temp_pointer: POINTER
+			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: INTEGER]
 		do
-			temp_pointer := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $a_x, $a_y, default_pointer)
-			create Result.set (a_x, a_y)
+			l_display_data := app_implementation.retrieve_display_data
+			create Result.set (l_display_data.a_x, l_display_data.a_y)
 		end
 
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
